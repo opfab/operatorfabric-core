@@ -43,7 +43,29 @@ describe ('LoginPage',()=>{
 
         //Basic check that we got past the login page
         cy.get('of-navbar').should('exist');
-        // TODO Check other things of the general feed layout: navbar should have at least one item, etc.
+    });
+
+
+    it('login with invalid password ', ()=>{
+
+        //go to login page
+        cy.visit("/")
+
+        //type login
+        cy.get('#opfab-login').should('be.visible')
+        cy.get('#opfab-login').type(username)
+
+        //type password
+        cy.get('#opfab-password').should('be.visible')
+        cy.get('#opfab-password').type("invalid_password ")
+
+        //press login button
+        cy.get('#opfab-login-btn-submit').click()
+        cy.get('#opfab-login-btn-submit').should('be.visible')
+
+        //Check Error message 
+        cy.get('#opfab-login-msg').should('exist');
+        cy.get("#opfab-login-msg").contains("Wrong login or password");
 
     })
 })

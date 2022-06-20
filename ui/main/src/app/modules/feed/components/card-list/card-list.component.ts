@@ -7,7 +7,6 @@
  * This file is part of the OperatorFabric project.
  */
 
-
 import {AfterViewChecked, Component, Input, OnInit} from '@angular/core';
 import {LightCard} from '@ofModel/light-card.model';
 import {Observable} from 'rxjs';
@@ -15,7 +14,7 @@ import {NgbModalRef} from '@ng-bootstrap/ng-bootstrap/modal/modal-ref';
 import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
 import {ConfigService} from '@ofServices/config.service';
 import {MessageLevel} from '@ofModel/message.model';
-import {AlertMessage} from '@ofActions/alert.actions';
+import {AlertMessageAction} from '@ofActions/alert.actions';
 import {Store} from '@ngrx/store';
 import {AppState} from '@ofStore/index';
 import {ProcessesService} from '@ofServices/processes.service';
@@ -26,15 +25,12 @@ import {UserWithPerimeters} from '@ofModel/userWithPerimeters.model';
 import {EntitiesService} from '@ofServices/entities.service';
 import {GroupedCardsService} from '@ofServices/grouped-cards.service';
 
-
-
 @Component({
     selector: 'of-card-list',
     templateUrl: './card-list.component.html',
     styleUrls: ['./card-list.component.scss']
 })
 export class CardListComponent implements AfterViewChecked, OnInit {
-
     @Input() public lightCards: LightCard[];
     @Input() public selection: Observable<string>;
     @Input() public totalNumberOfLightsCards: number;
@@ -46,15 +42,17 @@ export class CardListComponent implements AfterViewChecked, OnInit {
 
     domCardListElement;
 
-    constructor(private modalService: NgbModal,
-                private configService: ConfigService,
-                private store: Store<AppState>,
-                private processesService: ProcessesService,
-                private acknowledgeService: AcknowledgeService,
-                private userService: UserService,
-                private _appService: AppService,
-                private entitiesService: EntitiesService,
-                private groupedCardsService: GroupedCardsService) {
+    constructor(
+        private modalService: NgbModal,
+        private configService: ConfigService,
+        private store: Store<AppState>,
+        private processesService: ProcessesService,
+        private acknowledgeService: AcknowledgeService,
+        private userService: UserService,
+        private _appService: AppService,
+        private entitiesService: EntitiesService,
+        private groupedCardsService: GroupedCardsService
+    ) {
         this.currentUserWithPerimeters = this.userService.getCurrentUserWithPerimeters();
     }
 
@@ -70,29 +68,39 @@ export class CardListComponent implements AfterViewChecked, OnInit {
     adaptFrameHeight() {
         const rect = this.domCardListElement.getBoundingClientRect();
         let height = window.innerHeight - rect.top - 30;
-        if (this.hideAckAllCardsFeature)
-            height = window.innerHeight - rect.top - 10;
+        if (this.hideAckAllCardsFeature) height = window.innerHeight - rect.top - 10;
         this.domCardListElement.style.maxHeight = `${height}px`;
     }
 
     acknowledgeAllVisibleCardsInTheFeed() {
-       this.lightCards.forEach(lightCard => {
+        this.lightCards.forEach((lightCard) => {
             this.acknowledgeVisibleCardInTheFeed(lightCard);
-            this.groupedCardsService.getChildCardsByTags(lightCard.tags).forEach(groupedCard =>
-                this.acknowledgeVisibleCardInTheFeed(groupedCard));
-       });
+            this.groupedCardsService
+                .getChildCardsByTags(lightCard.tags)
+                .forEach((groupedCard) => this.acknowledgeVisibleCardInTheFeed(groupedCard));
+        });
     }
 
     private acknowledgeVisibleCardInTheFeed(lightCard: LightCard): void {
         const processDefinition = this.processesService.getProcess(lightCard.process);
 
-        if (! lightCard.hasBeenAcknowledged && this.isCardPublishedBeforeAckDemand(lightCard)
-            && this.acknowledgeService.isAcknowledgmentAllowed(this.currentUserWithPerimeters, lightCard, processDefinition)) {
+        if (
+            !lightCard.hasBeenAcknowledged &&
+            this.isCardPublishedBeforeAckDemand(lightCard) &&
+            this.acknowledgeService.isAcknowledgmentAllowed(
+                this.currentUserWithPerimeters,
+                lightCard,
+                processDefinition
+            )
+        ) {
             try {
                 const entitiesAcks = [];
-                const entities = this.entitiesService.getEntitiesFromIds(this.currentUserWithPerimeters.userData.entities);
-                entities.forEach(entity => {
-                    if (entity.entityAllowedToSendCard) // this avoids to display entities used only for grouping
+                const entities = this.entitiesService.getEntitiesFromIds(
+                    this.currentUserWithPerimeters.userData.entities
+                );
+                entities.forEach((entity) => {
+                    if (entity.entityAllowedToSendCard)
+                        // this avoids to display entities used only for grouping
                         entitiesAcks.push(entity.id);
                 });
                 this.acknowledgeService.acknowledgeCard(lightCard, entitiesAcks);
@@ -108,7 +116,9 @@ export class CardListComponent implements AfterViewChecked, OnInit {
     }
 
     private displayMessage(i18nKey: string, msg: string, severity: MessageLevel = MessageLevel.ERROR) {
-        this.store.dispatch(new AlertMessage({alertMessage: {message: msg, level: severity, i18n: {key: i18nKey}}}));
+        this.store.dispatch(
+            new AlertMessageAction({alertMessage: {message: msg, level: severity, i18n: {key: i18nKey}}})
+        );
     }
 
     open(content) {

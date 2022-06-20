@@ -7,10 +7,15 @@
  * This file is part of the OperatorFabric project.
  */
 
-describe ('FeedScreen tests',function () {
+describe('FeedScreen tests', function () {
+
+    function tryToLoadNonExistingCard() {
+        cy.visit('#/feed/cards/thisCardDoesNotExist');
+
+        cy.get('#opfab-feed-card-not-found').should('exist');
+    }
 
     before('Set up configuration', function () {
-
         // This can stay in a `before` block rather than `beforeEach` as long as the test does not change configuration
         cy.resetUIConfigurationFiles();
 
@@ -25,8 +30,7 @@ describe ('FeedScreen tests',function () {
 
 
     it('Check card reception and read behaviour', function () {
-
-        cy.loginOpFab('operator1_fr','test');
+        cy.loginOpFab('operator1_fr', 'test');
 
         // Set feed sort to "Date" so the cards don't move down the feed once they're read
         cy.get('#opfab-feed-filter-btn-sort').click();
@@ -34,7 +38,7 @@ describe ('FeedScreen tests',function () {
         cy.get('#opfab-feed-filter-btn-sort').click();
 
         // operator1_fr should see 6 cards in their feed
-        cy.get('of-light-card').should('have.length',6);
+        cy.get('of-light-card').should('have.length', 6);
 
         // No card detail is displayed
         cy.get('of-card-details').should('not.exist');
@@ -45,13 +49,12 @@ describe ('FeedScreen tests',function () {
                 cy.wrap(item)
                     .should('have.css', 'font-weight')
                     .and('match', /700|bold/); // Some browsers (Chrome for example) render "bold" as "700"
-            })
+            });
 
         // No summary should be displayed
-        cy.get('[id^=opfab-feed-light-card]')
-            .each((item, index) => {
-                cy.wrap(item).find('#opfab-selected-card-summary').should('not.exist');
-            })
+        cy.get('[id^=opfab-feed-light-card]').each((item, index) => {
+            cy.wrap(item).find('#opfab-selected-card-summary').should('not.exist');
+        });
 
         // Click on the first card:
         // - it should move to the side
@@ -61,15 +64,16 @@ describe ('FeedScreen tests',function () {
         cy.get('of-light-card').eq(0).click()
             .find('[id^=opfab-feed-light-card]')
             .should('have.class', 'light-card-detail-selected')
-            .should('have.css', 'margin-left','20px')
+            .should('have.css', 'margin-left', '20px')
             .invoke('attr', 'data-urlId')
             .as('firstCardUrlId')
             .then((urlId) => {
-                cy.hash().should('eq', '#/feed/cards/'+urlId);
+                cy.hash().should('eq', '#/feed/cards/' + urlId);
                 cy.get('of-card-details').find('of-detail');
             });
+        cy.get('#opfab-feed-card-not-found').should('not.exist');
 
-
+        tryToLoadNonExistingCard();
 
         // Click on the second card (taken from first card's siblings to avoid clicking the same card twice):
         // - it should move to the side
@@ -79,13 +83,14 @@ describe ('FeedScreen tests',function () {
             cy.get(`[data-urlId="${firstCardUrlId}"]`).parent().parent().parent().siblings().eq(0).click()
                 .find('[id^=opfab-feed-light-card]')
                 .should('have.class', 'light-card-detail-selected')
-                .should('have.css', 'margin-left','20px')
+                .should('have.css', 'margin-left', '20px')
                 .invoke('attr', 'data-urlId')
                 .then((urlId) => {
-                    cy.hash().should('eq', '#/feed/cards/'+urlId);
+                    cy.hash().should('eq', '#/feed/cards/' + urlId);
                     cy.get('of-card-details').find('of-detail');
                 });
         });
+        cy.get('#opfab-feed-card-not-found').should('not.exist');
 
         // Temporary fix for the `cy...failed because the element has been detached from the DOM` error (see OC-1669)
         cy.waitDefaultTime();
@@ -94,7 +99,7 @@ describe ('FeedScreen tests',function () {
         cy.get('@firstCardUrlId').then((firstCardUrlId) => {
             cy.get(`[data-urlId="${firstCardUrlId}"]`)
                 .should('not.have.class', 'light-card-detail-selected')
-                .should('not.have.css', 'margin-left','20px')
+                .should('not.have.css', 'margin-left', '20px')
                 .find('.card-title, .card-title')
                 .should('have.css', 'font-weight')
                 .and('match', /400|normal/);
@@ -106,19 +111,17 @@ describe ('FeedScreen tests',function () {
 
         // TODO Test with sort set to unread first
 
-
         // If we delete all the cards, the feed should be empty and the detail view should also be empty
         // Note: Here we use the `delete6TestCards` method which relies on API calls to delete cards as we want
         // the deletion to be reflected in the feed immediately.
         cy.delete6TestCards();
-        cy.get('of-light-card').should('have.length',0);
+        cy.get('of-light-card').should('have.length', 0);
         cy.get('of-card-details').should('not.exist');
-
-    })
+    });
 
     it('Check card visibility by publish date when business period is after selected time range', function () {
         cy.sendCard('cypress/feed/futureEvent.json');
-        cy.loginOpFab('operator1_fr','test');
-        cy.get('of-light-card').should('have.length',1);
-    })
-})
+        cy.loginOpFab('operator1_fr', 'test');
+        cy.get('of-light-card').should('have.length', 1);
+    });
+});

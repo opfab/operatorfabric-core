@@ -14,28 +14,26 @@ const EXCEL_TYPE = 'application/vnd.openxmlformats-officedocument.spreadsheetml.
 const EXCEL_EXTENSION = '.xlsx';
 
 export abstract class ExportService {
+    public static exportJsonToExcelFile(json: any[], excelFileName: string): void {
+        const opts: XLSX.JSON2SheetOpts = {dateNF: 'dd/mm/yy hh:mm'};
+        this.exportWorksheet(XLSX.utils.json_to_sheet(json, opts), excelFileName);
+    }
 
-  public static exportJsonToExcelFile(json: any[], excelFileName: string): void {
-    const opts : XLSX.JSON2SheetOpts = { dateNF: 'dd/mm/yy hh:mm'};
-    this.exportWorksheet(XLSX.utils.json_to_sheet(json,opts),excelFileName);
-  }
+    public static exportArrayToExcelFile(data: any[][], excelFileName: string): void {
+        const opts: XLSX.AOA2SheetOpts = {dateNF: 'dd/mm/yy hh:mm'};
+        this.exportWorksheet(XLSX.utils.aoa_to_sheet(data, opts), excelFileName);
+    }
 
-  public static exportArrayToExcelFile(data: any[][],excelFileName: string): void {
-    const opts : XLSX.AOA2SheetOpts = { dateNF: 'dd/mm/yy hh:mm'};
-    this.exportWorksheet(XLSX.utils.aoa_to_sheet(data,opts),excelFileName);
-  }
+    private static exportWorksheet(worksheet: XLSX.WorkSheet, excelFileName: string) {
+        const workbook: XLSX.WorkBook = {Sheets: {data: worksheet}, SheetNames: ['data']};
+        const excelBuffer: any = XLSX.write(workbook, {bookType: 'xlsx', type: 'array'});
+        this.saveAsExcelFile(excelBuffer, excelFileName);
+    }
 
-  private static exportWorksheet(worksheet: XLSX.WorkSheet, excelFileName: string,) {
-    const workbook: XLSX.WorkBook = { Sheets: { 'data': worksheet }, SheetNames: ['data'] };
-    const excelBuffer: any = XLSX.write(workbook, { bookType: 'xlsx', type: 'array' });
-    this.saveAsExcelFile(excelBuffer, excelFileName);
-  }
-
-  private static saveAsExcelFile(buffer: any, fileName: string): void {
-    const data: Blob = new Blob([buffer], {
-      type: EXCEL_TYPE
-    });
-    saveAs(data, fileName + '_export_' + new Date().getTime() + EXCEL_EXTENSION);
-  }
-
+    private static saveAsExcelFile(buffer: any, fileName: string): void {
+        const data: Blob = new Blob([buffer], {
+            type: EXCEL_TYPE
+        });
+        saveAs(data, fileName + '_export_' + new Date().getTime() + EXCEL_EXTENSION);
+    }
 }

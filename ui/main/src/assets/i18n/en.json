@@ -47,6 +47,7 @@
       "entitiesResponses": "ANSWERS",
       "requiredResponses": "REQUIRED ANSWERS"
     },
+    "exportInProgress": "Export in progress",
     "loadingInProgress": "Loading in progress",
     "noResult": "Your search did not match any result.",
     "exportToExcel": "Export data",
@@ -73,8 +74,9 @@
     "activateSoundText":"Sound not activated, click to activate",
     "activateSoundButton":"Activate sound",
     "sessionExpiredText":"Your session has expired",
-    "reloadRequestedText": "Application reload required",
-    "disconnectedByNewUser": "You have been disconnected because another user logged in using this account."
+    "disconnected": "You are disconnected.",
+    "disconnectedByNewUser": "You have been disconnected because another user logged in using this account.",
+    "disconnectByAppLoadedInAnotherTab": "You have been disconnected because another tab of this browser was used to log in using this URL."
   },
   "menu": {
     "feed": "Card Feed",
@@ -117,6 +119,12 @@
     "filterSelectAllText": "Select all filtered results",
     "filterUnSelectAllText": "UnSelect all filtered results",
     "noDataLabel": "No Data Available"
+  },
+  "multiSelect": {
+    "searchPlaceholderText": "Search..." ,
+    "clearButtonText" : "Clear",
+    "noSearchResultsText" : "No results",
+    "noOptionsText" :""
   },
   "feed": {
     "filters": {
@@ -178,13 +186,15 @@
     "from" : "from",
     "moreCards": "cards more",
     "lastResponse": "Last response received on",
-    "cardLoadingInProgress":"Loading card  ..."
+    "cardLoadingInProgress":"Loading card  ...",
+    "cardNotFound": "The card you are looking for was not found"
   },
   "login": {
     "reset": "Reset",
     "login": "Login",
     "password": "Password",
     "confirmationBecauseAccountIsAreadyUsed":"The account {{login}} is already being used by at least another user. Do you still want to log in ? \n\n By clicking OK, you will disconnect anyone using this account.",
+    "confirmationBecauseAppAlreadyLoadedInAnotherTab":"The URL {{url}} is already being used in this browser, do you still want to log in ?\n\n By clicking OK, you will disconnect the other tabs of this browser using this URL.",
     "submit": {
       "password": "Sign In",
       "code": "Sign in using {{name}}"
@@ -220,6 +230,7 @@
   },
   "archive": {
     "loadingInProgress": "Loading archived cards",
+    "cardLoadingInProgress":"Loading card  ...",
     "tooManyRows": "Too many cards , not all cards visible",
     "collapsibleUpdates": "Collapsible updates"
   },
@@ -233,8 +244,7 @@
         "selectTypeOfStateText" : "Select a Process status"
       }
     },
-    "seeDetails": "SEE DETAILS",
-    "ExportInProgress": "Export in progress"
+    "seeDetails": "SEE DETAILS"
   },
   "button": {
     "ok": "OK",
@@ -246,7 +256,8 @@
     "search" : "SEARCH"
   },
   "activityArea": {
-    "title": "ACTIVITY AREA"
+    "title": "ACTIVITY AREA",
+    "titleOnLogin": "CHOOSE YOUR ACTIVITY AREA"
   },
   "feedConfiguration": {
     "title": "NOTIFICATION RECEPTION CONFIGURATION"
@@ -320,6 +331,9 @@
         "name": "NAME",
         "description": "DESCRIPTION",
         "perimeters" : "PERIMETERS",
+        "realtime": "REAL TIME",
+        "true": "YES",
+        "false": "NO",
         "confirmDelete": "Do you really want to delete group",
         "add": "ADD NEW GROUP"
       },
@@ -435,7 +449,8 @@
       "edit": "EDIT USER DEVICE CONFIGURATION",
       "confirm": "Please confirm",
       "confirmDelete": "Do you really want to delete device configuration for user",
-      "allUsersConfigured": "All users devices are already configured"
+      "allUsersConfigured": "All users devices are already configured",
+      "loadingExternalDevices": "Loading external devices..."
     },
     "userLogin": "USER LOGIN",
     "externalDeviceIds": "DEVICES",
@@ -464,5 +479,9 @@
     "december": "Dec",
     "week": "Week",
     "placeholder": "YYYY-MM-DD"
+  },
+  "reloadRequired" : {
+    "message": "Application reload required. To reload please click ",
+    "linkText": "here"
   }
 }

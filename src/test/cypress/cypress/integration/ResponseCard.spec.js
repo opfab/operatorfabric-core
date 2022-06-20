@@ -232,6 +232,13 @@ describe ('Response card tests',function () {
         // because the only one entity allowed to respond for him is now ENTITY3_FR
         cy.get('#opfab-navbar-drop-user-menu').click();
         cy.get('#opfab-navbar-right-menu-activityarea').click();
+        
+        // Check every checkbox to let the time for the ui to set to true before we click
+        cy.get('.opfab-checkbox').eq(0).find('input').should('be.checked');
+        cy.get('.opfab-checkbox').eq(1).find('input').should('be.checked');
+        cy.get('.opfab-checkbox').eq(2).find('input').should('be.checked');
+        cy.get('.opfab-checkbox').eq(3).find('input').should('be.checked');
+        
         cy.get('.opfab-checkbox').contains('Control Center FR North').click();
         cy.get('.opfab-checkbox').contains('Control Center FR South').click();
         cy.get('#opfab-activityarea-btn-confirm').should('exist').click(); // click confirm settings

@@ -17,18 +17,16 @@ import org.opfab.cards.publication.model.ArchivedCardPublicationData;
 import org.opfab.cards.publication.model.CardPublicationData;
 import org.opfab.cards.publication.model.PublisherTypeEnum;
 import org.opfab.cards.publication.services.clients.impl.ExternalAppClientImpl;
-import org.opfab.cards.publication.services.processors.UserCardProcessor;
 import org.opfab.springtools.error.model.ApiError;
 import org.opfab.springtools.error.model.ApiErrorException;
-import org.opfab.users.model.ComputedPerimeter;
 import org.opfab.users.model.CurrentUserWithPerimeters;
-import org.opfab.users.model.RightsEnum;
 import org.opfab.users.model.User;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
 
@@ -39,7 +37,6 @@ import java.time.Instant;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 /**
  * <p>
@@ -50,18 +47,17 @@ import java.util.stream.Collectors;
 @Slf4j
 public class CardProcessingService {
 
-
     @Autowired
     private LocalValidatorFactoryBean localValidatorFactoryBean;
     @Autowired
     private CardNotificationService cardNotificationService;
     @Autowired
     private CardRepositoryService cardRepositoryService;
-    @Autowired
-    private UserCardProcessor userCardProcessor;
+
     @Autowired
     private ExternalAppClientImpl externalAppClient;
-
+    @Autowired
+    private CardPermissionControlService cardPermissionControlService;
 
     @Autowired
     private CardTranslationService cardTranslationService;
@@ -78,18 +74,12 @@ public class CardProcessingService {
         if (card.getPublisherType() == null)
             card.setPublisherType(PublisherTypeEnum.EXTERNAL);
 
-        if (user.isPresent() && checkAuthenticationForCardSending && !checkPublisher(card, user.get().getUserData().getLogin())) {
-            if (card.getRepresentative() != null) {
-                throw new ApiErrorException(ApiError.builder()
-                        .status(HttpStatus.FORBIDDEN)
-                        .message("Card representative is set to " + card.getRepresentative() + " and account login is " + user.get().getUserData().getLogin() + ", the card cannot be sent")
-                        .build());
-            } else {
-                throw new ApiErrorException(ApiError.builder()
-                        .status(HttpStatus.FORBIDDEN)
-                        .message("Card publisher is set to " + card.getPublisher() + " and account login is " + user.get().getUserData().getLogin() + ", the card cannot be sent")
-                        .build());
-            }
+        if (user.isPresent() && checkAuthenticationForCardSending && !cardPermissionControlService.isCardPublisherAllowedForUser(card, user.get().getUserData().getLogin())) {
+
+            throw new ApiErrorException(ApiError.builder()
+                    .status(HttpStatus.FORBIDDEN)
+                    .message(buildPublisherErrorMessage(card, user.get().getUserData().getLogin(), false))
+                    .build());
         }
         // set empty user otherwise it will be processed as a usercard
         processOneCard(card, Optional.empty(), jwt);
@@ -107,13 +97,21 @@ public class CardProcessingService {
 
         if (user.isPresent()) {
             CardPublicationData oldCard = getExistingCard(card.getId());
-            if (oldCard != null && !oldCard.getPublisher().equals(card.getPublisher()) && !isUserInEntityAllowedToEditCard(oldCard, user.get())) {
+            if (oldCard != null && !cardPermissionControlService.isUserAllowedToEditCard(user.get(), card, oldCard))
                 throw new ApiErrorException(ApiError.builder()
-                .status(HttpStatus.FORBIDDEN)
-                .message("User is not part of entities allowed to edit card. Card is rejected")
-                .build());
+                        .status(HttpStatus.FORBIDDEN)
+                        .message("User is not the sender of the original card or user is not part of entities allowed to edit card. Card is rejected")
+                        .build());
+
+
+            if (!cardPermissionControlService.isUserAuthorizedToSendCard(card,user.get())){
+                throw new AccessDeniedException("user not authorized, the card is rejected");
             }
-            userCardProcessor.processPublisher(card, user.get());
+
+            if (!cardPermissionControlService.isCardPublisherInUserEntities(card, user.get()))
+                // throw a runtime exception to be handled by Mono.onErrorResume()
+                throw new IllegalArgumentException("Publisher is not valid, the card is rejected");
+
             externalAppClient.sendCardToExternalApplication(card, jwt);
         }
         deleteChildCardsProcess(card, jwt);
@@ -179,16 +177,7 @@ public class CardProcessingService {
             throw new ConstraintViolationException("constraint violation : character '.' is forbidden in process and state", null);
     }
 
-    private boolean isUserInEntityAllowedToEditCard(CardPublicationData card, CurrentUserWithPerimeters user) {
-        if (user.getUserData().getEntities().contains(card.getPublisher()))
-            return true;
-        List<String> entitiesAllowed = card.getEntitiesAllowedToEdit();
-        if (entitiesAllowed != null) {
-            List<String> userEntitiesAllowed = user.getUserData().getEntities().stream().filter(entitiesAllowed::contains).collect(Collectors.toList());
-            return !userEntitiesAllowed.isEmpty();
-        }
-        return false;
-    }
+
 
     private CardPublicationData getExistingCard(String cardId){
         return cardRepositoryService.findCardById(cardId);
@@ -235,15 +224,7 @@ public class CardProcessingService {
         return true;
     }
 
-    boolean checkPublisher(CardPublicationData card, String login) {
-        if (card.getRepresentative() != null) {
-            if (card.getRepresentativeType().equals(PublisherTypeEnum.EXTERNAL))
-                return card.getRepresentative().equals(login);
-        } else if (card.getPublisherType().equals(PublisherTypeEnum.EXTERNAL)) {
-            return card.getPublisher().equals(login);
-        }
-        return true;
-    }
+
 
     public void deleteCard(String id, Optional<Jwt> jwt) {
         CardPublicationData cardToDelete = cardRepositoryService.findCardById(id);
@@ -265,18 +246,12 @@ public class CardProcessingService {
         if (user.isPresent()){  // if user is not present it means we have checkAuthenticationForCardSending = false 
             boolean isAdmin = user.get().getUserData().getGroups() != null && user.get().getUserData().getGroups().contains("ADMIN");
             String login = user.get().getUserData().getLogin();
-            if (cardToDelete != null && !isAdmin && checkAuthenticationForCardSending && !checkPublisher(cardToDelete,login)) {
-                if (cardToDelete.getRepresentative() != null) {
-                    throw new ApiErrorException(ApiError.builder()
-                            .status(HttpStatus.FORBIDDEN)
-                            .message("Card representative is set to " + cardToDelete.getRepresentative() + " and account login is " + login + ", the card cannot be deleted")
-                            .build());
-                } else {
-                    throw new ApiErrorException(ApiError.builder()
-                            .status(HttpStatus.FORBIDDEN)
-                            .message("Card publisher is set to " + cardToDelete.getPublisher() + " and account login is " + login + ", the card cannot be deleted")
-                            .build());
-                }
+            if (cardToDelete != null && !isAdmin && checkAuthenticationForCardSending && !cardPermissionControlService.isCardPublisherAllowedForUser(cardToDelete,login)) {
+
+                throw new ApiErrorException(ApiError.builder()
+                        .status(HttpStatus.FORBIDDEN)
+                        .message(buildPublisherErrorMessage(cardToDelete, login, true))
+                        .build());
             }
         }
        
@@ -295,7 +270,8 @@ public class CardProcessingService {
         CardPublicationData cardToDelete = cardRepositoryService.findCardById(id);
         if (cardToDelete == null)
             return Optional.empty();
-        if (isUserAllowedToDeleteThisCard(cardToDelete, user)){
+
+        if (cardPermissionControlService.isUserAllowedToDeleteThisCard(cardToDelete, user)){
             return deleteCard(cardToDelete, jwt);
         }
         else {
@@ -329,25 +305,15 @@ public class CardProcessingService {
         return deletedCard;
     }
 
-    /* 1st check : card.publisherType == ENTITY
-       2nd check : the card has been sent by an entity of the user connected
-       3rd check : the user has the Write access to the process/state of the card */
-    public boolean isUserAllowedToDeleteThisCard(CardPublicationData card, CurrentUserWithPerimeters user) {
-        List<ComputedPerimeter> perimetersOfTheUserList = user.getComputedPerimeters();
-        List<String>            entitiesOfTheUserList   = user.getUserData().getEntities();
-
-        if ((card.getPublisherType() == PublisherTypeEnum.ENTITY) &&
-            (entitiesOfTheUserList.contains(card.getPublisher()))){
-
-            for (ComputedPerimeter perimeter : perimetersOfTheUserList) {
-                if ((perimeter.getProcess().equals(card.getProcess())) &&
-                    (perimeter.getState().equals(card.getState())) &&
-                    ((perimeter.getRights() == RightsEnum.WRITE) || (perimeter.getRights() == RightsEnum.RECEIVEANDWRITE)))
-                    return true;
-            }
+    private String buildPublisherErrorMessage(CardPublicationData card, String login, boolean delete) {
+        String errorMessagePrefix = "Card publisher is set to " + card.getPublisher() + " and account login is " + login;
+        if (card.getRepresentative() != null) {
+            errorMessagePrefix = "Card representative is set to " + card.getRepresentative() + " and account login is " + login;
         }
-        return false;
+        String errorMessageSuffix = delete ? "deleted" : "sent";
+        return errorMessagePrefix + ", the card cannot be " + errorMessageSuffix;
     }
+
     
 	public UserBasedOperationResult processUserAcknowledgement(String cardUid, User user, List<String> entitiesAcks) {
         if (! user.getEntities().containsAll(entitiesAcks))

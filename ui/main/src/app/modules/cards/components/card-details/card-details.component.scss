@@ -6,26 +6,24 @@
  * SPDX-License-Identifier: MPL-2.0
  * This file is part of the OperatorFabric project.
  */
-  
-  .opfab-card-loading {
+
+.opfab-card-loading {
     z-index: 1; /* Sit on top */
     padding-top: 10%;
-    width: 100%; 
-    height: 100%; 
+    width: 100%;
+    height: 100%;
     background-color: var(--opfab-bgcolor);
     color: var(--opfab-text-color-stronger);
-    }
+}
 
-    
-  .opfab-card-loading-small-screen {
-      position: fixed; 
-      z-index: 1; /* Sit on top */
-      left: 0;
-      top: 130px;
-      width: 100%; 
-      height: 100%; 
-      padding: 100px;
-      background-color: var(--opfab-bgcolor);
-      color: var(--opfab-text-color-stronger);
-    }
-  
+.opfab-card-loading-small-screen {
+    position: fixed;
+    z-index: 1; /* Sit on top */
+    left: 0;
+    top: 130px;
+    width: 100%;
+    height: 100%;
+    padding: 100px;
+    background-color: var(--opfab-bgcolor);
+    color: var(--opfab-text-color-stronger);
+}

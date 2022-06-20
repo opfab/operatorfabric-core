@@ -9,8 +9,8 @@
   "author": "",
   "license": "MPL-2.0",
   "devDependencies": {
-    "cypress": "9.6.1",
-    "cypress-terminal-report": "3.5.2"
+    "cypress": "9.7.0",
+    "cypress-terminal-report": "4.0.1"
   },
   "dependencies": {
     "xlsx": "0.18.5"

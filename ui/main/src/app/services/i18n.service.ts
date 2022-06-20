@@ -7,8 +7,6 @@
  * This file is part of the OperatorFabric project.
  */
 
-
-
 import {Injectable} from '@angular/core';
 import * as moment from 'moment';
 import {TranslateService} from '@ngx-translate/core';
@@ -18,26 +16,25 @@ import {AppState} from '@ofStore/index';
 import {buildSettingsOrConfigSelector} from '@ofSelectors/settings.x.config.selectors';
 import {Observable} from 'rxjs';
 import {environment} from '@env/environment';
-import { tap } from 'rxjs/operators';
+import {catchError, tap} from 'rxjs/operators';
+import {ConfigService} from './config.service';
+import {Utilities} from 'app/common/utilities';
+
+declare const opfab: any;
 
 @Injectable({
     providedIn: 'root'
 })
 export class I18nService {
-
-
     private static localUrl = '/assets/i18n/';
     private _locale: string;
 
-
-    constructor(private httpClient: HttpClient, private translate: TranslateService, private store: Store<AppState>) {
+    constructor(private httpClient: HttpClient, private translate: TranslateService, private store: Store<AppState> ,private configService: ConfigService) {
         I18nService.localUrl = `${environment.paths.i18n}`;
         this.store.select(buildSettingsOrConfigSelector('locale')).subscribe((locale) => this.changeLocale(locale));
-
     }
 
     public changeLocale(locale: string) {
-
         if (locale) {
             this._locale = locale;
         } else {
@@ -45,19 +42,61 @@ export class I18nService {
         }
         moment.locale(this._locale);
         this.translate.use(this._locale);
+        this.setTranslationForMultiSelectUsedInTemplates();
+    }
+
+    public setTranslationForMultiSelectUsedInTemplates() {
+        this.translate
+            .get('multiSelect.searchPlaceholderText')
+            .subscribe((translated) => (opfab.multiSelect.searchPlaceholderText = translated));
+        this.translate
+            .get('multiSelect.clearButtonText')
+            .subscribe((translated) => (opfab.multiSelect.clearButtonText = translated));
+        this.translate
+            .get('multiSelect.noOptionsText')
+            .subscribe((translated) => (opfab.multiSelect.noOptionsText = translated));
+        this.translate
+            .get('multiSelect.noSearchResultsText')
+            .subscribe((translated) => (opfab.multiSelect.noSearchResultsText = translated));
     }
 
     public get locale() {
         return this._locale;
     }
 
-
     public loadLocale(locale: string): Observable<any> {
-        return this.httpClient.get(`${I18nService.localUrl}${locale}.json`).pipe( tap({
-            next: translation => this.translate.setTranslation(locale, translation, true),
-            error: error => console.log(new Date().toISOString(),`Error : impossible to load locale ${I18nService.localUrl}${locale}.json`)
-        }));
+        return this.httpClient.get(`${I18nService.localUrl}${locale}.json`).pipe(
+            tap({
+                next: (translation) => this.translate.setTranslation(locale, translation, true),
+                error: () =>
+                    console.log(
+                        new Date().toISOString(),
+                        `Error : impossible to load locale ${I18nService.localUrl}${locale}.json`
+                    )
+            })
+        );
     }
 
+    public loadGlobalTranslations(locales :Array<string>): Observable<any[]> {
+        if (!!locales) {
+            const localeRequests$ = [];
+            locales.forEach((locale) =>
+                localeRequests$.push(this.loadLocale(locale))
+            );
+           return Utilities.subscribeAndWaitForAllObservablesToEmitAnEvent(localeRequests$);
+        }
+    }
 
+    public loadTranslationForMenu():void {
+        this.configService.fetchMenuTranslations().subscribe((locales) => {
+            locales.forEach((locale) => {
+                this.translate.setTranslation(locale.language, locale.i18n, true);
+            });
+        });
+
+        catchError((err, caught) => {
+            console.error('Impossible to load configuration file ui-menu.json', err);
+            return caught;
+        });
+    }
 }

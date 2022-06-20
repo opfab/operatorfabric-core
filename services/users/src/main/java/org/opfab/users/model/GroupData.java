@@ -12,6 +12,7 @@
 package org.opfab.users.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.*;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
@@ -29,6 +30,7 @@ import java.util.*;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
+@JsonInclude(JsonInclude.Include.NON_EMPTY)
 public class GroupData implements Group {
     @Id
     private String id;
@@ -39,7 +41,8 @@ public class GroupData implements Group {
     @Singular("perimeter")
     private Set<String> perimeters;
 
-    private Boolean realtime;
+    @Builder.Default
+    private Boolean realtime = false;
 
     @Override
     public List<String> getPerimeters() {

@@ -7,18 +7,13 @@
  * This file is part of the OperatorFabric project.
  */
 
-
-
 import {NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {IframeDisplayComponent} from './iframedisplay.component';
-import {BusinessconfigpartyRoutingModule} from "./businessconfigparty-routing.module";
+import {BusinessconfigpartyRoutingModule} from './businessconfigparty-routing.module';
 
 @NgModule({
-  declarations: [IframeDisplayComponent],
-  imports: [
-    CommonModule,
-    BusinessconfigpartyRoutingModule
-  ]
+    declarations: [IframeDisplayComponent],
+    imports: [CommonModule, BusinessconfigpartyRoutingModule]
 })
-export class BusinessconfigpartyModule { }
+export class BusinessconfigpartyModule {}

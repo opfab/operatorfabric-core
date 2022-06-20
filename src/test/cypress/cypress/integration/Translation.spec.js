@@ -18,25 +18,25 @@ describe('Test translations', function () {
 
     function changeLanguage(newLanguage, useClock) {
         cy.get('#opfab-navbar-drop-user-menu').should('exist').click();
-        
+
         // Wait for the menu to open
         cy.get('.opfab-right-menu').should('exist');
 
         cy.get('#opfab-navbar-right-menu-settings').should('exist').click();
         cy.get('#opfab-setting-locale').select(newLanguage);
-        
+
         // Wait for the language to be changed
         if (useClock) {
             cy.tick(5000);
         }
-        
+
         if (newLanguage == ENGLISH) {
             cy.get('.opfab-settings-title').should('have.text', ENGLISH_SETTINGS);
         } else if (newLanguage == FRENCH) {
             cy.get('.opfab-settings-title').should('have.text', FRENCH_SETTINGS);
         } else if (newLanguage == DUTCH) {
             cy.get('.opfab-settings-title').should('have.text', DUTCH_SETTINGS);
-        } 
+        }
     }
 
     function setNightMode() {
@@ -47,7 +47,7 @@ describe('Test translations', function () {
                 // Close the dropdown user menu in order to always have it closed at the end of this function
                 cy.get('#opfab-navbar-drop-user-menu').should('exist').click();
             }
-        })
+        });
     }
 
     function setDayMode() {
@@ -58,8 +58,7 @@ describe('Test translations', function () {
                 // Close the dropdown user menu in order to always have it closed at the end of this function
                 cy.get('#opfab-navbar-drop-user-menu').should('exist').click();
             }
-        })
-
+        });
     }
 
     function checkMenuTitles(feedTitle, archivesTitle, monitoringTitle, loggingTitle, singleMenuTitle, secondMenuTitle, 
@@ -80,13 +79,12 @@ describe('Test translations', function () {
 
     function checkRightMenuStaticEntries(realTimeTitle, settingsTitle, activityAreaTitle, feedConfigurationTitle, aboutTitle,
                                          changePasswordTitle, logoutTitle) {
-        
         cy.get('#opfab-navbar-drop-user-menu').should('exist').click();
         cy.get('#opfab-navbar-right-menu-realtimeusers').should('have.text', realTimeTitle);
         cy.get('#opfab-navbar-right-menu-settings').should('have.text', settingsTitle);
         cy.get('#opfab-navbar-right-menu-activityarea').should('have.text', activityAreaTitle);
         cy.get('#opfab-navbar-right-menu-feedconfiguration').should('have.text', feedConfigurationTitle);
-        cy.get('#opfab-navbar-right-menu-about').should('have.text', aboutTitle);        
+        cy.get('#opfab-navbar-right-menu-about').should('have.text', aboutTitle);
         cy.get('#opfab-navbar-right-menu-change-password').should('have.text', changePasswordTitle);
         cy.get('#opfab-navbar-right-menu-logout').should('have.text', logoutTitle);
     }
@@ -99,7 +97,7 @@ describe('Test translations', function () {
         cy.get('#opfab-navbar-drop-user-menu').should('exist').click();
         cy.get('.opfab-right-menu').should('exist');
         cy.get('#opfab-navbar-right-menu-day-mode').should('have.text', dayModeTitle);
-        
+
         // Check night mode text
         setDayMode();
         cy.get('.opfab-right-menu').should('not.exist');
@@ -133,16 +131,16 @@ describe('Test translations', function () {
         checkPlaceholderText('#opfab-tags', selectTagText);
         checkPlaceholderText('#opfab-process', selectProcessText);
         checkPlaceholderText('#opfab-state', selectStateText);
-        
+
         cy.get('#opfab-archives-logging-btn-search').should('have.text', searchText);
         cy.get('#opfab-archives-logging-btn-reset').should('have.text', resetText);
     }
 
-    function checkMonitoringFilterTexts(serviceLabel, servicePlaceholder, processLabel, processPlaceholder, 
+    function checkMonitoringFilterTexts(serviceLabel, servicePlaceholder, processLabel, processPlaceholder,
                                         processStatusLabel, processStatusPlaceholder, searchText, resetText) {
 
         cy.get('#opfab-navbar-menu-monitoring').should('exist').click();
-        
+
         checkLabel('#opfab-processGroup', serviceLabel);
         checkPlaceholderText('#opfab-processGroup', servicePlaceholder);
         checkLabel('#opfab-process', processLabel);
@@ -185,7 +183,7 @@ describe('Test translations', function () {
         cy.get('#opfab-feed-filter-date-title').should('have.text', dateTitle);
         checkLabel('#opfab-feed-filter-dateTimeFrom', startText);
         checkLabel('#opfab-feed-filter-dateTimeTo', endText);
-        
+
         cy.get('#opfab-timeline-filter-form').should('have.text', applyToTimelineText);
     }
 
@@ -198,7 +196,15 @@ describe('Test translations', function () {
     }
 
     function checkPlaceholderText(selectId, placeholderText) {
-        cy.get(selectId).find('.selected-list').find('span').should('have.text', placeholderText);
+        cy.get(selectId).find('.vscomp-value').should('have.text', placeholderText);
+    }
+
+    function loadNonExistingCard() {
+        cy.visit('#/feed/cards/thisCardDoesNotExist');
+    }
+
+    function checkFeedTexts(cardNotFoundText) {
+        cy.get('#opfab-feed-card-not-found').should('exist').should('have.text', cardNotFoundText);
     }
 
     before('Set up configuration and cards', function () {
@@ -234,7 +240,7 @@ describe('Test translations', function () {
         changeLanguage(DUTCH);
         checkRightMenuStaticEntries('Realtime gebruikers', 'Instellingen', 'Activiteitengebied', 'Notificatie configuratie', 'Over', 'Wachtwoord wijzigen', 'Uitloggen');
         checkDayAndNightTitles('Dag modus', 'Nacht modus');
-    })
+    });
 
     it('Check archives screen translations', function () {
         cy.loginOpFab('operator1_fr','test');
@@ -252,24 +258,6 @@ describe('Test translations', function () {
         checkArchivesScreenTexts('Selecteer een Dienst', 'Selecteer een Label', 'Selecteer een Proces', 'Selecteer een Status', 'ZOEK', 'HERSTEL');
     })
 
-
-    it('Check Monitoring screen translations', function () {
-        cy.loginOpFab('operator1_fr', 'test');
-
-        changeLanguage(ENGLISH);
-        checkMonitoringFilterTexts('SERVICE', 'Select a Service', 'PROCESS', 'Select a Process', 'PROCESS STATUS', 'Select a Process status', 'SEARCH', 'RESET');
-        checkMonitoringResultTexts('Cards with response from my entity ', 'Your search did not match any result.');
-
-        changeLanguage(FRENCH);
-        checkMonitoringFilterTexts('SERVICE', 'Sélectionner un Service', 'PROCESSUS', 'Sélectionner un Processus', 'ÉTAT DU PROCESSUS', 'Sélectionner un État de processus', 'RECHERCHER', 'REINITIALISER');
-        checkMonitoringResultTexts('Cartes avec réponse de mon entité ', 'Votre recherche ne correspond à aucun résultat.');
-
-        changeLanguage(DUTCH);
-        checkMonitoringFilterTexts('DIENST', 'Selecteer een Dienst', 'PROCES', 'Selecteer een Proces', 'PROCES STATUS', 'Selecteer een Proces status', 'ZOEK', 'HERSTEL');
-        checkMonitoringResultTexts('Kaarten met reactie van mijn entiteit ', 'Uw zoekopdracht leverde geen resultaten op.');
-    })
-
-
     it('Check Monitoring screen translations', function () {
         cy.loginOpFab('operator1_fr', 'test');
 
@@ -284,8 +272,7 @@ describe('Test translations', function () {
         changeLanguage(DUTCH);
         checkMonitoringFilterTexts('DIENST', 'Selecteer een Dienst', 'PROCES', 'Selecteer een Proces', 'PROCES STATUS', 'Selecteer een Proces status', 'ZOEK', 'HERSTEL');
         checkMonitoringResultTexts('Kaarten met reactie van mijn entiteit ');
-    })
-
+    });
 
     it('Check Business period translations', function () {
         const currentDate = new Date(2030, 11, 31, 23, 46);
@@ -298,9 +285,9 @@ describe('Test translations', function () {
         cy.get('#opfab-timeline-title').should('have.text', ' 31 December 2030 ');
         checkBusinessPeriodLinks('Real Time', 'Day', '7 Days', 'Week', 'Month', 'Year');
 
-        cy.get('#opfab-navbar-menu-monitoring').should('exist').click();        
+        cy.get('#opfab-navbar-menu-monitoring').should('exist').click();
         cy.get('.opfab-business-period').should('have.text', 'Business period : 21:30 31/12/2030 -- 09:00 01/01/2031 ');
-        
+        cy.tick(1000);
 
         changeLanguage(FRENCH, true);
         cy.tick(1000);
@@ -309,9 +296,9 @@ describe('Test translations', function () {
         cy.get('#opfab-timeline-title').should('have.text', ' 31 décembre 2030 ');
         checkBusinessPeriodLinks('Temps réel', 'Jour', '7 Jours', 'Semaine', 'Mois', 'Année');
 
-        cy.get('#opfab-navbar-menu-monitoring').should('exist').click();        
+        cy.get('#opfab-navbar-menu-monitoring').should('exist').click();
         cy.get('.opfab-business-period').should('have.text', 'Période métier : 21:30 31/12/2030 -- 09:00 01/01/2031 ');
-
+        cy.tick(1000);
 
         changeLanguage(DUTCH, true);
         cy.tick(1000);
@@ -320,22 +307,19 @@ describe('Test translations', function () {
         cy.get('#opfab-timeline-title').should('have.text', ' 31 december 2030 ');
         checkBusinessPeriodLinks('Realtime', 'Dag', '7 Dagen', 'Week', 'Maand', 'Jaar');
 
-        cy.get('#opfab-navbar-menu-monitoring').should('exist').click();        
+        cy.get('#opfab-navbar-menu-monitoring').should('exist').click();
         cy.get('.opfab-business-period').should('have.text', 'Bedrijfsperiode : 21:30 31/12/2030 -- 09:00 01/01/2031 ');
-    })
-
-
+    });
 
     it('Check Feed filter translations', function () {
         cy.loginOpFab('operator1_fr', 'test');
 
         changeLanguage(ENGLISH);
         cy.get('#opfab-navbar-menu-feed').click();
-        cy.get('#opfab-feed-filter-btn-filter').click()
+        cy.get('#opfab-feed-filter-btn-filter').click();
         checkNotificationSeverityTexts('Alarm', 'Action', 'Compliant', 'Information');
         checkAknowledgementTexts('Acknowledgement', 'All', 'Acknowledged', 'Not acknowledged');
         checkDateFilterTexts('Receipt date', 'START', 'END', 'Apply filters to timeline', 'Reset');
-
 
         changeLanguage(FRENCH);
         cy.get('#opfab-navbar-menu-feed').click();
@@ -350,6 +334,21 @@ describe('Test translations', function () {
         checkNotificationSeverityTexts('Alarm', 'Actie', 'Conform', 'Informatie');
         checkAknowledgementTexts('Bevestigen', 'Alles', 'Bevestigd', 'Niet bevestigd');
         checkDateFilterTexts('Ontvangstdatum', 'START', 'EIND', 'Filters toepassen op tijdlijn', 'Opnieuw installen');
-    })
+    });
 
-})
+    it('Check translation for non-existent card', function () {
+        cy.loginOpFab('operator1_fr', 'test');
+
+        changeLanguage(ENGLISH);
+        loadNonExistingCard();
+        checkFeedTexts('The card you are looking for was not found');
+
+        changeLanguage(FRENCH);
+        loadNonExistingCard();
+        checkFeedTexts("La carte que vous cherchez n'a pas été trouvée");
+
+        changeLanguage(DUTCH);
+        loadNonExistingCard();
+        checkFeedTexts('De kaart die u zoekt werd niet gevonden');
+    });
+});

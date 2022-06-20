@@ -17,5 +17,5 @@ import {CrudService} from '@ofServices/crud-service';
     providedIn: 'root'
 })
 export abstract class CachedCrudService extends CrudService {
-  abstract getCachedValues(): Array<any>;
+    abstract getCachedValues(): Array<any>;
 }

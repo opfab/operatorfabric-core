@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2021, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2022, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -7,14 +7,10 @@
  * This file is part of the OperatorFabric project.
  */
 
-
 import {cardInitialState, CardState} from '@ofStates/card.state';
 import {CardActions, CardActionTypes} from '@ofActions/card.actions';
 
-export function reducer(
-    state = cardInitialState,
-    action: CardActions
-): CardState {
+export function reducer(state = cardInitialState, action: CardActions): CardState {
     switch (action.type) {
         case CardActionTypes.ClearCard: {
             return cardInitialState;
@@ -23,7 +19,7 @@ export function reducer(
             return {
                 ...state,
                 selected: action.payload.card,
-                selectedChildCards: action.payload.childCards
+                selectedChildCards: action.payload.childCards ? action.payload.childCards : []
             };
         }
         case CardActionTypes.LoadCardFailure: {
@@ -37,4 +33,3 @@ export function reducer(
         }
     }
 }
-

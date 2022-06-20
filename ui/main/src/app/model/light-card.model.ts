@@ -11,7 +11,6 @@ import {I18n} from '@ofModel/i18n.model';
 import {TimeSpan} from './card.model';
 
 export class LightCard {
-    /* istanbul ignore next */
     constructor(
         readonly uid: string,
         readonly id: string,
@@ -39,6 +38,8 @@ export class LightCard {
         readonly keepChildCards?: boolean,
         readonly representative?: string,
         readonly representativeType?: PublisherType | string,
+        readonly wktGeometry?: string,
+        readonly wktProjection?: string,
         readonly entitiesAcks?: string[],
         readonly entityRecipients?: string[],
         readonly entitiesAllowedToRespond?: string[],
@@ -46,16 +47,19 @@ export class LightCard {
         readonly entitiesAllowedToEdit?: string[],
         readonly publisherType?: PublisherType | string,
         readonly secondsBeforeTimeSpanForReminder?: number
-    ) {
-    }
+    ) {}
 }
 
 export enum Severity {
-    ALARM = 'ALARM', ACTION = 'ACTION', COMPLIANT = 'COMPLIANT', INFORMATION = 'INFORMATION'
+    ALARM = 'ALARM',
+    ACTION = 'ACTION',
+    COMPLIANT = 'COMPLIANT',
+    INFORMATION = 'INFORMATION'
 }
 
 export enum Sound {
-    INFORMATION, COMPLIANT
+    INFORMATION,
+    COMPLIANT
 }
 
 export enum PublisherType {

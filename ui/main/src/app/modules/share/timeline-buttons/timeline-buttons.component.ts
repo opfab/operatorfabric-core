@@ -7,12 +7,12 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {Component, EventEmitter, Input, OnDestroy, OnInit, Output} from '@angular/core';   
-import {ConfigService} from "@ofServices/config.service";
-import moment from "moment";
+import {Component, EventEmitter, Input, OnDestroy, OnInit, Output} from '@angular/core';
+import {ConfigService} from '@ofServices/config.service';
+import moment from 'moment';
 import {FilterType} from '@ofModel/feed-filter.model';
 import {UserPreferencesService} from '@ofServices/user-preference.service';
-import {TimeService} from "@ofServices/time.service";
+import {TimeService} from '@ofServices/time.service';
 import {FilterService} from '@ofServices/lightcards/filter.service';
 import {LogOption, OpfabLoggerService} from '@ofServices/logs/opfab-logger.service';
 
@@ -22,11 +22,10 @@ import {LogOption, OpfabLoggerService} from '@ofServices/logs/opfab-logger.servi
     styleUrls: ['./timeline-buttons.component.scss']
 })
 export class TimelineButtonsComponent implements OnInit, OnDestroy {
-
     private OVERLAP_DURATION_IN_MS = 15 * 60 * 1000;
 
     public hideTimeLine = false;
-    public currentDomain ;
+    public currentDomain;
     public currentDomainId: string;
     private followClockTick: boolean;
     private overlap = 0;
@@ -37,39 +36,37 @@ export class TimelineButtonsComponent implements OnInit, OnDestroy {
     public startDateForBusinessPeriodDisplay;
     public endDateForBusinessPeriodDisplay;
 
-
     @Input()
     public isMonitoringScreen: boolean;
 
     @Output()
-    public domainChange : EventEmitter<any> = new EventEmitter();
+    public domainChange: EventEmitter<any> = new EventEmitter();
 
-    private isDestroyed = false ;
+    private isDestroyed = false;
 
-    constructor(private time: TimeService,
-                private userPreferences : UserPreferencesService,
-                private configService: ConfigService,
-                private filterService: FilterService,
-                private opfabLogger: OpfabLoggerService) {
-
-    }
+    constructor(
+        private time: TimeService,
+        private userPreferences: UserPreferencesService,
+        private configService: ConfigService,
+        private filterService: FilterService,
+        private opfabLogger: OpfabLoggerService
+    ) {}
 
     ngOnInit() {
         this.loadDomainConfiguration();
         const hideTimeLineInStorage = this.userPreferences.getPreference('opfab.hideTimeLine');
-        this.hideTimeLine = (hideTimeLineInStorage === 'true');
+        this.hideTimeLine = hideTimeLineInStorage === 'true';
         this.setInitialDomain();
         this.shiftTimeLineIfNecessary();
     }
 
-
     loadDomainConfiguration() {
         const domains = {
-            'J': {
+            J: {
                 buttonTitle: 'timeline.buttonTitle.J',
                 domainId: 'J'
             },
-            'TR': {
+            TR: {
                 buttonTitle: 'timeline.buttonTitle.TR',
                 domainId: 'TR'
             },
@@ -77,38 +74,43 @@ export class TimelineButtonsComponent implements OnInit, OnDestroy {
                 buttonTitle: 'timeline.buttonTitle.7D',
                 domainId: '7D'
             },
-            'W': {
+            W: {
                 buttonTitle: 'timeline.buttonTitle.W',
                 domainId: 'W'
             },
-            'M': {
+            M: {
                 buttonTitle: 'timeline.buttonTitle.M',
                 domainId: 'M'
             },
-            'Y': {
+            Y: {
                 buttonTitle: 'timeline.buttonTitle.Y',
                 domainId: 'Y'
             }
         };
-        const domainsConf = this.configService.getConfigValue('feed.timeline.domains', ["TR", "J", "7D", "W", "M", "Y"]);
+        const domainsConf = this.configService.getConfigValue('feed.timeline.domains', [
+            'TR',
+            'J',
+            '7D',
+            'W',
+            'M',
+            'Y'
+        ]);
         this.buttonList = [];
-        domainsConf.map(domain => {
+        domainsConf.map((domain) => {
             if (Object.keys(domains).includes(domain)) {
                 this.buttonList.push(domains[domain]);
             }
         });
     }
 
-
     setInitialDomain(): void {
-
         // Set the zoom activated
         let initialGraphConf = this.buttonList.length > 0 ? this.buttonList[0] : null;
 
         const savedDomain = this.userPreferences.getPreference('opfab.timeLine.domain');
 
         if (!!savedDomain) {
-            const savedConf = this.buttonList.find(b => b.domainId === savedDomain);
+            const savedConf = this.buttonList.find((b) => b.domainId === savedDomain);
             if (!!savedConf) {
                 initialGraphConf = savedConf;
             }
@@ -124,12 +126,11 @@ export class TimelineButtonsComponent implements OnInit, OnDestroy {
      * @param conf button clicked
      */
     changeGraphConf(conf: any): void {
-
         this.followClockTick = true;
-  
+
         if (conf.buttonTitle) {
             this.selectedButtonTitle = conf.buttonTitle;
-            this.opfabLogger.info("Set timeline domain to " + conf.domainId, LogOption.REMOTE);
+            this.opfabLogger.info('Set timeline domain to ' + conf.domainId, LogOption.REMOTE);
         }
 
         this.selectZoomButton(conf.buttonTitle);
@@ -140,7 +141,7 @@ export class TimelineButtonsComponent implements OnInit, OnDestroy {
     }
 
     selectZoomButton(buttonTitle) {
-        this.buttonList.forEach(button => {
+        this.buttonList.forEach((button) => {
             button.selected = button.buttonTitle === buttonTitle;
         });
     }
@@ -149,7 +150,6 @@ export class TimelineButtonsComponent implements OnInit, OnDestroy {
         let startDomain;
         let endDomain;
         switch (this.currentDomainId) {
-
             case 'TR': {
                 startDomain = this.getRealTimeStartDate();
                 endDomain = moment().minutes(0).second(0).millisecond(0).add(10, 'hours');
@@ -164,7 +164,7 @@ export class TimelineButtonsComponent implements OnInit, OnDestroy {
                 startDomain = moment().minutes(0).second(0).millisecond(0).subtract(12, 'hours');
                 // set position to a multiple of 4
                 for (let i = 0; i < 4; i++) {
-                    if (((startDomain.hours() - i) % 4) === 0) {
+                    if ((startDomain.hours() - i) % 4 === 0) {
                         startDomain.subtract(i, 'hours');
                         break;
                     }
@@ -188,13 +188,13 @@ export class TimelineButtonsComponent implements OnInit, OnDestroy {
                 break;
             }
         }
-        this.setStartAndEndDomain(startDomain.valueOf(), endDomain.valueOf(),false);
+        this.setStartAndEndDomain(startDomain.valueOf(), endDomain.valueOf(), false);
     }
 
     private getRealTimeStartDate() {
         const currentMinutes = moment().minutes();
-        const roundedMinutes = Math.floor(currentMinutes/15)*15; // rounds minutes to previous quarter
-        return  moment().minutes(roundedMinutes).second(0).millisecond(0).subtract(2, 'hours').subtract(15, 'minutes');
+        const roundedMinutes = Math.floor(currentMinutes / 15) * 15; // rounds minutes to previous quarter
+        return moment().minutes(roundedMinutes).second(0).millisecond(0).subtract(2, 'hours').subtract(15, 'minutes');
     }
 
     /**
@@ -203,16 +203,27 @@ export class TimelineButtonsComponent implements OnInit, OnDestroy {
      * @param startDomain new start of domain
      * @param endDomain new end of domain
      */
-    setStartAndEndDomain(startDomain: number, endDomain: number , useOverlap = false ): void {
-
+    setStartAndEndDomain(startDomain: number, endDomain: number, useOverlap = false): void {
         if (this.currentDomainId == 'W') {
             /*
-            * In case of 'week' domain reset start and end date to take into account different locale setting for first day of week
-            * To compute start day of week add 2 days to startDate to avoid changing week passing from locale with saturday as first day of week
-            * to a locale with monday as first day of week
-            */
-            let startOfWeek = moment(startDomain).add(2,'day').startOf('week').minutes(0).second(0).millisecond(0).valueOf();
-            let endOfWeek = moment(startDomain).add(2,'day').startOf('week').minutes(0).second(0).millisecond(0).add(1, 'week');
+             * In case of 'week' domain reset start and end date to take into account different locale setting for first day of week
+             * To compute start day of week add 2 days to startDate to avoid changing week passing from locale with saturday as first day of week
+             * to a locale with monday as first day of week
+             */
+            let startOfWeek = moment(startDomain)
+                .add(2, 'day')
+                .startOf('week')
+                .minutes(0)
+                .second(0)
+                .millisecond(0)
+                .valueOf();
+            let endOfWeek = moment(startDomain)
+                .add(2, 'day')
+                .startOf('week')
+                .minutes(0)
+                .second(0)
+                .millisecond(0)
+                .add(1, 'week');
             startDomain = startOfWeek.valueOf();
             endDomain = endOfWeek.valueOf();
         }
@@ -220,18 +231,17 @@ export class TimelineButtonsComponent implements OnInit, OnDestroy {
         if (useOverlap) {
             this.overlap = this.OVERLAP_DURATION_IN_MS;
             startDomain = startDomain - this.overlap;
-        }
-        else this.overlap = 0;   
-        
-        this.currentDomain = {startDate : startDomain, endDate : endDomain ,overlap : this.overlap};
+        } else this.overlap = 0;
+
+        this.currentDomain = {startDate: startDomain, endDate: endDomain, overlap: this.overlap};
         this.startDateForBusinessPeriodDisplay = this.getDateFormatting(startDomain);
         this.endDateForBusinessPeriodDisplay = this.getDateFormatting(endDomain);
 
-        this.filterService.updateFilter(
-            FilterType.BUSINESSDATE_FILTER,
-            true,
-            {start: startDomain, end: endDomain, domainId: this.currentDomainId}
-        );
+        this.filterService.updateFilter(FilterType.BUSINESSDATE_FILTER, true, {
+            start: startDomain,
+            end: endDomain,
+            domainId: this.currentDomainId
+        });
         this.domainChange.emit(true);
     }
 
@@ -267,18 +277,18 @@ export class TimelineButtonsComponent implements OnInit, OnDestroy {
 
         // Move from main visualisation, now domain stop to move
         this.followClockTick = false;
- 
+
         if (moveForward) {
-            this.opfabLogger.info("Move domain forward",LogOption.REMOTE);
-            startDomain = this.goForward(startDomain.add(this.overlap, "milliseconds"));
+            this.opfabLogger.info('Move domain forward', LogOption.REMOTE);
+            startDomain = this.goForward(startDomain.add(this.overlap, 'milliseconds'));
             endDomain = this.goForward(endDomain);
         } else {
-            this.opfabLogger.info("Move domain backward",LogOption.REMOTE);
-            startDomain = this.goBackward(startDomain.add(this.overlap, "milliseconds"));
+            this.opfabLogger.info('Move domain backward', LogOption.REMOTE);
+            startDomain = this.goBackward(startDomain.add(this.overlap, 'milliseconds'));
             endDomain = this.goBackward(endDomain);
         }
 
-        this.setStartAndEndDomain(startDomain.valueOf(), endDomain.valueOf(),false);
+        this.setStartAndEndDomain(startDomain.valueOf(), endDomain.valueOf(), false);
     }
 
     goForward(dateToMove: moment.Moment) {
@@ -327,7 +337,6 @@ export class TimelineButtonsComponent implements OnInit, OnDestroy {
      * @param direction receive by child component custom-timeline-chart
      */
     applyNewZoom(direction: string): void {
-
         for (let i = 0; i < this.buttonList.length; i++) {
             if (this.buttonList[i].buttonTitle === this.selectedButtonTitle) {
                 if (direction === 'in') {
@@ -348,18 +357,17 @@ export class TimelineButtonsComponent implements OnInit, OnDestroy {
         return !this.followClockTick;
     }
 
-    lockTimeline() : void {
-        this.opfabLogger.info('Lock timeline',LogOption.REMOTE);
+    lockTimeline(): void {
+        this.opfabLogger.info('Lock timeline', LogOption.REMOTE);
         this.followClockTick = false;
-
     }
 
-    unlockTimeline() : void {
-        this.opfabLogger.info('Unlock timeline',LogOption.REMOTE);
+    unlockTimeline(): void {
+        this.opfabLogger.info('Unlock timeline', LogOption.REMOTE);
         this.followClockTick = true;
 
         // Restore default domain when the user unlocks the timeline
-        this.setDefaultStartAndEndDomain(); 
+        this.setDefaultStartAndEndDomain();
     }
 
     private shiftTimeLineIfNecessary() {
@@ -396,20 +404,25 @@ export class TimelineButtonsComponent implements OnInit, OnDestroy {
 
     private shiftIfNecessaryDomainUsingOverlap(domainDuration: moment.unitOfTime.DurationConstructor): void {
         const currentDate = moment().valueOf();
-        
-        // shift domain one minute before change of cycle 
+
+        // shift domain one minute before change of cycle
         if (currentDate > this.currentDomain.endDate - 60 * 1000) {
-            let startDomain = moment(currentDate + 60 * 1000).hours(0).minutes(0).second(0).millisecond(0);
-            let endDomain = moment(currentDate + 60 * 1000).hours(0).minutes(0).second(0).millisecond(0).add(1, domainDuration);
-            this.setStartAndEndDomain(startDomain.valueOf(), endDomain.valueOf(),true);
+            let startDomain = moment(currentDate + 60 * 1000)
+                .hours(0)
+                .minutes(0)
+                .second(0)
+                .millisecond(0);
+            let endDomain = moment(currentDate + 60 * 1000)
+                .hours(0)
+                .minutes(0)
+                .second(0)
+                .millisecond(0)
+                .add(1, domainDuration);
+            this.setStartAndEndDomain(startDomain.valueOf(), endDomain.valueOf(), true);
         }
     }
 
     ngOnDestroy() {
         this.isDestroyed = true;
     }
-
-
-
-
 }

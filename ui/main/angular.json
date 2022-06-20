@@ -25,21 +25,27 @@
             "assets": [
               "src/favicon.ico",
               "src/assets",
-              "src/silent-refresh.html"
+              "src/silent-refresh.html",
+              "src/manifest.webmanifest"
             ],
             "styles": [
               "node_modules/@fortawesome/fontawesome-free/css/all.css",
               "node_modules/@fullcalendar/bootstrap/main.css",
-              "node_modules/angular2-multiselect-dropdown/themes/default.theme.css",
+              "node_modules/virtual-select-plugin/dist/virtual-select.min.css",
+              "node_modules/tooltip-plugin/dist/tooltip.min.css",
+              "node_modules/ol/ol.css",
               "src/assets/styles/style.css",
               "src/scss/styles.scss"
             ],
             "scripts": [
               "node_modules/svg-pan-zoom/dist/svg-pan-zoom.js",
+              "node_modules/virtual-select-plugin/dist/virtual-select.min.js",
+              "node_modules/tooltip-plugin/dist/tooltip.min.js",
               "src/assets/js/templateGateway.js",
               "src/assets/js/usercardTemplateGateway.js",
               "node_modules/chart.js/dist/chart.min.js",
-              "node_modules/chartjs-adapter-date-fns/dist/chartjs-adapter-date-fns.bundle.min.js"
+              "node_modules/chartjs-adapter-date-fns/dist/chartjs-adapter-date-fns.bundle.min.js",
+              "src/assets/js/opfab.js"
             ],
             "allowedCommonJsDependencies": [
               "rxjs/internal/Subject",
@@ -53,7 +59,9 @@
             "buildOptimizer": false,
             "sourceMap": true,
             "optimization": false,
-            "namedChunks": true
+            "namedChunks": true,
+            "serviceWorker": true,
+            "ngswConfigPath": "ngsw-config.json"
           },
           "configurations": {
             "production": {
@@ -97,8 +105,7 @@
         },
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
-          "options": {
-          },
+          "options": {},
           "configurations": {
             "production": {
               "browserTarget": "ui-home:build:production"
@@ -133,11 +140,23 @@
             ],
             "scripts": [
               "src/assets/js/templateGateway.js",
-              "src/assets/js/usercardTemplateGateway.js"
+              "src/assets/js/usercardTemplateGateway.js",
+              "src/assets/js/opfab.js"
+
             ],
             "assets": [
               "src/favicon.ico",
-              "src/assets"
+              "src/assets",
+              "src/manifest.webmanifest"
+            ]
+          }
+        },
+        "lint": {
+          "builder": "@angular-eslint/builder:lint",
+          "options": {
+            "lintFilePatterns": [
+              "src/**/*.ts",
+              "src/**/*.html"
             ]
           }
         }
@@ -147,6 +166,6 @@
   "defaultProject": "ui-home",
   "cli": {
     "analytics": false,
-    "defaultCollection": "@ngrx/schematics"
+    "defaultCollection": "@angular-eslint/schematics"
   }
 }

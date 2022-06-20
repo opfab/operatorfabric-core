@@ -12,18 +12,11 @@ import {CommonModule} from '@angular/common';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {TranslateModule} from '@ngx-translate/core';
 import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
-import {TimelineButtonsComponent} from "./timeline-buttons.component";
-
+import {TimelineButtonsComponent} from './timeline-buttons.component';
 
 @NgModule({
     declarations: [TimelineButtonsComponent],
-    imports: [
-        CommonModule,
-        FormsModule,
-        ReactiveFormsModule,
-        TranslateModule,
-        NgbModule
-    ],
+    imports: [CommonModule, FormsModule, ReactiveFormsModule, TranslateModule, NgbModule],
     exports: [TimelineButtonsComponent]
 })
-export class TimelineButtonsModule { }
+export class TimelineButtonsModule {}

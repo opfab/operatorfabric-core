@@ -19,6 +19,7 @@ import org.opfab.cards.publication.kafka.card.CardCommandFactory;
 import org.opfab.cards.publication.kafka.producer.ResponseCardProducer;
 import org.opfab.cards.publication.repositories.ArchivedCardRepositoryForTest;
 import org.opfab.cards.publication.repositories.CardRepositoryForTest;
+import org.opfab.cards.publication.services.*;
 import org.opfab.cards.publication.services.clients.impl.ExternalAppClientImpl;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -29,11 +30,6 @@ import org.opfab.springtools.configuration.test.I18nProcessesCacheTestApplicatio
 import org.springframework.data.mongodb.repository.config.EnableMongoRepositories;
 import org.springframework.http.converter.json.Jackson2ObjectMapperBuilder;
 import org.opfab.cards.publication.configuration.mongo.LocalMongoConfiguration;
-import org.opfab.cards.publication.services.CardNotificationService;
-import org.opfab.cards.publication.services.CardProcessingService;
-import org.opfab.cards.publication.services.CardRepositoryService;
-import org.opfab.cards.publication.services.CardTranslationService;
-import org.opfab.cards.publication.services.processors.impl.UserCardProcessorImpl;
 import org.opfab.cards.publication.configuration.json.JacksonConfig;
 import org.opfab.cards.publication.configuration.Common;
 import org.opfab.cards.publication.configuration.ExternalRecipients;
@@ -46,7 +42,7 @@ import org.springframework.context.annotation.ImportResource;
 @EnableOperatorFabricMongo
 @EnableMongoRepositories(basePackageClasses = {CardRepositoryForTest.class , ArchivedCardRepositoryForTest.class})
 @Import({LocalMongoConfiguration.class, CardProcessingService.class, CardTranslationService.class, CardNotificationService.class,
-    CardRepositoryService.class, UserCardProcessorImpl.class, ExternalAppClientImpl.class , ResponseCardProducer.class
+    CardRepositoryService.class, CardPermissionControlService.class, ExternalAppClientImpl.class , ResponseCardProducer.class
 , CardCommandFactory.class, CardObjectMapper.class, TestCardReceiver.class , TestConsumerConfig.class, JacksonConfig.class
 , Common.class , CardController.class, WebSecurityConfigurationTest.class, I18nProcessesCache.class, I18nProcessesCacheTestApplication.class, 
 ExternalRecipients.class})

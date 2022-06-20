@@ -47,6 +47,7 @@
       "entitiesResponses": "ANTWOORDEN",
       "requiredResponses": "VEREISTE ANTWOORDEN"
     },
+    "exportInProgress": "Bezig met exporteren",
     "loadingInProgress": "Bezig met laden",
     "noResult": "Uw zoekopdracht leverde geen resultaten op.",
     "exportToExcel": "Exporteer data",
@@ -73,8 +74,9 @@
     "activateSoundText":"Geluid is niet geactiveerd, klik om te activeren",
     "activateSoundButton":"Activeer geluid",
     "sessionExpiredText":"De sessie is verlopen",
-    "reloadRequestedText": "Applicatie herladen vereist",
-    "disconnectedByNewUser": "De verbinding met u is verbroken omdat een andere gebruiker met dit account heeft ingelogd."
+    "disconnected": "Je bent losgekoppeld.",
+    "disconnectedByNewUser": "De verbinding met u is verbroken omdat een andere gebruiker met dit account heeft ingelogd.",
+    "disconnectByAppLoadedInAnotherTab": "De verbinding is verbroken omdat een ander tabblad van deze browser werd gebruikt om in te loggen met deze URL"
   },
   "menu": {
     "feed": "Kaart Feed",
@@ -109,7 +111,6 @@
     },
     "lockTooltip": "Het zichtbaarheidsdomein is momenteel vergrendeld: het zal niet bewegen naarmate de tijd verstrijkt",
     "unlockTooltip": "Het zichtbaarheidsdomein is momenteel ontgrendeld: het zal in de loop van de tijd verschuiven"
-
   },
   "multiFilter": {
     "searchPlaceholderText": "Zoeken",
@@ -118,6 +119,12 @@
     "filterSelectAllText": "Selecteer alle gefilterde resultaten",
     "filterUnSelectAllText": "Deselecteer alle gefilterde resultaten",
     "noDataLabel": "Geen Data Beschikbaar"
+  },
+  "multiSelect": {
+    "searchPlaceholderText": "Zoeken..." ,
+    "clearButtonText" : "Clear",
+    "noSearchResultsText" : "Geen resultaten",
+    "noOptionsText" :""     
   },
   "feed": {
     "filters": {
@@ -179,13 +186,15 @@
     "from" : "van",
     "moreCards": "kaarten over",
     "lastResponse": "Laatste reactie ontvangen op",
-    "cardLoadingInProgress":"Bezig met laden van de kaart  ..."
+    "cardLoadingInProgress":"Bezig met laden van de kaart  ...",
+    "cardNotFound": "De kaart die u zoekt werd niet gevonden"
   },
   "login": {
     "reset": "Opnieuw instellen",
     "login": "Gebruikersnaam",
     "password": "Wachtwoord",
     "confirmationBecauseAccountIsAreadyUsed": "De account {{login}} wordt al gebruikt door minstens één andere gebruiker. Wilt u zich nog steeds aanmelden ?\n\n Door op OK te klikken, verbreekt u de verbinding met iedereen die dit account gebruikt.",
+    "confirmationBecauseAppAlreadyLoadedInAnotherTab": "De URL {{url}} wordt al gebruikt in deze browser, wilt u nog steeds inloggen ?\n\n Door op OK te klikken, verbreekt u de verbinding met de andere tabbladen van deze browser die deze URL gebruiken.",
     "submit": {
       "password": "Inloggen",
       "code": "Log in met {{name}}"
@@ -209,7 +218,6 @@
     "title": "INSTELLINGEN",
     "description": "OMSCHRIJVING",
     "locale": "TAAL",
-    "timeZone": "TIJDZONE",
     "playSoundLabel": "SPEEL GELUIDEN AF VOOR KAARTEN MET VOLGENDE ERNST",
     "playSoundForAlarm": "Alarm",
     "playSoundForAction": "Actie",
@@ -222,6 +230,7 @@
   },
   "archive": {
     "loadingInProgress": "Gearchiveerde kaarten laden",
+    "cardLoadingInProgress":"Bezig met laden van de kaart  ...",
     "tooManyRows": "Te veel kaarten gevonden, niet alle kaarten worden getoond",
     "collapsibleUpdates": "Opvouwbare updates"
   },
@@ -235,8 +244,7 @@
         "selectTypeOfStateText" : "Selecteer een Proces status"
       }
     },
-    "seeDetails": "DETAILS BEKIJKEN",
-    "ExportInProgress": "Bezig met exporteren"
+    "seeDetails": "DETAILS BEKIJKEN"
   },
   "button": {
     "ok": "OK",
@@ -248,7 +256,8 @@
     "search" : "ZOEK"
   },
   "activityArea": {
-    "title": "ACTIVITEITENGEBIED"
+    "title": "ACTIVITEITENGEBIED",
+    "titleOnLogin": "KIES UW ACTIVITEITENGEBIED"
   },
   "feedConfiguration": {
     "title": "NOTIFICATIE CONFIGURATIE"
@@ -322,6 +331,9 @@
         "name": "NAAM",
         "description": "OMSCHRIJVING",
         "perimeters" : "PERIMETERS",
+        "realtime": "REAL TIME",
+        "true": "JA",
+        "false": "NEE",
         "confirmDelete": "Wilt u de groep echt verwijderen?",
         "add": "NIEUWE GROEP TOEVOEGEN"
       },
@@ -437,7 +449,8 @@
       "edit": "APPARAATCONFIGURATIE WIJZIGEN",
       "confirm": "Bevestig alstublieft",
       "confirmDelete": "Wilt u de apparaatconfiguratie echt verwijderen?",
-      "allUsersConfigured": "Alle apparaten zijn al geconfigureerd"
+      "allUsersConfigured": "Alle apparaten zijn al geconfigureerd",
+      "loadingExternalDevices": "Extern apparaat laden..."
     },
     "userLogin": "GEBRUIKERSNAAM",
     "externalDeviceIds": "APPARATEN",
@@ -466,5 +479,9 @@
     "december": "Dec",
     "week": "Week",
     "placeholder": "JJJJ-MM-DD"
+  },
+  "reloadRequired" : {
+    "message": "Applicatie herladen vereist. Om te herladen klik ",
+    "linkText": "hier"
   }
 }

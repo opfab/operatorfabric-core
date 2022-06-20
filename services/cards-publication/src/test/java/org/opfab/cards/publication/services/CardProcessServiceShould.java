@@ -86,6 +86,8 @@ class CardProcessServiceShould {
 
     @Autowired
     private CardProcessingService cardProcessingService;
+    @Autowired
+    private CardPermissionControlService cardPermissionControlService;
 
     @Autowired
     private CardRepositoryForTest cardRepository;
@@ -290,7 +292,7 @@ class CardProcessServiceShould {
 
         Assertions.assertThatThrownBy(() -> cardProcessingService.processUserCard(card, currentUserWithPerimeters, token))
             .isInstanceOf(IllegalArgumentException.class)
-            .hasMessageContaining("action not authorized, the card is rejected");
+            .hasMessageContaining("Publisher is not valid, the card is rejected");
         Assertions.assertThat(checkCardCount(0)).isTrue();
         Assertions.assertThat(checkArchiveCount(0)).isTrue();
     }
@@ -404,6 +406,8 @@ class CardProcessServiceShould {
                 .publisherType(PublisherTypeEnum.EXTERNAL)
                 .representative("ENTITY1")
                 .representativeType(PublisherTypeEnum.ENTITY)
+                .wktGeometry("POINT (6.530 53.221)")
+                .wktProjection("EPSG:4326")
                 .secondsBeforeTimeSpanForReminder(Integer.valueOf(1000))
                 .build();
         cardProcessingService.processCard(newCard);
@@ -716,7 +720,7 @@ class CardProcessServiceShould {
         user.setLogin("aaa");
         user.setEntities(Arrays.asList("newPublisherId", "entity2"));
         res = cardProcessingService.processUserAcknowledgement(cardUid, user, user.getEntities());
-        Assertions.assertThat(res.isCardFound() && !res.getOperationDone()).as("Expecting no addition because already done").isTrue();
+        Assertions.assertThat(res.isCardFound() && res.getOperationDone()).as("Expecting update to lastAckDate is done").isTrue();
         
         cardReloaded = cardRepository.findByUid(cardUid).get();
         Assertions.assertThat(cardReloaded.getUsersAcks()).as("Expecting  Card after ack processing contains exactly two acks by users aaa(only once) and bbb").containsExactly("aaa","bbb");
@@ -1064,13 +1068,13 @@ class CardProcessServiceShould {
                 .state("STATE3")
                 .build();
 
-        assertThat(cardProcessingService.isUserAllowedToDeleteThisCard(cardExternal1, currentUserWithPerimeters)).isFalse();
-        assertThat(cardProcessingService.isUserAllowedToDeleteThisCard(cardExternal2, currentUserWithPerimeters)).isFalse();
-        assertThat(cardProcessingService.isUserAllowedToDeleteThisCard(cardFromAnEntity1, currentUserWithPerimeters)).isFalse();
-        assertThat(cardProcessingService.isUserAllowedToDeleteThisCard(cardFromAnEntity2, currentUserWithPerimeters)).isFalse();
-        assertThat(cardProcessingService.isUserAllowedToDeleteThisCard(cardFromAnEntity3, currentUserWithPerimeters)).isFalse();
-        assertThat(cardProcessingService.isUserAllowedToDeleteThisCard(cardFromAnEntity4, currentUserWithPerimeters)).isTrue();
-        assertThat(cardProcessingService.isUserAllowedToDeleteThisCard(cardFromAnEntity5, currentUserWithPerimeters)).isTrue();
+        assertThat(cardPermissionControlService.isUserAllowedToDeleteThisCard(cardExternal1, currentUserWithPerimeters)).isFalse();
+        assertThat(cardPermissionControlService.isUserAllowedToDeleteThisCard(cardExternal2, currentUserWithPerimeters)).isFalse();
+        assertThat(cardPermissionControlService.isUserAllowedToDeleteThisCard(cardFromAnEntity1, currentUserWithPerimeters)).isFalse();
+        assertThat(cardPermissionControlService.isUserAllowedToDeleteThisCard(cardFromAnEntity2, currentUserWithPerimeters)).isFalse();
+        assertThat(cardPermissionControlService.isUserAllowedToDeleteThisCard(cardFromAnEntity3, currentUserWithPerimeters)).isFalse();
+        assertThat(cardPermissionControlService.isUserAllowedToDeleteThisCard(cardFromAnEntity4, currentUserWithPerimeters)).isTrue();
+        assertThat(cardPermissionControlService.isUserAllowedToDeleteThisCard(cardFromAnEntity5, currentUserWithPerimeters)).isTrue();
     }
 
     @Test
@@ -1269,7 +1273,7 @@ class CardProcessServiceShould {
         currentUserWithPerimeters.getUserData().setEntities(Arrays.asList("notallowed"));
 
         Assertions.assertThatThrownBy(() -> cardProcessingService.processUserCard(card, currentUserWithPerimeters, token))
-            .isInstanceOf(ApiErrorException.class).hasMessage("User is not part of entities allowed to edit card. Card is rejected");
+            .isInstanceOf(ApiErrorException.class).hasMessage("User is not the sender of the original card or user is not part of entities allowed to edit card. Card is rejected");
     }
 
     @Test

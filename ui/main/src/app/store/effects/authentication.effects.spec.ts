@@ -7,15 +7,14 @@
  * This file is part of the OperatorFabric project.
  */
 
-
 import {
-    AcceptLogOut,
+    AcceptLogOutAction,
     AuthenticationActions,
     AuthenticationActionTypes,
-    CheckAuthenticationStatus,
+    CheckAuthenticationStatusAction,
     PayloadForSuccessfulAuthentication,
-    RejectLogIn,
-    TryToLogIn,
+    RejectLogInAction,
+    TryToLogInAction
 } from '@ofActions/authentication.actions';
 
 import {TestBed, waitForAsync} from '@angular/core/testing';
@@ -53,24 +52,22 @@ describe('AuthenticationEffects', () => {
 
     beforeEach(waitForAsync(() => {
         const routerSpy = createSpyObj('Router', ['navigate']);
-        const authenticationServiceSpy = createSpyObj('authenticationService'
-            , ['extractToken',
-                'verifyExpirationDate',
-                'clearAuthenticationInformation',
-                'extractIdentificationInformation',
-                'askTokenFromPassword',
-                'checkAuthentication',
-                'askTokenFromCode',
-                'loadUserData',
-                'isExpirationDateOver',
-                'computeRedirectUri',
-                'regularCheckTokenValidity'
-            ]);
-        
-        const cardServiceSpy = createSpyObj('CardService'
-            , ['unsubscribeCardOperation']);
-        const configServiceSpy = createSpyObj('ConfigService'
-        , ['fetchConfiguration']);
+        const authenticationServiceSpy = createSpyObj('authenticationService', [
+            'extractToken',
+            'verifyExpirationDate',
+            'clearAuthenticationInformation',
+            'extractIdentificationInformation',
+            'askTokenFromPassword',
+            'checkAuthentication',
+            'askTokenFromCode',
+            'loadUserData',
+            'isExpirationDateOver',
+            'computeRedirectUri',
+            'regularCheckTokenValidity'
+        ]);
+
+        const cardServiceSpy = createSpyObj('CardService', ['unsubscribeCardOperation']);
+        const configServiceSpy = createSpyObj('ConfigService', ['fetchConfiguration']);
         const storeSpy = createSpyObj('Store', ['dispatch', 'select']);
         TestBed.configureTestingModule({
             providers: [
@@ -85,8 +82,6 @@ describe('AuthenticationEffects', () => {
         });
 
         effects = TestBed.inject(AuthenticationEffects);
-       
-
     }));
 
     beforeEach(() => {
@@ -97,76 +92,115 @@ describe('AuthenticationEffects', () => {
         configService = injectedSpy(ConfigService);
     });
 
-
     describe('TryToLogIn', () => {
         it('should success if JWT is generated from backend', () => {
-            const localAction$ = new Actions(hot('-a--', {a: new TryToLogIn({username: 'johndoe', password: 'pwd'})}));
-            authenticationService.askTokenFromPassword.and.returnValue(of(
-                new PayloadForSuccessfulAuthentication('johndoe', Guid.create(), 'fake-token', new Date())
-            ));
-            effects = new AuthenticationEffects(mockStore, localAction$, authenticationService, null,configService, cardService);
+            const localAction$ = new Actions(
+                hot('-a--', {a: new TryToLogInAction({username: 'johndoe', password: 'pwd'})})
+            );
+            authenticationService.askTokenFromPassword.and.returnValue(
+                of(new PayloadForSuccessfulAuthentication('johndoe', Guid.create(), 'fake-token', new Date()))
+            );
+            effects = new AuthenticationEffects(
+                mockStore,
+                localAction$,
+                authenticationService,
+                null,
+                configService,
+                cardService
+            );
             expect(effects).toBeTruthy();
-            effects.TryToLogIn.subscribe((action: AuthenticationActions) => expect(action.type).toEqual(AuthenticationActionTypes.AcceptLogIn))
+            effects.TryToLogIn.subscribe((action: AuthenticationActions) =>
+                expect(action.type).toEqual(AuthenticationActionTypes.AcceptLogIn)
+            );
         });
         it('should fail if JWT is not generated from backend', () => {
-            const localAction$ = new Actions(hot('-a--', {a: new TryToLogIn({username: 'johndoe', password: 'pwd'})}));
+            const localAction$ = new Actions(
+                hot('-a--', {a: new TryToLogInAction({username: 'johndoe', password: 'pwd'})})
+            );
             authenticationService.askTokenFromPassword.and.returnValue(throwError(() => 'Something went wrong'));
-            effects = new AuthenticationEffects(mockStore, localAction$, authenticationService, null, configService, cardService);
+            effects = new AuthenticationEffects(
+                mockStore,
+                localAction$,
+                authenticationService,
+                null,
+                configService,
+                cardService
+            );
             expect(effects).toBeTruthy();
-            effects.TryToLogIn.subscribe((action: AuthenticationActions) => expect(action.type).toEqual(AuthenticationActionTypes.RejectLogIn))
+            effects.TryToLogIn.subscribe((action: AuthenticationActions) =>
+                expect(action.type).toEqual(AuthenticationActionTypes.RejectLogIn)
+            );
         });
     });
 
     describe('AcceptLogout', () => {
         it('should success and navigate', () => {
-            const localAction$ = new Actions(hot('-a--', {a: new AcceptLogOut()}));
+            const localAction$ = new Actions(hot('-a--', {a: new AcceptLogOutAction()}));
             router.navigate.and.callThrough();
             effects = new AuthenticationEffects(mockStore, localAction$, null, router, configService, cardService);
             expect(effects).toBeTruthy();
             effects.AcceptLogOut.subscribe((action: AuthenticationActions) => {
                 expect(action.type).toEqual(AuthenticationActionTypes.AcceptLogOutSuccess);
                 expect(router.navigate).toHaveBeenCalledWith(['/login']);
-
             });
         });
     });
 
     describe('CheckAuthentication', () => {
         it('should success if has valid token', () => {
-      const localAction$ = new Actions(hot('-a--', {a: new CheckAuthenticationStatus()}));
+            const localAction$ = new Actions(hot('-a--', {a: new CheckAuthenticationStatusAction()}));
             setStorageWithUserData(moment().add(1, 'days').valueOf());
-            authenticationService.checkAuthentication.and.returnValue(of(
-                new CheckTokenResponse('johndoe', 123, Guid.create().toString())
-            ));
+            authenticationService.checkAuthentication.and.returnValue(
+                of(new CheckTokenResponse('johndoe', 123, Guid.create().toString()))
+            );
             mockStore.select.and.returnValue(of(null));
-            authenticationService.loadUserData.and.callFake(auth => of(auth));
-            effects = new AuthenticationEffects(mockStore, localAction$, authenticationService, router, configService, cardService);
+            authenticationService.loadUserData.and.callFake((auth) => of(auth));
+            effects = new AuthenticationEffects(
+                mockStore,
+                localAction$,
+                authenticationService,
+                router,
+                configService,
+                cardService
+            );
             expect(effects).toBeTruthy();
             effects.CheckAuthentication.subscribe((action: AuthenticationActions) => {
                 expect(action.type).toEqual(AuthenticationActionTypes.AcceptLogIn);
-
             });
         });
         it('should fail if has valid expired token', () => {
-            const localAction$ = new Actions(hot('-a--', {a: new CheckAuthenticationStatus()}));
+            const localAction$ = new Actions(hot('-a--', {a: new CheckAuthenticationStatusAction()}));
             setStorageWithUserData(moment().subtract(1, 'days').valueOf());
-            authenticationService.checkAuthentication.and.returnValue(of(
-                new CheckTokenResponse('johndoe', 123, Guid.create().toString())
-            ));
+            authenticationService.checkAuthentication.and.returnValue(
+                of(new CheckTokenResponse('johndoe', 123, Guid.create().toString()))
+            );
             mockStore.select.and.returnValue(of(null));
-            effects = new AuthenticationEffects(mockStore, localAction$, authenticationService, router, configService, cardService);
+            effects = new AuthenticationEffects(
+                mockStore,
+                localAction$,
+                authenticationService,
+                router,
+                configService,
+                cardService
+            );
             expect(effects).toBeTruthy();
             effects.CheckAuthentication.subscribe((action: AuthenticationActions) => {
                 expect(action.type).toEqual(AuthenticationActionTypes.RejectLogIn);
-
             });
         });
         it('should fail if has no valid token and an invalid code', () => {
-            const localAction$ = new Actions(hot('-a--', {a: new CheckAuthenticationStatus()}));
+            const localAction$ = new Actions(hot('-a--', {a: new CheckAuthenticationStatusAction()}));
             authenticationService.checkAuthentication.and.returnValue(throwError(() => 'no valid token'));
             authenticationService.askTokenFromCode.and.returnValue(throwError(() => 'no valid code'));
             mockStore.select.and.returnValue(of('code'));
-            effects = new AuthenticationEffects(mockStore, localAction$, authenticationService, router, configService, cardService);
+            effects = new AuthenticationEffects(
+                mockStore,
+                localAction$,
+                authenticationService,
+                router,
+                configService,
+                cardService
+            );
             expect(effects).toBeTruthy();
             effects.CheckAuthentication.subscribe((action: AuthenticationActions) => {
                 expect(action.type).toEqual(AuthenticationActionTypes.RejectLogIn);
@@ -174,40 +208,44 @@ describe('AuthenticationEffects', () => {
         });
     });
 
-
     it('should clear local storage of auth information when sending RejectLogIn Action', () => {
         const errorMsg = new Message('test');
-        expect(effects.handleRejectedLogin(errorMsg)).toEqual(new RejectLogIn({error: errorMsg}));
+        expect(effects.handleRejectedLogin(errorMsg)).toEqual(new RejectLogInAction({error: errorMsg}));
         expect(authenticationService.clearAuthenticationInformation).toHaveBeenCalled();
-    })
+    });
 
-    describe('handleErrorOnTokenGeneration',()=>{
-       it('should manage 401',()=>{
-           effects.handleErrorOnTokenGeneration({status:401, message: 'this a 401 error'},'code').subscribe((reject)=>{
-               expect(reject.payload.error.message).toEqual('Unable to authenticate the user');
-               expect(reject.payload.error.i18n.key).toEqual('login.error.code');
-           });
-       });
-        it('should manage 500',()=>{
-            effects.handleErrorOnTokenGeneration({status:500, message: 'this a 500 error'},'code').subscribe((reject)=>{
-                expect(reject.payload.error.message).toEqual('Authentication service currently unavailable');
-                expect(reject.payload.error.i18n.key).toEqual('login.error.unavailable');
-            });
+    describe('handleErrorOnTokenGeneration', () => {
+        it('should manage 401', () => {
+            effects
+                .handleErrorOnTokenGeneration({status: 401, message: 'this a 401 error'}, 'code')
+                .subscribe((reject) => {
+                    expect(reject.payload.error.message).toEqual('Unable to authenticate the user');
+                    expect(reject.payload.error.i18n.key).toEqual('login.error.code');
+                });
         });
-        it('should manage unreachable',()=>{
-            effects.handleErrorOnTokenGeneration({status:0, message: 'this a unreachable error'},'code').subscribe((reject)=>{
-                expect(reject.payload.error.message).toEqual('Authentication service currently unavailable');
-                expect(reject.payload.error.i18n.key).toEqual('login.error.unavailable');
-            });
+        it('should manage 500', () => {
+            effects
+                .handleErrorOnTokenGeneration({status: 500, message: 'this a 500 error'}, 'code')
+                .subscribe((reject) => {
+                    expect(reject.payload.error.message).toEqual('Authentication service currently unavailable');
+                    expect(reject.payload.error.i18n.key).toEqual('login.error.unavailable');
+                });
         });
-        it('should manage unexpected',()=>{
-            effects.handleErrorOnTokenGeneration({message: 'this a unexpected error'},'code').subscribe((reject)=>{
+        it('should manage unreachable', () => {
+            effects
+                .handleErrorOnTokenGeneration({status: 0, message: 'this a unreachable error'}, 'code')
+                .subscribe((reject) => {
+                    expect(reject.payload.error.message).toEqual('Authentication service currently unavailable');
+                    expect(reject.payload.error.i18n.key).toEqual('login.error.unavailable');
+                });
+        });
+        it('should manage unexpected', () => {
+            effects.handleErrorOnTokenGeneration({message: 'this a unexpected error'}, 'code').subscribe((reject) => {
                 expect(reject.payload.error.message).toEqual('Unexpected error');
                 expect(reject.payload.error.i18n.key).toEqual('login.error.unexpected');
             });
         });
     });
-
 });
 
 function setStorageWithUserData(expiration?) {

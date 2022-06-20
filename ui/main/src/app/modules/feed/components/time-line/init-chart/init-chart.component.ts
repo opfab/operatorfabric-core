@@ -7,10 +7,8 @@
  * This file is part of the OperatorFabric project.
  */
 
-
 import {Component, ViewChild} from '@angular/core';
-import {TimelineButtonsComponent} from "../../../../share/timeline-buttons/timeline-buttons.component";
-
+import {TimelineButtonsComponent} from '../../../../share/timeline-buttons/timeline-buttons.component';
 
 @Component({
     selector: 'of-init-chart',
@@ -18,8 +16,6 @@ import {TimelineButtonsComponent} from "../../../../share/timeline-buttons/timel
     styleUrls: ['./init-chart.component.scss']
 })
 export class InitChartComponent {
-
     @ViewChild('timelineButtons')
     timelineButtons: TimelineButtonsComponent;
 }
-

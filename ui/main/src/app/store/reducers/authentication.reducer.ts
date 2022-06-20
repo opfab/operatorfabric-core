@@ -7,14 +7,11 @@
  * This file is part of the OperatorFabric project.
  */
 
-
 import {AuthenticationActions, AuthenticationActionTypes} from '@ofActions/authentication.actions';
 import {authInitialState, AuthState} from '@ofStates/authentication.state';
 
-
 export function reducer(state: AuthState = authInitialState, action: AuthenticationActions): AuthState {
     switch (action.type) {
-
         case AuthenticationActionTypes.InitAuthStatus: {
             return {
                 ...state,
@@ -24,7 +21,6 @@ export function reducer(state: AuthState = authInitialState, action: Authenticat
         }
 
         case AuthenticationActionTypes.AcceptLogIn: {
-
             const payload = action.payload;
             return {
                 ...state,
@@ -66,11 +62,11 @@ export function reducer(state: AuthState = authInitialState, action: Authenticat
             };
         }
         case AuthenticationActionTypes.UnAuthenticationFromImplicitFlow: {
-                return {
-                    ...state,
-                    isImplicitlyAuthenticated: false
-                };
-            }
+            return {
+                ...state,
+                isImplicitlyAuthenticated: false
+            };
+        }
 
         default:
             return state;

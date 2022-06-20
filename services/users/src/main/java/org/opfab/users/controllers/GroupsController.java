@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2021, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2022, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -114,9 +114,8 @@ public class GroupsController implements GroupsApi {
 
         if(foundUser!=null) {
             foundUser.deleteGroup(id);
-            userService.publishUpdatedUserMessage(foundUser.getLogin());
-
             userRepository.save(foundUser);
+            userService.publishUpdatedUserMessage(foundUser.getLogin());
         }
         return null;
     }

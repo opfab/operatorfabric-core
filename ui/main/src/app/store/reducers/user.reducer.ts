@@ -7,24 +7,22 @@
  * This file is part of the OperatorFabric project.
  */
 
-
 import {userInitialState, UserState} from '@ofStore/states/user.state';
 import * as userActions from '@ofStore/actions/user.actions';
 
-
 export function reducer(state: UserState = userInitialState, action: userActions.UserActions): UserState {
     switch (action.type) {
-        case userActions.UserActionsTypes.UserApplicationRegistered :
+        case userActions.UserActionsTypes.UserApplicationRegistered:
             return {
                 ...state,
                 registered: true
             };
-        case userActions.UserActionsTypes.LoadAllEntities :
+        case userActions.UserActionsTypes.LoadAllEntities:
             return {
                 ...state,
                 allEntities: action.payload.entities
             };
-        default :
+        default:
             return state;
     }
 }

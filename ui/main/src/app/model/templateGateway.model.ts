@@ -7,7 +7,8 @@
  * This file is part of the OperatorFabric project.
  */
 
-
 export enum DisplayContext {
-    REALTIME='realtime', ARCHIVE='archive', PREVIEW='preview'
+    REALTIME = 'realtime',
+    ARCHIVE = 'archive',
+    PREVIEW = 'preview'
 }

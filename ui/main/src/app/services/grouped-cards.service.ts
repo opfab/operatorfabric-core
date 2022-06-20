@@ -27,14 +27,14 @@ export class GroupedCardsService {
         const allTags = [];
         const parentTags = new Set<string>();
 
-        lightCards.forEach(lightCard => {
+        lightCards.forEach((lightCard) => {
             allTags.push(GroupedCardsService.tagsAsString(lightCard.tags));
         });
 
-        lightCards.forEach(lightCard => {
+        lightCards.forEach((lightCard) => {
             const tagString = GroupedCardsService.tagsAsString(lightCard.tags);
 
-            if ( allTags.indexOf(tagString) !== allTags.lastIndexOf(tagString)) {
+            if (allTags.indexOf(tagString) !== allTags.lastIndexOf(tagString)) {
                 if (!parentTags.has(tagString)) {
                     this.parentsOfGroupedCards.push(lightCard);
                     parentTags.add(tagString);
@@ -46,7 +46,7 @@ export class GroupedCardsService {
     }
 
     filterGroupedChilds(lightCards: LightCard[]): LightCard[] {
-        return  lightCards.filter(element => !this.groupedChildCards.includes(element));
+        return lightCards.filter((element) => !this.groupedChildCards.includes(element));
     }
 
     isParentGroupCard(lightCard: LightCard): boolean {
@@ -55,17 +55,17 @@ export class GroupedCardsService {
 
     getChildCardsByTags(tags: string[]): LightCard[] {
         const tagString = GroupedCardsService.tagsAsString(tags);
-        return this.groupedChildCards.filter (e => {
+        return this.groupedChildCards.filter((e) => {
             const childTagString = GroupedCardsService.tagsAsString(e.tags);
             return childTagString === tagString;
         });
     }
 
     isCardInGroup(child: string, parent: string): boolean {
-        const parentCard = this.parentsOfGroupedCards.find(c => c.id === parent);
+        const parentCard = this.parentsOfGroupedCards.find((c) => c.id === parent);
         if (parentCard) {
             const childCards = this.getChildCardsByTags(parentCard.tags);
-            return childCards.find(c => c.id === child) !== undefined;
+            return childCards.find((c) => c.id === child) !== undefined;
         }
         return false;
     }

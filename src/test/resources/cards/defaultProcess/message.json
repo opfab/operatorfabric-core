@@ -1,6 +1,8 @@
 {
 	"publisher" : "ENTITY1_FR",
 	"publisherType": "ENTITY",
+	"wktGeometry": "POINT (5.8946407 51.9848624)",
+	"wktProjection": "EPSG:4326",
 	"representative": "publisher_test",
 	"representativeType": "EXTERNAL",
 	"processVersion" : "1",

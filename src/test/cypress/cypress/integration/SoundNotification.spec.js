@@ -110,7 +110,7 @@ describe('Sound notification test', function () {
       cy.sendCard('defaultProcess/message.json');
       cy.waitDefaultTime();
 
-       // wait for light card to appears 
+       // wait for light card to appear
       cy.tick(1000);
       cy.get('of-light-card');
 

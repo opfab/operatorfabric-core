@@ -47,6 +47,7 @@
       "entitiesResponses": "REPONSES",
       "requiredResponses": "REPONSES REQUISES"
     },
+    "exportInProgress": "Export en cours",
     "loadingInProgress": "Chargement en cours",
     "noResult": "Votre recherche ne correspond à aucun résultat.",
     "exportToExcel": "Exporter les données",
@@ -73,8 +74,9 @@
     "activateSoundText":"Son non activé, cliquer pour activer",
     "activateSoundButton":"Activer le son",
     "sessionExpiredText":"Votre session a expiré",
-    "reloadRequestedText": "Rechargement de l'application nécessaire",
-    "disconnectedByNewUser": "Vous avez été déconnecté car un autre utilisateur s'est connecté avec ce compte"
+    "disconnected": "Vous êtes déconnecté.",
+    "disconnectedByNewUser": "Vous avez été déconnecté car un autre utilisateur s'est connecté avec ce compte",
+    "disconnectByAppLoadedInAnotherTab": "Vous avez été déconnecté car un autre onglet de ce navigateur a été utilisé pour se connecter à cette URL."
   },
   "menu": {
     "feed": "Flux de cartes",
@@ -117,6 +119,12 @@
     "filterSelectAllText": "Sélectionner tous les résultats filtrés",
     "filterUnSelectAllText": "Desélectionner tous les résultats filtrés",
     "noDataLabel": "Pas de données disponibles"
+  },
+  "multiSelect": {
+    "searchPlaceholderText": "Rechercher..." ,
+    "clearButtonText" : "Effacer" ,
+    "noSearchResultsText" : "Pas de résultats",
+    "noOptionsText" :""
   },
   "feed": {
     "filters": {
@@ -178,13 +186,15 @@
     "from": "de",
     "moreCards": "cartes supplémentaires",
     "lastResponse": "Dernière réponse reçue le",
-    "cardLoadingInProgress":"Chargement de la carte ..."
+    "cardLoadingInProgress":"Chargement de la carte ...",
+    "cardNotFound": "La carte que vous cherchez n'a pas été trouvée"
   },
   "login": {
     "reset": "RaZ",
     "login": "Identifiant",
     "password": "Mot de passe",
     "confirmationBecauseAccountIsAreadyUsed":"Le compte {{login}} est en cours d'utilisation par au moins un autre utilisateur. Voulez-vous tout de même vous connecter ?\n\n En cliquant sur OK, vous déconnecterez tous les utilsateurs actuellement connectés à ce compte.",
+    "confirmationBecauseAppAlreadyLoadedInAnotherTab":"L'URL {{url}} est déjà en cours d'utilisation dans ce navigateur. Voulez-vous tout de même vous connecter ?\n\n  En cliquant sur OK, vous déconnecterez tous les autres onglets de ce navigateur utilisant cette URL.",
     "submit": {
       "password": "Se connecter",
       "code": "Se connecter avec {{name}}"
@@ -220,6 +230,7 @@
   },
   "archive": {
     "loadingInProgress": "Chargement des cartes archivées",
+    "cardLoadingInProgress":"Chargement de la carte ...",
     "tooManyRows": "Trop de cartes, toutes les cartes ne sont pas visibles",
     "collapsibleUpdates": "Mises à jour dépliables"
   },
@@ -233,8 +244,7 @@
         "selectTypeOfStateText": "Sélectionner un État de processus"
       }
     },
-    "seeDetails": "VOIR LES DETAILS",
-    "ExportInProgress": "Export en cours"
+    "seeDetails": "VOIR LES DETAILS"
   },
   "button": {
     "ok": "OK",
@@ -246,7 +256,8 @@
     "search": "RECHERCHER"
   },
   "activityArea": {
-    "title": "ZONE D'ACTIVITE"
+    "title": "ZONE D'ACTIVITE",
+    "titleOnLogin": "SÉLECTIONNER VOTRE ZONE D'ACTIVITÉ"
   },
   "feedConfiguration": {
     "title": "CONFIGURATION DES NOTIFICATIONS"
@@ -320,6 +331,9 @@
         "name": "NOM",
         "perimeters" : "PÉRIMÈTRES",
         "description": "DESCRIPTION",
+        "realtime": "TEMPS RÉEL",
+        "true": "OUI",
+        "false": "NON",
         "confirmDelete": "Voulez-vous vraiment supprimer le groupe",
         "add":"AJOUTER UN NOUVEAU GROUPE"
       },
@@ -435,7 +449,8 @@
       "edit": "MODIFIER LA CONFIGURATION",
       "confirm":"Confirmez...",
       "confirmDelete": "Voulez-vous vraiment supprimer la configuration pour l'utilisateur",
-      "allUsersConfigured": "Tous les périphériques des utilisateurs sont déjà configurés"
+      "allUsersConfigured": "Tous les périphériques des utilisateurs sont déjà configurés",
+      "loadingExternalDevices": "Chargement des périphériques externes..."
     },
     "userLogin": "IDENTIFIANT UTILISATEUR",
     "externalDeviceIds": "PÉRIPHÉRIQUES",
@@ -464,6 +479,9 @@
     "december": "Déc",
     "week": "sem",
     "placeholder": "AAAA-MM-JJ"
+  },
+  "reloadRequired" : {
+    "message": "Rechargement de l'application nécessaire. Pour recharger veuillez cliquer ",
+    "linkText": "ici"
   }
-
 }

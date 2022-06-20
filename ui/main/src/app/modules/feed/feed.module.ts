@@ -24,10 +24,11 @@ import {CustomTimelineChartComponent} from './components/time-line/custom-timeli
 import {MouseWheelDirective} from './components/time-line/directives/mouse-wheel.directive';
 import {InitChartComponent} from './components/time-line/init-chart/init-chart.component';
 import {DatetimeFilterModule} from '../../modules/share/datetime-filter/datetime-filter.module';
-import {FeedSortComponent } from './components/card-list/filters/feed-sort/feed-sort.component';
-import {LightCardModule } from 'app/modules/share/light-card/light-card.module';
+import {FeedSortComponent} from './components/card-list/filters/feed-sort/feed-sort.component';
+import {LightCardModule} from 'app/modules/share/light-card/light-card.module';
 import {TimelineButtonsModule} from '../share/timeline-buttons/timeline-buttons.module';
 import {PinnedCardsComponent} from './components/pinned-cards/pinned-cards.component';
+import { MapComponent } from './components/map/map.component';
 
 @NgModule({
     imports: [
@@ -44,7 +45,8 @@ import {PinnedCardsComponent} from './components/pinned-cards/pinned-cards.compo
         LightCardModule,
         TimelineButtonsModule
     ],
-    declarations: [CardListComponent,
+    declarations: [
+        CardListComponent,
         FeedComponent,
         TimeLineComponent,
         FiltersComponent,
@@ -53,8 +55,9 @@ import {PinnedCardsComponent} from './components/pinned-cards/pinned-cards.compo
         CustomTimelineChartComponent,
         MouseWheelDirective,
         FeedSortComponent,
-        PinnedCardsComponent],
+        PinnedCardsComponent,
+        MapComponent
+    ],
     exports: [FeedComponent]
 })
-export class FeedModule {
-}
+export class FeedModule {}

@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2021, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2022, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -7,18 +7,15 @@
  * This file is part of the OperatorFabric project.
  */
 
-
-
 import {Action} from '@ngrx/store';
 
 export enum ConfigActionTypes {
     LoadConfigSuccess = '[Config] Load Config Success'
 }
 
-export class LoadConfigSuccess implements Action {
+export class LoadConfigSuccessAction implements Action {
     readonly type = ConfigActionTypes.LoadConfigSuccess;
-    constructor(public payload: { config: any }) {
-    }
+    constructor(public payload: {config: any}) {}
 }
 
-export type ConfigActions = LoadConfigSuccess;
+export type ConfigActions = LoadConfigSuccessAction;

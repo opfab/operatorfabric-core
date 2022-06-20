@@ -7,21 +7,12 @@
  * This file is part of the OperatorFabric project.
  */
 
-
-
 // intermediate component used to avoir circular dependency with router module
-
 
 import {Component} from '@angular/core';
 
-
 @Component({
     selector: 'of-archives-entry-point',
-    template: `
-
-            <of-archives> </of-archives>
-        `
+    template: ` <of-archives> </of-archives> `
 })
-export class ArchivesEntryPointComponent {
-
-}
+export class ArchivesEntryPointComponent {}

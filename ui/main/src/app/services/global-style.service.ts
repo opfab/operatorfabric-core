@@ -7,17 +7,15 @@
  * This file is part of the OperatorFabric project.
  */
 
-
 import {Injectable} from '@angular/core';
 import {Store} from '@ngrx/store';
 import {AppState} from '@ofStore/index';
-import {GlobalStyleUpdate} from '@ofActions/global-style.actions';
+import {GlobalStyleUpdateAction} from '@ofActions/global-style.actions';
 
 @Injectable({
     providedIn: 'root'
 })
 export class GlobalStyleService {
-
     private static style: string;
     private static rootStyleSheet;
     private static rootRulesNumber;
@@ -145,7 +143,6 @@ export class GlobalStyleService {
                                         --opfab-pagination-disabled-link: #606060
                                     }`;
 
-
     constructor(private store: Store<AppState>) {
         const len = document.styleSheets.length;
         for (let n = 0; n < len; n++) {
@@ -174,14 +171,16 @@ export class GlobalStyleService {
             default:
                 this.setCss(GlobalStyleService.DAY_STYLE);
         }
-        this.store.dispatch(new GlobalStyleUpdate({style: style}));
+        this.store.dispatch(new GlobalStyleUpdateAction({style: style}));
     }
 
     private setCss(cssRule: string) {
         if (GlobalStyleService.rootRulesNumber) {
             GlobalStyleService.rootStyleSheet.deleteRule(GlobalStyleService.rootRulesNumber);
         }
-        GlobalStyleService.rootRulesNumber = GlobalStyleService.rootStyleSheet.insertRule(cssRule,
-            GlobalStyleService.rootStyleSheet.cssRules.length);
+        GlobalStyleService.rootRulesNumber = GlobalStyleService.rootStyleSheet.insertRule(
+            cssRule,
+            GlobalStyleService.rootStyleSheet.cssRules.length
+        );
     }
 }

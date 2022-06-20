@@ -29,7 +29,6 @@ import org.springframework.web.reactive.function.server.*;
 import reactor.core.publisher.Mono;
 import reactor.util.function.Tuple2;
 
-import static org.springframework.web.reactive.function.BodyInserters.fromObject;
 import static org.springframework.web.reactive.function.BodyInserters.fromValue;
 import static org.springframework.web.reactive.function.server.ServerResponse.notFound;
 import static org.springframework.web.reactive.function.server.ServerResponse.ok;
@@ -61,7 +60,7 @@ public class ArchivedCardRoutesConfig implements UserExtractor {
                 extractParameters(request)
                         .flatMap(params -> archivedCardRepository.findWithUserAndParams(params)
                                 .flatMap(archivedCards-> ok().contentType(MediaType.APPLICATION_JSON)
-                                                .body(fromObject(archivedCards))));
+                                                .body(fromValue(archivedCards))));
     }
 
     private HandlerFunction<ServerResponse> archivedCardGetRoute() {

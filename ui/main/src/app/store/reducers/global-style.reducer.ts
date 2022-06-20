@@ -7,17 +7,14 @@
  * This file is part of the OperatorFabric project.
  */
 
+import {globalStyleInitialState, GlobalStyleState} from '@ofStore/states/global-style.state';
+import {GlobalStyleActions, GlobalStyleActionTypes} from '@ofActions/global-style.actions';
 
-import { globalStyleInitialState, GlobalStyleState } from '@ofStore/states/global-style.state';
-import {GlobalStyleActions,GlobalStyleActionTypes} from "@ofActions/global-style.actions";
-
-
-export function reducer (state  = globalStyleInitialState, action : GlobalStyleActions) : GlobalStyleState {
+export function reducer(state = globalStyleInitialState, action: GlobalStyleActions): GlobalStyleState {
     if (action.type === GlobalStyleActionTypes.GlobalStyleUpdate)
         return {
-                ...state,
-                style : action.payload.style
-            };
+            ...state,
+            style: action.payload.style
+        };
     else return state;
-
 }

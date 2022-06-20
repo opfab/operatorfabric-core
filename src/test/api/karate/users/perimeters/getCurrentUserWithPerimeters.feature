@@ -273,7 +273,7 @@ Feature: Get current user with perimeters (endpoint tested : GET /CurrentUserWit
     When method patch
     Then status 200
     And match response.login == 'operator4_fr'
-    And assert response.entitiesDisconnected.length == 0
+    And match response.entitiesDisconnected == '#notpresent'
 
   Scenario: We check entities list of operator4_fr contains all entities again
     Given url opfabUrl + 'users/CurrentUserWithPerimeters'

@@ -7,7 +7,6 @@
  * This file is part of the OperatorFabric project.
  */
 
-
 import {Component, OnDestroy, OnInit} from '@angular/core';
 import {BaseSettingDirective} from '../base-setting/base-setting.directive';
 import {Store} from '@ngrx/store';
@@ -19,16 +18,18 @@ import {FormControl, FormGroup, Validators} from '@angular/forms';
     templateUrl: './multi-settings.component.html'
 })
 export class MultiSettingsComponent extends BaseSettingDirective implements OnInit, OnDestroy {
-
     constructor(protected store: Store<AppState>) {
         super(store);
     }
 
     initFormGroup() {
         const validators = this.computeMultiValidators();
-        return new FormGroup({
-            setting: new FormControl([], validators)
-        }, {updateOn: 'change'});
+        return new FormGroup(
+            {
+                setting: new FormControl([], validators)
+            },
+            {updateOn: 'change'}
+        );
     }
 
     protected computeMultiValidators() {
@@ -42,5 +43,4 @@ export class MultiSettingsComponent extends BaseSettingDirective implements OnIn
     updateValue(value) {
         this.form.get('setting').setValue(value, {emitEvent: false});
     }
-
 }

@@ -7,10 +7,8 @@
  * This file is part of the OperatorFabric project.
  */
 
-
-
 export const environment = {
-  production: true,
+    production: true,
     urls: {
         authentication: '/ui/',
         auth: '/auth',
@@ -20,7 +18,7 @@ export const environment = {
         groups: '/users/groups',
         entities: '/users/entities',
         perimeters: '/users/perimeters',
-        archives : '',
+        archives: '',
         processes: '/businessconfig/processes',
         processGroups: '/businessconfig/processgroups',
         realTimeScreens: '/businessconfig/realtimescreens',
@@ -29,7 +27,6 @@ export const environment = {
         menuConfig: '/config/ui-menu.json',
         externalDevices: '/externaldevices',
         remoteLogs: '/cards/logs'
-
     },
     paths: {
         i18n: '/ui/assets/i18n/'

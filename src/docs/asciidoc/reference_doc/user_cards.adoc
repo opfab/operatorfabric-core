@@ -85,6 +85,11 @@ ifdef::single-page-doc[<<opfab_template_style, OperatorFabric Style >>]
 ifndef::single-page-doc[<</documentation/current/reference_doc/index.adoc#opfab_template_style, OperatorFabric Style>>]
 for more information)
 
+[WARNING]
+Be aware that as we have a preview of the card, the application loads the html related to the usercard (build with the usercard template) and the html related to the card in preview (build with the card template) into the browser at the same time. This implies that you MUST NOT name the elements with the same names in both templates. This rule applies to HTML elements identifiers(id), global JavaScript variables and JavaScript function names.
+
+
+
 Once the card has been sent, users with the appropriate rights can edit it. If they choose to do so, they're presented
 with the same input form as for the card creation, but the fields are pre-filled with the current data of the card.
 This way, they can only change what they need without having to re-create the card from scratch.
@@ -173,6 +178,23 @@ For example :
 
 In this example the list of available recipients will contain: "ENTITY_FR" (level 0), all the first level children of "ENTITY_FR" (level 1) and "IT_SUPERVISOR_ENTITY".
 
+[[preselect_initial_recipients]]
+== Configure the list of initially selected recipients
+
+It is possible to configure the list of initially selected recipients via javascript in the user template by implementing the `usercardTemplateGateway.setInitialSelectedRecipients(selectedEntities)` method. The method takes as input the list of Entity ids to be preselected.
+
+For example : 
+
+....
+    usercardTemplateGateway.setInitialSelectedRecipients([
+            "ENTITY_FR",
+            "IT_SUPERVISOR_ENTITY"
+        ]);
+....
+
+
+In this example the dropdown list of available recipients will have "ENTITY_FR" and "IT_SUPERVISOR_ENTITY" preselected. The user can anyway change the selected recipients.
+
 [[set_recipients_via_code]]
 == Set the list of recipients via the template and not via user choice 
 
@@ -214,6 +236,18 @@ It is also possible to get the values of  `startDate`, `endDate` and `lttd` by c
 * _usercardTemplateGateway.getStartDate()_ 
 * _usercardTemplateGateway.getEndDate()_
 * _usercardTemplateGateway.getLttd()_  
+
+== Setting initial card severity
+From the template it is possible to set the initial value for card severity choice by calling the following function: 
+
+* _usercardTemplateGateway.setInitialSeverity(severity)_ 
+
+Allowed severity values are:
+
+* 'ALARM'
+* 'ACTION'
+* 'INFORMATION'
+* 'COMPLIANT'
 
 == Card editing
 Once a user card has been sent it can be edited by a user member of the publisher entity.
@@ -281,3 +315,4 @@ https://github.com/opfab/operatorfabric-core/tree/master/src/test/resources/bund
 == Misc
 
 When a user send a card, it is always sent to himself whatever he chooses in the recipient list.
+

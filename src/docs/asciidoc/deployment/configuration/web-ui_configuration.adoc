@@ -84,6 +84,13 @@ a|card time display mode in the feed. Values :
 
 |feed.timeline.domains|["TR", "J", "7D", "W", "M", "Y"]|no| List of domains to show on the timeline, possible domains are : "TR", "J", "7D", "W", "M", "Y".
 |feed.enableGroupedCards|false|no|_(Experimental feature)_: If true cards with the same tags are grouped together. Clicking on the grouped card will show the other cards with the same tags in the feed.
+|feed.geomap.enable|false|no|_(Experimental feature)_: If true a geographical map will be shown and cards that have geographical coordinates will be drawn on the map.
+|feed.geomap.defaultDataProjection|EPSG:4326|no| The default data projection of `card.wktGeometry` to use when no wktProjection is embedded in the card.
+|feed.geomap.initialLongitude|0|no| The initial longitude of the map when no cards with geographical coordinates are present.
+|feed.geomap.initialLatitude|0|no| The initial latitude of the map when no cards with geographical coordinates are present.
+|feed.geomap.initialZoom|1|no| Initial zoom level of the map.
+|feed.geomap.maxZoom|11|no| Max zoom level, to prevent zooming in too much when only one card is shown (or multiple cards in close proximity).
+|feed.geomap.zoomDuration|500|no| Time in milliseconds it takes to zoom the map to the specific location. Set to 0 to disable the zoom animation.
 |i18n.supported.locales||no|List of supported locales (Only fr and en so far)
 Values should be taken from the link:https://en.wikipedia.org/wiki/List_of_tz_database_time_zones[TZ database].
 
@@ -137,7 +144,7 @@ It should look like:
 |usercard.useDescriptionFieldForEntityList|false|no|If true, show entity `description` field instead of `name` in user card page
 |externalDevicesEnabled|false|no|If true, users have the opportunity to play sounds on external devices rather than in the browser. See `settings.playSoundOnExternalDevice`
 |secondsToCloseSession|60|no|Number of seconds between logout and token expiration
-
+|selectActivityAreaOnLogin|false|no| if set to true the users belonging to multiple Entities will be required to configure activity area on login 
 
 
 |===

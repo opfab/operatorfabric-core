@@ -8,7 +8,6 @@
  */
 
 const usercardTemplateGateway = {
-
     editionMode: null,
     childCard: null,
     currentState: null,
@@ -16,11 +15,12 @@ const usercardTemplateGateway = {
     startDate: null,
     endDate: null,
     lttd: null,
+    initialSeverity: null,
 
-    setUserEntityChildCardFromCurrentCard : function(childCard){
+    setUserEntityChildCardFromCurrentCard: function (childCard) {
         this.childCard = childCard;
     },
-    
+
     // The template calls this method to get the editon mode (CREATE/EDITION)
     getEditionMode() {
         return this.editionMode;
@@ -50,32 +50,39 @@ const usercardTemplateGateway = {
         return this.lttd;
     },
 
-    setInitialStartDate: function(start)  {
-        this.startDate = start;
+    getInitialSeverity() {
+        return this.initialSeverity;
     },
 
-    setInitialEndDate: function(endDate)  {
-        this.endDate = endDate;
+    setInitialStartDate: function (start) {
+        if (this.editionMode === 'CREATE') this.startDate = start;
     },
 
-    setInitialLttd: function(lttd)  {
-        this.lttd = lttd;
+    setInitialEndDate: function (endDate) {
+        if (this.editionMode === 'CREATE') this.endDate = endDate;
+    },
+
+    setInitialLttd: function (lttd) {
+        if (this.editionMode === 'CREATE') this.lttd = lttd;
+    },
+
+    setInitialSeverity: function (initialSeverity) {
+        this.initialSeverity = initialSeverity;
     },
 
     initUsercardTemplateGateway() {
-        this.editionMode=  null;
+        this.editionMode = null;
         this.childCard = null;
         this.currentState = null;
         this.currentProcess = null;
         this.startDate = null;
         this.endDate = null;
         this.lttd = null;
+        this.initialSeverity = null;
 
         // OpFab calls this function to inform the template on sender entity
         this.setEntityUsedForSendingCard = function (senderEntity) {
             // This function should be overridden in the template.
         };
-
     }
 };
-

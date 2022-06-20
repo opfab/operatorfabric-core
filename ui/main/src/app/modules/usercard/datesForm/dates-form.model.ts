@@ -7,20 +7,10 @@
  * This file is part of the OperatorFabric project.
  */
 
-
-
 export class DatesForm {
-    constructor(
-        public startDate: DateField,
-        public endDate: DateField,
-        public lttd: DateField
-
-    ) {}
+    constructor(public startDate: DateField, public endDate: DateField, public lttd: DateField) {}
 }
 
 export class DateField {
-    constructor(
-        public isVisible: boolean,
-        public initialEpochDate: number,
-    ) {}
+    constructor(public isVisible: boolean, public initialEpochDate: number) {}
 }

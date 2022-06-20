@@ -14,7 +14,7 @@ describe ('ExternalDevicesconfigurationPage',()=>{
 
     function clickOnNthDeviceInDropdown(index) {
         cy.get('#opfab-devicesDropdownList').click();
-        cy.get('#opfab-devicesDropdownList').find('li').eq(index).click();
+        cy.get('#opfab-devicesDropdownList').find('.vscomp-option-text').eq(index).click();
         cy.get('#opfab-devicesDropdownList').click();
     }
 
@@ -61,8 +61,10 @@ describe ('ExternalDevicesconfigurationPage',()=>{
         clickOnNthDeviceInDropdown(0);
         cy.get('#opfab-admin-user-btn-save').should('be.disabled');
 
+        cy.wait(100);
         // Add two external sound devices
         clickOnNthDeviceInDropdown(0);
+        cy.wait(100);
         clickOnNthDeviceInDropdown(1);
 
         // Wait for the dropdown to disappear before clicking save button

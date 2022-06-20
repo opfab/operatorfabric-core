@@ -6,20 +6,20 @@
  * SPDX-License-Identifier: MPL-2.0
  * This file is part of the OperatorFabric project.
  */
- @import "~scss/_variables.scss";
+@import '~scss/_variables.scss';
 
-.lttd-timeleft{
-  font-size: small;
-  color: var(--opfab-light-card-lttd-timeleft);
-  padding-left : 10px;
+.lttd-timeleft {
+    font-size: small;
+    color: var(--opfab-light-card-lttd-timeleft);
+    padding-left: 10px;
 }
-.lttd-text{
-  font-size: small;
-  padding-left : 3px;
-  padding-right: 3px;
+.lttd-text {
+    font-size: small;
+    padding-left: 3px;
+    padding-right: 3px;
 }
 
-.lttd-icon{
-  font-size: small;
-  padding-left: 6px;
+.lttd-icon {
+    font-size: small;
+    padding-left: 6px;
 }

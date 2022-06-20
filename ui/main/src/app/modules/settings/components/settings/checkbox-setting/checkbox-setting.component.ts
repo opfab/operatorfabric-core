@@ -7,7 +7,6 @@
  * This file is part of the OperatorFabric project.
  */
 
-
 import {Component, Input, OnDestroy, OnInit} from '@angular/core';
 import {BaseSettingDirective} from '../base-setting/base-setting.directive';
 import {Store} from '@ngrx/store';
@@ -15,37 +14,36 @@ import {AppState} from '@ofStore/index';
 import {FormControl, FormGroup} from '@angular/forms';
 
 @Component({
-  selector: 'of-checkbox-setting',
-  templateUrl: './checkbox-setting.component.html',
-  styleUrls: ['./checkbox-setting.component.scss']
+    selector: 'of-checkbox-setting',
+    templateUrl: './checkbox-setting.component.html',
+    styleUrls: ['./checkbox-setting.component.scss']
 })
 export class CheckboxSettingComponent extends BaseSettingDirective implements OnInit, OnDestroy {
+    @Input() public labelClass: string;
+    @Input() public name: string;
+    @Input() public checked: boolean;
 
-  @Input() public labelClass: string;
-  @Input() public name : string;
-  @Input() public checked : boolean;
+    constructor(protected store: Store<AppState>) {
+        super(store);
+    }
 
-  constructor(protected store: Store<AppState>) {
-    super(store);
-  }
+    ngOnInit() {
+        super.ngOnInit();
+    }
 
-  ngOnInit() {
-    super.ngOnInit();
-  }
+    initFormGroup() {
+        return new FormGroup(
+            {
+                setting: new FormControl('')
+            },
+            {updateOn: 'change'}
+        );
+        // No need for validators are the checkbox input type can only create boolean values
+    }
 
-  initFormGroup() {
-    return new FormGroup({
-      setting: new FormControl('')
-    }, {updateOn: 'change'});
-    // No need for validators are the checkbox input type can only create boolean values
-  }
-
-  updateValue(value) {
-    // Undefined or null value means the user does not have made a choice for his settings, so we set the input value "checked" (default value)
-    if ((value === null) || (value === undefined))
-      this.form.get('setting').setValue(this.checked, {emitEvent: false});
-    else
-      this.form.get('setting').setValue(value, {emitEvent: false});
-  }
-
+    updateValue(value) {
+        // Undefined or null value means the user does not have made a choice for his settings, so we set the input value "checked" (default value)
+        if (value === null || value === undefined) this.form.get('setting').setValue(this.checked, {emitEvent: false});
+        else this.form.get('setting').setValue(value, {emitEvent: false});
+    }
 }

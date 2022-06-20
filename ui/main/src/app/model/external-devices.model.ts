@@ -7,18 +7,12 @@
  * This file is part of the OperatorFabric project.
  */
 
-
 export class Notification {
-    constructor(
-        readonly opfabSignalId: string) {
-    }
+    constructor(readonly opfabSignalId: string) {}
 }
 
 export class UserConfiguration {
-    public constructor(
-        readonly userLogin: string,
-        readonly externalDeviceIds: string[]
-    ) {}
+    public constructor(readonly userLogin: string, readonly externalDeviceIds: string[]) {}
 }
 
 export class Device {

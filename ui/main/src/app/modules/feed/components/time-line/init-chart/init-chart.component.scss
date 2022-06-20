@@ -7,50 +7,49 @@
  * This file is part of the OperatorFabric project.
  */
 
-
-
 .timeline {
-  margin-right: 30px;
-  padding-right: 20px;
-  margin-left : 10px;
-  margin-bottom: 0px;
-  color : var(--opfab-text-color);
-  background-color: var(--opfab-timeline-bgcolor);
+    margin-right: 30px;
+    padding-right: 20px;
+    margin-left: 10px;
+    margin-bottom: 0px;
+    color: var(--opfab-text-color);
+    background-color: var(--opfab-timeline-bgcolor);
 
-  .of-custom-timeline-chart {
-    max-height: 150px;
-    margin-bottom: 10px;
-  }
+    .of-custom-timeline-chart {
+        max-height: 150px;
+        margin-bottom: 10px;
+    }
 
-  .opfab-timeline-grid {
-    display: grid;
-    grid-template-columns: 20px auto 10px;
-    align-items: center;
-  }
+    .opfab-timeline-grid {
+        display: grid;
+        grid-template-columns: 20px auto 10px;
+        align-items: center;
+    }
 }
 
-.opfab-move-domain{
-  padding-bottom: 12px;
+.opfab-move-domain {
+    padding-bottom: 12px;
 }
-.opfab-move-domain:hover{
-  color: var(--opfab-navbar-color-active);
-  font-weight: bold;
+.opfab-move-domain a:hover {
+    color: var(--opfab-navbar-color-active);
+    font-weight: bold;
+    cursor: pointer;
 }
-
 
 .opfab-showhide-timeline {
-  background-color: var(--opfab-bgcolor);
-  width: 100%;
-  text-align: right;
-  font-size: 13px;
-  padding-top : 5px;
-  padding-right:20px;
-  position: relative;
-  display: flex;
-  flex-wrap: wrap;
+    background-color: var(--opfab-bgcolor);
+    width: 100%;
+    text-align: right;
+    font-size: 13px;
+    padding-top: 5px;
+    padding-right: 20px;
+    position: relative;
+    display: flex;
+    flex-wrap: wrap;
 }
 
 .opfab-showhide-timeline a:hover {
-  color: var(--opfab-navbar-color-active);
-  font-weight: bold;
+    color: var(--opfab-navbar-color-active);
+    font-weight: bold;
+    cursor: pointer;
 }

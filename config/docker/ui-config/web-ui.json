@@ -3,6 +3,7 @@
   "environmentColor": "blue",
   "showUserEntitiesOnTopRightOfTheScreen": true,
   "externalDevicesEnabled": true,
+  "selectActivityAreaOnLogin": false,
   "settings.replayInterval": 10,
   "settings.replayEnabled": true,
   "archive": {
@@ -61,6 +62,15 @@
         "M",
         "Y"
       ]
+    },
+    "geomap": {
+      "enableMap": false,
+      "defaultDataProjection": "EPSG:4326",
+      "initialLongitude": 5.3255,
+      "initialLatitude": 52.1845,
+      "initialZoom": 6,
+      "maxZoom": 11,
+      "zoomDuration": 500
     },
     "enableGroupedCards": false
   },

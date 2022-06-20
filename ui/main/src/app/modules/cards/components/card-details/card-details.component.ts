@@ -20,7 +20,7 @@ import {UserService} from '@ofServices/user.service';
 import {selectCurrentUrl} from '@ofStore/selectors/router.selectors';
 import {AppService} from '@ofServices/app.service';
 import {State} from '@ofModel/processes.model';
-import {NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
+import {NgbModalRef} from '@ng-bootstrap/ng-bootstrap';
 import {DisplayContext} from '@ofModel/templateGateway.model';
 import {cardInitialState, CardState} from '@ofStates/card.state';
 
@@ -30,7 +30,6 @@ import {cardInitialState, CardState} from '@ofStates/card.state';
     styleUrls: ['./card-details.component.scss']
 })
 export class CardDetailsComponent implements OnInit, OnDestroy {
-
     @Input() parentModalRef: NgbModalRef;
     @Input() screenSize = 'md';
     @Input() displayContext: any = DisplayContext.REALTIME;
@@ -44,15 +43,16 @@ export class CardDetailsComponent implements OnInit, OnDestroy {
     currentSelectedCardId: string;
     protected _currentPath: string;
 
-    constructor(protected store: Store<AppState>
-        , protected businessconfigService: ProcessesService
-        , protected userService: UserService
-        , protected appService?: AppService
-    ) {
-    }
+    constructor(
+        protected store: Store<AppState>,
+        protected businessconfigService: ProcessesService,
+        protected userService: UserService,
+        protected appService?: AppService
+    ) {}
 
     ngOnInit() {
-        this.store.select(cardSelectors.selectCardStateSelectedWithChildCards)
+        this.store
+            .select(cardSelectors.selectCardStateSelectedWithChildCards)
             .pipe(takeUntil(this.unsubscribe$))
             .subscribe(([card, childCards]: [Card, Card[]] | [CardState]) => {
                 if (card !== cardInitialState) {
@@ -60,81 +60,87 @@ export class CardDetailsComponent implements OnInit, OnDestroy {
                         this.cardNotFound = false;
                         card = card as Card;
 
-                        this.businessconfigService.queryProcess(card.process, card.processVersion)
-                            .subscribe({
-                                next: businessconfig => {
-                                    card = card as Card;
-                                    this.card = card;
-                                    this.childCards = childCards;
-                                    this.cardLoadingInProgress = false;
-                                    if (!!businessconfig) {
-                                        this.cardState = businessconfig.extractState(card);
-                                        if (!this.cardState) {
-                                            console.log(new Date().toISOString(), `WARNING state ${card.state} does not exist for process ${card.process}`);
-                                            this.cardState = new State();
-                                        }
-                                    } else {
-                                        console.log(new Date().toISOString(), `WARNING process `
-                                            + ` ${card.process} with version ${card.processVersion} does not exist.`);
+                        this.businessconfigService.queryProcess(card.process, card.processVersion).subscribe({
+                            next: (businessconfig) => {
+                                card = card as Card;
+                                this.card = card;
+                                this.childCards = childCards;
+                                this.cardLoadingInProgress = false;
+                                if (!!businessconfig) {
+                                    this.cardState = businessconfig.extractState(card);
+                                    if (!this.cardState) {
+                                        console.log(
+                                            new Date().toISOString(),
+                                            `WARNING state ${card.state} does not exist for process ${card.process}`
+                                        );
                                         this.cardState = new State();
                                     }
-
-                                },
-                                error: () => {
-                                    card = card as Card;
-                                    console.log(new Date().toISOString(), `WARNING process `
-                                        + ` ${card.process} with version ${card.processVersion} does not exist.`);
-                                    this.card = card;
-                                    this.childCards = childCards;
-                                    this.cardLoadingInProgress = false;
+                                } else {
+                                    console.log(
+                                        new Date().toISOString(),
+                                        `WARNING process ` +
+                                            ` ${card.process} with version ${card.processVersion} does not exist.`
+                                    );
                                     this.cardState = new State();
                                 }
-                            });
+                            },
+                            error: () => {
+                                card = card as Card;
+                                console.log(
+                                    new Date().toISOString(),
+                                    `WARNING process ` +
+                                        ` ${card.process} with version ${card.processVersion} does not exist.`
+                                );
+                                this.card = card;
+                                this.childCards = childCards;
+                                this.cardLoadingInProgress = false;
+                                this.cardState = new State();
+                            }
+                        });
                     } else {
                         this.cardNotFound = true;
+                        this.cardLoadingInProgress = false;
                         console.log(new Date().toISOString(), 'WARNING card not found.');
                     }
                 }
             });
-        this.store.select(selectCurrentUrl)
+        this.store
+            .select(selectCurrentUrl)
             .pipe(takeUntil(this.unsubscribe$))
-            .subscribe(url => {
+            .subscribe((url) => {
                 if (!!url) {
                     const urlParts = url.split('/');
                     const CURRENT_PAGE_INDEX = 1;
                     this._currentPath = urlParts[CURRENT_PAGE_INDEX];
                 }
             });
-            this.checkForCardLoadingInProgressForMoreThanOneSecond();
-
+        this.checkForCardLoadingInProgressForMoreThanOneSecond();
     }
 
     // we show a spinner on screen if card loading takes more than 1 second
     checkForCardLoadingInProgressForMoreThanOneSecond() {
-        this.store.select(feedSelectors.selectLightCardSelection)
+        this.store
+            .select(feedSelectors.selectLightCardSelection)
             .pipe(takeUntil(this.unsubscribe$))
-            .subscribe((cardId) => {   // a new card has been selected and will be downloaded
+            .subscribe((cardId) => {
+                // a new card has been selected and will be downloaded
                 this.currentSelectedCardId = cardId;
                 setTimeout(() => {
-                    if (this.cardNotFound)  {
+                    if (this.cardNotFound) {
                         this.cardLoadingInProgress = false;
                         return;
                     }
                     // the selected card has not changed in between
                     if (this.currentSelectedCardId === cardId) {
-                        if (!this.card)
-                            this.cardLoadingInProgress = !!this.currentSelectedCardId;
-                        else
-                            this.cardLoadingInProgress = (this.card.id !== this.currentSelectedCardId);
+                        if (!this.card) this.cardLoadingInProgress = !!this.currentSelectedCardId;
+                        else this.cardLoadingInProgress = this.card.id !== this.currentSelectedCardId;
                     }
                 }, 1000);
             });
-
     }
 
-
     public isSmallscreen() {
-        return (window.innerWidth < 1000);
+        return window.innerWidth < 1000;
     }
 
     ngOnDestroy() {

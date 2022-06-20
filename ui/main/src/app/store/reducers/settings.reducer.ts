@@ -7,30 +7,25 @@
  * This file is part of the OperatorFabric project.
  */
 
+import {settingsInitialState, SettingsState} from '@ofStates/settings.state';
+import {SettingsActions, SettingsActionTypes} from '@ofActions/settings.actions';
 
-
-import {settingsInitialState, SettingsState} from "@ofStates/settings.state";
-import {SettingsActions, SettingsActionTypes} from "@ofActions/settings.actions";
-
-export function reducer(
-    state = settingsInitialState,
-    action: SettingsActions
-): SettingsState {
+export function reducer(state = settingsInitialState, action: SettingsActions): SettingsState {
     switch (action.type) {
         case SettingsActionTypes.LoadSettingsSuccess: {
             return {
                 ...state,
                 settings: action.payload.settings,
-                loaded: true,
+                loaded: true
             };
         }
 
-        case SettingsActionTypes.PatchSettingsSuccess : {
+        case SettingsActionTypes.PatchSettingsSuccess: {
             return {
                 ...state,
                 settings: action.payload.settings,
-                loaded: true,
-            }
+                loaded: true
+            };
         }
 
         default: {

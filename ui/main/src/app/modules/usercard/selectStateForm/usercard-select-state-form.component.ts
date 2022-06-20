@@ -18,14 +18,11 @@ import {Utilities} from 'app/common/utilities';
 import {Subject} from 'rxjs';
 import {debounceTime, takeUntil} from 'rxjs/operators';
 
-
 @Component({
     selector: 'of-usercard-select-state-form',
-    templateUrl: './usercard-select-state-form.component.html',
-
+    templateUrl: './usercard-select-state-form.component.html'
 })
 export class UserCardSelectStateFormComponent implements OnInit, OnDestroy {
-
     @Input() public cardIdToEdit;
     @Input() public initialProcess;
     @Input() public initialState;
@@ -36,7 +33,7 @@ export class UserCardSelectStateFormComponent implements OnInit, OnDestroy {
     processesDefinition: Process[];
     currentUserWithPerimeters: UserWithPerimeters;
     statesPerProcesses = new Map();
-    processGroups: Map<string, {name: string, processes: string[]}>;
+    processGroups: Map<string, {name: string; processes: string[]}>;
     processGroupPerProcesses = new Map();
     processesPerProcessGroups = new Map();
     processesWithoutProcessGroup = [];
@@ -52,12 +49,9 @@ export class UserCardSelectStateFormComponent implements OnInit, OnDestroy {
 
     unsubscribe$: Subject<void> = new Subject<void>();
 
-    constructor(private processesService: ProcessesService, private userService: UserService
-    ) {
-    }
+    constructor(private processesService: ProcessesService, private userService: UserService) {}
 
     ngOnInit() {
-
         this.selectStateForm = new FormGroup({
             processGroup: new FormControl(''),
             process: new FormControl(''),
@@ -78,7 +72,6 @@ export class UserCardSelectStateFormComponent implements OnInit, OnDestroy {
         this.InitProcessState();
         this.listenForStateChange();
         if (!this.processOptions || this.processOptions.length < 1) this.emptyProcessList.emit(true);
-
     }
 
     displayProcessGroupFilter() {
@@ -88,11 +81,11 @@ export class UserCardSelectStateFormComponent implements OnInit, OnDestroy {
     loadAllProcessAndStateInUserPerimeter(): void {
         this.processesDefinition = this.processesService.getAllProcesses();
         const processesInPerimeter: Set<string> = new Set();
-        this.currentUserWithPerimeters.computedPerimeters.forEach(perimeter => {
+        this.currentUserWithPerimeters.computedPerimeters.forEach((perimeter) => {
             if (this.userCanSendCard(perimeter)) processesInPerimeter.add(perimeter.process);
         });
 
-        this.processesDefinition.forEach(process => {
+        this.processesDefinition.forEach((process) => {
             if (processesInPerimeter.has(process.id)) {
                 const label = process.name ? process.name : process.id;
                 const processToShow = {value: process.id, label: label};
@@ -106,23 +99,18 @@ export class UserCardSelectStateFormComponent implements OnInit, OnDestroy {
     }
 
     private userCanSendCard(perimeter: ComputedPerimeter): boolean {
-        return ((perimeter.rights === RightsEnum.ReceiveAndWrite)
-            || (perimeter.rights === RightsEnum.Write));
+        return perimeter.rights === RightsEnum.ReceiveAndWrite || perimeter.rights === RightsEnum.Write;
     }
-
-
 
     private loadStatesForProcess(process: Process): void {
         const statesList = [];
-        this.currentUserWithPerimeters.computedPerimeters.forEach(
-            perimeter => {
-                if ((perimeter.process === process.id) && this.userCanSendCard(perimeter)) {
-                    const state = this.getStateFromProcessDefinition(process, perimeter.state);
-                    if (!!state) statesList.push(state);
-                }
-            });
+        this.currentUserWithPerimeters.computedPerimeters.forEach((perimeter) => {
+            if (perimeter.process === process.id && this.userCanSendCard(perimeter)) {
+                const state = this.getStateFromProcessDefinition(process, perimeter.state);
+                if (!!state) statesList.push(state);
+            }
+        });
         this.statesPerProcesses.set(process.id, statesList);
-
     }
 
     getStateFromProcessDefinition(process: Process, stateId: string) {
@@ -132,19 +120,23 @@ export class UserCardSelectStateFormComponent implements OnInit, OnDestroy {
                 const label = !!stateFromProcessDefinition.name ? stateFromProcessDefinition.name : stateId;
                 return {value: stateId, label: label};
             }
-        } else console.log('WARNING : state', stateId, 'is present in perimeter for process'
-            , process.id, 'but not in process definition');
+        } else
+            console.log(
+                'WARNING : state',
+                stateId,
+                'is present in perimeter for process',
+                process.id,
+                'but not in process definition'
+            );
         return null;
     }
-
 
     private loadAllProcessGroupsRelatingToUserPerimeter(): void {
         let numberOfProcessesAttachedToAProcessGroup = 0;
 
         this.processGroups.forEach((group, groupId) => {
-
             const processOptions = [];
-            this.processOptions.forEach(processOption => {
+            this.processOptions.forEach((processOption) => {
                 if (this.isProcessInProcessesGroup(processOption.value, group)) {
                     processOptions.push(processOption);
                     numberOfProcessesAttachedToAProcessGroup++;
@@ -153,10 +145,8 @@ export class UserCardSelectStateFormComponent implements OnInit, OnDestroy {
                 }
             });
 
-            if (processOptions.length > 0)
-                this.processesPerProcessGroups.set(groupId, processOptions);
+            if (processOptions.length > 0) this.processesPerProcessGroups.set(groupId, processOptions);
         });
-
 
         for (const processGroupId of this.processesPerProcessGroups.keys())
             this.processGroupOptions.push({value: processGroupId, label: this.processGroups.get(processGroupId).name});
@@ -173,25 +163,23 @@ export class UserCardSelectStateFormComponent implements OnInit, OnDestroy {
         }
     }
 
-
-    private isProcessInProcessesGroup(idProcess: string, processesGroup: {name: string, processes: string[]}): boolean {
-        return !!processesGroup.processes.find(process => process === idProcess);
+    private isProcessInProcessesGroup(idProcess: string, processesGroup: {name: string; processes: string[]}): boolean {
+        return !!processesGroup.processes.find((process) => process === idProcess);
     }
 
     private loadProcessesWithoutProcessGroup(): void {
         const processesWithProcessGroup = Array.from(this.processGroupPerProcesses.keys());
         this.processesWithoutProcessGroup = this.processOptions.filter(
-            processOption => processesWithProcessGroup.indexOf(processOption.value) < 0);
+            (processOption) => processesWithProcessGroup.indexOf(processOption.value) < 0
+        );
     }
-
 
     changeProcessesWhenSelectProcessGroup(): void {
         this.selectStateForm.get('processGroup').valueChanges.subscribe((processGroup) => {
             if (!!processGroup) {
                 if (processGroup === '--')
                     this.processOptionsWhenSelectedProcessGroup = this.processesWithoutProcessGroup;
-                else
-                    this.processOptionsWhenSelectedProcessGroup = this.processesPerProcessGroups.get(processGroup);
+                else this.processOptionsWhenSelectedProcessGroup = this.processesPerProcessGroups.get(processGroup);
                 this.processOptionsWhenSelectedProcessGroup.sort((a, b) => Utilities.compareObj(a.label, b.label));
                 this.selectedProcess = this.processOptionsWhenSelectedProcessGroup[0].value;
                 this.selectStateForm.get('process').setValue(this.selectedProcess);
@@ -199,13 +187,12 @@ export class UserCardSelectStateFormComponent implements OnInit, OnDestroy {
         });
     }
 
-
     changeStatesWhenSelectProcess(): void {
         this.selectStateForm.get('process').valueChanges.subscribe((process) => {
             if (!!process) {
                 this.stateOptions = this.statesPerProcesses.get(process);
                 this.selectedState = this.stateOptions[0].value;
-                this.selectedProcess = this.processesDefinition.find(processDefinition => {
+                this.selectedProcess = this.processesDefinition.find((processDefinition) => {
                     return processDefinition.id === process;
                 });
                 this.selectStateForm.get('state').setValue(this.selectedState);
@@ -216,38 +203,34 @@ export class UserCardSelectStateFormComponent implements OnInit, OnDestroy {
     private InitProcessState() {
         if (this.cardIdToEdit) {
             const processGroupForCardToEdit = this.processGroupPerProcesses.get(this.initialProcess);
-            if (processGroupForCardToEdit)
-                this.selectStateForm.get('processGroup').setValue(processGroupForCardToEdit);
-            else
-                this.selectStateForm.get('processGroup').setValue('--');
+            if (processGroupForCardToEdit) this.selectStateForm.get('processGroup').setValue(processGroupForCardToEdit);
+            else this.selectStateForm.get('processGroup').setValue('--');
 
             this.selectStateForm.get('processGroup').disable();
 
             this.selectStateForm.get('process').setValue(this.initialProcess);
             this.selectStateForm.get('process').disable();
             this.selectStateForm.get('state').setValue(this.initialState);
-            this.stateChange.emit(
-                {
-                    'selectedProcessId': this.initialProcess,
-                    'state': this.initialState
-                });
+            this.stateChange.emit({
+                selectedProcessId: this.initialProcess,
+                state: this.initialState
+            });
         }
     }
 
     private listenForStateChange() {
-        this.selectStateForm.get('state').valueChanges
-            .pipe(
+        this.selectStateForm
+            .get('state')
+            .valueChanges.pipe(
                 takeUntil(this.unsubscribe$),
                 debounceTime(10) //See #1891 Cypress usercard test was flaky without this debounce
             )
             .subscribe((state) => {
                 if (!!state) {
-                    this.stateChange.emit(
-                        {
-                            'selectedProcessId': this.selectStateForm.get('process').value,
-                            'state': this.selectStateForm.get('state').value
-                        });
-
+                    this.stateChange.emit({
+                        selectedProcessId: this.selectStateForm.get('process').value,
+                        state: this.selectStateForm.get('state').value
+                    });
                 }
             });
     }

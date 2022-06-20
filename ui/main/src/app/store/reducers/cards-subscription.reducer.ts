@@ -7,8 +7,6 @@
  * This file is part of the OperatorFabric project.
  */
 
-
-
 import {cardsSubscriptionInitialState, CardsSubscriptionState} from '@ofStates/cards-subscription.state';
 import {CardSubscriptionActions, CardsSubscriptionActionTypes} from '@ofActions/cards-subscription.actions';
 
@@ -17,29 +15,25 @@ export function cardsSubscriptionReducer(
     action: CardSubscriptionActions
 ): CardsSubscriptionState {
     switch (action.type) {
-
         case CardsSubscriptionActionTypes.CardSubscriptionOpen: {
             return {
                 ...state,
                 subscriptionOpen: true
             };
-
         }
         case CardsSubscriptionActionTypes.CardSubscriptionClosed: {
             return {
                 ...state,
                 subscriptionOpen: false
             };
-
         }
         case CardsSubscriptionActionTypes.UIReloadRequested: {
             return {
                 ...state,
                 reloadRequested: true
             };
-
         }
-    
+
         default: {
             return state;
         }

@@ -7,11 +7,9 @@
  * This file is part of the OperatorFabric project.
  */
 
-
 import {LightCard} from './light-card.model';
 
 export class CardOperation implements CardOperation {
-    /* istanbul ignore next */
     constructor(
         readonly number: number,
         readonly publicationDate: number,
@@ -20,8 +18,7 @@ export class CardOperation implements CardOperation {
         readonly cardId?: string,
         readonly cardUid?: string,
         readonly entitiesAcks?: string[]
-    ) {
-    }
+    ) {}
 
     static convertTypeIntoEnum(key: string, value: string) {
         if (key === 'type') {
@@ -29,9 +26,11 @@ export class CardOperation implements CardOperation {
         }
         return value;
     }
-
 }
 
 export enum CardOperationType {
-    ADD, UPDATE, DELETE, ACK
+    ADD,
+    UPDATE,
+    DELETE,
+    ACK
 }

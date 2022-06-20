@@ -7,7 +7,6 @@
  * This file is part of the OperatorFabric project.
  */
 
-
 import {AppState} from '@ofStore/index';
 import * as _ from 'lodash-es';
 
@@ -19,8 +18,7 @@ export function buildSettingsOrConfigSelector(path: string, fallback: any = null
         if (result == null) {
             result = _.get(config, `settings.${path}`, null);
         }
-        if (result == null && fallback)
-            return fallback
+        if (result == null && fallback) return fallback;
         return result;
-    }
+    };
 }

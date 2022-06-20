@@ -110,6 +110,7 @@ public class CardRepositoryService {
                 "entitiesAcks",
                 BasicDBObjectBuilder.start("$each", entitiesAcks).get()
         );
+        update.set("lastAckDate", Instant.now());
 
 		UpdateResult updateFirst = template.updateFirst(Query.query(Criteria.where("uid").is(cardUid)), 
                                                         update,

@@ -430,7 +430,7 @@ Feature: UserCards tests
     And header Authorization = 'Bearer ' + authTokenAsTSO
     When method get
     Then status 200
-    And assert response.childCards.length == 0
+    And match response.childCards == '#notpresent'
 
 
 

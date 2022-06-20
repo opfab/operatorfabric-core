@@ -130,9 +130,15 @@ public class CardPublicationData implements Card {
     private String  representative;
     private PublisherTypeEnum representativeType;
 
+    private String wktGeometry;
+    private String wktProjection;
+
     private Integer  secondsBeforeTimeSpanForReminder;
 
     private Boolean toNotify;
+
+    @Indexed
+    private Instant lastAckDate;
 
     public void prepare(Instant publishDate) {
         this.publishDate = publishDate;
@@ -170,6 +176,8 @@ public class CardPublicationData implements Card {
                 .publisherType(this.getPublisherType())
                 .representative(this.getRepresentative())
                 .representativeType(this.getRepresentativeType())
+                .wktGeometry(this.wktGeometry)
+                .wktProjection(this.wktProjection)
                 .secondsBeforeTimeSpanForReminder(this.secondsBeforeTimeSpanForReminder)
                 .entityRecipients(this.getEntityRecipients());
 

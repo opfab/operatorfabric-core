@@ -7,8 +7,6 @@
  * This file is part of the OperatorFabric project.
  */
 
-
-
 import {NgModule} from '@angular/core';
 import {RouterModule, Routes} from '@angular/router';
 import {SettingsComponent} from './components/settings/settings.component';
@@ -16,12 +14,12 @@ import {SettingsComponent} from './components/settings/settings.component';
 const routes: Routes = [
     {
         path: '',
-        component: SettingsComponent,
-    },
-]
+        component: SettingsComponent
+    }
+];
 
 @NgModule({
     imports: [RouterModule.forChild(routes)],
     exports: [RouterModule]
 })
-export class SettingsRoutingModule { }
+export class SettingsRoutingModule {}

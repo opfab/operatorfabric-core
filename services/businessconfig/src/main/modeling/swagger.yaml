@@ -1,7 +1,7 @@
 swagger: '2.0'
 info:
   description: IMPORTANT - The Try it Out button will generate curl requests for examples, but executing them through the UI will not work as authentication has not been set up. This page is for documentation only.
-  version: 3.7.0.RELEASE
+  version: 3.8.0.RELEASE
   title: BusinessConfig Management
   termsOfService: ''
   contact:
@@ -443,6 +443,9 @@ definitions:
             consideredAcknowledgedForUserWhen:
               description: Define how a card is considered as acknowledged in the feed
               $ref: '#/definitions/ConsideredAcknowledgedForUserWhenEnum'
+            cancelAcknowledgmentAllowed:
+              type: boolean
+              description: Cancel acknowledgment allowed
             name:
               type: string
               description: Name of the state

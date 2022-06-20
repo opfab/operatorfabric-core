@@ -7,24 +7,19 @@
  * This file is part of the OperatorFabric project.
  */
 
-
-
 import {AppState} from '@ofStore/index';
 import {createSelector} from '@ngrx/store';
 import {cardInitialState, CardState} from '@ofStates/card.state';
 import {Card} from '@ofModel/card.model';
 
 export const selectCardState = (state: AppState) => state.card;
-export const selectCardStateSelected =  createSelector(selectCardState, (cardState: CardState) => cardState.selected);
+export const selectCardStateSelected = createSelector(selectCardState, (cardState: CardState) => cardState.selected);
 
-export const selectCardStateSelectedWithChildCards =
-    createSelector(selectCardState, (cardState: CardState) => {
-        if (cardState === cardInitialState)
-            return [cardInitialState];
-        else
-            return [cardState.selected, cardState.selectedChildCards];
-    });
+export const selectCardStateSelectedWithChildCards = createSelector(selectCardState, (cardState: CardState) => {
+    if (cardState === cardInitialState) return [cardInitialState];
+    else return [cardState.selected, cardState.selectedChildCards];
+});
 
-export const selectCardStateSelectedId =  createSelector(selectCardStateSelected, (card: Card) => {
+export const selectCardStateSelectedId = createSelector(selectCardStateSelected, (card: Card) => {
     return card == null ? null : card.id;
 });

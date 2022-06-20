@@ -11,6 +11,7 @@
 
 package org.opfab.cards.publication.services;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
@@ -47,6 +48,7 @@ public class CardNotificationService {
     ) {
         this.rabbitTemplate = rabbitTemplate;
         this.mapper = mapper;
+        this.mapper.setSerializationInclusion(JsonInclude.Include.NON_EMPTY);
     }
 
     public void notifyOneCard(CardPublicationData card, CardOperationTypeEnum type) {

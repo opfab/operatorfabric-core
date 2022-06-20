@@ -7,37 +7,32 @@
  * This file is part of the OperatorFabric project.
  */
 
-import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { ExternaldevicesconfigurationComponent } from './externaldevicesconfiguration.component';
+import {NgModule} from '@angular/core';
+import {CommonModule} from '@angular/common';
+import {ExternaldevicesconfigurationComponent} from './externaldevicesconfiguration.component';
 
 import {TranslateModule} from '@ngx-translate/core';
 import {AgGridModule} from 'ag-grid-angular';
 import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
 import {ActionCellRendererComponent} from '../admin/components/cell-renderers/action-cell-renderer.component';
 import {SingleFilterModule} from '../share/single-filter/single-filter.module';
-import {MultiFilterModule} from '../share/multi-filter/multi-filter.module';
 import {ExternaldevicesconfigurationModalComponent} from './editModal/externaldevicesconfiguration-modal.component';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {ExternaldevicesconfigurationRoutingModule} from './externaldevicesconfiguration-routing.module';
-
+import {MultiSelectModule} from '../share/multi-select/multi-select.module';
 
 @NgModule({
-  declarations: [
-    ExternaldevicesconfigurationComponent,
-    ExternaldevicesconfigurationModalComponent
-  ],
-  imports: [
-    FormsModule,
-    ReactiveFormsModule,
-    CommonModule,
-    TranslateModule,
-    ExternaldevicesconfigurationRoutingModule,
-    SingleFilterModule,
-    MultiFilterModule,
-    NgbModule,
-    AgGridModule.withComponents([[
-      ActionCellRendererComponent]])
-  ]
+    declarations: [ExternaldevicesconfigurationComponent, ExternaldevicesconfigurationModalComponent],
+    imports: [
+        FormsModule,
+        ReactiveFormsModule,
+        CommonModule,
+        TranslateModule,
+        ExternaldevicesconfigurationRoutingModule,
+        SingleFilterModule,
+        MultiSelectModule,
+        NgbModule,
+        AgGridModule.withComponents([[ActionCellRendererComponent]])
+    ]
 })
-export class ExternaldevicesModule { }
+export class ExternaldevicesModule {}

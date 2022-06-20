@@ -7,13 +7,10 @@
  * This file is part of the OperatorFabric project.
  */
 
-
-
 import {LightCard, PublisherType, Severity} from '@ofModel/light-card.model';
 import {I18n} from '@ofModel/i18n.model';
 
 export class Card {
-    /* istanbul ignore next */
     constructor(
         readonly uid: string,
         readonly id: string,
@@ -48,11 +45,12 @@ export class Card {
         readonly publisherType?: PublisherType | string,
         readonly representative?: string,
         readonly representativeType?: PublisherType | string,
+        readonly wktGeometry?: string,
+        readonly wktProjection?: string,
         public secondsBeforeTimeSpanForReminder?: number,
         public timeSpans?: TimeSpan[],
         readonly entitiesAcks?: string[]
-    ) {
-    }
+    ) {}
 }
 
 export class CardForPublishing {
@@ -82,32 +80,23 @@ export class CardForPublishing {
         readonly publisherType?: PublisherType | string,
         readonly representative?: string,
         readonly representativeType?: PublisherType | string,
+        readonly wktGeometry?: string,
+        readonly wktProjection?: string,
         readonly secondsBeforeTimeSpanForReminder?: number,
         readonly timeSpans?: TimeSpan[]
-    ) {
-    }
+    ) {}
 }
 
 export class CardData {
-    constructor(
-        readonly card: Card,
-        readonly childCards: Card[]
-    ) {}
+    constructor(readonly card: Card, readonly childCards: Card[]) {}
 }
 
 export class CardCreationReportData {
-    constructor(
-        readonly uid: string,
-        readonly id: string,
-    ) {}
+    constructor(readonly uid: string, readonly id: string) {}
 }
 
 export class TimeSpan {
-    constructor(
-        readonly start: number,
-        readonly end?: number,
-        readonly recurrence?: Recurrence
-    ) { }
+    constructor(readonly start: number, readonly end?: number, readonly recurrence?: Recurrence) {}
 }
 
 export class Recurrence {
@@ -117,23 +106,45 @@ export class Recurrence {
         public timeZone?: string,
         public durationInMinutes?: number
     ) {}
-
 }
 
 export class HourAndMinutes {
-    constructor(
-        public hours: number,
-        public minutes: number
-    ) {}
-
+    constructor(public hours: number, public minutes: number) {}
 }
 
-
 export function fromCardToLightCard(card: Card): LightCard {
-    return new LightCard(card.uid, card.id, card.publisher, card.processVersion, card.publishDate, card.startDate
-        , card.endDate, card.severity, card.hasBeenAcknowledged, card.hasBeenRead, card.hasChildCardFromCurrentUserEntity, card.processInstanceId
-        , card.lttd, card.title, card.summary, card.titleTranslated, card.summaryTranslated, null, [], card.process, card.state, card.parentCardId,
-        card.initialParentCardUid, card.keepChildCards, card.representative, card.representativeType, card.entitiesAcks, card.entityRecipients);
+    return new LightCard(
+        card.uid,
+        card.id,
+        card.publisher,
+        card.processVersion,
+        card.publishDate,
+        card.startDate,
+        card.endDate,
+        card.severity,
+        card.hasBeenAcknowledged,
+        card.hasBeenRead,
+        card.hasChildCardFromCurrentUserEntity,
+        card.processInstanceId,
+        card.lttd,
+        card.title,
+        card.summary,
+        card.titleTranslated,
+        card.summaryTranslated,
+        null,
+        [],
+        card.process,
+        card.state,
+        card.parentCardId,
+        card.initialParentCardUid,
+        card.keepChildCards,
+        card.representative,
+        card.representativeType,
+        card.wktGeometry,
+        card.wktProjection,
+        card.entitiesAcks,
+        card.entityRecipients
+    );
 }
 
 export function fromCardToCardForPublishing(card: Card): CardForPublishing {
@@ -163,6 +174,8 @@ export function fromCardToCardForPublishing(card: Card): CardForPublishing {
         card.publisherType,
         card.representative,
         card.representativeType,
+        card.wktGeometry,
+        card.wktProjection,
         card.secondsBeforeTimeSpanForReminder,
         card.timeSpans
     );

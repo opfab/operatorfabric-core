@@ -7,19 +7,18 @@
  * This file is part of the OperatorFabric project.
  */
 
-
 import {ComponentFixture, TestBed, waitForAsync} from '@angular/core/testing';
 import {TextSettingComponent} from './text-setting.component';
-import {Store} from "@ngrx/store";
-import {FormsModule, ReactiveFormsModule} from "@angular/forms";
-import {AppState} from "@ofStore/index";
-import {of} from "rxjs";
-import {settingsInitialState} from "@ofStates/settings.state";
-import {map} from "rxjs/operators";
-import {PatchSettings} from "@ofActions/settings.actions";
+import {Store} from '@ngrx/store';
+import {FormsModule, ReactiveFormsModule} from '@angular/forms';
+import {AppState} from '@ofStore/index';
+import {of} from 'rxjs';
+import {settingsInitialState} from '@ofStates/settings.state';
+import {map} from 'rxjs/operators';
+import {PatchSettingsAction} from '@ofActions/settings.actions';
 import {emptyAppState4Test, injectedSpy} from '@tests/helpers';
-import {authInitialState} from "@ofStates/authentication.state";
-import {configInitialState} from "@ofStates/config.state";
+import {authInitialState} from '@ofStates/authentication.state';
+import {configInitialState} from '@ofStates/config.state';
 import createSpyObj = jasmine.createSpyObj;
 import SpyObj = jasmine.SpyObj;
 
@@ -36,21 +35,18 @@ describe('TextSettingComponent', () => {
         const storeSpy = createSpyObj('Store', ['dispatch', 'select']);
 
         TestBed.configureTestingModule({
-            imports: [
-                FormsModule,
-                ReactiveFormsModule,
-            ],
+            imports: [FormsModule, ReactiveFormsModule],
             providers: [{provide: Store, useValue: storeSpy}],
             declarations: [TextSettingComponent]
-        })
-            .compileComponents();
+        }).compileComponents();
     }));
 
     beforeEach(() => {
         mockStore = injectedSpy(Store) as SpyObj<Store<AppState>>;
-        mockStore.select.and.callFake(selector => {
+        mockStore.select.and.callFake((selector) => {
             return of({
-                ...emptyAppState, settings: {
+                ...emptyAppState,
+                settings: {
                     ...settingsInitialState,
                     loaded: true,
                     settings: {
@@ -58,13 +54,10 @@ describe('TextSettingComponent', () => {
                         empty: null
                     }
                 }
-            }).pipe(
-                map(v => selector(v))
-            )
+            }).pipe(map((v) => selector(v)));
         });
         fixture = TestBed.createComponent(TextSettingComponent);
         component = fixture.componentInstance;
-
     });
 
     it('should create', () => {
@@ -89,10 +82,9 @@ describe('TextSettingComponent', () => {
             expect(mockStore.dispatch).toHaveBeenCalledTimes(1);
             const settings = {login: 'test'};
             settings[component.settingPath] = 'new-value';
-            expect(mockStore.dispatch).toHaveBeenCalledWith(new PatchSettings({settings: settings}));
+            expect(mockStore.dispatch).toHaveBeenCalledWith(new PatchSettingsAction({settings: settings}));
             done();
         }, 1000);
-
     });
 
     it('should not submit with required validator', (done) => {
@@ -105,7 +97,6 @@ describe('TextSettingComponent', () => {
             expect(mockStore.dispatch).toHaveBeenCalledTimes(0);
             done();
         }, 1000);
-
     });
 
     it('should not submit with pattern validator', (done) => {
@@ -118,7 +109,6 @@ describe('TextSettingComponent', () => {
             expect(mockStore.dispatch).toHaveBeenCalledTimes(0);
             done();
         }, 1000);
-
     });
 
     it('should submit with pattern validator', (done) => {
@@ -131,9 +121,8 @@ describe('TextSettingComponent', () => {
             expect(mockStore.dispatch).toHaveBeenCalledTimes(1);
             const settings = {login: 'test'};
             settings[component.settingPath] = 'fr';
-            expect(mockStore.dispatch).toHaveBeenCalledWith(new PatchSettings({settings: settings}));
+            expect(mockStore.dispatch).toHaveBeenCalledWith(new PatchSettingsAction({settings: settings}));
             done();
         }, 1000);
-
     });
 });

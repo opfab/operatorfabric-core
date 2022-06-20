@@ -7,20 +7,17 @@
  * This file is part of the OperatorFabric project.
  */
 
-
 import {Component, Input, OnDestroy, OnInit} from '@angular/core';
 import {BaseSettingDirective} from '../base-setting/base-setting.directive';
 import {AppState} from '@ofStore/index';
 import {Store} from '@ngrx/store';
 import {FormControl, FormGroup, Validators} from '@angular/forms';
 
-
 @Component({
     selector: 'of-text-setting',
     templateUrl: './text-setting.component.html'
 })
 export class TextSettingComponent extends BaseSettingDirective implements OnInit, OnDestroy {
-
     @Input() pattern: string;
     @Input() disabled: boolean;
     @Input() text: string;
@@ -31,9 +28,12 @@ export class TextSettingComponent extends BaseSettingDirective implements OnInit
 
     initFormGroup() {
         const validators = this.computeTextValidators();
-        return new FormGroup({
-            setting: new FormControl(null, validators)
-        }, {updateOn: 'change'});
+        return new FormGroup(
+            {
+                setting: new FormControl(null, validators)
+            },
+            {updateOn: 'change'}
+        );
     }
 
     protected computeTextValidators() {
@@ -49,14 +49,11 @@ export class TextSettingComponent extends BaseSettingDirective implements OnInit
 
     updateValue(value) {
         // Undefined or null value means the user does not have made a choice for his settings, so we set the input value "text" (default value)
-        if ((value === null) || (value === undefined))
-            this.form.get('setting').setValue(this.text, {emitEvent: false});
-        else
-            this.form.get('setting').setValue(value, {emitEvent: false});
+        if (value === null || value === undefined) this.form.get('setting').setValue(this.text, {emitEvent: false});
+        else this.form.get('setting').setValue(value, {emitEvent: false});
     }
 
     protected isEqual(formA, formB): boolean {
         return formA.setting === formB.setting;
     }
-
 }

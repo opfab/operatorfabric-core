@@ -6,7 +6,8 @@ Feature: get card Subscription
     * def authToken = signIn.authToken
     * def signInAsTSO = callonce read('../common/getToken.feature') { username: 'operator1_fr'}
     * def authTokenAsTSO = signInAsTSO.authToken
-
+    * def signInAsTSO4 = callonce read('../common/getToken.feature') { username: 'operator4_fr'}
+    * def authTokenAsTSO4 = signInAsTSO4.authToken
 
 
 * def getCard = 
@@ -125,6 +126,63 @@ Feature: get card Subscription
       When method get
       Then status 200
       And match response == ''
+
+
+
+
+
+    Scenario: get card subscription by publishDate should return also newly acked cards
+
+    * def cardPublishDate = new Date().valueOf();
+    * def entity1Array =
+    """
+    [   "ENTITY1_FR"
+    ]
+    """
+
+    # Push card
+      Given url opfabPublishCardUrl + 'cards'
+      And header Authorization = 'Bearer ' + authTokenAsTSO
+      And header Content-Type = 'application/json'
+      And request card
+      When method post
+      Then status 201
+      And print response
+      And def cardUid = response.uid
+
+    # Get subscription and check that card is returned
+      Given url opfabUrl + 'cards/cardSubscription' +'?notification=false&clientId=ghi0123456789jkl&publishFrom='+ cardPublishDate
+      And header Authorization = 'Bearer ' + authTokenAsTSO
+      When method get
+      Then status 200
+      And print response
+      And match response contains '"card":{"uid":"' + cardUid + '"'
+
+    * def cardAckDate = new Date().valueOf();
+
+      # Get subscription and check that no card is returned
+      Given url opfabUrl + 'cards/cardSubscription' +'?notification=false&clientId=ghi0123456789jkl&publishFrom=' + cardAckDate
+      And header Authorization = 'Bearer ' + authTokenAsTSO
+      When method get
+      Then status 200
+      And match response == ''
+
+    # make an acknowledgement to the card with operator4_fr
+      Given url opfabUrl + 'cardspub/cards/userAcknowledgement/' + cardUid
+      And header Authorization = 'Bearer ' + authTokenAsTSO4
+      And request entity1Array
+      When method post
+      Then status 201
+
+
+    # Get subscription and check that card is returned
+      Given url opfabUrl + 'cards/cardSubscription' +'?notification=false&clientId=ghi0123456789jkl&publishFrom='+ cardAckDate
+      And header Authorization = 'Bearer ' + authTokenAsTSO
+      When method get
+      Then status 200
+      And match response contains '"card":{"uid":"' + cardUid + '"'
+
+
 
     #delete perimeter created previously
       Given url opfabUrl + 'users/perimeters/perimeter'

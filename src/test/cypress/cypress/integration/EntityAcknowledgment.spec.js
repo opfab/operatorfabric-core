@@ -438,4 +438,31 @@ describe('Entity acknowledgment tests for icon in light-card', function () {
         cy.get('#opfab-feed-light-card-cypress-entitiesAcksMessage4 .fa-check').should('not.exist');
     });
 
+    it('check entities ack for a card sent to entities different from entities of the user', function () {
+
+        // Clean up existing cards
+        cy.deleteAllCards();
+
+        cy.loginOpFab('operator1_fr', 'test');
+
+        // Set feed filter to see all cards
+        cy.get('#opfab-feed-filter-btn-filter').click();
+        cy.get('#opfab-feed-filter-ack-all').click();
+        cy.waitDefaultTime(); // let time before closing popup to avoid flaky error on CI/CD
+        cy.get('#opfab-feed-filter-btn-filter').click();
+
+        cy.sendCard('cypress/entitiesAcks/message4_ItalianEntityRecipients.json');
+
+        cy.get('of-light-card').should('have.length', 1);
+        // The card should not have ack icon
+        cy.get('#opfab-feed-light-card-cypress-entitiesAcksMessage4_ItalianEntityRecipients .fa-check').should('not.exist');
+        // The ack button must display 'acknowledge and close'
+        cy.get('#opfab-feed-light-card-cypress-entitiesAcksMessage4_ItalianEntityRecipients').click();
+        cy.get('#opfab-card-details-btn-ack').should('exist').should('have.text', 'ACKNOWLEDGE AND CLOSE');
+        // Click ack button
+        cy.get('#opfab-card-details-btn-ack').click();
+        // Now, the ack icon must be present
+        cy.get('#opfab-feed-light-card-cypress-entitiesAcksMessage4_ItalianEntityRecipients .fa-check').should('exist');
+    });
+
 });

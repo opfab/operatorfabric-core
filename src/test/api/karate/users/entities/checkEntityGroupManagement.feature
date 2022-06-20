@@ -131,7 +131,7 @@ Feature: CheckEntityGroupManagement
         And header Authorization = 'Bearer ' + adminAuthToken
         When method get
         Then status 200
-        And match response.parents == []
+        And match response.parents == '#notpresent'
 
     Scenario Outline: Clean entity test collection from the previous added entities in this feature
 

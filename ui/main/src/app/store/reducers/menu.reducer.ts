@@ -7,19 +7,14 @@
  * This file is part of the OperatorFabric project.
  */
 
-
 import {menuInitialState, MenuState} from '@ofStates/menu.state';
 import {MenuActions, MenuActionTypes} from '@ofActions/menu.actions';
 
-export function reducer(
-    state = menuInitialState,
-    action: MenuActions
-): MenuState {
-
+export function reducer(state = menuInitialState, action: MenuActions): MenuState {
     if (action.type === MenuActionTypes.LoadMenuSuccess)
         return {
             ...state,
             menu: action.payload.menu
-        }
+        };
     return state;
 }

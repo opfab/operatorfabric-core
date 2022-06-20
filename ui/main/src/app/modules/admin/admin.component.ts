@@ -8,7 +8,6 @@
  * This file is part of the OperatorFabric project.
  */
 
-
 import {Component, OnInit} from '@angular/core';
 import {ActivatedRoute} from '@angular/router';
 import {Store} from '@ngrx/store';
@@ -17,29 +16,28 @@ import {AppState} from '@ofStore/index';
 import {SharingService} from './services/sharing.service';
 
 @Component({
-  selector: 'of-admin',
-  templateUrl: './admin.component.html',
-  styleUrls: ['./admin.component.scss']
+    selector: 'of-admin',
+    templateUrl: './admin.component.html',
+    styleUrls: ['./admin.component.scss']
 })
 export class AdminComponent implements OnInit {
+    public paginationDefaultPageSize = 10;
+    public paginationPageSizeOptions = [5, 10, 25, 50, 100];
 
-  public paginationDefaultPageSize = 10;
-  public paginationPageSizeOptions = [5, 10, 25, 50, 100];
+    constructor(
+        private route: ActivatedRoute,
+        protected store: Store<AppState>,
+        protected translate: TranslateService,
+        private dataHandlingService: SharingService
+    ) {}
 
-  constructor(private route: ActivatedRoute,
-              protected store: Store<AppState>,
-              protected translate: TranslateService,
-              private dataHandlingService: SharingService) {
-  }
+    ngOnInit() {
+        this.dataHandlingService.changePaginationPageSize(this.paginationDefaultPageSize);
+    }
 
-  ngOnInit() {
-    this.dataHandlingService.changePaginationPageSize(this.paginationDefaultPageSize);
-  }
-
-  onPageSizeChanged() {
-    // Cast to get rid of "Property 'value' does not exist on type 'HTMLElement'."
-    const value = (<HTMLInputElement> document.getElementById('opfab-page-size-select')).value;
-    this.dataHandlingService.changePaginationPageSize(Number(value));
-  }
-
+    onPageSizeChanged() {
+        // Cast to get rid of "Property 'value' does not exist on type 'HTMLElement'."
+        const value = (<HTMLInputElement>document.getElementById('opfab-page-size-select')).value;
+        this.dataHandlingService.changePaginationPageSize(Number(value));
+    }
 }

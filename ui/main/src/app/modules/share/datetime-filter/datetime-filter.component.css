@@ -7,16 +7,14 @@
  * This file is part of the OperatorFabric project.
  */
 
-
-  .nopaddingrow {
-    padding-right:0;
-    padding-left:0;
-  }
-  legend.accessibility {
-    position:absolute;
-    left:-9999px;
-    width:100px;
-    height:auto;
-    overflow:hidden;
+.nopaddingrow {
+    padding-right: 0;
+    padding-left: 0;
 }
-
+legend.accessibility {
+    position: absolute;
+    left: -9999px;
+    width: 100px;
+    height: auto;
+    overflow: hidden;
+}

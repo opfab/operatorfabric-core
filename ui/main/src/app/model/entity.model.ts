@@ -7,17 +7,13 @@
  * This file is part of the OperatorFabric project.
  */
 
-
-
 export class Entity {
-
     public constructor(
-    readonly id: string,
-    readonly name: string,
-    readonly description: string,
-    readonly entityAllowedToSendCard: boolean,
-    readonly labels: string[],
-    readonly parents: string[]
-) {}
-
+        readonly id: string,
+        readonly name: string,
+        readonly description: string,
+        readonly entityAllowedToSendCard: boolean,
+        readonly labels: string[],
+        readonly parents: string[]
+    ) {}
 }

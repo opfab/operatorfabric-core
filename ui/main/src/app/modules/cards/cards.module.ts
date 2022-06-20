@@ -19,9 +19,7 @@ import {SingleFilterModule} from '../share/single-filter/single-filter.module';
 import {ReactiveFormsModule} from '@angular/forms';
 
 @NgModule({
-  declarations: [
-       CardDetailsComponent
-      , DetailComponent],
+    declarations: [CardDetailsComponent, DetailComponent],
     imports: [
         CommonModule,
         CountDownModule,
@@ -31,11 +29,6 @@ import {ReactiveFormsModule} from '@angular/forms';
         SingleFilterModule,
         ReactiveFormsModule
     ],
-    exports: [
-         CardDetailsComponent
-        , DetailComponent
-    ]
+    exports: [CardDetailsComponent, DetailComponent]
 })
-
 export class CardsModule {}
-

@@ -1,7 +1,7 @@
 swagger: '2.0'
 info:
   description: IMPORTANT - The Try it Out button will generate curl requests for examples, but executing them through the UI will not work as authentication has not been set up. This page is for documentation only.
-  version: 3.7.0.RELEASE
+  version: 3.8.0.RELEASE
   title: Card Management API
   termsOfService: ''
   contact:
@@ -286,6 +286,12 @@ definitions:
         description: Used in case of sending card as a representative of an entity or a publisher (unique ID of the entity or publisher)
       representativeType:
         $ref: '#/definitions/PublisherTypeEnum'
+      wktGeometry:
+        type: string
+        description: Contains WKT geometry string ex. 'POINT (6.476709 52.569132)'
+      wktProjection:
+        type: string
+        description: Contains projection ex. 'EPSG:4326'
       secondsBeforeTimeSpanForReminder:
         type: integer
       toNotify:
@@ -475,6 +481,12 @@ definitions:
         description: Used in case of sending card as a representative of an entity or a publisher (unique ID of the entity or publisher)
       representativeType:
         $ref: '#/definitions/PublisherTypeEnum'
+      wktGeometry:
+        type: string
+        description: Contains WKT geometry string ex. 'POINT (6.476709 52.569132)'
+      wktProjection:
+        type: string
+        description: Contains projection ex. 'EPSG:4326'
       secondsBeforeTimeSpanForReminder:
         type: integer
     required:

@@ -7,8 +7,6 @@
  * This file is part of the OperatorFabric project.
  */
 
-
-
 import {Action} from '@ngrx/store';
 
 export enum ProcessesActionTypes {

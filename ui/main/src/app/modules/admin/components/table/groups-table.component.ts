@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021, RTE (http://www.rte-france.com)
+ * Copyright (c) 2021-2022, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -14,14 +14,18 @@ import {AdminItemType} from '../../services/sharing.service';
 import {EditGroupModalComponent} from '../editmodal/groups/edit-group-modal.component';
 
 @Component({
-  templateUrl: 'admin-table.directive.html',
-  selector: 'of-groups-table'
+    templateUrl: 'admin-table.directive.html',
+    selector: 'of-groups-table'
 })
 export class GroupsTableComponent extends AdminTableDirective implements OnInit {
-
-  tableType = AdminItemType.GROUP;
-  fields = [new Field('id', 3), new Field('name', 3), new Field('description', 4), new Field('perimeters', 6)];
-  idField = 'id';
-  editModalComponent = EditGroupModalComponent;
-
+    tableType = AdminItemType.GROUP;
+    fields = [
+        new Field('id', 3),
+        new Field('name', 3),
+        new Field('description', 4),
+        new Field('perimeters', 6, 'perimetersCellRenderer'),
+        new Field('realtime', 4, null, this.translateValue)
+    ];
+    idField = 'id';
+    editModalComponent = EditGroupModalComponent;
 }

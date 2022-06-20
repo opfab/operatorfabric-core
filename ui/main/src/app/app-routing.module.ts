@@ -7,10 +7,9 @@
  * This file is part of the OperatorFabric project.
  */
 
-
 import {NgModule} from '@angular/core';
 import {PreloadAllModules, Router, RouterModule, Routes} from '@angular/router';
-import {LoginComponent} from './modules/login/login.component';
+import {LoginComponent} from './modules/core/application-loading/login/login.component';
 import {LoggingEntryPointComponent} from './modules/logging/logging-entry-point.component';
 import {MonitoringComponent} from './modules/monitoring/monitoring.component';
 import {CalendarComponent} from './modules/calendar/calendar.component';
@@ -22,7 +21,7 @@ const archivePath = 'archives';
 const routes: Routes = [
     {
         path: 'feed',
-        loadChildren: () => import('./modules/feed/feed.module').then(m => m.FeedModule),
+        loadChildren: () => import('./modules/feed/feed.module').then((m) => m.FeedModule)
     },
     {
         path: 'archives',
@@ -42,11 +41,12 @@ const routes: Routes = [
     },
     {
         path: 'businessconfigparty',
-        loadChildren: () => import('./modules/businessconfigparty/businessconfigparty.module').then(m => m.BusinessconfigpartyModule),
+        loadChildren: () =>
+            import('./modules/businessconfigparty/businessconfigparty.module').then((m) => m.BusinessconfigpartyModule)
     },
     {
         path: 'settings',
-        loadChildren: () => import('./modules/settings/settings.module').then(m => m.SettingsModule),
+        loadChildren: () => import('./modules/settings/settings.module').then((m) => m.SettingsModule)
     },
     {
         path: 'navbar',
@@ -54,34 +54,36 @@ const routes: Routes = [
     },
     {
         path: 'admin',
-         loadChildren: () => import('./modules/admin/admin.module').then(m => m.AdminModule),
+        loadChildren: () => import('./modules/admin/admin.module').then((m) => m.AdminModule)
     },
     {
         path: 'realtimeusers',
-        loadChildren: () => import('./modules/realtimeusers/realtimeusers.module').then(m => m.RealtimeusersModule),
+        loadChildren: () => import('./modules/realtimeusers/realtimeusers.module').then((m) => m.RealtimeusersModule)
     },
     {
         path: 'activityarea',
-        loadChildren: () => import('./modules/activityarea/activityarea.module').then(m => m.ActivityareaModule),
+        loadChildren: () => import('./modules/activityarea/activityarea.module').then((m) => m.ActivityareaModule)
     },
     {
         path: 'feedconfiguration',
-        loadChildren: () => import('./modules/feedconfiguration/feedconfiguration.module').then(m => m.FeedconfigurationModule),
+        loadChildren: () =>
+            import('./modules/feedconfiguration/feedconfiguration.module').then((m) => m.FeedconfigurationModule)
     },
     {
         path: 'changepassword',
-        loadChildren: () => import('./modules/changepassword/changepassword.module').then(m => m.ChangepasswordModule),
+        loadChildren: () => import('./modules/changepassword/changepassword.module').then((m) => m.ChangepasswordModule)
     },
     {
         path: 'externaldevicesconfiguration',
-        loadChildren: () => import('./modules/externaldevicesconfiguration/externaldevicesconfiguration.module').then(m => m.ExternaldevicesModule),
+        loadChildren: () =>
+            import('./modules/externaldevicesconfiguration/externaldevicesconfiguration.module').then(
+                (m) => m.ExternaldevicesModule
+            )
     },
-    {   path: '**',
-        redirectTo: defaultPath
-    }
+    {path: '**', redirectTo: defaultPath}
 ];
 const startIndex = 0;
-const numberOfHiddenRoutes = 10 ; // 'Calendar', 'businessconfigparty', 'settings', 'navbar', 'admin', 'realtimeusers', 'activityarea', 'feedconfiguration', 'changepassword', 'externaldevicesconfiguration'
+const numberOfHiddenRoutes = 10; // 'Calendar', 'businessconfigparty', 'settings', 'navbar', 'admin', 'realtimeusers', 'activityarea', 'feedconfiguration', 'changepassword', 'externaldevicesconfiguration'
 const manageIndexesWhichBeginAtZero = 1;
 const numberOfRoutes = routes.length;
 const lastIndexOfVisibleElements = numberOfRoutes - numberOfHiddenRoutes - manageIndexesWhichBeginAtZero;
@@ -95,26 +97,27 @@ export const navigationRoutes: Routes = routes.slice(startIndex, lastIndexOfVisi
 export function redirectToCurrentLocation(currentRouter: Router): void {
     const pathname = window.location.hash;
     const hashLength = pathname.length;
-    const destination = (hashLength > 2) ? pathname.substring(1, hashLength) : defaultPath;
+    const destination = hashLength > 2 ? pathname.substring(1, hashLength) : defaultPath;
     // as archive searches are not stored need to got back to archives root path
-    const lastDestination = (destination.includes(archivePath)) ? archivePath : destination;
+    const lastDestination = destination.includes(archivePath) ? archivePath : destination;
     currentRouter.navigate([lastDestination]);
 }
 
 @NgModule({
     imports: [
         RouterModule.forRoot(routes, {
-    enableTracing: false, preloadingStrategy: PreloadAllModules,
-    /* sets initialNavigation to false is needed to enable authentication implicit flow
-    * otherwise HashLocationStrategy breaks it by handling '#' within `window.location`.
-    */
-    /* sets initialNavigation to false is needed to enable authentication implicit flow
-* otherwise HashLocationStrategy breaks it by handling '#' within `window.location`.
-*/
-    initialNavigation: 'disabled',
-    relativeLinkResolution: 'legacy'
-})],
+            enableTracing: false,
+            preloadingStrategy: PreloadAllModules,
+            /* sets initialNavigation to false is needed to enable authentication implicit flow
+             * otherwise HashLocationStrategy breaks it by handling '#' within `window.location`.
+             */
+            /* sets initialNavigation to false is needed to enable authentication implicit flow
+             * otherwise HashLocationStrategy breaks it by handling '#' within `window.location`.
+             */
+            initialNavigation: 'disabled',
+            relativeLinkResolution: 'legacy'
+        })
+    ],
     exports: [RouterModule]
 })
-export class AppRoutingModule {
-}
+export class AppRoutingModule {}

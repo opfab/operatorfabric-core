@@ -7,21 +7,12 @@
  * This file is part of the OperatorFabric project.
  */
 
-
-
 // intermediate component used to avoir circular dependency with router module
-
 
 import {Component} from '@angular/core';
 
-
 @Component({
     selector: 'of-logging-entry-point',
-    template: `
-
-            <of-logging> </of-logging>
-        `
+    template: ` <of-logging> </of-logging> `
 })
-export class LoggingEntryPointComponent {
-
-}
+export class LoggingEntryPointComponent {}

@@ -7,7 +7,6 @@
  * This file is part of the OperatorFabric project.
  */
 
-
 import {ComponentFixture, TestBed, waitForAsync} from '@angular/core/testing';
 import {InitChartComponent} from './init-chart.component';
 import {APP_BASE_HREF, CommonModule} from '@angular/common';
@@ -24,12 +23,12 @@ import {RouterTestingModule} from '@angular/router/testing';
 import {MouseWheelDirective} from '../directives/mouse-wheel.directive';
 import {TimeService} from '@ofServices/time.service';
 import {TranslateLoader, TranslateModule, TranslateService} from '@ngx-translate/core';
-import {GlobalStyleService} from "@ofServices/global-style.service";
+import {GlobalStyleService} from '@ofServices/global-style.service';
 import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
-import {TimelineButtonsComponent} from "../../../../share/timeline-buttons/timeline-buttons.component";
-import {ConfigService} from "@ofServices/config.service";
-import {HttpClient, HttpHandler} from "@angular/common/http";
-import {AppService} from "@ofServices/app.service";
+import {TimelineButtonsComponent} from '../../../../share/timeline-buttons/timeline-buttons.component';
+import {ConfigService} from '@ofServices/config.service';
+import {HttpClient, HttpHandler} from '@angular/common/http';
+import {AppService} from '@ofServices/app.service';
 import {BusinessconfigI18nLoaderFactory} from '@tests/helpers';
 import {LightCardsServiceMock} from '@tests/mocks/lightcards.service.mock';
 import {LightCardsFeedFilterService} from '@ofServices/lightcards/lightcards-feed-filter.service';
@@ -37,106 +36,107 @@ import {OpfabLoggerService} from '@ofServices/logs/opfab-logger.service';
 import {RemoteLoggerService} from '@ofServices/logs/remote-logger.service';
 import {RemoteLoggerServiceMock} from '@tests/mocks/remote-logger.service.mock';
 
-
 describe('InitChartComponent', () => {
-  let component: InitChartComponent;
-  let timelineButtonsComponent: TimelineButtonsComponent;
-  let fixture: ComponentFixture<InitChartComponent>;
-  let fixture2: ComponentFixture<TimelineButtonsComponent>;
-  let translate: TranslateService;
-  
+    let component: InitChartComponent;
+    let timelineButtonsComponent: TimelineButtonsComponent;
+    let fixture: ComponentFixture<InitChartComponent>;
+    let fixture2: ComponentFixture<TimelineButtonsComponent>;
+    let translate: TranslateService;
 
-  beforeEach(waitForAsync(() => {
-    TestBed.configureTestingModule({
-      imports: [CommonModule,
-        BrowserAnimationsModule,
-        FormsModule,
-        StoreModule.forRoot(appReducer, storeConfig),
-        RouterTestingModule,
-        StoreRouterConnectingModule.forRoot(),
-        NgxChartsModule,
-        NgbModule,
-        TranslateModule.forRoot({
-          loader: {
-              provide: TranslateLoader,
-              useFactory: BusinessconfigI18nLoaderFactory
-          },
-          useDefaultLang: false
-      })
-      ],
-      declarations: [ InitChartComponent, CustomTimelineChartComponent, MouseWheelDirective, TimelineButtonsComponent],
-      providers: [{provide: APP_BASE_HREF, useValue: '/'},
-        {provide: Store, useClass: Store},
-        {provide: RouterStateSerializer, useClass: CustomRouterStateSerializer},
-        {provide: TimeService, useClass: TimeService},
-        {provide: ConfigService, useClass: ConfigService},
-        {provide: HttpClient, useClass: HttpClient},
-        {provide: HttpHandler, useClass: HttpHandler},
-        {provide: AppService, useClass: AppService},
-        {provide: GlobalStyleService, useClass: GlobalStyleService},
-        {provide: LightCardsFeedFilterService, useClass: LightCardsServiceMock},
-        {provide: OpfabLoggerService, useClass: OpfabLoggerService},
-        {provide: RemoteLoggerService, useClass : RemoteLoggerServiceMock}
-      ],
-      schemas: [ NO_ERRORS_SCHEMA ],
-    })
-    .compileComponents();
+    beforeEach(waitForAsync(() => {
+        TestBed.configureTestingModule({
+            imports: [
+                CommonModule,
+                BrowserAnimationsModule,
+                FormsModule,
+                StoreModule.forRoot(appReducer, storeConfig),
+                RouterTestingModule,
+                StoreRouterConnectingModule.forRoot(),
+                NgxChartsModule,
+                NgbModule,
+                TranslateModule.forRoot({
+                    loader: {
+                        provide: TranslateLoader,
+                        useFactory: BusinessconfigI18nLoaderFactory
+                    },
+                    useDefaultLang: false
+                })
+            ],
+            declarations: [
+                InitChartComponent,
+                CustomTimelineChartComponent,
+                MouseWheelDirective,
+                TimelineButtonsComponent
+            ],
+            providers: [
+                {provide: APP_BASE_HREF, useValue: '/'},
+                {provide: Store, useClass: Store},
+                {provide: RouterStateSerializer, useClass: CustomRouterStateSerializer},
+                {provide: TimeService, useClass: TimeService},
+                {provide: ConfigService, useClass: ConfigService},
+                {provide: HttpClient, useClass: HttpClient},
+                {provide: HttpHandler, useClass: HttpHandler},
+                {provide: AppService, useClass: AppService},
+                {provide: GlobalStyleService, useClass: GlobalStyleService},
+                {provide: LightCardsFeedFilterService, useClass: LightCardsServiceMock},
+                {provide: OpfabLoggerService, useClass: OpfabLoggerService},
+                {provide: RemoteLoggerService, useClass: RemoteLoggerServiceMock}
+            ],
+            schemas: [NO_ERRORS_SCHEMA]
+        }).compileComponents();
 
-    fixture = TestBed.createComponent(InitChartComponent);
-    component = fixture.componentInstance;
+        fixture = TestBed.createComponent(InitChartComponent);
+        component = fixture.componentInstance;
 
-    fixture2 = TestBed.createComponent(TimelineButtonsComponent);
-    timelineButtonsComponent = fixture2.componentInstance;
+        fixture2 = TestBed.createComponent(TimelineButtonsComponent);
+        timelineButtonsComponent = fixture2.componentInstance;
+    }));
 
-  }));
+    it('check applyNewZoom function with only one button' + 'forward level activated is different', () => {
+        fixture.detectChanges();
+        timelineButtonsComponent.selectedButtonTitle = 'W';
+        timelineButtonsComponent.buttonList = [{buttonTitle: 'M', domainId: 'M'}];
+        const tmp = timelineButtonsComponent.selectedButtonTitle;
+        timelineButtonsComponent.applyNewZoom('in');
+        // no change expected, cause button buttonList is not equal to buttonTitle
+        expect(tmp).toEqual(timelineButtonsComponent.selectedButtonTitle);
+        timelineButtonsComponent.applyNewZoom('out');
+        expect(tmp).toEqual(timelineButtonsComponent.selectedButtonTitle);
+        expect(component).toBeTruthy();
+    });
 
+    it('check applyNewZoom function with only one button' + 'forward level activated is same than one button', () => {
+        fixture.detectChanges();
+        timelineButtonsComponent.selectedButtonTitle = 'W';
+        timelineButtonsComponent.buttonList = [{buttonTitle: 'W'}];
+        const tmp = timelineButtonsComponent.selectedButtonTitle;
+        timelineButtonsComponent.applyNewZoom('in');
+        // no change expected, cause buttonList got only one button
+        expect(tmp).toEqual(timelineButtonsComponent.selectedButtonTitle);
+        timelineButtonsComponent.applyNewZoom('out');
+        expect(tmp).toEqual(timelineButtonsComponent.selectedButtonTitle);
+        expect(component).toBeTruthy();
+    });
 
-  it('check applyNewZoom function with only one button' +
-      'forward level activated is different', () => {
-    fixture.detectChanges();
-    timelineButtonsComponent.selectedButtonTitle = 'W';
-    timelineButtonsComponent.buttonList = [{buttonTitle: 'M',domainId:'M'}];
-    const tmp = timelineButtonsComponent.selectedButtonTitle;
-    timelineButtonsComponent.applyNewZoom('in');
-    // no change expected, cause button buttonList is not equal to buttonTitle
-    expect(tmp).toEqual(timelineButtonsComponent.selectedButtonTitle);
-    timelineButtonsComponent.applyNewZoom('out');
-    expect(tmp).toEqual(timelineButtonsComponent.selectedButtonTitle);
-    expect(component).toBeTruthy();
-  });
+    it('check applyNewZoom function with two buttons' + 'forward level activated is same than last button', () => {
+        fixture.detectChanges();
+        timelineButtonsComponent.selectedButtonTitle = 'W';
+        timelineButtonsComponent.buttonList = [
+            {buttonTitle: 'M', domainId: 'M'},
+            {buttonTitle: 'W', domainId: 'W'}
+        ];
+        timelineButtonsComponent.applyNewZoom('in');
+        // change expected, cause buttonList got two buttons :
+        //  - one is the same than actual buttonTitle
+        //  - next one has buttonList differe
+        expect(timelineButtonsComponent.selectedButtonTitle).toEqual('M');
+        expect(timelineButtonsComponent.buttonList[0].selected).toBeTruthy();
+        expect(timelineButtonsComponent.buttonList[1].selected).toBeFalsy();
+        timelineButtonsComponent.applyNewZoom('out');
+        expect(timelineButtonsComponent.selectedButtonTitle).toEqual('W');
+        expect(timelineButtonsComponent.buttonList[0].selected).toBeFalsy();
+        expect(timelineButtonsComponent.buttonList[1].selected).toBeTruthy();
 
-  it('check applyNewZoom function with only one button' +
-      'forward level activated is same than one button', () => {
-    fixture.detectChanges();
-    timelineButtonsComponent.selectedButtonTitle = 'W';
-    timelineButtonsComponent.buttonList = [{buttonTitle: 'W'}];
-    const tmp = timelineButtonsComponent.selectedButtonTitle;
-    timelineButtonsComponent.applyNewZoom('in');
-    // no change expected, cause buttonList got only one button
-    expect(tmp).toEqual(timelineButtonsComponent.selectedButtonTitle);
-    timelineButtonsComponent.applyNewZoom('out');
-    expect(tmp).toEqual(timelineButtonsComponent.selectedButtonTitle);
-    expect(component).toBeTruthy();
-  });
-
-  it('check applyNewZoom function with two buttons' +
-      'forward level activated is same than last button', () => {
-    fixture.detectChanges();
-    timelineButtonsComponent.selectedButtonTitle = 'W';
-    timelineButtonsComponent.buttonList = [{buttonTitle: 'M',domainId:'M'}, {buttonTitle: 'W',domainId:'W'}];
-    timelineButtonsComponent.applyNewZoom('in');
-    // change expected, cause buttonList got two buttons :
-    //  - one is the same than actual buttonTitle
-    //  - next one has buttonList differe
-    expect(timelineButtonsComponent.selectedButtonTitle).toEqual('M');
-    expect(timelineButtonsComponent.buttonList[0].selected).toBeTruthy();
-    expect(timelineButtonsComponent.buttonList[1].selected).toBeFalsy();
-    timelineButtonsComponent.applyNewZoom('out');
-    expect(timelineButtonsComponent.selectedButtonTitle).toEqual('W');
-    expect(timelineButtonsComponent.buttonList[0].selected).toBeFalsy();
-    expect(timelineButtonsComponent.buttonList[1].selected).toBeTruthy();
-
-    expect(component).toBeTruthy();
-  });
-
+        expect(component).toBeTruthy();
+    });
 });

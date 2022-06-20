@@ -7,7 +7,7 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {Component, Input, OnChanges, OnDestroy, OnInit} from '@angular/core';
+import {Component, Input, OnChanges, OnDestroy, OnInit, Output} from '@angular/core';
 import {FormControl, FormGroup} from '@angular/forms';
 import {Subject} from 'rxjs';
 import {TimeService} from '@ofServices/time.service';
@@ -19,51 +19,62 @@ import {DatesForm} from './dates-form.model';
 
 @Component({
     selector: 'of-usercard-dates-form',
-    templateUrl: './usercard-dates-form.component.html',
-
+    templateUrl: './usercard-dates-form.component.html'
 })
 export class UserCardDatesFormComponent implements OnInit, OnDestroy, OnChanges {
-
     @Input() public datesFormInputData: DatesForm;
+
+    @Output() public startDateFilterChange = new Subject();
+    @Output() public endDateFilterChange = new Subject();
+    @Output() public lttdFilterChange = new Subject();
 
     datesForm: FormGroup;
     unsubscribe$: Subject<void> = new Subject<void>();
 
-    endDateMin: {year: number, month: number, day: number} = null;
+    endDateMin: {year: number; month: number; day: number} = null;
 
-    dateTimeFilterChange = new Subject();
-
-    constructor(
-        private timeService: TimeService
-    ) {
-    }
+    constructor(private timeService: TimeService) {}
 
     ngOnInit() {
-
         this.datesForm = new FormGroup({
             startDate: new FormControl(''),
             endDate: new FormControl(''),
-            lttd: new FormControl(''),
-
+            lttd: new FormControl('')
         });
         this.setInitialDateValues();
-        this.dateTimeFilterChange.pipe(
-            takeUntil(this.unsubscribe$),
-            debounceTime(1000),
-        ).subscribe(() => this.setDateFilterBounds());
+        this.startDateFilterChange
+            .pipe(takeUntil(this.unsubscribe$), debounceTime(1000))
+            .subscribe(() => this.setDateFilterBounds());
     }
 
     private setInitialDateValues(): void {
         if (this.datesForm) {
-
             if (this.datesFormInputData.startDate.isVisible) {
-                this.datesForm.get('startDate').setValue(this.datesFormInputData.startDate.initialEpochDate != null ? getDateTimeNgbFromMoment(moment(this.datesFormInputData.startDate.initialEpochDate)) : '');
+                this.datesForm
+                    .get('startDate')
+                    .setValue(
+                        this.datesFormInputData.startDate.initialEpochDate != null
+                            ? getDateTimeNgbFromMoment(moment(this.datesFormInputData.startDate.initialEpochDate))
+                            : ''
+                    );
             }
-            if (this.datesFormInputData.endDate.isVisible) { 
-                this.datesForm.get('endDate').setValue(this.datesFormInputData.endDate.initialEpochDate != null ? getDateTimeNgbFromMoment(moment(this.datesFormInputData.endDate.initialEpochDate)) : '');
+            if (this.datesFormInputData.endDate.isVisible) {
+                this.datesForm
+                    .get('endDate')
+                    .setValue(
+                        this.datesFormInputData.endDate.initialEpochDate != null
+                            ? getDateTimeNgbFromMoment(moment(this.datesFormInputData.endDate.initialEpochDate))
+                            : ''
+                    );
             }
             if (this.datesFormInputData.lttd.isVisible) {
-                this.datesForm.get('lttd').setValue(this.datesFormInputData.lttd.initialEpochDate != null ? getDateTimeNgbFromMoment(moment(this.datesFormInputData.lttd.initialEpochDate)) : '');
+                this.datesForm
+                    .get('lttd')
+                    .setValue(
+                        this.datesFormInputData.lttd.initialEpochDate != null
+                            ? getDateTimeNgbFromMoment(moment(this.datesFormInputData.lttd.initialEpochDate))
+                            : ''
+                    );
             }
         }
         this.setDateFilterBounds();
@@ -79,8 +90,7 @@ export class UserCardDatesFormComponent implements OnInit, OnDestroy, OnChanges 
                 };
             } else {
                 this.endDateMin = null;
-            }          
-            
+            }
         }
     }
 
@@ -96,13 +106,23 @@ export class UserCardDatesFormComponent implements OnInit, OnDestroy, OnChanges 
         return this.createTimestampFromValue(this.datesForm.get('lttd').value);
     }
 
-    onDateTimeChange() {
-        this.dateTimeFilterChange.next(null);
+    // Hack : The three following method use setTimeout to let the component update the date internally
+    // otherwise when we get the date we obtain the old one
+    // refactoring of the date component may be needed to solve this problem
+    onStartDateChange() {
+        setTimeout(() => this.startDateFilterChange.next(null), 0);
+    }
+
+    onEndDateChange() {
+        setTimeout(() => this.endDateFilterChange.next(null), 0);
+    }
+
+    onLttdChange() {
+        setTimeout(() => this.lttdFilterChange.next(null), 0);
     }
 
     ngOnChanges() {
         this.setInitialDateValues();
-        
     }
 
     ngOnDestroy() {
@@ -117,10 +137,9 @@ export class UserCardDatesFormComponent implements OnInit, OnDestroy, OnChanges 
         } else {
             return null;
         }
-    }
+    };
 
     private transformToTimestamp(date: NgbDateStruct, time: NgbTimeStruct): string {
         return new DateTimeNgb(date, time).formatDateTime();
     }
-
 }

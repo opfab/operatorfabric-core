@@ -7,18 +7,18 @@
  * This file is part of the OperatorFabric project.
  */
 
-import { Injectable } from "@angular/core";
+import {Injectable} from '@angular/core';
 
 @Injectable()
 export class RemoteLoggerServiceMock {
-  public setRemoteLoggerActive(_active: boolean) {
-    // mock
-  }
-  public postLog(_logLine: string) {
-    // mock
-  }
+    public setRemoteLoggerActive(_active: boolean) {
+        // mock
+    }
+    public postLog(_logLine: string) {
+        // mock
+    }
 
-  public flush() {
-    // mock
-  }
+    public flush() {
+        // mock
+    }
 }

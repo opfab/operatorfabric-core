@@ -7,12 +7,12 @@
  * This file is part of the OperatorFabric project.
  */
 
-
 import {NgModule} from '@angular/core';
 import {FeedComponent} from './feed.component';
 import {RouterModule, Routes} from '@angular/router';
 import {DetailComponent} from '../cards/components/detail/detail.component';
 import {CardDetailsComponent} from '../cards/components/card-details/card-details.component';
+import {MapComponent} from './components/map/map.component';
 
 const routes: Routes = [
     {
@@ -24,7 +24,7 @@ const routes: Routes = [
                 children: [
                     {
                         path: '',
-                        component: CardDetailsComponent,
+                        component: CardDetailsComponent
                     },
                     {
                         path: ':cid',
@@ -35,7 +35,12 @@ const routes: Routes = [
                                 component: DetailComponent
                             }
                         ]
-                    }]
+                    }
+                ]
+            },
+            {
+                path: '',
+                component: MapComponent
             }
         ]
     }
@@ -45,5 +50,4 @@ const routes: Routes = [
     imports: [RouterModule.forChild(routes)],
     exports: [RouterModule]
 })
-export class FeedRoutingModule {
-}
+export class FeedRoutingModule {}

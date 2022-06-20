@@ -25,6 +25,7 @@ export NVM_DIR="$HOME/.nvm"
 source ./bin/load_environment_light.sh;
 cd config/docker
 ./docker-compose-cypress.sh
+docker-compose logs --follow > ../../opfab.log &
 cd ../../bin
 ./waitForOpfabToStart.sh
 cd ../

@@ -7,10 +7,9 @@
  * This file is part of the OperatorFabric project.
  */
 
-
 import {Injectable} from '@angular/core';
 import {debounceTime, map} from 'rxjs/operators';
-import {combineLatest, Observable, Subject, } from 'rxjs';
+import {combineLatest, Observable, ReplaySubject, Subject} from 'rxjs';
 import {LightCard} from '@ofModel/light-card.model';
 import {LightCardsStoreService} from './lightcards-store.service';
 import {FilterService} from './filter.service';
@@ -18,13 +17,11 @@ import {SortService} from './sort.service';
 import {GroupedCardsService} from '@ofServices/grouped-cards.service';
 import {ConfigService} from '@ofServices/config.service';
 
-
 @Injectable({
     providedIn: 'root'
 })
 export class LightCardsFeedFilterService {
-
-    private filteredAndSortedLightCards = new Subject();
+    private filteredAndSortedLightCards = new ReplaySubject(1);
     private filteredLightCards = new Subject();
     private filteredLightCardsForTimeLine = new Subject();
     private onlyBusinessFilterForTimeLine = new Subject();
@@ -34,29 +31,27 @@ export class LightCardsFeedFilterService {
         private filterService: FilterService,
         private sortService: SortService,
         private groupedCardsService: GroupedCardsService,
-        private configService: ConfigService) {
+        private configService: ConfigService
+    ) {
         this.computeFilteredAndSortedLightCards();
         this.computeFilteredLightCards();
         this.onlyBusinessFilterForTimeLine.next(false);
     }
 
     private computeFilteredAndSortedLightCards() {
-        combineLatest([
-            this.sortService.getSortFunctionChanges(),
-            this.getFilteredLightCards()
-        ]
-        ).pipe(
-            map(results => {
+        combineLatest([this.sortService.getSortFunctionChanges(), this.getFilteredLightCards()])
+            .pipe(
+                map((results) => {
                     results[1] = results[1].sort(results[0]);
                     if (this.isGroupedCardsEnabled()) {
                         this.groupedCardsService.computeGroupedCards(results[1]);
                         results[1] = this.groupedCardsService.filterGroupedChilds(results[1]);
                     }
                     return results[1];
-            })
-        ).subscribe((lightCards) => this.filteredAndSortedLightCards.next(lightCards));
+                })
+            )
+            .subscribe((lightCards) => this.filteredAndSortedLightCards.next(lightCards));
     }
-
 
     public getFilteredLightCards(): Observable<any> {
         return this.filteredLightCards.asObservable();
@@ -70,28 +65,30 @@ export class LightCardsFeedFilterService {
         combineLatest([
             this.filterService.getFiltersChanges(),
             this.lightCardsStoreService.getLightCards(),
-            this.onlyBusinessFilterForTimeLine.asObservable(),
-        ]
-        ).pipe(
-            debounceTime(50), // When resetting components it can happen that we have more than one filter change
-                              // with debounceTime, we avoid processing intermediate states
-            map(results => {
-                const lightCards = results[1];
-                const onlyBusinessFitlerForTimeLine = results[2];
+            this.onlyBusinessFilterForTimeLine.asObservable()
+        ])
+            .pipe(
+                debounceTime(50), // When resetting components it can happen that we have more than one filter change
+                // with debounceTime, we avoid processing intermediate states
+                map((results) => {
+                    const lightCards = results[1];
+                    const onlyBusinessFitlerForTimeLine = results[2];
 
-                console.log(new Date().toISOString(), 'Number of card in memory ', results[1].length, ' cards');
+                    console.log(new Date().toISOString(), 'Number of card in memory ', results[1].length, ' cards');
 
-                if (onlyBusinessFitlerForTimeLine) {
-                    const cardFilteredByBusinessDate = this.filterService.filterLightCardsOnlyByBusinessDate(lightCards);
-                    this.filteredLightCardsForTimeLine.next(cardFilteredByBusinessDate);
-                    return this.filterService.filterLightCardsWithoutBusinessDate(cardFilteredByBusinessDate);
-                }
+                    if (onlyBusinessFitlerForTimeLine) {
+                        const cardFilteredByBusinessDate =
+                            this.filterService.filterLightCardsOnlyByBusinessDate(lightCards);
+                        this.filteredLightCardsForTimeLine.next(cardFilteredByBusinessDate);
+                        return this.filterService.filterLightCardsWithoutBusinessDate(cardFilteredByBusinessDate);
+                    }
 
-                const cardFilter = this.filterService.filterLightCards(lightCards);
-                this.filteredLightCardsForTimeLine.next(cardFilter);
-                return cardFilter
-            })
-        ).subscribe((lightCards) => this.filteredLightCards.next(lightCards));
+                    const cardFilter = this.filterService.filterLightCards(lightCards);
+                    this.filteredLightCardsForTimeLine.next(cardFilter);
+                    return cardFilter;
+                })
+            )
+            .subscribe((lightCards) => this.filteredLightCards.next(lightCards));
     }
 
     private isGroupedCardsEnabled(): boolean {

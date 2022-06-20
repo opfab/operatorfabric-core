@@ -7,15 +7,8 @@
  * This file is part of the OperatorFabric project.
  */
 
-
 export class Page<T> {
-    /* istanbul ignore next */
-    constructor(
-        readonly totalPages: number,
-        readonly totalElements: number,
-        readonly content: T[]
-    ) {
-    }
+    constructor(readonly totalPages: number, readonly totalElements: number, readonly content: T[]) {}
 }
 
 export const emptyPage: Page<any> = new Page(1, 0, []);

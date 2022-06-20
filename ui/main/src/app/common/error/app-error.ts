@@ -9,11 +9,9 @@
  */
 
 export class AppError {
+    public originalError;
 
-  public originalError;
-
-  constructor(originalError? ) {
-    this.originalError = originalError;
-  }
-
+    constructor(originalError?) {
+        this.originalError = originalError;
+    }
 }

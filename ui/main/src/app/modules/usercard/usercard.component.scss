@@ -6,66 +6,65 @@
  * SPDX-License-Identifier: MPL-2.0
  * This file is part of the OperatorFabric project.
  */
- @import "~scss/_variables.scss";
- 
+@import '~scss/_variables.scss';
 
 .opfab-usercard-radio-button {
-  margin-top: 20px;
-  margin-left: 40px;
-  margin-right: 40px;
+    margin-top: 20px;
+    margin-left: 40px;
+    margin-right: 40px;
 }
 
 .label-sev-alarm::before {
-  content: "";
-  display: inline-block;
-  width: 7px;
-  height: 18px;
-  margin-right: 5px;
-  margin-bottom: -3px;
-  background-color: $sev-alarm;
+    content: '';
+    display: inline-block;
+    width: 7px;
+    height: 18px;
+    margin-right: 5px;
+    margin-bottom: -3px;
+    background-color: $sev-alarm;
 }
 
 .label-sev-action::before {
-  content: "";
-  display: inline-block;
-  width: 7px;
-  height: 18px;
-  margin-right: 5px;
-  margin-bottom: -3px;
-  background-color: $sev-action;
+    content: '';
+    display: inline-block;
+    width: 7px;
+    height: 18px;
+    margin-right: 5px;
+    margin-bottom: -3px;
+    background-color: $sev-action;
 }
 
 .label-sev-compliant::before {
-  content: "";
-  display: inline-block;
-  width: 7px;
-  height: 18px;
-  margin-right: 5px;
-  margin-bottom: -3px;
-  background-color: $sev-compliant;
+    content: '';
+    display: inline-block;
+    width: 7px;
+    height: 18px;
+    margin-right: 5px;
+    margin-bottom: -3px;
+    background-color: $sev-compliant;
 }
 
 .label-sev-information::before {
-  content: "";
-  display: inline-block;
-  width: 7px;
-  height: 18px;
-  margin-right: 5px;
-  margin-bottom: -3px;
-  background-color: $sev-information;
+    content: '';
+    display: inline-block;
+    width: 7px;
+    height: 18px;
+    margin-right: 5px;
+    margin-bottom: -3px;
+    background-color: $sev-information;
 }
 
 .alert-info {
-  color: var(--opfab-text-color);
-  background-color: transparent;
-  border-color: transparent;
-  text-align: center;
-  width: auto;
-  padding-top: 50px;
+    color: var(--opfab-text-color);
+    background-color: transparent;
+    border-color: transparent;
+    text-align: center;
+    width: auto;
+    padding-top: 50px;
 }
 
 .opfab-section-header {
-  font-weight: 600;
-  margin-top: 20px;
-  margin-bottom: 10px;
+    font-weight: 600;
+    margin-top: 20px;
+    margin-bottom: 10px;
 }

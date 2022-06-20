@@ -11,10 +11,11 @@ package org.opfab.externalapp.config;
 
 
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.web.SecurityFilterChain;
 
 /**
  * OAuth 2 http authentication configuration and access rules
@@ -23,18 +24,20 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
  */
 @Configuration
 @EnableWebSecurity
-public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
+public class WebSecurityConfiguration {
 
 
     @Value("${authenticationRequired:true}")
     private boolean authenticationRequired;
-    
-    @Override
-    public void configure(final HttpSecurity http) throws Exception {
+
+    @Bean
+    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         configureCommon(http, authenticationRequired);
         http
                 .oauth2ResourceServer()
                 .jwt();
+
+        return http.build();
     }
 
     public static void configureCommon(final HttpSecurity http, boolean authenticationRequired) throws Exception {
@@ -46,7 +49,6 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
                     .antMatchers("/test/**").authenticated()
                     .antMatchers("/**").permitAll();
         }
-             
     }
 
 }

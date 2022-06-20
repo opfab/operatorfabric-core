@@ -12,13 +12,12 @@ import {environment} from '@env/environment';
 import {HttpClient} from '@angular/common/http';
 import {Injectable, OnDestroy} from '@angular/core';
 import {RealTimeScreens} from '@ofModel/real-time-screens.model';
-import {takeUntil, tap} from "rxjs/operators";
+import {takeUntil, tap} from 'rxjs/operators';
 
 @Injectable({
     providedIn: 'root'
 })
 export class RealTimeScreensService implements OnDestroy {
-
     readonly realTimeScreensUrl: string;
     private _realTimeScreens: RealTimeScreens;
 
@@ -42,17 +41,18 @@ export class RealTimeScreensService implements OnDestroy {
     }
 
     public loadRealTimeScreensData(): Observable<any> {
-        return this.fetchRealTimeScreens()
-            .pipe(takeUntil(this.ngUnsubscribe$)
-                , tap({
-                    next: (realTimeScreens) => {
-                        if (!!realTimeScreens) {
-                            this._realTimeScreens = realTimeScreens;
-                            console.log(new Date().toISOString(), 'List of realTimeScreens loaded');
-                        }
-                    },
-                    error: (error) => console.error(new Date().toISOString(), 'an error occurred', error)
-                }));
+        return this.fetchRealTimeScreens().pipe(
+            takeUntil(this.ngUnsubscribe$),
+            tap({
+                next: (realTimeScreens) => {
+                    if (!!realTimeScreens) {
+                        this._realTimeScreens = realTimeScreens;
+                        console.log(new Date().toISOString(), 'List of realTimeScreens loaded');
+                    }
+                },
+                error: (error) => console.error(new Date().toISOString(), 'an error occurred', error)
+            })
+        );
     }
 
     public getRealTimeScreens(): RealTimeScreens {

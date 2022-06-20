@@ -1,0 +1,15 @@
+<!-- Copyright (c) 2022, RTE (http://www.rte-france.com)              -->
+<!-- See AUTHORS.txt                                                       -->
+<!-- This Source Code Form is subject to the terms of the Mozilla Public   -->
+<!-- License, v. 2.0. If a copy of the MPL was not distributed with this   -->
+<!-- file, You can obtain one at http://mozilla.org/MPL/2.0/.              -->
+<!-- SPDX-License-Identifier: MPL-2.0                                      -->
+<!-- This file is part of the OperatorFabric project.                      -->
+
+
+<div id='opfab-reload-msg' class="opfab-info-message opfab-alert-error" *ngIf='displayReloadRequired'>
+    <span translate>reloadRequired.message <a (click)="reload()"><span class="opfab-reload-link" translate>reloadRequired.linkText</span></a></span>
+    <div id="opfab-reload-close" class="opfab-alert-close" aria-label="Close" (click)="hide()">
+      <span aria-hidden="true">&times;</span>
+    </div>
+  </div>

@@ -15,7 +15,7 @@
       <span aria-hidden="true">&times;</span>
     </div>
   </div>
-  <div class="modal-body scrollable">
+  <div class="modal-body">
     <form [formGroup]="entityForm" class="opfab-form-lighter">
       <div class="container">
         <div>
@@ -45,16 +45,20 @@
           </div>
 
           <div class="opfab-edit-row">
-            <label for="opfab-entityAllowedToSendCard" class="opfab-checkbox "> <span class="" translate> admin.input.entity.entityAllowedToSendCard </span>
-              <input formControlName="entityAllowedToSendCard" name="entityAllowedToSendCard" id="opfab-entityAllowedToSendCard" type="checkbox">
+            <label for="opfab-entity-allowed-to-send-card" class="opfab-checkbox "> <span class="" translate> admin.input.entity.entityAllowedToSendCard </span>
+              <input formControlName="entityAllowedToSendCard" name="entityAllowedToSendCard" id="opfab-entity-allowed-to-send-card" type="checkbox">
               <span class="opfab-checkbox-checkmark"></span>
             </label>
           </div>
           <div class="opfab-edit-row">
-            <of-multi-filter filterPath="parents" id="opfab-parents" [parentForm]="entityForm" [values]="entitiesDropdownList"
-                             [translateValues]="false" [dropdownSettings]="entitiesDropdownSettings" [selectedItems]="selectedEntities"
-                             sortValues=true i18nRootLabelKey="admin.input.entity.">
-            </of-multi-filter>
+            <of-multi-select 
+            id="opfab-parents"
+            multiSelectId="parents"
+            [parentForm]="entityForm"
+            [config] = "entitiesMultiSelectConfig"
+            [options]="entitiesMultiSelectOptions"
+            [selectedOptions]="selectedEntities">    
+            </of-multi-select>
           </div>
           <div class="opfab-input opfab-edit-row" style="height: auto;">
             <label for="opfab-labels" translate>admin.input.entity.labels</label>
@@ -68,7 +72,7 @@
               translate>admin.input.close</button>
       <button id="opfab-admin-edit-btn-add" [disabled]="!entityForm.valid" *ngIf="!row" (click)="update()" class="opfab-btn"
               translate>admin.input.{{type}}.add</button>
-      <button id="opfab-admin-user-btn-save" [disabled]="!entityForm.valid" *ngIf="row" (click)="update()" class="opfab-btn"
+      <button id="opfab-admin-entity-btn-save" [disabled]="!entityForm.valid" *ngIf="row" (click)="update()" class="opfab-btn"
               translate>admin.input.save</button>
     </div>
   </div>

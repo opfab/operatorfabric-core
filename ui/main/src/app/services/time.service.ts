@@ -7,7 +7,6 @@
  * This file is part of the OperatorFabric project.
  */
 
-
 import {Injectable} from '@angular/core';
 import * as moment from 'moment';
 import {Moment} from 'moment/moment';
@@ -16,32 +15,29 @@ import {Store} from '@ngrx/store';
 import {buildSettingsOrConfigSelector} from '@ofSelectors/settings.x.config.selectors';
 import {isMoment} from 'moment';
 
-
 @Injectable({
     providedIn: 'root'
 })
 export class TimeService {
-
-
     private timeFormat;
     private dateFormat;
     private dateTimeFormat;
 
     constructor(private store: Store<AppState>) {
         this.initializeTimeFormat();
-
     }
 
     private initializeTimeFormat() {
-        this.store.select(buildSettingsOrConfigSelector('timeFormat', 'LT'))
-            .subscribe(next => this.timeFormat = next);
-        this.store.select(buildSettingsOrConfigSelector('dateFormat', 'L'))
-            .subscribe(next => this.dateFormat = next);
-        this.store.select(buildSettingsOrConfigSelector('dateTimeFormat'))
-            .subscribe(next => this.dateTimeFormat = next);
+        this.store
+            .select(buildSettingsOrConfigSelector('timeFormat', 'LT'))
+            .subscribe((next) => (this.timeFormat = next));
+        this.store
+            .select(buildSettingsOrConfigSelector('dateFormat', 'L'))
+            .subscribe((next) => (this.dateFormat = next));
+        this.store
+            .select(buildSettingsOrConfigSelector('dateTimeFormat'))
+            .subscribe((next) => (this.dateTimeFormat = next));
     }
-
-
 
     public parseString(value: string): moment.Moment {
         return moment(value, 'YYYY-MM-DDTHH:mm');
@@ -52,13 +48,10 @@ export class TimeService {
     public formatDate(date: Moment): string;
     public formatDate(arg: Moment | Date | number): string {
         let m: Moment = null;
-        if (!arg)
-            return '';
-        if (isMoment(arg))
-            m = arg;
+        if (!arg) return '';
+        if (isMoment(arg)) m = arg;
         else m = moment(arg);
-        if (m)
-            return m.format(this.dateFormat);
+        if (m) return m.format(this.dateFormat);
         return '';
     }
 
@@ -67,7 +60,7 @@ export class TimeService {
     }
 
     public toNgBNumberTimestamp(date): number {
-        return this.parseString(date).valueOf()
+        return this.parseString(date).valueOf();
     }
 
     public formatDateTime(timestamp: number): string;
@@ -75,14 +68,10 @@ export class TimeService {
     public formatDateTime(m: Moment): string;
     public formatDateTime(arg: Moment | Date | number): string {
         let m: Moment = null;
-        if (!arg)
-            return '';
-        if (isMoment(arg))
-            m = arg;
-        else
-            m = moment(arg);
-        if (m)
-            return m.format(this.dateTimeFormat ? this.dateTimeFormat : `${this.dateFormat} ${this.timeFormat}`);
+        if (!arg) return '';
+        if (isMoment(arg)) m = arg;
+        else m = moment(arg);
+        if (m) return m.format(this.dateTimeFormat ? this.dateTimeFormat : `${this.dateFormat} ${this.timeFormat}`);
         return '';
     }
 
@@ -91,17 +80,14 @@ export class TimeService {
     public formatTime(m: Moment);
     public formatTime(arg: Date | number | Moment) {
         let m = null;
-        if (!arg)
-            return '';
-        if (isMoment(arg))
-            m = arg;
-        else
-            m = moment(arg);
+        if (!arg) return '';
+        if (isMoment(arg)) m = arg;
+        else m = moment(arg);
         return m.format(this.timeFormat);
     }
 
-    private static isMoment(arg: Date | number | Moment): arg is Moment { //magic happens here
+    private static isMoment(arg: Date | number | Moment): arg is Moment {
+        //magic happens here
         return (<Moment>arg).format !== undefined && (<Moment>arg).toISOString !== undefined;
     }
-
 }

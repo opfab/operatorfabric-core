@@ -7,7 +7,6 @@
  * This file is part of the OperatorFabric project.
  */
 
-
 import {Injectable} from '@angular/core';
 import {map, mergeMap} from 'rxjs/operators';
 import * as _ from 'lodash-es';
@@ -33,9 +32,7 @@ export class ConfigService {
     }
 
     loadWebUIConfiguration(): Observable<any> {
-        return this.httpClient.get(`${this.configUrl}`).pipe(
-            map(
-            config => this.config = config));
+        return this.httpClient.get(`${this.configUrl}`).pipe(map((config) => (this.config = config)));
     }
 
     getConfigValue(path: string, fallback: any = null) {
@@ -45,9 +42,9 @@ export class ConfigService {
     /* Configuration for core menus */
 
     loadCoreMenuConfigurations(): Observable<CoreMenuConfig[]> {
-        return this.httpClient.get<UIMenuFile>(`${environment.urls.menuConfig}`).pipe(
-            map(config => this.coreMenuConfigurations = config.coreMenusConfiguration)
-        );
+        return this.httpClient
+            .get<UIMenuFile>(`${environment.urls.menuConfig}`)
+            .pipe(map((config) => (this.coreMenuConfigurations = config.coreMenusConfiguration)));
     }
 
     getCoreMenuConfiguration(): CoreMenuConfig[] {
@@ -57,30 +54,26 @@ export class ConfigService {
     /* Configuration for custom menus */
 
     fetchMenuTranslations(): Observable<Locale[]> {
-        return this.httpClient.get<UIMenuFile>(`${environment.urls.menuConfig}`).pipe(
-            map(config => config.locales)
-        );
+        return this.httpClient.get<UIMenuFile>(`${environment.urls.menuConfig}`).pipe(map((config) => config.locales));
     }
     computeMenu(): Observable<Menu[]> {
-        return this.httpClient.get<UIMenuFile>(`${environment.urls.menuConfig}`).pipe(
-            map(config => this.processMenuConfig(config)
-            )
-        );
+        return this.httpClient
+            .get<UIMenuFile>(`${environment.urls.menuConfig}`)
+            .pipe(map((config) => this.processMenuConfig(config)));
     }
 
     queryMenuEntryURL(id: string, menuEntryId: string): Observable<string> {
         if (this.customMenus.length === 0) {
-            return this.computeMenu().pipe(mergeMap(menus => this.getMenuEntryURL(menus, id, menuEntryId)));
+            return this.computeMenu().pipe(mergeMap((menus) => this.getMenuEntryURL(menus, id, menuEntryId)));
         } else {
             return this.getMenuEntryURL(this.customMenus, id, menuEntryId);
         }
-
     }
 
     private getMenuEntryURL(menus: Menu[], id: string, menuEntryId: string): Observable<string> {
-        const menu = menus.find(m => m.id === id);
+        const menu = menus.find((m) => m.id === id);
         if (menu) {
-            const entry = menu.entries.filter(e => e.id === menuEntryId);
+            const entry = menu.entries.filter((e) => e.id === menuEntryId);
             if (entry.length === 1) {
                 return of(entry[0].url);
             } else {
@@ -91,11 +84,13 @@ export class ConfigService {
         }
     }
 
-    private processMenuConfig(config: UIMenuFile): Menu[]{
+    private processMenuConfig(config: UIMenuFile): Menu[] {
         this.customMenus = [];
-        return config.menus.map(menu => new Menu(menu.id, menu.label, menu.entries)).reduce((menus: Menu[], menu: Menu) => {         
-            this.customMenus.push(menu);
-            return this.customMenus;
-        }, []);
+        return config.menus
+            .map((menu) => new Menu(menu.id, menu.label, menu.entries))
+            .reduce((menus: Menu[], menu: Menu) => {
+                this.customMenus.push(menu);
+                return this.customMenus;
+            }, []);
     }
 }

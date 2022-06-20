@@ -14,16 +14,9 @@ import {TranslateModule} from '@ngx-translate/core';
 import {ActivityareaComponent} from './activityarea.component';
 import {ActivityareaRoutingModule} from './activityarea-routing.module';
 
-
 @NgModule({
     declarations: [ActivityareaComponent],
-    imports: [
-        CommonModule,
-        FormsModule,
-        ReactiveFormsModule,
-        TranslateModule,
-        ActivityareaRoutingModule
-    ]
+    imports: [CommonModule, FormsModule, ReactiveFormsModule, TranslateModule, ActivityareaRoutingModule],
+    exports: [ActivityareaComponent]
 })
-export class ActivityareaModule {
-}
+export class ActivityareaModule {}

@@ -20,11 +20,11 @@ import {EditUserModalComponent} from './components/editmodal/users/edit-user-mod
 import {EntitiesTableComponent} from './components/table/entities-table.component';
 import {GroupsTableComponent} from './components/table/groups-table.component';
 import {AgGridModule} from 'ag-grid-angular';
-import {MultiFilterModule} from '../share/multi-filter/multi-filter.module';
 import {ArrayCellRendererComponent} from './components/cell-renderers/array-cell-renderer.component';
 import {ActionCellRendererComponent} from './components/cell-renderers/action-cell-renderer.component';
 import {GroupCellRendererComponent} from './components/cell-renderers/group-cell-renderer.component';
 import {EntityCellRendererComponent} from './components/cell-renderers/entity-cell-renderer.component';
+import {PerimetersCellRendererComponent} from './components/cell-renderers/perimeters-cell-renderer.component';
 import {SharingService} from './services/sharing.service';
 import {PerimetersTableComponent} from './components/table/perimeters-table.component';
 import {StateRightsCellRendererComponent} from './components/cell-renderers/state-rights-cell-renderer.component';
@@ -35,49 +35,51 @@ import {SingleFilterModule} from '../share/single-filter/single-filter.module';
 import {ProcessCellRendererComponent} from './components/cell-renderers/process-cell-renderer.component';
 import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
 import {TagInputModule} from 'ngx-chips';
+import {MultiSelectModule} from '../share/multi-select/multi-select.module';
 
 @NgModule({
-  declarations: [
-    AdminComponent,
-    UsersTableComponent,
-    EntitiesTableComponent,
-    GroupsTableComponent,
-    PerimetersTableComponent,
-    EditUserModalComponent,
-    ConfirmationDialogComponent,
-    EditEntityModalComponent,
-    EditGroupModalComponent,
-    EditPerimeterModalComponent,
-    ActionCellRendererComponent,
-    ArrayCellRendererComponent,
-    GroupCellRendererComponent,
-    EntityCellRendererComponent,
-    ProcessCellRendererComponent,
-    StateRightsCellRendererComponent
-  ],
+    declarations: [
+        AdminComponent,
+        UsersTableComponent,
+        EntitiesTableComponent,
+        GroupsTableComponent,
+        PerimetersTableComponent,
+        EditUserModalComponent,
+        ConfirmationDialogComponent,
+        EditEntityModalComponent,
+        EditGroupModalComponent,
+        EditPerimeterModalComponent,
+        ActionCellRendererComponent,
+        ArrayCellRendererComponent,
+        GroupCellRendererComponent,
+        EntityCellRendererComponent,
+        PerimetersCellRendererComponent,
+        ProcessCellRendererComponent,
+        StateRightsCellRendererComponent
+    ],
 
-
-  imports: [
-    FormsModule
-    , ReactiveFormsModule
-    , TagInputModule
-    , AdminRoutingModule
-    , CommonModule
-    , MultiFilterModule
-    , TranslateModule
-    , NgbModule
-    , AgGridModule.withComponents([[
-      ActionCellRendererComponent,
-      ArrayCellRendererComponent,
-      GroupCellRendererComponent,
-      EntityCellRendererComponent,
-      ProcessCellRendererComponent,
-      StateRightsCellRendererComponent
-    ]]), SingleFilterModule
-  ],
-  providers: [
-    { provide: SharingService, useClass: SharingService}
-  ]
+    imports: [
+        FormsModule,
+        ReactiveFormsModule,
+        TagInputModule,
+        AdminRoutingModule,
+        CommonModule,
+        MultiSelectModule,
+        TranslateModule,
+        NgbModule,
+        AgGridModule.withComponents([
+            [
+                ActionCellRendererComponent,
+                ArrayCellRendererComponent,
+                GroupCellRendererComponent,
+                EntityCellRendererComponent,
+                PerimetersCellRendererComponent,
+                ProcessCellRendererComponent,
+                StateRightsCellRendererComponent
+            ]
+        ]),
+        SingleFilterModule
+    ],
+    providers: [{provide: SharingService, useClass: SharingService}]
 })
-export class AdminModule { }
-
+export class AdminModule {}

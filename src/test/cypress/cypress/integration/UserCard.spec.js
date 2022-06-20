@@ -18,8 +18,6 @@ describe('User Card ', function () {
     cy.deleteAllSettings();
   });
 
-
-
   describe('Check edition mode', function () {
 
     it('Label change in edition mode for Question user card', () => {
@@ -93,17 +91,17 @@ describe('User Card ', function () {
       cy.usercardSelectState('Process example');
       cy.get('#opfab-recipients').should("exist");
       cy.get('#opfab-recipients').click();
-      cy.get('#opfab-recipients').find('li').should('have.length', 6);
-      cy.get('#opfab-recipients').find('li').eq(0).find('label').contains("Control Center FR East");
-      cy.get('#opfab-recipients').find('li').eq(1).find('label').contains("Control Center FR North");
-      cy.get('#opfab-recipients').find('li').eq(2).find('label').contains("Control Center FR South");
-      cy.get('#opfab-recipients').find('li').eq(3).find('label').contains("Control Center FR West");
-      cy.get('#opfab-recipients').find('li').eq(4).find('label').contains("French Control Centers");
-      cy.get('#opfab-recipients').find('li').eq(5).find('label').contains("IT SUPERVISION CENTER");
+      cy.get('#opfab-recipients').find('.vscomp-option-text').should('have.length', 6);
+      cy.get('#opfab-recipients').find('.vscomp-option-text').eq(0).contains("Control Center FR East");
+      cy.get('#opfab-recipients').find('.vscomp-option-text').eq(1).contains("Control Center FR North");
+      cy.get('#opfab-recipients').find('.vscomp-option-text').eq(2).contains("Control Center FR South");
+      cy.get('#opfab-recipients').find('.vscomp-option-text').eq(3).contains("Control Center FR West");
+      cy.get('#opfab-recipients').find('.vscomp-option-text').eq(4).contains("French Control Centers");
+      cy.get('#opfab-recipients').find('.vscomp-option-text').eq(5).contains("IT SUPERVISION CENTER");
     })
 
 
-    it('Recipients dropdown should be restricted in message user card', () => {
+    it('Recipients dropdown should be restricted and initial recipients preselected in message user card', () => {
 
       cy.loginOpFab('operator1_fr', 'test');
       cy.get('#opfab-navbarContent').find('#opfab-newcard-menu').click();
@@ -112,14 +110,23 @@ describe('User Card ', function () {
       cy.usercardSelectState('Message');
       cy.get('#opfab-recipients').should("exist");
       cy.get('#opfab-recipients').click();
-      cy.get('#opfab-recipients').find('li').should('have.length', 7);
-      cy.get('#opfab-recipients').find('li').eq(0).find('label').contains("Control Center FR East");
-      cy.get('#opfab-recipients').find('li').eq(1).find('label').contains("Control Center FR North");
-      cy.get('#opfab-recipients').find('li').eq(2).find('label').contains("Control Center FR South");
-      cy.get('#opfab-recipients').find('li').eq(3).find('label').contains("Control Center FR West");
-      cy.get('#opfab-recipients').find('li').eq(4).find('label').contains("French Control Centers");
-      cy.get('#opfab-recipients').find('li').eq(5).find('label').contains("IT SUPERVISION CENTER");
-      cy.get('#opfab-recipients').find('li').eq(6).find('label').contains("Italian Control Centers");
+      cy.get('#opfab-recipients').find('.vscomp-option-text').should('have.length', 7);
+      cy.get('#opfab-recipients').find('.vscomp-option-text').eq(0).contains("Control Center FR East");
+      cy.get('#opfab-recipients').find('.vscomp-option-text').eq(1).contains("Control Center FR North");
+      cy.get('#opfab-recipients').find('.vscomp-option-text').eq(2).contains("Control Center FR South");
+      cy.get('#opfab-recipients').find('.vscomp-option-text').eq(3).contains("Control Center FR West");
+      cy.get('#opfab-recipients').find('.vscomp-option-text').eq(4).contains("French Control Centers");
+      cy.get('#opfab-recipients').find('.vscomp-option-text').eq(5).contains("IT SUPERVISION CENTER");
+      cy.get('#opfab-recipients').find('.vscomp-option-text').eq(6).contains("Italian Control Centers");
+
+      cy.get('#opfab-recipients').find('.vscomp-value').contains("Control Center FR East");
+      cy.get('#opfab-recipients').find('.vscomp-value').contains("Control Center FR North");
+      cy.get('#opfab-recipients').find('.vscomp-value').contains("Control Center FR South");
+      cy.get('#opfab-recipients').find('.vscomp-value').contains("Control Center FR West").should('not.exist');
+      cy.get('#opfab-recipients').find('.vscomp-value').contains("French Control Centers").should('not.exist');
+      cy.get('#opfab-recipients').find('.vscomp-value').contains("IT SUPERVISION CENTER").should('not.exist');
+      cy.get('#opfab-recipients').find('.vscomp-value').contains("Italian Control Centers").should('not.exist');
+
     })
 
   })
@@ -205,7 +212,7 @@ describe('User Card ', function () {
       cy.usercardSelectState('Confirmation');
       cy.get('#opfab-recipients').click();
       // Select recipent entity not in user entities
-      cy.get('#opfab-recipients').find('li').eq(0).click();
+      cy.get('#opfab-recipients').find('.vscomp-option-text').eq(0).click({ force: true });
       
       cy.get('#opfab-recipients').click();
       cy.get('#question').type('Confirm YES or NO');
@@ -221,7 +228,7 @@ describe('User Card ', function () {
       cy.get('#opfab-recipients').click();
       // Select also one of user entities as recipent
       cy.waitDefaultTime(); // avoid detach dom error
-      cy.get('#opfab-recipients').find('li').eq(1).click();
+      cy.get('#opfab-recipients').find('.vscomp-option-text').eq(1).click({ force: true });
       cy.get('#opfab-recipients').click();
 
       cy.get('#opfab-usercard-btn-prepareCard').click();
@@ -285,7 +292,7 @@ describe('User Card ', function () {
       cy.setFormDateTime('startDate','2020','Jan',20,8,0);
       cy.setFormDateTime('endDate','2029','Jun',25,11,10);
       cy.get('#opfab-recipients').click();
-      cy.get('#opfab-recipients').find('li').eq(2).click();
+      cy.get('#opfab-recipients').find('.vscomp-option-text').eq(2).click({ force: true });
       cy.get('#opfab-recipients').click();
 
       cy.usercardPrepareAndSendCard();
@@ -421,6 +428,7 @@ describe('User Card ', function () {
     })
 
     it('Cannot edit card from not allowed entity', () => {
+      cy.sendCard('cypress/userCard/process.json');
       cy.loginOpFab('operator2_fr', 'test');
       cy.get('of-light-card').should('have.length', 1);
       cy.get('of-light-card').eq(0).click()
@@ -443,7 +451,7 @@ describe('User Card ', function () {
       cy.get("of-usercard").should('exist');
       cy.get('#message').type('Hello')
       cy.get('#opfab-recipients').click();
-      cy.get('#opfab-recipients').find('li').eq(2).click();
+      cy.get('#opfab-recipients').find('.vscomp-option-text').eq(2).click({ force: true });
       cy.get('#opfab-recipients').click();
       cy.usercardPrepareAndSendCard();
       // Check that the message indicating successful sending appears
@@ -597,7 +605,7 @@ describe('User Card ', function () {
       cy.setFormDateTime('startDate', '2020', 'Jan', 20, 8, 0);
       cy.setFormDateTime('endDate', '2029', 'Jun', 25, 11, 10);
       cy.get('#opfab-recipients').click();
-      cy.get('#opfab-recipients').find('li').eq(2).click();
+      cy.get('#opfab-recipients').find('.vscomp-option-text').eq(2).click({ force: true });
       cy.get('#opfab-recipients').click();
       cy.get('#opfab-usercard-btn-prepareCard').click();
 
@@ -672,6 +680,13 @@ describe('User Card ', function () {
       // operator4_fr disconnect from Control Center FR North (ENTITY1_FR)
       cy.get('#opfab-navbar-drop-user-menu').click();
       cy.get('#opfab-navbar-right-menu-activityarea').click();
+      
+      // Check every checkbox to let the time for the ui to set to true before we click
+      cy.get('.opfab-checkbox').eq(0).find('input').should('be.checked');
+      cy.get('.opfab-checkbox').eq(1).find('input').should('be.checked');
+      cy.get('.opfab-checkbox').eq(2).find('input').should('be.checked');
+      cy.get('.opfab-checkbox').eq(3).find('input').should('be.checked');
+
       cy.get('.opfab-checkbox').contains('Control Center FR North').click();
       cy.get('#opfab-activityarea-btn-confirm').should('exist').click(); //click confirm settings
       cy.get('#opfab-activityarea-btn-yes').should('exist').click(); // and click yes on the confirmation popup
@@ -913,5 +928,92 @@ describe('User Card ', function () {
 
     })
   })
+
+  describe('Set initial severity from template', function () {
+
+    it('Set initial severity from template', () => {
+      cy.deleteAllCards();
+      cy.loginOpFab('operator1_fr', 'test');
+      cy.get('#opfab-navbarContent').find('#opfab-newcard-menu').click();
+      // Check default severity level value is 'Alarm'
+      cy.get('#opfab-sev-alarm').should('be.checked');
+
+      cy.usercardSelectService('User card examples');
+      cy.usercardSelectProcess('Task');
+      // Check initial severity level value is set to 'Action'
+      cy.get('#opfab-sev-action').should('be.checked');
+
+      // Change severity, send card, edit it and check severity is not modified on edition
+      cy.get('#opfab-sev-information').check();
+      cy.get('#opfab-sev-information').should('be.checked');
+      cy.usercardPrepareAndSendCard();
+      cy.get('of-light-card').eq(0).click()
+      .find('[id^=opfab-feed-light-card]')
+      .invoke('attr', 'data-urlId')
+      .then((urlId) => {
+        cy.waitDefaultTime();
+        cy.hash().should('eq', '#/feed/cards/' + urlId);
+        cy.get('#opfab-card-edit').click();
+        cy.get('#opfab-sev-information').should('be.checked');
+      })
+
+    })
+  })
   
+  describe('Check search feature in dropdown select', function () {
+    
+    it('Search feature should be enabled on services dropdown for "IT incident" user card', () => {
+      cy.loginOpFab('operator1_fr', 'test');
+      cy.get('#opfab-navbarContent').find('#opfab-newcard-menu').click();
+      cy.usercardSelectService('User card examples');
+      cy.usercardSelectProcess('Conference and IT incident');
+      cy.usercardSelectState('IT Incident');
+      // check search is enabled for service select
+      cy.get('#service-select').should("exist");
+      cy.get('#service-select').click();
+      cy.get('#service-select').find('.vscomp-search-input').should("exist");
+      cy.get('#service-select').find('.vscomp-search-input').eq(0).invoke('attr', 'placeholder').should('eq', 'Search...');
+      cy.get('#service-select').find('.vscomp-option-text').should('have.length', 8);
+      cy.get('#service-select').find('.vscomp-option-text').eq(0).contains("Group 1");
+      cy.get('#service-select').find('.vscomp-option-text').eq(1).contains("Service A");
+      cy.get('#service-select').find('.vscomp-option-text').eq(2).contains("Service B");
+      cy.get('#service-select').find('.vscomp-option-text').eq(3).contains("Service C");
+      cy.get('#service-select').find('.vscomp-option-text').eq(4).contains("Group 2");
+      cy.get('#service-select').find('.vscomp-option-text').eq(5).contains("Service D");
+      cy.get('#service-select').find('.vscomp-option-text').eq(6).contains("Service E");
+      cy.get('#service-select').find('.vscomp-option-text').eq(7).contains("Service F");
+      cy.get('#service-select').find('.vscomp-search-input').eq(0).type('D');
+      cy.get('#service-select').find('.vscomp-option-text').should('have.length', 2);
+      cy.get('#service-select').find('.vscomp-option-text').eq(0).contains("Group 2");
+      cy.get('#service-select').find('.vscomp-option-text').eq(1).contains("Service D");
+    })
+    
+    
+    it('Search feature should be enabled on states dropdown for "Process example" user card', () => {
+      cy.loginOpFab('operator1_fr', 'test');
+      cy.get('#opfab-navbarContent').find('#opfab-newcard-menu').click();
+      cy.usercardSelectProcess('Process example');
+      cy.usercardSelectState('Process example');
+
+      // check search is enabled for state select
+      cy.get('#state-select').should("exist");
+      cy.get('#state-select').click();
+      cy.get('#state-select').find('.vscomp-search-input').should("exist");
+      cy.get('#state-select').find('.vscomp-search-input').eq(0).invoke('attr', 'placeholder').should('eq', 'Search...');
+      cy.get('#state-select').find('.vscomp-option-text').should('have.length', 4);
+      cy.get('#state-select').find('.vscomp-option-text').eq(0).contains("Start");
+      cy.get('#state-select').find('.vscomp-option-text').eq(1).contains("Calculation 1 done");
+      cy.get('#state-select').find('.vscomp-option-text').eq(2).contains("Calculation 2 done");
+      cy.get('#state-select').find('.vscomp-option-text').eq(3).contains("Calculation 3 done");
+      cy.get('#state-select').find('.vscomp-search-input').eq(0).type('sta');
+      cy.get('#state-select').find('.vscomp-option-text').should('have.length', 1);
+      cy.get('#state-select').find('.vscomp-option-text').eq(0).contains("Start");
+
+      // check search is not enabled for status select
+      cy.get('#status-select').should("exist");
+      cy.get('#status-select').click();
+      cy.get('#status-select').find('.vscomp-search-input').should("not.exist");
+    })
+  })
+
 })

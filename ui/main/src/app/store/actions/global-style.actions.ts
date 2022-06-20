@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2021, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2022, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -7,17 +7,15 @@
  * This file is part of the OperatorFabric project.
  */
 
-
 import {Action} from '@ngrx/store';
 
 export enum GlobalStyleActionTypes {
     GlobalStyleUpdate = '[Style] Style update'
 }
 
-export class GlobalStyleUpdate implements Action {
+export class GlobalStyleUpdateAction implements Action {
     readonly type = GlobalStyleActionTypes.GlobalStyleUpdate;
-    constructor(public payload : {style : string}) {}
+    constructor(public payload: {style: string}) {}
 }
 
-
-export type GlobalStyleActions = GlobalStyleUpdate;
+export type GlobalStyleActions = GlobalStyleUpdateAction;

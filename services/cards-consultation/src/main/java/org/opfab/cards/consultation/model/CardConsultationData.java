@@ -104,9 +104,13 @@ public class CardConsultationData implements Card {
     private PublisherTypeEnum publisherType;
     private String  representative;
     private PublisherTypeEnum representativeType;
+    private String wktGeometry;
+    private String wktProjection;
     private Integer  secondsBeforeTimeSpanForReminder;
 
     private String processStateKey;
 
     private Boolean toNotify;
+
+    private Instant lastAckDate;
 }

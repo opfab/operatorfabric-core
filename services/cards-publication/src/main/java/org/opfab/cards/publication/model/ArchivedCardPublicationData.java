@@ -111,6 +111,10 @@ public class ArchivedCardPublicationData implements Card {
     private String representative;
     private PublisherTypeEnum representativeType;
 
+    private String wktGeometry;
+
+    private String wktProjection;
+
     private Integer secondsBeforeTimeSpanForReminder;
 
     private Boolean toNotify;
@@ -162,6 +166,8 @@ public class ArchivedCardPublicationData implements Card {
         this.publisherType = card.getPublisherType();
         this.representative = card.getRepresentative();
         this.representativeType = card.getRepresentativeType();
+        this.wktGeometry = card.getWktGeometry();
+        this.wktProjection = card.getWktProjection();
         this.secondsBeforeTimeSpanForReminder = card.getSecondsBeforeTimeSpanForReminder();
         this.toNotify = card.getToNotify();
     }

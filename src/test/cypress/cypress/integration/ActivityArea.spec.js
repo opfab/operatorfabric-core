@@ -121,10 +121,118 @@ describe ('ActivityAreaPage',()=>{
         // We reconnect to ENTITY1_FR, ENTITY2_FR and ENTITY3_FR
         cy.get('#opfab-navbar-drop-user-menu').click();
         cy.get('#opfab-navbar-right-menu-activityarea').click();
+        // check every checkbox to let the time for the ui to set to true before we click
+        cy.get('.opfab-checkbox').eq(0).find('input').should('not.be.checked');
+        cy.get('.opfab-checkbox').eq(1).find('input').should('not.be.checked');
+        cy.get('.opfab-checkbox').eq(2).find('input').should('not.be.checked');
+        cy.get('.opfab-checkbox').eq(3).find('input').should('be.checked');
         cy.get('.opfab-checkbox').contains('Control Center FR East').click();
         cy.get('.opfab-checkbox').contains('Control Center FR South').click();
         cy.get('.opfab-checkbox').contains('Control Center FR North').click();
         cy.get('#opfab-activityarea-btn-confirm').should('exist').click(); // click confirm settings
         cy.get('#opfab-activityarea-btn-yes').should('exist').click(); // and click yes on the confirmation popup
+    })
+
+
+
+    it('Choose activity area on login ', function () {
+        cy.setPropertyInConf('selectActivityAreaOnLogin ','web-ui',true);
+
+        cy.visit('')
+
+        //type login
+        cy.get('#opfab-login').should('be.visible')
+        cy.get('#opfab-login').type('operator4_fr')
+    
+        //type password
+        cy.get('#opfab-password').should('be.visible')
+        cy.get('#opfab-password').type('test')
+    
+        //press login button
+        cy.get('#opfab-login-btn-submit').click()
+        cy.get('#opfab-login-btn-submit').should('be.visible')
+        
+        cy.get('of-activityarea').should('exist')
+
+
+        // We check the title of the page
+        cy.get('.opfab-activityarea-title').should('have.text', ' CHOOSE YOUR ACTIVITY AREA\n');
+
+        // We should have only one 'block'
+        cy.get('.opfab-activityarea-entitieslist').should('have.length', 1);
+
+        // We should have 4 checkboxes corresponding to the four entities of the user
+        cy.get('.opfab-checkbox').should('have.length', 4);
+        cy.get('.opfab-checkbox').eq(0).should('have.text', 'Control Center FR East ');
+        cy.get('.opfab-checkbox').eq(1).should('have.text', 'Control Center FR North ');
+        cy.get('.opfab-checkbox').eq(2).should('have.text', 'Control Center FR South ');
+        cy.get('.opfab-checkbox').eq(3).should('have.text', 'Control Center FR West ');
+
+        // We check all the checkboxes are checked
+        cy.get('.opfab-checkbox').eq(0).find('input').should('be.checked');
+        cy.get('.opfab-checkbox').eq(1).find('input').should('be.checked');
+        cy.get('.opfab-checkbox').eq(2).find('input').should('be.checked');
+        cy.get('.opfab-checkbox').eq(3).find('input').should('be.checked');
+
+        cy.get('#opfab-activityarea-btn-confirm').click();
+
+
+        cy.waitDefaultTime();
+        cy.get('of-light-card').should('have.length', 5);
+
+        cy.logoutOpFab();
+
+        cy.hackUrlCurrentlyUsedMechanism();
+        cy.visit('');
+
+        //type login
+        cy.get('#opfab-login').should('be.visible')
+        cy.get('#opfab-login').type('operator4_fr')
+    
+        //type password
+        cy.get('#opfab-password').should('be.visible')
+        cy.get('#opfab-password').type('test')
+    
+        //press login button
+        cy.get('#opfab-login-btn-submit').click()
+        cy.get('#opfab-login-btn-submit').should('be.visible')
+        
+        cy.get('of-activityarea').should('exist')
+
+        // Disconnect operator4_fr from ENTITY1_FR, ENTITY2_FR and ENTITY3_FR
+        cy.get('.opfab-checkbox').eq(0).find('input').should('be.checked');
+        cy.get('.opfab-checkbox').eq(1).find('input').should('be.checked');
+        cy.get('.opfab-checkbox').eq(2).find('input').should('be.checked');
+        cy.get('.opfab-checkbox').eq(3).find('input').should('be.checked');
+        cy.get('.opfab-checkbox').contains('Control Center FR North').click();
+        cy.get('.opfab-checkbox').contains('Control Center FR East').click();
+        cy.get('.opfab-checkbox').contains('Control Center FR South').click();
+        cy.get('#opfab-activityarea-btn-confirm').should('exist').click(); // click confirm settings
+
+        // now, operator4_fr should see only 4 cards in the feed
+        cy.get('#opfab-navbar-menu-feed').click();
+        cy.waitDefaultTime();
+        cy.get('of-light-card').should('have.length', 4);
+
+        cy.get('of-light-card').eq(0).find('.card-title').should('have.text', "⚡ Planned Outage ");
+        cy.get('of-light-card').eq(1).find('.card-title').should('have.text', "Process state (calcul) ");
+        cy.get('of-light-card').eq(2).find('.card-title').should('have.text', "Data quality ");
+        cy.get('of-light-card').eq(3).find('.card-title').should('have.text', "Message ");
+
+        // We reconnect to ENTITY1_FR, ENTITY2_FR and ENTITY3_FR
+        cy.get('#opfab-navbar-drop-user-menu').click();
+        cy.get('#opfab-navbar-right-menu-activityarea').click();
+        // check every checkbox to let the time for the ui to set to true before we click
+        cy.get('.opfab-checkbox').eq(0).find('input').should('not.be.checked');
+        cy.get('.opfab-checkbox').eq(1).find('input').should('not.be.checked');
+        cy.get('.opfab-checkbox').eq(2).find('input').should('not.be.checked');
+        cy.get('.opfab-checkbox').eq(3).find('input').should('be.checked');
+        cy.get('.opfab-checkbox').contains('Control Center FR East').click();
+        cy.get('.opfab-checkbox').contains('Control Center FR South').click();
+        cy.get('.opfab-checkbox').contains('Control Center FR North').click();
+        cy.get('#opfab-activityarea-btn-confirm').should('exist').click(); // click confirm settings
+        cy.get('#opfab-activityarea-btn-yes').should('exist').click(); // and click yes on the confirmation popup
+
+        cy.setPropertyInConf('selectActivityAreaOnLogin ','web-ui',false);
     })
 })

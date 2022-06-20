@@ -17,7 +17,6 @@ import {I18n} from '@ofModel/i18n.model';
 import {MonitoringFiltersComponent} from './components/monitoring-filters/monitoring-filters.component';
 import {Process, TypeOfStateEnum} from '@ofModel/processes.model';
 import {ProcessesService} from '@ofServices/processes.service';
-import {LightCardsFeedFilterService} from '@ofServices/lightcards/lightcards-feed-filter.service';
 import {Filter} from '@ofModel/feed-filter.model';
 import {LightCardsStoreService} from '@ofServices/lightcards/lightcards-store.service';
 import {EntitiesService} from '@ofServices/entities.service';
@@ -28,7 +27,6 @@ import {EntitiesService} from '@ofServices/entities.service';
     styleUrls: ['./monitoring.component.scss']
 })
 export class MonitoringComponent implements OnInit, OnDestroy {
-
     @ViewChild('filters')
     filters: MonitoringFiltersComponent;
 
@@ -41,7 +39,6 @@ export class MonitoringComponent implements OnInit, OnDestroy {
     unsubscribe$: Subject<void> = new Subject<void>();
 
     mapOfProcesses = new Map<string, Process>();
-    processValueForFilter = new Array();
 
     result: LineOfMonitoringResult[];
 
@@ -49,63 +46,59 @@ export class MonitoringComponent implements OnInit, OnDestroy {
 
     isThereProcessStateToDisplay: boolean;
 
-    constructor(private processesService: ProcessesService
-                , private lightCardsService: LightCardsFeedFilterService
-                , private lightCardsStoreService: LightCardsStoreService
-                , private entitiesService: EntitiesService
+    constructor(
+        private processesService: ProcessesService,
+        private lightCardsStoreService: LightCardsStoreService,
+        private entitiesService: EntitiesService
     ) {
-
-         processesService.getAllProcesses().forEach(process => {
+        processesService.getAllProcesses().forEach((process) => {
             const id = process.id;
             if (!!process.uiVisibility && !!process.uiVisibility.monitoring) {
                 this.mapOfProcesses.set(id, process);
-                let itemName = process.name;
-                if (!itemName)
-                    itemName = id;
-                this.processValueForFilter.push({id: id, itemName: itemName, i18nPrefix: `${process.id}.${process.version}` });
             }
-         });
-
+        });
     }
 
     ngOnInit() {
-        this.monitoringResult$ =
-            combineLatest([
-                this.monitoringFilters$.asObservable(),
-                this.responseFilter$.asObservable(),
-                this.lightCardsStoreService.getLightCards()
-            ]
-            ).pipe(
-                debounceTime(0), // Add this to avoid ExpressionChangedAfterItHasBeenCheckedError so it waits for component init before processing
-                takeUntil(this.unsubscribe$),
-                // the filters are set   by the monitoring filter and by the time line
-                // so it generates two events , we need to wait until every filter is set
-                filter( results => this.areFiltersCorrectlySet(results[0])),
-                map(results => {
-                        const activeFilters = results[0].concat(results[1]);
-                        const cards = results[2].filter(card => Filter.chainFilter(card, activeFilters));
-                        if (!!cards && cards.length <= 0) {
-                            return null;
-                        }
-                        return cards.map(card => {
-                                return this.cardToResult(card);
-                            }
-                        ).filter(elem => !!elem)
-                         .sort(( card1, card2) => (card2.creationDateTime.valueOf() - card1.creationDateTime.valueOf()));
-                    }
-                ),
-                catchError(err => of([]))
+        this.monitoringResult$ = combineLatest([
+            this.monitoringFilters$.asObservable(),
+            this.responseFilter$.asObservable(),
+            this.lightCardsStoreService.getLightCards()
+        ]).pipe(
+            debounceTime(0), // Add this to avoid ExpressionChangedAfterItHasBeenCheckedError so it waits for component init before processing
+            takeUntil(this.unsubscribe$),
+            // the filters are set   by the monitoring filter and by the time line
+            // so it generates two events , we need to wait until every filter is set
+            filter((results) => this.areFiltersCorrectlySet(results[0])),
+            map((results) => {
+                const activeFilters = results[0].concat(results[1]);
+                const cards = results[2].filter((card) => Filter.chainFilter(card, activeFilters));
+                if (!!cards && cards.length <= 0) {
+                    return null;
+                }
+                return cards
+                    .map((card) => {
+                        return this.cardToResult(card);
+                    })
+                    .filter((elem) => !!elem)
+                    .sort((card1, card2) => card2.creationDateTime.valueOf() - card1.creationDateTime.valueOf());
+            }),
+            catchError((err) => of([]))
         );
-        this.monitoringResult$.subscribe(lines => this.result = lines);
+        this.monitoringResult$.subscribe((lines) => (this.result = lines));
         this.applyResponseFilter();
-        this.lightCardsStoreService.getLoadingInProgress().pipe(
-            takeUntil(this.unsubscribe$)).subscribe( (inProgress: boolean ) => this.loadingInProgress = inProgress);
+        this.lightCardsStoreService
+            .getLoadingInProgress()
+            .pipe(takeUntil(this.unsubscribe$))
+            .subscribe((inProgress: boolean) => (this.loadingInProgress = inProgress));
         this.isThereProcessStateToDisplay = this.processesService.getStatesListPerProcess(false).size > 0;
     }
 
     private areFiltersCorrectlySet(filters: Array<any>): boolean {
         let correctlySet = true;
-        filters.forEach( filter => {if (!filter) correctlySet = false; });
+        filters.forEach((filter) => {
+            if (!filter) correctlySet = false;
+        });
         return correctlySet;
     }
 
@@ -129,36 +122,48 @@ export class MonitoringComponent implements OnInit, OnDestroy {
 
     private getEmitter(card: LightCard): string {
         const isThirdPartyPublisher = card.publisherType === 'EXTERNAL';
-        const sender = (isThirdPartyPublisher) ? card.publisher : this.entitiesService.getEntityName(card.publisher);
+        const sender = isThirdPartyPublisher ? card.publisher : this.entitiesService.getEntityName(card.publisher);
 
         let representative = '';
 
         if (!!card.representativeType && !!card.representative) {
             const isThirdPartyRepresentative = card.representativeType === 'EXTERNAL';
-            representative = (isThirdPartyRepresentative) ? card.representative : this.entitiesService.getEntityName(card.representative);
+            representative = isThirdPartyRepresentative
+                ? card.representative
+                : this.entitiesService.getEntityName(card.representative);
         }
-        return !representative.length ? sender : (sender + ' (' + representative + ')');
+        return !representative.length ? sender : sender + ' (' + representative + ')';
     }
 
     private getEntityIdsAllowedOrRequiredToRespondAndAllowedToSendCards(card: LightCard) {
         let entityIdsAllowedOrRequiredToRespond = [];
         if (card.entitiesAllowedToRespond)
-            entityIdsAllowedOrRequiredToRespond = entityIdsAllowedOrRequiredToRespond.concat(card.entitiesAllowedToRespond);
+            entityIdsAllowedOrRequiredToRespond = entityIdsAllowedOrRequiredToRespond.concat(
+                card.entitiesAllowedToRespond
+            );
         if (card.entitiesRequiredToRespond)
-            entityIdsAllowedOrRequiredToRespond = entityIdsAllowedOrRequiredToRespond.concat(card.entitiesRequiredToRespond);
+            entityIdsAllowedOrRequiredToRespond = entityIdsAllowedOrRequiredToRespond.concat(
+                card.entitiesRequiredToRespond
+            );
 
-        const entitiesAllowedOrRequiredToRespond = this.entitiesService.getEntitiesFromIds(entityIdsAllowedOrRequiredToRespond);
+        const entitiesAllowedOrRequiredToRespond = this.entitiesService.getEntitiesFromIds(
+            entityIdsAllowedOrRequiredToRespond
+        );
 
-        return this.entitiesService.resolveEntitiesAllowedToSendCards(entitiesAllowedOrRequiredToRespond).map(entity => entity.id);
+        return this.entitiesService
+            .resolveEntitiesAllowedToSendCards(entitiesAllowedOrRequiredToRespond)
+            .map((entity) => entity.id);
     }
 
     private getEntityIdsRequiredToRespondAndAllowedToSendCards(card: LightCard) {
         if (!card.entitiesRequiredToRespond) return [];
         const entitiesAllowedToRespond = this.entitiesService.getEntitiesFromIds(card.entitiesRequiredToRespond);
-        return this.entitiesService.resolveEntitiesAllowedToSendCards(entitiesAllowedToRespond).map(entity => entity.id);
+        return this.entitiesService
+            .resolveEntitiesAllowedToSendCards(entitiesAllowedToRespond)
+            .map((entity) => entity.id);
     }
 
-    private cardToResult(card: LightCard) : LineOfMonitoringResult{
+    private cardToResult(card: LightCard): LineOfMonitoringResult {
         let typeOfState: TypeOfStateEnum;
         const procId = card.process;
 
@@ -175,24 +180,23 @@ export class MonitoringComponent implements OnInit, OnDestroy {
                 typeOfState = state.type;
             }
             if (!!state.type) {
-                return (
-                    {
-                        creationDateTime: moment(card.publishDate),
-                        beginningOfBusinessPeriod: moment(card.startDate),
-                        endOfBusinessPeriod: ((!!card.endDate) ? moment(card.endDate) : null),
-                        titleTranslated: card.titleTranslated,
-                        summaryTranslated: card.summaryTranslated,
-                        processName: currentProcess.name,
-                        cardId: card.id,
-                        cardUid: card.uid,
-                        severity: card.severity.toLocaleLowerCase(),
-                        processId: procId,
-                        typeOfState: typeOfState,
-                        answer: card.hasChildCardFromCurrentUserEntity,
-                        emitter: this.getEmitter(card),
-                        requiredResponses: this.getEntityIdsRequiredToRespondAndAllowedToSendCards(card),
-                        allowedOrRequiredResponses: this.getEntityIdsAllowedOrRequiredToRespondAndAllowedToSendCards(card)
-                    } as LineOfMonitoringResult);
+                return {
+                    creationDateTime: moment(card.publishDate),
+                    beginningOfBusinessPeriod: moment(card.startDate),
+                    endOfBusinessPeriod: !!card.endDate ? moment(card.endDate) : null,
+                    titleTranslated: card.titleTranslated,
+                    summaryTranslated: card.summaryTranslated,
+                    processName: currentProcess.name,
+                    cardId: card.id,
+                    cardUid: card.uid,
+                    severity: card.severity.toLocaleLowerCase(),
+                    processId: procId,
+                    typeOfState: typeOfState,
+                    answer: card.hasChildCardFromCurrentUserEntity,
+                    emitter: this.getEmitter(card),
+                    requiredResponses: this.getEntityIdsRequiredToRespondAndAllowedToSendCards(card),
+                    allowedOrRequiredResponses: this.getEntityIdsAllowedOrRequiredToRespondAndAllowedToSendCards(card)
+                } as LineOfMonitoringResult;
             }
         }
         return null;
@@ -205,10 +209,7 @@ export class MonitoringComponent implements OnInit, OnDestroy {
 
     private applyResponseFilter() {
         this.responseFilter$.next(
-            new Filter(
-                (card: LightCard) => !card.hasChildCardFromCurrentUserEntity,
-                !this.responseFilterValue,
-                null
-            ));
+            new Filter((card: LightCard) => !card.hasChildCardFromCurrentUserEntity, !this.responseFilterValue, null)
+        );
     }
 }

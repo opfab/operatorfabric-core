@@ -18,15 +18,14 @@ import {NotFoundError} from './not-found-error';
  */
 @Injectable()
 export class AppErrorHandler implements ErrorHandler {
+    handleError(error) {
+        if (error instanceof NotAllowedError) {
+            alert('Action not allowed');
+        }
+        if (error instanceof NotFoundError) {
+            alert('Resource not found');
+        }
 
-  handleError(error) {
-    if (error instanceof NotAllowedError) {
-      alert('Action not allowed');
+        console.log(error);
     }
-    if (error instanceof NotFoundError) {
-      alert('Resource not found');
-    }
-
-    console.log(error);
-  }
 }

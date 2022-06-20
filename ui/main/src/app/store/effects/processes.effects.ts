@@ -17,25 +17,27 @@ import {HandlebarsService} from 'app/modules/cards/services/handlebars.service';
 
 @Injectable()
 export class ProcessesEffects {
-    constructor(private actions$: Actions, 
+    constructor(
+        private actions$: Actions,
         private service: ProcessesService,
-        private templateService: HandlebarsService) {
-    }
+        private templateService: HandlebarsService
+    ) {}
 
-    updateBusinessConfig: Observable<any> = createEffect(() => this.actions$
-        .pipe(
-            ofType(ProcessesActionTypes.BusinessConfigChange),
-            debounce(() => timer(5000 + Math.floor(Math.random() * 5000))), // use a random  part to avoid all UI to access at the same time the server
-            map(() => {
-                this.templateService.clearCache();
-                this.service.loadAllProcesses().subscribe();
-                this.service.loadProcessGroups().subscribe();
-
-            }),
-            catchError((error, caught) => {
-                console.error('ProcessesEffects - Error in update business config ', error);
-                return caught;
-            })
-        ), { dispatch: false });
-
+    updateBusinessConfig: Observable<any> = createEffect(
+        () =>
+            this.actions$.pipe(
+                ofType(ProcessesActionTypes.BusinessConfigChange),
+                debounce(() => timer(5000 + Math.floor(Math.random() * 5000))), // use a random  part to avoid all UI to access at the same time the server
+                map(() => {
+                    this.templateService.clearCache();
+                    this.service.loadAllProcesses().subscribe();
+                    this.service.loadProcessGroups().subscribe();
+                }),
+                catchError((error, caught) => {
+                    console.error('ProcessesEffects - Error in update business config ', error);
+                    return caught;
+                })
+            ),
+        {dispatch: false}
+    );
 }

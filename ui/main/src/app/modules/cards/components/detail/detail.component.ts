@@ -37,12 +37,12 @@ import {Subject} from 'rxjs';
 import {Severity} from '@ofModel/light-card.model';
 import {AppService, PageType} from '@ofServices/app.service';
 import {User} from '@ofModel/user.model';
-import {ClearLightCardSelection} from '@ofStore/actions/light-card.actions';
+import {ClearLightCardSelectionAction} from '@ofStore/actions/light-card.actions';
 import {UserService} from '@ofServices/user.service';
 import {EntitiesService} from '@ofServices/entities.service';
 import {NgbModal, NgbModalOptions, NgbModalRef} from '@ng-bootstrap/ng-bootstrap';
 import {TimeService} from '@ofServices/time.service';
-import {AlertMessage} from '@ofStore/actions/alert.actions';
+import {AlertMessageAction} from '@ofStore/actions/alert.actions';
 import {MessageLevel} from '@ofModel/message.model';
 import {AcknowledgeService} from '@ofServices/acknowledge.service';
 import {UserPermissionsService} from '@ofServices/user-permissions.service';
@@ -87,7 +87,6 @@ const maxVisibleEntitiesForCardHeader = 3;
     encapsulation: ViewEncapsulation.None
 })
 export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewChecked, DoCheck {
-
     @Input() cardState: State;
     @Input() card: Card;
     @Input() childCards: Card[];
@@ -144,7 +143,8 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
     private modalRef: NgbModalRef;
     private user: User;
 
-    constructor(private element: ElementRef,
+    constructor(
+        private element: ElementRef,
         private businessconfigService: ProcessesService,
         private handlebars: HandlebarsService,
         private sanitizer: DomSanitizer,
@@ -157,28 +157,27 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
         private time: TimeService,
         private acknowledgeService: AcknowledgeService,
         private userPermissionsService: UserPermissionsService,
-        private lightCardsStoreService: LightCardsStoreService) {
-
-            const userWithPerimeters = this.userService.getCurrentUserWithPerimeters();
-            if (!!userWithPerimeters)
-                this.user = userWithPerimeters.userData;
+        private lightCardsStoreService: LightCardsStoreService
+    ) {
+        const userWithPerimeters = this.userService.getCurrentUserWithPerimeters();
+        if (!!userWithPerimeters) this.user = userWithPerimeters.userData;
     }
-
 
     // START - ANGULAR COMPONENT LIFECYCLE
 
     ngOnInit() {
         this.reloadTemplateWhenGlobalStyleChange();
-        if (this._appService.pageType !== PageType.ARCHIVE)
-            this.integrateChildCardsInRealTime();
+        if (this._appService.pageType !== PageType.ARCHIVE) this.integrateChildCardsInRealTime();
 
         this.selectEntityForm = new FormGroup({
             entity: new FormControl('')
         });
 
-        this.cardService.getReceivedAcks().pipe(takeUntil(this.unsubscribe$)).subscribe(receivedAck => {
-            if (receivedAck.cardUid === this.card.uid)
-                this.addAckFromSubscription(receivedAck.entitiesAcks);
+        this.cardService
+            .getReceivedAcks()
+            .pipe(takeUntil(this.unsubscribe$))
+            .subscribe((receivedAck) => {
+                if (receivedAck.cardUid === this.card.uid) this.addAckFromSubscription(receivedAck.entitiesAcks);
             });
     }
 
@@ -202,8 +201,11 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
         if (this.cardState.response != null && this.cardState.response !== undefined) {
             this.isCardAQuestionCard = true;
             this.computeEntitiesForResponses();
-            this.isUserEnabledToRespond = this.userPermissionsService.isUserEnabledToRespond(this.userService.getCurrentUserWithPerimeters(),
-                this.card, this.businessconfigService.getProcess(this.card.process));
+            this.isUserEnabledToRespond = this.userPermissionsService.isUserEnabledToRespond(
+                this.userService.getCurrentUserWithPerimeters(),
+                this.card,
+                this.businessconfigService.getProcess(this.card.process)
+            );
             this.computeEntityOptionsDropdownListForResponse();
         } else this.isCardAQuestionCard = false;
 
@@ -211,8 +213,7 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
         this.lastResponse = this.getLastResponse();
 
         this.listEntitiesToAck = [];
-        if (this.isCardPublishedByUserEntity() && !! this.card.entityRecipients)
-            this.computeListEntitiesToAck();
+        if (this.isCardPublishedByUserEntity() && !!this.card.entityRecipients) this.computeListEntitiesToAck();
 
         // this call is necessary done after computeEntitiesForResponses() and checkIfHasAlreadyResponded()
         // to have the variables for templateGateway set
@@ -222,50 +223,62 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
         this.initializeHandlebarsTemplates();
         this.markAsReadIfNecessary();
         this.setButtonsVisibility();
-        this.showDetailCardHeader = (this.cardState.showDetailCardHeader === null) || (this.cardState.showDetailCardHeader === true);
+        this.showDetailCardHeader =
+            !this.cardState.showDetailCardHeader || this.cardState.showDetailCardHeader === true;
         this.computeFromEntityOrRepresentative();
         this.formattedPublishDate = this.formatDate(this.card.publishDate);
         this.formattedPublishTime = this.formatTime(this.card.publishDate);
         this.computeLttdParams();
 
-        this.btnValidateLabel = (!! this.cardState.validateAnswerButtonLabel) ? this.cardState.validateAnswerButtonLabel : 'response.btnValidate';
-        this.btnUnlockLabel = (!! this.cardState.modifyAnswerButtonLabel) ? this.cardState.modifyAnswerButtonLabel : 'response.btnUnlock';
+        this.btnValidateLabel = !!this.cardState.validateAnswerButtonLabel
+            ? this.cardState.validateAnswerButtonLabel
+            : 'response.btnValidate';
+        this.btnUnlockLabel = !!this.cardState.modifyAnswerButtonLabel
+            ? this.cardState.modifyAnswerButtonLabel
+            : 'response.btnUnlock';
     }
 
     public displayCardAcknowledgedFooter(): boolean {
-        return (this.cardState.acknowledgmentAllowed !== AcknowledgmentAllowedEnum.NEVER && this.listEntitiesToAck.length > 0);
+        return (
+            this.cardState.acknowledgmentAllowed !== AcknowledgmentAllowedEnum.NEVER &&
+            this.listEntitiesToAck.length > 0
+        );
     }
 
     private addAckFromSubscription(entitiesAcksToAdd: string[]) {
         if (!!this.listEntitiesToAck && this.listEntitiesToAck.length > 0) {
-            entitiesAcksToAdd.forEach(entityAckToAdd => {
-                const indexToUpdate = this.listEntitiesToAck.findIndex(entityToAck => entityToAck.id === entityAckToAdd);
-                if (indexToUpdate !== -1)
-                    this.listEntitiesToAck[indexToUpdate].color = 'green';
+            entitiesAcksToAdd.forEach((entityAckToAdd) => {
+                const indexToUpdate = this.listEntitiesToAck.findIndex(
+                    (entityToAck) => entityToAck.id === entityAckToAdd
+                );
+                if (indexToUpdate !== -1) this.listEntitiesToAck[indexToUpdate].color = 'green';
             });
         }
     }
 
     private computeListEntitiesToAck() {
         const resolved = new Set<string>();
-        this.card.entityRecipients.forEach(entityRecipient => {
+        this.card.entityRecipients.forEach((entityRecipient) => {
             const entity = this.entitiesService.getEntitiesFromIds([entityRecipient])[0];
-            if (entity.entityAllowedToSendCard)
-                resolved.add(entityRecipient);
+            if (entity.entityAllowedToSendCard) resolved.add(entityRecipient);
 
-            this.entitiesService.resolveChildEntities(entityRecipient).filter(c => c.entityAllowedToSendCard).forEach(c => resolved.add(c.id));
+            this.entitiesService
+                .resolveChildEntities(entityRecipient)
+                .filter((c) => c.entityAllowedToSendCard)
+                .forEach((c) => resolved.add(c.id));
         });
 
-        resolved.forEach(entityToAck => this.listEntitiesToAck.push({
-            id: entityToAck,
-            name: this.entitiesService.getEntityName(entityToAck),
-            color: this.checkEntityAcknowledged(entityToAck) ? 'green' : '#ff6600'
-        }));
-
+        resolved.forEach((entityToAck) =>
+            this.listEntitiesToAck.push({
+                id: entityToAck,
+                name: this.entitiesService.getEntityName(entityToAck),
+                color: this.checkEntityAcknowledged(entityToAck) ? 'green' : '#ff6600'
+            })
+        );
     }
 
     private isCardPublishedByUserEntity(): boolean {
-        return (this.card.publisherType === 'ENTITY') && (this.user.entities.includes(this.card.publisher));
+        return this.card.publisherType === 'ENTITY' && this.user.entities.includes(this.card.publisher);
     }
 
     ngOnDestroy() {
@@ -280,14 +293,15 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
     // For certain types of template , we need to reload it to take into account
     // the new css style (for example with chart done with chart.js)
     private reloadTemplateWhenGlobalStyleChange() {
-        this.store.select(selectGlobalStyleState)
+        this.store
+            .select(selectGlobalStyleState)
             .pipe(takeUntil(this.unsubscribe$), skip(1))
             .subscribe(() => this.initializeHandlebarsTemplates());
     }
 
     private initializeHandlebarsTemplates() {
         if (!this.userContext) {
-            this.store.select(selectAuthenticationState).subscribe(authState => {
+            this.store.select(selectAuthenticationState).subscribe((authState) => {
                 this.userContext = new UserContext(
                     authState.identifier,
                     authState.token,
@@ -306,14 +320,16 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
     private initializeHandlebarsTemplatesProcess() {
         const templateName = this.cardState.templateName;
         if (!!templateName) {
-            this.handlebars.executeTemplate(templateName,
-                new DetailContext(this.card, this.userContext, this.cardState.response))
+            this.handlebars
+                .executeTemplate(templateName, new DetailContext(this.card, this.userContext, this.cardState.response))
                 .subscribe({
                     next: (html) => {
                         this.htmlTemplateContent = this.sanitizer.bypassSecurityTrustHtml(html);
-                        setTimeout(() => { // wait for DOM rendering
+                        setTimeout(() => {
+                            // wait for DOM rendering
                             this.reinsertScripts();
-                            setTimeout(() => { // wait for script loading before calling them in template
+                            setTimeout(() => {
+                                // wait for script loading before calling them in template
                                 templateGateway.applyChildCards();
                                 if (this.isResponseLocked) templateGateway.lockAnswer();
                                 if (this.card.lttd && this.lttdExpiredIsTrue) {
@@ -325,13 +341,22 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
                         }, 10);
                     },
                     error: (error) => {
-                        console.log(new Date().toISOString(), 'WARNING impossible to process template ', templateName , ":  ", error ) ;
+                        console.log(
+                            new Date().toISOString(),
+                            'WARNING impossible to process template ',
+                            templateName,
+                            ':  ',
+                            error
+                        );
                         this.htmlTemplateContent = this.sanitizer.bypassSecurityTrustHtml('');
                     }
                 });
         } else {
-            this.htmlTemplateContent = " TECHNICAL ERROR - NO TEMPLATE AVAILABLE";
-            console.log(new Date().toISOString(), `WARNING No template for process ${this.card.process} version ${this.card.processVersion} with state ${this.card.state}`);
+            this.htmlTemplateContent = ' TECHNICAL ERROR - NO TEMPLATE AVAILABLE';
+            console.log(
+                new Date().toISOString(),
+                `WARNING No template for process ${this.card.process} version ${this.card.processVersion} with state ${this.card.state}`
+            );
         }
     }
 
@@ -351,57 +376,61 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
     }
 
     private integrateChildCardsInRealTime() {
-       this.lightCardsStoreService.getNewLightChildCards()
+        this.lightCardsStoreService
+            .getNewLightChildCards()
             .pipe(
                 takeUntil(this.unsubscribe$),
-                map(lastCardLoaded => {
+                map((lastCardLoaded) => {
                     if (!!lastCardLoaded) {
-                        if (lastCardLoaded.parentCardId === this.card.id &&
-                            !this.childCards.map(childCard => childCard.uid).includes(lastCardLoaded.uid)) {
+                        if (
+                            lastCardLoaded.parentCardId === this.card.id &&
+                            !this.childCards.map((childCard) => childCard.uid).includes(lastCardLoaded.uid)
+                        ) {
                             this.integrateOneChildCard(lastCardLoaded);
                         }
                     }
-                })).subscribe();
+                })
+            )
+            .subscribe();
 
-        this.lightCardsStoreService.getDeletedChildCardsIds()
+        this.lightCardsStoreService
+            .getDeletedChildCardsIds()
             .pipe(
                 takeUntil(this.unsubscribe$),
-                map(lastCardDeleted => {
-                    if (!!lastCardDeleted && lastCardDeleted.parentCardId === this.card.id
-                            && this.childCards.map(childCard => childCard.id).includes(lastCardDeleted.cardId)) {
-
+                map((lastCardDeleted) => {
+                    if (
+                        !!lastCardDeleted &&
+                        lastCardDeleted.parentCardId === this.card.id &&
+                        this.childCards.map((childCard) => childCard.id).includes(lastCardDeleted.cardId)
+                    ) {
                         this.removeChildCard(lastCardDeleted.cardId);
-
                     }
-                })).subscribe();
-
+                })
+            )
+            .subscribe();
     }
 
     private integrateOneChildCard(newChildCard: Card) {
-        this.cardService.loadCard(newChildCard.id).subscribe(
-            cardData => {
-                const newChildArray = this.childCards.filter(childCard => childCard.id !== cardData.card.id);
-                newChildArray.push(cardData.card);
-                this.childCards = newChildArray;
-                templateGateway.childCards = this.childCards;
-                this.computeEntitiesForResponses();
-                templateGateway.applyChildCards();
-                this.checkIfHasAlreadyResponded();
-                if (this.isResponseLocked)
-                    templateGateway.lockAnswer();
+        this.cardService.loadCard(newChildCard.id).subscribe((cardData) => {
+            const newChildArray = this.childCards.filter((childCard) => childCard.id !== cardData.card.id);
+            newChildArray.push(cardData.card);
+            this.childCards = newChildArray;
+            templateGateway.childCards = this.childCards;
+            this.computeEntitiesForResponses();
+            templateGateway.applyChildCards();
+            this.checkIfHasAlreadyResponded();
+            if (this.isResponseLocked) templateGateway.lockAnswer();
 
-                this.lastResponse = this.getLastResponse();
-            }
-        );
+            this.lastResponse = this.getLastResponse();
+        });
     }
 
     private removeChildCard(deletedChildCardId: string) {
-        const newChildArray = this.childCards.filter(childCard => childCard.id !== deletedChildCardId);
+        const newChildArray = this.childCards.filter((childCard) => childCard.id !== deletedChildCardId);
         this.childCards = newChildArray;
         this.checkIfHasAlreadyResponded();
         templateGateway.isLocked = this.isResponseLocked;
-        if (!this.isResponseLocked)
-            templateGateway.unlockAnswer();
+        if (!this.isResponseLocked) templateGateway.unlockAnswer();
         templateGateway.childCards = this.childCards;
         this.computeEntitiesForResponses();
         templateGateway.applyChildCards();
@@ -410,54 +439,75 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
     }
 
     private computeEntitiesForResponses() {
-
-        const entityIdsRequiredToRespondAndAllowedToSendCards = this.getEntityIdsRequiredToRespondAndAllowedToSendCards();
-        this.entityIdsAllowedOrRequiredToRespondAndAllowedToSendCards = this.getEntityIdsAllowedOrRequiredToRespondAndAllowedToSendCards();
-        console.log(new Date().toISOString(), ' Detail card - entities allowed to respond = ', this.entityIdsAllowedOrRequiredToRespondAndAllowedToSendCards);
+        const entityIdsRequiredToRespondAndAllowedToSendCards =
+            this.getEntityIdsRequiredToRespondAndAllowedToSendCards();
+        this.entityIdsAllowedOrRequiredToRespondAndAllowedToSendCards =
+            this.getEntityIdsAllowedOrRequiredToRespondAndAllowedToSendCards();
+        console.log(
+            new Date().toISOString(),
+            ' Detail card - entities allowed to respond = ',
+            this.entityIdsAllowedOrRequiredToRespondAndAllowedToSendCards
+        );
 
         this.setEntitiesToRespondForCardHeader(entityIdsRequiredToRespondAndAllowedToSendCards);
         this.setUserEntityIdsPossibleForResponse();
-        const userEntitiesRequiredToRespondAndAllowedToSendCards = entityIdsRequiredToRespondAndAllowedToSendCards.filter(entityId => this.user.entities.includes(entityId));
-        this.userMemberOfAnEntityRequiredToRespondAndAllowedToSendCards = userEntitiesRequiredToRespondAndAllowedToSendCards.length > 0;
+        const userEntitiesRequiredToRespondAndAllowedToSendCards =
+            entityIdsRequiredToRespondAndAllowedToSendCards.filter((entityId) => this.user.entities.includes(entityId));
+        this.userMemberOfAnEntityRequiredToRespondAndAllowedToSendCards =
+            userEntitiesRequiredToRespondAndAllowedToSendCards.length > 0;
     }
 
     private getEntityIdsRequiredToRespondAndAllowedToSendCards() {
         if (!this.card.entitiesRequiredToRespond) return [];
         const entitiesAllowedToRespond = this.entitiesService.getEntitiesFromIds(this.card.entitiesRequiredToRespond);
-        return this.entitiesService.resolveEntitiesAllowedToSendCards(entitiesAllowedToRespond).map(entity => entity.id);
+        return this.entitiesService
+            .resolveEntitiesAllowedToSendCards(entitiesAllowedToRespond)
+            .map((entity) => entity.id);
     }
 
     private getEntityIdsAllowedOrRequiredToRespondAndAllowedToSendCards() {
         let entityIdsAllowedOrRequiredToRespond = [];
         if (this.card.entitiesAllowedToRespond)
-            entityIdsAllowedOrRequiredToRespond = entityIdsAllowedOrRequiredToRespond.concat(this.card.entitiesAllowedToRespond);
+            entityIdsAllowedOrRequiredToRespond = entityIdsAllowedOrRequiredToRespond.concat(
+                this.card.entitiesAllowedToRespond
+            );
         if (this.card.entitiesRequiredToRespond)
-            entityIdsAllowedOrRequiredToRespond = entityIdsAllowedOrRequiredToRespond.concat(this.card.entitiesRequiredToRespond);
+            entityIdsAllowedOrRequiredToRespond = entityIdsAllowedOrRequiredToRespond.concat(
+                this.card.entitiesRequiredToRespond
+            );
 
-        const entitiesAllowedOrRequiredToRespond = this.entitiesService.getEntitiesFromIds(entityIdsAllowedOrRequiredToRespond);
-        return this.entitiesService.resolveEntitiesAllowedToSendCards(entitiesAllowedOrRequiredToRespond).map(entity => entity.id);
+        const entitiesAllowedOrRequiredToRespond = this.entitiesService.getEntitiesFromIds(
+            entityIdsAllowedOrRequiredToRespond
+        );
+        return this.entitiesService
+            .resolveEntitiesAllowedToSendCards(entitiesAllowedOrRequiredToRespond)
+            .map((entity) => entity.id);
     }
-
 
     private setEntitiesToRespondForCardHeader(entityIdsRequiredToRespondAndAllowedToSendCards) {
         if (this.entityIdsAllowedOrRequiredToRespondAndAllowedToSendCards) {
-
             // Entities for card header
             let listEntitiesToRespondForHeader;
             if (entityIdsRequiredToRespondAndAllowedToSendCards.length > 0)
-                listEntitiesToRespondForHeader = this.createEntityHeaderFromList(entityIdsRequiredToRespondAndAllowedToSendCards);
+                listEntitiesToRespondForHeader = this.createEntityHeaderFromList(
+                    entityIdsRequiredToRespondAndAllowedToSendCards
+                );
             else
-                listEntitiesToRespondForHeader = this.createEntityHeaderFromList(this.entityIdsAllowedOrRequiredToRespondAndAllowedToSendCards);
+                listEntitiesToRespondForHeader = this.createEntityHeaderFromList(
+                    this.entityIdsAllowedOrRequiredToRespondAndAllowedToSendCards
+                );
 
             listEntitiesToRespondForHeader.sort((a, b) => a.name?.localeCompare(b.name));
 
-            this.listVisibleEntitiesToRespond = listEntitiesToRespondForHeader.length > maxVisibleEntitiesForCardHeader ?
-                                                    listEntitiesToRespondForHeader.slice(0, maxVisibleEntitiesForCardHeader) :
-                                                    listEntitiesToRespondForHeader;
+            this.listVisibleEntitiesToRespond =
+                listEntitiesToRespondForHeader.length > maxVisibleEntitiesForCardHeader
+                    ? listEntitiesToRespondForHeader.slice(0, maxVisibleEntitiesForCardHeader)
+                    : listEntitiesToRespondForHeader;
 
-            this.listDropdownEntitiesToRespond = listEntitiesToRespondForHeader.length > maxVisibleEntitiesForCardHeader ?
-                                                    listEntitiesToRespondForHeader.slice(maxVisibleEntitiesForCardHeader) :
-                                                    [];
+            this.listDropdownEntitiesToRespond =
+                listEntitiesToRespondForHeader.length > maxVisibleEntitiesForCardHeader
+                    ? listEntitiesToRespondForHeader.slice(maxVisibleEntitiesForCardHeader)
+                    : [];
         } else {
             this.listVisibleEntitiesToRespond = [];
             this.listDropdownEntitiesToRespond = [];
@@ -466,33 +516,38 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
 
     private createEntityHeaderFromList(entities: string[]) {
         const entityHeader = new Array<EntityForCardHeader>();
-        entities.forEach(entity => {
+        entities.forEach((entity) => {
             const entityName = this.entitiesService.getEntityName(entity);
             if (entityName) {
-                entityHeader.push(
-                    {
-                        id: entity,
-                        name: entityName,
-                        color: this.checkEntityAnswered(entity) ? "green" : "#ff6600"
-                    });
+                entityHeader.push({
+                    id: entity,
+                    name: entityName,
+                    color: this.checkEntityAnswered(entity) ? 'green' : '#ff6600'
+                });
             }
         });
         return entityHeader;
     }
 
     private setUserEntityIdsPossibleForResponse() {
-        this.userEntityIdsPossibleForResponse = this.entityIdsAllowedOrRequiredToRespondAndAllowedToSendCards.filter(x => this.user.entities.includes(x));
-        console.log(new Date().toISOString(), ' Detail card - users entities allowed to respond = ', this.userEntityIdsPossibleForResponse);
+        this.userEntityIdsPossibleForResponse = this.entityIdsAllowedOrRequiredToRespondAndAllowedToSendCards.filter(
+            (x) => this.user.entities.includes(x)
+        );
+        console.log(
+            new Date().toISOString(),
+            ' Detail card - users entities allowed to respond = ',
+            this.userEntityIdsPossibleForResponse
+        );
         if (this.userEntityIdsPossibleForResponse.length === 1)
             this.userEntityIdToUseForResponse = this.userEntityIdsPossibleForResponse[0];
     }
 
     private checkEntityAnswered(entity: string): boolean {
-        return this.childCards.some(childCard => childCard.publisher === entity );
+        return this.childCards.some((childCard) => childCard.publisher === entity);
     }
 
     private checkEntityAcknowledged(entityId: string): boolean {
-        return (!! this.card.entitiesAcks) && (this.card.entitiesAcks.includes(entityId));
+        return !!this.card.entitiesAcks && this.card.entitiesAcks.includes(entityId);
     }
 
     private adaptTemplateSize() {
@@ -514,11 +569,11 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
     }
 
     private checkLttdExpired(): void {
-        this.lttdExpiredIsTrue = (this.card.lttd != null && (this.card.lttd - new Date().getTime()) <= 0);
+        this.lttdExpiredIsTrue = this.card.lttd != null && this.card.lttd - new Date().getTime() <= 0;
     }
 
     private computeLttdParams() {
-        this.businessconfigService.queryProcess(this.card.process, this.card.processVersion).subscribe( process => {
+        this.businessconfigService.queryProcess(this.card.process, this.card.processVersion).subscribe((process) => {
             const state = process.extractState(this.card);
             if (state.type === TypeOfStateEnum.FINISHED) {
                 this.showExpiredIcon = false;
@@ -534,39 +589,47 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
         });
     }
 
-
     private setButtonsVisibility() {
         this.showButtons = this._appService.pageType !== PageType.ARCHIVE;
-        if ((this._appService.pageType !== PageType.CALENDAR) && (this._appService.pageType !== PageType.MONITORING)) {
+        if (this._appService.pageType !== PageType.CALENDAR && this._appService.pageType !== PageType.MONITORING) {
             this.showMaxAndReduceButton = true;
         }
         this.showCloseButton = true;
         this.showEditButton = this.doesTheUserHavePermissionToEditCard();
         this.showDeleteButton = this.doesTheUserHavePermissionToDeleteCard();
-        this.showAckButton = this.isAcknowledgmentAllowed() && (this._appService.pageType !== PageType.CALENDAR);
-        this.showActionButton = (!!this.cardState.response);
+        this.showAckButton = this.isAcknowledgmentAllowed() && this._appService.pageType !== PageType.CALENDAR;
+        this.showActionButton = !!this.cardState.response;
     }
 
     private doesTheUserHavePermissionToEditCard(): boolean {
-        return this.userPermissionsService.doesTheUserHavePermissionToEditCard(this.userService.getCurrentUserWithPerimeters(), this.card);
+        return this.userPermissionsService.doesTheUserHavePermissionToEditCard(
+            this.userService.getCurrentUserWithPerimeters(),
+            this.card
+        );
     }
 
     private doesTheUserHavePermissionToDeleteCard(): boolean {
-        return this.userPermissionsService.doesTheUserHavePermissionToDeleteCard(this.userService.getCurrentUserWithPerimeters(), this.card);
+        return this.userPermissionsService.doesTheUserHavePermissionToDeleteCard(
+            this.userService.getCurrentUserWithPerimeters(),
+            this.card
+        );
     }
 
     private isAcknowledgmentAllowed(): boolean {
-        // default value is true
+        if (this.card.hasBeenAcknowledged && !this.cardState.cancelAcknowledgmentAllowed) return false;
+        // default is true
         if (!this.cardState.acknowledgmentAllowed) return true;
 
-        return (this.cardState.acknowledgmentAllowed === AcknowledgmentAllowedEnum.ALWAYS ||
+        return (
+            this.cardState.acknowledgmentAllowed === AcknowledgmentAllowedEnum.ALWAYS ||
             (this.cardState.acknowledgmentAllowed === AcknowledgmentAllowedEnum.ONLY_WHEN_RESPONSE_DISABLED_FOR_USER &&
-                (!this.isUserEnabledToRespond || (this.isUserEnabledToRespond && this.lttdExpiredIsTrue))));
+                (!this.isUserEnabledToRespond || (this.isUserEnabledToRespond && this.lttdExpiredIsTrue)))
+        );
     }
 
     private checkIfHasAlreadyResponded() {
         this.isResponseLocked = false;
-        for (const e of this.childCards.map(c => c.publisher)) {
+        for (const e of this.childCards.map((c) => c.publisher)) {
             if (this.user.entities.includes(e)) {
                 this.isResponseLocked = true;
                 break;
@@ -576,7 +639,7 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
 
     private getLastResponse(): Card {
         if (!!this.childCards && this.childCards.length > 0) {
-            return [...this.childCards].sort( (a, b) => a.publishDate < b.publishDate ? 1 : -1)[0];
+            return [...this.childCards].sort((a, b) => (a.publishDate < b.publishDate ? 1 : -1))[0];
         }
         return null;
     }
@@ -586,7 +649,8 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
         templateGateway.isLocked = this.isResponseLocked;
         templateGateway.userAllowedToRespond = this.isUserEnabledToRespond;
         templateGateway.entitiesAllowedToRespond = this.entityIdsAllowedOrRequiredToRespondAndAllowedToSendCards;
-        templateGateway.userMemberOfAnEntityRequiredToRespond = this.userMemberOfAnEntityRequiredToRespondAndAllowedToSendCards;
+        templateGateway.userMemberOfAnEntityRequiredToRespond =
+            this.userMemberOfAnEntityRequiredToRespondAndAllowedToSendCards;
         templateGateway.entityUsedForUserResponse = this.userEntityIdToUseForResponse;
     }
 
@@ -596,7 +660,7 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
         if (!!styles) {
             const process = this.card.process;
             const processVersion = this.card.processVersion;
-            styles.forEach(style => {
+            styles.forEach((style) => {
                 const cssUrl = this.businessconfigService.computeBusinessconfigCssUrl(process, style, processVersion);
                 // needed to instantiate href of link for css in component rendering
                 const safeCssUrl = this.sanitizer.bypassSecurityTrustResourceUrl(cssUrl);
@@ -616,7 +680,8 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
 
             if (this.lastCardSetToReadButNotYetOnFeed) {
                 // if the user has changed selected card in feed, set the previous read card as read in the feed
-                if (this.card.id !== this.lastCardSetToReadButNotYetOnFeed.id) this.updateLastReadCardStatusOnFeedIfNeeded();
+                if (this.card.id !== this.lastCardSetToReadButNotYetOnFeed.id)
+                    this.updateLastReadCardStatusOnFeedIfNeeded();
             }
             this.lastCardSetToReadButNotYetOnFeed = this.card;
             this.cardService.postUserCardRead(this.card.uid).subscribe();
@@ -635,17 +700,20 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
             this.fromEntityOrRepresentative = this.entitiesService.getEntityName(this.card.publisher);
 
             if (!!this.card.representativeType && !!this.card.representative) {
-                const representative = this.card.representativeType === 'ENTITY' ?
-                    this.entitiesService.getEntityName(this.card.representative) : this.card.representative;
+                const representative =
+                    this.card.representativeType === 'ENTITY'
+                        ? this.entitiesService.getEntityName(this.card.representative)
+                        : this.card.representative;
 
                 this.fromEntityOrRepresentative += ' (' + representative + ')';
             }
-        } else
-            this.fromEntityOrRepresentative = null;
+        } else this.fromEntityOrRepresentative = null;
     }
 
     private displayMessage(i18nKey: string, msg: string, severity: MessageLevel = MessageLevel.ERROR) {
-        this.store.dispatch(new AlertMessage({alertMessage: {message: msg, level: severity, i18n: {key: i18nKey}}}));
+        this.store.dispatch(
+            new AlertMessageAction({alertMessage: {message: msg, level: severity, i18n: {key: i18nKey}}})
+        );
     }
 
     public formatDate(date: number) {
@@ -667,11 +735,11 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
     }
 
     public getResponsePublisher(resp: Card) {
-        return this.entitiesService.getEntityName(resp.publisher)
+        return this.entitiesService.getEntityName(resp.publisher);
     }
 
     public isSmallscreen() {
-        return (window.innerWidth < 1000);
+        return window.innerWidth < 1000;
     }
 
     public openModal(content) {
@@ -682,13 +750,12 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
     public setFullScreen(active) {
         this.fullscreen = active;
         templateGateway.setScreenSize(active ? 'lg' : 'md');
-        if (!! this.parentComponent)
-            this.parentComponent.screenSize = (active ? 'lg' : 'md');
+        if (!!this.parentComponent) this.parentComponent.screenSize = active ? 'lg' : 'md';
     }
 
     public acknowledgeCard() {
         if (this.card.hasBeenAcknowledged) {
-            this.acknowledgeService.deleteUserAcknowledgement(this.card.uid).subscribe(resp => {
+            this.acknowledgeService.deleteUserAcknowledgement(this.card.uid).subscribe((resp) => {
                 if (resp.status === 200 || resp.status === 204) {
                     this.card = {...this.card, hasBeenAcknowledged: false};
                     this.acknowledgeService.updateAcknowledgementOnLightCard(this.card.id, false);
@@ -700,11 +767,12 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
         } else {
             const entitiesAcks = [];
             const entities = this.entitiesService.getEntitiesFromIds(this.user.entities);
-            entities.forEach(entity => {
-                if (entity.entityAllowedToSendCard) // this avoids to display entities used only for grouping
+            entities.forEach((entity) => {
+                if (entity.entityAllowedToSendCard)
+                    // this avoids to display entities used only for grouping
                     entitiesAcks.push(entity.id);
             });
-            this.acknowledgeService.postUserAcknowledgement(this.card.uid, entitiesAcks).subscribe(resp => {
+            this.acknowledgeService.postUserAcknowledgement(this.card.uid, entitiesAcks).subscribe((resp) => {
                 if (resp.status === 201 || resp.status === 200) {
                     this.acknowledgeService.updateAcknowledgementOnLightCard(this.card.id, true);
                     this.closeDetails();
@@ -720,7 +788,7 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
         this.updateLastReadCardStatusOnFeedIfNeeded();
         if (this.parentModalRef) {
             this.parentModalRef.close();
-            this.store.dispatch(new ClearLightCardSelection());
+            this.store.dispatch(new ClearLightCardSelectionAction());
         } else this._appService.closeDetails();
     }
 
@@ -729,29 +797,27 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
     }
 
     public confirmDeleteCard(): void {
-        this.cardService.deleteCard(this.card)
-            .subscribe({
-                next: (resp) => {
-                    const status = resp.status;
-                    this.modalRef.close();
-                    if (status === 200) {
-                        this.closeDetails();
-                        this.displayMessage("userCard.deleteCard.cardDeletedWithNoError", null, MessageLevel.INFO);
-                    } else {
-                        console.log('Impossible to delete card , error status from service : ', status);
-                        this.displayMessage("userCard.deleteCard.error.impossibleToDeleteCard ", null, MessageLevel.ERROR);
-                    }
-                },
-                error: (err) => {
-                    console.error('Error when deleting card :', err);
-                    this.modalRef.close();
-                    this.displayMessage("userCard.deleteCard.error.impossibleToDeleteCard ", null, MessageLevel.ERROR);
+        this.cardService.deleteCard(this.card).subscribe({
+            next: (resp) => {
+                const status = resp.status;
+                this.modalRef.close();
+                if (status === 200) {
+                    this.closeDetails();
+                    this.displayMessage('userCard.deleteCard.cardDeletedWithNoError', null, MessageLevel.INFO);
+                } else {
+                    console.log('Impossible to delete card , error status from service : ', status);
+                    this.displayMessage('userCard.deleteCard.error.impossibleToDeleteCard ', null, MessageLevel.ERROR);
                 }
-            });
+            },
+            error: (err) => {
+                console.error('Error when deleting card :', err);
+                this.modalRef.close();
+                this.displayMessage('userCard.deleteCard.error.impossibleToDeleteCard ', null, MessageLevel.ERROR);
+            }
+        });
     }
 
     public editCard(): void {
-
         // We close the card detail in the background to avoid interference when executing the template for the edition preview.
         // Otherwise, this can cause issues with templates functions referencing elements by id as there are two elements with the same id
         // in the document.
@@ -766,13 +832,14 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
 
         // Once the edition is complete or canceled, we reopen the card detail (see above).
         this.modalRef.result.then(
-            () => { // If modal is closed
+            () => {
+                // If modal is closed
                 this._appService.reopenDetails(this.currentPath, this.card.id);
             },
             () => {
                 this._appService.reopenDetails(this.currentPath, this.card.id);
-            });
-
+            }
+        );
     }
 
     public unlockAnswer() {
@@ -786,8 +853,8 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
 
     public computeEntityOptionsDropdownListForResponse(): void {
         this.userEntityOptionsDropdownList = [];
-        this.userEntityIdsPossibleForResponse.forEach(entityId => {
-            const entity = this.entitiesService.getEntities().find(e => e.id === entityId);
+        this.userEntityIdsPossibleForResponse.forEach((entityId) => {
+            const entity = this.entitiesService.getEntities().find((e) => e.id === entityId);
             this.userEntityOptionsDropdownList.push({value: entity.id, label: entity.name});
         });
         this.userEntityOptionsDropdownList.sort((a, b) => Utilities.compareObj(a.label, b.label));
@@ -800,10 +867,8 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
     }
 
     public submitResponse() {
-        if (this.userEntityIdsPossibleForResponse.length > 1)
-            this.displayEntityChoicePopup();
-        else
-            this.submitResponse0();
+        if (this.userEntityIdsPossibleForResponse.length > 1) this.displayEntityChoicePopup();
+        else this.submitResponse0();
     }
 
     public getSelectedEntity() {
@@ -817,11 +882,9 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
     }
 
     public submitResponse0() {
-
         const responseData: FormResult = templateGateway.getUserResponse();
 
         if (responseData.valid) {
-
             const card: CardForPublishing = {
                 publisher: this.userEntityIdToUseForResponse,
                 publisherType: 'ENTITY',
@@ -843,31 +906,28 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
                 initialParentCardUid: this.card.uid
             };
 
-            this.cardService.postCard(card)
-                .subscribe(
-                    rep => {
-                        if (rep.status !== 201) {
-                            this.displayMessage(ResponseI18nKeys.SUBMIT_ERROR_MSG, null, MessageLevel.ERROR);
-                            console.error(rep);
-                        } else {
-                            this.isResponseLocked = true;
-                            templateGateway.lockAnswer();
-                            this.displayMessage(ResponseI18nKeys.SUBMIT_SUCCESS_MSG, null, MessageLevel.INFO);
-                        }
-                    },
-                    err => {
+            this.cardService.postCard(card).subscribe(
+                (rep) => {
+                    if (rep.status !== 201) {
                         this.displayMessage(ResponseI18nKeys.SUBMIT_ERROR_MSG, null, MessageLevel.ERROR);
-                        console.error(err);
+                        console.error(rep);
+                    } else {
+                        this.isResponseLocked = true;
+                        templateGateway.lockAnswer();
+                        this.displayMessage(ResponseI18nKeys.SUBMIT_SUCCESS_MSG, null, MessageLevel.INFO);
                     }
-                );
-
+                },
+                (err) => {
+                    this.displayMessage(ResponseI18nKeys.SUBMIT_ERROR_MSG, null, MessageLevel.ERROR);
+                    console.error(err);
+                }
+            );
         } else {
-            (responseData.errorMsg && responseData.errorMsg !== '') ?
-                this.displayMessage(responseData.errorMsg, null, MessageLevel.ERROR) :
-                this.displayMessage(ResponseI18nKeys.FORM_ERROR_MSG, null, MessageLevel.ERROR);
+            responseData.errorMsg && responseData.errorMsg !== ''
+                ? this.displayMessage(responseData.errorMsg, null, MessageLevel.ERROR)
+                : this.displayMessage(ResponseI18nKeys.FORM_ERROR_MSG, null, MessageLevel.ERROR);
         }
     }
 
     // END - METHODS CALLED ONLY FROM HTML COMPONENT
-
 }

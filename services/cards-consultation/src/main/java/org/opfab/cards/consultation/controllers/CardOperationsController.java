@@ -11,6 +11,7 @@
 
 package org.opfab.cards.consultation.controllers;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
@@ -49,6 +50,7 @@ public class CardOperationsController {
     public CardOperationsController(CardSubscriptionService cardSubscriptionService, ObjectMapper mapper, CardRepository cardRepository) {
         this.cardSubscriptionService = cardSubscriptionService;
         this.mapper = mapper;
+        this.mapper.setSerializationInclusion(JsonInclude.Include.NON_EMPTY);
         this.cardRepository = cardRepository;
     }
 
@@ -138,6 +140,13 @@ public class CardOperationsController {
             oldCards = Flux.empty();
         }
         return oldCards.map(this::writeValueAsString);
+    }
+
+    public Mono<String> deleteSubscription(Mono<CardOperationsGetParameters> parameters) {
+        return parameters.map(p -> {
+            cardSubscriptionService.deleteSubscription(p.getCurrentUserWithPerimeters().getUserData().getLogin(), p.getClientId());
+            return "";
+        });
     }
 
     private String writeValueAsString(CardOperation cardOperation) {

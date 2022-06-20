@@ -15,16 +15,9 @@ import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
 import {CountDownModule} from '../countdown/countdown.module';
 import {GroupedCardListComponent} from './grouped-card-list/grouped-card-list.component';
 
-
 @NgModule({
     declarations: [LightCardComponent, GroupedCardListComponent],
-    imports: [
-        CommonModule,
-        TranslateModule,
-        CountDownModule,
-        NgbModule
-    ],
+    imports: [CommonModule, TranslateModule, CountDownModule, NgbModule],
     exports: [LightCardComponent]
 })
-export class LightCardModule {
-}
+export class LightCardModule {}

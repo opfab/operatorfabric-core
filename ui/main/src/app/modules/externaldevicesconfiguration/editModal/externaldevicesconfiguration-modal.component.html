@@ -14,44 +14,58 @@
       <span aria-hidden="true">&times;</span>
     </div>
   </div>
-  <div class="modal-body scrollable">
-    <div *ngIf="!row && usersDropdownList.length == 0">
+  <div class="modal-body">
+
+    <div *ngIf="!row && usersDropdownList.length === 0 && !isLoading()">
       <span style="text-align: center; font-size: 20px; padding-top: 100px;" translate>externalDevicesConfiguration.input.allUsersConfigured</span>
     </div>
-    <div *ngIf="row || (!row && usersDropdownList.length > 0)">
-    <form [formGroup]="userdeviceForm" class="opfab-form-lighter">
-      <div class="container">
-        <div class="col">
 
-          <div *ngIf="row" class="opfab-input" style="margin-bottom: 15px;">
-            <label for="opfab-userLogin" translate>externalDevicesConfiguration.userLogin</label>
-            <input type="text" disabled value="{{row.userLogin}}"/>
-          </div>
-          <div *ngIf="!row"  class="row">
-            <of-single-filter id="opfab-usersDropdownList" *ngIf="usersDropdownList.length > 0" i18nRootLabelKey="externalDevicesConfiguration." [parentForm]="userdeviceForm" filterPath="userLogin"
-                              [values]="usersDropdownList" [translateLabels]=false [prefixWithValue]=false style="position:relative"
-                              placeholderKey="externalDevicesConfiguration.input.selectUserText" sortValues=true></of-single-filter>
-          </div>
+    <div *ngIf="!isLoading(); else displayLoadingSpinner">
 
-          <div class="row">
-            <of-multi-filter *ngIf="devicesDropdownList.length > 0" id="opfab-devicesDropdownList" i18nRootLabelKey="externalDevicesConfiguration." 
-                             [parentForm]="userdeviceForm" filterPath="externalDeviceIds" [values]="devicesDropdownList" 
-                             style="position:relative" [translateValues]="false" sortValues=true [selectedItems]="selectedDevices"
-                             [dropdownSettings]="devicesDropdownSettings">
-            </of-multi-filter>
-          </div>
+      <div *ngIf="row || (!row && usersDropdownList.length > 0)">
+        <form [formGroup]="userdeviceForm" class="opfab-form-lighter">
+          <div class="container">
+            <div class="col">
 
+              <div *ngIf="row" class="opfab-input" style="margin-bottom: 15px;">
+                <label for="opfab-userLogin" translate>externalDevicesConfiguration.userLogin</label>
+                <input type="text" disabled value="{{row.userLogin}}"/>
+              </div>
+              <div *ngIf="!row"  class="row">
+                <of-single-filter id="opfab-usersDropdownList" *ngIf="usersDropdownList.length > 0" i18nRootLabelKey="externalDevicesConfiguration." [parentForm]="userdeviceForm" filterPath="userLogin"
+                                  [values]="usersDropdownList" [translateLabels]=false [prefixWithValue]=false style="position:relative"
+                                  placeholderKey="externalDevicesConfiguration.input.selectUserText" sortValues=true></of-single-filter>
+              </div>
+
+              <div class="row">
+                <of-multi-select *ngIf="devicesMultiSelectOptions.length > 0"  id="opfab-devicesDropdownList" multiSelectId="externalDeviceIds"
+                  [parentForm]="userdeviceForm" [config]="devicesMultiSelectConfig"
+                [options]="devicesMultiSelectOptions" [selectedOptions]="selectedDevices">
+            </of-multi-select>
+              </div>
+
+            </div>
+          </div>
+        </form>
+        <div class="modal-footer" style="border-top: none">
+          <button id="opfab-admin-edit-btn-cancel" type="button" (click)="dismissModal('Cancel click')" class="opfab-btn-cancel" data-dismiss="modal"
+                  translate>admin.input.close</button>
+          <button id="opfab-admin-edit-btn-add" [disabled]="!userdeviceForm.valid" *ngIf="!row" (click)="update()" class="opfab-btn"
+                  translate>externalDevicesConfiguration.input.add</button>
+          <button id="opfab-admin-user-btn-save" [disabled]="!userdeviceForm.valid" *ngIf="row" (click)="update()" class="opfab-btn"
+                  translate>admin.input.save</button>
         </div>
       </div>
-    </form>
-    <div class="modal-footer" style="border-top: none">
-      <button id="opfab-admin-edit-btn-cancel" type="button" (click)="dismissModal('Cancel click')" class="opfab-btn-cancel" data-dismiss="modal"
-              translate>admin.input.close</button>
-      <button id="opfab-admin-edit-btn-add" [disabled]="!userdeviceForm.valid" *ngIf="!row" (click)="update()" class="opfab-btn"
-              translate>externalDevicesConfiguration.input.add</button>
-      <button id="opfab-admin-user-btn-save" [disabled]="!userdeviceForm.valid" *ngIf="row" (click)="update()" class="opfab-btn"
-              translate>admin.input.save</button>
     </div>
-  </div>
+
+    <ng-template #displayLoadingSpinner>
+      <div class="opfab-card-loading-spinner">
+        <em  class="fas fa-spinner fa-spin opfab-slow-spinner" ></em>
+      </div>
+      <div style="text-align: center;font:16px;font-weight: bold;margin-top:10px" translate>
+        externalDevicesConfiguration.input.loadingExternalDevices
+      </div>
+    </ng-template>
+
   </div>
 </div>

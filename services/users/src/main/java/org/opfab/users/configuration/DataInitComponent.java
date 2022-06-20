@@ -87,6 +87,7 @@ public class DataInitComponent {
      */
     private void safeInsertUserSettings(UserSettingsData u) {
         try {
+            u.setLogin(u.getLogin().toLowerCase());
             userSettingsRepository.insert(u);
         } catch (DuplicateKeyException ex) {
             log.warn("{} {} user settings: duplicate",FAILED_INIT_MSG, u.getLogin() );
@@ -102,6 +103,7 @@ public class DataInitComponent {
      */
     private void safeInsertUsers(UserData u) {
         try {
+            u.setLogin(u.getLogin().toLowerCase());
             userRepository.insert(u);
         } catch (DuplicateKeyException ex) {
             log.warn("{} {} user: duplicate", FAILED_INIT_MSG, u.getLogin());

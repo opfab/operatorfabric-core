@@ -136,6 +136,10 @@ public class CardSubscriptionService {
         return userSubscription.isPresent();
     }
 
+    public void deleteSubscription(String login, String clientId) {
+        evictSubscription(CardSubscription.computeSubscriptionId(login, clientId));
+    }
+
     public void evictSubscription(String subId) {
         
         CardSubscription sub = cache.get(subId);

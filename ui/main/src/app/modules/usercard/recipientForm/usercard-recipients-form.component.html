@@ -5,13 +5,15 @@
 <!-- file, You can obtain one at http://mozilla.org/MPL/2.0/.              -->
 <!-- SPDX-License-Identifier: MPL-2.0                                      -->
 <!-- This file is part of the OperatorFabric project.                      -->
-<form [formGroup]="recipientForm" class="opfab-form-lighter">
-    <div class="row">
-        <div class="col-12">
-            <of-multi-filter filterPath="recipients" id="opfab-recipients" [parentForm]="recipientForm"
-                [values]="recipientsOptions" [translateValues]="false" [dropdownSettings]="dropdownSettings" i18nRootLabelKey="userCard.filters." [selectedItems]="initialSelectedRecipients" >
-            </of-multi-filter>
-        </div>
 
-    </div> 
-</form>
+<div class="opfab-form-lighter"> 
+    <of-multi-select 
+            id="opfab-recipients"
+            multiSelectId="userCardRecipients"
+            [parentForm]="recipientForm"
+            [config] = "multiSelectConfig"
+            [options]="recipientsOptions"
+            [selectedOptions]="initialSelectedRecipients"
+            (selectionChange)="recipientChoiceChanged($event)">    
+    </of-multi-select>
+</div>

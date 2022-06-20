@@ -8,24 +8,15 @@
  */
 
 export class Perimeter {
-    public constructor(
-        readonly id: string,
-        readonly process: string,
-        readonly stateRights: Array<StateRight>,
-    ) {
-    }
-
+    public constructor(readonly id: string, readonly process: string, readonly stateRights: Array<StateRight>) {}
 }
 
 export class StateRight {
-
-    constructor(
-        readonly state: string,
-        readonly right: RightsEnum
-    ) {
-    }
+    constructor(readonly state: string, readonly right: RightsEnum) {}
 }
 
 export enum RightsEnum {
-    Write = 'Write', ReceiveAndWrite = 'ReceiveAndWrite', Receive = 'Receive'
+    Write = 'Write',
+    ReceiveAndWrite = 'ReceiveAndWrite',
+    Receive = 'Receive'
 }
