@@ -185,6 +185,13 @@ export class UserCardComponent implements OnInit {
         const endDate = new DateField(this.endDateVisible, this.defaultEndDate);
         const lttd = new DateField(this.lttdVisible, this.defaultLttdDate);
         this.datesFormValue = new DatesForm(startDate, endDate, lttd);
+        this.datesFromTemplate = true;
+        this.currentStartDate = startDate.initialEpochDate;
+        usercardTemplateGateway.setInitialStartDate(null);
+        this.currentEndDate = endDate.initialEpochDate;
+        usercardTemplateGateway.setInitialEndDate(null);
+        this.currentLttd = lttd.initialEpochDate;
+        usercardTemplateGateway.setInitialLttd(null);
     }
 
     private setInitialDateFormValues(): void {
@@ -338,6 +345,7 @@ export class UserCardComponent implements OnInit {
             };
             templateGateway.getSpecificCardInformation = null;
             usercardTemplateGateway.getSpecificCardInformation = null;
+            if (!this.cardToEdit) this.setDefaultDateFormValues();
 
             this.handlebars
                 .queryTemplate(this.selectedProcessId, selected.version, templateName)
