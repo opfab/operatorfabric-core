@@ -41,7 +41,6 @@ import {ClearLightCardSelectionAction} from '@ofStore/actions/light-card.actions
 import {UserService} from '@ofServices/user.service';
 import {EntitiesService} from '@ofServices/entities.service';
 import {NgbModal, NgbModalOptions, NgbModalRef} from '@ng-bootstrap/ng-bootstrap';
-import {TimeService} from '@ofServices/time.service';
 import {AlertMessageAction} from '@ofStore/actions/alert.actions';
 import {MessageLevel} from '@ofModel/message.model';
 import {AcknowledgeService} from '@ofServices/acknowledge.service';
@@ -51,6 +50,7 @@ import {LightCardsStoreService} from '@ofServices/lightcards/lightcards-store.se
 import {FormControl, FormGroup} from '@angular/forms';
 import {Utilities} from '../../../../common/utilities';
 import {CardDetailsComponent} from '../card-details/card-details.component';
+import {DateTimeFormatterService} from '@ofServices/date-time-formatter.service';
 
 declare const templateGateway: any;
 
@@ -154,7 +154,7 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
         private userService: UserService,
         private entitiesService: EntitiesService,
         private modalService: NgbModal,
-        private time: TimeService,
+        private dateTimeFormatterService: DateTimeFormatterService,
         private acknowledgeService: AcknowledgeService,
         private userPermissionsService: UserPermissionsService,
         private lightCardsStoreService: LightCardsStoreService
@@ -717,11 +717,11 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
     }
 
     public formatDate(date: number) {
-        return this.time.formatDate(date);
+        return this.dateTimeFormatterService.getFormattedDateFromEpochDate(date);
     }
 
     public formatTime(date: number) {
-        return this.time.formatTime(date);
+        return this.dateTimeFormatterService.getFormattedTimeFromEpochDate(date);
     }
 
     // START - METHODS CALLED ONLY FROM HTML COMPONENT

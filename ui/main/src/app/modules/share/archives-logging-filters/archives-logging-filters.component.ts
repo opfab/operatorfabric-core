@@ -15,13 +15,13 @@ import {FormGroup} from '@angular/forms';
 import {ProcessesService} from '@ofServices/processes.service';
 import {debounceTime, takeUntil} from 'rxjs/operators';
 import {Subject} from 'rxjs';
-import {TimeService} from '@ofServices/time.service';
 import {NgbDateStruct, NgbTimeStruct} from '@ng-bootstrap/ng-bootstrap';
 import {DateTimeNgb} from '@ofModel/datetime-ngb.model';
 import {ProcessStatesMultiSelectOptionsService} from '@ofServices/process-states-multi-select-options.service';
 import {MultiSelectOption} from '@ofModel/multiselect.model';
 
 import moment from 'moment';
+import {Utilities} from 'app/common/utilities';
 
 export enum FilterDateTypes {
     PUBLISH_DATE_FROM_PARAM = 'publishDateFrom',
@@ -119,7 +119,6 @@ export class ArchivesLoggingFiltersComponent implements OnInit, OnDestroy {
 
     constructor(
         private configService: ConfigService,
-        private timeService: TimeService,
         private processesService: ProcessesService,
         private processStatesDropdownListService: ProcessStatesMultiSelectOptionsService
     ) {}
@@ -191,11 +190,8 @@ export class ArchivesLoggingFiltersComponent implements OnInit, OnDestroy {
     }
 
     dateFilterToMap(key: string, element: any) {
-        const {date, time} = element;
-        if (date) {
-            const timeStamp = this.timeService.toNgBTimestamp(transformToTimestamp(date, time));
-            if (timeStamp !== 'NaN') this.filters.set(key, [timeStamp]);
-        }
+        const epochDate = Utilities.convertNgbDateTimeToEpochDate(element);
+        if (epochDate)  this.filters.set(key, [epochDate]);
     }
 
     stateFilterToMap(element: any) {

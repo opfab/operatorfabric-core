@@ -7,7 +7,7 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {NgbDate, NgbDateStruct, NgbTimeStruct} from '@ng-bootstrap/ng-bootstrap';
+import {NgbDateStruct, NgbTimeStruct} from '@ng-bootstrap/ng-bootstrap';
 import * as moment from 'moment';
 
 export function padNumber(value: any) {
@@ -24,14 +24,6 @@ export function toInteger(value: any): number {
 
 export function isNumber(value: any): value is number {
     return !isNaN(toInteger(value));
-}
-
-export function getDateTimeNgbFromMoment(date: moment.Moment): DateTimeNgb {
-    return new DateTimeNgb(new NgbDate(date.year(), date.month() + 1, date.date()), {
-        hour: date.hour(),
-        minute: date.minute(),
-        second: date.second()
-    });
 }
 
 export class DateTimeNgb {

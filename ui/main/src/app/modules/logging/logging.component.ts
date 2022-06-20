@@ -15,7 +15,7 @@ import {ProcessesService} from '@ofServices/processes.service';
 import {takeUntil} from 'rxjs/operators';
 import {AbstractControl, FormControl, FormGroup} from '@angular/forms';
 import {ConfigService} from '@ofServices/config.service';
-import {TimeService} from '@ofServices/time.service';
+import {DateTimeFormatterService} from '@ofServices/date-time-formatter.service';
 import {CardService} from '@ofServices/card.service';
 import {LightCard} from '@ofModel/light-card.model';
 import {Page} from '@ofModel/page.model';
@@ -72,7 +72,7 @@ export class LoggingComponent implements OnDestroy, OnInit {
     constructor(private store: Store<AppState>,
         private processesService: ProcessesService,
         private configService: ConfigService,
-        private timeService: TimeService,
+        private dateTimeFormatter: DateTimeFormatterService,
         private cardService: CardService,
         private translate: TranslateService,
         private entitiesService: EntitiesService,
@@ -91,7 +91,7 @@ export class LoggingComponent implements OnDestroy, OnInit {
 
         processesService.getAllProcesses().forEach((process) => {
             if (!!process.uiVisibility && !!process.uiVisibility.logging) {
-                let itemName = !!process.name ? process.name : process.id;
+                const itemName = !!process.name ? process.name : process.id;
                 this.processNames.set(process.id, itemName);
                 for (const key in process.states) {
                     this.processStateDescription.set(process.id + '.' + key, process.states[key].description);
@@ -205,7 +205,7 @@ export class LoggingComponent implements OnDestroy, OnInit {
 
     private extractTime(form: AbstractControl) {
         const val = form.value;
-        if (!val || val == '') {
+        if (!val || val === '') {
             return null;
         }
 
@@ -247,7 +247,7 @@ export class LoggingComponent implements OnDestroy, OnInit {
     }
 
     displayTime(date) {
-        return this.timeService.formatDateTime(date);
+        return this.dateTimeFormatter.getFormattedDateAndTimeFromEpochDate(date);
     }
 
     exportToExcel(): void {
@@ -286,7 +286,7 @@ export class LoggingComponent implements OnDestroy, OnInit {
                     if (this.filtersTemplate.displayProcessGroupFilter())
                         exportArchiveData.push({
                             [severityColumnName]: Utilities.translateSeverity(this.translate, card.severity),
-                            [timeOfActionColumnName]: this.timeService.formatDateTime(card.publishDate),
+                            [timeOfActionColumnName]: this.dateTimeFormatter.getFormattedDateAndTimeFromEpochDate(card.publishDate),
                             [processGroupColumnName]: this.translateColumn(
                                 this.processesService.findProcessGroupLabelForProcess(card.process)
                             ),
@@ -301,7 +301,7 @@ export class LoggingComponent implements OnDestroy, OnInit {
                     else
                         exportArchiveData.push({
                             [severityColumnName]: card.severity,
-                            [timeOfActionColumnName]: this.timeService.formatDateTime(card.publishDate),
+                            [timeOfActionColumnName]: this.dateTimeFormatter.getFormattedDateAndTimeFromEpochDate(card.publishDate),
                             [processColumnName]: card.processName,
                             [titleColumnName]: card.titleTranslated,
                             [summaryColumnName]: card.summaryTranslated,

@@ -10,12 +10,9 @@
 import {Component, Input, OnChanges, OnDestroy, OnInit, Output} from '@angular/core';
 import {FormControl, FormGroup} from '@angular/forms';
 import {Subject} from 'rxjs';
-import {TimeService} from '@ofServices/time.service';
-import {NgbDateStruct, NgbTimeStruct} from '@ng-bootstrap/ng-bootstrap';
-import {DateTimeNgb, getDateTimeNgbFromMoment} from '@ofModel/datetime-ngb.model';
-import * as moment from 'moment';
 import {debounceTime, takeUntil} from 'rxjs/operators';
 import {DatesForm} from './dates-form.model';
+import {Utilities} from 'app/common/utilities';
 
 @Component({
     selector: 'of-usercard-dates-form',
@@ -33,8 +30,6 @@ export class UserCardDatesFormComponent implements OnInit, OnDestroy, OnChanges 
 
     endDateMin: {year: number; month: number; day: number} = null;
 
-    constructor(private timeService: TimeService) {}
-
     ngOnInit() {
         this.datesForm = new FormGroup({
             startDate: new FormControl(''),
@@ -42,45 +37,59 @@ export class UserCardDatesFormComponent implements OnInit, OnDestroy, OnChanges 
             lttd: new FormControl('')
         });
         this.setInitialDateValues();
-        this.startDateFilterChange
-            .pipe(takeUntil(this.unsubscribe$), debounceTime(1000))
-            .subscribe(() => this.setDateFilterBounds());
+        this.changeEndDateFilterBoundsWhenStartDateChange();
     }
 
     private setInitialDateValues(): void {
-        if (this.datesForm) {
-            if (this.datesFormInputData.startDate.isVisible) {
-                this.datesForm
-                    .get('startDate')
-                    .setValue(
-                        this.datesFormInputData.startDate.initialEpochDate != null
-                            ? getDateTimeNgbFromMoment(moment(this.datesFormInputData.startDate.initialEpochDate))
-                            : ''
-                    );
-            }
-            if (this.datesFormInputData.endDate.isVisible) {
-                this.datesForm
-                    .get('endDate')
-                    .setValue(
-                        this.datesFormInputData.endDate.initialEpochDate != null
-                            ? getDateTimeNgbFromMoment(moment(this.datesFormInputData.endDate.initialEpochDate))
-                            : ''
-                    );
-            }
-            if (this.datesFormInputData.lttd.isVisible) {
-                this.datesForm
-                    .get('lttd')
-                    .setValue(
-                        this.datesFormInputData.lttd.initialEpochDate != null
-                            ? getDateTimeNgbFromMoment(moment(this.datesFormInputData.lttd.initialEpochDate))
-                            : ''
-                    );
-            }
-        }
-        this.setDateFilterBounds();
+        this.setInitialStartDate();
+        this.setInitialEndDate();
+        this.setInitialLttd();
+        this.setEndDateFilterBounds();
     }
 
-    private setDateFilterBounds(): void {
+    private setInitialStartDate() {
+        if (this.datesFormInputData.startDate.isVisible) {
+            this.datesForm
+                .get('startDate')
+                .setValue(
+                    this.datesFormInputData.startDate.initialEpochDate != null
+                        ? Utilities.convertEpochDateToNgbDateTime(this.datesFormInputData.startDate.initialEpochDate)
+                        : ''
+                );
+        }
+    }
+
+    private setInitialEndDate() {
+        if (this.datesFormInputData.endDate.isVisible) {
+            this.datesForm
+                .get('endDate')
+                .setValue(
+                    this.datesFormInputData.endDate.initialEpochDate != null
+                        ? Utilities.convertEpochDateToNgbDateTime(this.datesFormInputData.endDate.initialEpochDate)
+                        : ''
+                );
+        }
+    }
+
+    private setInitialLttd() {
+        if (this.datesFormInputData.lttd.isVisible) {
+            this.datesForm
+                .get('lttd')
+                .setValue(
+                    this.datesFormInputData.lttd.initialEpochDate != null
+                        ? Utilities.convertEpochDateToNgbDateTime(this.datesFormInputData.lttd.initialEpochDate)
+                        : ''
+                );
+        }
+    }
+
+    private changeEndDateFilterBoundsWhenStartDateChange() {
+        this.startDateFilterChange
+            .pipe(takeUntil(this.unsubscribe$), debounceTime(1000))
+            .subscribe(() => this.setEndDateFilterBounds());
+    }
+
+    private setEndDateFilterBounds(): void {
         if (this.datesForm) {
             if (this.datesFormInputData.startDate.isVisible) {
                 this.endDateMin = {
@@ -95,15 +104,15 @@ export class UserCardDatesFormComponent implements OnInit, OnDestroy, OnChanges 
     }
 
     public getStartDateAsEpoch(): number {
-        return this.createTimestampFromValue(this.datesForm.get('startDate').value);
+        return Utilities.convertNgbDateTimeToEpochDate(this.datesForm.get('startDate').value);
     }
 
     public getEndDateAsEpoch(): number {
-        return this.createTimestampFromValue(this.datesForm.get('endDate').value);
+        return Utilities.convertNgbDateTimeToEpochDate(this.datesForm.get('endDate').value);
     }
 
     public getLttdAsEpoch(): number {
-        return this.createTimestampFromValue(this.datesForm.get('lttd').value);
+        return Utilities.convertNgbDateTimeToEpochDate(this.datesForm.get('lttd').value);
     }
 
     // Hack : The three following method use setTimeout to let the component update the date internally
@@ -122,24 +131,11 @@ export class UserCardDatesFormComponent implements OnInit, OnDestroy, OnChanges 
     }
 
     ngOnChanges() {
-        this.setInitialDateValues();
+        if (this.datesForm) this.setInitialDateValues();
     }
 
     ngOnDestroy() {
         this.unsubscribe$.next();
         this.unsubscribe$.complete();
-    }
-
-    private createTimestampFromValue = (value: any): number => {
-        const {date, time} = value;
-        if (date) {
-            return this.timeService.toNgBNumberTimestamp(this.transformToTimestamp(date, time));
-        } else {
-            return null;
-        }
-    };
-
-    private transformToTimestamp(date: NgbDateStruct, time: NgbTimeStruct): string {
-        return new DateTimeNgb(date, time).formatDateTime();
     }
 }

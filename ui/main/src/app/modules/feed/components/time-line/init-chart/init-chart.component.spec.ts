@@ -21,7 +21,6 @@ import {RouterStateSerializer, StoreRouterConnectingModule} from '@ngrx/router-s
 import {CustomRouterStateSerializer} from '@ofStates/router.state';
 import {RouterTestingModule} from '@angular/router/testing';
 import {MouseWheelDirective} from '../directives/mouse-wheel.directive';
-import {TimeService} from '@ofServices/time.service';
 import {TranslateLoader, TranslateModule, TranslateService} from '@ngx-translate/core';
 import {GlobalStyleService} from '@ofServices/global-style.service';
 import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
@@ -35,6 +34,7 @@ import {LightCardsFeedFilterService} from '@ofServices/lightcards/lightcards-fee
 import {OpfabLoggerService} from '@ofServices/logs/opfab-logger.service';
 import {RemoteLoggerService} from '@ofServices/logs/remote-logger.service';
 import {RemoteLoggerServiceMock} from '@tests/mocks/remote-logger.service.mock';
+import {DateTimeFormatterService} from '@ofServices/date-time-formatter.service';
 
 describe('InitChartComponent', () => {
     let component: InitChartComponent;
@@ -72,7 +72,7 @@ describe('InitChartComponent', () => {
                 {provide: APP_BASE_HREF, useValue: '/'},
                 {provide: Store, useClass: Store},
                 {provide: RouterStateSerializer, useClass: CustomRouterStateSerializer},
-                {provide: TimeService, useClass: TimeService},
+                {provide: DateTimeFormatterService, useClass: DateTimeFormatterService},
                 {provide: ConfigService, useClass: ConfigService},
                 {provide: HttpClient, useClass: HttpClient},
                 {provide: HttpHandler, useClass: HttpHandler},

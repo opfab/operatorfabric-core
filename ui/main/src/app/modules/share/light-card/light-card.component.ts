@@ -14,7 +14,6 @@ import {selectCurrentUrl} from '@ofStore/selectors/router.selectors';
 import {Store} from '@ngrx/store';
 import {AppState} from '@ofStore/index';
 import {takeUntil} from 'rxjs/operators';
-import {TimeService} from '@ofServices/time.service';
 import {Observable, Subject} from 'rxjs';
 import {ConfigService} from '@ofServices/config.service';
 import {AppService, PageType} from '@ofServices/app.service';
@@ -25,6 +24,7 @@ import {DisplayContext} from '@ofModel/templateGateway.model';
 import {GroupedCardsService} from '@ofServices/grouped-cards.service';
 import {TypeOfStateEnum} from '@ofModel/processes.model';
 import {SoundNotificationService} from '@ofServices/sound-notification.service';
+import {DateTimeFormatterService} from '@ofServices/date-time-formatter.service';
 
 @Component({
     selector: 'of-light-card',
@@ -56,7 +56,7 @@ export class LightCardComponent implements OnInit, OnDestroy {
     constructor(
         private router: Router,
         private store: Store<AppState>,
-        private time: TimeService,
+        private dateTimeFormatter: DateTimeFormatterService,
         private configService: ConfigService,
         private _appService: AppService,
         private entitiesService: EntitiesService,
@@ -134,7 +134,7 @@ export class LightCardComponent implements OnInit, OnDestroy {
     }
 
     handleDate(timeStamp: number): string {
-        return this.time.formatDateTime(timeStamp);
+        return this.dateTimeFormatter.getFormattedDateAndTimeFromEpochDate(timeStamp);
     }
 
     public select($event) {
