@@ -10,8 +10,6 @@
 
 import {Component, ElementRef, Input, OnChanges, OnDestroy, ViewChild} from '@angular/core';
 import {LineOfMonitoringResult} from '@ofModel/line-of-monitoring-result.model';
-import {TimeService} from '@ofServices/time.service';
-import {Moment} from 'moment';
 import {TranslateService} from '@ngx-translate/core';
 import {ExportService} from '@ofServices/export.service';
 import {takeUntil} from 'rxjs/operators';
@@ -34,6 +32,7 @@ import {AnswerCellRendererComponent} from '../cell-renderers/answer-cell-rendere
 import {ResponsesCellRendererComponent} from '../cell-renderers/responses-cell-renderer.component';
 import {LightCard} from '@ofModel/light-card.model';
 import {LightCardsStoreService} from '@ofServices/lightcards/lightcards-store.service';
+import {DateTimeFormatterService} from '@ofServices/date-time-formatter.service';
 
 @Component({
     selector: 'of-monitoring-table',
@@ -87,7 +86,7 @@ export class MonitoringTableComponent implements OnChanges, OnDestroy {
     ]);
 
     constructor(
-        readonly timeService: TimeService,
+        readonly dateTimeFormatter: DateTimeFormatterService,
         private translate: TranslateService,
         private store: Store<AppState>,
         private modalService: NgbModal,
@@ -259,7 +258,7 @@ export class MonitoringTableComponent implements OnChanges, OnDestroy {
 
             this.rowData.push({
                 severityNumber: this.mapSeverity.get(line.severity),
-                time: this.displayTime(line.creationDateTime),
+                time: this.getFormattedDateTime(line.creationDateTime),
                 title: line.titleTranslated,
                 summary: line.summaryTranslated,
                 processStatus: this.translateValue('shared.typeOfState.' + line.typeOfState),
@@ -279,11 +278,8 @@ export class MonitoringTableComponent implements OnChanges, OnDestroy {
         this.rowDataSubject.next(this.rowData);
     }
 
-    displayTime(moment: Moment) {
-        if (!!moment) {
-            return this.timeService.formatDateTime(moment);
-        }
-        return '';
+    getFormattedDateTime(epochDate: number):string {
+        return this.dateTimeFormatter.getFormattedDateAndTimeFromEpochDate(epochDate);
     }
 
     getResponses(cardId: string, entities: string[]) {
@@ -316,9 +312,9 @@ export class MonitoringTableComponent implements OnChanges, OnDestroy {
                 this.exportMonitoringData.push({
                     [this.timeColumnName]: line.data.time,
                     [this.answerColumnName]: !!line.data.answer ? line.data.answer : false,
-                    [this.businessPeriodColumnName]: this.displayTime(line.data.beginningOfBusinessPeriod)
+                    [this.businessPeriodColumnName]: this.getFormattedDateTime(line.data.beginningOfBusinessPeriod)
                         .concat('-')
-                        .concat(this.displayTime(line.data.endOfBusinessPeriod)),
+                        .concat(this.getFormattedDateTime(line.data.endOfBusinessPeriod)),
                     [this.titleColumnName]: line.data.title,
                     [this.summaryColumnName]: line.data.summary,
                     [this.typeOfStateColumnName]: line.data.processStatus,

@@ -18,12 +18,11 @@ import {appReducer, AppState} from '@ofStore/index';
 import {HttpClientTestingModule} from '@angular/common/http/testing';
 import {ProcessesService} from '@ofServices/processes.service';
 import {Router} from '@angular/router';
-import 'moment/locale/fr';
-import {TimeService} from '@ofServices/time.service';
 import {I18nService} from '@ofServices/i18n.service';
 import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
 import {CountDownModule} from '../countdown/countdown.module';
 import createSpyObj = jasmine.createSpyObj;
+import {DateTimeFormatterService} from '@ofServices/date-time-formatter.service';
 
 describe('LightCardComponent', () => {
     let lightCardDetailsComp: LightCardComponent;
@@ -59,7 +58,7 @@ describe('LightCardComponent', () => {
                 {provide: Router, useValue: myrout},
                 ProcessesService,
                 {provide: 'TimeEventSource', useValue: null},
-                TimeService,
+                DateTimeFormatterService,
                 I18nService
             ]
         }).compileComponents();

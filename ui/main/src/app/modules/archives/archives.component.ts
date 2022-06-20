@@ -15,7 +15,7 @@ import {Store} from '@ngrx/store';
 import {takeUntil, tap} from 'rxjs/operators';
 import {AbstractControl, FormControl, FormGroup} from '@angular/forms';
 import {ConfigService} from '@ofServices/config.service';
-import {TimeService} from '@ofServices/time.service';
+import {DateTimeFormatterService} from '@ofServices/date-time-formatter.service';
 import {NgbModal, NgbModalOptions, NgbModalRef} from '@ng-bootstrap/ng-bootstrap';
 import {CardService} from '@ofServices/card.service';
 import {LightCard} from '@ofModel/light-card.model';
@@ -84,7 +84,7 @@ export class ArchivesComponent implements OnDestroy, OnInit {
         private store: Store<AppState>,
         private processesService: ProcessesService,
         private configService: ConfigService,
-        private timeService: TimeService,
+        private dateTimeFormatter: DateTimeFormatterService,
         private cardService: CardService,
         private translate: TranslateService,
         private userPreferences: UserPreferencesService,
@@ -313,7 +313,7 @@ export class ArchivesComponent implements OnDestroy, OnInit {
     }
 
     displayTime(date) {
-        return this.timeService.formatDateTime(date);
+        return this.dateTimeFormatter.getFormattedDateAndTimeFromEpochDate(date);
     }
 
     private extractTime(form: AbstractControl) {
@@ -369,7 +369,9 @@ export class ArchivesComponent implements OnDestroy, OnInit {
                         if (this.filtersTemplate.displayProcessGroupFilter())
                             exportArchiveData.push({
                                 [severityColumnName]: Utilities.translateSeverity(this.translate, card.severity),
-                                [publishDateColumnName]: this.timeService.formatDateTime(card.publishDate),
+                                [publishDateColumnName]: this.dateTimeFormatter.getFormattedDateAndTimeFromEpochDate(
+                                    card.publishDate
+                                ),
                                 [businessDateColumnName]:
                                     this.displayTime(card.startDate) + '-' + this.displayTime(card.endDate),
                                 [titleColumnName]: card.titleTranslated,
@@ -381,7 +383,9 @@ export class ArchivesComponent implements OnDestroy, OnInit {
                         else
                             exportArchiveData.push({
                                 [severityColumnName]: Utilities.translateSeverity(this.translate, card.severity),
-                                [publishDateColumnName]: this.timeService.formatDateTime(card.publishDate),
+                                [publishDateColumnName]: this.dateTimeFormatter.getFormattedDateAndTimeFromEpochDate(
+                                    card.publishDate
+                                ),
                                 [businessDateColumnName]:
                                     this.displayTime(card.startDate) + '-' + this.displayTime(card.endDate),
                                 [titleColumnName]: card.titleTranslated,
@@ -447,11 +451,11 @@ export class ArchivesComponent implements OnDestroy, OnInit {
     }
 
     getFormattedPublishDate(): any {
-        return this.timeService.formatDate(this.selectedCard.publishDate);
+        return this.dateTimeFormatter.getFormattedDateFromEpochDate(this.selectedCard.publishDate);
     }
 
     getFormattedPublishTime(): any {
-        return this.timeService.formatTime(this.selectedCard.publishDate);
+        return this.dateTimeFormatter.getFormattedDateFromEpochDate(this.selectedCard.publishDate);
     }
 
     ngOnDestroy() {

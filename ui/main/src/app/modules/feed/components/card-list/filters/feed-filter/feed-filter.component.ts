@@ -17,12 +17,13 @@ import * as _ from 'lodash-es';
 import {FilterType} from '@ofModel/feed-filter.model';
 import {UserPreferencesService} from '@ofServices/user-preference.service';
 
-import {DateTimeNgb, getDateTimeNgbFromMoment} from '@ofModel/datetime-ngb.model';
+import {DateTimeNgb} from '@ofModel/datetime-ngb.model';
 import moment from 'moment';
 import {MessageLevel} from '@ofModel/message.model';
 import {AlertMessageAction} from '@ofStore/actions/alert.actions';
 import {FilterService} from '@ofServices/lightcards/filter.service';
 import {LightCardsFeedFilterService} from '@ofServices/lightcards/lightcards-feed-filter.service';
+import {Utilities} from 'app/common/utilities';
 
 @Component({
     selector: 'of-feed-filter',
@@ -239,10 +240,10 @@ export class FeedFilterComponent implements OnInit, OnDestroy {
         const savedEnd = this.userPreferences.getPreference('opfab.feed.filter.end');
 
         if (!!savedStart) {
-            this.timeFilterForm.get('dateTimeFrom').setValue(getDateTimeNgbFromMoment(moment(+savedStart)));
+            this.timeFilterForm.get('dateTimeFrom').setValue(Utilities.convertEpochDateToNgbDateTime(moment(+savedStart).valueOf()));
         }
         if (!!savedEnd) {
-            this.timeFilterForm.get('dateTimeTo').setValue(getDateTimeNgbFromMoment(moment(+savedEnd)));
+            this.timeFilterForm.get('dateTimeTo').setValue(Utilities.convertEpochDateToNgbDateTime(moment(+savedEnd).valueOf()));
         }
 
         this.setNewFilterValue();

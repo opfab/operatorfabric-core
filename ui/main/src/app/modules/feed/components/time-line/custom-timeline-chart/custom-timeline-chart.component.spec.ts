@@ -19,13 +19,13 @@ import {MouseWheelDirective} from '../directives/mouse-wheel.directive';
 import {Store, StoreModule} from '@ngrx/store';
 import {RouterStateSerializer, StoreRouterConnectingModule} from '@ngrx/router-store';
 import {CustomRouterStateSerializer} from '@ofStates/router.state';
-import {TimeService} from '@ofServices/time.service';
 import {appReducer, storeConfig} from '@ofStore/index';
 import {RouterTestingModule} from '@angular/router/testing';
 import {HttpClientTestingModule} from '@angular/common/http/testing';
 import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
 import {LightCardsFeedFilterService} from '@ofServices/lightcards/lightcards-feed-filter.service';
 import {LightCardsServiceMock} from '@tests/mocks/lightcards.service.mock';
+import {DateTimeFormatterService} from '@ofServices/date-time-formatter.service';
 
 describe('CustomTimelineChartComponent', () => {
     let component: CustomTimelineChartComponent;
@@ -52,7 +52,7 @@ describe('CustomTimelineChartComponent', () => {
                 {provide: APP_BASE_HREF, useValue: '/'},
                 {provide: Store, useClass: Store},
                 {provide: RouterStateSerializer, useClass: CustomRouterStateSerializer},
-                {provide: TimeService, useClass: TimeService},
+                {provide: DateTimeFormatterService, useClass: DateTimeFormatterService},
                 {provide: LightCardsFeedFilterService, useClass: LightCardsServiceMock}
             ],
             schemas: [NO_ERRORS_SCHEMA]
