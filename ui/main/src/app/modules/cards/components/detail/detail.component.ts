@@ -260,7 +260,9 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
         const resolved = new Set<string>();
         this.card.entityRecipients.forEach((entityRecipient) => {
             const entity = this.entitiesService.getEntitiesFromIds([entityRecipient])[0];
-            if (entity.entityAllowedToSendCard) resolved.add(entityRecipient);
+            if (entity.entityAllowedToSendCard) {
+                resolved.add(entityRecipient);
+            }
 
             this.entitiesService
                 .resolveChildEntities(entityRecipient)
@@ -275,6 +277,7 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
                 color: this.checkEntityAcknowledged(entityToAck) ? 'green' : '#ff6600'
             })
         );
+        this.listEntitiesToAck.sort((entity1, entity2) => Utilities.compareObj(entity1.name, entity2.name));
     }
 
     private isCardPublishedByUserEntity(): boolean {
