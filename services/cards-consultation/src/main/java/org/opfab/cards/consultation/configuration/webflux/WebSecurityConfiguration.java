@@ -35,9 +35,10 @@ import reactor.core.publisher.Mono;
 public class WebSecurityConfiguration {
 
     public static final String PROMETHEUS_PATH = "/actuator/prometheus**";
-    public static final String LOGGERS_PATH ="/actuator/loggers/**";
-    public static final String CONNECTIONS ="/connections";
-    public static final String CONNECTIONS_PATH ="/connections**";
+    public static final String LOGGERS_PATH = "/actuator/loggers/**";
+    public static final String CONNECTIONS = "/connections";
+    public static final String CONNECTIONS_PATH = "/connections**";
+    public static final String MESSAGE_TO_SUBSCRIPTIONS = "/messageToSubscriptions";
     public static final String ADMIN_ROLE = "ADMIN";
 
 
@@ -73,6 +74,7 @@ public class WebSecurityConfiguration {
                 .pathMatchers(HttpMethod.GET, CONNECTIONS).authenticated()
                 .pathMatchers(CONNECTIONS_PATH).hasRole(ADMIN_ROLE)
                 .pathMatchers(LOGGERS_PATH).hasRole(ADMIN_ROLE)
+                .pathMatchers(MESSAGE_TO_SUBSCRIPTIONS).hasRole(ADMIN_ROLE)
                 .anyExchange().access(new IpAddressAuthorizationManager());
     }
 }

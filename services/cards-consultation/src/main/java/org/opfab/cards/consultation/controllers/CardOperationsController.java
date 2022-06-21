@@ -149,6 +149,13 @@ public class CardOperationsController {
         });
     }
 
+    public Mono<String> postMessageToSubscriptions(Mono<String> messageToSend) {
+        return messageToSend.map(message -> {
+            cardSubscriptionService.postMessageToSubscriptions(message);
+            return "";
+        });
+    }
+
     private String writeValueAsString(CardOperation cardOperation) {
         try {
             return mapper.writeValueAsString(cardOperation);
