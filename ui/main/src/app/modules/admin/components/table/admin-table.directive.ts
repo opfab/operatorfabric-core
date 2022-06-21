@@ -134,12 +134,14 @@ export abstract class AdminTableDirective implements OnInit, OnDestroy {
                     filterParams: {
                         valueGetter: (params) => {
                             let text = '';
-                            params.data.parents.forEach((parent) => {
-                                text +=
-                                    this.entitiesDefinition
-                                        .filter((entityDefinition) => parent === entityDefinition.id)
-                                        .map((entityDefinition) => entityDefinition.name) + ' ';
-                            });
+                            if (params.data.parents) {
+                                params.data.parents.forEach((parent) => {
+                                    text +=
+                                        this.entitiesDefinition
+                                            .filter((entityDefinition) => parent === entityDefinition.id)
+                                            .map((entityDefinition) => entityDefinition.name) + ' ';
+                                });
+                            }
                             return text;
                         }
                     },
