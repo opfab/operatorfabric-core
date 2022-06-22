@@ -85,6 +85,10 @@ to have to maintain these mentions (since this information is tracked by git any
 * Prefer using `*ngIf` over `hidden` property  to hide elements : https://stackoverflow.com/questions/51317666/when-should-i-use-ngif-over-hidden-property-and-vice-versa/51317774
 * Do not use console.log or console.error, use specific opfab service : OpfabLoggerService
 * To give id to an HTML element, please use dashes between words and only lowercase letters. Example id="opfab-feed-filter-publish-date-to"
+* Always precise the return type of a function except when it is void (Example : `getUserName():string`)
+* Always precise the type of the function parameters (Example : `setUserName(name : string)`)
+* Function shall start with a verb (Example :  `showAlertPopup()`)
+* When the return type is a boolean, the method name shall be a yes/no question (Example : `isUserDeleted() : boolean`)
 
 ==== Back development 
 
