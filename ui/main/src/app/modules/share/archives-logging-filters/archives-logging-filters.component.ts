@@ -343,45 +343,35 @@ export class ArchivesLoggingFiltersComponent implements OnInit, OnDestroy {
         this.unsubscribe$.complete();
     }
 
-    isFormValid(): boolean {
+    private isFormValid(): boolean {
         return this.areAllDatesWellFormatted() && this.areDatesInCorrectOrder();
     }
 
-    private areAllDatesWellFormatted() {
-        const isPublishFromDateInvalid = this.displayMessageIfDateIsNotWellFormatted(
-            'publishDateFrom',
-            'shared.filters.invalidPublishStartDate'
-        );
-        const isPublishToDateInvalid = this.displayMessageIfDateIsNotWellFormatted(
-            'publishDateTo',
-            'shared.filters.invalidPublishEndDate'
-        );
+    private areAllDatesWellFormatted(): boolean {
+        const validationResult = this.validateDatesFormat();
 
-        const isActiveDateFromInvalid = this.displayMessageIfDateIsNotWellFormatted(
-            'activeFrom',
-            'shared.filters.invalidActiveStartDate'
-        );
-        const isActiveDateToInvalid = this.displayMessageIfDateIsNotWellFormatted(
-            'activeTo',
-            'shared.filters.invalidActiveEndDate'
-        );
-
-        return !isPublishFromDateInvalid && !isPublishToDateInvalid && !isActiveDateFromInvalid && !isActiveDateToInvalid;
-    }
-
-    private displayMessageIfDateIsNotWellFormatted(dateField: string, messageToDisplay): boolean {
-        const isDateInvalid = this.isInvalidDate(this.parentForm.get(dateField));
-        if (isDateInvalid) {
-            this.displayMessage(messageToDisplay, '', MessageLevel.ERROR);
+        if (!validationResult.areDatesCorrectlyFormatted) {
+            this.displayMessage(validationResult.errorMessageKey, '', MessageLevel.ERROR);
         }
-        return isDateInvalid;
+
+        return validationResult.areDatesCorrectlyFormatted;
     }
 
-    private isInvalidDate(dateControl: AbstractControl): boolean {
+    private validateDatesFormat(): {areDatesCorrectlyFormatted: boolean, errorMessageKey: string} {
+        if (!this.isDateWellFormatted('publishDateFrom')) return {areDatesCorrectlyFormatted: false, errorMessageKey: 'shared.filters.invalidPublishStartDate'};
+        if (!this.isDateWellFormatted('publishDateTo')) return {areDatesCorrectlyFormatted: false, errorMessageKey: 'shared.filters.invalidPublishEndDate'};
+        if (!this.isDateWellFormatted('activeFrom')) return {areDatesCorrectlyFormatted: false, errorMessageKey: 'shared.filters.invalidActiveStartDate'};
+        if (!this.isDateWellFormatted('activeTo')) return {areDatesCorrectlyFormatted: false, errorMessageKey: 'shared.filters.invalidActiveEndDate'};
+
+        return {areDatesCorrectlyFormatted: true, errorMessageKey: null};
+    }
+
+    private isDateWellFormatted(dateFieldName: string): boolean {
+        const dateControl = this.parentForm.get(dateFieldName);
         const dateValue = this.extractTime(dateControl);
         const isFieldEmpty = dateControl.value.date == null;
 
-        return isNaN(dateValue) && !isFieldEmpty;
+        return isFieldEmpty || !isNaN(dateValue);
     }
 
     private extractTime(form: AbstractControl) {
