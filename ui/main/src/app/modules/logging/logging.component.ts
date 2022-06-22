@@ -7,13 +7,12 @@
  * This file is part of the OperatorFabric project.
  */
 
-
 import {Component, ElementRef, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {Subject} from 'rxjs';
 
 import {ProcessesService} from '@ofServices/processes.service';
 import {takeUntil} from 'rxjs/operators';
-import {AbstractControl, FormControl, FormGroup} from '@angular/forms';
+import {FormControl, FormGroup} from '@angular/forms';
 import {ConfigService} from '@ofServices/config.service';
 import {DateTimeFormatterService} from '@ofServices/date-time-formatter.service';
 import {CardService} from '@ofServices/card.service';
@@ -23,15 +22,8 @@ import {ExportService} from '@ofServices/export.service';
 import {TranslateService} from '@ngx-translate/core';
 import {ArchivesLoggingFiltersComponent} from '../share/archives-logging-filters/archives-logging-filters.component';
 import {EntitiesService} from '@ofServices/entities.service';
-import {MessageLevel} from '@ofModel/message.model';
-import {AlertMessageAction} from '@ofStore/actions/alert.actions';
-import {Store} from '@ngrx/store';
-import {AppState} from '@ofStore/index';
-import {DateTimeNgb} from '@ofModel/datetime-ngb.model';
 import {Utilities} from 'app/common/utilities';
 import {NgbModal, NgbModalOptions, NgbModalRef} from '@ng-bootstrap/ng-bootstrap';
-
-
 
 @Component({
     selector: 'of-logging',
@@ -50,8 +42,8 @@ export class LoggingComponent implements OnDestroy, OnInit {
     resultsNumber = 0;
     hasResult = false;
     firstQueryHasBeenDone = false;
-    loadingInProgress: boolean = false;
-    loadingIsTakingMoreThanOneSecond: boolean = false;
+    loadingInProgress = false;
+    loadingIsTakingMoreThanOneSecond = false;
     technicalError = false;
 
     processStateDescription = new Map();
@@ -69,7 +61,7 @@ export class LoggingComponent implements OnDestroy, OnInit {
 
     isThereProcessStateToDisplay: boolean;
 
-    constructor(private store: Store<AppState>,
+    constructor(
         private processesService: ProcessesService,
         private configService: ConfigService,
         private dateTimeFormatter: DateTimeFormatterService,
@@ -125,42 +117,8 @@ export class LoggingComponent implements OnDestroy, OnInit {
         this.resultsNumber = 0;
     }
 
-    private displayMessage(i18nKey: string, msg: string, severity: MessageLevel = MessageLevel.ERROR) {
-        this.store.dispatch(
-            new AlertMessageAction({alertMessage: {message: msg, level: severity, i18n: {key: i18nKey}}})
-        );
-    }
-
     sendQuery(page_number): void {
         this.technicalError = false;
-        const publishStart = this.extractTime(this.loggingForm.get('publishDateFrom'));
-        const publishEnd = this.extractTime(this.loggingForm.get('publishDateTo'));
-
-        if (
-            publishStart != null &&
-            !isNaN(publishStart) &&
-            publishEnd != null &&
-            !isNaN(publishEnd) &&
-            publishStart > publishEnd
-        ) {
-            this.displayMessage('shared.filters.publishEndDateBeforeStartDate', '', MessageLevel.ERROR);
-            return;
-        }
-
-        const activeStart = this.extractTime(this.loggingForm.get('activeFrom'));
-        const activeEnd = this.extractTime(this.loggingForm.get('activeTo'));
-
-        if (
-            activeStart != null &&
-            !isNaN(activeStart) &&
-            activeEnd != null &&
-            !isNaN(activeEnd) &&
-            activeStart > activeEnd
-        ) {
-            this.displayMessage('shared.filters.activeEndDateBeforeStartDate', '', MessageLevel.ERROR);
-            return;
-        }
-
         this.loadingInProgress = true;
         this.checkIfLoadingIsTakingMoreThanOneSecond();
 
@@ -203,26 +161,6 @@ export class LoggingComponent implements OnDestroy, OnInit {
         }, 1000);
     }
 
-    private extractTime(form: AbstractControl) {
-        const val = form.value;
-        if (!val || val === '') {
-            return null;
-        }
-
-        if (isNaN(val.time.hour)) {
-            val.time.hour = 0;
-        }
-        if (isNaN(val.time.minute)) {
-            val.time.minute = 0;
-        }
-        if (isNaN(val.time.second)) {
-            val.time.second = 0;
-        }
-
-        const converter = new DateTimeNgb(val.date, val.time);
-        return converter.convertToNumber();
-    }
-
     cardPostProcessing(card) {
         const isThirdPartyPublisher = card.publisherType === 'EXTERNAL';
         const sender = isThirdPartyPublisher ? card.publisher : this.entitiesService.getEntityName(card.publisher);
@@ -260,7 +198,7 @@ export class LoggingComponent implements OnDestroy, OnInit {
             centered: true,
             backdrop: 'static', // Modal shouldn't close even if we click outside it
             size: 'sm'
-          };
+        };
         this.modalRef = this.modalService.open(this.exportTemplate, modalOptions);
 
         this.cardService

@@ -25,8 +25,12 @@
       "publishDateTo": "PUBLISH TO",
       "activeFrom": "ACTIVE FROM",
       "activeTo": "ACTIVE TO",
-      "publishEndDateBeforeStartDate" : "Publish end date must be after start date",
-      "activeEndDateBeforeStartDate" : "Active end date must be after start date"
+      "invalidPublishStartDate": "'Publish from' date is invalid",
+      "invalidPublishEndDate": "'Publish to' date is invalid",
+      "invalidActiveStartDate": "'Active from' date is invalid",
+      "invalidActiveEndDate": "'Active to' date is invalid",
+      "publishEndDateBeforeStartDate" : "'Publish to' date must be after 'Publish from' date",
+      "activeEndDateBeforeStartDate" : "'Active to' date must be after 'Active from' date"
     },
     "result": {
       "severity": "SEVERITY",

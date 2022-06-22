@@ -11,7 +11,7 @@ import {Component, EventEmitter, Input, OnDestroy, OnInit, Output} from '@angula
 import {ConfigService} from '@ofServices/config.service';
 import {Card} from '@ofModel/card.model';
 import {LightCard} from '@ofModel/light-card.model';
-import {FormGroup} from '@angular/forms';
+import {FormGroup, AbstractControl} from '@angular/forms';
 import {ProcessesService} from '@ofServices/processes.service';
 import {debounceTime, takeUntil} from 'rxjs/operators';
 import {Subject} from 'rxjs';
@@ -19,6 +19,10 @@ import {NgbDateStruct, NgbTimeStruct} from '@ng-bootstrap/ng-bootstrap';
 import {DateTimeNgb} from '@ofModel/datetime-ngb.model';
 import {ProcessStatesMultiSelectOptionsService} from '@ofServices/process-states-multi-select-options.service';
 import {MultiSelectOption} from '@ofModel/multiselect.model';
+import {MessageLevel} from '@ofModel/message.model';
+import {AlertMessageAction} from '@ofStore/actions/alert.actions';
+import {Store} from '@ngrx/store';
+import {AppState} from '@ofStore/index';
 
 import moment from 'moment';
 import {Utilities} from 'app/common/utilities';
@@ -118,6 +122,7 @@ export class ArchivesLoggingFiltersComponent implements OnInit, OnDestroy {
     defaultMinPublishDate: NgbDateStruct;
 
     constructor(
+        private store: Store<AppState>,
         private configService: ConfigService,
         private processesService: ProcessesService,
         private processStatesDropdownListService: ProcessStatesMultiSelectOptionsService
@@ -191,7 +196,7 @@ export class ArchivesLoggingFiltersComponent implements OnInit, OnDestroy {
 
     dateFilterToMap(key: string, element: any) {
         const epochDate = Utilities.convertNgbDateTimeToEpochDate(element);
-        if (epochDate)  this.filters.set(key, [epochDate]);
+        if (epochDate) this.filters.set(key, [epochDate]);
     }
 
     stateFilterToMap(element: any) {
@@ -316,7 +321,9 @@ export class ArchivesLoggingFiltersComponent implements OnInit, OnDestroy {
     }
 
     query(): void {
-        this.search.emit(null);
+        if (this.isFormValid()) {
+            this.search.emit(null);
+        }
     }
 
     resetForm() {
@@ -334,5 +341,105 @@ export class ArchivesLoggingFiltersComponent implements OnInit, OnDestroy {
     ngOnDestroy() {
         this.unsubscribe$.next();
         this.unsubscribe$.complete();
+    }
+
+    isFormValid(): boolean {
+        return this.areAllDatesWellFormatted() && this.areDatesInCorrectOrder();
+    }
+
+    private areAllDatesWellFormatted() {
+        const isPublishFromDateInvalid = this.displayMessageIfDateIsNotWellFormatted(
+            'publishDateFrom',
+            'shared.filters.invalidPublishStartDate'
+        );
+        const isPublishToDateInvalid = this.displayMessageIfDateIsNotWellFormatted(
+            'publishDateTo',
+            'shared.filters.invalidPublishEndDate'
+        );
+
+        const isActiveDateFromInvalid = this.displayMessageIfDateIsNotWellFormatted(
+            'activeFrom',
+            'shared.filters.invalidActiveStartDate'
+        );
+        const isActiveDateToInvalid = this.displayMessageIfDateIsNotWellFormatted(
+            'activeTo',
+            'shared.filters.invalidActiveEndDate'
+        );
+
+        return !isPublishFromDateInvalid && !isPublishToDateInvalid && !isActiveDateFromInvalid && !isActiveDateToInvalid;
+    }
+
+    private displayMessageIfDateIsNotWellFormatted(dateField: string, messageToDisplay): boolean {
+        const isDateInvalid = this.isInvalidDate(this.parentForm.get(dateField));
+        if (isDateInvalid) {
+            this.displayMessage(messageToDisplay, '', MessageLevel.ERROR);
+        }
+        return isDateInvalid;
+    }
+
+    private isInvalidDate(dateControl: AbstractControl): boolean {
+        const dateValue = this.extractTime(dateControl);
+        const isFieldEmpty = dateControl.value.date == null;
+
+        return isNaN(dateValue) && !isFieldEmpty;
+    }
+
+    private extractTime(form: AbstractControl) {
+        const val = form.value;
+        if (!val || val === '') {
+            return null;
+        }
+
+        if (isNaN(val.time.hour)) {
+            val.time.hour = 0;
+        }
+        if (isNaN(val.time.minute)) {
+            val.time.minute = 0;
+        }
+        if (isNaN(val.time.second)) {
+            val.time.second = 0;
+        }
+
+        const converter = new DateTimeNgb(val.date, val.time);
+        return converter.convertToNumber();
+    }
+
+    private displayMessage(i18nKey: string, msg: string, severity: MessageLevel = MessageLevel.ERROR) {
+        this.store.dispatch(
+            new AlertMessageAction({alertMessage: {message: msg, level: severity, i18n: {key: i18nKey}}})
+        );
+    }
+
+    private areDatesInCorrectOrder() {
+        let result = true;
+
+        const publishStart = this.extractTime(this.parentForm.get('publishDateFrom'));
+        const publishEnd = this.extractTime(this.parentForm.get('publishDateTo'));
+
+        if (
+            publishStart != null &&
+            !isNaN(publishStart) &&
+            publishEnd != null &&
+            !isNaN(publishEnd) &&
+            publishStart > publishEnd
+        ) {
+            this.displayMessage('shared.filters.publishEndDateBeforeStartDate', '', MessageLevel.ERROR);
+            result = false;
+        }
+
+        const activeStart = this.extractTime(this.parentForm.get('activeFrom'));
+        const activeEnd = this.extractTime(this.parentForm.get('activeTo'));
+
+        if (
+            activeStart != null &&
+            !isNaN(activeStart) &&
+            activeEnd != null &&
+            !isNaN(activeEnd) &&
+            activeStart > activeEnd
+        ) {
+            this.displayMessage('shared.filters.activeEndDateBeforeStartDate', '', MessageLevel.ERROR);
+            result = false;
+        }
+        return result;
     }
 }

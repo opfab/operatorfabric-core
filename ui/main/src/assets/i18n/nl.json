@@ -25,8 +25,12 @@
       "publishDateTo": "PUBLICEREN TOT",
       "activeFrom": "ACTIEF VAN",
       "activeTo": "ACTIEF TOT",
-      "publishEndDateBeforeStartDate" : "De einddatum van de publicatie moet na de startdatum liggen",
-      "activeEndDateBeforeStartDate" : "Actieve einddatum moet na de startdatum liggen"
+      "invalidPublishStartDate": "Datum 'Publiceren van'  is ongeldig",
+      "invalidPublishEndDate": "Datum 'Publiceren tot' is ongeldig",
+      "invalidActiveStartDate": "Datum 'Actief van' is ongeldig",
+      "invalidActiveEndDate": "Datum 'Actief tot' is ongeldig",
+      "publishEndDateBeforeStartDate" : "'Publiceren tot' moet na 'Publiceren van' liggen",
+      "activeEndDateBeforeStartDate" : "'Actief tot' moet na 'Actief van' liggen"
     },
     "result": {
       "severity": "ERNST",
