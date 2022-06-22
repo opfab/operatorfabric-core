@@ -25,8 +25,12 @@
       "publishDateTo": "PUBLIEE JUSQU'A",
       "activeFrom": "ACTIVE A PARTIR DE",
       "activeTo": "ACTIVE JUSQU'A",
-      "publishEndDateBeforeStartDate" : "La date de fin doit être postérieure à la date de début",
-      "activeEndDateBeforeStartDate" : "La date de fin doit être postérieure à la date de début"
+      "invalidPublishStartDate": "La date 'Publiée à partir de' est invalide",
+      "invalidPublishEndDate": "La date 'Publiée jusqu'à' est invalide",
+      "invalidActiveStartDate": "La date 'Active à partir de' est invalide",
+      "invalidActiveEndDate": "La date 'Active jusqu'à' est invalide",
+      "publishEndDateBeforeStartDate" : "La date 'Publiée jusqu'à' doit être postérieure à la date 'Publiée à partir de'",
+      "activeEndDateBeforeStartDate" : "La date 'Active jusqu'à' doit être postérieure à la date 'Active à partir de'"
     },
     "result": {
       "severity": "SEVERITE",

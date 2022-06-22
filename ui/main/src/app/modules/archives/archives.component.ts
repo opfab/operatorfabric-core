@@ -13,7 +13,7 @@ import {AppState} from '@ofStore/index';
 import {ProcessesService} from '@ofServices/processes.service';
 import {Store} from '@ngrx/store';
 import {takeUntil, tap} from 'rxjs/operators';
-import {AbstractControl, FormControl, FormGroup} from '@angular/forms';
+import {FormControl, FormGroup} from '@angular/forms';
 import {ConfigService} from '@ofServices/config.service';
 import {DateTimeFormatterService} from '@ofServices/date-time-formatter.service';
 import {NgbModal, NgbModalOptions, NgbModalRef} from '@ng-bootstrap/ng-bootstrap';
@@ -27,9 +27,6 @@ import {Utilities} from 'app/common/utilities';
 import {Card, CardData} from '@ofModel/card.model';
 import {ArchivesLoggingFiltersComponent} from '../share/archives-logging-filters/archives-logging-filters.component';
 import {EntitiesService} from '@ofServices/entities.service';
-import {MessageLevel} from '@ofModel/message.model';
-import {AlertMessageAction} from '@ofStore/actions/alert.actions';
-import {DateTimeNgb} from '@ofModel/datetime-ngb.model';
 import {DisplayContext} from '@ofModel/templateGateway.model';
 
 @Component({
@@ -144,43 +141,10 @@ export class ArchivesComponent implements OnDestroy, OnInit {
         this.resultsNumber = 0;
     }
 
-    private displayMessage(i18nKey: string, msg: string, severity: MessageLevel = MessageLevel.ERROR) {
-        this.store.dispatch(
-            new AlertMessageAction({alertMessage: {message: msg, level: severity, i18n: {key: i18nKey}}})
-        );
-    }
-
     sendQuery(page_number): void {
         this.technicalError = false;
-        const publishStart = this.extractTime(this.archiveForm.get('publishDateFrom'));
-        const publishEnd = this.extractTime(this.archiveForm.get('publishDateTo'));
-
-        if (
-            publishStart != null &&
-            !isNaN(publishStart) &&
-            publishEnd != null &&
-            !isNaN(publishEnd) &&
-            publishStart > publishEnd
-        ) {
-            this.displayMessage('shared.filters.publishEndDateBeforeStartDate', '', MessageLevel.ERROR);
-            return;
-        }
-
-        const activeStart = this.extractTime(this.archiveForm.get('activeFrom'));
-        const activeEnd = this.extractTime(this.archiveForm.get('activeTo'));
-
-        if (
-            activeStart != null &&
-            !isNaN(activeStart) &&
-            activeEnd != null &&
-            !isNaN(activeEnd) &&
-            activeStart > activeEnd
-        ) {
-            this.displayMessage('shared.filters.activeEndDateBeforeStartDate', '', MessageLevel.ERROR);
-            return;
-        }
-
         this.loadingInProgress = true;
+
         this.checkForArchiveLoadingInProgressForMoreThanOneSecond();
         const {value} = this.archiveForm;
         this.filtersTemplate.transformFiltersListToMap(value);
@@ -314,26 +278,6 @@ export class ArchivesComponent implements OnDestroy, OnInit {
 
     displayTime(date) {
         return this.dateTimeFormatter.getFormattedDateAndTimeFromEpochDate(date);
-    }
-
-    private extractTime(form: AbstractControl) {
-        const val = form.value;
-        if (!val || val == '') {
-            return null;
-        }
-
-        if (isNaN(val.time.hour)) {
-            val.time.hour = 0;
-        }
-        if (isNaN(val.time.minute)) {
-            val.time.minute = 0;
-        }
-        if (isNaN(val.time.second)) {
-            val.time.second = 0;
-        }
-
-        const converter = new DateTimeNgb(val.date, val.time);
-        return converter.convertToNumber();
     }
 
     // EXPORT TO EXCEL
