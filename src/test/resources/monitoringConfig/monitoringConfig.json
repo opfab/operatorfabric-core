@@ -47,7 +47,7 @@
         "fields" : [
           { "columnName": "Response from", "jsonField": "publisherName" },
           { "columnName": "Response date","jsonField": "publishDate","type": "EPOCHDATE"},
-          { "columnName": "Response ","jsonField": "data.response"}
+          { "columnName": "Response","jsonField": "data.response"}
         ]
       }
     ]

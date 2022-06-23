@@ -441,6 +441,8 @@ describe ('Monitoring screen tests',function () {
     })
 
     it('Check export', function () {
+        // Standard export, no custom configuration
+        cy.loadMonitoringConfig('emptyConfig.json');
 
         cy.loginOpFab('operator1_fr','test');
 
@@ -465,7 +467,7 @@ describe ('Monitoring screen tests',function () {
 
                 expect(rows[0]['TIME']).to.match(/^\d{2}:\d{2} \d{2}\/\d{2}\/\d{4}$/);
                 expect(rows[0]['BUSINESS PERIOD']).to.match(/^\d{2}:\d{2} \d{2}\/\d{2}\/\d{4}-\d{2}:\d{2} \d{2}\/\d{2}\/\d{4}$/);
-                expect(rows[0]['ANSWER']).to.equal(false);
+                expect(rows[0]['ANSWER']).to.equal('FALSE');
                 expect(rows[0].TITLE).to.equal('⚠️ Network Contingencies ⚠️');
                 expect(rows[0].SUMMARY).to.equal('Contingencies report for French network');
                 expect(rows[0]['PROCESS STATUS']).to.equal('IN PROGRESS');
@@ -476,7 +478,7 @@ describe ('Monitoring screen tests',function () {
 
                 expect(rows[1]['TIME']).to.match(/^\d{2}:\d{2} \d{2}\/\d{2}\/\d{4}$/);
                 expect(rows[1]['BUSINESS PERIOD']).to.match(/^\d{2}:\d{2} \d{2}\/\d{2}\/\d{4}-$/);
-                expect(rows[1]['ANSWER']).to.equal(false);
+                expect(rows[1]['ANSWER']).to.equal('FALSE');
                 expect(rows[1].TITLE).to.equal('Electricity consumption forecast');
                 expect(rows[1].SUMMARY).to.equal('Message received');
                 expect(rows[1]['PROCESS STATUS']).to.equal('CANCELED');
@@ -487,7 +489,7 @@ describe ('Monitoring screen tests',function () {
                 
                 expect(rows[2]['TIME']).to.match(/^\d{2}:\d{2} \d{2}\/\d{2}\/\d{4}$/);
                 expect(rows[2]['BUSINESS PERIOD']).to.match(/^\d{2}:\d{2} \d{2}\/\d{2}\/\d{4}-\d{2}:\d{2} \d{2}\/\d{2}\/\d{4}$/);
-                expect(rows[2]['ANSWER']).to.equal(true);
+                expect(rows[2]['ANSWER']).to.equal('TRUE');
                 expect(rows[2].TITLE).to.equal('⚡ Planned Outage');
                 expect(rows[2].SUMMARY).to.equal('Message received');
                 expect(rows[2]['PROCESS STATUS']).to.equal('IN PROGRESS');
@@ -498,7 +500,7 @@ describe ('Monitoring screen tests',function () {
 
                 expect(rows[3]['TIME']).to.match(/^\d{2}:\d{2} \d{2}\/\d{2}\/\d{4}$/);
                 expect(rows[3]['BUSINESS PERIOD']).to.match(/^\d{2}:\d{2} \d{2}\/\d{2}\/\d{4}-\d{2}:\d{2} \d{2}\/\d{2}\/\d{4}$/);
-                expect(rows[3]['ANSWER']).to.equal(false);
+                expect(rows[3]['ANSWER']).to.equal('FALSE');
                 expect(rows[3].TITLE).to.equal('Process state (calcul)');
                 expect(rows[3].SUMMARY).to.equal('Message received');
                 expect(rows[3]['PROCESS STATUS']).to.equal('IN PROGRESS');
@@ -509,7 +511,7 @@ describe ('Monitoring screen tests',function () {
 
                 expect(rows[4]['TIME']).to.match(/^\d{2}:\d{2} \d{2}\/\d{2}\/\d{4}$/);
                 expect(rows[4]['BUSINESS PERIOD']).to.match(/^\d{2}:\d{2} \d{2}\/\d{2}\/\d{4}-\d{2}:\d{2} \d{2}\/\d{2}\/\d{4}$/);
-                expect(rows[4]['ANSWER']).to.equal(false);
+                expect(rows[4]['ANSWER']).to.equal('FALSE');
                 expect(rows[4].TITLE).to.equal('Message');
                 expect(rows[4].SUMMARY).to.equal("Message received : France-England's interconnection is 100% operational / Result of the maintenance is <OK>");
                 expect(rows[4]['PROCESS STATUS']).to.equal('FINISHED');
@@ -517,12 +519,110 @@ describe ('Monitoring screen tests',function () {
                 expect(rows[4].EMITTER).to.equal('Control Center FR North (publisher_test)');
                 expect(rows[4]['REQUIRED ANSWERS']).to.equal('');
                 expect(rows[4].ANSWERS).to.equal('');
-                
 
                 // Delete export file
                 cy.task('deleteFile', { filename: './cypress/downloads/' + files[0] })
-
             })
+ 
+
+        })
+
+    })
+
+    it('Check custom export configuration', function () {
+        // Load custom export configuration
+        cy.loadMonitoringConfig('monitoringConfig.json');
+
+        cy.loginOpFab('operator1_fr','test');
+
+        // Access monitoring screen
+        cy.get('#opfab-navbar-menu-monitoring').click();
+        
+        cy.countAgGridTableRows('#opfab-monitoring-table-grid', 5);
+
+        // Do export
+        cy.get('#opfab-monitoring-btn-exportToExcel').click();
+
+        cy.waitDefaultTime();
+
+            // check download folder contains the export file
+            cy.task('list', {dir: './cypress/downloads'}).then((files) => {
+            expect(files.length).to.equal(1);
+            // check file name
+            expect(files[0]).to.match(/^Monitoring_export_\d*\.xlsx/);
+            
+            // check file content
+            cy.task('readXlsx', { file: './cypress/downloads/' + files[0], sheet: "data"}).then((rows) => {
+                expect(rows.length).to.equal(5);
+
+                expect(rows[0]['Creation Date']).to.match(/^\d{2}\/\d{2}\/\d{2} \d{2}:\d{2}$/);
+                expect(rows[0]['Business Date - start']).to.match(/^\d{2}\/\d{2}\/\d{2} \d{2}:\d{2}$/);
+                expect(rows[0]['Business Date - end']).to.match(/^\d{2}\/\d{2}\/\d{2} \d{2}:\d{2}$/);
+                expect(rows[0]['Service']).to.equal('Base Examples');
+                expect(rows[0]['Process']).to.equal('Process example ');
+                expect(rows[0]['Title']).to.equal('⚠️ Network Contingencies ⚠️');
+                expect(rows[0]['Summary']).to.equal('Contingencies report for French network');
+                expect(rows[0]['Status']).to.equal('IN PROGRESS');
+                expect(rows[0]['Severity']).to.equal('Alarm');
+                expect(rows[0]['Response from']).to.equal('');
+                expect(rows[0]['Response date']).to.equal('');
+                expect(rows[0]['Response']).to.equal('');
+
+                expect(rows[1]['Creation Date']).to.match(/^\d{2}\/\d{2}\/\d{2} \d{2}:\d{2}$/);
+                expect(rows[1]['Business Date - start']).to.match(/^\d{2}\/\d{2}\/\d{2} \d{2}:\d{2}$/);
+                expect(rows[1]['Business Date - end']).to.equal('');
+                expect(rows[1]['Service']).to.equal('Base Examples');
+                expect(rows[1]['Process']).to.equal('Process example ');
+                expect(rows[1]['Title']).to.equal('Electricity consumption forecast');
+                expect(rows[1]['Summary']).to.equal('Message received');
+                expect(rows[1]['Status']).to.equal('CANCELED');
+                expect(rows[1]['Severity']).to.equal('Alarm');
+                expect(rows[1]['Response from']).to.equal('');
+                expect(rows[1]['Response date']).to.equal('');
+                expect(rows[1]['Response']).to.equal('');
+ 
+                expect(rows[2]['Creation Date']).to.match(/^\d{2}\/\d{2}\/\d{2} \d{2}:\d{2}$/);
+                expect(rows[2]['Business Date - start']).to.match(/^\d{2}\/\d{2}\/\d{2} \d{2}:\d{2}$/);
+                expect(rows[2]['Business Date - end']).to.match(/^\d{2}\/\d{2}\/\d{2} \d{2}:\d{2}$/);
+                expect(rows[2]['Service']).to.equal('Base Examples');
+                expect(rows[2]['Process']).to.equal('Process example ');
+                expect(rows[2]['Title']).to.equal('⚡ Planned Outage');
+                expect(rows[2]['Summary']).to.equal('Message received');
+                expect(rows[2]['Status']).to.equal('IN PROGRESS');
+                expect(rows[2]['Severity']).to.equal('Action');
+                expect(rows[2]['Response from']).to.equal('Control Center FR North');
+                expect(rows[2]['Response date']).to.match(/^\d{2}\/\d{2}\/\d{2} \d{2}:\d{2}$/);
+                expect(rows[2]['Response']).to.equal('');
+          
+                expect(rows[3]['Creation Date']).to.match(/^\d{2}\/\d{2}\/\d{2} \d{2}:\d{2}$/);
+                expect(rows[3]['Business Date - start']).to.match(/^\d{2}\/\d{2}\/\d{2} \d{2}:\d{2}$/);
+                expect(rows[3]['Business Date - end']).to.match(/^\d{2}\/\d{2}\/\d{2} \d{2}:\d{2}$/);
+                expect(rows[3]['Service']).to.equal('Base Examples');
+                expect(rows[3]['Process']).to.equal('Process example ');
+                expect(rows[3]['Title']).to.equal('Process state (calcul)');
+                expect(rows[3]['Summary']).to.equal('Message received');
+                expect(rows[3]['Status']).to.equal('IN PROGRESS');
+                expect(rows[3]['Severity']).to.equal('Compliant');
+                expect(rows[3]['Response from']).to.equal('');
+                expect(rows[3]['Response date']).to.equal('');
+                expect(rows[3]['Response']).to.equal('');
+
+                expect(rows[4]['Creation Date']).to.match(/^\d{2}\/\d{2}\/\d{2} \d{2}:\d{2}$/);
+                expect(rows[4]['Business Date - start']).to.match(/^\d{2}\/\d{2}\/\d{2} \d{2}:\d{2}$/);
+                expect(rows[4]['Business Date - end']).to.match(/^\d{2}\/\d{2}\/\d{2} \d{2}:\d{2}$/);
+                expect(rows[4]['Service']).to.equal('Base Examples');
+                expect(rows[4]['Process']).to.equal('Process example ');
+                expect(rows[4]['Title']).to.equal('Message');
+                expect(rows[4]['Summary']).to.equal("Message received : France-England's interconnection is 100% operational / Result of the maintenance is <OK>");
+                expect(rows[4]['Status']).to.equal('FINISHED');
+                expect(rows[4]['Severity']).to.equal('Information');
+                expect(rows[4]['Response from']).to.equal('');
+                expect(rows[4]['Response date']).to.equal('');
+                expect(rows[4]['Response']).to.equal('');
+                // Delete export file
+                cy.task('deleteFile', { filename: './cypress/downloads/' + files[0] })
+            })
+
         })
 
     })
