@@ -15,16 +15,16 @@
     "filters": {
       "processGroup": "SERVICE",
       "process": "PROCESSUS",
-      "state": "ETAT",
-      "tags": "ETIQUETTES",
+      "state": "ÉTAT",
+      "tags": "ÉTIQUETTES",
       "selectProcessGroupText": "Sélectionner un Service",
       "selectProcessText": "Sélectionner un Processus",
-      "selectStateText": "Sélectionner un Etat",
-      "selectTagText": "Sélectionner une Etiquette",
-      "publishDateFrom": "PUBLIEE A PARTIR DE",
-      "publishDateTo": "PUBLIEE JUSQU'A",
-      "activeFrom": "ACTIVE A PARTIR DE",
-      "activeTo": "ACTIVE JUSQU'A",
+      "selectStateText": "Sélectionner un État",
+      "selectTagText": "Sélectionner une Étiquette",
+      "publishDateFrom": "PUBLIÉE À PARTIR DE",
+      "publishDateTo": "PUBLIÉE JUSQU'À",
+      "activeFrom": "ACTIVE À PARTIR DE",
+      "activeTo": "ACTIVE JUSQU'À",
       "invalidPublishStartDate": "La date 'Publiée à partir de' est invalide",
       "invalidPublishEndDate": "La date 'Publiée jusqu'à' est invalide",
       "invalidActiveStartDate": "La date 'Active à partir de' est invalide",
@@ -33,23 +33,23 @@
       "activeEndDateBeforeStartDate" : "La date 'Active jusqu'à' doit être postérieure à la date 'Active à partir de'"
     },
     "result": {
-      "severity": "SEVERITE",
+      "severity": "SÉVÉRITÉ",
       "timeOfAction": "MOMENT DE L'ACTION",
       "title": "TITRE",
-      "summary": "RESUME",
+      "summary": "RÉSUMÉ",
       "state": "ÉTAT",
       "description": "DESCRIPTION DE L'ÉTAT",
-      "sender": "EMETTEUR",
+      "sender": "ÉMETTEUR",
       "process" : "PROCESSUS",
       "processGroup": "SERVICE",
       "representative": "MANDATAIRE",
       "publishDate" : "DATE DE PUBLICATION",
-      "businessPeriod" : "PERIODE METIER",
+      "businessPeriod" : "PÉRIODE MÉTIER",
       "time": "DATE",
-      "answer": "REPONSE",
-      "emitter": "EMETTEUR",
-      "entitiesResponses": "REPONSES",
-      "requiredResponses": "REPONSES REQUISES"
+      "answer": "RÉPONSE",
+      "emitter": "ÉMETTEUR",
+      "entitiesResponses": "RÉPONSES",
+      "requiredResponses": "RÉPONSES REQUISES"
     },
     "exportInProgress": "Export en cours",
     "loadingInProgress": "Chargement en cours",
@@ -60,11 +60,11 @@
     "endDateBeforeStartDate": "La date de fin doit être postérieure à la date de début",
     "featureNotConfigured": "Fonctionnalité non configurée",
     "confirmSettings": "ENREGISTRER LA CONFIGURATION",
-    "cardEmitter": "EMETTEUR",
+    "cardEmitter": "ÉMETTEUR",
     "entity": "ENTITÉ",
     "popup": {
       "title": "CONFIRMATION",
-      "areYouSure": "Vous avez fait des modifications. Etes-vous sûr de vouloir les enregistrer ?"
+      "areYouSure": "Vous avez fait des modifications. Êtes-vous sûr de vouloir les enregistrer ?"
     },
     "error": {
       "impossibleToSaveSettings": "Impossible d'enregistrer les paramètres pour des raisons techniques",
@@ -74,7 +74,7 @@
   },
   "global":{
     "connectionLost":"Connexion perdue",
-    "tryToReconnect":"Tentative de reconnexion ...",
+    "tryToReconnect":"Tentative de reconnexion...",
     "activateSoundText":"Son non activé, cliquer pour activer",
     "activateSoundButton":"Activer le son",
     "sessionExpiredText":"Votre session a expiré",
@@ -127,13 +127,13 @@
   "multiSelect": {
     "searchPlaceholderText": "Rechercher..." ,
     "clearButtonText" : "Effacer" ,
-    "noSearchResultsText" : "Pas de résultats",
+    "noSearchResultsText" : "Pas de résultat",
     "noOptionsText" :""
   },
   "feed": {
     "filters": {
       "title": "Filtres",
-      "reset": "Reinitialiser",
+      "reset": "Réinitialiser",
       "time": {
         "titleIfFilterBasedOnPublishDate": "Date de réception",
         "titleIfFilterBasedOnBusinessDate": "Période métier",
@@ -190,7 +190,7 @@
     "from": "de",
     "moreCards": "cartes supplémentaires",
     "lastResponse": "Dernière réponse reçue le",
-    "cardLoadingInProgress":"Chargement de la carte ...",
+    "cardLoadingInProgress":"Chargement de la carte...",
     "cardNotFound": "La carte que vous cherchez n'a pas été trouvée"
   },
   "login": {
@@ -216,10 +216,10 @@
     }
   },
   "about": {
-    "title": "A PROPOS"
+    "title": "À PROPOS"
   },
   "settings": {
-    "title": "PARAMETRES",
+    "title": "PARAMÈTRES",
     "description": "DESCRIPTION",
     "locale": "LANGUE",
     "playSoundLabel": "JOUER DES SONS POUR LES CARTES DE TYPE",
@@ -234,7 +234,7 @@
   },
   "archive": {
     "loadingInProgress": "Chargement des cartes archivées",
-    "cardLoadingInProgress":"Chargement de la carte ...",
+    "cardLoadingInProgress":"Chargement de la carte...",
     "tooManyRows": "Trop de cartes, toutes les cartes ne sont pas visibles",
     "collapsibleUpdates": "Mises à jour dépliables"
   },
@@ -253,22 +253,22 @@
   "button": {
     "ok": "OK",
     "cancel": "ANNULER",
-    "reset": "REINITIALISER",
+    "reset": "RÉINITIALISER",
     "delete": "Supprimer",
-    "edit" : "Editer",
+    "edit" : "Éditer",
     "yes": "OUI",
     "search": "RECHERCHER"
   },
   "activityArea": {
-    "title": "ZONE D'ACTIVITE",
+    "title": "ZONE D'ACTIVITÉ",
     "titleOnLogin": "SÉLECTIONNER VOTRE ZONE D'ACTIVITÉ"
   },
   "feedConfiguration": {
     "title": "CONFIGURATION DES NOTIFICATIONS"
   },
   "userCard": {
-    "title": "CREATION D'UNE NOUVELLE CARTE",
-    "editTitle" : "EDITION D'UNE CARTE",
+    "title": "CRÉATION D'UNE NOUVELLE CARTE",
+    "editTitle" : "ÉDITION D'UNE CARTE",
     "error": {
       "notAvailable": "Vous n'êtes pas autorisé à envoyer des cartes",
       "templateError" : "Erreur technique : template non conforme",
@@ -277,8 +277,8 @@
       "lttdAfterEndDate": "La date limite de réponse doit être antérieure à la date de fin"
     },
     "filters": {
-      "severity": "SEVERITE",
-      "startDate": "DATE DE DEBUT ",
+      "severity": "SÉVÉRITÉ",
+      "startDate": "DATE DE DÉBUT ",
       "endDate": "DATE DE FIN ",
       "lttd": "DATE LIMITE DE RÉPONSE",
       "recipients": "DESTINATAIRES"
@@ -291,8 +291,8 @@
     "state": "État",
     "recipients": "DESTINATAIRES:",
     "youAreTheOnlyRecipient": "Vous êtes l'unique destinataire de cette carte",
-    "feedPreview": "PREVISUALISATION FLUX DE CARTES:",
-    "contentPreview": "PREVISUALISATION CONTENU:",
+    "feedPreview": "PRÉVISUALISATION FLUX DE CARTES:",
+    "contentPreview": "PRÉVISUALISATION CONTENU:",
     "send-another-one": "ENVOYER UNE AUTRE CARTE",
     "cardSendWithNoError": "Votre carte est publiée",
     "deleteCard": {
@@ -303,11 +303,11 @@
         "impossibleToDeleteCard": "Impossible de supprimer la carte pour des raisons techniques"
       }
     },
-    "sendingCardInProgress": "Envoi de la carte en cours ..."
+    "sendingCardInProgress": "Envoi de la carte en cours..."
   },
   "response": {
-    "btnValidate": "VALIDER REPONSE",
-    "btnUnlock": "MODIFIER REPONSE",
+    "btnValidate": "VALIDER RÉPONSE",
+    "btnUnlock": "MODIFIER RÉPONSE",
     "error": {
       "submit": "La carte n'a pas pu être envoyée",
       "form": "Le formulaire n'est pas correctement rempli",
@@ -358,7 +358,7 @@
         "id": "ID",
         "process": "PROCESSUS",
         "stateRights": "PERMISSIONS SUR LES ÉTATS",
-        "state": "ETAT",
+        "state": "ÉTAT",
         "right": "PERMISSION",
         "confirmDelete": "Voulez-vous vraiment supprimer le périmètre",
         "add":"AJOUTER UN NOUVEAU PÉRIMÈTRE"
@@ -377,9 +377,9 @@
       "selectEntityText": "Sélectionner une Entité",
       "selectPerimeterText": "Sélectionner un Périmètre",
       "selectProcessText": "Sélectionner un Processus",
-      "selectStateText": "Sélectionner un Etat",
+      "selectStateText": "Sélectionner un État",
       "selectRightText": "Sélectionner une Permission",
-      "edit": "Editer",
+      "edit": "Éditer",
       "delete": "Supprimer",
       "save": "SAUVEGARDER LES CHANGEMENTS",
       "close": "FERMER",
@@ -425,7 +425,7 @@
     "loadingOoo": "Chargement en cours...",
     "noRowsToShow": "Aucune donnée",
     "filterOoo": "Filtrer...",
-    "equals": "Egal à",
+    "equals": "Égal à",
     "notEqual": "N'est pas égal à",
     "contains": "Contient",
     "notContains": "Ne contient pas",
@@ -443,7 +443,7 @@
     "connected": "Connecté",
     "disconnected": "Déconnecté",
     "selectScreenText": "Sélectionner un écran",
-    "realTimeScreen": "ECRAN TEMPS RÉEL"
+    "realTimeScreen": "ÉCRAN TEMPS RÉEL"
   },
   "externalDevicesConfiguration": {
     "input": {
@@ -458,7 +458,7 @@
     },
     "userLogin": "IDENTIFIANT UTILISATEUR",
     "externalDeviceIds": "PÉRIPHÉRIQUES",
-    "edit": "EDITER",
+    "edit": "ÉDITER",
     "delete": "SUPPRIMER"
   },
   "datePicker": {

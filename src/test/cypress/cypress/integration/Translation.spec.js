@@ -13,7 +13,7 @@ describe('Test translations', function () {
     const DUTCH = 'nl';
 
     const ENGLISH_SETTINGS = 'SETTINGS';
-    const FRENCH_SETTINGS = 'PARAMETRES';
+    const FRENCH_SETTINGS = 'PARAMÈTRES';
     const DUTCH_SETTINGS = 'INSTELLINGEN';
 
     function changeLanguage(newLanguage, useClock) {
@@ -250,8 +250,8 @@ describe('Test translations', function () {
         checkArchivesScreenTexts('Select a Service', 'Select a Tag', 'Select a Process', 'Select a State', 'SEARCH', 'RESET');
 
         changeLanguage(FRENCH);
-        checkArchivesScreenLabels('SERVICE', 'ETIQUETTES', 'PROCESSUS', 'ETAT', 'PUBLIEE A PARTIR DE', "PUBLIEE JUSQU'A", 'ACTIVE A PARTIR DE', "ACTIVE JUSQU'A");
-        checkArchivesScreenTexts('Sélectionner un Service', 'Sélectionner une Etiquette', 'Sélectionner un Processus', 'Sélectionner un Etat', 'RECHERCHER', 'REINITIALISER');
+        checkArchivesScreenLabels('SERVICE', 'ÉTIQUETTES', 'PROCESSUS', 'ÉTAT', 'PUBLIÉE À PARTIR DE', "PUBLIÉE JUSQU'À", 'ACTIVE À PARTIR DE', "ACTIVE JUSQU'À");
+        checkArchivesScreenTexts('Sélectionner un Service', 'Sélectionner une Étiquette', 'Sélectionner un Processus', 'Sélectionner un État', 'RECHERCHER', 'RÉINITIALISER');
 
         changeLanguage(DUTCH);
         checkArchivesScreenLabels('DIENST', 'LABELS', 'PROCES', 'STATUS', 'PUBLICEREN VAN', 'PUBLICEREN TOT', 'ACTIEF VAN', 'ACTIEF TOT');
@@ -266,7 +266,7 @@ describe('Test translations', function () {
         checkMonitoringResultTexts('Cards with response from my entity ');
 
         changeLanguage(FRENCH);
-        checkMonitoringFilterTexts('SERVICE', 'Sélectionner un Service', 'PROCESSUS', 'Sélectionner un Processus', 'ÉTAT DU PROCESSUS', 'Sélectionner un État de processus', 'RECHERCHER', 'REINITIALISER');
+        checkMonitoringFilterTexts('SERVICE', 'Sélectionner un Service', 'PROCESSUS', 'Sélectionner un Processus', 'ÉTAT DU PROCESSUS', 'Sélectionner un État de processus', 'RECHERCHER', 'RÉINITIALISER');
         checkMonitoringResultTexts('Cartes avec réponse de mon entité ');
 
         changeLanguage(DUTCH);
