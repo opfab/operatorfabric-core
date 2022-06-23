@@ -244,3 +244,7 @@ Cypress.Commands.add('usercardPrepareAndSendCard', () => {
 
     cy.get('#opfab-usercard-btn-accept').click();
 })
+
+Cypress.Commands.add('loadMonitoringConfig', (config) => {
+    cy.exec('cd .. && ./resources/monitoringConfig/loadMonitoringConfig.sh ' + config);
+})
