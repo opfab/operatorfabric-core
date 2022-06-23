@@ -193,11 +193,11 @@ explanation] and https://docs.cypress.io/guides/core-concepts/retry-ability#Merg
 
 == Configuration
 
-In `cypress.json`:
+In `cypress.config.js`:
 
-* `baseUrl`: The base url of the OperatorFabric instance you're testing against. It will be appended in front of any
+* `e2e.baseUrl`: The base url of the OperatorFabric instance you're testing against. It will be appended in front of any
     `visit` call.
-* `env.host`: The host corresponding to the OperatorFabric instance you're testing against. It will be used for API
+* `e2e.env.host`: The host corresponding to the OperatorFabric instance you're testing against. It will be used for API
 calls.
-* `env.defaultWaitTime`: Using the custom-defined command cy.waitDefaultTime() instead of cy.wait(XXX) allows the wait
+* `e2e.env.defaultWaitTime`: Using the custom-defined command cy.waitDefaultTime() instead of cy.wait(XXX) allows the wait
 time to be changed globally for all steps to the value defined by this property.
