@@ -43,7 +43,7 @@
                         <ng-template #tipTags>
                             <span translate>feed.tips.seeGroupedCards</span>
                         </ng-template>
-                        <span *ngIf="showGroupedCardsIcon" class="p-2"
+                        <span *ngIf="showGroupedCardsIcon && !lightCardDisplayedInMapComponent" class="p-2"
                               [ngbPopover]="tipTags" popoverClass="opfab-popover" container="body"
                               triggers="mouseenter:mouseleave">
                             <em style="color: #0082FF;" class="fa " [class.fa-angle-down]="open" [class.fa-angle-left]="!open || !groupedCardsVisible"></em>
@@ -80,7 +80,7 @@
         </div>
     </div>
 
-    <div *ngIf="open && groupedCardsVisible">
+    <div *ngIf="open && groupedCardsVisible && !lightCardDisplayedInMapComponent">
         <of-grouped-card-list [lightCards]="getGroupedChildCards()" [selection]="selection"> </of-grouped-card-list>
     </div>
 
