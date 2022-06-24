@@ -9,16 +9,16 @@
 <div style="display: flex;">
     <!--2 columns in this case-->
     <!--First column-->
-    <div *ngIf="displayProcessGroupFilter() || tags" style="margin-right:40px">
+    <div *ngIf="isProcessGroupFilterVisible() || tags" style="margin-right:40px">
         <div  style="min-width:300px;max-width:400px;margin-top: 28px;margin-bottom: 54px;max-height: 48px">
-            <of-multi-select *ngIf="displayProcessGroupFilter()" id="opfab-processGroup" multiSelectId="processGroup" [parentForm]="this.parentForm" [config]="processGroupMultiSelectConfig"
+            <of-multi-select *ngIf="isProcessGroupFilterVisible()" id="opfab-processGroup" multiSelectId="processGroup" [parentForm]="this.parentForm" [config]="processGroupMultiSelectConfig"
             [options]="processGroupMultiSelectOptions" [selectedOptions]="processGroupSelected">
             </of-multi-select>
-            <of-multi-select *ngIf="! displayProcessGroupFilter() && tags" id="opfab-tags" multiSelectId="tags" [parentForm]="this.parentForm" [config]="tagsMultiSelectConfig"
+            <of-multi-select *ngIf="! isProcessGroupFilterVisible() && tags" id="opfab-tags" multiSelectId="tags" [parentForm]="this.parentForm" [config]="tagsMultiSelectConfig"
             [options]="tagsMultiSelectOptions" [selectedOptions]="tagSelected">
             </of-multi-select>
         </div>
-        <div *ngIf="displayProcessGroupFilter() && tags" style="min-width:300px;max-width:400px;max-height: 48px">
+        <div *ngIf="isProcessGroupFilterVisible() && tags" style="min-width:300px;max-width:400px;max-height: 48px">
             <of-multi-select id="opfab-tags" multiSelectId="tags" [parentForm]="this.parentForm" [config]="tagsMultiSelectConfig"
             [options]="tagsMultiSelectOptions" [selectedOptions]="tagSelected">
             </of-multi-select>
@@ -26,15 +26,15 @@
     </div>
 
     <!--Second column-->
-    <div *ngIf="displayProcessGroupFilter() || tags" style="margin-right:40px">
+    <div *ngIf="isProcessGroupFilterVisible() || tags" style="margin-right:40px">
         <div style="min-width:300px;max-width:400px;margin-top:28px;margin-bottom: 54px;max-height: 48px">
             <of-multi-select *ngIf="!isThereProcessGroup()"  id="opfab-process" multiSelectId="process" [parentForm]="this.parentForm" 
             [config]="processMultiSelectConfig" [options]="processMultiSelectOptions" [selectedOptions]="processSelected">
             </of-multi-select>
-            <of-multi-select *ngIf="isThereProcessGroup() && displayProcessGroupFilter()"  id="opfab-process" multiSelectId="process" [parentForm]="this.parentForm" [config]="processMultiSelectConfig"
+            <of-multi-select *ngIf="isThereProcessGroup() && isProcessGroupFilterVisible()"  id="opfab-process" multiSelectId="process" [parentForm]="this.parentForm" [config]="processMultiSelectConfig"
             [options]="processMultiSelectOptionsWhenSelectedProcessGroup" [selectedOptions]="processSelected">
             </of-multi-select>
-            <of-multi-select *ngIf="isThereProcessGroup() && !displayProcessGroupFilter() && isThereOnlyOneProcessGroupInDropdownList()"  
+            <of-multi-select *ngIf="isThereProcessGroup() && !isProcessGroupFilterVisible() && isThereOnlyOneProcessGroupInDropdownList()"  
             id="opfab-process" multiSelectId="process" [parentForm]="this.parentForm" 
             [config]="processMultiSelectConfig" [options]="processMultiSelectOptionsPerProcessGroups.get(processGroupMultiSelectOptions[0].value)" 
             [selectedOptions]="processSelected">
@@ -49,7 +49,7 @@
     </div>
 
     <!--Only one column in this case-->
-    <div *ngIf="! displayProcessGroupFilter() && ! tags" style="margin-right:40px">
+    <div *ngIf="! isProcessGroupFilterVisible() && ! tags" style="margin-right:40px">
         <div style="min-width:300px;max-width:400px;margin-top:28px;margin-bottom: 54px;max-height: 48px">
             <of-multi-select *ngIf="!isThereProcessGroup()"  id="opfab-process" multiSelectId="process" [parentForm]="this.parentForm" 
             [config]="processMultiSelectConfig" [options]="processMultiSelectOptions" [selectedOptions]="processSelected">

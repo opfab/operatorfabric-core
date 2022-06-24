@@ -46,7 +46,7 @@
         <tr>
           <th scope="col"></th>
           <th scope="col" style="padding-left: 5px" translate>shared.result.timeOfAction</th>
-          <th *ngIf="filtersTemplate.displayProcessGroupFilter()" scope="col" translate>shared.result.processGroup</th>
+          <th *ngIf="filtersTemplate.isProcessGroupFilterVisible()" scope="col" translate>shared.result.processGroup</th>
           <th scope="col" translate>shared.result.process</th>
           <th scope="col" translate>shared.result.title</th>
           <th scope="col" translate>shared.result.summary</th>
@@ -59,7 +59,7 @@
       <tr *ngFor="let card of results">
         <td class="opfab-logging-sev opfab-logging-sev-{{card.severity.toLowerCase()}}"></td>
         <td style="padding-left: 5px"> {{displayTime(card.publishDate)}} </td>
-        <td *ngIf="filtersTemplate.displayProcessGroupFilter()" translate>{{ processesService.findProcessGroupLabelForProcess(card.process) }}</td>
+        <td *ngIf="filtersTemplate.isProcessGroupFilterVisible()" translate>{{ processesService.findProcessGroupLabelForProcess(card.process) }}</td>
         <td>{{card.processName}}</td>
         <td>{{card.titleTranslated}}</td>
         <td>{{card.summaryTranslated}}</td>

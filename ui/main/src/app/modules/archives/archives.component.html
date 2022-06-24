@@ -45,7 +45,7 @@
           <th scope="col" translate>shared.result.businessPeriod</th>
           <th scope="col" translate>shared.result.title</th>
           <th scope="col" translate>shared.result.summary</th>
-          <th *ngIf="filtersTemplate.displayProcessGroupFilter()" scope="col" translate>shared.result.processGroup</th>
+          <th *ngIf="filtersTemplate.isProcessGroupFilterVisible()" scope="col" translate>shared.result.processGroup</th>
         </tr>
       </thead>
 
@@ -61,7 +61,7 @@
           <td> {{displayTime(updates.mostRecent.startDate)}} - {{displayTime(updates.mostRecent.endDate)}} </td>
           <td>{{updates.mostRecent.titleTranslated}}</td>
           <td>{{updates.mostRecent.summaryTranslated}}</td>
-          <td *ngIf="filtersTemplate.displayProcessGroupFilter()" translate>{{ processesService.findProcessGroupLabelForProcess(updates.mostRecent.process) }}</td>
+          <td *ngIf="filtersTemplate.isProcessGroupFilterVisible()" translate>{{ processesService.findProcessGroupLabelForProcess(updates.mostRecent.process) }}</td>
         </tr>
 
         <!--history of the card-->
@@ -74,12 +74,12 @@
             <td style="padding-left: 30px"> {{displayTime(historyCard.startDate)}} - {{displayTime(historyCard.endDate)}} </td>
             <td style="padding-left: 30px">{{historyCard.titleTranslated}}</td>
             <td style="padding-left: 30px">{{ historyCard.summaryTranslated}}</td>
-            <td style="padding-left: 30px" *ngIf="filtersTemplate.displayProcessGroupFilter()" translate>{{ processesService.findProcessGroupLabelForProcess(historyCard.process) }}</td>
+            <td style="padding-left: 30px" *ngIf="filtersTemplate.isProcessGroupFilterVisible()" translate>{{ processesService.findProcessGroupLabelForProcess(historyCard.process) }}</td>
           </tr>
           <tr *ngIf="updates.tooManyRows">
             <td colspan="3"></td>
             <td colspan="4" style="padding-left: 30px" translate>archive.tooManyRows</td>
-            <td *ngIf="filtersTemplate.displayProcessGroupFilter()"></td>
+            <td *ngIf="filtersTemplate.isProcessGroupFilterVisible()"></td>
           </tr>
         </ng-container>
       </ng-container>

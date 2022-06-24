@@ -221,7 +221,7 @@ export class LoggingComponent implements OnDestroy, OnInit {
                 lines.forEach((card: any) => {
                     this.cardPostProcessing(card);
                     // TO DO translation for old process should be done  , but loading local arrive to late , solution to find
-                    if (this.filtersTemplate.displayProcessGroupFilter())
+                    if (this.filtersTemplate.isProcessGroupFilterVisible())
                         exportArchiveData.push({
                             [severityColumnName]: Utilities.translateSeverity(this.translate, card.severity),
                             [timeOfActionColumnName]: this.dateTimeFormatter.getFormattedDateAndTimeFromEpochDate(card.publishDate),
