@@ -310,7 +310,7 @@ export class ArchivesComponent implements OnDestroy, OnInit {
                 lines.forEach((card: LightCard) => {
                     if (typeof card !== undefined) {
                         // TO DO translation for old process should be done, but loading local arrives too late, solution to find
-                        if (this.filtersTemplate.displayProcessGroupFilter())
+                        if (this.filtersTemplate.isProcessGroupFilterVisible())
                             exportArchiveData.push({
                                 [severityColumnName]: Utilities.translateSeverity(this.translate, card.severity),
                                 [publishDateColumnName]: this.dateTimeFormatter.getFormattedDateAndTimeFromEpochDate(

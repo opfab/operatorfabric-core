@@ -7,7 +7,7 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {Component, EventEmitter, Input, OnDestroy, OnInit, Output} from '@angular/core';
+import {AfterViewInit, Component, EventEmitter, Input, OnDestroy, OnInit, Output} from '@angular/core';
 import {ConfigService} from '@ofServices/config.service';
 import {Card} from '@ofModel/card.model';
 import {LightCard} from '@ofModel/light-card.model';
@@ -55,7 +55,7 @@ export const transformToTimestamp = (date: NgbDateStruct, time: NgbTimeStruct): 
     templateUrl: './archives-logging-filters.component.html',
     styleUrls: ['./archives-logging-filters.component.scss']
 })
-export class ArchivesLoggingFiltersComponent implements OnInit, OnDestroy {
+export class ArchivesLoggingFiltersComponent implements OnInit, OnDestroy, AfterViewInit {
     @Input() public card: Card | LightCard;
     @Input() parentForm: FormGroup;
     @Input() visibleProcesses: any[];
@@ -140,6 +140,11 @@ export class ArchivesLoggingFiltersComponent implements OnInit, OnDestroy {
         this.dateTimeFilterChange
             .pipe(takeUntil(this.unsubscribe$), debounceTime(1000))
             .subscribe(() => this.setDateFilterBounds());
+    }
+
+
+    ngAfterViewInit(): void {
+        this.setDateFilterBounds();
     }
 
     loadValuesForFilters() {
@@ -255,7 +260,7 @@ export class ArchivesLoggingFiltersComponent implements OnInit, OnDestroy {
         });
     }
 
-    displayProcessGroupFilter() {
+    isProcessGroupFilterVisible() : boolean {
         return !!this.processGroupMultiSelectOptions && this.processGroupMultiSelectOptions.length > 1;
     }
 
