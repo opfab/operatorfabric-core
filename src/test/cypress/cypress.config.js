@@ -16,6 +16,7 @@ module.exports = defineConfig({
     },
 
     setupNodeEvents(on, config) {
+      require('cypress-terminal-report/src/installLogsPrinter')(on);
       on('task', {
         'readXlsx': readXlsx.read,
         'list': readXlsx.list,
