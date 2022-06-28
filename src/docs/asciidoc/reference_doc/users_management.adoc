@@ -20,8 +20,8 @@ Entities::
 - can be part of another entity (or even several entities). This relationship is modeled using the "parent entity" property
 Groups::
 - represent set of users destined to receive collectively some cards.
-- has a set of perimeters to define rights for card reception in OperatorFabric.
-- can be used to model roles in organizations, for examples : supervisor, dispatcher ... 
+- has a set of perimeters to define rights for card reception in OperatorFabric (group type 'PERMISSION').
+- can be used to model roles in organizations (group type 'ROLE'), for examples : supervisor, dispatcher ... 
 
 WARNING: The user define here is an internal representation of the individual card recipient in `OperatorFabric` the authentication is leave to specific OAuth2 external service.
 
@@ -67,7 +67,7 @@ ifndef::single-page-doc[<</documentation/current/reference_doc/index.adoc#_send_
 .
 
 === Groups
-The notion of group is loose and can be used to simulate role in `OperatorFabric` (examples : supervisor, dispatcher ... ).
+The notion of group is loose and can be used to simulate role in `OperatorFabric` (examples : supervisor, dispatcher ... ) by setting group type to 'ROLE' or to define permissions on processes/states by setting the group type to 'PERMISSION'.
 Groups are used to send cards to several users without a name specifically. The information about membership to a
 group is stored in the user information. A group contains a list of perimeters which define the rights of reception/writing for a couple process/state. The rules used to send cards are described in the
 ifdef::single-page-doc[<<reception_rules, recipients section>>]

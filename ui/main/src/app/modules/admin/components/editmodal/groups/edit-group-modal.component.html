@@ -44,6 +44,12 @@
             <input formControlName="description" name="description" id="opfab-description" type="text">
           </div>
 
+          <div class="opfab-input opfab-edit-row">
+            <of-single-filter i18nRootLabelKey="admin.input.group."  [parentForm]="groupForm" filterPath="type"
+            [values]="groupTypes" placeholderKey="admin.input.selectGroupTypeText"
+            id="opfab-group-type" [translateLabels]="false"></of-single-filter>
+          </div>
+
           <div class="opfab-edit-row">
             <of-multi-select 
             id="opfab-perimeters"

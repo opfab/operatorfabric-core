@@ -21,6 +21,7 @@ import {MessageLevel} from '@ofModel/message.model';
 import {GroupsService} from '@ofServices/groups.service';
 import {debounceTime, distinctUntilChanged, first, map, switchMap} from 'rxjs/operators';
 import {MultiSelectConfig, MultiSelectOption} from '@ofModel/multiselect.model';
+import {GroupTypeEnum} from '@ofModel/group.model';
 
 @Component({
     selector: 'of-edit-group-modal',
@@ -44,13 +45,20 @@ export class EditGroupModalComponent implements OnInit {
 
     private crudService: CrudService;
 
+    groupTypes: string[];
+
     constructor(
         private store: Store<AppState>,
         private activeModal: NgbActiveModal,
         private dataHandlingService: SharingService,
         private perimetersService: PerimetersService,
         private groupsService: GroupsService
-    ) {}
+    ) {
+        this.groupTypes = [];
+        this.groupTypes.push('');
+
+        Object.values(GroupTypeEnum).forEach(t => this.groupTypes.push(t))
+    }
 
     ngOnInit() {
         const uniqueGroupIdValidator = [];
@@ -67,7 +75,8 @@ export class EditGroupModalComponent implements OnInit {
             name: new FormControl('', [Validators.required]),
             description: new FormControl(''),
             perimeters: new FormControl([]),
-            realtime: new FormControl(false)
+            realtime: new FormControl(false),
+            type: new FormControl('')
         });
 
         this.crudService = this.dataHandlingService.resolveCrudServiceDependingOnType(this.type);
@@ -76,8 +85,8 @@ export class EditGroupModalComponent implements OnInit {
             // If the modal is used for edition, initialize the modal with current data from this row
 
             // For 'simple' fields (where the value is directly displayed), we use the form's patching method
-            const {id, name, description, realtime} = this.row;
-            this.groupForm.patchValue({id, name, description, realtime}, {onlySelf: false});
+            const {id, name, description, realtime, type} = this.row;
+            this.groupForm.patchValue({id, name, description, realtime, type}, {onlySelf: false});
 
             // Otherwise, we use the selectedItems property of the of-multiselect component
             this.selectedPerimeters = this.row.perimeters;
