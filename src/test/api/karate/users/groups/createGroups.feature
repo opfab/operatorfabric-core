@@ -22,7 +22,8 @@ Feature: CreateGroups
   "id" : "groupKarate1",
   "name" : "groupKarate1 name",
   "description" : "I Love Karate",
-  "realtime" : false
+  "realtime" : false,
+  "type" : "ROLE"
 }
 """
     * def wrongGroup =
@@ -54,6 +55,7 @@ Feature: CreateGroups
     And match response.name == group.name
     And match response.id == group.id
     And match response.realtime == false
+    And match response.type == '#notpresent'
 
   Scenario: Update my group
 
@@ -67,6 +69,7 @@ Feature: CreateGroups
     And match response.name == groupUpdated.name
     And match response.id == groupUpdated.id
     And match response.realtime == groupUpdated.realtime
+    And match response.type == groupUpdated.type
 
   Scenario: create without admin role
 #Forbidden without admin role, expected response 403

@@ -280,6 +280,8 @@ describe('AdminPage', () => {
 
         cy.get('#opfab-description').type('group description');
 
+        cy.get('#opfab-group-type').find('select').select('ROLE');
+
         cy.get('#opfab-perimeters').click();
         cy.get('#opfab-perimeters').find('.vscomp-option-text').eq(1).click({force: true});
         cy.get('#opfab-perimeters').click();
@@ -295,7 +297,7 @@ describe('AdminPage', () => {
         cy.agGridCellShould('ag-grid-angular', 7, 0, 'have.text', 'testgroup');
 
         // Edit previously created group
-        cy.clickAgGridCell('ag-grid-angular', 7, 5, 'of-action-cell-renderer');
+        cy.clickAgGridCell('ag-grid-angular', 7, 6, 'of-action-cell-renderer');
 
         cy.get('of-edit-group-modal').should('exist');
 
@@ -304,12 +306,15 @@ describe('AdminPage', () => {
         cy.get('.modal-title').should('contain.text', 'testgroup');
         cy.agGridCellShould('ag-grid-angular', 7, 1, 'have.text', 'group name');
         cy.agGridCellShould('ag-grid-angular', 7, 2, 'have.text', 'group description');
-        cy.agGridCellShould('ag-grid-angular', 7, 3, 'have.text', 'cypress');
-        cy.agGridCellShould('ag-grid-angular', 7, 4, 'have.text', 'YES');
+        cy.agGridCellShould('ag-grid-angular', 7, 3, 'have.text', 'ROLE');
+        cy.agGridCellShould('ag-grid-angular', 7, 4, 'have.text', 'cypress');
+        cy.agGridCellShould('ag-grid-angular', 7, 5, 'have.text', 'YES');
 
         cy.get('#opfab-name').type(' updated');
 
         cy.get('#opfab-description').type(' updated');
+
+        cy.get('#opfab-group-type').find('select').select('PERMISSION');
 
         cy.get('#opfab-perimeters').click();
         // Deselect old perimeter
@@ -332,11 +337,12 @@ describe('AdminPage', () => {
         cy.agGridCellShould('ag-grid-angular', 7, 0, 'have.text', 'testgroup');
         cy.agGridCellShould('ag-grid-angular', 7, 1, 'have.text', 'group name updated');
         cy.agGridCellShould('ag-grid-angular', 7, 2, 'have.text', 'group description updated');
-        cy.agGridCellShould('ag-grid-angular', 7, 3, 'have.text', 'defaultProcess');
-        cy.agGridCellShould('ag-grid-angular', 7, 4, 'have.text', 'NO');
+        cy.agGridCellShould('ag-grid-angular', 7, 3, 'have.text', 'PERMISSION');
+        cy.agGridCellShould('ag-grid-angular', 7, 4, 'have.text', 'defaultProcess');
+        cy.agGridCellShould('ag-grid-angular', 7, 5, 'have.text', 'NO');
 
         // Delete previously created group
-        cy.clickAgGridCell('ag-grid-angular', 7, 6, 'of-action-cell-renderer');
+        cy.clickAgGridCell('ag-grid-angular', 7, 7, 'of-action-cell-renderer');
 
         cy.get('of-confirmation-dialog').should('exist');
 

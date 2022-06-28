@@ -12,6 +12,12 @@ export class Group {
         readonly id: string,
         readonly name: string,
         readonly description: string,
-        readonly realtime?: boolean
+        readonly realtime?: boolean,
+        readonly type?: GroupTypeEnum
     ) {}
+}
+
+export enum GroupTypeEnum {
+    ROLE = 'ROLE',
+    PERMISSION = 'PERMISSION'
 }

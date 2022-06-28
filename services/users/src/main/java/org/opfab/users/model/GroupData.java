@@ -35,6 +35,7 @@ public class GroupData implements Group {
     @Id
     private String id;
     private String name;
+    private GroupTypeEnum type;
     private String description;
 
     @JsonIgnore
