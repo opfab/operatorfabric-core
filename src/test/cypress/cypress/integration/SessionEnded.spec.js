@@ -65,6 +65,7 @@ describe('Session ended test', function () {
 
     cy.logoutOpFab();
     cy.loginWithClock();
+    cy.tick(1);
     cy.stubPlaySound();
     cy.waitDefaultTime(); // wait for configuration load end (in SoundNotificationService.ts)  
     
