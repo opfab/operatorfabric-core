@@ -340,6 +340,7 @@ export class ArchivesLoggingFiltersComponent implements OnInit, OnDestroy, After
         this.publishMaxDate = null;
         this.activeMinDate = null;
         this.activeMaxDate = null;
+        this.setDateFilterBounds();
         this.reset.emit(null);
     }
 
