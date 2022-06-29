@@ -9,9 +9,18 @@
 
 describe ('Logging screen tests',function () {
 
+    function checkLoadingSpinnerIsDisplayed() {
+        cy.get('#opfab-loading-spinner').should('exist');
+    }
+
+    function checkLoadingSpinnerIsNotDisplayed() {
+        cy.get('#opfab-loading-spinner').should('not.exist');
+    }
+
     before('Set up configuration', function () {
         cy.loadTestConf();
     });
+
 
     it('Check composition of multi-filters for process groups/processes/states for operator1_fr', function () {
         cy.loginOpFab('operator1_fr', 'test');
@@ -271,4 +280,22 @@ describe ('Logging screen tests',function () {
             })
         })
     })
+
+
+    it ('Check spinner is displayed when request is delayed and that spinner disappears once the request arrived ', function () {
+        cy.delayRequestResponse('/cards/archives');
+
+        cy.loginOpFab('operator1_fr','test');
+
+        // We move to logging screen
+        cy.get('#opfab-navbar-menu-logging').click();
+        cy.waitDefaultTime();
+
+        // We click the search button
+        cy.get('#opfab-archives-logging-btn-search').click();
+
+        checkLoadingSpinnerIsDisplayed();
+        checkLoadingSpinnerIsNotDisplayed();
+    })
+    
 })

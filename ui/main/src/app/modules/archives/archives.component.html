@@ -27,7 +27,7 @@
 
 
 <div style="height:2%"> </div>
-<div *ngIf="!loadingIsTakingMoreThanOneSecond && hasResult && !technicalError" style="margin-left:5%; margin-right:5%">
+<div *ngIf="!loadingInProgress && hasResult && !technicalError" style="margin-left:5%; margin-right:5%">
   <div style="display:flex; justify-content:flex-start;">
     <label id="opfab-archives-collapsible-updates" style="font-weight:bold; margin-left:5px" class="opfab-checkbox" translate>archive.collapsibleUpdates
       <input type="checkbox" (click)="toggleCollapsibleUpdates()" [checked]="isCollapsibleUpdatesActivated" >
@@ -112,18 +112,7 @@
 <div *ngIf="technicalError" style="text-align: center;font-size: 20px;" translate> shared.error.technicalError
 </div>
 
-<div *ngIf="loadingIsTakingMoreThanOneSecond">
-
-  <div class="opfab-card-loading-spinner" id="opfab-loading-spinner">
-  <em  class="fas fa-spinner fa-spin opfab-slow-spinner" ></em>
-  </div>
-  <div style="text-align: center;font-size:16px;font-weight: bold;margin-top:10px" translate>
-      archive.loadingInProgress
-  </div>
-
-  <br/>
-  <br/>
-</div>
+<of-spinner *ngIf="loadingInProgress" loadingText="archive.loadingInProgress"></of-spinner>
 
 <ng-template #cardDetail let-modal>
   <div class="modal-header">

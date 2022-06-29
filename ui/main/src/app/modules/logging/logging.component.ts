@@ -24,6 +24,7 @@ import {ArchivesLoggingFiltersComponent} from '../share/archives-logging-filters
 import {EntitiesService} from '@ofServices/entities.service';
 import {Utilities} from 'app/common/utilities';
 import {NgbModal, NgbModalOptions, NgbModalRef} from '@ng-bootstrap/ng-bootstrap';
+import { SpinnerComponent } from '../share/spinner/spinner.component';
 
 @Component({
     selector: 'of-logging',
@@ -43,7 +44,6 @@ export class LoggingComponent implements OnDestroy, OnInit {
     hasResult = false;
     firstQueryHasBeenDone = false;
     loadingInProgress = false;
-    loadingIsTakingMoreThanOneSecond = false;
     technicalError = false;
 
     processStateDescription = new Map();
@@ -55,6 +55,7 @@ export class LoggingComponent implements OnDestroy, OnInit {
 
     modalRef: NgbModalRef;
     @ViewChild('exportInProgress') exportTemplate: ElementRef;
+    @ViewChild('spinner') customSpinner: SpinnerComponent;
 
     listOfProcessesForFilter = [];
     listOfProcessesForRequest = [];
@@ -120,7 +121,6 @@ export class LoggingComponent implements OnDestroy, OnInit {
     sendQuery(page_number): void {
         this.technicalError = false;
         this.loadingInProgress = true;
-        this.checkIfLoadingIsTakingMoreThanOneSecond();
 
         const {value} = this.loggingForm;
         this.filtersTemplate.transformFiltersListToMap(value);
@@ -136,7 +136,6 @@ export class LoggingComponent implements OnDestroy, OnInit {
             .subscribe({
                 next: (page: Page<any>) => {
                     this.loadingInProgress = false;
-                    this.loadingIsTakingMoreThanOneSecond = false;
 
                     this.resultsNumber = page.totalElements;
                     this.currentPage = page_number + 1; // page on ngb-pagination component start at 1 , and page on backend start at 0
@@ -155,11 +154,6 @@ export class LoggingComponent implements OnDestroy, OnInit {
             });
     }
 
-    private checkIfLoadingIsTakingMoreThanOneSecond() {
-        setTimeout(() => {
-            this.loadingIsTakingMoreThanOneSecond = this.loadingInProgress;
-        }, 1000);
-    }
 
     cardPostProcessing(card) {
         const isThirdPartyPublisher = card.publisherType === 'EXTERNAL';

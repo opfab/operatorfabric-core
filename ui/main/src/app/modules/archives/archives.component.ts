@@ -28,6 +28,7 @@ import {Card, CardData} from '@ofModel/card.model';
 import {ArchivesLoggingFiltersComponent} from '../share/archives-logging-filters/archives-logging-filters.component';
 import {EntitiesService} from '@ofServices/entities.service';
 import {DisplayContext} from '@ofModel/templateGateway.model';
+import { SpinnerComponent } from '../share/spinner/spinner.component';
 
 @Component({
     selector: 'of-archives',
@@ -54,7 +55,6 @@ export class ArchivesComponent implements OnDestroy, OnInit {
     hasResult = false;
     firstQueryHasBeenDone = false;
     loadingInProgress = false;
-    loadingIsTakingMoreThanOneSecond = false;
     cardLoadingInProgress = false;
     cardLoadingIsTakingMoreThanOneSecond = false;
     isCollapsibleUpdatesActivated = false;
@@ -66,6 +66,8 @@ export class ArchivesComponent implements OnDestroy, OnInit {
     @ViewChild('cardLoadingInProgress') cardLoadingTemplate: ElementRef;
     @ViewChild('exportInProgress') exportTemplate: ElementRef;
     @ViewChild('filters') filtersTemplate: ArchivesLoggingFiltersComponent;
+    @ViewChild('spinner') customSpinner: SpinnerComponent;
+
     selectedCard: Card;
     selectedChildCards: Card[];
     fromEntityOrRepresentativeSelectedCard = null;
@@ -145,7 +147,6 @@ export class ArchivesComponent implements OnDestroy, OnInit {
         this.technicalError = false;
         this.loadingInProgress = true;
 
-        this.checkForArchiveLoadingInProgressForMoreThanOneSecond();
         const {value} = this.archiveForm;
         this.filtersTemplate.transformFiltersListToMap(value);
         this.filtersTemplate.filters.set('size', [this.size.toString()]);
@@ -168,7 +169,6 @@ export class ArchivesComponent implements OnDestroy, OnInit {
                         this.loadUpdatesByCardId(requestID);
                     } else {
                         this.loadingInProgress = false;
-                        this.loadingIsTakingMoreThanOneSecond = false;
                         this.updatesByCardId = [];
                         this.results.forEach((lightCard) => {
                             this.updatesByCardId.push({
@@ -186,13 +186,6 @@ export class ArchivesComponent implements OnDestroy, OnInit {
                     this.technicalError = true;
                 }
             });
-    }
-
-    // we show a spinner on screen if archives loading takes more than 1 second
-    private checkForArchiveLoadingInProgressForMoreThanOneSecond() {
-        setTimeout(() => {
-            this.loadingIsTakingMoreThanOneSecond = this.loadingInProgress;
-        }, 1000);
     }
 
     // we show a spinner on screen if archives loading takes more than 1 second
@@ -228,7 +221,6 @@ export class ArchivesComponent implements OnDestroy, OnInit {
 
         Utilities.subscribeAndWaitForAllObservablesToEmitAnEvent(updatesRequests$).subscribe(() => {
             this.loadingInProgress = false;
-            this.loadingIsTakingMoreThanOneSecond = false;
         });
     }
 

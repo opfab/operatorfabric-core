@@ -42,6 +42,7 @@ import {ApplicationLoadingComponent} from './modules/core/application-loading/ap
 import {ReloadRequiredComponent} from './modules/core/reload-required/reload-required.component';
 import {ServiceWorkerModule, SwRegistrationOptions} from '@angular/service-worker';
 import {Utilities} from './common/utilities';
+import { SpinnerModule } from './modules/share/spinner/spinner.module';
 
 @NgModule({
     imports: [
@@ -56,6 +57,7 @@ import {Utilities} from './common/utilities';
         StateModule.forRoot(),
         NgbModule,
         TranslateModule.forRoot(),
+        SpinnerModule,
         ArchivesModule,
         LoggingModule,
         MonitoringModule,

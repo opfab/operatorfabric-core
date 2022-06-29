@@ -95,6 +95,14 @@ Cypress.Commands.add('loadEmptyProcessGroups', () => {
     cy.exec('cd ../resources/processGroups && ./loadProcessGroups.sh emptyProcessGroups.json '+Cypress.env('host'));
 })
 
+Cypress.Commands.add('delayRequestResponse', (url, delayTime=2000) => {
+        cy.intercept(url + '/*', (req) => {
+            req.reply((res) => {
+                res.delay = delayTime;
+            });
+        });
+})
+
 Cypress.Commands.add('send6TestCards', () => {
     cy.exec('cd .. && ./resources/send6TestCards.sh ' + Cypress.env('host'));
 })

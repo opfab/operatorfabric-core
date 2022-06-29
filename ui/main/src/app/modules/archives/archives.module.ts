@@ -18,6 +18,7 @@ import {DatetimeFilterModule} from '../share/datetime-filter/datetime-filter.mod
 import {CardDetailModule} from 'app/modules/share/card-detail/card-detail.module';
 import {ArchivesEntryPointComponent} from './archives-entry-point.component';
 import {ArchivesLoggingFiltersModule} from '../share/archives-logging-filters/archives-logging-filters.module';
+import { SpinnerModule } from '../share/spinner/spinner.module';
 
 @NgModule({
     imports: [
@@ -29,7 +30,8 @@ import {ArchivesLoggingFiltersModule} from '../share/archives-logging-filters/ar
         NgbModule,
         DatetimeFilterModule,
         CardDetailModule,
-        ArchivesLoggingFiltersModule
+        ArchivesLoggingFiltersModule,
+        SpinnerModule
     ],
     declarations: [ArchivesComponent, ArchivesEntryPointComponent]
 })
