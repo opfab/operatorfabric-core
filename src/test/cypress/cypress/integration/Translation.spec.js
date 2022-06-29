@@ -179,12 +179,16 @@ describe('Test translations', function () {
         cy.get('#opfab-feed-filter-ack-notack-label').should('have.text', notAcknowledgedText);
     }
 
-    function checkDateFilterTexts(dateTitle, startText, endText, applyToTimelineText, resetText) {
+    function checkDateFilterTexts(dateTitle, startText, endText, applyToTimelineText) {
         cy.get('#opfab-feed-filter-date-title').should('have.text', dateTitle);
         checkLabel('#opfab-feed-filter-dateTimeFrom', startText);
         checkLabel('#opfab-feed-filter-dateTimeTo', endText);
-
         cy.get('#opfab-timeline-filter-form').should('have.text', applyToTimelineText);
+    }
+
+
+    function checkResetText(resetText) {
+        cy.get('#opfab-feed-filter-reset').find('span').should('have.text', resetText);
     }
 
     function checkLabel(labelId, labelText) {
@@ -317,23 +321,30 @@ describe('Test translations', function () {
         changeLanguage(ENGLISH);
         cy.get('#opfab-navbar-menu-feed').click();
         cy.get('#opfab-feed-filter-btn-filter').click();
+
         checkNotificationSeverityTexts('Alarm', 'Action', 'Compliant', 'Information');
         checkAknowledgementTexts('Acknowledgement', 'All', 'Acknowledged', 'Not acknowledged');
-        checkDateFilterTexts('Receipt date', 'START', 'END', 'Apply filters to timeline', 'Reset');
+        checkDateFilterTexts('Receipt date', 'START', 'END', 'Apply filters to timeline');
+        
+        // Select 'All' on Acknowledgement filter to show the "Reset" link
+        cy.get('#opfab-feed-filter-ack-all').click();
+        checkResetText('Reset');
 
         changeLanguage(FRENCH);
         cy.get('#opfab-navbar-menu-feed').click();
-        cy.get('#opfab-feed-filter-btn-filter').click()
+        cy.get('#opfab-feed-filter-btn-filter').click();
         checkNotificationSeverityTexts('Alarme', 'Action', 'Conforme', 'Information');
         checkAknowledgementTexts('Acquittement', 'Toutes', 'Acquittées', 'Non acquittées');
-        checkDateFilterTexts('Date de réception', 'DÉBUT', 'FIN', 'Appliquer les filtres à la timeline', 'Réinitialiser');
+        checkDateFilterTexts('Date de réception', 'DÉBUT', 'FIN', 'Appliquer les filtres à la timeline');
+        checkResetText('Réinitialiser');
 
         changeLanguage(DUTCH);
         cy.get('#opfab-navbar-menu-feed').click();
-        cy.get('#opfab-feed-filter-btn-filter').click()
+        cy.get('#opfab-feed-filter-btn-filter').click();
         checkNotificationSeverityTexts('Alarm', 'Actie', 'Conform', 'Informatie');
         checkAknowledgementTexts('Bevestigen', 'Alles', 'Bevestigd', 'Niet bevestigd');
-        checkDateFilterTexts('Ontvangstdatum', 'START', 'EIND', 'Filters toepassen op tijdlijn', 'Opnieuw installen');
+        checkDateFilterTexts('Ontvangstdatum', 'START', 'EIND', 'Filters toepassen op tijdlijn');
+        checkResetText('Opnieuw instellen');
     });
 
     it('Check translation for non-existent card', function () {
