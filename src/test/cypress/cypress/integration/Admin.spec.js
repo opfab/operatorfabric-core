@@ -26,8 +26,8 @@ describe('AdminPage', () => {
         // Check first page has 10 rows
         cy.countAgGridTableRows('ag-grid-angular', 10);
 
-        // Pagination should display ' Results number  : 12 '
-        cy.get('.opfab-pagination').should('contain.text', ' Results number  : 12');
+        // Pagination should display ' Results number  : 13 '
+        cy.get('.opfab-pagination').should('contain.text', ' Results number  : 13');
 
         // Add new user
         cy.get('#add-item').click();
@@ -55,26 +55,26 @@ describe('AdminPage', () => {
 
         cy.get('#opfab-admin-user-btn-add').click();
 
-        cy.get('.opfab-pagination').should('contain.text', ' Results number  : 13');
+        cy.get('.opfab-pagination').should('contain.text', ' Results number  : 14');
 
         cy.get('ngb-pagination').find('.page-link').eq(2).click();
 
-        cy.countAgGridTableRows('ag-grid-angular', 3);
+        cy.countAgGridTableRows('ag-grid-angular', 4);
 
-        cy.agGridCellShould('ag-grid-angular', 2, 0, 'have.text', 'testuser');
+        cy.agGridCellShould('ag-grid-angular', 3, 0, 'have.text', 'testuser');
 
         // Edit previously created user
-        cy.clickAgGridCell('ag-grid-angular', 2, 5, 'of-action-cell-renderer');
+        cy.clickAgGridCell('ag-grid-angular', 3, 5, 'of-action-cell-renderer');
 
         cy.get('of-edit-user-modal').should('exist');
 
         cy.get('#opfab-login').should('not.exist');
 
         cy.get('.modal-title').should('contain.text', 'testuser');
-        cy.agGridCellShould('ag-grid-angular', 2, 1, 'have.text', 'name');
-        cy.agGridCellShould('ag-grid-angular', 2, 2, 'have.text', 'surname');
-        cy.agGridCellShould('ag-grid-angular', 2, 3, 'have.text', 'Dispatcher');
-        cy.agGridCellShould('ag-grid-angular', 2, 4, 'have.text', 'Control Center FR North');
+        cy.agGridCellShould('ag-grid-angular', 3, 1, 'have.text', 'name');
+        cy.agGridCellShould('ag-grid-angular', 3, 2, 'have.text', 'surname');
+        cy.agGridCellShould('ag-grid-angular', 3, 3, 'have.text', 'Dispatcher');
+        cy.agGridCellShould('ag-grid-angular', 3, 4, 'have.text', 'Control Center FR North');
 
         cy.get('#opfab-firstName').type(' updated');
 
@@ -97,20 +97,20 @@ describe('AdminPage', () => {
         cy.get('#opfab-admin-user-btn-save').click();
 
         // Check user is updated
-        cy.get('.opfab-pagination').should('contain.text', ' Results number  : 13');
+        cy.get('.opfab-pagination').should('contain.text', ' Results number  : 14');
 
         cy.get('ngb-pagination').find('.page-link').eq(2).click();
 
-        cy.countAgGridTableRows('ag-grid-angular', 3);
+        cy.countAgGridTableRows('ag-grid-angular', 4);
 
-        cy.agGridCellShould('ag-grid-angular', 2, 0, 'have.text', 'testuser');
-        cy.agGridCellShould('ag-grid-angular', 2, 1, 'have.text', 'name updated');
-        cy.agGridCellShould('ag-grid-angular', 2, 2, 'have.text', 'surname updated');
-        cy.agGridCellShould('ag-grid-angular', 2, 3, 'have.text', 'Manager');
-        cy.agGridCellShould('ag-grid-angular', 2, 4, 'have.text', 'Control Center FR South');
+        cy.agGridCellShould('ag-grid-angular', 3, 0, 'have.text', 'testuser');
+        cy.agGridCellShould('ag-grid-angular', 3, 1, 'have.text', 'name updated');
+        cy.agGridCellShould('ag-grid-angular', 3, 2, 'have.text', 'surname updated');
+        cy.agGridCellShould('ag-grid-angular', 3, 3, 'have.text', 'Manager');
+        cy.agGridCellShould('ag-grid-angular', 3, 4, 'have.text', 'Control Center FR South');
 
         // Delete previously created user
-        cy.clickAgGridCell('ag-grid-angular', 2, 6, 'of-action-cell-renderer');
+        cy.clickAgGridCell('ag-grid-angular', 3, 6, 'of-action-cell-renderer');
 
         cy.get('of-confirmation-dialog').should('exist');
 
@@ -119,9 +119,9 @@ describe('AdminPage', () => {
         cy.waitDefaultTime();
 
         //Check user was deleted
-        cy.get('.opfab-pagination').should('contain.text', ' Results number  : 12');
+        cy.get('.opfab-pagination').should('contain.text', ' Results number  : 13');
 
-        cy.countAgGridTableRows('ag-grid-angular', 2);
+        cy.countAgGridTableRows('ag-grid-angular', 3);
     });
 
     it('List, add, edit, delete entities', () => {

@@ -25,15 +25,20 @@ export class ProcessStatesMultiSelectOptionsService {
         private translate: TranslateService
     ) {}
 
-    getStatesMultiSelectOptionsPerProcess(hideChildStates: boolean): any[] {
+    getStatesMultiSelectOptionsPerProcess(isAdminMode: boolean, hideChildStates: boolean): any[] {
         const statesMultiSelectOptionsPerProcess: Array<MultiSelectOption> = [];
         this.processesService.getAllProcesses().forEach((process) => {
             const stateOptions = new MultiSelectOption(process.id, process.name);
             stateOptions.options = [];
             for (const state in process.states) {
                 if (
-                    !(hideChildStates && process.states[state].isOnlyAChildState) &&
-                    this.userService.isReceiveRightsForProcessAndState(process.id, state)
+                    this.doesStateHaveToBeDisplayedInFilters(
+                        hideChildStates,
+                        process.states[state].isOnlyAChildState,
+                        process.id,
+                        state,
+                        isAdminMode
+                    )
                 ) {
                     stateOptions.options.push(
                         new MultiSelectOption(process.id + '.' + state, process.states[state].name)
@@ -45,26 +50,46 @@ export class ProcessStatesMultiSelectOptionsService {
         return statesMultiSelectOptionsPerProcess;
     }
 
-    getProcessesWithoutProcessGroupMultiSelectOptions(processesFilter?: string[]): any[] {
+    private doesStateHaveToBeDisplayedInFilters(
+        hideChildStates: boolean,
+        isOnlyAChildState: boolean,
+        processId: string,
+        stateId: string,
+        isAdminMode: boolean
+    ): boolean {
+        return (
+            !(hideChildStates && isOnlyAChildState) &&
+            (isAdminMode || this.userService.isReceiveRightsForProcessAndState(processId, stateId))
+        );
+    }
+
+    getProcessesWithoutProcessGroupMultiSelectOptions(isAdminMode: boolean, processesFilter?: string[]): any[] {
         const processesWithoutProcessGroupMultiSelectOptions: Array<MultiSelectOption> = [];
 
         this.processesService.getProcessesWithoutProcessGroup(processesFilter).forEach((process) => {
-            if (this.userService.isReceiveRightsForProcess(process.id))
+            if (isAdminMode || this.userService.isReceiveRightsForProcess(process.id))
                 processesWithoutProcessGroupMultiSelectOptions.push(new MultiSelectOption(process.id, process.name));
         });
         return processesWithoutProcessGroupMultiSelectOptions;
     }
 
-    getProcessesMultiSelectOptionsPerProcessGroup(processesFilter?: string[]): Map<string, any[]> {
+    getProcessesMultiSelectOptionsPerProcessGroup(
+        isAdminMode: boolean,
+        processesFilter?: string[]
+    ): Map<string, any[]> {
         const processMultiSelectOptionsPerProcessGroups =
             this.processesService.getProcessesPerProcessGroups(processesFilter);
 
         processMultiSelectOptionsPerProcessGroups.forEach((processList, processGroupId) => {
-            processList = processList.filter((processData) =>
-                this.userService.isReceiveRightsForProcess(processData.value)
-            );
-            if (!processList.length) processMultiSelectOptionsPerProcessGroups.delete(processGroupId);
-            else {
+            if (!isAdminMode) {
+                processList = processList.filter((processData) =>
+                    this.userService.isReceiveRightsForProcess(processData.value)
+                );
+            }
+
+            if (!processList.length) {
+                processMultiSelectOptionsPerProcessGroups.delete(processGroupId);
+            } else {
                 const options: Array<MultiSelectOption> = [];
                 processList.forEach((process) => options.push(new MultiSelectOption(process.value, process.label)));
                 processMultiSelectOptionsPerProcessGroups.set(processGroupId, options);

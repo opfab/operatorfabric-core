@@ -18,23 +18,25 @@ describe('Archives screen tests', function () {
         cy.loginOpFab('operator1_fr', 'test');
         moveToArchivesScreen();
         cy.waitDefaultTime();
-        clickOnSearchButton();
+        cy.checkAdminModeCheckboxDoesNotExist();
+        cy.checkAdminModeLinkDoesNotExist();
+        cy.clickOnSearchButton();
         checkNumberOfLineDisplayedIs(6);
-        checkNoCardDetailIsDisplayed();
+        cy.checkNoCardDetailIsDisplayed();
         checkPaginationResultsNumberIs(6);
 
-        // We delete the test cards and we check that we still have the corresponding archived cards
+        // We delete the test cards, and we check that we still have the corresponding archived cards
         cy.deleteAllCards();
-        clickOnSearchButton();
+        cy.clickOnSearchButton();
         checkNumberOfLineDisplayedIs(6);
-        checkNoCardDetailIsDisplayed();
+        cy.checkNoCardDetailIsDisplayed();
         checkPaginationResultsNumberIs(6);
 
         cy.send6TestCards();
-        clickOnSearchButton();
+        cy.clickOnSearchButton();
         checkNumberOfLineDisplayedIs(10);
 
-        checkNoCardDetailIsDisplayed();
+        cy.checkNoCardDetailIsDisplayed();
         checkPaginationResultsNumberIs(12);
     });
 
@@ -46,7 +48,7 @@ describe('Archives screen tests', function () {
         cy.loginOpFab('operator1_fr', 'test');
         moveToArchivesScreen();
 
-        clickOnSearchButton();
+        cy.clickOnSearchButton();
         checkNumberOfLineDisplayedIs(10);
         checkPaginationResultsNumberIs(12);
         checkNoPlusIconIsDisplayed();
@@ -55,7 +57,7 @@ describe('Archives screen tests', function () {
         clickOnCollapsibleUpdates();
         checkNumberOfLineDisplayedIs(6);
         checkNumberOfPlusIconDisplayedIs(6);
-        checkNoCardDetailIsDisplayed();
+        cy.checkNoCardDetailIsDisplayed();
         checkPaginationResultsNumberIs(6);
 
         clickOnFirstPlusIcon();
@@ -78,7 +80,7 @@ describe('Archives screen tests', function () {
         cy.loginOpFab('operator1_fr', 'test');
         moveToArchivesScreen();
         cy.waitDefaultTime();
-        clickOnSearchButton();
+        cy.clickOnSearchButton();
         cy.checkLoadingSpinnerIsDisplayed();
         cy.checkLoadingSpinnerIsNotDisplayed();
         checkNumberOfLineDisplayedIs(6);
@@ -88,114 +90,101 @@ describe('Archives screen tests', function () {
         cy.loginOpFab('operator1_fr', 'test');
         moveToArchivesScreen();
 
-        // We check we have 6 items in process multi-filter, even without choosing a process group
-        clickOnProcessSelect();
-        checkNumberOfProcessEntriesIs(6);
-        checkProcessSelectContains('Conference and IT incident');
-        checkProcessSelectContains('Message or question');
-        checkProcessSelectContains('Task');
-        checkProcessSelectContains('IGCC');
-        checkProcessSelectContains('Process example');
-        checkProcessSelectContains('Test process for cypress');
+        checkMultifiltersWhenAllProcessStatesAreDisplayed();
 
-        clickOnProcessGroupSelect();
-        checkNumberOfProcessGroupEntriesIs(3);
-        checkProcessGroupSelectContains('--');
-        checkProcessGroupSelectContains('Base Examples');
-        checkProcessGroupSelectContains('User card examples');
-        selectAllProcessGroups();
-
-        clickOnProcessSelect();
-        checkNumberOfProcessEntriesIs(6);
-        checkProcessSelectContains('Conference and IT incident');
-        checkProcessSelectContains('Message or question');
-        checkProcessSelectContains('Task');
-        checkProcessSelectContains('IGCC');
-        checkProcessSelectContains('Process example');
-        checkProcessSelectContains('Test process for cypress');
-        selectAllProcesses();
-        clickOnProcessSelect();
-
-        clickOnStateSelect();
-        selectAllStates();
-        checkNumberOfStateSelectedIs(31);
         // We check this state is not present because it is only a child state
-        checkStateSelectDoesNotContains('Planned outage date response');
+        cy.checkStateSelectDoesNotContains('Planned outage date response');
     });
 
     it('Check composition of multi-filters for process groups/processes/states for itsupervisor1', function () {
+        cy.deleteAllArchivedCards();
+        cy.send6TestCards();
         cy.loginOpFab('itsupervisor1', 'test');
         moveToArchivesScreen();
 
-        // We check we have 5 items in process multi-filter, even without choosing a process group
-        clickOnProcessSelect();
-        checkNumberOfProcessEntriesIs(5);
-        checkProcessSelectContains('Conference and IT incident');
-        checkProcessSelectContains('Message or question');
-        checkProcessSelectContains('Task');
-        checkProcessSelectContains('IGCC');
-        checkProcessSelectContains('Process example');
+        cy.checkAdminModeLinkDoesNotExist();
+        cy.checkAdminModeCheckboxIsDisplayed();
+        cy.checkAdminModeCheckboxIsNotChecked();
 
-        clickOnProcessGroupSelect();
-        checkNumberOfProcessGroupEntriesIs(2);
-        checkProcessGroupSelectContains('Base Examples');
-        checkProcessGroupSelectContains('User card examples');
-        selectAllProcessGroups();
+        checkMultifiltersForNotAdminModeForItsupervisor1();
 
-        clickOnProcessSelect();
-        checkNumberOfProcessEntriesIs(5);
-        checkProcessSelectContains('Conference and IT incident');
-        checkProcessSelectContains('Message or question');
-        checkProcessSelectContains('Task');
-        checkProcessSelectContains('IGCC');
-        checkProcessSelectContains('Process example');
-        selectAllProcesses();
-        clickOnProcessSelect();
+        cy.clickOnSearchButton();
+        checkNumberOfLineDisplayedIs(1);
 
-        clickOnStateSelect();
-        selectAllStates();
-        checkNumberOfStateSelectedIs(13);
+        // We activate the admin mode
+        cy.clickAdminModeCheckbox();
+        cy.checkAdminModeCheckboxIsChecked();
 
-        clickOnProcessSelect();
-        unselectAllProcesses();
-        selectProcess('Process example');
-        clickOnProcessSelect();
-        clickOnStateSelect();
-        checkNumberOfStateEntriesIs(2);
-        checkStateSelectContains('Action Required');
+        checkMultifiltersWhenAllProcessStatesAreDisplayed();
+
+        cy.clickOnSearchButton();
+        checkNumberOfLineDisplayedIs(6);
+
+        openAndCheckArchiveCardContent('Electricity consumption forecast', 'Daily electrical consumption forecast');
+
+        // We deactivate the admin mode
+        cy.clickAdminModeCheckbox();
+        cy.checkAdminModeCheckboxIsNotChecked();
+
+        checkMultifiltersForNotAdminModeForItsupervisor1();
     });
 
     it('Check composition of multi-filters for process groups/processes/states for admin', function () {
         cy.loginOpFab('admin', 'test');
         moveToArchivesScreen();
-        checkProcessGroupSelectDoesNotExist();
-        checkProcessSelectDoesNotExist();
-        checkStateSelectDoesNotExist();
-        checkNoProcessStateMessageIsDisplayed();
+        cy.checkProcessGroupSelectDoesNotExist();
+        cy.checkProcessSelectDoesNotExist();
+        cy.checkStateSelectDoesNotExist();
+        cy.checkNoProcessStateMessageIsDisplayed();
+
+        cy.checkAdminModeCheckboxDoesNotExist();
+        cy.checkAdminModeLinkIsDisplayed();
+
+        // We activate the admin mode
+        cy.clickAdminModeLink();
+
+        cy.checkAdminModeCheckboxIsDisplayed();
+        cy.checkAdminModeCheckboxIsChecked();
+
+        checkMultifiltersWhenAllProcessStatesAreDisplayed();
+
+        cy.clickOnSearchButton();
+        checkNumberOfLineDisplayedIs(6);
+
+        openAndCheckArchiveCardContent('Electricity consumption forecast', 'Daily electrical consumption forecast');
+
+        // We deactivate the admin mode
+        cy.clickAdminModeCheckbox();
+
+        cy.checkNoProcessStateMessageIsDisplayed();
+        cy.checkAdminModeCheckboxDoesNotExist();
+        cy.checkAdminModeLinkIsDisplayed();
     });
 
     it('Check composition of multi-filters for process groups/processes/states for operator1_fr, with a config without process group', function () {
         cy.loadEmptyProcessGroups();
         cy.loginOpFab('operator1_fr', 'test');
         moveToArchivesScreen();
-        checkProcessGroupSelectDoesNotExist();
+        cy.checkProcessGroupSelectDoesNotExist();
+        cy.checkAdminModeCheckboxDoesNotExist();
+        cy.checkAdminModeLinkDoesNotExist();
 
-        clickOnProcessSelect();
-        checkNumberOfProcessEntriesIs(6);
-        checkProcessSelectContains('Conference and IT incident');
-        checkProcessSelectContains('Message or question');
-        checkProcessSelectContains('Task');
-        checkProcessSelectContains('IGCC');
-        checkProcessSelectContains('Process example');
-        checkProcessSelectContains('Test process for cypress');
-        selectAllProcesses();
-        clickOnProcessSelect();
+        cy.clickOnProcessSelect();
+        cy.checkNumberOfProcessEntriesIs(6);
+        cy.checkProcessSelectContains('Conference and IT incident');
+        cy.checkProcessSelectContains('Message or question');
+        cy.checkProcessSelectContains('Task');
+        cy.checkProcessSelectContains('IGCC');
+        cy.checkProcessSelectContains('Process example');
+        cy.checkProcessSelectContains('Test process for cypress');
+        cy.selectAllProcesses();
+        cy.clickOnProcessSelect();
 
-        clickOnStateSelect();
-        selectAllStates();
-        checkNumberOfStateSelectedIs(31);
+        cy.clickOnStateSelect();
+        cy.selectAllStates();
+        cy.checkNumberOfStateSelectedIs(31);
         // We check this state is not present because it is only a child state
-        checkStateSelectDoesNotContains('Planned outage date response');
+        cy.checkStateSelectDoesNotContains('Planned outage date response');
 
         cy.loadTestConf();
     });
@@ -204,25 +193,37 @@ describe('Archives screen tests', function () {
         cy.loginOpFab('operator1_fr', 'test');
         moveToArchivesScreen();
 
-        clickOnProcessGroupSelect();
-        selectAllProcessGroups();
+        cy.clickOnProcessGroupSelect();
+        cy.selectAllProcessGroups();
 
-        clickOnProcessSelect();
-        selectProcess('Process example');
-        clickOnProcessSelect();
+        cy.clickOnProcessSelect();
+        cy.selectProcess('Process example');
+        cy.clickOnProcessSelect();
 
-        clickOnStateSelect();
-        checkNumberOfStateEntriesIs(8);
-        checkStateSelectContains('Process example');
-        checkStateSelectContains('Message');
-        checkStateSelectContains('Data quality');
-        checkStateSelectContains('Electricity consumption forecast');
-        checkStateSelectContains('Action Required');
-        checkStateSelectContains('Additional information required');
-        checkStateSelectContains('Network Contingencies');
+        cy.clickOnStateSelect();
+        cy.checkNumberOfStateEntriesIs(8);
+        cy.checkStateSelectContains('Process example');
+        cy.checkStateSelectContains('Message');
+        cy.checkStateSelectContains('Data quality');
+        cy.checkStateSelectContains('Electricity consumption forecast');
+        cy.checkStateSelectContains('Action Required');
+        cy.checkStateSelectContains('Additional information required');
+        cy.checkStateSelectContains('Network Contingencies');
         // 'Planned outage date response' shall not be displayed
         // because 'isOnlyAChildState' attribute is set to true for this state
-        checkStateSelectDoesNotContains('Planned outage date response');
+        cy.checkStateSelectDoesNotContains('Planned outage date response');
+    });
+
+    it('Check composition of multi-filters for operator6_fr (no rights on process/state and not member of ADMIN group)', function () {
+        cy.loginOpFab('operator6_fr', 'test');
+        moveToArchivesScreen();
+        cy.checkProcessGroupSelectDoesNotExist();
+        cy.checkProcessSelectDoesNotExist();
+        cy.checkStateSelectDoesNotExist();
+        cy.checkNoProcessStateMessageIsDisplayed();
+
+        cy.checkAdminModeCheckboxDoesNotExist();
+        cy.checkAdminModeLinkDoesNotExist();
     });
 
     it('Check export', function () {
@@ -231,7 +232,7 @@ describe('Archives screen tests', function () {
         cy.send6TestCards();
         cy.loginOpFab('operator1_fr', 'test');
         moveToArchivesScreen();
-        clickOnSearchButton();
+        cy.clickOnSearchButton();
 
         clickOnCollapsibleUpdates();
         checkNumberOfLineDisplayedIs(6);
@@ -347,10 +348,6 @@ describe('Archives screen tests', function () {
         cy.get('#opfab-navbar-menu-archives').click();
     }
 
-    function clickOnSearchButton() {
-        cy.get('#opfab-archives-logging-btn-search').click();
-    }
-
     function clickOnCollapsibleUpdates() {
         cy.get('#opfab-archives-collapsible-updates').click();
     }
@@ -402,10 +399,6 @@ describe('Archives screen tests', function () {
             .should('not.exist');
     }
 
-    function checkNoCardDetailIsDisplayed() {
-        cy.get('of-card-detail').should('not.exist');
-    }
-
     function checkPaginationResultsNumberIs(nb) {
         cy.get('#opfab-archive-results-number').should('have.text', ' Results number  : ' + nb + ' ');
     }
@@ -418,90 +411,6 @@ describe('Archives screen tests', function () {
         });
     }
 
-    function checkNoProcessStateMessageIsDisplayed() {
-        cy.get('#opfab-archives-no-process-state-available').contains('No process/state available').should('exist');
-    }
-
-    // PROCESSGROUP SELECT
-    function checkProcessGroupSelectDoesNotExist() {
-        cy.get('#opfab-processGroup').should('not.exist');
-    }
-
-    function clickOnProcessGroupSelect() {
-        cy.get('#opfab-processGroup').click();
-    }
-
-    function selectAllProcessGroups() {
-        cy.get('#opfab-processGroup').find('.vscomp-toggle-all-button').click();
-    }
-    function checkNumberOfProcessGroupEntriesIs(nb) {
-        cy.get('#opfab-processGroup').find('.vscomp-option-text').should('have.length', nb);
-    }
-
-    function checkProcessGroupSelectContains(value) {
-        cy.get('#opfab-processGroup').contains(value).should('exist');
-    }
-
-    // PROCESS SELECT
-    function checkProcessSelectDoesNotExist() {
-        cy.get('#opfab-process').should('not.exist');
-    }
-
-    function clickOnProcessSelect() {
-        cy.get('#opfab-process').click();
-    }
-
-    function selectProcess(processName) {
-        cy.get('#opfab-process').contains(processName).click();
-    }
-
-    function selectAllProcesses() {
-        cy.get('#opfab-process').find('.vscomp-toggle-all-button').click();
-    }
-
-    function unselectAllProcesses() {
-        selectAllProcesses();
-    }
-
-    function checkNumberOfProcessEntriesIs(nb) {
-        cy.get('#opfab-process').find('.vscomp-option-text').should('have.length', nb);
-    }
-
-    function checkProcessSelectContains(value) {
-        cy.get('#opfab-process').contains(value).should('exist');
-    }
-
-    // STATE SELECT
-    function checkStateSelectDoesNotExist() {
-        cy.get('#opfab-state').should('not.exist');
-    }
-    function clickOnStateSelect() {
-        cy.get('#opfab-state').click();
-    }
-
-    function selectAllStates() {
-        cy.get('#opfab-state').find('.vscomp-toggle-all-button').click();
-    }
-
-    function checkNumberOfStateEntriesIs(nb) {
-        cy.get('#opfab-state').find('.vscomp-option-text').should('have.length', nb);
-    }
-
-    function checkNumberOfStateSelectedIs(nb) {
-        cy.get('#opfab-state')
-            .find('.vscomp-value')
-            .contains('+ ' + (nb - 1) + ' more')
-            .should('exist');
-    }
-
-    function checkStateSelectContains(value) {
-        cy.get('#opfab-state').contains(value, {matchCase: false}).should('exist');
-    }
-
-    function checkStateSelectDoesNotContains(value) {
-        cy.get('#opfab-state').contains(value, {matchCase: false}).should('not.exist');
-    }
-
     function clickOnExportButton() {
         cy.get('#opfab-archives-btn-exportToExcel').click();
     }
@@ -511,11 +420,102 @@ describe('Archives screen tests', function () {
     }
 
     function checkBusinessPeriodForExportRow(row) {
-        expect(row['BUSINESS PERIOD']).to.match(
-            /^\d{2}:\d{2} \d{2}\/\d{2}\/\d{4}-\d{2}:\d{2} \d{2}\/\d{2}\/\d{4}$/
-        );
+        expect(row['BUSINESS PERIOD']).to.match(/^\d{2}:\d{2} \d{2}\/\d{2}\/\d{4}-\d{2}:\d{2} \d{2}\/\d{2}\/\d{4}$/);
     }
     function checkBusinessPeriodWithNoEndDateForExportRow(row) {
         expect(row['BUSINESS PERIOD']).to.match(/^\d{2}:\d{2} \d{2}\/\d{2}\/\d{4}-$/);
+    }
+
+    function openAndCheckArchiveCardContent(cellContent, cardText) {
+        cy.get('#opfab-archives-cards-list').find('td').contains(cellContent).should('exist').click();
+        cy.get('#opfab-card-template-detail').contains(cardText).should('exist');
+        cy.get('#opfab-archives-card-detail-close').click({force: true});
+    }
+
+    function checkMultifiltersWhenAllProcessStatesAreDisplayed() {
+        // We check we have 6 items in process multi-filter, even without choosing a process group
+        cy.clickOnProcessSelect();
+        cy.checkNumberOfProcessEntriesIs(6);
+        cy.checkProcessSelectContains('Conference and IT incident');
+        cy.checkProcessSelectContains('Message or question');
+        cy.checkProcessSelectContains('Task');
+        cy.checkProcessSelectContains('IGCC');
+        cy.checkProcessSelectContains('Process example');
+        cy.checkProcessSelectContains('Test process for cypress');
+
+        cy.clickOnProcessGroupSelect();
+        cy.checkNumberOfProcessGroupEntriesIs(3);
+        cy.checkProcessGroupSelectContains('--');
+        cy.checkProcessGroupSelectContains('Base Examples');
+        cy.checkProcessGroupSelectContains('User card examples');
+        cy.selectAllProcessGroups();
+
+        cy.clickOnProcessSelect();
+        cy.checkNumberOfProcessEntriesIs(6);
+        cy.checkProcessSelectContains('Conference and IT incident');
+        cy.checkProcessSelectContains('Message or question');
+        cy.checkProcessSelectContains('Task');
+        cy.checkProcessSelectContains('IGCC');
+        cy.checkProcessSelectContains('Process example');
+        cy.checkProcessSelectContains('Test process for cypress');
+        cy.selectAllProcesses();
+        cy.clickOnProcessSelect();
+
+        cy.clickOnStateSelect();
+        cy.selectAllStates();
+        cy.checkNumberOfStateSelectedIs(31);
+
+        cy.clickOnProcessSelect();
+        cy.unselectAllProcesses();
+        cy.selectProcess('Process example');
+        cy.clickOnProcessSelect();
+        cy.clickOnStateSelect();
+        cy.checkNumberOfStateEntriesIs(8);
+        cy.checkStateSelectContains('Process example');
+        cy.checkStateSelectContains('Message');
+        cy.checkStateSelectContains('Data quality');
+        cy.checkStateSelectContains('Electricity consumption forecast');
+        cy.checkStateSelectContains('Action Required');
+        cy.checkStateSelectContains('Additional information required');
+        cy.checkStateSelectContains('Network Contingencies');
+    }
+
+    function checkMultifiltersForNotAdminModeForItsupervisor1() {
+        // We check we have 5 items in process multi-filter, even without choosing a process group
+        cy.clickOnProcessSelect();
+        cy.checkNumberOfProcessEntriesIs(5);
+        cy.checkProcessSelectContains('Conference and IT incident');
+        cy.checkProcessSelectContains('Message or question');
+        cy.checkProcessSelectContains('Task');
+        cy.checkProcessSelectContains('IGCC');
+        cy.checkProcessSelectContains('Process example');
+
+        cy.clickOnProcessGroupSelect();
+        cy.checkNumberOfProcessGroupEntriesIs(2);
+        cy.checkProcessGroupSelectContains('Base Examples');
+        cy.checkProcessGroupSelectContains('User card examples');
+        cy.selectAllProcessGroups();
+
+        cy.clickOnProcessSelect();
+        cy.checkNumberOfProcessEntriesIs(5);
+        cy.checkProcessSelectContains('Conference and IT incident');
+        cy.checkProcessSelectContains('Message or question');
+        cy.checkProcessSelectContains('Task');
+        cy.checkProcessSelectContains('IGCC');
+        cy.checkProcessSelectContains('Process example');
+        cy.selectAllProcesses();
+        cy.clickOnProcessSelect();
+
+        cy.clickOnStateSelect();
+        cy.selectAllStates();
+        cy.checkNumberOfStateSelectedIs(13);
+
+        cy.clickOnProcessSelect();
+        cy.unselectAllProcesses();
+        cy.selectProcess('Process example');
+        cy.clickOnProcessSelect();
+        cy.clickOnStateSelect();
+        cy.checkNumberOfStateEntriesIs(2);
+        cy.checkStateSelectContains('Action Required');
     }
 });

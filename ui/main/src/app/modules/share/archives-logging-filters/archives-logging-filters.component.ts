@@ -26,6 +26,8 @@ import {AppState} from '@ofStore/index';
 
 import moment from 'moment';
 import {Utilities} from 'app/common/utilities';
+import {UserPreferencesService} from '@ofServices/user-preference.service';
+import {UserService} from '@ofServices/user.service';
 
 export enum FilterDateTypes {
     PUBLISH_DATE_FROM_PARAM = 'publishDateFrom',
@@ -63,6 +65,9 @@ export class ArchivesLoggingFiltersComponent implements OnInit, OnDestroy, After
     @Input() tags: any[];
     @Output() search = new EventEmitter<string>();
     @Output() reset = new EventEmitter<string>();
+
+    isCurrentUserInAdminGroup: boolean;
+    isAdminModeChecked: boolean;
 
     unsubscribe$: Subject<void> = new Subject<void>();
 
@@ -125,8 +130,15 @@ export class ArchivesLoggingFiltersComponent implements OnInit, OnDestroy, After
         private store: Store<AppState>,
         private configService: ConfigService,
         private processesService: ProcessesService,
-        private processStatesDropdownListService: ProcessStatesMultiSelectOptionsService
-    ) {}
+        private processStatesDropdownListService: ProcessStatesMultiSelectOptionsService,
+        private userPreferences: UserPreferencesService,
+        private userService: UserService
+    ) {
+        this.isCurrentUserInAdminGroup = this.userService.isCurrentUserAdmin();
+
+        const isAdminModeCheckedInStorage = this.userPreferences.getPreference('opfab.isAdminModeChecked');
+        this.isAdminModeChecked = this.isCurrentUserInAdminGroup && isAdminModeCheckedInStorage === 'true';
+    }
 
     ngOnInit() {
         this.processesGroups = this.processesService.getProcessGroups();
@@ -142,26 +154,44 @@ export class ArchivesLoggingFiltersComponent implements OnInit, OnDestroy, After
             .subscribe(() => this.setDateFilterBounds());
     }
 
-
     ngAfterViewInit(): void {
         this.setDateFilterBounds();
     }
 
+    clearMultiFilters() {
+        this.statesMultiSelectOptionsPerProcesses = [];
+        this.processesWithoutProcessGroupMultiSelectOptions = [];
+        this.processMultiSelectOptionsPerProcessGroups.clear();
+        this.processGroupMultiSelectOptions = [];
+        this.tagsMultiSelectOptions = [];
+    }
+
     loadValuesForFilters() {
+        this.clearMultiFilters();
+
         this.statesMultiSelectOptionsPerProcesses =
-            this.processStatesDropdownListService.getStatesMultiSelectOptionsPerProcess(this.hideChildStates);
+            this.processStatesDropdownListService.getStatesMultiSelectOptionsPerProcess(
+                this.isAdminModeChecked,
+                this.hideChildStates
+            );
+
         this.processesWithoutProcessGroupMultiSelectOptions =
             this.processStatesDropdownListService.getProcessesWithoutProcessGroupMultiSelectOptions(
+                this.isAdminModeChecked,
                 this.visibleProcessesId
             );
+
         this.processMultiSelectOptionsPerProcessGroups =
             this.processStatesDropdownListService.getProcessesMultiSelectOptionsPerProcessGroup(
+                this.isAdminModeChecked,
                 this.visibleProcessesId
             );
+
         this.processGroupMultiSelectOptions = this.processStatesDropdownListService.getProcessGroupsMultiSelectOptions(
             this.processesWithoutProcessGroupMultiSelectOptions,
             this.processMultiSelectOptionsPerProcessGroups
         );
+
         // we must filter visibleProcesses to keep only the processes in the perimeter of the user
         const processesIds = [];
         this.statesMultiSelectOptionsPerProcesses.forEach((process) => processesIds.push(process.value));
@@ -175,8 +205,17 @@ export class ArchivesLoggingFiltersComponent implements OnInit, OnDestroy, After
         this.setDefaultPublishDateFilter();
     }
 
+    toggleAdminMode() {
+        this.isAdminModeChecked = !this.isAdminModeChecked;
+        this.userPreferences.setPreference('opfab.isAdminModeChecked', String(this.isAdminModeChecked));
+        this.loadValuesForFilters();
+        this.resetForm();
+    }
+
     transformFiltersListToMap = (filters: any): void => {
         this.filters = new Map();
+        this.filters.set('adminMode', [this.isAdminModeChecked]);
+
         Object.keys(filters).forEach((key) => {
             const element = filters[key];
             // if the form element is date
@@ -260,7 +299,7 @@ export class ArchivesLoggingFiltersComponent implements OnInit, OnDestroy, After
         });
     }
 
-    isProcessGroupFilterVisible() : boolean {
+    isProcessGroupFilterVisible(): boolean {
         return !!this.processGroupMultiSelectOptions && this.processGroupMultiSelectOptions.length > 1;
     }
 
@@ -363,11 +402,15 @@ export class ArchivesLoggingFiltersComponent implements OnInit, OnDestroy, After
         return validationResult.areDatesCorrectlyFormatted;
     }
 
-    private validateDatesFormat(): {areDatesCorrectlyFormatted: boolean, errorMessageKey: string} {
-        if (!this.isDateWellFormatted('publishDateFrom')) return {areDatesCorrectlyFormatted: false, errorMessageKey: 'shared.filters.invalidPublishStartDate'};
-        if (!this.isDateWellFormatted('publishDateTo')) return {areDatesCorrectlyFormatted: false, errorMessageKey: 'shared.filters.invalidPublishEndDate'};
-        if (!this.isDateWellFormatted('activeFrom')) return {areDatesCorrectlyFormatted: false, errorMessageKey: 'shared.filters.invalidActiveStartDate'};
-        if (!this.isDateWellFormatted('activeTo')) return {areDatesCorrectlyFormatted: false, errorMessageKey: 'shared.filters.invalidActiveEndDate'};
+    private validateDatesFormat(): {areDatesCorrectlyFormatted: boolean; errorMessageKey: string} {
+        if (!this.isDateWellFormatted('publishDateFrom'))
+            return {areDatesCorrectlyFormatted: false, errorMessageKey: 'shared.filters.invalidPublishStartDate'};
+        if (!this.isDateWellFormatted('publishDateTo'))
+            return {areDatesCorrectlyFormatted: false, errorMessageKey: 'shared.filters.invalidPublishEndDate'};
+        if (!this.isDateWellFormatted('activeFrom'))
+            return {areDatesCorrectlyFormatted: false, errorMessageKey: 'shared.filters.invalidActiveStartDate'};
+        if (!this.isDateWellFormatted('activeTo'))
+            return {areDatesCorrectlyFormatted: false, errorMessageKey: 'shared.filters.invalidActiveEndDate'};
 
         return {areDatesCorrectlyFormatted: true, errorMessageKey: null};
     }
