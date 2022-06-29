@@ -7,6 +7,19 @@
  * This file is part of the OperatorFabric project.
  */
 
+.opfab-archives-logging {
+    background-color: var(--opfab-bgcolor-darker);
+    padding-left: 5%;
+}
+
+// ADAPT MARGINS TO SCREEN SIZE
+
+@media all and (max-width: 1700px) {
+    .opfab-archives-logging {
+        padding-left: 2%;
+    }
+}
+
 .opfab-vertical-bar {
     border-left-width: 1px;
     border-left-style: solid;
@@ -56,4 +69,8 @@
     .opfab-publish-date {
         margin: 0px;
     }
+}
+
+.opfab-icon-help {
+    margin-left: 10px;
 }

@@ -90,7 +90,7 @@ export class MonitoringComponent implements OnInit, OnDestroy {
             .getLoadingInProgress()
             .pipe(takeUntil(this.unsubscribe$))
             .subscribe((inProgress: boolean) => (this.loadingInProgress = inProgress));
-        this.isThereProcessStateToDisplay = this.processesService.getStatesListPerProcess(false).size > 0;
+        this.isThereProcessStateToDisplay = this.processesService.getStatesListPerProcess(false, false).size > 0;
     }
 
     private areFiltersCorrectlySet(filters: Array<any>): boolean {

@@ -9,18 +9,10 @@
 
 <div class="archives-page">
     <form [formGroup]="archiveForm" #currentForm>
-      <ng-template #noProcessStateToDisplay>
-        <div id="opfab-archives-no-process-state-available" style="text-align: center; font-size: 20px; padding-top: 100px" translate>shared.noProcessStateAvailable</div>
-      </ng-template>
-      <div *ngIf="isThereProcessStateToDisplay; else noProcessStateToDisplay" class="opfab-archives">
-        <div style="display: flex;">
-
-          <of-archives-logging-filters [parentForm]="archiveForm" [visibleProcesses]="listOfProcesses" (reset)='resetForm()' (search)='sendQuery(0)'
-                                       [hideChildStates]="true" [tags]="tags" #filters></of-archives-logging-filters>
-
-
-          </div>
-      </div>
+          <of-archives-logging-filters [parentForm]="archiveForm" [visibleProcesses]="listOfProcesses" (reset)='resetForm()'
+                                       (search)='sendQuery(0)'
+                                       [hideChildStates]="true" [tags]="tags" #filters>
+          </of-archives-logging-filters>
 
     </form>
 </div>

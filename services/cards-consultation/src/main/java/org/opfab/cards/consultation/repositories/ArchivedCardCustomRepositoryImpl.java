@@ -64,11 +64,13 @@ public class ArchivedCardCustomRepositoryImpl implements ArchivedCardCustomRepos
 
     public static final String LATEST_UPDATE_ONLY = "latestUpdateOnly";
 
+    public static final String ADMIN_MODE = "adminMode";
+
     public static final int DEFAULT_PAGE_SIZE = 10;
 
     private static final List<String> SPECIAL_PARAMETERS = Arrays.asList(
             PUBLISH_DATE_FROM_PARAM, PUBLISH_DATE_TO_PARAM, ACTIVE_FROM_PARAM, ACTIVE_TO_PARAM,
-            PAGE_PARAM, PAGE_SIZE_PARAM, CHILD_CARDS_PARAM, LATEST_UPDATE_ONLY);
+            PAGE_PARAM, PAGE_SIZE_PARAM, CHILD_CARDS_PARAM, LATEST_UPDATE_ONLY, ADMIN_MODE);
 
 
     private static final String ARCHIVED_CARDS_COLLECTION = "archivedCards";
@@ -174,11 +176,14 @@ public class ArchivedCardCustomRepositoryImpl implements ArchivedCardCustomRepos
 
 
     private  List<AggregationOperation> getOperations(Tuple2<CurrentUserWithPerimeters,
-    MultiValueMap<String, String>> params,Pageable pageableRequest) {
+        MultiValueMap<String, String>> params,Pageable pageableRequest) {
 
         CurrentUserWithPerimeters currentUserWithPerimeters = params.getT1();
         MultiValueMap<String, String> queryParams = params.getT2();
-        List<Criteria> criteria = getCriteria(queryParams, currentUserWithPerimeters);
+
+        boolean isAdminMode = checkIfInAdminMode(currentUserWithPerimeters, params.getT2());
+
+        List<Criteria> criteria = getCriteria(queryParams, currentUserWithPerimeters, isAdminMode);
 
         boolean latestUpdateOnly = isLatestUpdateOnlyParamPresent(params.getT2());
         
@@ -225,7 +230,10 @@ public class ArchivedCardCustomRepositoryImpl implements ArchivedCardCustomRepos
 
         CurrentUserWithPerimeters currentUserWithPerimeters = params.getT1();
         MultiValueMap<String, String> queryParams = params.getT2();
-        List<Criteria> criteria = getCriteria(queryParams, currentUserWithPerimeters);
+
+        boolean isAdminMode = checkIfInAdminMode(currentUserWithPerimeters, params.getT2());
+
+        List<Criteria> criteria = getCriteria(queryParams, currentUserWithPerimeters, isAdminMode);
 
         boolean latestUpdateOnly = isLatestUpdateOnlyParamPresent(params.getT2());
         
@@ -246,7 +254,8 @@ public class ArchivedCardCustomRepositoryImpl implements ArchivedCardCustomRepos
     }
 
     private List<Criteria> getCriteria(MultiValueMap<String, String> queryParams,
-            CurrentUserWithPerimeters currentUserWithPerimeters) {
+                                       CurrentUserWithPerimeters currentUserWithPerimeters,
+                                       boolean isAdminMode) {
         List<Criteria> criteria = new ArrayList<>();
         // Publish date range
         criteria.addAll(publishDateCriteria(queryParams));
@@ -258,7 +267,8 @@ public class ArchivedCardCustomRepositoryImpl implements ArchivedCardCustomRepos
         criteria.addAll(regularParametersCriteria(queryParams));
 
         /* Add user criteria */
-        criteria.add(computeCriteriaForUser(currentUserWithPerimeters));
+        if (! isAdminMode)
+            criteria.add(computeCriteriaForUser(currentUserWithPerimeters));
 
         /* Add child cards criteria (by default, child cards are not included) */
         criteria.add(childCardsIncludedOrNotCriteria(queryParams));
@@ -308,6 +318,21 @@ public class ArchivedCardCustomRepositoryImpl implements ArchivedCardCustomRepos
         return false;
     }
 
+    private boolean checkIfInAdminMode(CurrentUserWithPerimeters currentUserWithPerimeters,
+                                            MultiValueMap<String, String> params) {
+        if (params.containsKey(ADMIN_MODE)) {
+            String adminMode = params.getFirst(ADMIN_MODE);
+            boolean isCurrentUserMemberOfAdminGroup = ((currentUserWithPerimeters.getUserData().getGroups() != null) &&
+                                                      (currentUserWithPerimeters.getUserData().getGroups().contains("ADMIN")));
+
+            if ((adminMode != null) && (adminMode.equals("true")) && (!isCurrentUserMemberOfAdminGroup))
+                log.warn("Parameter {} set to true in the request but the user is not member of ADMIN group", ADMIN_MODE);
+
+            return isCurrentUserMemberOfAdminGroup && (adminMode != null) && (adminMode.equals("true"));
+        }
+        return false;
+    }
+
     private Criteria childCardsIncludedOrNotCriteria(MultiValueMap<String, String> params) {
 
         if (params.containsKey(CHILD_CARDS_PARAM)) {
@@ -350,5 +375,4 @@ public class ArchivedCardCustomRepositoryImpl implements ArchivedCardCustomRepos
         return criteria;
 
     }
-
 }

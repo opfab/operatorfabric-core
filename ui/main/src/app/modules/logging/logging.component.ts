@@ -58,8 +58,6 @@ export class LoggingComponent implements OnDestroy, OnInit {
     listOfProcessesForFilter = [];
     listOfProcessesForRequest = [];
 
-    isThereProcessStateToDisplay: boolean;
-
     constructor(
         private processesService: ProcessesService,
         private configService: ConfigService,
@@ -105,8 +103,6 @@ export class LoggingComponent implements OnDestroy, OnInit {
         this.tags = this.configService.getConfigValue('logging.filters.tags.list');
 
         this.results = [];
-
-        this.isThereProcessStateToDisplay = this.processesService.getStatesListPerProcess(false).size > 0;
     }
 
     resetForm() {
@@ -216,7 +212,9 @@ export class LoggingComponent implements OnDestroy, OnInit {
                     if (this.filtersTemplate.isProcessGroupFilterVisible())
                         exportArchiveData.push({
                             [severityColumnName]: Utilities.translateSeverity(this.translate, card.severity),
-                            [timeOfActionColumnName]: this.dateTimeFormatter.getFormattedDateAndTimeFromEpochDate(card.publishDate),
+                            [timeOfActionColumnName]: this.dateTimeFormatter.getFormattedDateAndTimeFromEpochDate(
+                                card.publishDate
+                            ),
                             [processGroupColumnName]: this.translateColumn(
                                 this.processesService.findProcessGroupLabelForProcess(card.process)
                             ),
@@ -231,7 +229,9 @@ export class LoggingComponent implements OnDestroy, OnInit {
                     else
                         exportArchiveData.push({
                             [severityColumnName]: card.severity,
-                            [timeOfActionColumnName]: this.dateTimeFormatter.getFormattedDateAndTimeFromEpochDate(card.publishDate),
+                            [timeOfActionColumnName]: this.dateTimeFormatter.getFormattedDateAndTimeFromEpochDate(
+                                card.publishDate
+                            ),
                             [processColumnName]: card.processName,
                             [titleColumnName]: card.titleTranslated,
                             [summaryColumnName]: card.summaryTranslated,

@@ -243,7 +243,7 @@ export class FeedconfigurationComponent implements OnInit {
         this.makeProcessIdsByProcessGroup();
         this.loadIsAllProcessesSelected();
 
-        this.isThereProcessStateToDisplay = this.processesService.getStatesListPerProcess(true).size > 0;
+        this.isThereProcessStateToDisplay = this.processesService.getStatesListPerProcess(false, true).size > 0;
     }
 
     makeProcessIdsByProcessGroup() {

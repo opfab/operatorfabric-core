@@ -75,8 +75,6 @@ export class ArchivesComponent implements OnDestroy, OnInit {
 
     displayContext: any = DisplayContext.ARCHIVE;
 
-    isThereProcessStateToDisplay: boolean;
-
     constructor(
         private store: Store<AppState>,
         private processesService: ProcessesService,
@@ -121,8 +119,6 @@ export class ArchivesComponent implements OnDestroy, OnInit {
         this.tags = this.configService.getConfigValue('archive.filters.tags.list');
         this.results = [];
         this.updatesByCardId = [];
-
-        this.isThereProcessStateToDisplay = this.processesService.getStatesListPerProcess(true).size > 0;
     }
 
     toggleCollapsibleUpdates() {
@@ -150,6 +146,8 @@ export class ArchivesComponent implements OnDestroy, OnInit {
         this.filtersTemplate.filters.set('size', [this.size.toString()]);
         this.filtersTemplate.filters.set('page', [page_number]);
         this.filtersTemplate.filters.set('latestUpdateOnly', [String(this.isCollapsibleUpdatesActivated)]);
+        const isAdminModeChecked = this.filtersTemplate.filters.get('adminMode')[0];
+
         this.cardService
             .fetchArchivedCards(this.filtersTemplate.filters)
             .pipe(takeUntil(this.unsubscribe$))
@@ -164,7 +162,7 @@ export class ArchivesComponent implements OnDestroy, OnInit {
                     if (this.isCollapsibleUpdatesActivated && this.hasResult) {
                         const requestID = new Date().valueOf();
                         this.lastRequestID = requestID;
-                        this.loadUpdatesByCardId(requestID);
+                        this.loadUpdatesByCardId(requestID, isAdminModeChecked);
                     } else {
                         this.loadingInProgress = false;
                         this.updatesByCardId = [];
@@ -201,7 +199,7 @@ export class ArchivesComponent implements OnDestroy, OnInit {
         }, 1000);
     }
 
-    loadUpdatesByCardId(requestID: number) {
+    loadUpdatesByCardId(requestID: number, isAdminModeChecked: boolean) {
         this.updatesByCardId = [];
         this.results.forEach((lightCard, index) => {
             this.updatesByCardId.splice(index, 0, {
@@ -214,7 +212,7 @@ export class ArchivesComponent implements OnDestroy, OnInit {
 
         const updatesRequests$ = [];
         this.results.forEach((lightCard, index) => {
-            updatesRequests$.push(this.fetchUpdatesByCardId(lightCard, index, requestID));
+            updatesRequests$.push(this.fetchUpdatesByCardId(lightCard, index, requestID, isAdminModeChecked));
         });
 
         Utilities.subscribeAndWaitForAllObservablesToEmitAnEvent(updatesRequests$).subscribe(() => {
@@ -222,19 +220,29 @@ export class ArchivesComponent implements OnDestroy, OnInit {
         });
     }
 
-    private fetchUpdatesByCardId(lightCard: LightCard, index: number, requestID: number): Observable<Page<LightCard>> {
+    private fetchUpdatesByCardId(
+        lightCard: LightCard,
+        index: number,
+        requestID: number,
+        isAdminModeChecked: boolean
+    ): Observable<Page<LightCard>> {
         const filters: Map<string, string[]> = new Map();
         filters.set('process', [lightCard.process]);
         filters.set('processInstanceId', [lightCard.processInstanceId]);
         filters.set('size', [(1 + this.historySize).toString()]);
         filters.set('page', ['0']);
+
+        if (isAdminModeChecked) {
+            filters.set('adminMode', ['true']);
+        }
+
         return this.cardService.fetchArchivedCards(filters).pipe(
             takeUntil(this.unsubscribe$),
             tap({
                 next: (page: Page<LightCard>) => {
                     this.removeMostRecentCardFromHistories(lightCard.id, page.content);
                     // log to debug CI/CD Failures
-                    console.debug(new Date().toISOString , "Archives : receive card update ");
+                    console.debug(new Date().toISOString, 'Archives : receive card update ');
                     // since we are in asynchronous mode, we test requestId to avoid that the requests "overlap" and that the results appear in a wrong order
                     if (requestID === this.lastRequestID)
                         this.updatesByCardId.splice(index, 1, {

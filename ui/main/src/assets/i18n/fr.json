@@ -62,6 +62,9 @@
     "confirmSettings": "ENREGISTRER LA CONFIGURATION",
     "cardEmitter": "ÉMETTEUR",
     "entity": "ENTITÉ",
+    "goToAdminMode": "Passer en mode admin",
+    "adminMode": "Mode admin",
+    "adminModeHelp": "Voir toutes les cartes",
     "popup": {
       "title": "CONFIRMATION",
       "areYouSure": "Vous avez fait des modifications. Êtes-vous sûr de vouloir les enregistrer ?"
@@ -197,7 +200,7 @@
     "reset": "RaZ",
     "login": "Identifiant",
     "password": "Mot de passe",
-    "confirmationBecauseAccountIsAreadyUsed":"Le compte {{login}} est en cours d'utilisation par au moins un autre utilisateur. Voulez-vous tout de même vous connecter ?\n\n En cliquant sur OK, vous déconnecterez tous les utilsateurs actuellement connectés à ce compte.",
+    "confirmationBecauseAccountIsAreadyUsed":"Le compte {{login}} est en cours d'utilisation par au moins un autre utilisateur. Voulez-vous tout de même vous connecter ?\n\n En cliquant sur OK, vous déconnecterez tous les utilisateurs actuellement connectés à ce compte.",
     "confirmationBecauseAppAlreadyLoadedInAnotherTab":"L'URL {{url}} est déjà en cours d'utilisation dans ce navigateur. Voulez-vous tout de même vous connecter ?\n\n  En cliquant sur OK, vous déconnecterez tous les autres onglets de ce navigateur utilisant cette URL.",
     "submit": {
       "password": "Se connecter",

@@ -93,6 +93,37 @@
     "notBefore" : 0,
     "groups" : [ ]
   },
+  {
+    "id" : "34869ff3-7ee4-4d0c-9e33-c08f2319744b",
+    "createdTimestamp" : 1557499482370,
+    "username" : "operator6_fr",
+    "enabled" : true,
+    "totp" : false,
+    "emailVerified" : false,
+    "attributes" : {
+      "groups" : []
+    },
+    "credentials" : [ {
+      "type" : "password",
+      "hashedSaltedValue" : "dD2BxsdcXiP8llVoM/YgTxWFPUYWDJ2oyYXvEBZSHADbNplTDk4GgHL5YJKCLbSE4ju2Itho510sFIDLjQrw7A==",
+      "salt" : "r2KO+r+7+qzvDWnN9Uer+A==",
+      "hashIterations" : 27500,
+      "counter" : 0,
+      "algorithm" : "pbkdf2-sha256",
+      "digits" : 0,
+      "period" : 0,
+      "createdDate" : 1557499490489,
+      "config" : { }
+    } ],
+    "disableableCredentialTypes" : [ "password" ],
+    "requiredActions" : [ ],
+    "realmRoles" : [ "uma_authorization", "offline_access" ],
+    "clientRoles" : {
+      "account" : [ "view-profile", "manage-account" ]
+    },
+    "notBefore" : 0,
+    "groups" : [ ]
+  },
    {
     "id" : "d87d0a32-0ce9-4890-9b1c-0bde18df1977",
     "createdTimestamp" : 1557499437664,
@@ -220,7 +251,7 @@
     "emailVerified" : false,
     "attributes" : {
       "entitiesId" : [ "IT_SUPERVISOR_ENTITY" ],
-      "groups" : ["Supervisor"]
+      "groups" : ["ADMIN;Supervisor"]
     },
     "credentials" : [ {
       "type" : "password",

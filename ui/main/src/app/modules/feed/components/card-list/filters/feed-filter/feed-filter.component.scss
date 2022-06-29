@@ -102,19 +102,6 @@
     background-color: var(--opfab-feedbar-icon-hover-bgcolor);
 }
 
-.opfab-link {
-    display: block;
-    color: var(--opfab-navbar-color);
-    text-align: center;
-    text-decoration: underline;
-
-    &:hover,
-    &:focus {
-        color: var(--opfab-navbar-color-hover);
-        text-decoration: none;
-    }
-}
-
 .opfab-filters-popover {
     margin-left: -10px !important;
     padding-left: 2px;
