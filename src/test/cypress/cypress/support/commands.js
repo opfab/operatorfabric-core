@@ -250,3 +250,7 @@ Cypress.Commands.add('usercardPrepareAndSendCard', () => {
 Cypress.Commands.add('loadMonitoringConfig', (config) => {
     cy.exec('cd .. && ./resources/monitoringConfig/loadMonitoringConfig.sh ' + config);
 })
+
+Cypress.Commands.add('sendMessageToSubscriptions', (message) => {
+    cy.exec('cd .. && ./resources/sendMessageToSubscriptions.sh ' + message);
+})
