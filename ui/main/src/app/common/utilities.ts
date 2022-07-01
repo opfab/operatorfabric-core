@@ -58,4 +58,8 @@ export class Utilities {
         }
         return final.asObservable();
     }
+
+    public static isNavigatorChromiumBased() {
+        return navigator.userAgent.indexOf('Chrom') > -1;
+    }
 }
