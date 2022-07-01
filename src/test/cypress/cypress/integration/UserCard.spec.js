@@ -44,7 +44,6 @@ describe('User Card ', function () {
 
       cy.get('of-light-card').should('have.length', 1);
       cy.get('of-light-card').eq(0).click();
-      cy.get('of-card-details').find('of-detail');
       cy.get('#opfab-card-edit').click();
       cy.get("of-usercard").should('exist');
       cy.get('#label').contains('QUESTION (New)');
@@ -243,7 +242,6 @@ describe('User Card ', function () {
       // Feed light card show response from current entity
       cy.get('of-light-card').eq(0).find('#opfab-feed-lightcard-hasChildCardFromCurrentUserEntity').should('exist');
       cy.get('of-light-card').eq(0).click();
-      cy.get('of-card-details').find('of-detail');
       cy.get("#childs-div").should('not.be.empty');
       // Response table has 1 header and 1 row 
       cy.get("#childs-div").find('tr').should('have.length', 2);
@@ -292,7 +290,6 @@ describe('User Card ', function () {
       cy.get('.opfab-info-message').should('have.class', 'opfab-alert-info').contains("Your card is published");
       cy.get('of-light-card').should('have.length', 1);
       cy.get('of-light-card').eq(0).click();
-      cy.get('of-card-details').find('of-detail');
       cy.get('#opfab-div-card-template').find('div').eq(0).should('have.text', "\n  Hello, that's a test message / Result is <OK> & work done is 100%\n");
       cy.get('#opfab-card-title').should('have.text', "Message");
       cy.get('#opfab-selected-card-summary').should('have.text', "Message received :   Hello, that's a test message / Result is <OK> & work done is 100%");
@@ -307,7 +304,6 @@ describe('User Card ', function () {
       cy.get('of-light-card').should('have.length', 1);
       cy.get('#opfab-lightcard-dates').contains('(08:00 20/01/2020 - 11:10 25/06/2029)');
       cy.get('of-light-card').eq(0).click();
-      cy.get('of-card-details').find('of-detail');
       cy.get('#opfab-div-card-template').find('div').eq(0).should('have.text', "\n  Hello, that's a test message / Result is <OK> & work done is 100%\n");
       cy.get('#opfab-card-title').should('have.text', "Message");
       cy.get('#opfab-selected-card-summary').should('have.text', "Message received :   Hello, that's a test message / Result is <OK> & work done is 100%");
@@ -322,8 +318,7 @@ describe('User Card ', function () {
       cy.loginOpFab('operator1_fr', 'test');
 
       cy.get('of-light-card').should('have.length', 1);
-      cy.get('of-light-card').eq(0).click()
-      cy.get('of-card-details').find('of-detail');
+      cy.get('of-light-card').eq(0).click();
       cy.get('#opfab-card-edit').click();
       cy.get("of-usercard").should('exist');
       cy.get('#of-usercard-card-emitter-selector').should("not.exist");
@@ -342,7 +337,6 @@ describe('User Card ', function () {
 
       cy.get('of-light-card').should('have.length', 1);
       cy.get('of-light-card').eq(0).click();
-      cy.get('of-card-details').find('of-detail');
       cy.get('#opfab-div-card-template').find('div').eq(0).should('have.text', "\n   Hello, that's a test message / Result is <OK> & work done is 100%  (updated)\n");
       cy.get('#opfab-card-title').should('have.text', "Message");
       cy.get('#opfab-selected-card-summary').should('have.text', "Message received :    Hello, that's a test message / Result is <OK> & work done is 100%  (updated)");
@@ -358,8 +352,7 @@ describe('User Card ', function () {
       cy.loginOpFab('operator1_fr', 'test');
 
       cy.get('of-light-card').should('have.length', 1);
-      cy.get('of-light-card').eq(0).click()
-      cy.get('of-card-details').find('of-detail');
+      cy.get('of-light-card').eq(0).click();
       cy.get('#opfab-card-delete').click();
       cy.get('#opfab-card-details-delete-btn-confirm').click();
       cy.get('of-light-card').should('have.length', 0);
@@ -421,7 +414,6 @@ describe('User Card ', function () {
       cy.get('.opfab-info-message').should('have.class', 'opfab-alert-info').contains("Your card is published");
       cy.get('of-light-card').should('have.length', 1);
       cy.get('of-light-card').eq(0).click();
-      cy.get('of-card-details').find('of-detail');
       cy.get('#opfab-div-card-template').find('div').eq(0).should('have.text', '\n  Hello\n')
       cy.get('#opfab-card-title').should('have.text', 'Message')
       cy.get('#opfab-selected-card-summary').should('have.text', "Message received :   Hello");
@@ -466,7 +458,6 @@ describe('User Card ', function () {
       it('Edit card from allowed entity', ()=>{
         cy.loginOpFab('operator1_fr','test');
         cy.get('of-light-card').eq(0).click();
-        cy.get('of-card-details').find('of-detail');
         cy.get('#opfab-card-edit').click();
         cy.get("of-usercard").should('exist');
         cy.usercardPrepareAndSendCard();
@@ -563,7 +554,6 @@ describe('User Card ', function () {
       cy.get('.opfab-info-message').should('have.class', 'opfab-alert-info').contains("Your card is published");
       cy.get('of-light-card').should('have.length', 1);
       cy.get('of-light-card').eq(0).click();
-      cy.get('of-card-details').find('of-detail');
       cy.get('#opfab-div-card-template').find('div').eq(0).should('have.text', "\n  Hello, that's a test message / Result is <OK> & work done is 100%\n");
       cy.get('#opfab-card-title').should('have.text', "Message");
       cy.get('#opfab-selected-card-summary').should('have.text', "Message received :   Hello, that's a test message / Result is <OK> & work done is 100%");
@@ -577,7 +567,6 @@ describe('User Card ', function () {
 
         cy.get('of-light-card').should('have.length', 1);
         cy.get('of-light-card').eq(0).click();
-        cy.get('of-card-details').find('of-detail');
         cy.get('#opfab-card-edit').click();
         cy.get("of-usercard").should('exist');
 
@@ -598,7 +587,6 @@ describe('User Card ', function () {
         // Check that the new card emitter 'Control Center FR North' is taken into account
         cy.get('of-light-card').should('have.length', 1);
         cy.get('of-light-card').eq(0).click();
-        cy.get('of-card-details').find('of-detail');
         cy.get('#opfab-div-card-template').find('div').eq(0).should('have.text', "\n   Hello, that's a test message / Result is <OK> & work done is 100%  (updated)\n");
         cy.get('#opfab-card-title').should('have.text', "Message");
         cy.get('#opfab-selected-card-summary').should('have.text', "Message received :    Hello, that's a test message / Result is <OK> & work done is 100%  (updated)");
@@ -629,7 +617,6 @@ describe('User Card ', function () {
       cy.waitDefaultTime();
       cy.get('of-light-card').should('have.length', 1);
       cy.get('of-light-card').eq(0).click();
-      cy.get('of-card-details').find('of-detail');
       cy.get('#opfab-card-edit').click();
       cy.get("of-usercard").should('exist');
 
@@ -691,7 +678,6 @@ describe('User Card ', function () {
       cy.usercardPrepareAndSendCard();
       cy.get('of-light-card').should('have.length', 1);
       cy.get('of-light-card').eq(0).click();
-      cy.get('of-card-details').find('of-detail');
       cy.get('#opfab-card-edit').click();
       cy.get("#hidden_process").should("exist");
       cy.get("#hidden_process").should("have.value", "conferenceAndITIncidentExample");
@@ -811,7 +797,6 @@ describe('User Card ', function () {
       cy.waitDefaultTime();
 
       cy.get('of-light-card').eq(0).click();
-      cy.get('of-card-details').find('of-detail');
       cy.get('#opfab-card-edit').click();
 
       cy.get("#hidden_sender").should("exist");
@@ -864,8 +849,7 @@ describe('User Card ', function () {
       cy.get('#opfab-sev-information').check();
       cy.get('#opfab-sev-information').should('be.checked');
       cy.usercardPrepareAndSendCard();
-      cy.get('of-light-card').eq(0).click()
-      cy.get('of-card-details').find('of-detail');
+      cy.get('of-light-card').eq(0).click();
       cy.get('#opfab-card-edit').click();
       cy.get('#opfab-sev-information').should('be.checked');
 
