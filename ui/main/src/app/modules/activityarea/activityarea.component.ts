@@ -12,7 +12,7 @@ import {UserService} from '@ofServices/user.service';
 import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
 import {NgbModalRef} from '@ng-bootstrap/ng-bootstrap/modal/modal-ref';
 import {UserWithPerimeters} from '@ofModel/userWithPerimeters.model';
-import {FormBuilder, FormControl, FormGroup} from '@angular/forms';
+import {FormControl, FormGroup} from '@angular/forms';
 import {SettingsService} from '@ofServices/settings.service';
 import {EntitiesService} from '@ofServices/entities.service';
 import {CardService} from '@ofServices/card.service';
@@ -35,6 +35,7 @@ export class ActivityareaComponent implements OnInit, OnDestroy {
     saveSettingsInProgress = false;
     messageAfterSavingSettings: string;
     displaySendResultError = false;
+    isScreenLoaded = false;
 
     connectedUsersPerEntityAndGroup: Map<string, Set<string>> = new Map<string, Set<string>>(); // We use a Set because we don't want duplicates
     userRealtimeGroupsIds: string[] = [];
@@ -43,7 +44,6 @@ export class ActivityareaComponent implements OnInit, OnDestroy {
     modalRef: NgbModalRef;
 
     constructor(
-        private formBuilder: FormBuilder,
         private userService: UserService,
         private entitiesService: EntitiesService,
         private groupsService: GroupsService,
@@ -66,6 +66,7 @@ export class ActivityareaComponent implements OnInit, OnDestroy {
 
         // we retrieve all the entities to which the user can connect
         this.userService.getUser(this.currentUserWithPerimeters.userData.login).subscribe((currentUser) => {
+            this.isScreenLoaded = true;
             const entities = this.entitiesService.getEntitiesFromIds(currentUser.entities);
             entities.forEach((entity) => {
                 if (entity.entityAllowedToSendCard) {

@@ -96,11 +96,20 @@ Cypress.Commands.add('loadEmptyProcessGroups', () => {
 })
 
 Cypress.Commands.add('delayRequestResponse', (url, delayTime=2000) => {
-        cy.intercept(url + '/*', (req) => {
+        cy.intercept(url, (req) => {
             req.reply((res) => {
                 res.delay = delayTime;
             });
         });
+})
+
+Cypress.Commands.add('checkLoadingSpinnerIsDisplayed', () => {
+    cy.get('#opfab-loading-spinner').should('exist');
+})
+
+
+Cypress.Commands.add('checkLoadingSpinnerIsNotDisplayed', () => {
+    cy.get('#opfab-loading-spinner').should('not.exist');
 })
 
 Cypress.Commands.add('send6TestCards', () => {

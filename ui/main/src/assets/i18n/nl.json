@@ -233,7 +233,6 @@
     "remoteLoggingEnabled": "Loggen op afstand ingeschakeld"
   },
   "archive": {
-    "loadingInProgress": "Gearchiveerde kaarten laden",
     "cardLoadingInProgress":"Bezig met laden van de kaart  ...",
     "tooManyRows": "Te veel kaarten gevonden, niet alle kaarten worden getoond",
     "collapsibleUpdates": "Opvouwbare updates"

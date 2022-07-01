@@ -79,8 +79,8 @@ describe('Archives screen tests', function () {
         moveToArchivesScreen();
         cy.waitDefaultTime();
         clickOnSearchButton();
-        checkLoadingSpinnerIsDisplayed();
-        checkLoadingSpinnerIsNotDisplayed();
+        cy.checkLoadingSpinnerIsDisplayed();
+        cy.checkLoadingSpinnerIsNotDisplayed();
         checkNumberOfLineDisplayedIs(6);
     });
 
@@ -416,14 +416,6 @@ describe('Archives screen tests', function () {
                 res.delay = 2000;
             });
         });
-    }
-
-    function checkLoadingSpinnerIsDisplayed() {
-        cy.get('#opfab-loading-spinner').should('exist');
-    }
-
-    function checkLoadingSpinnerIsNotDisplayed() {
-        cy.get('#opfab-loading-spinner').should('not.exist');
     }
 
     function checkNoProcessStateMessageIsDisplayed() {

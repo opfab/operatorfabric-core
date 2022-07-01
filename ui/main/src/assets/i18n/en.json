@@ -233,7 +233,6 @@
     "remoteLoggingEnabled": "Remote logging enabled"
   },
   "archive": {
-    "loadingInProgress": "Loading archived cards",
     "cardLoadingInProgress":"Loading card  ...",
     "tooManyRows": "Too many cards , not all cards visible",
     "collapsibleUpdates": "Collapsible updates"
