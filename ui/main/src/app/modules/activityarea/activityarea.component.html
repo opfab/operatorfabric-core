@@ -11,6 +11,8 @@
     {{titleI18nKey}}
 </div>
 
+<of-spinner *ngIf="!isScreenLoaded"></of-spinner>
+
 <div *ngIf="userEntities.length">
     <form [formGroup]="activityAreaForm">
         <div class="opfab-activityarea-entitieslist">

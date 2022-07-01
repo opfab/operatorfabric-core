@@ -235,4 +235,18 @@ describe ('ActivityAreaPage',()=>{
 
         cy.setPropertyInConf('selectActivityAreaOnLogin ','web-ui',false);
     })
+
+    it ('Check spinner is displayed when request is delayed and that spinner disappears once the request arrived ', function () {
+        cy.delayRequestResponse('/users/users/*');
+
+        cy.loginOpFab('operator1_fr','test');
+
+        cy.get('#opfab-navbar-drop-user-menu').click();
+        cy.get('#opfab-navbar-right-menu-activityarea').click();
+        cy.waitDefaultTime();
+
+        cy.checkLoadingSpinnerIsDisplayed();
+        cy.checkLoadingSpinnerIsNotDisplayed();
+    })
+
 })

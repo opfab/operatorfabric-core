@@ -13,10 +13,11 @@ import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {TranslateModule} from '@ngx-translate/core';
 import {ActivityareaComponent} from './activityarea.component';
 import {ActivityareaRoutingModule} from './activityarea-routing.module';
+import { SpinnerModule } from '../share/spinner/spinner.module';
 
 @NgModule({
     declarations: [ActivityareaComponent],
-    imports: [CommonModule, FormsModule, ReactiveFormsModule, TranslateModule, ActivityareaRoutingModule],
+    imports: [CommonModule, FormsModule, ReactiveFormsModule, TranslateModule, ActivityareaRoutingModule, SpinnerModule],
     exports: [ActivityareaComponent]
 })
 export class ActivityareaModule {}

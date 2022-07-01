@@ -215,4 +215,17 @@ describe ('RealTimeUsersPage',()=>{
         cy.get('table').first().find('tr').eq(4).find('td').eq(0).find('span').eq(0).should('have.text', '1 ');
         cy.get('table').first().find('tr').eq(4).find('td').eq(0).should('contain.text', '(operator4_fr)');
     })
+
+
+    it ('Check spinner is displayed when request is delayed and that spinner disappears once the request arrived ', function () {
+        cy.delayRequestResponse('/businessconfig/realtimescreens');
+
+        cy.loginOpFab('operator1_fr','test');
+
+        cy.get('#opfab-navbar-drop-user-menu').click();
+        cy.get('#opfab-navbar-right-menu-realtimeusers').click();
+
+        cy.checkLoadingSpinnerIsDisplayed();
+        cy.checkLoadingSpinnerIsNotDisplayed();
+    })
 })

@@ -8,7 +8,6 @@
  */
 
 import {Component, Input, OnDestroy, OnInit} from '@angular/core';
-import { TranslateService } from '@ngx-translate/core';
 
 @Component({
     selector: 'of-spinner',
@@ -22,7 +21,6 @@ export class SpinnerComponent implements OnInit, OnDestroy {
     mustDisplaySpinner = false;
     private interval;
 
-    constructor(protected translate: TranslateService) {}
 
     ngOnInit() {
         this.interval = setInterval(() => {
@@ -34,7 +32,4 @@ export class SpinnerComponent implements OnInit, OnDestroy {
         clearInterval(this.interval);
     }
 
-    getTranslation(stringToTranslate: string): string {
-        return this.translate.instant(stringToTranslate);
-    }
 }

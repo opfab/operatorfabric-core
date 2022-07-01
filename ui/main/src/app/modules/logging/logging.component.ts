@@ -24,7 +24,6 @@ import {ArchivesLoggingFiltersComponent} from '../share/archives-logging-filters
 import {EntitiesService} from '@ofServices/entities.service';
 import {Utilities} from 'app/common/utilities';
 import {NgbModal, NgbModalOptions, NgbModalRef} from '@ng-bootstrap/ng-bootstrap';
-import { SpinnerComponent } from '../share/spinner/spinner.component';
 
 @Component({
     selector: 'of-logging',
@@ -55,7 +54,6 @@ export class LoggingComponent implements OnDestroy, OnInit {
 
     modalRef: NgbModalRef;
     @ViewChild('exportInProgress') exportTemplate: ElementRef;
-    @ViewChild('spinner') customSpinner: SpinnerComponent;
 
     listOfProcessesForFilter = [];
     listOfProcessesForRequest = [];

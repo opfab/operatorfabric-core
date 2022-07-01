@@ -27,11 +27,12 @@ export class RealtimeusersComponent implements OnInit, OnDestroy {
     interval;
 
     realTimeScreens: Array<RealTimeScreen>;
-    realTimeScreensLoaded = false;
+    isRealTimeScreensLoaded = false;
     realTimeScreenIndexToDisplay: number;
     connectedUsersPerEntityAndGroup: Map<string, Array<string>> = new Map<string, Array<string>>();
     realTimeScreensOptions = [];
     columnsNumberPerScreenAndScreenColumn: Map<string, number> = new Map<string, number>();
+
 
     constructor(
         private userService: UserService,
@@ -50,7 +51,7 @@ export class RealtimeusersComponent implements OnInit, OnDestroy {
 
         this.realTimeScreensService.loadRealTimeScreensData().subscribe((result) => {
             this.realTimeScreens = result.realTimeScreens;
-            this.realTimeScreensLoaded = true;
+            this.isRealTimeScreensLoaded = true;
 
             this.realTimeScreens.forEach((realTimeScreen, index) => {
                 this.realTimeScreensOptions.push({value: index, label: realTimeScreen.screenName});

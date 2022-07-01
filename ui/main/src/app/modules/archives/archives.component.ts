@@ -28,7 +28,6 @@ import {Card, CardData} from '@ofModel/card.model';
 import {ArchivesLoggingFiltersComponent} from '../share/archives-logging-filters/archives-logging-filters.component';
 import {EntitiesService} from '@ofServices/entities.service';
 import {DisplayContext} from '@ofModel/templateGateway.model';
-import { SpinnerComponent } from '../share/spinner/spinner.component';
 
 @Component({
     selector: 'of-archives',
@@ -66,7 +65,6 @@ export class ArchivesComponent implements OnDestroy, OnInit {
     @ViewChild('cardLoadingInProgress') cardLoadingTemplate: ElementRef;
     @ViewChild('exportInProgress') exportTemplate: ElementRef;
     @ViewChild('filters') filtersTemplate: ArchivesLoggingFiltersComponent;
-    @ViewChild('spinner') customSpinner: SpinnerComponent;
 
     selectedCard: Card;
     selectedChildCards: Card[];
