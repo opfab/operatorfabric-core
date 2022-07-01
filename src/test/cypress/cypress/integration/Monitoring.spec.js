@@ -451,6 +451,10 @@ describe ('Monitoring screen tests',function () {
         
         cy.countAgGridTableRows('#opfab-monitoring-table-grid', 5);
 
+        // Check response arrow icon before lauching export , to let the time for child card processing 
+        cy.agGridCellElementShould('#opfab-monitoring-table-grid', 2, 1, 'em', 'have.class', 'fa-reply');
+
+
         // Do export
         cy.get('#opfab-monitoring-btn-exportToExcel').click();
 
