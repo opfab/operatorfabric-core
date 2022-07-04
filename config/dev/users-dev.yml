@@ -78,6 +78,7 @@ operatorfabric.users.default:
      name: Control Center FR North
      description: Control Center FR North
      parents : ["ENTITY_FR"]
+     labels: ["FR1 label"]
    - id: ENTITY2_FR
      name: Control Center FR South
      description: Control Center FR South
