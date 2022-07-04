@@ -107,6 +107,7 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
     public isUserEnabledToRespond = false;
     public lttdExpiredIsTrue: boolean;
     public isResponseLocked = false;
+    public sendingResponse: boolean;
     public hrefsOfCssLink = new Array<SafeResourceUrl>();
     public fullscreen = false;
     public showButtons = false;
@@ -908,9 +909,10 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
                 parentCardId: this.card.id,
                 initialParentCardUid: this.card.uid
             };
-
+            this.sendingResponse = true;
             this.cardService.postCard(card).subscribe(
                 (rep) => {
+                    this.sendingResponse = false;
                     if (rep.status !== 201) {
                         this.displayMessage(ResponseI18nKeys.SUBMIT_ERROR_MSG, null, MessageLevel.ERROR);
                         console.error(rep);
@@ -921,6 +923,7 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
                     }
                 },
                 (err) => {
+                    this.sendingResponse = false;
                     this.displayMessage(ResponseI18nKeys.SUBMIT_ERROR_MSG, null, MessageLevel.ERROR);
                     console.error(err);
                 }
