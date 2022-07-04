@@ -74,7 +74,8 @@ function loadData() {
                 responses += 'name=' + entity.name + ',';
                 responses += 'description=' + entity.description + ',';
                 responses += 'entityAllowedToSendCard=' + entity.entityAllowedToSendCard + ',';
-                responses += 'parents=' + entity.parents;
+                responses += 'parents=' + entity.parents + ',';
+                responses += 'labels=' + entity.labels;
                 }
               );
             responses += '</span></div>';
@@ -84,7 +85,8 @@ function loadData() {
             responses += templateGateway.getEntity('ENTITY1_FR').name + ',';
             responses += templateGateway.getEntity('ENTITY1_FR').description + ',';
             responses += templateGateway.getEntity('ENTITY1_FR').entityAllowedToSendCard + ',';
-            responses += templateGateway.getEntity('ENTITY1_FR').parents;
+            responses += templateGateway.getEntity('ENTITY1_FR').parents+ ',';
+            responses += templateGateway.getEntity('ENTITY1_FR').labels;
             responses += '</span></div>';
 
             templateGatewayResults.innerHTML = responses;

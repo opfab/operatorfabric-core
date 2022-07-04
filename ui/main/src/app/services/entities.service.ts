@@ -136,7 +136,8 @@ export class EntitiesService extends CachedCrudService implements OnDestroy {
                 name: entity.name,
                 description: entity.description,
                 entityAllowedToSendCard: entity.entityAllowedToSendCard,
-                parents: entity.parents
+                parents: entity.parents,
+                labels: entity.labels
             })
         );
         templateGateway.setEntities(entities);
