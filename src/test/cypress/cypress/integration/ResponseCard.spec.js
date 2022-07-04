@@ -367,6 +367,7 @@ describe ('Response card tests',function () {
 
     });
 
+
     it ('Check responses in archived cards detail',function () {
         cy.loginOpFab('operator1_fr','test');
         // We move to archives screen
@@ -422,4 +423,28 @@ describe ('Response card tests',function () {
 
     });
 
+
+    it ('Check response button is disabled while sending response',function () {
+        cy.loginOpFab('operator1_fr','test');
+
+        // Click on the card
+        cy.get('of-light-card').eq(0).click(); 
+
+        // Delay send card response
+        cy.intercept('/cardspub/cards/userCard', (req) => {
+            req.reply((res) => {
+                res.delay = 2000;
+            });
+        });
+        cy.get('#opfab-card-details-btn-response').click(); // click to send the response
+
+        // send response button should be disabled
+        cy.get('#opfab-card-details-btn-response').should('have.text', 'SEND RESPONSE');
+        cy.get('#opfab-card-details-btn-response').should('be.disabled');
+
+        //  Modify response button should be enabled after response is sent,
+        cy.get('#opfab-card-details-btn-response').should('not.be.disabled');
+        cy.get('#opfab-card-details-btn-response').should('have.text', 'MODIFY RESPONSE');
+
+    });
 })
