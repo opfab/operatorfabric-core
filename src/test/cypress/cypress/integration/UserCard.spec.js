@@ -366,14 +366,12 @@ describe('User Card ', function () {
     })
 
   })
-
+  
   describe('Entities allowed to edit card sent by user', function () {
 
     before('Set up configuration', function () {
-
       cy.deleteAllCards();
       cy.sendCard('cypress/userCard/process.json');
-
     });
 
     it('Edit card from allowed entity', () => {
@@ -428,7 +426,7 @@ describe('User Card ', function () {
       cy.get("of-usercard").should('exist');
 
       // check this to be sure template has been loaded
-      cy.get("#hidden_process").should("have.value", "defaultProcess");
+      cy.get("#hidden_sender").should("have.value", "ENTITY2_FR");
       
       cy.usercardPrepareAndSendCard();
       // Check that the message indicating successful sending appears
