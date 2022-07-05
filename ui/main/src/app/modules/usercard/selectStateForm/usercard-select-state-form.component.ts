@@ -34,11 +34,11 @@ export class UserCardSelectStateFormComponent implements OnInit, OnDestroy {
 
     @ViewChild('processGroupSelect') set processGroup(processGroupSelect: MultiSelectComponent) {
         if (processGroupSelect && this.cardIdToEdit) processGroupSelect.disable();
-     }
+    }
 
     @ViewChild('processSelect') set process(processSelect: MultiSelectComponent) {
         if (processSelect && this.cardIdToEdit) processSelect.disable();
-     }
+    }
 
     processesDefinition: Process[];
     currentUserWithPerimeters: UserWithPerimeters;
@@ -49,10 +49,10 @@ export class UserCardSelectStateFormComponent implements OnInit, OnDestroy {
     processesWithoutProcessGroup = [];
 
     selectStateForm: FormGroup;
-    processOptions : Array<MultiSelectOption> = [];
+    processOptions: Array<MultiSelectOption> = [];
     processOptionsWhenSelectedProcessGroup = [];
-    processGroupOptions : Array<MultiSelectOption> = [];
-    selectedProcessGroupOption : any;
+    processGroupOptions: Array<MultiSelectOption> = [];
+    selectedProcessGroupOption: any;
     stateOptions: any[];
 
     selectedProcess: string;
@@ -105,7 +105,7 @@ export class UserCardSelectStateFormComponent implements OnInit, OnDestroy {
         if (!this.processOptions || this.processOptions.length < 1) this.emptyProcessList.emit(true);
     }
 
-    isProcessGroupFilterVisible() : boolean {
+    isProcessGroupFilterVisible(): boolean {
         return !!this.processGroupOptions && this.processGroupOptions.length > 1;
     }
 
@@ -144,7 +144,7 @@ export class UserCardSelectStateFormComponent implements OnInit, OnDestroy {
         this.statesPerProcesses.set(process.id, statesList);
     }
 
-    getStateFromProcessDefinition(process: Process, stateId: string) : {value: string, label: string}{
+    getStateFromProcessDefinition(process: Process, stateId: string): {value: string; label: string} {
         const stateFromProcessDefinition = process.states[stateId];
         if (!!stateFromProcessDefinition) {
             if (!!stateFromProcessDefinition.userCard) {
@@ -180,16 +180,19 @@ export class UserCardSelectStateFormComponent implements OnInit, OnDestroy {
         });
 
         for (const processGroupId of this.processesPerProcessGroups.keys())
-            this.processGroupOptions.push(new MultiSelectOption(processGroupId, this.processGroups.get(processGroupId).name));
+            this.processGroupOptions.push(
+                new MultiSelectOption(processGroupId, this.processGroups.get(processGroupId).name)
+            );
 
         this.processGroupOptions.sort((a, b) => Utilities.compareObj(a.label, b.label));
 
         if (this.processOptions.length > numberOfProcessesAttachedToAProcessGroup) {
             this.loadProcessesWithoutProcessGroup();
-            this.processGroupOptions.unshift(new MultiSelectOption( '--', 'processGroup.defaultLabel'));
+            this.processGroupOptions.unshift(new MultiSelectOption('--', 'processGroup.defaultLabel'));
         }
 
-        if (!this.cardIdToEdit && this.processGroupOptions.length > 0) this.selectedProcessGroupOption = this.processGroupOptions[0].value;
+        if (!this.cardIdToEdit && this.processGroupOptions.length > 0)
+            this.selectedProcessGroupOption = this.processGroupOptions[0].value;
     }
 
     private isProcessInProcessesGroup(idProcess: string, processesGroup: {name: string; processes: string[]}): boolean {
@@ -219,7 +222,7 @@ export class UserCardSelectStateFormComponent implements OnInit, OnDestroy {
 
     changeStatesWhenSelectProcess(): void {
         this.selectStateForm.get('usercardProcess').valueChanges.subscribe((process) => {
-            if (!!process ) {
+            if (!!process) {
                 this.stateOptions = this.statesPerProcesses.get(process);
                 if (!this.cardIdToEdit) {
                     this.selectedProcess = process;
@@ -232,18 +235,10 @@ export class UserCardSelectStateFormComponent implements OnInit, OnDestroy {
     private initProcessState() {
         if (this.cardIdToEdit) {
             const processGroupForCardToEdit = this.processGroupPerProcesses.get(this.initialProcess);
-
             if (processGroupForCardToEdit) this.selectedProcessGroupOption = processGroupForCardToEdit;
             else this.selectedProcessGroupOption = '--';
-
             this.selectedProcess = this.initialProcess;
-
             this.selectedState = this.initialState;
-
-            this.stateChange.emit({
-                selectedProcessId: this.initialProcess,
-                state: this.initialState
-            });
         }
     }
 
