@@ -379,6 +379,10 @@ describe('User Card ', function () {
       cy.get('of-light-card').eq(0).click();
       cy.get('#opfab-card-edit').click();
       cy.get("of-usercard").should('exist');
+
+      // check this to be sure template has been loaded
+      cy.get('#state-select');
+
       cy.usercardPrepareAndSendCard();
       // Check that the message indicating successful sending appears
       cy.get('.opfab-info-message').should('have.class', 'opfab-alert-info').contains("Your card is published");
@@ -458,6 +462,11 @@ describe('User Card ', function () {
         cy.get('of-light-card').eq(0).click();
         cy.get('#opfab-card-edit').click();
         cy.get("of-usercard").should('exist');
+
+        // check this to be sure template has been loaded
+        cy.get('#state-select');
+
+
         cy.usercardPrepareAndSendCard();
         // Check that the message indicating successful sending appears
         cy.get('.opfab-info-message').should('have.class','opfab-alert-info').contains("Your card is published");
@@ -479,6 +488,10 @@ describe('User Card ', function () {
       cy.usercardSelectService('User card examples');
       cy.usercardSelectProcess('Conference and IT incident');
       cy.usercardSelectState('IT Incident');
+
+      // check this to be sure template has been loaded
+      cy.get('#service-select');
+
       cy.usercardPrepareAndSendCard();
       // Check that the message indicating successful sending appears
       cy.get('.opfab-info-message').should('have.class', 'opfab-alert-info').contains("Your card is published");
