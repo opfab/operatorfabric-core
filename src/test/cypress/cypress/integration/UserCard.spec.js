@@ -171,7 +171,7 @@ describe('User Card ', function () {
       cy.loginOpFab('operator1_fr', 'test');
       cy.get('#opfab-navbarContent').find('#opfab-newcard-menu').click();
       cy.usercardSelectService('User card examples');
-      cy.usercardSelectProcess('Message or question');;
+      cy.usercardSelectProcess('Message or question');
       cy.usercardSelectState('Message');
       cy.get('#opfab-usercard-startdate-choice').should("exist");
       cy.get('#opfab-usercard-enddate-choice').should("not.exist");
@@ -188,6 +188,38 @@ describe('User Card ', function () {
         cy.get("#of-usercard-process-filter").find('.vscomp-option-text').should("have.length", 1);
         cy.get("#of-usercard-process-filter").find('.vscomp-option-text').eq(0).should("contain", "Process example ");
     })
+  })
+
+  describe('Test spinners', function () {
+    it('Check spinner appears when card template is loading', () => {
+
+      cy.delayRequestResponse('/businessconfig/**');
+      cy.delayRequestResponse('/cardspub/**');
+
+      cy.loginOpFab('operator1_fr', 'test');
+      cy.get('#opfab-navbarContent').find('#opfab-newcard-menu').click();
+      cy.checkLoadingSpinnerIsDisplayed();
+      cy.checkLoadingSpinnerIsNotDisplayed();
+
+      cy.usercardSelectService('User card examples');
+      cy.checkLoadingSpinnerIsDisplayed();
+      cy.checkLoadingSpinnerIsNotDisplayed();
+
+      cy.usercardSelectState('IT Incident');
+      cy.checkLoadingSpinnerIsDisplayed();
+      cy.checkLoadingSpinnerIsNotDisplayed();
+
+      cy.get('#opfab-usercard-btn-prepareCard').click();
+
+      // Checks the spinner when the translations are loading
+      cy.checkLoadingSpinnerIsDisplayed();
+      cy.checkLoadingSpinnerIsNotDisplayed();
+
+      // Checks the spinner when the card preview is loading
+      cy.checkLoadingSpinnerIsDisplayed();
+      cy.checkLoadingSpinnerIsNotDisplayed();
+    })
+
   })
 
   describe('Show automated response in preview for some user cards', function () {
