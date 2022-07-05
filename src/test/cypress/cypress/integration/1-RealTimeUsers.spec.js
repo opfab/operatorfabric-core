@@ -47,7 +47,7 @@ describe ('RealTimeUsersPage',()=>{
         cy.get('.bg-danger').should('have.length', 18);
         cy.get('table').first().find('tr').eq(3).find('td').eq(0).find('.bg-success').should('have.length', 1);
         cy.get('table').first().find('tr').eq(3).find('td').eq(0).find('span').eq(0).should('have.text', '1 ');
-        cy.get('table').first().find('tr').eq(3).find('td').eq(0).should('contain.text', '(operator3_fr)');
+        cy.get('table').first().find('tr').eq(3).find('td').eq(0).should('contain.text', 'operator3_fr');
 
         // we choose another screen (French Control Centers screen) and we check the titles
         cy.get('#of-realtimeusers-screen-selector').find('select').select('French Control Centers');
@@ -71,7 +71,7 @@ describe ('RealTimeUsersPage',()=>{
         cy.get('.bg-danger').should('have.length', 18);
         cy.get('table').first().find('tr').eq(2).find('td').eq(1).find('.bg-success').should('have.length', 1);
         cy.get('table').first().find('tr').eq(2).find('td').eq(1).find('span').eq(0).should('have.text', '1 ');
-        cy.get('table').first().find('tr').eq(2).find('td').eq(1).should('contain.text', '(operator2_fr)');
+        cy.get('table').first().find('tr').eq(2).find('td').eq(1).should('contain.text', 'operator2_fr');
 
         // we choose another screen (French Control Centers screen) and we check the titles
         cy.get('#of-realtimeusers-screen-selector').find('select').select('French Control Centers');
@@ -98,19 +98,19 @@ describe ('RealTimeUsersPage',()=>{
         // first row/first column
         cy.get('table').first().find('tr').eq(1).find('td').eq(0).find('.bg-success').should('have.length', 1);
         cy.get('table').first().find('tr').eq(1).find('td').eq(0).find('span').eq(0).should('have.text', '1 ');
-        cy.get('table').first().find('tr').eq(1).find('td').eq(0).should('contain.text', '(operator4_fr)');
+        cy.get('table').first().find('tr').eq(1).find('td').eq(0).should('contain.text', 'operator4_fr');
         // second row/first column
         cy.get('table').first().find('tr').eq(2).find('td').eq(0).find('.bg-success').should('have.length', 1);
         cy.get('table').first().find('tr').eq(2).find('td').eq(0).find('span').eq(0).should('have.text', '1 ');
-        cy.get('table').first().find('tr').eq(2).find('td').eq(0).should('contain.text', '(operator4_fr)');
+        cy.get('table').first().find('tr').eq(2).find('td').eq(0).should('contain.text', 'operator4_fr');
         // third row/first column
         cy.get('table').first().find('tr').eq(3).find('td').eq(0).find('.bg-success').should('have.length', 1);
         cy.get('table').first().find('tr').eq(3).find('td').eq(0).find('span').eq(0).should('have.text', '1 ');
-        cy.get('table').first().find('tr').eq(3).find('td').eq(0).should('contain.text', '(operator4_fr)');
+        cy.get('table').first().find('tr').eq(3).find('td').eq(0).should('contain.text', 'operator4_fr');
         // fourth row/first column
         cy.get('table').first().find('tr').eq(4).find('td').eq(0).find('.bg-success').should('have.length', 1);
         cy.get('table').first().find('tr').eq(4).find('td').eq(0).find('span').eq(0).should('have.text', '1 ');
-        cy.get('table').first().find('tr').eq(4).find('td').eq(0).should('contain.text', '(operator4_fr)');
+        cy.get('table').first().find('tr').eq(4).find('td').eq(0).should('contain.text', 'operator4_fr');
 
         // we choose another screen (French Control Centers screen) and we check the titles
         cy.get('#of-realtimeusers-screen-selector').find('select').select('French Control Centers');
@@ -155,7 +155,7 @@ describe ('RealTimeUsersPage',()=>{
         // first row/first column
         cy.get('table').first().find('tr').eq(1).find('td').eq(0).find('.bg-success').should('have.length', 1);
         cy.get('table').first().find('tr').eq(1).find('td').eq(0).find('span').eq(0).should('have.text', '1 ');
-        cy.get('table').first().find('tr').eq(1).find('td').eq(0).should('contain.text', '(operator4_fr)');
+        cy.get('table').first().find('tr').eq(1).find('td').eq(0).should('contain.text', 'operator4_fr');
         // second row/first column
         cy.get('table').first().find('tr').eq(2).find('td').eq(0).find('.bg-danger').should('have.length', 1);
         cy.get('table').first().find('tr').eq(2).find('td').eq(0).find('span').eq(0).should('have.text', '0');
@@ -201,19 +201,19 @@ describe ('RealTimeUsersPage',()=>{
         // first row/first column
         cy.get('table').first().find('tr').eq(1).find('td').eq(0).find('.bg-success').should('have.length', 1);
         cy.get('table').first().find('tr').eq(1).find('td').eq(0).find('span').eq(0).should('have.text', '1 ');
-        cy.get('table').first().find('tr').eq(1).find('td').eq(0).should('contain.text', '(operator4_fr)');
+        cy.get('table').first().find('tr').eq(1).find('td').eq(0).should('contain.text', 'operator4_fr');
         // second row/first column
         cy.get('table').first().find('tr').eq(2).find('td').eq(0).find('.bg-success').should('have.length', 1);
         cy.get('table').first().find('tr').eq(2).find('td').eq(0).find('span').eq(0).should('have.text', '1 ');
-        cy.get('table').first().find('tr').eq(2).find('td').eq(0).should('contain.text', '(operator4_fr)');
+        cy.get('table').first().find('tr').eq(2).find('td').eq(0).should('contain.text', 'operator4_fr');
         // third row/first column
         cy.get('table').first().find('tr').eq(3).find('td').eq(0).find('.bg-success').should('have.length', 1);
         cy.get('table').first().find('tr').eq(3).find('td').eq(0).find('span').eq(0).should('have.text', '1 ');
-        cy.get('table').first().find('tr').eq(3).find('td').eq(0).should('contain.text', '(operator4_fr)');
+        cy.get('table').first().find('tr').eq(3).find('td').eq(0).should('contain.text', 'operator4_fr');
         // fourth row/first column
         cy.get('table').first().find('tr').eq(4).find('td').eq(0).find('.bg-success').should('have.length', 1);
         cy.get('table').first().find('tr').eq(4).find('td').eq(0).find('span').eq(0).should('have.text', '1 ');
-        cy.get('table').first().find('tr').eq(4).find('td').eq(0).should('contain.text', '(operator4_fr)');
+        cy.get('table').first().find('tr').eq(4).find('td').eq(0).should('contain.text', 'operator4_fr');
     })
 
 

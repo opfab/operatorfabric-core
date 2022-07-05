@@ -15,9 +15,10 @@ import {TranslateModule} from '@ngx-translate/core';
 import {SingleFilterModule} from '../share/single-filter/single-filter.module';
 import {ReactiveFormsModule} from '@angular/forms';
 import { SpinnerModule } from '../share/spinner/spinner.module';
+import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
 
 @NgModule({
     declarations: [RealtimeusersComponent],
-    imports: [CommonModule, TranslateModule, RealtimeusersRoutingModule, SingleFilterModule, ReactiveFormsModule, SpinnerModule]
+    imports: [CommonModule, TranslateModule, RealtimeusersRoutingModule, SingleFilterModule, ReactiveFormsModule, SpinnerModule, NgbModule]
 })
 export class RealtimeusersModule {}

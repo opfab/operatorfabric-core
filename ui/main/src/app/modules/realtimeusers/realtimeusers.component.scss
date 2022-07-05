@@ -35,3 +35,12 @@
 .badge-pill {
     color: var(--opfab-text-color-stronger);
 }
+
+.opfab-group-label {
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+    max-width: 180px;
+    display: inline-block;
+    vertical-align: middle;
+}
