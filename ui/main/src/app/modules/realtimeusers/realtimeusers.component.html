@@ -47,8 +47,20 @@
                             <td *ngFor="let group of entitiesGroupsElement.groups;">
                                 <ng-template #connected>
                                     <span class="badge rounded-pill bg-success">{{getNumberOfConnectedUsersInEntityAndGroup(entity + '.' + group)}}
-                                    </span>&nbsp;({{labelForConnectedUsers(entity + '.' + group)}})
+                                    </span>&nbsp;<span [id]="'grouped-label-' + entity + '.' + group" class="opfab-group-label"
+                                        [disablePopover]="!isEllipsisActive('grouped-label-' + entity + '.' + group)"
+                                        placement="top-left"
+                                        [ngbPopover]="usersDropdown" container="body"
+                                        triggers="mouseenter:mouseleave"
+                                        popoverClass="opfab-popover-no-arrow">
+                                        {{getLabelForConnectedUsers(entity + '.' + group)}}
+                                      </span>
                                 </ng-template>
+                                <ng-template #usersDropdown>
+                                    <div *ngFor="let login of connectedUsersPerEntityAndGroup.get(entity + '.' + group)">
+                                      &nbsp; {{login}} &nbsp;
+                                    </div>
+                                  </ng-template>
                                 <ng-template #disconnected><span class="badge rounded-pill bg-danger">0</span></ng-template>
                                 <span *ngIf="getNumberOfConnectedUsersInEntityAndGroup(entity + '.' + group);then connected else disconnected"></span>
                             </td>
@@ -59,6 +71,8 @@
         </div>
     </div>
 </form>
+
+
 
 <ng-template #noScreenConfiguration>
     <div id="opfab-realtimeusers-no-screen-configuration" style="text-align: center; font-size: 20px; padding-top: 100px" translate>shared.featureNotConfigured</div>

@@ -34,6 +34,7 @@ export class RealtimeusersComponent implements OnInit, OnDestroy {
     columnsNumberPerScreenAndScreenColumn: Map<string, number> = new Map<string, number>();
 
 
+
     constructor(
         private userService: UserService,
         private realTimeScreensService: RealTimeScreensService,
@@ -133,13 +134,13 @@ export class RealtimeusersComponent implements OnInit, OnDestroy {
         });
     }
 
-    labelForConnectedUsers(entityAndGroup: string): string {
+    getLabelForConnectedUsers(entityAndGroup: string): string {
         let label = '';
         const connectedUsers = this.connectedUsersPerEntityAndGroup.get(entityAndGroup);
-
-        if (!!connectedUsers) label = connectedUsers.length > 1 ? connectedUsers[0] + ', ...' : connectedUsers[0];
-
-        return label;
+        connectedUsers.forEach(login => {
+            label += login + ' ';
+        });
+        return label.trim();
     }
 
     getNumberOfConnectedUsersInEntityAndGroup(entityAndGroup: string): number {
@@ -151,4 +152,9 @@ export class RealtimeusersComponent implements OnInit, OnDestroy {
     ngOnDestroy() {
         clearInterval(this.interval);
     }
+
+    isEllipsisActive(id: string): boolean {
+        const element = document.getElementById(id);
+        return (element.offsetWidth < element.scrollWidth);
+   }
 }
