@@ -21,6 +21,7 @@ import {UserCardSelectStateFormComponent} from './selectStateForm/usercard-selec
 import {UserCardRecipientsFormComponent} from './recipientForm/usercard-recipients-form.component';
 import {UsercardSelectCardEmitterFormComponent} from './selectCardEmitterForm/usercard-select-card-emitter-form.component';
 import {MultiSelectModule} from '../share/multi-select/multi-select.module';
+import { SpinnerModule } from '../share/spinner/spinner.module';
 
 @NgModule({
     declarations: [
@@ -39,7 +40,8 @@ import {MultiSelectModule} from '../share/multi-select/multi-select.module';
         DatetimeFilterModule,
         MultiSelectModule,
         CardDetailModule,
-        LightCardModule
+        LightCardModule,
+        SpinnerModule
     ],
     exports: [UserCardComponent]
 })

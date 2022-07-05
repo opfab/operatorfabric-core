@@ -11,10 +11,11 @@ import {NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {TranslateModule} from '@ngx-translate/core';
 import {CardDetailComponent} from './card-detail.component';
+import { SpinnerModule } from '../spinner/spinner.module';
 
 @NgModule({
     declarations: [CardDetailComponent],
-    imports: [CommonModule, TranslateModule],
+    imports: [CommonModule, TranslateModule, SpinnerModule],
     exports: [CardDetailComponent]
 })
 export class CardDetailModule {}

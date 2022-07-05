@@ -90,6 +90,8 @@ export class UserCardComponent implements OnInit {
     public editCardStateId: string;
     private datesFromCardToEdit: boolean;
     private datesFromTemplate: boolean;
+    isLoadingCardTemplate = false;
+    isPreparingCard = false;
 
     // Preview and send card
     readonly displayContext = DisplayContext.PREVIEW;
@@ -356,18 +358,21 @@ export class UserCardComponent implements OnInit {
 
         if (!!this.userCardConfiguration && !!this.userCardConfiguration.template) {
             const templateName = this.userCardConfiguration.template;
-            usercardTemplateGateway.setEntityUsedForSendingCard = (entity) => {
+            usercardTemplateGateway.setEntityUsedForSendingCard = () => {
                 // default method if not override by template
             };
             templateGateway.getSpecificCardInformation = null;
             usercardTemplateGateway.getSpecificCardInformation = null;
             if (!this.cardToEdit) this.setDefaultDateFormValues();
 
+            this.isLoadingCardTemplate = true;
+
             this.handlebars
                 .queryTemplate(this.selectedProcessId, selected.version, templateName)
                 .pipe(map((t) => t(new DetailContext(card, null, null))))
                 .subscribe({
                     next: (template) => {
+                        this.isLoadingCardTemplate = false;
                         this.userCardTemplate = this.sanitizer.bypassSecurityTrustHtml(template);
                         setTimeout(() => {
                             // wait for DOM rendering
@@ -380,6 +385,8 @@ export class UserCardComponent implements OnInit {
                         }, 10);
                     },
                     error: (error) => {
+                        this.isLoadingCardTemplate = false;
+
                         this.opfabLogger.error(
                             'WARNING impossible to load template ' + templateName + ', error = ' + error
                         );
@@ -443,9 +450,12 @@ export class UserCardComponent implements OnInit {
         const cardEmitter = this.findPublisherForCreatingUsercard();
         const recipients = this.getRecipients();
 
+        this.isPreparingCard = true;
+
         this.cardService
             .postTranslateCardField(selectedProcess.id, selectedProcess.version, title)
             .subscribe((response) => {
+                this.isPreparingCard = false;
                 const titleTranslated = response.body.translatedField;
                 this.card = {
                     id: 'dummyId',

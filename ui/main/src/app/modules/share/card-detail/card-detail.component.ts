@@ -48,6 +48,7 @@ export class CardDetailComponent implements OnInit, OnDestroy, AfterViewChecked 
     private templateName: string;
     private user: User;
     private userMemberOfAnEntityRequiredToRespondAndAllowedToSendCards = false;
+    public isLoading = false;
 
     constructor(
         private element: ElementRef,
@@ -152,6 +153,7 @@ export class CardDetailComponent implements OnInit, OnDestroy, AfterViewChecked 
             this.userMemberOfAnEntityRequiredToRespondAndAllowedToSendCards;
 
         templateGateway.childCards = this.childCards;
+        this.isLoading = true;
 
         this.businessconfigService
             .queryProcessFromCard(this.card)
@@ -167,6 +169,8 @@ export class CardDetailComponent implements OnInit, OnDestroy, AfterViewChecked 
             .subscribe({
                 next: (html) => {
                     this._htmlContent = this.sanitizer.bypassSecurityTrustHtml(html);
+                    this.isLoading = false;
+
                     setTimeout(() => {
                         // wait for DOM rendering
                         this.reinsertScripts();
@@ -177,6 +181,8 @@ export class CardDetailComponent implements OnInit, OnDestroy, AfterViewChecked 
                     }, 10);
                 },
                 error: (error) => {
+                    this.isLoading = false;
+
                     console.log(
                         new Date().toISOString(),
                         'WARNING impossible to process template ',
