@@ -22,9 +22,9 @@
             <br>
             <div class="row" style="margin-left: 0px;margin-right: 0px;">
                 <div class="col-sm text-center" style="max-width: max-content;min-width: 15%;position:relative">
-                    <of-single-filter id="of-realtimeusers-screen-selector" [parentForm]="realTimeScreensForm" [values]="realTimeScreensOptions"
-                                      i18nRootLabelKey="realTimeUsers." placeholderKey="realTimeUsers.selectScreenText" filterPath="realTimeScreen">
-                    </of-single-filter>
+                    <of-multi-select id="of-realtimeusers-screen-selector" multiSelectId="realTimeScreen" [parentForm]="realTimeScreensForm"
+                                     [config]="multiSelectConfig" [options]="realTimeScreensOptions" [selectedOptions]="realTimeScreenIndexToDisplay">
+                    </of-multi-select>
                 </div>
             </div>
             <br>

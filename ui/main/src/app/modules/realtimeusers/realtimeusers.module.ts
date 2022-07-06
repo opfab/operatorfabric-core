@@ -14,11 +14,21 @@ import {RealtimeusersRoutingModule} from './realtimeusers-routing.module';
 import {TranslateModule} from '@ngx-translate/core';
 import {SingleFilterModule} from '../share/single-filter/single-filter.module';
 import {ReactiveFormsModule} from '@angular/forms';
-import { SpinnerModule } from '../share/spinner/spinner.module';
 import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
+import {SpinnerModule} from '../share/spinner/spinner.module';
+import {MultiSelectModule} from '../share/multi-select/multi-select.module';
 
 @NgModule({
     declarations: [RealtimeusersComponent],
-    imports: [CommonModule, TranslateModule, RealtimeusersRoutingModule, SingleFilterModule, ReactiveFormsModule, SpinnerModule, NgbModule]
+    imports: [
+        CommonModule,
+        TranslateModule,
+        RealtimeusersRoutingModule,
+        SingleFilterModule,
+        ReactiveFormsModule,
+        SpinnerModule,
+        MultiSelectModule,
+        NgbModule
+    ]
 })
 export class RealtimeusersModule {}
