@@ -50,7 +50,7 @@ describe ('RealTimeUsersPage',()=>{
         cy.get('table').first().find('tr').eq(3).find('td').eq(0).should('contain.text', 'operator3_fr');
 
         // we choose another screen (French Control Centers screen) and we check the titles
-        cy.get('#of-realtimeusers-screen-selector').find('select').select('French Control Centers');
+        cy.get('#of-realtimeusers-screen-selector').find('.vscomp-option-text').eq(1).click({force: true});
         cy.get('.opfab-realtimeusers-entitiesgroups').eq(0).find('span').eq(0).should('have.text', 'French Control Centers');
         cy.get('.opfab-realtimeusers-entitiesgroups').eq(1).find('span').eq(0).should('have.text', 'Central Supervision Centers');
     })
@@ -74,7 +74,7 @@ describe ('RealTimeUsersPage',()=>{
         cy.get('table').first().find('tr').eq(2).find('td').eq(1).should('contain.text', 'operator2_fr');
 
         // we choose another screen (French Control Centers screen) and we check the titles
-        cy.get('#of-realtimeusers-screen-selector').find('select').select('French Control Centers');
+        cy.get('#of-realtimeusers-screen-selector').find('.vscomp-option-text').eq(1).click({force: true});
         cy.get('.opfab-realtimeusers-entitiesgroups').eq(0).find('span').eq(0).should('have.text', 'French Control Centers');
         cy.get('.opfab-realtimeusers-entitiesgroups').eq(1).find('span').eq(0).should('have.text', 'Central Supervision Centers');
     })
@@ -113,7 +113,7 @@ describe ('RealTimeUsersPage',()=>{
         cy.get('table').first().find('tr').eq(4).find('td').eq(0).should('contain.text', 'operator4_fr');
 
         // we choose another screen (French Control Centers screen) and we check the titles
-        cy.get('#of-realtimeusers-screen-selector').find('select').select('French Control Centers');
+        cy.get('#of-realtimeusers-screen-selector').find('.vscomp-option-text').eq(1).click({force: true});
         cy.get('.opfab-realtimeusers-entitiesgroups').eq(0).find('span').eq(0).should('have.text', 'French Control Centers');
         cy.get('.opfab-realtimeusers-entitiesgroups').eq(1).find('span').eq(0).should('have.text', 'Central Supervision Centers');
 

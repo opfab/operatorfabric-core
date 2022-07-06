@@ -16,6 +16,7 @@ import {GroupsService} from '@ofServices/groups.service';
 import {UntypedFormControl, UntypedFormGroup} from '@angular/forms';
 import {UserPreferencesService} from '@ofServices/user-preference.service';
 import {Utilities} from '../../common/utilities';
+import {MultiSelectConfig} from '@ofModel/multiselect.model';
 
 @Component({
     selector: 'of-realtimeusers',
@@ -28,11 +29,16 @@ export class RealtimeusersComponent implements OnInit, OnDestroy {
 
     realTimeScreens: Array<RealTimeScreen>;
     isRealTimeScreensLoaded = false;
-    realTimeScreenIndexToDisplay: number;
+    realTimeScreenIndexToDisplay: string;
     connectedUsersPerEntityAndGroup: Map<string, Array<string>> = new Map<string, Array<string>>();
     realTimeScreensOptions = [];
     columnsNumberPerScreenAndScreenColumn: Map<string, number> = new Map<string, number>();
 
+    public multiSelectConfig: MultiSelectConfig = {
+        labelKey: 'realTimeUsers.realTimeScreen',
+        multiple: false,
+        search: true
+    };
 
 
     constructor(
@@ -54,15 +60,18 @@ export class RealtimeusersComponent implements OnInit, OnDestroy {
             this.realTimeScreens = result.realTimeScreens;
             
             this.realTimeScreens.forEach((realTimeScreen, index) => {
-                this.realTimeScreensOptions.push({value: index, label: realTimeScreen.screenName});
+                this.realTimeScreensOptions.push({value: String(index), label: realTimeScreen.screenName});
             });
             this.isRealTimeScreensLoaded = true;
 
             const screenIndexToDisplayFirst = this.userPreferences.getPreference(
                 'opfab.realTimeScreens.screenIndexToDisplayFirst'
             );
-            if (!!screenIndexToDisplayFirst) this.displayRealTimeScreenIndex(Number(screenIndexToDisplayFirst));
-            else this.displayRealTimeScreenIndex(0);
+            if (!!screenIndexToDisplayFirst) {
+                this.displayRealTimeScreenIndex(Number(screenIndexToDisplayFirst));
+            } else {
+                this.displayRealTimeScreenIndex(0);
+            }
 
             this.loadColumnsNumberPerScreenAndScreenColumn();
         });
@@ -118,7 +127,7 @@ export class RealtimeusersComponent implements OnInit, OnDestroy {
     }
 
     displayRealTimeScreenIndex(index: number): void {
-        this.realTimeScreenIndexToDisplay = !!this.realTimeScreens[index] ? index : 0;
+        this.realTimeScreenIndexToDisplay = !!this.realTimeScreens[index] ? String(index) : '0';
         this.realTimeScreensForm.get('realTimeScreen').setValue(this.realTimeScreenIndexToDisplay);
     }
 
