@@ -145,6 +145,7 @@ It should look like:
 |externalDevicesEnabled|false|no|If true, users have the opportunity to play sounds on external devices rather than in the browser. See `settings.playSoundOnExternalDevice`
 |secondsToCloseSession|60|no|Number of seconds between logout and token expiration
 |selectActivityAreaOnLogin|false|no| if set to true the users belonging to multiple Entities will be required to configure activity area on login 
+|checkIfUrlIsLocked|true|no| if set to false, an OperatorFabric url can be used by several tabs in the same browser. Note that there can only be one token per browser for a given OperatorFabric url, so the first session will be replaced by the second one
 
 
 |===
