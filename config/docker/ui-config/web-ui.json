@@ -1,6 +1,7 @@
 {
   "environmentName": "DOCKER ENV",
   "environmentColor": "blue",
+  "checkIfUrlIsLocked": true,
   "showUserEntitiesOnTopRightOfTheScreen": true,
   "externalDevicesEnabled": true,
   "selectActivityAreaOnLogin": false,

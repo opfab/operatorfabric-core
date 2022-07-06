@@ -103,9 +103,18 @@ export class ApplicationLoadingComponent implements OnInit {
                 );
                 this.i18nService.loadTranslationForMenu();
                 this.i18nService.setTranslationForMultiSelectUsedInTemplates();
-                this.checkIfAppLoadedInAnotherTab();
+
+                if (this.isUrlCheckActivated()) {
+                    this.checkIfAppLoadedInAnotherTab();
+                } else {
+                    this.launchAuthenticationProcess();
+                }
             });
         } else this.logger.error('No locales define (value i18.supported.locales not present in web-ui.json)');
+    }
+
+    private isUrlCheckActivated(): boolean {
+        return this.configService.getConfigValue('checkIfUrlIsLocked', true);
     }
 
     private checkIfAppLoadedInAnotherTab(): void {
