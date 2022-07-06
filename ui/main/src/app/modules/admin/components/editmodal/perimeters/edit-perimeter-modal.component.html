@@ -16,7 +16,7 @@
       <span aria-hidden="true">&times;</span>
     </div>
   </div>
-  <div class="modal-body scrollable">
+  <div class="modal-body">
     <form [formGroup]="perimeterForm" class="opfab-form-lighter">
       <div class="container">
         <div class="col">
@@ -33,34 +33,42 @@
           </div>
 
           <div class="opfab-edit-row"  style="position: relative;">
-            <of-single-filter i18nRootLabelKey="admin.input.perimeter." [parentForm]="perimeterForm" filterPath="process"
-                              [values]="processOptions" [prefixWithValue]=true 
-                              placeholderKey="admin.input.selectProcessText" sortValues=true
-                              id="opfab-admin-perimeter-process-filter"></of-single-filter>
+            <of-multi-select id="opfab-admin-perimeter-process-filter"
+                             multiSelectId="process"
+                             [parentForm]="perimeterForm"
+                             [config]="multiSelectConfigForProcess"
+                             [options]="processOptions"
+                             [selectedOptions]="perimeterForm.get('process').value">
+            </of-multi-select>
           </div>
 
         </div>
 
         <form [formGroup]="perimeterForm">
-          <div formArrayName="stateRights">
-            <div class="opfab-edit-row row" *ngFor="let stateRight of perimeterForm.get('stateRights')['controls']; let i = index"
-                 [formGroupName]="i">
-              <div class="col-7" style="position: relative;">
-                <of-single-filter i18nRootLabelKey="admin.input.perimeter." [parentForm]="stateRight" filterPath="state"
-                                  [values]="stateOptions" placeholderKey="admin.input.selectStateText"
-                                  sortValues=true id="opfab-admin-perimeter-state-filter"></of-single-filter>
-              </div>
-              <div class="col-3" style="position: relative;">
-                <of-single-filter i18nRootLabelKey="admin.input.perimeter." [parentForm]="stateRight" filterPath="right"
-                                  [values]="rightOptions" placeholderKey="admin.input.selectRightText"
-                                  id="opfab-admin-perimeter-right-filter"></of-single-filter>
-              </div>
-              <div class="col icons">
-                <em class="far fa-trash-alt" (click)="removeOrClearStateRight(i)"></em>
-              </div>
-              <div class="col icons">
-                <em class="fas fa-plus-circle" (click)="addStateRightFormGroup()"></em>
-              </div>
+          <div class="opfab-edit-row row" *ngFor="let i of stateRightControlsIndexes;">
+            <div class="col-7" style="position: relative;">
+              <of-multi-select id="opfab-admin-perimeter-state-filter"
+                               [multiSelectId]="'state'+i"
+                               [parentForm]="perimeterForm"
+                               [config]="multiSelectConfigForState"
+                               [options]="stateOptions"
+                               [selectedOptions]="perimeterForm.get('state'+i).value">
+              </of-multi-select>
+            </div>
+            <div class="col-3" style="position: relative;">
+              <of-multi-select id="opfab-admin-perimeter-right-filter"
+                               [multiSelectId]="'right'+i"
+                               [parentForm]="perimeterForm"
+                               [config]="multiSelectConfigForRight"
+                               [options]="rightOptions"
+                               [selectedOptions]="perimeterForm.get('right'+i).value">
+              </of-multi-select>
+            </div>
+            <div class="col icons" [hidden]="stateRightControlsIndexes.length === 1">
+              <em class="far fa-trash-alt" (click)="removeOrClearStateRight(i)"></em>
+            </div>
+            <div class="col icons">
+              <em class="fas fa-plus-circle" (click)="addStateRightControl()"></em>
             </div>
           </div>
         </form>
