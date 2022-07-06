@@ -388,15 +388,27 @@ describe('AdminPage', () => {
 
         cy.get('#opfab-admin-perimeter-btn-add').should('be.disabled');
 
-        cy.get('#opfab-admin-perimeter-process-filter').find('select').select('cypress - Test process for cypress');
+        cy.get('#opfab-admin-perimeter-process-filter')
+            .find('.vscomp-option-text')
+            .eq(1)
+            .should('contain.text', 'cypress - Test process for cypress')
+            .click({force: true});
 
         cy.get('#opfab-admin-perimeter-btn-add').should('be.disabled');
 
-        cy.get('#opfab-admin-perimeter-state-filter').find('select').select('Message');
+        cy.get('#opfab-admin-perimeter-state-filter')
+            .find('.vscomp-option-text')
+            .eq(1)
+            .should('contain.text', 'Message')
+            .click({force: true});
 
         cy.get('#opfab-admin-perimeter-btn-add').should('be.disabled');
 
-        cy.get('#opfab-admin-perimeter-right-filter').find('select').select('Write');
+        cy.get('#opfab-admin-perimeter-right-filter')
+            .find('.vscomp-option-text')
+            .eq(0)
+            .should('contain.text', 'Write')
+            .click({force: true});
 
         cy.get('#opfab-admin-perimeter-btn-add').should('not.be.disabled');
 
@@ -428,11 +440,18 @@ describe('AdminPage', () => {
 
         cy.get('.modal-title').should('contain.text', 'testperimeter');
 
-        // We modify the state
-        cy.get('#opfab-admin-perimeter-state-filter').find('select').select('Message with no ack');
+        cy.get('#opfab-admin-perimeter-state-filter').click();
+        cy.get('#opfab-admin-perimeter-state-filter')
+            .find('.vscomp-option-text')
+            .eq(3)
+            .should('contain.text', 'Message with no ack')
+            .click({force: true});
 
-        // We modify the right
-        cy.get('#opfab-admin-perimeter-right-filter').find('select').select('ReceiveAndWrite');
+        cy.get('#opfab-admin-perimeter-right-filter')
+            .find('.vscomp-option-text')
+            .eq(1)
+            .should('contain.text', 'ReceiveAndWrite')
+            .click({force: true});
 
         // We save changes
         cy.get('#opfab-admin-perimeter-btn-save').click();
