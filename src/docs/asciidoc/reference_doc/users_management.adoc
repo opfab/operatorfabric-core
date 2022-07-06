@@ -94,7 +94,7 @@ for more details to use this feature.
 
 == Currently connected users
 
-The endPoint `/cards/connections` gives the list of connected user in real time. It is only accessible by users with administrator privileges.
+The endPoint `/cards/connections` gives the list of connected users in real time. It is accessible by all users.
 
 == Real time users
 
@@ -277,3 +277,14 @@ With this configuration file, 4 different screens will be available : "All Contr
 For example, in the UI, "All Control Centers" will look like :
 
 image::realtimescreens_screenshot.png[Real Time Screens screenshot,align="center"]
+
+== Activity area
+
+OperatorFabric allows you to connect/disconnect to/from one or several entity/ies. By default, the user is connected to
+all the entities to which he belongs.
+By choosing to disconnect from an entity, the user will still be a member of this entity, but he will no longer have
+access to the cards intended for this entity, until he reconnects to it.
+
+If set visible in ui-menu.json, this interface is accessible via the user menu (top right of the screen).
+
+The choice of activity area may be done during user logging phase if you set selectActivityAreaOnLogin to true in web-ui.json.
