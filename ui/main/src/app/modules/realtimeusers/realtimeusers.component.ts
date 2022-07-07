@@ -51,11 +51,11 @@ export class RealtimeusersComponent implements OnInit, OnDestroy {
 
         this.realTimeScreensService.loadRealTimeScreensData().subscribe((result) => {
             this.realTimeScreens = result.realTimeScreens;
-            this.isRealTimeScreensLoaded = true;
-
+            
             this.realTimeScreens.forEach((realTimeScreen, index) => {
                 this.realTimeScreensOptions.push({value: index, label: realTimeScreen.screenName});
             });
+            this.isRealTimeScreensLoaded = true;
 
             const screenIndexToDisplayFirst = this.userPreferences.getPreference(
                 'opfab.realTimeScreens.screenIndexToDisplayFirst'
