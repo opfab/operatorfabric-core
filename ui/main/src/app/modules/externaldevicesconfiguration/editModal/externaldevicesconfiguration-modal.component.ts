@@ -43,6 +43,13 @@ export class ExternaldevicesconfigurationModalComponent implements OnInit {
         nbOfDisplayValues: 6
     };
 
+    public multiSelectConfig: MultiSelectConfig = {
+        labelKey: 'externalDevicesConfiguration.userLogin',
+        multiple: false,
+        search: true,
+        sortOptions: true
+    };
+
     constructor(
         private activeModal: NgbActiveModal,
         private externalDevicesService: ExternalDevicesService,
@@ -69,7 +76,7 @@ export class ExternaldevicesconfigurationModalComponent implements OnInit {
         this.users.forEach((usr) => {
             const alreadyConfiguredUser = this.configurations.find((c) => c.userLogin === usr.login);
             if (!alreadyConfiguredUser) {
-                this.usersDropdownList.push(usr.login);
+                this.usersDropdownList.push({value: usr.login, label: usr.login});
             }
         });
         this.isLoadingUsers = false;
