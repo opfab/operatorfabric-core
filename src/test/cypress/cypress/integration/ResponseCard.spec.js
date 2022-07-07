@@ -423,7 +423,7 @@ describe ('Response card tests',function () {
 
     });
 
-/** 
+ 
     it ('Check response button is disabled while sending response',function () {
         cy.loginOpFab('operator1_fr','test');
 
@@ -436,10 +436,14 @@ describe ('Response card tests',function () {
                 res.delay = 2000;
             });
         });
+
+        // Check template is loaded
+        cy.get('#question-choice1');
+
+        cy.get('#opfab-card-details-btn-response').should('have.text', 'SEND RESPONSE');
         cy.get('#opfab-card-details-btn-response').click(); // click to send the response
 
         // send response button should be disabled
-        cy.get('#opfab-card-details-btn-response').should('have.text', 'SEND RESPONSE');
         cy.get('#opfab-card-details-btn-response').should('be.disabled');
 
         //  Modify response button should be enabled after response is sent,
@@ -447,5 +451,5 @@ describe ('Response card tests',function () {
         cy.get('#opfab-card-details-btn-response').should('have.text', 'MODIFY RESPONSE');
 
     });
-*/
+
 })

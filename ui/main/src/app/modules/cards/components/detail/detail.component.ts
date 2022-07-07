@@ -223,7 +223,6 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
         this.initializeHrefsOfCssLink();
         this.initializeHandlebarsTemplates();
         this.markAsReadIfNecessary();
-        this.setButtonsVisibility();
         this.showDetailCardHeader =
             !this.cardState.showDetailCardHeader || this.cardState.showDetailCardHeader === true;
         this.computeFromEntityOrRepresentative();
@@ -341,6 +340,7 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
                                 }
                                 templateGateway.setScreenSize(this.screenSize);
                                 setTimeout(() => templateGateway.onTemplateRenderingComplete(), 10);
+                                this.setButtonsVisibility();
                             }, 10);
                         }, 10);
                     },
