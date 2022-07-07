@@ -32,9 +32,9 @@
                 <input type="text" disabled value="{{row.userLogin}}"/>
               </div>
               <div *ngIf="!row"  class="row">
-                <of-single-filter id="opfab-usersDropdownList" *ngIf="usersDropdownList.length > 0" i18nRootLabelKey="externalDevicesConfiguration." [parentForm]="userdeviceForm" filterPath="userLogin"
-                                  [values]="usersDropdownList" [translateLabels]=false [prefixWithValue]=false style="position:relative"
-                                  placeholderKey="externalDevicesConfiguration.input.selectUserText" sortValues=true></of-single-filter>
+                <of-multi-select id="opfab-usersDropdownList" *ngIf="usersDropdownList.length > 0" multiSelectId="userLogin"
+                                 [parentForm]="userdeviceForm" [config]="multiSelectConfig" [options]="usersDropdownList">
+                </of-multi-select>
               </div>
 
               <div class="row">
