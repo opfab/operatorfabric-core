@@ -72,7 +72,7 @@ export class UserCardComponent implements OnInit {
     private currentEndDate = new Date().valueOf() + 60000 * 60 * 24;
     private currentLttd = this.defaultEndDate - 60000;
 
-    private userEntitiesAllowedToSendCardOptions = [];
+    public userEntitiesAllowedToSendCardOptions = [];
 
     // Card emitter
     @ViewChild('cardEmitterForm') cardEmitterForm: UsercardSelectCardEmitterFormComponent;
@@ -124,19 +124,15 @@ export class UserCardComponent implements OnInit {
     }
 
     ngOnInit() {
-
-
-        const ngbDate = new NgbDate(2022, 7,33);
-        console.log("ngDate = ", ngbDate);
-        const test =  new DateTimeNgb(ngbDate, {
+        const ngbDate = new NgbDate(2022, 7, 33);
+        console.log('ngDate = ', ngbDate);
+        const test = new DateTimeNgb(ngbDate, {
             hour: 0,
             minute: 0,
             second: 0
         });
 
-        console.log("date = ", new Date(Utilities.convertNgbDateTimeToEpochDate(test)));
-
-
+        console.log('date = ', new Date(Utilities.convertNgbDateTimeToEpochDate(test)));
 
         this.pageLoading = true;
         this.datesFromTemplate = true;
@@ -154,8 +150,11 @@ export class UserCardComponent implements OnInit {
             this.loadCardForEdition();
         } else {
             usercardTemplateGateway.editionMode = 'CREATE';
-            this.publisherForCreatingUsercard = this.userEntitiesAllowedToSendCardOptions[0].value;
             this.pageLoading = false;
+
+            if (this.userEntitiesAllowedToSendCardOptions.length > 0) {
+                this.publisherForCreatingUsercard = this.userEntitiesAllowedToSendCardOptions[0].value;
+            }
         }
 
         this.useDescriptionFieldForEntityList = this.configService.getConfigValue(

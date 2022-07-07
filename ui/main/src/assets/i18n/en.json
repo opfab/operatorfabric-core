@@ -270,6 +270,7 @@
     "editTitle" : "EDIT A NEW CARD",
     "error": {
       "notAvailable": "You are not allowed to send card",
+      "userHasNoEntityThatCanSendCard" : "You are not a member of any entity that can send cards.",
       "templateError": "Technical error : invalid template",
       "impossibleToSendCard": "Impossible to send card for technical reasons",
       "lttdBeforeStartDate": "Limit date for response must be after start date",
