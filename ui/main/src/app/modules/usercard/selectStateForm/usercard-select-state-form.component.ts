@@ -8,7 +8,7 @@
  */
 
 import {Component, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild} from '@angular/core';
-import {FormControl, FormGroup} from '@angular/forms';
+import {UntypedFormControl, UntypedFormGroup} from '@angular/forms';
 import {MultiSelectConfig, MultiSelectOption} from '@ofModel/multiselect.model';
 import {RightsEnum} from '@ofModel/perimeter.model';
 import {Process} from '@ofModel/processes.model';
@@ -48,7 +48,7 @@ export class UserCardSelectStateFormComponent implements OnInit, OnDestroy {
     processesPerProcessGroups = new Map();
     processesWithoutProcessGroup = [];
 
-    selectStateForm: FormGroup;
+    selectStateForm: UntypedFormGroup;
     processOptions: Array<MultiSelectOption> = [];
     processOptionsWhenSelectedProcessGroup = [];
     processGroupOptions: Array<MultiSelectOption> = [];
@@ -82,10 +82,10 @@ export class UserCardSelectStateFormComponent implements OnInit, OnDestroy {
     constructor(private processesService: ProcessesService, private userService: UserService) {}
 
     ngOnInit() {
-        this.selectStateForm = new FormGroup({
-            usercardProcessGroup: new FormControl(''),
-            usercardProcess: new FormControl(''),
-            usercardState: new FormControl('')
+        this.selectStateForm = new UntypedFormGroup({
+            usercardProcessGroup: new UntypedFormControl(''),
+            usercardProcess: new UntypedFormControl(''),
+            usercardState: new UntypedFormControl('')
         });
         this.currentUserWithPerimeters = this.userService.getCurrentUserWithPerimeters();
         this.processGroups = this.processesService.getProcessGroups();

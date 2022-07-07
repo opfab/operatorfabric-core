@@ -11,7 +11,7 @@ import {Component, Input, OnDestroy, OnInit} from '@angular/core';
 import {BaseSettingDirective} from '../base-setting/base-setting.directive';
 import {AppState} from '@ofStore/index';
 import {Store} from '@ngrx/store';
-import {AbstractControl, FormControl, FormGroup, Validators} from '@angular/forms';
+import {AbstractControl, UntypedFormControl, UntypedFormGroup, Validators} from '@angular/forms';
 import {I18n} from '@ofModel/i18n.model';
 import {TranslateService} from '@ngx-translate/core';
 import {Observable, of} from 'rxjs';
@@ -50,9 +50,9 @@ export class ListSettingComponent extends BaseSettingDirective implements OnInit
     initFormGroup() {
         const validators = this.computeListValidators();
         validators.push(this.valueInListValidator());
-        return new FormGroup(
+        return new UntypedFormGroup(
             {
-                setting: new FormControl('', validators)
+                setting: new UntypedFormControl('', validators)
             },
             {updateOn: 'change'}
         );

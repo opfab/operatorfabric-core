@@ -10,7 +10,7 @@
 import {Component, Input, OnDestroy, OnInit} from '@angular/core';
 import {Store} from '@ngrx/store';
 import {AppState} from '@ofStore/index';
-import {FormControl, FormGroup} from '@angular/forms';
+import {UntypedFormControl, UntypedFormGroup} from '@angular/forms';
 import {Subject} from 'rxjs';
 import {takeUntil} from 'rxjs/operators';
 import {UserPreferencesService} from '@ofServices/user-preference.service';
@@ -26,7 +26,7 @@ export class FeedSortComponent implements OnInit, OnDestroy {
     @Input() hideReadSort: boolean;
 
     private ngUnsubscribe$ = new Subject<void>();
-    sortForm: FormGroup;
+    sortForm: UntypedFormGroup;
 
     constructor(
         private store: Store<AppState>,
@@ -39,11 +39,11 @@ export class FeedSortComponent implements OnInit, OnDestroy {
         this.initSort();
     }
 
-    private createFormGroup(): FormGroup {
+    private createFormGroup(): UntypedFormGroup {
         const initialValue = !this.hideReadSort ? 'unread' : 'date';
-        return new FormGroup(
+        return new UntypedFormGroup(
             {
-                sortControl: new FormControl(initialValue)
+                sortControl: new UntypedFormControl(initialValue)
             },
             {updateOn: 'change'}
         );

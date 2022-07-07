@@ -14,7 +14,7 @@ import {PatchSettingsAction} from '@ofActions/settings.actions';
 import {buildSettingsSelector} from '@ofSelectors/settings.selectors';
 import {Subject, timer} from 'rxjs';
 import {debounce, distinctUntilChanged, filter, first, map, takeUntil} from 'rxjs/operators';
-import {FormGroup} from '@angular/forms';
+import {UntypedFormGroup} from '@angular/forms';
 import * as _ from 'lodash-es';
 import {selectIdentifier} from '@ofSelectors/authentication.selectors';
 
@@ -26,7 +26,7 @@ export abstract class BaseSettingDirective implements OnInit, OnDestroy {
     @Input() public requiredField: boolean;
     private ngUnsubscribe$ = new Subject<void>();
     protected setting$;
-    form: FormGroup;
+    form: UntypedFormGroup;
     private baseSettings = {};
 
     protected constructor(protected store: Store<AppState>) {}
@@ -67,7 +67,7 @@ export abstract class BaseSettingDirective implements OnInit, OnDestroy {
 
     protected abstract updateValue(value: any);
 
-    protected initFormGroup(): FormGroup {
+    protected initFormGroup(): UntypedFormGroup {
         return null;
     }
 

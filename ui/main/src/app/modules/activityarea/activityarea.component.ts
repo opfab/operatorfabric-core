@@ -12,7 +12,7 @@ import {UserService} from '@ofServices/user.service';
 import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
 import {NgbModalRef} from '@ng-bootstrap/ng-bootstrap/modal/modal-ref';
 import {UserWithPerimeters} from '@ofModel/userWithPerimeters.model';
-import {FormControl, FormGroup} from '@angular/forms';
+import {UntypedFormControl, UntypedFormGroup} from '@angular/forms';
 import {SettingsService} from '@ofServices/settings.service';
 import {EntitiesService} from '@ofServices/entities.service';
 import {CardService} from '@ofServices/card.service';
@@ -29,7 +29,7 @@ export class ActivityareaComponent implements OnInit, OnDestroy {
     @Input() askConfirmation = true;
     @Output() confirm = new EventEmitter();
 
-    activityAreaForm: FormGroup;
+    activityAreaForm: UntypedFormGroup;
     currentUserWithPerimeters: UserWithPerimeters;
     userEntities: {entityId: string; entityName: string; isDisconnected: boolean}[] = [];
     saveSettingsInProgress = false;
@@ -55,10 +55,10 @@ export class ActivityareaComponent implements OnInit, OnDestroy {
     private initForm() {
         const group = {};
         this.userEntities.forEach((userEntity) => {
-            if (userEntity.isDisconnected) group[userEntity.entityId] = new FormControl('');
-            else group[userEntity.entityId] = new FormControl('true');
+            if (userEntity.isDisconnected) group[userEntity.entityId] = new UntypedFormControl('');
+            else group[userEntity.entityId] = new UntypedFormControl('true');
         });
-        this.activityAreaForm = new FormGroup(group);
+        this.activityAreaForm = new UntypedFormGroup(group);
     }
 
     ngOnInit() {

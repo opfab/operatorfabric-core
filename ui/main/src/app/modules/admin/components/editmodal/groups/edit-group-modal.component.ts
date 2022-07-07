@@ -9,7 +9,7 @@
  */
 
 import {Component, Input, OnInit} from '@angular/core';
-import {AsyncValidatorFn, FormControl, FormGroup, Validators} from '@angular/forms';
+import {AsyncValidatorFn, UntypedFormControl, UntypedFormGroup, Validators} from '@angular/forms';
 import {NgbActiveModal} from '@ng-bootstrap/ng-bootstrap';
 import {AdminItemType, SharingService} from '../../../services/sharing.service';
 import {CrudService} from '@ofServices/crud-service';
@@ -29,7 +29,7 @@ import {GroupTypeEnum} from '@ofModel/group.model';
     styleUrls: ['./edit-group-modal.component.scss']
 })
 export class EditGroupModalComponent implements OnInit {
-    groupForm: FormGroup;
+    groupForm: UntypedFormGroup;
 
     perimetersMultiSelectOptions: Array<MultiSelectOption> = [];
     selectedPerimeters = [];
@@ -72,17 +72,17 @@ export class EditGroupModalComponent implements OnInit {
             // modal used for creating a new group
             uniqueGroupIdValidator.push(this.uniqueGroupIdValidatorFn());
 
-        this.groupForm = new FormGroup({
-            id: new FormControl(
+        this.groupForm = new UntypedFormGroup({
+            id: new UntypedFormControl(
                 '',
                 [Validators.required, Validators.minLength(2), Validators.pattern(/^[A-z\d\-_]+$/)],
                 uniqueGroupIdValidator
             ),
-            name: new FormControl('', [Validators.required]),
-            description: new FormControl(''),
-            perimeters: new FormControl([]),
-            realtime: new FormControl(false),
-            type: new FormControl('')
+            name: new UntypedFormControl('', [Validators.required]),
+            description: new UntypedFormControl(''),
+            perimeters: new UntypedFormControl([]),
+            realtime: new UntypedFormControl(false),
+            type: new UntypedFormControl('')
         });
 
         this.crudService = this.dataHandlingService.resolveCrudServiceDependingOnType(this.type);

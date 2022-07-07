@@ -8,7 +8,7 @@
  */
 
 import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
-import {FormControl, FormGroup} from '@angular/forms';
+import {UntypedFormControl, UntypedFormGroup} from '@angular/forms';
 import {takeUntil, debounceTime, Subject} from 'rxjs';
 
 @Component({
@@ -23,15 +23,15 @@ export class UsercardSelectCardEmitterFormComponent implements OnInit {
 
     unsubscribe$: Subject<void> = new Subject<void>();
 
-    selectCardEmitterForm: FormGroup;
+    selectCardEmitterForm: UntypedFormGroup;
 
     constructor() {
         // No body because all members are Inputs.
     }
 
     ngOnInit() {
-        this.selectCardEmitterForm = new FormGroup({
-            cardEmitter: new FormControl('')
+        this.selectCardEmitterForm = new UntypedFormGroup({
+            cardEmitter: new UntypedFormControl('')
         });
 
         this.selectCardEmitterForm.get('cardEmitter').setValue(this.initialPublisher);

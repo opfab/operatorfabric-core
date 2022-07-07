@@ -29,8 +29,11 @@
               "src/manifest.webmanifest"
             ],
             "styles": [
-              "node_modules/@fortawesome/fontawesome-free/css/all.css",
+              "node_modules/@fullcalendar/common/main.css",
+              "node_modules/@fullcalendar/daygrid/main.css",
+              "node_modules/@fullcalendar/timegrid/main.css",
               "node_modules/@fullcalendar/bootstrap/main.css",
+              "node_modules/@fortawesome/fontawesome-free/css/all.css",
               "node_modules/virtual-select-plugin/dist/virtual-select.min.css",
               "node_modules/tooltip-plugin/dist/tooltip.min.css",
               "node_modules/ol/ol.css",
@@ -163,9 +166,10 @@
       }
     }
   },
-  "defaultProject": "ui-home",
   "cli": {
     "analytics": false,
-    "defaultCollection": "@angular-eslint/schematics"
+    "schematicCollections": [
+      "@angular-eslint/schematics"
+    ]
   }
 }

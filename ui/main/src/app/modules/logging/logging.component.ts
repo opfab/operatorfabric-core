@@ -12,7 +12,7 @@ import {Subject} from 'rxjs';
 
 import {ProcessesService} from '@ofServices/processes.service';
 import {takeUntil} from 'rxjs/operators';
-import {FormControl, FormGroup} from '@angular/forms';
+import {UntypedFormControl, UntypedFormGroup} from '@angular/forms';
 import {ConfigService} from '@ofServices/config.service';
 import {DateTimeFormatterService} from '@ofServices/date-time-formatter.service';
 import {CardService} from '@ofServices/card.service';
@@ -35,7 +35,7 @@ export class LoggingComponent implements OnDestroy, OnInit {
 
     tags: any[];
     size: number;
-    loggingForm: FormGroup;
+    loggingForm: UntypedFormGroup;
 
     results: LightCard[];
     currentPage = 0;
@@ -69,15 +69,15 @@ export class LoggingComponent implements OnDestroy, OnInit {
         private entitiesService: EntitiesService,
         private modalService: NgbModal
     ) {
-        this.loggingForm = new FormGroup({
-            tags: new FormControl([]),
-            state: new FormControl([]),
-            process: new FormControl([]),
-            processGroup: new FormControl([]),
-            publishDateFrom: new FormControl(),
-            publishDateTo: new FormControl(''),
-            activeFrom: new FormControl(''),
-            activeTo: new FormControl('')
+        this.loggingForm = new UntypedFormGroup({
+            tags: new UntypedFormControl([]),
+            state: new UntypedFormControl([]),
+            process: new UntypedFormControl([]),
+            processGroup: new UntypedFormControl([]),
+            publishDateFrom: new UntypedFormControl(),
+            publishDateTo: new UntypedFormControl(''),
+            activeFrom: new UntypedFormControl(''),
+            activeTo: new UntypedFormControl('')
         });
 
         processesService.getAllProcesses().forEach((process) => {
