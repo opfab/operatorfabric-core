@@ -155,7 +155,11 @@ export class EditGroupModalComponent implements OnInit {
         }
         this.id.setValue((this.id.value as string).trim());
         this.name.setValue((this.name.value as string).trim());
-        this.description.setValue((this.description.value as string).trim());
+
+        if (!! this.description.value) {
+            this.description.setValue((this.description.value as string).trim());
+        }
+
         this.realtime.setValue(this.realtime.value as boolean);
     }
 
