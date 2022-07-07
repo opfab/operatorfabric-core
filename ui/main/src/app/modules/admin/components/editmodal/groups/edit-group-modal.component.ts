@@ -33,6 +33,7 @@ export class EditGroupModalComponent implements OnInit {
 
     perimetersMultiSelectOptions: Array<MultiSelectOption> = [];
     selectedPerimeters = [];
+    selectedGroupType = '';
 
     perimetersMultiSelectConfig: MultiSelectConfig = {
         labelKey: 'admin.input.group.perimeters',
@@ -45,7 +46,15 @@ export class EditGroupModalComponent implements OnInit {
 
     private crudService: CrudService;
 
-    groupTypes: string[];
+    groupTypes = [];
+
+    public multiSelectConfig: MultiSelectConfig = {
+        labelKey: 'admin.input.group.type',
+        placeholderKey: 'admin.input.selectGroupTypeText',
+        multiple: false,
+        search: true,
+        sortOptions: true
+    };
 
     constructor(
         private store: Store<AppState>,
@@ -54,10 +63,7 @@ export class EditGroupModalComponent implements OnInit {
         private perimetersService: PerimetersService,
         private groupsService: GroupsService
     ) {
-        this.groupTypes = [];
-        this.groupTypes.push('');
-
-        Object.values(GroupTypeEnum).forEach(t => this.groupTypes.push(t))
+        Object.values(GroupTypeEnum).forEach((t) => this.groupTypes.push({value: String(t), label: String(t)}));
     }
 
     ngOnInit() {
@@ -90,6 +96,7 @@ export class EditGroupModalComponent implements OnInit {
 
             // Otherwise, we use the selectedItems property of the of-multiselect component
             this.selectedPerimeters = this.row.perimeters;
+            this.selectedGroupType = this.row.type;
         }
 
         this.perimetersService.getPerimeters().forEach((perimeter) => {
@@ -136,7 +143,9 @@ export class EditGroupModalComponent implements OnInit {
             })
         );
         this.store.dispatch(
-            new AlertMessageAction({alertMessage: {message: res.originalError.error.message, level: MessageLevel.ERROR}})
+            new AlertMessageAction({
+                alertMessage: {message: res.originalError.error.message, level: MessageLevel.ERROR}
+            })
         );
     }
 
