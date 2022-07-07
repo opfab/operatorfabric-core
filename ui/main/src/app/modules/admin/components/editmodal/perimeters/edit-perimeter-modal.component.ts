@@ -8,7 +8,7 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {FormArray, FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
+import {UntypedFormArray, UntypedFormBuilder, UntypedFormControl, UntypedFormGroup, Validators} from '@angular/forms';
 import {Component, Input, OnInit} from '@angular/core';
 import {NgbActiveModal} from '@ng-bootstrap/ng-bootstrap';
 import {Perimeter, RightsEnum, StateRight} from '@ofModel/perimeter.model';
@@ -31,15 +31,15 @@ export class EditPerimeterModalComponent implements OnInit {
         private activeModal: NgbActiveModal,
         private crudService: PerimetersService,
         private processesService: ProcessesService,
-        private formBuilder: FormBuilder
+        private formBuilder: UntypedFormBuilder
     ) {
         this.perimeterForm = this.formBuilder.group({
-            id: new FormControl('', [
+            id: new UntypedFormControl('', [
                 Validators.required,
                 Validators.minLength(2),
                 Validators.pattern(/^[A-z\d\-_]+$/)
             ]),
-            process: new FormControl(''),
+            process: new UntypedFormControl(''),
             stateRights: this.formBuilder.array([EditPerimeterModalComponent.createStateRightFormGroup()])
         });
     }
@@ -56,7 +56,7 @@ export class EditPerimeterModalComponent implements OnInit {
         return this.perimeterForm.get('stateRights');
     }
 
-    perimeterForm: FormGroup;
+    perimeterForm: UntypedFormGroup;
 
     processesDefinition: Process[];
     processOptions = [];
@@ -65,10 +65,10 @@ export class EditPerimeterModalComponent implements OnInit {
 
     @Input() row: Perimeter;
 
-    private static createStateRightFormGroup(initialState?, initialRight?): FormGroup {
-        return new FormGroup({
-            state: new FormControl(initialState ? initialState : '', [Validators.required]),
-            right: new FormControl(initialRight ? initialRight : '', [Validators.required])
+    private static createStateRightFormGroup(initialState?, initialRight?): UntypedFormGroup {
+        return new UntypedFormGroup({
+            state: new UntypedFormControl(initialState ? initialState : '', [Validators.required]),
+            right: new UntypedFormControl(initialRight ? initialRight : '', [Validators.required])
         });
     }
 
@@ -157,12 +157,12 @@ export class EditPerimeterModalComponent implements OnInit {
     }
 
     public addStateRightFormGroup() {
-        const stateRights = this.perimeterForm.get('stateRights') as FormArray;
+        const stateRights = this.perimeterForm.get('stateRights') as UntypedFormArray;
         stateRights.push(EditPerimeterModalComponent.createStateRightFormGroup());
     }
 
     public removeOrClearStateRight(i: number) {
-        const emails = this.perimeterForm.get('stateRights') as FormArray;
+        const emails = this.perimeterForm.get('stateRights') as UntypedFormArray;
         if (emails.length > 1) {
             emails.removeAt(i);
         } else {

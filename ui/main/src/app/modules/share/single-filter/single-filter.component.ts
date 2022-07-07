@@ -10,7 +10,7 @@
 import {Component, Input, OnChanges, OnInit} from '@angular/core';
 import {Observable} from 'rxjs';
 import {I18n} from '@ofModel/i18n.model';
-import {FormControl, FormGroup} from '@angular/forms';
+import {UntypedFormControl, UntypedFormGroup} from '@angular/forms';
 import {TranslateService} from '@ngx-translate/core';
 import {map} from 'rxjs/operators';
 
@@ -22,7 +22,7 @@ export class SingleFilterComponent implements OnInit, OnChanges {
     preparedList: {value: string; label: string}[];
     @Input() public i18nRootLabelKey: string;
     @Input() public values: ({value: string; label: I18n | string} | string)[];
-    @Input() public parentForm: FormGroup;
+    @Input() public parentForm: UntypedFormGroup;
     @Input() public filterPath: string;
     @Input() public valuesInObservable: Observable<any>;
     @Input() public prefixWithValue: boolean;
@@ -33,8 +33,8 @@ export class SingleFilterComponent implements OnInit, OnChanges {
     placeholderText: Observable<any>;
 
     constructor(private translateService: TranslateService) {
-        this.parentForm = new FormGroup({
-            [this.filterPath]: new FormControl()
+        this.parentForm = new UntypedFormGroup({
+            [this.filterPath]: new UntypedFormControl()
         });
     }
 

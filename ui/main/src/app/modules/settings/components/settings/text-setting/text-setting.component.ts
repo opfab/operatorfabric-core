@@ -11,7 +11,7 @@ import {Component, Input, OnDestroy, OnInit} from '@angular/core';
 import {BaseSettingDirective} from '../base-setting/base-setting.directive';
 import {AppState} from '@ofStore/index';
 import {Store} from '@ngrx/store';
-import {FormControl, FormGroup, Validators} from '@angular/forms';
+import {UntypedFormControl, UntypedFormGroup, Validators} from '@angular/forms';
 
 @Component({
     selector: 'of-text-setting',
@@ -28,9 +28,9 @@ export class TextSettingComponent extends BaseSettingDirective implements OnInit
 
     initFormGroup() {
         const validators = this.computeTextValidators();
-        return new FormGroup(
+        return new UntypedFormGroup(
             {
-                setting: new FormControl(null, validators)
+                setting: new UntypedFormControl(null, validators)
             },
             {updateOn: 'change'}
         );

@@ -9,7 +9,7 @@
  */
 
 import {Component, Input, OnInit} from '@angular/core';
-import {AsyncValidatorFn, FormControl, FormGroup, Validators} from '@angular/forms';
+import {AsyncValidatorFn, UntypedFormControl, UntypedFormGroup, Validators} from '@angular/forms';
 import {NgbActiveModal} from '@ng-bootstrap/ng-bootstrap';
 import {AdminItemType, SharingService} from '../../../services/sharing.service';
 import {CrudService} from '@ofServices/crud-service';
@@ -25,7 +25,7 @@ import {MultiSelectConfig, MultiSelectOption} from '@ofModel/multiselect.model';
     styleUrls: ['./edit-entity-modal.component.scss']
 })
 export class EditEntityModalComponent implements OnInit {
-    entityForm: FormGroup;
+    entityForm: UntypedFormGroup;
 
     @Input() row: any;
     @Input() type: AdminItemType;
@@ -55,17 +55,17 @@ export class EditEntityModalComponent implements OnInit {
             // modal used for creating a new entity
             uniqueEntityIdValidator.push(this.uniqueEntityIdValidatorFn());
 
-        this.entityForm = new FormGroup({
-            id: new FormControl(
+        this.entityForm = new UntypedFormGroup({
+            id: new UntypedFormControl(
                 '',
                 [Validators.required, Validators.minLength(2), Validators.pattern(/^[A-z\d\-_]+$/)],
                 uniqueEntityIdValidator
             ),
-            name: new FormControl('', [Validators.required]),
-            description: new FormControl(''),
-            entityAllowedToSendCard: new FormControl(false),
-            labels: new FormControl([]),
-            parents: new FormControl([])
+            name: new UntypedFormControl('', [Validators.required]),
+            description: new UntypedFormControl(''),
+            entityAllowedToSendCard: new UntypedFormControl(false),
+            labels: new UntypedFormControl([]),
+            parents: new UntypedFormControl([])
         });
 
         this.crudService = this.dataHandlingService.resolveCrudServiceDependingOnType(this.type);

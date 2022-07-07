@@ -8,7 +8,7 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {AsyncValidatorFn, FormControl, FormGroup, Validators} from '@angular/forms';
+import {AsyncValidatorFn, UntypedFormControl, UntypedFormGroup, Validators} from '@angular/forms';
 import {Component, Input, OnInit} from '@angular/core';
 import {User} from '@ofModel/user.model';
 import {NgbActiveModal} from '@ng-bootstrap/ng-bootstrap';
@@ -25,7 +25,7 @@ import {MultiSelectConfig, MultiSelectOption} from '@ofModel/multiselect.model';
     styleUrls: ['./edit-user-modal.component.scss']
 })
 export class EditUserModalComponent implements OnInit {
-    userForm: FormGroup;
+    userForm: UntypedFormGroup;
 
     entitiesMultiSelectOptions: Array<MultiSelectOption> = [];
     selectedEntities = [];
@@ -58,17 +58,17 @@ export class EditUserModalComponent implements OnInit {
             // modal used for creating a new user
             uniqueLoginValidator.push(this.uniqueLoginValidatorFn());
 
-        this.userForm = new FormGroup({
-            login: new FormControl(
+        this.userForm = new UntypedFormGroup({
+            login: new UntypedFormControl(
                 '',
                 [Validators.required, Validators.minLength(2), Validators.pattern(/^[a-z\d\-_.]+$/)],
                 uniqueLoginValidator
             ),
-            firstName: new FormControl('', []),
-            lastName: new FormControl('', []),
-            groups: new FormControl([]),
-            entities: new FormControl([]),
-            authorizedIPAddresses: new FormControl('', [])
+            firstName: new UntypedFormControl('', []),
+            lastName: new UntypedFormControl('', []),
+            groups: new UntypedFormControl([]),
+            entities: new UntypedFormControl([]),
+            authorizedIPAddresses: new UntypedFormControl('', [])
         });
 
         if (this.row) {

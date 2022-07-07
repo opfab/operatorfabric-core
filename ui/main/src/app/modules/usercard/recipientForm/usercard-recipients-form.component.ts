@@ -13,7 +13,7 @@ import {EntitiesService} from '@ofServices/entities.service';
 import {Recipient} from '@ofModel/processes.model';
 import {Entity} from '@ofModel/entity.model';
 import {OpfabLoggerService} from '@ofServices/logs/opfab-logger.service';
-import {FormControl, FormGroup} from '@angular/forms';
+import {UntypedFormControl, UntypedFormGroup} from '@angular/forms';
 import {MultiSelectConfig, MultiSelectOption} from '@ofModel/multiselect.model';
 
 declare const usercardTemplateGateway: any;
@@ -24,7 +24,7 @@ declare const usercardTemplateGateway: any;
 export class UserCardRecipientsFormComponent implements OnInit, OnChanges {
     @Input() public userCardConfiguration;
     @Input() public initialSelectedRecipients;
-    public recipientForm: FormGroup;
+    public recipientForm: UntypedFormGroup;
     private useDescriptionFieldForEntityList = false;
     public recipientsOptions: Array<MultiSelectOption> = [];
     public selectedRecipients: Array<string> = [];
@@ -45,8 +45,8 @@ export class UserCardRecipientsFormComponent implements OnInit, OnChanges {
     }
 
     ngOnInit() {
-        this.recipientForm = new FormGroup({
-            userCardRecipients: new FormControl([])
+        this.recipientForm = new UntypedFormGroup({
+            userCardRecipients: new UntypedFormControl([])
         });
         this.listenForDropdownRecipientList();
         this.listenForInitialSelectedRecipientList();

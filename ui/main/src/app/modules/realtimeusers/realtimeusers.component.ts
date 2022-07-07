@@ -13,7 +13,7 @@ import {RealTimeScreensService} from '@ofServices/real-time-screens.service';
 import {RealTimeScreen} from '@ofModel/real-time-screens.model';
 import {EntitiesService} from '@ofServices/entities.service';
 import {GroupsService} from '@ofServices/groups.service';
-import {FormControl, FormGroup} from '@angular/forms';
+import {UntypedFormControl, UntypedFormGroup} from '@angular/forms';
 import {UserPreferencesService} from '@ofServices/user-preference.service';
 import {Utilities} from '../../common/utilities';
 
@@ -23,7 +23,7 @@ import {Utilities} from '../../common/utilities';
     styleUrls: ['./realtimeusers.component.scss']
 })
 export class RealtimeusersComponent implements OnInit, OnDestroy {
-    realTimeScreensForm: FormGroup;
+    realTimeScreensForm: UntypedFormGroup;
     interval;
 
     realTimeScreens: Array<RealTimeScreen>;
@@ -43,8 +43,8 @@ export class RealtimeusersComponent implements OnInit, OnDestroy {
     ) {}
 
     ngOnInit(): void {
-        this.realTimeScreensForm = new FormGroup({
-            realTimeScreen: new FormControl('')
+        this.realTimeScreensForm = new UntypedFormGroup({
+            realTimeScreen: new UntypedFormControl('')
         });
 
         this.changeScreenWhenSelectRealTimeScreen();

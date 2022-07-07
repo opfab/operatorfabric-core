@@ -8,7 +8,7 @@
  */
 
 import {AfterViewInit, Component, Input, OnChanges, OnDestroy} from '@angular/core';
-import {FormGroup} from '@angular/forms';
+import {UntypedFormGroup} from '@angular/forms';
 import {TranslateService} from '@ngx-translate/core';
 import {MultiSelectConfig, MultiSelectOption} from '@ofModel/multiselect.model';
 
@@ -19,7 +19,7 @@ declare const VirtualSelect: any;
     templateUrl: './multi-select.component.html'
 })
 export class MultiSelectComponent implements AfterViewInit, OnDestroy, OnChanges {
-    @Input() public parentForm: FormGroup;
+    @Input() public parentForm: UntypedFormGroup;
     @Input() public multiSelectId: string;
     @Input() public config: MultiSelectConfig;
     @Input() public options: Array<MultiSelectOption>;

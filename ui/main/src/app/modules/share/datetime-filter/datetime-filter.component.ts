@@ -12,8 +12,8 @@ import {
     AbstractControl,
     ControlContainer,
     ControlValueAccessor,
-    FormControl,
-    FormGroup,
+    UntypedFormControl,
+    UntypedFormGroup,
     NG_VALUE_ACCESSOR
 } from '@angular/forms';
 import {NgbDatepickerI18n, NgbDateStruct} from '@ng-bootstrap/ng-bootstrap';
@@ -99,9 +99,9 @@ export class DatetimeFilterComponent implements ControlValueAccessor, OnInit, On
     disabled = true;
     time = {hour: 0, minute: 0};
 
-    dateInput = new FormControl();
-    timeInput = new FormControl();
-    public datetimeForm: FormGroup = new FormGroup({
+    dateInput = new UntypedFormControl();
+    timeInput = new UntypedFormControl();
+    public datetimeForm: UntypedFormGroup = new UntypedFormGroup({
         date: this.dateInput,
         time: this.timeInput
     });
