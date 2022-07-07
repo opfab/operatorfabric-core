@@ -7,6 +7,7 @@ module.exports = defineConfig({
     viewportWidth: 1848,
     viewportHeight: 949,
     chromeWebSecurity: false,
+    numTestsKeptInMemory: 20,
     defaultCommandTimeout: 6000,
     specPattern: 'cypress/integration/**/*.spec.js',
 
