@@ -573,6 +573,9 @@ describe('User Card ', function () {
       cy.get('#opfab-navbarContent').find('#opfab-newcard-menu').click();
       cy.get("of-usercard").should('exist');
 
+      // check template rendering done
+      cy.get('#message').should('be.visible');
+
       cy.get('#of-usercard-card-emitter-selector').should("exist");
       cy.get('#of-usercard-card-emitter-selector').find('label').should("have.text", "EMITTER");
       cy.get('#of-usercard-card-emitter-selector').find('option').should("have.length", 4);
@@ -581,7 +584,7 @@ describe('User Card ', function () {
       cy.get('#of-usercard-card-emitter-selector').find('option').eq(2).should("have.text", "Control Center FR South");
       cy.get('#of-usercard-card-emitter-selector').find('option').eq(3).should("have.text", "Control Center FR West");
 
-      cy.get("#of-usercard-card-emitter-selector").find('select').select('Control Center FR South');
+      cy.get('#of-usercard-card-emitter-selector').find('select').select('Control Center FR South');
       cy.get('#message').type('Hello, that\'s a test message / Result is <OK> & work done is 100%');
       cy.setFormDateTime('startDate', '2020', 'Jan', 20, 8, 0);
       cy.setFormDateTime('endDate', '2029', 'Jun', 25, 11, 10);
@@ -613,6 +616,9 @@ describe('User Card ', function () {
         cy.get('#opfab-card-edit').click();
         cy.get("of-usercard").should('exist');
 
+        // check template rendering done
+        cy.get('#message').should('be.visible');
+
         // Check that card emitter is set to Control Center FR South
         cy.get('#of-usercard-card-emitter-selector').should("exist");
         cy.get('#of-usercard-card-emitter-selector').find('option:selected').should('have.text', 'Control Center FR South');
@@ -627,9 +633,8 @@ describe('User Card ', function () {
         cy.get('.opfab-info-message').should('have.class', 'opfab-alert-info').contains("Your card is published");
 
         cy.waitDefaultTime();
+
         // Check that the new card emitter 'Control Center FR North' is taken into account
-        cy.get('of-light-card').should('have.length', 1);
-        cy.get('of-light-card').eq(0).click();
         cy.get('#opfab-div-card-template').find('div').eq(0).should('have.text', "\n   Hello, that's a test message / Result is <OK> & work done is 100%  (updated)\n");
         cy.get('#opfab-card-title').should('have.text', "Message");
         cy.get('#opfab-selected-card-summary').should('have.text', "Message received :    Hello, that's a test message / Result is <OK> & work done is 100%  (updated)");
@@ -662,6 +667,9 @@ describe('User Card ', function () {
       cy.get('of-light-card').eq(0).click();
       cy.get('#opfab-card-edit').click();
       cy.get("of-usercard").should('exist');
+
+      // check template rendering done
+      cy.get('#message').should('be.visible');
 
       // Check that card emitter is set to Control Center FR East (default value)
       cy.get('#of-usercard-card-emitter-selector').should("exist");
