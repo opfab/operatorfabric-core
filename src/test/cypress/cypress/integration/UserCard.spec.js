@@ -188,6 +188,32 @@ describe('User Card ', function () {
         cy.get("#of-usercard-process-filter").find('.vscomp-option-text').should("have.length", 1);
         cy.get("#of-usercard-process-filter").find('.vscomp-option-text').eq(0).should("contain", "Process example ");
     })
+
+    it('Users should not be able to send cards if it does not belong to any entity', () => {
+        cy.loginOpFab('operator1_fr', 'test');
+
+        cy.get('#opfab-navbarContent').find('#opfab-newcard-menu').click();
+        cy.get('#opfab-usercard-creation').should('exist');
+        cy.get('#opfab-usercard-close').click();
+
+        // The user should not be able to send a card if it does not belong to any entity
+        cy.openActivityArea();
+        cy.get('.opfab-activityarea-table').find('.opfab-checkbox').click();
+        cy.saveActivityAreaModifications();
+
+        cy.get('#opfab-navbarContent').find('#opfab-newcard-menu').click();
+        cy.get('of-usercard').find('#opfab-usercard-creation').should('not.exist');
+        cy.get('of-usercard').should('have.text', 'You are not a member of any entity that can send cards.');
+        cy.get('#opfab-usercard-close').click();
+
+        // The user should be able to send a card if an entity is added
+        cy.get('.opfab-activityarea-table').find('.opfab-checkbox').click();
+        cy.saveActivityAreaModifications();
+
+        cy.get('#opfab-navbarContent').find('#opfab-newcard-menu').click();
+        cy.get('of-usercard').find('#opfab-usercard-creation').should('exist');
+        cy.get('#opfab-usercard-close').click();
+    });
   })
 
   describe('Test spinners', function () {
@@ -647,9 +673,8 @@ describe('User Card ', function () {
       cy.get('of-light-card').should('have.length', 1);
 
       // operator4_fr disconnect from Control Center FR North (ENTITY1_FR)
-      cy.get('#opfab-navbar-drop-user-menu').click();
-      cy.get('#opfab-navbar-right-menu-activityarea').click();
-      
+      cy.openActivityArea();
+
       // Check every checkbox to let the time for the ui to set to true before we click
       cy.get('.opfab-checkbox').eq(0).find('input').should('be.checked');
       cy.get('.opfab-checkbox').eq(1).find('input').should('be.checked');
@@ -657,8 +682,7 @@ describe('User Card ', function () {
       cy.get('.opfab-checkbox').eq(3).find('input').should('be.checked');
 
       cy.get('.opfab-checkbox').contains('Control Center FR North').click();
-      cy.get('#opfab-activityarea-btn-confirm').should('exist').click(); //click confirm settings
-      cy.get('#opfab-activityarea-btn-yes').should('exist').click(); // and click yes on the confirmation popup
+      cy.saveActivityAreaModifications();
 
       // We go back to the feed
       cy.get('#opfab-navbar-menu-feed').click();
@@ -683,8 +707,7 @@ describe('User Card ', function () {
       cy.get('#opfab-usercard-btn-cancel').click();
 
       // We reconnect to Control Center FR North (ENTITY1_FR)
-      cy.get('#opfab-navbar-drop-user-menu').click();
-      cy.get('#opfab-navbar-right-menu-activityarea').click();
+      cy.openActivityArea();
       cy.get('.opfab-checkbox').contains('Control Center FR North').click();
     })
   })

@@ -270,6 +270,7 @@
     "editTitle" : "ÉDITION D'UNE CARTE",
     "error": {
       "notAvailable": "Vous n'êtes pas autorisé à envoyer des cartes",
+      "userHasNoEntityThatCanSendCard" : "Vous n'êtes pas membre d'une entité qui peut envoyer des cartes.",
       "templateError" : "Erreur technique : template non conforme",
       "impossibleToSendCard" : "Impossible d'envoyer la carte pour des raisons techniques",
       "lttdBeforeStartDate": "La date limite de réponse doit être postérieure à la date de début",

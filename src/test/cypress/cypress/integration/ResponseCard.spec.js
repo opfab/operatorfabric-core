@@ -230,19 +230,17 @@ describe ('Response card tests',function () {
 
         // operator4_fr disconnect from ENTITY_1_FR and ENTITY2_FR (the popup for entity choice must not be displayed)
         // because the only one entity allowed to respond for him is now ENTITY3_FR
-        cy.get('#opfab-navbar-drop-user-menu').click();
-        cy.get('#opfab-navbar-right-menu-activityarea').click();
-        
+        cy.openActivityArea();
+
         // Check every checkbox to let the time for the ui to set to true before we click
         cy.get('.opfab-checkbox').eq(0).find('input').should('be.checked');
         cy.get('.opfab-checkbox').eq(1).find('input').should('be.checked');
         cy.get('.opfab-checkbox').eq(2).find('input').should('be.checked');
         cy.get('.opfab-checkbox').eq(3).find('input').should('be.checked');
-        
+
         cy.get('.opfab-checkbox').contains('Control Center FR North').click();
         cy.get('.opfab-checkbox').contains('Control Center FR South').click();
-        cy.get('#opfab-activityarea-btn-confirm').should('exist').click(); // click confirm settings
-        cy.get('#opfab-activityarea-btn-yes').should('exist').click(); // and click yes on the confirmation popup
+        cy.saveActivityAreaModifications();
         cy.waitDefaultTime();
         cy.get('#opfab-navbar-menu-feed').click(); // go back to feed
         cy.get('of-light-card').eq(0).click(); // click the card
@@ -263,12 +261,10 @@ describe ('Response card tests',function () {
                                            .next().should("have.text", ' NOK ');
 
         // We reconnect operator4_fr to ENTITY1_FR, ENTITY2_FR
-        cy.get('#opfab-navbar-drop-user-menu').click();
-        cy.get('#opfab-navbar-right-menu-activityarea').click();
+        cy.openActivityArea();
         cy.get('.opfab-checkbox').contains('Control Center FR South').click();
         cy.get('.opfab-checkbox').contains('Control Center FR North').click();
-        cy.get('#opfab-activityarea-btn-confirm').should('exist').click(); // click confirm settings
-        cy.get('#opfab-activityarea-btn-yes').should('exist').click(); // and click yes on the confirmation popup
+        cy.saveActivityAreaModifications();
     })
 
 

@@ -194,11 +194,8 @@ describe('Entity acknowledgment tests for icon in light-card', function () {
         cy.waitDefaultTime(); // let time before closing popup to avoid flaky error on CI/CD
         cy.get('#opfab-feed-filter-btn-filter').click();
 
-        //click on user menu (top right of the screen)
-        cy.get('#opfab-navbar-drop-user-menu').click();
+        cy.openActivityArea();
 
-        // click on "Activity area"
-        cy.get('#opfab-navbar-right-menu-activityarea').click();
         // We should have 4 checkboxes corresponding to the four entities of the user
         cy.get('.opfab-checkbox').should('have.length', 4);
         // We check all the checkboxes are checked
@@ -210,8 +207,7 @@ describe('Entity acknowledgment tests for icon in light-card', function () {
         // We disconnect from ENTITY3_FR and ENTITY4_FR
         cy.get('.opfab-checkbox').contains('Control Center FR East').click();
         cy.get('.opfab-checkbox').contains('Control Center FR West').click();
-        cy.get('#opfab-activityarea-btn-confirm').should('exist').click(); // click confirm settings
-        cy.get('#opfab-activityarea-btn-yes').should('exist').click(); // and click yes on the confirmation popup
+        cy.saveActivityAreaModifications();
 
         cy.get('#opfab-navbar-menu-feed').click(); // we go back to the feed
         cy.sendCard('cypress/entitiesAcks/message3.json');
@@ -248,14 +244,11 @@ describe('Entity acknowledgment tests for icon in light-card', function () {
         });
 
         // now we add ENTITY3_FR to the entities of operator4_fr
-        cy.get('#opfab-navbar-drop-user-menu').click();
+        cy.openActivityArea();
 
-        // click on "Activity area"
-        cy.get('#opfab-navbar-right-menu-activityarea').click();
         // We connect to ENTITY3_FR
         cy.get('.opfab-checkbox').contains('Control Center FR East').click();
-        cy.get('#opfab-activityarea-btn-confirm').should('exist').click(); // click confirm settings
-        cy.get('#opfab-activityarea-btn-yes').should('exist').click(); // and click yes on the confirmation popup
+        cy.saveActivityAreaModifications();
 
         cy.get('#opfab-navbar-menu-feed').click(); // we go back to the feed
 
@@ -266,15 +259,12 @@ describe('Entity acknowledgment tests for icon in light-card', function () {
         cy.get('#opfab-feed-light-card-cypress-entitiesAcksMessage4 .fa-check').should('not.exist');
 
         // now operator4_fr is only connected to ENTITY3_FR
-        cy.get('#opfab-navbar-drop-user-menu').click();
+        cy.openActivityArea();
 
-        // click on "Activity area"
-        cy.get('#opfab-navbar-right-menu-activityarea').click();
         // We disconnect from ENTITY1_FR and ENTITY2_FR
         cy.get('.opfab-checkbox').contains('Control Center FR North').click();
         cy.get('.opfab-checkbox').contains('Control Center FR South').click();
-        cy.get('#opfab-activityarea-btn-confirm').should('exist').click(); // click confirm settings
-        cy.get('#opfab-activityarea-btn-yes').should('exist').click(); // and click yes on the confirmation popup
+        cy.saveActivityAreaModifications();
 
         cy.get('#opfab-navbar-menu-feed').click(); // we go back to the feed
 
@@ -285,13 +275,11 @@ describe('Entity acknowledgment tests for icon in light-card', function () {
         cy.get('#opfab-feed-light-card-cypress-entitiesAcksMessage4 .fa-check').should('not.exist');
 
         // We reconnect to ENTITY1_FR, ENTITY2_FR and ENTITY4_FR
-        cy.get('#opfab-navbar-drop-user-menu').click();
-        cy.get('#opfab-navbar-right-menu-activityarea').click();
+        cy.openActivityArea();
         cy.get('.opfab-checkbox').contains('Control Center FR North').click();
         cy.get('.opfab-checkbox').contains('Control Center FR South').click();
         cy.get('.opfab-checkbox').contains('Control Center FR West').click();
-        cy.get('#opfab-activityarea-btn-confirm').should('exist').click(); // click confirm settings
-        cy.get('#opfab-activityarea-btn-yes').should('exist').click(); // and click yes on the confirmation popup
+        cy.saveActivityAreaModifications();
     });
 
     it('check entities ack for cards sent to groups only (no entityRecipients) for operator2_fr', function () {
@@ -385,9 +373,7 @@ describe('Entity acknowledgment tests for icon in light-card', function () {
         cy.waitDefaultTime(); // let time before closing popup to avoid flaky error on CI/CD
         cy.get('#opfab-feed-filter-btn-filter').click();
 
-        // We go to activity area screen
-        cy.get('#opfab-navbar-drop-user-menu').click();
-        cy.get('#opfab-navbar-right-menu-activityarea').click();
+        cy.openActivityArea();
 
         // We should have 4 checkboxes corresponding to the four entities of the user
         cy.get('.opfab-checkbox').should('have.length', 4);
@@ -399,8 +385,7 @@ describe('Entity acknowledgment tests for icon in light-card', function () {
 
         // We disconnect from ENTITY4_FR
         cy.get('.opfab-checkbox').contains('Control Center FR West').click();
-        cy.get('#opfab-activityarea-btn-confirm').should('exist').click(); // click confirm settings
-        cy.get('#opfab-activityarea-btn-yes').should('exist').click(); // and click yes on the confirmation popup
+        cy.saveActivityAreaModifications();
 
         cy.get('#opfab-navbar-menu-feed').click(); // we go back to the feed
 
@@ -421,14 +406,11 @@ describe('Entity acknowledgment tests for icon in light-card', function () {
         cy.get('#opfab-card-details-btn-ack').click();
         cy.get('#opfab-feed-light-card-cypress-entitiesAcksMessage4 .fa-check').should('exist');
 
-        // We go to activity area screen
-        cy.get('#opfab-navbar-drop-user-menu').click();
-        cy.get('#opfab-navbar-right-menu-activityarea').click();
+        cy.openActivityArea();
 
         // We reconnect to ENTITY4_FR
         cy.get('.opfab-checkbox').contains('Control Center FR West').click();
-        cy.get('#opfab-activityarea-btn-confirm').should('exist').click(); // click confirm settings
-        cy.get('#opfab-activityarea-btn-yes').should('exist').click(); // and click yes on the confirmation popup
+        cy.saveActivityAreaModifications();
 
         cy.get('#opfab-navbar-menu-feed').click(); // we go back to the feed
 

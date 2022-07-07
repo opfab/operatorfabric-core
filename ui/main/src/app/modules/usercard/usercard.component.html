@@ -10,7 +10,7 @@
     
     <of-spinner *ngIf="isPreparingCard"></of-spinner>
 
-    <div [hidden]="isPreparingCard">
+    <div [hidden]="isPreparingCard" id="opfab-usercard-creation">
         <of-usercard-select-state-form 
                 [cardIdToEdit]="this.cardIdToEdit" 
                 [initialProcess]="this.editCardProcessId" 
@@ -132,21 +132,14 @@
 
 <ng-container *ngIf="!displayForm() && !pageLoading">
     <div class="alert alert-info">
-        <h1><label translate>userCard.error.notAvailable</label></h1>
+        <h1 *ngIf="userEntitiesAllowedToSendCardOptions.length > 0"><label translate>userCard.error.notAvailable</label></h1>
+        <h1 *ngIf="userEntitiesAllowedToSendCardOptions.length === 0"><label translate>userCard.error.userHasNoEntityThatCanSendCard</label></h1>
     </div>
 </ng-container>
 
 
-<ng-container *ngIf="pageLoading">
-    <div class="opfab-card-loading-spinner">
-        <em  class="fas fa-spinner fa-spin opfab-slow-spinner" ></em>
-        </div>
-        <div style="text-align: center;font:16px;font-weight: bold;margin-top:10px" translate>
-            feed.cardLoadingInProgress
-    </div>
-    <br/>
-    <br/>
-</ng-container>
+<of-spinner *ngIf="pageLoading" loadingText="feed.cardLoadingInProgress"></of-spinner> 
+            
 
 
 

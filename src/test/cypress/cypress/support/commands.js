@@ -189,10 +189,21 @@ Cypress.Commands.add('waitForOpfabToStart', () => {
     cy.exec('cd ../../.. && ./bin/waitForOpfabToStart.sh ');
 })
 
-Cypress.Commands.add('openOpfabSettings', () => {
+Cypress.Commands.add('openSettings', () => {
     cy.get('#opfab-navbar-drop-user-menu').click();
-    cy.get("#opfab-navbar-right-menu-settings").click();
-})
+    cy.get('#opfab-navbar-right-menu-settings').click();
+});
+
+Cypress.Commands.add('openActivityArea', () => {
+    cy.get('#opfab-navbar-drop-user-menu').click();
+    cy.get('#opfab-navbar-right-menu-activityarea').click();
+});
+
+Cypress.Commands.add('saveActivityAreaModifications', () => {
+    cy.get('#opfab-activityarea-btn-confirm').should('exist').click(); //click confirm settings
+    cy.get('#opfab-activityarea-btn-yes').should('exist').click(); // and click yes on the confirmation popup
+});
+
 
   // Stub playSound method to catch when opfab send a sound 
 Cypress.Commands.add('stubPlaySound', () => {

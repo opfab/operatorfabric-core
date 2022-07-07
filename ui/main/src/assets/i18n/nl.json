@@ -270,6 +270,7 @@
     "editTitle" : "WIJZIG EEN NIEUWE KAART",
     "error": {
       "notAvailable": "U heeft geen toestemming om kaarten te verzenden",
+      "userHasNoEntityThatCanSendCard" : "U bent geen lid van een entiteit die kaarten kan versturen.",
       "templateError": "Technische fout: ongeldige sjabloon",
       "impossibleToSendCard": "Om technische redenen is het onmogelijk om de kaart te verzenden",
       "lttdBeforeStartDate": "De beperkingsdatum voor reactie moet na de startdatum liggen",

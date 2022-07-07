@@ -24,7 +24,7 @@ describe('Sound notification test', function () {
     it('Sound when receiving card   ', () => {
       cy.loginOpFab(user, 'test');
       cy.stubPlaySound();
-      cy.openOpfabSettings();
+      cy.openSettings();
 
       // set severity alarm to be notified by sound
       cy.get('#opfab-checkbox-setting-form-alarm').click();
@@ -46,7 +46,7 @@ describe('Sound notification test', function () {
       // no new sound 
       cy.get('@playSound').its('callCount').should('eq', 1);
 
-      cy.openOpfabSettings();
+      cy.openSettings();
 
       // set severity alarm to NOT be notified by sound 
       cy.get('#opfab-checkbox-setting-form-alarm').click();
@@ -60,7 +60,7 @@ describe('Sound notification test', function () {
       // No new sound 
       cy.get('@playSound').its('callCount').should('eq', 1);
 
-      cy.openOpfabSettings();
+      cy.openSettings();
 
       // set severity action to be notified by sound
       cy.get('#opfab-checkbox-setting-form-action').click();
@@ -75,7 +75,7 @@ describe('Sound notification test', function () {
       // New sound 
       cy.get('@playSound').its('callCount').should('eq', 2);
 
-      cy.openOpfabSettings();
+      cy.openSettings();
 
       // set severity information  to be notified by sound
       cy.get('#opfab-checkbox-setting-form-information').click();
@@ -98,7 +98,7 @@ describe('Sound notification test', function () {
       cy.stubPlaySound();
 
       // Activate repeating sound (no need to click the checkbox because it is already checked, because of the default value set to true in web-ui.json)
-      cy.openOpfabSettings();
+      cy.openSettings();
       cy.waitDefaultTime();
 
       // Open the feed and send card 
@@ -139,7 +139,7 @@ describe('Sound notification test', function () {
       cy.stubPlaySound();
 
       // Set repeating interval to 20 seconds
-      cy.openOpfabSettings();
+      cy.openSettings();
       cy.get('#opfab-setting-replayInterval').clear();
       cy.get('#opfab-setting-replayInterval').type('20');
       cy.waitDefaultTime();
