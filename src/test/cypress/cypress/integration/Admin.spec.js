@@ -280,7 +280,8 @@ describe('AdminPage', () => {
 
         cy.get('#opfab-description').type('group description');
 
-        cy.get('#opfab-group-type').find('select').select('ROLE');
+        // we choose ROLE
+        clickOnNthGroupTypeInDropdown(1);
 
         cy.get('#opfab-perimeters').click();
         cy.get('#opfab-perimeters').find('.vscomp-option-text').eq(1).click({force: true});
@@ -314,7 +315,8 @@ describe('AdminPage', () => {
 
         cy.get('#opfab-description').type(' updated');
 
-        cy.get('#opfab-group-type').find('select').select('PERMISSION');
+        // we choose PERMISSION
+        clickOnNthGroupTypeInDropdown(0);
 
         cy.get('#opfab-perimeters').click();
         // Deselect old perimeter
@@ -470,4 +472,10 @@ describe('AdminPage', () => {
 
         cy.countAgGridTableRows('ag-grid-angular', 8);
     });
+
+    function clickOnNthGroupTypeInDropdown(index) {
+        cy.get('#opfab-group-type').click();
+        cy.get('#opfab-group-type').find('.vscomp-option-text').eq(index).click();
+        cy.get('#opfab-group-type').click();
+    }
 });
