@@ -35,8 +35,6 @@ import {UserPermissionsService} from '@ofServices/user-permissions.service';
 import {Utilities} from '../../common/utilities';
 import {UsercardSelectCardEmitterFormComponent} from './selectCardEmitterForm/usercard-select-card-emitter-form.component';
 import {LogOption, OpfabLoggerService} from '@ofServices/logs/opfab-logger.service';
-import {NgbDate} from '@ng-bootstrap/ng-bootstrap';
-import {DateTimeNgb} from '@ofModel/datetime-ngb.model';
 
 declare const templateGateway: any;
 declare const usercardTemplateGateway: any;
@@ -124,16 +122,6 @@ export class UserCardComponent implements OnInit {
     }
 
     ngOnInit() {
-        const ngbDate = new NgbDate(2022, 7, 33);
-        console.log('ngDate = ', ngbDate);
-        const test = new DateTimeNgb(ngbDate, {
-            hour: 0,
-            minute: 0,
-            second: 0
-        });
-
-        console.log('date = ', new Date(Utilities.convertNgbDateTimeToEpochDate(test)));
-
         this.pageLoading = true;
         this.datesFromTemplate = true;
         usercardTemplateGateway.initUsercardTemplateGateway();
