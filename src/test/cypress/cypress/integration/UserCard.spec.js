@@ -7,7 +7,12 @@
  * This file is part of the OperatorFabric project.
  */
 
+import {getUsercardCommands} from "../support/usercardCommands"
+
+
 describe('User Card ', function () {
+
+  const usercard = getUsercardCommands();
 
   before('Set up configuration', function () {
 
@@ -24,17 +29,13 @@ describe('User Card ', function () {
 
       cy.loginOpFab('operator1_fr', 'test');
       cy.get('#opfab-navbarContent').find('#opfab-newcard-menu').click();
-      cy.usercardSelectService('User card examples');
-      cy.usercardSelectProcess('Message or question');
-      cy.usercardSelectState('Question');
+      usercard.selectService('User card examples');
+      usercard.selectProcess('Message or question');
+      usercard.selectState('Question');
       cy.get('#label').should('not.have.text', 'QUESTION (New)');
-
       cy.get('#question').type('First question');
-
-      cy.usercardPrepareAndSendCard();
-
-      // Check that the message indicating successful sending appears
-      cy.get('.opfab-info-message').should('have.class', 'opfab-alert-info').contains("Your card is published");
+      usercard.prepareAndSendCard();
+      usercard.checkCardHasBeenSend();
       
     })
 
@@ -51,15 +52,15 @@ describe('User Card ', function () {
     })
 
   })
-
+ 
   describe('Recipients dropdown should not be displayed or restricted for some user cards', function () {
 
     it('Recipients dropdown should not be displayed in Tasks user card and only current user shall receive the card ', () => {
 
       cy.loginOpFab('operator1_fr', 'test');
       cy.get('#opfab-navbarContent').find('#opfab-newcard-menu').click();
-      cy.usercardSelectService('User card examples');
-      cy.usercardSelectProcess('Task');
+      usercard.selectService('User card examples');
+      usercard.selectProcess('Task');
       cy.get('#opfab-recipients').should("not.exist");
       cy.get('#opfab-usercard-btn-prepareCard').click();
       cy.get('#opfab-entity-recipients').contains("You are the only recipient of this card");
@@ -69,9 +70,9 @@ describe('User Card ', function () {
 
       cy.loginOpFab('operator1_fr', 'test');
       cy.get('#opfab-navbarContent').find('#opfab-newcard-menu').click();
-      cy.usercardSelectService('User card examples');
-      cy.usercardSelectProcess('Conference and IT incident');
-      cy.usercardSelectState('IT Incident');
+      usercard.selectService('User card examples');
+      usercard.selectProcess('Conference and IT incident');
+      usercard.selectState('IT Incident');
       cy.get('#opfab-recipients').should("not.exist");
       cy.get('#opfab-usercard-btn-prepareCard').click();
       cy.get('#opfab-entity-recipients').contains("French Control Centers");
@@ -81,8 +82,8 @@ describe('User Card ', function () {
     it('Recipients dropdown should be restricted in message user card  - Deprecated method using state config ', () => {
       cy.loginOpFab('operator1_fr', 'test');
       cy.get('#opfab-navbarContent').find('#opfab-newcard-menu').click();
-      cy.usercardSelectProcess('Process example');
-      cy.usercardSelectState('Process example');
+      usercard.selectProcess('Process example');
+      usercard.selectState('Process example');
       cy.get('#opfab-recipients').should("exist");
       cy.get('#opfab-recipients').click();
       cy.get('#opfab-recipients').find('.vscomp-option-text').should('have.length', 6);
@@ -99,9 +100,9 @@ describe('User Card ', function () {
 
       cy.loginOpFab('operator1_fr', 'test');
       cy.get('#opfab-navbarContent').find('#opfab-newcard-menu').click();
-      cy.usercardSelectService('User card examples');
-      cy.usercardSelectProcess('Message or question');
-      cy.usercardSelectState('Message');
+      usercard.selectService('User card examples');
+      usercard.selectProcess('Message or question');
+      usercard.selectState('Message');
       cy.get('#opfab-recipients').should("exist");
       cy.get('#opfab-recipients').click();
       cy.get('#opfab-recipients').find('.vscomp-option-text').should('have.length', 7);
@@ -131,11 +132,11 @@ describe('User Card ', function () {
 
       cy.loginOpFab('operator1_fr', 'test');
       cy.get('#opfab-navbarContent').find('#opfab-newcard-menu').click();
-      cy.usercardSelectService('User card examples');
-      cy.usercardSelectProcess('Message or question');
-      cy.usercardSelectState('Message');
+      usercard.selectService('User card examples');
+      usercard.selectProcess('Message or question');
+      usercard.selectState('Message');
       cy.get('#opfab-usercard-severity-choice').should("exist");
-      cy.usercardSelectState('Question');
+      usercard.selectState('Question');
       cy.get('#opfab-usercard-severity-choice').should("not.exist");
       cy.get('#of-usercard-card-emitter-selector').should("not.exist");
     })
@@ -144,9 +145,9 @@ describe('User Card ', function () {
 
       cy.loginOpFab('operator1_fr', 'test');
       cy.get('#opfab-navbarContent').find('#opfab-newcard-menu').click();
-      cy.usercardSelectService('User card examples');
-      cy.usercardSelectProcess('Conference and IT incident');
-      cy.usercardSelectState('IT Incident');
+      usercard.selectService('User card examples');
+      usercard.selectProcess('Conference and IT incident');
+      usercard.selectState('IT Incident');
       cy.get('#opfab-usercard-startdate-choice').should("not.exist");
       cy.get('#opfab-usercard-enddate-choice').should("not.exist");
       cy.get('#opfab-usercard-lttd-choice').should("not.exist");
@@ -157,9 +158,9 @@ describe('User Card ', function () {
 
       cy.loginOpFab('operator1_fr', 'test');
       cy.get('#opfab-navbarContent').find('#opfab-newcard-menu').click();
-      cy.usercardSelectService('User card examples');
-      cy.usercardSelectProcess('Message or question');;
-      cy.usercardSelectState('Question');
+      usercard.selectService('User card examples');
+      usercard.selectProcess('Message or question');;
+      usercard.selectState('Question');
       cy.get('#opfab-usercard-startdate-choice').should("exist");
       cy.get('#opfab-usercard-enddate-choice').should("exist");
       cy.get('#opfab-usercard-lttd-choice').should("exist");
@@ -170,9 +171,9 @@ describe('User Card ', function () {
 
       cy.loginOpFab('operator1_fr', 'test');
       cy.get('#opfab-navbarContent').find('#opfab-newcard-menu').click();
-      cy.usercardSelectService('User card examples');
-      cy.usercardSelectProcess('Message or question');
-      cy.usercardSelectState('Message');
+      usercard.selectService('User card examples');
+      usercard.selectProcess('Message or question');
+      usercard.selectState('Message');
       cy.get('#opfab-usercard-startdate-choice').should("exist");
       cy.get('#opfab-usercard-enddate-choice').should("not.exist");
       cy.get('#opfab-usercard-lttd-choice').should("not.exist");
@@ -183,7 +184,7 @@ describe('User Card ', function () {
 
         cy.loginOpFab('operator1_fr', 'test');
         cy.get('#opfab-navbarContent').find('#opfab-newcard-menu').click();
-        cy.usercardSelectService('Base Examples');
+        usercard.selectService('Base Examples');
         cy.get('#of-usercard-process-filter').should("exist");
         cy.get("#of-usercard-process-filter").find('.vscomp-option-text').should("have.length", 1);
         cy.get("#of-usercard-process-filter").find('.vscomp-option-text').eq(0).should("contain", "Process example ");
@@ -227,11 +228,11 @@ describe('User Card ', function () {
       cy.checkLoadingSpinnerIsDisplayed();
       cy.checkLoadingSpinnerIsNotDisplayed();
 
-      cy.usercardSelectService('User card examples');
+      usercard.selectService('User card examples');
       cy.checkLoadingSpinnerIsDisplayed();
       cy.checkLoadingSpinnerIsNotDisplayed();
 
-      cy.usercardSelectState('IT Incident');
+      usercard.selectState('IT Incident');
       cy.checkLoadingSpinnerIsDisplayed();
       cy.checkLoadingSpinnerIsNotDisplayed();
 
@@ -259,9 +260,9 @@ describe('User Card ', function () {
 
       cy.loginOpFab('operator1_fr', 'test');
       cy.get('#opfab-navbarContent').find('#opfab-newcard-menu').click();
-      cy.usercardSelectService('User card examples');
-      cy.usercardSelectProcess('Message or question');
-      cy.usercardSelectState('Confirmation');
+      usercard.selectService('User card examples');
+      usercard.selectProcess('Message or question');
+      usercard.selectState('Confirmation');
       cy.get('#opfab-recipients').click();
       // Select recipent entity not in user entities
       cy.get('#opfab-recipients').find('.vscomp-option-text').eq(0).click({ force: true });
@@ -294,8 +295,8 @@ describe('User Card ', function () {
       cy.get("#childs-div").find('tr').should('have.length', 2);
       // Send the card 
       cy.get('#opfab-usercard-btn-accept').click();
-      // Check that the message indicating successful sending appears
-      cy.get('.opfab-info-message').should('have.class', 'opfab-alert-info').contains("Your card is published");
+
+      usercard.checkCardHasBeenSend();
       cy.get('of-light-card').should('have.length', 1);
       // Feed light card show response from current entity
       cy.get('of-light-card').eq(0).find('#opfab-feed-lightcard-hasChildCardFromCurrentUserEntity').should('exist');
@@ -342,10 +343,8 @@ describe('User Card ', function () {
       cy.get('#opfab-recipients').find('.vscomp-option-text').eq(2).click({ force: true });
       cy.get('#opfab-recipients').click();
 
-      cy.usercardPrepareAndSendCard();
-
-      // Check that the message indicating successful sending appears
-      cy.get('.opfab-info-message').should('have.class', 'opfab-alert-info').contains("Your card is published");
+      usercard.prepareAndSendCard();
+      usercard.checkCardHasBeenSend();
       cy.get('of-light-card').should('have.length', 1);
       cy.get('of-light-card').eq(0).click();
       cy.get('#opfab-div-card-template').find('div').eq(0).should('have.text', "\n  Hello, that's a test message / Result is <OK> & work done is 100%\n");
@@ -383,9 +382,8 @@ describe('User Card ', function () {
       cy.get('#message').should('be.visible');
       cy.waitDefaultTime();
       cy.get('#message').type(' (updated)');
-      cy.usercardPrepareAndSendCard();
-      // Check that the message indicating successful sending appears
-      cy.get('.opfab-info-message').should('have.class', 'opfab-alert-info').contains("Your card is published");
+      usercard.prepareAndSendCard();
+      usercard.checkCardHasBeenSend();
     })
 
 
@@ -441,9 +439,8 @@ describe('User Card ', function () {
       // check this to be sure template has been loaded
       cy.get('#state-select');
 
-      cy.usercardPrepareAndSendCard();
-      // Check that the message indicating successful sending appears
-      cy.get('.opfab-info-message').should('have.class', 'opfab-alert-info').contains("Your card is published");
+      usercard.prepareAndSendCard();
+      usercard.checkCardHasBeenSend();
 
     })
 
@@ -469,9 +466,8 @@ describe('User Card ', function () {
       cy.get('#opfab-recipients').click();
       cy.get('#opfab-recipients').find('.vscomp-option-text').eq(2).click({ force: true });
       cy.get('#opfab-recipients').click();
-      cy.usercardPrepareAndSendCard();
-      // Check that the message indicating successful sending appears
-      cy.get('.opfab-info-message').should('have.class', 'opfab-alert-info').contains("Your card is published");
+      usercard.prepareAndSendCard();
+      usercard.checkCardHasBeenSend();
       cy.get('of-light-card').should('have.length', 1);
       cy.get('of-light-card').eq(0).click();
       cy.get('#opfab-div-card-template').find('div').eq(0).should('have.text', '\n  Hello\n')
@@ -490,9 +486,8 @@ describe('User Card ', function () {
       // check this to be sure template has been loaded
       cy.get("#hidden_sender").should("have.value", "ENTITY2_FR");
       
-      cy.usercardPrepareAndSendCard();
-      // Check that the message indicating successful sending appears
-       cy.get('.opfab-info-message').should('have.class', 'opfab-alert-info').contains("Your card is published");
+      usercard.prepareAndSendCard();
+       usercard.checkCardHasBeenSend();
         
     })
 
@@ -525,7 +520,7 @@ describe('User Card ', function () {
         cy.get('#state-select');
 
 
-        cy.usercardPrepareAndSendCard();
+        usercard.prepareAndSendCard();
         // Check that the message indicating successful sending appears
         cy.get('.opfab-info-message').should('have.class','opfab-alert-info').contains("Your card is published");
 
@@ -543,16 +538,15 @@ describe('User Card ', function () {
       cy.get('of-light-card').should('have.length', 0);
 
       cy.get('#opfab-navbarContent').find('#opfab-newcard-menu').click();
-      cy.usercardSelectService('User card examples');
-      cy.usercardSelectProcess('Conference and IT incident');
-      cy.usercardSelectState('IT Incident');
+      usercard.selectService('User card examples');
+      usercard.selectProcess('Conference and IT incident');
+      usercard.selectState('IT Incident');
 
       // check this to be sure template has been loaded
       cy.get('#service-select');
 
-      cy.usercardPrepareAndSendCard();
-      // Check that the message indicating successful sending appears
-      cy.get('.opfab-info-message').should('have.class', 'opfab-alert-info').contains("Your card is published");
+      usercard.prepareAndSendCard();
+      usercard.checkCardHasBeenSend();
       cy.get('of-light-card').should('have.length', 1);
     })
 
@@ -617,13 +611,8 @@ describe('User Card ', function () {
       cy.get('#opfab-recipients').click();
       cy.get('#opfab-recipients').find('.vscomp-option-text').eq(2).click({ force: true });
       cy.get('#opfab-recipients').click();
-      cy.get('#opfab-usercard-btn-prepareCard').click();
-
-      // Validate sending of the card
-      cy.get('#opfab-usercard-btn-accept').click();
-
-      // Check that the message indicating successful sending appears
-      cy.get('.opfab-info-message').should('have.class', 'opfab-alert-info').contains("Your card is published");
+      usercard.prepareAndSendCard();
+      usercard.checkCardHasBeenSend();
       cy.get('of-light-card').should('have.length', 1);
       cy.get('of-light-card').eq(0).click();
       cy.get('#opfab-div-card-template').find('div').eq(0).should('have.text', "\n  Hello, that's a test message / Result is <OK> & work done is 100%\n");
@@ -653,10 +642,8 @@ describe('User Card ', function () {
         cy.get("#of-usercard-card-emitter-selector").find('select').select('Control Center FR North');
 
         cy.get('#message').should('be.visible').type(' (updated)')
-        cy.get('#opfab-usercard-btn-prepareCard').click();
-        cy.get('#opfab-usercard-btn-accept').click();
-        // Check that the message indicating successful sending appears
-        cy.get('.opfab-info-message').should('have.class', 'opfab-alert-info').contains("Your card is published");
+        usercard.prepareAndSendCard();
+        usercard.checkCardHasBeenSend();
 
         cy.waitDefaultTime();
 
@@ -729,8 +716,8 @@ describe('User Card ', function () {
 
 
       // Test on Conference call
-      cy.usercardSelectService('User card examples');
-      cy.usercardSelectProcess('Conference and IT incident');
+      usercard.selectService('User card examples');
+      usercard.selectProcess('Conference and IT incident');
       cy.get("#hidden_process").should("exist");
       cy.get("#hidden_process").should("have.value", "conferenceAndITIncidentExample");
 
@@ -740,7 +727,7 @@ describe('User Card ', function () {
 
       // Test on IT incident
 
-      cy.usercardSelectState("IT Incident");
+      usercard.selectState("IT Incident");
       cy.get("#hidden_process").should("exist");
       cy.get("#hidden_process").should("have.value", "conferenceAndITIncidentExample");
 
@@ -749,7 +736,7 @@ describe('User Card ', function () {
 
 
       // Test on existing card, opened from the feed
-      cy.usercardPrepareAndSendCard();
+      usercard.prepareAndSendCard();
       cy.get('of-light-card').should('have.length', 1);
       cy.get('of-light-card').eq(0).click();
       cy.get('#opfab-card-edit').click();
@@ -769,9 +756,9 @@ describe('User Card ', function () {
       cy.loginOpFab('operator1_fr', 'test');
 
       cy.get('#opfab-navbarContent').find('#opfab-newcard-menu').click();
-      cy.usercardSelectService('User card examples');
-      cy.usercardSelectProcess('Message or question');
-      cy.usercardSelectState('Question');
+      usercard.selectService('User card examples');
+      usercard.selectProcess('Message or question');
+      usercard.selectState('Question');
 
       var startDate = new Date();
       startDate.setTime(startDate.getTime()+ 3600000);
@@ -866,7 +853,7 @@ describe('User Card ', function () {
       cy.get("#hidden_sender").should("have.value", "ENTITY2_FR");
 
       // Test on editing existing card, opened from the feed
-      cy.usercardPrepareAndSendCard();
+      usercard.prepareAndSendCard();
       
       cy.waitDefaultTime();
 
@@ -885,8 +872,8 @@ describe('User Card ', function () {
       cy.deleteAllCards();
       cy.loginOpFab('operator1_fr', 'test');
       cy.get('#opfab-navbarContent').find('#opfab-newcard-menu').click();
-      cy.usercardSelectService('User card examples');
-      cy.usercardSelectProcess('Task');
+      usercard.selectService('User card examples');
+      usercard.selectProcess('Task');
       cy.waitDefaultTime();
       cy.get('#Monday').check({force: true});
       cy.get('#Tuesday').check({force: true});
@@ -896,7 +883,7 @@ describe('User Card ', function () {
       cy.get('#Saturday').check({force: true});
       cy.get('#Sunday').check({force: true});
       cy.get('#time').type('08:00');
-      cy.usercardPrepareAndSendCard();
+      usercard.prepareAndSendCard();
       
       cy.waitDefaultTime();
       cy.get('#opfab-timeline-link-period-7D').click();
@@ -914,15 +901,15 @@ describe('User Card ', function () {
       // Check default severity level value is 'Alarm'
       cy.get('#opfab-sev-alarm').should('be.checked');
 
-      cy.usercardSelectService('User card examples');
-      cy.usercardSelectProcess('Task');
+      usercard.selectService('User card examples');
+      usercard.selectProcess('Task');
       // Check initial severity level value is set to 'Action'
       cy.get('#opfab-sev-action').should('be.checked');
 
       // Change severity, send card, edit it and check severity is not modified on edition
       cy.get('#opfab-sev-information').check();
       cy.get('#opfab-sev-information').should('be.checked');
-      cy.usercardPrepareAndSendCard();
+      usercard.prepareAndSendCard();
       cy.get('of-light-card').eq(0).click();
       cy.get('#opfab-card-edit').click();
       cy.get('#opfab-sev-information').should('be.checked');
@@ -935,9 +922,9 @@ describe('User Card ', function () {
     it('Search feature should be enabled on services dropdown for "IT incident" user card', () => {
       cy.loginOpFab('operator1_fr', 'test');
       cy.get('#opfab-navbarContent').find('#opfab-newcard-menu').click();
-      cy.usercardSelectService('User card examples');
-      cy.usercardSelectProcess('Conference and IT incident');
-      cy.usercardSelectState('IT Incident');
+      usercard.selectService('User card examples');
+      usercard.selectProcess('Conference and IT incident');
+      usercard.selectState('IT Incident');
       // check search is enabled for service select
       cy.get('#service-select').should("exist");
       cy.get('#service-select').click();
@@ -962,8 +949,8 @@ describe('User Card ', function () {
     it('Search feature should be enabled on states dropdown for "Process example" user card', () => {
       cy.loginOpFab('operator1_fr', 'test');
       cy.get('#opfab-navbarContent').find('#opfab-newcard-menu').click();
-      cy.usercardSelectProcess('Process example');
-      cy.usercardSelectState('Process example');
+      usercard.selectProcess('Process example');
+      usercard.selectState('Process example');
 
       // check search is enabled for state select
       cy.get('#state-select').should("exist");
@@ -985,5 +972,4 @@ describe('User Card ', function () {
       cy.get('#status-select').find('.vscomp-search-input').should("not.exist");
     })
   })
-
 })

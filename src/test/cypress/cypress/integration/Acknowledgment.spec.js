@@ -7,7 +7,13 @@
  * This file is part of the OperatorFabric project.
  */
 
+import {getUsercardCommands} from "../support/usercardCommands"
+
+
 describe('Acknowledgment tests', function () {
+
+    const usercard = getUsercardCommands();
+
 
     before('Set up configuration', function () {
 
@@ -208,15 +214,15 @@ describe('Acknowledgment tests', function () {
         // We create a usercard sent to several entities
         cy.get('#opfab-navbarContent').find('#opfab-newcard-menu').click();
         cy.get("of-usercard").should('exist');
-        cy.usercardSelectService('Base Examples');
-        cy.usercardSelectProcess('Process example');
-        cy.usercardSelectState('Message');
+        usercard.selectService('Base Examples')
+        usercard.selectProcess('Process example');
+        usercard.selectState('Message');
         cy.get('#message').type('Test message for entities acks');
         cy.get('#opfab-recipients').click();
         cy.get('.vscomp-toggle-all-checkbox').click();
         cy.get('#opfab-recipients').click();
 
-        cy.usercardPrepareAndSendCard();
+        usercard.prepareAndSendCard();
         cy.waitDefaultTime();
 
         // We display the created card
