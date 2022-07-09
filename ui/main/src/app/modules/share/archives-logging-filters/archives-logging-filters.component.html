@@ -112,7 +112,7 @@
                          container="body" triggers="mouseenter:mouseleave" popoverClass="opfab-popover">
                     </div>
                 </label>
-                <button id="opfab-archives-logging-btn-search" class="opfab-btn"  (click)='query()' translate>button.search</button>
+                <button id="opfab-archives-logging-btn-search" [ngClass]="isCurrentUserInAdminGroup ? 'opfab-btn-search-admin-mode' : 'opfab-btn'" (click)='query()' translate>button.search</button>
                 <button id="opfab-archives-logging-btn-reset" class="opfab-btn-cancel" style="margin-top:50px" (click)='resetForm()' translate>button.reset</button>
 
             </div>
