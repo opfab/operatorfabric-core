@@ -98,6 +98,12 @@
           "label": "entry.entry2",
           "linkType": "BOTH",
           "showOnlyForGroups": ["Dispatcher"]
+        },
+        {
+          "id": "uid_test_3",
+          "url": "http://localhost:2002/external/appExample/",
+          "label": "entry.entry3",
+          "linkType": "BOTH"
         }
       ]
     },
@@ -133,7 +139,8 @@
           },
           "entry": {
             "entry1": "First menu entry",
-            "entry2": "Second menu entry"
+            "entry2": "Second menu entry",
+            "entry3": "External application"
           }
         },
         "adminmenu": {
@@ -163,7 +170,8 @@
           },
           "entry": {
             "entry1": "Premier élément",
-            "entry2": "Deuxième élément"
+            "entry2": "Deuxième élément",
+            "entry3": "Application externe"
           }
         },
         "adminmenu": {
@@ -193,7 +201,8 @@
           },
           "entry": {
             "entry1": "Eerste menu-item",
-            "entry2": "Tweede menu-item"
+            "entry2": "Tweede menu-item",
+            "entry3": "TExterne applicatie"
           }
         },
         "adminmenu": {
