@@ -18,7 +18,6 @@ import allLocales from '@fullcalendar/core/locales-all';
 import {TranslateService} from '@ngx-translate/core';
 import {ClearLightCardSelectionAction, SelectLightCardAction} from '@ofActions/light-card.actions';
 import {LoadCardAction} from '@ofActions/card.actions';
-import {buildSettingsOrConfigSelector} from '@ofStore/selectors/settings.x.config.selectors';
 import {NgbModal, NgbModalOptions, NgbModalRef} from '@ng-bootstrap/ng-bootstrap';
 import {FilterType} from '@ofModel/feed-filter.model';
 import {HourAndMinutes} from '@ofModel/card.model';
@@ -26,6 +25,7 @@ import {ProcessesService} from '@ofServices/processes.service';
 import {DisplayContext} from '@ofModel/templateGateway.model';
 import {LightCardsStoreService} from '@ofServices/lightcards/lightcards-store.service';
 import {FilterService} from '@ofServices/lightcards/filter.service';
+import {ConfigService} from '@ofServices/config.service';
 
 @Component({
     selector: 'of-calendar',
@@ -39,7 +39,8 @@ export class CalendarComponent implements OnInit, OnDestroy, AfterViewInit {
         private modalService: NgbModal,
         private processesService: ProcessesService,
         private lightCardsStoreService: LightCardsStoreService,
-        private filterService: FilterService
+        private filterService: FilterService,
+        private configService: ConfigService
     ) {
         processesService.getAllProcesses().forEach((process) => {
             if (!!process.uiVisibility && !!process.uiVisibility.calendar) this.mapOfProcesses.set(process.id, 1);
@@ -102,8 +103,7 @@ export class CalendarComponent implements OnInit, OnDestroy, AfterViewInit {
     }
 
     private setLocale() {
-        this.store
-            .select(buildSettingsOrConfigSelector('locale'))
+        this.configService.getConfigValueAsObservable('settings.locale')
             .pipe(takeUntil(this.unsubscribe$))
             .subscribe((locale) => this.calendarComponent.getApi().setOption('locale', locale));
     }

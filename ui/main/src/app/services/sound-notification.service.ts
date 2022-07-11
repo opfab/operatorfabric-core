@@ -12,9 +12,6 @@ import {Injectable, OnDestroy} from '@angular/core';
 import {PlatformLocation} from '@angular/common';
 import {LightCard, Severity} from '@ofModel/light-card.model';
 import {Notification} from '@ofModel/external-devices.model';
-import {Store} from '@ngrx/store';
-import {AppState} from '@ofStore/index';
-import {buildSettingsOrConfigSelector} from '@ofSelectors/settings.x.config.selectors';
 import {LightCardsFeedFilterService} from './lightcards/lightcards-feed-filter.service';
 import {LightCardsStoreService} from './lightcards/lightcards-store.service';
 import {EMPTY, iif, merge, of, Subject, timer} from 'rxjs';
@@ -53,7 +50,6 @@ export class SoundNotificationService implements OnDestroy {
     private lastSentCardId: string;
 
     constructor(
-        private store: Store<AppState>,
         private platformLocation: PlatformLocation,
         private lightCardsFeedFilterService: LightCardsFeedFilterService,
         private lightCardsStoreService: LightCardsStoreService,
@@ -66,19 +62,19 @@ export class SoundNotificationService implements OnDestroy {
         this.soundConfigBySeverity = new Map<Severity, SoundConfig>();
         this.soundConfigBySeverity.set(Severity.ALARM, {
             soundFileName: 'alarm.mp3',
-            soundEnabledSetting: 'playSoundForAlarm'
+            soundEnabledSetting: 'settings.playSoundForAlarm'
         });
         this.soundConfigBySeverity.set(Severity.ACTION, {
             soundFileName: 'action.mp3',
-            soundEnabledSetting: 'playSoundForAction'
+            soundEnabledSetting: 'settings.playSoundForAction'
         });
         this.soundConfigBySeverity.set(Severity.COMPLIANT, {
             soundFileName: 'compliant.mp3',
-            soundEnabledSetting: 'playSoundForCompliant'
+            soundEnabledSetting: 'settings.playSoundForCompliant'
         });
         this.soundConfigBySeverity.set(Severity.INFORMATION, {
             soundFileName: 'information.mp3',
-            soundEnabledSetting: 'playSoundForInformation'
+            soundEnabledSetting: 'settings.playSoundForInformation'
         });
 
         const baseHref = platformLocation.getBaseHrefFromDOM();
@@ -86,19 +82,18 @@ export class SoundNotificationService implements OnDestroy {
 
         this.soundEnabled = new Map<Severity, boolean>();
         this.soundConfigBySeverity.forEach((soundConfig, severity) => {
-            store.select(buildSettingsOrConfigSelector(soundConfig.soundEnabledSetting, false)).subscribe((x) => {
+            this.configService.getConfigValueAsObservable(soundConfig.soundEnabledSetting, false).subscribe((x) => {
                 this.soundEnabled.set(severity, x);
                 this.setSoundForSessionEndWhenAtLeastOneSoundForASeverityIsActivated();
             });
         });
-        store.select(buildSettingsOrConfigSelector('playSoundOnExternalDevice', false)).subscribe((x) => {
+        this.configService.getConfigValueAsObservable('settings.playSoundOnExternalDevice', false).subscribe((x) => {
             this.playSoundOnExternalDevice = x;
         });
-        store.select(buildSettingsOrConfigSelector('replayEnabled', false)).subscribe((x) => {
+        this.configService.getConfigValueAsObservable('settings.replayEnabled', false).subscribe((x) => {
             this.replayEnabled = x;
         });
-        store
-            .select(buildSettingsOrConfigSelector('replayInterval', SoundNotificationService.DEFAULT_REPLAY_INTERVAL))
+        this.configService.getConfigValueAsObservable('settings.replayInterval', SoundNotificationService.DEFAULT_REPLAY_INTERVAL)
             .subscribe((x) => {
                 this.replayInterval = x;
             });

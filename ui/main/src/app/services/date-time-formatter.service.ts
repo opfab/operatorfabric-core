@@ -9,10 +9,7 @@
 
 import {Injectable} from '@angular/core';
 import * as moment from 'moment';
-import {AppState} from '@ofStore/index';
-import {Store} from '@ngrx/store';
-import {buildSettingsOrConfigSelector} from '@ofSelectors/settings.x.config.selectors';
-
+import {ConfigService} from './config.service';
 
 @Injectable({
     providedIn: 'root'
@@ -22,19 +19,19 @@ export class DateTimeFormatterService {
     private dateFormat;
     private dateTimeFormat;
 
-    constructor(private store: Store<AppState>) {
+    constructor( private configService: ConfigService) {
         this.loadFormatterServiceConfiguration();
     }
 
     private loadFormatterServiceConfiguration() {
-        this.store
-            .select(buildSettingsOrConfigSelector('timeFormat', 'LT'))
+        this.configService
+            .getConfigValueAsObservable('settings.timeFormat', 'LT')
             .subscribe((next) => (this.timeFormat = next));
-        this.store
-            .select(buildSettingsOrConfigSelector('dateFormat', 'L'))
+        this.configService
+            .getConfigValueAsObservable('settings.dateFormat', 'L')
             .subscribe((next) => (this.dateFormat = next));
-        this.store
-            .select(buildSettingsOrConfigSelector('dateTimeFormat'))
+        this.configService
+            .getConfigValueAsObservable('settings.dateTimeFormat')
             .subscribe((next) => (this.dateTimeFormat = next));
     }
 

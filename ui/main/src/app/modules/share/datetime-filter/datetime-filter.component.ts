@@ -22,7 +22,7 @@ import {Observable, Subject} from 'rxjs';
 import {TranslateService} from '@ngx-translate/core';
 import {Store} from '@ngrx/store';
 import {AppState} from '@ofStore/index';
-import {buildSettingsOrConfigSelector} from '@ofStore/selectors/settings.x.config.selectors';
+import {ConfigService} from '@ofServices/config.service';
 
 const i18nPrefix = 'datePicker.';
 
@@ -110,7 +110,8 @@ export class DatetimeFilterComponent implements ControlValueAccessor, OnInit, On
     constructor(
         private store: Store<AppState>,
         private translateService: TranslateService,
-        private controlContainer: ControlContainer
+        private controlContainer: ControlContainer,
+        private configService: ConfigService
     ) {
         this.onChanges();
         this.resetDateAndTime();
@@ -129,7 +130,7 @@ export class DatetimeFilterComponent implements ControlValueAccessor, OnInit, On
     }
 
     protected getLocale(): Observable<string> {
-        return this.store.select(buildSettingsOrConfigSelector('locale'));
+        return this.configService.getConfigValueAsObservable('settings.locale');
     }
 
     ngOnDestroy() {

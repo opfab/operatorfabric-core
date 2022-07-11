@@ -11,9 +11,6 @@ import {Injectable} from '@angular/core';
 import * as moment from 'moment';
 import {TranslateService} from '@ngx-translate/core';
 import {HttpClient} from '@angular/common/http';
-import {Store} from '@ngrx/store';
-import {AppState} from '@ofStore/index';
-import {buildSettingsOrConfigSelector} from '@ofSelectors/settings.x.config.selectors';
 import {Observable} from 'rxjs';
 import {environment} from '@env/environment';
 import {catchError, tap} from 'rxjs/operators';
@@ -29,9 +26,15 @@ export class I18nService {
     private static localUrl = '/assets/i18n/';
     private _locale: string;
 
-    constructor(private httpClient: HttpClient, private translate: TranslateService, private store: Store<AppState> ,private configService: ConfigService) {
+    constructor(
+        private httpClient: HttpClient,
+        private translate: TranslateService,
+        private configService: ConfigService
+    ) {
         I18nService.localUrl = `${environment.paths.i18n}`;
-        this.store.select(buildSettingsOrConfigSelector('locale')).subscribe((locale) => this.changeLocale(locale));
+        configService
+            .getConfigValueAsObservable('settings.locale', 'en')
+            .subscribe((locale) => this.changeLocale(locale));
     }
 
     public changeLocale(locale: string) {
@@ -77,17 +80,15 @@ export class I18nService {
         );
     }
 
-    public loadGlobalTranslations(locales :Array<string>): Observable<any[]> {
+    public loadGlobalTranslations(locales: Array<string>): Observable<any[]> {
         if (!!locales) {
             const localeRequests$ = [];
-            locales.forEach((locale) =>
-                localeRequests$.push(this.loadLocale(locale))
-            );
-           return Utilities.subscribeAndWaitForAllObservablesToEmitAnEvent(localeRequests$);
+            locales.forEach((locale) => localeRequests$.push(this.loadLocale(locale)));
+            return Utilities.subscribeAndWaitForAllObservablesToEmitAnEvent(localeRequests$);
         }
     }
 
-    public loadTranslationForMenu():void {
+    public loadTranslationForMenu(): void {
         this.configService.fetchMenuTranslations().subscribe((locales) => {
             locales.forEach((locale) => {
                 this.translate.setTranslation(locale.language, locale.i18n, true);
