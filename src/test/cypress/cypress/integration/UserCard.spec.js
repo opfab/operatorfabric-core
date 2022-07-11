@@ -351,7 +351,7 @@ describe('User Card ', function () {
       cy.get('.opfab-info-message').should('have.class', 'opfab-alert-info').contains("Your card is published");
       cy.get('of-light-card').should('have.length', 1);
       cy.get('of-light-card').eq(0).click();
-      cy.get('#opfab-div-card-template').find('div').eq(0).should('have.text', "\n  Hello, that's a test message / Result is <OK> & work done is 100%\n");
+      cy.get('#opfab-div-card-template-processed').find('div').eq(0).should('have.text', "\n  Hello, that's a test message / Result is <OK> & work done is 100%\n");
       cy.get('#opfab-card-title').should('have.text', "Message");
       cy.get('#opfab-selected-card-summary').should('have.text', "Message received :   Hello, that's a test message / Result is <OK> & work done is 100%");
     })
@@ -365,7 +365,7 @@ describe('User Card ', function () {
       cy.get('of-light-card').should('have.length', 1);
       cy.get('#opfab-lightcard-dates').contains('(08:00 20/01/2020 - 11:10 25/06/2029)');
       cy.get('of-light-card').eq(0).click();
-      cy.get('#opfab-div-card-template').find('div').eq(0).should('have.text', "\n  Hello, that's a test message / Result is <OK> & work done is 100%\n");
+      cy.get('#opfab-div-card-template-processed').find('div').eq(0).should('have.text', "\n  Hello, that's a test message / Result is <OK> & work done is 100%\n");
       cy.get('#opfab-card-title').should('have.text', "Message");
       cy.get('#opfab-selected-card-summary').should('have.text', "Message received :   Hello, that's a test message / Result is <OK> & work done is 100%");
     })
@@ -398,7 +398,7 @@ describe('User Card ', function () {
 
       cy.get('of-light-card').should('have.length', 1);
       cy.get('of-light-card').eq(0).click();
-      cy.get('#opfab-div-card-template').find('div').eq(0).should('have.text', "\n   Hello, that's a test message / Result is <OK> & work done is 100%  (updated)\n");
+      cy.get('#opfab-div-card-template-processed').find('div').eq(0).should('have.text', "\n   Hello, that's a test message / Result is <OK> & work done is 100%  (updated)\n");
       cy.get('#opfab-card-title').should('have.text', "Message");
       cy.get('#opfab-selected-card-summary').should('have.text', "Message received :    Hello, that's a test message / Result is <OK> & work done is 100%  (updated)");
 
@@ -477,7 +477,7 @@ describe('User Card ', function () {
       cy.get('.opfab-info-message').should('have.class', 'opfab-alert-info').contains("Your card is published");
       cy.get('of-light-card').should('have.length', 1);
       cy.get('of-light-card').eq(0).click();
-      cy.get('#opfab-div-card-template').find('div').eq(0).should('have.text', '\n  Hello\n')
+      cy.get('#opfab-div-card-template-processed').find('div').eq(0).should('have.text', '\n  Hello\n')
       cy.get('#opfab-card-title').should('have.text', 'Message')
       cy.get('#opfab-selected-card-summary').should('have.text', "Message received :   Hello");
 
@@ -629,7 +629,7 @@ describe('User Card ', function () {
       cy.get('.opfab-info-message').should('have.class', 'opfab-alert-info').contains("Your card is published");
       cy.get('of-light-card').should('have.length', 1);
       cy.get('of-light-card').eq(0).click();
-      cy.get('#opfab-div-card-template').find('div').eq(0).should('have.text', "\n  Hello, that's a test message / Result is <OK> & work done is 100%\n");
+      cy.get('#opfab-div-card-template-processed').find('div').eq(0).should('have.text', "\n  Hello, that's a test message / Result is <OK> & work done is 100%\n");
       cy.get('#opfab-card-title').should('have.text', "Message");
       cy.get('#opfab-selected-card-summary').should('have.text', "Message received :   Hello, that's a test message / Result is <OK> & work done is 100%");
       cy.get('#opfab-form-entity').should('have.text', 'from\u00a0:\u00a0Control Center FR South');
@@ -664,7 +664,7 @@ describe('User Card ', function () {
         cy.waitDefaultTime();
 
         // Check that the new card emitter 'Control Center FR North' is taken into account
-        cy.get('#opfab-div-card-template').find('div').eq(0).should('have.text', "\n   Hello, that's a test message / Result is <OK> & work done is 100%  (updated)\n");
+        cy.get('#opfab-div-card-template-processed').find('div').eq(0).should('have.text', "\n   Hello, that's a test message / Result is <OK> & work done is 100%  (updated)\n");
         cy.get('#opfab-card-title').should('have.text', "Message");
         cy.get('#opfab-selected-card-summary').should('have.text', "Message received :    Hello, that's a test message / Result is <OK> & work done is 100%  (updated)");
         cy.get('#opfab-form-entity').should('have.text', 'from\u00a0:\u00a0Control Center FR North');

@@ -16,12 +16,11 @@
 .opfab-loading-spinner {
     padding-top: 20px;
     border-radius: 8px;
-    border: solid 1px var(--opfab-bgcolor);
     font-size: 68px;
     width: 150px;
     height: 150px;
     margin: auto;
     text-align: center;
-    background-color: var(--opfab-bgcolor);
+    background-color: rgba(0, 0, 0, 0); // set the background to transparent
     color: var(--opfab-text-color);
 }
