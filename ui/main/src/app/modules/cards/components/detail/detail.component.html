@@ -92,7 +92,10 @@
           </div>
         </div>
 
-        <div id="opfab-div-card-template" class="opfab-card-detail" [innerHtml]="htmlTemplateContent"></div>
+        <div id="opfab-div-card-template" class="opfab-card-detail">
+          <of-spinner *ngIf="isCardProcessing"></of-spinner>
+          <div [hidden]="isCardProcessing" id="opfab-div-card-template-processed" [innerHtml]="htmlTemplateContent"></div>
+        </div>
 
         <div style="text-align: center;width:100% ; ">
 

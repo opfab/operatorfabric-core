@@ -132,6 +132,7 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
     public btnUnlockLabel = 'response.btnUnlock';
     public listEntitiesToAck = [];
     public lastResponse: Card;
+    public isCardProcessing = false;
 
     private lastCardSetToReadButNotYetOnFeed;
     private entityIdsAllowedOrRequiredToRespondAndAllowedToSendCards = [];
@@ -196,9 +197,8 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
     }
 
     ngOnChanges(): void {
-        templateGateway.initTemplateGateway();
+        this.updateTemplateGateway();
 
-        templateGateway.displayContext = this.displayContext;
         if (this.cardState.response != null && this.cardState.response !== undefined) {
             this.isCardAQuestionCard = true;
             this.computeEntitiesForResponses();
@@ -237,6 +237,22 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
             ? this.cardState.modifyAnswerButtonLabel
             : 'response.btnUnlock';
     }
+
+    private updateTemplateGateway() {
+        templateGateway.initTemplateGateway();
+
+        const that = this;
+        templateGateway.displayLoadingSpinner = function() {
+            that.isCardProcessing = true;
+        }
+
+        templateGateway.hideLoadingSpinner = function() {
+            that.isCardProcessing = false;
+        }
+
+        templateGateway.displayContext = this.displayContext;
+    }
+
 
     public displayCardAcknowledgedFooter(): boolean {
         return (

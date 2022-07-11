@@ -75,6 +75,19 @@ describe('Card detail', function () {
 
         });
 
+        it(`Check card detail spinner when simulating card processed `, function () {
+            cy.loginOpFab('operator1_fr', 'test');
+
+            // Click on the card
+            cy.get('of-light-card').eq(0).click();
+            
+            cy.get("#templateGateway-display-spinner-button").should('exist').click();
+            cy.checkLoadingSpinnerIsDisplayed();
+
+            cy.checkLoadingSpinnerIsNotDisplayed();
+
+        });
+
         it(`Check card detail in archives`, function () {
             
             cy.loginOpFab('operator1_fr', 'test');

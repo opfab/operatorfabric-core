@@ -28,7 +28,7 @@ describe ('Business nenu',()=>{
         .then((urlId) => {
             cy.hash().should('eq', '#/feed/cards/' + urlId);
             cy.get('of-card-details').find('of-detail');
-            cy.get('#opfab-div-card-template').find('a').eq(0).click();
+            cy.get('#opfab-div-card-template-processed').find('a').eq(0).click();
             cy.get('iframe').invoke('attr', 'src').should('eq', 'https://en.wikipedia.org/w/index.php?opfab_theme=NIGHT&search=chart&fulltext=1');
         });
 
@@ -75,7 +75,7 @@ describe ('Business nenu',()=>{
         .then((urlId) => {
             cy.hash().should('eq', '#/feed/cards/' + urlId);
             cy.get('of-card-details').find('of-detail');
-            cy.get('#opfab-div-card-template').find('a').eq(0).click();
+            cy.get('#opfab-div-card-template-processed').find('a').eq(0).click();
             cy.get('iframe').invoke('attr', 'src').should('eq', 'https://en.wikipedia.org/w/index.php?opfab_theme=DAY&search=chart&fulltext=1');
         });
 
