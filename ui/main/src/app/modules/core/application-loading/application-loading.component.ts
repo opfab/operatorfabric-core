@@ -22,13 +22,13 @@ import {ProcessesService} from '@ofServices/processes.service';
 import {ReminderService} from '@ofServices/reminder/reminder.service';
 import {UserService} from '@ofServices/user.service';
 import {AppState} from '@ofStore/index';
-import {LoadConfigSuccessAction} from '@ofStore/actions/config.actions';
 import {selectIdentifier} from '@ofStore/selectors/authentication.selectors';
 import {Utilities} from 'app/common/utilities';
 import {catchError, Subject} from 'rxjs';
 import {ActivityAreaChoiceAfterLoginComponent} from './activityarea-choice-after-login/activityarea-choice-after-login.component';
 import {AccountAlreadyUsedComponent} from './account-already-used/account-already-used.component';
 import {AppLoadedInAnotherTabComponent} from './app-loaded-in-another-tab/app-loaded-in-another-tab.component';
+import {SettingsService} from '@ofServices/settings.service';
 
 @Component({
     selector: 'of-application-loading',
@@ -58,6 +58,7 @@ export class ApplicationLoadingComponent implements OnInit {
         private titleService: Title,
         private authenticationService: AuthenticationService,
         private configService: ConfigService,
+        private settingsService: SettingsService,
         private translateService: TranslateService,
         private i18nService: I18nService,
         private cardService: CardService,
@@ -78,7 +79,6 @@ export class ApplicationLoadingComponent implements OnInit {
             //This configuration needs to be loaded first as it defines the authentication mode
             next: (config) => {
                 console.log(new Date().toISOString(), `Configuration loaded (web-ui.json)`);
-                this.store.dispatch(new LoadConfigSuccessAction({config: config}));
                 this.setTitleInBrowser();
                 this.loadTranslation(config);
             },
@@ -152,6 +152,21 @@ export class ApplicationLoadingComponent implements OnInit {
                 this.logger.info(`User ${identifier} logged`);
                 this.showLoginScreen = false;
                 this.userLogin = identifier;
+                this.loadSettings();
+            }
+        });
+    }
+
+    private loadSettings() {
+        this.settingsService.fetchUserSettings().subscribe ( {
+            next: (settings) => {
+                console.log(new Date().toISOString(), `Settings loaded` , settings);
+                this.configService.overrideConfigSettingsWithUserSettings(settings);
+                this.checkIfAccountIsAlreadyUsed();
+            },
+            error: (err) => {
+                if (err.status === 404) console.log(new Date().toISOString(), 'No settings for user');
+                else console.error(new Date().toISOString(), 'Error when loading settings', err);
                 this.checkIfAccountIsAlreadyUsed();
             }
         });
@@ -165,6 +180,8 @@ export class ApplicationLoadingComponent implements OnInit {
             this.loadAllConfigurations();
         });
     }
+
+   
 
     private loadAllConfigurations(): void {
         const requestsToLaunch$ = [

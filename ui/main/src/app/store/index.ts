@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2021, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2022, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -20,8 +20,6 @@ import {AuthenticationEffects} from '@ofEffects/authentication.effects';
 import {CardFeedState} from '@ofStates/feed.state';
 import {reducer as lightCardReducer} from '@ofStore/reducers/light-card.reducer';
 import {reducer as cardReducer} from '@ofStore/reducers/card.reducer';
-import {reducer as configReducer} from '@ofStore/reducers/config.reducer';
-import {reducer as settingsReducer} from '@ofStore/reducers/settings.reducer';
 import {reducer as menuReducer} from '@ofStore/reducers/menu.reducer';
 import {reducer as globalStyleReducer} from '@ofStore/reducers/global-style.reducer';
 import {AuthState} from '@ofStates/authentication.state';
@@ -29,9 +27,6 @@ import {CardState} from '@ofStates/card.state';
 import {CustomRouterEffects} from '@ofEffects/custom-router.effects';
 import {MenuState} from '@ofStates/menu.state';
 import {MenuEffects} from '@ofEffects/menu.effects';
-import {ConfigState} from '@ofStates/config.state';
-import {SettingsState} from '@ofStates/settings.state';
-import {SettingsEffects} from '@ofEffects/settings.effects';
 
 import {reducer as userReducer} from '@ofStore/reducers/user.reducer';
 import {UserState} from '@ofStates/user.state';
@@ -48,8 +43,6 @@ export interface AppState {
     authentication: AuthState;
     card: CardState;
     menu: MenuState;
-    config: ConfigState;
-    settings: SettingsState;
     user: UserState;
     cardsSubscription: CardsSubscriptionState;
     globalStyle: GlobalStyleState;
@@ -57,7 +50,6 @@ export interface AppState {
 
 export const appEffects = [
     CardEffects,
-    SettingsEffects,
     CardOperationEffects,
     CustomRouterEffects,
     AuthenticationEffects,
@@ -72,8 +64,6 @@ export const appReducer: ActionReducerMap<AppState> = {
     authentication: authenticationReducer,
     card: cardReducer,
     menu: menuReducer,
-    config: configReducer,
-    settings: settingsReducer,
     user: userReducer,
     cardsSubscription: cardsSubscriptionReducer,
     globalStyle: globalStyleReducer

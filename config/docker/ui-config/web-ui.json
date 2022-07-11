@@ -5,8 +5,6 @@
   "showUserEntitiesOnTopRightOfTheScreen": true,
   "externalDevicesEnabled": true,
   "selectActivityAreaOnLogin": false,
-  "settings.replayInterval": 10,
-  "settings.replayEnabled": true,
   "archive": {
     "filters": {
       "page": {
@@ -127,7 +125,10 @@
     "locale": "en",
     "dateTimeFormat": "HH:mm DD/MM/YYYY",
     "dateFormat": "DD/MM/YYYY",
-    "styleWhenNightDayModeDesactivated": "NIGHT"
+    "styleWhenNightDayModeDesactivated": "NIGHT",
+    "replayInterval" : 10,
+    "replayEnabled" : true
+
   },
   "usercard": {
     "useDescriptionFieldForEntityList": false

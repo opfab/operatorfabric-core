@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2021, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2022, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -15,6 +15,8 @@ import {AbstractControl, UntypedFormControl, UntypedFormGroup, Validators} from 
 import {I18n} from '@ofModel/i18n.model';
 import {TranslateService} from '@ngx-translate/core';
 import {Observable, of} from 'rxjs';
+import {ConfigService} from '@ofServices/config.service';
+import {SettingsService} from '@ofServices/settings.service';
 
 @Component({
     selector: 'of-list-setting',
@@ -24,8 +26,13 @@ export class ListSettingComponent extends BaseSettingDirective implements OnInit
     @Input() values: ({value: string; label: I18n | string} | string)[];
     preparedList: {value: string; label: Observable<string>}[];
 
-    constructor(protected store: Store<AppState>, private translateService: TranslateService) {
-        super(store);
+    constructor(
+        protected store: Store<AppState>,
+        protected configService: ConfigService,
+        protected settingsService: SettingsService,
+        private translateService: TranslateService
+    ) {
+        super(store, configService, settingsService);
     }
 
     ngOnInit() {

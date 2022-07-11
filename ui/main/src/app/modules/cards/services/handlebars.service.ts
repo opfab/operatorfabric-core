@@ -17,9 +17,7 @@ import {map, tap} from 'rxjs/operators';
 import {ProcessesService} from '@ofServices/processes.service';
 import {Guid} from 'guid-typescript';
 import {DetailContext} from '@ofModel/detail-context.model';
-import {Store} from '@ngrx/store';
-import {AppState} from '@ofStore/index';
-import {buildSettingsOrConfigSelector} from '@ofSelectors/settings.x.config.selectors';
+import {ConfigService} from '@ofServices/config.service';
 
 @Injectable({
     providedIn: 'root'
@@ -28,7 +26,7 @@ export class HandlebarsService {
     constructor(
         private translate: TranslateService,
         private businessconfig: ProcessesService,
-        private store: Store<AppState>
+        private configService: ConfigService
     ) {
         HandlebarsService.registerPreserveSpace();
         this.registerNumberFormat();
@@ -54,7 +52,7 @@ export class HandlebarsService {
         HandlebarsService.registerConditionalAttribute();
         HandlebarsService.registerReplace();
         HandlebarsService.registerObjectContainsKey();
-        this.store.select(buildSettingsOrConfigSelector('locale')).subscribe((locale) => this.changeLocale(locale));
+        this.configService.getConfigValueAsObservable('settings.locale').subscribe((locale) => this.changeLocale(locale));
     }
 
     private templateCache: Map<Function> = new Map();

@@ -8,9 +8,9 @@
  */
 
 import {Injectable} from '@angular/core';
-import {map, mergeMap} from 'rxjs/operators';
+import {filter, map, mergeMap, mergeWith} from 'rxjs/operators';
 import * as _ from 'lodash-es';
-import {Observable, of, throwError} from 'rxjs';
+import {Observable, of, Subject, throwError} from 'rxjs';
 import {HttpClient} from '@angular/common/http';
 import {environment} from '@env/environment';
 import {CoreMenuConfig, Locale, Menu, UIMenuFile} from '@ofModel/menu.model';
@@ -23,20 +23,41 @@ export class ConfigService {
     private customMenus: Menu[] = [];
     private coreMenuConfigurations: CoreMenuConfig[] = [];
 
-    // fetchXXX : method performs http get & returned observable emits the actual result of the request
-    // loadXXXX : method performs http get & stores the result in local variable. Returned observable is just success/error of request.
+    private configChangeEvent =  new Subject<any>();
+    private settingsOverrideEvent = new Subject<any>();
 
     constructor(private httpClient: HttpClient) {
         this.configUrl = `${environment.urls.config}`;
         this.customMenus = [];
     }
 
-    loadWebUIConfiguration(): Observable<any> {
+    public loadWebUIConfiguration(): Observable<any> {
         return this.httpClient.get(`${this.configUrl}`).pipe(map((config) => (this.config = config)));
     }
 
-    getConfigValue(path: string, fallback: any = null) {
+    public overrideConfigSettingsWithUserSettings(settings: any) {
+        const newConfig = {...this.config};
+        newConfig.settings = {...this.config.settings, ...settings};
+        this.config = newConfig;
+        this.settingsOverrideEvent.next(null);
+    }
+
+    public getConfigValue(path: string, fallback: any = null) : any {
         return _.get(this.config, path, fallback);
+    }
+
+    public setConfigValue(path: string, value :any) {
+        _.set(this.config,path,value);
+        this.configChangeEvent.next({path:path , value:value});
+    }
+
+    public getConfigValueAsObservable(path: string, fallback: any = null):Observable<any> {
+        return of(this.getConfigValue(path,fallback)).pipe(mergeWith (
+            this.settingsOverrideEvent.asObservable().pipe(map ( () => this.getConfigValue(path,fallback) )),
+            this.configChangeEvent.asObservable().pipe(
+                filter(config => config.path === path),
+                map( (config) => config.value))
+            ));
     }
 
     /* Configuration for core menus */

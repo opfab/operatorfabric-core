@@ -1,0 +1,55 @@
+// Copyright (c) 2022 RTE (http://www.rte-france.com)
+// See AUTHORS.txt
+// This document is subject to the terms of the Creative Commons Attribution 4.0 International license.
+// If a copy of the license was not distributed with this
+// file, You can obtain one at https://creativecommons.org/licenses/by/4.0/.
+// SPDX-License-Identifier: CC-BY-4.0
+
+= Migration Guide from release 3.8.x to release 3.9.0
+
+== `web-ui.json` config file 
+
+
+To declare settings parameters, you now need to group all fields under `settings: { }` and you must not use a statement like this one : `settings.replayInterval: 10` 
+
+
+For example: 
+
+Replace the following invalid settings config 
+```
+  "settings.replayInterval": 10,
+  "settings.replayEnabled": true,
+  "settings": {
+    "about": {
+      "keycloack": {
+        "name": "Keycloak",
+        "rank": 2,
+        "version": "6.0.1"
+      },
+    }
+    "locale": "en",
+    "dateTimeFormat": "HH:mm DD/MM/YYYY",
+    "dateFormat": "DD/MM/YYYY",
+    "styleWhenNightDayModeDesactivated": "NIGHT"
+  },
+```
+
+By this valid one : 
+
+```
+  "settings": {
+    "replayInterval": 10,
+    "replayEnabled": true,
+    "about": {
+      "keycloack": {
+        "name": "Keycloak",
+        "rank": 2,
+        "version": "6.0.1"
+      },
+    }
+    "locale": "en",
+    "dateTimeFormat": "HH:mm DD/MM/YYYY",
+    "dateFormat": "DD/MM/YYYY",
+    "styleWhenNightDayModeDesactivated": "NIGHT"
+  },
+```
