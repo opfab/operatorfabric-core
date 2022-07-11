@@ -207,12 +207,14 @@ export class FeedconfigurationComponent implements OnInit {
      *                          and we don't display process group which doesn't have any process
      * processesWithoutGroup : we don't display process which doesn't have any state with Receive or ReceiveAndWrite right*/
     private removeProcessesWithoutDisplayedStates() {
-        this.processGroupsAndLabels.forEach((processGroupData, index) => {
+        const toRemove = [];
+        this.processGroupsAndLabels.forEach((processGroupData) => {
             processGroupData.processes = processGroupData.processes.filter(
                 (processData) => !!this.processesStatesLabels.get(processData.processId)
             );
-            if (processGroupData.processes.length === 0) this.processGroupsAndLabels.splice(index, 1);
+            if (processGroupData.processes.length === 0)  toRemove.push(processGroupData.groupId);
         });
+        this.processGroupsAndLabels = this.processGroupsAndLabels.filter(group => !toRemove.includes(group.groupId));
         this.processesWithoutGroup = this.processesWithoutGroup.filter(
             (processData) => !!this.processesStatesLabels.get(processData.idProcess)
         );
