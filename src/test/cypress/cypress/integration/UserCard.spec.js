@@ -282,6 +282,9 @@ describe('User Card ', function () {
       cy.waitDefaultTime(); // avoid detach dom error
       cy.get('#opfab-recipients').find('.vscomp-option-text').eq(1).click({ force: true });
       cy.get('#opfab-recipients').click();
+      //check selection is finished to avoid falky CI test
+      cy.get('#opfab-recipients').find('.vscomp-value-tag').should('contain.text','FR North');
+
 
       cy.get('#opfab-usercard-btn-prepareCard').click();
       cy.get("of-card-detail").should('exist');
