@@ -49,6 +49,12 @@ describe ('Business nenu',()=>{
 
         cy.get('.icon-link').eq(2).invoke('attr', 'href').should('eq', 'https://www.wikipedia.org/');
 
+        // Select third dropdown menu
+        cy.get('.text-link').eq(3).click();
+
+        cy.get('iframe').invoke('attr', 'src').should('eq', 'http://localhost:2002/external/appExample/?opfab_theme=NIGHT');
+        cy.get('.icon-link').eq(3).invoke('attr', 'href').should('eq', 'http://localhost:2002/external/appExample/');
+
         // close dropdown menu by clicking a second time , otherwise the menu keeps open 
         cy.get('#opfab-navbar-menu-dropdown-menu2').click();
 
@@ -95,6 +101,12 @@ describe ('Business nenu',()=>{
         cy.get('.text-link').eq(2).click();
 
         cy.get('iframe').invoke('attr', 'src').should('eq', 'https://www.wikipedia.org/?opfab_theme=DAY');
+
+        // Select third dropdown menu
+        cy.get('.text-link').eq(3).click();
+
+        cy.get('iframe').invoke('attr', 'src').should('eq', 'http://localhost:2002/external/appExample/?opfab_theme=DAY');
+
        
         //Click on single business menu 
         cy.get('#opfab-navbar-menu-menu1').click();
