@@ -20,6 +20,7 @@ import {ExternaldevicesconfigurationModalComponent} from './editModal/externalde
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {ExternaldevicesconfigurationRoutingModule} from './externaldevicesconfiguration-routing.module';
 import {MultiSelectModule} from '../share/multi-select/multi-select.module';
+import {SpinnerModule} from '../share/spinner/spinner.module';
 
 @NgModule({
     declarations: [ExternaldevicesconfigurationComponent, ExternaldevicesconfigurationModalComponent],
@@ -32,6 +33,7 @@ import {MultiSelectModule} from '../share/multi-select/multi-select.module';
         SingleFilterModule,
         MultiSelectModule,
         NgbModule,
+        SpinnerModule,
         AgGridModule.withComponents([[ActionCellRendererComponent]])
     ]
 })
