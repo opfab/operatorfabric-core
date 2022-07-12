@@ -188,13 +188,16 @@ describe ('Response card tests',function () {
 
         // Check the popup for the entity choice is displayed
         cy.get("#opfab-card-details-entity-choice-selector").should('exist');
-        cy.get('#opfab-card-details-entity-choice-selector').find('option').should("have.length", 3);
-        cy.get('#opfab-card-details-entity-choice-selector').find('option').eq(0).should("have.text", "Control Center FR East");
-        cy.get('#opfab-card-details-entity-choice-selector').find('option').eq(1).should("have.text", "Control Center FR North");
-        cy.get('#opfab-card-details-entity-choice-selector').find('option').eq(2).should("have.text", "Control Center FR South");
+        cy.get('#opfab-card-details-entity-choice-selector').find('.vscomp-option-text').should("have.length", 3);
+        cy.get('#opfab-card-details-entity-choice-selector').find('.vscomp-option-text').eq(0).should("contain.text", "Control Center FR East");
+        cy.get('#opfab-card-details-entity-choice-selector').find('.vscomp-option-text').eq(1).should("contain.text", "Control Center FR North");
+        cy.get('#opfab-card-details-entity-choice-selector').find('.vscomp-option-text').eq(2).should("contain.text", "Control Center FR South");
 
         // We choose ENTITY3_FR (East)
-        cy.get("#opfab-card-details-entity-choice-selector").find('select').select('Control Center FR East');
+        cy.get("#opfab-card-details-entity-choice-selector").find('.vscomp-option-text').eq(0).click({force: true});
+        cy.get("#opfab-card-details-entity-choice-selector").find('.vscomp-value').should('have.text', 'Control Center FR East');
+
+
         cy.get('#opfab-card-details-entity-choice-btn-confirm').click();
 
         // Check the response from ENTITY1_FR, ENTITY2_FR and ENTITY3_FR have been integrated in the template
@@ -213,7 +216,8 @@ describe ('Response card tests',function () {
         cy.get('#question-choice1').click();
         cy.get('#question-choice3').click(); //to uncheck the box
         cy.get('#opfab-card-details-btn-response').click(); // click again to send the response
-        cy.get("#opfab-card-details-entity-choice-selector").find('select').select('Control Center FR North'); // We choose ENTITY1_FR (North)
+        cy.get("#opfab-card-details-entity-choice-selector").find('.vscomp-option-text').eq(1).click({force: true}); // We choose ENTITY1_FR (North)
+        cy.get("#opfab-card-details-entity-choice-selector").find('.vscomp-value').should('have.text', 'Control Center FR North');
         cy.get('#opfab-card-details-entity-choice-btn-confirm').click();
 
         cy.waitDefaultTime();

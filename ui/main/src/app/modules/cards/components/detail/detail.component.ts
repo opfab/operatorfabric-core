@@ -51,6 +51,7 @@ import {UntypedFormControl, UntypedFormGroup} from '@angular/forms';
 import {Utilities} from '../../../../common/utilities';
 import {CardDetailsComponent} from '../card-details/card-details.component';
 import {DateTimeFormatterService} from '@ofServices/date-time-formatter.service';
+import {MultiSelectConfig} from '@ofModel/multiselect.model';
 
 declare const templateGateway: any;
 
@@ -144,6 +145,12 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
     private unsubscribe$: Subject<void> = new Subject<void>();
     private modalRef: NgbModalRef;
     private user: User;
+
+    public multiSelectConfig: MultiSelectConfig = {
+        labelKey: 'shared.entity',
+        multiple: false,
+        search: true
+    };
 
     constructor(
         private element: ElementRef,
@@ -872,7 +879,7 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
         this.modalRef.dismiss();
     }
 
-    public computeEntityOptionsDropdownListForResponse(): void {
+    private computeEntityOptionsDropdownListForResponse(): void {
         this.userEntityOptionsDropdownList = [];
         this.userEntityIdsPossibleForResponse.forEach((entityId) => {
             const entity = this.entitiesService.getEntities().find((e) => e.id === entityId);
@@ -881,7 +888,7 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
         this.userEntityOptionsDropdownList.sort((a, b) => Utilities.compareObj(a.label, b.label));
     }
 
-    public displayEntityChoicePopup() {
+    private displayEntityChoicePopup() {
         this.userEntityIdToUseForResponse = '';
         this.selectEntityForm.get('entity').setValue(this.userEntityOptionsDropdownList[0].value);
         this.openModal(this.chooseEntityForResponsePopupRef);
