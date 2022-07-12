@@ -607,13 +607,13 @@ describe('User Card ', function () {
 
       cy.get('#of-usercard-card-emitter-selector').should("exist");
       cy.get('#of-usercard-card-emitter-selector').find('label').should("have.text", "EMITTER");
-      cy.get('#of-usercard-card-emitter-selector').find('option').should("have.length", 4);
-      cy.get('#of-usercard-card-emitter-selector').find('option').eq(0).should("have.text", "Control Center FR East");
-      cy.get('#of-usercard-card-emitter-selector').find('option').eq(1).should("have.text", "Control Center FR North");
-      cy.get('#of-usercard-card-emitter-selector').find('option').eq(2).should("have.text", "Control Center FR South");
-      cy.get('#of-usercard-card-emitter-selector').find('option').eq(3).should("have.text", "Control Center FR West");
+      cy.get('#of-usercard-card-emitter-selector').find('.vscomp-option-text').should("have.length", 4);
+      cy.get('#of-usercard-card-emitter-selector').find('.vscomp-option-text').eq(0).should("contain.text", "Control Center FR East");
+      cy.get('#of-usercard-card-emitter-selector').find('.vscomp-option-text').eq(1).should("contain.text", "Control Center FR North");
+      cy.get('#of-usercard-card-emitter-selector').find('.vscomp-option-text').eq(2).should("contain.text", "Control Center FR South");
+      cy.get('#of-usercard-card-emitter-selector').find('.vscomp-option-text').eq(3).should("contain.text", "Control Center FR West");
 
-      cy.get('#of-usercard-card-emitter-selector').find('select').select('Control Center FR South');
+      cy.get('#of-usercard-card-emitter-selector').find('.vscomp-option-text').eq(2).click({force: true});
       cy.get('#message').type('Hello, that\'s a test message / Result is <OK> & work done is 100%');
       cy.setFormDateTime('startDate', '2020', 'Jan', 20, 8, 0);
       cy.setFormDateTime('endDate', '2029', 'Jun', 25, 11, 10);
@@ -650,10 +650,10 @@ describe('User Card ', function () {
 
         // Check that card emitter is set to Control Center FR South
         cy.get('#of-usercard-card-emitter-selector').should("exist");
-        cy.get('#of-usercard-card-emitter-selector').find('option:selected').should('have.text', 'Control Center FR South');
+        cy.get('#of-usercard-card-emitter-selector').find('.vscomp-value').should('have.text', 'Control Center FR South');
 
         // Now we choose Control Center FR North as card emitter
-        cy.get("#of-usercard-card-emitter-selector").find('select').select('Control Center FR North');
+        cy.get("#of-usercard-card-emitter-selector").find('.vscomp-option-text').eq(1).click({force: true});
 
         cy.get('#message').should('be.visible').type(' (updated)')
         cy.get('#opfab-usercard-btn-prepareCard').click();
@@ -700,13 +700,13 @@ describe('User Card ', function () {
 
       // Check that card emitter is set to Control Center FR East (default value)
       cy.get('#of-usercard-card-emitter-selector').should("exist");
-      cy.get('#of-usercard-card-emitter-selector').find('option:selected').should('have.text', 'Control Center FR East');
+      cy.get('#of-usercard-card-emitter-selector').find('.vscomp-value').should('have.text', 'Control Center FR East');
 
       // Check that we have now only 3 entities available (instead of 4 because disconnected from ENTITY1_FR)
-      cy.get('#of-usercard-card-emitter-selector').find('option').should("have.length", 3);
-      cy.get('#of-usercard-card-emitter-selector').find('option').eq(0).should("have.text", "Control Center FR East");
-      cy.get('#of-usercard-card-emitter-selector').find('option').eq(1).should("have.text", "Control Center FR South");
-      cy.get('#of-usercard-card-emitter-selector').find('option').eq(2).should("have.text", "Control Center FR West");
+      cy.get('#of-usercard-card-emitter-selector').find('.vscomp-option-text').should("have.length", 3);
+      cy.get('#of-usercard-card-emitter-selector').find('.vscomp-option-text').eq(0).should("contain.text", "Control Center FR East");
+      cy.get('#of-usercard-card-emitter-selector').find('.vscomp-option-text').eq(1).should("contain.text", "Control Center FR South");
+      cy.get('#of-usercard-card-emitter-selector').find('.vscomp-option-text').eq(2).should("contain.text", "Control Center FR West");
       cy.get('#opfab-usercard-btn-cancel').click();
 
       // We reconnect to Control Center FR North (ENTITY1_FR)
@@ -858,14 +858,15 @@ describe('User Card ', function () {
 
       // Check that card emitter is set to Control Center FR East
       cy.get('#of-usercard-card-emitter-selector').should("exist");
-      cy.get('#of-usercard-card-emitter-selector').find('option:selected').should('have.text', 'Control Center FR East');
+      cy.get('#of-usercard-card-emitter-selector').find('.vscomp-value').should('contain.text', 'Control Center FR East');
 
 
       cy.get("#hidden_sender").should("exist");
       cy.get("#hidden_sender").should("have.value", "ENTITY3_FR");
 
-      // Now we choose Control Center FR North as card emitter
-      cy.get("#of-usercard-card-emitter-selector").find('select').select('Control Center FR South');
+      // Now we choose Control Center FR South as card emitter
+      cy.get("#of-usercard-card-emitter-selector").find('.vscomp-option-text').eq(1).click({force: true});
+      cy.get('#of-usercard-card-emitter-selector').find('.vscomp-value').should('contain.text', 'Control Center FR South');
       cy.get("#hidden_sender").should("have.value", "ENTITY2_FR");
 
       // Test on editing existing card, opened from the feed
