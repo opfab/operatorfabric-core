@@ -23,7 +23,12 @@ describe('Test translations', function () {
         cy.get('.opfab-right-menu').should('exist');
 
         cy.get('#opfab-navbar-right-menu-settings').should('exist').click();
-        cy.get('#opfab-setting-locale').select(newLanguage);
+
+        if (useClock) cy.tick(1000);
+        cy.get("#opfab-setting-locale").click();
+        if (useClock) cy.tick(1000);
+        cy.get("#opfab-setting-locale").find('[data-value="' +newLanguage + '"]' ).click();
+
 
         // Wait for the language to be changed
         if (useClock) {
@@ -281,7 +286,7 @@ describe('Test translations', function () {
     it('Check Business period translations', function () {
         const currentDate = new Date(2030, 11, 31, 23, 46);
         cy.loginWithClock(currentDate);
-
+       
         changeLanguage(ENGLISH, true);
         cy.tick(1000);
         cy.get('#opfab-navbar-menu-feed').click();
