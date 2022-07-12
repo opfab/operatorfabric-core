@@ -87,11 +87,6 @@
 
 <ng-template #exportInProgress let-modal>
   <div class="modal-body">
-    <div class="opfab-card-loading-spinner">
-      <em  class="fas fa-spinner fa-spin opfab-slow-spinner" ></em>
-    </div>
-    <div style="text-align: center;font:16px;font-weight: bold;margin-top:10px" translate>
-          shared.exportInProgress
-    </div>
+    <of-spinner timeBeforeDisplayingSpinner="0" loadingText="shared.exportInProgress"></of-spinner>
   </div>
 </ng-template>
