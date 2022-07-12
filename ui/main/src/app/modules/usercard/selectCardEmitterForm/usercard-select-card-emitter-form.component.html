@@ -8,9 +8,10 @@
 
 <form [formGroup]="selectCardEmitterForm" class="opfab-form-lighter">
     <div class="row">
-            <of-single-filter id="of-usercard-card-emitter-selector" i18nRootLabelKey="shared." style="position: relative;"
-                    [parentForm]="selectCardEmitterForm" filterPath="cardEmitter"  [values]="userEntitiesAllowedToSendCardOptions">
-            </of-single-filter>
+            <of-multi-select id="of-usercard-card-emitter-selector" multiSelectId="cardEmitter" [config]="multiSelectConfig" 
+                    [parentForm]="selectCardEmitterForm" [options]="userEntitiesAllowedToSendCardOptions"
+                    [selectedOptions]="initialPublisher">
+            </of-multi-select>
     </div>
     <br/>
 </form>

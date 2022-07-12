@@ -10,6 +10,7 @@
 import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {UntypedFormControl, UntypedFormGroup} from '@angular/forms';
 import {takeUntil, debounceTime, Subject} from 'rxjs';
+import {MultiSelectConfig} from '@ofModel/multiselect.model';
 
 @Component({
     selector: 'of-usercard-select-card-emitter-form',
@@ -25,6 +26,12 @@ export class UsercardSelectCardEmitterFormComponent implements OnInit {
 
     selectCardEmitterForm: UntypedFormGroup;
 
+    public multiSelectConfig: MultiSelectConfig = {
+        labelKey: 'shared.cardEmitter',
+        multiple: false,
+        search: true
+    };
+
     constructor() {
         // No body because all members are Inputs.
     }
@@ -34,7 +41,6 @@ export class UsercardSelectCardEmitterFormComponent implements OnInit {
             cardEmitter: new UntypedFormControl('')
         });
 
-        this.selectCardEmitterForm.get('cardEmitter').setValue(this.initialPublisher);
         this.listenForEmitterChange();
     }
 
