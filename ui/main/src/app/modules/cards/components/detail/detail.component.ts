@@ -197,6 +197,7 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
     }
 
     ngOnChanges(): void {
+        this.isCardProcessing = false;
         this.updateTemplateGateway();
 
         if (this.cardState.response != null && this.cardState.response !== undefined) {
