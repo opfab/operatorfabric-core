@@ -11,82 +11,61 @@ import {Component, Input, OnDestroy, OnInit} from '@angular/core';
 import {BaseSettingDirective} from '../base-setting/base-setting.directive';
 import {AppState} from '@ofStore/index';
 import {Store} from '@ngrx/store';
-import {AbstractControl, UntypedFormControl, UntypedFormGroup, Validators} from '@angular/forms';
-import {I18n} from '@ofModel/i18n.model';
-import {TranslateService} from '@ngx-translate/core';
-import {Observable, of} from 'rxjs';
 import {ConfigService} from '@ofServices/config.service';
 import {SettingsService} from '@ofServices/settings.service';
+import {UntypedFormControl, UntypedFormGroup, Validators} from '@angular/forms';
+import {MultiSelectConfig} from '@ofModel/multiselect.model';
 
 @Component({
     selector: 'of-list-setting',
     templateUrl: './list-setting.component.html'
 })
 export class ListSettingComponent extends BaseSettingDirective implements OnInit, OnDestroy {
-    @Input() values: ({value: string; label: I18n | string} | string)[];
-    preparedList: {value: string; label: Observable<string>}[];
+    @Input() values:  string [];
+    optionList: {value: string; label: string}[];
+    selectedOption = new Array();
+    multiSelectConfig : MultiSelectConfig;
+
 
     constructor(
         protected store: Store<AppState>,
         protected configService: ConfigService,
-        protected settingsService: SettingsService,
-        private translateService: TranslateService
+        protected settingsService: SettingsService
     ) {
         super(store, configService, settingsService);
     }
 
     ngOnInit() {
-        this.preparedList = [];
+        this.multiSelectConfig =  {
+            labelKey: 'settings.' + this.settingPath,
+            multiple: false,
+            search: false,
+            sortOptions: true
+        };
+
+        this.optionList = [];
         if (this.values) {
-            for (const v of this.values) {
-                if (typeof v === 'string') {
-                    this.preparedList.push({value: v, label: of(v)});
-                } else if (typeof v.label === 'string') {
-                    this.preparedList.push({value: v.value, label: of(v.label)});
-                } else {
-                    this.preparedList.push({
-                        value: v.value,
-                        label: this.translateService.get(v.label.key, v.label.parameters)
-                    });
-                }
-            }
+            for (const v of this.values) this.optionList.push({value: v, label: v});
         }
         super.ngOnInit();
     }
 
     initFormGroup() {
-        const validators = this.computeListValidators();
-        validators.push(this.valueInListValidator());
         return new UntypedFormGroup(
             {
-                setting: new UntypedFormControl('', validators)
+                setting: new UntypedFormControl('',  [Validators.required])
             },
             {updateOn: 'change'}
         );
     }
 
-    protected computeListValidators() {
-        const validators = [];
-        if (this.requiredField) {
-            validators.push(Validators.required);
-        }
-        return validators;
-    }
-
     updateValue(value) {
-        this.form.get('setting').setValue(value ? value : '', {emitEvent: false});
+        this.selectedOption[0] = value ? value : '';
     }
 
     protected isEqual(formA, formB): boolean {
         return formA.setting === formB.setting;
     }
 
-    private valueInListValidator() {
-        return (control: AbstractControl) => {
-            if (!!control.value && this.preparedList.map((e) => e.value).indexOf(control.value) < 0) {
-                return {valueInList: {valid: false}};
-            }
-            return null;
-        };
-    }
+
 }
