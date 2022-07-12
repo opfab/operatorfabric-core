@@ -17,6 +17,7 @@ import {CountDownModule} from '../share/countdown/countdown.module';
 import {UserCardModule} from '../usercard/usercard.module';
 import {SingleFilterModule} from '../share/single-filter/single-filter.module';
 import {ReactiveFormsModule} from '@angular/forms';
+import { MultiSelectModule } from '../share/multi-select/multi-select.module';
 import { SpinnerModule } from '../share/spinner/spinner.module';
 
 @NgModule({
@@ -29,6 +30,7 @@ import { SpinnerModule } from '../share/spinner/spinner.module';
         UserCardModule,
         SingleFilterModule,
         ReactiveFormsModule,
+        MultiSelectModule,
         SpinnerModule
     ],
     exports: [CardDetailsComponent, DetailComponent]
