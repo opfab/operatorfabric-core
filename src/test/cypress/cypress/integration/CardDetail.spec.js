@@ -81,7 +81,7 @@ describe('Card detail', function () {
             // Click on the card
             cy.get('of-light-card').eq(0).click();
             
-            cy.get("#templateGateway-display-spinner-button").should('exist').click();
+            cy.get("#templateGateway-display-spinner-button").click();
             cy.checkLoadingSpinnerIsDisplayed();
 
             cy.checkLoadingSpinnerIsNotDisplayed();
