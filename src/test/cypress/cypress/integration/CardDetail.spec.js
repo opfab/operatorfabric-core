@@ -156,6 +156,20 @@ describe('Card detail', function () {
         });
 
 
+    it(`Check that a spinner is displayed when the card takes time to load `, function () {
+        cy.sendCard('cypress/cardDetail/cardDetailResponseNotPossible.json');
+        cy.delayRequestResponse('/cards/cards/**')
+        cy.loginOpFab('operator1_fr', 'test');
+
+        // Click on the card
+        cy.get('of-light-card').eq(0).click();
+        
+        cy.checkLoadingSpinnerIsDisplayed();
+        cy.checkLoadingSpinnerIsNotDisplayed();
+
+    });
+
+
     });
 
 })
