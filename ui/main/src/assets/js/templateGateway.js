@@ -145,13 +145,13 @@ const templateGateway = {
 
         // The template may call this method to display a spinner when the card is loaded but is in a time consuming process
         this.displayLoadingSpinner = function() {
-            // This function is overridden in DetailComponent.
+            // This function is overridden in DetailComponent and in CardDetailComponent.
         };
 
         // The template may call this method to hide the spinner displayed after displayLoadingSpinner(), once the computations
         // of the template are done.
         this.hideLoadingSpinner = function() {
-            // This function is overridden in DetailComponent.
+            // This function is overridden in DetailComponent and in CardDetailComponent.
         };
     }
 };

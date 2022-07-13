@@ -49,6 +49,8 @@ export class CardDetailComponent implements OnInit, OnDestroy, AfterViewChecked 
     private user: User;
     private userMemberOfAnEntityRequiredToRespondAndAllowedToSendCards = false;
     public isLoading = false;
+    public isCardProcessing = false;
+
 
     constructor(
         private element: ElementRef,
@@ -147,6 +149,15 @@ export class CardDetailComponent implements OnInit, OnDestroy, AfterViewChecked 
 
     private initializeHandlebarsTemplates() {
         templateGateway.initTemplateGateway();
+
+        const that = this;
+        templateGateway.displayLoadingSpinner = function() {
+            that.isCardProcessing = true;
+        }
+
+        templateGateway.hideLoadingSpinner = function() {
+            that.isCardProcessing = false;
+        }
 
         templateGateway.displayContext = this.displayContext;
         templateGateway.userMemberOfAnEntityRequiredToRespond =

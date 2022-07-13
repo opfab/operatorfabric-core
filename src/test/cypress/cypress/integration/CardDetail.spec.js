@@ -101,6 +101,11 @@ describe('Card detail', function () {
             // Click on the card
             cy.waitDefaultTime();
             cy.get('#opfab-archives-cards-list').find('.opfab-archive-sev-information').first().click();
+
+            // Check the spinner appears when clicking on the button
+            cy.get("#templateGateway-display-spinner-button").click();
+            cy.checkLoadingSpinnerIsDisplayed();
+            cy.checkLoadingSpinnerIsNotDisplayed();
          
 
             // Check  user context values 
