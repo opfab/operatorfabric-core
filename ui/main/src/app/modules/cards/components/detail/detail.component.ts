@@ -346,6 +346,7 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
 
     private initializeHandlebarsTemplatesProcess() {
         const templateName = this.cardState.templateName;
+        this.isCardProcessing = true;
         if (!!templateName) {
             this.handlebars
                 .executeTemplate(templateName, new DetailContext(this.card, this.userContext, this.cardState.response))
@@ -354,6 +355,7 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
                         this.htmlTemplateContent = this.sanitizer.bypassSecurityTrustHtml(html);
                         setTimeout(() => {
                             // wait for DOM rendering
+                            this.isCardProcessing = false;
                             this.reinsertScripts();
                             setTimeout(() => {
                                 // wait for script loading before calling them in template
@@ -377,10 +379,12 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
                             error
                         );
                         this.htmlTemplateContent = this.sanitizer.bypassSecurityTrustHtml('');
+                        this.isCardProcessing = false;
                     }
                 });
         } else {
             this.htmlTemplateContent = ' TECHNICAL ERROR - NO TEMPLATE AVAILABLE';
+            this.isCardProcessing = false;
             console.log(
                 new Date().toISOString(),
                 `WARNING No template for process ${this.card.process} version ${this.card.processVersion} with state ${this.card.state}`

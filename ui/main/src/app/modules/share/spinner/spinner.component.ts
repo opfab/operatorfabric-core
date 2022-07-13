@@ -7,29 +7,25 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {Component, Input, OnDestroy, OnInit} from '@angular/core';
+import {Component, Input, OnInit} from '@angular/core';
 
 @Component({
     selector: 'of-spinner',
     templateUrl: './spinner.component.html',
     styleUrls: ['./spinner.component.scss']
 })
-export class SpinnerComponent implements OnInit, OnDestroy {
+export class SpinnerComponent implements OnInit {
     @Input() loadingText = "shared.loadingInProgress";
     @Input() timeBeforeDisplayingSpinner = 500;
 
     mustDisplaySpinner = false;
-    private interval;
-
 
     ngOnInit() {
-        this.interval = setInterval(() => {
+        setTimeout(() => {
             this.mustDisplaySpinner = true;
         }, this.timeBeforeDisplayingSpinner);
     }
 
-    ngOnDestroy() {
-        clearInterval(this.interval);
-    }
+
 
 }
