@@ -15,8 +15,8 @@
 
 
 
-  <of-spinner *ngIf="cardLoadingInProgress" [class.opfab-card-loading]="!isSmallscreen()"  
-              [class.opfab-card-loading-small-screen]="isSmallscreen()">
+  <of-spinner *ngIf="cardLoadingInProgress" 
+              [class.opfab-card-loading-small-screen]="isSmallscreen()" [timeBeforeDisplayingSpinner]="0">
   </of-spinner>
 
 
