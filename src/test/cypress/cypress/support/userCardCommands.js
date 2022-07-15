@@ -9,7 +9,7 @@
 
 import {externalCommands} from './externalCommands';
 
-export function getUsercardCommands() {
+export function getUserCardCommands() {
     const usercard = new externalCommands('USERCARD');
 
     usercard.addCommand('checkCardHasBeenSend', function () {
@@ -39,10 +39,25 @@ export function getUsercardCommands() {
         cy.get('#of-state-filter').find('.vscomp-option-text').contains(stateName).eq(0).click({force: true});
     });
 
+    usercard.addCommand('selectRecipient', function (recipientName) {
+        cy.get('#opfab-recipients').click();
+        cy.get('#opfab-recipients').find('.vscomp-search-input').clear();
+        cy.get('#opfab-recipients').find('.vscomp-search-input').type(recipientName);
+        cy.get('#opfab-recipients').find('.vscomp-option-text').eq(0).should('contain.text', recipientName);
+        cy.get('#opfab-recipients').find('.vscomp-option-text').eq(0).click();
+        cy.get('#opfab-recipients').find('.vscomp-value-tag').should('contain.text', recipientName);
+        cy.get('#opfab-recipients').find('.vscomp-toggle-button').click();
+    });
+
     usercard.addCommand('prepareAndSendCard', function () {
         cy.get('#opfab-usercard-btn-prepareCard').click();
         cy.get('of-card-detail').should('exist');
         cy.get('#opfab-usercard-btn-accept').click();
+    });
+
+    usercard.addCommand('seeBeforeSending', function () {
+        cy.get('#opfab-usercard-btn-prepareCard').click();
+        cy.get('of-card-detail').should('exist');
     });
 
     return usercard;
