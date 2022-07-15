@@ -7,12 +7,12 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {getUsercardCommands} from "../support/usercardCommands"
+import {getUserCardCommands} from "../support/userCardCommands"
 
 
 describe('Acknowledgment tests', function () {
 
-    const usercard = getUsercardCommands();
+    const usercard = getUserCardCommands();
 
 
     before('Set up configuration', function () {
