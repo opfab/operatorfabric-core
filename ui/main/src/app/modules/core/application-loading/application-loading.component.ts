@@ -29,6 +29,7 @@ import {ActivityAreaChoiceAfterLoginComponent} from './activityarea-choice-after
 import {AccountAlreadyUsedComponent} from './account-already-used/account-already-used.component';
 import {AppLoadedInAnotherTabComponent} from './app-loaded-in-another-tab/app-loaded-in-another-tab.component';
 import {SettingsService} from '@ofServices/settings.service';
+import {GlobalStyleService} from '@ofServices/global-style.service';
 
 @Component({
     selector: 'of-application-loading',
@@ -67,10 +68,13 @@ export class ApplicationLoadingComponent implements OnInit {
         private groupsService: GroupsService,
         private processesService: ProcessesService,
         private reminderService: ReminderService,
-        private logger: OpfabLoggerService
+        private logger: OpfabLoggerService,
+        private globalStyleService: GlobalStyleService
     ) {}
 
     ngOnInit() {
+        // Set default style before login
+        this.globalStyleService.setStyle('NIGHT');
         this.loadUIConfiguration();
     }
 
