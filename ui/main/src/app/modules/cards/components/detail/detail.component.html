@@ -43,9 +43,6 @@
     </ul>
 
     <div>
-      <link *ngFor="let cssUrl of hrefsOfCssLink" [href]="cssUrl" rel="stylesheet" type="text/css">
-
-
       <div style="padding-right:3px">
         <!-- padding is necessary to see box shadow-->
 
@@ -92,14 +89,16 @@
           </div>
         </div>
 
-        <div id="opfab-div-card-template" class="opfab-card-detail">
-          <of-spinner *ngIf="isCardProcessing"></of-spinner>
-          <div [hidden]="isCardProcessing" id="opfab-div-card-template-processed" [innerHtml]="htmlTemplateContent"></div>
-        </div>
+      <of-template-rendering [card]="card" [cardState]="cardState" [user]="user" [screenSize]="screenSize" [displayContext]="displayContext"
+      [functionToCallBeforeRendering]="beforeTemplateRendering" 
+      [functionToCallAfterRendering]="afterTemplateRendering" [parentComponent]="this"
+      [fixedBottomOffset]="this.templateOffset" cardFooterHtmlElementId = "opfab-card-detail-footer">
+
+      </of-template-rendering>
 
         <div style="text-align: center;width:100% ; ">
 
-          <div id='div-detail-btn'>
+          <div id='opfab-card-detail-footer'>
 
             <div style="text-align: left;margin-top: 5px" *ngIf="displayCardAcknowledgedFooter()" class="opfab-card-response-header">
               <div class="flex-container" id="opfab-card-acknowledged-footer" style="width:100%;padding-left: 15px;flex-direction: row">

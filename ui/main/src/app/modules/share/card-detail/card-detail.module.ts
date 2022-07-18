@@ -1,4 +1,4 @@
-/* Copyright (c) 2020, RTE (http://www.rte-france.com)
+/* Copyright (c) 2020-2022, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -12,10 +12,11 @@ import {CommonModule} from '@angular/common';
 import {TranslateModule} from '@ngx-translate/core';
 import {CardDetailComponent} from './card-detail.component';
 import { SpinnerModule } from '../spinner/spinner.module';
+import {TemplateRenderingModule} from '../template-rendering/template-rendering.module';
 
 @NgModule({
     declarations: [CardDetailComponent],
-    imports: [CommonModule, TranslateModule, SpinnerModule],
+    imports: [CommonModule, TranslateModule, SpinnerModule,TemplateRenderingModule],
     exports: [CardDetailComponent]
 })
 export class CardDetailModule {}

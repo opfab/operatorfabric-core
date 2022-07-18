@@ -7,75 +7,44 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {AfterViewChecked, Component, ElementRef, Input, OnDestroy, OnInit} from '@angular/core';
+import {Component, Input, OnDestroy, OnInit} from '@angular/core';
 import {Card} from '@ofModel/card.model';
 import {ProcessesService} from '@ofServices/processes.service';
-import {HandlebarsService} from '../../cards/services/handlebars.service';
-import {DomSanitizer, SafeHtml, SafeResourceUrl} from '@angular/platform-browser';
-import {DetailContext} from '@ofModel/detail-context.model';
-import {Store} from '@ngrx/store';
-import {AppState} from '@ofStore/index';
-import {selectAuthenticationState} from '@ofSelectors/authentication.selectors';
-import {selectGlobalStyleState} from '@ofSelectors/global-style.selectors';
-import {UserContext} from '@ofModel/user-context.model';
-import {skip, switchMap, takeUntil} from 'rxjs/operators';
+import {takeUntil} from 'rxjs/operators';
 import {Subject} from 'rxjs';
 import {UserService} from '@ofServices/user.service';
 import {User} from '@ofModel/user.model';
 import {EntitiesService} from '@ofServices/entities.service';
-import {AppService, PageType} from '@ofServices/app.service';
-import {UserPermissionsService} from '@ofServices/user-permissions.service';
+import {State} from '@ofModel/processes.model';
+import {DisplayContext} from '@ofModel/templateGateway.model';
 
 declare const templateGateway: any;
 
 @Component({
     selector: 'of-card-detail',
-    templateUrl: './card-detail.component.html',
-    styleUrls: ['./card-detail.component.scss']
+    templateUrl: './card-detail.component.html'
 })
-export class CardDetailComponent implements OnInit, OnDestroy, AfterViewChecked {
+export class CardDetailComponent implements OnInit, OnDestroy {
     @Input() card: Card;
-    @Input() screenSize: string = 'md';
-    @Input() displayContext: any;
+    @Input() screenSize = 'md';
+    @Input() displayContext: DisplayContext;
     @Input() childCards: Card[] = [];
 
+    public cardState: State;
     public active = false;
     unsubscribe$: Subject<void> = new Subject<void>();
-    public hrefsOfCssLink = new Array<SafeResourceUrl>();
-    private _htmlContent: SafeHtml;
-    private _userContext: UserContext;
-    private styles: string[];
-    private templateName: string;
     private user: User;
     private userMemberOfAnEntityRequiredToRespondAndAllowedToSendCards = false;
-    public isLoading = false;
-    public isCardProcessing = false;
-
+    public isLoading = true;
+    public fixedBottomOffset = 70;
 
     constructor(
-        private element: ElementRef,
         private businessconfigService: ProcessesService,
-        private handlebars: HandlebarsService,
-        private sanitizer: DomSanitizer,
-        private store: Store<AppState>,
         private userService: UserService,
-        private entitiesService: EntitiesService,
-        private userPermissionsService: UserPermissionsService,
-        private _appService: AppService
+        private entitiesService: EntitiesService
     ) {
         const userWithPerimeters = this.userService.getCurrentUserWithPerimeters();
         if (!!userWithPerimeters) this.user = userWithPerimeters.userData;
-        this.store.select(selectAuthenticationState).subscribe((authState) => {
-            this._userContext = new UserContext(
-                authState.identifier,
-                authState.token,
-                authState.firstName,
-                authState.lastName,
-                this.user.groups,
-                this.user.entities
-            );
-        });
-        this.reloadTemplateWhenGlobalStyleChange();
     }
 
     ngOnInit() {
@@ -84,7 +53,8 @@ export class CardDetailComponent implements OnInit, OnDestroy, AfterViewChecked 
     }
 
     private computeEntitiesForResponses() {
-        let entityIdsRequiredToRespondAndAllowedToSendCards = this.getEntityIdsRequiredToRespondAndAllowedToSendCards();
+        const entityIdsRequiredToRespondAndAllowedToSendCards =
+            this.getEntityIdsRequiredToRespondAndAllowedToSendCards();
         const userEntitiesRequiredToRespondAndAllowedToSendCards =
             entityIdsRequiredToRespondAndAllowedToSendCards.filter((entityId) => this.user.entities.includes(entityId));
         this.userMemberOfAnEntityRequiredToRespondAndAllowedToSendCards =
@@ -103,149 +73,29 @@ export class CardDetailComponent implements OnInit, OnDestroy, AfterViewChecked 
         this.businessconfigService
             .queryProcess(this.card.process, this.card.processVersion)
             .pipe(takeUntil(this.unsubscribe$))
-            .subscribe(
-                (businessconfig) => {
+            .subscribe({
+                next: (businessconfig) => {
                     if (!!businessconfig) {
-                        const state = businessconfig.extractState(this.card);
-                        if (!!state) {
-                            // Take the first detail, new card preview only compatible with one detail per card
-                            this.templateName = state.templateName;
-                            this.styles = state.styles;
-                        }
-                        this.initializeHrefsOfCssLink();
-                        this.initializeHandlebarsTemplates();
+                        this.cardState = businessconfig.extractState(this.card);
+                        this.isLoading = false;
                     }
                 },
-                (error) =>
+                error: (error) =>
                     console.log(
                         `something went wrong while trying to fetch process for ${this.card.process}` +
-                            ` with ${this.card.processVersion} version.`
+                            ` with ${this.card.processVersion} version, error = ${error}`
                     )
-            );
-    }
-
-    // for certain types of template, we need to reload it to take into account
-    // the new css style (for example with chart done with chart.js)
-    private reloadTemplateWhenGlobalStyleChange() {
-        this.store
-            .select(selectGlobalStyleState)
-            .pipe(takeUntil(this.unsubscribe$), skip(1))
-            .subscribe((style) => this.initializeHandlebarsTemplates());
-    }
-
-    private initializeHrefsOfCssLink() {
-        if (!!this.styles) {
-            const process = this.card.process;
-            const processVersion = this.card.processVersion;
-            this.hrefsOfCssLink = new Array<SafeResourceUrl>();
-            this.styles.forEach((style) => {
-                const cssUrl = this.businessconfigService.computeBusinessconfigCssUrl(process, style, processVersion);
-                // needed to instantiate href of link for css in component rendering
-                const safeCssUrl = this.sanitizer.bypassSecurityTrustResourceUrl(cssUrl);
-                this.hrefsOfCssLink.push(safeCssUrl);
             });
-        }
     }
 
-    private initializeHandlebarsTemplates() {
-        templateGateway.initTemplateGateway();
-
-        const that = this;
-        templateGateway.displayLoadingSpinner = function() {
-            that.isCardProcessing = true;
-        }
-
-        templateGateway.hideLoadingSpinner = function() {
-            that.isCardProcessing = false;
-        }
-
-        templateGateway.displayContext = this.displayContext;
+    public beforeTemplateRendering() {
         templateGateway.userMemberOfAnEntityRequiredToRespond =
             this.userMemberOfAnEntityRequiredToRespondAndAllowedToSendCards;
-
         templateGateway.childCards = this.childCards;
-        this.isLoading = true;
-
-        this.businessconfigService
-            .queryProcessFromCard(this.card)
-            .pipe(
-                takeUntil(this.unsubscribe$),
-                switchMap((process) => {
-                    return this.handlebars.executeTemplate(
-                        this.templateName,
-                        new DetailContext(this.card, this._userContext, null)
-                    );
-                })
-            )
-            .subscribe({
-                next: (html) => {
-                    this._htmlContent = this.sanitizer.bypassSecurityTrustHtml(html);
-                    this.isLoading = false;
-
-                    setTimeout(() => {
-                        // wait for DOM rendering
-                        this.reinsertScripts();
-                        templateGateway.setScreenSize(this.screenSize);
-                        templateGateway.applyChildCards();
-
-                        setTimeout(() => templateGateway.onTemplateRenderingComplete(), 10);
-                    }, 10);
-                },
-                error: (error) => {
-                    this.isLoading = false;
-
-                    console.log(
-                        new Date().toISOString(),
-                        'WARNING impossible to process template ',
-                        this.templateName,
-                        ':  ',
-                        error
-                    );
-                    this._htmlContent = this.sanitizer.bypassSecurityTrustHtml('');
-                }
-            });
-    }
-
-    get htmlContent() {
-        return this._htmlContent;
-    }
-
-    reinsertScripts(): void {
-        const scripts = <HTMLScriptElement[]>this.element.nativeElement.getElementsByTagName('script');
-        Array.prototype.forEach.call(scripts, (script) => {
-            // scripts.foreach does not work...
-            const scriptCopy = document.createElement('script');
-            scriptCopy.type = !!script.type ? script.type : 'text/javascript';
-            if (!!script.innerHTML) scriptCopy.innerHTML = script.innerHTML;
-            scriptCopy.async = false;
-            script.parentNode.replaceChild(scriptCopy, script);
-        });
     }
 
     ngOnDestroy() {
         this.unsubscribe$.next();
         this.unsubscribe$.complete();
-    }
-
-    ngAfterViewChecked() {
-        this.adaptTemplateSize();
-    }
-
-    private adaptTemplateSize() {
-        const cardTemplate = document.getElementById('opfab-card-template-detail');
-        if (!!cardTemplate) {
-            const diffWindow = cardTemplate.getBoundingClientRect();
-            const divBtn = document.getElementById('div-detail-btn');
-
-            let cardTemplateHeight = window.innerHeight - diffWindow.top;
-            if (this._appService.pageType !== PageType.FEED) cardTemplateHeight -= 50;
-
-            if (divBtn) {
-                cardTemplateHeight -= divBtn.scrollHeight + 15;
-            }
-
-            cardTemplate.style.maxHeight = `${cardTemplateHeight}px`;
-            cardTemplate.style.overflowX = 'hidden';
-        }
     }
 }
