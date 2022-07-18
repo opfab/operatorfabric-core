@@ -8,7 +8,6 @@
  */
 
 import {
-    AfterViewChecked,
     Component,
     DoCheck,
     ElementRef,
@@ -23,15 +22,12 @@ import {
 import {Card, CardForPublishing} from '@ofModel/card.model';
 import {ProcessesService} from '@ofServices/processes.service';
 import {HandlebarsService} from '../../services/handlebars.service';
-import {DomSanitizer, SafeHtml, SafeResourceUrl} from '@angular/platform-browser';
+import {DomSanitizer, SafeHtml} from '@angular/platform-browser';
 import {AcknowledgmentAllowedEnum, State, TypeOfStateEnum} from '@ofModel/processes.model';
-import {DetailContext} from '@ofModel/detail-context.model';
 import {Store} from '@ngrx/store';
 import {AppState} from '@ofStore/index';
-import {selectAuthenticationState} from '@ofSelectors/authentication.selectors';
-import {selectGlobalStyleState} from '@ofSelectors/global-style.selectors';
 import {UserContext} from '@ofModel/user-context.model';
-import {map, skip, takeUntil} from 'rxjs/operators';
+import {map, takeUntil} from 'rxjs/operators';
 import {CardService} from '@ofServices/card.service';
 import {Subject} from 'rxjs';
 import {Severity} from '@ofModel/light-card.model';
@@ -87,7 +83,7 @@ const maxVisibleEntitiesForCardHeader = 3;
     styleUrls: ['./detail.component.scss'],
     encapsulation: ViewEncapsulation.None
 })
-export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewChecked, DoCheck {
+export class DetailComponent implements OnChanges, OnInit, OnDestroy, DoCheck {
     @Input() cardState: State;
     @Input() card: Card;
     @Input() childCards: Card[];
@@ -95,7 +91,7 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
     @Input() currentPath: string;
     @Input() parentModalRef: NgbModalRef;
     @Input() screenSize: string;
-    @Input() displayContext: any = DisplayContext.REALTIME;
+    @Input() displayContext: DisplayContext = DisplayContext.REALTIME;
     @Input() parentComponent: CardDetailsComponent;
 
     @ViewChild('cardDeletedWithNoErrorPopup') cardDeletedWithNoErrorPopupRef: TemplateRef<any>;
@@ -109,7 +105,6 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
     public lttdExpiredIsTrue: boolean;
     public isResponseLocked = false;
     public sendingResponse: boolean;
-    public hrefsOfCssLink = new Array<SafeResourceUrl>();
     public fullscreen = false;
     public showButtons = false;
     public showCloseButton = false;
@@ -134,6 +129,7 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
     public listEntitiesToAck = [];
     public lastResponse: Card;
     public isCardProcessing = false;
+    public templateOffset = 15;
 
     private lastCardSetToReadButNotYetOnFeed;
     private entityIdsAllowedOrRequiredToRespondAndAllowedToSendCards = [];
@@ -144,8 +140,8 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
     private userContext: UserContext;
     private unsubscribe$: Subject<void> = new Subject<void>();
     private modalRef: NgbModalRef;
-    private user: User;
 
+    public user: User;
     public multiSelectConfig: MultiSelectConfig = {
         labelKey: 'shared.entity',
         multiple: false,
@@ -175,7 +171,6 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
     // START - ANGULAR COMPONENT LIFECYCLE
 
     ngOnInit() {
-        this.reloadTemplateWhenGlobalStyleChange();
         if (this._appService.pageType !== PageType.ARCHIVE) this.integrateChildCardsInRealTime();
 
         this.selectEntityForm = new UntypedFormGroup({
@@ -188,24 +183,23 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
             .subscribe((receivedAck) => {
                 if (receivedAck.cardUid === this.card.uid) this.addAckFromSubscription(receivedAck.entitiesAcks);
             });
-    }
 
-    ngAfterViewChecked() {
-        this.adaptTemplateSize();
+        if (this._appService.pageType === PageType.MONITORING) this.templateOffset = 35;
     }
 
     ngDoCheck() {
-        const previous = this.lttdExpiredIsTrue;
-        this.checkLttdExpired();
-        if (previous !== this.lttdExpiredIsTrue) {
-            templateGateway.setLttdExpired(this.lttdExpiredIsTrue);
-            this.setButtonsVisibility();
+        if (templateGateway.setLttdExpired) {
+            const previous = this.lttdExpiredIsTrue;
+            this.checkLttdExpired();
+            if (previous !== this.lttdExpiredIsTrue) {
+                templateGateway.setLttdExpired(this.lttdExpiredIsTrue);
+                this.setButtonsVisibility();
+            }
         }
     }
 
     ngOnChanges(): void {
         this.isCardProcessing = false;
-        this.updateTemplateGateway();
 
         if (this.cardState.response != null && this.cardState.response !== undefined) {
             this.isCardAQuestionCard = true;
@@ -224,12 +218,6 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
         this.listEntitiesToAck = [];
         if (this.isCardPublishedByUserEntity() && !!this.card.entityRecipients) this.computeListEntitiesToAck();
 
-        // this call is necessary done after computeEntitiesForResponses() and checkIfHasAlreadyResponded()
-        // to have the variables for templateGateway set
-        this.setTemplateGatewayVariables();
-
-        this.initializeHrefsOfCssLink();
-        this.initializeHandlebarsTemplates();
         this.markAsReadIfNecessary();
         this.showDetailCardHeader =
             !this.cardState.showDetailCardHeader || this.cardState.showDetailCardHeader === true;
@@ -245,22 +233,6 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
             ? this.cardState.modifyAnswerButtonLabel
             : 'response.btnUnlock';
     }
-
-    private updateTemplateGateway() {
-        templateGateway.initTemplateGateway();
-
-        const that = this;
-        templateGateway.displayLoadingSpinner = function() {
-            that.isCardProcessing = true;
-        }
-
-        templateGateway.hideLoadingSpinner = function() {
-            that.isCardProcessing = false;
-        }
-
-        templateGateway.displayContext = this.displayContext;
-    }
-
 
     public displayCardAcknowledgedFooter(): boolean {
         return (
@@ -310,101 +282,31 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
 
     ngOnDestroy() {
         this.updateLastReadCardStatusOnFeedIfNeeded();
-        templateGateway.initTemplateGateway();
         this.unsubscribe$.next();
         this.unsubscribe$.complete();
     }
 
     // END  - ANGULAR COMPONENT LIFECYCLE
 
-    // For certain types of template , we need to reload it to take into account
-    // the new css style (for example with chart done with chart.js)
-    private reloadTemplateWhenGlobalStyleChange() {
-        this.store
-            .select(selectGlobalStyleState)
-            .pipe(takeUntil(this.unsubscribe$), skip(1))
-            .subscribe(() => this.initializeHandlebarsTemplates());
+    public beforeTemplateRendering() {
+        this.setTemplateGatewayVariables();
+    }
+    private setTemplateGatewayVariables() {
+        templateGateway.childCards = this.childCards;
+        templateGateway.isLocked = this.isResponseLocked;
+        templateGateway.userAllowedToRespond = this.isUserEnabledToRespond;
+        templateGateway.entitiesAllowedToRespond = this.entityIdsAllowedOrRequiredToRespondAndAllowedToSendCards;
+        templateGateway.userMemberOfAnEntityRequiredToRespond =
+            this.userMemberOfAnEntityRequiredToRespondAndAllowedToSendCards;
+        templateGateway.entityUsedForUserResponse = this.userEntityIdToUseForResponse;
     }
 
-    private initializeHandlebarsTemplates() {
-        if (!this.userContext) {
-            this.store.select(selectAuthenticationState).subscribe((authState) => {
-                this.userContext = new UserContext(
-                    authState.identifier,
-                    authState.token,
-                    authState.firstName,
-                    authState.lastName,
-                    this.user.groups,
-                    this.user.entities
-                );
-                this.initializeHandlebarsTemplatesProcess();
-            });
-        } else {
-            this.initializeHandlebarsTemplatesProcess();
+    public afterTemplateRendering() {
+        if (this.isResponseLocked) templateGateway.lockAnswer();
+        if (this.card.lttd && this.lttdExpiredIsTrue) {
+            templateGateway.setLttdExpired(true);
         }
-    }
-
-    private initializeHandlebarsTemplatesProcess() {
-        const templateName = this.cardState.templateName;
-        this.isCardProcessing = true;
-        if (!!templateName) {
-            this.handlebars
-                .executeTemplate(templateName, new DetailContext(this.card, this.userContext, this.cardState.response))
-                .subscribe({
-                    next: (html) => {
-                        this.htmlTemplateContent = this.sanitizer.bypassSecurityTrustHtml(html);
-                        setTimeout(() => {
-                            // wait for DOM rendering
-                            this.isCardProcessing = false;
-                            this.reinsertScripts();
-                            setTimeout(() => {
-                                // wait for script loading before calling them in template
-                                templateGateway.applyChildCards();
-                                if (this.isResponseLocked) templateGateway.lockAnswer();
-                                if (this.card.lttd && this.lttdExpiredIsTrue) {
-                                    templateGateway.setLttdExpired(true);
-                                }
-                                templateGateway.setScreenSize(this.screenSize);
-                                setTimeout(() => templateGateway.onTemplateRenderingComplete(), 10);
-                                this.setButtonsVisibility();
-                            }, 10);
-                        }, 10);
-                    },
-                    error: (error) => {
-                        console.log(
-                            new Date().toISOString(),
-                            'WARNING impossible to process template ',
-                            templateName,
-                            ':  ',
-                            error
-                        );
-                        this.htmlTemplateContent = this.sanitizer.bypassSecurityTrustHtml('');
-                        this.isCardProcessing = false;
-                    }
-                });
-        } else {
-            this.htmlTemplateContent = ' TECHNICAL ERROR - NO TEMPLATE AVAILABLE';
-            this.isCardProcessing = false;
-            console.log(
-                new Date().toISOString(),
-                `WARNING No template for process ${this.card.process} version ${this.card.processVersion} with state ${this.card.state}`
-            );
-        }
-    }
-
-    private reinsertScripts(): void {
-        const scripts = <HTMLScriptElement[]>this.element.nativeElement.getElementsByTagName('script');
-        const scriptsInitialLength = scripts.length;
-        for (let i = 0; i < scriptsInitialLength; i++) {
-            const script = scripts[i];
-            const scriptCopy = document.createElement('script');
-            scriptCopy.type = script.type ? script.type : 'text/javascript';
-            if (script.innerHTML) {
-                scriptCopy.innerHTML = script.innerHTML;
-            }
-            scriptCopy.async = false;
-            script.parentNode.replaceChild(scriptCopy, script);
-        }
+        this.setButtonsVisibility();
     }
 
     private integrateChildCardsInRealTime() {
@@ -582,24 +484,6 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
         return !!this.card.entitiesAcks && this.card.entitiesAcks.includes(entityId);
     }
 
-    private adaptTemplateSize() {
-        const cardTemplate = document.getElementById('opfab-div-card-template');
-        if (!!cardTemplate) {
-            const diffWindow = cardTemplate.getBoundingClientRect();
-            const divBtn = document.getElementById('div-detail-btn');
-
-            let cardTemplateHeight = window.innerHeight - diffWindow.top;
-            if (this._appService.pageType !== PageType.FEED) cardTemplateHeight -= 20;
-
-            if (divBtn) {
-                cardTemplateHeight -= divBtn.scrollHeight + 15;
-            }
-
-            cardTemplate.style.height = `${cardTemplateHeight}px`;
-            cardTemplate.style.overflowX = 'hidden';
-        }
-    }
-
     private checkLttdExpired(): void {
         this.lttdExpiredIsTrue = this.card.lttd != null && this.card.lttd - new Date().getTime() <= 0;
     }
@@ -674,31 +558,6 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
             return [...this.childCards].sort((a, b) => (a.publishDate < b.publishDate ? 1 : -1))[0];
         }
         return null;
-    }
-
-    private setTemplateGatewayVariables() {
-        templateGateway.childCards = this.childCards;
-        templateGateway.isLocked = this.isResponseLocked;
-        templateGateway.userAllowedToRespond = this.isUserEnabledToRespond;
-        templateGateway.entitiesAllowedToRespond = this.entityIdsAllowedOrRequiredToRespondAndAllowedToSendCards;
-        templateGateway.userMemberOfAnEntityRequiredToRespond =
-            this.userMemberOfAnEntityRequiredToRespondAndAllowedToSendCards;
-        templateGateway.entityUsedForUserResponse = this.userEntityIdToUseForResponse;
-    }
-
-    private initializeHrefsOfCssLink() {
-        const styles = this.cardState.styles;
-        this.hrefsOfCssLink = new Array<SafeResourceUrl>();
-        if (!!styles) {
-            const process = this.card.process;
-            const processVersion = this.card.processVersion;
-            styles.forEach((style) => {
-                const cssUrl = this.businessconfigService.computeBusinessconfigCssUrl(process, style, processVersion);
-                // needed to instantiate href of link for css in component rendering
-                const safeCssUrl = this.sanitizer.bypassSecurityTrustResourceUrl(cssUrl);
-                this.hrefsOfCssLink.push(safeCssUrl);
-            });
-        }
     }
 
     private markAsReadIfNecessary() {
@@ -781,7 +640,6 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
 
     public setFullScreen(active) {
         this.fullscreen = active;
-        templateGateway.setScreenSize(active ? 'lg' : 'md');
         if (!!this.parentComponent) this.parentComponent.screenSize = active ? 'lg' : 'md';
     }
 

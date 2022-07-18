@@ -9,9 +9,10 @@
 
 
 
-<of-spinner *ngIf="isLoading || isCardProcessing"></of-spinner>
+<of-spinner *ngIf="isLoading"></of-spinner>
 
-<div [hidden]="isLoading || isCardProcessing">
-    <link *ngFor="let cssUrl of hrefsOfCssLink" [href]="cssUrl" rel="stylesheet" type="text/css">
-    <div id="opfab-card-template-detail" class="opfab-card-detail"  [innerHtml]="htmlContent" [hidden]="isLoading" style="height: 100%;"></div>
-</div>
+
+<of-template-rendering *ngIf="!isLoading" [card]="card"  [cardState]="cardState" [user]="user" [screenSize]="screenSize"
+    [displayContext]="displayContext" [functionToCallBeforeRendering]="beforeTemplateRendering" [parentComponent]="this"
+    [fixedBottomOffset]="fixedBottomOffset" cardFooterHtmlElementId="opfab-card-detail-footer">
+</of-template-rendering>

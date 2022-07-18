@@ -19,6 +19,7 @@ import {SingleFilterModule} from '../share/single-filter/single-filter.module';
 import {ReactiveFormsModule} from '@angular/forms';
 import { MultiSelectModule } from '../share/multi-select/multi-select.module';
 import { SpinnerModule } from '../share/spinner/spinner.module';
+import {TemplateRenderingModule} from '../share/template-rendering/template-rendering.module';
 
 @NgModule({
     declarations: [CardDetailsComponent, DetailComponent],
@@ -31,7 +32,8 @@ import { SpinnerModule } from '../share/spinner/spinner.module';
         SingleFilterModule,
         ReactiveFormsModule,
         MultiSelectModule,
-        SpinnerModule
+        SpinnerModule,
+        TemplateRenderingModule
     ],
     exports: [CardDetailsComponent, DetailComponent]
 })
