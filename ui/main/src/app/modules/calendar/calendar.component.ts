@@ -15,12 +15,11 @@ import {AfterViewInit, Component, ElementRef, OnDestroy, OnInit, ViewChild} from
 import {FullCalendarComponent} from '@fullcalendar/angular';
 import {EventInput} from '@fullcalendar/core';
 import allLocales from '@fullcalendar/core/locales-all';
-import {TranslateService} from '@ngx-translate/core';
 import {ClearLightCardSelectionAction, SelectLightCardAction} from '@ofActions/light-card.actions';
 import {LoadCardAction} from '@ofActions/card.actions';
 import {NgbModal, NgbModalOptions, NgbModalRef} from '@ng-bootstrap/ng-bootstrap';
 import {FilterType} from '@ofModel/feed-filter.model';
-import {HourAndMinutes} from '@ofModel/card.model';
+import {HourAndMinutes, TimeSpan} from '@ofModel/card.model';
 import {ProcessesService} from '@ofServices/processes.service';
 import {DisplayContext} from '@ofModel/templateGateway.model';
 import {LightCardsStoreService} from '@ofServices/lightcards/lightcards-store.service';
@@ -35,7 +34,6 @@ import {ConfigService} from '@ofServices/config.service';
 export class CalendarComponent implements OnInit, OnDestroy, AfterViewInit {
     constructor(
         private store: Store<AppState>,
-        private translate: TranslateService,
         private modalService: NgbModal,
         private processesService: ProcessesService,
         private lightCardsStoreService: LightCardsStoreService,
@@ -137,9 +135,7 @@ export class CalendarComponent implements OnInit, OnDestroy, AfterViewInit {
                                         'opfab-calendar-event',
                                         'opfab-calendar-event-' + card.severity.toLowerCase()
                                     ],
-                                    daysOfWeek: timespan.recurrence
-                                        ? timespan.recurrence.daysOfWeek.map((d) => d % 7)
-                                        : [],
+                                    daysOfWeek: this.getDaysOfWeek(timespan),
                                     startTime: timespan.recurrence.hoursAndMinutes
                                         ? CalendarComponent.formatTwoDigits(timespan.recurrence.hoursAndMinutes.hours) +
                                           ':' +
@@ -174,6 +170,16 @@ export class CalendarComponent implements OnInit, OnDestroy, AfterViewInit {
         // It is necessary to reassign the updated events to the corresponding options property to trigger change detection
         // See https://fullcalendar.io/docs/angular §Modifying properties
         this.calendarOptions.events = this.calendarEvents;
+    }
+
+    private getDaysOfWeek(timeSpan: TimeSpan):Array<number>
+    {
+        let daysOfWeek = [];
+        if (timeSpan.recurrence) {
+         if (timeSpan.recurrence.daysOfWeek) daysOfWeek = timeSpan.recurrence.daysOfWeek.map((d) => d % 7);
+         else daysOfWeek = [0,1,2,3,4,5,6];
+        }
+        return daysOfWeek;
     }
 
     selectCard(info) {
