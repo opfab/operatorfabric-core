@@ -357,14 +357,14 @@ describe('Test translations', function () {
 
         changeLanguage(ENGLISH);
         loadNonExistingCard();
-        checkFeedTexts('The card you are looking for was not found');
+        checkFeedTexts('The card you are looking for was not found.');
 
         changeLanguage(FRENCH);
         loadNonExistingCard();
-        checkFeedTexts("La carte que vous cherchez n'a pas été trouvée");
+        checkFeedTexts("La carte que vous cherchez n'a pas été trouvée.");
 
         changeLanguage(DUTCH);
         loadNonExistingCard();
-        checkFeedTexts('De kaart die u zoekt werd niet gevonden');
+        checkFeedTexts('De kaart die u zoekt werd niet gevonden.');
     });
 });
