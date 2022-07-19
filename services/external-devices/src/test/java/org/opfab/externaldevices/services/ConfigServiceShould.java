@@ -292,7 +292,7 @@ class ConfigServiceShould {
     @Test
     void deleteExistingUserConfiguration() throws ExternalDeviceConfigurationException {
 
-        configService.deleteUserConfiguration("user1");
+        configService.deleteUserConfiguration("user1", Optional.empty());
 
         // Check that the deleted device is gone from the repository
         Assertions.assertThat(userConfigurationRepository.findAll()).hasSize(INITIAL_NUMBER_OF_USER_CONFIGS-1);
@@ -305,7 +305,7 @@ class ConfigServiceShould {
     void throwExceptionIfUserConfigurationToDeleteDoesNotExist() {
 
         assertThrows(ExternalDeviceConfigurationException.class,
-                () -> configService.deleteUserConfiguration("user_configuration_that_doesnt_exist"));
+                () -> configService.deleteUserConfiguration("user_configuration_that_doesnt_exist", Optional.empty()));
 
         // Check that nothing was deleted
         Assertions.assertThat(userConfigurationRepository.findAll()).hasSize(INITIAL_NUMBER_OF_USER_CONFIGS);

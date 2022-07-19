@@ -21,6 +21,9 @@ import org.opfab.externaldevices.model.UserConfigurationData;
 import org.opfab.externaldevices.repositories.DeviceConfigurationRepository;
 import org.opfab.externaldevices.repositories.SignalMappingRepository;
 import org.opfab.externaldevices.repositories.UserConfigurationRepository;
+import org.opfab.springtools.configuration.oauth.UserServiceProxy;
+import org.opfab.users.model.UserSettings;
+import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -51,12 +54,15 @@ public class ConfigService {
     private final DeviceConfigurationRepository deviceConfigurationRepository;
     private final SignalMappingRepository signalMappingRepository;
 
+    private final UserServiceProxy userServiceProxy;
+
     public ConfigService(UserConfigurationRepository userConfigurationRepository,
                          DeviceConfigurationRepository deviceConfigurationRepository,
-                         SignalMappingRepository signalMappingRepository) {
+                         SignalMappingRepository signalMappingRepository, UserServiceProxy userServiceProxy) {
         this.userConfigurationRepository = userConfigurationRepository;
         this.deviceConfigurationRepository = deviceConfigurationRepository;
         this.signalMappingRepository = signalMappingRepository;
+        this.userServiceProxy = userServiceProxy;
     }
 
     public void insertDeviceConfiguration(DeviceConfiguration deviceConfiguration) {
@@ -182,13 +188,21 @@ public class ConfigService {
        signalMappingRepository.deleteById(signalMappingId);
     }
 
-    public void deleteUserConfiguration(String userLogin) throws ExternalDeviceConfigurationException {
+    public void deleteUserConfiguration(String userLogin, Optional<Jwt> token) throws ExternalDeviceConfigurationException {
 
         // Only existing configurations can be deleted
         retrieveUserConfiguration(userLogin);
         userConfigurationRepository.deleteById(userLogin);
+        setUserSettingPlaySoundOnExternalDeviceToFalse(userLogin, token);
     }
 
+    private void setUserSettingPlaySoundOnExternalDeviceToFalse(String userLogin, Optional<Jwt> token) {
+        UserSettings settings = new UserSettings();
+        settings.setPlaySoundOnExternalDevice(false);
+        settings.setLogin(userLogin);
+        String authToken = token.isPresent() ? "Bearer " + token.get().getTokenValue() : "";
+        userServiceProxy.patchUserSettings(authToken, userLogin, settings);
+    }
 
     private int computeSignalId(SignalMapping signalMapping, String opFabSignalKey) throws ExternalDeviceConfigurationException {
         if(signalMapping.getSupportedSignals().containsKey(opFabSignalKey)) {
