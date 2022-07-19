@@ -7,6 +7,7 @@ dependencies{
     implementation misc.feignMock
     implementation misc.feignJackson
     implementation misc.feignCore
+    implementation misc.feignOkhttp
     implementation spring.webflux
     implementation project(":client:users-client-data")
     implementation project(":tools:generic:utilities")

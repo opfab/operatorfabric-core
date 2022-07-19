@@ -16,15 +16,18 @@ import org.opfab.externaldevices.model.DeviceConfiguration;
 import org.opfab.externaldevices.model.SignalMapping;
 import org.opfab.externaldevices.model.UserConfiguration;
 import org.opfab.externaldevices.services.ConfigService;
+import org.opfab.springtools.configuration.oauth.OpFabJwtAuthenticationToken;
 import org.opfab.springtools.error.model.ApiError;
 import org.opfab.springtools.error.model.ApiErrorException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * DevicesController, documented at {@link ConfigurationsApi}
@@ -178,7 +181,13 @@ public class ConfigurationsController implements ConfigurationsApi {
     @Override
     public Void deleteUserConfiguration(HttpServletRequest request, HttpServletResponse response, String userLogin) {
         try {
-            configService.deleteUserConfiguration(userLogin);
+            OpFabJwtAuthenticationToken jwtPrincipal = (OpFabJwtAuthenticationToken) request.getUserPrincipal();
+            Jwt token = null;
+            if (jwtPrincipal!=null) {
+                token = jwtPrincipal.getToken();
+            }
+
+            configService.deleteUserConfiguration(userLogin, Optional.ofNullable(token));
         } catch (ExternalDeviceConfigurationException e) {
             throw new ApiErrorException(ApiError.builder()
                     .status(HttpStatus.NOT_FOUND)
