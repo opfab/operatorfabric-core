@@ -25,12 +25,12 @@
       "publishDateTo": "PUBLIÉE JUSQU'À",
       "activeFrom": "ACTIVE À PARTIR DE",
       "activeTo": "ACTIVE JUSQU'À",
-      "invalidPublishStartDate": "La date 'Publiée à partir de' est invalide",
-      "invalidPublishEndDate": "La date 'Publiée jusqu'à' est invalide",
-      "invalidActiveStartDate": "La date 'Active à partir de' est invalide",
-      "invalidActiveEndDate": "La date 'Active jusqu'à' est invalide",
-      "publishEndDateBeforeStartDate" : "La date 'Publiée jusqu'à' doit être postérieure à la date 'Publiée à partir de'",
-      "activeEndDateBeforeStartDate" : "La date 'Active jusqu'à' doit être postérieure à la date 'Active à partir de'"
+      "invalidPublishStartDate": "La date 'Publiée à partir de' est invalide.",
+      "invalidPublishEndDate": "La date 'Publiée jusqu'à' est invalide.",
+      "invalidActiveStartDate": "La date 'Active à partir de' est invalide.",
+      "invalidActiveEndDate": "La date 'Active jusqu'à' est invalide.",
+      "publishEndDateBeforeStartDate" : "La date 'Publiée jusqu'à' doit être postérieure à la date 'Publiée à partir de'.",
+      "activeEndDateBeforeStartDate" : "La date 'Active jusqu'à' doit être postérieure à la date 'Active à partir de'."
     },
     "result": {
       "severity": "SÉVÉRITÉ",
@@ -57,7 +57,7 @@
     "exportToExcel": "Exporter les données",
     "resultsNumber":"Nombre de résultats",
     "noProcessStateAvailable": "Aucun processus/état disponible",
-    "endDateBeforeStartDate": "La date de fin doit être postérieure à la date de début",
+    "endDateBeforeStartDate": "La date de fin doit être postérieure à la date de début.",
     "featureNotConfigured": "Fonctionnalité non configurée",
     "confirmSettings": "ENREGISTRER LA CONFIGURATION",
     "cardEmitter": "ÉMETTEUR",
@@ -80,9 +80,9 @@
     "tryToReconnect":"Tentative de reconnexion...",
     "activateSoundText":"Son non activé, cliquer pour activer",
     "activateSoundButton":"Activer le son",
-    "sessionExpiredText":"Votre session a expiré",
+    "sessionExpiredText":"Votre session a expiré.",
     "disconnected": "Vous êtes déconnecté.",
-    "disconnectedByNewUser": "Vous avez été déconnecté car un autre utilisateur s'est connecté avec ce compte",
+    "disconnectedByNewUser": "Vous avez été déconnecté car un autre utilisateur s'est connecté avec ce compte.",
     "disconnectByAppLoadedInAnotherTab": "Vous avez été déconnecté car un autre onglet de ce navigateur a été utilisé pour se connecter à cette URL."
   },
   "menu": {
@@ -116,8 +116,8 @@
       "M": "Mois",
       "Y": "Année"
     },
-    "lockTooltip": "Le domaine de visibilité est actuellement vérrouillé : il ne bougera pas avec le temps",
-    "unlockTooltip": "Le domaine de visibilité est actuellement dévérrouillé : il se décalera avec le temps"
+    "lockTooltip": "Le domaine de visibilité est actuellement vérrouillé : il ne bougera pas avec le temps.",
+    "unlockTooltip": "Le domaine de visibilité est actuellement dévérrouillé : il se décalera avec le temps."
   },
   "multiFilter": {
     "searchPlaceholderText": "Rechercher",
@@ -175,7 +175,7 @@
     "tips": {
       "acknowledged": "Acquittée",
       "lttd": "Temps restant pour décider",
-      "hasAResponseFromYourEntity" : "Votre entité a déjà répondu",
+      "hasAResponseFromYourEntity" : "Votre entité a déjà répondu.",
       "loadingInProgress": "Chargement de cartes en cours",
       "seeGroupedCards": "Ouvrez cette carte pour voir les cartes groupées"
     },
@@ -183,7 +183,7 @@
       "label": "Acquitter toutes les cartes",
       "popup": {
         "title": "CONFIRMATION",
-        "doYouReallyWant": "Toutes les cartes visibles du flux de cartes vont être acquittées, merci de confirmer"
+        "doYouReallyWant": "Toutes les cartes visibles du flux de cartes vont être acquittées, merci de confirmer."
       }
     },
     "lttdFinished": "Terminée",
@@ -194,7 +194,7 @@
     "moreCards": "cartes supplémentaires",
     "lastResponse": "Dernière réponse reçue le",
     "cardLoadingInProgress":"Chargement de la carte...",
-    "cardNotFound": "La carte que vous cherchez n'a pas été trouvée"
+    "cardNotFound": "La carte que vous cherchez n'a pas été trouvée."
   },
   "login": {
     "reset": "RaZ",
@@ -211,10 +211,10 @@
       "code": "Mauvais code d'authentification",
       "unavailable": "Le service d'authentification n'est pas disponible",
       "unexpected": "Une erreur inattendue a été détectée : {{error}}",
-      "disconnected": "Vous avez été deconnecté",
+      "disconnected": "Vous avez été deconnecté.",
       "token": {
-        "invalid": "Le jeton conservé est invalide",
-        "expiration": "Le jeton conservé a expiré"
+        "invalid": "Le jeton conservé est invalide.",
+        "expiration": "Le jeton conservé a expiré."
       }
     }
   },
@@ -237,7 +237,7 @@
   },
   "archive": {
     "cardLoadingInProgress":"Chargement de la carte...",
-    "tooManyRows": "Trop de cartes, toutes les cartes ne sont pas visibles",
+    "tooManyRows": "Trop de cartes, toutes les cartes ne sont pas visibles.",
     "collapsibleUpdates": "Mises à jour dépliables"
   },
   "monitoring": {
@@ -272,12 +272,12 @@
     "title": "CRÉATION D'UNE NOUVELLE CARTE",
     "editTitle" : "ÉDITION D'UNE CARTE",
     "error": {
-      "notAvailable": "Vous n'êtes pas autorisé à envoyer des cartes",
+      "notAvailable": "Vous n'êtes pas autorisé à envoyer des cartes.",
       "userHasNoEntityThatCanSendCard" : "Vous n'êtes pas membre d'une entité qui peut envoyer des cartes.",
       "templateError" : "Erreur technique : template non conforme",
       "impossibleToSendCard" : "Impossible d'envoyer la carte pour des raisons techniques",
-      "lttdBeforeStartDate": "La date limite de réponse doit être postérieure à la date de début",
-      "lttdAfterEndDate": "La date limite de réponse doit être antérieure à la date de fin"
+      "lttdBeforeStartDate": "La date limite de réponse doit être postérieure à la date de début.",
+      "lttdAfterEndDate": "La date limite de réponse doit être antérieure à la date de fin."
     },
     "filters": {
       "severity": "SÉVÉRITÉ",
@@ -293,11 +293,11 @@
     "processInstanceId": "Identifiant",
     "state": "État",
     "recipients": "DESTINATAIRES:",
-    "youAreTheOnlyRecipient": "Vous êtes l'unique destinataire de cette carte",
+    "youAreTheOnlyRecipient": "Vous êtes l'unique destinataire de cette carte.",
     "feedPreview": "PRÉVISUALISATION FLUX DE CARTES:",
     "contentPreview": "PRÉVISUALISATION CONTENU:",
     "send-another-one": "ENVOYER UNE AUTRE CARTE",
-    "cardSendWithNoError": "Votre carte est publiée",
+    "cardSendWithNoError": "Votre carte est publiée.",
     "deleteCard": {
       "title" : "CONFIRMATION",
       "doYouReallyWant": "Voulez-vous vraiment supprimer cette carte ?",
@@ -312,8 +312,8 @@
     "btnValidate": "VALIDER RÉPONSE",
     "btnUnlock": "MODIFIER RÉPONSE",
     "error": {
-      "submit": "La carte n'a pas pu être envoyée",
-      "form": "Le formulaire n'est pas correctement rempli",
+      "submit": "La carte n'a pas pu être envoyée.",
+      "form": "Le formulaire n'est pas correctement rempli.",
       "ack": "Impossible d'agir sur l'acquittement de cette carte en raison d'un problème technique"
     },
     "submitSuccess": "Votre réponse est confirmée. Merci!",
@@ -458,7 +458,7 @@
       "edit": "MODIFIER LA CONFIGURATION",
       "confirm":"Confirmez...",
       "confirmDelete": "Voulez-vous vraiment supprimer la configuration pour l'utilisateur",
-      "allUsersConfigured": "Tous les périphériques des utilisateurs sont déjà configurés",
+      "allUsersConfigured": "Tous les périphériques des utilisateurs sont déjà configurés.",
       "loadingExternalDevices": "Chargement des périphériques externes..."
     },
     "userLogin": "IDENTIFIANT UTILISATEUR",
