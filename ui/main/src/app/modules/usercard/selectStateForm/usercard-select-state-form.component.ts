@@ -9,6 +9,7 @@
 
 import {Component, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild} from '@angular/core';
 import {UntypedFormControl, UntypedFormGroup} from '@angular/forms';
+import {TranslateService} from '@ngx-translate/core';
 import {MultiSelectConfig, MultiSelectOption} from '@ofModel/multiselect.model';
 import {RightsEnum} from '@ofModel/perimeter.model';
 import {Process} from '@ofModel/processes.model';
@@ -79,7 +80,11 @@ export class UserCardSelectStateFormComponent implements OnInit, OnDestroy {
         search: true
     };
 
-    constructor(private processesService: ProcessesService, private userService: UserService) {}
+    constructor(
+        private processesService: ProcessesService,
+        private userService: UserService,
+        private translateService: TranslateService
+    ) {}
 
     ngOnInit() {
         this.selectStateForm = new UntypedFormGroup({
@@ -188,7 +193,9 @@ export class UserCardSelectStateFormComponent implements OnInit, OnDestroy {
 
         if (this.processOptions.length > numberOfProcessesAttachedToAProcessGroup) {
             this.loadProcessesWithoutProcessGroup();
-            this.processGroupOptions.unshift(new MultiSelectOption('--', 'processGroup.defaultLabel'));
+            this.processGroupOptions.unshift(
+                new MultiSelectOption('--', this.translateService.instant('processGroup.defaultLabel'))
+            );
         }
 
         if (!this.cardIdToEdit && this.processGroupOptions.length > 0)
