@@ -398,7 +398,7 @@ export class ArchivesComponent implements OnDestroy, OnInit {
     }
 
     getFormattedPublishTime(): any {
-        return this.dateTimeFormatter.getFormattedDateFromEpochDate(this.selectedCard.publishDate);
+        return this.dateTimeFormatter.getFormattedTimeFromEpochDate(this.selectedCard.publishDate);
     }
 
     ngOnDestroy() {
