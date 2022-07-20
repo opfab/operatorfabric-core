@@ -99,10 +99,10 @@ export class UserCardSelectStateFormComponent implements OnInit, OnDestroy {
         this.changeProcessesWhenSelectProcessGroup();
         this.loadAllProcessGroupsRelatingToUserPerimeter();
 
-        if (!this.cardIdToEdit && this.processGroupOptions.length === 0 && this.processOptions.length > 0) {
+        if (!this.cardIdToEdit && this.processGroupOptions.length <= 1 && this.processOptions.length > 0) {
             this.selectedProcess = this.processOptions[0].value;
         }
-        if (!this.cardIdToEdit && this.processGroupOptions.length > 0) {
+        if (!this.cardIdToEdit && this.processGroupOptions.length > 1) {
             this.selectedProcessGroupOption = this.processGroupOptions[0].value;
         }
         this.initProcessState();
