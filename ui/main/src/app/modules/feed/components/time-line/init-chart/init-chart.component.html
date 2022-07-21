@@ -20,7 +20,7 @@
       </a>
     </div>
     <of-custom-timeline-chart class="of-custom-timeline-chart" [prod]="true" [domainId]="this.timelineButtons.currentDomainId"
-                              [valueDomain]="this.timelineButtons.currentDomain" 
+                              [valueDomain]="this.timelineButtons.currentDomain" [isHidden]="this.timelineButtons.hideTimeLine"
                               (zoomChange)="this.timelineButtons.applyNewZoom($event)">
     </of-custom-timeline-chart>
 
