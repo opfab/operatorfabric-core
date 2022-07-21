@@ -222,4 +222,11 @@ public class CardSubscriptionService {
         }
     }
 
+    public void postMessageToSubscriptions(String message) {
+        getSubscriptions().forEach(subscription -> {
+                log.info("message '{}' sent to subscription '{}'", message, subscription.getId());
+                subscription.publishDataIntoSubscription(message);
+        });
+    }
+
 }

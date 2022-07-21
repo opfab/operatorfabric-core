@@ -41,16 +41,17 @@ import {ClearLightCardSelectionAction} from '@ofStore/actions/light-card.actions
 import {UserService} from '@ofServices/user.service';
 import {EntitiesService} from '@ofServices/entities.service';
 import {NgbModal, NgbModalOptions, NgbModalRef} from '@ng-bootstrap/ng-bootstrap';
-import {TimeService} from '@ofServices/time.service';
 import {AlertMessageAction} from '@ofStore/actions/alert.actions';
 import {MessageLevel} from '@ofModel/message.model';
 import {AcknowledgeService} from '@ofServices/acknowledge.service';
 import {UserPermissionsService} from '@ofServices/user-permissions.service';
 import {DisplayContext} from '@ofModel/templateGateway.model';
 import {LightCardsStoreService} from '@ofServices/lightcards/lightcards-store.service';
-import {FormControl, FormGroup} from '@angular/forms';
+import {UntypedFormControl, UntypedFormGroup} from '@angular/forms';
 import {Utilities} from '../../../../common/utilities';
 import {CardDetailsComponent} from '../card-details/card-details.component';
+import {DateTimeFormatterService} from '@ofServices/date-time-formatter.service';
+import {MultiSelectConfig} from '@ofModel/multiselect.model';
 
 declare const templateGateway: any;
 
@@ -102,11 +103,12 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
     @ViewChild('userCard') userCardTemplate: TemplateRef<any>;
     @ViewChild('chooseEntityForResponsePopup') chooseEntityForResponsePopupRef: TemplateRef<any>;
 
-    private selectEntityForm: FormGroup;
+    private selectEntityForm: UntypedFormGroup;
 
     public isUserEnabledToRespond = false;
     public lttdExpiredIsTrue: boolean;
     public isResponseLocked = false;
+    public sendingResponse: boolean;
     public hrefsOfCssLink = new Array<SafeResourceUrl>();
     public fullscreen = false;
     public showButtons = false;
@@ -131,6 +133,7 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
     public btnUnlockLabel = 'response.btnUnlock';
     public listEntitiesToAck = [];
     public lastResponse: Card;
+    public isCardProcessing = false;
 
     private lastCardSetToReadButNotYetOnFeed;
     private entityIdsAllowedOrRequiredToRespondAndAllowedToSendCards = [];
@@ -143,6 +146,12 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
     private modalRef: NgbModalRef;
     private user: User;
 
+    public multiSelectConfig: MultiSelectConfig = {
+        labelKey: 'shared.entity',
+        multiple: false,
+        search: true
+    };
+
     constructor(
         private element: ElementRef,
         private businessconfigService: ProcessesService,
@@ -154,7 +163,7 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
         private userService: UserService,
         private entitiesService: EntitiesService,
         private modalService: NgbModal,
-        private time: TimeService,
+        private dateTimeFormatterService: DateTimeFormatterService,
         private acknowledgeService: AcknowledgeService,
         private userPermissionsService: UserPermissionsService,
         private lightCardsStoreService: LightCardsStoreService
@@ -169,8 +178,8 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
         this.reloadTemplateWhenGlobalStyleChange();
         if (this._appService.pageType !== PageType.ARCHIVE) this.integrateChildCardsInRealTime();
 
-        this.selectEntityForm = new FormGroup({
-            entity: new FormControl('')
+        this.selectEntityForm = new UntypedFormGroup({
+            entity: new UntypedFormControl('')
         });
 
         this.cardService
@@ -195,9 +204,9 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
     }
 
     ngOnChanges(): void {
-        templateGateway.initTemplateGateway();
+        this.isCardProcessing = false;
+        this.updateTemplateGateway();
 
-        templateGateway.displayContext = this.displayContext;
         if (this.cardState.response != null && this.cardState.response !== undefined) {
             this.isCardAQuestionCard = true;
             this.computeEntitiesForResponses();
@@ -222,7 +231,6 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
         this.initializeHrefsOfCssLink();
         this.initializeHandlebarsTemplates();
         this.markAsReadIfNecessary();
-        this.setButtonsVisibility();
         this.showDetailCardHeader =
             !this.cardState.showDetailCardHeader || this.cardState.showDetailCardHeader === true;
         this.computeFromEntityOrRepresentative();
@@ -237,6 +245,22 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
             ? this.cardState.modifyAnswerButtonLabel
             : 'response.btnUnlock';
     }
+
+    private updateTemplateGateway() {
+        templateGateway.initTemplateGateway();
+
+        const that = this;
+        templateGateway.displayLoadingSpinner = function() {
+            that.isCardProcessing = true;
+        }
+
+        templateGateway.hideLoadingSpinner = function() {
+            that.isCardProcessing = false;
+        }
+
+        templateGateway.displayContext = this.displayContext;
+    }
+
 
     public displayCardAcknowledgedFooter(): boolean {
         return (
@@ -260,7 +284,9 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
         const resolved = new Set<string>();
         this.card.entityRecipients.forEach((entityRecipient) => {
             const entity = this.entitiesService.getEntitiesFromIds([entityRecipient])[0];
-            if (entity.entityAllowedToSendCard) resolved.add(entityRecipient);
+            if (entity.entityAllowedToSendCard) {
+                resolved.add(entityRecipient);
+            }
 
             this.entitiesService
                 .resolveChildEntities(entityRecipient)
@@ -275,6 +301,7 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
                 color: this.checkEntityAcknowledged(entityToAck) ? 'green' : '#ff6600'
             })
         );
+        this.listEntitiesToAck.sort((entity1, entity2) => Utilities.compareObj(entity1.name, entity2.name));
     }
 
     private isCardPublishedByUserEntity(): boolean {
@@ -319,6 +346,7 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
 
     private initializeHandlebarsTemplatesProcess() {
         const templateName = this.cardState.templateName;
+        this.isCardProcessing = true;
         if (!!templateName) {
             this.handlebars
                 .executeTemplate(templateName, new DetailContext(this.card, this.userContext, this.cardState.response))
@@ -327,6 +355,7 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
                         this.htmlTemplateContent = this.sanitizer.bypassSecurityTrustHtml(html);
                         setTimeout(() => {
                             // wait for DOM rendering
+                            this.isCardProcessing = false;
                             this.reinsertScripts();
                             setTimeout(() => {
                                 // wait for script loading before calling them in template
@@ -337,6 +366,7 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
                                 }
                                 templateGateway.setScreenSize(this.screenSize);
                                 setTimeout(() => templateGateway.onTemplateRenderingComplete(), 10);
+                                this.setButtonsVisibility();
                             }, 10);
                         }, 10);
                     },
@@ -349,10 +379,12 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
                             error
                         );
                         this.htmlTemplateContent = this.sanitizer.bypassSecurityTrustHtml('');
+                        this.isCardProcessing = false;
                     }
                 });
         } else {
             this.htmlTemplateContent = ' TECHNICAL ERROR - NO TEMPLATE AVAILABLE';
+            this.isCardProcessing = false;
             console.log(
                 new Date().toISOString(),
                 `WARNING No template for process ${this.card.process} version ${this.card.processVersion} with state ${this.card.state}`
@@ -717,11 +749,11 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
     }
 
     public formatDate(date: number) {
-        return this.time.formatDate(date);
+        return this.dateTimeFormatterService.getFormattedDateFromEpochDate(date);
     }
 
     public formatTime(date: number) {
-        return this.time.formatTime(date);
+        return this.dateTimeFormatterService.getFormattedTimeFromEpochDate(date);
     }
 
     // START - METHODS CALLED ONLY FROM HTML COMPONENT
@@ -851,7 +883,7 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
         this.modalRef.dismiss();
     }
 
-    public computeEntityOptionsDropdownListForResponse(): void {
+    private computeEntityOptionsDropdownListForResponse(): void {
         this.userEntityOptionsDropdownList = [];
         this.userEntityIdsPossibleForResponse.forEach((entityId) => {
             const entity = this.entitiesService.getEntities().find((e) => e.id === entityId);
@@ -860,7 +892,7 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
         this.userEntityOptionsDropdownList.sort((a, b) => Utilities.compareObj(a.label, b.label));
     }
 
-    public displayEntityChoicePopup() {
+    private displayEntityChoicePopup() {
         this.userEntityIdToUseForResponse = '';
         this.selectEntityForm.get('entity').setValue(this.userEntityOptionsDropdownList[0].value);
         this.openModal(this.chooseEntityForResponsePopupRef);
@@ -905,9 +937,10 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
                 parentCardId: this.card.id,
                 initialParentCardUid: this.card.uid
             };
-
+            this.sendingResponse = true;
             this.cardService.postCard(card).subscribe(
                 (rep) => {
+                    this.sendingResponse = false;
                     if (rep.status !== 201) {
                         this.displayMessage(ResponseI18nKeys.SUBMIT_ERROR_MSG, null, MessageLevel.ERROR);
                         console.error(rep);
@@ -918,6 +951,7 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, AfterViewC
                     }
                 },
                 (err) => {
+                    this.sendingResponse = false;
                     this.displayMessage(ResponseI18nKeys.SUBMIT_ERROR_MSG, null, MessageLevel.ERROR);
                     console.error(err);
                 }

@@ -20,8 +20,8 @@ Entities::
 - can be part of another entity (or even several entities). This relationship is modeled using the "parent entity" property
 Groups::
 - represent set of users destined to receive collectively some cards.
-- has a set of perimeters to define rights for card reception in OperatorFabric.
-- can be used to model roles in organizations, for examples : supervisor, dispatcher ... 
+- has a set of perimeters to define rights for card reception in OperatorFabric (group type 'PERMISSION').
+- can be used to model roles in organizations (group type 'ROLE'), for examples : supervisor, dispatcher ... 
 
 WARNING: The user define here is an internal representation of the individual card recipient in `OperatorFabric` the authentication is leave to specific OAuth2 external service.
 
@@ -67,7 +67,7 @@ ifndef::single-page-doc[<</documentation/current/reference_doc/index.adoc#_send_
 .
 
 === Groups
-The notion of group is loose and can be used to simulate role in `OperatorFabric` (examples : supervisor, dispatcher ... ).
+The notion of group is loose and can be used to simulate role in `OperatorFabric` (examples : supervisor, dispatcher ... ) by setting group type to 'ROLE' or to define permissions on processes/states by setting the group type to 'PERMISSION'.
 Groups are used to send cards to several users without a name specifically. The information about membership to a
 group is stored in the user information. A group contains a list of perimeters which define the rights of reception/writing for a couple process/state. The rules used to send cards are described in the
 ifdef::single-page-doc[<<reception_rules, recipients section>>]
@@ -94,7 +94,7 @@ for more details to use this feature.
 
 == Currently connected users
 
-The endPoint `/cards/connections` gives the list of connected user in real time. It is only accessible by users with administrator privileges.
+The endPoint `/cards/connections` gives the list of connected users in real time. It is accessible by all users.
 
 == Real time users
 
@@ -277,3 +277,14 @@ With this configuration file, 4 different screens will be available : "All Contr
 For example, in the UI, "All Control Centers" will look like :
 
 image::realtimescreens_screenshot.png[Real Time Screens screenshot,align="center"]
+
+== Activity area
+
+OperatorFabric allows you to connect/disconnect to/from one or several entity/ies. By default, the user is connected to
+all the entities to which he belongs.
+By choosing to disconnect from an entity, the user will still be a member of this entity, but he will no longer have
+access to the cards intended for this entity, until he reconnects to it.
+
+If set visible in ui-menu.json, this interface is accessible via the user menu (top right of the screen).
+
+The choice of activity area may be done during user logging phase if you set selectActivityAreaOnLogin to true in web-ui.json.

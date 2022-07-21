@@ -1,4 +1,4 @@
-<!-- Copyright (c) 2018-2021, RTE (http://www.rte-france.com)              -->
+<!-- Copyright (c) 2018-2022, RTE (http://www.rte-france.com)              -->
 <!-- See AUTHORS.txt                                                       -->
 <!-- This Source Code Form is subject to the terms of the Mozilla Public   -->
 <!-- License, v. 2.0. If a copy of the MPL was not distributed with this   -->
@@ -6,14 +6,8 @@
 <!-- SPDX-License-Identifier: MPL-2.0                                      -->
 <!-- This file is part of the OperatorFabric project.                      -->
 
-
-
 <form [formGroup]="form">
-  <div class="opfab-select" style="position: relative;">
-    <label for="opfab-setting" translate>settings.{{settingPath}}</label>
-    <select id="opfab-setting-{{settingPath}}" formControlName="setting" [attr.required]="requiredField">
-      <option *ngFor="let v of preparedList" value="{{v.value}}">{{v.label|async}}</option>
-    </select>
-    <span class="text-danger" *ngIf="!form.valid">Incorrect submission</span>
-  </div>
+  <of-multi-select id="opfab-setting-{{settingPath}}"  multiSelectId="setting"
+    [parentForm]="form" [config]="multiSelectConfig" [options]=" optionList" [selectedOptions]="selectedOption">
+</of-multi-select>
 </form>

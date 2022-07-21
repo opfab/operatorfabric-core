@@ -24,11 +24,11 @@ import static org.springframework.web.reactive.function.server.ServerResponse.ok
 
 @Slf4j
 @Configuration
-public class WillNewSubscriptionDisconnectAnExistingSubscription implements UserExtractor {
+public class WillNewSubscriptionDisconnectAnExistingSubscriptionRoutesConfig implements UserExtractor {
 
     private final CardSubscriptionService cardSubscriptionService;
 
-    public WillNewSubscriptionDisconnectAnExistingSubscription(CardSubscriptionService cardSubscriptionService) {
+    public WillNewSubscriptionDisconnectAnExistingSubscriptionRoutesConfig(CardSubscriptionService cardSubscriptionService) {
         this.cardSubscriptionService = cardSubscriptionService;
     }
 

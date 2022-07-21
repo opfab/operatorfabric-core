@@ -6,25 +6,19 @@
 <!-- SPDX-License-Identifier: MPL-2.0                                      -->
 <!-- This file is part of the OperatorFabric project.                      -->
 
-<div *ngIf="card && cardState;" style="font-size:13px;" [hidden] = "cardLoadingInProgress || cardNotFound" >
-  <of-detail   [cardState]="cardState" [card]="card" [childCards]="childCards"
-               [currentPath]="_currentPath" [parentModalRef]="parentModalRef" [screenSize]="screenSize" [displayContext]="displayContext"
-               [parentComponent]=this>
+<div *ngIf="card && cardState;" style="font-size:13px;" [hidden]="cardLoadingInProgress || cardNotFound">
+  <of-detail [cardState]="cardState" [card]="card" [childCards]="childCards" [currentPath]="_currentPath"
+    [parentModalRef]="parentModalRef" [screenSize]="screenSize" [displayContext]="displayContext"
+    [parentComponent]=this>
   </of-detail>
 </div>
 
 
-<div *ngIf="cardLoadingInProgress" [class.opfab-card-loading]="!isSmallscreen()"  [class.opfab-card-loading-small-screen]="isSmallscreen()">
 
-  <div class="opfab-card-loading-spinner">
-  <em  class="fas fa-spinner fa-spin opfab-slow-spinner" ></em>
-  </div>
-  <div style="text-align: center;font:16px;font-weight: bold;margin-top:10px" translate>
-      feed.cardLoadingInProgress
-  </div>
+<of-spinner *ngIf="cardLoadingInProgress" [class.opfab-card-loading-small-screen]="isSmallscreen()"
+  [timeBeforeDisplayingSpinner]="0">
+</of-spinner>
 
-  <br/>
-  <br/>
-</div>
 
-<div *ngIf="cardNotFound" id="opfab-feed-card-not-found" style="font-size:1.5em; text-align:center; padding-top: 3em;" translate>feed.cardNotFound</div>
+<div *ngIf="cardNotFound" id="opfab-feed-card-not-found" style="font-size:1.5em; text-align:center; padding-top: 3em;"
+  translate>feed.cardNotFound</div>

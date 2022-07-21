@@ -1,7 +1,7 @@
 swagger: '2.0'
 info:
   description: IMPORTANT - The Try it Out button will generate curl requests for examples, but executing them through the UI will not work as authentication has not been set up. This page is for documentation only.
-  version: 3.8.0.RELEASE
+  version: 3.9.0.RELEASE
   title: User Management
   termsOfService: ''
   contact:
@@ -61,6 +61,15 @@ definitions:
       entities:
         - ENTITY1
         - ENTITY2
+  GroupTypeEnum:
+    type: string
+    description: |-
+      Different group types possible >
+      * ROLE: Used to define user role or profile
+      * PERMISSION: Used to define user permissions on processes
+    enum:
+      - ROLE
+      - PERMISSION
   Group:
     type: object
     properties:
@@ -68,6 +77,8 @@ definitions:
         type: string
       name:
         type: string
+      type:
+        $ref: '#/definitions/GroupTypeEnum'
       description:
         type: string
       perimeters:

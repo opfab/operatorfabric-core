@@ -763,3 +763,8 @@ it is called after applyChildCard(), lockAnswer(), setLttdExpired() and setScree
 
 It can be used by a template to launch some processing when loading is complete
 
+
+=== Display a spinner when a card is being processed
+
+Once the card is loaded, there may be some processing that is time consuming. 
+In this case, it is possible to show a spinner using the methods _templateGateway.displayLoadingSpinner()_ and _templateGateway.hideLoadingSpinner()_ in the card template .

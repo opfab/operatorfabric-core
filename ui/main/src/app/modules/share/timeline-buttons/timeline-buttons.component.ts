@@ -12,7 +12,7 @@ import {ConfigService} from '@ofServices/config.service';
 import moment from 'moment';
 import {FilterType} from '@ofModel/feed-filter.model';
 import {UserPreferencesService} from '@ofServices/user-preference.service';
-import {TimeService} from '@ofServices/time.service';
+import {DateTimeFormatterService} from '@ofServices/date-time-formatter.service';
 import {FilterService} from '@ofServices/lightcards/filter.service';
 import {LogOption, OpfabLoggerService} from '@ofServices/logs/opfab-logger.service';
 
@@ -45,7 +45,7 @@ export class TimelineButtonsComponent implements OnInit, OnDestroy {
     private isDestroyed = false;
 
     constructor(
-        private time: TimeService,
+        private dateTimeFormatter: DateTimeFormatterService,
         private userPreferences: UserPreferencesService,
         private configService: ConfigService,
         private filterService: FilterService,
@@ -249,19 +249,19 @@ export class TimelineButtonsComponent implements OnInit, OnDestroy {
         const date = moment(value);
         switch (this.currentDomainId) {
             case 'TR':
-                return this.time.formatDateTime(value);
+                return this.dateTimeFormatter.getFormattedDateAndTimeFromEpochDate(value);
             case 'J':
-                return this.time.formatDate(value);
+                return this.dateTimeFormatter.getFormattedDateFromEpochDate(value);
             case '7D':
-                return this.time.formatDateTime(value);
+                return this.dateTimeFormatter.getFormattedDateAndTimeFromEpochDate(value);
             case 'W':
-                return this.time.formatDate(value);
+                return this.dateTimeFormatter.getFormattedDateFromEpochDate(value);
             case 'M':
-                return this.time.formatDate(value);
+                return this.dateTimeFormatter.getFormattedDateFromEpochDate(value);
             case 'Y':
                 return date.format('yyyy');
             default:
-                return this.time.formatDate(value);
+                return this.dateTimeFormatter.getFormattedDateFromEpochDate(value);
         }
     }
 

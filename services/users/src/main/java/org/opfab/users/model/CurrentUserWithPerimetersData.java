@@ -97,7 +97,7 @@ public class CurrentUserWithPerimetersData implements CurrentUserWithPerimeters 
     }
 
     public void addComputedPerimeters(ComputedPerimeter c){
-        if(null== computedPerimeters){
+        if(null == computedPerimeters){
             this.computedPerimeters=new HashSet<>();
         }
         computedPerimeters.add(c);

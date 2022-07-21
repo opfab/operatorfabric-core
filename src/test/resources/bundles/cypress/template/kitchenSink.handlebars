@@ -6,6 +6,14 @@
 <!-- SPDX-License-Identifier: MPL-2.0                                      -->
 <!-- This file is part of the OperatorFabric project.                      -->
 
+
+<button id="templateGateway-display-spinner-button" type="button"  
+        onclick="simulateCardProcessing()">Simulate card processing</button>
+
+
+<br>
+<br>
+
 <H3> USER CONTEXT VALUES </H3>
 
 <div> userContext.login : <span id="userContext-login" >{{userContext.login}}</span> </div>
@@ -41,61 +49,68 @@ loadData();
 
 function loadData() {
     
-            let templateGatewayResults = document.getElementById("templateGatewayResults");
-            
-            let responses = '<div> getEntityName("ENTITY1_FR") : <span id="templateGateway-getEntityName">';
-            responses += templateGateway.getEntityName('ENTITY1_FR');
-            responses += '</span></div>';
+  let templateGatewayResults = document.getElementById("templateGatewayResults");
+  
+  let responses = '<div> getEntityName("ENTITY1_FR") : <span id="templateGateway-getEntityName">';
+  responses += templateGateway.getEntityName('ENTITY1_FR');
+  responses += '</span></div>';
 
-            responses += '<div> getEntityName("unknownEntity") : <span id="templateGateway-getEntityName-unknownEntity">';
-            responses += templateGateway.getEntityName('unknownEntity');
-            responses += '</span></div>';
+  responses += '<div> getEntityName("unknownEntity") : <span id="templateGateway-getEntityName-unknownEntity">';
+  responses += templateGateway.getEntityName('unknownEntity');
+  responses += '</span></div>';
 
 
-            responses += '<div> isUserAllowedToRespond() : <span id="templateGateway-isUserAllowedToRespond">';
-            responses += templateGateway.isUserAllowedToRespond();
-            responses += '</span></div>';
+  responses += '<div> isUserAllowedToRespond() : <span id="templateGateway-isUserAllowedToRespond">';
+  responses += templateGateway.isUserAllowedToRespond();
+  responses += '</span></div>';
 
-            responses += '<div> isUserMemberOfAnEntityRequiredToRespond() : <span id="templateGateway-isUserMemberOfAnEntityRequiredToRespond">';
-            responses += templateGateway.isUserMemberOfAnEntityRequiredToRespond();
-            responses += '</span></div>';
+  responses += '<div> isUserMemberOfAnEntityRequiredToRespond() : <span id="templateGateway-isUserMemberOfAnEntityRequiredToRespond">';
+  responses += templateGateway.isUserMemberOfAnEntityRequiredToRespond();
+  responses += '</span></div>';
 
-            responses += '<div> getEntityUsedForUserResponse() : <span id="templateGateway-getEntityUsedForUserResponse">';
-            responses += templateGateway.getEntityUsedForUserResponse();
-            responses += '</span></div>';
+  responses += '<div> getEntityUsedForUserResponse() : <span id="templateGateway-getEntityUsedForUserResponse">';
+  responses += templateGateway.getEntityUsedForUserResponse();
+  responses += '</span></div>';
 
-            responses += '<div> getDisplayContext() : <span id="templateGateway-getDisplayContext">';
-            responses += templateGateway.getDisplayContext();
-            responses += '</span></div>';
+  responses += '<div> getDisplayContext() : <span id="templateGateway-getDisplayContext">';
+  responses += templateGateway.getDisplayContext();
+  responses += '</span></div>';
 
-            responses += '<div> getAllEntities() : <span id="templateGateway-getAllEntities">';
-            templateGateway.getAllEntities().forEach((entity, i) => {
-                responses += '<br>entity[' + i + ']:' + 'id=' + entity.id + ',';
-                responses += 'name=' + entity.name + ',';
-                responses += 'description=' + entity.description + ',';
-                responses += 'entityAllowedToSendCard=' + entity.entityAllowedToSendCard + ',';
-                responses += 'parents=' + entity.parents;
-                }
-              );
-            responses += '</span></div>';
+  responses += '<div> getAllEntities() : <span id="templateGateway-getAllEntities">';
+  templateGateway.getAllEntities().forEach((entity, i) => {
+      responses += '<br>entity[' + i + ']:' + 'id=' + entity.id + ',';
+      responses += 'name=' + entity.name + ',';
+      responses += 'description=' + entity.description + ',';
+      responses += 'entityAllowedToSendCard=' + entity.entityAllowedToSendCard + ',';
+      responses += 'parents=' + entity.parents + ',';
+      responses += 'labels=' + entity.labels;
+      }
+    );
+  responses += '</span></div>';
 
-            responses += '<div> getEntity("ENTITY1_FR") : <span id="templateGateway-getEntity-ENTITY1_FR">';
-            responses += templateGateway.getEntity('ENTITY1_FR').id + ',';
-            responses += templateGateway.getEntity('ENTITY1_FR').name + ',';
-            responses += templateGateway.getEntity('ENTITY1_FR').description + ',';
-            responses += templateGateway.getEntity('ENTITY1_FR').entityAllowedToSendCard + ',';
-            responses += templateGateway.getEntity('ENTITY1_FR').parents;
-            responses += '</span></div>';
+  responses += '<div> getEntity("ENTITY1_FR") : <span id="templateGateway-getEntity-ENTITY1_FR">';
+  responses += templateGateway.getEntity('ENTITY1_FR').id + ',';
+  responses += templateGateway.getEntity('ENTITY1_FR').name + ',';
+  responses += templateGateway.getEntity('ENTITY1_FR').description + ',';
+  responses += templateGateway.getEntity('ENTITY1_FR').entityAllowedToSendCard + ',';
+  responses += templateGateway.getEntity('ENTITY1_FR').parents+ ',';
+  responses += templateGateway.getEntity('ENTITY1_FR').labels;
+  responses += '</span></div>';
 
-            templateGatewayResults.innerHTML = responses;
+  templateGatewayResults.innerHTML = responses;
 }
 
-   templateGateway.setScreenSize =  function (size) {
-            document.getElementById("screenSize").innerHTML = size;
-        };
+function simulateCardProcessing() {
+  templateGateway.displayLoadingSpinner();
+  setTimeout(() => templateGateway.hideLoadingSpinner(), 2000);
+}
 
-    templateGateway.onTemplateRenderingComplete =  function () {
-            document.getElementById("templateGateway-onTemplateRenderingComplete").innerHTML = "ok";
-        };
+templateGateway.setScreenSize =  function (size) {
+        document.getElementById("screenSize").innerHTML = size;
+};
+
+templateGateway.onTemplateRenderingComplete =  function () {
+        document.getElementById("templateGateway-onTemplateRenderingComplete").innerHTML = "ok";
+};
 
 </script>

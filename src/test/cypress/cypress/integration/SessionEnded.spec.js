@@ -54,7 +54,7 @@ describe('Session ended test', function () {
     cy.get(".axis").find("text").first().as('firstTimelineXTick');
     cy.get('#opfab-timeline-link-period-Y').click();
 
-    cy.openOpfabSettings();
+    cy.openSettings();
 
     // set severity alarm to be notified by sound 
     cy.get('#opfab-checkbox-setting-form-alarm').click();
@@ -65,6 +65,7 @@ describe('Session ended test', function () {
 
     cy.logoutOpFab();
     cy.loginWithClock();
+    cy.tick(1);
     cy.stubPlaySound();
     cy.waitDefaultTime(); // wait for configuration load end (in SoundNotificationService.ts)  
     

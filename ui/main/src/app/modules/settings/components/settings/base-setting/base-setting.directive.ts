@@ -7,36 +7,39 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {Directive, Injectable, Input, OnDestroy, OnInit} from '@angular/core';
+import {Directive,Input, OnDestroy, OnInit} from '@angular/core';
 import {AppState} from '@ofStore/index';
 import {Store} from '@ngrx/store';
-import {PatchSettingsAction} from '@ofActions/settings.actions';
-import {buildSettingsSelector} from '@ofSelectors/settings.selectors';
 import {Subject, timer} from 'rxjs';
 import {debounce, distinctUntilChanged, filter, first, map, takeUntil} from 'rxjs/operators';
-import {FormGroup} from '@angular/forms';
+import {UntypedFormGroup} from '@angular/forms';
 import * as _ from 'lodash-es';
 import {selectIdentifier} from '@ofSelectors/authentication.selectors';
+import {ConfigService} from '@ofServices/config.service';
+import {SettingsService} from '@ofServices/settings.service';
 
 @Directive()
-@Injectable()
 export abstract class BaseSettingDirective implements OnInit, OnDestroy {
     @Input() public settingPath: string;
     @Input() public messagePlaceholder: string;
     @Input() public requiredField: boolean;
     private ngUnsubscribe$ = new Subject<void>();
     protected setting$;
-    form: FormGroup;
+    form: UntypedFormGroup;
     private baseSettings = {};
 
-    protected constructor(protected store: Store<AppState>) {}
+    protected constructor(
+        protected store: Store<AppState>,
+        protected configService: ConfigService,
+        protected settingsService: SettingsService
+    ) {}
 
     ngOnInit() {
         this.form = this.initFormGroup();
         if (!this.form) {
             throw new Error('Trying to instantiate component without form');
         }
-        this.setting$ = this.store.select(buildSettingsSelector(this.settingPath)).pipe(takeUntil(this.ngUnsubscribe$));
+        this.setting$ = this.configService.getConfigValueAsObservable('settings.' + this.settingPath, null);
         this.setting$.subscribe((next) => this.updateValue(next));
         this.setting$.pipe(first()).subscribe(() =>
             this.form.valueChanges
@@ -67,7 +70,7 @@ export abstract class BaseSettingDirective implements OnInit, OnDestroy {
 
     protected abstract updateValue(value: any);
 
-    protected initFormGroup(): FormGroup {
+    protected initFormGroup(): UntypedFormGroup {
         return null;
     }
 
@@ -78,7 +81,9 @@ export abstract class BaseSettingDirective implements OnInit, OnDestroy {
     private dispatch(value: any) {
         const settings = {...this.baseSettings};
         settings[this.settingPath] = value.setting;
-        this.store.dispatch(new PatchSettingsAction({settings: settings}));
+        this.configService.setConfigValue('settings.' + this.settingPath, value.setting);
+        this.settingsService.patchUserSettings(settings).subscribe({
+                error:  (error) => console.log("Error in patching settings" , error) });
     }
 
     protected isEqual(formA, formB): boolean {

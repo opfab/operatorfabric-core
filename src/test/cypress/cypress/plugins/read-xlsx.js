@@ -3,8 +3,8 @@ const XLSX = require('xlsx');
 
 const read = ({file, sheet}) => {
    const buff = fs.readFileSync(file);
-   const workbook = XLSX.read(buff, { type: 'buffer' });
-   return XLSX.utils.sheet_to_json(workbook.Sheets[sheet]);
+   const workbook = XLSX.read(buff, { type: 'buffer', cellDates: true});
+   return XLSX.utils.sheet_to_json(workbook.Sheets[sheet], {raw:false, dateNF: 'dd/mm/yy hh:mm'});
 }
 
 const list = ({dir, sheet}) => {

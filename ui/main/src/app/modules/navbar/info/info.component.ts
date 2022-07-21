@@ -12,11 +12,10 @@ import {AppState} from '@ofStore/index';
 import {Store} from '@ngrx/store';
 import {selectUserNameOrIdentifier} from '@ofSelectors/authentication.selectors';
 import {Observable} from 'rxjs';
-import {TimeService} from '@ofServices/time.service';
-import * as moment from 'moment';
 import {UserService} from '@ofServices/user.service';
 import {EntitiesService} from '@ofServices/entities.service';
 import {ConfigService} from '@ofServices/config.service';
+import {DateTimeFormatterService} from '@ofServices/date-time-formatter.service';
 
 @Component({
     selector: 'of-info',
@@ -30,7 +29,7 @@ export class InfoComponent implements OnInit {
 
     constructor(
         private store: Store<AppState>,
-        private timeService: TimeService,
+        private dateTimeFormatter: DateTimeFormatterService,
         private userService: UserService,
         private entitiesService: EntitiesService,
         private configService: ConfigService
@@ -44,7 +43,7 @@ export class InfoComponent implements OnInit {
     }
 
     updateTime(): void {
-        this.timeToDisplay = this.timeService.formatTime(moment());
+        this.timeToDisplay = this.dateTimeFormatter.getFormattedTimeFromEpochDate(new Date().valueOf());
         setTimeout(() => {
             this.updateTime();
         }, 1000);

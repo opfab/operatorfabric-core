@@ -188,13 +188,16 @@ describe ('Response card tests',function () {
 
         // Check the popup for the entity choice is displayed
         cy.get("#opfab-card-details-entity-choice-selector").should('exist');
-        cy.get('#opfab-card-details-entity-choice-selector').find('option').should("have.length", 3);
-        cy.get('#opfab-card-details-entity-choice-selector').find('option').eq(0).should("have.text", "Control Center FR East");
-        cy.get('#opfab-card-details-entity-choice-selector').find('option').eq(1).should("have.text", "Control Center FR North");
-        cy.get('#opfab-card-details-entity-choice-selector').find('option').eq(2).should("have.text", "Control Center FR South");
+        cy.get('#opfab-card-details-entity-choice-selector').find('.vscomp-option-text').should("have.length", 3);
+        cy.get('#opfab-card-details-entity-choice-selector').find('.vscomp-option-text').eq(0).should("contain.text", "Control Center FR East");
+        cy.get('#opfab-card-details-entity-choice-selector').find('.vscomp-option-text').eq(1).should("contain.text", "Control Center FR North");
+        cy.get('#opfab-card-details-entity-choice-selector').find('.vscomp-option-text').eq(2).should("contain.text", "Control Center FR South");
 
         // We choose ENTITY3_FR (East)
-        cy.get("#opfab-card-details-entity-choice-selector").find('select').select('Control Center FR East');
+        cy.get("#opfab-card-details-entity-choice-selector").find('.vscomp-option-text').eq(0).click({force: true});
+        cy.get("#opfab-card-details-entity-choice-selector").find('.vscomp-value').should('have.text', 'Control Center FR East');
+
+
         cy.get('#opfab-card-details-entity-choice-btn-confirm').click();
 
         // Check the response from ENTITY1_FR, ENTITY2_FR and ENTITY3_FR have been integrated in the template
@@ -213,7 +216,8 @@ describe ('Response card tests',function () {
         cy.get('#question-choice1').click();
         cy.get('#question-choice3').click(); //to uncheck the box
         cy.get('#opfab-card-details-btn-response').click(); // click again to send the response
-        cy.get("#opfab-card-details-entity-choice-selector").find('select').select('Control Center FR North'); // We choose ENTITY1_FR (North)
+        cy.get("#opfab-card-details-entity-choice-selector").find('.vscomp-option-text').eq(1).click({force: true}); // We choose ENTITY1_FR (North)
+        cy.get("#opfab-card-details-entity-choice-selector").find('.vscomp-value').should('have.text', 'Control Center FR North');
         cy.get('#opfab-card-details-entity-choice-btn-confirm').click();
 
         cy.waitDefaultTime();
@@ -230,19 +234,17 @@ describe ('Response card tests',function () {
 
         // operator4_fr disconnect from ENTITY_1_FR and ENTITY2_FR (the popup for entity choice must not be displayed)
         // because the only one entity allowed to respond for him is now ENTITY3_FR
-        cy.get('#opfab-navbar-drop-user-menu').click();
-        cy.get('#opfab-navbar-right-menu-activityarea').click();
-        
+        cy.openActivityArea();
+
         // Check every checkbox to let the time for the ui to set to true before we click
         cy.get('.opfab-checkbox').eq(0).find('input').should('be.checked');
         cy.get('.opfab-checkbox').eq(1).find('input').should('be.checked');
         cy.get('.opfab-checkbox').eq(2).find('input').should('be.checked');
         cy.get('.opfab-checkbox').eq(3).find('input').should('be.checked');
-        
+
         cy.get('.opfab-checkbox').contains('Control Center FR North').click();
         cy.get('.opfab-checkbox').contains('Control Center FR South').click();
-        cy.get('#opfab-activityarea-btn-confirm').should('exist').click(); // click confirm settings
-        cy.get('#opfab-activityarea-btn-yes').should('exist').click(); // and click yes on the confirmation popup
+        cy.saveActivityAreaModifications();
         cy.waitDefaultTime();
         cy.get('#opfab-navbar-menu-feed').click(); // go back to feed
         cy.get('of-light-card').eq(0).click(); // click the card
@@ -263,12 +265,10 @@ describe ('Response card tests',function () {
                                            .next().should("have.text", ' NOK ');
 
         // We reconnect operator4_fr to ENTITY1_FR, ENTITY2_FR
-        cy.get('#opfab-navbar-drop-user-menu').click();
-        cy.get('#opfab-navbar-right-menu-activityarea').click();
+        cy.openActivityArea();
         cy.get('.opfab-checkbox').contains('Control Center FR South').click();
         cy.get('.opfab-checkbox').contains('Control Center FR North').click();
-        cy.get('#opfab-activityarea-btn-confirm').should('exist').click(); // click confirm settings
-        cy.get('#opfab-activityarea-btn-yes').should('exist').click(); // and click yes on the confirmation popup
+        cy.saveActivityAreaModifications();
     })
 
 
@@ -367,6 +367,7 @@ describe ('Response card tests',function () {
 
     });
 
+
     it ('Check responses in archived cards detail',function () {
         cy.loginOpFab('operator1_fr','test');
         // We move to archives screen
@@ -419,6 +420,35 @@ describe ('Response card tests',function () {
         cy.get('#response_from_ENTITY1_FR').next().should("have.text", ' OK ')
                                             .next().should("have.text", ' NOK ')
                                             .next().should("have.text", ' NOK ');
+
+    });
+
+ 
+    it ('Check response button is disabled while sending response',function () {
+        cy.loginOpFab('operator1_fr','test');
+
+        // Click on the card
+        cy.get('of-light-card').eq(0).click(); 
+
+        // Delay send card response
+        cy.intercept('/cardspub/cards/userCard', (req) => {
+            req.reply((res) => {
+                res.delay = 2000;
+            });
+        });
+
+        // Check template is loaded
+        cy.get('#question-choice1');
+
+        cy.get('#opfab-card-details-btn-response').should('have.text', 'SEND RESPONSE');
+        cy.get('#opfab-card-details-btn-response').click(); // click to send the response
+
+        // send response button should be disabled
+        cy.get('#opfab-card-details-btn-response').should('be.disabled');
+
+        //  Modify response button should be enabled after response is sent,
+        cy.get('#opfab-card-details-btn-response').should('not.be.disabled');
+        cy.get('#opfab-card-details-btn-response').should('have.text', 'MODIFY RESPONSE');
 
     });
 

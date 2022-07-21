@@ -7,14 +7,13 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {Moment} from 'moment';
 import {I18n} from '@ofModel/i18n.model';
 import {TypeOfStateEnum} from '@ofModel/processes.model';
 
 export interface LineOfMonitoringResult {
-    creationDateTime: Moment;
-    beginningOfBusinessPeriod: Moment;
-    endOfBusinessPeriod: Moment;
+    creationDateTime: number;
+    beginningOfBusinessPeriod: number;
+    endOfBusinessPeriod: number;
     title: I18n;
     summary: I18n;
     titleTranslated: string;

@@ -7,15 +7,14 @@
  * This file is part of the OperatorFabric project.
  */
 
-
 import {Component, ElementRef, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {Subject} from 'rxjs';
 
 import {ProcessesService} from '@ofServices/processes.service';
 import {takeUntil} from 'rxjs/operators';
-import {AbstractControl, FormControl, FormGroup} from '@angular/forms';
+import {UntypedFormControl, UntypedFormGroup} from '@angular/forms';
 import {ConfigService} from '@ofServices/config.service';
-import {TimeService} from '@ofServices/time.service';
+import {DateTimeFormatterService} from '@ofServices/date-time-formatter.service';
 import {CardService} from '@ofServices/card.service';
 import {LightCard} from '@ofModel/light-card.model';
 import {Page} from '@ofModel/page.model';
@@ -23,15 +22,8 @@ import {ExportService} from '@ofServices/export.service';
 import {TranslateService} from '@ngx-translate/core';
 import {ArchivesLoggingFiltersComponent} from '../share/archives-logging-filters/archives-logging-filters.component';
 import {EntitiesService} from '@ofServices/entities.service';
-import {MessageLevel} from '@ofModel/message.model';
-import {AlertMessageAction} from '@ofStore/actions/alert.actions';
-import {Store} from '@ngrx/store';
-import {AppState} from '@ofStore/index';
-import {DateTimeNgb} from '@ofModel/datetime-ngb.model';
 import {Utilities} from 'app/common/utilities';
 import {NgbModal, NgbModalOptions, NgbModalRef} from '@ng-bootstrap/ng-bootstrap';
-
-
 
 @Component({
     selector: 'of-logging',
@@ -43,15 +35,14 @@ export class LoggingComponent implements OnDestroy, OnInit {
 
     tags: any[];
     size: number;
-    loggingForm: FormGroup;
+    loggingForm: UntypedFormGroup;
 
     results: LightCard[];
     currentPage = 0;
     resultsNumber = 0;
     hasResult = false;
     firstQueryHasBeenDone = false;
-    loadingInProgress: boolean = false;
-    loadingIsTakingMoreThanOneSecond: boolean = false;
+    loadingInProgress = false;
     technicalError = false;
 
     processStateDescription = new Map();
@@ -67,31 +58,29 @@ export class LoggingComponent implements OnDestroy, OnInit {
     listOfProcessesForFilter = [];
     listOfProcessesForRequest = [];
 
-    isThereProcessStateToDisplay: boolean;
-
-    constructor(private store: Store<AppState>,
+    constructor(
         private processesService: ProcessesService,
         private configService: ConfigService,
-        private timeService: TimeService,
+        private dateTimeFormatter: DateTimeFormatterService,
         private cardService: CardService,
         private translate: TranslateService,
         private entitiesService: EntitiesService,
         private modalService: NgbModal
     ) {
-        this.loggingForm = new FormGroup({
-            tags: new FormControl([]),
-            state: new FormControl([]),
-            process: new FormControl([]),
-            processGroup: new FormControl([]),
-            publishDateFrom: new FormControl(),
-            publishDateTo: new FormControl(''),
-            activeFrom: new FormControl(''),
-            activeTo: new FormControl('')
+        this.loggingForm = new UntypedFormGroup({
+            tags: new UntypedFormControl([]),
+            state: new UntypedFormControl([]),
+            process: new UntypedFormControl([]),
+            processGroup: new UntypedFormControl([]),
+            publishDateFrom: new UntypedFormControl(),
+            publishDateTo: new UntypedFormControl(''),
+            activeFrom: new UntypedFormControl(''),
+            activeTo: new UntypedFormControl('')
         });
 
         processesService.getAllProcesses().forEach((process) => {
             if (!!process.uiVisibility && !!process.uiVisibility.logging) {
-                let itemName = !!process.name ? process.name : process.id;
+                const itemName = !!process.name ? process.name : process.id;
                 this.processNames.set(process.id, itemName);
                 for (const key in process.states) {
                     this.processStateDescription.set(process.id + '.' + key, process.states[key].description);
@@ -114,8 +103,6 @@ export class LoggingComponent implements OnDestroy, OnInit {
         this.tags = this.configService.getConfigValue('logging.filters.tags.list');
 
         this.results = [];
-
-        this.isThereProcessStateToDisplay = this.processesService.getStatesListPerProcess(false).size > 0;
     }
 
     resetForm() {
@@ -125,44 +112,9 @@ export class LoggingComponent implements OnDestroy, OnInit {
         this.resultsNumber = 0;
     }
 
-    private displayMessage(i18nKey: string, msg: string, severity: MessageLevel = MessageLevel.ERROR) {
-        this.store.dispatch(
-            new AlertMessageAction({alertMessage: {message: msg, level: severity, i18n: {key: i18nKey}}})
-        );
-    }
-
     sendQuery(page_number): void {
         this.technicalError = false;
-        const publishStart = this.extractTime(this.loggingForm.get('publishDateFrom'));
-        const publishEnd = this.extractTime(this.loggingForm.get('publishDateTo'));
-
-        if (
-            publishStart != null &&
-            !isNaN(publishStart) &&
-            publishEnd != null &&
-            !isNaN(publishEnd) &&
-            publishStart > publishEnd
-        ) {
-            this.displayMessage('shared.filters.publishEndDateBeforeStartDate', '', MessageLevel.ERROR);
-            return;
-        }
-
-        const activeStart = this.extractTime(this.loggingForm.get('activeFrom'));
-        const activeEnd = this.extractTime(this.loggingForm.get('activeTo'));
-
-        if (
-            activeStart != null &&
-            !isNaN(activeStart) &&
-            activeEnd != null &&
-            !isNaN(activeEnd) &&
-            activeStart > activeEnd
-        ) {
-            this.displayMessage('shared.filters.activeEndDateBeforeStartDate', '', MessageLevel.ERROR);
-            return;
-        }
-
         this.loadingInProgress = true;
-        this.checkIfLoadingIsTakingMoreThanOneSecond();
 
         const {value} = this.loggingForm;
         this.filtersTemplate.transformFiltersListToMap(value);
@@ -178,7 +130,6 @@ export class LoggingComponent implements OnDestroy, OnInit {
             .subscribe({
                 next: (page: Page<any>) => {
                     this.loadingInProgress = false;
-                    this.loadingIsTakingMoreThanOneSecond = false;
 
                     this.resultsNumber = page.totalElements;
                     this.currentPage = page_number + 1; // page on ngb-pagination component start at 1 , and page on backend start at 0
@@ -197,31 +148,6 @@ export class LoggingComponent implements OnDestroy, OnInit {
             });
     }
 
-    private checkIfLoadingIsTakingMoreThanOneSecond() {
-        setTimeout(() => {
-            this.loadingIsTakingMoreThanOneSecond = this.loadingInProgress;
-        }, 1000);
-    }
-
-    private extractTime(form: AbstractControl) {
-        const val = form.value;
-        if (!val || val == '') {
-            return null;
-        }
-
-        if (isNaN(val.time.hour)) {
-            val.time.hour = 0;
-        }
-        if (isNaN(val.time.minute)) {
-            val.time.minute = 0;
-        }
-        if (isNaN(val.time.second)) {
-            val.time.second = 0;
-        }
-
-        const converter = new DateTimeNgb(val.date, val.time);
-        return converter.convertToNumber();
-    }
 
     cardPostProcessing(card) {
         const isThirdPartyPublisher = card.publisherType === 'EXTERNAL';
@@ -247,7 +173,7 @@ export class LoggingComponent implements OnDestroy, OnInit {
     }
 
     displayTime(date) {
-        return this.timeService.formatDateTime(date);
+        return this.dateTimeFormatter.getFormattedDateAndTimeFromEpochDate(date);
     }
 
     exportToExcel(): void {
@@ -260,7 +186,7 @@ export class LoggingComponent implements OnDestroy, OnInit {
             centered: true,
             backdrop: 'static', // Modal shouldn't close even if we click outside it
             size: 'sm'
-          };
+        };
         this.modalRef = this.modalService.open(this.exportTemplate, modalOptions);
 
         this.cardService
@@ -283,10 +209,12 @@ export class LoggingComponent implements OnDestroy, OnInit {
                 lines.forEach((card: any) => {
                     this.cardPostProcessing(card);
                     // TO DO translation for old process should be done  , but loading local arrive to late , solution to find
-                    if (this.filtersTemplate.displayProcessGroupFilter())
+                    if (this.filtersTemplate.isProcessGroupFilterVisible())
                         exportArchiveData.push({
                             [severityColumnName]: Utilities.translateSeverity(this.translate, card.severity),
-                            [timeOfActionColumnName]: this.timeService.formatDateTime(card.publishDate),
+                            [timeOfActionColumnName]: this.dateTimeFormatter.getFormattedDateAndTimeFromEpochDate(
+                                card.publishDate
+                            ),
                             [processGroupColumnName]: this.translateColumn(
                                 this.processesService.findProcessGroupLabelForProcess(card.process)
                             ),
@@ -301,7 +229,9 @@ export class LoggingComponent implements OnDestroy, OnInit {
                     else
                         exportArchiveData.push({
                             [severityColumnName]: card.severity,
-                            [timeOfActionColumnName]: this.timeService.formatDateTime(card.publishDate),
+                            [timeOfActionColumnName]: this.dateTimeFormatter.getFormattedDateAndTimeFromEpochDate(
+                                card.publishDate
+                            ),
                             [processColumnName]: card.processName,
                             [titleColumnName]: card.titleTranslated,
                             [summaryColumnName]: card.summaryTranslated,

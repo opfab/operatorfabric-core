@@ -44,6 +44,16 @@
             <input formControlName="description" name="description" id="opfab-description" type="text">
           </div>
 
+          <div class="opfab-input opfab-edit-row">
+            <of-multi-select id="opfab-group-type"
+                             multiSelectId="type"
+                             [parentForm]="groupForm"
+                             [config]="multiSelectConfig"
+                             [options]="groupTypes"
+                             [selectedOptions]="selectedGroupType">
+            </of-multi-select>
+          </div>
+
           <div class="opfab-edit-row">
             <of-multi-select 
             id="opfab-perimeters"

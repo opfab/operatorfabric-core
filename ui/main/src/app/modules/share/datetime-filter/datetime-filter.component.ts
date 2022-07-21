@@ -12,8 +12,8 @@ import {
     AbstractControl,
     ControlContainer,
     ControlValueAccessor,
-    FormControl,
-    FormGroup,
+    UntypedFormControl,
+    UntypedFormGroup,
     NG_VALUE_ACCESSOR
 } from '@angular/forms';
 import {NgbDatepickerI18n, NgbDateStruct} from '@ng-bootstrap/ng-bootstrap';
@@ -22,7 +22,7 @@ import {Observable, Subject} from 'rxjs';
 import {TranslateService} from '@ngx-translate/core';
 import {Store} from '@ngrx/store';
 import {AppState} from '@ofStore/index';
-import {buildSettingsOrConfigSelector} from '@ofStore/selectors/settings.x.config.selectors';
+import {ConfigService} from '@ofServices/config.service';
 
 const i18nPrefix = 'datePicker.';
 
@@ -99,9 +99,9 @@ export class DatetimeFilterComponent implements ControlValueAccessor, OnInit, On
     disabled = true;
     time = {hour: 0, minute: 0};
 
-    dateInput = new FormControl();
-    timeInput = new FormControl();
-    public datetimeForm: FormGroup = new FormGroup({
+    dateInput = new UntypedFormControl();
+    timeInput = new UntypedFormControl();
+    public datetimeForm: UntypedFormGroup = new UntypedFormGroup({
         date: this.dateInput,
         time: this.timeInput
     });
@@ -110,7 +110,8 @@ export class DatetimeFilterComponent implements ControlValueAccessor, OnInit, On
     constructor(
         private store: Store<AppState>,
         private translateService: TranslateService,
-        private controlContainer: ControlContainer
+        private controlContainer: ControlContainer,
+        private configService: ConfigService
     ) {
         this.onChanges();
         this.resetDateAndTime();
@@ -129,7 +130,7 @@ export class DatetimeFilterComponent implements ControlValueAccessor, OnInit, On
     }
 
     protected getLocale(): Observable<string> {
-        return this.store.select(buildSettingsOrConfigSelector('locale'));
+        return this.configService.getConfigValueAsObservable('settings.locale');
     }
 
     ngOnDestroy() {
@@ -180,6 +181,10 @@ export class DatetimeFilterComponent implements ControlValueAccessor, OnInit, On
             if (val) {
                 this.disabled = false;
             }
+            // avoid having null value for time field
+            // when user erases values in input field
+            else this.timeInput.setValue({hour:0 ,minute:0,second:0});
+            
             this.change.emit();
         });
     }

@@ -13,9 +13,10 @@ import {RealTimeScreensService} from '@ofServices/real-time-screens.service';
 import {RealTimeScreen} from '@ofModel/real-time-screens.model';
 import {EntitiesService} from '@ofServices/entities.service';
 import {GroupsService} from '@ofServices/groups.service';
-import {FormControl, FormGroup} from '@angular/forms';
+import {UntypedFormControl, UntypedFormGroup} from '@angular/forms';
 import {UserPreferencesService} from '@ofServices/user-preference.service';
 import {Utilities} from '../../common/utilities';
+import {MultiSelectConfig} from '@ofModel/multiselect.model';
 
 @Component({
     selector: 'of-realtimeusers',
@@ -23,15 +24,22 @@ import {Utilities} from '../../common/utilities';
     styleUrls: ['./realtimeusers.component.scss']
 })
 export class RealtimeusersComponent implements OnInit, OnDestroy {
-    realTimeScreensForm: FormGroup;
+    realTimeScreensForm: UntypedFormGroup;
     interval;
 
     realTimeScreens: Array<RealTimeScreen>;
-    realTimeScreensLoaded = false;
-    realTimeScreenIndexToDisplay: number;
+    isRealTimeScreensLoaded = false;
+    realTimeScreenIndexToDisplay: string;
     connectedUsersPerEntityAndGroup: Map<string, Array<string>> = new Map<string, Array<string>>();
     realTimeScreensOptions = [];
     columnsNumberPerScreenAndScreenColumn: Map<string, number> = new Map<string, number>();
+
+    public multiSelectConfig: MultiSelectConfig = {
+        labelKey: 'realTimeUsers.realTimeScreen',
+        multiple: false,
+        search: true
+    };
+
 
     constructor(
         private userService: UserService,
@@ -42,25 +50,28 @@ export class RealtimeusersComponent implements OnInit, OnDestroy {
     ) {}
 
     ngOnInit(): void {
-        this.realTimeScreensForm = new FormGroup({
-            realTimeScreen: new FormControl('')
+        this.realTimeScreensForm = new UntypedFormGroup({
+            realTimeScreen: new UntypedFormControl('')
         });
 
         this.changeScreenWhenSelectRealTimeScreen();
 
         this.realTimeScreensService.loadRealTimeScreensData().subscribe((result) => {
             this.realTimeScreens = result.realTimeScreens;
-            this.realTimeScreensLoaded = true;
-
+            
             this.realTimeScreens.forEach((realTimeScreen, index) => {
-                this.realTimeScreensOptions.push({value: index, label: realTimeScreen.screenName});
+                this.realTimeScreensOptions.push({value: String(index), label: realTimeScreen.screenName});
             });
+            this.isRealTimeScreensLoaded = true;
 
             const screenIndexToDisplayFirst = this.userPreferences.getPreference(
                 'opfab.realTimeScreens.screenIndexToDisplayFirst'
             );
-            if (!!screenIndexToDisplayFirst) this.displayRealTimeScreenIndex(Number(screenIndexToDisplayFirst));
-            else this.displayRealTimeScreenIndex(0);
+            if (!!screenIndexToDisplayFirst) {
+                this.displayRealTimeScreenIndex(Number(screenIndexToDisplayFirst));
+            } else {
+                this.displayRealTimeScreenIndex(0);
+            }
 
             this.loadColumnsNumberPerScreenAndScreenColumn();
         });
@@ -116,7 +127,7 @@ export class RealtimeusersComponent implements OnInit, OnDestroy {
     }
 
     displayRealTimeScreenIndex(index: number): void {
-        this.realTimeScreenIndexToDisplay = !!this.realTimeScreens[index] ? index : 0;
+        this.realTimeScreenIndexToDisplay = !!this.realTimeScreens[index] ? String(index) : '0';
         this.realTimeScreensForm.get('realTimeScreen').setValue(this.realTimeScreenIndexToDisplay);
     }
 
@@ -132,13 +143,13 @@ export class RealtimeusersComponent implements OnInit, OnDestroy {
         });
     }
 
-    labelForConnectedUsers(entityAndGroup: string): string {
+    getLabelForConnectedUsers(entityAndGroup: string): string {
         let label = '';
         const connectedUsers = this.connectedUsersPerEntityAndGroup.get(entityAndGroup);
-
-        if (!!connectedUsers) label = connectedUsers.length > 1 ? connectedUsers[0] + ', ...' : connectedUsers[0];
-
-        return label;
+        connectedUsers.forEach(login => {
+            label += login + ' ';
+        });
+        return label.trim();
     }
 
     getNumberOfConnectedUsersInEntityAndGroup(entityAndGroup: string): number {
@@ -150,4 +161,9 @@ export class RealtimeusersComponent implements OnInit, OnDestroy {
     ngOnDestroy() {
         clearInterval(this.interval);
     }
+
+    isEllipsisActive(id: string): boolean {
+        const element = document.getElementById(id);
+        return (element.offsetWidth < element.scrollWidth);
+   }
 }

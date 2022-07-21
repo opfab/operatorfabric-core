@@ -48,6 +48,9 @@ export class CardDetailComponent implements OnInit, OnDestroy, AfterViewChecked 
     private templateName: string;
     private user: User;
     private userMemberOfAnEntityRequiredToRespondAndAllowedToSendCards = false;
+    public isLoading = false;
+    public isCardProcessing = false;
+
 
     constructor(
         private element: ElementRef,
@@ -147,11 +150,21 @@ export class CardDetailComponent implements OnInit, OnDestroy, AfterViewChecked 
     private initializeHandlebarsTemplates() {
         templateGateway.initTemplateGateway();
 
+        const that = this;
+        templateGateway.displayLoadingSpinner = function() {
+            that.isCardProcessing = true;
+        }
+
+        templateGateway.hideLoadingSpinner = function() {
+            that.isCardProcessing = false;
+        }
+
         templateGateway.displayContext = this.displayContext;
         templateGateway.userMemberOfAnEntityRequiredToRespond =
             this.userMemberOfAnEntityRequiredToRespondAndAllowedToSendCards;
 
         templateGateway.childCards = this.childCards;
+        this.isLoading = true;
 
         this.businessconfigService
             .queryProcessFromCard(this.card)
@@ -167,6 +180,8 @@ export class CardDetailComponent implements OnInit, OnDestroy, AfterViewChecked 
             .subscribe({
                 next: (html) => {
                     this._htmlContent = this.sanitizer.bypassSecurityTrustHtml(html);
+                    this.isLoading = false;
+
                     setTimeout(() => {
                         // wait for DOM rendering
                         this.reinsertScripts();
@@ -177,6 +192,8 @@ export class CardDetailComponent implements OnInit, OnDestroy, AfterViewChecked 
                     }, 10);
                 },
                 error: (error) => {
+                    this.isLoading = false;
+
                     console.log(
                         new Date().toISOString(),
                         'WARNING impossible to process template ',

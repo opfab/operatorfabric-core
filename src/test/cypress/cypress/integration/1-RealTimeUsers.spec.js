@@ -47,10 +47,10 @@ describe ('RealTimeUsersPage',()=>{
         cy.get('.bg-danger').should('have.length', 18);
         cy.get('table').first().find('tr').eq(3).find('td').eq(0).find('.bg-success').should('have.length', 1);
         cy.get('table').first().find('tr').eq(3).find('td').eq(0).find('span').eq(0).should('have.text', '1 ');
-        cy.get('table').first().find('tr').eq(3).find('td').eq(0).should('contain.text', '(operator3_fr)');
+        cy.get('table').first().find('tr').eq(3).find('td').eq(0).should('contain.text', 'operator3_fr');
 
         // we choose another screen (French Control Centers screen) and we check the titles
-        cy.get('#of-realtimeusers-screen-selector').find('select').select('French Control Centers');
+        cy.get('#of-realtimeusers-screen-selector').find('.vscomp-option-text').eq(1).click({force: true});
         cy.get('.opfab-realtimeusers-entitiesgroups').eq(0).find('span').eq(0).should('have.text', 'French Control Centers');
         cy.get('.opfab-realtimeusers-entitiesgroups').eq(1).find('span').eq(0).should('have.text', 'Central Supervision Centers');
     })
@@ -71,10 +71,10 @@ describe ('RealTimeUsersPage',()=>{
         cy.get('.bg-danger').should('have.length', 18);
         cy.get('table').first().find('tr').eq(2).find('td').eq(1).find('.bg-success').should('have.length', 1);
         cy.get('table').first().find('tr').eq(2).find('td').eq(1).find('span').eq(0).should('have.text', '1 ');
-        cy.get('table').first().find('tr').eq(2).find('td').eq(1).should('contain.text', '(operator2_fr)');
+        cy.get('table').first().find('tr').eq(2).find('td').eq(1).should('contain.text', 'operator2_fr');
 
         // we choose another screen (French Control Centers screen) and we check the titles
-        cy.get('#of-realtimeusers-screen-selector').find('select').select('French Control Centers');
+        cy.get('#of-realtimeusers-screen-selector').find('.vscomp-option-text').eq(1).click({force: true});
         cy.get('.opfab-realtimeusers-entitiesgroups').eq(0).find('span').eq(0).should('have.text', 'French Control Centers');
         cy.get('.opfab-realtimeusers-entitiesgroups').eq(1).find('span').eq(0).should('have.text', 'Central Supervision Centers');
     })
@@ -98,22 +98,22 @@ describe ('RealTimeUsersPage',()=>{
         // first row/first column
         cy.get('table').first().find('tr').eq(1).find('td').eq(0).find('.bg-success').should('have.length', 1);
         cy.get('table').first().find('tr').eq(1).find('td').eq(0).find('span').eq(0).should('have.text', '1 ');
-        cy.get('table').first().find('tr').eq(1).find('td').eq(0).should('contain.text', '(operator4_fr)');
+        cy.get('table').first().find('tr').eq(1).find('td').eq(0).should('contain.text', 'operator4_fr');
         // second row/first column
         cy.get('table').first().find('tr').eq(2).find('td').eq(0).find('.bg-success').should('have.length', 1);
         cy.get('table').first().find('tr').eq(2).find('td').eq(0).find('span').eq(0).should('have.text', '1 ');
-        cy.get('table').first().find('tr').eq(2).find('td').eq(0).should('contain.text', '(operator4_fr)');
+        cy.get('table').first().find('tr').eq(2).find('td').eq(0).should('contain.text', 'operator4_fr');
         // third row/first column
         cy.get('table').first().find('tr').eq(3).find('td').eq(0).find('.bg-success').should('have.length', 1);
         cy.get('table').first().find('tr').eq(3).find('td').eq(0).find('span').eq(0).should('have.text', '1 ');
-        cy.get('table').first().find('tr').eq(3).find('td').eq(0).should('contain.text', '(operator4_fr)');
+        cy.get('table').first().find('tr').eq(3).find('td').eq(0).should('contain.text', 'operator4_fr');
         // fourth row/first column
         cy.get('table').first().find('tr').eq(4).find('td').eq(0).find('.bg-success').should('have.length', 1);
         cy.get('table').first().find('tr').eq(4).find('td').eq(0).find('span').eq(0).should('have.text', '1 ');
-        cy.get('table').first().find('tr').eq(4).find('td').eq(0).should('contain.text', '(operator4_fr)');
+        cy.get('table').first().find('tr').eq(4).find('td').eq(0).should('contain.text', 'operator4_fr');
 
         // we choose another screen (French Control Centers screen) and we check the titles
-        cy.get('#of-realtimeusers-screen-selector').find('select').select('French Control Centers');
+        cy.get('#of-realtimeusers-screen-selector').find('.vscomp-option-text').eq(1).click({force: true});
         cy.get('.opfab-realtimeusers-entitiesgroups').eq(0).find('span').eq(0).should('have.text', 'French Control Centers');
         cy.get('.opfab-realtimeusers-entitiesgroups').eq(1).find('span').eq(0).should('have.text', 'Central Supervision Centers');
 
@@ -123,11 +123,7 @@ describe ('RealTimeUsersPage',()=>{
         cy.get('.bg-danger').should('have.length', 5);
 
         // operator4_fr disconnect from ENTITY2_FR, ENTITY3_FR and ENTITY4_FR
-        // click on user menu (top right of the screen)
-        cy.get('#opfab-navbar-drop-user-menu').click();
-
-        // click on "Activity area"
-        cy.get('#opfab-navbar-right-menu-activityarea').click();
+        cy.openActivityArea();
 
         // Check every checkbox to let the time for the ui to set to true before we click
         cy.get('.opfab-checkbox').eq(0).find('input').should('be.checked');
@@ -138,8 +134,7 @@ describe ('RealTimeUsersPage',()=>{
         cy.get('.opfab-checkbox').contains('Control Center FR East').click();
         cy.get('.opfab-checkbox').contains('Control Center FR South').click();
         cy.get('.opfab-checkbox').contains('Control Center FR West').click();
-        cy.get('#opfab-activityarea-btn-confirm').should('exist').click(); //click confirm settings
-        cy.get('#opfab-activityarea-btn-yes').should('exist').click(); // and click yes on the confirmation popup
+        cy.saveActivityAreaModifications();
 
         // we go back to the real time screen
         cy.get('#opfab-navbar-drop-user-menu').should('exist').click();
@@ -155,7 +150,7 @@ describe ('RealTimeUsersPage',()=>{
         // first row/first column
         cy.get('table').first().find('tr').eq(1).find('td').eq(0).find('.bg-success').should('have.length', 1);
         cy.get('table').first().find('tr').eq(1).find('td').eq(0).find('span').eq(0).should('have.text', '1 ');
-        cy.get('table').first().find('tr').eq(1).find('td').eq(0).should('contain.text', '(operator4_fr)');
+        cy.get('table').first().find('tr').eq(1).find('td').eq(0).should('contain.text', 'operator4_fr');
         // second row/first column
         cy.get('table').first().find('tr').eq(2).find('td').eq(0).find('.bg-danger').should('have.length', 1);
         cy.get('table').first().find('tr').eq(2).find('td').eq(0).find('span').eq(0).should('have.text', '0');
@@ -170,12 +165,9 @@ describe ('RealTimeUsersPage',()=>{
         cy.get('table').first().find('tr').eq(4).find('td').eq(0).should('contain.text', '');
 
         // operator4_fr reconnect to ENTITY2_FR, ENTITY3_FR and ENTITY4_FR
-        // click on user menu (top right of the screen)
-        cy.get('#opfab-navbar-drop-user-menu').click();
+        cy.openActivityArea();
 
-        // click on "Activity area"
-        cy.get('#opfab-navbar-right-menu-activityarea').click();
-         // Check every checkbox to let the time for the ui to set to true before we click
+        // Check every checkbox to let the time for the ui to set to true before we click
         cy.get('.opfab-checkbox').eq(0).find('input').should('not.be.checked');
         cy.get('.opfab-checkbox').eq(1).find('input').should('be.checked');
         cy.get('.opfab-checkbox').eq(2).find('input').should('not.be.checked');
@@ -184,8 +176,7 @@ describe ('RealTimeUsersPage',()=>{
         cy.get('.opfab-checkbox').contains('Control Center FR East').click();
         cy.get('.opfab-checkbox').contains('Control Center FR South').click();
         cy.get('.opfab-checkbox').contains('Control Center FR West').click();
-        cy.get('#opfab-activityarea-btn-confirm').should('exist').click(); //click confirm settings
-        cy.get('#opfab-activityarea-btn-yes').should('exist').click(); // and click yes on the confirmation popup
+        cy.saveActivityAreaModifications();
 
         // we go back to the real time screen
         cy.get('#opfab-navbar-drop-user-menu').should('exist').click();
@@ -201,18 +192,31 @@ describe ('RealTimeUsersPage',()=>{
         // first row/first column
         cy.get('table').first().find('tr').eq(1).find('td').eq(0).find('.bg-success').should('have.length', 1);
         cy.get('table').first().find('tr').eq(1).find('td').eq(0).find('span').eq(0).should('have.text', '1 ');
-        cy.get('table').first().find('tr').eq(1).find('td').eq(0).should('contain.text', '(operator4_fr)');
+        cy.get('table').first().find('tr').eq(1).find('td').eq(0).should('contain.text', 'operator4_fr');
         // second row/first column
         cy.get('table').first().find('tr').eq(2).find('td').eq(0).find('.bg-success').should('have.length', 1);
         cy.get('table').first().find('tr').eq(2).find('td').eq(0).find('span').eq(0).should('have.text', '1 ');
-        cy.get('table').first().find('tr').eq(2).find('td').eq(0).should('contain.text', '(operator4_fr)');
+        cy.get('table').first().find('tr').eq(2).find('td').eq(0).should('contain.text', 'operator4_fr');
         // third row/first column
         cy.get('table').first().find('tr').eq(3).find('td').eq(0).find('.bg-success').should('have.length', 1);
         cy.get('table').first().find('tr').eq(3).find('td').eq(0).find('span').eq(0).should('have.text', '1 ');
-        cy.get('table').first().find('tr').eq(3).find('td').eq(0).should('contain.text', '(operator4_fr)');
+        cy.get('table').first().find('tr').eq(3).find('td').eq(0).should('contain.text', 'operator4_fr');
         // fourth row/first column
         cy.get('table').first().find('tr').eq(4).find('td').eq(0).find('.bg-success').should('have.length', 1);
         cy.get('table').first().find('tr').eq(4).find('td').eq(0).find('span').eq(0).should('have.text', '1 ');
-        cy.get('table').first().find('tr').eq(4).find('td').eq(0).should('contain.text', '(operator4_fr)');
+        cy.get('table').first().find('tr').eq(4).find('td').eq(0).should('contain.text', 'operator4_fr');
+    })
+
+
+    it ('Check spinner is displayed when request is delayed and that spinner disappears once the request arrived ', function () {
+        cy.delayRequestResponse('/businessconfig/realtimescreens');
+
+        cy.loginOpFab('operator1_fr','test');
+
+        cy.get('#opfab-navbar-drop-user-menu').click();
+        cy.get('#opfab-navbar-right-menu-realtimeusers').click();
+
+        cy.checkLoadingSpinnerIsDisplayed();
+        cy.checkLoadingSpinnerIsNotDisplayed();
     })
 })

@@ -25,8 +25,12 @@
       "publishDateTo": "PUBLISH TO",
       "activeFrom": "ACTIVE FROM",
       "activeTo": "ACTIVE TO",
-      "publishEndDateBeforeStartDate" : "Publish end date must be after start date",
-      "activeEndDateBeforeStartDate" : "Active end date must be after start date"
+      "invalidPublishStartDate": "'Publish from' date is invalid.",
+      "invalidPublishEndDate": "'Publish to' date is invalid.",
+      "invalidActiveStartDate": "'Active from' date is invalid.",
+      "invalidActiveEndDate": "'Active to' date is invalid.",
+      "publishEndDateBeforeStartDate" : "'Publish to' date must be after 'Publish from' date.",
+      "activeEndDateBeforeStartDate" : "'Active to' date must be after 'Active from' date."
     },
     "result": {
       "severity": "SEVERITY",
@@ -53,11 +57,14 @@
     "exportToExcel": "Export data",
     "resultsNumber":"Results number",
     "noProcessStateAvailable": "No process/state available",
-    "endDateBeforeStartDate": "End date must be after start date",
+    "endDateBeforeStartDate": "End date must be after start date.",
     "featureNotConfigured": "Feature not configured",
     "confirmSettings": "CONFIRM SETTINGS",
     "cardEmitter": "EMITTER",
     "entity": "ENTITY",
+    "goToAdminMode": "Go to admin mode",
+    "adminMode": "Admin mode",
+    "adminModeHelp": "Show all cards",
     "popup": {
       "title": "CONFIRMATION",
       "areYouSure": "You have made some changes. Are you sure you want to save them ?"
@@ -73,7 +80,7 @@
     "tryToReconnect":"Try to reconnect ...",
     "activateSoundText":"Sound not activated, click to activate",
     "activateSoundButton":"Activate sound",
-    "sessionExpiredText":"Your session has expired",
+    "sessionExpiredText":"Your session has expired.",
     "disconnected": "You are disconnected.",
     "disconnectedByNewUser": "You have been disconnected because another user logged in using this account.",
     "disconnectByAppLoadedInAnotherTab": "You have been disconnected because another tab of this browser was used to log in using this URL."
@@ -109,8 +116,8 @@
       "M": "Month",
       "Y": "Year"
     },
-    "lockTooltip": "The visibility domain is currently locked : it will not move as time goes by",
-    "unlockTooltip": "The visibility domain is currently unlocked : it will shift as time goes by"
+    "lockTooltip": "The visibility domain is currently locked : it will not move as time goes by.",
+    "unlockTooltip": "The visibility domain is currently unlocked : it will shift as time goes by."
   },
   "multiFilter": {
     "searchPlaceholderText": "Search",
@@ -168,7 +175,7 @@
     "tips": {
       "acknowledged": "Acknowledged",
       "lttd": "Time remaining to decide",
-      "hasAResponseFromYourEntity" : "Your entity has already responded",
+      "hasAResponseFromYourEntity" : "Your entity has already responded.",
       "loadingInProgress": "Card loading in progress",
       "seeGroupedCards": "Open this card to see grouped cards"
     },
@@ -176,7 +183,7 @@
       "label": "Acknowledge all cards",
       "popup": {
         "title": "CONFIRMATION",
-        "doYouReallyWant": "This will ack all visible cards of your feed, please confirm"
+        "doYouReallyWant": "This will ack all visible cards of your feed, please confirm."
       }
     },
     "lttdFinished": "Finished",
@@ -186,8 +193,8 @@
     "from" : "from",
     "moreCards": "cards more",
     "lastResponse": "Last response received on",
-    "cardLoadingInProgress":"Loading card  ...",
-    "cardNotFound": "The card you are looking for was not found"
+    "cardLoadingInProgress":"Loading card...",
+    "cardNotFound": "The card you are looking for was not found."
   },
   "login": {
     "reset": "Reset",
@@ -204,10 +211,10 @@
       "code": "Wrong authentication code",
       "unavailable": "Authentication service is currently unavailable",
       "unexpected": "An unexpected error was detected during login: {{error}}",
-      "disconnected": "You have been disconnected",
+      "disconnected": "You have been disconnected.",
       "token": {
-        "invalid": "Invalid token stored",
-        "expiration": "The stored token has expired"
+        "invalid": "Invalid token stored.",
+        "expiration": "The stored token has expired."
       }
     }
   },
@@ -229,9 +236,8 @@
     "remoteLoggingEnabled": "Remote logging enabled"
   },
   "archive": {
-    "loadingInProgress": "Loading archived cards",
     "cardLoadingInProgress":"Loading card  ...",
-    "tooManyRows": "Too many cards , not all cards visible",
+    "tooManyRows": "Too many cards , not all cards visible.",
     "collapsibleUpdates": "Collapsible updates"
   },
   "monitoring": {
@@ -266,11 +272,12 @@
     "title": "CREATE A NEW CARD ",
     "editTitle" : "EDIT A NEW CARD",
     "error": {
-      "notAvailable": "You are not allowed to send card",
+      "notAvailable": "You are not allowed to send card.",
+      "userHasNoEntityThatCanSendCard" : "You are not a member of any entity that can send cards.",
       "templateError": "Technical error : invalid template",
       "impossibleToSendCard": "Impossible to send card for technical reasons",
-      "lttdBeforeStartDate": "Limit date for response must be after start date",
-      "lttdAfterEndDate": "Limit date for response must be before end date"
+      "lttdBeforeStartDate": "Limit date for response must be after start date.",
+      "lttdAfterEndDate": "Limit date for response must be before end date."
     },
     "filters": {
       "severity": "SEVERITY",
@@ -286,11 +293,11 @@
     "processInstanceId": "Id",
     "state": "State",
     "recipients": "RECIPIENTS:",
-    "youAreTheOnlyRecipient": "You are the only recipient of this card",
+    "youAreTheOnlyRecipient": "You are the only recipient of this card.",
     "feedPreview": "FEED PREVIEW:",
     "contentPreview": "CONTENT PREVIEW:",
     "send-another-one": "SEND ANOTHER CARD",
-    "cardSendWithNoError": "Your card is published",
+    "cardSendWithNoError": "Your card is published.",
     "deleteCard": {
       "title" : "CONFIRMATION",
       "doYouReallyWant": "Do you really want to delete this card ?",
@@ -305,8 +312,8 @@
     "btnValidate": "VALIDATE ANSWER",
     "btnUnlock": "MODIFY ANSWER",
     "error": {
-      "submit": "The answer could not be sent",
-      "form": "The form is not correctly filled",
+      "submit": "The answer could not be sent.",
+      "form": "The form is not correctly filled.",
       "ack": "Unable to change acknowledgement of this card for an error of remote system"
     },
     "submitSuccess": "Your answer is confirmed. Thank you!",
@@ -332,6 +339,7 @@
         "description": "DESCRIPTION",
         "perimeters" : "PERIMETERS",
         "realtime": "REAL TIME",
+        "type": "TYPE",
         "true": "YES",
         "false": "NO",
         "confirmDelete": "Do you really want to delete group",
@@ -375,6 +383,7 @@
       "selectProcessText": "Select a Process",
       "selectStateText": "Select a State",
       "selectRightText": "Select a Right",
+      "selectGroupTypeText": "Select a Type",
       "edit": "Edit",
       "delete": "Delete",
       "save": "SAVE CHANGES",
@@ -449,7 +458,7 @@
       "edit": "EDIT USER DEVICE CONFIGURATION",
       "confirm": "Please confirm",
       "confirmDelete": "Do you really want to delete device configuration for user",
-      "allUsersConfigured": "All users devices are already configured",
+      "allUsersConfigured": "All users devices are already configured.",
       "loadingExternalDevices": "Loading external devices..."
     },
     "userLogin": "USER LOGIN",

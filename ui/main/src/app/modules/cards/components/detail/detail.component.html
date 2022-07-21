@@ -92,7 +92,10 @@
           </div>
         </div>
 
-        <div id="opfab-div-card-template" class="opfab-card-detail" [innerHtml]="htmlTemplateContent"></div>
+        <div id="opfab-div-card-template" class="opfab-card-detail">
+          <of-spinner *ngIf="isCardProcessing"></of-spinner>
+          <div [hidden]="isCardProcessing" id="opfab-div-card-template-processed" [innerHtml]="htmlTemplateContent"></div>
+        </div>
 
         <div style="text-align: center;width:100% ; ">
 
@@ -131,7 +134,7 @@
 
             <div *ngIf="showButtons" style="text-align: right;">
               <button id="opfab-card-details-btn-response" class="opfab-btn"
-                *ngIf='showActionButton && isUserEnabledToRespond && !isResponseLocked' [disabled]='lttdExpiredIsTrue || !isUserEnabledToRespond'
+                *ngIf='showActionButton && isUserEnabledToRespond && !isResponseLocked' [disabled]='lttdExpiredIsTrue || !isUserEnabledToRespond || sendingResponse'
                 (click)='submitResponse()'>{{btnValidateLabel|translate}}</button>
 
               <button id="opfab-card-details-btn-response" class="opfab-btn"
@@ -191,9 +194,10 @@
       <br/><p translate>response.chooseEntityForResponse</p><br/>
       <form [formGroup]="selectEntityForm" class="opfab-form-lighter">
         <div class="row">
-            <of-single-filter id="opfab-card-details-entity-choice-selector" i18nRootLabelKey="shared." style="position: relative;"
-                              [parentForm]="selectEntityForm" filterPath="entity" [values]="userEntityOptionsDropdownList">
-            </of-single-filter>
+            <of-multi-select id="opfab-card-details-entity-choice-selector" multiSelectId="entity"
+                              [parentForm]="selectEntityForm" [config]="multiSelectConfig"
+                              [options]="userEntityOptionsDropdownList" [selectedOptions]="selectEntityForm.get('entity').value">
+            </of-multi-select>
         </div>
         <br/>
       </form>

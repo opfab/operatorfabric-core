@@ -51,13 +51,13 @@ describe('Card detail', function () {
             cy.get("#templateGateway-isUserMemberOfAnEntityRequiredToRespond").contains("true");
             cy.get("#templateGateway-getEntityUsedForUserResponse").contains(/^ENTITY1_FR$/);
             cy.get("#templateGateway-getDisplayContext").contains(/^realtime$/);
-            cy.get("#templateGateway-getAllEntities").contains("entity[0]:id=ENTITY1_FR,name=Control Center FR North,description=Control Center FR North,entityAllowedToSendCard=true,parents=ENTITY_FR");
-            cy.get("#templateGateway-getAllEntities").contains("entity[1]:id=ENTITY2_FR,name=Control Center FR South,description=Control Center FR South,entityAllowedToSendCard=true,parents=ENTITY_FR");
-            cy.get("#templateGateway-getAllEntities").contains("entity[2]:id=ENTITY3_FR,name=Control Center FR East,description=Control Center FR East,entityAllowedToSendCard=true,parents=ENTITY_FR");
-            cy.get("#templateGateway-getAllEntities").contains("entity[3]:id=ENTITY4_FR,name=Control Center FR West,description=Control Center FR West,entityAllowedToSendCard=true,parents=ENTITY_FR");
-            cy.get("#templateGateway-getAllEntities").contains("entity[4]:id=ENTITY_FR,name=French Control Centers,description=French Control Centers,entityAllowedToSendCard=false,parents=");
-            cy.get("#templateGateway-getAllEntities").contains("entity[5]:id=IT_SUPERVISOR_ENTITY,name=IT SUPERVISION CENTER,description=IT SUPERVISION CENTER,entityAllowedToSendCard=true,parents=");
-            cy.get("#templateGateway-getEntity-ENTITY1_FR").contains(/^ENTITY1_FR,Control Center FR North,Control Center FR North,true,ENTITY_FR$/);
+            cy.get("#templateGateway-getAllEntities").contains("entity[0]:id=ENTITY1_FR,name=Control Center FR North,description=Control Center FR North,entityAllowedToSendCard=true,parents=ENTITY_FR,labels=FR1 label");
+            cy.get("#templateGateway-getAllEntities").contains("entity[1]:id=ENTITY2_FR,name=Control Center FR South,description=Control Center FR South,entityAllowedToSendCard=true,parents=ENTITY_FR,labels=undefined");
+            cy.get("#templateGateway-getAllEntities").contains("entity[2]:id=ENTITY3_FR,name=Control Center FR East,description=Control Center FR East,entityAllowedToSendCard=true,parents=ENTITY_FR,labels=undefined");
+            cy.get("#templateGateway-getAllEntities").contains("entity[3]:id=ENTITY4_FR,name=Control Center FR West,description=Control Center FR West,entityAllowedToSendCard=true,parents=ENTITY_FR,labels=undefined");
+            cy.get("#templateGateway-getAllEntities").contains("entity[4]:id=ENTITY_FR,name=French Control Centers,description=French Control Centers,entityAllowedToSendCard=false,parents=undefined,labels=undefined");
+            cy.get("#templateGateway-getAllEntities").contains("entity[5]:id=IT_SUPERVISOR_ENTITY,name=IT SUPERVISION CENTER,description=IT SUPERVISION CENTER,entityAllowedToSendCard=true,parents=undefined,labels=undefined");
+            cy.get("#templateGateway-getEntity-ENTITY1_FR").contains(/^ENTITY1_FR,Control Center FR North,Control Center FR North,true,ENTITY_FR,FR1 label$/);
             cy.get("#screenSize").contains("md");
             cy.get("#templateGateway-onTemplateRenderingComplete").contains("ok");
             // see card in full screen 
@@ -75,6 +75,19 @@ describe('Card detail', function () {
 
         });
 
+        it(`Check card detail spinner when simulating card processed `, function () {
+            cy.loginOpFab('operator1_fr', 'test');
+
+            // Click on the card
+            cy.get('of-light-card').eq(0).click();
+            
+            cy.get("#templateGateway-display-spinner-button").click();
+            cy.checkLoadingSpinnerIsDisplayed();
+
+            cy.checkLoadingSpinnerIsNotDisplayed();
+
+        });
+
         it(`Check card detail in archives`, function () {
             
             cy.loginOpFab('operator1_fr', 'test');
@@ -88,6 +101,11 @@ describe('Card detail', function () {
             // Click on the card
             cy.waitDefaultTime();
             cy.get('#opfab-archives-cards-list').find('.opfab-archive-sev-information').first().click();
+
+            // Check the spinner appears when clicking on the button
+            cy.get("#templateGateway-display-spinner-button").click();
+            cy.checkLoadingSpinnerIsDisplayed();
+            cy.checkLoadingSpinnerIsNotDisplayed();
          
 
             // Check  user context values 
@@ -141,6 +159,20 @@ describe('Card detail', function () {
             cy.get("#templateGateway-isUserMemberOfAnEntityRequiredToRespond").contains("false");
 
         });
+
+
+    it(`Check that a spinner is displayed when the card takes time to load `, function () {
+        cy.sendCard('cypress/cardDetail/cardDetailResponseNotPossible.json');
+        cy.delayRequestResponse('/cards/cards/**')
+        cy.loginOpFab('operator1_fr', 'test');
+
+        // Click on the card
+        cy.get('of-light-card').eq(0).click();
+        
+        cy.checkLoadingSpinnerIsDisplayed();
+        cy.checkLoadingSpinnerIsNotDisplayed();
+
+    });
 
 
     });

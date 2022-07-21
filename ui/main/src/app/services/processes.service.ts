@@ -312,7 +312,7 @@ export class ProcessesService {
         return this.typeOfStatesPerProcessAndState;
     }
 
-    public getStatesListPerProcess(hideChildStates: boolean): Map<string, any[]> {
+    public getStatesListPerProcess(isAdminMode: boolean, hideChildStates: boolean): Map<string, any[]> {
         const statesListPerProcess = new Map();
 
         this.getAllProcesses().forEach((process) => {
@@ -320,7 +320,7 @@ export class ProcessesService {
             for (const state in process.states) {
                 if (
                     !(hideChildStates && process.states[state].isOnlyAChildState) &&
-                    this.userService.isReceiveRightsForProcessAndState(process.id, state)
+                    (isAdminMode || this.userService.isReceiveRightsForProcessAndState(process.id, state))
                 ) {
                     statesDropdownList.push({
                         id: process.id + '.' + state

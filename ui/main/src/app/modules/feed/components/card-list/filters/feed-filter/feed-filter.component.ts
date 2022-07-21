@@ -11,18 +11,19 @@ import {Component, Input, OnDestroy, OnInit, ViewEncapsulation} from '@angular/c
 import {Subject, timer} from 'rxjs';
 import {Store} from '@ngrx/store';
 import {AppState} from '@ofStore/index';
-import {AbstractControl, FormControl, FormGroup} from '@angular/forms';
+import {AbstractControl, UntypedFormControl, UntypedFormGroup} from '@angular/forms';
 import {debounce, debounceTime, distinctUntilChanged, takeUntil} from 'rxjs/operators';
 import * as _ from 'lodash-es';
 import {FilterType} from '@ofModel/feed-filter.model';
 import {UserPreferencesService} from '@ofServices/user-preference.service';
 
-import {DateTimeNgb, getDateTimeNgbFromMoment} from '@ofModel/datetime-ngb.model';
+import {DateTimeNgb} from '@ofModel/datetime-ngb.model';
 import moment from 'moment';
 import {MessageLevel} from '@ofModel/message.model';
 import {AlertMessageAction} from '@ofStore/actions/alert.actions';
 import {FilterService} from '@ofServices/lightcards/filter.service';
 import {LightCardsFeedFilterService} from '@ofServices/lightcards/lightcards-feed-filter.service';
+import {Utilities} from 'app/common/utilities';
 
 @Component({
     selector: 'of-feed-filter',
@@ -39,11 +40,11 @@ export class FeedFilterComponent implements OnInit, OnDestroy {
     dateTimeFilterChange = new Subject();
 
     private ngUnsubscribe$ = new Subject<void>();
-    typeFilterForm: FormGroup;
-    ackFilterForm: FormGroup;
-    timeFilterForm: FormGroup;
-    responseFilterForm: FormGroup;
-    timeLineFilterForm: FormGroup;
+    typeFilterForm: UntypedFormGroup;
+    ackFilterForm: UntypedFormGroup;
+    timeFilterForm: UntypedFormGroup;
+    responseFilterForm: UntypedFormGroup;
+    timeLineFilterForm: UntypedFormGroup;
 
     endMinDate: {year: number; month: number; day: number} = null;
     startMaxDate: {year: number; month: number; day: number} = null;
@@ -64,48 +65,48 @@ export class FeedFilterComponent implements OnInit, OnDestroy {
     }
 
     private createFormGroup() {
-        return new FormGroup(
+        return new UntypedFormGroup(
             {
-                alarm: new FormControl(),
-                action: new FormControl(),
-                compliant: new FormControl(),
-                information: new FormControl()
+                alarm: new UntypedFormControl(),
+                action: new UntypedFormControl(),
+                compliant: new UntypedFormControl(),
+                information: new UntypedFormControl()
             },
             {updateOn: 'change'}
         );
     }
 
     private createResponseFormGroup() {
-        return new FormGroup(
+        return new UntypedFormGroup(
             {
-                responseControl: new FormControl(true)
+                responseControl: new UntypedFormControl(true)
             },
             {updateOn: 'change'}
         );
     }
 
     private createTimeLineFormGroup() {
-        return new FormGroup(
+        return new UntypedFormGroup(
             {
-                timeLineControl: new FormControl(true)
+                timeLineControl: new UntypedFormControl(true)
             },
             {updateOn: 'change'}
         );
     }
 
     private createAckFormGroup() {
-        return new FormGroup(
+        return new UntypedFormGroup(
             {
-                ackControl: new FormControl('notack')
+                ackControl: new UntypedFormControl('notack')
             },
             {updateOn: 'change'}
         );
     }
 
     private createDateTimeForm() {
-        return new FormGroup({
-            dateTimeFrom: new FormControl(''),
-            dateTimeTo: new FormControl('')
+        return new UntypedFormGroup({
+            dateTimeFrom: new UntypedFormControl(''),
+            dateTimeTo: new UntypedFormControl('')
         });
     }
 
@@ -239,10 +240,10 @@ export class FeedFilterComponent implements OnInit, OnDestroy {
         const savedEnd = this.userPreferences.getPreference('opfab.feed.filter.end');
 
         if (!!savedStart) {
-            this.timeFilterForm.get('dateTimeFrom').setValue(getDateTimeNgbFromMoment(moment(+savedStart)));
+            this.timeFilterForm.get('dateTimeFrom').setValue(Utilities.convertEpochDateToNgbDateTime(moment(+savedStart).valueOf()));
         }
         if (!!savedEnd) {
-            this.timeFilterForm.get('dateTimeTo').setValue(getDateTimeNgbFromMoment(moment(+savedEnd)));
+            this.timeFilterForm.get('dateTimeTo').setValue(Utilities.convertEpochDateToNgbDateTime(moment(+savedEnd).valueOf()));
         }
 
         this.setNewFilterValue();

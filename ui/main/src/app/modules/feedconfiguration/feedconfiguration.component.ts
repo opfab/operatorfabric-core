@@ -14,7 +14,7 @@ import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
 import {NgbModalRef} from '@ng-bootstrap/ng-bootstrap/modal/modal-ref';
 import {UserWithPerimeters} from '@ofModel/userWithPerimeters.model';
 import {ProcessesService} from '@ofServices/processes.service';
-import {FormArray, FormBuilder, FormControl, FormGroup} from '@angular/forms';
+import {UntypedFormArray, UntypedFormBuilder, UntypedFormControl, UntypedFormGroup} from '@angular/forms';
 import {SettingsService} from '@ofServices/settings.service';
 import {CardService} from '@ofServices/card.service';
 import {TranslateService} from '@ngx-translate/core';
@@ -27,7 +27,7 @@ import {Utilities} from '../../common/utilities';
     styleUrls: ['./feedconfiguration.component.scss']
 })
 export class FeedconfigurationComponent implements OnInit {
-    feedConfigurationForm: FormGroup;
+    feedConfigurationForm: UntypedFormGroup;
 
     processesDefinition: Process[];
     processGroupsAndLabels: {
@@ -57,7 +57,7 @@ export class FeedconfigurationComponent implements OnInit {
     isThereProcessStateToDisplay: boolean;
 
     constructor(
-        private formBuilder: FormBuilder,
+        private formBuilder: UntypedFormBuilder,
         private userService: UserService,
         private processesService: ProcessesService,
         private modalService: NgbModal,
@@ -77,7 +77,7 @@ export class FeedconfigurationComponent implements OnInit {
     }
 
     get processesStatesFormArray() {
-        return this.feedConfigurationForm.controls.processesStates as FormArray;
+        return this.feedConfigurationForm.controls.processesStates as UntypedFormArray;
     }
 
     private findInProcessGroups(processIdToFind: string): boolean {
@@ -167,7 +167,7 @@ export class FeedconfigurationComponent implements OnInit {
             let isChecked = true;
             if (!!notNotifiedStatesForThisProcess && notNotifiedStatesForThisProcess.includes(processState.stateId))
                 isChecked = false;
-            this.processesStatesFormArray.push(new FormControl(isChecked));
+            this.processesStatesFormArray.push(new UntypedFormControl(isChecked));
         });
     }
 
@@ -207,12 +207,14 @@ export class FeedconfigurationComponent implements OnInit {
      *                          and we don't display process group which doesn't have any process
      * processesWithoutGroup : we don't display process which doesn't have any state with Receive or ReceiveAndWrite right*/
     private removeProcessesWithoutDisplayedStates() {
-        this.processGroupsAndLabels.forEach((processGroupData, index) => {
+        const toRemove = [];
+        this.processGroupsAndLabels.forEach((processGroupData) => {
             processGroupData.processes = processGroupData.processes.filter(
                 (processData) => !!this.processesStatesLabels.get(processData.processId)
             );
-            if (processGroupData.processes.length === 0) this.processGroupsAndLabels.splice(index, 1);
+            if (processGroupData.processes.length === 0)  toRemove.push(processGroupData.groupId);
         });
+        this.processGroupsAndLabels = this.processGroupsAndLabels.filter(group => !toRemove.includes(group.groupId));
         this.processesWithoutGroup = this.processesWithoutGroup.filter(
             (processData) => !!this.processesStatesLabels.get(processData.idProcess)
         );
@@ -220,7 +222,7 @@ export class FeedconfigurationComponent implements OnInit {
 
     private initForm() {
         this.feedConfigurationForm = this.formBuilder.group({
-            processesStates: new FormArray([])
+            processesStates: new UntypedFormArray([])
         });
     }
 
@@ -243,7 +245,7 @@ export class FeedconfigurationComponent implements OnInit {
         this.makeProcessIdsByProcessGroup();
         this.loadIsAllProcessesSelected();
 
-        this.isThereProcessStateToDisplay = this.processesService.getStatesListPerProcess(true).size > 0;
+        this.isThereProcessStateToDisplay = this.processesService.getStatesListPerProcess(false, true).size > 0;
     }
 
     makeProcessIdsByProcessGroup() {

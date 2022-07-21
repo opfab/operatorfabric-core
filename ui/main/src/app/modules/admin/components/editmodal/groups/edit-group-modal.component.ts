@@ -9,7 +9,7 @@
  */
 
 import {Component, Input, OnInit} from '@angular/core';
-import {AsyncValidatorFn, FormControl, FormGroup, Validators} from '@angular/forms';
+import {AsyncValidatorFn, UntypedFormControl, UntypedFormGroup, Validators} from '@angular/forms';
 import {NgbActiveModal} from '@ng-bootstrap/ng-bootstrap';
 import {AdminItemType, SharingService} from '../../../services/sharing.service';
 import {CrudService} from '@ofServices/crud-service';
@@ -21,6 +21,7 @@ import {MessageLevel} from '@ofModel/message.model';
 import {GroupsService} from '@ofServices/groups.service';
 import {debounceTime, distinctUntilChanged, first, map, switchMap} from 'rxjs/operators';
 import {MultiSelectConfig, MultiSelectOption} from '@ofModel/multiselect.model';
+import {GroupTypeEnum} from '@ofModel/group.model';
 
 @Component({
     selector: 'of-edit-group-modal',
@@ -28,10 +29,11 @@ import {MultiSelectConfig, MultiSelectOption} from '@ofModel/multiselect.model';
     styleUrls: ['./edit-group-modal.component.scss']
 })
 export class EditGroupModalComponent implements OnInit {
-    groupForm: FormGroup;
+    groupForm: UntypedFormGroup;
 
     perimetersMultiSelectOptions: Array<MultiSelectOption> = [];
     selectedPerimeters = [];
+    selectedGroupType = '';
 
     perimetersMultiSelectConfig: MultiSelectConfig = {
         labelKey: 'admin.input.group.perimeters',
@@ -44,13 +46,25 @@ export class EditGroupModalComponent implements OnInit {
 
     private crudService: CrudService;
 
+    groupTypes = [];
+
+    public multiSelectConfig: MultiSelectConfig = {
+        labelKey: 'admin.input.group.type',
+        placeholderKey: 'admin.input.selectGroupTypeText',
+        multiple: false,
+        search: true,
+        sortOptions: true
+    };
+
     constructor(
         private store: Store<AppState>,
         private activeModal: NgbActiveModal,
         private dataHandlingService: SharingService,
         private perimetersService: PerimetersService,
         private groupsService: GroupsService
-    ) {}
+    ) {
+        Object.values(GroupTypeEnum).forEach((t) => this.groupTypes.push({value: String(t), label: String(t)}));
+    }
 
     ngOnInit() {
         const uniqueGroupIdValidator = [];
@@ -58,16 +72,17 @@ export class EditGroupModalComponent implements OnInit {
             // modal used for creating a new group
             uniqueGroupIdValidator.push(this.uniqueGroupIdValidatorFn());
 
-        this.groupForm = new FormGroup({
-            id: new FormControl(
+        this.groupForm = new UntypedFormGroup({
+            id: new UntypedFormControl(
                 '',
                 [Validators.required, Validators.minLength(2), Validators.pattern(/^[A-z\d\-_]+$/)],
                 uniqueGroupIdValidator
             ),
-            name: new FormControl('', [Validators.required]),
-            description: new FormControl(''),
-            perimeters: new FormControl([]),
-            realtime: new FormControl(false)
+            name: new UntypedFormControl('', [Validators.required]),
+            description: new UntypedFormControl(''),
+            perimeters: new UntypedFormControl([]),
+            realtime: new UntypedFormControl(false),
+            type: new UntypedFormControl('')
         });
 
         this.crudService = this.dataHandlingService.resolveCrudServiceDependingOnType(this.type);
@@ -76,11 +91,12 @@ export class EditGroupModalComponent implements OnInit {
             // If the modal is used for edition, initialize the modal with current data from this row
 
             // For 'simple' fields (where the value is directly displayed), we use the form's patching method
-            const {id, name, description, realtime} = this.row;
-            this.groupForm.patchValue({id, name, description, realtime}, {onlySelf: false});
+            const {id, name, description, realtime, type} = this.row;
+            this.groupForm.patchValue({id, name, description, realtime, type}, {onlySelf: false});
 
             // Otherwise, we use the selectedItems property of the of-multiselect component
             this.selectedPerimeters = this.row.perimeters;
+            this.selectedGroupType = this.row.type;
         }
 
         this.perimetersService.getPerimeters().forEach((perimeter) => {
@@ -127,7 +143,9 @@ export class EditGroupModalComponent implements OnInit {
             })
         );
         this.store.dispatch(
-            new AlertMessageAction({alertMessage: {message: res.originalError.error.message, level: MessageLevel.ERROR}})
+            new AlertMessageAction({
+                alertMessage: {message: res.originalError.error.message, level: MessageLevel.ERROR}
+            })
         );
     }
 
@@ -137,7 +155,11 @@ export class EditGroupModalComponent implements OnInit {
         }
         this.id.setValue((this.id.value as string).trim());
         this.name.setValue((this.name.value as string).trim());
-        this.description.setValue((this.description.value as string).trim());
+
+        if (!! this.description.value) {
+            this.description.setValue((this.description.value as string).trim());
+        }
+
         this.realtime.setValue(this.realtime.value as boolean);
     }
 

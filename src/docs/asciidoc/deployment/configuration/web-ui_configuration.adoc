@@ -108,6 +108,7 @@ Values should be taken from the link:https://en.wikipedia.org/wiki/List_of_tz_da
 |settings.infos.hide.language|false|no|Control if we want to hide(true) or display(false or not specified) the language in the settings page
 |settings.infos.hide.sounds|false|no|Control if we want to hide(true) or display(false or not specified) the checkboxes for sound notifications in the settings page
 |settings.infos.hide.remoteLoggingEnabled|false|no|Control if we want to hide(true) or display(false or not specified) the checkbox to activate remote logging 
+|settings.locale|en|no|Default user locale (use en if not set)
 |settings.playSoundForAlarm|false|no|If set to true, a sound is played when Alarm cards are added or updated in the feed
 |settings.playSoundForAction|false|no|If set to true, a sound is played when Action cards are added or updated in the feed
 |settings.playSoundForCompliant|false|no|If set to true, a sound is played when Compliant cards are added or updated in the feed
@@ -145,16 +146,56 @@ It should look like:
 |externalDevicesEnabled|false|no|If true, users have the opportunity to play sounds on external devices rather than in the browser. See `settings.playSoundOnExternalDevice`
 |secondsToCloseSession|60|no|Number of seconds between logout and token expiration
 |selectActivityAreaOnLogin|false|no| if set to true the users belonging to multiple Entities will be required to configure activity area on login 
-
-
-|===
-
-*User Settings default values*
+|checkIfUrlIsLocked|true|no| if set to false, an OperatorFabric url can be used by several tabs in the same browser. Note that there can only be one token per browser for a given OperatorFabric url, so the first session will be replaced by the second one
 
 |===
-|name|default|mandatory?|Description
-|settings.locale|en|no|Default user locale (use en if not set)
 
-|===
+IMPORTANT: 
+====
+To declare settings parameters, you now need to group all fields under `settings: { }` 
+For example: 
+
+Replace the following invalid settings config 
+```
+  "settings.replayInterval": 10,
+  "settings.replayEnabled": true,
+  "settings": {
+    "about": {
+      "keycloack": {
+        "name": "Keycloak",
+        "rank": 2,
+        "version": "6.0.1"
+      },
+    }
+    "locale": "en",
+    "dateTimeFormat": "HH:mm DD/MM/YYYY",
+    "dateFormat": "DD/MM/YYYY",
+    "styleWhenNightDayModeDesactivated": "NIGHT"
+  },
+```
+
+By this valid one : 
+
+```
+  "settings": {
+    "replayInterval": 10,
+    "replayEnabled": true,
+    "about": {
+      "keycloack": {
+        "name": "Keycloak",
+        "rank": 2,
+        "version": "6.0.1"
+      },
+    }
+    "locale": "en",
+    "dateTimeFormat": "HH:mm DD/MM/YYYY",
+    "dateFormat": "DD/MM/YYYY",
+    "styleWhenNightDayModeDesactivated": "NIGHT"
+  },
+```
+
+====
+
+
 
 

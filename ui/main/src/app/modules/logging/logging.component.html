@@ -9,44 +9,27 @@
 
 <div class="logging-page">
     <form [formGroup]="loggingForm" #currentForm>
-      <ng-template #noProcessStateToDisplay>
-        <div id="opfab-logging-no-process-state-available" style="text-align: center; font-size: 20px; padding-top: 100px" translate>shared.noProcessStateAvailable</div>
-      </ng-template>
-      <div *ngIf="isThereProcessStateToDisplay; else noProcessStateToDisplay" class="opfab-logging">
-        <div style="display: flex;">
-
-          <of-archives-logging-filters [parentForm]="loggingForm" [visibleProcesses]="listOfProcessesForFilter" (reset)='resetForm()' (search)='sendQuery(0)'
-                                       [tags]="tags" [hideChildStates]="false" #filters></of-archives-logging-filters>
-
-        </div>
-      </div>
+          <of-archives-logging-filters [parentForm]="loggingForm" [visibleProcesses]="listOfProcessesForFilter"
+                                       (reset)='resetForm()' (search)='sendQuery(0)'
+                                       [tags]="tags" [hideChildStates]="false" #filters>
+          </of-archives-logging-filters>
 
     </form>
 </div>
 
 <!-- Display spinner if loading cards is taking more than 1s -->
-<div *ngIf="loadingIsTakingMoreThanOneSecond">
+<of-spinner *ngIf="loadingInProgress"></of-spinner>
 
-  <div class="opfab-card-loading-spinner">
-  <em  class="fas fa-spinner fa-spin opfab-slow-spinner" ></em>
-  </div>
-  <div style="text-align: center;font:16px;font-weight: bold;margin-top:10px" translate>
-      shared.loadingInProgress
-  </div>
-
-  <br/>
-  <br/>
-</div>
 
 <div style="height:5%"> </div>
-<div *ngIf="!loadingIsTakingMoreThanOneSecond && hasResult && !technicalError" style="margin-left:5%;margin-right:5%">
+<div *ngIf="!loadingInProgress && hasResult && !technicalError" style="margin-left:5%;margin-right:5%">
   <div class="opfab-table">
     <table aria-describedby="Archive results table" id="opfab-logging-cards-list">
       <thead>
         <tr>
           <th scope="col"></th>
           <th scope="col" style="padding-left: 5px" translate>shared.result.timeOfAction</th>
-          <th *ngIf="filtersTemplate.displayProcessGroupFilter()" scope="col" translate>shared.result.processGroup</th>
+          <th *ngIf="filtersTemplate.isProcessGroupFilterVisible()" scope="col" translate>shared.result.processGroup</th>
           <th scope="col" translate>shared.result.process</th>
           <th scope="col" translate>shared.result.title</th>
           <th scope="col" translate>shared.result.summary</th>
@@ -59,7 +42,7 @@
       <tr *ngFor="let card of results">
         <td class="opfab-logging-sev opfab-logging-sev-{{card.severity.toLowerCase()}}"></td>
         <td style="padding-left: 5px"> {{displayTime(card.publishDate)}} </td>
-        <td *ngIf="filtersTemplate.displayProcessGroupFilter()" translate>{{ processesService.findProcessGroupLabelForProcess(card.process) }}</td>
+        <td *ngIf="filtersTemplate.isProcessGroupFilterVisible()" translate>{{ processesService.findProcessGroupLabelForProcess(card.process) }}</td>
         <td>{{card.processName}}</td>
         <td>{{card.titleTranslated}}</td>
         <td>{{card.summaryTranslated}}</td>
@@ -104,11 +87,6 @@
 
 <ng-template #exportInProgress let-modal>
   <div class="modal-body">
-    <div class="opfab-card-loading-spinner">
-      <em  class="fas fa-spinner fa-spin opfab-slow-spinner" ></em>
-    </div>
-    <div style="text-align: center;font:16px;font-weight: bold;margin-top:10px" translate>
-          shared.exportInProgress
-    </div>
+    <of-spinner timeBeforeDisplayingSpinner="0" loadingText="shared.exportInProgress"></of-spinner>
   </div>
 </ng-template>

@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2021, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2022, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -11,7 +11,9 @@ import {Component, Input, OnDestroy, OnInit} from '@angular/core';
 import {BaseSettingDirective} from '../base-setting/base-setting.directive';
 import {Store} from '@ngrx/store';
 import {AppState} from '@ofStore/index';
-import {FormControl, FormGroup} from '@angular/forms';
+import {UntypedFormControl, UntypedFormGroup} from '@angular/forms';
+import {ConfigService} from '@ofServices/config.service';
+import {SettingsService} from '@ofServices/settings.service';
 
 @Component({
     selector: 'of-checkbox-setting',
@@ -23,8 +25,8 @@ export class CheckboxSettingComponent extends BaseSettingDirective implements On
     @Input() public name: string;
     @Input() public checked: boolean;
 
-    constructor(protected store: Store<AppState>) {
-        super(store);
+    constructor(protected store: Store<AppState>,protected configService: ConfigService, protected settingsService: SettingsService) {
+        super(store,configService,settingsService);
     }
 
     ngOnInit() {
@@ -32,9 +34,9 @@ export class CheckboxSettingComponent extends BaseSettingDirective implements On
     }
 
     initFormGroup() {
-        return new FormGroup(
+        return new UntypedFormGroup(
             {
-                setting: new FormControl('')
+                setting: new UntypedFormControl('')
             },
             {updateOn: 'change'}
         );

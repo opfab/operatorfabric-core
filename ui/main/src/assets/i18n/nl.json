@@ -25,8 +25,12 @@
       "publishDateTo": "PUBLICEREN TOT",
       "activeFrom": "ACTIEF VAN",
       "activeTo": "ACTIEF TOT",
-      "publishEndDateBeforeStartDate" : "De einddatum van de publicatie moet na de startdatum liggen",
-      "activeEndDateBeforeStartDate" : "Actieve einddatum moet na de startdatum liggen"
+      "invalidPublishStartDate": "Datum 'Publiceren van'  is ongeldig.",
+      "invalidPublishEndDate": "Datum 'Publiceren tot' is ongeldig.",
+      "invalidActiveStartDate": "Datum 'Actief van' is ongeldig.",
+      "invalidActiveEndDate": "Datum 'Actief tot' is ongeldig.",
+      "publishEndDateBeforeStartDate" : "'Publiceren tot' moet na 'Publiceren van' liggen.",
+      "activeEndDateBeforeStartDate" : "'Actief tot' moet na 'Actief van' liggen."
     },
     "result": {
       "severity": "ERNST",
@@ -53,11 +57,14 @@
     "exportToExcel": "Exporteer data",
     "resultsNumber":"Aantal resultaten",
     "noProcessStateAvailable": "Geen proces/status beschikbaar",
-    "endDateBeforeStartDate": "Einddatum moet na start datum liggen",
+    "endDateBeforeStartDate": "Einddatum moet na start datum liggen.",
     "featureNotConfigured": "Functie niet geconfigureerd",
     "confirmSettings": "BEVESTIG INSTELLINGEN",
     "cardEmitter": "EMITTER",
     "entity": "ENTITEIT",
+    "goToAdminMode": "Ga naar administratie modus",
+    "adminMode": "Administratie modus",
+    "adminModeHelp": "Toon alle kaarten",
     "popup": {
       "title": "BEVESTIGING",
       "areYouSure": "U heeft enkele wijzigingen aangebracht. Weet u zeker dat u ze wilt opslaan?"
@@ -73,10 +80,10 @@
     "tryToReconnect":"Bezig met verbinden ...",
     "activateSoundText":"Geluid is niet geactiveerd, klik om te activeren",
     "activateSoundButton":"Activeer geluid",
-    "sessionExpiredText":"De sessie is verlopen",
+    "sessionExpiredText":"De sessie is verlopen.",
     "disconnected": "Je bent losgekoppeld.",
     "disconnectedByNewUser": "De verbinding met u is verbroken omdat een andere gebruiker met dit account heeft ingelogd.",
-    "disconnectByAppLoadedInAnotherTab": "De verbinding is verbroken omdat een ander tabblad van deze browser werd gebruikt om in te loggen met deze URL"
+    "disconnectByAppLoadedInAnotherTab": "De verbinding is verbroken omdat een ander tabblad van deze browser werd gebruikt om in te loggen met deze URL."
   },
   "menu": {
     "feed": "Kaart Feed",
@@ -109,8 +116,8 @@
       "M": "Maand",
       "Y": "Jaar"
     },
-    "lockTooltip": "Het zichtbaarheidsdomein is momenteel vergrendeld: het zal niet bewegen naarmate de tijd verstrijkt",
-    "unlockTooltip": "Het zichtbaarheidsdomein is momenteel ontgrendeld: het zal in de loop van de tijd verschuiven"
+    "lockTooltip": "Het zichtbaarheidsdomein is momenteel vergrendeld: het zal niet bewegen naarmate de tijd verstrijkt.",
+    "unlockTooltip": "Het zichtbaarheidsdomein is momenteel ontgrendeld: het zal in de loop van de tijd verschuiven."
   },
   "multiFilter": {
     "searchPlaceholderText": "Zoeken",
@@ -168,7 +175,7 @@
     "tips": {
       "acknowledged": "Bevestigd",
       "lttd": "Resterende tijd om te beslissen",
-      "hasAResponseFromYourEntity" : "Uw entiteit heeft al gereageerd",
+      "hasAResponseFromYourEntity" : "Uw entiteit heeft al gereageerd.",
       "loadingInProgress": "Kaart wordt geladen",
       "seeGroupedCards": "Open deze kaart om gegroepeerde kaarten te zien"
     },
@@ -186,8 +193,8 @@
     "from" : "van",
     "moreCards": "kaarten over",
     "lastResponse": "Laatste reactie ontvangen op",
-    "cardLoadingInProgress":"Bezig met laden van de kaart  ...",
-    "cardNotFound": "De kaart die u zoekt werd niet gevonden"
+    "cardLoadingInProgress":"Bezig met laden van de kaart...",
+    "cardNotFound": "De kaart die u zoekt werd niet gevonden."
   },
   "login": {
     "reset": "Opnieuw instellen",
@@ -204,10 +211,10 @@
       "code": "Onjuiste authenticatiecode",
       "unavailable": "Authenticatieservice is momenteel niet beschikbaar",
       "unexpected": "Er is een onverwachte fout gedetecteerd tijdens het inloggen: {{error}}",
-      "disconnected": "De verbinding is verbroken",
+      "disconnected": "De verbinding is verbroken.",
       "token": {
-        "invalid": "Ongeldige token opgeslagen",
-        "expiration": "Het opgeslagen token is verlopen"
+        "invalid": "Ongeldige token opgeslagen.",
+        "expiration": "Het opgeslagen token is verlopen."
       }
     }
   },
@@ -229,9 +236,8 @@
     "remoteLoggingEnabled": "Loggen op afstand ingeschakeld"
   },
   "archive": {
-    "loadingInProgress": "Gearchiveerde kaarten laden",
     "cardLoadingInProgress":"Bezig met laden van de kaart  ...",
-    "tooManyRows": "Te veel kaarten gevonden, niet alle kaarten worden getoond",
+    "tooManyRows": "Te veel kaarten gevonden, niet alle kaarten worden getoond.",
     "collapsibleUpdates": "Opvouwbare updates"
   },
   "monitoring": {
@@ -266,11 +272,12 @@
     "title": "MAAK EEN NIEUWE KAART ",
     "editTitle" : "WIJZIG EEN NIEUWE KAART",
     "error": {
-      "notAvailable": "U heeft geen toestemming om kaarten te verzenden",
+      "notAvailable": "U heeft geen toestemming om kaarten te verzenden.",
+      "userHasNoEntityThatCanSendCard" : "U bent geen lid van een entiteit die kaarten kan versturen.",
       "templateError": "Technische fout: ongeldige sjabloon",
       "impossibleToSendCard": "Om technische redenen is het onmogelijk om de kaart te verzenden",
-      "lttdBeforeStartDate": "De beperkingsdatum voor reactie moet na de startdatum liggen",
-      "lttdAfterEndDate": "De beperkingsdatum voor reactie moet vóór de einddatum liggen"
+      "lttdBeforeStartDate": "De beperkingsdatum voor reactie moet na de startdatum liggen.",
+      "lttdAfterEndDate": "De beperkingsdatum voor reactie moet vóór de einddatum liggen."
     },
     "filters": {
       "severity": "ERNST",
@@ -286,11 +293,11 @@
     "processInstanceId": "Id",
     "state": "Status",
     "recipients": "ONTVANGERS:",
-    "youAreTheOnlyRecipient": "U bent de enige ontvanger van deze kaart",
+    "youAreTheOnlyRecipient": "U bent de enige ontvanger van deze kaart.",
     "feedPreview": "FEED PREVIEW:",
     "contentPreview": "CONTENT PREVIEW:",
     "send-another-one": "SEND ANOTHER CARD",
-    "cardSendWithNoError": "Uw kaart is gepubliceerd",
+    "cardSendWithNoError": "Uw kaart is gepubliceerd.",
     "deleteCard": {
       "title" : "BEVESTIGING",
       "doYouReallyWant": "Wilt u deze kaart echt verwijderen?",
@@ -305,8 +312,8 @@
     "btnValidate": "VALIDEER ANTWOORD",
     "btnUnlock": "WIJZIG ANTWOORD",
     "error": {
-      "submit": "Het antwoord kon niet verzonden worden",
-      "form": "Het formulier is niet correct ingevuld",
+      "submit": "Het antwoord kon niet verzonden worden.",
+      "form": "Het formulier is niet correct ingevuld.",
       "ack": "Kan de bevestiging van deze kaart niet wijzigen door een fout van het externe systeem"
     },
     "submitSuccess": "Uw antwoord is bevestigd. Bedankt!",
@@ -332,6 +339,7 @@
         "description": "OMSCHRIJVING",
         "perimeters" : "PERIMETERS",
         "realtime": "REAL TIME",
+        "type": "TYPE",
         "true": "JA",
         "false": "NEE",
         "confirmDelete": "Wilt u de groep echt verwijderen?",
@@ -375,6 +383,7 @@
       "selectProcessText": "Selecteer een Proces",
       "selectStateText": "Selecteer een Status",
       "selectRightText": "Selecteer een Recht",
+      "selectGroupTypeText": "Selecteer een Type",
       "edit": "Wijzigen",
       "delete": "Verwijderen",
       "save": "WIJZIGINGEN OPSLAAN",
@@ -449,7 +458,7 @@
       "edit": "APPARAATCONFIGURATIE WIJZIGEN",
       "confirm": "Bevestig alstublieft",
       "confirmDelete": "Wilt u de apparaatconfiguratie echt verwijderen?",
-      "allUsersConfigured": "Alle apparaten zijn al geconfigureerd",
+      "allUsersConfigured": "Alle apparaten zijn al geconfigureerd.",
       "loadingExternalDevices": "Extern apparaat laden..."
     },
     "userLogin": "GEBRUIKERSNAAM",

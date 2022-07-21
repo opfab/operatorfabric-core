@@ -40,8 +40,9 @@ import {AccountAlreadyUsedComponent} from './modules/core/application-loading/ac
 import {AppLoadedInAnotherTabComponent} from './modules/core/application-loading/app-loaded-in-another-tab/app-loaded-in-another-tab.component';
 import {ApplicationLoadingComponent} from './modules/core/application-loading/application-loading.component';
 import {ReloadRequiredComponent} from './modules/core/reload-required/reload-required.component';
-import { ServiceWorkerModule } from '@angular/service-worker';
-import { environment } from '../environments/environment';
+import {ServiceWorkerModule, SwRegistrationOptions} from '@angular/service-worker';
+import {Utilities} from './common/utilities';
+import { SpinnerModule } from './modules/share/spinner/spinner.module';
 
 @NgModule({
     imports: [
@@ -56,6 +57,7 @@ import { environment } from '../environments/environment';
         StateModule.forRoot(),
         NgbModule,
         TranslateModule.forRoot(),
+        SpinnerModule,
         ArchivesModule,
         LoggingModule,
         MonitoringModule,
@@ -65,12 +67,7 @@ import { environment } from '../environments/environment';
         CalendarModule,
         NavbarModule,
         ActivityareaModule,
-        ServiceWorkerModule.register('ngsw-worker.js', {
-          enabled: environment.production,
-          // Register the ServiceWorker as soon as the application is stable
-          // or after 30 seconds (whichever comes first).
-          registrationStrategy: 'registerWhenStable:30000'
-        })
+        ServiceWorkerModule.register('ngsw-worker.js')
     ],
     declarations: [
         AppComponent,
@@ -87,6 +84,10 @@ import { environment } from '../environments/environment';
     ],
 
     providers: [
+        {
+            provide: SwRegistrationOptions,
+            useFactory: () => ({enabled: shallPWAFeatureBeActivated()})
+        },
         {provide: LocationStrategy, useClass: HashLocationStrategy},
         {provide: ErrorHandler, useClass: AppErrorHandler},
         {
@@ -98,3 +99,9 @@ import { environment } from '../environments/environment';
     bootstrap: [AppComponent]
 })
 export class AppModule {}
+
+export function shallPWAFeatureBeActivated(): boolean {
+    const activateSW = Utilities.isNavigatorChromiumBased() && location.href.includes('PWAFeature=true');
+    console.log(new Date().toISOString(), 'PWA feature enable : ', activateSW);
+    return activateSW;
+}

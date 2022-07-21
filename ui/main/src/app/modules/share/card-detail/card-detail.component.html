@@ -9,5 +9,9 @@
 
 
 
-<link *ngFor="let cssUrl of hrefsOfCssLink" [href]="cssUrl" rel="stylesheet" type="text/css">
-<div id="opfab-card-template-detail" class="opfab-card-detail"  [innerHtml]="htmlContent" style="height: 100%;"></div>
+<of-spinner *ngIf="isLoading || isCardProcessing"></of-spinner>
+
+<div [hidden]="isLoading || isCardProcessing">
+    <link *ngFor="let cssUrl of hrefsOfCssLink" [href]="cssUrl" rel="stylesheet" type="text/css">
+    <div id="opfab-card-template-detail" class="opfab-card-detail"  [innerHtml]="htmlContent" [hidden]="isLoading" style="height: 100%;"></div>
+</div>

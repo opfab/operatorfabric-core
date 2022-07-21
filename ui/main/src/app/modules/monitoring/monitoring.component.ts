@@ -12,7 +12,6 @@ import {combineLatest, Observable, of, Subject} from 'rxjs';
 import {LineOfMonitoringResult} from '@ofModel/line-of-monitoring-result.model';
 import {catchError, debounceTime, filter, map, takeUntil} from 'rxjs/operators';
 import {LightCard} from '@ofModel/light-card.model';
-import * as moment from 'moment';
 import {I18n} from '@ofModel/i18n.model';
 import {MonitoringFiltersComponent} from './components/monitoring-filters/monitoring-filters.component';
 import {Process, TypeOfStateEnum} from '@ofModel/processes.model';
@@ -91,7 +90,7 @@ export class MonitoringComponent implements OnInit, OnDestroy {
             .getLoadingInProgress()
             .pipe(takeUntil(this.unsubscribe$))
             .subscribe((inProgress: boolean) => (this.loadingInProgress = inProgress));
-        this.isThereProcessStateToDisplay = this.processesService.getStatesListPerProcess(false).size > 0;
+        this.isThereProcessStateToDisplay = this.processesService.getStatesListPerProcess(false, false).size > 0;
     }
 
     private areFiltersCorrectlySet(filters: Array<any>): boolean {
@@ -181,9 +180,9 @@ export class MonitoringComponent implements OnInit, OnDestroy {
             }
             if (!!state.type) {
                 return {
-                    creationDateTime: moment(card.publishDate),
-                    beginningOfBusinessPeriod: moment(card.startDate),
-                    endOfBusinessPeriod: !!card.endDate ? moment(card.endDate) : null,
+                    creationDateTime: card.publishDate,
+                    beginningOfBusinessPeriod: card.startDate,
+                    endOfBusinessPeriod: card.endDate,
                     titleTranslated: card.titleTranslated,
                     summaryTranslated: card.summaryTranslated,
                     processName: currentProcess.name,

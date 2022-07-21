@@ -96,6 +96,7 @@
     color: var(--opfab-navbar-color);
     align-items: center;
     text-decoration: none;
+    cursor: pointer;
 
     &:hover,
     &:focus {
@@ -138,17 +139,6 @@
     height: 100%;
     padding: 20px;
     background-color: var(--opfab-bgcolor);
-}
-
-.opfab-icon-help {
-    display: inline-block;
-    height: 13px;
-    width: 13px;
-    margin-bottom: -2px;
-    margin-right: 10px;
-    border-width: 0px;
-    background: var(--opfab-navbar-color-hover);
-    mask: url(../../../../../assets/images/icons/help.svg);
 }
 
 .label-help {

@@ -8,7 +8,7 @@
  */
 
 import {AfterViewInit, Component, Input, OnChanges, OnDestroy} from '@angular/core';
-import {FormGroup} from '@angular/forms';
+import {UntypedFormGroup} from '@angular/forms';
 import {TranslateService} from '@ngx-translate/core';
 import {MultiSelectConfig, MultiSelectOption} from '@ofModel/multiselect.model';
 
@@ -19,14 +19,15 @@ declare const VirtualSelect: any;
     templateUrl: './multi-select.component.html'
 })
 export class MultiSelectComponent implements AfterViewInit, OnDestroy, OnChanges {
-    @Input() public parentForm: FormGroup;
+    @Input() public parentForm: UntypedFormGroup;
     @Input() public multiSelectId: string;
     @Input() public config: MultiSelectConfig;
     @Input() public options: Array<MultiSelectOption>;
-    @Input() public selectedOptions: [];
+    @Input() public selectedOptions: any;
 
     private ngAfterViewInitHasBeenDone = false;
     private virtualSelectComponent: any;
+    private disabled: boolean;
 
     constructor(private translateService: TranslateService) {}
 
@@ -40,6 +41,16 @@ export class MultiSelectComponent implements AfterViewInit, OnDestroy, OnChanges
         }, 0);
     }
 
+    public disable() {
+        this.disabled = true;
+        if (!!this.virtualSelectComponent) this.virtualSelectComponent.disable();
+    }
+
+    public enable() {
+        this.disabled = false;
+        if (!!this.virtualSelectComponent && this.virtualSelectComponent.disabled) this.virtualSelectComponent.enable();
+    }
+
     private createVirtualSelectComponent() {
         let placeholder = '';
         let nbOfDisplayValues = 50;
@@ -48,7 +59,8 @@ export class MultiSelectComponent implements AfterViewInit, OnDestroy, OnChanges
         VirtualSelect.init({
             ele: '#' + this.multiSelectId,
             options: [],
-            multiple: true,
+            multiple: this.getValueOrDefault(this.config.multiple, true),
+            search: this.getValueOrDefault(this.config.search, this.getValueOrDefault(this.config.multiple, true)),
             showValueAsTags: true,
             placeholder: placeholder,
             noOfDisplayValues: nbOfDisplayValues,
@@ -57,14 +69,19 @@ export class MultiSelectComponent implements AfterViewInit, OnDestroy, OnChanges
             searchPlaceholderText: this.translateService.instant('multiSelect.searchPlaceholderText'),
             clearButtonText: this.translateService.instant('multiSelect.clearButtonText'),
             noOptionsText: this.translateService.instant('multiSelect.noOptionsText'),
-            noSearchResultsText: this.translateService.instant('multiSelect.noSearchResultsText')
+            noSearchResultsText: this.translateService.instant('multiSelect.noSearchResultsText'),
+            hideClearButton: !this.getValueOrDefault(this.config.multiple, true)
         });
 
         this.virtualSelectComponent = document.querySelector('#' + this.multiSelectId);
-        const currentComponent = this;
-        this.virtualSelectComponent.addEventListener('change', function () {
-            currentComponent.setSelectedOptionsToParentForm();
-        });
+        if (!!this.virtualSelectComponent) {
+            const currentComponent = this;
+            this.virtualSelectComponent.addEventListener('change', function () {
+                currentComponent.setSelectedOptionsToParentForm();
+            });
+            if (this.disabled) this.virtualSelectComponent.disable();
+        }
+
     }
 
     private setSelectedOptionsToParentForm() {
@@ -74,7 +91,7 @@ export class MultiSelectComponent implements AfterViewInit, OnDestroy, OnChanges
     private setOptionList() {
         if (this.options) {
             if (this.config.sortOptions) this.sortOptionListByLabel();
-            this.virtualSelectComponent.setOptions(this.options);
+            if (!!this.virtualSelectComponent) this.virtualSelectComponent.setOptions(this.options);
         }
     }
 
@@ -87,7 +104,12 @@ export class MultiSelectComponent implements AfterViewInit, OnDestroy, OnChanges
     }
 
     private setSelectedOptions() {
-        if (this.selectedOptions) this.virtualSelectComponent.setValue(this.selectedOptions);
+        if (this.selectedOptions && !!this.virtualSelectComponent) this.virtualSelectComponent.setValue(this.selectedOptions);
+    }
+
+    private getValueOrDefault(value : any, defaultValue : any) : any {
+        if (value !== undefined) return value;
+        else return defaultValue;
     }
 
     ngOnChanges() {
@@ -98,6 +120,6 @@ export class MultiSelectComponent implements AfterViewInit, OnDestroy, OnChanges
     }
 
     ngOnDestroy() {
-        this.virtualSelectComponent.destroy();
+        if (!!this.virtualSelectComponent) this.virtualSelectComponent.destroy();
     }
 }

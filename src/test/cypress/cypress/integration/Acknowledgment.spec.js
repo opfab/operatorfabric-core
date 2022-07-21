@@ -7,7 +7,13 @@
  * This file is part of the OperatorFabric project.
  */
 
+import {getUserCardCommands} from "../support/userCardCommands"
+
+
 describe('Acknowledgment tests', function () {
+
+    const usercard = getUserCardCommands();
+
 
     before('Set up configuration', function () {
 
@@ -208,15 +214,15 @@ describe('Acknowledgment tests', function () {
         // We create a usercard sent to several entities
         cy.get('#opfab-navbarContent').find('#opfab-newcard-menu').click();
         cy.get("of-usercard").should('exist');
-        cy.usercardSelectService('Base Examples');
-        cy.usercardSelectProcess('Process example');
-        cy.usercardSelectState('Message');
+        usercard.selectService('Base Examples')
+        usercard.selectProcess('Process example');
+        usercard.selectState('Message');
         cy.get('#message').type('Test message for entities acks');
         cy.get('#opfab-recipients').click();
         cy.get('.vscomp-toggle-all-checkbox').click();
         cy.get('#opfab-recipients').click();
 
-        cy.usercardPrepareAndSendCard();
+        usercard.prepareAndSendCard();
         cy.waitDefaultTime();
 
         // We display the created card
@@ -344,8 +350,7 @@ describe('Acknowledgment tests', function () {
             .and('have.css', 'color', 'rgb(255, 102, 0)');
 
         // operator4_fr goes to activity area screen and disconnect from ENTITY1_FR
-        cy.get('#opfab-navbar-drop-user-menu').click();
-        cy.get('#opfab-navbar-right-menu-activityarea').click();
+        cy.openActivityArea();
 
         // Check every checkbox to let the time for the ui to set to true before we click
         cy.get('.opfab-checkbox').eq(0).find('input').should('be.checked');
@@ -353,8 +358,7 @@ describe('Acknowledgment tests', function () {
         cy.get('.opfab-checkbox').eq(2).find('input').should('be.checked');
         cy.get('.opfab-checkbox').eq(3).find('input').should('be.checked');
         cy.get('.opfab-checkbox').contains('Control Center FR North').click(); // we disconnect
-        cy.get('#opfab-activityarea-btn-confirm').should('exist').click(); // click confirm settings
-        cy.get('#opfab-activityarea-btn-yes').should('exist').click(); // and click yes on the confirmation popup
+        cy.saveActivityAreaModifications();
 
         // We display again the card to check entities acknowledgements footer is not displayed anymore
         cy.get('#opfab-navbar-menu-feed').click(); // we go back to the feed
@@ -365,18 +369,16 @@ describe('Acknowledgment tests', function () {
         cy.get('#opfab-card-acknowledged-footer').should('not.exist');
 
         // We reconnect operator4_fr to ENTITY1_FR
-        cy.get('#opfab-navbar-drop-user-menu').click();
-        cy.get('#opfab-navbar-right-menu-activityarea').click();
+        cy.openActivityArea();
 
         // Check every checkbox to let the time for the ui to set to true before we click
         cy.get('.opfab-checkbox').eq(0).find('input').should('be.checked');
         cy.get('.opfab-checkbox').eq(1).find('input').should('not.be.checked');
         cy.get('.opfab-checkbox').eq(2).find('input').should('be.checked');
         cy.get('.opfab-checkbox').eq(3).find('input').should('be.checked');
-        
+
         cy.get('.opfab-checkbox').contains('Control Center FR North').click(); // we reconnect
-        cy.get('#opfab-activityarea-btn-confirm').should('exist').click(); // click confirm settings
-        cy.get('#opfab-activityarea-btn-yes').should('exist').click(); // and click yes on the confirmation popup
+        cy.saveActivityAreaModifications();
     });
 
     it('Check operator1_fr see the entities acknowledgments done by operator4_fr for the previous card', function () {

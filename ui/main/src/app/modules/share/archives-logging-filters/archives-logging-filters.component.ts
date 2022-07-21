@@ -7,21 +7,27 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {Component, EventEmitter, Input, OnDestroy, OnInit, Output} from '@angular/core';
+import {AfterViewInit, Component, EventEmitter, Input, OnDestroy, OnInit, Output} from '@angular/core';
 import {ConfigService} from '@ofServices/config.service';
 import {Card} from '@ofModel/card.model';
 import {LightCard} from '@ofModel/light-card.model';
-import {FormGroup} from '@angular/forms';
+import {UntypedFormGroup, AbstractControl} from '@angular/forms';
 import {ProcessesService} from '@ofServices/processes.service';
 import {debounceTime, takeUntil} from 'rxjs/operators';
 import {Subject} from 'rxjs';
-import {TimeService} from '@ofServices/time.service';
 import {NgbDateStruct, NgbTimeStruct} from '@ng-bootstrap/ng-bootstrap';
 import {DateTimeNgb} from '@ofModel/datetime-ngb.model';
 import {ProcessStatesMultiSelectOptionsService} from '@ofServices/process-states-multi-select-options.service';
 import {MultiSelectOption} from '@ofModel/multiselect.model';
+import {MessageLevel} from '@ofModel/message.model';
+import {AlertMessageAction} from '@ofStore/actions/alert.actions';
+import {Store} from '@ngrx/store';
+import {AppState} from '@ofStore/index';
 
 import moment from 'moment';
+import {Utilities} from 'app/common/utilities';
+import {UserPreferencesService} from '@ofServices/user-preference.service';
+import {UserService} from '@ofServices/user.service';
 
 export enum FilterDateTypes {
     PUBLISH_DATE_FROM_PARAM = 'publishDateFrom',
@@ -51,14 +57,17 @@ export const transformToTimestamp = (date: NgbDateStruct, time: NgbTimeStruct): 
     templateUrl: './archives-logging-filters.component.html',
     styleUrls: ['./archives-logging-filters.component.scss']
 })
-export class ArchivesLoggingFiltersComponent implements OnInit, OnDestroy {
+export class ArchivesLoggingFiltersComponent implements OnInit, OnDestroy, AfterViewInit {
     @Input() public card: Card | LightCard;
-    @Input() parentForm: FormGroup;
+    @Input() parentForm: UntypedFormGroup;
     @Input() visibleProcesses: any[];
     @Input() hideChildStates: boolean;
     @Input() tags: any[];
     @Output() search = new EventEmitter<string>();
     @Output() reset = new EventEmitter<string>();
+
+    isCurrentUserInAdminGroup: boolean;
+    isAdminModeChecked: boolean;
 
     unsubscribe$: Subject<void> = new Subject<void>();
 
@@ -118,11 +127,18 @@ export class ArchivesLoggingFiltersComponent implements OnInit, OnDestroy {
     defaultMinPublishDate: NgbDateStruct;
 
     constructor(
+        private store: Store<AppState>,
         private configService: ConfigService,
-        private timeService: TimeService,
         private processesService: ProcessesService,
-        private processStatesDropdownListService: ProcessStatesMultiSelectOptionsService
-    ) {}
+        private processStatesDropdownListService: ProcessStatesMultiSelectOptionsService,
+        private userPreferences: UserPreferencesService,
+        private userService: UserService
+    ) {
+        this.isCurrentUserInAdminGroup = this.userService.isCurrentUserAdmin();
+
+        const isAdminModeCheckedInStorage = this.userPreferences.getPreference('opfab.isAdminModeChecked');
+        this.isAdminModeChecked = this.isCurrentUserInAdminGroup && isAdminModeCheckedInStorage === 'true';
+    }
 
     ngOnInit() {
         this.processesGroups = this.processesService.getProcessGroups();
@@ -138,21 +154,44 @@ export class ArchivesLoggingFiltersComponent implements OnInit, OnDestroy {
             .subscribe(() => this.setDateFilterBounds());
     }
 
+    ngAfterViewInit(): void {
+        this.setDateFilterBounds();
+    }
+
+    clearMultiFilters() {
+        this.statesMultiSelectOptionsPerProcesses = [];
+        this.processesWithoutProcessGroupMultiSelectOptions = [];
+        this.processMultiSelectOptionsPerProcessGroups.clear();
+        this.processGroupMultiSelectOptions = [];
+        this.tagsMultiSelectOptions = [];
+    }
+
     loadValuesForFilters() {
+        this.clearMultiFilters();
+
         this.statesMultiSelectOptionsPerProcesses =
-            this.processStatesDropdownListService.getStatesMultiSelectOptionsPerProcess(this.hideChildStates);
+            this.processStatesDropdownListService.getStatesMultiSelectOptionsPerProcess(
+                this.isAdminModeChecked,
+                this.hideChildStates
+            );
+
         this.processesWithoutProcessGroupMultiSelectOptions =
             this.processStatesDropdownListService.getProcessesWithoutProcessGroupMultiSelectOptions(
+                this.isAdminModeChecked,
                 this.visibleProcessesId
             );
+
         this.processMultiSelectOptionsPerProcessGroups =
             this.processStatesDropdownListService.getProcessesMultiSelectOptionsPerProcessGroup(
+                this.isAdminModeChecked,
                 this.visibleProcessesId
             );
+
         this.processGroupMultiSelectOptions = this.processStatesDropdownListService.getProcessGroupsMultiSelectOptions(
             this.processesWithoutProcessGroupMultiSelectOptions,
             this.processMultiSelectOptionsPerProcessGroups
         );
+
         // we must filter visibleProcesses to keep only the processes in the perimeter of the user
         const processesIds = [];
         this.statesMultiSelectOptionsPerProcesses.forEach((process) => processesIds.push(process.value));
@@ -166,8 +205,17 @@ export class ArchivesLoggingFiltersComponent implements OnInit, OnDestroy {
         this.setDefaultPublishDateFilter();
     }
 
+    toggleAdminMode() {
+        this.isAdminModeChecked = !this.isAdminModeChecked;
+        this.userPreferences.setPreference('opfab.isAdminModeChecked', String(this.isAdminModeChecked));
+        this.loadValuesForFilters();
+        this.resetForm();
+    }
+
     transformFiltersListToMap = (filters: any): void => {
         this.filters = new Map();
+        this.filters.set('adminMode', [this.isAdminModeChecked]);
+
         Object.keys(filters).forEach((key) => {
             const element = filters[key];
             // if the form element is date
@@ -191,11 +239,8 @@ export class ArchivesLoggingFiltersComponent implements OnInit, OnDestroy {
     }
 
     dateFilterToMap(key: string, element: any) {
-        const {date, time} = element;
-        if (date) {
-            const timeStamp = this.timeService.toNgBTimestamp(transformToTimestamp(date, time));
-            if (timeStamp !== 'NaN') this.filters.set(key, [timeStamp]);
-        }
+        const epochDate = Utilities.convertNgbDateTimeToEpochDate(element);
+        if (epochDate) this.filters.set(key, [epochDate]);
     }
 
     stateFilterToMap(element: any) {
@@ -254,7 +299,7 @@ export class ArchivesLoggingFiltersComponent implements OnInit, OnDestroy {
         });
     }
 
-    displayProcessGroupFilter() {
+    isProcessGroupFilterVisible(): boolean {
         return !!this.processGroupMultiSelectOptions && this.processGroupMultiSelectOptions.length > 1;
     }
 
@@ -320,7 +365,9 @@ export class ArchivesLoggingFiltersComponent implements OnInit, OnDestroy {
     }
 
     query(): void {
-        this.search.emit(null);
+        if (this.isFormValid()) {
+            this.search.emit(null);
+        }
     }
 
     resetForm() {
@@ -332,11 +379,106 @@ export class ArchivesLoggingFiltersComponent implements OnInit, OnDestroy {
         this.publishMaxDate = null;
         this.activeMinDate = null;
         this.activeMaxDate = null;
+        this.setDateFilterBounds();
         this.reset.emit(null);
     }
 
     ngOnDestroy() {
         this.unsubscribe$.next();
         this.unsubscribe$.complete();
+    }
+
+    private isFormValid(): boolean {
+        return this.areAllDatesWellFormatted() && this.areDatesInCorrectOrder();
+    }
+
+    private areAllDatesWellFormatted(): boolean {
+        const validationResult = this.validateDatesFormat();
+
+        if (!validationResult.areDatesCorrectlyFormatted) {
+            this.displayMessage(validationResult.errorMessageKey, '', MessageLevel.ERROR);
+        }
+
+        return validationResult.areDatesCorrectlyFormatted;
+    }
+
+    private validateDatesFormat(): {areDatesCorrectlyFormatted: boolean; errorMessageKey: string} {
+        if (!this.isDateWellFormatted('publishDateFrom'))
+            return {areDatesCorrectlyFormatted: false, errorMessageKey: 'shared.filters.invalidPublishStartDate'};
+        if (!this.isDateWellFormatted('publishDateTo'))
+            return {areDatesCorrectlyFormatted: false, errorMessageKey: 'shared.filters.invalidPublishEndDate'};
+        if (!this.isDateWellFormatted('activeFrom'))
+            return {areDatesCorrectlyFormatted: false, errorMessageKey: 'shared.filters.invalidActiveStartDate'};
+        if (!this.isDateWellFormatted('activeTo'))
+            return {areDatesCorrectlyFormatted: false, errorMessageKey: 'shared.filters.invalidActiveEndDate'};
+
+        return {areDatesCorrectlyFormatted: true, errorMessageKey: null};
+    }
+
+    private isDateWellFormatted(dateFieldName: string): boolean {
+        const dateControl = this.parentForm.get(dateFieldName);
+        const dateValue = this.extractTime(dateControl);
+        const isFieldEmpty = dateControl.value.date == null;
+
+        return isFieldEmpty || !isNaN(dateValue);
+    }
+
+    private extractTime(form: AbstractControl) {
+        const val = form.value;
+        if (!val || val === '') {
+            return null;
+        }
+
+        if (isNaN(val.time.hour)) {
+            val.time.hour = 0;
+        }
+        if (isNaN(val.time.minute)) {
+            val.time.minute = 0;
+        }
+        if (isNaN(val.time.second)) {
+            val.time.second = 0;
+        }
+
+        const converter = new DateTimeNgb(val.date, val.time);
+        return converter.convertToNumber();
+    }
+
+    private displayMessage(i18nKey: string, msg: string, severity: MessageLevel = MessageLevel.ERROR) {
+        this.store.dispatch(
+            new AlertMessageAction({alertMessage: {message: msg, level: severity, i18n: {key: i18nKey}}})
+        );
+    }
+
+    private areDatesInCorrectOrder() {
+        let result = true;
+
+        const publishStart = this.extractTime(this.parentForm.get('publishDateFrom'));
+        const publishEnd = this.extractTime(this.parentForm.get('publishDateTo'));
+
+        if (
+            publishStart != null &&
+            !isNaN(publishStart) &&
+            publishEnd != null &&
+            !isNaN(publishEnd) &&
+            publishStart > publishEnd
+        ) {
+            this.displayMessage('shared.filters.publishEndDateBeforeStartDate', '', MessageLevel.ERROR);
+            result = false;
+        }
+
+        const activeStart = this.extractTime(this.parentForm.get('activeFrom'));
+        const activeEnd = this.extractTime(this.parentForm.get('activeTo'));
+
+        if (
+            activeStart != null &&
+            !isNaN(activeStart) &&
+            activeEnd != null &&
+            !isNaN(activeEnd) &&
+            activeStart > activeEnd
+        ) {
+            this.displayMessage('shared.filters.activeEndDateBeforeStartDate', '', MessageLevel.ERROR);
+            result = false;
+        }
+        return result;
     }
 }

@@ -633,7 +633,7 @@ type-ahead > .badge-primary {
     }
     tr {
         height: 42px;
-        color: var(--opfab-text-color-stronger);
+        color: var(--opfab-text-color);
     }
 
     tr:nth-child(even) {
@@ -1053,4 +1053,31 @@ tag-input {
             );
         }
     }
+}
+
+.opfab-link {
+    display: block;
+    color: var(--opfab-navbar-color);
+    text-align: center;
+    text-decoration: underline;
+    span {
+        cursor: pointer;
+    }
+
+    &:hover,
+    &:focus {
+        color: var(--opfab-navbar-color-hover);
+        text-decoration: none;
+    }
+}
+
+.opfab-icon-help {
+    display: inline-block;
+    height: 13px;
+    width: 13px;
+    margin-bottom: -2px;
+    margin-right: 10px;
+    border-width: 0px;
+    background: var(--opfab-navbar-color-hover);
+    mask: url(../assets/images/icons/help.svg);
 }

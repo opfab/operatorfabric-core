@@ -13,9 +13,9 @@ import {AppState} from '@ofStore/index';
 import {ProcessesService} from '@ofServices/processes.service';
 import {Store} from '@ngrx/store';
 import {takeUntil, tap} from 'rxjs/operators';
-import {AbstractControl, FormControl, FormGroup} from '@angular/forms';
+import {UntypedFormControl, UntypedFormGroup} from '@angular/forms';
 import {ConfigService} from '@ofServices/config.service';
-import {TimeService} from '@ofServices/time.service';
+import {DateTimeFormatterService} from '@ofServices/date-time-formatter.service';
 import {NgbModal, NgbModalOptions, NgbModalRef} from '@ng-bootstrap/ng-bootstrap';
 import {CardService} from '@ofServices/card.service';
 import {LightCard} from '@ofModel/light-card.model';
@@ -27,9 +27,6 @@ import {Utilities} from 'app/common/utilities';
 import {Card, CardData} from '@ofModel/card.model';
 import {ArchivesLoggingFiltersComponent} from '../share/archives-logging-filters/archives-logging-filters.component';
 import {EntitiesService} from '@ofServices/entities.service';
-import {MessageLevel} from '@ofModel/message.model';
-import {AlertMessageAction} from '@ofStore/actions/alert.actions';
-import {DateTimeNgb} from '@ofModel/datetime-ngb.model';
 import {DisplayContext} from '@ofModel/templateGateway.model';
 
 @Component({
@@ -43,7 +40,7 @@ export class ArchivesComponent implements OnDestroy, OnInit {
     tags: any[];
     size: number;
     historySize: number;
-    archiveForm: FormGroup;
+    archiveForm: UntypedFormGroup;
 
     results: LightCard[];
     updatesByCardId: {
@@ -57,7 +54,6 @@ export class ArchivesComponent implements OnDestroy, OnInit {
     hasResult = false;
     firstQueryHasBeenDone = false;
     loadingInProgress = false;
-    loadingIsTakingMoreThanOneSecond = false;
     cardLoadingInProgress = false;
     cardLoadingIsTakingMoreThanOneSecond = false;
     isCollapsibleUpdatesActivated = false;
@@ -69,6 +65,7 @@ export class ArchivesComponent implements OnDestroy, OnInit {
     @ViewChild('cardLoadingInProgress') cardLoadingTemplate: ElementRef;
     @ViewChild('exportInProgress') exportTemplate: ElementRef;
     @ViewChild('filters') filtersTemplate: ArchivesLoggingFiltersComponent;
+
     selectedCard: Card;
     selectedChildCards: Card[];
     fromEntityOrRepresentativeSelectedCard = null;
@@ -78,28 +75,26 @@ export class ArchivesComponent implements OnDestroy, OnInit {
 
     displayContext: any = DisplayContext.ARCHIVE;
 
-    isThereProcessStateToDisplay: boolean;
-
     constructor(
         private store: Store<AppState>,
         private processesService: ProcessesService,
         private configService: ConfigService,
-        private timeService: TimeService,
+        private dateTimeFormatter: DateTimeFormatterService,
         private cardService: CardService,
         private translate: TranslateService,
         private userPreferences: UserPreferencesService,
         private modalService: NgbModal,
         private entitiesService: EntitiesService
     ) {
-        this.archiveForm = new FormGroup({
-            tags: new FormControl([]),
-            state: new FormControl([]),
-            process: new FormControl([]),
-            processGroup: new FormControl([]),
-            publishDateFrom: new FormControl(),
-            publishDateTo: new FormControl(''),
-            activeFrom: new FormControl(''),
-            activeTo: new FormControl('')
+        this.archiveForm = new UntypedFormGroup({
+            tags: new UntypedFormControl([]),
+            state: new UntypedFormControl([]),
+            process: new UntypedFormControl([]),
+            processGroup: new UntypedFormControl([]),
+            publishDateFrom: new UntypedFormControl(),
+            publishDateTo: new UntypedFormControl(''),
+            activeFrom: new UntypedFormControl(''),
+            activeTo: new UntypedFormControl('')
         });
 
         processesService.getAllProcesses().forEach((process) => {
@@ -124,8 +119,6 @@ export class ArchivesComponent implements OnDestroy, OnInit {
         this.tags = this.configService.getConfigValue('archive.filters.tags.list');
         this.results = [];
         this.updatesByCardId = [];
-
-        this.isThereProcessStateToDisplay = this.processesService.getStatesListPerProcess(true).size > 0;
     }
 
     toggleCollapsibleUpdates() {
@@ -144,49 +137,17 @@ export class ArchivesComponent implements OnDestroy, OnInit {
         this.resultsNumber = 0;
     }
 
-    private displayMessage(i18nKey: string, msg: string, severity: MessageLevel = MessageLevel.ERROR) {
-        this.store.dispatch(
-            new AlertMessageAction({alertMessage: {message: msg, level: severity, i18n: {key: i18nKey}}})
-        );
-    }
-
     sendQuery(page_number): void {
         this.technicalError = false;
-        const publishStart = this.extractTime(this.archiveForm.get('publishDateFrom'));
-        const publishEnd = this.extractTime(this.archiveForm.get('publishDateTo'));
-
-        if (
-            publishStart != null &&
-            !isNaN(publishStart) &&
-            publishEnd != null &&
-            !isNaN(publishEnd) &&
-            publishStart > publishEnd
-        ) {
-            this.displayMessage('shared.filters.publishEndDateBeforeStartDate', '', MessageLevel.ERROR);
-            return;
-        }
-
-        const activeStart = this.extractTime(this.archiveForm.get('activeFrom'));
-        const activeEnd = this.extractTime(this.archiveForm.get('activeTo'));
-
-        if (
-            activeStart != null &&
-            !isNaN(activeStart) &&
-            activeEnd != null &&
-            !isNaN(activeEnd) &&
-            activeStart > activeEnd
-        ) {
-            this.displayMessage('shared.filters.activeEndDateBeforeStartDate', '', MessageLevel.ERROR);
-            return;
-        }
-
         this.loadingInProgress = true;
-        this.checkForArchiveLoadingInProgressForMoreThanOneSecond();
+
         const {value} = this.archiveForm;
         this.filtersTemplate.transformFiltersListToMap(value);
         this.filtersTemplate.filters.set('size', [this.size.toString()]);
         this.filtersTemplate.filters.set('page', [page_number]);
         this.filtersTemplate.filters.set('latestUpdateOnly', [String(this.isCollapsibleUpdatesActivated)]);
+        const isAdminModeChecked = this.filtersTemplate.filters.get('adminMode')[0];
+
         this.cardService
             .fetchArchivedCards(this.filtersTemplate.filters)
             .pipe(takeUntil(this.unsubscribe$))
@@ -201,10 +162,9 @@ export class ArchivesComponent implements OnDestroy, OnInit {
                     if (this.isCollapsibleUpdatesActivated && this.hasResult) {
                         const requestID = new Date().valueOf();
                         this.lastRequestID = requestID;
-                        this.loadUpdatesByCardId(requestID);
+                        this.loadUpdatesByCardId(requestID, isAdminModeChecked);
                     } else {
                         this.loadingInProgress = false;
-                        this.loadingIsTakingMoreThanOneSecond = false;
                         this.updatesByCardId = [];
                         this.results.forEach((lightCard) => {
                             this.updatesByCardId.push({
@@ -225,13 +185,6 @@ export class ArchivesComponent implements OnDestroy, OnInit {
     }
 
     // we show a spinner on screen if archives loading takes more than 1 second
-    private checkForArchiveLoadingInProgressForMoreThanOneSecond() {
-        setTimeout(() => {
-            this.loadingIsTakingMoreThanOneSecond = this.loadingInProgress;
-        }, 1000);
-    }
-
-    // we show a spinner on screen if archives loading takes more than 1 second
     private checkForCardLoadingInProgressForMoreThanOneSecond() {
         setTimeout(() => {
             this.cardLoadingIsTakingMoreThanOneSecond = this.cardLoadingInProgress;
@@ -246,7 +199,7 @@ export class ArchivesComponent implements OnDestroy, OnInit {
         }, 1000);
     }
 
-    loadUpdatesByCardId(requestID: number) {
+    loadUpdatesByCardId(requestID: number, isAdminModeChecked: boolean) {
         this.updatesByCardId = [];
         this.results.forEach((lightCard, index) => {
             this.updatesByCardId.splice(index, 0, {
@@ -259,27 +212,37 @@ export class ArchivesComponent implements OnDestroy, OnInit {
 
         const updatesRequests$ = [];
         this.results.forEach((lightCard, index) => {
-            updatesRequests$.push(this.fetchUpdatesByCardId(lightCard, index, requestID));
+            updatesRequests$.push(this.fetchUpdatesByCardId(lightCard, index, requestID, isAdminModeChecked));
         });
 
         Utilities.subscribeAndWaitForAllObservablesToEmitAnEvent(updatesRequests$).subscribe(() => {
             this.loadingInProgress = false;
-            this.loadingIsTakingMoreThanOneSecond = false;
         });
     }
 
-    private fetchUpdatesByCardId(lightCard: LightCard, index: number, requestID: number): Observable<Page<LightCard>> {
+    private fetchUpdatesByCardId(
+        lightCard: LightCard,
+        index: number,
+        requestID: number,
+        isAdminModeChecked: boolean
+    ): Observable<Page<LightCard>> {
         const filters: Map<string, string[]> = new Map();
         filters.set('process', [lightCard.process]);
         filters.set('processInstanceId', [lightCard.processInstanceId]);
         filters.set('size', [(1 + this.historySize).toString()]);
         filters.set('page', ['0']);
+
+        if (isAdminModeChecked) {
+            filters.set('adminMode', ['true']);
+        }
+
         return this.cardService.fetchArchivedCards(filters).pipe(
             takeUntil(this.unsubscribe$),
             tap({
                 next: (page: Page<LightCard>) => {
                     this.removeMostRecentCardFromHistories(lightCard.id, page.content);
-
+                    // log to debug CI/CD Failures
+                    console.debug(new Date().toISOString, 'Archives : receive card update ');
                     // since we are in asynchronous mode, we test requestId to avoid that the requests "overlap" and that the results appear in a wrong order
                     if (requestID === this.lastRequestID)
                         this.updatesByCardId.splice(index, 1, {
@@ -313,27 +276,7 @@ export class ArchivesComponent implements OnDestroy, OnInit {
     }
 
     displayTime(date) {
-        return this.timeService.formatDateTime(date);
-    }
-
-    private extractTime(form: AbstractControl) {
-        const val = form.value;
-        if (!val || val == '') {
-            return null;
-        }
-
-        if (isNaN(val.time.hour)) {
-            val.time.hour = 0;
-        }
-        if (isNaN(val.time.minute)) {
-            val.time.minute = 0;
-        }
-        if (isNaN(val.time.second)) {
-            val.time.second = 0;
-        }
-
-        const converter = new DateTimeNgb(val.date, val.time);
-        return converter.convertToNumber();
+        return this.dateTimeFormatter.getFormattedDateAndTimeFromEpochDate(date);
     }
 
     // EXPORT TO EXCEL
@@ -366,10 +309,12 @@ export class ArchivesComponent implements OnDestroy, OnInit {
                 lines.forEach((card: LightCard) => {
                     if (typeof card !== undefined) {
                         // TO DO translation for old process should be done, but loading local arrives too late, solution to find
-                        if (this.filtersTemplate.displayProcessGroupFilter())
+                        if (this.filtersTemplate.isProcessGroupFilterVisible())
                             exportArchiveData.push({
                                 [severityColumnName]: Utilities.translateSeverity(this.translate, card.severity),
-                                [publishDateColumnName]: this.timeService.formatDateTime(card.publishDate),
+                                [publishDateColumnName]: this.dateTimeFormatter.getFormattedDateAndTimeFromEpochDate(
+                                    card.publishDate
+                                ),
                                 [businessDateColumnName]:
                                     this.displayTime(card.startDate) + '-' + this.displayTime(card.endDate),
                                 [titleColumnName]: card.titleTranslated,
@@ -381,7 +326,9 @@ export class ArchivesComponent implements OnDestroy, OnInit {
                         else
                             exportArchiveData.push({
                                 [severityColumnName]: Utilities.translateSeverity(this.translate, card.severity),
-                                [publishDateColumnName]: this.timeService.formatDateTime(card.publishDate),
+                                [publishDateColumnName]: this.dateTimeFormatter.getFormattedDateAndTimeFromEpochDate(
+                                    card.publishDate
+                                ),
                                 [businessDateColumnName]:
                                     this.displayTime(card.startDate) + '-' + this.displayTime(card.endDate),
                                 [titleColumnName]: card.titleTranslated,
@@ -447,11 +394,11 @@ export class ArchivesComponent implements OnDestroy, OnInit {
     }
 
     getFormattedPublishDate(): any {
-        return this.timeService.formatDate(this.selectedCard.publishDate);
+        return this.dateTimeFormatter.getFormattedDateFromEpochDate(this.selectedCard.publishDate);
     }
 
     getFormattedPublishTime(): any {
-        return this.timeService.formatTime(this.selectedCard.publishDate);
+        return this.dateTimeFormatter.getFormattedTimeFromEpochDate(this.selectedCard.publishDate);
     }
 
     ngOnDestroy() {

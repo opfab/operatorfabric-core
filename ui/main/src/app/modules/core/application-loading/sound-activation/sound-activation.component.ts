@@ -11,6 +11,7 @@ import {Component, OnInit, TemplateRef, ViewChild} from '@angular/core';
 import {NgbModal, NgbModalRef} from '@ng-bootstrap/ng-bootstrap';
 import {LogOption, OpfabLoggerService} from '@ofServices/logs/opfab-logger.service';
 import {SoundNotificationService} from '@ofServices/sound-notification.service';
+import {Utilities} from 'app/common/utilities';
 
 // Due to auto-policy in chromium based browsers, if the user does not interact with the application
 // sound is not activated. This component opens a modal and by clicking OK the user interacts with the application
@@ -24,7 +25,6 @@ import {SoundNotificationService} from '@ofServices/sound-notification.service';
     templateUrl: './sound-activation.component.html'
 })
 export class SoundActivationComponent implements OnInit {
-    
     @ViewChild('noSound') noSoundPopupRef: TemplateRef<any>;
     private modalRef: NgbModalRef;
 
@@ -40,9 +40,9 @@ export class SoundActivationComponent implements OnInit {
 
     private activateSoundIfNotActivated() {
         setTimeout(() => {
-            let playSoundOnExternalDevice = this.soundNotificationService.getPlaySoundOnExternalDevice();
+            const playSoundOnExternalDevice = this.soundNotificationService.getPlaySoundOnExternalDevice();
             if (
-                this.isNavigatorChromiumBased() &&
+                Utilities.isNavigatorChromiumBased() &&
                 !playSoundOnExternalDevice &&
                 this.soundNotificationService.isAtLeastOneSoundActivated()
             ) {
@@ -57,10 +57,6 @@ export class SoundActivationComponent implements OnInit {
                 }
             }
         }, 3000);
-    }
-
-    private isNavigatorChromiumBased() {
-        return navigator.userAgent.indexOf('Chrom') > -1;
     }
 
     public closeModal() {

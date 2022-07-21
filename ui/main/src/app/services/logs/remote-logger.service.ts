@@ -10,9 +10,7 @@
 import {environment} from '@env/environment';
 import {HttpClient} from '@angular/common/http';
 import {Injectable} from '@angular/core';
-import {AppState} from '@ofStore/index';
-import {Store} from '@ngrx/store';
-import {buildSettingsOrConfigSelector} from '@ofStore/selectors/settings.x.config.selectors';
+import {ConfigService} from '@ofServices/config.service';
 
 @Injectable({
     providedIn: 'root'
@@ -22,10 +20,10 @@ export class RemoteLoggerService {
     private isActive = false;
     private logs = [];
 
-    constructor(private httpClient: HttpClient, private store: Store<AppState>) {
+    constructor(private httpClient: HttpClient, private configService: ConfigService) {
         this.remoteLogsUrl = `${environment.urls.remoteLogs}`;
-        this.store
-            .select(buildSettingsOrConfigSelector('remoteLoggingEnabled'))
+        configService
+            .getConfigValueAsObservable('settings.remoteLoggingEnabled', false)
             .subscribe((remoteLoggingEnabled) => this.setRemoteLoggerActive(remoteLoggingEnabled));
         this.regularlyFlush();
     }

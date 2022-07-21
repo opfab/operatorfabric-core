@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2021, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2022, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -11,22 +11,28 @@ import {Component, OnDestroy, OnInit} from '@angular/core';
 import {BaseSettingDirective} from '../base-setting/base-setting.directive';
 import {Store} from '@ngrx/store';
 import {AppState} from '@ofStore/index';
-import {FormControl, FormGroup, Validators} from '@angular/forms';
+import {UntypedFormControl, UntypedFormGroup, Validators} from '@angular/forms';
+import {ConfigService} from '@ofServices/config.service';
+import {SettingsService} from '@ofServices/settings.service';
 
 @Component({
     selector: 'of-multi-settings',
     templateUrl: './multi-settings.component.html'
 })
 export class MultiSettingsComponent extends BaseSettingDirective implements OnInit, OnDestroy {
-    constructor(protected store: Store<AppState>) {
-        super(store);
+    constructor(
+        protected store: Store<AppState>,
+        protected configService: ConfigService,
+        protected settingsService: SettingsService
+    ) {
+        super(store, configService, settingsService);
     }
 
     initFormGroup() {
         const validators = this.computeMultiValidators();
-        return new FormGroup(
+        return new UntypedFormGroup(
             {
-                setting: new FormControl([], validators)
+                setting: new UntypedFormControl([], validators)
             },
             {updateOn: 'change'}
         );

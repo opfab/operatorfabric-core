@@ -31,8 +31,6 @@ export const emptyAppState4Test: AppState = {
     authentication: null,
     card: null,
     menu: null,
-    config: null,
-    settings: null,
     user: null,
     cardsSubscription: null,
     globalStyle: null

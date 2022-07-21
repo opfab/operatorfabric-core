@@ -1,7 +1,7 @@
 swagger: '2.0'
 info:
   description: IMPORTANT - The Try it Out button will generate curl requests for examples, but executing them through the UI will not work as authentication has not been set up. This page is for documentation only.
-  version: 3.8.0.RELEASE
+  version: 3.9.0.RELEASE
   title: BusinessConfig Management
   termsOfService: ''
   contact:
@@ -578,8 +578,8 @@ definitions:
     type: string
     description: |-
       This field is used to define how a card is considered as acknowledged in the feed. >
-      * USER_HAS_ACKNOWLEDGED - For the card to appear acknowledged in the feed, it suffices that the user acknowledges it
-      * ONE_ENTITY_OF_USER_HAS_ACKNOWLEDGED - For the card to appear acknowledged in the feed, one (or more) entity(ies) of the user must acknowledge it
+      * USER_HAS_ACKNOWLEDGED - For the card to appear acknowledged in the feed, it suffices that the user acknowledges it 
+      * ONE_ENTITY_OF_USER_HAS_ACKNOWLEDGED - For the card to appear acknowledged in the feed, one (or more) entity(ies) of the user must acknowledge it 
       * ALL_ENTITIES_OF_USER_HAVE_ACKNOWLEDGED - For the card to appear acknowledged in the feed, all the entities of the user must acknowledge it
     enum:
       - UserHasAcknowledged

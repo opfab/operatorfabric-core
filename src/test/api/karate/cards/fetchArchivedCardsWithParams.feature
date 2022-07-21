@@ -212,6 +212,25 @@ Feature: Archives
 }
 """
 
+    * def cardNotInPerimeters =
+"""
+{
+	"publisher" : "operator1_fr",
+	"processVersion" : "1",
+	"process"  :"api_test",
+	"processInstanceId" : "cardNotInPerimeters0",
+	"state": "stateNotInPerimeters",
+	"groupRecipients": ["Dispatcher"],
+	"severity" : "ALARM",
+	"startDate" : 1583333122000,
+	"endDate" : 1583733122000,
+	"lttd" : 1583733122000,
+	"summary" : {"key" : "defaultProcess.summary"},
+	"title" : {"key" : "defaultProcess.title"},
+	"data" : {"message":"new message (card10) "}
+}
+"""
+
     * def perimeter =
 """
 {
@@ -306,6 +325,12 @@ Feature: Archives
     When method post
     Then status 201
 
+    Given url opfabPublishCardUrl + 'cards'
+    And header Authorization = 'Bearer ' + authTokenAsTSO
+    And request cardNotInPerimeters
+    When method post
+    Then status 201
+
  Scenario: fetch the first page
 
     Given url opfabUrl + 'cards/archives/' +'?page=0'
@@ -313,6 +338,38 @@ Feature: Archives
     Then method get
     Then status 200
     And match response.numberOfElements == 9
+
+  #Test parameter adminMode
+  Scenario: fetch all archived cards for operator1_fr, not in admin mode
+    Given url opfabUrl + 'cards/archives/' +'?adminMode=false'
+    And header Authorization = 'Bearer ' + authTokenAsTSO
+    When method get
+    Then status 200
+    And assert response.numberOfElements == 9
+
+  #Test parameter adminMode
+  Scenario: fetch all archived cards for operator1_fr, in admin mode
+    Given url opfabUrl + 'cards/archives/' + '?adminMode=true'
+    And header Authorization = 'Bearer ' + authTokenAsTSO
+    When method get
+    Then status 200
+    And assert response.numberOfElements == 9
+
+  #Test parameter adminMode
+  Scenario: fetch all archived cards for admin, not in admin mode
+    Given url opfabUrl + 'cards/archives/' + '?adminMode=false'
+    And header Authorization = 'Bearer ' + authTokenAdmin
+    When method get
+    Then status 200
+    And assert response.numberOfElements == 0
+
+  #Test parameter adminMode
+  Scenario: fetch all archived cards for admin, in admin mode
+    Given url opfabUrl + 'cards/archives/' +'?adminMode=true'
+    And header Authorization = 'Bearer ' + authTokenAdmin
+    When method get
+    Then status 200
+    And assert response.numberOfElements == 10
 
     Scenario: change number of elements
 

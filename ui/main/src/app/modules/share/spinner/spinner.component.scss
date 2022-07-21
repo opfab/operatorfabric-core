@@ -1,0 +1,26 @@
+/* Copyright (c) 2022, RTE (http://www.rte-france.com)
+ * See AUTHORS.txt
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ * SPDX-License-Identifier: MPL-2.0
+ * This file is part of the OperatorFabric project.
+ */
+
+
+.opfab-slow-spinner {
+    -webkit-animation: fa-spin 2s infinite linear;
+    animation: fa-spin 2s infinite linear;
+}
+
+.opfab-loading-spinner {
+    padding-top: 20px;
+    border-radius: 8px;
+    font-size: 68px;
+    width: 150px;
+    height: 150px;
+    margin: auto;
+    text-align: center;
+    background-color: rgba(0, 0, 0, 0); // set the background to transparent
+    color: var(--opfab-text-color);
+}

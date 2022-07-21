@@ -8,7 +8,7 @@
  */
 
 import {Component, Input, OnInit} from '@angular/core';
-import {FormControl, FormGroup, Validators} from '@angular/forms';
+import {UntypedFormControl, UntypedFormGroup, Validators} from '@angular/forms';
 import {NgbActiveModal} from '@ng-bootstrap/ng-bootstrap';
 import {User} from '@ofModel/user.model';
 import {UserService} from '@ofServices/user.service';
@@ -22,9 +22,9 @@ import {MultiSelectConfig} from '@ofModel/multiselect.model';
     styleUrls: ['./externaldevicesconfiguration-modal.component.scss']
 })
 export class ExternaldevicesconfigurationModalComponent implements OnInit {
-    userdeviceForm = new FormGroup({
-        userLogin: new FormControl('', [Validators.required]),
-        externalDeviceIds: new FormControl([], [Validators.required])
+    userdeviceForm = new UntypedFormGroup({
+        userLogin: new UntypedFormControl('', [Validators.required]),
+        externalDeviceIds: new UntypedFormControl([], [Validators.required])
     });
 
     @Input() row: any;
@@ -41,6 +41,13 @@ export class ExternaldevicesconfigurationModalComponent implements OnInit {
         placeholderKey: 'externalDevicesConfiguration.input.selectDeviceText',
         sortOptions: true,
         nbOfDisplayValues: 6
+    };
+
+    public multiSelectConfig: MultiSelectConfig = {
+        labelKey: 'externalDevicesConfiguration.userLogin',
+        multiple: false,
+        search: true,
+        sortOptions: true
     };
 
     constructor(
@@ -69,7 +76,7 @@ export class ExternaldevicesconfigurationModalComponent implements OnInit {
         this.users.forEach((usr) => {
             const alreadyConfiguredUser = this.configurations.find((c) => c.userLogin === usr.login);
             if (!alreadyConfiguredUser) {
-                this.usersDropdownList.push(usr.login);
+                this.usersDropdownList.push({value: usr.login, label: usr.login});
             }
         });
         this.isLoadingUsers = false;

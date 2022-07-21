@@ -8,7 +8,7 @@
  */
 
 import {Component, ElementRef, Input, OnInit, ViewChild} from '@angular/core';
-import {FormControl, FormGroup} from '@angular/forms';
+import {UntypedFormControl, UntypedFormGroup} from '@angular/forms';
 import {Store} from '@ngrx/store';
 import {AppState} from '@ofStore/index';
 import {CardService} from '@ofServices/card.service';
@@ -54,7 +54,7 @@ export class UserCardComponent implements OnInit {
     public userCardConfiguration: UserCard;
 
     // Severity
-    private severityForm: FormGroup;
+    private severityForm: UntypedFormGroup;
     public severityVisible = true;
 
     // Dates
@@ -70,7 +70,7 @@ export class UserCardComponent implements OnInit {
     private currentEndDate = new Date().valueOf() + 60000 * 60 * 24;
     private currentLttd = this.defaultEndDate - 60000;
 
-    private userEntitiesAllowedToSendCardOptions = [];
+    public userEntitiesAllowedToSendCardOptions = [];
 
     // Card emitter
     @ViewChild('cardEmitterForm') cardEmitterForm: UsercardSelectCardEmitterFormComponent;
@@ -88,6 +88,8 @@ export class UserCardComponent implements OnInit {
     public editCardStateId: string;
     private datesFromCardToEdit: boolean;
     private datesFromTemplate: boolean;
+    isLoadingCardTemplate = false;
+    isPreparingCard = false;
 
     // Preview and send card
     readonly displayContext = DisplayContext.PREVIEW;
@@ -123,8 +125,8 @@ export class UserCardComponent implements OnInit {
         this.pageLoading = true;
         this.datesFromTemplate = true;
         usercardTemplateGateway.initUsercardTemplateGateway();
-        this.severityForm = new FormGroup({
-            severity: new FormControl('')
+        this.severityForm = new UntypedFormGroup({
+            severity: new UntypedFormControl('')
         });
         this.severityForm.get('severity').setValue(Severity.ALARM);
 
@@ -136,8 +138,11 @@ export class UserCardComponent implements OnInit {
             this.loadCardForEdition();
         } else {
             usercardTemplateGateway.editionMode = 'CREATE';
-            this.publisherForCreatingUsercard = this.userEntitiesAllowedToSendCardOptions[0].value;
             this.pageLoading = false;
+
+            if (this.userEntitiesAllowedToSendCardOptions.length > 0) {
+                this.publisherForCreatingUsercard = this.userEntitiesAllowedToSendCardOptions[0].value;
+            }
         }
 
         this.useDescriptionFieldForEntityList = this.configService.getConfigValue(
@@ -340,18 +345,21 @@ export class UserCardComponent implements OnInit {
 
         if (!!this.userCardConfiguration && !!this.userCardConfiguration.template) {
             const templateName = this.userCardConfiguration.template;
-            usercardTemplateGateway.setEntityUsedForSendingCard = (entity) => {
+            usercardTemplateGateway.setEntityUsedForSendingCard = () => {
                 // default method if not override by template
             };
             templateGateway.getSpecificCardInformation = null;
             usercardTemplateGateway.getSpecificCardInformation = null;
             if (!this.cardToEdit) this.setDefaultDateFormValues();
 
+            this.isLoadingCardTemplate = true;
+
             this.handlebars
                 .queryTemplate(this.selectedProcessId, selected.version, templateName)
                 .pipe(map((t) => t(new DetailContext(card, null, null))))
                 .subscribe({
                     next: (template) => {
+                        this.isLoadingCardTemplate = false;
                         this.userCardTemplate = this.sanitizer.bypassSecurityTrustHtml(template);
                         setTimeout(() => {
                             // wait for DOM rendering
@@ -364,6 +372,8 @@ export class UserCardComponent implements OnInit {
                         }, 10);
                     },
                     error: (error) => {
+                        this.isLoadingCardTemplate = false;
+
                         this.opfabLogger.error(
                             'WARNING impossible to load template ' + templateName + ', error = ' + error
                         );
@@ -427,9 +437,12 @@ export class UserCardComponent implements OnInit {
         const cardEmitter = this.findPublisherForCreatingUsercard();
         const recipients = this.getRecipients();
 
+        this.isPreparingCard = true;
+
         this.cardService
             .postTranslateCardField(selectedProcess.id, selectedProcess.version, title)
             .subscribe((response) => {
+                this.isPreparingCard = false;
                 const titleTranslated = response.body.translatedField;
                 this.card = {
                     id: 'dummyId',

@@ -863,10 +863,10 @@ describe('Time line moves', function () {
 
         hoverNthCircle(0);
         cy.get(".popover-body").find('button').should("have.length", 1);
-        cy.get("#opfab-div-card-template").should("not.exist");
+        cy.get("#opfab-div-card-template-processed").should("not.exist");
 
         clickNthCircle(0);
-        cy.get("#opfab-div-card-template").should("exist");
+        cy.get("#opfab-div-card-template-processed").should("exist");
         checkDisplayedCardTitle("State to test template rendering features");
     
         cy.sendCard('defaultProcess/chartLine.json');
@@ -880,7 +880,7 @@ describe('Time line moves', function () {
 
         // Clicking on a circle with several cards should not change the currently displayed card
         clickNthCircle(1);
-        cy.get("#opfab-div-card-template").should("exist");
+        cy.get("#opfab-div-card-template-processed").should("exist");
         checkDisplayedCardTitle("State to test template rendering features");
 
 

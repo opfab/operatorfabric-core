@@ -13,7 +13,7 @@ describe('Test translations', function () {
     const DUTCH = 'nl';
 
     const ENGLISH_SETTINGS = 'SETTINGS';
-    const FRENCH_SETTINGS = 'PARAMETRES';
+    const FRENCH_SETTINGS = 'PARAMÈTRES';
     const DUTCH_SETTINGS = 'INSTELLINGEN';
 
     function changeLanguage(newLanguage, useClock) {
@@ -23,7 +23,12 @@ describe('Test translations', function () {
         cy.get('.opfab-right-menu').should('exist');
 
         cy.get('#opfab-navbar-right-menu-settings').should('exist').click();
-        cy.get('#opfab-setting-locale').select(newLanguage);
+
+        if (useClock) cy.tick(1000);
+        cy.get("#opfab-setting-locale").click();
+        if (useClock) cy.tick(1000);
+        cy.get("#opfab-setting-locale").find('[data-value="' +newLanguage + '"]' ).click();
+
 
         // Wait for the language to be changed
         if (useClock) {
@@ -179,12 +184,16 @@ describe('Test translations', function () {
         cy.get('#opfab-feed-filter-ack-notack-label').should('have.text', notAcknowledgedText);
     }
 
-    function checkDateFilterTexts(dateTitle, startText, endText, applyToTimelineText, resetText) {
+    function checkDateFilterTexts(dateTitle, startText, endText, applyToTimelineText) {
         cy.get('#opfab-feed-filter-date-title').should('have.text', dateTitle);
         checkLabel('#opfab-feed-filter-dateTimeFrom', startText);
         checkLabel('#opfab-feed-filter-dateTimeTo', endText);
-
         cy.get('#opfab-timeline-filter-form').should('have.text', applyToTimelineText);
+    }
+
+
+    function checkResetText(resetText) {
+        cy.get('#opfab-feed-filter-reset').find('span').should('have.text', resetText);
     }
 
     function checkLabel(labelId, labelText) {
@@ -250,8 +259,8 @@ describe('Test translations', function () {
         checkArchivesScreenTexts('Select a Service', 'Select a Tag', 'Select a Process', 'Select a State', 'SEARCH', 'RESET');
 
         changeLanguage(FRENCH);
-        checkArchivesScreenLabels('SERVICE', 'ETIQUETTES', 'PROCESSUS', 'ETAT', 'PUBLIEE A PARTIR DE', "PUBLIEE JUSQU'A", 'ACTIVE A PARTIR DE', "ACTIVE JUSQU'A");
-        checkArchivesScreenTexts('Sélectionner un Service', 'Sélectionner une Etiquette', 'Sélectionner un Processus', 'Sélectionner un Etat', 'RECHERCHER', 'REINITIALISER');
+        checkArchivesScreenLabels('SERVICE', 'ÉTIQUETTES', 'PROCESSUS', 'ÉTAT', 'PUBLIÉE À PARTIR DE', "PUBLIÉE JUSQU'À", 'ACTIVE À PARTIR DE', "ACTIVE JUSQU'À");
+        checkArchivesScreenTexts('Sélectionner un Service', 'Sélectionner une Étiquette', 'Sélectionner un Processus', 'Sélectionner un État', 'RECHERCHER', 'RÉINITIALISER');
 
         changeLanguage(DUTCH);
         checkArchivesScreenLabels('DIENST', 'LABELS', 'PROCES', 'STATUS', 'PUBLICEREN VAN', 'PUBLICEREN TOT', 'ACTIEF VAN', 'ACTIEF TOT');
@@ -266,7 +275,7 @@ describe('Test translations', function () {
         checkMonitoringResultTexts('Cards with response from my entity ');
 
         changeLanguage(FRENCH);
-        checkMonitoringFilterTexts('SERVICE', 'Sélectionner un Service', 'PROCESSUS', 'Sélectionner un Processus', 'ÉTAT DU PROCESSUS', 'Sélectionner un État de processus', 'RECHERCHER', 'REINITIALISER');
+        checkMonitoringFilterTexts('SERVICE', 'Sélectionner un Service', 'PROCESSUS', 'Sélectionner un Processus', 'ÉTAT DU PROCESSUS', 'Sélectionner un État de processus', 'RECHERCHER', 'RÉINITIALISER');
         checkMonitoringResultTexts('Cartes avec réponse de mon entité ');
 
         changeLanguage(DUTCH);
@@ -277,7 +286,7 @@ describe('Test translations', function () {
     it('Check Business period translations', function () {
         const currentDate = new Date(2030, 11, 31, 23, 46);
         cy.loginWithClock(currentDate);
-
+       
         changeLanguage(ENGLISH, true);
         cy.tick(1000);
         cy.get('#opfab-navbar-menu-feed').click();
@@ -317,23 +326,30 @@ describe('Test translations', function () {
         changeLanguage(ENGLISH);
         cy.get('#opfab-navbar-menu-feed').click();
         cy.get('#opfab-feed-filter-btn-filter').click();
+
         checkNotificationSeverityTexts('Alarm', 'Action', 'Compliant', 'Information');
         checkAknowledgementTexts('Acknowledgement', 'All', 'Acknowledged', 'Not acknowledged');
-        checkDateFilterTexts('Receipt date', 'START', 'END', 'Apply filters to timeline', 'Reset');
+        checkDateFilterTexts('Receipt date', 'START', 'END', 'Apply filters to timeline');
+        
+        // Select 'All' on Acknowledgement filter to show the "Reset" link
+        cy.get('#opfab-feed-filter-ack-all').click();
+        checkResetText('Reset');
 
         changeLanguage(FRENCH);
         cy.get('#opfab-navbar-menu-feed').click();
-        cy.get('#opfab-feed-filter-btn-filter').click()
+        cy.get('#opfab-feed-filter-btn-filter').click();
         checkNotificationSeverityTexts('Alarme', 'Action', 'Conforme', 'Information');
         checkAknowledgementTexts('Acquittement', 'Toutes', 'Acquittées', 'Non acquittées');
-        checkDateFilterTexts('Date de réception', 'DÉBUT', 'FIN', 'Appliquer les filtres à la timeline', 'Réinitialiser');
+        checkDateFilterTexts('Date de réception', 'DÉBUT', 'FIN', 'Appliquer les filtres à la timeline');
+        checkResetText('Réinitialiser');
 
         changeLanguage(DUTCH);
         cy.get('#opfab-navbar-menu-feed').click();
-        cy.get('#opfab-feed-filter-btn-filter').click()
+        cy.get('#opfab-feed-filter-btn-filter').click();
         checkNotificationSeverityTexts('Alarm', 'Actie', 'Conform', 'Informatie');
         checkAknowledgementTexts('Bevestigen', 'Alles', 'Bevestigd', 'Niet bevestigd');
-        checkDateFilterTexts('Ontvangstdatum', 'START', 'EIND', 'Filters toepassen op tijdlijn', 'Opnieuw installen');
+        checkDateFilterTexts('Ontvangstdatum', 'START', 'EIND', 'Filters toepassen op tijdlijn');
+        checkResetText('Opnieuw instellen');
     });
 
     it('Check translation for non-existent card', function () {
@@ -341,14 +357,14 @@ describe('Test translations', function () {
 
         changeLanguage(ENGLISH);
         loadNonExistingCard();
-        checkFeedTexts('The card you are looking for was not found');
+        checkFeedTexts('The card you are looking for was not found.');
 
         changeLanguage(FRENCH);
         loadNonExistingCard();
-        checkFeedTexts("La carte que vous cherchez n'a pas été trouvée");
+        checkFeedTexts("La carte que vous cherchez n'a pas été trouvée.");
 
         changeLanguage(DUTCH);
         loadNonExistingCard();
-        checkFeedTexts('De kaart die u zoekt werd niet gevonden');
+        checkFeedTexts('De kaart die u zoekt werd niet gevonden.');
     });
 });
