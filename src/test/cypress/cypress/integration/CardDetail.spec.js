@@ -60,6 +60,7 @@ describe('Card detail', function () {
             cy.get("#templateGateway-getEntity-ENTITY1_FR").contains(/^ENTITY1_FR,Control Center FR North,Control Center FR North,true,ENTITY_FR,FR1 label$/);
             cy.get("#screenSize").contains("md");
             cy.get("#templateGateway-onTemplateRenderingComplete").contains("ok");
+
             // see card in full screen 
             cy.get("#opfab-card-detail-fullscreen-button").click();
             cy.get("#screenSize").contains("lg");
@@ -72,6 +73,9 @@ describe('Card detail', function () {
             cy.get("#handlebars-simpleData").contains(/^test$/);
             cy.get("#handlebars-if").contains(/^ok$/);
             cy.get("#handlebars-each").contains(/^123$/);
+
+            // Check card detail footer contains card reception date and time 
+            cy.get('.opfab-card-received-footer').contains(/Received on \d{2}\/\d{2}\/\d{4} at ((1[0-2]|0?[1-9]):([0-5][0-9]) ([AP]M))/);
 
         });
 
@@ -132,7 +136,9 @@ describe('Card detail', function () {
             cy.get("#handlebars-simpleData").contains(/^test$/);
             cy.get("#handlebars-if").contains(/^ok$/);
             cy.get("#handlebars-each").contains(/^123$/);
-           
+
+            // Check card detail footer contains card reception date and time 
+            cy.get('.opfab-card-received-footer').contains(/Received on \d{2}\/\d{2}\/\d{4} at ((1[0-2]|0?[1-9]):([0-5][0-9]) ([AP]M))/);
             
         });
 
