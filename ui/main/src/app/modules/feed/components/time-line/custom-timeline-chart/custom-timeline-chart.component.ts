@@ -91,6 +91,14 @@ export class CustomTimelineChartComponent extends BaseChartComponent implements 
         this.setWeekRectanglePositions();
     }
 
+    // Hack to force reload of the timeline when the user switch from hidden timeline
+    // to visible timeline by cliking on "show timeline" :
+    // When isHidden will change from true to false, it will trigger ngOnchange in ngx-chart and reprocess the chart drawing
+    // It solves bugs :
+    // - https://github.com/opfab/operatorfabric-core/issues/3346
+    // - https://github.com/opfab/operatorfabric-core/issues/3348
+    @Input() isHidden;
+
     setDomainForTimeLineGridDisplay() {
         this.xDomainForTimeLineGridDisplay = [this.xDomain.startDate + this.xDomain.overlap, this.xDomain.endDate];
     }
