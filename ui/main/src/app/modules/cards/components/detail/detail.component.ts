@@ -721,15 +721,17 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, DoCheck {
         this.modalRef = this.modalService.open(this.userCardTemplate, options);
 
         // Once the edition is complete or canceled, we reopen the card detail (see above).
-        this.modalRef.result.then(
-            () => {
-                // If modal is closed
-                this._appService.reopenDetails(this.currentPath, this.card.id);
-            },
-            () => {
-                this._appService.reopenDetails(this.currentPath, this.card.id);
-            }
-        );
+        if (this._appService.pageType !== PageType.CALENDAR && this._appService.pageType !== PageType.MONITORING) {
+            this.modalRef.result.then(
+                () => {
+                    // If modal is closed
+                    this._appService.reopenDetails(this.currentPath, this.card.id);
+                },
+                () => {
+                    this._appService.reopenDetails(this.currentPath, this.card.id);
+                }
+            );
+        }
     }
 
     public unlockAnswer() {
