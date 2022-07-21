@@ -181,6 +181,10 @@ export class DatetimeFilterComponent implements ControlValueAccessor, OnInit, On
             if (val) {
                 this.disabled = false;
             }
+            // avoid having null value for time field
+            // when user erases values in input field
+            else this.timeInput.setValue({hour:0 ,minute:0,second:0});
+            
             this.change.emit();
         });
     }
