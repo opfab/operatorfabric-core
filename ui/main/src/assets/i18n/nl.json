@@ -264,7 +264,8 @@
   },
   "activityArea": {
     "title": "ACTIVITEITENGEBIED",
-    "titleOnLogin": "KIES UW ACTIVITEITENGEBIED"
+    "titleOnLogin": "KIES UW ACTIVITEITENGEBIED",
+    "savingInProgress": "aan het opslaan..."
   },
   "feedConfiguration": {
     "title": "NOTIFICATIE CONFIGURATIE"

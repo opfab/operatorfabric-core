@@ -121,7 +121,7 @@ describe('ActivityAreaPage', () => {
         cy.saveActivityAreaModifications();
     });
 
-    it('Choose activity area on login ', function () {
+    it('Choose activity area on login', function () {
         cy.setPropertyInConf('selectActivityAreaOnLogin ', 'web-ui', true);
 
         cy.visit('');
@@ -219,12 +219,26 @@ describe('ActivityAreaPage', () => {
         cy.setPropertyInConf('selectActivityAreaOnLogin ', 'web-ui', false);
     });
 
-    it('Check spinner is displayed when request is delayed and that spinner disappears once the request arrived ', function () {
+    it('Check spinner is displayed when request is delayed and that spinner disappears once the request arrived', function () {
         cy.delayRequestResponse('/users/users/*');
 
         cy.loginOpFab('operator1_fr', 'test');
 
         cy.openActivityArea();
+        cy.waitDefaultTime();
+
+        cy.checkLoadingSpinnerIsDisplayed();
+        cy.checkLoadingSpinnerIsNotDisplayed();
+    });
+
+    it('Check spinner is displayed for saving settings, when request is delayed and that spinner disappears once the request arrived', function () {
+        cy.loginOpFab('operator1_fr', 'test');
+
+        cy.openActivityArea();
+
+        cy.delayRequestResponse('/users/users/**');
+        cy.get('#opfab-activityarea-btn-confirm').should('exist').click(); // click confirm settings
+        cy.get('#opfab-activityarea-btn-yes').should('exist').click(); // click yes on the confirmation popup
         cy.waitDefaultTime();
 
         cy.checkLoadingSpinnerIsDisplayed();
