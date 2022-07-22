@@ -910,4 +910,24 @@ describe('User Card ', function () {
       cy.get('#status-select').find('.vscomp-search-input').should("not.exist");
     })
   })
+
+  describe('Check service, process and state select', function () {
+    it('Check process select when no process group is defined', () => {
+      cy.loadEmptyProcessGroups();
+      cy.loginOpFab('operator1_fr', 'test');
+      opfab.navigateToUserCard();
+      usercard.checkProcessGroupSelectDoesNotExist();
+      usercard.checkSelectedProcessIs('Conference and IT incident ');
+      usercard.checkSelectedStateIs('Conference Call ☏');
+    })
+
+    it('Check process select when no process is in no group', () => {
+      cy.loadProcessGroupsNotTotallyConfigured();
+      cy.loginOpFab('operator1_fr', 'test');
+      opfab.navigateToUserCard();
+      usercard.checkSelectedServiceIs('--');
+      usercard.checkSelectedProcessIs('Task');
+      usercard.checkStateSelectIsHidden();
+    })
+  })
 })

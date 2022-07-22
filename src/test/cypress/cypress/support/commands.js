@@ -87,6 +87,11 @@ Cypress.Commands.add('loadEmptyProcessGroups', () => {
     cy.exec('cd ../resources/processGroups && ./loadProcessGroups.sh emptyProcessGroups.json ' + Cypress.env('host'));
 });
 
+Cypress.Commands.add('loadProcessGroupsNotTotallyConfigured', () => {
+    // This load a process groups file without any process group
+    cy.exec('cd ../resources/processGroups && ./loadProcessGroups.sh processGroupsNotTotallyConfigure.json ' + Cypress.env('host'));
+});
+
 Cypress.Commands.add('delayRequestResponse', (url, delayTime = 2000) => {
     cy.intercept(url, (req) => {
         req.reply((res) => {
