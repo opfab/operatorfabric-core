@@ -180,7 +180,8 @@ export class MonitoringTableComponent implements OnChanges, OnDestroy {
             suppressHorizontalScroll: true,
             columnDefs: this.columnDefs,
             rowHeight: 45,
-            popupParent: document.querySelector('body')
+            popupParent: document.querySelector('body'),
+            rowClass: 'opfab-monitoring-ag-grid-row',
         };
         this.rowData$ = this.rowDataSubject.asObservable();
     }

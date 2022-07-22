@@ -991,6 +991,10 @@ body {
     }
 }
 
+.opfab-monitoring-ag-grid-row {
+    cursor: pointer;
+}
+
 .ag-popup {
     @extend .opfab-ag-grid-theme;
 }
