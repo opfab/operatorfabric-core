@@ -264,7 +264,8 @@
   },
   "activityArea": {
     "title": "ACTIVITY AREA",
-    "titleOnLogin": "CHOOSE YOUR ACTIVITY AREA"
+    "titleOnLogin": "CHOOSE YOUR ACTIVITY AREA",
+    "savingInProgress": "Saving in progress..."
   },
   "feedConfiguration": {
     "title": "NOTIFICATION RECEPTION CONFIGURATION"

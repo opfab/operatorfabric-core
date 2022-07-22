@@ -264,7 +264,8 @@
   },
   "activityArea": {
     "title": "ZONE D'ACTIVITÉ",
-    "titleOnLogin": "SÉLECTIONNER VOTRE ZONE D'ACTIVITÉ"
+    "titleOnLogin": "SÉLECTIONNER VOTRE ZONE D'ACTIVITÉ",
+    "savingInProgress": "Enregistrement en cours..."
   },
   "feedConfiguration": {
     "title": "CONFIGURATION DES NOTIFICATIONS"

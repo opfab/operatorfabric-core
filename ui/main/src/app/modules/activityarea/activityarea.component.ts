@@ -153,6 +153,9 @@ export class ActivityareaComponent implements OnInit, OnDestroy {
     confirmSaveSettings() {
         if (this.saveSettingsInProgress) return; // avoid multiple clicks
         this.saveSettingsInProgress = true;
+
+        if (!!this.modalRef) this.modalRef.close(); // we close the confirmation popup
+
         const disconnectedEntities = [];
 
         for (const entityId of Object.keys(this.activityAreaForm.controls)) {
@@ -184,6 +187,7 @@ export class ActivityareaComponent implements OnInit, OnDestroy {
                     this.confirm.emit();
                 },
                 error: (err) => {
+                    this.saveSettingsInProgress = false;
                     console.error('Error when saving settings :', err);
                     if (!!this.modalRef) this.modalRef.close();
                     this.messageAfterSavingSettings = 'shared.error.impossibleToSaveSettings';
