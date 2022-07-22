@@ -12,7 +12,6 @@ import {CommonModule} from '@angular/common';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {UserCardComponent} from './usercard.component';
 import {TranslateModule} from '@ngx-translate/core';
-import {SingleFilterModule} from '../../modules/share/single-filter/single-filter.module';
 import {DatetimeFilterModule} from '../../modules/share/datetime-filter/datetime-filter.module';
 import {CardDetailModule} from 'app/modules/share/card-detail/card-detail.module';
 import {LightCardModule} from 'app/modules/share/light-card/light-card.module';
@@ -36,7 +35,6 @@ import { SpinnerModule } from '../share/spinner/spinner.module';
         FormsModule,
         ReactiveFormsModule,
         TranslateModule,
-        SingleFilterModule,
         DatetimeFilterModule,
         MultiSelectModule,
         CardDetailModule,

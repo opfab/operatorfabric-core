@@ -31,7 +31,6 @@ import {StateRightsCellRendererComponent} from './components/cell-renderers/stat
 import {EditEntityModalComponent} from './components/editmodal/entities/edit-entity-modal.component';
 import {EditGroupModalComponent} from './components/editmodal/groups/edit-group-modal.component';
 import {EditPerimeterModalComponent} from './components/editmodal/perimeters/edit-perimeter-modal.component';
-import {SingleFilterModule} from '../share/single-filter/single-filter.module';
 import {ProcessCellRendererComponent} from './components/cell-renderers/process-cell-renderer.component';
 import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
 import {TagInputModule} from 'ngx-chips';
@@ -77,8 +76,7 @@ import {MultiSelectModule} from '../share/multi-select/multi-select.module';
                 ProcessCellRendererComponent,
                 StateRightsCellRendererComponent
             ]
-        ]),
-        SingleFilterModule
+        ])
     ],
     providers: [{provide: SharingService, useClass: SharingService}]
 })
