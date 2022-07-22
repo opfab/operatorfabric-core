@@ -302,6 +302,7 @@ input:-webkit-autofill {
     -moz-user-select: none;
     -ms-user-select: none;
     user-select: none;
+    width: max-content;
 }
 
 /* Hide the browser's default checkbox */
