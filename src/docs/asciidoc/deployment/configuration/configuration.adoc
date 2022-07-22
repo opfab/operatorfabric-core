@@ -134,10 +134,8 @@ The cards-consultation service has these specific properties :
 |checkIfUserIsAlreadyConnected|true|no|If false, OperatorFabric will allow a user to have several sessions opened at the same time. However, it may cause synchronization problems between the sessions using the same login, so it is recommended to let it to true, its default value. 
 |===
 
-include::web-ui_configuration.adoc[leveloffset=+1]
-
 [[external-devices-conf]]
-==== External Devices Service
+==== External devices service
 
 The external devices service can be configured with the following properties:
 
@@ -148,6 +146,8 @@ The external devices service can be configured with the following properties:
 |operatorfabric.externaldevices.watchdog.cron|`*/5 * * * * *`|no|CRON expression determining when watchdog signals should be sent to external devices.
 |operatorfabric.externaldevices.watchdog.signalId|0|no|Id the signal the external devices are expecting as watchdog
 |===
+
+include::web-ui_configuration.adoc[leveloffset=+1]
 
 
 
