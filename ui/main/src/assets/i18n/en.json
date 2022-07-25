@@ -54,6 +54,7 @@
     "exportInProgress": "Export in progress",
     "loadingInProgress": "Loading in progress",
     "requestInProgress": "Request in progress...",
+    "deleteInProgress": "Delete in progress...",
     "noResult": "Your search did not match any result.",
     "exportToExcel": "Export data",
     "resultsNumber":"Results number",

@@ -54,6 +54,7 @@
     "exportInProgress": "Export en cours",
     "loadingInProgress": "Chargement en cours",
     "requestInProgress": "Requête en cours...",
+    "deleteInProgress": "Suppression en cours...",
     "noResult": "Votre recherche ne correspond à aucun résultat.",
     "exportToExcel": "Exporter les données",
     "resultsNumber":"Nombre de résultats",
