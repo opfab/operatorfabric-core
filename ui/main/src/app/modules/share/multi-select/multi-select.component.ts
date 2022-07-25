@@ -11,6 +11,7 @@ import {AfterViewInit, Component, Input, OnChanges, OnDestroy} from '@angular/co
 import {UntypedFormGroup} from '@angular/forms';
 import {TranslateService} from '@ngx-translate/core';
 import {MultiSelectConfig, MultiSelectOption} from '@ofModel/multiselect.model';
+import * as _ from 'lodash-es';
 
 declare const VirtualSelect: any;
 
@@ -24,6 +25,9 @@ export class MultiSelectComponent implements AfterViewInit, OnDestroy, OnChanges
     @Input() public config: MultiSelectConfig;
     @Input() public options: Array<MultiSelectOption>;
     @Input() public selectedOptions: any;
+
+    private oldOptions: Array<MultiSelectOption>;
+    private oldSelectedOptions: any;
 
     private ngAfterViewInitHasBeenDone = false;
     private virtualSelectComponent: any;
@@ -85,12 +89,16 @@ export class MultiSelectComponent implements AfterViewInit, OnDestroy, OnChanges
     }
 
     private setSelectedOptionsToParentForm() {
-        this.parentForm.get(this.multiSelectId).setValue(this.virtualSelectComponent.value);
+        if (this.oldSelectedOptions !== this.virtualSelectComponent.value) {
+            this.parentForm.get(this.multiSelectId).setValue(this.virtualSelectComponent.value);
+            this.oldSelectedOptions = this.virtualSelectComponent.value;
+        }
     }
 
     private setOptionList() {
         if (this.options) {
             if (this.config.sortOptions) this.sortOptionListByLabel();
+            this.oldOptions = this.options;
             if (!!this.virtualSelectComponent) this.virtualSelectComponent.setOptions(this.options);
         }
     }
@@ -113,10 +121,15 @@ export class MultiSelectComponent implements AfterViewInit, OnDestroy, OnChanges
     }
 
     ngOnChanges() {
-        if (this.ngAfterViewInitHasBeenDone) {
+        if (this.ngAfterViewInitHasBeenDone && this.hasSelectectedOrOptionListChanged()) {
             this.setOptionList();
             this.setSelectedOptions();
         }
+    }
+
+    private hasSelectectedOrOptionListChanged() : boolean {
+        if (!_.isEqual(this.oldOptions,this.options)) return true;
+        if (!_.isEqual(this.oldSelectedOptions,this.selectedOptions)) return true;
     }
 
     ngOnDestroy() {

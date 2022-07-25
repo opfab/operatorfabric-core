@@ -70,12 +70,13 @@ export class UserCardSelectStateFormComponent implements OnInit, OnDestroy {
     public processMultiSelectConfig: MultiSelectConfig = {
         labelKey: 'shared.filters.process',
         multiple: false,
+        sortOptions: false,
         search: true
     };
 
     public stateMultiSelectConfig: MultiSelectConfig = {
         labelKey: 'shared.filters.state',
-        sortOptions: true,
+        sortOptions: false,
         multiple: false,
         search: true
     };
@@ -146,6 +147,7 @@ export class UserCardSelectStateFormComponent implements OnInit, OnDestroy {
                 if (!!state) statesList.push(state);
             }
         });
+        statesList.sort((a, b) => Utilities.compareObj(a.label, b.label));
         this.statesPerProcesses.set(process.id, statesList);
     }
 
