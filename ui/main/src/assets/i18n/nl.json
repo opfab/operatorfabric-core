@@ -55,6 +55,7 @@
     "loadingInProgress": "Bezig met laden",
     "requestInProgress": "Bezig met verzoek...",
     "deleteInProgress": "Bezig met verwijdering...",
+    "logoutInProgress": "Bezig met uitloggen...",
     "noResult": "Uw zoekopdracht leverde geen resultaten op.",
     "exportToExcel": "Exporteer data",
     "resultsNumber":"Aantal resultaten",
