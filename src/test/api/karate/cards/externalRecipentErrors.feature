@@ -135,7 +135,7 @@ Feature: External recipient application errors
     And header Authorization = 'Bearer ' + authTokenAsTSO
     And request card
     When method post
-    Then status 404
+    Then status 500
     And match response.message  ==  'External application endpoint not found (HTTP 404)'
 
 
