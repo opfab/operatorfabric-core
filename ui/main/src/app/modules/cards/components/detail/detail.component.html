@@ -210,4 +210,9 @@
               loadingText="shared.requestInProgress">
   </of-spinner>
 
+  <of-spinner *ngIf="deleteInProgress"
+              [seeInModal]="true"
+              loadingText="shared.deleteInProgress">
+  </of-spinner>
+
 </div>

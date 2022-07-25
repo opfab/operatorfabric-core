@@ -141,6 +141,7 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, DoCheck {
     private unsubscribe$: Subject<void> = new Subject<void>();
     private modalRef: NgbModalRef;
     public ackOrUnackInProgress = false;
+    public deleteInProgress = false;
 
     public user: User;
     public multiSelectConfig: MultiSelectConfig = {
@@ -692,10 +693,13 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, DoCheck {
     }
 
     public confirmDeleteCard(): void {
+        this.deleteInProgress = true;
+
+        if (!!this.modalRef) this.modalRef.close(); // we close the confirmation popup
+
         this.cardService.deleteCard(this.card).subscribe({
             next: (resp) => {
                 const status = resp.status;
-                this.modalRef.close();
                 if (status === 200) {
                     this.closeDetails();
                     this.displayMessage('userCard.deleteCard.cardDeletedWithNoError', null, MessageLevel.INFO);
@@ -703,11 +707,12 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, DoCheck {
                     console.log('Impossible to delete card , error status from service : ', status);
                     this.displayMessage('userCard.deleteCard.error.impossibleToDeleteCard ', null, MessageLevel.ERROR);
                 }
+                this.deleteInProgress = false;
             },
             error: (err) => {
                 console.error('Error when deleting card :', err);
-                this.modalRef.close();
                 this.displayMessage('userCard.deleteCard.error.impossibleToDeleteCard ', null, MessageLevel.ERROR);
+                this.deleteInProgress = false;
             }
         });
     }

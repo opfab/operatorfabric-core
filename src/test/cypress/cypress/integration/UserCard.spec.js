@@ -385,14 +385,28 @@ describe('User Card ', function () {
       cy.get('#opfab-card-details-delete-btn-confirm').click();
       feed.checkNumberOfDisplayedCardsIs(0);
 
-    })
+    });
 
     it('User card is deleted for operator2_fr', () => {
 
       cy.loginOpFab('operator2_fr', 'test');
       feed.checkNumberOfDisplayedCardsIs(0);
-    })
+    });
 
+    it('Check spinner is displayed when delete request is delayed and that spinner disappears once the request arrived', () => {
+
+      cy.sendCard('cypress/userCard/process.json');
+      cy.loginOpFab('operator1_fr', 'test');
+
+      feed.openFirstCard();
+      cy.intercept('DELETE', '/cardspub/cards/userCard/*', {delay: 2000, statusCode: 502});
+
+      cy.get('#opfab-card-delete').click();
+      cy.get('#opfab-card-details-delete-btn-confirm').click();
+
+      cy.checkLoadingSpinnerIsDisplayed();
+      cy.checkLoadingSpinnerIsNotDisplayed();
+    });
   })
   
   describe('Entities allowed to edit card sent by user', function () {
