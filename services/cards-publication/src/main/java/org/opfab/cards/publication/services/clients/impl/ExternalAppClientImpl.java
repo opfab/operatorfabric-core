@@ -162,7 +162,7 @@ public class ExternalAppClientImpl implements ExternalAppClient {
 
     private void throwException(Exception e) {
         if (e instanceof HttpClientErrorException.NotFound) {
-            throw createApiError(HttpStatus.NOT_FOUND, REMOTE_404_MESSAGE);
+            throw createApiError(HttpStatus.INTERNAL_SERVER_ERROR, REMOTE_404_MESSAGE);
         } else if ( e instanceof HttpClientErrorException || e instanceof HttpServerErrorException ) {
             throw createApiError(((HttpStatusCodeException) e).getStatusCode(), UNEXPECTED_REMOTE_MESSAGE);
         } else if (e instanceof IllegalArgumentException) {
