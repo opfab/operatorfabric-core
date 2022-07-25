@@ -306,7 +306,7 @@
         "impossibleToDeleteCard": "Impossible to delete card for technical reasons"
       }
     },
-    "sendingCardInProgress": "Sending card in progress ..."
+    "sendingCardInProgress": "Sending card in progress..."
   },
   "response": {
     "btnValidate": "VALIDATE ANSWER",
