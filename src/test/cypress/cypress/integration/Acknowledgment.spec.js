@@ -465,6 +465,43 @@ describe('Acknowledgment tests', function () {
         })
     });
 
+    it('Check spinner is displayed when ack/unack request is delayed and that spinner disappears once the request arrived ', function () {
+
+        cy.deleteAllCards();
+
+        cy.loginOpFab('operator1_fr', 'test');
+        cy.sendCard('cypress/ack/message2.json');
+
+        // Click on card message
+        cy.get('#opfab-feed-light-card-cypress-message2').click();
+
+        cy.delayRequestResponse('/cardspub/cards/userAcknowledgement/*');
+
+        // Click ack button
+        cy.get('#opfab-card-details-btn-ack').click();
+
+        cy.checkLoadingSpinnerIsDisplayed();
+        cy.checkLoadingSpinnerIsNotDisplayed();
+
+        // Set feed filter to see all cards and check message card is present
+        cy.get('#opfab-feed-filter-btn-filter').click();
+        cy.get('#opfab-feed-filter-ack-all').click();
+        cy.waitDefaultTime(); // let time before closing popup to avoid flaky error on CI/CD
+        cy.get('#opfab-feed-filter-btn-filter').click();
+        
+        // Check icon is present
+        cy.get('#opfab-feed-light-card-cypress-message2 .fa-check');
+
+        // Click on card message
+        cy.get('#opfab-feed-light-card-cypress-message2').click();
+
+        // Unack the card
+        cy.get('#opfab-card-details-btn-ack').click();
+
+        cy.checkLoadingSpinnerIsDisplayed();
+        cy.checkLoadingSpinnerIsNotDisplayed();
+    });
+
     it('Check pinned card', function () {
 
         cy.deleteAllCards();
@@ -639,7 +676,5 @@ describe('Acknowledgment tests', function () {
             cy.get('#of-pinned-cards-popover').should('not.exist');
 
         });
-
-
     });
 })

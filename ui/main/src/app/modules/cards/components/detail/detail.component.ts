@@ -140,6 +140,7 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, DoCheck {
     private userContext: UserContext;
     private unsubscribe$: Subject<void> = new Subject<void>();
     private modalRef: NgbModalRef;
+    public ackOrUnackInProgress = false;
 
     public user: User;
     public multiSelectConfig: MultiSelectConfig = {
@@ -644,8 +645,11 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, DoCheck {
     }
 
     public acknowledgeCard() {
+        this.ackOrUnackInProgress = true;
+
         if (this.card.hasBeenAcknowledged) {
             this.acknowledgeService.deleteUserAcknowledgement(this.card.uid).subscribe((resp) => {
+                this.ackOrUnackInProgress = false;
                 if (resp.status === 200 || resp.status === 204) {
                     this.card = {...this.card, hasBeenAcknowledged: false};
                     this.acknowledgeService.updateAcknowledgementOnLightCard(this.card.id, false);
@@ -663,6 +667,7 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, DoCheck {
                     entitiesAcks.push(entity.id);
             });
             this.acknowledgeService.postUserAcknowledgement(this.card.uid, entitiesAcks).subscribe((resp) => {
+                this.ackOrUnackInProgress = false;
                 if (resp.status === 201 || resp.status === 200) {
                     this.acknowledgeService.updateAcknowledgementOnLightCard(this.card.id, true);
                     this.closeDetails();

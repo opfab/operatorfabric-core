@@ -53,6 +53,7 @@
     },
     "exportInProgress": "Bezig met exporteren",
     "loadingInProgress": "Bezig met laden",
+    "requestInProgress": "Bezig met verzoek...",
     "noResult": "Uw zoekopdracht leverde geen resultaten op.",
     "exportToExcel": "Exporteer data",
     "resultsNumber":"Aantal resultaten",
