@@ -250,3 +250,8 @@
     </div>
   </div>
 </ng-template>
+
+<of-spinner *ngIf="logoutInProgress"
+            [seeInModal]="true"
+            loadingText="shared.logoutInProgress">
+</of-spinner>

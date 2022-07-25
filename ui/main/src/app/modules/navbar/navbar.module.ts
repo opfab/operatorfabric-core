@@ -19,6 +19,7 @@ import {AppRoutingModule} from 'app/app-routing.module';
 import {UserCardModule} from '../usercard/usercard.module';
 import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
 import {AboutComponent} from '../about/about.component';
+import {SpinnerModule} from "../share/spinner/spinner.module";
 
 @NgModule({
     declarations: [
@@ -29,7 +30,7 @@ import {AboutComponent} from '../about/about.component';
         AboutComponent,
         MenuLinkComponent
     ],
-    imports: [CommonModule, TranslateModule, AppRoutingModule, UserCardModule, NgbModule],
+    imports: [CommonModule, TranslateModule, AppRoutingModule, UserCardModule, NgbModule, SpinnerModule],
     exports: [NavbarComponent]
 })
 export class NavbarModule {}

@@ -66,6 +66,7 @@ export class NavbarComponent implements OnInit {
     environmentName: string;
     environmentColor: string;
     nightDayMode = false;
+    logoutInProgress = false;
 
     constructor(
         private store: Store<AppState>,
@@ -176,6 +177,7 @@ export class NavbarComponent implements OnInit {
     }
 
     logOut() {
+        this.logoutInProgress = true;
         this.store.dispatch(new TryToLogOutAction());
     }
 
