@@ -306,7 +306,7 @@
         "impossibleToDeleteCard": "Om technische redenen is het niet mogelijk om de kaart te verwijderen"
       }
     },
-    "sendingCardInProgress": "Kaart wordt verzonden ..."
+    "sendingCardInProgress": "Kaart wordt verzonden..."
   },
   "response": {
     "btnValidate": "VALIDEER ANTWOORD",
