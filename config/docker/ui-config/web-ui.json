@@ -101,22 +101,6 @@
     "changePasswordUrl": "http://localhost:89/auth/realms/dev/account/#/security/signingin"
   },
   "settings": {
-    "about": {
-      "firstapplication": {
-        "name": "First application",
-        "rank": 1,
-        "version": "v12.34.56"
-      },
-      "keycloack": {
-        "name": "Keycloak",
-        "rank": 2,
-        "version": "6.0.1"
-      },
-      "lastapplication": {
-        "name": "Wonderful Solution",
-        "version": "0.1.2-RELEASE"
-      }
-    },
     "infos": {
       "hide": {
         "description": true
@@ -129,6 +113,22 @@
     "replayInterval" : 10,
     "replayEnabled" : true
 
+  },
+  "about": {
+    "firstapplication": {
+      "name": "First application",
+      "rank": 1,
+      "version": "v12.34.56"
+    },
+    "keycloack": {
+      "name": "Keycloak",
+      "rank": 2,
+      "version": "6.0.1"
+    },
+    "lastapplication": {
+      "name": "Wonderful Solution",
+      "version": "0.1.2-RELEASE"
+    }
   },
   "usercard": {
     "useDescriptionFieldForEntityList": false

@@ -1,0 +1,55 @@
+// Copyright (c) 2022 RTE (http://www.rte-france.com)
+// See AUTHORS.txt
+// This document is subject to the terms of the Creative Commons Attribution 4.0 International license.
+// If a copy of the license was not distributed with this
+// file, You can obtain one at https://creativecommons.org/licenses/by/4.0/.
+// SPDX-License-Identifier: CC-BY-4.0
+
+= Migration Guide from release 3.9.x to release 3.10.0
+
+== `web-ui.json` config file 
+
+
+The section to configure `about` screen has been moved from `settings` section to the root level. You need to change the configuration file accordingly.
+
+
+For example: 
+
+Replace the following invalid config 
+```
+  "settings": {
+    "about": {
+      "keycloack": {
+        "name": "Keycloak",
+        "rank": 2,
+        "version": "6.0.1"
+      },
+    },
+    "replayInterval": 10,
+    "replayEnabled": true,
+    "locale": "en",
+    "dateTimeFormat": "HH:mm DD/MM/YYYY",
+    "dateFormat": "DD/MM/YYYY",
+    "styleWhenNightDayModeDesactivated": "NIGHT"
+  },
+```
+
+By this valid one : 
+
+```
+  "settings": {
+    "replayInterval": 10,
+    "replayEnabled": true,
+    "locale": "en",
+    "dateTimeFormat": "HH:mm DD/MM/YYYY",
+    "dateFormat": "DD/MM/YYYY",
+    "styleWhenNightDayModeDesactivated": "NIGHT"
+  },
+  "about": {
+    "keycloack": {
+      "name": "Keycloak",
+      "rank": 2,
+      "version": "6.0.1"
+    }
+  }
+```

@@ -35,7 +35,7 @@ export class AboutComponent implements OnInit {
     constructor(private configService: ConfigService) {}
 
     ngOnInit(): void {
-        const aboutConfig = this.configService.getConfigValue('settings.about');
+        const aboutConfig = this.configService.getConfigValue('about');
         this.aboutElements.push({name: 'OperatorFabric', rank: '0', version: packageInfo.opfabVersion});
         if (aboutConfig)
             this.aboutElements = this.aboutElements.concat(extractNameWithVersionAndSortByRank(aboutConfig));
