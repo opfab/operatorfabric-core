@@ -118,22 +118,23 @@ Values should be taken from the link:https://en.wikipedia.org/wiki/List_of_tz_da
 |settings.replayInterval|5|no|Interval between sound replays (see `settings.replayEnabled`)
 |settings.remoteLoggingEnabled|false|no| If set to true, some logs form the UI are sent to the back and write in the log file of the cards-consultation service
 
-|settings.about
+|about
 a|none
 a|no
 a|Declares application names and their version into web-ui about section. +
 Each entry is
 a free key value followed by its name (a string of characters), its version (a string of characters) and its facultative rank of declaration (a number). +
-For `OperatorFabric` value, with `'OperatorFabric'` as `name` and `0` as `rank`, the value of `${currentVersion}`
-is the version of the current release, `1.3.0.RELEASE` for example. +
-It should look like:
+It is not necessary to declare `OperatorFabric` as application because it is added automaticaly with current release version and rank `0`. +
+For example adding `Keycloak` appplication, with `'Keycloak'` as `name`, `1` as `rank` and  `'6.0.1'` as `version` should look like:
 [source, json]
 ----
-"operatorfabric": {
- "name":  "OperatorFabric",
- "version":  "1.3.0.RElEASE",
- "rank": 0
-}
+"about": {
+    "keycloack": {
+      "name": "Keycloak",
+      "rank": 1,
+      "version": "6.0.1"
+    }
+  }
 ----
 |logo.base64|medium OperatorFabric icon|no|The encoding result of converting the svg logo to Base64, use this link:https://base64.guru/converter/encode/image/svg[online tool] to encode your svg. If it is not set, a medium (32px) OperatorFabric icon is displayed.
 |logo.height|40|no|The height of the logo (in px) (only taken into account if logo.base64 is set). The value cannot be more than 48px (if it is set to more than 48px, it will be ignored and set to 48px).
