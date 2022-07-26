@@ -110,38 +110,21 @@
               </div>
             </div>
 
-            <div class="opfab-card-received-footer" style="max-width: 50%;text-align: left">
-              <span translate>feed.received</span>
-              {{formattedPublishDate}} <span translate> feed.at </span> {{formattedPublishTime}}
-              
-              <span *ngIf="fromEntityOrRepresentative">
-                <span translate> feed.from</span>
-                {{fromEntityOrRepresentative}}
-              </span>
-                
-              <span *ngIf="lastResponse">
-                <span > --- </span>
-                <span translate>feed.lastResponse</span>
-                {{formatDate(lastResponse.publishDate)}} <span translate> feed.at </span> {{formatTime(lastResponse.publishDate)}}
-              
-                <span>
-                  <span translate> feed.from</span>
-                  {{getResponsePublisher(lastResponse)}}
-                </span>
-              </span>
-            </div>
+            <div style="display: flex">
+              <div class="opfab-card-received-footer" style="text-align: left;white-space: pre-line;">{{makeTextOfFooter()}}</div>
 
-            <div *ngIf="showButtons" style="text-align: right;">
-              <button id="opfab-card-details-btn-response" class="opfab-btn"
-                *ngIf='showActionButton && isUserEnabledToRespond && !isResponseLocked' [disabled]='lttdExpiredIsTrue || !isUserEnabledToRespond || sendingResponse'
-                (click)='submitResponse()'>{{btnValidateLabel|translate}}</button>
+              <div *ngIf="showButtons" style="margin-left: auto;text-align: right;min-width: 250px">
+                <button id="opfab-card-details-btn-response" class="opfab-btn"
+                  *ngIf='showActionButton && isUserEnabledToRespond && !isResponseLocked' [disabled]='lttdExpiredIsTrue || !isUserEnabledToRespond || sendingResponse'
+                  (click)='submitResponse()'>{{btnValidateLabel|translate}}</button>
 
-              <button id="opfab-card-details-btn-response" class="opfab-btn"
-                [disabled]='lttdExpiredIsTrue || !isUserEnabledToRespond'
-                *ngIf='showActionButton && isUserEnabledToRespond && isResponseLocked' (click)='unlockAnswer()'>{{btnUnlockLabel|translate}}</button>
+                <button id="opfab-card-details-btn-response" class="opfab-btn"
+                  [disabled]='lttdExpiredIsTrue || !isUserEnabledToRespond'
+                  *ngIf='showActionButton && isUserEnabledToRespond && isResponseLocked' (click)='unlockAnswer()'>{{btnUnlockLabel|translate}}</button>
 
-              <button id="opfab-card-details-btn-ack" class="opfab-btn" *ngIf='showAckButton'
-                (click)='acknowledgeCard()'>{{btnAckText|translate}}</button>
+                <button id="opfab-card-details-btn-ack" class="opfab-btn" *ngIf='showAckButton'
+                  (click)='acknowledgeCard()'>{{btnAckText|translate}}</button>
+              </div>
             </div>
           </div>
 

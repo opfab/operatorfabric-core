@@ -74,9 +74,21 @@ describe('Card detail', function () {
             cy.get("#handlebars-if").contains(/^ok$/);
             cy.get("#handlebars-each").contains(/^123$/);
 
-            // Check card detail footer contains card reception date and time 
-            cy.get('.opfab-card-received-footer').contains(/Received on \d{2}\/\d{2}\/\d{4} at ((1[0-2]|0?[1-9]):([0-5][0-9]) ([AP]M))/);
+            // Check card detail footer contains card reception date and time and not contains 'Addressed to' (because operator1_fr is member of only one entity)
+            cy.get('.opfab-card-received-footer').contains(/Received : \d{2}\/\d{2}\/\d{4} at ((1[0-2]|0?[1-9]):([0-5][0-9]) ([AP]M))/);
+            cy.get('.opfab-card-received-footer').contains('Addressed to :').should('not.exist');
+        });
 
+        it(`Check card footer for operator4_fr (member of several entities)`, function () {
+
+            cy.loginOpFab('operator4_fr', 'test');
+
+            // Click on the card
+            cy.get('of-light-card').eq(0).click();
+
+            // Check card detail footer contains card reception date and time and contains 'Addressed to' with user entities to which the card was sent
+            cy.get('.opfab-card-received-footer').contains(/Received : \d{2}\/\d{2}\/\d{4} at ((1[0-2]|0?[1-9]):([0-5][0-9]) ([AP]M))/);
+            cy.get('.opfab-card-received-footer').contains('Addressed to : Control Center FR South, Control Center FR North');
         });
 
         it(`Check card detail spinner when simulating card processed `, function () {
@@ -137,9 +149,34 @@ describe('Card detail', function () {
             cy.get("#handlebars-if").contains(/^ok$/);
             cy.get("#handlebars-each").contains(/^123$/);
 
-            // Check card detail footer contains card reception date and time 
-            cy.get('.opfab-card-received-footer').contains(/Received on \d{2}\/\d{2}\/\d{4} at ((1[0-2]|0?[1-9]):([0-5][0-9]) ([AP]M))/);
-            
+            // Check card detail footer contains card reception date and time and not contains 'Addressed to'
+            cy.get('.opfab-card-received-footer').contains(/Received : \d{2}\/\d{2}\/\d{4} at ((1[0-2]|0?[1-9]):([0-5][0-9]) ([AP]M))/);
+            cy.get('.opfab-card-received-footer').contains('Addressed to :').should('not.exist');
+
+        });
+
+        it(`Check card detail footer for archives for operator4_fr (member of several entities)`, function () {
+
+            cy.loginOpFab('operator4_fr', 'test');
+
+            // We move to archives screen
+            cy.get('#opfab-navbar-menu-archives').click();
+
+            // We click the search button
+            cy.get('#opfab-archives-logging-btn-search').click();
+
+            // Click on the card
+            cy.waitDefaultTime();
+            cy.get('#opfab-archives-cards-list').find('.opfab-archive-sev-information').first().click();
+
+            // Check the spinner appears when clicking on the button
+            cy.get("#templateGateway-display-spinner-button").click();
+            cy.checkLoadingSpinnerIsDisplayed();
+            cy.checkLoadingSpinnerIsNotDisplayed();
+
+            // Check card detail footer contains card reception date and time and not contains 'Addressed to'
+            cy.get('.opfab-card-received-footer').contains(/Received : \d{2}\/\d{2}\/\d{4} at ((1[0-2]|0?[1-9]):([0-5][0-9]) ([AP]M))/);
+            cy.get('.opfab-card-received-footer').contains('Addressed to :').should('not.exist');
         });
 
         it(`Check card detail where response not required `, function () {

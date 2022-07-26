@@ -48,6 +48,7 @@ import {Utilities} from '../../../../common/utilities';
 import {CardDetailsComponent} from '../card-details/card-details.component';
 import {DateTimeFormatterService} from '@ofServices/date-time-formatter.service';
 import {MultiSelectConfig} from '@ofModel/multiselect.model';
+import {TranslateService} from "@ngx-translate/core";
 
 declare const templateGateway: any;
 
@@ -164,7 +165,8 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, DoCheck {
         private dateTimeFormatterService: DateTimeFormatterService,
         private acknowledgeService: AcknowledgeService,
         private userPermissionsService: UserPermissionsService,
-        private lightCardsStoreService: LightCardsStoreService
+        private lightCardsStoreService: LightCardsStoreService,
+        private translate: TranslateService
     ) {
         const userWithPerimeters = this.userService.getCurrentUserWithPerimeters();
         if (!!userWithPerimeters) this.user = userWithPerimeters.userData;
@@ -831,6 +833,47 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, DoCheck {
                 ? this.displayMessage(responseData.errorMsg, null, MessageLevel.ERROR)
                 : this.displayMessage(ResponseI18nKeys.FORM_ERROR_MSG, null, MessageLevel.ERROR);
         }
+    }
+
+    public makeTextOfFooter(): string {
+        let receivedAt = this.translate.instant('feed.received') + ' ' + this.formattedPublishDate + ' ' +
+            this.translate.instant('feed.at') + ' ' + this.formattedPublishTime;
+
+        if (!! this.fromEntityOrRepresentative && this.fromEntityOrRepresentative.length > 0) {
+            receivedAt += ' ' + this.translate.instant('feed.from') + ' ' + this.fromEntityOrRepresentative;
+        }
+
+        let addressedTo = '';
+        if (!! this.card.entityRecipients && this.card.entityRecipients.length > 0) {
+            // We compute the entities allowed to send cards to which the user is connected
+            const userEntitiesAllowedToSendCards = this.user.entities.filter(entityId => this.entitiesService.isEntityAllowedToSendCard(entityId));
+
+            // We compute the entities recipients of the card, taking into account parent entities
+            const entityRecipients = this.entitiesService.getEntitiesFromIds(this.card.entityRecipients);
+            const entityRecipientsAllowedToSendCards = this.entitiesService.resolveEntitiesAllowedToSendCards(entityRecipients)
+                .map((entity) => entity.id);
+
+            const userEntitiesAllowedToSendCardsWhichAreRecipient = userEntitiesAllowedToSendCards.filter(entityId =>
+                entityRecipientsAllowedToSendCards.includes(entityId));
+
+            if (userEntitiesAllowedToSendCards.length > 1) {
+                userEntitiesAllowedToSendCardsWhichAreRecipient.forEach(entityId => {
+                    addressedTo += this.entitiesService.getEntityName(entityId) + ', ';
+                });
+                if (addressedTo.slice(-2) === ', ') {
+                    addressedTo = '\n' + this.translate.instant('feed.addressedTo') + ' ' + addressedTo.substring(0, addressedTo.length - 2);
+                }
+            }
+        }
+
+        let lastResponse = '';
+        if (!! this.lastResponse) {
+            lastResponse += '\n' + this.translate.instant('feed.lastResponse') + ' ' + this.formatDate(this.lastResponse.publishDate) + ' ' +
+                this.translate.instant('feed.at') + ' ' + this.formatTime(this.lastResponse.publishDate) + ' ' +
+                this.translate.instant('feed.from') + ' ' + this.getResponsePublisher(this.lastResponse);
+        }
+
+        return receivedAt + addressedTo + lastResponse;
     }
 
     // END - METHODS CALLED ONLY FROM HTML COMPONENT
