@@ -171,5 +171,42 @@ describe('Sound notification test', function () {
 
     })
 
+    it('Repeating sound when receiving card with no existing settings for user on login \
+        and default settings replayEnabled = true  (Test for bug #3422)  ', () => {
+      cy.deleteAllSettings();
+      cy.delete6TestCards();
+      cy.loginOpFab(user, 'test');
+      cy.stubPlaySound();
+
+      cy.openSettings();
+      // set severity information  to be notified by sound
+      cy.get('#opfab-checkbox-setting-form-information').click();
+      cy.waitDefaultTime();
+
+      // Open the feed and send card 
+      cy.get('#opfab-navbar-menu-feed').click();
+      cy.waitDefaultTime();
+
+      // Use cypress time simulation 
+      cy.clock(new Date());
+      cy.sendCard('defaultProcess/message.json');
+      cy.waitDefaultTime();
+
+       // wait for light card to appear
+      cy.tick(1000);
+      cy.get('of-light-card');
+
+      // Shift 15 seconds in the future
+      cy.tick(15000);
+
+      // Two new sound , the first one + a repetition as default replay interval is 10 seconds in web-ui.json
+      cy.get('@playSound').its('callCount').should('eq', 2);
+
+      // After 10 seconds more , one more sound 
+      cy.tick(10000);
+      cy.get('@playSound').its('callCount').should('eq', 3);    
+    })
+
+
   })
 })

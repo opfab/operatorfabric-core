@@ -35,6 +35,7 @@ export class SoundActivationComponent implements OnInit {
     ) {}
 
     ngOnInit(): void {
+        this.soundNotificationService.initSoundService();
         this.activateSoundIfNotActivated();
     }
 
