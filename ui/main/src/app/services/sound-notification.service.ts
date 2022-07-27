@@ -41,7 +41,7 @@ export class SoundNotificationService implements OnDestroy {
     private replayEnabled: boolean;
     private playSoundWhenSessionEnd = false;
 
-    private readonly soundFileBasePath: string;
+    private soundFileBasePath: string;
 
     private incomingCardOrReminder = new Subject();
     private sessionEnd = new Subject();
@@ -58,7 +58,9 @@ export class SoundNotificationService implements OnDestroy {
     ) {
         // use to have access from cypress to the current object for stubbing method playSound
         if (window['Cypress']) window['soundNotificationService'] = this;
+    }
 
+    public initSoundService() {
         this.soundConfigBySeverity = new Map<Severity, SoundConfig>();
         this.soundConfigBySeverity.set(Severity.ALARM, {
             soundFileName: 'alarm.mp3',
@@ -77,7 +79,7 @@ export class SoundNotificationService implements OnDestroy {
             soundEnabledSetting: 'settings.playSoundForInformation'
         });
 
-        const baseHref = platformLocation.getBaseHrefFromDOM();
+        const baseHref = this.platformLocation.getBaseHrefFromDOM();
         this.soundFileBasePath = (baseHref ? baseHref : '/') + 'assets/sounds/';
 
         this.soundEnabled = new Map<Severity, boolean>();
