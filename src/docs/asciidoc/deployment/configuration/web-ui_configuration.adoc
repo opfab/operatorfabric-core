@@ -124,8 +124,8 @@ a|no
 a|Declares application names and their version into web-ui about section. +
 Each entry is
 a free key value followed by its name (a string of characters), its version (a string of characters) and its facultative rank of declaration (a number). +
-It is not necessary to declare `OperatorFabric` as application because it is added automaticaly with current release version and rank `0`. +
-For example adding `Keycloak` appplication, with `'Keycloak'` as `name`, `1` as `rank` and  `'6.0.1'` as `version` should look like:
+It is not necessary to declare `OperatorFabric` as application because it is added automatically with current release version and rank `0`. +
+For example adding `Keycloak` application, with `'Keycloak'` as `name`, `1` as `rank` and  `'6.0.1'` as `version` should look like:
 [source, json]
 ----
 "about": {
