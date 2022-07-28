@@ -33,7 +33,6 @@ import java.util.*;
 @Slf4j
 public class UserServiceImp implements UserService {
 
-    public static final String GROUP_ID_IMPOSSIBLE_TO_FETCH_MSG = "Group id impossible to fetch : %s";
     public static final String PERIMETER_ID_IMPOSSIBLE_TO_FETCH_MSG = "Perimeter id impossible to fetch : %s";
 
     @Autowired
@@ -48,15 +47,23 @@ public class UserServiceImp implements UserService {
     @Autowired
     private RabbitTemplate rabbitTemplate;
 
-    /** Retrieve user_settings from repository for the user **/
+    public UserData retrieveUser(String login) {
+
+        Optional<UserData> foundUser = userRepository.findById(login);
+        if (foundUser.isPresent()) {
+            return foundUser.get();
+        } else {
+            log.warn("User not found: {}", login);
+            return null;
+        }
+    }
+
     public UserSettingsData retrieveUserSettings(String login) {
 
         return userSettingsRepository.findById(login)
                 .orElse(UserSettingsData.builder().login(login).build());
     }
 
-    /** Retrieve groups from repository for groups list, logging a warning if a group id is not found
-     * */
     public List<GroupData> retrieveGroups(List<String> groupIds) {
         List<GroupData> foundGroups = new ArrayList<>();
         for(String id : groupIds){
@@ -70,8 +77,24 @@ public class UserServiceImp implements UserService {
         return foundGroups;
     }
 
-    /** Retrieve perimeters from repository for perimeter list, throwing an error if a perimeter is not found
-     * */
+    public Set<Perimeter> findPerimetersAttachedToGroups(List<String> groups) {
+        if ((groups != null) && (!groups.isEmpty())) {
+            List<GroupData> groupsData = retrieveGroups(groups);
+
+            if ((groupsData != null) && (!groupsData.isEmpty())) {
+                Set<Perimeter> perimetersData = new HashSet<>(); //We use a set because we don't want to have a duplicate
+                groupsData.forEach(     //For each group, we recover its perimeters
+                        groupData -> {
+                            List<PerimeterData> list = retrievePerimeters(groupData.getPerimeters());
+                            if (list != null)
+                                perimetersData.addAll(list);
+                        });
+                return perimetersData;
+            }
+        }
+        return Collections.emptySet();
+    }
+
     public List<PerimeterData> retrievePerimeters(List<String> perimeterIds) {
         List<PerimeterData> foundPerimeters = new ArrayList<>();
         for(String perimeterId : perimeterIds){
@@ -99,6 +122,66 @@ public class UserServiceImp implements UserService {
                     mySet.add(state);
                 else
                     return false;
+            }
+        }
+        return true;
+    }
+
+    public boolean checkFilteringNotificationIsAllowedForAllProcessesStates(String login, UserSettings userSettings) {
+        if ((userSettings.getProcessesStatesNotNotified() != null) && (!userSettings.getProcessesStatesNotNotified().isEmpty())) {
+            UserData userData = retrieveUser(login);
+
+            if (userData != null) {
+                List<String> groups = userData.getGroups();
+                Set<Perimeter> perimeters = findPerimetersAttachedToGroups(groups);
+
+                CurrentUserWithPerimetersData userWithPerimetersData = CurrentUserWithPerimetersData.builder().userData(userData).build();
+                userWithPerimetersData.computePerimeters(perimeters);
+                if (!isFilteringNotificationAllowedForAllProcessesStates(userWithPerimetersData,
+                        userSettings.getProcessesStatesNotNotified()))
+                    return false;
+            }
+        }
+        return true;
+    }
+
+    private boolean isFilteringNotificationAllowedForAllProcessesStates(CurrentUserWithPerimeters currentUserWithPerimeters,
+                                                                       Map<String, List<String>> processesStates){
+
+        if ((processesStates != null) && (processesStates.size() > 0)) {
+            for (Map.Entry<String, List<String>> entry : processesStates.entrySet()) {
+                List <String> stateIds = entry.getValue();
+                String processId = entry.getKey();
+
+                if (! isFilteringNotificationAllowedForAllProcessStates(currentUserWithPerimeters, processId, stateIds))
+                    return false;
+            }
+        }
+        return true;
+    }
+
+    private boolean isFilteringNotificationAllowedForAllProcessStates(CurrentUserWithPerimeters currentUserWithPerimeters,
+                                                              String processId,
+                                                              List<String> stateIds) {
+        if (stateIds != null) {
+            for (String stateId : stateIds) {
+                if (!isFilteringNotificationAllowedForThisProcessState(currentUserWithPerimeters, processId, stateId))
+                    return false;
+            }
+        }
+        return true;
+    }
+
+    private boolean isFilteringNotificationAllowedForThisProcessState(CurrentUserWithPerimeters currentUserWithPerimeters,
+                                                                     String processId, String stateId){
+
+        for (ComputedPerimeter computedPerimeter: currentUserWithPerimeters.getComputedPerimeters()) {
+
+            if ((computedPerimeter.getProcess().equals(processId)) && (computedPerimeter.getState().equals(stateId)) &&
+                (computedPerimeter.getFilteringNotificationAllowed() != null) && (!computedPerimeter.getFilteringNotificationAllowed())) {
+                log.info("Filtering notification not allowed for user={} process={} state={}",
+                        currentUserWithPerimeters.getUserData().getLogin(), processId, stateId);
+                return false;
             }
         }
         return true;

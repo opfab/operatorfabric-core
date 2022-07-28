@@ -42,11 +42,13 @@ Feature: Get perimeters for a user (endpoint tested : GET /users/{login}/perimet
   "stateRights" : [
     {
       "state" : "state1",
-      "right" : "Receive"
+      "right" : "Receive",
+      "filteringNotificationAllowed" : true
     },
     {
       "state" : "state2",
-      "right" : "ReceiveAndWrite"
+      "right" : "ReceiveAndWrite",
+      "filteringNotificationAllowed" : true
     }
   ]
 }
@@ -60,11 +62,13 @@ Feature: Get perimeters for a user (endpoint tested : GET /users/{login}/perimet
   "stateRights" : [
     {
       "state" : "state1",
-      "right" : "ReceiveAndWrite"
+      "right" : "ReceiveAndWrite",
+      "filteringNotificationAllowed" : true
     },
     {
       "state" : "state2",
-      "right" : "ReceiveAndWrite"
+      "right" : "ReceiveAndWrite",
+      "filteringNotificationAllowed" : true
     }
   ]
 }

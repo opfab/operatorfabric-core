@@ -19,7 +19,7 @@ export class UserWithPerimeters {
 }
 
 export class ComputedPerimeter {
-    public constructor(readonly process: string, readonly state: string, readonly rights: RightsEnum) {}
+    public constructor(readonly process: string, readonly state: string, readonly rights: RightsEnum, readonly filteringNotificationAllowed: boolean) {}
 }
 
 export function userRight(rights: RightsEnum) {

@@ -98,7 +98,7 @@
     "logout": "Logout",
     "changePassword": "Change password",
     "settings": "Settings",
-    "feedConfiguration": "Notification reception configuration",
+    "feedConfiguration": "Notification configuration",
     "about": "About",
     "usercard": "Card Creation",
     "switchToNightMode": "Night mode",
@@ -271,7 +271,10 @@
     "savingInProgress": "Saving in progress..."
   },
   "feedConfiguration": {
-    "title": "NOTIFICATION RECEPTION CONFIGURATION"
+    "title": "NOTIFICATION CONFIGURATION",
+    "information": "INFORMATION",
+    "youAreUnsubscribedFrom": "You are unsubscribed from one or more notifications for which unsubscribing is now prohibited.\n\nNotification(s) concerned :\n",
+    "youWillBeSubscribedAgain": "\n\nBy clicking OK, you will be subscribed to these notifications again."
   },
   "userCard": {
     "title": "CREATE A NEW CARD ",
@@ -369,6 +372,7 @@
         "stateRights": "STATE RIGHTS",
         "state": "STATE",
         "right": "RIGHT",
+        "filteringNotificationAllowed": "FILTERING NOTIFICATION\nALLOWED",
         "confirmDelete": "Do you really want to delete perimeter",
         "add":"ADD NEW PERIMETER"
       },

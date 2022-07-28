@@ -31,9 +31,12 @@ import lombok.NoArgsConstructor;
 public class StateRightData implements StateRight {
     private String state;
     private RightsEnum right;
+    @Builder.Default
+    private Boolean filteringNotificationAllowed = true;
 
     public StateRightData(StateRight stateRight) {
         this.state = stateRight.getState();
         this.right = stateRight.getRight();
+        this.filteringNotificationAllowed = stateRight.getFilteringNotificationAllowed();
     }
 }

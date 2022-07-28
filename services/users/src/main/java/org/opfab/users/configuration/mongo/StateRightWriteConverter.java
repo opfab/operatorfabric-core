@@ -32,6 +32,9 @@ public class StateRightWriteConverter implements Converter<StateRightData, Docum
         RightsEnum right = source.getRight();
         result.append("right", right.toString());
 
+        Boolean filteringNotificationAllowed = source.getFilteringNotificationAllowed();
+        result.append("filteringNotificationAllowed", filteringNotificationAllowed);
+
         return result;
     }
 }

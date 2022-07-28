@@ -30,7 +30,9 @@
                         </p>
                         <div style="margin-left: 15px;" class="row" formArrayName="processesStates" *ngFor="let state of processData.states; ">
                             <label class="opfab-checkbox">{{state.stateLabel}}
-                                <input type="checkbox"[formControlName]=state.stateControlIndex [id]=state.stateControlIndex (change)="updateIsAllStatesSelected(processIdAndLabel.processId, processGroup.groupId)">
+                                <input type="checkbox" *ngIf="state.filteringNotificationAllowed" [formControlName]=state.stateControlIndex [id]=state.stateControlIndex
+                                       (change)="updateIsAllStatesSelected(processIdAndLabel.processId, processGroup.groupId)">
+                                <input type="checkbox" *ngIf="!state.filteringNotificationAllowed" disabled [formControlName]=state.stateControlIndex [id]=state.stateControlIndex>
                                 <span class="opfab-checkbox-checkmark"></span>
                             </label>
                         </div>
@@ -52,7 +54,9 @@
                 </p>
                 <div style="margin-left: 15px;" class="row" formArrayName="processesStates" *ngFor="let state of processesStatesLabels.get(process.idProcess).states; ">
                     <label class="opfab-checkbox"> {{state.stateLabel}}
-                        <input type="checkbox" [formControlName]=state.stateControlIndex [id]=state.stateControlIndex (change)="updateIsAllStatesSelected(process.idProcess, '')">
+                        <input type="checkbox" *ngIf="state.filteringNotificationAllowed" [formControlName]=state.stateControlIndex [id]=state.stateControlIndex
+                               (change)="updateIsAllStatesSelected(process.idProcess, '')">
+                        <input type="checkbox" *ngIf="!state.filteringNotificationAllowed" disabled [formControlName]=state.stateControlIndex [id]=state.stateControlIndex>
                         <span class="opfab-checkbox-checkmark"></span>
                     </label>
                 </div>
@@ -84,6 +88,24 @@
             <p translate>shared.popup.areYouSure</p>
             <button id="opfab-feedconfiguration-btn-no" type="button" class="opfab-btn-cancel" (click)="doNotConfirmSaveSettings()" translate>button.cancel</button>
             <button id="opfab-feedconfiguration-btn-yes" type="button" class="opfab-btn" (click)="confirmSaveSettings()" translate>button.yes</button>
+        </div>
+    </ng-template>
+</div>
+
+<div class="my-3">
+    <ng-template #statesUnsubscribedButWithFilteringNotificationNotAllowedPopup let-modal>
+        <div id="opfab-feedconfiguration-states-unsubscribed-popup">
+            <div class="modal-header">
+                <div translate> feedConfiguration.information </div>
+            </div>
+            <div class="modal-body text-center">
+                <p style="white-space: pre-wrap;">
+                    <span translate>feedConfiguration.youAreUnsubscribedFrom</span>
+                    <span style="font-weight: bold">{{statesUnsubscribedButWithFilteringNotificationNotAllowed}}</span>
+                    <span translate>feedConfiguration.youWillBeSubscribedAgain</span>
+                </p>
+                <button id="opfab-feedconfiguration-states-unsubscribed-popup-btn-ok" type="button" class="opfab-btn" (click)="confirmSaveSettings()" translate>button.ok</button>
+            </div>
         </div>
     </ng-template>
 </div>

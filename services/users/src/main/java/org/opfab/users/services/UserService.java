@@ -8,16 +8,18 @@
  */
 package org.opfab.users.services;
 
-import org.opfab.users.model.GroupData;
-import org.opfab.users.model.PerimeterData;
-import org.opfab.users.model.User;
+import org.opfab.users.model.*;
 
 import java.util.List;
+import java.util.Set;
 
 public interface UserService {
     User createUser(User user) ;
+    UserData retrieveUser(String login);
     List<GroupData> retrieveGroups(List<String> groupIds);
     List<PerimeterData> retrievePerimeters(List<String> perimeterIds);
+    Set<Perimeter> findPerimetersAttachedToGroups(List<String> groups);
+    boolean checkFilteringNotificationIsAllowedForAllProcessesStates(String login, UserSettings userSettings);
     void publishUpdatedUserMessage(String userLogin);
     void publishUpdatedConfigMessage();
 }

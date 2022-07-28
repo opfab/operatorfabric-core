@@ -239,7 +239,7 @@ describe('Test translations', function () {
         cy.loginOpFab('operator1_fr','test');
 
         changeLanguage(ENGLISH);
-        checkRightMenuStaticEntries('Real time users', 'Settings', 'Activity area', 'Notification reception configuration', 'About', 'Change password', 'Logout');
+        checkRightMenuStaticEntries('Real time users', 'Settings', 'Activity area', 'Notification configuration', 'About', 'Change password', 'Logout');
         checkDayAndNightTitles('Day mode', 'Night mode');
 
         changeLanguage(FRENCH);

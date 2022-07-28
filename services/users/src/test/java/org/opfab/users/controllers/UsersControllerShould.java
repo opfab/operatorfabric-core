@@ -145,22 +145,22 @@ class UsersControllerShould {
         p1 = PerimeterData.builder()
                 .id("PERIMETER1_1")
                 .process("process1")
-                .stateRights(new HashSet<>(Arrays.asList(new StateRightData("state1", RightsEnum.RECEIVE),
-                                                         new StateRightData("state2", RightsEnum.RECEIVEANDWRITE))))
+                .stateRights(new HashSet<>(Arrays.asList(new StateRightData("state1", RightsEnum.RECEIVE, true),
+                                                         new StateRightData("state2", RightsEnum.RECEIVEANDWRITE, true))))
                 .build();
 
         p2 = PerimeterData.builder()
                 .id("PERIMETER1_2")
                 .process("process1")
-                .stateRights(new HashSet<>(Arrays.asList(new StateRightData("state1", RightsEnum.RECEIVEANDWRITE),
-                                                         new StateRightData("state2", RightsEnum.WRITE))))
+                .stateRights(new HashSet<>(Arrays.asList(new StateRightData("state1", RightsEnum.RECEIVEANDWRITE, true),
+                                                         new StateRightData("state2", RightsEnum.WRITE, true))))
                 .build();
 
         p3 = PerimeterData.builder()
                 .id("PERIMETER2")
                 .process("process2")
-                .stateRights(new HashSet<>(Arrays.asList(new StateRightData("state1", RightsEnum.WRITE),
-                                                         new StateRightData("state2", RightsEnum.RECEIVE))))
+                .stateRights(new HashSet<>(Arrays.asList(new StateRightData("state1", RightsEnum.WRITE, true),
+                                                         new StateRightData("state2", RightsEnum.RECEIVE, true))))
                 .build();
 
         perimeterRepository.insert(p1);

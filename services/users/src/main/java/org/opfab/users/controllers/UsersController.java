@@ -25,8 +25,6 @@ import org.opfab.users.repositories.GroupRepository;
 import org.opfab.users.repositories.UserRepository;
 import org.opfab.users.repositories.UserSettingsRepository;
 import org.opfab.users.services.UserService;
-import org.opfab.users.model.GroupData;
-import org.opfab.users.model.PerimeterData;
 import org.opfab.users.model.UserData;
 import org.opfab.users.model.UserSettingsData;
 
@@ -54,12 +52,13 @@ public class UsersController implements UsersApi, UserExtractor {
     public static final String NO_MATCHING_USER_NAME_MSG = "Payload User login does not match URL User login";
     public static final String MANDATORY_LOGIN_MISSING = "Mandatory 'login' field is missing";
     public static final String CANNOT_REMOVE_ADMIN_USER_FROM_ADMIN_GROUP = "Removing group ADMIN from user admin is not allowed";
+    public static final String FILTERING_NOTIFICATION_NOT_ALLOWED = "Filtering notification not allowed for at least one process/state";
 
     public static final String USER_CREATED = "User %s is created";
     public static final String USER_UPDATED = "User %s is updated";
 
     public static final String ADMIN_LOGIN = "admin";
-    
+
     @Autowired
     private UserRepository userRepository;
 
@@ -133,7 +132,15 @@ public class UsersController implements UsersApi, UserExtractor {
         return userRepository.findAll().stream().map( User.class::cast).collect(Collectors.toList());
     }
     @Override
-    public UserSettings patchUserSettings(HttpServletRequest request, HttpServletResponse response, String login, UserSettings userSettings) {
+    public UserSettings patchUserSettings(HttpServletRequest request, HttpServletResponse response, String login, UserSettings userSettings) throws Exception {
+
+        if (! userService.checkFilteringNotificationIsAllowedForAllProcessesStates(login, userSettings)) {
+            throw new ApiErrorException(ApiError.builder()
+                    .status(HttpStatus.FORBIDDEN)
+                    .message(FILTERING_NOTIFICATION_NOT_ALLOWED)
+                    .build());
+        }
+
         UserSettingsData settings = userSettingsRepository.findById(login)
                 .orElse(UserSettingsData.builder().login(login).build());
 
@@ -147,9 +154,17 @@ public class UsersController implements UsersApi, UserExtractor {
 
     @Override
     public UserSettings updateUserSettings(HttpServletRequest request, HttpServletResponse response, String login, UserSettings userSettings) throws ApiErrorException {
-        if(!userSettings.getLogin().equals(login)) {
+        if (!userSettings.getLogin().equals(login)) {
             throw buildApiException(HttpStatus.BAD_REQUEST, NO_MATCHING_USER_NAME_MSG);
         }
+
+        if (! userService.checkFilteringNotificationIsAllowedForAllProcessesStates(login, userSettings)) {
+            throw new ApiErrorException(ApiError.builder()
+                    .status(HttpStatus.FORBIDDEN)
+                    .message(FILTERING_NOTIFICATION_NOT_ALLOWED)
+                    .build());
+        }
+
         return userSettingsRepository.save(new UserSettingsData(userSettings));
     }
 
@@ -167,22 +182,7 @@ public class UsersController implements UsersApi, UserExtractor {
     public List<Perimeter> fetchUserPerimeters(HttpServletRequest request, HttpServletResponse response, String login) throws ApiErrorException {
 
         List<String> groups = findUserOrThrow(login).getGroups(); //First, we recover the groups to which the user belongs
-
-        if ((groups != null) && (! groups.isEmpty())) {     //Then, we recover the groups data
-            List<GroupData> groupsData = userService.retrieveGroups(groups);
-
-            if (! groupsData.isEmpty()){
-                Set<PerimeterData> perimetersData = new HashSet<>(); //We use a set because we don't want to have a duplicate
-                groupsData.forEach(     //For each group, we recover its perimeters
-                        groupData -> {
-                            List<PerimeterData> list = userService.retrievePerimeters(groupData.getPerimeters());
-                            if (list != null)
-                                perimetersData.addAll(list);
-                        });
-                return new ArrayList<>(perimetersData);
-            }
-        }
-        return Collections.emptyList();
+        return new ArrayList<>(userService.findPerimetersAttachedToGroups(groups));
     }
 
     @Override

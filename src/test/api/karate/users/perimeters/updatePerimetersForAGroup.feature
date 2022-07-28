@@ -24,11 +24,13 @@ Feature: Update perimeters for a group (endpoint tested : PUT /groups/{id}/perim
   "stateRights" : [
     {
       "state" : "state1",
-      "right" : "Receive"
+      "right" : "Receive",
+      "filteringNotificationAllowed" : true
     },
     {
       "state" : "state2",
-      "right" : "Write"
+      "right" : "Write",
+      "filteringNotificationAllowed" : true
     }
   ]
 }
@@ -42,11 +44,13 @@ Feature: Update perimeters for a group (endpoint tested : PUT /groups/{id}/perim
   "stateRights" : [
     {
       "state" : "state1",
-      "right" : "ReceiveAndWrite"
+      "right" : "ReceiveAndWrite",
+      "filteringNotificationAllowed" : true
     },
     {
       "state" : "state2",
-      "right" : "ReceiveAndWrite"
+      "right" : "ReceiveAndWrite",
+      "filteringNotificationAllowed" : true
     }
   ]
 }
@@ -159,7 +163,7 @@ Feature: Update perimeters for a group (endpoint tested : PUT /groups/{id}/perim
     When method get
     Then status 200
     And assert response.length == 1
-    And match response contains only [{"id":"perimeterKarate13_1","process":"process13","stateRights":[{"state":"state1","right":"Receive"},{"state":"state2","right":"Write"}]}]
+    And match response contains only [{"id":"perimeterKarate13_1","process":"process13","stateRights":[{"state":"state1","right":"Receive","filteringNotificationAllowed":true},{"state":"state2","right":"Write","filteringNotificationAllowed":true}]}]
 
 
   Scenario: Put perimeter13_2 for group13
@@ -176,4 +180,4 @@ Feature: Update perimeters for a group (endpoint tested : PUT /groups/{id}/perim
     When method get
     Then status 200
     And assert response.length == 1
-    And match response contains only [{"id":"perimeterKarate13_2","process":"process13","stateRights":[{"state":"state1","right":"ReceiveAndWrite"},{"state":"state2","right":"ReceiveAndWrite"}]}]
+    And match response contains only [{"id":"perimeterKarate13_2","process":"process13","stateRights":[{"state":"state1","right":"ReceiveAndWrite","filteringNotificationAllowed":true},{"state":"state2","right":"ReceiveAndWrite","filteringNotificationAllowed":true}]}]

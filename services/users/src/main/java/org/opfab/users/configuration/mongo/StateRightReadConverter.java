@@ -29,7 +29,8 @@ public class StateRightReadConverter implements Converter<Document, StateRight> 
 
         StateRightData.StateRightDataBuilder builder = StateRightData.builder()
                                                           .state(source.getString("state"))
-                                                          .right(RightsEnum.fromValue(source.getString("right")));
+                                                          .right(RightsEnum.fromValue(source.getString("right")))
+                                                          .filteringNotificationAllowed(source.getBoolean("filteringNotificationAllowed"));
         return builder.build();
     }
 }

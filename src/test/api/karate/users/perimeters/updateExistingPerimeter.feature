@@ -16,7 +16,8 @@ Feature: Update existing perimeter (endpoint tested : PUT /perimeters/{id})
   "stateRights" : [
     {
       "state" : "state2",
-      "right" : "Receive"
+      "right" : "Receive",
+      "filteringNotificationAllowed" : true
     }
   ]
 }
@@ -30,7 +31,8 @@ Feature: Update existing perimeter (endpoint tested : PUT /perimeters/{id})
   "stateRights" : [
     {
       "state" : "state2",
-      "right" : "ReceiveAndWrite"
+      "right" : "ReceiveAndWrite",
+      "filteringNotificationAllowed" : false
     }
   ]
 }

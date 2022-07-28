@@ -22,22 +22,28 @@ class CurrentUserWithPerimetersDataShould {
         Perimeter p1 = PerimeterData.builder().
                 id("perimeterKarate10_1_RR").
                 process("process10").
-                stateRights(new HashSet<>(Arrays.asList(new StateRightData("state1", RightsEnum.RECEIVE),
-                                                        new StateRightData("state2", RightsEnum.RECEIVE)))).
+                stateRights(new HashSet<>(Arrays.asList(new StateRightData("state1", RightsEnum.RECEIVE, true),
+                                                        new StateRightData("state2", RightsEnum.RECEIVE, false)))).
                 build();
 
         Perimeter p2 = PerimeterData.builder().
                     id("perimeterKarate10_1_R").
                     process("process10").
-                    stateRights(new HashSet<>(Arrays.asList(new StateRightData("state2", RightsEnum.WRITE)))).
+                    stateRights(new HashSet<>(Arrays.asList(new StateRightData("state2", RightsEnum.WRITE, true)))).
                     build();
 
         CurrentUserWithPerimetersData c = new CurrentUserWithPerimetersData();
 
         c.computePerimeters(new HashSet<>(Arrays.asList(p1, p2)));
 
-        ComputedPerimeterData c1 = ComputedPerimeterData.builder().process("process10").state("state1").rights(RightsEnum.RECEIVE).build();
-        ComputedPerimeterData c2 = ComputedPerimeterData.builder().process("process10").state("state2").rights(RightsEnum.RECEIVEANDWRITE).build();
+        ComputedPerimeterData c1 = ComputedPerimeterData.builder().process("process10")
+                                                                  .state("state1")
+                                                                  .rights(RightsEnum.RECEIVE)
+                                                                  .filteringNotificationAllowed(Boolean.TRUE).build();
+        ComputedPerimeterData c2 = ComputedPerimeterData.builder().process("process10")
+                                                                  .state("state2")
+                                                                  .rights(RightsEnum.RECEIVEANDWRITE)
+                                                                  .filteringNotificationAllowed(Boolean.FALSE).build();
 
         org.assertj.core.api.Assertions.assertThat(c.getComputedPerimeters()).hasSize(2);
         org.assertj.core.api.Assertions.assertThat(c.getComputedPerimeters()).containsExactlyInAnyOrder(c1, c2);

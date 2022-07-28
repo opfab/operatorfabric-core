@@ -78,7 +78,7 @@ describe('AcknowledgeService testing ', () => {
         statesList['testState'] = new State(null, null, null, null);
         const processDefinition = getOneRandomProcess({id: 'testProcess', version: '1', states: statesList});
         const userWithPerimeters = new UserWithPerimeters(userMemberOfEntity1, [
-            {process: 'testProcess', state: 'testState', rights: RightsEnum.Receive}
+            {process: 'testProcess', state: 'testState', rights: RightsEnum.Receive, filteringNotificationAllowed: true}
         ]);
 
         const res = acknowledgeService.isAcknowledgmentAllowed(userWithPerimeters, card, processDefinition);
@@ -87,7 +87,7 @@ describe('AcknowledgeService testing ', () => {
 
     it('process does not exist , isAcknowledgmentAllowed() must return true (default value)', () => {
         const userWithPerimeters = new UserWithPerimeters(userMemberOfEntity1, [
-            {process: 'testProcess', state: 'testState', rights: RightsEnum.Receive}
+            {process: 'testProcess', state: 'testState', rights: RightsEnum.Receive, filteringNotificationAllowed: true}
         ]);
         const res = acknowledgeService.isAcknowledgmentAllowed(userWithPerimeters, card, null);
         expect(res).toBeTrue();
@@ -97,7 +97,7 @@ describe('AcknowledgeService testing ', () => {
         statesList['dummyState'] = new State(null, null, null, null);
         const processDefinition = getOneRandomProcess({id: 'testProcess', version: '1', states: statesList});
         const userWithPerimeters = new UserWithPerimeters(userMemberOfEntity1, [
-            {process: 'testProcess', state: 'testState', rights: RightsEnum.Receive}
+            {process: 'testProcess', state: 'testState', rights: RightsEnum.Receive, filteringNotificationAllowed: true}
         ]);
 
         const res = acknowledgeService.isAcknowledgmentAllowed(userWithPerimeters, card, processDefinition);
@@ -108,7 +108,7 @@ describe('AcknowledgeService testing ', () => {
         statesList['testState'] = new State(null, null, null, AcknowledgmentAllowedEnum.NEVER);
         const processDefinition = getOneRandomProcess({id: 'testProcess', version: '1', states: statesList});
         const userWithPerimeters = new UserWithPerimeters(userMemberOfEntity1, [
-            {process: 'testProcess', state: 'testState', rights: RightsEnum.Receive}
+            {process: 'testProcess', state: 'testState', rights: RightsEnum.Receive, filteringNotificationAllowed: true}
         ]);
 
         const res = acknowledgeService.isAcknowledgmentAllowed(userWithPerimeters, card, processDefinition);
@@ -119,7 +119,7 @@ describe('AcknowledgeService testing ', () => {
         statesList['testState'] = new State(null, null, null, AcknowledgmentAllowedEnum.ALWAYS);
         const processDefinition = getOneRandomProcess({id: 'testProcess', version: '1', states: statesList});
         const userWithPerimeters = new UserWithPerimeters(userMemberOfEntity1, [
-            {process: 'testProcess', state: 'testState', rights: RightsEnum.Receive}
+            {process: 'testProcess', state: 'testState', rights: RightsEnum.Receive, filteringNotificationAllowed: true}
         ]);
 
         const res = acknowledgeService.isAcknowledgmentAllowed(userWithPerimeters, card, processDefinition);
@@ -139,7 +139,7 @@ describe('AcknowledgeService testing ', () => {
             );
             const processDefinition = getOneRandomProcess({id: 'testProcess', version: '1', states: statesList});
             const userWithPerimeters = new UserWithPerimeters(userMemberOfEntity1, [
-                {process: 'testProcess', state: 'responseState', rights: RightsEnum.Receive}
+                {process: 'testProcess', state: 'responseState', rights: RightsEnum.Receive, filteringNotificationAllowed: true}
             ]);
 
             const res = acknowledgeService.isAcknowledgmentAllowed(userWithPerimeters, card, processDefinition);
@@ -160,7 +160,7 @@ describe('AcknowledgeService testing ', () => {
             );
             const processDefinition = getOneRandomProcess({id: 'testProcess', version: '1', states: statesList});
             const userWithPerimeters = new UserWithPerimeters(userMemberOfEntity1, [
-                {process: 'testProcess', state: 'responseState', rights: RightsEnum.Write}
+                {process: 'testProcess', state: 'responseState', rights: RightsEnum.Write, filteringNotificationAllowed: true}
             ]);
 
             const res = acknowledgeService.isAcknowledgmentAllowed(userWithPerimeters, card, processDefinition);
@@ -181,7 +181,7 @@ describe('AcknowledgeService testing ', () => {
             );
             const processDefinition = getOneRandomProcess({id: 'testProcess', version: '1', states: statesList});
             const userWithPerimeters = new UserWithPerimeters(userMemberOfEntity1, [
-                {process: 'testProcess', state: 'responseState', rights: RightsEnum.ReceiveAndWrite}
+                {process: 'testProcess', state: 'responseState', rights: RightsEnum.ReceiveAndWrite, filteringNotificationAllowed: true}
             ]);
 
             const res = acknowledgeService.isAcknowledgmentAllowed(userWithPerimeters, card, processDefinition);
@@ -202,7 +202,7 @@ describe('AcknowledgeService testing ', () => {
             );
             const processDefinition = getOneRandomProcess({id: 'testProcess', version: '1', states: statesList});
             const userWithPerimeters = new UserWithPerimeters(userMemberOfEntity2, [
-                {process: 'testProcess', state: 'responseState', rights: RightsEnum.Receive}
+                {process: 'testProcess', state: 'responseState', rights: RightsEnum.Receive, filteringNotificationAllowed: true}
             ]);
 
             const res = acknowledgeService.isAcknowledgmentAllowed(userWithPerimeters, card, processDefinition);
@@ -223,7 +223,7 @@ describe('AcknowledgeService testing ', () => {
             );
             const processDefinition = getOneRandomProcess({id: 'testProcess', version: '1', states: statesList});
             const userWithPerimeters = new UserWithPerimeters(userMemberOfEntity2, [
-                {process: 'testProcess', state: 'responseState', rights: RightsEnum.Write}
+                {process: 'testProcess', state: 'responseState', rights: RightsEnum.Write, filteringNotificationAllowed: true}
             ]);
 
             const res = acknowledgeService.isAcknowledgmentAllowed(userWithPerimeters, card, processDefinition);
@@ -244,7 +244,7 @@ describe('AcknowledgeService testing ', () => {
             );
             const processDefinition = getOneRandomProcess({id: 'testProcess', version: '1', states: statesList});
             const userWithPerimeters = new UserWithPerimeters(userMemberOfEntity2, [
-                {process: 'testProcess', state: 'responseState', rights: RightsEnum.ReceiveAndWrite}
+                {process: 'testProcess', state: 'responseState', rights: RightsEnum.ReceiveAndWrite, filteringNotificationAllowed: true}
             ]);
 
             const res = acknowledgeService.isAcknowledgmentAllowed(userWithPerimeters, card, processDefinition);
@@ -265,7 +265,7 @@ describe('AcknowledgeService testing ', () => {
             );
             const processDefinition = getOneRandomProcess({id: 'testProcess', version: '1', states: statesList});
             const userWithPerimeters = new UserWithPerimeters(userMemberOfEntity1, [
-                {process: 'testProcess', state: 'responseState', rights: RightsEnum.Write}
+                {process: 'testProcess', state: 'responseState', rights: RightsEnum.Write, filteringNotificationAllowed: true}
             ]);
 
             const res = acknowledgeService.isAcknowledgmentAllowed(
@@ -290,7 +290,7 @@ describe('AcknowledgeService testing ', () => {
             );
             const processDefinition = getOneRandomProcess({id: 'testProcess', version: '1', states: statesList});
             const userWithPerimeters = new UserWithPerimeters(userMemberOfEntity1, [
-                {process: 'testProcess', state: 'responseState', rights: RightsEnum.Receive}
+                {process: 'testProcess', state: 'responseState', rights: RightsEnum.Receive, filteringNotificationAllowed: true}
             ]);
 
             const res = acknowledgeService.isAcknowledgmentAllowed(
@@ -323,7 +323,7 @@ describe('AcknowledgeService testing ', () => {
             );
             const processDefinition = getOneRandomProcess({id: 'testProcess', version: '1', states: statesList});
             const userWithPerimeters = new UserWithPerimeters(userMemberOfEntity1, [
-                {process: 'testProcess', state: 'responseState', rights: RightsEnum.Write}
+                {process: 'testProcess', state: 'responseState', rights: RightsEnum.Write, filteringNotificationAllowed: true}
             ]);
 
             const res = acknowledgeService.isAcknowledgmentAllowed(userWithPerimeters, cardWithLttd, processDefinition);
@@ -352,7 +352,7 @@ describe('AcknowledgeService testing ', () => {
             );
             const processDefinition = getOneRandomProcess({id: 'testProcess', version: '1', states: statesList});
             const userWithPerimeters = new UserWithPerimeters(userMemberOfEntity1, [
-                {process: 'testProcess', state: 'responseState', rights: RightsEnum.Write}
+                {process: 'testProcess', state: 'responseState', rights: RightsEnum.Write, filteringNotificationAllowed: true}
             ]);
 
             const res = acknowledgeService.isAcknowledgmentAllowed(userWithPerimeters, cardWithLttd, processDefinition);
