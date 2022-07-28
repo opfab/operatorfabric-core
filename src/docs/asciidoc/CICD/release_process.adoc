@@ -157,6 +157,7 @@ Wait for the build to complete (around 40 minutes) and check that all jobs have 
 . Check that the tag was correctly pushed to GitHub and is visible under the
 https://github.com/opfab/operatorfabric-core/tags[tags page] for the repository.
 
+[[update_version_list_on_website]]
 === Updating the version list on the website
 
 On the link:{opfab_website_repo}[website repository],
@@ -204,7 +205,7 @@ and that the links work (It may need a few minutes for the website to be updated
 NOTE: The `external_devices_api` property should be set to true for all new versions, so the API documentation for
 the External Devices API is displayed on the website.
 
-
+[[checking_docker_compose]]
 === Checking the docker-compose files
 
 While the docker-compose files should always point to the SNAPSHOT images while on the `develop` branch, on the `master`
@@ -217,6 +218,7 @@ previous steps has completed successfully, and you can see X.X.X.RELEASE images 
 People who want to experiment with OperatorFabric are pointed to this docker-compose so it's important to make sure
 that it's working correctly.
 
+[[publishing_release_on_github]]
 === Publishing the release on GitHub
 
 . On the https://github.com/opfab/operatorfabric-core/releases[`releases` screen] for the core repository, draft a new
@@ -284,14 +286,17 @@ image::confirm_release_to_maven_central.png[Release to Maven Central]
 
 . The jars for the release should then be available on the https://repo1.maven.org/maven2/org/opfab/[project space in the Maven repository] within 10 minutes.
 
-. It can take up to two hours for them to appear on the https://search.maven.org/search?q=opfab[Maven Central Repository Search].
+. It can take up to two hours for them to appear on the https://search.maven.org/search?q=opfab[Maven Central Repository Search] and up to one day for https://mvnrepository.com/artifact/org.opfab[MvnRepository]
 
-=== Advertising the new release on the LFE mailing list
+[[advertising_new_release]]
+=== Advertising the new release 
 
-. Send an email to the opfab-announce@lists.lfenergy.org mailing list with a link to the release notes on GitHub.
+* Advertising on the LFE mailing list via an email to the opfab-announce@lists.lfenergy.org mailing list with a link to the release notes on GitHub.
 
 NOTE: Here is the link to the link:https://lists.lfenergy.org/g/main[administration website for the LFE mailing lists]
 in case there is an issue.
+
+* Send a message on operator-fabric slack channel.
 
 === Preparing the next version
 
@@ -376,5 +381,13 @@ If the build and tests are successful, launch manually GitHubActions with jobs :
 IMPORTANT: In the case of a patch on the last major/minor version tagged on master, this version will become the
 `latest` version. In this case, add the jobs `Docker Push - Latest` and  `Build and publish documentation - Latest` instead of `Build and publish documentation` to also update the `latest` docker images on DockerHub and the `current` documentation on the website.
 
-You then need to release the client library jars for the hotfix version. To do so, refer to the
-<<publishing_client_lib_release,corresponding section>> for standard releases.
+You then have to follow the following steps as for a classic release:
+
+* <<update_version_list_on_website, Updating the version list on the website>>.
+* <<checking_docker_compose, Checking the docker-compose files>>.
+* <<publishing_release_on_github, Publishing the release on GitHub>>.
+* <<publishing_client_lib_release, Release the client library jars>>.
+* <<advertising_new_release, Advertising the new release>>.
+
+
+
