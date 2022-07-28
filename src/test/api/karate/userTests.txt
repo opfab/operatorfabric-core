@@ -7,6 +7,7 @@
       users/perimeters/createPerimeters.feature              \
       users/perimeters/addGroupsToPerimeter.feature          \
       users/patchUserSettings.feature                        \ # Be careful : patchUserSettings must be before fetchUserSettings
+      users/updateUserSettings.feature                       \
       users/fetchExistingUser.feature                        \
       users/fetchUserSettings.feature                        \
       users/groups/getGroupDetails.feature                   \

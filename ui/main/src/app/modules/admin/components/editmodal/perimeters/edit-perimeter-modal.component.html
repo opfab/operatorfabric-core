@@ -46,7 +46,7 @@
 
         <form [formGroup]="perimeterForm">
           <div class="opfab-edit-row row" *ngFor="let i of stateRightControlsIndexes;">
-            <div class="col-7" style="position: relative;">
+            <div class="col-6" style="position: relative;">
               <of-multi-select id="opfab-admin-perimeter-state-filter"
                                [multiSelectId]="'state'+i"
                                [parentForm]="perimeterForm"
@@ -55,7 +55,7 @@
                                [selectedOptions]="perimeterForm.get('state'+i).value">
               </of-multi-select>
             </div>
-            <div class="col-3" style="position: relative;">
+            <div class="col" style="position: relative;min-width: 18%">
               <of-multi-select id="opfab-admin-perimeter-right-filter"
                                [multiSelectId]="'right'+i"
                                [parentForm]="perimeterForm"
@@ -63,6 +63,12 @@
                                [options]="rightOptions"
                                [selectedOptions]="perimeterForm.get('right'+i).value">
               </of-multi-select>
+            </div>
+            <div class="col" style="position: relative;margin: auto">
+              <label [for]="'opfab-admin-perimeter-filtering-notification-allowed'+i" class="opfab-checkbox" style="white-space: pre-line; margin: auto" translate>admin.input.perimeter.filteringNotificationAllowed
+                <input [formControlName]="'filteringNotificationAllowed'+i" [name]="'filteringNotificationAllowed'+i" [id]="'opfab-admin-perimeter-filtering-notification-allowed'+i" type="checkbox">
+                <span class="opfab-checkbox-checkmark" style="top: 10px"></span>
+              </label>
             </div>
             <div class="col icons" [hidden]="stateRightControlsIndexes.length === 1">
               <em class="far fa-trash-alt" (click)="removeOrClearStateRight(i)"></em>

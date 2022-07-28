@@ -7,7 +7,7 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {Component, OnInit} from '@angular/core';
+import {Component, ElementRef, OnInit, ViewChild} from '@angular/core';
 import {UserService} from '@ofServices/user.service';
 import {Process, State} from '@ofModel/processes.model';
 import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
@@ -44,8 +44,10 @@ export class FeedconfigurationComponent implements OnInit {
     currentUserWithPerimeters: UserWithPerimeters;
     processesStatesLabels: Map<
         string,
-        {processLabel: string; states: {stateId: string; stateLabel: string; stateControlIndex: number}[]}
+        {processLabel: string; states: {stateId: string; stateLabel: string; stateControlIndex: number; filteringNotificationAllowed: boolean}[]}
     >;
+    statesUnsubscribedButWithFilteringNotificationNotAllowed = '';
+    @ViewChild('statesUnsubscribedButWithFilteringNotificationNotAllowedPopup') statesUnsubscribedTemplate: ElementRef;
     preparedListOfProcessesStates: {processId: string; stateId: string}[];
     isAllStatesSelectedPerProcess: Map<string, boolean>;
     isAllProcessesSelectedPerProcessGroup: Map<string, boolean>;
@@ -164,17 +166,34 @@ export class FeedconfigurationComponent implements OnInit {
                 : null;
 
             let isChecked = true;
-            if (!!notNotifiedStatesForThisProcess && notNotifiedStatesForThisProcess.includes(processState.stateId))
+
+            if (!!notNotifiedStatesForThisProcess && notNotifiedStatesForThisProcess.includes(processState.stateId)) {
                 isChecked = false;
+                if (this.checkStateUnsubscribedButWithFilteringNotificationNotAllowed(processState.processId, processState.stateId)) {
+                    isChecked = true; // We force the subscription to this state
+                }
+            }
+
             this.processesStatesFormArray.push(new FormControl<boolean | null>(isChecked));
         });
+    }
+
+    private checkStateUnsubscribedButWithFilteringNotificationNotAllowed(processId: string, stateId: string): boolean {
+        const processInfo = this.processesStatesLabels.get(processId);
+        const stateInfo = processInfo.states.find((stateInfo) => stateInfo.stateId === stateId);
+
+        if (! stateInfo.filteringNotificationAllowed) {
+            this.statesUnsubscribedButWithFilteringNotificationNotAllowed += '\n' + processInfo.processLabel + ' / ' + stateInfo.stateLabel;
+            return true;
+        }
+        return false;
     }
 
     private computePreparedListOfProcessesStatesAndProcessesStatesLabels() {
         let stateControlIndex = 0;
 
         for (const process of this.processesDefinition) {
-            const states: {stateId: string; stateLabel: string; stateControlIndex: number}[] = [];
+            const states: {stateId: string; stateLabel: string; stateControlIndex: number; filteringNotificationAllowed: boolean}[] = [];
 
             const processLabel = !!process.name ? process.name : process.id;
 
@@ -184,7 +203,9 @@ export class FeedconfigurationComponent implements OnInit {
                 if (this.checkIfStateMustBeDisplayed(state, process, stateId)) {
                     const stateLabel = !!state.name ? state.name : stateId;
 
-                    states.push({stateId, stateLabel, stateControlIndex});
+                    const filteringNotificationAllowed = this.userService.isFilteringNotificationAllowedForProcessAndState(process.id, stateId);
+
+                    states.push({stateId, stateLabel, stateControlIndex, filteringNotificationAllowed});
                     this.preparedListOfProcessesStates.push({processId: process.id, stateId});
                     stateControlIndex++;
                 }
@@ -247,6 +268,12 @@ export class FeedconfigurationComponent implements OnInit {
         this.isThereProcessStateToDisplay = this.processesService.getStatesListPerProcess(false, true).size > 0;
     }
 
+    ngAfterViewInit() {
+        if (this.statesUnsubscribedButWithFilteringNotificationNotAllowed.length) {
+            this.openStatesUnsubscribedButWithFilteringNotificationNotAllowedModal();
+        }
+    }
+
     makeProcessIdsByProcessGroup() {
         this.processGroupsAndLabels.forEach((element) => {
             const processIds = [];
@@ -307,6 +334,10 @@ export class FeedconfigurationComponent implements OnInit {
         // This happens because method this.cardService.removeAllLightCardFromMemory()
         // is called too late (in method confirmSaveSettings)
         if (!this.saveSettingsInProgress) this.modalRef.close();
+    }
+
+    openStatesUnsubscribedButWithFilteringNotificationNotAllowedModal() {
+        this.modalRef = this.modalService.open(this.statesUnsubscribedTemplate, {centered: true, backdrop: 'static'});
     }
 
     openConfirmSaveSettingsModal(content) {

@@ -271,7 +271,10 @@
     "savingInProgress": "aan het opslaan..."
   },
   "feedConfiguration": {
-    "title": "NOTIFICATIE CONFIGURATIE"
+    "title": "NOTIFICATIE CONFIGURATIE",
+    "information": "INFORMATIE",
+    "youAreUnsubscribedFrom": "U bent uitgeschreven voor een of meer meldingen waarvoor uitschrijving niet toegestaan is.\n\nBetrokken melding(en) :\n",
+    "youWillBeSubscribedAgain": "\n\nDoor op OK te klikken, wordt u opnieuw ingeschreven voor deze meldingen."
   },
   "userCard": {
     "title": "MAAK EEN NIEUWE KAART ",
@@ -369,6 +372,7 @@
         "stateRights": "STATUS RECHTEN",
         "state": "STATUS",
         "right": "RECHT",
+        "filteringNotificationAllowed": "FILTERBERICHT\nTOEGESTAAN",
         "confirmDelete": "Wilt u de perimeter echt verwijderen?",
         "add":"NIEUWE PERIMETER TOEVOEGEN"
       },

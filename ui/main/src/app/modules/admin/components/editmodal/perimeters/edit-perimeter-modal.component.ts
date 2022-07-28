@@ -97,9 +97,10 @@ export class EditPerimeterModalComponent implements OnInit {
         search: true
     };
 
-    private addStateRightControl(initialState?, initialRight?) {
+    private addStateRightControl(initialState?, initialRight?, initialFilteringNotificationAllowed?) {
         const stateKey = 'state' + this.indexForNewStateRightControl;
         const rightKey = 'right' + this.indexForNewStateRightControl;
+        const filteringNotificationAllowedKey = 'filteringNotificationAllowed' + this.indexForNewStateRightControl;
 
         this.perimeterForm.addControl(
             stateKey,
@@ -108,6 +109,16 @@ export class EditPerimeterModalComponent implements OnInit {
         this.perimeterForm.addControl(
             rightKey,
             new UntypedFormControl(initialRight ? initialRight : '', [Validators.required])
+        );
+
+        let filteringNotificationAllowed = true;
+        if (initialFilteringNotificationAllowed !== null && initialFilteringNotificationAllowed !== undefined) {
+            filteringNotificationAllowed = initialFilteringNotificationAllowed;
+        }
+
+        this.perimeterForm.addControl(
+            filteringNotificationAllowedKey,
+            new UntypedFormControl(filteringNotificationAllowed, [Validators.required])
         );
         this.addStateRightControlIndexToList();
     }
@@ -130,7 +141,7 @@ export class EditPerimeterModalComponent implements OnInit {
             this.perimeterForm.patchValue({id, process}, {onlySelf: false});
 
             stateRights.forEach((stateRight) => {
-                this.addStateRightControl(stateRight.state, stateRight.right);
+                this.addStateRightControl(stateRight.state, stateRight.right, stateRight.filteringNotificationAllowed);
             });
         }
     }
@@ -204,7 +215,10 @@ export class EditPerimeterModalComponent implements OnInit {
         this.stateRightControlsIndexes.forEach((index) => {
             const stateKey = 'state' + index;
             const rightKey = 'right' + index;
-            stateRights.push({state: this.perimeterForm.value[stateKey], right: this.perimeterForm.value[rightKey]});
+            const filteringNotificationAllowedKey = 'filteringNotificationAllowed' + index;
+            stateRights.push({state: this.perimeterForm.value[stateKey],
+                              right: this.perimeterForm.value[rightKey],
+                              filteringNotificationAllowed: this.perimeterForm.value[filteringNotificationAllowedKey]});
         });
         return {id: this.perimeterForm.value['id'],
                 process: this.perimeterForm.value['process'],
@@ -244,12 +258,17 @@ export class EditPerimeterModalComponent implements OnInit {
     private clearStateRight(indexToRemove: number) {
         const stateKey = 'state' + indexToRemove;
         const rightKey = 'right' + indexToRemove;
+        const filteringNotificationAllowedKey = 'filteringNotificationAllowed' + indexToRemove;
         if (this.perimeterForm.contains(stateKey)) {
             this.perimeterForm.removeControl(stateKey);
         }
 
         if (this.perimeterForm.contains(rightKey)) {
             this.perimeterForm.removeControl(rightKey);
+        }
+
+        if (this.perimeterForm.contains(filteringNotificationAllowedKey)) {
+            this.perimeterForm.removeControl(filteringNotificationAllowedKey);
         }
     }
 

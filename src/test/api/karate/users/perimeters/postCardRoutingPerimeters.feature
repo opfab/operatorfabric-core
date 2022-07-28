@@ -6,6 +6,26 @@ Feature: CreatePerimeters (endpoint tested : POST /perimeters)
     * def authToken = signIn.authToken
     * def signInAsTSO = callonce read('../../common/getToken.feature') { username: 'operator1_fr'}
     * def authTokenAsTSO = signInAsTSO.authToken
+      #defining perimeters
+    * def perimeter =
+"""
+{
+  "id" : "perimeterKarate16",
+  "process" : "process1",
+  "stateRights" : [
+      {
+        "state" : "state1",
+        "right" : "Receive",
+        "filteringNotificationAllowed" : true
+      },
+      {
+        "state" : "state2",
+        "right" : "ReceiveAndWrite",
+        "filteringNotificationAllowed" : true
+      }
+    ]
+}
+"""
 
     * def groupDispatcherList =
 """

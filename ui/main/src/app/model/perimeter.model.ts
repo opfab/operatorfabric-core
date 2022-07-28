@@ -12,7 +12,7 @@ export class Perimeter {
 }
 
 export class StateRight {
-    constructor(readonly state: string, readonly right: RightsEnum) {}
+    constructor(readonly state: string, readonly right: RightsEnum, readonly filteringNotificationAllowed: boolean) {}
 }
 
 export enum RightsEnum {

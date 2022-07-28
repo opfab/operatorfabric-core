@@ -24,7 +24,8 @@ Feature: Get perimeters for a group (endpoint tested : GET /groups/{id}/perimete
   "stateRights" : [
     {
       "state" : "state1",
-      "right" : "Receive"
+      "right" : "Receive",
+      "filteringNotificationAllowed" : true
     }
   ]
 }
@@ -38,7 +39,8 @@ Feature: Get perimeters for a group (endpoint tested : GET /groups/{id}/perimete
   "stateRights" : [
     {
       "state" : "state1",
-      "right" : "ReceiveAndWrite"
+      "right" : "ReceiveAndWrite",
+      "filteringNotificationAllowed" : true
     }
   ]
 }
@@ -127,4 +129,4 @@ Feature: Get perimeters for a group (endpoint tested : GET /groups/{id}/perimete
     When method get
     Then status 200
     And assert response.length == 2
-    And match response contains only [{"id":"perimeterKarate12_1","process":"process12_1","stateRights":[{"state":"state1","right":"Receive"}]},{"id":"perimeterKarate12_2","process":"process12_2","stateRights":[{"state":"state1","right":"ReceiveAndWrite"}]}]
+    And match response contains only [{"id":"perimeterKarate12_1","process":"process12_1","stateRights":[{"state":"state1","right":"Receive","filteringNotificationAllowed":true}]},{"id":"perimeterKarate12_2","process":"process12_2","stateRights":[{"state":"state1","right":"ReceiveAndWrite","filteringNotificationAllowed":true}]}]

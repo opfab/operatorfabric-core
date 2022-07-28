@@ -396,6 +396,8 @@ describe('AdminPage', () => {
 
         cy.get('#opfab-admin-perimeter-btn-add').should('be.disabled');
 
+        cy.get('.opfab-checkbox').contains('FILTERING NOTIFICATION ALLOWED ').find('input').should('be.checked');
+
         cy.get('#opfab-admin-perimeter-state-filter')
             .find('.vscomp-option-text')
             .eq(1)
@@ -453,6 +455,11 @@ describe('AdminPage', () => {
             .should('contain.text', 'ReceiveAndWrite')
             .click({force: true});
 
+        // We uncheck the field 'filtering notification allowed'
+        cy.get('.opfab-checkbox').contains('FILTERING NOTIFICATION ALLOWED ').find('input').should('be.checked');
+        cy.get('.opfab-checkbox').contains('FILTERING NOTIFICATION ALLOWED ').click();
+        cy.get('.opfab-checkbox').contains('FILTERING NOTIFICATION ALLOWED ').find('input').should('not.be.checked');
+
         // We save changes
         cy.get('#opfab-admin-perimeter-btn-save').click();
 
@@ -476,6 +483,13 @@ describe('AdminPage', () => {
             .find('.opfab-bg-right-receiveandwrite')
             .eq(0)
             .should('exist');
+
+        // We check the 'filtering notification allowed' is still unchecked, and we close the modal
+        cy.clickAgGridCell('ag-grid-angular', 8, 3, 'of-action-cell-renderer');
+        cy.get('of-edit-perimeter-modal').should('exist');
+        cy.get('.modal-title').should('contain.text', 'testperimeter');
+        cy.get('.opfab-checkbox').contains('FILTERING NOTIFICATION ALLOWED ').find('input').should('not.be.checked');
+        cy.get('#opfab-admin-perimeter-btn-close').click();
 
         // Delete previously created perimeter
         cy.clickAgGridCell('ag-grid-angular', 8, 4, 'of-action-cell-renderer');

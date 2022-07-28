@@ -8,7 +8,8 @@
     },
     {
       "state" : "contingenciesState",
-      "right" : "ReceiveAndWrite"
+      "right" : "ReceiveAndWrite",
+      "filteringNotificationAllowed" : false
     },
     {
       "state" : "dataQualityState",

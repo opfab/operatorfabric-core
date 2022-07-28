@@ -56,40 +56,83 @@ public class CurrentUserWithPerimetersData implements CurrentUserWithPerimeters 
         if (perimeters == null)
             return;
 
-        MultiKeyMap<String, List<RightsEnum>> multimapWithListOfRights = new MultiKeyMap<>();
-
         //First, we build a MultiKeyMap with key is (process, state) and value is a list of rights
+        MultiKeyMap<String, List<RightsEnum>> multimapOfRights = buildMultiKeyMapOfRights(perimeters);
+
+        //Then, we build a MultiKeyMap with key is (process, state) and value is a list of filteringNotificationAllowed
+        MultiKeyMap<String, List<Boolean>> multimapOfFilteringNotificationAllowed = buildMultiKeyMapOfFilteringNotificationAllowed(perimeters);
+
+        //Then, for each value in MultiKeyMap, we merge the rights in only one right
+        multimapOfRights.forEach((processstate, listRights) -> {
+            RightsEnum mergedRight = mergeRights(listRights);
+
+            multimapOfRights.put(processstate.getKey(0), processstate.getKey(1), new ArrayList<>(Arrays.asList(mergedRight)));
+        });
+
+        //Then, for each value in MultiKeyMap, we merge the filteringNotificationAllowed in only one boolean
+        multimapOfFilteringNotificationAllowed.forEach((processstate, listFilteringNotificationAllowed) -> {
+            Boolean mergedFilteringNotificationAllowed = mergeFilteringNotificationAllowed(listFilteringNotificationAllowed);
+
+            multimapOfFilteringNotificationAllowed.put(processstate.getKey(0), processstate.getKey(1),
+                                                       new ArrayList<>(Arrays.asList(mergedFilteringNotificationAllowed)));
+        });
+        makeComputedPerimeters(multimapOfRights, multimapOfFilteringNotificationAllowed);
+    }
+
+    private MultiKeyMap<String, List<RightsEnum>> buildMultiKeyMapOfRights(Set<Perimeter> perimeters) {
+        MultiKeyMap<String, List<RightsEnum>> multimapOfRights = new MultiKeyMap<>();
+
         perimeters.forEach(perimeter -> {
 
             List<StateRight> stateRights = perimeter.getStateRights();
 
             stateRights.forEach(stateRight -> {
-                List<RightsEnum> currentList = multimapWithListOfRights.get(perimeter.getProcess(), stateRight.getState());
+                List<RightsEnum> currentList = multimapOfRights.get(perimeter.getProcess(), stateRight.getState());
 
                 if (currentList != null) {
                     currentList.add(stateRight.getRight());
-                    multimapWithListOfRights.put(perimeter.getProcess(), stateRight.getState(), currentList);
+                    multimapOfRights.put(perimeter.getProcess(), stateRight.getState(), currentList);
                 }
                 else
-                    multimapWithListOfRights.put(perimeter.getProcess(), stateRight.getState(), new ArrayList<>(Arrays.asList(stateRight.getRight())));
+                    multimapOfRights.put(perimeter.getProcess(), stateRight.getState(), new ArrayList<>(Arrays.asList(stateRight.getRight())));
             });
         });
 
-        //Then, for each value in MultiKeyMap, we merge the rights in only one right
-        multimapWithListOfRights.forEach((processstate, listRights) -> {
-            RightsEnum mergedRight = mergeRights(listRights);
-            multimapWithListOfRights.put(processstate.getKey(0), processstate.getKey(1), new ArrayList<>(Arrays.asList(mergedRight)));
-        });
-        makeComputedPerimeters(multimapWithListOfRights);
+        return multimapOfRights;
     }
 
-    private void makeComputedPerimeters(MultiKeyMap<String, List<RightsEnum>> multimapWithOneRight){
+    private MultiKeyMap<String, List<Boolean>> buildMultiKeyMapOfFilteringNotificationAllowed(Set<Perimeter> perimeters) {
+        MultiKeyMap<String, List<Boolean>> multimapOfFilteringNotificationAllowed = new MultiKeyMap<>();
+
+        perimeters.forEach(perimeter -> {
+
+            List<StateRight> stateRights = perimeter.getStateRights();
+
+            stateRights.forEach(stateRight -> {
+                List<Boolean> currentList = multimapOfFilteringNotificationAllowed.get(perimeter.getProcess(), stateRight.getState());
+
+                if (currentList != null) {
+                    currentList.add(stateRight.getFilteringNotificationAllowed());
+                    multimapOfFilteringNotificationAllowed.put(perimeter.getProcess(), stateRight.getState(), currentList);
+                }
+                else
+                    multimapOfFilteringNotificationAllowed.put(perimeter.getProcess(), stateRight.getState(),
+                            new ArrayList<>(Arrays.asList(stateRight.getFilteringNotificationAllowed())));
+            });
+        });
+
+        return multimapOfFilteringNotificationAllowed;
+    }
+
+    private void makeComputedPerimeters(MultiKeyMap<String, List<RightsEnum>> multimapWithOneRight,
+                                        MultiKeyMap<String, List<Boolean>> multimapWithOneFilteringNotificationAllowed){
         if (multimapWithOneRight != null) {
             multimapWithOneRight.forEach((processstate, right) -> {
                 ComputedPerimeterData c = ComputedPerimeterData.builder()
                                             .process(processstate.getKey(0))
                                             .state(processstate.getKey(1))
                                             .rights(right.get(0))
+                                            .filteringNotificationAllowed(multimapWithOneFilteringNotificationAllowed.get(processstate).get(0))
                                             .build();
                 addComputedPerimeters(c);
             });
@@ -126,5 +169,13 @@ public class CurrentUserWithPerimetersData implements CurrentUserWithPerimeters 
         }
 
         return RightsEnum.RECEIVEANDWRITE;
+    }
+
+    public Boolean mergeFilteringNotificationAllowed(List<Boolean> listFilteringNotificationAllowed) {
+        for (Boolean filteringNotificationAllowed : listFilteringNotificationAllowed) {
+            if (filteringNotificationAllowed == Boolean.FALSE)
+                return false;
+        }
+        return Boolean.TRUE;
     }
 }

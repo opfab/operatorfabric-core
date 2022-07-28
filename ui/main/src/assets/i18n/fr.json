@@ -271,7 +271,10 @@
     "savingInProgress": "Enregistrement en cours..."
   },
   "feedConfiguration": {
-    "title": "CONFIGURATION DES NOTIFICATIONS"
+    "title": "CONFIGURATION DES NOTIFICATIONS",
+    "information": "INFORMATION",
+    "youAreUnsubscribedFrom": "Vous êtes désabonné d'une ou plusieurs notifications pour lesquelles le désabonnement est maintenant interdit.\n\nNotification(s) concernée(s) :\n",
+    "youWillBeSubscribedAgain": "\n\nEn cliquant sur OK, vous serez à nouveau abonné à ces notifications."
   },
   "userCard": {
     "title": "CRÉATION D'UNE NOUVELLE CARTE",
@@ -369,6 +372,7 @@
         "stateRights": "PERMISSIONS SUR LES ÉTATS",
         "state": "ÉTAT",
         "right": "PERMISSION",
+        "filteringNotificationAllowed": "DÉSABONNEMENT\nAUTORISÉ",
         "confirmDelete": "Voulez-vous vraiment supprimer le périmètre",
         "add":"AJOUTER UN NOUVEAU PÉRIMÈTRE"
       },

@@ -6,7 +6,9 @@ Feature: CreatePerimeters (endpoint tested : POST /perimeters)
     * def authToken = signIn.authToken
     * def signInAsTSO = callonce read('../../common/getToken.feature') { username: 'operator1_fr'}
     * def authTokenAsTSO = signInAsTSO.authToken
-      #defining perimeters
+
+    # defining perimeters
+    # state3 of perimeterKarate1_1 has no value for filteringNotificationAllowed to test default value is set to true
     * def perimeter =
 """
 {
@@ -15,10 +17,16 @@ Feature: CreatePerimeters (endpoint tested : POST /perimeters)
   "stateRights" : [
       {
         "state" : "state1",
-        "right" : "Receive"
+        "right" : "Receive",
+        "filteringNotificationAllowed" : true
       },
       {
         "state" : "state2",
+        "right" : "ReceiveAndWrite",
+        "filteringNotificationAllowed" : false
+      },
+      {
+        "state" : "state3",
         "right" : "ReceiveAndWrite"
       }
     ]
@@ -54,7 +62,11 @@ Feature: CreatePerimeters (endpoint tested : POST /perimeters)
     Then status 201
     And match response.id == perimeter.id
     And match response.process == perimeter.process
-    And match response.stateRights == perimeter.stateRights
+    And match response.stateRights[0] == perimeter.stateRights[0]
+    And match response.stateRights[1] == perimeter.stateRights[1]
+    And match response.stateRights[2].state == perimeter.stateRights[2].state
+    And match response.stateRights[2].right == perimeter.stateRights[2].right
+    And match response.stateRights[2].filteringNotificationAllowed == true
 
 
   Scenario: Try to update my perimeter (must return error 400 - duplicate key)

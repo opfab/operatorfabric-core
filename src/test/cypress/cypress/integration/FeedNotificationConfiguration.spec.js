@@ -26,7 +26,7 @@ describe ('Feed notification configuration tests',function () {
         cy.get('#opfab-navbar-drop-user-menu').click();
         cy.get('#opfab-menu-icon-notification').click();
 
-        cy.get('.opfab-feedconfiguration-title').should('have.text', ' NOTIFICATION RECEPTION CONFIGURATION\n');
+        cy.get('.opfab-feedconfiguration-title').should('have.text', ' NOTIFICATION CONFIGURATION\n');
         cy.get('.opfab-feedconfiguration-processlist').should('have.length', 3);
 
 
@@ -41,6 +41,10 @@ describe ('Feed notification configuration tests',function () {
         // We check the number of states for each process
         cy.get('.opfab-feedconfiguration-processlist').first().find('.opfab-feedconfiguration-process').first().find('.row').should('have.length', 6);
         cy.get('.opfab-feedconfiguration-processlist').first().find('.opfab-feedconfiguration-process').last().find('.row').should('have.length', 7);
+
+        // We check 'Process example/Network Contingencies' is disabled and checked (because 'filteringNotificationAllowed' is false for the corresponding perimeter)
+        cy.get('.opfab-feedconfiguration-processlist').first().find('.opfab-feedconfiguration-process').last()
+            .contains('⚠️ Network Contingencies ⚠️ ').find('input').should('be.disabled').should('be.checked');
 
         // We check the following state is absent because property 'isOnlyAChildState' is set to true
         cy.get('.opfab-feedconfiguration-processlist').first().find('.opfab-feedconfiguration-process').last().find('.row').contains('Planned outage date response').should('not.exist');
@@ -80,7 +84,7 @@ describe ('Feed notification configuration tests',function () {
         cy.get('#opfab-navbar-drop-user-menu').click();
         cy.get('#opfab-menu-icon-notification').click();
 
-        cy.get('.opfab-feedconfiguration-title').should('have.text', ' NOTIFICATION RECEPTION CONFIGURATION\n');
+        cy.get('.opfab-feedconfiguration-title').should('have.text', ' NOTIFICATION CONFIGURATION\n');
         cy.get('.opfab-feedconfiguration-processlist').should('have.length', 2);
 
 
@@ -122,7 +126,7 @@ describe ('Feed notification configuration tests',function () {
         cy.get('#opfab-navbar-drop-user-menu').click();
         cy.get('#opfab-menu-icon-notification').click();
 
-        cy.get('.opfab-feedconfiguration-title').should('have.text', ' NOTIFICATION RECEPTION CONFIGURATION\n');
+        cy.get('.opfab-feedconfiguration-title').should('have.text', ' NOTIFICATION CONFIGURATION\n');
         cy.get('.opfab-feedconfiguration-processlist').should('have.length', 0);
 
         cy.get('#opfab-feedconfiguration-no-process-state-available').should('exist');
@@ -139,7 +143,7 @@ describe ('Feed notification configuration tests',function () {
         cy.get('#opfab-navbar-drop-user-menu').click();
         cy.get('#opfab-menu-icon-notification').click();
 
-        cy.get('.opfab-feedconfiguration-title').should('have.text', ' NOTIFICATION RECEPTION CONFIGURATION\n');
+        cy.get('.opfab-feedconfiguration-title').should('have.text', ' NOTIFICATION CONFIGURATION\n');
         cy.get('.opfab-feedconfiguration-processlist').should('have.length', 1);
 
         // We check we have 6 processes
@@ -160,6 +164,10 @@ describe ('Feed notification configuration tests',function () {
         cy.get('.opfab-feedconfiguration-processlist').first().find('.opfab-feedconfiguration-process').eq(3).find('.row').should('have.length', 7);
         cy.get('.opfab-feedconfiguration-processlist').first().find('.opfab-feedconfiguration-process').eq(4).find('.row').should('have.length', 1);
         cy.get('.opfab-feedconfiguration-processlist').first().find('.opfab-feedconfiguration-process').eq(5).find('.row').should('have.length', 12);
+
+        // We check 'Process example/Network Contingencies' is disabled (because 'filteringNotificationAllowed' is false for the corresponding perimeter)
+        cy.get('.opfab-feedconfiguration-processlist').first().find('.opfab-feedconfiguration-process').eq(3)
+            .contains('⚠️ Network Contingencies ⚠️ ').find('input').should('be.disabled').should('be.checked');
 
         // We check state 'Planned outage date response' from 'Process example' is absent because property 'isOnlyAChildState' is set to true
         cy.get('.opfab-feedconfiguration-processlist').first().find('.opfab-feedconfiguration-process').eq(4).find('.row').contains('Planned outage date response', {matchCase: false}).should('not.exist');
@@ -194,18 +202,107 @@ describe ('Feed notification configuration tests',function () {
 
         // We check 'Message or question' process and all of its states are unchecked
         cy.get('.opfab-feedconfiguration-processlist').eq(1).find('p').eq(1).find('input').should('not.be.checked');
-        cy.get('.opfab-feedconfiguration-processlist').eq(1).find('.opfab-feedconfiguration-process').eq(1).find('.row').as('ExamplesForNewCards2States');
-        cy.get('@ExamplesForNewCards2States').contains('Message').find('input').should('not.be.checked');
-        cy.get('@ExamplesForNewCards2States').contains('Question').find('input').should('not.be.checked');
+        cy.get('.opfab-feedconfiguration-processlist').eq(1).find('.opfab-feedconfiguration-process').eq(1).find('.row').as('MessageOrQuestionStates');
+        cy.get('@MessageOrQuestionStates').contains('Message').find('input').should('not.be.checked');
+        cy.get('@MessageOrQuestionStates').contains('Question').find('input').should('not.be.checked');
 
         // We select 'Message or question' process
         cy.get('.opfab-feedconfiguration-processlist').eq(1).find('p').eq(1).find('input').check({force: true});
 
         // We check 'Message or question' process and all of its states are checked
         cy.get('.opfab-feedconfiguration-processlist').eq(1).find('p').eq(1).find('input').should('be.checked');
-        cy.get('@ExamplesForNewCards2States').contains('Message').find('input').should('be.checked');
-        cy.get('@ExamplesForNewCards2States').contains('Question').find('input').should('be.checked');
+        cy.get('@MessageOrQuestionStates').contains('Message').find('input').should('be.checked');
+        cy.get('@MessageOrQuestionStates').contains('Question').find('input').should('be.checked');
+
+        // We unselect 'Process example' process (to test the state 'Network Contingencies' is still checked (because filtering notification on this state is not allowed))
+        cy.get('.opfab-feedconfiguration-processlist').eq(0).find('p').eq(1).find('input').uncheck({force: true});
+
+        // We check 'Process example' process and all of its states are unchecked except 'Network Contingencies'
+        cy.get('.opfab-feedconfiguration-processlist').eq(0).find('p').eq(1).find('input').should('not.be.checked');
+        cy.get('.opfab-feedconfiguration-processlist').eq(0).find('.opfab-feedconfiguration-process').eq(1).find('.row').as('ProcessExampleStates');
+        cy.get('@ProcessExampleStates').contains('Action required').find('input').should('not.be.checked');
+        cy.get('@ProcessExampleStates').contains('Additional information required').find('input').should('not.be.checked');
+        cy.get('@ProcessExampleStates').contains('Data quality').find('input').should('not.be.checked');
+        cy.get('@ProcessExampleStates').contains('Electricity consumption forecast').find('input').should('not.be.checked');
+        cy.get('@ProcessExampleStates').contains('Message').find('input').should('not.be.checked');
+        cy.get('@ProcessExampleStates').contains('Process example').find('input').should('not.be.checked');
+        cy.get('@ProcessExampleStates').contains('⚠️ Network Contingencies ⚠').find('input').should('be.disabled').should('be.checked');
+
+        // We select 'Process example' process
+        cy.get('.opfab-feedconfiguration-processlist').eq(0).find('p').eq(1).find('input').check({force: true});
+
+        // We check 'Process example' process and all of its states are checked
+        cy.get('.opfab-feedconfiguration-processlist').eq(0).find('p').eq(1).find('input').should('be.checked');
+        cy.get('@ProcessExampleStates').contains('Action required').find('input').should('be.checked');
+        cy.get('@ProcessExampleStates').contains('Additional information required').find('input').should('be.checked');
+        cy.get('@ProcessExampleStates').contains('Data quality').find('input').should('be.checked');
+        cy.get('@ProcessExampleStates').contains('Electricity consumption forecast').find('input').should('be.checked');
+        cy.get('@ProcessExampleStates').contains('Message').find('input').should('be.checked');
+        cy.get('@ProcessExampleStates').contains('Process example').find('input').should('be.checked');
+        cy.get('@ProcessExampleStates').contains('⚠️ Network Contingencies ⚠').find('input').should('be.disabled').should('be.checked');
     })
+
+    it('In case of a state unsubscribed and then filtering notif on this state is prohibited : ' +
+        'test a popup is displayed and then the subscription to this state is forced', function () {
+
+        cy.loginOpFab('operator1_fr', 'test');
+
+        // We move to feed notification configuration screen
+        cy.get('#opfab-navbar-drop-user-menu').click();
+        cy.get('#opfab-menu-icon-notification').click();
+
+        cy.get('.opfab-feedconfiguration-processlist').eq(0).contains('Data quality')
+            .find('input').as('DataQualityState');
+        cy.get('@DataQualityState').should('be.checked');
+        cy.get('@DataQualityState').click({force:true}); // Unselect state
+
+        // Save
+        cy.get('#opfab-feedconfiguration-btn-confirm').click(); // Save settings
+        cy.get('#opfab-feedconfiguration-btn-yes').click(); // and confirm
+        cy.get('#opfab-feedconfiguration-btn-yes').should('not.exist'); // wait for dialog to go away
+
+        cy.logoutOpFab();
+        cy.loginOpFab('admin', 'test');
+
+        // Click on user menu (top right of the screen)
+        cy.get('#opfab-navbar-drop-user-menu').click();
+        // Click on "Administration"
+        cy.get('#opfab-navbar-right-menu-admin').click();
+
+        // Click on "Perimeters Management"
+        cy.get('#opfab-admin-perimeters-tab').click();
+        // Edit perimeter defaultProcess
+        cy.clickAgGridCell('ag-grid-angular', 2, 3, 'of-action-cell-renderer');
+        cy.get('of-edit-perimeter-modal').should('exist');
+        cy.get('.modal-title').should('contain.text', 'defaultProcess');
+        cy.get('#state2').should('contain.text', 'Data quality');
+        cy.get('#opfab-admin-perimeter-filtering-notification-allowed2').should('be.checked').click({force: true});
+        cy.get('#opfab-admin-perimeter-btn-save').click();
+
+        cy.logoutOpFab();
+        cy.loginOpFab('operator1_fr', 'test');
+
+        // We move to feed notification configuration screen
+        cy.get('#opfab-navbar-drop-user-menu').click();
+        cy.get('#opfab-menu-icon-notification').click();
+
+        // We check the text displayed in the popup
+        cy.get('#opfab-feedconfiguration-states-unsubscribed-popup').should('contain.text',
+            'You are unsubscribed from one or more notifications for which unsubscribing is now prohibited.\n\n');
+        cy.get('#opfab-feedconfiguration-states-unsubscribed-popup').should('contain.text',
+            'Notification(s) concerned :\n\n');
+        cy.get('#opfab-feedconfiguration-states-unsubscribed-popup').should('contain.text',
+            'Process example  / Data quality\n\n');
+        cy.get('#opfab-feedconfiguration-states-unsubscribed-popup').should('contain.text',
+            'By clicking OK, you will be subscribed to these notifications again.');
+        cy.get('#opfab-feedconfiguration-states-unsubscribed-popup-btn-ok').should('exist').click(); // Click OK
+
+        // Check the state 'Data quality' is checked and disabled
+        cy.get('.opfab-feedconfiguration-processlist').eq(0).contains('Data quality')
+            .find('input').as('DataQualityState');
+        cy.get('@DataQualityState').should('be.checked');
+        cy.get('@DataQualityState').should('be.disabled');
+    });
 
 
     it('Test remove some notifications after cards are sent', function () {

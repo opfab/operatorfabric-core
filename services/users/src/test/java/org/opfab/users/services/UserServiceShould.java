@@ -38,20 +38,20 @@ class UserServiceShould {
     void testIsEachStateUniqueInPerimeter() {
         PerimeterData p1, p2, p3, p4;
         p1 = PerimeterData.builder().id("PERIMETER1_1").process("process1")
-                .stateRights(new HashSet<>(Arrays.asList(new StateRightData("state1", RightsEnum.RECEIVE)))).build();
+                .stateRights(new HashSet<>(Arrays.asList(new StateRightData("state1", RightsEnum.RECEIVE, true)))).build();
 
         p2 = PerimeterData.builder().id("PERIMETER1_2").process("process1")
-                .stateRights(new HashSet<>(Arrays.asList(new StateRightData("state1", RightsEnum.RECEIVEANDWRITE),
-                                                         new StateRightData("state2", RightsEnum.WRITE)))).build();
+                .stateRights(new HashSet<>(Arrays.asList(new StateRightData("state1", RightsEnum.RECEIVEANDWRITE, true),
+                                                         new StateRightData("state2", RightsEnum.WRITE, true)))).build();
 
         p3 = PerimeterData.builder().id("PERIMETER2").process("process2")
-                .stateRights(new HashSet<>(Arrays.asList(new StateRightData("state1", RightsEnum.WRITE),
-                                                         new StateRightData("state1", RightsEnum.RECEIVEANDWRITE)))).build();
+                .stateRights(new HashSet<>(Arrays.asList(new StateRightData("state1", RightsEnum.WRITE, true),
+                                                         new StateRightData("state1", RightsEnum.RECEIVEANDWRITE, true)))).build();
 
         p4 = PerimeterData.builder().id("PERIMETER2").process("process2")
-                .stateRights(new HashSet<>(Arrays.asList(new StateRightData("state1", RightsEnum.WRITE),
-                                                         new StateRightData("state2", RightsEnum.RECEIVE),
-                                                         new StateRightData("state1", RightsEnum.RECEIVEANDWRITE)))).build();
+                .stateRights(new HashSet<>(Arrays.asList(new StateRightData("state1", RightsEnum.WRITE, true),
+                                                         new StateRightData("state2", RightsEnum.RECEIVE, true),
+                                                         new StateRightData("state1", RightsEnum.RECEIVEANDWRITE, true)))).build();
 
         Assertions.assertThat(userService.isEachStateUniqueInPerimeter(p1)).isTrue();
         Assertions.assertThat(userService.isEachStateUniqueInPerimeter(p2)).isTrue();

@@ -31,7 +31,7 @@ export class UserService extends CrudService {
     readonly willNewSubscriptionDisconnectAnExistingSubscriptionUrl: string;
     private _userWithPerimeters: UserWithPerimeters;
     private ngUnsubscribe = new Subject<void>();
-    private _userRightsPerProcessAndState: Map<string, RightsEnum>;
+    private _userRightsPerProcessAndState: Map<string, {rights: RightsEnum, filteringNotificationAllowed: boolean}>;
     private _receiveRightPerProcess: Map<string, number>;
 
     /**
@@ -124,7 +124,7 @@ export class UserService extends CrudService {
         this._userWithPerimeters.computedPerimeters.forEach((computedPerimeter) => {
             this._userRightsPerProcessAndState.set(
                 computedPerimeter.process + '.' + computedPerimeter.state,
-                computedPerimeter.rights
+                {rights: computedPerimeter.rights, filteringNotificationAllowed: computedPerimeter.filteringNotificationAllowed}
             );
             if (
                 computedPerimeter.rights === RightsEnum.Receive ||
@@ -135,9 +135,25 @@ export class UserService extends CrudService {
     }
 
     public isReceiveRightsForProcessAndState(processId: string, stateId: string): boolean {
-        const rights = this._userRightsPerProcessAndState.get(processId + '.' + stateId);
-        if (rights && (rights === RightsEnum.Receive || rights === RightsEnum.ReceiveAndWrite)) return true;
+        const rightsAndFilteringNotificationAllowed = this._userRightsPerProcessAndState.get(processId + '.' + stateId);
+        if (!! rightsAndFilteringNotificationAllowed) {
+            const rights = rightsAndFilteringNotificationAllowed.rights;
+            if (rights && (rights === RightsEnum.Receive || rights === RightsEnum.ReceiveAndWrite)) {
+                return true;
+            }
+        }
         return false;
+    }
+
+    public isFilteringNotificationAllowedForProcessAndState(processId: string, stateId: string): boolean {
+        const rightsAndFilteringNotificationAllowed = this._userRightsPerProcessAndState.get(processId + '.' + stateId);
+        if (!! rightsAndFilteringNotificationAllowed) {
+            const filteringNotificationAllowed = rightsAndFilteringNotificationAllowed.filteringNotificationAllowed;
+            if ((filteringNotificationAllowed !== null)  && (filteringNotificationAllowed !== undefined) && (! filteringNotificationAllowed)) {
+                return false;
+            }
+        }
+        return true;
     }
 
     public isReceiveRightsForProcess(processId: string): boolean {
