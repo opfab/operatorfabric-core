@@ -212,6 +212,7 @@ Cypress.Commands.add('saveActivityAreaModifications', () => {
 });
 
 
+
 // Stub playSound method to catch when opfab send a sound
 Cypress.Commands.add('stubPlaySound', () => {
     cy.window()
@@ -260,7 +261,7 @@ Cypress.Commands.add('agGridCellElementShould', (table, row, col, element, opera
         .eq(row)
         .find('.ag-cell-value')
         .eq(col)
-        .get(element)
+        .find(element)
         .should(operator, value);
 });
 

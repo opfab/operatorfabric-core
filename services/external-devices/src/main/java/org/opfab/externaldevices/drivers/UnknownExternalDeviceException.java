@@ -7,17 +7,13 @@
  * This file is part of the OperatorFabric project.
  */
 
-.opfab-externaldevices-title {
-    padding-top: 30px;
-    padding-bottom: 10px;
-    font-size: 20px;
-    font-weight: bold;
-    border-bottom: solid 1px;
-    text-transform: uppercase;
-}
+package org.opfab.externaldevices.drivers;
 
-.opfab-horizontal-margins {
-    margin-left: 5%;
-    margin-right: 5%;
-}
+/** This exception should be thrown when trying to find an unknown device. */
+public class UnknownExternalDeviceException extends Exception {
 
+    public UnknownExternalDeviceException(String message) {
+        super(message);
+    }
+
+}

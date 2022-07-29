@@ -11,6 +11,7 @@ operatorfabric:
           host: dummy-modbus-device_1
           port: 4030
           signalMappingId: default_CDS_mapping
+          isEnabled: true
         - id: CDS_2
           host: dummy-modbus-device_2
           port: 4030

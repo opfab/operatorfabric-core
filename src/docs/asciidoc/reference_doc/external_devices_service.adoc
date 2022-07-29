@@ -100,9 +100,15 @@ The following elements need to be configurable:
   "id": "CDS_1",
   "host": "localhost",
   "port": 4300,
-  "signalMappingId": "default_CDS_mapping"
+  "signalMappingId": "default_CDS_mapping",
+  "isEnabled": true
 }
 ----
++
+The "isEnabled" field is optional and allows the user to activate or deactivate an external device.
+When a device is disabled (isEnabled = false) , OperatorFabric will not send any signal and watchdog to the device.
++
+The default value of the "isEnabled" field is true.
 +
 . How to map an OperatorFabric signal key footnote:[currently, that means a severity, but in the future it could also
 be a process id, or anything identifying the signal to be played] to a signal (sound, light) on the external system
@@ -131,13 +137,15 @@ A and another set for desk B) would be represented as two different device confi
   "id": "CDS_A",
   "host": "localhost",
   "port": 4300,
-  "signalMappingId": "mapping_A"
+  "signalMappingId": "mapping_A",
+  "isEnabled": true
 },
 {
   "id": "CDS_B",
   "host": "localhost",
   "port": 4300,
-  "signalMappingId": "mapping_B"
+  "signalMappingId": "mapping_B",
+  "isEnabled": true
 }]
 ----
 

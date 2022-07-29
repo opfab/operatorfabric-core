@@ -465,8 +465,18 @@
       "allUsersConfigured": "All users devices are already configured.",
       "loadingExternalDevices": "Loading external devices..."
     },
+    "tabs": {
+      "users": "Users Configuration",
+      "devices": "External Devices"
+    },
+    "error": {
+      "errorWhenEnablingDevice": "An error occured when trying to enable this device. Please try again later.",
+      "errorWhenDisablingDevice": "An error occured when trying to disable this device. Please try again later."
+    },
     "userLogin": "USER LOGIN",
     "externalDeviceIds": "DEVICES",
+    "id": "DEVICES",
+    "isEnabled": "IS ENABLED",
     "edit": "EDIT",
     "delete": "DELETE"
   },

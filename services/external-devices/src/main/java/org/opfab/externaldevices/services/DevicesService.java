@@ -12,10 +12,12 @@ package org.opfab.externaldevices.services;
 
 import lombok.extern.slf4j.Slf4j;
 import org.opfab.externaldevices.configuration.externaldevices.ExternalDevicesWatchdogProperties;
+import org.opfab.externaldevices.drivers.ExternalDeviceAvailableException;
 import org.opfab.externaldevices.drivers.ExternalDeviceConfigurationException;
 import org.opfab.externaldevices.drivers.ExternalDeviceDriver;
 import org.opfab.externaldevices.drivers.ExternalDeviceDriverException;
 import org.opfab.externaldevices.drivers.ExternalDeviceDriverFactory;
+import org.opfab.externaldevices.drivers.UnknownExternalDeviceException;
 import org.opfab.externaldevices.model.Device;
 import org.opfab.externaldevices.model.DeviceConfiguration;
 import org.opfab.externaldevices.model.DeviceData;
@@ -25,7 +27,11 @@ import org.springframework.stereotype.Service;
 
 import java.net.InetAddress;
 import java.net.UnknownHostException;
-import java.util.*;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 /**
@@ -42,6 +48,7 @@ public class DevicesService {
 
     public static final String EXISTING_DRIVER = "Driver already exists in pool for {}: {}";
     public static final String OUTDATED_DRIVER = "Driver exists in pool for {}: {}, but configuration has changed. Replacing it with new driver.";
+    public static final String DISCONNECTION_FAILED = "No disconnection was performed as there is no driver for device %1$s in the pool.";
 
     private final ConfigService configService;
     private final ExternalDeviceDriverFactory externalDeviceDriverFactory;
@@ -58,43 +65,104 @@ public class DevicesService {
         this.deviceDriversPool = new HashMap<>();
     }
 
-    public void connectDevice(String deviceId) throws ExternalDeviceDriverException, ExternalDeviceConfigurationException {
+    public void connectDevice(String deviceId) throws ExternalDeviceDriverException, ExternalDeviceConfigurationException, ExternalDeviceAvailableException, UnknownExternalDeviceException {
         DeviceConfiguration deviceConfiguration = configService.retrieveDeviceConfiguration(deviceId);
-        ExternalDeviceDriver externalDeviceDriver = getDriverForDevice(deviceConfiguration);
-        externalDeviceDriver.connect();
+        if (Boolean.TRUE.equals(deviceConfiguration.getIsEnabled())) {
+            ExternalDeviceDriver externalDeviceDriver = getDriverForDevice(deviceConfiguration);
+            externalDeviceDriver.connect();
+        } else {
+            throw new ExternalDeviceAvailableException(String.format("Could not connect device %s because it is disabled", deviceId));
+        }
     }
 
-    public void disconnectDevice(String deviceId) throws ExternalDeviceDriverException {
+    public void disconnectDevice(String deviceId) throws ExternalDeviceDriverException, UnknownExternalDeviceException {
         synchronized (deviceDriversPool) {
             if (deviceDriversPool.containsKey(deviceId)) {
                 log.debug(EXISTING_DRIVER, deviceId,deviceDriversPool.get(deviceId).toString());
                 deviceDriversPool.get(deviceId).disconnect();
             } else {
-                log.warn("No disconnection was performed as no driver for device {} exists in the pool.", deviceId);
+                log.warn(String.format(DISCONNECTION_FAILED, deviceId));
+                if (isDriverOfDeviceMissing(deviceId)) {
+                    throw new UnknownExternalDeviceException(String.format(DISCONNECTION_FAILED, deviceId));
+                }
             }
         }
     }
 
-    public void sendSignalToAllDevicesOfUser(String opFabSignalKey, String userLogin) throws ExternalDeviceConfigurationException, ExternalDeviceDriverException {
+    private boolean isDriverOfDeviceMissing(String deviceId) {
+        boolean isDriverMissing = true;
+
+        try {
+            DeviceConfiguration deviceConfiguration = configService.retrieveDeviceConfiguration(deviceId);
+            ExternalDeviceDriver driver = getDriverForDevice(deviceConfiguration);
+            isDriverMissing = driver == null;
+        } catch (ExternalDeviceConfigurationException| UnknownExternalDeviceException | ExternalDeviceDriverException e) {
+           log.warn("Could not find driver for device {}", deviceId);
+        }
+
+        return isDriverMissing;
+    }
+
+    public void sendSignalToAllDevicesOfUser(String opFabSignalKey, String userLogin) throws ExternalDeviceConfigurationException, ExternalDeviceDriverException, ExternalDeviceAvailableException, UnknownExternalDeviceException {
 
         List<ResolvedConfiguration> resolvedConfigurationList = configService.getResolvedConfigurationList(opFabSignalKey, userLogin);
+        ExternalDeviceConfigurationException configurationException = null;
+        ExternalDeviceDriverException driverException = null;
+        ExternalDeviceAvailableException deviceDisabledException = null;
+        UnknownExternalDeviceException unknownDeviceException = null;
+
         for(ResolvedConfiguration resolvedConfiguration: resolvedConfigurationList) {
-            sendSignalToOneDevice(resolvedConfiguration);
+            try {
+                sendSignalToOneDevice(resolvedConfiguration);
+            } catch (ExternalDeviceConfigurationException e) {
+                configurationException = e;
+            } catch (ExternalDeviceDriverException e) {
+                driverException = e;
+            } catch (ExternalDeviceAvailableException e) {
+                deviceDisabledException = e;
+            } catch (UnknownExternalDeviceException e) {
+                unknownDeviceException = e;
+            }
+        }
+
+        throwCaughtException(configurationException, driverException, deviceDisabledException, unknownDeviceException);
+
+    }
+
+    private void throwCaughtException(ExternalDeviceConfigurationException configurationException, ExternalDeviceDriverException driverException, ExternalDeviceAvailableException deviceDisabledException, UnknownExternalDeviceException unknownDeviceException) throws ExternalDeviceConfigurationException, ExternalDeviceDriverException, ExternalDeviceAvailableException, UnknownExternalDeviceException {
+        if (configurationException != null) {
+            throw configurationException;
+        } else if (driverException != null) {
+            throw driverException;
+        } else if (deviceDisabledException != null) {
+            throw deviceDisabledException;
+        } else if (unknownDeviceException != null) {
+            throw unknownDeviceException;
         }
     }
 
-    private void sendSignalToOneDevice(ResolvedConfiguration resolvedConfiguration) throws ExternalDeviceDriverException, ExternalDeviceConfigurationException {
+    private void sendSignalToOneDevice(ResolvedConfiguration resolvedConfiguration) throws ExternalDeviceDriverException, ExternalDeviceConfigurationException, ExternalDeviceAvailableException, UnknownExternalDeviceException {
+        DeviceConfiguration deviceConfiguration = resolvedConfiguration.getDeviceConfiguration();
+        if (Boolean.TRUE.equals(deviceConfiguration.getIsEnabled())) {
+            sendSignalToOneEnabledDevice(resolvedConfiguration);
+        } else {
+            String errorMessage = String.format("Could not send signal to device %1$s because it is disabled", deviceConfiguration.getId());
+            throw new ExternalDeviceAvailableException(errorMessage);
+        }
+    }
+
+    private void sendSignalToOneEnabledDevice(ResolvedConfiguration resolvedConfiguration) throws ExternalDeviceDriverException, ExternalDeviceConfigurationException, ExternalDeviceAvailableException, UnknownExternalDeviceException {
         ExternalDeviceDriver externalDeviceDriver = getDriverForDevice(resolvedConfiguration.getDeviceConfiguration());
-        if(!externalDeviceDriver.isConnected()) {
-            log.debug("External device {} was not connected. Connecting before send.",resolvedConfiguration.getDeviceConfiguration().getId());
-            externalDeviceDriver.connect();
+        if (!externalDeviceDriver.isConnected()) {
+            log.debug("External device {} was not connected. Connecting before send.", resolvedConfiguration.getDeviceConfiguration().getId());
+            connectDevice(resolvedConfiguration.getDeviceConfiguration().getId());
         }
         externalDeviceDriver.send(resolvedConfiguration.getSignalId());
     }
 
     @Scheduled(cron = "${operatorfabric.externaldevices.watchdog.cron:*/5 * * * * *}", zone = "UTC")
     public void sendWatchdog() {
-        if (externalDevicesWatchdogProperties.getEnabled()) {
+        if (Boolean.TRUE.equals((externalDevicesWatchdogProperties.getEnabled()))) {
 
             HashSet<String> hostAndPorSet = new HashSet<>();
 
@@ -102,7 +170,7 @@ public class DevicesService {
 
                 String hostAndPort = externalDeviceDriver.getResolvedHost() + ":" + externalDeviceDriver.getPort();
 
-                if (externalDeviceDriver.isConnected() && (! hostAndPorSet.contains(hostAndPort))) { // To avoid reconnecting drivers automatically
+                if (isDeviceConnectedAndEnabled(deviceId) && (! hostAndPorSet.contains(hostAndPort))) { // To avoid reconnecting drivers automatically
                     try {
                         log.debug("Sending watchdog signal for device {}", deviceId);
                         hostAndPorSet.add(hostAndPort);
@@ -116,6 +184,24 @@ public class DevicesService {
             log.debug("Watchdog signal disabled.");
         }
     }
+
+    private boolean isDeviceConnectedAndEnabled(String deviceId) {
+
+        boolean isDeviceAvailable = false;
+
+        try {
+            ExternalDeviceDriver driver = deviceDriversPool.get(deviceId);
+            DeviceConfiguration deviceConfiguration = configService.retrieveDeviceConfiguration(deviceId);
+            isDeviceAvailable = driver.isConnected() && deviceConfiguration.getIsEnabled().booleanValue();
+        } catch (ExternalDeviceConfigurationException e) {
+            log.error("Could not access device {} because of an invalid configuration", deviceId);
+        } catch (UnknownExternalDeviceException e) {
+            log.error("Could not access device {} that does not exist", deviceId);
+        }
+
+        return isDeviceAvailable;
+    }
+
 
     public Optional<Device> getDevice(String deviceId) {
         synchronized (deviceDriversPool) {
@@ -173,5 +259,14 @@ public class DevicesService {
                 .build();
     }
 
+    public void enableDevice(String deviceId) throws ExternalDeviceConfigurationException, UnknownExternalDeviceException {
+        DeviceConfiguration deviceConfiguration = configService.retrieveDeviceConfiguration(deviceId);
+        deviceConfiguration.setIsEnabled(true);
+    }
+
+    public void disableDevice(String deviceId) throws ExternalDeviceConfigurationException, UnknownExternalDeviceException {
+        DeviceConfiguration deviceConfiguration = configService.retrieveDeviceConfiguration(deviceId);
+        deviceConfiguration.setIsEnabled(false);
+    }
 }
 

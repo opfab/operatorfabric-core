@@ -7,17 +7,14 @@
  * This file is part of the OperatorFabric project.
  */
 
-.opfab-externaldevices-title {
-    padding-top: 30px;
-    padding-bottom: 10px;
-    font-size: 20px;
-    font-weight: bold;
-    border-bottom: solid 1px;
-    text-transform: uppercase;
-}
+package org.opfab.externaldevices.drivers;
 
-.opfab-horizontal-margins {
-    margin-left: 5%;
-    margin-right: 5%;
-}
+/** This exception should be thrown when trying to connect an external device
+ *  when this latter is disabled */
+public class ExternalDeviceAvailableException extends Exception {
 
+    public ExternalDeviceAvailableException(String message) {
+        super(message);
+    }
+
+}

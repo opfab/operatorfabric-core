@@ -22,6 +22,7 @@ export class ExternalDevicesService extends ErrorService {
     readonly externalDevicesUrl: string;
     readonly notificationsUrl: string;
     readonly configurationsUrl: string;
+    readonly devicesUrl: string;
     private ngUnsubscribe$ = new Subject<void>();
     /**
      * @constructor
@@ -32,6 +33,7 @@ export class ExternalDevicesService extends ErrorService {
         this.externalDevicesUrl = `${environment.urls.externalDevices}`;
         this.notificationsUrl = this.externalDevicesUrl + '/notifications';
         this.configurationsUrl = this.externalDevicesUrl + '/configurations';
+        this.devicesUrl = this.externalDevicesUrl + '/devices';
     }
 
     sendNotification(notification: Notification): Observable<any> {
@@ -56,6 +58,16 @@ export class ExternalDevicesService extends ErrorService {
         return this.httpClient
             .post<UserConfiguration>(`${this.configurationsUrl}/users`, userconfigData)
             .pipe(catchError((error: Response) => this.handleError(error)));
+    }
+
+    enableDevice(deviceId: string): Observable<string> {
+        return this.httpClient
+            .post<string>(`${this.devicesUrl}/${deviceId}/enable`, deviceId);
+    }
+
+    disableDevice(deviceId: string): Observable<string> {
+        return this.httpClient
+            .post<string>(`${this.devicesUrl}/${deviceId}/disable`, deviceId);
     }
 
     deleteByUserLogin(login: string) {

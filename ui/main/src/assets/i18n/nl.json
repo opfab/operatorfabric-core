@@ -465,10 +465,20 @@
       "allUsersConfigured": "Alle apparaten zijn al geconfigureerd.",
       "loadingExternalDevices": "Extern apparaat laden..."
     },
+    "tabs": {
+      "users": "Gebruikers Configuratie",
+      "devices": "Externe Apparaten"
+    },
+    "error": {
+      "errorWhenEnablingDevice": "Er is een fout opgetreden bij het inschakelen van dit apparaat. Probeer het later nog eens.",
+      "errorWhenDisablingDevice": "Er is een fout opgetreden bij het uitschakelen van dit apparaat. Probeer het later nog eens."
+    },
     "userLogin": "GEBRUIKERSNAAM",
     "externalDeviceIds": "APPARATEN",
     "edit": "WIJZIGEN",
-    "delete": "VERWIJDEREN"
+    "delete": "VERWIJDEREN",
+    "id": "APPARATEN",
+    "isEnabled": "IS INGESCHAKELD"
   },
   "datePicker": {
     "monday": "Ma",

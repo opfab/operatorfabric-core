@@ -5,36 +5,27 @@
 <!-- file, You can obtain one at http://mozilla.org/MPL/2.0/.              -->
 <!-- SPDX-License-Identifier: MPL-2.0                                      -->
 <!-- This file is part of the OperatorFabric project.                      -->
-<div class="opfab-externaldevices-title" translate>
-    menu.externalDevicesConfiguration
-</div>
 
-<div *ngIf="!technicalError" style="margin-left:10px;margin-right:10px">
-    <div style="background-color: var(--opfab-bgcolor-darker);border: solid 5px var(--opfab-bgcolor-darker)">
-        <div style="padding: 10px"><a class="btn btn-primary" (click)="createNewItem()" id ="addItem">
-            <em class="fas fa-plus-circle"></em></a>
-            <span>&nbsp;<label for="addItem" translate> externalDevicesConfiguration.input.add </label></span>
-        </div>
-        <br>
-        <ag-grid-angular id="opfab-externaldevices-table-grid" aria-describedby="External devices table"
-                (gridReady)="onGridReady($event)"
-                [gridOptions]="gridOptions"
-                [rowData]="this.userConfigurations"
-                class="opfab-ag-grid-theme">
-        </ag-grid-angular>
-        <div *ngIf="gridApi" class="opfab-pagination">
-            <div style="white-space: nowrap;margin-top:17px">
-            <span translate> shared.resultsNumber </span> : {{gridApi.paginationGetRowCount()}}
-            </div>
-            <div style="width:40%;margin-top:5px">
-            <ngb-pagination *ngIf="gridApi.paginationGetRowCount() > pageSize" [collectionSize]="gridApi.paginationGetRowCount()"
-                [page]="page" [pageSize]="gridApi.paginationGetPageSize()" (pageChange)="updateResultPage($event)" [maxSize]="3" [rotate]="true">
-            </ngb-pagination>
-            </div>
+<div id="opfab-externaldevices-tabs" class="opfab-horizontal-margins">
 
-        </div>
-    </div>
-</div>
+    <ul class="nav nav-pills">
+  
+      <li id="opfab-externaldevices-devices-tab" class="nav-item">
+        <a class="nav-link" data-toggle="tab" routerLink="/externaldevicesconfiguration/devices" routerLinkActive="active" translate> externalDevicesConfiguration.tabs.devices </a>
+      </li>
+      <li id="opfab-externaldevices-users-tab" class="nav-item">
+        <a class="nav-link" data-toggle="tab" routerLink="/externaldevicesconfiguration/users" routerLinkActive="active" translate> externalDevicesConfiguration.tabs.users </a>
+      </li>
+  
+    </ul>
+    <br>
+    <br>
+  
+    <router-outlet></router-outlet>
+  
+    <br>
+    <br>
 
-<div *ngIf="technicalError" style="text-align: center;font-size: 20px;" translate><br/><br/>shared.error.technicalError
-</div>
+
+  </div>
+  

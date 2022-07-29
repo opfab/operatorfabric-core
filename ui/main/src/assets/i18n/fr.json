@@ -465,10 +465,20 @@
       "allUsersConfigured": "Tous les périphériques des utilisateurs sont déjà configurés.",
       "loadingExternalDevices": "Chargement des périphériques externes..."
     },
+    "tabs": {
+      "users": "Configuration des utilisateurs",
+      "devices": "Périphériques externes"
+    },
+    "error": {
+      "errorWhenEnablingDevice": "Une erreur est survenue en essayant d'activer ce périphérique. Veuillez réessayer plus tard.",
+      "errorWhenDisablingDevice": "Une erreur est survenue en essayant de désactiver ce périphérique. Veuillez réessayer plus tard."
+    },
     "userLogin": "IDENTIFIANT UTILISATEUR",
     "externalDeviceIds": "PÉRIPHÉRIQUES",
     "edit": "ÉDITER",
-    "delete": "SUPPRIMER"
+    "delete": "SUPPRIMER",
+    "id": "PÉRIPHÉRIQUES",
+    "isEnabled": "EST ACTIVÉ"
   },
   "datePicker": {
     "monday": "Lu",

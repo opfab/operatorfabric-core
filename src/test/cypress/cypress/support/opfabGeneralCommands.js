@@ -17,6 +17,12 @@ export function getOpfabGeneralCommands() {
         cy.get("of-usercard").should('exist');
     });
 
+    opfab.addCommand('openExternalDevices', () => {
+        cy.get('#opfab-navbar-drop-user-menu').click();
+        cy.get('#opfab-navbar-right-menu-externaldevicesconfiguration').click();
+    });
+    
+
 
     return opfab;
 }
