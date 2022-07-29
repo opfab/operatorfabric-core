@@ -8,3 +8,4 @@
       externaldevices/createSignalConfig.feature                    \
       externaldevices/deleteSignalConfig.feature                    \
       externaldevices/sendNotification.feature                      \
+      externaldevices/editDevicesConfiguration.feature              \

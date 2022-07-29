@@ -19,13 +19,21 @@ Feature: Device Configuration Management (Fetch)
     Then status 200
     And match response == '#array'
 
-  Scenario: Fetch existing deviceConfiguration
+  Scenario: Fetch existing deviceConfiguration CDS_1
 
     Given url opfabUrl + deviceConfigEndpoint + '/CDS_1'
     And header Authorization = 'Bearer ' + authToken
     When method GET
     Then status 200
-    And match response == { id: 'CDS_1', host: 'dummy-modbus-device_1', port: 4030, signalMappingId: 'default_CDS_mapping'}
+    And match response == { id: 'CDS_1', host: 'dummy-modbus-device_1', port: 4030, signalMappingId: 'default_CDS_mapping', "isEnabled":true}
+
+  Scenario: Fetch existing deviceConfiguration CDS_2
+
+    Given url opfabUrl + deviceConfigEndpoint + '/CDS_2'
+    And header Authorization = 'Bearer ' + authToken
+    When method GET
+    Then status 200
+    And match response == { id: 'CDS_2', host: 'dummy-modbus-device_2', port: 4030, signalMappingId: 'exotic_CDS_mapping', "isEnabled":true}
 
   Scenario: Attempt to fetch deviceConfiguration that doesn't exist
 

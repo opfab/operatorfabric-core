@@ -20,6 +20,7 @@ import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.opfab.externaldevices.application.UnitTestApplication;
 import org.opfab.externaldevices.drivers.ExternalDeviceConfigurationException;
+import org.opfab.externaldevices.drivers.UnknownExternalDeviceException;
 import org.opfab.externaldevices.model.DeviceConfiguration;
 import org.opfab.externaldevices.model.DeviceConfigurationData;
 import org.opfab.externaldevices.model.ResolvedConfiguration;
@@ -84,6 +85,7 @@ class ConfigServiceShould {
                 .host("host5")
                 .port(1234)
                 .signalMappingId("signalMapping4")
+                .isEnabled(true)
                 .build();
         configService.insertDeviceConfiguration(deviceConfiguration5);
 
@@ -125,7 +127,7 @@ class ConfigServiceShould {
     }
 
     @Test
-    void retrieveExistingDeviceConfiguration() throws ExternalDeviceConfigurationException {
+    void retrieveExistingDeviceConfiguration() throws ExternalDeviceConfigurationException, UnknownExternalDeviceException {
 
         DeviceConfiguration retrievedConfiguration = configService.retrieveDeviceConfiguration("ESS1");
         Assertions.assertThat(retrievedConfiguration)
@@ -135,7 +137,7 @@ class ConfigServiceShould {
     }
 
     @Test
-    void deleteExistingDeviceConfiguration() throws ExternalDeviceConfigurationException {
+    void deleteExistingDeviceConfiguration() throws ExternalDeviceConfigurationException, UnknownExternalDeviceException {
 
         configService.deleteDeviceConfiguration("ESS1");
 
@@ -152,7 +154,7 @@ class ConfigServiceShould {
     @Test
     void throwExceptionIfDeviceConfigurationToDeleteDoesNotExist() {
 
-        assertThrows(ExternalDeviceConfigurationException.class,
+        assertThrows(UnknownExternalDeviceException.class,
                 () -> configService.deleteDeviceConfiguration("device_configuration_that_doesnt_exist"));
 
         // Check that nothing was deleted
@@ -314,7 +316,7 @@ class ConfigServiceShould {
 
     @ParameterizedTest
     @MethodSource("getResolvedConfigurationOKParams")
-    void getResolvedConfigurationSuccessfully(String userLogin, String opFabSignalKey, List<ResolvedConfiguration> expected) throws ExternalDeviceConfigurationException {
+    void getResolvedConfigurationSuccessfully(String userLogin, String opFabSignalKey, List<ResolvedConfiguration> expected) throws ExternalDeviceConfigurationException, UnknownExternalDeviceException {
         Assertions.assertThat(configService.getResolvedConfigurationList(opFabSignalKey, userLogin)).isEqualTo(expected);
     }
 
@@ -325,11 +327,23 @@ class ConfigServiceShould {
                 () -> configService.getResolvedConfigurationList(opFabSignalKey, userLogin));
     }
 
+    @Test
+    void throwUnknownDeviceExceptionOnResolveIfDeviceIsUnknown() {
+        assertThrows(UnknownExternalDeviceException.class,
+                () -> configService.getResolvedConfigurationList("ACTION", "user4"));
+    }
+
     @ParameterizedTest
     @MethodSource("retrieveConfigurationErrorParams")
     void throwExceptionWhenAttemptingToRetrieveUserConfiguration(String userLogin) {
         assertThrows(ExternalDeviceConfigurationException.class,
                 () -> configService.retrieveUserConfiguration(userLogin));
+    }
+
+    @Test
+    void shouldThrowUnknownDeviceExceptionIfDeviceIsUnknown() {
+        assertThrows(UnknownExternalDeviceException.class,
+                () -> configService.retrieveDeviceConfiguration("item_that_doesnt_exist"));
     }
 
     @ParameterizedTest
@@ -450,7 +464,6 @@ class ConfigServiceShould {
     private static Stream<Arguments> getResolvedConfigurationErrorParams() {
         return Stream.of(
                 Arguments.of("user_with_no_config", "ACTION"),
-                Arguments.of("user4", "ACTION"), //Configured device for user doesn't exist
                 Arguments.of("user3", "ALARM"), //Configured signal mapping for device doesn't exist
                 Arguments.of("user2", "INFORMATION") //This signal is not mapped in this user's configuration
         );
@@ -458,7 +471,6 @@ class ConfigServiceShould {
 
     private static Stream<Arguments> retrieveConfigurationErrorParams() {
         return Stream.of(
-                Arguments.of("item_that_doesnt_exist"),
                 Arguments.of(""),
                 null
         );

@@ -20,9 +20,17 @@ import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {ExternaldevicesconfigurationRoutingModule} from './externaldevicesconfiguration-routing.module';
 import {MultiSelectModule} from '../share/multi-select/multi-select.module';
 import {SpinnerModule} from '../share/spinner/spinner.module';
+import { UsersTableComponent } from './table/users.table.component';
+import { DevicesTableComponent } from './table/devices.table.component';
+import { CheckboxCellRendererComponent } from '../admin/components/cell-renderers/checkbox-cell-renderer.component';
 
 @NgModule({
-    declarations: [ExternaldevicesconfigurationComponent, ExternaldevicesconfigurationModalComponent],
+    declarations: [
+        ExternaldevicesconfigurationComponent,
+        ExternaldevicesconfigurationModalComponent,
+        UsersTableComponent,
+        DevicesTableComponent
+    ],
     imports: [
         FormsModule,
         ReactiveFormsModule,
@@ -32,7 +40,7 @@ import {SpinnerModule} from '../share/spinner/spinner.module';
         MultiSelectModule,
         NgbModule,
         SpinnerModule,
-        AgGridModule.withComponents([[ActionCellRendererComponent]])
+        AgGridModule.withComponents([[ActionCellRendererComponent, CheckboxCellRendererComponent]])
     ]
 })
 export class ExternaldevicesModule {}

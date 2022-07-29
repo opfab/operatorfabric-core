@@ -10,11 +10,30 @@
 import {NgModule} from '@angular/core';
 import {RouterModule, Routes} from '@angular/router';
 import {ExternaldevicesconfigurationComponent} from './externaldevicesconfiguration.component';
+import { DevicesTableComponent } from './table/devices.table.component';
+import { UsersTableComponent } from './table/users.table.component';
+
+
+const defaultPath = 'devices';
+
 
 const routes: Routes = [
     {
         path: '',
-        component: ExternaldevicesconfigurationComponent
+        component: ExternaldevicesconfigurationComponent,
+
+        children: [
+            {
+                path: 'devices',
+                component: DevicesTableComponent
+            },
+            {
+                path: 'users',
+                component: UsersTableComponent
+            },
+
+            {path: '**', redirectTo: defaultPath}
+        ]
     }
 ];
 
