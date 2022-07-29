@@ -267,7 +267,7 @@ describe('Acknowledgment tests', function () {
 
         cy.loginOpFab('operator4_fr', 'test');
 
-        cy.get('of-light-card').should('have.length', 6);
+        cy.get('of-light-card').should('have.length', 7);
 
         // We check acknowledgements footer is displayed for operator4_fr (because he's member of ENTITY1_FR)
         cy.get('of-light-card').eq(0).click();
@@ -428,7 +428,7 @@ describe('Acknowledgment tests', function () {
 
         cy.loginOpFab('operator4_fr', 'test');
 
-        cy.get('of-light-card').should('have.length', 6);
+        cy.get('of-light-card').should('have.length', 7);
         cy.get('of-light-card').eq(0).click();
         cy.get('#opfab-selected-card-summary').should('have.text', "State to test template rendering features");
         cy.get('#opfab-card-acknowledged-footer').should('exist');
