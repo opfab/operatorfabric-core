@@ -4,7 +4,7 @@
 	  "process"  :"defaultProcess",
 	  "processInstanceId" : $random,
 	  "state": "contingenciesState",
-	  "userRecipients": ["operator1_fr"],
+	  "entityRecipients": ["ENTITY1_FR"],
 	  "severity" : "ALARM",
 	  "startDate" : ${current_date_in_milliseconds_from_epoch_plus_2hours},
 	  "endDate": ${current_date_in_milliseconds_from_epoch_plus_24hours},
