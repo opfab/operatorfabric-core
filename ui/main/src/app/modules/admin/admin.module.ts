@@ -66,17 +66,7 @@ import {MultiSelectModule} from '../share/multi-select/multi-select.module';
         MultiSelectModule,
         TranslateModule,
         NgbModule,
-        AgGridModule.withComponents([
-            [
-                ActionCellRendererComponent,
-                ArrayCellRendererComponent,
-                GroupCellRendererComponent,
-                EntityCellRendererComponent,
-                PerimetersCellRendererComponent,
-                ProcessCellRendererComponent,
-                StateRightsCellRendererComponent
-            ]
-        ])
+        AgGridModule,
     ],
     providers: [{provide: SharingService, useClass: SharingService}]
 })
