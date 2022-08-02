@@ -179,9 +179,9 @@ export class EditPerimeterModalComponent implements OnInit {
 
     create() {
         this.cleanForm();
-        this.computeStateRightsForPerimeterForm();
+        const fieldsForRequest = this.computeFieldsForRequest();
 
-        this.crudService.create(this.perimeterForm.value).subscribe({
+        this.crudService.create(fieldsForRequest).subscribe({
             next: () => this.onSavesuccess(),
             error: (e) => this.onSaveError(e)
         });
@@ -189,22 +189,24 @@ export class EditPerimeterModalComponent implements OnInit {
 
     update() {
         this.cleanForm();
-        this.computeStateRightsForPerimeterForm();
+        const fieldsForRequest = this.computeFieldsForRequest();
 
-        this.crudService.update(this.perimeterForm.value).subscribe({
+        this.crudService.update(fieldsForRequest).subscribe({
             next: (res) => this.onSavesuccess(),
             error: (err) => this.onSaveError(err)
         });
     }
 
-    private computeStateRightsForPerimeterForm() {
+    private computeFieldsForRequest(): {id: string, process: string, stateRights: {state: string, right: RightsEnum}[]} {
         const stateRights = [];
         this.stateRightControlsIndexes.forEach((index) => {
             const stateKey = 'state' + index;
             const rightKey = 'right' + index;
             stateRights.push({state: this.perimeterForm.value[stateKey], right: this.perimeterForm.value[rightKey]});
         });
-        this.perimeterForm.value.stateRights = stateRights;
+        return {id: this.perimeterForm.value['id'],
+                process: this.perimeterForm.value['process'],
+                stateRights: stateRights};
     }
 
     onSavesuccess() {
