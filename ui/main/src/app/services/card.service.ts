@@ -108,7 +108,7 @@ export class CardService {
                             this.logger.info(
                                 'CardService - Receive card to add id=' +
                                     operation.card.id +
-                                    'with date=' +
+                                    ' with date=' +
                                     new Date(operation.card.publishDate).toISOString(),
                                 LogOption.LOCAL_AND_REMOTE
                             );
