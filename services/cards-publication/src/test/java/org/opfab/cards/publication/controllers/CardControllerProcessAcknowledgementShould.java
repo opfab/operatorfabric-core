@@ -59,7 +59,7 @@ class CardControllerProcessAcknowledgementShould extends CardControllerShouldBas
     private WebApplicationContext webApplicationContext;
 
 	@BeforeAll
-	void setup() throws Exception{
+	void setup() {
 		this.mockMvc = webAppContextSetup(webApplicationContext).apply(springSecurity()).build();
 		EasyRandom randomGenerator = instantiateEasyRandom();
 		List<CardPublicationData> cardsInRepository = instantiateCardPublicationData(randomGenerator, cardNumber);

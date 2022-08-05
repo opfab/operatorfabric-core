@@ -186,7 +186,7 @@ public class BusinessconfigController implements BusinessconfigApi {
 
 	@Override
 	public Void deleteBundle(HttpServletRequest request, HttpServletResponse response, String processId)
-			throws Exception {
+			throws ApiErrorException {
 		try {
 			processService.delete(processId);
 			// leaving response body empty
@@ -208,7 +208,7 @@ public class BusinessconfigController implements BusinessconfigApi {
 
 	@Override
 	public Void deleteBundleVersion(HttpServletRequest request, HttpServletResponse response, String processId,
-			String version) throws Exception {
+			String version) throws ApiErrorException {
 		try {
 			processService.deleteVersion(processId,version);
 			// leaving response body empty

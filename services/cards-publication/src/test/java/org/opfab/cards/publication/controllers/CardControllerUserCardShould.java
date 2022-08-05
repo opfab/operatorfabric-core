@@ -55,7 +55,7 @@ class CardControllerUserCardShould extends CardControllerShouldBase {
     private CardRepositoryForTest cardRepository;
 
     @BeforeAll
-    private void setup() throws Exception {
+    private void setup() {
         this.mockMvc = webAppContextSetup(webApplicationContext)
                 .apply(springSecurity())
                 .build();

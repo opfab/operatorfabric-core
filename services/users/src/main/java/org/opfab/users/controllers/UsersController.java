@@ -79,7 +79,7 @@ public class UsersController implements UsersApi, UserExtractor {
     private GroupsProperties groupsProperties;
 
     @Override
-    public User createUser(HttpServletRequest request, HttpServletResponse response, User user) throws Exception {
+    public User createUser(HttpServletRequest request, HttpServletResponse response, User user) {
         boolean created = false;
         checkAndsetUserLogin(user);
 
@@ -103,7 +103,7 @@ public class UsersController implements UsersApi, UserExtractor {
     }
 
     @Override
-    public User fetchUser(HttpServletRequest request, HttpServletResponse response, String login) throws Exception {
+    public User fetchUser(HttpServletRequest request, HttpServletResponse response, String login) throws ApiErrorException {
         return userRepository.findById(login)
                 .orElseThrow(()-> new ApiErrorException(
                         ApiError.builder()
@@ -114,7 +114,7 @@ public class UsersController implements UsersApi, UserExtractor {
     }
 
     @Override
-    public UserSettings fetchUserSetting(HttpServletRequest request, HttpServletResponse response, String login) throws Exception {
+    public UserSettings fetchUserSetting(HttpServletRequest request, HttpServletResponse response, String login) throws ApiErrorException {
         return userSettingsRepository.findById(login)
                 .orElseThrow(()->new ApiErrorException(
                         ApiError.builder()
@@ -124,11 +124,11 @@ public class UsersController implements UsersApi, UserExtractor {
     }
 
     @Override
-    public List<User> fetchUsers(HttpServletRequest request, HttpServletResponse response) throws Exception {
+    public List<User> fetchUsers(HttpServletRequest request, HttpServletResponse response) {
         return userRepository.findAll().stream().map( User.class::cast).collect(Collectors.toList());
     }
     @Override
-    public UserSettings patchUserSettings(HttpServletRequest request, HttpServletResponse response, String login, UserSettings userSettings) throws Exception {
+    public UserSettings patchUserSettings(HttpServletRequest request, HttpServletResponse response, String login, UserSettings userSettings) {
         UserSettingsData settings = userSettingsRepository.findById(login)
                 .orElse(UserSettingsData.builder().login(login).build());
 
@@ -141,7 +141,7 @@ public class UsersController implements UsersApi, UserExtractor {
     }
 
     @Override
-    public UserSettings updateUserSettings(HttpServletRequest request, HttpServletResponse response, String login, UserSettings userSettings) throws Exception {
+    public UserSettings updateUserSettings(HttpServletRequest request, HttpServletResponse response, String login, UserSettings userSettings) throws ApiErrorException {
         if(!userSettings.getLogin().equals(login)) {
             throw new ApiErrorException(
                     ApiError.builder()
@@ -153,7 +153,7 @@ public class UsersController implements UsersApi, UserExtractor {
     }
 
     @Override
-    public User updateUser(HttpServletRequest request, HttpServletResponse response, String login, User user) throws Exception {
+    public User updateUser(HttpServletRequest request, HttpServletResponse response, String login, User user) throws ApiErrorException {
         //login from user body parameter should match login path parameter
         if (!user.getLogin().equalsIgnoreCase(login)) {
             throw new ApiErrorException(
@@ -167,7 +167,7 @@ public class UsersController implements UsersApi, UserExtractor {
     }
 
     @Override
-    public List<Perimeter> fetchUserPerimeters(HttpServletRequest request, HttpServletResponse response, String login) throws Exception{
+    public List<Perimeter> fetchUserPerimeters(HttpServletRequest request, HttpServletResponse response, String login) throws ApiErrorException {
 
         List<String> groups = findUserOrThrow(login).getGroups(); //First, we recover the groups to which the user belongs
 
@@ -189,7 +189,7 @@ public class UsersController implements UsersApi, UserExtractor {
     }
 
     @Override
-    public Void deleteUser(HttpServletRequest request, HttpServletResponse response, String login) throws Exception{
+    public Void deleteUser(HttpServletRequest request, HttpServletResponse response, String login) throws ApiErrorException{
 
         //Retrieve user from repository for login, throwing an error if login is not found
         UserData foundUser = userRepository.findById(login).orElseThrow(()->new ApiErrorException(
@@ -209,7 +209,7 @@ public class UsersController implements UsersApi, UserExtractor {
 
 
     @Override
-    public User synchronizeWithToken(HttpServletRequest request, HttpServletResponse response) throws Exception {
+    public User synchronizeWithToken(HttpServletRequest request, HttpServletResponse response) {
         User user = this.extractUserFromJwtToken(request);
 
         checkAndsetUserLogin(user);
@@ -262,7 +262,7 @@ public class UsersController implements UsersApi, UserExtractor {
         return user;
     }
 
-    private UserData findUserOrThrow(String login) {
+    private UserData findUserOrThrow(String login) throws ApiErrorException {
         return userRepository.findById(login).orElseThrow(
                 ()-> new ApiErrorException(
                         ApiError.builder()
