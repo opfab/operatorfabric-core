@@ -312,12 +312,12 @@ class ProcessesServiceShould {
             }
 
             @Test
-            void deleteBundleByNameAndVersionWhichNotExisting() throws Exception {
+            void deleteBundleByNameAndVersionWhichNotExisting() {
                 Assertions.assertThrows(FileNotFoundException.class, () -> {service.deleteVersion(bundleName,"impossible_someone_really_so_crazy_to_give_this_name_to_a_version");});
             }
 
             @Test
-            void deleteBundleByNameWhichNotExistingAndVersion() throws Exception {
+            void deleteBundleByNameWhichNotExistingAndVersion() {
                 Assertions.assertThrows(FileNotFoundException.class, () -> {service.deleteVersion("impossible_someone_really_so_crazy_to_give_this_name_to_a_bundle","1.0");});
             }
 

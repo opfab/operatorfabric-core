@@ -29,7 +29,7 @@ class PathUtilsShould {
   private static final Path basePath = Paths.get("build","test-data");
 
   @AfterAll
-  static void dispose() throws IOException {
+  static void dispose() {
     PathUtils.silentDelete(basePath);
   }
 
@@ -49,7 +49,7 @@ class PathUtilsShould {
   }
 
   @Test
-  void delete() throws IOException {
+  void delete() {
     PathUtils.silentDelete(basePath.resolve("deleteable-dir"));
     assertThat(basePath.resolve("deleteable-dir")).doesNotExist();
   }
