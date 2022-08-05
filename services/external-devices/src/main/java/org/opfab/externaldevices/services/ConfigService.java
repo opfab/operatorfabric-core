@@ -43,7 +43,7 @@ import java.util.stream.Collectors;
 public class ConfigService {
 
     public static final String CONFIGURATION_NOT_FOUND = "Configuration not found for %1$s %2$s";
-    public static final String DEBUG_RETRIEVED_CONFIG = "Retrieved configuration for";
+    public static final String DEBUG_RETRIEVED_CONFIG = "Retrieved configuration";
     public static final String UNSUPPORTED_SIGNAL ="Signal %1$s is not supported in mapping %2$s";
     public static final String NULL_AFTER_DELETE = "Following deletion of {}, no {} is configured for {} {}";
     public static final String CANNOT_RETRIEVE_FOR_NULL_OR_EMPTY_ID = "Cannot retrieve %1$s with null or empty id.";
