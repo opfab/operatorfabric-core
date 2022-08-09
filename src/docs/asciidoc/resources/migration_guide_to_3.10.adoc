@@ -9,6 +9,7 @@
 
 == `web-ui.json` config file 
 
+=== `settings.about` section
 
 The section to configure `about` screen has been moved from `settings` section to the root level. You need to change the configuration file accordingly.
 
@@ -51,5 +52,33 @@ By this valid one :
       "rank": 2,
       "version": "6.0.1"
     }
+  }
+```
+
+=== `settings.infos.hide` section
+
+The section to configure hidden fields for the settings screen has been moved from `settings.infos.hide` section to
+`settingsScreen.hiddenSettings`. This new field is an array of string and possible values are : "description",
+"language", "remoteLoggingEnabled" and "sounds". So, you need to change the configuration file accordingly.
+
+
+For example:
+
+Replace the following invalid config
+```
+  "settings": {
+    "infos": {
+      "hide": {
+        "description": true
+      }
+    }
+  }
+```
+
+By this valid one :
+
+```
+  "settingsScreen": {
+    "hiddenSettings":  ["description"]
   }
 ```
