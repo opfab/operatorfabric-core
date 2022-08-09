@@ -11,27 +11,27 @@
 
 <div class="opfab-settings ">
 
-  <div class="opfab-border-box opfab-settings-item" style="margin-bottom:0px;" *ngIf="!displayInfo?.sounds">
+  <div class="opfab-border-box opfab-settings-item" style="margin-bottom:0px;" *ngIf="!hiddenSettings?.includes('sounds')">
     <label translate>settings.playSoundLabel</label>
     <of-checkbox-setting settingPath="playSoundForAlarm" labelClass="label-sev-alarm" name="alarm" [checked]=playSoundForAlarmDefaultValue></of-checkbox-setting>
     <of-checkbox-setting settingPath="playSoundForAction" labelClass="label-sev-action" name="action" [checked]=playSoundForActionDefaultValue></of-checkbox-setting>
     <of-checkbox-setting settingPath="playSoundForCompliant" labelClass="label-sev-compliant" name="compliant" [checked]=playSoundForCompliantDefaultValue></of-checkbox-setting>
     <of-checkbox-setting settingPath="playSoundForInformation" labelClass="label-sev-information" name="information" [checked]=playSoundForInformationDefaultValue></of-checkbox-setting>
   </div>
-  <div class="opfab-settings-sounds opfab-settings-item" *ngIf="!displayInfo?.sounds" >
+  <div class="opfab-settings-sounds opfab-settings-item" *ngIf="!hiddenSettings?.includes('sounds')" >
     <div class="opfab-sound-checkbox-label">
       <of-checkbox-setting settingPath="replayEnabled" labelClass="label-replay" name="replay" [checked]=replayEnabledDefaultValue></of-checkbox-setting>
       <of-checkbox-setting settingPath="playSoundOnExternalDevice" labelClass="label-external-devices" *ngIf="isExternalDeviceConfiguredForUser()"></of-checkbox-setting>
     </div>
     <of-text-setting settingPath="replayInterval" [pattern]=patternReplayInterval [text]=replayIntervalDefaultValue></of-text-setting>
   </div>
-    <div class="opfab-settings-item" *ngIf="!displayInfo?.description">
+    <div class="opfab-settings-item" *ngIf="!hiddenSettings?.includes('description')">
       <of-text-setting settingPath="description" [disabled]="(disableInfos)"></of-text-setting>
     </div>
-    <div class="opfab-settings-item" *ngIf="!displayInfo?.language">
+    <div class="opfab-settings-item" *ngIf="!hiddenSettings?.includes('language')">
       <of-list-setting settingPath="locale" [values]="locales" ></of-list-setting>
     </div>
-    <div class="opfab-settings-item" *ngIf="!displayInfo?.remoteLoggingEnabled">
+    <div class="opfab-settings-item" *ngIf="!hiddenSettings?.includes('remoteLoggingEnabled')">
       <of-checkbox-setting settingPath="remoteLoggingEnabled" labelClass="label-remoteLoggingEnabled" name="remoteLoggingEnabled" [checked]=remoteLoggingEnabledDefaultValue></of-checkbox-setting>
     </div>
 </div>

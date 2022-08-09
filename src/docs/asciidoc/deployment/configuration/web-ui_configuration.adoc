@@ -100,14 +100,10 @@ Values should be taken from the link:https://en.wikipedia.org/wiki/List_of_tz_da
 |archive.filters.publishDate.days|10|no|The default search period (days) for publish date filter in archives page
 |logging.filters.tags.list||no|List of tags to choose from in the corresponding filter in logging page
 |logging.filters.publishDate.days|10|no|The default search period (days) for publish date filter in logging page
-|settings.styleWhenNightDayModeDesactivated||no|style to apply if not using day night mode, possible value are DAY or NIGHT 
+|settings.styleWhenNightDayModeDesactivated||no|Style to apply if not using day night mode, possible value are DAY or NIGHT
 |settings.dateFormat|Value from the browser configuration|no|Format for date rendering (example : DD/MM/YYYY )
 |settings.timeFormat|Value from the browser configuration|no|Format for time rendering (example : HH:mm )
 |settings.dateTimeFormat|Value from the browser configuration|no|Format for date and time rendering (example : HH:mm DD/MM/YYYY )
-|settings.infos.hide.description|false|no|Control if we want to hide(true) or display(false or not specified) the user description in the settings page
-|settings.infos.hide.language|false|no|Control if we want to hide(true) or display(false or not specified) the language in the settings page
-|settings.infos.hide.sounds|false|no|Control if we want to hide(true) or display(false or not specified) the checkboxes for sound notifications in the settings page
-|settings.infos.hide.remoteLoggingEnabled|false|no|Control if we want to hide(true) or display(false or not specified) the checkbox to activate remote logging 
 |settings.locale|en|no|Default user locale (use en if not set)
 |settings.playSoundForAlarm|false|no|If set to true, a sound is played when Alarm cards are added or updated in the feed
 |settings.playSoundForAction|false|no|If set to true, a sound is played when Action cards are added or updated in the feed
@@ -117,6 +113,11 @@ Values should be taken from the link:https://en.wikipedia.org/wiki/List_of_tz_da
 |settings.replayEnabled|false|no|If set to true, sounds are replayed every `settings.replayInterval` seconds until the user interacts with the application
 |settings.replayInterval|5|no|Interval between sound replays (see `settings.replayEnabled`)
 |settings.remoteLoggingEnabled|false|no| If set to true, some logs form the UI are sent to the back and write in the log file of the cards-consultation service
+|settingsScreen.hiddenSettings||no|Array of string indicating which field(s) we want to hide in the settings screen. Possible values : +
+"description" : if present, description field will not be displayed +
+"language" : if present, language field will not be displayed +
+"remoteLoggingEnabled" : if present, the checkbox to activate remote logging will not be displayed +
+"sounds" : if present, the checkboxes for sound notifications will not be displayed
 
 |about
 a|none
