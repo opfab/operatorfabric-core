@@ -94,8 +94,6 @@ describe ('Response card tests',function () {
     });
 
 
-
-
     it('Check card response for operator2_fr ', function () {
 
         cy.loginOpFab('operator2_fr','test');
@@ -186,16 +184,15 @@ describe ('Response card tests',function () {
         cy.get('#question-choice3').click();
         cy.get('#opfab-card-details-btn-response').click(); // click again to send the response
 
-        // Check the popup for the entity choice is displayed
-        cy.get("#opfab-card-details-entity-choice-selector").should('exist');
-        cy.get('#opfab-card-details-entity-choice-selector').find('.vscomp-option-text').should("have.length", 3);
-        cy.get('#opfab-card-details-entity-choice-selector').find('.vscomp-option-text').eq(0).should("contain.text", "Control Center FR East");
-        cy.get('#opfab-card-details-entity-choice-selector').find('.vscomp-option-text').eq(1).should("contain.text", "Control Center FR North");
-        cy.get('#opfab-card-details-entity-choice-selector').find('.vscomp-option-text').eq(2).should("contain.text", "Control Center FR South");
+        // Check the popup for the entities choice is displayed
+        cy.get("#opfab-card-details-entities-choice-selector").should('exist');
+        cy.get('#opfab-card-details-entities-choice-selector').find('.vscomp-option-text').should("have.length", 3);
+        cy.get('#opfab-card-details-entities-choice-selector').find('.vscomp-option-text').eq(0).should("contain.text", "Control Center FR East");
+        cy.get('#opfab-card-details-entities-choice-selector').find('.vscomp-option-text').eq(1).should("contain.text", "Control Center FR North");
+        cy.get('#opfab-card-details-entities-choice-selector').find('.vscomp-option-text').eq(2).should("contain.text", "Control Center FR South");
 
-        // We choose ENTITY3_FR (East)
-        cy.get("#opfab-card-details-entity-choice-selector").find('.vscomp-option-text').eq(0).click({force: true});
-        cy.get("#opfab-card-details-entity-choice-selector").find('.vscomp-value').should('have.text', 'Control Center FR East');
+        // We choose ENTITY3_FR (East) which is already selected
+        cy.get("#opfab-card-details-entities-choice-selector").find('.vscomp-value').should('contain.text', 'Control Center FR East');
 
 
         cy.get('#opfab-card-details-entity-choice-btn-confirm').click();
@@ -211,28 +208,33 @@ describe ('Response card tests',function () {
                                            .next().should("have.text", ' NOK ')
                                            .next().should("have.text", ' OK ');
 
-        // operator4_fr updates the answer of ENTITY1_FR
+        // operator4_fr updates the answer of ENTITY1_FR and ENTITY2_FR
         cy.get('#opfab-card-details-btn-response').click(); // button "modify response"
         cy.get('#question-choice1').click();
         cy.get('#question-choice3').click(); //to uncheck the box
         cy.get('#opfab-card-details-btn-response').click(); // click again to send the response
-        cy.get("#opfab-card-details-entity-choice-selector").find('.vscomp-option-text').eq(1).click({force: true}); // We choose ENTITY1_FR (North)
-        cy.get("#opfab-card-details-entity-choice-selector").find('.vscomp-value').should('have.text', 'Control Center FR North');
+        cy.get("#opfab-card-details-entities-choice-selector").click();
+        cy.get("#opfab-card-details-entities-choice-selector").find('.vscomp-option-text').eq(0).click(); // We unselect ENTITY3_FR (East)
+        cy.get("#opfab-card-details-entities-choice-selector").find('.vscomp-option-text').eq(1).click(); // We select ENTITY1_FR (North)
+        cy.get("#opfab-card-details-entities-choice-selector").find('.vscomp-option-text').eq(2).click(); // We select ENTITY2_FR (South)
+        cy.get("#opfab-card-details-entities-choice-selector").click();
+        cy.get("#opfab-card-details-entities-choice-selector").find('.vscomp-value').should('contain.text', 'Control Center FR North');
+        cy.get("#opfab-card-details-entities-choice-selector").find('.vscomp-value').should('contain.text', 'Control Center FR South');
         cy.get('#opfab-card-details-entity-choice-btn-confirm').click();
 
         cy.waitDefaultTime();
-        // Check the response from ENTITY1_FR has been updated and the other responses are still the same
+        // Check the response from ENTITY1_FR and ENTITY2_FR have been updated and the other response is still the same
         cy.get('#response_from_ENTITY1_FR').next().should("have.text", ' OK ')
                                            .next().should("have.text", ' NOK ')
                                            .next().should("have.text", ' NOK ');
-        cy.get('#response_from_ENTITY2_FR').next().should("have.text", ' NOK ')
-                                           .next().should("have.text", ' OK ')
+        cy.get('#response_from_ENTITY2_FR').next().should("have.text", ' OK ')
+                                           .next().should("have.text", ' NOK ')
                                            .next().should("have.text", ' NOK ');
         cy.get('#response_from_ENTITY3_FR').next().should("have.text", ' NOK ')
                                            .next().should("have.text", ' NOK ')
                                            .next().should("have.text", ' OK ');
 
-        // operator4_fr disconnect from ENTITY_1_FR and ENTITY2_FR (the popup for entity choice must not be displayed)
+        // operator4_fr disconnect from ENTITY_1_FR and ENTITY2_FR (the popup for entities choice must not be displayed)
         // because the only one entity allowed to respond for him is now ENTITY3_FR
         cy.openActivityArea();
 
@@ -251,14 +253,14 @@ describe ('Response card tests',function () {
         cy.get('#opfab-card-details-btn-response').click(); // button "modify response"
         cy.get('#question-choice2').click(); // to check the box
         cy.get('#opfab-card-details-btn-response').click(); // click again to send the response
-        cy.get("#opfab-card-details-entity-choice-selector").should('not.exist'); // entity choice popup must not be displayed
+        cy.get("#opfab-card-details-entities-choice-selector").should('not.exist'); // entities choice popup must not be displayed
         cy.waitDefaultTime();
         // Check the response from ENTITY3_FR (East) has been updated and the other responses are still the same
         cy.get('#response_from_ENTITY1_FR').next().should("have.text", ' OK ')
                                            .next().should("have.text", ' NOK ')
                                            .next().should("have.text", ' NOK ');
-        cy.get('#response_from_ENTITY2_FR').next().should("have.text", ' NOK ')
-                                           .next().should("have.text", ' OK ')
+        cy.get('#response_from_ENTITY2_FR').next().should("have.text", ' OK ')
+                                           .next().should("have.text", ' NOK ')
                                            .next().should("have.text", ' NOK ');
         cy.get('#response_from_ENTITY3_FR').next().should("have.text", ' NOK ')
                                            .next().should("have.text", ' OK ')
@@ -292,8 +294,8 @@ describe ('Response card tests',function () {
         cy.get('#response_from_ENTITY1_FR').next().should("have.text", ' OK ')
                                            .next().should("have.text", ' NOK ')
                                            .next().should("have.text", ' NOK ');
-        cy.get('#response_from_ENTITY2_FR').next().should("have.text", ' NOK ')
-                                           .next().should("have.text", ' OK ')
+        cy.get('#response_from_ENTITY2_FR').next().should("have.text", ' OK ')
+                                           .next().should("have.text", ' NOK ')
                                            .next().should("have.text", ' NOK ');
         cy.get('#response_from_ENTITY3_FR').next().should("have.text", ' NOK ')
                                            .next().should("have.text", ' OK ')
@@ -305,8 +307,8 @@ describe ('Response card tests',function () {
         
         // Response button is not present 
         cy.get('#opfab-card-details-btn-response').should('not.exist');
-        
     })
+
 
     it ('Check response for operator1_fr is still present after update of card with keepChildCard=true re-logging',function () {
         cy.sendCard('defaultProcess/questionWithKeepChildCards.json');
@@ -325,8 +327,8 @@ describe ('Response card tests',function () {
         cy.get('#response_from_ENTITY1_FR').next().should("have.text", ' OK ')
                                            .next().should("have.text", ' NOK ')
                                            .next().should("have.text", ' NOK ');
-        cy.get('#response_from_ENTITY2_FR').next().should("have.text", ' NOK ')
-                                           .next().should("have.text", ' OK ')
+        cy.get('#response_from_ENTITY2_FR').next().should("have.text", ' OK ')
+                                           .next().should("have.text", ' NOK ')
                                            .next().should("have.text", ' NOK ');
         cy.get('#response_from_ENTITY3_FR').next().should("have.text", ' NOK ')
                                            .next().should("have.text", ' OK ')
@@ -335,10 +337,8 @@ describe ('Response card tests',function () {
         // check entities in card header 
         cy.get('#opfab-card-header-entity-ENTITY1_FR').should('have.css', 'color', 'rgb(0, 128, 0)'); // entity 1 color is green 
         cy.get('#opfab-card-header-entity-ENTITY2_FR').should('have.css', 'color', 'rgb(0, 128, 0)'); // entity 2 color is green
-
-       
-
     });
+
 
     it ('Check response for  operator1_fr  is not present after update of card with keepChildCard= false re-logging',function () {
         cy.sendCard('defaultProcess/question.json');
@@ -362,9 +362,6 @@ describe ('Response card tests',function () {
         // check entities in card header 
         cy.get('#opfab-card-header-entity-ENTITY1_FR').should('have.css', 'color', 'rgb(255, 102, 0)');// entity 1 color is orange 
         cy.get('#opfab-card-header-entity-ENTITY2_FR').should('have.css', 'color', 'rgb(255, 102, 0)');  // entity 2 color is orange
-    
-        
-
     });
 
 
@@ -401,8 +398,8 @@ describe ('Response card tests',function () {
         cy.get('#response_from_ENTITY1_FR').next().should("have.text", ' OK ')
                                             .next().should("have.text", ' NOK ')
                                             .next().should("have.text", ' NOK ');
-        cy.get('#response_from_ENTITY2_FR').next().should("have.text", ' NOK ')
-                                            .next().should("have.text", ' OK ')
+        cy.get('#response_from_ENTITY2_FR').next().should("have.text", ' OK ')
+                                            .next().should("have.text", ' NOK ')
                                             .next().should("have.text", ' NOK ');
         cy.get('#response_from_ENTITY3_FR').next().should("have.text", ' NOK ')
                                             .next().should("have.text", ' OK ')
@@ -420,7 +417,6 @@ describe ('Response card tests',function () {
         cy.get('#response_from_ENTITY1_FR').next().should("have.text", ' OK ')
                                             .next().should("have.text", ' NOK ')
                                             .next().should("have.text", ' NOK ');
-
     });
 
  
@@ -443,13 +439,12 @@ describe ('Response card tests',function () {
         cy.get('#opfab-card-details-btn-response').should('have.text', 'SEND RESPONSE');
         cy.get('#opfab-card-details-btn-response').click(); // click to send the response
 
-        // send response button should be disabled
+        // Send response button should be disabled
         cy.get('#opfab-card-details-btn-response').should('be.disabled');
 
-        //  Modify response button should be enabled after response is sent,
+        // Modify response button should be enabled after response is sent
         cy.get('#opfab-card-details-btn-response').should('not.be.disabled');
         cy.get('#opfab-card-details-btn-response').should('have.text', 'MODIFY RESPONSE');
-
     });
 
 })

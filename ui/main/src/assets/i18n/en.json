@@ -326,8 +326,8 @@
     "answered": "Answered",
     "unanswered": "Not answered yet",
     "status": "Process Status",
-    "chooseEntityForResponse": "Choose the entity you are responding for :",
-    "entityChoice": "Entity choice"
+    "chooseEntitiesForResponse": "Choose the entities you are responding for :",
+    "entitiesChoice": "Entities choice"
   },
   "cardAcknowledgment": {
     "button": {
