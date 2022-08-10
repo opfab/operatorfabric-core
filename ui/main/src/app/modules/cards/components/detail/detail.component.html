@@ -165,26 +165,26 @@
     </div>
   </ng-template>
 
-  <ng-template #chooseEntityForResponsePopup let-modal>
+  <ng-template #chooseEntitiesForResponsePopup let-modal>
     <div class="modal-header">
-      <div translate> response.entityChoice </div>
+      <div translate> response.entitiesChoice </div>
       <div class="opfab-close-modal-icon" aria-label="Close" (click)="modal.dismiss('Cross click')">
         <span aria-hidden="true">&times;</span>
       </div>
     </div>
     <div class="modal-body text-center">
-      <br/><p translate>response.chooseEntityForResponse</p><br/>
-      <form [formGroup]="selectEntityForm" class="opfab-form-lighter">
+      <br/><p translate>response.chooseEntitiesForResponse</p><br/>
+      <form [formGroup]="selectEntitiesForm" class="opfab-form-lighter">
         <div class="row">
-            <of-multi-select id="opfab-card-details-entity-choice-selector" multiSelectId="entity"
-                              [parentForm]="selectEntityForm" [config]="multiSelectConfig"
-                              [options]="userEntityOptionsDropdownList" [selectedOptions]="selectEntityForm.get('entity').value">
+            <of-multi-select id="opfab-card-details-entities-choice-selector" multiSelectId="entities"
+                              [parentForm]="selectEntitiesForm" [config]="multiSelectConfig"
+                              [options]="userEntityOptionsDropdownList" [selectedOptions]="selectEntitiesForm.get('entities').value">
             </of-multi-select>
         </div>
         <br/>
       </form>
-      <button id="opfab-card-details-entity-choice-btn-cancel" type="button" class="opfab-btn-cancel" (click)="cancelEntityChoice()" translate>button.cancel</button>
-      <button id="opfab-card-details-entity-choice-btn-confirm" type="button" class="opfab-btn" (click)="submitEntityChoice()" translate>button.ok</button>
+      <button id="opfab-card-details-entity-choice-btn-cancel" type="button" class="opfab-btn-cancel" (click)="cancelEntitiesChoice()" translate>button.cancel</button>
+      <button id="opfab-card-details-entity-choice-btn-confirm" type="button" class="opfab-btn" (click)="submitEntitiesChoice()" translate>button.ok</button>
     </div>
   </ng-template>
 

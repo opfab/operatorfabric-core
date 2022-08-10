@@ -326,8 +326,8 @@
     "answered": "Beantwoord",
     "unanswered": "Nog niet beantwoord",
     "status": "Proces Status",
-    "chooseEntityForResponse": "Kies de entiteit waarvoor u reageert :",
-    "entityChoice": "Entiteit keuze"
+    "chooseEntitiesForResponse": "Kies de entiteiten waarvoor u reageert :",
+    "entitiesChoice": "Entiteiten keuze"
   },
   "cardAcknowledgment": {
     "button": {

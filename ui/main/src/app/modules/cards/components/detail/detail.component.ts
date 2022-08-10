@@ -26,7 +26,6 @@ import {DomSanitizer, SafeHtml} from '@angular/platform-browser';
 import {AcknowledgmentAllowedEnum, State, TypeOfStateEnum} from '@ofModel/processes.model';
 import {Store} from '@ngrx/store';
 import {AppState} from '@ofStore/index';
-import {UserContext} from '@ofModel/user-context.model';
 import {map, takeUntil} from 'rxjs/operators';
 import {CardService} from '@ofServices/card.service';
 import {Subject} from 'rxjs';
@@ -98,9 +97,9 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, DoCheck {
     @ViewChild('cardDeletedWithNoErrorPopup') cardDeletedWithNoErrorPopupRef: TemplateRef<any>;
     @ViewChild('impossibleToDeleteCardPopup') impossibleToDeleteCardPopupRef: TemplateRef<any>;
     @ViewChild('userCard') userCardTemplate: TemplateRef<any>;
-    @ViewChild('chooseEntityForResponsePopup') chooseEntityForResponsePopupRef: TemplateRef<any>;
+    @ViewChild('chooseEntitiesForResponsePopup') chooseEntitiesForResponsePopupRef: TemplateRef<any>;
 
-    private selectEntityForm: UntypedFormGroup;
+    private selectEntitiesForm: UntypedFormGroup;
 
     public isUserEnabledToRespond = false;
     public lttdExpiredIsTrue: boolean;
@@ -138,7 +137,6 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, DoCheck {
     private userEntityOptionsDropdownList = [];
     private userEntityIdToUseForResponse = '';
     private userMemberOfAnEntityRequiredToRespondAndAllowedToSendCards = false;
-    private userContext: UserContext;
     private unsubscribe$: Subject<void> = new Subject<void>();
     private modalRef: NgbModalRef;
     public ackOrUnackInProgress = false;
@@ -147,7 +145,7 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, DoCheck {
     public user: User;
     public multiSelectConfig: MultiSelectConfig = {
         labelKey: 'shared.entity',
-        multiple: false,
+        multiple: true,
         search: true
     };
 
@@ -177,8 +175,8 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, DoCheck {
     ngOnInit() {
         if (this._appService.pageType !== PageType.ARCHIVE) this.integrateChildCardsInRealTime();
 
-        this.selectEntityForm = new UntypedFormGroup({
-            entity: new UntypedFormControl('')
+        this.selectEntitiesForm = new UntypedFormGroup({
+            entities: new UntypedFormControl([])
         });
 
         this.cardService
@@ -751,7 +749,7 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, DoCheck {
         templateGateway.unlockAnswer();
     }
 
-    public cancelEntityChoice(): void {
+    public cancelEntitiesChoice(): void {
         this.modalRef.dismiss();
     }
 
@@ -764,25 +762,28 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, DoCheck {
         this.userEntityOptionsDropdownList.sort((a, b) => Utilities.compareObj(a.label, b.label));
     }
 
-    private displayEntityChoicePopup() {
+    private displayEntitiesChoicePopup() {
         this.userEntityIdToUseForResponse = '';
-        this.selectEntityForm.get('entity').setValue(this.userEntityOptionsDropdownList[0].value);
-        this.openModal(this.chooseEntityForResponsePopupRef);
+        this.selectEntitiesForm.get('entities').setValue(this.userEntityOptionsDropdownList[0].value);
+        this.openModal(this.chooseEntitiesForResponsePopupRef);
     }
 
     public submitResponse() {
-        if (this.userEntityIdsPossibleForResponse.length > 1) this.displayEntityChoicePopup();
+        if (this.userEntityIdsPossibleForResponse.length > 1) this.displayEntitiesChoicePopup();
         else this.submitResponse0();
     }
 
-    public getSelectedEntity() {
-        return this.selectEntityForm.value['entity'];
+    public getSelectedEntities() {
+        return this.selectEntitiesForm.value['entities'];
     }
 
-    public submitEntityChoice() {
+    public submitEntitiesChoice() {
         this.modalRef.dismiss();
-        this.userEntityIdToUseForResponse = this.getSelectedEntity();
-        this.submitResponse0();
+
+        this.getSelectedEntities().forEach(selectedEntity => {
+            this.userEntityIdToUseForResponse = selectedEntity;
+            this.submitResponse0();
+        });
     }
 
     public submitResponse0() {
