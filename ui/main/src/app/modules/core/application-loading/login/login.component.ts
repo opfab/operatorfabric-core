@@ -8,7 +8,7 @@
  */
 
 import {Component, OnInit} from '@angular/core';
-import {UntypedFormControl, UntypedFormGroup} from '@angular/forms';
+import {FormControl, FormGroup} from '@angular/forms';
 import {Store} from '@ngrx/store';
 import {TryToLogInAction} from '@ofActions/authentication.actions';
 import {AppState} from '@ofStore/index';
@@ -22,7 +22,10 @@ import {Message, MessageLevel} from '@ofModel/message.model';
     styles: ['.btn-primary {margin-right: 8px;}']
 })
 export class LoginComponent implements OnInit {
-    userForm: UntypedFormGroup;
+    userForm: FormGroup<{
+        identifier: FormControl<string | null>;
+        password: FormControl<string | null>;
+    }>;
     loginMessage: Message;
 
     constructor(private store: Store<AppState>) {}
@@ -32,9 +35,9 @@ export class LoginComponent implements OnInit {
             .select(selectMessage)
             .pipe(filter((m) => m != null && m.level === MessageLevel.ERROR))
             .subscribe((m) => (this.loginMessage = m));
-        this.userForm = new UntypedFormGroup({
-            identifier: new UntypedFormControl(''),
-            password: new UntypedFormControl('')
+        this.userForm = new FormGroup({
+            identifier: new FormControl(''),
+            password: new FormControl('')
         });
     }
 

@@ -9,7 +9,12 @@
  */
 
 import {Component, Input, OnInit} from '@angular/core';
-import {AsyncValidatorFn, UntypedFormControl, UntypedFormGroup, Validators} from '@angular/forms';
+import {
+    AsyncValidatorFn,
+    FormControl,
+    FormGroup,
+    Validators
+} from '@angular/forms';
 import {NgbActiveModal} from '@ng-bootstrap/ng-bootstrap';
 import {AdminItemType, SharingService} from '../../../services/sharing.service';
 import {CrudService} from '@ofServices/crud-service';
@@ -29,7 +34,14 @@ import {GroupTypeEnum} from '@ofModel/group.model';
     styleUrls: ['./edit-group-modal.component.scss']
 })
 export class EditGroupModalComponent implements OnInit {
-    groupForm: UntypedFormGroup;
+    groupForm: FormGroup<{
+        id: FormControl<string | null>,
+        name: FormControl<string | null>,
+        description: FormControl<string | null>,
+        perimeters: FormControl<{}[] | null>,
+        realtime: FormControl<boolean | null>,
+        type: FormControl<string | null>
+    }>;
 
     perimetersMultiSelectOptions: Array<MultiSelectOption> = [];
     selectedPerimeters = [];
@@ -72,17 +84,17 @@ export class EditGroupModalComponent implements OnInit {
             // modal used for creating a new group
             uniqueGroupIdValidator.push(this.uniqueGroupIdValidatorFn());
 
-        this.groupForm = new UntypedFormGroup({
-            id: new UntypedFormControl(
+        this.groupForm = new FormGroup({
+            id: new FormControl(
                 '',
                 [Validators.required, Validators.minLength(2), Validators.pattern(/^[A-Za-z\d\-_]+$/)],
                 uniqueGroupIdValidator
             ),
-            name: new UntypedFormControl('', [Validators.required]),
-            description: new UntypedFormControl(''),
-            perimeters: new UntypedFormControl([]),
-            realtime: new UntypedFormControl(false),
-            type: new UntypedFormControl('')
+            name: new FormControl('', [Validators.required]),
+            description: new FormControl(''),
+            perimeters: new FormControl([]),
+            realtime: new FormControl<boolean | null>(false),
+            type: new FormControl('')
         });
 
         this.crudService = this.dataHandlingService.resolveCrudServiceDependingOnType(this.type);

@@ -77,7 +77,7 @@ export class UserService extends CrudService {
             .pipe(catchError((error: Response) => this.handleError(error)));
     }
 
-    update(userData: User): Observable<User> {
+    update(userData: User | any): Observable<User> {
         return this.updateUser(userData);
     }
 
