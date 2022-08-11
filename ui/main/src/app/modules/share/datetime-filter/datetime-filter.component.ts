@@ -12,9 +12,7 @@ import {
     AbstractControl,
     ControlContainer,
     ControlValueAccessor,
-    UntypedFormControl,
-    UntypedFormGroup,
-    NG_VALUE_ACCESSOR
+    NG_VALUE_ACCESSOR, FormControl, FormGroup
 } from '@angular/forms';
 import {NgbDatepickerI18n, NgbDateStruct} from '@ng-bootstrap/ng-bootstrap';
 import {takeUntil} from 'rxjs/operators';
@@ -87,7 +85,7 @@ export class DatetimeFilterComponent implements ControlValueAccessor, OnInit, On
     @Input() labelKey: string;
     @Input() filterPath: string;
     @Input() defaultDate: NgbDateStruct;
-    @Input() defaultTime: {hour: number; minute: number};
+    @Input() defaultTime: {hour: number; minute: number;};
     @Output() change = new EventEmitter();
     @Input() minDate: {year: number; month: number; day: number};
     @Input() maxDate: {year: number; month: number; day: number};
@@ -99,9 +97,9 @@ export class DatetimeFilterComponent implements ControlValueAccessor, OnInit, On
     disabled = true;
     time = {hour: 0, minute: 0};
 
-    dateInput = new UntypedFormControl();
-    timeInput = new UntypedFormControl();
-    public datetimeForm: UntypedFormGroup = new UntypedFormGroup({
+    dateInput = new FormControl<NgbDateStruct | null>(null);
+    timeInput = new FormControl<{hour: number; minute: number; second: number} | null>(null);
+    public datetimeForm = new FormGroup({
         date: this.dateInput,
         time: this.timeInput
     });
@@ -170,7 +168,7 @@ export class DatetimeFilterComponent implements ControlValueAccessor, OnInit, On
                 this.disabled = false;
             }
             // we check date value really change
-            // because when we change minDate or maxDate it emit a "valueChange"
+            // because when we change minDate or maxDate it emits a "valueChange"
             // this was causing an infinite loop in usercard-dates-form.component.ts
             if (val !== this.previousDateValue) {
                 this.previousDateValue = val;
@@ -198,9 +196,9 @@ export class DatetimeFilterComponent implements ControlValueAccessor, OnInit, On
     }
 
     resetDateAndTime() {
-        let val = {hour: 0, minute: 0};
+        let val = {hour: 0, minute: 0, second: 0};
         if (!!this.defaultTime) {
-            val = this.defaultTime;
+            val = {...this.defaultTime, second: 0};
         }
         // option `{emitEvent: false})` to reset completely control and mark it as 'pristine'
         this.timeInput.reset(val, {emitEvent: false});
@@ -221,17 +219,4 @@ export class DatetimeFilterComponent implements ControlValueAccessor, OnInit, On
     computeLabelKey(): string {
         return this.labelKey + this.filterPath;
     }
-}
-
-export class DateTimeFilterValue {
-    date: {
-        year: number;
-        month: number;
-        day: number;
-    };
-
-    time: {
-        hour: number;
-        minute: number;
-    };
 }

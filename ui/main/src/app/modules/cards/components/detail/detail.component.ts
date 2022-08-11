@@ -42,7 +42,7 @@ import {AcknowledgeService} from '@ofServices/acknowledge.service';
 import {UserPermissionsService} from '@ofServices/user-permissions.service';
 import {DisplayContext} from '@ofModel/templateGateway.model';
 import {LightCardsStoreService} from '@ofServices/lightcards/lightcards-store.service';
-import {UntypedFormControl, UntypedFormGroup} from '@angular/forms';
+import {FormControl, FormGroup} from '@angular/forms';
 import {Utilities} from '../../../../common/utilities';
 import {CardDetailsComponent} from '../card-details/card-details.component';
 import {DateTimeFormatterService} from '@ofServices/date-time-formatter.service';
@@ -99,7 +99,9 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, DoCheck {
     @ViewChild('userCard') userCardTemplate: TemplateRef<any>;
     @ViewChild('chooseEntitiesForResponsePopup') chooseEntitiesForResponsePopupRef: TemplateRef<any>;
 
-    private selectEntitiesForm: UntypedFormGroup;
+    private selectEntitiesForm: FormGroup<{
+        entities: FormControl<[] | null>;
+    }>;
 
     public isUserEnabledToRespond = false;
     public lttdExpiredIsTrue: boolean;
@@ -175,8 +177,8 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, DoCheck {
     ngOnInit() {
         if (this._appService.pageType !== PageType.ARCHIVE) this.integrateChildCardsInRealTime();
 
-        this.selectEntitiesForm = new UntypedFormGroup({
-            entities: new UntypedFormControl([])
+        this.selectEntitiesForm = new FormGroup({
+            entities: new FormControl([])
         });
 
         this.cardService

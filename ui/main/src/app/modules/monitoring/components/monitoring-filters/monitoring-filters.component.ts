@@ -8,7 +8,7 @@
  */
 
 import {Component, EventEmitter, OnInit, Output} from '@angular/core';
-import {UntypedFormControl, UntypedFormGroup} from '@angular/forms';
+import {FormControl, FormGroup} from '@angular/forms';
 import {TranslateService} from '@ngx-translate/core';
 import {TypeOfStateEnum} from '@ofModel/processes.model';
 import {Filter} from '@ofModel/feed-filter.model';
@@ -22,10 +22,10 @@ import {MonitoringProcessList} from './monitoring-process-list';
     styleUrls: ['./monitoring-filters.component.scss']
 })
 export class MonitoringFiltersComponent implements OnInit {
-    monitoringForm: UntypedFormGroup = new UntypedFormGroup({
-        processGroup: new UntypedFormControl([]),
-        process: new UntypedFormControl([]),
-        typeOfState: new UntypedFormControl([])
+    monitoringForm = new FormGroup({
+        processGroup: new FormControl([]),
+        process: new FormControl([]),
+        typeOfState: new FormControl([])
     });
 
     processGroupMultiSelect: MultiSelect;
