@@ -92,6 +92,7 @@ a|card time display mode in the feed. Values :
 |feed.geomap.zoomToLocation|14|no| Zoom level when zooming to a location of a selected card.
 |feed.geomap.maxZoom|11|no| Max zoom level, to prevent zooming in too much when only one card is shown (or multiple cards in close proximity).
 |feed.geomap.zoomDuration|500|no| Time in milliseconds it takes to zoom the map to the specific location. Set to 0 to disable the zoom animation.
+|feed.geomap.enableGraph|false|no|Show a graph on the map with number of cards per severity.
 |i18n.supported.locales||no|List of supported locales (Only fr and en so far)
 Values should be taken from the link:https://en.wikipedia.org/wiki/List_of_tz_database_time_zones[TZ database].
 
