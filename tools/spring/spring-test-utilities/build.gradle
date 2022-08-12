@@ -7,4 +7,5 @@ dependencies{
     implementation misc.feignJackson
     implementation project(':tools:spring:spring-oauth2-utilities')
     implementation project(":client:users-client-data")
+    implementation project(":client:businessconfig-client-data")
 }

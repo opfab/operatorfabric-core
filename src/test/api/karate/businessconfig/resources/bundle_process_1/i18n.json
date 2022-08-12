@@ -1,0 +1,10 @@
+{
+	"detail":{
+		"title":"Message"
+	},
+	"defaultProcess": {
+		"title" : "card Title",
+		"title2" : "card Title II",
+		"summary": "card summary"
+	}
+}

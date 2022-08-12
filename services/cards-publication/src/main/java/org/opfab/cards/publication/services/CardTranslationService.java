@@ -1,4 +1,4 @@
-/* Copyright (c) 2021, RTE (http://www.rte-france.com)
+/* Copyright (c) 2021-2022, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -19,6 +19,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import org.opfab.cards.publication.model.CardPublicationData;
 import org.opfab.cards.publication.model.I18n;
 import org.opfab.springtools.configuration.oauth.I18nProcessesCache;
+import org.opfab.springtools.configuration.oauth.ProcessesCache;
 import org.opfab.utilities.AmqpUtils;
 import org.opfab.utilities.I18nTranslation;
 import org.springframework.amqp.core.AcknowledgeMode;
@@ -42,6 +43,8 @@ public class CardTranslationService {
 
     @Autowired
     private I18nProcessesCache i18nProcessesCache;
+    @Autowired
+    private ProcessesCache processesCache;
     private ConnectionFactory connectionFactory;
     private AmqpAdmin amqpAdmin;
     private Queue processQueue;
@@ -102,11 +105,12 @@ public class CardTranslationService {
     }
 
     private void registerProcessListener(MessageListenerContainer mlc) {
-        mlc.setupMessageListener(message -> clearProcessCache());
+        mlc.setupMessageListener(message -> clearCaches());
     }
 
-    private void clearProcessCache() {
+    private void clearCaches() {
         i18nProcessesCache.clearCache();
+        processesCache.clearCache();
     }
 
 

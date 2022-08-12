@@ -38,10 +38,6 @@ Feature: CardsUserAcknowledgementUpdateCheck
       {
         "state" : "messageState",
         "right" : "Receive"
-      },
-      {
-        "state" : "messageState2",
-        "right" : "Receive"
       }
     ]
 }
@@ -110,7 +106,7 @@ Feature: CardsUserAcknowledgementUpdateCheck
 	"processVersion" : "1",
 	"process"  :"api_test",
 	"processInstanceId" : "process1",
-	"state": "messageState2",
+	"state": "messageState",
 	"groupRecipients": ["ReadOnly"],
 	"severity" : "INFORMATION",
 	"startDate" : 1553186770681,

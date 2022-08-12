@@ -10,6 +10,7 @@
 
 package org.opfab.cards.publication.services;
 
+import feign.FeignException;
 import lombok.extern.slf4j.Slf4j;
 
 import org.opfab.cards.model.CardOperationTypeEnum;
@@ -17,10 +18,12 @@ import org.opfab.cards.publication.model.ArchivedCardPublicationData;
 import org.opfab.cards.publication.model.CardPublicationData;
 import org.opfab.cards.publication.model.PublisherTypeEnum;
 import org.opfab.cards.publication.services.clients.impl.ExternalAppClientImpl;
+import org.opfab.springtools.configuration.oauth.ProcessesCache;
 import org.opfab.springtools.error.model.ApiError;
 import org.opfab.springtools.error.model.ApiErrorException;
 import org.opfab.users.model.CurrentUserWithPerimeters;
 import org.opfab.users.model.User;
+import org.opfab.businessconfig.model.Process;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -62,8 +65,12 @@ public class CardProcessingService {
     @Autowired
     private CardTranslationService cardTranslationService;
 
+    @Autowired
+    private ProcessesCache processesCache;
+
     @Value("${checkAuthenticationForCardSending:true}") boolean checkAuthenticationForCardSending;
 
+    public static final String UNEXISTING_PROCESS_STATE = "Impossible to publish card because process and/or state does not exist (process=%1$s, state=%2$s, processVersion=%3$s, processInstanceId=%4$s)";
    
 
     public void processCard(CardPublicationData card) {
@@ -81,6 +88,7 @@ public class CardProcessingService {
                     .message(buildPublisherErrorMessage(card, user.get().getUserData().getLogin(), false))
                     .build());
         }
+
         // set empty user otherwise it will be processed as a usercard
         processOneCard(card, Optional.empty(), jwt);
     }
@@ -92,6 +100,7 @@ public class CardProcessingService {
 
     private void processOneCard(CardPublicationData card, Optional<CurrentUserWithPerimeters> user, Optional<Jwt> jwt) {
         validate(card);
+        checkProcessStateExistsInBundles(card);
         card.prepare(Instant.ofEpochMilli(Instant.now().toEpochMilli()));
         cardTranslationService.translate(card);
 
@@ -199,6 +208,20 @@ public class CardProcessingService {
                   (! cardRepositoryService.findArchivedCardByUid(initialParentCardUid).isPresent()));
     }
 
+    public boolean doesProcessStateExistInBundles(String processId, String processVersion, String stateId) {
+        if (processesCache != null) {
+            try {
+                Process process = processesCache.fetchProcessFromCacheOrProxy(processId, processVersion);
+                if ((process != null) && (process.getStates() != null) && (process.getStates().containsKey(stateId)))
+                    return true;
+            } catch (FeignException ex) {
+                log.error("Error getting process information for process={} and processVersion={}", processId,
+                        processVersion, ex);
+            }
+        }
+        return false;
+    }
+
     boolean checkIsEndDateAfterStartDate(CardPublicationData c) {
         Instant endDateInstant = c.getEndDate();
         Instant startDateInstant = c.getStartDate();
@@ -224,6 +247,15 @@ public class CardProcessingService {
         return true;
     }
 
+    public void checkProcessStateExistsInBundles(CardPublicationData card) {
+        if (!doesProcessStateExistInBundles(card.getProcess(), card.getProcessVersion(), card.getState())) {
+            throw new ApiErrorException(
+                    ApiError.builder()
+                            .status(HttpStatus.BAD_REQUEST)
+                            .message(String.format(UNEXISTING_PROCESS_STATE, card.getProcess(), card.getState(), card.getProcessVersion(), card.getProcessInstanceId()))
+                            .build());
+        }
+    }
 
 
     public void deleteCard(String id, Optional<Jwt> jwt) {

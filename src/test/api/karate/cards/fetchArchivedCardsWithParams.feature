@@ -219,7 +219,7 @@ Feature: Archives
 	"processVersion" : "1",
 	"process"  :"api_test",
 	"processInstanceId" : "cardNotInPerimeters0",
-	"state": "stateNotInPerimeters",
+	"state": "incidentInProgressState",
 	"groupRecipients": ["Dispatcher"],
 	"severity" : "ALARM",
 	"startDate" : 1583333122000,
