@@ -14,3 +14,11 @@ cd bundle_api_test_apogee
 tar -czvf bundle_api_test_apogee.tar.gz config.json i18n.json css/ template/ 
 mv bundle_api_test_apogee.tar.gz ../
 cd ..
+cd bundle_defaultProcess_V1
+tar -czvf bundle_defaultProcess_V1.tar.gz config.json i18n.json css/ template/
+mv bundle_defaultProcess_V1.tar.gz ../
+cd ..
+cd bundle_api_test_with_newState
+tar -czvf bundle_api_test_with_newState.tar.gz config.json i18n.json css/ template/
+mv bundle_api_test_with_newState.tar.gz ../
+cd ..

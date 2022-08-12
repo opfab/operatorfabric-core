@@ -277,7 +277,7 @@ public class GroupsController implements GroupsApi {
                     () -> new ApiErrorException(
                             ApiError.builder()
                                     .status(HttpStatus.BAD_REQUEST)
-                                    .message(String.format(BAD_USER_LIST_MSG,login))
+                                    .message(String.format(BAD_USER_LIST_MSG, login))
                                     .build()
                     ));
             foundUsers.add(foundUser);

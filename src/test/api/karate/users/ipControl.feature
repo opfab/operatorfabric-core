@@ -50,10 +50,10 @@ Feature: Client ip control
 """
 {
   "id" : "perimeterIp",
-  "process" : "process_1",
+  "process" : "api_test",
   "stateRights" : [
       {
-        "state" : "state1",
+        "state" : "messageState",
         "right" : "ReceiveAndWrite"
       }
   ]
@@ -75,9 +75,9 @@ Feature: Client ip control
 {
 	"publisher" : "ENTITY1_FR",
 	"processVersion" : "1",
-	"process"  :"process_1",
+	"process"  :"api_test",
 	"processInstanceId" : "initialCardProcess",
-	"state": "state1",
+	"state": "messageState",
 	"entityRecipients" : ["ENTITY1_FR"],
 	"severity" : "INFORMATION",
 	"startDate" : 1553186770681,
@@ -93,9 +93,9 @@ Feature: Client ip control
   {
     "publisher" : "user_test_api_1",
     "processVersion" : "1",
-    "process"  :"process_1",
+    "process"  :"api_test",
     "processInstanceId" : "initialCardProcess1",
-    "state": "state1",
+    "state": "messageState",
     "entityRecipients" : ["ENTITY1_FR"],
     "severity" : "INFORMATION",
     "startDate" : 1553186770681,
@@ -252,7 +252,7 @@ Scenario Outline: Check direct calls are accepted
 
 
     Scenario: delete user card, expected response 200
-      Given url opfabPublishCardUrl + 'cards/userCard/process_1.initialCardProcess'
+      Given url opfabPublishCardUrl + 'cards/userCard/api_test.initialCardProcess'
       And header Authorization = 'Bearer ' + authTokenAsTSO
       When method delete
       Then status 200

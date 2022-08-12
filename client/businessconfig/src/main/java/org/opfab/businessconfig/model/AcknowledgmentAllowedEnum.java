@@ -9,6 +9,8 @@
 
 package org.opfab.businessconfig.model;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonValue;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
@@ -32,4 +34,20 @@ public enum AcknowledgmentAllowedEnum {
     ONLY_WHEN_RESPONSE_DISABLED_FOR_USER("OnlyWhenResponseDisabledForUser");
 
     String value;
+
+    @Override
+    @JsonValue
+    public String toString() {
+        return String.valueOf(value);
+    }
+
+    @JsonCreator
+    public static AcknowledgmentAllowedEnum fromValue(String text) {
+        for (AcknowledgmentAllowedEnum b : AcknowledgmentAllowedEnum.values()) {
+            if (String.valueOf(b.value).equals(text)) {
+                return b;
+            }
+        }
+        return null;
+    }
 }

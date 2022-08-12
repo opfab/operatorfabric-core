@@ -1,0 +1,68 @@
+<!-- Copyright (c) 2020-2022, RTE (http://www.rte-france.com)              -->
+<!-- See AUTHORS.txt                                                       -->
+<!-- This Source Code Form is subject to the terms of the Mozilla Public   -->
+<!-- License, v. 2.0. If a copy of the MPL was not distributed with this   -->
+<!-- file, You can obtain one at http://mozilla.org/MPL/2.0/.              -->
+<!-- SPDX-License-Identifier: MPL-2.0                                      -->
+<!-- This file is part of the OperatorFabric project.                      -->
+
+
+        <div class="opfab-textarea">
+            <label> MESSAGE </label>
+            <textarea id="message" name="message" placeholder="Write something.."
+                style="width:100%"> {{card.data.message}} </textarea>
+        </div>
+
+    <!-- Hidden attribute for cypress tests -->
+    <!-- remove them if you use this template as example -->
+
+        <div hidden="true" class="opfab-input" style="margin-right:5px">
+            <label>HIDDEN PROCESS MOCK </label>
+            <input id="hidden_process" name="hidden_process">
+        </div>
+        <div hidden="true" class="opfab-input" style="margin-right:5px">
+            <label>HIDDEN STATE MOCK </label>
+            <input id="hidden_state" name="hidden_state">
+        </div>
+        <div hidden="true" class="opfab-input" style="margin-right:5px">
+            <label>HIDDEN SENDER MOCK </label>
+            <input id="hidden_sender" name="hidden_sender">
+        </div>
+
+
+
+<script>
+    
+    // The two following lines are used for cypress test 
+    // remove them if you use this template as example 
+    document.getElementById("hidden_process").value = usercardTemplateGateway.getCurrentProcess();
+    document.getElementById("hidden_state").value = usercardTemplateGateway.getCurrentState();
+
+    // we keep here the deprecated templateGateway.getSpecificInformation (instead of usercardTemplateGateway.getSpecificInformation)
+    // to have the deprecated feature still covered by cypress tests
+    // DO NOT USE AS EXAMPLE 
+    templateGateway.getSpecificCardInformation = function () {
+        const message = document.getElementById('message').value;
+        let summaryParameter = message.slice(0, 100);
+        if (message.length > summaryParameter.length)
+            summaryParameter += '...';
+
+        const card = {
+        summary : {key : "messageState.summary", parameters : {"summary": summaryParameter}},
+		title : {key : "messageState.title"},
+        data : {message: message},
+        entitiesAllowedToEdit: ['ENTITY_FR'],
+        };
+        if (message.length<1) return { valid:false , errorMsg:'You must provide a message'}
+        return {
+            valid: true,
+            card: card
+        };
+
+    };
+
+    usercardTemplateGateway.setEntityUsedForSendingCard = function(senderEntity) {
+        document.getElementById("hidden_sender").value = senderEntity;
+    };
+
+</script>

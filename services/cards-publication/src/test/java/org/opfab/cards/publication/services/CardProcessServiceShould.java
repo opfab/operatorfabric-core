@@ -1190,4 +1190,13 @@ class CardProcessServiceShould {
         cardProcessingService.processUserCard(card, currentUserWithPerimeters, token);
         Assertions.assertThat(checkCardCount(1)).isTrue();
     }
+
+    @Test
+    void doesProcessStateExistInBundles() {
+        assertThat(cardProcessingService.doesProcessStateExistInBundles("api_test", "1", "messageState", "operator1_fr")).isTrue();
+        assertThat(cardProcessingService.doesProcessStateExistInBundles("api_test", "1", "unexistingState", "operator1_fr")).isFalse();
+        assertThat(cardProcessingService.doesProcessStateExistInBundles("api_test", "99", "messageState", "operator1_fr")).isFalse();
+        assertThat(cardProcessingService.doesProcessStateExistInBundles("unexistingProcess", "1", "messageState", "operator1_fr")).isFalse();
+        assertThat(cardProcessingService.doesProcessStateExistInBundles("processWithNoState", "1", "messageState", "operator1_fr")).isFalse();
+    }
 }

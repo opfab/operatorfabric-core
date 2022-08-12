@@ -10,6 +10,7 @@
 
 package org.opfab.cards.publication.services;
 
+import feign.FeignException;
 import lombok.extern.slf4j.Slf4j;
 
 import org.opfab.cards.model.CardOperationTypeEnum;
@@ -17,10 +18,12 @@ import org.opfab.cards.publication.model.ArchivedCardPublicationData;
 import org.opfab.cards.publication.model.CardPublicationData;
 import org.opfab.cards.publication.model.PublisherTypeEnum;
 import org.opfab.cards.publication.services.clients.impl.ExternalAppClientImpl;
+import org.opfab.springtools.configuration.oauth.ProcessesCache;
 import org.opfab.springtools.error.model.ApiError;
 import org.opfab.springtools.error.model.ApiErrorException;
 import org.opfab.users.model.CurrentUserWithPerimeters;
 import org.opfab.users.model.User;
+import org.opfab.businessconfig.model.Process;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -61,6 +64,9 @@ public class CardProcessingService {
 
     @Autowired
     private CardTranslationService cardTranslationService;
+
+    @Autowired
+    private ProcessesCache processesCache;
 
     @Value("${checkAuthenticationForCardSending:true}") boolean checkAuthenticationForCardSending;
 
@@ -197,6 +203,20 @@ public class CardProcessingService {
 
         return ! ((Optional.ofNullable(initialParentCardUid).isPresent()) &&
                   (! cardRepositoryService.findArchivedCardByUid(initialParentCardUid).isPresent()));
+    }
+
+    public boolean doesProcessStateExistInBundles(String processId, String processVersion, String stateId, String login) {
+        if (processesCache != null) {
+            try {
+                Process process = processesCache.fetchProcessFromCacheOrProxy(processId, processVersion, login);
+                if ((process != null) && (process.getStates() != null) && (process.getStates().containsKey(stateId)))
+                    return true;
+            } catch (FeignException ex) {
+                log.error("Error getting process information for process={} and processVersion={}", processId,
+                        processVersion, ex);
+            }
+        }
+        return false;
     }
 
     boolean checkIsEndDateAfterStartDate(CardPublicationData c) {

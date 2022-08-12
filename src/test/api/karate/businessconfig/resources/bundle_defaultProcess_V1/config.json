@@ -1,0 +1,112 @@
+{
+  "id": "defaultProcess",
+  "name": "Process example ",
+  "version": "1",
+  "uiVisibility": {
+    "monitoring": true,
+    "logging": true,
+    "calendar": true
+  },
+  "states": {
+    "messageState": {
+      "name":  "Message",
+      "description": "Message state",
+      "color": "#CC9900",
+      "userCard" : {
+        "template" : "usercard_message",
+        "lttdVisible" : false
+      },
+      "templateName": "template",
+      "styles": [
+        "style"
+      ],
+      "acknowledgmentAllowed": "Always",
+      "type" : "FINISHED"
+    },
+    "dataQualityState": {
+      "name": "Data quality",
+      "description": "Data quality state",
+      "color": "#DA00DA",
+      "templateName": "chart",
+      "styles": [
+        "style"
+      ],
+      "acknowledgmentAllowed": "Always"
+    },
+    "chartLineState": {
+      "name": "Electricity consumption forecast",
+      "description": "Chart line state",
+      "color": "#6666FF",
+      "templateName": "chart-line",
+      "styles": [
+        "style"
+      ],
+      "acknowledgmentAllowed": "Always",
+      "cancelAcknowledgmentAllowed": false,
+      "type" : "CANCELED"
+    },
+    "processState": {
+      "name": "Process example ",
+      "description": "Process state",
+      "color": "#0070C0",
+      "userCard" : {
+        "template" : "usercard_process",
+        "lttdVisible" : false,
+        "recipientList" : [{"id": "ENTITY_FR", "levels": [0,1]}, {"id": "IT_SUPERVISOR_ENTITY"}]
+      },
+      "templateName": "process",
+      "styles": [
+        "style"
+      ],
+      "acknowledgmentAllowed": "Always",
+      "type" : "INPROGRESS"
+    },
+    "contingenciesState": {
+      "name": "⚠️ Network Contingencies ⚠️",
+      "description": "Contingencies state",
+      "templateName": "contingencies",
+      "styles": [
+        "contingencies"
+      ],
+      "acknowledgmentAllowed": "Always",
+      "type" : "INPROGRESS",
+      "automaticPinWhenAcknowledged" : true
+    },
+    "questionState": {
+      "name": "Action required",
+      "description": "Question state",
+      "response": {
+        "lock": true,
+        "state": "responseState"
+      },
+      "templateName": "question",
+      "styles": [
+        "style"
+      ],
+      "acknowledgmentAllowed": "OnlyWhenResponseDisabledForUser",
+      "type" : "INPROGRESS",
+      "validateAnswerButtonLabel" : "SEND RESPONSE",
+      "modifyAnswerButtonLabel" : "MODIFY RESPONSE"
+    },
+    "multipleOptionsResponseState": {
+      "name": "Additional information required",
+      "description": "Follow-up Question state",
+      "color": "#0070C0",
+      "acknowledgmentAllowed": "Always",
+      "templateName": "multipleOptionsResponseState"
+    },
+    "responseState": {
+      "name": "Planned outage date response",
+      "description": "Response state",
+      "color": "#0070C0",
+      "templateName": "response",
+      "styles": [
+        "style"
+      ],
+      "acknowledgmentAllowed": "Always",
+      "type" : "INPROGRESS",
+      "isOnlyAChildState": true
+    }
+
+  }
+}

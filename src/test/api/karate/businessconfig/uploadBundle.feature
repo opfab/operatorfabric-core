@@ -63,3 +63,12 @@ Feature: Bundle
     When method post
     Then status 201
 
+  Scenario: Post Bundle for defaultProcess V1 (needed for cards sent by External App)
+
+    # Push bundle
+    Given url opfabUrl + '/businessconfig/processes'
+    And header Authorization = 'Bearer ' + authToken
+    And multipart file file = {read:'resources/bundle_defaultProcess_V1.tar.gz', contentType: 'application/gzip'}
+    When method post
+    Then status 201
+

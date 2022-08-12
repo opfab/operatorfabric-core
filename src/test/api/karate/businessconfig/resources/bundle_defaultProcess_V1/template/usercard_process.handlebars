@@ -1,0 +1,74 @@
+<!-- Copyright (c) 2020-2022, RTE (http://www.rte-france.com)              -->
+<!-- See AUTHORS.txt                                                       -->
+<!-- This Source Code Form is subject to the terms of the Mozilla Public   -->
+<!-- License, v. 2.0. If a copy of the MPL was not distributed with this   -->
+<!-- file, You can obtain one at http://mozilla.org/MPL/2.0/.              -->
+<!-- SPDX-License-Identifier: MPL-2.0                                      -->
+<!-- This file is part of the OperatorFabric project.                      -->
+
+
+<div style="width:100%;display:flex;flex-wrap:wrap">  
+    <div class="opfab-multiselect" style="flex-basis:0;width:100%;position:relative;flex-grow:1;margin-right:20px">
+        <label> STATE OF THE PROCESS</label>
+        <div id="state-select" placeholder="--Please choose an option--"></div>
+    </div>
+
+   <div class="opfab-multiselect"  style="flex-basis:0;width:100%;position:relative;flex-grow:1;margin-left:20px">
+        <label > STATUS OF THE STATE </label>
+        <div id="status-select" placeholder="--Please choose an option--"></div>
+    </div>
+</div>
+
+
+<script>
+
+    stateSelect = opfab.multiSelect.init({
+        id: "state-select",
+        options: [
+                { label: 'Started', value: 'start' },
+                { label: 'Calculation 1 done', value: 'calcul1' },
+                { label: 'Calculation 2 done', value: 'calcul2' },
+                { label: 'Calculation 3 done', value: 'calcul3' },
+            ],
+        multiple: false,
+        search: true
+    });
+
+    statusSelect = opfab.multiSelect.init({
+        id: "status-select",
+        options: [
+                { label: 'Ok', value: 'ok' },
+                { label: 'Error', value: 'error' },
+            ],
+        multiple: false,
+        search: false
+    });
+
+    selectedProcessState = "{{card.data.state}}";
+    if (selectedProcessState.length >0) document.getElementById('state-select').setValue(selectedProcessState);
+
+    selectedProcessStatus = "{{card.data.status}}";
+    if (selectedProcessStatus.length >0) document.getElementById('status-select').setValue(selectedProcessStatus);
+
+
+
+
+    usercardTemplateGateway.getSpecificCardInformation = function () {
+        const state = document.getElementById('state-select').value;
+        const status = document.getElementById('status-select').value;
+        const card = {
+            summary: { key: "message.summary" },
+            title: { key: "processState.title", parameters: {status: state} },
+            data: { 
+                state: state,
+                status: status
+            }
+        };
+        if (status==="error") card.data.error="true";
+        return {
+            valid: true,
+            card: card
+        };
+
+    }
+</script>

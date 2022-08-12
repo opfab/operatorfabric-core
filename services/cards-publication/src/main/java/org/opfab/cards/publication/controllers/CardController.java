@@ -17,6 +17,8 @@ import org.opfab.cards.publication.services.CardProcessingService;
 import org.opfab.cards.publication.services.CardTranslationService;
 import org.opfab.cards.publication.services.UserBasedOperationResult;
 import org.opfab.springtools.configuration.oauth.OpFabJwtAuthenticationToken;
+import org.opfab.springtools.error.model.ApiError;
+import org.opfab.springtools.error.model.ApiErrorException;
 import org.opfab.users.model.CurrentUserWithPerimeters;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -39,6 +41,8 @@ import java.util.UUID;
 
 public class CardController {
 
+    public static final String UNEXISTING_PROCESS_STATE = "Impossible to publish card because process and/or state does not exist (process=%1$s, state=%2$s, processVersion=%3$s, processInstanceId=%4$s)";
+
     @Autowired
     private CardProcessingService cardProcessingService;
     @Autowired
@@ -47,7 +51,7 @@ public class CardController {
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public @Valid CardCreationReportData createCard(@Valid @RequestBody CardPublicationData card, HttpServletResponse response, Principal principal) {
-        //Overwrite eventual uid sent by client 
+        //Overwrite eventual uid sent by client
         card.setUid(UUID.randomUUID().toString());
         OpFabJwtAuthenticationToken jwtPrincipal = (OpFabJwtAuthenticationToken) principal;
         CurrentUserWithPerimeters user = null ;
@@ -56,6 +60,17 @@ public class CardController {
             user = (CurrentUserWithPerimeters) jwtPrincipal.getPrincipal();
             token = jwtPrincipal.getToken();
         }
+
+
+        if ((user != null) && (!cardProcessingService.doesProcessStateExistInBundles(card.getProcess(),
+                card.getProcessVersion(), card.getState(), user.getUserData().getLogin()))) {
+            throw new ApiErrorException(
+                    ApiError.builder()
+                            .status(HttpStatus.BAD_REQUEST)
+                            .message(String.format(UNEXISTING_PROCESS_STATE, card.getProcess(), card.getState(), card.getProcessVersion(), card.getProcessInstanceId()))
+                            .build());
+        }
+
         cardProcessingService.processCard(card, Optional.ofNullable(user), Optional.ofNullable(token));
         return CardCreationReportData.builder().id(card.getId()).uid(card.getUid()).build();
     }
@@ -85,14 +100,13 @@ public class CardController {
         try {
             Optional<CardPublicationData> deletedCard = cardProcessingService.deleteUserCard(id, user, Optional.of(jwtPrincipal.getToken()));
             if (!deletedCard.isPresent()) {
-                    response.setStatus(404);
-                }
+                response.setStatus(404);
+            }
         }
         catch (Exception e) {
-                    response.setStatus(403);
+            response.setStatus(403);
         }
         return null;
-
     }
 
     @DeleteMapping("/{id}")

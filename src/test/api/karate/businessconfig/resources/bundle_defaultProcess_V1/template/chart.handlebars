@@ -1,0 +1,193 @@
+<div class="opfab-border-box" style="width:100%; display:inline-block">
+    <div>
+      <p><b>Info on quality degradation of the main server </b>
+          
+         
+    </div>
+    <div>
+      <ul>
+      {{#each card.data.indications }}
+          <li><div title={{keepSpacesAndEndOfLine (json this.tooltip)}}><b>{{this.titre}}</b></div>{{this.information}}</li>
+      {{/each}}
+      </ul>
+    </div>
+</div>
+
+<br/>
+<hr/>
+<div class="opfab-border-box" style="width:100%; display:inline-block;">
+  <label>  Historical evolution of the quality of network snapshot</label>
+  
+  <div style="position: relative; height:35vh; width:100%;margin:auto">
+    <canvas id="myChart"></canvas>
+  </div>
+
+</div>
+</div>
+
+<br/>
+<hr/>
+
+<div class="opfab-border-box" style="width:100%; display:inline-block;">
+  <label> History of the number of non-standard deviations</label>
+  
+  <div style="position: relative; height:35vh; width:100%;margin:auto">
+    <canvas id="myChartEcartsHN" style="display:block;"></canvas>
+  </div>
+</div>
+
+<!-- test for calling business application from a card -->
+<br/>
+<br/>
+<!-- The below 'tag' comment (and matching end tag) is directed at asciidoctor to include this snippet as an example
+in the documentation, it should not be used in actual templates. -->
+<!-- tag::templateGateway.redirectToBusinessMenu_example[] -->
+<a href="javascript:templateGateway.redirectToBusinessMenu('menu1','uid_test_0','?search=chart&fulltext=1')"> Want more information about charts ? </a>
+<!-- end::templateGateway.redirectToBusinessMenu_example[] -->
+
+
+
+
+<script>
+
+
+
+var opfabColor = getComputedStyle(document.body).getPropertyValue('--opfab-text-color');
+
+
+if (window.myChart instanceof Chart) {
+    window.myChart.destroy();
+}
+if (window.myChartEcartsHN instanceof Chart) {
+    window.myChartEcartsHN.destroy();
+}
+
+
+var chartContext = document.getElementById('myChart').getContext('2d');
+window.myChart = new Chart(chartContext, {
+    type: 'line',
+    data: {
+        datasets: [{
+            label: 'Quality Main Server',
+            data : {{json card.data.quality}},
+            fill : false,
+            backgroundColor: 'rgba(54, 162, 235, 0.2)',
+            borderColor: 'rgba(54, 162, 235, 1)',
+            tension: 0.4,
+            parsing: {
+            xAxisKey: 'hour',
+            yAxisKey: 'Qualite_P'
+            }
+        },
+        {
+            label: 'Quality Secondary Server',
+            data : {{json card.data.quality}},
+            fill : false,
+            backgroundColor: 'rgba(54, 162, 235, 0.2)',
+            borderColor: 'rgba(54, 162, 0, 1)',
+            tension: 0.1,
+            parsing: {
+            xAxisKey: 'hour',
+            yAxisKey: 'Qualite_R'
+            }
+        }]
+    },
+    options: {
+        maintainAspectRatio: false,
+        stepped: true,
+        plugins: {
+            title: {
+                display: true,
+                text: {{json card.data.quality_chart_title}}
+            }
+        },
+        scales: {
+            y: {
+                beginAtZero: true,
+                grid: {color:'rgba(100,100,100,0.2)'},
+                ticks: {
+                    color: opfabColor
+                }
+            },
+            x: {
+                grid: {color:'rgba(100,100,100,0.2)'},
+                ticks: {
+                    color: opfabColor
+                }
+            }
+        }
+    }
+});
+
+
+var chartHNContext = document.getElementById('myChartEcartsHN').getContext('2d');
+window.myChartEcartsHN = new Chart(chartHNContext, {
+    type: 'line',
+    data: {
+        datasets: [{
+            label: 'Quality threshold 7',
+            data : {{json card.data.ecartsHN}},
+            fill : false,
+            backgroundColor: 'rgba(54, 162, 235, 0.2)',
+            borderColor: 'rgba(195, 14, 5, 0.8)',
+            tension: 0.4,
+            parsing: {
+            xAxisKey: 'hour',
+            yAxisKey: 'Seuil_P'
+            }
+        },
+        {
+            label: 'Non-standard deviations - Main Server',
+            data : {{json card.data.ecartsHN}},
+            fill : false,
+            backgroundColor: 'rgba(54, 162, 235, 0.2)',
+            borderColor: 'rgba(54, 162, 235, 1)',
+            tension: 0.1,
+            parsing: {
+            xAxisKey: 'hour',
+            yAxisKey: 'Nb_HN_P'
+            }
+        },
+        {
+            label: 'Non-standard deviations - Secondary Server',
+            data : {{json card.data.ecartsHN}},
+            fill : false,
+            backgroundColor: 'rgba(54, 162, 235, 0.2)',
+            borderColor: 'rgba(54, 162, 0, 1)',
+            tension: 0.1,
+            parsing: {
+            xAxisKey: 'hour',
+            yAxisKey: 'Nb_HN_R'
+            }
+        }]
+    },
+    options: {
+        maintainAspectRatio: false,
+        stepped: true,
+        plugins: {
+            title: {
+                display: true,
+                text: "History of non-standard deviations "
+            }
+        },
+        scales: {
+            y: {
+                beginAtZero: true,
+                grid: {color:'rgba(100,100,100,0.2)'},
+                ticks: {
+                    color: opfabColor
+                }
+            },
+            x: {
+                grid: {color:'rgba(100,100,100,0.2)'},
+                ticks: {
+                    color: opfabColor
+                }
+            }
+        }
+    }
+});
+
+
+
+</script>
