@@ -80,4 +80,11 @@ Feature: uploadRealTimeScreens
   Scenario: Get realtime screens configuration without authentication
     Given url opfabUrl + '/businessconfig/realtimescreens'
     When method GET
-    Then status 401
+    Then status 200
+    And assert response.realTimeScreens.length == 1
+    Then match response.realTimeScreens[0].screenName == 'All Control Centers'
+    Then assert response.realTimeScreens[0].screenColumns.length == 2
+    Then assert response.realTimeScreens[0].screenColumns[0].entitiesGroups.length == 1
+    Then match response.realTimeScreens[0].screenColumns[0].entitiesGroups[0].name == 'Central Supervision Centers'
+    Then assert response.realTimeScreens[0].screenColumns[0].entitiesGroups[0].entities.length == 1
+    Then assert response.realTimeScreens[0].screenColumns[0].entitiesGroups[0].groups.length == 1

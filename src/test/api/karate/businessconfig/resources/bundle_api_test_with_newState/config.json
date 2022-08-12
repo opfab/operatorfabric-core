@@ -1,0 +1,59 @@
+{
+	"id":"api_test",
+	"version":"1",
+	"uiVisibility": {
+		"monitoring": true,
+		"logging": true,
+		"calendar": true
+	},
+	"states": {
+		"messageState" : {
+			"templateName" : "template",
+			"description": "Message",
+			"styles" : [ "style" ]
+		},
+		"questionState": {
+		  "name": "question.title",
+		  "description": "Question",
+		  "color": "#8bcdcd",
+		  "userCard" : {
+					"template" : "usercard_question",
+					"severityVisible" : false,
+					"startDateVisible" : true,
+					"endDateVisible" : true,
+					"lttdVisible" : true
+				},
+		  "response": {
+			"state": "questionState",
+			"emittingEntityAllowedToRespond": true
+		  },
+		  "templateName": "question",
+		  "styles": [],
+		  "acknowledgmentAllowed": "Never"
+		},  
+		"incidentInProgressState": {
+		  "name": "incidentInProgress.name",
+		  "description": "Incident",
+		  "userCard" : {
+					"template" : "usercard_incidentInProgress",
+					"severityVisible" : true,
+					"startDateVisible" : false,
+					"endDateVisible" : false,
+					"lttdVisible" : false,
+					"recipientVisible": false
+				},
+		  "color": "#FAF0AF",
+		  "response": {
+			"state": "incidentInProgressState"
+		  },
+		  "templateName": "incidentInProgress",
+		  "styles": [],
+		  "acknowledgmentAllowed": "Always"
+		},
+		"newState" : {
+			"templateName" : "template",
+			"description": "new state to test update of the cache when posting bundle",
+			"styles" : [ "style" ]
+		}
+	}
+}

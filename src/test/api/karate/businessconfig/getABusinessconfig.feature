@@ -50,4 +50,4 @@ Feature: Bundle
     # Check bundle
     Given url opfabUrl + '/businessconfig/processes/api_test'
     When method GET
-    Then status 401
+    Then status 200

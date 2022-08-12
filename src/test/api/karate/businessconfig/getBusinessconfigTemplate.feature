@@ -25,7 +25,8 @@ And match response contains '{{card.data.message}}'
     # Check template
     Given url opfabUrl + '/businessconfig/processes/'+ process +'/templates/' + templateName + '?version='+ templateVersion
     When method GET
-    Then status 401
+    Then status 200
+    And match response contains '{{card.data.message}}'
 
   Scenario: Check wrong version template
 

@@ -51,4 +51,13 @@ Feature: getProcessGroups
   Scenario: List existing process groups without authentication
     Given url opfabUrl + '/businessconfig/processgroups'
     When method GET
-    Then status 401
+    Then status 200
+    And assert response.groups.length == 2
+    Then match response.groups[0].id == 'processgroupKarate1'
+    Then match response.groups[0].name == 'Process Group Karate 1'
+    Then match response.groups[0].processes[0] == 'id_process1'
+    Then match response.groups[0].processes[1] == 'id_process2'
+    Then match response.groups[1].id == 'processgroupKarate2'
+    Then match response.groups[1].name == 'Process Group Karate 2'
+    Then match response.groups[1].processes[0] == 'id_process3'
+    Then match response.groups[1].processes[1] == 'id_process4'

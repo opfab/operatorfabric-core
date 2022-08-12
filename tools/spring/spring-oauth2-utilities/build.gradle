@@ -10,6 +10,7 @@ dependencies{
     implementation misc.feignOkhttp
     implementation spring.webflux
     implementation project(":client:users-client-data")
+    implementation project(":client:businessconfig-client-data")
     implementation project(":tools:generic:utilities")
     testImplementation project(':tools:spring:spring-test-utilities')
 }

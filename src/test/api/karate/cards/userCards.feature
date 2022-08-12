@@ -70,14 +70,14 @@ Feature: UserCards tests
 """
 {
   "id" : "perimeter",
-  "process" : "initial",
+  "process" : "api_test",
   "stateRights" : [
       {
-        "state" : "state2",
+        "state" : "messageState",
         "right" : "Receive"
       },
       {
-        "state" : "final",
+        "state" : "incidentInProgressState",
         "right" : "Receive"
       }
     ]
@@ -194,10 +194,10 @@ Feature: UserCards tests
 {
 	"publisher" : "operator1_fr",
 	"processVersion" : "1",
-	"process"  :"initial",
+	"process"  :"api_test",
 	"processInstanceId" : "initialCardProcess",
-	"state": "state2",
-  "groupRecipients": ["Dispatcher"],
+	"state": "messageState",
+    "groupRecipients": ["Dispatcher"],
 	"externalRecipients" : ["api_test_externalRecipient1"],
 	"severity" : "INFORMATION",
 	"startDate" : 1553186770681,
@@ -217,7 +217,7 @@ Feature: UserCards tests
 
 
 #get card with user operator1_fr
-    Given url opfabUrl + 'cards/cards/initial.initialCardProcess'
+    Given url opfabUrl + 'cards/cards/api_test.initialCardProcess'
     And header Authorization = 'Bearer ' + authTokenAsTSO
     When method get
     Then status 200
@@ -338,9 +338,9 @@ Feature: UserCards tests
     Then status 201
 
 
-  Scenario: We update the parent card (which id is : initial.initialCardProcess, with keepChildCards=true), then we check that child card was not deleted
+  Scenario: We update the parent card (which id is : api_test.initialCardProcess, with keepChildCards=true), then we check that child card was not deleted
     #get card with user operator1_fr
-    Given url opfabUrl + 'cards/cards/initial.initialCardProcess'
+    Given url opfabUrl + 'cards/cards/api_test.initialCardProcess'
     And header Authorization = 'Bearer ' + authTokenAsTSO
     When method get
     Then status 200
@@ -354,9 +354,9 @@ Feature: UserCards tests
 {
 	"publisher" : "operator1_fr",
 	"processVersion" : "1",
-	"process"  :"initial",
+	"process"  :"api_test",
 	"processInstanceId" : "initialCardProcess",
-	"state": "final",
+	"state": "incidentInProgressState",
 	"groupRecipients": ["Dispatcher"],
 	"externalRecipients" : ["api_test_externalRecipient1"],
 	"severity" : "INFORMATION",
@@ -369,7 +369,7 @@ Feature: UserCards tests
 
 """
 
-# Push card (we update the parent card, which id is : initial.initialCardProcess)
+# Push card (we update the parent card, which id is : api_test.initialCardProcess )
     Given url opfabPublishCardUrl + 'cards'
     And header Authorization = 'Bearer ' + authTokenAsTSO
     And request card
@@ -385,22 +385,22 @@ Feature: UserCards tests
     And match response.card.initialParentCardUid == cardUid
 
 # we check that the parent card still has its child card
-    Given url opfabUrl + 'cards/cards/initial.initialCardProcess'
+    Given url opfabUrl + 'cards/cards/api_test.initialCardProcess'
     And header Authorization = 'Bearer ' + authTokenAsTSO
     When method get
     Then status 200
     And assert response.childCards.length == 1
     And match response.childCards[0].id == "process_2.process_o"
 
-  Scenario: We update the parent card (which id is : initial.initialCardProcess, without parameter keepChildCards), then we check that child card was deleted
+  Scenario: We update the parent card (which id is : api_test.initialCardProcess, without parameter keepChildCards), then we check that child card was deleted
     * def card =
 """
 {
 	"publisher" : "operator1_fr",
 	"processVersion" : "1",
-	"process"  :"initial",
+	"process"  :"api_test",
 	"processInstanceId" : "initialCardProcess",
-	"state": "final",
+	"state": "incidentInProgressState",
 	"groupRecipients": ["Dispatcher"],
 	"externalRecipients" : ["api_test_externalRecipient1"],
 	"severity" : "INFORMATION",
@@ -412,7 +412,7 @@ Feature: UserCards tests
 
 """
 
-# Push card (we update the parent card, which id is : initial.initialCardProcess)
+# Push card (we update the parent card, which id is : api_test.initialCardProcess )
     Given url opfabPublishCardUrl + 'cards'
     And header Authorization = 'Bearer ' + authTokenAsTSO
     And request card
@@ -426,7 +426,7 @@ Feature: UserCards tests
     Then status 404
 
 # we check that the parent card has no child card anymore
-    Given url opfabUrl + 'cards/cards/initial.initialCardProcess'
+    Given url opfabUrl + 'cards/cards/api_test.initialCardProcess'
     And header Authorization = 'Bearer ' + authTokenAsTSO
     When method get
     Then status 200
@@ -436,7 +436,7 @@ Feature: UserCards tests
 
   Scenario: We push 2 child cards, then we delete the parent card, then we check that the 2 child cards are deleted
     #get the id of the updated parent card (with user tso1-operator)
-    Given url opfabUrl + 'cards/cards/initial.initialCardProcess'
+    Given url opfabUrl + 'cards/cards/api_test.initialCardProcess'
     And header Authorization = 'Bearer ' + authTokenAsTSO
     When method get
     Then status 200
@@ -518,7 +518,7 @@ Feature: UserCards tests
 
 
 # delete parent card
-    Given url opfabPublishCardUrl + 'cards/initial.initialCardProcess'
+    Given url opfabPublishCardUrl + 'cards/api_test.initialCardProcess'
     And header Authorization = 'Bearer ' + authTokenAsTSO
     When method delete
     Then status 200
@@ -551,6 +551,25 @@ Feature: UserCards tests
 
 #delete perimeterForDefaultProcess created previously
     Given url opfabUrl + 'users/perimeters/perimeterForDefaultProcess'
+    And header Authorization = 'Bearer ' + authToken
+    When method delete
+    Then status 200
+
+#delete perimeter_1 created previously
+    Given url opfabUrl + 'users/perimeters/' + perimeter_1.id
+    And header Authorization = 'Bearer ' + authToken
+    When method delete
+    Then status 200
+
+#delete perimeter_2 created previously
+    Given url opfabUrl + 'users/perimeters/' + perimeter_2.id
+    And header Authorization = 'Bearer ' + authToken
+    When method delete
+    Then status 200
+
+# delete groupKarate
+  Scenario: Delete groupKarate created previously
+    Given url opfabUrl + 'users/groups/' + groupKarate.id
     And header Authorization = 'Bearer ' + authToken
     When method delete
     Then status 200

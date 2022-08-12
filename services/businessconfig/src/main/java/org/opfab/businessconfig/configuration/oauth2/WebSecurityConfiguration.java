@@ -38,8 +38,6 @@ public class WebSecurityConfiguration {
     public static final String LOGGERS_PATH ="/actuator/loggers/**";
     public static final String ADMIN_ROLE = "ADMIN";
     public static final String THIRDS_PATH = "/businessconfig/**";
-    private static final String STYLE_URL_PATTERN = "/businessconfig/processes/*/css/*";
-    private static final String I18N_URL_PATTERN = "/businessconfig/processes/*/i18n*";
 
     public static final String AUTH_AND_IP_ALLOWED = "isAuthenticated() and @webSecurityChecks.checkUserIpAddress(authentication)";
     public static final String ADMIN_AND_IP_ALLOWED = "hasRole('ADMIN') and @webSecurityChecks.checkUserIpAddress(authentication)";
@@ -60,12 +58,15 @@ public class WebSecurityConfiguration {
         return http.build();
     }
 
+    /* We remove authentication for GET on THIRDS_PATH because :
+    1) style is called via <style>, so no token is provided (Static resource)
+    2) it is called by CardPublication when checkAuthenticationForCardSending is set to false
+    3) it is called for publishing card, for checking if process/state exists in the bundles */
     public static void configureCommon(final HttpSecurity http) throws Exception {
         http
                 .authorizeRequests()
                 .antMatchers(HttpMethod.GET,PROMETHEUS_PATH).permitAll()
-                .antMatchers(STYLE_URL_PATTERN).permitAll() // Style is called via <style>, so no token is provided (Static resource)
-                .antMatchers(I18N_URL_PATTERN).permitAll() // To let it be called by CardPublication when checkAuthenticationForCardSending is set to false
+                .antMatchers(HttpMethod.GET, THIRDS_PATH).permitAll()
                 .antMatchers(HttpMethod.POST, THIRDS_PATH).access(ADMIN_AND_IP_ALLOWED)
                 .antMatchers(HttpMethod.PUT, THIRDS_PATH).access(ADMIN_AND_IP_ALLOWED)
                 .antMatchers(HttpMethod.DELETE, THIRDS_PATH).access(ADMIN_AND_IP_ALLOWED)

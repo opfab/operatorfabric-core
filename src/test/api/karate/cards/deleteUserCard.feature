@@ -169,9 +169,9 @@ Feature: deleteUserCards tests
 {
 	"publisher" : "operator1_fr",
 	"processVersion" : "1",
-	"process"  :"processDeleteUserCard",
+	"process"  :"api_test",
 	"processInstanceId" : "processDeleteUserCardForbidden1",
-	"state": "state1",
+	"state": "messageState",
 	"severity" : "INFORMATION",
 	"startDate" : 1553186770681,
 	"summary" : {"key" : "defaultProcess.summary"},
@@ -260,7 +260,7 @@ Feature: deleteUserCards tests
 
 
   Scenario: delete card not published by an entity, expected response 403
-    Given url opfabPublishCardUrl + 'cards/userCard/processDeleteUserCard.processDeleteUserCardForbidden1'
+    Given url opfabPublishCardUrl + 'cards/userCard/api_test.processDeleteUserCardForbidden1'
     And header Authorization = 'Bearer ' + authTokenAsTSO
     When method delete
     Then status 403
@@ -302,7 +302,7 @@ Feature: deleteUserCards tests
 
 
   Scenario: delete cardForDeleteForbidden1
-    Given url opfabPublishCardUrl + 'cards/processDeleteUserCard.processDeleteUserCardForbidden1'
+    Given url opfabPublishCardUrl + 'cards/api_test.processDeleteUserCardForbidden1'
     And header Authorization = 'Bearer ' + authToken
     When method delete
     Then status 200
