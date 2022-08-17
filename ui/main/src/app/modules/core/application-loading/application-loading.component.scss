@@ -22,27 +22,3 @@
 }
 
 
- .opfab-loading {
-  position: fixed;
-  z-index: 5000; /* Sit on top */
-  left: 0;
-  top: 0;
-  padding-top: 20%;
-  width: 100%;
-  height: 100%;
-  color: white;
-}
-
-.opfab-loading-spinner {
-  font-size: 68px;
-  padding-top: 20px;
-  width: 150px;
-  height: 150px;
-  margin: auto;
-  border: solid 1px var(--opfab-bgcolor);
-  border-radius: 8px;
-  text-align: center;
-  background-color: var(--opfab-bgcolor);
-  color: #aaaaaa;
-}
-
