@@ -28,7 +28,7 @@ export class FeedCommands extends OpfabCommands {
     }
 
     checkSelectedCardHasTitle= function (title) {
-        cy.get('.light-card-detail-selected .card-title').should('have.text',title + " ");
+        cy.get('.light-card-detail-selected .card-title').should('have.text',title.toUpperCase());
     }
 
     checkSelectedCardHasSummary= function (summary) {
@@ -36,7 +36,7 @@ export class FeedCommands extends OpfabCommands {
     }
 
     checkLigthCardAtIndexHasTitle= function (index, title) {
-        cy.get('.card-title').eq(index).should('have.text',title + " ")
+        cy.get('.card-title').eq(index).should('have.text',title.toUpperCase())
     }
 
     deleteCurrentCard= function () {
@@ -62,14 +62,14 @@ export class FeedCommands extends OpfabCommands {
         cy.get('#opfab-feed-filter-publication-date').check();
         cy.get('#opfab-feed-filter-btn-sort').click();
     }
-    
+
     sortBySeverity= function () {
         cy.get('#opfab-feed-filter-btn-sort').click();
         cy.get('#opfab-sort-form').should('exist');
         cy.get('#opfab-feed-filter-severity').check();
         cy.get('#opfab-feed-filter-btn-sort').click();
     }
-        
+
     sortByStartDate= function () {
         cy.get('#opfab-feed-filter-btn-sort').click();
         cy.get('#opfab-sort-form').should('exist');
@@ -77,7 +77,7 @@ export class FeedCommands extends OpfabCommands {
         cy.get('#opfab-feed-filter-btn-sort').click();
     }
 
-        
+
     sortByEndDate= function () {
         cy.get('#opfab-feed-filter-btn-sort').click();
         cy.get('#opfab-sort-form').should('exist');

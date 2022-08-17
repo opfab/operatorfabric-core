@@ -429,7 +429,7 @@ describe('Archives screen tests', function () {
     }
 
     function openAndCheckArchiveCardContent(cellContent, cardText) {
-        cy.get('#opfab-archives-cards-list').find('td').contains(cellContent).should('exist').click();
+        cy.get('#opfab-archives-cards-list').find('td').contains(cellContent.toUpperCase()).should('exist').click();
         cy.get('#opfab-div-card-template-processed').contains(cardText).should('exist');
         cy.get('#opfab-archives-card-detail-close').click({force: true});
     }

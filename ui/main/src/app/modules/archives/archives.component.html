@@ -51,7 +51,7 @@
           <td *ngIf="isCollapsibleUpdatesActivated && ! updates.cardHistories.length"></td>
           <td style="padding-left: 5px"> {{displayTime(updates.mostRecent.publishDate)}} </td>
           <td> {{displayTime(updates.mostRecent.startDate)}} - {{displayTime(updates.mostRecent.endDate)}} </td>
-          <td>{{updates.mostRecent.titleTranslated}}</td>
+          <td>{{updates.mostRecent.titleTranslated | opfabTitleCase}}</td>
           <td>{{updates.mostRecent.summaryTranslated}}</td>
           <td *ngIf="filtersTemplate.isProcessGroupFilterVisible()" translate>{{ processesService.findProcessGroupLabelForProcess(updates.mostRecent.process) }}</td>
         </tr>
@@ -64,7 +64,7 @@
             <td></td>
             <td style="padding-left: 30px"> {{displayTime(historyCard.publishDate)}} </td>
             <td style="padding-left: 30px"> {{displayTime(historyCard.startDate)}} - {{displayTime(historyCard.endDate)}} </td>
-            <td style="padding-left: 30px">{{historyCard.titleTranslated}}</td>
+            <td style="padding-left: 30px">{{historyCard.titleTranslated | opfabTitleCase}}</td>
             <td style="padding-left: 30px">{{ historyCard.summaryTranslated}}</td>
             <td style="padding-left: 30px" *ngIf="filtersTemplate.isProcessGroupFilterVisible()" translate>{{ processesService.findProcessGroupLabelForProcess(historyCard.process) }}</td>
           </tr>
@@ -108,7 +108,7 @@
 
 <ng-template #cardDetail let-modal>
   <div class="modal-header">
-    <div class="text-uppercase">{{selectedCard.titleTranslated}}</div>
+    <div id="opfab-archives-card-title">{{selectedCard.titleTranslated | opfabTitleCase}}</div>
     <div id="opfab-archives-card-detail-close" class="opfab-close-modal-icon" aria-label="Close"
       (click)="modal.dismiss('Cross click')">
       <span aria-hidden="true">&times;</span>
