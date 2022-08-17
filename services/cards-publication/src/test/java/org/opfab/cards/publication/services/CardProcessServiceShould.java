@@ -12,7 +12,6 @@ package org.opfab.cards.publication.services;
 
 import lombok.extern.slf4j.Slf4j;
 import org.assertj.core.api.Assertions;
-import org.assertj.core.api.OptionalAssert;
 import org.jeasy.random.EasyRandom;
 import org.jeasy.random.EasyRandomParameters;
 import org.jetbrains.annotations.NotNull;
@@ -86,8 +85,6 @@ class CardProcessServiceShould {
 
     @Autowired
     private CardProcessingService cardProcessingService;
-    @Autowired
-    private CardPermissionControlService cardPermissionControlService;
 
     @Autowired
     private CardRepositoryForTest cardRepository;
@@ -961,120 +958,6 @@ class CardProcessServiceShould {
                 .build();
 
         cardProcessingService.validate(card);
-    }
-
-    @Test
-    void isUserAllowedToDeleteThisCard() {
-        CardPublicationData cardExternal1 = CardPublicationData.builder()   //false because publisherType not ENTITY
-                .publisher("PUBLISHER_1")
-                .processVersion("O")
-                .processInstanceId("PROCESS_1")
-                .severity(SeverityEnum.ALARM)
-                .title(I18nPublicationData.builder().key("title").build())
-                .summary(I18nPublicationData.builder().key("summary").build())
-                .startDate(Instant.now())
-                .timeSpan(TimeSpanPublicationData.builder()
-                        .start(Instant.ofEpochMilli(123l)).build())
-                .process("process1")
-                .state("state1")
-                .build();
-
-        CardPublicationData cardExternal2 = CardPublicationData.builder()   //false because publisherType not ENTITY
-                .publisher("entity2")
-                .processVersion("O")
-                .processInstanceId("PROCESS_1")
-                .severity(SeverityEnum.ALARM)
-                .title(I18nPublicationData.builder().key("title").build())
-                .summary(I18nPublicationData.builder().key("summary").build())
-                .startDate(Instant.now())
-                .timeSpan(TimeSpanPublicationData.builder()
-                        .start(Instant.ofEpochMilli(123l)).build())
-                .process("process1")
-                .state("state1")
-                .build();
-
-        CardPublicationData cardFromAnEntity1 = CardPublicationData.builder() // false because publisher not an entity of the user
-                .publisher("entity3")
-                .publisherType(PublisherTypeEnum.ENTITY)
-                .processVersion("O")
-                .processInstanceId("PROCESS_1")
-                .severity(SeverityEnum.ALARM)
-                .title(I18nPublicationData.builder().key("title").build())
-                .summary(I18nPublicationData.builder().key("summary").build())
-                .startDate(Instant.now())
-                .timeSpan(TimeSpanPublicationData.builder()
-                        .start(Instant.ofEpochMilli(123l)).build())
-                .process("process1")
-                .state("state1")
-                .build();
-
-        CardPublicationData cardFromAnEntity2 = CardPublicationData.builder() // false because not process/state in the perimeter of the user
-                .publisher("entity2")
-                .publisherType(PublisherTypeEnum.ENTITY)
-                .processVersion("O")
-                .processInstanceId("PROCESS_1")
-                .severity(SeverityEnum.ALARM)
-                .title(I18nPublicationData.builder().key("title").build())
-                .summary(I18nPublicationData.builder().key("summary").build())
-                .startDate(Instant.now())
-                .timeSpan(TimeSpanPublicationData.builder()
-                        .start(Instant.ofEpochMilli(123l)).build())
-                .process("PROCESS_NOT_IN_PERIMETER")
-                .state("STATE_NOT_IN_PERIMETER")
-                .build();
-
-        CardPublicationData cardFromAnEntity3 = CardPublicationData.builder() // false because not write access for the user
-                .publisher("entity2")
-                .publisherType(PublisherTypeEnum.ENTITY)
-                .processVersion("O")
-                .processInstanceId("PROCESS_1")
-                .severity(SeverityEnum.ALARM)
-                .title(I18nPublicationData.builder().key("title").build())
-                .summary(I18nPublicationData.builder().key("summary").build())
-                .startDate(Instant.now())
-                .timeSpan(TimeSpanPublicationData.builder()
-                        .start(Instant.ofEpochMilli(123l)).build())
-                .process("PROCESS_CARD_USER")
-                .state("STATE2")
-                .build();
-
-        CardPublicationData cardFromAnEntity4 = CardPublicationData.builder() // true
-                .publisher("entity2")
-                .publisherType(PublisherTypeEnum.ENTITY)
-                .processVersion("O")
-                .processInstanceId("PROCESS_1")
-                .severity(SeverityEnum.ALARM)
-                .title(I18nPublicationData.builder().key("title").build())
-                .summary(I18nPublicationData.builder().key("summary").build())
-                .startDate(Instant.now())
-                .timeSpan(TimeSpanPublicationData.builder()
-                        .start(Instant.ofEpochMilli(123l)).build())
-                .process("PROCESS_CARD_USER")
-                .state("STATE1")
-                .build();
-
-        CardPublicationData cardFromAnEntity5 = CardPublicationData.builder() // true
-                .publisher("entity2")
-                .publisherType(PublisherTypeEnum.ENTITY)
-                .processVersion("O")
-                .processInstanceId("PROCESS_1")
-                .severity(SeverityEnum.ALARM)
-                .title(I18nPublicationData.builder().key("title").build())
-                .summary(I18nPublicationData.builder().key("summary").build())
-                .startDate(Instant.now())
-                .timeSpan(TimeSpanPublicationData.builder()
-                        .start(Instant.ofEpochMilli(123l)).build())
-                .process("PROCESS_CARD_USER")
-                .state("STATE3")
-                .build();
-
-        assertThat(cardPermissionControlService.isUserAllowedToDeleteThisCard(cardExternal1, currentUserWithPerimeters)).isFalse();
-        assertThat(cardPermissionControlService.isUserAllowedToDeleteThisCard(cardExternal2, currentUserWithPerimeters)).isFalse();
-        assertThat(cardPermissionControlService.isUserAllowedToDeleteThisCard(cardFromAnEntity1, currentUserWithPerimeters)).isFalse();
-        assertThat(cardPermissionControlService.isUserAllowedToDeleteThisCard(cardFromAnEntity2, currentUserWithPerimeters)).isFalse();
-        assertThat(cardPermissionControlService.isUserAllowedToDeleteThisCard(cardFromAnEntity3, currentUserWithPerimeters)).isFalse();
-        assertThat(cardPermissionControlService.isUserAllowedToDeleteThisCard(cardFromAnEntity4, currentUserWithPerimeters)).isTrue();
-        assertThat(cardPermissionControlService.isUserAllowedToDeleteThisCard(cardFromAnEntity5, currentUserWithPerimeters)).isTrue();
     }
 
     @Test
