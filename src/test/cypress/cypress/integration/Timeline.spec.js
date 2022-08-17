@@ -898,6 +898,6 @@ describe('Time line moves', function () {
     }
 
     function checkDisplayedCardTitle(title) {
-        cy.get("#opfab-card-title").should("have.text", title);
+        cy.get("#opfab-card-title").should("have.text", title.toUpperCase());
     }
 })

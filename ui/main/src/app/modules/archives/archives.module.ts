@@ -18,7 +18,8 @@ import {DatetimeFilterModule} from '../share/datetime-filter/datetime-filter.mod
 import {CardDetailModule} from 'app/modules/share/card-detail/card-detail.module';
 import {ArchivesEntryPointComponent} from './archives-entry-point.component';
 import {ArchivesLoggingFiltersModule} from '../share/archives-logging-filters/archives-logging-filters.module';
-import { SpinnerModule } from '../share/spinner/spinner.module';
+import {SpinnerModule} from '../share/spinner/spinner.module';
+import {PipesModule} from '../share/pipes/pipes.module';
 
 @NgModule({
     imports: [
@@ -31,7 +32,8 @@ import { SpinnerModule } from '../share/spinner/spinner.module';
         DatetimeFilterModule,
         CardDetailModule,
         ArchivesLoggingFiltersModule,
-        SpinnerModule
+        SpinnerModule,
+        PipesModule
     ],
     declarations: [ArchivesComponent, ArchivesEntryPointComponent]
 })

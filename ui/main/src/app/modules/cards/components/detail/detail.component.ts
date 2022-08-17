@@ -48,7 +48,7 @@ import {Utilities} from '../../../../common/utilities';
 import {CardDetailsComponent} from '../card-details/card-details.component';
 import {DateTimeFormatterService} from '@ofServices/date-time-formatter.service';
 import {MultiSelectConfig} from '@ofModel/multiselect.model';
-import {TranslateService} from "@ngx-translate/core";
+import {TranslateService} from '@ngx-translate/core';
 
 declare const templateGateway: any;
 

@@ -225,12 +225,12 @@ describe('Acknowledgment tests', function () {
         cy.get('of-light-card').should('have.length', 6);
 
         // We check a card not published by an entity does not display any entity ack
-        cy.get('of-light-card').find('.card-title').contains("Electricity consumption forecast ").click();
-        cy.get('#opfab-card-title').should("have.text", "Electricity consumption forecast");
+        cy.get('of-light-card').find('.card-title').contains("Electricity consumption forecast".toUpperCase()).click();
+        cy.get('#opfab-card-title').should("have.text", "Electricity consumption forecast".toUpperCase());
         cy.get('#opfab-card-acknowledged-footer').should('not.exist');
 
         // We check a card published by an entity of the user but with no entityRecipients does not display any entity ack
-        cy.get('of-light-card').find('.card-title').contains("Message ").click();
+        cy.get('of-light-card').find('.card-title').contains("Message".toUpperCase()).click();
         cy.get('#opfab-selected-card-summary').should('have.text', "Message received : France-England\'s interconnection is 100% operational / Result of the maintenance is <OK>");
         cy.get('#opfab-card-acknowledged-footer').should('not.exist');
 

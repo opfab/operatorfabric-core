@@ -16,9 +16,10 @@ import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
 import {CountDownModule} from '../share/countdown/countdown.module';
 import {UserCardModule} from '../usercard/usercard.module';
 import {ReactiveFormsModule} from '@angular/forms';
-import { MultiSelectModule } from '../share/multi-select/multi-select.module';
-import { SpinnerModule } from '../share/spinner/spinner.module';
+import {MultiSelectModule} from '../share/multi-select/multi-select.module';
+import {SpinnerModule} from '../share/spinner/spinner.module';
 import {TemplateRenderingModule} from '../share/template-rendering/template-rendering.module';
+import {PipesModule} from '../share/pipes/pipes.module';
 
 @NgModule({
     declarations: [CardDetailsComponent, DetailComponent],
@@ -31,7 +32,8 @@ import {TemplateRenderingModule} from '../share/template-rendering/template-rend
         ReactiveFormsModule,
         MultiSelectModule,
         SpinnerModule,
-        TemplateRenderingModule
+        TemplateRenderingModule,
+        PipesModule
     ],
     exports: [CardDetailsComponent, DetailComponent]
 })

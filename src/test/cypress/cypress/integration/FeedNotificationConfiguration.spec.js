@@ -20,9 +20,12 @@ describe ('Feed notification configuration tests',function () {
 
     const totalCards = 6;
     const cardsToTest =[
-        /Message\s*$/,                             // ignore any trailing whitespace
-        /Electricity consumption forecast\s*$/     // ignore any trailing whitespace
-    ];
+        'Message',
+        'Electricity consumption forecast'
+    ]
+
+    const cardsToTestRegex = cardsToTest.map (x =>  new RegExp(x+'\\s*$'));  // Convert to regex, ignore any trailing whitespace
+    const cardsToTestString = cardsToTest.map (x => x.toUpperCase());
 
     before('Set up configuration', function () {
         script.loadTestConf();
@@ -325,13 +328,13 @@ describe ('Feed notification configuration tests',function () {
         cy.get('of-light-card').should('have.length',totalCards);
 
         // All cards should exist in the card feed
-        cardsToTest.forEach((c) =>{
+        cardsToTestString.forEach((c) =>{
             cy.get('#opfab-card-list').contains(c).should('exist');
         })
 
         // Cards should exist on the monitoring page
         cy.get('#opfab-navbarContent #opfab-navbar-menu-monitoring').click();
-        cardsToTest.forEach((c) => {
+        cardsToTestRegex.forEach((c) => {
             cy.get('of-monitoring-table').contains(c).should('exist');
         })
 
@@ -339,7 +342,7 @@ describe ('Feed notification configuration tests',function () {
         cy.get('#opfab-navbar-drop-user-menu').click(); // Click top right dropdown menu
         cy.get('#opfab-navbar-right-menu-feedconfiguration').click(); // Click notification reception
 
-        cardsToTest.forEach((c) => {
+        cardsToTestRegex.forEach((c) => {
             cy.get('.opfab-feedconfiguration-process').contains(c).click({force:true}); // Unselect card
         })
 
@@ -354,22 +357,22 @@ describe ('Feed notification configuration tests',function () {
 
 
         // All cards minus the cards to check should be visible
-        cy.get('of-light-card').should('have.length',totalCards - cardsToTest.length);       
+        cy.get('of-light-card').should('have.length',totalCards - cardsToTestRegex.length);
 
 
         // Cards should not be visible anymore in the card feed
-        cardsToTest.forEach((c) => {
+        cardsToTestRegex.forEach((c) => {
             cy.get('#opfab-card-list').contains(c).should('not.exist');
         })
 
         // Cards should not exist on the monitoring page
         cy.get('#opfab-navbarContent #opfab-navbar-menu-monitoring').click();  // Monitoring results table
-        cardsToTest.forEach((c) => {
+        cardsToTestRegex.forEach((c) => {
             cy.get('of-monitoring-table').contains(c).should('not.exist'); // wait for dialog to go away
         })
 
         // Pagination should display ' Results number  : <5 - cardsToTest> '
-        cy.get('.opfab-pagination').should('contain.text', ' Results number  : '+parseInt(5 - cardsToTest.length));
+        cy.get('.opfab-pagination').should('contain.text', ' Results number  : '+parseInt(5 - cardsToTestRegex.length));
     });
 
     it('When sending new cards, check only monitored cards are shown', function () {
@@ -381,18 +384,18 @@ describe ('Feed notification configuration tests',function () {
         cy.get('#opfab-navbar-menu-feed').click(); // Open feed
 
         // Cards should not be visible anymore in the card feed
-        cardsToTest.forEach((c) => {
+        cardsToTestRegex.forEach((c) => {
             cy.get('of-light-card').contains(c).should('not.exist');
         })
 
         // All cards minus the cards to check should be visible
-        cy.get('of-light-card').should('have.length', totalCards - cardsToTest.length);
+        cy.get('of-light-card').should('have.length', totalCards - cardsToTestRegex.length);
 
         // Cards should not exist on the monitoring page
         cy.get('#opfab-navbarContent #opfab-navbar-menu-monitoring').click();
 
         // Monitoring results table
-        cardsToTest.forEach((c) => {
+        cardsToTestRegex.forEach((c) => {
             cy.get('of-monitoring-table').contains(c).should('not.exist');
         })
     });
@@ -415,7 +418,7 @@ describe ('Feed notification configuration tests',function () {
         cy.get('#opfab-navbar-menu-feed').click(); // Open feed
 
         // Cards should be visible in the card feed
-        cardsToTest.forEach((c) => {
+        cardsToTestString.forEach((c) => {
             cy.get('#opfab-card-list').contains(c).should('exist');
         })
 
@@ -426,7 +429,7 @@ describe ('Feed notification configuration tests',function () {
         cy.get('#opfab-navbarContent #opfab-navbar-menu-monitoring').click();
 
         // Monitoring results table
-        cardsToTest.forEach((c) => {
+        cardsToTestRegex.forEach((c) => {
             cy.get('of-monitoring-table').contains(c).should('exist');
         })
 
@@ -444,13 +447,13 @@ describe ('Feed notification configuration tests',function () {
         cy.get('of-light-card').should('have.length',totalCards);
 
         // Cards should exist in the card feed
-        cardsToTest.forEach((c) => {
+        cardsToTestString.forEach((c) => {
             cy.get('#opfab-card-list').contains(c).should('exist');
         })
 
         // Cards should exist on the monitoring page
         cy.get('#opfab-navbarContent #opfab-navbar-menu-monitoring').click();
-        cardsToTest.forEach((c) => {
+        cardsToTestRegex.forEach((c) => {
             cy.get('of-monitoring-table').contains(c).should('exist');
         })
     })

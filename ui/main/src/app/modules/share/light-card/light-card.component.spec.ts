@@ -23,6 +23,7 @@ import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
 import {CountDownModule} from '../countdown/countdown.module';
 import createSpyObj = jasmine.createSpyObj;
 import {DateTimeFormatterService} from '@ofServices/date-time-formatter.service';
+import {PipesModule} from '../pipes/pipes.module';
 
 describe('LightCardComponent', () => {
     let lightCardDetailsComp: LightCardComponent;
@@ -43,6 +44,7 @@ describe('LightCardComponent', () => {
                 RouterTestingModule,
                 HttpClientTestingModule,
                 CountDownModule,
+                PipesModule,
                 TranslateModule.forRoot({
                     loader: {
                         provide: TranslateLoader,
