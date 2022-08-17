@@ -13,7 +13,10 @@
      class="card light-card-detail "
      [class.light-card-detail-selected]="open || groupedCardOpen" [class.light-card-detail-unselected]="!open && !groupedCardOpen"
      [class.light-card-detail-unread]="displayUnreadIcon && !isArchivePageType() && !lightCard.hasBeenRead"
-     (click)="select($event)">
+     (click)="select($event)"
+     (mouseenter)='highlightOnMap(true)'
+     (mouseleave)='highlightOnMap(false)'
+>
     <div class="d-flex  p-0 border-0">
         <div class="badge-border  opfab-bg-sev-{{lightCard.severity.toString()|lowercase}}">
         </div>
@@ -47,6 +50,9 @@
                               [ngbPopover]="tipTags" popoverClass="opfab-popover" container="body"
                               triggers="mouseenter:mouseleave">
                             <em style="color: #0082FF;" class="fa " [class.fa-angle-down]="open" [class.fa-angle-left]="!open || !groupedCardsVisible"></em>
+                        </span>
+                        <span *ngIf="isGeoMapEnabled && hasGeoLocation" (click)='zoomToLocation($event)'>
+                               <em style="color: #0082FF;" class="fa fa-location-crosshairs"></em>
                         </span>
                         <span *ngIf="lightCardDisplayedInMapComponent" class="p-2" >
                                 <!-- Space for the close button on the popup of the geo-map -->

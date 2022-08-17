@@ -89,6 +89,7 @@ a|card time display mode in the feed. Values :
 |feed.geomap.initialLongitude|0|no| The initial longitude of the map when no cards with geographical coordinates are present.
 |feed.geomap.initialLatitude|0|no| The initial latitude of the map when no cards with geographical coordinates are present.
 |feed.geomap.initialZoom|1|no| Initial zoom level of the map.
+|feed.geomap.zoomToLocation|14|no| Zoom level when zooming to a location of a selected card.
 |feed.geomap.maxZoom|11|no| Max zoom level, to prevent zooming in too much when only one card is shown (or multiple cards in close proximity).
 |feed.geomap.zoomDuration|500|no| Time in milliseconds it takes to zoom the map to the specific location. Set to 0 to disable the zoom animation.
 |i18n.supported.locales||no|List of supported locales (Only fr and en so far)
