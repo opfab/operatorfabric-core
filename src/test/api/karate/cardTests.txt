@@ -10,6 +10,7 @@
       cards/postCardWithNoProcess.feature         \
       cards/postCardWithNoState.feature           \
       cards/postCardWithProcessAndOrStateUnexisting.feature   \
+      cards/postCardWithI18nUnexisting.feature    \
       cards/postCardWithToNotify.feature          \
       cards/postCardFor3Users.feature             \
       cards/postCardsEntitiesToRespond.feature \
