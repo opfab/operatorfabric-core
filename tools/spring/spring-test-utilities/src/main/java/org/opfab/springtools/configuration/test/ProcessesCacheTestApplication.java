@@ -58,7 +58,7 @@ public class ProcessesCacheTestApplication {
         String stringTestProcesses4 = "{ \"id\": \"process1\"" +
                 ",\"name\": \"process1 name\"" +
                 ",\"version\": \"0\"" +
-                ",\"states\": {\"state1\": {\"name\": \"Message\"}}}";
+                ",\"states\": {\"state1\": {\"name\": \"Message\"}, \"messageState\": {\"name\": \"Message\"}}}";
 
         String stringTestProcesses5 = "{ \"id\": \"\"" +
                 ",\"name\": \"taskId name\"" +

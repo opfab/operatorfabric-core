@@ -42,13 +42,76 @@ public class I18nProcessesCacheTestApplication {
 
         String stringTestI18n = "{ \"summary\": \"Summary translated {{arg1}}\",\"title\": \"Title translated\"}";
 
-        MockClient mockClient = new MockClient();   
-        mockClient = mockClient.add(HttpMethod.GET, "/businessconfig/processes/process2/i18n?version=1",
-                200, stringTestI18n);
+        String stringTestI18nForApi_test = "{ \"summary\": \"Message received\",\"defaultProcess\": {" +
+                "\"title\": \"Message\", \"summary\": \"Message received\"}}";
+
+        String stringTestI18nForProcess1 = "{ \"summary\": \"Message received\",\"defaultProcess\": {" +
+                "\"title\": \"Message\", \"summary\": \"Message received\"}, \"title\": \"Message\"}";
+
+        String stringTestI18nForProcess2 = "{ \"summary\": \"Message received\",\"defaultProcess\": {" +
+                "\"title\": \"Message\", \"summary\": \"Message received\"}, \"title\": \"Message\"}";
+
+        String stringTestI18nForProcess3 = "{ \"summary\": \"Message received\",\"defaultProcess\": {" +
+                "\"title\": \"Message\", \"summary\": \"Message received\"}, \"title\": \"Message\"}";
+
+        String stringTestI18nForProcess4 = "{ \"summary\": \"Message received\",\"defaultProcess\": {" +
+                "\"title\": \"Message\", \"summary\": \"Message received\"}, \"title\": \"Message\"}";
+
+        String stringTestI18nForProcess5 = "{ \"summary\": \"Message received\",\"defaultProcess\": {" +
+                "\"title\": \"Message\", \"summary\": \"Message received\"}, \"title\": \"Message\"}";
+
+        String stringTestI18nForPROCESS_CARD_USER = "{ \"summary\": \"Message received\",\"defaultProcess\": {" +
+                "\"title\": \"Message\", \"summary\": \"Message received\"}, \"title\": \"Message\"}";
+
+        String stringTestI18nForTaskId = "{ \"MySummary\": \"Message received\", \"MyTitle\": \"Message\"}";
+
+
+        MockClient mockClient = new MockClient();
+
+        // api_test, version 1
+        mockClient = mockClient.add(HttpMethod.GET, "/businessconfig/processes/api_test/i18n?version=1",
+                200, stringTestI18nForApi_test);
+
+        // process1, version 0
         mockClient = mockClient.add(HttpMethod.GET, "/businessconfig/processes/process1/i18n?version=0",
                 200, stringTestI18n);
+
+        // process1, version 1
         mockClient = mockClient.add(HttpMethod.GET, "/businessconfig/processes/process1/i18n?version=1",
                 200, stringTestI18n);
+
+        // process2, version 0
+        mockClient = mockClient.add(HttpMethod.GET, "/businessconfig/processes/process2/i18n?version=0",
+                200, stringTestI18nForProcess2);
+
+        // process2, version 1
+        mockClient = mockClient.add(HttpMethod.GET, "/businessconfig/processes/process2/i18n?version=1",
+                200, stringTestI18n);
+
+        // process3, version 0
+        mockClient = mockClient.add(HttpMethod.GET, "/businessconfig/processes/process3/i18n?version=0",
+                200, stringTestI18nForProcess3);
+
+        // process4, version 0
+        mockClient = mockClient.add(HttpMethod.GET, "/businessconfig/processes/process4/i18n?version=0",
+                200, stringTestI18nForProcess4);
+
+        //process5, version 0
+        mockClient = mockClient.add(HttpMethod.GET, "/businessconfig/processes/process5/i18n?version=0",
+                200, stringTestI18nForProcess5);
+
+        // PROCESS_CARD_USER, version 0
+        mockClient = mockClient.add(HttpMethod.GET, "/businessconfig/processes/PROCESS_CARD_USER/i18n?version=0",
+                200, stringTestI18nForPROCESS_CARD_USER);
+
+        // taskId, version myVersion
+        mockClient = mockClient.add(HttpMethod.GET, "/businessconfig/processes/taskId/i18n?version=myVersion",
+                200, stringTestI18nForTaskId);
+
+        // processWithNonExistingI18nFile, version 1
+        mockClient = mockClient.add(HttpMethod.GET, "/businessconfig/processes/processWithNonExistingI18nFile/i18n?version=1",
+                404, "");
+
         return mockClient;
     }
 

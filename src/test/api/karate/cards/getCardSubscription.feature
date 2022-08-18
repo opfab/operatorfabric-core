@@ -28,7 +28,7 @@ Feature: get card Subscription
           "startDate" : startDate,
           "endDate" : endDate,
           "summary" : {"key" : "message.summary"},
-          "title" : {"key" : "question.title"},
+          "title" : {"key" : "message.title"},
           "data" : {"message":" Action Card"}
         }
         return JSON.stringify(card);

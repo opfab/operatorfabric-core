@@ -562,6 +562,12 @@ class CardProcessServiceShould {
         cards.forEach(c -> {
             c.setParentCardId(null);
             c.setInitialParentCardUid(null);
+
+            // process, processVersion, title and summary can't be random anymore because we check if i18n file exists via a mock (see issue #3178)
+            c.setProcess("process1");
+            c.setProcessVersion("0");
+            c.setTitle(I18nPublicationData.builder().key("title").build());
+            c.setSummary(I18nPublicationData.builder().key("summary").build());
         });
         return cards;
     }
@@ -585,6 +591,12 @@ class CardProcessServiceShould {
                     cardPublicationData.setState("messageState");
                     cardPublicationData.setProcessVersion("1");
                     cardPublicationData.setToNotify(true);
+
+                    // process, processVersion, title and summary can't be random anymore because we check if i18n file exists via a mock (see issue #3178)
+                    cardPublicationData.setProcess("process1");
+                    cardPublicationData.setProcessVersion("0");
+                    cardPublicationData.setTitle(I18nPublicationData.builder().key("title").build());
+                    cardPublicationData.setSummary(I18nPublicationData.builder().key("summary").build());
                 }
             }
         }
