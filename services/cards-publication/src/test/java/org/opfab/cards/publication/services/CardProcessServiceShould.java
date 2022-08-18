@@ -166,7 +166,7 @@ class CardProcessServiceShould {
     private List<CardPublicationData> generateCards() {
         ArrayList<CardPublicationData> cards = new ArrayList<>();
         cards.add(
-                CardPublicationData.builder().publisher("PUBLISHER_1").processVersion("O")
+                CardPublicationData.builder().publisher("PUBLISHER_1").processVersion("0")
                         .processInstanceId("PROCESS_1").severity(SeverityEnum.ALARM)
                         .title(I18nPublicationData.builder().key("title").build())
                         .summary(I18nPublicationData.builder().key("summary").build())
@@ -178,7 +178,7 @@ class CardProcessServiceShould {
                         .build()
                 );
         cards.add(
-                CardPublicationData.builder().publisher("PUBLISHER_2").processVersion("O")
+                CardPublicationData.builder().publisher("PUBLISHER_2").processVersion("0")
                         .processInstanceId("PROCESS_1").severity(SeverityEnum.INFORMATION)
                         .title(I18nPublicationData.builder().key("title").build())
                         .summary(I18nPublicationData.builder().key("summary").build())
@@ -187,7 +187,7 @@ class CardProcessServiceShould {
                         .state("state2")
                         .build());
         cards.add(
-                CardPublicationData.builder().publisher("PUBLISHER_2").processVersion("O")
+                CardPublicationData.builder().publisher("PUBLISHER_2").processVersion("0")
                         .processInstanceId("PROCESS_2").severity(SeverityEnum.COMPLIANT)
                         .title(I18nPublicationData.builder().key("title").build())
                         .summary(I18nPublicationData.builder().key("summary").build())
@@ -196,7 +196,7 @@ class CardProcessServiceShould {
                         .state("state3")
                         .build());
         cards.add(
-                CardPublicationData.builder().publisher("PUBLISHER_1").processVersion("O")
+                CardPublicationData.builder().publisher("PUBLISHER_1").processVersion("0")
                         .processInstanceId("PROCESS_2").severity(SeverityEnum.INFORMATION)
                         .title(I18nPublicationData.builder().key("title").build())
                         .summary(I18nPublicationData.builder().key("summary").build())
@@ -205,7 +205,7 @@ class CardProcessServiceShould {
                         .state("state4")
                         .build());
         cards.add(                
-                CardPublicationData.builder().publisher("PUBLISHER_1").processVersion("O")
+                CardPublicationData.builder().publisher("PUBLISHER_1").processVersion("0")
                         .processInstanceId("PROCESS_1").severity(SeverityEnum.INFORMATION)
                         .title(I18nPublicationData.builder().key("title").build())
                         .summary(I18nPublicationData.builder().key("summary").build())
@@ -217,12 +217,12 @@ class CardProcessServiceShould {
     }
 
     private CardPublicationData generateWrongCardData(String publisher, String process) {
-        return CardPublicationData.builder().publisher(publisher).processVersion("O").processInstanceId(process)
+        return CardPublicationData.builder().publisher(publisher).processVersion("0").processInstanceId(process)
                 .build();
     }
 
     private CardPublicationData generateOneCard(String publisher) {
-        return CardPublicationData.builder().publisher(publisher).processVersion("O")
+        return CardPublicationData.builder().publisher(publisher).processVersion("0")
         .processInstanceId("PROCESS_1").severity(SeverityEnum.ALARM)
         .title(I18nPublicationData.builder().key("title").build())
         .summary(I18nPublicationData.builder().key("summary").build())
@@ -248,7 +248,7 @@ class CardProcessServiceShould {
         ArrayList<String> externalRecipients = new ArrayList<>();
         externalRecipients.add(API_TEST_EXTERNAL_RECIPIENT_1);
 
-        CardPublicationData card = CardPublicationData.builder().publisher("newPublisherId").processVersion("O")
+        CardPublicationData card = CardPublicationData.builder().publisher("newPublisherId").processVersion("0")
                 .processInstanceId("PROCESS_CARD_USER").severity(SeverityEnum.INFORMATION)
                 .process("PROCESS_CARD_USER")
                 .state("STATE1")
@@ -276,7 +276,7 @@ class CardProcessServiceShould {
         ArrayList<String> externalRecipients = new ArrayList<>();
         externalRecipients.add(API_TEST_EXTERNAL_RECIPIENT_1);
 
-        CardPublicationData card = CardPublicationData.builder().publisher("PUBLISHER_X").processVersion("O")
+        CardPublicationData card = CardPublicationData.builder().publisher("PUBLISHER_X").processVersion("0")
                 .processInstanceId("PROCESS_CARD_USER").severity(SeverityEnum.INFORMATION)
                 .process("PROCESS_CARD_USER")
                 .state("STATE1")
@@ -312,7 +312,7 @@ class CardProcessServiceShould {
         ArrayList<String> externalRecipients = new ArrayList<>();
         externalRecipients.add(API_TEST_EXTERNAL_RECIPIENT_1);
 
-        CardPublicationData card = CardPublicationData.builder().publisher("newPublisherId").processVersion("O")
+        CardPublicationData card = CardPublicationData.builder().publisher("newPublisherId").processVersion("0")
                 .processInstanceId("PROCESS_CARD_USER").severity(SeverityEnum.INFORMATION)
                 .process("PROCESS_CARD_USER")
                 .parentCardId(cards.get(0).getId())
@@ -562,6 +562,12 @@ class CardProcessServiceShould {
         cards.forEach(c -> {
             c.setParentCardId(null);
             c.setInitialParentCardUid(null);
+
+            // process, processVersion, title and summary can't be random anymore because we check if i18n file exists via a mock (see issue #3178)
+            c.setProcess("process1");
+            c.setProcessVersion("0");
+            c.setTitle(I18nPublicationData.builder().key("title").build());
+            c.setSummary(I18nPublicationData.builder().key("summary").build());
         });
         return cards;
     }
@@ -583,6 +589,12 @@ class CardProcessServiceShould {
                     }
 
                     cardPublicationData.setToNotify(true);
+
+                    // process, processVersion, title and summary can't be random anymore because we check if i18n file exists via a mock (see issue #3178)
+                    cardPublicationData.setProcess("process1");
+                    cardPublicationData.setProcessVersion("0");
+                    cardPublicationData.setTitle(I18nPublicationData.builder().key("title").build());
+                    cardPublicationData.setSummary(I18nPublicationData.builder().key("summary").build());
                 }
             }
         }
@@ -854,7 +866,7 @@ class CardProcessServiceShould {
         Assertions.assertThatCode(() -> cardProcessingService.processCard(
                 CardPublicationData.builder()
                         .uid("uid_1")
-                        .publisher("PUBLISHER_1").processVersion("O")
+                        .publisher("PUBLISHER_1").processVersion("0")
                         .processInstanceId("PROCESS_1").severity(SeverityEnum.ALARM)
                         .title(I18nPublicationData.builder().key("title").build())
                         .summary(I18nPublicationData.builder().key("summary").build())
@@ -868,7 +880,7 @@ class CardProcessServiceShould {
         CardPublicationData childCard = CardPublicationData.builder()
                 .parentCardId("process1.PROCESS_1")
                 .initialParentCardUid("uid_1")
-                .publisher("PUBLISHER_1").processVersion("O")
+                .publisher("PUBLISHER_1").processVersion("0")
                 .processInstanceId("PROCESS_1").severity(SeverityEnum.ALARM)
                 .title(I18nPublicationData.builder().key("title").build())
                 .summary(I18nPublicationData.builder().key("summary").build())
@@ -887,7 +899,7 @@ class CardProcessServiceShould {
 
         CardPublicationData card = CardPublicationData.builder()
                 .parentCardId("id_1")
-                .publisher("PUBLISHER_1").processVersion("O")
+                .publisher("PUBLISHER_1").processVersion("0")
                 .process("PROCESS_1")
                 .processInstanceId("PROCESS_1").severity(SeverityEnum.ALARM)
                 .title(I18nPublicationData.builder().key("title").build())
@@ -909,7 +921,7 @@ class CardProcessServiceShould {
         Assertions.assertThatCode(() -> cardProcessingService.processCard(
                 CardPublicationData.builder()
                         .uid("uid_1")
-                        .publisher("PUBLISHER_1").processVersion("O")
+                        .publisher("PUBLISHER_1").processVersion("0")
                         .processInstanceId("PROCESS_1").severity(SeverityEnum.ALARM)
                         .title(I18nPublicationData.builder().key("title").build())
                         .summary(I18nPublicationData.builder().key("summary").build())
@@ -923,7 +935,7 @@ class CardProcessServiceShould {
         CardPublicationData childCard = CardPublicationData.builder()
                 .parentCardId("process1.PROCESS_1")
                 .initialParentCardUid("initialParentCardUidNotExisting")
-                .publisher("PUBLISHER_1").processVersion("O")
+                .publisher("PUBLISHER_1").processVersion("0")
                 .processInstanceId("PROCESS_1").severity(SeverityEnum.ALARM)
                 .title(I18nPublicationData.builder().key("title").build())
                 .summary(I18nPublicationData.builder().key("summary").build())
@@ -946,7 +958,7 @@ class CardProcessServiceShould {
     void validate_noParentCardId_processOk() {
 
         CardPublicationData card = CardPublicationData.builder()
-                .publisher("PUBLISHER_1").processVersion("O")
+                .publisher("PUBLISHER_1").processVersion("0")
                 .processInstanceId("PROCESS_1").severity(SeverityEnum.ALARM)
                 .title(I18nPublicationData.builder().key("title").build())
                 .summary(I18nPublicationData.builder().key("summary").build())
@@ -1122,7 +1134,7 @@ class CardProcessServiceShould {
     @Test
     void checkEntitiesAllowedToEdit() {
 
-        CardPublicationData card = CardPublicationData.builder().publisher("entity2").processVersion("O")
+        CardPublicationData card = CardPublicationData.builder().publisher("entity2").processVersion("0")
         .processInstanceId("PROCESS_CARD_USER").severity(SeverityEnum.INFORMATION)
         .process("PROCESS_CARD_USER")
         .parentCardId(null)
@@ -1161,7 +1173,7 @@ class CardProcessServiceShould {
 
     @Test
     void checkEditChangingPublisher() {
-        CardPublicationData card = CardPublicationData.builder().publisher("entity2").processVersion("O")
+        CardPublicationData card = CardPublicationData.builder().publisher("entity2").processVersion("0")
         .processInstanceId("PROCESS_CARD_USER_2").severity(SeverityEnum.INFORMATION)
         .process("PROCESS_CARD_USER")
         .parentCardId(null)

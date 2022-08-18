@@ -1,0 +1,18 @@
+{
+	"id":"processDeleteUserCard",
+	"version":"1",
+	"uiVisibility": {
+		"monitoring": true,
+		"logging": true,
+		"calendar": true
+	},
+	"states": {
+		"state2": {
+			"templateName": "template",
+			"description": "Message",
+			"styles": [
+				"style"
+			]
+		}
+	}
+}

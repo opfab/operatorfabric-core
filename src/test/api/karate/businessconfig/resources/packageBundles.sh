@@ -22,3 +22,19 @@ cd bundle_api_test_with_newState
 tar -czvf bundle_api_test_with_newState.tar.gz config.json i18n.json css/ template/
 mv bundle_api_test_with_newState.tar.gz ../
 cd ..
+cd bundle_api_test_without_i18n_file
+tar -czvf bundle_api_test_without_i18n_file.tar.gz config.json css/ template/
+mv bundle_api_test_without_i18n_file.tar.gz ../
+cd ..
+cd bundle_process_1
+tar -czvf bundle_process_1.tar.gz config.json i18n.json css/ template/
+mv bundle_process_1.tar.gz ../
+cd ..
+cd bundle_process_2
+tar -czvf bundle_process_2.tar.gz config.json i18n.json css/ template/
+mv bundle_process_2.tar.gz ../
+cd ..
+cd bundle_processDeleteUserCard
+tar -czvf bundle_processDeleteUserCard.tar.gz config.json i18n.json css/ template/
+mv bundle_processDeleteUserCard.tar.gz ../
+cd ..
