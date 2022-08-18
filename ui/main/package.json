@@ -36,7 +36,7 @@
     "@ngrx/router-store": "14.0.2",
     "@ngrx/store": "14.0.2",
     "@ngx-translate/core": "14.0.0",
-    "@popperjs/core": "2.11.5",
+    "@popperjs/core": "2.11.6",
     "@swimlane/ngx-charts": "20.1.0",
     "@types/jwt-decode": "2.2.1",
     "ag-grid-angular": "28.1.0",
