@@ -594,22 +594,22 @@ export class UserCardComponent implements OnInit {
     }
 
     private getRecipients(): string[] {
-        let recipients = [];
+        const recipients = [];
         if (this.recipientVisible) {
             this.recipientsForm.getSelectedRecipients().forEach((entity) => recipients.push(entity));
+        }
+        if (this.specificInformation.card.entityRecipients) {
+            this.specificInformation.card.entityRecipients.forEach((entity) => {if (!recipients.includes(entity)) recipients.push(entity)});
         } else {
-            if (this.specificInformation.card.entityRecipients) {
-                recipients = this.specificInformation.card.entityRecipients;
-            } else {
-                const recipientListFromStateConfig = this.getRecipientListFromState_Deprecated();
-                if (recipientListFromStateConfig !== undefined) {
-                    this.opfabLogger.info(
-                        'Use of state configuration to define list of recipient is deprecated, provide  it via  templateGateway.getSpecificCardInformation()  '
-                    );
-                    recipientListFromStateConfig.forEach((entity) => recipients.push(entity.id));
-                }
+            const recipientListFromStateConfig = this.getRecipientListFromState_Deprecated();
+            if (recipientListFromStateConfig !== undefined) {
+                this.opfabLogger.info(
+                    'Use of state configuration to define list of recipient is deprecated, provide  it via  templateGateway.getSpecificCardInformation() '
+                );
+                recipientListFromStateConfig.forEach((entity) => {if (!recipients.includes(entity.id)) recipients.push(entity.id)});
             }
         }
+
         return recipients;
     }
 

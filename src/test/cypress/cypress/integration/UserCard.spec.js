@@ -75,6 +75,19 @@ describe('User Card ', function () {
       cy.get('#opfab-entity-recipients').contains("IT SUPERVISION CENTER");
     })
 
+    it('Recipients should be the union of user selection and template defined recipients in conference user card', () => {
+
+      cy.loginOpFab('operator1_fr', 'test');
+      opfab.navigateToUserCard();
+      usercard.selectService('User card examples');
+      usercard.selectProcess('Conference and IT incident');
+      usercard.selectState('Conference Call ☏');
+      usercard.selectRecipient('Control Center FR East');
+      usercard.seeBeforeSending();
+      cy.get('#opfab-entity-recipients').contains("IT SUPERVISION CENTER");
+      cy.get('#opfab-entity-recipients').contains("Control Center FR East");
+    })
+
     it('Recipients dropdown should be restricted in message user card  - Deprecated method using state config ', () => {
       cy.loginOpFab('operator1_fr', 'test');
       opfab.navigateToUserCard();
