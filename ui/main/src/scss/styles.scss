@@ -101,47 +101,7 @@ body {
 
 // END OF CUSTOM SPINNER
 
-// BUTTON STYLE
-
-.opfab-btn {
-    color: white;
-    background-color: #2784ff;
-    border-width: 0px;
-    border-radius: 2px;
-    height: 40px;
-    font-size: 14px;
-    font-weight: 600;
-    margin: 10px;
-    padding: 10px;
-    min-width: 150px;
-}
-
-.opfab-btn:hover {
-    background-color: #2268ff;
-}
-
-.opfab-btn:disabled {
-    color: #606267;
-    background-color: var(--opfab-button-disable-bgcolor);
-}
-
-.opfab-btn-cancel {
-    color: #2784ff;
-    background-color: var(--opfab-bg-color);
-    border-width: 0px;
-    border-radius: 2px;
-    height: 40px;
-    font-size: 14px;
-    font-weight: 600;
-    margin: 10px;
-    padding: 10px;
-    min-width: 150px;
-}
-
-.opfab-btn-cancel:hover {
-    color: #2268ff;
-}
-
+// EXPORT ICON
 .opfab-icon-export-data {
     display: inline-block;
     height: 28px;
@@ -151,7 +111,6 @@ body {
     background: var(--opfab-text-color);
     mask: url(../assets/images/icons/export-data.svg);
 }
-// END BUTTON STYLE
 
 
 // INPUT FIELD STYLE

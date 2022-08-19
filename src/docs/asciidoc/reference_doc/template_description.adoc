@@ -609,6 +609,13 @@ Some styles for text standard colors, for example:
   <span class="opfab-color-danger"> my text in color </span>
 ....
 
+=== opfab-btn, opfab-btn-cancel
+Styles for buttons, for example:
+
+....
+  <button type="button" class="opfab-btn">OK</button>
+  <button type="button" class="opfab-btn-cancel">CANCEL</button>
+....
 
 == Multi Select
 
