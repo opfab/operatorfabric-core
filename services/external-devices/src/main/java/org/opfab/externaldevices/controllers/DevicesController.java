@@ -15,7 +15,6 @@ import org.opfab.externaldevices.drivers.ExternalDeviceConfigurationException;
 import org.opfab.externaldevices.drivers.ExternalDeviceDriverException;
 import org.opfab.externaldevices.drivers.UnknownExternalDeviceException;
 import org.opfab.externaldevices.model.Device;
-import org.opfab.externaldevices.model.DeviceConfiguration;
 import org.opfab.externaldevices.services.ConfigService;
 import org.opfab.externaldevices.services.DevicesService;
 import org.opfab.springtools.error.model.ApiError;
@@ -53,25 +52,6 @@ public class DevicesController implements DevicesApi {
                              ConfigService configService) {
         this.devicesService = devicesService;
         this.configService = configService;
-
-        List<DeviceConfiguration> deviceConfigurationList = this.configService.getDeviceConfigurations();
-
-        if (deviceConfigurationList != null) {
-            deviceConfigurationList.forEach(deviceConfiguration -> {
-                try {
-                    this.devicesService.connectDevice(deviceConfiguration.getId());
-                    log.info("External device id={} connected to opfab", deviceConfiguration.getId());
-                } catch (ExternalDeviceConfigurationException e) {
-                    log.warn(String.format(CONNECT_FAILED_DUE_TO_CONFIG, deviceConfiguration.getId()));
-                } catch (ExternalDeviceDriverException e) {
-                    log.warn(String.format(CONNECT_FAILED, deviceConfiguration.getId()));
-                } catch (ExternalDeviceAvailableException e) {
-                    log.warn(String.format(CONNECT_FAILED_BECAUSE_DEVICE_IS_DISABLED, deviceConfiguration.getId()));
-                } catch (UnknownExternalDeviceException e) {
-                    log.warn(String.format(UNKNOWN_DRIVER, deviceConfiguration.getId()));
-                }
-            });
-        }
     }
 
 

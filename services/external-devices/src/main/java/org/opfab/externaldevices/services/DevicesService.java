@@ -49,12 +49,14 @@ public class DevicesService {
     public static final String EXISTING_DRIVER = "Driver already exists in pool for {}: {}";
     public static final String OUTDATED_DRIVER = "Driver exists in pool for {}: {}, but configuration has changed. Replacing it with new driver.";
     public static final String DISCONNECTION_FAILED = "No disconnection was performed as there is no driver for device %1$s in the pool.";
+    private static final String CONNECT_FAILED = "Connection to device %1$s failed.";
+    private static final String CONNECT_FAILED_BECAUSE_DEVICE_IS_DISABLED = "Could not connect device %s because it is disabled.";
 
     private final ConfigService configService;
     private final ExternalDeviceDriverFactory externalDeviceDriverFactory;
     private final ExternalDevicesWatchdogProperties externalDevicesWatchdogProperties;
 
-    private final Map<String, ExternalDeviceDriver> deviceDriversPool;
+    private final Map<String, ExternalDeviceDriver> enabledDevicesPool;
 
     public DevicesService(ConfigService configService,
                           ExternalDeviceDriverFactory externalDeviceDriverFactory,
@@ -62,45 +64,36 @@ public class DevicesService {
         this.configService = configService;
         this.externalDeviceDriverFactory = externalDeviceDriverFactory;
         this.externalDevicesWatchdogProperties = externalDevicesWatchdogProperties;
-        this.deviceDriversPool = new HashMap<>();
+        this.enabledDevicesPool = new HashMap<>();
     }
 
     public void connectDevice(String deviceId) throws ExternalDeviceDriverException, ExternalDeviceConfigurationException, ExternalDeviceAvailableException, UnknownExternalDeviceException {
         DeviceConfiguration deviceConfiguration = configService.retrieveDeviceConfiguration(deviceId);
+        connectDevice(deviceConfiguration);
+    }
+
+    /* Preferably use this function rather than the above one for performance reasons (to avoid calls to the database) */
+    public void connectDevice(DeviceConfiguration deviceConfiguration) throws ExternalDeviceDriverException, ExternalDeviceAvailableException {
+        String deviceId = deviceConfiguration.getId();
         if (Boolean.TRUE.equals(deviceConfiguration.getIsEnabled())) {
-            ExternalDeviceDriver externalDeviceDriver = getDriverForDevice(deviceConfiguration);
-            externalDeviceDriver.connect();
-        } else {
-            throw new ExternalDeviceAvailableException(String.format("Could not connect device %s because it is disabled", deviceId));
-        }
-    }
-
-    public void disconnectDevice(String deviceId) throws ExternalDeviceDriverException, UnknownExternalDeviceException {
-        synchronized (deviceDriversPool) {
-            if (deviceDriversPool.containsKey(deviceId)) {
-                log.debug(EXISTING_DRIVER, deviceId,deviceDriversPool.get(deviceId).toString());
-                deviceDriversPool.get(deviceId).disconnect();
-            } else {
-                log.warn(String.format(DISCONNECTION_FAILED, deviceId));
-                if (isDriverOfDeviceMissing(deviceId)) {
-                    throw new UnknownExternalDeviceException(String.format(DISCONNECTION_FAILED, deviceId));
-                }
+            ExternalDeviceDriver externalDeviceDriver = safeGetDriverForDevice(deviceConfiguration);
+            if (externalDeviceDriver != null) {
+                enabledDevicesPool.put(deviceId, externalDeviceDriver);
+                connectExternalDriver(deviceId);
             }
+        } else {
+            enabledDevicesPool.remove(deviceId);
+            throw new ExternalDeviceAvailableException(String.format(CONNECT_FAILED_BECAUSE_DEVICE_IS_DISABLED, deviceId));
         }
+
     }
 
-    private boolean isDriverOfDeviceMissing(String deviceId) {
-        boolean isDriverMissing = true;
-
-        try {
-            DeviceConfiguration deviceConfiguration = configService.retrieveDeviceConfiguration(deviceId);
-            ExternalDeviceDriver driver = getDriverForDevice(deviceConfiguration);
-            isDriverMissing = driver == null;
-        } catch (ExternalDeviceConfigurationException| UnknownExternalDeviceException | ExternalDeviceDriverException e) {
-           log.warn("Could not find driver for device {}", deviceId);
+    private void connectExternalDriver(String deviceId) throws ExternalDeviceDriverException {
+        ExternalDeviceDriver externalDeviceDriver = enabledDevicesPool.get(deviceId);
+        if (!externalDeviceDriver.isConnected()) {
+            externalDeviceDriver.connect();
+            log.debug("Device {} is now connected", deviceId);
         }
-
-        return isDriverMissing;
     }
 
     public void sendSignalToAllDevicesOfUser(String opFabSignalKey, String userLogin) throws ExternalDeviceConfigurationException, ExternalDeviceDriverException, ExternalDeviceAvailableException, UnknownExternalDeviceException {
@@ -152,28 +145,34 @@ public class DevicesService {
     }
 
     private void sendSignalToOneEnabledDevice(ResolvedConfiguration resolvedConfiguration) throws ExternalDeviceDriverException, ExternalDeviceConfigurationException, ExternalDeviceAvailableException, UnknownExternalDeviceException {
-        ExternalDeviceDriver externalDeviceDriver = getDriverForDevice(resolvedConfiguration.getDeviceConfiguration());
-        if (!externalDeviceDriver.isConnected()) {
-            log.debug("External device {} was not connected. Connecting before send.", resolvedConfiguration.getDeviceConfiguration().getId());
-            connectDevice(resolvedConfiguration.getDeviceConfiguration().getId());
+        DeviceConfiguration deviceConfiguration = resolvedConfiguration.getDeviceConfiguration();
+        try {
+            ExternalDeviceDriver externalDeviceDriver = getDriverForDevice(deviceConfiguration);
+            if (!externalDeviceDriver.isConnected()) {
+                log.debug("External device {} was not connected. Connecting before sending signal.", deviceConfiguration.getId());
+                connectDevice(deviceConfiguration);
+            }
+            externalDeviceDriver.send(resolvedConfiguration.getSignalId());
+        } catch (UnknownHostException e) {
+            disconnectDevice(deviceConfiguration.getId());
+            throw new ExternalDeviceDriverException("Unable to initialize ModbusDriver with host " + deviceConfiguration.getHost() + ".", e);
         }
-        externalDeviceDriver.send(resolvedConfiguration.getSignalId());
     }
 
     @Scheduled(cron = "${operatorfabric.externaldevices.watchdog.cron:*/5 * * * * *}", zone = "UTC")
     public void sendWatchdog() {
         if (Boolean.TRUE.equals((externalDevicesWatchdogProperties.getEnabled()))) {
 
-            HashSet<String> hostAndPorSet = new HashSet<>();
+            HashSet<String> knownHostsAndPorts = new HashSet<>();
 
-            this.deviceDriversPool.forEach((deviceId, externalDeviceDriver) -> {
+            this.enabledDevicesPool.forEach((deviceId, externalDeviceDriver) -> {
 
-                String hostAndPort = externalDeviceDriver.getResolvedHost() + ":" + externalDeviceDriver.getPort();
+                String hostAndPort = buildHostAndPortString(externalDeviceDriver);
 
-                if (isDeviceConnectedAndEnabled(deviceId) && (! hostAndPorSet.contains(hostAndPort))) { // To avoid reconnecting drivers automatically
+                if (isDeviceConnectedAndEnabled(deviceId) && (! knownHostsAndPorts.contains(hostAndPort))) { // To avoid reconnecting drivers automatically
                     try {
                         log.debug("Sending watchdog signal for device {}", deviceId);
-                        hostAndPorSet.add(hostAndPort);
+                        knownHostsAndPorts.add(hostAndPort);
                         externalDeviceDriver.send(externalDevicesWatchdogProperties.getSignalId());
                     } catch (ExternalDeviceDriverException e) {
                         log.error("Watchdog signal couldn't be sent to device {} (driver: {}): {}", deviceId, externalDeviceDriver.toString(), e.getMessage());
@@ -185,46 +184,140 @@ public class DevicesService {
         }
     }
 
+    private String buildHostAndPortString(ExternalDeviceDriver externalDeviceDriver) {
+        return externalDeviceDriver.getResolvedHost() + ":" + externalDeviceDriver.getPort();
+    }
+
     private boolean isDeviceConnectedAndEnabled(String deviceId) {
+        ExternalDeviceDriver driver = enabledDevicesPool.get(deviceId);
+        return driver.isConnected() && isDeviceEnabled(deviceId);
+    }
 
-        boolean isDeviceAvailable = false;
+    private boolean isDeviceEnabled(String deviceId) {
+        return enabledDevicesPool.containsKey(deviceId);
+    }
 
-        try {
-            ExternalDeviceDriver driver = deviceDriversPool.get(deviceId);
-            DeviceConfiguration deviceConfiguration = configService.retrieveDeviceConfiguration(deviceId);
-            isDeviceAvailable = driver.isConnected() && deviceConfiguration.getIsEnabled().booleanValue();
-        } catch (ExternalDeviceConfigurationException e) {
-            log.error("Could not access device {} because of an invalid configuration", deviceId);
-        } catch (UnknownExternalDeviceException e) {
-            log.error("Could not access device {} that does not exist", deviceId);
+
+    @Scheduled(fixedDelay = 5000)
+    public void reconnectDisconnectedDevices() {
+
+        HashSet<String> knownHostsAndPorts = new HashSet<>();
+
+        List<DeviceConfiguration> devices = configService.getDeviceConfigurations();
+
+        for (DeviceConfiguration currentDevice : devices) {
+
+            ExternalDeviceDriver externalDeviceDriver = safeGetDriverForDevice(currentDevice);
+            if (externalDeviceDriver != null) {
+                String hostAndPort = buildHostAndPortString(externalDeviceDriver);
+
+                if (!knownHostsAndPorts.contains(hostAndPort) && Boolean.TRUE.equals(currentDevice.getIsEnabled())) {
+                    knownHostsAndPorts.add(hostAndPort);
+                    tryToReconnectDisconnectedDevice(currentDevice);
+                }
+            } else {
+                log.warn("Automatic reconnection failed for device {} because it has no known driver", currentDevice.getId());
+                tryToDisconnectDevice(currentDevice.getId());
+            }
         }
 
-        return isDeviceAvailable;
+    }
+
+
+    private void tryToReconnectDisconnectedDevice(DeviceConfiguration deviceConfiguration) {
+        log.debug("Sending reconnection signal for device {}", deviceConfiguration);
+
+        try {
+            connectDevice(deviceConfiguration);
+            ExternalDeviceDriver externalDeviceDriver = safeGetDriverForDevice(deviceConfiguration);
+
+            if (externalDeviceDriver != null && !externalDeviceDriver.isConnected()) {
+                tryToDisconnectDevice(deviceConfiguration.getId());
+                log.warn("Automatic reconnection failed for device {}", deviceConfiguration.getId());
+            } else if (externalDeviceDriver != null && externalDeviceDriver.isConnected()) {
+                log.debug("Automatic reconnection succeeded for device {}", deviceConfiguration.getId());
+            }
+
+        } catch (ExternalDeviceDriverException e) {
+            log.warn(String.format(CONNECT_FAILED, deviceConfiguration));
+        } catch (ExternalDeviceAvailableException e) {
+            log.warn(String.format(CONNECT_FAILED_BECAUSE_DEVICE_IS_DISABLED, deviceConfiguration));
+        }
+    }
+
+
+    private void tryToDisconnectDevice(String deviceId) {
+        try {
+            disconnectDevice(deviceId);
+        } catch (ExternalDeviceDriverException e) {
+            log.warn("Could not disconnect device {} : driver returned an error", deviceId);
+        } catch (UnknownExternalDeviceException e) {
+            log.warn("Could not disconnect device {} that does not exist", deviceId);
+        }
+    }
+
+    public void disconnectDevice(String deviceId) throws ExternalDeviceDriverException, UnknownExternalDeviceException {
+        synchronized (enabledDevicesPool) {
+            if (enabledDevicesPool.containsKey(deviceId)) {
+                log.debug(EXISTING_DRIVER, deviceId, enabledDevicesPool.get(deviceId).toString());
+                enabledDevicesPool.get(deviceId).disconnect();
+            } else {
+                log.warn(String.format(DISCONNECTION_FAILED, deviceId));
+                if (isDriverOfDeviceMissing(deviceId)) {
+                    throw new UnknownExternalDeviceException(String.format(DISCONNECTION_FAILED, deviceId));
+                }
+            }
+        }
+    }
+
+    private boolean isDriverOfDeviceMissing(String deviceId) {
+        boolean isDriverMissing = true;
+
+        try {
+            DeviceConfiguration deviceConfiguration = configService.retrieveDeviceConfiguration(deviceId);
+            ExternalDeviceDriver driver = getDriverForDevice(deviceConfiguration);
+            isDriverMissing = driver == null;
+        } catch (ExternalDeviceConfigurationException | UnknownExternalDeviceException | ExternalDeviceDriverException e) {
+            log.warn("Could not find driver for device {}.", deviceId);
+        } catch (UnknownHostException e) {
+            log.warn("Device {} has an unknown host.", deviceId);
+        }
+
+        return isDriverMissing;
     }
 
 
     public Optional<Device> getDevice(String deviceId) {
-        synchronized (deviceDriversPool) {
-            return Optional.ofNullable(deviceDriversPool.get(deviceId)).map(driver -> createDeviceFromDriver(deviceId,driver));
+        synchronized (enabledDevicesPool) {
+            return Optional.ofNullable(enabledDevicesPool.get(deviceId)).map(driver -> createDeviceFromDriver(deviceId,driver));
         }
     }
 
     public List<Device> getDevices() {
-        synchronized (deviceDriversPool) {
-            return deviceDriversPool.entrySet().stream()
+        synchronized (enabledDevicesPool) {
+            return enabledDevicesPool.entrySet().stream()
                     .map(entry -> createDeviceFromDriver(entry.getKey(),entry.getValue()))
                     .collect(Collectors.toList());
         }
     }
 
-    private ExternalDeviceDriver getDriverForDevice(DeviceConfiguration deviceConfiguration) throws ExternalDeviceDriverException, ExternalDeviceConfigurationException {
+    private ExternalDeviceDriver safeGetDriverForDevice(DeviceConfiguration deviceConfiguration) {
+        ExternalDeviceDriver result = null;
+        try {
+            result = getDriverForDevice(deviceConfiguration);
+        } catch (ExternalDeviceDriverException |UnknownHostException | ExternalDeviceConfigurationException e) {
+            log.debug("Device {} was not found", deviceConfiguration.getId());
+        }
+
+        return result;
+    }
+
+    private ExternalDeviceDriver getDriverForDevice(DeviceConfiguration deviceConfiguration) throws ExternalDeviceDriverException, ExternalDeviceConfigurationException, UnknownHostException {
         String deviceId = deviceConfiguration.getId();
-        synchronized (deviceDriversPool) {
-            try {
+        synchronized (enabledDevicesPool) {
+                if (enabledDevicesPool.containsKey(deviceId)) {
 
-                if (deviceDriversPool.containsKey(deviceId)) {
-
-                    ExternalDeviceDriver existingDriver = deviceDriversPool.get(deviceId);
+                    ExternalDeviceDriver existingDriver = enabledDevicesPool.get(deviceId);
                     log.debug(EXISTING_DRIVER, deviceId, existingDriver.toString());
                     // Check whether the host still resolves to the same InetAddress
                     // (for example in the case of a transient IP for a docker container) and the port hasn't changed
@@ -238,17 +331,10 @@ public class DevicesService {
                     }
 
                 }
-
-                ExternalDeviceDriver newDriver = externalDeviceDriverFactory.create(deviceConfiguration.getHost(), deviceConfiguration.getPort());
-                deviceDriversPool.put(deviceId, newDriver);
-                return newDriver;
-
-            } catch (UnknownHostException e) {
-                deviceDriversPool.remove(deviceId);
-                throw new ExternalDeviceDriverException("Unable to initialize ModbusDriver with host " + deviceConfiguration.getHost(), e);
-            }
+                return externalDeviceDriverFactory.create(deviceConfiguration.getHost(), deviceConfiguration.getPort());
         }
     }
+
 
     private Device createDeviceFromDriver(String id, ExternalDeviceDriver externalDeviceDriver) {
         return DeviceData.builder()
@@ -262,11 +348,13 @@ public class DevicesService {
     public void enableDevice(String deviceId) throws ExternalDeviceConfigurationException, UnknownExternalDeviceException {
         DeviceConfiguration deviceConfiguration = configService.retrieveDeviceConfiguration(deviceId);
         deviceConfiguration.setIsEnabled(true);
+        enabledDevicesPool.put(deviceId, safeGetDriverForDevice(deviceConfiguration));
     }
 
     public void disableDevice(String deviceId) throws ExternalDeviceConfigurationException, UnknownExternalDeviceException {
         DeviceConfiguration deviceConfiguration = configService.retrieveDeviceConfiguration(deviceId);
         deviceConfiguration.setIsEnabled(false);
+        enabledDevicesPool.remove(deviceId);
     }
 }
 

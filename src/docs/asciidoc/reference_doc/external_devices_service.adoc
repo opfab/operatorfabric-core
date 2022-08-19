@@ -189,12 +189,12 @@ them differently (some people might be allowed to connect/disconnect devices but
 
 == Connexion Management
 
-OperatorFabric doesn't automatically attempt to connect to configured external devices on start up as they might not
-be available when the OperatorFabric instance starts. Similarly, posting a new device configuration to the external
-devices service doesn't cause it to attempt to connect immediately, as the configuration setup might be done in advance
-of the actual activation.
+OperatorFabric automatically attempts to connect to configured and enabled (attribute isEnabled = true) external devices on start up. 
+Besides, OperatorFabric regularly searches for disconnected devices, and tries to reconnect them if they are enabled.
+Similarly, posting a new device configuration to the external devices service causes it to attempt to connect promptly.
 
-However, if a notification is received by the external devices service that needs to be passed on to a device that is
+
+In addition, if a notification is received by the external devices service that needs to be passed on to a device that is
 configured but not connected yet, the connection will be performed automatically.
 
 == Configuration Management
