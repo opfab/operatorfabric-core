@@ -16,7 +16,7 @@ Feature: Update list of group users
     * def userKarate3 =
 """
 {
-   "login" : "loginKarate3",
+   "login" : "loginkarate3",
    "firstName" : "name3",
    "lastName" : "familyName3"
 }
@@ -25,7 +25,7 @@ Feature: Update list of group users
     * def userKarate4 =
 """
 {
-   "login" : "loginKarate4",
+   "login" : "loginkarate4",
    "firstName" : "name4",
    "lastName" : "familyName4"
 }
@@ -34,7 +34,7 @@ Feature: Update list of group users
     * def userKarate6 =
 """
 {
-   "login" : "loginKarate6",
+   "login" : "loginkarate6",
    "firstName" : "name6",
    "lastName" : "familyName6"
 }
@@ -62,7 +62,7 @@ Feature: Update list of group users
     And request userKarate3
     When method post
     Then status 201
-    And match response.login == karate.lowerCase(userKarate3.login)
+    And match response.login == userKarate3.login
     And match response.firstName == userKarate3.firstName
     And match response.lastName == userKarate3.lastName
 
@@ -75,7 +75,7 @@ Feature: Update list of group users
     And request userKarate4
     When method post
     Then status 201
-    And match response.login == karate.lowerCase(userKarate4.login)
+    And match response.login == userKarate4.login
     And match response.firstName == userKarate4.firstName
     And match response.lastName == userKarate4.lastName
 
@@ -88,7 +88,7 @@ Feature: Update list of group users
     And request userKarate6
     When method post
     Then status 201
-    And match response.login == karate.lowerCase(userKarate6.login)
+    And match response.login == userKarate6.login
     And match response.firstName == userKarate6.firstName
     And match response.lastName == userKarate6.lastName
 
@@ -102,7 +102,7 @@ Feature: Update list of group users
 
 
   Scenario: Check that userKarate6 belongs to the group
-    Given url opfabUrl + 'users/users/' + karate.lowerCase(userKarate6.login)
+    Given url opfabUrl + 'users/users/' + userKarate6.login
     And header Authorization = 'Bearer ' + authToken
     When method get
     Then status 200
@@ -142,7 +142,7 @@ Feature: Update list of group users
 
 
   Scenario: Check that userKarate3 belongs to the group
-    Given url opfabUrl + 'users/users/' + karate.lowerCase(userKarate3.login)
+    Given url opfabUrl + 'users/users/' + userKarate3.login
     And header Authorization = 'Bearer ' + authToken
     When method get
     Then status 200
@@ -150,7 +150,7 @@ Feature: Update list of group users
 
 
   Scenario: Check that userKarate4 belongs to the group
-    Given url opfabUrl + 'users/users/' + karate.lowerCase(userKarate4.login)
+    Given url opfabUrl + 'users/users/' + userKarate4.login
     And header Authorization = 'Bearer ' + authToken
     When method get
     Then status 200
@@ -158,7 +158,7 @@ Feature: Update list of group users
 
 
   Scenario: Check that userKarate6 no longer belongs to the group
-    Given url opfabUrl + 'users/users/' + karate.lowerCase(userKarate6.login)
+    Given url opfabUrl + 'users/users/' + userKarate6.login
     And header Authorization = 'Bearer ' + authToken
     When method get
     Then status 200

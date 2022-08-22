@@ -9,12 +9,12 @@ Feature: deleteUser
 
 
     # defining user to create
-    * def userForEndpointDeleteUser =
+    * def user_for_endpoint_delete_user =
 """
 {
-   "login" : "userForEndpointDeleteUser",
-   "firstName" : "userForEndpointDeleteUser firstname",
-   "lastName" : "userForEndpointDeleteUser lastname"
+   "login" : "user_for_endpoint_delete_user",
+   "firstName" : "user_for_endpoint_delete_user firstname",
+   "lastName" : "user_for_endpoint_delete_user lastname"
 }
 """
 
@@ -30,29 +30,29 @@ Feature: deleteUser
   Scenario: create a new user
     Given url opfabUrl + 'users/users'
     And header Authorization = 'Bearer ' + authToken
-    And request userForEndpointDeleteUser
+    And request user_for_endpoint_delete_user
     When method post
     Then status 201
-    And match response.login == karate.lowerCase(userForEndpointDeleteUser.login)
-    And match response.firstName == userForEndpointDeleteUser.firstName
-    And match response.lastName == userForEndpointDeleteUser.lastName
+    And match response.login == user_for_endpoint_delete_user.login
+    And match response.firstName == user_for_endpoint_delete_user.firstName
+    And match response.lastName == user_for_endpoint_delete_user.lastName
 
 
   Scenario: we check that the user created previously exists
-    Given url opfabUrl + 'users/users/' + karate.lowerCase(userForEndpointDeleteUser.login)
+    Given url opfabUrl + 'users/users/' + user_for_endpoint_delete_user.login
     And header Authorization = 'Bearer ' + authToken
     When method get
     Then status 200
 
 
   Scenario: delete user with no authentication, expected response 401
-    Given url opfabUrl + 'users/users/' + karate.lowerCase(userForEndpointDeleteUser.login)
+    Given url opfabUrl + 'users/users/' + user_for_endpoint_delete_user.login
     When method delete
     Then status 401
 
 
   Scenario: delete user with no admin authentication (with operator1_fr authentication), expected response 403
-    Given url opfabUrl + 'users/users/' + karate.lowerCase(userForEndpointDeleteUser.login)
+    Given url opfabUrl + 'users/users/' + user_for_endpoint_delete_user.login
     And header Authorization = 'Bearer ' + authTokenAsTSO
     When method delete
     Then status 403
@@ -66,14 +66,14 @@ Feature: deleteUser
 
 
   Scenario: delete user (with admin authentication), expected response 200
-    Given url opfabUrl + 'users/users/' + karate.lowerCase(userForEndpointDeleteUser.login)
+    Given url opfabUrl + 'users/users/' + user_for_endpoint_delete_user.login
     And header Authorization = 'Bearer ' + authToken
     When method delete
     Then status 200
 
 
   Scenario: we check that the user doesn't exist anymore, expected response 404
-    Given url opfabUrl + 'users/users/' + karate.lowerCase(userForEndpointDeleteUser.login)
+    Given url opfabUrl + 'users/users/' + user_for_endpoint_delete_user.login
     And header Authorization = 'Bearer ' + authToken
     When method get
     Then status 404

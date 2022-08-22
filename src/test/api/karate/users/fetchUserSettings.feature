@@ -6,7 +6,7 @@ Feature: fetch user settings
     * def authToken = signIn.authToken
     * def signInAsTSO = callonce read('../common/getToken.feature') { username: 'operator1_fr'}
     * def authTokenAsTSO = signInAsTSO.authToken
-    * def userToFetch = 'loginKarate1'
+    * def userToFetch = 'loginkarate1'
 
 
   Scenario: Fetch user settings

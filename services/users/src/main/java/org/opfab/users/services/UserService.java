@@ -8,6 +8,7 @@
  */
 package org.opfab.users.services;
 
+import org.opfab.springtools.error.model.ApiErrorException;
 import org.opfab.users.model.*;
 
 import java.util.List;
@@ -22,4 +23,6 @@ public interface UserService {
     boolean checkFilteringNotificationIsAllowedForAllProcessesStates(String login, UserSettings userSettings);
     void publishUpdatedUserMessage(String userLogin);
     void publishUpdatedConfigMessage();
+    void checkFormatOfIdField(String id) throws ApiErrorException;
+    void checkFormatOfLoginField(String login) throws ApiErrorException;
 }

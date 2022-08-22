@@ -13,7 +13,7 @@ Feature: patch user settings
     * def userSettings =
 """
 {
-  "login" : "loginKarate1",
+  "login" : "loginkarate1",
   "description" : "my dummy user",
   "locale" : "en",
   "processesStatesNotNotified": {"processA": ["state1", "state2"], "processB": ["state3", "state4"]},

@@ -95,7 +95,7 @@ Feature: CheckEntityGroupManagement
     | entity2_RefToEntity4          | 201       |
     | entity3_RefToEntity2          | 201       |
 
-        # Chech the correct detection of cycle
+        # Check the correct detection of cycle
     Scenario Outline: Adding entities with parents declaration results to a cycle detection
 
         Given url opfabUrl + 'users/entities'

@@ -12,7 +12,7 @@ Feature: Update existing user
     * def userNew =
 """
 {
-  "login" : "loginKarate5",
+  "login" : "loginkarate5",
   "firstName" : "name",
   "lastName" : "last name"
 }
@@ -21,7 +21,7 @@ Feature: Update existing user
     * def userUpdate =
 """
 {
-  "login" : "loginKarate5",
+  "login" : "loginkarate5",
   "firstName" : "name update Karate5",
   "lastName" : "last name update Karate5",
   "authorizedIPAddresses" : ['127.0.0.1','192.168.0.1']
@@ -31,7 +31,7 @@ Feature: Update existing user
     * def fakeUser =
 """
 {
-  "fake" : "NewUser"
+  "fake" : "newuser"
 }
 """
     #Endpoint tested put /users/{login}
@@ -69,7 +69,7 @@ Feature: Update existing user
     And request userNew
     When method put
     Then status 201
-    And match response.login == karate.lowerCase(userNew.login)
+    And match response.login == userNew.login
     And match response.firstName == userNew.firstName
     And match response.lastName == userNew.lastName
 
@@ -81,7 +81,7 @@ Feature: Update existing user
     And request userUpdate
     When method put
     Then status 200
-    And match response.login == karate.lowerCase(userUpdate.login)
+    And match response.login == userUpdate.login
     And match response.firstName == userUpdate.firstName
     And match response.lastName == userUpdate.lastName
     And match response.authorizedIPAddresses contains '127.0.0.1'

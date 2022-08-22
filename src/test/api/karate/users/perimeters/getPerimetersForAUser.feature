@@ -10,9 +10,9 @@ Feature: Get perimeters for a user (endpoint tested : GET /users/{login}/perimet
     * def user10 =
 """
 {
-   "login" : "loginKarate10",
-   "firstName" : "loginKarate10 firstName",
-   "lastName" : "loginKarate10 lastName"
+   "login" : "loginkarate10",
+   "firstName" : "loginkarate10 firstName",
+   "lastName" : "loginkarate10 lastName"
 }
 """
 
@@ -95,7 +95,7 @@ Feature: Get perimeters for a user (endpoint tested : GET /users/{login}/perimet
     And request user10
     When method post
     Then status 201
-    And match response.login == karate.lowerCase(user10.login)
+    And match response.login == user10.login
     And match response.firstName == user10.firstName
     And match response.lastName == user10.lastName
 
@@ -177,14 +177,14 @@ Feature: Get perimeters for a user (endpoint tested : GET /users/{login}/perimet
 
 
   Scenario: get all perimeters for user10 without authentication
-    Given url opfabUrl + 'users/users/' + karate.lowerCase(user10.login) + '/perimeters'
+    Given url opfabUrl + 'users/users/' + user10.login + '/perimeters'
     When method get
     Then status 401
 
 
   Scenario: get all perimeters for user10 with simple user
     #   Using TSO user,  expected response 403
-    Given url opfabUrl + 'users/users/' + karate.lowerCase(user10.login) + '/perimeters'
+    Given url opfabUrl + 'users/users/' + user10.login + '/perimeters'
     And header Authorization = 'Bearer ' + authTokenAsTSO
     When method get
     Then status 403
@@ -200,7 +200,7 @@ Feature: Get perimeters for a user (endpoint tested : GET /users/{login}/perimet
 
 
   Scenario: get all perimeters for user10
-    Given url opfabUrl + 'users/users/' + karate.lowerCase(user10.login) + '/perimeters'
+    Given url opfabUrl + 'users/users/' + user10.login + '/perimeters'
     And header Authorization = 'Bearer ' + authToken
     When method get
     Then status 200
