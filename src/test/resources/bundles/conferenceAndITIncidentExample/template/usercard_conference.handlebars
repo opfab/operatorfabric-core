@@ -74,7 +74,7 @@
         const conf_link = document.getElementById('conf_link').value;
         const report_title = document.getElementById('report_title').value;
         const report_link = document.getElementById('report_link').value;
-        
+    
         const card = {
             summary : {key : "conference.summary"},
             title : {key : "conference.title"},
@@ -87,12 +87,21 @@
                 report_link:report_link
             }
         };
+        if (!isReportProperlyFilled(report_title, report_link))
+            return {valid: false, errorMsg: 'You must provide a report name and link, or none of them.'}
         return {
             valid: true,
             card: card,
             viewCardInAgenda: true
         };
 
+    }
+
+    isReportProperlyFilled = function(report_title, report_link) {
+        const areBothReportNameAndLinkEmpty = (report_title.length === 0 && report_link.length === 0);
+        const areBothReportNameAndLinkFilled = (report_title.length >= 1 && report_link.length >= 1);
+
+        return areBothReportNameAndLinkEmpty || areBothReportNameAndLinkFilled;
     }
 
 
