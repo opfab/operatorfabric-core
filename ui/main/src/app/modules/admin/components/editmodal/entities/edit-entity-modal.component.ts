@@ -58,7 +58,7 @@ export class EditEntityModalComponent implements OnInit {
         this.entityForm = new UntypedFormGroup({
             id: new UntypedFormControl(
                 '',
-                [Validators.required, Validators.minLength(2), Validators.pattern(/^[A-z\d\-_]+$/)],
+                [Validators.required, Validators.minLength(2), Validators.pattern(/^[A-Za-z\d\-_]+$/)],
                 uniqueEntityIdValidator
             ),
             name: new UntypedFormControl('', [Validators.required]),

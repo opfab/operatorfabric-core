@@ -38,7 +38,7 @@ export class EditPerimeterModalComponent implements OnInit {
             id: new UntypedFormControl('', [
                 Validators.required,
                 Validators.minLength(2),
-                Validators.pattern(/^[A-z\d\-_]+$/)
+                Validators.pattern(/^[A-Za-z\d\-_]+$/)
             ]),
             process: new UntypedFormControl('')
         });
