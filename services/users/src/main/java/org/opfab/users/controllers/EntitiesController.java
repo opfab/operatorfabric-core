@@ -67,12 +67,13 @@ public class EntitiesController implements EntitiesApi {
         }
         userRepository.saveAll(foundUsers);
         return null;
-
     }
 
     @Override
     public Entity createEntity(HttpServletRequest request, HttpServletResponse response, Entity entity) throws Exception {
-        if(entityRepository.findById(entity.getId()).orElse(null) == null){
+        userService.checkFormatOfIdField(entity.getId());
+
+        if (entityRepository.findById(entity.getId()).orElse(null) == null) {
             response.addHeader("Location", request.getContextPath() + "/entities/" + entity.getId());
             response.setStatus(201);
         }
@@ -113,7 +114,7 @@ public class EntitiesController implements EntitiesApi {
                         .build()
         ));
 
-        if(foundUser!=null) {
+        if (foundUser != null) {
             foundUser.deleteEntity(id);
             userRepository.save(foundUser);
             userService.publishUpdatedUserMessage(foundUser.getLogin());
@@ -141,7 +142,7 @@ public class EntitiesController implements EntitiesApi {
     @Override
     public Entity updateEntity(HttpServletRequest request, HttpServletResponse response, String id, Entity entity) throws Exception {
         //id from entity body parameter should match id path parameter
-        if(!entity.getId().equals(id)){
+        if (!entity.getId().equals(id)) {
             throw new ApiErrorException(
                     ApiError.builder()
                             .status(HttpStatus.BAD_REQUEST)

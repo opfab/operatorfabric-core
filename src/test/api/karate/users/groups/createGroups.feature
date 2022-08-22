@@ -43,6 +43,78 @@ Feature: CreateGroups
   }
   """
 
+    * def groupToTestBadRequest0 =
+"""
+{
+   "id" : "",
+   "name" : "group name",
+   "description" : "group description"
+}
+"""
+
+    * def groupToTestBadRequest1 =
+"""
+{
+   "id" : "a",
+   "name" : "group name",
+   "description" : "group description"
+}
+"""
+
+    * def groupToTestBadRequest2 =
+"""
+{
+   "id" : "aé",
+   "name" : "group name",
+   "description" : "group description"
+}
+"""
+
+    * def groupToTestBadRequest3 =
+"""
+{
+   "id" : "é",
+   "name" : "group name",
+   "description" : "group description"
+}
+"""
+
+    * def groupWithValidIdFormat0 =
+"""
+{
+   "id" : "validId",
+   "name" : "group name",
+   "description" : "group description"
+}
+"""
+
+    * def groupWithValidIdFormat1 =
+"""
+{
+   "id" : "valid_id",
+   "name" : "group name",
+   "description" : "group description"
+}
+"""
+
+    * def groupWithValidIdFormat2 =
+"""
+{
+   "id" : "valid-id",
+   "name" : "group name",
+   "description" : "group description"
+}
+"""
+
+    * def groupWithValidIdFormat3 =
+"""
+{
+   "id" : "validId_with-digit_0",
+   "name" : "group name",
+   "description" : "group description"
+}
+"""
+
   Scenario: Create Groups
 
 #Create new group (check if the group already exists otherwise it will return 200)
@@ -103,3 +175,50 @@ Feature: CreateGroups
     And request wrongPerimeterGroup
     When method post
     Then status 400
+
+
+  Scenario Outline: Bad request
+    Given url opfabUrl + 'users/groups'
+    And header Authorization = 'Bearer ' + authToken
+    And request <groupToTestBadRequest>
+    When method post
+    Then status 400
+    And match response.status == "BAD_REQUEST"
+    And match response.message == <expectedMessage>
+
+    Examples:
+      | groupToTestBadRequest  | expectedMessage                                                                                                            |
+      | groupToTestBadRequest0 | "Id is required."                                                                                                           |
+      | groupToTestBadRequest1 | "Id should be minimum 2 characters (id=a)."                                                                                 |
+      | groupToTestBadRequest2 | "Id should only contain the following characters: letters, _, - or digits (id=aé)."                                         |
+      | groupToTestBadRequest3 | "Id should be minimum 2 characters (id=é).Id should only contain the following characters: letters, _, - or digits (id=é)." |
+
+
+  Scenario Outline: Create group with valid id format
+    Given url opfabUrl + 'users/groups'
+    And header Authorization = 'Bearer ' + authToken
+    And request <groupWithValidIdFormat>
+    When method post
+    Then status 201
+    And match response.id == <expectedGroupId>
+
+    Examples:
+      | groupWithValidIdFormat  | expectedGroupId            |
+      | groupWithValidIdFormat0 | groupWithValidIdFormat0.id |
+      | groupWithValidIdFormat1 | groupWithValidIdFormat1.id |
+      | groupWithValidIdFormat2 | groupWithValidIdFormat2.id |
+      | groupWithValidIdFormat3 | groupWithValidIdFormat3.id |
+
+
+  Scenario Outline: we delete the groups previously created
+    Given url opfabUrl + 'users/groups/' + <groupId>
+    And header Authorization = 'Bearer ' + authToken
+    When method delete
+    Then status 200
+
+    Examples:
+      | groupId  |
+      | groupWithValidIdFormat0.id |
+      | groupWithValidIdFormat1.id |
+      | groupWithValidIdFormat2.id |
+      | groupWithValidIdFormat3.id |

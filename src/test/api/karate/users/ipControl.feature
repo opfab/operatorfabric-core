@@ -113,7 +113,7 @@ Feature: Client ip control
     And request userAuthorizedIPAddressesUpdate
     When method put
     Then assert responseStatus == 200 || responseStatus == 201
-    And match response.login == karate.lowerCase(userAuthorizedIPAddressesUpdate.login)
+    And match response.login == userAuthorizedIPAddressesUpdate.login
     And match response.authorizedIPAddresses contains '10.0.2.2'
     And match response.authorizedIPAddresses contains '10.0.3.3'
 
@@ -214,7 +214,7 @@ Scenario Outline: Check direct calls from authorized ip are accepted
     And request userEmptyAuthorizedIPAddressesUpdate
     When method put
     Then status 200
-    And match response.login == karate.lowerCase(userAuthorizedIPAddressesUpdate.login)
+    And match response.login == userAuthorizedIPAddressesUpdate.login
     And match response.authorizedIPAddresses == []
 
 

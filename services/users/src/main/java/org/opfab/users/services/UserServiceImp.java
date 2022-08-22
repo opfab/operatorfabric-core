@@ -35,6 +35,16 @@ public class UserServiceImp implements UserService {
 
     public static final String PERIMETER_ID_IMPOSSIBLE_TO_FETCH_MSG = "Perimeter id impossible to fetch : %s";
 
+    public static final String ID_IS_REQUIRED_MSG = "Id is required.";
+    public static final String ID_FIELD_PATTERN_MSG = "Id should only contain the following characters: letters, _, - or digits (id=%s).";
+    public static final String ID_FIELD_MIN_LENGTH_MSG = "Id should be minimum 2 characters (id=%s).";
+    public static final String ID_FIELD_PATTERN = "^[A-Za-z0-9-_]+$";
+
+    public static final String MANDATORY_LOGIN_MISSING = "Mandatory 'login' field is missing.";
+    public static final String LOGIN_FIELD_PATTERN_MSG = "Login should only contain the following characters: letters, _, -, . or digits (login=%s).";
+    public static final String LOGIN_FIELD_MIN_LENGTH_MSG = "Login should be minimum 2 characters (login=%s).";
+    public static final String LOGIN_FIELD_PATTERN = "^[A-Za-z0-9-_.]+$";
+
     @Autowired
     private UserRepository userRepository;
     @Autowired
@@ -209,6 +219,48 @@ public class UserServiceImp implements UserService {
     public User createUser(User user) {
         userRepository.save(new UserData(user));
         return user;
+    }
+
+    public void checkFormatOfIdField(String id) throws ApiErrorException {
+        String errorMessage = "";
+
+        if (id.length() == 0)
+            errorMessage = ID_IS_REQUIRED_MSG;
+        else {
+            if (id.length() == 1)
+                errorMessage = String.format(ID_FIELD_MIN_LENGTH_MSG, id);
+
+            if (! id.matches(ID_FIELD_PATTERN))
+                errorMessage += String.format(ID_FIELD_PATTERN_MSG, id);
+        }
+
+        if (errorMessage.length() > 0)
+            throw new ApiErrorException(
+                    ApiError.builder()
+                            .status(HttpStatus.BAD_REQUEST)
+                            .message(errorMessage)
+                            .build());
+    }
+
+    public void checkFormatOfLoginField(String login) throws ApiErrorException {
+        String errorMessage = "";
+
+        if (login.length() == 0)
+            errorMessage = MANDATORY_LOGIN_MISSING;
+        else {
+            if (login.length() == 1)
+                errorMessage = String.format(LOGIN_FIELD_MIN_LENGTH_MSG, login);
+
+            if (! login.matches(LOGIN_FIELD_PATTERN))
+                errorMessage += String.format(LOGIN_FIELD_PATTERN_MSG, login);
+        }
+
+        if (errorMessage.length() > 0)
+            throw new ApiErrorException(
+                    ApiError.builder()
+                            .status(HttpStatus.BAD_REQUEST)
+                            .message(errorMessage)
+                            .build());
     }
 }
 

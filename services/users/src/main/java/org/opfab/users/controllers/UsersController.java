@@ -84,8 +84,9 @@ public class UsersController implements UsersApi, UserExtractor {
     public User createUser(HttpServletRequest request, HttpServletResponse response, User user) {
 
         boolean created = false;
-        checkAndSetUserLogin(user);
+        userService.checkFormatOfLoginField(user.getLogin());
 
+        user.setLogin(user.getLogin().toLowerCase());
         String login = user.getLogin();
 
         if (userRepository.findById(login).orElse(null) == null){
@@ -102,7 +103,7 @@ public class UsersController implements UsersApi, UserExtractor {
 
         userService.createUser(user);
 
-        if(!created)
+        if (!created)
             userService.publishUpdatedUserMessage(login);
         
         return user;
@@ -208,8 +209,9 @@ public class UsersController implements UsersApi, UserExtractor {
     public User synchronizeWithToken(HttpServletRequest request, HttpServletResponse response) {
         User user = this.extractUserFromJwtToken(request);
 
-        checkAndSetUserLogin(user);
+        userService.checkFormatOfLoginField(user.getLogin());
 
+        user.setLogin(user.getLogin().toLowerCase());
         String login = user.getLogin();
 
         if (groupsProperties.getMode() == GroupsMode.JWT) {
@@ -261,15 +263,6 @@ public class UsersController implements UsersApi, UserExtractor {
     private UserData findUserOrThrow(String login) throws ApiErrorException {
         return userRepository.findById(login).orElseThrow(
                 ()-> buildApiException(HttpStatus.NOT_FOUND, String.format(USER_NOT_FOUND_MSG, login)));
-    }
-
-    private void checkAndSetUserLogin(User user) {
-        String login = user.getLogin();
-
-        if (login.length() == 0) {
-            throw buildApiException(HttpStatus.BAD_REQUEST, MANDATORY_LOGIN_MISSING);
-        }
-        user.setLogin(user.getLogin().toLowerCase());
     }
 
     private ApiErrorException buildApiException(HttpStatus httpStatus, String errorMessage) {

@@ -52,6 +52,77 @@ Feature: CreatePerimeters (endpoint tested : POST /perimeters)
 }
 """
 
+    * def perimeterToTestBadRequest0 =
+"""
+{
+   "id" : "",
+   "name" : "perimeter name",
+   "description" : "perimeter description"
+}
+"""
+
+    * def perimeterToTestBadRequest1 =
+"""
+{
+   "id" : "a",
+   "name" : "perimeter name",
+   "description" : "perimeter description"
+}
+"""
+
+    * def perimeterToTestBadRequest2 =
+"""
+{
+   "id" : "aé",
+   "name" : "perimeter name",
+   "description" : "perimeter description"
+}
+"""
+
+    * def perimeterToTestBadRequest3 =
+"""
+{
+   "id" : "é",
+   "name" : "perimeter name",
+   "description" : "perimeter description"
+}
+"""
+
+    * def perimeterWithValidIdFormat0 =
+"""
+{
+   "id" : "validId",
+   "name" : "perimeter name",
+   "description" : "perimeter description"
+}
+"""
+
+    * def perimeterWithValidIdFormat1 =
+"""
+{
+   "id" : "valid_id",
+   "name" : "perimeter name",
+   "description" : "perimeter description"
+}
+"""
+
+    * def perimeterWithValidIdFormat2 =
+"""
+{
+   "id" : "valid-id",
+   "name" : "perimeter name",
+   "description" : "perimeter description"
+}
+"""
+
+    * def perimeterWithValidIdFormat3 =
+"""
+{
+   "id" : "validId_with-digit_0",
+   "name" : "perimeter name",
+   "description" : "perimeter description"
+}
+"""
 
   Scenario: Create Perimeters
   #Create new perimeter (check if the perimeter already exists otherwise it will return 200)
@@ -104,3 +175,50 @@ Feature: CreatePerimeters (endpoint tested : POST /perimeters)
     And request wrongPerimeter
     When method post
     Then status 400
+
+
+  Scenario Outline: Bad request
+    Given url opfabUrl + 'users/perimeters'
+    And header Authorization = 'Bearer ' + authToken
+    And request <perimeterToTestBadRequest>
+    When method post
+    Then status 400
+    And match response.status == "BAD_REQUEST"
+    And match response.message == <expectedMessage>
+
+    Examples:
+      | perimeterToTestBadRequest  | expectedMessage                                                                                                             |
+      | perimeterToTestBadRequest0 | "Id is required."                                                                                                           |
+      | perimeterToTestBadRequest1 | "Id should be minimum 2 characters (id=a)."                                                                                 |
+      | perimeterToTestBadRequest2 | "Id should only contain the following characters: letters, _, - or digits (id=aé)."                                         |
+      | perimeterToTestBadRequest3 | "Id should be minimum 2 characters (id=é).Id should only contain the following characters: letters, _, - or digits (id=é)." |
+
+
+  Scenario Outline: Create perimeter with valid id format
+    Given url opfabUrl + 'users/perimeters'
+    And header Authorization = 'Bearer ' + authToken
+    And request <perimeterWithValidIdFormat>
+    When method post
+    Then status 201
+    And match response.id == <expectedPerimeterId>
+
+    Examples:
+      | perimeterWithValidIdFormat  | expectedPerimeterId            |
+      | perimeterWithValidIdFormat0 | perimeterWithValidIdFormat0.id |
+      | perimeterWithValidIdFormat1 | perimeterWithValidIdFormat1.id |
+      | perimeterWithValidIdFormat2 | perimeterWithValidIdFormat2.id |
+      | perimeterWithValidIdFormat3 | perimeterWithValidIdFormat3.id |
+
+
+  Scenario Outline: we delete the perimeters previously created
+    Given url opfabUrl + 'users/perimeters/' + <perimeterId>
+    And header Authorization = 'Bearer ' + authToken
+    When method delete
+    Then status 200
+
+    Examples:
+      | perimeterId  |
+      | perimeterWithValidIdFormat0.id |
+      | perimeterWithValidIdFormat1.id |
+      | perimeterWithValidIdFormat2.id |
+      | perimeterWithValidIdFormat3.id |

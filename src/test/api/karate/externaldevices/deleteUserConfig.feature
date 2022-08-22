@@ -17,7 +17,7 @@ Feature: User Configuration Management (Delete)
     * def userSettings =
 """
 {
-  "login" : "loginKarate1",
+  "login" : "loginkarate1",
   "playSoundOnExternalDevice" : true
 }
 """
