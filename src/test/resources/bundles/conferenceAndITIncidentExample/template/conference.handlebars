@@ -24,8 +24,9 @@ The conference call is available via : <a href="{{card.data.conf_link}}" target=
 
 <br/>
 <br/>
-Please consult the full report :  <a href="{{card.data.report_link}}" target="_blank"> {{card.data.report_title}}</a>
-
+{{#if card.data.report_title }}
+    Please consult the full report :  <a href="{{card.data.report_link}}" target="_blank"> {{card.data.report_title}}</a>
+{{/if }}
 </center>
 <br/>
 <p>
