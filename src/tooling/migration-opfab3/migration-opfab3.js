@@ -40,7 +40,8 @@ i18next.init({
         en: {
             translation: Object.fromEntries(i18nPerProcessAndVersion)
         }
-    }
+    },
+    interpolation: { escapeValue: false }
 }).then(function(t) {
         fetch('cards').then(r => update('cards', cards));
         fetch('archivedCards').then(r => update('archivedCards', archivedCards));
