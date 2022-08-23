@@ -8,12 +8,15 @@
  */
 
 import {environment} from '@env/environment';
-import {HttpClient} from '@angular/common/http';
+import {HttpClient, HttpErrorResponse} from '@angular/common/http';
 import {catchError} from 'rxjs/operators';
 import {Observable, Subject} from 'rxjs';
 import {Device, Notification, UserConfiguration} from '@ofModel/external-devices.model';
 import {Injectable} from '@angular/core';
 import {ErrorService} from '@ofServices/error-service';
+import {Store} from '@ngrx/store';
+import {AppState} from '@ofStore/index';
+import {OpfabLoggerService} from './logs/opfab-logger.service';
 
 @Injectable({
     providedIn: 'root'
@@ -28,8 +31,8 @@ export class ExternalDevicesService extends ErrorService {
      * @constructor
      * @param httpClient - Angular build-in
      */
-    constructor(private httpClient: HttpClient) {
-        super();
+    constructor(protected store: Store<AppState>, private httpClient: HttpClient, protected loggerService: OpfabLoggerService) {
+        super(store, loggerService);
         this.externalDevicesUrl = `${environment.urls.externalDevices}`;
         this.notificationsUrl = this.externalDevicesUrl + '/notifications';
         this.configurationsUrl = this.externalDevicesUrl + '/configurations';
@@ -39,7 +42,7 @@ export class ExternalDevicesService extends ErrorService {
     sendNotification(notification: Notification): Observable<any> {
         return this.httpClient
             .post<Notification>(`${this.notificationsUrl}`, notification)
-            .pipe(catchError((error: Response) => this.handleError(error)));
+            .pipe(catchError((error: HttpErrorResponse) => this.handleError(error)));
     }
 
     fetchUserConfiguration(login: string): Observable<UserConfiguration> {
@@ -57,7 +60,7 @@ export class ExternalDevicesService extends ErrorService {
     updateUserConfiguration(userconfigData: UserConfiguration): Observable<UserConfiguration> {
         return this.httpClient
             .post<UserConfiguration>(`${this.configurationsUrl}/users`, userconfigData)
-            .pipe(catchError((error: Response) => this.handleError(error)));
+            .pipe(catchError((error: HttpErrorResponse) => this.handleError(error)));
     }
 
     enableDevice(deviceId: string): Observable<string> {
@@ -72,6 +75,6 @@ export class ExternalDevicesService extends ErrorService {
 
     deleteByUserLogin(login: string) {
         const url = `${this.configurationsUrl}/users/${login}`;
-        return this.httpClient.delete(url).pipe(catchError((error: Response) => this.handleError(error)));
+        return this.httpClient.delete(url).pipe(catchError((error: HttpErrorResponse) => this.handleError(error)));
     }
 }

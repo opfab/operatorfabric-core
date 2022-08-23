@@ -12,12 +12,15 @@ import {environment} from '@env/environment';
 import {Observable, Subject} from 'rxjs';
 import {User} from '@ofModel/user.model';
 import {UserWithPerimeters} from '@ofModel/userWithPerimeters.model';
-import {HttpClient} from '@angular/common/http';
+import {HttpClient, HttpErrorResponse} from '@angular/common/http';
 import {catchError, takeUntil, tap} from 'rxjs/operators';
 import {CrudService} from './crud-service';
 import {Injectable} from '@angular/core';
 import {Entity} from '@ofModel/entity.model';
 import {RightsEnum} from '@ofModel/perimeter.model';
+import {Store} from '@ngrx/store';
+import {AppState} from '@ofStore/index';
+import {OpfabLoggerService} from './logs/opfab-logger.service';
 
 @Injectable({
     providedIn: 'root'
@@ -35,8 +38,8 @@ export class UserService extends CrudService {
      * @constructor
      * @param httpClient - Angular build-in
      */
-    constructor(private httpClient: HttpClient) {
-        super();
+    constructor(protected store: Store<AppState>, private httpClient: HttpClient, protected loggerService: OpfabLoggerService) {
+        super(store, loggerService);
         this.userUrl = `${environment.urls.users}`;
         this.connectionsUrl = `${environment.urls.cards}/connections`;
         this.willNewSubscriptionDisconnectAnExistingSubscriptionUrl = `${environment.urls.cards}/willNewSubscriptionDisconnectAnExistingSubscription`;
@@ -46,7 +49,7 @@ export class UserService extends CrudService {
 
     deleteById(login: string) {
         const url = `${this.userUrl}/users/${login}`;
-        return this.httpClient.delete(url).pipe(catchError((error: Response) => this.handleError(error)));
+        return this.httpClient.delete(url).pipe(catchError((error: HttpErrorResponse) => this.handleError(error)));
     }
 
     getUser(user: string): Observable<User> {
@@ -64,7 +67,7 @@ export class UserService extends CrudService {
     queryAllUsers(): Observable<User[]> {
         return this.httpClient
             .get<User[]>(`${this.userUrl}`)
-            .pipe(catchError((error: Response) => this.handleError(error)));
+            .pipe(catchError((error: HttpErrorResponse) => this.handleError(error)));
     }
 
     getAll(): Observable<User[]> {
@@ -74,7 +77,7 @@ export class UserService extends CrudService {
     updateUser(userData: User): Observable<User> {
         return this.httpClient
             .post<User>(`${this.userUrl}`, userData)
-            .pipe(catchError((error: Response) => this.handleError(error)));
+            .pipe(catchError((error: HttpErrorResponse) => this.handleError(error)));
     }
 
     update(userData: User | any): Observable<User> {
@@ -83,7 +86,7 @@ export class UserService extends CrudService {
 
     queryAllEntities(): Observable<Entity[]> {
         const url = `${this.userUrl}/entities`;
-        return this.httpClient.get<Entity[]>(url).pipe(catchError((error: Response) => this.handleError(error)));
+        return this.httpClient.get<Entity[]>(url).pipe(catchError((error: HttpErrorResponse) => this.handleError(error)));
     }
 
     public loadUserWithPerimetersData(): Observable<any> {

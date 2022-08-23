@@ -16,7 +16,6 @@ import {ExternalDevicesService} from '@ofServices/external-devices.service';
 import {AlertMessageAction} from '@ofStore/actions/alert.actions';
 import {AppState} from '@ofStore/index';
 import {ColDef, GridOptions, ICellRendererParams} from 'ag-grid-community';
-import {AppError} from 'app/common/error/app-error';
 import { CheckboxCellRendererComponent } from 'app/modules/admin/components/cell-renderers/checkbox-cell-renderer.component';
 import {Observable, throwError} from 'rxjs';
 import {ActionCellRendererComponent} from '../../admin/components/cell-renderers/action-cell-renderer.component';
@@ -229,7 +228,7 @@ export abstract class ExternalDevicesConfigurationDirective {
                     });
                 }
             })
-            .catch(() => throwError(() => new AppError(null)));
+            .catch((error) => throwError(() => error));
     }
 
     protected displayMessage(i18nKey: string, msg: string, severity: MessageLevel = MessageLevel.ERROR) {

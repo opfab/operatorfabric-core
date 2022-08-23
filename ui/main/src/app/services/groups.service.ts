@@ -10,11 +10,13 @@
 import {Observable, Subject} from 'rxjs';
 import {Group} from '@ofModel/group.model';
 import {environment} from '@env/environment';
-import {HttpClient} from '@angular/common/http';
+import {HttpClient, HttpErrorResponse} from '@angular/common/http';
 import {catchError, takeUntil, tap} from 'rxjs/operators';
 import {Injectable, OnDestroy} from '@angular/core';
 import {CachedCrudService} from '@ofServices/cached-crud-service';
-
+import {Store} from '@ngrx/store';
+import {AppState} from '@ofStore/index';
+import {OpfabLoggerService} from './logs/opfab-logger.service';
 @Injectable({
     providedIn: 'root'
 })
@@ -28,8 +30,8 @@ export class GroupsService extends CachedCrudService implements OnDestroy {
      * @constructor
      * @param httpClient - Angular build-in
      */
-    constructor(private httpClient: HttpClient) {
-        super();
+    constructor(protected store: Store<AppState>, private httpClient: HttpClient, protected loggerService: OpfabLoggerService) {
+        super(store, loggerService);
         this.groupsUrl = `${environment.urls.groups}`;
     }
 
@@ -41,7 +43,7 @@ export class GroupsService extends CachedCrudService implements OnDestroy {
     deleteById(id: string) {
         const url = `${this.groupsUrl}/${id}`;
         return this.httpClient.delete(url).pipe(
-            catchError((error: Response) => this.handleError(error)),
+            catchError((error: HttpErrorResponse) => this.handleError(error)),
             tap(() => {
                 this.deleteFromCachedGroups(id);
             })
@@ -61,7 +63,7 @@ export class GroupsService extends CachedCrudService implements OnDestroy {
     private queryAllGroups(): Observable<Group[]> {
         return this.httpClient
             .get<Group[]>(`${this.groupsUrl}`)
-            .pipe(catchError((error: Response) => this.handleError(error)));
+            .pipe(catchError((error: HttpErrorResponse) => this.handleError(error)));
     }
 
     public loadAllGroupsData(): Observable<any> {
@@ -89,7 +91,7 @@ export class GroupsService extends CachedCrudService implements OnDestroy {
 
     updateGroup(groupData: Group): Observable<Group> {
         return this.httpClient.post<Group>(`${this.groupsUrl}`, groupData).pipe(
-            catchError((error: Response) => this.handleError(error)),
+            catchError((error: HttpErrorResponse) => this.handleError(error)),
             tap(() => {
                 this.updateCachedGroups(groupData);
             })
