@@ -217,6 +217,43 @@ describe ('Monitoring screen tests',function () {
 
     })
 
+    it('Check severity sort', function () {
+
+        cy.loginOpFab('operator1_fr','test');
+
+        // Access monitoring screen
+        cy.get('#opfab-navbar-menu-monitoring').click();
+
+        // Create an alias to shorten the code
+        cy.get('#opfab-monitoring-table-grid').find('.ag-header-container').find('.ag-header-row-column').as('monitoring-table-headers');
+
+        // Should have the correct number of cards (5 because one card is set not to be visible in monitoring)
+        cy.countAgGridTableRows('#opfab-monitoring-table-grid', 5);
+
+        // Sorting severities a first time
+        cy.get('@monitoring-table-headers').find('.ag-header-cell').eq(0).click();
+        cy.wait(500);
+
+        // Cards should be sorted by severity
+        cy.agGridCellShould('#opfab-monitoring-table-grid', 0, 3, 'have.text', '⚠️ Network Contingencies ⚠️');
+        cy.agGridCellShould('#opfab-monitoring-table-grid', 1, 3, 'have.text', 'Electricity consumption forecast');
+        cy.agGridCellShould('#opfab-monitoring-table-grid', 2, 3, 'have.text', '⚡ Planned Outage');
+        cy.agGridCellShould('#opfab-monitoring-table-grid', 3, 3, 'have.text', 'Process state (calcul)');
+        cy.agGridCellShould('#opfab-monitoring-table-grid', 4, 3, 'have.text', 'Message');
+
+        // Sorting severities a second time
+        cy.get('@monitoring-table-headers').find('.ag-header-cell').eq(0).click();
+        cy.wait(500);
+
+        // Cards should be sorted by severity
+        cy.agGridCellShould('#opfab-monitoring-table-grid', 0, 3, 'have.text', 'Message');
+        cy.agGridCellShould('#opfab-monitoring-table-grid', 1, 3, 'have.text', 'Process state (calcul)');
+        cy.agGridCellShould('#opfab-monitoring-table-grid', 2, 3, 'have.text', '⚡ Planned Outage');
+        cy.agGridCellShould('#opfab-monitoring-table-grid', 3, 3, 'have.text', '⚠️ Network Contingencies ⚠️');
+        cy.agGridCellShould('#opfab-monitoring-table-grid', 4, 3, 'have.text', 'Electricity consumption forecast');
+
+    })
+
     it('Check title sort', function () {
 
         cy.loginOpFab('operator1_fr','test');
