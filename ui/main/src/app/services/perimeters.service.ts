@@ -9,11 +9,14 @@
 
 import {Observable, Subject} from 'rxjs';
 import {environment} from '@env/environment';
-import {HttpClient} from '@angular/common/http';
+import {HttpClient, HttpErrorResponse} from '@angular/common/http';
 import {catchError, takeUntil, tap} from 'rxjs/operators';
 import {Injectable, OnDestroy} from '@angular/core';
 import {CachedCrudService} from '@ofServices/cached-crud-service';
 import {Perimeter} from '@ofModel/perimeter.model';
+import {Store} from '@ngrx/store';
+import {AppState} from '@ofStore/index';
+import {OpfabLoggerService} from './logs/opfab-logger.service';
 
 @Injectable({
     providedIn: 'root'
@@ -28,8 +31,8 @@ export class PerimetersService extends CachedCrudService implements OnDestroy {
      * @constructor
      * @param httpClient - Angular build-in
      */
-    constructor(private httpClient: HttpClient) {
-        super();
+    constructor(protected store: Store<AppState>, private httpClient: HttpClient, protected loggerService: OpfabLoggerService) {
+        super(store, loggerService);
         this.perimetersUrl = `${environment.urls.perimeters}`;
     }
 
@@ -41,7 +44,7 @@ export class PerimetersService extends CachedCrudService implements OnDestroy {
     deleteById(id: string) {
         const url = `${this.perimetersUrl}/${id}`;
         return this.httpClient.delete(url).pipe(
-            catchError((error: Response) => this.handleError(error)),
+            catchError((error: HttpErrorResponse) => this.handleError(error)),
             tap(() => {
                 this.deleteFromCachedPerimeters(id);
             })
@@ -61,7 +64,7 @@ export class PerimetersService extends CachedCrudService implements OnDestroy {
     private queryAllPerimeters(): Observable<Perimeter[]> {
         return this.httpClient
             .get<Perimeter[]>(`${this.perimetersUrl}`)
-            .pipe(catchError((error: Response) => this.handleError(error)));
+            .pipe(catchError((error: HttpErrorResponse) => this.handleError(error)));
     }
 
     public loadAllPerimetersData(): Observable<any> {
@@ -89,7 +92,7 @@ export class PerimetersService extends CachedCrudService implements OnDestroy {
 
     createPerimeter(perimeterData: Perimeter): Observable<Perimeter> {
         return this.httpClient.post<Perimeter>(`${this.perimetersUrl}`, perimeterData).pipe(
-            catchError((error: Response) => this.handleError(error)),
+            catchError((error: HttpErrorResponse) => this.handleError(error)),
             tap(() => {
                 this.updateCachedPerimeters(perimeterData);
             })
@@ -98,7 +101,7 @@ export class PerimetersService extends CachedCrudService implements OnDestroy {
 
     updatePerimeter(perimeterData: Perimeter): Observable<Perimeter> {
         return this.httpClient.put<Perimeter>(`${this.perimetersUrl}` + '/' + perimeterData.id, perimeterData).pipe(
-            catchError((error: Response) => this.handleError(error)),
+            catchError((error: HttpErrorResponse) => this.handleError(error)),
             tap(() => {
                 this.updateCachedPerimeters(perimeterData);
             })
