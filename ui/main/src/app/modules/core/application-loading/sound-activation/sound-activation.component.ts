@@ -11,14 +11,13 @@ import {Component, OnInit, TemplateRef, ViewChild} from '@angular/core';
 import {NgbModal, NgbModalRef} from '@ng-bootstrap/ng-bootstrap';
 import {LogOption, OpfabLoggerService} from '@ofServices/logs/opfab-logger.service';
 import {SoundNotificationService} from '@ofServices/sound-notification.service';
-import {Utilities} from 'app/common/utilities';
 
-// Due to auto-policy in chromium based browsers, if the user does not interact with the application
+// Due to auto-policy in firefox and chromium based browsers, if the user does not interact with the application
 // sound is not activated. This component opens a modal and by clicking OK the user interacts with the application
 // and activates the sound
 //
 // See https://developer.chrome.com/blog/autoplay/#web-audio
-//
+// See https://www.mozilla.org/en-US/firefox/66.0/releasenotes/
 
 @Component({
     selector: 'of-sound-activation',
@@ -43,7 +42,6 @@ export class SoundActivationComponent implements OnInit {
         setTimeout(() => {
             const playSoundOnExternalDevice = this.soundNotificationService.getPlaySoundOnExternalDevice();
             if (
-                Utilities.isNavigatorChromiumBased() &&
                 !playSoundOnExternalDevice &&
                 this.soundNotificationService.isAtLeastOneSoundActivated()
             ) {
