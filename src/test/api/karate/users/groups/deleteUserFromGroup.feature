@@ -93,3 +93,11 @@ Feature: deleteUserFromGroup
     And header Authorization = 'Bearer ' + authToken
     When method delete
     Then status 200
+
+  
+    
+  Scenario: Try to delete admin user from admin group (should return 403)
+    Given url opfabUrl + 'users/groups/ADMIN/users/admin'
+    And header Authorization = 'Bearer ' + authToken
+    When method delete
+    Then status 403

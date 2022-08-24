@@ -752,6 +752,15 @@ class UsersControllerShould {
         }
 
         @Test
+        void shouldNotBeAbleToDeleteAdminUser() throws Exception {
+            mockMvc.perform(delete("/users/admin")
+                    .contentType(MediaType.APPLICATION_JSON)
+            )
+                    .andExpect(status().isForbidden())
+            ;
+        }
+
+        @Test
         void deleteUser() throws Exception {
             List<UserData> pythons = userRepository.findByGroupSetContaining("Monty Pythons");
             assertThat(pythons).hasSize(2);
