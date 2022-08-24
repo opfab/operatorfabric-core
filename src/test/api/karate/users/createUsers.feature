@@ -28,6 +28,15 @@ Feature: CreateUsers
 }
 """
 
+  * def adminUser =
+"""
+  {
+  
+     "login" : "admin",
+     "groups": []
+  }
+  """
+
     * def wrongUser =
 """
 {
@@ -82,3 +91,13 @@ Feature: CreateUsers
    And request wrongUser
     When method post
     Then status 400
+
+    
+  Scenario: Try to remove the admin user from the ADMIN group
+    #post /users
+    #update user, expected response 403
+    Given url opfabUrl + 'users/users'
+    And header Authorization = 'Bearer ' + authToken
+    And request adminUser
+    When method post
+    Then status 403

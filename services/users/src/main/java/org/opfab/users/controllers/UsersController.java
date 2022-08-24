@@ -53,9 +53,12 @@ public class UsersController implements UsersApi, UserExtractor {
     public static final String USER_SETTINGS_NOT_FOUND_MSG = "User setting for user %s not found";
     public static final String NO_MATCHING_USER_NAME_MSG = "Payload User login does not match URL User login";
     public static final String MANDATORY_LOGIN_MISSING = "Mandatory 'login' field is missing";
+    public static final String CANNOT_REMOVE_ADMIN_USER_FROM_ADMIN_GROUP = "Removing group ADMIN from user admin is not allowed";
 
     public static final String USER_CREATED = "User %s is created";
     public static final String USER_UPDATED = "User %s is updated";
+
+    public static final String ADMIN_LOGIN = "admin";
     
     @Autowired
     private UserRepository userRepository;
@@ -80,8 +83,12 @@ public class UsersController implements UsersApi, UserExtractor {
 
     @Override
     public User createUser(HttpServletRequest request, HttpServletResponse response, User user) {
+        if (isRemovingAdminUserFromAdminGroup(user)) {
+            throw buildApiException(HttpStatus.FORBIDDEN, CANNOT_REMOVE_ADMIN_USER_FROM_ADMIN_GROUP);
+        }
+
         boolean created = false;
-        checkAndsetUserLogin(user);
+        checkAndSetUserLogin(user);
 
         String login = user.getLogin();
 
@@ -102,25 +109,23 @@ public class UsersController implements UsersApi, UserExtractor {
         return user;
     }
 
+    private boolean isRemovingAdminUserFromAdminGroup(User user) {
+        boolean isAdminUser = user.getLogin().equals(ADMIN_LOGIN);
+        boolean hasAdminGroup = user.getGroups().contains(GroupsController.ADMIN_GROUP_ID);
+
+        return isAdminUser && !hasAdminGroup;
+    }
+
     @Override
     public User fetchUser(HttpServletRequest request, HttpServletResponse response, String login) throws ApiErrorException {
         return userRepository.findById(login)
-                .orElseThrow(()-> new ApiErrorException(
-                        ApiError.builder()
-                                .status(HttpStatus.NOT_FOUND)
-                                .message(String.format(USER_NOT_FOUND_MSG,login))
-                                .build()
-                ));
+                .orElseThrow(()-> buildApiException(HttpStatus.NOT_FOUND, String.format(USER_NOT_FOUND_MSG,login)));
     }
 
     @Override
     public UserSettings fetchUserSetting(HttpServletRequest request, HttpServletResponse response, String login) throws ApiErrorException {
         return userSettingsRepository.findById(login)
-                .orElseThrow(()->new ApiErrorException(
-                        ApiError.builder()
-                                .status(HttpStatus.NOT_FOUND)
-                                .message(String.format(USER_SETTINGS_NOT_FOUND_MSG,login)).build()
-                ));
+                .orElseThrow(()-> buildApiException(HttpStatus.NOT_FOUND, String.format(USER_SETTINGS_NOT_FOUND_MSG,login)));
     }
 
     @Override
@@ -143,11 +148,7 @@ public class UsersController implements UsersApi, UserExtractor {
     @Override
     public UserSettings updateUserSettings(HttpServletRequest request, HttpServletResponse response, String login, UserSettings userSettings) throws ApiErrorException {
         if(!userSettings.getLogin().equals(login)) {
-            throw new ApiErrorException(
-                    ApiError.builder()
-                            .status(HttpStatus.BAD_REQUEST)
-                            .message(NO_MATCHING_USER_NAME_MSG)
-                            .build());
+            throw buildApiException(HttpStatus.BAD_REQUEST, NO_MATCHING_USER_NAME_MSG);
         }
         return userSettingsRepository.save(new UserSettingsData(userSettings));
     }
@@ -156,11 +157,7 @@ public class UsersController implements UsersApi, UserExtractor {
     public User updateUser(HttpServletRequest request, HttpServletResponse response, String login, User user) throws ApiErrorException {
         //login from user body parameter should match login path parameter
         if (!user.getLogin().equalsIgnoreCase(login)) {
-            throw new ApiErrorException(
-                    ApiError.builder()
-                            .status(HttpStatus.BAD_REQUEST)
-                            .message(NO_MATCHING_USER_NAME_MSG)
-                            .build());
+            throw buildApiException(HttpStatus.BAD_REQUEST, NO_MATCHING_USER_NAME_MSG);
         }
         user.setLogin(user.getLogin().toLowerCase());
         return createUser(request, response, user);
@@ -190,14 +187,13 @@ public class UsersController implements UsersApi, UserExtractor {
 
     @Override
     public Void deleteUser(HttpServletRequest request, HttpServletResponse response, String login) throws ApiErrorException{
+        // Prevent from deleting admin user
+        if (login.equals(ADMIN_LOGIN)) {
+            throw buildApiException(HttpStatus.FORBIDDEN, "Deleting user admin is not allowed");
+        }
 
         //Retrieve user from repository for login, throwing an error if login is not found
-        UserData foundUser = userRepository.findById(login).orElseThrow(()->new ApiErrorException(
-                ApiError.builder()
-                        .status(HttpStatus.NOT_FOUND)
-                        .message(String.format(USER_NOT_FOUND_MSG, login))
-                        .build()
-        ));
+        UserData foundUser = userRepository.findById(login).orElseThrow(()-> buildApiException(HttpStatus.NOT_FOUND, String.format(USER_NOT_FOUND_MSG, login)));
 
         if (foundUser != null) {
             userRepository.delete(foundUser);
@@ -212,7 +208,7 @@ public class UsersController implements UsersApi, UserExtractor {
     public User synchronizeWithToken(HttpServletRequest request, HttpServletResponse response) {
         User user = this.extractUserFromJwtToken(request);
 
-        checkAndsetUserLogin(user);
+        checkAndSetUserLogin(user);
 
         String login = user.getLogin();
 
@@ -264,25 +260,24 @@ public class UsersController implements UsersApi, UserExtractor {
 
     private UserData findUserOrThrow(String login) throws ApiErrorException {
         return userRepository.findById(login).orElseThrow(
-                ()-> new ApiErrorException(
-                        ApiError.builder()
-                                .status(HttpStatus.NOT_FOUND)
-                                .message(String.format(USER_NOT_FOUND_MSG, login))
-                                .build()
-                ));
+                ()-> buildApiException(HttpStatus.NOT_FOUND, String.format(USER_NOT_FOUND_MSG, login)));
     }
 
-    private void checkAndsetUserLogin(User user) {
+    private void checkAndSetUserLogin(User user) {
         String login = user.getLogin();
 
         if (login.length() == 0) {
-            throw new ApiErrorException(
-                    ApiError.builder()
-                                .status(HttpStatus.BAD_REQUEST)
-                                .message(MANDATORY_LOGIN_MISSING)
-                                .build());
+            throw buildApiException(HttpStatus.BAD_REQUEST, MANDATORY_LOGIN_MISSING);
         }
         user.setLogin(user.getLogin().toLowerCase());
     }
-    
+
+    private ApiErrorException buildApiException(HttpStatus httpStatus, String errorMessage) {
+        return new ApiErrorException(
+                ApiError.builder()
+                        .status(httpStatus)
+                        .message(errorMessage)
+                        .build());
+    }
+
 }
