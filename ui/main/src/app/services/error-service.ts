@@ -18,13 +18,15 @@ import {throwError} from 'rxjs';
  * Note: This can't be an interface because Typescript doesn't allow default methods.
  */
 export abstract class ErrorService {
-    protected handleError(error: Response) {
-        if (error.status === 404) {
-            return throwError(() => new NotFoundError(error));
+    protected handleError(response) {
+        const errorMessage = response.error.message;
+
+        if (response.status === 404) {
+            return throwError(() => new NotFoundError(response, errorMessage));
         }
-        if (error.status === 403) {
-            return throwError(() => new NotAllowedError(error));
+        if (response.status === 403) {
+            return throwError(() => new NotAllowedError(response, errorMessage));
         }
-        return throwError(() => new AppError(error));
+        return throwError(() => new AppError(response, errorMessage));
     }
 }

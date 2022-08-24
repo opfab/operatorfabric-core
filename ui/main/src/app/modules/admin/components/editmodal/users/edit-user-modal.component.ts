@@ -108,8 +108,8 @@ export class EditUserModalComponent implements OnInit {
 
     update() {
         this.cleanForm();
-        const ipList =
-            this.authorizedIPAddresses.value.trim().length > 0 ? this.authorizedIPAddresses.value.split(',') : [];
+        const isAuthorizedIPAdressesAString = this.authorizedIPAddresses.value instanceof String;
+        const ipList = isAuthorizedIPAdressesAString && this.authorizedIPAddresses.value.trim().length > 0 ? this.authorizedIPAddresses.value.split(',') : [];
         this.authorizedIPAddresses.setValue(ipList.map((str) => str.trim()));
         this.crudService.update(this.userForm.value).subscribe(() => {
             this.activeModal.close('Update button clicked on user modal');

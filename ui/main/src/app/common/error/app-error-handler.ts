@@ -19,11 +19,17 @@ import {NotFoundError} from './not-found-error';
 @Injectable()
 export class AppErrorHandler implements ErrorHandler {
     handleError(error) {
-        if (error instanceof NotAllowedError) {
-            alert('Action not allowed');
-        }
-        if (error instanceof NotFoundError) {
-            alert('Resource not found');
+        const errorMessage = error.errorMessage;
+        if (!!errorMessage && errorMessage.length > 0) {
+            alert(error.errorMessage);
+        } else {
+            if (error instanceof NotAllowedError) {
+                alert('Action not allowed');
+            }
+
+            if (error instanceof NotFoundError) {
+                alert('Resource not found');
+            }
         }
 
         console.log(error);

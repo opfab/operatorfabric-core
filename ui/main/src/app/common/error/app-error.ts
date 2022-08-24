@@ -10,8 +10,10 @@
 
 export class AppError {
     public originalError;
+    public errorMessage;
 
-    constructor(originalError?) {
+    constructor(originalError?, errorMessage?) {
         this.originalError = originalError;
+        this.errorMessage = errorMessage;
     }
 }
