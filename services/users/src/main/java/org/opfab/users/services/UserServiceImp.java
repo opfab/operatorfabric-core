@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2021, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2022, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -107,10 +107,15 @@ public class UserServiceImp implements UserService {
     //Retrieve users from repository for the group and publish a message to USER_EXCHANGE
     public void publishUpdatedGroupMessage(String groupId){
         List<UserData> foundUsers = userRepository.findByGroupSetContaining(groupId);
-        if (foundUsers != null) {
+        if (foundUsers != null && !foundUsers.isEmpty()) {
             for (UserData userData : foundUsers)
                 publishUpdatedUserMessage(userData.getLogin());
-        }
+        } else publishUpdatedConfigMessage();
+    }
+
+    @Override
+    public void publishUpdatedConfigMessage(){
+        publishUpdatedUserMessage("");
     }
 
     public void publishUpdatedUserMessage(String userLogin){

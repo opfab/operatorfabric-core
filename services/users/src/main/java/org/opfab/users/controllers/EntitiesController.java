@@ -77,6 +77,7 @@ public class EntitiesController implements EntitiesApi {
             response.setStatus(201);
         }
         this.checkForCycleInEntityParenthood(entity);
+        userService.publishUpdatedConfigMessage();
         return entityRepository.save((EntityData) entity);
     }
 
@@ -94,6 +95,7 @@ public class EntitiesController implements EntitiesApi {
 
         //We delete the links between the users who are part of the entity to delete, and the entity
         removeTheReferenceToTheEntityForMemberUsers(id);
+        userService.publishUpdatedConfigMessage();
         return null;
     }
 
@@ -190,7 +192,7 @@ public class EntitiesController implements EntitiesApi {
 
         // Then we can delete the entity
         entityRepository.delete(foundEntityData);
-
+        userService.publishUpdatedConfigMessage();
         return null;
     }
 
@@ -198,7 +200,7 @@ public class EntitiesController implements EntitiesApi {
     private void removeTheReferenceToTheEntityForMemberUsers(String idEntity) {
         List<UserData> foundUsers = userRepository.findByEntitiesContaining(idEntity);
 
-        if (foundUsers != null) {
+        if (foundUsers != null && !foundUsers.isEmpty()) {
             for (UserData userData : foundUsers) {
                 userData.deleteEntity(idEntity);
                 userService.publishUpdatedUserMessage(userData.getLogin());

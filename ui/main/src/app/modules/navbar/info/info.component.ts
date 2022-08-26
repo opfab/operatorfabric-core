@@ -16,6 +16,8 @@ import {UserService} from '@ofServices/user.service';
 import {EntitiesService} from '@ofServices/entities.service';
 import {ConfigService} from '@ofServices/config.service';
 import {DateTimeFormatterService} from '@ofServices/date-time-formatter.service';
+import {Actions, ofType} from '@ngrx/effects';
+import {UserActionsTypes} from '@ofStore/actions/user.actions';
 
 @Component({
     selector: 'of-info',
@@ -32,14 +34,20 @@ export class InfoComponent implements OnInit {
         private dateTimeFormatter: DateTimeFormatterService,
         private userService: UserService,
         private entitiesService: EntitiesService,
-        private configService: ConfigService
+        private configService: ConfigService,
+        private actions$: Actions
     ) {}
 
     ngOnInit() {
         this.updateTime();
         this._userName$ = this.store.select(selectUserNameOrIdentifier);
         if (this.configService.getConfigValue('showUserEntitiesOnTopRightOfTheScreen', false))
+        {
             this.setUserEntitiesToDisplay();
+            this.actions$.pipe(
+                ofType(UserActionsTypes.UserConfigLoaded),
+                ).subscribe(() => this.setUserEntitiesToDisplay());
+        }
     }
 
     updateTime(): void {
