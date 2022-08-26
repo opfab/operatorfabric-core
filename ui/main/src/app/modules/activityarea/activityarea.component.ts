@@ -18,6 +18,8 @@ import {EntitiesService} from '@ofServices/entities.service';
 import {CardService} from '@ofServices/card.service';
 import {Utilities} from '../../common/utilities';
 import {GroupsService} from '@ofServices/groups.service';
+import {Actions, ofType} from '@ngrx/effects';
+import {UserActionsTypes} from '@ofStore/actions/user.actions';
 
 @Component({
     selector: 'of-activityarea',
@@ -49,7 +51,8 @@ export class ActivityareaComponent implements OnInit, OnDestroy {
         private groupsService: GroupsService,
         private modalService: NgbModal,
         private settingsService: SettingsService,
-        private cardService: CardService
+        private cardService: CardService,
+        private actions$: Actions
     ) {}
 
     private initForm() {
@@ -65,6 +68,19 @@ export class ActivityareaComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit() {
+       this.loadUserData();
+
+       this.actions$.pipe(
+        ofType(UserActionsTypes.UserConfigLoaded)
+        ).subscribe(() => this.loadUserData());
+
+        this.interval = setInterval(() => {
+            this.refresh();
+        }, 2000);
+    }
+
+    loadUserData() {
+        this.userEntities = [];
         this.currentUserWithPerimeters = this.userService.getCurrentUserWithPerimeters();
 
         // we retrieve all the entities to which the user can connect
@@ -74,7 +90,11 @@ export class ActivityareaComponent implements OnInit, OnDestroy {
             entities.forEach((entity) => {
                 if (entity.entityAllowedToSendCard) {
                     // this avoids to display entities used only for grouping
-                    const isDisconnected = !this.currentUserWithPerimeters.userData.entities.includes(entity.id);
+                    const isDisconnected =
+                        this.activityAreaForm && this.activityAreaForm.get(entity.id)
+                            ? !this.activityAreaForm.get(entity.id).value // Keep form value if esists
+                            : !this.currentUserWithPerimeters.userData.entities.includes(entity.id);
+
                     this.userEntities.push({
                         entityId: entity.id,
                         entityName: entity.name,
@@ -91,9 +111,6 @@ export class ActivityareaComponent implements OnInit, OnDestroy {
                 );
 
             this.refresh();
-            this.interval = setInterval(() => {
-                this.refresh();
-            }, 2000);
         });
     }
 

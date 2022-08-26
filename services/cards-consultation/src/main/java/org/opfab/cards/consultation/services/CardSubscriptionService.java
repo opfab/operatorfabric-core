@@ -186,10 +186,7 @@ public class CardSubscriptionService {
                 cache.values().forEach(subscription -> subscription.publishDataIntoSubscription(message));
                 break;
             case "user":
-                cache.values().forEach(subscription -> {
-                            if (message.equals(subscription.getUserLogin()))
-                                subscription.publishDataIntoSubscription("USER_CONFIG_CHANGE");
-                        });
+                cache.values().forEach(subscription -> subscription.publishDataIntoSubscription("USER_CONFIG_CHANGE"));
                 break;
             case "card":
                 cache.values().forEach(subscription -> processNewCard(message, subscription));

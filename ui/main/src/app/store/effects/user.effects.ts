@@ -15,19 +15,25 @@ import {
     LoadAllEntitiesAction,
     UserActions,
     UserActionsTypes,
-    UserApplicationRegisteredAction
+    UserApplicationRegisteredAction,
+    UserConfigLoadedAction
 } from '@ofStore/actions/user.actions';
 import {AuthenticationActionTypes} from '@ofStore/actions/authentication.actions';
 import {catchError, debounce, map, switchMap} from 'rxjs/operators';
 import {User} from '@ofModel/user.model';
 import {AuthenticationService} from '@ofServices/authentication/authentication.service';
 import {Entity} from '@ofModel/entity.model';
+import {EntitiesService} from '@ofServices/entities.service';
+import {GroupsService} from '@ofServices/groups.service';
+import {Utilities} from 'app/common/utilities';
 
 @Injectable()
 export class UserEffects {
     constructor(
         private actions$: Actions,
         private userService: UserService,
+        private entitieservice: EntitiesService,
+        private groupservice: GroupsService,
         private authService: AuthenticationService
     ) {}
 
@@ -71,14 +77,20 @@ export class UserEffects {
             this.actions$.pipe(
                 ofType(UserActionsTypes.UserConfigChange),
                 debounce(() => timer(5000 + Math.floor(Math.random() * 5000))), // use a random  part to avoid all UI to access at the same time the server
-                map(() => {
-                    this.userService.loadUserWithPerimetersData().subscribe();
+                switchMap(() => {
+                    const requestsToLaunch$ = [
+                        this.userService.loadUserWithPerimetersData(),
+                        this.entitieservice.loadAllEntitiesData(),
+                        this.groupservice.loadAllGroupsData()
+                    ];
+                    return Utilities.subscribeAndWaitForAllObservablesToEmitAnEvent(requestsToLaunch$)
                 }),
+                map(() => new UserConfigLoadedAction()),
                 catchError((error, caught) => {
                     console.error('UserEffects - Error in update user config ', error);
                     return caught;
                 })
             ),
-        {dispatch: false}
+        {dispatch: true}
     );
 }

@@ -15,7 +15,8 @@ export enum UserActionsTypes {
     UserApplicationRegistered = '[User] User application registered',
     QueryAllEntities = '[User] Ask to fetch all entities',
     LoadAllEntities = '[User] Load all entities',
-    UserConfigChange = '[User] User config changed'
+    UserConfigChange = '[User] User config changed',
+    UserConfigLoaded = '[User] User config loaded'
 }
 export class UserApplicationRegisteredAction implements Action {
     readonly type = UserActionsTypes.UserApplicationRegistered;
@@ -35,8 +36,13 @@ export class UserConfigChangeAction implements Action {
     readonly type = UserActionsTypes.UserConfigChange;
 }
 
+export class UserConfigLoadedAction implements Action {
+    readonly type = UserActionsTypes.UserConfigLoaded;
+}
+
 export type UserActions =
     | UserApplicationRegisteredAction
     | QueryAllEntitiesAction
     | LoadAllEntitiesAction
-    | UserConfigChangeAction;
+    | UserConfigChangeAction
+    | UserConfigLoadedAction;

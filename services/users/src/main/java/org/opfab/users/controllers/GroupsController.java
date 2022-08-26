@@ -81,9 +81,8 @@ public class GroupsController implements GroupsApi {
         if(groupRepository.findById(group.getId()).orElse(null) == null){
             response.addHeader("Location", request.getContextPath() + "/groups/" + group.getId());
             response.setStatus(201);
-        } else {
-            userService.publishUpdatedGroupMessage(group.getId());
         }
+        userService.publishUpdatedGroupMessage(group.getId());
         return groupRepository.save((GroupData)group);
     }
 
@@ -95,6 +94,7 @@ public class GroupsController implements GroupsApi {
 
         //We delete the link between the group and its users
         removeTheReferenceToTheGroupForMemberUsers(id);
+        userService.publishUpdatedGroupMessage(id);
         return null;
     }
 
@@ -245,13 +245,14 @@ public class GroupsController implements GroupsApi {
     private void removeTheReferenceToTheGroupForMemberUsers(String idGroup) {
         List<UserData> foundUsers = userRepository.findByGroupSetContaining(idGroup);
 
-        if (foundUsers != null) {
+        if (foundUsers != null && !foundUsers.isEmpty()) {
             for (UserData userData : foundUsers) {
                 userData.deleteGroup(idGroup);
                 userService.publishUpdatedUserMessage(userData.getLogin());
             }
             userRepository.saveAll(foundUsers);
-        }
+        } else  userService.publishUpdatedConfigMessage();
+
     }
 
     private GroupData findGroupOrThrow(String id) {
