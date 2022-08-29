@@ -63,18 +63,19 @@ describe('ActivityAreaPage', () => {
     it('Connection of operator4_fr, disconnection from ENTITY1_FR, ENTITY2_FR and ENTITY3_FR and check of feed and archives pages', () => {
         cy.loginOpFab('operator4_fr', 'test');
 
-        // operator4_fr is connected to all his entities, he should receive 5 cards in the feed
-        cy.get('of-light-card').should('have.length', 5);
-        cy.get('of-light-card').eq(0).find('.card-title').should('have.text', 'Electricity consumption forecast ');
-        cy.get('of-light-card').eq(1).find('.card-title').should('have.text', '⚡ Planned Outage ');
-        cy.get('of-light-card').eq(2).find('.card-title').should('have.text', 'Process state (calcul) ');
-        cy.get('of-light-card').eq(3).find('.card-title').should('have.text', 'Data quality ');
-        cy.get('of-light-card').eq(4).find('.card-title').should('have.text', 'Message ');
+        // operator4_fr is connected to all his entities, he should receive 6 cards in the feed
+        cy.get('of-light-card').should('have.length', 6);
+        cy.get('of-light-card').eq(0).find('.card-title').should('have.text', '⚠️ Network Contingencies ⚠️ ');
+        cy.get('of-light-card').eq(1).find('.card-title').should('have.text', 'Electricity consumption forecast ');
+        cy.get('of-light-card').eq(2).find('.card-title').should('have.text', '⚡ Planned Outage ');
+        cy.get('of-light-card').eq(3).find('.card-title').should('have.text', 'Process state (calcul) ');
+        cy.get('of-light-card').eq(4).find('.card-title').should('have.text', 'Data quality ');
+        cy.get('of-light-card').eq(5).find('.card-title').should('have.text', 'Message ');
 
-        // operator4_fr should see 5 cards in archives page
+        // operator4_fr should see 6 cards in archives page
         cy.get('#opfab-navbar-menu-archives').click();
         cy.get('#opfab-archives-logging-btn-search').click();
-        cy.get('#opfab-archives-cards-list').find('.opfab-archives-table-line').should('have.length', 5);
+        cy.get('#opfab-archives-cards-list').find('.opfab-archives-table-line').should('have.length', 6);
 
         // operator4_fr disconnect from ENTITY1_FR, ENTITY2_FR and ENTITY3_FR
         cy.openActivityArea();
@@ -162,7 +163,7 @@ describe('ActivityAreaPage', () => {
         cy.get('#opfab-activityarea-btn-confirm').click();
 
         cy.waitDefaultTime();
-        cy.get('of-light-card').should('have.length', 5);
+        cy.get('of-light-card').should('have.length', 6);
 
         cy.logoutOpFab();
 

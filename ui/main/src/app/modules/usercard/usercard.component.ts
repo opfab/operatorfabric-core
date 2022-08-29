@@ -8,7 +8,7 @@
  */
 
 import {Component, ElementRef, Input, OnInit, ViewChild} from '@angular/core';
-import {UntypedFormControl, UntypedFormGroup} from '@angular/forms';
+import {FormControl, FormGroup} from '@angular/forms';
 import {Store} from '@ngrx/store';
 import {AppState} from '@ofStore/index';
 import {CardService} from '@ofServices/card.service';
@@ -54,7 +54,9 @@ export class UserCardComponent implements OnInit {
     public userCardConfiguration: UserCard;
 
     // Severity
-    private severityForm: UntypedFormGroup;
+    private severityForm: FormGroup<{
+        severity: FormControl<string | null>;
+    }>;
     public severityVisible = true;
 
     // Dates
@@ -125,8 +127,8 @@ export class UserCardComponent implements OnInit {
         this.pageLoading = true;
         this.datesFromTemplate = true;
         usercardTemplateGateway.initUsercardTemplateGateway();
-        this.severityForm = new UntypedFormGroup({
-            severity: new UntypedFormControl('')
+        this.severityForm = new FormGroup({
+            severity: new FormControl('')
         });
         this.severityForm.get('severity').setValue(Severity.ALARM);
 

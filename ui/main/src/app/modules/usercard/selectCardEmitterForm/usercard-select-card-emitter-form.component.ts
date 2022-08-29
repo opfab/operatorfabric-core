@@ -8,7 +8,7 @@
  */
 
 import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
-import {UntypedFormControl, UntypedFormGroup} from '@angular/forms';
+import {FormControl, FormGroup} from '@angular/forms';
 import {takeUntil, debounceTime, Subject} from 'rxjs';
 import {MultiSelectConfig} from '@ofModel/multiselect.model';
 
@@ -24,7 +24,9 @@ export class UsercardSelectCardEmitterFormComponent implements OnInit {
 
     unsubscribe$: Subject<void> = new Subject<void>();
 
-    selectCardEmitterForm: UntypedFormGroup;
+    selectCardEmitterForm: FormGroup<{
+        cardEmitter: FormControl<string | null>;
+    }>;
 
     public multiSelectConfig: MultiSelectConfig = {
         labelKey: 'shared.cardEmitter',
@@ -37,8 +39,8 @@ export class UsercardSelectCardEmitterFormComponent implements OnInit {
     }
 
     ngOnInit() {
-        this.selectCardEmitterForm = new UntypedFormGroup({
-            cardEmitter: new UntypedFormControl('')
+        this.selectCardEmitterForm = new FormGroup({
+            cardEmitter: new FormControl('')
         });
 
         this.listenForEmitterChange();

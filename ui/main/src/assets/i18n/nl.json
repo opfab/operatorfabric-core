@@ -507,5 +507,9 @@
   "reloadRequired" : {
     "message": "Applicatie herladen vereist. Om te herladen klik ",
     "linkText": "hier"
-  }
+  },
+  "errors" : {
+    "notFound" : "Bron niet gevonden",
+    "notAllowed" : "Actie niet toegestaan"
+  } 
 }

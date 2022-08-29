@@ -14,11 +14,10 @@ import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
 import {NgbModalRef} from '@ng-bootstrap/ng-bootstrap/modal/modal-ref';
 import {UserWithPerimeters} from '@ofModel/userWithPerimeters.model';
 import {ProcessesService} from '@ofServices/processes.service';
-import {UntypedFormArray, UntypedFormBuilder, UntypedFormControl, UntypedFormGroup} from '@angular/forms';
+import {FormArray, FormControl, FormGroup} from '@angular/forms';
 import {SettingsService} from '@ofServices/settings.service';
 import {CardService} from '@ofServices/card.service';
 import {TranslateService} from '@ngx-translate/core';
-import {ConfigService} from '@ofServices/config.service';
 import {Utilities} from '../../common/utilities';
 
 @Component({
@@ -27,7 +26,9 @@ import {Utilities} from '../../common/utilities';
     styleUrls: ['./feedconfiguration.component.scss']
 })
 export class FeedconfigurationComponent implements OnInit {
-    feedConfigurationForm: UntypedFormGroup;
+    feedConfigurationForm: FormGroup<{
+        processesStates: FormArray;
+    }>;
 
     processesDefinition: Process[];
     processGroupsAndLabels: {
@@ -57,14 +58,12 @@ export class FeedconfigurationComponent implements OnInit {
     isThereProcessStateToDisplay: boolean;
 
     constructor(
-        private formBuilder: UntypedFormBuilder,
         private userService: UserService,
         private processesService: ProcessesService,
         private modalService: NgbModal,
         private settingsService: SettingsService,
         private cardService: CardService,
-        private translateService: TranslateService,
-        private configService: ConfigService
+        private translateService: TranslateService
     ) {
         this.processesStatesLabels = new Map();
         this.processIdsByProcessGroup = new Map();
@@ -77,7 +76,7 @@ export class FeedconfigurationComponent implements OnInit {
     }
 
     get processesStatesFormArray() {
-        return this.feedConfigurationForm.controls.processesStates as UntypedFormArray;
+        return this.feedConfigurationForm.controls.processesStates as FormArray;
     }
 
     private findInProcessGroups(processIdToFind: string): boolean {
@@ -167,7 +166,7 @@ export class FeedconfigurationComponent implements OnInit {
             let isChecked = true;
             if (!!notNotifiedStatesForThisProcess && notNotifiedStatesForThisProcess.includes(processState.stateId))
                 isChecked = false;
-            this.processesStatesFormArray.push(new UntypedFormControl(isChecked));
+            this.processesStatesFormArray.push(new FormControl<boolean | null>(isChecked));
         });
     }
 
@@ -221,8 +220,8 @@ export class FeedconfigurationComponent implements OnInit {
     }
 
     private initForm() {
-        this.feedConfigurationForm = this.formBuilder.group({
-            processesStates: new UntypedFormArray([])
+        this.feedConfigurationForm = new FormGroup({
+            processesStates: new FormArray([])
         });
     }
 

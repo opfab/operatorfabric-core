@@ -507,5 +507,9 @@
   "reloadRequired" : {
     "message": "Rechargement de l'application nécessaire. Pour recharger veuillez cliquer ",
     "linkText": "ici"
-  }
+  },
+  "errors" : {
+    "notFound" : "Ressource non trouvée",
+    "notAllowed" : "Action non autorisée"
+  } 
 }

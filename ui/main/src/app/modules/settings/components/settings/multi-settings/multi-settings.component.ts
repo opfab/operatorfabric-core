@@ -11,7 +11,7 @@ import {Component, OnDestroy, OnInit} from '@angular/core';
 import {BaseSettingDirective} from '../base-setting/base-setting.directive';
 import {Store} from '@ngrx/store';
 import {AppState} from '@ofStore/index';
-import {UntypedFormControl, UntypedFormGroup, Validators} from '@angular/forms';
+import {FormControl, FormGroup, Validators} from '@angular/forms';
 import {ConfigService} from '@ofServices/config.service';
 import {SettingsService} from '@ofServices/settings.service';
 
@@ -30,9 +30,9 @@ export class MultiSettingsComponent extends BaseSettingDirective implements OnIn
 
     initFormGroup() {
         const validators = this.computeMultiValidators();
-        return new UntypedFormGroup(
+        return new FormGroup(
             {
-                setting: new UntypedFormControl([], validators)
+                setting: new FormControl([], validators)
             },
             {updateOn: 'change'}
         );

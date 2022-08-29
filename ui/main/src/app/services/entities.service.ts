@@ -8,12 +8,15 @@
  */
 
 import {environment} from '@env/environment';
-import {HttpClient} from '@angular/common/http';
+import {HttpClient, HttpErrorResponse} from '@angular/common/http';
 import {catchError, takeUntil, tap} from 'rxjs/operators';
 import {Observable, Subject} from 'rxjs';
 import {Entity} from '@ofModel/entity.model';
 import {Injectable, OnDestroy} from '@angular/core';
 import {CachedCrudService} from '@ofServices/cached-crud-service';
+import {Store} from '@ngrx/store';
+import {AppState} from '@ofStore/index';
+import {OpfabLoggerService} from './logs/opfab-logger.service';
 
 declare const templateGateway: any;
 
@@ -28,8 +31,8 @@ export class EntitiesService extends CachedCrudService implements OnDestroy {
      * @constructor
      * @param httpClient - Angular build-in
      */
-    constructor(private httpClient: HttpClient) {
-        super();
+    constructor(protected store: Store<AppState>, private httpClient: HttpClient, protected loggerService: OpfabLoggerService) {
+        super(store, loggerService);
         this.entitiesUrl = `${environment.urls.entities}`;
     }
 
@@ -41,7 +44,7 @@ export class EntitiesService extends CachedCrudService implements OnDestroy {
     deleteById(id: string) {
         const url = `${this.entitiesUrl}/${id}`;
         return this.httpClient.delete(url).pipe(
-            catchError((error: Response) => this.handleError(error)),
+            catchError((error: HttpErrorResponse) => this.handleError(error)),
             tap(() => {
                 this.deleteFromCachedEntities(id);
             })
@@ -55,12 +58,12 @@ export class EntitiesService extends CachedCrudService implements OnDestroy {
     queryAllEntities(): Observable<Entity[]> {
         return this.httpClient
             .get<Entity[]>(`${this.entitiesUrl}`)
-            .pipe(catchError((error: Response) => this.handleError(error)));
+            .pipe(catchError((error: HttpErrorResponse) => this.handleError(error)));
     }
 
     updateEntity(entityData: Entity): Observable<Entity> {
         return this.httpClient.post<Entity>(`${this.entitiesUrl}`, entityData).pipe(
-            catchError((error: Response) => this.handleError(error)),
+            catchError((error: HttpErrorResponse) => this.handleError(error)),
             tap(() => {
                 this.updateCachedEntity(entityData);
             })
@@ -152,8 +155,7 @@ export class EntitiesService extends CachedCrudService implements OnDestroy {
             if (entity.entityAllowedToSendCard) {
                 allowed.add(entity);
             } else {
-                let children: Entity[];
-                children = this._entities.filter((child) => !!child.parents && child.parents.includes(entity.id));
+                const children = this._entities.filter((child) => !!child.parents && child.parents.includes(entity.id));
                 const childrenAllowed = this.resolveEntitiesAllowedToSendCards(children);
                 childrenAllowed.forEach((c) => allowed.add(c));
             }

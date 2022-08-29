@@ -8,7 +8,7 @@
  */
 
 import {Component, Input, OnChanges, OnDestroy, OnInit, Output} from '@angular/core';
-import {UntypedFormControl, UntypedFormGroup} from '@angular/forms';
+import {FormControl, FormGroup} from '@angular/forms';
 import {Subject} from 'rxjs';
 import {debounceTime, takeUntil} from 'rxjs/operators';
 import {DatesForm} from './dates-form.model';
@@ -25,16 +25,20 @@ export class UserCardDatesFormComponent implements OnInit, OnDestroy, OnChanges 
     @Output() public endDateFilterChange = new Subject();
     @Output() public lttdFilterChange = new Subject();
 
-    datesForm: UntypedFormGroup;
+    datesForm: FormGroup<{
+        startDate: FormControl<any | null>;
+        endDate: FormControl<any | null>;
+        lttd: FormControl<any | null>;
+    }>;
     unsubscribe$: Subject<void> = new Subject<void>();
 
     endDateMin: {year: number; month: number; day: number} = null;
 
     ngOnInit() {
-        this.datesForm = new UntypedFormGroup({
-            startDate: new UntypedFormControl(''),
-            endDate: new UntypedFormControl(''),
-            lttd: new UntypedFormControl('')
+        this.datesForm = new FormGroup({
+            startDate: new FormControl(''),
+            endDate: new FormControl(''),
+            lttd: new FormControl('')
         });
         this.setInitialDateValues();
         this.changeEndDateFilterBoundsWhenStartDateChange();

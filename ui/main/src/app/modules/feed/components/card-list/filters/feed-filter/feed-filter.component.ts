@@ -11,7 +11,7 @@ import {Component, Input, OnDestroy, OnInit, ViewEncapsulation} from '@angular/c
 import {Subject, timer} from 'rxjs';
 import {Store} from '@ngrx/store';
 import {AppState} from '@ofStore/index';
-import {AbstractControl, UntypedFormControl, UntypedFormGroup} from '@angular/forms';
+import {AbstractControl, FormControl, FormGroup} from '@angular/forms';
 import {debounce, debounceTime, distinctUntilChanged, takeUntil} from 'rxjs/operators';
 import * as _ from 'lodash-es';
 import {FilterType} from '@ofModel/feed-filter.model';
@@ -40,11 +40,25 @@ export class FeedFilterComponent implements OnInit, OnDestroy {
     dateTimeFilterChange = new Subject();
 
     private ngUnsubscribe$ = new Subject<void>();
-    typeFilterForm: UntypedFormGroup;
-    ackFilterForm: UntypedFormGroup;
-    timeFilterForm: UntypedFormGroup;
-    responseFilterForm: UntypedFormGroup;
-    timeLineFilterForm: UntypedFormGroup;
+    typeFilterForm: FormGroup<{
+        alarm: FormControl<boolean | null>;
+        action: FormControl<boolean | null>;
+        compliant: FormControl<boolean | null>;
+        information: FormControl<boolean | null>;
+    }>;
+    ackFilterForm: FormGroup<{
+        ackControl: FormControl<string | null>;
+    }>;
+    timeFilterForm: FormGroup<{
+        dateTimeFrom: FormControl<any | null>;
+        dateTimeTo: FormControl<any | null>;
+    }>;
+    responseFilterForm: FormGroup<{
+        responseControl: FormControl<boolean | null>;
+    }>;
+    timeLineFilterForm: FormGroup<{
+        timeLineControl: FormControl<boolean | null>;
+    }>;
 
     endMinDate: {year: number; month: number; day: number} = null;
     startMaxDate: {year: number; month: number; day: number} = null;
@@ -65,48 +79,48 @@ export class FeedFilterComponent implements OnInit, OnDestroy {
     }
 
     private createFormGroup() {
-        return new UntypedFormGroup(
+        return new FormGroup(
             {
-                alarm: new UntypedFormControl(),
-                action: new UntypedFormControl(),
-                compliant: new UntypedFormControl(),
-                information: new UntypedFormControl()
+                alarm: new FormControl<boolean | null>(null),
+                action: new FormControl<boolean | null>(null),
+                compliant: new FormControl<boolean | null>(null),
+                information: new FormControl<boolean | null>(null)
             },
             {updateOn: 'change'}
         );
     }
 
     private createResponseFormGroup() {
-        return new UntypedFormGroup(
+        return new FormGroup(
             {
-                responseControl: new UntypedFormControl(true)
+                responseControl: new FormControl<boolean | null>(true)
             },
             {updateOn: 'change'}
         );
     }
 
     private createTimeLineFormGroup() {
-        return new UntypedFormGroup(
+        return new FormGroup(
             {
-                timeLineControl: new UntypedFormControl(true)
+                timeLineControl: new FormControl<boolean | null>(true)
             },
             {updateOn: 'change'}
         );
     }
 
     private createAckFormGroup() {
-        return new UntypedFormGroup(
+        return new FormGroup(
             {
-                ackControl: new UntypedFormControl('notack')
+                ackControl: new FormControl<string | null>('notack')
             },
             {updateOn: 'change'}
         );
     }
 
     private createDateTimeForm() {
-        return new UntypedFormGroup({
-            dateTimeFrom: new UntypedFormControl(''),
-            dateTimeTo: new UntypedFormControl('')
+        return new FormGroup({
+            dateTimeFrom: new FormControl<any | null>(''),
+            dateTimeTo: new FormControl<any | null>('')
         });
     }
 

@@ -11,7 +11,7 @@ import {Component, Input, OnDestroy, OnInit} from '@angular/core';
 import {BaseSettingDirective} from '../base-setting/base-setting.directive';
 import {Store} from '@ngrx/store';
 import {AppState} from '@ofStore/index';
-import {UntypedFormControl, UntypedFormGroup} from '@angular/forms';
+import {FormControl, FormGroup} from '@angular/forms';
 import {ConfigService} from '@ofServices/config.service';
 import {SettingsService} from '@ofServices/settings.service';
 
@@ -34,9 +34,9 @@ export class CheckboxSettingComponent extends BaseSettingDirective implements On
     }
 
     initFormGroup() {
-        return new UntypedFormGroup(
+        return new FormGroup(
             {
-                setting: new UntypedFormControl('')
+                setting: new FormControl('')
             },
             {updateOn: 'change'}
         );

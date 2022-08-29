@@ -83,9 +83,6 @@ public class UsersController implements UsersApi, UserExtractor {
 
     @Override
     public User createUser(HttpServletRequest request, HttpServletResponse response, User user) {
-        if (isRemovingAdminUserFromAdminGroup(user)) {
-            throw buildApiException(HttpStatus.FORBIDDEN, CANNOT_REMOVE_ADMIN_USER_FROM_ADMIN_GROUP);
-        }
 
         boolean created = false;
         checkAndSetUserLogin(user);
@@ -98,6 +95,10 @@ public class UsersController implements UsersApi, UserExtractor {
             created = true;
             log.debug(String.format(USER_CREATED, login));
         } else {
+            if (isRemovingAdminUserFromAdminGroup(user)) {
+                throw buildApiException(HttpStatus.FORBIDDEN, CANNOT_REMOVE_ADMIN_USER_FROM_ADMIN_GROUP);
+            }
+    
         	log.debug(String.format(USER_UPDATED, login));
         }
 

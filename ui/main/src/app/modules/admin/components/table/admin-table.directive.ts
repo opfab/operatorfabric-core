@@ -14,7 +14,6 @@ import {TranslateService} from '@ngx-translate/core';
 import {NgbModal, NgbModalOptions} from '@ng-bootstrap/ng-bootstrap';
 import {Subject, throwError} from 'rxjs';
 import {ConfirmationDialogService} from '../../services/confirmation-dialog.service';
-import {AppError} from '../../../../common/error/app-error';
 import {CrudService} from '@ofServices/crud-service';
 import {ActionCellRendererComponent} from '../cell-renderers/action-cell-renderer.component';
 import {EntityCellRendererComponent} from '../cell-renderers/entity-cell-renderer.component';
@@ -380,7 +379,7 @@ export abstract class AdminTableDirective implements OnInit, OnDestroy {
                     });
                 }
             })
-            .catch(() => throwError(() => new AppError(null)));
+            .catch((error) => throwError(() => error));
     }
 
     createNewItem(): void {

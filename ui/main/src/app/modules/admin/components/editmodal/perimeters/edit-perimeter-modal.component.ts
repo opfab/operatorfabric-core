@@ -8,7 +8,12 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {UntypedFormBuilder, UntypedFormControl, UntypedFormGroup, Validators} from '@angular/forms';
+import {
+    FormControl,
+    UntypedFormControl,
+    UntypedFormGroup,
+    Validators
+} from '@angular/forms';
 import {Component, Input, OnInit} from '@angular/core';
 import {NgbActiveModal} from '@ng-bootstrap/ng-bootstrap';
 import {Perimeter, RightsEnum} from '@ofModel/perimeter.model';
@@ -31,18 +36,8 @@ export class EditPerimeterModalComponent implements OnInit {
         private store: Store<AppState>,
         private activeModal: NgbActiveModal,
         private crudService: PerimetersService,
-        private processesService: ProcessesService,
-        private formBuilder: UntypedFormBuilder
+        private processesService: ProcessesService
     ) {
-        this.perimeterForm = this.formBuilder.group({
-            id: new UntypedFormControl('', [
-                Validators.required,
-                Validators.minLength(2),
-                Validators.pattern(/^[A-Za-z\d\-_]+$/)
-            ]),
-            process: new UntypedFormControl('')
-        });
-
         Object.keys(RightsEnum).forEach((key) => {
             this.rightOptions.push({value: key, label: key});
         });
@@ -60,7 +55,14 @@ export class EditPerimeterModalComponent implements OnInit {
         return this.perimeterForm.get('stateRights');
     }
 
-    perimeterForm: UntypedFormGroup;
+    perimeterForm = new UntypedFormGroup({
+        id: new FormControl('', [
+            Validators.required,
+            Validators.minLength(2),
+            Validators.pattern(/^[A-Za-z\d\-_]+$/)
+        ]),
+        process: new FormControl('')
+    });
 
     processesDefinition: Process[];
     processOptions = [];

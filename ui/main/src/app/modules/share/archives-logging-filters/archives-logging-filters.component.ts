@@ -11,7 +11,7 @@ import {AfterViewInit, Component, EventEmitter, Input, OnDestroy, OnInit, Output
 import {ConfigService} from '@ofServices/config.service';
 import {Card} from '@ofModel/card.model';
 import {LightCard} from '@ofModel/light-card.model';
-import {UntypedFormGroup, AbstractControl} from '@angular/forms';
+import {AbstractControl, FormGroup} from '@angular/forms';
 import {ProcessesService} from '@ofServices/processes.service';
 import {debounceTime, takeUntil} from 'rxjs/operators';
 import {Subject} from 'rxjs';
@@ -59,7 +59,7 @@ export const transformToTimestamp = (date: NgbDateStruct, time: NgbTimeStruct): 
 })
 export class ArchivesLoggingFiltersComponent implements OnInit, OnDestroy, AfterViewInit {
     @Input() public card: Card | LightCard;
-    @Input() parentForm: UntypedFormGroup;
+    @Input() parentForm: FormGroup;
     @Input() visibleProcesses: any[];
     @Input() hideChildStates: boolean;
     @Input() tags: any[];
