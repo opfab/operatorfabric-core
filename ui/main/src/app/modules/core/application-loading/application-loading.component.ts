@@ -114,6 +114,7 @@ export class ApplicationLoadingComponent implements OnInit {
                 }
             });
         } else this.logger.error('No locales define (value i18.supported.locales not present in web-ui.json)');
+        this.i18nService.initLocale();
     }
 
     private isUrlCheckActivated(): boolean {
