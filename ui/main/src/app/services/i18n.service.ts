@@ -32,7 +32,11 @@ export class I18nService {
         private configService: ConfigService
     ) {
         I18nService.localUrl = `${environment.paths.i18n}`;
-        configService
+    }
+
+
+    public initLocale() {
+        this.configService
             .getConfigValueAsObservable('settings.locale', 'en')
             .subscribe((locale) => this.changeLocale(locale));
     }
