@@ -173,9 +173,9 @@ describe ('RealTimeUsersPage',()=>{
         cy.get('.opfab-checkbox').eq(2).find('input').should('not.be.checked');
         cy.get('.opfab-checkbox').eq(3).find('input').should('not.be.checked');
 
-        cy.get('.opfab-checkbox').contains('Control Center FR East').click();
-        cy.get('.opfab-checkbox').contains('Control Center FR South').click();
-        cy.get('.opfab-checkbox').contains('Control Center FR West').click();
+        cy.get('.opfab-checkbox').contains('Control Center FR East').click({force: true});
+        cy.get('.opfab-checkbox').contains('Control Center FR South').click({force: true});
+        cy.get('.opfab-checkbox').contains('Control Center FR West').click({force: true});
         cy.saveActivityAreaModifications();
 
         // we go back to the real time screen
