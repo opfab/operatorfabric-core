@@ -10,7 +10,9 @@
 import {TestBed} from '@angular/core/testing';
 import {FilterType} from '@ofModel/feed-filter.model';
 import {LightCard, Severity} from '@ofModel/light-card.model';
+import {RemoteLoggerService} from '@ofServices/logs/remote-logger.service';
 import {getSeveralRandomLightCards} from '@tests/helpers';
+import {RemoteLoggerServiceMock} from '@tests/mocks/remote-logger.service.mock';
 import {FilterService} from './filter.service';
 
 describe('NewFilterService ', () => {
@@ -18,6 +20,9 @@ describe('NewFilterService ', () => {
     const ONE_HOUR = 3600000;
 
     beforeEach(() => {
+        TestBed.configureTestingModule( {providers: [
+            {provide: RemoteLoggerService, useClass: RemoteLoggerServiceMock}
+        ]});
         service = TestBed.inject(FilterService);
     });
 

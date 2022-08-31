@@ -16,6 +16,7 @@ import {FilterService} from './filter.service';
 import {SortService} from './sort.service';
 import {GroupedCardsService} from '@ofServices/grouped-cards.service';
 import {ConfigService} from '@ofServices/config.service';
+import {LogOption, OpfabLoggerService} from '@ofServices/logs/opfab-logger.service';
 
 @Injectable({
     providedIn: 'root'
@@ -31,7 +32,8 @@ export class LightCardsFeedFilterService {
         private filterService: FilterService,
         private sortService: SortService,
         private groupedCardsService: GroupedCardsService,
-        private configService: ConfigService
+        private configService: ConfigService,
+        private logger : OpfabLoggerService
     ) {
         this.computeFilteredAndSortedLightCards();
         this.computeFilteredLightCards();
@@ -74,7 +76,7 @@ export class LightCardsFeedFilterService {
                     const lightCards = results[1];
                     const onlyBusinessFitlerForTimeLine = results[2];
 
-                    console.log(new Date().toISOString(), 'Number of card in memory ', results[1].length, ' cards');
+                    this.logger.debug('Number of cards in memory : ' +  results[1].length ,LogOption.LOCAL_AND_REMOTE);
 
                     if (onlyBusinessFitlerForTimeLine) {
                         const cardFilteredByBusinessDate =
@@ -88,7 +90,10 @@ export class LightCardsFeedFilterService {
                     return cardFilter;
                 })
             )
-            .subscribe((lightCards) => this.filteredLightCards.next(lightCards));
+            .subscribe((lightCards) => {
+                this.logger.debug('Number of cards visible after filtering : ' +  lightCards.length ,LogOption.LOCAL_AND_REMOTE);
+                this.filteredLightCards.next(lightCards);
+            });
     }
 
     private isGroupedCardsEnabled(): boolean {
