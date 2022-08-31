@@ -101,3 +101,4 @@ Feature: deleteUserFromGroup
     And header Authorization = 'Bearer ' + authToken
     When method delete
     Then status 403
+    And match response.message == 'Removing group ADMIN from user admin is not allowed'
