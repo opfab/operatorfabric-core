@@ -14,6 +14,7 @@ import {Store} from '@ngrx/store';
 import {AppState} from '@ofStore/index';
 import {environment} from '@env/environment';
 import {selectIdentifier} from '@ofSelectors/authentication.selectors';
+import {LogOption, OpfabLoggerService} from './logs/opfab-logger.service';
 
 @Injectable({
     providedIn: 'root'
@@ -22,7 +23,7 @@ export class SettingsService {
     readonly usersUrl: string;
     private userId: string;
 
-    constructor(private httpClient: HttpClient, private store: Store<AppState>) {
+    constructor(private httpClient: HttpClient, private store: Store<AppState>,private logger: OpfabLoggerService) {
         this.usersUrl = `${environment.urls.users}`;
         this.store.select(selectIdentifier).subscribe((id) => (this.userId = id));
     }
@@ -32,6 +33,7 @@ export class SettingsService {
     }
 
     patchUserSettings(settings: any): Observable<any> {
+        this.logger.debug("Patch settings : " + JSON.stringify(settings),LogOption.REMOTE);
         return this.httpClient.patch(`${this.usersUrl}/users/${this.userId}/settings`, settings);
     }
 }

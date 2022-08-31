@@ -18,6 +18,7 @@ import {EMPTY, iif, merge, of, Subject, timer} from 'rxjs';
 import {filter, map, switchMap, takeUntil} from 'rxjs/operators';
 import {ExternalDevicesService} from '@ofServices/external-devices.service';
 import {ConfigService} from '@ofServices/config.service';
+import {LogOption, OpfabLoggerService} from './logs/opfab-logger.service';
 
 @Injectable({
     providedIn: 'root'
@@ -54,7 +55,8 @@ export class SoundNotificationService implements OnDestroy {
         private lightCardsFeedFilterService: LightCardsFeedFilterService,
         private lightCardsStoreService: LightCardsStoreService,
         private externalDevicesService: ExternalDevicesService,
-        private configService: ConfigService
+        private configService: ConfigService,
+        private logger: OpfabLoggerService
     ) {
         // use to have access from cypress to the current object for stubbing method playSound
         if (window['Cypress']) window['soundNotificationService'] = this;
@@ -165,15 +167,16 @@ export class SoundNotificationService implements OnDestroy {
 
     private playSoundForSeverityEnabled(severity: Severity) {
         if (this.soundEnabled.get(severity)) this.playSound(severity);
-        else console.debug('No sound was played for ' + severity + ' as sound is disabled for this severity');
+        else this.logger.debug('No sound was played for ' + severity + ' as sound is disabled for this severity',LogOption.LOCAL);
     }
 
     private playSound(severity: Severity) {
         if (this.configService.getConfigValue('externalDevicesEnabled') && this.playSoundOnExternalDevice) {
-            console.debug('External devices enabled. Sending notification for ' + severity + '.');
+            this.logger.debug('External devices enabled. Sending notification for ' + severity + '.',LogOption.LOCAL_AND_REMOTE);
             const notification = new Notification(severity.toString());
             this.externalDevicesService.sendNotification(notification).subscribe();
         } else {
+            this.logger.debug('Play sound on browser with severity ' + severity + '.',LogOption.LOCAL_AND_REMOTE);
             this.playSoundOnBrowser(this.getSoundForSeverity(severity));
         }
     }
