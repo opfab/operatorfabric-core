@@ -8,9 +8,12 @@
 <div class="opfab-pinned-cards">
 
     <div id="of-pinned-cards">
-        <div class="opfab-pinned-card" *ngFor="let pinned of visiblePinnedCards">
-            <span class="opfab-bg-sev-{{pinned.severity.toString()|lowercase}}" (click)="select(pinned.id)">{{pinned.titleTranslated}}</span>
-            <em class="fas fa-thumbtack" style="padding-left: 4px;"></em>
+        <div class="opfab-pinned-card" *ngFor="let pinned of visiblePinnedCards" style="white-space: nowrap;">
+            <div style="display:flex">
+            <span class="opfab-bg-sev-{{pinned.severity.toString()|lowercase}}" (click)="select(pinned.id)" style="text-overflow: ellipsis; overflow: hidden; max-width:215px">{{pinned.titleTranslated}}</span>
+            <em class="fas fa-thumbtack" style="padding-left: 4px; margin-top: 4px;"></em>
+            </div>
+
         </div>
     </div>
     <span id="of-pinned-cards-popover" *ngIf="pinnedCards.length >  maxVisiblePinnedCards" container="body" #p1="ngbPopover" [ngbPopover]="hiddenCardsTemplate" triggers="mouseenter:mouseleave" closeDelay="5000" popoverClass="opfab-popover">...</span>
