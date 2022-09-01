@@ -30,7 +30,7 @@
                         <ng-template #tipHasAResponseFromYourEntity>
                             <span translate>feed.tips.hasAResponseFromYourEntity</span>
                         </ng-template>
-                        <span *ngIf="lightCard.hasChildCardFromCurrentUserEntity" id="opfab-feed-lightcard-hasChildCardFromCurrentUserEntity" class="p-2"
+                        <span *ngIf="lightCard.hasChildCardFromCurrentUserEntity" id="opfab-feed-lightcard-hasChildCardFromCurrentUserEntity" class="p-1"
                             [ngbPopover]="tipHasAResponseFromYourEntity" popoverClass="opfab-popover" container="body"
                             triggers="mouseenter:mouseleave">
                             <em style="color: #0082FF;" class="fa fa-reply"></em>
@@ -38,7 +38,7 @@
                         <ng-template #tipAcknowledged>
                             <span translate>feed.tips.acknowledged</span>
                         </ng-template>
-                        <span *ngIf="this.lightCard.hasBeenAcknowledged" class="p-2"
+                        <span *ngIf="this.lightCard.hasBeenAcknowledged" class="p-1"
                               [ngbPopover]="tipAcknowledged" popoverClass="opfab-popover" container="body"
                               triggers="mouseenter:mouseleave">
                             <em style="color: #0082FF;" class="fa fa-check"></em>
@@ -46,12 +46,12 @@
                         <ng-template #tipTags>
                             <span translate>feed.tips.seeGroupedCards</span>
                         </ng-template>
-                        <span *ngIf="showGroupedCardsIcon && !lightCardDisplayedInMapComponent" class="p-2"
+                        <span *ngIf="showGroupedCardsIcon && !lightCardDisplayedInMapComponent" class="p-1"
                               [ngbPopover]="tipTags" popoverClass="opfab-popover" container="body"
                               triggers="mouseenter:mouseleave">
                             <em style="color: #0082FF;" class="fa " [class.fa-angle-down]="open" [class.fa-angle-left]="!open || !groupedCardsVisible"></em>
                         </span>
-                        <span *ngIf="isGeoMapEnabled && hasGeoLocation" (click)='zoomToLocation($event)'>
+                        <span *ngIf="isGeoMapEnabled && hasGeoLocation" (click)='zoomToLocation($event)' class="p-1">
                                <em style="color: #0082FF;" class="fa fa-location-crosshairs"></em>
                         </span>
                         <span *ngIf="lightCardDisplayedInMapComponent" class="p-2" >
