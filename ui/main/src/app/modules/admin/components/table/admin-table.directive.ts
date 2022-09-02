@@ -28,10 +28,12 @@ import {Group} from '@ofModel/group.model';
 import {Entity} from '@ofModel/entity.model';
 import {EntitiesService} from '@ofServices/entities.service';
 import {PerimetersCellRendererComponent} from '../cell-renderers/perimeters-cell-renderer.component';
+import {ExportService} from '@ofServices/export.service';
 
 @Directive()
 @Injectable()
 export abstract class AdminTableDirective implements OnInit, OnDestroy {
+
     constructor(
         protected translateService: TranslateService,
         protected confirmationDialogService: ConfirmationDialogService,
@@ -416,9 +418,81 @@ export abstract class AdminTableDirective implements OnInit, OnDestroy {
         this.page = currentPage;
     }
 
+    export(): void {
+        ExportService.exportJsonToExcelFile(this.getDataForExportFile(), this.tableType);
+    }
+
     ngOnDestroy() {
         this.unsubscribe$.next();
         this.unsubscribe$.complete();
+    }
+
+    private getDataForExportFile() : Array<any> {
+        const exportData = [];
+
+        this.gridApi.rowModel.rowsToDisplay.forEach((line) => {
+            if (typeof line !== undefined) {
+                const item = {};
+                this.fields.forEach((field) => {
+                    if (Array.isArray(line.data[field.name]))
+                        item[this.getTranslatedHeaderName(field.name)] = this.arrayToString(
+                            line.data[field.name],
+                            field.cellRendererName,
+                            line.data
+                        );
+                    else
+                        item[this.getTranslatedHeaderName(field.name)] =
+                            field.valueFormatter && field.valueFormatter.name === 'translateValue'
+                                ? this.translateService.instant(
+                                      this.i18NPrefix + this.tableType + '.' + line.data[field.name]
+                                  )
+                                : line.data[field.name];
+                });
+                exportData.push(item);
+            }
+        });
+        return exportData;
+    }
+
+    private getTranslatedHeaderName(header: string): string {
+        return this.translateService.instant(this.i18NPrefix + this.tableType + '.' + header).toUpperCase();
+    }
+
+    private arrayToString(arr: any, renderer: string, data: any): string {
+        if (arr.length === 0) return '';
+        if (this.isStringArray(arr))
+            return arr
+                .map((element) => this.getNameFromId(element, renderer))
+                .sort()
+                .join();
+        else return this.removeSquareBraketsInArrayAsString(this.objectArrayToString(arr, renderer, data));
+    }
+
+    private isStringArray(arr): boolean {
+        return arr.every((value) => {
+            return typeof value === 'string';
+        });
+    }
+
+    private getNameFromId(id: string, renderer: string): string {
+        if (renderer) {
+            const cellRenderer = new this.gridOptions.components[renderer].prototype.constructor();
+            return this.dataHandlingService
+                .resolveCachedCrudServiceDependingOnType(cellRenderer.itemType)
+                .getNameFromId(id);
+        } else return id;
+    }
+
+    // Method to be overridden by extending classes to customize objects to string conversion
+    objectArrayToString(arr: any, renderer: string, data: any): string {
+        return JSON.stringify(arr);
+    }
+
+    removeSquareBraketsInArrayAsString(arrayAsString: string) : string{
+        if (arrayAsString.length > 1) {
+              arrayAsString = arrayAsString.substring(1,arrayAsString.length -1)
+          }
+        return arrayAsString;
     }
 }
 

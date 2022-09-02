@@ -506,6 +506,180 @@ describe('AdminPage', () => {
         cy.countAgGridTableRows('ag-grid-angular', 8);
     });
 
+    it('Check users export', function () {
+
+        cy.loginOpFab('admin','test');
+
+        //Click on user menu (top right of the screen)
+        cy.get('#opfab-navbar-drop-user-menu').click();
+
+        //Click on "Administration"
+        cy.get('#opfab-navbar-right-menu-admin').click();
+
+        //Click on tab "Users"
+        cy.get('#opfab-tabs').find('li').eq(0).click();
+
+        // Do export
+        cy.get('#opfab-admin-btn-exportToExcel').click();
+
+        cy.waitDefaultTime();
+
+            // check download folder contains the export file
+            cy.task('list', {dir: './cypress/downloads'}).then((files) => {
+            expect(files.length).to.equal(1);
+            // check file name
+            expect(files[0]).to.match(/^user_export_\d*\.xlsx/);
+            // check file content
+            cy.task('readXlsx', { file: './cypress/downloads/' + files[0], sheet: "data" }).then((rows) => {
+                expect(rows.length).to.equal(13);
+
+                expect(rows[0].LOGIN).to.equal('admin');
+                expect(rows[0]['FIRST NAME']).to.be.undefined;
+                expect(rows[0]['LAST NAME']).to.be.undefined;
+                expect(rows[0].GROUPS).to.equal('ADMINISTRATORS');
+                expect(rows[0].ENTITIES).to.equal('Control Center FR North,Control Center FR South');
+
+                expect(rows[1].LOGIN).to.equal('operator1_fr');
+                expect(rows[1]['FIRST NAME']).to.equal('John');
+                expect(rows[1]['LAST NAME']).to.equal('Doe');
+                expect(rows[1].GROUPS).to.equal('Dispatcher,ReadOnly');
+                expect(rows[1].ENTITIES).to.equal('Control Center FR North');
+
+                // Delete export file
+                cy.task('deleteFile', { filename: './cypress/downloads/' + files[0] })
+            })
+        })
+    })
+
+    it('Check entities export', function () {
+
+        cy.loginOpFab('admin','test');
+
+        //Click on user menu (top right of the screen)
+        cy.get('#opfab-navbar-drop-user-menu').click();
+
+        //Click on "Administration"
+        cy.get('#opfab-navbar-right-menu-admin').click();
+
+        //Click on tab "Entities"
+        cy.get('#opfab-tabs').find('li').eq(1).click();
+
+        // Do export
+        cy.get('#opfab-admin-btn-exportToExcel').click();
+
+        cy.waitDefaultTime();
+
+            // check download folder contains the export file
+            cy.task('list', {dir: './cypress/downloads'}).then((files) => {
+            expect(files.length).to.equal(1);
+            // check file name
+            expect(files[0]).to.match(/^entity_export_\d*\.xlsx/);
+            // check file content
+            cy.task('readXlsx', { file: './cypress/downloads/' + files[0], sheet: "data" }).then((rows) => {
+                expect(rows.length).to.equal(13);
+
+                expect(rows[0].ID).to.equal('ENTITY1_FR');
+                expect(rows[0].NAME).to.equal('Control Center FR North');
+                expect(rows[0].DESCRIPTION).to.equal('Control Center FR North');
+                expect(rows[0]['CARD SENDING ALLOWED']).to.equal('YES');
+                expect(rows[0]['PARENT ENTITIES']).to.equal('French Control Centers');
+
+                expect(rows[4].ID).to.equal('ENTITY_FR');
+                expect(rows[4].NAME).to.equal('French Control Centers');
+                expect(rows[4].DESCRIPTION).to.equal('French Control Centers');
+                expect(rows[4]['CARD SENDING ALLOWED']).to.equal('NO');
+                expect(rows[4]['PARENT ENTITIES']).to.be.undefined;
+
+                // Delete export file
+                cy.task('deleteFile', { filename: './cypress/downloads/' + files[0] })
+            })
+        })
+    })
+
+    it('Check groups export', function () {
+
+        cy.loginOpFab('admin','test');
+
+        //Click on user menu (top right of the screen)
+        cy.get('#opfab-navbar-drop-user-menu').click();
+
+        //Click on "Administration"
+        cy.get('#opfab-navbar-right-menu-admin').click();
+
+        //Click on tab "Groups"
+        cy.get('#opfab-tabs').find('li').eq(2).click();
+
+        // Do export
+        cy.get('#opfab-admin-btn-exportToExcel').click();
+
+        cy.waitDefaultTime();
+
+            // check download folder contains the export file
+            cy.task('list', {dir: './cypress/downloads'}).then((files) => {
+            expect(files.length).to.equal(1);
+            // check file name
+            expect(files[0]).to.match(/^group_export_\d*\.xlsx/);
+            // check file content
+            cy.task('readXlsx', { file: './cypress/downloads/' + files[0], sheet: "data" }).then((rows) => {
+                expect(rows.length).to.equal(7);
+                
+                expect(rows[0].ID).to.equal('ADMIN');
+                expect(rows[0].NAME).to.equal('ADMINISTRATORS');
+                expect(rows[0].DESCRIPTION).to.equal('The admin group');
+                expect(rows[0].TYPE).to.be.undefined;
+                expect(rows[0].PERIMETERS).to.be.undefined;
+                expect(rows[0]['REAL TIME']).to.equal('NO');
+
+                expect(rows[2].ID).to.equal('Dispatcher');
+                expect(rows[2].NAME).to.equal('Dispatcher');
+                expect(rows[2].DESCRIPTION).to.equal('Dispatcher Group');
+                expect(rows[2].TYPE).to.be.undefined;
+                expect(rows[2].PERIMETERS).to.equal('conferenceAndITIncidentExample,cypress,defaultProcess,gridCooperation,messageOrQuestionExample,question,taskExample');
+                expect(rows[2]['REAL TIME']).to.equal('YES');
+
+                // Delete export file
+                cy.task('deleteFile', { filename: './cypress/downloads/' + files[0] })
+            })
+        })
+    })
+
+    it('Check perimeters export', function () {
+
+        cy.loginOpFab('admin','test');
+
+        //Click on user menu (top right of the screen)
+        cy.get('#opfab-navbar-drop-user-menu').click();
+
+        //Click on "Administration"
+        cy.get('#opfab-navbar-right-menu-admin').click();
+
+        //Click on tab "Perimeters"
+        cy.get('#opfab-tabs').find('li').eq(3).click();
+
+        // Do export
+        cy.get('#opfab-admin-btn-exportToExcel').click();
+
+        cy.waitDefaultTime();
+
+            // check download folder contains the export file
+            cy.task('list', {dir: './cypress/downloads'}).then((files) => {
+            expect(files.length).to.equal(1);
+            // check file name
+            expect(files[0]).to.match(/^perimeter_export_\d*\.xlsx/);
+            // check file content
+            cy.task('readXlsx', { file: './cypress/downloads/' + files[0], sheet: "data" }).then((rows) => {
+                expect(rows.length).to.equal(8);
+
+                expect(rows[0].ID).to.equal('conferenceAndITIncidentExample');
+                expect(rows[0].PROCESS).to.equal('conferenceAndITIncidentExample');
+                expect(rows[0]['STATE RIGHTS']).to.equal('{"state":"Conference Call ☏","right":"ReceiveAndWrite","filteringNotificationAllowed":true},{"state":"IT Incident","right":"ReceiveAndWrite","filteringNotificationAllowed":true}');
+
+                // Delete export file
+                cy.task('deleteFile', { filename: './cypress/downloads/' + files[0] })
+            })
+        })
+    })
+
     function clickOnNthGroupTypeInDropdown(index) {
         cy.get('#opfab-group-type').click();
         cy.get('#opfab-group-type').find('.vscomp-option-text').eq(index).click();

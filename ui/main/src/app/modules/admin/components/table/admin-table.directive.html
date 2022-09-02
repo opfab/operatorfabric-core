@@ -29,5 +29,12 @@
             [page]="page" [pageSize]="gridApi.paginationGetPageSize()" (pageChange)="updateResultPage($event)" [maxSize]="3" [rotate]="true">
         </ngb-pagination>
         </div>
+        <div class="opfab-admin-export-div">
+            <div id="opfab-admin-btn-exportToExcel" class="opfab-admin-export-btn" (click)="export()">
+                <span class="opfab-icon-export-data"></span>
+                <span style="font-weight: bold;" translate> shared.exportToExcel </span>
+            </div>
+        </div>
     </div>
+
 </div>
