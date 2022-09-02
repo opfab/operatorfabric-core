@@ -15,7 +15,8 @@ import {EditGroupModalComponent} from '../editmodal/groups/edit-group-modal.comp
 
 @Component({
     templateUrl: 'admin-table.directive.html',
-    selector: 'of-groups-table'
+    selector: 'of-groups-table',
+    styleUrls: ['admin-table.directive.scss']
 })
 export class GroupsTableComponent extends AdminTableDirective implements OnInit {
     tableType = AdminItemType.GROUP;

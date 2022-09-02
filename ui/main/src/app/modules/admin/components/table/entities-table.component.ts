@@ -15,7 +15,8 @@ import {AdminItemType} from '../../services/sharing.service';
 
 @Component({
     templateUrl: 'admin-table.directive.html',
-    selector: 'of-entities-table'
+    selector: 'of-entities-table',
+    styleUrls: ['admin-table.directive.scss']
 })
 export class EntitiesTableComponent extends AdminTableDirective implements OnInit {
     tableType = AdminItemType.ENTITY;
