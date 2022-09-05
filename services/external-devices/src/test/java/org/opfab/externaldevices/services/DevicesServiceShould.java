@@ -16,12 +16,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.opfab.externaldevices.configuration.externaldevices.ExternalDevicesWatchdogProperties;
-import org.opfab.externaldevices.drivers.ExternalDeviceAvailableException;
-import org.opfab.externaldevices.drivers.ExternalDeviceConfigurationException;
-import org.opfab.externaldevices.drivers.ExternalDeviceDriver;
-import org.opfab.externaldevices.drivers.ExternalDeviceDriverException;
-import org.opfab.externaldevices.drivers.ExternalDeviceDriverFactory;
-import org.opfab.externaldevices.drivers.UnknownExternalDeviceException;
+import org.opfab.externaldevices.drivers.*;
 import org.opfab.externaldevices.model.Device;
 import org.opfab.externaldevices.model.DeviceConfigurationData;
 import org.opfab.externaldevices.model.ResolvedConfiguration;
@@ -35,20 +30,16 @@ import java.util.Optional;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
-import static org.mockito.Mockito.anyInt;
 import static org.mockito.Mockito.clearInvocations;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.doThrow;
+
 
 @ExtendWith(MockitoExtension.class)
 class DevicesServiceShould {
-
-    // We use IP addresses for hosts rather than names for tests because otherwise we would need to mock the static
-    // method InetAddress.getByName.
-    // This also means that we can't test the part of the code that handles a change in the resolved ip after a driver
-    // is created.
 
     DevicesService devicesService;
 
@@ -63,7 +54,8 @@ class DevicesServiceShould {
 
     private DeviceConfigurationData deviceConfigurationData;
     private DeviceConfigurationData deviceConfigurationData2;
-    private final ExternalDeviceDriver externalDeviceDriver = mock(ExternalDeviceDriver.class);;
+    private final ExternalDeviceDriver externalDeviceDriver = mock(ExternalDeviceDriver.class);
+    private final ExternalDeviceDriver externalDeviceDriver2 = mock(ExternalDeviceDriver.class);;
 
     private static final String TEST_DEVICE_ID = "testDeviceId";
     private static final String TEST_DEVICE_ID_2 = "testDeviceId2";
@@ -71,14 +63,79 @@ class DevicesServiceShould {
 
     @BeforeEach
     public void setUp() {
-        devicesService = new DevicesService(configService,externalDeviceDriverFactory,externalDevicesWatchdogProperties);
+        devicesService = new DevicesService(configService, externalDeviceDriverFactory,
+                externalDevicesWatchdogProperties);
         deviceConfigurationData = buildDeviceConfiguration(1234, TEST_DEVICE_ID, true);
         deviceConfigurationData2 = buildDeviceConfiguration(5678, TEST_DEVICE_ID_2, true);
     }
 
     @Test
-    void shouldEnableAndDisableDevice() throws ExternalDeviceConfigurationException, UnknownExternalDeviceException {
+    void shouldGetOneDeviceFromPool()
+            throws ExternalDeviceDriverException, ExternalDeviceConfigurationException, UnknownHostException,
+            ExternalDeviceAvailableException, UnknownExternalDeviceException {
+
         when(configService.retrieveDeviceConfiguration(TEST_DEVICE_ID)).thenReturn(deviceConfigurationData);
+        when(externalDeviceDriverFactory.create(FAKE_HOST, 1234)).thenReturn(externalDeviceDriver);
+        when(externalDeviceDriver.getResolvedHost()).thenReturn(InetAddress.getByName(FAKE_HOST));
+        when(externalDeviceDriver.getPort()).thenReturn(1234);
+        when(externalDeviceDriver.isConnected()).thenReturn(true);
+
+        // To add the device to the driver pool
+        devicesService.connectDevice(TEST_DEVICE_ID);
+
+        Optional<Device> result = devicesService.getDevice(TEST_DEVICE_ID);
+        Assertions.assertThat(result).isPresent();
+        Device device = result.get();
+        Assertions.assertThat(device.getId()).isEqualTo(TEST_DEVICE_ID);
+        Assertions.assertThat(device.getResolvedAddress()).isEqualTo("/" + FAKE_HOST);
+        Assertions.assertThat(device.getPort()).isEqualTo(1234);
+        Assertions.assertThat(device.getIsConnected()).isTrue();
+
+    }
+
+    @Test
+    void shouldReturnEmptyIfDeviceDoesntExists() {
+        Optional<Device> result = devicesService.getDevice("deviceThatIsNotInPool");
+        Assertions.assertThat(result).isEmpty();
+
+    }
+
+    @Test
+    void shouldGetAllDevicesFromPool()
+            throws ExternalDeviceDriverException, ExternalDeviceConfigurationException, UnknownHostException,
+            ExternalDeviceAvailableException, UnknownExternalDeviceException {
+
+        when(configService.retrieveDeviceConfiguration(TEST_DEVICE_ID)).thenReturn(deviceConfigurationData);
+        when(externalDeviceDriverFactory.create(FAKE_HOST, 1234)).thenReturn(externalDeviceDriver);
+        when(externalDeviceDriver.getResolvedHost()).thenReturn(InetAddress.getByName(FAKE_HOST));
+        when(externalDeviceDriver.getPort()).thenReturn(1234);
+        when(externalDeviceDriver.isConnected()).thenReturn(true);
+
+        // To add the device to the driver pool
+        devicesService.connectDevice(TEST_DEVICE_ID);
+
+        List<Device> deviceList = devicesService.getDevices();
+        Assertions.assertThat(deviceList).isNotNull().hasSize(1);
+        Device device = deviceList.get(0);
+        Assertions.assertThat(device.getId()).isEqualTo(TEST_DEVICE_ID);
+        Assertions.assertThat(device.getResolvedAddress()).isEqualTo("/" + FAKE_HOST);
+        Assertions.assertThat(device.getPort()).isEqualTo(1234);
+        Assertions.assertThat(device.getIsConnected()).isTrue();
+
+    }
+
+    @Test
+    void shouldReturnEmptyDevicesListWhenNoDevicesInPool() {
+        List<Device> deviceList = devicesService.getDevices();
+        Assertions.assertThat(deviceList).isNotNull().isEmpty();
+
+    }
+    
+    @Test
+    void shouldEnableAndDisableDevice()
+            throws ExternalDeviceConfigurationException, UnknownExternalDeviceException, ExternalDeviceDriverException {
+        when(configService.retrieveDeviceConfiguration(TEST_DEVICE_ID)).thenReturn(deviceConfigurationData);
+        when(externalDeviceDriverFactory.create(FAKE_HOST, 1234)).thenReturn(externalDeviceDriver);
 
         assertTrue(deviceConfigurationData.getIsEnabled());
         devicesService.disableDevice(TEST_DEVICE_ID);
@@ -89,71 +146,48 @@ class DevicesServiceShould {
     }
 
     @Test
-    void connectDeviceIfCorrectConfig() throws ExternalDeviceConfigurationException, UnknownHostException, ExternalDeviceDriverException, ExternalDeviceAvailableException, UnknownExternalDeviceException {
+    void shouldConnectWhenEnableDevice()
+            throws ExternalDeviceConfigurationException, UnknownExternalDeviceException, ExternalDeviceDriverException {
+        when(configService.retrieveDeviceConfiguration(TEST_DEVICE_ID)).thenReturn(deviceConfigurationData);
+        when(externalDeviceDriverFactory.create(FAKE_HOST, 1234)).thenReturn(externalDeviceDriver);
 
-        sharedExternalDriverMockConfiguration();
-
-        // Call the connectDevice method twice on the same device
-        devicesService.connectDevice(TEST_DEVICE_ID);
-        devicesService.connectDevice(TEST_DEVICE_ID);
-
-        // The corresponding configuration should have been retrieved each time (to check for updates)
-        verify(configService,times(2)).retrieveDeviceConfiguration(TEST_DEVICE_ID);
-
-        // But the corresponding driver should only have been created once (because for the second call it's already in the driver pool)
-        verify(externalDeviceDriverFactory,times(1)).create(FAKE_HOST,1234);
-
+        devicesService.enableDevice(TEST_DEVICE_ID);
+        assertTrue(deviceConfigurationData.getIsEnabled());
+        verify(externalDeviceDriver, times(1)).connect();
     }
 
     @Test
-    void connectDeviceWhenConfigIsUpdated() throws ExternalDeviceConfigurationException, UnknownHostException, ExternalDeviceDriverException, ExternalDeviceAvailableException, UnknownExternalDeviceException {
-
-        DeviceConfigurationData updatedDeviceConfigurationData = buildDeviceConfiguration(5678, TEST_DEVICE_ID, true);
-
-        ExternalDeviceDriver initialExternalDeviceDriver = mock(ExternalDeviceDriver.class);
-        ExternalDeviceDriver updatedExternalDeviceDriver = mock(ExternalDeviceDriver.class);
-
-        // Mock configuration
-        when(initialExternalDeviceDriver.getResolvedHost()).thenReturn(InetAddress.getByName(FAKE_HOST));
-        when(initialExternalDeviceDriver.getPort()).thenReturn(1234);
+    void shouldDisconnectWhenDisableDevice()
+            throws ExternalDeviceConfigurationException, UnknownExternalDeviceException, ExternalDeviceDriverException {
         when(configService.retrieveDeviceConfiguration(TEST_DEVICE_ID)).thenReturn(deviceConfigurationData);
-        when(externalDeviceDriverFactory.create(FAKE_HOST,1234)).thenReturn(initialExternalDeviceDriver);
-        when(externalDeviceDriverFactory.create(FAKE_HOST,5678)).thenReturn(updatedExternalDeviceDriver);
+        when(externalDeviceDriverFactory.create(FAKE_HOST, 1234)).thenReturn(externalDeviceDriver);
 
-        // Call the connectDevice method twice on the same device, but the configuration changes after the first call
-        devicesService.connectDevice(TEST_DEVICE_ID);
-        when(configService.retrieveDeviceConfiguration(TEST_DEVICE_ID)).thenReturn(updatedDeviceConfigurationData);
-        devicesService.connectDevice(TEST_DEVICE_ID);
-
-        // The corresponding configuration should have been retrieved each time (to check for updates)
-        verify(configService,times(2)).retrieveDeviceConfiguration(TEST_DEVICE_ID);
-
-        // Driver creation should happen twice
-        verify(externalDeviceDriverFactory,times(1)).create(FAKE_HOST,1234);
-        verify(externalDeviceDriverFactory,times(1)).create(FAKE_HOST,5678);
-
+        devicesService.enableDevice(TEST_DEVICE_ID);
+        devicesService.disableDevice(TEST_DEVICE_ID);
+        verify(externalDeviceDriver, times(1)).disconnect();
     }
 
     @Test
-    void connectAndDisconnectDriverAssociatedWithDevice() throws ExternalDeviceConfigurationException, ExternalDeviceDriverException, ExternalDeviceAvailableException, UnknownExternalDeviceException, UnknownHostException {
-
-        // Mock configuration
-        sharedExternalDriverMockConfiguration();
+    void shouldConnectAndDisconnectDevice()
+            throws ExternalDeviceConfigurationException, ExternalDeviceDriverException,
+            ExternalDeviceAvailableException, UnknownExternalDeviceException, UnknownHostException {
         when(configService.retrieveDeviceConfiguration(TEST_DEVICE_ID)).thenReturn(deviceConfigurationData);
+        when(externalDeviceDriverFactory.create(FAKE_HOST, 1234)).thenReturn(externalDeviceDriver);
 
         devicesService.connectDevice(TEST_DEVICE_ID);
-        verify(externalDeviceDriver,times(1)).connect();
+        verify(externalDeviceDriver, times(1)).connect();
 
         devicesService.disconnectDevice(TEST_DEVICE_ID);
-        verify(externalDeviceDriver,times(1)).disconnect();
+        verify(externalDeviceDriver, times(1)).disconnect();
 
         // In the case of a disconnect, there is no need to check configuration again
-        verify(configService,times(1)).retrieveDeviceConfiguration(TEST_DEVICE_ID);
+        verify(configService, times(1)).retrieveDeviceConfiguration(TEST_DEVICE_ID);
 
     }
 
     @Test
-    void shouldNotBeAbleToConnectDisabledDevice() throws ExternalDeviceConfigurationException, ExternalDeviceDriverException, UnknownExternalDeviceException {
+    void shouldNotBeAbleToConnectDisabledDevice()
+            throws ExternalDeviceConfigurationException, ExternalDeviceDriverException, UnknownExternalDeviceException {
         deviceConfigurationData = buildDeviceConfiguration(1234, TEST_DEVICE_ID, false);
         when(configService.retrieveDeviceConfiguration(TEST_DEVICE_ID)).thenReturn(deviceConfigurationData);
 
@@ -168,180 +202,309 @@ class DevicesServiceShould {
     }
 
     @Test
-    void sendAppropriateSignalIfCorrectConfiguration() throws ExternalDeviceConfigurationException, ExternalDeviceDriverException, ExternalDeviceAvailableException, UnknownHostException, UnknownExternalDeviceException {
-        mockResolvedConfigurations();
-        when(configService.retrieveDeviceConfiguration(TEST_DEVICE_ID)).thenReturn(deviceConfigurationData);
-        when(configService.retrieveDeviceConfiguration(TEST_DEVICE_ID_2)).thenReturn(deviceConfigurationData2);
+    void shouldSendOneSignalsWhenUserHasOneDevicesConfigured()
+            throws ExternalDeviceException, ExternalDeviceConfigurationException, ExternalDeviceDriverException,
+            ExternalDeviceAvailableException, UnknownHostException, UnknownExternalDeviceException {
 
-        ExternalDeviceDriver externalDeviceDriver1 = mock(ExternalDeviceDriver.class);
-        when(externalDeviceDriverFactory.create(FAKE_HOST, 1234)).thenReturn(externalDeviceDriver1);
-        when(externalDeviceDriver1.getResolvedHost()).thenReturn(InetAddress.getByName(FAKE_HOST));
+        ResolvedConfiguration resolvedConfiguration1 = new ResolvedConfiguration(deviceConfigurationData, 3);
+        when(configService.getResolvedConfigurationList("ALARM", "testUser"))
+                .thenReturn(Arrays.asList(resolvedConfiguration1));
 
-        ExternalDeviceDriver externalDeviceDriver2 = mock(ExternalDeviceDriver.class);
-        when(externalDeviceDriverFactory.create(FAKE_HOST, 5678)).thenReturn(externalDeviceDriver2);
-        when(externalDeviceDriver2.getResolvedHost()).thenReturn(InetAddress.getByName(FAKE_HOST));
+        when(externalDeviceDriverFactory.create(FAKE_HOST, 1234)).thenReturn(externalDeviceDriver);
 
         devicesService.sendSignalToAllDevicesOfUser("ALARM", "testUser");
 
         verify(configService, times(1)).getResolvedConfigurationList("ALARM", "testUser");
-        verify(externalDeviceDriver1, times(1)).send(3);
+        verify(externalDeviceDriver, times(1)).connect();
+        verify(externalDeviceDriver, times(1)).send(3);
+    }
+
+    @Test
+    void shouldSendTwoSignalsWhenUserHasTwoDevicesConfigured()
+            throws ExternalDeviceException, ExternalDeviceConfigurationException, ExternalDeviceDriverException,
+            ExternalDeviceAvailableException, UnknownHostException, UnknownExternalDeviceException {
+
+        ResolvedConfiguration resolvedConfiguration1 = new ResolvedConfiguration(deviceConfigurationData, 3);
+        ResolvedConfiguration resolvedConfiguration2 = new ResolvedConfiguration(deviceConfigurationData2, 4);
+        when(configService.getResolvedConfigurationList("ALARM", "testUser"))
+                .thenReturn(Arrays.asList(resolvedConfiguration1, resolvedConfiguration2));
+
+        when(externalDeviceDriverFactory.create(FAKE_HOST, 1234)).thenReturn(externalDeviceDriver);
+        when(externalDeviceDriverFactory.create(FAKE_HOST, 5678)).thenReturn(externalDeviceDriver2);
+
+        devicesService.sendSignalToAllDevicesOfUser("ALARM", "testUser");
+
+        verify(configService, times(1)).getResolvedConfigurationList("ALARM", "testUser");
+        verify(externalDeviceDriver, times(1)).connect();
+        verify(externalDeviceDriver2, times(1)).connect();
+        verify(externalDeviceDriver, times(1)).send(3);
         verify(externalDeviceDriver2, times(1)).send(4);
     }
 
     @Test
-    void shouldReconnectDisconnectedDevicesBeforeSendingSignal() throws ExternalDeviceConfigurationException, ExternalDeviceDriverException, ExternalDeviceAvailableException, UnknownHostException, UnknownExternalDeviceException {
-        mockResolvedConfigurations();
+    void shouldNotReconnectDevicesBeforeSendingSignalIfAlreadyConnected()
+            throws ExternalDeviceException, ExternalDeviceConfigurationException, ExternalDeviceDriverException,
+            ExternalDeviceAvailableException, UnknownHostException, UnknownExternalDeviceException {
 
-        when(configService.retrieveDeviceConfiguration(TEST_DEVICE_ID)).thenReturn(deviceConfigurationData);
-        when(configService.retrieveDeviceConfiguration(TEST_DEVICE_ID_2)).thenReturn(deviceConfigurationData2);
+        ResolvedConfiguration resolvedConfiguration1 = new ResolvedConfiguration(deviceConfigurationData, 3);
+        ResolvedConfiguration resolvedConfiguration2 = new ResolvedConfiguration(deviceConfigurationData2, 4);
+        when(configService.getResolvedConfigurationList("ALARM", "testUser"))
+                .thenReturn(Arrays.asList(resolvedConfiguration1, resolvedConfiguration2));
 
-        ExternalDeviceDriver externalDeviceDriver1 = mock(ExternalDeviceDriver.class);
-        when(externalDeviceDriverFactory.create(FAKE_HOST, 1234)).thenReturn(externalDeviceDriver1);
-        when(externalDeviceDriver1.getResolvedHost()).thenReturn(InetAddress.getByName(FAKE_HOST));
-
-        ExternalDeviceDriver externalDeviceDriver2 = mock(ExternalDeviceDriver.class);
+        when(externalDeviceDriverFactory.create(FAKE_HOST, 1234)).thenReturn(externalDeviceDriver);
         when(externalDeviceDriverFactory.create(FAKE_HOST, 5678)).thenReturn(externalDeviceDriver2);
-        when(externalDeviceDriver2.getResolvedHost()).thenReturn(InetAddress.getByName(FAKE_HOST));
 
-        // Add the device to the pool
-        devicesService.connectDevice(TEST_DEVICE_ID_2);
-
-        // Disconnects one external device
-        devicesService.disconnectDevice(TEST_DEVICE_ID_2);
+        when(externalDeviceDriver.isConnected()).thenReturn(true);
+        when(externalDeviceDriver2.isConnected()).thenReturn(true);
 
         devicesService.sendSignalToAllDevicesOfUser("ALARM", "testUser");
 
-        verify(configService,times(1)).getResolvedConfigurationList("ALARM", "testUser");
-        verify(externalDeviceDriver2,times(2)).connect();
-        verify(externalDeviceDriver1,times(1)).send(3);
-        verify(externalDeviceDriver2,times(1)).send(4);
+        verify(configService, times(1)).getResolvedConfigurationList("ALARM", "testUser");
+        verify(externalDeviceDriver, times(0)).connect();
+        verify(externalDeviceDriver2, times(0)).connect();
+        verify(externalDeviceDriver, times(1)).send(3);
+        verify(externalDeviceDriver2, times(1)).send(4);
+
     }
 
     @Test
-    void sendWatchdogToConnectedDevicesSignalIfEnabled() throws ExternalDeviceConfigurationException, ExternalDeviceDriverException, ExternalDeviceAvailableException, UnknownExternalDeviceException, UnknownHostException {
+    void shouldNotSendSignalIfDeviceIsDisabled()
+            throws ExternalDeviceException, ExternalDeviceConfigurationException, ExternalDeviceDriverException,
+            ExternalDeviceAvailableException, UnknownHostException, UnknownExternalDeviceException {
+
+        deviceConfigurationData = buildDeviceConfiguration(1234, TEST_DEVICE_ID, false);
+        ResolvedConfiguration resolvedConfiguration1 = new ResolvedConfiguration(deviceConfigurationData, 3);
+        when(configService.getResolvedConfigurationList("ALARM", "testUser"))
+                .thenReturn(Arrays.asList(resolvedConfiguration1));
+
+        try {
+            devicesService.sendSignalToAllDevicesOfUser("ALARM", "testUser");
+            fail("Should not be able to connect disabled external device");
+        } catch (ExternalDeviceException e) {
+            // OK
+        }
+        verify(configService, times(1)).getResolvedConfigurationList("ALARM", "testUser");
+        verify(externalDeviceDriver, times(0)).send(3);
+    }
+
+    @Test
+    void shouldSendOneSignalWhenUserHasTwoDevicesConfiguredButOneDisable()
+            throws ExternalDeviceException, ExternalDeviceConfigurationException, ExternalDeviceDriverException,
+            ExternalDeviceAvailableException, UnknownHostException, UnknownExternalDeviceException {
+
+        deviceConfigurationData = buildDeviceConfiguration(1234, TEST_DEVICE_ID, false);
+        ResolvedConfiguration resolvedConfiguration1 = new ResolvedConfiguration(deviceConfigurationData, 3);
+        ResolvedConfiguration resolvedConfiguration2 = new ResolvedConfiguration(deviceConfigurationData2, 4);
+        when(configService.getResolvedConfigurationList("ALARM", "testUser"))
+                .thenReturn(Arrays.asList(resolvedConfiguration1, resolvedConfiguration2));
+        when(externalDeviceDriverFactory.create(FAKE_HOST, 5678)).thenReturn(externalDeviceDriver2);
+
+        try {
+            devicesService.sendSignalToAllDevicesOfUser("ALARM", "testUser");
+            fail("Should not be able to connect disabled external device");
+        } catch (ExternalDeviceException e) {
+            // OK
+        }
+
+        verify(configService, times(1)).getResolvedConfigurationList("ALARM", "testUser");
+        verify(externalDeviceDriver, times(0)).connect();
+        verify(externalDeviceDriver2, times(1)).connect();
+        verify(externalDeviceDriver, times(0)).send(3);
+        verify(externalDeviceDriver2, times(1)).send(4);
+    }
+
+    @Test
+    void shouldTryToSendTwoSignalsAndThrowExceptionWhenUserHasTwoDevicesConfiguredButOneIsNotResponding()
+            throws ExternalDeviceException, ExternalDeviceConfigurationException, ExternalDeviceDriverException,
+            ExternalDeviceAvailableException, UnknownHostException, UnknownExternalDeviceException {
+        ResolvedConfiguration resolvedConfiguration1 = new ResolvedConfiguration(deviceConfigurationData, 3);
+        ResolvedConfiguration resolvedConfiguration2 = new ResolvedConfiguration(deviceConfigurationData2, 4);
+        when(configService.getResolvedConfigurationList("ALARM", "testUser"))
+                .thenReturn(Arrays.asList(resolvedConfiguration1, resolvedConfiguration2));
+
+        when(externalDeviceDriverFactory.create(FAKE_HOST, 1234)).thenReturn(externalDeviceDriver);
+        when(externalDeviceDriverFactory.create(FAKE_HOST, 5678)).thenReturn(externalDeviceDriver2);
+        doThrow(ExternalDeviceDriverException.class).when(externalDeviceDriver).send(3);
+
+        try {
+            devicesService.sendSignalToAllDevicesOfUser("ALARM", "testUser");
+            fail("Should not be able to connect to external device");
+        } catch (ExternalDeviceException e) {
+            // OK
+        }
+
+        verify(configService, times(1)).getResolvedConfigurationList("ALARM", "testUser");
+        verify(externalDeviceDriver, times(1)).connect();
+        verify(externalDeviceDriver2, times(1)).connect();
+        verify(externalDeviceDriver, times(1)).send(3);
+        verify(externalDeviceDriver2, times(1)).send(4);
+    }
+
+    @Test
+    void shouldSendWatchdogToDeviceWhenDeviceIsConnected()
+            throws ExternalDeviceConfigurationException, ExternalDeviceDriverException,
+            ExternalDeviceAvailableException, UnknownExternalDeviceException, UnknownHostException {
 
         final int CUSTOM_SIGNAL_ID = 4;
 
-
-        // Mock configuration
-        sharedExternalDriverMockConfiguration();
         when(configService.retrieveDeviceConfiguration(TEST_DEVICE_ID)).thenReturn(deviceConfigurationData);
+        when(externalDeviceDriverFactory.create(FAKE_HOST, 1234)).thenReturn(externalDeviceDriver);
         when(externalDevicesWatchdogProperties.getEnabled()).thenReturn(true);
         when(externalDevicesWatchdogProperties.getSignalId()).thenReturn(CUSTOM_SIGNAL_ID);
 
-        devicesService.connectDevice(TEST_DEVICE_ID); //Necessary to add driver to pool
+        devicesService.connectDevice(TEST_DEVICE_ID); // Necessary to add driver to pool
 
-        //If connected
         when(externalDeviceDriver.isConnected()).thenReturn(true);
         devicesService.sendWatchdog();
-        verify(externalDeviceDriver,times(1)).send(CUSTOM_SIGNAL_ID);
-        clearInvocations(externalDeviceDriver);
+        verify(externalDeviceDriver, times(1)).send(CUSTOM_SIGNAL_ID);
 
-        //If not connected
+    }
+
+    @Test
+    void shouldNotSendWatchdogToDeviceWhenDeviceIsNotConnected()
+            throws ExternalDeviceConfigurationException, ExternalDeviceDriverException,
+            ExternalDeviceAvailableException, UnknownExternalDeviceException, UnknownHostException {
+
+        final int CUSTOM_SIGNAL_ID = 4;
+
+        when(configService.retrieveDeviceConfiguration(TEST_DEVICE_ID)).thenReturn(deviceConfigurationData);
+        when(externalDeviceDriverFactory.create(FAKE_HOST, 1234)).thenReturn(externalDeviceDriver);
+        when(externalDevicesWatchdogProperties.getEnabled()).thenReturn(true);
+
+        devicesService.connectDevice(TEST_DEVICE_ID); // Necessary to add driver to pool
         when(externalDeviceDriver.isConnected()).thenReturn(false);
         devicesService.sendWatchdog();
-        verify(externalDeviceDriver,times(0)).send(CUSTOM_SIGNAL_ID);
+        verify(externalDeviceDriver, times(0)).send(CUSTOM_SIGNAL_ID);
 
     }
 
     @Test
-    void notSendWatchdogSignalToDevicesIfWatchdogIsDisabled() throws ExternalDeviceConfigurationException, ExternalDeviceDriverException, ExternalDeviceAvailableException, UnknownExternalDeviceException, UnknownHostException {
+    void shouldSendWatchdogToTwoDevicesWhenTwoDevicesWithDifferentIPPortAreConnected()
+            throws ExternalDeviceConfigurationException, ExternalDeviceDriverException,
+            ExternalDeviceAvailableException, UnknownExternalDeviceException, UnknownHostException {
 
-        // Mock configuration
-        sharedExternalDriverMockConfiguration();
+        final int CUSTOM_SIGNAL_ID = 4;
+
         when(configService.retrieveDeviceConfiguration(TEST_DEVICE_ID)).thenReturn(deviceConfigurationData);
-        when(externalDevicesWatchdogProperties.getEnabled()).thenReturn(false);
-
-        devicesService.connectDevice(TEST_DEVICE_ID); //Necessary to add driver to pool
-
-        devicesService.sendWatchdog();
-        verify(externalDeviceDriver,times(0)).send(anyInt());
-    }
-
-    @Test
-    void notSendWatchdogSignalToDevicesIfDeviceIsDisabled() throws ExternalDeviceConfigurationException, ExternalDeviceDriverException, ExternalDeviceAvailableException, UnknownExternalDeviceException, UnknownHostException {
-
-        // Mock configuration
-        sharedExternalDriverMockConfiguration();
-        when(configService.retrieveDeviceConfiguration(TEST_DEVICE_ID)).thenReturn(deviceConfigurationData);
-        when(externalDevicesWatchdogProperties.getEnabled()).thenReturn(true);
-        deviceConfigurationData.setIsEnabled(true);
-
-        devicesService.connectDevice(TEST_DEVICE_ID); //Necessary to add driver to pool
-        when(externalDeviceDriver.isConnected()).thenReturn(true);
-
-        deviceConfigurationData.setIsEnabled(false);
-        devicesService.sendWatchdog();
-        verify(externalDeviceDriver,times(0)).send(anyInt());
-    }
-
-    @Test
-    void getDeviceIfExists() throws ExternalDeviceDriverException, ExternalDeviceConfigurationException, UnknownHostException, ExternalDeviceAvailableException, UnknownExternalDeviceException {
-
-        sharedExternalDriverMockConfiguration();
-        when(externalDeviceDriver.isConnected()).thenReturn(true);
-
-        // To add the device to the driver pool
-        devicesService.connectDevice(TEST_DEVICE_ID);
-
-        Optional<Device> result = devicesService.getDevice(TEST_DEVICE_ID);
-        Assertions.assertThat(result).isPresent();
-        Device device = result.get();
-        Assertions.assertThat(device.getId()).isEqualTo(TEST_DEVICE_ID);
-        Assertions.assertThat(device.getResolvedAddress()).isEqualTo("/123.45.67.1");
-        Assertions.assertThat(device.getPort()).isEqualTo(1234);
-        Assertions.assertThat(device.getIsConnected()).isTrue();
-
-    }
-
-    @Test
-    void returnEmptyIfDeviceDoesntExists() {
-
-        Optional<Device> result = devicesService.getDevice("deviceThatIsNotInPool");
-        Assertions.assertThat(result).isEmpty();
-
-    }
-
-    @Test
-    void getDevices() throws ExternalDeviceDriverException, ExternalDeviceConfigurationException, UnknownHostException, ExternalDeviceAvailableException, UnknownExternalDeviceException {
-
-        sharedExternalDriverMockConfiguration();
-        when(externalDeviceDriver.isConnected()).thenReturn(true);
-
-        // To add the device to the driver pool
-        devicesService.connectDevice(TEST_DEVICE_ID);
-
-        List<Device> deviceList = devicesService.getDevices();
-        Assertions.assertThat(deviceList).isNotNull().hasSize(1);
-        Device device = deviceList.get(0);
-        Assertions.assertThat(device.getId()).isEqualTo(TEST_DEVICE_ID);
-        Assertions.assertThat(device.getResolvedAddress()).isEqualTo("/123.45.67.1");
-        Assertions.assertThat(device.getPort()).isEqualTo(1234);
-        Assertions.assertThat(device.getIsConnected()).isTrue();
-
-    }
-
-    @Test
-    void returnEmptyDevicesList() {
-
-        List<Device> deviceList = devicesService.getDevices();
-        Assertions.assertThat(deviceList).isNotNull().isEmpty();
-
-    }
-
-
-    /** This method contains the basic configuration of mock ConfigService, ExternalDeviceDriverFactory and
-     * ExternalDeviceDriver instances that is common to several tests.
-     *
-     * @return mock ExternalDeviceDriver for further test-specific configuration
-     * */
-    private void sharedExternalDriverMockConfiguration() throws ExternalDeviceConfigurationException, UnknownHostException, ExternalDeviceDriverException, UnknownExternalDeviceException {
-        when(configService.retrieveDeviceConfiguration(TEST_DEVICE_ID)).thenReturn(deviceConfigurationData);
-
-        // Mock configuration
+        when(configService.retrieveDeviceConfiguration(TEST_DEVICE_ID_2)).thenReturn(deviceConfigurationData2);
         when(externalDeviceDriverFactory.create(FAKE_HOST, 1234)).thenReturn(externalDeviceDriver);
-        when(externalDeviceDriver.getResolvedHost()).thenReturn(InetAddress.getByName(FAKE_HOST));
+        when(externalDeviceDriverFactory.create(FAKE_HOST, 5678)).thenReturn(externalDeviceDriver2);
+        when(externalDevicesWatchdogProperties.getEnabled()).thenReturn(true);
+        when(externalDevicesWatchdogProperties.getSignalId()).thenReturn(CUSTOM_SIGNAL_ID);
+        when(externalDeviceDriver.isConnected()).thenReturn(true);
+        when(externalDeviceDriver2.isConnected()).thenReturn(true);
         when(externalDeviceDriver.getPort()).thenReturn(1234);
+        when(externalDeviceDriver2.getPort()).thenReturn(5678);
+
+        devicesService.connectDevice(TEST_DEVICE_ID); // Necessary to add driver to pool
+        devicesService.connectDevice(TEST_DEVICE_ID_2); // Necessary to add driver to pool
+
+        devicesService.sendWatchdog();
+        verify(externalDeviceDriver, times(1)).send(CUSTOM_SIGNAL_ID);
+        verify(externalDeviceDriver2, times(1)).send(CUSTOM_SIGNAL_ID);
+    }
+
+    @Test
+    void shouldSendWatchdogToOneDevicesWhenTwoDevicesWithSameIPPortAreConnected()
+            throws ExternalDeviceConfigurationException, ExternalDeviceDriverException,
+            ExternalDeviceAvailableException, UnknownExternalDeviceException, UnknownHostException {
+
+        final int CUSTOM_SIGNAL_ID = 4;
+
+        when(configService.retrieveDeviceConfiguration(TEST_DEVICE_ID)).thenReturn(deviceConfigurationData);
+        when(configService.retrieveDeviceConfiguration(TEST_DEVICE_ID_2)).thenReturn(deviceConfigurationData2);
+        when(externalDeviceDriverFactory.create(FAKE_HOST, 1234)).thenReturn(externalDeviceDriver);
+        when(externalDeviceDriverFactory.create(FAKE_HOST, 5678)).thenReturn(externalDeviceDriver2);
+        when(externalDevicesWatchdogProperties.getEnabled()).thenReturn(true);
+        when(externalDevicesWatchdogProperties.getSignalId()).thenReturn(CUSTOM_SIGNAL_ID);
+        when(externalDeviceDriver.isConnected()).thenReturn(true);
+        when(externalDeviceDriver2.isConnected()).thenReturn(true);
+        when(externalDeviceDriver.getPort()).thenReturn(1234);
+        when(externalDeviceDriver2.getPort()).thenReturn(1234);
+
+        devicesService.connectDevice(TEST_DEVICE_ID); // Necessary to add driver to pool
+        devicesService.connectDevice(TEST_DEVICE_ID_2); // Necessary to add driver to pool
+
+        devicesService.sendWatchdog();
+        verify(externalDeviceDriver, times(1)).send(CUSTOM_SIGNAL_ID);
+        verify(externalDeviceDriver2, times(0)).send(CUSTOM_SIGNAL_ID);
+    }
+
+    @Test
+    void shouldSendWatchdogToOnlyOneDevicesWhenTwoDevicesAreConfiguredButOnlyOneConnected()
+            throws ExternalDeviceConfigurationException, ExternalDeviceDriverException,
+            ExternalDeviceAvailableException, UnknownExternalDeviceException, UnknownHostException {
+
+        final int CUSTOM_SIGNAL_ID = 4;
+
+        when(configService.retrieveDeviceConfiguration(TEST_DEVICE_ID)).thenReturn(deviceConfigurationData);
+        when(configService.retrieveDeviceConfiguration(TEST_DEVICE_ID_2)).thenReturn(deviceConfigurationData2);
+        when(externalDeviceDriverFactory.create(FAKE_HOST, 1234)).thenReturn(externalDeviceDriver);
+        when(externalDeviceDriverFactory.create(FAKE_HOST, 5678)).thenReturn(externalDeviceDriver2);
+        when(externalDevicesWatchdogProperties.getEnabled()).thenReturn(true);
+        when(externalDevicesWatchdogProperties.getSignalId()).thenReturn(CUSTOM_SIGNAL_ID);
+        when(externalDeviceDriver.isConnected()).thenReturn(true);
+        when(externalDeviceDriver2.isConnected()).thenReturn(false);
+        when(externalDeviceDriver.getPort()).thenReturn(1234);
+        when(externalDeviceDriver2.getPort()).thenReturn(5678);
+
+        devicesService.connectDevice(TEST_DEVICE_ID); // Necessary to add driver to pool
+        devicesService.connectDevice(TEST_DEVICE_ID_2); // Necessary to add driver to pool
+
+        devicesService.sendWatchdog();
+        verify(externalDeviceDriver, times(1)).send(CUSTOM_SIGNAL_ID);
+        verify(externalDeviceDriver2, times(0)).send(CUSTOM_SIGNAL_ID);
+    }
+
+    @Test
+    void shouldReconnectDisconnectedDevices()
+            throws ExternalDeviceConfigurationException, ExternalDeviceDriverException,
+            ExternalDeviceAvailableException, UnknownExternalDeviceException, UnknownHostException {
+
+        when(configService.retrieveDeviceConfiguration(TEST_DEVICE_ID)).thenReturn(deviceConfigurationData);
+        when(externalDeviceDriverFactory.create(FAKE_HOST, 1234)).thenReturn(externalDeviceDriver);
+        when(externalDevicesWatchdogProperties.getEnabled()).thenReturn(true);
+
+        devicesService.connectDevice(TEST_DEVICE_ID); // Necessary to add driver to pool
+        devicesService.disconnectDevice(TEST_DEVICE_ID);
+        clearInvocations(externalDeviceDriver);
+
+        devicesService.reconnectDisconnectedDevices();
+        verify(externalDeviceDriver, times(1)).connect();
+
+    }
+
+    @Test
+    void shouldNotReconnectConnectedDevices()
+            throws ExternalDeviceConfigurationException, ExternalDeviceDriverException,
+            ExternalDeviceAvailableException, UnknownExternalDeviceException, UnknownHostException {
+
+        when(configService.retrieveDeviceConfiguration(TEST_DEVICE_ID)).thenReturn(deviceConfigurationData);
+        when(externalDeviceDriverFactory.create(FAKE_HOST, 1234)).thenReturn(externalDeviceDriver);
+        when(externalDevicesWatchdogProperties.getEnabled()).thenReturn(true);
+
+        devicesService.connectDevice(TEST_DEVICE_ID);
+        when(externalDeviceDriver.isConnected()).thenReturn(true);
+        clearInvocations(externalDeviceDriver);
+
+        devicesService.reconnectDisconnectedDevices();
+        verify(externalDeviceDriver, times(0)).connect();
+
+    }
+
+
+    @Test
+    void shouldRemoveDevice()
+            throws ExternalDeviceConfigurationException, UnknownExternalDeviceException, ExternalDeviceDriverException {
+        when(configService.retrieveDeviceConfiguration(TEST_DEVICE_ID)).thenReturn(deviceConfigurationData);
+        when(externalDeviceDriverFactory.create(FAKE_HOST, 1234)).thenReturn(externalDeviceDriver);
+
+        devicesService.enableDevice(TEST_DEVICE_ID);
+        assertTrue(deviceConfigurationData.getIsEnabled());
+        devicesService.removeDevice(TEST_DEVICE_ID);
+        Optional<Device> result = devicesService.getDevice(TEST_DEVICE_ID);
+        Assertions.assertThat(result).isEmpty();
+        verify(externalDeviceDriver, times(1)).disconnect();
     }
 
     private DeviceConfigurationData buildDeviceConfiguration(int port, String deviceId, boolean isEnabled) {
@@ -354,10 +517,4 @@ class DevicesServiceShould {
                 .build();
     }
 
-    private void mockResolvedConfigurations() throws ExternalDeviceConfigurationException, UnknownExternalDeviceException {
-        ResolvedConfiguration resolvedConfiguration1 = new ResolvedConfiguration(deviceConfigurationData, 3);
-        ResolvedConfiguration resolvedConfiguration2 = new ResolvedConfiguration(deviceConfigurationData2, 4);
-
-        when(configService.getResolvedConfigurationList("ALARM", "testUser")).thenReturn(Arrays.asList(resolvedConfiguration1, resolvedConfiguration2));
-    }
 }

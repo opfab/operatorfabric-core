@@ -14,6 +14,7 @@ import org.opfab.externaldevices.configuration.oauth2.UserExtractor;
 import org.opfab.externaldevices.drivers.ExternalDeviceAvailableException;
 import org.opfab.externaldevices.drivers.ExternalDeviceConfigurationException;
 import org.opfab.externaldevices.drivers.ExternalDeviceDriverException;
+import org.opfab.externaldevices.drivers.ExternalDeviceException;
 import org.opfab.externaldevices.drivers.UnknownExternalDeviceException;
 import org.opfab.externaldevices.model.Notification;
 import org.opfab.externaldevices.services.DevicesService;
@@ -54,7 +55,7 @@ public class NotificationsController implements NotificationsApi, UserExtractor 
 
         try {
             devicesService.sendSignalToAllDevicesOfUser(notification.getOpfabSignalId(), user.getLogin());
-        } catch (ExternalDeviceConfigurationException | ExternalDeviceDriverException | ExternalDeviceAvailableException e) {
+        } catch (ExternalDeviceConfigurationException | ExternalDeviceException e) {
             throw new ApiErrorException(ApiError.builder()
                     .status(HttpStatus.BAD_REQUEST)
                     .message(String.format(UNHANDLED_NOTIFICATION,notification.getOpfabSignalId(),user.getLogin()))

@@ -178,7 +178,7 @@ public class ConfigService {
         if (foundUserConfigurations != null) {
             for (UserConfigurationData userConfigurationData :  foundUserConfigurations) {
                 userConfigurationData.setExternalDeviceIds(null);
-                log.warn(NULL_AFTER_DELETE, deviceId, DEVICE_CONFIG, "user", userConfigurationData.getUserLogin());
+                log.info(NULL_AFTER_DELETE, deviceId, DEVICE_CONFIG, "user", userConfigurationData.getUserLogin());
             }
             userConfigurationRepository.saveAll(foundUserConfigurations);
         }
@@ -198,7 +198,7 @@ public class ConfigService {
         if (foundDeviceConfigurations != null) {
             for (DeviceConfigurationData deviceConfigurationData : foundDeviceConfigurations) {
                 deviceConfigurationData.setSignalMappingId(null);
-                log.warn(NULL_AFTER_DELETE, signalMappingId, "signalMapping", DEVICE_CONFIG, deviceConfigurationData.getId());
+                log.info(NULL_AFTER_DELETE, signalMappingId, "signalMapping", DEVICE_CONFIG, deviceConfigurationData.getId());
             }
             deviceConfigurationRepository.saveAll(foundDeviceConfigurations);
         }
