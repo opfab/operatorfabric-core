@@ -1,0 +1,6 @@
+{
+  "id": "TestDevice",
+  "host": "dummy-modbus-device_2",
+  "port": 4030,
+  "signalMappingId": "default_CDS_mapping"
+}

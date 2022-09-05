@@ -111,10 +111,10 @@ public class DevicesController implements DevicesApi {
 
     @Override
     public Void enableDevice(HttpServletRequest request, HttpServletResponse response, String deviceId) {
-        log.debug("Activating device {}", deviceId);
+        log.info("Enable device {}", deviceId);
         try {
-            this.devicesService.enableDevice(deviceId);
             configService.enableDevice(deviceId);
+            this.devicesService.enableDevice(deviceId);
         } catch (ExternalDeviceConfigurationException e) {
             return throwApiException(e, HttpStatus.INTERNAL_SERVER_ERROR, String.format(ENABLED_FAILED, deviceId));
         } catch (UnknownExternalDeviceException e) {
@@ -126,10 +126,10 @@ public class DevicesController implements DevicesApi {
 
     @Override
     public Void disableDevice(HttpServletRequest request, HttpServletResponse response, String deviceId) {
-        log.debug("Deactivating device {}", deviceId);
+        log.info("Disable device {}", deviceId);
         try {
-            this.devicesService.disableDevice(deviceId);
             configService.disableDevice(deviceId);
+            this.devicesService.disableDevice(deviceId);
         } catch (ExternalDeviceConfigurationException e) {
             throwApiException(e, HttpStatus.INTERNAL_SERVER_ERROR, String.format(DISABLED_FAILED, deviceId));
         } catch (UnknownExternalDeviceException e) {
