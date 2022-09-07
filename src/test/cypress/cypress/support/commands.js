@@ -207,7 +207,7 @@ Cypress.Commands.add('openActivityArea', () => {
 });
 
 Cypress.Commands.add('saveActivityAreaModifications', () => {
-    cy.get('#opfab-activityarea-btn-confirm').should('exist').click(); //click confirm settings
+    cy.get('#opfab-activityarea-btn-confirm').should('exist').click({force: true}); //click confirm settings
     cy.get('#opfab-activityarea-btn-yes').should('exist').click(); // and click yes on the confirmation popup
 });
 
