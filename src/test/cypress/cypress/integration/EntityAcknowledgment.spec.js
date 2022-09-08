@@ -146,10 +146,9 @@ describe('Entity acknowledgment tests for icon in light-card', function () {
             cy.get('#opfab-feed-light-card-cypress-entitiesAcksMessage2 .fa-check').should('not.exist');
         });
 
+        cy.get('#opfab-close-card').click();
         // operator1_fr acknowledges the card "message3", and we check the icon is present for operator4_fr
         cy.get('#opfab-feed-light-card-cypress-entitiesAcksMessage3').click();
-        // wait for detail card to be visible
-        cy.get('#cardId').contains("cypress.entitiesAcksMessage3");
         cy.get('#cardUid').then(($cardUidElement) => {
             const cardUid = $cardUidElement.text(); // We need the uid of the card to ack it
 
@@ -157,11 +156,9 @@ describe('Entity acknowledgment tests for icon in light-card', function () {
             cy.waitDefaultTime();
             cy.get('#opfab-feed-light-card-cypress-entitiesAcksMessage3 .fa-check').should('exist');
         });
-
+        cy.get('#opfab-close-card').click();
         // operator1_fr acknowledges the card "message4", and we check the icon is not present for operator4_fr
         cy.get('#opfab-feed-light-card-cypress-entitiesAcksMessage4').click();
-        // wait for detail card to be visible
-        cy.get('#cardId').contains("cypress.entitiesAcksMessage4");
         cy.get('#cardUid').then(($cardUidElement) => {
             const cardUid = $cardUidElement.text(); // We need the uid of the card to ack it
 
@@ -232,10 +229,9 @@ describe('Entity acknowledgment tests for icon in light-card', function () {
             cy.get('#opfab-feed-light-card-cypress-entitiesAcksMessage3 .fa-check').should('exist');
         });
 
+        cy.get('#opfab-close-card').click();
         // operator1_fr acknowledges the card "message4", and we check the icon is not present for operator4_fr
         cy.get('#opfab-feed-light-card-cypress-entitiesAcksMessage4').click();
-        // wait for detail card to be visible
-        cy.get('#cardId').contains("cypress.entitiesAcksMessage4");
         cy.get('#cardUid').then(($cardUidElement) => {
             const cardUid = $cardUidElement.text(); // We need the uid of the card to ack it
 
@@ -321,10 +317,9 @@ describe('Entity acknowledgment tests for icon in light-card', function () {
             cy.get('#opfab-feed-light-card-cypress-entitiesAcksMessage2_groupsOnly .fa-check').should('not.exist');
         });
 
+        cy.get('#opfab-close-card').click();
         // operator4_fr acknowledges the card "message3_groupsOnly", and we check the icon is not present for operator2_fr
         cy.get('#opfab-feed-light-card-cypress-entitiesAcksMessage3_groupsOnly').click();
-        // wait for detail card to be visible
-        cy.get('#cardId').contains("cypress.entitiesAcksMessage3_groupsOnly");
         cy.get('#cardUid').then(($cardUidElement) => {
             const cardUid = $cardUidElement.text(); // We need the uid of the card to ack it
 
@@ -333,10 +328,9 @@ describe('Entity acknowledgment tests for icon in light-card', function () {
             cy.get('#opfab-feed-light-card-cypress-entitiesAcksMessage3_groupsOnly .fa-check').should('not.exist');
         });
 
+        cy.get('#opfab-close-card').click();
         // operator4_fr acknowledges the card "message4_groupsOnly", and we check the icon is not present for operator2_fr
         cy.get('#opfab-feed-light-card-cypress-entitiesAcksMessage4_groupsOnly').click();
-        // wait for detail card to be visible
-        cy.get('#cardId').contains("cypress.entitiesAcksMessage4_groupsOnly");
         cy.get('#cardUid').then(($cardUidElement) => {
             const cardUid = $cardUidElement.text(); // We need the uid of the card to ack it
 
