@@ -37,7 +37,6 @@ Cypress.Commands.add('loginOpFabWithoutHack', (username, password) => {
 
     //press login button
     cy.get('#opfab-login-btn-submit').click();
-    cy.get('#opfab-login-btn-submit').should('be.visible');
 
     //Wait for the app to finish initializing
     cy.get('#opfab-cypress-loaded-check', {timeout: 20000}).should('have.text', 'true');
