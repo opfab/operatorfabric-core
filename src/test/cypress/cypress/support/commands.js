@@ -195,11 +195,6 @@ Cypress.Commands.add('waitForOpfabToStart', () => {
     cy.exec('cd ../../.. && ./bin/waitForOpfabToStart.sh ');
 });
 
-Cypress.Commands.add('openSettings', () => {
-    cy.get('#opfab-navbar-drop-user-menu').click();
-    cy.get('#opfab-navbar-right-menu-settings').click();
-});
-
 Cypress.Commands.add('openActivityArea', () => {
     cy.get('#opfab-navbar-drop-user-menu').click();
     cy.get('#opfab-navbar-right-menu-activityarea').click();
@@ -210,16 +205,6 @@ Cypress.Commands.add('saveActivityAreaModifications', () => {
     cy.get('#opfab-activityarea-btn-yes').should('exist').click(); // and click yes on the confirmation popup
 });
 
-
-
-// Stub playSound method to catch when opfab send a sound
-Cypress.Commands.add('stubPlaySound', () => {
-    cy.window()
-        .its('soundNotificationService')
-        .then((soundNotificationService) => {
-            cy.stub(soundNotificationService, 'playSound').as('playSound');
-        });
-});
 
 Cypress.Commands.add('setFormDateTime', (formName, year, month, day, hours, minutes) => {
     cy.get('#opfab-datepicker-' + formName).click();

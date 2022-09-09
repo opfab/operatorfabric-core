@@ -7,9 +7,15 @@
  * This file is part of the OperatorFabric project.
  */
 
+import {getOpfabGeneralCommands} from '../support/opfabGeneralCommands';
+import {getSoundCommands} from '../support/soundCommands';
+import {getSettingsCommands} from '../support/settingsCommands'
 
 describe('Session ended test', function () {
 
+  const opfab = getOpfabGeneralCommands();
+  const sound = getSoundCommands();
+  const settings = getSettingsCommands();
   
   before('Reset UI configuration file ', function () {
     cy.resetUIConfigurationFiles();
@@ -21,7 +27,7 @@ describe('Session ended test', function () {
   it('Checking session end after 7 days  ', () => {
     
     cy.loginWithClock();
-    cy.stubPlaySound();
+    sound.stubPlaySound();
 
     // clock on timeline Year mode to avoid having a lot of update subscription request  when simulating time 
     cy.get(".axis").find("text").first().as('firstTimelineXTick');
@@ -42,7 +48,7 @@ describe('Session ended test', function () {
     cy.get('#opfab-sessionEnd');
 
     // no sound configured , sound shall not be activated
-    cy.get('@playSound').its('callCount').should('eq', 0);
+    sound.checkNumberOfEmittedSoundIs(0);
 
   })
 
@@ -54,19 +60,15 @@ describe('Session ended test', function () {
     cy.get(".axis").find("text").first().as('firstTimelineXTick');
     cy.get('#opfab-timeline-link-period-Y').click();
 
-    cy.openSettings();
-
-    // set severity alarm to be notified by sound 
-    cy.get('#opfab-checkbox-setting-form-alarm').click();
-    cy.waitDefaultTime();
-    // set no replay for sound
-    cy.get('#opfab-checkbox-setting-form-replay').click();
+    opfab.navigateToSettings();
+    settings.clickOnSeverity('alarm');  // set severity alarm to be notified by sound 
+    settings.clickOnReplaySound();  // set no replay for sound
     cy.waitDefaultTime();
 
     cy.logoutOpFab();
     cy.loginWithClock();
     cy.tick(1);
-    cy.stubPlaySound();
+    sound.stubPlaySound();
     cy.waitDefaultTime(); // wait for configuration load end (in SoundNotificationService.ts)  
     
     // go 1 hour in the future 
@@ -83,7 +85,7 @@ describe('Session ended test', function () {
     cy.get('#opfab-sessionEnd');
 
     //As one sound is configured , sound shall be activated
-    cy.get('@playSound').its('callCount').should('eq', 1);
+    sound.checkNumberOfEmittedSoundIs(1);
    
 
   })
