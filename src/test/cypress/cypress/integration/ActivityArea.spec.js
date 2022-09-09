@@ -137,7 +137,6 @@ describe('ActivityAreaPage', () => {
 
         //press login button
         cy.get('#opfab-login-btn-submit').click();
-        cy.get('#opfab-login-btn-submit').should('be.visible');
 
         cy.get('of-activityarea').should('exist');
 
@@ -180,7 +179,6 @@ describe('ActivityAreaPage', () => {
 
         //press login button
         cy.get('#opfab-login-btn-submit').click();
-        cy.get('#opfab-login-btn-submit').should('be.visible');
 
         cy.get('of-activityarea').should('exist');
 

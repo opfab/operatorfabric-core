@@ -37,7 +37,6 @@ describe ('LoginPage',()=>{
 
         //press login button
         cy.get('#opfab-login-btn-submit').click()
-        cy.get('#opfab-login-btn-submit').should('be.visible')
 
         //Check that the browser has been redirected to the feed page
         cy.hash().should('eq', '#/feed')
@@ -62,7 +61,6 @@ describe ('LoginPage',()=>{
 
         //press login button
         cy.get('#opfab-login-btn-submit').click()
-        cy.get('#opfab-login-btn-submit').should('be.visible')
 
         //Check Error message 
         cy.get('#opfab-login-msg').should('exist');
