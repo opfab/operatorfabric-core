@@ -99,7 +99,8 @@ import { SpinnerModule } from './modules/share/spinner/spinner.module';
 export class AppModule {}
 
 export function shallPWAFeatureBeActivated(): boolean {
-    const activateSW = Utilities.isNavigatorChromiumBased() && location.href.includes('PWAFeature=true');
+    //const activateSW = location.href.includes('PWAFeature=true');
+    const activateSW = true;
     console.log(new Date().toISOString(), 'PWA feature enable : ', activateSW);
     return activateSW;
 }

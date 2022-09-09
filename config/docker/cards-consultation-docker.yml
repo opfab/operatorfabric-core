@@ -3,3 +3,7 @@ spring:
     name: cards-consultation
 
 checkIfUserIsAlreadyConnected: true
+webPush:
+  subject: https://opfab.github.io
+  privateKey: 
+  publicKey: 

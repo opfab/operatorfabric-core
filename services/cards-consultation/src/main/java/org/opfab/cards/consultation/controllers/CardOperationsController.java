@@ -20,6 +20,7 @@ import org.opfab.cards.consultation.model.CardSubscriptionDto;
 import org.opfab.cards.consultation.repositories.CardRepository;
 import org.opfab.cards.consultation.services.CardSubscription;
 import org.opfab.cards.consultation.services.CardSubscriptionService;
+import org.opfab.cards.consultation.services.PushNotificationService;
 import org.opfab.springtools.error.model.ApiError;
 import org.opfab.springtools.error.model.ApiErrorException;
 import org.opfab.users.model.CurrentUserWithPerimeters;
@@ -40,6 +41,8 @@ public class CardOperationsController {
 
     private final CardSubscriptionService cardSubscriptionService;
 
+    private final PushNotificationService pushNotificationService;
+
     private final CardRepository cardRepository;
 
     private final ObjectMapper mapper;
@@ -47,11 +50,12 @@ public class CardOperationsController {
     private final String version = getClass().getPackage().getImplementationVersion();
 
     @Autowired
-    public CardOperationsController(CardSubscriptionService cardSubscriptionService, ObjectMapper mapper, CardRepository cardRepository) {
+    public CardOperationsController(CardSubscriptionService cardSubscriptionService, ObjectMapper mapper, CardRepository cardRepository, PushNotificationService pushNotificationService) {
         this.cardSubscriptionService = cardSubscriptionService;
         this.mapper = mapper;
         this.mapper.setSerializationInclusion(JsonInclude.Include.NON_EMPTY);
         this.cardRepository = cardRepository;
+        this.pushNotificationService = pushNotificationService;
     }
 
 
@@ -152,6 +156,7 @@ public class CardOperationsController {
     public Mono<String> postMessageToSubscriptions(Mono<String> messageToSend) {
         return messageToSend.map(message -> {
             cardSubscriptionService.postMessageToSubscriptions(message);
+            pushNotificationService.pushMessageToSubscriptions(message);
             return "";
         });
     }

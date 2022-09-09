@@ -58,7 +58,8 @@
     "rxjs": "7.5.6",
     "svg-pan-zoom": "3.6.1",
     "virtual-select-plugin": "1.0.31",
-    "xlsx": "0.18.5"
+    "xlsx": "0.18.5",
+    "web-push": "3.5.0"
   },
   "devDependencies": {
     "@angular-devkit/build-angular": "14.1.0",

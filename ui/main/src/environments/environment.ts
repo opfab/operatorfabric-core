@@ -30,7 +30,8 @@ export const environment = {
         config: 'http://localhost:2002/config/web-ui.json',
         menuConfig: 'http://localhost:2002/config/ui-menu.json',
         externalDevices: 'http://localhost:2002/externaldevices',
-        remoteLogs: 'http://localhost:2002/cards/logs'
+        remoteLogs: 'http://localhost:2002/cards/logs',
+        pushNotification: 'http://localhost:2002/cards/notification'
     },
     paths: {
         i18n: '/assets/i18n/'

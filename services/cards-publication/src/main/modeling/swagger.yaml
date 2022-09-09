@@ -364,6 +364,19 @@ definitions:
         items:
           type: string
         description: Groups of the user
+  PushSubscription:
+    type: object
+    description: Push notification Subscription object
+    properties:
+      endpoint:
+        type: string
+        description: notification endpoint
+      key:
+        type: string
+        description: notification key
+      auth:
+        type: string
+        description: subscription auth
   LightCard:
     type: object
     description: >-

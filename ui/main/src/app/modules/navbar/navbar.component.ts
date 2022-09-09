@@ -27,6 +27,8 @@ import {QueryAllEntitiesAction} from '@ofActions/user.actions';
 import {UserService} from '@ofServices/user.service';
 import {NgbModal, NgbModalOptions, NgbModalRef} from '@ng-bootstrap/ng-bootstrap';
 import {AppService} from '@ofServices/app.service';
+import {SwPush} from '@angular/service-worker';
+import {PushNotificationService} from '@ofServices/push-notification.service';
 
 @Component({
     selector: 'of-navbar',
@@ -68,6 +70,8 @@ export class NavbarComponent implements OnInit {
     nightDayMode = false;
     logoutInProgress = false;
 
+    vapIdPublicKey: string;
+
     constructor(
         private store: Store<AppState>,
         private globalStyleService: GlobalStyleService,
@@ -75,7 +79,9 @@ export class NavbarComponent implements OnInit {
         private userService: UserService,
         private modalService: NgbModal,
         private appService: AppService,
-        private userPreferences: UserPreferencesService
+        private userPreferences: UserPreferencesService,
+        private swPush: SwPush,
+        private pushNotificationService: PushNotificationService
     ) {
         this.currentPath = ['']; // Initializing currentPath to avoid 'undefined' errors when it is used to determine 'active' look in template
     }
@@ -141,6 +147,7 @@ export class NavbarComponent implements OnInit {
         } else {
             this.loadNightModeFromUserPreferences();
         }
+        this.vapIdPublicKey = this.configService.getConfigValue('webPush.publicKey');
     }
 
     private getCurrentUserCustomMenus(menus: Menu[]): Menu[] {
@@ -250,5 +257,27 @@ export class NavbarComponent implements OnInit {
 
     showAbout() {
         this.modalService.open(this.aboutTemplate, {centered: true});
+    }
+
+    subscribe() {
+        console.log("Subscribe to push notifications");
+        this.swPush.requestSubscription({
+            serverPublicKey: this.vapIdPublicKey
+        })
+        .then(sub => this.handleSubscription(sub))
+        .catch(err => console.error("Could not subscribe to notifications", err));
+    }
+
+    handleSubscription(sub: PushSubscription) {
+        console.log(sub);
+        console.log(sub.toJSON().keys);
+        this.pushNotificationService.sendSubscriptionToServer(sub).subscribe();
+    }
+
+    unsubscribe() {
+        console.log("UnSubscribe to push notifications");
+        this.swPush.unsubscribe()
+        .then(sub => console.log("Unsubscribed"))
+        .catch(err => console.error("Could not unsubscribe to notifications", err));
     }
 }

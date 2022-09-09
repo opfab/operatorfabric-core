@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2021, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2022, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -18,12 +18,15 @@ import org.opfab.cards.consultation.configuration.json.JacksonConfig;
 import org.opfab.cards.consultation.configuration.mongo.LocalMongoConfiguration;
 import org.opfab.cards.consultation.repositories.ArchivedCardRepository;
 import org.opfab.cards.consultation.repositories.CardRepository;
+import org.opfab.cards.consultation.repositories.PushSubscriptionRepository;
+import org.opfab.cards.consultation.services.PushNotificationService;
 import org.opfab.springtools.configuration.mongo.EnableOperatorFabricMongo;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.annotation.Import;
 import org.springframework.context.annotation.ImportResource;
+import org.springframework.data.mongodb.repository.config.EnableMongoRepositories;
 import org.springframework.data.mongodb.repository.config.EnableReactiveMongoRepositories;
 
 /**
@@ -36,8 +39,9 @@ import org.springframework.data.mongodb.repository.config.EnableReactiveMongoRep
 @Slf4j
 @EnableOperatorFabricMongo
 @EnableReactiveMongoRepositories(basePackageClasses = {CardRepository.class, ArchivedCardRepository.class})
+@EnableMongoRepositories(basePackageClasses = PushSubscriptionRepository.class)
 @ImportResource("classpath:/amqp.xml")
-@Import({JacksonConfig.class, LocalMongoConfiguration.class, ThreadPoolTaskSchedulerConfiguration.class})
+@Import({JacksonConfig.class, LocalMongoConfiguration.class, ThreadPoolTaskSchedulerConfiguration.class, PushNotificationService.class})
 public class IntegrationTestApplication {
 
     public static void main(String[] args) {

@@ -26,7 +26,8 @@ export const environment = {
         config: '/config/web-ui.json',
         menuConfig: '/config/ui-menu.json',
         externalDevices: '/externaldevices',
-        remoteLogs: '/cards/logs'
+        remoteLogs: '/cards/logs',
+        pushNotification: '/cards/notification'
     },
     paths: {
         i18n: '/ui/assets/i18n/'

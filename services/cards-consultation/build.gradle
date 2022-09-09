@@ -4,6 +4,7 @@ dependencies {
     implementation project(':tools:generic:utilities'), project(':tools:spring:spring-utilities')
     implementation boot.starterRabbitmq
     implementation misc.jsonSmart
+    implementation misc.webPush
     implementation spring.securityOauthResource, spring.securityOauthJose
     implementation boot.starterMongo
     implementation cloud.starterFeign
@@ -11,6 +12,9 @@ dependencies {
     implementation boot.starterValidation
     compileOnly boot.annotationConfiguration
     annotationProcessor boot.annotationConfiguration
+
+
+
 
     implementation boot.starterWebflux
     implementation project(':client:cards-client-data')

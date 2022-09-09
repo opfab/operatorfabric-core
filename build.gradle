@@ -80,7 +80,8 @@ ext {
             handlebars     : "com.github.jknack:handlebars:4.3.0",
             jacksonDatabind   : "com.fasterxml.jackson.core:jackson-databind:$jacksonDatabind",
             jlibmodbus     : "com.intelligt.modbus:jlibmodbus:WORKAROUND",
-            commonsText    : "org.apache.commons:commons-text:$apacheCommonsText"
+            commonsText    : "org.apache.commons:commons-text:$apacheCommonsText",
+            webPush: "nl.martijndwars:web-push:$webPush"
     ]
 
     generator = [

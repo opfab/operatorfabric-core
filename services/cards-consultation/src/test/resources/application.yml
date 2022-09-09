@@ -8,3 +8,7 @@ spring:
     port: 5672
     username: guest
     password: guest
+webPush:
+  subject: https://opfab.github.io
+  privateKey:
+  publicKey:
