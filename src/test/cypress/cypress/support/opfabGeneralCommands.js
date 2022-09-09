@@ -17,6 +17,23 @@ export function getOpfabGeneralCommands() {
         cy.get("of-usercard").should('exist');
     });
 
+    opfab.addCommand('navigateToFeed', function () {
+        cy.get('#opfab-navbar-menu-feed').click();
+        cy.get("of-card-list").should('exist');
+    });
+
+    opfab.addCommand('navigateToArchives', function () {
+        cy.get('#opfab-navbar-menu-archives').click();
+        cy.get("of-archives").should('exist');
+    });
+
+    opfab.addCommand('navigateToSettings', function () {
+        cy.get('#opfab-navbar-drop-user-menu').click();
+        cy.get('#opfab-navbar-right-menu-settings').click();
+        cy.get("of-settings").should('exist');
+    });
+
+
     opfab.addCommand('openExternalDevices', () => {
         cy.get('#opfab-navbar-drop-user-menu').click();
         cy.get('#opfab-navbar-right-menu-externaldevicesconfiguration').click();

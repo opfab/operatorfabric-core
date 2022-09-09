@@ -21,8 +21,6 @@ export function getFeedCommands() {
         cy.get('#opfab-div-card-template-processed');
     });
 
-
-
     feed.addCommand('editCurrentCard', function () {
         cy.get('#opfab-card-edit').click();
         cy.get("of-usercard").should('exist');
