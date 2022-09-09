@@ -288,3 +288,5 @@ access to the cards intended for this entity, until he reconnects to it.
 If set visible in ui-menu.json, this interface is accessible via the user menu (top right of the screen).
 
 The choice of activity area may be done during user logging phase if you set selectActivityAreaOnLogin to true in web-ui.json.
+
+If the user is a member of one (or more) real-time group(s), then he will see on the screen the members of these groups, currently connected.
