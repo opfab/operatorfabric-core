@@ -121,7 +121,7 @@ export class ActivityareaComponent implements OnInit, OnDestroy {
             connectedUsers.sort((obj1, obj2) => Utilities.compareObj(obj1.login, obj2.login));
 
             connectedUsers.forEach((connectedUser) => {
-                if (connectedUser.login !== this.currentUserWithPerimeters.userData.login) {
+                if ((connectedUser.login !== this.currentUserWithPerimeters.userData.login) && (!! connectedUser.entitiesConnected)) {
                     connectedUser.entitiesConnected.forEach((entityConnectedId) => {
                         if (this.userEntities.map((userEntity) => userEntity.entityId).includes(entityConnectedId)) {
                             connectedUser.groups.forEach((groupId) => {

@@ -107,23 +107,25 @@ export class RealtimeusersComponent implements OnInit, OnDestroy {
             connectedUsers.sort((obj1, obj2) => Utilities.compareObj(obj1.login, obj2.login));
 
             connectedUsers.forEach((realTimeUserConnected) => {
-                realTimeUserConnected.entitiesConnected.forEach((entityConnected) => {
-                    realTimeUserConnected.groups.forEach((group) => {
-                        let usersConnectedPerEntityAndGroup = this.connectedUsersPerEntityAndGroup.get(
-                            entityConnected + '.' + group
-                        );
+                if (!! realTimeUserConnected.entitiesConnected) {
+                    realTimeUserConnected.entitiesConnected.forEach((entityConnected) => {
+                        realTimeUserConnected.groups.forEach((group) => {
+                            let usersConnectedPerEntityAndGroup = this.connectedUsersPerEntityAndGroup.get(
+                                entityConnected + '.' + group
+                            );
 
-                        if (!usersConnectedPerEntityAndGroup) usersConnectedPerEntityAndGroup = [];
+                            if (!usersConnectedPerEntityAndGroup) usersConnectedPerEntityAndGroup = [];
 
-                        // we don't want duplicates for the same user
-                        if (!usersConnectedPerEntityAndGroup.includes(realTimeUserConnected.login))
-                            usersConnectedPerEntityAndGroup.push(realTimeUserConnected.login);
-                        this.connectedUsersPerEntityAndGroup.set(
-                            entityConnected + '.' + group,
-                            usersConnectedPerEntityAndGroup
-                        );
+                            // we don't want duplicates for the same user
+                            if (!usersConnectedPerEntityAndGroup.includes(realTimeUserConnected.login))
+                                usersConnectedPerEntityAndGroup.push(realTimeUserConnected.login);
+                            this.connectedUsersPerEntityAndGroup.set(
+                                entityConnected + '.' + group,
+                                usersConnectedPerEntityAndGroup
+                            );
+                        });
                     });
-                });
+                }
             });
         });
     }
