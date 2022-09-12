@@ -198,11 +198,14 @@ Cypress.Commands.add('waitForOpfabToStart', () => {
 Cypress.Commands.add('openActivityArea', () => {
     cy.get('#opfab-navbar-drop-user-menu').click();
     cy.get('#opfab-navbar-right-menu-activityarea').click();
+    cy.get("of-activityarea").should('exist');
 });
 
 Cypress.Commands.add('saveActivityAreaModifications', () => {
+    cy.intercept('PATCH', '/users/**').as('saved');
     cy.get('#opfab-activityarea-btn-confirm').should('exist').click({force: true}); //click confirm settings
     cy.get('#opfab-activityarea-btn-yes').should('exist').click(); // and click yes on the confirmation popup
+    cy.wait('@saved'); // wait for settings to be saved
 });
 
 
