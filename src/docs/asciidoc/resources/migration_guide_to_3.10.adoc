@@ -7,6 +7,10 @@
 
 = Migration Guide from release 3.9.x to release 3.10.0
 
+== Card publication with not existent process or state
+OperatorFabric will refuse the publication of cards referring a not existent process or state.
+To allow the publication of cards with not existent proces or state you should set the `authorizeToSendCardWithInvalidProcessState` property to `true` in `cards-publication.yml` configuration file 
+
 == `web-ui.json` config file 
 
 === `settings.about` section

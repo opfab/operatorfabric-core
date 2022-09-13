@@ -70,6 +70,8 @@ public class CardProcessingService {
 
     @Value("${checkAuthenticationForCardSending:true}") boolean checkAuthenticationForCardSending;
 
+    @Value("${authorizeToSendCardWithInvalidProcessState:false}") boolean authorizeToSendCardWithInvalidProcessState;
+
     public static final String UNEXISTING_PROCESS_STATE = "Impossible to publish card because process and/or state does not exist (process=%1$s, state=%2$s, processVersion=%3$s, processInstanceId=%4$s)";
    
 
@@ -100,7 +102,7 @@ public class CardProcessingService {
 
     private void processOneCard(CardPublicationData card, Optional<CurrentUserWithPerimeters> user, Optional<Jwt> jwt) {
         validate(card);
-        checkProcessStateExistsInBundles(card);
+        if (!authorizeToSendCardWithInvalidProcessState) checkProcessStateExistsInBundles(card);
         card.prepare(Instant.ofEpochMilli(Instant.now().toEpochMilli()));
         cardTranslationService.translate(card);
 
