@@ -84,8 +84,7 @@ export class ActivityareaComponent implements OnInit, OnDestroy {
         this.currentUserWithPerimeters = this.userService.getCurrentUserWithPerimeters();
 
         // we retrieve all the entities to which the user can connect
-        this.userService.getUser(this.currentUserWithPerimeters.userData.login).subscribe((currentUser) => {
-            this.isScreenLoaded = true;
+        this.userService.getUser(this.currentUserWithPerimeters.userData.login).subscribe((currentUser) => {  
             const entities = this.entitiesService.getEntitiesFromIds(currentUser.entities);
             entities.forEach((entity) => {
                 if (entity.entityAllowedToSendCard) {
@@ -109,7 +108,7 @@ export class ActivityareaComponent implements OnInit, OnDestroy {
                 this.userRealtimeGroupsIds = this.currentUserWithPerimeters.userData.groups.filter((groupId) =>
                     this.groupsService.isRealtimeGroup(groupId)
                 );
-
+            this.isScreenLoaded = true;
             this.refresh();
         });
     }
