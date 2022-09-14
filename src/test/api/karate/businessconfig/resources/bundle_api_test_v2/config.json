@@ -53,7 +53,8 @@
 		  "consideredAcknowledgedForUserWhen": "AllEntitiesOfUserHaveAcknowledged",
 		  "type" : "FINISHED",
 		  "automaticPinWhenAcknowledged": true,
-		  "cancelAcknowledgmentAllowed": false
+		  "cancelAcknowledgmentAllowed": false,
+		  "closeCardWhenUserAcknowledges": false
 
 		}
 	  }

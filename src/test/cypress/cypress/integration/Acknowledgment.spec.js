@@ -82,6 +82,8 @@ describe('Acknowledgment tests', function () {
         // Click on card message
         cy.get('#opfab-feed-light-card-cypress-message2').click();
 
+        cy.get('#opfab-card-details-btn-ack').contains('ACKNOWLEDGE AND CLOSE');
+
         // Click ack button
         cy.get('#opfab-card-details-btn-ack').click();
 
@@ -94,6 +96,25 @@ describe('Acknowledgment tests', function () {
         // Operator1 should see 5 cards in his feed
         cy.get('of-light-card').should('have.length', 5);
 
+
+        // Click on card message1
+        cy.get('#opfab-feed-light-card-cypress-message1').click();
+
+        cy.get('#opfab-card-details-btn-ack').contains('ACKNOWLEDGE');
+        cy.get('#opfab-card-details-btn-ack').should('not.contain','CLOSE');
+        // Click ack button
+        cy.get('#opfab-card-details-btn-ack').click();
+
+        // Card is not anymore in the feed
+        cy.get('#opfab-feed-light-card-cypress-message1').should('not.exist');
+
+        // Detail card is still present 
+        cy.get('of-detail').should('exist');
+
+        // Operator1 should see 4 cards in his feed
+        cy.get('of-light-card').should('have.length', 4);
+
+
         // Set feed filter to see all cards and check message card is present
         cy.get('#opfab-feed-filter-btn-filter').click();
         cy.get('#opfab-feed-filter-ack-all').click();
@@ -104,6 +125,7 @@ describe('Acknowledgment tests', function () {
         cy.get('of-light-card').should('have.length', 6);
 
         // Check icon is present
+        cy.get('#opfab-feed-light-card-cypress-message1 .fa-check');
         cy.get('#opfab-feed-light-card-cypress-message2 .fa-check');
 
         // Click on card message
@@ -114,6 +136,7 @@ describe('Acknowledgment tests', function () {
 
         // Check icon is not present
         cy.get('#opfab-feed-light-card-cypress-message2 .fa-check').should('not.exist');
+
 
         // Click on Ack all cards
         cy.get('#opfab-feed-ack-all-link').click();
