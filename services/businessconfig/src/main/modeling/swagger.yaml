@@ -446,6 +446,9 @@ definitions:
             cancelAcknowledgmentAllowed:
               type: boolean
               description: Cancel acknowledgment allowed
+            closeCardWhenUserAcknowledges:
+              type: boolean
+              description: close card detail when user acknowledges it
             name:
               type: string
               description: Name of the state

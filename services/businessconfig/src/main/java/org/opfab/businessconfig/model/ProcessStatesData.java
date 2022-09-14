@@ -27,6 +27,9 @@ public class ProcessStatesData implements ProcessStates {
 
     @Builder.Default
     private Boolean cancelAcknowledgmentAllowed = true;
+    @Builder.Default
+    private Boolean  closeCardWhenUserAcknowledges = true;
+
     private String color;
     private String name;
     private String description;
@@ -87,6 +90,13 @@ public class ProcessStatesData implements ProcessStates {
     @Override
     public void setCancelAcknowledgmentAllowed(Boolean cancelAcknowledgmentAllowed) {
         this.cancelAcknowledgmentAllowed = cancelAcknowledgmentAllowed;
+    }
+    @Override
+    public Boolean getCloseCardWhenUserAcknowledges() { return closeCardWhenUserAcknowledges;}
+
+    @Override
+    public void setCloseCardWhenUserAcknowledges(Boolean closeCardWhenUserAcknowledges) {
+        this.closeCardWhenUserAcknowledges = closeCardWhenUserAcknowledges;
     }
 
 }

@@ -334,7 +334,8 @@
   },
   "cardAcknowledgment": {
     "button": {
-      "ack": "ACKNOWLEDGE AND CLOSE",
+      "ack": "ACKNOWLEDGE",
+      "ackAndClose": "ACKNOWLEDGE AND CLOSE",
       "unack": "CANCEL ACKNOWLEDGMENT"
     },
     "acknowledged": "Acknowledged"

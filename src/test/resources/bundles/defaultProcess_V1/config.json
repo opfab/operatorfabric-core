@@ -59,6 +59,7 @@
         "style"
       ],
       "acknowledgmentAllowed": "Always",
+      "closeCardWhenUserAcknowledges": false,
       "type" : "INPROGRESS"
     },
     "contingenciesState": {

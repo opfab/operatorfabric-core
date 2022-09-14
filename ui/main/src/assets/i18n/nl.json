@@ -334,7 +334,8 @@
   },
   "cardAcknowledgment": {
     "button": {
-      "ack": "BEVESTIG EN SLUIT",
+      "ack": "BEVESTIG",
+      "ackAndClose": "BEVESTIG EN SLUIT",
       "unack": "ANNULEER BEVESTIGING"
     },
     "acknowledged": "Bevestigd"

@@ -334,7 +334,8 @@
   },
   "cardAcknowledgment": {
     "button": {
-      "ack": "ACQUITTER ET FERMER",
+      "ack": "ACQUITTER",
+      "ackAndClose": "ACQUITTER ET FERMER",
       "unack": "ANNULER L'ACQUITTEMENT"
     },
     "acknowledged": "Acquittements"

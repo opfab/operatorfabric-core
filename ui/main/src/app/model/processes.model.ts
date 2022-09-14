@@ -41,6 +41,7 @@ export class State {
         readonly response?: Response,
         readonly acknowledgmentAllowed?: AcknowledgmentAllowedEnum,
         readonly cancelAcknowledgmentAllowed?: boolean,
+        readonly closeCardWhenUserAcknowledges?: boolean,
         readonly name?: string,
         readonly color?: string,
         readonly userCard?: UserCard,

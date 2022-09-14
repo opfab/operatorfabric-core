@@ -71,6 +71,7 @@ const enum ResponseI18nKeys {
 
 const enum AckI18nKeys {
     BUTTON_TEXT_ACK = 'cardAcknowledgment.button.ack',
+    BUTTON_TEXT_ACK_AND_CLOSE = 'cardAcknowledgment.button.ackAndClose',
     BUTTON_TEXT_UNACK = 'cardAcknowledgment.button.unack',
     ERROR_MSG = 'response.error.ack'
 }
@@ -517,8 +518,12 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, DoCheck {
         this.showCloseButton = true;
         this.showEditButton = this.doesTheUserHavePermissionToEditCard();
         this.showDeleteButton = this.doesTheUserHavePermissionToDeleteCard();
-        this.showAckButton = this.isAcknowledgmentAllowed() && this._appService.pageType !== PageType.CALENDAR;
+        this.setAcknowledgeButtonVisibility();
         this.showActionButton = !!this.cardState.response;
+    }
+
+    private setAcknowledgeButtonVisibility() {
+        this.showAckButton = this.isAcknowledgmentAllowed() && this._appService.pageType !== PageType.CALENDAR;
     }
 
     private doesTheUserHavePermissionToEditCard(): boolean {
@@ -545,6 +550,10 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, DoCheck {
             (this.cardState.acknowledgmentAllowed === AcknowledgmentAllowedEnum.ONLY_WHEN_RESPONSE_DISABLED_FOR_USER &&
                 (!this.isUserEnabledToRespond || (this.isUserEnabledToRespond && this.lttdExpiredIsTrue)))
         );
+    }
+
+    private shouldCloseCardWhenUserAcknowledges(): boolean {
+        return this.cardState.closeCardWhenUserAcknowledges;
     }
 
     private checkIfHasAlreadyResponded() {
@@ -626,7 +635,9 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, DoCheck {
     }
 
     get btnAckText(): string {
-        return this.card.hasBeenAcknowledged ? AckI18nKeys.BUTTON_TEXT_UNACK : AckI18nKeys.BUTTON_TEXT_ACK;
+        if (this.card.hasBeenAcknowledged) return AckI18nKeys.BUTTON_TEXT_UNACK
+        else if (this.shouldCloseCardWhenUserAcknowledges()) return AckI18nKeys.BUTTON_TEXT_ACK_AND_CLOSE
+        else return AckI18nKeys.BUTTON_TEXT_ACK;
     }
 
     public getResponsePublisher(resp: Card) {
@@ -651,16 +662,7 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, DoCheck {
         this.ackOrUnackInProgress = true;
 
         if (this.card.hasBeenAcknowledged) {
-            this.acknowledgeService.deleteUserAcknowledgement(this.card.uid).subscribe((resp) => {
-                this.ackOrUnackInProgress = false;
-                if (resp.status === 200 || resp.status === 204) {
-                    this.card = {...this.card, hasBeenAcknowledged: false};
-                    this.acknowledgeService.updateAcknowledgementOnLightCard(this.card.id, false);
-                } else {
-                    console.error('the remote acknowledgement endpoint returned an error status(%d)', resp.status);
-                    this.displayMessage(AckI18nKeys.ERROR_MSG, null, MessageLevel.ERROR);
-                }
-            });
+            this.cancelAcknowledgement();
         } else {
             const entitiesAcks = [];
             const entities = this.entitiesService.getEntitiesFromIds(this.user.entities);
@@ -673,13 +675,28 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, DoCheck {
                 this.ackOrUnackInProgress = false;
                 if (resp.status === 201 || resp.status === 200) {
                     this.acknowledgeService.updateAcknowledgementOnLightCard(this.card.id, true);
-                    this.closeDetails();
+                    this.card = {...this.card, hasBeenAcknowledged: true};
+                    this.setAcknowledgeButtonVisibility();
+                    if (this.shouldCloseCardWhenUserAcknowledges()) this.closeDetails();
                 } else {
                     console.error('the remote acknowledgement endpoint returned an error status(%d)', resp.status);
                     this.displayMessage(AckI18nKeys.ERROR_MSG, null, MessageLevel.ERROR);
                 }
             });
         }
+    }
+
+    private cancelAcknowledgement() {
+        this.acknowledgeService.deleteUserAcknowledgement(this.card.uid).subscribe((resp) => {
+            this.ackOrUnackInProgress = false;
+            if (resp.status === 200 || resp.status === 204) {
+                this.card = {...this.card, hasBeenAcknowledged: false};
+                this.acknowledgeService.updateAcknowledgementOnLightCard(this.card.id, false);
+            } else {
+                console.error('the remote acknowledgement endpoint returned an error status(%d)', resp.status);
+                this.displayMessage(AckI18nKeys.ERROR_MSG, null, MessageLevel.ERROR);
+            }
+        });
     }
 
     public closeDetails() {
@@ -839,41 +856,65 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, DoCheck {
     }
 
     public makeTextOfFooter(): string {
-        let receivedAt = this.translate.instant('feed.received') + ' ' + this.formattedPublishDate + ' ' +
-            this.translate.instant('feed.at') + ' ' + this.formattedPublishTime;
+        let receivedAt =
+            this.translate.instant('feed.received') +
+            ' ' +
+            this.formattedPublishDate +
+            ' ' +
+            this.translate.instant('feed.at') +
+            ' ' +
+            this.formattedPublishTime;
 
-        if (!! this.fromEntityOrRepresentative && this.fromEntityOrRepresentative.length > 0) {
+        if (!!this.fromEntityOrRepresentative && this.fromEntityOrRepresentative.length > 0) {
             receivedAt += ' ' + this.translate.instant('feed.from') + ' ' + this.fromEntityOrRepresentative;
         }
 
         let addressedTo = '';
-        if (!! this.card.entityRecipients && this.card.entityRecipients.length > 0) {
+        if (!!this.card.entityRecipients && this.card.entityRecipients.length > 0) {
             // We compute the entities allowed to send cards to which the user is connected
-            const userEntitiesAllowedToSendCards = this.user.entities.filter(entityId => this.entitiesService.isEntityAllowedToSendCard(entityId));
+            const userEntitiesAllowedToSendCards = this.user.entities.filter((entityId) =>
+                this.entitiesService.isEntityAllowedToSendCard(entityId)
+            );
 
             // We compute the entities recipients of the card, taking into account parent entities
             const entityRecipients = this.entitiesService.getEntitiesFromIds(this.card.entityRecipients);
-            const entityRecipientsAllowedToSendCards = this.entitiesService.resolveEntitiesAllowedToSendCards(entityRecipients)
+            const entityRecipientsAllowedToSendCards = this.entitiesService
+                .resolveEntitiesAllowedToSendCards(entityRecipients)
                 .map((entity) => entity.id);
 
-            const userEntitiesAllowedToSendCardsWhichAreRecipient = userEntitiesAllowedToSendCards.filter(entityId =>
-                entityRecipientsAllowedToSendCards.includes(entityId));
+            const userEntitiesAllowedToSendCardsWhichAreRecipient = userEntitiesAllowedToSendCards.filter((entityId) =>
+                entityRecipientsAllowedToSendCards.includes(entityId)
+            );
 
             if (userEntitiesAllowedToSendCards.length > 1) {
-                userEntitiesAllowedToSendCardsWhichAreRecipient.forEach(entityId => {
+                userEntitiesAllowedToSendCardsWhichAreRecipient.forEach((entityId) => {
                     addressedTo += this.entitiesService.getEntityName(entityId) + ', ';
                 });
                 if (addressedTo.slice(-2) === ', ') {
-                    addressedTo = '\n' + this.translate.instant('feed.addressedTo') + ' ' + addressedTo.substring(0, addressedTo.length - 2);
+                    addressedTo =
+                        '\n' +
+                        this.translate.instant('feed.addressedTo') +
+                        ' ' +
+                        addressedTo.substring(0, addressedTo.length - 2);
                 }
             }
         }
 
         let lastResponse = '';
-        if (!! this.lastResponse) {
-            lastResponse += '\n' + this.translate.instant('feed.lastResponse') + ' ' + this.formatDate(this.lastResponse.publishDate) + ' ' +
-                this.translate.instant('feed.at') + ' ' + this.formatTime(this.lastResponse.publishDate) + ' ' +
-                this.translate.instant('feed.from') + ' ' + this.getResponsePublisher(this.lastResponse);
+        if (!!this.lastResponse) {
+            lastResponse +=
+                '\n' +
+                this.translate.instant('feed.lastResponse') +
+                ' ' +
+                this.formatDate(this.lastResponse.publishDate) +
+                ' ' +
+                this.translate.instant('feed.at') +
+                ' ' +
+                this.formatTime(this.lastResponse.publishDate) +
+                ' ' +
+                this.translate.instant('feed.from') +
+                ' ' +
+                this.getResponsePublisher(this.lastResponse);
         }
 
         return receivedAt + addressedTo + lastResponse;
