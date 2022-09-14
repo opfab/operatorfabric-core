@@ -14,6 +14,7 @@ import {Store} from '@ngrx/store';
 import {FormControl, FormGroup, Validators} from '@angular/forms';
 import {ConfigService} from '@ofServices/config.service';
 import {SettingsService} from '@ofServices/settings.service';
+import {OpfabLoggerService} from '@ofServices/logs/opfab-logger.service';
 
 @Component({
     selector: 'of-text-setting',
@@ -27,9 +28,10 @@ export class TextSettingComponent extends BaseSettingDirective implements OnInit
     constructor(
         protected store: Store<AppState>,
         protected configService: ConfigService,
-        protected settingsService: SettingsService
+        protected settingsService: SettingsService,
+        protected logger: OpfabLoggerService
     ) {
-        super(store, configService, settingsService);
+        super(store, configService, settingsService,logger);
     }
 
     initFormGroup() {
