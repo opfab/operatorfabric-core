@@ -14,6 +14,7 @@ import {AppState} from '@ofStore/index';
 import {FormControl, FormGroup, Validators} from '@angular/forms';
 import {ConfigService} from '@ofServices/config.service';
 import {SettingsService} from '@ofServices/settings.service';
+import {OpfabLoggerService} from '@ofServices/logs/opfab-logger.service';
 
 @Component({
     selector: 'of-multi-settings',
@@ -23,9 +24,10 @@ export class MultiSettingsComponent extends BaseSettingDirective implements OnIn
     constructor(
         protected store: Store<AppState>,
         protected configService: ConfigService,
-        protected settingsService: SettingsService
+        protected settingsService: SettingsService,
+        protected logger: OpfabLoggerService
     ) {
-        super(store, configService, settingsService);
+        super(store, configService, settingsService,logger);
     }
 
     initFormGroup() {

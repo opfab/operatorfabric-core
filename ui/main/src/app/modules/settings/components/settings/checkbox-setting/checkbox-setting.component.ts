@@ -14,6 +14,7 @@ import {AppState} from '@ofStore/index';
 import {FormControl, FormGroup} from '@angular/forms';
 import {ConfigService} from '@ofServices/config.service';
 import {SettingsService} from '@ofServices/settings.service';
+import {OpfabLoggerService} from '@ofServices/logs/opfab-logger.service';
 
 @Component({
     selector: 'of-checkbox-setting',
@@ -25,8 +26,13 @@ export class CheckboxSettingComponent extends BaseSettingDirective implements On
     @Input() public name: string;
     @Input() public checked: boolean;
 
-    constructor(protected store: Store<AppState>,protected configService: ConfigService, protected settingsService: SettingsService) {
-        super(store,configService,settingsService);
+    constructor(
+        protected store: Store<AppState>,
+        protected configService: ConfigService,
+        protected settingsService: SettingsService,
+        protected logger: OpfabLoggerService
+    ) {
+        super(store, configService, settingsService,logger);
     }
 
     ngOnInit() {

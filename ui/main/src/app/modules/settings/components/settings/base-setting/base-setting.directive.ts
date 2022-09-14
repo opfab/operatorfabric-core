@@ -17,6 +17,7 @@ import * as _ from 'lodash-es';
 import {selectIdentifier} from '@ofSelectors/authentication.selectors';
 import {ConfigService} from '@ofServices/config.service';
 import {SettingsService} from '@ofServices/settings.service';
+import {OpfabLoggerService} from '@ofServices/logs/opfab-logger.service';
 
 @Directive()
 export abstract class BaseSettingDirective implements OnInit, OnDestroy {
@@ -31,7 +32,8 @@ export abstract class BaseSettingDirective implements OnInit, OnDestroy {
     protected constructor(
         protected store: Store<AppState>,
         protected configService: ConfigService,
-        protected settingsService: SettingsService
+        protected settingsService: SettingsService,
+        protected logger: OpfabLoggerService
     ) {}
 
     ngOnInit() {
@@ -83,7 +85,9 @@ export abstract class BaseSettingDirective implements OnInit, OnDestroy {
         settings[this.settingPath] = value.setting;
         this.configService.setConfigValue('settings.' + this.settingPath, value.setting);
         this.settingsService.patchUserSettings(settings).subscribe({
-                error:  (error) => console.log("Error in patching settings" , error) });
+                next : (res) => this.logger.debug("Receive response for patch settings"+ JSON.stringify(res)),
+                error:  (error) => this.logger.error("Error in patching settings" + JSON.stringify(error))
+        });
     }
 
     protected isEqual(formA, formB): boolean {
