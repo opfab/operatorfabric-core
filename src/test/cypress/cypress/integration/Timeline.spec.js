@@ -79,7 +79,7 @@ describe('Time line moves', function () {
     beforeEach('Reset UI configuration file ', function () {
         cy.deleteAllCards();
     })
-
+ 
     it('Check timelime manual moves in TR mode', function () {
 
         // NB : month  starts at 0
@@ -869,11 +869,13 @@ describe('Time line moves', function () {
         cy.get("#opfab-div-card-template-processed").should("exist");
         checkDisplayedCardTitle("State to test template rendering features");
     
-        cy.sendCard('defaultProcess/chartLine.json');
-        cy.sendCard('cypress/feed/customAlarm.json', currentDate.getTime() + 1 * HOURS, currentDate.getTime() + 5 * HOURS);
+        const startDate = currentDate.getTime() + 1 * HOURS;
+        cy.sendCard('cypress/feed/customAlarm.json', startDate, currentDate.getTime() + 5 * HOURS);
+        cy.sendCard('cypress/feed/chartLineWithCustomDate.json',startDate);
 
          // wait we receive the cards (when we have 3 cards in the feed)
          cy.get('of-light-card').should('have.length',3);
+         // we have two bubbles on the timeline as 2 cards have the same startDate
          checkHaveCircle(2);
          checkNthCircleContains(0,"1");
          checkNthCircleContains(1,"2");
