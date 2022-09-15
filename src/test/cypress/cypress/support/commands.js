@@ -208,6 +208,10 @@ Cypress.Commands.add('saveActivityAreaModifications', () => {
     cy.get('#opfab-activityarea-btn-yes').should('exist').click(); // and click yes on the confirmation popup
     cy.wait('@saved'); // wait for settings to be saved
     cy.wait('@reloadPerimeter'); // wait for user perimeter to be updated 
+
+    // pause the cypress code  to let the time to update the perimeter
+    // this is to unsure javascript engine  launch the user perimeter processing before the next cypress instruction 
+    cy.wait(100); 
 });
 
 
