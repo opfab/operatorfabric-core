@@ -203,9 +203,11 @@ Cypress.Commands.add('openActivityArea', () => {
 
 Cypress.Commands.add('saveActivityAreaModifications', () => {
     cy.intercept('PATCH', '/users/**').as('saved');
+    cy.intercept('GET', '/users/CurrentUserWithPerimeters').as('reloadPerimeter');
     cy.get('#opfab-activityarea-btn-confirm').should('exist').click({force: true}); //click confirm settings
     cy.get('#opfab-activityarea-btn-yes').should('exist').click(); // and click yes on the confirmation popup
     cy.wait('@saved'); // wait for settings to be saved
+    cy.wait('@reloadPerimeter'); // wait for user perimeter to be updated 
 });
 
 

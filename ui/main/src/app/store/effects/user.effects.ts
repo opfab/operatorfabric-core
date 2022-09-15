@@ -26,6 +26,7 @@ import {Entity} from '@ofModel/entity.model';
 import {EntitiesService} from '@ofServices/entities.service';
 import {GroupsService} from '@ofServices/groups.service';
 import {Utilities} from 'app/common/utilities';
+import {LogOption, OpfabLoggerService} from '@ofServices/logs/opfab-logger.service';
 
 @Injectable()
 export class UserEffects {
@@ -34,7 +35,8 @@ export class UserEffects {
         private userService: UserService,
         private entitieservice: EntitiesService,
         private groupservice: GroupsService,
-        private authService: AuthenticationService
+        private authService: AuthenticationService,
+        private logger: OpfabLoggerService
     ) {}
 
     /**
@@ -83,6 +85,7 @@ export class UserEffects {
                         this.entitieservice.loadAllEntitiesData(),
                         this.groupservice.loadAllGroupsData()
                     ];
+                    this.logger.info("Update user perimeter, entities and groups",LogOption.LOCAL_AND_REMOTE);
                     return Utilities.subscribeAndWaitForAllObservablesToEmitAnEvent(requestsToLaunch$)
                 }),
                 map(() => new UserConfigLoadedAction()),
