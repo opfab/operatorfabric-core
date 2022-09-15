@@ -244,8 +244,8 @@ describe ('Response card tests',function () {
         cy.get('.opfab-checkbox').eq(2).find('input').should('be.checked');
         cy.get('.opfab-checkbox').eq(3).find('input').should('be.checked');
 
-        cy.get('.opfab-checkbox').contains('Control Center FR North').click();
-        cy.get('.opfab-checkbox').contains('Control Center FR South').click();
+        cy.get('.opfab-checkbox').contains('Control Center FR North').click({force:true});
+        cy.get('.opfab-checkbox').contains('Control Center FR South').click({force:true});
         cy.saveActivityAreaModifications();
         cy.waitDefaultTime();
         cy.get('#opfab-navbar-menu-feed').click(); // go back to feed
@@ -268,8 +268,8 @@ describe ('Response card tests',function () {
 
         // We reconnect operator4_fr to ENTITY1_FR, ENTITY2_FR
         cy.openActivityArea();
-        cy.get('.opfab-checkbox').contains('Control Center FR South').click();
-        cy.get('.opfab-checkbox').contains('Control Center FR North').click();
+        cy.get('.opfab-checkbox').contains('Control Center FR South').click({force:true});
+        cy.get('.opfab-checkbox').contains('Control Center FR North').click({force:true});
         cy.saveActivityAreaModifications();
     })
 
