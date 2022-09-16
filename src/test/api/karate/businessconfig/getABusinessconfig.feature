@@ -26,7 +26,10 @@ Feature: Bundle
     And match response.states.questionState.modifyAnswerButtonLabel == 'Modify impact'
     And match response.states.questionState.cancelAcknowledgmentAllowed == true
     And match response.states.questionState.closeCardWhenUserAcknowledges == true
+    And match response.states.questionState.editCardEnabledOnUserInterface == true
+    And match response.states.questionState.deleteCardEnabledOnUserInterface == true
     And match response.states.messageState.type == 'CANCELED'
+    And match response.states.messageState.editCardEnabledOnUserInterface == false
     And match response.states.incidentInProgressState.userCard.template == 'usercard_incidentInProgress'
     And match response.states.incidentInProgressState.userCard.severityVisible == true
     And match response.states.incidentInProgressState.userCard.startDateVisible == false
@@ -43,7 +46,8 @@ Feature: Bundle
     And match response.states.incidentInProgressState.type == 'FINISHED'
     And match response.states.incidentInProgressState.automaticPinWhenAcknowledged == true
     And match response.states.incidentInProgressState.closeCardWhenUserAcknowledges == false
-    
+    And match response.states.incidentInProgressState.deleteCardEnabledOnUserInterface == false
+
 
 
 

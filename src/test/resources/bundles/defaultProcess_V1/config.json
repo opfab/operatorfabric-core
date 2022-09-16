@@ -60,6 +60,7 @@
       ],
       "acknowledgmentAllowed": "Always",
       "closeCardWhenUserAcknowledges": false,
+      "deleteCardEnabledOnUserInterface": false,
       "type" : "INPROGRESS"
     },
     "contingenciesState": {

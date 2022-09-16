@@ -10,7 +10,8 @@
 		"messageState" : {
 			"templateName" : "template",
 			"styles" : [ "style" ],
-			"type" : "CANCELED"
+			"type" : "CANCELED",
+			"editCardEnabledOnUserInterface": false
 		},
 		"questionState": {
 		  "name": "question.title",
@@ -54,7 +55,8 @@
 		  "type" : "FINISHED",
 		  "automaticPinWhenAcknowledged": true,
 		  "cancelAcknowledgmentAllowed": false,
-		  "closeCardWhenUserAcknowledges": false
+		  "closeCardWhenUserAcknowledges": false,
+		  "deleteCardEnabledOnUserInterface": false
 
 		}
 	  }
