@@ -7,7 +7,7 @@
   ],
   "branchPrefix": "FE-Renovate_",
   "baseBranches": ["develop"],
-  "prConcurrentLimit": 7,
+  "prConcurrentLimit": 10,
   "ignorePaths": [
     "**/node_modules/**",
     "**/bower_components/**",
