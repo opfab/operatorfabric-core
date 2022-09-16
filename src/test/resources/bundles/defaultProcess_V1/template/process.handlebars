@@ -15,7 +15,8 @@ console.log("rect to color  = " + rect);
 var stateColor = "#aaffaa";
 if (document.getElementById("error").getAttribute("value")=="true") stateColor="red";
 console.log("color  = " + stateColor );
-document.getElementById(rect).setAttribute("fill",stateColor);
+if (document.getElementById(rect)) document.getElementById(rect).setAttribute("fill",stateColor);
+else console.log("element not found " + rect);
 
 templateGateway.setScreenSize = function(size) {
     const chart = document.getElementById('chart');

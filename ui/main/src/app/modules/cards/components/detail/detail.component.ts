@@ -516,9 +516,9 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, DoCheck {
             this.showMaxAndReduceButton = true;
         }
         this.showCloseButton = true;
-        this.showEditButton = this.doesTheUserHavePermissionToEditCard();
-        this.showDeleteButton = this.doesTheUserHavePermissionToDeleteCard();
         this.setAcknowledgeButtonVisibility();
+        this.showEditButton = this.cardState.editCardEnabledOnUserInterface && this.doesTheUserHavePermissionToEditCard();
+        this.showDeleteButton = this.cardState.deleteCardEnabledOnUserInterface && this.doesTheUserHavePermissionToDeleteCard();
         this.showActionButton = !!this.cardState.response;
     }
 

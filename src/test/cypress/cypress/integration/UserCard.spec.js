@@ -27,10 +27,43 @@ describe('User Card ', function () {
     cy.deleteAllSettings();
   });
 
+  describe('Check edit and delete buttons visibility', function () {
+    it('Check edit button is not present when editCardEnabledOnUserInterface is false', () => {
+      cy.loginOpFab('operator1_fr', 'test');
+      opfab.navigateToUserCard();
+      usercard.selectService('User card examples');
+      usercard.selectProcess('Conference and IT incident');
+      usercard.selectState('Conference Call ☏');
+      usercard.prepareAndSendCard();
+      usercard.checkCardHasBeenSend();
+      feed.openFirstCard();
+      cy.get('#opfab-div-card-template-processed').should('exist');
+      cy.get('#opfab-card-edit').should('not.exist');
+      cy.get('#opfab-card-delete').click();
+      cy.get('#opfab-card-details-delete-btn-confirm').click();
+      feed.checkNumberOfDisplayedCardsIs(0);
+
+    })
+
+    it('Check delete button is not present when deleteCardEnabledOnUserInterface is false ', () => {
+      cy.loginOpFab('operator1_fr', 'test');
+      opfab.navigateToUserCard();
+      usercard.selectService('Base Examples');
+      usercard.selectProcess('Process example');
+      usercard.selectState('Process example');
+      usercard.prepareAndSendCard();
+      usercard.checkCardHasBeenSend();
+      feed.openFirstCard();
+      cy.get('#opfab-div-card-template-processed').should('exist');
+      cy.get('#opfab-card-delete').should('not.exist');
+    })
+  })
+
   describe('Check edition mode', function () {
 
     it('Label change in edition mode for Question user card', () => {
-
+      cy.deleteAllCards();
+      cy.deleteAllArchivedCards();
       cy.loginOpFab('operator1_fr', 'test');
       opfab.navigateToUserCard();
       usercard.selectService('User card examples');
@@ -447,7 +480,7 @@ describe('User Card ', function () {
 
     it('Check spinner is displayed when delete request is delayed and that spinner disappears once the request arrived', () => {
 
-      cy.sendCard('cypress/userCard/process.json');
+      cy.sendCard('cypress/userCard/message.json');
       cy.loginOpFab('operator1_fr', 'test');
 
       feed.openFirstCard();
@@ -996,4 +1029,6 @@ describe('User Card ', function () {
       usercard.checkStateSelectIsHidden();
     })
   })
+
+  
 })

@@ -29,6 +29,10 @@ public class ProcessStatesData implements ProcessStates {
     private Boolean cancelAcknowledgmentAllowed = true;
     @Builder.Default
     private Boolean  closeCardWhenUserAcknowledges = true;
+    @Builder.Default
+    private Boolean editCardEnabledOnUserInterface = true;
+    @Builder.Default
+    private Boolean deleteCardEnabledOnUserInterface = true;
 
     private String color;
     private String name;
@@ -99,4 +103,23 @@ public class ProcessStatesData implements ProcessStates {
         this.closeCardWhenUserAcknowledges = closeCardWhenUserAcknowledges;
     }
 
+    @Override
+    public Boolean getEditCardEnabledOnUserInterface() {
+        return editCardEnabledOnUserInterface;
+    }
+
+    @Override
+    public void setEditCardEnabledOnUserInterface(Boolean editCardEnabledOnUserInterface) {
+        this.editCardEnabledOnUserInterface = editCardEnabledOnUserInterface;
+    }
+
+    @Override
+    public Boolean getDeleteCardEnabledOnUserInterface() {
+        return deleteCardEnabledOnUserInterface;
+    }
+
+    @Override
+    public void setDeleteCardEnabledOnUserInterface(Boolean deleteCardEnabledOnUserInterface) {
+        this.deleteCardEnabledOnUserInterface = deleteCardEnabledOnUserInterface;
+    }
 }
