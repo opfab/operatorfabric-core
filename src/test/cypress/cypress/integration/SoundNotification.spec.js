@@ -20,6 +20,9 @@ describe('Sound notification test', function () {
     before('Reset UI configuration file ', function () {
         //cy.loadTestConf(); Avoid to launch it as it is time consuming
         cy.resetUIConfigurationFiles();
+    });
+
+    beforeEach('Reset settings', function () {
         cy.deleteAllCards();
         cy.deleteAllSettings();
     });
@@ -59,10 +62,10 @@ describe('Sound notification test', function () {
         });
 
         it('Repeating sound when receiving card with default repeating interval   ', () => {
-            cy.delete6TestCards();
             cy.loginOpFab(user, 'test');
             sound.stubPlaySound();
-
+            opfab.navigateToSettings();
+            settings.clickOnSeverity('information'); 
             opfab.navigateToFeed();
 
             // Use cypress time simulation
@@ -93,13 +96,12 @@ describe('Sound notification test', function () {
         });
 
         it('Repeating sound when receiving card  with  custom repeating interval ', () => {
-            cy.delete6TestCards();
+   
             cy.loginOpFab(user, 'test');
             sound.stubPlaySound();
-
             opfab.navigateToSettings();
             settings.setReplayIntervalTo('20');
-
+            settings.clickOnSeverity('information'); 
             opfab.navigateToFeed();
 
             cy.clock(new Date());
@@ -110,6 +112,7 @@ describe('Sound notification test', function () {
             cy.tick(1000);
             cy.get('of-light-card');
 
+             // Shift 15 seconds in the future
             cy.tick(50000);
 
             // Two new sound , the first one + 2 repetition
@@ -125,15 +128,10 @@ describe('Sound notification test', function () {
 
         it('Repeating sound when receiving card with no existing settings for user on login \
         and default settings replayEnabled = true  (Test for bug #3422)  ', () => {
-            cy.deleteAllSettings();
-            cy.delete6TestCards();
             cy.loginOpFab(user, 'test');
             sound.stubPlaySound();
-
             opfab.navigateToSettings();
-            // set severity information  to be notified by sound
             settings.clickOnSeverity('information');
-
             opfab.navigateToFeed();
 
             // Use cypress time simulation
