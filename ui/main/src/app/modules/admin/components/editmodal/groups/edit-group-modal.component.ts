@@ -27,6 +27,8 @@ import {GroupsService} from '@ofServices/groups.service';
 import {debounceTime, distinctUntilChanged, first, map, switchMap} from 'rxjs/operators';
 import {MultiSelectConfig, MultiSelectOption} from '@ofModel/multiselect.model';
 import {GroupTypeEnum} from '@ofModel/group.model';
+import {UserService} from '@ofServices/user.service';
+import {User} from '../../../../../model/user.model';
 
 @Component({
     selector: 'of-edit-group-modal',
@@ -60,6 +62,8 @@ export class EditGroupModalComponent implements OnInit {
 
     groupTypes = [];
 
+    groupUsers: string;
+
     public multiSelectConfig: MultiSelectConfig = {
         labelKey: 'admin.input.group.type',
         placeholderKey: 'admin.input.selectGroupTypeText',
@@ -73,7 +77,8 @@ export class EditGroupModalComponent implements OnInit {
         private activeModal: NgbActiveModal,
         private dataHandlingService: SharingService,
         private perimetersService: PerimetersService,
-        private groupsService: GroupsService
+        private groupsService: GroupsService,
+        private userService: UserService
     ) {
         Object.values(GroupTypeEnum).forEach((t) => this.groupTypes.push({value: String(t), label: String(t)}));
     }
@@ -114,6 +119,15 @@ export class EditGroupModalComponent implements OnInit {
         this.perimetersService.getPerimeters().forEach((perimeter) => {
             this.perimetersMultiSelectOptions.push(new MultiSelectOption(perimeter.id, perimeter.id));
         });
+
+        this.userService.getAll().subscribe(users => {
+            this.groupUsers = users.filter(usr => this.isUserInCurrentGroup(usr)).map(usr => usr.login).join(', ');
+        });
+
+    }
+
+    private isUserInCurrentGroup(usr: User) :boolean {
+        return !!usr.groups && usr.groups.findIndex(g => g === this.row.id) >= 0;
     }
 
     update() {

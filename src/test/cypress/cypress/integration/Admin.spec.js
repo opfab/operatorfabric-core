@@ -270,6 +270,8 @@ describe('AdminPage', () => {
         // Check id and name are mandatory
         cy.get('#opfab-admin-edit-btn-add').should('be.disabled');
 
+        cy.get('#opfab-group-users').should('not.exist');
+
         cy.get('#opfab-id').type('testgroup');
 
         cy.get('#opfab-admin-edit-btn-add').should('be.disabled');
@@ -303,6 +305,7 @@ describe('AdminPage', () => {
         cy.get('of-edit-group-modal').should('exist');
 
         cy.get('#opfab-id').should('not.exist');
+        cy.get('#opfab-group-users').should('be.empty');
 
         cy.get('.modal-title').should('contain.text', 'testgroup');
         cy.agGridCellShould('ag-grid-angular', 7, 1, 'have.text', 'group name');
@@ -356,6 +359,14 @@ describe('AdminPage', () => {
         cy.get('.opfab-pagination').should('contain.text', ' Results number  : 7');
 
         cy.countAgGridTableRows('ag-grid-angular', 7);
+
+
+         // Edit RTE group to check users list
+         cy.clickAgGridCell('ag-grid-angular', 1, 6, 'of-action-cell-renderer');
+
+         cy.get('of-edit-group-modal').should('exist');
+         cy.get('.modal-title').should('contain.text', 'RTE');
+         cy.get('#opfab-group-users').contains('operator3_fr, operator5_fr');
     });
 
     it('List, add, edit, delete perimeters', () => {

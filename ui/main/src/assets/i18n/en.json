@@ -347,6 +347,7 @@
         "name": "NAME",
         "description": "DESCRIPTION",
         "perimeters" : "PERIMETERS",
+        "users": "USERS",
         "realtime": "REAL TIME",
         "type": "TYPE",
         "true": "YES",

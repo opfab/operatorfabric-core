@@ -64,6 +64,10 @@
             [selectedOptions]="selectedPerimeters">    
             </of-multi-select>
           </div>
+          <div *ngIf="!!row" class="opfab-input opfab-edit-row" style="height: fit-content; min-height: 46px">
+            <label for="opfab-description" translate>admin.input.group.users</label>
+            <div style="padding:10px" id="opfab-group-users">{{groupUsers}}</div>
+          </div>
           <div class="opfab-edit-row">
             <label for="opfab-realtime" class="opfab-checkbox "> <span class="" translate>admin.input.group.realtime</span>
               <input formControlName="realtime" name="realtime" id="opfab-realtime" type="checkbox">
