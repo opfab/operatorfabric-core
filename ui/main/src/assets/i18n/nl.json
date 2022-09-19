@@ -346,6 +346,7 @@
         "name": "NAAM",
         "description": "OMSCHRIJVING",
         "perimeters" : "PERIMETERS",
+        "users": "GEBRUIKERS",
         "realtime": "REAL TIME",
         "type": "TYPE",
         "true": "JA",

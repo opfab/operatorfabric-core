@@ -346,6 +346,7 @@
         "name": "NOM",
         "perimeters" : "PÉRIMÈTRES",
         "description": "DESCRIPTION",
+        "users": "UTILISATEURS",
         "realtime": "TEMPS RÉEL",
         "type": "TYPE",
         "true": "OUI",
