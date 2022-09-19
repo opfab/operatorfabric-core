@@ -7,7 +7,13 @@
  * This file is part of the OperatorFabric project.
  */
 
+import {getOpfabGeneralCommands} from "../support/opfabGeneralCommands"
+import {getActivityAreaCommands} from "../support/activityAreaCommands"
+
 describe ('Response card tests',function () {
+
+    const opfab = getOpfabGeneralCommands();
+    const activityArea = getActivityAreaCommands();
 
     before('Set up configuration and clean cards', function () {
 
@@ -26,7 +32,7 @@ describe ('Response card tests',function () {
 
     it('Check card response for operator1_fr ', function () {
 
-        cy.loginOpFab('operator1_fr','test');
+        opfab.loginWithUser('operator1_fr');
 
         // operator1_fr should see the card in the feed
         cy.get('of-light-card').should('have.length',1);
@@ -96,7 +102,7 @@ describe ('Response card tests',function () {
 
     it('Check card response for operator2_fr ', function () {
 
-        cy.loginOpFab('operator2_fr','test');
+        opfab.loginWithUser('operator2_fr');
 
         // operator2_fr should see the card in the feed
         cy.get('of-light-card').should('have.length',1);
@@ -150,7 +156,7 @@ describe ('Response card tests',function () {
     // ENTITY1_FR, ENTITY2_FR, ENTITY3_FR
     it('Check card response for operator4_fr ', function () {
 
-        cy.loginOpFab('operator4_fr','test');
+        opfab.loginWithUser('operator4_fr');
 
         // operator4_fr should see the card in the feed
         cy.get('of-light-card').should('have.length',1);
@@ -236,7 +242,7 @@ describe ('Response card tests',function () {
 
         // operator4_fr disconnect from ENTITY_1_FR and ENTITY2_FR (the popup for entities choice must not be displayed)
         // because the only one entity allowed to respond for him is now ENTITY3_FR
-        cy.openActivityArea();
+        opfab.navigateToActivityArea();
 
         // Check every checkbox to let the time for the ui to set to true before we click
         cy.get('.opfab-checkbox').eq(0).find('input').should('be.checked');
@@ -246,7 +252,7 @@ describe ('Response card tests',function () {
 
         cy.get('.opfab-checkbox').contains('Control Center FR North').click({force:true});
         cy.get('.opfab-checkbox').contains('Control Center FR South').click({force:true});
-        cy.saveActivityAreaModifications();
+        activityArea.save();
         cy.waitDefaultTime();
         cy.get('#opfab-navbar-menu-feed').click(); // go back to feed
         cy.get('of-light-card').eq(0).click(); // click the card
@@ -267,16 +273,16 @@ describe ('Response card tests',function () {
                                            .next().should("have.text", ' NOK ');
 
         // We reconnect operator4_fr to ENTITY1_FR, ENTITY2_FR
-        cy.openActivityArea();
+        opfab.navigateToActivityArea();
         cy.get('.opfab-checkbox').contains('Control Center FR South').click({force:true});
         cy.get('.opfab-checkbox').contains('Control Center FR North').click({force:true});
-        cy.saveActivityAreaModifications();
+        activityArea.save();
     })
 
 
     it('Check itsupervisor1 see the card but cannot respond ', function () {
 
-        cy.loginOpFab('itsupervisor1','test');
+        opfab.loginWithUser('itsupervisor1');
 
         // operator1_fr should see the card in their feed
         cy.get('of-light-card').should('have.length',1);
@@ -313,7 +319,7 @@ describe ('Response card tests',function () {
     it ('Check response for operator1_fr is still present after update of card with keepChildCard=true re-logging',function () {
         cy.sendCard('defaultProcess/questionWithKeepChildCards.json');
 
-        cy.loginOpFab('operator1_fr','test');
+        opfab.loginWithUser('operator1_fr');
         // See in the feed the fact that user has responded (icon)
         cy.get('#opfab-feed-lightcard-hasChildCardFromCurrentUserEntity');
 
@@ -343,8 +349,8 @@ describe ('Response card tests',function () {
     it ('Check response for  operator1_fr  is not present after update of card with keepChildCard= false re-logging',function () {
         cy.sendCard('defaultProcess/question.json');
 
-        cy.loginOpFab('operator1_fr','test');
-       
+        opfab.loginWithUser('operator1_fr');
+
         // Click on the card
         cy.get('of-light-card').eq(0).click(); 
 
@@ -366,7 +372,7 @@ describe ('Response card tests',function () {
 
 
     it ('Check responses in archived cards detail',function () {
-        cy.loginOpFab('operator1_fr','test');
+        opfab.loginWithUser('operator1_fr');
         // We move to archives screen
         cy.get('#opfab-navbar-menu-archives').click();
         cy.waitDefaultTime();
@@ -421,8 +427,7 @@ describe ('Response card tests',function () {
 
  
     it ('Check response button is disabled while sending response',function () {
-        cy.loginOpFab('operator1_fr','test');
-
+        opfab.loginWithUser('operator1_fr');
         // Click on the card
         cy.get('of-light-card').eq(0).click(); 
 

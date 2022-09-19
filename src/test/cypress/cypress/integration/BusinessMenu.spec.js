@@ -7,9 +7,13 @@
  * This file is part of the OperatorFabric project.
  */
 
-/** Test for the OpFab users administration page */
+import {getOpfabGeneralCommands} from '../support/opfabGeneralCommands'
+import {getFeedCommands} from '../support/feedCommands'
 
 describe ('Business nenu',()=>{
+
+    const opfab = getOpfabGeneralCommands();
+    const feed = getFeedCommands();
 
     before('Set up configuration', function () {
         cy.loadTestConf();
@@ -17,102 +21,78 @@ describe ('Business nenu',()=>{
         cy.sendCard('defaultProcess/chart.json');
     });
 
-    it('Test business menu links', ()=> {
+    it('Test business menu links in night mode ', ()=> {
 
-        cy.loginOpFab('operator1_fr', 'test');
+        opfab.loginWithUser('operator1_fr');
 
-        // check link in chart card detail
-        cy.get('of-light-card').eq(0).click()
-        .find('[id^=opfab-feed-light-card]')
-        .invoke('attr', 'data-urlId')
-        .then((urlId) => {
-            cy.hash().should('eq', '#/feed/cards/' + urlId);
-            cy.get('of-card-details').find('of-detail');
-            cy.get('#opfab-div-card-template-processed').find('a').eq(0).click();
-            cy.get('iframe').invoke('attr', 'src').should('eq', 'https://en.wikipedia.org/w/index.php?opfab_theme=NIGHT&search=chart&fulltext=1');
-        });
+        feed.openFirstCard();
+        clickLinkInsideCard();
+        checkUrlDisplayedIs('https://en.wikipedia.org/w/index.php?opfab_theme=NIGHT&search=chart&fulltext=1');
+ 
+        openBusinessDropdownMenu();
+        checkDropdownMenuIconLinks();
+        clickOnDropdownMenuEntryNumber(1);
+        checkUrlDisplayedIs('https://opfab.github.io/?opfab_theme=NIGHT');
+        clickOnDropdownMenuEntryNumber(2);
+        checkUrlDisplayedIs('https://www.wikipedia.org/?opfab_theme=NIGHT');
+        clickOnDropdownMenuEntryNumber(3);
+        checkUrlDisplayedIs('http://localhost:2002/external/appExample/?opfab_theme=NIGHT');
 
-        // Open business dropdown menu
-        cy.get('#opfab-navbar-menu-dropdown-menu2').click();
-
-        // Select first dropdown menu
-        cy.get('.text-link').eq(1).click();
-
-        cy.get('iframe').invoke('attr', 'src').should('eq', 'https://opfab.github.io/?opfab_theme=NIGHT');
-
-        cy.get('.icon-link').eq(1).invoke('attr', 'href').should('eq', 'https://opfab.github.io/');
-
-        // Select second dropdown menu
-        cy.get('.text-link').eq(2).click();
-
-        cy.get('iframe').invoke('attr', 'src').should('eq', 'https://www.wikipedia.org/?opfab_theme=NIGHT');
-
-        cy.get('.icon-link').eq(2).invoke('attr', 'href').should('eq', 'https://www.wikipedia.org/');
-
-        // Select third dropdown menu
-        cy.get('.text-link').eq(3).click();
-
-        cy.get('iframe').invoke('attr', 'src').should('eq', 'http://localhost:2002/external/appExample/?opfab_theme=NIGHT');
-        cy.get('.icon-link').eq(3).invoke('attr', 'href').should('eq', 'http://localhost:2002/external/appExample/');
-
-        // close dropdown menu by clicking a second time , otherwise the menu keeps open 
-        cy.get('#opfab-navbar-menu-dropdown-menu2').click();
-
-        //Click on single business menu 
-        cy.get('#opfab-navbar-menu-menu1').click();
-
-        cy.get('iframe').invoke('attr', 'src').should('eq', 'https://en.wikipedia.org/w/index.php?opfab_theme=NIGHT');
-
-        cy.get('.icon-link').eq(0).invoke('attr', 'href').should('eq', 'https://en.wikipedia.org/w/index.php');
-
-        // Go to Feed page
-        cy.get('#opfab-navbar-menu-feed').click();
-
-        // Open user dropdown menu
-        cy.get('#opfab-navbar-drop-user-menu').click();
-        // Switch to Day Mode
-        cy.get('#opfab-navbar-right-menu-day-mode').click();
-
-
-        // check link in chart card detail
-        cy.get('of-light-card').eq(0).click()
-        .find('[id^=opfab-feed-light-card]')
-        .invoke('attr', 'data-urlId')
-        .then((urlId) => {
-            cy.hash().should('eq', '#/feed/cards/' + urlId);
-            cy.get('of-card-details').find('of-detail');
-            cy.get('#opfab-div-card-template-processed').find('a').eq(0).click();
-            cy.get('iframe').invoke('attr', 'src').should('eq', 'https://en.wikipedia.org/w/index.php?opfab_theme=DAY&search=chart&fulltext=1');
-        });
-
-        // Open business dropdown menu
-        cy.get('#opfab-navbar-menu-dropdown-menu2').click();
-
-        // Select first dropdown menu
-        cy.get('.text-link').eq(1).click();
-
-        cy.get('iframe').invoke('attr', 'src').should('eq', 'https://opfab.github.io/?opfab_theme=DAY');
-        
-        // wait for dropdown menu to disappear and click again (to avoid falky test)
-        cy.get('.text-link').eq(1).should("not.be.visible");
-        cy.get('#opfab-navbar-menu-dropdown-menu2').click();
-
-        // Select second dropdown menu
-        cy.get('.text-link').eq(2).click();
-
-        cy.get('iframe').invoke('attr', 'src').should('eq', 'https://www.wikipedia.org/?opfab_theme=DAY');
-
-        // Select third dropdown menu
-        cy.get('.text-link').eq(3).click();
-
-        cy.get('iframe').invoke('attr', 'src').should('eq', 'http://localhost:2002/external/appExample/?opfab_theme=DAY');
-
-       
-        //Click on single business menu 
-        cy.get('#opfab-navbar-menu-menu1').click();
-
-        cy.get('iframe').invoke('attr', 'src').should('eq', 'https://en.wikipedia.org/w/index.php?opfab_theme=DAY');
+        openBusinessSingleMenu();
+        checkSingleMenuIconLink();
+        checkUrlDisplayedIs('https://en.wikipedia.org/w/index.php?opfab_theme=NIGHT');
 
     });
- 
+
+    it('Test business menu links in day mode ', ()=> {
+
+        opfab.loginWithUser('operator1_fr')
+        opfab.switchToDayMode();
+
+        feed.openFirstCard();
+        clickLinkInsideCard();
+        checkUrlDisplayedIs('https://en.wikipedia.org/w/index.php?opfab_theme=DAY&search=chart&fulltext=1');
+
+        openBusinessDropdownMenu();
+        clickOnDropdownMenuEntryNumber(1);
+        checkUrlDisplayedIs('https://opfab.github.io/?opfab_theme=DAY');
+        clickOnDropdownMenuEntryNumber(2);
+        checkUrlDisplayedIs('https://www.wikipedia.org/?opfab_theme=DAY');
+        clickOnDropdownMenuEntryNumber(3);
+        checkUrlDisplayedIs('http://localhost:2002/external/appExample/?opfab_theme=DAY');
+
+        openBusinessSingleMenu();
+        checkUrlDisplayedIs('https://en.wikipedia.org/w/index.php?opfab_theme=DAY');
+
+    });
+
+    function clickLinkInsideCard() {
+        cy.get('#opfab-div-card-template-processed').find('a').eq(0).click();
+    }
+
+    function checkUrlDisplayedIs(url) {
+        cy.get('iframe').invoke('attr', 'src').should('eq', url);
+    }
+
+    function openBusinessDropdownMenu() {
+        cy.get('#opfab-navbar-menu-dropdown-menu2').click();
+    }
+
+    function checkDropdownMenuIconLinks() {
+        cy.get('.icon-link').eq(1).invoke('attr', 'href').should('eq', 'https://opfab.github.io/');
+        cy.get('.icon-link').eq(2).invoke('attr', 'href').should('eq', 'https://www.wikipedia.org/');
+        cy.get('.icon-link').eq(3).invoke('attr', 'href').should('eq', 'http://localhost:2002/external/appExample/');
+    }
+
+    function clickOnDropdownMenuEntryNumber(menuNumber) {
+        cy.get('.text-link').eq(menuNumber).click();
+    }
+
+    function checkSingleMenuIconLink() {
+        cy.get('.icon-link').eq(0).invoke('attr', 'href').should('eq', 'https://en.wikipedia.org/w/index.php');
+    }
+
+    function openBusinessSingleMenu() {
+        cy.get('#opfab-navbar-menu-menu1').click();
+    }
 })

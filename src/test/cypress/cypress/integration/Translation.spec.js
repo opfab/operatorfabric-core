@@ -7,6 +7,8 @@
  * This file is part of the OperatorFabric project.
  */
 
+import {getOpfabGeneralCommands} from '../support/opfabGeneralCommands';
+
 describe('Test translations', function () {
     const ENGLISH = 'en';
     const FRENCH = 'fr';
@@ -15,6 +17,8 @@ describe('Test translations', function () {
     const ENGLISH_SETTINGS = 'SETTINGS';
     const FRENCH_SETTINGS = 'PARAMÈTRES';
     const DUTCH_SETTINGS = 'INSTELLINGEN';
+
+    const opfab = getOpfabGeneralCommands();
 
     function changeLanguage(newLanguage, useClock) {
         cy.get('#opfab-navbar-drop-user-menu').should('exist').click();
@@ -217,11 +221,12 @@ describe('Test translations', function () {
     }
 
     before('Set up configuration and cards', function () {
+        cy.deleteAllSettings();
         cy.loadTestConf();
     });
 
     it('Check translations for menu titles', function () {
-        cy.loginOpFab('operator1_fr','test');
+        opfab.loginWithUser('operator1_fr');
 
         changeLanguage(ENGLISH);
         checkMenuTitles('Card Feed', 'Archives', 'Monitoring', 'Logging', 'Single menu entry', 'Second menu', 'First menu entry', 'Second menu entry');
@@ -236,7 +241,7 @@ describe('Test translations', function () {
 
 
     it('Check translations for user dropdown menu', function () {
-        cy.loginOpFab('operator1_fr','test');
+        opfab.loginWithUser('operator1_fr');
 
         changeLanguage(ENGLISH);
         checkRightMenuStaticEntries('Real time users', 'Settings', 'Activity area', 'Notification configuration', 'About', 'Change password', 'Logout');
@@ -252,7 +257,7 @@ describe('Test translations', function () {
     });
 
     it('Check archives screen translations', function () {
-        cy.loginOpFab('operator1_fr','test');
+        opfab.loginWithUser('operator1_fr');
 
         changeLanguage(ENGLISH);
         checkArchivesScreenLabels('SERVICE', 'TAGS', 'PROCESS', 'STATE', 'PUBLISH FROM', 'PUBLISH TO', 'ACTIVE FROM', 'ACTIVE TO');
@@ -268,7 +273,7 @@ describe('Test translations', function () {
     })
 
     it('Check Monitoring screen translations', function () {
-        cy.loginOpFab('operator1_fr', 'test');
+        opfab.loginWithUser('operator1_fr');
 
         changeLanguage(ENGLISH);
         checkMonitoringFilterTexts('SERVICE', 'Select a Service', 'PROCESS', 'Select a Process', 'PROCESS STATUS', 'Select a Process status', 'SEARCH', 'RESET');
@@ -285,7 +290,8 @@ describe('Test translations', function () {
 
     it('Check Business period translations', function () {
         const currentDate = new Date(2030, 11, 31, 23, 46);
-        cy.loginWithClock(currentDate);
+        opfab.loginWithUser('operator1_fr');
+        cy.clock(currentDate);
        
         changeLanguage(ENGLISH, true);
         cy.tick(1000);
@@ -321,7 +327,7 @@ describe('Test translations', function () {
     });
 
     it('Check Feed filter translations', function () {
-        cy.loginOpFab('operator1_fr', 'test');
+        opfab.loginWithUser('operator1_fr');
 
         changeLanguage(ENGLISH);
         cy.get('#opfab-navbar-menu-feed').click();
@@ -353,7 +359,7 @@ describe('Test translations', function () {
     });
 
     it('Check translation for non-existent card', function () {
-        cy.loginOpFab('operator1_fr', 'test');
+        opfab.loginWithUser('operator1_fr');
 
         changeLanguage(ENGLISH);
         loadNonExistingCard();

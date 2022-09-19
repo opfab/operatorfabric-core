@@ -7,7 +7,6 @@
  * This file is part of the OperatorFabric project.
  */
 
-/** Test for the OpFab external devices configuration page */
 
 import {getOpfabGeneralCommands} from "../support/opfabGeneralCommands"
 
@@ -15,37 +14,12 @@ describe('ExternalDevicesconfigurationPage', () => {
 
     const opfab = getOpfabGeneralCommands();
 
-    function clickOnNthDeviceInDropdown(index) {
-        cy.get('#opfab-devicesDropdownList').click();
-        cy.get('#opfab-devicesDropdownList').find('.vscomp-option-text').eq(index).click({force: true});
-        cy.get('#opfab-devicesDropdownList').click();
-    }
-
-    function clickOnNthUserInDropdown(index) {
-        cy.get('#opfab-usersDropdownList').click();
-        cy.get('#opfab-usersDropdownList').find('.vscomp-option-text').eq(index).click({force: true});
-        cy.get('#opfab-usersDropdownList').click();
-    }
-
-    function clickOnNthDevice(index) {
-        cy.clickAgGridCell('ag-grid-angular', index, 1, '.opfab-checkbox-checkmark');
-    }
-
-    function checkNthDeviceIsEnabled(index) {
-        cy.agGridCellElementShould('ag-grid-angular', index, 1, 'input', 'be.checked');
-    }
-
-    function checkNthDeviceIsDisabled(index) {
-        cy.agGridCellElementShould('ag-grid-angular', index, 1, 'input', 'not.be.checked');
-    }
-
     before('Set up configuration', function () {
         cy.loadTestConf();
     });
 
-
     it('Enable and disable external devices', () => {
-        cy.loginOpFab('admin', 'test');
+        opfab.loginWithUser('admin');
         opfab.openExternalDevices();
 
         // Check that the tabs exist
@@ -88,7 +62,7 @@ describe('ExternalDevicesconfigurationPage', () => {
     })
 
     it('List, add, edit, delete user device configuration', () => {
-        cy.loginOpFab('admin', 'test');
+        opfab.loginWithUser('admin');
         opfab.openExternalDevices();
 
         // Go to the users configuration screen
@@ -151,7 +125,7 @@ describe('ExternalDevicesconfigurationPage', () => {
     });
 
     it('Add device configuration for all available users', () => {
-        cy.loginOpFab('admin', 'test');
+        opfab.loginWithUser('admin');
         opfab.openExternalDevices();
 
         // Go to the users configuration screen
@@ -188,7 +162,7 @@ describe('ExternalDevicesconfigurationPage', () => {
     });
 
     it('Delete added device configurations', () => {
-        cy.loginOpFab('admin', 'test');
+        opfab.loginWithUser('admin');
         opfab.openExternalDevices();
 
         // Go to the users configuration screen
@@ -207,5 +181,28 @@ describe('ExternalDevicesconfigurationPage', () => {
         cy.countAgGridTableRows('#opfab-externaldevices-table-grid', 4);
     });
 
-    
+    function clickOnNthDeviceInDropdown(index) {
+        cy.get('#opfab-devicesDropdownList').click();
+        cy.get('#opfab-devicesDropdownList').find('.vscomp-option-text').eq(index).click({force: true});
+        cy.get('#opfab-devicesDropdownList').click();
+    }
+
+    function clickOnNthUserInDropdown(index) {
+        cy.get('#opfab-usersDropdownList').click();
+        cy.get('#opfab-usersDropdownList').find('.vscomp-option-text').eq(index).click({force: true});
+        cy.get('#opfab-usersDropdownList').click();
+    }
+
+    function clickOnNthDevice(index) {
+        cy.clickAgGridCell('ag-grid-angular', index, 1, '.opfab-checkbox-checkmark');
+    }
+
+    function checkNthDeviceIsEnabled(index) {
+        cy.agGridCellElementShould('ag-grid-angular', index, 1, 'input', 'be.checked');
+    }
+
+    function checkNthDeviceIsDisabled(index) {
+        cy.agGridCellElementShould('ag-grid-angular', index, 1, 'input', 'not.be.checked');
+    }
+
 });

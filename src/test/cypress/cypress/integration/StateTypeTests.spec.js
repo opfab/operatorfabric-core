@@ -10,7 +10,12 @@
 /* This test file focuses on some state-type specific behaviour in card details header. As the Cypress test suite grows,
 it might make sense to merge it with other tests.
 * */
+
+import {getOpfabGeneralCommands} from '../support/opfabGeneralCommands';
+
 describe('State type tests', function () {
+
+    const opfab = getOpfabGeneralCommands();
 
     const orange = 'rgb(255, 102, 0)';
     const green = 'rgb(0, 128, 0)';
@@ -65,7 +70,7 @@ describe('State type tests', function () {
 
         it(`Check card detail header`, function () {
 
-            cy.loginOpFab('operator1_fr', 'test');
+            opfab.loginWithUser('operator1_fr');
 
             cy.get('of-light-card').should('have.length', 9);
 

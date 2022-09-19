@@ -7,7 +7,11 @@
  * This file is part of the OperatorFabric project.
  */
 
+import {getOpfabGeneralCommands} from '../support/opfabGeneralCommands'
+
 describe ('Feed configuration tests',function () {
+    
+    const opfab = getOpfabGeneralCommands();
 
     before('Set up configuration and cards', function () {
         cy.loadTestConf();
@@ -32,7 +36,7 @@ describe ('Feed configuration tests',function () {
         cy.removePropertyInConf('feed.card.hideSeveritySort','web-ui');
         cy.removePropertyInConf('feed.card.hideAckAllCardsFeature','web-ui');
 
-        cy.loginOpFab('operator1_fr','test');
+        opfab.loginWithUser('operator1_fr');
 
         // Open filter menu
         cy.get('#opfab-feed-filter-btn-filter').click();
@@ -64,7 +68,7 @@ describe ('Feed configuration tests',function () {
         cy.setPropertyInConf('feed.card.hideSeveritySort','web-ui',true);
         cy.setPropertyInConf('feed.card.hideAckAllCardsFeature','web-ui',true);
 
-        cy.loginOpFab('operator1_fr','test');
+        opfab.loginWithUser('operator1_fr');
 
         // Open filter menu
         cy.get('#opfab-feed-filter-btn-filter').click();
@@ -95,7 +99,7 @@ describe ('Feed configuration tests',function () {
         cy.setPropertyInConf('feed.card.hideSeveritySort','web-ui',false);
         cy.setPropertyInConf('feed.card.hideAckAllCardsFeature','web-ui',false);
 
-        cy.loginOpFab('operator1_fr','test');
+        opfab.loginWithUser('operator1_fr');
 
         // Open filter menu
         cy.get('#opfab-feed-filter-btn-filter').click();

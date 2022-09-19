@@ -7,7 +7,13 @@
  * This file is part of the OperatorFabric project.
  */
 
+
+import {getOpfabGeneralCommands} from "../support/opfabGeneralCommands" 
+
 describe ('Feed notification configuration tests',function () {
+
+    const opfab = getOpfabGeneralCommands();
+
     const totalCards = 6;
     const cardsToTest =[
         /Message\s*$/,                             // ignore any trailing whitespace
@@ -20,7 +26,7 @@ describe ('Feed notification configuration tests',function () {
     });
 
     it('Check feed notification configuration screen for operator1_fr', function () {
-        cy.loginOpFab('operator1_fr', 'test');
+        opfab.loginWithUser('operator1_fr');
 
         // We move to feed notification configuration screen
         cy.get('#opfab-navbar-drop-user-menu').click();
@@ -78,7 +84,7 @@ describe ('Feed notification configuration tests',function () {
     })
 
     it('Check feed notification configuration screen for itsupervisor1', function () {
-        cy.loginOpFab('itsupervisor1', 'test');
+        opfab.loginWithUser('itsupervisor1');
 
         // We move to feed notification configuration screen
         cy.get('#opfab-navbar-drop-user-menu').click();
@@ -120,7 +126,7 @@ describe ('Feed notification configuration tests',function () {
     })
 
     it('Check feed notification configuration screen for admin', function () {
-        cy.loginOpFab('admin', 'test');
+        opfab.loginWithUser('admin');
 
         // We move to feed notification configuration screen
         cy.get('#opfab-navbar-drop-user-menu').click();
@@ -134,7 +140,7 @@ describe ('Feed notification configuration tests',function () {
     })
 
     it('Check feed notification configuration screen for operator1_fr, with a config without process group', function () {
-        cy.loginOpFab('operator1_fr', 'test');
+        opfab.loginWithUser('operator1_fr');
 
         cy.loadEmptyProcessGroups();
         cy.reload();
@@ -177,7 +183,7 @@ describe ('Feed notification configuration tests',function () {
     })
 
     it('Check feature select/unselect all states for a process', function () {
-        cy.loginOpFab('operator1_fr', 'test');
+        opfab.loginWithUser('operator1_fr');
 
         // We move to feed notification configuration screen
         cy.get('#opfab-navbar-drop-user-menu').click();
@@ -245,7 +251,7 @@ describe ('Feed notification configuration tests',function () {
     it('In case of a state unsubscribed and then filtering notif on this state is prohibited : ' +
         'test a popup is displayed and then the subscription to this state is forced', function () {
 
-        cy.loginOpFab('operator1_fr', 'test');
+        opfab.loginWithUser('operator1_fr');
 
         // We move to feed notification configuration screen
         cy.get('#opfab-navbar-drop-user-menu').click();
@@ -261,8 +267,8 @@ describe ('Feed notification configuration tests',function () {
         cy.get('#opfab-feedconfiguration-btn-yes').click(); // and confirm
         cy.get('#opfab-feedconfiguration-btn-yes').should('not.exist'); // wait for dialog to go away
 
-        cy.logoutOpFab();
-        cy.loginOpFab('admin', 'test');
+        opfab.logout();
+        opfab.loginWithUser('admin');
 
         // Click on user menu (top right of the screen)
         cy.get('#opfab-navbar-drop-user-menu').click();
@@ -279,8 +285,8 @@ describe ('Feed notification configuration tests',function () {
         cy.get('#opfab-admin-perimeter-filtering-notification-allowed2').should('be.checked').click({force: true});
         cy.get('#opfab-admin-perimeter-btn-save').click();
 
-        cy.logoutOpFab();
-        cy.loginOpFab('operator1_fr', 'test');
+        opfab.logout();
+        opfab.loginWithUser('operator1_fr');
 
         // We move to feed notification configuration screen
         cy.get('#opfab-navbar-drop-user-menu').click();
@@ -309,8 +315,7 @@ describe ('Feed notification configuration tests',function () {
         // Clean up existing cards
         cy.deleteAllCards();
         cy.send6TestCards();
-
-        cy.loginOpFab('operator1_fr', 'test');
+        opfab.loginWithUser('operator1_fr');
 
         // All cards should be present
         cy.get('of-light-card').should('have.length',totalCards);
@@ -366,8 +371,7 @@ describe ('Feed notification configuration tests',function () {
     it('When sending new cards, check only monitored cards are shown', function () {
         cy.deleteAllCards();
         cy.send6TestCards();
-
-        cy.loginOpFab('operator1_fr', 'test')
+        opfab.loginWithUser('operator1_fr');
 
         // Check feed
         cy.get('#opfab-navbar-menu-feed').click(); // Open feed
@@ -391,7 +395,7 @@ describe ('Feed notification configuration tests',function () {
 
 
     it ('Test monitoring all cards', function () {
-        cy.loginOpFab('operator1_fr', 'test')
+        opfab.loginWithUser('operator1_fr');
 
         // Monitor all cards again
         cy.get('#opfab-navbar-drop-user-menu').click(); // Click top right dropdown menu
@@ -430,11 +434,8 @@ describe ('Feed notification configuration tests',function () {
     it ('Send new cards and verify all are visible', function () {
         cy.deleteAllCards();
         cy.send6TestCards();
-
-        cy.loginOpFab('operator1_fr', 'test')
-
-
-        
+        opfab.loginWithUser('operator1_fr');
+  
         // All cards should be present
         cy.get('of-light-card').should('have.length',totalCards);
 

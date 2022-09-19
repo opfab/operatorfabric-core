@@ -7,21 +7,21 @@
  * This file is part of the OperatorFabric project.
  */
 
-/** Test for the OpFab users administration page */
+import {getOpfabGeneralCommands} from "../support/opfabGeneralCommands"
 
-describe('AdminPage', () => {
+
+
+describe('AdmininstrationPages', () => {
+
+    const opfab = getOpfabGeneralCommands();
+
     before('Set up configuration', function () {
         cy.loadTestConf();
     });
 
     it('List, add, edit, delete users', () => {
-        cy.loginOpFab('admin', 'test');
-
-        // Click on user menu (top right of the screen)
-        cy.get('#opfab-navbar-drop-user-menu').click();
-
-        // Click on "Administration"
-        cy.get('#opfab-navbar-right-menu-admin').click();
+        opfab.loginWithUser('admin');
+        opfab.navigateToAdministration();
 
         // Check first page has 10 rows
         cy.countAgGridTableRows('ag-grid-angular', 10);
@@ -125,13 +125,8 @@ describe('AdminPage', () => {
     });
 
     it('List, add, edit, delete entities', () => {
-        cy.loginOpFab('admin', 'test');
-
-        //Click on user menu (top right of the screen)
-        cy.get('#opfab-navbar-drop-user-menu').click();
-
-        //Click on "Administration"
-        cy.get('#opfab-navbar-right-menu-admin').click();
+        opfab.loginWithUser('admin');
+        opfab.navigateToAdministration();
 
         //Click on tab "Entities"
         cy.get('#opfab-tabs').find('li').eq(1).click();
@@ -245,13 +240,8 @@ describe('AdminPage', () => {
     });
 
     it('List, add, edit, delete groups', () => {
-        cy.loginOpFab('admin', 'test');
-
-        //Click on user menu (top right of the screen)
-        cy.get('#opfab-navbar-drop-user-menu').click();
-
-        //Click on "Administration"
-        cy.get('#opfab-navbar-right-menu-admin').click();
+        opfab.loginWithUser('admin');
+        opfab.navigateToAdministration();
 
         //Click on "Groups Management"
         cy.get('#opfab-admin-groups-tab').click();
@@ -370,13 +360,8 @@ describe('AdminPage', () => {
     });
 
     it('List, add, edit, delete perimeters', () => {
-        cy.loginOpFab('admin', 'test');
-
-        //Click on user menu (top right of the screen)
-        cy.get('#opfab-navbar-drop-user-menu').click();
-
-        //Click on "Administration"
-        cy.get('#opfab-navbar-right-menu-admin').click();
+        opfab.loginWithUser('admin');
+        opfab.navigateToAdministration();
 
         //Click on "Perimeters Management"
         cy.get('#opfab-admin-perimeters-tab').click();
@@ -518,14 +503,8 @@ describe('AdminPage', () => {
     });
 
     it('Check users export', function () {
-
-        cy.loginOpFab('admin','test');
-
-        //Click on user menu (top right of the screen)
-        cy.get('#opfab-navbar-drop-user-menu').click();
-
-        //Click on "Administration"
-        cy.get('#opfab-navbar-right-menu-admin').click();
+        opfab.loginWithUser('admin');
+        opfab.navigateToAdministration();
 
         //Click on tab "Users"
         cy.get('#opfab-tabs').find('li').eq(0).click();
@@ -564,13 +543,8 @@ describe('AdminPage', () => {
 
     it('Check entities export', function () {
 
-        cy.loginOpFab('admin','test');
-
-        //Click on user menu (top right of the screen)
-        cy.get('#opfab-navbar-drop-user-menu').click();
-
-        //Click on "Administration"
-        cy.get('#opfab-navbar-right-menu-admin').click();
+        opfab.loginWithUser('admin');
+        opfab.navigateToAdministration();
 
         //Click on tab "Entities"
         cy.get('#opfab-tabs').find('li').eq(1).click();
@@ -609,13 +583,8 @@ describe('AdminPage', () => {
 
     it('Check groups export', function () {
 
-        cy.loginOpFab('admin','test');
-
-        //Click on user menu (top right of the screen)
-        cy.get('#opfab-navbar-drop-user-menu').click();
-
-        //Click on "Administration"
-        cy.get('#opfab-navbar-right-menu-admin').click();
+        opfab.loginWithUser('admin');
+        opfab.navigateToAdministration();
 
         //Click on tab "Groups"
         cy.get('#opfab-tabs').find('li').eq(2).click();
@@ -656,13 +625,8 @@ describe('AdminPage', () => {
 
     it('Check perimeters export', function () {
 
-        cy.loginOpFab('admin','test');
-
-        //Click on user menu (top right of the screen)
-        cy.get('#opfab-navbar-drop-user-menu').click();
-
-        //Click on "Administration"
-        cy.get('#opfab-navbar-right-menu-admin').click();
+        opfab.loginWithUser('admin');
+        opfab.navigateToAdministration();
 
         //Click on tab "Perimeters"
         cy.get('#opfab-tabs').find('li').eq(3).click();
