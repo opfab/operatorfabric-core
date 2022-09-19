@@ -7,38 +7,37 @@
  * This file is part of the OperatorFabric project.
  */
 
+import {getOpfabGeneralCommands} from '../support/opfabGeneralCommands'
+import {getFeedCommands} from '../support/feedCommands'
+
 describe('FeedScreen tests', function () {
+
+    const opfab = getOpfabGeneralCommands();
+    const feed = getFeedCommands();
 
     function tryToLoadNonExistingCard() {
         cy.visit('#/feed/cards/thisCardDoesNotExist');
-
         cy.get('#opfab-feed-card-not-found').should('exist');
     }
 
     before('Set up configuration', function () {
-        // This can stay in a `before` block rather than `beforeEach` as long as the test does not change configuration
         cy.resetUIConfigurationFiles();
-
         cy.loadTestConf();
-
-        // Clean up existing cards
-        cy.deleteAllCards();
-
-        cy.send6TestCards();
     });
 
-
+    beforeEach('Delete all cards', function () {
+        cy.deleteAllCards();
+    });
 
     it('Check card reception and read behaviour', function () {
-        cy.loginOpFab('operator1_fr', 'test');
-
+        opfab.loginWithUser('operator1_fr');
+        cy.send6TestCards();
         // Set feed sort to "Date" so the cards don't move down the feed once they're read
         cy.get('#opfab-feed-filter-btn-sort').click();
         cy.get('#opfab-sort-form').find('input[value=date]').parent().click();
         cy.get('#opfab-feed-filter-btn-sort').click();
 
-        // operator1_fr should see 6 cards in their feed
-        cy.get('of-light-card').should('have.length', 6);
+        feed.checkNumberOfDisplayedCardsIs(6);
 
         // No card detail is displayed
         cy.get('of-card-details').should('not.exist');
@@ -105,23 +104,21 @@ describe('FeedScreen tests', function () {
                 .and('match', /400|normal/);
         });
 
-        // TODO Test on other card that it gets read when clicking cross
+    });
 
-        // TODO Test read if navigating to other page and back
-
-        // TODO Test with sort set to unread first
-
-        // If we delete all the cards, the feed should be empty and the detail view should also be empty
-        // Note: Here we use the `delete6TestCards` method which relies on API calls to delete cards as we want
-        // the deletion to be reflected in the feed immediately.
+    it('Check card delete ', function () {
+        opfab.loginWithUser('operator1_fr');
+        cy.send6TestCards();
+        feed.checkNumberOfDisplayedCardsIs(6);
+        cy.get('of-card-details').should('not.exist');
         cy.delete6TestCards();
-        cy.get('of-light-card').should('have.length', 0);
+        feed.checkNumberOfDisplayedCardsIs(0);
         cy.get('of-card-details').should('not.exist');
     });
 
     it('Check card visibility by publish date when business period is after selected time range', function () {
         cy.sendCard('cypress/feed/futureEvent.json');
-        cy.loginOpFab('operator1_fr', 'test');
+        opfab.loginWithUser('operator1_fr');
         cy.get('of-light-card').should('have.length', 1);
     });
 });

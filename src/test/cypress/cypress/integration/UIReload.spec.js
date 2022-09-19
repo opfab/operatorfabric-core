@@ -6,25 +6,32 @@
  * SPDX-License-Identifier: MPL-2.0
  * This file is part of the OperatorFabric project.
  */
-
-/** Test for the OpFab UI reload requested */
+import {getOpfabGeneralCommands} from '../support/opfabGeneralCommands'
 
 describe ('UI Reload requested',()=>{
 
+    const opfab = getOpfabGeneralCommands();
+    
     it('Receive RELOAD message', ()=>{
 
-        cy.loginOpFab('operator1_fr', 'test');
-
+        opfab.loginWithUser('operator1_fr');
         cy.sendMessageToSubscriptions('RELOAD');
+        clickOnLinkToReloadUI();
+        waitForPageReload();
+        checkThereIsNoReloadMessage();
+    })
 
-        // click on the link to reload the UI
+    function clickOnLinkToReloadUI() {
         cy.get('#opfab-reload-msg').find('.opfab-reload-link').click();
-        // wait for page reload
+    }
+
+    function waitForPageReload() {
         cy.intercept('GET', '/config/ui-menu.json').as('reloaded');
         cy.wait('@reloaded');
-
         cy.get('of-navbar').should('exist');
-        cy.get('#opfab-reload-msg').should('not.exist');
+    }
 
-    })
+    function checkThereIsNoReloadMessage() {
+        cy.get('#opfab-reload-msg').should('not.exist');
+    }
 })

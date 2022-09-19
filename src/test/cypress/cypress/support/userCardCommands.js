@@ -24,6 +24,10 @@ export function getUserCardCommands() {
         cy.get('#of-usercard-process-filter').should('not.exist');
     });
     
+    usercard.addCommand('checkRecipientSelectDoesNotExist', function () {
+        cy.get('#opfab-recipients').should("not.exist");
+    })
+
     usercard.addCommand('checkStateSelectIsHidden', function () {
         cy.get('#of-state-filter').should('not.be.visible');
     });

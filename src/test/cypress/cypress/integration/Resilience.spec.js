@@ -7,102 +7,86 @@
  * This file is part of the OperatorFabric project.
  */
 
+import {getOpfabGeneralCommands} from '../support/opfabGeneralCommands';
+import {getFeedCommands} from '../support/feedCommands';
 
-
-describe ('Resilience tests',function () {
+describe('Resilience tests', function () {
+    const opfab = getOpfabGeneralCommands();
+    const feed = getFeedCommands();
 
     before('Set up configuration', function () {
-
-        // This can stay in a `before` block rather than `beforeEach` as long as the test does not change configuration
         cy.resetUIConfigurationFiles();
-
         cy.loadTestConf();
+    });
 
-        // Clean up existing cards
+    beforeEach('Delete all cards', function () {
         cy.deleteAllCards();
-
     });
 
-
-
-    it('Check card reception after nginx restart ', function () {
-
-        cy.loginOpFab('operator1_fr','test');
-
-        cy.get('of-light-card').should('have.length',0);
-
-        // Stop nginx
-        cy.exec('docker stop web-ui');
-
-        cy.wait(15000);
-
-        // Check loading spinner is present 
-        cy.get('#opfab-connecting-spinner');
-
-        // Start Nginx
-        cy.exec('docker start web-ui');
-
-        // Wait for subscription to be fully restored 
-        cy.wait(20000);
-
+    it('Check loading spinner when nginx is stopped and card reception after nginx restart', function () {
+        opfab.loginWithUser('operator1_fr');
+        feed.checkNumberOfDisplayedCardsIs(0);
+        stopNginx();
+        checkLoadingSpinnerIsVisible();
+        startNginx();
         cy.send6TestCards();
-        cy.get('of-light-card').should('have.length',6);
-
-        // Check loading spinner is not present anymore 
-        cy.get('#opfab-connecting-spinner').should('not.exist');
-
-
+        feed.checkNumberOfDisplayedCardsIs(6);
+        checkLoadingSpinnerIsNotVisible();
     });
 
-    it('Check card reception after rabbit restart ', function () {
-
-        cy.loginOpFab('operator1_fr','test');
-
-        cy.delete6TestCards();
-        cy.get('of-light-card').should('have.length',0);
-
-        // Restart rabbitMQ
-        cy.exec('docker restart rabbit');
-
-        cy.wait(10000); // Wait for rabbitMQ to be fully up 
-
+    it('Check card reception after rabbitMQ restart ', function () {
+        opfab.loginWithUser('operator1_fr');
+        feed.checkNumberOfDisplayedCardsIs(0);
+        restartRabbitMQ();
         cy.send6TestCards();
-        cy.get('of-light-card').should('have.length',6);
-
+        feed.checkNumberOfDisplayedCardsIs(6);
     });
 
-    // the following test will only be relevant if using docker mode 
-    // in dev mode it will execute but the cards-consultation services will not be restart 
-    it('Check card reception when cards-consultation is restarted ', function () {
+    it('Check card reception when cards-consultation service is restarted ', function () {
+    // WARNING : the following test will only be relevant if using docker mode
+    // in dev mode it will execute but the cards-consultation services will not be restart
+        opfab.loginWithUser('operator1_fr');
+        feed.checkNumberOfDisplayedCardsIs(0);
+        cy.wait(5000); // wait for subscription to be fully working
 
-        cy.loginOpFab('operator1_fr', 'test');
-
-        cy.delete6TestCards();
-        cy.get('of-light-card').should('have.length', 0);
-
-        // wait for subscription to be fully working
-        cy.wait(5000);
-
-        cy.exec('docker stop cards-consultation',{failOnNonZeroExit: false}).then((result) => {
-            // only if docker stop works, so it will not be executed in dev mode 
+        cy.exec('docker stop cards-consultation', {failOnNonZeroExit: false}).then((result) => {
+            // only if docker stop works, so it will not be executed in dev mode
             if (result.code === 0) {
-
-                // Send 6 cards when cards-consultation servcie is down 
-                cy.send6TestCards();
-
-                cy.exec('docker start cards-consultation');
-
-                cy.waitForOpfabToStart();
-
-                // wait for subscription to be fully restored 
-                cy.wait(20000);
-
-                cy.get('of-light-card').should('have.length', 6);
+                cy.send6TestCards();  // Send 6 cards when cards-consultation service is down
+                checkLoadingSpinnerIsVisible();
+                restartCardsConsultationService();
+                feed.checkNumberOfDisplayedCardsIs(6);
             }
-        })
-
-
+        });
     });
 
+    function stopNginx() {
+        cy.exec('docker stop web-ui');
+        cy.wait(15000);
+    }
 
-})
+    function checkLoadingSpinnerIsVisible() {
+        cy.get('#opfab-connecting-spinner');
+    }
+
+    function startNginx() {
+        cy.exec('docker start web-ui');
+        cy.wait(20000); // Wait for subscription to be fully restored
+    }
+
+    function checkLoadingSpinnerIsNotVisible() {
+        cy.get('#opfab-connecting-spinner').should('not.exist');
+    }
+
+    function restartRabbitMQ() {
+        cy.exec('docker restart rabbit');
+        cy.wait(10000); // Wait for rabbitMQ to be fully up
+    }
+
+    function restartCardsConsultationService() {
+        cy.exec('docker start cards-consultation');
+        cy.waitForOpfabToStart();
+        cy.wait(20000); // wait for subscription to be fully restored
+
+    }
+});

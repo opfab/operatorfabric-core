@@ -6,8 +6,11 @@
  * SPDX-License-Identifier: MPL-2.0
  * Ther file is part of the OperatorFabric project.
  */
+import {getOpfabGeneralCommands} from '../support/opfabGeneralCommands'
 
 describe('Group Cards tests', function () {
+
+    const opfab = getOpfabGeneralCommands();
 
     before('Set up configuration', function () {
 
@@ -38,7 +41,7 @@ describe('Group Cards tests', function () {
 
     it('Card grouping disabled -> all cards should be visible in the feed', function () {
         cy.setPropertyInConf('feed.enableGroupedCards','web-ui', false);
-        cy.loginOpFab('operator1_fr', 'test');
+        opfab.loginWithUser('operator1_fr');
 
 
         // Operator1 should see 10 cards in her feed
@@ -56,8 +59,7 @@ describe('Group Cards tests', function () {
 
     it('Card grouping enabled -> only cards with unique tag strings should be visible in the feed', function () {
         cy.setPropertyInConf('feed.enableGroupedCards','web-ui', true);
-
-        cy.loginOpFab('operator1_fr', 'test');
+        opfab.loginWithUser('operator1_fr');
 
         // Operator1 should see 3 cards in her feed
         cy.get('of-light-card').should('have.length', 3 );

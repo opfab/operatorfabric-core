@@ -8,11 +8,15 @@
  */
 
 import {getUserCardCommands} from "../support/userCardCommands"
+import {getOpfabGeneralCommands} from "../support/opfabGeneralCommands"
+import {getActivityAreaCommands} from "../support/activityAreaCommands"
 
 
 describe('Acknowledgment tests', function () {
 
     const usercard = getUserCardCommands();
+    const opfab = getOpfabGeneralCommands();
+    const activityArea = getActivityAreaCommands();
 
 
     before('Set up configuration', function () {
@@ -54,7 +58,7 @@ describe('Acknowledgment tests', function () {
 
     it('Check acknowledgment for operator 1', function () {
 
-        cy.loginOpFab('operator1_fr', 'test');
+        opfab.loginWithUser('operator1_fr');
 
         // Wait for all cards to be loaded (check the last one is present)
         cy.get('#opfab-feed-light-card-cypress-message6');
@@ -163,7 +167,7 @@ describe('Acknowledgment tests', function () {
 
     it('Check acknowledgment for operator 1 after re-logging  ', function () {
 
-        cy.loginOpFab('operator1_fr', 'test');
+        opfab.loginWithUser('operator1_fr');
 
         // Set feed filter to see all card
         cy.get('#opfab-feed-filter-btn-filter').click();
@@ -179,7 +183,7 @@ describe('Acknowledgment tests', function () {
 
     it('Check no acknowledgment for operator 2  ', function () {
 
-        cy.loginOpFab('operator2_fr', 'test');
+        opfab.loginWithUser('operator2_fr');
 
         // Set feed filter to see all card
         cy.get('#opfab-feed-filter-btn-filter').click();
@@ -194,7 +198,7 @@ describe('Acknowledgment tests', function () {
 
     it('Check cancel ack not possible when cancelAcknowledgmentAllowed is false', function () {
 
-        cy.loginOpFab('operator1_fr', 'test');
+        opfab.loginWithUser('operator1_fr');
 
         // Set feed filter to see all card
         cy.get('#opfab-feed-filter-btn-filter').click();
@@ -220,7 +224,7 @@ describe('Acknowledgment tests', function () {
         // Clean up existing cards
         cy.deleteAllCards();
         cy.send6TestCards();
-        cy.loginOpFab('operator1_fr', 'test');
+        opfab.loginWithUser('operator1_fr');
 
         cy.get('of-light-card').should('have.length', 6);
 
@@ -288,7 +292,7 @@ describe('Acknowledgment tests', function () {
 
     it('operator4_fr (member of 4 FR entities) acknowledges the previous card created by operator1_fr ', function () {
 
-        cy.loginOpFab('operator4_fr', 'test');
+        opfab.loginWithUser('operator4_fr');
 
         cy.get('of-light-card').should('have.length', 7);
 
@@ -373,7 +377,7 @@ describe('Acknowledgment tests', function () {
             .and('have.css', 'color', 'rgb(255, 102, 0)');
 
         // operator4_fr goes to activity area screen and disconnect from ENTITY1_FR
-        cy.openActivityArea();
+        opfab.navigateToActivityArea();
 
         // Check every checkbox to let the time for the ui to set to true before we click
         cy.get('.opfab-checkbox').eq(0).find('input').should('be.checked');
@@ -381,7 +385,7 @@ describe('Acknowledgment tests', function () {
         cy.get('.opfab-checkbox').eq(2).find('input').should('be.checked');
         cy.get('.opfab-checkbox').eq(3).find('input').should('be.checked');
         cy.get('.opfab-checkbox').contains('Control Center FR North').click(); // we disconnect
-        cy.saveActivityAreaModifications();
+        activityArea.save();
 
         // We display again the card to check entities acknowledgements footer is not displayed anymore
         cy.get('#opfab-navbar-menu-feed').click(); // we go back to the feed
@@ -392,7 +396,7 @@ describe('Acknowledgment tests', function () {
         cy.get('#opfab-card-acknowledged-footer').should('not.exist');
 
         // We reconnect operator4_fr to ENTITY1_FR
-        cy.openActivityArea();
+        opfab.navigateToActivityArea();
 
         // Check every checkbox to let the time for the ui to set to true before we click
         cy.get('.opfab-checkbox').eq(0).find('input').should('be.checked');
@@ -401,12 +405,12 @@ describe('Acknowledgment tests', function () {
         cy.get('.opfab-checkbox').eq(3).find('input').should('be.checked');
 
         cy.get('.opfab-checkbox').contains('Control Center FR North').click(); // we reconnect
-        cy.saveActivityAreaModifications();
+        activityArea.save();
     });
 
     it('Check operator1_fr see the entities acknowledgments done by operator4_fr for the previous card', function () {
 
-        cy.loginOpFab('operator1_fr', 'test');
+        opfab.loginWithUser('operator1_fr');
 
         cy.get('of-light-card').should('have.length', 7);
         // We display the previous card (acknowledged by operator4_fr)
@@ -449,7 +453,7 @@ describe('Acknowledgment tests', function () {
     it('Check acknowledgements are received also in real-time', function () {
         cy.sendCard('cypress/entitiesAcks/message1.json');
 
-        cy.loginOpFab('operator4_fr', 'test');
+        opfab.loginWithUser('operator4_fr');
 
         cy.get('of-light-card').should('have.length', 7);
         cy.get('of-light-card').eq(0).click();
@@ -492,7 +496,7 @@ describe('Acknowledgment tests', function () {
 
         cy.deleteAllCards();
 
-        cy.loginOpFab('operator1_fr', 'test');
+        opfab.loginWithUser('operator1_fr');
         cy.sendCard('cypress/ack/message2.json');
 
         // Click on card message
@@ -503,8 +507,8 @@ describe('Acknowledgment tests', function () {
         // Click ack button
         cy.get('#opfab-card-details-btn-ack').click();
 
-        cy.checkLoadingSpinnerIsDisplayed();
-        cy.checkLoadingSpinnerIsNotDisplayed();
+        opfab.checkLoadingSpinnerIsDisplayed();
+        opfab.checkLoadingSpinnerIsNotDisplayed();
 
         // Set feed filter to see all cards and check message card is present
         cy.get('#opfab-feed-filter-btn-filter').click();
@@ -521,8 +525,8 @@ describe('Acknowledgment tests', function () {
         // Unack the card
         cy.get('#opfab-card-details-btn-ack').click();
 
-        cy.checkLoadingSpinnerIsDisplayed();
-        cy.checkLoadingSpinnerIsNotDisplayed();
+        opfab.checkLoadingSpinnerIsDisplayed();
+        opfab.checkLoadingSpinnerIsNotDisplayed();
     });
 
     it('Check pinned card', function () {
@@ -531,7 +535,7 @@ describe('Acknowledgment tests', function () {
         // Send card with automaticPinWhenAcknowledged = true
         cy.sendCard('defaultProcess/contingencies.json');
 
-        cy.loginOpFab('operator1_fr', 'test');
+        opfab.loginWithUser('operator1_fr');
 
         //There are no pinned cards
         cy.get('#of-pinned-cards').find('.opfab-pinned-card').should('have.length', 0);
@@ -604,7 +608,8 @@ describe('Acknowledgment tests', function () {
 
         const currentDate =  new Date(2022, 3, 22, 16, 10);
 
-        cy.loginWithClock(currentDate);
+        opfab.loginWithUser('operator1_fr');
+        cy.clock(currentDate);
        
         // Send card with automaticPinWhenAcknowledged = true
         cy.sendCard('cypress/feed/customEvent.json', currentDate.getTime() - (2 * HOURS ), currentDate.getTime() + 5 * MINUTES);
@@ -657,7 +662,7 @@ describe('Acknowledgment tests', function () {
         cy.sendCard('cypress/ack/pinned.json');
 
 
-        cy.loginOpFab('operator1_fr', 'test');
+        opfab.loginWithUser('operator1_fr');
 
         cy.get('#of-pinned-cards').find('.opfab-pinned-card').should('have.length', 0);
 

@@ -6,8 +6,11 @@
  * SPDX-License-Identifier: MPL-2.0
  * This file is part of the OperatorFabric project.
  */
+import {getOpfabGeneralCommands} from '../support/opfabGeneralCommands'
 
 describe ('Core menu configuration tests',function () {
+
+    const opfab = getOpfabGeneralCommands();
 
     // These arrays lists all existing core menus, with their id and the selector to use to check for the presence of the link
     
@@ -56,7 +59,7 @@ describe ('Core menu configuration tests',function () {
 
             it('Menu should not be visible for ' + user, ()=>{
 
-                cy.loginOpFab(user,'test');
+                opfab.loginWithUser(user);
 
                 allMenuItems.forEach((item) => {
                     cy.deleteCoreMenuFromConf(item.menu_id); // Remove menu item with given id from ui-menu.json
@@ -89,7 +92,7 @@ describe ('Core menu configuration tests',function () {
 
             it('Menu should not be visible for ' + user, ()=>{
 
-                cy.loginOpFab(user,'test');
+                opfab.loginWithUser(user);
 
                 allMenuItems.forEach((item) => {
                     cy.updateCoreMenuInConf(item.menu_id,"visible",false);
@@ -118,7 +121,7 @@ describe ('Core menu configuration tests',function () {
 
             it('Menu should be visible for ' + user, ()=>{
 
-                cy.loginOpFab(user,'test');
+                opfab.loginWithUser(user);
 
                 allMenuItems.forEach((item) => {
                     cy.deleteCoreMenuFromConf(item.menu_id); // Remove menu item with given id from ui-menu.json
@@ -142,11 +145,10 @@ describe ('Core menu configuration tests',function () {
     })
 
     describe('Check behaviour if defined and visibility is true and showOnlyForGroups is set to ["ADMIN"]', function () {
-        // If core menu is defined with visibility true and showOnlyForGroups not defined, menu should be visible for all users
-
+   
         it('Menu should be visible for admin', ()=>{
 
-            cy.loginOpFab('admin','test');
+            opfab.loginWithUser('admin');
 
             allMenuItems.forEach((item) => {
                 cy.updateCoreMenuInConf(item.menu_id,"visible",true);
@@ -168,7 +170,7 @@ describe ('Core menu configuration tests',function () {
 
         it('Menu should be not be visible for operator1_fr', ()=>{
 
-            cy.loginOpFab('operator1_fr','test');
+            opfab.loginWithUser('operator1_fr');
 
             allMenuItems.forEach((item) => {
                 cy.updateCoreMenuInConf(item.menu_id,"visible",true);
@@ -190,15 +192,13 @@ describe ('Core menu configuration tests',function () {
 
     })
 
-    // Testing single menu for "edge" cases
-
     describe('Check behaviour for edge cases', function () {
 
         const item = navbarMenuItems[0];
 
         it('Tests with admin', ()=>{
 
-            cy.loginOpFab('admin','test');
+            opfab.loginWithUser('admin');
 
             cy.log('Testing visible: true and showOnlyForGroups: []')
             cy.updateCoreMenuInConf(item.menu_id,"visible",true);
@@ -222,7 +222,7 @@ describe ('Core menu configuration tests',function () {
 
         it('Tests with operator1_fr', ()=>{
 
-            cy.loginOpFab('operator1_fr','test');
+            opfab.loginWithUser('operator1_fr');
 
             cy.log('Testing visible: true and showOnlyForGroups: []')
             cy.updateCoreMenuInConf(item.menu_id,"visible",true);

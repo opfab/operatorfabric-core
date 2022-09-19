@@ -7,9 +7,14 @@
  * This file is part of the OperatorFabric project.
  */
 
-/** Test for the OpFab real time users page */
+import {getOpfabGeneralCommands} from "../support/opfabGeneralCommands"
+import {getActivityAreaCommands} from "../support/activityAreaCommands"
+
 
 describe ('RealTimeUsersPage',()=>{
+
+    const opfab = getOpfabGeneralCommands();
+    const activityArea = getActivityAreaCommands();
 
     before('Set up configuration', function () {
         cy.loadRealTimeScreensConf();
@@ -17,13 +22,8 @@ describe ('RealTimeUsersPage',()=>{
     });
 
     it('Connection of admin and check of Real time users screen : no one should be connected', ()=> {
-        cy.loginOpFab('admin', 'test');
-
-        //click on user menu (top right of the screen)
-        cy.get('#opfab-navbar-drop-user-menu').click();
-
-        //click on "Real time users"
-        cy.get('#opfab-navbar-right-menu-realtimeusers').click();
+        opfab.loginWithUser('admin');
+        opfab.navigateToRealTimeUsers();
 
         // we should have 19 disconnected entities/groups and 0 connected
         cy.get('.badge').should('have.length', 19);
@@ -32,13 +32,8 @@ describe ('RealTimeUsersPage',()=>{
     })
 
     it('Connection of operator3_fr and check of Real time users screen', ()=> {
-        cy.loginOpFab('operator3_fr', 'test');
-
-        //click on user menu (top right of the screen)
-        cy.get('#opfab-navbar-drop-user-menu').click();
-
-        //click on "Real time users"
-        cy.get('#opfab-navbar-right-menu-realtimeusers').click();
+        opfab.loginWithUser('operator3_fr');
+        opfab.navigateToRealTimeUsers();
 
         // we should have 18 disconnected entities/groups and 1 connected (operator3_fr for ENTITY3_FR/Dispatcher)
         // we check the connected badge is for the third row/first column
@@ -56,13 +51,8 @@ describe ('RealTimeUsersPage',()=>{
     })
 
     it('Connection of operator2_fr, which is not in the ADMIN group, and check Real time users screen is authorized and screen is ok', ()=> {
-        cy.loginOpFab('operator2_fr', 'test');
-
-        //click on user menu (top right of the screen)
-        cy.get('#opfab-navbar-drop-user-menu').click();
-
-        //click on "Real time users"
-        cy.get('#opfab-navbar-right-menu-realtimeusers').click();
+        opfab.loginWithUser('operator2_fr');
+        opfab.navigateToRealTimeUsers();
 
         // we should have 18 disconnected entities/groups and 1 connected (operator2_fr for ENTITY2_FR/Planner)
         // we check the connected badge is for the second row/second column
@@ -81,13 +71,8 @@ describe ('RealTimeUsersPage',()=>{
 
     it('Connection of operator4_fr, which is connected to ENTITY1_FR, ENTITY2_FR, ENTITY3_FR, ENTITY4_FR, ' +
         'interact with activity area screen and check Real time users screen is updated', ()=> {
-        cy.loginOpFab('operator4_fr', 'test');
-
-        //click on user menu (top right of the screen)
-        cy.get('#opfab-navbar-drop-user-menu').click();
-
-        //click on "Real time users"
-        cy.get('#opfab-navbar-right-menu-realtimeusers').click();
+        opfab.loginWithUser('operator4_fr');
+        opfab.navigateToRealTimeUsers();
 
         // we should have 15 disconnected entities/groups and 4 connected (operator4_fr for ENTITY1_FR/Dispatcher, ENTITY2_FR/Dispatcher, ENTITY3_FR/Dispatcher and ENTITY4_FR/Dispatcher)
         cy.get('.badge').should('have.length', 19);
@@ -123,18 +108,16 @@ describe ('RealTimeUsersPage',()=>{
         cy.get('.bg-danger').should('have.length', 5);
 
         // operator4_fr disconnect from ENTITY2_FR, ENTITY3_FR and ENTITY4_FR
-        cy.openActivityArea();
-
+        opfab.navigateToActivityArea();
         // Check every checkbox to let the time for the ui to set to true before we click
         cy.get('.opfab-checkbox').eq(0).find('input').should('be.checked');
         cy.get('.opfab-checkbox').eq(1).find('input').should('be.checked');
         cy.get('.opfab-checkbox').eq(2).find('input').should('be.checked');
         cy.get('.opfab-checkbox').eq(3).find('input').should('be.checked');
-
-        cy.get('.opfab-checkbox').contains('Control Center FR East').click();
-        cy.get('.opfab-checkbox').contains('Control Center FR South').click();
-        cy.get('.opfab-checkbox').contains('Control Center FR West').click();
-        cy.saveActivityAreaModifications();
+        activityArea.clickOnCheckbox('Control Center FR East');
+        activityArea.clickOnCheckbox('Control Center FR South');
+        activityArea.clickOnCheckbox('Control Center FR West');
+        activityArea.save();
 
         // we go back to the real time screen
         cy.get('#opfab-navbar-drop-user-menu').should('exist').click();
@@ -165,18 +148,16 @@ describe ('RealTimeUsersPage',()=>{
         cy.get('table').first().find('tr').eq(4).find('td').eq(0).should('contain.text', '');
 
         // operator4_fr reconnect to ENTITY2_FR, ENTITY3_FR and ENTITY4_FR
-        cy.openActivityArea();
-
+        opfab.navigateToActivityArea();
         // Check every checkbox to let the time for the ui to set to true before we click
         cy.get('.opfab-checkbox').eq(0).find('input').should('not.be.checked');
         cy.get('.opfab-checkbox').eq(1).find('input').should('be.checked');
         cy.get('.opfab-checkbox').eq(2).find('input').should('not.be.checked');
         cy.get('.opfab-checkbox').eq(3).find('input').should('not.be.checked');
-
-        cy.get('.opfab-checkbox').contains('Control Center FR East').click({force: true});
-        cy.get('.opfab-checkbox').contains('Control Center FR South').click({force: true});
-        cy.get('.opfab-checkbox').contains('Control Center FR West').click({force: true});
-        cy.saveActivityAreaModifications();
+        activityArea.clickOnCheckbox('Control Center FR East');
+        activityArea.clickOnCheckbox('Control Center FR South');
+        activityArea.clickOnCheckbox('Control Center FR West');
+        activityArea.save();
 
         // we go back to the real time screen
         cy.get('#opfab-navbar-drop-user-menu').should('exist').click();
@@ -207,16 +188,11 @@ describe ('RealTimeUsersPage',()=>{
         cy.get('table').first().find('tr').eq(4).find('td').eq(0).should('contain.text', 'operator4_fr');
     })
 
-
     it ('Check spinner is displayed when request is delayed and that spinner disappears once the request arrived ', function () {
         cy.delayRequestResponse('/businessconfig/realtimescreens');
-
-        cy.loginOpFab('operator1_fr','test');
-
-        cy.get('#opfab-navbar-drop-user-menu').click();
-        cy.get('#opfab-navbar-right-menu-realtimeusers').click();
-
-        cy.checkLoadingSpinnerIsDisplayed();
-        cy.checkLoadingSpinnerIsNotDisplayed();
+        opfab.loginWithUser('operator1_fr');
+        opfab.navigateToRealTimeUsers();
+        opfab.checkLoadingSpinnerIsDisplayed();
+        opfab.checkLoadingSpinnerIsNotDisplayed();
     })
 })

@@ -29,7 +29,7 @@ describe('Sound notification test', function () {
 
     describe('Checking sound when receiving notification ', function () {
         it('Sound when receiving card   ', () => {
-            cy.loginOpFab(user, 'test');
+            opfab.loginWithUser(user);
             sound.stubPlaySound();
 
             opfab.navigateToSettings();
@@ -62,7 +62,7 @@ describe('Sound notification test', function () {
         });
 
         it('Repeating sound when receiving card with default repeating interval   ', () => {
-            cy.loginOpFab(user, 'test');
+            opfab.loginWithUser(user);
             sound.stubPlaySound();
             opfab.navigateToSettings();
             settings.clickOnSeverity('information'); 
@@ -97,7 +97,7 @@ describe('Sound notification test', function () {
 
         it('Repeating sound when receiving card  with  custom repeating interval ', () => {
    
-            cy.loginOpFab(user, 'test');
+            opfab.loginWithUser(user);
             sound.stubPlaySound();
             opfab.navigateToSettings();
             settings.setReplayIntervalTo('20');
@@ -128,7 +128,7 @@ describe('Sound notification test', function () {
 
         it('Repeating sound when receiving card with no existing settings for user on login \
         and default settings replayEnabled = true  (Test for bug #3422)  ', () => {
-            cy.loginOpFab(user, 'test');
+            opfab.loginWithUser(user);
             sound.stubPlaySound();
             opfab.navigateToSettings();
             settings.clickOnSeverity('information');

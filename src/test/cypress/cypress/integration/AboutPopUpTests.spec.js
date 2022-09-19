@@ -7,69 +7,45 @@
  * This file is part of the OperatorFabric project.
  */
 
+import {getOpfabGeneralCommands} from "../support/opfabGeneralCommands"
+
 describe ('About pop up tests',function () {
 
-  const user = 'operator1_fr';
-
+  const opfab = getOpfabGeneralCommands();
 
   before('Reset UI configuration file ', function () {
     cy.resetUIConfigurationFiles(); 
   })
 
+  describe('Checking that the About pop up ', function () {
 
-
-  describe('Checking that the About pop up is shown', function () {
-
-    it('About pop-up should be visible for ' + user, ()=>{
-
-      cy.loginOpFab(user,'test');
-
-      cy.get('#opfab-navbarContent').find('#opfab-navbar-drop-user-menu').click();
-      cy.get("#opfab-navbar-right-menu-about").should('exist'); // Check that the corresponding element is present
-
-      cy.get("#opfab-navbar-right-menu-about").click();
-      cy.get("#opfab-about-dialog").should('exist'); // Check that the corresponding element is present
-
+    it('About pop-up should be visible ', ()=>{
+      opfab.loginWithUser('operator1_fr');
+      openAboutPopup();
       cy.get("#opfab-about-dialog-header").should("be.visible");
       cy.get("#opfab-about-dialog-body").should("be.visible");
-
+      cy.get("#opfab-about-dialog-body").contains("OperatorFabric");
+      cy.get("#opfab-about-dialog-body").contains("First application");
+      cy.get("#opfab-about-dialog-body").contains("v12.34.56");
     })
 
-  })
-
-
-  describe('Checking that the About pop up can be closed with the "OK" button', function () {
-
-    it('About pop-up should be closeable for ' + user, ()=>{
-
-      cy.loginOpFab(user,'test');
-
-      cy.get('#opfab-navbarContent').find('#opfab-navbar-drop-user-menu').click();
-      cy.get("#opfab-navbar-right-menu-about").click();
-
-      // Check that the pop-up is closed when clicking "OK" button
+    it('About pop-up should be closeable via the OK Button ', ()=>{
+      opfab.loginWithUser('operator1_fr');
+      openAboutPopup();
       cy.get("#opfab-about-dialog").find("#opfab-about-btn-close").click();
-      cy.get("#opfab-about-dialog").should('not.exist'); // Check that the corresponding element is absent
-
+      cy.get("#opfab-about-dialog").should('not.exist'); 
     })
 
-  })
-
-
-  describe('Checking that the About pop up can be closed with the "X" button', function () {
-
-    it('About pop-up should be closeable for ' + user, ()=>{
-
-      cy.loginOpFab(user,'test');
-
-      cy.get('#opfab-navbarContent').find('#opfab-navbar-drop-user-menu').click();
-      cy.get("#opfab-navbar-right-menu-about").click();
-
-      // Check that the pop-up is closed when clicking "X" button
+    it('About pop-up should be closeable with the "X" button ' , ()=>{
+      opfab.loginWithUser('operator1_fr');
+      openAboutPopup();
       cy.get("#opfab-about-dialog").find("#opfab-about-close").click();
-      cy.get("#opfab-about-dialog").should('not.exist'); // Check that the corresponding element is absent
-
+      cy.get("#opfab-about-dialog").should('not.exist'); 
     })
-
   })
+
+  function openAboutPopup() {
+    cy.get('#opfab-navbarContent').find('#opfab-navbar-drop-user-menu').click();
+    cy.get("#opfab-navbar-right-menu-about").click();
+  }
 })
