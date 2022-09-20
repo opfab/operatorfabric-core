@@ -42,3 +42,8 @@ depending on how busy the service is.
 === DockerHub
 
 To be allowed to push images to DockerHub, Github needs to be authenticated. This is done again by generating a token in DockerHub using the technical account and provide it to github via actions secrets.
+
+
+=== Sonatype
+
+We use sonatype accounts to be able to push librairies to maven central. The list of people authorized to publish is defined via issues : https://issues.sonatype.org/browse/OSSRH-67392
