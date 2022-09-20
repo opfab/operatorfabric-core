@@ -33,6 +33,10 @@ export class SortService {
                 return compareByReadPublishDate;
             case 'severity':
                 return compareBySeverityPublishDate;
+            case 'startDate':
+                return compareByStartDate;
+            case 'endDate':
+                return compareByEndDate;
             default:
                 return compareByPublishDate;
         }
@@ -92,4 +96,14 @@ export function compareByReadPublishDate(card1: LightCard, card2: LightCard) {
         result = compareByPublishDate(card1, card2);
     }
     return result;
+}
+
+export function compareByStartDate(card1: LightCard, card2: LightCard) {
+    return card1.startDate - card2.startDate;
+}
+
+export function compareByEndDate(card1: LightCard, card2: LightCard) {
+    const date1 = !!card1.endDate ? card1.endDate: card1.startDate;
+    const date2 = !!card2.endDate ? card2.endDate: card2.startDate;
+    return date1 - date2;
 }

@@ -171,9 +171,11 @@
     },
     "sort": {
       "title": "Sorteer op",
-      "severity": "Ernst en dan datum",
-      "publish": "Datum",
-      "unread": "Ongelezen en dan datum"
+      "severity": "Ernst en dan ontvangstdatum",
+      "publish": "Ontvangstdatum",
+      "unread": "Ongelezen en dan ontvangstdatum",
+      "startDate": "Startdatum",
+      "endDate": "Einddatum"
     },
     "tips": {
       "acknowledged": "Bevestigd",
