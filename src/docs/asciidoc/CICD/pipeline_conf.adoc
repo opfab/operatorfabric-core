@@ -46,4 +46,4 @@ To be allowed to push images to DockerHub, Github needs to be authenticated. Thi
 
 === Sonatype
 
-We use sonatype accounts to be able to push librairies to maven central. The list of people authorized to publish is defined via issues : https://issues.sonatype.org/browse/OSSRH-67392
+We use Sonatype accounts to be able to push libraries to maven central. The list of people authorized to publish is defined via issues : https://issues.sonatype.org/browse/OSSRH-67392
