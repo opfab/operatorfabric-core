@@ -171,9 +171,11 @@
     },
     "sort": {
       "title": "Triées par",
-      "severity": "Criticité puis date ",
-      "publish": "Date",
-      "unread": "Non lu puis date"
+      "severity": "Criticité puis date de réception",
+      "publish": "Date de réception",
+      "unread": "Non lu puis date de réception",
+      "startDate": "Date de début",
+      "endDate": "Date de fin"
     },
     "tips": {
       "acknowledged": "Acquittée",

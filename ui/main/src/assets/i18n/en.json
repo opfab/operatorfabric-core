@@ -171,9 +171,11 @@
     },
     "sort": {
       "title": "Sort by",
-      "severity": "Criticality then date",
-      "publish": "Date",
-      "unread": "Unread then date"
+      "severity": "Criticality then reception date",
+      "publish": "Reception date",
+      "unread": "Unread then reception date",
+      "startDate": "Start date",
+      "endDate": "End date"
     },
     "tips": {
       "acknowledged": "Acknowledged",
