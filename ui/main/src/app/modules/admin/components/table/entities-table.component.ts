@@ -21,7 +21,7 @@ import {AdminItemType} from '../../services/sharing.service';
 export class EntitiesTableComponent extends AdminTableDirective implements OnInit {
     tableType = AdminItemType.ENTITY;
     fields = [
-        new Field('id', 3),
+        new Field('id', 3, 'idCellRenderer'),
         new Field('name', 3),
         new Field('description', 5),
         new Field('entityAllowedToSendCard', 4, null, this.translateValue),

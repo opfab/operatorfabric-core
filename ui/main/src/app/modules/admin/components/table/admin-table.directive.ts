@@ -29,6 +29,7 @@ import {Entity} from '@ofModel/entity.model';
 import {EntitiesService} from '@ofServices/entities.service';
 import {PerimetersCellRendererComponent} from '../cell-renderers/perimeters-cell-renderer.component';
 import {ExportService} from '@ofServices/export.service';
+import {IdCellRendererComponent} from '../cell-renderers/id-cell-renderer.component';
 
 @Directive()
 @Injectable()
@@ -53,7 +54,8 @@ export abstract class AdminTableDirective implements OnInit, OnDestroy {
                 groupCellRenderer: GroupCellRendererComponent,
                 entityCellRenderer: EntityCellRendererComponent,
                 perimetersCellRenderer: PerimetersCellRendererComponent,
-                stateRightsCellRenderer: StateRightsCellRendererComponent
+                stateRightsCellRenderer: StateRightsCellRendererComponent,
+                idCellRenderer: IdCellRendererComponent
             },
             domLayout: 'autoHeight',
             rowHeight: 50,

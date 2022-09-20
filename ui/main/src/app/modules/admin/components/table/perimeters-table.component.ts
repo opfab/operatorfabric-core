@@ -21,7 +21,7 @@ import {Utilities} from 'app/common/utilities';
 })
 export class PerimetersTableComponent extends AdminTableDirective implements OnInit {
     tableType = AdminItemType.PERIMETER;
-    fields = [new Field('id'), new Field('process'), new Field('stateRights', 7, 'stateRightsCellRenderer')];
+    fields = [new Field('id', 4, 'idCellRenderer'), new Field('process'), new Field('stateRights', 7, 'stateRightsCellRenderer')];
     idField = 'id';
     editModalComponent = EditPerimeterModalComponent;
     modalOptions = {...AdminTableDirective.defaultModalOptions, size: 'xl'};

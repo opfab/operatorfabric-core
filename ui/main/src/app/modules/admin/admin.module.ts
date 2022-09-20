@@ -35,6 +35,7 @@ import {ProcessCellRendererComponent} from './components/cell-renderers/process-
 import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
 import {TagInputModule} from 'ngx-chips';
 import {MultiSelectModule} from '../share/multi-select/multi-select.module';
+import {IdCellRendererComponent} from './components/cell-renderers/id-cell-renderer.component';
 
 @NgModule({
     declarations: [
@@ -54,7 +55,8 @@ import {MultiSelectModule} from '../share/multi-select/multi-select.module';
         EntityCellRendererComponent,
         PerimetersCellRendererComponent,
         ProcessCellRendererComponent,
-        StateRightsCellRendererComponent
+        StateRightsCellRendererComponent,
+        IdCellRendererComponent
     ],
 
     imports: [

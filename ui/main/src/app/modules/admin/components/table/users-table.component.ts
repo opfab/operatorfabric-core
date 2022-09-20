@@ -21,7 +21,7 @@ import {AdminItemType} from '../../services/sharing.service';
 export class UsersTableComponent extends AdminTableDirective implements OnInit {
     tableType = AdminItemType.USER;
     fields = [
-        new Field('login'),
+        new Field('login', 4, 'idCellRenderer'),
         new Field('firstName'),
         new Field('lastName'),
         new Field('groups', 8, 'groupCellRenderer'),
