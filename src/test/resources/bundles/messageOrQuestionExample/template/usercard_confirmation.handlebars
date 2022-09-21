@@ -29,56 +29,67 @@
 
 <script>
 
-    if (usercardTemplateGateway.getUserEntityChildCardFromCurrentCard()) {
-        if (usercardTemplateGateway.getUserEntityChildCardFromCurrentCard().data.confirm == 'YES') {
-            document.getElementById('yes').selected=true;
-            document.getElementById('no').selected=false;
-        } else {
-            document.getElementById('yes').selected=false;
-            document.getElementById('no').selected=true;
-        }
-        document.getElementById('message').value=usercardTemplateGateway.getUserEntityChildCardFromCurrentCard().data.message;
-    }
+    userCardTemplate = {
+        init: function() {
+            this.showCurrentUserResponse();
+            this.initTemplateGatewayMethod();
+        },
 
-    usercardTemplateGateway.getSpecificCardInformation = function () {
-        const question = document.getElementById('question').value;
-        if (question.length <1) return {
-            valid: false,
-            errorMsg : "You must provide a question"
-        }
-        
-        const confirm = document.getElementById('confirm').value;
-        
-
-        const message = document.getElementById('message').value;
-
-        const card = {
-            summary: { key: "confirmation.summary" },
-            title: { key: "confirmation.title" },
-            severity: "ACTION",
-            data: {
-                question: question,
-                confirm: confirm,
-                message: message
+        showCurrentUserResponse: function(){
+            if (usercardTemplateGateway.getUserEntityChildCardFromCurrentCard()) {
+                if (usercardTemplateGateway.getUserEntityChildCardFromCurrentCard().data.confirm == 'YES') {
+                    document.getElementById('yes').selected=true;
+                    document.getElementById('no').selected=false;
+                } else {
+                    document.getElementById('yes').selected=false;
+                    document.getElementById('no').selected=true;
+                }
+                document.getElementById('message').value=usercardTemplateGateway.getUserEntityChildCardFromCurrentCard().data.message;
             }
-        };
+        },
 
-        const childCard = {
-            summary: { key: "confirmation.summary" },
-            title: { key: "confirmation.title" },
-            data: {
-                question: question,
-                confirm: confirm,
-                message: message
+        initTemplateGatewayMethod: function() {
+            usercardTemplateGateway.getSpecificCardInformation = function () {
+                const question = document.getElementById('question').value;
+                if (question.length <1) return {
+                    valid: false,
+                    errorMsg : "You must provide a question"
+                }
+                const confirm = document.getElementById('confirm').value;     
+                const message = document.getElementById('message').value;
+
+                const card = {
+                    summary: { key: "confirmation.summary" },
+                    title: { key: "confirmation.title" },
+                    severity: "ACTION",
+                    data: {
+                        question: question,
+                        confirm: confirm,
+                        message: message
+                    }
+                };
+
+                const childCard = {
+                    summary: { key: "confirmation.summary" },
+                    title: { key: "confirmation.title" },
+                    data: {
+                        question: question,
+                        confirm: confirm,
+                        message: message
+                    }
+                };
+
+                return {
+                    valid: true,
+                    card: card,
+                    childCard: childCard,
+                    viewCardInAgenda: false
+                };
             }
-        };
-
-        return {
-            valid: true,
-            card: card,
-            childCard: childCard,
-            viewCardInAgenda: false
-        };
-
+        }
     }
+    
+    userCardTemplate.init();
+
+
 </script>

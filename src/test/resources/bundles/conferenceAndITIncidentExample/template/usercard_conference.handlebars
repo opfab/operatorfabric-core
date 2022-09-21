@@ -1,5 +1,5 @@
 
-<!-- Copyright (c) 2020, RTE (http://www.rte-france.com)              -->
+<!-- Copyright (c) 2020-2022, RTE (http://www.rte-france.com)              -->
 <!-- See AUTHORS.txt                                                       -->
 <!-- This Source Code Form is subject to the terms of the Mozilla Public   -->
 <!-- License, v. 2.0. If a copy of the MPL was not distributed with this   -->
@@ -63,47 +63,55 @@
 
 <script>
 
+    userCardTemplate = {
+        initTemplateGateway: function() {
+            that = this;
+            usercardTemplateGateway.getSpecificCardInformation = function () {
+                const message = document.getElementById('message').value;
+                const conf_subject = document.getElementById('conf_subject').value;
+                const conf_link = document.getElementById('conf_link').value;
+                const report_title = document.getElementById('report_title').value;
+                const report_link = document.getElementById('report_link').value;
+            
+                const card = {
+                    summary : {key : "conference.summary"},
+                    title : {key : "conference.title"},
+                    secondsBeforeTimeSpanForReminder: 300,
+                    entityRecipients: ["IT_SUPERVISOR_ENTITY"],
+                    data : {
+                        message: message,
+                        conf_subject:conf_subject,
+                        conf_link:conf_link,
+                        report_title:report_title,
+                        report_link:report_link
+                    }
+                };
+                if (!that.isReportProperlyFilled(report_title, report_link))
+                    return {valid: false, errorMsg: 'You must provide a report name and link, or none of them.'}
+                return {
+                    valid: true,
+                    card: card,
+                    viewCardInAgenda: true
+                };
+
+            }
+        },
+        isReportProperlyFilled: function(report_title, report_link) {
+            const areBothReportNameAndLinkEmpty = (report_title.length === 0 && report_link.length === 0);
+            const areBothReportNameAndLinkFilled = (report_title.length >= 1 && report_link.length >= 1);
+
+            return areBothReportNameAndLinkEmpty || areBothReportNameAndLinkFilled;
+        }
+
+    }
+
+    userCardTemplate.initTemplateGateway();
+
+
     // The two following lines are used for cypress test 
     // remove them if you use this template as example 
     document.getElementById("hidden_process").value = usercardTemplateGateway.getCurrentProcess();
     document.getElementById("hidden_state").value = usercardTemplateGateway.getCurrentState();
 
-    usercardTemplateGateway.getSpecificCardInformation = function () {
-        const message = document.getElementById('message').value;
-        const conf_subject = document.getElementById('conf_subject').value;
-        const conf_link = document.getElementById('conf_link').value;
-        const report_title = document.getElementById('report_title').value;
-        const report_link = document.getElementById('report_link').value;
     
-        const card = {
-            summary : {key : "conference.summary"},
-            title : {key : "conference.title"},
-            secondsBeforeTimeSpanForReminder: 300,
-            entityRecipients: ["IT_SUPERVISOR_ENTITY"],
-            data : {
-                message: message,
-                conf_subject:conf_subject,
-                conf_link:conf_link,
-                report_title:report_title,
-                report_link:report_link
-            }
-        };
-        if (!isReportProperlyFilled(report_title, report_link))
-            return {valid: false, errorMsg: 'You must provide a report name and link, or none of them.'}
-        return {
-            valid: true,
-            card: card,
-            viewCardInAgenda: true
-        };
-
-    }
-
-    isReportProperlyFilled = function(report_title, report_link) {
-        const areBothReportNameAndLinkEmpty = (report_title.length === 0 && report_link.length === 0);
-        const areBothReportNameAndLinkFilled = (report_title.length >= 1 && report_link.length >= 1);
-
-        return areBothReportNameAndLinkEmpty || areBothReportNameAndLinkFilled;
-    }
-
-
 </script>
