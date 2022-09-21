@@ -1,3 +1,11 @@
+<!-- Copyright (c) 2022, RTE (http://www.rte-france.com)              -->
+<!-- See AUTHORS.txt                                                       -->
+<!-- This Source Code Form is subject to the terms of the Mozilla Public   -->
+<!-- License, v. 2.0. If a copy of the MPL was not distributed with this   -->
+<!-- file, You can obtain one at http://mozilla.org/MPL/2.0/.              -->
+<!-- SPDX-License-Identifier: MPL-2.0                                      -->
+<!-- This file is part of the OperatorFabric project.                      -->
+
 <br />
 <h2 style="text-align: center;"> {{card.data.question}} </h2>
 
@@ -19,66 +27,83 @@
 
 
 <script>
-    if (templateGateway.getDisplayContext() != 'realtime' ) {
-       document.getElementById("response").disabled = true;
-    }
-    templateGateway.applyChildCards = () => {
-        let childsDiv = document.getElementById("childs-div");
 
-        if (templateGateway.childCards[0]) {
-            let responses = ' <h3>Responses received </h3><center> <br/>'
-            responses += ' <table width="100%""> <tr> <th> Entity </th>';
-            responses += ' <th> Response </th>';
-            responses += ' </tr>';
 
-            templateGateway.childCards.forEach((c, i) => {
-                responses += `<tr> <td> ${templateGateway.getEntityName(c.publisher)} </td>`
-                responses += `<td> ${c.data.response} </td>`;
-                responses += "</tr>";
-            });
+    cardTemplate = {
+        init: function() {
+            this.disableResponseIfNotInRealTimeContext();
+            this.initTemplateGatewayMethods();
+            this.loadEntitiesList();
+            this.loadEntityUsedForResponse();
+        },
 
-            responses += '</table> </center> <br/> <br/>';
+        disableResponseIfNotInRealTimeContext: function() {
+            if (templateGateway.getDisplayContext() != 'realtime' ) {
+            document.getElementById("response").disabled = true;
+            }
+        },
 
-            childsDiv.innerHTML = responses;
-        } else {
-            childsDiv.innerHTML = '';
-        }
-    }
+        initTemplateGatewayMethods: function() {
+            
+            templateGateway.applyChildCards = () => {
+                let childsDiv = document.getElementById("childs-div");
 
-    templateGateway.getUserResponse = function () {
-        const response = document.getElementById('response').value;
-        const responseCardData = { response: response };
-        return {
-            valid: true,
-            responseCardData: responseCardData
-        };
+                if (templateGateway.childCards[0]) {
+                    let responses = ' <h3>Responses received </h3><center> <br/>'
+                    responses += ' <table width="100%""> <tr> <th> Entity </th>';
+                    responses += ' <th> Response </th>';
+                    responses += ' </tr>';
 
-    }
+                    templateGateway.childCards.forEach((c, i) => {
+                        responses += `<tr> <td> ${templateGateway.getEntityName(c.publisher)} </td>`
+                        responses += `<td> ${c.data.response} </td>`;
+                        responses += "</tr>";
+                    });
 
-    function loadEntitiesList () {
-        let entitiesDiv = document.getElementById("entities-div");
-        let text = "Entities allowed to respond : ";
-        let entities = templateGateway.getEntitiesAllowedToRespond();
-        entities.forEach( 
-            id => {
-                text += "&nbsp; &nbsp; &nbsp;";
-                text +=  templateGateway.getEntityName(id);
+                    responses += '</table> </center> <br/> <br/>';
+
+                    childsDiv.innerHTML = responses;
+                } else {
+                    childsDiv.innerHTML = '';
                 }
-        );
-        // if it is in card preview (usercard) , the template gateway does not contain the list 
-        // so we show nothing
-        if (entities.length>0) entitiesDiv.innerHTML = text;
-    }
-    loadEntitiesList();
+            }
 
-    function loadEntityUsedForResponse() {
-        let responseEntityDiv = document.getElementById("response-entity-div");
-        let responseEntity = templateGateway.getEntityUsedForUserResponse();
-        let userAllowedToRespond = templateGateway.isUserAllowedToRespond();
-        if (userAllowedToRespond && responseEntity) 
-            responseEntityDiv.innerHTML = "Entity used by user to respond : " + templateGateway.getEntityName(responseEntity);
+            templateGateway.getUserResponse = function () {
+                const response = document.getElementById('response').value;
+                const responseCardData = { response: response };
+                return {
+                    valid: true,
+                    responseCardData: responseCardData
+                };
+            }
+        },
+
+        loadEntitiesList: function() {
+            let entitiesDiv = document.getElementById("entities-div");
+            let text = "Entities allowed to respond : ";
+            let entities = templateGateway.getEntitiesAllowedToRespond();
+            entities.forEach( 
+                id => {
+                    text += "&nbsp; &nbsp; &nbsp;";
+                    text +=  templateGateway.getEntityName(id);
+                    }
+            );
+            // if it is in card preview (usercard) , the template gateway does not contain the list 
+            // so we show nothing
+            if (entities.length>0) entitiesDiv.innerHTML = text;
+        },
+
+        loadEntityUsedForResponse: function() {
+            let responseEntityDiv = document.getElementById("response-entity-div");
+            let responseEntity = templateGateway.getEntityUsedForUserResponse();
+            let userAllowedToRespond = templateGateway.isUserAllowedToRespond();
+            if (userAllowedToRespond && responseEntity) 
+                responseEntityDiv.innerHTML = "Entity used by user to respond : " + templateGateway.getEntityName(responseEntity);
+        }
+
     }
-    loadEntityUsedForResponse();
+   
+    cardTemplate.init();
 
 </script>
 

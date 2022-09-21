@@ -654,7 +654,7 @@ OperatorFabric provides a multiselect component based on https://sa-si-dev.githu
 WARNING: It strongly advice to NOT use directly virtual select (always use OperatorFabric js object and css) otherwise you will not be guaranteed compatibility when upgrading.
 
 
-It is possible to use the component also as single value select. The advantage over a standard select is the possibility to benefit of the serching feature. To use the component as single select, initialize it with the `multiple` property set to false:  
+It is possible to use the component also as single value select. The advantage over a standard select is the possibility to benefit of the searching feature. To use the component as single select, initialize it with the `multiple` property set to false:  
 
 ....
 
@@ -665,7 +665,8 @@ It is possible to use the component also as single value select. The advantage o
   </div>
 
  <script>
-  mySingleSelect = opfab.multiSelect.init({
+
+  opfab.multiSelect.init({
                 id: "my-singleselect",
                 options: [
                 { label: 'Choice A', value: 'A' },

@@ -1,8 +1,15 @@
+<!-- Copyright (c) 2021-2022, RTE (http://www.rte-france.com)              -->
+<!-- See AUTHORS.txt                                                       -->
+<!-- This Source Code Form is subject to the terms of the Mozilla Public   -->
+<!-- License, v. 2.0. If a copy of the MPL was not distributed with this   -->
+<!-- file, You can obtain one at http://mozilla.org/MPL/2.0/.              -->
+<!-- SPDX-License-Identifier: MPL-2.0                                      -->
+<!-- This file is part of the OperatorFabric project.                      -->
+
 <div class="opfab-border-box" style="width:100%; display:inline-block">
     <div>
       <p><b>Info on quality degradation of the main server </b>
           
-         
     </div>
     <div>
       <ul>
@@ -47,147 +54,149 @@ in the documentation, it should not be used in actual templates. -->
 
 
 
-
 <script>
 
+    cardTemplate = {
+        initChart: function() {
+            const opfabColor = getComputedStyle(document.body).getPropertyValue('--opfab-text-color');
 
 
-var opfabColor = getComputedStyle(document.body).getPropertyValue('--opfab-text-color');
-
-
-if (window.myChart instanceof Chart) {
-    window.myChart.destroy();
-}
-if (window.myChartEcartsHN instanceof Chart) {
-    window.myChartEcartsHN.destroy();
-}
-
-
-var chartContext = document.getElementById('myChart').getContext('2d');
-window.myChart = new Chart(chartContext, {
-    type: 'line',
-    data: {
-        datasets: [{
-            label: 'Quality Main Server',
-            data : {{json card.data.quality}},
-            fill : false,
-            backgroundColor: 'rgba(54, 162, 235, 0.2)',
-            borderColor: 'rgba(54, 162, 235, 1)',
-            tension: 0.4,
-            parsing: {
-            xAxisKey: 'hour',
-            yAxisKey: 'Qualite_P'
+            if (window.myChart instanceof Chart) {
+                window.myChart.destroy();
             }
-        },
-        {
-            label: 'Quality Secondary Server',
-            data : {{json card.data.quality}},
-            fill : false,
-            backgroundColor: 'rgba(54, 162, 235, 0.2)',
-            borderColor: 'rgba(54, 162, 0, 1)',
-            tension: 0.1,
-            parsing: {
-            xAxisKey: 'hour',
-            yAxisKey: 'Qualite_R'
+            if (window.myChartEcartsHN instanceof Chart) {
+                window.myChartEcartsHN.destroy();
             }
-        }]
-    },
-    options: {
-        maintainAspectRatio: false,
-        stepped: true,
-        plugins: {
-            title: {
-                display: true,
-                text: {{json card.data.quality_chart_title}}
-            }
-        },
-        scales: {
-            y: {
-                beginAtZero: true,
-                grid: {color:'rgba(100,100,100,0.2)'},
-                ticks: {
-                    color: opfabColor
+
+
+            const chartContext = document.getElementById('myChart').getContext('2d');
+            window.myChart = new Chart(chartContext, {
+                type: 'line',
+                data: {
+                    datasets: [{
+                        label: 'Quality Main Server',
+                        data : {{json card.data.quality}},
+                        fill : false,
+                        backgroundColor: 'rgba(54, 162, 235, 0.2)',
+                        borderColor: 'rgba(54, 162, 235, 1)',
+                        tension: 0.4,
+                        parsing: {
+                        xAxisKey: 'hour',
+                        yAxisKey: 'Qualite_P'
+                        }
+                    },
+                    {
+                        label: 'Quality Secondary Server',
+                        data : {{json card.data.quality}},
+                        fill : false,
+                        backgroundColor: 'rgba(54, 162, 235, 0.2)',
+                        borderColor: 'rgba(54, 162, 0, 1)',
+                        tension: 0.1,
+                        parsing: {
+                        xAxisKey: 'hour',
+                        yAxisKey: 'Qualite_R'
+                        }
+                    }]
+                },
+                options: {
+                    maintainAspectRatio: false,
+                    stepped: true,
+                    plugins: {
+                        title: {
+                            display: true,
+                            text: {{json card.data.quality_chart_title}}
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            grid: {color:'rgba(100,100,100,0.2)'},
+                            ticks: {
+                                color: opfabColor
+                            }
+                        },
+                        x: {
+                            grid: {color:'rgba(100,100,100,0.2)'},
+                            ticks: {
+                                color: opfabColor
+                            }
+                        }
+                    }
                 }
-            },
-            x: {
-                grid: {color:'rgba(100,100,100,0.2)'},
-                ticks: {
-                    color: opfabColor
+            });
+
+
+            const chartHNContext = document.getElementById('myChartEcartsHN').getContext('2d');
+            window.myChartEcartsHN = new Chart(chartHNContext, {
+                type: 'line',
+                data: {
+                    datasets: [{
+                        label: 'Quality threshold 7',
+                        data : {{json card.data.ecartsHN}},
+                        fill : false,
+                        backgroundColor: 'rgba(54, 162, 235, 0.2)',
+                        borderColor: 'rgba(195, 14, 5, 0.8)',
+                        tension: 0.4,
+                        parsing: {
+                        xAxisKey: 'hour',
+                        yAxisKey: 'Seuil_P'
+                        }
+                    },
+                    {
+                        label: 'Non-standard deviations - Main Server',
+                        data : {{json card.data.ecartsHN}},
+                        fill : false,
+                        backgroundColor: 'rgba(54, 162, 235, 0.2)',
+                        borderColor: 'rgba(54, 162, 235, 1)',
+                        tension: 0.1,
+                        parsing: {
+                        xAxisKey: 'hour',
+                        yAxisKey: 'Nb_HN_P'
+                        }
+                    },
+                    {
+                        label: 'Non-standard deviations - Secondary Server',
+                        data : {{json card.data.ecartsHN}},
+                        fill : false,
+                        backgroundColor: 'rgba(54, 162, 235, 0.2)',
+                        borderColor: 'rgba(54, 162, 0, 1)',
+                        tension: 0.1,
+                        parsing: {
+                        xAxisKey: 'hour',
+                        yAxisKey: 'Nb_HN_R'
+                        }
+                    }]
+                },
+                options: {
+                    maintainAspectRatio: false,
+                    stepped: true,
+                    plugins: {
+                        title: {
+                            display: true,
+                            text: "History of non-standard deviations "
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            grid: {color:'rgba(100,100,100,0.2)'},
+                            ticks: {
+                                color: opfabColor
+                            }
+                        },
+                        x: {
+                            grid: {color:'rgba(100,100,100,0.2)'},
+                            ticks: {
+                                color: opfabColor
+                            }
+                        }
+                    }
                 }
-            }
+            });
         }
+
     }
-});
-
-
-var chartHNContext = document.getElementById('myChartEcartsHN').getContext('2d');
-window.myChartEcartsHN = new Chart(chartHNContext, {
-    type: 'line',
-    data: {
-        datasets: [{
-            label: 'Quality threshold 7',
-            data : {{json card.data.ecartsHN}},
-            fill : false,
-            backgroundColor: 'rgba(54, 162, 235, 0.2)',
-            borderColor: 'rgba(195, 14, 5, 0.8)',
-            tension: 0.4,
-            parsing: {
-            xAxisKey: 'hour',
-            yAxisKey: 'Seuil_P'
-            }
-        },
-        {
-            label: 'Non-standard deviations - Main Server',
-            data : {{json card.data.ecartsHN}},
-            fill : false,
-            backgroundColor: 'rgba(54, 162, 235, 0.2)',
-            borderColor: 'rgba(54, 162, 235, 1)',
-            tension: 0.1,
-            parsing: {
-            xAxisKey: 'hour',
-            yAxisKey: 'Nb_HN_P'
-            }
-        },
-        {
-            label: 'Non-standard deviations - Secondary Server',
-            data : {{json card.data.ecartsHN}},
-            fill : false,
-            backgroundColor: 'rgba(54, 162, 235, 0.2)',
-            borderColor: 'rgba(54, 162, 0, 1)',
-            tension: 0.1,
-            parsing: {
-            xAxisKey: 'hour',
-            yAxisKey: 'Nb_HN_R'
-            }
-        }]
-    },
-    options: {
-        maintainAspectRatio: false,
-        stepped: true,
-        plugins: {
-            title: {
-                display: true,
-                text: "History of non-standard deviations "
-            }
-        },
-        scales: {
-            y: {
-                beginAtZero: true,
-                grid: {color:'rgba(100,100,100,0.2)'},
-                ticks: {
-                    color: opfabColor
-                }
-            },
-            x: {
-                grid: {color:'rgba(100,100,100,0.2)'},
-                ticks: {
-                    color: opfabColor
-                }
-            }
-        }
-    }
-});
-
-
+    
+    cardTemplate.initChart();
 
 </script>
