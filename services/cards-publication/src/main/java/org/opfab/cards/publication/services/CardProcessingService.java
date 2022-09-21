@@ -358,21 +358,26 @@ public class CardProcessingService {
 
         cardRepositoryService.findByUid(cardUid).ifPresent(selectedCard ->
             cardNotificationService.pushAckOfCardInRabbit(cardUid, selectedCard.getId(), entitiesAcks));
-
+        
+        log.info("Set ack on card with uid {} for user {} and entities {}", cardUid,user.getLogin(),entitiesAcks);
         return cardRepositoryService.addUserAck(user, cardUid, entitiesAcks);
 	}
 
 
 	public UserBasedOperationResult processUserRead(String cardUid, String userName) {
+        log.info("Set read on card with uid {} for user {} ", cardUid,userName);
 		return cardRepositoryService.addUserRead(userName, cardUid);
     }
 
     public UserBasedOperationResult deleteUserRead(String cardUid, String userName) {
+        log.info("Delete read on card with uid {} for user {} ", cardUid,userName);
 		return cardRepositoryService.deleteUserRead(userName,cardUid);
 	}
 
 	public UserBasedOperationResult deleteUserAcknowledgement(String cardUid, String userName) {
-		return cardRepositoryService.deleteUserAck(userName, cardUid);
+		log.info("Delete ack on card with uid {} for user {} ", cardUid,userName);
+        return cardRepositoryService.deleteUserAck(userName, cardUid);
+        
 	}
 
 }
