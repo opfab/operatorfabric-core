@@ -1,4 +1,4 @@
-<!-- Copyright (c) 2018-2021, RTE (http://www.rte-france.com)              -->
+<!-- Copyright (c) 2018-2022, RTE (http://www.rte-france.com)              -->
 <!-- See AUTHORS.txt                                                       -->
 <!-- This Source Code Form is subject to the terms of the Mozilla Public   -->
 <!-- License, v. 2.0. If a copy of the MPL was not distributed with this   -->
@@ -9,8 +9,8 @@
 
 <div class="opfab-feedbar opfab-form-lighter">
         <div style="width:180px;display:flex;">
-            <of-feed-filter [hideTimerTags]="hideTimerTags" [hideAckFilter]="hideAckFilter" [hideResponseFilter]="hideResponseFilter" [hideApplyFiltersToTimeLineChoice]="hideApplyFiltersToTimeLineChoice"></of-feed-filter>
-            <of-feed-sort [hideSeveritySort]="hideSeveritySort" [hideReadSort]="hideReadSort"></of-feed-sort>
+            <of-feed-filter [hideTimerTags]="hideTimerTags" [defaultAcknowledgmentFilter]="defaultAcknowledgmentFilter" [hideResponseFilter]="hideResponseFilter" [hideApplyFiltersToTimeLineChoice]="hideApplyFiltersToTimeLineChoice"></of-feed-filter>
+            <of-feed-sort [defaultSorting]="defaultSorting"></of-feed-sort>
         </div>
         <div style="width:100%">
         </div>

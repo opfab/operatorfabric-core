@@ -86,3 +86,11 @@ By this valid one :
     "hiddenSettings":  ["description"]
   }
 ```
+
+=== Feed filtering and sorting 
+In feed configuration the following parameters to hide filtering and sorting options have been removed: `feed.card.hideAckFilter`, `feed.card.hideReadSort`, `feed.card.hideSeveritySort`
+
+Instead it is possible to configure the default behaviour for sorting and acknowlegment filtering by setting the following parameters in `web-ui.json`:
+
+ * `feed.defaultSorting` : possible values are : "unread", "date", "severity", "startDate", "endDate"
+ * `feed.defaultAcknowledgmentFilter` : possible values are : "notack", "ack", "all"

@@ -33,7 +33,7 @@ import {Utilities} from 'app/common/utilities';
 })
 export class FeedFilterComponent implements OnInit, OnDestroy {
     @Input() hideTimerTags: boolean;
-    @Input() hideAckFilter: boolean;
+    @Input() defaultAcknowledgmentFilter: string;
     @Input() hideResponseFilter: boolean;
     @Input() hideApplyFiltersToTimeLineChoice: boolean;
 
@@ -136,9 +136,7 @@ export class FeedFilterComponent implements OnInit, OnDestroy {
             this.initResponseFilter();
         }
 
-        if (!this.hideAckFilter) {
-            this.initAckFilter();
-        }
+        this.initAckFilter();
 
         if (!this.hideTimerTags) {
             this.initDateTimeFilter();
@@ -235,7 +233,7 @@ export class FeedFilterComponent implements OnInit, OnDestroy {
             const ack = active && ackValue === 'ack';
             this.filterService.updateFilter(FilterType.ACKNOWLEDGEMENT_FILTER, active, ack);
         } else {
-            this.ackFilterForm.get('ackControl').setValue('notack', {emitEvent: false});
+            this.ackFilterForm.get('ackControl').setValue(this.defaultAcknowledgmentFilter, {emitEvent: false});
         }
 
         this.ackFilterForm.valueChanges.pipe(takeUntil(this.ngUnsubscribe$)).subscribe((form) => {
@@ -368,9 +366,8 @@ export class FeedFilterComponent implements OnInit, OnDestroy {
         if (!this.hideResponseFilter) {
             this.responseFilterForm.get('responseControl').setValue(true, {emitEvent: true});
         }
-        if (!this.hideAckFilter) {
-            this.ackFilterForm.get('ackControl').setValue('notack', {emitEvent: true});
-        }
+
+        this.ackFilterForm.get('ackControl').setValue(this.defaultAcknowledgmentFilter, {emitEvent: true});
 
         if (!this.hideTimerTags) {
             this.timeFilterForm.get('dateTimeFrom').setValue(null);

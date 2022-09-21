@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2021, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2022, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -19,12 +19,11 @@ import {LightCardsStoreService} from '@ofServices/lightcards/lightcards-store.se
     styleUrls: ['./filters.component.scss']
 })
 export class FiltersComponent implements OnInit {
-    hideAckFilter: boolean;
     hideResponseFilter: boolean;
     hideTimerTags: boolean;
-    hideReadSort: boolean;
-    hideSeveritySort: boolean;
     hideApplyFiltersToTimeLineChoice: boolean;
+    defaultSorting: string;
+    defaultAcknowledgmentFilter: string;
 
     loadingInProgress = false;
 
@@ -35,11 +34,10 @@ export class FiltersComponent implements OnInit {
     ) {}
 
     ngOnInit() {
+        this.defaultSorting = this.configService.getConfigValue('feed.defaultSorting', 'unread');
+        this.defaultAcknowledgmentFilter = this.configService.getConfigValue('feed.defaultAcknowledgmentFilter', 'notack');
         this.hideTimerTags = this.configService.getConfigValue('feed.card.hideTimeFilter', false);
-        this.hideAckFilter = this.configService.getConfigValue('feed.card.hideAckFilter', false);
         this.hideResponseFilter = this.configService.getConfigValue('feed.card.hideResponseFilter', false);
-        this.hideReadSort = this.configService.getConfigValue('feed.card.hideReadSort', false);
-        this.hideSeveritySort = this.configService.getConfigValue('feed.card.hideSeveritySort', false);
         this.hideApplyFiltersToTimeLineChoice = this.configService.getConfigValue(
             'feed.card.hideApplyFiltersToTimeLineChoice',
             false

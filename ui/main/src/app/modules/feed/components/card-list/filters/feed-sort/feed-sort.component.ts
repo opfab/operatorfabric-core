@@ -22,8 +22,7 @@ import {SortService} from '@ofServices/lightcards/sort.service';
     styleUrls: ['./feed-sort.component.scss']
 })
 export class FeedSortComponent implements OnInit, OnDestroy {
-    @Input() hideSeveritySort: boolean;
-    @Input() hideReadSort: boolean;
+    @Input() defaultSorting: string;
 
     private ngUnsubscribe$ = new Subject<void>();
     sortForm: FormGroup<{
@@ -42,7 +41,7 @@ export class FeedSortComponent implements OnInit, OnDestroy {
     }
 
     private createFormGroup(): FormGroup {
-        const initialValue = !this.hideReadSort ? 'unread' : 'date';
+        const initialValue = this.defaultSorting;
         return new FormGroup(
             {
                 sortControl: new FormControl<string | null>(initialValue)
@@ -63,16 +62,9 @@ export class FeedSortComponent implements OnInit, OnDestroy {
     }
 
     private getInitialSort(): string {
-        let sortedChoice = 'date';
+        let sortedChoice = this.defaultSorting;;
         const sortedPreference = this.userPreferences.getPreference('opfab.feed.sort.type');
-        if (!!sortedPreference) {
-            if (
-                !(sortedPreference === 'unread' && this.hideReadSort) &&
-                !(sortedPreference === 'severity' && this.hideSeveritySort)
-            ) {
-                sortedChoice = sortedPreference;
-            }
-        } else if (!this.hideReadSort) sortedChoice = 'unread';
+        if (!!sortedPreference)  sortedChoice = sortedPreference;
         return sortedChoice;
     }
 

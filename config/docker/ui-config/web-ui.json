@@ -39,17 +39,16 @@
     }
   },
   "feed": {
+    "defaultSorting": "unread",
+    "defaultAcknowledgmentFilter": "notack",
     "card": {
       "hideTimeFilter": false,
       "time": {
         "display": "BUSINESS"
       },
-      "hideAckFilter": false,
       "hideResponseFilter": false,
       "hideApplyFiltersToTimeLineChoice": false,
       "secondsBeforeLttdForClockDisplay": 3700,
-      "hideReadSort": false,
-      "hideSeveritySort": false,
       "hideAckAllCardsFeature": false
     },
     "timeline": {
