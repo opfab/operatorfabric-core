@@ -647,9 +647,32 @@ OperatorFabric provides a multiselect component based on https://sa-si-dev.githu
   usercardTemplateGateway.getSpecificCardInformation = function () {
 
         const selectedValues = myMultiSelect.getSelectedValues(); 
-
-      ....
+  ...
+  
 ....
+
+
+You can set selected values via method setSelectedValues();
+
+....
+  myMultiSelect.setSelectedValues(['A','B']);
+....
+
+
+If you want to set the options list after init use setOptions method : 
+
+....
+
+  var options = [
+    { label: 'Options 1', value: '1' },
+    { label: 'Options 2', value: '2' },
+    { label: 'Options 3', value: '3' },
+  ];
+
+  myMultiSelect.setOptions(options);
+....
+
+
 
 WARNING: It strongly advice to NOT use directly virtual select (always use OperatorFabric js object and css) otherwise you will not be guaranteed compatibility when upgrading.
 
