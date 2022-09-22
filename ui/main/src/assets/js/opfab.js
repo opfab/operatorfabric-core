@@ -22,6 +22,12 @@ opfab.multiSelect = {
             id: config.id,
             getSelectedValues() {
                 return document.querySelector('#' + config.id).value;
+            },
+            setSelectedValues(values) {
+                document.querySelector('#' + config.id).setValue(values);
+            },
+            setOptions(options) {
+                document.querySelector('#' + config.id).setOptions(options);
             }
         };
         VirtualSelect.init({
