@@ -49,7 +49,8 @@ export class Card {
         readonly wktProjection?: string,
         public secondsBeforeTimeSpanForReminder?: number,
         public timeSpans?: TimeSpan[],
-        readonly entitiesAcks?: string[]
+        readonly entitiesAcks?: string[],
+        readonly deletionDate?: number
     ) {}
 }
 

@@ -205,5 +205,33 @@ describe('Card detail', function () {
             opfab.checkLoadingSpinnerIsDisplayed();
             opfab.checkLoadingSpinnerIsNotDisplayed();
         });
+
+        it(`Check deleted card detail footer in archives`, function () {
+            cy.sendCard('cypress/userCard/message.json');
+            opfab.loginWithUser('operator1_fr');
+            feed.openFirstCard();
+            feed.deleteCurrentCard();
+    
+            opfab.navigateToArchives();
+    
+            // We click the search button
+            cy.get('#opfab-archives-logging-btn-search').click();
+    
+            // Click on the card
+            cy.waitDefaultTime();
+            cy.get('#opfab-archives-cards-list').find('.opfab-archive-sev-information').first().click();
+    
+            // Check card detail footer contains card reception date 
+            cy.get('.opfab-card-received-footer').contains(
+                /Received : \d{2}\/\d{2}\/\d{4} at ((1[0-2]|0?[1-9]):([0-5][0-9]) ([AP]M))/
+            );
+             // Check card detail footer contains card deletion date 
+            cy.get('.opfab-card-received-footer').contains(
+                /Deleted : \d{2}\/\d{2}\/\d{4} at ((1[0-2]|0?[1-9]):([0-5][0-9]) ([AP]M))/
+            );
+        });
     });
+
+
+
 });
