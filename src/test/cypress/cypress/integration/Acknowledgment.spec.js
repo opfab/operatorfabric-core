@@ -249,7 +249,7 @@ describe('Acknowledgment tests', function () {
         cy.get('.vscomp-toggle-all-checkbox').click();
         cy.get('#opfab-recipients').click();
 
-        usercard.prepareAndSendCard();
+        usercard.previewThenSendCard();
         cy.waitDefaultTime();
 
         // We display the created card

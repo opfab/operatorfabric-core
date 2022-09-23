@@ -21,6 +21,14 @@ export function getFeedCommands() {
         cy.get('#opfab-div-card-template-processed');
     });
 
+    feed.addCommand('checkSelectedCardHasTitle', function (title) {
+        cy.get('.light-card-detail-selected .card-title').should('have.text',title + " ");
+    });
+
+    feed.addCommand('checkSelectedCardHasSummary', function (summary) {
+        cy.get('#opfab-selected-card-summary').should('have.text',summary);
+    });
+
     feed.addCommand('deleteCurrentCard', function () {
         cy.get('#opfab-card-delete').click();
         cy.get('#opfab-card-details-delete-btn-confirm').click();

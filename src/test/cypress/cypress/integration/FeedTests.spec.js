@@ -119,6 +119,6 @@ describe('FeedScreen tests', function () {
     it('Check card visibility by publish date when business period is after selected time range', function () {
         cy.sendCard('cypress/feed/futureEvent.json');
         opfab.loginWithUser('operator1_fr');
-        cy.get('of-light-card').should('have.length', 1);
+        feed.checkNumberOfDisplayedCardsIs(1);
     });
 });
