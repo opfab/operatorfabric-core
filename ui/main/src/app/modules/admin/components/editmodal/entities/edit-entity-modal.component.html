@@ -63,7 +63,11 @@
           <div class="opfab-input opfab-edit-row" style="height: auto;">
             <label for="opfab-labels" translate>admin.input.entity.labels</label>
             <tag-input formControlName="labels" [theme]="'opfab-theme'" modelAsStrings="true" addOnBlur="true" placeholder="{{labelsPlaceholder}}" secondaryPlaceholder="{{labelsPlaceholder}}" ></tag-input>
-        </div>
+          </div>
+          <div *ngIf="!!row" class="opfab-input opfab-edit-row" style="height: fit-content; min-height: 46px">
+            <label for="opfab-entity-users" translate>admin.input.entity.users</label>
+            <div style="padding:10px" id="opfab-entity-users">{{entityUsers}}</div>
+          </div>
         </div>
       </div>
     </form>

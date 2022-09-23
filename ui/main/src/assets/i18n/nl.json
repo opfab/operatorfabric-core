@@ -364,6 +364,7 @@
         "parents": "HOOFD ENTITEITEN",
         "description": "OMSCHRIJVING",
         "labels": "LABELS",
+        "users": "GEBRUIKERS",
         "entityAllowedToSendCard": "KAARTEN VERSTUREN TOEGESTAAN",
         "confirmDelete": "Wilt u de entiteit echt verwijderen?",
         "add": "NIEUWE ENTITEIT TOEVOEGEN",
