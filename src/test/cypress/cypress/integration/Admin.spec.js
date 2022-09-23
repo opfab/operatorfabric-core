@@ -149,6 +149,8 @@ describe('AdmininstrationPages', () => {
 
         cy.get('#opfab-admin-edit-btn-add').should('be.disabled');
 
+        cy.get('#opfab-entity-users').should('not.exist');
+
         cy.get('#opfab-name').type('entity name');
 
         cy.get('#opfab-admin-edit-btn-add').should('not.be.disabled');
@@ -183,6 +185,8 @@ describe('AdmininstrationPages', () => {
         cy.get('of-edit-entity-modal').should('exist');
 
         cy.get('#opfab-id').should('not.exist');
+
+        cy.get('#opfab-entity-users').should('be.empty');
 
         cy.get('.modal-title').should('contain.text', 'entityId');
 
@@ -237,6 +241,15 @@ describe('AdmininstrationPages', () => {
         cy.get('.opfab-pagination').should('contain.text', ' Results number  : 13');
 
         cy.countAgGridTableRows('ag-grid-angular', 3);
+
+        // Edit ENTITY2_FR entity to check users list
+        cy.get('ngb-pagination').find('.page-link').eq(1).click();
+
+        cy.clickAgGridCell('ag-grid-angular', 1, 5, 'of-action-cell-renderer');
+
+        cy.get('of-edit-entity-modal').should('exist');
+        cy.get('.modal-title').should('contain.text', 'ENTITY2_FR');
+        cy.get('#opfab-entity-users').contains('admin, operator2_fr, operator4_fr');
     });
 
     it('List, add, edit, delete groups', () => {

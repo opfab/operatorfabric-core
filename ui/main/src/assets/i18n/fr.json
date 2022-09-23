@@ -363,6 +363,7 @@
         "parents": "ENTITÉS PARENTES",
         "description": "DESCRIPTION",
         "labels": "ÉTIQUETTES",
+        "users": "UTILISATEURS",
         "entityAllowedToSendCard": "ENVOI DE CARTE AUTORISÉ",
         "confirmDelete": "Voulez-vous vraiment supprimer l'entité",
         "add":"AJOUTER UNE NOUVELLE ENTITÉ",
