@@ -31,8 +31,8 @@ public class PushNotificationController {
         pushNotificationService.savePushSubscription(subscription);
     }
 
-    public void deleteSubscription(String login) {
-        pushNotificationService.deleteSubscription(login);
+    public void deleteSubscription(String endpoint, String login) {
+        pushNotificationService.deleteSubscription(endpoint, login);
     }
 
     public void pushMessageToSubscriptions(String message) {

@@ -13,9 +13,12 @@ import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
+
 @Repository
 public interface PushSubscriptionRepository  extends MongoRepository<PushSubscriptionData,String> {
 
     List<PushSubscriptionData> findAll();
 
+    Optional<PushSubscriptionData> findById(String id);
 }

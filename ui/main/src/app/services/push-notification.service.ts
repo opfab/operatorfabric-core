@@ -45,10 +45,21 @@ export class PushNotificationService extends ErrorService {
         subscriptionObject.auth = subscription.getKey('auth')? btoa(String.fromCharCode.apply(null, new Uint8Array(subscription.getKey('auth')))) : ''
         console.log("Send subscription to server " + subscriptionObject);
         return this.httpClient
-            .post<SubscriptionObject>(`${this.pushNotificationServiceUrl}/subscribe`, subscriptionObject)
+            .post<SubscriptionObject>(`${this.pushNotificationServiceUrl}/subscription`, subscriptionObject)
             .pipe(catchError((error: HttpErrorResponse) => this.handleError(error)));
     }
 
+    public deleteSubscription(subscription: PushSubscription) {
+        const encodedEndpoint = this.toBase64(subscription.endpoint);
+        const url = `${this.pushNotificationServiceUrl}/subscription/${encodedEndpoint}`;
+        return this.httpClient.delete(url).pipe(
+            catchError((error: HttpErrorResponse) => this.handleError(error))
+        );
+    }
+
+    private toBase64(str) {
+        return window.btoa(encodeURIComponent(str));
+    }
 
 }
 

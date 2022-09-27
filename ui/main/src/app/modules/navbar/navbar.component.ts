@@ -71,6 +71,8 @@ export class NavbarComponent implements OnInit {
     logoutInProgress = false;
 
     vapIdPublicKey: string;
+    pushSubscriptionActive: boolean;
+    pushSubscription: PushSubscription;
 
     constructor(
         private store: Store<AppState>,
@@ -148,6 +150,12 @@ export class NavbarComponent implements OnInit {
             this.loadNightModeFromUserPreferences();
         }
         this.vapIdPublicKey = this.configService.getConfigValue('webPush.publicKey');
+        console.log("Push notification enabled : " + this.swPush.isEnabled);
+        this.swPush.subscription.subscribe( sub =>  {
+            this.pushSubscriptionActive = (sub != null);
+            this.pushSubscription = sub;
+            console.log("Subscribed to push notifications = " + this.pushSubscriptionActive);
+        });
     }
 
     private getCurrentUserCustomMenus(menus: Menu[]): Menu[] {
@@ -269,15 +277,19 @@ export class NavbarComponent implements OnInit {
     }
 
     handleSubscription(sub: PushSubscription) {
-        console.log(sub);
-        console.log(sub.toJSON().keys);
+        console.log("Save push subscriprion: " + JSON.stringify(sub.toJSON()));
+        this.pushSubscription = sub;
         this.pushNotificationService.sendSubscriptionToServer(sub).subscribe();
     }
 
     unsubscribe() {
-        console.log("UnSubscribe to push notifications");
+        console.log("UnSubscribe from push notification " + this.pushSubscription.endpoint);
+        this.pushNotificationService.deleteSubscription(this.pushSubscription).subscribe();
+
         this.swPush.unsubscribe()
-        .then(sub => console.log("Unsubscribed"))
-        .catch(err => console.error("Could not unsubscribe to notifications", err));
+        .then(sub => {
+            console.log("Unsubscribed");
+        })
+        .catch(err => console.error("Could not unsubscribe from push notifications", err));
     }
 }

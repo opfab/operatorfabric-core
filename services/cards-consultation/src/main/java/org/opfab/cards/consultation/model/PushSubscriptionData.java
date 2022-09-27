@@ -22,6 +22,7 @@ import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import org.bouncycastle.jce.spec.ECNamedCurveParameterSpec;
 import org.bouncycastle.jce.spec.ECPublicKeySpec;
 import org.bouncycastle.math.ec.ECPoint;
+import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 @Document(collection = "pushSubscriptions")
@@ -31,6 +32,7 @@ public class PushSubscriptionData implements PushSubscription {
     private String login;
     private String auth;
     private String key;
+    @Id
     private String endpoint;
 
     public void setAuth(String auth) {

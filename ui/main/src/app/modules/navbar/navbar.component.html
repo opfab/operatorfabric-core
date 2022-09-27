@@ -114,7 +114,14 @@
           <div class="opfab-menu-icon opfab-menu-icon-dark-light"></div>
         </a>
       </li>
-      
+      <li class="nav-item">
+        <a id="opfab-navbar-right-menu-subscribe-collapsed" *ngIf="!pushSubscriptionActive" class="opfab-right-menu-link" (click)='subscribe()'>
+          <div class="opfab-menu-icon opfab-menu-icon-subscribe"></div>
+        </a>
+        <a id="opfab-navbar-right-menu-unsubscibe-collapsed" *ngIf="pushSubscriptionActive" class="opfab-right-menu-link" (click)='unsubscribe()'>
+          <div class="opfab-menu-icon opfab-menu-icon-unsubscribe"></div>
+        </a>
+      </li>
       <li class="nav-item" *ngIf="(displayLogOut)">
         <form>
           <a id="opfab-navbar-right-menu-logout-collapsed"  class="opfab-right-menu-link" (click)="logOut()" href="javascript:void(0)">
@@ -199,18 +206,14 @@
       </a>
     </div>
 
-    <div class="opfab-right-menu-item" style="padding-top: 20px; padding-bottom: 20px">
+    <div class="opfab-right-menu-item">
       <form>
-        <a id="opfab-navbar-right-menu-logout"  class="opfab-right-menu-link" (click)="subscribe()" href="javascript:void(0)">
-          <div class="opfab-menu-icon opfab-menu-icon-logout"></div>
+        <a id="opfab-navbar-right-menu-logout" *ngIf="!pushSubscriptionActive" class="opfab-right-menu-link" (click)="subscribe()" href="javascript:void(0)">
+          <div class="opfab-menu-icon opfab-menu-icon-subscribe"></div>
           <div>Subscribe</div>
         </a>
-      </form>
-    </div>
-    <div class="opfab-right-menu-item" style="padding-top: 20px; padding-bottom: 20px">
-      <form>
-        <a id="opfab-navbar-right-menu-logout"  class="opfab-right-menu-link" (click)="unsubscribe()" href="javascript:void(0)">
-          <div class="opfab-menu-icon opfab-menu-icon-logout"></div>
+        <a id="opfab-navbar-right-menu-logout" *ngIf="pushSubscriptionActive" class="opfab-right-menu-link" (click)="unsubscribe()" href="javascript:void(0)">
+          <div class="opfab-menu-icon opfab-menu-icon-unsubscribe"></div>
           <div>Unsubscribe</div>
         </a>
       </form>

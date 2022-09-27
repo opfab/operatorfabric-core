@@ -20,8 +20,11 @@ import org.apache.http.HttpResponse;
 import org.jose4j.lang.JoseException;
 import org.opfab.cards.consultation.model.PushSubscriptionData;
 import org.opfab.cards.consultation.repositories.PushSubscriptionRepository;
+import org.opfab.springtools.error.model.ApiError;
+import org.opfab.springtools.error.model.ApiErrorException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
@@ -29,6 +32,7 @@ import java.security.GeneralSecurityException;
 import java.security.NoSuchAlgorithmException;
 import java.security.NoSuchProviderException;
 import java.security.spec.InvalidKeySpecException;
+import java.util.Optional;
 import java.util.concurrent.ExecutionException;
 
 @Service
@@ -50,12 +54,18 @@ public class PushNotificationService {
     private String subject;
 
     public void savePushSubscription(PushSubscriptionData subscription) {
-        log.info("savePushSubscription : " + subscription);
         pushSubscriptionRepository.save(subscription);
     }
 
 
-    public void deleteSubscription(String login) {
+    public void deleteSubscription(String endpoint, String login) {
+        Optional<PushSubscriptionData> sub = findSubscription(endpoint);
+        if (sub.isPresent()) pushSubscriptionRepository.delete(sub.get());
+        else log.info("PushSubscription not found for user : " + login + " and endpoint:" + endpoint);
+    }
+
+    private Optional<PushSubscriptionData> findSubscription(String endpoint) {
+        return pushSubscriptionRepository.findById(endpoint);
     }
 
     public void pushMessageToSubscriptions(String message) {

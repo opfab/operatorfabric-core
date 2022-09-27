@@ -24,11 +24,13 @@ import nl.martijndwars.webpush.PushService;
 
 
 import java.io.IOException;
+import java.net.URLDecoder;
 import java.security.GeneralSecurityException;
 import java.security.NoSuchAlgorithmException;
 import java.security.NoSuchProviderException;
 import java.security.Security;
 import java.security.spec.InvalidKeySpecException;
+import java.util.Base64;
 import java.util.concurrent.ExecutionException;
 
 import static org.springframework.web.reactive.function.server.ServerResponse.ok;
@@ -49,7 +51,8 @@ public class PushNotificationRoutesConfig implements UserExtractor {
             Security.addProvider(new BouncyCastleProvider());
         }
         return RouterFunctions
-                .route(RequestPredicates.POST("/notification/subscribe"), subscribe());
+                .route(RequestPredicates.POST("/notification/subscription"), subscribe())
+                .andRoute(RequestPredicates.DELETE("/notification/subscription/{endpoint}"), unsubscribe());
     }
 
     private HandlerFunction<ServerResponse> subscribe() {
@@ -59,6 +62,10 @@ public class PushNotificationRoutesConfig implements UserExtractor {
                 .then(ok().contentType(MediaType.APPLICATION_JSON).build());
     }
 
-
+    private HandlerFunction<ServerResponse> unsubscribe() {
+        return request -> extractUserFromJwtToken(request)
+                .doOnNext(t1 -> pushNotificationController.deleteSubscription( URLDecoder.decode(new String(Base64.getDecoder().decode(request.pathVariable("endpoint")))), t1.getUserData().getLogin()))
+                .then(ok().contentType(MediaType.APPLICATION_JSON).build());
+    }
 
 }
