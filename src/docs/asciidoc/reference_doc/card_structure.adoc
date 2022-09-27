@@ -144,16 +144,23 @@ NOTE: Geographical information  is an experimental feature
 
 You can add geographical location in  `wktGeometry` and the projection in `wktProjection`  fields.
 
-When `feed.enableGeoMapFeature` is enabled in the `web&#8288;-ui.json` configuration file and the card is visible in the line feed, a geographical map will be drawn with a circle at the point as specified by the wkt settings. Example:
+When `feed.enableGeoMapFeature` is enabled in the `web&#8288;-ui.json` configuration file and the card is visible in the line feed, a geographical map will be drawn. When the card has set its wktGeometry, the location will be highlighted on the card. Two geometrical shapes are supported `POINT`, which will show a circle on the map, and `POLYGON` which will draw the specified area on the map.  For example show a circle based on the card location:
 
 ```
 "wktGeometry": "POINT (5.8946407 51.9848624)",
 "wktProjection": "EPSG:4326",
 ```
+
+Example to highlight an area on the map:
+```
+"wktGeometry": "POLYGON ((5.5339097 52.0233042,  5.7162495 51.7603784, 5.0036701 51.573684, 4.8339214 52.3547498, 5.5339097 52.0233042))",
+"wktProjection": "EPSG:4326",
+```
+
 The specifications of the Well-known Text Representation of coordinate reference systems
 can be found at https://www.ogc.org/standards/wkt-crs[WKT Specification].
 
-NOTE: Only the POINT is supported at the moment. POLYGON and other figures are to be included later.
+NOTE: Only the POINT and POLYGON are supported.
 
 === Business period 
 
