@@ -13,6 +13,7 @@ import {ReminderList} from './reminderList';
 import {AcknowledgeService} from '@ofServices/acknowledge.service';
 import {LightCardsStoreService} from '@ofServices/lightcards/lightcards-store.service';
 import {SoundNotificationService} from '@ofServices/sound-notification.service';
+import {LogOption, OpfabLoggerService} from '@ofServices/logs/opfab-logger.service';
 
 @Injectable({
     providedIn: 'root'
@@ -24,11 +25,12 @@ export class ReminderService {
         private cardService: CardService,
         private acknowledgeService: AcknowledgeService,
         private lightCardsStoreService: LightCardsStoreService,
-        private soundNotificationService: SoundNotificationService
+        private soundNotificationService: SoundNotificationService,
+        private logger: OpfabLoggerService
     ) {}
 
     public startService(userLogin: string) {
-        console.log(new Date().toISOString(), ' Reminder : starting service');
+        this.logger.info('Reminder : starting service');
         this.reminderList = new ReminderList(userLogin);
         this.listenForCardsToAddInReminder();
         this.checkForCardToRemind();
@@ -47,26 +49,20 @@ export class ReminderService {
     }
 
     private remindCard(cardId) {
-        console.log(new Date().toISOString(), ' Reminder : will remind card = ', cardId);
+        this.logger.info('Reminder : will remind card = ' + cardId, LogOption.LOCAL_AND_REMOTE);
         const lightCard = this.lightCardsStoreService.getLightCard(cardId);
 
         if (!!lightCard) {
             this.reminderList.setCardHasBeenRemind(lightCard);
             this.acknowledgeService.deleteUserAcknowledgement(lightCard.uid).subscribe((resp) => {
                 if (!(resp.status === 200 || resp.status === 204))
-                    console.error(
-                        new Date().toISOString(),
-                        'Reminder : the remote acknowledgement endpoint returned an error status(%d)',
-                        resp.status
+                    this.logger.error(
+                        'Reminder : the remote acknowledgement endpoint returned an error status' + resp.status
                     );
             });
             this.cardService.deleteUserCardRead(lightCard.uid).subscribe((resp) => {
                 if (!(resp.status === 200 || resp.status === 204))
-                    console.error(
-                        new Date().toISOString(),
-                        'Reminder : the remote read endpoint returned an error status(%d)',
-                        resp.status
-                    );
+                    this.logger.error('Reminder : the remote read endpoint returned an error status' + resp.status);
             });
             this.lightCardsStoreService.setLightCardAcknowledgment(cardId, false);
             this.lightCardsStoreService.setLightCardRead(cardId, false);
