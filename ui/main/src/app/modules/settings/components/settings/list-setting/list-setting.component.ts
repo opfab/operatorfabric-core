@@ -13,8 +13,9 @@ import {AppState} from '@ofStore/index';
 import {Store} from '@ngrx/store';
 import {ConfigService} from '@ofServices/config.service';
 import {SettingsService} from '@ofServices/settings.service';
-import {UntypedFormControl, UntypedFormGroup, Validators} from '@angular/forms';
+import {FormControl, FormGroup, Validators} from '@angular/forms';
 import {MultiSelectConfig} from '@ofModel/multiselect.model';
+import {OpfabLoggerService} from '@ofServices/logs/opfab-logger.service';
 
 @Component({
     selector: 'of-list-setting',
@@ -30,9 +31,11 @@ export class ListSettingComponent extends BaseSettingDirective implements OnInit
     constructor(
         protected store: Store<AppState>,
         protected configService: ConfigService,
-        protected settingsService: SettingsService
+        protected settingsService: SettingsService,
+        protected logger: OpfabLoggerService
+        
     ) {
-        super(store, configService, settingsService);
+        super(store, configService, settingsService,logger);
     }
 
     ngOnInit() {
@@ -51,9 +54,9 @@ export class ListSettingComponent extends BaseSettingDirective implements OnInit
     }
 
     initFormGroup() {
-        return new UntypedFormGroup(
+        return new FormGroup(
             {
-                setting: new UntypedFormControl('',  [Validators.required])
+                setting: new FormControl('',  [Validators.required])
             },
             {updateOn: 'change'}
         );

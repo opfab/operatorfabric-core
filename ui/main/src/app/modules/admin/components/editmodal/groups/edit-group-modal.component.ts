@@ -9,7 +9,12 @@
  */
 
 import {Component, Input, OnInit} from '@angular/core';
-import {AsyncValidatorFn, UntypedFormControl, UntypedFormGroup, Validators} from '@angular/forms';
+import {
+    AsyncValidatorFn,
+    FormControl,
+    FormGroup,
+    Validators
+} from '@angular/forms';
 import {NgbActiveModal} from '@ng-bootstrap/ng-bootstrap';
 import {AdminItemType, SharingService} from '../../../services/sharing.service';
 import {CrudService} from '@ofServices/crud-service';
@@ -22,6 +27,8 @@ import {GroupsService} from '@ofServices/groups.service';
 import {debounceTime, distinctUntilChanged, first, map, switchMap} from 'rxjs/operators';
 import {MultiSelectConfig, MultiSelectOption} from '@ofModel/multiselect.model';
 import {GroupTypeEnum} from '@ofModel/group.model';
+import {UserService} from '@ofServices/user.service';
+import {User} from '../../../../../model/user.model';
 
 @Component({
     selector: 'of-edit-group-modal',
@@ -29,7 +36,14 @@ import {GroupTypeEnum} from '@ofModel/group.model';
     styleUrls: ['./edit-group-modal.component.scss']
 })
 export class EditGroupModalComponent implements OnInit {
-    groupForm: UntypedFormGroup;
+    groupForm: FormGroup<{
+        id: FormControl<string | null>,
+        name: FormControl<string | null>,
+        description: FormControl<string | null>,
+        perimeters: FormControl<{}[] | null>,
+        realtime: FormControl<boolean | null>,
+        type: FormControl<string | null>
+    }>;
 
     perimetersMultiSelectOptions: Array<MultiSelectOption> = [];
     selectedPerimeters = [];
@@ -48,6 +62,8 @@ export class EditGroupModalComponent implements OnInit {
 
     groupTypes = [];
 
+    groupUsers: string;
+
     public multiSelectConfig: MultiSelectConfig = {
         labelKey: 'admin.input.group.type',
         placeholderKey: 'admin.input.selectGroupTypeText',
@@ -61,7 +77,8 @@ export class EditGroupModalComponent implements OnInit {
         private activeModal: NgbActiveModal,
         private dataHandlingService: SharingService,
         private perimetersService: PerimetersService,
-        private groupsService: GroupsService
+        private groupsService: GroupsService,
+        private userService: UserService
     ) {
         Object.values(GroupTypeEnum).forEach((t) => this.groupTypes.push({value: String(t), label: String(t)}));
     }
@@ -72,17 +89,17 @@ export class EditGroupModalComponent implements OnInit {
             // modal used for creating a new group
             uniqueGroupIdValidator.push(this.uniqueGroupIdValidatorFn());
 
-        this.groupForm = new UntypedFormGroup({
-            id: new UntypedFormControl(
+        this.groupForm = new FormGroup({
+            id: new FormControl(
                 '',
-                [Validators.required, Validators.minLength(2), Validators.pattern(/^[A-z\d\-_]+$/)],
+                [Validators.required, Validators.minLength(2), Validators.pattern(/^[A-Za-z\d\-_]+$/)],
                 uniqueGroupIdValidator
             ),
-            name: new UntypedFormControl('', [Validators.required]),
-            description: new UntypedFormControl(''),
-            perimeters: new UntypedFormControl([]),
-            realtime: new UntypedFormControl(false),
-            type: new UntypedFormControl('')
+            name: new FormControl('', [Validators.required]),
+            description: new FormControl(''),
+            perimeters: new FormControl([]),
+            realtime: new FormControl<boolean | null>(false),
+            type: new FormControl('')
         });
 
         this.crudService = this.dataHandlingService.resolveCrudServiceDependingOnType(this.type);
@@ -102,6 +119,15 @@ export class EditGroupModalComponent implements OnInit {
         this.perimetersService.getPerimeters().forEach((perimeter) => {
             this.perimetersMultiSelectOptions.push(new MultiSelectOption(perimeter.id, perimeter.id));
         });
+
+        this.userService.getAll().subscribe(users => {
+            this.groupUsers = users.filter(usr => this.isUserInCurrentGroup(usr)).map(usr => usr.login).join(', ');
+        });
+
+    }
+
+    private isUserInCurrentGroup(usr: User) :boolean {
+        return !!usr.groups && usr.groups.findIndex(g => g === this.row.id) >= 0;
     }
 
     update() {

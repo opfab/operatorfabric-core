@@ -18,3 +18,8 @@ curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.0/install.sh | bash
 sudo apt-get install jq
 git config --global user.email "opfabtech@gmail.com" 
 git config --global user.name "OpfabTech"
+echo "Original computer date : "  
+date -R 
+sudo timedatectl set-timezone Europe/Paris
+echo "Modify computer date :" 
+date -R

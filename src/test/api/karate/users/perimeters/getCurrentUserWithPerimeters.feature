@@ -35,11 +35,13 @@ Feature: Get current user with perimeters (endpoint tested : GET /CurrentUserWit
   "stateRights" : [
       {
         "state" : "state1",
-        "right" : "Receive"
+        "right" : "Receive",
+        "filteringNotificationAllowed" : true
       },
       {
         "state" : "state2",
-        "right" : "ReceiveAndWrite"
+        "right" : "ReceiveAndWrite",
+        "filteringNotificationAllowed" : true
       }
   ]
 }
@@ -53,11 +55,13 @@ Feature: Get current user with perimeters (endpoint tested : GET /CurrentUserWit
   "stateRights" : [
       {
         "state" : "state1",
-        "right" : "Write"
+        "right" : "Write",
+        "filteringNotificationAllowed" : true
       },
       {
         "state" : "state2",
-        "right" : "Receive"
+        "right" : "Receive",
+        "filteringNotificationAllowed" : false
       }
   ]
 }
@@ -202,7 +206,7 @@ Feature: Get current user with perimeters (endpoint tested : GET /CurrentUserWit
     Then status 200
     And match response.userData.login == 'operator1_fr'
     And assert response.computedPerimeters.length == 2
-    And match response.computedPerimeters contains only [{"process":"process15","state":"state1","rights":"ReceiveAndWrite"}, {"process":"process15","state":"state2","rights":"ReceiveAndWrite"}]
+    And match response.computedPerimeters contains only [{"process":"process15","state":"state1","rights":"ReceiveAndWrite","filteringNotificationAllowed":true}, {"process":"process15","state":"state2","rights":"ReceiveAndWrite","filteringNotificationAllowed":false}]
 
 
   Scenario: Delete user operator1_fr from group15

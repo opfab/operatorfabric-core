@@ -17,7 +17,8 @@ Feature: deletePerimeter
   "stateRights" : [
       {
         "state" : "stateForEndpointDeletePerimeter",
-        "right" : "ReceiveAndWrite"
+        "right" : "ReceiveAndWrite",
+        "filteringNotificationAllowed" : true
       }
     ]
 }

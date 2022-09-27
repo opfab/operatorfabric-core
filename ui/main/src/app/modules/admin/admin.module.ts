@@ -31,11 +31,11 @@ import {StateRightsCellRendererComponent} from './components/cell-renderers/stat
 import {EditEntityModalComponent} from './components/editmodal/entities/edit-entity-modal.component';
 import {EditGroupModalComponent} from './components/editmodal/groups/edit-group-modal.component';
 import {EditPerimeterModalComponent} from './components/editmodal/perimeters/edit-perimeter-modal.component';
-import {SingleFilterModule} from '../share/single-filter/single-filter.module';
 import {ProcessCellRendererComponent} from './components/cell-renderers/process-cell-renderer.component';
 import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
 import {TagInputModule} from 'ngx-chips';
 import {MultiSelectModule} from '../share/multi-select/multi-select.module';
+import {IdCellRendererComponent} from './components/cell-renderers/id-cell-renderer.component';
 
 @NgModule({
     declarations: [
@@ -55,7 +55,8 @@ import {MultiSelectModule} from '../share/multi-select/multi-select.module';
         EntityCellRendererComponent,
         PerimetersCellRendererComponent,
         ProcessCellRendererComponent,
-        StateRightsCellRendererComponent
+        StateRightsCellRendererComponent,
+        IdCellRendererComponent
     ],
 
     imports: [
@@ -67,18 +68,7 @@ import {MultiSelectModule} from '../share/multi-select/multi-select.module';
         MultiSelectModule,
         TranslateModule,
         NgbModule,
-        AgGridModule.withComponents([
-            [
-                ActionCellRendererComponent,
-                ArrayCellRendererComponent,
-                GroupCellRendererComponent,
-                EntityCellRendererComponent,
-                PerimetersCellRendererComponent,
-                ProcessCellRendererComponent,
-                StateRightsCellRendererComponent
-            ]
-        ]),
-        SingleFilterModule
+        AgGridModule,
     ],
     providers: [{provide: SharingService, useClass: SharingService}]
 })

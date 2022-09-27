@@ -10,31 +10,34 @@
 import {NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {ExternaldevicesconfigurationComponent} from './externaldevicesconfiguration.component';
-
 import {TranslateModule} from '@ngx-translate/core';
 import {AgGridModule} from 'ag-grid-angular';
 import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
-import {ActionCellRendererComponent} from '../admin/components/cell-renderers/action-cell-renderer.component';
-import {SingleFilterModule} from '../share/single-filter/single-filter.module';
 import {ExternaldevicesconfigurationModalComponent} from './editModal/externaldevicesconfiguration-modal.component';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {ExternaldevicesconfigurationRoutingModule} from './externaldevicesconfiguration-routing.module';
 import {MultiSelectModule} from '../share/multi-select/multi-select.module';
 import {SpinnerModule} from '../share/spinner/spinner.module';
+import {UsersTableComponent} from './table/users.table.component';
+import {DevicesTableComponent} from './table/devices.table.component';
 
 @NgModule({
-    declarations: [ExternaldevicesconfigurationComponent, ExternaldevicesconfigurationModalComponent],
+    declarations: [
+        ExternaldevicesconfigurationComponent,
+        ExternaldevicesconfigurationModalComponent,
+        UsersTableComponent,
+        DevicesTableComponent
+    ],
     imports: [
         FormsModule,
         ReactiveFormsModule,
         CommonModule,
         TranslateModule,
         ExternaldevicesconfigurationRoutingModule,
-        SingleFilterModule,
         MultiSelectModule,
         NgbModule,
         SpinnerModule,
-        AgGridModule.withComponents([[ActionCellRendererComponent]])
+        AgGridModule
     ]
 })
 export class ExternaldevicesModule {}

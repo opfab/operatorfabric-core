@@ -9,7 +9,7 @@
  */
 
 import {Component, Input, OnInit} from '@angular/core';
-import {AsyncValidatorFn, UntypedFormControl, UntypedFormGroup, Validators} from '@angular/forms';
+import {AsyncValidatorFn, FormControl, FormGroup, Validators} from '@angular/forms';
 import {NgbActiveModal} from '@ng-bootstrap/ng-bootstrap';
 import {AdminItemType, SharingService} from '../../../services/sharing.service';
 import {CrudService} from '@ofServices/crud-service';
@@ -18,6 +18,8 @@ import {Entity} from '@ofModel/entity.model';
 import {TranslateService} from '@ngx-translate/core';
 import {debounceTime, distinctUntilChanged, first, map, switchMap} from 'rxjs/operators';
 import {MultiSelectConfig, MultiSelectOption} from '@ofModel/multiselect.model';
+import {User} from '@ofModel/user.model';
+import {UserService} from '@ofServices/user.service';
 
 @Component({
     selector: 'of-edit-entity-modal',
@@ -25,7 +27,14 @@ import {MultiSelectConfig, MultiSelectOption} from '@ofModel/multiselect.model';
     styleUrls: ['./edit-entity-modal.component.scss']
 })
 export class EditEntityModalComponent implements OnInit {
-    entityForm: UntypedFormGroup;
+    entityForm: FormGroup<{
+        id: FormControl<string | null>,
+        name: FormControl<string | null>,
+        description: FormControl<string | null>,
+        entityAllowedToSendCard: FormControl<boolean | null>,
+        labels: FormControl<[] | null>,
+        parents: FormControl<[] | null>
+    }>;
 
     @Input() row: any;
     @Input() type: AdminItemType;
@@ -40,13 +49,16 @@ export class EditEntityModalComponent implements OnInit {
     };
     labelsPlaceholder: string;
 
+    entityUsers: string;
+
     private crudService: CrudService;
 
     constructor(
         private translate: TranslateService,
         private activeModal: NgbActiveModal,
         private dataHandlingService: SharingService,
-        private entitiesService: EntitiesService
+        private entitiesService: EntitiesService,
+        private userService: UserService
     ) {}
 
     ngOnInit() {
@@ -55,17 +67,17 @@ export class EditEntityModalComponent implements OnInit {
             // modal used for creating a new entity
             uniqueEntityIdValidator.push(this.uniqueEntityIdValidatorFn());
 
-        this.entityForm = new UntypedFormGroup({
-            id: new UntypedFormControl(
+        this.entityForm = new FormGroup({
+            id: new FormControl(
                 '',
-                [Validators.required, Validators.minLength(2), Validators.pattern(/^[A-z\d\-_]+$/)],
+                [Validators.required, Validators.minLength(2), Validators.pattern(/^[A-Za-z\d\-_]+$/)],
                 uniqueEntityIdValidator
             ),
-            name: new UntypedFormControl('', [Validators.required]),
-            description: new UntypedFormControl(''),
-            entityAllowedToSendCard: new UntypedFormControl(false),
-            labels: new UntypedFormControl([]),
-            parents: new UntypedFormControl([])
+            name: new FormControl('', [Validators.required]),
+            description: new FormControl(''),
+            entityAllowedToSendCard: new FormControl<boolean | null>(false),
+            labels: new FormControl([]),
+            parents: new FormControl([])
         });
 
         this.crudService = this.dataHandlingService.resolveCrudServiceDependingOnType(this.type);
@@ -73,6 +85,10 @@ export class EditEntityModalComponent implements OnInit {
             // If the modal is used for edition, initialize the modal with current data from this row
             this.entityForm.patchValue(this.row, {onlySelf: true});
             this.selectedEntities = this.row.parents;
+
+            this.userService.getAll().subscribe(users => {
+                this.entityUsers = users.filter(usr => this.isUserInCurrentEntity(usr)).map(usr => usr.login).join(', ');
+            });
         }
 
         this.translate.get('admin.input.entity.addLabel').subscribe((translation) => {
@@ -91,6 +107,10 @@ export class EditEntityModalComponent implements OnInit {
                 this.entitiesMultiSelectOptions.push(new MultiSelectOption(id, itemName));
             }
         });
+    }
+
+    private isUserInCurrentEntity(usr: User) :boolean {
+        return !!usr.entities && usr.entities.findIndex(g => g === this.row.id) >= 0;
     }
 
     update() {

@@ -8,7 +8,7 @@
  */
 
 import {Component, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild} from '@angular/core';
-import {UntypedFormControl, UntypedFormGroup} from '@angular/forms';
+import {FormControl, FormGroup} from '@angular/forms';
 import {TranslateService} from '@ngx-translate/core';
 import {MultiSelectConfig, MultiSelectOption} from '@ofModel/multiselect.model';
 import {RightsEnum} from '@ofModel/perimeter.model';
@@ -49,7 +49,11 @@ export class UserCardSelectStateFormComponent implements OnInit, OnDestroy {
     processesPerProcessGroups = new Map();
     processesWithoutProcessGroup = [];
 
-    selectStateForm: UntypedFormGroup;
+    selectStateForm: FormGroup<{
+        usercardProcessGroup: FormControl<string | null>;
+        usercardProcess: FormControl<string | null>;
+        usercardState: FormControl<string | null>;
+    }>;
     processOptions: Array<MultiSelectOption> = [];
     processOptionsWhenSelectedProcessGroup = [];
     processGroupOptions: Array<MultiSelectOption> = [];
@@ -70,12 +74,13 @@ export class UserCardSelectStateFormComponent implements OnInit, OnDestroy {
     public processMultiSelectConfig: MultiSelectConfig = {
         labelKey: 'shared.filters.process',
         multiple: false,
+        sortOptions: false,
         search: true
     };
 
     public stateMultiSelectConfig: MultiSelectConfig = {
         labelKey: 'shared.filters.state',
-        sortOptions: true,
+        sortOptions: false,
         multiple: false,
         search: true
     };
@@ -87,10 +92,10 @@ export class UserCardSelectStateFormComponent implements OnInit, OnDestroy {
     ) {}
 
     ngOnInit() {
-        this.selectStateForm = new UntypedFormGroup({
-            usercardProcessGroup: new UntypedFormControl(''),
-            usercardProcess: new UntypedFormControl(''),
-            usercardState: new UntypedFormControl('')
+        this.selectStateForm = new FormGroup({
+            usercardProcessGroup: new FormControl(''),
+            usercardProcess: new FormControl(''),
+            usercardState: new FormControl('')
         });
         this.currentUserWithPerimeters = this.userService.getCurrentUserWithPerimeters();
         this.processGroups = this.processesService.getProcessGroups();
@@ -146,6 +151,7 @@ export class UserCardSelectStateFormComponent implements OnInit, OnDestroy {
                 if (!!state) statesList.push(state);
             }
         });
+        statesList.sort((a, b) => Utilities.compareObj(a.label, b.label));
         this.statesPerProcesses.set(process.id, statesList);
     }
 

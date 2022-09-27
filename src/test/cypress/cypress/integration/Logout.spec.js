@@ -7,22 +7,16 @@
  * This file is part of the OperatorFabric project.
  */
 
+import {getOpfabGeneralCommands} from "../support/opfabGeneralCommands"
 
 describe ('Test log out behaviour',()=>{
 
-    before('Set up configuration', function () {
-
-        // This can stay in a `before` block rather than `beforeEach` as long as the test does not change configuration
-        cy.resetUIConfigurationFiles();
-
-    });
-
+    const opfab = getOpfabGeneralCommands();
 
     it('Logout should clear cookie and redirect to feed page with login inputs', ()=>{
 
-        cy.loginOpFab('operator1_fr','test');
-
-        cy.logoutOpFab();
+        opfab.loginWithUser('operator1_fr');
+        opfab.logout();
 
         //Check that the browser has been redirected to the feed page
         cy.hash().should('eq', '#/feed')

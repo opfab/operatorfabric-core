@@ -33,7 +33,8 @@ Feature: getResponseBusinessconfig
 
     Given url opfabUrl + '/businessconfig/processes/' + process + '/' + state + '/response?version=' + version
     When method get
-    Then status 401
+    Then status 200
+    And match response == {"lock":true,"state":"responseState","externalRecipients":["externalRecipient1","externalRecipient2"],"emittingEntityAllowedToRespond":false}
 
 
   Scenario: get businessconfig response without authentication

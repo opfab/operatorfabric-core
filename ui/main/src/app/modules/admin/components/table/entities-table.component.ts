@@ -15,12 +15,13 @@ import {AdminItemType} from '../../services/sharing.service';
 
 @Component({
     templateUrl: 'admin-table.directive.html',
-    selector: 'of-entities-table'
+    selector: 'of-entities-table',
+    styleUrls: ['admin-table.directive.scss']
 })
 export class EntitiesTableComponent extends AdminTableDirective implements OnInit {
     tableType = AdminItemType.ENTITY;
     fields = [
-        new Field('id', 3),
+        new Field('id', 3, 'idCellRenderer'),
         new Field('name', 3),
         new Field('description', 5),
         new Field('entityAllowedToSendCard', 4, null, this.translateValue),

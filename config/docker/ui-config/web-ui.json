@@ -39,17 +39,16 @@
     }
   },
   "feed": {
+    "defaultSorting": "unread",
+    "defaultAcknowledgmentFilter": "notack",
     "card": {
       "hideTimeFilter": false,
       "time": {
         "display": "BUSINESS"
       },
-      "hideAckFilter": false,
       "hideResponseFilter": false,
       "hideApplyFiltersToTimeLineChoice": false,
       "secondsBeforeLttdForClockDisplay": 3700,
-      "hideReadSort": false,
-      "hideSeveritySort": false,
       "hideAckAllCardsFeature": false
     },
     "timeline": {
@@ -68,6 +67,7 @@
       "initialLongitude": 5.3255,
       "initialLatitude": 52.1845,
       "initialZoom": 6,
+      "zoomLevelWhenZoomToLocation": 14,
       "maxZoom": 11,
       "zoomDuration": 500
     },
@@ -101,27 +101,6 @@
     "changePasswordUrl": "http://localhost:89/auth/realms/dev/account/#/security/signingin"
   },
   "settings": {
-    "about": {
-      "firstapplication": {
-        "name": "First application",
-        "rank": 1,
-        "version": "v12.34.56"
-      },
-      "keycloack": {
-        "name": "Keycloak",
-        "rank": 2,
-        "version": "6.0.1"
-      },
-      "lastapplication": {
-        "name": "Wonderful Solution",
-        "version": "0.1.2-RELEASE"
-      }
-    },
-    "infos": {
-      "hide": {
-        "description": true
-      }
-    },
     "locale": "en",
     "dateTimeFormat": "HH:mm DD/MM/YYYY",
     "dateFormat": "DD/MM/YYYY",
@@ -129,6 +108,25 @@
     "replayInterval" : 10,
     "replayEnabled" : true
 
+  },
+  "settingsScreen": {
+    "hiddenSettings":  ["description"]
+  },
+  "about": {
+    "firstapplication": {
+      "name": "First application",
+      "rank": 1,
+      "version": "v12.34.56"
+    },
+    "keycloack": {
+      "name": "Keycloak",
+      "rank": 2,
+      "version": "6.0.1"
+    },
+    "lastapplication": {
+      "name": "Wonderful Solution",
+      "version": "0.1.2-RELEASE"
+    }
   },
   "usercard": {
     "useDescriptionFieldForEntityList": false

@@ -1,4 +1,4 @@
-<!-- Copyright (c) 2018-2021, RTE (http://www.rte-france.com)              -->
+<!-- Copyright (c) 2018-2022, RTE (http://www.rte-france.com)              -->
 <!-- See AUTHORS.txt                                                       -->
 <!-- This Source Code Form is subject to the terms of the Mozilla Public   -->
 <!-- License, v. 2.0. If a copy of the MPL was not distributed with this   -->
@@ -47,7 +47,7 @@
             </label>
         </form>
     </div>
-    <div *ngIf="!(hideAckFilter)">
+    <div>
         <div class="row opfab-filter-header">
             <span id='opfab-filter-ack-title' translate>feed.filters.ack.title</span>
         </div>
@@ -99,14 +99,18 @@
     <div *ngIf="!(hideApplyFiltersToTimeLineChoice)">
         
         <form [formGroup]="timeLineFilterForm" id="opfab-timeline-filter-form"  style="padding-left: 3px; padding-top: 0px;margin-top:20px">
-            <label class="opfab-checkbox "> <span translate>feed.filters.applyFiltersToTimeLine.label</span>
+            <label class="opfab-checkbox" translate>feed.filters.applyFiltersToTimeLine.label
                 <input type="checkbox"  id="opfab-feed-filter-timeline" formControlName="timeLineControl">
                 <span class="opfab-checkbox-checkmark"></span>
             </label>
         </form>
     </div>
 
-    <div *ngIf="isFilterChanged()"><a id='opfab-feed-filter-reset' class="opfab-link" (click)="reset()"><span translate>feed.filters.reset</span></a></div>
+    <div *ngIf="isFilterChanged()" style="display: flex; justify-content: center">
+        <div id='opfab-feed-filter-reset' class="opfab-link" style="width: max-content" (click)="reset()">
+            <span translate>feed.filters.reset</span>
+        </div>
+    </div>
 </ng-template>
 
 

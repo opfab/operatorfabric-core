@@ -29,7 +29,7 @@ This has several advantages:
 
 * The sound can be heard by all operators
 * It can be heard even if the operator is not at their desk
-* The sound system can warn that the connexion with an application has been lost if it hasn't received a "watchdog"
+* The sound system can warn that the connection with an application has been lost if it hasn't received a "watchdog"
 signal for a given period of time.
 
 As a result, external devices support in OperatorFabric aims to allow sound notifications to be passed on to external
@@ -100,9 +100,15 @@ The following elements need to be configurable:
   "id": "CDS_1",
   "host": "localhost",
   "port": 4300,
-  "signalMappingId": "default_CDS_mapping"
+  "signalMappingId": "default_CDS_mapping",
+  "isEnabled": true
 }
 ----
++
+The "isEnabled" field is optional and allows the user to activate or deactivate an external device.
+When a device is disabled (isEnabled = false) , OperatorFabric will not send any signal and watchdog to the device.
++
+The default value of the "isEnabled" field is true.
 +
 . How to map an OperatorFabric signal key footnote:[currently, that means a severity, but in the future it could also
 be a process id, or anything identifying the signal to be played] to a signal (sound, light) on the external system
@@ -131,13 +137,15 @@ A and another set for desk B) would be represented as two different device confi
   "id": "CDS_A",
   "host": "localhost",
   "port": 4300,
-  "signalMappingId": "mapping_A"
+  "signalMappingId": "mapping_A",
+  "isEnabled": true
 },
 {
   "id": "CDS_B",
   "host": "localhost",
   "port": 4300,
-  "signalMappingId": "mapping_B"
+  "signalMappingId": "mapping_B",
+  "isEnabled": true
 }]
 ----
 
@@ -171,7 +179,7 @@ severities.
 Please see the https://opfab.github.io/documentation/current/api/external-devices/[API documentation] for details.
 
 NOTE: There is a `Device` object distinct from `DeviceConfiguration` because the latter represents static information
-about how to reach a device, while the former contains information about the actual connexion and its status.
+about how to reach a device, while the former contains information about the actual connection and its status.
 For example, this is why the device configuration contains a `host` (which can be a hostname) while the device
 has a `resolvedAddress`.
 As a result, they are managed through separate endpoints, which might also make things easier if we need to secure
@@ -181,13 +189,9 @@ them differently (some people might be allowed to connect/disconnect devices but
 
 == Connexion Management
 
-OperatorFabric doesn't automatically attempt to connect to configured external devices on start up as they might not
-be available when the OperatorFabric instance starts. Similarly, posting a new device configuration to the external
-devices service doesn't cause it to attempt to connect immediately, as the configuration setup might be done in advance
-of the actual activation.
+OperatorFabric does automatically attempt to connect to enabled configured external devices at startup. If an enabled device
+is disconnected, OperatorFabric will try to reconnect it every 10 seconds (default value).
 
-However, if a notification is received by the external devices service that needs to be passed on to a device that is
-configured but not connected yet, the connection will be performed automatically.
 
 == Configuration Management
 

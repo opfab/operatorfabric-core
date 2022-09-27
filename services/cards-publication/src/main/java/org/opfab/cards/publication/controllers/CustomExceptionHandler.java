@@ -10,6 +10,7 @@
 package org.opfab.cards.publication.controllers;
 
 import lombok.extern.slf4j.Slf4j;
+import org.opfab.springtools.OpfabCustomExceptionHandler;
 import org.opfab.springtools.error.model.ApiError;
 import org.opfab.springtools.error.model.ApiErrorException;
 import org.springframework.http.HttpHeaders;
@@ -18,7 +19,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.context.request.WebRequest;
-import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
 import javax.validation.ConstraintViolationException;
 
@@ -36,22 +36,7 @@ import javax.validation.ConstraintViolationException;
  */
 @RestControllerAdvice
 @Slf4j
-public class CustomExceptionHandler extends ResponseEntityExceptionHandler {
-
-    public static final String GENERIC_MSG = "Caught exception at API level";
-
-    /**
-     * Handles {@link ApiErrorException}
-     * @param exception exception to handle
-     * @param request Corresponding request of exchange
-     * @return Computed http response for specified exception
-     */
-    @ExceptionHandler(ApiErrorException.class)
-    public ResponseEntity<Object> handleApiError(ApiErrorException exception, final WebRequest
-            request) {
-        log.info(GENERIC_MSG, exception);
-        return new ResponseEntity<>(exception.getError(), exception.getError().getStatus());
-    }
+public class CustomExceptionHandler extends OpfabCustomExceptionHandler {
 
     /**
      * Handles {@link ConstraintViolationException}
@@ -62,7 +47,7 @@ public class CustomExceptionHandler extends ResponseEntityExceptionHandler {
     @ExceptionHandler(ConstraintViolationException.class)
     public ResponseEntity<Object> handleConstraintViolationException(ConstraintViolationException exception, final WebRequest
             request) {
-        log.info(GENERIC_MSG, exception);
+        log.info(GENERIC_MSG, request, exception);
         ApiError error = ApiError.builder()
                 .status(HttpStatus.BAD_REQUEST)
                 .message("Constraint violation in the request")

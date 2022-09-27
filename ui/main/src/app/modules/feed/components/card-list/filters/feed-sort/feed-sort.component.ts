@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2021, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2022, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -10,7 +10,7 @@
 import {Component, Input, OnDestroy, OnInit} from '@angular/core';
 import {Store} from '@ngrx/store';
 import {AppState} from '@ofStore/index';
-import {UntypedFormControl, UntypedFormGroup} from '@angular/forms';
+import {FormControl, FormGroup} from '@angular/forms';
 import {Subject} from 'rxjs';
 import {takeUntil} from 'rxjs/operators';
 import {UserPreferencesService} from '@ofServices/user-preference.service';
@@ -22,11 +22,12 @@ import {SortService} from '@ofServices/lightcards/sort.service';
     styleUrls: ['./feed-sort.component.scss']
 })
 export class FeedSortComponent implements OnInit, OnDestroy {
-    @Input() hideSeveritySort: boolean;
-    @Input() hideReadSort: boolean;
+    @Input() defaultSorting: string;
 
     private ngUnsubscribe$ = new Subject<void>();
-    sortForm: UntypedFormGroup;
+    sortForm: FormGroup<{
+        sortControl: FormControl<string | null>
+    }>;
 
     constructor(
         private store: Store<AppState>,
@@ -39,11 +40,11 @@ export class FeedSortComponent implements OnInit, OnDestroy {
         this.initSort();
     }
 
-    private createFormGroup(): UntypedFormGroup {
-        const initialValue = !this.hideReadSort ? 'unread' : 'date';
-        return new UntypedFormGroup(
+    private createFormGroup(): FormGroup {
+        const initialValue = this.defaultSorting;
+        return new FormGroup(
             {
-                sortControl: new UntypedFormControl(initialValue)
+                sortControl: new FormControl<string | null>(initialValue)
             },
             {updateOn: 'change'}
         );
@@ -61,16 +62,9 @@ export class FeedSortComponent implements OnInit, OnDestroy {
     }
 
     private getInitialSort(): string {
-        let sortedChoice = 'date';
+        let sortedChoice = this.defaultSorting;;
         const sortedPreference = this.userPreferences.getPreference('opfab.feed.sort.type');
-        if (!!sortedPreference) {
-            if (
-                !(sortedPreference === 'unread' && this.hideReadSort) &&
-                !(sortedPreference === 'severity' && this.hideSeveritySort)
-            ) {
-                sortedChoice = sortedPreference;
-            }
-        } else if (!this.hideReadSort) sortedChoice = 'unread';
+        if (!!sortedPreference)  sortedChoice = sortedPreference;
         return sortedChoice;
     }
 

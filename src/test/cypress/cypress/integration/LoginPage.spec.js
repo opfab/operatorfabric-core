@@ -1,4 +1,4 @@
-/* Copyright (c) 2021, RTE (http://www.rte-france.com)
+/* Copyright (c) 2021-2022, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -25,6 +25,7 @@ describe ('LoginPage',()=>{
 
         //go to login page
         cy.visit("/")
+        cy.get('#opfab-login-btn-submit').contains("Sign In");
 
         //type login
         cy.get('#opfab-login').should('be.visible')
@@ -36,7 +37,6 @@ describe ('LoginPage',()=>{
 
         //press login button
         cy.get('#opfab-login-btn-submit').click()
-        cy.get('#opfab-login-btn-submit').should('be.visible')
 
         //Check that the browser has been redirected to the feed page
         cy.hash().should('eq', '#/feed')
@@ -61,11 +61,17 @@ describe ('LoginPage',()=>{
 
         //press login button
         cy.get('#opfab-login-btn-submit').click()
-        cy.get('#opfab-login-btn-submit').should('be.visible')
 
         //Check Error message 
         cy.get('#opfab-login-msg').should('exist');
         cy.get("#opfab-login-msg").contains("Wrong login or password");
 
+    })
+
+    it('login is in french if settings.locale is set to fr in web-ui.json' , () => {
+        //go to login page
+        cy.setPropertyInConf('settings.locale','web-ui','\\"fr\\"');
+        cy.visit("/");
+        cy.get('#opfab-login-btn-submit').contains("Se connecter");
     })
 })

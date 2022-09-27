@@ -7,7 +7,11 @@
  * This file is part of the OperatorFabric project.
  */
 
+import {getOpfabGeneralCommands} from '../support/opfabGeneralCommands'
+
 describe ('Feed configuration tests',function () {
+    
+    const opfab = getOpfabGeneralCommands();
 
     before('Set up configuration and cards', function () {
         cy.loadTestConf();
@@ -26,13 +30,12 @@ describe ('Feed configuration tests',function () {
 
         // Removing corresponding properties from the web-ui file
         cy.removePropertyInConf('feed.card.hideTimeFilter','web-ui');
-        cy.removePropertyInConf('feed.card.hideAckFilter','web-ui');
         cy.removePropertyInConf('feed.card.hideResponseFilter','web-ui');
-        cy.removePropertyInConf('feed.card.hideReadSort','web-ui');
-        cy.removePropertyInConf('feed.card.hideSeveritySort','web-ui');
+        cy.removePropertyInConf('feed.defaultAcknowledgmentFilter','web-ui');
+        cy.removePropertyInConf('feed.defaultSorting','web-ui');
         cy.removePropertyInConf('feed.card.hideAckAllCardsFeature','web-ui');
 
-        cy.loginOpFab('operator1_fr','test');
+        opfab.loginWithUser('operator1_fr');
 
         // Open filter menu
         cy.get('#opfab-feed-filter-btn-filter').click();
@@ -58,29 +61,22 @@ describe ('Feed configuration tests',function () {
 
         // Setting properties to true in file
         cy.setPropertyInConf('feed.card.hideTimeFilter','web-ui',true);
-        cy.setPropertyInConf('feed.card.hideAckFilter','web-ui',true);
         cy.setPropertyInConf('feed.card.hideResponseFilter','web-ui',true);
-        cy.setPropertyInConf('feed.card.hideReadSort','web-ui',true);
-        cy.setPropertyInConf('feed.card.hideSeveritySort','web-ui',true);
         cy.setPropertyInConf('feed.card.hideAckAllCardsFeature','web-ui',true);
 
-        cy.loginOpFab('operator1_fr','test');
+        opfab.loginWithUser('operator1_fr');
 
         // Open filter menu
         cy.get('#opfab-feed-filter-btn-filter').click();
 
         // Check elements visibility
         cy.get('#opfab-time-filter-form').should('not.exist');
-        cy.get('#opfab-ack-filter-form').should('not.exist');
         cy.get('#opfab-response-filter-form').should('not.exist');
 
         // Open sort menu
         cy.get('#opfab-feed-filter-btn-sort').click();
 
         // Check elements visibility
-        cy.get('#opfab-feed-filter-unread').should('not.exist');
-        cy.get('#opfab-feed-filter-severity').should('not.exist');
-
         cy.get('#opfab-feed-ack-all-link').should('not.exist');
 
     })
@@ -89,34 +85,70 @@ describe ('Feed configuration tests',function () {
 
         // Setting properties to true in file
         cy.setPropertyInConf('feed.card.hideTimeFilter','web-ui',false);
-        cy.setPropertyInConf('feed.card.hideAckFilter','web-ui',false);
         cy.setPropertyInConf('feed.card.hideResponseFilter','web-ui',false);
-        cy.setPropertyInConf('feed.card.hideReadSort','web-ui',false);
-        cy.setPropertyInConf('feed.card.hideSeveritySort','web-ui',false);
         cy.setPropertyInConf('feed.card.hideAckAllCardsFeature','web-ui',false);
 
-        cy.loginOpFab('operator1_fr','test');
+        opfab.loginWithUser('operator1_fr');
 
         // Open filter menu
         cy.get('#opfab-feed-filter-btn-filter').click();
 
         // Check elements visibility
         cy.get('#opfab-time-filter-form');
-        cy.get('#opfab-ack-filter-form');
         cy.get('#opfab-response-filter-form');
 
         // Open sort menu
         cy.get('#opfab-feed-filter-btn-sort').click();
 
         // Check elements visibility
-        cy.get('#opfab-feed-filter-unread');
-        cy.get('#opfab-feed-filter-severity');
-
         cy.get('#opfab-feed-ack-all-link');
 
     })
 
-    
+
+    it('Sorting criteria and acknowledgment filter options - Configure initial value', function () {
+
+        //Set corresponding properties from the web-ui file
+        cy.setPropertyInConf('feed.defaultAcknowledgmentFilter','web-ui','\\"ack\\"');
+        cy.setPropertyInConf('feed.defaultSorting','web-ui','\\"date\\"');
+
+        opfab.loginWithUser('operator1_fr');
+
+        // Open filter menu
+        cy.get('#opfab-feed-filter-btn-filter').click();
+
+        // Check notack option is selected
+        cy.get('#opfab-feed-filter-ack-ack').should('be.checked');
+
+        // Open sort menu
+        cy.get('#opfab-feed-filter-btn-sort').click();
+
+        // Check publication date option is selected
+        cy.get('#opfab-feed-filter-publication-date').should('be.checked');
+
+    })
+
+    it('Sorting criteria and acknowledgment filter options - Check default behaviour', function () {
+
+        // Removing corresponding properties from the web-ui file
+        cy.removePropertyInConf('feed.defaultAcknowledgmentFilter','web-ui');
+        cy.removePropertyInConf('feed.defaultSorting','web-ui');
+
+        opfab.loginWithUser('operator1_fr');
+
+        // Open filter menu
+        cy.get('#opfab-feed-filter-btn-filter').click();
+
+        // Check notack option is selected
+        cy.get('#opfab-feed-filter-ack-notack').should('be.checked');
+
+        // Open sort menu
+        cy.get('#opfab-feed-filter-btn-sort').click();
+
+        // Check uread option is selected
+        cy.get('#opfab-feed-filter-unread').should('be.checked');
+
+    })
 
 
 })

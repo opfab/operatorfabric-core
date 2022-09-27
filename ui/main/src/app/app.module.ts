@@ -9,7 +9,7 @@
  */
 
 import {BrowserModule} from '@angular/platform-browser';
-import {ErrorHandler, NgModule} from '@angular/core';
+import {NgModule} from '@angular/core';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {HttpClientModule, HTTP_INTERCEPTORS} from '@angular/common/http';
 import {CommonModule, HashLocationStrategy, LocationStrategy} from '@angular/common';
@@ -24,7 +24,6 @@ import {LoggingModule} from './modules/logging/logging.module';
 import {MonitoringModule} from './modules/monitoring/monitoring.module';
 import {AdminModule} from './modules/admin/admin.module';
 import {CalendarModule} from './modules/calendar/calendar.module';
-import {AppErrorHandler} from './common/error/app-error-handler';
 import {ArchivesModule} from './modules/archives/archives.module';
 import {NavbarModule} from './modules/navbar/navbar.module';
 import {NgbModalModule, NgbModule} from '@ng-bootstrap/ng-bootstrap';
@@ -89,7 +88,6 @@ import { SpinnerModule } from './modules/share/spinner/spinner.module';
             useFactory: () => ({enabled: shallPWAFeatureBeActivated()})
         },
         {provide: LocationStrategy, useClass: HashLocationStrategy},
-        {provide: ErrorHandler, useClass: AppErrorHandler},
         {
             provide: HTTP_INTERCEPTORS,
             useClass: TokenInjector,

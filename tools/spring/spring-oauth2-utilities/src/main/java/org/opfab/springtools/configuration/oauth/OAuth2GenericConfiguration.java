@@ -42,6 +42,7 @@ import java.util.List;
 @EnableCaching
 @Import({UserServiceCache.class
         ,I18nProcessesCache.class
+        ,ProcessesCache.class
         ,UpdateUserListenerConfiguration.class
         , GroupsProperties.class
         , GroupsUtils.class
@@ -91,6 +92,7 @@ public class OAuth2GenericConfiguration {
         
         String principalId = jwt.getClaimAsString(jwtProperties.getLoginClaim()).toLowerCase();
         UserServiceCache.setTokenForUserRequest(principalId,jwt.getTokenValue());
+        ProcessesCache.setTokenForUserRequest(principalId,jwt.getTokenValue());
         CurrentUserWithPerimeters currentUserWithPerimeters = userServiceCache.fetchCurrentUserWithPerimetersFromCacheOrProxy(principalId);
         User user = currentUserWithPerimeters.getUserData();
 

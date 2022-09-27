@@ -113,7 +113,7 @@
              </div>
 
         </div>
-        <div id='div-detail-btn'>
+        <div id='opfab-card-detail-footer'>
             <div class="modal-footer" style="margin-top:10px;margin-bottom: 0px;" ></div>
             <div style="text-align: center;width:100%">
                 <button id="opfab-usercard-btn-refuse" type="button" class="opfab-btn-cancel" (click)="decline()" translate>userCard.refuse</button>
@@ -123,12 +123,7 @@
 
 </div>
 
-<div *ngIf="displaySendingCardInProgress" style="text-align: center;margin-top: 20px;font-size: 20px">
-    <em  class="fas fa-spinner fa-spin opfab-slow-spinner"></em>
-    <div style="font-weight: bold;margin-top: 10px;margin-bottom: 20px" translate>
-        userCard.sendingCardInProgress
-    </div>
-</div>
+<of-spinner *ngIf="displaySendingCardInProgress" loadingText="userCard.sendingCardInProgress"></of-spinner>
 
 <ng-container *ngIf="!displayForm() && !pageLoading">
     <div class="alert alert-info">
@@ -138,7 +133,7 @@
 </ng-container>
 
 
-<of-spinner *ngIf="pageLoading" loadingText="feed.cardLoadingInProgress"></of-spinner> 
+<of-spinner *ngIf="pageLoading" loadingText="feed.cardLoadingInProgress"></of-spinner>
             
 
 

@@ -7,86 +7,70 @@
  * This file is part of the OperatorFabric project.
  */
 
+import {getOpfabGeneralCommands} from '../support/opfabGeneralCommands';
+import {getSoundCommands} from '../support/soundCommands';
+import {getSettingsCommands} from '../support/settingsCommands';
 
 describe('Session ended test', function () {
+    const opfab = getOpfabGeneralCommands();
+    const sound = getSoundCommands();
+    const settings = getSettingsCommands();
 
-  
-  before('Reset UI configuration file ', function () {
-    cy.resetUIConfigurationFiles();
-    cy.deleteAllCards();
-    cy.deleteAllSettings();
-  })
+    before('Reset UI configuration file ', function () {
+        cy.resetUIConfigurationFiles();
+        cy.deleteAllCards();
+        cy.deleteAllSettings();
+    });
 
+    it('Checking session end after 7 days and with no sound by default', () => {
+        opfab.loginWithUser('operator1_fr');
+        sound.stubPlaySound();
+        setTimelineInYearMode(); // to avoid having a lot of update subscription request  when simulating time
+        goOneHourInTheFuture();
+        checkSessionIsActive();
+        goSevenDaysInTheFuture();
+        checkSessionIsClosed();
+        sound.checkNumberOfEmittedSoundIs(0);
+    });
 
-  it('Checking session end after 7 days  ', () => {
-    
-    cy.loginWithClock();
-    cy.stubPlaySound();
+    it('Checking sound when session end and one sound is configured ', () => {
+        opfab.loginWithUser('operator1_fr');
+        sound.stubPlaySound();
+        setTimelineInYearMode(); // to avoid having a lot of update subscription request  when simulating time
+        configureOneSound();
+        goOneHourInTheFuture();
+        checkSessionIsActive();
+        goSevenDaysInTheFuture();
+        checkSessionIsClosed();
+        sound.checkNumberOfEmittedSoundIs(1);
+    });
 
-    // clock on timeline Year mode to avoid having a lot of update subscription request  when simulating time 
-    cy.get(".axis").find("text").first().as('firstTimelineXTick');
-    cy.get('#opfab-timeline-link-period-Y').click();
+    function setTimelineInYearMode() {
+        cy.get('.axis').find('text').first().as('firstTimelineXTick');
+        cy.get('#opfab-timeline-link-period-Y').click();
+    }
 
+    function goOneHourInTheFuture() {
+        cy.clock(new Date());
+        cy.tick(1 * 60 * 60 * 1000);
+    }
 
-    // go 1 hour in the future 
-    cy.tick(1*60*60*1000);
-   
-    // The session is active
-    cy.get('#opfab-sessionEnd').should('not.exist');
+    function checkSessionIsActive() {
+        cy.get('#opfab-sessionEnd').should('not.exist');
+    }
 
-    // go 7 days in the future 
-    cy.tick(7*24*60*60*1000); 
+    function goSevenDaysInTheFuture() {
+        cy.clock(new Date());
+        cy.tick(7 * 24 * 60 * 60 * 1000);
+    }
 
-    // Session is closed 
-    // check session end message 
-    cy.get('#opfab-sessionEnd');
+    function checkSessionIsClosed() {
+        cy.get('#opfab-sessionEnd');
+    }
 
-    // no sound configured , sound shall not be activated
-    cy.get('@playSound').its('callCount').should('eq', 0);
-
-  })
-
-  it('Checking sound when session end  ', () => {
-    
-    cy.loginOpFab('operator1_fr', 'test');
-
-    // clock on timeline Year mode to avoid having a lot of update subscription request  when simulating time 
-    cy.get(".axis").find("text").first().as('firstTimelineXTick');
-    cy.get('#opfab-timeline-link-period-Y').click();
-
-    cy.openSettings();
-
-    // set severity alarm to be notified by sound 
-    cy.get('#opfab-checkbox-setting-form-alarm').click();
-    cy.waitDefaultTime();
-    // set no replay for sound
-    cy.get('#opfab-checkbox-setting-form-replay').click();
-    cy.waitDefaultTime();
-
-    cy.logoutOpFab();
-    cy.loginWithClock();
-    cy.tick(1);
-    cy.stubPlaySound();
-    cy.waitDefaultTime(); // wait for configuration load end (in SoundNotificationService.ts)  
-    
-    // go 1 hour in the future 
-    cy.tick(1*60*60*1000);
-   
-    // The session is active
-    cy.get('#opfab-sessionEnd').should('not.exist');
-
-    // go 7 days in the future 
-    cy.tick(7*24*60*60*1000); 
-
-    // Session is closed 
-    // check session end message 
-    cy.get('#opfab-sessionEnd');
-
-    //As one sound is configured , sound shall be activated
-    cy.get('@playSound').its('callCount').should('eq', 1);
-   
-
-  })
-
-
-})
+    function configureOneSound() {
+        opfab.navigateToSettings();
+        settings.clickOnSeverity('alarm');
+        settings.clickOnReplaySound(); // set no replay for sound
+    }
+});

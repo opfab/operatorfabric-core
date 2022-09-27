@@ -24,6 +24,7 @@ dependencies {
     testImplementation spring.securityTest
     implementation project(':client:cards-client-data')
     implementation project(':client:users-client-data')
+    implementation project(':client:businessconfig-client-data')
     implementation project(':tools:spring:spring-mongo-utilities')
     implementation project(':tools:spring:spring-oauth2-utilities')
     testImplementation project(':tools:spring:spring-test-utilities')

@@ -23,7 +23,7 @@ import {TranslateService} from '@ngx-translate/core';
 })
 export class SettingsComponent implements OnInit {
     locales: string[];
-    displayInfo: SettingsInputs;
+    hiddenSettings: string[];
     externalDevicesEnabled: boolean;
     playSoundForAlarmDefaultValue: boolean;
     playSoundForActionDefaultValue: boolean;
@@ -47,7 +47,7 @@ export class SettingsComponent implements OnInit {
 
     ngOnInit() {
         this.locales = this.translateService.getLangs();
-        this.displayInfo = this.configService.getConfigValue('settings.infos.hide');
+        this.hiddenSettings = this.configService.getConfigValue('settingsScreen.hiddenSettings');
         this.externalDevicesEnabled = this.configService.getConfigValue('externalDevicesEnabled');
         this.playSoundForAlarmDefaultValue = !!this.configService.getConfigValue('settings.playSoundForAlarm')
             ? this.configService.getConfigValue('settings.playSoundForAlarm')
@@ -90,9 +90,3 @@ export class SettingsComponent implements OnInit {
     }
 }
 
-interface SettingsInputs {
-    description: boolean;
-    language: boolean;
-    sounds: boolean;
-    remoteLoggingEnabled: boolean;
-}

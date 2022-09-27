@@ -12,19 +12,24 @@ package org.opfab.externaldevices.controllers;
 
 import lombok.extern.slf4j.Slf4j;
 import org.opfab.externaldevices.drivers.ExternalDeviceConfigurationException;
+import org.opfab.externaldevices.drivers.UnknownExternalDeviceException;
 import org.opfab.externaldevices.model.DeviceConfiguration;
 import org.opfab.externaldevices.model.SignalMapping;
 import org.opfab.externaldevices.model.UserConfiguration;
 import org.opfab.externaldevices.services.ConfigService;
+import org.opfab.externaldevices.services.DevicesService;
+import org.opfab.springtools.configuration.oauth.OpFabJwtAuthenticationToken;
 import org.opfab.springtools.error.model.ApiError;
 import org.opfab.springtools.error.model.ApiErrorException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * DevicesController, documented at {@link ConfigurationsApi}
@@ -43,10 +48,12 @@ public class ConfigurationsController implements ConfigurationsApi {
     public static final String USER_CONFIGURATION_NAME = "UserConfiguration";
 
     private final ConfigService configService;
+    private final DevicesService devicesService;
 
     @Autowired
-    public ConfigurationsController(ConfigService configService) {
+    public ConfigurationsController(ConfigService configService,DevicesService devicesService) {
         this.configService = configService;
+        this.devicesService = devicesService;
     }
 
     @Override
@@ -56,7 +63,7 @@ public class ConfigurationsController implements ConfigurationsApi {
         configService.insertDeviceConfiguration(deviceConfiguration);
         response.addHeader(LOCATION_HEADER_NAME, request.getContextPath() + "/configurations/devices/" + id);
         response.setStatus(201);
-        log.debug(CREATED_LOG, DEVICE_CONFIGURATION_NAME, id);
+        log.info(CREATED_LOG, DEVICE_CONFIGURATION_NAME, id);
         return null;
 
     }
@@ -73,12 +80,16 @@ public class ConfigurationsController implements ConfigurationsApi {
             DeviceConfiguration deviceConfiguration = this.configService.retrieveDeviceConfiguration(deviceId);
             response.setStatus(200);
             return deviceConfiguration;
-        } catch (ExternalDeviceConfigurationException e) {
-            throw new ApiErrorException(ApiError.builder()
-                    .status(HttpStatus.NOT_FOUND)
-                    .message(String.format(NOT_FOUND_MESSAGE, DEVICE_CONFIGURATION_NAME, deviceId))
-                    .build(), e);
+        } catch (ExternalDeviceConfigurationException | UnknownExternalDeviceException e) {
+            throw buildApiNotFoundException(e, String.format(NOT_FOUND_MESSAGE, DEVICE_CONFIGURATION_NAME, deviceId));
         }
+    }
+
+    private ApiErrorException buildApiNotFoundException(Exception e, String errorMessage)  {
+        return new ApiErrorException(ApiError.builder()
+                   .status(HttpStatus.NOT_FOUND)
+                   .message(errorMessage)
+                   .build(), e);
     }
 
     @Override
@@ -86,14 +97,12 @@ public class ConfigurationsController implements ConfigurationsApi {
 
         try {
             configService.deleteDeviceConfiguration(deviceId);
-        } catch (ExternalDeviceConfigurationException e) {
-            throw new ApiErrorException(ApiError.builder()
-                    .status(HttpStatus.NOT_FOUND)
-                    .message(String.format(NOT_FOUND_MESSAGE, DEVICE_CONFIGURATION_NAME, deviceId))
-                    .build(), e);
+            devicesService.removeDevice(deviceId);
+        } catch (ExternalDeviceConfigurationException | UnknownExternalDeviceException e) {
+            throw buildApiNotFoundException(e, String.format(NOT_FOUND_MESSAGE, DEVICE_CONFIGURATION_NAME, deviceId));
         }
         response.setStatus(200);
-        log.debug(DELETED_LOG, DEVICE_CONFIGURATION_NAME, deviceId);
+        log.info(DELETED_LOG, DEVICE_CONFIGURATION_NAME, deviceId);
         return null;
 
     }
@@ -105,7 +114,7 @@ public class ConfigurationsController implements ConfigurationsApi {
         configService.insertSignalMapping(signalMapping);
         response.addHeader(LOCATION_HEADER_NAME, request.getContextPath() + "/configurations/signals/" + id);
         response.setStatus(201);
-        log.debug(CREATED_LOG, SIGNAL_MAPPING_NAME, id);
+        log.info(CREATED_LOG, SIGNAL_MAPPING_NAME, id);
         return null;
     }
 
@@ -122,10 +131,7 @@ public class ConfigurationsController implements ConfigurationsApi {
             response.setStatus(200);
             return signalMapping;
         } catch (ExternalDeviceConfigurationException e) {
-            throw new ApiErrorException(ApiError.builder()
-                    .status(HttpStatus.NOT_FOUND)
-                    .message(String.format(NOT_FOUND_MESSAGE, SIGNAL_MAPPING_NAME, signalMappingId))
-                    .build(), e);
+            throw buildApiNotFoundException(e, String.format(NOT_FOUND_MESSAGE, SIGNAL_MAPPING_NAME, signalMappingId));
         }
     }
 
@@ -135,10 +141,7 @@ public class ConfigurationsController implements ConfigurationsApi {
         try {
             configService.deleteSignalMapping(signalMappingId);
         } catch (ExternalDeviceConfigurationException e) {
-            throw new ApiErrorException(ApiError.builder()
-                    .status(HttpStatus.NOT_FOUND)
-                    .message(String.format(NOT_FOUND_MESSAGE, SIGNAL_MAPPING_NAME, signalMappingId))
-                    .build(), e);
+            throw buildApiNotFoundException(e, String.format(NOT_FOUND_MESSAGE, SIGNAL_MAPPING_NAME, signalMappingId));
         }
         response.setStatus(200);
         log.debug(DELETED_LOG, SIGNAL_MAPPING_NAME, signalMappingId);
@@ -151,7 +154,7 @@ public class ConfigurationsController implements ConfigurationsApi {
         configService.saveUserConfiguration(userConfiguration);
         response.addHeader(LOCATION_HEADER_NAME, request.getContextPath() + "/configurations/signals/" + id);
         response.setStatus(201);
-        log.debug(CREATED_LOG, SIGNAL_MAPPING_NAME, id);
+        log.info(CREATED_LOG, SIGNAL_MAPPING_NAME, id);
         return null;
     }
 
@@ -168,25 +171,25 @@ public class ConfigurationsController implements ConfigurationsApi {
             response.setStatus(200);
             return userConfiguration;
         } catch (ExternalDeviceConfigurationException e) {
-            throw new ApiErrorException(ApiError.builder()
-                    .status(HttpStatus.NOT_FOUND)
-                    .message(String.format(NOT_FOUND_MESSAGE, USER_CONFIGURATION_NAME, userLogin))
-                    .build(), e);
+            throw buildApiNotFoundException(e, String.format(NOT_FOUND_MESSAGE, USER_CONFIGURATION_NAME, userLogin));
         }
     }
 
     @Override
     public Void deleteUserConfiguration(HttpServletRequest request, HttpServletResponse response, String userLogin) {
         try {
-            configService.deleteUserConfiguration(userLogin);
+            OpFabJwtAuthenticationToken jwtPrincipal = (OpFabJwtAuthenticationToken) request.getUserPrincipal();
+            Jwt token = null;
+            if (jwtPrincipal!=null) {
+                token = jwtPrincipal.getToken();
+            }
+
+            configService.deleteUserConfiguration(userLogin, Optional.ofNullable(token));
         } catch (ExternalDeviceConfigurationException e) {
-            throw new ApiErrorException(ApiError.builder()
-                    .status(HttpStatus.NOT_FOUND)
-                    .message(String.format(NOT_FOUND_MESSAGE, USER_CONFIGURATION_NAME, userLogin))
-                    .build(), e);
+            throw buildApiNotFoundException(e, String.format(NOT_FOUND_MESSAGE, USER_CONFIGURATION_NAME, userLogin));
         }
         response.setStatus(200);
-        log.debug(DELETED_LOG, USER_CONFIGURATION_NAME, userLogin);
+        log.info(DELETED_LOG, USER_CONFIGURATION_NAME, userLogin);
         return null;
     }
 

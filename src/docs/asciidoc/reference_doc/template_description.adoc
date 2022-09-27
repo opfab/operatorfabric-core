@@ -609,6 +609,13 @@ Some styles for text standard colors, for example:
   <span class="opfab-color-danger"> my text in color </span>
 ....
 
+=== opfab-btn, opfab-btn-cancel
+Styles for buttons, for example:
+
+....
+  <button type="button" class="opfab-btn">OK</button>
+  <button type="button" class="opfab-btn-cancel">CANCEL</button>
+....
 
 == Multi Select
 
@@ -640,14 +647,37 @@ OperatorFabric provides a multiselect component based on https://sa-si-dev.githu
   usercardTemplateGateway.getSpecificCardInformation = function () {
 
         const selectedValues = myMultiSelect.getSelectedValues(); 
-
-      ....
+  ...
+  
 ....
+
+
+You can set selected values via method setSelectedValues();
+
+....
+  myMultiSelect.setSelectedValues(['A','B']);
+....
+
+
+If you want to set the options list after init use setOptions method : 
+
+....
+
+  var options = [
+    { label: 'Options 1', value: '1' },
+    { label: 'Options 2', value: '2' },
+    { label: 'Options 3', value: '3' },
+  ];
+
+  myMultiSelect.setOptions(options);
+....
+
+
 
 WARNING: It strongly advice to NOT use directly virtual select (always use OperatorFabric js object and css) otherwise you will not be guaranteed compatibility when upgrading.
 
 
-It is possible to use the component also as single value select. The advantage over a standard select is the possibility to benefit of the serching feature. To use the component as single select, initialize it with the `multiple` property set to false:  
+It is possible to use the component also as single value select. The advantage over a standard select is the possibility to benefit of the searching feature. To use the component as single select, initialize it with the `multiple` property set to false:  
 
 ....
 
@@ -658,7 +688,8 @@ It is possible to use the component also as single value select. The advantage o
   </div>
 
  <script>
-  mySingleSelect = opfab.multiSelect.init({
+
+  opfab.multiSelect.init({
                 id: "my-singleselect",
                 options: [
                 { label: 'Choice A', value: 'A' },

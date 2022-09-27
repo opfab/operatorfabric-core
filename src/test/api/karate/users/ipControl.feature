@@ -50,10 +50,10 @@ Feature: Client ip control
 """
 {
   "id" : "perimeterIp",
-  "process" : "process_1",
+  "process" : "api_test",
   "stateRights" : [
       {
-        "state" : "state1",
+        "state" : "messageState",
         "right" : "ReceiveAndWrite"
       }
   ]
@@ -75,9 +75,9 @@ Feature: Client ip control
 {
 	"publisher" : "ENTITY1_FR",
 	"processVersion" : "1",
-	"process"  :"process_1",
+	"process"  :"api_test",
 	"processInstanceId" : "initialCardProcess",
-	"state": "state1",
+	"state": "messageState",
 	"entityRecipients" : ["ENTITY1_FR"],
 	"severity" : "INFORMATION",
 	"startDate" : 1553186770681,
@@ -93,9 +93,9 @@ Feature: Client ip control
   {
     "publisher" : "user_test_api_1",
     "processVersion" : "1",
-    "process"  :"process_1",
+    "process"  :"api_test",
     "processInstanceId" : "initialCardProcess1",
-    "state": "state1",
+    "state": "messageState",
     "entityRecipients" : ["ENTITY1_FR"],
     "severity" : "INFORMATION",
     "startDate" : 1553186770681,
@@ -113,7 +113,7 @@ Feature: Client ip control
     And request userAuthorizedIPAddressesUpdate
     When method put
     Then assert responseStatus == 200 || responseStatus == 201
-    And match response.login == karate.lowerCase(userAuthorizedIPAddressesUpdate.login)
+    And match response.login == userAuthorizedIPAddressesUpdate.login
     And match response.authorizedIPAddresses contains '10.0.2.2'
     And match response.authorizedIPAddresses contains '10.0.3.3'
 
@@ -165,7 +165,7 @@ Feature: Client ip control
     Examples:
     | url                          | method | request | expected  |
     | userServiceUrl               | get    | ''      | 403       |
-    | businessConfigServiceUrl     | get    | ''      | 403       |
+    | businessConfigServiceUrl     | get    | ''      | 200       |
     | userCardsPublicationServiceUrl   | post   | card    | 403       |
     | cardsPublicationServiceUrl   | post   | card1    | 403       |
     | cardsConsultationServiceUrl  | get    | ''      | 403       |
@@ -201,7 +201,7 @@ Scenario Outline: Check direct calls from authorized ip are accepted
     Examples:
     | url                                   | method | request | expected  |
     | nginxUserServiceUrl                   | get    | ''      | 403       |
-    | nginxBusinessConfigServiceUrl         | get    | ''      | 403       |
+    | nginxBusinessConfigServiceUrl         | get    | ''      | 200       |
     | nginxUserCardsPublicationServiceUrl   | post   | card    | 403       |
     | nginxCardsConsultationServiceUrl      | get    | ''      | 403       |
 
@@ -214,7 +214,7 @@ Scenario Outline: Check direct calls from authorized ip are accepted
     And request userEmptyAuthorizedIPAddressesUpdate
     When method put
     Then status 200
-    And match response.login == karate.lowerCase(userAuthorizedIPAddressesUpdate.login)
+    And match response.login == userAuthorizedIPAddressesUpdate.login
     And match response.authorizedIPAddresses == []
 
 
@@ -252,7 +252,7 @@ Scenario Outline: Check direct calls are accepted
 
 
     Scenario: delete user card, expected response 200
-      Given url opfabPublishCardUrl + 'cards/userCard/process_1.initialCardProcess'
+      Given url opfabPublishCardUrl + 'cards/userCard/api_test.initialCardProcess'
       And header Authorization = 'Bearer ' + authTokenAsTSO
       When method delete
       Then status 200

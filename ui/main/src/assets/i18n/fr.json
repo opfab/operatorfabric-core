@@ -53,6 +53,9 @@
     },
     "exportInProgress": "Export en cours",
     "loadingInProgress": "Chargement en cours",
+    "requestInProgress": "Requête en cours...",
+    "deleteInProgress": "Suppression en cours...",
+    "logoutInProgress": "Déconnexion en cours...",
     "noResult": "Votre recherche ne correspond à aucun résultat.",
     "exportToExcel": "Exporter les données",
     "resultsNumber":"Nombre de résultats",
@@ -168,9 +171,11 @@
     },
     "sort": {
       "title": "Triées par",
-      "severity": "Criticité puis date ",
-      "publish": "Date",
-      "unread": "Non lu puis date"
+      "severity": "Criticité puis date de réception",
+      "publish": "Date de réception",
+      "unread": "Non lu puis date de réception",
+      "startDate": "Date de début",
+      "endDate": "Date de fin"
     },
     "tips": {
       "acknowledged": "Acquittée",
@@ -188,11 +193,13 @@
     },
     "lttdFinished": "Terminée",
     "responsesClosed": "Réponse expirée",
-    "received": "Reçu le",
+    "received": "Reçue :",
+    "deleted": "Supprimée :",
+    "addressedTo": "Adressée à :",
     "at" : "à",
     "from": "de",
     "moreCards": "cartes supplémentaires",
-    "lastResponse": "Dernière réponse reçue le",
+    "lastResponse": "Dernière réponse :",
     "cardLoadingInProgress":"Chargement de la carte...",
     "cardNotFound": "La carte que vous cherchez n'a pas été trouvée."
   },
@@ -263,10 +270,14 @@
   },
   "activityArea": {
     "title": "ZONE D'ACTIVITÉ",
-    "titleOnLogin": "SÉLECTIONNER VOTRE ZONE D'ACTIVITÉ"
+    "titleOnLogin": "SÉLECTIONNER VOTRE ZONE D'ACTIVITÉ",
+    "savingInProgress": "Enregistrement en cours..."
   },
   "feedConfiguration": {
-    "title": "CONFIGURATION DES NOTIFICATIONS"
+    "title": "CONFIGURATION DES NOTIFICATIONS",
+    "information": "INFORMATION",
+    "youAreUnsubscribedFrom": "Vous êtes désabonné d'une ou plusieurs notifications pour lesquelles le désabonnement est maintenant interdit.\n\nNotification(s) concernée(s) :\n",
+    "youWillBeSubscribedAgain": "\n\nEn cliquant sur OK, vous serez à nouveau abonné à ces notifications."
   },
   "userCard": {
     "title": "CRÉATION D'UNE NOUVELLE CARTE",
@@ -321,12 +332,13 @@
     "answered": "A répondu",
     "unanswered": "Pas encore répondu",
     "status": "Statut du processus",
-    "chooseEntityForResponse": "Choissisez l'entité pour laquelle vous répondez :",
-    "entityChoice": "Choix de l'entité"
+    "chooseEntitiesForResponse": "Choisissez les entités pour lesquelles vous répondez :",
+    "entitiesChoice": "Choix des entités"
   },
   "cardAcknowledgment": {
     "button": {
-      "ack": "ACQUITTER ET FERMER",
+      "ack": "ACQUITTER",
+      "ackAndClose": "ACQUITTER ET FERMER",
       "unack": "ANNULER L'ACQUITTEMENT"
     },
     "acknowledged": "Acquittements"
@@ -338,6 +350,7 @@
         "name": "NOM",
         "perimeters" : "PÉRIMÈTRES",
         "description": "DESCRIPTION",
+        "users": "UTILISATEURS",
         "realtime": "TEMPS RÉEL",
         "type": "TYPE",
         "true": "OUI",
@@ -351,6 +364,7 @@
         "parents": "ENTITÉS PARENTES",
         "description": "DESCRIPTION",
         "labels": "ÉTIQUETTES",
+        "users": "UTILISATEURS",
         "entityAllowedToSendCard": "ENVOI DE CARTE AUTORISÉ",
         "confirmDelete": "Voulez-vous vraiment supprimer l'entité",
         "add":"AJOUTER UNE NOUVELLE ENTITÉ",
@@ -364,6 +378,7 @@
         "stateRights": "PERMISSIONS SUR LES ÉTATS",
         "state": "ÉTAT",
         "right": "PERMISSION",
+        "filteringNotificationAllowed": "DÉSABONNEMENT\nAUTORISÉ",
         "confirmDelete": "Voulez-vous vraiment supprimer le périmètre",
         "add":"AJOUTER UN NOUVEAU PÉRIMÈTRE"
       },
@@ -461,10 +476,20 @@
       "allUsersConfigured": "Tous les périphériques des utilisateurs sont déjà configurés.",
       "loadingExternalDevices": "Chargement des périphériques externes..."
     },
+    "tabs": {
+      "users": "Configuration des utilisateurs",
+      "devices": "Périphériques externes"
+    },
+    "error": {
+      "errorWhenEnablingDevice": "Une erreur est survenue en essayant d'activer ce périphérique. Veuillez réessayer plus tard.",
+      "errorWhenDisablingDevice": "Une erreur est survenue en essayant de désactiver ce périphérique. Veuillez réessayer plus tard."
+    },
     "userLogin": "IDENTIFIANT UTILISATEUR",
     "externalDeviceIds": "PÉRIPHÉRIQUES",
     "edit": "ÉDITER",
-    "delete": "SUPPRIMER"
+    "delete": "SUPPRIMER",
+    "id": "PÉRIPHÉRIQUES",
+    "isEnabled": "EST ACTIVÉ"
   },
   "datePicker": {
     "monday": "Lu",
@@ -492,5 +517,9 @@
   "reloadRequired" : {
     "message": "Rechargement de l'application nécessaire. Pour recharger veuillez cliquer ",
     "linkText": "ici"
-  }
+  },
+  "errors" : {
+    "notFound" : "Ressource non trouvée",
+    "notAllowed" : "Action non autorisée"
+  } 
 }

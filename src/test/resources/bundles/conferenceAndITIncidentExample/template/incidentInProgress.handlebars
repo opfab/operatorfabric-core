@@ -1,4 +1,4 @@
-<!-- Copyright (c) 2020, RTE (http://www.rte-france.com)              -->
+<!-- Copyright (c) 2020-2022, RTE (http://www.rte-france.com)              -->
 <!-- See AUTHORS.txt                                                       -->
 <!-- This Source Code Form is subject to the terms of the Mozilla Public   -->
 <!-- License, v. 2.0. If a copy of the MPL was not distributed with this   -->
@@ -6,22 +6,13 @@
 <!-- SPDX-License-Identifier: MPL-2.0                                      -->
 <!-- This file is part of the OperatorFabric project.                      -->
 <p>
-    
     <strong> Incident description:</strong> {{keepSpacesAndEndOfLine card.data.message}}
-
-
     <br />
     <br />
-
     <strong>Impacted services from an IT perspective:</strong>   <span id="impacts"></span> {{card.data.impacts.OTHERS}}
-
-
     <br />
-
-
 
 <div id="services">
-
 
      <div style="text-align: center;"> <strong>Please fill in the impacts from your perspective </strong> </div>
 
@@ -41,7 +32,6 @@
         </table>
     </div>
 
-
 </div>
 <br/>
 <br/>
@@ -54,101 +44,116 @@
 <br/>
 <div id="childs-div"></div>
 
-
 <script>
 
-    var impact = "";
-    var SA = {{ card.data.impacts.SA }};
-    if (SA) impact += " Service A ";
+    cardTemplate = {
+        init: function() {
+            this.initImpact();
+            this.displayResponseInputsIfUserIsAllowedToRespond();
+            this.initTemplateGateway();
+        },
 
-    var SB = {{ card.data.impacts.SB }};
-    if (SB) impact += " Service B ";
+        initImpact: function() {
+            let impact = "";
+            const SA = {{ card.data.impacts.SA }};
+            if (SA) impact += " Service A ";
 
-    var SC = {{ card.data.impacts.SC }};
-    if (SC) impact += " Service C ";
+            const SB = {{ card.data.impacts.SB }};
+            if (SB) impact += " Service B ";
 
-    var SD = {{ card.data.impacts.SD }};
-    if (SD) impact += " Service D ";
+            const SC = {{ card.data.impacts.SC }};
+            if (SC) impact += " Service C ";
 
-    var SE = {{ card.data.impacts.SE }};
-    if (SE) impact += " Service E ";
+            const SD = {{ card.data.impacts.SD }};
+            if (SD) impact += " Service D ";
 
-    var SF = {{ card.data.impacts.SF }};
-    if (SF) impact += " Service F ";
+            const SE = {{ card.data.impacts.SE }};
+            if (SE) impact += " Service E ";
 
-    document.getElementById("impacts").innerHTML = impact;
+            const SF = {{ card.data.impacts.SF }};
+            if (SF) impact += " Service F ";
 
-    templateGateway.applyChildCards = () => {
-        let childsDiv = document.getElementById("childs-div");
+            document.getElementById("impacts").innerHTML = impact;
+        },
 
-        if (templateGateway.childCards[0]) {
-            let responses = '<strong> RESPONSES RECEIVED : </strong> <br/>';
-            responses += ' <table style="width: 100%"> <tr> <th> Entity </th>';
-            responses += ' <th> Service A </th> <th> Service B </th> <th> Service C </th> <th> Service D </th> <th>Service E </th> <th> Service F </th>';
-            responses += ' </tr>';
-
-            templateGateway.childCards.forEach((c) => {
-                 const entityName = templateGateway.getEntityName(c.publisher);
-                responses += `<tr> <td> ${entityName} </td>`;
-                if (c.data.impacts.SA)  responses += `<td style="color:red;">  YES </td>`;
-                else  responses += `<td>  NO </td>`;
-                if (c.data.impacts.SB)  responses += `<td style="color:red;">  YES </td>`;
-                else  responses += `<td>  NO </td>`;
-                if (c.data.impacts.SC)  responses += `<td style="color:red;">  YES </td>`;
-                else  responses += `<td>  NO </td>`;
-                if (c.data.impacts.SD)  responses += `<td style="color:red;">  YES </td>`;
-                else  responses += `<td>  NO </td>`;
-                if (c.data.impacts.SE)  responses += `<td style="color:red;">  YES </td>`;
-                else  responses += `<td>  NO </td>`;
-                if (c.data.impacts.SF)  responses += `<td style="color:red;">  YES </td>`;
-                else  responses += `<td>  NO </td>`;
-                responses += `<td> ${c.data.impacts.OTHERS}</td>`;
-                responses += "</tr>";
-            });
-
-            responses += '</table> </center>';
-
-            childsDiv.innerHTML = responses;
-        } else {
-            childsDiv.innerHTML = '';
-        }
-    };
-
-    templateGateway.getUserResponse = function () {
-
-        const SA = document.getElementById('SA').checked;
-        const SB = document.getElementById('SB').checked;
-        const SC = document.getElementById('SC').checked;
-        const SD = document.getElementById('SD').checked;
-        const SE = document.getElementById('SE').checked;
-        const SF = document.getElementById('SF').checked;
-        const OTHERS = document.getElementById('OTHERS').value;
-
-        const responseCardData = {
-            impacts:
-            {
-                SA: SA,
-                SB: SB,
-                SC: SC,
-                SD: SD,
-                SE: SE,
-                SF: SF,
-                OTHERS: OTHERS
+        displayResponseInputsIfUserIsAllowedToRespond: function() {
+            if (templateGateway.isUserAllowedToRespond()) {
+                document.getElementById('services').style.display = '';
+                document.getElementById('other-impacts').style.display = '';
+            } else {
+                document.getElementById('services').style.display = 'none';
+                document.getElementById('other-impacts').style.display = 'none'
             }
-        };
+        },
 
-        return {
-            valid: true,
-            responseCardData: responseCardData
-        };
+        initTemplateGateway: function() {
+            templateGateway.applyChildCards = () => {
+                let childsDiv = document.getElementById("childs-div");
+
+                if (templateGateway.childCards[0]) {
+                    let responses = '<strong> RESPONSES RECEIVED : </strong> <br/>';
+                    responses += ' <table style="width: 100%"> <tr> <th> Entity </th>';
+                    responses += ' <th> Service A </th> <th> Service B </th> <th> Service C </th> <th> Service D </th> <th>Service E </th> <th> Service F </th>';
+                    responses += ' </tr>';
+
+                    templateGateway.childCards.forEach((c) => {
+                        const entityName = templateGateway.getEntityName(c.publisher);
+                        responses += `<tr> <td> ${entityName} </td>`;
+                        if (c.data.impacts.SA)  responses += `<td style="color:red;">  YES </td>`;
+                        else  responses += `<td>  NO </td>`;
+                        if (c.data.impacts.SB)  responses += `<td style="color:red;">  YES </td>`;
+                        else  responses += `<td>  NO </td>`;
+                        if (c.data.impacts.SC)  responses += `<td style="color:red;">  YES </td>`;
+                        else  responses += `<td>  NO </td>`;
+                        if (c.data.impacts.SD)  responses += `<td style="color:red;">  YES </td>`;
+                        else  responses += `<td>  NO </td>`;
+                        if (c.data.impacts.SE)  responses += `<td style="color:red;">  YES </td>`;
+                        else  responses += `<td>  NO </td>`;
+                        if (c.data.impacts.SF)  responses += `<td style="color:red;">  YES </td>`;
+                        else  responses += `<td>  NO </td>`;
+                        responses += `<td> ${c.data.impacts.OTHERS}</td>`;
+                        responses += "</tr>";
+                    });
+
+                    responses += '</table> </center>';
+
+                    childsDiv.innerHTML = responses;
+                } else {
+                    childsDiv.innerHTML = '';
+                }
+            };
+
+            templateGateway.getUserResponse = function () {
+
+                const SA = document.getElementById('SA').checked;
+                const SB = document.getElementById('SB').checked;
+                const SC = document.getElementById('SC').checked;
+                const SD = document.getElementById('SD').checked;
+                const SE = document.getElementById('SE').checked;
+                const SF = document.getElementById('SF').checked;
+                const OTHERS = document.getElementById('OTHERS').value;
+
+                const responseCardData = {
+                    impacts:
+                    {
+                        SA: SA,
+                        SB: SB,
+                        SC: SC,
+                        SD: SD,
+                        SE: SE,
+                        SF: SF,
+                        OTHERS: OTHERS
+                    }
+                };
+
+                return {
+                    valid: true,
+                    responseCardData: responseCardData
+                };
+            }
+        }
     }
 
-    if (templateGateway.isUserAllowedToRespond()) {
-        document.getElementById('services').style.display = '';
-        document.getElementById('other-impacts').style.display = '';
-    } else {
-        document.getElementById('services').style.display = 'none';
-        document.getElementById('other-impacts').style.display = 'none'
-    }
+    cardTemplate.init();
 
 </script>

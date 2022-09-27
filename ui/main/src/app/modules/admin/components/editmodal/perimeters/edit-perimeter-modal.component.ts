@@ -8,7 +8,12 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {UntypedFormBuilder, UntypedFormControl, UntypedFormGroup, Validators} from '@angular/forms';
+import {
+    FormControl,
+    UntypedFormControl,
+    UntypedFormGroup,
+    Validators
+} from '@angular/forms';
 import {Component, Input, OnInit} from '@angular/core';
 import {NgbActiveModal} from '@ng-bootstrap/ng-bootstrap';
 import {Perimeter, RightsEnum} from '@ofModel/perimeter.model';
@@ -31,18 +36,8 @@ export class EditPerimeterModalComponent implements OnInit {
         private store: Store<AppState>,
         private activeModal: NgbActiveModal,
         private crudService: PerimetersService,
-        private processesService: ProcessesService,
-        private formBuilder: UntypedFormBuilder
+        private processesService: ProcessesService
     ) {
-        this.perimeterForm = this.formBuilder.group({
-            id: new UntypedFormControl('', [
-                Validators.required,
-                Validators.minLength(2),
-                Validators.pattern(/^[A-z\d\-_]+$/)
-            ]),
-            process: new UntypedFormControl('')
-        });
-
         Object.keys(RightsEnum).forEach((key) => {
             this.rightOptions.push({value: key, label: key});
         });
@@ -60,7 +55,14 @@ export class EditPerimeterModalComponent implements OnInit {
         return this.perimeterForm.get('stateRights');
     }
 
-    perimeterForm: UntypedFormGroup;
+    perimeterForm = new UntypedFormGroup({
+        id: new FormControl('', [
+            Validators.required,
+            Validators.minLength(2),
+            Validators.pattern(/^[A-Za-z\d\-_]+$/)
+        ]),
+        process: new FormControl('')
+    });
 
     processesDefinition: Process[];
     processOptions = [];
@@ -95,9 +97,10 @@ export class EditPerimeterModalComponent implements OnInit {
         search: true
     };
 
-    private addStateRightControl(initialState?, initialRight?) {
+    private addStateRightControl(initialState?, initialRight?, initialFilteringNotificationAllowed?) {
         const stateKey = 'state' + this.indexForNewStateRightControl;
         const rightKey = 'right' + this.indexForNewStateRightControl;
+        const filteringNotificationAllowedKey = 'filteringNotificationAllowed' + this.indexForNewStateRightControl;
 
         this.perimeterForm.addControl(
             stateKey,
@@ -106,6 +109,16 @@ export class EditPerimeterModalComponent implements OnInit {
         this.perimeterForm.addControl(
             rightKey,
             new UntypedFormControl(initialRight ? initialRight : '', [Validators.required])
+        );
+
+        let filteringNotificationAllowed = true;
+        if (initialFilteringNotificationAllowed !== null && initialFilteringNotificationAllowed !== undefined) {
+            filteringNotificationAllowed = initialFilteringNotificationAllowed;
+        }
+
+        this.perimeterForm.addControl(
+            filteringNotificationAllowedKey,
+            new UntypedFormControl(filteringNotificationAllowed, [Validators.required])
         );
         this.addStateRightControlIndexToList();
     }
@@ -128,7 +141,7 @@ export class EditPerimeterModalComponent implements OnInit {
             this.perimeterForm.patchValue({id, process}, {onlySelf: false});
 
             stateRights.forEach((stateRight) => {
-                this.addStateRightControl(stateRight.state, stateRight.right);
+                this.addStateRightControl(stateRight.state, stateRight.right, stateRight.filteringNotificationAllowed);
             });
         }
     }
@@ -179,9 +192,9 @@ export class EditPerimeterModalComponent implements OnInit {
 
     create() {
         this.cleanForm();
-        this.computeStateRightsForPerimeterForm();
+        const fieldsForRequest = this.computeFieldsForRequest();
 
-        this.crudService.create(this.perimeterForm.value).subscribe({
+        this.crudService.create(fieldsForRequest).subscribe({
             next: () => this.onSavesuccess(),
             error: (e) => this.onSaveError(e)
         });
@@ -189,22 +202,27 @@ export class EditPerimeterModalComponent implements OnInit {
 
     update() {
         this.cleanForm();
-        this.computeStateRightsForPerimeterForm();
+        const fieldsForRequest = this.computeFieldsForRequest();
 
-        this.crudService.update(this.perimeterForm.value).subscribe({
+        this.crudService.update(fieldsForRequest).subscribe({
             next: (res) => this.onSavesuccess(),
             error: (err) => this.onSaveError(err)
         });
     }
 
-    private computeStateRightsForPerimeterForm() {
+    private computeFieldsForRequest(): {id: string, process: string, stateRights: {state: string, right: RightsEnum}[]} {
         const stateRights = [];
         this.stateRightControlsIndexes.forEach((index) => {
             const stateKey = 'state' + index;
             const rightKey = 'right' + index;
-            stateRights.push({state: this.perimeterForm.value[stateKey], right: this.perimeterForm.value[rightKey]});
+            const filteringNotificationAllowedKey = 'filteringNotificationAllowed' + index;
+            stateRights.push({state: this.perimeterForm.value[stateKey],
+                              right: this.perimeterForm.value[rightKey],
+                              filteringNotificationAllowed: this.perimeterForm.value[filteringNotificationAllowedKey]});
         });
-        this.perimeterForm.value.stateRights = stateRights;
+        return {id: this.perimeterForm.value['id'],
+                process: this.perimeterForm.value['process'],
+                stateRights: stateRights};
     }
 
     onSavesuccess() {
@@ -240,12 +258,17 @@ export class EditPerimeterModalComponent implements OnInit {
     private clearStateRight(indexToRemove: number) {
         const stateKey = 'state' + indexToRemove;
         const rightKey = 'right' + indexToRemove;
+        const filteringNotificationAllowedKey = 'filteringNotificationAllowed' + indexToRemove;
         if (this.perimeterForm.contains(stateKey)) {
             this.perimeterForm.removeControl(stateKey);
         }
 
         if (this.perimeterForm.contains(rightKey)) {
             this.perimeterForm.removeControl(rightKey);
+        }
+
+        if (this.perimeterForm.contains(filteringNotificationAllowedKey)) {
+            this.perimeterForm.removeControl(filteringNotificationAllowedKey);
         }
     }
 

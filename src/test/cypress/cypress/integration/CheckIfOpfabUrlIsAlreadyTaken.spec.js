@@ -7,8 +7,11 @@
  * This file is part of the OperatorFabric project.
  */
 
+import {getOpfabGeneralCommands} from "../support/opfabGeneralCommands"
 
 describe('Check the behaviour of OpFab when URL is already in use', function () {
+
+    const opfab = getOpfabGeneralCommands();
 
     const IS_OPFAB_URL_CURRENTLY_USED_KEY = 'isOpfabUrlCurrentlyUsed';
     const DISCONNECTED_BY_NEW_USER_USING_SAME_URL = 'disconnectedByNewUserUsingSameUrl';
@@ -45,20 +48,20 @@ describe('Check the behaviour of OpFab when URL is already in use', function () 
         cy.get('#opfab-log-in-confirmation-because-url-is-locked').find('#opfab-confirm-button').click();
         cy.get('#opfab-disconnected-message').should('not.exist');
 
-        cy.loginOpFabWithoutHack('operator1_fr', 'test');
+        opfab.loginWithoutHackWithUser('operator1_fr');
         cy.get('#opfab-navbar-menu-feed').should('exist');
 
 
     });
 
     it(`Check tab is disconnected when receiving disconnection signal`, function () {
-        cy.loginOpFab('operator1_fr', 'test').then( () => {
+        opfab.loginWithUser('operator1_fr');
+        // magic here , without using the 'then' it does not work 
+        cy.wait(1).then( () => {
             sendDisconnectionSignal();    
             expect(localStorage.getItem(DISCONNECTED_BY_NEW_USER_USING_SAME_URL)).to.equal(disconnectionSignal);
             cy.get('#opfab-disconnected-by-another-tab').should('exist');
         })
-
-
 
     });
 

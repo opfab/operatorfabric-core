@@ -6,7 +6,7 @@
 <!-- SPDX-License-Identifier: MPL-2.0                                      -->
 <!-- This file is part of the OperatorFabric project.                      -->
 
-<div *ngIf="mustDisplaySpinner" class="opfab-loading">
+<div *ngIf="! seeInModal && mustDisplaySpinner" class="opfab-loading" >
     <div id="opfab-loading-spinner" class="opfab-loading-spinner">
         <em class="fas fa-spinner fa-spin opfab-slow-spinner"></em>
     </div>
@@ -14,3 +14,16 @@
        {{ loadingText }}
     </div>
 </div>
+
+<ng-template let-modal #spinnerInModal>
+    <div class="modal-body">
+        <div *ngIf="mustDisplaySpinner" class="opfab-loading" >
+            <div id="opfab-loading-spinner" class="opfab-loading-spinner">
+                <em class="fas fa-spinner fa-spin opfab-slow-spinner"></em>
+            </div>
+            <div style="text-align: center;font:16px;font-weight: bold;margin-top:10px" translate>
+                {{ loadingText }}
+            </div>
+        </div>
+    </div>
+</ng-template>

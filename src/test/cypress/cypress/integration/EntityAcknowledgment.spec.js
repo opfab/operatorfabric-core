@@ -7,13 +7,22 @@
 * This file is part of the OperatorFabric project.
 */
 
+import {getOpfabGeneralCommands} from "../support/opfabGeneralCommands"
+import {getActivityAreaCommands} from "../support/activityAreaCommands"
+
 describe('Entity acknowledgment tests for icon in light-card', function () {
 
+    const opfab = getOpfabGeneralCommands();
+    const activityArea = getActivityAreaCommands();
+
     before('Set up configuration', function () {
-        // This can stay in a `before` block rather than `beforeEach` as long as the test does not change configuration
         cy.resetUIConfigurationFiles();
+        cy.deleteAllSettings();
         cy.loadTestConf();
-        // Clean up existing cards
+        
+    });
+
+    beforeEach('Delete all cards', function () {
         cy.deleteAllCards();
     });
 
@@ -26,8 +35,7 @@ describe('Entity acknowledgment tests for icon in light-card', function () {
         cy.sendCard('cypress/entitiesAcks/message2.json');
         cy.sendCard('cypress/entitiesAcks/message3.json');
         cy.sendCard('cypress/entitiesAcks/message4.json');
-
-        cy.loginOpFab('operator4_fr', 'test');
+        opfab.loginWithUser('operator4_fr');
 
         // Set feed filter to see only un-acknowledged cards
         cy.get('#opfab-feed-filter-btn-filter').click();
@@ -115,10 +123,7 @@ describe('Entity acknowledgment tests for icon in light-card', function () {
        '3) operator1_fr acknowledges the card "message4", and we check the icon is not present for operator4_fr'
         , function () {
 
-        // Clean up existing cards
-        cy.deleteAllCards();
-
-        cy.loginOpFab('operator4_fr', 'test');
+        opfab.loginWithUser('operator4_fr');
 
         // Set feed filter to see all cards
         cy.get('#opfab-feed-filter-btn-filter').click();
@@ -146,6 +151,7 @@ describe('Entity acknowledgment tests for icon in light-card', function () {
             cy.get('#opfab-feed-light-card-cypress-entitiesAcksMessage2 .fa-check').should('not.exist');
         });
 
+        cy.get('#opfab-close-card').click();
         // operator1_fr acknowledges the card "message3", and we check the icon is present for operator4_fr
         cy.get('#opfab-feed-light-card-cypress-entitiesAcksMessage3').click();
         cy.get('#cardUid').then(($cardUidElement) => {
@@ -155,7 +161,7 @@ describe('Entity acknowledgment tests for icon in light-card', function () {
             cy.waitDefaultTime();
             cy.get('#opfab-feed-light-card-cypress-entitiesAcksMessage3 .fa-check').should('exist');
         });
-
+        cy.get('#opfab-close-card').click();
         // operator1_fr acknowledges the card "message4", and we check the icon is not present for operator4_fr
         cy.get('#opfab-feed-light-card-cypress-entitiesAcksMessage4').click();
         cy.get('#cardUid').then(($cardUidElement) => {
@@ -183,10 +189,8 @@ describe('Entity acknowledgment tests for icon in light-card', function () {
 
     it('check entities ack modifying activity area of operator4_fr', function () {
 
-        // Clean up existing cards
-        cy.deleteAllCards();
 
-        cy.loginOpFab('operator4_fr', 'test');
+        opfab.loginWithUser('operator4_fr');
 
         // Set feed filter to see all cards
         cy.get('#opfab-feed-filter-btn-filter').click();
@@ -194,7 +198,7 @@ describe('Entity acknowledgment tests for icon in light-card', function () {
         cy.waitDefaultTime(); // let time before closing popup to avoid flaky error on CI/CD
         cy.get('#opfab-feed-filter-btn-filter').click();
 
-        cy.openActivityArea();
+        opfab.navigateToActivityArea();
 
         // We should have 4 checkboxes corresponding to the four entities of the user
         cy.get('.opfab-checkbox').should('have.length', 4);
@@ -207,7 +211,7 @@ describe('Entity acknowledgment tests for icon in light-card', function () {
         // We disconnect from ENTITY3_FR and ENTITY4_FR
         cy.get('.opfab-checkbox').contains('Control Center FR East').click();
         cy.get('.opfab-checkbox').contains('Control Center FR West').click();
-        cy.saveActivityAreaModifications();
+        activityArea.save();
 
         cy.get('#opfab-navbar-menu-feed').click(); // we go back to the feed
         cy.sendCard('cypress/entitiesAcks/message3.json');
@@ -228,6 +232,7 @@ describe('Entity acknowledgment tests for icon in light-card', function () {
             cy.get('#opfab-feed-light-card-cypress-entitiesAcksMessage3 .fa-check').should('exist');
         });
 
+        cy.get('#opfab-close-card').click();
         // operator1_fr acknowledges the card "message4", and we check the icon is not present for operator4_fr
         cy.get('#opfab-feed-light-card-cypress-entitiesAcksMessage4').click();
         cy.get('#cardUid').then(($cardUidElement) => {
@@ -244,11 +249,11 @@ describe('Entity acknowledgment tests for icon in light-card', function () {
         });
 
         // now we add ENTITY3_FR to the entities of operator4_fr
-        cy.openActivityArea();
+        opfab.navigateToActivityArea();
 
         // We connect to ENTITY3_FR
         cy.get('.opfab-checkbox').contains('Control Center FR East').click();
-        cy.saveActivityAreaModifications();
+        activityArea.save();
 
         cy.get('#opfab-navbar-menu-feed').click(); // we go back to the feed
 
@@ -259,12 +264,12 @@ describe('Entity acknowledgment tests for icon in light-card', function () {
         cy.get('#opfab-feed-light-card-cypress-entitiesAcksMessage4 .fa-check').should('not.exist');
 
         // now operator4_fr is only connected to ENTITY3_FR
-        cy.openActivityArea();
+        opfab.navigateToActivityArea();
 
         // We disconnect from ENTITY1_FR and ENTITY2_FR
         cy.get('.opfab-checkbox').contains('Control Center FR North').click();
         cy.get('.opfab-checkbox').contains('Control Center FR South').click();
-        cy.saveActivityAreaModifications();
+        activityArea.save();
 
         cy.get('#opfab-navbar-menu-feed').click(); // we go back to the feed
 
@@ -275,19 +280,16 @@ describe('Entity acknowledgment tests for icon in light-card', function () {
         cy.get('#opfab-feed-light-card-cypress-entitiesAcksMessage4 .fa-check').should('not.exist');
 
         // We reconnect to ENTITY1_FR, ENTITY2_FR and ENTITY4_FR
-        cy.openActivityArea();
+        opfab.navigateToActivityArea();
         cy.get('.opfab-checkbox').contains('Control Center FR North').click();
         cy.get('.opfab-checkbox').contains('Control Center FR South').click();
         cy.get('.opfab-checkbox').contains('Control Center FR West').click();
-        cy.saveActivityAreaModifications();
+        activityArea.save();
     });
 
     it('check entities ack for cards sent to groups only (no entityRecipients) for operator2_fr', function () {
 
-        // Clean up existing cards
-        cy.deleteAllCards();
-
-        cy.loginOpFab('operator2_fr', 'test');
+        opfab.loginWithUser('operator2_fr');
 
         // Set feed filter to see all cards
         cy.get('#opfab-feed-filter-btn-filter').click();
@@ -315,6 +317,7 @@ describe('Entity acknowledgment tests for icon in light-card', function () {
             cy.get('#opfab-feed-light-card-cypress-entitiesAcksMessage2_groupsOnly .fa-check').should('not.exist');
         });
 
+        cy.get('#opfab-close-card').click();
         // operator4_fr acknowledges the card "message3_groupsOnly", and we check the icon is not present for operator2_fr
         cy.get('#opfab-feed-light-card-cypress-entitiesAcksMessage3_groupsOnly').click();
         cy.get('#cardUid').then(($cardUidElement) => {
@@ -325,6 +328,7 @@ describe('Entity acknowledgment tests for icon in light-card', function () {
             cy.get('#opfab-feed-light-card-cypress-entitiesAcksMessage3_groupsOnly .fa-check').should('not.exist');
         });
 
+        cy.get('#opfab-close-card').click();
         // operator4_fr acknowledges the card "message4_groupsOnly", and we check the icon is not present for operator2_fr
         cy.get('#opfab-feed-light-card-cypress-entitiesAcksMessage4_groupsOnly').click();
         cy.get('#cardUid').then(($cardUidElement) => {
@@ -362,10 +366,7 @@ describe('Entity acknowledgment tests for icon in light-card', function () {
         '2) operator4_fr reconnects to ENTITY4_FR, and we check the ack icon is still present for "message3" but not \n' +
         'present anymore for "message4"', function () {
 
-        // Clean up existing cards
-        cy.deleteAllCards();
-
-        cy.loginOpFab('operator4_fr', 'test');
+        opfab.loginWithUser('operator4_fr');
 
         // Set feed filter to see all cards
         cy.get('#opfab-feed-filter-btn-filter').click();
@@ -373,7 +374,7 @@ describe('Entity acknowledgment tests for icon in light-card', function () {
         cy.waitDefaultTime(); // let time before closing popup to avoid flaky error on CI/CD
         cy.get('#opfab-feed-filter-btn-filter').click();
 
-        cy.openActivityArea();
+        opfab.navigateToActivityArea();
 
         // We should have 4 checkboxes corresponding to the four entities of the user
         cy.get('.opfab-checkbox').should('have.length', 4);
@@ -385,7 +386,7 @@ describe('Entity acknowledgment tests for icon in light-card', function () {
 
         // We disconnect from ENTITY4_FR
         cy.get('.opfab-checkbox').contains('Control Center FR West').click();
-        cy.saveActivityAreaModifications();
+        activityArea.save();
 
         cy.get('#opfab-navbar-menu-feed').click(); // we go back to the feed
 
@@ -406,11 +407,12 @@ describe('Entity acknowledgment tests for icon in light-card', function () {
         cy.get('#opfab-card-details-btn-ack').click();
         cy.get('#opfab-feed-light-card-cypress-entitiesAcksMessage4 .fa-check').should('exist');
 
-        cy.openActivityArea();
+        opfab.navigateToActivityArea();
 
         // We reconnect to ENTITY4_FR
         cy.get('.opfab-checkbox').contains('Control Center FR West').click();
-        cy.saveActivityAreaModifications();
+        activityArea.save();
+        opfab.navigateToFeed();
 
         cy.get('#opfab-navbar-menu-feed').click(); // we go back to the feed
 
@@ -422,10 +424,7 @@ describe('Entity acknowledgment tests for icon in light-card', function () {
 
     it('check entities ack for a card sent to entities different from entities of the user', function () {
 
-        // Clean up existing cards
-        cy.deleteAllCards();
-
-        cy.loginOpFab('operator1_fr', 'test');
+        opfab.loginWithUser('operator1_fr');
 
         // Set feed filter to see all cards
         cy.get('#opfab-feed-filter-btn-filter').click();

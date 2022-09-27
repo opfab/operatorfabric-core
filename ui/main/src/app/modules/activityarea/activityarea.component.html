@@ -61,4 +61,9 @@
             <button id="opfab-activityarea-btn-yes" type="button" class="opfab-btn" (click)="confirmSaveSettings()" translate>button.yes</button>
         </div>
     </ng-template>
+    
+    <of-spinner *ngIf="saveSettingsInProgress"
+                [seeInModal]="true"
+                loadingText="activityArea.savingInProgress">
+    </of-spinner>
 </div>

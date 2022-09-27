@@ -1,7 +1,7 @@
 swagger: '2.0'
 info:
   description: IMPORTANT - The Try it Out button will generate curl requests for examples, but executing them through the UI will not work as authentication has not been set up. This page is for documentation only.
-  version: 3.9.0.RELEASE
+  version: 3.10.0.RELEASE
   title: User Management
   termsOfService: ''
   contact:
@@ -30,6 +30,7 @@ definitions:
     properties:
       login:
         type: string
+        description: Login must be minimum 2 characters and must only contain lowercase letters, _, -, . or digits.
       firstName:
         type: string
       lastName:
@@ -75,6 +76,7 @@ definitions:
     properties:
       id:
         type: string
+        description: Id must be minimum 2 characters and must only contain letters, _, - or digits.
       name:
         type: string
       type:
@@ -99,6 +101,7 @@ definitions:
     properties:
       id:
         type: string
+        description: Id must be minimum 2 characters and must only contain letters, _, - or digits.
       name:
         type: string
       description:
@@ -138,6 +141,9 @@ definitions:
         type: string
       right:
         $ref: '#/definitions/RightsEnum'
+      filteringNotificationAllowed:
+        type: boolean
+        description: When set to false, the user can not unselect the state in the notification configuration screen.
     example:
       state: State1
       right: Receive
@@ -146,6 +152,7 @@ definitions:
     properties:
       id:
         type: string
+        description: Id must be minimum 2 characters and must only contain letters, _, - or digits.
       process:
         type: string
       stateRights:
@@ -254,6 +261,9 @@ definitions:
         type: string
       rights:
         $ref: '#/definitions/RightsEnum'
+      filteringNotificationAllowed:
+        type: boolean
+        description: When the value is false, the user can not unselect the state in the notification configuration screen.
   NotificationFilter:
     type: object
     properties:
@@ -308,7 +318,7 @@ paths:
       tags:
         - users
       summary: Create a new user
-      description: Create a new user. If the user already exists, then an update of the user will be made. Be careful, user login must be lowercase. Otherwise, it will be converted to lowercase before saving to the database.
+      description: Create a new user. If the user already exists, then an update of the user will be made. Be careful, login must be minimum 2 characters and must only contain lowercase letters, _, -, . or digits.
       operationId: createUser
       consumes:
         - application/json

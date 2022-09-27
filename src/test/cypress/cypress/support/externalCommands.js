@@ -17,7 +17,7 @@ export class externalCommands {
         this[command] = function () {
             let args = '';
             Array.prototype.slice.call(arguments).forEach((element) => (args += ' - ' + element));
-            cy.log(' ---- ',this.commandGroupName, '-', command, args, ' ----');
+            cy.log(' ---- ', (new Date()).toISOString() ,this.commandGroupName, command, args, ' ----');
             funct.call(this, ...arguments);
         };
     }

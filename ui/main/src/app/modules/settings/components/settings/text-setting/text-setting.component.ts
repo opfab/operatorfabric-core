@@ -11,9 +11,10 @@ import {Component, Input, OnDestroy, OnInit} from '@angular/core';
 import {BaseSettingDirective} from '../base-setting/base-setting.directive';
 import {AppState} from '@ofStore/index';
 import {Store} from '@ngrx/store';
-import {UntypedFormControl, UntypedFormGroup, Validators} from '@angular/forms';
+import {FormControl, FormGroup, Validators} from '@angular/forms';
 import {ConfigService} from '@ofServices/config.service';
 import {SettingsService} from '@ofServices/settings.service';
+import {OpfabLoggerService} from '@ofServices/logs/opfab-logger.service';
 
 @Component({
     selector: 'of-text-setting',
@@ -27,16 +28,17 @@ export class TextSettingComponent extends BaseSettingDirective implements OnInit
     constructor(
         protected store: Store<AppState>,
         protected configService: ConfigService,
-        protected settingsService: SettingsService
+        protected settingsService: SettingsService,
+        protected logger: OpfabLoggerService
     ) {
-        super(store, configService, settingsService);
+        super(store, configService, settingsService,logger);
     }
 
     initFormGroup() {
         const validators = this.computeTextValidators();
-        return new UntypedFormGroup(
+        return new FormGroup(
             {
-                setting: new UntypedFormControl(null, validators)
+                setting: new FormControl<string | null>(null, validators)
             },
             {updateOn: 'change'}
         );

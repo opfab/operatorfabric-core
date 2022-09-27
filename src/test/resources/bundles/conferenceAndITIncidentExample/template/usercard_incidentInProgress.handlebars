@@ -44,84 +44,100 @@
 <br/>
 <script>
 
+    userCardTemplate = {
+        serviceSelect: null ,
+
+        init: function() {
+            this.initMultiSelect();
+            this.initUserCardTemplateGateway();
+        },
+
+        initMultiSelect: function() {
+            this.serviceSelect = opfab.multiSelect.init({
+                id: "service-select",
+                options: [
+                {
+                    label: 'Group 1',
+                    options : [
+                        { label: 'Service A', value: 'SA' },
+                        { label: 'Service B', value: 'SB' },
+                        { label: 'Service C', value: 'SC' }
+                    ]
+                },
+                {
+                    label: 'Group 2',
+                    options: [
+                        { label: 'Service D', value: 'SD' },
+                        { label: 'Service E', value: 'SE' },
+                        { label: 'Service F', value: 'SF' }
+                    ]
+                }
+                ],
+                multiple: true,
+                search: true
+            });
+        },
+
+        initUserCardTemplateGateway :function() {
+            that = this;
+            usercardTemplateGateway.getSpecificCardInformation = function () {
+
+                const selectedValues = that.serviceSelect.getSelectedValues(); 
+                console.log("selected Value = ",selectedValues);
+
+                const message = document.getElementById('message').value;
+                const SA = selectedValues.includes('SA');
+                const SB = selectedValues.includes('SB');
+                const SC = selectedValues.includes('SC');
+                const SD = selectedValues.includes('SD');
+                const SE = selectedValues.includes('SE');
+                const SF = selectedValues.includes('SF');
+                const OTHERS = document.getElementById('OTHERS').value;
+
+                const lttd = new Date().valueOf() + 1800000; // 30 min after current time
+                const startDate = new Date().valueOf() + 300000; // 5 min after current time
+
+                const card = {
+                    summary: { key: "incidentInProgress.summary" },
+                    title: { key: "incidentInProgress.title" },
+                    entitiesAllowedToRespond: [ "ENTITY3_FR", "ENTITY2_FR"],
+                    entitiesRequiredToRespond: [ "ENTITY4_FR"],
+                    keepChildCards: true,
+                    startDate: startDate,
+                    entityRecipients: ["ENTITY_FR","IT_SUPERVISOR_ENTITY"],
+                    data: {
+                        message: message,
+                        impacts :
+                            {
+                                SA : SA,
+                                SB : SB,
+                                SC: SC,
+                                SD: SD,
+                                SE: SE,
+                                SF: SF,
+                                OTHERS: OTHERS
+                            }
+                    },
+                    lttd : lttd
+
+                };
+                return {
+                    valid: true,
+                    card: card,
+                    viewCardInAgenda: false
+                };
+
+            }
+        }
+    }
+
+    userCardTemplate.init();
+
+
     // The two following lines are used for cypress test 
     // remove them if you use this template as example 
     document.getElementById("hidden_process").value = usercardTemplateGateway.getCurrentProcess();
     document.getElementById("hidden_state").value = usercardTemplateGateway.getCurrentState();
 
 
-    serviceSelect = opfab.multiSelect.init({
-        id: "service-select",
-        options: [
-        {
-            label: 'Group 1',
-            options : [
-                { label: 'Service A', value: 'SA' },
-                { label: 'Service B', value: 'SB' },
-                { label: 'Service C', value: 'SC' }
-            ]
-        },
-        {
-            label: 'Group 2',
-            options: [
-                { label: 'Service D', value: 'SD' },
-                { label: 'Service E', value: 'SE' },
-                { label: 'Service F', value: 'SF' }
-            ]
-        }
-        ],
-        multiple: true,
-        search: true
-    });
-
-
-
-    usercardTemplateGateway.getSpecificCardInformation = function () {
-
-        const selectedValues = serviceSelect.getSelectedValues(); 
-        console.log("selected Value = ",selectedValues);
-
-        const message = document.getElementById('message').value;
-        const SA = selectedValues.includes('SA');
-        const SB = selectedValues.includes('SB');
-        const SC = selectedValues.includes('SC');
-        const SD = selectedValues.includes('SD');
-        const SE = selectedValues.includes('SE');
-        const SF = selectedValues.includes('SF');
-        const OTHERS = document.getElementById('OTHERS').value;
-
-        const lttd = new Date().valueOf() + 1800000; // 30 min after current time
-        const startDate = new Date().valueOf() + 300000; // 5 min after current time
-
-        const card = {
-            summary: { key: "incidentInProgress.summary" },
-            title: { key: "incidentInProgress.title" },
-            entitiesAllowedToRespond: [ "ENTITY3_FR", "ENTITY2_FR"],
-            entitiesRequiredToRespond: [ "ENTITY4_FR"],
-            keepChildCards: true,
-            startDate: startDate,
-            entityRecipients: ["ENTITY_FR","IT_SUPERVISOR_ENTITY"],
-            data: {
-                message: message,
-                impacts :
-                     {
-                         SA : SA,
-                         SB : SB,
-                         SC: SC,
-                         SD: SD,
-                         SE: SE,
-                         SF: SF,
-                         OTHERS: OTHERS
-                    }
-            },
-            lttd : lttd
-
-        };
-        return {
-            valid: true,
-            card: card,
-            viewCardInAgenda: false
-        };
-
-    }
 </script>

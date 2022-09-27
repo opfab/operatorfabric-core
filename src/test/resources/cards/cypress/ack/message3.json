@@ -4,7 +4,7 @@
 	"process"  :"cypress",
 	"processInstanceId" : "message3",
 	"state":"messageStateWithOnlyWhenResponseDisabledForUserAck",
-	"userRecipients": ["operator1_fr","operator2_fr"],
+	"entityRecipients": ["ENTITY1_FR","ENTITY2_FR"],
 	"entitiesAllowedToRespond":["ENTITY1_FR","ENTITY2_FR"],
 	"severity" : "INFORMATION",
 	"startDate" : ${current_date_in_milliseconds_from_epoch_plus_2hours},

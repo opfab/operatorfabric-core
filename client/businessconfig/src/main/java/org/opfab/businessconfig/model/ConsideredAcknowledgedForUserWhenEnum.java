@@ -9,6 +9,8 @@
 
 package org.opfab.businessconfig.model;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonValue;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
@@ -32,4 +34,20 @@ public enum ConsideredAcknowledgedForUserWhenEnum {
     ALL_ENTITIES_OF_USER_HAVE_ACKNOWLEDGED("AllEntitiesOfUserHaveAcknowledged");
 
     String value;
+
+    @Override
+    @JsonValue
+    public String toString() {
+        return String.valueOf(value);
+    }
+
+    @JsonCreator
+    public static ConsideredAcknowledgedForUserWhenEnum fromValue(String text) {
+        for (ConsideredAcknowledgedForUserWhenEnum b : ConsideredAcknowledgedForUserWhenEnum.values()) {
+            if (String.valueOf(b.value).equals(text)) {
+                return b;
+            }
+        }
+        return null;
+    }
 }

@@ -6,16 +6,9 @@
 <!-- SPDX-License-Identifier: MPL-2.0                                      -->
 <!-- This file is part of the OperatorFabric project.                      -->
 
-
-<div class="opfab-loading" *ngIf="isSpinnerVisible()">
-    <div class="opfab-loading-spinner">
-        <em class="fas fa-spinner fa-spin opfab-slow-spinner"></em>
-    </div>
-    <div style="text-align: center;font:16px;font-weight: bold;margin-top:10px">
-        Application is loading ...
-    </div>
+<div *ngIf="loadingInProgress" style="padding-top: 15%;">
+    <of-spinner loadingText="Application is loading ..."></of-spinner>
 </div>
-
 
 <of-app-loaded-in-another-tab #appLoadedInAnotherTab> </of-app-loaded-in-another-tab>
 

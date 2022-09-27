@@ -15,17 +15,18 @@ import {EditGroupModalComponent} from '../editmodal/groups/edit-group-modal.comp
 
 @Component({
     templateUrl: 'admin-table.directive.html',
-    selector: 'of-groups-table'
+    selector: 'of-groups-table',
+    styleUrls: ['admin-table.directive.scss']
 })
 export class GroupsTableComponent extends AdminTableDirective implements OnInit {
     tableType = AdminItemType.GROUP;
     fields = [
-        new Field('id', 3),
-        new Field('name', 3),
-        new Field('description', 4),
+        new Field('id', 6, 'idCellRenderer'),
+        new Field('name', 6),
+        new Field('description', 6),
         new Field('type', 3),
-        new Field('perimeters', 6, 'perimetersCellRenderer'),
-        new Field('realtime', 4, null, this.translateValue)
+        new Field('perimeters', 8, 'perimetersCellRenderer'),
+        new Field('realtime', 3, null, this.translateValue)
     ];
     idField = 'id';
     editModalComponent = EditGroupModalComponent;

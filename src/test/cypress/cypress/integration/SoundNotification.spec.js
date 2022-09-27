@@ -7,169 +7,164 @@
  * This file is part of the OperatorFabric project.
  */
 
+import {getOpfabGeneralCommands} from '../support/opfabGeneralCommands';
+import {getSoundCommands} from '../support/soundCommands'
+import {getSettingsCommands} from '../support/settingsCommands'
 
 describe('Sound notification test', function () {
+    const user = 'operator1_fr';
+    const opfab = getOpfabGeneralCommands();
+    const sound = getSoundCommands();
+    const settings = getSettingsCommands();
 
-  const user = 'operator1_fr';
-
-
-  before('Reset UI configuration file ', function () {
-    //cy.loadTestConf(); Avoid to launch it as it is time consuming 
-    cy.resetUIConfigurationFiles();
-    cy.deleteAllCards();
-    cy.deleteAllSettings();
-  })
-
-  describe('Checking sound when receiving notification ', function () {
-    it('Sound when receiving card   ', () => {
-      cy.loginOpFab(user, 'test');
-      cy.stubPlaySound();
-      cy.openSettings();
-
-      // set severity alarm to be notified by sound
-      cy.get('#opfab-checkbox-setting-form-alarm').click();
-
-      cy.waitDefaultTime();
-
-      // Open the feed
-      cy.get('#opfab-navbar-menu-feed').click();
-
-      // send card with severity alarm
-      cy.sendCard('defaultProcess/contingencies.json');
-
-      // sound should be launch 
-      cy.get('@playSound').its('callCount').should('eq', 1);
-
-      // send card with severity action
-      cy.sendCard('defaultProcess/question.json');
-
-      // no new sound 
-      cy.get('@playSound').its('callCount').should('eq', 1);
-
-      cy.openSettings();
-
-      // set severity alarm to NOT be notified by sound 
-      cy.get('#opfab-checkbox-setting-form-alarm').click();
-
-      // Open the feed
-      cy.get('#opfab-navbar-menu-feed').click();
-
-      // Send a card with severity alarm 
-      cy.sendCard('defaultProcess/contingencies.json');
-
-      // No new sound 
-      cy.get('@playSound').its('callCount').should('eq', 1);
-
-      cy.openSettings();
-
-      // set severity action to be notified by sound
-      cy.get('#opfab-checkbox-setting-form-action').click();
-      
-
-      // Open the archives screen  , even if user is in archives screen sound are activated 
-      cy.get('#opfab-navbar-menu-archives').click();
-
-      // send card with severity action
-      cy.sendCard('defaultProcess/question.json');
-
-      // New sound 
-      cy.get('@playSound').its('callCount').should('eq', 2);
-
-      cy.openSettings();
-
-      // set severity information  to be notified by sound
-      cy.get('#opfab-checkbox-setting-form-information').click();
-
-      // Open the archives screen  
-      cy.get('#opfab-navbar-menu-archives').click();
-
-      // Send three cars : alarm ,information  and action
-      cy.sendCard('defaultProcess/contingencies.json');
-      cy.sendCard('defaultProcess/message.json');
-      cy.sendCard('defaultProcess/question.json');
-
-      // Two new sound (no sound for alarm)
-      cy.get('@playSound').its('callCount').should('eq', 4);
+    before('Reset UI configuration file ', function () {
+        //cy.loadTestConf(); Avoid to launch it as it is time consuming
+        cy.resetUIConfigurationFiles();
     });
 
-    it('Repeating sound when receiving card with default repeating interval   ', () => {
-      cy.delete6TestCards();
-      cy.loginOpFab(user, 'test');
-      cy.stubPlaySound();
+    beforeEach('Reset settings', function () {
+        cy.deleteAllCards();
+        cy.deleteAllSettings();
+    });
 
-      // Activate repeating sound (no need to click the checkbox because it is already checked, because of the default value set to true in web-ui.json)
-      cy.openSettings();
-      cy.waitDefaultTime();
+    describe('Checking sound when receiving notification ', function () {
+        it('Sound when receiving card   ', () => {
+            opfab.loginWithUser(user);
+            sound.stubPlaySound();
 
-      // Open the feed and send card 
-      cy.get('#opfab-navbar-menu-feed').click();
-      cy.waitDefaultTime();
+            opfab.navigateToSettings();
+            settings.clickOnSeverity('alarm');  // set severity alarm to be notified by sound
+            opfab.navigateToFeed();
+            sendCardWithSeverityAlarm();
+            sound.checkNumberOfEmittedSoundIs(1);
+            sendCardWithSeverityAction();
+            sound.checkNumberOfEmittedSoundIs(1); // no new sound
 
-      // Use cypress time simulation 
-      cy.clock(new Date());
-      cy.sendCard('defaultProcess/message.json');
-      cy.waitDefaultTime();
+            opfab.navigateToSettings();
+            settings.clickOnSeverity('alarm'); // set severity alarm to NOT be notified by sound
+            opfab.navigateToFeed();
+            sendCardWithSeverityAlarm();
+            sound.checkNumberOfEmittedSoundIs(1); // No new sound
 
-       // wait for light card to appear
-      cy.tick(1000);
-      cy.get('of-light-card');
+            opfab.navigateToSettings();
+            settings.clickOnSeverity('action'); // set severity action to be notified by sound
+            opfab.navigateToArchives(); //even if user is in archives screen sound are activated
+            sendCardWithSeverityAction();
+            sound.checkNumberOfEmittedSoundIs(2); // One new sound
 
-      // Shift 15 seconds in the future
-      cy.tick(15000);
+            opfab.navigateToSettings();
+            settings.clickOnSeverity('information'); // set severity information  to be notified by sound
+            opfab.navigateToArchives(); //even if user is in archives screen sound are activated
+            sendCardWithSeverityAlarm();
+            sendCardWithSeverityInformation();
+            sendCardWithSeverityAction();
+            sound.checkNumberOfEmittedSoundIs(4); // Two new sound (no sound for alarm)
+        });
 
-      // Two new sound , the first one + a repetition as default replay interval is 10 seconds in web-ui.json
-      cy.get('@playSound').its('callCount').should('eq', 2);
+        it('Repeating sound when receiving card with default repeating interval   ', () => {
+            opfab.loginWithUser(user);
+            sound.stubPlaySound();
+            opfab.navigateToSettings();
+            settings.clickOnSeverity('information'); 
+            opfab.navigateToFeed();
 
-      // After 10 seconds more , one more sound 
-      cy.tick(10000);
-      cy.get('@playSound').its('callCount').should('eq', 3);
+            // Use cypress time simulation
+            cy.clock(new Date());
+            sendCardWithSeverityInformation();
+            cy.waitDefaultTime();
 
-      // Click somewhere to stop repeating sound 
-      cy.get('#opfab-navbar-menu-feed').click();
+            // wait for light card to appear
+            cy.tick(1000);
+            cy.get('of-light-card');
 
-      // Wait 30 seconds more , no new sound 
-      cy.tick(30000);
-      cy.get('@playSound').its('callCount').should('eq', 3);
-    
-    })
+            // Shift 15 seconds in the future
+            cy.tick(15000);
 
-    it('Repeating sound when receiving card  with  custom repeating interval ', () => {
-      cy.delete6TestCards();
-      cy.loginOpFab(user, 'test');
-      cy.stubPlaySound();
+            // Two new sound , the first one + a repetition as default replay interval is 10 seconds in web-ui.json
+            sound.checkNumberOfEmittedSoundIs(2);
 
-      // Set repeating interval to 20 seconds
-      cy.openSettings();
-      cy.get('#opfab-setting-replayInterval').clear();
-      cy.get('#opfab-setting-replayInterval').type('20');
-      cy.waitDefaultTime();
+            // After 10 seconds more , one more sound
+            cy.tick(10000);
+            cy.get('@playSound').its('callCount').should('eq', 3);
 
-      // Open the feed and send card 
-      cy.get('#opfab-navbar-menu-feed').click();
-      cy.waitDefaultTime();
+            // Click somewhere to stop repeating sound
+            cy.get('#opfab-navbar-menu-feed').click();
 
-      cy.clock(new Date());
-      cy.sendCard('defaultProcess/message.json');
-      cy.waitDefaultTime();
+            // Wait 30 seconds more , no new sound
+            cy.tick(30000);
+            sound.checkNumberOfEmittedSoundIs(3);
+        });
 
-       // wait for light card to appears 
-       cy.tick(1000);
-       cy.get('of-light-card');
+        it('Repeating sound when receiving card  with  custom repeating interval ', () => {
+   
+            opfab.loginWithUser(user);
+            sound.stubPlaySound();
+            opfab.navigateToSettings();
+            settings.setReplayIntervalTo('20');
+            settings.clickOnSeverity('information'); 
+            opfab.navigateToFeed();
 
-      cy.tick(50000);
+            cy.clock(new Date());
+            sendCardWithSeverityInformation();
+            cy.waitDefaultTime();
 
-      // Two new sound , the first one + 2 repetition
-      cy.get('@playSound').its('callCount').should('eq', 3);
+            // wait for light card to appears
+            cy.tick(1000);
+            cy.get('of-light-card');
+
+             // Shift 15 seconds in the future
+            cy.tick(50000);
+
+            // Two new sound , the first one + 2 repetition
+            sound.checkNumberOfEmittedSoundIs(3);
+
+            // Click somewhere to stop repeating sound
+            cy.get('#opfab-navbar-menu-feed').click();
+
+            // Wait 30 seconds more , no new sound
+            cy.tick(30000);
+            sound.checkNumberOfEmittedSoundIs(3);
+        });
+
+        it('Repeating sound when receiving card with no existing settings for user on login \
+        and default settings replayEnabled = true  (Test for bug #3422)  ', () => {
+            opfab.loginWithUser(user);
+            sound.stubPlaySound();
+            opfab.navigateToSettings();
+            settings.clickOnSeverity('information');
+            opfab.navigateToFeed();
+
+            // Use cypress time simulation
+            cy.clock(new Date());
+            sendCardWithSeverityInformation();
+            cy.waitDefaultTime();
+
+            // wait for light card to appear
+            cy.tick(1000);
+            cy.get('of-light-card');
+
+            // Shift 15 seconds in the future
+            cy.tick(15000);
+
+            // Two new sound , the first one + a repetition as default replay interval is 10 seconds in web-ui.json
+            sound.checkNumberOfEmittedSoundIs(2);
+
+            // After 10 seconds more , one more sound
+            cy.tick(10000);
+            sound.checkNumberOfEmittedSoundIs(3);
+        });
+    });
 
 
-      // Click somewhere to stop repeating sound 
-      cy.get('#opfab-navbar-menu-feed').click();
+    function sendCardWithSeverityAlarm() {
+        cy.sendCard('defaultProcess/contingencies.json');
+    }
 
-      // Wait 30 seconds more , no new sound 
-      cy.tick(30000);
-      cy.get('@playSound').its('callCount').should('eq', 3);
+    function sendCardWithSeverityAction() {
+        cy.sendCard('defaultProcess/question.json');
+    }
 
-    })
-
-  })
-})
+    function sendCardWithSeverityInformation() {
+        cy.sendCard('defaultProcess/message.json');
+    }
+});

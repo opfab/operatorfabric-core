@@ -21,7 +21,10 @@ export function getFeedCommands() {
         cy.get('#opfab-div-card-template-processed');
     });
 
-
+    feed.addCommand('deleteCurrentCard', function () {
+        cy.get('#opfab-card-delete').click();
+        cy.get('#opfab-card-details-delete-btn-confirm').click();
+    });
 
     feed.addCommand('editCurrentCard', function () {
         cy.get('#opfab-card-edit').click();

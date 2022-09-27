@@ -1,4 +1,4 @@
-/* Copyright (c) 2021, RTE (http://www.rte-france.com)
+/* Copyright (c) 2021-2022, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -8,15 +8,21 @@
  */
 package org.opfab.users.services;
 
-import org.opfab.users.model.GroupData;
-import org.opfab.users.model.PerimeterData;
-import org.opfab.users.model.User;
+import org.opfab.springtools.error.model.ApiErrorException;
+import org.opfab.users.model.*;
 
 import java.util.List;
+import java.util.Set;
 
 public interface UserService {
     User createUser(User user) ;
+    UserData retrieveUser(String login);
     List<GroupData> retrieveGroups(List<String> groupIds);
     List<PerimeterData> retrievePerimeters(List<String> perimeterIds);
+    Set<Perimeter> findPerimetersAttachedToGroups(List<String> groups);
+    boolean checkFilteringNotificationIsAllowedForAllProcessesStates(String login, UserSettings userSettings);
     void publishUpdatedUserMessage(String userLogin);
+    void publishUpdatedConfigMessage();
+    void checkFormatOfIdField(String id) throws ApiErrorException;
+    void checkFormatOfLoginField(String login) throws ApiErrorException;
 }

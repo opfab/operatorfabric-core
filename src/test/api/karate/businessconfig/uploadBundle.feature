@@ -63,3 +63,39 @@ Feature: Bundle
     When method post
     Then status 201
 
+  Scenario: Post Bundle for defaultProcess V1 (needed for cards sent by External App)
+
+    # Push bundle
+    Given url opfabUrl + '/businessconfig/processes'
+    And header Authorization = 'Bearer ' + authToken
+    And multipart file file = {read:'resources/bundle_defaultProcess_V1.tar.gz', contentType: 'application/gzip'}
+    When method post
+    Then status 201
+
+  Scenario: Post Bundle for process_1 (needed for tests in userCards.feature)
+
+    # Push bundle
+    Given url opfabUrl + '/businessconfig/processes'
+    And header Authorization = 'Bearer ' + authToken
+    And multipart file file = {read:'resources/bundle_process_1.tar.gz', contentType: 'application/gzip'}
+    When method post
+    Then status 201
+
+  Scenario: Post Bundle for process_2 (needed for tests in userCards.feature)
+
+    # Push bundle
+    Given url opfabUrl + '/businessconfig/processes'
+    And header Authorization = 'Bearer ' + authToken
+    And multipart file file = {read:'resources/bundle_process_2.tar.gz', contentType: 'application/gzip'}
+    When method post
+    Then status 201
+
+  Scenario: Post Bundle for processDeleteUserCard (needed for tests in deleteUserCard.feature)
+
+    # Push bundle
+    Given url opfabUrl + '/businessconfig/processes'
+    And header Authorization = 'Bearer ' + authToken
+    And multipart file file = {read:'resources/bundle_processDeleteUserCard.tar.gz', contentType: 'application/gzip'}
+    When method post
+    Then status 201
+

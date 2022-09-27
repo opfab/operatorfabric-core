@@ -58,3 +58,5 @@ external-recipients:
 
 
 checkAuthenticationForCardSending: true
+
+authorizeToSendCardWithInvalidProcessState: false

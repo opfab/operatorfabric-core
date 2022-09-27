@@ -29,6 +29,7 @@ import {ActivityAreaChoiceAfterLoginComponent} from './activityarea-choice-after
 import {AccountAlreadyUsedComponent} from './account-already-used/account-already-used.component';
 import {AppLoadedInAnotherTabComponent} from './app-loaded-in-another-tab/app-loaded-in-another-tab.component';
 import {SettingsService} from '@ofServices/settings.service';
+import {GlobalStyleService} from '@ofServices/global-style.service';
 
 @Component({
     selector: 'of-application-loading',
@@ -47,7 +48,6 @@ export class ApplicationLoadingComponent implements OnInit {
     public userLogin: string;
     public showLoginScreen = false;
     public loadingInProgress = true;
-    public lastLoadingInProgress = new Date();
     public applicationLoaded = false;
 
     /**
@@ -67,10 +67,13 @@ export class ApplicationLoadingComponent implements OnInit {
         private groupsService: GroupsService,
         private processesService: ProcessesService,
         private reminderService: ReminderService,
-        private logger: OpfabLoggerService
+        private logger: OpfabLoggerService,
+        private globalStyleService: GlobalStyleService
     ) {}
 
     ngOnInit() {
+        // Set default style before login
+        this.globalStyleService.setStyle('NIGHT');
         this.loadUIConfiguration();
     }
 
@@ -111,6 +114,7 @@ export class ApplicationLoadingComponent implements OnInit {
                 }
             });
         } else this.logger.error('No locales define (value i18.supported.locales not present in web-ui.json)');
+        this.i18nService.initLocale();
     }
 
     private isUrlCheckActivated(): boolean {
@@ -118,7 +122,7 @@ export class ApplicationLoadingComponent implements OnInit {
     }
 
     private checkIfAppLoadedInAnotherTab(): void {
-        this.setLoadingInProgress(false);
+        this.loadingInProgress = false;
         this.appLoadedInAnotherTabComponent.execute();
         this.appLoadedInAnotherTabComponent.isFinishedWithoutError().subscribe(() => {
             this.launchAuthenticationProcess();
@@ -127,7 +131,7 @@ export class ApplicationLoadingComponent implements OnInit {
     }
 
     private launchAuthenticationProcess(): void {
-        this.setLoadingInProgress(true);
+        this.loadingInProgress = true;
         this.logger.info(`Launch authentication process`);
         this.waitForEndOfAuthentication();
         this.authenticationService.initializeAuthentication();
@@ -142,7 +146,7 @@ export class ApplicationLoadingComponent implements OnInit {
     private waitForEmptyTokenInStorageToShowLoginForm() {
         if (!window.localStorage.getItem('token')) {
             this.showLoginScreen = true;
-            this.setLoadingInProgress(false);
+            this.loadingInProgress = false;
         } else if (!this.applicationLoaded) setTimeout(() => this.waitForEmptyTokenInStorageToShowLoginForm(), 100);
     }
 
@@ -173,15 +177,13 @@ export class ApplicationLoadingComponent implements OnInit {
     }
 
     private checkIfAccountIsAlreadyUsed(): void {
-        this.setLoadingInProgress(false);
+        this.loadingInProgress = false;
         this.accountAlreadyUsedComponent.execute();
         this.accountAlreadyUsedComponent.isFinishedWithoutError().subscribe(() => {
-            this.setLoadingInProgress(true);
+            this.loadingInProgress = true;
             this.loadAllConfigurations();
         });
     }
-
-   
 
     private loadAllConfigurations(): void {
         const requestsToLaunch$ = [
@@ -195,7 +197,7 @@ export class ApplicationLoadingComponent implements OnInit {
         ];
         Utilities.subscribeAndWaitForAllObservablesToEmitAnEvent(requestsToLaunch$).subscribe({
             next: () => {
-                this.setLoadingInProgress(false);
+                this.loadingInProgress = false;
                 this.chooseActivityArea();
             },
             error: catchError((err, caught) => {
@@ -211,32 +213,15 @@ export class ApplicationLoadingComponent implements OnInit {
     }
 
     private openSubscription(): void {
-        this.setLoadingInProgress(true);
+        this.loadingInProgress = true;
         this.cardService.initCardSubscription();
         this.cardService.initSubscription.subscribe(() => {
             this.applicationLoadedDone.next(true);
             this.applicationLoadedDone.complete();
-            this.setLoadingInProgress(false);
+            this.loadingInProgress = false;
             this.applicationLoaded = true;
         });
         this.reminderService.startService(this.userLogin);
     }
 
-    private setLoadingInProgress(loadingInProgress: boolean): void {
-        if (loadingInProgress) {
-            this.loadingInProgress = true;
-            this.lastLoadingInProgress = new Date();
-        } else this.loadingInProgress = false;
-    }
-    public isSpinnerVisible(): boolean {
-        if (this.loadingInProgress) {
-            return this.showSpinnerAfter500ms();
-        }
-        return false;
-    }
-
-    private showSpinnerAfter500ms(): boolean {
-        if (new Date().valueOf() - this.lastLoadingInProgress.valueOf() > 500) return true;
-        return false;
-    }
 }

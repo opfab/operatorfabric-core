@@ -7,33 +7,66 @@
  * This file is part of the OperatorFabric project.
  */
 
-/** Test for the OpFab external devices configuration page */
+
+import {getOpfabGeneralCommands} from "../support/opfabGeneralCommands"
 
 describe('ExternalDevicesconfigurationPage', () => {
-    function clickOnNthDeviceInDropdown(index) {
-        cy.get('#opfab-devicesDropdownList').click();
-        cy.get('#opfab-devicesDropdownList').find('.vscomp-option-text').eq(index).click({force: true});
-        cy.get('#opfab-devicesDropdownList').click();
-    }
 
-    function clickOnNthUserInDropdown(index) {
-        cy.get('#opfab-usersDropdownList').click();
-        cy.get('#opfab-usersDropdownList').find('.vscomp-option-text').eq(index).click({force: true});
-        cy.get('#opfab-usersDropdownList').click();
-    }
+    const opfab = getOpfabGeneralCommands();
 
     before('Set up configuration', function () {
         cy.loadTestConf();
     });
 
+    it('Enable and disable external devices', () => {
+        opfab.loginWithUser('admin');
+        opfab.openExternalDevices();
+
+        // Check that the tabs exist
+        cy.get('#opfab-externaldevices-tabs').find('#opfab-externaldevices-users-tab').should('exist');
+        cy.get('#opfab-externaldevices-tabs').find('#opfab-externaldevices-devices-tab').should('exist');
+
+        cy.get('#addItem').should('not.exist');
+
+        cy.countAgGridTableRows('ag-grid-angular', 3);
+
+        checkNthDeviceIsEnabled(0);
+        checkNthDeviceIsEnabled(1);
+        checkNthDeviceIsEnabled(2);
+
+        clickOnNthDevice(0);
+        clickOnNthDevice(2);
+
+        checkNthDeviceIsDisabled(0);
+        checkNthDeviceIsEnabled(1);
+        checkNthDeviceIsDisabled(2);
+
+        clickOnNthDevice(2);
+
+        checkNthDeviceIsDisabled(0);
+        checkNthDeviceIsEnabled(1);
+        checkNthDeviceIsEnabled(2);
+        
+        // Check that the changes are saved when we change screen
+        cy.get('#opfab-navbar-menu-feed').click();
+        opfab.openExternalDevices();
+
+        cy.countAgGridTableRows('ag-grid-angular', 3);
+
+        checkNthDeviceIsDisabled(0);
+        checkNthDeviceIsEnabled(1);
+        checkNthDeviceIsEnabled(2);
+
+        // Enable CDS_1 to clean test environment
+        clickOnNthDevice(0);
+    })
+
     it('List, add, edit, delete user device configuration', () => {
-        cy.loginOpFab('admin', 'test');
+        opfab.loginWithUser('admin');
+        opfab.openExternalDevices();
 
-        //click on user menu (top right of the screen)
-        cy.get('#opfab-navbar-drop-user-menu').click();
-
-        //click on "External devices configuration"
-        cy.get('#opfab-navbar-right-menu-externaldevicesconfiguration').click();
+        // Go to the users configuration screen
+        cy.get('#opfab-externaldevices-tabs').find('#opfab-externaldevices-users-tab').click();
 
         cy.countAgGridTableRows('#opfab-externaldevices-table-grid', 4);
 
@@ -78,11 +111,9 @@ describe('ExternalDevicesconfigurationPage', () => {
         // Workaround to let ag-grid update the value in dom, otherwise it fails even if the right value is shown on screen
         cy.reload();
 
-        //click on user menu (top right of the screen)
-        cy.get('#opfab-navbar-drop-user-menu').click();
+        opfab.openExternalDevices();
+        cy.get('#opfab-externaldevices-tabs').find('#opfab-externaldevices-users-tab').click();
 
-        //click on "External devices configuration"
-        cy.get('#opfab-navbar-right-menu-externaldevicesconfiguration').click();
         cy.agGridCellShould('#opfab-externaldevices-table-grid', 4, 1, 'have.text', 'CDS_1, CDS_2');
 
         // Delete previously created row
@@ -94,13 +125,11 @@ describe('ExternalDevicesconfigurationPage', () => {
     });
 
     it('Add device configuration for all available users', () => {
-        cy.loginOpFab('admin', 'test');
+        opfab.loginWithUser('admin');
+        opfab.openExternalDevices();
 
-        //click on user menu (top right of the screen)
-        cy.get('#opfab-navbar-drop-user-menu').click();
-
-        //click on "External devices configuration"
-        cy.get('#opfab-navbar-right-menu-externaldevicesconfiguration').click();
+        // Go to the users configuration screen
+        cy.get('#opfab-externaldevices-tabs').find('#opfab-externaldevices-users-tab').click();
 
         // We iterate 9 times because there are 13 users and 4 users have already a configuration
         for (let i = 0; i < 9; i++) {
@@ -133,13 +162,11 @@ describe('ExternalDevicesconfigurationPage', () => {
     });
 
     it('Delete added device configurations', () => {
-        cy.loginOpFab('admin', 'test');
+        opfab.loginWithUser('admin');
+        opfab.openExternalDevices();
 
-        //click on user menu (top right of the screen)
-        cy.get('#opfab-navbar-drop-user-menu').click();
-
-        //click on "External devices configuration"
-        cy.get('#opfab-navbar-right-menu-externaldevicesconfiguration').click();
+        // Go to the users configuration screen
+        cy.get('#opfab-externaldevices-tabs').find('#opfab-externaldevices-users-tab').click();
 
         cy.get('#opfab-externaldevices-table-grid').should('exist');
 
@@ -153,4 +180,29 @@ describe('ExternalDevicesconfigurationPage', () => {
         }
         cy.countAgGridTableRows('#opfab-externaldevices-table-grid', 4);
     });
+
+    function clickOnNthDeviceInDropdown(index) {
+        cy.get('#opfab-devicesDropdownList').click();
+        cy.get('#opfab-devicesDropdownList').find('.vscomp-option-text').eq(index).click({force: true});
+        cy.get('#opfab-devicesDropdownList').click();
+    }
+
+    function clickOnNthUserInDropdown(index) {
+        cy.get('#opfab-usersDropdownList').click();
+        cy.get('#opfab-usersDropdownList').find('.vscomp-option-text').eq(index).click({force: true});
+        cy.get('#opfab-usersDropdownList').click();
+    }
+
+    function clickOnNthDevice(index) {
+        cy.clickAgGridCell('ag-grid-angular', index, 1, '.opfab-checkbox-checkmark');
+    }
+
+    function checkNthDeviceIsEnabled(index) {
+        cy.agGridCellElementShould('ag-grid-angular', index, 1, 'input', 'be.checked');
+    }
+
+    function checkNthDeviceIsDisabled(index) {
+        cy.agGridCellElementShould('ag-grid-angular', index, 1, 'input', 'not.be.checked');
+    }
+
 });

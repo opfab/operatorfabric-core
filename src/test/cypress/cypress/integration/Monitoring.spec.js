@@ -7,17 +7,22 @@
  * This file is part of the OperatorFabric project.
  */
 
+import {getOpfabGeneralCommands} from "../support/opfabGeneralCommands"
+
 describe ('Monitoring screen tests',function () {
 
+    const opfab = getOpfabGeneralCommands();
+
     before('Set up configuration', function () {
+        cy.deleteAllSettings();
         cy.deleteAllCards();
+        cy.resetUIConfigurationFiles();
         cy.loadTestConf();
         cy.send6TestCards();
     });
 
-
     it('Check composition of multi-filters for process groups/processes/type of state for operator1_fr', function () {
-        cy.loginOpFab('operator1_fr', 'test');
+        opfab.loginWithUser('operator1_fr');
 
         // We move to monitoring screen
         cy.get('#opfab-navbar-menu-monitoring').click();
@@ -54,7 +59,7 @@ describe ('Monitoring screen tests',function () {
     })
 
     it('Check composition of multi-filters for process groups/processes/type of state for itsupervisor1', function () {
-        cy.loginOpFab('itsupervisor1', 'test');
+        opfab.loginWithUser('itsupervisor1');
 
         // We move to monitoring screen
         cy.get('#opfab-navbar-menu-monitoring').click();
@@ -91,7 +96,7 @@ describe ('Monitoring screen tests',function () {
     })
 
     it('Check composition of multi-filters for process groups/processes/type of state for admin', function () {
-        cy.loginOpFab('admin', 'test');
+        opfab.loginWithUser('admin');
 
         // We move to monitoring screen
         cy.get('#opfab-navbar-menu-monitoring').click();
@@ -106,7 +111,7 @@ describe ('Monitoring screen tests',function () {
     })
 
     it('Check composition of multi-filters for processes/states/typeOfState for operator1_fr, with a config without process group', function () {
-        cy.loginOpFab('operator1_fr', 'test');
+        opfab.loginWithUser('operator1_fr');
 
         cy.loadEmptyProcessGroups();
         cy.reload();
@@ -139,7 +144,7 @@ describe ('Monitoring screen tests',function () {
 
     it('Check monitoring cards reception', function () {
 
-        cy.loginOpFab('operator1_fr','test');
+        opfab.loginWithUser('operator1_fr');
 
         // We move to monitoring screen
         cy.get('#opfab-navbar-menu-monitoring').click();
@@ -166,7 +171,7 @@ describe ('Monitoring screen tests',function () {
 
     it('Check filters and reset button', function () {
 
-        cy.loginOpFab('operator1_fr','test');
+        opfab.loginWithUser('operator1_fr');
 
         // Access monitoring screen
         cy.get('#opfab-navbar-menu-monitoring').click();
@@ -217,9 +222,46 @@ describe ('Monitoring screen tests',function () {
 
     })
 
+    it('Check severity sort', function () {
+
+        opfab.loginWithUser('operator1_fr');
+
+        // Access monitoring screen
+        cy.get('#opfab-navbar-menu-monitoring').click();
+
+        // Create an alias to shorten the code
+        cy.get('#opfab-monitoring-table-grid').find('.ag-header-container').find('.ag-header-row-column').as('monitoring-table-headers');
+
+        // Should have the correct number of cards (5 because one card is set not to be visible in monitoring)
+        cy.countAgGridTableRows('#opfab-monitoring-table-grid', 5);
+
+        // Sorting severities a first time
+        cy.get('@monitoring-table-headers').find('.ag-header-cell').eq(0).click();
+        cy.wait(500);
+
+        // Cards should be sorted by severity
+        cy.agGridCellShould('#opfab-monitoring-table-grid', 0, 3, 'have.text', '⚠️ Network Contingencies ⚠️');
+        cy.agGridCellShould('#opfab-monitoring-table-grid', 1, 3, 'have.text', 'Electricity consumption forecast');
+        cy.agGridCellShould('#opfab-monitoring-table-grid', 2, 3, 'have.text', '⚡ Planned Outage');
+        cy.agGridCellShould('#opfab-monitoring-table-grid', 3, 3, 'have.text', 'Process state (calcul)');
+        cy.agGridCellShould('#opfab-monitoring-table-grid', 4, 3, 'have.text', 'Message');
+
+        // Sorting severities a second time
+        cy.get('@monitoring-table-headers').find('.ag-header-cell').eq(0).click();
+        cy.wait(500);
+
+        // Cards should be sorted by severity
+        cy.agGridCellShould('#opfab-monitoring-table-grid', 0, 3, 'have.text', 'Message');
+        cy.agGridCellShould('#opfab-monitoring-table-grid', 1, 3, 'have.text', 'Process state (calcul)');
+        cy.agGridCellShould('#opfab-monitoring-table-grid', 2, 3, 'have.text', '⚡ Planned Outage');
+        cy.agGridCellShould('#opfab-monitoring-table-grid', 3, 3, 'have.text', '⚠️ Network Contingencies ⚠️');
+        cy.agGridCellShould('#opfab-monitoring-table-grid', 4, 3, 'have.text', 'Electricity consumption forecast');
+
+    })
+
     it('Check title sort', function () {
 
-        cy.loginOpFab('operator1_fr','test');
+        opfab.loginWithUser('operator1_fr');
 
         // Access monitoring screen
         cy.get('#opfab-navbar-menu-monitoring').click();
@@ -257,7 +299,7 @@ describe ('Monitoring screen tests',function () {
 
     it('Check summary sort', function () {
 
-        cy.loginOpFab('operator1_fr','test');
+        opfab.loginWithUser('operator1_fr');
 
         // Access monitoring screen
         cy.get('#opfab-navbar-menu-monitoring').click();
@@ -295,7 +337,7 @@ describe ('Monitoring screen tests',function () {
 
     it('Check process state sort', function () {
 
-        cy.loginOpFab('operator1_fr','test');
+        opfab.loginWithUser('operator1_fr');
 
         // Access monitoring screen
         cy.get('#opfab-navbar-menu-monitoring').click();
@@ -333,7 +375,7 @@ describe ('Monitoring screen tests',function () {
 
     it('Check emitter sort', function () {
 
-        cy.loginOpFab('operator1_fr','test');
+        opfab.loginWithUser('operator1_fr');
 
         // Access monitoring screen
         cy.get('#opfab-navbar-menu-monitoring').click();
@@ -372,7 +414,7 @@ describe ('Monitoring screen tests',function () {
 
     it('Check answer sort', function () {
 
-        cy.loginOpFab('operator1_fr','test');
+        opfab.loginWithUser('operator1_fr');
 
         // Access monitoring screen
         cy.get('#opfab-navbar-menu-monitoring').click();
@@ -416,7 +458,7 @@ describe ('Monitoring screen tests',function () {
 
     it('Check card response', function () {
 
-        cy.loginOpFab('operator1_fr','test');
+        opfab.loginWithUser('operator1_fr');
 
         cy.get('of-light-card').should('have.length', 6);
 
@@ -436,7 +478,7 @@ describe ('Monitoring screen tests',function () {
         cy.countAgGridTableRows('#opfab-monitoring-table-grid', 5);
 
         // Check response arrow icon
-        cy.agGridCellElementShould('#opfab-monitoring-table-grid', 2, 1, 'em', 'have.class', 'fa-reply');
+        cy.agGridCellElementShould('#opfab-monitoring-table-grid', 2, 2, 'em', 'have.class', 'fa-reply');
 
     })
 
@@ -444,7 +486,7 @@ describe ('Monitoring screen tests',function () {
         // Standard export, no custom configuration
         cy.loadMonitoringConfig('emptyConfig.json');
 
-        cy.loginOpFab('operator1_fr','test');
+        opfab.loginWithUser('operator1_fr');
 
         // Access monitoring screen
         cy.get('#opfab-navbar-menu-monitoring').click();
@@ -452,7 +494,7 @@ describe ('Monitoring screen tests',function () {
         cy.countAgGridTableRows('#opfab-monitoring-table-grid', 5);
 
         // Check response arrow icon before lauching export , to let the time for child card processing 
-        cy.agGridCellElementShould('#opfab-monitoring-table-grid', 2, 1, 'em', 'have.class', 'fa-reply');
+        cy.agGridCellElementShould('#opfab-monitoring-table-grid', 2, 2, 'em', 'have.class', 'fa-reply');
 
 
         // Do export
@@ -537,7 +579,7 @@ describe ('Monitoring screen tests',function () {
         // Load custom export configuration
         cy.loadMonitoringConfig('monitoringConfig.json');
 
-        cy.loginOpFab('operator1_fr','test');
+        opfab.loginWithUser('operator1_fr');
 
         // Access monitoring screen
         cy.get('#opfab-navbar-menu-monitoring').click();

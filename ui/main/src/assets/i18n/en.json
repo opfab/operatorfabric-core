@@ -53,6 +53,9 @@
     },
     "exportInProgress": "Export in progress",
     "loadingInProgress": "Loading in progress",
+    "requestInProgress": "Request in progress...",
+    "deleteInProgress": "Delete in progress...",
+    "logoutInProgress": "Logout in progress...",
     "noResult": "Your search did not match any result.",
     "exportToExcel": "Export data",
     "resultsNumber":"Results number",
@@ -95,7 +98,7 @@
     "logout": "Logout",
     "changePassword": "Change password",
     "settings": "Settings",
-    "feedConfiguration": "Notification reception configuration",
+    "feedConfiguration": "Notification configuration",
     "about": "About",
     "usercard": "Card Creation",
     "switchToNightMode": "Night mode",
@@ -168,9 +171,11 @@
     },
     "sort": {
       "title": "Sort by",
-      "severity": "Criticality then date",
-      "publish": "Date",
-      "unread": "Unread then date"
+      "severity": "Criticality then reception date",
+      "publish": "Reception date",
+      "unread": "Unread then reception date",
+      "startDate": "Start date",
+      "endDate": "End date"
     },
     "tips": {
       "acknowledged": "Acknowledged",
@@ -188,11 +193,13 @@
     },
     "lttdFinished": "Finished",
     "responsesClosed": "Response closed",
-    "received": "Received on",
+    "received": "Received :",
+    "deleted": "Deleted :",
+    "addressedTo": "Addressed to :",
     "at": "at",
     "from" : "from",
     "moreCards": "cards more",
-    "lastResponse": "Last response received on",
+    "lastResponse": "Last response :",
     "cardLoadingInProgress":"Loading card...",
     "cardNotFound": "The card you are looking for was not found."
   },
@@ -263,10 +270,14 @@
   },
   "activityArea": {
     "title": "ACTIVITY AREA",
-    "titleOnLogin": "CHOOSE YOUR ACTIVITY AREA"
+    "titleOnLogin": "CHOOSE YOUR ACTIVITY AREA",
+    "savingInProgress": "Saving in progress..."
   },
   "feedConfiguration": {
-    "title": "NOTIFICATION RECEPTION CONFIGURATION"
+    "title": "NOTIFICATION CONFIGURATION",
+    "information": "INFORMATION",
+    "youAreUnsubscribedFrom": "You are unsubscribed from one or more notifications for which unsubscribing is now prohibited.\n\nNotification(s) concerned :\n",
+    "youWillBeSubscribedAgain": "\n\nBy clicking OK, you will be subscribed to these notifications again."
   },
   "userCard": {
     "title": "CREATE A NEW CARD ",
@@ -306,7 +317,7 @@
         "impossibleToDeleteCard": "Impossible to delete card for technical reasons"
       }
     },
-    "sendingCardInProgress": "Sending card in progress ..."
+    "sendingCardInProgress": "Sending card in progress..."
   },
   "response": {
     "btnValidate": "VALIDATE ANSWER",
@@ -321,12 +332,13 @@
     "answered": "Answered",
     "unanswered": "Not answered yet",
     "status": "Process Status",
-    "chooseEntityForResponse": "Choose the entity you are responding for :",
-    "entityChoice": "Entity choice"
+    "chooseEntitiesForResponse": "Choose the entities you are responding for :",
+    "entitiesChoice": "Entities choice"
   },
   "cardAcknowledgment": {
     "button": {
-      "ack": "ACKNOWLEDGE AND CLOSE",
+      "ack": "ACKNOWLEDGE",
+      "ackAndClose": "ACKNOWLEDGE AND CLOSE",
       "unack": "CANCEL ACKNOWLEDGMENT"
     },
     "acknowledged": "Acknowledged"
@@ -338,6 +350,7 @@
         "name": "NAME",
         "description": "DESCRIPTION",
         "perimeters" : "PERIMETERS",
+        "users": "USERS",
         "realtime": "REAL TIME",
         "type": "TYPE",
         "true": "YES",
@@ -351,6 +364,7 @@
         "parents": "PARENT ENTITIES",
         "description": "DESCRIPTION",
         "labels": "LABELS",
+        "users": "USERS",
         "entityAllowedToSendCard": "CARD SENDING ALLOWED",
         "confirmDelete": "Do you really want to delete entity",
         "add": "ADD NEW ENTITY",
@@ -364,6 +378,7 @@
         "stateRights": "STATE RIGHTS",
         "state": "STATE",
         "right": "RIGHT",
+        "filteringNotificationAllowed": "FILTERING NOTIFICATION\nALLOWED",
         "confirmDelete": "Do you really want to delete perimeter",
         "add":"ADD NEW PERIMETER"
       },
@@ -461,8 +476,18 @@
       "allUsersConfigured": "All users devices are already configured.",
       "loadingExternalDevices": "Loading external devices..."
     },
+    "tabs": {
+      "users": "Users Configuration",
+      "devices": "External Devices"
+    },
+    "error": {
+      "errorWhenEnablingDevice": "An error occured when trying to enable this device. Please try again later.",
+      "errorWhenDisablingDevice": "An error occured when trying to disable this device. Please try again later."
+    },
     "userLogin": "USER LOGIN",
     "externalDeviceIds": "DEVICES",
+    "id": "DEVICES",
+    "isEnabled": "IS ENABLED",
     "edit": "EDIT",
     "delete": "DELETE"
   },
@@ -492,5 +517,9 @@
   "reloadRequired" : {
     "message": "Application reload required. To reload please click ",
     "linkText": "here"
-  }
+  },
+  "errors" : {
+    "notFound" : "Resource not found",
+    "notAllowed" : "Action not allowed"
+  } 
 }

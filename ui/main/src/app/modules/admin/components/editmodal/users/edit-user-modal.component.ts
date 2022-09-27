@@ -8,7 +8,12 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {AsyncValidatorFn, UntypedFormControl, UntypedFormGroup, Validators} from '@angular/forms';
+import {
+    AsyncValidatorFn,
+    FormControl,
+    FormGroup,
+    Validators
+} from '@angular/forms';
 import {Component, Input, OnInit} from '@angular/core';
 import {User} from '@ofModel/user.model';
 import {NgbActiveModal} from '@ng-bootstrap/ng-bootstrap';
@@ -25,7 +30,14 @@ import {MultiSelectConfig, MultiSelectOption} from '@ofModel/multiselect.model';
     styleUrls: ['./edit-user-modal.component.scss']
 })
 export class EditUserModalComponent implements OnInit {
-    userForm: UntypedFormGroup;
+    userForm: FormGroup<{
+        login: FormControl<string | null>,
+        firstName: FormControl<string | null>,
+        lastName: FormControl<string | null>,
+        groups: FormControl<[] | null>,
+        entities: FormControl<[] | null>,
+        authorizedIPAddresses: FormControl<any | null>
+    }>;
 
     entitiesMultiSelectOptions: Array<MultiSelectOption> = [];
     selectedEntities = [];
@@ -58,17 +70,17 @@ export class EditUserModalComponent implements OnInit {
             // modal used for creating a new user
             uniqueLoginValidator.push(this.uniqueLoginValidatorFn());
 
-        this.userForm = new UntypedFormGroup({
-            login: new UntypedFormControl(
+        this.userForm = new FormGroup({
+            login: new FormControl(
                 '',
                 [Validators.required, Validators.minLength(2), Validators.pattern(/^[a-z\d\-_.]+$/)],
                 uniqueLoginValidator
             ),
-            firstName: new UntypedFormControl('', []),
-            lastName: new UntypedFormControl('', []),
-            groups: new UntypedFormControl([]),
-            entities: new UntypedFormControl([]),
-            authorizedIPAddresses: new UntypedFormControl('', [])
+            firstName: new FormControl('', []),
+            lastName: new FormControl('', []),
+            groups: new FormControl([]),
+            entities: new FormControl([]),
+            authorizedIPAddresses: new FormControl('', [])
         });
 
         if (this.row) {
@@ -108,8 +120,8 @@ export class EditUserModalComponent implements OnInit {
 
     update() {
         this.cleanForm();
-        const ipList =
-            this.authorizedIPAddresses.value.trim().length > 0 ? this.authorizedIPAddresses.value.split(',') : [];
+        const isAuthorizedIPAdressesAString = this.authorizedIPAddresses.value instanceof String;
+        const ipList = isAuthorizedIPAdressesAString && this.authorizedIPAddresses.value.trim().length > 0 ? this.authorizedIPAddresses.value.split(',') : [];
         this.authorizedIPAddresses.setValue(ipList.map((str) => str.trim()));
         this.crudService.update(this.userForm.value).subscribe(() => {
             this.activeModal.close('Update button clicked on user modal');

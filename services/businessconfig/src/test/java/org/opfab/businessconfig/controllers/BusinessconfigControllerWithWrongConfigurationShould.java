@@ -48,7 +48,7 @@ class BusinessconfigControllerWithWrongConfigurationShould {
   private WebApplicationContext webApplicationContext;
 
   @BeforeAll
-  void setup() throws Exception {
+  void setup() {
     this.mockMvc = webAppContextSetup(webApplicationContext).build();
   }
 

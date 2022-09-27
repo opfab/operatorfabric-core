@@ -11,6 +11,7 @@ import {environment} from '@env/environment';
 import {HttpClient} from '@angular/common/http';
 import {Injectable} from '@angular/core';
 import {ConfigService} from '@ofServices/config.service';
+import packageInfo from '../../../../package.json';
 
 @Injectable({
     providedIn: 'root'
@@ -36,7 +37,7 @@ export class RemoteLoggerService {
     public setRemoteLoggerActive(active: boolean) {
         if (active) {
             this.isActive = true;
-            this.postLog('Remote log activated - ' + window.navigator.userAgent);
+            this.postLog('Remote log activated - ' +  packageInfo.opfabVersion + ' - ' + window.navigator.userAgent );
         } else {
             this.postLog('Remote log deactivated ');
             this.isActive = false;

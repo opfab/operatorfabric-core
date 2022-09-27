@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021, RTE (http://www.rte-france.com)
+ * Copyright (c) 2021-2022, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -15,12 +15,13 @@ import {AdminItemType} from '../../services/sharing.service';
 
 @Component({
     templateUrl: 'admin-table.directive.html',
-    selector: 'of-users-table'
+    selector: 'of-users-table',
+    styleUrls: ['admin-table.directive.scss']
 })
 export class UsersTableComponent extends AdminTableDirective implements OnInit {
     tableType = AdminItemType.USER;
     fields = [
-        new Field('login'),
+        new Field('login', 4, 'idCellRenderer'),
         new Field('firstName'),
         new Field('lastName'),
         new Field('groups', 8, 'groupCellRenderer'),

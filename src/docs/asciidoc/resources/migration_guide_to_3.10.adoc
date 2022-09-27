@@ -1,0 +1,96 @@
+// Copyright (c) 2022 RTE (http://www.rte-france.com)
+// See AUTHORS.txt
+// This document is subject to the terms of the Creative Commons Attribution 4.0 International license.
+// If a copy of the license was not distributed with this
+// file, You can obtain one at https://creativecommons.org/licenses/by/4.0/.
+// SPDX-License-Identifier: CC-BY-4.0
+
+= Migration Guide from release 3.9.x to release 3.10.0
+
+== Card publication with not existent process or state
+OperatorFabric will refuse the publication of cards referring a not existent process or state.
+To allow the publication of cards with not existent proces or state you should set the `authorizeToSendCardWithInvalidProcessState` property to `true` in `cards-publication.yml` configuration file 
+
+== `web-ui.json` config file 
+
+=== `settings.about` section
+
+The section to configure `about` screen has been moved from `settings` section to the root level. You need to change the configuration file accordingly.
+
+
+For example: 
+
+Replace the following invalid config 
+```
+  "settings": {
+    "about": {
+      "keycloack": {
+        "name": "Keycloak",
+        "rank": 2,
+        "version": "6.0.1"
+      },
+    },
+    "replayInterval": 10,
+    "replayEnabled": true,
+    "locale": "en",
+    "dateTimeFormat": "HH:mm DD/MM/YYYY",
+    "dateFormat": "DD/MM/YYYY",
+    "styleWhenNightDayModeDesactivated": "NIGHT"
+  },
+```
+
+By this valid one : 
+
+```
+  "settings": {
+    "replayInterval": 10,
+    "replayEnabled": true,
+    "locale": "en",
+    "dateTimeFormat": "HH:mm DD/MM/YYYY",
+    "dateFormat": "DD/MM/YYYY",
+    "styleWhenNightDayModeDesactivated": "NIGHT"
+  },
+  "about": {
+    "keycloack": {
+      "name": "Keycloak",
+      "rank": 2,
+      "version": "6.0.1"
+    }
+  }
+```
+
+=== `settings.infos.hide` section
+
+The section to configure hidden fields for the settings screen has been moved from `settings.infos.hide` section to
+`settingsScreen.hiddenSettings`. This new field is an array of string and possible values are : "description",
+"language", "remoteLoggingEnabled" and "sounds". So, you need to change the configuration file accordingly.
+
+
+For example:
+
+Replace the following invalid config
+```
+  "settings": {
+    "infos": {
+      "hide": {
+        "description": true
+      }
+    }
+  }
+```
+
+By this valid one :
+
+```
+  "settingsScreen": {
+    "hiddenSettings":  ["description"]
+  }
+```
+
+=== Feed filtering and sorting 
+In feed configuration the following parameters to hide filtering and sorting options have been removed: `feed.card.hideAckFilter`, `feed.card.hideReadSort`, `feed.card.hideSeveritySort`
+
+Instead it is possible to configure the default behaviour for sorting and acknowlegment filtering by setting the following parameters in `web-ui.json`:
+
+ * `feed.defaultSorting` : possible values are : "unread", "date", "severity", "startDate", "endDate"
+ * `feed.defaultAcknowledgmentFilter` : possible values are : "notack", "ack", "all"

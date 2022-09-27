@@ -115,7 +115,7 @@ The following card fields can be set via the object `card` in the object returne
 * secondsBeforeTimeSpanForReminder
 * severity (in case it is not visible from the user , when `severityVisible` set to false in `config.json`)
 * data
-* entityRecipients (in case recipient list is not visible from the user)
+* entityRecipients
 * entitiesAllowedToEdit
 * entitiesAllowedToRespond
 * entitiesRequiredToRespond
@@ -196,13 +196,9 @@ For example :
 In this example the dropdown list of available recipients will have "ENTITY_FR" and "IT_SUPERVISOR_ENTITY" preselected. The user can anyway change the selected recipients.
 
 [[set_recipients_via_code]]
-== Set the list of recipients via the template and not via user choice 
+== Set the list of recipients via the template
 
-To do that , you have to :
-
-* hide the recipient dropdown using the attribute `recipientVisible` in state definition in config.json 
-* provide the list of recipients when returning the card object in usercardTemplateGateway.getSpecificCardInformation() in the field entityRecipients 
-
+To do that, you have to provide the list of recipients when returning the card object in usercardTemplateGateway.getSpecificCardInformation() in the field `entityRecipients`.
 
 Example:
 ....
@@ -222,6 +218,8 @@ Example:
         };
 
 ....
+
+When recipient dropdown is not visible to the user (attribute `recipientVisible` set to `false` in state definition in config.json) the final recipients list will be the one defined in the template, otherwise it will be the union of user selection and template `entityRecipients` definition.
 
 
 == Setting card dates
@@ -250,8 +248,13 @@ Allowed severity values are:
 * 'COMPLIANT'
 
 == Card editing
-Once a user card has been sent it can be edited by a user member of the publisher entity.
+Once a user card has been sent it can be edited by a user member of the publisher entity who has write access for the process/state of the card.
 It is possible to allow other entities to edit the card by specifying the 'entitiesAllowedToEdit' card field.
+It is possible to hide card edit button on UI by setting 'editCardEnabledOnUserInterface' to false in card's process/state definition.
+
+== Card delete
+Once a user card has been sent it can be deleted by a user member of the publisher entity who has write access for the process/state of the card.
+It is possible to hide card delete button on UI by setting 'deleteCardEnabledOnUserInterface' to false in card's process/state definition.
 
 == Get edition mode
 The template can know if the user is creating a new card or editing an existing card by calling the _usercardTemplateGateway.getEditionMode()_ function. The function will return one of the following values:

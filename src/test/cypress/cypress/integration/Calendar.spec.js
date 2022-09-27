@@ -7,33 +7,24 @@
  * This file is part of the OperatorFabric project.
  */
 
+import {getOpfabGeneralCommands} from "../support/opfabGeneralCommands"
+
 describe('Calendar screen tests', function () {
+    
+    const opfab = getOpfabGeneralCommands();
+    
     const SECONDS = 1000;
     const HOURS = 3600000;
 
-    function openAndCheckCardDataQuality() {
-        cy.waitDefaultTime();
-        // click the card
-        cy.get('.fc-event-title').contains('Data quality').should('exist').click({force: true});
-
-        // detail card is present, check content and then close the card
-        cy.get('of-detail').should('be.visible');
-        cy.get('#opfab-card-title').should('have.text', 'Data quality');
-        cy.get('#opfab-div-card-template-processed')
-            .find('p')
-            .first()
-            .should('contain.text', 'Info on quality degradation of the main server');
-        cy.get('#opfab-close-card').click({force: true});
-    }
-
     before('Set up configuration', function () {
+        cy.deleteAllSettings();
         cy.loadTestConf();
         cy.deleteAllCards();
     });
 
     it('Check calendar screen', function () {
         const currentDate = new Date(2022, 3, 22, 12, 10);
-        cy.loginWithClock(currentDate);
+        opfab.loginWithClock(currentDate);
 
         // Send card data quality
         cy.sendCard(
@@ -65,4 +56,20 @@ describe('Calendar screen tests', function () {
         cy.get('.opfab-calendar-event').should('have.length', 1); // only one card should be present
         openAndCheckCardDataQuality();
     });
+
+
+    function openAndCheckCardDataQuality() {
+        cy.waitDefaultTime();
+        // click the card
+        cy.get('.fc-event-title').contains('Data quality').should('exist').click({force: true});
+
+        // detail card is present, check content and then close the card
+        cy.get('of-detail').should('be.visible');
+        cy.get('#opfab-card-title').should('have.text', 'Data quality');
+        cy.get('#opfab-div-card-template-processed')
+            .find('p')
+            .first()
+            .should('contain.text', 'Info on quality degradation of the main server');
+        cy.get('#opfab-close-card').click({force: true});
+    }
 });

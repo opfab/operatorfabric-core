@@ -43,9 +43,6 @@
     </ul>
 
     <div>
-      <link *ngFor="let cssUrl of hrefsOfCssLink" [href]="cssUrl" rel="stylesheet" type="text/css">
-
-
       <div style="padding-right:3px">
         <!-- padding is necessary to see box shadow-->
 
@@ -63,9 +60,9 @@
 
         <div *ngIf='isCardAQuestionCard && showDetailCardHeader' class="opfab-card-response-header">
           <div class="flex-container">
-            <div id="opfab-card-response-header-left" style="width:30%;">
+            <div id="opfab-card-response-header-left" style="width:30%;padding-left:15px">
               <span id="opfab-card-response-header-status" *ngIf="!!cardState.type">
-                <span style="padding-left:15px" translate>response.status</span> :
+                <span translate>response.status</span> :
                 <!--The translate directive should stay there rather than in the element see OC-1603-->
                 <span class="opfab-typeOfState-{{cardState.type}}">{{"shared.typeOfState."+cardState.type | translate}}</span>
               </span>
@@ -92,14 +89,16 @@
           </div>
         </div>
 
-        <div id="opfab-div-card-template" class="opfab-card-detail">
-          <of-spinner *ngIf="isCardProcessing"></of-spinner>
-          <div [hidden]="isCardProcessing" id="opfab-div-card-template-processed" [innerHtml]="htmlTemplateContent"></div>
-        </div>
+      <of-template-rendering [card]="card" [cardState]="cardState" [user]="user" [screenSize]="screenSize" [displayContext]="displayContext"
+      [functionToCallBeforeRendering]="beforeTemplateRendering" 
+      [functionToCallAfterRendering]="afterTemplateRendering" [parentComponent]="this"
+      [fixedBottomOffset]="this.templateOffset" cardFooterHtmlElementId = "opfab-card-detail-footer">
+
+      </of-template-rendering>
 
         <div style="text-align: center;width:100% ; ">
 
-          <div id='div-detail-btn'>
+          <div id='opfab-card-detail-footer'>
 
             <div style="text-align: left;margin-top: 5px" *ngIf="displayCardAcknowledgedFooter()" class="opfab-card-response-header">
               <div class="flex-container" id="opfab-card-acknowledged-footer" style="width:100%;padding-left: 15px;flex-direction: row">
@@ -111,38 +110,21 @@
               </div>
             </div>
 
-            <div class="opfab-card-received-footer" style="max-width: 50%;text-align: left">
-              <span translate>feed.received</span>
-              {{formattedPublishDate}} <span translate> feed.at </span> {{formattedPublishTime}}
-              
-              <span *ngIf="fromEntityOrRepresentative">
-                <span translate> feed.from</span>
-                {{fromEntityOrRepresentative}}
-              </span>
-                
-              <span *ngIf="lastResponse">
-                <span > --- </span>
-                <span translate>feed.lastResponse</span>
-                {{formatDate(lastResponse.publishDate)}} <span translate> feed.at </span> {{formatTime(lastResponse.publishDate)}}
-              
-                <span>
-                  <span translate> feed.from</span>
-                  {{getResponsePublisher(lastResponse)}}
-                </span>
-              </span>
-            </div>
+            <div style="display: flex">
+              <div class="opfab-card-received-footer" style="text-align: left;white-space: pre-line;">{{makeTextOfFooter()}}</div>
 
-            <div *ngIf="showButtons" style="text-align: right;">
-              <button id="opfab-card-details-btn-response" class="opfab-btn"
-                *ngIf='showActionButton && isUserEnabledToRespond && !isResponseLocked' [disabled]='lttdExpiredIsTrue || !isUserEnabledToRespond || sendingResponse'
-                (click)='submitResponse()'>{{btnValidateLabel|translate}}</button>
+              <div *ngIf="showButtons" style="margin-left: auto;text-align: right;min-width: 250px">
+                <button id="opfab-card-details-btn-response" class="opfab-btn"
+                  *ngIf='showActionButton && isUserEnabledToRespond && !isResponseLocked' [disabled]='lttdExpiredIsTrue || !isUserEnabledToRespond || sendingResponse'
+                  (click)='submitResponse()'>{{btnValidateLabel|translate}}</button>
 
-              <button id="opfab-card-details-btn-response" class="opfab-btn"
-                [disabled]='lttdExpiredIsTrue || !isUserEnabledToRespond'
-                *ngIf='showActionButton && isUserEnabledToRespond && isResponseLocked' (click)='unlockAnswer()'>{{btnUnlockLabel|translate}}</button>
+                <button id="opfab-card-details-btn-response" class="opfab-btn"
+                  [disabled]='lttdExpiredIsTrue || !isUserEnabledToRespond'
+                  *ngIf='showActionButton && isUserEnabledToRespond && isResponseLocked' (click)='unlockAnswer()'>{{btnUnlockLabel|translate}}</button>
 
-              <button id="opfab-card-details-btn-ack" class="opfab-btn" *ngIf='showAckButton'
-                (click)='acknowledgeCard()'>{{btnAckText|translate}}</button>
+                <button id="opfab-card-details-btn-ack" class="opfab-btn" *ngIf='showAckButton'
+                  (click)='acknowledgeCard()'>{{btnAckText|translate}}</button>
+              </div>
             </div>
           </div>
 
@@ -183,26 +165,37 @@
     </div>
   </ng-template>
 
-  <ng-template #chooseEntityForResponsePopup let-modal>
+  <ng-template #chooseEntitiesForResponsePopup let-modal>
     <div class="modal-header">
-      <div translate> response.entityChoice </div>
+      <div translate> response.entitiesChoice </div>
       <div class="opfab-close-modal-icon" aria-label="Close" (click)="modal.dismiss('Cross click')">
         <span aria-hidden="true">&times;</span>
       </div>
     </div>
     <div class="modal-body text-center">
-      <br/><p translate>response.chooseEntityForResponse</p><br/>
-      <form [formGroup]="selectEntityForm" class="opfab-form-lighter">
+      <br/><p translate>response.chooseEntitiesForResponse</p><br/>
+      <form [formGroup]="selectEntitiesForm" class="opfab-form-lighter">
         <div class="row">
-            <of-multi-select id="opfab-card-details-entity-choice-selector" multiSelectId="entity"
-                              [parentForm]="selectEntityForm" [config]="multiSelectConfig"
-                              [options]="userEntityOptionsDropdownList" [selectedOptions]="selectEntityForm.get('entity').value">
+            <of-multi-select id="opfab-card-details-entities-choice-selector" multiSelectId="entities"
+                              [parentForm]="selectEntitiesForm" [config]="multiSelectConfig"
+                              [options]="userEntityOptionsDropdownList" [selectedOptions]="selectEntitiesForm.get('entities').value">
             </of-multi-select>
         </div>
         <br/>
       </form>
-      <button id="opfab-card-details-entity-choice-btn-cancel" type="button" class="opfab-btn-cancel" (click)="cancelEntityChoice()" translate>button.cancel</button>
-      <button id="opfab-card-details-entity-choice-btn-confirm" type="button" class="opfab-btn" (click)="submitEntityChoice()" translate>button.ok</button>
+      <button id="opfab-card-details-entity-choice-btn-cancel" type="button" class="opfab-btn-cancel" (click)="cancelEntitiesChoice()" translate>button.cancel</button>
+      <button id="opfab-card-details-entity-choice-btn-confirm" type="button" class="opfab-btn" (click)="submitEntitiesChoice()" translate>button.ok</button>
     </div>
   </ng-template>
+
+  <of-spinner *ngIf="ackOrUnackInProgress"
+              [seeInModal]="true"
+              loadingText="shared.requestInProgress">
+  </of-spinner>
+
+  <of-spinner *ngIf="deleteInProgress"
+              [seeInModal]="true"
+              loadingText="shared.deleteInProgress">
+  </of-spinner>
+
 </div>

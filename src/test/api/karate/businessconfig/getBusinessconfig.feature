@@ -31,6 +31,7 @@ Feature: getBusinessconfig
 
     Given url opfabUrl + '/businessconfig/processes/'
     When method GET
-    Then status 401
+    Then status 200
+    And assert response.length >= 1
 
 

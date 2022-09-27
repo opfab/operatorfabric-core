@@ -21,11 +21,16 @@ import {takeUntil} from 'rxjs/operators';
 import WKT from 'ol/format/WKT';
 import Overlay from 'ol/Overlay';
 import {Style, Fill, Stroke, Circle} from 'ol/style';
-import {Attribution, defaults as defaultControls} from 'ol/control';
+import {Attribution, ZoomToExtent, Control, defaults as defaultControls} from 'ol/control';
 import {ConfigService} from '@ofServices/config.service';
 import {selectGlobalStyleState} from '@ofSelectors/global-style.selectors';
 import {Store} from '@ngrx/store';
 import {AppState} from '@ofStore/index';
+import {MapService} from '@ofServices/map.service';
+import {OpfabLoggerService} from '@ofServices/logs/opfab-logger.service';
+import Chart from 'chart.js/auto';
+import ChartDataLabels from 'chartjs-plugin-datalabels';
+import {TranslateService} from '@ngx-translate/core';
 
 let self;
 
@@ -36,29 +41,44 @@ let self;
 })
 export class MapComponent implements OnInit, OnDestroy, AfterViewChecked {
     private unsubscribe$ = new Subject<void>();
-    private unsubscribeStyle$ = new Subject<void>();
     private map: OpenLayersMap;
     private vectorLayer: VectorLayer;
+    private graphChart = null;
     lightCardToDisplay: LightCard;
 
     constructor(
         private lightCardsFeedFilterService: LightCardsFeedFilterService,
         private configService: ConfigService,
-        private store: Store<AppState>
+        private store: Store<AppState>,
+        private logger: OpfabLoggerService,
+        private mapService: MapService,
+        private translate: TranslateService
     ) {}
 
     ngOnInit() {
         self = this;
 
         if (this.configService.getConfigValue('feed.geomap.enableMap', false)) {
-            this.drawMap();
+            const enableGraph = this.configService.getConfigValue('feed.geomap.enableGraph', false);
+            this.drawMap(enableGraph);
             this.lightCardsFeedFilterService
                 .getFilteredAndSortedLightCards()
                 .pipe(takeUntil(this.unsubscribe$))
                 .subscribe((cards) => {
                     setTimeout(() => this.updateMap(cards), 500);
+                    if (enableGraph) {
+                        setTimeout(() => this.updateGraph(cards), 500);
+                    }
                 });
             this.updateMapWhenGlobalStyleChange();
+            this.mapService.highlightCardEvent
+                .pipe(takeUntil(this.unsubscribe$))
+                .subscribe(({lightCardId, highLight}) => {
+                    this.highlightFeature(lightCardId, highLight);
+                });
+            this.mapService.zoomToLocationEvent.pipe(takeUntil(this.unsubscribe$)).subscribe((lightCardId) => {
+                this.zoomToLocation(lightCardId);
+            });
         }
     }
 
@@ -69,14 +89,14 @@ export class MapComponent implements OnInit, OnDestroy, AfterViewChecked {
     private updateMapWhenGlobalStyleChange() {
         this.store
             .select(selectGlobalStyleState)
-            .pipe(takeUntil(this.unsubscribeStyle$))
+            .pipe(takeUntil(this.unsubscribe$))
             .subscribe((style) => this.updateMapColors(style));
     }
 
     private updateMapColors(style) {
         if (this.map) {
             let filter = '';
-            if (style.style == 'NIGHT') {
+            if (style.style === 'NIGHT') {
                 //change map color to Dark Mode
                 filter = 'invert(100%) hue-rotate(180deg) brightness(95%) contrast(90%)';
             }
@@ -93,7 +113,7 @@ export class MapComponent implements OnInit, OnDestroy, AfterViewChecked {
 
         if (!!mapTemplate && !!this.map) {
             const diffWindow = mapTemplate.getBoundingClientRect();
-            let mapTemplateHeight = window.innerHeight - (diffWindow.top + marginBottom);
+            const mapTemplateHeight = window.innerHeight - (diffWindow.top + marginBottom);
             if (mapTemplate.style.height !== `${mapTemplateHeight}px`) {
                 mapTemplate.style.height = `${mapTemplateHeight}px`;
                 this.map.updateSize();
@@ -101,7 +121,46 @@ export class MapComponent implements OnInit, OnDestroy, AfterViewChecked {
         }
     }
 
-    private drawMap() {
+    private highlightFeature(lightCardId: string, highlight: boolean) {
+        const mapTemplate = document.getElementById('ol-map');
+        if (!!mapTemplate && !!this.map) {
+            if (this.vectorLayer.getSource().getFeatures().length > 0) {
+                const features = this.vectorLayer.getSource().getFeatures();
+                const radius = highlight ? 2 : 1;
+                features.forEach((feature) => {
+                    if (feature.get('lightCard')?.id === lightCardId) {
+                        feature.setStyle(function (feature) {
+                            const severity: Severity = feature.get('lightCard').severity;
+                            return MapComponent.getOpenLayersStyle(severity, radius);
+                        });
+                    }
+                });
+            }
+        }
+    }
+
+    private zoomToLocation(lightCardId: string) {
+        const zoomLevelWhenZoomToLocation = this.configService.getConfigValue(
+            'feed.geomap.zoomLevelWhenZoomToLocation',
+            14
+        );
+        if (this.vectorLayer.getSource().getFeatures().length > 0) {
+            const features = this.vectorLayer.getSource().getFeatures();
+            features.forEach((feature) => {
+                if (feature.get('lightCard')?.id === lightCardId) {
+                    const ext = feature.getGeometry().getExtent();
+                    this.map.getView().fit(ext, {
+                        duration: 0,
+                        maxZoom: zoomLevelWhenZoomToLocation,
+                        padding: [20, 20, 20, 20],
+                        callback: this.map.updateSize()
+                    });
+                }
+            });
+        }
+    }
+
+    private drawMap(enableGraph: boolean) {
         const overlay = this.getClosePopupOverlay();
         const attribution = new Attribution({
             collapsible: true
@@ -126,6 +185,10 @@ export class MapComponent implements OnInit, OnDestroy, AfterViewChecked {
             controls: defaultControls({attribution: false}).extend([attribution])
         });
 
+        if (enableGraph) {
+            this.map.addControl(new GraphControl(null));
+        }
+
         this.map.on('singleclick', function (evt) {
             displayLightCardIfNecessary(evt);
         });
@@ -136,6 +199,16 @@ export class MapComponent implements OnInit, OnDestroy, AfterViewChecked {
                 self.lightCardToDisplay = feature.get('lightCard');
             });
         }
+    }
+
+    private getExtentWithMargin() {
+        const margin = 4000;
+        const extent = this.vectorLayer.getSource().getExtent();
+        extent[0] = extent[0] - margin;
+        extent[1] = extent[1] - margin;
+        extent[2] = extent[2] + margin;
+        extent[3] = extent[3] + margin;
+        return extent;
     }
 
     private updateMap(lightCards: LightCard[]) {
@@ -152,13 +225,19 @@ export class MapComponent implements OnInit, OnDestroy, AfterViewChecked {
         lightCards
             .filter((lightCard) => lightCard.wktGeometry)
             .forEach((lightCard) => {
-                const format = new WKT();
-                const feature = format.readFeature(lightCard.wktGeometry, {
-                    dataProjection: lightCard.wktProjection || defaultDataProjection,
-                    featureProjection: 'EPSG:3857'
-                });
-                feature.set('lightCard', lightCard, true);
-                featureArray.push(feature);
+                try {
+                    const format = new WKT();
+                    const feature = format.readFeature(lightCard.wktGeometry, {
+                        dataProjection: lightCard.wktProjection || defaultDataProjection,
+                        featureProjection: 'EPSG:3857'
+                    });
+                    feature.set('lightCard', lightCard, true);
+                    featureArray.push(feature);
+                } catch (e) {
+                    this.logger.error(
+                        `Unable to parse wktGeometry: ${e} for cardId [${lightCard.id}] and process [${lightCard.process}]`
+                    );
+                }
             });
         this.vectorLayer = new VectorLayer({
             source: new VectorSource({
@@ -177,6 +256,14 @@ export class MapComponent implements OnInit, OnDestroy, AfterViewChecked {
                 padding: [20, 20, 20, 20],
                 callback: this.map.updateSize()
             });
+
+            this.map.getControls().push(
+                new ZoomToExtent({
+                    extent: this.getExtentWithMargin(),
+                    label: 'R',
+                    tipLabel: 'Reset to default view'
+                })
+            );
         }
     }
 
@@ -208,14 +295,39 @@ export class MapComponent implements OnInit, OnDestroy, AfterViewChecked {
         return overlay;
     }
 
-    private static getOpenLayersStyle(severity: Severity): Style {
-        return MapComponent.openLayersForPointStyles()[severity];
+    private static getOpenLayersStyle(severity: Severity, radiusMultiplier = 1): Style {
+        return MapComponent.openLayersForPointStyles(radiusMultiplier)[severity];
     }
 
-    private static openLayersForPointStyles() {
+    private updateGraph(lightCards: LightCard[]) {
+        let countAlarm = 0;
+        let countAction = 0;
+        let countCompliant = 0;
+        let countInformational = 0;
+        lightCards.forEach((lightCard) => {
+            switch (lightCard.severity) {
+                case Severity.ALARM:
+                    countAlarm++;
+                    break;
+                case Severity.ACTION:
+                    countAction++;
+                    break;
+                case Severity.COMPLIANT:
+                    countCompliant++;
+                    break;
+                case Severity.INFORMATION:
+                    countInformational++;
+                    break;
+            }
+        });
+        const data = [countAlarm, countAction, countCompliant, countInformational];
+        this.updateGraphChart(self.graphChart, data);
+    }
+
+    private static openLayersForPointStyles(radiusMultiplier = 1) {
         const alarmStyle = new Style({
             image: new Circle({
-                radius: 7,
+                radius: 7 * radiusMultiplier,
                 fill: new Fill({
                     color: 'rgba(167, 26, 26, 0.8)'
                 }),
@@ -227,7 +339,7 @@ export class MapComponent implements OnInit, OnDestroy, AfterViewChecked {
         });
         const actionStyle = new Style({
             image: new Circle({
-                radius: 7,
+                radius: 7 * radiusMultiplier,
                 fill: new Fill({
                     color: 'rgba(253, 147, 18, 0.8)'
                 }),
@@ -239,7 +351,7 @@ export class MapComponent implements OnInit, OnDestroy, AfterViewChecked {
         });
         const compliantStyle = new Style({
             image: new Circle({
-                radius: 7,
+                radius: 7 * radiusMultiplier,
                 fill: new Fill({
                     color: 'rgba(0, 187, 3, 0.8)'
                 }),
@@ -251,7 +363,7 @@ export class MapComponent implements OnInit, OnDestroy, AfterViewChecked {
         });
         const informationStyle = new Style({
             image: new Circle({
-                radius: 7,
+                radius: 7 * radiusMultiplier,
                 fill: new Fill({
                     color: 'rgba(16, 116, 173, 0.8)'
                 }),
@@ -271,14 +383,84 @@ export class MapComponent implements OnInit, OnDestroy, AfterViewChecked {
         return geoStyles;
     }
 
+    private buildGraphChart(canvas) {
+        if (self.graphChart) self.graphChart.destroy();
+        const piechartDataObject = {
+            labels: [this.translate.instant('shared.severity.alarm'), this.translate.instant('shared.severity.action'),
+                this.translate.instant('shared.severity.compliant'), this.translate.instant('shared.severity.information')],
+            datasets: [{
+                label: 'Cards',
+                data: [0, 0, 0, 0],
+                backgroundColor: ['rgba(167, 26, 26, 0.8)', 'rgba(253, 147, 18, 0.8)', 'rgba(0, 187, 3, 0.8)', 'rgba(16, 116, 173, 0.8)']
+            }]
+        };
+        this.graphChart = new Chart(canvas, {
+            type: 'doughnut',
+            plugins: [ChartDataLabels],
+            options: {
+                responsive: true,
+                borderColor: 'rgb(38, 47, 61, 0.8)',
+                plugins: {
+                    datalabels: {
+                        display: function(context) {
+                            return context.dataset.data[context.dataIndex] > 0;
+                        },
+                        color: 'rgb(38, 47, 61, 0.8)',
+                        font: {
+                            weight: 'bold',
+                            size: 16
+                        },
+                    },
+                    legend: {
+                        display: false,
+                        position: 'bottom',
+                    },
+                    title: {
+                        display: false,
+                        text: 'Cards'
+                    }
+                }
+            },
+            data: piechartDataObject
+        });
+    }
+
+    private updateGraphChart(chart, data) {
+        if (chart != null && chart.data != null) {
+            chart.data.datasets.forEach((dataset) => {
+                dataset.data = data;
+            });
+            chart.update();
+        }
+    }
+
     ngOnDestroy() {
         this.unsubscribe$.next();
         this.unsubscribe$.complete();
-        this.unsubscribeStyle$.next();
-        this.unsubscribeStyle$.complete();
     }
 
     isSmallscreen() {
         return window.innerWidth < 1000;
+    }
+}
+
+class GraphControl extends Control {
+    constructor(opt_options) {
+        const options = opt_options || {};
+        const element = document.createElement('div');
+        element.className = 'ol-overlaycontainer-stopevent';
+        element.style.top = '0.5em';
+        element.style.right = '0.5em';
+        element.style.height = '10vh';
+        element.style.width = '10vw';
+        element.style.position = 'absolute';
+        const canvas = document.createElement('canvas');
+        canvas.id = 'mapGraph';
+        element.appendChild(canvas);
+        super({
+            element: element,
+            target: options.target
+        });
+        self.buildGraphChart(canvas.getContext('2d'));
     }
 }

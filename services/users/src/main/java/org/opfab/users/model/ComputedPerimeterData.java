@@ -29,4 +29,5 @@ public class ComputedPerimeterData implements ComputedPerimeter {
     private String process;
     private String state;
     private RightsEnum rights;
+    private Boolean filteringNotificationAllowed;
 }

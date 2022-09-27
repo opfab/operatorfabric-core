@@ -25,6 +25,7 @@
             "assets": [
               "src/favicon.ico",
               "src/assets",
+              "src/shared",
               "src/silent-refresh.html",
               "src/manifest.webmanifest"
             ],
@@ -37,8 +38,8 @@
               "node_modules/virtual-select-plugin/dist/virtual-select.min.css",
               "node_modules/tooltip-plugin/dist/tooltip.min.css",
               "node_modules/ol/ol.css",
-              "src/assets/styles/style.css",
-              "src/scss/styles.scss"
+              "src/scss/styles.scss",
+              "src/shared/css/opfab-application.css"
             ],
             "scripts": [
               "node_modules/svg-pan-zoom/dist/svg-pan-zoom.js",
@@ -48,7 +49,8 @@
               "src/assets/js/usercardTemplateGateway.js",
               "node_modules/chart.js/dist/chart.min.js",
               "node_modules/chartjs-adapter-date-fns/dist/chartjs-adapter-date-fns.bundle.min.js",
-              "src/assets/js/opfab.js"
+              "src/assets/js/opfab.js",
+              "src/shared/js/opfab-application.js"
             ],
             "allowedCommonJsDependencies": [
               "rxjs/internal/Subject",
@@ -138,14 +140,14 @@
             "styles": [
               "./node_modules/bootstrap/dist/css/bootstrap.min.css",
               "node_modules/@fortawesome/fontawesome-free/css/all.css",
-              "src/assets/styles/style.css",
-              "src/scss/styles.scss"
+              "src/scss/styles.scss",
+              "src/shared/css/opfab-application.css"
             ],
             "scripts": [
               "src/assets/js/templateGateway.js",
               "src/assets/js/usercardTemplateGateway.js",
-              "src/assets/js/opfab.js"
-
+              "src/assets/js/opfab.js",
+              "src/shared/js/opfab-application.js"
             ],
             "assets": [
               "src/favicon.ico",

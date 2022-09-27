@@ -72,7 +72,7 @@ listed groups.
 |Settings
 |settings
 
-|Notification Reception Configuration
+|Notification Configuration
 |feedconfiguration
 
 |Real time users

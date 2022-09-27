@@ -1,0 +1,16 @@
+{
+	"id":"process_2",
+	"version":"1",
+	"states": {
+		"state1" : {
+			"templateName" : "template",
+			"description": "Message 1",
+			"styles" : [ "style" ]
+		},
+		"state2" : {
+			"templateName" : "template",
+			"description": "Message 2",
+			"styles" : [ "style" ]
+		}
+	  }
+}

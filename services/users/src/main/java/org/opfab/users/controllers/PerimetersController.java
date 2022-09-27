@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2021, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2022, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -69,9 +69,11 @@ public class PerimetersController implements PerimetersApi {
 
     @Override
     public Perimeter createPerimeter(HttpServletRequest request, HttpServletResponse response, Perimeter perimeter) throws Exception {
-        if(perimeterRepository.findById(perimeter.getId()).orElse(null) == null){
+        userService.checkFormatOfIdField(perimeter.getId());
 
-            if(! userService.isEachStateUniqueInPerimeter(perimeter)){
+        if (perimeterRepository.findById(perimeter.getId()).orElse(null) == null) {
+
+            if (! userService.isEachStateUniqueInPerimeter(perimeter)) {
                 throw new ApiErrorException(
                         ApiError.builder()
                                 .status(HttpStatus.BAD_REQUEST)

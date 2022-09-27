@@ -7,14 +7,14 @@
 <!-- This file is part of the OperatorFabric project.                      -->
 
 
-<div style="width:100%;display:flex;flex-wrap:wrap">  
+<div style="width:100%;display:flex;flex-wrap:wrap">
     <div class="opfab-multiselect" style="flex-basis:0;width:100%;position:relative;flex-grow:1;margin-right:20px">
         <label> STATE OF THE PROCESS</label>
         <div id="state-select" placeholder="--Please choose an option--"></div>
     </div>
 
-   <div class="opfab-multiselect"  style="flex-basis:0;width:100%;position:relative;flex-grow:1;margin-left:20px">
-        <label > STATUS OF THE STATE </label>
+    <div class="opfab-multiselect" style="flex-basis:0;width:100%;position:relative;flex-grow:1;margin-left:20px">
+        <label> STATUS OF THE STATE </label>
         <div id="status-select" placeholder="--Please choose an option--"></div>
     </div>
 </div>
@@ -22,53 +22,73 @@
 
 <script>
 
-    stateSelect = opfab.multiSelect.init({
-        id: "state-select",
-        options: [
-                { label: 'Started', value: 'start' },
-                { label: 'Calculation 1 done', value: 'calcul1' },
-                { label: 'Calculation 2 done', value: 'calcul2' },
-                { label: 'Calculation 3 done', value: 'calcul3' },
-            ],
-        multiple: false,
-        search: true
-    });
+    userCardTemplate = {
 
-    statusSelect = opfab.multiSelect.init({
-        id: "status-select",
-        options: [
-                { label: 'Ok', value: 'ok' },
-                { label: 'Error', value: 'error' },
-            ],
-        multiple: false,
-        search: false
-    });
+        stateSelect: null,
+        statusSelect: null,
 
-    selectedProcessState = "{{card.data.state}}";
-    if (selectedProcessState.length >0) document.getElementById('state-select').setValue(selectedProcessState);
+        init: function () {
+            this.initMultiSelect();
+            this.selectValuesInEditMode();
+            this.initGetSpecificInformation();
+        },
 
-    selectedProcessStatus = "{{card.data.status}}";
-    if (selectedProcessStatus.length >0) document.getElementById('status-select').setValue(selectedProcessStatus);
+        initMultiSelect: function () {
+            this.stateSelect = opfab.multiSelect.init({
+                id: "state-select",
+                options: [
+                    {label: 'Started', value: 'start'},
+                    {label: 'Calculation 1 done', value: 'calcul1'},
+                    {label: 'Calculation 2 done', value: 'calcul2'},
+                    {label: 'Calculation 3 done', value: 'calcul3'}
+                ],
+                multiple: false,
+                search: true
+            });
 
+            this.statusSelect = opfab.multiSelect.init({
+                id: "status-select",
+                options: [],
+                multiple: false,
+                search: false
+            });
+            // Init multiselect option list via setOptions() instead of init  
+            // to have the method  setOptions() used in  cypress tests 
+            this.statusSelect.setOptions([
+                {label: 'Ok', value: 'ok'},
+                {label: 'Error', value: 'error'},
+            ],)
+        },
 
+        selectValuesInEditMode: function () {
+            const selectedProcessState = "{{card.data.state}}";
+            if (selectedProcessState.length > 0) this.stateSelect.setSelectedValues([selectedProcessState]);
+            
+            const selectedProcessStatus = "{{card.data.status}}";
+            if (selectedProcessStatus.length > 0) this.statusSelect.setSelectedValues([selectedProcessStatus]);
+        },
 
-
-    usercardTemplateGateway.getSpecificCardInformation = function () {
-        const state = document.getElementById('state-select').value;
-        const status = document.getElementById('status-select').value;
-        const card = {
-            summary: { key: "message.summary" },
-            title: { key: "processState.title", parameters: {status: state} },
-            data: { 
-                state: state,
-                status: status
+        initGetSpecificInformation: function () {
+            usercardTemplateGateway.getSpecificCardInformation = function () {
+                const state = document.getElementById('state-select').value;
+                const status = document.getElementById('status-select').value;
+                const card = {
+                    summary: {key: "message.summary"},
+                    title: {key: "processState.title", parameters: {status: state}},
+                    data: {
+                        state: state,
+                        status: status
+                    }
+                };
+                if (status === "error") card.data.error = "true";
+                return {
+                    valid: true,
+                    card: card
+                };
             }
-        };
-        if (status==="error") card.data.error="true";
-        return {
-            valid: true,
-            card: card
-        };
-
+        }
     }
+
+    userCardTemplate.init();
+
 </script>

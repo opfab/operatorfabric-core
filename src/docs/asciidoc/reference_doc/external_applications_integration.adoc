@@ -1,0 +1,24 @@
+// Copyright (c) 2022 RTE (http://www.rte-france.com)
+// See AUTHORS.txt
+// This document is subject to the terms of the Creative Commons Attribution 4.0 International license.
+// If a copy of the license was not distributed with this
+// file, You can obtain one at https://creativecommons.org/licenses/by/4.0/.
+// SPDX-License-Identifier: CC-BY-4.0
+
+= External Applications Integration
+
+The external web applications can take advantage of OperatorFabric shared stylesheet to style pages and specific components. 
+The available css classes are detailed in  
+ifdef::single-page-doc[<<opfab_template_style, OperatorFabric css styles>>]
+ifndef::single-page-doc[<</documentation/current/reference_doc/index.adoc#copfab_template_style, OperatorFabric css styles>>]
+
+To use the shared stylesheet the web application should link the following resources:
+
+- `/shared/css/opfab-application.css` : css classes
+
+- `/shared/css/opfab-application.js` : javascript objects to hande day/night themes
+
+
+Your can find an example of a web page using these resources in the OperatorFabric core repository (https://github.com/opfab/operatorfabric-core/tree/develop/src/test/externalWebAppExample/index.html[src/test/externalWebAppExample/index.html]).
+
+The example test page can be accessed from OperatorFabric directly at the following url  `http://localhost:2002/external/appExample/` and also using one of the example business menu entries.

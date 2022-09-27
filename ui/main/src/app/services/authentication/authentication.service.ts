@@ -37,6 +37,8 @@ import {redirectToCurrentLocation} from '../../app-routing.module';
 import {Router} from '@angular/router';
 import {Message, MessageLevel} from '@ofModel/message.model';
 import {I18n} from '@ofModel/i18n.model';
+import {selectAuthenticationState} from '@ofSelectors/authentication.selectors';
+
 
 export enum LocalStorageAuthContent {
     token = 'token',
@@ -67,6 +69,7 @@ export class AuthenticationService {
     private implicitConf = implicitAuthenticationConfigFallback;
 
     private secondsToCloseSession: number;
+    private authenticated: boolean;
 
     /**
      * @constructor
@@ -90,6 +93,7 @@ export class AuthenticationService {
     ) {
         this.assignConfigurationProperties(this.configService.getConfigValue('security'));
         this.authModeHandler = this.instantiateAuthModeHandler(this.mode);
+        this.subscribeToAuthenticationState();
     }
 
     /**
@@ -140,6 +144,12 @@ export class AuthenticationService {
         return new PasswordOrCodeAuthenticationHandler(this, this.store);
     }
 
+    subscribeToAuthenticationState() {
+        this.store.select(selectAuthenticationState).subscribe((authState) => {
+            this.authenticated = authState.identifier != null;
+        });
+    }
+
     regularCheckTokenValidity() {
         if (this.verifyExpirationDate()) {
             setTimeout(() => {
@@ -147,7 +157,7 @@ export class AuthenticationService {
             }, MILLIS_TO_WAIT_BETWEEN_TOKEN_EXPIRATION_DATE_CONTROLS);
         } else {
             // Will send Logout if token is expired
-            this.store.dispatch(new SessionExpiredAction());
+            if (this.authenticated) this.store.dispatch(new SessionExpiredAction());
         }
     }
 

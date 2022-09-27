@@ -13,7 +13,7 @@ import {RealTimeScreensService} from '@ofServices/real-time-screens.service';
 import {RealTimeScreen} from '@ofModel/real-time-screens.model';
 import {EntitiesService} from '@ofServices/entities.service';
 import {GroupsService} from '@ofServices/groups.service';
-import {UntypedFormControl, UntypedFormGroup} from '@angular/forms';
+import {FormControl, FormGroup} from '@angular/forms';
 import {UserPreferencesService} from '@ofServices/user-preference.service';
 import {Utilities} from '../../common/utilities';
 import {MultiSelectConfig} from '@ofModel/multiselect.model';
@@ -24,7 +24,9 @@ import {MultiSelectConfig} from '@ofModel/multiselect.model';
     styleUrls: ['./realtimeusers.component.scss']
 })
 export class RealtimeusersComponent implements OnInit, OnDestroy {
-    realTimeScreensForm: UntypedFormGroup;
+    realTimeScreensForm: FormGroup<{
+        realTimeScreen: FormControl<string | null>;
+    }>;
     interval;
 
     realTimeScreens: Array<RealTimeScreen>;
@@ -50,15 +52,15 @@ export class RealtimeusersComponent implements OnInit, OnDestroy {
     ) {}
 
     ngOnInit(): void {
-        this.realTimeScreensForm = new UntypedFormGroup({
-            realTimeScreen: new UntypedFormControl('')
+        this.realTimeScreensForm = new FormGroup({
+            realTimeScreen: new FormControl('')
         });
 
         this.changeScreenWhenSelectRealTimeScreen();
 
         this.realTimeScreensService.loadRealTimeScreensData().subscribe((result) => {
             this.realTimeScreens = result.realTimeScreens;
-            
+
             this.realTimeScreens.forEach((realTimeScreen, index) => {
                 this.realTimeScreensOptions.push({value: String(index), label: realTimeScreen.screenName});
             });
@@ -105,23 +107,25 @@ export class RealtimeusersComponent implements OnInit, OnDestroy {
             connectedUsers.sort((obj1, obj2) => Utilities.compareObj(obj1.login, obj2.login));
 
             connectedUsers.forEach((realTimeUserConnected) => {
-                realTimeUserConnected.entitiesConnected.forEach((entityConnected) => {
-                    realTimeUserConnected.groups.forEach((group) => {
-                        let usersConnectedPerEntityAndGroup = this.connectedUsersPerEntityAndGroup.get(
-                            entityConnected + '.' + group
-                        );
+                if (!! realTimeUserConnected.entitiesConnected) {
+                    realTimeUserConnected.entitiesConnected.forEach((entityConnected) => {
+                        realTimeUserConnected.groups.forEach((group) => {
+                            let usersConnectedPerEntityAndGroup = this.connectedUsersPerEntityAndGroup.get(
+                                entityConnected + '.' + group
+                            );
 
-                        if (!usersConnectedPerEntityAndGroup) usersConnectedPerEntityAndGroup = [];
+                            if (!usersConnectedPerEntityAndGroup) usersConnectedPerEntityAndGroup = [];
 
-                        // we don't want duplicates for the same user
-                        if (!usersConnectedPerEntityAndGroup.includes(realTimeUserConnected.login))
-                            usersConnectedPerEntityAndGroup.push(realTimeUserConnected.login);
-                        this.connectedUsersPerEntityAndGroup.set(
-                            entityConnected + '.' + group,
-                            usersConnectedPerEntityAndGroup
-                        );
+                            // we don't want duplicates for the same user
+                            if (!usersConnectedPerEntityAndGroup.includes(realTimeUserConnected.login))
+                                usersConnectedPerEntityAndGroup.push(realTimeUserConnected.login);
+                            this.connectedUsersPerEntityAndGroup.set(
+                                entityConnected + '.' + group,
+                                usersConnectedPerEntityAndGroup
+                            );
+                        });
                     });
-                });
+                }
             });
         });
     }

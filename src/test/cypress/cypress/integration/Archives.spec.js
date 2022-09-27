@@ -7,7 +7,12 @@
  * This file is part of the OperatorFabric project.
  */
 
+import {getOpfabGeneralCommands} from "../support/opfabGeneralCommands"
+
 describe('Archives screen tests', function () {
+
+    const opfab = getOpfabGeneralCommands();
+
     before('Set up configuration', function () {
         cy.loadTestConf();
     });
@@ -15,8 +20,8 @@ describe('Archives screen tests', function () {
     it('Check archived cards reception', function () {
         cy.deleteAllArchivedCards();
         cy.send6TestCards();
-        cy.loginOpFab('operator1_fr', 'test');
-        moveToArchivesScreen();
+        opfab.loginWithUser('operator1_fr');
+        opfab.navigateToArchives();
         cy.waitDefaultTime();
         cy.checkAdminModeCheckboxDoesNotExist();
         cy.checkAdminModeLinkDoesNotExist();
@@ -44,9 +49,8 @@ describe('Archives screen tests', function () {
         cy.deleteAllArchivedCards();
         cy.send6TestCards();
         cy.send6TestCards();
-
-        cy.loginOpFab('operator1_fr', 'test');
-        moveToArchivesScreen();
+        opfab.loginWithUser('operator1_fr');
+        opfab.navigateToArchives();
 
         cy.clickOnSearchButton();
         checkNumberOfLineDisplayedIs(10);
@@ -77,21 +81,19 @@ describe('Archives screen tests', function () {
         delayArchiveRequest();
         cy.deleteAllArchivedCards();
         cy.send6TestCards();
-        cy.loginOpFab('operator1_fr', 'test');
-        moveToArchivesScreen();
+        opfab.loginWithUser('operator1_fr');
+        opfab.navigateToArchives();
         cy.waitDefaultTime();
         cy.clickOnSearchButton();
-        cy.checkLoadingSpinnerIsDisplayed();
-        cy.checkLoadingSpinnerIsNotDisplayed();
+        opfab.checkLoadingSpinnerIsDisplayed();
+        opfab.checkLoadingSpinnerIsNotDisplayed();
         checkNumberOfLineDisplayedIs(6);
     });
 
     it('Check composition of multi-filters for process groups/processes/states for operator1_fr', function () {
-        cy.loginOpFab('operator1_fr', 'test');
-        moveToArchivesScreen();
-
+        opfab.loginWithUser('operator1_fr');
+        opfab.navigateToArchives();
         checkMultifiltersWhenAllProcessStatesAreDisplayed();
-
         // We check this state is not present because it is only a child state
         cy.checkStateSelectDoesNotContains('Planned outage date response');
     });
@@ -99,9 +101,8 @@ describe('Archives screen tests', function () {
     it('Check composition of multi-filters for process groups/processes/states for itsupervisor1', function () {
         cy.deleteAllArchivedCards();
         cy.send6TestCards();
-        cy.loginOpFab('itsupervisor1', 'test');
-        moveToArchivesScreen();
-
+        opfab.loginWithUser('itsupervisor1');
+        opfab.navigateToArchives();
         cy.checkAdminModeLinkDoesNotExist();
         cy.checkAdminModeCheckboxIsDisplayed();
         cy.checkAdminModeCheckboxIsNotChecked();
@@ -130,8 +131,8 @@ describe('Archives screen tests', function () {
     });
 
     it('Check composition of multi-filters for process groups/processes/states for admin', function () {
-        cy.loginOpFab('admin', 'test');
-        moveToArchivesScreen();
+        opfab.loginWithUser('admin');
+        opfab.navigateToArchives();
         cy.checkProcessGroupSelectDoesNotExist();
         cy.checkProcessSelectDoesNotExist();
         cy.checkStateSelectDoesNotExist();
@@ -163,8 +164,8 @@ describe('Archives screen tests', function () {
 
     it('Check composition of multi-filters for process groups/processes/states for operator1_fr, with a config without process group', function () {
         cy.loadEmptyProcessGroups();
-        cy.loginOpFab('operator1_fr', 'test');
-        moveToArchivesScreen();
+        opfab.loginWithUser('operator1_fr');
+        opfab.navigateToArchives();
         cy.checkProcessGroupSelectDoesNotExist();
         cy.checkAdminModeCheckboxDoesNotExist();
         cy.checkAdminModeLinkDoesNotExist();
@@ -190,8 +191,8 @@ describe('Archives screen tests', function () {
     });
 
     it('Check behaviour of "isOnlyAChildState" attribute (in file config.json of bundles)', function () {
-        cy.loginOpFab('operator1_fr', 'test');
-        moveToArchivesScreen();
+        opfab.loginWithUser('operator1_fr');
+        opfab.navigateToArchives();
 
         cy.clickOnProcessGroupSelect();
         cy.selectAllProcessGroups();
@@ -215,8 +216,8 @@ describe('Archives screen tests', function () {
     });
 
     it('Check composition of multi-filters for operator6_fr (no rights on process/state and not member of ADMIN group)', function () {
-        cy.loginOpFab('operator6_fr', 'test');
-        moveToArchivesScreen();
+        opfab.loginWithUser('operator6_fr');
+        opfab.navigateToArchives();
         cy.checkProcessGroupSelectDoesNotExist();
         cy.checkProcessSelectDoesNotExist();
         cy.checkStateSelectDoesNotExist();
@@ -230,8 +231,8 @@ describe('Archives screen tests', function () {
         cy.deleteAllArchivedCards();
         cy.send6TestCards();
         cy.send6TestCards();
-        cy.loginOpFab('operator1_fr', 'test');
-        moveToArchivesScreen();
+        opfab.loginWithUser('operator1_fr');
+        opfab.navigateToArchives();
         cy.clickOnSearchButton();
 
         clickOnCollapsibleUpdates();
@@ -344,9 +345,6 @@ describe('Archives screen tests', function () {
         });
     });
 
-    function moveToArchivesScreen() {
-        cy.get('#opfab-navbar-menu-archives').click();
-    }
 
     function clickOnCollapsibleUpdates() {
         cy.get('#opfab-archives-collapsible-updates').click();
@@ -428,7 +426,7 @@ describe('Archives screen tests', function () {
 
     function openAndCheckArchiveCardContent(cellContent, cardText) {
         cy.get('#opfab-archives-cards-list').find('td').contains(cellContent).should('exist').click();
-        cy.get('#opfab-card-template-detail').contains(cardText).should('exist');
+        cy.get('#opfab-div-card-template-processed').contains(cardText).should('exist');
         cy.get('#opfab-archives-card-detail-close').click({force: true});
     }
 

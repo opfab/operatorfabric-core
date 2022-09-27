@@ -9,7 +9,7 @@
 
 <div class="modal-content groupModal">
   <div class="modal-header">
-    <span class="modal-title" *ngIf="row">{{row.id}}</span>
+    <span class="modal-title" style="overflow-wrap: break-word; max-width: 700px;" *ngIf="row">{{row.id}}</span>
     <span class="modal-title" *ngIf="!row" translate>admin.input.{{type}}.add</span>
     <div id="opfab-admin-edit-btn-close" class="opfab-close-modal-icon" aria-label="Close" (click)="dismissModal('Cross click')">
       <span aria-hidden="true">&times;</span>
@@ -44,7 +44,7 @@
             <input formControlName="description" name="description" id="opfab-description" type="text">
           </div>
 
-          <div class="opfab-input opfab-edit-row">
+          <div class="opfab-edit-row">
             <of-multi-select id="opfab-group-type"
                              multiSelectId="type"
                              [parentForm]="groupForm"
@@ -63,6 +63,10 @@
             [options]="perimetersMultiSelectOptions"
             [selectedOptions]="selectedPerimeters">    
             </of-multi-select>
+          </div>
+          <div *ngIf="!!row" class="opfab-input opfab-edit-row" style="height: fit-content; min-height: 46px">
+            <label for="opfab-group-users" translate>admin.input.group.users</label>
+            <div style="padding:10px" id="opfab-group-users">{{groupUsers}}</div>
           </div>
           <div class="opfab-edit-row">
             <label for="opfab-realtime" class="opfab-checkbox "> <span class="" translate>admin.input.group.realtime</span>

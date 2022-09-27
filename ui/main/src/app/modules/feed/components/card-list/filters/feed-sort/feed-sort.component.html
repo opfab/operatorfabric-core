@@ -1,4 +1,4 @@
-<!-- Copyright (c) 2018-2021, RTE (http://www.rte-france.com)              -->
+<!-- Copyright (c) 2018-2022, RTE (http://www.rte-france.com)              -->
 <!-- See AUTHORS.txt                                                       -->
 <!-- This Source Code Form is subject to the terms of the Mozilla Public   -->
 <!-- License, v. 2.0. If a copy of the MPL was not distributed with this   -->
@@ -13,7 +13,7 @@
     </div>
     <form [formGroup]="sortForm" id="opfab-sort-form">
 
-        <label *ngIf="!hideReadSort" class="opfab-radio-button"> <span  translate> feed.sort.unread</span>
+        <label class="opfab-radio-button"> <span  translate> feed.sort.unread</span>
             <input type="radio"  id="opfab-feed-filter-unread" formControlName="sortControl" value="unread">
             <span class="opfab-radio-button-checkmark"></span>
         </label>
@@ -23,8 +23,18 @@
             <span class="opfab-radio-button-checkmark"></span>
         </label>
 
-        <label *ngIf="!hideSeveritySort" class="opfab-radio-button"> <span  translate> feed.sort.severity</span>
+        <label class="opfab-radio-button"> <span  translate> feed.sort.severity</span>
             <input type="radio"  id="opfab-feed-filter-severity" formControlName="sortControl" value="severity">
+            <span class="opfab-radio-button-checkmark"></span>
+        </label>
+
+        <label class="opfab-radio-button"> <span  translate> feed.sort.startDate</span>
+            <input type="radio"  id="opfab-feed-filter-start-date" formControlName="sortControl" value="startDate">
+            <span class="opfab-radio-button-checkmark"></span>
+        </label>
+
+        <label class="opfab-radio-button"> <span  translate> feed.sort.endDate</span>
+            <input type="radio"  id="opfab-feed-filter-end-date" formControlName="sortControl" value="endDate">
             <span class="opfab-radio-button-checkmark"></span>
         </label>
     </form>

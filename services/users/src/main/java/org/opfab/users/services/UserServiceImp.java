@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2021, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2022, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -33,8 +33,17 @@ import java.util.*;
 @Slf4j
 public class UserServiceImp implements UserService {
 
-    public static final String GROUP_ID_IMPOSSIBLE_TO_FETCH_MSG = "Group id impossible to fetch : %s";
     public static final String PERIMETER_ID_IMPOSSIBLE_TO_FETCH_MSG = "Perimeter id impossible to fetch : %s";
+
+    public static final String ID_IS_REQUIRED_MSG = "Id is required.";
+    public static final String ID_FIELD_PATTERN_MSG = "Id should only contain the following characters: letters, _, - or digits (id=%s).";
+    public static final String ID_FIELD_MIN_LENGTH_MSG = "Id should be minimum 2 characters (id=%s).";
+    public static final String ID_FIELD_PATTERN = "^[A-Za-z0-9-_]+$";
+
+    public static final String MANDATORY_LOGIN_MISSING = "Mandatory 'login' field is missing.";
+    public static final String LOGIN_FIELD_PATTERN_MSG = "Login should only contain the following characters: letters, _, -, . or digits (login=%s).";
+    public static final String LOGIN_FIELD_MIN_LENGTH_MSG = "Login should be minimum 2 characters (login=%s).";
+    public static final String LOGIN_FIELD_PATTERN = "^[A-Za-z0-9-_.]+$";
 
     @Autowired
     private UserRepository userRepository;
@@ -48,15 +57,23 @@ public class UserServiceImp implements UserService {
     @Autowired
     private RabbitTemplate rabbitTemplate;
 
-    /** Retrieve user_settings from repository for the user **/
+    public UserData retrieveUser(String login) {
+
+        Optional<UserData> foundUser = userRepository.findById(login);
+        if (foundUser.isPresent()) {
+            return foundUser.get();
+        } else {
+            log.warn("User not found: {}", login);
+            return null;
+        }
+    }
+
     public UserSettingsData retrieveUserSettings(String login) {
 
         return userSettingsRepository.findById(login)
                 .orElse(UserSettingsData.builder().login(login).build());
     }
 
-    /** Retrieve groups from repository for groups list, logging a warning if a group id is not found
-     * */
     public List<GroupData> retrieveGroups(List<String> groupIds) {
         List<GroupData> foundGroups = new ArrayList<>();
         for(String id : groupIds){
@@ -70,8 +87,24 @@ public class UserServiceImp implements UserService {
         return foundGroups;
     }
 
-    /** Retrieve perimeters from repository for perimeter list, throwing an error if a perimeter is not found
-     * */
+    public Set<Perimeter> findPerimetersAttachedToGroups(List<String> groups) {
+        if ((groups != null) && (!groups.isEmpty())) {
+            List<GroupData> groupsData = retrieveGroups(groups);
+
+            if ((groupsData != null) && (!groupsData.isEmpty())) {
+                Set<Perimeter> perimetersData = new HashSet<>(); //We use a set because we don't want to have a duplicate
+                groupsData.forEach(     //For each group, we recover its perimeters
+                        groupData -> {
+                            List<PerimeterData> list = retrievePerimeters(groupData.getPerimeters());
+                            if (list != null)
+                                perimetersData.addAll(list);
+                        });
+                return perimetersData;
+            }
+        }
+        return Collections.emptySet();
+    }
+
     public List<PerimeterData> retrievePerimeters(List<String> perimeterIds) {
         List<PerimeterData> foundPerimeters = new ArrayList<>();
         for(String perimeterId : perimeterIds){
@@ -104,13 +137,78 @@ public class UserServiceImp implements UserService {
         return true;
     }
 
+    public boolean checkFilteringNotificationIsAllowedForAllProcessesStates(String login, UserSettings userSettings) {
+        if ((userSettings.getProcessesStatesNotNotified() != null) && (!userSettings.getProcessesStatesNotNotified().isEmpty())) {
+            UserData userData = retrieveUser(login);
+
+            if (userData != null) {
+                List<String> groups = userData.getGroups();
+                Set<Perimeter> perimeters = findPerimetersAttachedToGroups(groups);
+
+                CurrentUserWithPerimetersData userWithPerimetersData = CurrentUserWithPerimetersData.builder().userData(userData).build();
+                userWithPerimetersData.computePerimeters(perimeters);
+                if (!isFilteringNotificationAllowedForAllProcessesStates(userWithPerimetersData,
+                        userSettings.getProcessesStatesNotNotified()))
+                    return false;
+            }
+        }
+        return true;
+    }
+
+    private boolean isFilteringNotificationAllowedForAllProcessesStates(CurrentUserWithPerimeters currentUserWithPerimeters,
+                                                                       Map<String, List<String>> processesStates){
+
+        if ((processesStates != null) && (processesStates.size() > 0)) {
+            for (Map.Entry<String, List<String>> entry : processesStates.entrySet()) {
+                List <String> stateIds = entry.getValue();
+                String processId = entry.getKey();
+
+                if (! isFilteringNotificationAllowedForAllProcessStates(currentUserWithPerimeters, processId, stateIds))
+                    return false;
+            }
+        }
+        return true;
+    }
+
+    private boolean isFilteringNotificationAllowedForAllProcessStates(CurrentUserWithPerimeters currentUserWithPerimeters,
+                                                              String processId,
+                                                              List<String> stateIds) {
+        if (stateIds != null) {
+            for (String stateId : stateIds) {
+                if (!isFilteringNotificationAllowedForThisProcessState(currentUserWithPerimeters, processId, stateId))
+                    return false;
+            }
+        }
+        return true;
+    }
+
+    private boolean isFilteringNotificationAllowedForThisProcessState(CurrentUserWithPerimeters currentUserWithPerimeters,
+                                                                     String processId, String stateId){
+
+        for (ComputedPerimeter computedPerimeter: currentUserWithPerimeters.getComputedPerimeters()) {
+
+            if ((computedPerimeter.getProcess().equals(processId)) && (computedPerimeter.getState().equals(stateId)) &&
+                (computedPerimeter.getFilteringNotificationAllowed() != null) && (!computedPerimeter.getFilteringNotificationAllowed())) {
+                log.info("Filtering notification not allowed for user={} process={} state={}",
+                        currentUserWithPerimeters.getUserData().getLogin(), processId, stateId);
+                return false;
+            }
+        }
+        return true;
+    }
+
     //Retrieve users from repository for the group and publish a message to USER_EXCHANGE
     public void publishUpdatedGroupMessage(String groupId){
         List<UserData> foundUsers = userRepository.findByGroupSetContaining(groupId);
-        if (foundUsers != null) {
+        if (foundUsers != null && !foundUsers.isEmpty()) {
             for (UserData userData : foundUsers)
                 publishUpdatedUserMessage(userData.getLogin());
-        }
+        } else publishUpdatedConfigMessage();
+    }
+
+    @Override
+    public void publishUpdatedConfigMessage(){
+        publishUpdatedUserMessage("");
     }
 
     public void publishUpdatedUserMessage(String userLogin){
@@ -121,6 +219,48 @@ public class UserServiceImp implements UserService {
     public User createUser(User user) {
         userRepository.save(new UserData(user));
         return user;
+    }
+
+    public void checkFormatOfIdField(String id) throws ApiErrorException {
+        String errorMessage = "";
+
+        if (id.length() == 0)
+            errorMessage = ID_IS_REQUIRED_MSG;
+        else {
+            if (id.length() == 1)
+                errorMessage = String.format(ID_FIELD_MIN_LENGTH_MSG, id);
+
+            if (! id.matches(ID_FIELD_PATTERN))
+                errorMessage += String.format(ID_FIELD_PATTERN_MSG, id);
+        }
+
+        if (errorMessage.length() > 0)
+            throw new ApiErrorException(
+                    ApiError.builder()
+                            .status(HttpStatus.BAD_REQUEST)
+                            .message(errorMessage)
+                            .build());
+    }
+
+    public void checkFormatOfLoginField(String login) throws ApiErrorException {
+        String errorMessage = "";
+
+        if (login.length() == 0)
+            errorMessage = MANDATORY_LOGIN_MISSING;
+        else {
+            if (login.length() == 1)
+                errorMessage = String.format(LOGIN_FIELD_MIN_LENGTH_MSG, login);
+
+            if (! login.matches(LOGIN_FIELD_PATTERN))
+                errorMessage += String.format(LOGIN_FIELD_PATTERN_MSG, login);
+        }
+
+        if (errorMessage.length() > 0)
+            throw new ApiErrorException(
+                    ApiError.builder()
+                            .status(HttpStatus.BAD_REQUEST)
+                            .message(errorMessage)
+                            .build());
     }
 }
 

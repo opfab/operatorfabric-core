@@ -26,6 +26,10 @@ You can find more information
 ifdef::single-page-doc[<<_processes_groups, here>>]
 ifndef::single-page-doc[<</documentation/current/reference_doc/index.adoc#_processes_groups, here>>]
 
+Some process/state may be non-filterable. In this case, the corresponding checkbox is disabled (and checked).
+To make a process/state filterable or not, the admin must modify the "filtering notification allowed" field, in the
+corresponding perimeter.
+
 == Sound notification 
 
 If the option is activated in the general configuration file web-ui.json, the user can choose to have a sound played
@@ -55,6 +59,8 @@ The configuration is done on a state by setting the `acknowledgmentAllowed` fiel
 the response is disabled for the user
 
 It is possible to cancel a card aknowledgment unless process state configuration has the `cancelAcknowledgmentAllowed` field set to false.
+
+When the user acknowledges a card, the card detail is closed unless process state configuration has the `closeCardWhenUserAcknowledges` field set to false.
 
 You can see examples in src/test/resources/bundles/defaultProcess_V1/config.json
 

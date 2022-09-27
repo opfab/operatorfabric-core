@@ -53,6 +53,9 @@
     },
     "exportInProgress": "Bezig met exporteren",
     "loadingInProgress": "Bezig met laden",
+    "requestInProgress": "Bezig met verzoek...",
+    "deleteInProgress": "Bezig met verwijdering...",
+    "logoutInProgress": "Bezig met uitloggen...",
     "noResult": "Uw zoekopdracht leverde geen resultaten op.",
     "exportToExcel": "Exporteer data",
     "resultsNumber":"Aantal resultaten",
@@ -168,9 +171,11 @@
     },
     "sort": {
       "title": "Sorteer op",
-      "severity": "Ernst en dan datum",
-      "publish": "Datum",
-      "unread": "Ongelezen en dan datum"
+      "severity": "Ernst en dan ontvangstdatum",
+      "publish": "Ontvangstdatum",
+      "unread": "Ongelezen en dan ontvangstdatum",
+      "startDate": "Startdatum",
+      "endDate": "Einddatum"
     },
     "tips": {
       "acknowledged": "Bevestigd",
@@ -188,11 +193,13 @@
     },
     "lttdFinished": "Afgerond",
     "responsesClosed": "Reacties gesloten",
-    "received": "Ontvangen op",
+    "received": "Ontvangen :",
+    "deleted": "Verwijderd :",
+    "addressedTo": "Geadresseerd aan :",
     "at": "op",
     "from" : "van",
     "moreCards": "kaarten over",
-    "lastResponse": "Laatste reactie ontvangen op",
+    "lastResponse": "Laatste reactie :",
     "cardLoadingInProgress":"Bezig met laden van de kaart...",
     "cardNotFound": "De kaart die u zoekt werd niet gevonden."
   },
@@ -263,10 +270,14 @@
   },
   "activityArea": {
     "title": "ACTIVITEITENGEBIED",
-    "titleOnLogin": "KIES UW ACTIVITEITENGEBIED"
+    "titleOnLogin": "KIES UW ACTIVITEITENGEBIED",
+    "savingInProgress": "aan het opslaan..."
   },
   "feedConfiguration": {
-    "title": "NOTIFICATIE CONFIGURATIE"
+    "title": "NOTIFICATIE CONFIGURATIE",
+    "information": "INFORMATIE",
+    "youAreUnsubscribedFrom": "U bent uitgeschreven voor een of meer meldingen waarvoor uitschrijving niet toegestaan is.\n\nBetrokken melding(en) :\n",
+    "youWillBeSubscribedAgain": "\n\nDoor op OK te klikken, wordt u opnieuw ingeschreven voor deze meldingen."
   },
   "userCard": {
     "title": "MAAK EEN NIEUWE KAART ",
@@ -306,7 +317,7 @@
         "impossibleToDeleteCard": "Om technische redenen is het niet mogelijk om de kaart te verwijderen"
       }
     },
-    "sendingCardInProgress": "Kaart wordt verzonden ..."
+    "sendingCardInProgress": "Kaart wordt verzonden..."
   },
   "response": {
     "btnValidate": "VALIDEER ANTWOORD",
@@ -321,12 +332,13 @@
     "answered": "Beantwoord",
     "unanswered": "Nog niet beantwoord",
     "status": "Proces Status",
-    "chooseEntityForResponse": "Kies de entiteit waarvoor u reageert :",
-    "entityChoice": "Entiteit keuze"
+    "chooseEntitiesForResponse": "Kies de entiteiten waarvoor u reageert :",
+    "entitiesChoice": "Entiteiten keuze"
   },
   "cardAcknowledgment": {
     "button": {
-      "ack": "BEVESTIG EN SLUIT",
+      "ack": "BEVESTIG",
+      "ackAndClose": "BEVESTIG EN SLUIT",
       "unack": "ANNULEER BEVESTIGING"
     },
     "acknowledged": "Bevestigd"
@@ -338,6 +350,7 @@
         "name": "NAAM",
         "description": "OMSCHRIJVING",
         "perimeters" : "PERIMETERS",
+        "users": "GEBRUIKERS",
         "realtime": "REAL TIME",
         "type": "TYPE",
         "true": "JA",
@@ -351,6 +364,7 @@
         "parents": "HOOFD ENTITEITEN",
         "description": "OMSCHRIJVING",
         "labels": "LABELS",
+        "users": "GEBRUIKERS",
         "entityAllowedToSendCard": "KAARTEN VERSTUREN TOEGESTAAN",
         "confirmDelete": "Wilt u de entiteit echt verwijderen?",
         "add": "NIEUWE ENTITEIT TOEVOEGEN",
@@ -364,6 +378,7 @@
         "stateRights": "STATUS RECHTEN",
         "state": "STATUS",
         "right": "RECHT",
+        "filteringNotificationAllowed": "FILTERBERICHT\nTOEGESTAAN",
         "confirmDelete": "Wilt u de perimeter echt verwijderen?",
         "add":"NIEUWE PERIMETER TOEVOEGEN"
       },
@@ -461,10 +476,20 @@
       "allUsersConfigured": "Alle apparaten zijn al geconfigureerd.",
       "loadingExternalDevices": "Extern apparaat laden..."
     },
+    "tabs": {
+      "users": "Gebruikers Configuratie",
+      "devices": "Externe Apparaten"
+    },
+    "error": {
+      "errorWhenEnablingDevice": "Er is een fout opgetreden bij het inschakelen van dit apparaat. Probeer het later nog eens.",
+      "errorWhenDisablingDevice": "Er is een fout opgetreden bij het uitschakelen van dit apparaat. Probeer het later nog eens."
+    },
     "userLogin": "GEBRUIKERSNAAM",
     "externalDeviceIds": "APPARATEN",
     "edit": "WIJZIGEN",
-    "delete": "VERWIJDEREN"
+    "delete": "VERWIJDEREN",
+    "id": "APPARATEN",
+    "isEnabled": "IS INGESCHAKELD"
   },
   "datePicker": {
     "monday": "Ma",
@@ -492,5 +517,9 @@
   "reloadRequired" : {
     "message": "Applicatie herladen vereist. Om te herladen klik ",
     "linkText": "hier"
-  }
+  },
+  "errors" : {
+    "notFound" : "Bron niet gevonden",
+    "notAllowed" : "Actie niet toegestaan"
+  } 
 }

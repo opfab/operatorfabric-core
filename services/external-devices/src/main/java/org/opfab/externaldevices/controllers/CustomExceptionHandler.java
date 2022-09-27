@@ -1,4 +1,4 @@
-/* Copyright (c) 2021, RTE (http://www.rte-france.com)
+/* Copyright (c) 2021-2022, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -10,17 +10,16 @@
 package org.opfab.externaldevices.controllers;
 
 import lombok.extern.slf4j.Slf4j;
+import org.opfab.springtools.OpfabCustomExceptionHandler;
 import org.opfab.springtools.error.model.ApiError;
 import org.opfab.springtools.error.model.ApiErrorException;
 import org.springframework.core.convert.ConversionFailedException;
 import org.springframework.dao.DuplicateKeyException;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.context.request.WebRequest;
-import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
 import javax.validation.ConstraintViolationException;
 
@@ -40,22 +39,7 @@ import javax.validation.ConstraintViolationException;
  */
 @RestControllerAdvice
 @Slf4j
-public class CustomExceptionHandler extends ResponseEntityExceptionHandler {
-
-  public static final String GENERIC_MSG = "Caught exception at API level for request {}";
-
-  /**
-   * Handles {@link ApiErrorException}
-   * @param exception exception to handle
-   * @param request Corresponding request of exchange
-   * @return Computed http response for specified exception
-   */
-  @ExceptionHandler(ApiErrorException.class)
-  public ResponseEntity<Object> handleApiError(ApiErrorException exception, final WebRequest
-          request) {
-    log.info(GENERIC_MSG,request,exception);
-    return new ResponseEntity<>(exception.getError(), exception.getError().getStatus());
-  }
+public class CustomExceptionHandler extends OpfabCustomExceptionHandler {
 
   /**
    * Handles {@link DuplicateKeyException} as 400 BAD_REQUEST error
@@ -82,7 +66,7 @@ public class CustomExceptionHandler extends ResponseEntityExceptionHandler {
   @ExceptionHandler(ConversionFailedException.class)
   public ResponseEntity<Object> handleConversionError(ConversionFailedException exception, final WebRequest
           request) {
-    log.error(GENERIC_MSG,request,exception);
+    log.error(GENERIC_MSG, request, exception);
     ApiError error = ApiError.builder()
             .status(HttpStatus.BAD_REQUEST)
             .message("Conversion Error")
@@ -100,20 +84,13 @@ public class CustomExceptionHandler extends ResponseEntityExceptionHandler {
   @ExceptionHandler(ConstraintViolationException.class)
   public ResponseEntity<Object> handleConstraintViolationException(ConstraintViolationException exception, final WebRequest
           request) {
-    log.info(GENERIC_MSG,request, exception);
+    log.info(GENERIC_MSG, request, exception);
     ApiError error = ApiError.builder()
             .status(HttpStatus.BAD_REQUEST)
             .message("Constraint violation in the request")
             .error(exception.getMessage())
             .build();
     return new ResponseEntity<>(error, error.getStatus());
-  }
-
-
-  @Override
-  protected ResponseEntity<Object> handleExceptionInternal(Exception ex, Object body, HttpHeaders headers, HttpStatus status, WebRequest request) {
-    log.error("Uncaught internal server exception",ex);
-    return super.handleExceptionInternal(ex, body, headers, status, request);
   }
 
 }

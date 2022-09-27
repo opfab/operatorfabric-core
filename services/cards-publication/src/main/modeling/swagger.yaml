@@ -1,7 +1,7 @@
 swagger: '2.0'
 info:
   description: IMPORTANT - The Try it Out button will generate curl requests for examples, but executing them through the UI will not work as authentication has not been set up. This page is for documentation only.
-  version: 3.9.0.RELEASE
+  version: 3.10.0.RELEASE
   title: Card Management API
   termsOfService: ''
   contact:
@@ -82,7 +82,7 @@ definitions:
         FR: Mon Titre
   CardOperation:
     type: object
-    description: 'Operation to do:  Add, Update or Delete a card'
+    description: 'Operation to do:  Add, Update or Delete a card' 
     properties:
       type:
         $ref: '#/definitions/CardOperationTypeEnum'
@@ -358,7 +358,7 @@ definitions:
         type: array
         items:
           type: string
-        description: List of entities the user is attached to
+        description: List of entities the user is attached to 
       groups:
         type: array
         items:

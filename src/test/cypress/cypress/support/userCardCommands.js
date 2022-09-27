@@ -16,6 +16,40 @@ export function getUserCardCommands() {
         cy.get('.opfab-info-message').should('have.class', 'opfab-alert-info').contains('Your card is published');
     });
 
+    usercard.addCommand('checkProcessGroupSelectDoesNotExist', function () {
+        cy.get('#of-usercard-service-selector').should('not.exist');
+    });
+ 
+    usercard.addCommand('checkProcessSelectDoesNotExist', function () {
+        cy.get('#of-usercard-process-filter').should('not.exist');
+    });
+    
+    usercard.addCommand('checkRecipientSelectDoesNotExist', function () {
+        cy.get('#opfab-recipients').should("not.exist");
+    })
+
+    usercard.addCommand('checkStateSelectIsHidden', function () {
+        cy.get('#of-state-filter').should('not.be.visible');
+    });
+
+    usercard.addCommand('checkSelectedServiceIs', function (serviceName) {
+        cy.get('#of-usercard-service-selector')
+            .find('.vscomp-value')
+            .contains(serviceName);
+    });
+
+    usercard.addCommand('checkSelectedProcessIs', function (processName) {
+        cy.get('#of-usercard-process-filter')
+            .find('.vscomp-value')
+            .contains(processName);
+    });
+
+    usercard.addCommand('checkSelectedStateIs', function (stateName) {
+        cy.get('#of-state-filter')
+            .find('.vscomp-value')
+            .contains(stateName);
+    });
+
     usercard.addCommand('selectService', function (serviceName) {
         cy.get('#of-usercard-service-selector').click();
         cy.get('#of-usercard-service-selector')

@@ -1,0 +1,599 @@
+/* Copyright (c) 2022, RTE (http://www.rte-france.com)
+ * See AUTHORS.txt
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ * SPDX-License-Identifier: MPL-2.0
+ * This file is part of the OperatorFabric project.
+ */
+
+ @font-face {
+    font-family: 'Open Sans';
+    src: url('/shared/fonts/OpenSans-Bold.ttf') format('truetype');
+    font-weight: bold;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Open Sans';
+    src: url('/shared/fonts/OpenSans-SemiBold.ttf') format('truetype');
+    font-weight: 600;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Open Sans';
+    src: url('/shared/fonts/OpenSans-Regular.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+    font-display: swap;
+}
+
+
+/* Global colors */
+
+.opfab-colors {
+    background-color: var(--opfab-bgcolor);
+    color: var(--opfab-text-color);
+}
+
+.opfab-color-danger {
+    color: red;
+}
+
+.opfab-color-warning {
+    color: #ff6600;
+}
+.opfab-color-success {
+    color: green;
+}
+
+body {
+    height: 100vh;
+    font-family: var(--opfab-font-family);
+    font-size: 13px;
+}
+
+/* SELECT FIELD STYLE */
+
+.opfab-select {
+    color: var(--opfab-input-text-color);
+    background-color: var(--opfab-bgcolor-darker);
+    box-sizing: border-box;
+
+    border: 0.5px solid var(--opfab-form-border-color);
+    border-radius: 3px;
+    font-size: 13px;
+    height: 46px;
+    outline: none;
+}
+
+.opfab-select > select {
+    background-color: var(--opfab-bgcolor-darker);
+    color: var(--opfab-input-text-color);
+    padding: 10px;
+    width: calc(100% - 4px);
+    height: 42px;
+    border: none;
+    outline: none;
+    -webkit-appearance: none;
+}
+
+.opfab-select > select option {
+    background-color: var(--opfab-bgcolor-darker);
+    font-size: 16px;
+}
+
+.opfab-select  label {
+    margin-left: 10px;
+    padding-left: 10px;
+    padding-right: 10px;
+    position: absolute;
+    font-size: 11px;
+    top: -10px;
+    left: 10;
+    color: var(--opfab-form-label-text-color);
+    background-color: var(--opfab-bgcolor-darker);
+}
+
+.opfab-select::before {
+    content: 'V';
+    transform: scaleY(0.5);
+    position: absolute;
+    margin-right: 20px;
+    top: 0;
+    right: 0;
+    width: 30px;
+    height: 100%;
+    text-align: center;
+    font-size: 30px;
+    color: var(--opfab-text-color);
+    pointer-events: none;
+}
+
+/* INPUT FIELD STYLE */
+
+.opfab-input > input {
+    background-color: var(--opfab-bgcolor-darker);
+    color: var(--opfab-input-text-color);
+    padding: 10px;
+    width: calc(100% - 4px);
+    height: 42px;
+    border: none;
+    outline: none;
+    -webkit-appearance: none;
+    -webkit-autofill: none;
+
+    /* Firefox : to avoid browser styling when auto-filling input field (example password)
+    * see https://stackoverflow.com/questions/55228377/remove-new-firefox-autofill-color
+    */
+    filter: none; 
+}
+
+.opfab-input,
+.form-control {
+    box-sizing: border-box;
+    position: relative;
+    color: var(--opfab-input-text-color);
+    border: 1px solid var(--opfab-form-border-color);
+    border-radius: 3px;
+    font-size: 13px;
+    height: 46px;
+    outline: none;
+    background-color: var(--opfab-bgcolor-darker);
+}
+
+/* Chrome  : to avoid browser styling when auto-filling input field (example password)
+* see https://stackoverflow.com/questions/2781549/removing-input-background-colour-for-chrome-autocomplete
+*/
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+input:-webkit-autofill:active {
+    -webkit-box-shadow: 0 0 0 30px var(--opfab-bgcolor) inset !important;
+}
+input:-webkit-autofill {
+    -webkit-text-fill-color: var(--opfab-input-text-color) !important;
+}
+
+.opfab-input > label {
+    margin-left: 10px;
+    padding-left: 10px;
+    padding-right: 10px;
+    position: absolute;
+    font-size: 11px;
+    margin-top: -10px;
+    left: 10;
+    color: var(--opfab-form-label-text-color);
+    background-color: var(--opfab-bgcolor-darker);
+}
+
+/* CHECKBOX */
+
+/* The opfab-checkbox */
+.opfab-checkbox {
+    display: block;
+    position: relative;
+    padding-left: 35px;
+    margin-bottom: 12px;
+    cursor: pointer;
+    font-size: 13px;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    width: max-content;
+}
+
+/* Hide the browser's default checkbox */
+.opfab-checkbox input {
+    position: absolute;
+    opacity: 0;
+    cursor: pointer;
+    height: 0;
+    width: 0;
+}
+
+/* Create a custom checkbox */
+.opfab-checkbox-checkmark {
+    position: absolute;
+    top: 2px;
+    left: 0;
+    height: 17px;
+    width: 17px;
+    border: 1px solid #979797;
+    border-radius: 2px;
+}
+
+/* Create the opfab-checkbox-checkmark/indicator (hidden when not checked) */
+.opfab-checkbox-checkmark:after {
+    content: '';
+    position: absolute;
+    display: none;
+}
+
+/* Show the opfab-checkbox-checkmark when checked */
+.opfab-checkbox input:checked ~ .opfab-checkbox-checkmark:after {
+    display: block;
+}
+
+/* Style the opfab-checkbox-checkmark/indicator */
+.opfab-checkbox .opfab-checkbox-checkmark:after {
+    left: 8px;
+    top: -6px;
+    width: 10px;
+    height: 20px;
+    border: solid #0082ff;
+    border-width: 0 4px 4px 0;
+    -webkit-transform: rotate(45deg);
+    -ms-transform: rotate(45deg);
+    transform: rotate(45deg);
+}
+
+/* END CHECKBOX */
+
+/* RADIO BUTTON */
+
+/* The container */
+.opfab-radio-button {
+    display: block;
+    position: relative;
+    padding-left: 25px;
+    margin-bottom: 12px;
+    cursor: pointer;
+    font-size: 13px;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+
+/* Hide the browser's default radio button */
+.opfab-radio-button input {
+    position: absolute;
+    opacity: 0;
+    cursor: pointer;
+}
+
+/* Create a custom radio button */
+.opfab-radio-button-checkmark {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 17px;
+    width: 17px;
+    border: 1px solid var(--opfab-text-color);
+    border-radius: 50%;
+}
+
+/* Create the indicator (the dot/circle - hidden when not checked) */
+.opfab-radio-button-checkmark:after {
+    content: '';
+    position: absolute;
+    display: none;
+}
+
+/* Show the indicator (dot/circle) when checked */
+.opfab-radio-button input:checked ~ .opfab-radio-button-checkmark:after {
+    display: block;
+}
+
+/* Style the indicator (dot/circle) */
+.opfab-radio-button .opfab-radio-button-checkmark:after {
+    top: 17%;
+    left: 17%;
+    width: 65%;
+    height: 65%;
+    border-radius: 50%;
+    background: var(--opfab-text-color);
+}
+
+/* END RADIO BUTTON */
+
+/* TEXTAREA FIELD STYLE */
+
+.opfab-textarea {
+    color: var(--opfab-input-text-color);
+    background-color: var(--opfab-bgcolor-darker);
+    box-sizing: border-box;
+
+    border: 1px solid var(--opfab-form-border-color);
+    border-radius: 3px;
+    font-size: 13px;
+    outline: none;
+}
+
+.opfab-textarea > textarea {
+    background-color: var(--opfab-bgcolor-darker);
+    color: var(--opfab-input-text-color);
+    padding: 10px;
+    width: calc(100% - 4px);
+    border: none;
+    outline: none;
+    -webkit-appearance: none;
+}
+
+.opfab-textarea > label {
+    margin-left: 10px;
+    padding-left: 10px;
+    padding-right: 10px;
+    position: absolute;
+    font-size: 11px;
+    margin-top: -10px;
+    left: 10;
+    color: var(--opfab-form-label-text-color);
+    background-color: var(--opfab-bgcolor-darker);
+}
+
+/* Table */
+
+.opfab-table {
+    background-color: var(--opfab-bgcolor-darker);
+    color: var(--opfab-lightcard-detail-textcolor);
+    padding-left: 5px;
+    padding-right: 5px;
+    padding-bottom: 5px;
+    }
+
+.opfab-table table{
+        text-align: left;
+        border-bottom: 1px solid var(--opfab-table-border-color);
+        width: 100%;
+    }
+
+.opfab-table tr {
+        height: 42px;
+        color: var(--opfab-text-color);
+    }
+
+.opfab-table tr:nth-child(even) {
+        background-color: var(--opfab-bgcolor);
+    }
+
+.opfab-table th {
+        color: var(--opfab-text-color);
+        height: 70px;
+        border-top: 1px solid var(--opfab-table-border-color);
+        border-bottom: 1px solid var(--opfab-table-border-color);
+    }
+
+    /* #2588 : Logging screen : summary column extends without limit if the message contains no space character */
+.opfab-table td {
+        overflow: hidden;
+    }
+
+.opfab-pagination {
+    padding-top: 6px;
+    padding-left: 10px;
+    width: 100%;
+    display: flex;
+    color: var(--opfab-text-color-stronger);
+    font-size: 14px;
+}
+
+/* Border box */
+
+.opfab-border-box {
+    color: var(--opfab-input-text-color);
+    position: relative;
+    box-sizing: border-box;
+    padding: 10px;
+    border: 1px solid var(--opfab-form-border-color);
+    border-radius: 3px;
+    outline: none;
+}
+
+.opfab-border-box > label {
+    padding-left: 10px;
+    padding-right: 10px;
+    position: absolute;
+    font-size: 11px;
+    top: -10px;
+    left: 10;
+    color: var(--opfab-form-label-text-color);
+    background-color: var(--opfab-bgcolor-darker);
+}
+
+/* VIRTUAL MULTI SELECT */
+
+.opfab-multiselect {
+    position: relative;
+}
+
+.opfab-multiselect > label {
+    margin-left: 10px;
+    padding-left: 10px;
+    padding-right: 10px;
+    position: absolute;
+    font-size: 11px;
+    top: -10px;
+    left: 10;
+    color: var(--opfab-form-label-text-color);
+    background-color: var(--opfab-bgcolor-darker);
+    z-index: 1;
+}
+
+/* Border and background select field */
+.vscomp-toggle-button {
+    background-color: var(--opfab-bgcolor-darker);
+    border: 1px solid var(--opfab-form-border-color);
+    min-height: 48px;
+    color: var(--opfab-text-color-stronger);
+}
+
+.vscomp-option-text {
+    font-family: var(--opfab-font-family);
+    font-size: 13px;
+}
+
+/* Select width
+* Necessary while https://github.com/sa-si-dev/virtual-select/issues/127 is not solved
+*/
+.vscomp-ele {
+    max-width: 2000px;
+}
+
+/* Tags */
+.vscomp-wrapper.show-value-as-tags .vscomp-value-tag {
+    border: 0px solid var(--opfab-form-border-color);
+    border-radius: 2px;
+    color: white;
+    background-color: #2784ff;
+    z-index: 1;
+    font-family: var(--opfab-font-family);
+    font-size: 13px;
+}
+
+/* Cross to remove tag */
+.vscomp-value-tag-clear-button > .vscomp-clear-icon::before,
+.vscomp-value-tag-clear-button > .vscomp-clear-icon::after {
+    background-color: white;
+}
+
+/* Cross to remove all tags */
+.vscomp-clear-button > .vscomp-clear-icon::before,
+.vscomp-clear-button > .vscomp-clear-icon::after {
+    background-color: var(--opfab-text-color);
+}
+.vscomp-wrapper.show-value-as-tags.has-value .vscomp-clear-button {
+    right: 28px;
+    top: 10px;
+}
+/* Avoid tags to override the cross */
+.vscomp-value {
+    padding-right: 25px;
+    font-family: var(--opfab-font-family);
+    font-size: 13px;
+}
+
+/* Right arrow when nothing selected */
+.opfab-multiselect::after {
+    content: 'V';
+    transform: scaleY(0.5);
+    position: absolute;
+    margin-right: 5px;
+    top: 0;
+    right: 0;
+    width: 30px;
+    text-align: center;
+    font-size: 30px;
+    color: var(--opfab-text-color);
+    pointer-events: none;
+}
+
+/* Hide existing arrow */
+
+.vscomp-arrow::after {
+    color: var(--opfab-bgcolor);
+    border-right-color: var(--opfab-color);
+    border-bottom-color: var(--opfab-color);
+}
+
+/* Check icon in dropdown */
+.vscomp-wrapper .checkbox-icon.checked::after,  /* select all */
+.vscomp-wrapper.multiple .vscomp-option.selected .checkbox-icon::after /* select option */
+{
+    border-right-color: #2784ff;
+    border-bottom-color: #2784ff;
+}
+
+/* END VIRTUAL MULTI SELECT */
+
+
+/* Class to use when background form is lighter */
+
+.opfab-form-lighter .opfab-input {
+    background-color: var(--opfab-bgcolor);
+}
+
+.opfab-form-lighter .opfab-input > input {
+    background-color: var(--opfab-bgcolor);
+}
+
+.opfab-form-lighter .opfab-input label {
+    background-color: var(--opfab-bgcolor);
+}
+
+.opfab-form-lighter .opfab-textarea {
+    background-color: var(--opfab-bgcolor);
+}
+
+.opfab-form-lighter .opfab-textarea > textarea {
+    background-color: var(--opfab-bgcolor);
+}
+
+.opfab-form-lighter .opfab-textarea label {
+    background-color: var(--opfab-bgcolor);
+}
+
+.opfab-form-lighter .opfab-select {
+    background-color: var(--opfab-bgcolor);
+}
+
+.opfab-form-lighter .opfab-select > select {
+    background-color: var(--opfab-bgcolor);
+}
+
+.opfab-form-lighter .opfab-select > select option {
+    background-color: var(--opfab-bgcolor);
+}
+
+.opfab-form-lighter .opfab-select label {
+    background-color: var(--opfab-bgcolor);
+}
+
+.opfab-form-lighter .opfab-multiselect label {
+    background-color: var(--opfab-bgcolor);
+}
+
+.opfab-form-lighter .vscomp-toggle-button {
+    background-color: var(--opfab-bgcolor);
+}
+
+.opfab-form-lighter .opfab-border-box > label {
+    background-color: var(--opfab-bgcolor);
+}
+
+/* BUTTON STYLE */
+
+.opfab-btn {
+    color: white;
+    background-color: #2784ff;
+    border-width: 0px;
+    border-radius: 2px;
+    height: 40px;
+    font-size: 14px;
+    font-weight: 600;
+    margin: 10px;
+    padding: 10px;
+    min-width: 150px;
+}
+
+.opfab-btn:hover {
+    background-color: #2268ff;
+}
+
+.opfab-btn:disabled {
+    color: #606267;
+    background-color: var(--opfab-button-disable-bgcolor);
+}
+
+.opfab-btn-cancel {
+    color: #2784ff;
+    background-color: var(--opfab-bg-color);
+    border-width: 0px;
+    border-radius: 2px;
+    height: 40px;
+    font-size: 14px;
+    font-weight: 600;
+    margin: 10px;
+    padding: 10px;
+    min-width: 150px;
+}
+
+.opfab-btn-cancel:hover {
+    color: #2268ff;
+}
+/* END BUTTON STYLE */

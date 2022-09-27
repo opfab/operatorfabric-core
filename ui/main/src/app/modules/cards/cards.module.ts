@@ -15,10 +15,10 @@ import {TranslateModule} from '@ngx-translate/core';
 import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
 import {CountDownModule} from '../share/countdown/countdown.module';
 import {UserCardModule} from '../usercard/usercard.module';
-import {SingleFilterModule} from '../share/single-filter/single-filter.module';
 import {ReactiveFormsModule} from '@angular/forms';
 import { MultiSelectModule } from '../share/multi-select/multi-select.module';
 import { SpinnerModule } from '../share/spinner/spinner.module';
+import {TemplateRenderingModule} from '../share/template-rendering/template-rendering.module';
 
 @NgModule({
     declarations: [CardDetailsComponent, DetailComponent],
@@ -28,10 +28,10 @@ import { SpinnerModule } from '../share/spinner/spinner.module';
         TranslateModule,
         NgbModule,
         UserCardModule,
-        SingleFilterModule,
         ReactiveFormsModule,
         MultiSelectModule,
-        SpinnerModule
+        SpinnerModule,
+        TemplateRenderingModule
     ],
     exports: [CardDetailsComponent, DetailComponent]
 })

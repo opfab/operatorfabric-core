@@ -7,20 +7,27 @@
  * This file is part of the OperatorFabric project.
  */
 
-/** Test for the OpFab activity area page */
+import {getOpfabGeneralCommands} from "../support/opfabGeneralCommands"
+import {getActivityAreaCommands} from "../support/activityAreaCommands"
+
 
 describe('ActivityAreaPage', () => {
+
+    const opfab = getOpfabGeneralCommands();
+    const activityArea = getActivityAreaCommands();
+
     before('Delete previous cards', function () {
         cy.loadTestConf();
+        cy.deleteAllSettings();
         cy.deleteAllCards();
         cy.deleteAllArchivedCards();
         cy.send6TestCards();
     });
 
     it('Connection of operator4_fr, which is connected to ENTITY1_FR, ENTITY2_FR, ENTITY3_FR, ENTITY4_FR and check of the activity area page', () => {
-        cy.loginOpFab('operator4_fr', 'test');
 
-        cy.openActivityArea();
+        opfab.loginWithUser('operator4_fr');
+        opfab.navigateToActivityArea();
 
         // We check the title of the page
         cy.get('.opfab-activityarea-title').should('have.text', ' ACTIVITY AREA\n');
@@ -43,13 +50,13 @@ describe('ActivityAreaPage', () => {
 
         // We disconnect from ENTITY1_FR
         cy.get('.opfab-checkbox').contains('Control Center FR North').click();
-        cy.saveActivityAreaModifications();
+        activityArea.save();
 
         // We navigate to another page (archives for example)
         cy.get('#opfab-navbar-menu-archives').click();
 
         // We go back to activity area page, we check ENTITY1_FR is unchecked and all other checkboxes are checked
-        cy.openActivityArea();
+        opfab.navigateToActivityArea();
         cy.get('.opfab-checkbox').eq(0).find('input').should('be.checked');
         cy.get('.opfab-checkbox').eq(1).find('input').should('not.be.checked');
         cy.get('.opfab-checkbox').eq(2).find('input').should('be.checked');
@@ -57,27 +64,28 @@ describe('ActivityAreaPage', () => {
 
         // We reconnect to ENTITY1_FR
         cy.get('.opfab-checkbox').contains('Control Center FR North').click();
-        cy.saveActivityAreaModifications();
+        activityArea.save();
     });
 
     it('Connection of operator4_fr, disconnection from ENTITY1_FR, ENTITY2_FR and ENTITY3_FR and check of feed and archives pages', () => {
-        cy.loginOpFab('operator4_fr', 'test');
+        opfab.loginWithUser('operator4_fr');
 
-        // operator4_fr is connected to all his entities, he should receive 5 cards in the feed
-        cy.get('of-light-card').should('have.length', 5);
-        cy.get('of-light-card').eq(0).find('.card-title').should('have.text', 'Electricity consumption forecast ');
-        cy.get('of-light-card').eq(1).find('.card-title').should('have.text', '⚡ Planned Outage ');
-        cy.get('of-light-card').eq(2).find('.card-title').should('have.text', 'Process state (calcul) ');
-        cy.get('of-light-card').eq(3).find('.card-title').should('have.text', 'Data quality ');
-        cy.get('of-light-card').eq(4).find('.card-title').should('have.text', 'Message ');
+        // operator4_fr is connected to all his entities, he should receive 6 cards in the feed
+        cy.get('of-light-card').should('have.length', 6);
+        cy.get('of-light-card').eq(0).find('.card-title').should('have.text', '⚠️ Network Contingencies ⚠️ ');
+        cy.get('of-light-card').eq(1).find('.card-title').should('have.text', 'Electricity consumption forecast ');
+        cy.get('of-light-card').eq(2).find('.card-title').should('have.text', '⚡ Planned Outage ');
+        cy.get('of-light-card').eq(3).find('.card-title').should('have.text', 'Process state (calcul) ');
+        cy.get('of-light-card').eq(4).find('.card-title').should('have.text', 'Data quality ');
+        cy.get('of-light-card').eq(5).find('.card-title').should('have.text', 'Message ');
 
-        // operator4_fr should see 5 cards in archives page
+        // operator4_fr should see 6 cards in archives page
         cy.get('#opfab-navbar-menu-archives').click();
         cy.get('#opfab-archives-logging-btn-search').click();
-        cy.get('#opfab-archives-cards-list').find('.opfab-archives-table-line').should('have.length', 5);
+        cy.get('#opfab-archives-cards-list').find('.opfab-archives-table-line').should('have.length', 6);
 
         // operator4_fr disconnect from ENTITY1_FR, ENTITY2_FR and ENTITY3_FR
-        cy.openActivityArea();
+        opfab.navigateToActivityArea();
 
         // check every checkbox to let the time for the ui to set to true before we click
         cy.get('.opfab-checkbox').eq(0).find('input').should('be.checked');
@@ -87,7 +95,7 @@ describe('ActivityAreaPage', () => {
         cy.get('.opfab-checkbox').contains('Control Center FR North').click();
         cy.get('.opfab-checkbox').contains('Control Center FR East').click();
         cy.get('.opfab-checkbox').contains('Control Center FR South').click();
-        cy.saveActivityAreaModifications();
+        activityArea.save();
 
         // now, operator4_fr should see only 4 cards in the feed
         cy.get('#opfab-navbar-menu-feed').click();
@@ -109,7 +117,7 @@ describe('ActivityAreaPage', () => {
         cy.get('@archives-table').eq(3).find('td').eq(4).should('have.text', 'Message');
 
         // We reconnect to ENTITY1_FR, ENTITY2_FR and ENTITY3_FR
-        cy.openActivityArea();
+        opfab.navigateToActivityArea();
         // check every checkbox to let the time for the ui to set to true before we click
         cy.get('.opfab-checkbox').eq(0).find('input').should('not.be.checked');
         cy.get('.opfab-checkbox').eq(1).find('input').should('not.be.checked');
@@ -118,10 +126,10 @@ describe('ActivityAreaPage', () => {
         cy.get('.opfab-checkbox').contains('Control Center FR East').click();
         cy.get('.opfab-checkbox').contains('Control Center FR South').click();
         cy.get('.opfab-checkbox').contains('Control Center FR North').click();
-        cy.saveActivityAreaModifications();
+        activityArea.save();
     });
 
-    it('Choose activity area on login ', function () {
+    it('Choose activity area on login', function () {
         cy.setPropertyInConf('selectActivityAreaOnLogin ', 'web-ui', true);
 
         cy.visit('');
@@ -136,7 +144,6 @@ describe('ActivityAreaPage', () => {
 
         //press login button
         cy.get('#opfab-login-btn-submit').click();
-        cy.get('#opfab-login-btn-submit').should('be.visible');
 
         cy.get('of-activityarea').should('exist');
 
@@ -162,11 +169,10 @@ describe('ActivityAreaPage', () => {
         cy.get('#opfab-activityarea-btn-confirm').click();
 
         cy.waitDefaultTime();
-        cy.get('of-light-card').should('have.length', 5);
+        cy.get('of-light-card').should('have.length', 6);
 
-        cy.logoutOpFab();
-
-        cy.hackUrlCurrentlyUsedMechanism();
+        opfab.logout();
+        opfab.hackUrlCurrentlyUsedMechanism();
         cy.visit('');
 
         //type login
@@ -179,7 +185,6 @@ describe('ActivityAreaPage', () => {
 
         //press login button
         cy.get('#opfab-login-btn-submit').click();
-        cy.get('#opfab-login-btn-submit').should('be.visible');
 
         cy.get('of-activityarea').should('exist');
 
@@ -204,7 +209,7 @@ describe('ActivityAreaPage', () => {
         cy.get('of-light-card').eq(3).find('.card-title').should('have.text', 'Message ');
 
         // We reconnect to ENTITY1_FR, ENTITY2_FR and ENTITY3_FR
-        cy.openActivityArea();
+        opfab.navigateToActivityArea();
 
         // check every checkbox to let the time for the ui to set to true before we click
         cy.get('.opfab-checkbox').eq(0).find('input').should('not.be.checked');
@@ -214,20 +219,28 @@ describe('ActivityAreaPage', () => {
         cy.get('.opfab-checkbox').contains('Control Center FR East').click();
         cy.get('.opfab-checkbox').contains('Control Center FR South').click();
         cy.get('.opfab-checkbox').contains('Control Center FR North').click();
-        cy.saveActivityAreaModifications();
+        activityArea.save();
 
         cy.setPropertyInConf('selectActivityAreaOnLogin ', 'web-ui', false);
     });
 
-    it('Check spinner is displayed when request is delayed and that spinner disappears once the request arrived ', function () {
+    it('Check spinner is displayed when request is delayed and that spinner disappears once the request arrived', function () {
         cy.delayRequestResponse('/users/users/*');
-
-        cy.loginOpFab('operator1_fr', 'test');
-
-        cy.openActivityArea();
+        opfab.loginWithUser('operator1_fr');
+        opfab.navigateToActivityArea();
         cy.waitDefaultTime();
+        opfab.checkLoadingSpinnerIsDisplayed();
+        opfab.checkLoadingSpinnerIsNotDisplayed();
+    });
 
-        cy.checkLoadingSpinnerIsDisplayed();
-        cy.checkLoadingSpinnerIsNotDisplayed();
+    it('Check spinner is displayed for saving settings, when request is delayed and that spinner disappears once the request arrived', function () {
+        opfab.loginWithUser('operator1_fr');
+        opfab.navigateToActivityArea();
+        cy.delayRequestResponse('/users/users/**');
+        cy.get('#opfab-activityarea-btn-confirm').should('exist').click(); // click confirm settings
+        cy.get('#opfab-activityarea-btn-yes').should('exist').click(); // click yes on the confirmation popup
+        cy.waitDefaultTime();
+        opfab.checkLoadingSpinnerIsDisplayed();
+        opfab.checkLoadingSpinnerIsNotDisplayed();
     });
 });

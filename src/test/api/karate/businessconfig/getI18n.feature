@@ -26,7 +26,7 @@ Feature: getI18n
 
     Given url opfabUrl + '/businessconfig/processes/'+ process +'/i18n/' + '?version='+ businessconfigVersion
     When method GET
-    Then status 401
+    Then status 200
 
   Scenario: Check unknown i18n translation file version
 

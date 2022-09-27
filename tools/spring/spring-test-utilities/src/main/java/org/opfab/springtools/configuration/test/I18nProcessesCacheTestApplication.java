@@ -45,6 +45,8 @@ public class I18nProcessesCacheTestApplication {
         MockClient mockClient = new MockClient();   
         mockClient = mockClient.add(HttpMethod.GET, "/businessconfig/processes/process2/i18n?version=1",
                 200, stringTestI18n);
+        mockClient = mockClient.add(HttpMethod.GET, "/businessconfig/processes/process1/i18n?version=0",
+                200, stringTestI18n);
         mockClient = mockClient.add(HttpMethod.GET, "/businessconfig/processes/process1/i18n?version=1",
                 200, stringTestI18n);
         return mockClient;

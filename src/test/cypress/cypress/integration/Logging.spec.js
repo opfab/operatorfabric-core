@@ -7,13 +7,18 @@
  * This file is part of the OperatorFabric project.
  */
 
+import {getOpfabGeneralCommands} from "../support/opfabGeneralCommands"
+
 describe('Logging screen tests', function () {
+
+    const opfab = getOpfabGeneralCommands();
+
     before('Set up configuration', function () {
         cy.loadTestConf();
     });
 
     it('Check composition of multi-filters for process groups/processes/states for operator1_fr', function () {
-        cy.loginOpFab('operator1_fr', 'test');
+        opfab.loginWithUser('operator1_fr');
 
         moveToLoggingScreen();
         cy.checkAdminModeCheckboxDoesNotExist();
@@ -62,7 +67,7 @@ describe('Logging screen tests', function () {
     it('Check composition of multi-filters for process groups/processes/states for itsupervisor1', function () {
         cy.deleteAllArchivedCards();
         cy.send6TestCards();
-        cy.loginOpFab('itsupervisor1', 'test');
+        opfab.loginWithUser('itsupervisor1');
 
         moveToLoggingScreen();
         cy.checkAdminModeLinkDoesNotExist();
@@ -93,12 +98,12 @@ describe('Logging screen tests', function () {
     it('Check composition of multi-filters for process groups/processes/states for admin', function () {
         cy.deleteAllArchivedCards();
         cy.send6TestCards();
-        cy.loginOpFab('admin', 'test');
+        opfab.loginWithUser('admin');
 
         moveToLoggingScreen();
 
         cy.checkProcessGroupSelectDoesNotExist();
-        cy.checkProcessSelectDoesNotExist;
+        cy.checkProcessSelectDoesNotExist();
         cy.checkStateSelectDoesNotExist();
         cy.checkNoProcessStateMessageIsDisplayed();
 
@@ -125,7 +130,7 @@ describe('Logging screen tests', function () {
     });
 
     it('Check composition of multi-filters for process groups/processes/states for operator1_fr, with a config without process group', function () {
-        cy.loginOpFab('operator1_fr', 'test');
+        opfab.loginWithUser('operator1_fr');
 
         cy.loadEmptyProcessGroups();
         cy.reload();
@@ -164,7 +169,7 @@ describe('Logging screen tests', function () {
     });
 
     it('Check composition of multi-filters for operator6_fr (no rights on process/state and not member of ADMIN group)', function () {
-        cy.loginOpFab('operator6_fr', 'test');
+        opfab.loginWithUser('operator6_fr');
         moveToLoggingScreen();
         cy.checkProcessGroupSelectDoesNotExist();
         cy.checkProcessSelectDoesNotExist();
@@ -178,7 +183,7 @@ describe('Logging screen tests', function () {
     it('Check export', function () {
         cy.deleteAllArchivedCards();
         cy.send6TestCards();
-        cy.loginOpFab('operator1_fr', 'test');
+        opfab.loginWithUser('operator1_fr');
 
         moveToLoggingScreen();
 
@@ -276,16 +281,12 @@ describe('Logging screen tests', function () {
 
     it('Check spinner is displayed when request is delayed and that spinner disappears once the request arrived ', function () {
         cy.delayRequestResponse('/cards/archives/*');
-
-        cy.loginOpFab('operator1_fr', 'test');
-
+        opfab.loginWithUser('operator1_fr');
         moveToLoggingScreen();
         cy.waitDefaultTime();
-
         cy.clickOnSearchButton();
-
-        cy.checkLoadingSpinnerIsDisplayed();
-        cy.checkLoadingSpinnerIsNotDisplayed();
+        opfab.checkLoadingSpinnerIsDisplayed();
+        opfab.checkLoadingSpinnerIsNotDisplayed();
     });
 
     function moveToLoggingScreen() {

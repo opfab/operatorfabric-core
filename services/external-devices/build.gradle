@@ -23,6 +23,10 @@ dependencies {
     testImplementation project(':tools:generic:test-utilities')
     testImplementation project(':tools:spring:spring-test-utilities')
     testImplementation testing_deps.awaitility
+    testImplementation cloud.starterFeign
+    testImplementation misc.feignMock
+    testImplementation misc.feignJackson
+    testImplementation misc.feignCore
 
     implementation misc.jlibmodbus
 }

@@ -67,16 +67,18 @@ public class EntitiesController implements EntitiesApi {
         }
         userRepository.saveAll(foundUsers);
         return null;
-
     }
 
     @Override
     public Entity createEntity(HttpServletRequest request, HttpServletResponse response, Entity entity) throws Exception {
-        if(entityRepository.findById(entity.getId()).orElse(null) == null){
+        userService.checkFormatOfIdField(entity.getId());
+
+        if (entityRepository.findById(entity.getId()).orElse(null) == null) {
             response.addHeader("Location", request.getContextPath() + "/entities/" + entity.getId());
             response.setStatus(201);
         }
         this.checkForCycleInEntityParenthood(entity);
+        userService.publishUpdatedConfigMessage();
         return entityRepository.save((EntityData) entity);
     }
 
@@ -94,6 +96,7 @@ public class EntitiesController implements EntitiesApi {
 
         //We delete the links between the users who are part of the entity to delete, and the entity
         removeTheReferenceToTheEntityForMemberUsers(id);
+        userService.publishUpdatedConfigMessage();
         return null;
     }
 
@@ -111,7 +114,7 @@ public class EntitiesController implements EntitiesApi {
                         .build()
         ));
 
-        if(foundUser!=null) {
+        if (foundUser != null) {
             foundUser.deleteEntity(id);
             userRepository.save(foundUser);
             userService.publishUpdatedUserMessage(foundUser.getLogin());
@@ -139,7 +142,7 @@ public class EntitiesController implements EntitiesApi {
     @Override
     public Entity updateEntity(HttpServletRequest request, HttpServletResponse response, String id, Entity entity) throws Exception {
         //id from entity body parameter should match id path parameter
-        if(!entity.getId().equals(id)){
+        if (!entity.getId().equals(id)) {
             throw new ApiErrorException(
                     ApiError.builder()
                             .status(HttpStatus.BAD_REQUEST)
@@ -190,7 +193,7 @@ public class EntitiesController implements EntitiesApi {
 
         // Then we can delete the entity
         entityRepository.delete(foundEntityData);
-
+        userService.publishUpdatedConfigMessage();
         return null;
     }
 
@@ -198,7 +201,7 @@ public class EntitiesController implements EntitiesApi {
     private void removeTheReferenceToTheEntityForMemberUsers(String idEntity) {
         List<UserData> foundUsers = userRepository.findByEntitiesContaining(idEntity);
 
-        if (foundUsers != null) {
+        if (foundUsers != null && !foundUsers.isEmpty()) {
             for (UserData userData : foundUsers) {
                 userData.deleteEntity(idEntity);
                 userService.publishUpdatedUserMessage(userData.getLogin());

@@ -25,6 +25,7 @@ import {GroupedCardsService} from '@ofServices/grouped-cards.service';
 import {TypeOfStateEnum} from '@ofModel/processes.model';
 import {SoundNotificationService} from '@ofServices/sound-notification.service';
 import {DateTimeFormatterService} from '@ofServices/date-time-formatter.service';
+import {MapService} from '@ofServices/map.service';
 
 @Component({
     selector: 'of-light-card',
@@ -50,6 +51,8 @@ export class LightCardComponent implements OnInit, OnDestroy {
 
     showGroupedCardsIcon = false;
     groupedCardsVisible = true;
+    hasGeoLocation;
+    isGeoMapEnabled;
 
     private ngUnsubscribe: Subject<void> = new Subject<void>();
 
@@ -63,7 +66,8 @@ export class LightCardComponent implements OnInit, OnDestroy {
         private processesService: ProcessesService,
         private userPreferencesService: UserPreferencesService,
         private groupedCardsService: GroupedCardsService,
-        private soundNotificationService: SoundNotificationService
+        private soundNotificationService: SoundNotificationService,
+        private mapService: MapService
     ) {}
 
     ngOnInit() {
@@ -81,6 +85,13 @@ export class LightCardComponent implements OnInit, OnDestroy {
         this.computeDisplayedDate();
         this.computeLttdParams();
         this.computeGroupedCardsIcon();
+        this.hasGeoLocation =
+            this.lightCard.wktGeometry === undefined ||
+            this.lightCard.wktGeometry == null ||
+            this.lightCard.wktGeometry.length <= 0
+                ? false
+                : true;
+        this.isGeoMapEnabled = this.configService.getConfigValue('feed.geomap.enableMap', false);
     }
 
     computeLttdParams() {
@@ -161,5 +172,18 @@ export class LightCardComponent implements OnInit, OnDestroy {
     ngOnDestroy(): void {
         this.ngUnsubscribe.next();
         this.ngUnsubscribe.complete();
+    }
+
+    highlightOnMap(highlight: boolean) {
+        if (this.isGeoMapEnabled) {
+            this.mapService.highlightOnMap(highlight, this.lightCard);
+        }
+    }
+
+    zoomToLocation($event) {
+        $event.stopPropagation();
+        // Fix for https://github.com/opfab/operatorfabric-core/issues/2994
+        this.soundNotificationService.clearOutstandingNotifications();
+        this.mapService.zoomToLocation(this.lightCard);
     }
 }

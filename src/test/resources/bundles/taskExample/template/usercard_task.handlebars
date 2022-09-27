@@ -72,69 +72,86 @@
 
 <br/>
 
-
 <script>
-    var mystartDate = new Date();
-    mystartDate.setTime(mystartDate.getTime());
 
-    usercardTemplateGateway.setInitialSeverity('ACTION');
+    userCardTemplate = {
+        init: function() {
+            this.initSeverity();
+            this.initInitialDates();
+            this.initUserCardTemplateGateway();
+        },
 
-    usercardTemplateGateway.setInitialStartDate(mystartDate.getTime() + 3600000);
+        initSeverity: function() {
+            usercardTemplateGateway.setInitialSeverity('ACTION');
+        },
 
-    usercardTemplateGateway.setInitialEndDate(mystartDate.getTime() + 7 * 24 * 3600000);
+        initInitialDates: function() {
+            const mystartDate = new Date();
+            mystartDate.setTime(mystartDate.getTime());
+            usercardTemplateGateway.setInitialStartDate(mystartDate.getTime() + 3600000);
+            usercardTemplateGateway.setInitialEndDate(mystartDate.getTime() + 7 * 24 * 3600000);
+        },
 
-    usercardTemplateGateway.getSpecificCardInformation = function () {
-        const taskDescription = document.getElementById('taskDescription').value;
-        
-        const time = document.getElementById('time').value;
-        const hours =  time.slice(0, 2); // the hours are the 2 first characters
-        const minutes =  time.slice(-2); // the minutes are the 2 last characterss
-        
-        const minutesForReminder =  document.getElementById('minutesForReminder').value;
-        const durationInMinutes =  document.getElementById('durationInMinutes').value;
+        initUserCardTemplateGateway: function() {
 
-       const daysOfWeek = [];
-       
-        if (document.getElementById("Monday").checked) daysOfWeek.push(1);
-        if (document.getElementById("Tuesday").checked) daysOfWeek.push(2);
-        if (document.getElementById("Wednesday").checked) daysOfWeek.push(3);
-        if (document.getElementById("Thursday").checked) daysOfWeek.push(4);
-        if (document.getElementById("Friday").checked) daysOfWeek.push(5);
-        if (document.getElementById("Saturday").checked) daysOfWeek.push(6);
-        if (document.getElementById("Sunday").checked) daysOfWeek.push(7);
+            usercardTemplateGateway.getSpecificCardInformation = function () {
+                const taskDescription = document.getElementById('taskDescription').value;
+                
+                const time = document.getElementById('time').value;
+                const hours =  time.slice(0, 2); // the hours are the 2 first characters
+                const minutes =  time.slice(-2); // the minutes are the 2 last characterss
+                
+                const minutesForReminder =  document.getElementById('minutesForReminder').value;
+                const durationInMinutes =  document.getElementById('durationInMinutes').value;
 
-        const recurrence = {
-            daysOfWeek : daysOfWeek,
-            hoursAndMinutes : {hours:hours,minutes:minutes},
-            durationInMinutes: durationInMinutes
-        }
-      
-        const card = {
-            summary: { key: "task.summary" },
-            title: { key: "task.title" },
-            secondsBeforeTimeSpanForReminder: minutesForReminder * 60,
-            data: {
-                taskDescription: taskDescription,
-                hours: hours,
-                minutes: minutes,
-                durationInMinutes: durationInMinutes,
-                minutesForReminder: minutesForReminder,
-                daysOfWeek: daysOfWeek
+                const daysOfWeek = [];
+            
+                if (document.getElementById("Monday").checked) daysOfWeek.push(1);
+                if (document.getElementById("Tuesday").checked) daysOfWeek.push(2);
+                if (document.getElementById("Wednesday").checked) daysOfWeek.push(3);
+                if (document.getElementById("Thursday").checked) daysOfWeek.push(4);
+                if (document.getElementById("Friday").checked) daysOfWeek.push(5);
+                if (document.getElementById("Saturday").checked) daysOfWeek.push(6);
+                if (document.getElementById("Sunday").checked) daysOfWeek.push(7);
+
+                const recurrence = {
+                    daysOfWeek : daysOfWeek,
+                    hoursAndMinutes : {hours:hours,minutes:minutes},
+                    durationInMinutes: durationInMinutes
+                }
+            
+                const card = {
+                    summary: { key: "task.summary" },
+                    title: { key: "task.title" },
+                    secondsBeforeTimeSpanForReminder: minutesForReminder * 60,
+                    data: {
+                        taskDescription: taskDescription,
+                        hours: hours,
+                        minutes: minutes,
+                        durationInMinutes: durationInMinutes,
+                        minutesForReminder: minutesForReminder,
+                        daysOfWeek: daysOfWeek
+                    }
+                };
+
+                const timeSpans = [{
+                    startDate: usercardTemplateGateway.getStartDate(),
+                    endDate: usercardTemplateGateway.getEndDate(),
+                    recurrence: recurrence
+                }]
+                
+
+                return {
+                    valid: true,
+                    card: card,
+                    timeSpans: timeSpans
+                };
+
             }
-        };
-
-        const timeSpans = [{
-            startDate: usercardTemplateGateway.getStartDate(),
-            endDate: usercardTemplateGateway.getEndDate(),
-            recurrence: recurrence
-        }]
-        
-
-        return {
-            valid: true,
-            card: card,
-            timeSpans: timeSpans
-        };
+        }
 
     }
+
+    userCardTemplate.init();
+
 </script>

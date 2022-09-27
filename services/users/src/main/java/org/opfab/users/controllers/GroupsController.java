@@ -75,15 +75,16 @@ public class GroupsController implements GroupsApi {
 
     @Override
     public Group createGroup(HttpServletRequest request, HttpServletResponse response, Group group) throws Exception {
+        userService.checkFormatOfIdField(group.getId());
+
         if (group.getPerimeters() != null) {
             retrievePerimeters(group.getPerimeters());
         }
-        if(groupRepository.findById(group.getId()).orElse(null) == null){
+        if (groupRepository.findById(group.getId()).orElse(null) == null) {
             response.addHeader("Location", request.getContextPath() + "/groups/" + group.getId());
             response.setStatus(201);
-        } else {
-            userService.publishUpdatedGroupMessage(group.getId());
         }
+        userService.publishUpdatedGroupMessage(group.getId());
         return groupRepository.save((GroupData)group);
     }
 
@@ -95,29 +96,40 @@ public class GroupsController implements GroupsApi {
 
         //We delete the link between the group and its users
         removeTheReferenceToTheGroupForMemberUsers(id);
+        userService.publishUpdatedGroupMessage(id);
         return null;
     }
 
     @Override
     public Void deleteGroupUser(HttpServletRequest request, HttpServletResponse response, String id, String login) throws Exception {
 
+        if (id.equalsIgnoreCase(ADMIN_GROUP_ID) && login.equalsIgnoreCase(UsersController.ADMIN_LOGIN)) {
+            throw buildApiException(HttpStatus.FORBIDDEN, "Removing group ADMIN from user admin is not allowed");
+        }
+
         //Only existing groups can be updated
         findGroupOrThrow(id);
 
         //Retrieve users from repository for users list, throwing an error if a login is not found
-        UserData foundUser = userRepository.findById(login).orElseThrow(()->new ApiErrorException(
-                ApiError.builder()
-                        .status(HttpStatus.NOT_FOUND)
-                        .message(String.format(USER_NOT_FOUND_MSG,login))
-                        .build()
-        ));
+        UserData foundUser = userRepository.findById(login).orElseThrow(
+            ()-> buildApiException(HttpStatus.NOT_FOUND, String.format(USER_NOT_FOUND_MSG,login))
+        );
 
         if(foundUser!=null) {
             foundUser.deleteGroup(id);
             userRepository.save(foundUser);
             userService.publishUpdatedUserMessage(foundUser.getLogin());
         }
+
         return null;
+    }
+
+    private ApiErrorException buildApiException(HttpStatus httpStatus, String errorMessage) {
+        return new ApiErrorException(
+                ApiError.builder()
+                        .status(httpStatus)
+                        .message(errorMessage)
+                        .build());
     }
 
     @Override
@@ -128,24 +140,14 @@ public class GroupsController implements GroupsApi {
     @Override
     public Group fetchGroup(HttpServletRequest request, HttpServletResponse response, String id) throws Exception {
         return groupRepository.findById(id).orElseThrow(
-           ()-> new ApiErrorException(
-              ApiError.builder()
-                 .status(HttpStatus.NOT_FOUND)
-                 .message(String.format(GROUP_NOT_FOUND_MSG,id))
-                 .build()
-           )
-        );
+           ()-> buildApiException(HttpStatus.NOT_FOUND, String.format(GROUP_NOT_FOUND_MSG,id)));
     }
 
     @Override
     public Group updateGroup(HttpServletRequest request, HttpServletResponse response, String id, Group group) throws Exception {
         //id from group body parameter should match id path parameter
         if(!group.getId().equals(id)){
-            throw new ApiErrorException(
-                    ApiError.builder()
-                            .status(HttpStatus.BAD_REQUEST)
-                            .message(NO_MATCHING_GROUP_ID_MSG)
-                            .build());
+            throw buildApiException(HttpStatus.BAD_REQUEST, NO_MATCHING_GROUP_ID_MSG);
         } else {
             return createGroup(request,response,group);
         }
@@ -230,10 +232,7 @@ public class GroupsController implements GroupsApi {
 
         // ADMIN group cannot be deleted
         if (ADMIN_GROUP_ID.equals(id)) {
-            throw new ApiErrorException(
-                        ApiError.builder()
-                                .status(HttpStatus.FORBIDDEN)
-                                .build());
+            throw buildApiException(HttpStatus.FORBIDDEN, "Deleting group ADMIN is not allowed");
         }
 
         // First we have to delete the link between the group to delete and its users
@@ -248,13 +247,14 @@ public class GroupsController implements GroupsApi {
     private void removeTheReferenceToTheGroupForMemberUsers(String idGroup) {
         List<UserData> foundUsers = userRepository.findByGroupSetContaining(idGroup);
 
-        if (foundUsers != null) {
+        if (foundUsers != null && !foundUsers.isEmpty()) {
             for (UserData userData : foundUsers) {
                 userData.deleteGroup(idGroup);
                 userService.publishUpdatedUserMessage(userData.getLogin());
             }
             userRepository.saveAll(foundUsers);
-        }
+        } else  userService.publishUpdatedConfigMessage();
+
     }
 
     private GroupData findGroupOrThrow(String id) {
@@ -274,12 +274,7 @@ public class GroupsController implements GroupsApi {
         List<UserData> foundUsers = new ArrayList<>();
         for(String login : logins){
             UserData foundUser = userRepository.findById(login).orElseThrow(
-                    () -> new ApiErrorException(
-                            ApiError.builder()
-                                    .status(HttpStatus.BAD_REQUEST)
-                                    .message(String.format(BAD_USER_LIST_MSG,login))
-                                    .build()
-                    ));
+                    () -> buildApiException(HttpStatus.BAD_REQUEST, String.format(BAD_USER_LIST_MSG,login)));
             foundUsers.add(foundUser);
         }
         return foundUsers;
@@ -292,12 +287,7 @@ public class GroupsController implements GroupsApi {
         List<Perimeter> foundPerimeters = new ArrayList<>();
         for(String perimeterId : perimeterIds){
             Perimeter foundPerimeter = perimeterRepository.findById(perimeterId).orElseThrow(
-                    () -> new ApiErrorException(
-                            ApiError.builder()
-                                    .status(HttpStatus.BAD_REQUEST)
-                                    .message(String.format(BAD_PERIMETER_LIST_MSG, perimeterId))
-                                    .build()
-                    ));
+                    () -> buildApiException(HttpStatus.BAD_REQUEST, String.format(BAD_PERIMETER_LIST_MSG, perimeterId)));
             foundPerimeters.add(foundPerimeter);
         }
         return foundPerimeters;

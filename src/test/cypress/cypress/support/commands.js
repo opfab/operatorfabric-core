@@ -17,45 +17,6 @@ Cypress.Commands.add('hackUrlCurrentlyUsedMechanism', () => {
     cy.wait(100);
 });
 
-Cypress.Commands.add('loginOpFab', (username, password) => {
-    cy.hackUrlCurrentlyUsedMechanism();
-
-    //go to login page
-    cy.visit('');
-
-    cy.loginOpFabWithoutHack(username, password);
-});
-
-Cypress.Commands.add('loginOpFabWithoutHack', (username, password) => {
-    //type login
-    cy.get('#opfab-login').should('be.visible');
-    cy.get('#opfab-login').type(username);
-
-    //type password
-    cy.get('#opfab-password').should('be.visible');
-    cy.get('#opfab-password').type(password);
-
-    //press login button
-    cy.get('#opfab-login-btn-submit').click();
-    cy.get('#opfab-login-btn-submit').should('be.visible');
-
-    //Wait for the app to finish initializing
-    cy.get('#opfab-cypress-loaded-check', {timeout: 20000}).should('have.text', 'true');
-});
-
-Cypress.Commands.add('loginWithClock', (dateToUse = new Date()) => {
-    // Do not use the generic login feature as we
-    // need to launch cy.clock after cy.visit('')
-    cy.hackUrlCurrentlyUsedMechanism();
-    cy.visit('');
-    cy.clock(dateToUse);
-    cy.get('#opfab-login').type('operator1_fr');
-    cy.get('#opfab-password').type('test');
-    cy.get('#opfab-login-btn-submit').click();
-
-    //Wait for the app to finish initializing
-    cy.get('#opfab-cypress-loaded-check', {timeout: 15000}).should('have.text', 'true');
-});
 
 Cypress.Commands.overwrite('reload', () => {
     cy.hackUrlCurrentlyUsedMechanism();
@@ -67,10 +28,6 @@ Cypress.Commands.overwrite('reload', () => {
     cy.get('#opfab-cypress-loaded-check', {timeout: 15000}).should('have.text', 'true');
 });
 
-Cypress.Commands.add('logoutOpFab', () => {
-    cy.get('#opfab-navbar-drop-user-menu').click(); // Click top right dropdown menu
-    cy.get('#opfab-navbar-right-menu-logout').click(); // Click logout button
-});
 
 Cypress.Commands.add('loadTestConf', () => {
     // This clears existing processGroups, bundles and perimeters and load the test configuration
@@ -87,20 +44,17 @@ Cypress.Commands.add('loadEmptyProcessGroups', () => {
     cy.exec('cd ../resources/processGroups && ./loadProcessGroups.sh emptyProcessGroups.json ' + Cypress.env('host'));
 });
 
+Cypress.Commands.add('loadProcessGroupsNotTotallyConfigured', () => {
+    // This load a process groups file without any process group
+    cy.exec('cd ../resources/processGroups && ./loadProcessGroups.sh processGroupsNotTotallyConfigure.json ' + Cypress.env('host'));
+});
+
 Cypress.Commands.add('delayRequestResponse', (url, delayTime = 2000) => {
     cy.intercept(url, (req) => {
         req.reply((res) => {
             res.delay = delayTime;
         });
     });
-});
-
-Cypress.Commands.add('checkLoadingSpinnerIsDisplayed', () => {
-    cy.get('#opfab-loading-spinner').should('exist');
-});
-
-Cypress.Commands.add('checkLoadingSpinnerIsNotDisplayed', () => {
-    cy.get('#opfab-loading-spinner').should('not.exist');
 });
 
 Cypress.Commands.add('send6TestCards', () => {
@@ -191,30 +145,7 @@ Cypress.Commands.add('waitForOpfabToStart', () => {
     cy.exec('cd ../../.. && ./bin/waitForOpfabToStart.sh ');
 });
 
-Cypress.Commands.add('openSettings', () => {
-    cy.get('#opfab-navbar-drop-user-menu').click();
-    cy.get('#opfab-navbar-right-menu-settings').click();
-});
 
-Cypress.Commands.add('openActivityArea', () => {
-    cy.get('#opfab-navbar-drop-user-menu').click();
-    cy.get('#opfab-navbar-right-menu-activityarea').click();
-});
-
-Cypress.Commands.add('saveActivityAreaModifications', () => {
-    cy.get('#opfab-activityarea-btn-confirm').should('exist').click(); //click confirm settings
-    cy.get('#opfab-activityarea-btn-yes').should('exist').click(); // and click yes on the confirmation popup
-});
-
-
-// Stub playSound method to catch when opfab send a sound
-Cypress.Commands.add('stubPlaySound', () => {
-    cy.window()
-        .its('soundNotificationService')
-        .then((soundNotificationService) => {
-            cy.stub(soundNotificationService, 'playSound').as('playSound');
-        });
-});
 
 Cypress.Commands.add('setFormDateTime', (formName, year, month, day, hours, minutes) => {
     cy.get('#opfab-datepicker-' + formName).click();
@@ -255,7 +186,7 @@ Cypress.Commands.add('agGridCellElementShould', (table, row, col, element, opera
         .eq(row)
         .find('.ag-cell-value')
         .eq(col)
-        .get(element)
+        .find(element)
         .should(operator, value);
 });
 
