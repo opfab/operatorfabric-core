@@ -8,7 +8,8 @@
  */
 
 .fill-available {
-    height: 100%;
+    height: calc(100% + 15px);
+    display: block;
     width: 100%;
 }
 .no-border {
