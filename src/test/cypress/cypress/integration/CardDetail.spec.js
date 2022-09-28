@@ -227,7 +227,7 @@ describe('Card detail', function () {
             );
              // Check card detail footer contains card deletion date 
             cy.get('.opfab-card-received-footer').contains(
-                /Deleted : \d{2}\/\d{2}\/\d{4} at ((1[0-2]|0?[1-9]):([0-5][0-9]) ([AP]M))/
+                /Deleted or updated : \d{2}\/\d{2}\/\d{4} at ((1[0-2]|0?[1-9]):([0-5][0-9]) ([AP]M))/
             );
         });
     });
