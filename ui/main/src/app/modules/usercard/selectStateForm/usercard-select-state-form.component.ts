@@ -238,8 +238,17 @@ export class UserCardSelectStateFormComponent implements OnInit, OnDestroy {
             if (!!process) {
                 this.stateOptions = this.statesPerProcesses.get(process);
                 if (!this.cardIdToEdit) {
-                    this.selectedProcess = process;
+                    const oldSelectedState = this.stateOptions[0].value;
                     this.selectedState = this.stateOptions[0].value;
+                   
+                   // in case the state is the same as before , the selected value does not change for the select component 
+                   // so we need to send the event here instead of waiting for the event state change 
+                    if (this.selectedState === oldSelectedState) {
+                        this.stateChange.emit({
+                            selectedProcessId: this.selectStateForm.get('usercardProcess').value,
+                            state: this.selectStateForm.get('usercardState').value
+                        });
+                    }
                 }
             }
         });
