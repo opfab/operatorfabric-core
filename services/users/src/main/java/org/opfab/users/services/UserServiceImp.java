@@ -147,7 +147,9 @@ public class UserServiceImp implements UserService {
 
                 CurrentUserWithPerimetersData userWithPerimetersData = CurrentUserWithPerimetersData.builder().userData(userData).build();
                 userWithPerimetersData.computePerimeters(perimeters);
-                if (!isFilteringNotificationAllowedForAllProcessesStates(userWithPerimetersData,
+                Map<String, Integer> processStatesWithFilteringNotificationNotAllowed =
+                        computeProcessStatesWithFilteringNotificationNotAllowed(userWithPerimetersData);
+                if (!isFilteringNotificationAllowedForAllProcessesStates(processStatesWithFilteringNotificationNotAllowed,
                         userSettings.getProcessesStatesNotNotified()))
                     return false;
             }
@@ -155,44 +157,49 @@ public class UserServiceImp implements UserService {
         return true;
     }
 
-    private boolean isFilteringNotificationAllowedForAllProcessesStates(CurrentUserWithPerimeters currentUserWithPerimeters,
-                                                                       Map<String, List<String>> processesStates){
+    private Map<String, Integer> computeProcessStatesWithFilteringNotificationNotAllowed(CurrentUserWithPerimeters currentUserWithPerimeters) {
+        Map<String, Integer> processStatesWithFilteringNotificationNotAllowed = new HashMap<>();
+
+        for (ComputedPerimeter computedPerimeter : currentUserWithPerimeters.getComputedPerimeters()) {
+            if ((computedPerimeter.getFilteringNotificationAllowed() != null) && (!computedPerimeter.getFilteringNotificationAllowed()))
+                processStatesWithFilteringNotificationNotAllowed.put(computedPerimeter.getProcess() + "." + computedPerimeter.getState(), 1);
+        }
+        return processStatesWithFilteringNotificationNotAllowed;
+    }
+
+    private boolean isFilteringNotificationAllowedForAllProcessesStates(Map<String, Integer> processStatesWithFilteringNotificationNotAllowed,
+                                                                        Map<String, List<String>> processesStates){
 
         if ((processesStates != null) && (processesStates.size() > 0)) {
             for (Map.Entry<String, List<String>> entry : processesStates.entrySet()) {
                 List <String> stateIds = entry.getValue();
                 String processId = entry.getKey();
 
-                if (! isFilteringNotificationAllowedForAllProcessStates(currentUserWithPerimeters, processId, stateIds))
+                if (! isFilteringNotificationAllowedForAllProcessStates(processStatesWithFilteringNotificationNotAllowed, processId, stateIds))
                     return false;
             }
         }
         return true;
     }
 
-    private boolean isFilteringNotificationAllowedForAllProcessStates(CurrentUserWithPerimeters currentUserWithPerimeters,
-                                                              String processId,
-                                                              List<String> stateIds) {
+    private boolean isFilteringNotificationAllowedForAllProcessStates(Map<String, Integer> processStatesWithFilteringNotificationNotAllowed,
+                                                                      String processId,
+                                                                      List<String> stateIds) {
         if (stateIds != null) {
             for (String stateId : stateIds) {
-                if (!isFilteringNotificationAllowedForThisProcessState(currentUserWithPerimeters, processId, stateId))
+                if (!isFilteringNotificationAllowedForThisProcessState(processStatesWithFilteringNotificationNotAllowed, processId, stateId))
                     return false;
             }
         }
         return true;
     }
 
-    private boolean isFilteringNotificationAllowedForThisProcessState(CurrentUserWithPerimeters currentUserWithPerimeters,
-                                                                     String processId, String stateId){
+    private boolean isFilteringNotificationAllowedForThisProcessState(Map<String, Integer> processStatesWithFilteringNotificationNotAllowed,
+                                                                      String processId, String stateId){
 
-        for (ComputedPerimeter computedPerimeter: currentUserWithPerimeters.getComputedPerimeters()) {
-
-            if ((computedPerimeter.getProcess().equals(processId)) && (computedPerimeter.getState().equals(stateId)) &&
-                (computedPerimeter.getFilteringNotificationAllowed() != null) && (!computedPerimeter.getFilteringNotificationAllowed())) {
-                log.info("Filtering notification not allowed for user={} process={} state={}",
-                        currentUserWithPerimeters.getUserData().getLogin(), processId, stateId);
-                return false;
-            }
+        if (processStatesWithFilteringNotificationNotAllowed.containsKey(processId + "." + stateId)) {
+            log.info("Filtering notification not allowed for process={} state={}", processId, stateId);
+            return false;
         }
         return true;
     }
