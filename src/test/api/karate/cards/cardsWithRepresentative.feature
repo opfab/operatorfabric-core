@@ -36,7 +36,7 @@ Feature: Cards with representative
   "stateRights" : [
       {
         "state" : "messageState",
-        "right" : "Receive"
+        "right" : "ReceiveAndWrite"
       }
     ]
 }

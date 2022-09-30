@@ -26,6 +26,46 @@ Feature: Posting card with a process and/or a state that doesn't exist in bundle
 }
 """
 
+
+  * def perimeter =
+  """
+  {
+    "id" : "perimeter",
+    "process" : "api_test",
+    "stateRights" : [
+        {
+          "state" : "messageState",
+          "right" : "ReceiveAndWrite"
+        },
+        {
+          "state" : "newState",
+          "right" : "ReceiveAndWrite"
+        }
+      ]
+  }
+  """
+  
+      * def perimeterArray =
+  """
+  [   "perimeter"
+  ]
+  """
+  
+  #Create new perimeter
+      Given url opfabUrl + 'users/perimeters'
+      And header Authorization = 'Bearer ' + authToken
+      And request perimeter
+      When method post
+      Then status 201
+  
+  #Attach perimeter to group
+      Given url opfabUrl + 'users/groups/ReadOnly/perimeters'
+      And header Authorization = 'Bearer ' + authToken
+      And request perimeterArray
+      When method patch
+      Then status 200
+  
+
 # Push card
     Given url opfabPublishCardUrl + 'cards'
     And header Authorization = 'Bearer ' + authTokenAsTSO
@@ -213,3 +253,9 @@ Feature: Posting card with a process and/or a state that doesn't exist in bundle
     And multipart file file = {read:'../businessconfig/resources/bundle_api_test.tar.gz', contentType: 'application/gzip'}
     When method post
     Then status 201
+
+    #delete perimeter created previously
+    Given url opfabUrl + 'users/perimeters/perimeter'
+    And header Authorization = 'Bearer ' + authToken
+    When method delete
+    Then status 200

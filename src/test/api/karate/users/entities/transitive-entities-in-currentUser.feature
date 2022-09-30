@@ -91,7 +91,7 @@ Feature: Check addition of transitive entities to user
   			"stateRights" : [
       			{
         			"state" : "messageState",
-        			"right" : "Receive"
+        			"right" : "ReceiveAndWrite"
       			}
     		]
         }

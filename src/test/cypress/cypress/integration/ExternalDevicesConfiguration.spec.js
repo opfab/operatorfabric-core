@@ -135,8 +135,8 @@ describe('ExternalDevicesconfigurationPage', () => {
         // Go to the users configuration screen
         cy.get('#opfab-externaldevices-tabs').find('#opfab-externaldevices-users-tab').click();
 
-        // We iterate 9 times because there are 13 users and 4 users have already a configuration
-        for (let i = 0; i < 9; i++) {
+        // We iterate 10 times because there are 14 users and 4 users have already a configuration
+        for (let i = 0; i < 10; i++) {
             cy.get('#addItem').click();
 
             cy.get('of-externaldevices-modal').should('exist');
@@ -152,8 +152,8 @@ describe('ExternalDevicesconfigurationPage', () => {
         //First page is 10 rows
         agGrid.countTableRows('#opfab-externaldevices-table-grid', 10);
 
-        // Pagination should display ' Results number  : 13 '
-        cy.get('.opfab-pagination').should('contain.text', ' Results number  : 13');
+        // Pagination should display ' Results number  : 14 '
+        cy.get('.opfab-pagination').should('contain.text', ' Results number  : 14');
 
         // When all users devices are configured it is not possible to add new configurations
         cy.get('#addItem').click();
@@ -175,7 +175,7 @@ describe('ExternalDevicesconfigurationPage', () => {
         cy.get('#opfab-externaldevices-table-grid').should('exist');
 
         // Delete previously created configurations
-        for (let j = 13; j > 4; j--) {
+        for (let j = 14; j > 4; j--) {
             agGrid.clickCell('#opfab-externaldevices-table-grid', 4, 3, 'of-action-cell-renderer');
 
             cy.get('of-confirmation-dialog').should('exist');

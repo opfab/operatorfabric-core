@@ -17,3 +17,4 @@ external-recipients:
       url: "http://localhost:8090/test"
       propagateUserToken: true
 checkAuthenticationForCardSending: true
+checkPerimeterForCardSending: false

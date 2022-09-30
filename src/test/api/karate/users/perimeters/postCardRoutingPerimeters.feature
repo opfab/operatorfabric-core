@@ -6,6 +6,7 @@ Feature: CreatePerimeters (endpoint tested : POST /perimeters)
     * def authToken = signIn.authToken
     * def signInAsTSO = callonce read('../../common/getToken.feature') { username: 'operator1_fr'}
     * def authTokenAsTSO = signInAsTSO.authToken
+
       #defining perimeters
     * def perimeter =
 """
@@ -119,16 +120,33 @@ Feature: CreatePerimeters (endpoint tested : POST /perimeters)
   "stateRights" : [
       {
         "state" : "messageState",
-        "right" : "Receive"
+        "right" : "ReceiveAndWrite"
       }
     ]
 }
 """
+
+  * def perimeterWrite =
+  """
+  {
+    "id" : "perimeterWrite",
+    "process" : "api_test",
+    "stateRights" : [
+        {
+          "state" : "incidentInProgressState",
+          "right" : "Write"
+        }
+      ]
+  }
+  """
+  
     * def perimeterArray =
 """
-[   "perimeter"
+[   "perimeter",
+    "perimeterWrite"
 ]
 """
+
 
   Scenario: Create Perimeters
   #Create new perimeter
@@ -138,6 +156,13 @@ Feature: CreatePerimeters (endpoint tested : POST /perimeters)
     When method post
     Then status 201
 
+    #Create new perimeter
+      Given url opfabUrl + 'users/perimeters'
+      And header Authorization = 'Bearer ' + authToken
+      And request perimeterWrite
+      When method post
+      Then status 201
+
   #Attach perimeter to group
     Given url opfabUrl + 'users/groups/ReadOnly/perimeters'
     And header Authorization = 'Bearer ' + authToken
@@ -145,6 +170,8 @@ Feature: CreatePerimeters (endpoint tested : POST /perimeters)
     When method patch
     Then status 200
 
+
+  
 
 
   Scenario: Push the card 'cardForGroup'
@@ -213,3 +240,9 @@ Feature: CreatePerimeters (endpoint tested : POST /perimeters)
     And header Authorization = 'Bearer ' + authToken
     When method delete
     Then status 200
+
+      #delete perimeter created previously
+      Given url opfabUrl + 'users/perimeters/perimeterWrite'
+      And header Authorization = 'Bearer ' + authToken
+      When method delete
+      Then status 200

@@ -55,7 +55,7 @@ Feature: postCardWithToNotify
   "stateRights" : [
       {
         "state" : "messageState",
-        "right" : "Receive"
+        "right" : "ReceiveAndWrite"
       }
     ]
 }
