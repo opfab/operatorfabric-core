@@ -47,7 +47,7 @@ public class ExternalAppServiceImpl implements ExternalAppService {
 		log.info("card reception from Card Publication Service {} : \n\n", requestBody);
 		ArrayList<String> entitiesRecipients = new ArrayList<>(List.of("IT_SUPERVISOR_ENTITY"));
 		ArrayList<String> groupRecipients = new ArrayList<>();
-		requestBody.ifPresent(card -> sendBackCard("defaultProcess", card.path("processInstanceId").textValue(), entitiesRecipients, groupRecipients, card.path("id").textValue()));
+		requestBody.ifPresent(card -> sendBackCard("api_test", "messageState", card.path("processInstanceId").textValue(), entitiesRecipients, groupRecipients, card.path("id").textValue()));
 	}
 
 	@Override
@@ -55,21 +55,21 @@ public class ExternalAppServiceImpl implements ExternalAppService {
 		log.info("Card suppression from Card Publication Service cardId = {} : \n\n", id);
 		ArrayList<String> entitiesRecipients = new ArrayList<>();
 		ArrayList<String> groupRecipients = new ArrayList<>(List.of("ReadOnly"));
-		sendBackCard("api_test", "process1_deleted", entitiesRecipients, groupRecipients, id);
+		sendBackCard("api_test", "messageState","process1_deleted", entitiesRecipients, groupRecipients, id);
 	}
 
 	public String welcomeMessage() {
 		return   "Welcome to External Application";
 	}
 
-	public void sendBackCard(String processToSend, String processInstanceIdReceived, List<String> entitiesRecipients, List<String> groupRecipients, String idReceived) {
+	public void sendBackCard(String processToSend, String state, String processInstanceIdReceived, List<String> entitiesRecipients, List<String> groupRecipients, String idReceived) {
 
 		Card card = new Card();
 		card.setPublisher("operator1_fr");
 		card.setProcessVersion("1");
 		card.setProcess(processToSend);
 		card.setProcessInstanceId(processInstanceIdReceived);
-		card.setState("messageState");
+		card.setState(state);
 		card.setSeverity(SeverityEnum.INFORMATION);
 		card.setStartDate(Instant.now());
 

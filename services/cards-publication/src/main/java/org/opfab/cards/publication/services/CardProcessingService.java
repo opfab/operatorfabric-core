@@ -70,6 +70,8 @@ public class CardProcessingService {
 
     @Value("${checkAuthenticationForCardSending:true}") boolean checkAuthenticationForCardSending;
 
+    @Value("${checkPerimeterForCardSending:true}") boolean checkPerimeterForCardSending;
+
     @Value("${authorizeToSendCardWithInvalidProcessState:false}") boolean authorizeToSendCardWithInvalidProcessState;
 
     public static final String UNEXISTING_PROCESS_STATE = "Impossible to publish card because process and/or state does not exist (process=%1$s, state=%2$s, processVersion=%3$s, processInstanceId=%4$s)";
@@ -90,19 +92,23 @@ public class CardProcessingService {
                     .message(buildPublisherErrorMessage(card, user.get().getUserData().getLogin(), false))
                     .build());
         }
-
+        validate(card);
+        if (!authorizeToSendCardWithInvalidProcessState) checkProcessStateExistsInBundles(card);
+        if (user.isPresent() && checkPerimeterForCardSending && !cardPermissionControlService.isUserAuthorizedToSendCard(card,user.get())) {
+            throw new AccessDeniedException("user not authorized, the card is rejected");
+        }
         // set empty user otherwise it will be processed as a usercard
         processOneCard(card, Optional.empty(), jwt);
     }
 
     public void processUserCard(CardPublicationData card, CurrentUserWithPerimeters user, Optional<Jwt> jwt) {
         card.setPublisherType(PublisherTypeEnum.ENTITY);
+        validate(card);
+        if (!authorizeToSendCardWithInvalidProcessState) checkProcessStateExistsInBundles(card);
         processOneCard(card, Optional.of(user), jwt);
     }
 
     private void processOneCard(CardPublicationData card, Optional<CurrentUserWithPerimeters> user, Optional<Jwt> jwt) {
-        validate(card);
-        if (!authorizeToSendCardWithInvalidProcessState) checkProcessStateExistsInBundles(card);
         card.prepare(Instant.ofEpochMilli(Instant.now().toEpochMilli()));
         cardTranslationService.translate(card);
 
@@ -122,7 +128,7 @@ public class CardProcessingService {
             if (!cardPermissionControlService.isCardPublisherInUserEntities(card, user.get()))
                 // throw a runtime exception to be handled by Mono.onErrorResume()
                 throw new IllegalArgumentException("Publisher is not valid, the card is rejected");
-
+            log.info("Send user card to external app with jwt present " + jwt.isPresent());
             externalAppClient.sendCardToExternalApplication(card, jwt);
         }
         deleteChildCardsProcess(card, jwt);

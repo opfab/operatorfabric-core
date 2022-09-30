@@ -85,7 +85,7 @@ Feature: Delete Cards by end date before
   "stateRights" : [
       {
         "state" : "messageState",
-        "right" : "Receive"
+        "right" : "ReceiveAndWrite"
       }
     ]
 }

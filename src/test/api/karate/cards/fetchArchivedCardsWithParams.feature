@@ -239,7 +239,11 @@ Feature: Archives
   "stateRights" : [
       {
         "state" : "messageState",
-        "right" : "Receive"
+        "right" : "ReceiveAndWrite"
+      },
+	  {
+        "state" : "incidentInProgressState",
+        "right" : "Write"
       }
     ]
 }

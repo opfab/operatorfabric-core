@@ -74,11 +74,11 @@ Feature: UserCards tests
   "stateRights" : [
       {
         "state" : "messageState",
-        "right" : "Receive"
+        "right" : "ReceiveAndWrite"
       },
       {
         "state" : "incidentInProgressState",
-        "right" : "Receive"
+        "right" : "ReceiveAndWrite"
       }
     ]
 }
@@ -106,7 +106,8 @@ Feature: UserCards tests
 
     * def perimeterForSupervisorGroup =
 """
-[   "perimeterForDefaultProcess"
+[   "perimeterForDefaultProcess",
+    "perimeter"
 ]
 """
 
@@ -293,7 +294,7 @@ Feature: UserCards tests
 
 # We check externalApp has sent a card following reception of card process_1.process_id_w
     * configure retry = { count: 3, interval: 3000 }
-    Given url opfabUrl + 'cards/cards/defaultProcess.process_id_w'
+    Given url opfabUrl + 'cards/cards/api_test.process_id_w'
     And header Authorization = 'Bearer ' + authTokenAsItsupervisor1
     And retry until responseStatus == 200 && response.card.data == "Card with id=process_1.process_id_w received by externalApp"
     When method get
@@ -536,42 +537,42 @@ Feature: UserCards tests
     Then status 404
 
 
+
 # delete user from group
-  Scenario: Delete user operator1_fr from groupKarate
-    Given url opfabUrl + 'users/groups/' + groupKarate.id  + '/users/operator1_fr'
-    And header Authorization = 'Bearer ' + authToken
-    When method delete
-    Then status 200
+Scenario: Delete user operator1_fr from groupKarate
+  Given url opfabUrl + 'users/groups/' + groupKarate.id  + '/users/operator1_fr'
+  And header Authorization = 'Bearer ' + authToken
+  When method delete
+  Then status 200
 
 #delete perimeter created previously
-    Given url opfabUrl + 'users/perimeters/perimeter'
-    And header Authorization = 'Bearer ' + authToken
-    When method delete
-    Then status 200
+  Given url opfabUrl + 'users/perimeters/perimeter'
+  And header Authorization = 'Bearer ' + authToken
+  When method delete
+  Then status 200
 
 #delete perimeterForDefaultProcess created previously
-    Given url opfabUrl + 'users/perimeters/perimeterForDefaultProcess'
-    And header Authorization = 'Bearer ' + authToken
-    When method delete
-    Then status 200
+  Given url opfabUrl + 'users/perimeters/perimeterForDefaultProcess'
+  And header Authorization = 'Bearer ' + authToken
+  When method delete
+  Then status 200
 
 #delete perimeter_1 created previously
-    Given url opfabUrl + 'users/perimeters/' + perimeter_1.id
-    And header Authorization = 'Bearer ' + authToken
-    When method delete
-    Then status 200
+  Given url opfabUrl + 'users/perimeters/' + perimeter_1.id
+  And header Authorization = 'Bearer ' + authToken
+  When method delete
+  Then status 200
 
 #delete perimeter_2 created previously
-    Given url opfabUrl + 'users/perimeters/' + perimeter_2.id
-    And header Authorization = 'Bearer ' + authToken
-    When method delete
-    Then status 200
+  Given url opfabUrl + 'users/perimeters/' + perimeter_2.id
+  And header Authorization = 'Bearer ' + authToken
+  When method delete
+  Then status 200
 
 # delete groupKarate
-  Scenario: Delete groupKarate created previously
-    Given url opfabUrl + 'users/groups/' + groupKarate.id
-    And header Authorization = 'Bearer ' + authToken
-    When method delete
-    Then status 200
-
-
+Scenario: Delete groupKarate created previously
+  Given url opfabUrl + 'users/groups/' + groupKarate.id
+  And header Authorization = 'Bearer ' + authToken
+  When method delete
+  Then status 200
+#

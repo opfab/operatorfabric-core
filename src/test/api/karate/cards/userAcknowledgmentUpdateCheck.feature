@@ -37,7 +37,7 @@ Feature: CardsUserAcknowledgementUpdateCheck
   "stateRights" : [
       {
         "state" : "messageState",
-        "right" : "Receive"
+        "right" : "ReceiveAndWrite"
       }
     ]
 }

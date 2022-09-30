@@ -45,6 +45,20 @@ Feature: deleteUserCards tests
 }
 """
 
+  * def perimeter2 =
+  """
+  {
+    "id" : "perimeter2",
+    "process" : "api_test",
+    "stateRights" : [
+        {
+          "state" : "messageState",
+          "right" : "ReceiveAndWrite"
+        }
+    ]
+  }
+  """
+
     * def perimeterWriteForState2 =
 """
 {
@@ -124,6 +138,12 @@ Feature: deleteUserCards tests
     And request perimeter
     When method post
 
+  Scenario: Create perimeter2
+    Given url opfabUrl + 'users/perimeters'
+    And header Authorization = 'Bearer ' + authToken
+    And request perimeter2
+    When method post
+
   Scenario: Create perimeterWriteForState2
     Given url opfabUrl + 'users/perimeters'
     And header Authorization = 'Bearer ' + authToken
@@ -133,6 +153,13 @@ Feature: deleteUserCards tests
 
   Scenario: Put groupKarate for perimeter
     Given url opfabUrl + 'users/perimeters/'+ perimeter.id + '/groups'
+    And header Authorization = 'Bearer ' + authToken
+    And request groupArray
+    When method put
+    Then status 200
+
+  Scenario: Put groupKarate for perimeter2
+    Given url opfabUrl + 'users/perimeters/'+ perimeter2.id + '/groups'
     And header Authorization = 'Bearer ' + authToken
     And request groupArray
     When method put
@@ -293,6 +320,12 @@ Feature: deleteUserCards tests
     When method delete
     Then status 200
 
+    
+  Scenario: delete the perimeter2 previously created
+    Given url opfabUrl + 'users/perimeters/' + perimeter2.id
+    And header Authorization = 'Bearer ' + authToken
+    When method delete
+    Then status 200
 
   Scenario: delete the group previously created
     Given url opfabUrl + 'users/groups/' + groupKarate.id

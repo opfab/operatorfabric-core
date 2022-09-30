@@ -604,7 +604,6 @@
     "firstName" : "",
     "lastName" : "",
     "attributes" : {
-      "entitiesId" : [ "ENTITY1_FR;ENTITY3_FR" ],
       "groups" : ["Dispatcher;ReadOnly;Supervisor"]
     },
     "credentials" : [ {

@@ -9,6 +9,41 @@ Feature: Posting cards with unexisting i18n file in bundle, and with i18n file b
 
   Scenario: Post card with unexisting i18n file
 
+    * def perimeter =
+"""
+{
+  "id" : "perimeter",
+  "process" : "api_test",
+  "stateRights" : [
+      {
+        "state" : "messageState",
+        "right" : "ReceiveAndWrite"
+      }
+    ]
+}
+"""
+
+    * def perimeterArray =
+"""
+[   "perimeter"
+]
+"""
+
+#Create new perimeter
+    Given url opfabUrl + 'users/perimeters'
+    And header Authorization = 'Bearer ' + authToken
+    And request perimeter
+    When method post
+    Then status 201
+
+#Attach perimeter to group
+    Given url opfabUrl + 'users/groups/ReadOnly/perimeters'
+    And header Authorization = 'Bearer ' + authToken
+    And request perimeterArray
+    When method patch
+    Then status 200
+
+    
   # We post an update for bundle api_test, version=1, which does not contain i18n file
   # Post bundle
     Given url opfabUrl + '/businessconfig/processes'
@@ -131,3 +166,9 @@ Feature: Posting cards with unexisting i18n file in bundle, and with i18n file b
     When method post
     Then status 201
     And match response.id == 'api_test.cardWithExistingI18nKeys'
+
+#delete perimeter created previously
+Given url opfabUrl + 'users/perimeters/perimeter'
+And header Authorization = 'Bearer ' + authToken
+When method delete
+Then status 200
