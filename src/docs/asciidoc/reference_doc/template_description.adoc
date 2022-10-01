@@ -426,17 +426,6 @@ outputs
 </ul>
 ....
 
-[[svg]]
-=== svg
-
-outputs a svg tag with lazy loading, and missing image replacement message. The
-image url is the concatenation of an arbitrary number of helper arguments
-
-....
-{{{svg baseUri scheduledOpId "/" substation "/before/"
-computationPhaseOrdinal}}}
-....
-
 
 [[times]]
 === times
