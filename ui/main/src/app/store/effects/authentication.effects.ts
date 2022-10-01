@@ -27,7 +27,6 @@ import {Router} from '@angular/router';
 import {selectCode} from '@ofSelectors/authentication.selectors';
 import {Message, MessageLevel} from '@ofModel/message.model';
 import {I18n} from '@ofModel/i18n.model';
-import {Map} from '@ofModel/map';
 import {ConfigService} from '@ofServices/config.service';
 import {redirectToCurrentLocation} from '../../app-routing.module';
 import {CardService} from '@ofServices/card.service';
@@ -223,7 +222,7 @@ export class AuthenticationEffects {
             }),
             catchError((err) => {
                 console.error(new Date().toISOString(), err);
-                const parameters = new Map<string>();
+                const parameters = new Map<string,string>();
                 parameters['message'] = err;
                 return of(
                     this.handleRejectedLogin(
@@ -236,7 +235,7 @@ export class AuthenticationEffects {
 
     handleErrorOnTokenGeneration(errorResponse, category: string) {
         let message, key;
-        const params = new Map<string>();
+        const params = new Map<string,string>();
         switch (errorResponse.status) {
             case 401:
                 message = 'Unable to authenticate the user';

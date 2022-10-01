@@ -8,7 +8,6 @@
  */
 
 import {Card} from '@ofModel/card.model';
-import {Map as OfMap} from '@ofModel/map';
 import {LightCard} from '@ofModel/light-card.model';
 
 export class Process {
@@ -17,7 +16,7 @@ export class Process {
         readonly version: string,
         readonly name?: string,
         readonly locales?: string[],
-        readonly states?: OfMap<State>,
+        readonly states?: Map<string,State>,
         readonly uiVisibility?: UiVisibility
     ) {}
 

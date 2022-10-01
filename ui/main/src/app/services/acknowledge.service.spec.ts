@@ -10,7 +10,6 @@
 import {AcknowledgeService} from '@ofServices/acknowledge.service';
 import {TestBed} from '@angular/core/testing';
 import {AcknowledgmentAllowedEnum, Response, State} from '@ofModel/processes.model';
-import {Map as OfMap} from '@ofModel/map';
 import {BusinessconfigI18nLoaderFactory, getOneRandomCard, getOneRandomProcess} from '@tests/helpers';
 import {Card} from '@ofModel/card.model';
 import {UserWithPerimeters} from '@ofModel/userWithPerimeters.model';
@@ -33,7 +32,7 @@ describe('AcknowledgeService testing ', () => {
     let statesList;
 
     beforeEach(() => {
-        statesList = new OfMap();
+        statesList = new Map();
 
         TestBed.configureTestingModule({
             providers: [
