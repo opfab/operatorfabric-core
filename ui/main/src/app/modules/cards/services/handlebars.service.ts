@@ -13,7 +13,6 @@ import * as moment from 'moment';
 import {Observable, of} from 'rxjs';
 import {map, tap} from 'rxjs/operators';
 import {ProcessesService} from '@ofServices/processes.service';
-import {Guid} from 'guid-typescript';
 import {DetailContext} from '@ofModel/detail-context.model';
 import {ConfigService} from '@ofServices/config.service';
 
@@ -28,7 +27,6 @@ export class HandlebarsService {
         HandlebarsService.registerPreserveSpace();
         this.registerNumberFormat();
         this.registerDateFormat();
-        this.registerSvg();
         this.registerSort();
         HandlebarsService.registerSlice();
         HandlebarsService.registerArrayAtIndex();
@@ -318,23 +316,6 @@ export class HandlebarsService {
         });
     }
 
-    private registerSvg() {
-        const svgUid = Guid.create().toString();
-        Handlebars.registerHelper('svg', function () {
-            const args = [];
-            for (let i = 0; i < arguments.length - 1; i++) {
-                args.push(arguments[i]);
-            }
-            let imageUrl = '';
-            for (let i = 0; i < args.length; i++) {
-                imageUrl += args[i];
-            }
-            return `<embed type="image/svg+xml" src="${imageUrl}" id="${svgUid}" />
-                    <script>document.getElementById('${svgUid}').addEventListener('load', function(){
-                            svgPanZoom(document.getElementById('${svgUid}'));});
-                    </script>`;
-        });
-    }
 
     private registerDateFormat() {
         Handlebars.registerHelper('dateFormat', (value, options) => {

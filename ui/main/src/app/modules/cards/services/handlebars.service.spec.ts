@@ -569,28 +569,6 @@ describe('Handlebars Services', () => {
                 call.flush('{{preserveSpace "   "}}');
             });
         });
-        it('compile svg', (done) => {
-            const templateName = Guid.create().toString();
-            handlebarsService
-                .executeTemplate(templateName, new DetailContext(card, userContext, null))
-                .subscribe((result) => {
-                    const lines = result.split('\n');
-                    expect(lines.length).toEqual(4);
-                    expect(lines[0]).toMatch(/<embed type="image\/svg\+xml" src="\/some\/where" id=".+" \/>/);
-                    expect(lines[1]).toMatch(
-                        /         <script>document\.getElementById\('.+'\).addEventListener\('load', function\(\){/
-                    );
-                    expect(lines[2]).toMatch(/                 svgPanZoom\(document\.getElementById\('.+'\)\);}\);/);
-                    expect(lines[3]).toMatch(/         <\/script>/);
-                    done();
-                });
-            const calls = httpMock.match((req) => req.url === computeTemplateUri(templateName));
-            expect(calls.length).toEqual(1);
-            calls.forEach((call) => {
-                expect(call.request.method).toBe('GET');
-                call.flush('{{{svg "/some" "/where"}}}');
-            });
-        });
 
         it('compile keepSpacesAndEndOfLine for two lines ', (done) => {
             const templateName = Guid.create().toString();

@@ -57,7 +57,6 @@
     "ngx-chips": "3.0.0",
     "ol": "6.5.0",
     "rxjs": "7.5.7",
-    "svg-pan-zoom": "3.6.1",
     "virtual-select-plugin": "1.0.33",
     "xlsx": "0.18.5"
   },
