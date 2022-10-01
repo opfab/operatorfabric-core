@@ -9,22 +9,22 @@
 
 import {getTestBed, TestBed} from '@angular/core/testing';
 
-import {ProcessesService} from '@ofServices/processes.service';
-import {HttpClientTestingModule, HttpTestingController, TestRequest} from '@angular/common/http/testing';
+
+import {HttpClientTestingModule, HttpTestingController} from '@angular/common/http/testing';
 import {environment} from '@env/environment';
-import {TranslateLoader, TranslateModule, TranslateService} from '@ngx-translate/core';
+import {TranslateLoader, TranslateModule} from '@ngx-translate/core';
 import {RouterTestingModule} from '@angular/router/testing';
 import {Store, StoreModule} from '@ngrx/store';
 import {appReducer, AppState} from '@ofStore/index';
 import {AuthenticationImportHelperForSpecs, BusinessconfigI18nLoaderFactory, getOneRandomCard} from '@tests/helpers';
-import {LightCard} from '@ofModel/light-card.model';
+
 import {HandlebarsService} from './handlebars.service';
 import {Guid} from 'guid-typescript';
-import {I18n} from '@ofModel/i18n.model';
 import * as moment from 'moment';
 import {UserContext} from '@ofModel/user-context.model';
 import {DetailContext} from '@ofModel/detail-context.model';
 import {DateTimeProvider, SystemDateTimeProvider} from 'angular-oauth2-oidc';
+
 
 function computeTemplateUri(templateName) {
     return `${environment.urls.processes}/testProcess/templates/${templateName}`;
@@ -35,7 +35,6 @@ describe('Handlebars Services', () => {
     let handlebarsService: HandlebarsService;
     let httpMock: HttpTestingController;
     let store: Store<AppState>;
-    let translate: TranslateService;
     const now = moment(Date.now());
     beforeEach(() => {
         TestBed.configureTestingModule({
@@ -55,7 +54,6 @@ describe('Handlebars Services', () => {
                 {provide: 'TimeEventSource', useValue: null},
                 {provide: DateTimeProvider, useClass: SystemDateTimeProvider},
                 {provide: store, useClass: Store},
-                ProcessesService,
                 HandlebarsService,
                 AuthenticationImportHelperForSpecs
             ]
@@ -65,7 +63,6 @@ describe('Handlebars Services', () => {
         spyOn(store, 'dispatch').and.callThrough();
         httpMock = injector.get(HttpTestingController);
         handlebarsService = TestBed.inject(HandlebarsService);
-        translate = TestBed.inject(TranslateService);
     });
     afterEach(() => {
         httpMock.verify();
@@ -99,8 +96,7 @@ describe('Handlebars Services', () => {
                     eric: 'Idle',
                     terry2: 'Jones',
                     michael: 'Palin'
-                },
-                i18n: new I18n('value', {param: 'BAR'})
+                }
             }
         });
         const simpleTemplate = 'English template {{card.data.name}}';
@@ -506,63 +502,6 @@ describe('Handlebars Services', () => {
                 call.flush('{{#each (sort card.data.pythons "lastName")}}{{lastName}} {{/each}}');
             });
         });
-        it('compile i18n', (done) => {
-            translate.setTranslation('en', {
-                value: {subValue: 'English value'}
-            });
-            translate.use('en');
-            const templateName = Guid.create().toString();
-            handlebarsService
-                .executeTemplate(templateName, new DetailContext(card, userContext, null))
-                .subscribe((result) => {
-                    expect(result).toEqual('English value');
-                    done();
-                });
-            let calls = httpMock.match((req) => req.url == computeTemplateUri(templateName));
-            expect(calls.length).toEqual(1);
-            calls.forEach((call) => {
-                expect(call.request.method).toBe('GET');
-                call.flush('{{i18n "value" "subValue"}}');
-            });
-        });
-        it('compile i18n with parameters', (done) => {
-            translate.setTranslation('en', {
-                value: 'English value: {{param}}'
-            });
-            translate.use('en');
-            const templateName = Guid.create().toString();
-            handlebarsService
-                .executeTemplate(templateName, new DetailContext(card, userContext, null))
-                .subscribe((result) => {
-                    expect(result).toEqual('English value: FOO');
-                    done();
-                });
-            let calls = httpMock.match((req) => req.url == computeTemplateUri(templateName));
-            expect(calls.length).toEqual(1);
-            calls.forEach((call) => {
-                expect(call.request.method).toBe('GET');
-                call.flush('{{i18n "value" param="FOO"}}');
-            });
-        });
-        it('compile i18n with i18n object', (done) => {
-            translate.setTranslation('en', {
-                value: 'English value: {{param}}'
-            });
-            translate.use('en');
-            const templateName = Guid.create().toString();
-            handlebarsService
-                .executeTemplate(templateName, new DetailContext(card, userContext, null))
-                .subscribe((result) => {
-                    expect(result).toEqual('English value: BAR');
-                    done();
-                });
-            let calls = httpMock.match((req) => req.url == computeTemplateUri(templateName));
-            expect(calls.length).toEqual(1);
-            calls.forEach((call) => {
-                expect(call.request.method).toBe('GET');
-                call.flush('{{i18n card.data.i18n}}');
-            });
-        });
         it('compile numberFormat using en locale fallback', (done) => {
             const templateName = Guid.create().toString();
             handlebarsService
@@ -748,11 +687,4 @@ describe('Handlebars Services', () => {
     });
 });
 
-function flushI18nJson(request: TestRequest, json: any) {
-    const locale = request.request.params.get('locale');
-    request.flush(json[locale]);
-}
 
-function prefix(card: LightCard) {
-    return card.process + '.' + card.processVersion + '.';
-}

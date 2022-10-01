@@ -9,9 +9,7 @@
 
 import {Injectable} from '@angular/core';
 import * as Handlebars from 'handlebars/dist/handlebars.js';
-import {TranslateService} from '@ngx-translate/core';
 import * as moment from 'moment';
-import {Map} from '@ofModel/map';
 import {Observable, of} from 'rxjs';
 import {map, tap} from 'rxjs/operators';
 import {ProcessesService} from '@ofServices/processes.service';
@@ -24,7 +22,6 @@ import {ConfigService} from '@ofServices/config.service';
 })
 export class HandlebarsService {
     constructor(
-        private translate: TranslateService,
         private businessconfig: ProcessesService,
         private configService: ConfigService
     ) {
@@ -32,7 +29,6 @@ export class HandlebarsService {
         this.registerNumberFormat();
         this.registerDateFormat();
         this.registerSvg();
-        this.registerI18n();
         this.registerSort();
         HandlebarsService.registerSlice();
         HandlebarsService.registerArrayAtIndex();
@@ -55,7 +51,7 @@ export class HandlebarsService {
         this.configService.getConfigValueAsObservable('settings.locale').subscribe((locale) => this.changeLocale(locale));
     }
 
-    private templateCache: Map<Function> = new Map();
+    private templateCache: Map<string,Function> = new Map();
     private _locale: string;
 
     private static registerJson() {
@@ -319,31 +315,6 @@ export class HandlebarsService {
                 }
             }
             return arrayToSort;
-        });
-    }
-
-    private registerI18n() {
-        Handlebars.registerHelper('i18n', (...fctArgs) => {
-            const args = [],
-                options = fctArgs[fctArgs.length - 1];
-            for (let i = 0; i < fctArgs.length - 1; i++) {
-                args.push(fctArgs[i]);
-            }
-
-            let i18nKey: string, i18nParams: string[];
-            if (typeof args[0] === 'object') {
-                i18nKey = args[0].key;
-                i18nParams = args[0].parameters;
-            } else {
-                i18nKey = '';
-                for (let i = 0; i < args.length; i++) {
-                    if (i18nKey) i18nKey += '.';
-                    i18nKey += args[i];
-                }
-                i18nParams = options.hash;
-            }
-
-            return this.translate.instant(i18nKey, i18nParams);
         });
     }
 

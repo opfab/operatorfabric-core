@@ -148,35 +148,6 @@ You can also pass a milliseconds value as a string.
 {{dateFormat card.data.birthdayAsString format="MMMM Do YYYY, h:mm:ss a"}}
 ....
 
-[[i18n]]
-=== i18n
-
-outputs a i18n result from a key and some parameters. There are two ways of
-configuration :
-
-* Pass an object as sole argument. The object must contain a key field (string)
-and an optional parameter field (map of parameterKey => value)
-+
-....
-{{i18n card.data.i18nTitle}}
-....
-* Pass a string key as sole argument and use hash parameters
-(https://handlebarsjs.com/[see Handlebars doc Literals section]) for i18n string
-parameters.
-
-....
-<!--
-emergency.title=Emergency situation happened on {{date}}. Cause : {{cause}}.
--->
-{{i18n "emergency.title" date="2018-06-14" cause="Broken Coffee Machine"}}
-....
-
-outputs
-
-....
-Emergency situation happened on 2018-06-14. Cause : Broken Cofee Machine
-....
-
 
 [[json]]
 === json
