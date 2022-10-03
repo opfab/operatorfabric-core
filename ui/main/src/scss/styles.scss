@@ -517,6 +517,17 @@ body {
     .ag-cell-wrap-text {
         word-break: normal;
     }
+
+    .ag-header-cell-sortable {
+        cursor: default;
+        .ag-header-cell-label {
+            cursor: pointer;
+        }
+    }
+
+    .ag-header-cell-menu-button {
+        cursor: pointer;
+    }
 }
 
 .opfab-monitoring-ag-grid-row {
