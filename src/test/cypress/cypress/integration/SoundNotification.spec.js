@@ -7,15 +7,15 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {getOpfabGeneralCommands} from '../support/opfabGeneralCommands';
-import {getSoundCommands} from '../support/soundCommands'
-import {getSettingsCommands} from '../support/settingsCommands'
+import {OpfabGeneralCommands} from '../support/opfabGeneralCommands';
+import {SoundCommands} from '../support/soundCommands';
+import {SettingsCommands} from '../support/settingsCommands'
 
 describe('Sound notification test', function () {
     const user = 'operator1_fr';
-    const opfab = getOpfabGeneralCommands();
-    const sound = getSoundCommands();
-    const settings = getSettingsCommands();
+    const opfab = new OpfabGeneralCommands();
+    const sound = new SoundCommands();
+    const settings = new SettingsCommands();
 
     before('Reset UI configuration file ', function () {
         //cy.loadTestConf(); Avoid to launch it as it is time consuming

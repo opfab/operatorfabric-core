@@ -8,11 +8,11 @@
  */
 
 
-import {getOpfabGeneralCommands} from "../support/opfabGeneralCommands"
+import {OpfabGeneralCommands} from "../support/opfabGeneralCommands"
 
 describe('ExternalDevicesconfigurationPage', () => {
 
-    const opfab = getOpfabGeneralCommands();
+    const opfab = new OpfabGeneralCommands();
 
     before('Set up configuration', function () {
         cy.loadTestConf();

@@ -7,7 +7,7 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {getOpfabGeneralCommands} from '../support/opfabGeneralCommands';
+import {OpfabGeneralCommands} from '../support/opfabGeneralCommands';
 
 describe('Test translations', function () {
     const ENGLISH = 'en';
@@ -18,7 +18,7 @@ describe('Test translations', function () {
     const FRENCH_SETTINGS = 'PARAMÈTRES';
     const DUTCH_SETTINGS = 'INSTELLINGEN';
 
-    const opfab = getOpfabGeneralCommands();
+    const opfab = new OpfabGeneralCommands();
 
     function changeLanguage(newLanguage, useClock) {
         cy.get('#opfab-navbar-drop-user-menu').should('exist').click();

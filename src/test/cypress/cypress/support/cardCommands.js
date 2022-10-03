@@ -7,26 +7,27 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {externalCommands} from './externalCommands';
 
-export function getCardCommands() {
-    const card = new externalCommands('CARD');
+import {OpfabCommands} from './opfabCommands';
 
+export class CardCommands extends OpfabCommands {
 
-    card.addCommand('checkEditButtonDoesNotExist', function () {
+    constructor() {
+        super();
+        super.init('CARD');
+    }
+
+    checkEditButtonDoesNotExist = function () {
         cy.get('#opfab-card-edit').should('not.exist');
-    });
+    }
 
-    card.addCommand('checkDeleteButtonDoesNotExist', function () {
+    checkDeleteButtonDoesNotExist = function () {
         cy.get('#opfab-card-delete').should('not.exist');
-    });
+    }
 
-
-    card.addCommand('delete', function () {
+    delete = function () {
         cy.get('#opfab-card-delete').click();
         cy.get('#opfab-card-details-delete-btn-confirm').click();
-    });
-
-   
-    return card;
+    }
 }
+

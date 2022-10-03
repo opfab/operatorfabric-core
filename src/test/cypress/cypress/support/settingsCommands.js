@@ -7,31 +7,31 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {externalCommands} from './externalCommands';
+import {OpfabCommands} from './opfabCommands';
 
-export function getSettingsCommands() {
-    const settings = new externalCommands('SETTINGS');
+export class SettingsCommands extends OpfabCommands {
+    constructor() {
+        super();
+        super.init('SETTINGS');
+    }
 
-    settings.addCommand('clickOnSeverity', function (severity) {
+    clickOnSeverity = function(severity) {
         cy.intercept('PATCH', '/users/**').as('saved');
         cy.get('#opfab-checkbox-setting-form-' + severity).click();
         cy.wait('@saved'); // wait for settings to be saved
-    });
+    }
 
-    settings.addCommand('clickOnReplaySound', function () {
+    clickOnReplaySound = function () {
         cy.intercept('PATCH', '/users/**').as('saved');
         cy.get('#opfab-checkbox-setting-form-replay').click();
         cy.wait('@saved'); // wait for settings to be saved
-    });
+    }
 
-    settings.addCommand('setReplayIntervalTo', function (interval) {
+    setReplayIntervalTo = function (interval) {
         cy.intercept('PATCH', '/users/**').as('saved');
         cy.get('#opfab-setting-replayInterval').clear();
         cy.wait('@saved'); // wait for settings to be saved
         cy.get('#opfab-setting-replayInterval').type(interval);
         cy.wait('@saved'); // wait for settings to be saved
-    });
-
-
-    return settings;
+    }
 }

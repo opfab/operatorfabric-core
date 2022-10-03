@@ -10,12 +10,12 @@
 /* This test file focuses on some state-type specific behaviour in card details header. As the Cypress test suite grows,
 it might make sense to merge it with other tests.
 * */
-import {getOpfabGeneralCommands} from '../support/opfabGeneralCommands';
-import {getFeedCommands} from '../support/feedCommands';
+import {OpfabGeneralCommands} from '../support/opfabGeneralCommands';
+import {FeedCommands} from '../support/feedCommands';
 
 describe('Card detail', function () {
-    const opfab = getOpfabGeneralCommands();
-    const feed = getFeedCommands();
+    const opfab = new OpfabGeneralCommands();
+    const feed = new FeedCommands();
 
     before('Set up configuration', function () {
         // This can stay in a `before` block rather than `beforeEach` as long as the test does not change configuration

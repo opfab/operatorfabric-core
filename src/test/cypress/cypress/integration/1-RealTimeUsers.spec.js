@@ -7,14 +7,13 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {getOpfabGeneralCommands} from "../support/opfabGeneralCommands"
-import {getActivityAreaCommands} from "../support/activityAreaCommands"
-
+import {OpfabGeneralCommands} from "../support/opfabGeneralCommands"
+import {ActivityAreaCommands} from "../support/activityAreaCommands"
 
 describe ('RealTimeUsersPage',()=>{
 
-    const opfab = getOpfabGeneralCommands();
-    const activityArea = getActivityAreaCommands();
+    const opfab = new OpfabGeneralCommands();
+    const activityArea = new ActivityAreaCommands();
 
     before('Set up configuration', function () {
         cy.loadRealTimeScreensConf();

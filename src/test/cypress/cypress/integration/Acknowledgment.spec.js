@@ -7,16 +7,16 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {getUserCardCommands} from "../support/userCardCommands"
-import {getOpfabGeneralCommands} from "../support/opfabGeneralCommands"
-import {getActivityAreaCommands} from "../support/activityAreaCommands"
+import {UserCardCommands} from "../support/userCardCommands"
+import {OpfabGeneralCommands} from "../support/opfabGeneralCommands"
+import {ActivityAreaCommands} from "../support/activityAreaCommands"
 
 
 describe('Acknowledgment tests', function () {
 
-    const usercard = getUserCardCommands();
-    const opfab = getOpfabGeneralCommands();
-    const activityArea = getActivityAreaCommands();
+    const usercard = new UserCardCommands();
+    const opfab = new OpfabGeneralCommands();
+    const activityArea = new ActivityAreaCommands();
 
 
     before('Set up configuration', function () {
