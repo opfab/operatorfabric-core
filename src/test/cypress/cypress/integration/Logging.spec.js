@@ -8,10 +8,12 @@
  */
 
 import {OpfabGeneralCommands} from "../support/opfabGeneralCommands"
+import {ArchivesAndLoggingCommands} from "../support/archivesAndLoggingCommands"
 
 describe('Logging screen tests', function () {
 
     const opfab = new OpfabGeneralCommands();
+    const archivesAndLogging = new ArchivesAndLoggingCommands();
 
     before('Set up configuration', function () {
         cy.loadTestConf();
@@ -21,47 +23,47 @@ describe('Logging screen tests', function () {
         opfab.loginWithUser('operator1_fr');
 
         moveToLoggingScreen();
-        cy.checkAdminModeCheckboxDoesNotExist();
-        cy.checkAdminModeLinkDoesNotExist();
+        archivesAndLogging.checkAdminModeCheckboxDoesNotExist();
+        archivesAndLogging.checkAdminModeLinkDoesNotExist();
 
         // We check we have 4 items in process multi-filter, even without choosing a process group
-        cy.clickOnProcessSelect();
-        cy.checkNumberOfProcessEntriesIs(4);
-        cy.checkProcessSelectContains('Conference and IT incident');
-        cy.checkProcessSelectContains('Message or question');
-        cy.checkProcessSelectContains('IGCC');
-        cy.checkProcessSelectContains('Process example');
+        archivesAndLogging.clickOnProcessSelect();
+        archivesAndLogging.checkNumberOfProcessEntriesIs(4);
+        archivesAndLogging.checkProcessSelectContains('Conference and IT incident');
+        archivesAndLogging.checkProcessSelectContains('Message or question');
+        archivesAndLogging.checkProcessSelectContains('IGCC');
+        archivesAndLogging.checkProcessSelectContains('Process example');
 
         // We check we have 2 items in process groups multi-filter
-        cy.clickOnProcessGroupSelect();
-        cy.checkNumberOfProcessGroupEntriesIs(2);
-        cy.checkProcessGroupSelectContains('Base Examples');
-        cy.checkProcessGroupSelectContains('User card examples');
-        cy.selectAllProcessGroups();
+        archivesAndLogging.clickOnProcessGroupSelect();
+        archivesAndLogging.checkNumberOfProcessGroupEntriesIs(2);
+        archivesAndLogging.checkProcessGroupSelectContains('Base Examples');
+        archivesAndLogging.checkProcessGroupSelectContains('User card examples');
+        archivesAndLogging.selectAllProcessGroups();
 
         // We check we have 4 items in process multi-filter
-        cy.clickOnProcessSelect();
-        cy.checkNumberOfProcessEntriesIs(4);
-        cy.checkProcessSelectContains('Conference and IT incident');
-        cy.checkProcessSelectContains('Message or question');
-        cy.checkProcessSelectContains('IGCC');
-        cy.checkProcessSelectContains('Process example');
-        cy.selectAllProcesses();
-        cy.clickOnProcessSelect();
+        archivesAndLogging.clickOnProcessSelect();
+        archivesAndLogging.checkNumberOfProcessEntriesIs(4);
+        archivesAndLogging.checkProcessSelectContains('Conference and IT incident');
+        archivesAndLogging.checkProcessSelectContains('Message or question');
+        archivesAndLogging.checkProcessSelectContains('IGCC');
+        archivesAndLogging.checkProcessSelectContains('Process example');
+        archivesAndLogging.selectAllProcesses();
+        archivesAndLogging.clickOnProcessSelect();
 
         // We check we have 19 states
-        cy.clickOnStateSelect();
-        cy.selectAllStates();
-        cy.checkNumberOfStateSelectedIs(19);
+        archivesAndLogging.clickOnStateSelect();
+        archivesAndLogging.selectAllStates();
+        archivesAndLogging.checkNumberOfStateSelectedIs(19);
 
         // We unselect all processes then we select 'Process example' process, and we check there are 8 states for this process
-        cy.clickOnProcessSelect();
-        cy.unselectAllProcesses();
+        archivesAndLogging.clickOnProcessSelect();
+        archivesAndLogging.unselectAllProcesses();
         cy.selectProcess('Process example');
-        cy.clickOnProcessSelect();
-        cy.clickOnStateSelect();
-        cy.checkNumberOfStateEntriesIs(9);
-        cy.checkStateSelectContains('Planned outage date response');
+        archivesAndLogging.clickOnProcessSelect();
+        archivesAndLogging.clickOnStateSelect();
+        archivesAndLogging.checkNumberOfStateEntriesIs(9);
+        archivesAndLogging.checkStateSelectContains('Planned outage date response');
     });
 
     it('Check composition of multi-filters for process groups/processes/states for itsupervisor1', function () {
@@ -70,27 +72,27 @@ describe('Logging screen tests', function () {
         opfab.loginWithUser('itsupervisor1');
 
         moveToLoggingScreen();
-        cy.checkAdminModeLinkDoesNotExist();
-        cy.checkAdminModeCheckboxIsDisplayed();
-        cy.checkAdminModeCheckboxIsNotChecked();
+        archivesAndLogging.checkAdminModeLinkDoesNotExist();
+        archivesAndLogging.checkAdminModeCheckboxIsDisplayed();
+        archivesAndLogging.checkAdminModeCheckboxIsNotChecked();
 
         checkMultifiltersForNotAdminModeForItsupervisor1();
 
-        cy.clickOnSearchButton();
+        archivesAndLogging.clickOnSearchButton();
         checkNumberOfLineDisplayedIs(1);
 
         // We activate the admin mode
-        cy.clickAdminModeCheckbox();
-        cy.checkAdminModeCheckboxIsChecked();
+        archivesAndLogging.clickAdminModeCheckbox();
+        archivesAndLogging.checkAdminModeCheckboxIsChecked();
 
         checkMultifiltersWhenAllProcessStatesAreDisplayed();
 
-        cy.clickOnSearchButton();
+        archivesAndLogging.clickOnSearchButton();
         checkNumberOfLineDisplayedIs(6);
 
         // We deactivate the admin mode
-        cy.clickAdminModeCheckbox();
-        cy.checkAdminModeCheckboxIsNotChecked();
+        archivesAndLogging.clickAdminModeCheckbox();
+        archivesAndLogging.checkAdminModeCheckboxIsNotChecked();
 
         checkMultifiltersForNotAdminModeForItsupervisor1();
     });
@@ -102,31 +104,31 @@ describe('Logging screen tests', function () {
 
         moveToLoggingScreen();
 
-        cy.checkProcessGroupSelectDoesNotExist();
-        cy.checkProcessSelectDoesNotExist();
-        cy.checkStateSelectDoesNotExist();
-        cy.checkNoProcessStateMessageIsDisplayed();
+        archivesAndLogging.checkProcessGroupSelectDoesNotExist();
+        archivesAndLogging.checkProcessSelectDoesNotExist();
+        archivesAndLogging.checkStateSelectDoesNotExist();
+        archivesAndLogging.checkNoProcessStateMessageIsDisplayed();
 
-        cy.checkAdminModeCheckboxDoesNotExist();
-        cy.checkAdminModeLinkIsDisplayed();
+        archivesAndLogging.checkAdminModeCheckboxDoesNotExist();
+        archivesAndLogging.checkAdminModeLinkIsDisplayed();
 
         // We activate the admin mode
-        cy.clickAdminModeLink();
+        archivesAndLogging.clickAdminModeLink();
 
-        cy.checkAdminModeCheckboxIsDisplayed();
-        cy.checkAdminModeCheckboxIsChecked();
+        archivesAndLogging.checkAdminModeCheckboxIsDisplayed();
+        archivesAndLogging.checkAdminModeCheckboxIsChecked();
 
         checkMultifiltersWhenAllProcessStatesAreDisplayed();
 
-        cy.clickOnSearchButton();
+        archivesAndLogging.clickOnSearchButton();
         checkNumberOfLineDisplayedIs(6);
 
         // We deactivate the admin mode
-        cy.clickAdminModeCheckbox();
+        archivesAndLogging.clickAdminModeCheckbox();
 
-        cy.checkNoProcessStateMessageIsDisplayed();
-        cy.checkAdminModeCheckboxDoesNotExist();
-        cy.checkAdminModeLinkIsDisplayed();
+        archivesAndLogging.checkNoProcessStateMessageIsDisplayed();
+        archivesAndLogging.checkAdminModeCheckboxDoesNotExist();
+        archivesAndLogging.checkAdminModeLinkIsDisplayed();
     });
 
     it('Check composition of multi-filters for process groups/processes/states for operator1_fr, with a config without process group', function () {
@@ -136,33 +138,33 @@ describe('Logging screen tests', function () {
         cy.reload();
 
         moveToLoggingScreen();
-        cy.checkAdminModeCheckboxDoesNotExist();
-        cy.checkAdminModeLinkDoesNotExist();
+        archivesAndLogging.checkAdminModeCheckboxDoesNotExist();
+        archivesAndLogging.checkAdminModeLinkDoesNotExist();
 
-        cy.checkProcessGroupSelectDoesNotExist();
+        archivesAndLogging.checkProcessGroupSelectDoesNotExist();
 
         // We check we have 4 items in process multi-filter
-        cy.clickOnProcessSelect();
-        cy.checkNumberOfProcessEntriesIs(4);
-        cy.checkProcessSelectContains('Conference and IT incident');
-        cy.checkProcessSelectContains('Message or question');
-        cy.checkProcessSelectContains('IGCC');
-        cy.checkProcessSelectContains('Process example');
-        cy.selectAllProcesses();
-        cy.clickOnProcessSelect();
+        archivesAndLogging.clickOnProcessSelect();
+        archivesAndLogging.checkNumberOfProcessEntriesIs(4);
+        archivesAndLogging.checkProcessSelectContains('Conference and IT incident');
+        archivesAndLogging.checkProcessSelectContains('Message or question');
+        archivesAndLogging.checkProcessSelectContains('IGCC');
+        archivesAndLogging.checkProcessSelectContains('Process example');
+        archivesAndLogging.selectAllProcesses();
+        archivesAndLogging.clickOnProcessSelect();
 
         // We check we have 19 states (and 4 items for their process)
-        cy.clickOnStateSelect();
-        cy.selectAllStates();
-        cy.checkNumberOfStateSelectedIs(19);
+        archivesAndLogging.clickOnStateSelect();
+        archivesAndLogging.selectAllStates();
+        archivesAndLogging.checkNumberOfStateSelectedIs(19);
 
-        cy.clickOnProcessSelect();
-        cy.unselectAllProcesses();
+        archivesAndLogging.clickOnProcessSelect();
+        archivesAndLogging.unselectAllProcesses();
         cy.selectProcess('Process example');
-        cy.clickOnProcessSelect();
-        cy.clickOnStateSelect();
-        cy.checkNumberOfStateEntriesIs(9);
-        cy.checkStateSelectContains('Planned outage date response');
+        archivesAndLogging.clickOnProcessSelect();
+        archivesAndLogging.clickOnStateSelect();
+        archivesAndLogging.checkNumberOfStateEntriesIs(9);
+        archivesAndLogging.checkStateSelectContains('Planned outage date response');
 
         cy.loadTestConf();
         cy.reload();
@@ -171,13 +173,13 @@ describe('Logging screen tests', function () {
     it('Check composition of multi-filters for operator6_fr (no rights on process/state and not member of ADMIN group)', function () {
         opfab.loginWithUser('operator6_fr');
         moveToLoggingScreen();
-        cy.checkProcessGroupSelectDoesNotExist();
-        cy.checkProcessSelectDoesNotExist();
-        cy.checkStateSelectDoesNotExist();
-        cy.checkNoProcessStateMessageIsDisplayed();
+        archivesAndLogging.checkProcessGroupSelectDoesNotExist();
+        archivesAndLogging.checkProcessSelectDoesNotExist();
+        archivesAndLogging.checkStateSelectDoesNotExist();
+        archivesAndLogging.checkNoProcessStateMessageIsDisplayed();
 
-        cy.checkAdminModeCheckboxDoesNotExist();
-        cy.checkAdminModeLinkDoesNotExist();
+        archivesAndLogging.checkAdminModeCheckboxDoesNotExist();
+        archivesAndLogging.checkAdminModeLinkDoesNotExist();
     });
 
     it('Check export', function () {
@@ -187,10 +189,10 @@ describe('Logging screen tests', function () {
 
         moveToLoggingScreen();
 
-        cy.clickOnSearchButton();
+        archivesAndLogging.clickOnSearchButton();
 
         checkNumberOfLineDisplayedIs(6);
-        cy.checkNoCardDetailIsDisplayed();
+        archivesAndLogging.checkNoCardDetailIsDisplayed();
         checkPaginationResultsNumberIs(6);
 
         clickOnExportButton();
@@ -284,7 +286,7 @@ describe('Logging screen tests', function () {
         opfab.loginWithUser('operator1_fr');
         moveToLoggingScreen();
         cy.waitDefaultTime();
-        cy.clickOnSearchButton();
+        archivesAndLogging.clickOnSearchButton();
         opfab.checkLoadingSpinnerIsDisplayed();
         opfab.checkLoadingSpinnerIsNotDisplayed();
     });
@@ -295,83 +297,83 @@ describe('Logging screen tests', function () {
 
     function checkMultifiltersWhenAllProcessStatesAreDisplayed() {
         // We check we have 4 items in process multi-filter, even without choosing a process group
-        cy.clickOnProcessSelect();
-        cy.checkNumberOfProcessEntriesIs(4);
-        cy.checkProcessSelectContains('Conference and IT incident');
-        cy.checkProcessSelectContains('Message or question');
-        cy.checkProcessSelectContains('IGCC');
-        cy.checkProcessSelectContains('Process example');
+        archivesAndLogging.clickOnProcessSelect();
+        archivesAndLogging.checkNumberOfProcessEntriesIs(4);
+        archivesAndLogging.checkProcessSelectContains('Conference and IT incident');
+        archivesAndLogging.checkProcessSelectContains('Message or question');
+        archivesAndLogging.checkProcessSelectContains('IGCC');
+        archivesAndLogging.checkProcessSelectContains('Process example');
 
-        cy.clickOnProcessGroupSelect();
-        cy.checkNumberOfProcessGroupEntriesIs(2);
-        cy.checkProcessGroupSelectContains('Base Examples');
-        cy.checkProcessGroupSelectContains('User card examples');
-        cy.selectAllProcessGroups();
+        archivesAndLogging.clickOnProcessGroupSelect();
+        archivesAndLogging.checkNumberOfProcessGroupEntriesIs(2);
+        archivesAndLogging.checkProcessGroupSelectContains('Base Examples');
+        archivesAndLogging.checkProcessGroupSelectContains('User card examples');
+        archivesAndLogging.selectAllProcessGroups();
 
-        cy.clickOnProcessSelect();
-        cy.checkNumberOfProcessEntriesIs(4);
-        cy.checkProcessSelectContains('Conference and IT incident');
-        cy.checkProcessSelectContains('Message or question');
-        cy.checkProcessSelectContains('IGCC');
-        cy.checkProcessSelectContains('Process example');
-        cy.selectAllProcesses();
-        cy.clickOnProcessSelect();
+        archivesAndLogging.clickOnProcessSelect();
+        archivesAndLogging.checkNumberOfProcessEntriesIs(4);
+        archivesAndLogging.checkProcessSelectContains('Conference and IT incident');
+        archivesAndLogging.checkProcessSelectContains('Message or question');
+        archivesAndLogging.checkProcessSelectContains('IGCC');
+        archivesAndLogging.checkProcessSelectContains('Process example');
+        archivesAndLogging.selectAllProcesses();
+        archivesAndLogging.clickOnProcessSelect();
 
-        cy.clickOnStateSelect();
-        cy.selectAllStates();
-        cy.checkNumberOfStateSelectedIs(19);
+        archivesAndLogging.clickOnStateSelect();
+        archivesAndLogging.selectAllStates();
+        archivesAndLogging.checkNumberOfStateSelectedIs(19);
 
-        cy.clickOnProcessSelect();
-        cy.unselectAllProcesses();
+        archivesAndLogging.clickOnProcessSelect();
+        archivesAndLogging.unselectAllProcesses();
         cy.selectProcess('Process example');
-        cy.clickOnProcessSelect();
-        cy.clickOnStateSelect();
-        cy.checkNumberOfStateEntriesIs(9);
-        cy.checkStateSelectContains('Process example');
-        cy.checkStateSelectContains('Message');
-        cy.checkStateSelectContains('Data quality');
-        cy.checkStateSelectContains('Electricity consumption forecast');
-        cy.checkStateSelectContains('Action Required');
-        cy.checkStateSelectContains('Additional information required');
-        cy.checkStateSelectContains('Network Contingencies');
-        cy.checkStateSelectContains('Planned outage date response');
+        archivesAndLogging.clickOnProcessSelect();
+        archivesAndLogging.clickOnStateSelect();
+        archivesAndLogging.checkNumberOfStateEntriesIs(9);
+        archivesAndLogging.checkStateSelectContains('Process example');
+        archivesAndLogging.checkStateSelectContains('Message');
+        archivesAndLogging.checkStateSelectContains('Data quality');
+        archivesAndLogging.checkStateSelectContains('Electricity consumption forecast');
+        archivesAndLogging.checkStateSelectContains('Action Required');
+        archivesAndLogging.checkStateSelectContains('Additional information required');
+        archivesAndLogging.checkStateSelectContains('Network Contingencies');
+        archivesAndLogging.checkStateSelectContains('Planned outage date response');
     }
 
     function checkMultifiltersForNotAdminModeForItsupervisor1() {
         // We check we have 4 items in process multi-filter, even without choosing a process group
-        cy.clickOnProcessSelect();
-        cy.checkNumberOfProcessEntriesIs(4);
-        cy.checkProcessSelectContains('Conference and IT incident');
-        cy.checkProcessSelectContains('Message or question');
-        cy.checkProcessSelectContains('IGCC');
-        cy.checkProcessSelectContains('Process example');
+        archivesAndLogging.clickOnProcessSelect();
+        archivesAndLogging.checkNumberOfProcessEntriesIs(4);
+        archivesAndLogging.checkProcessSelectContains('Conference and IT incident');
+        archivesAndLogging.checkProcessSelectContains('Message or question');
+        archivesAndLogging.checkProcessSelectContains('IGCC');
+        archivesAndLogging.checkProcessSelectContains('Process example');
 
-        cy.clickOnProcessGroupSelect();
-        cy.checkNumberOfProcessGroupEntriesIs(2);
-        cy.checkProcessGroupSelectContains('Base Examples');
-        cy.checkProcessGroupSelectContains('User card examples');
-        cy.selectAllProcessGroups();
+        archivesAndLogging.clickOnProcessGroupSelect();
+        archivesAndLogging.checkNumberOfProcessGroupEntriesIs(2);
+        archivesAndLogging.checkProcessGroupSelectContains('Base Examples');
+        archivesAndLogging.checkProcessGroupSelectContains('User card examples');
+        archivesAndLogging.selectAllProcessGroups();
 
-        cy.clickOnProcessSelect();
-        cy.checkNumberOfProcessEntriesIs(4);
-        cy.checkProcessSelectContains('Conference and IT incident');
-        cy.checkProcessSelectContains('Message or question');
-        cy.checkProcessSelectContains('IGCC');
-        cy.checkProcessSelectContains('Process example');
-        cy.selectAllProcesses();
-        cy.clickOnProcessSelect();
+        archivesAndLogging.clickOnProcessSelect();
+        archivesAndLogging.checkNumberOfProcessEntriesIs(4);
+        archivesAndLogging.checkProcessSelectContains('Conference and IT incident');
+        archivesAndLogging.checkProcessSelectContains('Message or question');
+        archivesAndLogging.checkProcessSelectContains('IGCC');
+        archivesAndLogging.checkProcessSelectContains('Process example');
+        archivesAndLogging.selectAllProcesses();
+        archivesAndLogging.clickOnProcessSelect();
 
-        cy.clickOnStateSelect();
-        cy.selectAllStates();
-        cy.checkNumberOfStateSelectedIs(12);
+        archivesAndLogging.clickOnStateSelect();
+        archivesAndLogging.selectAllStates();
+        archivesAndLogging.checkNumberOfStateSelectedIs(12);
 
-        cy.clickOnProcessSelect();
-        cy.unselectAllProcesses();
+        archivesAndLogging.clickOnProcessSelect();
+        archivesAndLogging.unselectAllProcesses();
         cy.selectProcess('Process example');
-        cy.clickOnProcessSelect();
-        cy.clickOnStateSelect();
-        cy.checkNumberOfStateEntriesIs(2);
-        cy.checkStateSelectContains('Action Required');
+        archivesAndLogging.clickOnProcessSelect();
+        archivesAndLogging.clickOnStateSelect();
+        archivesAndLogging.checkNumberOfStateEntriesIs(2);
+        archivesAndLogging.checkStateSelectContains('Action Required');
     }
 
     function checkPaginationResultsNumberIs(nb) {
