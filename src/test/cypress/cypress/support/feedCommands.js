@@ -7,38 +7,41 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {externalCommands} from './externalCommands';
 
-export function getFeedCommands() {
-    const feed = new externalCommands('FEED');
+import {OpfabCommands} from './opfabCommands';
 
-    feed.addCommand('checkNumberOfDisplayedCardsIs', function (nb) {
+export class FeedCommands extends OpfabCommands {
+
+    constructor() {
+        super();
+        super.init('FEED');
+    }
+
+
+    checkNumberOfDisplayedCardsIs= function (nb) {
         cy.get('of-light-card').should('have.length', nb);
-    });
+    }
 
-    feed.addCommand('openFirstCard', function () {
+    openFirstCard= function () {
         cy.get('of-light-card').eq(0).click();
         cy.get('#opfab-div-card-template-processed');
-    });
+    }
 
-    feed.addCommand('checkSelectedCardHasTitle', function (title) {
+    checkSelectedCardHasTitle= function (title) {
         cy.get('.light-card-detail-selected .card-title').should('have.text',title + " ");
-    });
+    }
 
-    feed.addCommand('checkSelectedCardHasSummary', function (summary) {
+    checkSelectedCardHasSummary= function (summary) {
         cy.get('#opfab-selected-card-summary').should('have.text',summary);
-    });
+    }
 
-    feed.addCommand('deleteCurrentCard', function () {
+    deleteCurrentCard= function () {
         cy.get('#opfab-card-delete').click();
         cy.get('#opfab-card-details-delete-btn-confirm').click();
-    });
+    }
 
-    feed.addCommand('editCurrentCard', function () {
+    editCurrentCard= function () {
         cy.get('#opfab-card-edit').click();
         cy.get("of-usercard").should('exist');
-    });
-
-   
-    return feed;
+    }
 }

@@ -11,11 +11,11 @@
 it might make sense to merge it with other tests.
 * */
 
-import {getOpfabGeneralCommands} from '../support/opfabGeneralCommands';
+import {OpfabGeneralCommands} from '../support/opfabGeneralCommands';
 
 describe('State type tests', function () {
 
-    const opfab = getOpfabGeneralCommands();
+    const opfab = new OpfabGeneralCommands();
 
     const orange = 'rgb(255, 102, 0)';
     const green = 'rgb(0, 128, 0)';

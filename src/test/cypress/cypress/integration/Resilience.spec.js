@@ -7,12 +7,12 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {getOpfabGeneralCommands} from '../support/opfabGeneralCommands';
-import {getFeedCommands} from '../support/feedCommands';
+import {OpfabGeneralCommands} from '../support/opfabGeneralCommands';
+import {FeedCommands} from '../support/feedCommands';
 
 describe('Resilience tests', function () {
-    const opfab = getOpfabGeneralCommands();
-    const feed = getFeedCommands();
+    const opfab = new OpfabGeneralCommands();
+    const feed = new FeedCommands();
 
     before('Set up configuration', function () {
         cy.resetUIConfigurationFiles();

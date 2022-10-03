@@ -6,11 +6,11 @@
  * SPDX-License-Identifier: MPL-2.0
  * This file is part of the OperatorFabric project.
  */
-import {getOpfabGeneralCommands} from '../support/opfabGeneralCommands'
+import {OpfabGeneralCommands} from '../support/opfabGeneralCommands'
 
 describe ('Core menu configuration tests',function () {
 
-    const opfab = getOpfabGeneralCommands();
+    const opfab = new OpfabGeneralCommands();
 
     // These arrays lists all existing core menus, with their id and the selector to use to check for the presence of the link
     

@@ -7,14 +7,14 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {getOpfabGeneralCommands} from '../support/opfabGeneralCommands';
-import {getSoundCommands} from '../support/soundCommands';
-import {getSettingsCommands} from '../support/settingsCommands';
+import {OpfabGeneralCommands} from '../support/opfabGeneralCommands';
+import {SettingsCommands} from '../support/settingsCommands';
+import {SoundCommands} from '../support/soundCommands'
 
 describe('Session ended test', function () {
-    const opfab = getOpfabGeneralCommands();
-    const sound = getSoundCommands();
-    const settings = getSettingsCommands();
+    const opfab = new OpfabGeneralCommands();
+    const sound = new SoundCommands();
+    const settings = new SettingsCommands();
 
     before('Reset UI configuration file ', function () {
         cy.resetUIConfigurationFiles();

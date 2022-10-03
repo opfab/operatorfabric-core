@@ -6,11 +6,11 @@
  * SPDX-License-Identifier: MPL-2.0
  * This file is part of the OperatorFabric project.
  */
-import {getOpfabGeneralCommands} from '../support/opfabGeneralCommands'
+import {OpfabGeneralCommands} from '../support/opfabGeneralCommands'
 
 describe ('UI Reload requested',()=>{
 
-    const opfab = getOpfabGeneralCommands();
+    const opfab = new OpfabGeneralCommands();
     
     it('Receive RELOAD message', ()=>{
 

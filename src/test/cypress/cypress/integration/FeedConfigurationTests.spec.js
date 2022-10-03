@@ -7,11 +7,11 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {getOpfabGeneralCommands} from '../support/opfabGeneralCommands'
+import {OpfabGeneralCommands} from '../support/opfabGeneralCommands'
 
 describe ('Feed configuration tests',function () {
     
-    const opfab = getOpfabGeneralCommands();
+    const opfab = new OpfabGeneralCommands();
 
     before('Set up configuration and cards', function () {
         cy.loadTestConf();

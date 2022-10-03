@@ -7,11 +7,11 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {getOpfabGeneralCommands} from "../support/opfabGeneralCommands"
+import {OpfabGeneralCommands} from "../support/opfabGeneralCommands"
 
 describe('Time line moves', function () {
 
-    const opfab = getOpfabGeneralCommands();
+    const opfab = new OpfabGeneralCommands();
 
     const SECONDS = 1000;
     const MINUTES = 60000;

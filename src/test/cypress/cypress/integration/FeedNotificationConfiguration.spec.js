@@ -8,11 +8,11 @@
  */
 
 
-import {getOpfabGeneralCommands} from "../support/opfabGeneralCommands" 
+import {OpfabGeneralCommands} from "../support/opfabGeneralCommands" 
 
 describe ('Feed notification configuration tests',function () {
 
-    const opfab = getOpfabGeneralCommands();
+    const opfab = new OpfabGeneralCommands();
 
     const totalCards = 6;
     const cardsToTest =[

@@ -7,19 +7,19 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {getUserCardCommands} from "../support/userCardCommands"
-import {getOpfabGeneralCommands} from "../support/opfabGeneralCommands"
-import {getFeedCommands} from "../support/feedCommands"
-import {getActivityAreaCommands} from "../support/activityAreaCommands"
-import {getCardCommands} from "../support/cardCommands";
+import {UserCardCommands} from "../support/userCardCommands"
+import {OpfabGeneralCommands} from "../support/opfabGeneralCommands"
+import {FeedCommands} from "../support/feedCommands"
+import {ActivityAreaCommands} from "../support/activityAreaCommands"
+import {CardCommands} from "../support/cardCommands";
 
 describe('User Card ', function () {
 
-  const usercard = getUserCardCommands();
-  const opfab = getOpfabGeneralCommands();
-  const feed = getFeedCommands();
-  const activityArea = getActivityAreaCommands();
-  const card = getCardCommands();
+  const usercard = new UserCardCommands();
+  const opfab = new OpfabGeneralCommands();
+  const feed = new FeedCommands();
+  const activityArea = new ActivityAreaCommands();
+  const card = new CardCommands();
 
   before('Set up configuration', function () {
 

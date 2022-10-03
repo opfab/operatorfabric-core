@@ -6,11 +6,11 @@
  * SPDX-License-Identifier: MPL-2.0
  * Ther file is part of the OperatorFabric project.
  */
-import {getOpfabGeneralCommands} from '../support/opfabGeneralCommands'
+import {OpfabGeneralCommands} from '../support/opfabGeneralCommands'
 
 describe('Group Cards tests', function () {
 
-    const opfab = getOpfabGeneralCommands();
+    const opfab = new OpfabGeneralCommands();
 
     before('Set up configuration', function () {
 
