@@ -799,3 +799,26 @@ It can be used by a template to launch some processing when loading is complete
 
 Once the card is loaded, there may be some processing that is time consuming. 
 In this case, it is possible to show a spinner using the methods _templateGateway.displayLoadingSpinner()_ and _templateGateway.hideLoadingSpinner()_ in the card template .
+
+
+=== Escape HTML
+
+To avoid script injection, OperatorFabric provides an utility function 'opfab.utils.escapeHtml()' to sanitize input content by escaping HTML specific characters. For example: 
+
+....
+<input id="input-message" type="text" name="message">
+<button onClick="showMessage()">
+
+<span id="safe-message"></span>
+
+
+<script>
+  showMessage : function() {
+    let msg = document.getElementById("input-message");
+    document.getElementById("safe-message").innerHTML = opfab.utils.escapeHtml(msg.value);
+  }
+
+</script>
+
+
+....
