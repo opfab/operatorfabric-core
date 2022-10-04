@@ -8,10 +8,12 @@
  */
 
 import {OpfabGeneralCommands} from "../support/opfabGeneralCommands"
+import {AgGridCommands} from "../support/agGridCommands";
 
 describe ('Monitoring screen tests',function () {
 
     const opfab = new OpfabGeneralCommands();
+    const agGrid = new AgGridCommands();
 
     before('Set up configuration', function () {
         cy.deleteAllSettings();
@@ -156,11 +158,11 @@ describe ('Monitoring screen tests',function () {
         cy.get('of-card-details').should('not.exist');
 
         // Should have the correct number of cards (5 because one card is set not to be visible in monitoring)
-        cy.countAgGridTableRows('#opfab-monitoring-table-grid', 5);
+        agGrid.countTableRows('#opfab-monitoring-table-grid', 5);
         cy.waitDefaultTime();
 
         // Opens the first card, checks that its content is visible
-        cy.clickAgGridCell('#opfab-monitoring-table-grid', 1, 1);
+        agGrid.clickCell('#opfab-monitoring-table-grid', 1, 1);
         cy.get('of-card-details').first().should('exist');
 
         // Closes the card content and check card  body is no longer visible
@@ -177,7 +179,7 @@ describe ('Monitoring screen tests',function () {
         cy.get('#opfab-navbar-menu-monitoring').click();
 
         // Should have the correct number of cards (5 because one card is set not to be visible in monitoring)
-        cy.countAgGridTableRows('#opfab-monitoring-table-grid', 5);
+        agGrid.countTableRows('#opfab-monitoring-table-grid', 5);
 
         // Filter on IN PROGRESS cards
         cy.get('#opfab-typeOfState').click();
@@ -188,7 +190,7 @@ describe ('Monitoring screen tests',function () {
         cy.get('#opfab-monitoring-btn-search').click();
 
         // Should have the correct number of cards (3 because 3 are IN PROGRESS)
-        cy.countAgGridTableRows('#opfab-monitoring-table-grid', 3);
+        agGrid.countTableRows('#opfab-monitoring-table-grid', 3);
 
         // All found cards should be IN PROGRESS
         cy.get('#opfab-monitoring-table-grid').find('.ag-center-cols-container')
@@ -202,7 +204,7 @@ describe ('Monitoring screen tests',function () {
         cy.get('#opfab-monitoring-btn-reset').click();
 
         // The grid containing monitoring cards should have been reset
-        cy.countAgGridTableRows('#opfab-monitoring-table-grid', 5);
+        agGrid.countTableRows('#opfab-monitoring-table-grid', 5);
 
 
         // Use a filter that will not return any card
@@ -233,29 +235,29 @@ describe ('Monitoring screen tests',function () {
         cy.get('#opfab-monitoring-table-grid').find('.ag-header-container').find('.ag-header-row-column').as('monitoring-table-headers');
 
         // Should have the correct number of cards (5 because one card is set not to be visible in monitoring)
-        cy.countAgGridTableRows('#opfab-monitoring-table-grid', 5);
+        agGrid.countTableRows('#opfab-monitoring-table-grid', 5);
 
         // Sorting severities a first time
         cy.get('@monitoring-table-headers').find('.ag-header-cell').eq(0).click();
         cy.wait(500);
 
         // Cards should be sorted by severity
-        cy.agGridCellShould('#opfab-monitoring-table-grid', 0, 3, 'have.text', '⚠️ Network Contingencies ⚠️');
-        cy.agGridCellShould('#opfab-monitoring-table-grid', 1, 3, 'have.text', 'Electricity consumption forecast');
-        cy.agGridCellShould('#opfab-monitoring-table-grid', 2, 3, 'have.text', '⚡ Planned Outage');
-        cy.agGridCellShould('#opfab-monitoring-table-grid', 3, 3, 'have.text', 'Process state (calcul)');
-        cy.agGridCellShould('#opfab-monitoring-table-grid', 4, 3, 'have.text', 'Message');
+        agGrid.cellShould('#opfab-monitoring-table-grid', 0, 3, 'have.text', '⚠️ Network Contingencies ⚠️');
+        agGrid.cellShould('#opfab-monitoring-table-grid', 1, 3, 'have.text', 'Electricity consumption forecast');
+        agGrid.cellShould('#opfab-monitoring-table-grid', 2, 3, 'have.text', '⚡ Planned Outage');
+        agGrid.cellShould('#opfab-monitoring-table-grid', 3, 3, 'have.text', 'Process state (calcul)');
+        agGrid.cellShould('#opfab-monitoring-table-grid', 4, 3, 'have.text', 'Message');
 
         // Sorting severities a second time
         cy.get('@monitoring-table-headers').find('.ag-header-cell').eq(0).click();
         cy.wait(500);
 
         // Cards should be sorted by severity
-        cy.agGridCellShould('#opfab-monitoring-table-grid', 0, 3, 'have.text', 'Message');
-        cy.agGridCellShould('#opfab-monitoring-table-grid', 1, 3, 'have.text', 'Process state (calcul)');
-        cy.agGridCellShould('#opfab-monitoring-table-grid', 2, 3, 'have.text', '⚡ Planned Outage');
-        cy.agGridCellShould('#opfab-monitoring-table-grid', 3, 3, 'have.text', '⚠️ Network Contingencies ⚠️');
-        cy.agGridCellShould('#opfab-monitoring-table-grid', 4, 3, 'have.text', 'Electricity consumption forecast');
+        agGrid.cellShould('#opfab-monitoring-table-grid', 0, 3, 'have.text', 'Message');
+        agGrid.cellShould('#opfab-monitoring-table-grid', 1, 3, 'have.text', 'Process state (calcul)');
+        agGrid.cellShould('#opfab-monitoring-table-grid', 2, 3, 'have.text', '⚡ Planned Outage');
+        agGrid.cellShould('#opfab-monitoring-table-grid', 3, 3, 'have.text', '⚠️ Network Contingencies ⚠️');
+        agGrid.cellShould('#opfab-monitoring-table-grid', 4, 3, 'have.text', 'Electricity consumption forecast');
 
     })
 
@@ -271,29 +273,29 @@ describe ('Monitoring screen tests',function () {
         cy.get('#opfab-monitoring-table-grid').find('.ag-header-container').find('.ag-header-row-column').as('monitoring-table-headers');
 
         // Should have the correct number of cards (5 because one card is set not to be visible in monitoring)
-        cy.countAgGridTableRows('#opfab-monitoring-table-grid', 5);
+        agGrid.countTableRows('#opfab-monitoring-table-grid', 5);
 
         // Sorting titles a first time
         cy.get('@monitoring-table-headers').find('.ag-header-cell').eq(3).click();
         cy.wait(500);
 
         // Cards should be sorted by title
-        cy.agGridCellShould('#opfab-monitoring-table-grid', 0, 3, 'have.text', 'Electricity consumption forecast');
-        cy.agGridCellShould('#opfab-monitoring-table-grid', 1, 3, 'have.text', 'Message');
-        cy.agGridCellShould('#opfab-monitoring-table-grid', 2, 3, 'have.text', 'Process state (calcul)');
-        cy.agGridCellShould('#opfab-monitoring-table-grid', 3, 3, 'have.text', '⚠️ Network Contingencies ⚠️');
-        cy.agGridCellShould('#opfab-monitoring-table-grid', 4, 3, 'have.text', '⚡ Planned Outage');
+        agGrid.cellShould('#opfab-monitoring-table-grid', 0, 3, 'have.text', 'Electricity consumption forecast');
+        agGrid.cellShould('#opfab-monitoring-table-grid', 1, 3, 'have.text', 'Message');
+        agGrid.cellShould('#opfab-monitoring-table-grid', 2, 3, 'have.text', 'Process state (calcul)');
+        agGrid.cellShould('#opfab-monitoring-table-grid', 3, 3, 'have.text', '⚠️ Network Contingencies ⚠️');
+        agGrid.cellShould('#opfab-monitoring-table-grid', 4, 3, 'have.text', '⚡ Planned Outage');
 
         // Sorting titles a second time
         cy.get('@monitoring-table-headers').find('.ag-header-cell').eq(3).click();
         cy.wait(500);
 
         // Cards should be sorted by title
-        cy.agGridCellShould('#opfab-monitoring-table-grid', 0, 3, 'have.text', '⚡ Planned Outage');
-        cy.agGridCellShould('#opfab-monitoring-table-grid', 1, 3, 'have.text', '⚠️ Network Contingencies ⚠️');
-        cy.agGridCellShould('#opfab-monitoring-table-grid', 2, 3, 'have.text', 'Process state (calcul)');
-        cy.agGridCellShould('#opfab-monitoring-table-grid', 3, 3, 'have.text', 'Message');
-        cy.agGridCellShould('#opfab-monitoring-table-grid', 4, 3, 'have.text', 'Electricity consumption forecast');
+        agGrid.cellShould('#opfab-monitoring-table-grid', 0, 3, 'have.text', '⚡ Planned Outage');
+        agGrid.cellShould('#opfab-monitoring-table-grid', 1, 3, 'have.text', '⚠️ Network Contingencies ⚠️');
+        agGrid.cellShould('#opfab-monitoring-table-grid', 2, 3, 'have.text', 'Process state (calcul)');
+        agGrid.cellShould('#opfab-monitoring-table-grid', 3, 3, 'have.text', 'Message');
+        agGrid.cellShould('#opfab-monitoring-table-grid', 4, 3, 'have.text', 'Electricity consumption forecast');
 
     })
 
@@ -309,29 +311,29 @@ describe ('Monitoring screen tests',function () {
         cy.get('#opfab-monitoring-table-grid').find('.ag-header-container').find('.ag-header-row-column').as('monitoring-table-headers');
 
         // Should have the correct number of cards (5 because one card is set not to be visible in monitoring)
-        cy.countAgGridTableRows('#opfab-monitoring-table-grid', 5);
+        agGrid.countTableRows('#opfab-monitoring-table-grid', 5);
 
         // Sorting summaries a first time
         cy.get('@monitoring-table-headers').find('.ag-header-cell').eq(4).click();
         cy.wait(500);
 
         // Cards should be sorted by summary
-        cy.agGridCellShould('#opfab-monitoring-table-grid', 0, 4, 'have.text', 'Contingencies report for French network');
-        cy.agGridCellShould('#opfab-monitoring-table-grid', 1, 4, 'have.text', 'Message received');
-        cy.agGridCellShould('#opfab-monitoring-table-grid', 2, 4, 'have.text', 'Message received');
-        cy.agGridCellShould('#opfab-monitoring-table-grid', 3, 4, 'have.text', 'Message received');
-        cy.agGridCellShould('#opfab-monitoring-table-grid', 4, 4, 'have.text', 'Message received : France-England\'s interconnection is 100% operational / Result of the maintenance is <OK>');
+        agGrid.cellShould('#opfab-monitoring-table-grid', 0, 4, 'have.text', 'Contingencies report for French network');
+        agGrid.cellShould('#opfab-monitoring-table-grid', 1, 4, 'have.text', 'Message received');
+        agGrid.cellShould('#opfab-monitoring-table-grid', 2, 4, 'have.text', 'Message received');
+        agGrid.cellShould('#opfab-monitoring-table-grid', 3, 4, 'have.text', 'Message received');
+        agGrid.cellShould('#opfab-monitoring-table-grid', 4, 4, 'have.text', 'Message received : France-England\'s interconnection is 100% operational / Result of the maintenance is <OK>');
         
         // Sorting summaries a second time
         cy.get('@monitoring-table-headers').find('.ag-header-cell').eq(4).click();
         cy.wait(500);
 
         // Cards should be sorted by summary
-        cy.agGridCellShould('#opfab-monitoring-table-grid', 0, 4, 'have.text', 'Message received : France-England\'s interconnection is 100% operational / Result of the maintenance is <OK>');
-        cy.agGridCellShould('#opfab-monitoring-table-grid', 1, 4, 'have.text', 'Message received');
-        cy.agGridCellShould('#opfab-monitoring-table-grid', 2, 4, 'have.text', 'Message received');
-        cy.agGridCellShould('#opfab-monitoring-table-grid', 3, 4, 'have.text', 'Message received');
-        cy.agGridCellShould('#opfab-monitoring-table-grid', 4, 4, 'have.text', 'Contingencies report for French network');
+        agGrid.cellShould('#opfab-monitoring-table-grid', 0, 4, 'have.text', 'Message received : France-England\'s interconnection is 100% operational / Result of the maintenance is <OK>');
+        agGrid.cellShould('#opfab-monitoring-table-grid', 1, 4, 'have.text', 'Message received');
+        agGrid.cellShould('#opfab-monitoring-table-grid', 2, 4, 'have.text', 'Message received');
+        agGrid.cellShould('#opfab-monitoring-table-grid', 3, 4, 'have.text', 'Message received');
+        agGrid.cellShould('#opfab-monitoring-table-grid', 4, 4, 'have.text', 'Contingencies report for French network');
 
     })
 
@@ -347,29 +349,29 @@ describe ('Monitoring screen tests',function () {
         cy.get('#opfab-monitoring-table-grid').find('.ag-header-container').find('.ag-header-row-column').as('monitoring-table-headers');
 
         // Should have the correct number of cards (5 because one card is set not to be visible in monitoring)
-        cy.countAgGridTableRows('#opfab-monitoring-table-grid', 5);
+        agGrid.countTableRows('#opfab-monitoring-table-grid', 5);
 
         // Sorting process states a first time
         cy.get('@monitoring-table-headers').find('.ag-header-cell').eq(5).click();
         cy.wait(500);
 
         // Cards should be sorted by process states
-        cy.agGridCellShould('#opfab-monitoring-table-grid', 0, 5, 'have.text', 'CANCELED');
-        cy.agGridCellShould('#opfab-monitoring-table-grid', 1, 5, 'have.text', 'FINISHED');
-        cy.agGridCellShould('#opfab-monitoring-table-grid', 2, 5, 'have.text', 'IN PROGRESS');
-        cy.agGridCellShould('#opfab-monitoring-table-grid', 3, 5, 'have.text', 'IN PROGRESS');
-        cy.agGridCellShould('#opfab-monitoring-table-grid', 4, 5, 'have.text', 'IN PROGRESS');
+        agGrid.cellShould('#opfab-monitoring-table-grid', 0, 5, 'have.text', 'CANCELED');
+        agGrid.cellShould('#opfab-monitoring-table-grid', 1, 5, 'have.text', 'FINISHED');
+        agGrid.cellShould('#opfab-monitoring-table-grid', 2, 5, 'have.text', 'IN PROGRESS');
+        agGrid.cellShould('#opfab-monitoring-table-grid', 3, 5, 'have.text', 'IN PROGRESS');
+        agGrid.cellShould('#opfab-monitoring-table-grid', 4, 5, 'have.text', 'IN PROGRESS');
         
         // Sorting process states a second time
         cy.get('@monitoring-table-headers').find('.ag-header-cell').eq(5).click();
         cy.wait(500);
 
         // Cards should be sorted by process states
-        cy.agGridCellShould('#opfab-monitoring-table-grid', 0, 5, 'have.text', 'IN PROGRESS');
-        cy.agGridCellShould('#opfab-monitoring-table-grid', 1, 5, 'have.text', 'IN PROGRESS');
-        cy.agGridCellShould('#opfab-monitoring-table-grid', 2, 5, 'have.text', 'IN PROGRESS');
-        cy.agGridCellShould('#opfab-monitoring-table-grid', 3, 5, 'have.text', 'FINISHED');
-        cy.agGridCellShould('#opfab-monitoring-table-grid', 4, 5, 'have.text', 'CANCELED');
+        agGrid.cellShould('#opfab-monitoring-table-grid', 0, 5, 'have.text', 'IN PROGRESS');
+        agGrid.cellShould('#opfab-monitoring-table-grid', 1, 5, 'have.text', 'IN PROGRESS');
+        agGrid.cellShould('#opfab-monitoring-table-grid', 2, 5, 'have.text', 'IN PROGRESS');
+        agGrid.cellShould('#opfab-monitoring-table-grid', 3, 5, 'have.text', 'FINISHED');
+        agGrid.cellShould('#opfab-monitoring-table-grid', 4, 5, 'have.text', 'CANCELED');
 
     })
 
@@ -385,7 +387,7 @@ describe ('Monitoring screen tests',function () {
         cy.get('#opfab-monitoring-table-grid').find('.ag-header-container').find('.ag-header-row-column').as('monitoring-table-headers');
 
         // Should have the correct number of cards (5 because one card is set not to be visible in monitoring)
-        cy.countAgGridTableRows('#opfab-monitoring-table-grid', 5);
+        agGrid.countTableRows('#opfab-monitoring-table-grid', 5);
 
 
         // Sorting emitters a first time
@@ -393,22 +395,22 @@ describe ('Monitoring screen tests',function () {
         cy.wait(500);
 
         // Cards should be sorted by emitter
-        cy.agGridCellShould('#opfab-monitoring-table-grid', 0, 6, 'have.text', 'Control Center FR North (publisher_test)');
-        cy.agGridCellShould('#opfab-monitoring-table-grid', 1, 6, 'have.text', 'publisher_test');
-        cy.agGridCellShould('#opfab-monitoring-table-grid', 2, 6, 'have.text', 'publisher_test');
-        cy.agGridCellShould('#opfab-monitoring-table-grid', 3, 6, 'have.text', 'publisher_test');
-        cy.agGridCellShould('#opfab-monitoring-table-grid', 4, 6, 'have.text', 'publisher_test');
+        agGrid.cellShould('#opfab-monitoring-table-grid', 0, 6, 'have.text', 'Control Center FR North (publisher_test)');
+        agGrid.cellShould('#opfab-monitoring-table-grid', 1, 6, 'have.text', 'publisher_test');
+        agGrid.cellShould('#opfab-monitoring-table-grid', 2, 6, 'have.text', 'publisher_test');
+        agGrid.cellShould('#opfab-monitoring-table-grid', 3, 6, 'have.text', 'publisher_test');
+        agGrid.cellShould('#opfab-monitoring-table-grid', 4, 6, 'have.text', 'publisher_test');
         
         // Sorting emitters a second time
         cy.get('@monitoring-table-headers').find('.ag-header-cell').eq(6).click();
         cy.wait(500);
 
         // Cards should be sorted by emitter
-        cy.agGridCellShould('#opfab-monitoring-table-grid', 0, 6, 'have.text', 'publisher_test');
-        cy.agGridCellShould('#opfab-monitoring-table-grid', 1, 6, 'have.text', 'publisher_test');
-        cy.agGridCellShould('#opfab-monitoring-table-grid', 2, 6, 'have.text', 'publisher_test');
-        cy.agGridCellShould('#opfab-monitoring-table-grid', 3, 6, 'have.text', 'publisher_test');
-        cy.agGridCellShould('#opfab-monitoring-table-grid', 4, 6, 'have.text', 'Control Center FR North (publisher_test)');
+        agGrid.cellShould('#opfab-monitoring-table-grid', 0, 6, 'have.text', 'publisher_test');
+        agGrid.cellShould('#opfab-monitoring-table-grid', 1, 6, 'have.text', 'publisher_test');
+        agGrid.cellShould('#opfab-monitoring-table-grid', 2, 6, 'have.text', 'publisher_test');
+        agGrid.cellShould('#opfab-monitoring-table-grid', 3, 6, 'have.text', 'publisher_test');
+        agGrid.cellShould('#opfab-monitoring-table-grid', 4, 6, 'have.text', 'Control Center FR North (publisher_test)');
 
     })
 
@@ -424,7 +426,7 @@ describe ('Monitoring screen tests',function () {
         cy.get('#opfab-monitoring-table-grid').find('.ag-header-container').find('.ag-header-row-column').as('monitoring-table-headers');
 
         // Should have the correct number of cards (5 because one card is set not to be visible in monitoring)
-        cy.countAgGridTableRows('#opfab-monitoring-table-grid', 5);
+        agGrid.countTableRows('#opfab-monitoring-table-grid', 5);
 
 
         // Sorting answers a first time
@@ -432,13 +434,13 @@ describe ('Monitoring screen tests',function () {
         cy.wait(500);
 
         // Cards should be sorted by answer
-        cy.agGridCellShould('#opfab-monitoring-table-grid', 0, 7, 'have.text', '');
-        cy.agGridCellShould('#opfab-monitoring-table-grid', 1, 7, 'have.text', '');
-        cy.agGridCellShould('#opfab-monitoring-table-grid', 2, 7, 'have.text', '');
-        cy.agGridCellShould('#opfab-monitoring-table-grid', 3, 7, 'have.text', '');
-        cy.agGridCellShould('#opfab-monitoring-table-grid', 4, 7, 'not.contain.text', 'Control Center FR East');
-        cy.agGridCellShould('#opfab-monitoring-table-grid', 4, 7, 'contain.text', 'Control Center FR North');
-        cy.agGridCellShould('#opfab-monitoring-table-grid', 4, 7, 'contain.text', 'Control Center FR South');
+        agGrid.cellShould('#opfab-monitoring-table-grid', 0, 7, 'have.text', '');
+        agGrid.cellShould('#opfab-monitoring-table-grid', 1, 7, 'have.text', '');
+        agGrid.cellShould('#opfab-monitoring-table-grid', 2, 7, 'have.text', '');
+        agGrid.cellShould('#opfab-monitoring-table-grid', 3, 7, 'have.text', '');
+        agGrid.cellShould('#opfab-monitoring-table-grid', 4, 7, 'not.contain.text', 'Control Center FR East');
+        agGrid.cellShould('#opfab-monitoring-table-grid', 4, 7, 'contain.text', 'Control Center FR North');
+        agGrid.cellShould('#opfab-monitoring-table-grid', 4, 7, 'contain.text', 'Control Center FR South');
         
 
         // Sorting answers a second time
@@ -446,13 +448,13 @@ describe ('Monitoring screen tests',function () {
         cy.wait(500);
 
         // Cards should be sorted by emitter
-        cy.agGridCellShould('#opfab-monitoring-table-grid', 0, 7, 'not.contain.text', 'Control Center FR East');
-        cy.agGridCellShould('#opfab-monitoring-table-grid', 0, 7, 'contain.text', 'Control Center FR North');
-        cy.agGridCellShould('#opfab-monitoring-table-grid', 0, 7, 'contain.text', 'Control Center FR South');
-        cy.agGridCellShould('#opfab-monitoring-table-grid', 1, 7, 'have.text', '');
-        cy.agGridCellShould('#opfab-monitoring-table-grid', 2, 7, 'have.text', '');
-        cy.agGridCellShould('#opfab-monitoring-table-grid', 3, 7, 'have.text', '');
-        cy.agGridCellShould('#opfab-monitoring-table-grid', 4, 7, 'have.text', '');
+        agGrid.cellShould('#opfab-monitoring-table-grid', 0, 7, 'not.contain.text', 'Control Center FR East');
+        agGrid.cellShould('#opfab-monitoring-table-grid', 0, 7, 'contain.text', 'Control Center FR North');
+        agGrid.cellShould('#opfab-monitoring-table-grid', 0, 7, 'contain.text', 'Control Center FR South');
+        agGrid.cellShould('#opfab-monitoring-table-grid', 1, 7, 'have.text', '');
+        agGrid.cellShould('#opfab-monitoring-table-grid', 2, 7, 'have.text', '');
+        agGrid.cellShould('#opfab-monitoring-table-grid', 3, 7, 'have.text', '');
+        agGrid.cellShould('#opfab-monitoring-table-grid', 4, 7, 'have.text', '');
 
     })
 
@@ -474,11 +476,11 @@ describe ('Monitoring screen tests',function () {
 
         // Access monitoring screen
         cy.get('#opfab-navbar-menu-monitoring').click();
-        
-        cy.countAgGridTableRows('#opfab-monitoring-table-grid', 5);
+
+        agGrid.countTableRows('#opfab-monitoring-table-grid', 5);
 
         // Check response arrow icon
-        cy.agGridCellElementShould('#opfab-monitoring-table-grid', 2, 2, 'em', 'have.class', 'fa-reply');
+        agGrid.cellElementShould('#opfab-monitoring-table-grid', 2, 2, 'em', 'have.class', 'fa-reply');
 
     })
 
@@ -490,11 +492,11 @@ describe ('Monitoring screen tests',function () {
 
         // Access monitoring screen
         cy.get('#opfab-navbar-menu-monitoring').click();
-        
-        cy.countAgGridTableRows('#opfab-monitoring-table-grid', 5);
+
+        agGrid.countTableRows('#opfab-monitoring-table-grid', 5);
 
         // Check response arrow icon before lauching export , to let the time for child card processing 
-        cy.agGridCellElementShould('#opfab-monitoring-table-grid', 2, 2, 'em', 'have.class', 'fa-reply');
+        agGrid.cellElementShould('#opfab-monitoring-table-grid', 2, 2, 'em', 'have.class', 'fa-reply');
 
 
         // Do export
@@ -583,8 +585,8 @@ describe ('Monitoring screen tests',function () {
 
         // Access monitoring screen
         cy.get('#opfab-navbar-menu-monitoring').click();
-        
-        cy.countAgGridTableRows('#opfab-monitoring-table-grid', 5);
+
+        agGrid.countTableRows('#opfab-monitoring-table-grid', 5);
 
         // Do export
         cy.get('#opfab-monitoring-btn-exportToExcel').click();
