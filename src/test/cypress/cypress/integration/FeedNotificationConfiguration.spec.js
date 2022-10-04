@@ -8,11 +8,13 @@
  */
 
 
-import {OpfabGeneralCommands} from "../support/opfabGeneralCommands" 
+import {OpfabGeneralCommands} from "../support/opfabGeneralCommands"
+import {AgGridCommands} from "../support/agGridCommands";
 
 describe ('Feed notification configuration tests',function () {
 
     const opfab = new OpfabGeneralCommands();
+    const agGrid = new AgGridCommands();
 
     const totalCards = 6;
     const cardsToTest =[
@@ -278,7 +280,7 @@ describe ('Feed notification configuration tests',function () {
         // Click on "Perimeters Management"
         cy.get('#opfab-admin-perimeters-tab').click();
         // Edit perimeter defaultProcess
-        cy.clickAgGridCell('ag-grid-angular', 2, 3, 'of-action-cell-renderer');
+        agGrid.clickCell('ag-grid-angular', 2, 3, 'of-action-cell-renderer');
         cy.get('of-edit-perimeter-modal').should('exist');
         cy.get('.modal-title').should('contain.text', 'defaultProcess');
         cy.get('#state2').should('contain.text', 'Data quality');

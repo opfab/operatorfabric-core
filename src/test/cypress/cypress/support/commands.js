@@ -162,52 +162,6 @@ Cypress.Commands.add('setFormDateTime', (formName, year, month, day, hours, minu
         .type('{backspace}{backspace}' + minutes);
 });
 
-// Count ag-grid table rows
-Cypress.Commands.add('countAgGridTableRows', (table, rowsNum) => {
-    cy.get(table).find('.ag-center-cols-container').find('.ag-row').should('have.length', rowsNum);
-});
-
-// Check ag-grid cell value
-Cypress.Commands.add('agGridCellShould', (table, row, col, operator, value) => {
-    cy.get(table)
-        .find('.ag-center-cols-container')
-        .find('.ag-row')
-        .eq(row)
-        .find('.ag-cell-value')
-        .eq(col)
-        .should(operator, value);
-});
-
-// Check ag-grid cell value
-Cypress.Commands.add('agGridCellElementShould', (table, row, col, element, operator, value) => {
-    cy.get(table)
-        .find('.ag-center-cols-container')
-        .find('.ag-row')
-        .eq(row)
-        .find('.ag-cell-value')
-        .eq(col)
-        .find(element)
-        .should(operator, value);
-});
-
-// Click on ag-grid cell
-// Specific tag should be specified in case of cell renderers
-Cypress.Commands.add('clickAgGridCell', (table, row, col, tag) => {
-    if (!!tag) {
-        cy.get(table)
-            .find('.ag-center-cols-container')
-            .find('.ag-row')
-            .eq(row)
-            .find('.ag-cell-value')
-            .eq(col)
-            .find(tag)
-            .eq(0)
-            .click();
-    } else {
-        cy.get(table).find('.ag-center-cols-container').find('.ag-row').eq(row).find('.ag-cell-value').eq(col).click();
-    }
-});
-
 
 Cypress.Commands.add('loadMonitoringConfig', (config) => {
     cy.exec('cd .. && ./resources/monitoringConfig/loadMonitoringConfig.sh ' + config);
