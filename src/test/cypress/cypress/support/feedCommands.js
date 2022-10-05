@@ -35,6 +35,10 @@ export class FeedCommands extends OpfabCommands {
         cy.get('#opfab-selected-card-summary').should('have.text',summary);
     }
 
+    checkLigthCardAtIndexHasTitle= function (index, title) {
+        cy.get('.card-title').eq(index).should('have.text',title + " ")
+    }
+
     deleteCurrentCard= function () {
         cy.get('#opfab-card-delete').click();
         cy.get('#opfab-card-details-delete-btn-confirm').click();
@@ -43,5 +47,41 @@ export class FeedCommands extends OpfabCommands {
     editCurrentCard= function () {
         cy.get('#opfab-card-edit').click();
         cy.get("of-usercard").should('exist');
+    }
+
+    sortByUnread= function () {
+        cy.get('#opfab-feed-filter-btn-sort').click();
+        cy.get('#opfab-sort-form').should('exist');
+        cy.get('#opfab-feed-filter-unread').check();
+        cy.get('#opfab-feed-filter-btn-sort').click();
+    }
+
+    sortByReceptionDate= function () {
+        cy.get('#opfab-feed-filter-btn-sort').click();
+        cy.get('#opfab-sort-form').should('exist');
+        cy.get('#opfab-feed-filter-publication-date').check();
+        cy.get('#opfab-feed-filter-btn-sort').click();
+    }
+    
+    sortBySeverity= function () {
+        cy.get('#opfab-feed-filter-btn-sort').click();
+        cy.get('#opfab-sort-form').should('exist');
+        cy.get('#opfab-feed-filter-severity').check();
+        cy.get('#opfab-feed-filter-btn-sort').click();
+    }
+        
+    sortByStartDate= function () {
+        cy.get('#opfab-feed-filter-btn-sort').click();
+        cy.get('#opfab-sort-form').should('exist');
+        cy.get('#opfab-feed-filter-start-date').check();
+        cy.get('#opfab-feed-filter-btn-sort').click();
+    }
+
+        
+    sortByEndDate= function () {
+        cy.get('#opfab-feed-filter-btn-sort').click();
+        cy.get('#opfab-sort-form').should('exist');
+        cy.get('#opfab-feed-filter-end-date').check();
+        cy.get('#opfab-feed-filter-btn-sort').click();
     }
 }

@@ -29,5 +29,9 @@ export class CardCommands extends OpfabCommands {
         cy.get('#opfab-card-delete').click();
         cy.get('#opfab-card-details-delete-btn-confirm').click();
     }
+
+    close= function () {
+        cy.get('#opfab-close-card').click();
+    }
 }
 
