@@ -189,7 +189,7 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, DoCheck {
                 if (receivedAck.cardUid === this.card.uid) this.addAckFromSubscription(receivedAck.entitiesAcks);
             });
 
-        if (this._appService.pageType === PageType.MONITORING) this.templateOffset = 35;
+        if (this._appService.pageType === PageType.MONITORING || this._appService.pageType === PageType.CALENDAR) this.templateOffset = 35;
     }
 
     ngDoCheck() {
