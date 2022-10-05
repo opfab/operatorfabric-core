@@ -9,11 +9,13 @@
 
 import {OpfabGeneralCommands} from '../support/opfabGeneralCommands'
 import {FeedCommands} from '../support/feedCommands'
+import {CardCommands} from '../support/cardCommands'
 
 describe('FeedScreen tests', function () {
 
     const opfab = new OpfabGeneralCommands();
     const feed = new FeedCommands();
+    const card = new CardCommands();
 
     function tryToLoadNonExistingCard() {
         cy.visit('#/feed/cards/thisCardDoesNotExist');
@@ -120,5 +122,72 @@ describe('FeedScreen tests', function () {
         cy.sendCard('cypress/feed/futureEvent.json');
         opfab.loginWithUser('operator1_fr');
         feed.checkNumberOfDisplayedCardsIs(1);
+    });
+
+    it('Check sorting', function () {
+        cy.sendCard('defaultProcess/chartLine.json');
+        cy.sendCard('defaultProcess/question.json');
+        cy.sendCard('defaultProcess/process.json');
+        cy.sendCard('defaultProcess/message.json');
+
+        opfab.loginWithUser('operator1_fr');
+        feed.checkNumberOfDisplayedCardsIs(4);
+
+        feed.sortByUnread();
+
+        feed.checkLigthCardAtIndexHasTitle(0, 'Message');
+        feed.checkLigthCardAtIndexHasTitle(1, 'Process state (calcul)');
+        feed.checkLigthCardAtIndexHasTitle(2, '⚡ Planned Outage');
+        feed.checkLigthCardAtIndexHasTitle(3, 'Electricity consumption forecast');
+
+
+        // Read first card
+        feed.openFirstCard();
+        card.close();
+
+        cy.waitDefaultTime();
+
+        // Check read card is the last one
+        feed.checkLigthCardAtIndexHasTitle(0, 'Process state (calcul)');
+        feed.checkLigthCardAtIndexHasTitle(1, '⚡ Planned Outage');
+        feed.checkLigthCardAtIndexHasTitle(2, 'Electricity consumption forecast');
+        feed.checkLigthCardAtIndexHasTitle(3, 'Message');
+
+
+        feed.sortByReceptionDate();
+
+        cy.waitDefaultTime();
+    
+        feed.checkLigthCardAtIndexHasTitle(0, 'Message');
+        feed.checkLigthCardAtIndexHasTitle(1, 'Process state (calcul)');
+        feed.checkLigthCardAtIndexHasTitle(2, '⚡ Planned Outage');
+        feed.checkLigthCardAtIndexHasTitle(3, 'Electricity consumption forecast');
+
+        feed.sortBySeverity();
+
+        cy.waitDefaultTime();
+
+        feed.checkLigthCardAtIndexHasTitle(0, 'Electricity consumption forecast');
+        feed.checkLigthCardAtIndexHasTitle(1, '⚡ Planned Outage');
+        feed.checkLigthCardAtIndexHasTitle(2, 'Process state (calcul)');
+        feed.checkLigthCardAtIndexHasTitle(3, 'Message');
+
+        feed.sortByStartDate();
+
+        cy.waitDefaultTime();
+
+        feed.checkLigthCardAtIndexHasTitle(0, '⚡ Planned Outage');
+        feed.checkLigthCardAtIndexHasTitle(1, 'Electricity consumption forecast');
+        feed.checkLigthCardAtIndexHasTitle(2, 'Message');
+        feed.checkLigthCardAtIndexHasTitle(3, 'Process state (calcul)');
+
+        feed.sortByEndDate();
+
+        cy.waitDefaultTime();
+
+        feed.checkLigthCardAtIndexHasTitle(0, 'Electricity consumption forecast');
+        feed.checkLigthCardAtIndexHasTitle(1, '⚡ Planned Outage');
+        feed.checkLigthCardAtIndexHasTitle(2, 'Message');
+        feed.checkLigthCardAtIndexHasTitle(3, 'Process state (calcul)');
     });
 });
