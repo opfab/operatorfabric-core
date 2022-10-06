@@ -17,6 +17,7 @@ import {
     OnDestroy,
     OnInit,
     Output,
+    SimpleChanges,
     ViewEncapsulation
 } from '@angular/core';
 import {Card} from '@ofModel/card.model';
@@ -64,6 +65,7 @@ export class TemplateRenderingComponent implements OnChanges, OnInit, OnDestroy,
 
     private userContext: UserContext;
     private unsubscribeToGlobalStyle$: Subject<void> = new Subject<void>();
+    private templateLoaded: boolean;
 
     constructor(
         private element: ElementRef,
@@ -130,6 +132,7 @@ export class TemplateRenderingComponent implements OnChanges, OnInit, OnDestroy,
                                 templateGateway.setScreenSize(this.screenSize);
                                 templateGateway.applyChildCards();
                                 setTimeout(() => templateGateway.onTemplateRenderingComplete(), 10);
+                                this.templateLoaded = true;
 
                             }, 10);
                         }, 10);
@@ -184,8 +187,9 @@ export class TemplateRenderingComponent implements OnChanges, OnInit, OnDestroy,
         }
     }
 
-    ngOnChanges(): void {
-        this.render();
+    ngOnChanges(changes: SimpleChanges) {
+        if (!!changes.screenSize && this.templateLoaded) templateGateway.setScreenSize(this.screenSize);
+        else this.render();
     }
 
     private render() {
