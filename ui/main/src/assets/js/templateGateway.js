@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2021, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2022, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -152,6 +152,11 @@ const templateGateway = {
         // of the template are done.
         this.hideLoadingSpinner = function() {
             // This function is overridden in DetailComponent and in CardDetailComponent.
+        };
+
+        // OpFab calls this function when global style has changed
+        this.onStyleChange = function (expired) {
+            // This function should be overridden in the template.
         };
     }
 };

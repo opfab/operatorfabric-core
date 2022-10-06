@@ -800,6 +800,11 @@ It can be used by a template to launch some processing when loading is complete
 Once the card is loaded, there may be some processing that is time consuming. 
 In this case, it is possible to show a spinner using the methods _templateGateway.displayLoadingSpinner()_ and _templateGateway.hideLoadingSpinner()_ in the card template .
 
+=== Method onStyleChange()
+
+OpFab calls this method when global style has changed, for example when switching day/night mode.
+
+It can be used by a template to refresh styles and reload embedded charts.
 
 === Escape HTML
 

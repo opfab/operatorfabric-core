@@ -78,13 +78,17 @@ export class TemplateRenderingComponent implements OnChanges, OnInit, OnDestroy,
         this.reloadTemplateWhenGlobalStyleChange();
     }
 
-    // For certain types of template , we need to reload it to take into account
+    // For certain types of template , we need to inform it to take into account
     // the new css style (for example with chart done with chart.js)
     private reloadTemplateWhenGlobalStyleChange() {
         this.store
             .select(selectGlobalStyleState)
             .pipe(takeUntil(this.unsubscribeToGlobalStyle$), skip(1))
-            .subscribe(() => this.getUserContextAndRenderTemplate());
+            .subscribe(() => this.onStyleChange());
+    }
+
+    private onStyleChange() {
+        templateGateway.onStyleChange();
     }
 
     private getUserContextAndRenderTemplate() {
