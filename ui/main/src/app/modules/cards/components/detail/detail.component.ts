@@ -15,6 +15,7 @@ import {
     OnChanges,
     OnDestroy,
     OnInit,
+    SimpleChanges,
     TemplateRef,
     ViewChild,
     ViewEncapsulation
@@ -186,7 +187,9 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, DoCheck {
             .getReceivedAcks()
             .pipe(takeUntil(this.unsubscribe$))
             .subscribe((receivedAck) => {
-                if (receivedAck.cardUid === this.card.uid) this.addAckFromSubscription(receivedAck.entitiesAcks);
+                if (receivedAck.cardUid === this.card.uid) {
+                    this.addAckFromSubscription(receivedAck.entitiesAcks);
+                }
             });
 
         if (this._appService.pageType === PageType.MONITORING || this._appService.pageType === PageType.CALENDAR) this.templateOffset = 35;
@@ -203,7 +206,7 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, DoCheck {
         }
     }
 
-    ngOnChanges(): void {
+    ngOnChanges(changes: SimpleChanges): void {
         this.isCardProcessing = false;
 
         if (this.cardState.response != null && this.cardState.response !== undefined) {
@@ -220,8 +223,12 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, DoCheck {
         this.checkIfHasAlreadyResponded();
         this.lastResponse = this.getLastResponse();
 
-        this.listEntitiesToAck = [];
-        if (this.isCardPublishedByUserEntity() && !!this.card.entityRecipients) this.computeListEntitiesToAck();
+        if (!changes.screenSize || !changes.screenSize.previousValue) {
+            this.listEntitiesToAck = [];
+            if (this.isCardPublishedByUserEntity() && !!this.card.entityRecipients) {
+                this.computeListEntitiesToAck();
+            }
+        }
 
         this.markAsReadIfNecessary();
         this.showDetailCardHeader =
@@ -252,7 +259,9 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, DoCheck {
                 const indexToUpdate = this.listEntitiesToAck.findIndex(
                     (entityToAck) => entityToAck.id === entityAckToAdd
                 );
-                if (indexToUpdate !== -1) this.listEntitiesToAck[indexToUpdate].color = 'green';
+                if (indexToUpdate !== -1) {
+                    this.listEntitiesToAck[indexToUpdate].color = 'green';
+                }
             });
         }
     }
