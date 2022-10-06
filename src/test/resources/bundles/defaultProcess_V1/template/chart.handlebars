@@ -199,4 +199,8 @@ in the documentation, it should not be used in actual templates. -->
     
     cardTemplate.initChart();
 
+    templateGateway.onStyleChange = function() {
+        cardTemplate.initChart();
+    }
+
 </script>
