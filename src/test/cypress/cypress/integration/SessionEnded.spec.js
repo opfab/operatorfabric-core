@@ -10,16 +10,18 @@
 import {OpfabGeneralCommands} from '../support/opfabGeneralCommands';
 import {SettingsCommands} from '../support/settingsCommands';
 import {SoundCommands} from '../support/soundCommands'
+import {ScriptCommands} from "../support/scriptCommands";
 
 describe('Session ended test', function () {
     const opfab = new OpfabGeneralCommands();
     const sound = new SoundCommands();
     const settings = new SettingsCommands();
+    const script = new ScriptCommands();
 
     before('Reset UI configuration file ', function () {
-        cy.resetUIConfigurationFiles();
-        cy.deleteAllCards();
-        cy.deleteAllSettings();
+        script.resetUIConfigurationFiles();
+        script.deleteAllCards();
+        script.deleteAllSettings();
     });
 
     it('Checking session end after 7 days and with no sound by default', () => {

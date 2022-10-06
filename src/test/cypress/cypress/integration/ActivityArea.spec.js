@@ -9,19 +9,21 @@
 
 import {OpfabGeneralCommands} from "../support/opfabGeneralCommands"
 import {ActivityAreaCommands} from "../support/activityAreaCommands"
+import {ScriptCommands} from "../support/scriptCommands";
 
 
 describe('ActivityAreaPage', () => {
 
     const opfab = new OpfabGeneralCommands();
     const activityArea = new ActivityAreaCommands();
+    const script = new ScriptCommands();
 
     before('Delete previous cards', function () {
-        cy.loadTestConf();
-        cy.deleteAllSettings();
-        cy.deleteAllCards();
-        cy.deleteAllArchivedCards();
-        cy.send6TestCards();
+        script.loadTestConf();
+        script.deleteAllSettings();
+        script.deleteAllCards();
+        script.deleteAllArchivedCards();
+        script.send6TestCards();
     });
 
     it('Connection of operator4_fr, which is connected to ENTITY1_FR, ENTITY2_FR, ENTITY3_FR, ENTITY4_FR and check of the activity area page', () => {
@@ -130,7 +132,7 @@ describe('ActivityAreaPage', () => {
     });
 
     it('Choose activity area on login', function () {
-        cy.setPropertyInConf('selectActivityAreaOnLogin ', 'web-ui', true);
+        script.setPropertyInConf('selectActivityAreaOnLogin ', 'web-ui', true);
 
         cy.visit('');
 
@@ -221,7 +223,7 @@ describe('ActivityAreaPage', () => {
         cy.get('.opfab-checkbox').contains('Control Center FR North').click();
         activityArea.save();
 
-        cy.setPropertyInConf('selectActivityAreaOnLogin ', 'web-ui', false);
+        script.setPropertyInConf('selectActivityAreaOnLogin ', 'web-ui', false);
     });
 
     it('Check spinner is displayed when request is delayed and that spinner disappears once the request arrived', function () {

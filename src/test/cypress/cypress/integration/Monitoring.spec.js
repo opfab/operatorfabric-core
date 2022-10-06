@@ -9,18 +9,20 @@
 
 import {OpfabGeneralCommands} from "../support/opfabGeneralCommands"
 import {AgGridCommands} from "../support/agGridCommands";
+import {ScriptCommands} from "../support/scriptCommands";
 
 describe ('Monitoring screen tests',function () {
 
     const opfab = new OpfabGeneralCommands();
     const agGrid = new AgGridCommands();
+    const script = new ScriptCommands();
 
     before('Set up configuration', function () {
-        cy.deleteAllSettings();
-        cy.deleteAllCards();
-        cy.resetUIConfigurationFiles();
-        cy.loadTestConf();
-        cy.send6TestCards();
+        script.deleteAllSettings();
+        script.deleteAllCards();
+        script.resetUIConfigurationFiles();
+        script.loadTestConf();
+        script.send6TestCards();
     });
 
     it('Check composition of multi-filters for process groups/processes/type of state for operator1_fr', function () {
@@ -115,7 +117,7 @@ describe ('Monitoring screen tests',function () {
     it('Check composition of multi-filters for processes/states/typeOfState for operator1_fr, with a config without process group', function () {
         opfab.loginWithUser('operator1_fr');
 
-        cy.loadEmptyProcessGroups();
+        script.loadEmptyProcessGroups();
         cy.reload();
 
         // We move to monitoring screen
@@ -138,7 +140,7 @@ describe ('Monitoring screen tests',function () {
         cy.get('#opfab-typeOfState').contains('FINISHED').should('exist');
         cy.get('#opfab-typeOfState').contains('CANCELED').should('exist');
 
-        cy.loadTestConf();
+        script.loadTestConf();
         cy.reload();
     })
 
@@ -486,7 +488,7 @@ describe ('Monitoring screen tests',function () {
 
     it('Check export', function () {
         // Standard export, no custom configuration
-        cy.loadMonitoringConfig('emptyConfig.json');
+        script.loadMonitoringConfig('emptyConfig.json');
 
         opfab.loginWithUser('operator1_fr');
 
@@ -579,7 +581,7 @@ describe ('Monitoring screen tests',function () {
 
     it('Check custom export configuration', function () {
         // Load custom export configuration
-        cy.loadMonitoringConfig('monitoringConfig.json');
+        script.loadMonitoringConfig('monitoringConfig.json');
 
         opfab.loginWithUser('operator1_fr');
 

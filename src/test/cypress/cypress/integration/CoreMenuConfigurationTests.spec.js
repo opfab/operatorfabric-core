@@ -7,12 +7,14 @@
  * This file is part of the OperatorFabric project.
  */
 import {OpfabGeneralCommands} from '../support/opfabGeneralCommands'
+import {ScriptCommands} from "../support/scriptCommands";
 
 describe ('Core menu configuration tests',function () {
 
     const opfab = new OpfabGeneralCommands();
+    const script = new ScriptCommands();
 
-    // These arrays lists all existing core menus, with their id and the selector to use to check for the presence of the link
+    // These arrays list all existing core menus, with their id and the selector to use to check for the presence of the link
     
     // The #opfab-navbarContent in selector is to make sure we're targeting the standard navbar links and not the collapsed navbar links
     const navbarMenuItems = [
@@ -43,11 +45,11 @@ describe ('Core menu configuration tests',function () {
     //TODO Check collapsed navbar as well
 
     before('Set up configuration', function () {
-        cy.loadTestConf();
+        script.loadTestConf();
     });
 
     beforeEach('Reset UI configuration file ', function () {
-        cy.resetUIConfigurationFiles();
+        script.resetUIConfigurationFiles();
     })
 
     // Testing all menus for "normal" cases
@@ -62,7 +64,7 @@ describe ('Core menu configuration tests',function () {
                 opfab.loginWithUser(user);
 
                 allMenuItems.forEach((item) => {
-                    cy.deleteCoreMenuFromConf(item.menu_id); // Remove menu item with given id from ui-menu.json
+                    script.deleteCoreMenuFromConf(item.menu_id); // Remove menu item with given id from ui-menu.json
                     // Reload and check was initially performed after each update rather than globally to make sure that
                     // there was no interference between menus (for example if a menu was linked to another menus configuration by mistake)
                     // Unfortunately it made the tests too long.
@@ -95,7 +97,7 @@ describe ('Core menu configuration tests',function () {
                 opfab.loginWithUser(user);
 
                 allMenuItems.forEach((item) => {
-                    cy.updateCoreMenuInConf(item.menu_id,"visible",false);
+                    script.updateCoreMenuInConf(item.menu_id,"visible",false);
                 })
 
                 cy.reload();
@@ -124,8 +126,8 @@ describe ('Core menu configuration tests',function () {
                 opfab.loginWithUser(user);
 
                 allMenuItems.forEach((item) => {
-                    cy.deleteCoreMenuFromConf(item.menu_id); // Remove menu item with given id from ui-menu.json
-                    cy.updateCoreMenuInConf(item.menu_id,"visible",true);
+                    script.deleteCoreMenuFromConf(item.menu_id); // Remove menu item with given id from ui-menu.json
+                    script.updateCoreMenuInConf(item.menu_id,"visible",true);
                 })
 
                 cy.reload();
@@ -151,8 +153,8 @@ describe ('Core menu configuration tests',function () {
             opfab.loginWithUser('admin');
 
             allMenuItems.forEach((item) => {
-                cy.updateCoreMenuInConf(item.menu_id,"visible",true);
-                cy.updateCoreMenuInConf(item.menu_id,"showOnlyForGroups",'[\\\"ADMIN\\\"]');
+                script.updateCoreMenuInConf(item.menu_id,"visible",true);
+                script.updateCoreMenuInConf(item.menu_id,"showOnlyForGroups",'[\\\"ADMIN\\\"]');
             })
 
             cy.reload();
@@ -173,8 +175,8 @@ describe ('Core menu configuration tests',function () {
             opfab.loginWithUser('operator1_fr');
 
             allMenuItems.forEach((item) => {
-                cy.updateCoreMenuInConf(item.menu_id,"visible",true);
-                cy.updateCoreMenuInConf(item.menu_id,"showOnlyForGroups",'[\\\"ADMIN\\\"]');
+                script.updateCoreMenuInConf(item.menu_id,"visible",true);
+                script.updateCoreMenuInConf(item.menu_id,"showOnlyForGroups",'[\\\"ADMIN\\\"]');
             })
 
             cy.reload();
@@ -201,20 +203,20 @@ describe ('Core menu configuration tests',function () {
             opfab.loginWithUser('admin');
 
             cy.log('Testing visible: true and showOnlyForGroups: []')
-            cy.updateCoreMenuInConf(item.menu_id,"visible",true);
-            cy.updateCoreMenuInConf(item.menu_id,"showOnlyForGroups","[]");
+            script.updateCoreMenuInConf(item.menu_id,"visible",true);
+            script.updateCoreMenuInConf(item.menu_id,"showOnlyForGroups","[]");
             cy.reload();
             cy.get(item.selector).should('exist');
 
             cy.log('Testing visible: true and showOnlyForGroups: null')
-            cy.updateCoreMenuInConf(item.menu_id,"visible",true);
-            cy.updateCoreMenuInConf(item.menu_id,"showOnlyForGroups",null);
+            script.updateCoreMenuInConf(item.menu_id,"visible",true);
+            script.updateCoreMenuInConf(item.menu_id,"showOnlyForGroups",null);
             cy.reload();
             cy.get(item.selector).should('exist');
 
             cy.log('Testing visible: false and showOnlyForGroups: ["ADMIN"]')
-            cy.updateCoreMenuInConf(item.menu_id,"visible",false);
-            cy.updateCoreMenuInConf(item.menu_id,"showOnlyForGroups",'[\\\"ADMIN\\\"]');
+            script.updateCoreMenuInConf(item.menu_id,"visible",false);
+            script.updateCoreMenuInConf(item.menu_id,"showOnlyForGroups",'[\\\"ADMIN\\\"]');
             cy.reload();
             cy.get(item.selector).should('not.exist');
 
@@ -225,20 +227,20 @@ describe ('Core menu configuration tests',function () {
             opfab.loginWithUser('operator1_fr');
 
             cy.log('Testing visible: true and showOnlyForGroups: []')
-            cy.updateCoreMenuInConf(item.menu_id,"visible",true);
-            cy.updateCoreMenuInConf(item.menu_id,"showOnlyForGroups","[]");
+            script.updateCoreMenuInConf(item.menu_id,"visible",true);
+            script.updateCoreMenuInConf(item.menu_id,"showOnlyForGroups","[]");
             cy.reload();
             cy.get(item.selector).should('exist');
 
             cy.log('Testing visible: true and showOnlyForGroups: null')
-            cy.updateCoreMenuInConf(item.menu_id,"visible",true);
-            cy.updateCoreMenuInConf(item.menu_id,"showOnlyForGroups",null);
+            script.updateCoreMenuInConf(item.menu_id,"visible",true);
+            script.updateCoreMenuInConf(item.menu_id,"showOnlyForGroups",null);
             cy.reload();
             cy.get(item.selector).should('exist');
 
             cy.log('Testing visible: false and showOnlyForGroups: ["ADMIN"]')
-            cy.updateCoreMenuInConf(item.menu_id,"visible",false);
-            cy.updateCoreMenuInConf(item.menu_id,"showOnlyForGroups",'[\\\"ADMIN\\\"]');
+            script.updateCoreMenuInConf(item.menu_id,"visible",false);
+            script.updateCoreMenuInConf(item.menu_id,"showOnlyForGroups",'[\\\"ADMIN\\\"]');
             cy.reload();
             cy.get(item.selector).should('not.exist');
 

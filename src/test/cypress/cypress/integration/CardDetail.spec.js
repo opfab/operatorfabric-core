@@ -12,19 +12,21 @@ it might make sense to merge it with other tests.
 * */
 import {OpfabGeneralCommands} from '../support/opfabGeneralCommands';
 import {FeedCommands} from '../support/feedCommands';
+import {ScriptCommands} from "../support/scriptCommands";
 
 describe('Card detail', function () {
     const opfab = new OpfabGeneralCommands();
     const feed = new FeedCommands();
+    const script = new ScriptCommands();
 
     before('Set up configuration', function () {
         // This can stay in a `before` block rather than `beforeEach` as long as the test does not change configuration
-        cy.resetUIConfigurationFiles();
-        cy.deleteAllSettings();
-        cy.loadTestConf();
-        cy.deleteAllCards();
-        cy.deleteAllArchivedCards();
-        cy.sendCard('cypress/cardDetail/cardDetail.json');
+        script.resetUIConfigurationFiles();
+        script.deleteAllSettings();
+        script.loadTestConf();
+        script.deleteAllCards();
+        script.deleteAllArchivedCards();
+        script.sendCard('cypress/cardDetail/cardDetail.json');
     });
 
     describe('Check card detail', function () {
@@ -182,7 +184,7 @@ describe('Card detail', function () {
         });
 
         it(`Check templateGateway when response not required `, function () {
-            cy.sendCard('cypress/cardDetail/cardDetailResponseNotRequired.json');
+            script.sendCard('cypress/cardDetail/cardDetailResponseNotRequired.json');
             opfab.loginWithUser('operator1_fr');
             feed.openFirstCard();
             cy.get('#templateGateway-isUserAllowedToRespond').contains('true');
@@ -190,7 +192,7 @@ describe('Card detail', function () {
         });
 
         it(`Check templateGateway when response is not possible `, function () {
-            cy.sendCard('cypress/cardDetail/cardDetailResponseNotPossible.json');
+            script.sendCard('cypress/cardDetail/cardDetailResponseNotPossible.json');
             opfab.loginWithUser('operator1_fr');
             feed.openFirstCard();
             cy.get('#templateGateway-isUserAllowedToRespond').contains('false');
@@ -198,7 +200,7 @@ describe('Card detail', function () {
         });
 
         it(`Check that a spinner is displayed when the card takes time to load `, function () {
-            cy.sendCard('cypress/cardDetail/cardDetailResponseNotPossible.json');
+            script.sendCard('cypress/cardDetail/cardDetailResponseNotPossible.json');
             cy.delayRequestResponse('/cards/cards/**');
             opfab.loginWithUser('operator1_fr');
             cy.get('of-light-card').eq(0).click();
@@ -207,7 +209,7 @@ describe('Card detail', function () {
         });
 
         it(`Check deleted card detail footer in archives`, function () {
-            cy.sendCard('cypress/userCard/message.json');
+            script.sendCard('cypress/userCard/message.json');
             opfab.loginWithUser('operator1_fr');
             feed.openFirstCard();
             feed.deleteCurrentCard();

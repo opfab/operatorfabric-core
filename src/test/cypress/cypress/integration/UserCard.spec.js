@@ -12,6 +12,7 @@ import {OpfabGeneralCommands} from "../support/opfabGeneralCommands"
 import {FeedCommands} from "../support/feedCommands"
 import {ActivityAreaCommands} from "../support/activityAreaCommands"
 import {CardCommands} from "../support/cardCommands";
+import {ScriptCommands} from "../support/scriptCommands";
 
 describe('User Card ', function () {
 
@@ -20,14 +21,15 @@ describe('User Card ', function () {
   const feed = new FeedCommands();
   const activityArea = new ActivityAreaCommands();
   const card = new CardCommands();
+  const script = new ScriptCommands();
 
   before('Set up configuration', function () {
 
-    cy.resetUIConfigurationFiles();
-    cy.loadTestConf();
-    cy.deleteAllCards();
-    cy.deleteAllArchivedCards();
-    cy.deleteAllSettings();
+    script.resetUIConfigurationFiles();
+    script.loadTestConf();
+    script.deleteAllCards();
+    script.deleteAllArchivedCards();
+    script.deleteAllSettings();
   });
 
   describe('Check edit and delete buttons visibility', function () {
@@ -79,8 +81,8 @@ describe('User Card ', function () {
 
     it('Label change in edition mode for Question user card', () => {
 
-      cy.deleteAllCards();
-      cy.deleteAllArchivedCards();
+      script.deleteAllCards();
+      script.deleteAllArchivedCards();
       opfab.loginWithUser('operator1_fr');
       opfab.navigateToUserCard();
       usercard.selectService('User card examples');
@@ -345,8 +347,8 @@ describe('User Card ', function () {
   describe('Show automated response in preview for some user cards', function () {
 
     before('Delete previous cards', function () {
-      cy.deleteAllCards();
-      cy.deleteAllArchivedCards();
+      script.deleteAllCards();
+      script.deleteAllArchivedCards();
     });
 
     it('Show automated response in preview for Confirmation user card if user enabled to respond', () => {
@@ -405,8 +407,8 @@ describe('User Card ', function () {
   describe('Send user card', function () {
 
     before('Delete previous cards', function () {
-      cy.deleteAllCards();
-      cy.deleteAllArchivedCards();
+      script.deleteAllCards();
+      script.deleteAllArchivedCards();
     });
 
     it('Send User card from operator1_fr', () => {
@@ -487,7 +489,7 @@ describe('User Card ', function () {
 
     it('Check spinner is displayed when delete request is delayed and that spinner disappears once the request arrived', () => {
 
-      cy.sendCard('cypress/userCard/message.json');
+      script.sendCard('cypress/userCard/message.json');
       opfab.loginWithUser('operator1_fr');
 
       feed.openFirstCard();
@@ -502,8 +504,8 @@ describe('User Card ', function () {
   describe('Entities allowed to edit card sent by user', function () {
 
     before('Set up configuration', function () {
-      cy.deleteAllCards();
-      cy.sendCard('cypress/userCard/process.json');
+      script.deleteAllCards();
+      script.sendCard('cypress/userCard/process.json');
     });
 
     it('Edit card from allowed entity', () => {
@@ -517,7 +519,7 @@ describe('User Card ', function () {
     })
 
     it('Cannot edit card from not allowed entity', () => {
-      cy.sendCard('cypress/userCard/process.json');
+      script.sendCard('cypress/userCard/process.json');
       opfab.loginWithUser('operator2_fr');
       feed.openFirstCard();
       cy.get('#opfab-card-edit').should('not.exist');
@@ -525,7 +527,7 @@ describe('User Card ', function () {
 
 
     it('Send User card with entitiesAllowedToEdit = "ENTITY_FR"', () => {
-      cy.deleteAllCards();
+      script.deleteAllCards();
       opfab.loginWithUser('operator1_fr');
       feed.checkNumberOfDisplayedCardsIs(0);
 
@@ -560,8 +562,8 @@ describe('User Card ', function () {
 
       before('Set up configuration', function () {
 
-        cy.deleteAllCards();
-        cy.sendCard('cypress/userCard/processSendByExternal.json');
+        script.deleteAllCards();
+        script.sendCard('cypress/userCard/processSendByExternal.json');
 
       });
 
@@ -589,7 +591,7 @@ describe('User Card ', function () {
 
     it('Send User card with keepChildCards=true', () => {
       
-      cy.deleteAllCards();
+      script.deleteAllCards();
       opfab.loginWithUser('operator1_fr');
       feed.checkNumberOfDisplayedCardsIs(0);
 
@@ -633,8 +635,8 @@ describe('User Card ', function () {
   describe('Send user card with operator4_fr, member of several entities', function () {
 
     before('Delete previous cards', function () {
-        cy.deleteAllCards();
-        cy.deleteAllArchivedCards();
+        script.deleteAllCards();
+        script.deleteAllArchivedCards();
     });
 
     it('Send User card from operator4_fr', () => {
@@ -904,7 +906,7 @@ describe('User Card ', function () {
   describe('Set timeSpans from template', function () {
 
     it('Set timeSpans from template', () => {
-      cy.deleteAllCards();
+      script.deleteAllCards();
       opfab.loginWithUser('operator1_fr');
       opfab.navigateToUserCard();
       usercard.selectService('User card examples');
@@ -930,7 +932,7 @@ describe('User Card ', function () {
   describe('Set initial severity from template', function () {
 
     it('Set initial severity from template', () => {
-      cy.deleteAllCards();
+      script.deleteAllCards();
       opfab.loginWithUser('operator1_fr');
       opfab.navigateToUserCard();
 
@@ -1011,7 +1013,7 @@ describe('User Card ', function () {
 
   describe('Check service, process and state select', function () {
     it('Check process select when no process group is defined', () => {
-      cy.loadEmptyProcessGroups();
+      script.loadEmptyProcessGroups();
       opfab.loginWithUser('operator1_fr');
       opfab.navigateToUserCard();
       usercard.checkServiceSelectDoesNotExist();
@@ -1020,7 +1022,7 @@ describe('User Card ', function () {
     })
 
     it('Check process select when no process is in no group', () => {
-      cy.loadProcessGroupsNotTotallyConfigured();
+      script.loadProcessGroupsNotTotallyConfigured();
       opfab.loginWithUser('operator1_fr');
       opfab.navigateToUserCard();
       usercard.checkSelectedServiceIs('--');

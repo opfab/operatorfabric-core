@@ -8,13 +8,15 @@
  */
 
 import {OpfabGeneralCommands} from "../support/opfabGeneralCommands"
+import {ScriptCommands} from "../support/scriptCommands";
 
 describe ('About pop up tests',function () {
 
   const opfab = new OpfabGeneralCommands();
+  const script = new ScriptCommands();
 
   before('Reset UI configuration file ', function () {
-    cy.resetUIConfigurationFiles(); 
+    script.resetUIConfigurationFiles(); 
   })
 
   describe('Checking that the About pop up ', function () {

@@ -10,14 +10,16 @@
 
 import {OpfabGeneralCommands} from "../support/opfabGeneralCommands"
 import {AgGridCommands} from "../support/agGridCommands";
+import {ScriptCommands} from "../support/scriptCommands";
 
 describe('ExternalDevicesconfigurationPage', () => {
 
     const opfab = new OpfabGeneralCommands();
     const agGrid = new AgGridCommands();
+    const script = new ScriptCommands();
 
     before('Set up configuration', function () {
-        cy.loadTestConf();
+        script.loadTestConf();
     });
 
     it('Enable and disable external devices', () => {

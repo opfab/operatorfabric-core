@@ -9,15 +9,17 @@
 
 import {OpfabGeneralCommands} from "../support/opfabGeneralCommands"
 import {ActivityAreaCommands} from "../support/activityAreaCommands"
+import {ScriptCommands} from "../support/scriptCommands";
 
 describe ('RealTimeUsersPage',()=>{
 
     const opfab = new OpfabGeneralCommands();
     const activityArea = new ActivityAreaCommands();
+    const script = new ScriptCommands();
 
     before('Set up configuration', function () {
-        cy.loadRealTimeScreensConf();
-        cy.deleteAllSettings();
+        script.loadRealTimeScreensConf();
+        script.deleteAllSettings();
     });
 
     it('Connection of admin and check of Real time users screen : no one should be connected', ()=> {

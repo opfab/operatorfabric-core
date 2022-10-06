@@ -8,18 +8,20 @@
  */
 
 import {OpfabGeneralCommands} from "../support/opfabGeneralCommands"
+import {ScriptCommands} from "../support/scriptCommands";
 
 describe('Calendar screen tests', function () {
     
     const opfab = new OpfabGeneralCommands();
+    const script = new ScriptCommands();
     
     const SECONDS = 1000;
     const HOURS = 3600000;
 
     before('Set up configuration', function () {
-        cy.deleteAllSettings();
-        cy.loadTestConf();
-        cy.deleteAllCards();
+        script.deleteAllSettings();
+        script.loadTestConf();
+        script.deleteAllCards();
     });
 
     it('Check calendar screen', function () {
@@ -27,7 +29,7 @@ describe('Calendar screen tests', function () {
         opfab.loginWithClock(currentDate);
 
         // Send card data quality
-        cy.sendCard(
+        script.sendCard(
             'cypress/calendar/chart_customDates.json',
             currentDate.getTime() + 2 * HOURS,
             currentDate.getTime() + 5 * HOURS

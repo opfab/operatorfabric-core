@@ -10,11 +10,13 @@
 
 import {OpfabGeneralCommands} from "../support/opfabGeneralCommands"
 import {AgGridCommands} from "../support/agGridCommands";
+import {ScriptCommands} from "../support/scriptCommands";
 
 describe ('Feed notification configuration tests',function () {
 
     const opfab = new OpfabGeneralCommands();
     const agGrid = new AgGridCommands();
+    const script = new ScriptCommands();
 
     const totalCards = 6;
     const cardsToTest =[
@@ -23,8 +25,8 @@ describe ('Feed notification configuration tests',function () {
     ];
 
     before('Set up configuration', function () {
-        cy.loadTestConf();
-        cy.deleteAllSettings();
+        script.loadTestConf();
+        script.deleteAllSettings();
     });
 
     it('Check feed notification configuration screen for operator1_fr', function () {
@@ -144,7 +146,7 @@ describe ('Feed notification configuration tests',function () {
     it('Check feed notification configuration screen for operator1_fr, with a config without process group', function () {
         opfab.loginWithUser('operator1_fr');
 
-        cy.loadEmptyProcessGroups();
+        script.loadEmptyProcessGroups();
         cy.reload();
 
         // We move to feed notification configuration screen
@@ -180,7 +182,7 @@ describe ('Feed notification configuration tests',function () {
         // We check state 'Planned outage date response' from 'Process example' is absent because property 'isOnlyAChildState' is set to true
         cy.get('.opfab-feedconfiguration-processlist').first().find('.opfab-feedconfiguration-process').eq(4).find('.row').contains('Planned outage date response', {matchCase: false}).should('not.exist');
 
-        cy.loadTestConf();
+        script.loadTestConf();
         cy.reload();
     })
 
@@ -315,8 +317,8 @@ describe ('Feed notification configuration tests',function () {
 
     it('Test remove some notifications after cards are sent', function () {
         // Clean up existing cards
-        cy.deleteAllCards();
-        cy.send6TestCards();
+        script.deleteAllCards();
+        script.send6TestCards();
         opfab.loginWithUser('operator1_fr');
 
         // All cards should be present
@@ -371,8 +373,8 @@ describe ('Feed notification configuration tests',function () {
     });
 
     it('When sending new cards, check only monitored cards are shown', function () {
-        cy.deleteAllCards();
-        cy.send6TestCards();
+        script.deleteAllCards();
+        script.send6TestCards();
         opfab.loginWithUser('operator1_fr');
 
         // Check feed
@@ -434,8 +436,8 @@ describe ('Feed notification configuration tests',function () {
 
 
     it ('Send new cards and verify all are visible', function () {
-        cy.deleteAllCards();
-        cy.send6TestCards();
+        script.deleteAllCards();
+        script.send6TestCards();
         opfab.loginWithUser('operator1_fr');
   
         // All cards should be present

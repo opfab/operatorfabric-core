@@ -9,19 +9,21 @@
 
 import {OpfabGeneralCommands} from "../support/opfabGeneralCommands"
 import {ArchivesAndLoggingCommands} from "../support/archivesAndLoggingCommands"
+import {ScriptCommands} from "../support/scriptCommands";
 
 describe('Archives screen tests', function () {
 
     const opfab = new OpfabGeneralCommands();
     const archivesAndLogging = new ArchivesAndLoggingCommands();
+    const script = new ScriptCommands();
 
     before('Set up configuration', function () {
-        cy.loadTestConf();
+        script.loadTestConf();
     });
 
     it('Check archived cards reception', function () {
-        cy.deleteAllArchivedCards();
-        cy.send6TestCards();
+        script.deleteAllArchivedCards();
+        script.send6TestCards();
         opfab.loginWithUser('operator1_fr');
         opfab.navigateToArchives();
         cy.waitDefaultTime();
@@ -33,13 +35,13 @@ describe('Archives screen tests', function () {
         checkPaginationResultsNumberIs(6);
 
         // We delete the test cards, and we check that we still have the corresponding archived cards
-        cy.deleteAllCards();
+        script.deleteAllCards();
         archivesAndLogging.clickOnSearchButton();
         checkNumberOfLineDisplayedIs(6);
         archivesAndLogging.checkNoCardDetailIsDisplayed();
         checkPaginationResultsNumberIs(6);
 
-        cy.send6TestCards();
+        script.send6TestCards();
         archivesAndLogging.clickOnSearchButton();
         checkNumberOfLineDisplayedIs(10);
 
@@ -48,9 +50,9 @@ describe('Archives screen tests', function () {
     });
 
     it('Check collapsible update', function () {
-        cy.deleteAllArchivedCards();
-        cy.send6TestCards();
-        cy.send6TestCards();
+        script.deleteAllArchivedCards();
+        script.send6TestCards();
+        script.send6TestCards();
         opfab.loginWithUser('operator1_fr');
         opfab.navigateToArchives();
 
@@ -81,8 +83,8 @@ describe('Archives screen tests', function () {
 
     it('Check spinner when request take more than one second', function () {
         delayArchiveRequest();
-        cy.deleteAllArchivedCards();
-        cy.send6TestCards();
+        script.deleteAllArchivedCards();
+        script.send6TestCards();
         opfab.loginWithUser('operator1_fr');
         opfab.navigateToArchives();
         cy.waitDefaultTime();
@@ -101,8 +103,8 @@ describe('Archives screen tests', function () {
     });
 
     it('Check composition of multi-filters for process groups/processes/states for itsupervisor1', function () {
-        cy.deleteAllArchivedCards();
-        cy.send6TestCards();
+        script.deleteAllArchivedCards();
+        script.send6TestCards();
         opfab.loginWithUser('itsupervisor1');
         opfab.navigateToArchives();
         archivesAndLogging.checkAdminModeLinkDoesNotExist();
@@ -165,7 +167,7 @@ describe('Archives screen tests', function () {
     });
 
     it('Check composition of multi-filters for process groups/processes/states for operator1_fr, with a config without process group', function () {
-        cy.loadEmptyProcessGroups();
+        script.loadEmptyProcessGroups();
         opfab.loginWithUser('operator1_fr');
         opfab.navigateToArchives();
         archivesAndLogging.checkProcessGroupSelectDoesNotExist();
@@ -189,7 +191,7 @@ describe('Archives screen tests', function () {
         // We check this state is not present because it is only a child state
         archivesAndLogging.checkStateSelectDoesNotContains('Planned outage date response');
 
-        cy.loadTestConf();
+        script.loadTestConf();
     });
 
     it('Check behaviour of "isOnlyAChildState" attribute (in file config.json of bundles)', function () {
@@ -230,9 +232,9 @@ describe('Archives screen tests', function () {
     });
 
     it('Check export', function () {
-        cy.deleteAllArchivedCards();
-        cy.send6TestCards();
-        cy.send6TestCards();
+        script.deleteAllArchivedCards();
+        script.send6TestCards();
+        script.send6TestCards();
         opfab.loginWithUser('operator1_fr');
         opfab.navigateToArchives();
         archivesAndLogging.clickOnSearchButton();

@@ -9,24 +9,26 @@
 
 import {OpfabGeneralCommands} from "../support/opfabGeneralCommands"
 import {ActivityAreaCommands} from "../support/activityAreaCommands"
+import {ScriptCommands} from "../support/scriptCommands";
 
 describe ('Response card tests',function () {
 
     const opfab = new OpfabGeneralCommands();
     const activityArea = new ActivityAreaCommands();
+    const script = new ScriptCommands();
 
     before('Set up configuration and clean cards', function () {
 
         // This can stay in a `before` block rather than `beforeEach` as long as the test does not change configuration
-        cy.resetUIConfigurationFiles();
+        script.resetUIConfigurationFiles();
 
-        cy.loadTestConf();
+        script.loadTestConf();
         // Clean up existing cards
-        cy.deleteAllCards();
-        cy.deleteAllArchivedCards();
-        cy.deleteAllSettings();
+        script.deleteAllCards();
+        script.deleteAllArchivedCards();
+        script.deleteAllSettings();
 
-        cy.sendCard('defaultProcess/question.json');
+        script.sendCard('defaultProcess/question.json');
     });
 
 
@@ -76,7 +78,7 @@ describe ('Response card tests',function () {
         cy.get('#opfab-card-header-entity-ENTITY2_FR').should('have.css', 'color', 'rgb(255, 102, 0)'); // entity 2 color is orange
 
         // update card 
-        cy.sendCard('defaultProcess/question.json');
+        script.sendCard('defaultProcess/question.json');
 
          // See in the feed the fact that user has not responded (no icon)
          cy.get('#opfab-feed-lightcard-hasChildCardFromCurrentUserEntity').should('not.exist');
@@ -317,7 +319,7 @@ describe ('Response card tests',function () {
 
 
     it ('Check response for operator1_fr is still present after update of card with keepChildCard=true re-logging',function () {
-        cy.sendCard('defaultProcess/questionWithKeepChildCards.json');
+        script.sendCard('defaultProcess/questionWithKeepChildCards.json');
 
         opfab.loginWithUser('operator1_fr');
         // See in the feed the fact that user has responded (icon)
@@ -347,7 +349,7 @@ describe ('Response card tests',function () {
 
 
     it ('Check response for  operator1_fr  is not present after update of card with keepChildCard= false re-logging',function () {
-        cy.sendCard('defaultProcess/question.json');
+        script.sendCard('defaultProcess/question.json');
 
         opfab.loginWithUser('operator1_fr');
 
