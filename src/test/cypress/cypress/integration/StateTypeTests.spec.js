@@ -12,10 +12,12 @@ it might make sense to merge it with other tests.
 * */
 
 import {OpfabGeneralCommands} from '../support/opfabGeneralCommands';
+import {ScriptCommands} from "../support/scriptCommands";
 
 describe('State type tests', function () {
 
     const opfab = new OpfabGeneralCommands();
+    const script = new ScriptCommands();
 
     const orange = 'rgb(255, 102, 0)';
     const green = 'rgb(0, 128, 0)';
@@ -37,32 +39,32 @@ describe('State type tests', function () {
     before('Set up configuration', function () {
 
         // This can stay in a `before` block rather than `beforeEach` as long as the test does not change configuration
-        cy.resetUIConfigurationFiles();
-        cy.loadTestConf();
-        cy.deleteAllCards();
-        cy.deleteAllArchivedCards();
+        script.resetUIConfigurationFiles();
+        script.loadTestConf();
+        script.deleteAllCards();
+        script.deleteAllArchivedCards();
 
         // Tests with state present and no lttd
-        cy.sendCard('cypress/state_types/state_type1.json');
-        cy.sendCard('cypress/state_types/state_type2.json');
-        cy.sendCard('cypress/state_types/state_type3.json');
+        script.sendCard('cypress/state_types/state_type1.json');
+        script.sendCard('cypress/state_types/state_type2.json');
+        script.sendCard('cypress/state_types/state_type3.json');
 
 
         // Tests with no state (null or absent) and no lttd
-        cy.sendCard('cypress/state_types/state_type4.json');
-        cy.sendCard('cypress/state_types/state_type5.json');
+        script.sendCard('cypress/state_types/state_type4.json');
+        script.sendCard('cypress/state_types/state_type5.json');
 
         // Test with state FINISHED and lttd present
-        cy.sendCard('cypress/state_types/state_type6.json');
+        script.sendCard('cypress/state_types/state_type6.json');
 
         // Test with no state but lttd present
-        cy.sendCard('cypress/state_types/state_type7.json');
+        script.sendCard('cypress/state_types/state_type7.json');
 
         // Test with state IN PROGRESS and lttd present
-         cy.sendCard('cypress/state_types/state_type8.json');
+         script.sendCard('cypress/state_types/state_type8.json');
 
         // Test with state FINISHD and lttd expired
-        cy.sendCard('cypress/state_types/state_type9.json');
+        script.sendCard('cypress/state_types/state_type9.json');
 
     });
 

@@ -9,12 +9,15 @@
 
 /** Test for the OpFab login page (used with password mode) */
 
+import {ScriptCommands} from "../support/scriptCommands";
+
 describe ('LoginPage',()=>{
+    const script = new ScriptCommands();
 
     before('Set up configuration', function () {
 
         // This can stay in a `before` block rather than `beforeEach` as long as the test does not change configuration
-        cy.resetUIConfigurationFiles();
+        script.resetUIConfigurationFiles();
 
     });
 
@@ -70,7 +73,7 @@ describe ('LoginPage',()=>{
 
     it('login is in french if settings.locale is set to fr in web-ui.json' , () => {
         //go to login page
-        cy.setPropertyInConf('settings.locale','web-ui','\\"fr\\"');
+        script.setPropertyInConf('settings.locale','web-ui','\\"fr\\"');
         cy.visit("/");
         cy.get('#opfab-login-btn-submit').contains("Se connecter");
     })

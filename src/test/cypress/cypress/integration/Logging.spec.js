@@ -9,14 +9,16 @@
 
 import {OpfabGeneralCommands} from "../support/opfabGeneralCommands"
 import {ArchivesAndLoggingCommands} from "../support/archivesAndLoggingCommands"
+import {ScriptCommands} from "../support/scriptCommands";
 
 describe('Logging screen tests', function () {
 
     const opfab = new OpfabGeneralCommands();
     const archivesAndLogging = new ArchivesAndLoggingCommands();
+    const script = new ScriptCommands();
 
     before('Set up configuration', function () {
-        cy.loadTestConf();
+        script.loadTestConf();
     });
 
     it('Check composition of multi-filters for process groups/processes/states for operator1_fr', function () {
@@ -67,8 +69,8 @@ describe('Logging screen tests', function () {
     });
 
     it('Check composition of multi-filters for process groups/processes/states for itsupervisor1', function () {
-        cy.deleteAllArchivedCards();
-        cy.send6TestCards();
+        script.deleteAllArchivedCards();
+        script.send6TestCards();
         opfab.loginWithUser('itsupervisor1');
 
         moveToLoggingScreen();
@@ -98,8 +100,8 @@ describe('Logging screen tests', function () {
     });
 
     it('Check composition of multi-filters for process groups/processes/states for admin', function () {
-        cy.deleteAllArchivedCards();
-        cy.send6TestCards();
+        script.deleteAllArchivedCards();
+        script.send6TestCards();
         opfab.loginWithUser('admin');
 
         moveToLoggingScreen();
@@ -134,7 +136,7 @@ describe('Logging screen tests', function () {
     it('Check composition of multi-filters for process groups/processes/states for operator1_fr, with a config without process group', function () {
         opfab.loginWithUser('operator1_fr');
 
-        cy.loadEmptyProcessGroups();
+        script.loadEmptyProcessGroups();
         cy.reload();
 
         moveToLoggingScreen();
@@ -166,7 +168,7 @@ describe('Logging screen tests', function () {
         archivesAndLogging.checkNumberOfStateEntriesIs(9);
         archivesAndLogging.checkStateSelectContains('Planned outage date response');
 
-        cy.loadTestConf();
+        script.loadTestConf();
         cy.reload();
     });
 
@@ -183,8 +185,8 @@ describe('Logging screen tests', function () {
     });
 
     it('Check export', function () {
-        cy.deleteAllArchivedCards();
-        cy.send6TestCards();
+        script.deleteAllArchivedCards();
+        script.send6TestCards();
         opfab.loginWithUser('operator1_fr');
 
         moveToLoggingScreen();

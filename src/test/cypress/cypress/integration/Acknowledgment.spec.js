@@ -10,6 +10,7 @@
 import {UserCardCommands} from "../support/userCardCommands"
 import {OpfabGeneralCommands} from "../support/opfabGeneralCommands"
 import {ActivityAreaCommands} from "../support/activityAreaCommands"
+import {ScriptCommands} from "../support/scriptCommands";
 
 
 describe('Acknowledgment tests', function () {
@@ -17,43 +18,44 @@ describe('Acknowledgment tests', function () {
     const usercard = new UserCardCommands();
     const opfab = new OpfabGeneralCommands();
     const activityArea = new ActivityAreaCommands();
+    const script = new ScriptCommands();
 
 
     before('Set up configuration', function () {
 
         // This can stay in a `before` block rather than `beforeEach` as long as the test does not change configuration
-        cy.resetUIConfigurationFiles();
-        cy.deleteAllSettings();
-        cy.loadTestConf();
+        script.resetUIConfigurationFiles();
+        script.deleteAllSettings();
+        script.loadTestConf();
 
         // Clean up existing cards
-        cy.deleteAllCards();
+        script.deleteAllCards();
 
         // Send a card with ack config set to Always and cancelAcknowledgmentAllowed set to false
         // ack is possible
         // cancel ack not possible
-        cy.sendCard('cypress/ack/message1.json');
+        script.sendCard('cypress/ack/message1.json');
 
         // Send a card with ack config set to OnlyWhenResponseDisabledForUser and user cannot respond
         // ack is possible
         // cancel ack is possible
-        cy.sendCard('cypress/ack/message2.json');
+        script.sendCard('cypress/ack/message2.json');
 
         // Send a card with ack config set to OnlyWhenResponseDisabledForUser and user can respond
         // ack is not possible
-        cy.sendCard('cypress/ack/message3.json');
+        script.sendCard('cypress/ack/message3.json');
 
         // Send a card with ack config set to Never
         // ack is not possible
-        cy.sendCard('cypress/ack/message4.json');
+        script.sendCard('cypress/ack/message4.json');
 
         // Send a card with ack config set to OnlyWhenResponseDisabledForUser and user can respond and lttd is expired
         // ack is possible when lttd is expired
-        cy.sendCard('cypress/ack/message5.json');
+        script.sendCard('cypress/ack/message5.json');
 
         // Send a card with ack config set to OnlyWhenResponseDisabledForUser and user can respond and lttd is not expired
         // ack is not possible before lttd is expired
-        cy.sendCard('cypress/ack/message6.json');
+        script.sendCard('cypress/ack/message6.json');
     });
 
     it('Check acknowledgment for operator 1', function () {
@@ -222,8 +224,8 @@ describe('Acknowledgment tests', function () {
     it('Check entities acknowledgments for a usercard created by operator1_fr', function () {
 
         // Clean up existing cards
-        cy.deleteAllCards();
-        cy.send6TestCards();
+        script.deleteAllCards();
+        script.send6TestCards();
         opfab.loginWithUser('operator1_fr');
 
         cy.get('of-light-card').should('have.length', 6);
@@ -451,7 +453,7 @@ describe('Acknowledgment tests', function () {
     });
 
     it('Check acknowledgements are received also in real-time', function () {
-        cy.sendCard('cypress/entitiesAcks/message1.json');
+        script.sendCard('cypress/entitiesAcks/message1.json');
 
         opfab.loginWithUser('operator4_fr');
 
@@ -470,7 +472,7 @@ describe('Acknowledgment tests', function () {
             const cardUid = $cardUidElement.text(); // We need the uid of the card to ack it
 
             // operator1_fr acknowledges the card, and then we check ENTITY1_FR is displayed green and ENTITY2_FR still orange
-            cy.sendAckForCard("operator1_fr", cardUid, '[\\"ENTITY1_FR\\"]');
+            script.sendAckForCard("operator1_fr", cardUid, '[\\"ENTITY1_FR\\"]');
 
             cy.get('#opfab-card-acknowledged-footer').find('span').should("have.length", 3); // 2 entities + 1 for 'Acknowledged :' label
             cy.get('#opfab-card-acknowledged-footer').find('span').eq(1).should("have.text", "\u00a0 Control Center FR North \u00a0")
@@ -481,7 +483,7 @@ describe('Acknowledgment tests', function () {
 
             // operator2_fr acknowledges the card (for ENTITY2_FR)
             // and then we check ENTITY1_FR is still displayed green and ENTITY2_FR is now green also
-            cy.sendAckForCard("operator2_fr", cardUid, '[\\"ENTITY2_FR\\"]');
+            script.sendAckForCard("operator2_fr", cardUid, '[\\"ENTITY2_FR\\"]');
 
             cy.get('#opfab-card-acknowledged-footer').find('span').should("have.length", 3); // 2 entities + 1 for 'Acknowledged :' label
             cy.get('#opfab-card-acknowledged-footer').find('span').eq(1).should("have.text", "\u00a0 Control Center FR North \u00a0")
@@ -494,10 +496,10 @@ describe('Acknowledgment tests', function () {
 
     it('Check spinner is displayed when ack/unack request is delayed and that spinner disappears once the request arrived ', function () {
 
-        cy.deleteAllCards();
+        script.deleteAllCards();
 
         opfab.loginWithUser('operator1_fr');
-        cy.sendCard('cypress/ack/message2.json');
+        script.sendCard('cypress/ack/message2.json');
 
         // Click on card message
         cy.get('#opfab-feed-light-card-cypress-message2').click();
@@ -531,9 +533,9 @@ describe('Acknowledgment tests', function () {
 
     it('Check pinned card', function () {
 
-        cy.deleteAllCards();
+        script.deleteAllCards();
         // Send card with automaticPinWhenAcknowledged = true
-        cy.sendCard('defaultProcess/contingencies.json');
+        script.sendCard('defaultProcess/contingencies.json');
 
         opfab.loginWithUser('operator1_fr');
 
@@ -570,7 +572,7 @@ describe('Acknowledgment tests', function () {
         cy.get('#of-pinned-cards').find('.opfab-pinned-card').should('have.length', 1);
 
         //Update the card by resending
-        cy.sendCard('defaultProcess/contingencies.json');
+        script.sendCard('defaultProcess/contingencies.json');
 
         //There are no pinned cards
         cy.get('#of-pinned-cards').find('.opfab-pinned-card').should('have.length', 0);
@@ -594,7 +596,7 @@ describe('Acknowledgment tests', function () {
 
 
          //Delete the card
-         cy.deleteCard('defaultProcess.process6');
+         script.deleteCard('defaultProcess.process6');
 
          //There are no pinned cards
         cy.get('#of-pinned-cards').find('.opfab-pinned-card').should('have.length', 0);
@@ -612,7 +614,7 @@ describe('Acknowledgment tests', function () {
         cy.clock(currentDate);
        
         // Send card with automaticPinWhenAcknowledged = true
-        cy.sendCard('cypress/feed/customEvent.json', currentDate.getTime() - (2 * HOURS ), currentDate.getTime() + 5 * MINUTES);
+        script.sendCard('cypress/feed/customEvent.json', currentDate.getTime() - (2 * HOURS ), currentDate.getTime() + 5 * MINUTES);
 
         cy.waitDefaultTime();
 
@@ -652,14 +654,14 @@ describe('Acknowledgment tests', function () {
 
     it('Check when many pinned cards', function () {
 
-        cy.deleteAllCards();
+        script.deleteAllCards();
         // Send 6 card with automaticPinWhenAcknowledged = true
-        cy.sendCard('cypress/ack/pinned.json');
-        cy.sendCard('cypress/ack/pinned.json');
-        cy.sendCard('cypress/ack/pinned.json');
-        cy.sendCard('cypress/ack/pinned.json');
-        cy.sendCard('cypress/ack/pinned.json');
-        cy.sendCard('cypress/ack/pinned.json');
+        script.sendCard('cypress/ack/pinned.json');
+        script.sendCard('cypress/ack/pinned.json');
+        script.sendCard('cypress/ack/pinned.json');
+        script.sendCard('cypress/ack/pinned.json');
+        script.sendCard('cypress/ack/pinned.json');
+        script.sendCard('cypress/ack/pinned.json');
 
 
         opfab.loginWithUser('operator1_fr');
@@ -675,7 +677,7 @@ describe('Acknowledgment tests', function () {
         //There are 6 pinned cards
         cy.get('#of-pinned-cards').find('.opfab-pinned-card').should('have.length', 6);
 
-        cy.sendCard('cypress/ack/pinned.json');
+        script.sendCard('cypress/ack/pinned.json');
 
         // Open and ack the new card
         cy.get('of-light-card').eq(0).click()

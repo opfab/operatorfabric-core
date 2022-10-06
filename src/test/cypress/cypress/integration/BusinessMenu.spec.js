@@ -9,16 +9,18 @@
 
 import {OpfabGeneralCommands} from '../support/opfabGeneralCommands'
 import {FeedCommands} from '../support/feedCommands'
+import {ScriptCommands} from "../support/scriptCommands";
 
 describe ('Business nenu',()=>{
 
     const opfab = new OpfabGeneralCommands();
     const feed = new FeedCommands();
+    const script = new ScriptCommands();
 
     before('Set up configuration', function () {
-        cy.loadTestConf();
-        cy.deleteAllCards();
-        cy.sendCard('defaultProcess/chart.json');
+        script.loadTestConf();
+        script.deleteAllCards();
+        script.sendCard('defaultProcess/chart.json');
     });
 
     it('Test business menu links in night mode ', ()=> {

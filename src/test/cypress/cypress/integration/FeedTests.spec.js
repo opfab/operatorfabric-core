@@ -10,12 +10,14 @@
 import {OpfabGeneralCommands} from '../support/opfabGeneralCommands'
 import {FeedCommands} from '../support/feedCommands'
 import {CardCommands} from '../support/cardCommands'
+import {ScriptCommands} from "../support/scriptCommands";
 
 describe('FeedScreen tests', function () {
 
     const opfab = new OpfabGeneralCommands();
     const feed = new FeedCommands();
     const card = new CardCommands();
+    const script = new ScriptCommands();
 
     function tryToLoadNonExistingCard() {
         cy.visit('#/feed/cards/thisCardDoesNotExist');
@@ -23,17 +25,17 @@ describe('FeedScreen tests', function () {
     }
 
     before('Set up configuration', function () {
-        cy.resetUIConfigurationFiles();
-        cy.loadTestConf();
+        script.resetUIConfigurationFiles();
+        script.loadTestConf();
     });
 
     beforeEach('Delete all cards', function () {
-        cy.deleteAllCards();
+        script.deleteAllCards();
     });
 
     it('Check card reception and read behaviour', function () {
         opfab.loginWithUser('operator1_fr');
-        cy.send6TestCards();
+        script.send6TestCards();
         // Set feed sort to "Date" so the cards don't move down the feed once they're read
         cy.get('#opfab-feed-filter-btn-sort').click();
         cy.get('#opfab-sort-form').find('input[value=date]').parent().click();
@@ -110,25 +112,25 @@ describe('FeedScreen tests', function () {
 
     it('Check card delete ', function () {
         opfab.loginWithUser('operator1_fr');
-        cy.send6TestCards();
+        script.send6TestCards();
         feed.checkNumberOfDisplayedCardsIs(6);
         cy.get('of-card-details').should('not.exist');
-        cy.delete6TestCards();
+        script.delete6TestCards();
         feed.checkNumberOfDisplayedCardsIs(0);
         cy.get('of-card-details').should('not.exist');
     });
 
     it('Check card visibility by publish date when business period is after selected time range', function () {
-        cy.sendCard('cypress/feed/futureEvent.json');
+        script.sendCard('cypress/feed/futureEvent.json');
         opfab.loginWithUser('operator1_fr');
         feed.checkNumberOfDisplayedCardsIs(1);
     });
 
     it('Check sorting', function () {
-        cy.sendCard('defaultProcess/chartLine.json');
-        cy.sendCard('defaultProcess/question.json');
-        cy.sendCard('defaultProcess/process.json');
-        cy.sendCard('defaultProcess/message.json');
+        script.sendCard('defaultProcess/chartLine.json');
+        script.sendCard('defaultProcess/question.json');
+        script.sendCard('defaultProcess/process.json');
+        script.sendCard('defaultProcess/message.json');
 
         opfab.loginWithUser('operator1_fr');
         feed.checkNumberOfDisplayedCardsIs(4);

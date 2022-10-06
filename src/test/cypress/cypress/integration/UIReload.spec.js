@@ -7,15 +7,17 @@
  * This file is part of the OperatorFabric project.
  */
 import {OpfabGeneralCommands} from '../support/opfabGeneralCommands'
+import {ScriptCommands} from "../support/scriptCommands";
 
 describe ('UI Reload requested',()=>{
 
     const opfab = new OpfabGeneralCommands();
+    const script = new ScriptCommands();
     
     it('Receive RELOAD message', ()=>{
 
         opfab.loginWithUser('operator1_fr');
-        cy.sendMessageToSubscriptions('RELOAD');
+        script.sendMessageToSubscriptions('RELOAD');
         clickOnLinkToReloadUI();
         waitForPageReload();
         checkThereIsNoReloadMessage();
