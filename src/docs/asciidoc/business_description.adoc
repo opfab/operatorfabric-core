@@ -50,4 +50,10 @@ image::ResponseCardScreenshot.png[Feed screen layout,align="center"]
 
 It is also possible for users to directly send card to other users using predefined card templates.
 
-OperatorFabric user interface is running on a browser (recent version of chrome, firefox and edge are supported). The minimum screen resolution is 1680x1050.
+OperatorFabric user interface is running on a browser (recent version of chrome, firefox and edge are supported). 
+
+The supported screen resolutions are : 
+
+* Resolutions greater than or equals to 1680x1050.
+* Resolutions with a width between 450-900px and a minimum height of 700px. 
+
