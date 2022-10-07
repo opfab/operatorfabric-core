@@ -74,10 +74,11 @@ classes
 .project
 .settings
 .classpath
-#*/**/bin
-services/*/*/bin
+
+# Opfab binary directories
+services/*/bin
 tools/spring/spring-oauth2-utilities/bin
-services/bin
+src/test/externalApp/bin
 */**/*.class
 
 ### Gradle ###
