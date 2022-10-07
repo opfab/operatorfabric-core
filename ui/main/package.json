@@ -77,7 +77,7 @@
     "@types/moment": "2.13.0",
     "@typescript-eslint/eslint-plugin": "5.39.0",
     "@typescript-eslint/parser": "5.39.0",
-    "eslint": "8.24.0",
+    "eslint": "8.25.0",
     "jasmine-core": "4.4.0",
     "jasmine-marbles": "0.9.2",
     "karma": "6.4.1",
