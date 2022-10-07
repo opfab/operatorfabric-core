@@ -84,4 +84,48 @@ export class FeedCommands extends OpfabCommands {
         cy.get('#opfab-feed-filter-end-date').check();
         cy.get('#opfab-feed-filter-btn-sort').click();
     }
+
+    toggleFilterByPriority = function (priorities) {
+        cy.get('#opfab-feed-filter-btn-filter').click();
+        cy.get('#opfab-type-filter-form').should('exist');
+        priorities.forEach(priority => {
+            cy.get('#opfab-feed-filter-severity-' + priority).click({force: true});
+        });
+
+        cy.get('#opfab-feed-filter-btn-filter').click();
+    }
+
+    toggleFilterByResponse = function () {
+        cy.get('#opfab-feed-filter-btn-filter').click();
+        cy.get('#opfab-response-filter-form').should('exist');
+        cy.get('#opfab-feed-filter-response').click({force: true});
+        cy.get('#opfab-feed-filter-btn-filter').click();
+    }
+
+    filterByAcknowledgement = function (acknowledgementOption) {
+        cy.get('#opfab-feed-filter-btn-filter').click();
+        cy.get('#opfab-ack-filter-form').should('exist');
+        cy.get('#opfab-feed-filter-ack-' + acknowledgementOption).check();
+        cy.get('#opfab-feed-filter-btn-filter').click();
+    }
+
+    toggleApplyFilterToTimeline = function () {
+        cy.get('#opfab-feed-filter-btn-filter').click();
+        cy.get('#opfab-timeline-filter-form').should('exist');
+        cy.get('#opfab-feed-filter-timeline').click({force: true});
+        cy.get('#opfab-feed-filter-btn-filter').click();
+    }
+
+    checkFilterIsActive= function() {
+        cy.get('#opfab-feed-filter-btn-filter').should('have.class', 'opfab-icon-filter-active');
+    }
+
+    checkFilterIsNotActive= function() {
+        cy.get('#opfab-feed-filter-btn-filter').should('have.class', 'opfab-icon-filter');
+    }
+
+    resetAllFilters() {
+        cy.get('#opfab-feed-filter-btn-filter').click();
+        cy.get('#opfab-feed-filter-reset').click();
+    }
 }
