@@ -147,6 +147,7 @@ export abstract class ExternalDevicesConfigurationDirective {
     }
 
     updateResultPage(currentPage): void {
+        this.refreshData();
         this.gridApi.paginationGoToPage(currentPage - 1);
         this.page = currentPage;
     }
