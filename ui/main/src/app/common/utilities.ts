@@ -49,6 +49,7 @@ export class Utilities {
                     }
                 },
                 error: (error) => {
+                    console.log("Error in observable = ", error);
                     if (flags[i] === false) {
                         flags[i] = true;
                         result[i] = error;
