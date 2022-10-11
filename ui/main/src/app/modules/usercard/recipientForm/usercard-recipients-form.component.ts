@@ -29,7 +29,6 @@ export class UserCardRecipientsFormComponent implements OnInit, OnChanges {
     }>;
     private useDescriptionFieldForEntityList = false;
     public recipientsOptions: Array<MultiSelectOption> = [];
-    public selectedRecipients: Array<string> = [];
     public multiSelectConfig: MultiSelectConfig = {
         labelKey: 'userCard.filters.recipients',
         sortOptions: true
@@ -118,6 +117,6 @@ export class UserCardRecipientsFormComponent implements OnInit, OnChanges {
     }
 
     public recipientChoiceChanged(selected: any) {
-        this.selectedRecipients = selected;
+        usercardTemplateGateway.selectedEntityRecipients = selected;
     }
 }

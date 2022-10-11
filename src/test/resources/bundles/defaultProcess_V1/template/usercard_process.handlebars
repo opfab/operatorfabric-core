@@ -72,9 +72,20 @@
             usercardTemplateGateway.getSpecificCardInformation = function () {
                 const state = document.getElementById('state-select').value;
                 const status = document.getElementById('status-select').value;
+                const selectedRecipients = usercardTemplateGateway.getSelectedEntityRecipients();
+                if ((selectedRecipients.includes('ENTITY1_FR') || selectedRecipients.includes('ENTITY3_FR')) &&  !selectedRecipients.includes('ENTITY1_EU')) 
+                  selectedRecipients.push('ENTITY1_EU');
+                if ((selectedRecipients.includes('ENTITY2_FR') || selectedRecipients.includes('ENTITY4_FR')) &&  !selectedRecipients.includes('ENTITY2_EU')) 
+                  selectedRecipients.push('ENTITY2_EU');
+                if (selectedRecipients.includes('ENTITY_FR') && !selectedRecipients.includes('ENTITY1_EU'))
+                      selectedRecipients.push('ENTITY1_EU');
+                if (selectedRecipients.includes('ENTITY_FR') && !selectedRecipients.includes('ENTITY2_EU'))
+                      selectedRecipients.push('ENTITY2_EU');
+
                 const card = {
                     summary: {key: "message.summary"},
                     title: {key: "processState.title", parameters: {status: state}},
+                    entityRecipients: selectedRecipients,
                     data: {
                         state: state,
                         status: status

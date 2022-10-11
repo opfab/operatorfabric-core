@@ -7,7 +7,7 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {AfterViewInit, Component, Input, OnChanges, OnDestroy} from '@angular/core';
+import {AfterViewInit, Component, EventEmitter, Input, OnChanges, OnDestroy, Output} from '@angular/core';
 import {UntypedFormGroup} from '@angular/forms';
 import {TranslateService} from '@ngx-translate/core';
 import {MultiSelectConfig, MultiSelectOption} from '@ofModel/multiselect.model';
@@ -25,6 +25,8 @@ export class MultiSelectComponent implements AfterViewInit, OnDestroy, OnChanges
     @Input() public config: MultiSelectConfig;
     @Input() public options: Array<MultiSelectOption>;
     @Input() public selectedOptions: any;
+
+    @Output() selectionChange: EventEmitter<string[]> = new EventEmitter<string[]>();
 
     private oldOptions: Array<MultiSelectOption>;
     private oldSelectedOptions: any;
@@ -92,6 +94,7 @@ export class MultiSelectComponent implements AfterViewInit, OnDestroy, OnChanges
         if (this.oldSelectedOptions !== this.virtualSelectComponent.value) {
             this.parentForm.get(this.multiSelectId).setValue(this.virtualSelectComponent.value);
             this.oldSelectedOptions = this.virtualSelectComponent.value;
+            this.selectionChange.emit(this.virtualSelectComponent.value);
         }
     }
 

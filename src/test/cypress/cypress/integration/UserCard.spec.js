@@ -955,6 +955,31 @@ describe('User Card ', function () {
     })
   })
   
+  describe('Get selected recipient entities from template', function () {
+
+    it('Get selected entities and add recipient from template', () => {
+      script.deleteAllCards();
+      opfab.loginWithUser('operator1_fr');
+      opfab.navigateToUserCard();
+
+      usercard.selectProcess('Process example');
+      usercard.selectState('Process example');
+
+      usercard.selectRecipient('Control Center FR North');
+      usercard.preview();
+      usercard.checkEntityRecipientsInPreviewContains("Control Center FR North");
+      usercard.checkEntityRecipientsInPreviewContains("North Europe Control Center");
+
+      usercard.cancelCardSending();
+
+      usercard.selectRecipient('Control Center FR South');
+      usercard.preview();
+      usercard.checkEntityRecipientsInPreviewContains("Control Center FR South");
+      usercard.checkEntityRecipientsInPreviewContains("South Europe Control Center");
+      usercard.cancelCardSending();
+    })
+  })
+
   describe('Check search feature in dropdown select', function () {
     
     it('Search feature should be enabled on services dropdown for "IT incident" user card', () => {
