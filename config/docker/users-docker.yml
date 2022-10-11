@@ -49,6 +49,12 @@ operatorfabric.users.default:
     - login: operator2_nl
       groups: ["Dispatcher", "Planner", "ReadOnly"]
       entities: ["ENTITY2_NL"]
+    - login: operator1_eu
+      groups: ["Planner", "ReadOnly"]
+      entities: ["ENTITY1_EU"]
+    - login: operator2_eu
+      groups: ["Planner", "ReadOnly"]
+      entities: ["ENTITY2_EU"]
     - login: publisher_test
       groups: ["Dispatcher", "ReadOnly", "Supervisor"]
   groups:
@@ -132,4 +138,11 @@ operatorfabric.users.default:
      name: Dutch Control Centers
      description: Dutch Control Centers
      entityAllowedToSendCard: false
-
+   - id: ENTITY1_EU
+     name: North Europe Control Center
+     description: North Europe Control Center
+     entityAllowedToSendCard: true
+   - id: ENTITY2_EU
+     name: South Europe Control Center
+     description: South Europe Control Center
+     entityAllowedToSendCard: true

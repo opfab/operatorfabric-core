@@ -276,6 +276,13 @@ An example of _usercardTemplateGateway.setEntityUsedForSendingCard()_ usage can 
 https://github.com/opfab/operatorfabric-core/tree/master/src/test/resources/bundles/defaultProcess_V1/template/usercard_message.handlebars[src/test/resources/bundles/defaultProcess_V1/template/usercard_message.handlebars].
 
 
+== Get selected recipient entities list
+The template can know the list of entities selected by the users as recipients of the card by calling the _usercardTemplateGateway.getSelectedEntityRecipients()_ function.
+
+An example of _usercardTemplateGateway.getSelectedEntityRecipients()_ usage can be found in the file
+https://github.com/opfab/operatorfabric-core/tree/master/src/test/resources/bundles/defaultProcess_V1/template/usercard_process.handlebars[src/test/resources/bundles/defaultProcess_V1/template/usercard_process.handlebars].
+
+
 == Send response automatically (experimental feature)
 
 It is possible to configure a template to automatically send a response when sending a user card expecting an answers from one of the entities of the emitting user. 
