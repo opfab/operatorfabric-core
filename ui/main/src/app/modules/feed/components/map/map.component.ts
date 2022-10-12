@@ -12,7 +12,7 @@ import {AfterViewChecked, Component, OnDestroy, OnInit} from '@angular/core';
 import {Map as OpenLayersMap} from 'ol';
 import View from 'ol/View';
 import {Tile as TileLayer, Vector as VectorLayer} from 'ol/layer';
-import {OSM, Vector as VectorSource} from 'ol/source';
+import {OSM, XYZ, Vector as VectorSource} from 'ol/source';
 import {fromLonLat} from 'ol/proj';
 import {LightCard, Severity} from '@ofModel/light-card.model';
 import {LightCardsFeedFilterService} from '@ofServices/lightcards/lightcards-feed-filter.service';
@@ -175,15 +175,27 @@ export class MapComponent implements OnInit, OnDestroy, AfterViewChecked {
                 center: fromLonLat([longitude, latitude]),
                 zoom: zoom
             }),
-            layers: [
-                new TileLayer({
-                    source: new OSM()
-                })
-            ],
             target: 'ol-map',
             overlays: [overlay],
             controls: defaultControls({attribution: false}).extend([attribution])
         });
+
+        const bgUrl = this.configService.getConfigValue('feed.geomap.bglayer.xyz.url', null);
+        const bgTileSize = this.configService.getConfigValue('feed.geomap.bglayer.xyz.tileSize', null);
+        if (bgUrl && bgTileSize) {
+            const bgCrossOrigin = this.configService.getConfigValue('feed.geomap.bglayer.xyz.crossOrigin', null);
+            this.map.addLayer(new TileLayer({
+                source: new XYZ({
+                    url: bgUrl,
+                    tileSize: bgTileSize,
+                    crossOrigin: bgCrossOrigin
+                })
+            }))
+        } else {
+            this.map.addLayer(new TileLayer({
+                source: new OSM()
+            }));
+        }
 
         if (enableGraph) {
             this.map.addControl(new GraphControl(null));
