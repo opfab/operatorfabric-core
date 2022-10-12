@@ -105,7 +105,8 @@ export class Recurrence {
         public hoursAndMinutes: HourAndMinutes,
         public daysOfWeek?: number[],
         public timeZone?: string,
-        public durationInMinutes?: number
+        public durationInMinutes?: number,
+        public months?: number[]
     ) {}
 }
 

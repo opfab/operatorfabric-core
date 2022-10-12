@@ -136,6 +136,7 @@ export class CalendarComponent implements OnInit, OnDestroy, AfterViewInit {
                                         'opfab-calendar-event-' + card.severity.toLowerCase()
                                     ],
                                     daysOfWeek: this.getDaysOfWeek(timespan),
+                                    months: this.getMonths(timespan),
                                     startTime: timespan.recurrence.hoursAndMinutes
                                         ? CalendarComponent.formatTwoDigits(timespan.recurrence.hoursAndMinutes.hours) +
                                           ':' +
@@ -180,6 +181,19 @@ export class CalendarComponent implements OnInit, OnDestroy, AfterViewInit {
          else daysOfWeek = [0,1,2,3,4,5,6];
         }
         return daysOfWeek;
+    }
+
+    private getMonths(timeSpan: TimeSpan):Array<number>
+    {
+        let months = [];
+        if (timeSpan.recurrence) {
+            if (timeSpan.recurrence.months){
+                months = timeSpan.recurrence.months.map((d) => d % 12);
+            } else {
+                months = [0,1,2,3,4,5,6,7,8,9,10,11];
+            }
+        }
+        return months;
     }
 
     selectCard(info) {

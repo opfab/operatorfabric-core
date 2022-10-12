@@ -83,3 +83,7 @@ function isFirstHoursMinutesSuperiorToSecondOne(hm1: HourAndMinutes, hm2: HourAn
 function isDaysOfWeekFieldSet(recurrence: Recurrence): boolean {
     return !!recurrence.daysOfWeek && recurrence.daysOfWeek.length > 0;
 }
+
+function isMonthsFieldSet(recurrence: Recurrence): boolean {
+    return !!recurrence.months && recurrence.months.length > 0;
+}

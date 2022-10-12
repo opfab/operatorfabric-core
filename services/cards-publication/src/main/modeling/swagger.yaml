@@ -126,6 +126,11 @@ definitions:
         type: array
         items:
           type: integer
+      months:
+        description: Months of the year for the recurrence
+        type: array
+        items:
+          type: integer
       timeZone:
         description: Time zone reference for the recurrence definition
         type: string
