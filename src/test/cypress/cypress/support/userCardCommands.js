@@ -48,11 +48,10 @@ export class UserCardCommands extends OpfabCommands {
 
     selectProcess= function (processName) {
         cy.get('#of-usercard-process-filter').click();
-        cy.get('#of-usercard-process-filter')
-            .find('.vscomp-option-text')
-            .contains(processName)
-            .eq(0)
-            .click({force: true});
+        cy.get('#of-usercard-process-filter').find('.vscomp-search-input').clear();
+        cy.get('#of-usercard-process-filter').find('.vscomp-search-input').type(processName);
+        cy.get('#of-usercard-process-filter').find('.vscomp-option-text').eq(0).should('contain.text', processName);
+        cy.get('#of-usercard-process-filter').find('.vscomp-option-text').eq(0).click();
     }
 
     checkSelectedProcessIs= function (processName) {
