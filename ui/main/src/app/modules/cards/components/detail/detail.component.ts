@@ -131,6 +131,7 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, DoCheck {
     public btnValidateLabel = 'response.btnValidate';
     public btnUnlockLabel = 'response.btnUnlock';
     public listEntitiesToAck = [];
+    public listEntitiesAcknowledged = [];
     public lastResponse: Card;
     public isCardProcessing = false;
     public templateOffset = 15;
@@ -228,6 +229,7 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, DoCheck {
             if (this.isCardPublishedByUserEntity() && !!this.card.entityRecipients) {
                 this.computeListEntitiesToAck();
             }
+            this.computeListEntitiesAcknowledged();
         }
 
         this.markAsReadIfNecessary();
@@ -264,6 +266,16 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, DoCheck {
                 }
             });
         }
+        if (!!this.listEntitiesAcknowledged && this.listEntitiesAcknowledged.length > 0) {
+            entitiesAcksToAdd.forEach((entityAckToAdd) => {
+                const indexToUpdate = this.listEntitiesAcknowledged.findIndex(
+                    (entityToAck) => entityToAck.id === entityAckToAdd
+                );
+                if (indexToUpdate !== -1) {
+                    this.listEntitiesAcknowledged[indexToUpdate].acknowledged = true;
+                }
+            });
+        }
     }
 
     private computeListEntitiesToAck() {
@@ -288,6 +300,32 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, DoCheck {
             })
         );
         this.listEntitiesToAck.sort((entity1, entity2) => Utilities.compareObj(entity1.name, entity2.name));
+    }
+
+    private computeListEntitiesAcknowledged() {
+        const addressedTo = [];
+        if (!!this.card.entityRecipients && this.card.entityRecipients.length > 0) {
+            // We compute the entities allowed to send cards to which the user is connected
+            const userEntitiesAllowedToSendCards = this.user.entities.filter((entityId) =>
+                this.entitiesService.isEntityAllowedToSendCard(entityId)
+            );
+
+            // We compute the entities recipients of the card, taking into account parent entities
+            const entityRecipients = this.entitiesService.getEntitiesFromIds(this.card.entityRecipients);
+            const entityRecipientsAllowedToSendCards = this.entitiesService
+                .resolveEntitiesAllowedToSendCards(entityRecipients)
+                .map((entity) => entity.id);
+
+            const userEntitiesAllowedToSendCardsWhichAreRecipient = userEntitiesAllowedToSendCards.filter((entityId) =>
+                entityRecipientsAllowedToSendCards.includes(entityId)
+            );
+            userEntitiesAllowedToSendCardsWhichAreRecipient.forEach((entityId) => {
+                addressedTo.push({id: entityId, entityName: this.entitiesService.getEntityName(entityId), acknowledged: !!this.card.entitiesAcks? this.card.entitiesAcks.includes(entityId) : false});
+            });
+
+            addressedTo.sort((a, b) => Utilities.compareObj(a.entityName, b.entityName));
+        }
+        this.listEntitiesAcknowledged = addressedTo;
     }
 
     private isCardPublishedByUserEntity(): boolean {
@@ -862,71 +900,6 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, DoCheck {
                 ? this.displayMessage(responseData.errorMsg, null, MessageLevel.ERROR)
                 : this.displayMessage(ResponseI18nKeys.FORM_ERROR_MSG, null, MessageLevel.ERROR);
         }
-    }
-
-    public makeTextOfFooter(): string {
-        let receivedAt =
-            this.translate.instant('feed.received') +
-            ' ' +
-            this.formattedPublishDate +
-            ' ' +
-            this.translate.instant('feed.at') +
-            ' ' +
-            this.formattedPublishTime;
-
-        if (!!this.fromEntityOrRepresentative && this.fromEntityOrRepresentative.length > 0) {
-            receivedAt += ' ' + this.translate.instant('feed.from') + ' ' + this.fromEntityOrRepresentative;
-        }
-
-        let addressedTo = '';
-        if (!!this.card.entityRecipients && this.card.entityRecipients.length > 0) {
-            // We compute the entities allowed to send cards to which the user is connected
-            const userEntitiesAllowedToSendCards = this.user.entities.filter((entityId) =>
-                this.entitiesService.isEntityAllowedToSendCard(entityId)
-            );
-
-            // We compute the entities recipients of the card, taking into account parent entities
-            const entityRecipients = this.entitiesService.getEntitiesFromIds(this.card.entityRecipients);
-            const entityRecipientsAllowedToSendCards = this.entitiesService
-                .resolveEntitiesAllowedToSendCards(entityRecipients)
-                .map((entity) => entity.id);
-
-            const userEntitiesAllowedToSendCardsWhichAreRecipient = userEntitiesAllowedToSendCards.filter((entityId) =>
-                entityRecipientsAllowedToSendCards.includes(entityId)
-            );
-
-            if (userEntitiesAllowedToSendCards.length > 1) {
-                userEntitiesAllowedToSendCardsWhichAreRecipient.forEach((entityId) => {
-                    addressedTo += this.entitiesService.getEntityName(entityId) + ', ';
-                });
-                if (addressedTo.slice(-2) === ', ') {
-                    addressedTo =
-                        '\n' +
-                        this.translate.instant('feed.addressedTo') +
-                        ' ' +
-                        addressedTo.substring(0, addressedTo.length - 2);
-                }
-            }
-        }
-
-        let lastResponse = '';
-        if (!!this.lastResponse) {
-            lastResponse +=
-                '\n' +
-                this.translate.instant('feed.lastResponse') +
-                ' ' +
-                this.formatDate(this.lastResponse.publishDate) +
-                ' ' +
-                this.translate.instant('feed.at') +
-                ' ' +
-                this.formatTime(this.lastResponse.publishDate) +
-                ' ' +
-                this.translate.instant('feed.from') +
-                ' ' +
-                this.getResponsePublisher(this.lastResponse);
-        }
-
-        return receivedAt + addressedTo + lastResponse;
     }
 
     // END - METHODS CALLED ONLY FROM HTML COMPONENT

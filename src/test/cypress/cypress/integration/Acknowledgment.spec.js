@@ -10,6 +10,7 @@
 import {UserCardCommands} from "../support/userCardCommands"
 import {OpfabGeneralCommands} from "../support/opfabGeneralCommands"
 import {ActivityAreaCommands} from "../support/activityAreaCommands"
+import {FeedCommands} from "../support/feedCommands"
 import {ScriptCommands} from "../support/scriptCommands";
 import {CardCommands} from "../support/cardCommands"
 
@@ -18,6 +19,7 @@ describe('Acknowledgment tests', function () {
     const usercard = new UserCardCommands();
     const opfab = new OpfabGeneralCommands();
     const activityArea = new ActivityAreaCommands();
+    const feed = new FeedCommands();
     const script = new ScriptCommands();
     const card = new CardCommands();
 
@@ -122,10 +124,9 @@ describe('Acknowledgment tests', function () {
 
 
         // Set feed filter to see all cards and check message card is present
-        cy.get('#opfab-feed-filter-btn-filter').click();
-        cy.get('#opfab-feed-filter-ack-all').click();
-        cy.waitDefaultTime(); // let time before closing popup to avoid flaky error on CI/CD
-        cy.get('#opfab-feed-filter-btn-filter').click();
+        feed.filterByAcknowledgement('all');
+
+        cy.waitDefaultTime(); 
 
         // Operator1 should see 6 cards in his feed
         cy.get('of-light-card').should('have.length', 6);
@@ -171,9 +172,7 @@ describe('Acknowledgment tests', function () {
         opfab.loginWithUser('operator1_fr');
 
         // Set feed filter to see all card
-        cy.get('#opfab-feed-filter-btn-filter').click();
-        cy.get('#opfab-feed-filter-ack-all').click();
-        cy.get('#opfab-feed-filter-btn-filter').click();
+        feed.filterByAcknowledgement('all');
 
         // Check that all cards except one are acknowledged
         cy.get('#opfab-feed-light-card-cypress-message1 .fa-check')
@@ -187,9 +186,7 @@ describe('Acknowledgment tests', function () {
         opfab.loginWithUser('operator2_fr');
 
         // Set feed filter to see all card
-        cy.get('#opfab-feed-filter-btn-filter').click();
-        cy.get('#opfab-feed-filter-ack-all').click();
-        cy.get('#opfab-feed-filter-btn-filter').click();
+        feed.filterByAcknowledgement('all');
 
         // Check that all cards are not acknowledged
         cy.get('.fa-check').should('not.exist');
@@ -202,9 +199,7 @@ describe('Acknowledgment tests', function () {
         opfab.loginWithUser('operator1_fr');
 
         // Set feed filter to see all card
-        cy.get('#opfab-feed-filter-btn-filter').click();
-        cy.get('#opfab-feed-filter-ack-all').click();
-        cy.get('#opfab-feed-filter-btn-filter').click();
+        feed.filterByAcknowledgement('all');
 
         cy.get('of-light-card').should('have.length', 6);
 
@@ -342,11 +337,20 @@ describe('Acknowledgment tests', function () {
     
         cy.get('#opfab-card-acknowledged-footer').find('span').eq(12).should("have.text", "\u00a0 South Europe Control Center \u00a0")
             .and('have.css', 'color', 'rgb(255, 102, 0)');
+            
+        // Footer should contain 'Addredd to' with 4 FR control centers each without ack icon
+        cy.get('#opfab-card-details-address-to').find('span').eq(0).contains('Addressed to :');
+        cy.get('#opfab-card-details-address-to').find('span').eq(1).contains('Control Center FR East');
+        cy.get('#opfab-card-details-address-to').find('span').eq(1).find('.fa-check').should('not.exist')
+        cy.get('#opfab-card-details-address-to').find('span').eq(3).contains('Control Center FR North');
+        cy.get('#opfab-card-details-address-to').find('span').eq(3).find('.fa-check').should('not.exist')
+        cy.get('#opfab-card-details-address-to').find('span').eq(5).contains('Control Center FR South');
+        cy.get('#opfab-card-details-address-to').find('span').eq(5).find('.fa-check').should('not.exist')
+        cy.get('#opfab-card-details-address-to').find('span').eq(7).contains('Control Center FR West');
+        cy.get('#opfab-card-details-address-to').find('span').eq(7).find('.fa-check').should('not.exist');
 
         // Set feed filter to see all card
-        cy.get('#opfab-feed-filter-btn-filter').click();
-        cy.get('#opfab-feed-filter-ack-all').click();
-        cy.get('#opfab-feed-filter-btn-filter').click();
+        feed.filterByAcknowledgement('all');
 
         card.acknowledge();
         // We click again the card to display it
@@ -392,6 +396,18 @@ describe('Acknowledgment tests', function () {
         cy.get('#opfab-card-acknowledged-footer').find('span').eq(12).should("have.text", "\u00a0 South Europe Control Center \u00a0")
             .and('have.css', 'color', 'rgb(255, 102, 0)');
 
+        // Footer should contain 'Addredd to' with 4 FR control centers each with ack icon
+        cy.get('#opfab-card-details-address-to').find('span').eq(0).contains('Addressed to :');
+        cy.get('#opfab-card-details-address-to').find('span').eq(1).contains('Control Center FR East');
+        cy.get('#opfab-card-details-address-to').find('span').eq(1).find('.fa-check').should('exist')
+        cy.get('#opfab-card-details-address-to').find('span').eq(3).contains('Control Center FR North');
+        cy.get('#opfab-card-details-address-to').find('span').eq(3).find('.fa-check').should('exist')
+        cy.get('#opfab-card-details-address-to').find('span').eq(5).contains('Control Center FR South');
+        cy.get('#opfab-card-details-address-to').find('span').eq(5).find('.fa-check').should('exist')
+        cy.get('#opfab-card-details-address-to').find('span').eq(7).contains('Control Center FR West');
+        cy.get('#opfab-card-details-address-to').find('span').eq(7).find('.fa-check').should('exist');
+
+
         // operator4_fr goes to activity area screen and disconnect from ENTITY1_FR
         opfab.navigateToActivityArea();
 
@@ -410,6 +426,15 @@ describe('Acknowledgment tests', function () {
         cy.get('of-light-card').eq(5).click();
         cy.get('#opfab-selected-card-summary').should('have.text', "Message received :   Test message for entities acks");
         cy.get('#opfab-card-acknowledged-footer').should('not.exist');
+
+        // Footer should contain 'Addredd to' with 3 FR control centers each with ack icon
+        cy.get('#opfab-card-details-address-to').find('span').eq(0).contains('Addressed to :');
+        cy.get('#opfab-card-details-address-to').find('span').eq(1).contains('Control Center FR East');
+        cy.get('#opfab-card-details-address-to').find('span').eq(1).find('.fa-check').should('exist')
+        cy.get('#opfab-card-details-address-to').find('span').eq(3).contains('Control Center FR South');
+        cy.get('#opfab-card-details-address-to').find('span').eq(3).find('.fa-check').should('exist')
+        cy.get('#opfab-card-details-address-to').find('span').eq(5).contains('Control Center FR West');
+        cy.get('#opfab-card-details-address-to').find('span').eq(5).find('.fa-check').should('exist');
 
         // We reconnect operator4_fr to ENTITY1_FR
         opfab.navigateToActivityArea();
@@ -531,10 +556,9 @@ describe('Acknowledgment tests', function () {
         opfab.checkLoadingSpinnerIsNotDisplayed();
 
         // Set feed filter to see all cards and check message card is present
-        cy.get('#opfab-feed-filter-btn-filter').click();
-        cy.get('#opfab-feed-filter-ack-all').click();
-        cy.waitDefaultTime(); // let time before closing popup to avoid flaky error on CI/CD
-        cy.get('#opfab-feed-filter-btn-filter').click();
+        feed.filterByAcknowledgement('all');
+
+        cy.waitDefaultTime(); 
         
         // Check icon is present
         cy.get('#opfab-feed-light-card-cypress-message2 .fa-check');

@@ -111,7 +111,22 @@
             </div>
 
             <div style="display: flex">
-              <div class="opfab-card-received-footer" style="text-align: left;white-space: pre-line;">{{makeTextOfFooter()}}</div>
+              <div class="opfab-card-received-footer" style="text-align: left;white-space: pre-line;">
+                <div>
+                  <span translate="feed.received"></span> {{formattedPublishDate}}
+                  <span translate="feed.at"></span> {{formattedPublishTime}}
+                  <span *ngIf="!!fromEntityOrRepresentative && fromEntityOrRepresentative.length > 0"translate="feed.from"></span> {{fromEntityOrRepresentative}}
+                </div>
+                <div id="opfab-card-details-address-to" *ngIf="listEntitiesAcknowledged.length > 1">
+                  <span translate="feed.addressedTo"></span>
+                  <span *ngFor="let entity of listEntitiesAcknowledged; let isLast = last"> {{entity.entityName}} <em *ngIf="entity.acknowledged" style="color: #0082FF;" class="fa fa-check"></em><span *ngIf="!isLast" style="margin-right: 5px;">, </span></span>
+                </div>
+                <div *ngIf="!!this.lastResponse">
+                  <span translate="feed.lastResponse"></span> {{formatDate(lastResponse.publishDate)}}
+                  <span translate="feed.at"></span> {{formatTime(lastResponse.publishDate)}}
+                  <span translate="feed.from"></span> {{getResponsePublisher(lastResponse)}}
+                </div>
+              </div>
 
               <div *ngIf="showButtons" style="margin-left: auto;text-align: right;min-width: 250px">
                 <button id="opfab-card-details-btn-response" class="opfab-btn"

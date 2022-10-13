@@ -89,7 +89,7 @@ describe('Card detail', function () {
             cy.get('.opfab-card-received-footer').contains(
                 /Received : \d{2}\/\d{2}\/\d{4} at ((1[0-2]|0?[1-9]):([0-5][0-9]) ([AP]M))/
             );
-            cy.get('.opfab-card-received-footer').contains('Addressed to :').should('not.exist');
+            cy.get('#opfab-card-details-address-to').should('not.exist');
         });
 
         it(`Check card footer for operator4_fr (member of several entities)`, function () {
@@ -100,9 +100,8 @@ describe('Card detail', function () {
             cy.get('.opfab-card-received-footer').contains(
                 /Received : \d{2}\/\d{2}\/\d{4} at ((1[0-2]|0?[1-9]):([0-5][0-9]) ([AP]M))/
             );
-            cy.get('.opfab-card-received-footer').contains(
-                'Addressed to : Control Center FR South, Control Center FR North'
-            );
+            cy.get('#opfab-card-details-address-to').contains('Control Center FR North');
+            cy.get('#opfab-card-details-address-to').contains('Control Center FR South');
         });
 
         it(`Check card detail spinner when simulating card processed `, function () {
@@ -157,7 +156,7 @@ describe('Card detail', function () {
             cy.get('.opfab-card-received-footer').contains(
                 /Received : \d{2}\/\d{2}\/\d{4} at ((1[0-2]|0?[1-9]):([0-5][0-9]) ([AP]M))/
             );
-            cy.get('.opfab-card-received-footer').contains('Addressed to :').should('not.exist');
+            cy.get('#opfab-card-details-address-to').should('not.exist');
         });
 
         it(`Check card detail footer for archives for operator4_fr (member of several entities)`, function () {
@@ -180,7 +179,7 @@ describe('Card detail', function () {
             cy.get('.opfab-card-received-footer').contains(
                 /Received : \d{2}\/\d{2}\/\d{4} at ((1[0-2]|0?[1-9]):([0-5][0-9]) ([AP]M))/
             );
-            cy.get('.opfab-card-received-footer').contains('Addressed to :').should('not.exist');
+            cy.get('#opfab-card-details-address-to').should('not.exist');
         });
 
         it(`Check templateGateway when response not required `, function () {
