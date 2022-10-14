@@ -373,14 +373,13 @@ describe('FeedScreen tests', function () {
 
         // Respond to the card 
         cy.get('#question-choice1').click();
-        cy.get('#opfab-card-details-btn-response').click();
+        card.sendResponse();
     }
 
     function acknowledgeCard(cardId) {
         // Click on the card
         cy.get(cardId).click();
-        // Click ack button
-        cy.get('#opfab-card-details-btn-ack').click();
+        card.acknowledge();
     }
 
     function checkResetAllFiltersLinkDoesNotExists() {

@@ -11,7 +11,7 @@ import {UserCardCommands} from "../support/userCardCommands"
 import {OpfabGeneralCommands} from "../support/opfabGeneralCommands"
 import {ActivityAreaCommands} from "../support/activityAreaCommands"
 import {ScriptCommands} from "../support/scriptCommands";
-
+import {CardCommands} from "../support/cardCommands"
 
 describe('Acknowledgment tests', function () {
 
@@ -19,6 +19,7 @@ describe('Acknowledgment tests', function () {
     const opfab = new OpfabGeneralCommands();
     const activityArea = new ActivityAreaCommands();
     const script = new ScriptCommands();
+    const card = new CardCommands();
 
 
     before('Set up configuration', function () {
@@ -91,7 +92,7 @@ describe('Acknowledgment tests', function () {
         cy.get('#opfab-card-details-btn-ack').contains('ACKNOWLEDGE AND CLOSE');
 
         // Click ack button
-        cy.get('#opfab-card-details-btn-ack').click();
+        card.acknowledge();
 
         // Card is not anymore in the feed
         cy.get('#opfab-feed-light-card-cypress-message2').should('not.exist');
@@ -108,9 +109,8 @@ describe('Acknowledgment tests', function () {
 
         cy.get('#opfab-card-details-btn-ack').contains('ACKNOWLEDGE');
         cy.get('#opfab-card-details-btn-ack').should('not.contain','CLOSE');
-        // Click ack button
-        cy.get('#opfab-card-details-btn-ack').click();
-
+        
+        card.acknowledge();
         // Card is not anymore in the feed
         cy.get('#opfab-feed-light-card-cypress-message1').should('not.exist');
 
@@ -137,8 +137,7 @@ describe('Acknowledgment tests', function () {
         // Click on card message
         cy.get('#opfab-feed-light-card-cypress-message2').click();
 
-        // Unack the card
-        cy.get('#opfab-card-details-btn-ack').click();
+        card.unacknowledge();
 
         // Check icon is not present
         cy.get('#opfab-feed-light-card-cypress-message2 .fa-check').should('not.exist');
@@ -349,9 +348,7 @@ describe('Acknowledgment tests', function () {
         cy.get('#opfab-feed-filter-ack-all').click();
         cy.get('#opfab-feed-filter-btn-filter').click();
 
-        // Click ack button
-        cy.get('#opfab-card-details-btn-ack').click();
-
+        card.acknowledge();
         // We click again the card to display it
         cy.get('of-light-card').eq(0).click();
         cy.get('#opfab-selected-card-summary').should('have.text', "Message received :   Test message for entities acks");
@@ -529,9 +526,7 @@ describe('Acknowledgment tests', function () {
 
         cy.delayRequestResponse('/cardspub/cards/userAcknowledgement/*');
 
-        // Click ack button
-        cy.get('#opfab-card-details-btn-ack').click();
-
+        card.acknowledge();
         opfab.checkLoadingSpinnerIsDisplayed();
         opfab.checkLoadingSpinnerIsNotDisplayed();
 
@@ -547,8 +542,7 @@ describe('Acknowledgment tests', function () {
         // Click on card message
         cy.get('#opfab-feed-light-card-cypress-message2').click();
 
-        // Unack the card
-        cy.get('#opfab-card-details-btn-ack').click();
+        card.unacknowledge();
 
         opfab.checkLoadingSpinnerIsDisplayed();
         opfab.checkLoadingSpinnerIsNotDisplayed();
@@ -571,8 +565,7 @@ describe('Acknowledgment tests', function () {
         .then((urlId) => {
             cy.waitDefaultTime();
             cy.hash().should('eq', '#/feed/cards/' + urlId);
-            //Acknowledge card
-            cy.get('#opfab-card-details-btn-ack').click();
+            card.acknowledge();
              //The card is pinned
             cy.get('#of-pinned-cards').find('.opfab-pinned-card').should('have.length', 1);
             // Detail card is not present anymore
@@ -584,13 +577,11 @@ describe('Acknowledgment tests', function () {
         cy.get('#of-pinned-cards').find('.opfab-pinned-card').eq(0).click();
         // Detail card is present  
         cy.get('of-detail').should('exist');
-        // Unack the card 
-        cy.get('#opfab-card-details-btn-ack').click();
+        card.unacknowledge();
         //There are no pinned cards
         cy.get('#of-pinned-cards').find('.opfab-pinned-card').should('have.length', 0);
 
-        // Ack the card
-        cy.get('#opfab-card-details-btn-ack').click();
+        card.acknowledge();
         //Card is pinned
         cy.get('#of-pinned-cards').find('.opfab-pinned-card').should('have.length', 1);
 
@@ -609,8 +600,7 @@ describe('Acknowledgment tests', function () {
         .then((urlId) => {
             cy.waitDefaultTime();
             cy.hash().should('eq', '#/feed/cards/' + urlId);
-            //Acknowledge card
-            cy.get('#opfab-card-details-btn-ack').click();
+            card.acknowledge();
              //The card is pinned
             cy.get('#of-pinned-cards').find('.opfab-pinned-card').should('have.length', 1);
             // Detail card is not present anymore
@@ -652,8 +642,7 @@ describe('Acknowledgment tests', function () {
         .then((urlId) => {
             cy.hash().should('eq', '#/feed/cards/' + urlId);
 
-            //Acknowledge card
-            cy.get('#opfab-card-details-btn-ack').click();
+            card.acknowledge();
 
             cy.waitDefaultTime();
 
@@ -709,8 +698,7 @@ describe('Acknowledgment tests', function () {
         .then((urlId) => {
             cy.waitDefaultTime();
             cy.hash().should('eq', '#/feed/cards/' + urlId);
-            //Acknowledge card
-            cy.get('#opfab-card-details-btn-ack').click();
+            card.acknowledge();
             //The are still 6 pinned cards visible plus "..." popover
             cy.get('#of-pinned-cards').find('.opfab-pinned-card').should('have.length', 6);
 
@@ -722,8 +710,7 @@ describe('Acknowledgment tests', function () {
             cy.get('.opfab-hidden-pinned-card').eq(0).click();
             // Detail card is present  
             cy.get('of-detail').should('exist');
-            // Unack the card 
-            cy.get('#opfab-card-details-btn-ack').click();
+            card.unacknowledge();
             //There are 6 pinned cards with no popover "..."
             cy.get('#of-pinned-cards').find('.opfab-pinned-card').should('have.length', 6);
             cy.get('#of-pinned-cards-popover').should('not.exist');
