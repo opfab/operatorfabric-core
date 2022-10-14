@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2021, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2022, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -30,15 +30,21 @@ public class RecurrenceWriterConverter {
     public static Document convert(RecurrencePublicationData source) {
         Document result = new Document();
         HoursAndMinutes  hoursAndMinutes = source.getHoursAndMinutes();
-        if (hoursAndMinutes!=null) {
+        if (hoursAndMinutes != null) {
             result.append("hoursAndMinutes", HoursAndMinutesWriterConverter.convert(hoursAndMinutes));
         }
 
         List<Integer>  daysOfWeek = source.getDaysOfWeek();
-        if (daysOfWeek!=null) result.append("daysOfWeek",daysOfWeek);
+        if (daysOfWeek != null)
+            result.append("daysOfWeek", daysOfWeek);
+
+        List<Integer>  months = source.getMonths();
+        if (months != null)
+            result.append("months", months);
 
         String timeZone = source.getTimeZone();
-        if ((timeZone==null)||timeZone.equals("")) timeZone = defaultTimeZone;
+        if ((timeZone == null)||timeZone.equals(""))
+            timeZone = defaultTimeZone;
         result.append("timeZone", timeZone);
 
         Integer durationInMinutes = source.getDurationInMinutes();
@@ -47,7 +53,5 @@ public class RecurrenceWriterConverter {
         }
 
         return result;
-
     }
-
 }

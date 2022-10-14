@@ -382,11 +382,14 @@ class CardProcessServiceShould {
         entityRecipients.add("Planner");
 
         List<Integer> daysOfWeek = new ArrayList<>();
+        List<Integer> months = new ArrayList<>();
         daysOfWeek.add(2);
         daysOfWeek.add(3);
+        months.add(2);
+        months.add(3);
         Integer duration = 15;
         HoursAndMinutes hoursAndMinutes = new HoursAndMinutesPublicationData(2,10);
-        RecurrencePublicationData recurrence = new RecurrencePublicationData("timezone",daysOfWeek,hoursAndMinutes, duration);
+        RecurrencePublicationData recurrence = new RecurrencePublicationData("timezone", daysOfWeek, hoursAndMinutes, duration, months);
 
         CardPublicationData newCard = CardPublicationData.builder().publisher("publisher(")
                 .processVersion("0").processInstanceId("PROCESS_1").severity(SeverityEnum.ALARM)

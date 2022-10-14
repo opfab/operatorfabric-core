@@ -7,6 +7,89 @@ Feature: Cards with timespans
     * def signInAdmin = callonce read('../common/getToken.feature') { username: 'admin'}
     * def authTokenAdmin = signInAdmin.authToken
 
+    * def cardToTestBadRequest1 =
+"""
+{
+	"publisher" : "operator1_fr",
+	"processVersion" : "1",
+	"process"  :"api_test",
+	"processInstanceId" : "processTimeSpan",
+	"state": "messageState",
+	"groupRecipients": ["Dispatcher"],
+	"severity" : "INFORMATION",
+	"startDate" : 1553186770681,
+	"summary" : {"key" : "defaultProcess.summary"},
+	"title" : {"key" : "defaultProcess.title"},
+	"data" : {"message":"a message"},
+	"timeSpans" : [
+		{"start" : 1553186770681 ,"end" :1553186770682 , "recurrence" :
+					{
+						"timeZone":"test",
+						"daysOfWeek":[2,3],
+						"hoursAndMinutes": {"hours":"","minutes":""}
+					}
+		},
+		{"start" : 1553186770678}
+		]
+}
+"""
+
+    * def cardToTestBadRequest2 =
+"""
+{
+	"publisher" : "operator1_fr",
+	"processVersion" : "1",
+	"process"  :"api_test",
+	"processInstanceId" : "processTimeSpan",
+	"state": "messageState",
+	"groupRecipients": ["Dispatcher"],
+	"severity" : "INFORMATION",
+	"startDate" : 1553186770681,
+	"summary" : {"key" : "defaultProcess.summary"},
+	"title" : {"key" : "defaultProcess.title"},
+	"data" : {"message":"a message"},
+	"timeSpans" : [
+		{"start" : 1553186770681 ,"end" :1553186770682 , "recurrence" :
+					{
+						"timeZone":"test",
+						"daysOfWeek":[2,8],
+						"months":[0,11],
+						"hoursAndMinutes": {"hours":"14","minutes":"30"}
+					}
+		},
+		{"start" : 1553186770678}
+		]
+}
+"""
+
+    * def cardToTestBadRequest3 =
+"""
+{
+	"publisher" : "operator1_fr",
+	"processVersion" : "1",
+	"process"  :"api_test",
+	"processInstanceId" : "processTimeSpan",
+	"state": "messageState",
+	"groupRecipients": ["Dispatcher"],
+	"severity" : "INFORMATION",
+	"startDate" : 1553186770681,
+	"summary" : {"key" : "defaultProcess.summary"},
+	"title" : {"key" : "defaultProcess.title"},
+	"data" : {"message":"a message"},
+	"timeSpans" : [
+		{"start" : 1553186770681 ,"end" :1553186770682 , "recurrence" :
+					{
+						"timeZone":"test",
+						"daysOfWeek":[2,3],
+						"months":[4,12],
+						"hoursAndMinutes": {"hours":"14","minutes":"30"}
+					}
+		},
+		{"start" : 1553186770678}
+		]
+}
+"""
+
   Scenario: Post a card with timepans and recurrence
 
     * def card =
@@ -205,45 +288,24 @@ Scenario: When post a card with no timeZone in timespan recurrence , it set the 
     Then response.count == 0
 
 
-  Scenario: When post card with no hours and minutes in recurrence, the card is not accepted
-
-    * def card =
-"""
-{
-	"publisher" : "operator1_fr",
-	"processVersion" : "1",
-	"process"  :"api_test",
-	"processInstanceId" : "processTimeSpan",
-	"state": "messageState",
-	"groupRecipients": ["Dispatcher"],
-	"severity" : "INFORMATION",
-	"startDate" : 1553186770681,
-	"summary" : {"key" : "defaultProcess.summary"},
-	"title" : {"key" : "defaultProcess.title"},
-	"data" : {"message":"a message"},
-	"timeSpans" : [
-		{"start" : 1553186770681 ,"end" :1553186770682 , "recurrence" :
-					{
-						"timeZone":"test",
-						"daysOfWeek":[2,3],
-						"hoursAndMinutes": {"hours":"","minutes":""}
-					}
-		},
-		{"start" : 1553186770678}
-		]
-}
-"""
-
-# Push card
+  Scenario Outline: Bad request with constraint violation on TimeSpan.Recurrence object
     Given url opfabPublishCardUrl + 'cards'
     And header Authorization = 'Bearer ' + authToken
-    And request card
+    And request <cardToTestBadRequest>
     When method post
     Then status 400
+    And match response.status == "BAD_REQUEST"
     And match response.message contains "Constraint violation in the request"
-    And match response.errors[0] contains "constraint violation : TimeSpan.Recurrence.HoursAndMinutes must be filled"
+    And match response.errors[0] contains  <expectedMessage>
 
-#delete perimeter created previously
+    Examples:
+      | cardToTestBadRequest  | expectedMessage                                                                                 |
+      | cardToTestBadRequest1 | "constraint violation : TimeSpan.Recurrence.HoursAndMinutes must be filled"                     |
+      | cardToTestBadRequest2 | "constraint violation : TimeSpan.Recurrence.daysOfWeek must be filled with values from 1 to 7"  |
+      | cardToTestBadRequest3 | "constraint violation : TimeSpan.Recurrence.months must be filled with values from 0 to 11"     |
+
+
+  Scenario: delete perimeter created previously
     Given url opfabUrl + 'users/perimeters/perimeter'
     And header Authorization = 'Bearer ' + authTokenAdmin
     When method delete

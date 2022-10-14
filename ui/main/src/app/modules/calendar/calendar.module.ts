@@ -17,8 +17,9 @@ import dayGridPlugin from '@fullcalendar/daygrid';
 import timeGridPlugin from '@fullcalendar/timegrid';
 import interactionPlugin from '@fullcalendar/interaction';
 import bootstrapPlugin from '@fullcalendar/bootstrap';
+import rrulePlugin from "@fullcalendar/rrule";
 
-FullCalendarModule.registerPlugins([dayGridPlugin, timeGridPlugin, interactionPlugin, bootstrapPlugin]);
+FullCalendarModule.registerPlugins([dayGridPlugin, timeGridPlugin, interactionPlugin, bootstrapPlugin, rrulePlugin]);
 
 @NgModule({
     declarations: [CalendarComponent],

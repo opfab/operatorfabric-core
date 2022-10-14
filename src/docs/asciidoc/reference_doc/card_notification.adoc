@@ -117,7 +117,7 @@ For example:
 [[card_reminder]]
 == Card reminder 
 
-For certain process and state, it is possible to configure a reminder. The reminder "reactivate" the card in the feed at a certain time. "Reactivate" means setting the card to the status "unread" and "unacknowledged".
+For certain process and state, it is possible to configure a reminder. The reminder "reactivates" the card in the feed at a certain time. "Reactivate" means setting the card to the status "unread" and "unacknowledged".
 
 
 The time for "reactivation" is defined with the parameter "secondsBeforeTimeSpanForReminder" in the card.
@@ -138,7 +138,9 @@ It is possible to set a recurrent reminder via the structure recurrence which de
 
  - HoursAndMinutes : hours and minutes of day when the event arise
 
- - DaysOfWeek : a list of day of the week when the event arises. The day of week is a number with 1 being Monday and 7 being Sunday as defined in https://en.wikipedia.org/wiki/ISO_8601#Week_dates[the ISO Standard 8601 (weekday number) ]
+ - DaysOfWeek : a list of days of the week when the event arises. The day of week is a number with 1 being Monday and 7 being Sunday as defined in https://en.wikipedia.org/wiki/ISO_8601#Week_dates[the ISO Standard 8601 (weekday number) ]
+
+ - Months : a list of months of the year when the event arises. The month of year is a number with 0 being January and 11 being December
 
  - TimeZone : the time zone of reference for the recurrence definition (default value is Europe/Paris)
 
@@ -155,11 +157,12 @@ startDate : 1231135161
 recurrence : {
     hoursAndMinutes : { hours:10 ,minutes:30},
     daysOfWeek : [6,7],
-    durationInMinutes : 15
+    durationInMinutes : 15,
+    months : [10,11]
 }
 ....
 
-If secondsBeforeTimeSpanForReminder is set to 600 seconds, the reminder will arise every saturday and sunday at 10:20 starting from startDate 
+If secondsBeforeTimeSpanForReminder is set to 600 seconds, the reminder will arise every Saturday and Sunday, in November and December at 10:20 starting from startDate.
 
 === Last time for reminding
 

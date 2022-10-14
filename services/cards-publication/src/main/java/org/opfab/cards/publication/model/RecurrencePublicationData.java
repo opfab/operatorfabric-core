@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2021, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2022, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -23,14 +23,20 @@ public class RecurrencePublicationData implements Recurrence {
     private List<Integer> daysOfWeek;
     HoursAndMinutes hoursAndMinutes;
     private Integer durationInMinutes;
+    private List<Integer> months;
 
 
-    public  RecurrencePublicationData(String timeZone,List<Integer> daysOfWeek, HoursAndMinutes hoursAndMinutes, Integer durationInMinutes)
+    public  RecurrencePublicationData(String timeZone,
+                                      List<Integer> daysOfWeek,
+                                      HoursAndMinutes hoursAndMinutes,
+                                      Integer durationInMinutes,
+                                      List<Integer> months)
     {
-        if (this.timeZone !=null) this.timeZone = timeZone ;
+        if (this.timeZone != null) this.timeZone = timeZone ;
         this.daysOfWeek = daysOfWeek;
         this.hoursAndMinutes = hoursAndMinutes; 
         this.durationInMinutes = durationInMinutes;
+        this.months = months;
     }
 
 }
