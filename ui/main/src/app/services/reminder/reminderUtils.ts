@@ -28,56 +28,112 @@ export function getNextTimeForRepeating(card: Card, startingDate?: number) {
 
 function getNextTimeForRepeatingFromTimeSpan(timeSpan: TimeSpan, startingDate?: number) {
     if (!!timeSpan) {
-        if (!startingDate) startingDate = new Date().valueOf();
+        if (!startingDate) {
+            startingDate = new Date().valueOf();
+        }
         if (!timeSpan.recurrence) {
-            if (timeSpan.start + MAX_MILLISECONDS_FOR_REMINDING_AFTER_EVENT_STARTS < startingDate) return -1;
-            return timeSpan.start;
+            if (timeSpan.start + MAX_MILLISECONDS_FOR_REMINDING_AFTER_EVENT_STARTS < startingDate) {
+                return -1;
+            } else {
+                return timeSpan.start;
+            }
         } else {
-            if (startingDate > timeSpan.start) return getNextTimeFromRecurrence(startingDate, timeSpan.recurrence);
-            else return getNextTimeFromRecurrence(timeSpan.start, timeSpan.recurrence);
+            if (startingDate > timeSpan.start) {
+                return getNextDateTimeFromRecurrence(startingDate, timeSpan.recurrence);
+            } else {
+                return getNextDateTimeFromRecurrence(timeSpan.start, timeSpan.recurrence);
+            }
         }
     }
     return -1;
 }
 
-function getNextTimeFromRecurrence(StartingDate: number, recurrence: Recurrence): number {
-    const date = moment(StartingDate).tz(recurrence.timeZone);
+function getNextDateTimeFromRecurrence(StartingDate: number, recurrence: Recurrence): number {
+    if (! isRecurrenceObjectInValidFormat(recurrence)) {
+        return -1;
+    }
+
+    const nextDateTime = moment(StartingDate).tz(recurrence.timeZone);
+
+    const startingHoursMinutes = new HourAndMinutes(nextDateTime.hours(), nextDateTime.minutes());
+    if (isFirstHoursMinutesInferiorOrEqualToSecondOne(recurrence.hoursAndMinutes, startingHoursMinutes)) {
+        nextDateTime.add(1, 'day');
+        nextDateTime.set('hours',0);
+        nextDateTime.set('minutes',0)
+    }
+
+    moveToValidMonth(nextDateTime, recurrence);
+
     if (isDaysOfWeekFieldSet(recurrence)) {
-        if (!recurrence.daysOfWeek.includes(date.isoWeekday())) {
-            date.set('hours', 0);
-            date.set('minutes', 0);
+        if (!recurrence.daysOfWeek.includes(nextDateTime.isoWeekday())) {
+
+            // we keep the month found previously
+            const monthForNextDateTime = nextDateTime.month();
+
+            nextDateTime.set('hours', 0);
+            nextDateTime.set('minutes', 0);
             let nb_add = 0;
             do {
                 nb_add++;
-                if (nb_add > 7) return -1; // in case we have an invalid recurrence daysOfWeek array
-                date.add(1, 'day');
-            } while (!recurrence.daysOfWeek.includes(date.isoWeekday()));
-            date.set('hours', recurrence.hoursAndMinutes.hours);
-            date.set('minutes', recurrence.hoursAndMinutes.minutes);
-            date.set('seconds', 0);
-            date.set('milliseconds', 0);
-            return date.valueOf();
+                nextDateTime.add(1, 'day');
+
+                if (nextDateTime.month() !== monthForNextDateTime) { // in case incrementing took us into the next month
+                    moveToValidMonth(nextDateTime, recurrence);
+                }
+            } while (!recurrence.daysOfWeek.includes(nextDateTime.isoWeekday()));
+            nextDateTime.set('hours', recurrence.hoursAndMinutes.hours);
+            nextDateTime.set('minutes', recurrence.hoursAndMinutes.minutes);
+            nextDateTime.set('seconds', 0);
+            nextDateTime.set('milliseconds', 0);
+            return nextDateTime.valueOf();
         }
     }
 
-    const startingHoursMinutes = new HourAndMinutes(date.hours(), date.minutes());
-    if (!isFirstHoursMinutesSuperiorToSecondOne(recurrence.hoursAndMinutes, startingHoursMinutes)) {
-        date.add(1, 'day');
-        if (isDaysOfWeekFieldSet(recurrence)) {
-            while (!recurrence.daysOfWeek.includes(date.isoWeekday())) date.add(1, 'day');
-        }
-    }
-    date.set('hours', recurrence.hoursAndMinutes.hours);
-    date.set('minutes', recurrence.hoursAndMinutes.minutes);
-    date.set('seconds', 0);
-    date.set('milliseconds', 0);
-    return date.valueOf();
+    nextDateTime.set('hours', recurrence.hoursAndMinutes.hours);
+    nextDateTime.set('minutes', recurrence.hoursAndMinutes.minutes);
+    nextDateTime.set('seconds', 0);
+    nextDateTime.set('milliseconds', 0);
+    return nextDateTime.valueOf();
 }
 
-function isFirstHoursMinutesSuperiorToSecondOne(hm1: HourAndMinutes, hm2: HourAndMinutes): boolean {
-    if (hm1.hours > hm2.hours) return true;
-    if (hm1.hours < hm2.hours) return false;
-    return hm1.minutes > hm2.minutes;
+function isRecurrenceObjectInValidFormat(recurrence: Recurrence): boolean {
+    if (!! recurrence.months) {
+        for (const month of recurrence.months) {
+            if (month < 0 || month > 11) {
+                return false;
+            }
+        }
+    }
+
+    if (!! recurrence.daysOfWeek) {
+        for (const dayOfWeek of recurrence.daysOfWeek) {
+            if (dayOfWeek < 1 || dayOfWeek > 7) {
+                return false;
+            }
+        }
+    }
+    return true;
+}
+
+function moveToValidMonth(nextDateTime: moment.Moment, recurrence: Recurrence) {
+    if (!recurrence.months || recurrence.months.length === 0)
+        return;
+    if (recurrence.months.includes(nextDateTime.month()))
+        return;
+    let nb_add = 0;
+    do {
+        nb_add++;
+        if (nb_add > 12)
+            return ; // in case we have an invalid recurrence months array
+        nextDateTime.add(1, 'month');
+        nextDateTime.set('date',1);
+    } while (!recurrence.months.includes(nextDateTime.month()));
+}
+
+function isFirstHoursMinutesInferiorOrEqualToSecondOne(hm1: HourAndMinutes, hm2: HourAndMinutes): boolean {
+    if (hm1.hours < hm2.hours) return true;
+    if (hm1.hours > hm2.hours) return false;
+    return hm1.minutes <= hm2.minutes;
 }
 
 function isDaysOfWeekFieldSet(recurrence: Recurrence): boolean {

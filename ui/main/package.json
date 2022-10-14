@@ -30,6 +30,7 @@
     "@fullcalendar/core": "5.11.3",
     "@fullcalendar/daygrid": "5.11.3",
     "@fullcalendar/interaction": "5.11.3",
+    "@fullcalendar/rrule": "5.11.3",
     "@fullcalendar/timegrid": "5.11.3",
     "@ng-bootstrap/ng-bootstrap": "13.1.0",
     "@ngrx/effects": "14.3.2",
@@ -56,6 +57,7 @@
     "ng-event-source": "1.0.14",
     "ngx-chips": "3.0.0",
     "ol": "6.5.0",
+    "rrule": "2.7.1",
     "rxjs": "7.5.7",
     "virtual-select-plugin": "1.0.33",
     "xlsx": "0.18.5"

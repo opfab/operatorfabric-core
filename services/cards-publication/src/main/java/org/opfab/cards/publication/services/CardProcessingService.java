@@ -190,6 +190,12 @@ public class CardProcessingService {
         if (!checkIsAllHoursAndMinutesFilled(c))
             throw new ConstraintViolationException("constraint violation : TimeSpan.Recurrence.HoursAndMinutes must be filled", null);
 
+        if (!checkIsAllDaysOfWeekValid(c))
+            throw new ConstraintViolationException("constraint violation : TimeSpan.Recurrence.daysOfWeek must be filled with values from 1 to 7", null);
+
+        if (!checkIsAllMonthsValid(c))
+            throw new ConstraintViolationException("constraint violation : TimeSpan.Recurrence.months must be filled with values from 0 to 11", null);
+
         // constraint check : process and state must not contain "." (because we use it as a separator)
         if (!checkIsDotCharacterNotInProcessAndState(c))
             throw new ConstraintViolationException("constraint violation : character '.' is forbidden in process and state", null);
@@ -258,11 +264,53 @@ public class CardProcessingService {
 
     boolean checkIsAllHoursAndMinutesFilled(CardPublicationData c) {
         if (c.getTimeSpans() != null) {
-            for (int i = 0; i < c.getTimeSpans().size(); i++) {
-                TimeSpan currentTimeSpan = c.getTimeSpans().get(i);
+            for (TimeSpan currentTimeSpan : c.getTimeSpans()) {
+
                 if ((currentTimeSpan != null) && (currentTimeSpan.getRecurrence() != null)) {
                     HoursAndMinutes currentHoursAndMinutes = currentTimeSpan.getRecurrence().getHoursAndMinutes();
                     if ((currentHoursAndMinutes == null) || (currentHoursAndMinutes.getHours() == null) || (currentHoursAndMinutes.getMinutes() == null))
+                        return false;
+                }
+            }
+        }
+        return true;
+    }
+
+    boolean checkIsAllDaysOfWeekValid(CardPublicationData c) {
+        if (c.getTimeSpans() == null)
+            return true;
+
+        for (TimeSpan currentTimeSpan : c.getTimeSpans()) {
+
+            if ((currentTimeSpan == null) || (currentTimeSpan.getRecurrence() == null))
+                return true;
+
+            List<Integer> currentDaysOfWeek = currentTimeSpan.getRecurrence().getDaysOfWeek();
+
+            if (currentDaysOfWeek != null) {
+                for (Integer dayOfWeek : currentDaysOfWeek) {
+                    if ((dayOfWeek < 1) || (dayOfWeek > 7))
+                        return false;
+                }
+            }
+        }
+        return true;
+    }
+
+    boolean checkIsAllMonthsValid(CardPublicationData c) {
+        if (c.getTimeSpans() == null)
+            return true;
+
+        for (TimeSpan currentTimeSpan : c.getTimeSpans()) {
+
+            if ((currentTimeSpan == null) || (currentTimeSpan.getRecurrence() == null))
+                return true;
+            
+            List<Integer> currentMonths = currentTimeSpan.getRecurrence().getMonths();
+
+            if (currentMonths != null) {
+                for (Integer month : currentMonths) {
+                    if ((month < 0) || (month > 11))
                         return false;
                 }
             }

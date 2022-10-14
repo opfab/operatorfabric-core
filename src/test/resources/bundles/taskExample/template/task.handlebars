@@ -18,14 +18,13 @@
 
 
 <br/>
-Duration: {{card.data.durationInMinutes}} minutes
+Duration: {{card.data.durationInMinutes}} minutes<br/>
 <br/> 
 
-At {{card.data.hours}}:{{card.data.minutes}} on 
-<span id="dayOfWeeks">
-
-
-</span>
+At {{card.data.hours}}:{{card.data.minutes}}
+<span id="dayOfWeeks"></span><br/>
+<br/>
+<span id="months"></span>
 
 </h3>
 </center>
@@ -35,16 +34,34 @@ At {{card.data.hours}}:{{card.data.minutes}} on
       cardTemplate = {
             init: function() {
                   const daysOfWeek = "{{card.data.daysOfWeek}}";
-                  let text ="";
-                  if (daysOfWeek.includes("1"))   text += " monday";
-                  if (daysOfWeek.includes("2"))   text += " tuesday";
-                  if (daysOfWeek.includes("3"))   text += " wednesday";
-                  if (daysOfWeek.includes("4"))  text += " thursday ";
-                  if (daysOfWeek.includes("5"))   text += " friday";
-                  if (daysOfWeek.includes("6"))  text += " saturday";
-                  if (daysOfWeek.includes("7"))  text += " sunday";
+                  let textForDaysOfWeek ="";
+                  if (daysOfWeek.includes("1"))  textForDaysOfWeek += " Monday";
+                  if (daysOfWeek.includes("2"))  textForDaysOfWeek += " Tuesday";
+                  if (daysOfWeek.includes("3"))  textForDaysOfWeek += " Wednesday";
+                  if (daysOfWeek.includes("4"))  textForDaysOfWeek += " Thursday ";
+                  if (daysOfWeek.includes("5"))  textForDaysOfWeek += " Friday";
+                  if (daysOfWeek.includes("6"))  textForDaysOfWeek += " Saturday";
+                  if (daysOfWeek.includes("7"))  textForDaysOfWeek += " Sunday";
+                  if (textForDaysOfWeek !== "")  textForDaysOfWeek = "on" + textForDaysOfWeek;
+                  document.getElementById("dayOfWeeks").innerHTML = textForDaysOfWeek;
 
-                  document.getElementById("dayOfWeeks").innerHTML = text;
+                  const months = "{{card.data.months}}";
+                  const monthsArray = months.split(',');
+                  let textForMonths ="";
+                  if (monthsArray.includes("0"))  textForMonths += " January";
+                  if (monthsArray.includes("1"))  textForMonths += " February";
+                  if (monthsArray.includes("2"))  textForMonths += " March";
+                  if (monthsArray.includes("3"))  textForMonths += " April ";
+                  if (monthsArray.includes("4"))  textForMonths += " May";
+                  if (monthsArray.includes("5"))  textForMonths += " June";
+                  if (monthsArray.includes("6"))  textForMonths += " July";
+                  if (monthsArray.includes("7"))  textForMonths += " August";
+                  if (monthsArray.includes("8"))  textForMonths += " September";
+                  if (monthsArray.includes("9"))  textForMonths += " October";
+                  if (monthsArray.includes("10")) textForMonths += " November";
+                  if (monthsArray.includes("11")) textForMonths += " December";
+                  if (textForMonths !== "")  textForMonths = "in" + textForMonths;
+                  document.getElementById("months").innerHTML = textForMonths;
             }
       }
       cardTemplate.init();
