@@ -7,7 +7,7 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {OnInit, Component, OnDestroy} from '@angular/core';
+import {OnInit, Component, OnDestroy, Input, OnChanges} from '@angular/core';
 import {ProcessesService} from '@ofServices/processes.service';
 import {Store} from '@ngrx/store';
 import {AppState} from '@ofStore/index';
@@ -23,14 +23,15 @@ import {Utilities} from 'app/common/utilities';
     templateUrl: './pinned-cards.component.html',
     styleUrls: ['./pinned-cards.component.scss']
 })
-export class PinnedCardsComponent implements OnInit, OnDestroy {
+export class PinnedCardsComponent implements OnInit, OnDestroy, OnChanges {
     currentPath: string;
     private ngUnsubscribe: Subject<void> = new Subject<void>();
     pinnedCards: LightCard[];
     visiblePinnedCards: LightCard[];
     hiddenPinnedCards: LightCard[];
 
-    maxVisiblePinnedCards = 6;
+    @Input() maxVisiblePinnedCards = 6;
+
     maxHiddenPinnedCards = 20;
 
     constructor(
@@ -58,6 +59,10 @@ export class PinnedCardsComponent implements OnInit, OnDestroy {
         timer(10000, 10000)
             .pipe(takeUntil(this.ngUnsubscribe))
             .subscribe((t) => this.checkPinnedCardsEndDate());
+    }
+
+    ngOnChanges(): void {
+        this.setVisiblePinnedCards();
     }
 
     private setPinnedCards(cards: LightCard[]) {
