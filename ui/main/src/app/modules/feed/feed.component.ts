@@ -34,6 +34,7 @@ export class FeedComponent implements OnInit,OnDestroy {
     private currentPath: string;
     private ngUnsubscribe$ = new Subject<void>();
     private hallwayMode = false;
+    maxPinnedCards: number;
 
     constructor(
         private store: Store<AppState>,
@@ -83,9 +84,12 @@ export class FeedComponent implements OnInit,OnDestroy {
                 this.currentPath = urlParts[1];
             }
         });
+
+        this.maxPinnedCards = Math.floor(window.innerWidth / 250);
     }
 
     public enoughSpaceForTimeLine() {
+        this.maxPinnedCards = Math.floor(window.innerWidth / 250);
         return window.innerWidth > 1000 && window.innerHeight > 700;
     }
 
