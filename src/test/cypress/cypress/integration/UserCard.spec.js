@@ -615,7 +615,8 @@ describe('User Card ', function () {
       // template is ready
       cy.get("#services").should('exist');
       // Respond to the card 
-      cy.get('#opfab-card-details-btn-response').click();
+      card.sendResponse();
+      
     })
 
     it('Edit card and check card preview show the response', ()=>{

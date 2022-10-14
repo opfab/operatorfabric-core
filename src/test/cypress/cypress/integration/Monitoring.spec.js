@@ -10,12 +10,14 @@
 import {OpfabGeneralCommands} from "../support/opfabGeneralCommands"
 import {AgGridCommands} from "../support/agGridCommands";
 import {ScriptCommands} from "../support/scriptCommands";
+import {CardCommands} from "../support/cardCommands"
 
 describe ('Monitoring screen tests',function () {
 
     const opfab = new OpfabGeneralCommands();
     const agGrid = new AgGridCommands();
     const script = new ScriptCommands();
+    const card = new CardCommands();
 
     before('Set up configuration', function () {
         script.deleteAllSettings();
@@ -472,7 +474,7 @@ describe ('Monitoring screen tests',function () {
         // template is ready
         cy.get("#question-form").should('exist');
         // Respond to the card 
-        cy.get('#opfab-card-details-btn-response').click();
+        card.sendResponse();
 
         cy.waitDefaultTime();
 

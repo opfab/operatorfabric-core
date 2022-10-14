@@ -17,6 +17,10 @@ export class CardCommands extends OpfabCommands {
         super.init('CARD');
     }
 
+    acknowledge = function () {
+        cy.get('#opfab-card-details-btn-ack').click();
+    }
+
     checkEditButtonDoesNotExist = function () {
         cy.get('#opfab-card-edit').should('not.exist');
     }
@@ -25,13 +29,25 @@ export class CardCommands extends OpfabCommands {
         cy.get('#opfab-card-delete').should('not.exist');
     }
 
+    close= function () {
+        cy.get('#opfab-close-card').click();
+    }
+
     delete = function () {
         cy.get('#opfab-card-delete').click();
         cy.get('#opfab-card-details-delete-btn-confirm').click();
     }
 
-    close= function () {
-        cy.get('#opfab-close-card').click();
+    modifyResponse = function () {
+        cy.get('#opfab-card-details-btn-response').click();
+    }
+
+    sendResponse = function () {
+        cy.get('#opfab-card-details-btn-response').click();
+    }
+
+    unacknowledge = function () {
+        cy.get('#opfab-card-details-btn-ack').click();
     }
 }
 

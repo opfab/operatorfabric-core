@@ -10,12 +10,17 @@
 import {OpfabGeneralCommands} from "../support/opfabGeneralCommands"
 import {ActivityAreaCommands} from "../support/activityAreaCommands"
 import {ScriptCommands} from "../support/scriptCommands";
+import {CardCommands} from "../support/cardCommands";
+import {FeedCommands} from "../support/feedCommands";
+
 
 describe ('Response card tests',function () {
 
     const opfab = new OpfabGeneralCommands();
     const activityArea = new ActivityAreaCommands();
     const script = new ScriptCommands();
+    const card = new CardCommands();
+    const feed = new FeedCommands();
 
     before('Set up configuration and clean cards', function () {
 
@@ -58,7 +63,7 @@ describe ('Response card tests',function () {
             
         // Respond to the card 
         cy.get('#question-choice1').click();
-        cy.get('#opfab-card-details-btn-response').click();
+        card.sendResponse();
 
         // The label of the validate button must be "MODIFY RESPONSE" now
         cy.get('#opfab-card-details-btn-response').should('have.text', 'MODIFY RESPONSE');
@@ -89,7 +94,7 @@ describe ('Response card tests',function () {
 
          cy.waitDefaultTime(); // to avoid detach dom error, we need to wait the new template has been rendered
          cy.get('#question-choice3').click(); 
-         cy.get('#opfab-card-details-btn-response').click();
+         card.sendResponse();
 
         cy.get('#response_from_ENTITY1_FR').next().should("have.text", ' NOK ')
                                            .next().should("have.text", ' NOK ')
@@ -134,7 +139,7 @@ describe ('Response card tests',function () {
             
         // Respond to the card
         cy.get('#question-choice2').click();
-        cy.get('#opfab-card-details-btn-response').click();
+        card.sendResponse();
 
         // See in the feed the fact that user has responded (icon)
         cy.get('#opfab-feed-lightcard-hasChildCardFromCurrentUserEntity');
@@ -185,12 +190,11 @@ describe ('Response card tests',function () {
         cy.get('#opfab-card-header-entity-ENTITY1_FR').should('have.css', 'color', 'rgb(0, 128, 0)'); // entity 1 color is green
         cy.get('#opfab-card-header-entity-ENTITY2_FR').should('have.css', 'color', 'rgb(0, 128, 0)'); // entity 2 color is green
 
-        // Response button is present (modify response), we click it
-        cy.get('#opfab-card-details-btn-response').click();
+        card.modifyResponse();
 
         // Respond to the card
         cy.get('#question-choice3').click();
-        cy.get('#opfab-card-details-btn-response').click(); // click again to send the response
+        card.sendResponse();
 
         // Check the popup for the entities choice is displayed
         cy.get("#opfab-card-details-entities-choice-selector").should('exist');
@@ -217,10 +221,10 @@ describe ('Response card tests',function () {
                                            .next().should("have.text", ' OK ');
 
         // operator4_fr updates the answer of ENTITY1_FR and ENTITY2_FR
-        cy.get('#opfab-card-details-btn-response').click(); // button "modify response"
+        card.modifyResponse();
         cy.get('#question-choice1').click();
         cy.get('#question-choice3').click(); //to uncheck the box
-        cy.get('#opfab-card-details-btn-response').click(); // click again to send the response
+        card.sendResponse();
         cy.get("#opfab-card-details-entities-choice-selector").click();
         cy.get("#opfab-card-details-entities-choice-selector").find('.vscomp-option-text').eq(0).click(); // We unselect ENTITY3_FR (East)
         cy.get("#opfab-card-details-entities-choice-selector").find('.vscomp-option-text').eq(1).click(); // We select ENTITY1_FR (North)
@@ -256,11 +260,11 @@ describe ('Response card tests',function () {
         cy.get('.opfab-checkbox').contains('Control Center FR South').click({force:true});
         activityArea.save();
         cy.waitDefaultTime();
-        cy.get('#opfab-navbar-menu-feed').click(); // go back to feed
-        cy.get('of-light-card').eq(0).click(); // click the card
-        cy.get('#opfab-card-details-btn-response').click(); // button "modify response"
+        opfab.navigateToFeed();
+        feed.openFirstCard();
+        card.modifyResponse();
         cy.get('#question-choice2').click(); // to check the box
-        cy.get('#opfab-card-details-btn-response').click(); // click again to send the response
+        card.sendResponse();
         cy.get("#opfab-card-details-entities-choice-selector").should('not.exist'); // entities choice popup must not be displayed
         cy.waitDefaultTime();
         // Check the response from ENTITY3_FR (East) has been updated and the other responses are still the same
@@ -352,9 +356,7 @@ describe ('Response card tests',function () {
         script.sendCard('defaultProcess/question.json');
 
         opfab.loginWithUser('operator1_fr');
-
-        // Click on the card
-        cy.get('of-light-card').eq(0).click(); 
+        feed.openFirstCard();
 
         // Should not have an icon of response
         cy.get('#opfab-feed-lightcard-hasChildCardFromCurrentUserEntity').should('not.exist');
@@ -430,7 +432,7 @@ describe ('Response card tests',function () {
  
     it ('Check response button is disabled while sending response',function () {
         opfab.loginWithUser('operator1_fr');
-        // Click on the card
+        //feed.openFirstCard();
         cy.get('of-light-card').eq(0).click(); 
 
         // Delay send card response
@@ -444,7 +446,7 @@ describe ('Response card tests',function () {
         cy.get('#question-choice1');
 
         cy.get('#opfab-card-details-btn-response').should('have.text', 'SEND RESPONSE');
-        cy.get('#opfab-card-details-btn-response').click(); // click to send the response
+        card.sendResponse();
 
         // Send response button should be disabled
         cy.get('#opfab-card-details-btn-response').should('be.disabled');
