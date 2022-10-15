@@ -52,7 +52,7 @@
     "jwt-decode": "3.1.2",
     "lodash-es": "4.17.21",
     "moment": "2.29.4",
-    "moment-timezone": "0.5.37",
+    "moment-timezone": "0.5.38",
     "ng-event-source": "1.0.14",
     "ngx-chips": "3.0.0",
     "ol": "6.5.0",
