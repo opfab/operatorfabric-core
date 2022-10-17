@@ -32,7 +32,14 @@ export class ConfigService {
     }
 
     public loadWebUIConfiguration(): Observable<any> {
-        return this.httpClient.get(`${this.configUrl}`).pipe(map((config) => (this.config = config)));
+        return this.httpClient.get(`${this.configUrl}`,{responseType:'text'}).pipe(map((config) => {
+            try {
+                this.config = JSON.parse(config);
+            } catch (error) {
+                console.error("Invalid web-ui.json file:", error);
+            }
+            return this.config;
+        }));
     }
 
     public overrideConfigSettingsWithUserSettings(settings: any) {
