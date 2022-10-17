@@ -73,7 +73,7 @@
         </div>
 
         <br />
-        <div style="text-align: center;width:100%">
+        <div  [hidden]="isLoadingCardTemplate" style="text-align: center;width:100%">
             <button id="opfab-usercard-btn-cancel" class="opfab-btn-cancel" (click)="cancel()" translate> userCard.refuse</button>
             <button id="opfab-usercard-btn-prepareCard" type="button" class="opfab-btn" [disabled]="!selectedProcessId" (click)="prepareCard()" translate>
                 userCard.prepareCard
