@@ -81,12 +81,17 @@ export class ApplicationLoadingComponent implements OnInit {
         this.configService.loadWebUIConfiguration().subscribe({
             //This configuration needs to be loaded first as it defines the authentication mode
             next: (config) => {
-                console.log(new Date().toISOString(), `Configuration loaded (web-ui.json)`);
-                this.setTitleInBrowser();
-                this.loadTranslation(config);
+                if (!!config) {
+                    this.logger.info(`Configuration loaded (web-ui.json)`);
+                    this.setTitleInBrowser();
+                    this.loadTranslation(config);
+                }
+                else {
+                    this.logger.info("No valid web-ui.json configuration file, stop application loading");
+                }
             },
             error: catchError((err, caught) => {
-                console.error('Impossible to load configuration file web-ui.json', err);
+                this.logger.error('Impossible to load configuration file web-ui.json' + err);
                 return caught;
             })
         });
@@ -162,9 +167,9 @@ export class ApplicationLoadingComponent implements OnInit {
     }
 
     private loadSettings() {
-        this.settingsService.fetchUserSettings().subscribe ( {
+        this.settingsService.fetchUserSettings().subscribe({
             next: (settings) => {
-                console.log(new Date().toISOString(), `Settings loaded` , settings);
+                console.log(new Date().toISOString(), `Settings loaded`, settings);
                 this.configService.overrideConfigSettingsWithUserSettings(settings);
                 this.checkIfAccountIsAlreadyUsed();
             },
@@ -223,5 +228,4 @@ export class ApplicationLoadingComponent implements OnInit {
         });
         this.reminderService.startService(this.userLogin);
     }
-
 }
