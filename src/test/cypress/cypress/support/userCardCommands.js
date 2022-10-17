@@ -157,15 +157,15 @@ export class UserCardCommands extends OpfabCommands {
     // SENDING CARD COMMANDS
     sendCard= function () {
         cy.get('#opfab-usercard-btn-accept').click();
+        cy.get('.opfab-info-message').should('have.class', 'opfab-alert-info').contains('Your card is published');
+        cy.get('#opfab-close-alert').click();
     }
 
     previewThenSendCard= function () {
         cy.get('#opfab-usercard-btn-prepareCard').click();
         cy.get('of-card-detail').should('exist');
         cy.get('#opfab-usercard-btn-accept').click();
-    }
-
-    checkCardHasBeenSend= function () {
         cy.get('.opfab-info-message').should('have.class', 'opfab-alert-info').contains('Your card is published');
+        cy.get('#opfab-close-alert').click();
     }
 }
