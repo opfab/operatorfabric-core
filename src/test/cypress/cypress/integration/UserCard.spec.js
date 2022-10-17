@@ -40,7 +40,6 @@ describe('User Card ', function () {
       usercard.selectProcess('Conference and IT incident');
       usercard.selectState('Conference Call ☏');
       usercard.previewThenSendCard();
-      usercard.checkCardHasBeenSend();
       feed.openFirstCard();
       card.checkEditButtonDoesNotExist();
       card.delete();
@@ -55,7 +54,6 @@ describe('User Card ', function () {
       usercard.selectProcess('Process example');
       usercard.selectState('Process example');
       usercard.previewThenSendCard();
-      usercard.checkCardHasBeenSend();
       feed.openFirstCard();
       card.checkDeleteButtonDoesNotExist();
     })
@@ -71,7 +69,6 @@ describe('User Card ', function () {
       usercard.selectProcess('Process example');
       usercard.selectState('Process example');
       usercard.previewThenSendCard();
-      usercard.checkCardHasBeenSend();
       feed.openFirstCard();
       card.checkDeleteButtonDoesNotExist();
     })
@@ -92,7 +89,6 @@ describe('User Card ', function () {
       cy.get('#question').type('First question');
       usercard.selectRecipient('Control Center FR East');
       usercard.previewThenSendCard();
-      usercard.checkCardHasBeenSend();
       feed.openFirstCard();
       feed.editCurrentCard();
       cy.get('#label').contains('QUESTION (New)');
@@ -380,8 +376,6 @@ describe('User Card ', function () {
       // Response table has 1 header and 1 row 
       cy.get("#childs-div").find('tr').should('have.length', 2);
       usercard.sendCard();
-
-      usercard.checkCardHasBeenSend();
       feed.checkNumberOfDisplayedCardsIs(1);
       // Feed light card show response from current entity
       cy.get('of-light-card').eq(0).find('#opfab-feed-lightcard-hasChildCardFromCurrentUserEntity').should('exist');
@@ -422,7 +416,6 @@ describe('User Card ', function () {
       cy.setFormDateTime('endDate','2029','Jun',25,11,10);
       usercard.selectRecipient('Control Center FR South');
       usercard.previewThenSendCard();
-      usercard.checkCardHasBeenSend();
       feed.openFirstCard();
       feed.checkSelectedCardHasTitle("Message");
       feed.checkSelectedCardHasSummary("Message received :   Hello, that's a test message / Result is <OK> & work done is 100%");
@@ -457,7 +450,6 @@ describe('User Card ', function () {
       cy.waitDefaultTime();
       cy.get('#message').type(' (updated)');
       usercard.previewThenSendCard();
-      usercard.checkCardHasBeenSend();
     })
 
 
@@ -515,7 +507,6 @@ describe('User Card ', function () {
       // check this to be sure template has been loaded
       cy.get('#state-select');
       usercard.previewThenSendCard();
-      usercard.checkCardHasBeenSend();
     })
 
     it('Cannot edit card from not allowed entity', () => {
@@ -536,7 +527,6 @@ describe('User Card ', function () {
       cy.get('#message').type('Hello')
       usercard.selectRecipient('Control Center FR South');
       usercard.previewThenSendCard();
-      usercard.checkCardHasBeenSend();
       feed.openFirstCard(); 
       cy.get('#opfab-div-card-template-processed').find('div').eq(0).should('have.text', '\n  Hello\n')
       feed.checkSelectedCardHasTitle("Message");
@@ -552,7 +542,6 @@ describe('User Card ', function () {
       // check this to be sure template has been loaded
       cy.get("#hidden_sender").should("have.value", "ENTITY2_FR");
       usercard.previewThenSendCard();
-      usercard.checkCardHasBeenSend();
         
     })
 
@@ -580,7 +569,6 @@ describe('User Card ', function () {
         // check this to be sure template has been loaded
         cy.get('#state-select');
         usercard.previewThenSendCard();
-        usercard.checkCardHasBeenSend();
 
       })
 
@@ -604,7 +592,6 @@ describe('User Card ', function () {
       cy.get('#service-select');
 
       usercard.previewThenSendCard();
-      usercard.checkCardHasBeenSend();
       feed.checkNumberOfDisplayedCardsIs(1);
     })
 
@@ -663,7 +650,6 @@ describe('User Card ', function () {
       cy.setFormDateTime('endDate', '2029', 'Jun', 25, 11, 10);
       usercard.selectRecipient('Control Center FR South');
       usercard.previewThenSendCard();
-      usercard.checkCardHasBeenSend();
       feed.checkNumberOfDisplayedCardsIs(1);
       feed.openFirstCard();
       cy.get('#opfab-div-card-template-processed').find('div').eq(0).should('have.text', "\n  Hello, that's a test message / Result is <OK> & work done is 100%\n");
@@ -691,7 +677,6 @@ describe('User Card ', function () {
 
         cy.get('#message').should('be.visible').type(' (updated)')
         usercard.previewThenSendCard();
-        usercard.checkCardHasBeenSend();
 
         cy.waitDefaultTime();
 
