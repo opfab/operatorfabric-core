@@ -382,11 +382,11 @@ describe('AdmininstrationPages', () => {
         //Click on "Perimeters Management"
         cy.get('#opfab-admin-perimeters-tab').click();
 
-        // Check first page has 8 rows
-        agGrid.countTableRows('ag-grid-angular', 8);
+        // Check first page has 9 rows
+        agGrid.countTableRows('ag-grid-angular', 9);
 
-        // Pagination should display ' Results number  : 8 '
-        cy.get('.opfab-pagination').should('contain.text', ' Results number  : 8');
+        // Pagination should display ' Results number  : 9 '
+        cy.get('.opfab-pagination').should('contain.text', ' Results number  : 9');
 
         // Add new perimeter
         cy.get('#add-item').click();
@@ -402,7 +402,7 @@ describe('AdmininstrationPages', () => {
 
         cy.get('#opfab-admin-perimeter-process-filter')
             .find('.vscomp-option-text')
-            .eq(1)
+            .eq(2)
             .should('contain.text', 'cypress - Test process for cypress')
             .click({force: true});
 
@@ -428,25 +428,25 @@ describe('AdmininstrationPages', () => {
 
         cy.get('#opfab-admin-perimeter-btn-add').click();
 
-        cy.get('.opfab-pagination').should('contain.text', ' Results number  : 9');
+        cy.get('.opfab-pagination').should('contain.text', ' Results number  : 10');
 
-        agGrid.countTableRows('ag-grid-angular', 9);
+        agGrid.countTableRows('ag-grid-angular', 10);
 
-        agGrid.cellShould('ag-grid-angular', 8, 0, 'have.text', 'testperimeter');
-        agGrid.cellShould('ag-grid-angular', 8, 1, 'have.text', 'cypress');
-        agGrid.cellShould('ag-grid-angular', 8, 2, 'have.text', 'Message');
+        agGrid.cellShould('ag-grid-angular', 9, 0, 'have.text', 'testperimeter');
+        agGrid.cellShould('ag-grid-angular', 9, 1, 'have.text', 'cypress');
+        agGrid.cellShould('ag-grid-angular', 9, 2, 'have.text', 'Message');
         // We check the right for Message is Write (the badge must be from class opfab-bg-right-write)
         cy.get('ag-grid-angular')
             .find('.ag-center-cols-container')
             .find('.ag-row')
-            .eq(8)
+            .eq(9)
             .find('.ag-cell-value')
             .find('.opfab-bg-right-write')
             .eq(0)
             .should('exist');
 
         // Edit previously created perimeter
-        agGrid.clickCell('ag-grid-angular', 8, 3, 'of-action-cell-renderer');
+        agGrid.clickCell('ag-grid-angular', 9, 3, 'of-action-cell-renderer');
 
         cy.get('of-edit-perimeter-modal').should('exist');
 
@@ -477,34 +477,34 @@ describe('AdmininstrationPages', () => {
 
         cy.waitDefaultTime();
 
-        // We still have 9 rows
-        cy.get('.opfab-pagination').should('contain.text', ' Results number  : 9');
+        // We still have 10 rows
+        cy.get('.opfab-pagination').should('contain.text', ' Results number  : 10');
 
-        agGrid.countTableRows('ag-grid-angular', 9);
+        agGrid.countTableRows('ag-grid-angular', 10);
 
         // We check the perimeter is updated
-        agGrid.cellShould('ag-grid-angular', 8, 0, 'have.text', 'testperimeter');
-        agGrid.cellShould('ag-grid-angular', 8, 1, 'have.text', 'cypress');
-        agGrid.cellShould('ag-grid-angular', 8, 2, 'have.text', 'Message with no ack');
+        agGrid.cellShould('ag-grid-angular', 9, 0, 'have.text', 'testperimeter');
+        agGrid.cellShould('ag-grid-angular', 9, 1, 'have.text', 'cypress');
+        agGrid.cellShould('ag-grid-angular', 9, 2, 'have.text', 'Message with no ack');
         // We check the right for Message is ReceiveAndWrite (the badge must be from class opfab-bg-right-receiveandwrite)
         cy.get('ag-grid-angular')
             .find('.ag-center-cols-container')
             .find('.ag-row')
-            .eq(8)
+            .eq(9)
             .find('.ag-cell-value')
             .find('.opfab-bg-right-receiveandwrite')
             .eq(0)
             .should('exist');
 
         // We check the 'filtering notification allowed' is still unchecked, and we close the modal
-        agGrid.clickCell('ag-grid-angular', 8, 3, 'of-action-cell-renderer');
+        agGrid.clickCell('ag-grid-angular', 9, 3, 'of-action-cell-renderer');
         cy.get('of-edit-perimeter-modal').should('exist');
         cy.get('.modal-title').should('contain.text', 'testperimeter');
         cy.get('.opfab-checkbox').contains('FILTERING NOTIFICATION ALLOWED ').find('input').should('not.be.checked');
         cy.get('#opfab-admin-perimeter-btn-close').click();
 
         // Delete previously created perimeter
-        agGrid.clickCell('ag-grid-angular', 8, 4, 'of-action-cell-renderer');
+        agGrid.clickCell('ag-grid-angular', 9, 4, 'of-action-cell-renderer');
 
         cy.get('of-confirmation-dialog').should('exist');
 
@@ -513,9 +513,9 @@ describe('AdmininstrationPages', () => {
         cy.waitDefaultTime();
 
         //Check perimeter was deleted
-        cy.get('.opfab-pagination').should('contain.text', ' Results number  : 8');
+        cy.get('.opfab-pagination').should('contain.text', ' Results number  : 9');
 
-        agGrid.countTableRows('ag-grid-angular', 8);
+        agGrid.countTableRows('ag-grid-angular', 9);
     });
 
     it('Check users export', function () {
@@ -630,7 +630,7 @@ describe('AdmininstrationPages', () => {
                 expect(rows[2].NAME).to.equal('Dispatcher');
                 expect(rows[2].DESCRIPTION).to.equal('Dispatcher Group');
                 expect(rows[2].TYPE).to.be.undefined;
-                expect(rows[2].PERIMETERS).to.equal('conferenceAndITIncidentExample,cypress,defaultProcess,gridCooperation,messageOrQuestionExample,question,taskExample');
+                expect(rows[2].PERIMETERS).to.equal('conferenceAndITIncidentExample,cypress,defaultProcess,externalRecipent,gridCooperation,messageOrQuestionExample,question,taskExample');
                 expect(rows[2]['REAL TIME']).to.equal('YES');
 
                 // Delete export file
@@ -659,7 +659,7 @@ describe('AdmininstrationPages', () => {
             expect(files[0]).to.match(/^perimeter_export_\d*\.xlsx/);
             // check file content
             cy.task('readXlsx', { file: './cypress/downloads/' + files[0], sheet: "data" }).then((rows) => {
-                expect(rows.length).to.equal(8);
+                expect(rows.length).to.equal(9);
 
                 expect(rows[0].ID).to.equal('conferenceAndITIncidentExample');
                 expect(rows[0].PROCESS).to.equal('conferenceAndITIncidentExample');
