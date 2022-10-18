@@ -493,6 +493,11 @@ body {
     .action-cell-delete-admin {
         display: none;
     }
+
+    .action-cell-column-header {
+        display: none;
+    }
+
     .opfab-sev-alarm {
         background-color: $sev-alarm;
         font-size: 0px;
