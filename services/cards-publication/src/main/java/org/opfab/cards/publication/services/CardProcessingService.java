@@ -14,9 +14,7 @@ import feign.FeignException;
 import lombok.extern.slf4j.Slf4j;
 
 import org.opfab.cards.model.CardOperationTypeEnum;
-import org.opfab.cards.publication.model.ArchivedCardPublicationData;
-import org.opfab.cards.publication.model.CardPublicationData;
-import org.opfab.cards.publication.model.PublisherTypeEnum;
+import org.opfab.cards.publication.model.*;
 import org.opfab.cards.publication.services.clients.impl.ExternalAppClientImpl;
 import org.opfab.springtools.configuration.oauth.ProcessesCache;
 import org.opfab.springtools.error.model.ApiError;
@@ -189,6 +187,9 @@ public class CardProcessingService {
         if (!checkIsAllTimeSpanEndDateAfterStartDate(c))
             throw new ConstraintViolationException("constraint violation : TimeSpan.end must be after TimeSpan.start", null);
 
+        if (!checkIsAllHoursAndMinutesFilled(c))
+            throw new ConstraintViolationException("constraint violation : TimeSpan.Recurrence.HoursAndMinutes must be filled", null);
+
         // constraint check : process and state must not contain "." (because we use it as a separator)
         if (!checkIsDotCharacterNotInProcessAndState(c))
             throw new ConstraintViolationException("constraint violation : character '.' is forbidden in process and state", null);
@@ -248,6 +249,20 @@ public class CardProcessingService {
                     Instant endInstant = c.getTimeSpans().get(i).getEnd();
                     Instant startInstant = c.getTimeSpans().get(i).getStart();
                     if ((endInstant != null) && (endInstant.compareTo(startInstant) < 0))
+                        return false;
+                }
+            }
+        }
+        return true;
+    }
+
+    boolean checkIsAllHoursAndMinutesFilled(CardPublicationData c) {
+        if (c.getTimeSpans() != null) {
+            for (int i = 0; i < c.getTimeSpans().size(); i++) {
+                TimeSpan currentTimeSpan = c.getTimeSpans().get(i);
+                if ((currentTimeSpan != null) && (currentTimeSpan.getRecurrence() != null)) {
+                    HoursAndMinutes currentHoursAndMinutes = currentTimeSpan.getRecurrence().getHoursAndMinutes();
+                    if ((currentHoursAndMinutes == null) || (currentHoursAndMinutes.getHours() == null) || (currentHoursAndMinutes.getMinutes() == null))
                         return false;
                 }
             }
