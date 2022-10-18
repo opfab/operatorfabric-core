@@ -79,6 +79,7 @@
             this.initSeverity();
             this.initInitialDates();
             this.initUserCardTemplateGateway();
+            this.initTimeForRecurrence();
         },
 
         initSeverity: function() {
@@ -92,6 +93,16 @@
             usercardTemplateGateway.setInitialEndDate(mystartDate.getTime() + 7 * 24 * 3600000);
         },
 
+        initTimeForRecurrence: function() {
+            const defaultTimeForRecurrence = new Date();
+            defaultTimeForRecurrence.setTime(defaultTimeForRecurrence.getTime() + 3600000);
+
+            const timeControl = document.getElementById('time');
+            if (! timeControl.value) {
+                timeControl.value = defaultTimeForRecurrence.getHours() + ':' + defaultTimeForRecurrence.getMinutes();
+            }
+        },
+
         initUserCardTemplateGateway: function() {
 
             usercardTemplateGateway.getSpecificCardInformation = function () {
@@ -99,7 +110,7 @@
                 
                 const time = document.getElementById('time').value;
                 const hours =  time.slice(0, 2); // the hours are the 2 first characters
-                const minutes =  time.slice(-2); // the minutes are the 2 last characterss
+                const minutes =  time.slice(-2); // the minutes are the 2 last characters
                 
                 const minutesForReminder =  document.getElementById('minutesForReminder').value;
                 const durationInMinutes =  document.getElementById('durationInMinutes').value;

@@ -204,6 +204,45 @@ Scenario: When post a card with no timeZone in timespan recurrence , it set the 
     When method post
     Then response.count == 0
 
+
+  Scenario: When post card with no hours and minutes in recurrence, the card is not accepted
+
+    * def card =
+"""
+{
+	"publisher" : "operator1_fr",
+	"processVersion" : "1",
+	"process"  :"api_test",
+	"processInstanceId" : "processTimeSpan",
+	"state": "messageState",
+	"groupRecipients": ["Dispatcher"],
+	"severity" : "INFORMATION",
+	"startDate" : 1553186770681,
+	"summary" : {"key" : "defaultProcess.summary"},
+	"title" : {"key" : "defaultProcess.title"},
+	"data" : {"message":"a message"},
+	"timeSpans" : [
+		{"start" : 1553186770681 ,"end" :1553186770682 , "recurrence" :
+					{
+						"timeZone":"test",
+						"daysOfWeek":[2,3],
+						"hoursAndMinutes": {"hours":"","minutes":""}
+					}
+		},
+		{"start" : 1553186770678}
+		]
+}
+"""
+
+# Push card
+    Given url opfabPublishCardUrl + 'cards'
+    And header Authorization = 'Bearer ' + authToken
+    And request card
+    When method post
+    Then status 400
+    And match response.message contains "Constraint violation in the request"
+    And match response.errors[0] contains "constraint violation : TimeSpan.Recurrence.HoursAndMinutes must be filled"
+
 #delete perimeter created previously
     Given url opfabUrl + 'users/perimeters/perimeter'
     And header Authorization = 'Bearer ' + authTokenAdmin
