@@ -35,6 +35,7 @@ import {I18n} from '@ofModel/i18n.model';
 import {FilterService} from '@ofServices/lightcards/filter.service';
 import {LogOption, OpfabLoggerService} from './logs/opfab-logger.service';
 import packageInfo from '../../../package.json';
+import {SoundNotificationService} from './sound-notification.service';
 
 @Injectable({
     providedIn: 'root'
@@ -69,6 +70,7 @@ export class CardService {
         private authService: AuthenticationService,
         private lightCardsStoreService: LightCardsStoreService,
         private filterService: FilterService,
+        private soundNotificationService: SoundNotificationService,
         private logger: OpfabLoggerService
     ) {
         const clientId = this.guidService.getCurrentGuidString();
@@ -233,6 +235,7 @@ export class CardService {
                             this.logger.info(
                                 'CardService - Disconnecting user because a new connection is being opened for this account'
                             );
+                            this.soundNotificationService.stopService();
                             this.closeSubscription();
                             this.receivedDisconnectedSubject.next(true);
                             break;

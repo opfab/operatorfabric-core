@@ -40,6 +40,7 @@ import {ConfigService} from '@ofServices/config.service';
 import {injectedSpy} from '@tests/helpers';
 import SpyObj = jasmine.SpyObj;
 import createSpyObj = jasmine.createSpyObj;
+import {SoundNotificationService} from '@ofServices/sound-notification.service';
 
 describe('AuthenticationEffects', () => {
     let actions$: Observable<any>;
@@ -49,6 +50,7 @@ describe('AuthenticationEffects', () => {
     let router: SpyObj<Router>;
     let configService: SpyObj<ConfigService>;
     let cardService: SpyObj<CardService>;
+    let soundNotificationService: SpyObj<SoundNotificationService>;
 
     beforeEach(waitForAsync(() => {
         const routerSpy = createSpyObj('Router', ['navigate']);
@@ -77,7 +79,8 @@ describe('AuthenticationEffects', () => {
                 {provide: CardService, useValue: cardServiceSpy},
                 {provide: Store, useValue: storeSpy},
                 {provide: Router, useValue: routerSpy},
-                {provide: ConfigService, useValue: configServiceSpy}
+                {provide: ConfigService, useValue: configServiceSpy},
+                {provide: SoundNotificationService, useValue: soundNotificationService}
             ]
         });
 
@@ -106,7 +109,8 @@ describe('AuthenticationEffects', () => {
                 authenticationService,
                 null,
                 configService,
-                cardService
+                cardService,
+                soundNotificationService
             );
             expect(effects).toBeTruthy();
             effects.TryToLogIn.subscribe((action: AuthenticationActions) =>
@@ -124,7 +128,8 @@ describe('AuthenticationEffects', () => {
                 authenticationService,
                 null,
                 configService,
-                cardService
+                cardService,
+                soundNotificationService
             );
             expect(effects).toBeTruthy();
             effects.TryToLogIn.subscribe((action: AuthenticationActions) =>
@@ -137,7 +142,7 @@ describe('AuthenticationEffects', () => {
         it('should success and navigate', () => {
             const localAction$ = new Actions(hot('-a--', {a: new AcceptLogOutAction()}));
             router.navigate.and.callThrough();
-            effects = new AuthenticationEffects(mockStore, localAction$, null, router, configService, cardService);
+            effects = new AuthenticationEffects(mockStore, localAction$, null, router, configService, cardService,soundNotificationService);
             expect(effects).toBeTruthy();
             effects.AcceptLogOut.subscribe((action: AuthenticationActions) => {
                 expect(action.type).toEqual(AuthenticationActionTypes.AcceptLogOutSuccess);
@@ -161,7 +166,8 @@ describe('AuthenticationEffects', () => {
                 authenticationService,
                 router,
                 configService,
-                cardService
+                cardService,
+                soundNotificationService
             );
             expect(effects).toBeTruthy();
             effects.CheckAuthentication.subscribe((action: AuthenticationActions) => {
@@ -181,7 +187,8 @@ describe('AuthenticationEffects', () => {
                 authenticationService,
                 router,
                 configService,
-                cardService
+                cardService,
+                soundNotificationService
             );
             expect(effects).toBeTruthy();
             effects.CheckAuthentication.subscribe((action: AuthenticationActions) => {
@@ -199,7 +206,8 @@ describe('AuthenticationEffects', () => {
                 authenticationService,
                 router,
                 configService,
-                cardService
+                cardService,
+                soundNotificationService
             );
             expect(effects).toBeTruthy();
             effects.CheckAuthentication.subscribe((action: AuthenticationActions) => {

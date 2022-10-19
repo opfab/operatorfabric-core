@@ -30,6 +30,7 @@ import {I18n} from '@ofModel/i18n.model';
 import {ConfigService} from '@ofServices/config.service';
 import {redirectToCurrentLocation} from '../../app-routing.module';
 import {CardService} from '@ofServices/card.service';
+import {SoundNotificationService} from '@ofServices/sound-notification.service';
 
 /**
  * Management of the authentication of the current user
@@ -42,7 +43,8 @@ export class AuthenticationEffects {
         private authService: AuthenticationService,
         private router: Router,
         private configService: ConfigService,
-        private cardService: CardService
+        private cardService: CardService,
+        private soundNotificationService: SoundNotificationService
     ) {}
 
     /**
@@ -95,6 +97,7 @@ export class AuthenticationEffects {
             ofType(AuthenticationActionTypes.TryToLogOut),
             switchMap(() => {
                 this.resetState();
+                this.soundNotificationService.stopService();
                 return of(new AcceptLogOutAction());
             })
         )
