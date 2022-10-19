@@ -31,7 +31,7 @@
     "@fullcalendar/daygrid": "5.11.3",
     "@fullcalendar/interaction": "5.11.3",
     "@fullcalendar/timegrid": "5.11.3",
-    "@ng-bootstrap/ng-bootstrap": "13.0.0",
+    "@ng-bootstrap/ng-bootstrap": "13.1.0",
     "@ngrx/effects": "14.3.2",
     "@ngrx/router-store": "14.3.2",
     "@ngrx/store": "14.3.2",
