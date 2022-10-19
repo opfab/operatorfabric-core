@@ -14,6 +14,7 @@ import {LogOption, OpfabLoggerService} from '@ofServices/logs/opfab-logger.servi
 import {UrlLockService} from './url-lock.service';
 import {UserService} from '@ofServices/user.service';
 import {ApplicationLoadingStep} from '../application-loading-step';
+import {SoundNotificationService} from '@ofServices/sound-notification.service';
 
 /** This component checks if the url of opfab is already in use
  *  in the browser (there should not be several accounts connected
@@ -48,7 +49,8 @@ export class AppLoadedInAnotherTabComponent extends ApplicationLoadingStep {
         private urlLockService: UrlLockService,
         private modalService: NgbModal,
         private logger: OpfabLoggerService,
-        private userService: UserService
+        private userService: UserService,
+        private soundNotificationService: SoundNotificationService
     ) {
         super();
     }
@@ -93,6 +95,7 @@ export class AppLoadedInAnotherTabComponent extends ApplicationLoadingStep {
         this.urlLockService.setDisconnectSignalListener(() => {
             this.isDisconnectedByAnotherTab = true;
             this.isApplicationActive = false;
+            this.soundNotificationService.stopService();
             this.cardService.closeSubscription();
             const login = this.userService.getCurrentUserWithPerimeters().userData.login;
             this.logger.info(
