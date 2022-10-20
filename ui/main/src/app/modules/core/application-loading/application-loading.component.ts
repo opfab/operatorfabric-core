@@ -49,6 +49,9 @@ export class ApplicationLoadingComponent implements OnInit {
     public showLoginScreen = false;
     public loadingInProgress = true;
     public applicationLoaded = false;
+    displayEnvironmentName = false;
+    environmentName: string;
+    environmentColor: string;
 
     /**
      * NB: I18nService is injected to trigger its constructor at application startup
@@ -85,6 +88,7 @@ export class ApplicationLoadingComponent implements OnInit {
                     this.logger.info(`Configuration loaded (web-ui.json)`);
                     this.setTitleInBrowser();
                     this.loadTranslation(config);
+                    this.loadEnvironmentName();
                 }
                 else {
                     this.logger.info("No valid web-ui.json configuration file, stop application loading");
@@ -95,6 +99,14 @@ export class ApplicationLoadingComponent implements OnInit {
                 return caught;
             })
         });
+    }
+
+    private loadEnvironmentName() {
+        this.environmentName = this.configService.getConfigValue('environmentName');
+        this.environmentColor = this.configService.getConfigValue('environmentColor', 'blue');
+        if (!!this.environmentName) {
+            this.displayEnvironmentName = true;
+        }
     }
 
     private setTitleInBrowser() {
