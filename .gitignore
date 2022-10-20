@@ -124,8 +124,9 @@ ui/main/reports
 ui/main/report.html
 ui/main/.angular
 
-# Bundles and cypress configuration for docker
+# Bundles for docker and dev mode
 config/docker/businessconfig-storage/**
+config/dev/businessconfig-storage/**
 
 # Web UI config
 config/cypress/ui-config/**
