@@ -264,8 +264,8 @@ export class AuthenticationEffects {
     }
 
     private resetState() {
-        this.authService.clearAuthenticationInformation();
         this.cardService.closeSubscription();
+        this.authService.clearAuthenticationInformation();
         window.location.href = this.configService.getConfigValue('security.logout-url', 'https://opfab.github.io');
     }
 }
