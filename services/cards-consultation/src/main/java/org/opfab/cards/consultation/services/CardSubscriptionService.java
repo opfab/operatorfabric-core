@@ -13,15 +13,15 @@ import lombok.extern.slf4j.Slf4j;
 import net.minidev.json.JSONObject;
 import net.minidev.json.parser.JSONParser;
 import net.minidev.json.parser.ParseException;
+import org.opfab.actiontracing.model.UserActionEnum;
+import org.opfab.actiontracing.services.UserActionLogService;
 import org.opfab.springtools.configuration.oauth.UserServiceCache;
 import org.opfab.users.model.CurrentUserWithPerimeters;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
-import java.util.Collection;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
 @Service
@@ -37,6 +37,11 @@ public class CardSubscriptionService {
 
     @Autowired
     protected UserServiceCache userServiceCache;
+
+    @Autowired
+    protected UserActionLogService userActionLogService;
+
+    private @Value("${traceUserAction:true}") boolean traceUserAction;
 
     @Autowired
     public CardSubscriptionService(
@@ -113,6 +118,8 @@ public class CardSubscriptionService {
         log.info("Subscription created with id {} for user {} ", cardSubscription.getId(), cardSubscription.getUserLogin());
         cardSubscription.userServiceCache = this.userServiceCache;
 
+        logUserAction(currentUserWithPerimeters.getUserData().getLogin(), UserActionEnum.OPEN_SUBSCRIPTION, currentUserWithPerimeters.getUserData().getEntities(), null, null);
+
         return cardSubscription;
     }
 
@@ -149,6 +156,9 @@ public class CardSubscriptionService {
         }
         cache.remove(subId); 
         log.info("Subscription with id {} evicted (user {})", subId , sub.getUserLogin());
+
+
+        logUserAction(sub.getUserLogin(), UserActionEnum.CLOSE_SUBSCRIPTION, sub.getCurrentUserWithPerimeters().getUserData().getEntities(), null, null);
     }
 
     /**
@@ -224,6 +234,10 @@ public class CardSubscriptionService {
                 log.info("message '{}' sent to subscription '{}'", message, subscription.getId());
                 subscription.publishDataIntoSubscription(message);
         });
+    }
+
+    private void logUserAction(String login, UserActionEnum actionType, List<String> entities, String cardUid, String comment) {
+        if (traceUserAction) userActionLogService.insertUserActionLog(login,  actionType, entities, cardUid, comment);
     }
 
 }

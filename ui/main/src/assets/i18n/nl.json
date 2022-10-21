@@ -105,7 +105,8 @@
     "switchToDayMode": "Dag modus",
     "realTimeUsers": "Realtime gebruikers",
     "externalDevicesConfiguration": "Extern apparaat configuratie",
-    "activityArea": "Activiteitengebied"
+    "activityArea": "Activiteitengebied",
+    "useractionlogs": "Logboek"
   },
   "timeline": {
     "hideTimeline" : "Verberg Tijdlijn",
@@ -490,6 +491,15 @@
     "delete": "VERWIJDEREN",
     "id": "APPARATEN",
     "isEnabled": "IS INGESCHAKELD"
+  },
+  "useractionlogs": {
+    "title": "LOGBOEKEN VAN GEBRUIKERSACTIES",
+    "date": "Datum",
+    "action": "Actie",
+    "login": "Gebruikersnaam",
+    "entities": "Entiteiten",
+    "cardUid": "Kaart UID",
+    "comment": "Opmerking"
   },
   "datePicker": {
     "monday": "Ma",

@@ -14,6 +14,7 @@ import {LoggingEntryPointComponent} from './modules/logging/logging-entry-point.
 import {MonitoringComponent} from './modules/monitoring/monitoring.component';
 import {CalendarComponent} from './modules/calendar/calendar.component';
 import {ArchivesEntryPointComponent} from './modules/archives/archives-entry-point.component';
+import {UserActionLogsComponent} from './modules/useractionlogs/useractionlogs.component';
 
 const defaultPath = '/feed';
 const archivePath = 'archives';
@@ -80,10 +81,14 @@ const routes: Routes = [
                 (m) => m.ExternaldevicesModule
             )
     },
+    {
+        path: 'useractionlogs',
+        component: UserActionLogsComponent
+    },
     {path: '**', redirectTo: defaultPath}
 ];
 const startIndex = 0;
-const numberOfHiddenRoutes = 10; // 'Calendar', 'businessconfigparty', 'settings', 'navbar', 'admin', 'realtimeusers', 'activityarea', 'feedconfiguration', 'changepassword', 'externaldevicesconfiguration'
+const numberOfHiddenRoutes = 11; // 'Calendar', 'businessconfigparty', 'settings', 'navbar', 'admin', 'realtimeusers', 'activityarea', 'feedconfiguration', 'changepassword', 'externaldevicesconfiguration', 'useractionlogs'
 const manageIndexesWhichBeginAtZero = 1;
 const numberOfRoutes = routes.length;
 const lastIndexOfVisibleElements = numberOfRoutes - numberOfHiddenRoutes - manageIndexesWhichBeginAtZero;

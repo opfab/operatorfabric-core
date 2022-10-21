@@ -56,6 +56,7 @@ export class NavbarComponent implements OnInit {
     displayFeedConfiguration: boolean;
     displayRealTimeUsers: boolean;
     displayExternalDevicesConfiguration: boolean;
+    displayUserActionLogs: boolean;
     displayCreateUserCard: boolean;
     displayCalendar: boolean;
     displaySettings: boolean;
@@ -122,6 +123,8 @@ export class NavbarComponent implements OnInit {
         this.displayFeedConfiguration = visibleCoreMenus.includes('feedconfiguration');
         this.displayRealTimeUsers = visibleCoreMenus.includes('realtimeusers');
         this.displayExternalDevicesConfiguration = visibleCoreMenus.includes('externaldevicesconfiguration');
+        this.displayUserActionLogs = visibleCoreMenus.includes('useractionlogs');
+        debugger;
         this.displayCreateUserCard = visibleCoreMenus.includes('usercard');
         this.displayCalendar = visibleCoreMenus.includes('calendar');
         this.displaySettings = visibleCoreMenus.includes('settings');

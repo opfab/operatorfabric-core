@@ -18,6 +18,7 @@ dependencies {
     implementation project(':tools:spring:spring-mongo-utilities')
     implementation project(':tools:spring:spring-oauth2-utilities')
     implementation project(':tools:generic:utilities')
+    implementation project(':tools:action-tracing')
 
     testImplementation spring.securityTest
 }

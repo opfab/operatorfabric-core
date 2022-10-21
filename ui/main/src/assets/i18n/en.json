@@ -105,7 +105,8 @@
     "switchToDayMode": "Day mode",
     "realTimeUsers": "Real time users",
     "externalDevicesConfiguration": "External devices configuration",
-    "activityArea": "Activity area"
+    "activityArea": "Activity area",
+    "useractionlogs": "User action logs"
   },
   "timeline": {
     "hideTimeline" : "Hide Timeline",
@@ -490,6 +491,15 @@
     "isEnabled": "IS ENABLED",
     "edit": "EDIT",
     "delete": "DELETE"
+  },
+  "useractionlogs": {
+    "title": "USER ACTION LOGS",
+    "date": "Date",
+    "action": "Action",
+    "login": "Username",
+    "entities": "Entities",
+    "cardUid": "Card UID",
+    "comment": "Comment"
   },
   "datePicker": {
     "monday": "Mo",

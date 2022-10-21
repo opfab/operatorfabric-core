@@ -12,12 +12,14 @@
 package org.opfab.cards.publication;
 
 import lombok.extern.slf4j.Slf4j;
+import org.opfab.actiontracing.UserActionLogsConfiguration;
 import org.opfab.springtools.configuration.mongo.EnableOperatorFabricMongo;
 import org.opfab.springtools.configuration.oauth.EnableOperatorFabricOAuth2;
 import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ConfigurableApplicationContext;
+import org.springframework.context.annotation.Import;
 import org.springframework.context.annotation.ImportResource;
 import org.springframework.http.converter.json.Jackson2ObjectMapperBuilder;
 
@@ -26,6 +28,7 @@ import org.springframework.http.converter.json.Jackson2ObjectMapperBuilder;
 @EnableOperatorFabricOAuth2
 @EnableOperatorFabricMongo
 @ImportResource("classpath:/amqp.xml")
+@Import({ UserActionLogsConfiguration.class })
 public class CardPublicationApplication {
 
     public static void main(String[] args) {

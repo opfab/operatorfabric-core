@@ -42,6 +42,7 @@ import {ReloadRequiredComponent} from './modules/core/reload-required/reload-req
 import {ServiceWorkerModule, SwRegistrationOptions} from '@angular/service-worker';
 import {Utilities} from './common/utilities';
 import { SpinnerModule } from './modules/share/spinner/spinner.module';
+import {UserActionLogsModule} from './modules/useractionlogs/useractionlogs.module';
 
 @NgModule({
     imports: [
@@ -66,6 +67,7 @@ import { SpinnerModule } from './modules/share/spinner/spinner.module';
         CalendarModule,
         NavbarModule,
         ActivityareaModule,
+        UserActionLogsModule,
         ServiceWorkerModule.register('ngsw-worker.js')
     ],
     declarations: [
