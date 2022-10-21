@@ -63,6 +63,8 @@ export class CardService {
     private receivedAcksSubject = new Subject<{cardUid: string; entitiesAcks: string[]}>();
     private receivedDisconnectedSubject = new Subject<boolean>();
 
+    private subscriptionClosed = false;
+
     constructor(
         private httpClient: HttpClient,
         private guidService: GuidService,
@@ -172,11 +174,13 @@ export class CardService {
     }
 
     public closeSubscription() {
-        this.logger.info('Closing subscription', LogOption.LOCAL_AND_REMOTE);
-
-        this.deleteCardSubscription().subscribe();
-        this.unsubscribe$.next();
-        this.unsubscribe$.complete();
+        if (!this.subscriptionClosed) {
+            this.logger.info('Closing subscription', LogOption.LOCAL_AND_REMOTE);
+            this.deleteCardSubscription().subscribe();
+            this.unsubscribe$.next();
+            this.unsubscribe$.complete();
+            this.subscriptionClosed = true;
+        }
     }
 
     private deleteCardSubscription(): Observable<HttpResponse<void>> {
