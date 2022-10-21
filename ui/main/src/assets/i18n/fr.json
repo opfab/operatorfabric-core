@@ -105,7 +105,8 @@
     "switchToDayMode": "Mode jour",
     "realTimeUsers": "Utilisateurs temps réel",
     "externalDevicesConfiguration": "Configuration des périphériques externes",
-    "activityArea": "Zone d'activité"
+    "activityArea": "Zone d'activité",
+    "useractionlogs": "Trace des actions utilisateurs"
   },
   "timeline": {
     "hideTimeline" : "Masquer la timeline",
@@ -490,6 +491,15 @@
     "delete": "SUPPRIMER",
     "id": "PÉRIPHÉRIQUES",
     "isEnabled": "EST ACTIVÉ"
+  },
+  "useractionlogs": {
+    "title": "TRACES DES ACTIONS UTILISATEURS",
+    "date": "Date",
+    "action": "Action",
+    "login": "Utilisateur",
+    "entities": "Entités",
+    "cardUid": "Uid de la carte",
+    "comment": "Commentaire"
   },
   "datePicker": {
     "monday": "Lu",

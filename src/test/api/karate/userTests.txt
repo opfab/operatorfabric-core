@@ -44,5 +44,6 @@
       users/entities/transitive-entities-in-currentUser.feature \
       users/ipControl.feature \
       users/synchronizeWithToken.feature \
+      users/getUserActionLogs.feature \
 
 

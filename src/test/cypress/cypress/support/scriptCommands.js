@@ -116,6 +116,10 @@ export class ScriptCommands extends OpfabCommands {
         cy.exec('cd .. && ./resources/deleteAllSettings.sh ' + Cypress.env('host'));
     }
 
+    deleteAllUserActionLogs = function () {
+        cy.exec('cd .. && ./resources/deleteAllUserActionLogs.sh ' + Cypress.env('host'));
+    }
+
     waitForOpfabToStart = function () {
         cy.exec('cd ../../.. && ./bin/waitForOpfabToStart.sh ');
     }

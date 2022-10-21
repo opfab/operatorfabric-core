@@ -273,7 +273,21 @@ definitions:
         type: array
         items:
           type: string
-
+  ActionLog:
+    type: object
+    properties:
+      login:
+        type: string
+      entities:
+        type: array
+        items:
+          type: string
+      action:
+        type: string
+      cardUid:
+        type: string
+      comment:
+        type: string
 paths:
   /users:
     get:
@@ -1590,3 +1604,19 @@ paths:
                   rights: ReceiveAndWrite
         '401':
           description: Authentication required
+  /userActionLogs:
+    get:
+      tags:
+        - user actions logs
+      summary: Get user action logs
+      description: 'Get the list the user actions.'
+      operationId: getUserActionLogs
+      produces:
+        - application/json
+      responses:
+        '200':
+          description: OK
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/ActionLog'

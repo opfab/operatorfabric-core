@@ -172,7 +172,13 @@
         <div translate>menu.feedConfiguration</div>
       </a>
     </div>
-
+    <div class="opfab-right-menu-item" *ngIf="(displayUserActionLogs)">
+      <a  id="opfab-navbar-right-menu-useractionlogs" class="opfab-right-menu-link" routerLink="/useractionlogs"  routerLinkActive
+        #rla="routerLinkActive">
+        <div class="opfab-menu-icon opfab-menu-icon-useractionlogs" id="opfab-menu-icon-logs"></div>
+        <div translate>menu.useractionlogs</div>
+      </a>
+    </div>
     <div class="opfab-right-menu-item">
       <a id="opfab-navbar-right-menu-about" *ngIf="(displayAbout)" class="opfab-right-menu-link" (click)="showAbout()"  href="javascript:void(0)">
         <div class="opfab-menu-icon opfab-menu-icon-about"></div>

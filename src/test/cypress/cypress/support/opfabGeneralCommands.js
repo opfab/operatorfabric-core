@@ -121,6 +121,11 @@ export class OpfabGeneralCommands extends OpfabCommands {
         cy.tick(100);
         cy.wait(10);
     }
+    
+    navigateToUserActionLogs = function () {
+        cy.get('#opfab-navbar-drop-user-menu').click();
+        cy.get('#opfab-navbar-right-menu-useractionlogs').click();
+    }
 
     switchToDayMode = function () {
         cy.get('#opfab-navbar-drop-user-menu').click();

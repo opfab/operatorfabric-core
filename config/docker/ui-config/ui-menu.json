@@ -52,6 +52,11 @@
       "showOnlyForGroups": ["ADMIN"]
     },
     {
+      "id": "useractionlogs",
+      "visible": true,
+      "showOnlyForGroups": ["ADMIN"]
+    },
+    {
       "id": "nightdaymode",
       "visible": true
     },
