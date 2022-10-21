@@ -268,12 +268,8 @@ export class CardBodyComponent implements OnChanges, OnInit, OnDestroy {
             this.cardState.acknowledgmentAllowed !== AcknowledgmentAllowedEnum.NEVER &&
             !!this.card.entityRecipients &&
             this.card.entityRecipients.length > 0 &&
-            this.isCardPublishedByUserEntity()
+            this.userPermissionsService.isUserAuthorizedToSeeAcknowledgmentFooter(this.user, this.card)
         );
-    }
-
-    private isCardPublishedByUserEntity(): boolean {
-        return this.card.publisherType === 'ENTITY' && this.user.entities.includes(this.card.publisher);
     }
 
     public beforeTemplateRendering() {

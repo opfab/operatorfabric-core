@@ -46,7 +46,7 @@ When the user receives a new card, he can see it in the feed with a bold title a
 
 === Acknowledgment done by the user
 
-The user can set a card as "acknowledged" so he will not see it anymore by default in the feed. It is as well possible to cancel it and set a card to "unacknowledged" (a filter permit to see acknowledged cards).
+The user can set a card as "acknowledged," so he will not see it any more by default in the feed. It is as well possible to cancel it and set a card to "unacknowledged" (a filter permit to see acknowledged cards).
 
 To offer the possibility for the user to acknowledge card, it has to be configured in process definition.
 The configuration is done on a state by setting the `acknowledgmentAllowed` field. Allowed values are:
@@ -58,7 +58,7 @@ The configuration is done on a state by setting the `acknowledgmentAllowed` fiel
 - "OnlyWhenResponseDisabledForUser": acknowledgement allowed only when 
 the response is disabled for the user
 
-It is possible to cancel a card aknowledgment unless process state configuration has the `cancelAcknowledgmentAllowed` field set to false.
+It is possible to cancel a card acknowledgment unless process state configuration has the `cancelAcknowledgmentAllowed` field set to false.
 
 When the user acknowledges a card, the card detail is closed unless process state configuration has the `closeCardWhenUserAcknowledges` field set to false.
 
@@ -71,13 +71,26 @@ A user can be member of several entities, so you can configure if acknowledgment
 (of the user) suffices for the card to appear as acknowledged or if all entities must acknowledge the card.
 
 To configure how a card is considered as acknowledged for the user, it has to be configured in process definition.
-The configuration is done on a state by setting the `consideredAcknowledgedForUserWhen` field. Allowed values are:
+The configuration is done on a state by setting the `consideredAcknowledgedForUserWhen` field. Allowed values are :
 
-- "UserHasAcknowledged": the card is set as acknowledged if the user acknowledges it
+- "UserHasAcknowledged" : the card is set as acknowledged if the user acknowledges it
 
-- "OneEntityOfUserHasAcknowledged": the card is set as acknowledged if one (or more) entity(ies) of the user acknowledges it
+- "OneEntityOfUserHasAcknowledged" : the card is set as acknowledged if one (or more) entity(ies) of the user acknowledges it
 
-- "AllEntitiesOfUserHaveAcknowledged": the card is set as acknowledged if all the entities of the user acknowledge it
+- "AllEntitiesOfUserHaveAcknowledged" : the card is set as acknowledged if all the entities of the user acknowledge it
+
+=== Displaying the entities acknowledgments
+
+The entities acknowledgments can be displayed in the footer of the card. You can choose to display it (or not) via the option
+`showAcknowledgmentFooter` in a state definition. Allowed values are :
+
+- "OnlyForEmittingEntity" (default value) : the entities acknowledgments are displayed only for the members of the entity
+that has created the card
+
+- "OnlyForEntitiesAllowedToEdit" : the entities acknowledgments are displayed for the members of the entities allowed to
+edit the card
+
+- "ForAllUsers" : the entities acknowledgments are displayed for the members of all the entities
 
 
 == Pin cards
@@ -109,7 +122,7 @@ For certain process and state, it is possible to configure a reminder. The remin
 
 The time for "reactivation" is defined with the parameter "secondsBeforeTimeSpanForReminder" in the card.
 
-The remind is done related to the timespans values :
+The reminder is done related to the timespans values :
 
 - the startDate 
 
@@ -125,7 +138,7 @@ It is possible to set a recurrent reminder via the structure recurrence which de
 
  - HoursAndMinutes : hours and minutes of day when the event arise
 
- - DaysOfWeek : a list of day of the week when the event arise. The day of week is a number with 1 being Monday and 7 being Sunday as defined in https://en.wikipedia.org/wiki/ISO_8601#Week_dates[the ISO Standard 8601 (weekday number) ]
+ - DaysOfWeek : a list of day of the week when the event arises. The day of week is a number with 1 being Monday and 7 being Sunday as defined in https://en.wikipedia.org/wiki/ISO_8601#Week_dates[the ISO Standard 8601 (weekday number) ]
 
  - TimeZone : the time zone of reference for the recurrence definition (default value is Europe/Paris)
 
@@ -135,7 +148,7 @@ The reminder will arise for each `recurrent date of event - secondsBeforeTimeSpa
 
 ==== Recurrent reminder example 
 
-If timespan is defined as follow : 
+If timespan is defined as follows :
 
 .... 
 startDate : 1231135161
@@ -150,11 +163,11 @@ If secondsBeforeTimeSpanForReminder is set to 600 seconds, the reminder will ari
 
 === Last time for reminding
 
-If the user is not connected at the time of the remind,  when he connects if current time is superior to 15 minutes from the event date, no  remind will arise. 
+If the user is not connected at the time of the reminder,  when he connects if current time is superior to 15 minutes from the event date, no  remind will arise.
 
 === Debugging 
 
-When the user receives a card with a reminder to set, the log (console) of the browser contains a line with the date when the remind will arise . For example : 
+When the user receives a card with a reminder to set, the log (console) of the browser contains a line with the date when the reminder will arise . For example :
 
 `2020-11-22T21:00:36.011Z Reminder Will remind card conferenceAndITIncidentExample.0cf5537b-f0df-4314-f17f-2797ccd8e4e9 at
                          Sun Nov 22 2020 22:55:00 GMT+0100 (heure normale d’Europe centrale)`
