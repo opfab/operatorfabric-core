@@ -933,6 +933,7 @@ describe('User Card ', function () {
       // Change severity, send card, edit it and check severity is not modified on edition
       cy.get('#opfab-sev-information').check();
       usercard.checkSelectedSeverityIs('INFORMATION');
+      cy.get('#time').type('12:00'); // We fix the field "time" for recurrence, otherwise the request will return 400 (bad request) because of the CI which runs very fast
       usercard.previewThenSendCard();
       feed.openFirstCard();
       feed.editCurrentCard();
