@@ -24,6 +24,7 @@ public class ProcessStatesData implements ProcessStates {
     private ResponseData responseData;
     private AcknowledgmentAllowedEnum acknowledgmentAllowed;
     private ConsideredAcknowledgedForUserWhenEnum consideredAcknowledgedForUserWhen;
+    private ShowAcknowledgmentFooterEnum showAcknowledgmentFooter;
 
     @Builder.Default
     private Boolean cancelAcknowledgmentAllowed = true;
@@ -70,6 +71,14 @@ public class ProcessStatesData implements ProcessStates {
     @Override
     public void setConsideredAcknowledgedForUserWhen(ConsideredAcknowledgedForUserWhenEnum consideredAcknowledgedForUserWhen) {
         this.consideredAcknowledgedForUserWhen = consideredAcknowledgedForUserWhen;
+    }
+
+    @Override
+    public ShowAcknowledgmentFooterEnum getShowAcknowledgmentFooter() { return this.showAcknowledgmentFooter; }
+
+    @Override
+    public void setShowAcknowledgmentFooter(ShowAcknowledgmentFooterEnum showAcknowledgmentFooter) {
+        this.showAcknowledgmentFooter = showAcknowledgmentFooter;
     }
 
     @Override

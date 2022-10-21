@@ -53,7 +53,8 @@ export class State {
         readonly validateAnswerButtonLabel?: string,
         readonly modifyAnswerButtonLabel?: string,
         readonly automaticPinWhenAcknowledged?: boolean,
-        readonly consideredAcknowledgedForUserWhen?: ConsideredAcknowledgedForUserWhenEnum
+        readonly consideredAcknowledgedForUserWhen?: ConsideredAcknowledgedForUserWhenEnum,
+        readonly showAcknowledgmentFooter?: ShowAcknowledgmentFooterEnum
     ) {}
 }
 
@@ -98,4 +99,10 @@ export enum ConsideredAcknowledgedForUserWhenEnum {
     USER_HAS_ACKNOWLEDGED = 'UserHasAcknowledged',
     ONE_ENTITY_OF_USER_HAS_ACKNOWLEDGED = 'OneEntityOfUserHasAcknowledged',
     ALL_ENTITIES_OF_USER_HAVE_ACKNOWLEDGED = 'AllEntitiesOfUserHaveAcknowledged'
+}
+
+export enum ShowAcknowledgmentFooterEnum {
+    ONLY_FOR_EMITTING_ENTITY = 'OnlyForEmittingEntity',
+    ONLY_FOR_ENTITIES_ALLOWED_TO_EDIT = 'OnlyForEntitiesAllowedToEdit',
+    FOR_ALL_USERS = 'ForAllUsers'
 }

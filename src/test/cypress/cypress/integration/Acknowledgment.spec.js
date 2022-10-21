@@ -210,8 +210,6 @@ describe('Acknowledgment tests', function () {
         // Cancel ack is possible
         cy.get('#opfab-feed-light-card-cypress-message2').click();
         cy.get('#opfab-card-details-btn-ack').should('contain.text', 'CANCEL ACKNOWLEDGMENT');
-
-
     });
 
 
@@ -741,5 +739,148 @@ describe('Acknowledgment tests', function () {
             cy.get('#of-pinned-cards-popover').should('not.exist');
 
         });
-    }); 
+    });
+
+    it('Check display of acknowledgments footer for parameter "showAcknowledgmentFooter" set to "OnlyForEmittingEntity"', function () {
+
+        // Clean up existing cards
+        script.deleteAllCards();
+        opfab.loginWithUser('operator1_fr');
+
+        cy.get('of-light-card').should('have.length', 0);
+
+        // We create a usercard for a process/state which has "showAcknowledgmentFooter" set to "OnlyForEmittingEntity"
+        cy.get('#opfab-navbarContent').find('#opfab-newcard-menu').click();
+        cy.get("of-usercard").should('exist');
+        usercard.selectService('User card examples')
+        usercard.selectProcess('Message or question');
+        usercard.selectState('Message');
+        cy.waitDefaultTime();
+        cy.get('#message').type('Test message for ack footer');
+        usercard.previewThenSendCard();
+        cy.waitDefaultTime();
+
+        // We display the created card
+        // And we check the ack footer is displayed and there are 3 entities in it, in orange color
+        cy.get('of-light-card').eq(0).click();
+        cy.get('#opfab-selected-card-summary').should('contain.text', "Message received");
+        cy.get('#opfab-card-acknowledged-footer').should('exist');
+        cy.get('#opfab-card-acknowledged-footer').find('span').should("have.length", 4); // 3 entities + 1 for 'Acknowledged :' label
+        cy.get('#opfab-card-acknowledged-footer').find('span').eq(1).should("have.text", "\u00a0 Control Center FR East \u00a0")
+            .and('have.css', 'color', 'rgb(255, 102, 0)');
+
+        cy.get('#opfab-card-acknowledged-footer').find('span').eq(2).should("have.text", "\u00a0 Control Center FR North \u00a0")
+            .and('have.css', 'color', 'rgb(255, 102, 0)');
+
+        cy.get('#opfab-card-acknowledged-footer').find('span').eq(3).should("have.text", "\u00a0 Control Center FR South \u00a0")
+            .and('have.css', 'color', 'rgb(255, 102, 0)');
+
+        opfab.logout();
+        opfab.loginWithUser('operator2_fr');
+        cy.get('of-light-card').should('have.length', 1);
+
+        // We display the card
+        // And we check the ack footer is not displayed
+        cy.get('of-light-card').eq(0).click();
+        cy.get('#opfab-selected-card-summary').should('contain.text', "Message received");
+        cy.get('#opfab-card-acknowledged-footer').should('not.exist');
+    });
+
+    it('Check display of acknowledgments footer for parameter "showAcknowledgmentFooter" set to "OnlyForEntitiesAllowedToEdit"', function () {
+
+        // Clean up existing cards
+        script.deleteAllCards();
+        opfab.loginWithUser('operator1_fr');
+
+        cy.get('of-light-card').should('have.length', 0);
+
+        // We create a usercard for a process/state which has "showAcknowledgmentFooter" set to "OnlyForEntitiesAllowedToEdit"
+        cy.get('#opfab-navbarContent').find('#opfab-newcard-menu').click();
+        cy.get("of-usercard").should('exist');
+        usercard.selectService('Base Examples')
+        usercard.selectProcess('Process example');
+        usercard.selectState('Message');
+        cy.get('#opfab-recipients').click();
+        cy.get('.vscomp-toggle-all-checkbox').click();
+        cy.get('#opfab-recipients').click();
+        usercard.previewThenSendCard();
+        cy.waitDefaultTime();
+
+        // We display the created card
+        // And we check the ack footer is displayed and there are 12 entities in it
+        cy.get('of-light-card').eq(0).click();
+        cy.get('#opfab-selected-card-summary').should('contain.text', "Message received");
+        cy.get('#opfab-card-acknowledged-footer').should('exist');
+        cy.get('#opfab-card-acknowledged-footer').find('span').should("have.length", 13); // 12 entities + 1 for 'Acknowledged :' label
+
+        // For this card, ENTITY_FR is part of entitiesAllowedToEdit, so the ack footer should be displayed for operator2_fr
+        opfab.logout();
+        opfab.loginWithUser('operator2_fr');
+        cy.get('of-light-card').should('have.length', 1);
+
+        // We display the card
+        // And we check the ack footer is displayed
+        cy.get('of-light-card').eq(0).click();
+        cy.get('#opfab-selected-card-summary').should('contain.text', "Message received");
+        cy.get('#opfab-card-acknowledged-footer').should('exist');
+        cy.get('#opfab-card-acknowledged-footer').find('span').should("have.length", 13); // 12 entities + 1 for 'Acknowledged :' label
+
+        // We check the ack footer is not displayed for operator1_it (because he's not a member of an entity allowed to edit the card)
+        opfab.logout();
+        opfab.loginWithUser('operator1_it');
+        cy.get('of-light-card').should('have.length', 1);
+
+        // We display the card
+        // And we check the ack footer is not displayed
+        cy.get('of-light-card').eq(0).click();
+        cy.get('#opfab-selected-card-summary').should('contain.text', "Message received");
+        cy.get('#opfab-card-acknowledged-footer').should('not.exist');
+    });
+
+    it('Check display of acknowledgments footer for parameter "showAcknowledgmentFooter" set to "ForAllUsers"', function () {
+
+        // Clean up existing cards
+        script.deleteAllCards();
+        opfab.loginWithUser('operator1_fr');
+
+        cy.get('of-light-card').should('have.length', 0);
+
+        // We create a usercard for a process/state which has "showAcknowledgmentFooter" set to "ForAllUsers"
+        cy.get('#opfab-navbarContent').find('#opfab-newcard-menu').click();
+        cy.get("of-usercard").should('exist');
+        usercard.selectService('Base Examples')
+        usercard.selectProcess('Process example');
+        usercard.selectState('Process example');
+        usercard.selectRecipient('Control Center FR South');
+        usercard.previewThenSendCard();
+        cy.waitDefaultTime();
+
+        // We display the created card
+        // And we check the ack footer is displayed and there are 2 entities in it, all in orange color
+        cy.get('of-light-card').eq(0).click();
+        cy.get('#opfab-selected-card-summary').should('have.text', "Message received");
+        cy.get('#opfab-card-acknowledged-footer').should('exist');
+        cy.get('#opfab-card-acknowledged-footer').find('span').should("have.length", 3); // 2 entities + 1 for 'Acknowledged :' label
+        cy.get('#opfab-card-acknowledged-footer').find('span').eq(1).should("have.text", "\u00a0 Control Center FR South \u00a0")
+            .and('have.css', 'color', 'rgb(255, 102, 0)');
+
+        cy.get('#opfab-card-acknowledged-footer').find('span').eq(2).should("have.text", "\u00a0 South Europe Control Center \u00a0")
+            .and('have.css', 'color', 'rgb(255, 102, 0)');
+
+        opfab.logout();
+        opfab.loginWithUser('operator2_fr');
+        cy.get('of-light-card').should('have.length', 1);
+
+        // We display the card
+        // And we check the ack footer is displayed and there are 2 entities in it, all in orange color
+        cy.get('of-light-card').eq(0).click();
+        cy.get('#opfab-selected-card-summary').should('have.text', "Message received");
+        cy.get('#opfab-card-acknowledged-footer').should('exist');
+        cy.get('#opfab-card-acknowledged-footer').find('span').should("have.length", 3); // 2 entities + 1 for 'Acknowledged :' label
+        cy.get('#opfab-card-acknowledged-footer').find('span').eq(1).should("have.text", "\u00a0 Control Center FR South \u00a0")
+            .and('have.css', 'color', 'rgb(255, 102, 0)');
+
+        cy.get('#opfab-card-acknowledged-footer').find('span').eq(2).should("have.text", "\u00a0 South Europe Control Center \u00a0")
+            .and('have.css', 'color', 'rgb(255, 102, 0)');
+    });
 })

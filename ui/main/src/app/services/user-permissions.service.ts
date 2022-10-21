@@ -10,10 +10,12 @@
 import {Injectable} from '@angular/core';
 import {userRight, UserWithPerimeters} from '@ofModel/userWithPerimeters.model';
 import {Card} from '@ofModel/card.model';
-import {Process} from '@ofModel/processes.model';
+import {Process, ShowAcknowledgmentFooterEnum} from '@ofModel/processes.model';
 import {RightsEnum} from '@ofModel/perimeter.model';
 import {ConfigService} from '@ofServices/config.service';
 import {EntitiesService} from '@ofServices/entities.service';
+import {ProcessesService} from "@ofServices/processes.service";
+import {User} from "@ofModel/user.model";
 
 /** This class contains functions allowing to know if the user has the right to answer to the card or not */
 
@@ -21,7 +23,9 @@ import {EntitiesService} from '@ofServices/entities.service';
     providedIn: 'root'
 })
 export class UserPermissionsService {
-    constructor(private configService: ConfigService, private entitiesService: EntitiesService) {}
+    constructor(private configService: ConfigService,
+                private entitiesService: EntitiesService,
+                private processesService: ProcessesService) {}
 
     public isUserEnabledToRespond(user: UserWithPerimeters, card: Card, processDefinition: Process): boolean {
         if (this.isLttdExpired(card)) return false;
@@ -44,7 +48,7 @@ export class UserPermissionsService {
     }
 
     public doesTheUserHavePermissionToEditCard(user: UserWithPerimeters, card: Card): boolean {
-        if (!!card.entitiesAllowedToEdit && this.isUserInEntityAllowedToEditCard(user, card))
+        if (!!card.entitiesAllowedToEdit && this.isUserInEntityAllowedToEditCard(user.userData, card))
             return this.checkUserWritePerimeter(user, card);
         if (card.publisherType === 'ENTITY' && user.userData.entities.includes(card.publisher))
             return this.checkUserWritePerimeter(user, card);
@@ -67,11 +71,29 @@ export class UserPermissionsService {
         return permission;
     }
 
-    private isUserInEntityAllowedToEditCard(user: UserWithPerimeters, card: Card) {
-        const userEntitiesAllowed = user.userData.entities.filter((entity) =>
+    private isUserInEntityAllowedToEditCard(user: User, card: Card) {
+        const userEntitiesAllowed = user.entities.filter((entity) =>
             card.entitiesAllowedToEdit.includes(entity)
         );
         return userEntitiesAllowed.length > 0;
+    }
+
+    public isUserAuthorizedToSeeAcknowledgmentFooter(user: User, card: Card) {
+
+        const showAcknowledgmentFooter =
+            this.processesService.getShowAcknowledgmentFooterForACard(card);
+
+        if (showAcknowledgmentFooter === ShowAcknowledgmentFooterEnum.FOR_ALL_USERS) {
+            return true;
+        }
+        if (showAcknowledgmentFooter === ShowAcknowledgmentFooterEnum.ONLY_FOR_ENTITIES_ALLOWED_TO_EDIT) {
+            return this.isUserInEntityAllowedToEditCard(user, card);
+        }
+        return this.isCardPublishedByUserEntity(user, card);
+    }
+
+    private isCardPublishedByUserEntity(user: User, card: Card): boolean {
+        return card.publisherType === 'ENTITY' && user.entities.includes(card.publisher);
     }
 
     private isLttdExpired(card: Card): boolean {

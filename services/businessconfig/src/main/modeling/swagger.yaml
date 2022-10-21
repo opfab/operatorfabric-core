@@ -446,6 +446,9 @@ definitions:
             cancelAcknowledgmentAllowed:
               type: boolean
               description: Cancel acknowledgment allowed
+            showAcknowledgmentFooter:
+              description: Define the condition for displaying or not the acknowledgment footer of the card
+              $ref: '#/definitions/ShowAcknowledgmentFooterEnum'
             closeCardWhenUserAcknowledges:
               type: boolean
               description: close card detail when user acknowledges it
@@ -594,6 +597,18 @@ definitions:
       - UserHasAcknowledged
       - OneEntityOfUserHasAcknowledged
       - AllEntitiesOfUserHaveAcknowledged
+
+  ShowAcknowledgmentFooterEnum:
+    type: string
+    description: |-
+      Define the condition for displaying or not the acknowledgment footer of the card. >
+      * ONLY_FOR_EMITTING_ENTITY
+      * ONLY_FOR_ENTITIES_ALLOWED_TO_EDIT
+      * FOR_ALL_USERS
+    enum:
+      - OnlyForEmittingEntity
+      - OnlyForEntitiesAllowedToEdit
+      - ForAllUsers
 
   ProcessGroup:
     description: Object containing a list of processes.
