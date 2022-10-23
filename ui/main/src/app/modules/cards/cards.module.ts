@@ -20,9 +20,10 @@ import {MultiSelectModule} from '../share/multi-select/multi-select.module';
 import {SpinnerModule} from '../share/spinner/spinner.module';
 import {TemplateRenderingModule} from '../share/template-rendering/template-rendering.module';
 import {PipesModule} from '../share/pipes/pipes.module';
+import {CardActionsComponent} from './components/card-actions/card-actions.component';
 
 @NgModule({
-    declarations: [CardDetailsComponent, DetailComponent],
+    declarations: [CardDetailsComponent, DetailComponent,CardActionsComponent],
     imports: [
         CommonModule,
         CountDownModule,
