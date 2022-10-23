@@ -41,11 +41,6 @@
     }
 }
 
-.opfab-menu-icon-right {
-    float: right;
-    margin-right: 20px;
-}
-
 .opfab-menu-item-right {
     float: right;
     display: inline-flex;
@@ -81,21 +76,6 @@
     &:hover,
     &:focus {
         color: var(--opfab-navbar-color-hover);
-    }
-}
-
-.opfab-right-menu-link {
-    display: grid;
-    grid-template-columns: 30px auto;
-    color: var(--opfab-navbar-color);
-    align-items: center;
-    text-decoration: none;
-    cursor: pointer;
-
-    &:hover,
-    &:focus {
-        color: var(--opfab-navbar-color-hover);
-        text-decoration: none;
     }
 }
 

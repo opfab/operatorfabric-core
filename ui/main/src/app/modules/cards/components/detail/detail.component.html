@@ -14,19 +14,8 @@
       </li>
       <li *ngIf="showButtons" class="nav-item opfab-menu-item-right">
         <div *ngIf="!isSmallscreen()" style="display:flex">
-          <div class="opfab-right-menu-item" *ngIf='showEditButton'>
-            <a id="opfab-card-edit" class="opfab-right-menu-link" (click)='editCard()'>
-              <div class="opfab-menu-icon opfab-menu-icon-right opfab-icon-edit"></div>
-              <div translate>{{'button.edit'}}</div>
-            </a>
-          </div>
-
-          <div class="opfab-right-menu-item" *ngIf='showDeleteButton'>
-            <a id="opfab-card-delete" class="opfab-right-menu-link" (click)='openModal(doYouReallyWantToDeleteCardPopup)'>
-              <div class="opfab-menu-icon opfab-menu-icon-right opfab-icon-trash"></div>
-              <div translate>{{'button.delete'}}</div>
-            </a>
-          </div>
+          
+          <of-card-actions style="display:flex" [card]="this.card" [cardState]="this.cardState" [parentModalRef]="this.parentModalRef" [currentPath]="this.currentPath" (closeCardDetail)="closeDetails()"></of-card-actions>
 
           <div id="opfab-card-detail-fullscreen-button" *ngIf="!fullscreen && showMaxAndReduceButton" class="opfab-max-and-reduce-icons">
             <div class="opfab-menu-icon opfab-icon-maximize" (click)='setFullScreen(true)'></div>
@@ -142,43 +131,13 @@
               </div>
             </div>
           </div>
-
-          <ng-template #doYouReallyWantToDeleteCardPopup let-modal>
-            <div class="modal-header">
-              <span translate> userCard.deleteCard.title </span>
-              <div id="opfab-card-details-delete-btn-close" class="opfab-close-modal-icon" aria-label="Close"
-                (click)="modal.dismiss('Cross click')">
-                <span aria-hidden="true">&times;</span>
-              </div>
-            </div>
-            <div class="modal-body text-center">
-              <p translate> userCard.deleteCard.doYouReallyWant </p>
-              <button id="opfab-card-details-delete-btn-cancel" type="button" class="opfab-btn-cancel"
-                (click)="declineDeleteCard()" translate>button.cancel</button>
-              <button id="opfab-card-details-delete-btn-confirm" type="button" class="opfab-btn"
-                (click)="confirmDeleteCard()" translate>button.delete</button>
-            </div>
-          </ng-template>
       </div>
     </div>
 
   </div>
 </div>
 
-  <ng-template #userCard let-modal>
-    <div class="modal-header">
-      <div translate> userCard.editTitle </div>
-      <div id="opfab-usercard-close" class="opfab-close-modal-icon" aria-label="Close"
-        (click)="modal.dismiss('Cross click')">
-        <span aria-hidden="true">&times;</span>
-      </div>
-    </div>
-    <div class="modal-body">
-      <div>
-        <of-usercard [cardIdToEdit]="card.id" [userCardModal]="modal"></of-usercard>
-      </div>
-    </div>
-  </ng-template>
+
 
   <ng-template #chooseEntitiesForResponsePopup let-modal>
     <div class="modal-header">
@@ -208,9 +167,5 @@
               loadingText="shared.requestInProgress">
   </of-spinner>
 
-  <of-spinner *ngIf="deleteInProgress"
-              [seeInModal]="true"
-              loadingText="shared.deleteInProgress">
-  </of-spinner>
 
 </div>

@@ -10,7 +10,6 @@
 import {
     Component,
     DoCheck,
-    ElementRef,
     Input,
     OnChanges,
     OnDestroy,
@@ -22,8 +21,7 @@ import {
 } from '@angular/core';
 import {Card, CardForPublishing} from '@ofModel/card.model';
 import {ProcessesService} from '@ofServices/processes.service';
-import {HandlebarsService} from '../../services/handlebars.service';
-import {DomSanitizer, SafeHtml} from '@angular/platform-browser';
+import {SafeHtml} from '@angular/platform-browser';
 import {AcknowledgmentAllowedEnum, State, TypeOfStateEnum} from '@ofModel/processes.model';
 import {Store} from '@ngrx/store';
 import {AppState} from '@ofStore/index';
@@ -36,7 +34,7 @@ import {User} from '@ofModel/user.model';
 import {ClearLightCardSelectionAction} from '@ofStore/actions/light-card.actions';
 import {UserService} from '@ofServices/user.service';
 import {EntitiesService} from '@ofServices/entities.service';
-import {NgbModal, NgbModalOptions, NgbModalRef} from '@ng-bootstrap/ng-bootstrap';
+import {NgbModal,NgbModalRef} from '@ng-bootstrap/ng-bootstrap';
 import {AlertMessageAction} from '@ofStore/actions/alert.actions';
 import {MessageLevel} from '@ofModel/message.model';
 import {AcknowledgeService} from '@ofServices/acknowledge.service';
@@ -48,7 +46,6 @@ import {Utilities} from '../../../../common/utilities';
 import {CardDetailsComponent} from '../card-details/card-details.component';
 import {DateTimeFormatterService} from '@ofServices/date-time-formatter.service';
 import {MultiSelectConfig} from '@ofModel/multiselect.model';
-import {TranslateService} from '@ngx-translate/core';
 
 declare const templateGateway: any;
 
@@ -96,9 +93,6 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, DoCheck {
     @Input() displayContext: DisplayContext = DisplayContext.REALTIME;
     @Input() parentComponent: CardDetailsComponent;
 
-    @ViewChild('cardDeletedWithNoErrorPopup') cardDeletedWithNoErrorPopupRef: TemplateRef<any>;
-    @ViewChild('impossibleToDeleteCardPopup') impossibleToDeleteCardPopupRef: TemplateRef<any>;
-    @ViewChild('userCard') userCardTemplate: TemplateRef<any>;
     @ViewChild('chooseEntitiesForResponsePopup') chooseEntitiesForResponsePopupRef: TemplateRef<any>;
 
     private selectEntitiesForm: FormGroup<{
@@ -115,8 +109,6 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, DoCheck {
     public showMaxAndReduceButton = false;
     public showAckButton = false;
     public showActionButton = false;
-    public showEditButton = false;
-    public showDeleteButton = false;
     public showDetailCardHeader = false;
     public fromEntityOrRepresentative = null;
     public formattedPublishDate = '';
@@ -145,7 +137,6 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, DoCheck {
     private unsubscribe$: Subject<void> = new Subject<void>();
     private modalRef: NgbModalRef;
     public ackOrUnackInProgress = false;
-    public deleteInProgress = false;
 
     public user: User;
     public multiSelectConfig: MultiSelectConfig = {
@@ -155,10 +146,7 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, DoCheck {
     };
 
     constructor(
-        private element: ElementRef,
         private businessconfigService: ProcessesService,
-        private handlebars: HandlebarsService,
-        private sanitizer: DomSanitizer,
         private store: Store<AppState>,
         private cardService: CardService,
         private _appService: AppService,
@@ -168,8 +156,7 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, DoCheck {
         private dateTimeFormatterService: DateTimeFormatterService,
         private acknowledgeService: AcknowledgeService,
         private userPermissionsService: UserPermissionsService,
-        private lightCardsStoreService: LightCardsStoreService,
-        private translate: TranslateService
+        private lightCardsStoreService: LightCardsStoreService
     ) {
         const userWithPerimeters = this.userService.getCurrentUserWithPerimeters();
         if (!!userWithPerimeters) this.user = userWithPerimeters.userData;
@@ -564,8 +551,6 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, DoCheck {
         }
         this.showCloseButton = true;
         this.setAcknowledgeButtonVisibility();
-        this.showEditButton = this.cardState.editCardEnabledOnUserInterface && this.doesTheUserHavePermissionToEditCard();
-        this.showDeleteButton = this.cardState.deleteCardEnabledOnUserInterface && this.doesTheUserHavePermissionToDeleteCard();
         this.showActionButton = !!this.cardState.response;
     }
 
@@ -573,19 +558,7 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, DoCheck {
         this.showAckButton = this.isAcknowledgmentAllowed() && this._appService.pageType !== PageType.CALENDAR;
     }
 
-    private doesTheUserHavePermissionToEditCard(): boolean {
-        return this.userPermissionsService.doesTheUserHavePermissionToEditCard(
-            this.userService.getCurrentUserWithPerimeters(),
-            this.card
-        );
-    }
 
-    private doesTheUserHavePermissionToDeleteCard(): boolean {
-        return this.userPermissionsService.doesTheUserHavePermissionToDeleteCard(
-            this.userService.getCurrentUserWithPerimeters(),
-            this.card
-        );
-    }
 
     private isAcknowledgmentAllowed(): boolean {
         if (this.card.hasBeenAcknowledged && !this.cardState.cancelAcknowledgmentAllowed) return false;
@@ -754,61 +727,7 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, DoCheck {
         } else this._appService.closeDetails();
     }
 
-    public declineDeleteCard(): void {
-        this.modalRef.dismiss();
-    }
 
-    public confirmDeleteCard(): void {
-        this.deleteInProgress = true;
-
-        if (!!this.modalRef) this.modalRef.close(); // we close the confirmation popup
-
-        this.cardService.deleteCard(this.card).subscribe({
-            next: (resp) => {
-                const status = resp.status;
-                if (status === 200) {
-                    this.closeDetails();
-                    this.displayMessage('userCard.deleteCard.cardDeletedWithNoError', null, MessageLevel.INFO);
-                } else {
-                    console.log('Impossible to delete card , error status from service : ', status);
-                    this.displayMessage('userCard.deleteCard.error.impossibleToDeleteCard ', null, MessageLevel.ERROR);
-                }
-                this.deleteInProgress = false;
-            },
-            error: (err) => {
-                console.error('Error when deleting card :', err);
-                this.displayMessage('userCard.deleteCard.error.impossibleToDeleteCard ', null, MessageLevel.ERROR);
-                this.deleteInProgress = false;
-            }
-        });
-    }
-
-    public editCard(): void {
-        // We close the card detail in the background to avoid interference when executing the template for the edition preview.
-        // Otherwise, this can cause issues with templates functions referencing elements by id as there are two elements with the same id
-        // in the document.
-        this.closeDetails();
-        if (!!this.parentModalRef) this.parentModalRef.close();
-
-        const options: NgbModalOptions = {
-            size: 'usercard',
-            backdrop: 'static'
-        };
-        this.modalRef = this.modalService.open(this.userCardTemplate, options);
-
-        // Once the edition is complete or canceled, we reopen the card detail (see above).
-        if (this._appService.pageType !== PageType.CALENDAR && this._appService.pageType !== PageType.MONITORING) {
-            this.modalRef.result.then(
-                () => {
-                    // If modal is closed
-                    this._appService.reopenDetails(this.currentPath, this.card.id);
-                },
-                () => {
-                    this._appService.reopenDetails(this.currentPath, this.card.id);
-                }
-            );
-        }
-    }
 
     public unlockAnswer() {
         this.isResponseLocked = false;
