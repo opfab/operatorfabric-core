@@ -21,9 +21,10 @@ import {SpinnerModule} from '../share/spinner/spinner.module';
 import {TemplateRenderingModule} from '../share/template-rendering/template-rendering.module';
 import {PipesModule} from '../share/pipes/pipes.module';
 import {CardActionsComponent} from './components/card-actions/card-actions.component';
+import {CardAcksFooterComponent} from './components/card-acks-footer/card-acks-footer.component';
 
 @NgModule({
-    declarations: [CardDetailsComponent, DetailComponent,CardActionsComponent],
+    declarations: [CardDetailsComponent, DetailComponent,CardActionsComponent,CardAcksFooterComponent],
     imports: [
         CommonModule,
         CountDownModule,
