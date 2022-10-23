@@ -90,13 +90,7 @@
           <div id='opfab-card-detail-footer'>
 
             <div style="text-align: left;margin-top: 5px" *ngIf="displayCardAcknowledgedFooter()" class="opfab-card-response-header">
-              <div class="flex-container" id="opfab-card-acknowledged-footer" style="width:100%;padding-left: 15px;flex-direction: row">
-                <span translate>cardAcknowledgment.acknowledged</span>&nbsp;:
-                <div>
-                <span *ngFor="let entity of listEntitiesToAck" style="display:inline-block;"
-                      [ngStyle]="{'color': entity.color}" [id]="'opfab-card-acknowledged-entity-'+entity.id">&nbsp; {{entity.name}} &nbsp;</span>
-                </div>
-              </div>
+              <of-card-acks-footer style="display:flex" [card]="this.card"></of-card-acks-footer>
             </div>
 
             <div style="display: flex">

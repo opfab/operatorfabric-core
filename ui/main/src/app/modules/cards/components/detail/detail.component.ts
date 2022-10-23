@@ -122,7 +122,6 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, DoCheck {
     public expiredLabel = 'feed.lttdFinished';
     public btnValidateLabel = 'response.btnValidate';
     public btnUnlockLabel = 'response.btnUnlock';
-    public listEntitiesToAck = [];
     public listEntitiesAcknowledged = [];
     public lastResponse: Card;
     public isCardProcessing = false;
@@ -212,10 +211,6 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, DoCheck {
         this.lastResponse = this.getLastResponse();
 
         if (!changes.screenSize || !changes.screenSize.previousValue) {
-            this.listEntitiesToAck = [];
-            if (this.isCardPublishedByUserEntity() && !!this.card.entityRecipients) {
-                this.computeListEntitiesToAck();
-            }
             this.computeListEntitiesAcknowledged();
         }
 
@@ -238,21 +233,15 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, DoCheck {
     public displayCardAcknowledgedFooter(): boolean {
         return (
             this.cardState.acknowledgmentAllowed !== AcknowledgmentAllowedEnum.NEVER &&
-            this.listEntitiesToAck.length > 0
+            this.card.entityRecipients.length > 0 && this.isCardPublishedByUserEntity()
         );
     }
 
+    private isCardPublishedByUserEntity(): boolean {
+        return this.card.publisherType === 'ENTITY' && this.user.entities.includes(this.card.publisher);
+    }
+
     private addAckFromSubscription(entitiesAcksToAdd: string[]) {
-        if (!!this.listEntitiesToAck && this.listEntitiesToAck.length > 0) {
-            entitiesAcksToAdd.forEach((entityAckToAdd) => {
-                const indexToUpdate = this.listEntitiesToAck.findIndex(
-                    (entityToAck) => entityToAck.id === entityAckToAdd
-                );
-                if (indexToUpdate !== -1) {
-                    this.listEntitiesToAck[indexToUpdate].color = 'green';
-                }
-            });
-        }
         if (!!this.listEntitiesAcknowledged && this.listEntitiesAcknowledged.length > 0) {
             entitiesAcksToAdd.forEach((entityAckToAdd) => {
                 const indexToUpdate = this.listEntitiesAcknowledged.findIndex(
@@ -265,29 +254,6 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, DoCheck {
         }
     }
 
-    private computeListEntitiesToAck() {
-        const resolved = new Set<string>();
-        this.card.entityRecipients.forEach((entityRecipient) => {
-            const entity = this.entitiesService.getEntitiesFromIds([entityRecipient])[0];
-            if (entity.entityAllowedToSendCard) {
-                resolved.add(entityRecipient);
-            }
-
-            this.entitiesService
-                .resolveChildEntities(entityRecipient)
-                .filter((c) => c.entityAllowedToSendCard)
-                .forEach((c) => resolved.add(c.id));
-        });
-
-        resolved.forEach((entityToAck) =>
-            this.listEntitiesToAck.push({
-                id: entityToAck,
-                name: this.entitiesService.getEntityName(entityToAck),
-                color: this.checkEntityAcknowledged(entityToAck) ? 'green' : '#ff6600'
-            })
-        );
-        this.listEntitiesToAck.sort((entity1, entity2) => Utilities.compareObj(entity1.name, entity2.name));
-    }
 
     private computeListEntitiesAcknowledged() {
         const addressedTo = [];
@@ -313,10 +279,6 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, DoCheck {
             addressedTo.sort((a, b) => Utilities.compareObj(a.entityName, b.entityName));
         }
         this.listEntitiesAcknowledged = addressedTo;
-    }
-
-    private isCardPublishedByUserEntity(): boolean {
-        return this.card.publisherType === 'ENTITY' && this.user.entities.includes(this.card.publisher);
     }
 
     ngOnDestroy() {
