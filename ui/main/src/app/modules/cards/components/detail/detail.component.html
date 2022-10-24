@@ -66,8 +66,7 @@
                   [disabled]='lttdExpiredIsTrue || !isUserEnabledToRespond'
                   *ngIf='showActionButton && isUserEnabledToRespond && isResponseLocked' (click)='unlockAnswer()'>{{btnUnlockLabel|translate}}</button>
 
-                <button id="opfab-card-details-btn-ack" class="opfab-btn" *ngIf='showAckButton'
-                  (click)='acknowledgeCard()'>{{btnAckText|translate}}</button>
+                  <of-card-ack [card]="this.card" [cardState]="this.cardState" [lttdExpiredIsTrue]="this.lttdExpiredIsTrue" (closeCardDetail)="closeDetails()"> </of-card-ack>
               </div>
             </div>
           </div>
@@ -102,10 +101,7 @@
     </div>
   </ng-template>
 
-  <of-spinner *ngIf="ackOrUnackInProgress"
-              [seeInModal]="true"
-              loadingText="shared.requestInProgress">
-  </of-spinner>
+
 
 
 </div>
