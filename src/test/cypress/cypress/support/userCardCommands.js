@@ -137,6 +137,7 @@ export class UserCardCommands extends OpfabCommands {
         cy.get('#opfab-recipients').find('.vscomp-option-text').eq(0).click();
         cy.get('#opfab-recipients').find('.vscomp-value-tag').should('contain.text', recipientName);
         cy.get('#opfab-recipients').find('.vscomp-toggle-button').click();
+        cy.wait(100);
     }
 
     // PREVIEW 
