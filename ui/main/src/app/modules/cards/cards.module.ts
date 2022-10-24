@@ -23,9 +23,17 @@ import {PipesModule} from '../share/pipes/pipes.module';
 import {CardActionsComponent} from './components/card-actions/card-actions.component';
 import {CardAcksFooterComponent} from './components/card-acks-footer/card-acks-footer.component';
 import {CardHeaderComponent} from './components/card-header/card-header.component';
+import {CardFooterTextComponent} from './components/card-footer-text/card-footer-text.component';
 
 @NgModule({
-    declarations: [CardDetailsComponent, DetailComponent,CardActionsComponent,CardAcksFooterComponent,CardHeaderComponent],
+    declarations: [
+        CardDetailsComponent,
+        DetailComponent,
+        CardActionsComponent,
+        CardAcksFooterComponent,
+        CardHeaderComponent,
+        CardFooterTextComponent
+    ],
     imports: [
         CommonModule,
         CountDownModule,

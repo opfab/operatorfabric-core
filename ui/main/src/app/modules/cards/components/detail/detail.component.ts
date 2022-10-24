@@ -44,7 +44,6 @@ import {LightCardsStoreService} from '@ofServices/lightcards/lightcards-store.se
 import {FormControl, FormGroup} from '@angular/forms';
 import {Utilities} from '../../../../common/utilities';
 import {CardDetailsComponent} from '../card-details/card-details.component';
-import {DateTimeFormatterService} from '@ofServices/date-time-formatter.service';
 import {MultiSelectConfig} from '@ofModel/multiselect.model';
 
 declare const templateGateway: any;
@@ -105,15 +104,10 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, DoCheck {
     public showAckButton = false;
     public showActionButton = false;
     public showDetailCardHeader = false;
-    public fromEntityOrRepresentative = null;
-    public formattedPublishDate = '';
-    public formattedPublishTime = '';
     public htmlTemplateContent: SafeHtml;
     public isCardAQuestionCard = false;
     public btnValidateLabel = 'response.btnValidate';
     public btnUnlockLabel = 'response.btnUnlock';
-    public listEntitiesAcknowledged = [];
-    public lastResponse: Card;
     public isCardProcessing = false;
     public templateOffset = 15;
 
@@ -142,7 +136,6 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, DoCheck {
         private userService: UserService,
         private entitiesService: EntitiesService,
         private modalService: NgbModal,
-        private dateTimeFormatterService: DateTimeFormatterService,
         private acknowledgeService: AcknowledgeService,
         private userPermissionsService: UserPermissionsService,
         private lightCardsStoreService: LightCardsStoreService
@@ -160,14 +153,6 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, DoCheck {
             entities: new FormControl([])
         });
 
-        this.cardService
-            .getReceivedAcks()
-            .pipe(takeUntil(this.unsubscribe$))
-            .subscribe((receivedAck) => {
-                if (receivedAck.cardUid === this.card.uid) {
-                    this.addAckFromSubscription(receivedAck.entitiesAcks);
-                }
-            });
 
         if (this._appService.pageType === PageType.MONITORING || this._appService.pageType === PageType.CALENDAR) this.templateOffset = 35;
     }
@@ -198,18 +183,11 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, DoCheck {
         } else this.isCardAQuestionCard = false;
 
         this.checkIfHasAlreadyResponded();
-        this.lastResponse = this.getLastResponse();
 
-        if (!changes.screenSize || !changes.screenSize.previousValue) {
-            this.computeListEntitiesAcknowledged();
-        }
 
         this.markAsReadIfNecessary();
         this.showDetailCardHeader =
             !this.cardState.showDetailCardHeader || this.cardState.showDetailCardHeader === true;
-        this.computeFromEntityOrRepresentative();
-        this.formattedPublishDate = this.formatDate(this.card.publishDate);
-        this.formattedPublishTime = this.formatTime(this.card.publishDate);
         
         this.btnValidateLabel = !!this.cardState.validateAnswerButtonLabel
             ? this.cardState.validateAnswerButtonLabel
@@ -230,45 +208,6 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, DoCheck {
         return this.card.publisherType === 'ENTITY' && this.user.entities.includes(this.card.publisher);
     }
 
-    private addAckFromSubscription(entitiesAcksToAdd: string[]) {
-        if (!!this.listEntitiesAcknowledged && this.listEntitiesAcknowledged.length > 0) {
-            entitiesAcksToAdd.forEach((entityAckToAdd) => {
-                const indexToUpdate = this.listEntitiesAcknowledged.findIndex(
-                    (entityToAck) => entityToAck.id === entityAckToAdd
-                );
-                if (indexToUpdate !== -1) {
-                    this.listEntitiesAcknowledged[indexToUpdate].acknowledged = true;
-                }
-            });
-        }
-    }
-
-
-    private computeListEntitiesAcknowledged() {
-        const addressedTo = [];
-        if (!!this.card.entityRecipients && this.card.entityRecipients.length > 0) {
-            // We compute the entities allowed to send cards to which the user is connected
-            const userEntitiesAllowedToSendCards = this.user.entities.filter((entityId) =>
-                this.entitiesService.isEntityAllowedToSendCard(entityId)
-            );
-
-            // We compute the entities recipients of the card, taking into account parent entities
-            const entityRecipients = this.entitiesService.getEntitiesFromIds(this.card.entityRecipients);
-            const entityRecipientsAllowedToSendCards = this.entitiesService
-                .resolveEntitiesAllowedToSendCards(entityRecipients)
-                .map((entity) => entity.id);
-
-            const userEntitiesAllowedToSendCardsWhichAreRecipient = userEntitiesAllowedToSendCards.filter((entityId) =>
-                entityRecipientsAllowedToSendCards.includes(entityId)
-            );
-            userEntitiesAllowedToSendCardsWhichAreRecipient.forEach((entityId) => {
-                addressedTo.push({id: entityId, entityName: this.entitiesService.getEntityName(entityId), acknowledged: !!this.card.entitiesAcks? this.card.entitiesAcks.includes(entityId) : false});
-            });
-
-            addressedTo.sort((a, b) => Utilities.compareObj(a.entityName, b.entityName));
-        }
-        this.listEntitiesAcknowledged = addressedTo;
-    }
 
     ngOnDestroy() {
         this.updateLastReadCardStatusOnFeedIfNeeded();
@@ -345,7 +284,6 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, DoCheck {
             this.checkIfHasAlreadyResponded();
             if (this.isResponseLocked) templateGateway.lockAnswer();
 
-            this.lastResponse = this.getLastResponse();
         });
     }
 
@@ -359,7 +297,6 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, DoCheck {
         this.computeEntitiesForResponses();
         templateGateway.applyChildCards();
 
-        this.lastResponse = this.getLastResponse();
     }
 
     private computeEntitiesForResponses() {
@@ -470,13 +407,6 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, DoCheck {
         }
     }
 
-    private getLastResponse(): Card {
-        if (!!this.childCards && this.childCards.length > 0) {
-            return [...this.childCards].sort((a, b) => (a.publishDate < b.publishDate ? 1 : -1))[0];
-        }
-        return null;
-    }
-
     private markAsReadIfNecessary() {
         if (this.card.hasBeenRead === false) {
             // we do not set now the card as read in the store, as we want to keep
@@ -503,34 +433,12 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, DoCheck {
         }
     }
 
-    private computeFromEntityOrRepresentative() {
-        if (this.card.publisherType === 'ENTITY') {
-            this.fromEntityOrRepresentative = this.entitiesService.getEntityName(this.card.publisher);
-
-            if (!!this.card.representativeType && !!this.card.representative) {
-                const representative =
-                    this.card.representativeType === 'ENTITY'
-                        ? this.entitiesService.getEntityName(this.card.representative)
-                        : this.card.representative;
-
-                this.fromEntityOrRepresentative += ' (' + representative + ')';
-            }
-        } else this.fromEntityOrRepresentative = null;
-    }
-
     private displayMessage(i18nKey: string, msg: string, severity: MessageLevel = MessageLevel.ERROR) {
         this.store.dispatch(
             new AlertMessageAction({alertMessage: {message: msg, level: severity, i18n: {key: i18nKey}}})
         );
     }
 
-    public formatDate(date: number) {
-        return this.dateTimeFormatterService.getFormattedDateFromEpochDate(date);
-    }
-
-    public formatTime(date: number) {
-        return this.dateTimeFormatterService.getFormattedTimeFromEpochDate(date);
-    }
 
     // START - METHODS CALLED ONLY FROM HTML COMPONENT
 
@@ -544,9 +452,6 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, DoCheck {
         else return AckI18nKeys.BUTTON_TEXT_ACK;
     }
 
-    public getResponsePublisher(resp: Card) {
-        return this.entitiesService.getEntityName(resp.publisher);
-    }
 
     public isSmallscreen() {
         return window.innerWidth < 1000;
