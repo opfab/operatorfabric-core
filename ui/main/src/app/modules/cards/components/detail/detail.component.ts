@@ -14,12 +14,11 @@ import {
     OnChanges,
     OnDestroy,
     OnInit,
-    SimpleChanges,
     TemplateRef,
     ViewChild,
     ViewEncapsulation
 } from '@angular/core';
-import {Card, CardForPublishing} from '@ofModel/card.model';
+import {Card} from '@ofModel/card.model';
 import {ProcessesService} from '@ofServices/processes.service';
 import {SafeHtml} from '@angular/platform-browser';
 import {AcknowledgmentAllowedEnum, State} from '@ofModel/processes.model';
@@ -28,39 +27,19 @@ import {AppState} from '@ofStore/index';
 import {map, takeUntil} from 'rxjs/operators';
 import {CardService} from '@ofServices/card.service';
 import {Subject} from 'rxjs';
-import {Severity} from '@ofModel/light-card.model';
 import {AppService, PageType} from '@ofServices/app.service';
 import {User} from '@ofModel/user.model';
 import {ClearLightCardSelectionAction} from '@ofStore/actions/light-card.actions';
 import {UserService} from '@ofServices/user.service';
 import {EntitiesService} from '@ofServices/entities.service';
-import {NgbModal,NgbModalRef} from '@ng-bootstrap/ng-bootstrap';
-import {AlertMessageAction} from '@ofStore/actions/alert.actions';
-import {MessageLevel} from '@ofModel/message.model';
+import {NgbModalRef} from '@ng-bootstrap/ng-bootstrap';
 import {UserPermissionsService} from '@ofServices/user-permissions.service';
 import {DisplayContext} from '@ofModel/templateGateway.model';
 import {LightCardsStoreService} from '@ofServices/lightcards/lightcards-store.service';
-import {FormControl, FormGroup} from '@angular/forms';
-import {Utilities} from '../../../../common/utilities';
 import {CardDetailsComponent} from '../card-details/card-details.component';
-import {MultiSelectConfig} from '@ofModel/multiselect.model';
+import {OpfabLoggerService} from '@ofServices/logs/opfab-logger.service';
 
 declare const templateGateway: any;
-
-
-class FormResult {
-    valid: boolean;
-    errorMsg: string;
-    responseCardData: any;
-    responseState?: string;
-}
-
-const enum ResponseI18nKeys {
-    FORM_ERROR_MSG = 'response.error.form',
-    SUBMIT_ERROR_MSG = 'response.error.submit',
-    SUBMIT_SUCCESS_MSG = 'response.submitSuccess'
-}
-
 
 @Component({
     selector: 'of-detail',
@@ -79,44 +58,25 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, DoCheck {
     @Input() displayContext: DisplayContext = DisplayContext.REALTIME;
     @Input() parentComponent: CardDetailsComponent;
 
-    @ViewChild('chooseEntitiesForResponsePopup') chooseEntitiesForResponsePopupRef: TemplateRef<any>;
-
-    private selectEntitiesForm: FormGroup<{
-        entities: FormControl<[] | null>;
-    }>;
-
     public isUserEnabledToRespond = false;
     public lttdExpiredIsTrue: boolean;
     public isResponseLocked = false;
-    public sendingResponse: boolean;
     public fullscreen = false;
     public showButtons = false;
-    public showCloseButton = false;
     public showMaxAndReduceButton = false;
-    public showActionButton = false;
     public showDetailCardHeader = false;
     public htmlTemplateContent: SafeHtml;
     public isCardAQuestionCard = false;
-    public btnValidateLabel = 'response.btnValidate';
-    public btnUnlockLabel = 'response.btnUnlock';
-    public isCardProcessing = false;
     public templateOffset = 15;
 
     private lastCardSetToReadButNotYetOnFeed;
     private entityIdsAllowedOrRequiredToRespondAndAllowedToSendCards = [];
     private userEntityIdsPossibleForResponse = [];
-    private userEntityOptionsDropdownList = [];
     private userEntityIdToUseForResponse = '';
     private userMemberOfAnEntityRequiredToRespondAndAllowedToSendCards = false;
     private unsubscribe$: Subject<void> = new Subject<void>();
-    private modalRef: NgbModalRef;
 
     public user: User;
-    public multiSelectConfig: MultiSelectConfig = {
-        labelKey: 'shared.entity',
-        multiple: true,
-        search: true
-    };
 
     constructor(
         private businessconfigService: ProcessesService,
@@ -125,9 +85,9 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, DoCheck {
         private _appService: AppService,
         private userService: UserService,
         private entitiesService: EntitiesService,
-        private modalService: NgbModal,
         private userPermissionsService: UserPermissionsService,
-        private lightCardsStoreService: LightCardsStoreService
+        private lightCardsStoreService: LightCardsStoreService,
+        private logger: OpfabLoggerService
     ) {
         const userWithPerimeters = this.userService.getCurrentUserWithPerimeters();
         if (!!userWithPerimeters) this.user = userWithPerimeters.userData;
@@ -137,13 +97,11 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, DoCheck {
 
     ngOnInit() {
         if (this._appService.pageType !== PageType.ARCHIVE) this.integrateChildCardsInRealTime();
-
-        this.selectEntitiesForm = new FormGroup({
-            entities: new FormControl([])
-        });
-
-
-        if (this._appService.pageType === PageType.MONITORING || this._appService.pageType === PageType.CALENDAR) this.templateOffset = 35;
+        if (this._appService.pageType === PageType.MONITORING || this._appService.pageType === PageType.CALENDAR)
+            this.templateOffset = 35;
+            if (this._appService.pageType !== PageType.CALENDAR && this._appService.pageType !== PageType.MONITORING) {
+                this.showMaxAndReduceButton = true;
+            }
     }
 
     ngDoCheck() {
@@ -152,51 +110,41 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, DoCheck {
             this.checkLttdExpired();
             if (previous !== this.lttdExpiredIsTrue) {
                 templateGateway.setLttdExpired(this.lttdExpiredIsTrue);
-                this.setButtonsVisibility();
             }
         }
     }
 
-    ngOnChanges(changes: SimpleChanges): void {
-        this.isCardProcessing = false;
-
+    ngOnChanges(): void {
         if (this.cardState.response != null && this.cardState.response !== undefined) {
             this.isCardAQuestionCard = true;
             this.computeEntitiesForResponses();
+            this.computeUserEntitiesRequiredToRespondAndAllowedToSendCards();
             this.isUserEnabledToRespond = this.userPermissionsService.isUserEnabledToRespond(
                 this.userService.getCurrentUserWithPerimeters(),
                 this.card,
                 this.businessconfigService.getProcess(this.card.process)
             );
-            this.computeEntityOptionsDropdownListForResponse();
         } else this.isCardAQuestionCard = false;
 
-        this.checkIfHasAlreadyResponded();
-
+        this.lockResponseIfOneUserEntityHasAlreadyRespond();
 
         this.markAsReadIfNecessary();
         this.showDetailCardHeader =
             !this.cardState.showDetailCardHeader || this.cardState.showDetailCardHeader === true;
-        
-        this.btnValidateLabel = !!this.cardState.validateAnswerButtonLabel
-            ? this.cardState.validateAnswerButtonLabel
-            : 'response.btnValidate';
-        this.btnUnlockLabel = !!this.cardState.modifyAnswerButtonLabel
-            ? this.cardState.modifyAnswerButtonLabel
-            : 'response.btnUnlock';
     }
 
     public displayCardAcknowledgedFooter(): boolean {
         return (
             this.cardState.acknowledgmentAllowed !== AcknowledgmentAllowedEnum.NEVER &&
-            !!this.card.entityRecipients && this.card.entityRecipients.length > 0 && this.isCardPublishedByUserEntity()
+            !!this.card.entityRecipients &&
+            this.card.entityRecipients.length > 0 &&
+            this.isCardPublishedByUserEntity()
         );
     }
 
     private isCardPublishedByUserEntity(): boolean {
         return this.card.publisherType === 'ENTITY' && this.user.entities.includes(this.card.publisher);
     }
-
 
     ngOnDestroy() {
         this.updateLastReadCardStatusOnFeedIfNeeded();
@@ -207,6 +155,7 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, DoCheck {
     // END  - ANGULAR COMPONENT LIFECYCLE
 
     public beforeTemplateRendering() {
+        this.showButtons = false;
         this.setTemplateGatewayVariables();
     }
     private setTemplateGatewayVariables() {
@@ -224,7 +173,7 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, DoCheck {
         if (this.card.lttd && this.lttdExpiredIsTrue) {
             templateGateway.setLttdExpired(true);
         }
-        this.setButtonsVisibility();
+        this.showButtons = this._appService.pageType !== PageType.ARCHIVE;
     }
 
     private integrateChildCardsInRealTime() {
@@ -268,38 +217,34 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, DoCheck {
             newChildArray.push(cardData.card);
             this.childCards = newChildArray;
             templateGateway.childCards = this.childCards;
-            this.computeEntitiesForResponses();
             templateGateway.applyChildCards();
-            this.checkIfHasAlreadyResponded();
+            this.lockResponseIfOneUserEntityHasAlreadyRespond();
             if (this.isResponseLocked) templateGateway.lockAnswer();
-
         });
     }
 
     private removeChildCard(deletedChildCardId: string) {
         const newChildArray = this.childCards.filter((childCard) => childCard.id !== deletedChildCardId);
         this.childCards = newChildArray;
-        this.checkIfHasAlreadyResponded();
+        this.lockResponseIfOneUserEntityHasAlreadyRespond();
         templateGateway.isLocked = this.isResponseLocked;
         if (!this.isResponseLocked) templateGateway.unlockAnswer();
         templateGateway.childCards = this.childCards;
-        this.computeEntitiesForResponses();
         templateGateway.applyChildCards();
-
     }
 
     private computeEntitiesForResponses() {
-        const entityIdsRequiredToRespondAndAllowedToSendCards =
-            this.getEntityIdsRequiredToRespondAndAllowedToSendCards();
         this.entityIdsAllowedOrRequiredToRespondAndAllowedToSendCards =
             this.getEntityIdsAllowedOrRequiredToRespondAndAllowedToSendCards();
-        console.log(
-            new Date().toISOString(),
-            ' Detail card - entities allowed to respond = ',
-            this.entityIdsAllowedOrRequiredToRespondAndAllowedToSendCards
+        this.logger.debug(
+            `Detail card - entities allowed to respond = ${this.entityIdsAllowedOrRequiredToRespondAndAllowedToSendCards}`
         );
-
         this.setUserEntityIdsPossibleForResponse();
+    }
+
+    private computeUserEntitiesRequiredToRespondAndAllowedToSendCards() {
+        const entityIdsRequiredToRespondAndAllowedToSendCards =
+            this.getEntityIdsRequiredToRespondAndAllowedToSendCards();
         const userEntitiesRequiredToRespondAndAllowedToSendCards =
             entityIdsRequiredToRespondAndAllowedToSendCards.filter((entityId) => this.user.entities.includes(entityId));
         this.userMemberOfAnEntityRequiredToRespondAndAllowedToSendCards =
@@ -333,37 +278,20 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, DoCheck {
             .map((entity) => entity.id);
     }
 
-
     private setUserEntityIdsPossibleForResponse() {
         this.userEntityIdsPossibleForResponse = this.entityIdsAllowedOrRequiredToRespondAndAllowedToSendCards.filter(
-            (x) => this.user.entities.includes(x)
+            (entityId) => this.user.entities.includes(entityId)
         );
-        console.log(
-            new Date().toISOString(),
-            ' Detail card - users entities allowed to respond = ',
-            this.userEntityIdsPossibleForResponse
-        );
+        this.logger.debug(`Detail card - user entities allowed to respond = ${this.userEntityIdsPossibleForResponse}`);
         if (this.userEntityIdsPossibleForResponse.length === 1)
             this.userEntityIdToUseForResponse = this.userEntityIdsPossibleForResponse[0];
     }
-
 
     private checkLttdExpired(): void {
         this.lttdExpiredIsTrue = this.card.lttd != null && this.card.lttd - new Date().getTime() <= 0;
     }
 
-
-
-    private setButtonsVisibility() {
-        this.showButtons = this._appService.pageType !== PageType.ARCHIVE;
-        if (this._appService.pageType !== PageType.CALENDAR && this._appService.pageType !== PageType.MONITORING) {
-            this.showMaxAndReduceButton = true;
-        }
-        this.showCloseButton = true;
-        this.showActionButton = !!this.cardState.response;
-    }
-
-    private checkIfHasAlreadyResponded() {
+    private lockResponseIfOneUserEntityHasAlreadyRespond() {
         this.isResponseLocked = false;
         for (const e of this.childCards.map((c) => c.publisher)) {
             if (this.user.entities.includes(e)) {
@@ -399,37 +327,16 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, DoCheck {
         }
     }
 
-    private displayMessage(i18nKey: string, msg: string, severity: MessageLevel = MessageLevel.ERROR) {
-        this.store.dispatch(
-            new AlertMessageAction({alertMessage: {message: msg, level: severity, i18n: {key: i18nKey}}})
-        );
-    }
-
-
     // START - METHODS CALLED ONLY FROM HTML COMPONENT
-
-    get i18nPrefix() {
-        return `${this.card.process}.${this.card.processVersion}.`;
-    }
-
-
 
     public isSmallscreen() {
         return window.innerWidth < 1000;
-    }
-
-    public openModal(content) {
-        const modalOptions = {centered: true};
-        this.modalRef = this.modalService.open(content, modalOptions);
     }
 
     public setFullScreen(active) {
         this.fullscreen = active;
         if (!!this.parentComponent) this.parentComponent.screenSize = active ? 'lg' : 'md';
     }
-
-
-
 
     public closeDetails() {
         this.updateLastReadCardStatusOnFeedIfNeeded();
@@ -442,93 +349,6 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, DoCheck {
     public unlockAnswer() {
         this.isResponseLocked = false;
         templateGateway.unlockAnswer();
-    }
-
-    public cancelEntitiesChoice(): void {
-        this.modalRef.dismiss();
-    }
-
-    private computeEntityOptionsDropdownListForResponse(): void {
-        this.userEntityOptionsDropdownList = [];
-        this.userEntityIdsPossibleForResponse.forEach((entityId) => {
-            const entity = this.entitiesService.getEntities().find((e) => e.id === entityId);
-            this.userEntityOptionsDropdownList.push({value: entity.id, label: entity.name});
-        });
-        this.userEntityOptionsDropdownList.sort((a, b) => Utilities.compareObj(a.label, b.label));
-    }
-    
-    private displayEntitiesChoicePopup() {
-        this.userEntityIdToUseForResponse = '';
-        this.selectEntitiesForm.get('entities').setValue(this.userEntityOptionsDropdownList[0].value);
-        this.openModal(this.chooseEntitiesForResponsePopupRef);
-    }
-
-    public submitResponse() {
-        if (this.userEntityIdsPossibleForResponse.length > 1) this.displayEntitiesChoicePopup();
-        else this.submitResponse0();
-    }
-
-    public getSelectedEntities() {
-        return this.selectEntitiesForm.value['entities'];
-    }
-
-    public submitEntitiesChoice() {
-        this.modalRef.dismiss();
-
-        this.getSelectedEntities().forEach(selectedEntity => {
-            this.userEntityIdToUseForResponse = selectedEntity;
-            this.submitResponse0();
-        });
-    }
-
-    public submitResponse0() {
-        const responseData: FormResult = templateGateway.getUserResponse();
-
-        if (responseData.valid) {
-            const card: CardForPublishing = {
-                publisher: this.userEntityIdToUseForResponse,
-                publisherType: 'ENTITY',
-                processVersion: this.card.processVersion,
-                process: this.card.process,
-                processInstanceId: `${this.card.processInstanceId}_${this.userEntityIdToUseForResponse}`,
-                state: responseData.responseState ? responseData.responseState : this.cardState.response.state,
-                startDate: this.card.startDate,
-                endDate: this.card.endDate,
-                severity: Severity.INFORMATION,
-                entityRecipients: this.card.entityRecipients,
-                userRecipients: this.card.userRecipients,
-                groupRecipients: this.card.groupRecipients,
-                externalRecipients: this.cardState.response.externalRecipients,
-                title: this.card.title,
-                summary: this.card.summary,
-                data: responseData.responseCardData,
-                parentCardId: this.card.id,
-                initialParentCardUid: this.card.uid
-            };
-            this.sendingResponse = true;
-            this.cardService.postCard(card).subscribe(
-                (rep) => {
-                    this.sendingResponse = false;
-                    if (rep.status !== 201) {
-                        this.displayMessage(ResponseI18nKeys.SUBMIT_ERROR_MSG, null, MessageLevel.ERROR);
-                        console.error(rep);
-                    } else {
-                        this.isResponseLocked = true;
-                        templateGateway.lockAnswer();
-                        this.displayMessage(ResponseI18nKeys.SUBMIT_SUCCESS_MSG, null, MessageLevel.INFO);
-                    }
-                },
-                (err) => {
-                    this.sendingResponse = false;
-                    this.displayMessage(ResponseI18nKeys.SUBMIT_ERROR_MSG, null, MessageLevel.ERROR);
-                    console.error(err);
-                }
-            );
-        } else {
-            responseData.errorMsg && responseData.errorMsg !== ''
-                ? this.displayMessage(responseData.errorMsg, null, MessageLevel.ERROR)
-                : this.displayMessage(ResponseI18nKeys.FORM_ERROR_MSG, null, MessageLevel.ERROR);
-        }
     }
 
     // END - METHODS CALLED ONLY FROM HTML COMPONENT

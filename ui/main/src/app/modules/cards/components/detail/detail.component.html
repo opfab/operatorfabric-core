@@ -14,17 +14,22 @@
       </li>
       <li *ngIf="showButtons" class="nav-item opfab-menu-item-right">
         <div *ngIf="!isSmallscreen()" style="display:flex">
-          
-          <of-card-actions style="display:flex" [card]="this.card" [cardState]="this.cardState" [parentModalRef]="this.parentModalRef" [currentPath]="this.currentPath" (closeCardDetail)="closeDetails()"></of-card-actions>
 
-          <div id="opfab-card-detail-fullscreen-button" *ngIf="!fullscreen && showMaxAndReduceButton" class="opfab-max-and-reduce-icons">
+          <of-card-actions style="display:flex" [card]="this.card" [cardState]="this.cardState"
+            [parentModalRef]="this.parentModalRef" [currentPath]="this.currentPath" (closeCardDetail)="closeDetails()">
+          </of-card-actions>
+
+          <div id="opfab-card-detail-fullscreen-button" *ngIf="!fullscreen && showMaxAndReduceButton"
+            class="opfab-max-and-reduce-icons">
             <div class="opfab-menu-icon opfab-icon-maximize" (click)='setFullScreen(true)'></div>
           </div>
-          <div id="opfab-card-detail-fullscreen-button"  *ngIf="fullscreen && showMaxAndReduceButton" class="opfab-max-and-reduce-icons">
+          <div id="opfab-card-detail-fullscreen-button" *ngIf="fullscreen && showMaxAndReduceButton"
+            class="opfab-max-and-reduce-icons">
             <div class="opfab-menu-icon  opfab-icon-reduce" (click)='setFullScreen(false)'></div>
           </div>
         </div>
-        <div *ngIf="showCloseButton" id="opfab-close-card" class="opfab-close-card-link" aria-label="Close" (click)="closeDetails()">
+        <div id="opfab-close-card" class="opfab-close-card-link" aria-label="Close"
+          (click)="closeDetails()">
           <span aria-hidden="true">&times;</span>
         </div>
 
@@ -36,72 +41,44 @@
         <!-- padding is necessary to see box shadow-->
 
         <div *ngIf='isCardAQuestionCard && showDetailCardHeader' class="opfab-card-response-header">
-          <of-card-header [card]="this.card" [childCards]="this.childCards" [cardState]="this.cardState" [lttdExpiredIsTrue]="this.lttdExpiredIsTrue"> </of-card-header>
+          <of-card-header [card]="this.card" [childCards]="this.childCards" [cardState]="this.cardState"
+            [lttdExpiredIsTrue]="this.lttdExpiredIsTrue"> </of-card-header>
         </div>
 
-      <of-template-rendering [card]="card" [cardState]="cardState" [user]="user" [screenSize]="screenSize" [displayContext]="displayContext"
-      [functionToCallBeforeRendering]="beforeTemplateRendering" 
-      [functionToCallAfterRendering]="afterTemplateRendering" [parentComponent]="this"
-      [fixedBottomOffset]="this.templateOffset" cardFooterHtmlElementId = "opfab-card-detail-footer">
+        <of-template-rendering [card]="card" [cardState]="cardState" [user]="user" [screenSize]="screenSize"
+          [displayContext]="displayContext" [functionToCallBeforeRendering]="beforeTemplateRendering"
+          [functionToCallAfterRendering]="afterTemplateRendering" [parentComponent]="this"
+          [fixedBottomOffset]="this.templateOffset" cardFooterHtmlElementId="opfab-card-detail-footer">
 
-      </of-template-rendering>
+        </of-template-rendering>
 
         <div style="text-align: center;width:100% ; ">
 
           <div id='opfab-card-detail-footer'>
 
-            <div style="text-align: left;margin-top: 5px" *ngIf="displayCardAcknowledgedFooter()" class="opfab-card-response-header">
+            <div style="text-align: left;margin-top: 5px" *ngIf="displayCardAcknowledgedFooter()"
+              class="opfab-card-response-header">
               <of-card-acks-footer style="display:flex" [card]="this.card"></of-card-acks-footer>
             </div>
 
             <div style="display: flex">
-              <of-card-footer-text [card]="this.card" [childCards]="this.childCards" > </of-card-footer-text>
+              <of-card-footer-text [card]="this.card" [childCards]="this.childCards"> </of-card-footer-text>
 
               <div *ngIf="showButtons" style="margin-left: auto;text-align: right;min-width: 250px">
-                <button id="opfab-card-details-btn-response" class="opfab-btn"
-                  *ngIf='showActionButton && isUserEnabledToRespond && !isResponseLocked' [disabled]='lttdExpiredIsTrue || !isUserEnabledToRespond || sendingResponse'
-                  (click)='submitResponse()'>{{btnValidateLabel|translate}}</button>
-
-                <button id="opfab-card-details-btn-response" class="opfab-btn"
-                  [disabled]='lttdExpiredIsTrue || !isUserEnabledToRespond'
-                  *ngIf='showActionButton && isUserEnabledToRespond && isResponseLocked' (click)='unlockAnswer()'>{{btnUnlockLabel|translate}}</button>
-
-                  <of-card-ack [card]="this.card" [cardState]="this.cardState" [lttdExpiredIsTrue]="this.lttdExpiredIsTrue" (closeCardDetail)="closeDetails()"> </of-card-ack>
+                <of-card-response [card]="this.card" [cardState]="this.cardState"
+                  [lttdExpiredIsTrue]="this.lttdExpiredIsTrue" [isResponseLocked]="this.isResponseLocked"
+                  [entityIdsAllowedOrRequiredToRespondAndAllowedToSendCards]="this.entityIdsAllowedOrRequiredToRespondAndAllowedToSendCards"
+                  [userEntityIdsPossibleForResponse]="this.userEntityIdsPossibleForResponse"
+                  (unlockAnswerEvent)="this.unlockAnswer()"> </of-card-response>
+                <of-card-ack [card]="this.card" [cardState]="this.cardState"
+                  [lttdExpiredIsTrue]="this.lttdExpiredIsTrue" (closeCardDetail)="closeDetails()"> </of-card-ack>
               </div>
             </div>
           </div>
-      </div>
-    </div>
-
-  </div>
-</div>
-
-
-
-  <ng-template #chooseEntitiesForResponsePopup let-modal>
-    <div class="modal-header">
-      <div translate> response.entitiesChoice </div>
-      <div class="opfab-close-modal-icon" aria-label="Close" (click)="modal.dismiss('Cross click')">
-        <span aria-hidden="true">&times;</span>
-      </div>
-    </div>
-    <div class="modal-body text-center">
-      <br/><p translate>response.chooseEntitiesForResponse</p><br/>
-      <form [formGroup]="selectEntitiesForm" class="opfab-form-lighter">
-        <div class="row">
-            <of-multi-select id="opfab-card-details-entities-choice-selector" multiSelectId="entities"
-                              [parentForm]="selectEntitiesForm" [config]="multiSelectConfig"
-                              [options]="userEntityOptionsDropdownList" [selectedOptions]="selectEntitiesForm.get('entities').value">
-            </of-multi-select>
         </div>
-        <br/>
-      </form>
-      <button id="opfab-card-details-entity-choice-btn-cancel" type="button" class="opfab-btn-cancel" (click)="cancelEntitiesChoice()" translate>button.cancel</button>
-      <button id="opfab-card-details-entity-choice-btn-confirm" type="button" class="opfab-btn" (click)="submitEntitiesChoice()" translate>button.ok</button>
+      </div>
+
     </div>
-  </ng-template>
-
-
-
+  </div>
 
 </div>

@@ -25,6 +25,7 @@ import {CardAcksFooterComponent} from './components/card-acks-footer/card-acks-f
 import {CardHeaderComponent} from './components/card-header/card-header.component';
 import {CardFooterTextComponent} from './components/card-footer-text/card-footer-text.component';
 import {CardAckComponent} from './components/card-ack/card-ack.component';
+import {CardResponseComponent} from './components/card-reponse/card-response.component';
 
 @NgModule({
     declarations: [
@@ -34,7 +35,8 @@ import {CardAckComponent} from './components/card-ack/card-ack.component';
         CardAcksFooterComponent,
         CardHeaderComponent,
         CardFooterTextComponent,
-        CardAckComponent
+        CardAckComponent,
+        CardResponseComponent
     ],
     imports: [
         CommonModule,
