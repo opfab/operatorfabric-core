@@ -23,7 +23,8 @@ class EntityForCardHeader {
 
 @Component({
     selector: 'of-card-header',
-    templateUrl: './card-header.component.html'
+    templateUrl: './card-header.component.html',
+    styleUrls: ['./card-header.component.scss']
 })
 export class CardHeaderComponent implements OnChanges {
     @Input() card: Card;
