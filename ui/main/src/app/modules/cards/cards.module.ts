@@ -22,9 +22,10 @@ import {TemplateRenderingModule} from '../share/template-rendering/template-rend
 import {PipesModule} from '../share/pipes/pipes.module';
 import {CardActionsComponent} from './components/card-actions/card-actions.component';
 import {CardAcksFooterComponent} from './components/card-acks-footer/card-acks-footer.component';
+import {CardHeaderComponent} from './components/card-header/card-header.component';
 
 @NgModule({
-    declarations: [CardDetailsComponent, DetailComponent,CardActionsComponent,CardAcksFooterComponent],
+    declarations: [CardDetailsComponent, DetailComponent,CardActionsComponent,CardAcksFooterComponent,CardHeaderComponent],
     imports: [
         CommonModule,
         CountDownModule,

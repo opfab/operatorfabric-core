@@ -29,6 +29,18 @@ export class CardCommands extends OpfabCommands {
         cy.get('#opfab-card-delete').should('not.exist');
     }
 
+    checkEntityIsGreenInCardHeader = function(entityId) {
+        cy.get(`#opfab-card-header-entity-${entityId}`).should('have.css', 'color', 'rgb(0, 128, 0)');
+    }
+
+    checkEntityIsOrangeInCardHeader = function(entityId) {
+        cy.get(`#opfab-card-header-entity-${entityId}`).should('have.css', 'color', 'rgb(255, 102, 0)');
+    }
+
+    checkEntityIsNotVisibleInCardHeader = function(entityId) {
+        cy.get(`#opfab-card-header-entity-${entityId}`).should('not.exist');
+    }
+
     close= function () {
         cy.get('#opfab-close-card').click();
     }
@@ -40,6 +52,10 @@ export class CardCommands extends OpfabCommands {
 
     modifyResponse = function () {
         cy.get('#opfab-card-details-btn-response').click();
+    }
+
+    openEntityDropdownInCardHeader() {
+        cy.get('#opfab-entities-dropdown').click();
     }
 
     sendResponse = function () {

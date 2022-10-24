@@ -35,47 +35,8 @@
       <div style="padding-right:3px">
         <!-- padding is necessary to see box shadow-->
 
-        <ng-template #helpContent>
-          <label class="label-help"><span class="label-answered" translate>response.answered</span></label>
-          <label class="label-help"><span class="label-unanswered" translate>response.unanswered</span></label>
-        </ng-template>
-
-        <ng-template #entitiesDropdown>
-          <div *ngFor="let entity of listDropdownEntitiesToRespond;"
-            [ngStyle]="{'color': entity.color,'text-align': 'left'}">
-            &nbsp; {{entity.name}} &nbsp;
-          </div>
-        </ng-template>
-
         <div *ngIf='isCardAQuestionCard && showDetailCardHeader' class="opfab-card-response-header">
-          <div class="flex-container">
-            <div id="opfab-card-response-header-left" style="width:30%;padding-left:15px;margin-top:2px">
-              <span id="opfab-card-response-header-status" *ngIf="!!cardState.type">
-                <span translate>response.status</span> :
-                <!--The translate directive should stay there rather than in the element see OC-1603-->
-                <span class="opfab-typeOfState-{{cardState.type}}">{{"shared.typeOfState."+cardState.type | translate}}</span>
-              </span>
-              <span *ngIf="!!card.lttd && !!cardState.type && (!lttdExpiredIsTrue || cardState.type !== 'FINISHED')"> | </span>
-              <span *ngIf="!!card.lttd"><of-countdown [lttd]="card.lttd" [showExpiredIcon]="showExpiredIcon" [showExpiredLabel]="showExpiredLabel" [expiredLabel]="expiredLabel"></of-countdown></span>
-            </div>
-
-            <div id="opfab-card-response-header-right" style="width:70%;text-align: right">
-              <div id="opfab-answer-help" class="opfab-icon-help" placement="left" [ngbPopover]="helpContent"
-                container="body" triggers="mouseenter:mouseleave" popoverClass="opfab-popover">
-              </div>
-              <span translate>response.answers</span> :
-              <span *ngFor="let entity of listVisibleEntitiesToRespond; let isLast = last"
-                [ngStyle]="{'color': entity.color,'text-align': 'center'}" [id]="'opfab-card-header-entity-'+entity.id">
-                &nbsp; {{entity.name}} &nbsp;
-              </span>
-              <span *ngIf="listDropdownEntitiesToRespond && listDropdownEntitiesToRespond.length > 0"
-                id="opfab-entities-dropdown" class="opfab-entities-dropdown" placement="bottom-right"
-                [ngbPopover]="entitiesDropdown" container="body" [autoClose]="'true'"
-                popoverClass="opfab-popover-no-arrow">
-                &nbsp;..&nbsp;
-              </span>
-            </div>
-          </div>
+          <of-card-header [card]="this.card" [childCards]="this.childCards" [cardState]="this.cardState" [lttdExpiredIsTrue]="this.lttdExpiredIsTrue"> </of-card-header>
         </div>
 
       <of-template-rendering [card]="card" [cardState]="cardState" [user]="user" [screenSize]="screenSize" [displayContext]="displayContext"

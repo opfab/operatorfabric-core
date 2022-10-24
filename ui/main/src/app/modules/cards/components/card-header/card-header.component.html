@@ -1,0 +1,54 @@
+<!-- Copyright (c) 2022, RTE (http://www.rte-france.com)              -->
+<!-- See AUTHORS.txt                                                       -->
+<!-- This Source Code Form is subject to the terms of the Mozilla Public   -->
+<!-- License, v. 2.0. If a copy of the MPL was not distributed with this   -->
+<!-- file, You can obtain one at http://mozilla.org/MPL/2.0/.              -->
+<!-- SPDX-License-Identifier: MPL-2.0                                      -->
+
+<div class="flex-container">
+      <div id="opfab-card-response-header-left" style="width:30%;padding-left:15px;margin-top:2px">
+            <span id="opfab-card-response-header-status" *ngIf="!!cardState.type">
+                  <span translate>response.status</span> :
+                  <!--The translate directive should stay there rather than in the element see OC-1603-->
+                  <span class="opfab-typeOfState-{{cardState.type}}">{{"shared.typeOfState."+cardState.type |
+                        translate}}</span>
+            </span>
+            <span *ngIf="!!card.lttd && !!cardState.type && (!lttdExpiredIsTrue || cardState.type !== 'FINISHED')"> |
+            </span>
+            <span *ngIf="!!card.lttd">
+                  <of-countdown [lttd]="card.lttd" [showExpiredIcon]="showExpiredIcon"
+                        [showExpiredLabel]="showExpiredLabel" [expiredLabel]="expiredLabel"></of-countdown>
+            </span>
+      </div>
+
+      <div id="opfab-card-response-header-right" style="width:70%;text-align: right">
+            <div id="opfab-answer-help" class="opfab-icon-help" placement="left" [ngbPopover]="helpContent"
+                  container="body" triggers="mouseenter:mouseleave" popoverClass="opfab-popover">
+            </div>
+            <span translate>response.answers</span> :
+            <span *ngFor="let entity of listVisibleEntitiesToRespond; let isLast = last"
+                  [ngStyle]="{'color': entity.color,'text-align': 'center'}"
+                  [id]="'opfab-card-header-entity-'+entity.id">
+                  &nbsp; {{entity.name}} &nbsp;
+            </span>
+            <span *ngIf="listDropdownEntitiesToRespond && listDropdownEntitiesToRespond.length > 0"
+                  id="opfab-entities-dropdown" class="opfab-entities-dropdown" placement="bottom-right"
+                  [ngbPopover]="entitiesDropdown" container="body" [autoClose]="'true'"
+                  popoverClass="opfab-popover-no-arrow">
+                  &nbsp;..&nbsp;
+            </span>
+      </div>
+</div>
+
+<ng-template #helpContent>
+      <label class="label-help"><span class="label-answered" translate>response.answered</span></label>
+      <label class="label-help"><span class="label-unanswered" translate>response.unanswered</span></label>
+</ng-template>
+
+<ng-template #entitiesDropdown>
+      <div *ngFor="let entity of listDropdownEntitiesToRespond;"
+            [ngStyle]="{'color': entity.color,'text-align': 'left'}"
+            [id]="'opfab-card-header-entity-'+entity.id">
+            &nbsp; {{entity.name}} &nbsp;
+      </div>
+</ng-template>

@@ -22,7 +22,7 @@ import {
 import {Card, CardForPublishing} from '@ofModel/card.model';
 import {ProcessesService} from '@ofServices/processes.service';
 import {SafeHtml} from '@angular/platform-browser';
-import {AcknowledgmentAllowedEnum, State, TypeOfStateEnum} from '@ofModel/processes.model';
+import {AcknowledgmentAllowedEnum, State} from '@ofModel/processes.model';
 import {Store} from '@ngrx/store';
 import {AppState} from '@ofStore/index';
 import {map, takeUntil} from 'rxjs/operators';
@@ -49,11 +49,7 @@ import {MultiSelectConfig} from '@ofModel/multiselect.model';
 
 declare const templateGateway: any;
 
-class EntityForCardHeader {
-    id: string;
-    name: string;
-    color: string;
-}
+
 class FormResult {
     valid: boolean;
     errorMsg: string;
@@ -74,7 +70,6 @@ const enum AckI18nKeys {
     ERROR_MSG = 'response.error.ack'
 }
 
-const maxVisibleEntitiesForCardHeader = 3;
 
 @Component({
     selector: 'of-detail',
@@ -114,12 +109,7 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, DoCheck {
     public formattedPublishDate = '';
     public formattedPublishTime = '';
     public htmlTemplateContent: SafeHtml;
-    public listVisibleEntitiesToRespond = [];
-    public listDropdownEntitiesToRespond = [];
     public isCardAQuestionCard = false;
-    public showExpiredIcon = true;
-    public showExpiredLabel = true;
-    public expiredLabel = 'feed.lttdFinished';
     public btnValidateLabel = 'response.btnValidate';
     public btnUnlockLabel = 'response.btnUnlock';
     public listEntitiesAcknowledged = [];
@@ -220,8 +210,7 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, DoCheck {
         this.computeFromEntityOrRepresentative();
         this.formattedPublishDate = this.formatDate(this.card.publishDate);
         this.formattedPublishTime = this.formatTime(this.card.publishDate);
-        this.computeLttdParams();
-
+        
         this.btnValidateLabel = !!this.cardState.validateAnswerButtonLabel
             ? this.cardState.validateAnswerButtonLabel
             : 'response.btnValidate';
@@ -233,7 +222,7 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, DoCheck {
     public displayCardAcknowledgedFooter(): boolean {
         return (
             this.cardState.acknowledgmentAllowed !== AcknowledgmentAllowedEnum.NEVER &&
-            this.card.entityRecipients.length > 0 && this.isCardPublishedByUserEntity()
+            !!this.card.entityRecipients && this.card.entityRecipients.length > 0 && this.isCardPublishedByUserEntity()
         );
     }
 
@@ -384,7 +373,6 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, DoCheck {
             this.entityIdsAllowedOrRequiredToRespondAndAllowedToSendCards
         );
 
-        this.setEntitiesToRespondForCardHeader(entityIdsRequiredToRespondAndAllowedToSendCards);
         this.setUserEntityIdsPossibleForResponse();
         const userEntitiesRequiredToRespondAndAllowedToSendCards =
             entityIdsRequiredToRespondAndAllowedToSendCards.filter((entityId) => this.user.entities.includes(entityId));
@@ -419,50 +407,6 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, DoCheck {
             .map((entity) => entity.id);
     }
 
-    private setEntitiesToRespondForCardHeader(entityIdsRequiredToRespondAndAllowedToSendCards) {
-        if (this.entityIdsAllowedOrRequiredToRespondAndAllowedToSendCards) {
-            // Entities for card header
-            let listEntitiesToRespondForHeader;
-            if (entityIdsRequiredToRespondAndAllowedToSendCards.length > 0)
-                listEntitiesToRespondForHeader = this.createEntityHeaderFromList(
-                    entityIdsRequiredToRespondAndAllowedToSendCards
-                );
-            else
-                listEntitiesToRespondForHeader = this.createEntityHeaderFromList(
-                    this.entityIdsAllowedOrRequiredToRespondAndAllowedToSendCards
-                );
-
-            listEntitiesToRespondForHeader.sort((a, b) => a.name?.localeCompare(b.name));
-
-            this.listVisibleEntitiesToRespond =
-                listEntitiesToRespondForHeader.length > maxVisibleEntitiesForCardHeader
-                    ? listEntitiesToRespondForHeader.slice(0, maxVisibleEntitiesForCardHeader)
-                    : listEntitiesToRespondForHeader;
-
-            this.listDropdownEntitiesToRespond =
-                listEntitiesToRespondForHeader.length > maxVisibleEntitiesForCardHeader
-                    ? listEntitiesToRespondForHeader.slice(maxVisibleEntitiesForCardHeader)
-                    : [];
-        } else {
-            this.listVisibleEntitiesToRespond = [];
-            this.listDropdownEntitiesToRespond = [];
-        }
-    }
-
-    private createEntityHeaderFromList(entities: string[]) {
-        const entityHeader = new Array<EntityForCardHeader>();
-        entities.forEach((entity) => {
-            const entityName = this.entitiesService.getEntityName(entity);
-            if (entityName) {
-                entityHeader.push({
-                    id: entity,
-                    name: entityName,
-                    color: this.checkEntityAnswered(entity) ? 'green' : '#ff6600'
-                });
-            }
-        });
-        return entityHeader;
-    }
 
     private setUserEntityIdsPossibleForResponse() {
         this.userEntityIdsPossibleForResponse = this.entityIdsAllowedOrRequiredToRespondAndAllowedToSendCards.filter(
@@ -477,34 +421,12 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, DoCheck {
             this.userEntityIdToUseForResponse = this.userEntityIdsPossibleForResponse[0];
     }
 
-    private checkEntityAnswered(entity: string): boolean {
-        return this.childCards.some((childCard) => childCard.publisher === entity);
-    }
-
-    private checkEntityAcknowledged(entityId: string): boolean {
-        return !!this.card.entitiesAcks && this.card.entitiesAcks.includes(entityId);
-    }
 
     private checkLttdExpired(): void {
         this.lttdExpiredIsTrue = this.card.lttd != null && this.card.lttd - new Date().getTime() <= 0;
     }
 
-    private computeLttdParams() {
-        this.businessconfigService.queryProcess(this.card.process, this.card.processVersion).subscribe((process) => {
-            const state = process.extractState(this.card);
-            if (state.type === TypeOfStateEnum.FINISHED) {
-                this.showExpiredIcon = false;
-                this.showExpiredLabel = false;
-            } else if (this.isCardAQuestionCard) {
-                this.showExpiredIcon = false;
-                this.showExpiredLabel = true;
-                this.expiredLabel = 'feed.responsesClosed';
-            } else {
-                this.showExpiredIcon = true;
-                this.showExpiredLabel = true;
-            }
-        });
-    }
+
 
     private setButtonsVisibility() {
         this.showButtons = this._appService.pageType !== PageType.ARCHIVE;
@@ -708,7 +630,7 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, DoCheck {
         });
         this.userEntityOptionsDropdownList.sort((a, b) => Utilities.compareObj(a.label, b.label));
     }
-
+    
     private displayEntitiesChoicePopup() {
         this.userEntityIdToUseForResponse = '';
         this.selectEntitiesForm.get('entities').setValue(this.userEntityOptionsDropdownList[0].value);
