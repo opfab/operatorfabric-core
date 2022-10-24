@@ -683,6 +683,10 @@ describe('Acknowledgment tests', function () {
         cy.get('#of-pinned-cards').find('.opfab-pinned-card').should('have.length', 1);
 
         cy.tick(1 * MINUTES);
+        cy.waitDefaultTime();
+
+        cy.tick(1 * MINUTES);
+        cy.waitDefaultTime();
 
         //There is no more pinned card after end date is passed
         cy.get('#of-pinned-cards').find('.opfab-pinned-card').should('have.length', 0);

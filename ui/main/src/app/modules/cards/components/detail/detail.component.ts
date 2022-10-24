@@ -37,7 +37,6 @@ import {EntitiesService} from '@ofServices/entities.service';
 import {NgbModal,NgbModalRef} from '@ng-bootstrap/ng-bootstrap';
 import {AlertMessageAction} from '@ofStore/actions/alert.actions';
 import {MessageLevel} from '@ofModel/message.model';
-import {AcknowledgeService} from '@ofServices/acknowledge.service';
 import {UserPermissionsService} from '@ofServices/user-permissions.service';
 import {DisplayContext} from '@ofModel/templateGateway.model';
 import {LightCardsStoreService} from '@ofServices/lightcards/lightcards-store.service';
@@ -60,13 +59,6 @@ const enum ResponseI18nKeys {
     FORM_ERROR_MSG = 'response.error.form',
     SUBMIT_ERROR_MSG = 'response.error.submit',
     SUBMIT_SUCCESS_MSG = 'response.submitSuccess'
-}
-
-const enum AckI18nKeys {
-    BUTTON_TEXT_ACK = 'cardAcknowledgment.button.ack',
-    BUTTON_TEXT_ACK_AND_CLOSE = 'cardAcknowledgment.button.ackAndClose',
-    BUTTON_TEXT_UNACK = 'cardAcknowledgment.button.unack',
-    ERROR_MSG = 'response.error.ack'
 }
 
 
@@ -101,7 +93,6 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, DoCheck {
     public showButtons = false;
     public showCloseButton = false;
     public showMaxAndReduceButton = false;
-    public showAckButton = false;
     public showActionButton = false;
     public showDetailCardHeader = false;
     public htmlTemplateContent: SafeHtml;
@@ -119,7 +110,6 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, DoCheck {
     private userMemberOfAnEntityRequiredToRespondAndAllowedToSendCards = false;
     private unsubscribe$: Subject<void> = new Subject<void>();
     private modalRef: NgbModalRef;
-    public ackOrUnackInProgress = false;
 
     public user: User;
     public multiSelectConfig: MultiSelectConfig = {
@@ -136,7 +126,6 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, DoCheck {
         private userService: UserService,
         private entitiesService: EntitiesService,
         private modalService: NgbModal,
-        private acknowledgeService: AcknowledgeService,
         private userPermissionsService: UserPermissionsService,
         private lightCardsStoreService: LightCardsStoreService
     ) {
@@ -371,30 +360,7 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, DoCheck {
             this.showMaxAndReduceButton = true;
         }
         this.showCloseButton = true;
-        this.setAcknowledgeButtonVisibility();
         this.showActionButton = !!this.cardState.response;
-    }
-
-    private setAcknowledgeButtonVisibility() {
-        this.showAckButton = this.isAcknowledgmentAllowed() && this._appService.pageType !== PageType.CALENDAR;
-    }
-
-
-
-    private isAcknowledgmentAllowed(): boolean {
-        if (this.card.hasBeenAcknowledged && !this.cardState.cancelAcknowledgmentAllowed) return false;
-        // default is true
-        if (!this.cardState.acknowledgmentAllowed) return true;
-
-        return (
-            this.cardState.acknowledgmentAllowed === AcknowledgmentAllowedEnum.ALWAYS ||
-            (this.cardState.acknowledgmentAllowed === AcknowledgmentAllowedEnum.ONLY_WHEN_RESPONSE_DISABLED_FOR_USER &&
-                (!this.isUserEnabledToRespond || (this.isUserEnabledToRespond && this.lttdExpiredIsTrue)))
-        );
-    }
-
-    private shouldCloseCardWhenUserAcknowledges(): boolean {
-        return this.cardState.closeCardWhenUserAcknowledges;
     }
 
     private checkIfHasAlreadyResponded() {
@@ -446,11 +412,6 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, DoCheck {
         return `${this.card.process}.${this.card.processVersion}.`;
     }
 
-    get btnAckText(): string {
-        if (this.card.hasBeenAcknowledged) return AckI18nKeys.BUTTON_TEXT_UNACK
-        else if (this.shouldCloseCardWhenUserAcknowledges()) return AckI18nKeys.BUTTON_TEXT_ACK_AND_CLOSE
-        else return AckI18nKeys.BUTTON_TEXT_ACK;
-    }
 
 
     public isSmallscreen() {
@@ -467,46 +428,8 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, DoCheck {
         if (!!this.parentComponent) this.parentComponent.screenSize = active ? 'lg' : 'md';
     }
 
-    public acknowledgeCard() {
-        this.ackOrUnackInProgress = true;
 
-        if (this.card.hasBeenAcknowledged) {
-            this.cancelAcknowledgement();
-        } else {
-            const entitiesAcks = [];
-            const entities = this.entitiesService.getEntitiesFromIds(this.user.entities);
-            entities.forEach((entity) => {
-                if (entity.entityAllowedToSendCard)
-                    // this avoids to display entities used only for grouping
-                    entitiesAcks.push(entity.id);
-            });
-            this.acknowledgeService.postUserAcknowledgement(this.card.uid, entitiesAcks).subscribe((resp) => {
-                this.ackOrUnackInProgress = false;
-                if (resp.status === 201 || resp.status === 200) {
-                    this.acknowledgeService.updateAcknowledgementOnLightCard(this.card.id, true);
-                    this.card = {...this.card, hasBeenAcknowledged: true};
-                    this.setAcknowledgeButtonVisibility();
-                    if (this.shouldCloseCardWhenUserAcknowledges()) this.closeDetails();
-                } else {
-                    console.error('the remote acknowledgement endpoint returned an error status(%d)', resp.status);
-                    this.displayMessage(AckI18nKeys.ERROR_MSG, null, MessageLevel.ERROR);
-                }
-            });
-        }
-    }
 
-    private cancelAcknowledgement() {
-        this.acknowledgeService.deleteUserAcknowledgement(this.card.uid).subscribe((resp) => {
-            this.ackOrUnackInProgress = false;
-            if (resp.status === 200 || resp.status === 204) {
-                this.card = {...this.card, hasBeenAcknowledged: false};
-                this.acknowledgeService.updateAcknowledgementOnLightCard(this.card.id, false);
-            } else {
-                console.error('the remote acknowledgement endpoint returned an error status(%d)', resp.status);
-                this.displayMessage(AckI18nKeys.ERROR_MSG, null, MessageLevel.ERROR);
-            }
-        });
-    }
 
     public closeDetails() {
         this.updateLastReadCardStatusOnFeedIfNeeded();
@@ -515,8 +438,6 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, DoCheck {
             this.store.dispatch(new ClearLightCardSelectionAction());
         } else this._appService.closeDetails();
     }
-
-
 
     public unlockAnswer() {
         this.isResponseLocked = false;
