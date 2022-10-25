@@ -113,6 +113,15 @@ export class OpfabGeneralCommands extends OpfabCommands {
         cy.get('#opfab-navbar-right-menu-externaldevicesconfiguration').click();
     }
 
+    simulateTimeForOpfabCodeToExecute = function () {
+        cy.tick(100);
+        cy.wait(10);
+        cy.tick(100);
+        cy.wait(10);
+        cy.tick(100);
+        cy.wait(10);
+    }
+
     switchToDayMode = function () {
         cy.get('#opfab-navbar-drop-user-menu').click();
         cy.get('#opfab-navbar-right-menu-day-mode').click();

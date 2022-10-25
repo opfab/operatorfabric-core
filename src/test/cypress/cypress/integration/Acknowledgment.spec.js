@@ -657,26 +657,23 @@ describe('Acknowledgment tests', function () {
 
         cy.tick(1 * SECONDS);
 
+
         //There are no pinned cards
         cy.get('#of-pinned-cards').find('.opfab-pinned-card').should('have.length', 0);
 
-        cy.get('of-light-card').eq(0).click()
-        .find('[id^=opfab-feed-light-card]')
-        .invoke('attr', 'data-urlId')
-        .then((urlId) => {
-            cy.hash().should('eq', '#/feed/cards/' + urlId);
+        feed.openFirstCard();
+        opfab.simulateTimeForOpfabCodeToExecute();
+        card.acknowledge();
 
-            card.acknowledge();
+        cy.waitDefaultTime();
 
-            cy.waitDefaultTime();
+        cy.tick(1 * SECONDS);
 
-            cy.tick(1 * SECONDS);
+        //The card is pinned
+        cy.get('#of-pinned-cards').find('.opfab-pinned-card').should('have.length', 1);
+        // Detail card is not present anymore
+        cy.get('of-detail').should('not.exist');
 
-            //The card is pinned
-            cy.get('#of-pinned-cards').find('.opfab-pinned-card').should('have.length', 1);
-            // Detail card is not present anymore
-            cy.get('of-detail').should('not.exist');
-        });
 
         cy.tick(5 * MINUTES);
         // Check card is still pinned before endDate
@@ -744,5 +741,5 @@ describe('Acknowledgment tests', function () {
             cy.get('#of-pinned-cards-popover').should('not.exist');
 
         });
-    });
+    }); 
 })
