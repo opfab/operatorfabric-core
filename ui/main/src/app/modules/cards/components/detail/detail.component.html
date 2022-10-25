@@ -40,7 +40,7 @@
       <div style="padding-right:3px">
         <!-- padding is necessary to see box shadow-->
 
-        <div *ngIf='isCardAQuestionCard && showDetailCardHeader' class="opfab-card-response-header">
+        <div *ngIf='showDetailCardHeader' class="opfab-card-response-header">
           <of-card-header [card]="this.card" [childCards]="this.childCards" [cardState]="this.cardState"
             [lttdExpiredIsTrue]="this.lttdExpiredIsTrue"> </of-card-header>
         </div>
@@ -67,7 +67,6 @@
               <div *ngIf="showButtons" style="margin-left: auto;text-align: right;min-width: 250px">
                 <of-card-response [card]="this.card" [cardState]="this.cardState"
                   [lttdExpiredIsTrue]="this.lttdExpiredIsTrue" [isResponseLocked]="this.isResponseLocked"
-                  [entityIdsAllowedOrRequiredToRespondAndAllowedToSendCards]="this.entityIdsAllowedOrRequiredToRespondAndAllowedToSendCards"
                   [userEntityIdsPossibleForResponse]="this.userEntityIdsPossibleForResponse"
                   (unlockAnswerEvent)="this.unlockAnswer()"> </of-card-response>
                 <of-card-ack [card]="this.card" [cardState]="this.cardState"
