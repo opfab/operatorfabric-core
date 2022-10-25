@@ -7,17 +7,7 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {
-    Component,
-    DoCheck,
-    Input,
-    OnChanges,
-    OnDestroy,
-    OnInit,
-    TemplateRef,
-    ViewChild,
-    ViewEncapsulation
-} from '@angular/core';
+import {Component, Input, OnChanges, OnDestroy, OnInit, SimpleChanges, ViewEncapsulation} from '@angular/core';
 import {Card} from '@ofModel/card.model';
 import {ProcessesService} from '@ofServices/processes.service';
 import {SafeHtml} from '@angular/platform-browser';
@@ -47,7 +37,7 @@ declare const templateGateway: any;
     styleUrls: ['./detail.component.scss'],
     encapsulation: ViewEncapsulation.None
 })
-export class DetailComponent implements OnChanges, OnInit, OnDestroy, DoCheck {
+export class DetailComponent implements OnChanges, OnInit, OnDestroy {
     @Input() cardState: State;
     @Input() card: Card;
     @Input() childCards: Card[];
@@ -60,13 +50,14 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, DoCheck {
 
     public isUserEnabledToRespond = false;
     public lttdExpiredIsTrue: boolean;
+    private regularlyLttdCheckActive = false;
+
     public isResponseLocked = false;
     public fullscreen = false;
     public showButtons = false;
     public showMaxAndReduceButton = false;
     public showDetailCardHeader = false;
     public htmlTemplateContent: SafeHtml;
-    public isCardAQuestionCard = false;
     public templateOffset = 15;
 
     private lastCardSetToReadButNotYetOnFeed;
@@ -93,87 +84,15 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, DoCheck {
         if (!!userWithPerimeters) this.user = userWithPerimeters.userData;
     }
 
-    // START - ANGULAR COMPONENT LIFECYCLE
-
     ngOnInit() {
-        if (this._appService.pageType !== PageType.ARCHIVE) this.integrateChildCardsInRealTime();
+        if (this._appService.pageType !== PageType.ARCHIVE) {
+            this.integrateChildCardsInRealTime();
+            this.showButtons = true;
+        }
         if (this._appService.pageType === PageType.MONITORING || this._appService.pageType === PageType.CALENDAR)
             this.templateOffset = 35;
-            if (this._appService.pageType !== PageType.CALENDAR && this._appService.pageType !== PageType.MONITORING) {
-                this.showMaxAndReduceButton = true;
-            }
-    }
-
-    ngDoCheck() {
-        if (templateGateway.setLttdExpired) {
-            const previous = this.lttdExpiredIsTrue;
-            this.checkLttdExpired();
-            if (previous !== this.lttdExpiredIsTrue) {
-                templateGateway.setLttdExpired(this.lttdExpiredIsTrue);
-            }
-        }
-    }
-
-    ngOnChanges(): void {
-        if (this.cardState.response != null && this.cardState.response !== undefined) {
-            this.isCardAQuestionCard = true;
-            this.computeEntitiesForResponses();
-            this.computeUserEntitiesRequiredToRespondAndAllowedToSendCards();
-            this.isUserEnabledToRespond = this.userPermissionsService.isUserEnabledToRespond(
-                this.userService.getCurrentUserWithPerimeters(),
-                this.card,
-                this.businessconfigService.getProcess(this.card.process)
-            );
-        } else this.isCardAQuestionCard = false;
-
-        this.lockResponseIfOneUserEntityHasAlreadyRespond();
-
-        this.markAsReadIfNecessary();
-        this.showDetailCardHeader =
-            !this.cardState.showDetailCardHeader || this.cardState.showDetailCardHeader === true;
-    }
-
-    public displayCardAcknowledgedFooter(): boolean {
-        return (
-            this.cardState.acknowledgmentAllowed !== AcknowledgmentAllowedEnum.NEVER &&
-            !!this.card.entityRecipients &&
-            this.card.entityRecipients.length > 0 &&
-            this.isCardPublishedByUserEntity()
-        );
-    }
-
-    private isCardPublishedByUserEntity(): boolean {
-        return this.card.publisherType === 'ENTITY' && this.user.entities.includes(this.card.publisher);
-    }
-
-    ngOnDestroy() {
-        this.updateLastReadCardStatusOnFeedIfNeeded();
-        this.unsubscribe$.next();
-        this.unsubscribe$.complete();
-    }
-
-    // END  - ANGULAR COMPONENT LIFECYCLE
-
-    public beforeTemplateRendering() {
-        this.showButtons = false;
-        this.setTemplateGatewayVariables();
-    }
-    private setTemplateGatewayVariables() {
-        templateGateway.childCards = this.childCards;
-        templateGateway.isLocked = this.isResponseLocked;
-        templateGateway.userAllowedToRespond = this.isUserEnabledToRespond;
-        templateGateway.entitiesAllowedToRespond = this.entityIdsAllowedOrRequiredToRespondAndAllowedToSendCards;
-        templateGateway.userMemberOfAnEntityRequiredToRespond =
-            this.userMemberOfAnEntityRequiredToRespondAndAllowedToSendCards;
-        templateGateway.entityUsedForUserResponse = this.userEntityIdToUseForResponse;
-    }
-
-    public afterTemplateRendering() {
-        if (this.isResponseLocked) templateGateway.lockAnswer();
-        if (this.card.lttd && this.lttdExpiredIsTrue) {
-            templateGateway.setLttdExpired(true);
-        }
-        this.showButtons = this._appService.pageType !== PageType.ARCHIVE;
+        if (this._appService.pageType !== PageType.CALENDAR && this._appService.pageType !== PageType.MONITORING)
+            this.showMaxAndReduceButton = true;
     }
 
     private integrateChildCardsInRealTime() {
@@ -223,6 +142,16 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, DoCheck {
         });
     }
 
+    private lockResponseIfOneUserEntityHasAlreadyRespond() {
+        this.isResponseLocked = false;
+        for (const e of this.childCards.map((c) => c.publisher)) {
+            if (this.user.entities.includes(e)) {
+                this.isResponseLocked = true;
+                break;
+            }
+        }
+    }
+
     private removeChildCard(deletedChildCardId: string) {
         const newChildArray = this.childCards.filter((childCard) => childCard.id !== deletedChildCardId);
         this.childCards = newChildArray;
@@ -233,33 +162,30 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, DoCheck {
         templateGateway.applyChildCards();
     }
 
-    private computeEntitiesForResponses() {
-        this.entityIdsAllowedOrRequiredToRespondAndAllowedToSendCards =
-            this.getEntityIdsAllowedOrRequiredToRespondAndAllowedToSendCards();
-        this.logger.debug(
-            `Detail card - entities allowed to respond = ${this.entityIdsAllowedOrRequiredToRespondAndAllowedToSendCards}`
-        );
-        this.setUserEntityIdsPossibleForResponse();
+    public unlockAnswer() {
+        this.isResponseLocked = false;
+        templateGateway.unlockAnswer();
     }
 
-    private computeUserEntitiesRequiredToRespondAndAllowedToSendCards() {
-        const entityIdsRequiredToRespondAndAllowedToSendCards =
-            this.getEntityIdsRequiredToRespondAndAllowedToSendCards();
-        const userEntitiesRequiredToRespondAndAllowedToSendCards =
-            entityIdsRequiredToRespondAndAllowedToSendCards.filter((entityId) => this.user.entities.includes(entityId));
-        this.userMemberOfAnEntityRequiredToRespondAndAllowedToSendCards =
-            userEntitiesRequiredToRespondAndAllowedToSendCards.length > 0;
+    ngOnChanges(changes: SimpleChanges): void {
+        if (!!changes.card || !!changes.cardState) {
+            if (this.cardState.response != null && this.cardState.response !== undefined) {
+                this.computeEntityIdsAllowedOrRequiredToRespondAndAllowedToSendCards();
+                this.computeUserEntityIdsPossibleForResponse();
+                this.computeUserMemberOfAnEntityRequiredToRespondAndAllowedToSendCards();
+                this.isUserEnabledToRespond = this.userPermissionsService.isUserEnabledToRespond(
+                    this.userService.getCurrentUserWithPerimeters(),
+                    this.card,
+                    this.businessconfigService.getProcess(this.card.process)
+                );
+            }
+            this.computeShowDetailCardHeader();
+            this.lockResponseIfOneUserEntityHasAlreadyRespond();
+            this.markAsReadIfNecessary();
+        }
     }
 
-    private getEntityIdsRequiredToRespondAndAllowedToSendCards() {
-        if (!this.card.entitiesRequiredToRespond) return [];
-        const entitiesAllowedToRespond = this.entitiesService.getEntitiesFromIds(this.card.entitiesRequiredToRespond);
-        return this.entitiesService
-            .resolveEntitiesAllowedToSendCards(entitiesAllowedToRespond)
-            .map((entity) => entity.id);
-    }
-
-    private getEntityIdsAllowedOrRequiredToRespondAndAllowedToSendCards() {
+    private computeEntityIdsAllowedOrRequiredToRespondAndAllowedToSendCards() {
         let entityIdsAllowedOrRequiredToRespond = [];
         if (this.card.entitiesAllowedToRespond)
             entityIdsAllowedOrRequiredToRespond = entityIdsAllowedOrRequiredToRespond.concat(
@@ -273,12 +199,16 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, DoCheck {
         const entitiesAllowedOrRequiredToRespond = this.entitiesService.getEntitiesFromIds(
             entityIdsAllowedOrRequiredToRespond
         );
-        return this.entitiesService
+        this.entityIdsAllowedOrRequiredToRespondAndAllowedToSendCards = this.entitiesService
             .resolveEntitiesAllowedToSendCards(entitiesAllowedOrRequiredToRespond)
             .map((entity) => entity.id);
+
+        this.logger.debug(
+            `Detail card - entities allowed to respond = ${this.entityIdsAllowedOrRequiredToRespondAndAllowedToSendCards}`
+        );
     }
 
-    private setUserEntityIdsPossibleForResponse() {
+    private computeUserEntityIdsPossibleForResponse() {
         this.userEntityIdsPossibleForResponse = this.entityIdsAllowedOrRequiredToRespondAndAllowedToSendCards.filter(
             (entityId) => this.user.entities.includes(entityId)
         );
@@ -287,18 +217,29 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, DoCheck {
             this.userEntityIdToUseForResponse = this.userEntityIdsPossibleForResponse[0];
     }
 
-    private checkLttdExpired(): void {
-        this.lttdExpiredIsTrue = this.card.lttd != null && this.card.lttd - new Date().getTime() <= 0;
+    private computeUserMemberOfAnEntityRequiredToRespondAndAllowedToSendCards() {
+        if (!this.card.entitiesRequiredToRespond) {
+            this.userMemberOfAnEntityRequiredToRespondAndAllowedToSendCards = false;
+            return;
+        }
+
+        const entitiesRequiredToRespond = this.entitiesService.getEntitiesFromIds(this.card.entitiesRequiredToRespond);
+
+        const entityIdsRequiredToRespondAndAllowedToSendCards = this.entitiesService
+            .resolveEntitiesAllowedToSendCards(entitiesRequiredToRespond)
+            .map((entity) => entity.id);
+
+        const userEntitiesRequiredToRespondAndAllowedToSendCards =
+            entityIdsRequiredToRespondAndAllowedToSendCards.filter((entityId) => this.user.entities.includes(entityId));
+        this.userMemberOfAnEntityRequiredToRespondAndAllowedToSendCards =
+            userEntitiesRequiredToRespondAndAllowedToSendCards.length > 0;
     }
 
-    private lockResponseIfOneUserEntityHasAlreadyRespond() {
-        this.isResponseLocked = false;
-        for (const e of this.childCards.map((c) => c.publisher)) {
-            if (this.user.entities.includes(e)) {
-                this.isResponseLocked = true;
-                break;
-            }
-        }
+    public computeShowDetailCardHeader() {
+        this.showDetailCardHeader =
+            (!this.cardState.showDetailCardHeader || this.cardState.showDetailCardHeader === true) &&
+            this.cardState.response != null &&
+            this.cardState.response !== undefined;
     }
 
     private markAsReadIfNecessary() {
@@ -327,7 +268,62 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, DoCheck {
         }
     }
 
-    // START - METHODS CALLED ONLY FROM HTML COMPONENT
+    public displayCardAcknowledgedFooter(): boolean {
+        return (
+            this.cardState.acknowledgmentAllowed !== AcknowledgmentAllowedEnum.NEVER &&
+            !!this.card.entityRecipients &&
+            this.card.entityRecipients.length > 0 &&
+            this.isCardPublishedByUserEntity()
+        );
+    }
+
+    private isCardPublishedByUserEntity(): boolean {
+        return this.card.publisherType === 'ENTITY' && this.user.entities.includes(this.card.publisher);
+    }
+
+    public beforeTemplateRendering() {
+        this.setTemplateGatewayVariables();
+        this.stopRegularlyCheckLttd();
+    }
+
+    private setTemplateGatewayVariables() {
+        templateGateway.childCards = this.childCards;
+        templateGateway.isLocked = this.isResponseLocked;
+        templateGateway.userAllowedToRespond = this.isUserEnabledToRespond;
+        templateGateway.entitiesAllowedToRespond = this.entityIdsAllowedOrRequiredToRespondAndAllowedToSendCards;
+        templateGateway.userMemberOfAnEntityRequiredToRespond =
+            this.userMemberOfAnEntityRequiredToRespondAndAllowedToSendCards;
+        templateGateway.entityUsedForUserResponse = this.userEntityIdToUseForResponse;
+    }
+
+    private stopRegularlyCheckLttd() {
+        this.regularlyLttdCheckActive = false;
+        this.lttdExpiredIsTrue = false;
+    }
+
+    public afterTemplateRendering() {
+        if (this.isResponseLocked) templateGateway.lockAnswer();
+        this.startRegularlyCheckLttd();
+        
+    }
+
+    private startRegularlyCheckLttd() {
+        this.regularlyLttdCheckActive = true;
+        this.regularlyCheckLttd();
+    }
+
+    private regularlyCheckLttd() {
+        if (this.card.lttd && !this.lttdExpiredIsTrue && this.regularlyLttdCheckActive) {
+            if (this.isLttdExpired()) {
+                this.lttdExpiredIsTrue = true;
+                templateGateway.setLttdExpired(true);
+            } else setTimeout(() => this.regularlyCheckLttd(), 500);
+        }
+    }
+
+    private isLttdExpired(): boolean {
+        return this.card.lttd != null && this.card.lttd - new Date().getTime() <= 0;
+    }
 
     public isSmallscreen() {
         return window.innerWidth < 1000;
@@ -346,10 +342,9 @@ export class DetailComponent implements OnChanges, OnInit, OnDestroy, DoCheck {
         } else this._appService.closeDetails();
     }
 
-    public unlockAnswer() {
-        this.isResponseLocked = false;
-        templateGateway.unlockAnswer();
+    ngOnDestroy() {
+        this.updateLastReadCardStatusOnFeedIfNeeded();
+        this.unsubscribe$.next();
+        this.unsubscribe$.complete();
     }
-
-    // END - METHODS CALLED ONLY FROM HTML COMPONENT
 }
