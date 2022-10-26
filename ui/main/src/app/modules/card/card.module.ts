@@ -52,4 +52,4 @@ import {CardResponseComponent} from './components/card-reponse/card-response.com
     ],
     exports: [CardComponent, CardBodyComponent]
 })
-export class CardsModule {}
+export class CardModule {}

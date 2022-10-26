@@ -20,7 +20,7 @@ import {Guid} from 'guid-typescript';
 import {DomSanitizer, SafeHtml} from '@angular/platform-browser';
 import {EntitiesService} from '@ofServices/entities.service';
 import {ProcessesService} from '@ofServices/processes.service';
-import {HandlebarsService} from '../cards/services/handlebars.service';
+import {HandlebarsService} from '../card/services/handlebars.service';
 import {DetailContext} from '@ofModel/detail-context.model';
 import {map} from 'rxjs/operators';
 import {MessageLevel} from '@ofModel/message.model';

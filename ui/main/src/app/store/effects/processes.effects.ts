@@ -13,7 +13,7 @@ import {Observable, timer} from 'rxjs';
 import {ProcessesActionTypes} from '@ofActions/processes.actions';
 import {catchError, debounce, map} from 'rxjs/operators';
 import {ProcessesService} from '@ofServices/processes.service';
-import {HandlebarsService} from 'app/modules/cards/services/handlebars.service';
+import {HandlebarsService} from 'app/modules/card/services/handlebars.service';
 import {TemplateCssService} from '@ofServices/template-css.service';
 
 @Injectable()

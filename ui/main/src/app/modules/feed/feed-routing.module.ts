@@ -10,8 +10,8 @@
 import {NgModule} from '@angular/core';
 import {FeedComponent} from './feed.component';
 import {RouterModule, Routes} from '@angular/router';
-import {CardBodyComponent} from '../cards/components/card-body/card-body.component';
-import {CardComponent} from '../cards/card.component';
+import {CardBodyComponent} from '../card/components/card-body/card-body.component';
+import {CardComponent} from '../card/card.component';
 import {MapComponent} from './components/map/map.component';
 
 const routes: Routes = [
