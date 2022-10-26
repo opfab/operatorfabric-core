@@ -45,7 +45,7 @@ describe('FeedScreen tests', function () {
         feed.checkNumberOfDisplayedCardsIs(6);
 
         // No card detail is displayed
-        cy.get('of-card-details').should('not.exist');
+        cy.get('of-card').should('not.exist');
 
         // Title and subtitle should be unread (bold) for all 6 cards
         cy.get('of-light-card').find('.card-title, .card-title')
@@ -73,7 +73,7 @@ describe('FeedScreen tests', function () {
             .as('firstCardUrlId')
             .then((urlId) => {
                 cy.hash().should('eq', '#/feed/cards/' + urlId);
-                cy.get('of-card-details').find('of-card-body');
+                cy.get('of-card').find('of-card-body');
             });
         cy.get('#opfab-feed-card-not-found').should('not.exist');
 
@@ -91,7 +91,7 @@ describe('FeedScreen tests', function () {
                 .invoke('attr', 'data-urlId')
                 .then((urlId) => {
                     cy.hash().should('eq', '#/feed/cards/' + urlId);
-                    cy.get('of-card-details').find('of-card-body');
+                    cy.get('of-card').find('of-card-body');
                 });
         });
         cy.get('#opfab-feed-card-not-found').should('not.exist');
@@ -115,10 +115,10 @@ describe('FeedScreen tests', function () {
         opfab.loginWithUser('operator1_fr');
         script.send6TestCards();
         feed.checkNumberOfDisplayedCardsIs(6);
-        cy.get('of-card-details').should('not.exist');
+        cy.get('of-card').should('not.exist');
         script.delete6TestCards();
         feed.checkNumberOfDisplayedCardsIs(0);
-        cy.get('of-card-details').should('not.exist');
+        cy.get('of-card').should('not.exist');
     });
 
     it('Check card visibility by publish date when business period is after selected time range', function () {

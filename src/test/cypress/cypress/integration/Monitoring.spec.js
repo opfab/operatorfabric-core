@@ -159,7 +159,7 @@ describe ('Monitoring screen tests',function () {
         cy.get("#opfab-monitoring-table").find('#opfab-monitoring-table-grid').should("exist");
 
         // No card detail is displayed
-        cy.get('of-card-details').should('not.exist');
+        cy.get('of-card').should('not.exist');
 
         // Should have the correct number of cards (5 because one card is set not to be visible in monitoring)
         agGrid.countTableRows('#opfab-monitoring-table-grid', 5);
@@ -167,11 +167,11 @@ describe ('Monitoring screen tests',function () {
 
         // Opens the first card, checks that its content is visible
         agGrid.clickCell('#opfab-monitoring-table-grid', 1, 1);
-        cy.get('of-card-details').first().should('exist');
+        cy.get('of-card').first().should('exist');
 
         // Closes the card content and check card  body is no longer visible
         cy.get("#opfab-close-card").click();
-        cy.get('of-card-details').should('not.exist');
+        cy.get('of-card').should('not.exist');
     })
     
 

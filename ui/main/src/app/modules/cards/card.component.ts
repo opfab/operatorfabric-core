@@ -25,11 +25,11 @@ import {DisplayContext} from '@ofModel/templateGateway.model';
 import {cardInitialState, CardState} from '@ofStates/card.state';
 
 @Component({
-    selector: 'of-card-details',
-    templateUrl: './card-details.component.html',
-    styleUrls: ['./card-details.component.scss']
+    selector: 'of-card',
+    templateUrl: './card.component.html',
+    styleUrls: ['./card.component.scss']
 })
-export class CardDetailsComponent implements OnInit, OnDestroy {
+export class CardComponent implements OnInit, OnDestroy {
     @Input() parentModalRef: NgbModalRef;
     @Input() screenSize = 'md';
     @Input() displayContext: any = DisplayContext.REALTIME;

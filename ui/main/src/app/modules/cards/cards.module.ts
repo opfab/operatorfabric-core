@@ -9,7 +9,7 @@
 
 import {NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
-import {CardDetailsComponent} from './components/card-details/card-details.component';
+import {CardComponent} from './card.component';
 import {CardBodyComponent} from './components/card-body/card-body.component';
 import {TranslateModule} from '@ngx-translate/core';
 import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
@@ -29,7 +29,7 @@ import {CardResponseComponent} from './components/card-reponse/card-response.com
 
 @NgModule({
     declarations: [
-        CardDetailsComponent,
+        CardComponent,
         CardBodyComponent,
         CardActionsComponent,
         CardAcksFooterComponent,
@@ -50,6 +50,6 @@ import {CardResponseComponent} from './components/card-reponse/card-response.com
         TemplateRenderingModule,
         PipesModule
     ],
-    exports: [CardDetailsComponent, CardBodyComponent]
+    exports: [CardComponent, CardBodyComponent]
 })
 export class CardsModule {}
