@@ -26,7 +26,7 @@ import {NgbModalRef} from '@ng-bootstrap/ng-bootstrap';
 import {UserPermissionsService} from '@ofServices/user-permissions.service';
 import {DisplayContext} from '@ofModel/templateGateway.model';
 import {LightCardsStoreService} from '@ofServices/lightcards/lightcards-store.service';
-import {CardDetailsComponent} from '../card-details/card-details.component';
+import {CardComponent} from '../../card.component';
 import {OpfabLoggerService} from '@ofServices/logs/opfab-logger.service';
 
 declare const templateGateway: any;
@@ -46,7 +46,7 @@ export class CardBodyComponent implements OnChanges, OnInit, OnDestroy {
     @Input() parentModalRef: NgbModalRef;
     @Input() screenSize: string;
     @Input() displayContext: DisplayContext = DisplayContext.REALTIME;
-    @Input() parentComponent: CardDetailsComponent;
+    @Input() parentComponent: CardComponent;
 
     public isUserEnabledToRespond = false;
     public lttdExpiredIsTrue: boolean;

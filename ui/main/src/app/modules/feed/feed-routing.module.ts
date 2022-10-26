@@ -11,7 +11,7 @@ import {NgModule} from '@angular/core';
 import {FeedComponent} from './feed.component';
 import {RouterModule, Routes} from '@angular/router';
 import {CardBodyComponent} from '../cards/components/card-body/card-body.component';
-import {CardDetailsComponent} from '../cards/components/card-details/card-details.component';
+import {CardComponent} from '../cards/card.component';
 import {MapComponent} from './components/map/map.component';
 
 const routes: Routes = [
@@ -24,11 +24,11 @@ const routes: Routes = [
                 children: [
                     {
                         path: '',
-                        component: CardDetailsComponent
+                        component: CardComponent
                     },
                     {
                         path: ':cid',
-                        component: CardDetailsComponent,
+                        component: CardComponent,
                         children: [
                             {
                                 path: 'details/:did',
