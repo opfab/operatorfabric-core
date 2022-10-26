@@ -7,10 +7,10 @@
 <!-- This file is part of the OperatorFabric project.                      -->
 
 <div *ngIf="card && cardState;" style="font-size:13px;" [hidden]="cardLoadingInProgress || cardNotFound">
-  <of-detail [cardState]="cardState" [card]="card" [childCards]="childCards" [currentPath]="_currentPath"
+  <of-card-body [cardState]="cardState" [card]="card" [childCards]="childCards" [currentPath]="_currentPath"
     [parentModalRef]="parentModalRef" [screenSize]="screenSize" [displayContext]="displayContext"
     [parentComponent]=this>
-  </of-detail>
+  </of-card-body>
 </div>
 
 

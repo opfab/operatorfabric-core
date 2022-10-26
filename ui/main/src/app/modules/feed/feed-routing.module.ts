@@ -10,7 +10,7 @@
 import {NgModule} from '@angular/core';
 import {FeedComponent} from './feed.component';
 import {RouterModule, Routes} from '@angular/router';
-import {DetailComponent} from '../cards/components/detail/detail.component';
+import {CardBodyComponent} from '../cards/components/card-body/card-body.component';
 import {CardDetailsComponent} from '../cards/components/card-details/card-details.component';
 import {MapComponent} from './components/map/map.component';
 
@@ -32,7 +32,7 @@ const routes: Routes = [
                         children: [
                             {
                                 path: 'details/:did',
-                                component: DetailComponent
+                                component: CardBodyComponent
                             }
                         ]
                     }

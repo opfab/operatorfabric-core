@@ -10,7 +10,7 @@
 import {NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {CardDetailsComponent} from './components/card-details/card-details.component';
-import {DetailComponent} from './components/detail/detail.component';
+import {CardBodyComponent} from './components/card-body/card-body.component';
 import {TranslateModule} from '@ngx-translate/core';
 import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
 import {CountDownModule} from '../share/countdown/countdown.module';
@@ -30,7 +30,7 @@ import {CardResponseComponent} from './components/card-reponse/card-response.com
 @NgModule({
     declarations: [
         CardDetailsComponent,
-        DetailComponent,
+        CardBodyComponent,
         CardActionsComponent,
         CardAcksFooterComponent,
         CardHeaderComponent,
@@ -50,6 +50,6 @@ import {CardResponseComponent} from './components/card-reponse/card-response.com
         TemplateRenderingModule,
         PipesModule
     ],
-    exports: [CardDetailsComponent, DetailComponent]
+    exports: [CardDetailsComponent, CardBodyComponent]
 })
 export class CardsModule {}

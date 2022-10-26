@@ -66,7 +66,7 @@ describe('Calendar screen tests', function () {
         cy.get('.fc-event-title').contains('Data quality').should('exist').click({force: true});
 
         // detail card is present, check content and then close the card
-        cy.get('of-detail').should('be.visible');
+        cy.get('of-card-body').should('be.visible');
         cy.get('#opfab-card-title').should('have.text', 'Data quality'.toUpperCase());
         cy.get('#opfab-div-card-template-processed')
             .find('p')

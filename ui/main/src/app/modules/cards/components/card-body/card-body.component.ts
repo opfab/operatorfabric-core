@@ -32,12 +32,12 @@ import {OpfabLoggerService} from '@ofServices/logs/opfab-logger.service';
 declare const templateGateway: any;
 
 @Component({
-    selector: 'of-detail',
-    templateUrl: './detail.component.html',
-    styleUrls: ['./detail.component.scss'],
+    selector: 'of-card-body',
+    templateUrl: './card-body.component.html',
+    styleUrls: ['./card-body.component.scss'],
     encapsulation: ViewEncapsulation.None
 })
-export class DetailComponent implements OnChanges, OnInit, OnDestroy {
+export class CardBodyComponent implements OnChanges, OnInit, OnDestroy {
     @Input() cardState: State;
     @Input() card: Card;
     @Input() childCards: Card[];

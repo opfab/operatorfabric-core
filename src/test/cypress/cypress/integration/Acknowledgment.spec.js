@@ -100,7 +100,7 @@ describe('Acknowledgment tests', function () {
         cy.get('#opfab-feed-light-card-cypress-message2').should('not.exist');
 
         // Detail card is not present anymore
-        cy.get('of-detail').should('not.exist');
+        cy.get('of-card-body').should('not.exist');
 
         // Operator1 should see 5 cards in his feed
         cy.get('of-light-card').should('have.length', 5);
@@ -117,7 +117,7 @@ describe('Acknowledgment tests', function () {
         cy.get('#opfab-feed-light-card-cypress-message1').should('not.exist');
 
         // Detail card is still present 
-        cy.get('of-detail').should('exist');
+        cy.get('of-card-body').should('exist');
 
         // Operator1 should see 4 cards in his feed
         cy.get('of-light-card').should('have.length', 4);
@@ -593,14 +593,14 @@ describe('Acknowledgment tests', function () {
              //The card is pinned
             cy.get('#of-pinned-cards').find('.opfab-pinned-card').should('have.length', 1);
             // Detail card is not present anymore
-            cy.get('of-detail').should('not.exist');
+            cy.get('of-card-body').should('not.exist');
         });
 
         
         // Click on pinned card to open card detail
         cy.get('#of-pinned-cards').find('.opfab-pinned-card').eq(0).click();
         // Detail card is present  
-        cy.get('of-detail').should('exist');
+        cy.get('of-card-body').should('exist');
         card.unacknowledge();
         //There are no pinned cards
         cy.get('#of-pinned-cards').find('.opfab-pinned-card').should('have.length', 0);
@@ -628,7 +628,7 @@ describe('Acknowledgment tests', function () {
              //The card is pinned
             cy.get('#of-pinned-cards').find('.opfab-pinned-card').should('have.length', 1);
             // Detail card is not present anymore
-            cy.get('of-detail').should('not.exist');
+            cy.get('of-card-body').should('not.exist');
         });
 
 
@@ -672,7 +672,7 @@ describe('Acknowledgment tests', function () {
         //The card is pinned
         cy.get('#of-pinned-cards').find('.opfab-pinned-card').should('have.length', 1);
         // Detail card is not present anymore
-        cy.get('of-detail').should('not.exist');
+        cy.get('of-card-body').should('not.exist');
 
 
         cy.tick(5 * MINUTES);
@@ -734,7 +734,7 @@ describe('Acknowledgment tests', function () {
             // Click on pinned card to open card detail
             cy.get('.opfab-hidden-pinned-card').eq(0).click();
             // Detail card is present  
-            cy.get('of-detail').should('exist');
+            cy.get('of-card-body').should('exist');
             card.unacknowledge();
             //There are 6 pinned cards with no popover "..."
             cy.get('#of-pinned-cards').find('.opfab-pinned-card').should('have.length', 6);
