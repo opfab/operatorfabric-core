@@ -17,11 +17,9 @@ import {ProcessesService} from '@ofServices/processes.service';
 import {Subject} from 'rxjs';
 import {takeUntil} from 'rxjs/operators';
 import {UserService} from '@ofServices/user.service';
-import {selectCurrentUrl} from '@ofStore/selectors/router.selectors';
 import {AppService} from '@ofServices/app.service';
 import {State} from '@ofModel/processes.model';
 import {NgbModalRef} from '@ng-bootstrap/ng-bootstrap';
-import {DisplayContext} from '@ofModel/templateGateway.model';
 import {cardInitialState, CardState} from '@ofStates/card.state';
 
 @Component({
@@ -32,7 +30,6 @@ import {cardInitialState, CardState} from '@ofStates/card.state';
 export class CardComponent implements OnInit, OnDestroy {
     @Input() parentModalRef: NgbModalRef;
     @Input() screenSize = 'md';
-    @Input() displayContext: any = DisplayContext.REALTIME;
 
     card: Card;
     childCards: Card[];
@@ -41,7 +38,6 @@ export class CardComponent implements OnInit, OnDestroy {
     cardLoadingInProgress = false;
     cardNotFound = false;
     currentSelectedCardId: string;
-    protected _currentPath: string;
 
     constructor(
         protected store: Store<AppState>,
@@ -102,16 +98,6 @@ export class CardComponent implements OnInit, OnDestroy {
                         this.cardLoadingInProgress = false;
                         console.log(new Date().toISOString(), 'WARNING card not found.');
                     }
-                }
-            });
-        this.store
-            .select(selectCurrentUrl)
-            .pipe(takeUntil(this.unsubscribe$))
-            .subscribe((url) => {
-                if (!!url) {
-                    const urlParts = url.split('/');
-                    const CURRENT_PAGE_INDEX = 1;
-                    this._currentPath = urlParts[CURRENT_PAGE_INDEX];
                 }
             });
         this.checkForCardLoadingInProgressForMoreThanOneSecond();

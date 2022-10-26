@@ -26,7 +26,6 @@ import {JsonToArray} from 'app/common/jsontoarray/json-to-array';
 import {CardService} from '@ofServices/card.service';
 import {Process} from '@ofModel/processes.model';
 import {EntitiesService} from '@ofServices/entities.service';
-import {DisplayContext} from '@ofModel/templateGateway.model';
 import {ColDef, GridOptions} from 'ag-grid-community';
 import {AnswerCellRendererComponent} from '../cell-renderers/answer-cell-renderer.component';
 import {ResponsesCellRendererComponent} from '../cell-renderers/responses-cell-renderer.component';
@@ -44,8 +43,6 @@ export class MonitoringTableComponent implements OnChanges, OnDestroy {
     @ViewChild('exportInProgress') exportInProgressTemplate: ElementRef;
     @Input() result: LineOfMonitoringResult[];
 
-    displayContext = DisplayContext.REALTIME;
-
     exportMonitoringData: Array<any> = [];
     jsonToArray: JsonToArray;
     monitoringConfig: MonitoringConfig;
@@ -53,14 +50,14 @@ export class MonitoringTableComponent implements OnChanges, OnDestroy {
     modalRef: NgbModalRef;
     exportModalRef: NgbModalRef;
     displayedResults: LineOfMonitoringResult[];
-    exportInProgress: boolean = false;
-    exportCancelled: boolean = false;
+    exportInProgress = false;
+    exportCancelled = false;
     exportProgress: number;
 
     // ag-grid configuration objects
     gridOptions;
     public gridApi;
-    public page: number = 1;
+    public page = 1;
     private columnDefs: ColDef[] = [];
     private rowData = [];
     rowData$: Observable<any>;
