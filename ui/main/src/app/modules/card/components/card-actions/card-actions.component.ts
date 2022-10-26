@@ -7,7 +7,7 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {Component, EventEmitter, Input, OnChanges, Output, TemplateRef, ViewChild} from '@angular/core';
+import {Component, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output, TemplateRef, ViewChild} from '@angular/core';
 import {NgbModal, NgbModalOptions, NgbModalRef} from '@ng-bootstrap/ng-bootstrap';
 import {Store} from '@ngrx/store';
 import {Card} from '@ofModel/card.model';
@@ -19,28 +19,32 @@ import {UserPermissionsService} from '@ofServices/user-permissions.service';
 import {UserService} from '@ofServices/user.service';
 import {AlertMessageAction} from '@ofStore/actions/alert.actions';
 import {AppState} from '@ofStore/index';
+import {selectCurrentUrl} from '@ofStore/selectors/router.selectors';
+import {Subject, takeUntil} from 'rxjs';
 
 @Component({
     selector: 'of-card-actions',
     templateUrl: './card-actions.component.html',
     styleUrls: ['./card-actions.component.scss']
 })
-export class CardActionsComponent implements OnChanges {
+export class CardActionsComponent implements OnInit, OnChanges,OnDestroy {
     @Input() card: Card;
     @Input() cardState: State;
     @Input() parentModalRef: NgbModalRef;
-    @Input() currentPath: string;
 
     @Output() closeCardDetail: EventEmitter<boolean> = new EventEmitter<boolean>();
 
     @ViewChild('userCardEdition') userCardEditionTemplate: TemplateRef<any>;
     @ViewChild('deleteCardConfirmation') deleteCardConfirmationTemplate: TemplateRef<any>;
 
+    private currentPath: string;
     private editModal: NgbModalRef;
     private deleteConfirmationModal: NgbModalRef;
     public showEditButton = false;
     public showDeleteButton = false;
     public deleteInProgress = false;
+
+    private unsubscribe$: Subject<void> = new Subject<void>();
 
     constructor(
         private userPermissionsService: UserPermissionsService,
@@ -50,6 +54,19 @@ export class CardActionsComponent implements OnChanges {
         private cardService: CardService,
         private store: Store<AppState>
     ) {}
+
+    ngOnInit() : void {
+        this.store
+        .select(selectCurrentUrl)
+        .pipe(takeUntil(this.unsubscribe$))
+        .subscribe((url) => {
+            if (!!url) {
+                const urlParts = url.split('/');
+                const CURRENT_PAGE_INDEX = 1;
+                this.currentPath = urlParts[CURRENT_PAGE_INDEX];
+            }
+        });
+    }
 
     ngOnChanges(): void {
         this.setButtonsVisibility();
@@ -145,5 +162,10 @@ export class CardActionsComponent implements OnChanges {
         this.store.dispatch(
             new AlertMessageAction({alertMessage: {message: msg, level: severity, i18n: {key: i18nKey}}})
         );
+    }
+
+    ngOnDestroy() {
+        this.unsubscribe$.next();
+        this.unsubscribe$.complete();
     }
 }

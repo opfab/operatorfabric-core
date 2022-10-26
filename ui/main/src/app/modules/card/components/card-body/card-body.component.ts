@@ -42,19 +42,17 @@ export class CardBodyComponent implements OnChanges, OnInit, OnDestroy {
     @Input() card: Card;
     @Input() childCards: Card[];
 
-    @Input() currentPath: string;
     @Input() parentModalRef: NgbModalRef;
     @Input() screenSize: string;
-    @Input() displayContext: DisplayContext = DisplayContext.REALTIME;
     @Input() parentComponent: CardComponent;
 
+    public displayContext: DisplayContext = DisplayContext.REALTIME;
     public isUserEnabledToRespond = false;
     public lttdExpiredIsTrue: boolean;
     private regularlyLttdCheckActive = false;
 
     public isResponseLocked = false;
     public fullscreen = false;
-    public showButtons = false;
     public showMaxAndReduceButton = false;
     public showDetailCardHeader = false;
     public htmlTemplateContent: SafeHtml;
@@ -62,7 +60,7 @@ export class CardBodyComponent implements OnChanges, OnInit, OnDestroy {
 
     private lastCardSetToReadButNotYetOnFeed;
     private entityIdsAllowedOrRequiredToRespondAndAllowedToSendCards = [];
-    private userEntityIdsPossibleForResponse = [];
+    public userEntityIdsPossibleForResponse = [];
     private userEntityIdToUseForResponse = '';
     private userMemberOfAnEntityRequiredToRespondAndAllowedToSendCards = false;
     private unsubscribe$: Subject<void> = new Subject<void>();
@@ -85,10 +83,7 @@ export class CardBodyComponent implements OnChanges, OnInit, OnDestroy {
     }
 
     ngOnInit() {
-        if (this._appService.pageType !== PageType.ARCHIVE) {
-            this.integrateChildCardsInRealTime();
-            this.showButtons = true;
-        }
+        this.integrateChildCardsInRealTime();
         if (this._appService.pageType === PageType.MONITORING || this._appService.pageType === PageType.CALENDAR)
             this.templateOffset = 35;
         if (this._appService.pageType !== PageType.CALENDAR && this._appService.pageType !== PageType.MONITORING)

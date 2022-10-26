@@ -12,11 +12,11 @@
       <li class="nav-item opfab-tab opfab-menu-item-left" data-toggle="tab">
         <span class="opfab-tab" id="opfab-card-title">{{card.titleTranslated | opfabTitleCase}}</span>
       </li>
-      <li *ngIf="showButtons" class="nav-item opfab-menu-item-right">
+      <li class="nav-item opfab-menu-item-right">
         <div *ngIf="!isSmallscreen()" style="display:flex">
 
           <of-card-actions style="display:flex" [card]="this.card" [cardState]="this.cardState"
-            [parentModalRef]="this.parentModalRef" [currentPath]="this.currentPath" (closeCardDetail)="closeDetails()">
+            [parentModalRef]="this.parentModalRef"  (closeCardDetail)="closeDetails()">
           </of-card-actions>
 
           <div id="opfab-card-detail-fullscreen-button" *ngIf="!fullscreen && showMaxAndReduceButton"
@@ -64,7 +64,7 @@
             <div style="display: flex">
               <of-card-footer-text [card]="this.card" [childCards]="this.childCards"> </of-card-footer-text>
 
-              <div *ngIf="showButtons" style="margin-left: auto;text-align: right;min-width: 250px">
+              <div style="margin-left: auto;text-align: right;min-width: 250px">
                 <of-card-response [card]="this.card" [cardState]="this.cardState"
                   [lttdExpiredIsTrue]="this.lttdExpiredIsTrue" [isResponseLocked]="this.isResponseLocked"
                   [userEntityIdsPossibleForResponse]="this.userEntityIdsPossibleForResponse"

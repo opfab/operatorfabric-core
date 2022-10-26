@@ -21,7 +21,6 @@ import {NgbModal, NgbModalOptions, NgbModalRef} from '@ng-bootstrap/ng-bootstrap
 import {FilterType} from '@ofModel/feed-filter.model';
 import {HourAndMinutes, TimeSpan} from '@ofModel/card.model';
 import {ProcessesService} from '@ofServices/processes.service';
-import {DisplayContext} from '@ofModel/templateGateway.model';
 import {LightCardsStoreService} from '@ofServices/lightcards/lightcards-store.service';
 import {FilterService} from '@ofServices/lightcards/filter.service';
 import {ConfigService} from '@ofServices/config.service';
@@ -48,7 +47,7 @@ export class CalendarComponent implements OnInit, OnDestroy, AfterViewInit {
     @ViewChild('calendar') calendarComponent: FullCalendarComponent; // the #calendar in the template
     @ViewChild('cardDetail') cardDetailTemplate: ElementRef; // the #cardDetail in the template
 
-    displayContext = DisplayContext.REALTIME;
+
     private unsubscribe$ = new Subject<void>();
     calendarVisible = true;
     locales = allLocales;
