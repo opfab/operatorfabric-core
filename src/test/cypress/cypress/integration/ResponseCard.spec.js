@@ -466,7 +466,7 @@ describe('Response card tests', function () {
         // open card detail for card with keepChildCards=false and check there are no responses
         cy.get('#opfab-archives-cards-list').find('.opfab-archives-table-line').eq(0).click();
         cy.waitDefaultTime();
-        cy.get('of-card-detail').should('exist');
+        cy.get('of-simplified-card-view').should('exist');
 
         //Check the responses from ENTITY1_FR, ENTITY2_FR and ENTITY3_FR have not been integrated in the template
         cy.get('#response_from_ENTITY1_FR').should('not.exist');
@@ -479,7 +479,7 @@ describe('Response card tests', function () {
         // open card detail for card with keepChildCards=true and check it should have 3 child cards
         cy.get('#opfab-archives-cards-list').find('.opfab-archives-table-line').eq(1).click();
         cy.waitDefaultTime();
-        cy.get('of-card-detail').should('exist');
+        cy.get('of-simplified-card-view').should('exist');
         // Check the responses from ENTITY1_FR, ENTITY2_FR and ENTITY3_FR have been integrated in the template
         cy.get('#childs-div').find('tr').should('have.length', 4);
         cy.get('#response_from_ENTITY1_FR')
@@ -510,7 +510,7 @@ describe('Response card tests', function () {
         // open card detail for first card and check it should have 1 child card
         cy.get('#opfab-archives-cards-list').find('.opfab-archives-table-line').eq(2).click();
         cy.waitDefaultTime();
-        cy.get('of-card-detail').should('exist');
+        cy.get('of-simplified-card-view').should('exist');
         // Check the responses from ENTITY1_FR  has been integrated in the template
         cy.get('#childs-div').find('tr').should('have.length', 2);
         cy.get('#response_from_ENTITY1_FR')

@@ -143,7 +143,7 @@ export class UserCardCommands extends OpfabCommands {
     // PREVIEW 
     preview= function () {
         cy.get('#opfab-usercard-btn-prepareCard').click();
-        cy.get('of-card-detail').should('exist');
+        cy.get('of-simplified-card-view').should('exist');
     }
 
     checkEntityRecipientsInPreviewContains= function (entityName) {
@@ -164,7 +164,7 @@ export class UserCardCommands extends OpfabCommands {
 
     previewThenSendCard= function () {
         cy.get('#opfab-usercard-btn-prepareCard').click();
-        cy.get('of-card-detail').should('exist');
+        cy.get('of-simplified-card-view').should('exist');
         cy.get('#opfab-usercard-btn-accept').click();
         cy.get('.opfab-info-message').should('have.class', 'opfab-alert-info').contains('Your card is published');
         cy.get('#opfab-close-alert').click();
