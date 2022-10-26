@@ -10,7 +10,7 @@
 import {NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
-import {CardsModule} from '../cards/cards.module';
+import {CardModule} from '../card/card.module';
 import {TranslateModule} from '@ngx-translate/core';
 import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
 import {MonitoringComponent} from './monitoring.component';
@@ -36,7 +36,7 @@ import {MultiSelectModule} from '../share/multi-select/multi-select.module';
         CommonModule,
         FormsModule,
         ReactiveFormsModule,
-        CardsModule,
+        CardModule,
         TranslateModule,
         NgbModule,
         DatetimeFilterModule,

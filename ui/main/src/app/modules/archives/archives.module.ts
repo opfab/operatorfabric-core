@@ -11,7 +11,7 @@ import {NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {ArchivesComponent} from './archives.component';
-import {CardsModule} from '../cards/cards.module';
+import {CardModule} from '../card/card.module';
 import {TranslateModule} from '@ngx-translate/core';
 import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
 import {DatetimeFilterModule} from '../share/datetime-filter/datetime-filter.module';
@@ -26,7 +26,7 @@ import {PipesModule} from '../share/pipes/pipes.module';
         CommonModule,
         FormsModule,
         ReactiveFormsModule,
-        CardsModule,
+        CardModule,
         TranslateModule,
         NgbModule,
         DatetimeFilterModule,

@@ -21,7 +21,7 @@ import {
     ViewEncapsulation
 } from '@angular/core';
 import {Card} from '@ofModel/card.model';
-import {HandlebarsService} from '../../cards/services/handlebars.service';
+import {HandlebarsService} from '../../card/services/handlebars.service';
 import {DomSanitizer, SafeHtml} from '@angular/platform-browser';
 import {State} from '@ofModel/processes.model';
 import {DetailContext} from '@ofModel/detail-context.model';

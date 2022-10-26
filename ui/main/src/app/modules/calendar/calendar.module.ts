@@ -11,7 +11,7 @@ import {NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {CalendarComponent} from './calendar.component';
 import {FullCalendarModule} from '@fullcalendar/angular';
-import {CardsModule} from '../cards/cards.module';
+import {CardModule} from '../card/card.module';
 import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import timeGridPlugin from '@fullcalendar/timegrid';
@@ -22,6 +22,6 @@ FullCalendarModule.registerPlugins([dayGridPlugin, timeGridPlugin, interactionPl
 
 @NgModule({
     declarations: [CalendarComponent],
-    imports: [CommonModule, FullCalendarModule, CardsModule, NgbModule]
+    imports: [CommonModule, FullCalendarModule, CardModule, NgbModule]
 })
 export class CalendarModule {}

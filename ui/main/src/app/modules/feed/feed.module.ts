@@ -14,7 +14,7 @@ import {FeedComponent} from './feed.component';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {FeedRoutingModule} from './feed-routing.module';
 import {TimeLineComponent} from './components/time-line/time-line.component';
-import {CardsModule} from '../cards/cards.module';
+import {CardModule} from '../card/card.module';
 import {FiltersComponent} from './components/card-list/filters/filters.component';
 import {FeedFilterComponent} from './components/card-list/filters/feed-filter/feed-filter.component';
 import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
@@ -39,7 +39,7 @@ import { MapComponent } from './components/map/map.component';
         ReactiveFormsModule,
         TranslateModule,
         NgbModule,
-        CardsModule,
+        CardModule,
         DatetimeFilterModule,
         FeedRoutingModule,
         LightCardModule,
