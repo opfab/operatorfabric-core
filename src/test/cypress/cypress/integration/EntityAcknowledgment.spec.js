@@ -54,7 +54,7 @@ describe('Entity acknowledgment tests for icon in light-card', function () {
         // Card is not anymore in the feed
         cy.get('#opfab-feed-light-card-cypress-entitiesAcksMessage2').should('not.exist');
         // Detail card is not present anymore
-        cy.get('of-detail').should('not.exist');
+        cy.get('of-card-body').should('not.exist');
 
         cy.get('of-light-card').should('have.length', 2);
         // Click on card (message3) and acknowledge it
@@ -63,7 +63,7 @@ describe('Entity acknowledgment tests for icon in light-card', function () {
         // Card is not anymore in the feed
         cy.get('#opfab-feed-light-card-cypress-entitiesAcksMessage3').should('not.exist');
         // Detail card is not present anymore
-        cy.get('of-detail').should('not.exist');
+        cy.get('of-card-body').should('not.exist');
 
         cy.get('of-light-card').should('have.length', 1);
         // Click on card (message4) and acknowledge it
@@ -72,7 +72,7 @@ describe('Entity acknowledgment tests for icon in light-card', function () {
         // Card is not anymore in the feed
         cy.get('#opfab-feed-light-card-cypress-entitiesAcksMessage4').should('not.exist');
         // Detail card is not present anymore
-        cy.get('of-detail').should('not.exist');
+        cy.get('of-card-body').should('not.exist');
 
         cy.get('of-light-card').should('have.length', 0);
 

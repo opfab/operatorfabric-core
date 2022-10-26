@@ -73,7 +73,7 @@ describe('FeedScreen tests', function () {
             .as('firstCardUrlId')
             .then((urlId) => {
                 cy.hash().should('eq', '#/feed/cards/' + urlId);
-                cy.get('of-card-details').find('of-detail');
+                cy.get('of-card-details').find('of-card-body');
             });
         cy.get('#opfab-feed-card-not-found').should('not.exist');
 
@@ -91,7 +91,7 @@ describe('FeedScreen tests', function () {
                 .invoke('attr', 'data-urlId')
                 .then((urlId) => {
                     cy.hash().should('eq', '#/feed/cards/' + urlId);
-                    cy.get('of-card-details').find('of-detail');
+                    cy.get('of-card-details').find('of-card-body');
                 });
         });
         cy.get('#opfab-feed-card-not-found').should('not.exist');
