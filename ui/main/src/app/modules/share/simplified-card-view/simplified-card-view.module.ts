@@ -10,13 +10,13 @@
 import {NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {TranslateModule} from '@ngx-translate/core';
-import {CardDetailComponent} from './card-detail.component';
+import {SimplifiedCardViewComponent} from './simplified-card-view.component';
 import { SpinnerModule } from '../spinner/spinner.module';
 import {TemplateRenderingModule} from '../template-rendering/template-rendering.module';
 
 @NgModule({
-    declarations: [CardDetailComponent],
+    declarations: [SimplifiedCardViewComponent],
     imports: [CommonModule, TranslateModule, SpinnerModule,TemplateRenderingModule],
-    exports: [CardDetailComponent]
+    exports: [SimplifiedCardViewComponent]
 })
-export class CardDetailModule {}
+export class SimplifiedCardViewModule {}

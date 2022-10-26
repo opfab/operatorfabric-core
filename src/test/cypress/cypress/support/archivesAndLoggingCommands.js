@@ -73,7 +73,7 @@ export class ArchivesAndLoggingCommands extends OpfabCommands {
     }
 
     checkNoCardDetailIsDisplayed = function () {
-        cy.get('of-card-detail').should('not.exist');
+        cy.get('of-simplified-card-view').should('not.exist');
     }
 
     clickOnProcessGroupSelect = function () {

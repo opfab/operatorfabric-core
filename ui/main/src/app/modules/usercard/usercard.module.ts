@@ -13,7 +13,7 @@ import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {UserCardComponent} from './usercard.component';
 import {TranslateModule} from '@ngx-translate/core';
 import {DatetimeFilterModule} from '../../modules/share/datetime-filter/datetime-filter.module';
-import {CardDetailModule} from 'app/modules/share/card-detail/card-detail.module';
+import {SimplifiedCardViewModule} from 'app/modules/share/simplified-card-view/simplified-card-view.module';
 import {LightCardModule} from 'app/modules/share/light-card/light-card.module';
 import {UserCardDatesFormComponent} from './datesForm/usercard-dates-form.component';
 import {UserCardSelectStateFormComponent} from './selectStateForm/usercard-select-state-form.component';
@@ -37,7 +37,7 @@ import { SpinnerModule } from '../share/spinner/spinner.module';
         TranslateModule,
         DatetimeFilterModule,
         MultiSelectModule,
-        CardDetailModule,
+        SimplifiedCardViewModule,
         LightCardModule,
         SpinnerModule
     ],

@@ -21,10 +21,10 @@ import {DisplayContext} from '@ofModel/templateGateway.model';
 declare const templateGateway: any;
 
 @Component({
-    selector: 'of-card-detail',
-    templateUrl: './card-detail.component.html'
+    selector: 'of-simplified-card-view',
+    templateUrl: './simplified-card-view.component.html'
 })
-export class CardDetailComponent implements OnInit, OnDestroy {
+export class SimplifiedCardViewComponent implements OnInit, OnDestroy {
     @Input() card: Card;
     @Input() screenSize = 'md';
     @Input() displayContext: DisplayContext;
