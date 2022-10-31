@@ -71,7 +71,11 @@ export class UserPermissionsService {
         return permission;
     }
 
-    private isUserInEntityAllowedToEditCard(user: User, card: Card) {
+    private isUserInEntityAllowedToEditCard(user: User, card: Card) : boolean {
+        if (! card.entitiesAllowedToEdit) {
+            return false;
+        }
+
         const userEntitiesAllowed = user.entities.filter((entity) =>
             card.entitiesAllowedToEdit.includes(entity)
         );
