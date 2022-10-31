@@ -41,6 +41,7 @@
   "feed": {
     "defaultSorting": "unread",
     "defaultAcknowledgmentFilter": "notack",
+    "showSearchFilter": false,
     "card": {
       "hideTimeFilter": false,
       "time": {

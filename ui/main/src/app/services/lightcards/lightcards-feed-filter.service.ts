@@ -17,13 +17,15 @@ import {SortService} from './sort.service';
 import {GroupedCardsService} from '@ofServices/grouped-cards.service';
 import {ConfigService} from '@ofServices/config.service';
 import {LogOption, OpfabLoggerService} from '@ofServices/logs/opfab-logger.service';
+import {SearchService} from '@ofServices/lightcards/search-service';
 
 @Injectable({
     providedIn: 'root'
 })
 export class LightCardsFeedFilterService {
-    private filteredAndSortedLightCards = new ReplaySubject(1);
+    private filteredAndSortedLightCards = new Subject();
     private filteredLightCards = new Subject();
+    private filteredAndSearchedLightCards = new ReplaySubject(1);
     private filteredLightCardsForTimeLine = new Subject();
     private onlyBusinessFilterForTimeLine = new Subject();
 
@@ -31,17 +33,19 @@ export class LightCardsFeedFilterService {
         private lightCardsStoreService: LightCardsStoreService,
         private filterService: FilterService,
         private sortService: SortService,
+        private searchService: SearchService,
         private groupedCardsService: GroupedCardsService,
         private configService: ConfigService,
         private logger : OpfabLoggerService
     ) {
         this.computeFilteredAndSortedLightCards();
+        this.computeFilteredAndSearchedLightCards();
         this.computeFilteredLightCards();
         this.onlyBusinessFilterForTimeLine.next(false);
     }
 
     private computeFilteredAndSortedLightCards() {
-        combineLatest([this.sortService.getSortFunctionChanges(), this.getFilteredLightCards()])
+        combineLatest([this.sortService.getSortFunctionChanges(), this.getFilteredAndSearchedLightCards()])
             .pipe(
                 map((results) => {
                     results[1] = results[1].sort(results[0]);
@@ -61,6 +65,10 @@ export class LightCardsFeedFilterService {
 
     public getFilteredLightCardsForTimeLine(): Observable<any> {
         return this.filteredLightCardsForTimeLine.asObservable();
+    }
+
+    public getFilteredAndSearchedLightCards() : Observable<any> {
+        return this.filteredAndSearchedLightCards.asObservable();
     }
 
     private computeFilteredLightCards() {
@@ -91,8 +99,18 @@ export class LightCardsFeedFilterService {
                 })
             )
             .subscribe((lightCards) => {
-                this.logger.debug('Number of cards visible after filtering : ' +  lightCards.length ,LogOption.LOCAL_AND_REMOTE);
                 this.filteredLightCards.next(lightCards);
+            });
+    }
+
+    private computeFilteredAndSearchedLightCards() {
+        combineLatest([this.searchService.getSearchChanges(), this.getFilteredLightCards()])
+            .pipe(map((results) => {
+                return this.searchService.searchLightCards(results[0], results[1]);
+            }))
+            .subscribe((lightCards) => {
+                this.logger.debug('Number of cards visible after filtering and searching : ' +  lightCards.length, LogOption.LOCAL_AND_REMOTE);
+                this.filteredAndSearchedLightCards.next(lightCards);
             });
     }
 
