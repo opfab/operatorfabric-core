@@ -24,13 +24,14 @@ export class FiltersComponent implements OnInit {
     hideApplyFiltersToTimeLineChoice: boolean;
     defaultSorting: string;
     defaultAcknowledgmentFilter: string;
+    showSearchFilter: boolean;
 
     loadingInProgress = false;
 
     constructor(
         private store: Store<AppState>,
         private configService: ConfigService,
-        private lightCardsStoreService: LightCardsStoreService
+        private lightCardsStoreService: LightCardsStoreService,
     ) {}
 
     ngOnInit() {
@@ -42,6 +43,7 @@ export class FiltersComponent implements OnInit {
             'feed.card.hideApplyFiltersToTimeLineChoice',
             false
         );
+        this.showSearchFilter = this.configService.getConfigValue('feed.showSearchFilter', false);
         this.lightCardsStoreService
             .getLoadingInProgress()
             .subscribe((inProgress: boolean) => (this.loadingInProgress = inProgress));

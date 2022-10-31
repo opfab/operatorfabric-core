@@ -11,7 +11,9 @@
         <div style="width:180px;display:flex;">
             <of-feed-filter [hideTimerTags]="hideTimerTags" [defaultAcknowledgmentFilter]="defaultAcknowledgmentFilter" [hideResponseFilter]="hideResponseFilter" [hideApplyFiltersToTimeLineChoice]="hideApplyFiltersToTimeLineChoice"></of-feed-filter>
             <of-feed-sort [defaultSorting]="defaultSorting"></of-feed-sort>
+            <of-feed-search [showSearchFilter]="showSearchFilter" ></of-feed-search>
         </div>
+
         <div style="width:100%">
         </div>
         <div  *ngIf="loadingInProgress" class="opfab-loading-spinner">
