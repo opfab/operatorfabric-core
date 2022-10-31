@@ -21,7 +21,6 @@
         "style"
       ],
       "acknowledgmentAllowed": "Always",
-      "showAcknowledgmentFooter" : "OnlyForEntitiesAllowedToEdit",
       "type" : "FINISHED"
     },
     "dataQualityState": {
@@ -63,7 +62,7 @@
       "closeCardWhenUserAcknowledges": false,
       "deleteCardEnabledOnUserInterface": false,
       "type" : "INPROGRESS",
-      "showAcknowledgmentFooter" : "ForAllUsers"
+      "showAcknowledgmentFooter" : "OnlyForEntitiesAllowedToEdit"
     },
     "contingenciesState": {
       "name": "⚠️ Network Contingencies ⚠️",
