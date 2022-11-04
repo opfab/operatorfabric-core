@@ -10,8 +10,8 @@
 
 package org.opfab.cards.publication.controllers;
 
-import org.opfab.actiontracing.model.UserActionEnum;
-import org.opfab.actiontracing.services.UserActionLogService;
+import org.opfab.useractiontracing.model.UserActionEnum;
+import org.opfab.useractiontracing.services.UserActionLogService;
 import org.opfab.cards.publication.model.CardCreationReportData;
 import org.opfab.cards.publication.model.CardPublicationData;
 import org.opfab.cards.publication.model.FieldToTranslateData;

@@ -14,7 +14,7 @@ import {UserCardCommands} from "../support/userCardCommands"
 import {CardCommands} from "../support/cardCommands"
 import {FeedCommands} from '../support/feedCommands'
 
-describe ('User actiion logs page',()=>{
+describe ('User action logs page',()=>{
 
     const opfab = new OpfabGeneralCommands();
     const script = new ScriptCommands();
@@ -71,6 +71,8 @@ describe ('User actiion logs page',()=>{
         opfab.loginWithUser('admin');
         opfab.navigateToUserActionLogs();
 
+        cy.get('#opfab-useractionlogs-btn-search').click();
+
         cy.get('.opfab-pagination').should('contain.text', ' Results number  : 12');
 
         agGrid.countTableRows('#opfab-useractionlogs-table-grid', 10);
@@ -114,8 +116,30 @@ describe ('User actiion logs page',()=>{
 
         agGrid.cellShould('ag-grid-angular', 1, 1, 'have.text', 'OPEN_SUBSCRIPTION');
         agGrid.cellShould('ag-grid-angular', 1, 2, 'have.text', 'operator1_fr');
-        
 
+        selectUsername(['operator1_fr','operator2_fr']);
+        selectAction(['SEND_CARD','READ_CARD']);
+        cy.get('#opfab-useractionlogs-btn-search').click();
+        agGrid.countTableRows('#opfab-useractionlogs-table-grid', 4);
+
+        agGrid.cellShould('ag-grid-angular', 0, 1, 'have.text', 'READ_CARD');
+        agGrid.cellShould('ag-grid-angular', 0, 2, 'have.text', 'operator2_fr');
+
+        agGrid.cellShould('ag-grid-angular', 1, 1, 'have.text', 'READ_CARD');
+        agGrid.cellShould('ag-grid-angular', 1, 2, 'have.text', 'operator2_fr');
+
+        agGrid.cellShould('ag-grid-angular', 2, 1, 'have.text', 'SEND_CARD');
+        agGrid.cellShould('ag-grid-angular', 2, 2, 'have.text', 'operator1_fr');
+
+        agGrid.cellShould('ag-grid-angular', 3, 1, 'have.text', 'SEND_CARD');
+        agGrid.cellShould('ag-grid-angular', 3, 2, 'have.text', 'operator1_fr');
+
+        cy.get('#opfab-useractionlogs-btn-reset').click();
+        cy.get('#opfab-useractionlogs-table-grid').should('not.exist');
+        
+        selectUsername(['operator3_fr']);
+        cy.get('#opfab-useractionlogs-btn-search').click();
+        cy.get('#opfab-useractionlogs-noResult').contains('Your search did not match any result.');
     })
 
 
@@ -135,5 +159,19 @@ describe ('User actiion logs page',()=>{
         // Send base example message
         usercard.selectRecipient('Control Center FR South');
         usercard.previewThenSendCard();
+    }
+
+    function selectUsername(logins) {
+        cy.get('#opfab-login-filter').click();
+        logins.forEach(login => {
+            cy.get('#opfab-login-filter').find('.vscomp-option-text').contains(login).eq(0).click({force: true});
+        });
+    }
+
+    function selectAction(actions) {
+        cy.get('#opfab-action-filter').click();
+        actions.forEach(action => {
+            cy.get('#opfab-action-filter').find('.vscomp-option-text').contains(action).eq(0).click({force: true});
+        });
     }
 })

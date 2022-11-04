@@ -8,7 +8,7 @@
  */
 
 import {environment} from '@env/environment';
-import {HttpClient} from '@angular/common/http';
+import {HttpClient, HttpParams} from '@angular/common/http';
 import {Observable} from 'rxjs';
 import {Injectable} from '@angular/core';
 import {ErrorService} from '@ofServices/error-service';
@@ -16,11 +16,12 @@ import {Store} from '@ngrx/store';
 import {AppState} from '@ofStore/index';
 import {OpfabLoggerService} from './logs/opfab-logger.service';
 import {UserActionLog} from '@ofModel/user-action-log.model';
+import {Page} from '@ofModel/page.model';
 
 @Injectable({
     providedIn: 'root'
 })
-export class UserActionsService extends ErrorService {
+export class UserActionLogsService extends ErrorService {
     readonly userActionsUrl: string;
 
     /**
@@ -32,8 +33,15 @@ export class UserActionsService extends ErrorService {
         this.userActionsUrl = `${environment.urls.userActionLogs}`;
     }
 
-    queryAllUserActions(): Observable<UserActionLog[]> {
-        return this.httpClient.get<UserActionLog[]>(this.userActionsUrl);
+    queryUserActionLogs(filters: Map<string, string[]>): Observable<Page<UserActionLog>> {
+        const params = this.convertFiltersIntoHttpParams(filters);
+        return this.httpClient.get<Page<UserActionLog>>(this.userActionsUrl, {params});
+    }
+
+    convertFiltersIntoHttpParams(filters: Map<string, string[]>): HttpParams {
+        let params = new HttpParams();
+        filters.forEach((values, key) => values.forEach((value) => (params = params.append(key, value))));
+        return params;
     }
 
 }

@@ -7,12 +7,14 @@
  * This file is part of the OperatorFabric project.
  */
 
-package org.opfab.actiontracing.repositories;
+package org.opfab.useractiontracing;
 
-import org.opfab.actiontracing.model.UserActionLog;
-import org.springframework.data.mongodb.repository.MongoRepository;
-import org.springframework.stereotype.Repository;
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.data.mongodb.repository.config.EnableMongoRepositories;
 
-@Repository
-public interface UserActionLogRepository extends MongoRepository<UserActionLog, String> {
+@Configuration
+@ComponentScan
+@EnableMongoRepositories
+public class UserActionLogsConfiguration {
 }

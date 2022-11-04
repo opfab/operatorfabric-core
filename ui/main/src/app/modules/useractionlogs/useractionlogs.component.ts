@@ -7,9 +7,12 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {Component, OnInit} from "@angular/core";
+import {Component, ViewChild} from "@angular/core";
+import {FormControl, FormGroup} from "@angular/forms";
 import {UserActionLog} from "@ofModel/user-action-log.model";
-import {UserActionsService} from "@ofServices/user-action-logs.service";
+import {UserActionLogsService} from "@ofServices/user-action-logs.service";
+import moment from "moment";
+import {UserActionLogsFiltersComponent} from "./components/useractionlogs-filters/useractionlogs-filters.component";
 
 
 @Component({
@@ -17,20 +20,92 @@ import {UserActionsService} from "@ofServices/user-action-logs.service";
     templateUrl: './useractionlogs.component.html',
     styleUrls: ['./useractionlogs.component.scss']
 })
-export class UserActionLogsComponent implements OnInit {
+export class UserActionLogsComponent {
 
-    public userActions: UserActionLog[];
+    userActions: UserActionLog[];
 
+    userActionLogsForm = new FormGroup({
+        login: new FormControl([]),
+        action: new FormControl([]),
+        dateFrom: new FormControl<string | null>(null),
+        dateTo: new FormControl('')
+    });
 
-    constructor(private userActionsService: UserActionsService) {
+    @ViewChild('filters') filtersTemplate: UserActionLogsFiltersComponent;
 
+    size = 10;
+    page = 1;
+    hasResult = false;
+    firstQueryHasBeenDone = false;
+    loadingInProgress = false;
+    technicalError = false;
+    totalPages: number;
+    totalElements: number;
+
+    defaultMinDate : {year: number; month: number; day: number} = null;
+
+    constructor(private userActionLogsService: UserActionLogsService) {
+        this.setDefaultPublishDateFilter();
     }
 
-    ngOnInit(): void {
-        this.query();
+    setDefaultPublishDateFilter() {
+        const defaultPublishDateInterval = 10;
+        const min = moment(Date.now());
+        min.subtract(defaultPublishDateInterval, 'day');
+        const minDate = min.toDate();
+        this.defaultMinDate = {
+            day: minDate.getDate(),
+            month: minDate.getMonth() + 1,
+            year: minDate.getFullYear()
+        };
     }
 
-    private query() {
-        this.userActionsService.queryAllUserActions().subscribe(actions => this.userActions = actions);
+    sendQuery(): void {
+        const {value} = this.userActionLogsForm;
+        this.filtersTemplate.transformFiltersListToMap(value);
+        this.filtersTemplate.filters.set('size', [this.size.toString()]);
+        this.page = 1;
+        this.getResults(0);
     }
+
+    private getResults(page_number: number): void {
+
+        this.filtersTemplate.filters.set('page', [page_number]);
+        this.hasResult = false;
+        this.loadingInProgress = true;
+
+        this.userActionLogsService.queryUserActionLogs(this.filtersTemplate.filters)
+        .subscribe({ next: (actionsPage) => {
+            this.userActions = actionsPage.content;
+            this.totalPages = actionsPage.totalPages;
+            this.totalElements = actionsPage.totalElements;
+
+            this.loadingInProgress = false;
+            this.firstQueryHasBeenDone = true;
+            this.hasResult = actionsPage.content.length > 0;
+        },
+        error: () => {
+            this.firstQueryHasBeenDone = false;
+            this.loadingInProgress = false;
+            this.technicalError = true;
+        }});
+    }
+
+    pageChange(currentPage: number) {
+        this.getResults(currentPage -1);
+        this.page = currentPage;
+    }
+
+    resetForm(): void {
+        this.firstQueryHasBeenDone = false;
+        this.loadingInProgress = false;
+        this.userActionLogsForm.reset();
+        this.userActions = [];
+        this.totalElements = 0;
+        this.totalPages = 0;
+        this.page = 1;
+        this.hasResult = false;
+        this.setDefaultPublishDateFilter();
+    }
+
 }

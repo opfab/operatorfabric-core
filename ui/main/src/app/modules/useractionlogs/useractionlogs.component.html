@@ -9,12 +9,22 @@
 <div class="opfab-useractionlogs-title" translate>
     useractionlogs.title
 </div>
-
-<div *ngIf="userActions ; else noResult" style="margin-top:20px;margin-left:5%;margin-right:5%">
-    <of-useractionlogs-table [actions]="userActions"></of-useractionlogs-table>
-
+<form [formGroup]="userActionLogsForm" #currentForm>
+<of-useractionlogs-filters [userActionLogsForm]="userActionLogsForm"  [defaultMinDate]="defaultMinDate" (search)="sendQuery()" (reset)="resetForm()" #filters></of-useractionlogs-filters> 
+</form>
+<div style="height:5%"> </div>
+<div *ngIf="hasResult; else noResult" style="margin-top:20px;margin-left:5%;margin-right:5%">
+    <of-useractionlogs-table [actions]="userActions" [page]="page" [totalElements]="totalElements" [totalPages]="totalPages" (pageChange)="pageChange($event)"></of-useractionlogs-table>
 </div>
 
 <ng-template #noResult>
-    <div id="opfab-useractionlogs-noResult" class="alert alert-info"  translate>shared.noResult</div>
+    <div *ngIf="firstQueryHasBeenDone&&!hasResult&&!loadingInProgress" id="opfab-useractionlogs-noResult"  style="text-align: center;font-size: 20px;" translate>shared.noResult</div>
 </ng-template>
+
+
+
+
+<div *ngIf="technicalError" style="text-align: center;font-size: 20px;" translate> shared.error.technicalError
+</div>
+
+<of-spinner *ngIf="loadingInProgress"></of-spinner>

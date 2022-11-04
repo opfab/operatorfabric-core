@@ -12,7 +12,7 @@
 package org.opfab.users;
 
 import lombok.extern.slf4j.Slf4j;
-import org.opfab.actiontracing.UserActionLogsConfiguration;
+import org.opfab.useractiontracing.UserActionLogsConfiguration;
 import org.opfab.springtools.configuration.mongo.EnableOperatorFabricMongo;
 import org.opfab.users.repositories.UserRepository;
 import org.springframework.boot.SpringApplication;

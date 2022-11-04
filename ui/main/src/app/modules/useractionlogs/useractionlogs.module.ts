@@ -18,16 +18,18 @@ import {DatetimeFilterModule} from "../share/datetime-filter/datetime-filter.mod
 import {MultiSelectModule} from "../share/multi-select/multi-select.module";
 import {UserActionLogsComponent} from "./useractionlogs.component";
 import {UserActionLogsTableComponent} from "./components/useractionlogs-table/useractionlogs-table.component";
-
+import {UserActionLogsFiltersComponent} from "./components/useractionlogs-filters/useractionlogs-filters.component";
+import {SpinnerModule} from '../share/spinner/spinner.module';
 
 @NgModule({
-    declarations: [UserActionLogsComponent, UserActionLogsTableComponent],
+    declarations: [UserActionLogsComponent, UserActionLogsTableComponent, UserActionLogsFiltersComponent],
     imports: [
     CommonModule,
     FormsModule,
     ReactiveFormsModule,
     TranslateModule,
     NgbModule,
+    SpinnerModule,
     DatetimeFilterModule,
     AppRoutingModule,
     MultiSelectModule,

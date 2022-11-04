@@ -7,11 +7,12 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {Component, Input} from "@angular/core";
+import {Component, EventEmitter, Input, Output} from "@angular/core";
 import {TranslateService} from "@ngx-translate/core";
 import {UserActionLog} from "@ofModel/user-action-log.model";
 import {DateTimeFormatterService} from "@ofServices/date-time-formatter.service";
 import {ColDef, GridOptions} from "ag-grid-community";
+import {EntitiesCellRendererComponent} from "./cell-renderers/entities-cell-renderer.component";
 
 
 @Component({
@@ -21,12 +22,15 @@ import {ColDef, GridOptions} from "ag-grid-community";
 export class UserActionLogsTableComponent {
 
     @Input() actions: UserActionLog[];
+    @Input() totalElements: number;
+    @Input() totalPages: number;
+    @Input() page: number;
+
+    @Output() pageChange = new EventEmitter<number>();
 
     // ag-grid configuration objects
     public gridOptions;
     public gridApi;
-    public rowData: any[];
-    public page = 1;
     private columnDefs: ColDef[] = [];
 
     private dateColumnName: string;
@@ -49,6 +53,9 @@ export class UserActionLogsTableComponent {
             context: {
                 componentParent: this
             },
+            components: {
+                entitiesCellRenderer: EntitiesCellRendererComponent
+            },
             domLayout: 'autoHeight',
             defaultColDef: {
                 editable: false
@@ -60,8 +67,8 @@ export class UserActionLogsTableComponent {
             },
             columnTypes: {
                 timeColumn: {
-                    sortable: true,
-                    filter: true,
+                    sortable: false,
+                    filter: false,
                     wrapText: false,
                     autoHeight: false,
                     width: 150,
@@ -70,27 +77,35 @@ export class UserActionLogsTableComponent {
                     }
                 },
                 dataColumn: {
-                    sortable: true,
-                    filter: true,
+                    sortable: false,
+                    filter: false,
                     wrapText: false,
                     autoHeight: false,
-                    flex: 1,
+                    width: 190,
                     resizable: false
                 },
                 entitiesColumn: {
-                    sortable: true,
-                    filter: true,
-                    wrapText: false,
-                    autoHeight: false,
+                    sortable: false,
+                    filter: false,
+                    wrapText: true,
+                    autoHeight: true,
                     flex: 3,
                     resizable: false
                 },
                 cardUidColumn: {
-                    sortable: true,
-                    filter: true,
+                    sortable: false,
+                    filter: false,
                     wrapText: false,
                     autoHeight: false,
                     flex: 2,
+                    resizable: false
+                },
+                commentColumn: {
+                    sortable: false,
+                    filter: false,
+                    wrapText: false,
+                    autoHeight: false,
+                    flex: 1,
                     resizable: false
                 }
             },
@@ -108,23 +123,21 @@ export class UserActionLogsTableComponent {
 
     onGridReady(params) {
         this.gridApi = params.api;
-        this.gridApi.paginationSetPageSize(10);
 
         this.columnDefs = [
             {type: 'timeColumn', headerName: this.dateColumnName, field: 'date'},
             {type: 'dataColumn', headerName: this.actionColumnName, field: 'action'},
             {type: 'dataColumn', headerName: this.loginColumnName, field: 'login'},
-            {type: 'entitiesColumn', headerName: this.entitiesColumnName, field: 'entities'},
+            {type: 'entitiesColumn', headerName: this.entitiesColumnName, field: 'entities', cellRenderer: 'entitiesCellRenderer'},
             {type: 'cardUidColumn', headerName: this.cardUidColumnName, field: 'cardUid'},
-            {type: 'dataColumn', headerName: this.commentColumnName, field: 'comment'}
+            {type: 'commentColumn', headerName: this.commentColumnName, field: 'comment'}
         ];
 
         this.gridApi.setColumnDefs(this.columnDefs);
     }
 
     updateResultPage(currentPage): void {
-        this.gridApi.paginationGoToPage(currentPage - 1);
-        this.page = currentPage;
+        this.pageChange.emit(currentPage);
     }
 
     getFormattedDateTime(epochDate: number):string {

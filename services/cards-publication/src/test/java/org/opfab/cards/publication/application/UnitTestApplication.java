@@ -11,7 +11,7 @@
 
 package org.opfab.cards.publication.application;
 
-import org.opfab.actiontracing.UserActionLogsConfiguration;
+import org.opfab.useractiontracing.UserActionLogsConfiguration;
 import org.opfab.cards.publication.configuration.TestCardReceiver;
 import org.opfab.cards.publication.configuration.TestConsumerConfig;
 import org.opfab.cards.publication.configuration.WebSecurityConfigurationTest;

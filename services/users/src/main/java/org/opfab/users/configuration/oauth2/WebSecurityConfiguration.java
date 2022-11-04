@@ -47,7 +47,7 @@ public class WebSecurityConfiguration {
     public static final String ENTITIES_PATH = "/entities/**";
     public static final String ENTITIES = "/entities";
     public static final String PERIMETERS_PATH = "/perimeters/**";
-    public static final String ACTIONS = "/userActionLogs";
+    public static final String USER_ACTION_LOGS = "/userActionLogs";
     public static final String CURRENTUSER_INTERNAL_PATH = "/internal/CurrentUserWithPerimeters";
     public static final String ADMIN_ROLE = "ADMIN";
     public static final String IS_ADMIN_OR_OWNER = "hasRole('ADMIN') or @webSecurityChecks.checkUserLogin(authentication,#login)";
@@ -93,7 +93,7 @@ public class WebSecurityConfiguration {
                 .antMatchers(HttpMethod.GET, ENTITIES).access(AUTH_AND_IP_ALLOWED)      // OC-1067 : we authorize all users for GET /entities
                 .antMatchers(ENTITIES_PATH).access(IS_ADMIN_AND_IP_ALLOWED)
                 .antMatchers(PERIMETERS_PATH).access(IS_ADMIN_AND_IP_ALLOWED)
-                .antMatchers(ACTIONS).access(IS_ADMIN_AND_IP_ALLOWED)
+                .antMatchers(USER_ACTION_LOGS).access(IS_ADMIN_AND_IP_ALLOWED)
                 .antMatchers(CURRENTUSER_INTERNAL_PATH).authenticated()
                 .antMatchers(LOGGERS_PATH).hasRole(ADMIN_ROLE)
                 .anyRequest().access(AUTH_AND_IP_ALLOWED);

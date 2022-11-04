@@ -7,12 +7,13 @@
  * This file is part of the OperatorFabric project.
  */
 
-package org.opfab.actiontracing.model;
+package org.opfab.useractiontracing.model;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.time.Instant;
@@ -24,10 +25,12 @@ import java.util.List;
 @NoArgsConstructor
 @Builder
 public class UserActionLog {
-
+    @Indexed
     private Instant date;
+    @Indexed
     private String login;
     private List<String> entities;
+    @Indexed
     private UserActionEnum action;
     private String cardUid;
     private String comment;
