@@ -1,0 +1,42 @@
+<!-- Copyright (c) 2022, RTE (http://www.rte-france.com)              -->
+<!-- See AUTHORS.txt                                                       -->
+<!-- This Source Code Form is subject to the terms of the Mozilla Public   -->
+<!-- License, v. 2.0. If a copy of the MPL was not distributed with this   -->
+<!-- file, You can obtain one at http://mozilla.org/MPL/2.0/.              -->
+<!-- SPDX-License-Identifier: MPL-2.0                                      -->
+<!-- This file is part of the OperatorFabric project.                      -->
+
+<div id="opfab-useractionlogs-filters" style="padding-left: 5%; background-color: var(--opfab-bgcolor-darker);border: solid 0px var(--opfab-bgcolor-darker)">
+    <div style="display: flex;">
+        <div  style="display: flex;  min-width:300px;max-width:500px;margin-top: 38px;margin-bottom: 38px;max-height: 48px">
+            <div style="min-width: 200px;">
+                <of-multi-select id="opfab-login-filter" multiSelectId="login" [parentForm]="this.userActionLogsForm" [config]="loginMultiSelectConfig"
+                [options]="this.logins" [selectedOptions]="loginsSelected">
+                </of-multi-select>
+            </div>
+            <div style="min-width: 200px; margin-left: 10px">
+                <of-multi-select id="opfab-action-filter" multiSelectId="action" [parentForm]="this.userActionLogsForm" [config]="actionsMultiSelectConfig"
+                [options]="actions" [selectedOptions]="actionsSelected">
+                </of-multi-select>
+            </div>
+        </div>
+
+        <div class="opfab-publish-date" style="display: flex; margin-top: 10px;" [formGroup]="this.userActionLogsForm">
+            <div style="margin-left: 10px">
+                <of-datetime-filter id="opfab-date-from" filterPath="dateFrom" formControlName="dateFrom" 
+                    [maxDate]="maxDate" labelKey="useractionlogs.filters." (change)="onDateTimeChange()" [defaultDate]="defaultMinDate" [defaultTime]="{ hour: 0, minute: 0}"></of-datetime-filter>
+            </div> 
+            <div style="margin-left: 10px">
+                <of-datetime-filter id="opfab-date-to" filterPath="dateTo" formControlName="dateTo"
+                    [minDate]="minDate" labelKey="useractionlogs.filters." (change)="onDateTimeChange()"></of-datetime-filter>
+            </div>
+
+        </div>
+        <div  class="opfab-buttons" style="margin-top: 30px; margin-left:60px; min-width: 320px; ">
+
+            <button id="opfab-useractionlogs-btn-search" class="opfab-btn" (click)='query()' translate>button.search</button>
+            <button id="opfab-useractionlogs-btn-reset" class="opfab-btn-cancel" (click)='resetForm()' translate>button.reset</button>
+
+        </div> 
+    </div>
+</div>

@@ -13,7 +13,7 @@ package org.opfab.cards.consultation.application;
 
 import lombok.extern.slf4j.Slf4j;
 
-import org.opfab.actiontracing.UserActionLogsConfiguration;
+import org.opfab.useractiontracing.UserActionLogsConfiguration;
 import org.opfab.cards.consultation.configuration.ThreadPoolTaskSchedulerConfiguration;
 import org.opfab.cards.consultation.configuration.json.JacksonConfig;
 import org.opfab.cards.consultation.configuration.mongo.LocalMongoConfiguration;

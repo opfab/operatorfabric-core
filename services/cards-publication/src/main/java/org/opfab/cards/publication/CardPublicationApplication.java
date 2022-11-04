@@ -12,7 +12,7 @@
 package org.opfab.cards.publication;
 
 import lombok.extern.slf4j.Slf4j;
-import org.opfab.actiontracing.UserActionLogsConfiguration;
+import org.opfab.useractiontracing.UserActionLogsConfiguration;
 import org.opfab.springtools.configuration.mongo.EnableOperatorFabricMongo;
 import org.opfab.springtools.configuration.oauth.EnableOperatorFabricOAuth2;
 import org.springframework.beans.factory.ObjectProvider;

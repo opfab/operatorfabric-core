@@ -7,7 +7,7 @@
  * This file is part of the OperatorFabric project.
  */
 
-package org.opfab.actiontracing.model;
+package org.opfab.useractiontracing.model;
 
 public enum UserActionEnum {
     ACK_CARD, UNACK_CARD, READ_CARD, UNREAD_CARD, SEND_CARD, SEND_RESPONSE, OPEN_SUBSCRIPTION, CLOSE_SUBSCRIPTION

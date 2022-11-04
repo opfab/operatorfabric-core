@@ -16,4 +16,25 @@ A new `onStyleChange()` method has benn added to templateGateway.
 OpFab will call this method when switching day/night mode.
 It can be used by a template to refresh styles and reload embedded charts.
 
+== Nginx configuration
+Nginx configuration file has to be modified to allow the forwarding of query parameters to the new 'userActionLogs' API.
+You have to modify `nginx.conf` file as follows:
 
+Replace
+----
+  location ~ "^/users/(.*)" {
+    proxy_set_header Host $http_host;
+    proxy_pass http://users:8080/$1;
+    proxy_set_header X-Forwarded-For $remote_addr;
+  }
+----
+
+With 
+
+----
+  location ~ "^/users/(.*)" {
+    proxy_set_header Host $http_host;
+    proxy_pass http://users:8080/$1$is_args$args;
+    proxy_set_header X-Forwarded-For $remote_addr;
+  }
+----

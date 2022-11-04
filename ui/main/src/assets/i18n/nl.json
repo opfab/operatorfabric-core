@@ -30,7 +30,10 @@
       "invalidActiveStartDate": "Datum 'Actief van' is ongeldig.",
       "invalidActiveEndDate": "Datum 'Actief tot' is ongeldig.",
       "publishEndDateBeforeStartDate" : "'Publiceren tot' moet na 'Publiceren van' liggen.",
-      "activeEndDateBeforeStartDate" : "'Actief tot' moet na 'Actief van' liggen."
+      "activeEndDateBeforeStartDate" : "'Actief tot' moet na 'Actief van' liggen.",
+      "invalidFromDate": "Datum 'Van' is ongeldig.",
+      "invalidToDate": "Datum 'Tot' is ongeldig.",
+      "toDateBeforeFromDate" : "'Tot' moet na 'Van' liggen."
     },
     "result": {
       "severity": "ERNST",
@@ -499,7 +502,13 @@
     "login": "Gebruikersnaam",
     "entities": "Entiteiten",
     "cardUid": "Kaart UID",
-    "comment": "Opmerking"
+    "comment": "Opmerking",
+    "filters": {
+      "action": "ACTIE",
+      "login": "GEBRUIKERSNAAM",
+      "dateFrom": "VAN",
+      "dateTo": "TOT"
+    }
   },
   "datePicker": {
     "monday": "Ma",

@@ -8,6 +8,7 @@
 
 <div id="opfab-useractionlogs-table" style="background-color: var(--opfab-bgcolor-darker);border: solid 0px var(--opfab-bgcolor-darker)">
 
+    
 
     <ag-grid-angular id="opfab-useractionlogs-table-grid" aria-describedby="User action logs results table"
             (gridReady)="onGridReady($event)"
@@ -19,11 +20,11 @@
 
     <div *ngIf="gridApi" class="opfab-pagination" style="padding-bottom: 5px">
         <div style="white-space: nowrap;margin-top:17px">
-        <span translate> shared.resultsNumber </span> : {{gridApi.paginationGetRowCount()}}
+        <span translate> shared.resultsNumber </span> : {{totalElements}}
         </div>
         <div style="width:40%;margin-top:5px">
-        <ngb-pagination *ngIf="gridApi.paginationGetRowCount() > 10" [collectionSize]="gridApi.paginationGetRowCount()"
-            [page]="page" [pageSize]="gridApi.paginationGetPageSize()" (pageChange)="updateResultPage($event)" [maxSize]="3" [rotate]="true">
+        <ngb-pagination *ngIf="totalPages > 1" [collectionSize]="totalElements"
+            [page]="page" (pageChange)="updateResultPage($event)" [maxSize]="3" [rotate]="true">
         </ngb-pagination>
         </div>
     </div>

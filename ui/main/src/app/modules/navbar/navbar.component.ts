@@ -124,7 +124,6 @@ export class NavbarComponent implements OnInit {
         this.displayRealTimeUsers = visibleCoreMenus.includes('realtimeusers');
         this.displayExternalDevicesConfiguration = visibleCoreMenus.includes('externaldevicesconfiguration');
         this.displayUserActionLogs = visibleCoreMenus.includes('useractionlogs');
-        debugger;
         this.displayCreateUserCard = visibleCoreMenus.includes('usercard');
         this.displayCalendar = visibleCoreMenus.includes('calendar');
         this.displaySettings = visibleCoreMenus.includes('settings');

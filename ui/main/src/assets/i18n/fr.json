@@ -30,7 +30,10 @@
       "invalidActiveStartDate": "La date 'Active à partir de' est invalide.",
       "invalidActiveEndDate": "La date 'Active jusqu'à' est invalide.",
       "publishEndDateBeforeStartDate" : "La date 'Publiée jusqu'à' doit être postérieure à la date 'Publiée à partir de'.",
-      "activeEndDateBeforeStartDate" : "La date 'Active jusqu'à' doit être postérieure à la date 'Active à partir de'."
+      "activeEndDateBeforeStartDate" : "La date 'Active jusqu'à' doit être postérieure à la date 'Active à partir de'.",
+      "invalidFromDate": "La date 'À partir de' est invalide.",
+      "invalidToDate": "La date 'Jusqu'à' est invalide.",
+      "toDateBeforeFromDate" :  "La date 'Jusqu'à' doit être postérieure à la date 'À partir de'."
     },
     "result": {
       "severity": "SÉVÉRITÉ",
@@ -499,7 +502,13 @@
     "login": "Utilisateur",
     "entities": "Entités",
     "cardUid": "Uid de la carte",
-    "comment": "Commentaire"
+    "comment": "Commentaire",
+    "filters": {
+      "action": "ACTION",
+      "login": "UTILISATEUR",
+      "dateFrom": "À PARTIR DE",
+      "dateTo": "JUSQU'À"
+    }
   },
   "datePicker": {
     "monday": "Lu",

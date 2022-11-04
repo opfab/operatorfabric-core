@@ -7,13 +7,16 @@
  * This file is part of the OperatorFabric project.
  */
 
-package org.opfab.actiontracing.services;
+package org.opfab.useractiontracing.services;
 
-import org.opfab.actiontracing.model.UserActionLog;
-import org.opfab.actiontracing.model.UserActionEnum;
-import org.opfab.actiontracing.repositories.UserActionLogRepository;
+import org.opfab.useractiontracing.model.UserActionLog;
+import org.opfab.useractiontracing.model.UserActionEnum;
+import org.opfab.useractiontracing.repositories.UserActionLogRepository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.util.MultiValueMap;
 
 import java.time.Instant;
 import java.util.List;
@@ -42,7 +45,11 @@ public class UserActionLogService {
     }
 
     public List<UserActionLog> getUserActionLogs() {
-
         return this.userActionLogRepository.findAll(Sort.by("date").descending());
     }
+
+    public Page<UserActionLog> getUserActionLogsByParams(MultiValueMap<String, String> params, Pageable pageable) {
+        return this.userActionLogRepository.findByParams(params, pageable);
+    }
+
 }

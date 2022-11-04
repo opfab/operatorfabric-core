@@ -30,7 +30,10 @@
       "invalidActiveStartDate": "'Active from' date is invalid.",
       "invalidActiveEndDate": "'Active to' date is invalid.",
       "publishEndDateBeforeStartDate" : "'Publish to' date must be after 'Publish from' date.",
-      "activeEndDateBeforeStartDate" : "'Active to' date must be after 'Active from' date."
+      "activeEndDateBeforeStartDate" : "'Active to' date must be after 'Active from' date.",
+      "invalidFromDate": "'From' date is invalid.",
+      "invalidToDate": "'To' date is invalid.",
+      "toDateBeforeFromDate" : "'To' date must be after 'From' date."
     },
     "result": {
       "severity": "SEVERITY",
@@ -499,7 +502,13 @@
     "login": "Username",
     "entities": "Entities",
     "cardUid": "Card UID",
-    "comment": "Comment"
+    "comment": "Comment",
+    "filters": {
+      "action": "ACTION",
+      "login": "USERNAME",
+      "dateFrom": "FROM",
+      "dateTo": "TO"
+    }
   },
   "datePicker": {
     "monday": "Mo",

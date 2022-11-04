@@ -13,7 +13,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.opfab.actiontracing.model.UserActionLog;
+
 
 import java.time.Instant;
 import java.util.List;
@@ -22,7 +22,7 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class ActionLogData implements ActionLog
+public class UserActionLogData implements UserActionLog
 {
     private Instant date;
     private String login;
@@ -31,7 +31,7 @@ public class ActionLogData implements ActionLog
     private String cardUid;
     private String comment;
 
-    public ActionLogData(UserActionLog userAction) {
+    public UserActionLogData(org.opfab.useractiontracing.model.UserActionLog userAction) {
         this.login = userAction.getLogin();
         this.date = userAction.getDate();
         this.entities = userAction.getEntities();
