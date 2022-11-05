@@ -252,6 +252,15 @@ export class ProcessesService {
         };
     }
 
+    public findProcessGroupIdForProcessId(processId: string): string {
+        const data = this.findProcessGroupForProcess(processId);
+
+        if (!! data) {
+            return data.id;
+        }
+        return null;
+    }
+
     public findProcessGroupForProcess(processId: string) {
         for (let [groupId, group] of this.processGroups) {
             if (group.processes.find((process) => process === processId))
