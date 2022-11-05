@@ -44,13 +44,16 @@ export class FeedconfigurationComponent implements OnInit {
     currentUserWithPerimeters: UserWithPerimeters;
     processesStatesLabels: Map<
         string,
-        {processLabel: string; states: {stateId: string; stateLabel: string; stateControlIndex: number; filteringNotificationAllowed: boolean}[]}
+        {processLabel: string;
+         states: {stateId: string; stateLabel: string; stateControlIndex: number; filteringNotificationAllowed: boolean}[]}
     >;
     statesUnsubscribedButWithFilteringNotificationNotAllowed = '';
     @ViewChild('statesUnsubscribedButWithFilteringNotificationNotAllowedPopup') statesUnsubscribedTemplate: ElementRef;
     preparedListOfProcessesStates: {processId: string; stateId: string}[];
     isAllStatesSelectedPerProcess: Map<string, boolean>;
     isAllProcessesSelectedPerProcessGroup: Map<string, boolean>;
+    isAllProcessesCheckboxDisabledPerProcessGroup: Map<string, boolean>;
+    isAllStatesCheckboxDisabledPerProcessId: Map<string, boolean>;
 
     modalRef: NgbModalRef;
     private saveSettingsInProgress = false;
@@ -74,6 +77,8 @@ export class FeedconfigurationComponent implements OnInit {
         this.processesDefinition = this.processesService.getAllProcesses();
         this.isAllStatesSelectedPerProcess = new Map();
         this.isAllProcessesSelectedPerProcessGroup = new Map();
+        this.isAllProcessesCheckboxDisabledPerProcessGroup = new Map();
+        this.isAllStatesCheckboxDisabledPerProcessId = new Map();
         this.initForm();
     }
 
@@ -204,6 +209,7 @@ export class FeedconfigurationComponent implements OnInit {
                     const stateLabel = !!state.name ? state.name : stateId;
 
                     const filteringNotificationAllowed = this.userService.isFilteringNotificationAllowedForProcessAndState(process.id, stateId);
+                    this.checkIfProcessAndProcessGroupCheckboxesAreEnabled(process.id, filteringNotificationAllowed);
 
                     states.push({stateId, stateLabel, stateControlIndex, filteringNotificationAllowed});
                     this.preparedListOfProcessesStates.push({processId: process.id, stateId});
@@ -212,7 +218,18 @@ export class FeedconfigurationComponent implements OnInit {
             }
             if (states.length) {
                 states.sort((obj1, obj2) => Utilities.compareObj(obj1.stateLabel, obj2.stateLabel));
+
                 this.processesStatesLabels.set(process.id, {processLabel, states});
+            }
+        }
+    }
+
+    private checkIfProcessAndProcessGroupCheckboxesAreEnabled(processId: string, filteringNotificationAllowed: boolean) {
+        if (filteringNotificationAllowed === true) {
+            this.isAllStatesCheckboxDisabledPerProcessId.set(processId, false);
+            const processGroupId = this.processesService.findProcessGroupIdForProcessId(processId);
+            if (!! processGroupId) {
+                this.isAllProcessesCheckboxDisabledPerProcessGroup.set(processGroupId, false);
             }
         }
     }
@@ -256,7 +273,12 @@ export class FeedconfigurationComponent implements OnInit {
 
         this.processGroupsAndLabels.sort((obj1, obj2) => Utilities.compareObj(obj1.groupLabel, obj2.groupLabel));
 
-        if (this.processesDefinition) this.computePreparedListOfProcessesStatesAndProcessesStatesLabels();
+        this.initIsAllProcessesCheckboxDisabledPerProcessGroup();
+
+        if (this.processesDefinition) {
+            this.initIsAllStatesCheckboxDisabledPerProcessId();
+            this.computePreparedListOfProcessesStatesAndProcessesStatesLabels();
+        }
 
         this.makeProcessesWithoutGroup();
         this.addCheckboxesInFormArray();
@@ -271,6 +293,20 @@ export class FeedconfigurationComponent implements OnInit {
     ngAfterViewInit() {
         if (this.statesUnsubscribedButWithFilteringNotificationNotAllowed.length) {
             this.openStatesUnsubscribedButWithFilteringNotificationNotAllowedModal();
+        }
+    }
+
+    initIsAllProcessesCheckboxDisabledPerProcessGroup() {
+        if (!! this.processGroupsAndLabels) {
+            this.processGroupsAndLabels.forEach(processGroupAndLabel => {
+                this.isAllProcessesCheckboxDisabledPerProcessGroup.set(processGroupAndLabel.groupId, true);
+            });
+        }
+    }
+
+    initIsAllStatesCheckboxDisabledPerProcessId() {
+        for (const process of this.processesDefinition) {
+            this.isAllStatesCheckboxDisabledPerProcessId.set(process.id, true);
         }
     }
 
