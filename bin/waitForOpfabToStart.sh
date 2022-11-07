@@ -64,7 +64,7 @@ sleep 5 &
 pid=$!
 
 frames="/ | \\ -"
-while kill -0 $pid 2>&1 > /dev/null;
+while kill -0 $pid > /dev/null 2>&1
 do
     for frame in $frames;
     do
