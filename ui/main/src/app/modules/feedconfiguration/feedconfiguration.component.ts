@@ -7,7 +7,7 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {Component, ElementRef, OnInit, ViewChild} from '@angular/core';
+import {AfterViewInit, Component, ElementRef, OnInit, ViewChild} from '@angular/core';
 import {UserService} from '@ofServices/user.service';
 import {Process, State} from '@ofModel/processes.model';
 import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
@@ -25,7 +25,7 @@ import {Utilities} from '../../common/utilities';
     templateUrl: './feedconfiguration.component.html',
     styleUrls: ['./feedconfiguration.component.scss']
 })
-export class FeedconfigurationComponent implements OnInit {
+export class FeedconfigurationComponent implements OnInit,AfterViewInit {
     feedConfigurationForm: FormGroup<{
         processesStates: FormArray;
     }>;
@@ -44,8 +44,15 @@ export class FeedconfigurationComponent implements OnInit {
     currentUserWithPerimeters: UserWithPerimeters;
     processesStatesLabels: Map<
         string,
-        {processLabel: string;
-         states: {stateId: string; stateLabel: string; stateControlIndex: number; filteringNotificationAllowed: boolean}[]}
+        {
+            processLabel: string;
+            states: {
+                stateId: string;
+                stateLabel: string;
+                stateControlIndex: number;
+                filteringNotificationAllowed: boolean;
+            }[];
+        }
     >;
     statesUnsubscribedButWithFilteringNotificationNotAllowed = '';
     @ViewChild('statesUnsubscribedButWithFilteringNotificationNotAllowedPopup') statesUnsubscribedTemplate: ElementRef;
@@ -174,7 +181,12 @@ export class FeedconfigurationComponent implements OnInit {
 
             if (!!notNotifiedStatesForThisProcess && notNotifiedStatesForThisProcess.includes(processState.stateId)) {
                 isChecked = false;
-                if (this.checkStateUnsubscribedButWithFilteringNotificationNotAllowed(processState.processId, processState.stateId)) {
+                if (
+                    this.checkStateUnsubscribedButWithFilteringNotificationNotAllowed(
+                        processState.processId,
+                        processState.stateId
+                    )
+                ) {
                     isChecked = true; // We force the subscription to this state
                 }
             }
@@ -187,8 +199,9 @@ export class FeedconfigurationComponent implements OnInit {
         const processInfo = this.processesStatesLabels.get(processId);
         const stateInfo = processInfo.states.find((stateInfo) => stateInfo.stateId === stateId);
 
-        if (! stateInfo.filteringNotificationAllowed) {
-            this.statesUnsubscribedButWithFilteringNotificationNotAllowed += '\n' + processInfo.processLabel + ' / ' + stateInfo.stateLabel;
+        if (!stateInfo.filteringNotificationAllowed) {
+            this.statesUnsubscribedButWithFilteringNotificationNotAllowed +=
+                '\n' + processInfo.processLabel + ' / ' + stateInfo.stateLabel;
             return true;
         }
         return false;
@@ -198,7 +211,12 @@ export class FeedconfigurationComponent implements OnInit {
         let stateControlIndex = 0;
 
         for (const process of this.processesDefinition) {
-            const states: {stateId: string; stateLabel: string; stateControlIndex: number; filteringNotificationAllowed: boolean}[] = [];
+            const states: {
+                stateId: string;
+                stateLabel: string;
+                stateControlIndex: number;
+                filteringNotificationAllowed: boolean;
+            }[] = [];
 
             const processLabel = !!process.name ? process.name : process.id;
 
@@ -208,8 +226,10 @@ export class FeedconfigurationComponent implements OnInit {
                 if (this.checkIfStateMustBeDisplayed(state, process, stateId)) {
                     const stateLabel = !!state.name ? state.name : stateId;
 
-                    const filteringNotificationAllowed = this.userService.isFilteringNotificationAllowedForProcessAndState(process.id, stateId);
-                    this.checkIfProcessAndProcessGroupCheckboxesAreEnabled(process.id, filteringNotificationAllowed);
+                    const filteringNotificationAllowed =
+                        this.userService.isFilteringNotificationAllowedForProcessAndState(process.id, stateId);
+                    if (!!filteringNotificationAllowed)
+                        this.setProcessAndProcessGroupCheckboxesEnabled(process.id);
 
                     states.push({stateId, stateLabel, stateControlIndex, filteringNotificationAllowed});
                     this.preparedListOfProcessesStates.push({processId: process.id, stateId});
@@ -224,13 +244,11 @@ export class FeedconfigurationComponent implements OnInit {
         }
     }
 
-    private checkIfProcessAndProcessGroupCheckboxesAreEnabled(processId: string, filteringNotificationAllowed: boolean) {
-        if (filteringNotificationAllowed === true) {
-            this.isAllStatesCheckboxDisabledPerProcessId.set(processId, false);
-            const processGroupId = this.processesService.findProcessGroupIdForProcessId(processId);
-            if (!! processGroupId) {
-                this.isAllProcessesCheckboxDisabledPerProcessGroup.set(processGroupId, false);
-            }
+    private setProcessAndProcessGroupCheckboxesEnabled(processId: string) {
+        this.isAllStatesCheckboxDisabledPerProcessId.set(processId, false);
+        const processGroupId = this.processesService.findProcessGroupIdForProcessId(processId);
+        if (!!processGroupId) {
+            this.isAllProcessesCheckboxDisabledPerProcessGroup.set(processGroupId, false);
         }
     }
 
@@ -249,9 +267,9 @@ export class FeedconfigurationComponent implements OnInit {
             processGroupData.processes = processGroupData.processes.filter(
                 (processData) => !!this.processesStatesLabels.get(processData.processId)
             );
-            if (processGroupData.processes.length === 0)  toRemove.push(processGroupData.groupId);
+            if (processGroupData.processes.length === 0) toRemove.push(processGroupData.groupId);
         });
-        this.processGroupsAndLabels = this.processGroupsAndLabels.filter(group => !toRemove.includes(group.groupId));
+        this.processGroupsAndLabels = this.processGroupsAndLabels.filter((group) => !toRemove.includes(group.groupId));
         this.processesWithoutGroup = this.processesWithoutGroup.filter(
             (processData) => !!this.processesStatesLabels.get(processData.idProcess)
         );
@@ -274,12 +292,8 @@ export class FeedconfigurationComponent implements OnInit {
         this.processGroupsAndLabels.sort((obj1, obj2) => Utilities.compareObj(obj1.groupLabel, obj2.groupLabel));
 
         this.initIsAllProcessesCheckboxDisabledPerProcessGroup();
-
-        if (this.processesDefinition) {
-            this.initIsAllStatesCheckboxDisabledPerProcessId();
-            this.computePreparedListOfProcessesStatesAndProcessesStatesLabels();
-        }
-
+        this.initIsAllStatesCheckboxDisabledPerProcessId();
+        this.computePreparedListOfProcessesStatesAndProcessesStatesLabels();
         this.makeProcessesWithoutGroup();
         this.addCheckboxesInFormArray();
         this.removeProcessesWithoutDisplayedStates();
@@ -297,8 +311,8 @@ export class FeedconfigurationComponent implements OnInit {
     }
 
     initIsAllProcessesCheckboxDisabledPerProcessGroup() {
-        if (!! this.processGroupsAndLabels) {
-            this.processGroupsAndLabels.forEach(processGroupAndLabel => {
+        if (!!this.processGroupsAndLabels) {
+            this.processGroupsAndLabels.forEach((processGroupAndLabel) => {
                 this.isAllProcessesCheckboxDisabledPerProcessGroup.set(processGroupAndLabel.groupId, true);
             });
         }
