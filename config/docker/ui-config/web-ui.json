@@ -107,7 +107,8 @@
     "dateFormat": "DD/MM/YYYY",
     "styleWhenNightDayModeDesactivated": "NIGHT",
     "replayInterval" : 10,
-    "replayEnabled" : true
+    "replayEnabled" : true,
+    "showSoundActivationMessage": true
 
   },
   "settingsScreen": {

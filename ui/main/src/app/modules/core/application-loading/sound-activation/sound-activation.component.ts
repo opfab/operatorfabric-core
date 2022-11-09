@@ -11,6 +11,7 @@ import {Component, OnInit, TemplateRef, ViewChild} from '@angular/core';
 import {NgbModal, NgbModalRef} from '@ng-bootstrap/ng-bootstrap';
 import {LogOption, OpfabLoggerService} from '@ofServices/logs/opfab-logger.service';
 import {SoundNotificationService} from '@ofServices/sound-notification.service';
+import {ConfigService} from '@ofServices/config.service';
 
 // Due to auto-policy in firefox and chromium based browsers, if the user does not interact with the application
 // sound is not activated. This component opens a modal and by clicking OK the user interacts with the application
@@ -30,12 +31,15 @@ export class SoundActivationComponent implements OnInit {
     constructor(
         private soundNotificationService: SoundNotificationService,
         private logger: OpfabLoggerService,
-        private modalService: NgbModal
+        private modalService: NgbModal,
+        private configService: ConfigService
     ) {}
 
     ngOnInit(): void {
         this.soundNotificationService.initSoundService();
-        this.activateSoundIfNotActivated();
+        if (this.configService.getConfigValue('settings.showSoundActivationMessage', true)) {
+            this.activateSoundIfNotActivated();
+        }
     }
 
     private activateSoundIfNotActivated() {
