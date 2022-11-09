@@ -86,11 +86,11 @@
         </div>
     </div>
 
-    <div *ngIf="open && groupedCardsVisible && !lightCardDisplayedInMapComponent">
-        <of-grouped-card-list [lightCards]="getGroupedChildCards()" [selection]="selection"> </of-grouped-card-list>
-    </div>
-
     <div class="badge-border  opfab-bg-sev-{{lightCard.severity.toString()|lowercase}} "></div>
 
 
+</div>
+
+<div *ngIf="open && groupedCardsVisible && !lightCardDisplayedInMapComponent">
+    <of-grouped-card-list [lightCards]="getGroupedChildCards()" [selection]="selection"> </of-grouped-card-list>
 </div>
