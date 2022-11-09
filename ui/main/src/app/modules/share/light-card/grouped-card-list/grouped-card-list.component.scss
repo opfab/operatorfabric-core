@@ -1,10 +1,19 @@
+/* Copyright (c) 2022, Alliander (http://www.alliander.com)
+ * See AUTHORS.txt
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ * SPDX-License-Identifier: MPL-2.0
+ * This file is part of the OperatorFabric project.
+ */
+
 .opfab-grouped-light-card-detail {
     color: var(--opfab-lightcard-detail-textcolor);
-    margin-left: 14px;
     margin-right: 10px;
 }
 
 .opfab-grouped-row {
     background-color: var(--opfab-bgcolor);
     padding-top: 10px;
+    margin-left: 20px;
 }
