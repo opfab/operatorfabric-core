@@ -188,7 +188,7 @@ export class CalendarComponent implements OnInit, OnDestroy, AfterViewInit {
             if (timeSpan.recurrence.months) {
                 months = timeSpan.recurrence.months.map((d) => d + 1);
             } else {
-                months = [0,1,2,3,4,5,6,7,8,9,10,11];
+                months = [1,2,3,4,5,6,7,8,9,10,11,12];
             }
         }
         return months;
