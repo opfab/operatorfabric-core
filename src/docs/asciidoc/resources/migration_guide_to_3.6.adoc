@@ -12,12 +12,12 @@
 Bootstrap library has been migrate to v5.
 
 [IMPORTANT]
-If you use bootstrap css classes in your templates, it's strongly recommended to check your template rendering after migration.
+If you use bootstrap css classes in your templates, it's strongly recommended checking your template rendering after migration.
 
 Charts library has been upgraded from version 3.2.1 to 3.7.1
 
 [IMPORTANT]
-If you use charts in your templates, it's strongly recommended to check your template rendering after migration.
+If you use charts in your templates, it's strongly recommended checking your template rendering after migration.
 
 == Mongo data migration steps
 

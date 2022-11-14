@@ -8,12 +8,15 @@
 = Migration Guide from release 3.10.x to release 3.11.0
 
 == Card publication 
-OperatorFabric will now check user perimeter when publishing cards via endpoint `/cards` (it does not concern user cards which are always controlled). To disable perimeter validation it is possible to set the configuration parameter `checkPerimeterForCardSending` to `false` in cards-publication service configuration file. 
+OperatorFabric will now check user perimeter when publishing cards via endpoint `/cards` (it does not concern user cards
+which are always controlled). To disable perimeter validation it is possible to set the configuration parameter
+`checkPerimeterForCardSending` to `false` in cards-publication service configuration file.
 
 == templateGateway `onStyleChange()` method
 
-A new `onStyleChange()` method has benn added to templateGateway.
+A new `onStyleChange()` method has been added to templateGateway.
 OpFab will call this method when switching day/night mode.
-It can be used by a template to refresh styles and reload embedded charts.
+It may have to be implemented by a template to refresh styles and reload embedded charts when user change day/night
+mode, please check your existing templates.
 
 

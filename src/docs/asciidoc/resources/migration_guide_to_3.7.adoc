@@ -90,7 +90,7 @@ userConfigurations:
 
 ==== Before the migration
 
-Before the migration to 3.7.0, one should save its current data base, then add the attribute "externalDeviceIds" based on the
+Before the migration to 3.7.0, one should save its current database, then add the attribute "externalDeviceIds" based on the
 value of the existing attribute "externalDeviceId". To add this attribute, simply launch the commands :
 
 ....

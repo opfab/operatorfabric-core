@@ -49,3 +49,5 @@ include::migration_guide_to_3.8.adoc[leveloffset=+1]
 include::migration_guide_to_3.9.adoc[leveloffset=+1]
 
 include::migration_guide_to_3.10.adoc[leveloffset=+1]
+
+include::migration_guide_to_3.11.adoc[leveloffset=+1]
