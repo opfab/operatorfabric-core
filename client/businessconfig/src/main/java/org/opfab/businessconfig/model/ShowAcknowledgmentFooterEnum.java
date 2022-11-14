@@ -18,7 +18,7 @@ import lombok.Getter;
  * Define the condition for displaying or not the acknowledgment footer of the card
  * <dl>
  *     <dt>ONLY_FOR_EMITTING_ENTITY</dt>
- *     <dt>ONLY_FOR_ENTITIES_ALLOWED_TO_EDIT</dt>
+ *     <dt>ONLY_FOR_USERS_ALLOWED_TO_EDIT</dt>
  *     <dt>FOR_ALL_USERS</dt>
  * </dl>
  * Note : This enum is created by hand because Swagger can't handle enums. It should match the corresponding
@@ -30,7 +30,7 @@ import lombok.Getter;
 @AllArgsConstructor
 public enum ShowAcknowledgmentFooterEnum {
     ONLY_FOR_EMITTING_ENTITY("OnlyForEmittingEntity"),
-    ONLY_FOR_ENTITIES_ALLOWED_TO_EDIT("OnlyForEntitiesAllowedToEdit"),
+    ONLY_FOR_USERS_ALLOWED_TO_EDIT("OnlyForUsersAllowedToEdit"),
     FOR_ALL_USERS("ForAllUsers");
 
     String value;

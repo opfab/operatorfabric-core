@@ -28,7 +28,7 @@ Feature: Bundle
     And match response.states.questionState.closeCardWhenUserAcknowledges == true
     And match response.states.questionState.editCardEnabledOnUserInterface == true
     And match response.states.questionState.deleteCardEnabledOnUserInterface == true
-    And match response.states.questionState.showAcknowledgmentFooter == 'OnlyForEntitiesAllowedToEdit'
+    And match response.states.questionState.showAcknowledgmentFooter == 'OnlyForUsersAllowedToEdit'
     And match response.states.messageState.type == 'CANCELED'
     And match response.states.messageState.editCardEnabledOnUserInterface == false
     And match response.states.messageState.showAcknowledgmentFooter == 'OnlyForEmittingEntity'

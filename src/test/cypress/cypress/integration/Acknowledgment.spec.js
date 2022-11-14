@@ -784,7 +784,7 @@ describe('Acknowledgment tests', function () {
         cy.get('#opfab-card-acknowledged-footer').should('not.exist');
     });
 
-    it('Check display of acknowledgments footer for parameter "showAcknowledgmentFooter" set to "OnlyForEntitiesAllowedToEdit"', function () {
+    it('Check display of acknowledgments footer for parameter "showAcknowledgmentFooter" set to "OnlyForUsersAllowedToEdit"', function () {
 
         // Clean up existing cards
         script.deleteAllCards();
@@ -792,7 +792,7 @@ describe('Acknowledgment tests', function () {
 
         cy.get('of-light-card').should('have.length', 0);
 
-        // We send a usercard for a process/state which has "showAcknowledgmentFooter" set to "OnlyForEntitiesAllowedToEdit"
+        // We send a usercard for a process/state which has "showAcknowledgmentFooter" set to "OnlyForUsersAllowedToEdit"
         script.sendCard('cypress/ack/message7.json');
 
         // We display the received card
