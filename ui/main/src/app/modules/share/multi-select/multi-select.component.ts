@@ -14,6 +14,7 @@ import {MultiSelectConfig, MultiSelectOption} from '@ofModel/multiselect.model';
 import * as _ from 'lodash-es';
 
 declare const VirtualSelect: any;
+declare const opfab: any;
 
 @Component({
     selector: 'of-multi-select ',
@@ -100,10 +101,15 @@ export class MultiSelectComponent implements AfterViewInit, OnDestroy, OnChanges
 
     private setOptionList() {
         if (this.options) {
+            this.escapeHTMLFromOptionLabels();
             if (this.config.sortOptions) this.sortOptionListByLabel();
             this.oldOptions = this.options;
             if (!!this.virtualSelectComponent) this.virtualSelectComponent.setOptions(this.options);
         }
+    }
+
+    private escapeHTMLFromOptionLabels(){
+        this.options.forEach( option => option.label = opfab.utils.escapeHtml(option.label));
     }
 
     private sortOptionListByLabel() {
