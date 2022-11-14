@@ -82,7 +82,7 @@ export class UserPermissionsService {
         return userEntitiesAllowed.length > 0;
     }
 
-    public isUserAuthorizedToSeeAcknowledgmentFooter(user: User, card: Card) {
+    public isUserAuthorizedToSeeAcknowledgmentFooter(userWithPerimeters: UserWithPerimeters, card: Card) {
 
         const showAcknowledgmentFooter =
             this.processesService.getShowAcknowledgmentFooterForACard(card);
@@ -90,10 +90,10 @@ export class UserPermissionsService {
         if (showAcknowledgmentFooter === ShowAcknowledgmentFooterEnum.FOR_ALL_USERS) {
             return true;
         }
-        if (showAcknowledgmentFooter === ShowAcknowledgmentFooterEnum.ONLY_FOR_ENTITIES_ALLOWED_TO_EDIT) {
-            return this.isUserInEntityAllowedToEditCard(user, card);
+        if (showAcknowledgmentFooter === ShowAcknowledgmentFooterEnum.ONLY_FOR_USERS_ALLOWED_TO_EDIT) {
+            return this.doesTheUserHavePermissionToEditCard(userWithPerimeters, card);
         }
-        return this.isCardPublishedByUserEntity(user, card);
+        return this.isCardPublishedByUserEntity(userWithPerimeters.userData, card);
     }
 
     private isCardPublishedByUserEntity(user: User, card: Card): boolean {

@@ -33,7 +33,7 @@
 		  "type" : "INPROGRESS",
 		  "validateAnswerButtonLabel": "Send impact",
 		  "modifyAnswerButtonLabel": "Modify impact",
-		  "showAcknowledgmentFooter" : "OnlyForEntitiesAllowedToEdit"
+		  "showAcknowledgmentFooter" : "OnlyForUsersAllowedToEdit"
 		},   
 		"incidentInProgressState": {
 		  "name": "incidentInProgress.name",

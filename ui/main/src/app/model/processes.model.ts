@@ -103,6 +103,6 @@ export enum ConsideredAcknowledgedForUserWhenEnum {
 
 export enum ShowAcknowledgmentFooterEnum {
     ONLY_FOR_EMITTING_ENTITY = 'OnlyForEmittingEntity',
-    ONLY_FOR_ENTITIES_ALLOWED_TO_EDIT = 'OnlyForEntitiesAllowedToEdit',
+    ONLY_FOR_USERS_ALLOWED_TO_EDIT = 'OnlyForUsersAllowedToEdit',
     FOR_ALL_USERS = 'ForAllUsers'
 }

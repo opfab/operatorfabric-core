@@ -87,8 +87,7 @@ The entities acknowledgments can be displayed in the footer of the card. You can
 - "OnlyForEmittingEntity" (default value) : the entities acknowledgments are displayed only for the members of the entity
 that has created the card
 
-- "OnlyForEntitiesAllowedToEdit" : the entities acknowledgments are displayed for the members of the entities allowed to
-edit the card
+- "OnlyForUsersAllowedToEdit" : the entities acknowledgments are displayed for the users allowed to edit the card
 
 - "ForAllUsers" : the entities acknowledgments are displayed for the members of all the entities
 

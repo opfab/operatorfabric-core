@@ -28,6 +28,7 @@ import {DisplayContext} from '@ofModel/templateGateway.model';
 import {LightCardsStoreService} from '@ofServices/lightcards/lightcards-store.service';
 import {CardComponent} from '../../card.component';
 import {OpfabLoggerService} from '@ofServices/logs/opfab-logger.service';
+import {UserWithPerimeters} from "@ofModel/userWithPerimeters.model";
 
 declare const templateGateway: any;
 
@@ -66,6 +67,7 @@ export class CardBodyComponent implements OnChanges, OnInit, OnDestroy {
     private unsubscribe$: Subject<void> = new Subject<void>();
 
     public user: User;
+    private userWithPerimeters: UserWithPerimeters;
 
     constructor(
         private businessconfigService: ProcessesService,
@@ -78,8 +80,10 @@ export class CardBodyComponent implements OnChanges, OnInit, OnDestroy {
         private lightCardsStoreService: LightCardsStoreService,
         private logger: OpfabLoggerService
     ) {
-        const userWithPerimeters = this.userService.getCurrentUserWithPerimeters();
-        if (!!userWithPerimeters) this.user = userWithPerimeters.userData;
+        this.userWithPerimeters = this.userService.getCurrentUserWithPerimeters();
+        if (!!this.userWithPerimeters) {
+            this.user = this.userWithPerimeters.userData;
+        }
     }
 
     ngOnInit() {
@@ -268,7 +272,7 @@ export class CardBodyComponent implements OnChanges, OnInit, OnDestroy {
             this.cardState.acknowledgmentAllowed !== AcknowledgmentAllowedEnum.NEVER &&
             !!this.card.entityRecipients &&
             this.card.entityRecipients.length > 0 &&
-            this.userPermissionsService.isUserAuthorizedToSeeAcknowledgmentFooter(this.user, this.card)
+            this.userPermissionsService.isUserAuthorizedToSeeAcknowledgmentFooter(this.userWithPerimeters, this.card)
         );
     }
 

@@ -62,7 +62,7 @@
       "closeCardWhenUserAcknowledges": false,
       "deleteCardEnabledOnUserInterface": false,
       "type" : "INPROGRESS",
-      "showAcknowledgmentFooter" : "OnlyForEntitiesAllowedToEdit"
+      "showAcknowledgmentFooter" : "OnlyForUsersAllowedToEdit"
     },
     "contingenciesState": {
       "name": "⚠️ Network Contingencies ⚠️",

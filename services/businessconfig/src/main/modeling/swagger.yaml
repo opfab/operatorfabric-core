@@ -603,11 +603,11 @@ definitions:
     description: |-
       Define the condition for displaying or not the acknowledgment footer of the card. >
       * ONLY_FOR_EMITTING_ENTITY
-      * ONLY_FOR_ENTITIES_ALLOWED_TO_EDIT
+      * ONLY_FOR_USERS_ALLOWED_TO_EDIT
       * FOR_ALL_USERS
     enum:
       - OnlyForEmittingEntity
-      - OnlyForEntitiesAllowedToEdit
+      - OnlyForUsersAllowedToEdit
       - ForAllUsers
 
   ProcessGroup:
