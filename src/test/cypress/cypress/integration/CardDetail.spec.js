@@ -10,21 +10,23 @@
 /* This test file focuses on some state-type specific behaviour in card details header. As the Cypress test suite grows,
 it might make sense to merge it with other tests.
 * */
-import {getOpfabGeneralCommands} from '../support/opfabGeneralCommands';
-import {getFeedCommands} from '../support/feedCommands';
+import {OpfabGeneralCommands} from '../support/opfabGeneralCommands';
+import {FeedCommands} from '../support/feedCommands';
+import {ScriptCommands} from "../support/scriptCommands";
 
 describe('Card detail', function () {
-    const opfab = getOpfabGeneralCommands();
-    const feed = getFeedCommands();
+    const opfab = new OpfabGeneralCommands();
+    const feed = new FeedCommands();
+    const script = new ScriptCommands();
 
     before('Set up configuration', function () {
         // This can stay in a `before` block rather than `beforeEach` as long as the test does not change configuration
-        cy.resetUIConfigurationFiles();
-        cy.deleteAllSettings();
-        cy.loadTestConf();
-        cy.deleteAllCards();
-        cy.deleteAllArchivedCards();
-        cy.sendCard('cypress/cardDetail/cardDetail.json');
+        script.resetUIConfigurationFiles();
+        script.deleteAllSettings();
+        script.loadTestConf();
+        script.deleteAllCards();
+        script.deleteAllArchivedCards();
+        script.sendCard('cypress/cardDetail/cardDetail.json');
     });
 
     describe('Check card detail', function () {
@@ -87,7 +89,7 @@ describe('Card detail', function () {
             cy.get('.opfab-card-received-footer').contains(
                 /Received : \d{2}\/\d{2}\/\d{4} at ((1[0-2]|0?[1-9]):([0-5][0-9]) ([AP]M))/
             );
-            cy.get('.opfab-card-received-footer').contains('Addressed to :').should('not.exist');
+            cy.get('#opfab-card-details-address-to').should('not.exist');
         });
 
         it(`Check card footer for operator4_fr (member of several entities)`, function () {
@@ -98,9 +100,8 @@ describe('Card detail', function () {
             cy.get('.opfab-card-received-footer').contains(
                 /Received : \d{2}\/\d{2}\/\d{4} at ((1[0-2]|0?[1-9]):([0-5][0-9]) ([AP]M))/
             );
-            cy.get('.opfab-card-received-footer').contains(
-                'Addressed to : Control Center FR South, Control Center FR North'
-            );
+            cy.get('#opfab-card-details-address-to').contains('Control Center FR North');
+            cy.get('#opfab-card-details-address-to').contains('Control Center FR South');
         });
 
         it(`Check card detail spinner when simulating card processed `, function () {
@@ -155,7 +156,7 @@ describe('Card detail', function () {
             cy.get('.opfab-card-received-footer').contains(
                 /Received : \d{2}\/\d{2}\/\d{4} at ((1[0-2]|0?[1-9]):([0-5][0-9]) ([AP]M))/
             );
-            cy.get('.opfab-card-received-footer').contains('Addressed to :').should('not.exist');
+            cy.get('#opfab-card-details-address-to').should('not.exist');
         });
 
         it(`Check card detail footer for archives for operator4_fr (member of several entities)`, function () {
@@ -178,11 +179,11 @@ describe('Card detail', function () {
             cy.get('.opfab-card-received-footer').contains(
                 /Received : \d{2}\/\d{2}\/\d{4} at ((1[0-2]|0?[1-9]):([0-5][0-9]) ([AP]M))/
             );
-            cy.get('.opfab-card-received-footer').contains('Addressed to :').should('not.exist');
+            cy.get('#opfab-card-details-address-to').should('not.exist');
         });
 
         it(`Check templateGateway when response not required `, function () {
-            cy.sendCard('cypress/cardDetail/cardDetailResponseNotRequired.json');
+            script.sendCard('cypress/cardDetail/cardDetailResponseNotRequired.json');
             opfab.loginWithUser('operator1_fr');
             feed.openFirstCard();
             cy.get('#templateGateway-isUserAllowedToRespond').contains('true');
@@ -190,7 +191,7 @@ describe('Card detail', function () {
         });
 
         it(`Check templateGateway when response is not possible `, function () {
-            cy.sendCard('cypress/cardDetail/cardDetailResponseNotPossible.json');
+            script.sendCard('cypress/cardDetail/cardDetailResponseNotPossible.json');
             opfab.loginWithUser('operator1_fr');
             feed.openFirstCard();
             cy.get('#templateGateway-isUserAllowedToRespond').contains('false');
@@ -198,7 +199,7 @@ describe('Card detail', function () {
         });
 
         it(`Check that a spinner is displayed when the card takes time to load `, function () {
-            cy.sendCard('cypress/cardDetail/cardDetailResponseNotPossible.json');
+            script.sendCard('cypress/cardDetail/cardDetailResponseNotPossible.json');
             cy.delayRequestResponse('/cards/cards/**');
             opfab.loginWithUser('operator1_fr');
             cy.get('of-light-card').eq(0).click();
@@ -207,7 +208,7 @@ describe('Card detail', function () {
         });
 
         it(`Check deleted card detail footer in archives`, function () {
-            cy.sendCard('cypress/userCard/message.json');
+            script.sendCard('cypress/userCard/message.json');
             opfab.loginWithUser('operator1_fr');
             feed.openFirstCard();
             feed.deleteCurrentCard();
@@ -227,7 +228,7 @@ describe('Card detail', function () {
             );
              // Check card detail footer contains card deletion date 
             cy.get('.opfab-card-received-footer').contains(
-                /Deleted : \d{2}\/\d{2}\/\d{4} at ((1[0-2]|0?[1-9]):([0-5][0-9]) ([AP]M))/
+                /Deleted or updated : \d{2}\/\d{2}\/\d{4} at ((1[0-2]|0?[1-9]):([0-5][0-9]) ([AP]M))/
             );
         });
     });

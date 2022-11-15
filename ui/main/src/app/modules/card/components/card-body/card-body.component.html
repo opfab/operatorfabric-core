@@ -1,0 +1,83 @@
+<!-- Copyright (c) 2018-2022, RTE (http://www.rte-france.com)              -->
+<!-- See AUTHORS.txt                                                       -->
+<!-- This Source Code Form is subject to the terms of the Mozilla Public   -->
+<!-- License, v. 2.0. If a copy of the MPL was not distributed with this   -->
+<!-- file, You can obtain one at http://mozilla.org/MPL/2.0/.              -->
+<!-- SPDX-License-Identifier: MPL-2.0                                      -->
+<!-- This file is part of the OperatorFabric project.                      -->
+
+<div [class.opfab-card-detail-fullscreen]="fullscreen || isSmallscreen()">
+  <div style="display: block;  margin-top:10px;">
+    <ul class="nav nav-tabs opfab-line-undertab">
+      <li class="nav-item opfab-tab opfab-menu-item-left" data-toggle="tab">
+        <span class="opfab-tab" id="opfab-card-title">{{card.titleTranslated | opfabTitleCase}}</span>
+      </li>
+      <li class="nav-item opfab-menu-item-right">
+        <div *ngIf="!isSmallscreen()" style="display:flex">
+
+          <of-card-actions style="display:flex" [card]="this.card" [cardState]="this.cardState"
+            [parentModalRef]="this.parentModalRef"  (closeCardDetail)="closeDetails()">
+          </of-card-actions>
+
+          <div id="opfab-card-detail-fullscreen-button" *ngIf="!fullscreen && showMaxAndReduceButton"
+            class="opfab-max-and-reduce-icons">
+            <div class="opfab-menu-icon opfab-icon-maximize" (click)='setFullScreen(true)'></div>
+          </div>
+          <div id="opfab-card-detail-fullscreen-button" *ngIf="fullscreen && showMaxAndReduceButton"
+            class="opfab-max-and-reduce-icons">
+            <div class="opfab-menu-icon  opfab-icon-reduce" (click)='setFullScreen(false)'></div>
+          </div>
+        </div>
+        <div id="opfab-close-card" class="opfab-close-card-link" aria-label="Close"
+          (click)="closeDetails()">
+          <span aria-hidden="true">&times;</span>
+        </div>
+
+      </li>
+    </ul>
+
+    <div>
+      <div style="padding-right:3px">
+        <!-- padding is necessary to see box shadow-->
+
+        <div *ngIf='showDetailCardHeader' class="opfab-card-response-header">
+          <of-card-header [card]="this.card" [childCards]="this.childCards" [cardState]="this.cardState"
+            [lttdExpiredIsTrue]="this.lttdExpiredIsTrue"> </of-card-header>
+        </div>
+
+        <of-template-rendering [card]="card" [cardState]="cardState" [user]="user" [screenSize]="screenSize"
+          [displayContext]="displayContext" [functionToCallBeforeRendering]="beforeTemplateRendering"
+          [functionToCallAfterRendering]="afterTemplateRendering" [parentComponent]="this"
+          [fixedBottomOffset]="this.templateOffset" cardFooterHtmlElementId="opfab-card-detail-footer">
+
+        </of-template-rendering>
+
+        <div style="text-align: center;width:100% ; ">
+
+          <div id='opfab-card-detail-footer'>
+
+            <div style="text-align: left;margin-top: 5px" *ngIf="displayCardAcknowledgedFooter()"
+              class="opfab-card-response-header">
+              <of-card-acks-footer style="display:flex" [card]="this.card"></of-card-acks-footer>
+            </div>
+
+            <div style="display: flex">
+              <of-card-footer-text [card]="this.card" [childCards]="this.childCards"> </of-card-footer-text>
+
+              <div style="margin-left: auto;text-align: right;min-width: 250px">
+                <of-card-response [card]="this.card" [cardState]="this.cardState"
+                  [lttdExpiredIsTrue]="this.lttdExpiredIsTrue" [isResponseLocked]="this.isResponseLocked"
+                  [userEntityIdsPossibleForResponse]="this.userEntityIdsPossibleForResponse"
+                  (unlockAnswerEvent)="this.unlockAnswer()"> </of-card-response>
+                <of-card-ack [card]="this.card" [cardState]="this.cardState"
+                  [lttdExpiredIsTrue]="this.lttdExpiredIsTrue" (closeCardDetail)="closeDetails()"> </of-card-ack>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+</div>

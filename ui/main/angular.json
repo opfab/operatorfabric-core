@@ -42,7 +42,6 @@
               "src/shared/css/opfab-application.css"
             ],
             "scripts": [
-              "node_modules/svg-pan-zoom/dist/svg-pan-zoom.js",
               "node_modules/virtual-select-plugin/dist/virtual-select.min.js",
               "node_modules/tooltip-plugin/dist/tooltip.min.js",
               "src/assets/js/templateGateway.js",

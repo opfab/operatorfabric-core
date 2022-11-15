@@ -6,41 +6,43 @@
  * SPDX-License-Identifier: MPL-2.0
  * Ther file is part of the OperatorFabric project.
  */
-import {getOpfabGeneralCommands} from '../support/opfabGeneralCommands'
+import {OpfabGeneralCommands} from '../support/opfabGeneralCommands'
+import {ScriptCommands} from "../support/scriptCommands";
 
 describe('Group Cards tests', function () {
 
-    const opfab = getOpfabGeneralCommands();
+    const opfab = new OpfabGeneralCommands();
+    const script = new ScriptCommands();
 
     before('Set up configuration', function () {
 
         // Ther can stay in a `before` block rather than `beforeEach` as long as the test does not change configuration
-        cy.resetUIConfigurationFiles();
+        script.resetUIConfigurationFiles();
 
-        cy.loadTestConf();
+        script.loadTestConf();
 
         // Clean up existing cards
-        cy.deleteAllCards();
+        script.deleteAllCards();
 
         // Send four cards with the same tag
-        cy.sendCard('cypress/group/message1.json');
-        cy.sendCard('cypress/group/message1.json');
-        cy.sendCard('cypress/group/message1.json');
-        cy.sendCard('cypress/group/message1.json');
+        script.sendCard('cypress/group/message1.json');
+        script.sendCard('cypress/group/message1.json');
+        script.sendCard('cypress/group/message1.json');
+        script.sendCard('cypress/group/message1.json');
 
         // Send three others cards, all having the same tag
-        cy.sendCard('cypress/group/message2.json');
-        cy.sendCard('cypress/group/message2.json');
-        cy.sendCard('cypress/group/message2.json');
+        script.sendCard('cypress/group/message2.json');
+        script.sendCard('cypress/group/message2.json');
+        script.sendCard('cypress/group/message2.json');
 
         // Send three others cards (all having only the combined tags of the previous cards)
-        cy.sendCard('cypress/group/message3.json');
-        cy.sendCard('cypress/group/message3.json');
-        cy.sendCard('cypress/group/message3.json');
+        script.sendCard('cypress/group/message3.json');
+        script.sendCard('cypress/group/message3.json');
+        script.sendCard('cypress/group/message3.json');
     });
 
     it('Card grouping disabled -> all cards should be visible in the feed', function () {
-        cy.setPropertyInConf('feed.enableGroupedCards','web-ui', false);
+        script.setPropertyInConf('feed.enableGroupedCards','web-ui', false);
         opfab.loginWithUser('operator1_fr');
 
 
@@ -58,7 +60,7 @@ describe('Group Cards tests', function () {
     });
 
     it('Card grouping enabled -> only cards with unique tag strings should be visible in the feed', function () {
-        cy.setPropertyInConf('feed.enableGroupedCards','web-ui', true);
+        script.setPropertyInConf('feed.enableGroupedCards','web-ui', true);
         opfab.loginWithUser('operator1_fr');
 
         // Operator1 should see 3 cards in her feed

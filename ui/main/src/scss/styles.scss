@@ -493,6 +493,11 @@ body {
     .action-cell-delete-admin {
         display: none;
     }
+
+    .action-cell-column-header {
+        display: none;
+    }
+
     .opfab-sev-alarm {
         background-color: $sev-alarm;
         font-size: 0px;
@@ -516,6 +521,17 @@ body {
 
     .ag-cell-wrap-text {
         word-break: normal;
+    }
+
+    .ag-header-cell-sortable {
+        cursor: default;
+        .ag-header-cell-label {
+            cursor: pointer;
+        }
+    }
+
+    .ag-header-cell-menu-button {
+        cursor: pointer;
     }
 }
 

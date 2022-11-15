@@ -49,7 +49,8 @@
       "hideResponseFilter": false,
       "hideApplyFiltersToTimeLineChoice": false,
       "secondsBeforeLttdForClockDisplay": 3700,
-      "hideAckAllCardsFeature": false
+      "hideAckAllCardsFeature": false,
+      "titleUpperCase": true
     },
     "timeline": {
       "domains": [

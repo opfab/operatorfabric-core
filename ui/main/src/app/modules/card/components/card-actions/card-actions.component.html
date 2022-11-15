@@ -1,0 +1,59 @@
+<!-- Copyright (c) 2022, RTE (http://www.rte-france.com)              -->
+<!-- See AUTHORS.txt                                                       -->
+<!-- This Source Code Form is subject to the terms of the Mozilla Public   -->
+<!-- License, v. 2.0. If a copy of the MPL was not distributed with this   -->
+<!-- file, You can obtain one at http://mozilla.org/MPL/2.0/.              -->
+<!-- SPDX-License-Identifier: MPL-2.0                                      -->
+<!-- This file is part of the OperatorFabric project.                      -->
+
+
+<div class="opfab-right-menu-item" *ngIf='showEditButton'>
+    <a id="opfab-card-edit" class="opfab-right-menu-link" (click)='editCard()'>
+        <div class="opfab-menu-icon opfab-icon-edit"></div>
+        <div translate>{{'button.edit'}}</div>
+    </a>
+</div>
+
+<div class="opfab-right-menu-item" *ngIf='showDeleteButton'>
+    <a id="opfab-card-delete" class="opfab-right-menu-link" (click)='openDeleteConfirmationModal()'>
+        <div class="opfab-menu-icon  opfab-icon-trash"></div>
+        <div translate>{{'button.delete'}}</div>
+    </a>
+</div>
+
+
+<ng-template #deleteCardConfirmation let-modal>
+    <div class="modal-header">
+        <span translate> userCard.deleteCard.title </span>
+        <div id="opfab-card-details-delete-btn-close" class="opfab-close-modal-icon" aria-label="Close"
+            (click)="modal.dismiss('Cross click')">
+            <span aria-hidden="true">&times;</span>
+        </div>
+    </div>
+    <div class="modal-body text-center">
+        <p translate> userCard.deleteCard.doYouReallyWant </p>
+        <button id="opfab-card-details-delete-btn-cancel" type="button" class="opfab-btn-cancel"
+            (click)="declineDeleteCard()" translate>button.cancel</button>
+        <button id="opfab-card-details-delete-btn-confirm" type="button" class="opfab-btn" (click)="confirmDeleteCard()"
+            translate>button.delete</button>
+    </div>
+</ng-template>
+
+<ng-template #userCardEdition let-modal>
+    <div class="modal-header">
+        <div translate> userCard.editTitle </div>
+        <div id="opfab-usercard-close" class="opfab-close-modal-icon" aria-label="Close"
+            (click)="modal.dismiss('Cross click')">
+            <span aria-hidden="true">&times;</span>
+        </div>
+    </div>
+    <div class="modal-body">
+        <div>
+            <of-usercard [cardIdToEdit]="card.id" [userCardModal]="modal"></of-usercard>
+        </div>
+    </div>
+</ng-template>
+
+
+<of-spinner *ngIf="deleteInProgress" [seeInModal]="true" loadingText="shared.deleteInProgress">
+</of-spinner>

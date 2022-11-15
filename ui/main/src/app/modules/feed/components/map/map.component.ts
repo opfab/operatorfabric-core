@@ -12,7 +12,7 @@ import {AfterViewChecked, Component, OnDestroy, OnInit} from '@angular/core';
 import {Map as OpenLayersMap} from 'ol';
 import View from 'ol/View';
 import {Tile as TileLayer, Vector as VectorLayer} from 'ol/layer';
-import {OSM, Vector as VectorSource} from 'ol/source';
+import {OSM, XYZ, Vector as VectorSource} from 'ol/source';
 import {fromLonLat} from 'ol/proj';
 import {LightCard, Severity} from '@ofModel/light-card.model';
 import {LightCardsFeedFilterService} from '@ofServices/lightcards/lightcards-feed-filter.service';
@@ -126,12 +126,12 @@ export class MapComponent implements OnInit, OnDestroy, AfterViewChecked {
         if (!!mapTemplate && !!this.map) {
             if (this.vectorLayer.getSource().getFeatures().length > 0) {
                 const features = this.vectorLayer.getSource().getFeatures();
-                const radius = highlight ? 2 : 1;
                 features.forEach((feature) => {
                     if (feature.get('lightCard')?.id === lightCardId) {
                         feature.setStyle(function (feature) {
                             const severity: Severity = feature.get('lightCard').severity;
-                            return MapComponent.getOpenLayersStyle(severity, radius);
+                            const geoType: string = feature.getGeometry().getType();
+                            return MapComponent.getOpenLayersStyle(geoType, severity, highlight);
                         });
                     }
                 });
@@ -175,15 +175,27 @@ export class MapComponent implements OnInit, OnDestroy, AfterViewChecked {
                 center: fromLonLat([longitude, latitude]),
                 zoom: zoom
             }),
-            layers: [
-                new TileLayer({
-                    source: new OSM()
-                })
-            ],
             target: 'ol-map',
             overlays: [overlay],
             controls: defaultControls({attribution: false}).extend([attribution])
         });
+
+        const bgUrl = this.configService.getConfigValue('feed.geomap.bglayer.xyz.url', null);
+        const bgTileSize = this.configService.getConfigValue('feed.geomap.bglayer.xyz.tileSize', null);
+        if (bgUrl && bgTileSize) {
+            const bgCrossOrigin = this.configService.getConfigValue('feed.geomap.bglayer.xyz.crossOrigin', null);
+            this.map.addLayer(new TileLayer({
+                source: new XYZ({
+                    url: bgUrl,
+                    tileSize: bgTileSize,
+                    crossOrigin: bgCrossOrigin
+                })
+            }))
+        } else {
+            this.map.addLayer(new TileLayer({
+                source: new OSM()
+            }));
+        }
 
         if (enableGraph) {
             this.map.addControl(new GraphControl(null));
@@ -245,7 +257,8 @@ export class MapComponent implements OnInit, OnDestroy, AfterViewChecked {
             }),
             style: function (feature) {
                 const severity: Severity = feature.get('lightCard').severity;
-                return MapComponent.getOpenLayersStyle(severity);
+                const geoType: string = feature.getGeometry().getType();
+                return MapComponent.getOpenLayersStyle(geoType, severity);
             }
         });
         this.map.addLayer(this.vectorLayer);
@@ -295,8 +308,15 @@ export class MapComponent implements OnInit, OnDestroy, AfterViewChecked {
         return overlay;
     }
 
-    private static getOpenLayersStyle(severity: Severity, radiusMultiplier = 1): Style {
-        return MapComponent.openLayersForPointStyles(radiusMultiplier)[severity];
+    private static getOpenLayersStyle(type: string, severity: Severity, highlight = false): Style {
+        switch (type) {
+            case 'Point':
+                return MapComponent.pointStyle(severity, highlight);
+            case 'Polygon':
+                return MapComponent.polygonStyle(severity, highlight);
+            default:
+                console.log('ERROR: Unsupported geo type: ' + type);
+        }
     }
 
     private updateGraph(lightCards: LightCard[]) {
@@ -324,75 +344,66 @@ export class MapComponent implements OnInit, OnDestroy, AfterViewChecked {
         this.updateGraphChart(self.graphChart, data);
     }
 
-    private static openLayersForPointStyles(radiusMultiplier = 1) {
-        const alarmStyle = new Style({
-            image: new Circle({
-                radius: 7 * radiusMultiplier,
-                fill: new Fill({
-                    color: 'rgba(167, 26, 26, 0.8)'
-                }),
-                stroke: new Stroke({
-                    color: 'rgba(186, 186, 186, 0.5)',
-                    width: 2
-                })
-            })
-        });
-        const actionStyle = new Style({
-            image: new Circle({
-                radius: 7 * radiusMultiplier,
-                fill: new Fill({
-                    color: 'rgba(253, 147, 18, 0.8)'
-                }),
-                stroke: new Stroke({
-                    color: 'rgba(186, 186, 186, 0.5)',
-                    width: 2
-                })
-            })
-        });
-        const compliantStyle = new Style({
-            image: new Circle({
-                radius: 7 * radiusMultiplier,
-                fill: new Fill({
-                    color: 'rgba(0, 187, 3, 0.8)'
-                }),
-                stroke: new Stroke({
-                    color: 'rgba(186, 186, 186, 0.5)',
-                    width: 2
-                })
-            })
-        });
-        const informationStyle = new Style({
-            image: new Circle({
-                radius: 7 * radiusMultiplier,
-                fill: new Fill({
-                    color: 'rgba(16, 116, 173, 0.8)'
-                }),
-                stroke: new Stroke({
-                    color: 'rgba(186, 186, 186, 0.5)',
-                    width: 1
-                })
-            })
-        });
-
-        const geoStyles: {[name: string]: Style} = {
-            [Severity.ALARM]: alarmStyle,
-            [Severity.ACTION]: actionStyle,
-            [Severity.COMPLIANT]: compliantStyle,
-            [Severity.INFORMATION]: informationStyle
+    private static severityToColorMap(opacity: number) {
+        const severityColors: {[name: string]: Style} = {
+            [Severity.ALARM]: `rgba(167, 26, 26, ${opacity})`,
+            [Severity.ACTION]: `rgba(253, 147, 18, ${opacity})`,
+            [Severity.COMPLIANT]: `rgba(0, 187, 3, ${opacity})`,
+            [Severity.INFORMATION]: `rgba(16, 116, 173, ${opacity})`
         };
-        return geoStyles;
+        return severityColors;
+    }
+
+    private static pointStyle(severity: Severity, highlight: boolean) {
+        const radiusMultiplier = highlight ? 2 : 1;
+        return new Style({
+            image: new Circle({
+                radius: 7 * radiusMultiplier,
+                fill: new Fill({
+                    color: MapComponent.severityToColorMap(0.8)[severity]
+                }),
+                stroke: new Stroke({
+                    color: 'rgba(186, 186, 186, 0.5)',
+                    width: 2
+                })
+            })
+        });
+    }
+
+    private static polygonStyle(severity: Severity, highlight: boolean) {
+        const fillOpacity = highlight ? 0.6 : 0.1;
+        return new Style({
+            stroke: new Stroke({
+                color: MapComponent.severityToColorMap(0.8)[severity],
+                width: 2
+            }),
+            fill: new Fill({
+                color: MapComponent.severityToColorMap(fillOpacity)[severity] // 'rgba(0, 0, 255, 0.1)'
+            })
+        });
     }
 
     private buildGraphChart(canvas) {
         if (self.graphChart) self.graphChart.destroy();
         const piechartDataObject = {
-            labels: [this.translate.instant('shared.severity.alarm'), this.translate.instant('shared.severity.action'),
-                this.translate.instant('shared.severity.compliant'), this.translate.instant('shared.severity.information')],
-            datasets: [{
-                label: 'Cards',
-                data: [0, 0, 0, 0],
-                backgroundColor: ['rgba(167, 26, 26, 0.8)', 'rgba(253, 147, 18, 0.8)', 'rgba(0, 187, 3, 0.8)', 'rgba(16, 116, 173, 0.8)']
-            }]
+            labels: [
+                this.translate.instant('shared.severity.alarm'),
+                this.translate.instant('shared.severity.action'),
+                this.translate.instant('shared.severity.compliant'),
+                this.translate.instant('shared.severity.information')
+            ],
+            datasets: [
+                {
+                    label: 'Cards',
+                    data: [0, 0, 0, 0],
+                    backgroundColor: [
+                        'rgba(167, 26, 26, 0.8)',
+                        'rgba(253, 147, 18, 0.8)',
+                        'rgba(0, 187, 3, 0.8)',
+                        'rgba(16, 116, 173, 0.8)'
+                    ]
+                }
+            ]
         };
         this.graphChart = new Chart(canvas, {
             type: 'doughnut',
@@ -402,18 +413,18 @@ export class MapComponent implements OnInit, OnDestroy, AfterViewChecked {
                 borderColor: 'rgb(38, 47, 61, 0.8)',
                 plugins: {
                     datalabels: {
-                        display: function(context) {
+                        display: function (context) {
                             return context.dataset.data[context.dataIndex] > 0;
                         },
                         color: 'rgb(38, 47, 61, 0.8)',
                         font: {
                             weight: 'bold',
                             size: 16
-                        },
+                        }
                     },
                     legend: {
                         display: false,
-                        position: 'bottom',
+                        position: 'bottom'
                     },
                     title: {
                         display: false,

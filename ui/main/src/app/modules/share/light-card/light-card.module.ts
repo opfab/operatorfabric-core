@@ -14,10 +14,11 @@ import {LightCardComponent} from './light-card.component';
 import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
 import {CountDownModule} from '../countdown/countdown.module';
 import {GroupedCardListComponent} from './grouped-card-list/grouped-card-list.component';
+import {PipesModule} from '../pipes/pipes.module';
 
 @NgModule({
     declarations: [LightCardComponent, GroupedCardListComponent],
-    imports: [CommonModule, TranslateModule, CountDownModule, NgbModule],
+    imports: [CommonModule, TranslateModule, CountDownModule, NgbModule, PipesModule],
     exports: [LightCardComponent]
 })
 export class LightCardModule {}

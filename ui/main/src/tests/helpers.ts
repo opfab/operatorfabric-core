@@ -13,7 +13,6 @@ import {Process, State} from '@ofModel/processes.model';
 import {Menu, MenuEntry, MenuEntryLinkTypeEnum} from '@ofModel/menu.model';
 import {Card} from '@ofModel/card.model';
 import {I18n} from '@ofModel/i18n.model';
-import {Map as OfMap, Map} from '@ofModel/map';
 import {Page} from '@ofModel/page.model';
 import {AppState} from '@ofStore/index';
 import {AuthenticationService} from '@ofServices/authentication/authentication.service';
@@ -71,7 +70,7 @@ export function getRandomMenus(): Menu[] {
 
 export function getOneRandomProcess(processTemplate?: any): Process {
     processTemplate = processTemplate ? processTemplate : {};
-    const states = new OfMap();
+    const states = new Map();
     const stateCount = getPositiveRandomNumberWithinRange(1, 3);
 
     for (let j = 0; j < stateCount; j++) {
@@ -221,7 +220,7 @@ export function getSeveralRandomLightCards(numberOfCards = 1, cardTemplate?: any
 
 export function getRandomI18nData(): I18n {
     const paramNumber = generateRandomPositiveIntegerWithinRangeWithOneAsMinimum(4);
-    const parameters: OfMap<string> = new OfMap();
+    const parameters: Map<string, string> = new Map();
     for (let i = 0; i < paramNumber; ++i) {
         parameters[`param${i}`] = getRandomAlphanumericValue(4, 13);
     }
@@ -298,8 +297,8 @@ export function shuffleArrayContentByFisherYatesLike<T>(array: Array<T>): Array<
 export function generateBusinessconfigWithVersion(
     businessconfigName?: string,
     versions?: Set<string>
-): Map<Set<string>> {
-    const result = new Map<Set<string>>();
+): Map<string, Set<string>> {
+    const result = new Map<string, Set<string>>();
     const businessconfig = businessconfigName ? businessconfigName : getRandomAlphanumericValue(3, 5);
     function getSomeVersions() {
         return getRandomAlphanumericValue(3, 8);

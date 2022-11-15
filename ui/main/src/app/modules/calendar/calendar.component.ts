@@ -21,10 +21,10 @@ import {NgbModal, NgbModalOptions, NgbModalRef} from '@ng-bootstrap/ng-bootstrap
 import {FilterType} from '@ofModel/feed-filter.model';
 import {HourAndMinutes, TimeSpan} from '@ofModel/card.model';
 import {ProcessesService} from '@ofServices/processes.service';
-import {DisplayContext} from '@ofModel/templateGateway.model';
 import {LightCardsStoreService} from '@ofServices/lightcards/lightcards-store.service';
 import {FilterService} from '@ofServices/lightcards/filter.service';
 import {ConfigService} from '@ofServices/config.service';
+import {Frequency} from 'rrule';
 
 @Component({
     selector: 'of-calendar',
@@ -48,7 +48,7 @@ export class CalendarComponent implements OnInit, OnDestroy, AfterViewInit {
     @ViewChild('calendar') calendarComponent: FullCalendarComponent; // the #calendar in the template
     @ViewChild('cardDetail') cardDetailTemplate: ElementRef; // the #cardDetail in the template
 
-    displayContext = DisplayContext.REALTIME;
+
     private unsubscribe$ = new Subject<void>();
     calendarVisible = true;
     locales = allLocales;
@@ -124,29 +124,25 @@ export class CalendarComponent implements OnInit, OnDestroy, AfterViewInit {
                             const endDate = new Date(timespan.end.valueOf());
 
                             if (timespan.recurrence) {
+
                                 this.calendarEvents = this.calendarEvents.concat({
                                     // add new event data. must create new array
                                     id: card.id,
                                     title: card.titleTranslated,
                                     allDay: false,
-                                    startRecur: startDate,
-                                    endRecur: endDate,
                                     className: [
                                         'opfab-calendar-event',
                                         'opfab-calendar-event-' + card.severity.toLowerCase()
                                     ],
-                                    daysOfWeek: this.getDaysOfWeek(timespan),
-                                    startTime: timespan.recurrence.hoursAndMinutes
-                                        ? CalendarComponent.formatTwoDigits(timespan.recurrence.hoursAndMinutes.hours) +
-                                          ':' +
-                                          CalendarComponent.formatTwoDigits(timespan.recurrence.hoursAndMinutes.minutes)
-                                        : null,
-                                    endTime: timespan.recurrence.durationInMinutes
-                                        ? CalendarComponent.getEndTime(
-                                              timespan.recurrence.hoursAndMinutes,
-                                              timespan.recurrence.durationInMinutes
-                                          )
-                                        : null
+                                    rrule: {
+                                        freq: Frequency.WEEKLY,
+                                        byweekday: this.getDaysOfWeek(timespan),
+                                        bymonth: this.getMonths(timespan),
+                                        dtstart: startDate,
+                                        until: endDate,
+                                        byhour: timespan.recurrence.hoursAndMinutes.hours,
+                                        byminute: timespan.recurrence.hoursAndMinutes.minutes
+                                    }
                                 });
                             } else {
                                 this.calendarEvents = this.calendarEvents.concat({
@@ -176,10 +172,26 @@ export class CalendarComponent implements OnInit, OnDestroy, AfterViewInit {
     {
         let daysOfWeek = [];
         if (timeSpan.recurrence) {
-         if (timeSpan.recurrence.daysOfWeek) daysOfWeek = timeSpan.recurrence.daysOfWeek.map((d) => d % 7);
-         else daysOfWeek = [0,1,2,3,4,5,6];
+            if (timeSpan.recurrence.daysOfWeek) {
+                daysOfWeek = timeSpan.recurrence.daysOfWeek.map((d) => d - 1);
+            } else {
+                daysOfWeek = [0,1,2,3,4,5,6];
+            }
         }
         return daysOfWeek;
+    }
+
+    private getMonths(timeSpan: TimeSpan):Array<number>
+    {
+        let months = [];
+        if (timeSpan.recurrence) {
+            if (timeSpan.recurrence.months) {
+                months = timeSpan.recurrence.months.map((d) => d + 1);
+            } else {
+                months = [1,2,3,4,5,6,7,8,9,10,11,12];
+            }
+        }
+        return months;
     }
 
     selectCard(info) {

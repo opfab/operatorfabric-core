@@ -7,19 +7,21 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {getOpfabGeneralCommands} from "../support/opfabGeneralCommands"
+import {OpfabGeneralCommands} from "../support/opfabGeneralCommands"
+import {ScriptCommands} from "../support/scriptCommands";
 
 describe('Calendar screen tests', function () {
     
-    const opfab = getOpfabGeneralCommands();
+    const opfab = new OpfabGeneralCommands();
+    const script = new ScriptCommands();
     
     const SECONDS = 1000;
     const HOURS = 3600000;
 
     before('Set up configuration', function () {
-        cy.deleteAllSettings();
-        cy.loadTestConf();
-        cy.deleteAllCards();
+        script.deleteAllSettings();
+        script.loadTestConf();
+        script.deleteAllCards();
     });
 
     it('Check calendar screen', function () {
@@ -27,7 +29,7 @@ describe('Calendar screen tests', function () {
         opfab.loginWithClock(currentDate);
 
         // Send card data quality
-        cy.sendCard(
+        script.sendCard(
             'cypress/calendar/chart_customDates.json',
             currentDate.getTime() + 2 * HOURS,
             currentDate.getTime() + 5 * HOURS
@@ -64,8 +66,8 @@ describe('Calendar screen tests', function () {
         cy.get('.fc-event-title').contains('Data quality').should('exist').click({force: true});
 
         // detail card is present, check content and then close the card
-        cy.get('of-detail').should('be.visible');
-        cy.get('#opfab-card-title').should('have.text', 'Data quality');
+        cy.get('of-card-body').should('be.visible');
+        cy.get('#opfab-card-title').should('have.text', 'Data quality'.toUpperCase());
         cy.get('#opfab-div-card-template-processed')
             .find('p')
             .first()

@@ -1,4 +1,4 @@
-<!-- Copyright (c) 2020-2021, RTE (http://www.rte-france.com)              -->
+<!-- Copyright (c) 2020-2022, RTE (http://www.rte-france.com)              -->
 <!-- See AUTHORS.txt                                                       -->
 <!-- This Source Code Form is subject to the terms of the Mozilla Public   -->
 <!-- License, v. 2.0. If a copy of the MPL was not distributed with this   -->
@@ -16,15 +16,21 @@
         <div *ngFor="let processGroup of processGroupsAndLabels; " class="opfab-feedconfiguration-processlist">
             <label class="opfab-checkbox">
                 <h5 class="font-weight-bold">{{processGroup.groupLabel}}</h5>
-                <input type="checkbox" (click)="toggleSelectAllProcesses(processGroup.groupId)" [checked]="isAllProcessesSelectedPerProcessGroup.get(processGroup.groupId)">
+                <input type="checkbox" (click)="toggleSelectAllProcesses(processGroup.groupId)"
+                       [checked]="isAllProcessesSelectedPerProcessGroup.get(processGroup.groupId)" *ngIf="!isAllProcessesCheckboxDisabledPerProcessGroup.get(processGroup.groupId)">
+                <input type="checkbox" disabled
+                       [checked]="isAllProcessesSelectedPerProcessGroup.get(processGroup.groupId)" *ngIf="isAllProcessesCheckboxDisabledPerProcessGroup.get(processGroup.groupId)">
                 <span class="opfab-checkbox-checkmark"></span>
             </label>
             <div class="opfab-feedconfiguration-processgrid">
                 <div  class="opfab-feedconfiguration-process" *ngFor="let processIdAndLabel of processGroup.processes; ">
                     <div *ngIf="processesStatesLabels.get(processIdAndLabel.processId) as processData">
                         <p class="font-weight-bold">
-                            <label style="font-weight: bold" class="opfab-checkbox">{{processData.processLabel}}
-                                <input type="checkbox" (click)="toggleSelectAllStates(processIdAndLabel.processId)" [checked]="isAllStatesSelectedPerProcess.get(processIdAndLabel.processId)">
+                            <label style="font-weight: bold;width: auto" class="opfab-checkbox">{{processData.processLabel}}
+                                <input type="checkbox" *ngIf="!isAllStatesCheckboxDisabledPerProcessId.get(processIdAndLabel.processId)" (click)="toggleSelectAllStates(processIdAndLabel.processId)"
+                                       [checked]="isAllStatesSelectedPerProcess.get(processIdAndLabel.processId)">
+                                <input type="checkbox" *ngIf="isAllStatesCheckboxDisabledPerProcessId.get(processIdAndLabel.processId)" disabled
+                                       [checked]="isAllStatesSelectedPerProcess.get(processIdAndLabel.processId)">
                                 <span class="opfab-checkbox-checkmark"></span>
                             </label>
                         </p>
@@ -47,8 +53,11 @@
         <div class="row opfab-feedconfiguration-processlist opfab-feedconfiguration-processgrid" *ngIf="!! processesWithoutGroup && processesWithoutGroup.length">
             <div class="opfab-feedconfiguration-process" *ngFor="let process of processesWithoutGroup; ">
                 <p class="font-weight-bold">
-                    <label style="font-weight: bold" class="opfab-checkbox">{{process.processLabel}}
-                        <input type="checkbox" (click)="toggleSelectAllStates(process.idProcess)" [checked]="isAllStatesSelectedPerProcess.get(process.idProcess)">
+                    <label style="font-weight: bold;width: auto" class="opfab-checkbox">{{process.processLabel}}
+                        <input type="checkbox" *ngIf="!isAllStatesCheckboxDisabledPerProcessId.get(process.idProcess)" (click)="toggleSelectAllStates(process.idProcess)"
+                               [checked]="isAllStatesSelectedPerProcess.get(process.idProcess)">
+                        <input type="checkbox" *ngIf="isAllStatesCheckboxDisabledPerProcessId.get(process.idProcess)"
+                               [checked]="isAllStatesSelectedPerProcess.get(process.idProcess)" disabled>
                         <span class="opfab-checkbox-checkmark"></span>
                     </label>
                 </p>

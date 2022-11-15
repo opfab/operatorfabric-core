@@ -1,0 +1,13 @@
+{
+	"id":"api_test",
+	"name": "External recipient",
+	"version":"1",
+	"states": {
+		"messageState" : {
+			"name": "Message",
+			"templateName" : "template",
+			"description": "Message received",
+			"styles" : [ "style" ]
+		}
+	  }
+}

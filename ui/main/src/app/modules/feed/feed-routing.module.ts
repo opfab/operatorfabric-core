@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2020, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2022, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -10,8 +10,8 @@
 import {NgModule} from '@angular/core';
 import {FeedComponent} from './feed.component';
 import {RouterModule, Routes} from '@angular/router';
-import {DetailComponent} from '../cards/components/detail/detail.component';
-import {CardDetailsComponent} from '../cards/components/card-details/card-details.component';
+import {CardBodyComponent} from '../card/components/card-body/card-body.component';
+import {CardComponent} from '../card/card.component';
 import {MapComponent} from './components/map/map.component';
 
 const routes: Routes = [
@@ -24,15 +24,15 @@ const routes: Routes = [
                 children: [
                     {
                         path: '',
-                        component: CardDetailsComponent
+                        component: CardComponent
                     },
                     {
                         path: ':cid',
-                        component: CardDetailsComponent,
+                        component: CardComponent,
                         children: [
                             {
                                 path: 'details/:did',
-                                component: DetailComponent
+                                component: CardBodyComponent
                             }
                         ]
                     }

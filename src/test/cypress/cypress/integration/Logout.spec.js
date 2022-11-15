@@ -7,11 +7,11 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {getOpfabGeneralCommands} from "../support/opfabGeneralCommands"
+import {OpfabGeneralCommands} from "../support/opfabGeneralCommands"
 
 describe ('Test log out behaviour',()=>{
 
-    const opfab = getOpfabGeneralCommands();
+    const opfab = new OpfabGeneralCommands();
 
     it('Logout should clear cookie and redirect to feed page with login inputs', ()=>{
 

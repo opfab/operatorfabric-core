@@ -15,9 +15,7 @@ import org.assertj.core.api.Assertions;
 import org.jeasy.random.EasyRandom;
 import org.jeasy.random.EasyRandomParameters;
 import org.jetbrains.annotations.NotNull;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.opfab.cards.model.SeverityEnum;
 import org.opfab.cards.publication.application.UnitTestApplication;
@@ -42,6 +40,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.Import;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
@@ -383,11 +382,14 @@ class CardProcessServiceShould {
         entityRecipients.add("Planner");
 
         List<Integer> daysOfWeek = new ArrayList<>();
+        List<Integer> months = new ArrayList<>();
         daysOfWeek.add(2);
         daysOfWeek.add(3);
+        months.add(2);
+        months.add(3);
         Integer duration = 15;
         HoursAndMinutes hoursAndMinutes = new HoursAndMinutesPublicationData(2,10);
-        RecurrencePublicationData recurrence = new RecurrencePublicationData("timezone",daysOfWeek,hoursAndMinutes, duration);
+        RecurrencePublicationData recurrence = new RecurrencePublicationData("timezone", daysOfWeek, hoursAndMinutes, duration, months);
 
         CardPublicationData newCard = CardPublicationData.builder().publisher("publisher(")
                 .processVersion("0").processInstanceId("PROCESS_1").severity(SeverityEnum.ALARM)
@@ -562,6 +564,12 @@ class CardProcessServiceShould {
         cards.forEach(c -> {
             c.setParentCardId(null);
             c.setInitialParentCardUid(null);
+
+            // process, processVersion, title and summary can't be random anymore because we check if i18n file exists via a mock (see issue #3178)
+            c.setProcess("process1");
+            c.setProcessVersion("0");
+            c.setTitle(I18nPublicationData.builder().key("title").build());
+            c.setSummary(I18nPublicationData.builder().key("summary").build());
         });
         return cards;
     }
@@ -585,6 +593,12 @@ class CardProcessServiceShould {
                     cardPublicationData.setState("messageState");
                     cardPublicationData.setProcessVersion("1");
                     cardPublicationData.setToNotify(true);
+
+                    // process, processVersion, title and summary can't be random anymore because we check if i18n file exists via a mock (see issue #3178)
+                    cardPublicationData.setProcess("process1");
+                    cardPublicationData.setProcessVersion("0");
+                    cardPublicationData.setTitle(I18nPublicationData.builder().key("title").build());
+                    cardPublicationData.setSummary(I18nPublicationData.builder().key("summary").build());
                 }
             }
         }
@@ -1201,4 +1215,68 @@ class CardProcessServiceShould {
         assertThat(cardProcessingService.doesProcessStateExistInBundles("unexistingProcess", "1", "messageState")).isFalse();
         assertThat(cardProcessingService.doesProcessStateExistInBundles("processWithNoState", "1", "messageState")).isFalse();
     }
+
+    @Nested
+    class CardProcessServiceWithCheckPerimeterForCardSendingShould {
+
+        @BeforeEach
+        void setup() {
+            cardProcessingService.checkPerimeterForCardSending = true;
+        }
+
+        @AfterEach
+        void cleanup() {
+            cardProcessingService.checkPerimeterForCardSending = false;
+        }
+        @Test
+        void checkPerimeterForCardSending() {
+
+            User testuser = new User();
+            testuser.setLogin("dummyUser");
+
+            CurrentUserWithPerimeters testCurrentUserWithPerimeters = new CurrentUserWithPerimeters();
+            testCurrentUserWithPerimeters.setUserData(testuser);
+
+            ComputedPerimeter c1 = new ComputedPerimeter();
+            c1.setProcess("process1") ;
+            c1.setState("state1");
+            c1.setRights(RightsEnum.RECEIVE);
+
+
+            ComputedPerimeter c2 = new ComputedPerimeter();
+            c2.setProcess("process1") ;
+            c2.setState("state1");
+            c2.setRights(RightsEnum.RECEIVEANDWRITE);
+
+
+            CardPublicationData card1 = CardPublicationData.builder().publisher("dummyUser").processVersion("0")
+                    .processInstanceId("process1_1").severity(SeverityEnum.INFORMATION)
+                    .process("process1")
+                    .parentCardId(null)
+                    .initialParentCardUid(null)
+                    .state("state1")
+                    .title(I18nPublicationData.builder().key("title").build())
+                    .summary(I18nPublicationData.builder().key("summary").build())
+                    .startDate(Instant.now())
+                    .build();
+
+            List<ComputedPerimeter> list=new ArrayList<>();
+            list.add(c1);
+            testCurrentUserWithPerimeters.setComputedPerimeters(list);
+            Optional<CurrentUserWithPerimeters> user = Optional.of(testCurrentUserWithPerimeters);
+
+            Assertions.assertThatThrownBy(() -> cardProcessingService.processCard(card1, user, token))
+                    .isInstanceOf(AccessDeniedException.class).hasMessage("user not authorized, the card is rejected");
+
+            list=new ArrayList<>();
+            list.add(c2);
+            testCurrentUserWithPerimeters.setComputedPerimeters(list);
+
+            Assertions.assertThat(checkCardCount(0)).isTrue();
+            cardProcessingService.processCard(card1, user, token);
+            Assertions.assertThat(checkCardCount(1)).isTrue();
+        }
+
+    }
+
 }

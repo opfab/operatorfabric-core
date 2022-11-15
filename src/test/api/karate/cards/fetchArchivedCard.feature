@@ -37,7 +37,7 @@ Feature: fetchArchive
   "stateRights" : [
       {
         "state" : "messageState",
-        "right" : "Receive"
+        "right" : "ReceiveAndWrite"
       }
     ]
 }

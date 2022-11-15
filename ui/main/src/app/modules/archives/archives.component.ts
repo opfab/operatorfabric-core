@@ -125,7 +125,7 @@ export class ArchivesComponent implements OnDestroy, OnInit {
             'opfab.archives.isCollapsibleUpdatesActivated',
             String(this.isCollapsibleUpdatesActivated)
         );
-        this.sendQuery(0);
+        this.getResults(0);
     }
 
     resetForm() {
@@ -136,50 +136,56 @@ export class ArchivesComponent implements OnDestroy, OnInit {
     }
 
     sendQuery(page_number): void {
-        this.technicalError = false;
-        this.loadingInProgress = true;
-
         const {value} = this.archiveForm;
         this.filtersTemplate.transformFiltersListToMap(value);
         this.filtersTemplate.filters.set('size', [this.size.toString()]);
+
+        this.getResults(page_number);
+    }
+
+    private getResults(page_number: number): void {
+        this.technicalError = false;
+        this.loadingInProgress = true;
+
         this.filtersTemplate.filters.set('page', [page_number]);
         this.filtersTemplate.filters.set('latestUpdateOnly', [String(this.isCollapsibleUpdatesActivated)]);
+
         const isAdminModeChecked = this.filtersTemplate.filters.get('adminMode')[0];
 
         this.cardService
-            .fetchArchivedCards(this.filtersTemplate.filters)
-            .pipe(takeUntil(this.unsubscribe$))
-            .subscribe({
-                next: (page: Page<LightCard>) => {
-                    this.resultsNumber = page.totalElements;
-                    this.currentPage = page_number + 1; // page on ngb-pagination component starts at 1 , and page on backend starts at 0
-                    this.firstQueryHasBeenDone = true;
-                    this.hasResult = page.content.length > 0;
-                    this.results = page.content;
+        .fetchArchivedCards(this.filtersTemplate.filters)
+        .pipe(takeUntil(this.unsubscribe$))
+        .subscribe({
+            next: (page: Page<LightCard>) => {
+                this.resultsNumber = page.totalElements;
+                this.currentPage = page_number + 1; // page on ngb-pagination component starts at 1 , and page on backend starts at 0
+                this.firstQueryHasBeenDone = true;
+                this.hasResult = page.content.length > 0;
+                this.results = page.content;
 
-                    if (this.isCollapsibleUpdatesActivated && this.hasResult) {
-                        const requestID = new Date().valueOf();
-                        this.lastRequestID = requestID;
-                        this.loadUpdatesByCardId(requestID, isAdminModeChecked);
-                    } else {
-                        this.loadingInProgress = false;
-                        this.updatesByCardId = [];
-                        this.results.forEach((lightCard) => {
-                            this.updatesByCardId.push({
-                                mostRecent: lightCard,
-                                cardHistories: [],
-                                displayHistory: false,
-                                tooManyRows: false
-                            });
-                        });
-                    }
-                },
-                error: () => {
-                    this.firstQueryHasBeenDone = false;
+                if (this.isCollapsibleUpdatesActivated && this.hasResult) {
+                    const requestID = new Date().valueOf();
+                    this.lastRequestID = requestID;
+                    this.loadUpdatesByCardId(requestID, isAdminModeChecked);
+                } else {
                     this.loadingInProgress = false;
-                    this.technicalError = true;
+                    this.updatesByCardId = [];
+                    this.results.forEach((lightCard) => {
+                        this.updatesByCardId.push({
+                            mostRecent: lightCard,
+                            cardHistories: [],
+                            displayHistory: false,
+                            tooManyRows: false
+                        });
+                    });
                 }
-            });
+            },
+            error: () => {
+                this.firstQueryHasBeenDone = false;
+                this.loadingInProgress = false;
+                this.technicalError = true;
+            }
+        });
     }
 
     // we show a spinner on screen if archives loading takes more than 1 second
@@ -270,7 +276,7 @@ export class ArchivesComponent implements OnDestroy, OnInit {
 
     updateResultPage(currentPage): void {
         // page on ngb-pagination component start at 1 , and page on backend start at 0
-        this.sendQuery(currentPage - 1);
+        this.getResults(currentPage - 1);
     }
 
     displayTime(date) {

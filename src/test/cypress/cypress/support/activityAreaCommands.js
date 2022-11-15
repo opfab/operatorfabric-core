@@ -7,12 +7,16 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {externalCommands} from './externalCommands';
+import {OpfabCommands} from './opfabCommands';
 
-export function getActivityAreaCommands() {
-    const activityArea = new externalCommands('ACTIVITY AREA');
+export class ActivityAreaCommands extends OpfabCommands {
 
-    activityArea.addCommand('save', function () {
+    constructor() {
+        super();
+        super.init('ACTIVITY AREA');
+    }
+
+    save = function () {
         cy.intercept('PATCH', '/users/**').as('saved');
         cy.intercept('GET', '/users/CurrentUserWithPerimeters').as('reloadPerimeter');
         cy.get('#opfab-activityarea-btn-confirm').should('exist').click({force: true}); //click confirm settings
@@ -23,12 +27,10 @@ export function getActivityAreaCommands() {
         // pause the cypress code  to let the time to update the perimeter
         // this is to unsure javascript engine  launch the user perimeter processing before the next cypress instruction 
         cy.wait(100); 
-    });
+    }
 
-    activityArea.addCommand('clickOnCheckbox', function (entityName) {
+    clickOnCheckbox = function (entityName) {
         cy.get('.opfab-checkbox').contains(entityName).click();
-    });
-
-   
-    return activityArea;
+    }
 }
+

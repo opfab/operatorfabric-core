@@ -20,7 +20,7 @@ Scenario: Post a big Card
   "stateRights" : [
       {
         "state" : "APOGEESEA",
-        "right" : "Receive"
+        "right" : "ReceiveAndWrite"
       }
     ]
 }

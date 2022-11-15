@@ -20,7 +20,7 @@ import {Guid} from 'guid-typescript';
 import {DomSanitizer, SafeHtml} from '@angular/platform-browser';
 import {EntitiesService} from '@ofServices/entities.service';
 import {ProcessesService} from '@ofServices/processes.service';
-import {HandlebarsService} from '../cards/services/handlebars.service';
+import {HandlebarsService} from '../card/services/handlebars.service';
 import {DetailContext} from '@ofModel/detail-context.model';
 import {map} from 'rxjs/operators';
 import {MessageLevel} from '@ofModel/message.model';
@@ -57,7 +57,7 @@ export class UserCardComponent implements OnInit {
     private severityForm: FormGroup<{
         severity: FormControl<string | null>;
     }>;
-    public severityVisible = true;
+    public severityVisible = false;
 
     // Dates
     @ViewChild('datesForm') datesForm: UserCardDatesFormComponent;
@@ -65,9 +65,9 @@ export class UserCardComponent implements OnInit {
     readonly defaultStartDate = new Date().valueOf() + 60000;
     readonly defaultEndDate = new Date().valueOf() + 60000 * 60 * 24;
     readonly defaultLttdDate = this.defaultEndDate - 60000;
-    private startDateVisible = true;
-    private endDateVisible = true;
-    private lttdVisible = true;
+    private startDateVisible = false;
+    private endDateVisible = false;
+    private lttdVisible = false;
     private currentStartDate = new Date().valueOf() + 60000;
     private currentEndDate = new Date().valueOf() + 60000 * 60 * 24;
     private currentLttd = this.defaultEndDate - 60000;

@@ -27,10 +27,10 @@ import {Router} from '@angular/router';
 import {selectCode} from '@ofSelectors/authentication.selectors';
 import {Message, MessageLevel} from '@ofModel/message.model';
 import {I18n} from '@ofModel/i18n.model';
-import {Map} from '@ofModel/map';
 import {ConfigService} from '@ofServices/config.service';
 import {redirectToCurrentLocation} from '../../app-routing.module';
 import {CardService} from '@ofServices/card.service';
+import {SoundNotificationService} from '@ofServices/sound-notification.service';
 
 /**
  * Management of the authentication of the current user
@@ -43,7 +43,8 @@ export class AuthenticationEffects {
         private authService: AuthenticationService,
         private router: Router,
         private configService: ConfigService,
-        private cardService: CardService
+        private cardService: CardService,
+        private soundNotificationService: SoundNotificationService
     ) {}
 
     /**
@@ -96,6 +97,7 @@ export class AuthenticationEffects {
             ofType(AuthenticationActionTypes.TryToLogOut),
             switchMap(() => {
                 this.resetState();
+                this.soundNotificationService.stopService();
                 return of(new AcceptLogOutAction());
             })
         )
@@ -223,7 +225,7 @@ export class AuthenticationEffects {
             }),
             catchError((err) => {
                 console.error(new Date().toISOString(), err);
-                const parameters = new Map<string>();
+                const parameters = new Map<string,string>();
                 parameters['message'] = err;
                 return of(
                     this.handleRejectedLogin(
@@ -236,7 +238,7 @@ export class AuthenticationEffects {
 
     handleErrorOnTokenGeneration(errorResponse, category: string) {
         let message, key;
-        const params = new Map<string>();
+        const params = new Map<string,string>();
         switch (errorResponse.status) {
             case 401:
                 message = 'Unable to authenticate the user';
@@ -262,8 +264,8 @@ export class AuthenticationEffects {
     }
 
     private resetState() {
-        this.authService.clearAuthenticationInformation();
         this.cardService.closeSubscription();
+        this.authService.clearAuthenticationInformation();
         window.location.href = this.configService.getConfigValue('security.logout-url', 'https://opfab.github.io');
     }
 }

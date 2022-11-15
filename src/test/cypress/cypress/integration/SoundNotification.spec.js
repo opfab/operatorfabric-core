@@ -7,24 +7,26 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {getOpfabGeneralCommands} from '../support/opfabGeneralCommands';
-import {getSoundCommands} from '../support/soundCommands'
-import {getSettingsCommands} from '../support/settingsCommands'
+import {OpfabGeneralCommands} from '../support/opfabGeneralCommands';
+import {SoundCommands} from '../support/soundCommands';
+import {SettingsCommands} from '../support/settingsCommands'
+import {ScriptCommands} from "../support/scriptCommands";
 
 describe('Sound notification test', function () {
     const user = 'operator1_fr';
-    const opfab = getOpfabGeneralCommands();
-    const sound = getSoundCommands();
-    const settings = getSettingsCommands();
+    const opfab = new OpfabGeneralCommands();
+    const sound = new SoundCommands();
+    const settings = new SettingsCommands();
+    const script = new ScriptCommands();
 
     before('Reset UI configuration file ', function () {
-        //cy.loadTestConf(); Avoid to launch it as it is time consuming
-        cy.resetUIConfigurationFiles();
+        //script.loadTestConf(); Avoid to launch it as it is time consuming
+        script.resetUIConfigurationFiles();
     });
 
     beforeEach('Reset settings', function () {
-        cy.deleteAllCards();
-        cy.deleteAllSettings();
+        script.deleteAllCards();
+        script.deleteAllSettings();
     });
 
     describe('Checking sound when receiving notification ', function () {
@@ -157,14 +159,14 @@ describe('Sound notification test', function () {
 
 
     function sendCardWithSeverityAlarm() {
-        cy.sendCard('defaultProcess/contingencies.json');
+        script.sendCard('defaultProcess/contingencies.json');
     }
 
     function sendCardWithSeverityAction() {
-        cy.sendCard('defaultProcess/question.json');
+        script.sendCard('defaultProcess/question.json');
     }
 
     function sendCardWithSeverityInformation() {
-        cy.sendCard('defaultProcess/message.json');
+        script.sendCard('defaultProcess/message.json');
     }
 });

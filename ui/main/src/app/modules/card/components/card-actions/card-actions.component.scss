@@ -1,0 +1,31 @@
+/* Copyright (c) 2022, RTE (http://www.rte-france.com)
+ * See AUTHORS.txt
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ * SPDX-License-Identifier: MPL-2.0
+ * This file is part of the OperatorFabric project.
+ */
+
+ .opfab-right-menu-link {
+    display: grid;
+    grid-template-columns: 30px auto;
+    color: var(--opfab-navbar-color);
+    align-items: center;
+    text-decoration: none;
+    cursor: pointer;
+
+    &:hover,
+    &:focus {
+        color: var(--opfab-navbar-color-hover);
+        text-decoration: none;
+    }
+}
+
+.opfab-icon-edit {
+    mask: url(../../../../../assets/images/icons/edit.svg);
+}
+
+.opfab-icon-trash {
+    mask: url(../../../../../assets/images/icons/trash.svg);
+}

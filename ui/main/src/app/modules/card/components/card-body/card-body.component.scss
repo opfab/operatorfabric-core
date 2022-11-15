@@ -1,0 +1,139 @@
+/* Copyright (c) 2018-2022, RTE (http://www.rte-france.com)
+ * See AUTHORS.txt
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ * SPDX-License-Identifier: MPL-2.0
+ * This file is part of the OperatorFabric project.
+ */
+
+.opfab-line-undertab {
+    border-color: var(--opfab-card-tab-border-color);
+    border-bottom-width: 0.5px;
+    display: inline-block;
+    width: 100%;
+    margin-bottom: 5px;
+}
+
+.opfab-tab {
+    color: var(--opfab-card-tab-selected-text-color);
+    font-size: 20px;
+    font-weight: bold;
+    margin-bottom: 15px;
+}
+
+.opfab-card-response-header {
+    background-color: var(--opfab-card-bgcolor);
+    box-shadow: var(--opfab-card-shadow);
+    margin-bottom: 5px;
+}
+
+.opfab-menu-icon {
+    display: inline-block;
+    height: 18px;
+    width: 18px;
+    margin-right: 5px;
+    background: var(--opfab-navbar-color);
+    mask-size: cover;
+    &:hover,
+    &:focus {
+        background: var(--opfab-navbar-color-hover);
+    }
+}
+
+.opfab-menu-item-right {
+    float: right;
+    display: inline-flex;
+}
+
+.opfab-menu-item-left {
+    float: left;
+}
+
+.opfab-icon-maximize {
+    mask: url(../../../../../assets/images/icons/maximize.svg);
+}
+
+.opfab-icon-reduce {
+    mask: url(../../../../../assets/images/icons/reduce.svg);
+}
+
+.opfab-right-menu-item {
+    color: var(--opfab-navbar-color);
+    margin-left: 20px;
+    margin-right: 20px;
+    letter-spacing: 0.54px;
+    font-size: 16px;
+    line-height: 40px;
+    &:hover,
+    &:focus {
+        color: var(--opfab-navbar-color-hover);
+    }
+}
+
+.opfab-close-card-link {
+    color: var(--opfab-navbar-color);
+    margin-left: 5px;
+    margin-right: 20px;
+    letter-spacing: 0.54px;
+    line-height: 40px;
+    font-size: 30px;
+    cursor: pointer;
+    &:hover,
+    &:focus {
+        color: var(--opfab-navbar-color-hover);
+    }
+}
+
+.opfab-max-and-reduce-icons {
+    margin-top: 12px;
+    margin-right: 0px;
+    color: var(--opfab-navbar-color);
+    cursor: pointer;
+    &:hover,
+    &:focus {
+        color: var(--opfab-navbar-color-hover);
+    }
+}
+
+.opfab-card-detail-fullscreen {
+    position: fixed;
+    z-index: 1; /* Sit on top */
+    left: 0;
+    top: 50px;
+    width: 100%;
+    height: 100%;
+    padding: 20px;
+    background-color: var(--opfab-bgcolor);
+}
+
+.label-help {
+    display: block;
+}
+
+.label-answered::before {
+    content: '';
+    display: inline-block;
+    width: 15px;
+    height: 15px;
+    margin-right: 5px;
+    margin-bottom: -3px;
+    background-color: green;
+}
+
+.label-unanswered::before {
+    content: '';
+    display: inline-block;
+    width: 15px;
+    height: 15px;
+    margin-right: 5px;
+    margin-bottom: -3px;
+    background-color: #ff6600;
+}
+
+.flex-container {
+    display: flex;
+}
+
+
+

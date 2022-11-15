@@ -7,22 +7,26 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {externalCommands} from './externalCommands';
+import {OpfabCommands} from './opfabCommands';
 
-export function getSoundCommands() {
-    const sound = new externalCommands('SOUND');
+export class SoundCommands extends OpfabCommands {
 
-    sound.addCommand('checkNumberOfEmittedSoundIs', function (nb) {
-            cy.get('@playSound').its('callCount').should('eq', nb);
-    });
+    constructor() {
+        super();
+        super.init('SOUND');
+    }
 
-    sound.addCommand('stubPlaySound', function () {
+
+    checkNumberOfEmittedSoundIs = function (nb) {
+        cy.get('@playSound').its('callCount').should('eq', nb);
+    };
+
+    stubPlaySound = function () {
         cy.window()
-        .its('soundNotificationService')
-        .then((soundNotificationService) => {
-            cy.stub(soundNotificationService, 'playSound').as('playSound');
-        });
-    });
+            .its('soundNotificationService')
+            .then((soundNotificationService) => {
+                cy.stub(soundNotificationService, 'playSound').as('playSound');
+            });
+    };
 
-    return sound;
 }

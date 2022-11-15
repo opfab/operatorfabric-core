@@ -7,53 +7,58 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {getUserCardCommands} from "../support/userCardCommands"
-import {getOpfabGeneralCommands} from "../support/opfabGeneralCommands"
-import {getActivityAreaCommands} from "../support/activityAreaCommands"
-
+import {UserCardCommands} from "../support/userCardCommands"
+import {OpfabGeneralCommands} from "../support/opfabGeneralCommands"
+import {ActivityAreaCommands} from "../support/activityAreaCommands"
+import {FeedCommands} from "../support/feedCommands"
+import {ScriptCommands} from "../support/scriptCommands";
+import {CardCommands} from "../support/cardCommands"
 
 describe('Acknowledgment tests', function () {
 
-    const usercard = getUserCardCommands();
-    const opfab = getOpfabGeneralCommands();
-    const activityArea = getActivityAreaCommands();
+    const usercard = new UserCardCommands();
+    const opfab = new OpfabGeneralCommands();
+    const activityArea = new ActivityAreaCommands();
+    const feed = new FeedCommands();
+    const script = new ScriptCommands();
+    const card = new CardCommands();
 
 
     before('Set up configuration', function () {
 
         // This can stay in a `before` block rather than `beforeEach` as long as the test does not change configuration
-        cy.resetUIConfigurationFiles();
-        cy.deleteAllSettings();
-        cy.loadTestConf();
+        script.resetUIConfigurationFiles();
+        script.deleteAllSettings();
+        script.loadTestConf();
 
         // Clean up existing cards
-        cy.deleteAllCards();
+        script.deleteAllCards();
 
         // Send a card with ack config set to Always and cancelAcknowledgmentAllowed set to false
         // ack is possible
         // cancel ack not possible
-        cy.sendCard('cypress/ack/message1.json');
+        script.sendCard('cypress/ack/message1.json');
 
         // Send a card with ack config set to OnlyWhenResponseDisabledForUser and user cannot respond
         // ack is possible
         // cancel ack is possible
-        cy.sendCard('cypress/ack/message2.json');
+        script.sendCard('cypress/ack/message2.json');
 
         // Send a card with ack config set to OnlyWhenResponseDisabledForUser and user can respond
         // ack is not possible
-        cy.sendCard('cypress/ack/message3.json');
+        script.sendCard('cypress/ack/message3.json');
 
         // Send a card with ack config set to Never
         // ack is not possible
-        cy.sendCard('cypress/ack/message4.json');
+        script.sendCard('cypress/ack/message4.json');
 
         // Send a card with ack config set to OnlyWhenResponseDisabledForUser and user can respond and lttd is expired
         // ack is possible when lttd is expired
-        cy.sendCard('cypress/ack/message5.json');
+        script.sendCard('cypress/ack/message5.json');
 
         // Send a card with ack config set to OnlyWhenResponseDisabledForUser and user can respond and lttd is not expired
         // ack is not possible before lttd is expired
-        cy.sendCard('cypress/ack/message6.json');
+        script.sendCard('cypress/ack/message6.json');
     });
 
     it('Check acknowledgment for operator 1', function () {
@@ -89,13 +94,13 @@ describe('Acknowledgment tests', function () {
         cy.get('#opfab-card-details-btn-ack').contains('ACKNOWLEDGE AND CLOSE');
 
         // Click ack button
-        cy.get('#opfab-card-details-btn-ack').click();
+        card.acknowledge();
 
         // Card is not anymore in the feed
         cy.get('#opfab-feed-light-card-cypress-message2').should('not.exist');
 
         // Detail card is not present anymore
-        cy.get('of-detail').should('not.exist');
+        cy.get('of-card-body').should('not.exist');
 
         // Operator1 should see 5 cards in his feed
         cy.get('of-light-card').should('have.length', 5);
@@ -106,24 +111,22 @@ describe('Acknowledgment tests', function () {
 
         cy.get('#opfab-card-details-btn-ack').contains('ACKNOWLEDGE');
         cy.get('#opfab-card-details-btn-ack').should('not.contain','CLOSE');
-        // Click ack button
-        cy.get('#opfab-card-details-btn-ack').click();
-
+        
+        card.acknowledge();
         // Card is not anymore in the feed
         cy.get('#opfab-feed-light-card-cypress-message1').should('not.exist');
 
         // Detail card is still present 
-        cy.get('of-detail').should('exist');
+        cy.get('of-card-body').should('exist');
 
         // Operator1 should see 4 cards in his feed
         cy.get('of-light-card').should('have.length', 4);
 
 
         // Set feed filter to see all cards and check message card is present
-        cy.get('#opfab-feed-filter-btn-filter').click();
-        cy.get('#opfab-feed-filter-ack-all').click();
-        cy.waitDefaultTime(); // let time before closing popup to avoid flaky error on CI/CD
-        cy.get('#opfab-feed-filter-btn-filter').click();
+        feed.filterByAcknowledgement('all');
+
+        cy.waitDefaultTime(); 
 
         // Operator1 should see 6 cards in his feed
         cy.get('of-light-card').should('have.length', 6);
@@ -135,8 +138,7 @@ describe('Acknowledgment tests', function () {
         // Click on card message
         cy.get('#opfab-feed-light-card-cypress-message2').click();
 
-        // Unack the card
-        cy.get('#opfab-card-details-btn-ack').click();
+        card.unacknowledge();
 
         // Check icon is not present
         cy.get('#opfab-feed-light-card-cypress-message2 .fa-check').should('not.exist');
@@ -170,9 +172,7 @@ describe('Acknowledgment tests', function () {
         opfab.loginWithUser('operator1_fr');
 
         // Set feed filter to see all card
-        cy.get('#opfab-feed-filter-btn-filter').click();
-        cy.get('#opfab-feed-filter-ack-all').click();
-        cy.get('#opfab-feed-filter-btn-filter').click();
+        feed.filterByAcknowledgement('all');
 
         // Check that all cards except one are acknowledged
         cy.get('#opfab-feed-light-card-cypress-message1 .fa-check')
@@ -186,9 +186,7 @@ describe('Acknowledgment tests', function () {
         opfab.loginWithUser('operator2_fr');
 
         // Set feed filter to see all card
-        cy.get('#opfab-feed-filter-btn-filter').click();
-        cy.get('#opfab-feed-filter-ack-all').click();
-        cy.get('#opfab-feed-filter-btn-filter').click();
+        feed.filterByAcknowledgement('all');
 
         // Check that all cards are not acknowledged
         cy.get('.fa-check').should('not.exist');
@@ -201,9 +199,7 @@ describe('Acknowledgment tests', function () {
         opfab.loginWithUser('operator1_fr');
 
         // Set feed filter to see all card
-        cy.get('#opfab-feed-filter-btn-filter').click();
-        cy.get('#opfab-feed-filter-ack-all').click();
-        cy.get('#opfab-feed-filter-btn-filter').click();
+        feed.filterByAcknowledgement('all');
 
         cy.get('of-light-card').should('have.length', 6);
 
@@ -214,33 +210,30 @@ describe('Acknowledgment tests', function () {
         // Cancel ack is possible
         cy.get('#opfab-feed-light-card-cypress-message2').click();
         cy.get('#opfab-card-details-btn-ack').should('contain.text', 'CANCEL ACKNOWLEDGMENT');
-
-
     });
 
 
     it('Check entities acknowledgments for a usercard created by operator1_fr', function () {
 
         // Clean up existing cards
-        cy.deleteAllCards();
-        cy.send6TestCards();
+        script.deleteAllCards();
+        script.send6TestCards();
         opfab.loginWithUser('operator1_fr');
 
         cy.get('of-light-card').should('have.length', 6);
 
         // We check a card not published by an entity does not display any entity ack
-        cy.get('of-light-card').find('.card-title').contains("Electricity consumption forecast ").click();
-        cy.get('#opfab-card-title').should("have.text", "Electricity consumption forecast");
+        cy.get('of-light-card').find('.card-title').contains("Electricity consumption forecast".toUpperCase()).click();
+        cy.get('#opfab-card-title').should("have.text", "Electricity consumption forecast".toUpperCase());
         cy.get('#opfab-card-acknowledged-footer').should('not.exist');
 
         // We check a card published by an entity of the user but with no entityRecipients does not display any entity ack
-        cy.get('of-light-card').find('.card-title').contains("Message ").click();
+        cy.get('of-light-card').find('.card-title').contains("Message".toUpperCase()).click();
         cy.get('#opfab-selected-card-summary').should('have.text', "Message received : France-England\'s interconnection is 100% operational / Result of the maintenance is <OK>");
         cy.get('#opfab-card-acknowledged-footer').should('not.exist');
 
         // We create a usercard sent to several entities
-        cy.get('#opfab-navbarContent').find('#opfab-newcard-menu').click();
-        cy.get("of-usercard").should('exist');
+        opfab.navigateToUserCard();
         usercard.selectService('Base Examples')
         usercard.selectProcess('Process example');
         usercard.selectState('Message');
@@ -249,7 +242,7 @@ describe('Acknowledgment tests', function () {
         cy.get('.vscomp-toggle-all-checkbox').click();
         cy.get('#opfab-recipients').click();
 
-        usercard.prepareAndSendCard();
+        usercard.previewThenSendCard();
         cy.waitDefaultTime();
 
         // We display the created card
@@ -257,7 +250,7 @@ describe('Acknowledgment tests', function () {
         cy.get('of-light-card').eq(0).click();
         cy.get('#opfab-selected-card-summary').should('have.text', "Message received :   Test message for entities acks");
         cy.get('#opfab-card-acknowledged-footer').should('exist');
-        cy.get('#opfab-card-acknowledged-footer').find('span').should("have.length", 11); // 10 single entities (no group entities) + 1 for 'Acknowledged :' label
+        cy.get('#opfab-card-acknowledged-footer').find('span').should("have.length", 13); // 12 single entities (no group entities) + 1 for 'Acknowledged :' label
         cy.get('#opfab-card-acknowledged-footer').find('span').eq(1).should("have.text", "\u00a0 Control Center FR East \u00a0")
             .and('have.css', 'color', 'rgb(255, 102, 0)');
 
@@ -288,6 +281,11 @@ describe('Acknowledgment tests', function () {
         cy.get('#opfab-card-acknowledged-footer').find('span').eq(10).should("have.text", "\u00a0 IT SUPERVISION CENTER \u00a0")
             .and('have.css', 'color', 'rgb(255, 102, 0)');
 
+        cy.get('#opfab-card-acknowledged-footer').find('span').eq(11).should("have.text", "\u00a0 North Europe Control Center \u00a0")
+        .and('have.css', 'color', 'rgb(255, 102, 0)');
+
+        cy.get('#opfab-card-acknowledged-footer').find('span').eq(12).should("have.text", "\u00a0 South Europe Control Center \u00a0")
+        .and('have.css', 'color', 'rgb(255, 102, 0)');
     });
 
     it('operator4_fr (member of 4 FR entities) acknowledges the previous card created by operator1_fr ', function () {
@@ -300,7 +298,7 @@ describe('Acknowledgment tests', function () {
         cy.get('of-light-card').eq(0).click();
         cy.get('#opfab-selected-card-summary').should('have.text', "Message received :   Test message for entities acks");
         cy.get('#opfab-card-acknowledged-footer').should('exist');
-        cy.get('#opfab-card-acknowledged-footer').find('span').should("have.length", 11); // 10 single entities (no group entities) + 1 for 'Acknowledged :' label
+        cy.get('#opfab-card-acknowledged-footer').find('span').should("have.length", 13); // 12 single entities (no group entities) + 1 for 'Acknowledged :' label
         cy.get('#opfab-card-acknowledged-footer').find('span').eq(1).should("have.text", "\u00a0 Control Center FR East \u00a0")
             .and('have.css', 'color', 'rgb(255, 102, 0)');
 
@@ -330,22 +328,35 @@ describe('Acknowledgment tests', function () {
 
         cy.get('#opfab-card-acknowledged-footer').find('span').eq(10).should("have.text", "\u00a0 IT SUPERVISION CENTER \u00a0")
             .and('have.css', 'color', 'rgb(255, 102, 0)');
+        
+        cy.get('#opfab-card-acknowledged-footer').find('span').eq(11).should("have.text", "\u00a0 North Europe Control Center \u00a0")
+            .and('have.css', 'color', 'rgb(255, 102, 0)');
+    
+        cy.get('#opfab-card-acknowledged-footer').find('span').eq(12).should("have.text", "\u00a0 South Europe Control Center \u00a0")
+            .and('have.css', 'color', 'rgb(255, 102, 0)');
+            
+        // Footer should contain 'Addredd to' with 4 FR control centers each without ack icon
+        cy.get('#opfab-card-details-address-to').find('span').eq(0).contains('Addressed to :');
+        cy.get('#opfab-card-details-address-to').find('span').eq(1).contains('Control Center FR East');
+        cy.get('#opfab-card-details-address-to').find('span').eq(1).find('.fa-check').should('not.exist')
+        cy.get('#opfab-card-details-address-to').find('span').eq(3).contains('Control Center FR North');
+        cy.get('#opfab-card-details-address-to').find('span').eq(3).find('.fa-check').should('not.exist')
+        cy.get('#opfab-card-details-address-to').find('span').eq(5).contains('Control Center FR South');
+        cy.get('#opfab-card-details-address-to').find('span').eq(5).find('.fa-check').should('not.exist')
+        cy.get('#opfab-card-details-address-to').find('span').eq(7).contains('Control Center FR West');
+        cy.get('#opfab-card-details-address-to').find('span').eq(7).find('.fa-check').should('not.exist');
 
         // Set feed filter to see all card
-        cy.get('#opfab-feed-filter-btn-filter').click();
-        cy.get('#opfab-feed-filter-ack-all').click();
-        cy.get('#opfab-feed-filter-btn-filter').click();
+        feed.filterByAcknowledgement('all');
 
-        // Click ack button
-        cy.get('#opfab-card-details-btn-ack').click();
-
+        card.acknowledge();
         // We click again the card to display it
         cy.get('of-light-card').eq(0).click();
         cy.get('#opfab-selected-card-summary').should('have.text', "Message received :   Test message for entities acks");
         cy.get('#opfab-card-acknowledged-footer').should('exist');
 
         // We check we have ENTITY1_FR, ENTITY2_FR, ENTITY3_FR and ENTITY4_FR now displayed in green, all other entities in orange
-        cy.get('#opfab-card-acknowledged-footer').find('span').should("have.length", 11); // 10 single entities (no group entities) + 1 for 'Acknowledged :' label
+        cy.get('#opfab-card-acknowledged-footer').find('span').should("have.length", 13); // 12 single entities (no group entities) + 1 for 'Acknowledged :' label
         cy.get('#opfab-card-acknowledged-footer').find('span').eq(1).should("have.text", "\u00a0 Control Center FR East \u00a0")
             .and('have.css', 'color', 'rgb(0, 128, 0)');
 
@@ -375,6 +386,24 @@ describe('Acknowledgment tests', function () {
 
         cy.get('#opfab-card-acknowledged-footer').find('span').eq(10).should("have.text", "\u00a0 IT SUPERVISION CENTER \u00a0")
             .and('have.css', 'color', 'rgb(255, 102, 0)');
+
+        cy.get('#opfab-card-acknowledged-footer').find('span').eq(11).should("have.text", "\u00a0 North Europe Control Center \u00a0")
+            .and('have.css', 'color', 'rgb(255, 102, 0)');
+    
+        cy.get('#opfab-card-acknowledged-footer').find('span').eq(12).should("have.text", "\u00a0 South Europe Control Center \u00a0")
+            .and('have.css', 'color', 'rgb(255, 102, 0)');
+
+        // Footer should contain 'Addredd to' with 4 FR control centers each with ack icon
+        cy.get('#opfab-card-details-address-to').find('span').eq(0).contains('Addressed to :');
+        cy.get('#opfab-card-details-address-to').find('span').eq(1).contains('Control Center FR East');
+        cy.get('#opfab-card-details-address-to').find('span').eq(1).find('.fa-check').should('exist')
+        cy.get('#opfab-card-details-address-to').find('span').eq(3).contains('Control Center FR North');
+        cy.get('#opfab-card-details-address-to').find('span').eq(3).find('.fa-check').should('exist')
+        cy.get('#opfab-card-details-address-to').find('span').eq(5).contains('Control Center FR South');
+        cy.get('#opfab-card-details-address-to').find('span').eq(5).find('.fa-check').should('exist')
+        cy.get('#opfab-card-details-address-to').find('span').eq(7).contains('Control Center FR West');
+        cy.get('#opfab-card-details-address-to').find('span').eq(7).find('.fa-check').should('exist');
+
 
         // operator4_fr goes to activity area screen and disconnect from ENTITY1_FR
         opfab.navigateToActivityArea();
@@ -394,6 +423,15 @@ describe('Acknowledgment tests', function () {
         cy.get('of-light-card').eq(5).click();
         cy.get('#opfab-selected-card-summary').should('have.text', "Message received :   Test message for entities acks");
         cy.get('#opfab-card-acknowledged-footer').should('not.exist');
+
+        // Footer should contain 'Addredd to' with 3 FR control centers each with ack icon
+        cy.get('#opfab-card-details-address-to').find('span').eq(0).contains('Addressed to :');
+        cy.get('#opfab-card-details-address-to').find('span').eq(1).contains('Control Center FR East');
+        cy.get('#opfab-card-details-address-to').find('span').eq(1).find('.fa-check').should('exist')
+        cy.get('#opfab-card-details-address-to').find('span').eq(3).contains('Control Center FR South');
+        cy.get('#opfab-card-details-address-to').find('span').eq(3).find('.fa-check').should('exist')
+        cy.get('#opfab-card-details-address-to').find('span').eq(5).contains('Control Center FR West');
+        cy.get('#opfab-card-details-address-to').find('span').eq(5).find('.fa-check').should('exist');
 
         // We reconnect operator4_fr to ENTITY1_FR
         opfab.navigateToActivityArea();
@@ -418,7 +456,7 @@ describe('Acknowledgment tests', function () {
         cy.get('of-light-card').eq(4).click();
         cy.get('#opfab-selected-card-summary').should('have.text', "Message received :   Test message for entities acks");
         cy.get('#opfab-card-acknowledged-footer').should('exist');
-        cy.get('#opfab-card-acknowledged-footer').find('span').should("have.length", 11); // 10 single entities (no group entities) + 1 for 'Acknowledged :' label
+        cy.get('#opfab-card-acknowledged-footer').find('span').should("have.length", 13); // 12 single entities (no group entities) + 1 for 'Acknowledged :' label
         cy.get('#opfab-card-acknowledged-footer').find('span').eq(1).should("have.text", "\u00a0 Control Center FR East \u00a0")
             .and('have.css', 'color', 'rgb(0, 128, 0)');
 
@@ -448,10 +486,16 @@ describe('Acknowledgment tests', function () {
 
         cy.get('#opfab-card-acknowledged-footer').find('span').eq(10).should("have.text", "\u00a0 IT SUPERVISION CENTER \u00a0")
             .and('have.css', 'color', 'rgb(255, 102, 0)');
+        
+        cy.get('#opfab-card-acknowledged-footer').find('span').eq(11).should("have.text", "\u00a0 North Europe Control Center \u00a0")
+            .and('have.css', 'color', 'rgb(255, 102, 0)');
+    
+        cy.get('#opfab-card-acknowledged-footer').find('span').eq(12).should("have.text", "\u00a0 South Europe Control Center \u00a0")
+            .and('have.css', 'color', 'rgb(255, 102, 0)');
     });
 
     it('Check acknowledgements are received also in real-time', function () {
-        cy.sendCard('cypress/entitiesAcks/message1.json');
+        script.sendCard('cypress/entitiesAcks/message1.json');
 
         opfab.loginWithUser('operator4_fr');
 
@@ -470,7 +514,7 @@ describe('Acknowledgment tests', function () {
             const cardUid = $cardUidElement.text(); // We need the uid of the card to ack it
 
             // operator1_fr acknowledges the card, and then we check ENTITY1_FR is displayed green and ENTITY2_FR still orange
-            cy.sendAckForCard("operator1_fr", cardUid, '[\\"ENTITY1_FR\\"]');
+            script.sendAckForCard("operator1_fr", cardUid, '[\\"ENTITY1_FR\\"]');
 
             cy.get('#opfab-card-acknowledged-footer').find('span').should("have.length", 3); // 2 entities + 1 for 'Acknowledged :' label
             cy.get('#opfab-card-acknowledged-footer').find('span').eq(1).should("have.text", "\u00a0 Control Center FR North \u00a0")
@@ -481,7 +525,7 @@ describe('Acknowledgment tests', function () {
 
             // operator2_fr acknowledges the card (for ENTITY2_FR)
             // and then we check ENTITY1_FR is still displayed green and ENTITY2_FR is now green also
-            cy.sendAckForCard("operator2_fr", cardUid, '[\\"ENTITY2_FR\\"]');
+            script.sendAckForCard("operator2_fr", cardUid, '[\\"ENTITY2_FR\\"]');
 
             cy.get('#opfab-card-acknowledged-footer').find('span').should("have.length", 3); // 2 entities + 1 for 'Acknowledged :' label
             cy.get('#opfab-card-acknowledged-footer').find('span').eq(1).should("have.text", "\u00a0 Control Center FR North \u00a0")
@@ -494,27 +538,24 @@ describe('Acknowledgment tests', function () {
 
     it('Check spinner is displayed when ack/unack request is delayed and that spinner disappears once the request arrived ', function () {
 
-        cy.deleteAllCards();
+        script.deleteAllCards();
 
         opfab.loginWithUser('operator1_fr');
-        cy.sendCard('cypress/ack/message2.json');
+        script.sendCard('cypress/ack/message2.json');
 
         // Click on card message
         cy.get('#opfab-feed-light-card-cypress-message2').click();
 
         cy.delayRequestResponse('/cardspub/cards/userAcknowledgement/*');
 
-        // Click ack button
-        cy.get('#opfab-card-details-btn-ack').click();
-
+        card.acknowledge();
         opfab.checkLoadingSpinnerIsDisplayed();
         opfab.checkLoadingSpinnerIsNotDisplayed();
 
         // Set feed filter to see all cards and check message card is present
-        cy.get('#opfab-feed-filter-btn-filter').click();
-        cy.get('#opfab-feed-filter-ack-all').click();
-        cy.waitDefaultTime(); // let time before closing popup to avoid flaky error on CI/CD
-        cy.get('#opfab-feed-filter-btn-filter').click();
+        feed.filterByAcknowledgement('all');
+
+        cy.waitDefaultTime(); 
         
         // Check icon is present
         cy.get('#opfab-feed-light-card-cypress-message2 .fa-check');
@@ -522,8 +563,7 @@ describe('Acknowledgment tests', function () {
         // Click on card message
         cy.get('#opfab-feed-light-card-cypress-message2').click();
 
-        // Unack the card
-        cy.get('#opfab-card-details-btn-ack').click();
+        card.unacknowledge();
 
         opfab.checkLoadingSpinnerIsDisplayed();
         opfab.checkLoadingSpinnerIsNotDisplayed();
@@ -531,9 +571,9 @@ describe('Acknowledgment tests', function () {
 
     it('Check pinned card', function () {
 
-        cy.deleteAllCards();
+        script.deleteAllCards();
         // Send card with automaticPinWhenAcknowledged = true
-        cy.sendCard('defaultProcess/contingencies.json');
+        script.sendCard('defaultProcess/contingencies.json');
 
         opfab.loginWithUser('operator1_fr');
 
@@ -546,31 +586,28 @@ describe('Acknowledgment tests', function () {
         .then((urlId) => {
             cy.waitDefaultTime();
             cy.hash().should('eq', '#/feed/cards/' + urlId);
-            //Acknowledge card
-            cy.get('#opfab-card-details-btn-ack').click();
+            card.acknowledge();
              //The card is pinned
             cy.get('#of-pinned-cards').find('.opfab-pinned-card').should('have.length', 1);
             // Detail card is not present anymore
-            cy.get('of-detail').should('not.exist');
+            cy.get('of-card-body').should('not.exist');
         });
 
         
         // Click on pinned card to open card detail
         cy.get('#of-pinned-cards').find('.opfab-pinned-card').eq(0).click();
         // Detail card is present  
-        cy.get('of-detail').should('exist');
-        // Unack the card 
-        cy.get('#opfab-card-details-btn-ack').click();
+        cy.get('of-card-body').should('exist');
+        card.unacknowledge();
         //There are no pinned cards
         cy.get('#of-pinned-cards').find('.opfab-pinned-card').should('have.length', 0);
 
-        // Ack the card
-        cy.get('#opfab-card-details-btn-ack').click();
+        card.acknowledge();
         //Card is pinned
         cy.get('#of-pinned-cards').find('.opfab-pinned-card').should('have.length', 1);
 
         //Update the card by resending
-        cy.sendCard('defaultProcess/contingencies.json');
+        script.sendCard('defaultProcess/contingencies.json');
 
         //There are no pinned cards
         cy.get('#of-pinned-cards').find('.opfab-pinned-card').should('have.length', 0);
@@ -584,17 +621,16 @@ describe('Acknowledgment tests', function () {
         .then((urlId) => {
             cy.waitDefaultTime();
             cy.hash().should('eq', '#/feed/cards/' + urlId);
-            //Acknowledge card
-            cy.get('#opfab-card-details-btn-ack').click();
+            card.acknowledge();
              //The card is pinned
             cy.get('#of-pinned-cards').find('.opfab-pinned-card').should('have.length', 1);
             // Detail card is not present anymore
-            cy.get('of-detail').should('not.exist');
+            cy.get('of-card-body').should('not.exist');
         });
 
 
          //Delete the card
-         cy.deleteCard('defaultProcess.process6');
+         script.deleteCard('defaultProcess.process6');
 
          //There are no pinned cards
         cy.get('#of-pinned-cards').find('.opfab-pinned-card').should('have.length', 0);
@@ -612,39 +648,39 @@ describe('Acknowledgment tests', function () {
         cy.clock(currentDate);
        
         // Send card with automaticPinWhenAcknowledged = true
-        cy.sendCard('cypress/feed/customEvent.json', currentDate.getTime() - (2 * HOURS ), currentDate.getTime() + 5 * MINUTES);
+        script.sendCard('cypress/feed/customEvent.json', currentDate.getTime() - (2 * HOURS ), currentDate.getTime() + 5 * MINUTES);
 
         cy.waitDefaultTime();
 
         cy.tick(1 * SECONDS);
 
+
         //There are no pinned cards
         cy.get('#of-pinned-cards').find('.opfab-pinned-card').should('have.length', 0);
 
-        cy.get('of-light-card').eq(0).click()
-        .find('[id^=opfab-feed-light-card]')
-        .invoke('attr', 'data-urlId')
-        .then((urlId) => {
-            cy.hash().should('eq', '#/feed/cards/' + urlId);
+        feed.openFirstCard();
+        opfab.simulateTimeForOpfabCodeToExecute();
+        card.acknowledge();
 
-            //Acknowledge card
-            cy.get('#opfab-card-details-btn-ack').click();
+        cy.waitDefaultTime();
 
-            cy.waitDefaultTime();
+        cy.tick(1 * SECONDS);
 
-            cy.tick(1 * SECONDS);
+        //The card is pinned
+        cy.get('#of-pinned-cards').find('.opfab-pinned-card').should('have.length', 1);
+        // Detail card is not present anymore
+        cy.get('of-card-body').should('not.exist');
 
-            //The card is pinned
-            cy.get('#of-pinned-cards').find('.opfab-pinned-card').should('have.length', 1);
-            // Detail card is not present anymore
-            cy.get('of-detail').should('not.exist');
-        });
 
         cy.tick(5 * MINUTES);
         // Check card is still pinned before endDate
         cy.get('#of-pinned-cards').find('.opfab-pinned-card').should('have.length', 1);
 
         cy.tick(1 * MINUTES);
+        cy.waitDefaultTime();
+
+        cy.tick(1 * MINUTES);
+        cy.waitDefaultTime();
 
         //There is no more pinned card after end date is passed
         cy.get('#of-pinned-cards').find('.opfab-pinned-card').should('have.length', 0);
@@ -652,14 +688,14 @@ describe('Acknowledgment tests', function () {
 
     it('Check when many pinned cards', function () {
 
-        cy.deleteAllCards();
+        script.deleteAllCards();
         // Send 6 card with automaticPinWhenAcknowledged = true
-        cy.sendCard('cypress/ack/pinned.json');
-        cy.sendCard('cypress/ack/pinned.json');
-        cy.sendCard('cypress/ack/pinned.json');
-        cy.sendCard('cypress/ack/pinned.json');
-        cy.sendCard('cypress/ack/pinned.json');
-        cy.sendCard('cypress/ack/pinned.json');
+        script.sendCard('cypress/ack/pinned.json');
+        script.sendCard('cypress/ack/pinned.json');
+        script.sendCard('cypress/ack/pinned.json');
+        script.sendCard('cypress/ack/pinned.json');
+        script.sendCard('cypress/ack/pinned.json');
+        script.sendCard('cypress/ack/pinned.json');
 
 
         opfab.loginWithUser('operator1_fr');
@@ -675,7 +711,7 @@ describe('Acknowledgment tests', function () {
         //There are 6 pinned cards
         cy.get('#of-pinned-cards').find('.opfab-pinned-card').should('have.length', 6);
 
-        cy.sendCard('cypress/ack/pinned.json');
+        script.sendCard('cypress/ack/pinned.json');
 
         // Open and ack the new card
         cy.get('of-light-card').eq(0).click()
@@ -684,8 +720,7 @@ describe('Acknowledgment tests', function () {
         .then((urlId) => {
             cy.waitDefaultTime();
             cy.hash().should('eq', '#/feed/cards/' + urlId);
-            //Acknowledge card
-            cy.get('#opfab-card-details-btn-ack').click();
+            card.acknowledge();
             //The are still 6 pinned cards visible plus "..." popover
             cy.get('#of-pinned-cards').find('.opfab-pinned-card').should('have.length', 6);
 
@@ -696,13 +731,144 @@ describe('Acknowledgment tests', function () {
             // Click on pinned card to open card detail
             cy.get('.opfab-hidden-pinned-card').eq(0).click();
             // Detail card is present  
-            cy.get('of-detail').should('exist');
-            // Unack the card 
-            cy.get('#opfab-card-details-btn-ack').click();
+            cy.get('of-card-body').should('exist');
+            card.unacknowledge();
             //There are 6 pinned cards with no popover "..."
             cy.get('#of-pinned-cards').find('.opfab-pinned-card').should('have.length', 6);
             cy.get('#of-pinned-cards-popover').should('not.exist');
 
         });
+    });
+
+    it('Check display of acknowledgments footer for parameter "showAcknowledgmentFooter" set to "OnlyForEmittingEntity"', function () {
+
+        // Clean up existing cards
+        script.deleteAllCards();
+        opfab.loginWithUser('operator1_fr');
+
+        cy.get('of-light-card').should('have.length', 0);
+
+        // We create a usercard for a process/state which has "showAcknowledgmentFooter" set to "OnlyForEmittingEntity"
+        opfab.navigateToUserCard();
+        usercard.selectService('User card examples')
+        usercard.selectProcess('Message or question');
+        usercard.selectState('Message');
+        cy.waitDefaultTime();
+        cy.get('#message').type('Test message for ack footer');
+        usercard.previewThenSendCard();
+        cy.waitDefaultTime();
+
+        // We display the created card
+        // And we check the ack footer is displayed and there are 3 entities in it, in orange color
+        cy.get('of-light-card').eq(0).click();
+        cy.get('#opfab-selected-card-summary').should('contain.text', "Message received");
+        cy.get('#opfab-card-acknowledged-footer').should('exist');
+        cy.get('#opfab-card-acknowledged-footer').find('span').should("have.length", 4); // 3 entities + 1 for 'Acknowledged :' label
+        cy.get('#opfab-card-acknowledged-footer').find('span').eq(1).should("have.text", "\u00a0 Control Center FR East \u00a0")
+            .and('have.css', 'color', 'rgb(255, 102, 0)');
+
+        cy.get('#opfab-card-acknowledged-footer').find('span').eq(2).should("have.text", "\u00a0 Control Center FR North \u00a0")
+            .and('have.css', 'color', 'rgb(255, 102, 0)');
+
+        cy.get('#opfab-card-acknowledged-footer').find('span').eq(3).should("have.text", "\u00a0 Control Center FR South \u00a0")
+            .and('have.css', 'color', 'rgb(255, 102, 0)');
+
+        opfab.logout();
+        opfab.loginWithUser('operator2_fr');
+        cy.get('of-light-card').should('have.length', 1);
+
+        // We display the card
+        // And we check the ack footer is not displayed
+        cy.get('of-light-card').eq(0).click();
+        cy.get('#opfab-selected-card-summary').should('contain.text', "Message received");
+        cy.get('#opfab-card-acknowledged-footer').should('not.exist');
+    });
+
+    it('Check display of acknowledgments footer for parameter "showAcknowledgmentFooter" set to "OnlyForUsersAllowedToEdit"', function () {
+
+        // Clean up existing cards
+        script.deleteAllCards();
+        opfab.loginWithUser('operator1_fr');
+
+        cy.get('of-light-card').should('have.length', 0);
+
+        // We send a usercard for a process/state which has "showAcknowledgmentFooter" set to "OnlyForUsersAllowedToEdit"
+        script.sendCard('cypress/ack/message7.json');
+
+        // We display the received card
+        // And we check the ack footer is displayed and there are 5 entities in it
+        cy.get('of-light-card').eq(0).click();
+        cy.get('#opfab-selected-card-summary').should('contain.text', "Message received");
+        cy.get('#opfab-card-acknowledged-footer').should('exist');
+        cy.get('#opfab-card-acknowledged-footer').find('span').should("have.length", 6); // 5 entities + 1 for 'Acknowledged :' label
+
+        // For this card, ENTITY_FR is part of entitiesAllowedToEdit, so the ack footer should be displayed for operator2_fr
+        opfab.logout();
+        opfab.loginWithUser('operator2_fr');
+        cy.get('of-light-card').should('have.length', 1);
+
+        // We display the card
+        // And we check the ack footer is displayed
+        cy.get('of-light-card').eq(0).click();
+        cy.get('#opfab-selected-card-summary').should('contain.text', "Message received");
+        cy.get('#opfab-card-acknowledged-footer').should('exist');
+        cy.get('#opfab-card-acknowledged-footer').find('span').should("have.length", 6); // 5 entities + 1 for 'Acknowledged :' label
+
+        // We check the ack footer is not displayed for operator1_it (because he's not a member of an entity allowed to edit the card)
+        opfab.logout();
+        opfab.loginWithUser('operator1_it');
+        cy.get('of-light-card').should('have.length', 1);
+
+        // We display the card
+        // And we check the ack footer is not displayed
+        cy.get('of-light-card').eq(0).click();
+        cy.get('#opfab-selected-card-summary').should('contain.text', "Message received");
+        cy.get('#opfab-card-acknowledged-footer').should('not.exist');
+    });
+
+    it('Check display of acknowledgments footer for parameter "showAcknowledgmentFooter" set to "ForAllUsers"', function () {
+
+        // Clean up existing cards
+        script.deleteAllCards();
+        opfab.loginWithUser('operator1_fr');
+
+        cy.get('of-light-card').should('have.length', 0);
+
+        // We create a usercard for a process/state which has "showAcknowledgmentFooter" set to "ForAllUsers"
+        opfab.navigateToUserCard();
+        usercard.selectService('User card examples')
+        usercard.selectProcess('Conference and IT incident');
+        usercard.selectState('Conference Call');
+        usercard.selectRecipient('Control Center FR South');
+        usercard.previewThenSendCard();
+        cy.waitDefaultTime();
+
+        // We display the created card
+        // And we check the ack footer is displayed and there are 2 entities in it, all in orange color
+        cy.get('of-light-card').eq(0).click();
+        cy.get('#opfab-selected-card-summary').should('have.text', "You are invited to a conference");
+        cy.get('#opfab-card-acknowledged-footer').should('exist');
+        cy.get('#opfab-card-acknowledged-footer').find('span').should("have.length", 3); // 2 entities + 1 for 'Acknowledged :' label
+        cy.get('#opfab-card-acknowledged-footer').find('span').eq(1).should("have.text", "\u00a0 Control Center FR South \u00a0")
+            .and('have.css', 'color', 'rgb(255, 102, 0)');
+
+        cy.get('#opfab-card-acknowledged-footer').find('span').eq(2).should("have.text", "\u00a0 IT SUPERVISION CENTER \u00a0")
+            .and('have.css', 'color', 'rgb(255, 102, 0)');
+
+        opfab.logout();
+        opfab.loginWithUser('operator2_fr');
+        cy.get('of-light-card').should('have.length', 1);
+
+        // We display the card
+        // And we check the ack footer is displayed and there are 2 entities in it, all in orange color
+        cy.get('of-light-card').eq(0).click();
+        cy.get('#opfab-selected-card-summary').should('have.text', "You are invited to a conference");
+        cy.get('#opfab-card-acknowledged-footer').should('exist');
+        cy.get('#opfab-card-acknowledged-footer').find('span').should("have.length", 3); // 2 entities + 1 for 'Acknowledged :' label
+        cy.get('#opfab-card-acknowledged-footer').find('span').eq(1).should("have.text", "\u00a0 Control Center FR South \u00a0")
+            .and('have.css', 'color', 'rgb(255, 102, 0)');
+
+        cy.get('#opfab-card-acknowledged-footer').find('span').eq(2).should("have.text", "\u00a0 IT SUPERVISION CENTER \u00a0")
+            .and('have.css', 'color', 'rgb(255, 102, 0)');
     });
 })

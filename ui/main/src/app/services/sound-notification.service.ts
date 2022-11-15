@@ -50,6 +50,8 @@ export class SoundNotificationService implements OnDestroy {
     private ngUnsubscribe$ = new Subject<void>();
     private lastSentCardId: string;
 
+    private isServiceActive = true;
+
     constructor(
         private platformLocation: PlatformLocation,
         private lightCardsFeedFilterService: LightCardsFeedFilterService,
@@ -60,6 +62,11 @@ export class SoundNotificationService implements OnDestroy {
     ) {
         // use to have access from cypress to the current object for stubbing method playSound
         if (window['Cypress']) window['soundNotificationService'] = this;
+    }
+
+    public stopService() {
+        this.isServiceActive = false;
+        this.logger.info("Stopping sound service",LogOption.LOCAL_AND_REMOTE);
     }
 
     public initSoundService() {
@@ -99,7 +106,7 @@ export class SoundNotificationService implements OnDestroy {
         });
         this.configService.getConfigValueAsObservable('settings.replayInterval', SoundNotificationService.DEFAULT_REPLAY_INTERVAL)
             .subscribe((x) => {
-                this.replayInterval = x;
+                this.replayInterval = Math.max(3,x);
             });
 
         for (const severity of Object.values(Severity)) this.initSoundPlayingForSeverity(severity);
@@ -171,6 +178,7 @@ export class SoundNotificationService implements OnDestroy {
     }
 
     private playSound(severity: Severity) {
+        if (!this.isServiceActive) return;
         if (this.configService.getConfigValue('externalDevicesEnabled') && this.playSoundOnExternalDevice) {
             this.logger.debug('External devices enabled. Sending notification for ' + severity + '.',LogOption.LOCAL_AND_REMOTE);
             const notification = new Notification(severity.toString());

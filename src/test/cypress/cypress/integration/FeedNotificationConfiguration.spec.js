@@ -8,21 +8,28 @@
  */
 
 
-import {getOpfabGeneralCommands} from "../support/opfabGeneralCommands" 
+import {OpfabGeneralCommands} from "../support/opfabGeneralCommands"
+import {AgGridCommands} from "../support/agGridCommands";
+import {ScriptCommands} from "../support/scriptCommands";
 
 describe ('Feed notification configuration tests',function () {
 
-    const opfab = getOpfabGeneralCommands();
+    const opfab = new OpfabGeneralCommands();
+    const agGrid = new AgGridCommands();
+    const script = new ScriptCommands();
 
     const totalCards = 6;
     const cardsToTest =[
-        /Message\s*$/,                             // ignore any trailing whitespace
-        /Electricity consumption forecast\s*$/     // ignore any trailing whitespace
-    ];
+        'Message',
+        'Electricity consumption forecast'
+    ]
+
+    const cardsToTestRegex = cardsToTest.map (x =>  new RegExp(x+'\\s*$'));  // Convert to regex, ignore any trailing whitespace
+    const cardsToTestString = cardsToTest.map (x => x.toUpperCase());
 
     before('Set up configuration', function () {
-        cy.loadTestConf();
-        cy.deleteAllSettings();
+        script.loadTestConf();
+        script.deleteAllSettings();
     });
 
     it('Check feed notification configuration screen for operator1_fr', function () {
@@ -73,11 +80,13 @@ describe ('Feed notification configuration tests',function () {
 
         // Processes without group
         // We check the number of processes and their titles
-        cy.get('.opfab-feedconfiguration-processlist').last().find('p').should('have.length', 1);
-        cy.get('.opfab-feedconfiguration-processlist').last().find('p').should('have.text', 'Test process for cypress ');
+        cy.get('.opfab-feedconfiguration-processlist').last().find('p').should('have.length', 2);
+        cy.get('.opfab-feedconfiguration-processlist').last().find('p').eq(0).should('have.text', 'External recipient ');
+        cy.get('.opfab-feedconfiguration-processlist').last().find('p').eq(1).should('have.text', 'Test process for cypress ');
 
         // We check the number of states for each process
-        cy.get('.opfab-feedconfiguration-processlist').last().find('.opfab-feedconfiguration-process').first().find('.row').should('have.length', 12);
+        cy.get('.opfab-feedconfiguration-processlist').last().find('.opfab-feedconfiguration-process').eq(0).find('.row').should('have.length', 1);
+        cy.get('.opfab-feedconfiguration-processlist').last().find('.opfab-feedconfiguration-process').eq(1).find('.row').should('have.length', 12);
 
         // We check the following state is absent because property 'isOnlyAChildState' is set to true
         cy.get('.opfab-feedconfiguration-processlist').last().find('.opfab-feedconfiguration-process').first().find('.row').contains('Dummy response state for tests').should('not.exist');
@@ -142,7 +151,7 @@ describe ('Feed notification configuration tests',function () {
     it('Check feed notification configuration screen for operator1_fr, with a config without process group', function () {
         opfab.loginWithUser('operator1_fr');
 
-        cy.loadEmptyProcessGroups();
+        script.loadEmptyProcessGroups();
         cy.reload();
 
         // We move to feed notification configuration screen
@@ -153,32 +162,34 @@ describe ('Feed notification configuration tests',function () {
         cy.get('.opfab-feedconfiguration-processlist').should('have.length', 1);
 
         // We check we have 6 processes
-        cy.get('.opfab-feedconfiguration-processlist').first().find('p').should('have.length', 6);
+        cy.get('.opfab-feedconfiguration-processlist').first().find('p').should('have.length', 7);
 
         // We check the title of each process
         cy.get('.opfab-feedconfiguration-processlist').first().find('p').eq(0).should('have.text', 'Conference and IT incident  ');
-        cy.get('.opfab-feedconfiguration-processlist').first().find('p').eq(1).should('have.text', 'IGCC ');
-        cy.get('.opfab-feedconfiguration-processlist').first().find('p').eq(2).should('have.text', 'Message or question ');
-        cy.get('.opfab-feedconfiguration-processlist').first().find('p').eq(3).should('have.text', 'Process example  ');
-        cy.get('.opfab-feedconfiguration-processlist').first().find('p').eq(4).should('have.text', 'Task ');
-        cy.get('.opfab-feedconfiguration-processlist').first().find('p').eq(5).should('have.text', 'Test process for cypress ');
+        cy.get('.opfab-feedconfiguration-processlist').first().find('p').eq(1).should('have.text', 'External recipient ');
+        cy.get('.opfab-feedconfiguration-processlist').first().find('p').eq(2).should('have.text', 'IGCC ');
+        cy.get('.opfab-feedconfiguration-processlist').first().find('p').eq(3).should('have.text', 'Message or question ');
+        cy.get('.opfab-feedconfiguration-processlist').first().find('p').eq(4).should('have.text', 'Process example  ');
+        cy.get('.opfab-feedconfiguration-processlist').first().find('p').eq(5).should('have.text', 'Task ');
+        cy.get('.opfab-feedconfiguration-processlist').first().find('p').eq(6).should('have.text', 'Test process for cypress ');
 
         // We check the number of states for each process
         cy.get('.opfab-feedconfiguration-processlist').first().find('.opfab-feedconfiguration-process').eq(0).find('.row').should('have.length', 2);
-        cy.get('.opfab-feedconfiguration-processlist').first().find('.opfab-feedconfiguration-process').eq(1).find('.row').should('have.length', 6);
-        cy.get('.opfab-feedconfiguration-processlist').first().find('.opfab-feedconfiguration-process').eq(2).find('.row').should('have.length', 3);
-        cy.get('.opfab-feedconfiguration-processlist').first().find('.opfab-feedconfiguration-process').eq(3).find('.row').should('have.length', 7);
-        cy.get('.opfab-feedconfiguration-processlist').first().find('.opfab-feedconfiguration-process').eq(4).find('.row').should('have.length', 1);
-        cy.get('.opfab-feedconfiguration-processlist').first().find('.opfab-feedconfiguration-process').eq(5).find('.row').should('have.length', 12);
+        cy.get('.opfab-feedconfiguration-processlist').first().find('.opfab-feedconfiguration-process').eq(1).find('.row').should('have.length', 1);
+        cy.get('.opfab-feedconfiguration-processlist').first().find('.opfab-feedconfiguration-process').eq(2).find('.row').should('have.length', 6);
+        cy.get('.opfab-feedconfiguration-processlist').first().find('.opfab-feedconfiguration-process').eq(3).find('.row').should('have.length', 3);
+        cy.get('.opfab-feedconfiguration-processlist').first().find('.opfab-feedconfiguration-process').eq(4).find('.row').should('have.length', 7);
+        cy.get('.opfab-feedconfiguration-processlist').first().find('.opfab-feedconfiguration-process').eq(5).find('.row').should('have.length', 1);
+        cy.get('.opfab-feedconfiguration-processlist').first().find('.opfab-feedconfiguration-process').eq(6).find('.row').should('have.length', 12);
 
         // We check 'Process example/Network Contingencies' is disabled (because 'filteringNotificationAllowed' is false for the corresponding perimeter)
-        cy.get('.opfab-feedconfiguration-processlist').first().find('.opfab-feedconfiguration-process').eq(3)
+        cy.get('.opfab-feedconfiguration-processlist').first().find('.opfab-feedconfiguration-process').eq(4)
             .contains('⚠️ Network Contingencies ⚠️ ').find('input').should('be.disabled').should('be.checked');
 
         // We check state 'Planned outage date response' from 'Process example' is absent because property 'isOnlyAChildState' is set to true
-        cy.get('.opfab-feedconfiguration-processlist').first().find('.opfab-feedconfiguration-process').eq(4).find('.row').contains('Planned outage date response', {matchCase: false}).should('not.exist');
+        cy.get('.opfab-feedconfiguration-processlist').first().find('.opfab-feedconfiguration-process').eq(5).find('.row').contains('Planned outage date response', {matchCase: false}).should('not.exist');
 
-        cy.loadTestConf();
+        script.loadTestConf();
         cy.reload();
     })
 
@@ -278,7 +289,7 @@ describe ('Feed notification configuration tests',function () {
         // Click on "Perimeters Management"
         cy.get('#opfab-admin-perimeters-tab').click();
         // Edit perimeter defaultProcess
-        cy.clickAgGridCell('ag-grid-angular', 2, 3, 'of-action-cell-renderer');
+        agGrid.clickCell('ag-grid-angular', 2, 3, 'of-action-cell-renderer');
         cy.get('of-edit-perimeter-modal').should('exist');
         cy.get('.modal-title').should('contain.text', 'defaultProcess');
         cy.get('#state2').should('contain.text', 'Data quality');
@@ -313,21 +324,21 @@ describe ('Feed notification configuration tests',function () {
 
     it('Test remove some notifications after cards are sent', function () {
         // Clean up existing cards
-        cy.deleteAllCards();
-        cy.send6TestCards();
+        script.deleteAllCards();
+        script.send6TestCards();
         opfab.loginWithUser('operator1_fr');
 
         // All cards should be present
         cy.get('of-light-card').should('have.length',totalCards);
 
         // All cards should exist in the card feed
-        cardsToTest.forEach((c) =>{
+        cardsToTestString.forEach((c) =>{
             cy.get('#opfab-card-list').contains(c).should('exist');
         })
 
         // Cards should exist on the monitoring page
         cy.get('#opfab-navbarContent #opfab-navbar-menu-monitoring').click();
-        cardsToTest.forEach((c) => {
+        cardsToTestRegex.forEach((c) => {
             cy.get('of-monitoring-table').contains(c).should('exist');
         })
 
@@ -335,7 +346,7 @@ describe ('Feed notification configuration tests',function () {
         cy.get('#opfab-navbar-drop-user-menu').click(); // Click top right dropdown menu
         cy.get('#opfab-navbar-right-menu-feedconfiguration').click(); // Click notification reception
 
-        cardsToTest.forEach((c) => {
+        cardsToTestRegex.forEach((c) => {
             cy.get('.opfab-feedconfiguration-process').contains(c).click({force:true}); // Unselect card
         })
 
@@ -350,45 +361,45 @@ describe ('Feed notification configuration tests',function () {
 
 
         // All cards minus the cards to check should be visible
-        cy.get('of-light-card').should('have.length',totalCards - cardsToTest.length);       
+        cy.get('of-light-card').should('have.length',totalCards - cardsToTestRegex.length);
 
 
         // Cards should not be visible anymore in the card feed
-        cardsToTest.forEach((c) => {
+        cardsToTestRegex.forEach((c) => {
             cy.get('#opfab-card-list').contains(c).should('not.exist');
         })
 
         // Cards should not exist on the monitoring page
         cy.get('#opfab-navbarContent #opfab-navbar-menu-monitoring').click();  // Monitoring results table
-        cardsToTest.forEach((c) => {
+        cardsToTestRegex.forEach((c) => {
             cy.get('of-monitoring-table').contains(c).should('not.exist'); // wait for dialog to go away
         })
 
         // Pagination should display ' Results number  : <5 - cardsToTest> '
-        cy.get('.opfab-pagination').should('contain.text', ' Results number  : '+parseInt(5 - cardsToTest.length));
+        cy.get('.opfab-pagination').should('contain.text', ' Results number  : '+parseInt(5 - cardsToTestRegex.length));
     });
 
     it('When sending new cards, check only monitored cards are shown', function () {
-        cy.deleteAllCards();
-        cy.send6TestCards();
+        script.deleteAllCards();
+        script.send6TestCards();
         opfab.loginWithUser('operator1_fr');
 
         // Check feed
         cy.get('#opfab-navbar-menu-feed').click(); // Open feed
 
         // Cards should not be visible anymore in the card feed
-        cardsToTest.forEach((c) => {
+        cardsToTestRegex.forEach((c) => {
             cy.get('of-light-card').contains(c).should('not.exist');
         })
 
         // All cards minus the cards to check should be visible
-        cy.get('of-light-card').should('have.length', totalCards - cardsToTest.length);
+        cy.get('of-light-card').should('have.length', totalCards - cardsToTestRegex.length);
 
         // Cards should not exist on the monitoring page
         cy.get('#opfab-navbarContent #opfab-navbar-menu-monitoring').click();
 
         // Monitoring results table
-        cardsToTest.forEach((c) => {
+        cardsToTestRegex.forEach((c) => {
             cy.get('of-monitoring-table').contains(c).should('not.exist');
         })
     });
@@ -411,7 +422,7 @@ describe ('Feed notification configuration tests',function () {
         cy.get('#opfab-navbar-menu-feed').click(); // Open feed
 
         // Cards should be visible in the card feed
-        cardsToTest.forEach((c) => {
+        cardsToTestString.forEach((c) => {
             cy.get('#opfab-card-list').contains(c).should('exist');
         })
 
@@ -422,7 +433,7 @@ describe ('Feed notification configuration tests',function () {
         cy.get('#opfab-navbarContent #opfab-navbar-menu-monitoring').click();
 
         // Monitoring results table
-        cardsToTest.forEach((c) => {
+        cardsToTestRegex.forEach((c) => {
             cy.get('of-monitoring-table').contains(c).should('exist');
         })
 
@@ -432,21 +443,21 @@ describe ('Feed notification configuration tests',function () {
 
 
     it ('Send new cards and verify all are visible', function () {
-        cy.deleteAllCards();
-        cy.send6TestCards();
+        script.deleteAllCards();
+        script.send6TestCards();
         opfab.loginWithUser('operator1_fr');
   
         // All cards should be present
         cy.get('of-light-card').should('have.length',totalCards);
 
         // Cards should exist in the card feed
-        cardsToTest.forEach((c) => {
+        cardsToTestString.forEach((c) => {
             cy.get('#opfab-card-list').contains(c).should('exist');
         })
 
         // Cards should exist on the monitoring page
         cy.get('#opfab-navbarContent #opfab-navbar-menu-monitoring').click();
-        cardsToTest.forEach((c) => {
+        cardsToTestRegex.forEach((c) => {
             cy.get('of-monitoring-table').contains(c).should('exist');
         })
     })

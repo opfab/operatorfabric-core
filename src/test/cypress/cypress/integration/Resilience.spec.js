@@ -7,20 +7,22 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {getOpfabGeneralCommands} from '../support/opfabGeneralCommands';
-import {getFeedCommands} from '../support/feedCommands';
+import {OpfabGeneralCommands} from '../support/opfabGeneralCommands';
+import {FeedCommands} from '../support/feedCommands';
+import {ScriptCommands} from "../support/scriptCommands";
 
 describe('Resilience tests', function () {
-    const opfab = getOpfabGeneralCommands();
-    const feed = getFeedCommands();
+    const opfab = new OpfabGeneralCommands();
+    const feed = new FeedCommands();
+    const script = new ScriptCommands();
 
     before('Set up configuration', function () {
-        cy.resetUIConfigurationFiles();
-        cy.loadTestConf();
+        script.resetUIConfigurationFiles();
+        script.loadTestConf();
     });
 
     beforeEach('Delete all cards', function () {
-        cy.deleteAllCards();
+        script.deleteAllCards();
     });
 
     it('Check loading spinner when nginx is stopped and card reception after nginx restart', function () {
@@ -29,7 +31,7 @@ describe('Resilience tests', function () {
         stopNginx();
         checkLoadingSpinnerIsVisible();
         startNginx();
-        cy.send6TestCards();
+        script.send6TestCards();
         feed.checkNumberOfDisplayedCardsIs(6);
         checkLoadingSpinnerIsNotVisible();
     });
@@ -38,7 +40,7 @@ describe('Resilience tests', function () {
         opfab.loginWithUser('operator1_fr');
         feed.checkNumberOfDisplayedCardsIs(0);
         restartRabbitMQ();
-        cy.send6TestCards();
+        script.send6TestCards();
         feed.checkNumberOfDisplayedCardsIs(6);
     });
 
@@ -52,7 +54,7 @@ describe('Resilience tests', function () {
         cy.exec('docker stop cards-consultation', {failOnNonZeroExit: false}).then((result) => {
             // only if docker stop works, so it will not be executed in dev mode
             if (result.code === 0) {
-                cy.send6TestCards();  // Send 6 cards when cards-consultation service is down
+                script.send6TestCards();  // Send 6 cards when cards-consultation service is down
                 checkLoadingSpinnerIsVisible();
                 restartCardsConsultationService();
                 feed.checkNumberOfDisplayedCardsIs(6);
@@ -85,7 +87,7 @@ describe('Resilience tests', function () {
 
     function restartCardsConsultationService() {
         cy.exec('docker start cards-consultation');
-        cy.waitForOpfabToStart();
+        script.waitForOpfabToStart();
         cy.wait(20000); // wait for subscription to be fully restored
 
     }

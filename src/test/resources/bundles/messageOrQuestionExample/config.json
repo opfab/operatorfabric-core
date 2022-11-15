@@ -20,6 +20,7 @@
       "templateName": "message",
       "styles": [],
       "acknowledgmentAllowed": "Always",
+      "showAcknowledgmentFooter" : "OnlyForEmittingEntity",
       "type" : "INPROGRESS",
       "consideredAcknowledgedForUserWhen" : "AllEntitiesOfUserHaveAcknowledged"
     },

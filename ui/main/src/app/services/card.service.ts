@@ -35,6 +35,7 @@ import {I18n} from '@ofModel/i18n.model';
 import {FilterService} from '@ofServices/lightcards/filter.service';
 import {LogOption, OpfabLoggerService} from './logs/opfab-logger.service';
 import packageInfo from '../../../package.json';
+import {SoundNotificationService} from './sound-notification.service';
 
 @Injectable({
     providedIn: 'root'
@@ -62,6 +63,8 @@ export class CardService {
     private receivedAcksSubject = new Subject<{cardUid: string; entitiesAcks: string[]}>();
     private receivedDisconnectedSubject = new Subject<boolean>();
 
+    private subscriptionClosed = false;
+
     constructor(
         private httpClient: HttpClient,
         private guidService: GuidService,
@@ -69,6 +72,7 @@ export class CardService {
         private authService: AuthenticationService,
         private lightCardsStoreService: LightCardsStoreService,
         private filterService: FilterService,
+        private soundNotificationService: SoundNotificationService,
         private logger: OpfabLoggerService
     ) {
         const clientId = this.guidService.getCurrentGuidString();
@@ -170,11 +174,13 @@ export class CardService {
     }
 
     public closeSubscription() {
-        this.logger.info('Closing subscription', LogOption.LOCAL_AND_REMOTE);
-
-        this.deleteCardSubscription().subscribe();
-        this.unsubscribe$.next();
-        this.unsubscribe$.complete();
+        if (!this.subscriptionClosed) {
+            this.logger.info('Closing subscription', LogOption.LOCAL_AND_REMOTE);
+            this.deleteCardSubscription().subscribe();
+            this.unsubscribe$.next();
+            this.unsubscribe$.complete();
+            this.subscriptionClosed = true;
+        }
     }
 
     private deleteCardSubscription(): Observable<HttpResponse<void>> {
@@ -233,6 +239,7 @@ export class CardService {
                             this.logger.info(
                                 'CardService - Disconnecting user because a new connection is being opened for this account'
                             );
+                            this.soundNotificationService.stopService();
                             this.closeSubscription();
                             this.receivedDisconnectedSubject.next(true);
                             break;

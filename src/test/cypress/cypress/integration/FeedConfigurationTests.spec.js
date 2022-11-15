@@ -7,20 +7,22 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {getOpfabGeneralCommands} from '../support/opfabGeneralCommands'
+import {OpfabGeneralCommands} from '../support/opfabGeneralCommands'
+import {ScriptCommands} from "../support/scriptCommands";
 
 describe ('Feed configuration tests',function () {
     
-    const opfab = getOpfabGeneralCommands();
+    const opfab = new OpfabGeneralCommands();
+    const script = new ScriptCommands();
 
     before('Set up configuration and cards', function () {
-        cy.loadTestConf();
-        cy.deleteAllCards();
-        cy.send6TestCards(); // The feed needs to have cards so the "Acknowledge all cards" feature can be shown
+        script.loadTestConf();
+        script.deleteAllCards();
+        script.send6TestCards(); // The feed needs to have cards so the "Acknowledge all cards" feature can be shown
     });
 
     beforeEach('Reset UI configuration file ', function () {
-        cy.resetUIConfigurationFiles();
+        script.resetUIConfigurationFiles();
     })
 
 
@@ -29,11 +31,11 @@ describe ('Feed configuration tests',function () {
         // Default is "false" (i.e. visible) except for hideAckAllCardsFeature
 
         // Removing corresponding properties from the web-ui file
-        cy.removePropertyInConf('feed.card.hideTimeFilter','web-ui');
-        cy.removePropertyInConf('feed.card.hideResponseFilter','web-ui');
-        cy.removePropertyInConf('feed.defaultAcknowledgmentFilter','web-ui');
-        cy.removePropertyInConf('feed.defaultSorting','web-ui');
-        cy.removePropertyInConf('feed.card.hideAckAllCardsFeature','web-ui');
+        script.removePropertyInConf('feed.card.hideTimeFilter','web-ui');
+        script.removePropertyInConf('feed.card.hideResponseFilter','web-ui');
+        script.removePropertyInConf('feed.defaultAcknowledgmentFilter','web-ui');
+        script.removePropertyInConf('feed.defaultSorting','web-ui');
+        script.removePropertyInConf('feed.card.hideAckAllCardsFeature','web-ui');
 
         opfab.loginWithUser('operator1_fr');
 
@@ -60,9 +62,9 @@ describe ('Feed configuration tests',function () {
     it('Buttons and filters visibility - Set property to true', function () {
 
         // Setting properties to true in file
-        cy.setPropertyInConf('feed.card.hideTimeFilter','web-ui',true);
-        cy.setPropertyInConf('feed.card.hideResponseFilter','web-ui',true);
-        cy.setPropertyInConf('feed.card.hideAckAllCardsFeature','web-ui',true);
+        script.setPropertyInConf('feed.card.hideTimeFilter','web-ui',true);
+        script.setPropertyInConf('feed.card.hideResponseFilter','web-ui',true);
+        script.setPropertyInConf('feed.card.hideAckAllCardsFeature','web-ui',true);
 
         opfab.loginWithUser('operator1_fr');
 
@@ -84,9 +86,9 @@ describe ('Feed configuration tests',function () {
     it('Buttons and filters visibility - Set property to false', function () {
 
         // Setting properties to true in file
-        cy.setPropertyInConf('feed.card.hideTimeFilter','web-ui',false);
-        cy.setPropertyInConf('feed.card.hideResponseFilter','web-ui',false);
-        cy.setPropertyInConf('feed.card.hideAckAllCardsFeature','web-ui',false);
+        script.setPropertyInConf('feed.card.hideTimeFilter','web-ui',false);
+        script.setPropertyInConf('feed.card.hideResponseFilter','web-ui',false);
+        script.setPropertyInConf('feed.card.hideAckAllCardsFeature','web-ui',false);
 
         opfab.loginWithUser('operator1_fr');
 
@@ -109,8 +111,8 @@ describe ('Feed configuration tests',function () {
     it('Sorting criteria and acknowledgment filter options - Configure initial value', function () {
 
         //Set corresponding properties from the web-ui file
-        cy.setPropertyInConf('feed.defaultAcknowledgmentFilter','web-ui','\\"ack\\"');
-        cy.setPropertyInConf('feed.defaultSorting','web-ui','\\"date\\"');
+        script.setPropertyInConf('feed.defaultAcknowledgmentFilter','web-ui','\\"ack\\"');
+        script.setPropertyInConf('feed.defaultSorting','web-ui','\\"date\\"');
 
         opfab.loginWithUser('operator1_fr');
 
@@ -131,8 +133,8 @@ describe ('Feed configuration tests',function () {
     it('Sorting criteria and acknowledgment filter options - Check default behaviour', function () {
 
         // Removing corresponding properties from the web-ui file
-        cy.removePropertyInConf('feed.defaultAcknowledgmentFilter','web-ui');
-        cy.removePropertyInConf('feed.defaultSorting','web-ui');
+        script.removePropertyInConf('feed.defaultAcknowledgmentFilter','web-ui');
+        script.removePropertyInConf('feed.defaultSorting','web-ui');
 
         opfab.loginWithUser('operator1_fr');
 

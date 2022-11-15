@@ -148,35 +148,6 @@ You can also pass a milliseconds value as a string.
 {{dateFormat card.data.birthdayAsString format="MMMM Do YYYY, h:mm:ss a"}}
 ....
 
-[[i18n]]
-=== i18n
-
-outputs a i18n result from a key and some parameters. There are two ways of
-configuration :
-
-* Pass an object as sole argument. The object must contain a key field (string)
-and an optional parameter field (map of parameterKey => value)
-+
-....
-{{i18n card.data.i18nTitle}}
-....
-* Pass a string key as sole argument and use hash parameters
-(https://handlebarsjs.com/[see Handlebars doc Literals section]) for i18n string
-parameters.
-
-....
-<!--
-emergency.title=Emergency situation happened on {{date}}. Cause : {{cause}}.
--->
-{{i18n "emergency.title" date="2018-06-14" cause="Broken Coffee Machine"}}
-....
-
-outputs
-
-....
-Emergency situation happened on 2018-06-14. Cause : Broken Cofee Machine
-....
-
 
 [[json]]
 === json
@@ -453,17 +424,6 @@ outputs
   <li>example</li>
   <li>string</li>
 </ul>
-....
-
-[[svg]]
-=== svg
-
-outputs a svg tag with lazy loading, and missing image replacement message. The
-image url is the concatenation of an arbitrary number of helper arguments
-
-....
-{{{svg baseUri scheduledOpId "/" substation "/before/"
-computationPhaseOrdinal}}}
 ....
 
 
@@ -799,3 +759,31 @@ It can be used by a template to launch some processing when loading is complete
 
 Once the card is loaded, there may be some processing that is time consuming. 
 In this case, it is possible to show a spinner using the methods _templateGateway.displayLoadingSpinner()_ and _templateGateway.hideLoadingSpinner()_ in the card template .
+
+=== Method onStyleChange()
+
+OpFab calls this method when switching day/night mode.
+
+It can be used by a template to refresh styles and reload embedded charts.
+
+=== Escape HTML
+
+To avoid script injection, OperatorFabric provides an utility function 'opfab.utils.escapeHtml()' to sanitize input content by escaping HTML specific characters. For example: 
+
+....
+<input id="input-message" type="text" name="message">
+<button onClick="showMessage()">
+
+<span id="safe-message"></span>
+
+
+<script>
+  showMessage : function() {
+    let msg = document.getElementById("input-message");
+    document.getElementById("safe-message").innerHTML = opfab.utils.escapeHtml(msg.value);
+  }
+
+</script>
+
+
+....

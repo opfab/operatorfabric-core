@@ -7,18 +7,19 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {getOpfabGeneralCommands} from "../support/opfabGeneralCommands"
-import {getActivityAreaCommands} from "../support/activityAreaCommands"
-
+import {OpfabGeneralCommands} from "../support/opfabGeneralCommands"
+import {ActivityAreaCommands} from "../support/activityAreaCommands"
+import {ScriptCommands} from "../support/scriptCommands";
 
 describe ('RealTimeUsersPage',()=>{
 
-    const opfab = getOpfabGeneralCommands();
-    const activityArea = getActivityAreaCommands();
+    const opfab = new OpfabGeneralCommands();
+    const activityArea = new ActivityAreaCommands();
+    const script = new ScriptCommands();
 
     before('Set up configuration', function () {
-        cy.loadRealTimeScreensConf();
-        cy.deleteAllSettings();
+        script.loadRealTimeScreensConf();
+        script.deleteAllSettings();
     });
 
     it('Connection of admin and check of Real time users screen : no one should be connected', ()=> {

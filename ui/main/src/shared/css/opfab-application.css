@@ -231,6 +231,18 @@ input:-webkit-autofill {
     -ms-transform: rotate(45deg);
     transform: rotate(45deg);
 }
+/* set disabled checkbox checkmark in grey */
+.opfab-checkbox input:disabled~.opfab-checkbox-checkmark:after {
+    left: 8px;
+    top: -6px;
+    width: 10px;
+    height: 20px;
+    border: solid gray;
+    border-width: 0 4px 4px 0;
+    -webkit-transform: rotate(45deg);
+    -ms-transform: rotate(45deg);
+    transform: rotate(45deg);
+}
 
 /* END CHECKBOX */
 

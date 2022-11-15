@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2021, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2022, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -145,13 +145,18 @@ const templateGateway = {
 
         // The template may call this method to display a spinner when the card is loaded but is in a time consuming process
         this.displayLoadingSpinner = function() {
-            // This function is overridden in DetailComponent and in CardDetailComponent.
+            // This function is overridden in CardBodyComponent and in CardDetailComponent.
         };
 
         // The template may call this method to hide the spinner displayed after displayLoadingSpinner(), once the computations
         // of the template are done.
         this.hideLoadingSpinner = function() {
-            // This function is overridden in DetailComponent and in CardDetailComponent.
+            // This function is overridden in CardBodyComponent and in CardDetailComponent.
+        };
+
+        // OpFab calls this function when global style has changed
+        this.onStyleChange = function (expired) {
+            // This function should be overridden in the template.
         };
     }
 };

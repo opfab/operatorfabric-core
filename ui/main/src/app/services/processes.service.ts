@@ -13,7 +13,12 @@ import {environment} from '@env/environment';
 import {Observable, of} from 'rxjs';
 import {TranslateService} from '@ngx-translate/core';
 import {catchError, map, tap} from 'rxjs/operators';
-import {ConsideredAcknowledgedForUserWhenEnum, Process, TypeOfStateEnum} from '@ofModel/processes.model';
+import {
+    ConsideredAcknowledgedForUserWhenEnum,
+    Process,
+    ShowAcknowledgmentFooterEnum,
+    TypeOfStateEnum
+} from '@ofModel/processes.model';
 import {MonitoringConfig} from '@ofModel/monitoringConfig.model';
 import {Card} from '@ofModel/card.model';
 import {UserService} from '@ofServices/user.service';
@@ -252,6 +257,15 @@ export class ProcessesService {
         };
     }
 
+    public findProcessGroupIdForProcessId(processId: string): string {
+        const data = this.findProcessGroupForProcess(processId);
+
+        if (!! data) {
+            return data.id;
+        }
+        return null;
+    }
+
     public findProcessGroupForProcess(processId: string) {
         for (let [groupId, group] of this.processGroups) {
             if (group.processes.find((process) => process === processId))
@@ -343,5 +357,16 @@ export class ProcessesService {
                 consideredAcknowledgedForUserWhen = state.consideredAcknowledgedForUserWhen;
         });
         return consideredAcknowledgedForUserWhen;
+    }
+
+    public getShowAcknowledgmentFooterForACard(card: Card): ShowAcknowledgmentFooterEnum {
+        let showAcknowledgmentFooter = ShowAcknowledgmentFooterEnum.ONLY_FOR_EMITTING_ENTITY;
+
+        this.queryProcess(card.process, card.processVersion).subscribe((process) => {
+            const state = process.extractState(card);
+            if (!!state.showAcknowledgmentFooter)
+                showAcknowledgmentFooter = state.showAcknowledgmentFooter;
+        });
+        return showAcknowledgmentFooter;
     }
 }

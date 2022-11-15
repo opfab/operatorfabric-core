@@ -11,11 +11,11 @@ import {NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {LoggingComponent} from './logging.component';
-import {CardsModule} from '../cards/cards.module';
+import {CardModule} from '../card/card.module';
 import {TranslateModule} from '@ngx-translate/core';
 import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
 import {DatetimeFilterModule} from '../share/datetime-filter/datetime-filter.module';
-import {CardDetailModule} from 'app/modules/share/card-detail/card-detail.module';
+import {SimplifiedCardViewModule} from 'app/modules/share/simplified-card-view/simplified-card-view.module';
 import {LoggingEntryPointComponent} from './logging-entry-point.component';
 import {ArchivesLoggingFiltersModule} from '../share/archives-logging-filters/archives-logging-filters.module';
 import { SpinnerModule } from '../share/spinner/spinner.module';
@@ -25,11 +25,11 @@ import { SpinnerModule } from '../share/spinner/spinner.module';
         CommonModule,
         FormsModule,
         ReactiveFormsModule,
-        CardsModule,
+        CardModule,
         TranslateModule,
         NgbModule,
         DatetimeFilterModule,
-        CardDetailModule,
+        SimplifiedCardViewModule,
         ArchivesLoggingFiltersModule,
         SpinnerModule
     ],

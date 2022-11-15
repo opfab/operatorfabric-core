@@ -7,30 +7,125 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {externalCommands} from './externalCommands';
 
-export function getFeedCommands() {
-    const feed = new externalCommands('FEED');
+import {OpfabCommands} from './opfabCommands';
 
-    feed.addCommand('checkNumberOfDisplayedCardsIs', function (nb) {
+export class FeedCommands extends OpfabCommands {
+
+    constructor() {
+        super();
+        super.init('FEED');
+    }
+
+
+    checkNumberOfDisplayedCardsIs= function (nb) {
         cy.get('of-light-card').should('have.length', nb);
-    });
+    }
 
-    feed.addCommand('openFirstCard', function () {
+    openFirstCard= function () {
         cy.get('of-light-card').eq(0).click();
         cy.get('#opfab-div-card-template-processed');
-    });
+    }
 
-    feed.addCommand('deleteCurrentCard', function () {
+    checkSelectedCardHasTitle= function (title) {
+        cy.get('.light-card-detail-selected .card-title').should('have.text',title.toUpperCase());
+    }
+
+    checkSelectedCardHasSummary= function (summary) {
+        cy.get('#opfab-selected-card-summary').should('have.text',summary);
+    }
+
+    checkLigthCardAtIndexHasTitle= function (index, title) {
+        cy.get('.card-title').eq(index).should('have.text',title.toUpperCase())
+    }
+
+    deleteCurrentCard= function () {
         cy.get('#opfab-card-delete').click();
         cy.get('#opfab-card-details-delete-btn-confirm').click();
-    });
+    }
 
-    feed.addCommand('editCurrentCard', function () {
+    editCurrentCard= function () {
         cy.get('#opfab-card-edit').click();
         cy.get("of-usercard").should('exist');
-    });
+    }
 
-   
-    return feed;
+    sortByUnread= function () {
+        cy.get('#opfab-feed-filter-btn-sort').click();
+        cy.get('#opfab-sort-form').should('exist');
+        cy.get('#opfab-feed-filter-unread').check();
+        cy.get('#opfab-feed-filter-btn-sort').click();
+    }
+
+    sortByReceptionDate= function () {
+        cy.get('#opfab-feed-filter-btn-sort').click();
+        cy.get('#opfab-sort-form').should('exist');
+        cy.get('#opfab-feed-filter-publication-date').check();
+        cy.get('#opfab-feed-filter-btn-sort').click();
+    }
+
+    sortBySeverity= function () {
+        cy.get('#opfab-feed-filter-btn-sort').click();
+        cy.get('#opfab-sort-form').should('exist');
+        cy.get('#opfab-feed-filter-severity').check();
+        cy.get('#opfab-feed-filter-btn-sort').click();
+    }
+
+    sortByStartDate= function () {
+        cy.get('#opfab-feed-filter-btn-sort').click();
+        cy.get('#opfab-sort-form').should('exist');
+        cy.get('#opfab-feed-filter-start-date').check();
+        cy.get('#opfab-feed-filter-btn-sort').click();
+    }
+
+
+    sortByEndDate= function () {
+        cy.get('#opfab-feed-filter-btn-sort').click();
+        cy.get('#opfab-sort-form').should('exist');
+        cy.get('#opfab-feed-filter-end-date').check();
+        cy.get('#opfab-feed-filter-btn-sort').click();
+    }
+
+    toggleFilterByPriority = function (priorities) {
+        cy.get('#opfab-feed-filter-btn-filter').click();
+        cy.get('#opfab-type-filter-form').should('exist');
+        priorities.forEach(priority => {
+            cy.get('#opfab-feed-filter-severity-' + priority).click({force: true});
+        });
+
+        cy.get('#opfab-feed-filter-btn-filter').click();
+    }
+
+    toggleFilterByResponse = function () {
+        cy.get('#opfab-feed-filter-btn-filter').click();
+        cy.get('#opfab-response-filter-form').should('exist');
+        cy.get('#opfab-feed-filter-response').click({force: true});
+        cy.get('#opfab-feed-filter-btn-filter').click();
+    }
+
+    filterByAcknowledgement = function (acknowledgementOption) {
+        cy.get('#opfab-feed-filter-btn-filter').click();
+        cy.get('#opfab-ack-filter-form').should('exist');
+        cy.get('#opfab-feed-filter-ack-' + acknowledgementOption).check();
+        cy.get('#opfab-feed-filter-btn-filter').click();
+    }
+
+    toggleApplyFilterToTimeline = function () {
+        cy.get('#opfab-feed-filter-btn-filter').click();
+        cy.get('#opfab-timeline-filter-form').should('exist');
+        cy.get('#opfab-feed-filter-timeline').click({force: true});
+        cy.get('#opfab-feed-filter-btn-filter').click();
+    }
+
+    checkFilterIsActive= function() {
+        cy.get('#opfab-feed-filter-btn-filter').should('have.class', 'opfab-icon-filter-active');
+    }
+
+    checkFilterIsNotActive= function() {
+        cy.get('#opfab-feed-filter-btn-filter').should('have.class', 'opfab-icon-filter');
+    }
+
+    resetAllFilters() {
+        cy.get('#opfab-feed-filter-btn-filter').click();
+        cy.get('#opfab-feed-filter-reset').click();
+    }
 }

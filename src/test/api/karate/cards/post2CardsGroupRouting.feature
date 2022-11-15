@@ -38,7 +38,7 @@ Scenario: Post Card only for group Dispatcher
   "stateRights" : [
       {
         "state" : "messageState",
-        "right" : "Receive"
+        "right" : "ReceiveAndWrite"
       }
     ]
 }

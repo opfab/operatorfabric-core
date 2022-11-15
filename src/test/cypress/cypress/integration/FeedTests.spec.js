@@ -7,13 +7,17 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {getOpfabGeneralCommands} from '../support/opfabGeneralCommands'
-import {getFeedCommands} from '../support/feedCommands'
+import {OpfabGeneralCommands} from '../support/opfabGeneralCommands'
+import {FeedCommands} from '../support/feedCommands'
+import {CardCommands} from '../support/cardCommands'
+import {ScriptCommands} from "../support/scriptCommands";
 
 describe('FeedScreen tests', function () {
 
-    const opfab = getOpfabGeneralCommands();
-    const feed = getFeedCommands();
+    const opfab = new OpfabGeneralCommands();
+    const feed = new FeedCommands();
+    const card = new CardCommands();
+    const script = new ScriptCommands();
 
     function tryToLoadNonExistingCard() {
         cy.visit('#/feed/cards/thisCardDoesNotExist');
@@ -21,17 +25,18 @@ describe('FeedScreen tests', function () {
     }
 
     before('Set up configuration', function () {
-        cy.resetUIConfigurationFiles();
-        cy.loadTestConf();
+        script.resetUIConfigurationFiles();
+        script.loadTestConf();
     });
 
     beforeEach('Delete all cards', function () {
-        cy.deleteAllCards();
+        script.deleteAllCards();
     });
+
 
     it('Check card reception and read behaviour', function () {
         opfab.loginWithUser('operator1_fr');
-        cy.send6TestCards();
+        script.send6TestCards();
         // Set feed sort to "Date" so the cards don't move down the feed once they're read
         cy.get('#opfab-feed-filter-btn-sort').click();
         cy.get('#opfab-sort-form').find('input[value=date]').parent().click();
@@ -40,7 +45,7 @@ describe('FeedScreen tests', function () {
         feed.checkNumberOfDisplayedCardsIs(6);
 
         // No card detail is displayed
-        cy.get('of-card-details').should('not.exist');
+        cy.get('of-card').should('not.exist');
 
         // Title and subtitle should be unread (bold) for all 6 cards
         cy.get('of-light-card').find('.card-title, .card-title')
@@ -68,7 +73,7 @@ describe('FeedScreen tests', function () {
             .as('firstCardUrlId')
             .then((urlId) => {
                 cy.hash().should('eq', '#/feed/cards/' + urlId);
-                cy.get('of-card-details').find('of-detail');
+                cy.get('of-card').find('of-card-body');
             });
         cy.get('#opfab-feed-card-not-found').should('not.exist');
 
@@ -86,7 +91,7 @@ describe('FeedScreen tests', function () {
                 .invoke('attr', 'data-urlId')
                 .then((urlId) => {
                     cy.hash().should('eq', '#/feed/cards/' + urlId);
-                    cy.get('of-card-details').find('of-detail');
+                    cy.get('of-card').find('of-card-body');
                 });
         });
         cy.get('#opfab-feed-card-not-found').should('not.exist');
@@ -108,17 +113,283 @@ describe('FeedScreen tests', function () {
 
     it('Check card delete ', function () {
         opfab.loginWithUser('operator1_fr');
-        cy.send6TestCards();
+        script.send6TestCards();
         feed.checkNumberOfDisplayedCardsIs(6);
-        cy.get('of-card-details').should('not.exist');
-        cy.delete6TestCards();
+        cy.get('of-card').should('not.exist');
+        script.delete6TestCards();
         feed.checkNumberOfDisplayedCardsIs(0);
-        cy.get('of-card-details').should('not.exist');
+        cy.get('of-card').should('not.exist');
     });
 
     it('Check card visibility by publish date when business period is after selected time range', function () {
-        cy.sendCard('cypress/feed/futureEvent.json');
+        script.sendCard('cypress/feed/futureEvent.json');
         opfab.loginWithUser('operator1_fr');
-        cy.get('of-light-card').should('have.length', 1);
+        feed.checkNumberOfDisplayedCardsIs(1);
     });
+
+    it('Check sorting', function () {
+        script.sendCard('defaultProcess/chartLine.json');
+        script.sendCard('defaultProcess/question.json');
+        script.sendCard('defaultProcess/process.json');
+        script.sendCard('defaultProcess/message.json');
+
+        opfab.loginWithUser('operator1_fr');
+        feed.checkNumberOfDisplayedCardsIs(4);
+
+        feed.sortByUnread();
+
+        feed.checkLigthCardAtIndexHasTitle(0, 'Message');
+        feed.checkLigthCardAtIndexHasTitle(1, 'Process state (calcul)');
+        feed.checkLigthCardAtIndexHasTitle(2, '⚡ Planned Outage');
+        feed.checkLigthCardAtIndexHasTitle(3, 'Electricity consumption forecast');
+
+
+        // Read first card
+        feed.openFirstCard();
+        card.close();
+
+        cy.waitDefaultTime();
+
+        // Check read card is the last one
+        feed.checkLigthCardAtIndexHasTitle(0, 'Process state (calcul)');
+        feed.checkLigthCardAtIndexHasTitle(1, '⚡ Planned Outage');
+        feed.checkLigthCardAtIndexHasTitle(2, 'Electricity consumption forecast');
+        feed.checkLigthCardAtIndexHasTitle(3, 'Message');
+
+
+        feed.sortByReceptionDate();
+
+        cy.waitDefaultTime();
+    
+        feed.checkLigthCardAtIndexHasTitle(0, 'Message');
+        feed.checkLigthCardAtIndexHasTitle(1, 'Process state (calcul)');
+        feed.checkLigthCardAtIndexHasTitle(2, '⚡ Planned Outage');
+        feed.checkLigthCardAtIndexHasTitle(3, 'Electricity consumption forecast');
+
+        feed.sortBySeverity();
+
+        cy.waitDefaultTime();
+
+        feed.checkLigthCardAtIndexHasTitle(0, 'Electricity consumption forecast');
+        feed.checkLigthCardAtIndexHasTitle(1, '⚡ Planned Outage');
+        feed.checkLigthCardAtIndexHasTitle(2, 'Process state (calcul)');
+        feed.checkLigthCardAtIndexHasTitle(3, 'Message');
+
+        feed.sortByStartDate();
+
+        cy.waitDefaultTime();
+
+        feed.checkLigthCardAtIndexHasTitle(0, '⚡ Planned Outage');
+        feed.checkLigthCardAtIndexHasTitle(1, 'Electricity consumption forecast');
+        feed.checkLigthCardAtIndexHasTitle(2, 'Message');
+        feed.checkLigthCardAtIndexHasTitle(3, 'Process state (calcul)');
+
+        feed.sortByEndDate();
+
+        cy.waitDefaultTime();
+
+        feed.checkLigthCardAtIndexHasTitle(0, 'Electricity consumption forecast');
+        feed.checkLigthCardAtIndexHasTitle(1, '⚡ Planned Outage');
+        feed.checkLigthCardAtIndexHasTitle(2, 'Message');
+        feed.checkLigthCardAtIndexHasTitle(3, 'Process state (calcul)');
+    });
+    
+
+
+    it('Check filter by priority', function () {
+        opfab.loginWithUser('operator1_fr');
+        script.send6TestCards();
+        
+        feed.checkFilterIsNotActive();
+        feed.checkNumberOfDisplayedCardsIs(6);
+        feed.toggleFilterByPriority(['alarm']);
+        feed.checkFilterIsActive();
+        cy.waitDefaultTime();
+        feed.checkNumberOfDisplayedCardsIs(4);
+        feed.checkLigthCardAtIndexHasTitle(0, '⚡ Planned Outage');
+        feed.checkLigthCardAtIndexHasTitle(1, 'Process state (calcul)');
+        feed.checkLigthCardAtIndexHasTitle(2, 'Data quality');
+        feed.checkLigthCardAtIndexHasTitle(3, 'Message');
+
+        feed.toggleFilterByPriority(['compliant']);
+        feed.checkFilterIsActive();
+        cy.waitDefaultTime();
+        feed.checkNumberOfDisplayedCardsIs(3);
+        feed.checkLigthCardAtIndexHasTitle(0, '⚡ Planned Outage');
+        feed.checkLigthCardAtIndexHasTitle(1, 'Data quality');
+        feed.checkLigthCardAtIndexHasTitle(2, 'Message');
+
+        feed.toggleFilterByPriority(['alarm', 'compliant']);
+        feed.checkFilterIsNotActive();
+        feed.checkNumberOfDisplayedCardsIs(6);
+    });
+        
+    it('Check filter by acknowledgement', function () {
+        opfab.loginWithUser('operator1_fr');
+        script.sendCard('defaultProcess/message.json');
+        script.sendCard('defaultProcess/chart.json');
+
+        feed.checkFilterIsNotActive();
+        feed.checkNumberOfDisplayedCardsIs(2);
+        cy.get('#opfab-feed-light-card-defaultProcess-process1').should('exist');
+        cy.get('#opfab-feed-light-card-defaultProcess-process2').should('exist');
+
+        acknowledgeCard('#opfab-feed-light-card-defaultProcess-process2');
+
+        feed.checkNumberOfDisplayedCardsIs(1);
+        // Acknowledged card is not anymore in the feed
+        cy.get('#opfab-feed-light-card-defaultProcess-process1').should('exist');
+        cy.get('#opfab-feed-light-card-defaultProcess-process2').should('not.exist');
+
+        feed.filterByAcknowledgement('all');
+        feed.checkFilterIsNotActive();
+        cy.waitDefaultTime();
+        feed.checkNumberOfDisplayedCardsIs(2);
+        // All cards are visible
+        cy.get('#opfab-feed-light-card-defaultProcess-process1').should('exist');
+        cy.get('#opfab-feed-light-card-defaultProcess-process2').should('exist');
+
+        feed.filterByAcknowledgement('ack');
+        feed.checkFilterIsActive();
+        cy.waitDefaultTime();
+        feed.checkNumberOfDisplayedCardsIs(1);
+        // Only acknowledged card is visible
+        cy.get('#opfab-feed-light-card-defaultProcess-process1').should('not.exist');
+        cy.get('#opfab-feed-light-card-defaultProcess-process2').should('exist');
+
+        feed.filterByAcknowledgement('notack');
+        feed.checkFilterIsNotActive();
+        cy.waitDefaultTime();
+        feed.checkNumberOfDisplayedCardsIs(1);
+        // Only not acknowledged card is visible
+        cy.get('#opfab-feed-light-card-defaultProcess-process1').should('exist');
+        cy.get('#opfab-feed-light-card-defaultProcess-process2').should('not.exist');
+    });
+    
+
+    it('Check filter by response from user entity', function () {
+        opfab.loginWithUser('operator1_fr');
+        script.sendCard('defaultProcess/message.json');
+        script.sendCard('defaultProcess/question.json');
+
+        feed.checkFilterIsNotActive();
+        feed.checkNumberOfDisplayedCardsIs(2);
+        cy.get('#opfab-feed-light-card-defaultProcess-process1').should('exist');
+        cy.get('#opfab-feed-light-card-defaultProcess-process4').should('exist');
+
+        respondToCard('#opfab-feed-light-card-defaultProcess-process4');
+
+        // See in the feed the fact that user has responded (icon)
+        cy.get('#opfab-feed-light-card-defaultProcess-process4').find('#opfab-feed-lightcard-hasChildCardFromCurrentUserEntity');
+
+        feed.toggleFilterByResponse();
+        feed.checkFilterIsActive();
+        cy.waitDefaultTime();
+        feed.checkNumberOfDisplayedCardsIs(1);
+        // Card with response is not visible
+        cy.get('#opfab-feed-light-card-defaultProcess-process4').should('not.exist');
+
+        feed.toggleFilterByResponse();
+        feed.checkFilterIsNotActive();
+        cy.waitDefaultTime();
+        feed.checkNumberOfDisplayedCardsIs(2);
+        // Card with response is visible
+        cy.get('#opfab-feed-light-card-defaultProcess-process4').should('exist');
+
+    });
+
+    it('Check apply filters to timeline', function () {
+        opfab.loginWithUser('operator1_fr');
+        script.sendCard('defaultProcess/chart.json');
+
+        script.sendCard('defaultProcess/question.json');
+
+        feed.checkFilterIsNotActive();
+        feed.checkNumberOfDisplayedCardsIs(2);
+        checkTimelineCircles(2);
+
+        feed.toggleFilterByPriority(['action']);
+        feed.checkFilterIsActive();
+        cy.waitDefaultTime();
+        feed.checkNumberOfDisplayedCardsIs(1);
+        // Filter is applied to timeline
+        checkTimelineCircles(1);
+
+        // Uncheck apply filters to timeliine 
+        feed.toggleApplyFilterToTimeline();
+        cy.waitDefaultTime();
+        feed.checkNumberOfDisplayedCardsIs(1);
+        // Filter is not applied to timeline
+        checkTimelineCircles(2);
+
+    });
+
+
+    it('Check reset all filters', function () {
+        opfab.loginWithUser('operator1_fr');
+        script.send6TestCards();
+
+        feed.checkFilterIsNotActive();
+        feed.checkNumberOfDisplayedCardsIs(6);
+
+        feed.toggleFilterByPriority(['alarm']);
+        feed.checkFilterIsActive();
+        cy.waitDefaultTime();
+        feed.checkNumberOfDisplayedCardsIs(4);
+
+        acknowledgeCard('#opfab-feed-light-card-defaultProcess-process2');
+        cy.waitDefaultTime();
+        feed.checkNumberOfDisplayedCardsIs(3);
+
+        feed.filterByAcknowledgement('all');
+        cy.waitDefaultTime();
+        feed.checkNumberOfDisplayedCardsIs(4);
+
+        respondToCard('#opfab-feed-light-card-defaultProcess-process4');
+        // See in the feed the fact that user has responded (icon)
+        cy.get('#opfab-feed-light-card-defaultProcess-process4').find('#opfab-feed-lightcard-hasChildCardFromCurrentUserEntity');
+
+        feed.toggleFilterByResponse();
+        cy.waitDefaultTime();
+        feed.checkNumberOfDisplayedCardsIs(3);
+
+        feed.resetAllFilters();
+        cy.waitDefaultTime();
+
+        // Check there are 5 cards in the feed (acknowwledged card is not visible)
+        feed.checkNumberOfDisplayedCardsIs(5);
+        feed.checkFilterIsNotActive();
+        checkResetAllFiltersLinkDoesNotExists();
+    });
+
+
+
+    function respondToCard(cardId) {
+        // Click on the card
+        cy.get(cardId).click();
+
+        // Check the correct rendering of card 
+        cy.get('#question-choice1');
+
+        // Respond to the card 
+        cy.get('#question-choice1').click();
+        card.sendResponse();
+    }
+
+    function acknowledgeCard(cardId) {
+        // Click on the card
+        cy.get(cardId).click();
+        card.acknowledge();
+    }
+
+    function checkResetAllFiltersLinkDoesNotExists() {
+        // Open filter popover and check that "reset all" link does not exist
+        cy.get('#opfab-feed-filter-btn-filter').click();
+        cy.get('#opfab-feed-filter-reset').should('not.exist');
+        cy.get('#opfab-feed-filter-btn-filter').click();
+    }
+
+    function checkTimelineCircles(nb) {
+        cy.get("of-custom-timeline-chart").find("ellipse").should('have.length', nb);
+    }
 });

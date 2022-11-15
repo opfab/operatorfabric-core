@@ -14,9 +14,7 @@ import feign.FeignException;
 import lombok.extern.slf4j.Slf4j;
 
 import org.opfab.cards.model.CardOperationTypeEnum;
-import org.opfab.cards.publication.model.ArchivedCardPublicationData;
-import org.opfab.cards.publication.model.CardPublicationData;
-import org.opfab.cards.publication.model.PublisherTypeEnum;
+import org.opfab.cards.publication.model.*;
 import org.opfab.cards.publication.services.clients.impl.ExternalAppClientImpl;
 import org.opfab.springtools.configuration.oauth.ProcessesCache;
 import org.opfab.springtools.error.model.ApiError;
@@ -70,6 +68,8 @@ public class CardProcessingService {
 
     @Value("${checkAuthenticationForCardSending:true}") boolean checkAuthenticationForCardSending;
 
+    @Value("${checkPerimeterForCardSending:true}") boolean checkPerimeterForCardSending;
+
     @Value("${authorizeToSendCardWithInvalidProcessState:false}") boolean authorizeToSendCardWithInvalidProcessState;
 
     public static final String UNEXISTING_PROCESS_STATE = "Impossible to publish card because process and/or state does not exist (process=%1$s, state=%2$s, processVersion=%3$s, processInstanceId=%4$s)";
@@ -90,19 +90,23 @@ public class CardProcessingService {
                     .message(buildPublisherErrorMessage(card, user.get().getUserData().getLogin(), false))
                     .build());
         }
-
+        validate(card);
+        if (!authorizeToSendCardWithInvalidProcessState) checkProcessStateExistsInBundles(card);
+        if (user.isPresent() && checkPerimeterForCardSending && !cardPermissionControlService.isUserAuthorizedToSendCard(card,user.get())) {
+            throw new AccessDeniedException("user not authorized, the card is rejected");
+        }
         // set empty user otherwise it will be processed as a usercard
         processOneCard(card, Optional.empty(), jwt);
     }
 
     public void processUserCard(CardPublicationData card, CurrentUserWithPerimeters user, Optional<Jwt> jwt) {
         card.setPublisherType(PublisherTypeEnum.ENTITY);
+        validate(card);
+        if (!authorizeToSendCardWithInvalidProcessState) checkProcessStateExistsInBundles(card);
         processOneCard(card, Optional.of(user), jwt);
     }
 
     private void processOneCard(CardPublicationData card, Optional<CurrentUserWithPerimeters> user, Optional<Jwt> jwt) {
-        validate(card);
-        if (!authorizeToSendCardWithInvalidProcessState) checkProcessStateExistsInBundles(card);
         card.prepare(Instant.ofEpochMilli(Instant.now().toEpochMilli()));
         cardTranslationService.translate(card);
 
@@ -122,7 +126,7 @@ public class CardProcessingService {
             if (!cardPermissionControlService.isCardPublisherInUserEntities(card, user.get()))
                 // throw a runtime exception to be handled by Mono.onErrorResume()
                 throw new IllegalArgumentException("Publisher is not valid, the card is rejected");
-
+            log.info("Send user card to external app with jwt present " + jwt.isPresent());
             externalAppClient.sendCardToExternalApplication(card, jwt);
         }
         deleteChildCardsProcess(card, jwt);
@@ -183,6 +187,15 @@ public class CardProcessingService {
         if (!checkIsAllTimeSpanEndDateAfterStartDate(c))
             throw new ConstraintViolationException("constraint violation : TimeSpan.end must be after TimeSpan.start", null);
 
+        if (!checkIsAllHoursAndMinutesFilled(c))
+            throw new ConstraintViolationException("constraint violation : TimeSpan.Recurrence.HoursAndMinutes must be filled", null);
+
+        if (!checkIsAllDaysOfWeekValid(c))
+            throw new ConstraintViolationException("constraint violation : TimeSpan.Recurrence.daysOfWeek must be filled with values from 1 to 7", null);
+
+        if (!checkIsAllMonthsValid(c))
+            throw new ConstraintViolationException("constraint violation : TimeSpan.Recurrence.months must be filled with values from 0 to 11", null);
+
         // constraint check : process and state must not contain "." (because we use it as a separator)
         if (!checkIsDotCharacterNotInProcessAndState(c))
             throw new ConstraintViolationException("constraint violation : character '.' is forbidden in process and state", null);
@@ -242,6 +255,62 @@ public class CardProcessingService {
                     Instant endInstant = c.getTimeSpans().get(i).getEnd();
                     Instant startInstant = c.getTimeSpans().get(i).getStart();
                     if ((endInstant != null) && (endInstant.compareTo(startInstant) < 0))
+                        return false;
+                }
+            }
+        }
+        return true;
+    }
+
+    boolean checkIsAllHoursAndMinutesFilled(CardPublicationData c) {
+        if (c.getTimeSpans() != null) {
+            for (TimeSpan currentTimeSpan : c.getTimeSpans()) {
+
+                if ((currentTimeSpan != null) && (currentTimeSpan.getRecurrence() != null)) {
+                    HoursAndMinutes currentHoursAndMinutes = currentTimeSpan.getRecurrence().getHoursAndMinutes();
+                    if ((currentHoursAndMinutes == null) || (currentHoursAndMinutes.getHours() == null) || (currentHoursAndMinutes.getMinutes() == null))
+                        return false;
+                }
+            }
+        }
+        return true;
+    }
+
+    boolean checkIsAllDaysOfWeekValid(CardPublicationData c) {
+        if (c.getTimeSpans() == null)
+            return true;
+
+        for (TimeSpan currentTimeSpan : c.getTimeSpans()) {
+
+            if ((currentTimeSpan == null) || (currentTimeSpan.getRecurrence() == null))
+                return true;
+
+            List<Integer> currentDaysOfWeek = currentTimeSpan.getRecurrence().getDaysOfWeek();
+
+            if (currentDaysOfWeek != null) {
+                for (Integer dayOfWeek : currentDaysOfWeek) {
+                    if ((dayOfWeek < 1) || (dayOfWeek > 7))
+                        return false;
+                }
+            }
+        }
+        return true;
+    }
+
+    boolean checkIsAllMonthsValid(CardPublicationData c) {
+        if (c.getTimeSpans() == null)
+            return true;
+
+        for (TimeSpan currentTimeSpan : c.getTimeSpans()) {
+
+            if ((currentTimeSpan == null) || (currentTimeSpan.getRecurrence() == null))
+                return true;
+            
+            List<Integer> currentMonths = currentTimeSpan.getRecurrence().getMonths();
+
+            if (currentMonths != null) {
+                for (Integer month : currentMonths) {
+                    if ((month < 0) || (month > 11))
                         return false;
                 }
             }

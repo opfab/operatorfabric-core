@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2020, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2022, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -11,17 +11,18 @@ import {NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {CalendarComponent} from './calendar.component';
 import {FullCalendarModule} from '@fullcalendar/angular';
-import {CardsModule} from '../cards/cards.module';
+import {CardModule} from '../card/card.module';
 import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import timeGridPlugin from '@fullcalendar/timegrid';
 import interactionPlugin from '@fullcalendar/interaction';
 import bootstrapPlugin from '@fullcalendar/bootstrap';
+import rrulePlugin from "@fullcalendar/rrule";
 
-FullCalendarModule.registerPlugins([dayGridPlugin, timeGridPlugin, interactionPlugin, bootstrapPlugin]);
+FullCalendarModule.registerPlugins([dayGridPlugin, timeGridPlugin, interactionPlugin, bootstrapPlugin, rrulePlugin]);
 
 @NgModule({
     declarations: [CalendarComponent],
-    imports: [CommonModule, FullCalendarModule, CardsModule, NgbModule]
+    imports: [CommonModule, FullCalendarModule, CardModule, NgbModule]
 })
 export class CalendarModule {}

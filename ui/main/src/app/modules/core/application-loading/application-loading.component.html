@@ -23,7 +23,17 @@
 <of-sound-activation *ngIf="applicationLoaded"> </of-sound-activation>
 
 <div id="opfab-disconnected-message" class="opfab-disconnected-message" *ngIf="isDisconnected">
-    <div style="text-align: center;font:16px;font-weight: bold;margin-top:10px" translate>
+    <div style="text-align: center;font-size:16px;font-weight: bold;margin-top:10px" translate>
         global.disconnected
+    </div>
+</div>
+
+<div *ngIf="displayEnvironmentName && showLoginScreen"
+     style=" position:absolute;right:0;top:0;width:80px;height:87px;overflow:hidden;">
+    <div [style.background-color]="environmentColor"
+         style="font-size:10px;transform:rotate(45deg);color:white;
+          margin-top:33px; margin-left: -57px; width:210px;
+          text-align: center; font-weight: bold;">
+        {{environmentName}}
     </div>
 </div>

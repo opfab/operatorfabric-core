@@ -6,10 +6,6 @@
 <!-- SPDX-License-Identifier: MPL-2.0                                      -->
 <!-- This file is part of the OperatorFabric project.                      -->
 
-
-<link *ngFor="let cssUrl of hrefsOfCssLink" [href]="cssUrl" rel="stylesheet" type="text/css">
-
-
 <div id="opfab-div-card-template" class="opfab-card-template-rendering">
   <of-spinner *ngIf="isLoadingSpinnerToDisplay"></of-spinner>
   <div [hidden]="isLoadingSpinnerToDisplay" id="opfab-div-card-template-processed" [innerHtml]="htmlTemplateContent"

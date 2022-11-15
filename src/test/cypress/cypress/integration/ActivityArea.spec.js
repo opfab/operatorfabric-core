@@ -7,21 +7,23 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {getOpfabGeneralCommands} from "../support/opfabGeneralCommands"
-import {getActivityAreaCommands} from "../support/activityAreaCommands"
+import {OpfabGeneralCommands} from "../support/opfabGeneralCommands"
+import {ActivityAreaCommands} from "../support/activityAreaCommands"
+import {ScriptCommands} from "../support/scriptCommands";
 
 
 describe('ActivityAreaPage', () => {
 
-    const opfab = getOpfabGeneralCommands();
-    const activityArea = getActivityAreaCommands();
+    const opfab = new OpfabGeneralCommands();
+    const activityArea = new ActivityAreaCommands();
+    const script = new ScriptCommands();
 
     before('Delete previous cards', function () {
-        cy.loadTestConf();
-        cy.deleteAllSettings();
-        cy.deleteAllCards();
-        cy.deleteAllArchivedCards();
-        cy.send6TestCards();
+        script.loadTestConf();
+        script.deleteAllSettings();
+        script.deleteAllCards();
+        script.deleteAllArchivedCards();
+        script.send6TestCards();
     });
 
     it('Connection of operator4_fr, which is connected to ENTITY1_FR, ENTITY2_FR, ENTITY3_FR, ENTITY4_FR and check of the activity area page', () => {
@@ -72,12 +74,12 @@ describe('ActivityAreaPage', () => {
 
         // operator4_fr is connected to all his entities, he should receive 6 cards in the feed
         cy.get('of-light-card').should('have.length', 6);
-        cy.get('of-light-card').eq(0).find('.card-title').should('have.text', '⚠️ Network Contingencies ⚠️ ');
-        cy.get('of-light-card').eq(1).find('.card-title').should('have.text', 'Electricity consumption forecast ');
-        cy.get('of-light-card').eq(2).find('.card-title').should('have.text', '⚡ Planned Outage ');
-        cy.get('of-light-card').eq(3).find('.card-title').should('have.text', 'Process state (calcul) ');
-        cy.get('of-light-card').eq(4).find('.card-title').should('have.text', 'Data quality ');
-        cy.get('of-light-card').eq(5).find('.card-title').should('have.text', 'Message ');
+        cy.get('of-light-card').eq(0).find('.card-title').should('have.text', '⚠️ Network Contingencies ⚠️'.toUpperCase());
+        cy.get('of-light-card').eq(1).find('.card-title').should('have.text', 'Electricity consumption forecast'.toUpperCase());
+        cy.get('of-light-card').eq(2).find('.card-title').should('have.text', '⚡ Planned Outage'.toUpperCase());
+        cy.get('of-light-card').eq(3).find('.card-title').should('have.text', 'Process state (calcul)'.toUpperCase());
+        cy.get('of-light-card').eq(4).find('.card-title').should('have.text', 'Data quality'.toUpperCase());
+        cy.get('of-light-card').eq(5).find('.card-title').should('have.text', 'Message'.toUpperCase());
 
         // operator4_fr should see 6 cards in archives page
         cy.get('#opfab-navbar-menu-archives').click();
@@ -101,20 +103,20 @@ describe('ActivityAreaPage', () => {
         cy.get('#opfab-navbar-menu-feed').click();
         cy.waitDefaultTime();
         cy.get('of-light-card').should('have.length', 4);
-        cy.get('of-light-card').eq(0).find('.card-title').should('have.text', '⚡ Planned Outage ');
-        cy.get('of-light-card').eq(1).find('.card-title').should('have.text', 'Process state (calcul) ');
-        cy.get('of-light-card').eq(2).find('.card-title').should('have.text', 'Data quality ');
-        cy.get('of-light-card').eq(3).find('.card-title').should('have.text', 'Message ');
+        cy.get('of-light-card').eq(0).find('.card-title').should('have.text', '⚡ Planned Outage'.toUpperCase());
+        cy.get('of-light-card').eq(1).find('.card-title').should('have.text', 'Process state (calcul)'.toUpperCase());
+        cy.get('of-light-card').eq(2).find('.card-title').should('have.text', 'Data quality'.toUpperCase());
+        cy.get('of-light-card').eq(3).find('.card-title').should('have.text', 'Message'.toUpperCase());
 
         // and now operator4_fr should see only 4 cards in archives page
         cy.get('#opfab-navbar-menu-archives').click(); // click confirm settings
         cy.get('#opfab-archives-logging-btn-search').click();
         cy.get('#opfab-archives-cards-list').find('.opfab-archives-table-line').should('have.length', 4);
         cy.get('#opfab-archives-cards-list').find('.opfab-archives-table-line').as('archives-table');
-        cy.get('@archives-table').eq(0).find('td').eq(4).should('have.text', '⚡ Planned Outage');
-        cy.get('@archives-table').eq(1).find('td').eq(4).should('have.text', 'Process state (calcul)');
-        cy.get('@archives-table').eq(2).find('td').eq(4).should('have.text', 'Data quality');
-        cy.get('@archives-table').eq(3).find('td').eq(4).should('have.text', 'Message');
+        cy.get('@archives-table').eq(0).find('td').eq(4).should('have.text', '⚡ Planned Outage'.toUpperCase());
+        cy.get('@archives-table').eq(1).find('td').eq(4).should('have.text', 'Process state (calcul)'.toUpperCase());
+        cy.get('@archives-table').eq(2).find('td').eq(4).should('have.text', 'Data quality'.toUpperCase());
+        cy.get('@archives-table').eq(3).find('td').eq(4).should('have.text', 'Message'.toUpperCase());
 
         // We reconnect to ENTITY1_FR, ENTITY2_FR and ENTITY3_FR
         opfab.navigateToActivityArea();
@@ -130,7 +132,7 @@ describe('ActivityAreaPage', () => {
     });
 
     it('Choose activity area on login', function () {
-        cy.setPropertyInConf('selectActivityAreaOnLogin ', 'web-ui', true);
+        script.setPropertyInConf('selectActivityAreaOnLogin ', 'web-ui', true);
 
         cy.visit('');
 
@@ -203,10 +205,10 @@ describe('ActivityAreaPage', () => {
         cy.waitDefaultTime();
         cy.get('of-light-card').should('have.length', 4);
 
-        cy.get('of-light-card').eq(0).find('.card-title').should('have.text', '⚡ Planned Outage ');
-        cy.get('of-light-card').eq(1).find('.card-title').should('have.text', 'Process state (calcul) ');
-        cy.get('of-light-card').eq(2).find('.card-title').should('have.text', 'Data quality ');
-        cy.get('of-light-card').eq(3).find('.card-title').should('have.text', 'Message ');
+        cy.get('of-light-card').eq(0).find('.card-title').should('have.text', '⚡ Planned Outage'.toUpperCase());
+        cy.get('of-light-card').eq(1).find('.card-title').should('have.text', 'Process state (calcul)'.toUpperCase());
+        cy.get('of-light-card').eq(2).find('.card-title').should('have.text', 'Data quality'.toUpperCase());
+        cy.get('of-light-card').eq(3).find('.card-title').should('have.text', 'Message'.toUpperCase());
 
         // We reconnect to ENTITY1_FR, ENTITY2_FR and ENTITY3_FR
         opfab.navigateToActivityArea();
@@ -221,7 +223,7 @@ describe('ActivityAreaPage', () => {
         cy.get('.opfab-checkbox').contains('Control Center FR North').click();
         activityArea.save();
 
-        cy.setPropertyInConf('selectActivityAreaOnLogin ', 'web-ui', false);
+        script.setPropertyInConf('selectActivityAreaOnLogin ', 'web-ui', false);
     });
 
     it('Check spinner is displayed when request is delayed and that spinner disappears once the request arrived', function () {

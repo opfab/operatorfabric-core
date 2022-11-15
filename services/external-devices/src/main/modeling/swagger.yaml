@@ -1,7 +1,7 @@
 swagger: '2.0'
 info:
   description: IMPORTANT - The Try it Out button will generate curl requests for examples, but executing them through the UI will not work as authentication has not been set up. This page is for documentation only.
-  version: 3.10.0.RELEASE
+  version: 3.11.0.RELEASE
   title: External Devices Management
   termsOfService: ''
   contact:
@@ -469,7 +469,7 @@ paths:
           description: Could not connect device because it is disabled
         '401':
           description: Authentication required
-        '403':
+        '403': 
           description: Forbidden - ADMIN role necessary
         '404':
           description: Required device not found
@@ -495,7 +495,7 @@ paths:
           description: OK
         '401':
           description: Authentication required
-        '403':
+        '403': 
           description: Forbidden - ADMIN role necessary
         '404':
           description: Required device not found
@@ -520,7 +520,7 @@ paths:
           description: OK Device was enabled
         '401':
           description: Authentication required
-        '403':
+        '403': 
           description: Forbidden - ADMIN role necessary
         '404':
           description: Required device not found
@@ -543,7 +543,7 @@ paths:
           description: OK Device was disabled
         '401':
           description: Authentication required
-        '403':
+        '403': 
           description: Forbidden - ADMIN role necessary
         '404':
           description: Required device not found

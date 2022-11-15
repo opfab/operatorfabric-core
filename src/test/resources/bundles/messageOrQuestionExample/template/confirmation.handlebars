@@ -10,7 +10,7 @@
 <h2 style="text-align: center;"> {{card.data.question}} </h2>
 
 <br />
-<div style="width:100%;display:flex;flex-wrap:wrap">  
+<div id="confirmation-response" style="width:100%;display:flex;flex-wrap:wrap">  
     <div class="opfab-select" style="flex-basis:0;width:20%;position:relative;flex-grow:1;">
         <label for="confirm" style="z-index: 100;"> Confirm </label>
         <select id="resp_confirm" name="confirm">
@@ -68,11 +68,13 @@
                     templateGateway.childCards.forEach((c, i) => {
                         responses += `<tr> <td> ${templateGateway.getEntityName(c.publisher)} </td>`
                         responses += `<td> ${c.data.confirm} </td>`;
-                        responses += `<td> ${c.data.message} </td>`;
+                        responses += `<td> ${opfab.utils.escapeHtml(c.data.message)} </td>`;
                         responses += "</tr>";
                     });
 
                     responses += '</table> </center> <br/> <br/>';
+ 
+
 
                     childsDiv.innerHTML = responses;
                 } else {
@@ -92,6 +94,14 @@
                 };
 
             }
+
+            templateGateway.lockAnswer = function() {
+                document.getElementById('confirmation-response').style['visibility'] = 'hidden';
+            };
+
+            templateGateway.unlockAnswer = function() {
+                document.getElementById('confirmation-response').style['visibility'] = 'visible';
+            };
         },
 
         loadEntitiesList: function() {

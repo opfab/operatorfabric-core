@@ -37,7 +37,7 @@ Feature: Cards
   "stateRights" : [
       {
         "state" : "messageState",
-        "right" : "Receive"
+        "right" : "ReceiveAndWrite"
       }
     ]
 }
@@ -553,6 +553,9 @@ Scenario: Push card with null keepChilCards and publisherType
     And match response.card.keepChildCards == false
 	And match response.card.publisherType == "EXTERNAL"
 
+
+
+    
 #delete perimeter created previously
   Given url opfabUrl + 'users/perimeters/perimeter'
   And header Authorization = 'Bearer ' + authTokenAdmin

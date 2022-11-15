@@ -18,17 +18,38 @@
     <label> REPEAT EVERY</label>
     <table width="100%" style="margin-bottom: -5px;">
         <tr>
-            <td><label class="opfab-checkbox"> MONDAY <input type="checkbox" id="Monday" {{conditionalAttribute (arrayContains card.data.daysOfWeek 1) 'checked'}}>   <span class="opfab-checkbox-checkmark"> </span>   </label> </td>
-            <td><label class="opfab-checkbox"> TUESDAY <input type="checkbox" id="Tuesday" {{conditionalAttribute (arrayContains card.data.daysOfWeek 2) 'checked'}}>   <span class="opfab-checkbox-checkmark"> </span>   </label> </td>
-            <td><label class="opfab-checkbox"> WEDNESDAY <input type="checkbox" id="Wednesday" {{conditionalAttribute (arrayContains card.data.daysOfWeek 3) 'checked'}}>   <span class="opfab-checkbox-checkmark"> </span>   </label> </td>
-            <td><label class="opfab-checkbox"> THURSDAY <input type="checkbox" id="Thursday" {{conditionalAttribute (arrayContains card.data.daysOfWeek 4) 'checked'}}>   <span class="opfab-checkbox-checkmark"> </span>   </label> </td>
-            <td><label class="opfab-checkbox"> FRIDAY <input type="checkbox" id="Friday" {{conditionalAttribute (arrayContains card.data.daysOfWeek 5) 'checked'}}>   <span class="opfab-checkbox-checkmark"> </span>   </label> </td>
-            <td><label class="opfab-checkbox"> SATURDAY <input type="checkbox" id="Saturday" {{conditionalAttribute (arrayContains card.data.daysOfWeek 6) 'checked'}}>   <span class="opfab-checkbox-checkmark"> </span>   </label> </td>
-            <td><label class="opfab-checkbox"> SUNDAY <input type="checkbox" id="Sunday" {{conditionalAttribute (arrayContains card.data.daysOfWeek 7) 'checked'}}>   <span class="opfab-checkbox-checkmark"> </span>   </label> </td>
+            <td><label class="opfab-checkbox" style="padding-left:25px"> MONDAY <input type="checkbox" id="Monday" {{conditionalAttribute (arrayContains card.data.daysOfWeek 1) 'checked'}}>   <span class="opfab-checkbox-checkmark"> </span>   </label> </td>
+            <td><label class="opfab-checkbox" style="padding-left:25px"> TUESDAY <input type="checkbox" id="Tuesday" {{conditionalAttribute (arrayContains card.data.daysOfWeek 2) 'checked'}}>   <span class="opfab-checkbox-checkmark"> </span>   </label> </td>
+            <td><label class="opfab-checkbox" style="padding-left:25px"> WEDNESDAY <input type="checkbox" id="Wednesday" {{conditionalAttribute (arrayContains card.data.daysOfWeek 3) 'checked'}}>   <span class="opfab-checkbox-checkmark"> </span>   </label> </td>
+            <td><label class="opfab-checkbox" style="padding-left:25px"> THURSDAY <input type="checkbox" id="Thursday" {{conditionalAttribute (arrayContains card.data.daysOfWeek 4) 'checked'}}>   <span class="opfab-checkbox-checkmark"> </span>   </label> </td>
+            <td><label class="opfab-checkbox" style="padding-left:25px"> FRIDAY <input type="checkbox" id="Friday" {{conditionalAttribute (arrayContains card.data.daysOfWeek 5) 'checked'}}>   <span class="opfab-checkbox-checkmark"> </span>   </label> </td>
+            <td><label class="opfab-checkbox" style="padding-left:25px"> SATURDAY <input type="checkbox" id="Saturday" {{conditionalAttribute (arrayContains card.data.daysOfWeek 6) 'checked'}}>   <span class="opfab-checkbox-checkmark"> </span>   </label> </td>
+            <td><label class="opfab-checkbox" style="padding-left:25px"> SUNDAY <input type="checkbox" id="Sunday" {{conditionalAttribute (arrayContains card.data.daysOfWeek 7) 'checked'}}>   <span class="opfab-checkbox-checkmark"> </span>   </label> </td>
 
         </tr>
     </table>
+</div>
 
+<br/>
+
+<div class="opfab-border-box">
+    <table width="100%" style="margin-bottom: -5px;">
+        <tr>
+            <td><label class="opfab-checkbox" style="padding-left:25px"> JANUARY <input type="checkbox" id="January" {{conditionalAttribute (arrayContains card.data.months 0) 'checked'}}>   <span class="opfab-checkbox-checkmark"> </span>   </label> </td>
+            <td><label class="opfab-checkbox" style="padding-left:25px"> FEBRUARY <input type="checkbox" id="February" {{conditionalAttribute (arrayContains card.data.months 1) 'checked'}}>   <span class="opfab-checkbox-checkmark"> </span>   </label> </td>
+            <td><label class="opfab-checkbox" style="padding-left:25px"> MARCH <input type="checkbox" id="March" {{conditionalAttribute (arrayContains card.data.months 2) 'checked'}}>   <span class="opfab-checkbox-checkmark"> </span>   </label> </td>
+            <td><label class="opfab-checkbox" style="padding-left:25px"> APRIL <input type="checkbox" id="April" {{conditionalAttribute (arrayContains card.data.months 3) 'checked'}}>   <span class="opfab-checkbox-checkmark"> </span>   </label> </td>
+            <td><label class="opfab-checkbox" style="padding-left:25px"> MAY <input type="checkbox" id="May" {{conditionalAttribute (arrayContains card.data.months 4) 'checked'}}>   <span class="opfab-checkbox-checkmark"> </span>   </label> </td>
+            <td><label class="opfab-checkbox" style="padding-left:25px"> JUNE <input type="checkbox" id="June" {{conditionalAttribute (arrayContains card.data.months 5) 'checked'}}>   <span class="opfab-checkbox-checkmark"> </span>   </label> </td>
+            <td><label class="opfab-checkbox" style="padding-left:25px"> JULY <input type="checkbox" id="July" {{conditionalAttribute (arrayContains card.data.months 6) 'checked'}}>   <span class="opfab-checkbox-checkmark"> </span>   </label> </td>
+            <td><label class="opfab-checkbox" style="padding-left:25px"> AUGUST <input type="checkbox" id="August" {{conditionalAttribute (arrayContains card.data.months 7) 'checked'}}>   <span class="opfab-checkbox-checkmark"> </span>   </label> </td>
+            <td><label class="opfab-checkbox" style="padding-left:25px"> SEPTEMBER <input type="checkbox" id="September" {{conditionalAttribute (arrayContains card.data.months 8) 'checked'}}>   <span class="opfab-checkbox-checkmark"> </span>   </label> </td>
+            <td><label class="opfab-checkbox" style="padding-left:25px"> OCTOBER <input type="checkbox" id="October" {{conditionalAttribute (arrayContains card.data.months 9) 'checked'}}>   <span class="opfab-checkbox-checkmark"> </span>   </label> </td>
+            <td><label class="opfab-checkbox" style="padding-left:25px"> NOVEMBER <input type="checkbox" id="November" {{conditionalAttribute (arrayContains card.data.months 10) 'checked'}}>   <span class="opfab-checkbox-checkmark"> </span>   </label> </td>
+            <td><label class="opfab-checkbox" style="padding-left:25px"> DECEMBER <input type="checkbox" id="December" {{conditionalAttribute (arrayContains card.data.months 11) 'checked'}}>   <span class="opfab-checkbox-checkmark"> </span>   </label> </td>
+
+        </tr>
+    </table>
 </div>
 
 <br/>
@@ -79,6 +100,7 @@
             this.initSeverity();
             this.initInitialDates();
             this.initUserCardTemplateGateway();
+            this.initTimeForRecurrence();
         },
 
         initSeverity: function() {
@@ -92,6 +114,16 @@
             usercardTemplateGateway.setInitialEndDate(mystartDate.getTime() + 7 * 24 * 3600000);
         },
 
+        initTimeForRecurrence: function() {
+            const defaultTimeForRecurrence = new Date();
+            defaultTimeForRecurrence.setTime(defaultTimeForRecurrence.getTime() + 3600000);
+
+            const timeControl = document.getElementById('time');
+            if (! timeControl.value) {
+                timeControl.value = defaultTimeForRecurrence.getHours() + ':' + defaultTimeForRecurrence.getMinutes();
+            }
+        },
+
         initUserCardTemplateGateway: function() {
 
             usercardTemplateGateway.getSpecificCardInformation = function () {
@@ -99,13 +131,12 @@
                 
                 const time = document.getElementById('time').value;
                 const hours =  time.slice(0, 2); // the hours are the 2 first characters
-                const minutes =  time.slice(-2); // the minutes are the 2 last characterss
+                const minutes =  time.slice(-2); // the minutes are the 2 last characters
                 
                 const minutesForReminder =  document.getElementById('minutesForReminder').value;
                 const durationInMinutes =  document.getElementById('durationInMinutes').value;
 
                 const daysOfWeek = [];
-            
                 if (document.getElementById("Monday").checked) daysOfWeek.push(1);
                 if (document.getElementById("Tuesday").checked) daysOfWeek.push(2);
                 if (document.getElementById("Wednesday").checked) daysOfWeek.push(3);
@@ -114,10 +145,25 @@
                 if (document.getElementById("Saturday").checked) daysOfWeek.push(6);
                 if (document.getElementById("Sunday").checked) daysOfWeek.push(7);
 
+                const months = [];
+                if (document.getElementById("January").checked) months.push(0);
+                if (document.getElementById("February").checked) months.push(1);
+                if (document.getElementById("March").checked) months.push(2);
+                if (document.getElementById("April").checked) months.push(3);
+                if (document.getElementById("May").checked) months.push(4);
+                if (document.getElementById("June").checked) months.push(5);
+                if (document.getElementById("July").checked) months.push(6);
+                if (document.getElementById("August").checked) months.push(7);
+                if (document.getElementById("September").checked) months.push(8);
+                if (document.getElementById("October").checked) months.push(9);
+                if (document.getElementById("November").checked) months.push(10);
+                if (document.getElementById("December").checked) months.push(11);
+
                 const recurrence = {
                     daysOfWeek : daysOfWeek,
                     hoursAndMinutes : {hours:hours,minutes:minutes},
-                    durationInMinutes: durationInMinutes
+                    durationInMinutes: durationInMinutes,
+                    months: months
                 }
             
                 const card = {
@@ -130,7 +176,8 @@
                         minutes: minutes,
                         durationInMinutes: durationInMinutes,
                         minutesForReminder: minutesForReminder,
-                        daysOfWeek: daysOfWeek
+                        daysOfWeek: daysOfWeek,
+                        months: months
                     }
                 };
 

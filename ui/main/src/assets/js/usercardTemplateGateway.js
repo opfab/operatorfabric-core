@@ -16,6 +16,7 @@ const usercardTemplateGateway = {
     endDate: null,
     lttd: null,
     initialSeverity: null,
+    selectedEntityRecipients: [],
 
     setUserEntityChildCardFromCurrentCard: function (childCard) {
         this.childCard = childCard;
@@ -54,6 +55,10 @@ const usercardTemplateGateway = {
         return this.initialSeverity;
     },
 
+    getSelectedEntityRecipients() {
+        return this.selectedEntityRecipients;
+    },
+
     setInitialStartDate: function (start) {
         if (this.editionMode === 'CREATE') this.startDate = start;
     },
@@ -79,6 +84,7 @@ const usercardTemplateGateway = {
         this.endDate = null;
         this.lttd = null;
         this.initialSeverity = null;
+        this.selectedEntityRecipients = [];
 
         // OpFab calls this function to inform the template on sender entity
         this.setEntityUsedForSendingCard = function (senderEntity) {

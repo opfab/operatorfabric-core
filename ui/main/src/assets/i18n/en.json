@@ -194,7 +194,7 @@
     "lttdFinished": "Finished",
     "responsesClosed": "Response closed",
     "received": "Received :",
-    "deleted": "Deleted :",
+    "deleted": "Deleted or updated :",
     "addressedTo": "Addressed to :",
     "at": "at",
     "from" : "from",
@@ -481,8 +481,8 @@
       "devices": "External Devices"
     },
     "error": {
-      "errorWhenEnablingDevice": "An error occured when trying to enable this device. Please try again later.",
-      "errorWhenDisablingDevice": "An error occured when trying to disable this device. Please try again later."
+      "errorWhenEnablingDevice": "An error occurred when trying to enable this device. Please try again later.",
+      "errorWhenDisablingDevice": "An error occurred when trying to disable this device. Please try again later."
     },
     "userLogin": "USER LOGIN",
     "externalDeviceIds": "DEVICES",

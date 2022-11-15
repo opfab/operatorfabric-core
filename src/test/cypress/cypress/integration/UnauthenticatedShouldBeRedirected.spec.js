@@ -7,6 +7,8 @@
  * This file is part of the OperatorFabric project.
  */
 
+import {ScriptCommands} from "../support/scriptCommands";
+
 const featureUrls = [
     '#/feed/cards',
     '#/archives',
@@ -22,11 +24,12 @@ const featureUrls = [
 ]
 
 describe ('Unauthenticated user should be redirected',()=>{
+    const script = new ScriptCommands();
 
     before('Set up configuration', function () {
 
         // This can stay in a `before` block rather than `beforeEach` as long as the test does not change configuration
-        cy.resetUIConfigurationFiles();
+        script.resetUIConfigurationFiles();
 
     });
 

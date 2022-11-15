@@ -25,6 +25,17 @@ public class I18nTranslation {
         this.i18n = i18n;
     }
 
+    public JsonNode findNode(String key) {
+        String[] keyPath = key.split("\\.");
+        JsonNode node = this.i18n;
+        int i = 0;
+        while (node != null && i < keyPath.length) {
+            node = node.get(keyPath[i]);
+            i++;
+        }
+        return node;
+    }
+
     public String translate(String key, Map<String, String> parameters) throws IOException {
         String[] keyPath = key.split("\\.");
         JsonNode node = this.i18n;
