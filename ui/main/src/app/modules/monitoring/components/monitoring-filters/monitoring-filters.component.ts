@@ -14,7 +14,7 @@ import {TypeOfStateEnum} from '@ofModel/processes.model';
 import {Filter} from '@ofModel/feed-filter.model';
 import {MultiSelect, MultiSelectOption} from '@ofModel/multiselect.model';
 import {MonitoringFilterBuilder} from './monitoring-filter-builder';
-import {MonitoringProcessList} from './monitoring-process-list';
+import {DEFAULT_PROCESS_GROUP_ID, MonitoringProcessList} from './monitoring-process-list';
 
 @Component({
     selector: 'of-monitoring-filters',
@@ -61,7 +61,10 @@ export class MonitoringFiltersComponent implements OnInit {
             selectedOptions: []
         };
         this.monitoringProcessList.getProcessGroups().forEach((processGroup) => {
-            this.processGroupMultiSelect.options.push(new MultiSelectOption(processGroup.id, processGroup.name));
+            this.processGroupMultiSelect.options.push(new MultiSelectOption(processGroup.id,
+                processGroup.id === DEFAULT_PROCESS_GROUP_ID ?
+                this.translate.instant('processGroup.defaultLabel') :
+                processGroup.name));
         });
     }
 
