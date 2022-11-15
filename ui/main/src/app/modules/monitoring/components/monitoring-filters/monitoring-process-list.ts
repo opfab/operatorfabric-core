@@ -62,7 +62,7 @@ export class MonitoringProcessList {
 
     private loadProcessGroups() {
         this.processGroups = [];
-        for (let processGroup of this.processByProcessGroup.keys()) {
+        for (const processGroup of this.processByProcessGroup.keys()) {
             this.processGroups.push({
                 id: processGroup,
                 name: this.processesService.getProcessGroupName(processGroup)
