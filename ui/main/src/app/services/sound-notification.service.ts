@@ -106,7 +106,7 @@ export class SoundNotificationService implements OnDestroy {
         });
         this.configService.getConfigValueAsObservable('settings.replayInterval', SoundNotificationService.DEFAULT_REPLAY_INTERVAL)
             .subscribe((x) => {
-                this.replayInterval = x;
+                this.replayInterval = Math.max(3,x);
             });
 
         for (const severity of Object.values(Severity)) this.initSoundPlayingForSeverity(severity);
