@@ -14,7 +14,6 @@ import {MultiSelectConfig, MultiSelectOption} from '@ofModel/multiselect.model';
 import * as _ from 'lodash-es';
 
 declare const VirtualSelect: any;
-declare const opfab: any;
 
 @Component({
     selector: 'of-multi-select ',
@@ -77,7 +76,8 @@ export class MultiSelectComponent implements AfterViewInit, OnDestroy, OnChanges
             clearButtonText: this.translateService.instant('multiSelect.clearButtonText'),
             noOptionsText: this.translateService.instant('multiSelect.noOptionsText'),
             noSearchResultsText: this.translateService.instant('multiSelect.noSearchResultsText'),
-            hideClearButton: !this.getValueOrDefault(this.config.multiple, true)
+            hideClearButton: !this.getValueOrDefault(this.config.multiple, true),
+            enableSecureText: true  // Do not remove this important security control to avoid script injection see #3826
         });
 
         this.virtualSelectComponent = document.querySelector('#' + this.multiSelectId);
@@ -101,16 +101,12 @@ export class MultiSelectComponent implements AfterViewInit, OnDestroy, OnChanges
 
     private setOptionList() {
         if (this.options) {
-            this.escapeHTMLFromOptionLabels();
             if (this.config.sortOptions) this.sortOptionListByLabel();
             this.oldOptions = this.options;
             if (!!this.virtualSelectComponent) this.virtualSelectComponent.setOptions(this.options);
         }
     }
 
-    private escapeHTMLFromOptionLabels(){
-        this.options.forEach( option => option.label = opfab.utils.escapeHtml(option.label));
-    }
 
     private sortOptionListByLabel() {
         this.options.sort((a, b) => {
