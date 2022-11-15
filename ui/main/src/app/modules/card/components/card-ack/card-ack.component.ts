@@ -7,21 +7,24 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {Component, EventEmitter, Input, OnChanges, Output} from '@angular/core';
+import {Component, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output} from '@angular/core';
 import {Store} from '@ngrx/store';
-import {Card} from '@ofModel/card.model';
+import {Card, fromCardToLightCard} from '@ofModel/card.model';
 import {MessageLevel} from '@ofModel/message.model';
-import {AcknowledgmentAllowedEnum, State} from '@ofModel/processes.model';
+import {AcknowledgmentAllowedEnum, ConsideredAcknowledgedForUserWhenEnum, State} from '@ofModel/processes.model';
 import {User} from '@ofModel/user.model';
 import {AcknowledgeService} from '@ofServices/acknowledge.service';
 import {AppService, PageType} from '@ofServices/app.service';
+import {CardService} from '@ofServices/card.service';
 import {EntitiesService} from '@ofServices/entities.service';
+import {LightCardsStoreService} from '@ofServices/lightcards/lightcards-store.service';
 import {LogOption, OpfabLoggerService} from '@ofServices/logs/opfab-logger.service';
 import {ProcessesService} from '@ofServices/processes.service';
 import {UserPermissionsService} from '@ofServices/user-permissions.service';
 import {UserService} from '@ofServices/user.service';
 import {AlertMessageAction} from '@ofStore/actions/alert.actions';
 import {AppState} from '@ofStore/index';
+import {Subject, takeUntil} from 'rxjs';
 
 const enum AckI18nKeys {
     BUTTON_TEXT_ACK = 'cardAcknowledgment.button.ack',
@@ -36,18 +39,20 @@ const enum AckI18nKeys {
 })
 
 
-export class CardAckComponent implements OnChanges {
+export class CardAckComponent implements OnInit, OnChanges, OnDestroy {
     @Input() card: Card;
     @Input() cardState: State;
     @Input() lttdExpiredIsTrue: boolean;
 
     @Output() closeCardDetail: EventEmitter<boolean> = new EventEmitter<boolean>();
-    
+
     public ackOrUnackInProgress = false;
     public showAckButton = false;
     public isUserEnabledToRespond = false;
 
     public user: User;
+
+    private unsubscribe$: Subject<void> = new Subject<void>();
 
     constructor(
         private store: Store<AppState>,
@@ -57,10 +62,41 @@ export class CardAckComponent implements OnChanges {
         private userService: UserService,
         private userPermissionsService: UserPermissionsService,
         private processService: ProcessesService,
+        private cardService: CardService,
+        private lightCardsStoreService: LightCardsStoreService,
         private logger: OpfabLoggerService
     ) {
         const userWithPerimeters = this.userService.getCurrentUserWithPerimeters();
         if (!!userWithPerimeters) this.user = userWithPerimeters.userData;
+    }
+
+    ngOnInit()  {
+
+            this.cardService
+            .getReceivedAcks()
+            .pipe(takeUntil(this.unsubscribe$))
+            .subscribe((receivedAck) => {
+                if (receivedAck.cardUid === this.card.uid) {
+                    this.addAckFromSubscription(receivedAck.entitiesAcks);
+                }
+            });
+    }
+
+    private addAckFromSubscription(entitiesAcksToAdd: string[]) {
+        let lightcard = fromCardToLightCard(this.card);
+        if (!!lightcard && !!entitiesAcksToAdd) {
+            const newentitiesAcks = !!lightcard.entitiesAcks
+                ? [...new Set([...lightcard.entitiesAcks, ...entitiesAcksToAdd])]
+                : entitiesAcksToAdd;
+           lightcard = {...lightcard, entitiesAcks: newentitiesAcks};
+        }
+
+        this.card = {
+            ...this.card,
+            hasBeenAcknowledged: this.lightCardsStoreService.isLightCardHasBeenAcknowledgedByUserOrByUserEntity(lightcard)
+        };
+        this.setAcknowledgeButtonVisibility();
+
     }
 
     ngOnChanges(): void {
@@ -73,7 +109,8 @@ export class CardAckComponent implements OnChanges {
     }
 
     private setAcknowledgeButtonVisibility() {
-        this.showAckButton = this.isAcknowledgmentAllowed() && this._appService.pageType !== PageType.CALENDAR;
+        this.showAckButton = this.card.hasBeenAcknowledged && this.isCardAcknowledgedAtEntityLevel() ? false
+            : this.isAcknowledgmentAllowed() && this._appService.pageType !== PageType.CALENDAR;
     }
 
     private isAcknowledgmentAllowed(): boolean {
@@ -85,6 +122,10 @@ export class CardAckComponent implements OnChanges {
             (this.cardState.acknowledgmentAllowed === AcknowledgmentAllowedEnum.ONLY_WHEN_RESPONSE_DISABLED_FOR_USER &&
                 (!this.isUserEnabledToRespond || (this.isUserEnabledToRespond && this.lttdExpiredIsTrue)))
         );
+    }
+
+    private isCardAcknowledgedAtEntityLevel() {
+        return this.cardState.consideredAcknowledgedForUserWhen && this.cardState.consideredAcknowledgedForUserWhen !== ConsideredAcknowledgedForUserWhenEnum.USER_HAS_ACKNOWLEDGED;
     }
 
     get btnAckText(): string {
@@ -128,7 +169,6 @@ export class CardAckComponent implements OnChanges {
     public closeDetails() {
         this.closeCardDetail.emit(true);
     }
-   
 
     private displayMessage(i18nKey: string, msg: string, severity: MessageLevel = MessageLevel.ERROR) {
         this.store.dispatch(
@@ -150,7 +190,10 @@ export class CardAckComponent implements OnChanges {
     }
 
 
-
+    ngOnDestroy() {
+        this.unsubscribe$.next();
+        this.unsubscribe$.complete();
+    }
 
 
 

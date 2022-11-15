@@ -99,18 +99,19 @@ describe('Entity acknowledgment tests for icon in light-card', function () {
         cy.get('#opfab-feed-light-card-cypress-entitiesAcksMessage3 .fa-check').should('exist');
         // Click on card message
         cy.get('#opfab-feed-light-card-cypress-entitiesAcksMessage3').click();
-        card.unacknowledge();
-        // Check icon is still present
-        cy.get('#opfab-feed-light-card-cypress-entitiesAcksMessage3 .fa-check').should('exist');
+
+        // Check "Cancel acknowledgment" button is not present
+        cy.get("#opfab-card-details-btn-ack").should('not.exist');
 
         // operator4_fr un-ack the card "message4", the icon should not disappear (because entities acks are never removed)
         // First, check icon is present
         cy.get('#opfab-feed-light-card-cypress-entitiesAcksMessage4 .fa-check').should('exist');
         // Click on card message
         cy.get('#opfab-feed-light-card-cypress-entitiesAcksMessage4').click();
-        card.unacknowledge();
-        // Check icon is still present
-        cy.get('#opfab-feed-light-card-cypress-entitiesAcksMessage4 .fa-check').should('exist');
+
+        // Check "Cancel acknowledgment" button is not present
+        cy.get("#opfab-card-details-btn-ack").should('not.exist');
+
     });
 
     it('1) operator1_fr acknowledges the card "message2", and we check the icon is not present for operator4_fr\n' +
