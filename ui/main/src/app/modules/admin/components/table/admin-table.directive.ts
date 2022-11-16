@@ -323,14 +323,14 @@ export abstract class AdminTableDirective implements OnInit, OnDestroy {
             colId: 'edit',
             type: 'actionColumn',
             headerClass:'action-cell-column-header',
-            cellStyle: {'padding-left': '0'},
+            cellStyle: {'padding-left': '0', 'padding-right': '0'},
             maxWidth: 50,
         };
         columnDefs[fields.length + 1] = {
             colId: 'delete',
             type: 'actionColumn',
             headerClass:'action-cell-column-header',
-            cellStyle: {'padding-left': '0'},
+            cellStyle: {'padding-left': '0', 'padding-right': '0'},
             maxWidth: 50,
             cellClassRules: deleteActionCellClassRules
         };
