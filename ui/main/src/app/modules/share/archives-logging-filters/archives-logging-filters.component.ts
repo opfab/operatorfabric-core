@@ -336,12 +336,15 @@ export class ArchivesLoggingFiltersComponent implements OnInit, OnDestroy, After
                 day: this.parentForm.value.publishDateFrom.date.day
             };
         }
+
         if (this.parentForm.value.publishDateTo?.date) {
             this.publishMaxDate = {
                 year: this.parentForm.value.publishDateTo.date.year,
                 month: this.parentForm.value.publishDateTo.date.month,
                 day: this.parentForm.value.publishDateTo.date.day
             };
+        } else {
+            this.publishMaxDate = null;
         }
 
         if (this.parentForm.value.activeFrom?.date) {
@@ -350,6 +353,8 @@ export class ArchivesLoggingFiltersComponent implements OnInit, OnDestroy, After
                 month: this.parentForm.value.activeFrom.date.month,
                 day: this.parentForm.value.activeFrom.date.day
             };
+        } else {
+            this.activeMinDate = null;
         }
         if (this.parentForm.value.activeTo?.date) {
             this.activeMaxDate = {
@@ -357,6 +362,8 @@ export class ArchivesLoggingFiltersComponent implements OnInit, OnDestroy, After
                 month: this.parentForm.value.activeTo.date.month,
                 day: this.parentForm.value.activeTo.date.day
             };
+        } else {
+            this.activeMaxDate = null;
         }
     }
 
