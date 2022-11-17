@@ -11,5 +11,5 @@ tasks.register('runSomeCypressTests', NpxTask)  {
     description 'runs some Cypress tests for the project'
     dependsOn npmInstall
     command = 'cypress'
-    args = ['run','-scypress/integration/' + specFiles + '.spec.js', '--config', 'video=false', '--browser', 'chrome', '--headless' ]
+    args = ['run','-scypress/integration/' + project.properties["specFiles"] + '.spec.js', '--config', 'video=false', '--browser', 'chrome', '--headless' ]
 }
