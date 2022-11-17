@@ -50,7 +50,7 @@ export class IframeDisplayComponent implements OnInit, OnDestroy {
             this.menu_id = paramMap.get('menu_id');
             this.menu_entry_id = paramMap.get('menu_entry_id');
             this.businessconfigService
-                .queryMenuEntryURL(this.menu_id, this.menu_entry_id)
+                .queryMenuEntryURL(this.menu_id, this.removeEncodedParams(this.menu_entry_id))
                 .pipe(
                     map((url) => this.addRoutingToUrl(url)),
                     map((url) => this.addOpfabThemeParamToUrl(url)),
@@ -66,6 +66,10 @@ export class IframeDisplayComponent implements OnInit, OnDestroy {
                     }
                 });
         });
+    }
+
+    private removeEncodedParams(url: string): string {
+        return decodeURIComponent(url).split('?')[0];
     }
 
     private addRoutingToUrl(url: string): string {
@@ -91,7 +95,7 @@ export class IframeDisplayComponent implements OnInit, OnDestroy {
     // The user will be redirected to the url configured + the parameters
 
     private addParamToUrl(url) {
-        const params = this.document.location.href.split('?');
+        const params = decodeURIComponent(this.document.location.href).split('?');
         if (!!params[1]) return url + '&' + params[1];
         return url;
     }
