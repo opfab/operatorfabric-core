@@ -29,10 +29,15 @@ Feature: Posting cards with unexisting i18n file in bundle, and with i18n file b
 ]
 """
 
-#Create new perimeter
+# Create new perimeter
+# use retry to avoid falky test when previous test ask for perimeter delete
+# but the processing is not finished when we create the perimeter
+# resulting in a bad response : 
+#  {"status":"BAD_REQUEST","message":"Resource creation failed because a resource with the same key already exists.","errors":["Duplicate key : perimeter"]}
     Given url opfabUrl + 'users/perimeters'
     And header Authorization = 'Bearer ' + authToken
     And request perimeter
+    And retry until responseStatus == 201
     When method post
     Then status 201
 
