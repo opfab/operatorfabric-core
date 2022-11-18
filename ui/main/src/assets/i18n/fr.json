@@ -205,7 +205,8 @@
     "moreCards": "cartes supplémentaires",
     "lastResponse": "Dernière réponse :",
     "cardLoadingInProgress":"Chargement de la carte...",
-    "cardNotFound": "La carte que vous cherchez n'a pas été trouvée."
+    "cardNotFound": "La carte que vous cherchez n'a pas été trouvée.",
+    "entityRecipients" : "Entités destinataires :"
   },
   "login": {
     "reset": "RaZ",
