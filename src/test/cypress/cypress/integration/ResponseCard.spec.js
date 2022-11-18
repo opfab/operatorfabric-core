@@ -526,11 +526,10 @@ describe('Response card tests', function () {
         opfab.loginWithUser('operator1_fr');
         feed.openFirstCard();
 
-        // Delay send card response
-        cy.intercept('/cardspub/cards/userCard', (req) => {
-            req.reply((res) => {
-                res.delay = 3000;
-            });
+        // Mock and delay card response 
+        cy.intercept('/cardspub/cards/userCard', {
+            statusCode: 201,
+            delay: 3000
         });
 
         // Check template is loaded
