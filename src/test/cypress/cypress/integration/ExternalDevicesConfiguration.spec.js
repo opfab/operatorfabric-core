@@ -135,6 +135,10 @@ describe('ExternalDevicesconfigurationPage', () => {
         // Go to the users configuration screen
         cy.get('#opfab-externaldevices-tabs').find('#opfab-externaldevices-users-tab').click();
 
+        // following line is necessary to avoid failing cypress test until we solve 
+        // https://github.com/opfab/operatorfabric-core/issues/3854
+        agGrid.countTableRows('#opfab-externaldevices-table-grid', 4);
+
         // We iterate 10 times because there are 16 users and 4 users have already a configuration
         for (let i = 0; i < 12; i++) {
             cy.get('#addItem').click();
