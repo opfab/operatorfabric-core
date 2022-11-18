@@ -237,9 +237,12 @@ Feature: Posting card with a process and/or a state that doesn't exist in bundle
 """
 
     # We push a card corresponding to the bundle previously deleted and we check the push is failed
+    # Add a retry to avoid falky test when the delete information has not yet been propagated 
+    # to the publication service when making the request 
     Given url opfabPublishCardUrl + 'cards'
     And header Authorization = 'Bearer ' + authTokenAsTSO
     And request card
+    And retry until responseStatus == 400
     When method post
     Then status 400
     And match response.status == 'BAD_REQUEST'
