@@ -205,7 +205,8 @@
     "moreCards": "cards more",
     "lastResponse": "Last response :",
     "cardLoadingInProgress":"Loading card...",
-    "cardNotFound": "The card you are looking for was not found."
+    "cardNotFound": "The card you are looking for was not found.",
+    "entityRecipients" : "Entity recipients :"
   },
   "login": {
     "reset": "Reset",

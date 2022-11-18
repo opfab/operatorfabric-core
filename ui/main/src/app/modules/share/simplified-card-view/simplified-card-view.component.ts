@@ -36,7 +36,7 @@ export class SimplifiedCardViewComponent implements OnInit, OnDestroy {
     private user: User;
     private userMemberOfAnEntityRequiredToRespondAndAllowedToSendCards = false;
     public isLoading = true;
-    public fixedBottomOffset = 70;
+    public fixedBottomOffset = 90;
 
     constructor(
         private businessconfigService: ProcessesService,

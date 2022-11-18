@@ -117,11 +117,11 @@
 
   <div class="modal-body">
 
-    <div style="height: calc(100% - 50px);">
+    <div style="height: calc(100% - 70px);">
       <of-simplified-card-view [card]="selectedCard" [childCards]="selectedChildCards" [screenSize]="'lg'"
         [displayContext]="displayContext"> </of-simplified-card-view>
     </div>
-    <div>
+    <div id="opfab-archives-card-footer">
       <span class="opfab-card-received-footer">
         <span translate>feed.received</span>
         {{getFormattedDate(selectedCard.publishDate)}} <span translate> feed.at </span> {{getFormattedTime(selectedCard.publishDate)}}
@@ -134,6 +134,8 @@
           <span translate>feed.deleted</span>
           {{getFormattedDate(selectedCard.deletionDate)}} <span translate> feed.at </span> {{getFormattedTime(selectedCard.deletionDate)}}
         </span>
+        <br>
+        {{entityRecipientsForFooter}}
       </span>
     </div>
   </div>

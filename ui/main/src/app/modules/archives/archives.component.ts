@@ -78,6 +78,7 @@ export class ArchivesComponent implements OnDestroy, OnInit {
     selectedCard: Card;
     selectedChildCards: Card[];
     fromEntityOrRepresentativeSelectedCard = null;
+    entityRecipientsForFooter = '';
     listOfProcesses = [];
 
     lastRequestID: number;
@@ -370,6 +371,7 @@ export class ArchivesComponent implements OnDestroy, OnInit {
             this.selectedCard = card.card;
             this.selectedChildCards = card.childCards;
             this.computeFromEntity();
+            this.computeEntityRecipientsForFooter();
             const options: NgbModalOptions = {
                 size: 'fullscreen'
             };
@@ -395,6 +397,26 @@ export class ArchivesComponent implements OnDestroy, OnInit {
                 this.fromEntityOrRepresentativeSelectedCard += ' (' + representative + ')';
             }
         } else this.fromEntityOrRepresentativeSelectedCard = null;
+    }
+
+    private computeEntityRecipientsForFooter() {
+        const listOfEntityRecipients = [];
+        this.entityRecipientsForFooter = '';
+
+        if (!! this.selectedCard.entityRecipients) {
+            this.selectedCard.entityRecipients.forEach((entityRecipient) => {
+                listOfEntityRecipients.push(this.entitiesService.getEntityName(entityRecipient));
+            });
+        }
+        listOfEntityRecipients.sort();
+
+        listOfEntityRecipients.forEach((entityRecipient) => {
+            this.entityRecipientsForFooter += ' ' + entityRecipient + ',';
+        });
+        if (this.entityRecipientsForFooter.length > 0) {
+            this.entityRecipientsForFooter = this.translate.instant('feed.entityRecipients') +
+                this.entityRecipientsForFooter.slice(0, -1); // we remove the last comma
+        }
     }
 
     getFormattedPublishDate(): any {

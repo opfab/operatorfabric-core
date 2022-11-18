@@ -125,7 +125,8 @@ describe('Archives screen tests', function () {
         archivesAndLogging.clickOnSearchButton();
         checkNumberOfLineDisplayedIs(6);
 
-        openAndCheckArchiveCardContent('Electricity consumption forecast', 'Daily electrical consumption forecast');
+        openAndCheckArchiveCardContent('Electricity consumption forecast', 'Daily electrical consumption forecast',
+                            'Entity recipients : Control Center FR East, Control Center FR North, Control Center FR South');
 
         // We deactivate the admin mode
         archivesAndLogging.clickAdminModeCheckbox();
@@ -429,9 +430,13 @@ describe('Archives screen tests', function () {
         expect(row['BUSINESS PERIOD']).to.match(/^\d{2}:\d{2} \d{2}\/\d{2}\/\d{4}-$/);
     }
 
-    function openAndCheckArchiveCardContent(cellContent, cardText) {
+    function openAndCheckArchiveCardContent(cellContent, cardText, entityRecipientsFooterText = '') {
         cy.get('#opfab-archives-cards-list').find('td').contains(cellContent.toUpperCase()).should('exist').click();
         cy.get('#opfab-div-card-template-processed').contains(cardText).should('exist');
+
+        if (entityRecipientsFooterText !== '')
+            cy.get('#opfab-archives-card-footer').contains(entityRecipientsFooterText).should('exist');
+
         cy.get('#opfab-archives-card-detail-close').click({force: true});
     }
 
