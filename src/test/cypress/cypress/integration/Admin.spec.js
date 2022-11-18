@@ -525,6 +525,9 @@ describe('AdmininstrationPages', () => {
         //Click on tab "Users"
         cy.get('#opfab-tabs').find('li').eq(0).click();
 
+        // Wait for table rendering
+        cy.get('.opfab-pagination').should('contain.text', ' Results number  : 16');
+
         // Do export
         cy.get('#opfab-admin-btn-exportToExcel').click();
 
@@ -564,6 +567,9 @@ describe('AdmininstrationPages', () => {
 
         //Click on tab "Entities"
         cy.get('#opfab-tabs').find('li').eq(1).click();
+
+        // Wait for table rendering
+        cy.get('.opfab-pagination').should('contain.text', ' Results number  : 15');
 
         // Do export
         cy.get('#opfab-admin-btn-exportToExcel').click();
@@ -608,6 +614,9 @@ describe('AdmininstrationPages', () => {
         // Do export
         cy.get('#opfab-admin-btn-exportToExcel').click();
 
+        //Wait for table rendering
+        cy.get('.opfab-pagination').should('contain.text', ' Results number  : 7');
+
         cy.waitDefaultTime();
 
             // check download folder contains the export file
@@ -646,6 +655,9 @@ describe('AdmininstrationPages', () => {
 
         //Click on tab "Perimeters"
         cy.get('#opfab-tabs').find('li').eq(3).click();
+
+        // Wait for table rendering
+        cy.get('.opfab-pagination').should('contain.text', ' Results number  : 9');
 
         // Do export
         cy.get('#opfab-admin-btn-exportToExcel').click();
