@@ -18,3 +18,4 @@ external-recipients:
       propagateUserToken: true
 checkAuthenticationForCardSending: true
 checkPerimeterForCardSending: false
+delayForDeleteExpiredCardsScheduling: "60000"

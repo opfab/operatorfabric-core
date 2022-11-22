@@ -151,6 +151,7 @@ export class CardResponseComponent implements OnChanges, OnInit {
                 state: responseData.responseState ? responseData.responseState : this.cardState.response.state,
                 startDate: this.card.startDate,
                 endDate: this.card.endDate,
+                expirationDate: this.card.expirationDate,
                 severity: Severity.INFORMATION,
                 entityRecipients: this.card.entityRecipients,
                 userRecipients: this.card.userRecipients,

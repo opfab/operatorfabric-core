@@ -41,6 +41,10 @@ export class CardCommands extends OpfabCommands {
         cy.get(`#opfab-card-header-entity-${entityId}`).should('not.exist');
     }
 
+    checkExpirationDateIconDoesExist = function () {
+        cy.get('#opfab-card-expiration-date').should('exist');
+    }
+
     close= function () {
         cy.get('#opfab-close-card').click();
     }

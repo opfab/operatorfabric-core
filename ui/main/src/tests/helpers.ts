@@ -132,6 +132,9 @@ export function getOneRandomLightCard(lightCardTemplate?: any): LightCard {
         lightCardTemplate.endDate
             ? lightCardTemplate.endDate
             : startTime + generateRandomPositiveIntegerWithinRangeWithOneAsMinimum(3455),
+        lightCardTemplate.expirationDate
+            ? lightCardTemplate.expirationDate
+            : startTime + generateRandomPositiveIntegerWithinRangeWithOneAsMinimum(3455),
         lightCardTemplate.severity ? lightCardTemplate.severity : getRandomSeverity(),
         lightCardTemplate.hasBeenAcknowledged ? lightCardTemplate.hasBeenAcknowledged : false,
         lightCardTemplate.hasBeenRead ? lightCardTemplate.hasBeenRead : false,
@@ -175,6 +178,9 @@ export function getOneRandomCard(cardTemplate?: any): Card {
         cardTemplate.startDate ? cardTemplate.startDate : startTime,
         cardTemplate.endDate
             ? cardTemplate.endDate
+            : startTime + generateRandomPositiveIntegerWithinRangeWithOneAsMinimum(3455),
+        cardTemplate.expirationDate
+            ? cardTemplate.expirationDate
             : startTime + generateRandomPositiveIntegerWithinRangeWithOneAsMinimum(3455),
         cardTemplate.severity ? cardTemplate.severity : getRandomSeverity(),
         false,

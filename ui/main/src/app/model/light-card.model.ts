@@ -19,6 +19,7 @@ export class LightCard {
         readonly publishDate: number,
         readonly startDate: number,
         readonly endDate: number,
+        readonly expirationDate: number,
         readonly severity: Severity,
         readonly hasBeenAcknowledged: boolean = false,
         readonly hasBeenRead: boolean = false,

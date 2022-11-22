@@ -60,3 +60,5 @@ external-recipients:
 checkAuthenticationForCardSending: true
 
 authorizeToSendCardWithInvalidProcessState: false
+
+delayForDeleteExpiredCardsScheduling: "60000"

@@ -50,6 +50,7 @@ public class LightCardReadConverter implements Converter<Document, LightCardCons
                 .lttd(source.getDate("lttd") == null ? null : source.getDate("lttd").toInstant())
                 .startDate(source.getDate("startDate") == null ? null : source.getDate("startDate").toInstant())
                 .endDate(source.getDate("endDate") == null ? null : source.getDate("endDate").toInstant())
+                .expirationDate(source.getDate("expirationDate") == null ? null : source.getDate("expirationDate").toInstant())
                 .publishDate(source.getDate("publishDate") == null ? null : source.getDate("publishDate").toInstant())
                 .severity(SeverityEnum.valueOf(source.getString("severity")))
                 .titleTranslated(source.getString("titleTranslated"))

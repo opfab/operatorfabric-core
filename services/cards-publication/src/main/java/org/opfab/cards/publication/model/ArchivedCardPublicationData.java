@@ -72,6 +72,8 @@ public class ArchivedCardPublicationData implements Card {
     private Instant startDate;
     @Indexed
     private Instant endDate;
+    @Indexed
+    private Instant expirationDate;
     private SeverityEnum severity;
     @Indexed
     private List<String> tags;
@@ -146,6 +148,7 @@ public class ArchivedCardPublicationData implements Card {
         this.state = card.getState();
         this.startDate = card.getStartDate();
         this.endDate = card.getEndDate();
+        this.expirationDate = card.getExpirationDate();
         this.lttd = card.getLttd();
         this.title = card.getTitle();
         this.summary = card.getSummary();

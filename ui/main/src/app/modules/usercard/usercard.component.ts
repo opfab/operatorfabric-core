@@ -65,12 +65,15 @@ export class UserCardComponent implements OnInit {
     readonly defaultStartDate = new Date().valueOf() + 60000;
     readonly defaultEndDate = new Date().valueOf() + 60000 * 60 * 24;
     readonly defaultLttdDate = this.defaultEndDate - 60000;
+    readonly defaultExpirationDate = null;
     private startDateVisible = false;
     private endDateVisible = false;
     private lttdVisible = false;
+    private expirationDateVisible = false;
     private currentStartDate = new Date().valueOf() + 60000;
     private currentEndDate = new Date().valueOf() + 60000 * 60 * 24;
     private currentLttd = this.defaultEndDate - 60000;
+    private currentExpirationDate = null;
 
     public userEntitiesAllowedToSendCardOptions = [];
 
@@ -166,6 +169,7 @@ export class UserCardComponent implements OnInit {
             usercardTemplateGateway.startDate = this.cardToEdit.card.startDate;
             usercardTemplateGateway.endDate = this.cardToEdit.card.endDate;
             usercardTemplateGateway.lttd = this.cardToEdit.card.lttd;
+            usercardTemplateGateway.expirationDate = this.cardToEdit.card.expirationDate;
 
             this.setPublisherForCreatingUsercardForCardToEdit();
 
@@ -191,7 +195,8 @@ export class UserCardComponent implements OnInit {
         const startDate = new DateField(this.startDateVisible, this.defaultStartDate);
         const endDate = new DateField(this.endDateVisible, this.defaultEndDate);
         const lttd = new DateField(this.lttdVisible, this.defaultLttdDate);
-        this.datesFormValue = new DatesForm(startDate, endDate, lttd);
+        const expirationDate = new DateField(this.expirationDateVisible, this.defaultExpirationDate);
+        this.datesFormValue = new DatesForm(startDate, endDate, lttd, expirationDate);
         this.datesFromTemplate = true;
         this.currentStartDate = startDate.initialEpochDate;
         usercardTemplateGateway.setInitialStartDate(null);
@@ -199,6 +204,8 @@ export class UserCardComponent implements OnInit {
         usercardTemplateGateway.setInitialEndDate(null);
         this.currentLttd = lttd.initialEpochDate;
         usercardTemplateGateway.setInitialLttd(null);
+        this.currentExpirationDate = expirationDate.initialEpochDate;
+        usercardTemplateGateway.setInitialExpirationDate(null);
     }
 
     private setInitialDateFormValues(): void {
@@ -220,31 +227,40 @@ export class UserCardComponent implements OnInit {
                 ? usercardTemplateGateway.getLttd()
                 : this.getLttd()
         );
+        let expirationDate = new DateField(
+            this.expirationDateVisible,
+            this.datesFromTemplate && !!usercardTemplateGateway.getExpirationDate()
+                ? usercardTemplateGateway.getExpirationDate()
+                : this.getExpirationDate()
+        );
 
         if (
             !!usercardTemplateGateway.getStartDate() ||
             !!usercardTemplateGateway.getEndDate() ||
             !!usercardTemplateGateway.getEndDate() ||
-            !!usercardTemplateGateway.getLttd()
+            !!usercardTemplateGateway.getLttd() ||
+            !!usercardTemplateGateway.getExpirationDate()
         ) {
             this.datesFromTemplate = false;
         }
 
         this.datesFormValue = this.datesFromCardToEdit
-            ? this.setDatesFromCardToEdit(startDate, endDate, lttd)
-            : new DatesForm(startDate, endDate, lttd);
+            ? this.setDatesFromCardToEdit(startDate, endDate, lttd, expirationDate)
+            : new DatesForm(startDate, endDate, lttd, expirationDate);
 
         this.currentStartDate = this.datesFormValue.startDate.initialEpochDate;
         this.currentEndDate = this.datesFormValue.endDate.initialEpochDate;
         this.currentLttd = this.datesFormValue.lttd.initialEpochDate;
+        this.currentExpirationDate = this.datesFormValue.expirationDate.initialEpochDate;
     }
 
-    private setDatesFromCardToEdit(startDate: DateField, endDate: DateField, lttd: DateField): DatesForm {
+    private setDatesFromCardToEdit(startDate: DateField, endDate: DateField, lttd: DateField, expirationDate: DateField): DatesForm {
         if (!!this.cardToEdit.card.startDate) startDate.initialEpochDate = this.cardToEdit.card.startDate;
         if (!!this.cardToEdit.card.endDate) endDate.initialEpochDate = this.cardToEdit.card.endDate;
         if (!!this.cardToEdit.card.lttd) lttd.initialEpochDate = this.cardToEdit.card.lttd;
+        if (!!this.cardToEdit.card.expirationDate) expirationDate.initialEpochDate = this.cardToEdit.card.expirationDate;
         this.datesFromCardToEdit = false;
-        return new DatesForm(startDate, endDate, lttd);
+        return new DatesForm(startDate, endDate, lttd, expirationDate);
     }
 
     private findUserEntitiesAllowedToSendCard(): Array<any> {
@@ -288,6 +304,12 @@ export class UserCardComponent implements OnInit {
         usercardTemplateGateway.lttd = lttd;
     }
 
+    public onExpirationDateChange() {
+        const expirationDate = this.datesForm.getExpirationDateAsEpoch();
+        this.currentExpirationDate = expirationDate;
+        usercardTemplateGateway.expirationDate = expirationDate;
+    }
+
     public stateChanged(event: any) {
         this.selectedStateId = event.state;
         this.selectedProcessId = event.selectedProcessId;
@@ -296,6 +318,7 @@ export class UserCardComponent implements OnInit {
         usercardTemplateGateway.setInitialStartDate(null);
         usercardTemplateGateway.setInitialEndDate(null);
         usercardTemplateGateway.setInitialLttd(null);
+        usercardTemplateGateway.setInitialExpirationDate(null);
         usercardTemplateGateway.setInitialSeverity(null);
 
         this.userCardConfiguration = this.processesService.getProcess(this.selectedProcessId).states[
@@ -326,7 +349,13 @@ export class UserCardComponent implements OnInit {
                     ? true
                     : this.userCardConfiguration.endDateVisible;
             this.lttdVisible =
-                this.userCardConfiguration.lttdVisible === undefined ? true : this.userCardConfiguration.lttdVisible;
+                this.userCardConfiguration.lttdVisible === undefined
+                    ? true
+                    : this.userCardConfiguration.lttdVisible;
+            this.expirationDateVisible =
+                this.userCardConfiguration.expirationDateVisible === undefined
+                    ? true
+                    : this.userCardConfiguration.expirationDateVisible;
             this.recipientVisible =
                 this.userCardConfiguration.recipientVisible === undefined
                     ? true
@@ -336,6 +365,7 @@ export class UserCardComponent implements OnInit {
             this.startDateVisible = true;
             this.endDateVisible = true;
             this.lttdVisible = true;
+            this.expirationDateVisible = true;
             this.recipientVisible = true;
         }
     }
@@ -428,11 +458,13 @@ export class UserCardComponent implements OnInit {
         const startDate = this.getStartDate();
         const endDate = this.getEndDate();
         const lttd = this.getLttd();
-        if (!this.areDatesValid(startDate, endDate, lttd)) return;
+        const expirationDate = this.getExpirationDate();
+        if (!this.areDatesValid(startDate, endDate, lttd, expirationDate)) return;
 
         usercardTemplateGateway.startDate = startDate;
         usercardTemplateGateway.endDate = endDate;
         usercardTemplateGateway.lttd = lttd;
+        usercardTemplateGateway.expirationDate = expirationDate;
 
         const title = !!this.specificInformation.card.title ? this.specificInformation.card.title : 'UNDEFINED';
         const selectedProcess = this.processesService.getProcess(this.selectedProcessId);
@@ -457,6 +489,7 @@ export class UserCardComponent implements OnInit {
                     state: this.selectedStateId,
                     startDate: startDate,
                     endDate: endDate,
+                    expirationDate: expirationDate,
                     lttd: lttd,
                     severity: this.getSeverity(),
                     hasBeenAcknowledged: false,
@@ -577,7 +610,17 @@ export class UserCardComponent implements OnInit {
         return lttd;
     }
 
-    private areDatesValid(startDate, endDate, lttd): boolean {
+    private getExpirationDate(): number {
+        let expirationDate = null;
+        if (this.expirationDateVisible) expirationDate = this.currentExpirationDate;
+        else {
+            if (this.specificInformation && this.specificInformation.card.expirationDate)
+                expirationDate = this.specificInformation.card.expirationDate;
+        }
+        return expirationDate;
+    }
+
+    private areDatesValid(startDate, endDate, lttd, expirationDate): boolean {
         if (!!endDate && endDate < startDate) {
             this.displayMessage('shared.endDateBeforeStartDate', '', MessageLevel.ERROR);
             return false;
@@ -590,6 +633,10 @@ export class UserCardComponent implements OnInit {
 
         if (!!lttd && !!endDate && lttd > endDate) {
             this.displayMessage('userCard.error.lttdAfterEndDate', '', MessageLevel.ERROR);
+            return false;
+        }
+        if (!!expirationDate && expirationDate < startDate) {
+            this.displayMessage('shared.expirationDateBeforeStartDate', '', MessageLevel.ERROR);
             return false;
         }
         return true;
@@ -705,6 +752,7 @@ export class UserCardComponent implements OnInit {
             state: childCard.responseState ? childCard.responseState : cardState.response.state,
             startDate: this.card.startDate,
             endDate: this.card.endDate,
+            expirationDate: this.card.expirationDate,
             severity: Severity.INFORMATION,
             entityRecipients: this.card.entityRecipients,
             userRecipients: this.card.userRecipients,

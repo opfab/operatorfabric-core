@@ -186,7 +186,8 @@
       "lttd": "Time remaining to decide",
       "hasAResponseFromYourEntity" : "Your entity has already responded.",
       "loadingInProgress": "Card loading in progress",
-      "seeGroupedCards": "Open this card to see grouped cards"
+      "seeGroupedCards": "Open this card to see grouped cards",
+      "expirationDate": "Expiration date"
     },
     "acknowledgeAllCards": {
       "label": "Acknowledge all cards",
@@ -299,6 +300,7 @@
       "severity": "SEVERITY",
       "startDate":  "START DATE",
       "endDate":  "END DATE",
+      "expirationDate":  "EXPIRATION DATE",
       "lttd": "LIMIT DATE FOR RESPONSE",
       "recipients": "RECIPIENTS"
     },

@@ -64,8 +64,14 @@
 
                 <p *ngIf="this.dateToDisplay" id="opfab-lightcard-dates" class="card-subtitle">({{this.dateToDisplay}})</p>
 
-                <div style="text-align: right;margin-top: -5px;margin-right: 5px ;padding-right: 5px; ">
+                <div style="text-align: right;margin-top: -5px;margin-right: 5px;padding-right: 5px; ">
                         <of-countdown  *ngIf="!!lightCard.lttd" [lttd]="lightCard.lttd" [showExpiredIcon]="showExpiredIcon" [showExpiredLabel]="showExpiredLabel" [expiredLabel]="expiredLabel"></of-countdown>
+
+                        <span *ngIf="lightCard.expirationDate" class="expiration-date" id="opfab-card-expiration-date"
+                              [ngbPopover]="this.expirationDateToDisplay" popoverClass="opfab-popover" container="body" placement="right"
+                              triggers="mouseenter:mouseleave">
+                            <em style="color: #ff6600;margin-left: 8px;" class="fa fa-hourglass"></em>
+                        </span>
                 </div>
             </div>
         </div>
