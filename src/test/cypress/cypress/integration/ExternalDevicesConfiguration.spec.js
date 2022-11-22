@@ -137,7 +137,7 @@ describe('ExternalDevicesconfigurationPage', () => {
 
         // We iterate 10 times because there are 16 users and 4 users have already a configuration
         for (let i = 0; i < 12; i++) {
-            cy.get('#addItem').click();
+            cy.get('#addItem').should('be.visible').click();
 
             cy.get('of-externaldevices-modal').should('exist');
 
@@ -173,6 +173,8 @@ describe('ExternalDevicesconfigurationPage', () => {
         cy.get('#opfab-externaldevices-tabs').find('#opfab-externaldevices-users-tab').click();
 
         cy.get('#opfab-externaldevices-table-grid').should('exist');
+        //First page is 10 rows
+        agGrid.countTableRows('#opfab-externaldevices-table-grid', 10);
 
         // Delete previously created configurations
         for (let j = 16; j > 4; j--) {
