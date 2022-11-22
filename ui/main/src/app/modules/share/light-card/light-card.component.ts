@@ -26,6 +26,7 @@ import {TypeOfStateEnum} from '@ofModel/processes.model';
 import {SoundNotificationService} from '@ofServices/sound-notification.service';
 import {DateTimeFormatterService} from '@ofServices/date-time-formatter.service';
 import {MapService} from '@ofServices/map.service';
+import {TranslateService} from '@ngx-translate/core';
 
 @Component({
     selector: 'of-light-card',
@@ -48,6 +49,7 @@ export class LightCardComponent implements OnInit, OnDestroy {
     showExpiredIcon = true;
     showExpiredLabel = true;
     expiredLabel = 'feed.lttdFinished';
+    expirationDateToDisplay: string;
 
     showGroupedCardsIcon = false;
     groupedCardsVisible = true;
@@ -67,7 +69,8 @@ export class LightCardComponent implements OnInit, OnDestroy {
         private userPreferencesService: UserPreferencesService,
         private groupedCardsService: GroupedCardsService,
         private soundNotificationService: SoundNotificationService,
-        private mapService: MapService
+        private mapService: MapService,
+        private translateService: TranslateService
     ) {}
 
     ngOnInit() {
@@ -87,6 +90,7 @@ export class LightCardComponent implements OnInit, OnDestroy {
         this.computeFromEntity();
         this.computeDisplayedDate();
         this.computeLttdParams();
+        this.computeDisplayedExpirationDate();
         this.hasGeoLocation =
             this.lightCard.wktGeometry === undefined ||
             this.lightCard.wktGeometry == null ||
@@ -136,6 +140,10 @@ export class LightCardComponent implements OnInit, OnDestroy {
                     this.lightCard.endDate
                 )}`;
         }
+    }
+
+    computeDisplayedExpirationDate() {
+        this.expirationDateToDisplay = `${this.translateService.instant('feed.tips.expirationDate')}: ${this.handleDate(this.lightCard.expirationDate)}`;
     }
 
     private computeGroupedCardsIcon() {

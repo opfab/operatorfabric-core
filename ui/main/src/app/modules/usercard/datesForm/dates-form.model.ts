@@ -8,7 +8,7 @@
  */
 
 export class DatesForm {
-    constructor(public startDate: DateField, public endDate: DateField, public lttd: DateField) {}
+    constructor(public startDate: DateField, public endDate: DateField, public lttd: DateField, public expirationDate: DateField) {}
 }
 
 export class DateField {

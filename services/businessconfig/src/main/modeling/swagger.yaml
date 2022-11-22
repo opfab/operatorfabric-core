@@ -680,6 +680,8 @@ definitions:
         type: boolean      
       endDateVisible: 
         type: boolean
+      expirationDateVisible:
+        type: boolean
       lttdVisible: 
         type: boolean
       recipientVisible: # tells whether to display recipient dropdown when creating a user card

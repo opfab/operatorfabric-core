@@ -186,7 +186,8 @@
       "lttd": "Resterende tijd om te beslissen",
       "hasAResponseFromYourEntity" : "Uw entiteit heeft al gereageerd.",
       "loadingInProgress": "Kaart wordt geladen",
-      "seeGroupedCards": "Open deze kaart om gegroepeerde kaarten te zien"
+      "seeGroupedCards": "Open deze kaart om gegroepeerde kaarten te zien",
+      "expirationDate": "Vervaldatum"
     },
     "acknowledgeAllCards": {
       "label": "Bevestig alle kaarten",
@@ -299,6 +300,7 @@
       "severity": "ERNST",
       "startDate":  "STARTDATUM",
       "endDate":  "EINDDATUM",
+      "expirationDate": "VERVALDATUM",
       "lttd": "BEPERK DATUM VOOR REACTIE",
       "recipients": "ONTVANGERS"
     },

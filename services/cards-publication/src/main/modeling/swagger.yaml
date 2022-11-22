@@ -202,6 +202,9 @@ definitions:
       endDate:
         $ref: '#/definitions/EpochDate'
         description: Card validity end time (must be after startDate)
+      expirationDate:
+        $ref: '#/definitions/EpochDate'
+        description: Card deletion time (must be after startDate)
       severity:
         $ref: '#/definitions/SeverityEnum'
         description: Card severity
@@ -324,6 +327,7 @@ definitions:
       lttd: 1546387230000
       startDate: 1546387200000
       endDate: 1546387250000
+      expirationDate: 1546397250000
       severity: ACTION
       tags:
         - MyService
@@ -408,6 +412,9 @@ definitions:
       endDate:
         $ref: '#/definitions/EpochDate'
         description: Card validity end time
+      expirationDate:
+        $ref: '#/definitions/EpochDate'
+        description: Card deletion time
       publishDate:
         $ref: '#/definitions/EpochDate'
         description: Publication time of the Card
@@ -508,6 +515,7 @@ definitions:
       lttd: 1546387230000
       startDate: 1546387200000
       endDate: 1546387250000
+      expirationDate: 1546397250000
       severity: ACTION
       tags:
         - MyService

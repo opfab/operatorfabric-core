@@ -65,6 +65,7 @@ export class UserCard {
         readonly startDateVisible?: boolean,
         readonly endDateVisible?: boolean,
         readonly lttdVisible?: boolean,
+        readonly expirationDateVisible?: boolean,
         readonly recipientVisible?: boolean,
         readonly recipientList?: Recipient[]
     ) {}

@@ -82,6 +82,9 @@ public class CardPublicationData implements Card {
     @Indexed
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private Instant endDate;
+    @Indexed
+    @JsonInclude(JsonInclude.Include.NON_NULL)
+    private Instant expirationDate;
     
     private SeverityEnum severity;
     @Singular
@@ -164,6 +167,7 @@ public class CardPublicationData implements Card {
                 .lttd(this.getLttd())
                 .startDate(this.getStartDate())
                 .endDate(this.getEndDate())
+                .expirationDate(this.getExpirationDate())
                 .publishDate(this.getPublishDate())
                 .severity(this.getSeverity())
                 .tags(this.getTags())

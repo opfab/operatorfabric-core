@@ -79,6 +79,10 @@ This attribute is display as a description of a card in the feed of the GUI, whe
 
 End date of the active period of the card (process business time).
 
+==== Expiration Date (`expirationDate`)
+
+Expiration date of the active period of the card (process business time). When the expiration date has passed, the card will be automatically removed from the card feed.
+
 ==== Tags (`tag`)
 
 Tags are intended as an additional way to filter cards in the feed of the GUI.

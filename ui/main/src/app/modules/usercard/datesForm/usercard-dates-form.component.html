@@ -28,5 +28,12 @@
                 (change) ="onLttdChange()" >
             </of-datetime-filter>
         </div>
+
+        <div *ngIf="datesFormInputData.expirationDate.isVisible" style="width: 280px; margin-right: 30px; margin-left: 30px;" id="opfab-usercard-expirationdate-choice">
+            <of-datetime-filter filterPath="expirationDate" formControlName="expirationDate"
+                                labelKey="userCard.filters."
+                                (change)="onExpirationDateChange()">
+            </of-datetime-filter>
+        </div>
     </div>
 </form>

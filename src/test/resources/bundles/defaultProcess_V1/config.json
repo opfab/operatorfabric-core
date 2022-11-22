@@ -14,7 +14,8 @@
       "color": "#CC9900",
       "userCard" : {
         "template" : "usercard_message",
-        "lttdVisible" : false
+        "lttdVisible" : false,
+        "expirationDateVisible" : false
       },
       "templateName": "template",
       "styles": [
@@ -52,6 +53,7 @@
       "userCard" : {
         "template" : "usercard_process",
         "lttdVisible" : false,
+        "expirationDateVisible" : true,
         "recipientList" : [{"id": "ENTITY_FR", "levels": [0,1]}, {"id": "IT_SUPERVISOR_ENTITY"}]
       },
       "templateName": "process",

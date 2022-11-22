@@ -164,4 +164,11 @@ public class CardRepositoryService {
         toDelete.stream().forEach(cardToDelete -> cardNotificationService.notifyOneCard(cardToDelete, CardOperationTypeEnum.DELETE));
         return template.remove(findCardByEndDateBefore, CardPublicationData.class);
     }
+
+    public List<CardPublicationData> findCardsByExpirationDate(Instant expirationDate) {
+        Query findCardByExpirationDate = new Query();
+        Criteria expirationDateCriteria = new Criteria().andOperator(Criteria.where("expirationDate").ne(null), Criteria.where("expirationDate").lt(expirationDate));
+        findCardByExpirationDate.addCriteria(expirationDateCriteria);
+        return template.find(findCardByExpirationDate, CardPublicationData.class);
+    }
 }

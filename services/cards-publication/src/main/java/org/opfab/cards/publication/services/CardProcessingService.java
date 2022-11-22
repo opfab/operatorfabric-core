@@ -184,6 +184,10 @@ public class CardProcessingService {
         if (!checkIsEndDateAfterStartDate(c))
             throw new ConstraintViolationException("constraint violation : endDate must be after startDate", null);
 
+        // constraint check : expirationDate must be after startDate
+        if (!checkIsExpirationDateAfterStartDate(c))
+            throw new ConstraintViolationException("constraint violation : expirationDate must be after startDate", null);
+
         // constraint check : timeSpans list : each end date must be after his start date
         if (!checkIsAllTimeSpanEndDateAfterStartDate(c))
             throw new ConstraintViolationException("constraint violation : TimeSpan.end must be after TimeSpan.start", null);
@@ -242,6 +246,12 @@ public class CardProcessingService {
         Instant endDateInstant = c.getEndDate();
         Instant startDateInstant = c.getStartDate();
         return ! ((endDateInstant != null) && (startDateInstant != null) && (endDateInstant.compareTo(startDateInstant) < 0));
+    }
+
+    boolean checkIsExpirationDateAfterStartDate(CardPublicationData c) {
+        Instant expirationDateInstant = c.getExpirationDate();
+        Instant startDateInstant = c.getStartDate();
+        return ! ((expirationDateInstant != null) && (startDateInstant != null) && (expirationDateInstant.compareTo(startDateInstant) < 0));
     }
 
     boolean checkIsDotCharacterNotInProcessAndState(CardPublicationData c) {
@@ -385,6 +395,11 @@ public class CardProcessingService {
                     .message("User not allowed to delete this card")
                     .build());
         }
+    }
+
+    public void deleteCardsByExpirationDate(Instant expirationDate) {
+        cardRepositoryService.findCardsByExpirationDate(expirationDate).forEach(cardToDelete ->
+                deleteCard(cardToDelete, expirationDate, Optional.empty()));
     }
 
     private Optional<CardPublicationData> deleteCard(CardPublicationData cardToDelete, Optional<Jwt> jwt) {

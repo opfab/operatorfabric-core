@@ -42,6 +42,8 @@ public class UserCardData implements UserCard {
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private Boolean endDateVisible;
     @JsonInclude(JsonInclude.Include.NON_NULL)
+    private Boolean expirationDateVisible;
+    @JsonInclude(JsonInclude.Include.NON_NULL)
     private Boolean lttdVisible;
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private Boolean recipientVisible;

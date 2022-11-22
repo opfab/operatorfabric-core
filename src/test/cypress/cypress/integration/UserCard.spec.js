@@ -1021,7 +1021,31 @@ describe('User Card ', function () {
       cy.get('#status-select').click();
       cy.get('#status-select').find('.vscomp-search-input').should("not.exist");
     })
-  })
+  }) 
+
+
+
+  describe('Expiration Date', function () {
+
+    before('Delete previous cards', function () {
+      script.deleteAllCards();
+      script.deleteAllArchivedCards();
+    });
+
+    it('Check expiration date icon is present when expirationDate is set', () => {
+      opfab.loginWithUser('operator1_fr');
+      opfab.navigateToUserCard();
+      usercard.selectService('Base Examples');
+      usercard.selectProcess('Process example');
+      usercard.selectState('Process example');
+      cy.setFormDateTime('startDate','2020','Jan',20,8,0);
+      cy.setFormDateTime('endDate','2029','Jun',25,11,10);
+      cy.setFormDateTime('expirationDate','2029','Jun',25,11,10);
+      usercard.previewThenSendCard();
+      feed.openFirstCard();
+      card.checkExpirationDateIconDoesExist();
+    });
+  });
 
   describe('Check service, process and state select', function () {
     it('Check process select when no process group is defined', () => {
@@ -1042,6 +1066,4 @@ describe('User Card ', function () {
       usercard.checkStateSelectDoesNotExist();
     })
   })
-
-  
 })

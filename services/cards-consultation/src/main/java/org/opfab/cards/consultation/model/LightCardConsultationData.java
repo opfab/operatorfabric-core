@@ -50,6 +50,7 @@ public class LightCardConsultationData implements LightCard {
     private Instant publishDate;
     private Instant startDate;
     private Instant endDate;
+    private Instant expirationDate;
     private SeverityEnum severity;
     @JsonInclude(JsonInclude.Include.NON_EMPTY)
     @Singular
@@ -126,6 +127,7 @@ public class LightCardConsultationData implements LightCard {
                 .startDate(other.getStartDate())
                 .publishDate(other.getPublishDate())
                 .endDate(other.getEndDate())
+                .expirationDate(other.getExpirationDate())
                 .severity(other.getSeverity())
                 .title(I18nConsultationData.copy(other.getTitle()))
                 .summary(I18nConsultationData.copy(other.getSummary()))

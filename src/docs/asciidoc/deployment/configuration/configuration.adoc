@@ -123,6 +123,7 @@ KafkaAvroSerializer|yes|Serializer used to convert cards to bytes
 |opfab.kafka.topics.card.topicname |opfab|no|Name of the topic to read the messages from
 |opfab.kafka.topics.response-card.topicname |opfab|no|Name of the topic to place the response cards to
 |opfab.kafka.schema.registry.url|http://localhost:8081|yes|URL of the schema registry. Can be set to the empty string "" is no registry is used
+|delayForDeleteExpiredCardsScheduling|60000|no|The delay in millisecond after the last execution finished and the next execution starts.
 |===
 
 

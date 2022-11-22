@@ -15,7 +15,8 @@
       "userCard" : {
         "template" : "usercard_message",
         "endDateVisible" : false,
-        "lttdVisible" : false
+        "lttdVisible" : false,
+        "expirationDateVisible" : false
       },
       "templateName": "message",
       "styles": [],
@@ -34,7 +35,8 @@
 				"severityVisible" : false,
 				"startDateVisible" : true,
 				"endDateVisible" : true,
-        "lttdVisible" : true
+                "lttdVisible" : true,
+                "expirationDateVisible" : false
 			},
       "response": {
         "state": "questionState",
@@ -55,7 +57,8 @@
 				"severityVisible" : false,
 				"startDateVisible" : true,
 				"endDateVisible" : true,
-        "lttdVisible" : false
+                "lttdVisible" : false,
+                "expirationDateVisible" : false
 			},
       "response": {
         "state": "confirmationState",

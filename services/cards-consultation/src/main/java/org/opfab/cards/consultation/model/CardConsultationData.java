@@ -64,6 +64,8 @@ public class CardConsultationData implements Card {
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private Instant endDate;
     @JsonInclude(JsonInclude.Include.NON_NULL)
+    private Instant expirationDate;
+    @JsonInclude(JsonInclude.Include.NON_NULL)
     private String media;
     private SeverityEnum severity;
     @JsonInclude(JsonInclude.Include.NON_EMPTY)

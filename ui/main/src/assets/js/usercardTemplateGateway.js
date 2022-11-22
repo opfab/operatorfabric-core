@@ -15,6 +15,7 @@ const usercardTemplateGateway = {
     startDate: null,
     endDate: null,
     lttd: null,
+    expirationDate: null,
     initialSeverity: null,
     selectedEntityRecipients: [],
 
@@ -51,6 +52,10 @@ const usercardTemplateGateway = {
         return this.lttd;
     },
 
+    getExpirationDate() {
+        return this.expirationDate;
+    },
+
     getInitialSeverity() {
         return this.initialSeverity;
     },
@@ -71,6 +76,10 @@ const usercardTemplateGateway = {
         if (this.editionMode === 'CREATE') this.lttd = lttd;
     },
 
+    setInitialExpirationDate: function (expirationDate) {
+        if (this.editionMode === 'CREATE') this.expirationDate = expirationDate;
+    },
+
     setInitialSeverity: function (initialSeverity) {
         this.initialSeverity = initialSeverity;
     },
@@ -83,6 +92,7 @@ const usercardTemplateGateway = {
         this.startDate = null;
         this.endDate = null;
         this.lttd = null;
+        this.expirationDate = null;
         this.initialSeverity = null;
         this.selectedEntityRecipients = [];
 
