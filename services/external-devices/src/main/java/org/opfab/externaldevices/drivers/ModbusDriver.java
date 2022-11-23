@@ -28,35 +28,52 @@ public class ModbusDriver implements ExternalDeviceDriver {
 
     private InetAddress resolvedHost;
     private int port;
-    @ToString.Exclude private ModbusMaster modbusMaster;
+    @ToString.Exclude
+    private ModbusMaster modbusMaster;
+
+    private boolean keepAlive;
+
+    private boolean fakeConnectForKeepAliveFalse;
 
     static final int TRIGGER_VALUE = 1;
     static final String SENDING_REQUEST = "Sending write request for register {}, value {} on {}";
 
-    protected ModbusDriver(InetAddress resolvedHost, int port, ModbusMaster modbusMaster) {
-
+    protected ModbusDriver(InetAddress resolvedHost, int port, ModbusMaster modbusMaster,boolean keepAlive) {
         this.resolvedHost = resolvedHost;
         this.port = port;
         this.modbusMaster = modbusMaster;
-
+        this.keepAlive = keepAlive;
+        log.info("Create driver for " + resolvedHost + ":" + port +  " with keepAlive set to " + keepAlive );
     }
 
     @Override
-    public void connect () throws ExternalDeviceDriverException {
+    public void connect() throws ExternalDeviceDriverException {
+        if (keepAlive)
             try {
                 modbusMaster.connect();
             } catch (ModbusIOException e) {
-                throw new ExternalDeviceDriverException("Error during ModbusDriver connection to " + this.resolvedHost + ":" + this.port, e);
+                throw new ExternalDeviceDriverException(
+                        "Error during ModbusDriver connection to " + this.resolvedHost + ":" + this.port, e);
+            }
+        else {
+            fakeConnectForKeepAliveFalse = true;
             }
     }
 
     @Override
     public void disconnect() throws ExternalDeviceDriverException {
+        if (keepAlive) {
         try {
             modbusMaster.disconnect();
         } catch (ModbusIOException e) {
-            throw new ExternalDeviceDriverException("Error during ModbusDriver disconnection from "+this.resolvedHost +":"+this.port, e);
+                throw new ExternalDeviceDriverException(
+                        "Error during ModbusDriver disconnection from " + this.resolvedHost + ":" + this.port, e);
         }
+        }
+        else {
+            fakeConnectForKeepAliveFalse = false;
+        }
+
     }
 
     @Override
@@ -86,7 +103,8 @@ public class ModbusDriver implements ExternalDeviceDriver {
 
     @Override
     public boolean isConnected() {
-        return modbusMaster.isConnected();
+        if (keepAlive) return modbusMaster.isConnected();
+        return fakeConnectForKeepAliveFalse;
     }
 
 }

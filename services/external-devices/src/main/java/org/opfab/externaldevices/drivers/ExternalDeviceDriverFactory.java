@@ -15,6 +15,6 @@ package org.opfab.externaldevices.drivers;
  * */
 public interface ExternalDeviceDriverFactory {
 
-    ExternalDeviceDriver create(String host, int port) throws ExternalDeviceDriverException;
+    ExternalDeviceDriver create(String host, int port, boolean keepAlive) throws ExternalDeviceDriverException;
 
 }
