@@ -3,6 +3,7 @@ spring:
     name: external-devices
 operatorfabric:
   externaldevices:
+    keepAlive : true
     watchdog:
       enabled: true
     default:
@@ -43,6 +44,5 @@ operatorfabric:
         - userLogin: operator4_fr
           externalDeviceIds: ["CDS_1"]
 logging.level.org.opfab: debug
-
 
 

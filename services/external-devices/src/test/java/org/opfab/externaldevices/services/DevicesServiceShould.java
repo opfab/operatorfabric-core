@@ -20,6 +20,8 @@ import org.opfab.externaldevices.drivers.*;
 import org.opfab.externaldevices.model.Device;
 import org.opfab.externaldevices.model.DeviceConfigurationData;
 import org.opfab.externaldevices.model.ResolvedConfiguration;
+import org.springframework.test.context.TestPropertySource;
+import org.springframework.test.util.ReflectionTestUtils;
 
 import java.net.InetAddress;
 import java.net.UnknownHostException;
@@ -63,8 +65,10 @@ class DevicesServiceShould {
 
     @BeforeEach
     public void setUp() {
+        
         devicesService = new DevicesService(configService, externalDeviceDriverFactory,
                 externalDevicesWatchdogProperties);
+        ReflectionTestUtils.setField(devicesService, "keepAlive",true);
         deviceConfigurationData = buildDeviceConfiguration(1234, TEST_DEVICE_ID, true);
         deviceConfigurationData2 = buildDeviceConfiguration(5678, TEST_DEVICE_ID_2, true);
     }
@@ -75,7 +79,7 @@ class DevicesServiceShould {
             ExternalDeviceAvailableException, UnknownExternalDeviceException {
 
         when(configService.retrieveDeviceConfiguration(TEST_DEVICE_ID)).thenReturn(deviceConfigurationData);
-        when(externalDeviceDriverFactory.create(FAKE_HOST, 1234)).thenReturn(externalDeviceDriver);
+        when(externalDeviceDriverFactory.create(FAKE_HOST, 1234,true)).thenReturn(externalDeviceDriver);
         when(externalDeviceDriver.getResolvedHost()).thenReturn(InetAddress.getByName(FAKE_HOST));
         when(externalDeviceDriver.getPort()).thenReturn(1234);
         when(externalDeviceDriver.isConnected()).thenReturn(true);
@@ -106,7 +110,7 @@ class DevicesServiceShould {
             ExternalDeviceAvailableException, UnknownExternalDeviceException {
 
         when(configService.retrieveDeviceConfiguration(TEST_DEVICE_ID)).thenReturn(deviceConfigurationData);
-        when(externalDeviceDriverFactory.create(FAKE_HOST, 1234)).thenReturn(externalDeviceDriver);
+        when(externalDeviceDriverFactory.create(FAKE_HOST, 1234,true)).thenReturn(externalDeviceDriver);
         when(externalDeviceDriver.getResolvedHost()).thenReturn(InetAddress.getByName(FAKE_HOST));
         when(externalDeviceDriver.getPort()).thenReturn(1234);
         when(externalDeviceDriver.isConnected()).thenReturn(true);
@@ -135,7 +139,7 @@ class DevicesServiceShould {
     void shouldEnableAndDisableDevice()
             throws ExternalDeviceConfigurationException, UnknownExternalDeviceException, ExternalDeviceDriverException {
         when(configService.retrieveDeviceConfiguration(TEST_DEVICE_ID)).thenReturn(deviceConfigurationData);
-        when(externalDeviceDriverFactory.create(FAKE_HOST, 1234)).thenReturn(externalDeviceDriver);
+        when(externalDeviceDriverFactory.create(FAKE_HOST, 1234,true)).thenReturn(externalDeviceDriver);
 
         assertTrue(deviceConfigurationData.getIsEnabled());
         devicesService.disableDevice(TEST_DEVICE_ID);
@@ -149,7 +153,7 @@ class DevicesServiceShould {
     void shouldConnectWhenEnableDevice()
             throws ExternalDeviceConfigurationException, UnknownExternalDeviceException, ExternalDeviceDriverException {
         when(configService.retrieveDeviceConfiguration(TEST_DEVICE_ID)).thenReturn(deviceConfigurationData);
-        when(externalDeviceDriverFactory.create(FAKE_HOST, 1234)).thenReturn(externalDeviceDriver);
+        when(externalDeviceDriverFactory.create(FAKE_HOST, 1234,true)).thenReturn(externalDeviceDriver);
 
         devicesService.enableDevice(TEST_DEVICE_ID);
         assertTrue(deviceConfigurationData.getIsEnabled());
@@ -160,7 +164,7 @@ class DevicesServiceShould {
     void shouldDisconnectWhenDisableDevice()
             throws ExternalDeviceConfigurationException, UnknownExternalDeviceException, ExternalDeviceDriverException {
         when(configService.retrieveDeviceConfiguration(TEST_DEVICE_ID)).thenReturn(deviceConfigurationData);
-        when(externalDeviceDriverFactory.create(FAKE_HOST, 1234)).thenReturn(externalDeviceDriver);
+        when(externalDeviceDriverFactory.create(FAKE_HOST, 1234,true)).thenReturn(externalDeviceDriver);
 
         devicesService.enableDevice(TEST_DEVICE_ID);
         devicesService.disableDevice(TEST_DEVICE_ID);
@@ -172,7 +176,7 @@ class DevicesServiceShould {
             throws ExternalDeviceConfigurationException, ExternalDeviceDriverException,
             ExternalDeviceAvailableException, UnknownExternalDeviceException, UnknownHostException {
         when(configService.retrieveDeviceConfiguration(TEST_DEVICE_ID)).thenReturn(deviceConfigurationData);
-        when(externalDeviceDriverFactory.create(FAKE_HOST, 1234)).thenReturn(externalDeviceDriver);
+        when(externalDeviceDriverFactory.create(FAKE_HOST, 1234,true)).thenReturn(externalDeviceDriver);
 
         devicesService.connectDevice(TEST_DEVICE_ID);
         verify(externalDeviceDriver, times(1)).connect();
@@ -210,7 +214,7 @@ class DevicesServiceShould {
         when(configService.getResolvedConfigurationList("ALARM", "testUser"))
                 .thenReturn(Arrays.asList(resolvedConfiguration1));
 
-        when(externalDeviceDriverFactory.create(FAKE_HOST, 1234)).thenReturn(externalDeviceDriver);
+        when(externalDeviceDriverFactory.create(FAKE_HOST, 1234,true)).thenReturn(externalDeviceDriver);
 
         devicesService.sendSignalToAllDevicesOfUser("ALARM", "testUser");
 
@@ -229,8 +233,8 @@ class DevicesServiceShould {
         when(configService.getResolvedConfigurationList("ALARM", "testUser"))
                 .thenReturn(Arrays.asList(resolvedConfiguration1, resolvedConfiguration2));
 
-        when(externalDeviceDriverFactory.create(FAKE_HOST, 1234)).thenReturn(externalDeviceDriver);
-        when(externalDeviceDriverFactory.create(FAKE_HOST, 5678)).thenReturn(externalDeviceDriver2);
+        when(externalDeviceDriverFactory.create(FAKE_HOST, 1234,true)).thenReturn(externalDeviceDriver);
+        when(externalDeviceDriverFactory.create(FAKE_HOST, 5678,true)).thenReturn(externalDeviceDriver2);
 
         devicesService.sendSignalToAllDevicesOfUser("ALARM", "testUser");
 
@@ -251,8 +255,8 @@ class DevicesServiceShould {
         when(configService.getResolvedConfigurationList("ALARM", "testUser"))
                 .thenReturn(Arrays.asList(resolvedConfiguration1, resolvedConfiguration2));
 
-        when(externalDeviceDriverFactory.create(FAKE_HOST, 1234)).thenReturn(externalDeviceDriver);
-        when(externalDeviceDriverFactory.create(FAKE_HOST, 5678)).thenReturn(externalDeviceDriver2);
+        when(externalDeviceDriverFactory.create(FAKE_HOST, 1234,true)).thenReturn(externalDeviceDriver);
+        when(externalDeviceDriverFactory.create(FAKE_HOST, 5678,true)).thenReturn(externalDeviceDriver2);
 
         when(externalDeviceDriver.isConnected()).thenReturn(true);
         when(externalDeviceDriver2.isConnected()).thenReturn(true);
@@ -297,7 +301,7 @@ class DevicesServiceShould {
         ResolvedConfiguration resolvedConfiguration2 = new ResolvedConfiguration(deviceConfigurationData2, 4);
         when(configService.getResolvedConfigurationList("ALARM", "testUser"))
                 .thenReturn(Arrays.asList(resolvedConfiguration1, resolvedConfiguration2));
-        when(externalDeviceDriverFactory.create(FAKE_HOST, 5678)).thenReturn(externalDeviceDriver2);
+        when(externalDeviceDriverFactory.create(FAKE_HOST, 5678,true)).thenReturn(externalDeviceDriver2);
 
         try {
             devicesService.sendSignalToAllDevicesOfUser("ALARM", "testUser");
@@ -322,8 +326,8 @@ class DevicesServiceShould {
         when(configService.getResolvedConfigurationList("ALARM", "testUser"))
                 .thenReturn(Arrays.asList(resolvedConfiguration1, resolvedConfiguration2));
 
-        when(externalDeviceDriverFactory.create(FAKE_HOST, 1234)).thenReturn(externalDeviceDriver);
-        when(externalDeviceDriverFactory.create(FAKE_HOST, 5678)).thenReturn(externalDeviceDriver2);
+        when(externalDeviceDriverFactory.create(FAKE_HOST, 1234,true)).thenReturn(externalDeviceDriver);
+        when(externalDeviceDriverFactory.create(FAKE_HOST, 5678,true)).thenReturn(externalDeviceDriver2);
         doThrow(ExternalDeviceDriverException.class).when(externalDeviceDriver).send(3);
 
         try {
@@ -348,7 +352,7 @@ class DevicesServiceShould {
         final int CUSTOM_SIGNAL_ID = 4;
 
         when(configService.retrieveDeviceConfiguration(TEST_DEVICE_ID)).thenReturn(deviceConfigurationData);
-        when(externalDeviceDriverFactory.create(FAKE_HOST, 1234)).thenReturn(externalDeviceDriver);
+        when(externalDeviceDriverFactory.create(FAKE_HOST, 1234,true)).thenReturn(externalDeviceDriver);
         when(externalDevicesWatchdogProperties.getEnabled()).thenReturn(true);
         when(externalDevicesWatchdogProperties.getSignalId()).thenReturn(CUSTOM_SIGNAL_ID);
 
@@ -368,7 +372,7 @@ class DevicesServiceShould {
         final int CUSTOM_SIGNAL_ID = 4;
 
         when(configService.retrieveDeviceConfiguration(TEST_DEVICE_ID)).thenReturn(deviceConfigurationData);
-        when(externalDeviceDriverFactory.create(FAKE_HOST, 1234)).thenReturn(externalDeviceDriver);
+        when(externalDeviceDriverFactory.create(FAKE_HOST, 1234,true)).thenReturn(externalDeviceDriver);
         when(externalDevicesWatchdogProperties.getEnabled()).thenReturn(true);
 
         devicesService.connectDevice(TEST_DEVICE_ID); // Necessary to add driver to pool
@@ -387,8 +391,8 @@ class DevicesServiceShould {
 
         when(configService.retrieveDeviceConfiguration(TEST_DEVICE_ID)).thenReturn(deviceConfigurationData);
         when(configService.retrieveDeviceConfiguration(TEST_DEVICE_ID_2)).thenReturn(deviceConfigurationData2);
-        when(externalDeviceDriverFactory.create(FAKE_HOST, 1234)).thenReturn(externalDeviceDriver);
-        when(externalDeviceDriverFactory.create(FAKE_HOST, 5678)).thenReturn(externalDeviceDriver2);
+        when(externalDeviceDriverFactory.create(FAKE_HOST, 1234,true)).thenReturn(externalDeviceDriver);
+        when(externalDeviceDriverFactory.create(FAKE_HOST, 5678,true)).thenReturn(externalDeviceDriver2);
         when(externalDevicesWatchdogProperties.getEnabled()).thenReturn(true);
         when(externalDevicesWatchdogProperties.getSignalId()).thenReturn(CUSTOM_SIGNAL_ID);
         when(externalDeviceDriver.isConnected()).thenReturn(true);
@@ -413,8 +417,8 @@ class DevicesServiceShould {
 
         when(configService.retrieveDeviceConfiguration(TEST_DEVICE_ID)).thenReturn(deviceConfigurationData);
         when(configService.retrieveDeviceConfiguration(TEST_DEVICE_ID_2)).thenReturn(deviceConfigurationData2);
-        when(externalDeviceDriverFactory.create(FAKE_HOST, 1234)).thenReturn(externalDeviceDriver);
-        when(externalDeviceDriverFactory.create(FAKE_HOST, 5678)).thenReturn(externalDeviceDriver2);
+        when(externalDeviceDriverFactory.create(FAKE_HOST, 1234,true)).thenReturn(externalDeviceDriver);
+        when(externalDeviceDriverFactory.create(FAKE_HOST, 5678,true)).thenReturn(externalDeviceDriver2);
         when(externalDevicesWatchdogProperties.getEnabled()).thenReturn(true);
         when(externalDevicesWatchdogProperties.getSignalId()).thenReturn(CUSTOM_SIGNAL_ID);
         when(externalDeviceDriver.isConnected()).thenReturn(true);
@@ -439,8 +443,8 @@ class DevicesServiceShould {
 
         when(configService.retrieveDeviceConfiguration(TEST_DEVICE_ID)).thenReturn(deviceConfigurationData);
         when(configService.retrieveDeviceConfiguration(TEST_DEVICE_ID_2)).thenReturn(deviceConfigurationData2);
-        when(externalDeviceDriverFactory.create(FAKE_HOST, 1234)).thenReturn(externalDeviceDriver);
-        when(externalDeviceDriverFactory.create(FAKE_HOST, 5678)).thenReturn(externalDeviceDriver2);
+        when(externalDeviceDriverFactory.create(FAKE_HOST, 1234,true)).thenReturn(externalDeviceDriver);
+        when(externalDeviceDriverFactory.create(FAKE_HOST, 5678,true)).thenReturn(externalDeviceDriver2);
         when(externalDevicesWatchdogProperties.getEnabled()).thenReturn(true);
         when(externalDevicesWatchdogProperties.getSignalId()).thenReturn(CUSTOM_SIGNAL_ID);
         when(externalDeviceDriver.isConnected()).thenReturn(true);
@@ -462,7 +466,7 @@ class DevicesServiceShould {
             ExternalDeviceAvailableException, UnknownExternalDeviceException, UnknownHostException {
 
         when(configService.retrieveDeviceConfiguration(TEST_DEVICE_ID)).thenReturn(deviceConfigurationData);
-        when(externalDeviceDriverFactory.create(FAKE_HOST, 1234)).thenReturn(externalDeviceDriver);
+        when(externalDeviceDriverFactory.create(FAKE_HOST, 1234,true)).thenReturn(externalDeviceDriver);
         when(externalDevicesWatchdogProperties.getEnabled()).thenReturn(true);
 
         devicesService.connectDevice(TEST_DEVICE_ID); // Necessary to add driver to pool
@@ -480,7 +484,7 @@ class DevicesServiceShould {
             ExternalDeviceAvailableException, UnknownExternalDeviceException, UnknownHostException {
 
         when(configService.retrieveDeviceConfiguration(TEST_DEVICE_ID)).thenReturn(deviceConfigurationData);
-        when(externalDeviceDriverFactory.create(FAKE_HOST, 1234)).thenReturn(externalDeviceDriver);
+        when(externalDeviceDriverFactory.create(FAKE_HOST, 1234,true)).thenReturn(externalDeviceDriver);
         when(externalDevicesWatchdogProperties.getEnabled()).thenReturn(true);
 
         devicesService.connectDevice(TEST_DEVICE_ID);
@@ -497,7 +501,7 @@ class DevicesServiceShould {
     void shouldRemoveDevice()
             throws ExternalDeviceConfigurationException, UnknownExternalDeviceException, ExternalDeviceDriverException {
         when(configService.retrieveDeviceConfiguration(TEST_DEVICE_ID)).thenReturn(deviceConfigurationData);
-        when(externalDeviceDriverFactory.create(FAKE_HOST, 1234)).thenReturn(externalDeviceDriver);
+        when(externalDeviceDriverFactory.create(FAKE_HOST, 1234,true)).thenReturn(externalDeviceDriver);
 
         devicesService.enableDevice(TEST_DEVICE_ID);
         assertTrue(deviceConfigurationData.getIsEnabled());
