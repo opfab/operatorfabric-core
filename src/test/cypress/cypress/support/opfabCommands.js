@@ -27,7 +27,7 @@ export class OpfabCommands {
         const oldMethod = Reflect.getOwnPropertyDescriptor(this, methodName);
 
         const newMethod = function (...args) {
-            cy.log(' ---- ', (new Date()).toISOString(), name, methodName, args.toString(), ' ----');
+            cy.logCustom(this.name, methodName, args.toString());
             oldMethod.value.call(this, ...args);
         }
         Reflect.defineProperty(this, methodName, {value: newMethod});

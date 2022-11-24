@@ -18,6 +18,10 @@ Cypress.Commands.add('hackUrlCurrentlyUsedMechanism', () => {
 });
 
 
+Cypress.Commands.add('logCustom', function(...args ){
+    cy.log(" ---- " , new Date().toISOString(), ...args, " ----");
+})
+
 Cypress.Commands.overwrite('reload', () => {
     cy.hackUrlCurrentlyUsedMechanism();
 
