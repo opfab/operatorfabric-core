@@ -8,10 +8,12 @@
  */
 
 import {OpfabGeneralCommands} from "../support/opfabGeneralCommands"
+import {ScriptCommands} from "../support/scriptCommands"
 
 describe('Check the behaviour of OpFab when URL is already in use', function () {
 
     const opfab = new OpfabGeneralCommands();
+    const script = new ScriptCommands();
 
     const IS_OPFAB_URL_CURRENTLY_USED_KEY = 'isOpfabUrlCurrentlyUsed';
     const DISCONNECTED_BY_NEW_USER_USING_SAME_URL = 'disconnectedByNewUserUsingSameUrl';
@@ -25,9 +27,16 @@ describe('Check the behaviour of OpFab when URL is already in use', function () 
     function sendDisconnectionSignal() {
         localStorage.setItem(DISCONNECTED_BY_NEW_USER_USING_SAME_URL, disconnectionSignal);
     }
+    before('Init web-ui.json', function () {
+        script.setPropertyInConf('checkIfUrlIsLocked','web-ui',true);
+    })
 
     beforeEach('Set up configuration', function () {
         localStorage.clear();        
+    });
+
+    after('Reset conf', function () {
+        script.resetUIConfigurationFiles();
     });
 
 
