@@ -54,8 +54,9 @@ public class ArchivedCardConsultationData implements Card {
     private String state;
     private I18n title;
     private I18n summary;
-
+    @Indexed
     private String titleTranslated;
+    @Indexed
     private String summaryTranslated;
     
     @CreatedDate

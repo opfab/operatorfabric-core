@@ -15,7 +15,9 @@
     "CardOperationTypeEnum": "org.opfab.cards.model.CardOperationTypeEnum",
     "SeverityEnum": "org.opfab.cards.model.SeverityEnum",
     "EpochDate": "java.time.Instant",
-    "LongInteger": "java.lang.Long"
+    "LongInteger": "java.lang.Long",
+    "FilterMatchTypeEnum": "org.opfab.cards.model.FilterMatchTypeEnum",
+    "FilterOperationTypeEnum": "org.opfab.cards.model.FilterOperationTypeEnum"
   },
   "model": []
 }

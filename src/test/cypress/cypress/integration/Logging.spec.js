@@ -10,11 +10,13 @@
 import {OpfabGeneralCommands} from "../support/opfabGeneralCommands"
 import {ArchivesAndLoggingCommands} from "../support/archivesAndLoggingCommands"
 import {ScriptCommands} from "../support/scriptCommands";
+import {AgGridCommands} from "../support/agGridCommands";
 
 describe('Logging screen tests', function () {
 
     const opfab = new OpfabGeneralCommands();
     const archivesAndLogging = new ArchivesAndLoggingCommands();
+    const agGrid = new AgGridCommands();
     const script = new ScriptCommands();
 
     before('Set up configuration', function () {
@@ -284,7 +286,7 @@ describe('Logging screen tests', function () {
     });
 
     it('Check spinner is displayed when request is delayed and that spinner disappears once the request arrived ', function () {
-        cy.delayRequestResponse('/cards/archives/*');
+        cy.delayRequestResponse('/cards/archives');
         opfab.loginWithUser('operator1_fr');
         moveToLoggingScreen();
         cy.waitDefaultTime();
@@ -383,7 +385,7 @@ describe('Logging screen tests', function () {
     }
 
     function checkNumberOfLineDisplayedIs(nb) {
-        cy.get('#opfab-logging-cards-list>tr').should('have.length', nb);
+        agGrid.countTableRows('#opfab-monitoring-table-grid', nb);
     }
 
     function clickOnExportButton() {

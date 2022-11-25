@@ -7,7 +7,7 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {Component, ElementRef, OnDestroy, OnInit, ViewChild} from '@angular/core';
+import {AfterViewInit, Component, ElementRef, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {Subject} from 'rxjs';
 
 import {ProcessesService} from '@ofServices/processes.service';
@@ -24,13 +24,15 @@ import {ArchivesLoggingFiltersComponent} from '../share/archives-logging-filters
 import {EntitiesService} from '@ofServices/entities.service';
 import {Utilities} from 'app/common/utilities';
 import {NgbModal, NgbModalOptions, NgbModalRef} from '@ng-bootstrap/ng-bootstrap';
+import {ArchivedCardsFilter} from '@ofModel/archived-cards-filter.model';
+import {FilterMatchTypeEnum, FilterModel} from '@ofModel/filter-model';
 
 @Component({
     selector: 'of-logging',
     templateUrl: './logging.component.html',
     styleUrls: ['./logging.component.scss']
 })
-export class LoggingComponent implements OnDestroy, OnInit {
+export class LoggingComponent implements OnDestroy, OnInit, AfterViewInit {
     unsubscribe$: Subject<void> = new Subject<void>();
 
     tags: any[];
@@ -48,11 +50,17 @@ export class LoggingComponent implements OnDestroy, OnInit {
 
     results: LightCard[];
     currentPage = 0;
-    resultsNumber = 0;
-    hasResult = false;
+
+    totalElements: number;
+    totalPages: number;
+    page: number;
+
     firstQueryHasBeenDone = false;
+    firstQueryHasResults = false;
     loadingInProgress = false;
     technicalError = false;
+
+    resultsNumber = 0;
 
     processStateDescription = new Map();
     processStateName = new Map();
@@ -66,6 +74,16 @@ export class LoggingComponent implements OnDestroy, OnInit {
 
     listOfProcessesForFilter = [];
     listOfProcessesForRequest = [];
+
+    columnFilters: FilterModel[] = [];
+    isProcessGroupFilterVisible: boolean;
+
+    private mapSeverity = new Map([
+        ['alarm', 1],
+        ['action', 2],
+        ['compliant', 3],
+        ['information', 4]
+    ]);
 
     constructor(
         private processesService: ProcessesService,
@@ -103,40 +121,48 @@ export class LoggingComponent implements OnDestroy, OnInit {
         this.results = [];
     }
 
-    resetForm() {
-        this.loggingForm.reset();
-        this.firstQueryHasBeenDone = false;
-        this.hasResult = false;
-        this.resultsNumber = 0;
+    ngAfterViewInit() {
+        this.isProcessGroupFilterVisible = this.filtersTemplate.isProcessGroupFilterVisible();
+
     }
 
-    sendQuery(page_number): void {
+    resetForm() {
+        this.loggingForm.reset();
+        this.columnFilters = [];
+        this.firstQueryHasBeenDone = false;
+    }
+
+    sendFilterQuery(page_number): void {
         this.technicalError = false;
         this.loadingInProgress = true;
 
         const {value} = this.loggingForm;
         this.filtersTemplate.transformFiltersListToMap(value);
-        this.filtersTemplate.filters.set('size', [this.size.toString()]);
-        this.filtersTemplate.filters.set('page', [page_number]);
-        this.filtersTemplate.filters.set('childCards', ['true']);
-        // if no process selected , set the filter to the list of process that shall be visible on the UI
-        if (this.listOfProcessesForRequest.length && !this.filtersTemplate.filters.has('process'))
-            this.filtersTemplate.filters.set('process', this.listOfProcessesForRequest);
+
+        const filter = this.getFilter(page_number, this.size, this.filtersTemplate.filters);
+
         this.cardService
-            .fetchArchivedCards(this.filtersTemplate.filters)
+            .fetchFilteredArchivedCards(filter)
             .pipe(takeUntil(this.unsubscribe$))
             .subscribe({
                 next: (page: Page<any>) => {
                     this.loadingInProgress = false;
 
-                    this.resultsNumber = page.totalElements;
                     this.currentPage = page_number + 1; // page on ngb-pagination component start at 1 , and page on backend start at 0
+
+                    if (!this.firstQueryHasBeenDone) {
+                        this.firstQueryHasResults=page.content.length > 0;
+                        this.resultsNumber = page.totalElements;
+                    }
+
                     this.firstQueryHasBeenDone = true;
-                    this.hasResult = page.content.length > 0;
+
                     page.content.forEach((card) => {
                         this.cardPostProcessing(card);
                     });
                     this.results = page.content;
+                    this.totalElements= page.totalElements;
+                    this.totalPages= page.totalPages;
                 },
                 error: () => {
                     this.firstQueryHasBeenDone = false;
@@ -146,6 +172,22 @@ export class LoggingComponent implements OnDestroy, OnInit {
             });
     }
 
+    private getFilter(page: number, size: number, filtersMap: Map<string, any[]>) : ArchivedCardsFilter {
+        const filters = [];
+        let isAdminMode = false;
+        filtersMap.forEach( (values, key) => {
+            if (key === 'adminMode')
+                isAdminMode = values[0];
+            else
+                filters.push(new FilterModel(key,null,FilterMatchTypeEnum.IN, values));
+        });
+        // if no process selected , set the filter to the list of process that shall be visible on the UI
+        if (this.listOfProcessesForRequest.length && !filtersMap.has('process'))
+            filters.push(new FilterModel('process',null,FilterMatchTypeEnum.IN, this.listOfProcessesForRequest));
+
+        this.columnFilters.forEach(filter => filters.push(filter));
+        return new ArchivedCardsFilter(page, size, isAdminMode, true, false, filters);
+    }
 
     cardPostProcessing(card) {
         const isThirdPartyPublisher = card.publisherType === 'EXTERNAL';
@@ -163,11 +205,29 @@ export class LoggingComponent implements OnDestroy, OnInit {
 
         card.processName = this.processNames.get(card.process);
         card.stateColor = this.stateColors.get(card.process + '.' + card.state);
+        card.severityNumber = this.mapSeverity.get(card.severity.toLocaleLowerCase());
     }
 
-    updateResultPage(currentPage): void {
+    search() {
+        this.firstQueryHasBeenDone = false;
+        this.columnFilters = [];
+        this.sendFilterQuery(0);
+        this.page = 1;
+    }
+
+    onPageChange(currentPage): void {
         // page on ngb-pagination component start at 1 , and page on backend start at 0
-        this.sendQuery(currentPage - 1);
+        this.sendFilterQuery(currentPage - 1);
+        this.page = currentPage;
+    }
+
+    onTableFilterChange(filterModel) {
+        this.columnFilters = [];
+        Object.keys(filterModel).forEach(column => {
+            const type : string = filterModel[column].type;
+            this.columnFilters.push(new FilterModel(column, filterModel[column].filterType, FilterMatchTypeEnum[type.toUpperCase()], [filterModel[column].filter]))
+        });
+        this.sendFilterQuery(0);
     }
 
     displayTime(date) {
@@ -177,9 +237,6 @@ export class LoggingComponent implements OnDestroy, OnInit {
     exportToExcel(): void {
         const exportArchiveData = [];
 
-        this.filtersTemplate.filters.set('size', [this.resultsNumber.toString()]);
-        this.filtersTemplate.filters.set('page', [0]);
-
         const modalOptions: NgbModalOptions = {
             centered: true,
             backdrop: 'static', // Modal shouldn't close even if we click outside it
@@ -187,8 +244,10 @@ export class LoggingComponent implements OnDestroy, OnInit {
         };
         this.modalRef = this.modalService.open(this.exportTemplate, modalOptions);
 
+        const filter = this.getFilter(0, this.resultsNumber, this.filtersTemplate.filters);
+
         this.cardService
-            .fetchArchivedCards(this.filtersTemplate.filters)
+            .fetchFilteredArchivedCards(filter)
             .pipe(takeUntil(this.unsubscribe$))
             .subscribe((page: Page<LightCard>) => {
                 const lines = page.content;
