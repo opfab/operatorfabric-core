@@ -35,7 +35,7 @@ public class ModbusDriverFactoryShould {
     @Test
     void modbusDriverFactoryShouldCreateDriverForResolvableHost() throws ExternalDeviceDriverException, UnknownHostException {
 
-        ExternalDeviceDriver modbusDriver = modbusDriverFactory.create("123.45.67.1",123,true);
+        ExternalDeviceDriver modbusDriver = modbusDriverFactory.create("123.45.67.1",123);
 
         assertThat(modbusDriver).isNotNull();
         assertThat(modbusDriver.getResolvedHost()).isEqualTo(InetAddress.getByName("123.45.67.1"));
@@ -46,7 +46,7 @@ public class ModbusDriverFactoryShould {
 
     @Test
     void modbusDriverFactoryShouldThrowErrorIfAttemptingToCreateDriverWithUnresolvableHost() {
-        assertThrows(ExternalDeviceDriverException.class, () -> {modbusDriverFactory.create("unresolvableHost",123,true);});
+        assertThrows(ExternalDeviceDriverException.class, () -> {modbusDriverFactory.create("unresolvableHost",123);});
     }
 
 }

@@ -13,7 +13,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.opfab.externaldevices.configuration.externaldevices.ExternalDevicesWatchdogProperties;
 import org.opfab.externaldevices.drivers.*;
 import org.opfab.externaldevices.model.*;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
@@ -44,9 +43,6 @@ public class DevicesService {
     private final ExternalDeviceDriverFactory externalDeviceDriverFactory;
     private final ExternalDevicesWatchdogProperties externalDevicesWatchdogProperties;
     private final Map<String, ExternalDeviceDriver> deviceDriversPool;
-
-    @Value("${operatorfabric.externaldevices.keepAlive:true}")
-    private boolean keepAlive;
 
     public DevicesService(ConfigService configService,
             ExternalDeviceDriverFactory externalDeviceDriverFactory,
@@ -122,7 +118,7 @@ public class DevicesService {
             }
             log.info("Add driver to pool ", deviceId);
             ExternalDeviceDriver newDriver = externalDeviceDriverFactory.create(deviceConfiguration.getHost(),
-                    deviceConfiguration.getPort(),keepAlive);
+                    deviceConfiguration.getPort());
             deviceDriversPool.put(deviceId, newDriver);
             return newDriver;
         }
