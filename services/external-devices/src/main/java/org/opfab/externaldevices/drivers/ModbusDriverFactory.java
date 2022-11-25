@@ -28,7 +28,7 @@ public class ModbusDriverFactory implements ExternalDeviceDriverFactory {
     static final int RESPONSE_TIMEOUT = 10000;
 
     @Override
-    public ExternalDeviceDriver create(String host, int port, boolean keepAlive) throws ExternalDeviceDriverException {
+    public ExternalDeviceDriver create(String host, int port) throws ExternalDeviceDriverException {
 
         try {
             InetAddress resolvedHost = InetAddress.getByName(host);
@@ -38,14 +38,14 @@ public class ModbusDriverFactory implements ExternalDeviceDriverFactory {
             TcpParameters tcpParameters = new TcpParameters();
             tcpParameters.setHost(resolvedHost);
             tcpParameters.setPort(port);
-            tcpParameters.setKeepAlive(keepAlive);
-            log.info("Creating ModbusMaster with host {} and port {} and keepAlive {} ", tcpParameters.getHost(),tcpParameters.getPort(),keepAlive);
+            tcpParameters.setKeepAlive(true);
+            log.debug("Creating ModbusMaster with host {} and port {}",tcpParameters.getHost(),tcpParameters.getPort());
             Modbus.setLogLevel(Modbus.LogLevel.LEVEL_DEBUG);
             Modbus.setAutoIncrementTransactionId(true);
             ModbusMaster modbusMaster = ModbusMasterFactory.createModbusMasterTCP(tcpParameters);
             modbusMaster.setResponseTimeout(RESPONSE_TIMEOUT);
 
-            return new ModbusDriver(resolvedHost,port,modbusMaster,keepAlive);
+            return new ModbusDriver(resolvedHost,port,modbusMaster);
 
         } catch (UnknownHostException e) {
             throw new ExternalDeviceDriverException("Unable to initialize ModbusDriver with host "+ host, e);
