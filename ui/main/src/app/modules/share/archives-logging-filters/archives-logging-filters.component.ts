@@ -265,6 +265,7 @@ export class ArchivesLoggingFiltersComponent implements OnInit, OnDestroy, After
         if (!this.filters.get('process')) this.filters.set('process', ids);
     }
 
+
     addProcessesDropdownList(processesDropdownList: any[]): void {
         processesDropdownList.forEach((processMultiSelectOptions) =>
             this.processMultiSelectOptionsWhenSelectedProcessGroup.push(processMultiSelectOptions)

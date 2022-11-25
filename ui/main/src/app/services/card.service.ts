@@ -36,11 +36,13 @@ import {FilterService} from '@ofServices/lightcards/filter.service';
 import {LogOption, OpfabLoggerService} from './logs/opfab-logger.service';
 import packageInfo from '../../../package.json';
 import {SoundNotificationService} from './sound-notification.service';
+import {ArchivedCardsFilter} from '@ofModel/archived-cards-filter.model';
 
 @Injectable({
     providedIn: 'root'
 })
 export class CardService {
+
     private static TWO_MINUTES = 120000;
 
     readonly cardOperationsUrl: string;
@@ -343,6 +345,10 @@ export class CardService {
     fetchArchivedCards(filters: Map<string, string[]>): Observable<Page<LightCard>> {
         const params = this.convertFiltersIntoHttpParams(filters);
         return this.httpClient.get<Page<LightCard>>(`${this.archivesUrl}/`, {params});
+    }
+
+    fetchFilteredArchivedCards(filter: ArchivedCardsFilter) {
+        return this.httpClient.post<Page<LightCard>>(`${this.archivesUrl}/`, filter);
     }
 
     convertFiltersIntoHttpParams(filters: Map<string, string[]>): HttpParams {

@@ -564,6 +564,65 @@ definitions:
         type: number
         description: >-
           Page number
+  FilterOperationTypeEnum:
+    type: string
+    description: |-
+      Type of operation between 2 filter conditions
+    enum:
+      - AND
+      - OR
+  FilterMatchTypeEnum:
+    type: string
+    description: |-
+      Type of match to do between column value and filter value
+    enum:
+      - EQUALS
+      - NOTEQUAL
+      - STARTSWITH
+      - ENDSWITH
+      - CONTAINS
+      - NOTCONTAINS
+      - BLANK
+      - NOTBLANK
+      - IN
+  ArchivedCardsFilter:
+    type: object
+    properties:
+      page:
+        type: number
+        description: >-
+          Page number
+      size: 
+        type: number
+        description: >-
+          Page size (max number of items in page)
+      adminMode:
+        type: boolean
+      includeChildCards:
+        type: boolean
+      latestUpdateOnly:
+        type: boolean
+      filters:
+        type: array
+        items:
+          $ref: '#/definitions/FilterModel'
+  FilterModel:
+    type: object
+    properties:
+      columnName:
+        type: string
+      matchType:
+        $ref: '#/definitions/FilterMatchTypeEnum'
+      filter: 
+        type: array
+        items: 
+          type: string
+      condition1:
+        $ref: '#/definitions/FilterModel'
+      condition2:
+        $ref: '#/definitions/FilterModel'
+      operation: 
+        $ref: '#/definitions/FilterOperationTypeEnum'
   PublisherTypeEnum:
     type: string
     description: |-
@@ -856,6 +915,37 @@ paths:
           description: OK
           schema:
             $ref: '#/definitions/Card'
+        '401':
+          description: Authentication required
+        '403':
+          description: Forbidden - User doesn't have any group
+  /archives:
+    post:
+      tags:
+        - archives
+        - read
+      summary: get archived cards matching given criteria
+      description: >-
+        get archived cards matching the criteria given as parameters. Results are limited to the cards that
+        the calling user is allowed to see (based on the card recipients). For performance reasons, the response 
+        does not contain all lightCard fields, the returned fields are : id, uid,publisher, processVersion,process,
+        processInstanceId,state,title,summary,publishDate,startDate,endDate,severity, publisherType,
+        representative,representativeType. The other fields are set to null.
+      operationId: fetchArchivedCardsWithFilterinCriteria
+      consumes:
+        - application/json
+      parameters:
+        - name: filter
+          in: body
+          schema:
+            $ref: '#/definitions/ArchivedCardsFilter'
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/LightCardPage'
+        '400':
+          description: Bad request
         '401':
           description: Authentication required
         '403':

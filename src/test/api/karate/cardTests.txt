@@ -1,4 +1,4 @@
-      cards/fetchArchivedCardsWithParams.feature  \
+      cards/fetchArchivedCardsWithParamsOrFilter.feature  \
       cards/cards.feature                         \
       cards/cardsWithTimespans.feature            \
       cards/fetchArchivedCard.feature             \

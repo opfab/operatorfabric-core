@@ -443,3 +443,5 @@ export class MonitoringTableComponent implements OnChanges, OnDestroy {
         });
     }
 }
+
+
