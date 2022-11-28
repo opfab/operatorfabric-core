@@ -58,21 +58,22 @@ export class ActivityareaComponent implements OnInit, OnDestroy {
     private initForm() {
         const group = {};
         this.userEntities.forEach((userEntity) => {
-            if (userEntity.isDisconnected) {
-                group[userEntity.entityId] = new FormControl<boolean | null>(false);
-            } else {
-                group[userEntity.entityId] = new FormControl<boolean | null>(true);
+            // avoid recreating form if existing to avoid detached dom error in cypress tests
+            if (!group[userEntity.entityId]) {
+                if (userEntity.isDisconnected) {
+                    group[userEntity.entityId] = new FormControl<boolean | null>(false);
+                } else {
+                    group[userEntity.entityId] = new FormControl<boolean | null>(true);
+                }
             }
         });
         this.activityAreaForm = new FormGroup(group);
     }
 
     ngOnInit() {
-       this.loadUserData();
+        this.loadUserData();
 
-       this.actions$.pipe(
-        ofType(UserActionsTypes.UserConfigLoaded)
-        ).subscribe(() => this.loadUserData());
+        this.actions$.pipe(ofType(UserActionsTypes.UserConfigLoaded)).subscribe(() => this.loadUserData());
 
         this.interval = setInterval(() => {
             this.refresh();
@@ -84,7 +85,7 @@ export class ActivityareaComponent implements OnInit, OnDestroy {
         this.currentUserWithPerimeters = this.userService.getCurrentUserWithPerimeters();
 
         // we retrieve all the entities to which the user can connect
-        this.userService.getUser(this.currentUserWithPerimeters.userData.login).subscribe((currentUser) => {  
+        this.userService.getUser(this.currentUserWithPerimeters.userData.login).subscribe((currentUser) => {
             const entities = this.entitiesService.getEntitiesFromIds(currentUser.entities);
             entities.forEach((entity) => {
                 if (entity.entityAllowedToSendCard) {
@@ -120,7 +121,10 @@ export class ActivityareaComponent implements OnInit, OnDestroy {
             connectedUsers.sort((obj1, obj2) => Utilities.compareObj(obj1.login, obj2.login));
 
             connectedUsers.forEach((connectedUser) => {
-                if ((connectedUser.login !== this.currentUserWithPerimeters.userData.login) && (!! connectedUser.entitiesConnected)) {
+                if (
+                    connectedUser.login !== this.currentUserWithPerimeters.userData.login &&
+                    !!connectedUser.entitiesConnected
+                ) {
                     connectedUser.entitiesConnected.forEach((entityConnectedId) => {
                         if (this.userEntities.map((userEntity) => userEntity.entityId).includes(entityConnectedId)) {
                             connectedUser.groups.forEach((groupId) => {
