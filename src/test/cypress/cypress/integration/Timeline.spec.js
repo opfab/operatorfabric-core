@@ -27,7 +27,7 @@ describe('Time line moves', function () {
     beforeEach('Reset UI configuration file ', function () {
         script.deleteAllCards();
     })
- 
+  
     it('Check timelime manual moves in TR mode', function () {
 
         // NB : month  starts at 0
@@ -797,7 +797,6 @@ describe('Time line moves', function () {
 
     });
 
-
     it('Check timeline circles have valid popover', function () {
 
         opfab.loginWithUser("operator1_fr");
@@ -833,11 +832,13 @@ describe('Time line moves', function () {
         cy.get("#opfab-div-card-template-processed").should("exist");
         checkDisplayedCardTitle("State to test template rendering features");
 
+        // hide and show time line to avoid detached dom error when clicking on popover after
+        hideTimeLine();
+        showTimeLine();
 
         hoverNthCircle(1);
         cy.get(".popover-body").find('button').should("have.length", 2);
         cy.get(".popover-body").find('button').eq(1).click();
-        
         
         checkDisplayedCardTitle("Electricity consumption forecast");
     });
@@ -899,5 +900,13 @@ describe('Time line moves', function () {
 
     function checkDisplayedCardTitle(title) {
         cy.get("#opfab-card-title").should("have.text", title.toUpperCase());
+    }
+
+    function hideTimeLine() {
+        cy.get('#opfab-timeline-link-hide-timeline > a').click();
+    }
+
+    function showTimeLine() {
+        cy.get('#opfab-timeline-link-show-timeline > a').click();
     }
 })
