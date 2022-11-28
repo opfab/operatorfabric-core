@@ -38,10 +38,7 @@ public class DevicesController implements DevicesApi {
 
     private static final String CONNECT_FAILED_DUE_TO_CONFIG = "Could not connect to device %1$s due to a configuration issue.";
     private static final String CONNECT_FAILED = "Connection to device %1$s failed.";
-    private static final String CONNECT_FAILED_BECAUSE_DEVICE_IS_DISABLED = "Connection to device %1$s failed because device is disabled.";
-    private static final String DISCONNECT_FAILED = "Disconnection from device %1$s failed.";
     private static final String ENABLED_FAILED = "Activation of device %1$s failed.";
-    private static final String DISABLED_FAILED = "Deactivation of device %1$s failed.";
     private static final String DEVICE_NOT_FOUND_MSG = "Device %s not found.";
     private static final String UNKNOWN_DRIVER = "No known driver for device %1$s.";
 
@@ -59,58 +56,23 @@ public class DevicesController implements DevicesApi {
         if (deviceConfigurationList != null) {
             deviceConfigurationList.forEach(deviceConfiguration -> {
                 try {
-                    this.devicesService.connectDevice(deviceConfiguration.getId());
-                    log.info("External device id={} connected to opfab", deviceConfiguration.getId());
+                    if (Boolean.TRUE.equals(deviceConfiguration.getIsEnabled())) {
+                        this.devicesService.enableDevice(deviceConfiguration.getId());
+                        log.info("External device id={} connected to opfab", deviceConfiguration.getId());
+                    }
                 } catch (ExternalDeviceConfigurationException e) {
                     log.warn(String.format(CONNECT_FAILED_DUE_TO_CONFIG, deviceConfiguration.getId()));
                 } catch (ExternalDeviceDriverException e) {
                     log.warn(String.format(CONNECT_FAILED, deviceConfiguration.getId()));
-                } catch (ExternalDeviceAvailableException e) {
-                    log.warn(String.format(CONNECT_FAILED_BECAUSE_DEVICE_IS_DISABLED, deviceConfiguration.getId()));
-                } catch (UnknownExternalDeviceException e) {
+                }catch (UnknownExternalDeviceException e) {
                     log.warn(String.format(UNKNOWN_DRIVER, deviceConfiguration.getId()));
                 }
             });
         }
     }
 
-
     @Override
-    public Void connectDevice(HttpServletRequest request, HttpServletResponse response, String deviceId) {
-
-        try {
-            this.devicesService.connectDevice(deviceId);
-        } catch (ExternalDeviceConfigurationException e) {
-            throwApiException(e, HttpStatus.BAD_REQUEST, String.format(CONNECT_FAILED_DUE_TO_CONFIG, deviceId));
-        } catch (ExternalDeviceDriverException e) {
-            throwApiException(e, HttpStatus.INTERNAL_SERVER_ERROR, String.format(CONNECT_FAILED,deviceId));
-        } catch (ExternalDeviceAvailableException e) {
-            throwApiException(e, HttpStatus.BAD_REQUEST, String.format(CONNECT_FAILED_BECAUSE_DEVICE_IS_DISABLED, deviceId));
-        } catch (UnknownExternalDeviceException e) {
-            throwApiException(e, HttpStatus.NOT_FOUND, String.format(UNKNOWN_DRIVER, deviceId));
-        }
-        response.setStatus(200);
-        return null;
-
-    }
-
-    @Override
-    public Void disconnectDevice(HttpServletRequest request, HttpServletResponse response, String deviceId) {
-
-        try {
-            this.devicesService.disconnectDevice(deviceId);
-        } catch (ExternalDeviceDriverException e) {
-            throwApiException(e, HttpStatus.INTERNAL_SERVER_ERROR, String.format(DISCONNECT_FAILED, deviceId));
-        } catch (UnknownExternalDeviceException e) {
-            throwApiException(e, HttpStatus.NOT_FOUND, String.format(UNKNOWN_DRIVER, deviceId));
-        }
-        response.setStatus(200);
-        return null;
-
-    }
-
-    @Override
-    public Void enableDevice(HttpServletRequest request, HttpServletResponse response, String deviceId) {
+    public Void enableDevice(HttpServletRequest request, HttpServletResponse response, String deviceId) throws ExternalDeviceDriverException {
         log.info("Enable device {}", deviceId);
         try {
             configService.enableDevice(deviceId);
@@ -125,14 +87,13 @@ public class DevicesController implements DevicesApi {
     }
 
     @Override
-    public Void disableDevice(HttpServletRequest request, HttpServletResponse response, String deviceId) {
+    public Void disableDevice(HttpServletRequest request, HttpServletResponse response, String deviceId) throws ExternalDeviceDriverException{
         log.info("Disable device {}", deviceId);
         try {
             configService.disableDevice(deviceId);
             this.devicesService.disableDevice(deviceId);
-        } catch (ExternalDeviceConfigurationException e) {
-            throwApiException(e, HttpStatus.INTERNAL_SERVER_ERROR, String.format(DISABLED_FAILED, deviceId));
-        } catch (UnknownExternalDeviceException e) {
+        } 
+        catch (UnknownExternalDeviceException e) {
             return throwApiException(e, HttpStatus.NOT_FOUND, String.format(UNKNOWN_DRIVER, deviceId));
         }
         response.setStatus(200);

@@ -1,4 +1,4 @@
-/* Copyright (c) 2021, RTE (http://www.rte-france.com)
+/* Copyright (c) 2021-2022, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -18,6 +18,7 @@ import org.opfab.externaldevices.model.UserConfigurationData;
 import org.opfab.externaldevices.repositories.DeviceConfigurationRepository;
 import org.opfab.externaldevices.repositories.SignalMappingRepository;
 import org.opfab.externaldevices.repositories.UserConfigurationRepository;
+import org.opfab.externaldevices.services.DevicesService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Component;
@@ -47,6 +48,9 @@ public class DataInitComponent {
 
     @Autowired
     private UserConfigurationRepository userConfigurationRepository;
+
+    @Autowired
+    private DevicesService deviceService;
 
     @PostConstruct
     public void init() {
@@ -114,11 +118,20 @@ public class DataInitComponent {
     private void safeInsertDeviceConfiguration(DeviceConfigurationData deviceConfigurationData) {
         try {
             deviceConfigurationRepository.insert(deviceConfigurationData);
+            if (Boolean.TRUE.equals(deviceConfigurationData.getIsEnabled()))  enableDevice(deviceConfigurationData.getId());
         } catch (DuplicateKeyException ex) {
             log.warn("{} {} device configuration: duplicate",FAILED_INIT_MSG, deviceConfigurationData.getId());
         }
     }
 
+    private void enableDevice(String deviceId) {
+        try {
+            deviceService.enableDevice(deviceId);
+        }
+        catch (Exception exc) {
+            log.warn("Impossible to enable device {} ", deviceId ,exc);
+        }
+    }
     /**
      * Inserts signal mapping unless a mapping already exists with the same id. In this case log it and
      * carry on with the next mapping
