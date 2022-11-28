@@ -48,12 +48,6 @@ Scenario: Try to enable a device without authentication
     When method post
     Then status 401
 
-Scenario: Try to connect a disabled device
-
-    Given url opfabUrl + devicesEndpoint + "/CDS_1/connect"
-    And header Authorization = 'Bearer ' + authToken
-    When method post
-    Then status 400
 
 Scenario: Enable a device
 
@@ -101,56 +95,4 @@ Scenario: Try to enable a non existing device
     When method post
     Then status 404
 
-Scenario: Disconnect a device
 
-    Given url opfabUrl + devicesEndpoint + "/CDS_1/disconnect"
-    And header Authorization = 'Bearer ' + authToken
-    When method post
-    Then status 200
-
-Scenario: Try to connect a device without admin role
-
-    Given url opfabUrl + devicesEndpoint + "/CDS_1/connect"
-    And header Authorization = 'Bearer ' + authTokenAsTSO
-    When method post
-    Then status 403
-
-Scenario: Try to connect a device without authentication
-
-    Given url opfabUrl + devicesEndpoint + "/CDS_1/connect"
-    When method post
-    Then status 401
-
-Scenario: Connect a device
-
-    Given url opfabUrl + devicesEndpoint + "/CDS_1/connect"
-    And header Authorization = 'Bearer ' + authToken
-    When method post
-    Then status 200
-
-Scenario: Try to disconnect a device without admin role
-
-    Given url opfabUrl + devicesEndpoint + "/CDS_1/disconnect"
-    And header Authorization = 'Bearer ' + authTokenAsTSO
-    When method post
-    Then status 403
-
-Scenario: Try to disconnect a device without authentication
-
-    Given url opfabUrl + devicesEndpoint + "/CDS_1/disconnect"
-    When method post
-    Then status 401
-
-Scenario: Try to connect a non existing device
-
-    Given url opfabUrl + devicesEndpoint + "/device_that_doesnt_exist/connect"
-    And header Authorization = 'Bearer ' + authToken
-    When method post
-    Then status 404
-
-Scenario: Try to disconnect a non existing device
-
-    Given url opfabUrl + devicesEndpoint + "/device_that_doesnt_exist/disconnect"
-    And header Authorization = 'Bearer ' + authToken
-    When method post
-    Then status 404

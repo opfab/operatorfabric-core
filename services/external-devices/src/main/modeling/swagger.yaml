@@ -447,60 +447,6 @@ paths:
             $ref: '#/definitions/Device'
         '404':
           description: Required device not found
-  '/devices/{deviceId}/connect':
-    post:
-      tags:
-        - device
-      summary: Connect device
-      description: Connect device with given deviceId
-      operationId: connectDevice
-      produces:
-        - application/json
-      parameters:
-        - in: path
-          name: deviceId
-          description: device Id
-          type: string
-          required: true
-      responses:
-        '200':
-          description: OK
-        '400':
-          description: Could not connect device because it is disabled
-        '401':
-          description: Authentication required
-        '403': 
-          description: Forbidden - ADMIN role necessary
-        '404':
-          description: Required device not found
-        '500':
-          description: Driver error during the connection to the device
-  '/devices/{deviceId}/disconnect':
-    post:
-      tags:
-        - device
-      summary: Disconnect device
-      description: Disconnect device with given deviceId
-      operationId: disconnectDevice
-      produces:
-        - application/json
-      parameters:
-        - in: path
-          name: deviceId
-          description: device Id
-          type: string
-          required: true
-      responses:
-        '200':
-          description: OK
-        '401':
-          description: Authentication required
-        '403': 
-          description: Forbidden - ADMIN role necessary
-        '404':
-          description: Required device not found
-        '500':
-          description: Driver error during the disconnection to the device
   '/devices/{deviceId}/enable':
     post:
       tags:

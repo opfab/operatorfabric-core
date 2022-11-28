@@ -179,18 +179,19 @@ severities.
 Please see the https://opfab.github.io/documentation/current/api/external-devices/[API documentation] for details.
 
 NOTE: There is a `Device` object distinct from `DeviceConfiguration` because the latter represents static information
-about how to reach a device, while the former contains information about the actual connection and its status.
+about how to reach a device, while the former contains information about the actual connection.
 For example, this is why the device configuration contains a `host` (which can be a hostname) while the device
 has a `resolvedAddress`.
 As a result, they are managed through separate endpoints, which might also make things easier if we need to secure
-them differently (some people might be allowed to connect/disconnect devices but not change their configuration).
+them differently.
 
 == Configuration
 
-== Connexion Management
+== Connection Management
 
-OperatorFabric does automatically attempt to connect to enabled configured external devices at startup. If an enabled device
-is disconnected, OperatorFabric will try to reconnect it every 10 seconds (default value).
+OperatorFabric does automatically attempt to connect to enabled configured external devices at startup. If several external devices share the same host and port, only one connection will be open for the external devices and only one watchdog will be sent for the external devices.
+
+If an external driver is disconnected, OperatorFabric will try to reconnect it every 10 seconds (default value). 
 
 
 == Configuration Management
