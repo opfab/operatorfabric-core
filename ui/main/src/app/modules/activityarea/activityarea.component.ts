@@ -81,7 +81,9 @@ export class ActivityareaComponent implements OnInit, OnDestroy {
     }
 
     loadUserData() {
-        this.userEntities = [];
+        //  Use a temporary array to avoid detached dom error in cypress tests
+        //  with  <tr *ngFor="let userEntity of userEntities;">  in html
+        const newUserEntities = [];
         this.currentUserWithPerimeters = this.userService.getCurrentUserWithPerimeters();
 
         // we retrieve all the entities to which the user can connect
@@ -95,14 +97,15 @@ export class ActivityareaComponent implements OnInit, OnDestroy {
                             ? !this.activityAreaForm.get(entity.id).value // Keep form value if esists
                             : !this.currentUserWithPerimeters.userData.entities.includes(entity.id);
 
-                    this.userEntities.push({
+                    newUserEntities.push({
                         entityId: entity.id,
                         entityName: entity.name,
                         isDisconnected: isDisconnected
                     });
                 }
             });
-            this.userEntities.sort((a, b) => Utilities.compareObj(a.entityName, b.entityName));
+            newUserEntities.sort((a, b) => Utilities.compareObj(a.entityName, b.entityName));
+            this.userEntities = newUserEntities;
             this.initForm();
 
             if (!!this.currentUserWithPerimeters.userData.groups)
@@ -110,6 +113,7 @@ export class ActivityareaComponent implements OnInit, OnDestroy {
                     this.groupsService.isRealtimeGroup(groupId)
                 );
             this.isScreenLoaded = true;
+            
             this.refresh();
         });
     }
