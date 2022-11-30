@@ -39,7 +39,7 @@ import java.util.Optional;
 @ActiveProfiles("test")
 @WebAppConfiguration
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-@WithMockOpFabUser(login = "someUser", roles = { "AROLE" })
+@WithMockOpFabUser(login = "someUser")
 class CardControllerUserCardShould extends CardControllerShouldBase {
 
 	String cardUid;

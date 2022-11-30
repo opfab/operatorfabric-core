@@ -18,6 +18,7 @@ import org.opfab.cards.consultation.model.LightCard;
 import org.opfab.cards.consultation.model.LightCardConsultationData;
 import org.opfab.springtools.configuration.mongo.PaginationUtils;
 import org.opfab.users.model.CurrentUserWithPerimeters;
+import org.opfab.users.model.OpfabRolesEnum;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.*;
 import org.springframework.data.mongodb.core.ReactiveMongoTemplate;
@@ -524,11 +525,14 @@ public class ArchivedCardCustomRepositoryImpl implements ArchivedCardCustomRepos
             String adminMode = params.getFirst(ADMIN_MODE);
             boolean isCurrentUserMemberOfAdminGroup = ((currentUserWithPerimeters.getUserData().getGroups() != null) &&
                                                       (currentUserWithPerimeters.getUserData().getGroups().contains("ADMIN")));
+            boolean hasCurrentUserAdminRole = currentUserWithPerimeters.getUserData().getOpfabRoles() != null && 
+                                 (currentUserWithPerimeters.getUserData().getOpfabRoles().contains(OpfabRolesEnum.ADMIN) ||
+                                 currentUserWithPerimeters.getUserData().getOpfabRoles().contains(OpfabRolesEnum.VIEW_ALL_ARCHIVED_CARDS));
 
-            if ((adminMode != null) && (adminMode.equals("true")) && (!isCurrentUserMemberOfAdminGroup))
-                log.warn("Parameter {} set to true in the request but the user is not member of ADMIN group", ADMIN_MODE);
+            if (adminMode != null && adminMode.equals("true") && !isCurrentUserMemberOfAdminGroup && !hasCurrentUserAdminRole)
+                log.warn("Parameter {} set to true in the request but the user is not member of ADMIN group and does not have ADMIN or VIEW_ALL_ARCHIVED_CARDS role", ADMIN_MODE);
 
-            return isCurrentUserMemberOfAdminGroup && (adminMode != null) && (adminMode.equals("true"));
+            return (isCurrentUserMemberOfAdminGroup || hasCurrentUserAdminRole) && (adminMode != null) && (adminMode.equals("true"));
         }
         return false;
     }

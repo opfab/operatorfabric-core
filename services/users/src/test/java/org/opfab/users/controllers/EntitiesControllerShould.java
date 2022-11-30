@@ -16,6 +16,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.opfab.users.application.UnitTestApplication;
 import org.opfab.users.application.configuration.WithMockOpFabUser;
 import org.opfab.users.model.EntityData;
+import org.opfab.users.model.OpfabRolesEnum;
 import org.opfab.users.model.UserData;
 import org.opfab.users.repositories.EntityRepository;
 import org.opfab.users.repositories.UserRepository;
@@ -118,7 +119,7 @@ class EntitiesControllerShould {
     }
 
     @Nested
-    @WithMockOpFabUser(login="testAdminUser", roles = { "ADMIN" })
+    @WithMockOpFabUser(login="testAdminUser", opfabRoles = {OpfabRolesEnum.ADMIN})
     class GivenAdminUserEntitiesControllerShould {
 
         @Test
@@ -678,7 +679,7 @@ class EntitiesControllerShould {
     }
 
     @Nested
-    @WithMockOpFabUser(login="gchapman", roles = { "Monty Pythons" })
+    @WithMockOpFabUser(login="gchapman")
     class GivenNonAdminUserEntitiesControllerShould {
 
         @Test

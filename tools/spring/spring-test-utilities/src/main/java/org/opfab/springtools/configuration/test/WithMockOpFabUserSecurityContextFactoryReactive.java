@@ -1,4 +1,4 @@
-/* Copyright (c) 2021, RTE (http://www.rte-france.com)
+/* Copyright (c) 2021-2022, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -43,7 +43,8 @@ public class WithMockOpFabUserSecurityContextFactoryReactive implements WithSecu
                         customUser.login(),
                         customUser.firstName(),
                         customUser.lastName(),
-                Arrays.asList(customUser.roles()),
+                Arrays.asList(customUser.groups()),
+                Arrays.asList(customUser.opfabRoles()),
                 customUser.entities() != null ? Arrays.asList(customUser.entities()) : null,
                 customUser.authorizedIPAddresses() != null ? Arrays.asList(customUser.authorizedIPAddresses()) : null);
 

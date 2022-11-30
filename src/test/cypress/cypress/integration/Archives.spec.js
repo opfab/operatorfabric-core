@@ -167,6 +167,26 @@ describe('Archives screen tests', function () {
         archivesAndLogging.checkAdminModeLinkIsDisplayed();
     });
 
+
+
+    it('Check admin mode for for operator2_it with VIEW_ALL_ARCHIVED_CARDS role ', function () {
+        opfab.loginWithUser('operator2_fr');
+        opfab.navigateToArchives();
+
+        cy.waitDefaultTime();
+
+        archivesAndLogging.checkAdminModeCheckboxIsDisplayed();
+        archivesAndLogging.checkAdminModeCheckboxIsNotChecked();
+
+        archivesAndLogging.clickOnSearchButton();
+        checkNumberOfLineDisplayedIs(3);
+        // We activate the admin mode
+        archivesAndLogging.clickAdminModeCheckbox();
+        archivesAndLogging.clickOnSearchButton();
+
+        checkNumberOfLineDisplayedIs(6);
+    });
+
     it('Check composition of multi-filters for process groups/processes/states for operator1_fr, with a config without process group', function () {
         script.loadEmptyProcessGroups();
         opfab.loginWithUser('operator1_fr');

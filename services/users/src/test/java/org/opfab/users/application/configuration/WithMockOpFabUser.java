@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2021, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2022, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -15,6 +15,7 @@ import org.springframework.security.test.context.support.WithSecurityContext;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
+import org.opfab.users.model.OpfabRolesEnum;
 
 /**
  * This annotation defines the creation of mock OpFab users for tests
@@ -31,9 +32,11 @@ public @interface WithMockOpFabUser {
 
     String lastName() default  "myUserLastName";
 
-    String[] roles() default "";
+    String[] groups() default "";
 
     String[] entities() default "";
+
+    OpfabRolesEnum[] opfabRoles() default {};
 
     String[] authorizedIPAddresses() default {};
 }

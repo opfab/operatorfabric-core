@@ -29,12 +29,14 @@ export class ArrayCellRendererComponent implements ICellRendererAngularComp {
     private _nameValues: string;
 
     agInit(params: any): void {
-        this.cachedCrudService = this.dataHandlingService.resolveCachedCrudServiceDependingOnType(this.itemType);
-        this.mapping = this.cachedCrudService.getCachedValues();
-        // Look up code in values returned by the corresponding service, if it exists return corresponding name, otherwise return code
-        if (!!this.mapping) {
-            const value = params.getValue();
-            if (!!value) {
+        const value = params.getValue();
+        this._nameValues = value;;
+
+        if (!!this.itemType) {
+            this.cachedCrudService = this.dataHandlingService.resolveCachedCrudServiceDependingOnType(this.itemType);
+            this.mapping = this.cachedCrudService.getCachedValues();
+
+            if (!!this.mapping && !!value) {
                 this._nameValues = value
                     .map((code) => {
                         // This entails that the items that need to be rendered have an `id` and a `name` property.
@@ -51,11 +53,9 @@ export class ArrayCellRendererComponent implements ICellRendererAngularComp {
                     })
                     .sort()
                     .join(', ');
-            }
-        } else {
-            console.log('Admin table: id/name mapping was undefined for ' + this.itemType);
-            this._nameValues = params.getValue();
+            } else console.log('Admin table: id/name mapping was undefined for ' + this.itemType);
         }
+
     }
 
     /** This method returns true to signal to the grid that this renderer doesn't need to be recreated if the underlying data changes

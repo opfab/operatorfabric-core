@@ -28,6 +28,7 @@ import moment from 'moment';
 import {Utilities} from 'app/common/utilities';
 import {UserPreferencesService} from '@ofServices/user-preference.service';
 import {UserService} from '@ofServices/user.service';
+import {OpfabRolesEnum} from '@ofModel/user.model';
 
 export enum FilterDateTypes {
     PUBLISH_DATE_FROM_PARAM = 'publishDateFrom',
@@ -66,7 +67,7 @@ export class ArchivesLoggingFiltersComponent implements OnInit, OnDestroy, After
     @Output() search = new EventEmitter<string>();
     @Output() reset = new EventEmitter<string>();
 
-    isCurrentUserInAdminGroup: boolean;
+    hasCurrentUserRigthsToViewAllArchivedCards: boolean;
     isAdminModeChecked: boolean;
 
     unsubscribe$: Subject<void> = new Subject<void>();
@@ -134,10 +135,10 @@ export class ArchivesLoggingFiltersComponent implements OnInit, OnDestroy, After
         private userPreferences: UserPreferencesService,
         private userService: UserService
     ) {
-        this.isCurrentUserInAdminGroup = this.userService.isCurrentUserAdmin();
+        this.hasCurrentUserRigthsToViewAllArchivedCards = this.userService.isCurrentUserAdmin() || this.userService.hasCurrentUserAnyRole([OpfabRolesEnum.VIEW_ALL_ARCHIVED_CARDS]);
 
         const isAdminModeCheckedInStorage = this.userPreferences.getPreference('opfab.isAdminModeChecked');
-        this.isAdminModeChecked = this.isCurrentUserInAdminGroup && isAdminModeCheckedInStorage === 'true';
+        this.isAdminModeChecked = this.hasCurrentUserRigthsToViewAllArchivedCards && isAdminModeCheckedInStorage === 'true';
     }
 
     ngOnInit() {

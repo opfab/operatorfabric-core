@@ -177,7 +177,7 @@ class UsersControllerShould {
     }
 
     @Nested
-    @WithMockOpFabUser(login = "testAdminUser", roles = {"ADMIN"})
+    @WithMockOpFabUser(login = "testAdminUser", opfabRoles = {OpfabRolesEnum.ADMIN})
     class GivenAdminUserUsersControllerShould {
 
         @Test
@@ -788,7 +788,7 @@ class UsersControllerShould {
     }
 
     @Nested
-    @WithMockOpFabUser(login="gchapman", roles = { "Monty Pythons" })
+    @WithMockOpFabUser(login="gchapman")
     class GivenNonAdminUserUsersControllerShould {
         @Test
         void fetchAll() throws Exception {
@@ -906,7 +906,7 @@ class UsersControllerShould {
 
 
         @Test
-        @WithMockOpFabUser(login="unknownSoFar", roles = { "" })
+        @WithMockOpFabUser(login="unknownSoFar")
         void updateOwnDataWithNotFoundError() throws Exception {
 
             mockMvc.perform(get("/users/unknownSoFar"))
@@ -954,7 +954,7 @@ class UsersControllerShould {
         }
 
         @Test
-        @WithMockOpFabUser(login="unknownSoFar", roles = { "" })
+        @WithMockOpFabUser(login="unknownSoFar")
         void updateOwnDataWithMismatchedAndNotFoundError() throws Exception {
 
             mockMvc.perform(get("/users/unknownSoFar"))

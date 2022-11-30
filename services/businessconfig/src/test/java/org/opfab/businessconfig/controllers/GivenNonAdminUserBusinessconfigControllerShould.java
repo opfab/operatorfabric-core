@@ -50,7 +50,7 @@ import static org.springframework.test.web.servlet.setup.MockMvcBuilders.webAppC
 @ActiveProfiles("test")
 @WebAppConfiguration
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-@WithMockOpFabUser(login="nonAdminUser", roles = {"someRole"})
+@WithMockOpFabUser(login="nonAdminUser")
 class GivenNonAdminUserBusinessconfigControllerShould {
 
     private static Path testDataDir = Paths.get("./build/test-data/businessconfig-storage");
@@ -211,7 +211,7 @@ class GivenNonAdminUserBusinessconfigControllerShould {
     }
 
     @Nested
-    @WithMockOpFabUser(login="nonAdminUser", roles = {"someRole"})
+    @WithMockOpFabUser(login="nonAdminUser")
     class CreateContent {
         @Test
         void notAllowBundleToBePost() throws Exception {
@@ -274,7 +274,7 @@ class GivenNonAdminUserBusinessconfigControllerShould {
         }
 
         @Nested
-        @WithMockOpFabUser(login="nonAdminUser", roles = {"someRole"})
+        @WithMockOpFabUser(login="nonAdminUser")
         class DeleteOnlyOneProcess {
         	
         	static final String bundleName = "first";
@@ -310,7 +310,7 @@ class GivenNonAdminUserBusinessconfigControllerShould {
             }
         	
         	@Nested
-            @WithMockOpFabUser(login="nonAdminUser", roles = {"someRole"})
+            @WithMockOpFabUser(login="nonAdminUser")
             class DeleteContent {
                 @Test
                 void clean() throws Exception {

@@ -15,6 +15,7 @@ dependencies {
     implementation project(':tools:spring:spring-oauth2-utilities')
     implementation project(':tools:spring:spring-utilities')
     implementation project(':client:businessconfig-client-data')
+    implementation project(':client:users-client-data')
     testImplementation project(':tools:spring:spring-test-utilities')
     testImplementation spring.securityTest
 }

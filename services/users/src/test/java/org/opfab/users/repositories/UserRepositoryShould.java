@@ -17,6 +17,7 @@ import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.opfab.users.application.UnitTestApplication;
+import org.opfab.users.model.OpfabRolesEnum;
 import org.opfab.users.model.UserData;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -79,6 +80,7 @@ class UserRepositoryShould {
            .lastName("Palin")
            .group("Monty Pythons").group("Wanda")
            .entity("ENTITY1").entity("ENTITY2")
+           .opfabRole(OpfabRolesEnum.ADMIN)
            .build();
         repository.insert(user);
         assertThat(repository.count()).isEqualTo(4);
@@ -89,6 +91,7 @@ class UserRepositoryShould {
         assertThat(mpalin.getLastName()).isEqualTo("Palin");
         assertThat(mpalin.getGroups()).contains("Monty Pythons", "Wanda");
         assertThat(mpalin.getEntities()).contains("ENTITY1", "ENTITY2");
+        assertThat(mpalin.getOpfabRoles()).contains(OpfabRolesEnum.ADMIN);
     }
 
     @Test

@@ -30,6 +30,7 @@ import {EntitiesService} from '@ofServices/entities.service';
 import {PerimetersCellRendererComponent} from '../cell-renderers/perimeters-cell-renderer.component';
 import {ExportService} from '@ofServices/export.service';
 import {IdCellRendererComponent} from '../cell-renderers/id-cell-renderer.component';
+import {ArrayCellRendererComponent} from '../cell-renderers/array-cell-renderer.component';
 
 @Directive()
 @Injectable()
@@ -51,6 +52,7 @@ export abstract class AdminTableDirective implements OnInit, OnDestroy {
             },
             components: {
                 actionCellRenderer: ActionCellRendererComponent,
+                arrayCellRenderer: ArrayCellRendererComponent,
                 groupCellRenderer: GroupCellRendererComponent,
                 entityCellRenderer: EntityCellRendererComponent,
                 perimetersCellRenderer: PerimetersCellRendererComponent,
@@ -483,10 +485,12 @@ export abstract class AdminTableDirective implements OnInit, OnDestroy {
     private getNameFromId(id: string, renderer: string): string {
         if (renderer) {
             const cellRenderer = new this.gridOptions.components[renderer].prototype.constructor();
-            return this.dataHandlingService
-                .resolveCachedCrudServiceDependingOnType(cellRenderer.itemType)
-                .getNameFromId(id);
-        } else return id;
+            if (cellRenderer.itemType)
+                return this.dataHandlingService
+                    .resolveCachedCrudServiceDependingOnType(cellRenderer.itemType)
+                    .getNameFromId(id);
+        }
+        return id;
     }
 
     // Method to be overridden by extending classes to customize objects to string conversion

@@ -18,6 +18,7 @@ import org.opfab.springtools.configuration.oauth.jwt.JwtProperties;
 import org.opfab.springtools.configuration.oauth.jwt.groups.GroupsMode;
 import org.opfab.springtools.configuration.oauth.jwt.groups.GroupsProperties;
 import org.opfab.springtools.configuration.oauth.jwt.groups.GroupsUtils;
+import org.opfab.users.model.OpfabRolesEnum;
 import org.opfab.users.model.User;
 import org.opfab.users.model.UserData;
 import org.opfab.users.repositories.UserRepository;
@@ -33,8 +34,11 @@ import org.springframework.security.oauth2.jwt.Jwt;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collector;
+import java.util.stream.Collectors;
 
 /**
  * Specific authentication configuration for the Users service It is necessary
@@ -115,7 +119,7 @@ public class OAuth2UsersConfiguration {
                 if(principalId != null) principalId = principalId.toLowerCase();
                 String givenName = extractClaimAsStringOrNull(jwt, jwtProperties.getGivenNameClaim());
                 String familyName = extractClaimAsStringOrNull(jwt, jwtProperties.getFamilyNameClaim());
-                return new UserData(principalId, givenName, familyName, null, null, null);
+                return new UserData(principalId, givenName, familyName, null, null, null, null);
             }
         };
     }
@@ -129,16 +133,17 @@ public class OAuth2UsersConfiguration {
     }
 
     /**
-     * Creates Authority list from user's groups (ROLE_[group name])
+     * Creates Authority list from user's opfabRoles, taking into account only admin role (ROLE_ADMIN)
      *
      * @param user user model data
      * @return list of authority
      */
     public static List<GrantedAuthority> computeAuthorities(User user) {
-        return AuthorityUtils
-                .createAuthorityList(user.getGroups().stream().map(g -> "ROLE_" + g).toArray(size -> new String[size]));
+        if (user.getOpfabRoles() != null && user.getOpfabRoles().contains(OpfabRolesEnum.ADMIN))
+            return AuthorityUtils.createAuthorityList("ROLE_ADMIN");
+        else
+            return Collections.emptyList();
     }
-
 
     /**
      * Creates group list from a jwt

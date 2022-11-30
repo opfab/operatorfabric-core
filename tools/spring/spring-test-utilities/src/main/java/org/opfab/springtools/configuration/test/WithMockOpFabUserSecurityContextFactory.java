@@ -60,10 +60,11 @@ public class WithMockOpFabUserSecurityContextFactory implements WithSecurityCont
         SecurityContext context = SecurityContextHolder.createEmptyContext();
 
         OpFabUserDetails principal = new OpFabUserDetails(
-                        customUser.login(),
-                        customUser.firstName(),
-                        customUser.lastName(),
-                Arrays.asList(customUser.roles()),
+                customUser.login(),
+                customUser.firstName(),
+                customUser.lastName(),
+                Arrays.asList(customUser.groups()),
+                Arrays.asList(customUser.opfabRoles()),
                 customUser.entities() != null ? Arrays.asList(customUser.entities()) : null,
                 customUser.authorizedIPAddresses() != null ? Arrays.asList(customUser.authorizedIPAddresses()) : null);
 

@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2021, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2022, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -13,11 +13,13 @@ package org.opfab.users.application.configuration;
 
 import lombok.AllArgsConstructor;
 import org.opfab.users.model.User;
+import org.opfab.users.model.OpfabRolesEnum;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -35,19 +37,21 @@ public class OpFabUserDetails implements UserDetails, User {
     private String lastName = null;
     private List<String> groups = null;
     private List<String> entities = null;
+    private List<OpfabRolesEnum> opfabRoles = null;
     private List<String> authorizedIPAddresses = null;
 
     /**
-     * Creates Authority list from user's groups (ROLE_[group name])
+     * Creates Authority list from user's opfabRoles, taking into account only admin role (ROLE_ADMIN)
      * Similar to the method of the same name defined in OAuth2JwtProcessingUtilities,
      * but using the User interface from the users-service module rather than the User class from client-data.
      * @param user user model data
      * @return list of authority
      */
     private static List<GrantedAuthority> computeAuthorities(User user) {
-        return AuthorityUtils.createAuthorityList(user.getGroups().stream().map(g -> "ROLE_" + g).toArray(size ->
-                new
-                        String[size]));
+        if (user.getOpfabRoles() != null && user.getOpfabRoles().contains(OpfabRolesEnum.ADMIN))
+            return AuthorityUtils.createAuthorityList("ROLE_ADMIN");
+        else
+            return Collections.emptyList();
     }
 
     //Methods from the UserDetails interface
@@ -178,6 +182,16 @@ public class OpFabUserDetails implements UserDetails, User {
     @Override
     public void setEntities(List<String> entities) {
         this.entities = entities;
+    }
+
+    @Override
+    public List<OpfabRolesEnum> getOpfabRoles() {
+        return this.opfabRoles;
+    }
+
+    @Override
+    public void setOpfabRoles(List<OpfabRolesEnum> opfabRoles) {
+        this.opfabRoles = opfabRoles;
     }
 
     @Override
