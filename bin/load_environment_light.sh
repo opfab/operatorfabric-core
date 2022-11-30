@@ -13,5 +13,5 @@ source ${BASH_SOURCE%/*}/load_variables.sh
 
 sdk install java 11.0.15-zulu
 sdk use java 11.0.15-zulu
-nvm install v14.20.1
-nvm use v14.20.1
+nvm install v18.12.1
+nvm use v18.12.1
