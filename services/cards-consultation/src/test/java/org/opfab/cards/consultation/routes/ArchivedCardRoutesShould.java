@@ -63,7 +63,7 @@ class ArchivedCardRoutesShould {
     }
 
     @Nested
-    @WithMockOpFabUserReactive(login="userWithGroup", roles = {"SOME_GROUP"})
+    @WithMockOpFabUserReactive(login="userWithGroup", groups = {"SOME_GROUP"})
     class GivenUserWithGroupArchivedCardRoutesShould {
 
         @Test
@@ -102,7 +102,7 @@ class ArchivedCardRoutesShould {
     }
 
     @Nested
-    @WithMockOpFabUserReactive(login="userWithNoGroup", roles = {})
+    @WithMockOpFabUserReactive(login="userWithNoGroup", groups = {})
     class GivenUserWithNoGroupArchivedCardRoutesShould {
 
         @Test
@@ -121,7 +121,7 @@ class ArchivedCardRoutesShould {
     }
 
     @Nested
-    @WithMockOpFabUserReactive(login="userWithGroupAndEntity", roles={"SOME_GROUP"}, entities={"SOME_ENTITY"})
+    @WithMockOpFabUserReactive(login="userWithGroupAndEntity", groups={"SOME_GROUP"}, entities={"SOME_ENTITY"})
     class GivenUserWithGroupAndEntityArchivedCardRoutesShould {
 
         @Test

@@ -156,7 +156,7 @@ class PerimetersControllerShould {
     }
 
     @Nested
-    @WithMockOpFabUser(login="testAdminUser", roles = { "ADMIN" })
+    @WithMockOpFabUser(login="testAdminUser", opfabRoles = {OpfabRolesEnum.ADMIN})
     class GivenAdminUserPerimetersControllerShould {
 
         @Test
@@ -834,7 +834,7 @@ class PerimetersControllerShould {
     }
 
     @Nested
-    @WithMockOpFabUser(login="gchapman", roles = { "Monty Pythons" })
+    @WithMockOpFabUser(login="gchapman")
     class GivenNonAdminUserPerimetersControllerShould {
 
         @Test

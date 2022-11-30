@@ -15,6 +15,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.opfab.cards.publication.application.UnitTestApplication;
 import org.opfab.cards.publication.repositories.CardRepositoryForTest;
 import org.opfab.springtools.configuration.test.WithMockOpFabUser;
+import org.opfab.users.model.OpfabRolesEnum;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
@@ -38,7 +39,7 @@ import org.springframework.web.context.WebApplicationContext;
 @SpringBootTest(classes = UnitTestApplication.class)
 @ActiveProfiles("test")
 @WebAppConfiguration
-@WithMockOpFabUser(login = "api_test", roles = { "AROLE" })
+@WithMockOpFabUser(login = "api_test")
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class CardControllerShould {
 
@@ -120,7 +121,7 @@ class CardControllerShould {
     }
 
     @Nested
-    @WithMockOpFabUser(login="adminUser", roles = {"ADMIN"})
+    @WithMockOpFabUser(login="adminUser", opfabRoles = {OpfabRolesEnum.ADMIN})
     class AdminDeleteCardsByEndDate {
         @Test
         void deleteCardByEndDate() throws Exception {

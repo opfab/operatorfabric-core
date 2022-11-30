@@ -20,6 +20,7 @@ import org.opfab.cards.consultation.controllers.CardOperationsController;
 import org.opfab.cards.consultation.services.CardSubscriptionService;
 import org.opfab.springtools.configuration.test.UserServiceCacheTestApplication;
 import org.opfab.springtools.configuration.test.WithMockOpFabUserReactive;
+import org.opfab.users.model.OpfabRolesEnum;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.reactive.AutoConfigureWebTestClient;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -51,7 +52,7 @@ class MessageToSubscriptionsRoutesShould {
     }
 
     @Nested
-    @WithMockOpFabUserReactive(login = "userWithGroup", roles = { "ADMIN" })
+    @WithMockOpFabUserReactive(login = "userWithGroup", opfabRoles = {OpfabRolesEnum.ADMIN})
     class MessageToSubscriptionsRoutesForAdminShould {
 
         @Test
@@ -66,7 +67,7 @@ class MessageToSubscriptionsRoutesShould {
     }
 
     @Nested
-    @WithMockOpFabUserReactive(login = "userWithGroup", roles = { "TEST" })
+    @WithMockOpFabUserReactive(login = "userWithGroup")
     class MessageToSubscriptionsRoutesForNonAdminShould {
 
         @Test

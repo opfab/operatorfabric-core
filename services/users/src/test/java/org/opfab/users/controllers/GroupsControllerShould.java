@@ -156,7 +156,7 @@ class GroupsControllerShould {
     }
 
     @Nested
-    @WithMockOpFabUser(login="testAdminUser", roles = { "ADMIN" })
+    @WithMockOpFabUser(login="testAdminUser", opfabRoles = {OpfabRolesEnum.ADMIN})
     class GivenAdminUserGroupsControllerShould {
 
         @Test
@@ -913,7 +913,7 @@ class GroupsControllerShould {
     }
 
     @Nested
-    @WithMockOpFabUser(login="gchapman", roles = { "Monty Pythons" })
+    @WithMockOpFabUser(login="gchapman")
     class GivenNonAdminUserGroupsControllerShould {
 
         @Test

@@ -35,6 +35,7 @@ import org.opfab.businessconfig.application.IntegrationTestApplication;
 import org.opfab.businessconfig.model.Monitoring;
 import org.opfab.businessconfig.model.MonitoringData;
 import org.opfab.springtools.configuration.test.WithMockOpFabUser;
+import org.opfab.users.model.OpfabRolesEnum;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -54,7 +55,7 @@ import lombok.extern.slf4j.Slf4j;
 @ActiveProfiles("test")
 @WebAppConfiguration
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-@WithMockOpFabUser(login = "adminUser", roles = { "ADMIN" })
+@WithMockOpFabUser(login = "adminUser", opfabRoles = {OpfabRolesEnum.ADMIN})
 @Slf4j
 class BusinessconfigControllerForMonitoringShould implements ResourceLoaderAware{
 

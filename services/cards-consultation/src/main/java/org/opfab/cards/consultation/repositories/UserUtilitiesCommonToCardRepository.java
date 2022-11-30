@@ -12,6 +12,7 @@ package org.opfab.cards.consultation.repositories;
 
 import org.opfab.cards.consultation.model.Card;
 import org.opfab.users.model.CurrentUserWithPerimeters;
+import org.opfab.users.model.OpfabRolesEnum;
 import org.opfab.users.model.RightsEnum;
 import org.springframework.data.mongodb.core.ReactiveMongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
@@ -61,7 +62,11 @@ public interface UserUtilitiesCommonToCardRepository<T extends Card> {
 
         boolean isCurrentUserMemberOfAdminGroup = ((currentUserWithPerimeters.getUserData().getGroups() != null) &&
                                                    (currentUserWithPerimeters.getUserData().getGroups().contains("ADMIN")));
-        if (! isCurrentUserMemberOfAdminGroup)
+        
+         boolean hasCurrentUserAdminRole = currentUserWithPerimeters.getUserData().getOpfabRoles() != null && 
+                                 (currentUserWithPerimeters.getUserData().getOpfabRoles().contains(OpfabRolesEnum.ADMIN));
+
+        if (! isCurrentUserMemberOfAdminGroup && !hasCurrentUserAdminRole)
             criteria.add(computeCriteriaForUser(currentUserWithPerimeters));
         return criteria;
     }

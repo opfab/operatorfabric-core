@@ -41,7 +41,7 @@ import java.util.Optional;
 @ActiveProfiles("test")
 @WebAppConfiguration
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-@WithMockOpFabUser(login = "someUser", roles = { "AROLE" }, entities = { "entity1", "entity2", "entity3" })
+@WithMockOpFabUser(login = "someUser", entities = { "entity1", "entity2", "entity3" })
 class CardControllerProcessAcknowledgementShould extends CardControllerShouldBase {
 
 	String cardUid;
@@ -109,7 +109,7 @@ class CardControllerProcessAcknowledgementShould extends CardControllerShouldBas
 	}
 
 	@Nested
-	@WithMockOpFabUser(login = "someOtherUser", roles = { "AROLE" }, entities = { "entity1", "entity4" })
+	@WithMockOpFabUser(login = "someOtherUser", entities = { "entity1", "entity4" })
 	@TestInstance(Lifecycle.PER_CLASS)
 	class ProcessUserAcknowledgementNested {
 		@Test
@@ -130,7 +130,7 @@ class CardControllerProcessAcknowledgementShould extends CardControllerShouldBas
 		}
 
 		@Nested
-		@WithMockOpFabUser(login = "someUser", roles = { "AROLE" }, entities = { "entity1", "entity2", "entity3" })
+		@WithMockOpFabUser(login = "someUser", entities = { "entity1", "entity2", "entity3" })
 		@TestInstance(Lifecycle.PER_CLASS)
 		class ProcessUserAcknowledgementNestedTwice {
 
@@ -151,7 +151,7 @@ class CardControllerProcessAcknowledgementShould extends CardControllerShouldBas
 			}
 
 			@Nested
-			@WithMockOpFabUser(login = "someUser", roles = { "AROLE" }, entities = { "entity1", "entity2", "entity3" })
+			@WithMockOpFabUser(login = "someUser", entities = { "entity1", "entity2", "entity3" })
 			@TestInstance(Lifecycle.PER_CLASS)
 			class ProcessDeleteUserAcknowledgement {
 
@@ -172,7 +172,7 @@ class CardControllerProcessAcknowledgementShould extends CardControllerShouldBas
 				}
 
 				@Nested
-				@WithMockOpFabUser(login = "someUser", roles = { "AROLE" }, entities = { "entity1", "entity2", "entity3" })
+				@WithMockOpFabUser(login = "someUser", entities = { "entity1", "entity2", "entity3" })
 				@TestInstance(Lifecycle.PER_CLASS)
 				class ProcessDeleteUserAcknowledgementSecond {
 

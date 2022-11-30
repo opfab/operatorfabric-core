@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2021, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2022, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -13,6 +13,7 @@ package org.opfab.springtools.configuration.test;
 
 import org.opfab.users.model.ComputedPerimeter;
 import org.opfab.users.model.CurrentUserWithPerimeters;
+import org.opfab.users.model.OpfabRolesEnum;
 import org.opfab.users.model.RightsEnum;
 import org.opfab.users.model.User;
 import org.springframework.security.core.GrantedAuthority;
@@ -32,12 +33,13 @@ import static org.opfab.springtools.configuration.oauth.OAuth2JwtProcessingUtili
  */
 public class OpFabUserDetails extends CurrentUserWithPerimeters implements UserDetails {
 
-    public OpFabUserDetails(String login, String firstName, String lastName, List<String> roles, List<String> entities, List<String> authorizedIPAddresses){
+    public OpFabUserDetails(String login, String firstName, String lastName, List<String> groups, List<OpfabRolesEnum> opfabRoles, List<String> entities, List<String> authorizedIPAddresses){
         User user = new User();
         user.setLogin(login);
         user.setFirstName(firstName);
         user.setLastName(lastName);
-        user.setGroups(roles);
+        user.setGroups(groups);
+        user.setOpfabRoles(opfabRoles);
         user.setEntities(entities);
         user.setAuthorizedIPAddresses(authorizedIPAddresses);
         this.setUserData(user);

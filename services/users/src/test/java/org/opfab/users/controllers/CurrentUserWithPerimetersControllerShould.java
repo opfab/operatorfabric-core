@@ -1,3 +1,11 @@
+/* Copyright (c) 2022, RTE (http://www.rte-france.com)
+ * See AUTHORS.txt
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ * SPDX-License-Identifier: MPL-2.0
+ * This file is part of the OperatorFabric project.
+ */
 package org.opfab.users.controllers;
 
 import org.junit.jupiter.api.*;
@@ -5,6 +13,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.opfab.users.application.UnitTestApplication;
 import org.opfab.users.application.configuration.WithMockOpFabUser;
 import org.opfab.users.model.EntityData;
+import org.opfab.users.model.OpfabRolesEnum;
 import org.opfab.users.model.UserData;
 import org.opfab.users.repositories.EntityRepository;
 import org.opfab.users.repositories.UserRepository;
@@ -121,7 +130,7 @@ public class CurrentUserWithPerimetersControllerShould {
     }
 
     @Nested
-    @WithMockOpFabUser(login = "testAdminUser", roles = {"ADMIN"})
+    @WithMockOpFabUser(login = "testAdminUser", opfabRoles = {OpfabRolesEnum.ADMIN})
     class GivenAdminUserEntitiesControllerShould {
 
         @Test

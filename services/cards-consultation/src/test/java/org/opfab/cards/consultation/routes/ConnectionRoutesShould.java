@@ -69,7 +69,7 @@ class ConnectionRoutesShould {
         }
 
         @Nested
-        @WithMockOpFabUserReactive(login = "userWithGroup", roles = { "ADMIN" })
+        @WithMockOpFabUserReactive(login = "userWithGroup")
         class ConnectionRoutesForAdminShould {
                 @Test
                 void respondOk() {
@@ -166,7 +166,7 @@ class ConnectionRoutesShould {
         }
 
         @Nested
-        @WithMockOpFabUserReactive(login = "userWithGroup", roles = { "TEST" })
+        @WithMockOpFabUserReactive(login = "userWithGroup")
         class ConnectionRoutesForNonAdminShould {
                 @Test
                 void accessIsAuthorized() {

@@ -10,7 +10,7 @@
 
 import {environment} from '@env/environment';
 import {Observable, Subject} from 'rxjs';
-import {User} from '@ofModel/user.model';
+import {OpfabRolesEnum, User} from '@ofModel/user.model';
 import {UserWithPerimeters} from '@ofModel/userWithPerimeters.model';
 import {HttpClient, HttpErrorResponse} from '@angular/common/http';
 import {catchError, takeUntil, tap} from 'rxjs/operators';
@@ -111,12 +111,17 @@ export class UserService extends CrudService {
     }
 
     public isCurrentUserAdmin(): boolean {
-        return this.isCurrentUserInAnyGroup(['ADMIN']);
+        return this.isCurrentUserInAnyGroup(['ADMIN']) || this.hasCurrentUserAnyRole([OpfabRolesEnum.ADMIN]);
     }
 
     public isCurrentUserInAnyGroup(groups: string[]): boolean {
         if (!groups) return false;
         return this._userWithPerimeters.userData.groups.filter((group) => groups.indexOf(group) >= 0).length > 0;
+    }
+
+    public hasCurrentUserAnyRole(roles: OpfabRolesEnum[]): boolean {
+        if (!roles) return false;
+        return this._userWithPerimeters.userData.opfabRoles.filter((role) => roles.indexOf(role) >= 0).length > 0;
     }
 
     private loadUserRightsPerProcessAndState() {

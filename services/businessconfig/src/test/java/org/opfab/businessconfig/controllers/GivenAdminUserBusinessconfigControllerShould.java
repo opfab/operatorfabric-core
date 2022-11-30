@@ -17,6 +17,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.opfab.businessconfig.application.IntegrationTestApplication;
 import org.opfab.businessconfig.services.ProcessesService;
 import org.opfab.springtools.configuration.test.WithMockOpFabUser;
+import org.opfab.users.model.OpfabRolesEnum;
 import org.opfab.utilities.PathUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -51,7 +52,7 @@ import static org.springframework.test.web.servlet.setup.MockMvcBuilders.webAppC
 @ActiveProfiles("test")
 @WebAppConfiguration
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-@WithMockOpFabUser(login="adminUser", roles = {"ADMIN"})
+@WithMockOpFabUser(login="adminUser", opfabRoles = {OpfabRolesEnum.ADMIN})
 @Slf4j
 class GivenAdminUserBusinessconfigControllerShould {
 
@@ -209,7 +210,7 @@ class GivenAdminUserBusinessconfigControllerShould {
     }
 
     @Nested
-    @WithMockOpFabUser(login="adminUser", roles = {"ADMIN"})
+    @WithMockOpFabUser(login="adminUser", opfabRoles = {OpfabRolesEnum.ADMIN})
     class CreateContent {
         @Test
         void create() throws Exception {
@@ -306,7 +307,7 @@ class GivenAdminUserBusinessconfigControllerShould {
         }
 
         @Nested
-        @WithMockOpFabUser(login="adminUser", roles = {"ADMIN"})
+        @WithMockOpFabUser(login="adminUser", opfabRoles = {OpfabRolesEnum.ADMIN})
         class DeleteOnlyOneProcess {
 
             static final String bundleName = "first";
@@ -386,7 +387,7 @@ class GivenAdminUserBusinessconfigControllerShould {
             }
 
         	@Nested
-            @WithMockOpFabUser(login="adminUser", roles = {"ADMIN"})
+            @WithMockOpFabUser(login="adminUser", opfabRoles = {OpfabRolesEnum.ADMIN})
             class DeleteContent {
                 @Test
                 void clean() throws Exception {

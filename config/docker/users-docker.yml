@@ -11,6 +11,7 @@ operatorfabric.users.default:
     - login: admin
       groups: ["ADMIN"]
       entities: ["ENTITY1_FR","ENTITY2_FR"]
+      opfabRoles: ['ADMIN']
     - login: operator1_fr
       firstname : John
       lastname : Doe
@@ -19,6 +20,7 @@ operatorfabric.users.default:
     - login: operator2_fr
       groups: ["Planner", "ReadOnly"]
       entities: ["ENTITY2_FR"]
+      opfabRoles: ['VIEW_ALL_ARCHIVED_CARDS']
     - login: operator3_fr
       groups: [ "RTE","ADMIN","ReadOnly","Dispatcher"]
       entities: [ "ENTITY3_FR" ]

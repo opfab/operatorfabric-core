@@ -56,6 +56,10 @@ describe('AdmininstrationPages', () => {
         cy.get('#opfab-entities').find('.vscomp-option-text').eq(1).click({force: true});
         cy.get('#opfab-entities').click();
 
+        cy.get('#opfab-roles').click();
+        cy.get('#opfab-roles').find('.vscomp-option-text').eq(0).click({force: true});
+        cy.get('#opfab-roles').click();
+
         cy.get('#opfab-admin-user-btn-add').click();
 
         cy.get('.opfab-pagination').should('contain.text', ' Results number  : 17');
@@ -67,7 +71,7 @@ describe('AdmininstrationPages', () => {
         agGrid.cellShould('ag-grid-angular', 6, 0, 'have.text', 'testuser');
 
         // Edit previously created user
-        agGrid.clickCell('ag-grid-angular', 6, 5, 'of-action-cell-renderer');
+        agGrid.clickCell('ag-grid-angular', 6, 6, 'of-action-cell-renderer');
 
         cy.get('of-edit-user-modal').should('exist');
 
@@ -78,6 +82,7 @@ describe('AdmininstrationPages', () => {
         agGrid.cellShould('ag-grid-angular', 6, 2, 'have.text', 'surname');
         agGrid.cellShould('ag-grid-angular', 6, 3, 'have.text', 'Dispatcher');
         agGrid.cellShould('ag-grid-angular', 6, 4, 'have.text', 'Control Center FR North');
+        agGrid.cellShould('ag-grid-angular', 6, 5, 'have.text', 'ADMIN');
 
         cy.get('#opfab-firstName').type(' updated');
 
@@ -97,6 +102,13 @@ describe('AdmininstrationPages', () => {
         cy.get('#opfab-entities').find('.vscomp-option-text').eq(2).click({force: true});
         cy.get('#opfab-entities').click();
 
+        cy.get('#opfab-roles').click();
+        // Deselect old roles
+        cy.get('#opfab-roles').find('.vscomp-option-text').eq(0).click({force: true});
+        // Select new role
+        cy.get('#opfab-roles').find('.vscomp-option-text').eq(1).click({force: true});
+        cy.get('#opfab-roles').click();
+
         cy.get('#opfab-admin-user-btn-save').click();
 
         // Check user is updated
@@ -111,9 +123,10 @@ describe('AdmininstrationPages', () => {
         agGrid.cellShould('ag-grid-angular', 6, 2, 'have.text', 'surname updated');
         agGrid.cellShould('ag-grid-angular', 6, 3, 'have.text', 'Manager');
         agGrid.cellShould('ag-grid-angular', 6, 4, 'have.text', 'Control Center FR South');
+        agGrid.cellShould('ag-grid-angular', 6, 5, 'have.text', 'VIEW_ALL_ARCHIVED_CARDS');
 
         // Delete previously created user
-        agGrid.clickCell('ag-grid-angular', 6, 6, 'of-action-cell-renderer');
+        agGrid.clickCell('ag-grid-angular', 6, 7, 'of-action-cell-renderer');
 
         cy.get('of-confirmation-dialog').should('exist');
 
@@ -547,12 +560,15 @@ describe('AdmininstrationPages', () => {
                 expect(rows[0]['LAST NAME']).to.be.undefined;
                 expect(rows[0].GROUPS).to.equal('ADMINISTRATORS');
                 expect(rows[0].ENTITIES).to.equal('Control Center FR North,Control Center FR South');
+                expect(rows[0].ROLES).to.equal('ADMIN');
+
 
                 expect(rows[1].LOGIN).to.equal('operator1_fr');
                 expect(rows[1]['FIRST NAME']).to.equal('John');
                 expect(rows[1]['LAST NAME']).to.equal('Doe');
                 expect(rows[1].GROUPS).to.equal('Dispatcher,ReadOnly');
                 expect(rows[1].ENTITIES).to.equal('Control Center FR North');
+                expect(rows[1].ROLES).to.equal('');
 
                 // Delete export file
                 cy.task('deleteFile', { filename: './cypress/downloads/' + files[0] })
