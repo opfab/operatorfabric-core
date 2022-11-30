@@ -81,10 +81,12 @@ export class LightCardComponent implements OnInit, OnDestroy {
                     this.currentPath = urlParts[1];
                 }
             });
+        this.groupedCardsService.computeEvent
+            .pipe(takeUntil(this.ngUnsubscribe))
+            .subscribe((x) => this.computeGroupedCardsIcon());
         this.computeFromEntity();
         this.computeDisplayedDate();
         this.computeLttdParams();
-        this.computeGroupedCardsIcon();
         this.hasGeoLocation =
             this.lightCard.wktGeometry === undefined ||
             this.lightCard.wktGeometry == null ||
