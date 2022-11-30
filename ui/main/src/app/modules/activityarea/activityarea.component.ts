@@ -58,13 +58,10 @@ export class ActivityareaComponent implements OnInit, OnDestroy {
     private initForm() {
         const group = {};
         this.userEntities.forEach((userEntity) => {
-            // avoid recreating form if existing to avoid detached dom error in cypress tests
-            if (!group[userEntity.entityId]) {
-                if (userEntity.isDisconnected) {
-                    group[userEntity.entityId] = new FormControl<boolean | null>(false);
-                } else {
-                    group[userEntity.entityId] = new FormControl<boolean | null>(true);
-                }
+            if (userEntity.isDisconnected) {
+                group[userEntity.entityId] = new FormControl<boolean | null>(false);
+            } else {
+                group[userEntity.entityId] = new FormControl<boolean | null>(true);
             }
         });
         this.activityAreaForm = new FormGroup(group);
@@ -81,9 +78,7 @@ export class ActivityareaComponent implements OnInit, OnDestroy {
     }
 
     loadUserData() {
-        //  Use a temporary array to avoid detached dom error in cypress tests
-        //  with  <tr *ngFor="let userEntity of userEntities;">  in html
-        const newUserEntities = [];
+        this.userEntities = [];
         this.currentUserWithPerimeters = this.userService.getCurrentUserWithPerimeters();
 
         // we retrieve all the entities to which the user can connect
@@ -97,15 +92,14 @@ export class ActivityareaComponent implements OnInit, OnDestroy {
                             ? !this.activityAreaForm.get(entity.id).value // Keep form value if esists
                             : !this.currentUserWithPerimeters.userData.entities.includes(entity.id);
 
-                    newUserEntities.push({
+                    this.userEntities.push({
                         entityId: entity.id,
                         entityName: entity.name,
                         isDisconnected: isDisconnected
                     });
                 }
             });
-            newUserEntities.sort((a, b) => Utilities.compareObj(a.entityName, b.entityName));
-            this.userEntities = newUserEntities;
+            this.userEntities.sort((a, b) => Utilities.compareObj(a.entityName, b.entityName));
             this.initForm();
 
             if (!!this.currentUserWithPerimeters.userData.groups)
@@ -113,7 +107,7 @@ export class ActivityareaComponent implements OnInit, OnDestroy {
                     this.groupsService.isRealtimeGroup(groupId)
                 );
             this.isScreenLoaded = true;
-            
+
             this.refresh();
         });
     }

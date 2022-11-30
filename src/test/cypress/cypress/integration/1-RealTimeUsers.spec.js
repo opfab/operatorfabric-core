@@ -120,9 +120,14 @@ describe ('RealTimeUsersPage',()=>{
         activityArea.clickOnCheckbox('Control Center FR West');
         activityArea.save();
 
+    
         // we go back to the real time screen
-        cy.get('#opfab-navbar-drop-user-menu').should('exist').click();
-        cy.get('#opfab-navbar-right-menu-realtimeusers').should('exist').click();
+        // we logout and login to avoid detached dom cypress error
+        // when refreshing activity area page due to user config reload
+        // receive via the subscription mechanism
+        opfab.logout();
+        opfab.loginWithUser('operator4_fr');
+        opfab.navigateToRealTimeUsers();
 
         // we are on the French control centers
         // we should have 8 disconnected entities/groups and 1 connected (operator4_fr for ENTITY1_FR/Dispatcher only)
