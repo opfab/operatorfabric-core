@@ -9,6 +9,7 @@
 
 import {Injectable} from '@angular/core';
 import {LightCard} from '@ofModel/light-card.model';
+import {BehaviorSubject} from 'rxjs';
 
 @Injectable({
     providedIn: 'root'
@@ -16,6 +17,8 @@ import {LightCard} from '@ofModel/light-card.model';
 export class GroupedCardsService {
     private groupedChildCards: LightCard[] = [];
     private parentsOfGroupedCards: LightCard[] = [];
+
+    computeEvent = new BehaviorSubject(null);
 
     static tagsAsString(tags: string[]): string {
         return tags ? JSON.stringify([...tags].sort()) : '';
@@ -43,6 +46,7 @@ export class GroupedCardsService {
                 }
             }
         });
+        this.computeEvent.next(null);
     }
 
     filterGroupedChilds(lightCards: LightCard[]): LightCard[] {
