@@ -146,7 +146,7 @@ describe('ExternalDevicesconfigurationPage', () => {
             clickOnNthDeviceInDropdown(0);
 
             // Wait for the dropdown to disappear before clicking add button
-            cy.get('#opfab-admin-edit-btn-add').should('be.visible').click();
+            cy.get('#opfab-admin-edit-btn-add').should('be.visible').click({force: true});
         }
 
         //First page is 10 rows
