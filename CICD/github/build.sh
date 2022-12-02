@@ -22,6 +22,7 @@ echo "npm version $(npm -version)"
 echo "node version $(node --version)"
 sdk version
 javac -version
+export GRADLE_OPTS="-XX:MaxMetaspaceSize=512m -Xmx2g"
 ./gradlew --version
 ./gradlew --build-cache copyDependencies test jacocoTestReport sonar dockerTag${OF_VERSION}
 status_code=$?
