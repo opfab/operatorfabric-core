@@ -1,0 +1,27 @@
+{
+  "id": "taskAdvancedExample",
+  "name": "Task Advanced",
+  "version": "1",
+  "uiVisibility": {
+    "monitoring": false,
+    "logging": false,
+    "calendar": true
+  },
+  "states": {
+    "taskAdvancedState": {
+      "name": "Task Advanced",
+      "description": "Task Advanced",
+      "color": "#0070C0",
+      "userCard" : {
+        "template" : "usercard_taskAdvanced",
+        "lttdVisible" : false,
+        "recipientVisible" : false
+      },
+      "templateName": "taskAdvanced",
+      "styles": [
+      ],
+      "acknowledgmentAllowed": "Always",
+      "type" : "INPROGRESS"
+    }
+  }
+}

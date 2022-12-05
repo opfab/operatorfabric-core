@@ -125,4 +125,7 @@ public class ArchivedCardConsultationData implements Card {
 
     @JsonIgnore
     private List<String> entitiesAcks;
+
+    @JsonInclude(JsonInclude.Include.NON_EMPTY)
+    private RRule rRule;
 }

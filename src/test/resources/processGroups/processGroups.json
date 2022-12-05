@@ -14,7 +14,8 @@
       "processes": [
         "conferenceAndITIncidentExample",
         "messageOrQuestionExample",
-        "taskExample"
+        "taskExample",
+        "taskAdvancedExample"
       ]
     }
   ]

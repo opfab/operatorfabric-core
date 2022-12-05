@@ -93,6 +93,9 @@ public class LightCardPublicationData implements LightCard {
 
     private Integer  secondsBeforeTimeSpanForReminder;
 
+    @JsonInclude(JsonInclude.Include.NON_EMPTY)
+    private RRule rRule;
+
     /**
      * @return timespans, may be null
      */

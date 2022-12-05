@@ -93,6 +93,9 @@ public class LightCardConsultationData implements LightCard {
 
     private Integer  secondsBeforeTimeSpanForReminder;
 
+    @JsonInclude(JsonInclude.Include.NON_EMPTY)
+    private RRule rRule;
+
     /**
      * @return timespans, may return null
      */
@@ -100,14 +103,14 @@ public class LightCardConsultationData implements LightCard {
     @JsonInclude(JsonInclude.Include.NON_EMPTY)
     @Override
     public List<TimeSpan> getTimeSpans() {
-        if(this.timeSpansSet!=null)
+        if (this.timeSpansSet != null)
             return new ArrayList<>(this.timeSpansSet);
         return null;
     }
 
     @Override
     public void setTimeSpans(List<TimeSpan> timeSpans) {
-        if(timeSpans != null)
+        if (timeSpans != null)
             this.timeSpansSet = new HashSet<>(timeSpans);
 
     }
@@ -140,7 +143,8 @@ public class LightCardConsultationData implements LightCard {
                 .representativeType(other.getRepresentativeType())
                 .wktGeometry(other.getWktGeometry())
                 .wktProjection(other.getWktProjection())
-                .secondsBeforeTimeSpanForReminder(other.getSecondsBeforeTimeSpanForReminder());
+                .secondsBeforeTimeSpanForReminder(other.getSecondsBeforeTimeSpanForReminder())
+                .rRule(other.getRRule());
 
         if (other.getTags() != null && ! other.getTags().isEmpty())
             builder.tags(other.getTags());

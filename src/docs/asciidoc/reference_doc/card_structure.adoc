@@ -115,7 +115,7 @@ Used to send cards directly to users without using groups or entities for card r
 
 ==== Last Time to Decide (`lttd`)
 
-Fixes the moment until when a `response` is possible for the card. After this moment, the response button won't be useable. When lttd time is approaching, a clock is visible on the card in the feed with the residual time.  The lttd time can be set for cards that don't expect any response
+Fixes the moment until when a `response` is possible for the card. After this moment, the response button won't be usable. When lttd time is approaching, a clock is visible on the card in the feed with the residual time.  The lttd time can be set for cards that don't expect any response
 
 ==== SecondsBeforeTimeSpanForReminder (`secondsBeforeTimeSpanForReminder`)
 
@@ -178,7 +178,7 @@ Unique identifier of the card in the OperatorFabric system. This attribute can b
 
 ==== id (`id`)
 
-State id of the associated process, determined by `OperatorFabric` can be set arbitrarily by the `publisher`. The id is determined by 'OperatorFabric' as follow : process.processIntanceId
+State id of the associated process, determined by `OperatorFabric` can be set arbitrarily by the `publisher`. The id is determined by 'OperatorFabric' as follows : process.processInstanceId
 
 ==== Publish Date (`publishDate`)
 

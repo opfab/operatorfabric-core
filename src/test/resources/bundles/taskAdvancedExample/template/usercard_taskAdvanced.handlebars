@@ -1,0 +1,199 @@
+<!-- Copyright (c) 2022, RTE (http://www.rte-france.com)                   -->
+<!-- See AUTHORS.txt                                                       -->
+<!-- This Source Code Form is subject to the terms of the Mozilla Public   -->
+<!-- License, v. 2.0. If a copy of the MPL was not distributed with this   -->
+<!-- file, You can obtain one at http://mozilla.org/MPL/2.0/.              -->
+<!-- SPDX-License-Identifier: MPL-2.0                                      -->
+<!-- This file is part of the OperatorFabric project.                      -->
+
+<br/>
+<div class="opfab-input">
+    <label for="taskDescription"> TASK DESCRIPTION</label>
+    <input size="50" type="text" id="taskDescription" value="{{card.data.taskDescription}}"> </input> 
+</div>
+<br/>
+
+
+<div class="opfab-border-box">
+    <label> REPEAT EVERY</label>
+    <table width="100%" style="margin-bottom: -5px;">
+        <tr>
+            <td><label class="opfab-checkbox" style="padding-left:25px"> MONDAY <input type="checkbox" id="Monday" {{conditionalAttribute (arrayContains card.data.byweekday 'MO') 'checked'}}>   <span class="opfab-checkbox-checkmark"> </span>   </label> </td>
+            <td><label class="opfab-checkbox" style="padding-left:25px"> TUESDAY <input type="checkbox" id="Tuesday" {{conditionalAttribute (arrayContains card.data.byweekday 'TU') 'checked'}}>   <span class="opfab-checkbox-checkmark"> </span>   </label> </td>
+            <td><label class="opfab-checkbox" style="padding-left:25px"> WEDNESDAY <input type="checkbox" id="Wednesday" {{conditionalAttribute (arrayContains card.data.byweekday 'WE') 'checked'}}>   <span class="opfab-checkbox-checkmark"> </span>   </label> </td>
+            <td><label class="opfab-checkbox" style="padding-left:25px"> THURSDAY <input type="checkbox" id="Thursday" {{conditionalAttribute (arrayContains card.data.byweekday 'TH') 'checked'}}>   <span class="opfab-checkbox-checkmark"> </span>   </label> </td>
+            <td><label class="opfab-checkbox" style="padding-left:25px"> FRIDAY <input type="checkbox" id="Friday" {{conditionalAttribute (arrayContains card.data.byweekday 'FR') 'checked'}}>   <span class="opfab-checkbox-checkmark"> </span>   </label> </td>
+            <td><label class="opfab-checkbox" style="padding-left:25px"> SATURDAY <input type="checkbox" id="Saturday" {{conditionalAttribute (arrayContains card.data.byweekday 'SA') 'checked'}}>   <span class="opfab-checkbox-checkmark"> </span>   </label> </td>
+            <td><label class="opfab-checkbox" style="padding-left:25px"> SUNDAY <input type="checkbox" id="Sunday" {{conditionalAttribute (arrayContains card.data.byweekday 'SU') 'checked'}}>   <span class="opfab-checkbox-checkmark"> </span>   </label> </td>
+
+        </tr>
+    </table>
+</div>
+
+<br/>
+
+<div class="opfab-border-box">
+    <table width="100%" style="margin-bottom: -5px;">
+        <tr>
+            <td><label class="opfab-checkbox" style="padding-left:25px"> JANUARY <input type="checkbox" id="January" {{conditionalAttribute (arrayContains card.data.bymonth 1) 'checked'}}>   <span class="opfab-checkbox-checkmark"> </span>   </label> </td>
+            <td><label class="opfab-checkbox" style="padding-left:25px"> FEBRUARY <input type="checkbox" id="February" {{conditionalAttribute (arrayContains card.data.bymonth 2) 'checked'}}>   <span class="opfab-checkbox-checkmark"> </span>   </label> </td>
+            <td><label class="opfab-checkbox" style="padding-left:25px"> MARCH <input type="checkbox" id="March" {{conditionalAttribute (arrayContains card.data.bymonth 3) 'checked'}}>   <span class="opfab-checkbox-checkmark"> </span>   </label> </td>
+            <td><label class="opfab-checkbox" style="padding-left:25px"> APRIL <input type="checkbox" id="April" {{conditionalAttribute (arrayContains card.data.bymonth 4) 'checked'}}>   <span class="opfab-checkbox-checkmark"> </span>   </label> </td>
+            <td><label class="opfab-checkbox" style="padding-left:25px"> MAY <input type="checkbox" id="May" {{conditionalAttribute (arrayContains card.data.bymonth 5) 'checked'}}>   <span class="opfab-checkbox-checkmark"> </span>   </label> </td>
+            <td><label class="opfab-checkbox" style="padding-left:25px"> JUNE <input type="checkbox" id="June" {{conditionalAttribute (arrayContains card.data.bymonth 6) 'checked'}}>   <span class="opfab-checkbox-checkmark"> </span>   </label> </td>
+            <td><label class="opfab-checkbox" style="padding-left:25px"> JULY <input type="checkbox" id="July" {{conditionalAttribute (arrayContains card.data.bymonth 7) 'checked'}}>   <span class="opfab-checkbox-checkmark"> </span>   </label> </td>
+            <td><label class="opfab-checkbox" style="padding-left:25px"> AUGUST <input type="checkbox" id="August" {{conditionalAttribute (arrayContains card.data.bymonth 8) 'checked'}}>   <span class="opfab-checkbox-checkmark"> </span>   </label> </td>
+            <td><label class="opfab-checkbox" style="padding-left:25px"> SEPTEMBER <input type="checkbox" id="September" {{conditionalAttribute (arrayContains card.data.bymonth 9) 'checked'}}>   <span class="opfab-checkbox-checkmark"> </span>   </label> </td>
+            <td><label class="opfab-checkbox" style="padding-left:25px"> OCTOBER <input type="checkbox" id="October" {{conditionalAttribute (arrayContains card.data.bymonth 10) 'checked'}}>   <span class="opfab-checkbox-checkmark"> </span>   </label> </td>
+            <td><label class="opfab-checkbox" style="padding-left:25px"> NOVEMBER <input type="checkbox" id="November" {{conditionalAttribute (arrayContains card.data.bymonth 11) 'checked'}}>   <span class="opfab-checkbox-checkmark"> </span>   </label> </td>
+            <td><label class="opfab-checkbox" style="padding-left:25px"> DECEMBER <input type="checkbox" id="December" {{conditionalAttribute (arrayContains card.data.bymonth 12) 'checked'}}>   <span class="opfab-checkbox-checkmark"> </span>   </label> </td>
+
+        </tr>
+    </table>
+</div>
+
+<br/>
+<br/>
+<div>
+
+    <table>
+        <tr>
+            <td style="width:4%">
+                AT :
+            </td>
+            <td style="width:15%">
+                <div class="opfab-input">
+                    <label> TIME </label>
+                    <input type="time" id="time" style="text-align:center" value="{{card.data.byhour}}:{{card.data.byminute}}">
+                </div>
+            </td>
+
+            <td style="width:6%">
+    
+            </td>
+            <td style="width:32%">
+                <div class="opfab-input">
+                    <label> TASK DURATION (MINUTES) </label>
+                    <input size="3" maxlength="3" type="text" id="durationInMinutes" value="{{#if card.data.durationInMinutes}}{{card.data.durationInMinutes}}{{else}}15{{/if}}">
+                </div>
+            </td>
+            <td style="width:6%">
+    
+            </td>
+            <td style="width:32%">
+                <div class="opfab-input">
+                    <label> MINUTES TO REMIND BEFORE TASK</label>
+                    <input size="2" maxlength="2" type="text" id="minutesForReminder" value="{{#if card.data.minutesForReminder}}{{card.data.minutesForReminder}}{{else}}5{{/if}}">
+                </div>
+            </td>
+        </tr>
+    </table>
+
+</div>
+
+<br/>
+
+<script>
+
+    userCardTemplate = {
+        init: function() {
+            this.initSeverity();
+            this.initInitialDates();
+            this.initUserCardTemplateGateway();
+            this.initTimeForRecurrence();
+        },
+
+        initSeverity: function() {
+            usercardTemplateGateway.setInitialSeverity('ACTION');
+        },
+
+        initInitialDates: function() {
+            const mystartDate = new Date();
+            mystartDate.setTime(mystartDate.getTime());
+            usercardTemplateGateway.setInitialStartDate(mystartDate.getTime() + 3600000);
+            usercardTemplateGateway.setInitialEndDate(mystartDate.getTime() + 7 * 24 * 3600000);
+        },
+
+        initTimeForRecurrence: function() {
+            const defaultTimeForRecurrence = new Date();
+            defaultTimeForRecurrence.setTime(defaultTimeForRecurrence.getTime() + 3600000);
+
+            const timeControl = document.getElementById('time');
+            if (! timeControl.value) {
+                timeControl.value = defaultTimeForRecurrence.getHours() + ':' + defaultTimeForRecurrence.getMinutes();
+            }
+        },
+
+        initUserCardTemplateGateway: function() {
+
+            usercardTemplateGateway.getSpecificCardInformation = function () {
+                const taskDescription = document.getElementById('taskDescription').value;
+                
+                const time = document.getElementById('time').value;
+                const byhour =  [time.slice(0, 2) * 1]; // the hours are the 2 first characters
+                const byminute =  [time.slice(-2) * 1]; // the minutes are the 2 last characters
+                
+                const minutesForReminder =  document.getElementById('minutesForReminder').value;
+                const durationInMinutes =  document.getElementById('durationInMinutes').value;
+
+                const byweekday = [];
+                if (document.getElementById("Monday").checked)    byweekday.push('MO');
+                if (document.getElementById("Tuesday").checked)   byweekday.push('TU');
+                if (document.getElementById("Wednesday").checked) byweekday.push('WE');
+                if (document.getElementById("Thursday").checked)  byweekday.push('TH');
+                if (document.getElementById("Friday").checked)    byweekday.push('FR');
+                if (document.getElementById("Saturday").checked)  byweekday.push('SA');
+                if (document.getElementById("Sunday").checked)    byweekday.push('SU');
+
+                const bymonth = [];
+                if (document.getElementById("January").checked)   bymonth.push(1);
+                if (document.getElementById("February").checked)  bymonth.push(2);
+                if (document.getElementById("March").checked)     bymonth.push(3);
+                if (document.getElementById("April").checked)     bymonth.push(4);
+                if (document.getElementById("May").checked)       bymonth.push(5);
+                if (document.getElementById("June").checked)      bymonth.push(6);
+                if (document.getElementById("July").checked)      bymonth.push(7);
+                if (document.getElementById("August").checked)    bymonth.push(8);
+                if (document.getElementById("September").checked) bymonth.push(9);
+                if (document.getElementById("October").checked)   bymonth.push(10);
+                if (document.getElementById("November").checked)  bymonth.push(11);
+                if (document.getElementById("December").checked)  bymonth.push(12);
+
+                const rRule = {
+                    freq: 'DAILY',
+                    byweekday : byweekday,
+                    byhour: byhour,
+                    byminute: byminute,
+                    durationInMinutes: durationInMinutes,
+                    bymonth: bymonth
+                }
+            
+                const card = {
+                    summary: { key: "taskAdvanced.summary" },
+                    title: { key: "taskAdvanced.title" },
+                    secondsBeforeTimeSpanForReminder: minutesForReminder * 60,
+                    data: {
+                        taskDescription: taskDescription,
+                        byhour: byhour,
+                        byminute: byminute,
+                        durationInMinutes: durationInMinutes,
+                        minutesForReminder: minutesForReminder,
+                        byweekday: byweekday,
+                        bymonth: bymonth
+                    },
+                    rRule: rRule
+                };
+
+                return {
+                    valid: true,
+                    card: card
+                };
+
+            }
+        }
+
+    }
+
+    userCardTemplate.init();
+
+</script>

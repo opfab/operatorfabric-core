@@ -140,6 +140,9 @@ public class CardPublicationData implements Card {
 
     private Boolean toNotify;
 
+    @JsonInclude(JsonInclude.Include.NON_EMPTY)
+    private RRule rRule;
+
     @Indexed
     private Instant lastAckDate;
 
@@ -185,8 +188,12 @@ public class CardPublicationData implements Card {
                 .secondsBeforeTimeSpanForReminder(this.secondsBeforeTimeSpanForReminder)
                 .entityRecipients(this.getEntityRecipients());
 
-        if(this.getTimeSpans()!=null)
+        if (this.getTimeSpans() != null)
             result.timeSpansSet(new HashSet<>(this.getTimeSpans()));
+
+        if (this.getRRule() != null)
+            result.rRule(this.getRRule());
+
         return result.build();
     }
 

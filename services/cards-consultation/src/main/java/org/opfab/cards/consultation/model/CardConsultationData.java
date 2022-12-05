@@ -115,4 +115,7 @@ public class CardConsultationData implements Card {
     private Boolean toNotify;
 
     private Instant lastAckDate;
+
+    @JsonInclude(JsonInclude.Include.NON_EMPTY)
+    private RRule rRule;
 }
