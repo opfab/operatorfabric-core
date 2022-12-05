@@ -19,14 +19,14 @@ below for details on:
 
 == Tools and libraries
 
-* Java 11.0 +
+* Java 17.0 +
 * Docker
 * Docker Compose with 2.1+ file format support
 * Chrome (needed for UI tests in build)
-* Node 14.15 (Npm 6.14)
+* Node 18.12.1 (Npm 8.19.2)
 * https://stedolan.github.io/jq/[jq]
 
-NOTE: the current Jdk used for the project is Java 11.0.14-zulu.
+NOTE: the current Jdk used for the project is Java 17.0.4.1-zulu.
 
 IMPORTANT: It is highly recommended to use https://sdkman.io/[sdkman] and
 https://github.com/nvm-sh/nvm[nvm] to manage tools versions. The following steps rely on these tools.
