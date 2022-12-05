@@ -1,0 +1,13 @@
+// Copyright (c) 2022 RTE (http://www.rte-france.com)
+// See AUTHORS.txt
+// This document is subject to the terms of the Creative Commons Attribution 4.0 International license.
+// If a copy of the license was not distributed with this
+// file, You can obtain one at https://creativecommons.org/licenses/by/4.0/.
+// SPDX-License-Identifier: CC-BY-4.0
+
+= Migration Guide from release 3.11.x to release 3.12.0
+
+== Java 17 
+
+OperatorFabric now runs on java 17, which means that the client library is now compiled with java 17. If you are using the client library, you may need to upgrade your application to java 17 or use client 3.11.2 which is compatible with version 3.12.0 and compiled with java 11.
+
