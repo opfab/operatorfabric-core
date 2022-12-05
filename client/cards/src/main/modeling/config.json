@@ -17,6 +17,8 @@
     "EpochDate": "java.time.Instant",
     "PublisherTypeEnum": "org.opfab.cards.model.PublisherTypeEnum",
     "FilterMatchTypeEnum": "org.opfab.cards.model.FilterMatchTypeEnum",
-    "FilterOperationTypeEnum": "org.opfab.cards.model.FilterOperationTypeEnum"
+    "FilterOperationTypeEnum": "org.opfab.cards.model.FilterOperationTypeEnum",
+    "FreqEnum": "org.opfab.cards.model.FreqEnum",
+    "DayEnum": "org.opfab.cards.model.DayEnum"
   }
 }

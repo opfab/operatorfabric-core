@@ -8,7 +8,7 @@
  */
 
 import {I18n} from '@ofModel/i18n.model';
-import {TimeSpan} from './card.model';
+import {RRule, TimeSpan} from './card.model';
 
 export class LightCard {
     constructor(
@@ -32,6 +32,7 @@ export class LightCard {
         readonly summaryTranslated?: string,
         readonly tags?: string[],
         readonly timeSpans?: TimeSpan[],
+        readonly rRule?: RRule,
         readonly process?: string,
         readonly state?: string,
         readonly parentCardId?: string,
@@ -66,4 +67,24 @@ export enum Sound {
 export enum PublisherType {
     EXTERNAL,
     ENTITY
+}
+
+export enum Frequency {
+    YEARLY = 'YEARLY',
+    MONTHLY = 'MONTHLY',
+    WEEKLY = 'WEEKLY',
+    DAILY = 'DAILY',
+    HOURLY = 'HOURLY',
+    MINUTELY = 'MINUTELY',
+    SECONDLY = 'SECONDLY'
+}
+
+export enum Day {
+    MO = 'MO',
+    TU = 'TU',
+    WE = 'WE',
+    TH = 'TH',
+    FR = 'FR',
+    SA = 'SA',
+    SU = 'SU'
 }

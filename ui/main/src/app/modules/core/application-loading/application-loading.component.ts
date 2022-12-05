@@ -30,6 +30,7 @@ import {AccountAlreadyUsedComponent} from './account-already-used/account-alread
 import {AppLoadedInAnotherTabComponent} from './app-loaded-in-another-tab/app-loaded-in-another-tab.component';
 import {SettingsService} from '@ofServices/settings.service';
 import {GlobalStyleService} from '@ofServices/global-style.service';
+import {RRuleReminderService} from '@ofServices/rrule-reminder/rrule-reminder.service';
 
 @Component({
     selector: 'of-application-loading',
@@ -70,6 +71,7 @@ export class ApplicationLoadingComponent implements OnInit {
         private groupsService: GroupsService,
         private processesService: ProcessesService,
         private reminderService: ReminderService,
+        private rRuleReminderService: RRuleReminderService,
         private logger: OpfabLoggerService,
         private globalStyleService: GlobalStyleService
     ) {}
@@ -239,5 +241,6 @@ export class ApplicationLoadingComponent implements OnInit {
             this.applicationLoaded = true;
         });
         this.reminderService.startService(this.userLogin);
+        this.rRuleReminderService.startService(this.userLogin);
     }
 }

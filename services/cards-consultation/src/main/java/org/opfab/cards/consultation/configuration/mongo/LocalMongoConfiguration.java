@@ -31,6 +31,7 @@ public class LocalMongoConfiguration extends AbstractLocalMongoConfiguration {
         converterList.add(new I18nReadConverter());
         converterList.add(new LightCardReadConverter());
         converterList.add(new TimeSpanReadConverter());
+        converterList.add(new RRuleReadConverter());
 
         return converterList;
     }

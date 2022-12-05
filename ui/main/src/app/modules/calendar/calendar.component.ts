@@ -172,11 +172,36 @@ export class CalendarComponent implements OnInit, OnDestroy, AfterViewInit {
                         }
                     }
                 }
+                this.computeRRuleCalendarEvents(card);
             }
         }
         // It is necessary to reassign the updated events to the corresponding options property to trigger change detection
         // See https://fullcalendar.io/docs/angular §Modifying properties
         this.calendarOptions.events = this.calendarEvents;
+    }
+
+    private computeRRuleCalendarEvents(card: any) {
+
+        if (!! card.rRule) {
+            this.calendarEvents = this.calendarEvents.concat({
+                id: card.id,
+                title: card.titleTranslated,
+                allDay: false,
+                className: [
+                    'opfab-calendar-event',
+                    'opfab-calendar-event-' + card.severity.toLowerCase()
+                ],
+                rrule: {
+                    freq: card.rRule.freq,
+                    byweekday: card.rRule.byweekday,
+                    bymonth: card.rRule.bymonth,
+                    dtstart: new Date(card.startDate),
+                    until: card.endDate,
+                    byhour: card.rRule.byhour,
+                    byminute: card.rRule.byminute
+                }
+            });
+        }
     }
 
     private getDaysOfWeek(timeSpan: TimeSpan):Array<number>

@@ -11,6 +11,7 @@
 
 package org.opfab.cards.publication.model;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.Singular;
@@ -127,6 +128,8 @@ public class ArchivedCardPublicationData implements Card {
 
     private List<String> entitiesAcks;
 
+    private RRule rRule;
+
     public Instant getDeletionDate() {
         return this.deletionDate;
     }
@@ -174,6 +177,8 @@ public class ArchivedCardPublicationData implements Card {
         this.wktProjection = card.getWktProjection();
         this.secondsBeforeTimeSpanForReminder = card.getSecondsBeforeTimeSpanForReminder();
         this.toNotify = card.getToNotify();
+
+        this.rRule = card.getRRule();
     }
 
 }

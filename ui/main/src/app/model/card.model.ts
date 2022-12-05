@@ -7,7 +7,7 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {LightCard, PublisherType, Severity} from '@ofModel/light-card.model';
+import {Day, Frequency, LightCard, PublisherType, Severity} from '@ofModel/light-card.model';
 import {I18n} from '@ofModel/i18n.model';
 
 export class Card {
@@ -51,7 +51,8 @@ export class Card {
         public secondsBeforeTimeSpanForReminder?: number,
         public timeSpans?: TimeSpan[],
         readonly entitiesAcks?: string[],
-        readonly deletionDate?: number
+        readonly deletionDate?: number,
+        public rRule?: RRule
     ) {}
 }
 
@@ -86,7 +87,8 @@ export class CardForPublishing {
         readonly wktGeometry?: string,
         readonly wktProjection?: string,
         readonly secondsBeforeTimeSpanForReminder?: number,
-        readonly timeSpans?: TimeSpan[]
+        readonly timeSpans?: TimeSpan[],
+        readonly rRule?: RRule
     ) {}
 }
 
@@ -116,6 +118,18 @@ export class HourAndMinutes {
     constructor(public hours: number, public minutes: number) {}
 }
 
+export class RRule {
+    constructor(
+        public freq?: Frequency,
+        public count?: number,
+        public wkst?: Day,
+        public byweekday?: Day[],
+        public bymonth?: number[],
+        public byhour?: number[],
+        public byminute?: number[]
+    ) {}
+}
+
 export function fromCardToLightCard(card: Card): LightCard {
     return new LightCard(
         card.uid,
@@ -138,6 +152,7 @@ export function fromCardToLightCard(card: Card): LightCard {
         card.summaryTranslated,
         null,
         [],
+        card.rRule,
         card.process,
         card.state,
         card.parentCardId,
@@ -183,6 +198,7 @@ export function fromCardToCardForPublishing(card: Card): CardForPublishing {
         card.wktGeometry,
         card.wktProjection,
         card.secondsBeforeTimeSpanForReminder,
-        card.timeSpans
+        card.timeSpans,
+        card.rRule
     );
 }

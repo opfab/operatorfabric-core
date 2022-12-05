@@ -11,7 +11,6 @@
 
 package org.opfab.cards.publication.model;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.*;
 
 /**
