@@ -30,6 +30,42 @@ describe('Entity acknowledgment tests for icon in light-card', function () {
         script.deleteAllCards();
     });
 
+    // card "message3" has the state with parameter consideredAcknowledgedForUserWhen set to OneEntityOfUserHasAcknowledged
+    it('READONLY user operator1_crisisroom acknowledges card, check the card is not acknoledged at entity level', function () {
+
+        script.sendCard('cypress/entitiesAcks/message3.json');
+        opfab.loginWithUser('operator1_crisisroom');
+
+        // Set feed filter to see only un-acknowledged cards
+        cy.get('#opfab-feed-filter-btn-filter').click();
+        cy.get('#opfab-feed-filter-ack-notack').click();
+        cy.waitDefaultTime(); // let time before closing popup to avoid flaky error on CI/CD
+        cy.get('#opfab-feed-filter-btn-filter').click();
+
+        cy.get('of-light-card').should('have.length', 1);
+        // Click on card (message2) and acknowledge it
+        cy.get('#opfab-feed-light-card-cypress-entitiesAcksMessage3').click();
+        card.acknowledge();
+        // Card is not anymore in the feed
+        cy.get('#opfab-feed-light-card-cypress-entitiesAcksMessage2').should('not.exist');
+        // Detail card is not present anymore
+        cy.get('of-card-body').should('not.exist');
+
+        opfab.logout();
+
+        opfab.loginWithUser('operator4_fr');
+
+        // Set feed filter to see all cards
+        cy.get('#opfab-feed-filter-btn-filter').click();
+        cy.get('#opfab-feed-filter-ack-all').click();
+        cy.waitDefaultTime(); // let time before closing popup to avoid flaky error on CI/CD
+        cy.get('#opfab-feed-filter-btn-filter').click();
+
+        cy.get('of-light-card').should('have.length', 1);
+        cy.get('#opfab-feed-light-card-cypress-entitiesAcksMessage3 .fa-check').should('not.exist');
+
+    });
+
     // card "message2" has the state with parameter consideredAcknowledgedForUserWhen set to UserHasAcknowledged
     // card "message3" has the state with parameter consideredAcknowledgedForUserWhen set to OneEntityOfUserHasAcknowledged
     // card "message4" has the state with parameter consideredAcknowledgedForUserWhen set to AllEntitiesOfUserHaveAcknowledged

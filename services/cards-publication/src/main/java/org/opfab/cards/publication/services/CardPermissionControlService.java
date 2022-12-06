@@ -11,11 +11,14 @@ package org.opfab.cards.publication.services;
 import org.opfab.cards.publication.model.CardPublicationData;
 import org.opfab.users.model.ComputedPerimeter;
 import org.opfab.users.model.CurrentUserWithPerimeters;
+import org.opfab.users.model.OpfabRolesEnum;
 import org.opfab.users.model.RightsEnum;
+import org.opfab.users.model.User;
 import org.springframework.stereotype.Service;
 
 import lombok.extern.slf4j.Slf4j;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -61,16 +64,29 @@ public class CardPermissionControlService {
         return entitiesUser.isPresent() && !entitiesUser.get().isEmpty() && entitiesUser.get().contains(card.getPublisher());
     }
 
-    /* 1st check : card.publisherType == ENTITY
-   2nd check : the card has been sent by an entity of the user connected
-   3rd check : the user has the Write access to the process/state of the card */
+    /* 
+    1st check : not a READONLY user
+    2nd check : card.publisherType == ENTITY
+    3rd check : the card has been sent by an entity of the user connected
+    4th check : the user has the Write access to the process/state of the card */
     boolean isUserAllowedToDeleteThisCard(CardPublicationData card, CurrentUserWithPerimeters user) {
-        return card.getPublisherType() == org.opfab.cards.publication.model.PublisherTypeEnum.ENTITY
+        return !isCurrentUserReadOnly(user.getUserData()) && card.getPublisherType() == org.opfab.cards.publication.model.PublisherTypeEnum.ENTITY
             && user.getUserData().getEntities().contains(card.getPublisher()) && checkUserPerimeterForCard(user.getComputedPerimeters(), card);
     }
 
     boolean isUserAuthorizedToSendCard(CardPublicationData card, CurrentUserWithPerimeters user){
-        return checkUserPerimeterForCard(user.getComputedPerimeters(), card);
+
+        return !isCurrentUserReadOnly(user.getUserData()) && checkUserPerimeterForCard(user.getComputedPerimeters(), card);
+    }
+
+    boolean isCurrentUserReadOnly(User user) {
+        return hasCurrentUserAnyRole(user, OpfabRolesEnum.READONLY);
+    }
+
+    boolean hasCurrentUserAnyRole(User user, OpfabRolesEnum... roles) {
+        if (roles == null || user.getOpfabRoles() == null) return false;
+        List<OpfabRolesEnum> rolesList = Arrays.asList(roles);
+        return user.getOpfabRoles().stream().filter(role -> rolesList.indexOf(role) >= 0).count() > 0;
     }
 
     private boolean checkUserPerimeterForCard(List<ComputedPerimeter> perimeters, CardPublicationData card) {

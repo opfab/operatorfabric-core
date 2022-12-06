@@ -36,6 +36,10 @@ operatorfabric.users.default:
     - login: itsupervisor1
       groups: ["ADMIN", "Supervisor"]
       entities: ["IT_SUPERVISOR_ENTITY"]
+    - login: operator1_crisisRoom
+      groups: ["Supervisor"]
+      entities: ["ENTITY1_FR", "ENTITY2_FR", "ENTITY3_FR", "ENTITY4_FR"]
+      opfabRoles: ['READONLY']
     - login: operator1_it
       groups: ["Dispatcher", "ReadOnly"]
       entities: ["ENTITY1_IT"]

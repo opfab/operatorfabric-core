@@ -32,6 +32,14 @@ describe('User Card ', function () {
     script.deleteAllSettings();
   });
 
+  describe('Check READONLY user cannot send usercard', function () {
+    it('Check error message when READONLY user try to create a usercard', () => {
+      opfab.loginWithUser('operator1_crisisroom');
+      opfab.navigateToUserCard();
+      cy.get('of-usercard').find('.alert-info').should('contain','You are not allowed to send card.')
+    })
+  })
+
   describe('Check edit and delete buttons visibility', function () {
     it('Check edit button is not present when editCardEnabledOnUserInterface is false', () => {
       opfab.loginWithUser('operator1_fr');

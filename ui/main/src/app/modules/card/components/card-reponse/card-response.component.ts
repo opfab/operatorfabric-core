@@ -16,7 +16,7 @@ import {Severity} from '@ofModel/light-card.model';
 import {MessageLevel} from '@ofModel/message.model';
 import {MultiSelectConfig} from '@ofModel/multiselect.model';
 import {State} from '@ofModel/processes.model';
-import {User} from '@ofModel/user.model';
+import {OpfabRolesEnum, User} from '@ofModel/user.model';
 import {CardService} from '@ofServices/card.service';
 import {EntitiesService} from '@ofServices/entities.service';
 import {ProcessesService} from '@ofServices/processes.service';
@@ -76,6 +76,7 @@ export class CardResponseComponent implements OnChanges, OnInit {
     };
     public btnValidateLabel = 'response.btnValidate';
     public btnUnlockLabel = 'response.btnUnlock';
+    isReadOnlyUser: boolean;
 
     constructor(
         private store: Store<AppState>,
@@ -102,7 +103,9 @@ export class CardResponseComponent implements OnChanges, OnInit {
             this.card,
             this.processService.getProcess(this.card.process)
         );
-        this.showButton = !!this.cardState.response;
+        this.isReadOnlyUser = this.userService.hasCurrentUserAnyRole([OpfabRolesEnum.READONLY]);
+
+        this.showButton = !!this.cardState.response && !this.isReadOnlyUser;
         this.userEntityIdToUseForResponse = this.userEntityIdsPossibleForResponse[0];
         this.setButtonLabels();
         this.computeEntityOptionsDropdownListForResponse();

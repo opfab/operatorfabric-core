@@ -8,6 +8,9 @@ Feature: UserCards tests
     * def authTokenAsTSO = signInAsTSO.authToken
     * def signInAsItsupervisor1 = callonce read('../common/getToken.feature') { username: 'itsupervisor1'}
     * def authTokenAsItsupervisor1 = signInAsItsupervisor1.authToken
+    * def signInAsREADONLY = callonce read('../common/getToken.feature') { username: 'operator1_crisisroom'}
+    * def authTokenAsREADONLY = signInAsREADONLY.authToken
+    
 
     * def groupKarate =
 """
@@ -274,6 +277,13 @@ Feature: UserCards tests
     And request card
     When method post
     Then status 401
+
+# Push user card with READONLY user is not allowed
+    Given url opfabPublishCardUrl + 'cards/userCard'
+    And header Authorization = 'Bearer ' + authTokenAsREADONLY
+    And request card
+    When method post
+    Then status 403
 
 
 # Push user card with good perimeter ==> ReceiveAndWrite perimeter

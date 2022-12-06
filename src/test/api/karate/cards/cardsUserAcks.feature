@@ -9,6 +9,8 @@ Feature: CardsUserAcknowledgement
     * def authToken2 = signIn2.authToken
     * def signInAdmin = callonce read('../common/getToken.feature') { username: 'admin'}
     * def authTokenAdmin = signInAdmin.authToken
+    * def signInAsREADONLY = callonce read('../common/getToken.feature') { username: 'operator1_crisisroom'}
+    * def authTokenAsREADONLY = signInAsREADONLY.authToken
 
     Scenario: CardsUserAcknowledgement
 
@@ -101,6 +103,13 @@ Feature: CardsUserAcknowledgement
     Given url opfabUrl + 'cardspub/cards/userAcknowledgement/' + uid
     And header Authorization = 'Bearer ' + authToken
     And request entity1entity2Array
+    When method post
+    Then status 403
+
+#make an entity acknowledgement to the card with READONLY operator1_crisisroom with allowed entities 
+    Given url opfabUrl + 'cardspub/cards/userAcknowledgement/' + uid
+    And header Authorization = 'Bearer ' + authTokenAsREADONLY
+    And request entity1Array
     When method post
     Then status 403
 

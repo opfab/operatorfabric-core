@@ -100,7 +100,7 @@ describe ('Feed notification configuration tests',function () {
         cy.get('#opfab-menu-icon-notification').click();
 
         cy.get('.opfab-feedconfiguration-title').should('have.text', ' NOTIFICATION CONFIGURATION\n');
-        cy.get('.opfab-feedconfiguration-processlist').should('have.length', 2);
+        cy.get('.opfab-feedconfiguration-processlist').should('have.length', 3);
 
 
         // First process group
@@ -132,6 +132,16 @@ describe ('Feed notification configuration tests',function () {
         cy.get('.opfab-feedconfiguration-processlist').eq(1).find('.opfab-feedconfiguration-process').first().find('.row').should('have.length', 2);
         cy.get('.opfab-feedconfiguration-processlist').eq(1).find('.opfab-feedconfiguration-process').eq(1).find('.row').should('have.length', 3);
         cy.get('.opfab-feedconfiguration-processlist').eq(1).find('.opfab-feedconfiguration-process').last().find('.row').should('have.length', 1);
+    
+        // Processes without group
+        // We check the number of processes and their titles
+        cy.get('.opfab-feedconfiguration-processlist').last().find('p').should('have.length', 1);
+        cy.get('.opfab-feedconfiguration-processlist').last().find('p').eq(0).should('have.text', 'Test process for cypress ');
+
+        // We check the number of states for each process
+        cy.get('.opfab-feedconfiguration-processlist').last().find('.opfab-feedconfiguration-process').eq(0).find('.row').should('have.length', 12);
+
+    
     })
 
     it('Check feed notification configuration screen for admin', function () {

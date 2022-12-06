@@ -13,6 +13,7 @@ import {Store} from '@ngrx/store';
 import {Card} from '@ofModel/card.model';
 import {MessageLevel} from '@ofModel/message.model';
 import {State} from '@ofModel/processes.model';
+import {OpfabRolesEnum} from '@ofModel/user.model';
 import {AppService, PageType} from '@ofServices/app.service';
 import {CardService} from '@ofServices/card.service';
 import {UserPermissionsService} from '@ofServices/user-permissions.service';
@@ -45,6 +46,7 @@ export class CardActionsComponent implements OnInit, OnChanges,OnDestroy {
     public deleteInProgress = false;
 
     private unsubscribe$: Subject<void> = new Subject<void>();
+    isReadOnlyUser: boolean;
 
     constructor(
         private userPermissionsService: UserPermissionsService,
@@ -70,12 +72,14 @@ export class CardActionsComponent implements OnInit, OnChanges,OnDestroy {
 
     ngOnChanges(): void {
         this.setButtonsVisibility();
+        this.isReadOnlyUser = this.userService.hasCurrentUserAnyRole([OpfabRolesEnum.READONLY]);
+
     }
 
     private setButtonsVisibility() {
-        this.showEditButton =
+        this.showEditButton = !this.isReadOnlyUser &&
             this.cardState.editCardEnabledOnUserInterface && this.doesTheUserHavePermissionToEditCard();
-        this.showDeleteButton =
+        this.showDeleteButton = !this.isReadOnlyUser &&
             this.cardState.deleteCardEnabledOnUserInterface && this.doesTheUserHavePermissionToDeleteCard();
     }
 

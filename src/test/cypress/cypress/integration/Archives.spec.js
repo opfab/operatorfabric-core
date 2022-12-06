@@ -511,34 +511,37 @@ describe('Archives screen tests', function () {
     }
 
     function checkMultifiltersForNotAdminModeForItsupervisor1() {
-        // We check we have 5 items in process multi-filter, even without choosing a process group
+        // We check we have 6 items in process multi-filter, even without choosing a process group
         archivesAndLogging.clickOnProcessSelect();
-        archivesAndLogging.checkNumberOfProcessEntriesIs(5);
+        archivesAndLogging.checkNumberOfProcessEntriesIs(6);
         archivesAndLogging.checkProcessSelectContains('Conference and IT incident');
         archivesAndLogging.checkProcessSelectContains('Message or question');
         archivesAndLogging.checkProcessSelectContains('Task');
         archivesAndLogging.checkProcessSelectContains('IGCC');
         archivesAndLogging.checkProcessSelectContains('Process example');
+        archivesAndLogging.checkProcessSelectContains('Test process for cypress');
 
         archivesAndLogging.clickOnProcessGroupSelect();
-        archivesAndLogging.checkNumberOfProcessGroupEntriesIs(2);
+        archivesAndLogging.checkNumberOfProcessGroupEntriesIs(3);
+        archivesAndLogging.checkProcessGroupSelectContains('--');
         archivesAndLogging.checkProcessGroupSelectContains('Base Examples');
         archivesAndLogging.checkProcessGroupSelectContains('User card examples');
         archivesAndLogging.selectAllProcessGroups();
 
         archivesAndLogging.clickOnProcessSelect();
-        archivesAndLogging.checkNumberOfProcessEntriesIs(5);
+        archivesAndLogging.checkNumberOfProcessEntriesIs(6);
         archivesAndLogging.checkProcessSelectContains('Conference and IT incident');
         archivesAndLogging.checkProcessSelectContains('Message or question');
         archivesAndLogging.checkProcessSelectContains('Task');
         archivesAndLogging.checkProcessSelectContains('IGCC');
         archivesAndLogging.checkProcessSelectContains('Process example');
+        archivesAndLogging.checkProcessSelectContains('Test process for cypress');
         archivesAndLogging.selectAllProcesses();
         archivesAndLogging.clickOnProcessSelect();
 
         archivesAndLogging.clickOnStateSelect();
         archivesAndLogging.selectAllStates();
-        archivesAndLogging.checkNumberOfStateSelectedIs(13);
+        archivesAndLogging.checkNumberOfStateSelectedIs(25);
 
         archivesAndLogging.clickOnProcessSelect();
         archivesAndLogging.unselectAllProcesses();
