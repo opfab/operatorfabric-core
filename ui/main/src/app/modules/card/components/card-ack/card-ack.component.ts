@@ -12,7 +12,7 @@ import {Store} from '@ngrx/store';
 import {Card, fromCardToLightCard} from '@ofModel/card.model';
 import {MessageLevel} from '@ofModel/message.model';
 import {AcknowledgmentAllowedEnum, ConsideredAcknowledgedForUserWhenEnum, State} from '@ofModel/processes.model';
-import {User} from '@ofModel/user.model';
+import {OpfabRolesEnum, User} from '@ofModel/user.model';
 import {AcknowledgeService} from '@ofServices/acknowledge.service';
 import {AppService, PageType} from '@ofServices/app.service';
 import {CardService} from '@ofServices/card.service';
@@ -53,6 +53,7 @@ export class CardAckComponent implements OnInit, OnChanges, OnDestroy {
     public user: User;
 
     private unsubscribe$: Subject<void> = new Subject<void>();
+    isReadOnlyUser: any;
 
     constructor(
         private store: Store<AppState>,
@@ -100,16 +101,19 @@ export class CardAckComponent implements OnInit, OnChanges, OnDestroy {
     }
 
     ngOnChanges(): void {
+        this.isReadOnlyUser = this.userService.hasCurrentUserAnyRole([OpfabRolesEnum.READONLY]);
+
         this.isUserEnabledToRespond = this.userPermissionsService.isUserEnabledToRespond(
             this.userService.getCurrentUserWithPerimeters(),
             this.card,
             this.processService.getProcess(this.card.process)
         );
         this.setAcknowledgeButtonVisibility();
+
     }
 
     private setAcknowledgeButtonVisibility() {
-        this.showAckButton = this.card.hasBeenAcknowledged && this.isCardAcknowledgedAtEntityLevel() ? false
+        this.showAckButton = this.card.hasBeenAcknowledged && this.isCardAcknowledgedAtEntityLevel() && !this.isReadOnlyUser ? false
             : this.isAcknowledgmentAllowed() && this._appService.pageType !== PageType.CALENDAR;
     }
 
@@ -120,7 +124,7 @@ export class CardAckComponent implements OnInit, OnChanges, OnDestroy {
         return (
             this.cardState.acknowledgmentAllowed === AcknowledgmentAllowedEnum.ALWAYS ||
             (this.cardState.acknowledgmentAllowed === AcknowledgmentAllowedEnum.ONLY_WHEN_RESPONSE_DISABLED_FOR_USER &&
-                (!this.isUserEnabledToRespond || (this.isUserEnabledToRespond && this.lttdExpiredIsTrue)))
+                (this.isReadOnlyUser || !this.isUserEnabledToRespond || (this.isUserEnabledToRespond && this.lttdExpiredIsTrue)))
         );
     }
 
@@ -144,13 +148,8 @@ export class CardAckComponent implements OnInit, OnChanges, OnDestroy {
         if (this.card.hasBeenAcknowledged) {
             this.cancelAcknowledgement();
         } else {
-            const entitiesAcks = [];
-            const entities = this.entitiesService.getEntitiesFromIds(this.user.entities);
-            entities.forEach((entity) => {
-                if (entity.entityAllowedToSendCard)
-                    // this avoids to display entities used only for grouping
-                    entitiesAcks.push(entity.id);
-            });
+            const entitiesAcks = this.computeAcknowledgedEntities();
+
             this.acknowledgeService.postUserAcknowledgement(this.card.uid, entitiesAcks).subscribe((resp) => {
                 this.ackOrUnackInProgress = false;
                 if (resp.status === 201 || resp.status === 200) {
@@ -164,6 +163,19 @@ export class CardAckComponent implements OnInit, OnChanges, OnDestroy {
                 }
             });
         }
+    }
+
+    private computeAcknowledgedEntities() : string[] {
+        const entitiesAcks = [];
+        if (!this.isReadOnlyUser) {
+            const entities = this.entitiesService.getEntitiesFromIds(this.user.entities);
+            entities.forEach((entity) => {
+                if (entity.entityAllowedToSendCard)
+                    // this avoids to display entities used only for grouping
+                    entitiesAcks.push(entity.id);
+            });
+        }
+        return entitiesAcks;
     }
 
     public closeDetails() {

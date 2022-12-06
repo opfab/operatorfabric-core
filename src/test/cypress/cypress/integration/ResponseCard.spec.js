@@ -112,6 +112,21 @@ describe('Response card tests', function () {
         cy.get('#opfab-feed-lightcard-hasChildCardFromCurrentUserEntity');
     });
 
+    it('Check READONLY operator1_crisisroom cannot respond ', function () {
+        opfab.loginWithUser('operator1_crisisroom');
+        feed.checkNumberOfDisplayedCardsIs(1);
+
+        // See in the feed the fact that user has not responded (no icon)
+        cy.get('#opfab-feed-lightcard-hasChildCardFromCurrentUserEntity').should('not.exist');
+
+        feed.openFirstCard();
+
+        // Check the correct rendering of card
+        cy.get('#question-choice1');
+
+        cy.get('#opfab-card-details-btn-response').should('not.exist');
+    });
+
     it('Check card response for operator2_fr ', function () {
         opfab.loginWithUser('operator2_fr');
         feed.checkNumberOfDisplayedCardsIs(1);

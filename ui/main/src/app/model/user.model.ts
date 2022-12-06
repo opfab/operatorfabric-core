@@ -21,5 +21,6 @@ export class User {
 
 export enum OpfabRolesEnum {
     ADMIN = 'ADMIN',
-    VIEW_ALL_ARCHIVED_CARDS = 'VIEW_ALL_ARCHIVED_CARDS'
+    VIEW_ALL_ARCHIVED_CARDS = 'VIEW_ALL_ARCHIVED_CARDS',
+    READONLY = 'READONLY'
 }

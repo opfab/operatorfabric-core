@@ -73,9 +73,11 @@ definitions:
       OpFab roles values >
       * ADMIN: Administrator role
       * VIEW_ALL_ARCHIVED_CARDS: Role to access all archived cards
+      * READONLY: Role to view card, no rights to send cards or respond to a card.
     enum:
       - ADMIN
       - VIEW_ALL_ARCHIVED_CARDS
+      - READONLY
   GroupTypeEnum:
     type: string
     description: |-

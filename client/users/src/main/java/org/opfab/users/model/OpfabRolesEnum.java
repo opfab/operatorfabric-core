@@ -25,8 +25,9 @@ import com.fasterxml.jackson.annotation.JsonValue;
  */
 public enum OpfabRolesEnum {
     ADMIN("ADMIN"),
-    VIEW_ALL_ARCHIVED_CARDS("VIEW_ALL_ARCHIVED_CARDS");
-
+    VIEW_ALL_ARCHIVED_CARDS("VIEW_ALL_ARCHIVED_CARDS"),
+    READONLY("READONLY");
+    
     private String value;
 
     OpfabRolesEnum(String value) {

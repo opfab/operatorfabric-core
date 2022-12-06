@@ -349,7 +349,7 @@ public class CardProcessingService {
         CardPublicationData cardToDelete = cardRepositoryService.findCardById(id);
         if (user.isPresent()){  // if user is not present it means we have checkAuthenticationForCardSending = false 
             boolean isAdmin = (user.get().getUserData().getGroups() != null && user.get().getUserData().getGroups().contains("ADMIN"))
-                            || (user.get().getUserData().getOpfabRoles() != null && user.get().getUserData().getOpfabRoles().contains(OpfabRolesEnum.ADMIN));
+                            || cardPermissionControlService.hasCurrentUserAnyRole(user.get().getUserData(), OpfabRolesEnum.ADMIN);
             String login = user.get().getUserData().getLogin();
             if (cardToDelete != null && !isAdmin && checkAuthenticationForCardSending && !cardPermissionControlService.isCardPublisherAllowedForUser(cardToDelete,login)) {
 
@@ -421,6 +421,12 @@ public class CardProcessingService {
 
     
 	public UserBasedOperationResult processUserAcknowledgement(String cardUid, User user, List<String> entitiesAcks) {
+        if (cardPermissionControlService.isCurrentUserReadOnly(user) && entitiesAcks != null && !entitiesAcks.isEmpty())
+            throw new ApiErrorException(ApiError.builder()
+            .status(HttpStatus.FORBIDDEN)
+            .message("Acknowledgement impossible : User has READONLY opfab role")
+            .build());
+
         if (! user.getEntities().containsAll(entitiesAcks))
             throw new ApiErrorException(ApiError.builder()
                     .status(HttpStatus.FORBIDDEN)

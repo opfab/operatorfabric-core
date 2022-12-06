@@ -35,6 +35,7 @@ import {UserPermissionsService} from '@ofServices/user-permissions.service';
 import {Utilities} from '../../common/utilities';
 import {UsercardSelectCardEmitterFormComponent} from './selectCardEmitterForm/usercard-select-card-emitter-form.component';
 import {LogOption, OpfabLoggerService} from '@ofServices/logs/opfab-logger.service';
+import {OpfabRolesEnum} from '@ofModel/user.model';
 
 declare const templateGateway: any;
 declare const usercardTemplateGateway: any;
@@ -92,6 +93,7 @@ export class UserCardComponent implements OnInit {
     private datesFromTemplate: boolean;
     isLoadingCardTemplate = false;
     isPreparingCard = false;
+    isReadOnlyUser : boolean;
 
     // Preview and send card
     readonly displayContext = DisplayContext.PREVIEW;
@@ -151,6 +153,9 @@ export class UserCardComponent implements OnInit {
             'usercard.useDescriptionFieldForEntityList',
             false
         );
+
+        this.isReadOnlyUser = this.userService.hasCurrentUserAnyRole([OpfabRolesEnum.READONLY]);
+
     }
 
     private loadCardForEdition() {
@@ -263,7 +268,7 @@ export class UserCardComponent implements OnInit {
     }
 
     public displayForm() {
-        return !!this.publisherForCreatingUsercard && !this.emptyProcessList;
+        return !!this.publisherForCreatingUsercard && !this.emptyProcessList && !this.isReadOnlyUser;
     }
 
     public setEmptyProcessList(): void {
