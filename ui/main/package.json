@@ -58,7 +58,7 @@
     "ngx-chips": "3.0.0",
     "ol": "6.5.0",
     "rrule": "2.7.1",
-    "rxjs": "7.5.7",
+    "rxjs": "7.6.0",
     "virtual-select-plugin": "1.0.35",
     "xlsx": "0.18.5"
   },
