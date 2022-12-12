@@ -73,6 +73,7 @@ class BusinessconfigControllerForMonitoringShould implements ResourceLoaderAware
         @Autowired
         private WebApplicationContext webApplicationContext;
 
+
         @Override
         public void setResourceLoader(ResourceLoader resourceLoader) {
             this.resourceLoader = resourceLoader;

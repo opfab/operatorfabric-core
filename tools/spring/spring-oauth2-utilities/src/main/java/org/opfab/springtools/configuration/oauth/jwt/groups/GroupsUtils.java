@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2021, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2022, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -14,7 +14,6 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import org.opfab.springtools.configuration.oauth.jwt.groups.roles.RoleClaim;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.oauth2.jwt.Jwt;
@@ -31,8 +30,11 @@ public class GroupsUtils {
 	
 	public static final String PREFIX_ROLE = "ROLE_";
 	
-	@Autowired
 	private GroupsProperties groupsProperties;
+
+	public GroupsUtils(GroupsProperties groupsProperties) {
+		this.groupsProperties = groupsProperties;
+	}
 	
 	/**
 	 * get a GrantedAuthority list from the Jwt 

@@ -11,6 +11,9 @@
 
 package org.opfab.springtools.configuration.oauth;
 
+import org.opfab.springtools.configuration.oauth.jwt.JwtProperties;
+import org.opfab.springtools.configuration.oauth.jwt.groups.GroupsProperties;
+import org.opfab.springtools.configuration.oauth.jwt.groups.GroupsUtils;
 import org.opfab.users.model.User;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -27,6 +30,11 @@ import reactor.core.publisher.Mono;
  */
 @Configuration
 public class OAuth2ReactiveConfiguration extends OAuth2GenericConfiguration{
+
+    
+    public OAuth2ReactiveConfiguration(UserServiceCache userServiceCache,GroupsProperties groupsProperties,JwtProperties jwtProperties, GroupsUtils groupsUtils) {
+        super(userServiceCache, groupsProperties,jwtProperties,groupsUtils);
+    }
 
     /**
      * Generates a converter that converts {@link Jwt} to {@link OpFabJwtAuthenticationToken} whose principal is  a

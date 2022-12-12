@@ -13,7 +13,6 @@ package org.opfab.cards.consultation.configuration.json;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.opfab.springtools.json.InstantModule;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.converter.json.Jackson2ObjectMapperBuilder;
@@ -24,7 +23,6 @@ public class JacksonConfig {
 
 
   @Bean
-  @Autowired
   public ObjectMapper objectMapper(Jackson2ObjectMapperBuilder builder) {
     ObjectMapper objectMapper = builder.createXmlMapper(false).build();
     objectMapper.registerModule(new CardsModule());

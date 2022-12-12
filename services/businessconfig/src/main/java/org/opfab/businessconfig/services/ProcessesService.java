@@ -66,7 +66,7 @@ public class ProcessesService implements ResourceLoaderAware {
     private RealTimeScreensData realTimeScreensCache;
     private final RabbitTemplate rabbitTemplate;
     
-    @Autowired
+
     public ProcessesService(ObjectMapper objectMapper, LocalValidatorFactoryBean validator, RabbitTemplate rabbitTemplate) {
         this.objectMapper = objectMapper;
         this.completeCache = HashBasedTable.create();

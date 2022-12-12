@@ -11,6 +11,7 @@ package org.opfab.cards.publication.services.clients.impl;
 import lombok.extern.slf4j.Slf4j;
 
 import org.opfab.cards.publication.configuration.ExternalRecipients;
+import org.opfab.cards.publication.configuration.ExternalRecipients.ExternalRecipient;
 import org.opfab.cards.publication.kafka.producer.ResponseCardProducer;
 import org.opfab.cards.publication.model.CardPublicationData;
 import org.opfab.cards.publication.services.clients.ExternalAppClient;
@@ -28,7 +29,6 @@ import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.HttpServerErrorException;
 import org.springframework.web.client.HttpStatusCodeException;
 import org.springframework.web.client.ResourceAccessException;
-import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 
 import java.nio.charset.Charset;
@@ -48,14 +48,16 @@ public class ExternalAppClientImpl implements ExternalAppClient {
     public static final String NO_EXTERNALRECIPIENTS_MESSAGE = "No external recipients found in the card";
     public static final String ERR_CONNECTION_REFUSED = "I/O exception accessing external application endpoint";
 
-    @Autowired
     private ExternalRecipients externalRecipients;
-
-    @Autowired
     private RestTemplate restTemplate;
-
-    @Autowired
     private ResponseCardProducer responseCardProducer;
+
+
+    public ExternalAppClientImpl(ExternalRecipients externalRecipients,RestTemplate restTemplate,ResponseCardProducer responseCardProducer) {
+        this.externalRecipients = externalRecipients;
+        this.restTemplate = restTemplate;
+        this.responseCardProducer = responseCardProducer;
+    }
 
     public void sendCardToExternalApplication(CardPublicationData card, Optional<Jwt> jwt) {
 

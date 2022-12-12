@@ -19,7 +19,6 @@ import org.opfab.cards.consultation.model.LightCardConsultationData;
 import org.opfab.springtools.configuration.mongo.PaginationUtils;
 import org.opfab.users.model.CurrentUserWithPerimeters;
 import org.opfab.users.model.OpfabRolesEnum;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.*;
 import org.springframework.data.mongodb.core.ReactiveMongoTemplate;
 import org.springframework.data.mongodb.core.aggregation.*;
@@ -81,7 +80,6 @@ public class ArchivedCardCustomRepositoryImpl implements ArchivedCardCustomRepos
 
     private final ReactiveMongoTemplate template;
 
-    @Autowired
     public ArchivedCardCustomRepositoryImpl(ReactiveMongoTemplate template) {
         this.template = template;
     }

@@ -99,6 +99,7 @@ to have to maintain these mentions (since this information is tracked by git any
 ==== Back development 
 
 * When developing a Spring Controller, you do not need to develop unit test, use karate api test (file pattern \\**/controllers/** is excluded from test coverage indicator in sonarCloud).
+* Do not use spring annotation (@Autowired, @PostConstruct.. ) in business code to avoid coupling business code with spring framework. This rules is recent so a lot of the business code depends on spring.
 
 include::documentation.adoc[leveloffset=+2]
 

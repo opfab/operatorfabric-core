@@ -20,7 +20,6 @@ import org.opfab.cards.consultation.model.ArchivedCardsFilter;
 import org.opfab.cards.consultation.repositories.ArchivedCardRepository;
 import org.opfab.springtools.configuration.oauth.OpFabJwtAuthenticationToken;
 import org.opfab.users.model.CurrentUserWithPerimeters;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.MediaType;
@@ -39,7 +38,7 @@ public class ArchivedCardRoutesConfig implements UserExtractor {
 
     private final ArchivedCardRepository archivedCardRepository;
 
-    @Autowired
+    
     public ArchivedCardRoutesConfig(ArchivedCardRepository archivedCardRepository) { this.archivedCardRepository = archivedCardRepository; }
 
     /**
