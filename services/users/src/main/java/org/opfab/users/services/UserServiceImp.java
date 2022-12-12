@@ -7,7 +7,6 @@
  * This file is part of the OperatorFabric project.
  */
 
-
 package org.opfab.users.services;
 
 import lombok.extern.slf4j.Slf4j;
@@ -23,7 +22,7 @@ import org.opfab.users.model.PerimeterData;
 import org.opfab.users.model.UserData;
 import org.opfab.users.model.UserSettingsData;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
-import org.springframework.beans.factory.annotation.Autowired;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
@@ -45,17 +44,21 @@ public class UserServiceImp implements UserService {
     public static final String LOGIN_FIELD_MIN_LENGTH_MSG = "Login should be minimum 2 characters (login=%s).";
     public static final String LOGIN_FIELD_PATTERN = "^[A-Za-z0-9-_.]+$";
 
-    @Autowired
     private UserRepository userRepository;
-    @Autowired
     private GroupRepository groupRepository;
-    @Autowired
     private PerimeterRepository perimeterRepository;
-    @Autowired
     private UserSettingsRepository userSettingsRepository;
-
-    @Autowired
     private RabbitTemplate rabbitTemplate;
+
+    public UserServiceImp(UserRepository userRepository, GroupRepository groupRepository,
+            PerimeterRepository perimeterRepository, UserSettingsRepository userSettingsRepository,
+            RabbitTemplate rabbitTemplate) {
+                this.userRepository = userRepository;
+                this.groupRepository = groupRepository;
+                this.perimeterRepository = perimeterRepository;
+                this.userSettingsRepository = userSettingsRepository;
+                this.rabbitTemplate = rabbitTemplate;
+    }
 
     public UserData retrieveUser(String login) {
 
@@ -76,7 +79,7 @@ public class UserServiceImp implements UserService {
 
     public List<GroupData> retrieveGroups(List<String> groupIds) {
         List<GroupData> foundGroups = new ArrayList<>();
-        for(String id : groupIds){
+        for (String id : groupIds) {
             Optional<GroupData> foundGroup = groupRepository.findById(id);
             if (foundGroup.isPresent()) {
                 foundGroups.add(foundGroup.get());
@@ -92,8 +95,9 @@ public class UserServiceImp implements UserService {
             List<GroupData> groupsData = retrieveGroups(groups);
 
             if ((groupsData != null) && (!groupsData.isEmpty())) {
-                Set<Perimeter> perimetersData = new HashSet<>(); //We use a set because we don't want to have a duplicate
-                groupsData.forEach(     //For each group, we recover its perimeters
+                Set<Perimeter> perimetersData = new HashSet<>(); // We use a set because we don't want to have a
+                                                                 // duplicate
+                groupsData.forEach( // For each group, we recover its perimeters
                         groupData -> {
                             List<PerimeterData> list = retrievePerimeters(groupData.getPerimeters());
                             if (list != null)
@@ -107,20 +111,19 @@ public class UserServiceImp implements UserService {
 
     public List<PerimeterData> retrievePerimeters(List<String> perimeterIds) {
         List<PerimeterData> foundPerimeters = new ArrayList<>();
-        for(String perimeterId : perimeterIds){
+        for (String perimeterId : perimeterIds) {
             PerimeterData foundPerimeter = perimeterRepository.findById(perimeterId).orElseThrow(
                     () -> new ApiErrorException(
                             ApiError.builder()
                                     .status(HttpStatus.INTERNAL_SERVER_ERROR)
                                     .message(String.format(PERIMETER_ID_IMPOSSIBLE_TO_FETCH_MSG, perimeterId))
-                                    .build()
-                    ));
+                                    .build()));
             foundPerimeters.add(foundPerimeter);
         }
         return foundPerimeters;
     }
 
-    public boolean isEachStateUniqueInPerimeter(Perimeter perimeter){
+    public boolean isEachStateUniqueInPerimeter(Perimeter perimeter) {
 
         if ((perimeter != null) && (perimeter.getStateRights().size() > 1)) {
 
@@ -128,7 +131,7 @@ public class UserServiceImp implements UserService {
             for (StateRight stateRight : perimeter.getStateRights()) {
 
                 String state = stateRight.getState();
-                if (! mySet.contains(state))
+                if (!mySet.contains(state))
                     mySet.add(state);
                 else
                     return false;
@@ -138,18 +141,21 @@ public class UserServiceImp implements UserService {
     }
 
     public boolean checkFilteringNotificationIsAllowedForAllProcessesStates(String login, UserSettings userSettings) {
-        if ((userSettings.getProcessesStatesNotNotified() != null) && (!userSettings.getProcessesStatesNotNotified().isEmpty())) {
+        if ((userSettings.getProcessesStatesNotNotified() != null)
+                && (!userSettings.getProcessesStatesNotNotified().isEmpty())) {
             UserData userData = retrieveUser(login);
 
             if (userData != null) {
                 List<String> groups = userData.getGroups();
                 Set<Perimeter> perimeters = findPerimetersAttachedToGroups(groups);
 
-                CurrentUserWithPerimetersData userWithPerimetersData = CurrentUserWithPerimetersData.builder().userData(userData).build();
+                CurrentUserWithPerimetersData userWithPerimetersData = CurrentUserWithPerimetersData.builder()
+                        .userData(userData).build();
                 userWithPerimetersData.computePerimeters(perimeters);
-                Map<String, Integer> processStatesWithFilteringNotificationNotAllowed =
-                        computeProcessStatesWithFilteringNotificationNotAllowed(userWithPerimetersData);
-                if (!isFilteringNotificationAllowedForAllProcessesStates(processStatesWithFilteringNotificationNotAllowed,
+                Map<String, Integer> processStatesWithFilteringNotificationNotAllowed = computeProcessStatesWithFilteringNotificationNotAllowed(
+                        userWithPerimetersData);
+                if (!isFilteringNotificationAllowedForAllProcessesStates(
+                        processStatesWithFilteringNotificationNotAllowed,
                         userSettings.getProcessesStatesNotNotified()))
                     return false;
             }
@@ -157,45 +163,53 @@ public class UserServiceImp implements UserService {
         return true;
     }
 
-    private Map<String, Integer> computeProcessStatesWithFilteringNotificationNotAllowed(CurrentUserWithPerimeters currentUserWithPerimeters) {
+    private Map<String, Integer> computeProcessStatesWithFilteringNotificationNotAllowed(
+            CurrentUserWithPerimeters currentUserWithPerimeters) {
         Map<String, Integer> processStatesWithFilteringNotificationNotAllowed = new HashMap<>();
 
         for (ComputedPerimeter computedPerimeter : currentUserWithPerimeters.getComputedPerimeters()) {
-            if ((computedPerimeter.getFilteringNotificationAllowed() != null) && (!computedPerimeter.getFilteringNotificationAllowed()))
-                processStatesWithFilteringNotificationNotAllowed.put(computedPerimeter.getProcess() + "." + computedPerimeter.getState(), 1);
+            if ((computedPerimeter.getFilteringNotificationAllowed() != null)
+                    && (!computedPerimeter.getFilteringNotificationAllowed()))
+                processStatesWithFilteringNotificationNotAllowed
+                        .put(computedPerimeter.getProcess() + "." + computedPerimeter.getState(), 1);
         }
         return processStatesWithFilteringNotificationNotAllowed;
     }
 
-    private boolean isFilteringNotificationAllowedForAllProcessesStates(Map<String, Integer> processStatesWithFilteringNotificationNotAllowed,
-                                                                        Map<String, List<String>> processesStates){
+    private boolean isFilteringNotificationAllowedForAllProcessesStates(
+            Map<String, Integer> processStatesWithFilteringNotificationNotAllowed,
+            Map<String, List<String>> processesStates) {
 
         if ((processesStates != null) && (processesStates.size() > 0)) {
             for (Map.Entry<String, List<String>> entry : processesStates.entrySet()) {
-                List <String> stateIds = entry.getValue();
+                List<String> stateIds = entry.getValue();
                 String processId = entry.getKey();
 
-                if (! isFilteringNotificationAllowedForAllProcessStates(processStatesWithFilteringNotificationNotAllowed, processId, stateIds))
+                if (!isFilteringNotificationAllowedForAllProcessStates(processStatesWithFilteringNotificationNotAllowed,
+                        processId, stateIds))
                     return false;
             }
         }
         return true;
     }
 
-    private boolean isFilteringNotificationAllowedForAllProcessStates(Map<String, Integer> processStatesWithFilteringNotificationNotAllowed,
-                                                                      String processId,
-                                                                      List<String> stateIds) {
+    private boolean isFilteringNotificationAllowedForAllProcessStates(
+            Map<String, Integer> processStatesWithFilteringNotificationNotAllowed,
+            String processId,
+            List<String> stateIds) {
         if (stateIds != null) {
             for (String stateId : stateIds) {
-                if (!isFilteringNotificationAllowedForThisProcessState(processStatesWithFilteringNotificationNotAllowed, processId, stateId))
+                if (!isFilteringNotificationAllowedForThisProcessState(processStatesWithFilteringNotificationNotAllowed,
+                        processId, stateId))
                     return false;
             }
         }
         return true;
     }
 
-    private boolean isFilteringNotificationAllowedForThisProcessState(Map<String, Integer> processStatesWithFilteringNotificationNotAllowed,
-                                                                      String processId, String stateId){
+    private boolean isFilteringNotificationAllowedForThisProcessState(
+            Map<String, Integer> processStatesWithFilteringNotificationNotAllowed,
+            String processId, String stateId) {
 
         if (processStatesWithFilteringNotificationNotAllowed.containsKey(processId + "." + stateId)) {
             log.info("Filtering notification not allowed for process={} state={}", processId, stateId);
@@ -204,21 +218,23 @@ public class UserServiceImp implements UserService {
         return true;
     }
 
-    //Retrieve users from repository for the group and publish a message to USER_EXCHANGE
-    public void publishUpdatedGroupMessage(String groupId){
+    // Retrieve users from repository for the group and publish a message to
+    // USER_EXCHANGE
+    public void publishUpdatedGroupMessage(String groupId) {
         List<UserData> foundUsers = userRepository.findByGroupSetContaining(groupId);
         if (foundUsers != null && !foundUsers.isEmpty()) {
             for (UserData userData : foundUsers)
                 publishUpdatedUserMessage(userData.getLogin());
-        } else publishUpdatedConfigMessage();
+        } else
+            publishUpdatedConfigMessage();
     }
 
     @Override
-    public void publishUpdatedConfigMessage(){
+    public void publishUpdatedConfigMessage() {
         publishUpdatedUserMessage("");
     }
 
-    public void publishUpdatedUserMessage(String userLogin){
+    public void publishUpdatedUserMessage(String userLogin) {
         rabbitTemplate.convertAndSend("USER_EXCHANGE", "", userLogin);
     }
 
@@ -237,7 +253,7 @@ public class UserServiceImp implements UserService {
             if (id.length() == 1)
                 errorMessage = String.format(ID_FIELD_MIN_LENGTH_MSG, id);
 
-            if (! id.matches(ID_FIELD_PATTERN))
+            if (!id.matches(ID_FIELD_PATTERN))
                 errorMessage += String.format(ID_FIELD_PATTERN_MSG, id);
         }
 
@@ -258,7 +274,7 @@ public class UserServiceImp implements UserService {
             if (login.length() == 1)
                 errorMessage = String.format(LOGIN_FIELD_MIN_LENGTH_MSG, login);
 
-            if (! login.matches(LOGIN_FIELD_PATTERN))
+            if (!login.matches(LOGIN_FIELD_PATTERN))
                 errorMessage += String.format(LOGIN_FIELD_PATTERN_MSG, login);
         }
 
@@ -270,4 +286,3 @@ public class UserServiceImp implements UserService {
                             .build());
     }
 }
-

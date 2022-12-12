@@ -36,8 +36,12 @@ import java.util.stream.Collectors;
 @RequestMapping("/userActionLogs")
 public class UserActionLogsController implements UserActionLogsApi{
 
-    @Autowired
     private UserActionLogService actionService;
+
+    public UserActionLogsController(UserActionLogService actionService) {
+        this.actionService  = actionService ; 
+
+    }
 
     @Override
     public UserActionLogPage getUserActionLogs(HttpServletRequest request, HttpServletResponse response, List<String> login, List<String> action, BigDecimal dateFrom, BigDecimal dateTo, BigDecimal page, BigDecimal size) throws Exception {

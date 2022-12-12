@@ -17,7 +17,6 @@ import org.opfab.cards.consultation.controllers.CardOperationsGetParameters;
 import org.opfab.cards.consultation.model.CardSubscriptionDto;
 import org.opfab.springtools.configuration.oauth.OpFabJwtAuthenticationToken;
 import org.opfab.users.model.CurrentUserWithPerimeters;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.MediaType;
@@ -39,7 +38,6 @@ public class CardSubscriptionRoutesConfig {
 
     private final CardOperationsController cardOperationsController;
 
-    @Autowired
     public CardSubscriptionRoutesConfig(CardOperationsController cardOperationsController){
         this.cardOperationsController = cardOperationsController;
     }

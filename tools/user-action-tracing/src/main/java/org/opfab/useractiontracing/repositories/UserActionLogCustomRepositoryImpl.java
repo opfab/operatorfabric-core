@@ -11,7 +11,6 @@ package org.opfab.useractiontracing.repositories;
 
 import lombok.extern.slf4j.Slf4j;
 import org.opfab.useractiontracing.model.UserActionLog;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.*;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.aggregation.Aggregation;
@@ -33,7 +32,6 @@ public class UserActionLogCustomRepositoryImpl implements  UserActionLogCustomRe
 
     private final MongoTemplate template;
 
-    @Autowired
     public UserActionLogCustomRepositoryImpl(MongoTemplate template) {
         this.template = template;
     }

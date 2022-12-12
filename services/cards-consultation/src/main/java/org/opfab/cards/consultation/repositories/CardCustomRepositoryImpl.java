@@ -42,7 +42,6 @@ public class CardCustomRepositoryImpl implements CardCustomRepository {
     private final ReactiveMongoTemplate template;
 
 
-    @Autowired
     public CardCustomRepositoryImpl(ReactiveMongoTemplate template) {
         this.template = template;
     }

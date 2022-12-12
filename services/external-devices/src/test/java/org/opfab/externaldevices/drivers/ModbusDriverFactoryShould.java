@@ -1,4 +1,4 @@
-/* Copyright (c) 2021, RTE (http://www.rte-france.com)
+/* Copyright (c) 2021-2022, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -9,7 +9,6 @@
 
 package org.opfab.externaldevices.drivers;
 
-import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -22,7 +21,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @ExtendWith(MockitoExtension.class)
-@Slf4j
 public class ModbusDriverFactoryShould {
 
     private static ModbusDriverFactory modbusDriverFactory;
@@ -46,7 +44,7 @@ public class ModbusDriverFactoryShould {
 
     @Test
     void modbusDriverFactoryShouldThrowErrorIfAttemptingToCreateDriverWithUnresolvableHost() {
-        assertThrows(ExternalDeviceDriverException.class, () -> {modbusDriverFactory.create("unresolvableHost",123);});
+        assertThrows(ExternalDeviceDriverException.class, () -> {modbusDriverFactory.create("unresolvable Host",123);});
     }
 
 }

@@ -19,7 +19,6 @@ import org.opfab.cards.model.CardOperationTypeEnum;
 import org.opfab.cards.publication.model.ArchivedCardPublicationData;
 import org.opfab.cards.publication.model.CardPublicationData;
 import org.opfab.users.model.User;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
@@ -40,11 +39,16 @@ import static org.springframework.data.mongodb.core.query.Criteria.where;
 @Slf4j
 public class CardRepositoryService {
 
-    @Autowired
+
     private MongoTemplate template;
 
-    @Autowired
     private CardNotificationService cardNotificationService;
+
+    public CardRepositoryService(MongoTemplate template,CardNotificationService cardNotificationService ) 
+    {
+        this.template = template;
+        this.cardNotificationService = cardNotificationService;
+    }
 
     public Optional<CardPublicationData> findByUid(String uid) {
         Query query = new Query();

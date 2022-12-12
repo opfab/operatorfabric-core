@@ -12,7 +12,6 @@ package org.opfab.externalapp.controller;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import org.opfab.externalapp.service.ExternalAppServiceImpl;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
@@ -24,7 +23,6 @@ public class ExternalAppController {
 
     private ExternalAppServiceImpl externalAppServiceImpl;
 
-    @Autowired
     public ExternalAppController(ExternalAppServiceImpl externalAppServiceImpl) {
         this.externalAppServiceImpl = externalAppServiceImpl;
     }

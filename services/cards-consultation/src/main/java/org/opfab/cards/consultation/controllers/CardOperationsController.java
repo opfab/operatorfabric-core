@@ -46,7 +46,7 @@ public class CardOperationsController {
 
     private final String version = getClass().getPackage().getImplementationVersion();
 
-    @Autowired
+    
     public CardOperationsController(CardSubscriptionService cardSubscriptionService, ObjectMapper mapper, CardRepository cardRepository) {
         this.cardSubscriptionService = cardSubscriptionService;
         this.mapper = mapper;

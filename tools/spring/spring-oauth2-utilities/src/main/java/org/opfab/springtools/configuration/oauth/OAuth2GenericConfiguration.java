@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2021, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2022, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -19,7 +19,6 @@ import org.opfab.springtools.configuration.oauth.jwt.groups.GroupsProperties;
 import org.opfab.springtools.configuration.oauth.jwt.groups.GroupsUtils;
 import org.opfab.users.model.CurrentUserWithPerimeters;
 import org.opfab.users.model.User;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.cloud.openfeign.EnableFeignClients;
 import org.springframework.context.annotation.Bean;
@@ -51,19 +50,18 @@ import java.util.List;
 public class OAuth2GenericConfiguration {
 
 
-
-    @Autowired
     protected UserServiceCache userServiceCache;
-    
-	@Autowired
 	protected GroupsProperties groupsProperties;
-	
-	@Autowired
 	protected JwtProperties jwtProperties;
-	
-	@Autowired
 	protected GroupsUtils groupsUtils;
 
+
+    public OAuth2GenericConfiguration(UserServiceCache userServiceCache,GroupsProperties groupsProperties,JwtProperties jwtProperties, GroupsUtils groupsUtils) {
+        this.userServiceCache = userServiceCache;
+        this.groupsProperties = groupsProperties;
+        this.jwtProperties = jwtProperties;
+        this.groupsUtils = groupsUtils;       
+    }
     /**
      * Generates a converter that converts {@link Jwt} to {@link OpFabJwtAuthenticationToken} whose principal is  a
      * {@link User} model object

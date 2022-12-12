@@ -1,4 +1,4 @@
-/* Copyright (c) 2021, RTE (http://www.rte-france.com)
+/* Copyright (c) 2022, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -11,7 +11,6 @@
 
 package org.opfab.springtools.configuration.oauth;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.cache.annotation.EnableCaching;
@@ -29,8 +28,11 @@ import com.fasterxml.jackson.databind.JsonNode;
 @Component
 public class I18nProcessesCache {
 
-    @Autowired
     private I18nProcessesProxy client;
+
+    public I18nProcessesCache(I18nProcessesProxy client) {
+        this.client = client;
+    }
 
     /** Retrieve i18n translation data from cache or from Businessconfig service through proxy
      * @param process process name 

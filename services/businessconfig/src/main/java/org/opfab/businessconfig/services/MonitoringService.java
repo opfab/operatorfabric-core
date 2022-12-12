@@ -40,7 +40,7 @@ public class MonitoringService implements ResourceLoaderAware {
     private ObjectMapper objectMapper;
     private Monitoring monitoring;
 
-    @Autowired
+
     public MonitoringService(ObjectMapper objectMapper) {
         this.objectMapper = objectMapper;
     }

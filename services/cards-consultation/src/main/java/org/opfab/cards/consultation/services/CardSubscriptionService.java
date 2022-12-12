@@ -17,7 +17,6 @@ import org.opfab.useractiontracing.model.UserActionEnum;
 import org.opfab.useractiontracing.services.UserActionLogService;
 import org.opfab.springtools.configuration.oauth.UserServiceCache;
 import org.opfab.users.model.CurrentUserWithPerimeters;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
@@ -35,19 +34,20 @@ public class CardSubscriptionService {
     private final long heartbeatDelay;
     private Map<String, CardSubscription> cache = new ConcurrentHashMap<>();
 
-    @Autowired
-    protected UserServiceCache userServiceCache;
 
-    @Autowired
+    protected UserServiceCache userServiceCache;
     protected UserActionLogService userActionLogService;
 
     private @Value("${traceUserAction:true}") boolean traceUserAction;
 
-    @Autowired
+
     public CardSubscriptionService(
+                                    UserServiceCache userServiceCache,
+                                    UserActionLogService userActionLogService,
                                    @Value("${operatorfabric.heartbeat.delay:10000}")
                                    long heartbeatDelay) {
-
+        this.userServiceCache = userServiceCache;
+        this.userActionLogService = userActionLogService;
         this.heartbeatDelay = heartbeatDelay;
         Thread heartbeat = new Thread(){
             @Override
