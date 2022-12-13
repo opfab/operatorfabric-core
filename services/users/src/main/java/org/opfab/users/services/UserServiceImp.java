@@ -68,6 +68,7 @@ public class UserServiceImp implements UserService {
         }
     }
 
+    @Override
     public UserSettingsData retrieveUserSettings(String login) {
 
         return userSettingsRepository.findById(login)

@@ -17,6 +17,7 @@ import java.util.Set;
 public interface UserService {
     User createUser(User user) ;
     UserData retrieveUser(String login);
+    UserSettingsData retrieveUserSettings(String login);
     List<GroupData> retrieveGroups(List<String> groupIds);
     List<PerimeterData> retrievePerimeters(List<String> perimeterIds);
     Set<Perimeter> findPerimetersAttachedToGroups(List<String> groups);
