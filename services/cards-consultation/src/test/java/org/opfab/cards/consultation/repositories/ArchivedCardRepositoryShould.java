@@ -16,6 +16,10 @@ import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.opfab.cards.consultation.application.IntegrationTestApplication;
 import org.opfab.cards.consultation.model.ArchivedCardConsultationData;
+import org.opfab.cards.consultation.model.ArchivedCardsFilter;
+import org.opfab.cards.consultation.model.ArchivedCardsFilterData;
+import org.opfab.cards.consultation.model.FilterModelData;
+import org.opfab.cards.model.FilterMatchTypeEnum;
 import org.opfab.users.model.ComputedPerimeter;
 import org.opfab.users.model.CurrentUserWithPerimeters;
 import org.opfab.users.model.RightsEnum;
@@ -24,14 +28,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
-import org.springframework.util.LinkedMultiValueMap;
-import org.springframework.util.MultiValueMap;
 import reactor.test.StepVerifier;
 import reactor.util.function.Tuple2;
 
+import java.math.BigDecimal;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.Arrays;
+import java.util.List;
 import java.util.function.Predicate;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -240,16 +244,27 @@ public class ArchivedCardRepositoryShould {
     @Test
     void fetchArchivedCardsWithRegularParams() {
 
-        MultiValueMap<String, String> queryParams = new LinkedMultiValueMap<>();
-
         //Find cards with given publishers and a given processInstanceId
-        queryParams.add("publisher",secondPublisher);
-        queryParams.add("publisher",businessconfigPublisher);
-        queryParams.add("processInstanceId","PROCESS1");
 
-        Tuple2<CurrentUserWithPerimeters, MultiValueMap<String, String>> params = of(currentUser1,queryParams);
+        FilterModelData filter1 = FilterModelData.builder()
+            .columnName("publisher")
+            .matchType(FilterMatchTypeEnum.IN)
+            .filter(List.of(secondPublisher, businessconfigPublisher))
+            .build();
+        FilterModelData filter2 = FilterModelData.builder()
+            .columnName("processInstanceId")
+            .matchType(FilterMatchTypeEnum.EQUALS)
+            .filter(List.of("PROCESS1"))
+            .build();
 
-        StepVerifier.create(repository.findWithUserAndParams(params))
+            
+        ArchivedCardsFilter filters = ArchivedCardsFilterData.builder()
+            .filters(List.of(filter1, filter2)).build();
+
+        Tuple2<CurrentUserWithPerimeters, ArchivedCardsFilter> filterParams = of(currentUser1, filters);
+
+
+        StepVerifier.create(repository.findWithUserAndFilter(filterParams))
                 //The card from businessconfigPublisher is returned first because it has the latest publication date
                 .assertNext(page -> {
                     assertThat(page.getTotalElements()).isEqualTo(2);
@@ -267,13 +282,18 @@ public class ArchivedCardRepositoryShould {
     @Test
     void fetchArchivedCardsWithRegularParamsEmptyResultSet() {
 
-        MultiValueMap<String, String> queryParams = new LinkedMultiValueMap<>();
+        FilterModelData filter1 = FilterModelData.builder()
+            .columnName("publisher")
+            .matchType(FilterMatchTypeEnum.IN)
+            .filter(List.of("noSuchPublisher"))
+            .build();
+            
+        ArchivedCardsFilter filters = ArchivedCardsFilterData.builder()
+            .filters(List.of(filter1)).build();
 
-        queryParams.add("publisher","noSuchPublisher");
+        Tuple2<CurrentUserWithPerimeters, ArchivedCardsFilter> filterParams = of(currentUser1, filters);
 
-        Tuple2<CurrentUserWithPerimeters, MultiValueMap<String, String>> params = of(currentUser1,queryParams);
-
-        StepVerifier.create(repository.findWithUserAndParams(params))
+        StepVerifier.create(repository.findWithUserAndFilter(filterParams))
                 .assertNext(page -> {
                     assertThat(page.getTotalElements()).isZero();
                     assertThat(page.getTotalPages()).isEqualTo(1);
@@ -286,18 +306,27 @@ public class ArchivedCardRepositoryShould {
     @Test
     void fetchArchivedCardsWithPublishDateBetween() {
 
-        MultiValueMap<String, String> queryParams = new LinkedMultiValueMap<>();
-
         //Find cards published between start and end (included)
         Instant start = now;
         Instant end = nowPlusOne;
 
-        queryParams.add("publishDateFrom", Long.toString(start.toEpochMilli()));
-        queryParams.add("publishDateTo",Long.toString(end.toEpochMilli()));
 
-        Tuple2<CurrentUserWithPerimeters, MultiValueMap<String, String>> params = of(currentUser1,queryParams);
+        FilterModelData filter1 = FilterModelData.builder()
+            .columnName("publishDateFrom")
+            .filter(List.of(Long.toString(start.toEpochMilli())))
+            .build();
+        FilterModelData filter2 = FilterModelData.builder()
+            .columnName("publishDateTo")
+            .filter(List.of(Long.toString(end.toEpochMilli())))
+            .build();
+            
+        ArchivedCardsFilter filters = ArchivedCardsFilterData.builder()
+            .filters(List.of(filter1, filter2)).build();
 
-        StepVerifier.create(repository.findWithUserAndParams(params))
+        Tuple2<CurrentUserWithPerimeters, ArchivedCardsFilter> filterParams = of(currentUser1, filters);
+
+
+        StepVerifier.create(repository.findWithUserAndFilter(filterParams))
                 .assertNext(page -> {
                     assertThat(page.getTotalElements()).isEqualTo(3);
                     assertThat(page.getTotalPages()).isEqualTo(1);
@@ -315,16 +344,21 @@ public class ArchivedCardRepositoryShould {
     @Test
     void fetchArchivedCardsWithPublishDateAfter() {
 
-        MultiValueMap<String, String> queryParams = new LinkedMultiValueMap<>();
-
         //Find cards published after start (included)
         Instant start = now;
 
-        queryParams.add("publishDateFrom", Long.toString(start.toEpochMilli()));
+        FilterModelData filter1 = FilterModelData.builder()
+            .columnName("publishDateFrom")
+            .filter(List.of(Long.toString(start.toEpochMilli())))
+            .build();
+            
+        ArchivedCardsFilter filters = ArchivedCardsFilterData.builder()
+            .filters(List.of(filter1)).build();
 
-        Tuple2<CurrentUserWithPerimeters, MultiValueMap<String, String>> params = of(currentUser1,queryParams);
+        Tuple2<CurrentUserWithPerimeters, ArchivedCardsFilter> filterParams = of(currentUser1, filters);
 
-        StepVerifier.create(repository.findWithUserAndParams(params))
+
+        StepVerifier.create(repository.findWithUserAndFilter(filterParams))
                 .assertNext(page -> {
                     assertThat(page.getTotalElements()).isEqualTo(4);
                     assertThat(page.getTotalPages()).isEqualTo(1);
@@ -342,16 +376,21 @@ public class ArchivedCardRepositoryShould {
     @Test
     void fetchArchivedCardsWithPublishDateBefore() {
 
-        MultiValueMap<String, String> queryParams = new LinkedMultiValueMap<>();
-
         //Find cards published before end (included)
         Instant end = nowMinusTwo;
 
-        queryParams.add("publishDateTo",Long.toString(end.toEpochMilli()));
+        FilterModelData filter1 = FilterModelData.builder()
+            .columnName("publishDateTo")
+            .filter(List.of(Long.toString(end.toEpochMilli())))
+            .build();
+        
+        ArchivedCardsFilter filters = ArchivedCardsFilterData.builder()
+            .filters(List.of(filter1)).build();
 
-        Tuple2<CurrentUserWithPerimeters, MultiValueMap<String, String>> params = of(currentUser1,queryParams);
+        Tuple2<CurrentUserWithPerimeters, ArchivedCardsFilter> filterParams = of(currentUser1, filters);
 
-        StepVerifier.create(repository.findWithUserAndParams(params))
+
+        StepVerifier.create(repository.findWithUserAndFilter(filterParams))
                 .assertNext(page -> {
                     assertThat(page.getTotalElements()).isEqualTo(9);
                     assertThat(page.getTotalPages()).isEqualTo(1);
@@ -369,18 +408,26 @@ public class ArchivedCardRepositoryShould {
     @Test
     void fetchArchivedCardsActiveBetween() {
 
-        MultiValueMap<String, String> queryParams = new LinkedMultiValueMap<>();
-
         //Find cards with an active period that overlaps the [start,end] range (bounds included)
         Instant start = nowMinusHalf;
         Instant end = nowPlusHalf;
 
-        queryParams.add("activeFrom", Long.toString(start.toEpochMilli()));
-        queryParams.add("activeTo", Long.toString(end.toEpochMilli()));
+        FilterModelData filter1 = FilterModelData.builder()
+            .columnName("activeFrom")
+            .filter(List.of(Long.toString(start.toEpochMilli())))
+            .build();
+        FilterModelData filter2 = FilterModelData.builder()
+            .columnName("activeTo")
+            .filter(List.of(Long.toString(end.toEpochMilli())))
+            .build();
+        
+        ArchivedCardsFilter filters = ArchivedCardsFilterData.builder()
+            .filters(List.of(filter1, filter2)).build();
 
-        Tuple2<CurrentUserWithPerimeters, MultiValueMap<String, String>> params = of(currentUser1,queryParams);
+        Tuple2<CurrentUserWithPerimeters, ArchivedCardsFilter> filterParams = of(currentUser1, filters);
 
-        StepVerifier.create(repository.findWithUserAndParams(params))
+
+        StepVerifier.create(repository.findWithUserAndFilter(filterParams))
                 .assertNext(page -> {
                     assertThat(page.getTotalElements()).isEqualTo(4);
                     assertThat(page.getTotalPages()).isEqualTo(1);
@@ -398,16 +445,21 @@ public class ArchivedCardRepositoryShould {
     @Test
     void fetchArchivedCardsActiveFrom() {
 
-        MultiValueMap<String, String> queryParams = new LinkedMultiValueMap<>();
-
         //Find cards with an active period that is at least partly after start
         Instant start = nowPlusTwo;
 
-        queryParams.add("activeFrom", Long.toString(start.toEpochMilli()));
+        FilterModelData filter1 = FilterModelData.builder()
+            .columnName("activeFrom")
+            .filter(List.of(Long.toString(start.toEpochMilli())))
+            .build();
+            
+        ArchivedCardsFilter filters = ArchivedCardsFilterData.builder()
+            .filters(List.of(filter1)).build();
 
-        Tuple2<CurrentUserWithPerimeters, MultiValueMap<String, String>> params = of(currentUser1,queryParams);
+        Tuple2<CurrentUserWithPerimeters, ArchivedCardsFilter> filterParams = of(currentUser1, filters);
 
-        StepVerifier.create(repository.findWithUserAndParams(params))
+
+        StepVerifier.create(repository.findWithUserAndFilter(filterParams))
                 .assertNext(page -> {
                     assertThat(page.getTotalElements()).isEqualTo(5);
                     assertThat(page.getTotalPages()).isEqualTo(1);
@@ -427,19 +479,24 @@ public class ArchivedCardRepositoryShould {
     @Test
     void fetchArchivedCardsActiveFromWithPaging() {
 
-        MultiValueMap<String, String> queryParams = new LinkedMultiValueMap<>();
-
         //Find cards with an active period that is at least partly after start
         Instant start = nowPlusTwo;
 
-        queryParams.add("activeFrom", Long.toString(start.toEpochMilli()));
-        queryParams.add("size","2");
-
+        FilterModelData filter1 = FilterModelData.builder()
+            .columnName("activeFrom")
+            .filter(List.of(Long.toString(start.toEpochMilli())))
+            .build();
+            
         //Page 1
-        queryParams.add("page","0");
-        Tuple2<CurrentUserWithPerimeters, MultiValueMap<String, String>> params = of(currentUser1,queryParams);
+        ArchivedCardsFilter filters = ArchivedCardsFilterData.builder()
+            .size(BigDecimal.valueOf(2))
+            .page(BigDecimal.ZERO)
+            .filters(List.of(filter1)).build();
 
-        StepVerifier.create(repository.findWithUserAndParams(params))
+        Tuple2<CurrentUserWithPerimeters, ArchivedCardsFilter> filterParams = of(currentUser1, filters);
+
+
+        StepVerifier.create(repository.findWithUserAndFilter(filterParams))
                 .assertNext(page -> {
                     int expectedNbOfElements = 5;
                     assertThat(page.getTotalElements()).isEqualTo(expectedNbOfElements);
@@ -458,9 +515,11 @@ public class ArchivedCardRepositoryShould {
                 .verify();
 
         //Page 2
-        queryParams.set("page","1");
-        params = of(currentUser1,queryParams);
-        StepVerifier.create(repository.findWithUserAndParams(params))
+        filters.setPage(BigDecimal.ONE);
+        filterParams = of(currentUser1, filters);
+
+
+        StepVerifier.create(repository.findWithUserAndFilter(filterParams))
                 .assertNext(page -> {
                     int expectedNbOfElements = 5;
                     assertThat(page.getTotalElements()).isEqualTo(expectedNbOfElements);
@@ -479,10 +538,10 @@ public class ArchivedCardRepositoryShould {
                 .verify();
 
         //Page 3
+        filters.setPage(BigDecimal.valueOf(2));
+        filterParams = of(currentUser1, filters);
 
-        queryParams.set("page","2");
-        params = of(currentUser1,queryParams);
-        StepVerifier.create(repository.findWithUserAndParams(params))
+        StepVerifier.create(repository.findWithUserAndFilter(filterParams))
                 .assertNext(page -> {
                     int expectedNbOfElements = 5;
                     assertThat(page.getTotalElements()).isEqualTo(expectedNbOfElements);
@@ -505,16 +564,22 @@ public class ArchivedCardRepositoryShould {
     @Test
     void fetchArchivedCardsActiveTo() {
 
-        MultiValueMap<String, String> queryParams = new LinkedMultiValueMap<>();
-
         //Find cards with an active period that is at least partly before end
         Instant end = nowMinusTwo;
 
-        queryParams.add("activeTo", Long.toString(end.toEpochMilli()));
+        FilterModelData filter1 = FilterModelData.builder()
+            .columnName("activeTo")
+            .filter(List.of(Long.toString(end.toEpochMilli())))
+            .build();
 
-        Tuple2<CurrentUserWithPerimeters, MultiValueMap<String, String>> params = of(currentUser1,queryParams);
+        
+        ArchivedCardsFilter filters = ArchivedCardsFilterData.builder()
+            .filters(List.of(filter1)).build();
 
-        StepVerifier.create(repository.findWithUserAndParams(params))
+        Tuple2<CurrentUserWithPerimeters, ArchivedCardsFilter> filterParams = of(currentUser1, filters);
+
+        
+        StepVerifier.create(repository.findWithUserAndFilter(filterParams))
                 .assertNext(page -> {
                     assertThat(page.getTotalElements()).isEqualTo(6);
                     assertThat(page.getTotalPages()).isEqualTo(1);
@@ -532,24 +597,38 @@ public class ArchivedCardRepositoryShould {
     @Test
     void fetchArchivedCardsMixParams() {
 
-        MultiValueMap<String, String> queryParams = new LinkedMultiValueMap<>();
-
-        //Regular queryParams
-        queryParams.add("publisher",firstPublisher);
-
-        //Active period
         Instant start = nowMinusHalf;
         Instant end = nowPlusHalf;
-        queryParams.add("activeFrom", Long.toString(start.toEpochMilli()));
-        queryParams.add("activeTo", Long.toString(end.toEpochMilli()));
 
-        //Publication date
         Instant publishTo = now;
-        queryParams.add("publishDateTo",Long.toString(publishTo.toEpochMilli()));
+     
+        FilterModelData filter1 = FilterModelData.builder()
+            .columnName("activeFrom")
+            .filter(List.of(Long.toString(start.toEpochMilli())))
+            .build();
+        FilterModelData filter2 = FilterModelData.builder()
+            .columnName("activeTo")
+            .filter(List.of(Long.toString(end.toEpochMilli())))
+            .build();
 
-        Tuple2<CurrentUserWithPerimeters, MultiValueMap<String, String>> params = of(currentUser1,queryParams);
+        FilterModelData filter3= FilterModelData.builder()
+            .columnName("publishDateTo")
+            .filter(List.of(Long.toString(publishTo.toEpochMilli())))
+            .build();
 
-        StepVerifier.create(repository.findWithUserAndParams(params))
+        FilterModelData filter4= FilterModelData.builder()
+            .columnName("publisher")
+            .matchType(FilterMatchTypeEnum.EQUALS)
+            .filter(List.of(firstPublisher))
+            .build();
+
+        ArchivedCardsFilter filters = ArchivedCardsFilterData.builder()
+            .filters(List.of(filter1, filter2, filter3, filter4)).build();
+
+        Tuple2<CurrentUserWithPerimeters, ArchivedCardsFilter> filterParams = of(currentUser1, filters);
+
+
+        StepVerifier.create(repository.findWithUserAndFilter(filterParams))
                 .assertNext(page -> {
                     assertThat(page.getTotalElements()).isEqualTo(3);
                     assertThat(page.getTotalPages()).isEqualTo(1);
@@ -571,12 +650,13 @@ public class ArchivedCardRepositoryShould {
     @Test
     void fetchArchivedCardsUserRecipientIsAllowedToSee() {
 
-        MultiValueMap<String, String> queryParams = new LinkedMultiValueMap<>();
-
         //Cards visible by user1
-        Tuple2<CurrentUserWithPerimeters, MultiValueMap<String, String>> params = of(currentUser1,queryParams);
+        ArchivedCardsFilter filters = ArchivedCardsFilterData.builder().filters(List.of()).build();
 
-        StepVerifier.create(repository.findWithUserAndParams(params))
+        Tuple2<CurrentUserWithPerimeters, ArchivedCardsFilter> filterParams = of(currentUser1, filters);
+
+
+        StepVerifier.create(repository.findWithUserAndFilter(filterParams))
                 .assertNext(page -> {
                     assertThat(page.getTotalElements()).isEqualTo(13);
                     assertThat(page.getTotalPages()).isEqualTo(1);
@@ -591,12 +671,13 @@ public class ArchivedCardRepositoryShould {
     @Test
     void fetchArchivedCardsGroupRecipientIsAllowedToSee() {
 
-        MultiValueMap<String, String> queryParams = new LinkedMultiValueMap<>();
-
         //Cards visible by someone from group "rte"
-        Tuple2<CurrentUserWithPerimeters, MultiValueMap<String, String>> params = of(currentUser2,queryParams);
+        ArchivedCardsFilter filters = ArchivedCardsFilterData.builder().filters(List.of()).build();
 
-        StepVerifier.create(repository.findWithUserAndParams(params))
+        Tuple2<CurrentUserWithPerimeters, ArchivedCardsFilter> filterParams = of(currentUser2, filters);
+
+
+        StepVerifier.create(repository.findWithUserAndFilter(filterParams))
                 .assertNext(page -> {
                     assertThat(page.getTotalElements()).isEqualTo(7);
                     assertThat(page.getTotalPages()).isEqualTo(1);
@@ -611,12 +692,12 @@ public class ArchivedCardRepositoryShould {
     @Test
     void fetchArchivedCardsUserRecipientWithNoGroupIsAllowedToSee() {
 
-        MultiValueMap<String, String> queryParams = new LinkedMultiValueMap<>();
-
         //Cards visible by user3 (who has no groups at all)
-        Tuple2<CurrentUserWithPerimeters, MultiValueMap<String, String>> params = of(currentUser3,queryParams);
+        ArchivedCardsFilter filters = ArchivedCardsFilterData.builder().filters(List.of()).build();
+        Tuple2<CurrentUserWithPerimeters, ArchivedCardsFilter> filterParams = of(currentUser3, filters);
 
-        StepVerifier.create(repository.findWithUserAndParams(params))
+
+        StepVerifier.create(repository.findWithUserAndFilter(filterParams))
                 .expectNextCount(1)
                 .expectComplete()
                 .verify();
@@ -626,12 +707,12 @@ public class ArchivedCardRepositoryShould {
     @Test
     void fetchArchivedCardsEntityRecipientIsAllowedToSee() {
 
-        MultiValueMap<String, String> queryParams = new LinkedMultiValueMap<>();
-
         //Cards visible by someone from entity "someEntity"
-        Tuple2<CurrentUserWithPerimeters, MultiValueMap<String, String>> params = of(currentUser4,queryParams);
+        ArchivedCardsFilter filters = ArchivedCardsFilterData.builder().filters(List.of()).build();
+        Tuple2<CurrentUserWithPerimeters, ArchivedCardsFilter> filterParams = of(currentUser4, filters);
 
-        StepVerifier.create(repository.findWithUserAndParams(params))
+
+        StepVerifier.create(repository.findWithUserAndFilter(filterParams))
                 .expectNextCount(1)
                 .expectComplete()
                 .verify();
@@ -641,12 +722,12 @@ public class ArchivedCardRepositoryShould {
     @Test
     void fetchArchivedCardsGroupAndEntityRecipientAreAllowedToSee() {
 
-        MultiValueMap<String, String> queryParams = new LinkedMultiValueMap<>();
-
         //Cards visible by someone from group "group1" and from entity "entity1"
-        Tuple2<CurrentUserWithPerimeters, MultiValueMap<String, String>> params = of(currentUser5,queryParams);
+        ArchivedCardsFilter filters = ArchivedCardsFilterData.builder().filters(List.of()).build();
+        Tuple2<CurrentUserWithPerimeters, ArchivedCardsFilter> filterParams = of(currentUser5, filters);
 
-        StepVerifier.create(repository.findWithUserAndParams(params))
+
+        StepVerifier.create(repository.findWithUserAndFilter(filterParams))
                 .expectNextCount(1)
                 .expectComplete()
                 .verify();
