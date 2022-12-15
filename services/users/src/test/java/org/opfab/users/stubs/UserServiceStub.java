@@ -1,5 +1,5 @@
 
-/* Copyright (c) 2018-2022, RTE (http://www.rte-france.com)
+/* Copyright (c) 2022, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -74,6 +74,11 @@ public class UserServiceStub implements UserService {
     public void publishUpdatedUserMessage(String userLogin) {
         // stub 
         
+    }
+
+    @Override
+    public void publishUpdatedGroupMessage(String id) {
+        //stub
     }
 
     @Override

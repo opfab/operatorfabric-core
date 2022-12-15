@@ -23,6 +23,7 @@ public interface UserService {
     Set<Perimeter> findPerimetersAttachedToGroups(List<String> groups);
     boolean checkFilteringNotificationIsAllowedForAllProcessesStates(String login, UserSettings userSettings);
     void publishUpdatedUserMessage(String userLogin);
+    void publishUpdatedGroupMessage(String groupId);
     void publishUpdatedConfigMessage();
     void checkFormatOfIdField(String id) throws ApiErrorException;
     void checkFormatOfLoginField(String login) throws ApiErrorException;

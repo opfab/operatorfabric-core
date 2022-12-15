@@ -1,3 +1,11 @@
+/* Copyright (c) 2022, RTE (http://www.rte-france.com)
+ * See AUTHORS.txt
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ * SPDX-License-Identifier: MPL-2.0
+ * This file is part of the OperatorFabric project.
+ */
 package org.opfab.users.services;
 
 import org.opfab.users.model.*;
@@ -23,7 +31,7 @@ public class CurrentUserWithPerimetersService {
         this.entityRepository = entityRepository;
     }
 
-    public CurrentUserWithPerimeters fetchCurrentUserWithPerimeters(User user) throws Exception {
+    public CurrentUserWithPerimeters fetchCurrentUserWithPerimeters(User user) {
         CurrentUserWithPerimetersData currentUserWithPerimetersData = new CurrentUserWithPerimetersData();
         if (user != null) {
             currentUserWithPerimetersData.setUserData(user);
@@ -68,7 +76,7 @@ public class CurrentUserWithPerimetersService {
         // we remove entitiesDisconnected from the entities list of the user
         if (entitiesDisconnected != null) {
             userEntityList = userEntityList.stream().filter(
-                    entityId -> !entitiesDisconnected.contains(entityId)).collect(Collectors.toList());
+                    entityId -> !entitiesDisconnected.contains(entityId)).toList();
         }
 
         Set<String> userEntityNames = userEntityList.stream().collect(Collectors.toSet());
@@ -76,7 +84,7 @@ public class CurrentUserWithPerimetersService {
         Map<String, EntityData> systemEntityDictionary = systemEntities.stream()
                 .collect(Collectors.toMap(Entity::getId, Function.identity()));
         userEntityList.stream().forEach(entityName -> this.manageParentsRef(entityName, systemEntityDictionary, userEntityNames));
-        userData.setEntities(userEntityNames.stream().collect(Collectors.toList()));
+        userData.setEntities(userEntityNames.stream().toList());
     }
 // recursive because by convention there are no cycle in entity relationship (cf above)
     protected void manageParentsRef(String entity, Map<String, EntityData> dictionary, Set<String> records) {

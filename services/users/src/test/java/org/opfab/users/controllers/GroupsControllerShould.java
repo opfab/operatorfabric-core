@@ -601,7 +601,7 @@ class GroupsControllerShould {
             mockMvc.perform(delete("/groups/ADMIN")
                     .contentType(MediaType.APPLICATION_JSON)
             )
-                    .andExpect(status().isForbidden())
+                    .andExpect(status().isBadRequest())
             ;
         }
 

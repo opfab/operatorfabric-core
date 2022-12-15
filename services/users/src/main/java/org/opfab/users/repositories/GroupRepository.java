@@ -12,8 +12,6 @@
 package org.opfab.users.repositories;
 
 import org.opfab.users.model.GroupData;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.stereotype.Repository;
 
@@ -24,8 +22,6 @@ import java.util.List;
  */
 @Repository
 public interface GroupRepository extends MongoRepository<GroupData,String> {
-
-    Page<GroupData> findAll(Pageable pageable);
 
     List<GroupData> findByPerimetersContaining(String perimeterContains);
 }
