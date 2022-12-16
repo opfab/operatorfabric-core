@@ -46,7 +46,7 @@
     "bootstrap": "5.2.3",
     "chart.js": "3.9.1",
     "chartjs-adapter-date-fns": "2.0.1",
-    "chartjs-plugin-datalabels": "2.1.0",
+    "chartjs-plugin-datalabels": "2.2.0",
     "file-saver-es": "2.0.5",
     "guid-typescript": "1.0.9",
     "handlebars": "4.7.7",
