@@ -36,13 +36,13 @@ public class UserRepositoryStub implements UserRepository{
 
     @Override
     public List<UserData> findAll() {
-        // TODO Auto-generated method stub
+        // stub
         return null;
     }
 
     @Override
     public List<UserData> findAll(Sort sort) {
-        // TODO Auto-generated method stub
+        // stub
         return null;
     }
 
@@ -54,19 +54,19 @@ public class UserRepositoryStub implements UserRepository{
 
     @Override
     public <S extends UserData> List<S> insert(Iterable<S> entities) {
-        // TODO Auto-generated method stub
+        // stub
         return null;
     }
 
     @Override
     public <S extends UserData> List<S> findAll(Example<S> example) {
-        // TODO Auto-generated method stub
+        // stub
         return null;
     }
 
     @Override
     public <S extends UserData> List<S> findAll(Example<S> example, Sort sort) {
-        // TODO Auto-generated method stub
+        // stub
         return null;
     }
 
@@ -85,43 +85,43 @@ public class UserRepositoryStub implements UserRepository{
 
     @Override
     public boolean existsById(String id) {
-        // TODO Auto-generated method stub
+        // stub
         return false;
     }
 
     @Override
     public Iterable<UserData> findAllById(Iterable<String> ids) {
-        // TODO Auto-generated method stub
+        // stub
         return null;
     }
 
     @Override
     public long count() {
-        // TODO Auto-generated method stub
+        // stub
         return 0;
     }
 
     @Override
     public void deleteById(String id) {
-        // TODO Auto-generated method stub
+        // stub
         
     }
 
     @Override
     public void delete(UserData entity) {
-        // TODO Auto-generated method stub
+        // stub
         
     }
 
     @Override
     public void deleteAllById(Iterable<? extends String> ids) {
-        // TODO Auto-generated method stub
+        // stub
         
     }
 
     @Override
     public void deleteAll(Iterable<? extends UserData> entities) {
-        // TODO Auto-generated method stub
+        // stub
         
     }
 
@@ -133,37 +133,37 @@ public class UserRepositoryStub implements UserRepository{
 
     @Override
     public <S extends UserData> Optional<S> findOne(Example<S> example) {
-        // TODO Auto-generated method stub
+        // stub
         return Optional.empty();
     }
 
     @Override
     public <S extends UserData> Page<S> findAll(Example<S> example, Pageable pageable) {
-        // TODO Auto-generated method stub
+        // stub
         return null;
     }
 
     @Override
     public <S extends UserData> long count(Example<S> example) {
-        // TODO Auto-generated method stub
+        // stub
         return 0;
     }
 
     @Override
     public <S extends UserData> boolean exists(Example<S> example) {
-        // TODO Auto-generated method stub
+        // stub
         return false;
     }
 
     @Override
     public <S extends UserData, R> R findBy(Example<S> example, Function<FetchableFluentQuery<S>, R> queryFunction) {
-        // TODO Auto-generated method stub
+        // stub
         return null;
     }
 
     @Override
     public Page<UserData> findAll(Pageable pageable) {
-        // TODO Auto-generated method stub
+        // stub
         return null;
     }
 
@@ -180,8 +180,13 @@ public class UserRepositoryStub implements UserRepository{
 
     @Override
     public List<UserData> findByEntitiesContaining(String entityContains) {
-        // TODO Auto-generated method stub
-        return null;
+        List<UserData> usersInEntities = new ArrayList<>();
+        users.values().forEach((user) -> {
+            if (user.getEntities().contains(entityContains)) {
+                usersInEntities.add(user);
+            }
+        });
+        return usersInEntities;
     }
     
 }

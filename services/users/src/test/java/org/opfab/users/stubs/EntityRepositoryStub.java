@@ -10,7 +10,9 @@
 package org.opfab.users.stubs;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.function.Function;
 
@@ -24,7 +26,7 @@ import org.springframework.data.repository.query.FluentQuery.FetchableFluentQuer
 
 public class EntityRepositoryStub implements EntityRepository{
 
-    public List<EntityData> entities = new ArrayList<>();
+    Map<String,EntityData> entities = new HashMap<>(); 
 
     @Override
     public <S extends EntityData> List<S> saveAll(Iterable<S> entities) {
@@ -33,17 +35,17 @@ public class EntityRepositoryStub implements EntityRepository{
 
     @Override
     public List<EntityData> findAll() {
-        return entities;
+        return entities.values().stream().toList();
     }
 
     @Override
     public List<EntityData> findAll(Sort sort) {
-        return entities;
+        return null;
     }
 
     @Override
     public <S extends EntityData> S insert(S entity) {
-        entities.add(entity);
+        entities.put(entity.getId(),entity);
         return null;
     }
 
@@ -64,12 +66,15 @@ public class EntityRepositoryStub implements EntityRepository{
 
     @Override
     public <S extends EntityData> S save(S entity) {
-        return null;
+        entities.put(entity.getId(),entity);
+        return entity;
     }
 
     @Override
     public Optional<EntityData> findById(String id) {
-        return Optional.empty();
+        EntityData entity = entities.get(id);
+        if (entity==null) return Optional.empty();
+        return Optional.of(entity);
     }
 
     @Override
@@ -94,7 +99,7 @@ public class EntityRepositoryStub implements EntityRepository{
 
     @Override
     public void delete(EntityData entity) {
-        // stub
+        entities.remove(entity.getId());
     }
 
     @Override
@@ -148,8 +153,14 @@ public class EntityRepositoryStub implements EntityRepository{
 
     @Override
     public List<EntityData> findByParentsContaining(String entityId) {
-        
-        return null;
+        List<EntityData> childEntities = new ArrayList<>();
+        entities.values().forEach((entity) -> {
+            if (entity.getParents().contains(entityId)) {
+                childEntities.add(entity);
+            }
+        });
+        return childEntities;
+
     }
     
     
