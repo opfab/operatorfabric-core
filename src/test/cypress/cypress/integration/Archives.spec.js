@@ -185,6 +185,11 @@ describe('Archives screen tests', function () {
         archivesAndLogging.clickOnSearchButton();
 
         checkNumberOfLineDisplayedIs(6);
+
+        openAndCheckArchiveCardContent('⚠️ NETWORK CONTINGENCIES ⚠️', 'ASPHL71SIERE',
+        'Entity recipients : Control Center FR North');
+
+
     });
 
     it('Check composition of multi-filters for process groups/processes/states for operator1_fr, with a config without process group', function () {
