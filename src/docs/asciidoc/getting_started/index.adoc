@@ -32,7 +32,7 @@ After connection, you should see the following screen
 
 image::empty-opfab-page.png[empty opfab screenshot]
 
-To stop the server (if you start it in background), use:
+To stop the server (if you started it in background), use:
 
 ----
 docker-compose down & 
@@ -40,15 +40,15 @@ docker-compose down &
 
 == Examples 
 
-For each example, useful files and scripts are in the directory `client/exampleX`.
+For each example, relevant files and scripts are in the directory `client/exampleX`.
 
 All examples assume you connect to the server from `localhost` (otherwise change the provided scripts)
  
 === Example 1: Send and update a basic card
 
-Go in directory `client/example1`.
+Go in the directory `client/example1`.
 
-To receive the test cards it is necessary to configure a perimeter as you will see in details in Example 5.
+To receive the test cards it is necessary to configure a perimeter which you will have a closer look at in Example 5.
 
 Configure the required perimeter by executing the provided script:
 
@@ -145,7 +145,7 @@ or use provided script:
 
 === Example 2: Publish a new bundle
 
-The way the card is display in the UI is defined via a Bundle containing templates and process description.
+The way the card is displayed on the UI is defined by a Bundle containing templates and a process description.
 
 The bundle structure is the following:
 
@@ -153,7 +153,7 @@ The bundle structure is the following:
 ├── css : stylesheets files
 └── template : handlebar templates for detail card rendering
 config.json : process description and global configuration 
-i18n.json : internalization file
+i18n.json : internationalization file
 ----
 
 The bundle is provided in the bundle directory of example2. It contains a new version of the bundle used in example1.
@@ -205,7 +205,7 @@ To keep the old bundle, we create a new version by setting version to 2.
 
 ==== Package your bundle
 
-Your bundle need to be package in a tar.gz file, a script is available 
+Your bundle needs to be packaged in a tar.gz file, a script is available: 
 ----
 ./packageBundle.sh
 ---- 
@@ -235,9 +235,9 @@ This should return a JSON a response like this:
 
 Your token is the `access_token` value in the JSON, which the script will export to a `$token` environment variable.
 
-The sendBundle.sh script below will use of this variable.
+The sendBundle.sh script below will use this variable.
 
-NOTE: The token will be valid for 10 hours, after you will need to ask for a new one.
+NOTE: The token will be valid for 10 hours, after that you will need to ask for a new one.
 
 ==== Send the bundle 
 
@@ -249,7 +249,7 @@ You can now execute the script, it will send the bundle.
 ./sendBundle.sh
 ----
 
-You should received the following JSON in response, describing your bundle.
+You should receive the following JSON in response, describing your bundle.
 
 [source,JSON]
 ----
@@ -327,9 +327,9 @@ of the bundle:
 
 You can see in the JSON we define a process name "criticalSituation" with 3 states: criticalSituation-begin,
 criticalSituation-update and criticalSituation-end. For each state we define a title for the card, and the template
-a stylesheets to use.
+of stylesheet to use.
 
-The title is a key which refer to i18n.json file:
+The title is a key which refers to the i18n.json file:
 
 [source,JSON]
 ----
@@ -378,13 +378,13 @@ We can now send cards and simulate the process, first we send a card at the begi
 ----
 
 The card refers to the process "criticalSituation" as defined in the config.json, the state attribute is put to
-"criticalSituation-begin" which is the first step of the process, again as defined in the config.json. The card can be sent via provided script :
+"criticalSituation-begin" which is the first step of the process, again as defined in the config.json. The card can be sent via the provided script :
 
 ----
 ./sendCard.sh card.json
 ----
 
-Two other card have be provided to continue the process
+Two other cards have been provided to continue the process
 
 - cardUpdate.json: the state is criticalSituation-update
 - cardEnd.json: the state is criticalSituation-end and severity set to "compliant"
@@ -435,14 +435,14 @@ corresponding bundle to the businessconfig service as it has been loaded in adva
 getting started). If you want to take a look at its content you can find it under
 server/businessconfig-storage/scheduledMaintenance-publisher/1.
 
-Before sending the provided card provided, you need to set the good time values as
+Before sending the provided cards, you need to set the correct time values as
 link:https://en.wikipedia.org/wiki/Epoch_(computing)[epoch] (ms) in the json. For each value you set, you will have a
-point in the timeline. In our example, the first point represent the beginning of the maintenance operation, and the
+dot on the timeline. In our example, the first dot represents the beginning of the maintenance operation, and the
 second the end of the maintenance operation.
 
 For example cards the dates are calculated automatically in the provided `sendCard.sh` script.
 
-It is possible to change dates values by editing the card json file. To get the dates in Epoch, you can use the following commands:
+It is possible to change dates values by editing the card's json file. To get the dates in Epoch, you can use the following commands:
 
 For the first date: 
 ---- 
@@ -472,7 +472,7 @@ A second card (card2.json) is provided as example, as before you can eventually 
 ----
 ./sendCard.sh card2.json
 ----
-This time the severity of the card is ALERT, you should see the point in red in the timeline
+This time the severity of the card is ALERT, you should see the dot in red on the timeline
 
 image::example4.png[example 4 screenshot]
 
@@ -509,7 +509,7 @@ Use the provided script :
 
 The result should be a 201 Http status.
 
-See the result in the UI, you should not see the card.
+Look at the result in the UI, you should not be able to see the card.
 
 To receive the card you need to create a perimeter and to do it you need to be authenticated. To get a token you can *source* the provided script:
 
@@ -565,7 +565,7 @@ The result should be a 200 Http status.
 Now, if you refresh the UI or send again the card, you should see the card.
 
 ==== Card sent to a group and an entity
-If a card is sent to a group and an entity, then to receive the card the user must both a member of this entity and a member of this group and have the process / state of the card within the group's perimeter.
+If a card is sent to a group and an entity, then to receive the card the user must be both a member of this entity and a member of this group and have the process / state of the card within the group's perimeter.
 
 Let's send this card (for ENTITY1_FR and Dispatcher group with process/state not in user's perimeter) :
 [source,JSON]
@@ -593,7 +593,7 @@ Use the provided script :
 
 The result should be a 201 Http status.
 
-See the result in the UI, you should not see the card.
+Look at the result in the UI, you should not be able to see the card.
 
 
 
@@ -623,6 +623,6 @@ Use the provided script :
 
 The result should be a 201 Http status.
 
-See the result in the UI, you should see the card.
+Look at the result in the UI, you should be able to see the card.
 
 include::troubleshooting.adoc[leveloffset=+1]
