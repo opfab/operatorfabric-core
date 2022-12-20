@@ -64,7 +64,8 @@ public interface UserUtilitiesCommonToCardRepository<T extends Card> {
                                                    (currentUserWithPerimeters.getUserData().getGroups().contains("ADMIN")));
         
          boolean hasCurrentUserAdminRole = currentUserWithPerimeters.getUserData().getOpfabRoles() != null && 
-                                 (currentUserWithPerimeters.getUserData().getOpfabRoles().contains(OpfabRolesEnum.ADMIN));
+                                 (currentUserWithPerimeters.getUserData().getOpfabRoles().contains(OpfabRolesEnum.ADMIN) || 
+                                 currentUserWithPerimeters.getUserData().getOpfabRoles().contains(OpfabRolesEnum.VIEW_ALL_ARCHIVED_CARDS));
 
         if (! isCurrentUserMemberOfAdminGroup && !hasCurrentUserAdminRole)
             criteria.add(computeCriteriaForUser(currentUserWithPerimeters));
