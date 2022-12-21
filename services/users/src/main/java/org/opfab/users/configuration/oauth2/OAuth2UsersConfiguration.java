@@ -119,6 +119,8 @@ public class OAuth2UsersConfiguration {
                 if(principalId != null) principalId = principalId.toLowerCase();
                 String givenName = extractClaimAsStringOrNull(jwt, jwtProperties.getGivenNameClaim());
                 String familyName = extractClaimAsStringOrNull(jwt, jwtProperties.getFamilyNameClaim());
+                String name = extractClaimAsStringOrNull(jwt, jwtProperties.getNameClaim());
+                if (givenName == null && familyName == null) familyName = name;
                 return new UserData(principalId, givenName, familyName, null, null, null, null);
             }
         };
