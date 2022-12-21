@@ -35,8 +35,7 @@ public class PerimeterRepositoryStub implements PerimeterRepository{
 
     @Override
     public List<PerimeterData> findAll() {
-        // TODO Auto-generated method stub
-        return null;
+        return perimeters.values().stream().toList();
     }
 
     @Override
@@ -71,8 +70,8 @@ public class PerimeterRepositoryStub implements PerimeterRepository{
 
     @Override
     public <S extends PerimeterData> S save(S entity) {
-        // TODO Auto-generated method stub
-        return null;
+        perimeters.put(entity.getId(),entity);
+        return entity;
     }
 
     @Override

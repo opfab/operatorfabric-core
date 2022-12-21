@@ -235,8 +235,7 @@ class PerimetersControllerShould {
                     .andExpect(status().is(HttpStatus.BAD_REQUEST.value()))
                     .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                     .andExpect(jsonPath("$.status", is(HttpStatus.BAD_REQUEST.name())))
-                    .andExpect(jsonPath("$.message", is("Resource creation failed because a resource with the same key already exists.")))
-                    .andExpect(jsonPath("$.errors[0]", is("Duplicate key : PERIMETER3")));
+                    .andExpect(jsonPath("$.message", is("Creation failed because perimeter PERIMETER3 already exist")));
 
             mockMvc.perform(get("/perimeters"))
                     .andExpect(status().isOk())

@@ -140,15 +140,14 @@ Feature: CreatePerimeters (endpoint tested : POST /perimeters)
     And match response.stateRights[2].filteringNotificationAllowed == true
 
 
-  Scenario: Try to update my perimeter (must return error 400 - duplicate key)
+  Scenario: Try to update existing perimeter
   #Expected response 400
     Given url opfabUrl + 'users/perimeters'
     And header Authorization = 'Bearer ' + authToken
     And request perimeterUpdated
     When method post
     Then status 400
-    And match response.message == 'Resource creation failed because a resource with the same key already exists.'
-    And match response.errors[0] == 'Duplicate key : ' + perimeterUpdated.id
+    And match response.message == 'Creation failed because perimeter perimeterKarate1_1 already exist'
 
 
   Scenario: create without admin role

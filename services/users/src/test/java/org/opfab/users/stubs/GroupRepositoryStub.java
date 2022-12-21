@@ -9,6 +9,7 @@
 
 package org.opfab.users.stubs;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -29,7 +30,6 @@ public class GroupRepositoryStub implements GroupRepository {
 
     @Override
     public <S extends GroupData> List<S> saveAll(Iterable<S> entities) {
-        // TODO Auto-generated method stub
         return null;
     }
 
@@ -51,7 +51,6 @@ public class GroupRepositoryStub implements GroupRepository {
 
     @Override
     public <S extends GroupData> List<S> insert(Iterable<S> entities) {
-        // TODO Auto-generated method stub
         return null;
     }
 
@@ -62,7 +61,6 @@ public class GroupRepositoryStub implements GroupRepository {
 
     @Override
     public <S extends GroupData> List<S> findAll(Example<S> example, Sort sort) {
-        // TODO Auto-generated method stub
         return null;
     }
 
@@ -81,25 +79,22 @@ public class GroupRepositoryStub implements GroupRepository {
 
     @Override
     public boolean existsById(String id) {
-        // TODO Auto-generated method stub
         return false;
     }
 
     @Override
     public Iterable<GroupData> findAllById(Iterable<String> ids) {
-        // TODO Auto-generated method stub
         return null;
     }
 
     @Override
     public long count() {
-        // TODO Auto-generated method stub
         return 0;
     }
 
     @Override
     public void deleteById(String id) {
-        // TODO Auto-generated method stub
+        // Stub
         
     }
 
@@ -111,13 +106,12 @@ public class GroupRepositoryStub implements GroupRepository {
 
     @Override
     public void deleteAllById(Iterable<? extends String> ids) {
-        // TODO Auto-generated method stub
-        
+        // Stub
     }
 
     @Override
     public void deleteAll(Iterable<? extends GroupData> entities) {
-        // TODO Auto-generated method stub
+        // Stub
         
     }
 
@@ -129,44 +123,44 @@ public class GroupRepositoryStub implements GroupRepository {
 
     @Override
     public <S extends GroupData> Optional<S> findOne(Example<S> example) {
-        // TODO Auto-generated method stub
         return Optional.empty();
     }
 
     @Override
     public <S extends GroupData> Page<S> findAll(Example<S> example, Pageable pageable) {
-        // TODO Auto-generated method stub
+    
         return null;
     }
 
     @Override
     public <S extends GroupData> long count(Example<S> example) {
-        // TODO Auto-generated method stub
         return 0;
     }
 
     @Override
     public <S extends GroupData> boolean exists(Example<S> example) {
-        // TODO Auto-generated method stub
         return false;
     }
 
     @Override
     public <S extends GroupData, R> R findBy(Example<S> example, Function<FetchableFluentQuery<S>, R> queryFunction) {
-        // TODO Auto-generated method stub
         return null;
     }
 
     @Override
     public Page<GroupData> findAll(Pageable pageable) {
-        // TODO Auto-generated method stub
         return null;
     }
 
     @Override
     public List<GroupData> findByPerimetersContaining(String perimeterContains) {
-        // TODO Auto-generated method stub
-        return null;
+        List<GroupData> groupsHavingPerimeter = new ArrayList<>();
+        groups.values().forEach((group) -> {
+            if (group.getPerimeters().contains(perimeterContains)) {
+                groupsHavingPerimeter.add(group);
+            }
+        });
+        return groupsHavingPerimeter;
     }
     
 }
