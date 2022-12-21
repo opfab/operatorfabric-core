@@ -60,17 +60,8 @@ describe ('Core menu configuration tests',function () {
         users.forEach((user) => {
 
             it('Menu should not be visible for ' + user, ()=>{
-
+                script.configureMenuNotDefined();
                 opfab.loginWithUser(user);
-
-                allMenuItems.forEach((item) => {
-                    script.deleteCoreMenuFromConf(item.menu_id); // Remove menu item with given id from ui-menu.json
-                    // Reload and check was initially performed after each update rather than globally to make sure that
-                    // there was no interference between menus (for example if a menu was linked to another menus configuration by mistake)
-                    // Unfortunately it made the tests too long.
-                })
-
-                cy.reload();
 
                 navbarMenuItems.forEach((item) => {
                     cy.get(item.selector).should('not.exist'); // Check that the corresponding element is not present
@@ -93,14 +84,8 @@ describe ('Core menu configuration tests',function () {
         users.forEach((user) => {
 
             it('Menu should not be visible for ' + user, ()=>{
-
+                script.configureMenuNotVisibleForAllUsers();
                 opfab.loginWithUser(user);
-
-                allMenuItems.forEach((item) => {
-                    script.updateCoreMenuInConf(item.menu_id,"visible",false);
-                })
-
-                cy.reload();
 
                 navbarMenuItems.forEach((item) => {
                     cy.get(item.selector).should('not.exist'); // Check that the corresponding element is not present
@@ -115,22 +100,15 @@ describe ('Core menu configuration tests',function () {
         })
 
     })
+    
 
-    describe('Check behaviour if defined and visibility is true and showOnlyForGroups is not set', function () {
-        // If core menu is defined with visibility true and showOnlyForGroups not defined, menu should be visible for all users
+    describe('Check behaviour if defined and visibility is true and showOnlyForGroups and showOnlyForRoles are not set', function () {
+        // If core menu is defined with visibility true and showOnlyForGroups and showOnlyForRoles are not defined, menu should be visible for all users
+        it('Menu should be visible for admin' , ()=>{
+            script.configureMenuVisibleForAllUsers();
 
-        users.forEach((user) => {
 
-            it('Menu should be visible for ' + user, ()=>{
-
-                opfab.loginWithUser(user);
-
-                allMenuItems.forEach((item) => {
-                    script.deleteCoreMenuFromConf(item.menu_id); // Remove menu item with given id from ui-menu.json
-                    script.updateCoreMenuInConf(item.menu_id,"visible",true);
-                })
-
-                cy.reload();
+                opfab.loginWithUser('admin');
 
                 navbarMenuItems.forEach((item) => {
                     cy.get(item.selector).should('exist'); // Check that the corresponding element is present
@@ -141,23 +119,69 @@ describe ('Core menu configuration tests',function () {
                     cy.get(item.selector).should('exist'); // Check that the corresponding element is not present
                 })
 
+        })        
+        it('Menu should be visible for operator1_fr' , ()=>{
+            script.configureMenuVisibleForAllUsers();
+
+                opfab.loginWithUser('operator1_fr');
+
+                navbarMenuItems.forEach((item) => {
+                    cy.get(item.selector).should('exist'); // Check that the corresponding element is present
+                })
+
+                cy.get('#opfab-navbarContent').find('#opfab-navbar-drop-user-menu').click();
+                userMenuItems.forEach((item) => {
+                    cy.get(item.selector).should('exist'); // Check that the corresponding element is not present
+                })
+
+        })
+    })
+
+
+    describe('Check behaviour if defined and visibility is true and showOnlyForGroups is set to ["ADMIN"]', function () {
+
+        it('Menu should be visible for admin group', ()=>{
+            script.configureMenuForAdminGroup();
+
+
+            opfab.loginWithUser('admin');
+
+            navbarMenuItems.forEach((item) => {
+                cy.get(item.selector).should('exist');
             })
+
+            cy.get('#opfab-navbarContent').find('#opfab-navbar-drop-user-menu').click();
+            userMenuItems.forEach((item) => {
+                cy.get(item.selector).should('exist'); // Check that the corresponding element is not present
+            })
+
+        })
+
+        it('Menu should be not be visible for operator1_fr', ()=>{
+            script.configureMenuForAdminGroup();
+            opfab.loginWithUser('operator1_fr');
+
+            navbarMenuItems.forEach((item) => {
+                cy.get(item.selector).should('not.exist');
+            })
+
+            cy.get('#opfab-navbarContent').find('#opfab-navbar-drop-user-menu').click();
+            userMenuItems.forEach((item) => {
+                cy.get(item.selector).should('not.exist'); // Check that the corresponding element is not present
+            })
+
         })
 
     })
 
-    describe('Check behaviour if defined and visibility is true and showOnlyForGroups is set to ["ADMIN"]', function () {
+    describe('Check behaviour if defined and visibility is true and showOnlyForRoles is set to ["ADMIN"]', function () {
    
         it('Menu should be visible for admin', ()=>{
 
+            script.configureMenuForAdminRole();
+
             opfab.loginWithUser('admin');
 
-            allMenuItems.forEach((item) => {
-                script.updateCoreMenuInConf(item.menu_id,"visible",true);
-                script.updateCoreMenuInConf(item.menu_id,"showOnlyForGroups",'[\\\"ADMIN\\\"]');
-            })
-
-            cy.reload();
 
             navbarMenuItems.forEach((item) => {
                 cy.get(item.selector).should('exist');
@@ -172,14 +196,8 @@ describe ('Core menu configuration tests',function () {
 
         it('Menu should be not be visible for operator1_fr', ()=>{
 
+            script.configureMenuForAdminRole();
             opfab.loginWithUser('operator1_fr');
-
-            allMenuItems.forEach((item) => {
-                script.updateCoreMenuInConf(item.menu_id,"visible",true);
-                script.updateCoreMenuInConf(item.menu_id,"showOnlyForGroups",'[\\\"ADMIN\\\"]');
-            })
-
-            cy.reload();
 
             navbarMenuItems.forEach((item) => {
                 cy.get(item.selector).should('not.exist');
@@ -220,11 +238,42 @@ describe ('Core menu configuration tests',function () {
             cy.reload();
             cy.get(item.selector).should('not.exist');
 
+            cy.log('Testing visible: true and showOnlyForRoles: []')
+            script.updateCoreMenuInConf(item.menu_id,"visible",true);
+            script.updateCoreMenuInConf(item.menu_id,"showOnlyForRoles","[]");
+            cy.reload();
+            cy.get(item.selector).should('exist');
+
+            cy.log('Testing visible: true and showOnlyForRoles: null')
+            script.updateCoreMenuInConf(item.menu_id,"visible",true);
+            script.updateCoreMenuInConf(item.menu_id,"showOnlyForRoles",null);
+            cy.reload();
+            cy.get(item.selector).should('exist');
+
+            cy.log('Testing visible: false and showOnlyForRoles: ["ADMIN"]')
+            script.updateCoreMenuInConf(item.menu_id,"visible",false);
+            script.updateCoreMenuInConf(item.menu_id,"showOnlyForRoles",'[\\\"ADMIN\\\"]');
+            cy.reload();
+            cy.get(item.selector).should('not.exist');
+
+            cy.log('Testing showOnlyForGroups: ["ReadOnly"] and showOnlyForRoles: ["ADMIN"]')
+            script.updateCoreMenuInConf(item.menu_id,"visible",true);
+            script.updateCoreMenuInConf(item.menu_id,"showOnlyForGroups",'[\\\"ReadOnly\\\"]');
+            script.updateCoreMenuInConf(item.menu_id,"showOnlyForRoles",'[\\\"ADMIN\\\"]');
+            cy.reload();
+            cy.get(item.selector).should('exist');
+
+            cy.log('Testing showOnlyForGroups: ["ADMIN"] and showOnlyForRoles: ["VIEW_ALL_ARCHIVED_CARDS"]')
+            script.updateCoreMenuInConf(item.menu_id,"visible",true);
+            script.updateCoreMenuInConf(item.menu_id,"showOnlyForGroups",'[\\\"ADMIN\\\"]');
+            script.updateCoreMenuInConf(item.menu_id,"showOnlyForRoles",'[\\\"VIEW_ALL_ARCHIVED_CARDS\\\"]');
+            cy.reload();
+            cy.get(item.selector).should('exist');
         })
 
-        it('Tests with operator1_fr', ()=>{
+        it('Tests with operator2_fr', ()=>{
 
-            opfab.loginWithUser('operator1_fr');
+            opfab.loginWithUser('operator2_fr');
 
             cy.log('Testing visible: true and showOnlyForGroups: []')
             script.updateCoreMenuInConf(item.menu_id,"visible",true);
@@ -244,12 +293,43 @@ describe ('Core menu configuration tests',function () {
             cy.reload();
             cy.get(item.selector).should('not.exist');
 
+            cy.log('Testing visible: true and showOnlyForRoles []')
+            script.updateCoreMenuInConf(item.menu_id,"visible",true);
+            script.updateCoreMenuInConf(item.menu_id,"showOnlyForGroups","[]");
+            script.updateCoreMenuInConf(item.menu_id,"showOnlyForRoles","[]");
+            cy.reload();
+            cy.get(item.selector).should('exist');
+
+            cy.log('Testing visible: true and showOnlyForRoles: null')
+            script.updateCoreMenuInConf(item.menu_id,"visible",true);
+            script.updateCoreMenuInConf(item.menu_id,"showOnlyForRoles",null);
+            cy.reload();
+            cy.get(item.selector).should('exist');
+
+            cy.log('Testing visible: false and showOnlyForRoles: ["ADMIN"]')
+            script.updateCoreMenuInConf(item.menu_id,"visible",false);
+            script.updateCoreMenuInConf(item.menu_id,"showOnlyForRoles",'[\\\"ADMIN\\\"]');
+            cy.reload();
+            cy.get(item.selector).should('not.exist');
+
+            cy.log('Testing showOnlyForGroups: ["ReadOnly"] and showOnlyForRoles: ["ADMIN"]')
+            script.updateCoreMenuInConf(item.menu_id,"visible",true);
+            script.updateCoreMenuInConf(item.menu_id,"showOnlyForGroups",'[\\\"ReadOnly\\\"]');
+            script.updateCoreMenuInConf(item.menu_id,"showOnlyForRoles",'[\\\"ADMIN\\\"]');
+            cy.reload();
+            cy.get(item.selector).should('exist');
+
+            cy.log('Testing showOnlyForGroups: ["ADMIN"] and showOnlyForRoles: ["VIEW_ALL_ARCHIVED_CARDS"]')
+            script.updateCoreMenuInConf(item.menu_id,"visible",true);
+            script.updateCoreMenuInConf(item.menu_id,"showOnlyForGroups",'[\\\"ADMIN\\\"]');
+            script.updateCoreMenuInConf(item.menu_id,"showOnlyForRoles",'[\\\"VIEW_ALL_ARCHIVED_CARDS\\\"]');
+            cy.reload();
+            cy.get(item.selector).should('exist');
+
         })
 
 
     })
-
-
 
 
 })

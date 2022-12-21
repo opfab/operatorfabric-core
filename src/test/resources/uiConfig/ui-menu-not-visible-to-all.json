@@ -3,37 +3,35 @@
   [
     {
       "id": "feed",
-      "visible": true
+      "visible": false
     },
     {
       "id": "archives",
-      "visible": true
+      "visible": false
     },
     {
       "id": "monitoring",
-      "visible": true
+      "visible": false
     },
     {
       "id": "logging",
-      "visible": true
+      "visible": false
     },
     {
       "id": "usercard",
-      "visible": true
+      "visible": false
     },
     {
       "id": "calendar",
-      "visible": true
+      "visible": false
     },
     {
       "id": "admin",
-      "visible": true,
-      "showOnlyForGroups": ["ADMIN"],
-      "showOnlyForRoles": ["ADMIN"]
+      "visible": false
     },
     {
       "id": "settings",
-      "visible": true
+      "visible": false
     },
     {
       "id": "activityarea",
@@ -41,39 +39,35 @@
     },
     {
       "id": "feedconfiguration",
-      "visible": true
+      "visible": false
     },
     {
       "id": "realtimeusers",
-      "visible": true
+      "visible": false
     },
     {
       "id": "externaldevicesconfiguration",
-      "visible": true,
-      "showOnlyForGroups": ["ADMIN"],
-      "showOnlyForRoles": ["ADMIN"]
+      "visible": false
     },
     {
       "id": "useractionlogs",
-      "visible": true,
-      "showOnlyForGroups": ["ADMIN"],
-      "showOnlyForRoles": ["ADMIN"]
+      "visible": false
     },
     {
       "id": "nightdaymode",
-      "visible": true
+      "visible": false
     },
     {
       "id": "about",
-      "visible": true
+      "visible": false
     },
     {
       "id": "changepassword",
-      "visible": true
+      "visible": false
     },
     {
       "id": "logout",
-      "visible": true
+      "visible": false
     }
   ],
   "menus": [

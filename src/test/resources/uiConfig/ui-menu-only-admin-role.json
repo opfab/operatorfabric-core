@@ -3,77 +3,89 @@
   [
     {
       "id": "feed",
-      "visible": true
+      "visible": true,
+      "showOnlyForRoles": ["ADMIN"]
     },
     {
       "id": "archives",
-      "visible": true
+      "visible": true,
+      "showOnlyForRoles": ["ADMIN"]
     },
     {
       "id": "monitoring",
-      "visible": true
+      "visible": true,
+      "showOnlyForRoles": ["ADMIN"]
     },
     {
       "id": "logging",
-      "visible": true
+      "visible": true,
+      "showOnlyForRoles": ["ADMIN"]
     },
     {
       "id": "usercard",
-      "visible": true
+      "visible": true,
+      "showOnlyForRoles": ["ADMIN"]
     },
     {
       "id": "calendar",
-      "visible": true
+      "visible": true,
+      "showOnlyForRoles": ["ADMIN"]
     },
     {
       "id": "admin",
       "visible": true,
-      "showOnlyForGroups": ["ADMIN"],
       "showOnlyForRoles": ["ADMIN"]
     },
     {
       "id": "settings",
-      "visible": true
+      "visible": true,
+      "showOnlyForRoles": ["ADMIN"]
     },
     {
       "id": "activityarea",
-      "visible": true
+      "visible": true,
+      "showOnlyForRoles": ["ADMIN"]
+
     },
     {
       "id": "feedconfiguration",
-      "visible": true
+      "visible": true,
+      "showOnlyForRoles": ["ADMIN"]
     },
     {
       "id": "realtimeusers",
-      "visible": true
+      "visible": true,
+      "showOnlyForRoles": ["ADMIN"]
     },
     {
       "id": "externaldevicesconfiguration",
       "visible": true,
-      "showOnlyForGroups": ["ADMIN"],
       "showOnlyForRoles": ["ADMIN"]
     },
     {
       "id": "useractionlogs",
       "visible": true,
-      "showOnlyForGroups": ["ADMIN"],
       "showOnlyForRoles": ["ADMIN"]
     },
     {
       "id": "nightdaymode",
-      "visible": true
+      "visible": true,
+      "showOnlyForRoles": ["ADMIN"]
     },
     {
       "id": "about",
-      "visible": true
+      "visible": true,
+      "showOnlyForRoles": ["ADMIN"]
     },
     {
       "id": "changepassword",
-      "visible": true
+      "visible": true,
+      "showOnlyForRoles": ["ADMIN"]
     },
     {
       "id": "logout",
-      "visible": true
+      "visible": true,
+      "showOnlyForRoles": ["ADMIN"]
     }
   ],
   "menus": [

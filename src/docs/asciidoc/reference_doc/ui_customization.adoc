@@ -29,14 +29,15 @@ for each core menu:
 * `id`: Id of the core menu (string)
 * `visible`: Whether this menu should be visible for this OperatorFabric instance (boolean)
 * `showOnlyForGroups` : List of groups for which this menu should be visible (array, optional)
+* `showOnlyForRoles` : List of roles for which this menu should be visible (array, optional)
 
 .Menu visibility summary
 * If a core menu is not present in `coreMenusVisibility`, it won't be visible.
 * If a core menu doesn't have a `visible` property, or it is set to null or false, it won't be visible.
 * For a core menu with `"visible": true`:
-** If `showOnlyForGroups` is not present, null or an empty array : the menu is visible for all users.
-** If `showOnlyForGroups` is present and with a non-empty array as a value: menu is visible only for users from the
-listed groups.
+** If `showOnlyForGroups` and `showOnlyForRoles` are not present, null or an empty array : the menu is visible for all users.
+** If `showOnlyForGroups` or `showOnlyForGroups` is present and with a non-empty array as a value: menu is visible only for users from the listed groups or roles.
+
 
 .List of core menus and corresponding ids
 |===
@@ -128,8 +129,10 @@ Each `menu entry` declares the attributes listed below:
 ** `IFRAME`: displays only a text link. Clicking it opens the link in an iframe in the main content zone below the navigation bar.
 ** `BOTH`: default value. Displays a text link plus a little arrow icon. Clicking the text link opens the link in an iframe while clicking the icon opens in a new tab.
 **
-- `showOnlyForGroups`: Defines the list of user groups entitled to see the menu entry, if not defined or empty it will be visible to every user.
+- `showOnlyForGroups`: Defines the list of user groups entitled to see the menu entry, if not defined or empty it will be visible to every user (unless `showOnlyForRoles` is defined and not empty).
+- `showOnlyForRoles`: Defines the list of user roles entitled to see the menu entry, if not defined or empty it will be visible to every user (unless `showOnlyForGroups` is defined and not empty).
 
+Menu entry 
 In the following example, the configuration file declares two additional business menus.
 The first has only one entry, the second has two entries.
 The sample also contains the i18n translations in English and in French.
