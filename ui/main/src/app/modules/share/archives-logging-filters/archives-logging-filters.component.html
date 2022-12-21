@@ -27,12 +27,12 @@
                     [options]="processGroupMultiSelectOptions" [selectedOptions]="processGroupSelected">
                     </of-multi-select>
                     <of-multi-select *ngIf="! isProcessGroupFilterVisible() && tags" id="opfab-tags" multiSelectId="tags" [parentForm]="this.parentForm" [config]="tagsMultiSelectConfig"
-                    [options]="tagsMultiSelectOptions" [selectedOptions]="tagSelected">
+                    [options]="tagsMultiSelectOptions" [selectedOptions]="tagsSelected">
                     </of-multi-select>
                 </div>
                 <div *ngIf="isProcessGroupFilterVisible() && tags" style="min-width:300px;max-width:400px;max-height: 48px">
                     <of-multi-select id="opfab-tags" multiSelectId="tags" [parentForm]="this.parentForm" [config]="tagsMultiSelectConfig"
-                    [options]="tagsMultiSelectOptions" [selectedOptions]="tagSelected">
+                    [options]="tagsMultiSelectOptions" [selectedOptions]="tagsSelected">
                     </of-multi-select>
                 </div>
             </div>
