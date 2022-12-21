@@ -7,7 +7,6 @@
  * This file is part of the OperatorFabric project.
  */
 
-
 package org.opfab.users.controllers;
 
 import org.opfab.springtools.error.model.ApiError;
@@ -15,25 +14,17 @@ import org.opfab.springtools.error.model.ApiErrorException;
 import org.opfab.users.model.*;
 import org.opfab.users.repositories.PerimeterRepository;
 import org.opfab.users.repositories.GroupRepository;
+import org.opfab.users.services.PerimetersService;
 import org.opfab.users.services.UserServiceImp;
-import org.opfab.users.model.GroupData;
-import org.opfab.users.model.PerimeterData;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.DuplicateKeyException;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
-/**
- * PerimetersController, documented at {@link PerimetersApi}
- *
- */
+
 @RestController
 @RequestMapping("/perimeters")
 public class PerimetersController implements PerimetersApi {
@@ -42,220 +33,130 @@ public class PerimetersController implements PerimetersApi {
     public static final String GROUP_NOT_FOUND_MSG = "Group %s not found";
     public static final String BAD_GROUP_LIST_MSG = "Bad group list : group %s not found";
     public static final String NO_MATCHING_PERIMETER_ID_MSG = "Payload Perimeter id does not match URL Perimeter id";
+
     public static final String DUPLICATE_STATE_IN_PERIMETER = "Bad stateRights list : there is one or more duplicate state(s) in the perimeter";
-    @Autowired
-    private PerimeterRepository perimeterRepository;
-    @Autowired
-    private GroupRepository groupRepository;
-    @Autowired
-    private UserServiceImp userService;
+    private PerimetersService perimetersService;
 
-    @Override
-    public Void addPerimeterGroups(HttpServletRequest request, HttpServletResponse response, String id, List<String> groups) throws Exception {
-
-        //Only existing perimeters can be updated
-        findPerimeterOrThrow(id);
-
-        //Retrieve groups from repository for groups list, throwing an error if a group id is not found
-        List<GroupData> foundGroups = retrieveGroups(groups);
-
-        for (GroupData groupData : foundGroups) {
-            groupData.addPerimeter(id);
-            userService.publishUpdatedGroupMessage(groupData.getId());
-        }
-        groupRepository.saveAll(foundGroups);
-        return null;
-    }
-
-    @Override
-    public Perimeter createPerimeter(HttpServletRequest request, HttpServletResponse response, Perimeter perimeter) throws Exception {
-        userService.checkFormatOfIdField(perimeter.getId());
-
-        if (perimeterRepository.findById(perimeter.getId()).orElse(null) == null) {
-
-            if (! userService.isEachStateUniqueInPerimeter(perimeter)) {
-                throw new ApiErrorException(
-                        ApiError.builder()
-                                .status(HttpStatus.BAD_REQUEST)
-                                .message(DUPLICATE_STATE_IN_PERIMETER)
-                                .build());
-            }
-            response.addHeader("Location", request.getContextPath() + "/perimeters/" + perimeter.getId());
-            response.setStatus(201);
-            return perimeterRepository.save((PerimeterData)perimeter);
-        }
-        else
-            throw new DuplicateKeyException("Duplicate key : " + perimeter.getId());
-    }
-
-    @Override
-    public Void deletePerimeterGroups(HttpServletRequest request, HttpServletResponse response, String id) throws Exception {
-
-        // Only existing perimeters can be updated
-        findPerimeterOrThrow(id);
-
-        // We delete the links between the groups that contain the perimeter, and the perimeter
-        removeTheReferenceToThePerimeterForConcernedGroups(id);
-        return null;
-    }
-
-    @Override
-    public Void deletePerimeterGroup(HttpServletRequest request, HttpServletResponse response, String idParameter, String idGroup) throws Exception {
-
-        //Only existing perimeters can be updated
-        findPerimeterOrThrow(idParameter);
-
-        //Retrieve group from repository for idGroup, throwing an error if idGroup is not found
-        GroupData foundGroup = groupRepository.findById(idGroup).orElseThrow(()->new ApiErrorException(
-                ApiError.builder()
-                        .status(HttpStatus.NOT_FOUND)
-                        .message(String.format(GROUP_NOT_FOUND_MSG, idGroup))
-                        .build()
-        ));
-
-        if (foundGroup != null) {
-            foundGroup.deletePerimeter(idParameter);
-
-            userService.publishUpdatedGroupMessage(foundGroup.getId());
-            groupRepository.save(foundGroup);
-        }
-        return null;
+    public PerimetersController(PerimeterRepository perimeterRepository, GroupRepository groupRepository,
+            UserServiceImp userService) {
+        perimetersService = new PerimetersService(perimeterRepository, groupRepository, userService);
     }
 
     @Override
     public List<Perimeter> fetchPerimeters(HttpServletRequest request, HttpServletResponse response) throws Exception {
-        return perimeterRepository.findAll().stream().map(Perimeter.class::cast).collect(Collectors.toList());
+        return perimetersService.fetchPerimeters();
     }
 
     @Override
-    public Perimeter fetchPerimeter(HttpServletRequest request, HttpServletResponse response, String id) throws Exception {
-        return perimeterRepository.findById(id).orElseThrow(
-                ()-> new ApiErrorException(
-                        ApiError.builder()
-                                .status(HttpStatus.NOT_FOUND)
-                                .message(String.format(PERIMETER_NOT_FOUND_MSG, id))
-                                .build()
-                )
-        );
+    public Perimeter fetchPerimeter(HttpServletRequest request, HttpServletResponse response, String perimeterId)
+            throws Exception {
+        OperationResult<Perimeter> operationResult = perimetersService.fetchPerimeter(perimeterId);
+        if (!operationResult.isSuccess())
+            throw createExceptionFromOperationResult(operationResult);
+        return operationResult.getResult();
+    }
+
+    private <S extends Object> Exception createExceptionFromOperationResult(OperationResult<S> operationResult) {
+        HttpStatus status = HttpStatus.INTERNAL_SERVER_ERROR;
+        if (operationResult.getErrorType().equals(OperationResult.ErrorType.NOT_FOUND))
+            status = HttpStatus.NOT_FOUND;
+        if (operationResult.getErrorType().equals(OperationResult.ErrorType.BAD_REQUEST))
+            status = HttpStatus.BAD_REQUEST;
+        return new ApiErrorException(
+                ApiError.builder()
+                        .status(status)
+                        .message(operationResult.getErrorMessage())
+                        .build());
     }
 
     @Override
-    public Perimeter updatePerimeter(HttpServletRequest request, HttpServletResponse response, String id, Perimeter perimeter) throws Exception {
-        //id from perimeter body parameter should match id path parameter
-        if (!perimeter.getId().equals(id)){
+    public Perimeter createPerimeter(HttpServletRequest request, HttpServletResponse response, Perimeter perimeter)
+            throws Exception {
+
+        OperationResult<EntityCreationReport<Perimeter>> result = perimetersService.createPerimeter(perimeter);
+        if (result.isSuccess()) {
+            response.addHeader("Location", request.getContextPath() + "/perimeters/" + perimeter.getId());
+            response.setStatus(201);
+            return result.getResult().getEntity();
+        } else
+            throw createExceptionFromOperationResult(result);
+    }
+
+    @Override
+    public Perimeter updatePerimeter(HttpServletRequest request, HttpServletResponse response, String perimeterId,
+            Perimeter perimeter) throws Exception {
+
+        // id from perimeter body parameter should match id path parameter
+        if (!perimeter.getId().equals(perimeterId)) {
             throw new ApiErrorException(
                     ApiError.builder()
                             .status(HttpStatus.BAD_REQUEST)
                             .message(NO_MATCHING_PERIMETER_ID_MSG)
                             .build());
         }
-        else if (! userService.isEachStateUniqueInPerimeter(perimeter)){
-            throw new ApiErrorException(
-                    ApiError.builder()
-                            .status(HttpStatus.BAD_REQUEST)
-                            .message(DUPLICATE_STATE_IN_PERIMETER)
-                            .build());
-        }
-        else {
-            if (perimeterRepository.findById(perimeter.getId()).orElse(null) == null)
+        OperationResult<EntityCreationReport<Perimeter>> result = perimetersService.updatePerimeter(perimeter);
+        if (result.isSuccess()) {
+            if (!result.getResult().isUpdate()) {
+                response.addHeader("Location", request.getContextPath() + "/perimeters/" + perimeter.getId());
                 response.setStatus(201);
-            else
+            } else
                 response.setStatus(200);
-
-            response.addHeader("Location", request.getContextPath() + "/perimeters/" + perimeter.getId());
-
-            //Retrieve groups from repository
-            List<GroupData> foundGroups = groupRepository.findByPerimetersContaining(id);
-            if (foundGroups != null) {
-                for (GroupData groupData : foundGroups) {
-                    userService.publishUpdatedGroupMessage(groupData.getId());
-                }
-            }
-            return perimeterRepository.save((PerimeterData)perimeter);
-        }
+            return result.getResult().getEntity();
+        } else
+            throw createExceptionFromOperationResult(result);
     }
 
     @Override
-    public Void updatePerimeterGroups(HttpServletRequest request, HttpServletResponse response, String id, List<String> groups) throws Exception {
+    public Void deletePerimeter(HttpServletRequest request, HttpServletResponse response, String perimeterId) throws Exception {
 
-        //Only existing perimeters can be updated
-        findPerimeterOrThrow(id);
-
-        List<GroupData> formerlyBelongs = groupRepository.findByPerimetersContaining(id);
-        List<String> newGroupsInPerimeter = new ArrayList<>(groups);
-
-        //Make sure the intended updated groups list only contains group ids existing in the repository, throwing an error if this is not the case
-        retrieveGroups(groups);
-
-        List<GroupData> toUpdate =
-                formerlyBelongs.stream()
-                        .filter(g->!groups.contains(g.getId()))
-                        .peek(g-> {
-                            g.deletePerimeter(id);
-                            newGroupsInPerimeter.remove(g.getId());
-                            //Send a user config change event for all users that are updated because they're removed from the group
-                            userService.publishUpdatedGroupMessage(g.getId());
-                        }).collect(Collectors.toList());
-
-        groupRepository.saveAll(toUpdate);
-        //For groups that are added to the perimeter, the event will be published by addPerimeterGroups.
-        addPerimeterGroups(request, response, id, newGroupsInPerimeter);
-        return null;
+        OperationResult<String> result = perimetersService.deletePerimeter(perimeterId);
+        if (result.isSuccess())
+            return null;
+        else
+            throw createExceptionFromOperationResult(result);
     }
 
     @Override
-    public Void deletePerimeter(HttpServletRequest request, HttpServletResponse response, String id) throws Exception {
+    public Void addPerimeterGroups(HttpServletRequest request, HttpServletResponse response, String perimeterId,
+            List<String> groups) throws Exception {
 
-        // Only existing perimeter can be deleted
-        PerimeterData foundPerimeterData = findPerimeterOrThrow(id);
+        OperationResult<String> result = perimetersService.addPerimeterGroups(perimeterId, groups);
+        if (result.isSuccess())
+            return null;
+        else
+            throw createExceptionFromOperationResult(result);
+    }
 
-        // First we have to delete the links between the groups that contain the perimeter to delete, and the perimeter
-        removeTheReferenceToThePerimeterForConcernedGroups(id);
+    @Override
+    public Void updatePerimeterGroups(HttpServletRequest request, HttpServletResponse response, String perimeterId,
+            List<String> groups) throws Exception {
+        OperationResult<String> result = perimetersService.updatePerimeterGroups(perimeterId, groups);
+        if (result.isSuccess())
+            return null;
+        else
+            throw createExceptionFromOperationResult(result);
+    }
 
-        // Then we can delete the perimeter
-        perimeterRepository.delete(foundPerimeterData);
+    @Override
+    public Void deletePerimeterGroups(HttpServletRequest request, HttpServletResponse response, String perimeterId)
+            throws Exception {
+
+        OperationResult<String> operationResult = perimetersService.deletePerimeterGroups(perimeterId);
+        if (!operationResult.isSuccess())
+            throw createExceptionFromOperationResult(operationResult);
         return null;
+
     }
 
-    // Remove the link between the perimeter and the groups that own this perimeter (this link is in "group" mongo collection)
-    private void removeTheReferenceToThePerimeterForConcernedGroups(String idPerimeter) {
+    @Override
+    public Void deletePerimeterGroup(HttpServletRequest request, HttpServletResponse response, String perimeterId,
+            String groupId) throws Exception {
 
-        List<GroupData> foundGroups = groupRepository.findByPerimetersContaining(idPerimeter);
+        OperationResult<String> operationResult = perimetersService.deletePerimeterGroup(perimeterId, groupId);
+        if (!operationResult.isSuccess())
+            throw createExceptionFromOperationResult(operationResult);
+        return null;
 
-        if (foundGroups != null) {
-            for (GroupData groupData : foundGroups) {
-                groupData.deletePerimeter(idPerimeter);
-                userService.publishUpdatedGroupMessage(groupData.getId());
-            }
-            groupRepository.saveAll(foundGroups);
-        }
     }
 
-    private PerimeterData findPerimeterOrThrow(String id) {
-        return perimeterRepository.findById(id).orElseThrow(
-                ()-> new ApiErrorException(
-                        ApiError.builder()
-                                .status(HttpStatus.NOT_FOUND)
-                                .message(String.format(PERIMETER_NOT_FOUND_MSG, id))
-                                .build()
-                ));
-    }
-
-    /** Retrieve groups from repository for groups list, throwing an error if a group id is not found
-     * */
-    private List<GroupData> retrieveGroups(List<String> groupIds) {
-
-        List<GroupData> foundGroups = new ArrayList<>();
-        for(String id : groupIds){
-            GroupData foundGroup = groupRepository.findById(id).orElseThrow(
-                    () -> new ApiErrorException(
-                            ApiError.builder()
-                                    .status(HttpStatus.BAD_REQUEST)
-                                    .message(String.format(BAD_GROUP_LIST_MSG, id))
-                                    .build()
-                    ));
-            foundGroups.add(foundGroup);
-        }
-        return foundGroups;
-    }
 }
