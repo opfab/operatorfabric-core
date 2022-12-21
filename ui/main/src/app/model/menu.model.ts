@@ -16,13 +16,15 @@ export class Menu {
 export class MenuEntry {
     linkType: MenuEntryLinkTypeEnum = MenuEntryLinkTypeEnum.BOTH;
     showOnlyForGroups: string[];
+    showOnlyForRoles: string[];
 
     constructor(
         readonly id: string,
         readonly label: string,
         readonly url: string,
         linkType?: MenuEntryLinkTypeEnum,
-        showOnlyForGroups?: string[]
+        showOnlyForGroups?: string[],
+        showOnlyForRoles?: string[]
     ) {}
 }
 
@@ -45,5 +47,5 @@ export class UIMenuFile {
 }
 
 export class CoreMenuConfig {
-    constructor(readonly id: string, readonly visible?: boolean, readonly showOnlyForGroups?: string[]) {}
+    constructor(readonly id: string, readonly visible?: boolean, readonly showOnlyForGroups?: string[], readonly showOnlyForRoles?: string[]) {}
 }

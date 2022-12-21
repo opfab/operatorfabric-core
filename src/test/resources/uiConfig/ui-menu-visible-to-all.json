@@ -27,9 +27,7 @@
     },
     {
       "id": "admin",
-      "visible": true,
-      "showOnlyForGroups": ["ADMIN"],
-      "showOnlyForRoles": ["ADMIN"]
+      "visible": true
     },
     {
       "id": "settings",
@@ -49,15 +47,11 @@
     },
     {
       "id": "externaldevicesconfiguration",
-      "visible": true,
-      "showOnlyForGroups": ["ADMIN"],
-      "showOnlyForRoles": ["ADMIN"]
+      "visible": true
     },
     {
       "id": "useractionlogs",
-      "visible": true,
-      "showOnlyForGroups": ["ADMIN"],
-      "showOnlyForRoles": ["ADMIN"]
+      "visible": true
     },
     {
       "id": "nightdaymode",

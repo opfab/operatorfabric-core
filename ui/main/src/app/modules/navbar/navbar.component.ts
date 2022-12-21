@@ -16,7 +16,7 @@ import {selectCurrentUrl} from '@ofSelectors/router.selectors';
 import {LoadMenuAction} from '@ofActions/menu.actions';
 import {selectMenuStateMenu} from '@ofSelectors/menu.selectors';
 import {BehaviorSubject, Observable} from 'rxjs';
-import {CoreMenuConfig, Menu} from '@ofModel/menu.model';
+import {CoreMenuConfig, Menu, MenuEntry} from '@ofModel/menu.model';
 import {map, tap} from 'rxjs/operators';
 import * as _ from 'lodash-es';
 import {GlobalStyleService} from '@ofServices/global-style.service';
@@ -27,6 +27,7 @@ import {QueryAllEntitiesAction} from '@ofActions/user.actions';
 import {UserService} from '@ofServices/user.service';
 import {NgbModal, NgbModalOptions, NgbModalRef} from '@ng-bootstrap/ng-bootstrap';
 import {AppService} from '@ofServices/app.service';
+import {OpfabRolesEnum} from '@ofModel/user.model';
 
 @Component({
     selector: 'of-navbar',
@@ -148,9 +149,7 @@ export class NavbarComponent implements OnInit {
     private getCurrentUserCustomMenus(menus: Menu[]): Menu[] {
         const filteredMenus = [];
         menus.forEach((m) => {
-            const entries = m.entries.filter(
-                (e) => !e.showOnlyForGroups || this.userService.isCurrentUserInAnyGroup(e.showOnlyForGroups)
-            );
+            const entries = m.entries.filter((e) => this.isMenuVisibleForUserGroupsOrRoles(e));
             if (entries.length > 0) {
                 filteredMenus.push(new Menu(m.id, m.label, entries));
             }
@@ -164,12 +163,7 @@ export class NavbarComponent implements OnInit {
         if (coreMenuConfiguration) {
             return coreMenuConfiguration
                 .filter((coreMenuConfig: CoreMenuConfig) => {
-                    return (
-                        coreMenuConfig.visible &&
-                        (!coreMenuConfig.showOnlyForGroups ||
-                            coreMenuConfig.showOnlyForGroups.length == 0 ||
-                            this.userService.isCurrentUserInAnyGroup(coreMenuConfig.showOnlyForGroups))
-                    );
+                    return coreMenuConfig.visible && this.isMenuVisibleForUserGroupsOrRoles(coreMenuConfig);
                 })
                 .map((coreMenuConfig: CoreMenuConfig) => coreMenuConfig.id);
         } else {
@@ -177,6 +171,13 @@ export class NavbarComponent implements OnInit {
             return [];
         }
     }
+
+    private isMenuVisibleForUserGroupsOrRoles(menuConfig: CoreMenuConfig | MenuEntry): boolean {
+        return ((!menuConfig.showOnlyForGroups || menuConfig.showOnlyForGroups.length === 0) &&
+            (!menuConfig.showOnlyForRoles || menuConfig.showOnlyForRoles.length === 0)) ||
+            (menuConfig.showOnlyForGroups && this.userService.isCurrentUserInAnyGroup(menuConfig.showOnlyForGroups)) ||
+            (menuConfig.showOnlyForRoles && this.userService.hasCurrentUserAnyRole(menuConfig.showOnlyForRoles.flatMap((r) => OpfabRolesEnum[r])));
+        }
 
     logOut() {
         this.logoutInProgress = true;

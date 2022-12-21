@@ -3,77 +3,88 @@
   [
     {
       "id": "feed",
-      "visible": true
+      "visible": true,
+      "showOnlyForGroups": ["ADMIN"]
     },
     {
       "id": "archives",
-      "visible": true
+      "visible": true,
+      "showOnlyForGroups": ["ADMIN"]
     },
     {
       "id": "monitoring",
-      "visible": true
+      "visible": true,
+      "showOnlyForGroups": ["ADMIN"]
     },
     {
       "id": "logging",
-      "visible": true
+      "visible": true,
+      "showOnlyForGroups": ["ADMIN"]
     },
     {
       "id": "usercard",
-      "visible": true
+      "visible": true,
+      "showOnlyForGroups": ["ADMIN"]
     },
     {
       "id": "calendar",
-      "visible": true
+      "visible": true,
+      "showOnlyForGroups": ["ADMIN"]
     },
     {
       "id": "admin",
       "visible": true,
-      "showOnlyForGroups": ["ADMIN"],
-      "showOnlyForRoles": ["ADMIN"]
+      "showOnlyForGroups": ["ADMIN"]
     },
     {
       "id": "settings",
-      "visible": true
+      "visible": true,
+      "showOnlyForGroups": ["ADMIN"]
     },
     {
       "id": "activityarea",
-      "visible": true
+      "visible": true,
+      "showOnlyForGroups": ["ADMIN"]
     },
     {
       "id": "feedconfiguration",
-      "visible": true
+      "visible": true,
+      "showOnlyForGroups": ["ADMIN"]
     },
     {
       "id": "realtimeusers",
-      "visible": true
+      "visible": true,
+      "showOnlyForGroups": ["ADMIN"]
     },
     {
       "id": "externaldevicesconfiguration",
       "visible": true,
-      "showOnlyForGroups": ["ADMIN"],
-      "showOnlyForRoles": ["ADMIN"]
+      "showOnlyForGroups": ["ADMIN"]
     },
     {
       "id": "useractionlogs",
       "visible": true,
-      "showOnlyForGroups": ["ADMIN"],
-      "showOnlyForRoles": ["ADMIN"]
+      "showOnlyForGroups": ["ADMIN"]
     },
     {
       "id": "nightdaymode",
-      "visible": true
+      "visible": true,
+      "showOnlyForGroups": ["ADMIN"]
     },
     {
       "id": "about",
-      "visible": true
+      "visible": true,
+      "showOnlyForGroups": ["ADMIN"]
     },
     {
       "id": "changepassword",
-      "visible": true
+      "visible": true,
+      "showOnlyForGroups": ["ADMIN"]
     },
     {
       "id": "logout",
-      "visible": true
+      "visible": true,
+      "showOnlyForGroups": ["ADMIN"]
     }
   ],
   "menus": [
