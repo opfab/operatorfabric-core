@@ -255,7 +255,7 @@ public class CardProcessingService {
     }
 
     boolean checkIsDotCharacterNotInProcessAndState(CardPublicationData c) {
-        return ! ((c.getProcess() != null && c.getProcess().contains(Character.toString('.'))) ||
+        return ! ((c.getProcess().contains(Character.toString('.'))) ||
                   (c.getState() != null && c.getState().contains(Character.toString('.'))));
     }
 
