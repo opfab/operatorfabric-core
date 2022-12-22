@@ -22,10 +22,8 @@ spring:
 server:
   forward-headers-strategy: framework
 operatorfabric:
-  servicesUrls:
-    users: "users:8080"
-    businessconfig: "businessconfig:8080"
-### activate the following if you want to the groups or entities to come from the token and not mongo DB
+
+### activate the following if you want to the groups, roles or entities to come from the token and not mongo DB
 #  security:
 #    jwt:
 
@@ -34,7 +32,11 @@ operatorfabric:
 #      entitiesIdClaim : entitiesId
 #      gettingEntitiesFromToken: true
 ###
-
+### activate the folLowing if you want the roles of the user to come from the token and not mongoDB
+### rolesIdClaim is the name of the field in the token     
+#      rolesIdClaim : rolesId
+#      gettingRolesFromToken: true
+###
 ### activate the following if you want the groups of the user to come from the token and not mongoDB
 #      groups: 
 #        mode: JWT
@@ -53,3 +55,7 @@ operatorfabric:
 #            - path: "resource_access/BBB"
 #              roleValue: "roleBBB"  
 ### 
+
+  servicesUrls:
+    users: "users:8080"
+    businessconfig: "businessconfig:8080"

@@ -32,4 +32,7 @@ public class JwtProperties {
 	private String entitiesIdClaim = "entitiesId";
 	private boolean gettingEntitiesFromToken = false;
 
+	private String rolesIdClaim = "rolsId";
+	private boolean gettingRolesFromToken = false;
+
 }

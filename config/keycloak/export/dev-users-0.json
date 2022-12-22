@@ -9,7 +9,8 @@
     "emailVerified" : false,
     "attributes" : {
       "entitiesId" : [ "ENTITY1_FR;ENTITY2_FR" ],
-      "groups" : ["ADMIN"]
+      "groups" : ["ADMIN"],
+      "rolesId" : ["ADMIN"]
     },
     "credentials" : [ {
       "type" : "password",
@@ -282,8 +283,9 @@
     "totp" : false,
     "emailVerified" : false,
     "attributes" : {
-      "entitiesId" : [ "ENTITY1_FR", "ENTITY2_FR", "ENTITY3_FR", "ENTITY4_FR" ],
-      "groups" : ["Supervisor"]
+      "entitiesId" : [ "ENTITY1_FR;ENTITY2_FR;ENTITY3_FR;ENTITY4_FR" ],
+      "groups" : ["Supervisor"],
+      "rolesId" : ["READONLY"]
     },
     "credentials" : [ {
       "type" : "password",

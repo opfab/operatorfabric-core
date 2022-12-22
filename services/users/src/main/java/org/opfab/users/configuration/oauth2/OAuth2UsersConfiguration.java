@@ -100,6 +100,8 @@ public class OAuth2UsersConfiguration {
 
                 if (jwtProperties.isGettingEntitiesFromToken()) user.setEntities(getEntitiesFromToken(jwt));
 
+                if (jwtProperties.isGettingRolesFromToken()) user.setOpfabRoles(getRolesFromToken(jwt));
+
                 List<GrantedAuthority> authorities = computeAuthorities(user);
 
                 log.debug("user [{}] has these roles {} through the {} mode"
@@ -161,5 +163,10 @@ public class OAuth2UsersConfiguration {
         if (entitiesId!=null)  enititiesIdList.addAll(Arrays.asList(entitiesId.split(";")));
         return enititiesIdList;
 
+    }
+
+    private List<OpfabRolesEnum> getRolesFromToken(Jwt jwt){
+        String rolesId = jwt.getClaimAsString(jwtProperties.getRolesIdClaim());
+        return rolesId != null ? Arrays.asList(rolesId.split(";")).stream().map(OpfabRolesEnum::valueOf).toList() : Collections.emptyList();
     }
 }
