@@ -11,13 +11,11 @@ package org.opfab.cards.publication.services.clients.impl;
 import lombok.extern.slf4j.Slf4j;
 
 import org.opfab.cards.publication.configuration.ExternalRecipients;
-import org.opfab.cards.publication.configuration.ExternalRecipients.ExternalRecipient;
 import org.opfab.cards.publication.kafka.producer.ResponseCardProducer;
 import org.opfab.cards.publication.model.CardPublicationData;
 import org.opfab.cards.publication.services.clients.ExternalAppClient;
 import org.opfab.springtools.error.model.ApiError;
 import org.opfab.springtools.error.model.ApiErrorException;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -29,6 +27,7 @@ import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.HttpServerErrorException;
 import org.springframework.web.client.HttpStatusCodeException;
 import org.springframework.web.client.ResourceAccessException;
+import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 
 import java.nio.charset.Charset;
@@ -140,11 +139,12 @@ public class ExternalAppClientImpl implements ExternalAppClient {
 
             HttpEntity<CardPublicationData> requestBody = new HttpEntity<>(card, headers);
 
-            restTemplate.postForObject(externalRecipientUrl, requestBody, CardPublicationData.class);
+            restTemplate.postForObject(externalRecipientUrl, requestBody, Void.class);
 
             log.debug("End to Send card {} \n", card);
 
         } catch (Exception ex) {
+            log.error("Error calling external application ", ex);
             throwException(ex);
         }
 
@@ -154,9 +154,10 @@ public class ExternalAppClientImpl implements ExternalAppClient {
         try {
             HttpHeaders headers = createRequestHeader(jwt);
             HttpEntity<String> requestBody = new HttpEntity<>("", headers);
-            restTemplate.exchange(externalRecipientUrl + "/" + card.getId(), HttpMethod.DELETE, requestBody, String.class);
+            restTemplate.exchange(externalRecipientUrl + "/" + card.getId(), HttpMethod.DELETE, requestBody, Void.class);
 
         } catch (Exception ex) {
+            log.error("Error sending card deletion notification to external application ", ex);
             throwException(ex);
         }
 
