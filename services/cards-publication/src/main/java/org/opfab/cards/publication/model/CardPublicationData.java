@@ -196,6 +196,6 @@ public class CardPublicationData implements Card {
     }
 
     public void setKeepChildCards(Boolean keepChildCards) {
-        this.keepChildCards = keepChildCards != null ? keepChildCards : false;
+        this.keepChildCards = (keepChildCards != null) && keepChildCards;
     }
 }
