@@ -423,7 +423,7 @@ class GroupsServiceShould {
                 perimeters.add("perimeter1");
                 perimeters.add("perimeter2");
                 OperationResult<String> result = groupsService.updateGroupPerimeters("group1", perimeters);
-                Optional<GroupData> groupUpdated = groupRepositoryStub.findById("group1");
+                Optional<Group> groupUpdated = groupRepositoryStub.findById("group1");
                 assertThat(result.isSuccess()).isTrue();
                 assertThat(groupUpdated.get().getPerimeters()).contains("perimeter1");
                 assertThat(groupUpdated.get().getPerimeters()).contains("perimeter2");
@@ -433,7 +433,7 @@ class GroupsServiceShould {
             void GIVEN_Existing_Group_WHEN_Updating_Perimeter_List_With_Empty_List_THEN_Succeed_And_Perimeter_List_Is_Empty() {
                 ArrayList<String> perimeters = new ArrayList<>();
                 OperationResult<String> result = groupsService.updateGroupPerimeters("group1", perimeters);
-                Optional<GroupData> groupUpdated = groupRepositoryStub.findById("group1");
+                Optional<Group> groupUpdated = groupRepositoryStub.findById("group1");
                 assertThat(result.isSuccess()).isTrue();
                 assertThat(groupUpdated.get().getPerimeters()).isEmpty();
             }
@@ -465,7 +465,7 @@ class GroupsServiceShould {
                 ArrayList<String> perimetersToAdd = new ArrayList<>();
                 perimetersToAdd.add("perimeter2");
                 OperationResult<String> result = groupsService.addGroupPerimeters("group1", perimetersToAdd);
-                Optional<GroupData> groupUpdated = groupRepositoryStub.findById("group1");
+                Optional<Group> groupUpdated = groupRepositoryStub.findById("group1");
                 assertThat(result.isSuccess()).isTrue();
                 assertThat(groupUpdated.get().getPerimeters()).contains("perimeter1");
                 assertThat(groupUpdated.get().getPerimeters()).contains("perimeter2");
@@ -477,7 +477,7 @@ class GroupsServiceShould {
                 perimetersToAdd.add("perimeter2");
                 perimetersToAdd.add("perimeter3");
                 OperationResult<String> result = groupsService.addGroupPerimeters("group1", perimetersToAdd);
-                Optional<GroupData> groupUpdated = groupRepositoryStub.findById("group1");
+                Optional<Group> groupUpdated = groupRepositoryStub.findById("group1");
                 assertThat(result.isSuccess()).isTrue();
                 assertThat(groupUpdated.get().getPerimeters()).contains("perimeter1");
                 assertThat(groupUpdated.get().getPerimeters()).contains("perimeter2");
@@ -489,7 +489,7 @@ class GroupsServiceShould {
             void GIVEN_Existing_Group_WHEN_Adding_Perimeter_List_With_Empty_List_THEN_Succeed_And_Perimeter_List_Is_Not_Modified() {
                 ArrayList<String> perimetersToAdd = new ArrayList<>();
                 OperationResult<String> result = groupsService.addGroupPerimeters("group1", perimetersToAdd);
-                Optional<GroupData> groupUpdated = groupRepositoryStub.findById("group1");
+                Optional<Group> groupUpdated = groupRepositoryStub.findById("group1");
                 assertThat(result.isSuccess()).isTrue();
                 assertThat(groupUpdated.get().getPerimeters()).hasSize(1);
                 assertThat(groupUpdated.get().getPerimeters().get(0)).isEqualTo("perimeter1");

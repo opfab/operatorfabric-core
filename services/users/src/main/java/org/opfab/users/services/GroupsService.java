@@ -52,7 +52,7 @@ public class GroupsService {
     }
 
     public OperationResult<Group> fetchGroup(String groupId) {
-        Optional<GroupData> group = groupRepository.findById(groupId);
+        Optional<Group> group = groupRepository.findById(groupId);
         if (group.isPresent())
             return new OperationResult<>(group.get(), true, null, null);
         else
@@ -67,7 +67,7 @@ public class GroupsService {
 
             if (foundPerimetersResult.isSuccess()) {
                 boolean isAlreadyExisting = groupRepository.findById(group.getId()).isPresent();
-                Group newGroup = groupRepository.save((GroupData) group);
+                Group newGroup = groupRepository.save(group);
                 userService.publishUpdatedGroupMessage(group.getId());
                 EntityCreationReport<Group> report = new EntityCreationReport<>(isAlreadyExisting, newGroup);
                 return new OperationResult<>(report, true, null, null);
@@ -98,7 +98,7 @@ public class GroupsService {
             return new OperationResult<>(null, false, OperationResult.ErrorType.BAD_REQUEST,
                     "Deleting group ADMIN is not allowed");
         }
-        Optional<GroupData> group = groupRepository.findById(groupId);
+        Optional<Group> group = groupRepository.findById(groupId);
         if (group.isEmpty())
             return new OperationResult<>(null, false, OperationResult.ErrorType.NOT_FOUND,
                     String.format(GROUP_NOT_FOUND_MSG, groupId));
@@ -211,7 +211,7 @@ public class GroupsService {
     }
 
     public OperationResult<List<Perimeter>> fetchGroupPerimeters(String groupId) {
-        Optional<GroupData> group = groupRepository.findById(groupId);
+        Optional<Group> group = groupRepository.findById(groupId);
         if (group.isEmpty())
             return new OperationResult<>(null, false, OperationResult.ErrorType.NOT_FOUND,
                     String.format(GROUP_NOT_FOUND_MSG, groupId));
@@ -223,7 +223,7 @@ public class GroupsService {
     }
 
     public OperationResult<String> updateGroupPerimeters(String groupId, List<String> perimeters) {
-        Optional<GroupData> group = groupRepository.findById(groupId);
+        Optional<Group> group = groupRepository.findById(groupId);
         if (group.isEmpty())
             return new OperationResult<>(null, false, OperationResult.ErrorType.NOT_FOUND,
                     String.format(GROUP_NOT_FOUND_MSG, groupId));
@@ -233,13 +233,13 @@ public class GroupsService {
                     result.getErrorMessage());
         Group updatedGroup = group.get();
         updatedGroup.setPerimeters(perimeters);
-        groupRepository.save((GroupData) updatedGroup);
+        groupRepository.save(updatedGroup);
         userService.publishUpdatedGroupMessage(groupId);
         return new OperationResult<>(null, true, null, null);
     }
 
     public OperationResult<String> addGroupPerimeters(String groupId, List<String> perimeters) {
-        Optional<GroupData> group = groupRepository.findById(groupId);
+        Optional<Group> group = groupRepository.findById(groupId);
         if (group.isEmpty())
             return new OperationResult<>(null, false, OperationResult.ErrorType.NOT_FOUND,
                     String.format(GROUP_NOT_FOUND_MSG, groupId));
@@ -251,7 +251,7 @@ public class GroupsService {
         Group updatedGroup = group.get();
         for (String perimeter : perimeters)
             ((GroupData) updatedGroup).addPerimeter(perimeter);
-        groupRepository.save((GroupData) updatedGroup);
+        groupRepository.save((Group) updatedGroup);
         userService.publishUpdatedGroupMessage(groupId);
         return new OperationResult<>(null, true, null, null);
     }

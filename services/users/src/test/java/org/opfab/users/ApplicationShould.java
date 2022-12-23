@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2021, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2022, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -7,11 +7,9 @@
  * This file is part of the OperatorFabric project.
  */
 
-
-
 package org.opfab.users;
 
-import lombok.extern.slf4j.Slf4j;
+
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
@@ -21,8 +19,6 @@ import org.opfab.users.repositories.GroupRepository;
 import org.opfab.users.repositories.EntityRepository;
 import org.opfab.users.repositories.PerimeterRepository;
 import org.opfab.users.repositories.UserRepository;
-import org.opfab.users.model.EntityData;
-import org.opfab.users.model.GroupData;
 import org.opfab.users.model.UserData;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -32,10 +28,8 @@ import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-
 @SpringBootTest(classes = UnitTestApplication.class)
-@ActiveProfiles(profiles = {"default","test","test-init"})
-@Slf4j
+@ActiveProfiles(profiles = { "default", "test", "test-init" })
 @Tag("end-to-end")
 @Tag("mongo")
 class ApplicationShould {
@@ -50,7 +44,7 @@ class ApplicationShould {
     PerimeterRepository perimeterRepository;
 
     @AfterEach
-    public void clean(){
+    public void clean() {
         userRepository.deleteAll();
         groupRepository.deleteAll();
         entityRepository.deleteAll();
@@ -58,13 +52,13 @@ class ApplicationShould {
     }
 
     @Test
-    void createInitialData(){
+    void createInitialData() {
         List<UserData> defaultUsers = userRepository.findAll();
         assertThat(defaultUsers).hasSize(1);
 
-        List<GroupData> defaultGroups = groupRepository.findAll();
+        List<Group> defaultGroups = groupRepository.findAll();
 
-        List<EntityData> defaultEntities = entityRepository.findAll();
+        List<Entity> defaultEntities = entityRepository.findAll();
 
         assertThat(defaultGroups).hasSize(1);
         assertThat(defaultUsers.get(0).getLogin()).isEqualTo("admin");

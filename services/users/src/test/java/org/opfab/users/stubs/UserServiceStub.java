@@ -14,7 +14,7 @@ import java.util.List;
 import java.util.Set;
 
 import org.opfab.springtools.error.model.ApiErrorException;
-import org.opfab.users.model.GroupData;
+import org.opfab.users.model.Group;
 import org.opfab.users.model.Perimeter;
 import org.opfab.users.model.PerimeterData;
 import org.opfab.users.model.User;
@@ -29,7 +29,7 @@ public class UserServiceStub implements UserService {
     public User user;
     public UserData userData;
     public UserSettingsData userSettingsData;
-    public List<GroupData> groups;
+    public List<Group> groups;
     public List<PerimeterData> perimeters; 
     public Set<Perimeter> perimetersAttachedToGroups;
 
@@ -50,7 +50,7 @@ public class UserServiceStub implements UserService {
     }
 
     @Override
-    public List<GroupData> retrieveGroups(List<String> groupIds) {
+    public List<Group> retrieveGroups(List<String> groupIds) {
         return groups;
     }
 

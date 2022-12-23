@@ -16,6 +16,7 @@ import java.util.Optional;
 import java.util.Set;
 
 import org.opfab.users.model.EntityCreationReport;
+import org.opfab.users.model.Group;
 import org.opfab.users.model.GroupData;
 import org.opfab.users.model.OperationResult;
 import org.opfab.users.model.Perimeter;
@@ -106,10 +107,10 @@ public class PerimetersService {
 
             // Retrieve groups from repository
             // TODO : code smell for notification group update 
-            List<GroupData> foundGroups = groupRepository.findByPerimetersContaining(perimeter.getId());
+            List<Group> foundGroups = groupRepository.findByPerimetersContaining(perimeter.getId());
             if (foundGroups != null) {
-                for (GroupData groupData : foundGroups) {
-                    userService.publishUpdatedGroupMessage(groupData.getId());
+                for (Group group : foundGroups) {
+                    userService.publishUpdatedGroupMessage(group.getId());
                 }
             }
             Perimeter insertedPerimeter = perimeterRepository.save((PerimeterData) perimeter);
@@ -138,12 +139,12 @@ public class PerimetersService {
     // (this link is in "group" mongo collection)
     private void removeTheReferenceToThePerimeterForConcernedGroups(String idPerimeter) {
 
-        List<GroupData> foundGroups = groupRepository.findByPerimetersContaining(idPerimeter);
+        List<Group> foundGroups = groupRepository.findByPerimetersContaining(idPerimeter);
 
         if (foundGroups != null) {
-            for (GroupData groupData : foundGroups) {
-                groupData.deletePerimeter(idPerimeter);
-                userService.publishUpdatedGroupMessage(groupData.getId());
+            for (Group group : foundGroups) {
+                ((GroupData) group).deletePerimeter(idPerimeter);
+                userService.publishUpdatedGroupMessage(group.getId());
             }
             groupRepository.saveAll(foundGroups);
         }
@@ -154,13 +155,13 @@ public class PerimetersService {
             return new OperationResult<>(null, false, OperationResult.ErrorType.NOT_FOUND,
                     String.format(PERIMETER_NOT_FOUND_MSG, perimeterId));
 
-        OperationResult<List<GroupData>> foundGroupsResult = retrieveGroups(groups);
+        OperationResult<List<Group>> foundGroupsResult = retrieveGroups(groups);
         if (foundGroupsResult.isSuccess()) {
-            List<GroupData> foundGroups = foundGroupsResult.getResult();
-            for (GroupData groupData : foundGroups) {
-                groupData.addPerimeter(perimeterId);
-                groupRepository.save(groupData);
-                userService.publishUpdatedUserMessage(groupData.getId());
+            List<Group> foundGroups = foundGroupsResult.getResult();
+            for (Group group : foundGroups) {
+                ((GroupData) group).addPerimeter(perimeterId);
+                groupRepository.save(group);
+                userService.publishUpdatedUserMessage(group.getId());
             }
         } else
             return new OperationResult<>(null, false, foundGroupsResult.getErrorType(),
@@ -168,10 +169,10 @@ public class PerimetersService {
         return new OperationResult<>(null, true, null, perimeterId);
     }
 
-    private OperationResult<List<GroupData>> retrieveGroups(List<String> groupIds) {
-        List<GroupData> foundGroups = new ArrayList<>();
+    private OperationResult<List<Group>> retrieveGroups(List<String> groupIds) {
+        List<Group> foundGroups = new ArrayList<>();
         for (String groupId : groupIds) {
-            Optional<GroupData> foundGroup = groupRepository.findById(groupId);
+            Optional<Group> foundGroup = groupRepository.findById(groupId);
             if (foundGroup.isEmpty())
                 return new OperationResult<>(null, false, OperationResult.ErrorType.BAD_REQUEST,
                         String.format(BAD_GROUP_LIST_MSG, groupId));
@@ -185,14 +186,14 @@ public class PerimetersService {
         if (!perimeterRepository.findById(perimeterId).isPresent())
             return new OperationResult<>(null, false, OperationResult.ErrorType.NOT_FOUND,
                     String.format(PERIMETER_NOT_FOUND_MSG, perimeterId));
-        OperationResult<List<GroupData>> foundGroupsResult = retrieveGroups(groups);
+        OperationResult<List<Group>> foundGroupsResult = retrieveGroups(groups);
         if (foundGroupsResult.isSuccess()) {
-            List<GroupData> formerlyBelongs = groupRepository.findByPerimetersContaining(perimeterId);
-            formerlyBelongs.forEach(user -> {
-                if (!groups.contains(user.getId())) {
-                    user.deletePerimeter(perimeterId);
-                    groupRepository.save(user);
-                    userService.publishUpdatedUserMessage(user.getId());
+            List<Group> formerlyBelongs = groupRepository.findByPerimetersContaining(perimeterId);
+            formerlyBelongs.forEach(group -> {
+                if (!groups.contains(group.getId())) {
+                    ((GroupData) group).deletePerimeter(perimeterId);
+                    groupRepository.save(group);
+                    userService.publishUpdatedUserMessage(group.getId());
                 }
             });
             addPerimeterGroups(perimeterId, groups);
@@ -217,14 +218,14 @@ public class PerimetersService {
             return new OperationResult<>(null, false, OperationResult.ErrorType.NOT_FOUND,
                     String.format(PERIMETER_NOT_FOUND_MSG, perimeterId));
 
-        Optional<GroupData> foundGroup = groupRepository.findById(groupId);
+        Optional<Group> foundGroup = groupRepository.findById(groupId);
 
         if (foundGroup.isEmpty()) {
             return new OperationResult<>(null, false, OperationResult.ErrorType.NOT_FOUND,
                     String.format(GROUP_NOT_FOUND_MSG, groupId));
         }
 
-        foundGroup.get().deletePerimeter(perimeterId);
+        ((GroupData) foundGroup.get()).deletePerimeter(perimeterId);
         groupRepository.save(foundGroup.get());
         userService.publishUpdatedGroupMessage(groupId);
 
