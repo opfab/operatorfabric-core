@@ -22,6 +22,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.opfab.users.model.EntityCreationReport;
+import org.opfab.users.model.Group;
 import org.opfab.users.model.GroupData;
 import org.opfab.users.model.OperationResult;
 import org.opfab.users.model.Perimeter;
@@ -307,9 +308,9 @@ public class PerimetersServiceShould {
                 groups.add("group1");
                 groups.add("group2");
                 OperationResult<String> result = perimetersService.addPerimeterGroups("testPerimeter", groups);
-                Optional<GroupData> group1Updated = groupRepositoryStub.findById("group1");
-                Optional<GroupData> group2Updated = groupRepositoryStub.findById("group2");
-                Optional<GroupData> group3NotUpdated = groupRepositoryStub.findById("group3");
+                Optional<Group> group1Updated = groupRepositoryStub.findById("group1");
+                Optional<Group> group2Updated = groupRepositoryStub.findById("group2");
+                Optional<Group> group3NotUpdated = groupRepositoryStub.findById("group3");
                 assertThat(result.isSuccess()).isTrue();
                 assertThat(group1Updated.get().getPerimeters()).containsExactlyInAnyOrder("perimeter1", "perimeter2",
                         "testPerimeter");
@@ -347,9 +348,9 @@ public class PerimetersServiceShould {
                 groups.add("group1");
                 groups.add("group2");
                 OperationResult<String> result = perimetersService.updatePerimeterGroups("perimeter2", groups);
-                Optional<GroupData> group1Updated = groupRepositoryStub.findById("group1");
-                Optional<GroupData> group2Updated = groupRepositoryStub.findById("group2");
-                Optional<GroupData> group3Updated = groupRepositoryStub.findById("group3");
+                Optional<Group> group1Updated = groupRepositoryStub.findById("group1");
+                Optional<Group> group2Updated = groupRepositoryStub.findById("group2");
+                Optional<Group> group3Updated = groupRepositoryStub.findById("group3");
 
                 assertThat(result.isSuccess()).isTrue();
                 assertThat(group1Updated.get().getPerimeters()).containsExactlyInAnyOrder("perimeter1", "perimeter2");
@@ -362,9 +363,9 @@ public class PerimetersServiceShould {
             void GIVEN_Existing_Perimeter_WHEN_Update_With_Empty_Group_List_THEN_Succeed_And_Groups_Are_Updated() {
                 ArrayList<String> groups = new ArrayList<>();
                 OperationResult<String> result = perimetersService.updatePerimeterGroups("perimeter1", groups);
-                Optional<GroupData> group1Updated = groupRepositoryStub.findById("group1");
-                Optional<GroupData> group2Updated = groupRepositoryStub.findById("group2");
-                Optional<GroupData> group3Updated = groupRepositoryStub.findById("group3");
+                Optional<Group> group1Updated = groupRepositoryStub.findById("group1");
+                Optional<Group> group2Updated = groupRepositoryStub.findById("group2");
+                Optional<Group> group3Updated = groupRepositoryStub.findById("group3");
 
                 assertThat(result.isSuccess()).isTrue();
                 assertThat(group1Updated.get().getPerimeters()).containsExactly("perimeter2");
@@ -388,9 +389,9 @@ public class PerimetersServiceShould {
             @Test
             void GIVEN_A_Perimeter_With_Groups_WHEN_Try_To_Remove_Groups_THEN_Success_And_Groups_Removed() {
                 OperationResult<String> result = perimetersService.deletePerimeterGroups("perimeter1");
-                Optional<GroupData> group1Updated = groupRepositoryStub.findById("group1");
-                Optional<GroupData> group2Updated = groupRepositoryStub.findById("group2");
-                Optional<GroupData> group3Updated = groupRepositoryStub.findById("group3");
+                Optional<Group> group1Updated = groupRepositoryStub.findById("group1");
+                Optional<Group> group2Updated = groupRepositoryStub.findById("group2");
+                Optional<Group> group3Updated = groupRepositoryStub.findById("group3");
 
                 assertThat(result.isSuccess()).isTrue();
                 assertThat(group1Updated.get().getPerimeters()).containsExactly("perimeter2");
@@ -416,9 +417,9 @@ public class PerimetersServiceShould {
             void GIVEN_A_User_WHEN_Try_Removing_From_Group_THEN_Success_And_User_Removed_From_Group() {
                 OperationResult<String> result = perimetersService.deletePerimeterGroup("perimeter1",
                         "group1");
-                Optional<GroupData> group1Updated = groupRepositoryStub.findById("group1");
-                Optional<GroupData> group2Updated = groupRepositoryStub.findById("group2");
-                Optional<GroupData> group3Updated = groupRepositoryStub.findById("group3");
+                Optional<Group> group1Updated = groupRepositoryStub.findById("group1");
+                Optional<Group> group2Updated = groupRepositoryStub.findById("group2");
+                Optional<Group> group3Updated = groupRepositoryStub.findById("group3");
 
                 assertThat(result.isSuccess()).isTrue();
                 assertThat(group1Updated.get().getPerimeters()).containsExactly("perimeter2");

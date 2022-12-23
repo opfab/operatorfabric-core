@@ -11,10 +11,11 @@
 
 package org.opfab.users;
 
-import lombok.extern.slf4j.Slf4j;
+
 import org.opfab.useractiontracing.UserActionLogsConfiguration;
+import org.opfab.users.mongo.repositories.EntityRepositoryImpl;
+import org.opfab.users.mongo.repositories.GroupRepositoryImpl;
 import org.opfab.springtools.configuration.mongo.EnableOperatorFabricMongo;
-import org.opfab.users.repositories.UserRepository;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
@@ -23,11 +24,10 @@ import org.springframework.context.annotation.Import;
 import org.springframework.data.mongodb.repository.config.EnableMongoRepositories;
 
 @SpringBootApplication
-@Slf4j
 @EnableOperatorFabricMongo
-@EnableMongoRepositories(basePackageClasses = UserRepository.class)
+@EnableMongoRepositories(basePackageClasses = UsersApplication.class)
 @EnableConfigurationProperties
-@Import(UserActionLogsConfiguration.class)
+@Import({UserActionLogsConfiguration.class,EntityRepositoryImpl.class, GroupRepositoryImpl.class})
 public class UsersApplication {
 
     public static void main(String[] args) {

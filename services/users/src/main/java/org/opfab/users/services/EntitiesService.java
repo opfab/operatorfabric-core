@@ -15,7 +15,6 @@ import java.util.Optional;
 
 import org.opfab.users.model.Entity;
 import org.opfab.users.model.EntityCreationReport;
-import org.opfab.users.model.EntityData;
 import org.opfab.users.model.OperationResult;
 import org.opfab.users.model.UserData;
 import org.opfab.users.repositories.EntityRepository;
@@ -44,7 +43,7 @@ public class EntitiesService {
     }
 
     public OperationResult<Entity> fetchEntity(String entityId) {
-        Optional<EntityData> entity = entityRepository.findById(entityId);
+        Optional<Entity> entity = entityRepository.findById(entityId);
         if (entity.isPresent())
             return new OperationResult<>(entity.get(), true, null, null);
         else
@@ -65,7 +64,7 @@ public class EntitiesService {
                 }
             }
             boolean isAlreadyExisting = entityRepository.findById(entity.getId()).isPresent();
-            EntityData newEntity = entityRepository.save((EntityData) entity);
+            Entity newEntity = entityRepository.save(entity);
             userService.publishUpdatedConfigMessage();
             EntityCreationReport<Entity> report = new EntityCreationReport<>(isAlreadyExisting, newEntity);
             return new OperationResult<>(report, true, null, null);
@@ -76,7 +75,7 @@ public class EntitiesService {
     }
 
     public OperationResult<String> deleteEntity(String entityId) {
-        Optional<EntityData> entity = entityRepository.findById(entityId);
+        Optional<Entity> entity = entityRepository.findById(entityId);
         if (entity.isEmpty())
             return new OperationResult<>(null, false, OperationResult.ErrorType.NOT_FOUND,
                     String.format(ENTITY_NOT_FOUND_MSG, entityId));
@@ -105,9 +104,9 @@ public class EntitiesService {
 
     // Remove the link between the entity and all its child entities
     private void removeTheReferenceToTheEntityForChildEntities(String idEntity) {
-        List<EntityData> foundChilds = entityRepository.findByParentsContaining(idEntity);
+        List<Entity> foundChilds = entityRepository.findByParentsContaining(idEntity);
         if (foundChilds != null)
-            for (EntityData childData : foundChilds) {
+            for (Entity childData : foundChilds) {
                 List<String> parents = childData.getParents();
                 parents.remove(idEntity);
                 childData.setParents(parents);

@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2021, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2022, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -7,21 +7,28 @@
  * This file is part of the OperatorFabric project.
  */
 
-
-
 package org.opfab.users.repositories;
 
-import org.opfab.users.model.GroupData;
-import org.springframework.data.mongodb.repository.MongoRepository;
-import org.springframework.stereotype.Repository;
+import org.opfab.users.model.Group;
 
 import java.util.List;
+import java.util.Optional;
 
-/**
- * Mongo {@link GroupData} repository
- */
-@Repository
-public interface GroupRepository extends MongoRepository<GroupData,String> {
+public interface GroupRepository {
 
-    List<GroupData> findByPerimetersContaining(String perimeterContains);
+    public List<Group> findAll();
+
+    public Group insert(Group group);
+
+    public Group save(Group group);
+
+    public List<Group> saveAll(List<Group> groups);
+
+    public Optional<Group> findById(String id);
+
+    public void delete(Group group);
+
+    public void deleteAll();
+
+    public List<Group> findByPerimetersContaining(String perimeterContains);
 }

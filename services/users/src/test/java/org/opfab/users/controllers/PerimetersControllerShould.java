@@ -481,13 +481,13 @@ class PerimetersControllerShould {
                     .andExpect(status().isOk())
             ;
 
-            GroupData g2 = groupRepository.findById("G2").get();
+            Group g2 = groupRepository.findById("G2").get();
             assertThat(g2).isNotNull();
             assertThat(g2.getPerimeters()).containsExactly("PERIMETER1_1", "PERIMETER1_2");
-            GroupData g1 = groupRepository.findById("G1").get();
+            Group g1 = groupRepository.findById("G1").get();
             assertThat(g1).isNotNull();
             assertThat(g1.getPerimeters()).containsExactly("PERIMETER1_1", "PERIMETER2");
-            GroupData g3 = groupRepository.findById("G3").get();
+            Group g3 = groupRepository.findById("G3").get();
             assertThat(g3).isNotNull();
             assertThat(g3.getPerimeters()).containsExactly("PERIMETER1_2");
         }
@@ -514,7 +514,7 @@ class PerimetersControllerShould {
                     .andExpect(jsonPath("$.errors").doesNotExist())
             ;
 
-            GroupData g2 = groupRepository.findById("G2").get();
+            Group g2 = groupRepository.findById("G2").get();
             assertThat(g2).isNotNull();
             assertThat(g2.getPerimeters()).doesNotContain("unknownPerimeterSoFar");
 
@@ -540,7 +540,7 @@ class PerimetersControllerShould {
                     .andExpect(jsonPath("$.errors").doesNotExist());
 
             //If the group list isn't correct, no group should be updated
-            GroupData g2 = groupRepository.findById("G2").get();
+            Group g2 = groupRepository.findById("G2").get();
             assertThat(g2).isNotNull();
             assertThat(g2.getPerimeters()).containsExactly("PERIMETER1_1");
 
@@ -573,22 +573,22 @@ class PerimetersControllerShould {
             )
                     .andExpect(status().isOk());
 
-            GroupData freshlyNewGroup = groupRepository.findById(newGroupName).get();
+            Group freshlyNewGroup = groupRepository.findById(newGroupName).get();
             assertThat(freshlyNewGroup).isNotNull();
             assertThat(freshlyNewGroup.getPerimeters()).containsExactly("PERIMETER1_1");
 
-            GroupData g1 = groupRepository.findById("G1").get();
+            Group g1 = groupRepository.findById("G1").get();
             assertThat(g1).isNotNull();
             assertThat(g1.getPerimeters()).containsExactly("PERIMETER2");
 
-            GroupData g2 = groupRepository.findById("G2").get();
+            Group g2 = groupRepository.findById("G2").get();
             assertThat(g2).isNotNull();
             assertThat(g2.getPerimeters()).isEmpty();
         }
 
         @Test
         void deletePerimetersFromGroups() throws Exception {
-            List<GroupData> groupsHavingPerimeter1_1 = groupRepository.findByPerimetersContaining("PERIMETER1_1");
+            List<Group> groupsHavingPerimeter1_1 = groupRepository.findByPerimetersContaining("PERIMETER1_1");
             assertThat(groupsHavingPerimeter1_1).hasSize(2);
             mockMvc.perform(delete("/perimeters/PERIMETER1_1/groups")
                     .contentType(MediaType.APPLICATION_JSON)
@@ -602,7 +602,7 @@ class PerimetersControllerShould {
 
         @Test
         void deletePerimetersFromGroup() throws Exception {
-            List<GroupData> groupsHavingPerimeter1_1 = groupRepository.findByPerimetersContaining("PERIMETER1_1");
+            List<Group> groupsHavingPerimeter1_1 = groupRepository.findByPerimetersContaining("PERIMETER1_1");
             assertThat(groupsHavingPerimeter1_1).hasSize(2);
             mockMvc.perform(delete("/perimeters/PERIMETER1_1/groups/G2")
                     .contentType(MediaType.APPLICATION_JSON)
@@ -684,15 +684,15 @@ class PerimetersControllerShould {
                     .andExpect(status().isOk())
             ;
 
-            GroupData g3 = groupRepository.findById("G3").get();
+            Group g3 = groupRepository.findById("G3").get();
             assertThat(g3).isNotNull();
             assertThat(g3.getPerimeters()).containsExactlyInAnyOrder("PERIMETER1_1", "PERIMETER1_2");
 
-            GroupData g1 = groupRepository.findById("G1").get();
+            Group g1 = groupRepository.findById("G1").get();
             assertThat(g1).isNotNull();
             assertThat(g1.getPerimeters()).containsExactly("PERIMETER2");
 
-            GroupData g2 = groupRepository.findById("G2").get();
+            Group g2 = groupRepository.findById("G2").get();
             assertThat(g2).isNotNull();
             assertThat(g2.getPerimeters()).isEmpty();
         }
@@ -719,7 +719,7 @@ class PerimetersControllerShould {
                     .andExpect(jsonPath("$.errors").doesNotExist())
             ;
 
-            GroupData g2 = groupRepository.findById("G2").get();
+            Group g2 = groupRepository.findById("G2").get();
             assertThat(g2).isNotNull();
             assertThat(g2.getPerimeters()).doesNotContain("unknownPerimeterSoFar");
 
@@ -746,11 +746,11 @@ class PerimetersControllerShould {
                     .andExpect(jsonPath("$.errors").doesNotExist());
 
             //If the group list isn't correct, no group should be updated
-            GroupData g3 = groupRepository.findById("G3").get();
+            Group g3 = groupRepository.findById("G3").get();
             assertThat(g3).isNotNull();
             assertThat(g3.getPerimeters()).containsExactly("PERIMETER1_2");
 
-            GroupData g2 = groupRepository.findById("G2").get();
+            Group g2 = groupRepository.findById("G2").get();
             assertThat(g2).isNotNull();
             assertThat(g2.getPerimeters()).doesNotContain("PERIMETER1_2");
 
@@ -796,15 +796,15 @@ class PerimetersControllerShould {
         @Test
         void deletePerimeter() throws Exception {
 
-            GroupData g1 = groupRepository.findById("G1").get();
+            Group g1 = groupRepository.findById("G1").get();
             assertThat(g1).isNotNull();
             assertThat(g1.getPerimeters()).containsExactlyInAnyOrder("PERIMETER1_1", "PERIMETER2");
 
-            GroupData g2 = groupRepository.findById("G2").get();
+            Group g2 = groupRepository.findById("G2").get();
             assertThat(g2).isNotNull();
             assertThat(g2.getPerimeters()).containsExactlyInAnyOrder("PERIMETER1_1");
 
-            GroupData g3 = groupRepository.findById("G3").get();
+            Group g3 = groupRepository.findById("G3").get();
             assertThat(g3).isNotNull();
             assertThat(g3.getPerimeters()).containsExactlyInAnyOrder("PERIMETER1_2");
 

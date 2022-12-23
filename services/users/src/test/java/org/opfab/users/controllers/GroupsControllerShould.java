@@ -758,11 +758,11 @@ class GroupsControllerShould {
                     .andExpect(jsonPath("$.errors").doesNotExist());
 
             //If the perimeters list isn't correct, no group should be updated
-            GroupData monty = groupRepository.findById("MONTY").get();
+            Group monty = groupRepository.findById("MONTY").get();
             assertThat(monty).isNotNull();
             assertThat(monty.getPerimeters()).containsExactlyInAnyOrder("PERIMETER1_1", "PERIMETER2");
 
-            GroupData wanda = groupRepository.findById("WANDA").get();
+            Group wanda = groupRepository.findById("WANDA").get();
             assertThat(wanda).isNotNull();
             assertThat(wanda.getPerimeters()).containsExactly("PERIMETER1_1");
 
@@ -815,13 +815,13 @@ class GroupsControllerShould {
             ;
 
             //WANDA group must only contain PERIMETER1_2 (PERIMETER1_1 must be removed)
-            GroupData wanda = groupRepository.findById("WANDA").get();
+            Group wanda = groupRepository.findById("WANDA").get();
             assertThat(wanda).isNotNull();
             assertThat(wanda.getPerimeters()).hasSize(1);
             assertThat(wanda.getPerimeters()).containsExactly("PERIMETER1_2");
 
             //MONTY group must not be changed
-            GroupData monty = groupRepository.findById("MONTY").get();
+            Group monty = groupRepository.findById("MONTY").get();
             assertThat(monty).isNotNull();
             assertThat(monty.getPerimeters()).hasSize(2);
             assertThat(monty.getPerimeters()).containsExactlyInAnyOrder("PERIMETER1_1", "PERIMETER2");
@@ -871,12 +871,12 @@ class GroupsControllerShould {
                     .andExpect(jsonPath("$.errors").doesNotExist());
 
             //If the perimeters list isn't correct, no group should be updated
-            GroupData monty = groupRepository.findById("MONTY").get();
+            Group monty = groupRepository.findById("MONTY").get();
             assertThat(monty).isNotNull();
             assertThat(monty.getPerimeters()).hasSize(2);
             assertThat(monty.getPerimeters()).containsExactlyInAnyOrder("PERIMETER1_1", "PERIMETER2");
 
-            GroupData wanda = groupRepository.findById("WANDA").get();
+            Group wanda = groupRepository.findById("WANDA").get();
             assertThat(wanda).isNotNull();
             assertThat(wanda.getPerimeters()).hasSize(1);
             assertThat(wanda.getPerimeters()).containsExactly("PERIMETER1_1");
@@ -899,13 +899,13 @@ class GroupsControllerShould {
             ;
 
             //WANDA group must contain PERIMETER1_1 and PERIMETER2
-            GroupData wanda = groupRepository.findById("WANDA").get();
+            Group wanda = groupRepository.findById("WANDA").get();
             assertThat(wanda).isNotNull();
             assertThat(wanda.getPerimeters()).hasSize(2);
             assertThat(wanda.getPerimeters()).containsExactlyInAnyOrder("PERIMETER1_1", "PERIMETER2");
 
             //MONTY group must not be changed
-            GroupData monty = groupRepository.findById("MONTY").get();
+            Group monty = groupRepository.findById("MONTY").get();
             assertThat(monty).isNotNull();
             assertThat(monty.getPerimeters()).hasSize(2);
             assertThat(monty.getPerimeters()).containsExactlyInAnyOrder("PERIMETER1_1", "PERIMETER2");

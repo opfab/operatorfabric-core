@@ -15,6 +15,7 @@ import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.opfab.users.application.UnitTestApplication;
 import org.opfab.users.application.configuration.WithMockOpFabUser;
+import org.opfab.users.model.Entity;
 import org.opfab.users.model.EntityData;
 import org.opfab.users.model.OpfabRolesEnum;
 import org.opfab.users.model.UserData;
@@ -493,7 +494,7 @@ class EntitiesControllerShould {
                 .build();
             entityRepository.insert(p1);
 
-            EntityData e1 = entityRepository.findById("ENTITY1").get();
+            Entity e1 = entityRepository.findById("ENTITY1").get();
             assertThat(e1).isNotNull();
             e1.setParents(Arrays.asList("PARENT1"));
             entityRepository.save(e1);
@@ -507,7 +508,7 @@ class EntitiesControllerShould {
             ;
             assertThat(entityRepository.findById("PARENT1")).isEmpty();
 
-            EntityData e1after = entityRepository.findById("ENTITY1").get();
+            Entity e1after = entityRepository.findById("ENTITY1").get();
             assertThat(e1after).isNotNull();
             assertThat(e1after.getParents()).isEmpty();
 

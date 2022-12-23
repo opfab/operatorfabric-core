@@ -17,7 +17,6 @@ import org.opfab.users.repositories.GroupRepository;
 import org.opfab.users.repositories.PerimeterRepository;
 import org.opfab.users.repositories.UserRepository;
 import org.opfab.users.repositories.UserSettingsRepository;
-import org.opfab.users.model.GroupData;
 import org.opfab.users.model.PerimeterData;
 import org.opfab.users.model.UserData;
 import org.opfab.users.model.UserSettingsData;
@@ -78,10 +77,10 @@ public class UserServiceImp implements UserService {
                 .orElse(UserSettingsData.builder().login(login).build());
     }
 
-    public List<GroupData> retrieveGroups(List<String> groupIds) {
-        List<GroupData> foundGroups = new ArrayList<>();
+    public List<Group> retrieveGroups(List<String> groupIds) {
+        List<Group> foundGroups = new ArrayList<>();
         for (String id : groupIds) {
-            Optional<GroupData> foundGroup = groupRepository.findById(id);
+            Optional<Group> foundGroup = groupRepository.findById(id);
             if (foundGroup.isPresent()) {
                 foundGroups.add(foundGroup.get());
             } else {
@@ -91,14 +90,14 @@ public class UserServiceImp implements UserService {
         return foundGroups;
     }
 
-    public Set<Perimeter> findPerimetersAttachedToGroups(List<String> groups) {
-        if ((groups != null) && (!groups.isEmpty())) {
-            List<GroupData> groupsData = retrieveGroups(groups);
+    public Set<Perimeter> findPerimetersAttachedToGroups(List<String> groupIds) {
+        if ((groupIds != null) && (!groupIds.isEmpty())) {
+            List<Group> groups = retrieveGroups(groupIds);
 
-            if ((groupsData != null) && (!groupsData.isEmpty())) {
+            if ((groups != null) && (!groups.isEmpty())) {
                 Set<Perimeter> perimetersData = new HashSet<>(); // We use a set because we don't want to have a
                                                                  // duplicate
-                groupsData.forEach( // For each group, we recover its perimeters
+                groups.forEach( // For each group, we recover its perimeters
                         groupData -> {
                             List<PerimeterData> list = retrievePerimeters(groupData.getPerimeters());
                             if (list != null)
