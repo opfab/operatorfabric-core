@@ -28,8 +28,8 @@ configuration which is described in the following documentation:
  * link:{springboot_doc}/reference/htmlsingle/#boot-features-external-config[Springboot external configuration]
  * link:{springboot_doc}/reference/htmlsingle/#common-application-properties[Common application properties from Springboot documentation]
 
-Configuration is centralized in the *config* directory, the *dev* sub-directory is specific to development environments
-while the *docker* sub-directory is a specific configuration meant for use in a full docker environment.
+Configuration is centralized in the *config* directory, the *dev* subdirectory is specific to development environments
+while the *docker* subdirectory is a specific configuration meant for use in a full docker environment.
 
 == Business service configuration
 

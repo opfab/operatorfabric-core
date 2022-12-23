@@ -560,7 +560,7 @@ Scenario: fetch the first page
 	  }
 	  """
   
-	  Given url opfabUrl + 'cards/archives/' +'?activeFrom=1553186770481'
+	  Given url opfabUrl + 'cards/archives' +'?activeFrom=1553186770481'
 	  And header Authorization = 'Bearer ' + authTokenAsTSO
 	  And request filter11
 	  Then method post

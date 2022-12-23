@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2021, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2022, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -14,7 +14,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import javax.validation.constraints.NotNull;
+import jakarta.validation.constraints.NotNull;
 
 import com.fasterxml.jackson.databind.JsonNode;
 
@@ -24,7 +24,7 @@ import lombok.NoArgsConstructor;
 
 /**
  * Define the structure of the RoleClaimStandardList, an extension of RoleClaimStandard 
- * that dealts the case of key/value whose the value is a list of roles separated by a separator.
+ * that deals the case of key/value whose value is a list of roles separated by a separator.
  *
  *
  */

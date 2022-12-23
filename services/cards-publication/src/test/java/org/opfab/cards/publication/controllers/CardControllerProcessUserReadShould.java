@@ -57,7 +57,7 @@ class CardControllerProcessUserReadShould extends CardControllerShouldBase {
     private WebApplicationContext webApplicationContext;
 
 	@BeforeAll
-	private void setup() {
+	void setup() {
 		this.mockMvc = webAppContextSetup(webApplicationContext).apply(springSecurity()).build();
 		EasyRandom randomGenerator = instantiateEasyRandom();
 		List<CardPublicationData> cardsInRepository = instantiateCardPublicationData(randomGenerator, cardNumber);

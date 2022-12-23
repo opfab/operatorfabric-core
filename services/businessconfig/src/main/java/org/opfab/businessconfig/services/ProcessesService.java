@@ -21,7 +21,6 @@ import org.opfab.springtools.error.model.ApiError;
 import org.opfab.springtools.error.model.ApiErrorException;
 import org.opfab.utilities.PathUtils;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ResourceLoaderAware;
 import org.springframework.core.io.Resource;
@@ -30,9 +29,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
 
-import javax.annotation.PostConstruct;
-import javax.validation.ConstraintViolation;
+import jakarta.annotation.PostConstruct;
+import jakarta.validation.ConstraintViolation;
 import java.io.*;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -355,15 +355,14 @@ public class ProcessesService implements ResourceLoaderAware {
      * @param is processgroups file input stream
      * @throws IOException if error arise during stream reading
      */
-    public synchronized void updateProcessGroupsFile(InputStream is) throws IOException {
+    public synchronized void updateProcessGroupsFile(String fileContent) throws IOException {
         Path rootPath = Paths
                 .get(this.resourceLoader.getResource(PATH_PREFIX + this.storagePath).getFile().getAbsolutePath())
                 .normalize();
         if (!rootPath.toFile().exists())
             throw new FileNotFoundException("No directory available to copy processgroups file");
 
-        ProcessGroupsData newProcessGroups = objectMapper.readValue(is, ProcessGroupsData.class);
-        is.reset();
+        ProcessGroupsData newProcessGroups = objectMapper.readValue(fileContent, ProcessGroupsData.class);
 
         if (! checkNoDuplicateProcessInUploadedFile(newProcessGroups))
             throw new ApiErrorException(
@@ -373,7 +372,7 @@ public class ProcessesService implements ResourceLoaderAware {
                             .build());
 
         //copy file
-        PathUtils.copyInputStreamToFile(is, rootPath.toString() + "/processGroups.json");
+        PathUtils.copyInputStreamToFile(new ByteArrayInputStream(fileContent.getBytes()), rootPath.toString() + "/processGroups.json");
 
         //update cache
         processGroupsCache = newProcessGroups;
@@ -586,18 +585,18 @@ public class ProcessesService implements ResourceLoaderAware {
      * @param is realtimescreens file input stream
      * @throws IOException if error arise during stream reading
      */
-    public synchronized void updateRealTimeScreensFile(InputStream is) throws IOException {
+    public synchronized void updateRealTimeScreensFile(String fileContent) throws IOException {
         Path rootPath = Paths
                 .get(this.resourceLoader.getResource(PATH_PREFIX + this.storagePath).getFile().getAbsolutePath())
                 .normalize();
         if (!rootPath.toFile().exists())
             throw new FileNotFoundException("No directory available to copy realtimescreens file");
 
-        RealTimeScreensData newRealTimeScreens = objectMapper.readValue(is, RealTimeScreensData.class);
-        is.reset();
+
+        RealTimeScreensData newRealTimeScreens = objectMapper.readValue(fileContent, RealTimeScreensData.class);
 
         //copy file
-        PathUtils.copyInputStreamToFile(is, rootPath.toString() + "/realtimescreens.json");
+        PathUtils.copyInputStreamToFile(new ByteArrayInputStream(fileContent.getBytes()), rootPath.toString() + "/realtimescreens.json");
 
         //update cache
         realTimeScreensCache = newRealTimeScreens;

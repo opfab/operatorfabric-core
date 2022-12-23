@@ -1,0 +1,15 @@
+// Copyright (c) 2023 RTE (http://www.rte-france.com)
+// See AUTHORS.txt
+// This document is subject to the terms of the Creative Commons Attribution 4.0 International license.
+// If a copy of the license was not distributed with this
+// file, You can obtain one at https://creativecommons.org/licenses/by/4.0/.
+// SPDX-License-Identifier: CC-BY-4.0
+
+= Migration Guide from release 3.12.0 to release 3.13.0
+
+== Trailing slash
+
+When calling an opfab API you cannot use anymore trailing slash on url.
+
+
+If, for example, one makes a request like https://opfab/businessconfig/processes/, it must be replace by https://opfab/businessconfig/processes

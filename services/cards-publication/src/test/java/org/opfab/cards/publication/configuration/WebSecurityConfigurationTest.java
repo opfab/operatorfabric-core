@@ -1,4 +1,4 @@
-/* Copyright (c) 2021, RTE (http://www.rte-france.com)
+/* Copyright (c) 2021-2022, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -12,9 +12,10 @@ package org.opfab.cards.publication.configuration;
 import lombok.extern.slf4j.Slf4j;
 import org.opfab.cards.publication.configuration.oauth2.WebSecurityConfiguration;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.web.SecurityFilterChain;
 
 /**
  * WebSecurity test configuration
@@ -24,17 +25,19 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
  *
  *
  */
+
 @Configuration
 @Slf4j
-public class WebSecurityConfigurationTest extends WebSecurityConfigurerAdapter  {
+public class WebSecurityConfigurationTest {
 
     @Value("${checkAuthenticationForCardSending:true}")
     private boolean checkAuthenticationForCardSending;
-    
-    @Override
-    public void configure(final HttpSecurity http) throws Exception {
+
+    @Bean
+    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+
         WebSecurityConfiguration.configureCommon(http, checkAuthenticationForCardSending);
         http.csrf().disable();
+        return http.build();
     }
-
 }

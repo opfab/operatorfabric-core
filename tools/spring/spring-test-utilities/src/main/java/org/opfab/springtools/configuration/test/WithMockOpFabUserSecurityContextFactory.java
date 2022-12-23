@@ -11,6 +11,7 @@
 
 package org.opfab.springtools.configuration.test;
 
+import jakarta.servlet.*;
 import org.opfab.springtools.configuration.oauth.OAuth2JwtProcessingUtilities;
 import org.opfab.springtools.configuration.oauth.OpFabJwtAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -35,19 +36,13 @@ import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 
-import javax.servlet.RequestDispatcher;
-import javax.servlet.ServletInputStream;
-import javax.servlet.http.Cookie;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
-import javax.servlet.http.HttpUpgradeHandler;
-import javax.servlet.AsyncContext;
-import javax.servlet.DispatcherType;
-import javax.servlet.http.Part;
-import javax.servlet.ServletContext;
-import javax.servlet.ServletRequest;
-import javax.servlet.ServletResponse;
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
+import jakarta.servlet.http.HttpUpgradeHandler;
+import jakarta.servlet.http.Part;
+
 /**
  * Creates {@link SecurityContext} containing token holding {@link WithMockOpFabUser} principal
  *
@@ -117,6 +112,15 @@ public class WithMockOpFabUserSecurityContextFactory implements WithSecurityCont
     }
     @Data
     class MockHttpservletRequest implements HttpServletRequest {
+
+        @Override
+        public String getRequestId() { return null; }
+
+        @Override
+        public String getProtocolRequestId() { return null; }
+
+        @Override
+        public ServletConnection getServletConnection() { return null; }
 
         @Override
         public <T extends HttpUpgradeHandler> T upgrade(Class<T> handlerClass) {
@@ -237,11 +241,6 @@ public class WithMockOpFabUserSecurityContextFactory implements WithSecurityCont
 
         @Override
         public RequestDispatcher getRequestDispatcher(String path) {
-            return null;
-        }
-
-        @Override
-        public String getRealPath(String path) {
             return null;
         }
 
@@ -382,11 +381,6 @@ public class WithMockOpFabUserSecurityContextFactory implements WithSecurityCont
 
         @Override
         public boolean isRequestedSessionIdFromURL() {
-            return false;
-        }
-
-        @Override
-        public boolean isRequestedSessionIdFromUrl() {
             return false;
         }
 

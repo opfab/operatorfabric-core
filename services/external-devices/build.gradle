@@ -17,7 +17,7 @@ dependencies {
     compileOnly boot.annotationConfiguration
     annotationProcessor boot.annotationConfiguration
 
-    implementation boot.starterWeb, boot.starterJetty
+    implementation boot.starterWeb, boot.starterUndertow
 
     testImplementation spring.securityTest
     testImplementation project(':tools:generic:test-utilities')

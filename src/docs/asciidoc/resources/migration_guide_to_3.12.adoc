@@ -46,6 +46,6 @@ usercard configuration in the config.json of your bundle.
         "recipientList" : [{"id": "ENTITY_FR", "levels": [0,1]}, {"id": "IT_SUPERVISOR_ENTITY"}]
       },
 
-=== Remove deprecated method templateGateway.getSpecificCardInformation() 
+== Remove deprecated method templateGateway.getSpecificCardInformation() 
   
 The deprecated method 'templateGateway.getSpecificCardInformation()' in usercard templates has been removed, use 'usercardTemplateGateway.getSpecificCardInformation()' method instead.
