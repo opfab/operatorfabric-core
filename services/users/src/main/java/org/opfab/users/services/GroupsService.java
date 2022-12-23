@@ -15,10 +15,8 @@ import java.util.Optional;
 
 import org.opfab.users.model.EntityCreationReport;
 import org.opfab.users.model.Group;
-import org.opfab.users.model.GroupData;
 import org.opfab.users.model.OperationResult;
 import org.opfab.users.model.Perimeter;
-import org.opfab.users.model.PerimeterData;
 import org.opfab.users.model.UserData;
 import org.opfab.users.repositories.GroupRepository;
 import org.opfab.users.repositories.PerimeterRepository;
@@ -83,7 +81,7 @@ public class GroupsService {
     private OperationResult<List<Perimeter>> getPerimeters(List<String> perimeterIds) {
         List<Perimeter> foundPerimeters = new ArrayList<>();
         for (String perimeter : perimeterIds) {
-            Optional<PerimeterData> foundPerimeter = perimeterRepository.findById(perimeter);
+            Optional<Perimeter> foundPerimeter = perimeterRepository.findById(perimeter);
             if (foundPerimeter.isEmpty())
                 return new OperationResult<>(null, false, OperationResult.ErrorType.BAD_REQUEST,
                         String.format(BAD_PERIMETER_LIST_MSG, perimeter));
@@ -238,20 +236,22 @@ public class GroupsService {
         return new OperationResult<>(null, true, null, null);
     }
 
-    public OperationResult<String> addGroupPerimeters(String groupId, List<String> perimeters) {
+    public OperationResult<String> addGroupPerimeters(String groupId, List<String> perimetersToAdd) {
         Optional<Group> group = groupRepository.findById(groupId);
         if (group.isEmpty())
             return new OperationResult<>(null, false, OperationResult.ErrorType.NOT_FOUND,
                     String.format(GROUP_NOT_FOUND_MSG, groupId));
 
-        OperationResult<List<Perimeter>> result = getPerimeters(perimeters);
+        OperationResult<List<Perimeter>> result = getPerimeters(perimetersToAdd);
         if (!result.isSuccess())
             return new OperationResult<>(null, false, result.getErrorType(),
                     result.getErrorMessage());
         Group updatedGroup = group.get();
-        for (String perimeter : perimeters)
-            ((GroupData) updatedGroup).addPerimeter(perimeter);
-        groupRepository.save((Group) updatedGroup);
+        List<String> newPerimeters = new  ArrayList<>(updatedGroup.getPerimeters());
+        for (String perimeter : perimetersToAdd)
+            newPerimeters.add(perimeter);
+        updatedGroup.setPerimeters(newPerimeters);
+        groupRepository.save(updatedGroup);
         userService.publishUpdatedGroupMessage(groupId);
         return new OperationResult<>(null, true, null, null);
     }

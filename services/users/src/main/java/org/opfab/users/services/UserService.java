@@ -19,7 +19,7 @@ public interface UserService {
     UserData retrieveUser(String login);
     UserSettingsData retrieveUserSettings(String login);
     List<Group> retrieveGroups(List<String> groupIds);
-    List<PerimeterData> retrievePerimeters(List<String> perimeterIds);
+    List<Perimeter> retrievePerimeters(List<String> perimeterIds);
     Set<Perimeter> findPerimetersAttachedToGroups(List<String> groups);
     boolean checkFilteringNotificationIsAllowedForAllProcessesStates(String login, UserSettings userSettings);
     void publishUpdatedUserMessage(String userLogin);

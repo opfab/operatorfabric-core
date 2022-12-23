@@ -11,7 +11,6 @@ package org.opfab.users.services;
 import org.opfab.users.model.*;
 import org.opfab.users.repositories.EntityRepository;
 import org.opfab.users.model.CurrentUserWithPerimetersData;
-import org.opfab.users.model.PerimeterData;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -55,7 +54,7 @@ public class CurrentUserWithPerimetersService {
                                                                  // duplicate
                 groups.forEach( // For each group, we recover its perimeters
                         groupData -> {
-                            List<PerimeterData> list = userService.retrievePerimeters(groupData.getPerimeters());
+                            List<Perimeter> list = userService.retrievePerimeters(groupData.getPerimeters());
                             if (list != null)
                                 perimetersData.addAll(list);
                         });
