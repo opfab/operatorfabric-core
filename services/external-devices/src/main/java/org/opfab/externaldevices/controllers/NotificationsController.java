@@ -11,9 +11,7 @@ package org.opfab.externaldevices.controllers;
 
 import lombok.extern.slf4j.Slf4j;
 import org.opfab.externaldevices.configuration.oauth2.UserExtractor;
-import org.opfab.externaldevices.drivers.ExternalDeviceAvailableException;
 import org.opfab.externaldevices.drivers.ExternalDeviceConfigurationException;
-import org.opfab.externaldevices.drivers.ExternalDeviceDriverException;
 import org.opfab.externaldevices.drivers.ExternalDeviceException;
 import org.opfab.externaldevices.drivers.UnknownExternalDeviceException;
 import org.opfab.externaldevices.model.Notification;
@@ -25,8 +23,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 
 /**
  * NotificationsController, documented at {@link NotificationsApi}

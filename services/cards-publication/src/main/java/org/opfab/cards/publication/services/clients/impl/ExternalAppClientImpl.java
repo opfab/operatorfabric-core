@@ -16,18 +16,13 @@ import org.opfab.cards.publication.model.CardPublicationData;
 import org.opfab.cards.publication.services.clients.ExternalAppClient;
 import org.opfab.springtools.error.model.ApiError;
 import org.opfab.springtools.error.model.ApiErrorException;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
+import org.springframework.http.*;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.HttpServerErrorException;
 import org.springframework.web.client.HttpStatusCodeException;
 import org.springframework.web.client.ResourceAccessException;
-import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 
 import java.nio.charset.Charset;
@@ -177,7 +172,7 @@ public class ExternalAppClientImpl implements ExternalAppClient {
         }
     }
 
-    private ApiErrorException createApiError(HttpStatus httpStatus, String errorMessage) {
+    private ApiErrorException createApiError(HttpStatusCode httpStatus, String errorMessage) {
         return new ApiErrorException(ApiError.builder()
                 .status(httpStatus)
                 .message(errorMessage)

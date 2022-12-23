@@ -57,7 +57,7 @@ export class CardService {
     }
 
     fetchFilteredArchivedCards(filter: ArchivedCardsFilter) {
-        return this.httpClient.post<Page<LightCard>>(`${this.archivesUrl}/`, filter);
+        return this.httpClient.post<Page<LightCard>>(`${this.archivesUrl}`, filter);
     }
 
     convertFiltersIntoHttpParams(filters: Map<string, string[]>): HttpParams {

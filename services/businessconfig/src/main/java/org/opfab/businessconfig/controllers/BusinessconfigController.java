@@ -18,16 +18,15 @@ import org.opfab.businessconfig.services.MonitoringService;
 import org.opfab.businessconfig.services.ProcessesService;
 import org.opfab.springtools.error.model.ApiError;
 import org.opfab.springtools.error.model.ApiErrorException;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.validation.Valid;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import jakarta.validation.Valid;
 import java.io.ByteArrayOutputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -241,11 +240,12 @@ public class BusinessconfigController implements BusinessconfigApi {
     }
 
     public Void uploadFile(HttpServletRequest request, HttpServletResponse response, @Valid MultipartFile file, String endPointName) {
-        try (InputStream is = file.getInputStream()) {
+ 
+        try  {
             if (endPointName.equals("processgroups"))
-                processService.updateProcessGroupsFile(is);
+                processService.updateProcessGroupsFile(new String(file.getBytes()));
             else
-                processService.updateRealTimeScreensFile(is);
+                processService.updateRealTimeScreensFile(new String(file.getBytes()));
 
             response.addHeader(LOCATION, request.getContextPath() + "/businessconfig/" + endPointName);
             response.setStatus(201);

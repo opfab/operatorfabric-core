@@ -44,10 +44,10 @@ public class WebSecurityConfiguration {
         http.csrf().disable();
         if (authenticationRequired) {
             http
-                    .authorizeRequests()
-                    .antMatchers("/test").authenticated()
-                    .antMatchers("/test/**").authenticated()
-                    .antMatchers("/**").permitAll();
+                    .authorizeHttpRequests()
+                    .requestMatchers("/test").authenticated()
+                    .requestMatchers("/test/**").authenticated()
+                    .requestMatchers("/**").permitAll();
         }
     }
 

@@ -8,13 +8,13 @@ Feature: Client ip control
     * def authTokenAsTSO = signInAsTSO.authToken
 
     * def userServiceUrl = opfabUserUrl + 'users/user_test_api_1'
-    * def businessConfigServiceUrl = opfabBusinessConfigUrl + 'businessconfig/processes/'
+    * def businessConfigServiceUrl = opfabBusinessConfigUrl + 'businessconfig/processes'
     * def cardsConsultationServiceUrl = opfabCardsConsultationUrl + 'cardSubscription' + '?notification=false&clientId=abc0123456789def'
     * def userCardsPublicationServiceUrl = opfabPublishCardUrl + 'cards/userCard'
     * def cardsPublicationServiceUrl = opfabPublishCardUrl + 'cards'
 
     * def nginxUserServiceUrl = opfabUrl + 'users/users/user_test_api_1'
-    * def nginxBusinessConfigServiceUrl = opfabUrl + 'businessconfig/processes/'
+    * def nginxBusinessConfigServiceUrl = opfabUrl + 'businessconfig/processes'
     * def nginxCardsConsultationServiceUrl = opfabUrl + 'cards/cardSubscription' + '?notification=false&clientId=abc0123456789def'
     * def nginxUserCardsPublicationServiceUrl = opfabUrl + '/cardspub/cards/userCard'
 

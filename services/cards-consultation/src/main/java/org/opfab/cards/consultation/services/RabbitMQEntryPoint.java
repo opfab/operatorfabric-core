@@ -9,7 +9,7 @@
 
 package org.opfab.cards.consultation.services;
 
-import javax.annotation.PreDestroy;
+import jakarta.annotation.PreDestroy;
 
 import org.opfab.utilities.AmqpUtils;
 import org.springframework.amqp.core.AmqpAdmin;
