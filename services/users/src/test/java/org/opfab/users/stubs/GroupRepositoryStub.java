@@ -16,6 +16,7 @@ import java.util.Map;
 import java.util.Optional;
 
 import org.opfab.users.model.Group;
+import org.opfab.users.model.GroupData;
 import org.opfab.users.repositories.GroupRepository;
 
 public class GroupRepositoryStub implements GroupRepository {
@@ -23,24 +24,25 @@ public class GroupRepositoryStub implements GroupRepository {
     Map<String, Group> groups = new HashMap<>();
 
     @Override
-    public List<Group> saveAll(List<Group> groups) {
+    public List<Group> saveAll(List<Group> groupsToSave) {
+        groupsToSave.forEach((group) -> groups.put(group.getId(),cloneGroup(group)));
         return null;
     }
 
     @Override
     public List<Group> findAll() {
-        return groups.values().stream().toList();
+        return groups.values().stream().map(group -> cloneGroup(group)).toList();
     }
 
     @Override
     public Group insert(Group group) {
-        groups.put(group.getId(), group);
+        groups.put(group.getId(), cloneGroup(group));
         return null;
     }
 
     @Override
     public Group save(Group group) {
-        groups.put(group.getId(), group);
+        groups.put(group.getId(), cloneGroup(group));
         return group;
     }
 
@@ -49,7 +51,7 @@ public class GroupRepositoryStub implements GroupRepository {
         Group group = groups.get(id);
         if (group == null)
             return Optional.empty();
-        return Optional.of(group);
+        return Optional.of(cloneGroup(group));
     }
 
     @Override
@@ -69,10 +71,15 @@ public class GroupRepositoryStub implements GroupRepository {
         List<Group> groupsHavingPerimeter = new ArrayList<>();
         groups.values().forEach((group) -> {
             if (group.getPerimeters().contains(perimeterContains)) {
-                groupsHavingPerimeter.add(group);
+                groupsHavingPerimeter.add(cloneGroup(group));
             }
         });
         return groupsHavingPerimeter;
     }
 
+    // Use this method to create copy of a group to avoid 
+    // test code modifying repository data directly (without calling repository methods)
+    private Group cloneGroup(Group group) {
+        return (new GroupData((GroupData) group)); 
+    } 
 }

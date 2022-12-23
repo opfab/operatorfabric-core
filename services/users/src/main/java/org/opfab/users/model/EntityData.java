@@ -19,6 +19,7 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -45,6 +46,18 @@ public class EntityData implements Entity {
     private Boolean entityAllowedToSendCard = true;
 
     private Set<String> parents;
+
+    public EntityData(EntityData entityData) {
+        this.id = entityData.id;
+        this.name = entityData.name;
+        this.description = entityData.description;
+        if (entityData.labels==null) this.labels = new HashSet<>();
+        else this.labels = new HashSet<>(entityData.labels);
+        this.entityAllowedToSendCard =   entityData.entityAllowedToSendCard;
+        if (entityData.parents==null) this.parents = new HashSet<>();
+        else this.parents = new HashSet<>(entityData.parents);
+    }
+
 
     public EntityData(Entity entity) {
         this();
