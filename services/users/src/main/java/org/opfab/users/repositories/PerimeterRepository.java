@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2021, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2022, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -7,20 +7,25 @@
  * This file is part of the OperatorFabric project.
  */
 
-
 package org.opfab.users.repositories;
 
-import org.opfab.users.model.PerimeterData;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.mongodb.repository.MongoRepository;
-import org.springframework.stereotype.Repository;
+import java.util.List;
+import java.util.Optional;
+import org.opfab.users.model.Perimeter;
 
-/**
- * Mongo {@link PerimeterData} repository
- */
-@Repository
-public interface PerimeterRepository extends MongoRepository<PerimeterData, String> {
-    Page<PerimeterData> findAll(Pageable pageable);
+public interface PerimeterRepository {
+
+    public List<Perimeter> saveAll(List<Perimeter> perimeters);
+
+    public List<Perimeter> findAll();
+
+    public Perimeter insert(Perimeter perimeter);
+
+    public Perimeter save(Perimeter perimeter);
+
+    public Optional<Perimeter> findById(String id);
+
+    public void delete(Perimeter perimeter);
+
+    public void deleteAll();
 }
-

@@ -17,7 +17,6 @@ import org.opfab.users.repositories.GroupRepository;
 import org.opfab.users.repositories.PerimeterRepository;
 import org.opfab.users.repositories.UserRepository;
 import org.opfab.users.repositories.UserSettingsRepository;
-import org.opfab.users.model.PerimeterData;
 import org.opfab.users.model.UserData;
 import org.opfab.users.model.UserSettingsData;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
@@ -99,7 +98,7 @@ public class UserServiceImp implements UserService {
                                                                  // duplicate
                 groups.forEach( // For each group, we recover its perimeters
                         groupData -> {
-                            List<PerimeterData> list = retrievePerimeters(groupData.getPerimeters());
+                            List<Perimeter> list = retrievePerimeters(groupData.getPerimeters());
                             if (list != null)
                                 perimetersData.addAll(list);
                         });
@@ -109,10 +108,10 @@ public class UserServiceImp implements UserService {
         return Collections.emptySet();
     }
 
-    public List<PerimeterData> retrievePerimeters(List<String> perimeterIds) {
-        List<PerimeterData> foundPerimeters = new ArrayList<>();
+    public List<Perimeter> retrievePerimeters(List<String> perimeterIds) {
+        List<Perimeter> foundPerimeters = new ArrayList<>();
         for (String perimeterId : perimeterIds) {
-            PerimeterData foundPerimeter = perimeterRepository.findById(perimeterId).orElseThrow(
+            Perimeter foundPerimeter = perimeterRepository.findById(perimeterId).orElseThrow(
                     () -> new ApiErrorException(
                             ApiError.builder()
                                     .status(HttpStatus.INTERNAL_SERVER_ERROR)

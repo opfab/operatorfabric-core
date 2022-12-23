@@ -39,6 +39,13 @@ public class PerimeterData implements Perimeter {
     @Singular
     private List<StateRight> stateRights;
 
+    public PerimeterData (PerimeterData perimeterData) {
+        this.id = perimeterData.id;
+        this.process = perimeterData.process;
+        if (perimeterData.stateRights!=null)  this.stateRights = new ArrayList<>(perimeterData.stateRights);
+        else this.stateRights = new ArrayList<>();
+    }
+
     @Override
     public void setStateRights(List<StateRight> stateRights) {
         this.stateRights = new ArrayList<>(stateRights);

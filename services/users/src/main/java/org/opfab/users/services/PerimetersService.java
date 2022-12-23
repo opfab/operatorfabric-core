@@ -20,7 +20,6 @@ import org.opfab.users.model.Group;
 import org.opfab.users.model.GroupData;
 import org.opfab.users.model.OperationResult;
 import org.opfab.users.model.Perimeter;
-import org.opfab.users.model.PerimeterData;
 import org.opfab.users.model.StateRight;
 import org.opfab.users.repositories.GroupRepository;
 import org.opfab.users.repositories.PerimeterRepository;
@@ -51,7 +50,7 @@ public class PerimetersService {
     }
 
     public OperationResult<Perimeter> fetchPerimeter(String perimeterId) {
-        Optional<PerimeterData> perimeter = perimeterRepository.findById(perimeterId);
+        Optional<Perimeter> perimeter = perimeterRepository.findById(perimeterId);
         if (perimeter.isPresent())
             return new OperationResult<>(perimeter.get(), true, null, null);
         else
@@ -70,7 +69,7 @@ public class PerimetersService {
             if (!isEachStateUniqueInPerimeter(perimeter))
                 return new OperationResult<>(null, false, OperationResult.ErrorType.BAD_REQUEST,
                         DUPLICATE_STATE_IN_PERIMETER);
-            Perimeter insertedPerimeter = perimeterRepository.save((PerimeterData) perimeter);
+            Perimeter insertedPerimeter = perimeterRepository.save(perimeter);
             EntityCreationReport<Perimeter> report = new EntityCreationReport<>(isAlreadyExisting, insertedPerimeter);
             return new OperationResult<>(report, true, null, null);
 
@@ -113,7 +112,7 @@ public class PerimetersService {
                     userService.publishUpdatedGroupMessage(group.getId());
                 }
             }
-            Perimeter insertedPerimeter = perimeterRepository.save((PerimeterData) perimeter);
+            Perimeter insertedPerimeter = perimeterRepository.save(perimeter);
             EntityCreationReport<Perimeter> report = new EntityCreationReport<>(isAlreadyExisting, insertedPerimeter);
             return new OperationResult<>(report, true, null, null);
 
@@ -124,7 +123,7 @@ public class PerimetersService {
     }
 
     public OperationResult<String> deletePerimeter(String perimeterId) {
-        Optional<PerimeterData> group = perimeterRepository.findById(perimeterId);
+        Optional<Perimeter> group = perimeterRepository.findById(perimeterId);
         if (group.isEmpty())
             return new OperationResult<>(null, false, OperationResult.ErrorType.NOT_FOUND,
                     String.format(PERIMETER_NOT_FOUND_MSG, perimeterId));

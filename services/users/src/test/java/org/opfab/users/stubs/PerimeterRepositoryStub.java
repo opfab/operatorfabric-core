@@ -13,156 +13,61 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.function.Function;
 
+import org.opfab.users.model.Perimeter;
 import org.opfab.users.model.PerimeterData;
 import org.opfab.users.repositories.PerimeterRepository;
-import org.springframework.data.domain.Example;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
-import org.springframework.data.repository.query.FluentQuery.FetchableFluentQuery;
 
-public class PerimeterRepositoryStub implements PerimeterRepository{
+public class PerimeterRepositoryStub implements PerimeterRepository {
 
-    Map<String,PerimeterData> perimeters = new HashMap<>(); 
+    Map<String, Perimeter> perimeters = new HashMap<>();
 
     @Override
-    public <S extends PerimeterData> List<S> saveAll(Iterable<S> entities) {
-        entities.forEach((entity) -> perimeters.put(entity.getId(),entity) );
+    public List<Perimeter> saveAll(List<Perimeter> perimetersToSave) {
+        perimetersToSave.forEach((perimeter) -> perimeters.put(perimeter.getId(), clonePerimeter(perimeter)));
         return null;
     }
 
     @Override
-    public List<PerimeterData> findAll() {
-        return perimeters.values().stream().toList();
+    public List<Perimeter> findAll() {
+        return perimeters.values().stream().map(perimeter -> clonePerimeter(perimeter)).toList();
     }
 
     @Override
-    public List<PerimeterData> findAll(Sort sort) {
-        // TODO Auto-generated method stub
+    public Perimeter insert(Perimeter perimeter) {
+        perimeters.put(perimeter.getId(), clonePerimeter(perimeter));
         return null;
     }
 
     @Override
-    public <S extends PerimeterData> S insert(S entity) {
-        perimeters.put(entity.getId(),entity);
-        return null;
+    public Perimeter save(Perimeter perimeter) {
+        perimeters.put(perimeter.getId(), clonePerimeter(perimeter));
+        return perimeter;
     }
 
     @Override
-    public <S extends PerimeterData> List<S> insert(Iterable<S> entities) {
-        // TODO Auto-generated method stub
-        return null;
-    }
-
-    @Override
-    public <S extends PerimeterData> List<S> findAll(Example<S> example) {
-        // TODO Auto-generated method stub
-        return null;
-    }
-
-    @Override
-    public <S extends PerimeterData> List<S> findAll(Example<S> example, Sort sort) {
-        // TODO Auto-generated method stub
-        return null;
-    }
-
-    @Override
-    public <S extends PerimeterData> S save(S entity) {
-        perimeters.put(entity.getId(),entity);
-        return entity;
-    }
-
-    @Override
-    public Optional<PerimeterData> findById(String id) {
-        PerimeterData user = perimeters.get(id);
-        if (user==null) return Optional.empty();
-        return Optional.of(user);
-    }
-
-    @Override
-    public boolean existsById(String id) {
-        // TODO Auto-generated method stub
-        return false;
-    }
-
-    @Override
-    public Iterable<PerimeterData> findAllById(Iterable<String> ids) {
-        // TODO Auto-generated method stub
-        return null;
-    }
-
-    @Override
-    public long count() {
-        // TODO Auto-generated method stub
-        return 0;
-    }
-
-    @Override
-    public void deleteById(String id) {
-        // TODO Auto-generated method stub
-        
-    }
-
-    @Override
-    public void delete(PerimeterData entity) {
-        // TODO Auto-generated method stub
-        
-    }
-
-    @Override
-    public void deleteAllById(Iterable<? extends String> ids) {
-        // TODO Auto-generated method stub
-        
-    }
-
-    @Override
-    public void deleteAll(Iterable<? extends PerimeterData> entities) {
-        // TODO Auto-generated method stub
-        
+    public Optional<Perimeter> findById(String id) {
+        Perimeter perimeter = perimeters.get(id);
+        if (perimeter == null)
+            return Optional.empty();
+        return Optional.of(clonePerimeter(perimeter));
     }
 
     @Override
     public void deleteAll() {
         perimeters.clear();
-        
+
     }
 
     @Override
-    public <S extends PerimeterData> Optional<S> findOne(Example<S> example) {
-        // TODO Auto-generated method stub
-        return Optional.empty();
+    public void delete(Perimeter perimeter) {
+        perimeters.remove(perimeter.getId());
+
     }
 
-    @Override
-    public <S extends PerimeterData> Page<S> findAll(Example<S> example, Pageable pageable) {
-        // TODO Auto-generated method stub
-        return null;
-    }
-
-    @Override
-    public <S extends PerimeterData> long count(Example<S> example) {
-        // TODO Auto-generated method stub
-        return 0;
-    }
-
-    @Override
-    public <S extends PerimeterData> boolean exists(Example<S> example) {
-        // TODO Auto-generated method stub
-        return false;
-    }
-
-    @Override
-    public <S extends PerimeterData, R> R findBy(Example<S> example, Function<FetchableFluentQuery<S>, R> queryFunction) {
-        // TODO Auto-generated method stub
-        return null;
-    }
-
-    @Override
-    public Page<PerimeterData> findAll(Pageable pageable) {
-        // TODO Auto-generated method stub
-        return null;
-    }
-    
+        // Use this method to create copy of a group to avoid 
+    // test code modifying repository data directly (without calling repository methods)
+    private Perimeter clonePerimeter(Perimeter group) {
+        return (new PerimeterData((PerimeterData) group)); 
+    } 
 }
