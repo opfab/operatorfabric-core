@@ -38,12 +38,24 @@ public class GroupData implements Group {
     private GroupTypeEnum type;
     private String description;
 
+
     @JsonIgnore
     @Singular("perimeter")
     private Set<String> perimeters;
 
     @Builder.Default
     private Boolean realtime = false;
+
+
+    public GroupData(GroupData groupData) {
+        this.id = groupData.id;
+        this.name = groupData.name;
+        this.type= groupData.type;
+        this.description = groupData.description;
+        if (groupData.perimeters==null) this.perimeters = new HashSet<>();
+        else this.perimeters = new HashSet<>(groupData.perimeters);
+        this.realtime =   groupData.realtime;
+    }
 
     @Override
     public List<String> getPerimeters() {

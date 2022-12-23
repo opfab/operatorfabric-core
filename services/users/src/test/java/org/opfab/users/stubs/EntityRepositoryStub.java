@@ -25,18 +25,18 @@ public class EntityRepositoryStub implements EntityRepository {
 
     @Override
     public List<Entity> findAll() {
-        return entities.values().stream().toList();
+        return entities.values().stream().map(entity -> cloneEntity(entity)).toList();
     }
 
     @Override
     public EntityData insert(Entity entity) {
-        entities.put(entity.getId(), entity);
+        entities.put(entity.getId(), cloneEntity(entity));
         return null;
     }
 
     @Override
     public Entity save(Entity entity) {
-        entities.put(entity.getId(), entity);
+        entities.put(entity.getId(), cloneEntity(entity));
         return entity;
     }
 
@@ -45,7 +45,7 @@ public class EntityRepositoryStub implements EntityRepository {
         Entity entity = entities.get(id);
         if (entity == null)
             return Optional.empty();
-        return Optional.of(entity);
+        return Optional.of(cloneEntity(entity));
     }
 
     @Override
@@ -64,11 +64,18 @@ public class EntityRepositoryStub implements EntityRepository {
         List<Entity> childEntities = new ArrayList<>();
         entities.values().forEach((entity) -> {
             if (entity.getParents().contains(entityId)) {
-                childEntities.add(entity);
+                childEntities.add(cloneEntity(entity));
             }
         });
         return childEntities;
 
+    }
+
+    // Use this method to create copy of an entity to avoid
+    // test code modifying repository data directly (without calling repository
+    // methods)
+    private Entity cloneEntity(Entity entity) {
+        return (new EntityData((EntityData) entity));
     }
 
 }
