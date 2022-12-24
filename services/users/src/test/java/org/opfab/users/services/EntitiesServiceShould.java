@@ -1,4 +1,4 @@
-/* Copyright (c) 2022, RTE (http://www.rte-france.com)
+/* Copyright (c) 2022-2023, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -26,23 +26,24 @@ import org.opfab.users.model.Entity;
 import org.opfab.users.model.EntityCreationReport;
 import org.opfab.users.model.EntityData;
 import org.opfab.users.model.OperationResult;
+import org.opfab.users.model.User;
 import org.opfab.users.model.UserData;
 import org.opfab.users.stubs.EntityRepositoryStub;
+import org.opfab.users.stubs.EventBusStub;
 import org.opfab.users.stubs.UserRepositoryStub;
-import org.opfab.users.stubs.UserServiceStub;
 
 @DisplayName("EntitiesService")
 class EntitiesServiceShould {
 
     private EntityRepositoryStub entityRepositoryStub = new EntityRepositoryStub();
     private UserRepositoryStub userRepositoryStub = new UserRepositoryStub();
-    private UserServiceStub userServiceStub = new UserServiceStub();
+    private NotificationService notificationService = new NotificationService(userRepositoryStub,new EventBusStub());
     private EntitiesService entitiesService;
 
     @BeforeEach
     void clear() {
         entityRepositoryStub.deleteAll();
-        entitiesService = new EntitiesService(entityRepositoryStub,userRepositoryStub, userServiceStub);
+        entitiesService = new EntitiesService(entityRepositoryStub,userRepositoryStub, notificationService);
         EntityData entity1 = new EntityData("entity1", "Entity 1", "Entity 1 Desc", null, null, null);
         entityRepositoryStub.save(entity1);
         EntityData entity2 = new EntityData("entity2", "Entity 2", null, null, null, null);
@@ -206,8 +207,8 @@ class EntitiesServiceShould {
                 users.add("user2");
                 users.add("user3");
                 OperationResult<String> result = entitiesService.addEntityUsers("entity1", users);
-                Optional<UserData> user1Updated = userRepositoryStub.findById("user2");
-                Optional<UserData> user2Updated = userRepositoryStub.findById("user3");
+                Optional<User> user1Updated = userRepositoryStub.findById("user2");
+                Optional<User> user2Updated = userRepositoryStub.findById("user3");
                 assertThat(result.isSuccess()).isTrue();
                 assertThat(user1Updated.get().getEntities()).contains("entity1");
                 assertThat(user2Updated.get().getEntities()).contains("entity1");
@@ -242,9 +243,9 @@ class EntitiesServiceShould {
                 users.add("user2");
                 users.add("user3");
                 OperationResult<String> result = entitiesService.updateEntityUsers("entity1", users);
-                Optional<UserData> user1Updated = userRepositoryStub.findById("user1");
-                Optional<UserData> user2Updated = userRepositoryStub.findById("user2");
-                Optional<UserData> user3Updated = userRepositoryStub.findById("user3");
+                Optional<User> user1Updated = userRepositoryStub.findById("user1");
+                Optional<User> user2Updated = userRepositoryStub.findById("user2");
+                Optional<User> user3Updated = userRepositoryStub.findById("user3");
                 assertThat(result.isSuccess()).isTrue();
                 assertThat(user1Updated.get().getEntities()).hasSize(2);
                 assertThat(user2Updated.get().getEntities()).hasSize(2);
@@ -260,9 +261,9 @@ class EntitiesServiceShould {
 
                 ArrayList<String> users = new ArrayList<>();
                 OperationResult<String> result = entitiesService.updateEntityUsers("entity2", users);
-                Optional<UserData> user1Updated = userRepositoryStub.findById("user1");
-                Optional<UserData> user2Updated = userRepositoryStub.findById("user2");
-                Optional<UserData> user3Updated = userRepositoryStub.findById("user3");
+                Optional<User> user1Updated = userRepositoryStub.findById("user1");
+                Optional<User> user2Updated = userRepositoryStub.findById("user2");
+                Optional<User> user3Updated = userRepositoryStub.findById("user3");
                 assertThat(result.isSuccess()).isTrue();
                 assertThat(user1Updated.get().getEntities()).hasSize(1);
                 assertThat(user2Updated.get().getEntities()).isEmpty();

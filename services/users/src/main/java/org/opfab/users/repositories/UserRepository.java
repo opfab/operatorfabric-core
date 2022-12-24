@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2021, RTE (http://www.rte-france.com)
+/* Copyright (c) 2023, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -8,24 +8,30 @@
  */
 
 
-
 package org.opfab.users.repositories;
 
-import org.opfab.users.model.UserData;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.mongodb.repository.MongoRepository;
-import org.springframework.stereotype.Repository;
-
 import java.util.List;
+import java.util.Optional;
 
-/**
- * Mongo {@link UserData} repository
- */
-@Repository
-public interface UserRepository extends MongoRepository<UserData,String> {
+import org.opfab.users.model.User;
 
-    Page<UserData> findAll(Pageable pageable);
-    List<UserData> findByGroupSetContaining(String groupContains);
-    List<UserData> findByEntitiesContaining(String entityContains);
+public interface UserRepository {
+
+    public List<User> saveAll(List<User> users);
+
+    public List<User> findAll();
+
+    public User insert(User user);
+
+    public User save(User user);
+
+    public Optional<User> findById(String id);
+
+    public void delete(User user);
+
+    public void deleteAll();
+
+    public List<User> findByGroupSetContaining(String groupContains);
+
+    public List<User> findByEntitiesContaining(String entityContains);
 }

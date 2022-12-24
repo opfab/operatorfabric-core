@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2022, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2023, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -16,9 +16,9 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.opfab.users.application.UnitTestApplication;
 import org.opfab.users.application.configuration.WithMockOpFabUser;
 import org.opfab.users.model.*;
+import org.opfab.users.mongo.repositories.MongoUserRepository;
 import org.opfab.users.repositories.GroupRepository;
 import org.opfab.users.repositories.PerimeterRepository;
-import org.opfab.users.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpStatus;
@@ -59,7 +59,7 @@ class PerimetersControllerShould {
     private PerimeterRepository perimeterRepository;
 
     @Autowired
-    private UserRepository userRepository;
+    private MongoUserRepository userRepository;
 
     @Autowired
     private WebApplicationContext webApplicationContext;

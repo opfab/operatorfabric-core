@@ -1,4 +1,4 @@
-/* Copyright (c) 2022, RTE (http://www.rte-france.com)
+/* Copyright (c) 2022-2023, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -30,9 +30,10 @@ import org.opfab.users.model.PerimeterData;
 import org.opfab.users.model.RightsEnum;
 import org.opfab.users.model.StateRight;
 import org.opfab.users.model.StateRightData;
+import org.opfab.users.stubs.EventBusStub;
 import org.opfab.users.stubs.GroupRepositoryStub;
 import org.opfab.users.stubs.PerimeterRepositoryStub;
-import org.opfab.users.stubs.UserServiceStub;
+import org.opfab.users.stubs.UserRepositoryStub;
 
 @DisplayName("PerimetersService")
 public class PerimetersServiceShould {
@@ -40,7 +41,7 @@ public class PerimetersServiceShould {
     private PerimetersService perimetersService;
     private PerimeterRepositoryStub perimeterRepositoryStub = new PerimeterRepositoryStub();
     private GroupRepositoryStub groupRepositoryStub = new GroupRepositoryStub();
-    private UserServiceStub userServiceStub = new UserServiceStub();
+    private NotificationService notificationService = new NotificationService( new UserRepositoryStub(), new EventBusStub());
 
     @BeforeEach
     void clear() {
@@ -66,7 +67,7 @@ public class PerimetersServiceShould {
         perimeter2.setProcess("processTest");
         perimeterRepositoryStub.insert(perimeter1);
         perimeterRepositoryStub.insert(perimeter2);
-        perimetersService = new PerimetersService(perimeterRepositoryStub, groupRepositoryStub, userServiceStub);
+        perimetersService = new PerimetersService(perimeterRepositoryStub, groupRepositoryStub, notificationService);
     }
 
     private void initGroupRepository() {
@@ -181,6 +182,20 @@ public class PerimetersServiceShould {
             assertThat(result.isSuccess()).isFalse();
             assertThat(result.getErrorType()).isEqualTo(OperationResult.ErrorType.BAD_REQUEST);
         }
+
+        @Test
+        void GIVEN_A_Perimeter_With_3_States_And_Duplicate_State_WHEN_Create_Perimeter_THEN_Return_BAD_REQUEST() {
+
+            Perimeter perimeter = PerimeterData.builder().id("INVALID").process("process2")
+                    .stateRights(new HashSet<>(Arrays.asList(new StateRightData("state1", RightsEnum.WRITE, true),
+                            new StateRightData("state1", RightsEnum.RECEIVEANDWRITE, true),
+                            new StateRightData("state2", RightsEnum.RECEIVEANDWRITE, true))))
+                    .build();
+
+            OperationResult<EntityCreationReport<Perimeter>> result = perimetersService.createPerimeter(perimeter);
+            assertThat(result.isSuccess()).isFalse();
+            assertThat(result.getErrorType()).isEqualTo(OperationResult.ErrorType.BAD_REQUEST);
+        }
     }
 
     @Nested
@@ -269,7 +284,8 @@ public class PerimetersServiceShould {
         void GIVEN_An_Existing_Perimeter_WHEN_Deleting_Perimeter_THEN_Success_And_Groups_Are_Not_Linked_With_The_Perimeter_Anymore() {
             OperationResult<String> result = perimetersService.deletePerimeter("perimeter1");
             assertThat(result.isSuccess()).isTrue();
-            assertThat(groupRepositoryStub.findById("group1").get().getPerimeters()).containsExactlyInAnyOrder("perimeter2");
+            assertThat(groupRepositoryStub.findById("group1").get().getPerimeters())
+                    .containsExactlyInAnyOrder("perimeter2");
             assertThat(groupRepositoryStub.findById("group2").get().getPerimeters()).doesNotContain("perimeter1");
         }
 

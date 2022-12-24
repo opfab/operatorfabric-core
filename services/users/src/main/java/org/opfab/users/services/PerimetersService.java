@@ -1,4 +1,4 @@
-/* Copyright (c) 2022, RTE (http://www.rte-france.com)
+/* Copyright (c) 2022-2023, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -35,13 +35,13 @@ public class PerimetersService {
 
     private PerimeterRepository perimeterRepository;
     private GroupRepository groupRepository;
-    private UserService userService;
+    private NotificationService notificationService;
 
     public PerimetersService(
-            PerimeterRepository perimeterRepository, GroupRepository groupRepository, UserService userService) {
+            PerimeterRepository perimeterRepository, GroupRepository groupRepository, NotificationService notificationService) {
         this.perimeterRepository = perimeterRepository;
         this.groupRepository = groupRepository;
-        this.userService = userService;
+        this.notificationService = notificationService;
 
     }
 
@@ -109,7 +109,7 @@ public class PerimetersService {
             List<Group> foundGroups = groupRepository.findByPerimetersContaining(perimeter.getId());
             if (foundGroups != null) {
                 for (Group group : foundGroups) {
-                    userService.publishUpdatedGroupMessage(group.getId());
+                    notificationService.publishUpdatedGroupMessage(group.getId());
                 }
             }
             Perimeter insertedPerimeter = perimeterRepository.save(perimeter);
@@ -143,7 +143,7 @@ public class PerimetersService {
         if (foundGroups != null) {
             for (Group group : foundGroups) {
                 ((GroupData) group).deletePerimeter(idPerimeter);
-                userService.publishUpdatedGroupMessage(group.getId());
+                notificationService.publishUpdatedGroupMessage(group.getId());
             }
             groupRepository.saveAll(foundGroups);
         }
@@ -160,7 +160,7 @@ public class PerimetersService {
             for (Group group : foundGroups) {
                 ((GroupData) group).addPerimeter(perimeterId);
                 groupRepository.save(group);
-                userService.publishUpdatedUserMessage(group.getId());
+                notificationService.publishUpdatedUserMessage(group.getId());
             }
         } else
             return new OperationResult<>(null, false, foundGroupsResult.getErrorType(),
@@ -192,7 +192,7 @@ public class PerimetersService {
                 if (!groups.contains(group.getId())) {
                     ((GroupData) group).deletePerimeter(perimeterId);
                     groupRepository.save(group);
-                    userService.publishUpdatedUserMessage(group.getId());
+                    notificationService.publishUpdatedUserMessage(group.getId());
                 }
             });
             addPerimeterGroups(perimeterId, groups);
@@ -226,7 +226,7 @@ public class PerimetersService {
 
         ((GroupData) foundGroup.get()).deletePerimeter(perimeterId);
         groupRepository.save(foundGroup.get());
-        userService.publishUpdatedGroupMessage(groupId);
+        notificationService.publishUpdatedGroupMessage(groupId);
 
         return new OperationResult<>(null, true, null, "");
     }

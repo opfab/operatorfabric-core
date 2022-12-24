@@ -6,18 +6,17 @@
  * SPDX-License-Identifier: MPL-2.0
  * This file is part of the OperatorFabric project.
  */
-package org.opfab.users.repositories;
 
-import java.util.Optional;
+package org.opfab.users.stubs;
 
-import org.opfab.users.model.UserSettings;
+import org.opfab.users.services.EventBus;
 
-public interface UserSettingsRepository {
+public class EventBusStub implements EventBus {
 
-    public UserSettings save(UserSettings userSettings);
-
-    public Optional<UserSettings> findById(String id);
-
-    public void deleteAll();
-
+    @Override
+    public void sendEvent(String eventKey, String eventMessage) {
+        // Stub
+        
+    }
+    
 }
