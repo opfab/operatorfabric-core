@@ -1,4 +1,4 @@
-/* Copyright (c) 2022, RTE (http://www.rte-france.com)
+/* Copyright (c) 2022-2023, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -16,6 +16,7 @@ import java.util.Optional;
 import org.opfab.users.model.Entity;
 import org.opfab.users.model.EntityCreationReport;
 import org.opfab.users.model.OperationResult;
+import org.opfab.users.model.User;
 import org.opfab.users.model.UserData;
 import org.opfab.users.repositories.EntityRepository;
 import org.opfab.users.repositories.UserRepository;
@@ -28,12 +29,12 @@ public class EntitiesService {
     private static final String BAD_USER_LIST_MSG = "Bad user list : user %s not found";
     private static final String USER_NOT_FOUND_MSG = "User %s not found";
 
-    private UserService userService;
+    private NotificationService notificationService;
     private EntityRepository entityRepository;
     private UserRepository userRepository;
 
-    public EntitiesService(EntityRepository entityRepository, UserRepository userRepository, UserService userService) {
-        this.userService = userService;
+    public EntitiesService(EntityRepository entityRepository, UserRepository userRepository, NotificationService notificationService) {
+        this.notificationService = notificationService;
         this.entityRepository = entityRepository;
         this.userRepository = userRepository;
     }
@@ -65,7 +66,7 @@ public class EntitiesService {
             }
             boolean isAlreadyExisting = entityRepository.findById(entity.getId()).isPresent();
             Entity newEntity = entityRepository.save(entity);
-            userService.publishUpdatedConfigMessage();
+            notificationService.publishUpdatedConfigMessage();
             EntityCreationReport<Entity> report = new EntityCreationReport<>(isAlreadyExisting, newEntity);
             return new OperationResult<>(report, true, null, null);
         } else
@@ -85,19 +86,19 @@ public class EntitiesService {
         removeTheReferenceToTheEntityForChildEntities(entityId);
 
         entityRepository.delete(entity.get());
-        userService.publishUpdatedConfigMessage();
+        notificationService.publishUpdatedConfigMessage();
         return new OperationResult<>(null, true, null, null);
     }
 
     // Remove the link between the entity and all its members (this link is in
     // "user" mongo collection)
     private void removeTheReferenceToTheEntityForMemberUsers(String idEntity) {
-        List<UserData> foundUsers = userRepository.findByEntitiesContaining(idEntity);
+        List<User> foundUsers = userRepository.findByEntitiesContaining(idEntity);
         if (foundUsers != null && !foundUsers.isEmpty()) {
-            for (UserData userData : foundUsers) {
-                userData.deleteEntity(idEntity);
+            for (User userData : foundUsers) {
+                ((UserData) userData).deleteEntity(idEntity);
                 userRepository.save(userData);
-                userService.publishUpdatedUserMessage(userData.getLogin());
+                notificationService.publishUpdatedUserMessage(userData.getLogin());
             }
         }
     }
@@ -120,13 +121,13 @@ public class EntitiesService {
             return new OperationResult<>(null, false, OperationResult.ErrorType.NOT_FOUND,
                     String.format(ENTITY_NOT_FOUND_MSG, entityId));
 
-        OperationResult<List<UserData>> foundUsersResult = retrieveUsers(users);
+        OperationResult<List<User>> foundUsersResult = retrieveUsers(users);
         if (foundUsersResult.isSuccess()) {
-            List<UserData> foundUsers = foundUsersResult.getResult();
-            for (UserData userData : foundUsers) {
-                userData.addEntity(entityId);
+            List<User> foundUsers = foundUsersResult.getResult();
+            for (User userData : foundUsers) {
+                ((UserData) userData).addEntity(entityId);
                 userRepository.save(userData);
-                userService.publishUpdatedUserMessage(userData.getLogin());
+                notificationService.publishUpdatedUserMessage(userData.getLogin());
             }
         } else
             return new OperationResult<>(null, false, foundUsersResult.getErrorType(),
@@ -134,10 +135,10 @@ public class EntitiesService {
         return new OperationResult<>(null, true, null, entityId);
     }
 
-    private OperationResult<List<UserData>> retrieveUsers(List<String> logins) {
-        List<UserData> foundUsers = new ArrayList<>();
+    private OperationResult<List<User>> retrieveUsers(List<String> logins) {
+        List<User> foundUsers = new ArrayList<>();
         for (String login : logins) {
-            Optional<UserData> foundUser = userRepository.findById(login);
+            Optional<User> foundUser = userRepository.findById(login);
             if (foundUser.isEmpty())
                 return new OperationResult<>(null, false, OperationResult.ErrorType.BAD_REQUEST,
                         String.format(BAD_USER_LIST_MSG, login));
@@ -151,14 +152,14 @@ public class EntitiesService {
         if (!entityRepository.findById(entityId).isPresent())
             return new OperationResult<>(null, false, OperationResult.ErrorType.NOT_FOUND,
                     String.format(ENTITY_NOT_FOUND_MSG, entityId));
-        OperationResult<List<UserData>> foundUsersResult = retrieveUsers(users);
+        OperationResult<List<User>> foundUsersResult = retrieveUsers(users);
         if (foundUsersResult.isSuccess()) {
-            List<UserData> formerlyBelongs = userRepository.findByEntitiesContaining(entityId);
+            List<User> formerlyBelongs = userRepository.findByEntitiesContaining(entityId);
             formerlyBelongs.forEach(user -> {
                 if (!users.contains(user.getLogin())) {
-                    user.deleteEntity(entityId);
+                    ((UserData) user).deleteEntity(entityId);
                     userRepository.save(user);
-                    userService.publishUpdatedUserMessage(user.getLogin());
+                    notificationService.publishUpdatedUserMessage(user.getLogin());
                 }
             });
             addEntityUsers(entityId, users);
@@ -174,7 +175,7 @@ public class EntitiesService {
             return new OperationResult<>(null, false, OperationResult.ErrorType.NOT_FOUND,
                     String.format(ENTITY_NOT_FOUND_MSG, entityId));
         removeTheReferenceToTheEntityForMemberUsers(entityId);
-        userService.publishUpdatedGroupMessage(entityId);
+        notificationService.publishUpdatedGroupMessage(entityId);
         return new OperationResult<>(null, true, null, entityId);
     }
 
@@ -183,15 +184,15 @@ public class EntitiesService {
             return new OperationResult<>(null, false, OperationResult.ErrorType.NOT_FOUND,
                     String.format(ENTITY_NOT_FOUND_MSG, entityId));
 
-        Optional<UserData> foundUser = userRepository.findById(login);
+        Optional<User> foundUser = userRepository.findById(login);
         if (foundUser.isEmpty()) {
             return new OperationResult<>(null, false, OperationResult.ErrorType.NOT_FOUND,
                     String.format(USER_NOT_FOUND_MSG, login));
         }
 
-        foundUser.get().deleteEntity(entityId);
+        ((UserData) foundUser.get()).deleteEntity(entityId);
         userRepository.save(foundUser.get());
-        userService.publishUpdatedUserMessage(foundUser.get().getLogin());
+        notificationService.publishUpdatedUserMessage(foundUser.get().getLogin());
 
         return new OperationResult<>(null, true, null, "");
     }

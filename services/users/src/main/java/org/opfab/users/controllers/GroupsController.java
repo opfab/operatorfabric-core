@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2022, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2023, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -14,11 +14,12 @@ package org.opfab.users.controllers;
 import org.opfab.springtools.error.model.ApiError;
 import org.opfab.springtools.error.model.ApiErrorException;
 import org.opfab.users.model.*;
+import org.opfab.users.rabbit.RabbitEventBus;
 import org.opfab.users.repositories.GroupRepository;
 import org.opfab.users.repositories.PerimeterRepository;
 import org.opfab.users.repositories.UserRepository;
 import org.opfab.users.services.GroupsService;
-import org.opfab.users.services.UserServiceImp;
+import org.opfab.users.services.NotificationService;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -40,8 +41,9 @@ public class GroupsController implements GroupsApi {
     
     private GroupsService groupsService; 
 
-    public GroupsController(GroupRepository groupRepository,UserRepository userRepository,PerimeterRepository perimeterRepository,UserServiceImp userService) {
-        this.groupsService = new GroupsService(groupRepository, userRepository, perimeterRepository, userService);
+    public GroupsController(GroupRepository groupRepository,UserRepository userRepository,PerimeterRepository perimeterRepository,RabbitEventBus rabbitEventBus) {
+        NotificationService notificationService = new NotificationService(userRepository, rabbitEventBus);
+        this.groupsService = new GroupsService(groupRepository, userRepository, perimeterRepository, notificationService);
     }
 
     @Override

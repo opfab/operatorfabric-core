@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2022, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2023, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -14,7 +14,7 @@ package org.opfab.users.configuration.oauth2;
 import java.util.List;
 
 import org.opfab.users.model.User;
-import org.opfab.users.repositories.UserRepository;
+import org.opfab.users.mongo.repositories.MongoUserRepository;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.web.authentication.WebAuthenticationDetails;
 import org.springframework.stereotype.Component;
@@ -35,9 +35,9 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class WebSecurityChecks {
 
-    UserRepository userRepository;
+    MongoUserRepository userRepository;
 
-    public WebSecurityChecks(UserRepository userRepository) {
+    public WebSecurityChecks(MongoUserRepository userRepository) {
         this.userRepository = userRepository;
     }
 

@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2022, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2023, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -7,15 +7,15 @@
  * This file is part of the OperatorFabric project.
  */
 
-
-
 package org.opfab.users;
-
 
 import org.opfab.useractiontracing.UserActionLogsConfiguration;
 import org.opfab.users.mongo.repositories.EntityRepositoryImpl;
 import org.opfab.users.mongo.repositories.GroupRepositoryImpl;
 import org.opfab.users.mongo.repositories.PerimeterRepositoryImpl;
+import org.opfab.users.mongo.repositories.UserRepositoryImpl;
+import org.opfab.users.mongo.repositories.UserSettingsRepositoryImpl;
+import org.opfab.users.rabbit.RabbitEventBus;
 import org.opfab.springtools.configuration.mongo.EnableOperatorFabricMongo;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -28,14 +28,13 @@ import org.springframework.data.mongodb.repository.config.EnableMongoRepositorie
 @EnableOperatorFabricMongo
 @EnableMongoRepositories(basePackageClasses = UsersApplication.class)
 @EnableConfigurationProperties
-@Import({UserActionLogsConfiguration.class,EntityRepositoryImpl.class, GroupRepositoryImpl.class, PerimeterRepositoryImpl.class})
+@Import({ UserActionLogsConfiguration.class, EntityRepositoryImpl.class, GroupRepositoryImpl.class,
+        PerimeterRepositoryImpl.class,UserRepositoryImpl.class, UserSettingsRepositoryImpl.class, RabbitEventBus.class })
 public class UsersApplication {
 
     public static void main(String[] args) {
         ConfigurableApplicationContext ctx = SpringApplication.run(UsersApplication.class, args);
         assert (ctx != null);
     }
-
-
 
 }

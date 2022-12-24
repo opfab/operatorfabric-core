@@ -1,4 +1,4 @@
-/* Copyright (c) 2022, RTE (http://www.rte-france.com)
+/* Copyright (c) 2022-2023, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -17,6 +17,7 @@ import org.opfab.users.model.EntityCreationReport;
 import org.opfab.users.model.Group;
 import org.opfab.users.model.OperationResult;
 import org.opfab.users.model.Perimeter;
+import org.opfab.users.model.User;
 import org.opfab.users.model.UserData;
 import org.opfab.users.repositories.GroupRepository;
 import org.opfab.users.repositories.PerimeterRepository;
@@ -35,14 +36,14 @@ public class GroupsService {
     private GroupRepository groupRepository;
     private UserRepository userRepository;
     private PerimeterRepository perimeterRepository;
-    private UserService userService;
+    private NotificationService notificationService;
 
     public GroupsService(GroupRepository groupRepository, UserRepository userRepository,
-            PerimeterRepository perimeterRepository, UserService userService) {
+            PerimeterRepository perimeterRepository, NotificationService notificationService) {
         this.groupRepository = groupRepository;
         this.userRepository = userRepository;
         this.perimeterRepository = perimeterRepository;
-        this.userService = userService;
+        this.notificationService = notificationService;
     }
 
     public List<Group> fetchGroups() {
@@ -66,7 +67,7 @@ public class GroupsService {
             if (foundPerimetersResult.isSuccess()) {
                 boolean isAlreadyExisting = groupRepository.findById(group.getId()).isPresent();
                 Group newGroup = groupRepository.save(group);
-                userService.publishUpdatedGroupMessage(group.getId());
+                notificationService.publishUpdatedGroupMessage(group.getId());
                 EntityCreationReport<Group> report = new EntityCreationReport<>(isAlreadyExisting, newGroup);
                 return new OperationResult<>(report, true, null, null);
             } else
@@ -110,12 +111,12 @@ public class GroupsService {
     // Remove the link between the group and all its members (this link is in "user"
     // mongo collection)
     private void removeTheReferenceToTheGroupForMemberUsers(String idGroup) {
-        List<UserData> foundUsers = userRepository.findByGroupSetContaining(idGroup);
+        List<User> foundUsers = userRepository.findByGroupSetContaining(idGroup);
         if (foundUsers != null && !foundUsers.isEmpty()) {
-            for (UserData userData : foundUsers) {
-                userData.deleteGroup(idGroup);
+            for (User userData : foundUsers) {
+                ((UserData) userData).deleteGroup(idGroup);
                 userRepository.save(userData);
-                userService.publishUpdatedUserMessage(userData.getLogin());
+                notificationService.publishUpdatedUserMessage(userData.getLogin());
             }
         }
     }
@@ -125,13 +126,13 @@ public class GroupsService {
             return new OperationResult<>(null, false, OperationResult.ErrorType.NOT_FOUND,
                     String.format(GROUP_NOT_FOUND_MSG, groupId));
 
-        OperationResult<List<UserData>> foundUsersResult = retrieveUsers(users);
+        OperationResult<List<User>> foundUsersResult = retrieveUsers(users);
         if (foundUsersResult.isSuccess()) {
-            List<UserData> foundUsers = foundUsersResult.getResult();
-            for (UserData userData : foundUsers) {
-                userData.addGroup(groupId);
+            List<User> foundUsers = foundUsersResult.getResult();
+            for (User userData : foundUsers) {
+                ((UserData) userData).addGroup(groupId);
                 userRepository.save(userData);
-                userService.publishUpdatedUserMessage(userData.getLogin());
+                notificationService.publishUpdatedUserMessage(userData.getLogin());
             }
         } else
             return new OperationResult<>(null, false, foundUsersResult.getErrorType(),
@@ -143,14 +144,14 @@ public class GroupsService {
         if (!groupRepository.findById(groupId).isPresent())
             return new OperationResult<>(null, false, OperationResult.ErrorType.NOT_FOUND,
                     String.format(GROUP_NOT_FOUND_MSG, groupId));
-        OperationResult<List<UserData>> foundUsersResult = retrieveUsers(users);
+        OperationResult<List<User>> foundUsersResult = retrieveUsers(users);
         if (foundUsersResult.isSuccess()) {
-            List<UserData> formerlyBelongs = userRepository.findByGroupSetContaining(groupId);
+            List<User> formerlyBelongs = userRepository.findByGroupSetContaining(groupId);
             formerlyBelongs.forEach(user -> {
                 if (!users.contains(user.getLogin())) {
-                    user.deleteGroup(groupId);
+                    ((UserData)user).deleteGroup(groupId);
                     userRepository.save(user);
-                    userService.publishUpdatedUserMessage(user.getLogin());
+                    notificationService.publishUpdatedUserMessage(user.getLogin());
                 }
             });
             addGroupUsers(groupId, users);
@@ -161,10 +162,10 @@ public class GroupsService {
         return new OperationResult<>(null, true, null, null);
     }
 
-    private OperationResult<List<UserData>> retrieveUsers(List<String> logins) {
-        List<UserData> foundUsers = new ArrayList<>();
+    private OperationResult<List<User>> retrieveUsers(List<String> logins) {
+        List<User> foundUsers = new ArrayList<>();
         for (String login : logins) {
-            Optional<UserData> foundUser = userRepository.findById(login);
+            Optional<User> foundUser = userRepository.findById(login);
             if (foundUser.isEmpty())
                 return new OperationResult<>(null, false, OperationResult.ErrorType.BAD_REQUEST,
                         String.format(BAD_USER_LIST_MSG, login));
@@ -179,7 +180,7 @@ public class GroupsService {
             return new OperationResult<>(null, false, OperationResult.ErrorType.NOT_FOUND,
                     String.format(GROUP_NOT_FOUND_MSG, groupId));
         removeTheReferenceToTheGroupForMemberUsers(groupId);
-        userService.publishUpdatedGroupMessage(groupId);
+        notificationService.publishUpdatedGroupMessage(groupId);
         return new OperationResult<>(null, true, null, groupId);
     }
 
@@ -194,16 +195,16 @@ public class GroupsService {
             return new OperationResult<>(null, false, OperationResult.ErrorType.NOT_FOUND,
                     String.format(GROUP_NOT_FOUND_MSG, groupId));
 
-        Optional<UserData> foundUser = userRepository.findById(login);
+        Optional<User> foundUser = userRepository.findById(login);
 
         if (foundUser.isEmpty()) {
             return new OperationResult<>(null, false, OperationResult.ErrorType.NOT_FOUND,
                     String.format(USER_NOT_FOUND_MSG, login));
         }
 
-        foundUser.get().deleteGroup(groupId);
+        ((UserData) foundUser.get()).deleteGroup(groupId);
         userRepository.save(foundUser.get());
-        userService.publishUpdatedUserMessage(foundUser.get().getLogin());
+        notificationService.publishUpdatedUserMessage(foundUser.get().getLogin());
 
         return new OperationResult<>(null, true, null, "");
     }
@@ -232,7 +233,7 @@ public class GroupsService {
         Group updatedGroup = group.get();
         updatedGroup.setPerimeters(perimeters);
         groupRepository.save(updatedGroup);
-        userService.publishUpdatedGroupMessage(groupId);
+        notificationService.publishUpdatedGroupMessage(groupId);
         return new OperationResult<>(null, true, null, null);
     }
 
@@ -252,7 +253,7 @@ public class GroupsService {
             newPerimeters.add(perimeter);
         updatedGroup.setPerimeters(newPerimeters);
         groupRepository.save(updatedGroup);
-        userService.publishUpdatedGroupMessage(groupId);
+        notificationService.publishUpdatedGroupMessage(groupId);
         return new OperationResult<>(null, true, null, null);
     }
 

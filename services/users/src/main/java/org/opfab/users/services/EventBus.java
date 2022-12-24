@@ -1,3 +1,4 @@
+
 /* Copyright (c) 2023, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
@@ -6,18 +7,8 @@
  * SPDX-License-Identifier: MPL-2.0
  * This file is part of the OperatorFabric project.
  */
-package org.opfab.users.repositories;
+package org.opfab.users.services;
 
-import java.util.Optional;
-
-import org.opfab.users.model.UserSettings;
-
-public interface UserSettingsRepository {
-
-    public UserSettings save(UserSettings userSettings);
-
-    public Optional<UserSettings> findById(String id);
-
-    public void deleteAll();
-
+public interface EventBus {
+    public void sendEvent(String eventKey,String eventMessage);
 }

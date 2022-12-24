@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2022, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2023, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -6,8 +6,6 @@
  * SPDX-License-Identifier: MPL-2.0
  * This file is part of the OperatorFabric project.
  */
-
-
 
 package org.opfab.users.configuration.oauth2;
 
@@ -21,7 +19,7 @@ import org.opfab.springtools.configuration.oauth.jwt.groups.GroupsUtils;
 import org.opfab.users.model.OpfabRolesEnum;
 import org.opfab.users.model.User;
 import org.opfab.users.model.UserData;
-import org.opfab.users.repositories.UserRepository;
+import org.opfab.users.mongo.repositories.MongoUserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -37,8 +35,6 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collector;
-import java.util.stream.Collectors;
 
 /**
  * Specific authentication configuration for the Users service It is necessary
@@ -71,7 +67,7 @@ public class OAuth2UsersConfiguration {
      * @return Converter from {@link Jwt} to {@link OpFabJwtAuthenticationToken}
      */
     @Bean
-    public Converter<Jwt, AbstractAuthenticationToken> opfabJwtConverter(@Autowired UserRepository userRepository) {
+    public Converter<Jwt, AbstractAuthenticationToken> opfabJwtConverter(@Autowired MongoUserRepository userRepository) {
 
         return new Converter<Jwt, AbstractAuthenticationToken>() {
 

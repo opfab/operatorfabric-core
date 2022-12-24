@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2022, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2023, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -12,10 +12,12 @@ package org.opfab.users.controllers;
 import org.opfab.springtools.error.model.ApiError;
 import org.opfab.springtools.error.model.ApiErrorException;
 import org.opfab.users.model.*;
+import org.opfab.users.rabbit.RabbitEventBus;
 import org.opfab.users.repositories.PerimeterRepository;
+import org.opfab.users.repositories.UserRepository;
 import org.opfab.users.repositories.GroupRepository;
+import org.opfab.users.services.NotificationService;
 import org.opfab.users.services.PerimetersService;
-import org.opfab.users.services.UserServiceImp;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -37,9 +39,10 @@ public class PerimetersController implements PerimetersApi {
     public static final String DUPLICATE_STATE_IN_PERIMETER = "Bad stateRights list : there is one or more duplicate state(s) in the perimeter";
     private PerimetersService perimetersService;
 
-    public PerimetersController(PerimeterRepository perimeterRepository, GroupRepository groupRepository,
-            UserServiceImp userService) {
-        perimetersService = new PerimetersService(perimeterRepository, groupRepository, userService);
+    public PerimetersController(PerimeterRepository perimeterRepository, GroupRepository groupRepository,UserRepository userRepository,
+            RabbitEventBus rabbitEventBus) {
+        NotificationService notificationService = new NotificationService(userRepository, rabbitEventBus);
+        perimetersService = new PerimetersService(perimeterRepository, groupRepository, notificationService);
     }
 
     @Override

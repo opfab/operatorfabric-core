@@ -1,4 +1,4 @@
-/* Copyright (c) 2022, RTE (http://www.rte-france.com)
+/* Copyright (c) 2022-2023, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -20,11 +20,15 @@ import java.util.stream.Collectors;
 
 public class CurrentUserWithPerimetersService {
 
-    private UserService userService;
+
+    private UsersService usersService;
+    private UserSettingsService userSettingsService;
     private EntityRepository entityRepository;
 
-    public CurrentUserWithPerimetersService(UserService userService, EntityRepository entityRepository) {
-        this.userService = userService;
+    public CurrentUserWithPerimetersService(UsersService usersService, UserSettingsService userSettingsService,
+             EntityRepository entityRepository) {
+        this.usersService = usersService;
+        this.userSettingsService = userSettingsService;
         this.entityRepository = entityRepository;
     }
 
@@ -43,18 +47,20 @@ public class CurrentUserWithPerimetersService {
 
         // We recover the user_settings to have the process/state filters defined by the
         // user, for his feed
-        userWithPerimeterData.setProcessesStatesNotNotified(
-                userService.retrieveUserSettings(userData.getLogin()).getProcessesStatesNotNotified());
+        OperationResult<UserSettings> operationResult = userSettingsService.fetchUserSettings(userData.getLogin());
+        if (operationResult.isSuccess())
+            userWithPerimeterData
+                    .setProcessesStatesNotNotified(operationResult.getResult().getProcessesStatesNotNotified());
 
         if ((userGroups != null) && (!userGroups.isEmpty())) { // Then, we recover the groups data
-            List<Group> groups = userService.retrieveGroups(userGroups);
+            List<Group> groups = usersService.retrieveGroups(userGroups);
 
             if ((groups != null) && (!groups.isEmpty())) {
                 Set<Perimeter> perimetersData = new HashSet<>(); // We use a set because we don't want to have a
                                                                  // duplicate
                 groups.forEach( // For each group, we recover its perimeters
                         groupData -> {
-                            List<Perimeter> list = userService.retrievePerimeters(groupData.getPerimeters());
+                            List<Perimeter> list = usersService.retrievePerimeters(groupData.getPerimeters());
                             if (list != null)
                                 perimetersData.addAll(list);
                         });
@@ -72,13 +78,14 @@ public class CurrentUserWithPerimetersService {
         List<String> userEntityList = userData.getEntities();
 
         // we retrieve entitiesDisconnected of the user
-        List<String> entitiesDisconnected = userService.retrieveUserSettings(userData.getLogin())
-                .getEntitiesDisconnected();
-
-        // we remove entitiesDisconnected from the entities list of the user
-        if (entitiesDisconnected != null) {
-            userEntityList = userEntityList.stream().filter(
-                    entityId -> !entitiesDisconnected.contains(entityId)).toList();
+        OperationResult<UserSettings> operationResult = userSettingsService.fetchUserSettings(userData.getLogin());
+        if (operationResult.isSuccess()) {
+            List<String> entitiesDisconnected = operationResult.getResult().getEntitiesDisconnected();
+            // we remove entitiesDisconnected from the entities list of the user
+            if (entitiesDisconnected != null) {
+                userEntityList = userEntityList.stream().filter(
+                        entityId -> !entitiesDisconnected.contains(entityId)).toList();
+            }
         }
 
         Set<String> userEntityNames = userEntityList.stream().collect(Collectors.toSet());

@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2022, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2023, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -14,10 +14,11 @@ import org.opfab.springtools.error.model.ApiErrorException;
 import org.opfab.users.model.Entity;
 import org.opfab.users.model.EntityCreationReport;
 import org.opfab.users.model.OperationResult;
+import org.opfab.users.rabbit.RabbitEventBus;
 import org.opfab.users.repositories.EntityRepository;
 import org.opfab.users.repositories.UserRepository;
 import org.opfab.users.services.EntitiesService;
-import org.opfab.users.services.UserService;
+import org.opfab.users.services.NotificationService;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -38,8 +39,8 @@ public class EntitiesController implements EntitiesApi {
     private EntitiesService entitiesService;
 
     public EntitiesController(EntityRepository entityRepository, UserRepository userRepository,
-            UserService userService) {
-        this.entitiesService = new EntitiesService(entityRepository, userRepository, userService);
+            RabbitEventBus eventBus) {
+        this.entitiesService = new EntitiesService(entityRepository, userRepository, new NotificationService(userRepository, eventBus));
     }
 
     @Override

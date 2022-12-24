@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2022, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2023, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -22,7 +22,9 @@ import org.opfab.users.controllers.*;
 import org.opfab.users.mongo.repositories.EntityRepositoryImpl;
 import org.opfab.users.mongo.repositories.GroupRepositoryImpl;
 import org.opfab.users.mongo.repositories.PerimeterRepositoryImpl;
-import org.opfab.users.services.UserServiceImp;
+import org.opfab.users.mongo.repositories.UserRepositoryImpl;
+import org.opfab.users.mongo.repositories.UserSettingsRepositoryImpl;
+import org.opfab.users.rabbit.RabbitEventBus;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
@@ -38,7 +40,8 @@ import org.springframework.data.mongodb.repository.config.EnableMongoRepositorie
 @Import({ JacksonConfig.class, LocalMongoConfiguration.class, UsersProperties.class, CustomExceptionHandler.class,
         GroupsController.class, EntitiesController.class, UsersController.class, PerimetersController.class,
         CurrentUserWithPerimetersController.class, DataInitComponent.class, GroupsProperties.class, GroupsUtils.class,
-        JwtProperties.class, UserServiceImp.class, EntityRepositoryImpl.class, GroupRepositoryImpl.class, PerimeterRepositoryImpl.class })
+        JwtProperties.class, EntityRepositoryImpl.class, GroupRepositoryImpl.class,
+        PerimeterRepositoryImpl.class, UserRepositoryImpl.class,UserSettingsRepositoryImpl.class, RabbitEventBus.class })
 @ImportResource("classpath:/security.xml")
 public class UnitTestApplication {
 

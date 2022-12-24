@@ -1,4 +1,4 @@
-/* Copyright (c) 2022, RTE (http://www.rte-france.com)
+/* Copyright (c) 2022-2023, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -30,11 +30,12 @@ import org.opfab.users.model.PerimeterData;
 import org.opfab.users.model.RightsEnum;
 import org.opfab.users.model.StateRight;
 import org.opfab.users.model.StateRightData;
+import org.opfab.users.model.User;
 import org.opfab.users.model.UserData;
+import org.opfab.users.stubs.EventBusStub;
 import org.opfab.users.stubs.GroupRepositoryStub;
 import org.opfab.users.stubs.PerimeterRepositoryStub;
 import org.opfab.users.stubs.UserRepositoryStub;
-import org.opfab.users.stubs.UserServiceStub;
 
 @DisplayName("GroupsService")
 class GroupsServiceShould {
@@ -42,7 +43,7 @@ class GroupsServiceShould {
     private GroupRepositoryStub groupRepositoryStub = new GroupRepositoryStub();
     private UserRepositoryStub userRepositoryStub = new UserRepositoryStub();
     private PerimeterRepositoryStub perimeterRepositoryStub = new PerimeterRepositoryStub();
-    private UserServiceStub userServiceStub = new UserServiceStub();
+    private NotificationService notificationService = new NotificationService(userRepositoryStub,new EventBusStub());
     private GroupsService groupsService;
 
     @BeforeEach
@@ -74,7 +75,7 @@ class GroupsServiceShould {
         userRepositoryStub.insert(new UserData("admin", "admin", null, null, groupForAdmin, null, null));
 
         groupsService = new GroupsService(groupRepositoryStub, userRepositoryStub,
-                perimeterRepositoryStub, userServiceStub);
+                perimeterRepositoryStub, notificationService);
 
     }
 
@@ -229,14 +230,14 @@ class GroupsServiceShould {
                 users.add("user1");
                 users.add("user2");
                 OperationResult<String> result = groupsService.addGroupUsers("testGroup", users);
-                Optional<UserData> user1Updated = userRepositoryStub.findById("user1");
-                Optional<UserData> user2Updated = userRepositoryStub.findById("user2");
-                Optional<UserData> adminNotUpdated = userRepositoryStub.findById("admin");
+                Optional<User> user1Updated = userRepositoryStub.findById("user1");
+                Optional<User> user2Updated = userRepositoryStub.findById("user2");
+                Optional<User> adminNotUpdated = userRepositoryStub.findById("admin");
                 assertThat(result.isSuccess()).isTrue();
-                assertThat(user1Updated.get().getGroupSet()).contains("testGroup");
-                assertThat(user2Updated.get().getGroupSet()).contains("testGroup");
-                assertThat(adminNotUpdated.get().getGroupSet()).isNotEmpty();
-                assertThat(adminNotUpdated.get().getGroupSet()).doesNotContain("testGroup");
+                assertThat(user1Updated.get().getGroups()).contains("testGroup");
+                assertThat(user2Updated.get().getGroups()).contains("testGroup");
+                assertThat(adminNotUpdated.get().getGroups()).isNotEmpty();
+                assertThat(adminNotUpdated.get().getGroups()).doesNotContain("testGroup");
 
             }
         }
@@ -268,14 +269,14 @@ class GroupsServiceShould {
                 users.add("user1");
                 users.add("admin");
                 OperationResult<String> result = groupsService.updateGroupUsers("group1", users);
-                Optional<UserData> user1Updated = userRepositoryStub.findById("user1");
-                Optional<UserData> user2Updated = userRepositoryStub.findById("user2");
-                Optional<UserData> adminUpdated = userRepositoryStub.findById("admin");
+                Optional<User> user1Updated = userRepositoryStub.findById("user1");
+                Optional<User> user2Updated = userRepositoryStub.findById("user2");
+                Optional<User> adminUpdated = userRepositoryStub.findById("admin");
                 assertThat(result.isSuccess()).isTrue();
-                assertThat(user1Updated.get().getGroupSet()).contains("group1");
-                assertThat(user2Updated.get().getGroupSet()).isEmpty();
-                assertThat(adminUpdated.get().getGroupSet()).contains("group1");
-                assertThat(adminUpdated.get().getGroupSet()).contains("ADMIN");
+                assertThat(user1Updated.get().getGroups()).contains("group1");
+                assertThat(user2Updated.get().getGroups()).isEmpty();
+                assertThat(adminUpdated.get().getGroups()).contains("group1");
+                assertThat(adminUpdated.get().getGroups()).contains("ADMIN");
 
             }
 
@@ -284,14 +285,14 @@ class GroupsServiceShould {
 
                 ArrayList<String> users = new ArrayList<>();
                 OperationResult<String> result = groupsService.updateGroupUsers("group1", users);
-                Optional<UserData> user1Updated = userRepositoryStub.findById("user1");
-                Optional<UserData> user2Updated = userRepositoryStub.findById("user2");
-                Optional<UserData> adminUpdated = userRepositoryStub.findById("admin");
+                Optional<User> user1Updated = userRepositoryStub.findById("user1");
+                Optional<User> user2Updated = userRepositoryStub.findById("user2");
+                Optional<User> adminUpdated = userRepositoryStub.findById("admin");
                 assertThat(result.isSuccess()).isTrue();
-                assertThat(user1Updated.get().getGroupSet()).isEmpty();
-                assertThat(user2Updated.get().getGroupSet()).isEmpty();
-                assertThat(adminUpdated.get().getGroupSet()).doesNotContain("group1");
-                assertThat(adminUpdated.get().getGroupSet()).contains("ADMIN");
+                assertThat(user1Updated.get().getGroups()).isEmpty();
+                assertThat(user2Updated.get().getGroups()).isEmpty();
+                assertThat(adminUpdated.get().getGroups()).doesNotContain("group1");
+                assertThat(adminUpdated.get().getGroups()).contains("ADMIN");
 
             }
         }
@@ -311,8 +312,8 @@ class GroupsServiceShould {
             void GIVEN_A_Group_With_User_WHEN_Try_To_Remove_Users_THEN_Success_And_Users_Removed() {
                 OperationResult<String> result = groupsService.deleteGroupUsers("group1");
                 assertThat(result.isSuccess()).isTrue();
-                assertThat(userRepositoryStub.findById("user1").get().getGroupSet()).isEmpty();
-                assertThat(userRepositoryStub.findById("user2").get().getGroupSet()).isEmpty();
+                assertThat(userRepositoryStub.findById("user1").get().getGroups()).isEmpty();
+                assertThat(userRepositoryStub.findById("user2").get().getGroups()).isEmpty();
             }
 
             @Test
@@ -320,7 +321,7 @@ class GroupsServiceShould {
                 OperationResult<String> result = groupsService.deleteGroupUser("admin", "admin");
                 assertThat(result.isSuccess()).isFalse();
                 assertThat(result.getErrorType()).isEqualTo(OperationResult.ErrorType.BAD_REQUEST);
-                assertThat(userRepositoryStub.findById("admin").get().getGroupSet()).contains("ADMIN");
+                assertThat(userRepositoryStub.findById("admin").get().getGroups()).contains("ADMIN");
             }
 
             @Test
@@ -341,7 +342,7 @@ class GroupsServiceShould {
             void GIVEN_A_User_WHEN_Try_Removing_From_Group_THEN_Success_And_User_Removed_From_Group() {
                 OperationResult<String> result = groupsService.deleteGroupUser("group1", "user1");
                 assertThat(result.isSuccess()).isTrue();
-                assertThat(userRepositoryStub.findById("user1").get().getGroupSet()).doesNotContain("group1");
+                assertThat(userRepositoryStub.findById("user1").get().getGroups()).doesNotContain("group1");
             }
         }
 
