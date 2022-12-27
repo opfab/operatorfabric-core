@@ -13,13 +13,6 @@ import {CalendarComponent} from './calendar.component';
 import {FullCalendarModule} from '@fullcalendar/angular';
 import {CardModule} from '../card/card.module';
 import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
-import dayGridPlugin from '@fullcalendar/daygrid';
-import timeGridPlugin from '@fullcalendar/timegrid';
-import interactionPlugin from '@fullcalendar/interaction';
-import bootstrapPlugin from '@fullcalendar/bootstrap';
-import rrulePlugin from "@fullcalendar/rrule";
-
-FullCalendarModule.registerPlugins([dayGridPlugin, timeGridPlugin, interactionPlugin, bootstrapPlugin, rrulePlugin]);
 
 @NgModule({
     declarations: [CalendarComponent],

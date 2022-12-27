@@ -25,6 +25,11 @@ import {LightCardsStoreService} from '@ofServices/lightcards/lightcards-store.se
 import {FilterService} from '@ofServices/lightcards/filter.service';
 import {ConfigService} from '@ofServices/config.service';
 import {Frequency} from 'rrule';
+import dayGridPlugin from '@fullcalendar/daygrid';
+import timeGridPlugin from '@fullcalendar/timegrid';
+import interactionPlugin from '@fullcalendar/interaction';
+import bootstrapPlugin from '@fullcalendar/bootstrap';
+import rrulePlugin from '@fullcalendar/rrule';
 
 @Component({
     selector: 'of-calendar',
@@ -58,6 +63,12 @@ export class CalendarComponent implements OnInit, OnDestroy, AfterViewInit {
     // allDaySlot is now specific to timeGrid views (since v4), so it generates an error in build if we specify that the type of calendarOptions is
     // CalendarOptions... Yet it seems to be the correct way to set this property since it works as intended.
     calendarOptions = {
+        plugins: [
+            dayGridPlugin,
+            timeGridPlugin,
+            bootstrapPlugin,
+            interactionPlugin,
+            rrulePlugin],
         initialView: 'dayGridMonth',
         headerToolbar: {
             left: 'prev,today,next',
