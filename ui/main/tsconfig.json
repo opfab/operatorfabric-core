@@ -7,15 +7,33 @@
     "resolveJsonModule": true,
     "allowSyntheticDefaultImports": true,
     "paths": {
-      "@env/*": ["environments/*"],
-      "@ofStore/*": ["app/store/*"],
-      "@ofActions/*": ["app/store/actions/*"],
-      "@ofEffects/*": ["app/store/effects/*"],
-      "@ofSelectors/*": ["app/store/selectors/*"],
-      "@ofStates/*": ["app/store/states/*"],
-      "@ofServices/*": ["app/services/*"],
-      "@ofModel/*": ["app/model/*"],
-      "@tests/*": ["tests/*"],
+      "@env/*": [
+        "environments/*"
+      ],
+      "@ofStore/*": [
+        "app/store/*"
+      ],
+      "@ofActions/*": [
+        "app/store/actions/*"
+      ],
+      "@ofEffects/*": [
+        "app/store/effects/*"
+      ],
+      "@ofSelectors/*": [
+        "app/store/selectors/*"
+      ],
+      "@ofStates/*": [
+        "app/store/states/*"
+      ],
+      "@ofServices/*": [
+        "app/services/*"
+      ],
+      "@ofModel/*": [
+        "app/model/*"
+      ],
+      "@tests/*": [
+        "tests/*"
+      ],
       "file-saver-es": [
         "@types/file-saver"
       ]
@@ -25,7 +43,7 @@
     "declaration": false,
     "moduleResolution": "node",
     "experimentalDecorators": true,
-    "target": "es2020",
+    "target": "ES2022",
     "downlevelIteration": true,
     "typeRoots": [
       "node_modules/@types"
@@ -35,6 +53,7 @@
       "dom",
       "dom.iterable"
     ],
+    "useDefineForClassFields": false
   }
 
 }

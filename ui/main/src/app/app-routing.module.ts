@@ -111,17 +111,16 @@ export function redirectToCurrentLocation(currentRouter: Router): void {
 @NgModule({
     imports: [
         RouterModule.forRoot(routes, {
-            enableTracing: false,
-            preloadingStrategy: PreloadAllModules,
-            /* sets initialNavigation to false is needed to enable authentication implicit flow
-             * otherwise HashLocationStrategy breaks it by handling '#' within `window.location`.
-             */
-            /* sets initialNavigation to false is needed to enable authentication implicit flow
-             * otherwise HashLocationStrategy breaks it by handling '#' within `window.location`.
-             */
-            initialNavigation: 'disabled',
-            relativeLinkResolution: 'legacy'
-        })
+    enableTracing: false,
+    preloadingStrategy: PreloadAllModules,
+    /* sets initialNavigation to false is needed to enable authentication implicit flow
+     * otherwise HashLocationStrategy breaks it by handling '#' within `window.location`.
+     */
+    /* sets initialNavigation to false is needed to enable authentication implicit flow
+     * otherwise HashLocationStrategy breaks it by handling '#' within `window.location`.
+     */
+    initialNavigation: 'disabled'
+})
     ],
     exports: [RouterModule]
 })

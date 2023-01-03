@@ -389,7 +389,7 @@ export class CustomTimelineChartComponent extends BaseChartComponent implements 
 
     createCircles(): void {
         this.circles = [];
-        if (this.cardsData === undefined || this.cardsData === []) {
+        if (this.cardsData === undefined) {
             return;
         }
 

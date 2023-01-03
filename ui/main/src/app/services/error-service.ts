@@ -15,11 +15,16 @@ import {MessageLevel} from '@ofModel/message.model';
 import {OpfabLoggerService} from './logs/opfab-logger.service';
 import {throwError} from 'rxjs';
 import {HttpErrorResponse} from '@angular/common/http';
+import {Injectable} from '@angular/core';
 
 /** This class describes what errors should be thrown depending on the API `Response`
  * Services requiring this behaviour should extend this class (see `GroupService` for example).
  * Note: This can't be an interface because Typescript doesn't allow default methods.
  */
+
+ @Injectable({
+    providedIn: 'root'
+})
 export abstract class ErrorService {
 
     constructor(protected store: Store<AppState>, protected loggerService: OpfabLoggerService) {}

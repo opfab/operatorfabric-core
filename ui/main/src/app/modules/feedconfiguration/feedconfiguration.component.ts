@@ -1,4 +1,4 @@
-/* Copyright (c) 2020-2022, RTE (http://www.rte-france.com)
+/* Copyright (c) 2020-2023, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -25,7 +25,7 @@ import {Utilities} from '../../common/utilities';
     templateUrl: './feedconfiguration.component.html',
     styleUrls: ['./feedconfiguration.component.scss']
 })
-export class FeedconfigurationComponent implements OnInit,AfterViewInit {
+export class FeedconfigurationComponent implements OnInit, AfterViewInit {
     feedConfigurationForm: FormGroup<{
         processesStates: FormArray;
     }>;
@@ -103,11 +103,11 @@ export class FeedconfigurationComponent implements OnInit,AfterViewInit {
     private toggleSelectAllStates(idProcess: string) {
         if (this.isAllStatesSelectedPerProcess.get(idProcess)) {
             for (const state of this.processesStatesLabels.get(idProcess).states)
-                if (this.feedConfigurationForm.value.processesStates[state.stateControlIndex])
+                if (this.feedConfigurationForm.controls.processesStates.controls[state.stateControlIndex].value)
                     document.getElementById('' + state.stateControlIndex).click();
         } else {
             for (const state of this.processesStatesLabels.get(idProcess).states)
-                if (!this.feedConfigurationForm.value.processesStates[state.stateControlIndex])
+                if (!this.feedConfigurationForm.controls.processesStates.controls[state.stateControlIndex].value)
                     document.getElementById('' + state.stateControlIndex).click();
         }
     }
@@ -134,7 +134,8 @@ export class FeedconfigurationComponent implements OnInit,AfterViewInit {
 
     private isAllStatesSelected(idProcess) {
         for (const state of this.processesStatesLabels.get(idProcess).states) {
-            if (!this.feedConfigurationForm.value.processesStates[state.stateControlIndex]) return false;
+            if (!this.feedConfigurationForm.controls.processesStates.controls[state.stateControlIndex].value)
+                return false;
         }
         return true;
     }
@@ -190,8 +191,13 @@ export class FeedconfigurationComponent implements OnInit,AfterViewInit {
                     isChecked = true; // We force the subscription to this state
                 }
             }
-
-            this.processesStatesFormArray.push(new FormControl<boolean | null>(isChecked));
+            const filteringNotificationAllowed = this.userService.isFilteringNotificationAllowedForProcessAndState(
+                processState.processId,
+                processState.stateId
+            );
+            this.processesStatesFormArray.push(
+                new FormControl({value: isChecked, disabled: !filteringNotificationAllowed})
+            );
         });
     }
 
@@ -228,8 +234,7 @@ export class FeedconfigurationComponent implements OnInit,AfterViewInit {
 
                     const filteringNotificationAllowed =
                         this.userService.isFilteringNotificationAllowedForProcessAndState(process.id, stateId);
-                    if (!!filteringNotificationAllowed)
-                        this.setProcessAndProcessGroupCheckboxesEnabled(process.id);
+                    if (!!filteringNotificationAllowed) this.setProcessAndProcessGroupCheckboxesEnabled(process.id);
 
                     states.push({stateId, stateLabel, stateControlIndex, filteringNotificationAllowed});
                     this.preparedListOfProcessesStates.push({processId: process.id, stateId});
@@ -336,8 +341,8 @@ export class FeedconfigurationComponent implements OnInit,AfterViewInit {
         if (this.saveSettingsInProgress) return; // avoid multiple clicks
         this.saveSettingsInProgress = true;
         const processesStatesNotNotifiedUpdate = new Map<string, string[]>();
-        this.feedConfigurationForm.value.processesStates.map((checked, i) => {
-            if (!checked) {
+        this.feedConfigurationForm.controls.processesStates.controls.forEach((control, i) => {
+            if (!control.value) {
                 const currentProcessId = this.preparedListOfProcessesStates[i].processId;
                 const currentStateId = this.preparedListOfProcessesStates[i].stateId;
 
