@@ -1,4 +1,4 @@
-// Copyright (c) 2018-2021 RTE (http://www.rte-france.com)
+// Copyright (c) 2018-2023 RTE (http://www.rte-france.com)
 // See AUTHORS.txt
 // This document is subject to the terms of the Creative Commons Attribution 4.0 International license.
 // If a copy of the license was not distributed with this
@@ -8,14 +8,10 @@
 = Project Structure
 
 * link:https://github.com/opfab/operatorfabric-core/tree/master/bin[bin]: contains useful scripts for dev purposes
-** link:https://github.com/opfab/operatorfabric-core/tree/master/CICD/github[github]: scripts used by Github for the
+* link:https://github.com/opfab/operatorfabric-core/tree/master/CICD/github[CICD/github]: scripts used by Github for the
 build process
 * link:https://github.com/opfab/operatorfabric-core/tree/master/client[client]: contains REST APIs simple beans definition, may be
 used by external projects
-** link:https://github.com/opfab/operatorfabric-core/tree/master/client/cards[cards (cards-client-data)]: simple beans regarding cards
-** link:https://github.com/opfab/operatorfabric-core/tree/master/client/src[src]: contains swagger templates for link:https://github.com/opfab/operatorfabric-core/tree/master/client[client]
-code generation
-** link:https://github.com/opfab/operatorfabric-core/tree/master/client/users[users (users-client-data)]: simple beans regarding users
 * link:https://github.com/opfab/operatorfabric-core/tree/master/config[config]: contains external configurations for all services , keycloak and docker-compose files to help with tests and demonstrations
 * link:https://github.com/opfab/operatorfabric-core/tree/master/services[services]: contains the microservices that make up
 OperatorFabric
@@ -41,28 +37,13 @@ Getting Started Guide, etc.)
 tests and demonstrations
 ** link:https://github.com/opfab/operatorfabric-core/tree/master/src/test[test]
 *** link:https://github.com/opfab/operatorfabric-core/tree/master/src/test/api[api] : karate code for automatic api testing (non-regression tests)
+*** link:https://github.com/opfab/operatorfabric-core/tree/master/src/test/clientApp[clientApp] : test application that send card (used to test client lib)
 *** link:https://github.com/opfab/operatorfabric-core/tree/master/src/test/cypress[cypress] : cypress code for automatic ui testing
 *** link:https://github.com/opfab/operatorfabric-core/tree/master/src/test/dummyModbusDevice[dummyModbusDevice] : application emulating a Modbus device for test purposes
+*** link:https://github.com/opfab/operatorfabric-core/tree/master/src/test/externalApp[externalApp] : external test application that received card 
+*** link:https://github.com/opfab/operatorfabric-core/tree/master/src/test/externalWebAppExample[externalWebAppExample] : example application to show integration of an external application in opfab UI 
 *** link:https://github.com/opfab/operatorfabric-core/tree/master/src/test/resources[resources] : scripts and data for manual testing 
-* link:https://github.com/opfab/operatorfabric-core/tree/master/tools[tools]
-** link:https://github.com/opfab/operatorfabric-core/tree/master/tools/generic[generic]: Generic (as opposed to Spring-related)
-utility code
-*** link:https://github.com/opfab/operatorfabric-core/tree/master/tools/generic/test-utilities[test-utilities]: Test-specific
-utility code
-*** link:https://github.com/opfab/operatorfabric-core/tree/master/tools/generic/utilities[utilities]: Utility code
-** link:https://github.com/opfab/operatorfabric-core/tree/master/tools/spring[spring]: Spring-related utility code
-*** link:https://github.com/opfab/operatorfabric-core/tree/master/tools/spring/spring-mongo-utilities[spring-mongo-utilities] : Utility
-code with Spring-specific dependencies, used to share common features across
-MongoDB-dependent services
-*** link:https://github.com/opfab/operatorfabric-core/tree/master/tools/spring/spring-oauth2-utilities[spring-oauth2-utilities] :
-Utility code with Spring-specific dependencies, used to share common features
-across OAuth2-dependent services
-*** link:https://github.com/opfab/operatorfabric-core/tree/master/tools/spring/spring-test-utilities[spring-test-utilities] : Utility
-code with Spring-specific dependencies for testing purposes
-*** link:https://github.com/opfab/operatorfabric-core/tree/master/tools/spring/spring-utilities[spring-utilities] : Utility code with
-Spring-specific dependencies
-** link:https://github.com/opfab/operatorfabric-core/tree/master/tools/swagger-spring-generators[swagger-spring-generators] : Spring
-Boot generator for swagger, tailored for OperatorFabric needs
+* link:https://github.com/opfab/operatorfabric-core/tree/master/tools[tools] : code common to every back services
 * link:https://github.com/opfab/operatorfabric-core/tree/master/ui[ui]: Angular sources for the UI
 
 == Conventions regarding project structure and configuration
