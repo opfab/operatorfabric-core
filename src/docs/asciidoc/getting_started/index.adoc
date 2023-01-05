@@ -625,4 +625,156 @@ The result should be a 201 Http status.
 
 Look at the result in the UI, you should be able to see the card.
 
+=== Example 6: Sending cards from the UI
+
+==== Updating the perimeter
+In the top right corner, left to your username, there is the button to send a new card. 
+
+image::example6_button.png[example 6 screen shot]
+
+If you click on it now, you shouldn't be able to send a card because none of the groups you're part of has the right to send a card. So first we need to set up a new perimeter with the correct rights and associate it to one of your group.
+
+[source,JSON]
+----
+{
+	"id" : "example6-Perimeter",
+	"process" : "defaultProcess",
+	"stateRights" : [
+		{
+			"state" : "messageState",
+			"right" : "ReceiveAndWrite"
+		}
+	]
+}
+----
+Use the provided script :
+----
+./setupPerimeter.sh perimeter.json
+----
+
+
+==== Creating the template to send a card
+Now you need to update the bundle to include a template for the card sending screen. In the *config.json* file of the bundle, it is necessary to define the userCard object.
+
+[source, JSON]
+----
+{
+	"id":"defaultProcess",
+	"name": "Message process",
+	"version":"2",
+	"states": {
+		"messageState": {
+		  "name": "Message",
+		  "description": "Message",
+		  "userCard" : {
+			"template" : "usercard_message",
+			"startDateVisible": false,
+			"endDateVisible" : false,
+			"lttdVisible" : false,
+			"expirationDateVisible" : false
+		  },
+		  "templateName": "message"
+		}
+	}
+}
+----
+
+The bundle folder now contains usercard_message.handlebars:
+[source,handlebars]
+----
+<div class="opfab-textarea">
+	<label> MESSAGE </label>
+	<textarea id="message" name="message" placeholder="Write something.."
+		style="width:100%">{{card.data.message}}</textarea>
+</div>
+
+
+<script>
+    usercardTemplateGateway.getSpecificCardInformation = function () {
+        const message = document.getElementById('message').value;
+        const card = {
+        summary : {key : "message.summary"},
+		title : {key : "message.title"},
+        data : {message: message},
+        };
+        if (message.length<1) return { valid:false , errorMsg:'You must provide a message'}
+        return {
+            valid: true,
+            card: card
+        };
+
+    }
+
+</script>
+----
+
+You can package it and send it to the server with the provided scripts :
+
+----
+./packageBundle.sh | ./sendBundle.sh
+----
+
+Now if you reload the page, you should be able to send a card. Don't forget to send it to an entity you're a part of to receive it. For instance *Control Center FR North*.
+
+image::example6_card_send.png[example 6 screen shot #2]
+
+==== Customize the card sending template
+To go further you can check out the folder named *bundle_updated* to see a template where it is possible to add an object to the message similar to e-mails.
+
+You can see the updated UI using this command line and refreshing the page to update the bundle.
+
+----
+./packageBundle_updated.sh | ./sendBundle.sh
+----
+
+image::example6_card_send_updated.png[example 6 screen shot #3]
+
+
+The object attribute is defined in the userCard template in the *usercard_message.handlebars* file. 
+[source,handlebars]
+----
+        <div class="opfab-textarea">
+            <label> Object </label>
+            <textarea id="object" name="object" placeholder="Write something.."
+                style="width:100%">{{card.data.object}}</textarea>
+        </div>
+        <br/>
+
+        <div class="opfab-textarea">
+            <label> MESSAGE </label>
+            <textarea id="message" name="message" placeholder="Write something.."
+                style="width:100%">{{card.data.message}}</textarea>
+        </div>
+
+<script>
+    usercardTemplateGateway.getSpecificCardInformation = function () {
+        const message = document.getElementById('message').value;
+        const object = document.getElementById('object').value;
+        const card = {
+        summary : {key : "message.summary"},
+		title : {key : "message.title"},
+        data : {message: message, object: object},
+        };
+        if (message.length<1) return { valid:false , errorMsg:'You must provide a message'}
+        return {
+            valid: true,
+            card: card
+        };
+
+    }
+
+</script>
+----
+
+If you look at the *message.handlebars* file in the bundle, you will see how the template was changed to take the object attribute into account:
+
+[source,handlebars]
+----
+<h2><b>Object:</b> {{card.data.object}}</h2>
+
+{{card.data.message}}
+----
+
+See the link:https://opfab.github.io/documentation/current/reference_doc/#user_cards[card documentation] for further informations on cards.
+
 include::troubleshooting.adoc[leveloffset=+1]
