@@ -261,7 +261,7 @@ export class ArchivesComponent implements OnDestroy, OnInit {
                 next: (page: Page<LightCard>) => {
                     this.removeMostRecentCardFromHistories(lightCard.id, page.content);
                     // log to debug CI/CD Failures
-                    console.debug(new Date().toISOString, 'Archives : receive card update ');
+                    console.debug(new Date().toISOString(), 'Archives : receive card update ');
                     // since we are in asynchronous mode, we test requestId to avoid that the requests "overlap" and that the results appear in a wrong order
                     if (requestID === this.lastRequestID)
                         this.updatesByCardId.splice(index, 1, {
