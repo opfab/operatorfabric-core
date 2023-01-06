@@ -63,8 +63,8 @@
     "xlsx": "0.18.5"
   },
   "devDependencies": {
-    "@angular-devkit/build-angular": "15.0.4",
-    "@angular/cli": "15.0.4",
+    "@angular-devkit/build-angular": "15.0.5",
+    "@angular/cli": "15.0.5",
     "@angular/compiler-cli": "15.0.4",
     "@angular-eslint/builder": "15.1.0",
     "@angular-eslint/eslint-plugin": "15.1.0",
