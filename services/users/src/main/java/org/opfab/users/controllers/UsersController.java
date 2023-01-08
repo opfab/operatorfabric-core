@@ -11,8 +11,6 @@
 
 package org.opfab.users.controllers;
 
-import lombok.extern.slf4j.Slf4j;
-
 import org.opfab.springtools.configuration.oauth.jwt.JwtProperties;
 import org.opfab.springtools.configuration.oauth.jwt.groups.GroupsProperties;
 import org.opfab.springtools.configuration.oauth.jwt.groups.GroupsMode;
@@ -28,8 +26,6 @@ import org.opfab.users.repositories.UserSettingsRepository;
 import org.opfab.users.services.NotificationService;
 import org.opfab.users.services.UserSettingsService;
 import org.opfab.users.services.UsersService;
-import org.opfab.users.utils.LoginFormatChecker;
-import org.opfab.users.model.UserData;
 import org.opfab.users.rabbit.RabbitEventBus;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -39,15 +35,10 @@ import org.springframework.web.bind.annotation.RestController;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.*;
-import java.util.stream.Collectors;
 
-/**
- * UsersController, documented at {@link UsersApi}
- *
- */
+
 @RestController
 @RequestMapping("/users")
-@Slf4j
 public class UsersController implements UsersApi, UserExtractor {
 
     public static final String USER_NOT_FOUND_MSG = "User %s not found";
@@ -62,13 +53,6 @@ public class UsersController implements UsersApi, UserExtractor {
 
     public static final String ADMIN_LOGIN = "admin";
 
-    
-    private UserRepository userRepository;
-
-    private GroupRepository groupRepository;
-
-    @Autowired
-    private EntityRepository entityRepository;
 
     @Autowired
     private JwtProperties jwtProperties;
@@ -80,11 +64,9 @@ public class UsersController implements UsersApi, UserExtractor {
     private UserSettingsService userSettingsService;
     private NotificationService notificationService;
 
-    public UsersController(UserRepository userRepository,UserSettingsRepository userSettingsRepository, GroupRepository groupRepository, PerimeterRepository perimeterRepository,RabbitEventBus rabbitEventBus) {
-        this.userRepository = userRepository;
-        this.groupRepository = groupRepository;
+    public UsersController(UserRepository userRepository,UserSettingsRepository userSettingsRepository, GroupRepository groupRepository, EntityRepository entityRepository, PerimeterRepository perimeterRepository,RabbitEventBus rabbitEventBus) {
         this.notificationService = new NotificationService(userRepository, rabbitEventBus);
-        usersService = new UsersService(userRepository,groupRepository,perimeterRepository,notificationService);
+        usersService = new UsersService(userRepository,groupRepository,entityRepository,perimeterRepository,notificationService);
         userSettingsService = new UserSettingsService(userSettingsRepository,usersService,notificationService);
         }
 
@@ -176,70 +158,13 @@ public class UsersController implements UsersApi, UserExtractor {
         else throw  createExceptionFromOperationResult(result);
     }
 
-
-
     @Override
     public User synchronizeWithToken(HttpServletRequest request, HttpServletResponse response) {
         User user = this.extractUserFromJwtToken(request);
-
-        LoginFormatChecker.LoginCheckResult result =  LoginFormatChecker.check(user.getLogin());
-        if (!result.isValid()) {
-            throw new ApiErrorException(
-                ApiError.builder()
-                        .status(HttpStatus.BAD_REQUEST)
-                        .message(result.getErrorMessage())
-                        .build());
-        }
-
-        user.setLogin(user.getLogin().toLowerCase());
-        String login = user.getLogin();
-
-        if (groupsProperties.getMode() == GroupsMode.JWT) {
-            List<String> missingGroups = user.getGroups().stream()
-                    .filter(groupId -> this.groupRepository.findById(groupId).isEmpty()).collect(Collectors.toList());
-            if (!missingGroups.isEmpty()) {
-                missingGroups.forEach(id -> log.warn("Group id from token not found in db: {}", id));
-                List<String> goodGroups = user.getGroups();
-                goodGroups.removeAll(missingGroups);
-                user.setGroups(goodGroups);
-            }
-        }
-
-        if (jwtProperties.isGettingEntitiesFromToken()) {
-            List<String> missingEntities = user.getEntities().stream()
-                    .filter(entityId -> this.entityRepository.findById(entityId).isEmpty())
-                    .collect(Collectors.toList());
-            if (!missingEntities.isEmpty()) {
-                missingEntities.forEach(id -> log.warn("Entity id from token not found in db: {}", id));
-                List<String> goodEntities = user.getEntities();
-                goodEntities.removeAll(missingEntities);
-                user.setEntities(goodEntities);
-            }
-        }
-
-        User existingUser = userRepository.findById(login).orElse(null);
-
-        if (existingUser == null) {
-            log.debug(String.format(USER_CREATED, login));
-            usersService.createUser(user);
-        } else {
-            boolean updatedFromToken = false;
-            if (groupsProperties.getMode() == GroupsMode.JWT) {
-                updatedFromToken = !((UserData) existingUser).getGroupSet().equals(new HashSet<String>(user.getGroups()));
-            }
-            if (!updatedFromToken && jwtProperties.isGettingEntitiesFromToken()) {
-                updatedFromToken = !new HashSet<String>(existingUser.getEntities()).equals(new HashSet<String>(user.getEntities()));
-            }
-            if (updatedFromToken) {
-                log.debug(String.format(USER_UPDATED, login));
-                usersService.createUser(user);
-                notificationService.publishUpdatedUserMessage(login);
-            }
-        }
-
-        return user;
+        OperationResult<User> result = usersService.updateOrCreateUser(user, jwtProperties.isGettingEntitiesFromToken(), (groupsProperties.getMode() == GroupsMode.JWT));
+        if (result.isSuccess()) return result.getResult();
+        else throw  createExceptionFromOperationResult(result);       
     }
-
 
     private ApiErrorException buildApiException(HttpStatus httpStatus, String errorMessage) {
         return new ApiErrorException(

@@ -21,6 +21,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.opfab.users.model.EntityCreationReport;
+import org.opfab.users.model.EntityData;
 import org.opfab.users.model.GroupData;
 import org.opfab.users.model.OperationResult;
 import org.opfab.users.model.Perimeter;
@@ -29,6 +30,7 @@ import org.opfab.users.model.RightsEnum;
 import org.opfab.users.model.StateRightData;
 import org.opfab.users.model.User;
 import org.opfab.users.model.UserData;
+import org.opfab.users.stubs.EntityRepositoryStub;
 import org.opfab.users.stubs.EventBusStub;
 import org.opfab.users.stubs.GroupRepositoryStub;
 import org.opfab.users.stubs.PerimeterRepositoryStub;
@@ -40,37 +42,36 @@ public class UsersServiceShould {
     private UserRepositoryStub userRepositoryStub = new UserRepositoryStub();
     private PerimeterRepositoryStub perimeterRepositoryStub = new PerimeterRepositoryStub();
     private GroupRepositoryStub groupRepositoryStub = new GroupRepositoryStub();
+    private EntityRepositoryStub entityRepositoryStub = new EntityRepositoryStub();
     private UsersService usersService;
 
     PerimeterData perimeter1, perimeter2;
 
     @BeforeEach
     void clear() {
-        usersService = new UsersService(userRepositoryStub,groupRepositoryStub,perimeterRepositoryStub,
-                new NotificationService(userRepositoryStub, new EventBusStub()));
+        usersService = new UsersService(userRepositoryStub, groupRepositoryStub, entityRepositoryStub,
+                perimeterRepositoryStub, new NotificationService(userRepositoryStub, new EventBusStub()));
         initPerimeterRepository();
         initGroupRepository();
+        initEntityRepository();
         initUserRepository();
     }
 
-
     private void initPerimeterRepository() {
-        
-      
+
         perimeter1 = PerimeterData.builder()
                 .id("perimeter1")
                 .process("process1")
                 .stateRights(new HashSet<>(Arrays.asList(new StateRightData("state1", RightsEnum.RECEIVE, true),
-                                                         new StateRightData("state2", RightsEnum.RECEIVEANDWRITE, true))))
+                        new StateRightData("state2", RightsEnum.RECEIVEANDWRITE, true))))
                 .build();
 
         perimeter2 = PerimeterData.builder()
                 .id("perimeter2")
                 .process("process1")
                 .stateRights(new HashSet<>(Arrays.asList(new StateRightData("state1", RightsEnum.RECEIVEANDWRITE, true),
-                                                         new StateRightData("state2", RightsEnum.WRITE, true))))
+                        new StateRightData("state2", RightsEnum.WRITE, true))))
                 .build();
-
 
         perimeterRepositoryStub.insert(perimeter1);
         perimeterRepositoryStub.insert(perimeter2);
@@ -98,6 +99,20 @@ public class UsersServiceShould {
 
     }
 
+    private void initEntityRepository() {
+        EntityData e1, e2;
+        e1 = EntityData.builder()
+                .id("entity1")
+                .name("Entity 1")
+                .build();
+        e2 = EntityData.builder()
+                .id("entity2")
+                .name("Entity 2")
+                .build();
+        entityRepositoryStub.insert(e1);
+        entityRepositoryStub.insert(e2);
+
+    }
 
     private void initUserRepository() {
         userRepositoryStub.deleteAll();
@@ -126,6 +141,7 @@ public class UsersServiceShould {
         userRepositoryStub.insert(u2);
         userRepositoryStub.insert(u3);
     }
+
     @Nested
     @DisplayName("Fetch")
     class Fetch {
@@ -164,7 +180,8 @@ public class UsersServiceShould {
             OperationResult<EntityCreationReport<User>> result = usersService.createUser(user);
             assertThat(result.isSuccess()).isFalse();
             assertThat(result.getErrorType()).isEqualTo(OperationResult.ErrorType.BAD_REQUEST);
-            assertThat(result.getErrorMessage()).isEqualTo("Login should only contain the following characters: letters, _, -, . or digits (login=invalid?login).");
+            assertThat(result.getErrorMessage()).isEqualTo(
+                    "Login should only contain the following characters: letters, _, -, . or digits (login=invalid?login).");
         }
 
         @Test
@@ -267,7 +284,7 @@ public class UsersServiceShould {
             OperationResult<String> result = usersService.deleteUser("admin");
             assertThat(result.isSuccess()).isFalse();
             assertThat(result.getErrorType()).isEqualTo(OperationResult.ErrorType.BAD_REQUEST);
-            assertThat(result.getErrorMessage()).isEqualTo("Deleting user admin is not allowed"); 
+            assertThat(result.getErrorMessage()).isEqualTo("Deleting user admin is not allowed");
         }
 
         @Test
@@ -289,14 +306,14 @@ public class UsersServiceShould {
                 OperationResult<List<Perimeter>> result = usersService.fetchUserPerimeters("dummyUser");
                 assertThat(result.isSuccess()).isFalse();
                 assertThat(result.getErrorType()).isEqualTo(OperationResult.ErrorType.NOT_FOUND);
-                assertThat(result.getErrorMessage()).isEqualTo("User dummyUser not found"); 
+                assertThat(result.getErrorMessage()).isEqualTo("User dummyUser not found");
             }
 
             @Test
             void GIVEN_User1_WHEN_Fetch_Perimeter_THEN_Return_Merge_Perimeter1_And_Perimeter2() {
                 OperationResult<List<Perimeter>> result = usersService.fetchUserPerimeters("user1");
                 assertThat(result.isSuccess()).isTrue();
-                assertThat(result.getResult()).containsExactlyInAnyOrder(perimeter1,perimeter2);
+                assertThat(result.getResult()).containsExactlyInAnyOrder(perimeter1, perimeter2);
             }
 
             @Test
@@ -314,4 +331,208 @@ public class UsersServiceShould {
             }
         }
     }
+
+    @Nested
+    @DisplayName("UpdateOrCreate")
+    class Update {
+
+        @Test
+        void GIVEN_An_Invalid_Login__WHEN_UpdateOrCreate_User_THEN_Return_Bad_Request() {
+            UserData user = new UserData("invalid?login", "invalid", null, null, null, null, null);
+            OperationResult<User> result = usersService.updateOrCreateUser(user, true, true);
+            assertThat(result.isSuccess()).isFalse();
+            assertThat(result.getErrorType()).isEqualTo(OperationResult.ErrorType.BAD_REQUEST);
+            assertThat(result.getErrorMessage()).isEqualTo(
+                    "Login should only contain the following characters: letters, _, -, . or digits (login=invalid?login).");
+        }
+
+        @Test
+        void GIVEN_The_Admin_User_WHEN_UpdateOrCreate_User_Without_Admin_Group_THEN_Return_Bad_Request() {
+
+            UserData user = UserData.builder()
+                    .login("admin")
+                    .firstName("firstName")
+                    .lastName("user1LastName")
+                    .group("group1").group("group2")
+                    .build();
+            OperationResult<EntityCreationReport<User>> result = usersService.createUser(user);
+            assertThat(result.isSuccess()).isFalse();
+            assertThat(result.getErrorType()).isEqualTo(OperationResult.ErrorType.BAD_REQUEST);
+            assertThat(result.getErrorMessage()).isEqualTo("Removing group ADMIN from user admin is not allowed");
+        }
+
+        @Test
+        void GIVEN_A_None_Existing_User_WHEN_UpdateOrCreate_With_UpdateGroup_And_Entities_true_THEN_User_Is_Created() {
+
+            UserData user = UserData.builder()
+                    .login("newuser")
+                    .firstName("firstName")
+                    .lastName("user1LastName")
+                    .group("group1").group("group2")
+                    .entity("entity1").entity("entity2")
+                    .build();
+            OperationResult<User> result = usersService.updateOrCreateUser(user, true, true);
+            assertThat(result.isSuccess()).isTrue();
+            assertThat(result.getResult().getLogin()).isEqualTo("newuser");
+            assertThat(result.getResult().getFirstName()).isEqualTo("firstName");
+            assertThat(userRepositoryStub.findById("newuser").get().getLogin()).isEqualTo("newuser");
+            assertThat(userRepositoryStub.findById("newuser").get().getFirstName()).isEqualTo("firstName");
+            assertThat(userRepositoryStub.findById("newuser").get().getGroups()).containsExactlyInAnyOrder("group1",
+                    "group2");
+            assertThat(userRepositoryStub.findById("newuser").get().getEntities()).containsExactlyInAnyOrder("entity1",
+                    "entity2");
+        }
+
+        @Test
+        void GIVEN_A_None_Existing_User_WHEN_UpdateOrCreate_With_UpdateGroup_True_And_UpdateEntities_False_THEN_User_Is_Created_With_No_Entities() {
+
+            UserData user = UserData.builder()
+                    .login("newuser")
+                    .firstName("firstName")
+                    .lastName("user1LastName")
+                    .group("group1").group("group2")
+                    .entity("entity1").entity("entity2")
+                    .build();
+            OperationResult<User> result = usersService.updateOrCreateUser(user, false, true);
+            assertThat(result.isSuccess()).isTrue();
+            assertThat(result.getResult().getLogin()).isEqualTo("newuser");
+            assertThat(result.getResult().getFirstName()).isEqualTo("firstName");
+            assertThat(userRepositoryStub.findById("newuser").get().getLogin()).isEqualTo("newuser");
+            assertThat(userRepositoryStub.findById("newuser").get().getFirstName()).isEqualTo("firstName");
+            assertThat(userRepositoryStub.findById("newuser").get().getGroups()).containsExactlyInAnyOrder("group1",
+                    "group2");
+            assertThat(userRepositoryStub.findById("newuser").get().getEntities()).isEmpty();
+        }
+
+        @Test
+        void GIVEN_A_None_Existing_User_WHEN_UpdateOrCreate_With_UpdateGroup_False_And_UpdateEntities_True_THEN_User_Is_Created_With_No_Groups() {
+
+            UserData user = UserData.builder()
+                    .login("newuser")
+                    .firstName("firstName")
+                    .lastName("user1LastName")
+                    .group("group1").group("group2")
+                    .entity("entity1").entity("entity2")
+                    .build();
+            OperationResult<User> result = usersService.updateOrCreateUser(user, true, false);
+            assertThat(result.isSuccess()).isTrue();
+            assertThat(result.getResult().getLogin()).isEqualTo("newuser");
+            assertThat(result.getResult().getFirstName()).isEqualTo("firstName");
+            assertThat(userRepositoryStub.findById("newuser").get().getLogin()).isEqualTo("newuser");
+            assertThat(userRepositoryStub.findById("newuser").get().getFirstName()).isEqualTo("firstName");
+            assertThat(userRepositoryStub.findById("newuser").get().getGroups()).isEmpty();
+            assertThat(userRepositoryStub.findById("newuser").get().getEntities()).containsExactlyInAnyOrder("entity1",
+                    "entity2");
+        }
+
+        @Test
+        void GIVEN_A_None_Existing_User_WHEN_UpdateOrCreate_With_Invalid_Groups_THEN_User_Is_Created_Without_The_Invalid_Groups() {
+
+            UserData user = UserData.builder()
+                    .login("newuser")
+                    .firstName("firstName")
+                    .lastName("user1LastName")
+                    .group("group1").group("group2").group("invalid1").group("invalid2")
+                    .entity("entity1").entity("entity2")
+                    .build();
+            OperationResult<User> result = usersService.updateOrCreateUser(user, true, true);
+            assertThat(result.isSuccess()).isTrue();
+            assertThat(result.getResult().getLogin()).isEqualTo("newuser");
+            assertThat(result.getResult().getFirstName()).isEqualTo("firstName");
+            assertThat(userRepositoryStub.findById("newuser").get().getLogin()).isEqualTo("newuser");
+            assertThat(userRepositoryStub.findById("newuser").get().getFirstName()).isEqualTo("firstName");
+            assertThat(userRepositoryStub.findById("newuser").get().getGroups()).containsExactlyInAnyOrder("group1",
+                    "group2");
+            assertThat(userRepositoryStub.findById("newuser").get().getEntities()).containsExactlyInAnyOrder("entity1",
+                    "entity2");
+        }
+
+        @Test
+        void GIVEN_A_None_Existing_User_WHEN_UpdateOrCreate_With_Invalid_Entities_THEN_User_Is_Created_Without_The_Invalid_Entities() {
+
+            UserData user = UserData.builder()
+                    .login("newuser")
+                    .firstName("firstName")
+                    .lastName("user1LastName")
+                    .group("group1").group("group2")
+                    .entity("entity1").entity("entity2").entity("dummy1").entity("dummy2")
+                    .build();
+            OperationResult<User> result = usersService.updateOrCreateUser(user, true, true);
+            assertThat(result.isSuccess()).isTrue();
+            assertThat(result.getResult().getLogin()).isEqualTo("newuser");
+            assertThat(result.getResult().getFirstName()).isEqualTo("firstName");
+            assertThat(userRepositoryStub.findById("newuser").get().getLogin()).isEqualTo("newuser");
+            assertThat(userRepositoryStub.findById("newuser").get().getFirstName()).isEqualTo("firstName");
+            assertThat(userRepositoryStub.findById("newuser").get().getGroups()).containsExactlyInAnyOrder("group1",
+                    "group2");
+            assertThat(userRepositoryStub.findById("newuser").get().getEntities()).containsExactlyInAnyOrder("entity1",
+                    "entity2");
+        }
+
+        @Test
+        void GIVEN_An_Existing_User_WHEN_UpdateOrCreate_With_UpdateGroup_And_Entities_true_THEN_User_Is_Updated() {
+
+            UserData user = UserData.builder()
+                    .login("user3")
+                    .firstName("newFirstName")
+                    .lastName("newLastName")
+                    .group("group1").group("group2")
+                    .entity("entity1").entity("entity2")
+                    .build();
+            OperationResult<User> result = usersService.updateOrCreateUser(user, true, true);
+            assertThat(result.isSuccess()).isTrue();
+            assertThat(result.getResult().getLogin()).isEqualTo("user3");
+            assertThat(result.getResult().getFirstName()).isEqualTo("newFirstName");
+            assertThat(userRepositoryStub.findById("user3").get().getLogin()).isEqualTo("user3");
+            assertThat(userRepositoryStub.findById("user3").get().getFirstName()).isEqualTo("newFirstName");
+            assertThat(userRepositoryStub.findById("user3").get().getGroups()).containsExactlyInAnyOrder("group1",
+                    "group2");
+            assertThat(userRepositoryStub.findById("user3").get().getEntities()).containsExactlyInAnyOrder("entity1",
+                    "entity2");
+        }
+
+        @Test
+        void GIVEN_An_Existing_User_WHEN_UpdateOrCreate_With_UpdateGroup_True_And_UpdateEntities_False_THEN_User_Is_Update_Without_Entities_Update() {
+
+            UserData user = UserData.builder()
+                    .login("user3")
+                    .firstName("newFirstName")
+                    .lastName("user1LastName")
+                    .group("group1").group("group2")
+                    .entity("entity1").entity("entity2")
+                    .build();
+            OperationResult<User> result = usersService.updateOrCreateUser(user, false, true);
+            assertThat(result.isSuccess()).isTrue();
+            assertThat(result.getResult().getLogin()).isEqualTo("user3");
+            assertThat(result.getResult().getFirstName()).isEqualTo("newFirstName");
+            assertThat(userRepositoryStub.findById("user3").get().getLogin()).isEqualTo("user3");
+            assertThat(userRepositoryStub.findById("user3").get().getFirstName()).isEqualTo("newFirstName");
+            assertThat(userRepositoryStub.findById("user3").get().getGroups()).containsExactlyInAnyOrder("group1",
+                    "group2");
+            assertThat(userRepositoryStub.findById("user3").get().getEntities()).containsExactlyInAnyOrder("entity1");
+        }
+
+        @Test
+        void GIVEN_An_Existing_User_WHEN_UpdateOrCreate_With_UpdateGroup_False_And_UpdateEntities_True_THEN_User_Is_Update_Without_Groups_Update() {
+
+            UserData user = UserData.builder()
+                    .login("user2")
+                    .firstName("newFirstName")
+                    .lastName("user1LastName")
+                    .group("group1").group("group2")
+                    .entity("entity1")
+                    .build();
+            OperationResult<User> result = usersService.updateOrCreateUser(user, true, false);
+            assertThat(result.isSuccess()).isTrue();
+            assertThat(result.getResult().getLogin()).isEqualTo("user2");
+            assertThat(result.getResult().getFirstName()).isEqualTo("newFirstName");
+            assertThat(userRepositoryStub.findById("user2").get().getLogin()).isEqualTo("user2");
+            assertThat(userRepositoryStub.findById("user2").get().getFirstName()).isEqualTo("newFirstName");
+            assertThat(userRepositoryStub.findById("user2").get().getGroups()).containsExactlyInAnyOrder(
+                    "group2");
+            assertThat(userRepositoryStub.findById("user2").get().getEntities()).containsExactlyInAnyOrder("entity1");
+        }
+
+    }
+
 }

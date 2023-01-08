@@ -38,7 +38,7 @@ public class CurrentUserWithPerimetersController implements CurrentUserWithPerim
             PerimeterRepository perimeterRepository, EntityRepository entityRepository, UserSettingsRepository userSettingsRepository, RabbitEventBus rabbitEventBus) {
         
                 NotificationService notificationService = new NotificationService(userRepository,rabbitEventBus);
-        UsersService usersService = new UsersService(userRepository, groupRepository, perimeterRepository,notificationService);
+        UsersService usersService = new UsersService(userRepository, groupRepository, entityRepository, perimeterRepository,notificationService);
         UserSettingsService userSettingsService = new UserSettingsService(userSettingsRepository, usersService, notificationService);
         this.currentUserWithPerimetersService = new CurrentUserWithPerimetersService(usersService, userSettingsService,
                 entityRepository);

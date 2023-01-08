@@ -53,7 +53,7 @@ public class UserSettingsServiceShould {
         userSettingsRepositoryStub.save(settings1);
         userSettingsRepositoryStub.save(settings2);
 
-        usersServiceStub = new UsersServiceStub(null, null, null, null);
+        usersServiceStub = new UsersServiceStub(null, null,null, null, null);
         userSettingsService = new UserSettingsService(userSettingsRepositoryStub, usersServiceStub,
                 new NotificationService(userRepositoryStub, new EventBusStub()));
         initPerimetersPerUsers();

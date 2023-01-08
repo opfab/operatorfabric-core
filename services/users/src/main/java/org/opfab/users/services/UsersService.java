@@ -20,6 +20,7 @@ import org.opfab.users.model.Group;
 import org.opfab.users.model.OperationResult;
 import org.opfab.users.model.Perimeter;
 import org.opfab.users.model.User;
+import org.opfab.users.repositories.EntityRepository;
 import org.opfab.users.repositories.GroupRepository;
 import org.opfab.users.repositories.PerimeterRepository;
 import org.opfab.users.repositories.UserRepository;
@@ -35,14 +36,17 @@ public class UsersService {
 
     private UserRepository userRepository;
     private GroupRepository groupRepository;
+    private EntityRepository entityRepository;
     private PerimeterRepository perimeterRepository;
     private NotificationService notificationService;
-    
 
-    public UsersService(UserRepository userRepository, GroupRepository groupRepository,PerimeterRepository perimeterRepository,NotificationService notificationService) {
+    public UsersService(UserRepository userRepository, GroupRepository groupRepository,
+            EntityRepository entityRepository,
+            PerimeterRepository perimeterRepository, NotificationService notificationService) {
 
         this.userRepository = userRepository;
         this.groupRepository = groupRepository;
+        this.entityRepository = entityRepository;
         this.perimeterRepository = perimeterRepository;
         this.notificationService = notificationService;
 
@@ -109,11 +113,11 @@ public class UsersService {
         if (result.isEmpty())
             return new OperationResult<>(null, false, OperationResult.ErrorType.NOT_FOUND,
                     String.format(USER_NOT_FOUND_MSG, login));
-        
+
         List<String> groups = result.get().getGroups();
         Set<Perimeter> perimeters = findPerimetersAttachedToGroups(groups);
 
-        return  new OperationResult<>(new ArrayList<>(perimeters), true, null, null);
+        return new OperationResult<>(new ArrayList<>(perimeters), true, null, null);
 
     }
 
@@ -140,8 +144,9 @@ public class UsersService {
         List<Group> foundGroups = new ArrayList<>();
         for (String id : groupIds) {
             Optional<Group> foundGroup = groupRepository.findById(id);
-            if (foundGroup.isPresent())  foundGroups.add(foundGroup.get());
-            }     
+            if (foundGroup.isPresent())
+                foundGroups.add(foundGroup.get());
+        }
         return foundGroups;
     }
 
@@ -149,8 +154,76 @@ public class UsersService {
         List<Perimeter> foundPerimeters = new ArrayList<>();
         for (String perimeterId : perimeterIds) {
             Optional<Perimeter> foundPerimeter = perimeterRepository.findById(perimeterId);
-            if (foundPerimeter.isPresent()) foundPerimeters.add(foundPerimeter.get());
+            if (foundPerimeter.isPresent())
+                foundPerimeters.add(foundPerimeter.get());
         }
         return foundPerimeters;
     }
+
+    public OperationResult<User> updateOrCreateUser(User user, boolean updateEntities, boolean updateGroups) {
+        LoginFormatChecker.LoginCheckResult formatCheckResult = LoginFormatChecker.check(user.getLogin());
+        user.setLogin(user.getLogin().toLowerCase());
+
+        if (formatCheckResult.isValid()) {
+            User existingUser = userRepository.findById(user.getLogin()).orElse(null);
+
+            setEntitiesForUserUpdate(user, existingUser, updateEntities);
+
+            if (updateGroups) {
+                if (isRemovingAdminUserFromAdminGroup(user)) {
+                    return new OperationResult<>(null, false,
+                            OperationResult.ErrorType.BAD_REQUEST, CANNOT_REMOVE_ADMIN_USER_FROM_ADMIN_GROUP);
+                }
+                removeInvalidGroups(user);
+            } else {
+                if (existingUser != null)
+                    user.setGroups(existingUser.getGroups());
+                else
+                    user.setGroups(Collections.emptyList());
+            }
+
+            User newUser = userRepository.save(user);
+            if (existingUser != null)
+                notificationService.publishUpdatedUserMessage(user.getLogin());
+            return new OperationResult<>(newUser, true, null, null);
+
+        } else
+            return new OperationResult<>(null, false, OperationResult.ErrorType.BAD_REQUEST,
+                    formatCheckResult.getErrorMessage());
+    }
+
+    private void setEntitiesForUserUpdate(User newUser, User existingUser, boolean updateEntities) {
+        if (updateEntities)
+            removeInvalidEntities(newUser);
+        else {
+            if (existingUser != null)
+                newUser.setEntities(existingUser.getEntities());
+            else
+                newUser.setEntities(Collections.emptyList());
+        }
+    }
+
+    private void removeInvalidEntities(User user) {
+        List<String> entities = user.getEntities();
+        if (entities != null) {
+            List<String> invalidEntities = entities.stream()
+                    .filter(groupId -> this.entityRepository.findById(groupId).isEmpty()).toList();
+            if (!invalidEntities.isEmpty())
+                entities.removeAll(invalidEntities);
+        }
+        user.setEntities(entities);
+    }
+
+    private void removeInvalidGroups(User user) {
+        List<String> groups = user.getGroups();
+        if (groups != null) {
+            List<String> invalidGroups = groups.stream()
+                    .filter(groupId -> this.groupRepository.findById(groupId).isEmpty()).toList();
+            if (!invalidGroups.isEmpty())
+                groups.removeAll(invalidGroups);
+        }
+        user.setGroups(groups);
+    }
+
+ 
 }
