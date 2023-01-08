@@ -15,6 +15,7 @@ import java.util.Map;
 
 import org.opfab.users.model.OperationResult;
 import org.opfab.users.model.Perimeter;
+import org.opfab.users.repositories.EntityRepository;
 import org.opfab.users.repositories.GroupRepository;
 import org.opfab.users.repositories.PerimeterRepository;
 import org.opfab.users.repositories.UserRepository;
@@ -23,15 +24,16 @@ import org.opfab.users.services.UsersService;
 
 public class UsersServiceStub extends UsersService {
 
-    Map<String,List<Perimeter>> perimetersPerUser = new HashMap<>() ;
+    Map<String, List<Perimeter>> perimetersPerUser = new HashMap<>();
 
     public UsersServiceStub(UserRepository userRepository, GroupRepository groupRepository,
-            PerimeterRepository perimeterRepository, NotificationService notificationService) {
-        super(userRepository, groupRepository, perimeterRepository, notificationService);
+            EntityRepository entityRepository, PerimeterRepository perimeterRepository,
+            NotificationService notificationService) {
+        super(userRepository, groupRepository, entityRepository, perimeterRepository, notificationService);
     }
 
-    public void setPerimetersForUser(List<Perimeter> perimeters,String login) {
-        perimetersPerUser.put(login,perimeters);
+    public void setPerimetersForUser(List<Perimeter> perimeters, String login) {
+        perimetersPerUser.put(login, perimeters);
     }
 
     public void clearPerimetersPerUser() {
@@ -40,8 +42,8 @@ public class UsersServiceStub extends UsersService {
 
     @Override
     public OperationResult<List<Perimeter>> fetchUserPerimeters(String login) {
-        return  new OperationResult<>(perimetersPerUser.get(login), true, null, null);
+        return new OperationResult<>(perimetersPerUser.get(login), true, null, null);
 
     }
-    
+
 }
