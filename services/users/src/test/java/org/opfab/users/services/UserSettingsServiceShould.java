@@ -106,6 +106,7 @@ public class UserSettingsServiceShould {
             OperationResult<UserSettings> settings = userSettingsService.fetchUserSettings("dummy");
             assertThat(settings.isSuccess()).isFalse();
             assertThat(settings.getErrorType()).isEqualTo(OperationResult.ErrorType.NOT_FOUND);
+            assertThat(settings.getErrorMessage()).isEqualTo("User setting for user dummy not found");
         }
 
         @Test
@@ -127,7 +128,7 @@ public class UserSettingsServiceShould {
 
             UserSettings newSettings = UserSettingsData.builder().login("user1").description("desc").locale("newLocale")
                     .build();
-            OperationResult<UserSettings> settings = userSettingsService.patchUserSettings("user1",newSettings);
+            OperationResult<UserSettings> settings = userSettingsService.patchUserSettings("user1", newSettings);
             assertThat(settings.isSuccess()).isTrue();
             assertThat(settings.getResult().getLocale()).isEqualTo("newLocale");
             assertThat(userSettingsRepositoryStub.findById("user1").get().getLocale()).isEqualTo("newLocale");
@@ -139,7 +140,7 @@ public class UserSettingsServiceShould {
 
             UserSettings newSettings = UserSettingsData.builder().login("user3").description("desc").locale("nl")
                     .build();
-            OperationResult<UserSettings> settings = userSettingsService.patchUserSettings("user3",newSettings);
+            OperationResult<UserSettings> settings = userSettingsService.patchUserSettings("user3", newSettings);
             assertThat(settings.isSuccess()).isTrue();
             assertThat(settings.getResult().getLocale()).isEqualTo("nl");
             assertThat(userSettingsRepositoryStub.findById("user3").get().getLocale()).isEqualTo("nl");
@@ -152,7 +153,7 @@ public class UserSettingsServiceShould {
             processesStatesNotNotified.put("process1", Arrays.asList("state1", "state2"));
             UserSettings newSettings = UserSettingsData.builder().login("user1").locale("newLocale")
                     .processesStatesNotNotified(processesStatesNotNotified).build();
-            OperationResult<UserSettings> settings = userSettingsService.patchUserSettings("user1",newSettings);
+            OperationResult<UserSettings> settings = userSettingsService.patchUserSettings("user1", newSettings);
             assertThat(settings.isSuccess()).isTrue();
             assertThat(settings.getResult().getLocale()).isEqualTo("newLocale");
             assertThat(settings.getResult().getDescription()).isEqualTo("desc");
@@ -171,9 +172,11 @@ public class UserSettingsServiceShould {
             processesStatesNotNotified.put("process2", Arrays.asList("stateRightNotFilterable"));
             UserSettings newSettings = UserSettingsData.builder().login("user1").locale("newLocale")
                     .processesStatesNotNotified(processesStatesNotNotified).build();
-            OperationResult<UserSettings> settings = userSettingsService.patchUserSettings("user1",newSettings);
+            OperationResult<UserSettings> settings = userSettingsService.patchUserSettings("user1", newSettings);
             assertThat(settings.isSuccess()).isFalse();
             assertThat(settings.getErrorType()).isEqualTo(OperationResult.ErrorType.BAD_REQUEST);
+            assertThat(settings.getErrorMessage())
+                    .isEqualTo("Filtering notification not allowed for at least one process/state");
             assertThat(userSettingsRepositoryStub.findById("user1").get().getLocale()).isEqualTo("fr");
             assertThat(userSettingsRepositoryStub.findById("user1").get().getDescription()).isEqualTo("desc");
             assertThat(
@@ -192,7 +195,7 @@ public class UserSettingsServiceShould {
 
             UserSettings newSettings = UserSettingsData.builder().login("user1").locale("newLocale")
                     .build();
-            OperationResult<UserSettings> settings = userSettingsService.updateUserSettings("user1",newSettings);
+            OperationResult<UserSettings> settings = userSettingsService.updateUserSettings("user1", newSettings);
             assertThat(settings.isSuccess()).isTrue();
             assertThat(settings.getResult().getLocale()).isEqualTo("newLocale");
             assertThat(userSettingsRepositoryStub.findById("user1").get().getLocale()).isEqualTo("newLocale");
@@ -205,7 +208,7 @@ public class UserSettingsServiceShould {
 
             UserSettings newSettings = UserSettingsData.builder().login("user3").description("desc").locale("nl")
                     .build();
-            OperationResult<UserSettings> settings = userSettingsService.updateUserSettings("user3",newSettings);
+            OperationResult<UserSettings> settings = userSettingsService.updateUserSettings("user3", newSettings);
             assertThat(settings.isSuccess()).isTrue();
             assertThat(settings.getResult().getLocale()).isEqualTo("nl");
             assertThat(userSettingsRepositoryStub.findById("user3").get().getLocale()).isEqualTo("nl");
@@ -219,7 +222,7 @@ public class UserSettingsServiceShould {
             processesStatesNotNotified.put("process1", Arrays.asList("state1", "state2"));
             UserSettings newSettings = UserSettingsData.builder().login("user1").locale("newLocale")
                     .processesStatesNotNotified(processesStatesNotNotified).build();
-            OperationResult<UserSettings> settings = userSettingsService.updateUserSettings("user1",newSettings);
+            OperationResult<UserSettings> settings = userSettingsService.updateUserSettings("user1", newSettings);
             assertThat(settings.isSuccess()).isTrue();
             assertThat(settings.getResult().getLocale()).isEqualTo("newLocale");
             assertThat(settings.getResult().getDescription()).isNull();
@@ -238,9 +241,11 @@ public class UserSettingsServiceShould {
             processesStatesNotNotified.put("process2", Arrays.asList("stateRightNotFilterable"));
             UserSettings newSettings = UserSettingsData.builder().login("user1").locale("newLocale")
                     .processesStatesNotNotified(processesStatesNotNotified).build();
-            OperationResult<UserSettings> settings = userSettingsService.updateUserSettings("user1",newSettings);
+            OperationResult<UserSettings> settings = userSettingsService.updateUserSettings("user1", newSettings);
             assertThat(settings.isSuccess()).isFalse();
             assertThat(settings.getErrorType()).isEqualTo(OperationResult.ErrorType.BAD_REQUEST);
+            assertThat(settings.getErrorMessage())
+                    .isEqualTo("Filtering notification not allowed for at least one process/state");
             assertThat(userSettingsRepositoryStub.findById("user1").get().getLocale()).isEqualTo("fr");
             assertThat(userSettingsRepositoryStub.findById("user1").get().getDescription()).isEqualTo("desc");
             assertThat(

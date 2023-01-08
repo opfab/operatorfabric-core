@@ -140,6 +140,7 @@ public class UsersServiceShould {
             OperationResult<User> group = usersService.fetchUser("dummy");
             assertThat(group.isSuccess()).isFalse();
             assertThat(group.getErrorType()).isEqualTo(OperationResult.ErrorType.NOT_FOUND);
+            assertThat(group.getErrorMessage()).isEqualTo("User dummy not found");
         }
 
         @Test
@@ -163,6 +164,7 @@ public class UsersServiceShould {
             OperationResult<EntityCreationReport<User>> result = usersService.createUser(user);
             assertThat(result.isSuccess()).isFalse();
             assertThat(result.getErrorType()).isEqualTo(OperationResult.ErrorType.BAD_REQUEST);
+            assertThat(result.getErrorMessage()).isEqualTo("Login should only contain the following characters: letters, _, -, . or digits (login=invalid?login).");
         }
 
         @Test
@@ -229,6 +231,7 @@ public class UsersServiceShould {
             OperationResult<EntityCreationReport<User>> result = usersService.createUser(user);
             assertThat(result.isSuccess()).isFalse();
             assertThat(result.getErrorType()).isEqualTo(OperationResult.ErrorType.BAD_REQUEST);
+            assertThat(result.getErrorMessage()).isEqualTo("Removing group ADMIN from user admin is not allowed");
         }
 
         @Test
@@ -256,6 +259,7 @@ public class UsersServiceShould {
 
             assertThat(result.isSuccess()).isFalse();
             assertThat(result.getErrorType()).isEqualTo(OperationResult.ErrorType.NOT_FOUND);
+            assertThat(result.getErrorMessage()).isEqualTo("User dummyUser not found");
         }
 
         @Test
@@ -263,6 +267,7 @@ public class UsersServiceShould {
             OperationResult<String> result = usersService.deleteUser("admin");
             assertThat(result.isSuccess()).isFalse();
             assertThat(result.getErrorType()).isEqualTo(OperationResult.ErrorType.BAD_REQUEST);
+            assertThat(result.getErrorMessage()).isEqualTo("Deleting user admin is not allowed"); 
         }
 
         @Test
@@ -284,6 +289,7 @@ public class UsersServiceShould {
                 OperationResult<List<Perimeter>> result = usersService.fetchUserPerimeters("dummyUser");
                 assertThat(result.isSuccess()).isFalse();
                 assertThat(result.getErrorType()).isEqualTo(OperationResult.ErrorType.NOT_FOUND);
+                assertThat(result.getErrorMessage()).isEqualTo("User dummyUser not found"); 
             }
 
             @Test

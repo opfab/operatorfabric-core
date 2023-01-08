@@ -78,6 +78,7 @@ class EntitiesServiceShould {
             OperationResult<Entity> entity = entitiesService.fetchEntity("dummyEntity");
             assertThat(entity.isSuccess()).isFalse();
             assertThat(entity.getErrorType()).isEqualTo(OperationResult.ErrorType.NOT_FOUND);
+            assertThat(entity.getErrorMessage()).isEqualTo("Entity dummyEntity not found");
         }
 
         @Test
@@ -147,6 +148,7 @@ class EntitiesServiceShould {
 
             assertThat(result.isSuccess()).isFalse();
             assertThat(result.getErrorType()).isEqualTo(OperationResult.ErrorType.NOT_FOUND);
+            assertThat(result.getErrorMessage()).isEqualTo("Entity dummyEntity not found");
         }
 
         @Test
@@ -189,6 +191,7 @@ class EntitiesServiceShould {
                 OperationResult<String> result = entitiesService.addEntityUsers("dummyid", null);
                 assertThat(result.isSuccess()).isFalse();
                 assertThat(result.getErrorType()).isEqualTo(OperationResult.ErrorType.NOT_FOUND);
+                assertThat(result.getErrorMessage()).isEqualTo("Entity dummyid not found");
             }
 
             @Test
@@ -199,6 +202,7 @@ class EntitiesServiceShould {
                 OperationResult<String> result = entitiesService.addEntityUsers("entity1", users);
                 assertThat(result.isSuccess()).isFalse();
                 assertThat(result.getErrorType()).isEqualTo(OperationResult.ErrorType.BAD_REQUEST);
+                assertThat(result.getErrorMessage()).isEqualTo("Bad user list : user dummyUser not found");
             }
 
             @Test
@@ -223,6 +227,7 @@ class EntitiesServiceShould {
                 OperationResult<String> result = entitiesService.updateEntityUsers("dummyid", null);
                 assertThat(result.isSuccess()).isFalse();
                 assertThat(result.getErrorType()).isEqualTo(OperationResult.ErrorType.NOT_FOUND);
+                assertThat(result.getErrorMessage()).isEqualTo("Entity dummyid not found");
             }
 
             @Test
@@ -233,6 +238,7 @@ class EntitiesServiceShould {
                 OperationResult<String> result = entitiesService.updateEntityUsers("entity1", users);
                 assertThat(result.isSuccess()).isFalse();
                 assertThat(result.getErrorType()).isEqualTo(OperationResult.ErrorType.BAD_REQUEST);
+                assertThat(result.getErrorMessage()).isEqualTo("Bad user list : user dummyUser not found");
             }
 
             @Test
@@ -284,6 +290,7 @@ class EntitiesServiceShould {
                 OperationResult<String> result = entitiesService.deleteEntityUsers("dummyEntity");
                 assertThat(result.isSuccess()).isFalse();
                 assertThat(result.getErrorType()).isEqualTo(OperationResult.ErrorType.NOT_FOUND);
+                assertThat(result.getErrorMessage()).isEqualTo("Entity dummyEntity not found");
             }
 
             @Test
@@ -300,13 +307,15 @@ class EntitiesServiceShould {
                 OperationResult<String> result = entitiesService.deleteEntityUser("entity1", "dummyUser");
                 assertThat(result.isSuccess()).isFalse();
                 assertThat(result.getErrorType()).isEqualTo(OperationResult.ErrorType.NOT_FOUND);
+                assertThat(result.getErrorMessage()).isEqualTo("User dummyUser not found");
             }
 
             @Test
             void GIVEN_A_User_WHEN_Try_Removing_From_Not_Existing_Entity_THEN_Failed_And_Return_NOT_FOUND() {
-                OperationResult<String> result = entitiesService.deleteEntityUser("dummyGroup", "user1");
+                OperationResult<String> result = entitiesService.deleteEntityUser("dummyid", "user1");
                 assertThat(result.isSuccess()).isFalse();
                 assertThat(result.getErrorType()).isEqualTo(OperationResult.ErrorType.NOT_FOUND);
+                assertThat(result.getErrorMessage()).isEqualTo("Entity dummyid not found");
             }
 
             @Test
