@@ -1,4 +1,4 @@
-/* Copyright (c) 2021-2022, RTE (http://www.rte-france.com)
+/* Copyright (c) 2021-2023, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -7,12 +7,12 @@
  * This file is part of the OperatorFabric project.
  */
 
-package org.opfab.users.controllers;
+package org.opfab.users.utils;
 
 import org.junit.jupiter.api.Test;
 import org.opfab.users.model.Entity;
 import org.opfab.users.model.EntityData;
-import org.opfab.users.utils.EntityCycleDetector;
+
 
 import java.util.*;
 import java.util.stream.Collectors;

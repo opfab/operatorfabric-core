@@ -93,6 +93,7 @@ class GroupsServiceShould {
             OperationResult<Group> group = groupsService.fetchGroup("dummy");
             assertThat(group.isSuccess()).isFalse();
             assertThat(group.getErrorType()).isEqualTo(OperationResult.ErrorType.NOT_FOUND);
+            assertThat(group.getErrorMessage()).isEqualTo("Group dummy not found");
         }
 
         @Test
@@ -114,6 +115,7 @@ class GroupsServiceShould {
             OperationResult<EntityCreationReport<Group>> result = groupsService.createGroup(group);
             assertThat(result.isSuccess()).isFalse();
             assertThat(result.getErrorType()).isEqualTo(OperationResult.ErrorType.BAD_REQUEST);
+            assertThat(result.getErrorMessage()).isEqualTo("Id should only contain the following characters: letters, _, - or digits (id=invalid?id).");
         }
 
         @Test
@@ -155,6 +157,7 @@ class GroupsServiceShould {
             OperationResult<EntityCreationReport<Group>> result = groupsService.createGroup(group);
             assertThat(result.isSuccess()).isFalse();
             assertThat(result.getErrorType()).isEqualTo(OperationResult.ErrorType.BAD_REQUEST);
+            assertThat(result.getErrorMessage()).isEqualTo("Bad perimeter list : perimeter dummyPerimeter not found");
             assertThat(groupRepositoryStub.findById("groupId")).isEmpty();
 
         }
@@ -170,6 +173,7 @@ class GroupsServiceShould {
 
             assertThat(result.isSuccess()).isFalse();
             assertThat(result.getErrorType()).isEqualTo(OperationResult.ErrorType.NOT_FOUND);
+            assertThat(result.getErrorMessage()).isEqualTo("Group dummyGroup not found");
         }
 
         @Test
@@ -177,6 +181,7 @@ class GroupsServiceShould {
             OperationResult<String> result = groupsService.deleteGroup("ADMIN");
             assertThat(result.isSuccess()).isFalse();
             assertThat(result.getErrorType()).isEqualTo(OperationResult.ErrorType.BAD_REQUEST);
+            assertThat(result.getErrorMessage()).isEqualTo("Deleting group ADMIN is not allowed");
         }
 
         @Test
@@ -208,6 +213,7 @@ class GroupsServiceShould {
                 OperationResult<String> result = groupsService.addGroupUsers("dummyid", null);
                 assertThat(result.isSuccess()).isFalse();
                 assertThat(result.getErrorType()).isEqualTo(OperationResult.ErrorType.NOT_FOUND);
+                assertThat(result.getErrorMessage()).isEqualTo("Group dummyid not found");
             }
 
             @Test
@@ -218,6 +224,7 @@ class GroupsServiceShould {
                 OperationResult<String> result = groupsService.addGroupUsers("group1", users);
                 assertThat(result.isSuccess()).isFalse();
                 assertThat(result.getErrorType()).isEqualTo(OperationResult.ErrorType.BAD_REQUEST);
+                assertThat(result.getErrorMessage()).isEqualTo("Bad user list : user dummyUser not found");
             }
 
             @Test
@@ -250,6 +257,7 @@ class GroupsServiceShould {
                 OperationResult<String> result = groupsService.updateGroupUsers("dummyid", null);
                 assertThat(result.isSuccess()).isFalse();
                 assertThat(result.getErrorType()).isEqualTo(OperationResult.ErrorType.NOT_FOUND);
+                assertThat(result.getErrorMessage()).isEqualTo("Group dummyid not found");
             }
 
             @Test
@@ -260,6 +268,7 @@ class GroupsServiceShould {
                 OperationResult<String> result = groupsService.updateGroupUsers("group1", users);
                 assertThat(result.isSuccess()).isFalse();
                 assertThat(result.getErrorType()).isEqualTo(OperationResult.ErrorType.BAD_REQUEST);
+                assertThat(result.getErrorMessage()).isEqualTo("Bad user list : user dummyUser not found");
             }
 
             @Test
@@ -306,6 +315,7 @@ class GroupsServiceShould {
                 OperationResult<String> result = groupsService.deleteGroupUsers("dummyGroup");
                 assertThat(result.isSuccess()).isFalse();
                 assertThat(result.getErrorType()).isEqualTo(OperationResult.ErrorType.NOT_FOUND);
+                assertThat(result.getErrorMessage()).isEqualTo("Group dummyGroup not found");
             }
 
             @Test
@@ -321,6 +331,7 @@ class GroupsServiceShould {
                 OperationResult<String> result = groupsService.deleteGroupUser("admin", "admin");
                 assertThat(result.isSuccess()).isFalse();
                 assertThat(result.getErrorType()).isEqualTo(OperationResult.ErrorType.BAD_REQUEST);
+                assertThat(result.getErrorMessage()).isEqualTo("Removing group ADMIN from user admin is not allowed");
                 assertThat(userRepositoryStub.findById("admin").get().getGroups()).contains("ADMIN");
             }
 
@@ -329,6 +340,7 @@ class GroupsServiceShould {
                 OperationResult<String> result = groupsService.deleteGroupUser("group1", "dummyUser");
                 assertThat(result.isSuccess()).isFalse();
                 assertThat(result.getErrorType()).isEqualTo(OperationResult.ErrorType.NOT_FOUND);
+                assertThat(result.getErrorMessage()).isEqualTo("User dummyUser not found");
             }
 
             @Test
@@ -336,6 +348,7 @@ class GroupsServiceShould {
                 OperationResult<String> result = groupsService.deleteGroupUser("dummyGroup", "user1");
                 assertThat(result.isSuccess()).isFalse();
                 assertThat(result.getErrorType()).isEqualTo(OperationResult.ErrorType.NOT_FOUND);
+                assertThat(result.getErrorMessage()).isEqualTo("Group dummyGroup not found");
             }
 
             @Test
@@ -359,6 +372,7 @@ class GroupsServiceShould {
                 OperationResult<List<Perimeter>> result = groupsService.fetchGroupPerimeters("dummyGroup");
                 assertThat(result.isSuccess()).isFalse();
                 assertThat(result.getErrorType()).isEqualTo(OperationResult.ErrorType.NOT_FOUND);
+                assertThat(result.getErrorMessage()).isEqualTo("Group dummyGroup not found");
             }
 
             @Test
@@ -402,20 +416,23 @@ class GroupsServiceShould {
         class Update {
 
             @Test
-            void GIVEN_Group_Does_Not_Exist_WHEN_Updating_Perimeters_THEN_Return_NotFound() {
+            void GIVEN_Perimeter_Does_Not_Exist_WHEN_Updating_Perimeters_THEN_Return_BAD_REQUEST() {
                 ArrayList<String> perimeters = new ArrayList<>();
                 perimeters.add("perimeter1");
                 perimeters.add("dummyParimeter");
                 OperationResult<String> result = groupsService.updateGroupPerimeters("group1", perimeters);
                 assertThat(result.isSuccess()).isFalse();
                 assertThat(result.getErrorType()).isEqualTo(OperationResult.ErrorType.BAD_REQUEST);
+                assertThat(result.getErrorMessage()).isEqualTo("Bad perimeter list : perimeter dummyParimeter not found");
+                
             }
 
             @Test
-            void GIVEN_Existing_Group_WHEN_Updating_Perimeters_With_An_Invalid_One_THEN_Return_BAD_REQUEST() {
+            void GIVEN_None_Existing_Group_WHEN_Updating_Perimeters_THEN_Return_NOT_FOUND() {
                 OperationResult<String> result = groupsService.updateGroupPerimeters("dummyid", null);
                 assertThat(result.isSuccess()).isFalse();
                 assertThat(result.getErrorType()).isEqualTo(OperationResult.ErrorType.NOT_FOUND);
+                assertThat(result.getErrorMessage()).isEqualTo("Group dummyid not found");
             }
 
             @Test
@@ -445,20 +462,22 @@ class GroupsServiceShould {
         class Add {
 
             @Test
-            void GIVEN_Group_Does_Not_Exist_WHEN_Adding_Perimeters_THEN_Return_NotFound() {
+            void GIVEN_Perimeter_Does_Not_Exist_WHEN_Adding_Perimeters_THEN_Return_BAD_REQUEST() {
                 ArrayList<String> perimeters = new ArrayList<>();
                 perimeters.add("perimeter1");
-                perimeters.add("dummyParimeter");
+                perimeters.add("dummyPerimeter");
                 OperationResult<String> result = groupsService.addGroupPerimeters("group1", perimeters);
                 assertThat(result.isSuccess()).isFalse();
                 assertThat(result.getErrorType()).isEqualTo(OperationResult.ErrorType.BAD_REQUEST);
+                assertThat(result.getErrorMessage()).isEqualTo("Bad perimeter list : perimeter dummyPerimeter not found");
             }
 
             @Test
-            void GIVEN_Existing_Group_WHEN_Adding_Perimeters_With_An_Invalid_One_THEN_Return_BAD_REQUEST() {
+            void GIVEN_Group_Does_Not_Exist_WHEN_Adding_Perimeters_THEN_Return_NOT_FOUND() {
                 OperationResult<String> result = groupsService.addGroupPerimeters("dummyid", null);
                 assertThat(result.isSuccess()).isFalse();
                 assertThat(result.getErrorType()).isEqualTo(OperationResult.ErrorType.NOT_FOUND);
+                assertThat(result.getErrorMessage()).isEqualTo("Group dummyid not found");
             }
 
             @Test

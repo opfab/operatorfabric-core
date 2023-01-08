@@ -112,6 +112,7 @@ public class PerimetersServiceShould {
             OperationResult<Perimeter> perimeter = perimetersService.fetchPerimeter("dummy");
             assertThat(perimeter.isSuccess()).isFalse();
             assertThat(perimeter.getErrorType()).isEqualTo(OperationResult.ErrorType.NOT_FOUND);
+            assertThat(perimeter.getErrorMessage()).isEqualTo("Perimeter dummy not found");
         }
 
         @Test
@@ -132,6 +133,7 @@ public class PerimetersServiceShould {
             OperationResult<EntityCreationReport<Perimeter>> result = perimetersService.createPerimeter(perimeter);
             assertThat(result.isSuccess()).isFalse();
             assertThat(result.getErrorType()).isEqualTo(OperationResult.ErrorType.BAD_REQUEST);
+            assertThat(result.getErrorMessage()).isEqualTo("Id should only contain the following characters: letters, _, - or digits (id=invalid?id).");
         }
 
         @Test
@@ -140,6 +142,7 @@ public class PerimetersServiceShould {
             OperationResult<EntityCreationReport<Perimeter>> result = perimetersService.createPerimeter(perimeter);
             assertThat(result.isSuccess()).isFalse();
             assertThat(result.getErrorType()).isEqualTo(OperationResult.ErrorType.BAD_REQUEST);
+            assertThat(result.getErrorMessage()).isEqualTo("Creation failed because perimeter perimeter1 already exist");
         }
 
         @Test
@@ -181,6 +184,7 @@ public class PerimetersServiceShould {
             OperationResult<EntityCreationReport<Perimeter>> result = perimetersService.createPerimeter(perimeter);
             assertThat(result.isSuccess()).isFalse();
             assertThat(result.getErrorType()).isEqualTo(OperationResult.ErrorType.BAD_REQUEST);
+            assertThat(result.getErrorMessage()).isEqualTo("Bad stateRights list : there is one or more duplicate state(s) in the perimeter");
         }
 
         @Test
@@ -195,6 +199,7 @@ public class PerimetersServiceShould {
             OperationResult<EntityCreationReport<Perimeter>> result = perimetersService.createPerimeter(perimeter);
             assertThat(result.isSuccess()).isFalse();
             assertThat(result.getErrorType()).isEqualTo(OperationResult.ErrorType.BAD_REQUEST);
+            assertThat(result.getErrorMessage()).isEqualTo("Bad stateRights list : there is one or more duplicate state(s) in the perimeter");
         }
     }
 
@@ -207,6 +212,7 @@ public class PerimetersServiceShould {
             OperationResult<EntityCreationReport<Perimeter>> result = perimetersService.updatePerimeter(perimeter);
             assertThat(result.isSuccess()).isFalse();
             assertThat(result.getErrorType()).isEqualTo(OperationResult.ErrorType.BAD_REQUEST);
+            assertThat(result.getErrorMessage()).isEqualTo("Id should only contain the following characters: letters, _, - or digits (id=invalid?id).");
         }
 
         @Test
@@ -258,6 +264,7 @@ public class PerimetersServiceShould {
             OperationResult<EntityCreationReport<Perimeter>> result = perimetersService.createPerimeter(perimeter);
             assertThat(result.isSuccess()).isFalse();
             assertThat(result.getErrorType()).isEqualTo(OperationResult.ErrorType.BAD_REQUEST);
+            assertThat(result.getErrorMessage()).isEqualTo("Creation failed because perimeter perimeter1 already exist");
             assertThat(perimeterRepositoryStub.findById("perimeter1").get().getProcess()).isEqualTo("processTest");
         }
 
@@ -271,6 +278,7 @@ public class PerimetersServiceShould {
             OperationResult<String> result = perimetersService.deletePerimeter("dummyPerimeter");
             assertThat(result.isSuccess()).isFalse();
             assertThat(result.getErrorType()).isEqualTo(OperationResult.ErrorType.NOT_FOUND);
+            assertThat(result.getErrorMessage()).isEqualTo("Perimeter dummyPerimeter not found");
         }
 
         @Test
@@ -303,6 +311,7 @@ public class PerimetersServiceShould {
                 OperationResult<String> result = perimetersService.addPerimeterGroups("dummyid", null);
                 assertThat(result.isSuccess()).isFalse();
                 assertThat(result.getErrorType()).isEqualTo(OperationResult.ErrorType.NOT_FOUND);
+                assertThat(result.getErrorMessage()).isEqualTo("Perimeter dummyid not found");
             }
 
             @Test
@@ -313,6 +322,7 @@ public class PerimetersServiceShould {
                 OperationResult<String> result = perimetersService.addPerimeterGroups("perimeter1", groups);
                 assertThat(result.isSuccess()).isFalse();
                 assertThat(result.getErrorType()).isEqualTo(OperationResult.ErrorType.BAD_REQUEST);
+                assertThat(result.getErrorMessage()).isEqualTo("Bad group list : group dummyGroup not found");
             }
 
             @Test
@@ -345,16 +355,18 @@ public class PerimetersServiceShould {
                 OperationResult<String> result = perimetersService.updatePerimeterGroups("dummyid", null);
                 assertThat(result.isSuccess()).isFalse();
                 assertThat(result.getErrorType()).isEqualTo(OperationResult.ErrorType.NOT_FOUND);
+                assertThat(result.getErrorMessage()).isEqualTo("Perimeter dummyid not found");
             }
 
             @Test
             void GIVEN_Existing_Perimeter_WHEN_Updating_Groups_With_A_Not_Existing_One_THEN_Return_Bad_Request() {
                 ArrayList<String> groups = new ArrayList<>();
                 groups.add("group1");
-                groups.add("dummyUser");
+                groups.add("dummyGroup");
                 OperationResult<String> result = perimetersService.updatePerimeterGroups("perimeter1", groups);
                 assertThat(result.isSuccess()).isFalse();
                 assertThat(result.getErrorType()).isEqualTo(OperationResult.ErrorType.BAD_REQUEST);
+                assertThat(result.getErrorMessage()).isEqualTo("Bad group list : group dummyGroup not found");
             }
 
             @Test
@@ -400,6 +412,7 @@ public class PerimetersServiceShould {
                 OperationResult<String> result = perimetersService.deletePerimeterGroups("dummyPerimeter");
                 assertThat(result.isSuccess()).isFalse();
                 assertThat(result.getErrorType()).isEqualTo(OperationResult.ErrorType.NOT_FOUND);
+                assertThat(result.getErrorMessage()).isEqualTo("Perimeter dummyPerimeter not found");
             }
 
             @Test
@@ -420,6 +433,7 @@ public class PerimetersServiceShould {
                 OperationResult<String> result = perimetersService.deletePerimeterGroup("dummyPerimeter", "group1");
                 assertThat(result.isSuccess()).isFalse();
                 assertThat(result.getErrorType()).isEqualTo(OperationResult.ErrorType.NOT_FOUND);
+                assertThat(result.getErrorMessage()).isEqualTo("Perimeter dummyPerimeter not found");
             }
 
             @Test
@@ -427,6 +441,7 @@ public class PerimetersServiceShould {
                 OperationResult<String> result = perimetersService.deletePerimeterGroup("perimeter1", "dummyGroup");
                 assertThat(result.isSuccess()).isFalse();
                 assertThat(result.getErrorType()).isEqualTo(OperationResult.ErrorType.NOT_FOUND);
+                assertThat(result.getErrorMessage()).isEqualTo("Group dummyGroup not found");
             }
 
             @Test
