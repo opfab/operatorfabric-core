@@ -41,18 +41,7 @@ import java.util.*;
 @RequestMapping("/users")
 public class UsersController implements UsersApi, UserExtractor {
 
-    public static final String USER_NOT_FOUND_MSG = "User %s not found";
-    public static final String USER_SETTINGS_NOT_FOUND_MSG = "User setting for user %s not found";
-    public static final String NO_MATCHING_USER_NAME_MSG = "Payload User login does not match URL User login";
-    public static final String MANDATORY_LOGIN_MISSING = "Mandatory 'login' field is missing";
-    public static final String CANNOT_REMOVE_ADMIN_USER_FROM_ADMIN_GROUP = "Removing group ADMIN from user admin is not allowed";
-    public static final String FILTERING_NOTIFICATION_NOT_ALLOWED = "Filtering notification not allowed for at least one process/state";
-
-    public static final String USER_CREATED = "User %s is created";
-    public static final String USER_UPDATED = "User %s is updated";
-
-    public static final String ADMIN_LOGIN = "admin";
-
+    private static final String NO_MATCHING_USER_NAME_MSG = "Payload User login does not match URL User login";
 
     @Autowired
     private JwtProperties jwtProperties;
