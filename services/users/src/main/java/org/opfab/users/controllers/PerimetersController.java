@@ -26,20 +26,16 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 
-
 @RestController
 @RequestMapping("/perimeters")
 public class PerimetersController implements PerimetersApi {
 
-    public static final String PERIMETER_NOT_FOUND_MSG = "Perimeter %s not found";
-    public static final String GROUP_NOT_FOUND_MSG = "Group %s not found";
-    public static final String BAD_GROUP_LIST_MSG = "Bad group list : group %s not found";
-    public static final String NO_MATCHING_PERIMETER_ID_MSG = "Payload Perimeter id does not match URL Perimeter id";
+    private static final String NO_MATCHING_PERIMETER_ID_MSG = "Payload Perimeter id does not match URL Perimeter id";
 
-    public static final String DUPLICATE_STATE_IN_PERIMETER = "Bad stateRights list : there is one or more duplicate state(s) in the perimeter";
     private PerimetersService perimetersService;
 
-    public PerimetersController(PerimeterRepository perimeterRepository, GroupRepository groupRepository,UserRepository userRepository,
+    public PerimetersController(PerimeterRepository perimeterRepository, GroupRepository groupRepository,
+            UserRepository userRepository,
             RabbitEventBus rabbitEventBus) {
         NotificationService notificationService = new NotificationService(userRepository, rabbitEventBus);
         perimetersService = new PerimetersService(perimeterRepository, groupRepository, notificationService);
@@ -110,7 +106,8 @@ public class PerimetersController implements PerimetersApi {
     }
 
     @Override
-    public Void deletePerimeter(HttpServletRequest request, HttpServletResponse response, String perimeterId) throws Exception {
+    public Void deletePerimeter(HttpServletRequest request, HttpServletResponse response, String perimeterId)
+            throws Exception {
 
         OperationResult<String> result = perimetersService.deletePerimeter(perimeterId);
         if (result.isSuccess())

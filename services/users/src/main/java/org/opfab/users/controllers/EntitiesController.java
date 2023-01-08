@@ -31,10 +31,8 @@ import java.util.List;
 @RequestMapping("/entities")
 public class EntitiesController implements EntitiesApi {
 
-    public static final String ENTITY_NOT_FOUND_MSG = "Entity %s not found";
-    public static final String USER_NOT_FOUND_MSG = "User %s not found";
-    public static final String BAD_USER_LIST_MSG = "Bad user list : user %s not found";
-    public static final String NO_MATCHING_ENTITY_ID_MSG = "Payload Entity id does not match URL Entity id";
+
+    private static final String NO_MATCHING_ENTITY_ID_MSG = "Payload Entity id does not match URL Entity id";
 
     private EntitiesService entitiesService;
 

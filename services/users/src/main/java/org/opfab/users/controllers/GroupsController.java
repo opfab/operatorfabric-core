@@ -32,12 +32,7 @@ import java.util.List;
 @RequestMapping("/groups")
 public class GroupsController implements GroupsApi {
 
-    public static final String GROUP_NOT_FOUND_MSG = "Group %s not found";
-    public static final String USER_NOT_FOUND_MSG = "User %s not found";
-    public static final String BAD_USER_LIST_MSG = "Bad user list : user %s not found";
-    public static final String BAD_PERIMETER_LIST_MSG = "Bad perimeter list : perimeter %s not found";
-    public static final String NO_MATCHING_GROUP_ID_MSG = "Payload Group id does not match URL Group id";
-    public static final String ADMIN_GROUP_ID = "ADMIN";
+    private static final String NO_MATCHING_GROUP_ID_MSG = "Payload Group id does not match URL Group id";
     
     private GroupsService groupsService; 
 
