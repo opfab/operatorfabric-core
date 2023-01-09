@@ -1,7 +1,7 @@
 version: '2.1'
 services:
   mongodb:
-    image: mongo:4.4.4-bionic
+    image: mongo:4.4.18-focal
     ports:
       - "27017:27017"
     environment:
@@ -27,8 +27,8 @@ services:
 #      - "5672:5672"
 #      - "15672:15672"
   keycloak:
-    image: jboss/keycloak:16.1.1
-    command: -Dkeycloak.migration.action=import -Dkeycloak.migration.provider=dir -Dkeycloak.migration.dir=/keycloak/export -Dkeycloak.profile.feature.upload_scripts=enabled
+    image: quay.io/keycloak/keycloak:19.0.3-legacy
+    command: -Dkeycloak.migration.action=import -Dkeycloak.migration.provider=dir -Dkeycloak.migration.dir=/keycloak/export
     environment:
     - KEYCLOAK_USER=admin
     - KEYCLOAK_PASSWORD=admin

@@ -513,16 +513,6 @@
         "uris" : [ "/*" ]
       } ],
       "policies" : [ {
-        "id" : "4ef0fa39-c4fb-460a-8b86-50fccc756158",
-        "name" : "Default Policy",
-        "description" : "A policy that grants access only for users within this realm",
-        "type" : "js",
-        "logic" : "POSITIVE",
-        "decisionStrategy" : "AFFIRMATIVE",
-        "config" : {
-          "code" : "// by default, grants any permission associated with this policy\n$evaluation.grant();\n"
-        }
-      }, {
         "id" : "043ba77d-5e45-4298-96cf-93cc98919ca3",
         "name" : "Default Permission",
         "description" : "A permission that applies to the default resource type",
@@ -531,7 +521,7 @@
         "decisionStrategy" : "UNANIMOUS",
         "config" : {
           "defaultResourceType" : "urn:opfab-client:resources:default",
-          "applyPolicies" : "[\"Default Policy\"]"
+          "applyPolicies" : "[]"
         }
       } ],
       "scopes" : [ ]
