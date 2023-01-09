@@ -38,10 +38,7 @@
     document.getElementById("hidden_process").value = usercardTemplateGateway.getCurrentProcess();
     document.getElementById("hidden_state").value = usercardTemplateGateway.getCurrentState();
 
-    // we keep here the deprecated templateGateway.getSpecificInformation (instead of usercardTemplateGateway.getSpecificInformation)
-    // to have the deprecated feature still covered by cypress tests
-    // DO NOT USE AS EXAMPLE 
-    templateGateway.getSpecificCardInformation = function () {
+    usercardTemplateGateway.getSpecificCardInformation = function () {
         const message = document.getElementById('message').value;
         let summaryParameter = message.slice(0, 100);
         if (message.length > summaryParameter.length)
