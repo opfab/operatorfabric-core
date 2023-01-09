@@ -385,7 +385,6 @@ export class UserCardComponent implements OnInit {
             usercardTemplateGateway.setEntityUsedForSendingCard = () => {
                 // default method if not override by template
             };
-            templateGateway.getSpecificCardInformation = null;
             usercardTemplateGateway.getSpecificCardInformation = null;
             if (!this.cardToEdit) this.setDefaultDateFormValues();
 
@@ -457,7 +456,6 @@ export class UserCardComponent implements OnInit {
     }
 
     public prepareCard() {
-        this.dealWithDeprecatedUseOfTemplateGateway();
         if (!this.isSpecificInformationValid()) return;
         this.specificInformation = usercardTemplateGateway.getSpecificCardInformation();
         const startDate = this.getStartDate();
@@ -540,15 +538,6 @@ export class UserCardComponent implements OnInit {
                 }
                 this.displayPreview = true;
             });
-    }
-
-    private dealWithDeprecatedUseOfTemplateGateway(): void {
-        if (!usercardTemplateGateway.getSpecificCardInformation && templateGateway.getSpecificCardInformation) {
-            this.opfabLogger.info(
-                'Use of templateGateway.getSpecificCardInformation() is deprecated , use usercardTemplateGateway.getSpecificCardInformation instead'
-            );
-            usercardTemplateGateway.getSpecificCardInformation = templateGateway.getSpecificCardInformation;
-        }
     }
 
     private isSpecificInformationValid(): boolean {
@@ -658,7 +647,7 @@ export class UserCardComponent implements OnInit {
             const recipientListFromStateConfig = this.getRecipientListFromState_Deprecated();
             if (recipientListFromStateConfig !== undefined) {
                 this.opfabLogger.info(
-                    'Use of state configuration to define list of recipient is deprecated, provide  it via  templateGateway.getSpecificCardInformation() '
+                    'Use of state configuration to define list of recipient is deprecated, provide it via usercardTemplateGateway.getSpecificCardInformation() '
                 );
                 recipientListFromStateConfig.forEach((entity) => {if (!recipients.includes(entity.id)) recipients.push(entity.id)});
             }
