@@ -32,7 +32,7 @@
     "@fullcalendar/interaction": "6.0.2",
     "@fullcalendar/rrule": "6.0.2",
     "@fullcalendar/timegrid": "6.0.2",
-    "@ng-bootstrap/ng-bootstrap": "14.0.0",
+    "@ng-bootstrap/ng-bootstrap": "14.0.1",
     "@ngrx/effects": "15.1.0",
     "@ngrx/router-store": "15.1.0",
     "@ngrx/store": "15.1.0",
