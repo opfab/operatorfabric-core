@@ -30,8 +30,8 @@ import org.opfab.users.model.RightsEnum;
 import org.opfab.users.model.StateRightData;
 import org.opfab.users.model.User;
 import org.opfab.users.model.UserData;
+import org.opfab.users.spies.EventBusSpy;
 import org.opfab.users.stubs.EntityRepositoryStub;
-import org.opfab.users.stubs.EventBusStub;
 import org.opfab.users.stubs.GroupRepositoryStub;
 import org.opfab.users.stubs.PerimeterRepositoryStub;
 import org.opfab.users.stubs.UserRepositoryStub;
@@ -44,13 +44,15 @@ public class UsersServiceShould {
     private GroupRepositoryStub groupRepositoryStub = new GroupRepositoryStub();
     private EntityRepositoryStub entityRepositoryStub = new EntityRepositoryStub();
     private UsersService usersService;
+    private EventBusSpy eventBusSpy;
 
     PerimeterData perimeter1, perimeter2;
 
     @BeforeEach
     void clear() {
+        eventBusSpy =  new EventBusSpy();
         usersService = new UsersService(userRepositoryStub, groupRepositoryStub, entityRepositoryStub,
-                perimeterRepositoryStub, new NotificationService(userRepositoryStub, new EventBusStub()));
+                perimeterRepositoryStub, new NotificationService(userRepositoryStub,eventBusSpy ));
         initPerimeterRepository();
         initGroupRepository();
         initEntityRepository();
@@ -489,6 +491,25 @@ public class UsersServiceShould {
                     "group2");
             assertThat(userRepositoryStub.findById("user3").get().getEntities()).containsExactlyInAnyOrder("entity1",
                     "entity2");
+        }
+
+
+        @Test
+        void GIVEN_An_Existing_User_WHEN_UpdateOrCreate_THEN_User_Is_Updated_And_Notification_Is_Send_To_Other_Services() {
+
+            UserData user = UserData.builder()
+                    .login("user3")
+                    .firstName("newFirstName")
+                    .lastName("newLastName")
+                    .group("group1").group("group2")
+                    .entity("entity1").entity("entity2")
+                    .build();
+            OperationResult<User> result = usersService.updateOrCreateUser(user, true, true);
+            assertThat(result.isSuccess()).isTrue();
+            assertThat(userRepositoryStub.findById("user3").get().getFirstName()).isEqualTo("newFirstName");
+            
+            String[] expectedMessageSent = {"USER_EXCHANGE","user3"};
+            assertThat(eventBusSpy.getMessagesSent()).containsOnly(expectedMessageSent);
         }
 
         @Test

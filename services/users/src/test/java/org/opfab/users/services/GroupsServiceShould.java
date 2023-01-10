@@ -32,7 +32,7 @@ import org.opfab.users.model.StateRight;
 import org.opfab.users.model.StateRightData;
 import org.opfab.users.model.User;
 import org.opfab.users.model.UserData;
-import org.opfab.users.stubs.EventBusStub;
+import org.opfab.users.spies.EventBusSpy;
 import org.opfab.users.stubs.GroupRepositoryStub;
 import org.opfab.users.stubs.PerimeterRepositoryStub;
 import org.opfab.users.stubs.UserRepositoryStub;
@@ -43,7 +43,7 @@ class GroupsServiceShould {
     private GroupRepositoryStub groupRepositoryStub = new GroupRepositoryStub();
     private UserRepositoryStub userRepositoryStub = new UserRepositoryStub();
     private PerimeterRepositoryStub perimeterRepositoryStub = new PerimeterRepositoryStub();
-    private NotificationService notificationService = new NotificationService(userRepositoryStub,new EventBusStub());
+    private NotificationService notificationService = new NotificationService(userRepositoryStub,new EventBusSpy());
     private GroupsService groupsService;
 
     @BeforeEach

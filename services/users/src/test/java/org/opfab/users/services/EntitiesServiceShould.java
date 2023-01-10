@@ -28,8 +28,8 @@ import org.opfab.users.model.EntityData;
 import org.opfab.users.model.OperationResult;
 import org.opfab.users.model.User;
 import org.opfab.users.model.UserData;
+import org.opfab.users.spies.EventBusSpy;
 import org.opfab.users.stubs.EntityRepositoryStub;
-import org.opfab.users.stubs.EventBusStub;
 import org.opfab.users.stubs.UserRepositoryStub;
 
 @DisplayName("EntitiesService")
@@ -37,12 +37,14 @@ class EntitiesServiceShould {
 
     private EntityRepositoryStub entityRepositoryStub = new EntityRepositoryStub();
     private UserRepositoryStub userRepositoryStub = new UserRepositoryStub();
-    private NotificationService notificationService = new NotificationService(userRepositoryStub,new EventBusStub());
+    private EventBusSpy eventBusSpy;
     private EntitiesService entitiesService;
 
     @BeforeEach
     void clear() {
         entityRepositoryStub.deleteAll();
+        eventBusSpy = new EventBusSpy();
+        NotificationService notificationService = new NotificationService(userRepositoryStub,eventBusSpy);
         entitiesService = new EntitiesService(entityRepositoryStub,userRepositoryStub, notificationService);
         EntityData entity1 = new EntityData("entity1", "Entity 1", "Entity 1 Desc", null, null, null);
         entityRepositoryStub.save(entity1);
@@ -165,6 +167,16 @@ class EntitiesServiceShould {
             assertThat(userRepositoryStub.findById("user1").get().getEntities()).doesNotContain("entity1");
             assertThat(userRepositoryStub.findById("user1").get().getEntities()).contains("entity2");
             assertThat(userRepositoryStub.findById("user2").get().getEntities()).doesNotContain("entity1");
+        }
+
+        //@Test
+        void GIVEN_An_Existing_Entity_WHEN_Deleting_Entity_THEN_Success_And_A_Notification_Containing_Users_Updated_Is_Send_To_Other_Services(){
+            OperationResult<String> result = entitiesService.deleteEntity("entity2");
+            assertThat(result.isSuccess()).isTrue();
+
+            String[] expectedMessageSent1 = {"USER_EXCHANGE","user1"};
+            String[] expectedMessageSent2 = {"USER_EXCHANGE","user2"};
+            assertThat(eventBusSpy.getMessagesSent()).containsExactlyInAnyOrder(expectedMessageSent1,expectedMessageSent2);
         }
 
 
