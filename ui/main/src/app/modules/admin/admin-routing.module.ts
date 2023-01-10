@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2021, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2023, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -14,6 +14,7 @@ import {UsersTableComponent} from './components/table/users-table.component';
 import {GroupsTableComponent} from './components/table/groups-table.component';
 import {EntitiesTableComponent} from './components/table/entities-table.component';
 import {PerimetersTableComponent} from './components/table/perimeters-table.component';
+import {ProcessesTableComponent} from './components/table/processes-table.component';
 
 const defaultPath = 'users';
 
@@ -37,6 +38,10 @@ const routes: Routes = [
             {
                 path: 'perimeters',
                 component: PerimetersTableComponent
+            },
+            {
+                path: 'processes',
+                component: ProcessesTableComponent
             },
             {path: '**', redirectTo: defaultPath}
         ]

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021-2022, RTE (http://www.rte-france.com)
+ * Copyright (c) 2021-2023, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -24,9 +24,48 @@ export class EntitiesTableComponent extends AdminTableDirective implements OnIni
         new Field('id', 3, 'idCellRenderer'),
         new Field('name', 3),
         new Field('description', 5),
-        new Field('entityAllowedToSendCard', 4, null, this.translateValue),
-        new Field('parents', 5, 'entityCellRenderer')
+        new Field('entityAllowedToSendCard', 4, null, this.translateValue, 'entityAllowedToSendCardColumn'),
+        new Field('parents', 5, 'entityCellRenderer', null, 'parentsColumn')
     ];
     idField = 'id';
     editModalComponent = EditEntityModalComponent;
+
+    ngOnInit(){
+        this.gridOptions.columnTypes['entityAllowedToSendCardColumn'] = {
+            sortable: true,
+            filter: 'agTextColumnFilter',
+            filterParams: {
+                valueGetter: (params) => {
+                    return params.data.entityAllowedToSendCard
+                        ? this.translateService.instant('admin.input.entity.true')
+                        : this.translateService.instant('admin.input.entity.false');
+                }
+            },
+            wrapText: true,
+            autoHeight: true,
+            flex: 4
+        };
+        this.gridOptions.columnTypes['parentsColumn'] = {
+            sortable: true,
+            filter: 'agTextColumnFilter',
+            filterParams: {
+                valueGetter: (params) => {
+                    let text = '';
+                    if (params.data.parents) {
+                        params.data.parents.forEach((parent) => {
+                            text +=
+                                this.entitiesDefinition
+                                    .filter((entityDefinition) => parent === entityDefinition.id)
+                                    .map((entityDefinition) => entityDefinition.name) + ' ';
+                        });
+                    }
+                    return text;
+                }
+            },
+            wrapText: true,
+            autoHeight: true,
+            flex: 4
+        };
+        super.ngOnInit();
+    }
 }

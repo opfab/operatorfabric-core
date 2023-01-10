@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021-2022, RTE (http://www.rte-france.com)
+ * Copyright (c) 2021-2023, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -21,10 +21,14 @@ import {Utilities} from 'app/common/utilities';
 })
 export class PerimetersTableComponent extends AdminTableDirective implements OnInit {
     tableType = AdminItemType.PERIMETER;
-    fields = [new Field('id', 4, 'idCellRenderer'), new Field('process'), new Field('stateRights', 7, 'stateRightsCellRenderer')];
+    fields = [
+        new Field('id', 4, 'idCellRenderer'), 
+        new Field('process'), 
+        new Field('stateRights', 7, 'stateRightsCellRenderer', null, 'stateRightsColumn')
+    ];
     idField = 'id';
     editModalComponent = EditPerimeterModalComponent;
-    modalOptions = {...AdminTableDirective.defaultModalOptions, size: 'xl'};
+    modalOptions = {...AdminTableDirective.defaultEditionModalOptions, size: 'xl'};
 
     objectArrayToString(arr: any, renderer: string, data: any): string {
         if (renderer && renderer === 'stateRightsCellRenderer') {
@@ -37,4 +41,28 @@ export class PerimetersTableComponent extends AdminTableDirective implements OnI
         }
         return JSON.stringify(arr);
     }
+    ngOnInit(){
+        this.gridOptions.columnTypes['stateRightsColumn'] = {
+            sortable: false,
+            filter: 'agTextColumnFilter',
+            filterParams: {
+                valueGetter: (params) => {
+                    const currentProcessDef = this.processesDefinition.filter(
+                        (processDef) => processDef.id === params.data.process
+                    )[0];
+                    let text = '';
+                    params.data.stateRights.forEach((stateRight) => {
+                        if (!!currentProcessDef.states[stateRight.state])
+                            text += currentProcessDef.states[stateRight.state].name + ' ';
+                    });
+                    return text;
+                }
+            },
+            wrapText: true,
+            autoHeight: true,
+            flex: 4
+        };
+        super.ngOnInit();
+    }
 }
+

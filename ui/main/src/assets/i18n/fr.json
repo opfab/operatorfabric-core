@@ -389,6 +389,12 @@
         "confirmDelete": "Voulez-vous vraiment supprimer le périmètre",
         "add":"AJOUTER UN NOUVEAU PÉRIMÈTRE"
       },
+      "process": {
+        "id": "ID",
+        "name": "PROCESSUS",
+        "version": "VERSION ACTUELLE",
+        "confirmDelete": "Voulez-vous vraiment supprimer le processus"
+      },
       "user": {
         "login": "IDENTIFIANT",
         "lastName": "NOM",

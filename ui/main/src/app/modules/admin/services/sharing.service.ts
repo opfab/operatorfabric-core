@@ -1,4 +1,4 @@
-/* Copyright (c) 2021-2022, RTE (http://www.rte-france.com)
+/* Copyright (c) 2021-2023, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -16,6 +16,7 @@ import {CachedCrudService} from '@ofServices/cached-crud-service';
 import {Observable, ReplaySubject, Subject} from 'rxjs';
 import {takeUntil} from 'rxjs/operators';
 import {PerimetersService} from '@ofServices/perimeters.service';
+import {AdminProcessesService} from '@ofServices/adminprocess.service';
 
 /** The aim of this service is to provide the services that need to be shared between components of the admin screen. For example, a single
  * instance of `EntitiesService` should be used across all components so a update to the cache is visible from all components.
@@ -32,7 +33,8 @@ export class SharingService implements OnDestroy {
         private entitiesService: EntitiesService,
         private groupsService: GroupsService,
         private userService: UserService,
-        private perimetersService: PerimetersService
+        private perimetersService: PerimetersService,
+        private adminprocessesService: AdminProcessesService
     ) {
         this._paginationPageSize$ = new ReplaySubject<number>();
 
@@ -53,6 +55,8 @@ export class SharingService implements OnDestroy {
                 return this.userService;
             case AdminItemType.PERIMETER:
                 return this.perimetersService;
+            case AdminItemType.PROCESS:
+                return this.adminprocessesService;
             default:
                 throw Error('No CrudService associated with ' + adminItemType);
         }
@@ -68,6 +72,8 @@ export class SharingService implements OnDestroy {
                 return this.groupsService;
             case AdminItemType.PERIMETER:
                 return this.perimetersService;
+            case AdminItemType.PROCESS:
+                return this.adminprocessesService;
             default:
                 throw Error('No CachedCrudService associated with ' + adminItemType);
         }
