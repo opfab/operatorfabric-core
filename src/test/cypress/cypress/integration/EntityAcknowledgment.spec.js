@@ -1,4 +1,4 @@
-/* Copyright (c) 2022, RTE (http://www.rte-france.com)
+/* Copyright (c) 2022-2023, RTE (http://www.rte-france.com)
 * See AUTHORS.txt
 * This Source Code Form is subject to the terms of the Mozilla Public
 * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -137,7 +137,7 @@ describe('Entity acknowledgment tests for icon in light-card', function () {
         cy.get('#opfab-feed-light-card-cypress-entitiesAcksMessage3').click();
 
         // Check "Cancel acknowledgment" button is not present
-        cy.get("#opfab-card-details-btn-ack").should('not.exist');
+        cy.get("#opfab-card-details-btn-unack").should('not.exist');
 
         // operator4_fr un-ack the card "message4", the icon should not disappear (because entities acks are never removed)
         // First, check icon is present
@@ -146,7 +146,7 @@ describe('Entity acknowledgment tests for icon in light-card', function () {
         cy.get('#opfab-feed-light-card-cypress-entitiesAcksMessage4').click();
 
         // Check "Cancel acknowledgment" button is not present
-        cy.get("#opfab-card-details-btn-ack").should('not.exist');
+        cy.get("#opfab-card-details-btn-unack").should('not.exist');
 
     });
 

@@ -1,4 +1,4 @@
-/* Copyright (c) 2021-2022, RTE (http://www.rte-france.com)
+/* Copyright (c) 2021-2023, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -209,7 +209,7 @@ describe('Acknowledgment tests', function () {
 
         // Cancel ack is possible
         cy.get('#opfab-feed-light-card-cypress-message2').click();
-        cy.get('#opfab-card-details-btn-ack').should('contain.text', 'CANCEL ACKNOWLEDGMENT');
+        cy.get('#opfab-card-details-btn-unack').should('contain.text', 'CANCEL ACKNOWLEDGMENT');
     });
 
 
