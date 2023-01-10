@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021-2022, RTE (http://www.rte-france.com)
+ * Copyright (c) 2021-2023, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -36,14 +36,52 @@ import {ArrayCellRendererComponent} from '../cell-renderers/array-cell-renderer.
 @Injectable()
 export abstract class AdminTableDirective implements OnInit, OnDestroy {
 
+    showEditButton = true;
+    showAddButton = true;
+    processesDefinition: Process[];
+    groupsDefinition: Group[];
+    entitiesDefinition: Entity[];
+
+    unsubscribe$: Subject<void> = new Subject<void>();
+
+    // These fields will be initialized in the concrete classes extending `AdminTableDirective`
+    // (e.g. EntitiesTableComponent) as they depend on the type of the table
+    /** Modal component to open when editing an item from the table (e.g. `EditEntityGroupModal`) */
+    public editModalComponent;
+ 
+
+    /** Type of data managed by the table (e.g. `AdminItemType.ENTITY`) */
+    protected tableType: AdminItemType;
+    /** Relevant fields for this data type. They will be used to populate the table columns */
+    protected fields: Field[];
+    /** Among these fields, which one represents an item's unique id (e.g. `id`) */
+    protected idField: string;
+
+    // ag-grid configuration objects
+    public gridOptions;
+    public gridApi;
+    public rowData: any[];
+    public page = 1;
+
+        
+    protected static defaultEditionModalOptions: NgbModalOptions = {
+        backdrop: 'static', // Modal shouldn't close even if we click outside it
+        size: 'lg'
+    };
+    /** Default modal options can be added to or overridden using this property in the xxx-table components extending the directive. */
+    public modalOptions: NgbModalOptions = AdminTableDirective.defaultEditionModalOptions;
+
+    protected i18NPrefix = 'admin.input.';
+    protected crudService: CrudService;
+
     constructor(
         protected translateService: TranslateService,
         protected confirmationDialogService: ConfirmationDialogService,
         protected modalService: NgbModal,
         protected dataHandlingService: SharingService,
-        private processesService: ProcessesService,
-        private groupsService: GroupsService,
-        private entitiesService: EntitiesService
+        protected processesService: ProcessesService,
+        protected groupsService: GroupsService,
+        protected entitiesService: EntitiesService
     ) {
         this.processesDefinition = this.processesService.getAllProcesses();
         this.gridOptions = <GridOptions>{
@@ -81,119 +119,11 @@ export abstract class AdminTableDirective implements OnInit, OnDestroy {
                     autoHeight: true,
                     flex: 4
                 },
-                groupsColumn: {
-                    sortable: true,
-                    filter: 'agTextColumnFilter',
-                    filterParams: {
-                        valueGetter: (params) => {
-                            let text = '';
-                            params.data.groups.forEach((group) => {
-                                text +=
-                                    this.groupsDefinition
-                                        .filter((groupDefinition) => group === groupDefinition.id)
-                                        .map((groupDefinition) => groupDefinition.name) + ' ';
-                            });
-                            return text;
-                        }
-                    },
-                    wrapText: true,
-                    autoHeight: true,
-                    flex: 4
-                },
-                entitiesColumn: {
-                    sortable: true,
-                    filter: 'agTextColumnFilter',
-                    filterParams: {
-                        valueGetter: (params) => {
-                            let text = '';
-                            params.data.entities.forEach((entity) => {
-                                text +=
-                                    this.entitiesDefinition
-                                        .filter((entityDefinition) => entity === entityDefinition.id)
-                                        .map((entityDefinition) => entityDefinition.name) + ' ';
-                            });
-                            return text;
-                        }
-                    },
-                    wrapText: true,
-                    autoHeight: true,
-                    flex: 4
-                },
-                entityAllowedToSendCardColumn: {
-                    sortable: true,
-                    filter: 'agTextColumnFilter',
-                    filterParams: {
-                        valueGetter: (params) => {
-                            return params.data.entityAllowedToSendCard
-                                ? this.translateService.instant('admin.input.entity.true')
-                                : this.translateService.instant('admin.input.entity.false');
-                        }
-                    },
-                    wrapText: true,
-                    autoHeight: true,
-                    flex: 4
-                },
-                parentsColumn: {
-                    sortable: true,
-                    filter: 'agTextColumnFilter',
-                    filterParams: {
-                        valueGetter: (params) => {
-                            let text = '';
-                            if (params.data.parents) {
-                                params.data.parents.forEach((parent) => {
-                                    text +=
-                                        this.entitiesDefinition
-                                            .filter((entityDefinition) => parent === entityDefinition.id)
-                                            .map((entityDefinition) => entityDefinition.name) + ' ';
-                                });
-                            }
-                            return text;
-                        }
-                    },
-                    wrapText: true,
-                    autoHeight: true,
-                    flex: 4
-                },
-                stateRightsColumn: {
-                    sortable: false,
-                    filter: 'agTextColumnFilter',
-                    filterParams: {
-                        valueGetter: (params) => {
-                            const currentProcessDef = this.processesDefinition.filter(
-                                (processDef) => processDef.id === params.data.process
-                            )[0];
-                            let text = '';
-                            params.data.stateRights.forEach((stateRight) => {
-                                if (!!currentProcessDef.states[stateRight.state])
-                                    text += currentProcessDef.states[stateRight.state].name + ' ';
-                            });
-                            return text;
-                        }
-                    },
-                    wrapText: true,
-                    autoHeight: true,
-                    flex: 4
-                },
-                realtimeColumn: {
-                    sortable: true,
-                    filter: 'agTextColumnFilter',
-                    filterParams: {
-                        valueGetter: (params) => {
-                            return params.data.realtime
-                                ? this.translateService.instant('admin.input.group.true')
-                                : this.translateService.instant('admin.input.group.false');
-                        }
-                    },
-                    wrapText: true,
-                    autoHeight: true,
-                    flex: 4
-                }
             },
             getLocaleText: function (params) {
                 // To avoid clashing with opfab assets, all keys defined by ag-grid are prefixed with "ag-grid."
                 // e.g. key "to" defined by ag-grid for use with pagination can be found under "ag-grid.to" in assets
                 return translateService.instant('ag-grid.' + params.key);
-                // Not this.translateService otherwise "undefined" error
             },
             pagination: true,
             suppressCellFocus: true,
@@ -202,44 +132,7 @@ export abstract class AdminTableDirective implements OnInit, OnDestroy {
             suppressHorizontalScroll: true,
             popupParent: document.querySelector('body')
         };
-        // Defining a custom cellRenderer was necessary (instead of using onCellClicked & an inline cellRenderer) because of
-        // the need to call a method from the parent component
     }
-    /** Default options for edition modals. */
-    protected static defaultModalOptions: NgbModalOptions = {
-        backdrop: 'static', // Modal shouldn't close even if we click outside it
-        size: 'lg'
-    };
-
-    processesDefinition: Process[];
-    groupsDefinition: Group[];
-    entitiesDefinition: Entity[];
-
-    unsubscribe$: Subject<void> = new Subject<void>();
-
-    // These fields will be initialized in the concrete classes extending `AdminTableDirective`
-    // (e.g. EntitiesTableComponent) as they depend on the type of the table
-    /** Modal component to open when editing an item from the table (e.g. `EditEntityGroupModal`) */
-    public editModalComponent;
-    /** Default modal options can be added to or overridden using this property in the xxx-table components extending the directive. */
-    public modalOptions: NgbModalOptions = AdminTableDirective.defaultModalOptions;
-
-    /** Type of data managed by the table (e.g. `AdminItemType.ENTITY`) */
-    protected tableType: AdminItemType;
-    /** Relevant fields for this data type. They will be used to populate the table columns */
-    protected fields: Field[];
-    /** Among these fields, which one represents an item's unique id (e.g. `id`) */
-    protected idField: string;
-
-    // ag-grid configuration objects
-    public gridOptions;
-    public gridApi;
-    public rowData: any[];
-
-    public page = 1;
-
-    protected i18NPrefix = 'admin.input.';
-    protected crudService: CrudService;
 
     ngOnInit() {
         this.crudService = this.dataHandlingService.resolveCrudServiceDependingOnType(this.tableType);
@@ -284,31 +177,16 @@ export abstract class AdminTableDirective implements OnInit, OnDestroy {
 
         fields.forEach((field: Field, index: number) => {
             const columnDef = {
-                type: 'dataColumn',
+                type: field.type,
                 headerName: i18nPrefixForHeader + field.name,
                 field: field.name
+                
             };
-
-            if (this.tableType === AdminItemType.USER && field.name === 'groups') columnDef.type = 'groupsColumn';
-
-            if (this.tableType === AdminItemType.USER && field.name === 'entities') columnDef.type = 'entitiesColumn';
-
-            if (this.tableType === AdminItemType.PERIMETER && field.name === 'stateRights')
-                columnDef.type = 'stateRightsColumn';
-
-            if (this.tableType === AdminItemType.ENTITY && field.name === 'entityAllowedToSendCard')
-                columnDef.type = 'entityAllowedToSendCardColumn';
-
-            if (this.tableType === AdminItemType.GROUP && field.name === 'realtime') columnDef.type = 'realtimeColumn';
-
-            if (this.tableType === AdminItemType.ENTITY && field.name === 'parents') columnDef.type = 'parentsColumn';
-
             if (!!field.flex) columnDef['flex'] = field.flex;
             if (!!field.cellRendererName) columnDef['cellRenderer'] = field.cellRendererName;
             if (!!field.valueFormatter) {
                 columnDef['valueFormatter'] = field.valueFormatter;
             }
-
             columnDefs[index] = columnDef;
         });
 
@@ -319,22 +197,29 @@ export abstract class AdminTableDirective implements OnInit, OnDestroy {
                 (params.context.componentParent.tableType === AdminItemType.GROUP &&
                     params.data.id.toLowerCase() === 'admin')
         };
-
+        
         // Add action columns
-        columnDefs[fields.length] = {
+        const edit_col = {
             colId: 'edit',
             type: 'actionColumn',
             headerClass:'action-cell-column-header',
             cellStyle: {'padding-left': '0', 'padding-right': '0'},
             maxWidth: 50,
         };
-        columnDefs[fields.length + 1] = {
+        const delete_col = {
             colId: 'delete',
             type: 'actionColumn',
             headerClass:'action-cell-column-header',
             cellStyle: {'padding-left': '0', 'padding-right': '0'},
             maxWidth: 50,
             cellClassRules: deleteActionCellClassRules
+        };
+        if (this.showEditButton) {
+            columnDefs[fields.length] = edit_col;
+            columnDefs[fields.length +1] = delete_col;
+        } else {
+            columnDefs[fields.length] = delete_col;
+            columnDefs.pop();
         };
 
         return columnDefs;
@@ -511,15 +396,17 @@ export class Field {
     public flex: number;
     public cellRendererName: string;
     public valueFormatter: any;
+    public type: string;
 
     /**@param name: should match the property name in the underlying row data. Will be used as key to find i18n label for the column header.
    @param flex: Sets the column size relative to others
    @param cellRendererName: needs to match one of the renderers defined under `components` in the `gridOptions` above.
    * */
-    constructor(name: string, flex?: number, cellRendererName?: string, valueFormatter?: any) {
+    constructor(name: string, flex?: number, cellRendererName?: string, valueFormatter?: any, type?: string) {
         this.name = name;
         this.flex = flex;
         this.cellRendererName = cellRendererName;
         this.valueFormatter = valueFormatter;
+        this.type = type;
     }
 }

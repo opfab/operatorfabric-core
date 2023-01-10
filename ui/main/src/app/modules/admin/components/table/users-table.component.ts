@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021-2022, RTE (http://www.rte-france.com)
+ * Copyright (c) 2021-2023, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -24,10 +24,51 @@ export class UsersTableComponent extends AdminTableDirective implements OnInit {
         new Field('login', 4, 'idCellRenderer'),
         new Field('firstName'),
         new Field('lastName'),
-        new Field('groups', 6, 'groupCellRenderer'),
-        new Field('entities', 6, 'entityCellRenderer'),
+        new Field('groups', 6, 'groupCellRenderer', null,'groupsColumn'),
+        new Field('entities', 6, 'entityCellRenderer', null, 'entitiesColumn'),
         new Field('opfabRoles', 6, 'arrayCellRenderer')
     ];
     idField = 'login';
     editModalComponent = EditUserModalComponent;
+    ngOnInit(){
+        this.gridOptions.columnTypes['groupsColumn'] = {
+            sortable: true,
+            filter: 'agTextColumnFilter',
+            filterParams: {
+                valueGetter: (params) => {
+                    let text = '';
+                    params.data.groups.forEach((group) => {
+                        text +=
+                            this.groupsDefinition
+                                .filter((groupDefinition) => group === groupDefinition.id)
+                                .map((groupDefinition) => groupDefinition.name) + ' ';
+                    });
+                    return text;
+                }
+            },
+            wrapText: true,
+            autoHeight: true,
+            flex: 4
+        };
+        this.gridOptions.columnTypes['entitiesColumn'] = {
+            sortable: true,
+            filter: 'agTextColumnFilter',
+            filterParams: {
+                valueGetter: (params) => {
+                    let text = '';
+                    params.data.entities.forEach((entity) => {
+                        text +=
+                            this.entitiesDefinition
+                                .filter((entityDefinition) => entity === entityDefinition.id)
+                                .map((entityDefinition) => entityDefinition.name) + ' ';
+                    });
+                    return text;
+                }
+            },
+            wrapText: true,
+            autoHeight: true,
+            flex: 4
+        };
+        super.ngOnInit();
+    }
 }

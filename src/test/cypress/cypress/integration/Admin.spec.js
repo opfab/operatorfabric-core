@@ -21,7 +21,7 @@ describe('AdmininstrationPages', () => {
     before('Set up configuration', function () {
         script.loadTestConf();
     });
-
+    
     it('List, add, edit, delete users', () => {
         opfab.loginWithUser('admin');
         opfab.navigateToAdministration();
@@ -529,6 +529,43 @@ describe('AdmininstrationPages', () => {
         cy.get('.opfab-pagination').should('contain.text', ' Results number  : 9');
 
         agGrid.countTableRows('ag-grid-angular', 9);
+    });
+
+    it('List, delete processes', () => {
+        opfab.loginWithUser('admin');
+        opfab.navigateToAdministration();
+
+        //Click on "Groups Management"
+        cy.get('#opfab-admin-processes-tab').click();
+
+        // Check the content of the first row
+        agGrid.cellShould('ag-grid-angular', 0, 0, 'have.text', 'taskExample');
+
+        agGrid.cellShould('ag-grid-angular', 0, 1, 'have.text', 'Task');
+
+        agGrid.cellShould('ag-grid-angular', 0, 2, 'have.text', '1');
+
+
+        // Check the page has 7 rows
+        agGrid.countTableRows('ag-grid-angular', 7);
+
+        // Pagination should display ' Results number  : 7 '
+        cy.get('.opfab-pagination').should('contain.text', ' Results number  : 7');
+
+        // Delete first process
+        agGrid.clickCell('ag-grid-angular', 0, 3, 'of-action-cell-renderer');
+
+        cy.get('of-confirmation-dialog').should('exist');
+
+        cy.get('#opfab-admin-confirmation-btn-ok').click();
+
+        cy.waitDefaultTime();
+
+        //Check process was deleted
+        cy.get('.opfab-pagination').should('contain.text', ' Results number  : 6');
+
+        agGrid.countTableRows('ag-grid-angular', 6);
+
     });
 
     it('Check users export', function () {

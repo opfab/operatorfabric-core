@@ -389,6 +389,12 @@
         "confirmDelete": "Wilt u de perimeter echt verwijderen?",
         "add":"NIEUWE PERIMETER TOEVOEGEN"
       },
+      "process": {
+        "ProcessId": "ID",
+        "ProcessName": "PROCES",
+        "ProcessVersion": "HUIDIGE VERSIE",
+        "confirmDelete": "Wilt u het proces echt verwijderen?"
+      },
       "user": {
         "login": "GEBRUIKERSNAAM",
         "lastName": "ACHTERNAAM",

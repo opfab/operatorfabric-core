@@ -389,6 +389,12 @@
         "confirmDelete": "Do you really want to delete perimeter",
         "add":"ADD NEW PERIMETER"
       },
+      "process": {
+        "id": "ID",
+        "name": "PROCESS",
+        "version": "CURRENT VERSION",
+        "confirmDelete": "Do you really want to delete processus"
+      },
       "user": {
         "login": "LOGIN",
         "lastName": "LAST NAME",
@@ -444,7 +450,8 @@
       "users": "Users Management",
       "groups": "Groups Management",
       "entities": "Entities Management",
-      "perimeters": "Perimeters Management"
+      "perimeters": "Perimeters Management",
+      "processes": "Processes Management"
     }
   },
   "processGroup": {

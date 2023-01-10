@@ -1,5 +1,5 @@
 /* Copyright (c) 2020, RTEi (http://www.rte-international.com)
- * Copyright (c) 2019-2022, RTE (http://www.rte-france.com)
+ * Copyright (c) 2019-2023, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -27,15 +27,16 @@ import {EntityCellRendererComponent} from './components/cell-renderers/entity-ce
 import {PerimetersCellRendererComponent} from './components/cell-renderers/perimeters-cell-renderer.component';
 import {SharingService} from './services/sharing.service';
 import {PerimetersTableComponent} from './components/table/perimeters-table.component';
+import {ProcessesTableComponent} from './components/table/processes-table.component';
 import {StateRightsCellRendererComponent} from './components/cell-renderers/state-rights-cell-renderer.component';
 import {EditEntityModalComponent} from './components/editmodal/entities/edit-entity-modal.component';
 import {EditGroupModalComponent} from './components/editmodal/groups/edit-group-modal.component';
 import {EditPerimeterModalComponent} from './components/editmodal/perimeters/edit-perimeter-modal.component';
-import {ProcessCellRendererComponent} from './components/cell-renderers/process-cell-renderer.component';
 import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
 import {TagInputModule} from 'ngx-chips';
 import {MultiSelectModule} from '../share/multi-select/multi-select.module';
 import {IdCellRendererComponent} from './components/cell-renderers/id-cell-renderer.component';
+import {ProcessCellRendererComponent} from './components/cell-renderers/process-cell-renderer.component';
 
 @NgModule({
     declarations: [
@@ -44,6 +45,7 @@ import {IdCellRendererComponent} from './components/cell-renderers/id-cell-rende
         EntitiesTableComponent,
         GroupsTableComponent,
         PerimetersTableComponent,
+        ProcessesTableComponent,
         EditUserModalComponent,
         ConfirmationDialogComponent,
         EditEntityModalComponent,
@@ -54,9 +56,9 @@ import {IdCellRendererComponent} from './components/cell-renderers/id-cell-rende
         GroupCellRendererComponent,
         EntityCellRendererComponent,
         PerimetersCellRendererComponent,
-        ProcessCellRendererComponent,
         StateRightsCellRendererComponent,
-        IdCellRendererComponent
+        IdCellRendererComponent,
+        ProcessCellRendererComponent
     ],
 
     imports: [
