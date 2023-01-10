@@ -1,4 +1,4 @@
-/* Copyright (c) 2022, RTE (http://www.rte-france.com)
+/* Copyright (c) 2022-2023, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -48,6 +48,7 @@ export class CardAckComponent implements OnInit, OnChanges, OnDestroy {
 
     public ackOrUnackInProgress = false;
     public showAckButton = false;
+    public showUnAckButton = false;
     public isUserEnabledToRespond = false;
 
     public user: User;
@@ -113,12 +114,14 @@ export class CardAckComponent implements OnInit, OnChanges, OnDestroy {
     }
 
     private setAcknowledgeButtonVisibility() {
-        this.showAckButton = this.card.hasBeenAcknowledged && this.isCardAcknowledgedAtEntityLevel() && !this.isReadOnlyUser ? false
+        this.showAckButton = this.card.hasBeenAcknowledged ? false
             : this.isAcknowledgmentAllowed() && this._appService.pageType !== PageType.CALENDAR;
+
+        this.showUnAckButton = this.card.hasBeenAcknowledged && this.isCardAcknowledgedAtEntityLevel() && !this.isReadOnlyUser ? false
+            : this.isCancelAcknowledgmentAllowed() && this._appService.pageType !== PageType.CALENDAR;
     }
 
     private isAcknowledgmentAllowed(): boolean {
-        if (this.card.hasBeenAcknowledged && !this.cardState.cancelAcknowledgmentAllowed) return false;
         if (!this.cardState.acknowledgmentAllowed) return true;
 
         return (
@@ -126,6 +129,11 @@ export class CardAckComponent implements OnInit, OnChanges, OnDestroy {
             (this.cardState.acknowledgmentAllowed === AcknowledgmentAllowedEnum.ONLY_WHEN_RESPONSE_DISABLED_FOR_USER &&
                 (this.isReadOnlyUser || !this.isUserEnabledToRespond || (this.isUserEnabledToRespond && this.lttdExpiredIsTrue)))
         );
+    }
+
+    private isCancelAcknowledgmentAllowed(): boolean {
+        return (!this.card.hasBeenAcknowledged || !this.cardState.cancelAcknowledgmentAllowed) ? false
+            : this.isAcknowledgmentAllowed();
     }
 
     private isCardAcknowledgedAtEntityLevel() {
@@ -138,6 +146,10 @@ export class CardAckComponent implements OnInit, OnChanges, OnDestroy {
         else return AckI18nKeys.BUTTON_TEXT_ACK;
     }
 
+    get btnUnAckText(): string {
+        return AckI18nKeys.BUTTON_TEXT_UNACK
+    }
+
     private shouldCloseCardWhenUserAcknowledges(): boolean {
         return this.cardState.closeCardWhenUserAcknowledges;
     }
@@ -145,24 +157,20 @@ export class CardAckComponent implements OnInit, OnChanges, OnDestroy {
     public acknowledgeCard() {
         this.ackOrUnackInProgress = true;
 
-        if (this.card.hasBeenAcknowledged) {
-            this.cancelAcknowledgement();
-        } else {
-            const entitiesAcks = this.computeAcknowledgedEntities();
+        const entitiesAcks = this.computeAcknowledgedEntities();
 
-            this.acknowledgeService.postUserAcknowledgement(this.card.uid, entitiesAcks).subscribe((resp) => {
-                this.ackOrUnackInProgress = false;
-                if (resp.status === 201 || resp.status === 200) {
-                    this.acknowledgeService.updateAcknowledgementOnLightCard(this.card.id, true);
-                    this.card = {...this.card, hasBeenAcknowledged: true};
-                    this.setAcknowledgeButtonVisibility();
-                    if (this.shouldCloseCardWhenUserAcknowledges()) this.closeDetails();
-                } else {
-                    this.logger.error(`The remote acknowledgement endpoint returned an error status(${resp.status})`,LogOption.LOCAL_AND_REMOTE);
-                    this.displayMessage(AckI18nKeys.ERROR_MSG, null, MessageLevel.ERROR);
-                }
-            });
-        }
+        this.acknowledgeService.postUserAcknowledgement(this.card.uid, entitiesAcks).subscribe((resp) => {
+            this.ackOrUnackInProgress = false;
+            if (resp.status === 201 || resp.status === 200) {
+                this.acknowledgeService.updateAcknowledgementOnLightCard(this.card.id, true);
+                this.card = {...this.card, hasBeenAcknowledged: true};
+                this.setAcknowledgeButtonVisibility();
+                if (this.shouldCloseCardWhenUserAcknowledges()) this.closeDetails();
+            } else {
+                this.logger.error(`The remote acknowledgement endpoint returned an error status(${resp.status})`,LogOption.LOCAL_AND_REMOTE);
+                this.displayMessage(AckI18nKeys.ERROR_MSG, null, MessageLevel.ERROR);
+            }
+        });
     }
 
     private computeAcknowledgedEntities() : string[] {
@@ -188,11 +196,13 @@ export class CardAckComponent implements OnInit, OnChanges, OnDestroy {
         );
     }
 
-    private cancelAcknowledgement() {
+    public cancelAcknowledgement() {
+        this.ackOrUnackInProgress = true;
         this.acknowledgeService.deleteUserAcknowledgement(this.card.uid).subscribe((resp) => {
             this.ackOrUnackInProgress = false;
             if (resp.status === 200 || resp.status === 204) {
                 this.card = {...this.card, hasBeenAcknowledged: false};
+                this.setAcknowledgeButtonVisibility();
                 this.acknowledgeService.updateAcknowledgementOnLightCard(this.card.id, false);
             } else {
                 this.logger.error(`The remote acknowledgement endpoint returned an error status(${resp.status})`,LogOption.LOCAL_AND_REMOTE);
