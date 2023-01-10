@@ -7,16 +7,28 @@
  * This file is part of the OperatorFabric project.
  */
 
-package org.opfab.users.stubs;
+package org.opfab.users.spies;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import org.opfab.users.services.EventBus;
 
-public class EventBusStub implements EventBus {
+public class EventBusSpy implements EventBus {
+
+
+
+    private List<String[]>  messagesSent = new ArrayList<>();
+
 
     @Override
     public void sendEvent(String eventKey, String eventMessage) {
-        // Stub
-        
+        String[] event = {eventKey,eventMessage};
+        messagesSent.add(event);
+    }
+
+    public List<String[]> getMessagesSent() {
+        return new ArrayList<>(messagesSent);
     }
     
 }

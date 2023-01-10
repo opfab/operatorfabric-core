@@ -30,7 +30,7 @@ import org.opfab.users.model.PerimeterData;
 import org.opfab.users.model.RightsEnum;
 import org.opfab.users.model.StateRight;
 import org.opfab.users.model.StateRightData;
-import org.opfab.users.stubs.EventBusStub;
+import org.opfab.users.spies.EventBusSpy;
 import org.opfab.users.stubs.GroupRepositoryStub;
 import org.opfab.users.stubs.PerimeterRepositoryStub;
 import org.opfab.users.stubs.UserRepositoryStub;
@@ -41,7 +41,7 @@ public class PerimetersServiceShould {
     private PerimetersService perimetersService;
     private PerimeterRepositoryStub perimeterRepositoryStub = new PerimeterRepositoryStub();
     private GroupRepositoryStub groupRepositoryStub = new GroupRepositoryStub();
-    private NotificationService notificationService = new NotificationService( new UserRepositoryStub(), new EventBusStub());
+    private NotificationService notificationService = new NotificationService( new UserRepositoryStub(), new EventBusSpy());
 
     @BeforeEach
     void clear() {

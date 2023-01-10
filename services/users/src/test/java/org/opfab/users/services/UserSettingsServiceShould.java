@@ -29,7 +29,7 @@ import org.opfab.users.model.StateRight;
 import org.opfab.users.model.StateRightData;
 import org.opfab.users.model.UserSettings;
 import org.opfab.users.model.UserSettingsData;
-import org.opfab.users.stubs.EventBusStub;
+import org.opfab.users.spies.EventBusSpy;
 import org.opfab.users.stubs.UserRepositoryStub;
 import org.opfab.users.stubs.UsersServiceStub;
 import org.opfab.users.stubs.UserSettingsRepositoryStub;
@@ -55,7 +55,7 @@ public class UserSettingsServiceShould {
 
         usersServiceStub = new UsersServiceStub(null, null,null, null, null);
         userSettingsService = new UserSettingsService(userSettingsRepositoryStub, usersServiceStub,
-                new NotificationService(userRepositoryStub, new EventBusStub()));
+                new NotificationService(userRepositoryStub, new EventBusSpy()));
         initPerimetersPerUsers();
     }
 
