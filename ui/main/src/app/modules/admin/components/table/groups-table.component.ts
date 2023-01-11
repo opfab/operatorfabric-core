@@ -21,11 +21,11 @@ import {EditGroupModalComponent} from '../editmodal/groups/edit-group-modal.comp
 export class GroupsTableComponent extends AdminTableDirective implements OnInit {
     tableType = AdminItemType.GROUP;
     fields = [
-        new Field('id', 6, 'idCellRenderer'),
+        new Field('id', 4, 'idCellRenderer'),
         new Field('name', 6),
-        new Field('description', 6),
-        new Field('type', 3),
+        new Field('description', 5),
         new Field('perimeters', 8, 'perimetersCellRenderer'),
+        new Field('permissions', 6, 'arrayCellRenderer'),
         new Field('realtime', 3, null, this.translateValue, 'realtimeColumn')
     ];
     idField = 'id';
