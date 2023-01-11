@@ -41,7 +41,7 @@ import {ApplicationLoadingComponent} from './modules/core/application-loading/ap
 import {ReloadRequiredComponent} from './modules/core/reload-required/reload-required.component';
 import {ServiceWorkerModule, SwRegistrationOptions} from '@angular/service-worker';
 import {Utilities} from './common/utilities';
-import { SpinnerModule } from './modules/share/spinner/spinner.module';
+import {SpinnerModule} from './modules/share/spinner/spinner.module';
 import {UserActionLogsModule} from './modules/useractionlogs/useractionlogs.module';
 
 @NgModule({
