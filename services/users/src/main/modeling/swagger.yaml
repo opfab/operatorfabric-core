@@ -284,6 +284,11 @@ definitions:
           description: List of process states for which the user will not be notified
           items:
             type: string
+      permissions:
+        type: array
+        items:
+          $ref: '#/definitions/PermissionEnum'
+          uniqueItems: true
   ComputedPerimeter:
     type: object
     properties:
