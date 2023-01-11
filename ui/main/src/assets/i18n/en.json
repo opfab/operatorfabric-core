@@ -357,6 +357,7 @@
         "name": "NAME",
         "description": "DESCRIPTION",
         "perimeters" : "PERIMETERS",
+        "permissions" : "PERMISSIONS",
         "users": "USERS",
         "realtime": "REAL TIME",
         "type": "TYPE",

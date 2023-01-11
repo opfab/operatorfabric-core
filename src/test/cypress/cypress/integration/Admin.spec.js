@@ -329,8 +329,7 @@ describe('AdmininstrationPages', () => {
         cy.get('.modal-title').should('contain.text', 'testgroup');
         agGrid.cellShould('ag-grid-angular', 7, 1, 'have.text', 'group name');
         agGrid.cellShould('ag-grid-angular', 7, 2, 'have.text', 'group description');
-        agGrid.cellShould('ag-grid-angular', 7, 3, 'have.text', 'ROLE');
-        agGrid.cellShould('ag-grid-angular', 7, 4, 'have.text', 'cypress');
+        agGrid.cellShould('ag-grid-angular', 7, 3, 'have.text', 'cypress');
         agGrid.cellShould('ag-grid-angular', 7, 5, 'have.text', 'YES');
 
         cy.get('#opfab-name').type(' updated');
@@ -361,8 +360,7 @@ describe('AdmininstrationPages', () => {
         agGrid.cellShould('ag-grid-angular', 7, 0, 'have.text', 'testgroup');
         agGrid.cellShould('ag-grid-angular', 7, 1, 'have.text', 'group name updated');
         agGrid.cellShould('ag-grid-angular', 7, 2, 'have.text', 'group description updated');
-        agGrid.cellShould('ag-grid-angular', 7, 3, 'have.text', 'PERMISSION');
-        agGrid.cellShould('ag-grid-angular', 7, 4, 'have.text', 'defaultProcess');
+        agGrid.cellShould('ag-grid-angular', 7, 3, 'have.text', 'defaultProcess');
         agGrid.cellShould('ag-grid-angular', 7, 5, 'have.text', 'NO');
 
         // Delete previously created group
