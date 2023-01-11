@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2022, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2023, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -33,6 +33,8 @@ public class CurrentUserWithPerimetersData implements CurrentUserWithPerimeters 
     private User userData;
     private Set<ComputedPerimeter> computedPerimeters;
     private Map<String, List<String>> processesStatesNotNotified;
+
+    private Set<PermissionEnum> permissions;
 
     @Override
     public User getUserData(){return userData;}
@@ -177,5 +179,17 @@ public class CurrentUserWithPerimetersData implements CurrentUserWithPerimeters 
                 return false;
         }
         return Boolean.TRUE;
+    }
+
+    @Override
+    public List<PermissionEnum> getPermissions() {
+        if (permissions == null)
+            return Collections.emptyList();
+        return new ArrayList<>(permissions);
+    }
+
+    @Override
+    public void setPermissions(List<PermissionEnum> permissions) {
+        this.permissions = new HashSet<>(permissions);
     }
 }

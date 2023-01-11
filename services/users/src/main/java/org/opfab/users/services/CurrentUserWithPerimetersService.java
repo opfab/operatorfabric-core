@@ -11,10 +11,8 @@ package org.opfab.users.services;
 import org.opfab.users.model.*;
 import org.opfab.users.repositories.EntityRepository;
 import org.opfab.users.model.CurrentUserWithPerimetersData;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+
+import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -58,13 +56,16 @@ public class CurrentUserWithPerimetersService {
             if ((groups != null) && (!groups.isEmpty())) {
                 Set<Perimeter> perimetersData = new HashSet<>(); // We use a set because we don't want to have a
                                                                  // duplicate
-                groups.forEach( // For each group, we recover its perimeters
+                Set<PermissionEnum> permissionsData = new HashSet<>();
+                groups.forEach(
                         groupData -> {
                             List<Perimeter> list = usersService.retrievePerimeters(groupData.getPerimeters());
                             if (list != null)
                                 perimetersData.addAll(list);
+                            permissionsData.addAll(groupData.getPermissions());
                         });
                 userWithPerimeterData.computePerimeters(perimetersData);
+                userWithPerimeterData.setPermissions(new ArrayList<>(permissionsData));
             }
         }
     }
