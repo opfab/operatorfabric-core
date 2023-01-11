@@ -66,6 +66,7 @@ operatorfabric.users.default:
     - id: ADMIN
       name: ADMINISTRATORS
       description: The admin group
+      permissions: ["ADMIN"]
     - id: RTE
       name: RTE France
       description: RTE TSO Group
@@ -82,10 +83,12 @@ operatorfabric.users.default:
       name: Supervisor
       description: Supervisor Group
       realtime: true
+      permissions: ["READONLY"]
     - id: Manager
       name: Manager
       description: Manager Group
       realtime: false
+      permissions: ["VIEW_ALL_ARCHIVED_CARDS"]
     - id: ReadOnly
       name: ReadOnly
       description: ReadOnly Group
