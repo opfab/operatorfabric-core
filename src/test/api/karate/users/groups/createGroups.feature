@@ -23,7 +23,8 @@ Feature: CreateGroups
   "name" : "groupKarate1 name",
   "description" : "I Love Karate",
   "realtime" : false,
-  "type" : "ROLE"
+  "type" : "ROLE",
+  "permissions" : ["READONLY", "VIEW_ALL_ARCHIVED_CARDS"]
 }
 """
     * def wrongGroup =
@@ -127,6 +128,7 @@ Feature: CreateGroups
     And match response.name == group.name
     And match response.id == group.id
     And match response.realtime == false
+    And match response.permissions == '#notpresent'
     And match response.type == '#notpresent'
 
   Scenario: Update my group
@@ -142,6 +144,8 @@ Feature: CreateGroups
     And match response.id == groupUpdated.id
     And match response.realtime == groupUpdated.realtime
     And match response.type == groupUpdated.type
+    And assert response.permissions.length == 2
+    And match response.permissions contains only [ "READONLY","VIEW_ALL_ARCHIVED_CARDS"]
 
   Scenario: create without admin role
 #Forbidden without admin role, expected response 403
