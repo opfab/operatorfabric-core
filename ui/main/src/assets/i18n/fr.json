@@ -356,6 +356,7 @@
         "id": "ID",
         "name": "NOM",
         "perimeters" : "PÉRIMÈTRES",
+        "permissions" : "PERMISSIONS",
         "description": "DESCRIPTION",
         "users": "UTILISATEURS",
         "realtime": "TEMPS RÉEL",

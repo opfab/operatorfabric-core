@@ -402,7 +402,7 @@ export class Field {
    @param flex: Sets the column size relative to others
    @param cellRendererName: needs to match one of the renderers defined under `components` in the `gridOptions` above.
    * */
-    constructor(name: string, flex?: number, cellRendererName?: string, valueFormatter?: any, type?: string) {
+    constructor(name: string, flex?: number, cellRendererName?: string, valueFormatter?: any, type: string='dataColumn') {
         this.name = name;
         this.flex = flex;
         this.cellRendererName = cellRendererName;
