@@ -78,6 +78,17 @@ definitions:
       - ADMIN
       - VIEW_ALL_ARCHIVED_CARDS
       - READONLY
+  PermissionEnum:
+    type: string
+    description: |-
+      OpFab roles values >
+      * ADMIN: Administrator permission
+      * VIEW_ALL_ARCHIVED_CARDS: Permission to access all archived cards
+      * READONLY: Permission to view card, no rights to send cards or respond to a card.
+    enum:
+      - ADMIN
+      - VIEW_ALL_ARCHIVED_CARDS
+      - READONLY
   GroupTypeEnum:
     type: string
     description: |-
@@ -103,6 +114,11 @@ definitions:
         type: array
         items:
           type: string
+          uniqueItems: true
+      permissions:
+        type: array
+        items:
+          $ref: '#/definitions/PermissionEnum'
           uniqueItems: true
       realtime:
         type: boolean
