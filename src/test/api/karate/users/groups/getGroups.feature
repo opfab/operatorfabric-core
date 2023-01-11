@@ -20,7 +20,7 @@ Feature: Get Groups
     And def groupDescription = response[0].description
     And def groupPerimeters = response[0].perimeters
     And def groupRealtime = response[0].realtime
-
+    And def groupPermissions = response[0].permissions
 
     # Get the first group
     Given url opfabUrl + 'users/groups/' +  groupId
@@ -32,7 +32,7 @@ Feature: Get Groups
     And match response.description == groupDescription
     And match response.perimeters == '#notpresent'
     And match response.realtime == groupRealtime
-
+    And match response.permissions == groupPermissions
 
   Scenario: get groups without authentication
     # Get all groups, authentication required response expected 401
