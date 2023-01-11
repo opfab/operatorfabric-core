@@ -9,13 +9,12 @@
 
 package org.opfab.users.services;
 
+import org.assertj.core.util.Lists;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
-import org.opfab.users.model.CurrentUserWithPerimeters;
-import org.opfab.users.model.EntityData;
-import org.opfab.users.model.UserData;
-import org.opfab.users.model.UserSettingsData;
+import org.opfab.users.model.*;
 import org.opfab.users.stubs.EntityRepositoryStub;
+import org.opfab.users.stubs.GroupRepositoryStub;
 import org.opfab.users.stubs.UserSettingsRepositoryStub;
 import org.opfab.users.stubs.UsersServiceStub;
 
@@ -34,18 +33,26 @@ class CurrentUserWithPerimetersServiceShould {
         public static final String ENTITY_2 = "ENTITY2";
         public static final String ENTITY_NOT_CONNECTED = "ENTITY_NOT_CONNECTED";
 
+        public static final String GROUP_1 = "GROUP1";
+        public static final String GROUP_2 = "GROUP2";
+
+        public static final String GROUP_3 = "GROUP3";
         private static EntityRepositoryStub entityRepositoryStub = new EntityRepositoryStub();
         private static UsersServiceStub usersServiceStub;
         private static UserSettingsRepositoryStub userSettingsRepositoryStub = new UserSettingsRepositoryStub();
         private static UserSettingsService userSettingsService;
 
+        private static GroupRepositoryStub groupRepositoryStub = new GroupRepositoryStub();
+
         @BeforeAll
         static void initData() {
-                usersServiceStub = new UsersServiceStub(null, null, null, null, null);
+                groupRepositoryStub = new GroupRepositoryStub();
+                usersServiceStub = new UsersServiceStub(null, groupRepositoryStub, null, null, null);
                 userSettingsService = new UserSettingsService(userSettingsRepositoryStub, usersServiceStub, null);
 
                 initEntities();
                 initUserSettings();
+                initGroups();
         }
 
         private static void initEntities() {
@@ -78,6 +85,22 @@ class CurrentUserWithPerimetersServiceShould {
                 parents2.add(CHILD_ENTITY);
                 grandChildEntity.setParents(parents2);
                 entityRepositoryStub.insert(grandChildEntity);
+        }
+
+        private static void initGroups() {
+                GroupData group1 = new GroupData();
+                group1.setId(GROUP_1);
+                group1.setPermissions(Lists.list(PermissionEnum.READONLY));
+                groupRepositoryStub.save(group1);
+
+                GroupData group2 = new GroupData();
+                group2.setId(GROUP_2);
+                group2.setPermissions(Lists.list(PermissionEnum.READONLY, PermissionEnum.VIEW_ALL_ARCHIVED_CARDS));
+                groupRepositoryStub.save(group2);
+
+                GroupData group3 = new GroupData();
+                group3.setId(GROUP_3);
+                groupRepositoryStub.save(group3);
         }
 
         private static void initUserSettings() {
@@ -174,4 +197,29 @@ class CurrentUserWithPerimetersServiceShould {
                                 CHILD_ENTITY);
         }
 
+        @Test
+        void GIVEN_User_With_One_Group_Without_Permissions_WHEN_Fetching_CurrentUserWithPerimeters_THEN_Return_Empty_Permissions_List() {
+                UserData user = UserData.builder()
+                        .login("test")
+                        .group(GROUP_3)
+                        .build();
+                CurrentUserWithPerimetersService currentUserWithPerimetersService = new CurrentUserWithPerimetersService(
+                        usersServiceStub, userSettingsService, entityRepositoryStub);
+                CurrentUserWithPerimeters currentUser = currentUserWithPerimetersService
+                        .fetchCurrentUserWithPerimeters(user);
+                assertThat(currentUser.getPermissions()).isEmpty();
+        }
+
+        @Test
+        void GIVEN_User_With_Many_Groups_WHEN_Fetching_CurrentUserWithPerimeters_THEN_Return_Permissions_From_All_Groups() {
+                UserData user = UserData.builder()
+                        .login("test")
+                        .group(GROUP_1).group(GROUP_2).group(GROUP_3)
+                        .build();
+                CurrentUserWithPerimetersService currentUserWithPerimetersService = new CurrentUserWithPerimetersService(
+                        usersServiceStub, userSettingsService, entityRepositoryStub);
+                CurrentUserWithPerimeters currentUser = currentUserWithPerimetersService
+                        .fetchCurrentUserWithPerimeters(user);
+                assertThat(currentUser.getPermissions()).containsExactlyInAnyOrder(PermissionEnum.READONLY, PermissionEnum.VIEW_ALL_ARCHIVED_CARDS);
+        }
 }
