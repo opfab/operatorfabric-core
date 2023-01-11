@@ -13,7 +13,8 @@ Feature: Get Group details
 {
   "id" : "groupKarate3",
   "name" : "groupKarate3 name",
-  "description" : "groupKarate3 description"
+  "description" : "groupKarate3 description",
+  "permissions" : ["READONLY"]
 }
 """
 
@@ -36,6 +37,8 @@ Feature: Get Group details
     And match response.description == group.description
     And match response.name == group.name
     And match response.realtime == false
+    And assert response.permissions.length == 1
+    And match response.permissions contains only ["READONLY"]
     And status 200
 
 
