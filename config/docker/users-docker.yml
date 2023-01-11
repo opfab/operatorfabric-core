@@ -2,9 +2,11 @@
 # !!!! WARNING: VALUES SHOULD BE CHANGED FOR PRODUCTION MODE !!!!
 #
 
+
 spring:
   application:
     name: users
+
 
 operatorfabric.users.default:
   users:
@@ -26,7 +28,7 @@ operatorfabric.users.default:
       entities: [ "ENTITY3_FR" ]
     - login: operator4_fr
       groups: ["ReadOnly","Dispatcher"]
-      entities: [ "ENTITY1_FR", "ENTITY2_FR", "ENTITY3_FR", "ENTITY4_FR"]
+      entities: ["ENTITY1_FR", "ENTITY2_FR", "ENTITY3_FR",  "ENTITY4_FR" ]
     - login: operator5_fr
       groups: [ "RTE","ADMIN","ReadOnly","Dispatcher"]
       entities: [ "ENTITY1_FR" ]
@@ -44,7 +46,7 @@ operatorfabric.users.default:
       groups: ["Dispatcher", "ReadOnly"]
       entities: ["ENTITY1_IT"]
     - login: operator2_it
-      groups: ["Planner","ReadOnly"]
+      groups: ["Planner", "ReadOnly"]
       entities: ["ENTITY2_IT"]
     - login: operator3_it
       groups: ["Dispatcher", "Planner", "ReadOnly"]
@@ -67,6 +69,7 @@ operatorfabric.users.default:
     - id: ADMIN
       name: ADMINISTRATORS
       description: The admin group
+      permissions: ["ADMIN"]
     - id: RTE
       name: RTE France
       description: RTE TSO Group
@@ -83,10 +86,12 @@ operatorfabric.users.default:
       name: Supervisor
       description: Supervisor Group
       realtime: true
+      permissions: ["READONLY"]
     - id: Manager
       name: Manager
       description: Manager Group
       realtime: false
+      permissions: ["VIEW_ALL_ARCHIVED_CARDS"]
     - id: ReadOnly
       name: ReadOnly
       description: ReadOnly Group
@@ -114,7 +119,7 @@ operatorfabric.users.default:
      description: French Control Centers
      entityAllowedToSendCard: false
    - id: IT_SUPERVISOR_ENTITY
-     name: IT SUPERVISION CENTER 
+     name: IT SUPERVISION CENTER
      description: IT SUPERVISION CENTER
    - id: ENTITY1_IT
      name: Control Center IT North
@@ -152,3 +157,9 @@ operatorfabric.users.default:
      name: South Europe Control Center
      description: South Europe Control Center
      entityAllowedToSendCard: true
+  user-settings:
+    - login: operator3_fr
+      description: Da Operator Rulez
+#logging:
+#  level:
+#    ROOT: DEBUG
