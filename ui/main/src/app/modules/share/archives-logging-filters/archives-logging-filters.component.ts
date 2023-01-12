@@ -28,7 +28,7 @@ import moment from 'moment';
 import {Utilities} from 'app/business/common/utilities';
 import {UserPreferencesService} from '@ofServices/user-preference.service';
 import {UserService} from '@ofServices/user.service';
-import {OpfabRolesEnum} from '@ofModel/user.model';
+import {PermissionEnum} from '@ofModel/permission.model';
 
 export enum FilterDateTypes {
     PUBLISH_DATE_FROM_PARAM = 'publishDateFrom',
@@ -135,7 +135,7 @@ export class ArchivesLoggingFiltersComponent implements OnInit, OnDestroy, After
         private userPreferences: UserPreferencesService,
         private userService: UserService
     ) {
-        this.hasCurrentUserRigthsToViewAllArchivedCards = this.userService.isCurrentUserAdmin() || this.userService.hasCurrentUserAnyRole([OpfabRolesEnum.VIEW_ALL_ARCHIVED_CARDS]);
+        this.hasCurrentUserRigthsToViewAllArchivedCards = this.userService.isCurrentUserAdmin() || this.userService.hasCurrentUserAnyPermission([PermissionEnum.VIEW_ALL_ARCHIVED_CARDS]);
 
         const isAdminModeCheckedInStorage = this.userPreferences.getPreference('opfab.isAdminModeChecked');
         this.isAdminModeChecked = this.hasCurrentUserRigthsToViewAllArchivedCards && isAdminModeCheckedInStorage === 'true';
