@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2022, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2023, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -13,6 +13,7 @@ package org.opfab.cards.consultation.repositories;
 import org.opfab.cards.consultation.model.Card;
 import org.opfab.users.model.CurrentUserWithPerimeters;
 import org.opfab.users.model.OpfabRolesEnum;
+import org.opfab.users.model.PermissionEnum;
 import org.opfab.users.model.RightsEnum;
 import org.springframework.data.mongodb.core.ReactiveMongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
@@ -65,7 +66,7 @@ public interface UserUtilitiesCommonToCardRepository<T extends Card> {
         
          boolean hasCurrentUserAdminRole = currentUserWithPerimeters.getUserData().getOpfabRoles() != null && 
                                  (currentUserWithPerimeters.getUserData().getOpfabRoles().contains(OpfabRolesEnum.ADMIN) || 
-                                 currentUserWithPerimeters.getUserData().getOpfabRoles().contains(OpfabRolesEnum.VIEW_ALL_ARCHIVED_CARDS));
+                                 (currentUserWithPerimeters.getPermissions() != null && currentUserWithPerimeters.getPermissions().contains(PermissionEnum.VIEW_ALL_ARCHIVED_CARDS)));
 
         if (! isCurrentUserMemberOfAdminGroup && !hasCurrentUserAdminRole)
             criteria.add(computeCriteriaForUser(currentUserWithPerimeters));

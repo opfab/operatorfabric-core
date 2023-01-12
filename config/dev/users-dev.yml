@@ -17,7 +17,7 @@ operatorfabric.users.default:
       groups: ["Dispatcher","ReadOnly"]
       entities: ["ENTITY1_FR"]
     - login: operator2_fr
-      groups: ["Planner", "ReadOnly"]
+      groups: ["Planner", "ReadOnly", "Manager"]
       entities: ["ENTITY2_FR"]
       opfabRoles: ['VIEW_ALL_ARCHIVED_CARDS']
     - login: operator3_fr
