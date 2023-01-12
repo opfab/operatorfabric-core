@@ -495,7 +495,7 @@ public class UsersServiceShould {
 
 
         @Test
-        void GIVEN_An_Existing_User_WHEN_UpdateOrCreate_THEN_User_Is_Updated_And_Notification_Is_Send_To_Other_Services() {
+        void GIVEN_An_Existing_User_WHEN_UpdateOrCreate_THEN_User_Is_Updated_And_Notification_Is_Sent_To_Other_Services() {
 
             UserData user = UserData.builder()
                     .login("user3")

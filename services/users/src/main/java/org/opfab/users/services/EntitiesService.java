@@ -148,24 +148,24 @@ public class EntitiesService {
         return new OperationResult<>(foundUsers, true, null, null);
     }
 
-    public OperationResult<String> updateEntityUsers(String entityId, List<String> users) {
+    public OperationResult<String> updateEntityUsers(String entityId, List<String> newUsersInEntity) {
         if (!entityRepository.findById(entityId).isPresent())
             return new OperationResult<>(null, false, OperationResult.ErrorType.NOT_FOUND,
                     String.format(ENTITY_NOT_FOUND_MSG, entityId));
-        OperationResult<List<User>> foundUsersResult = retrieveUsers(users);
-        if (foundUsersResult.isSuccess()) {
-            List<User> formerlyBelongs = userRepository.findByEntitiesContaining(entityId);
-            formerlyBelongs.forEach(user -> {
-                if (!users.contains(user.getLogin())) {
-                    ((UserData) user).deleteEntity(entityId);
-                    userRepository.save(user);
-                    notificationService.publishUpdatedUserMessage(user.getLogin());
+        OperationResult<List<User>> existingUsers = retrieveUsers(newUsersInEntity);
+        if (existingUsers.isSuccess()) {
+            List<User> currentUsersInEntity = userRepository.findByEntitiesContaining(entityId);
+            currentUsersInEntity.forEach(currentUser -> {
+                if (!newUsersInEntity.contains(currentUser.getLogin())) {
+                    ((UserData) currentUser).deleteEntity(entityId);
+                    userRepository.save(currentUser);
+                    notificationService.publishUpdatedUserMessage(currentUser.getLogin());
                 }
             });
-            addEntityUsers(entityId, users);
+            addEntityUsers(entityId, newUsersInEntity);
         } else
-            return new OperationResult<>(null, false, foundUsersResult.getErrorType(),
-                    foundUsersResult.getErrorMessage());
+            return new OperationResult<>(null, false, existingUsers.getErrorType(),
+                    existingUsers.getErrorMessage());
 
         return new OperationResult<>(null, true, null, null);
     }
@@ -175,7 +175,6 @@ public class EntitiesService {
             return new OperationResult<>(null, false, OperationResult.ErrorType.NOT_FOUND,
                     String.format(ENTITY_NOT_FOUND_MSG, entityId));
         removeTheReferenceToTheEntityForMemberUsers(entityId);
-        notificationService.publishUpdatedGroupMessage(entityId);
         return new OperationResult<>(null, true, null, entityId);
     }
 

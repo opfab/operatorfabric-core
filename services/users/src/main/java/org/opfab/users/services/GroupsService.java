@@ -180,7 +180,6 @@ public class GroupsService {
             return new OperationResult<>(null, false, OperationResult.ErrorType.NOT_FOUND,
                     String.format(GROUP_NOT_FOUND_MSG, groupId));
         removeTheReferenceToTheGroupForMemberUsers(groupId);
-        notificationService.publishUpdatedGroupMessage(groupId);
         return new OperationResult<>(null, true, null, groupId);
     }
 

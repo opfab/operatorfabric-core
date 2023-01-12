@@ -16,6 +16,7 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -30,6 +31,7 @@ import org.opfab.users.model.PerimeterData;
 import org.opfab.users.model.RightsEnum;
 import org.opfab.users.model.StateRight;
 import org.opfab.users.model.StateRightData;
+import org.opfab.users.model.UserData;
 import org.opfab.users.spies.EventBusSpy;
 import org.opfab.users.stubs.GroupRepositoryStub;
 import org.opfab.users.stubs.PerimeterRepositoryStub;
@@ -41,12 +43,17 @@ public class PerimetersServiceShould {
     private PerimetersService perimetersService;
     private PerimeterRepositoryStub perimeterRepositoryStub = new PerimeterRepositoryStub();
     private GroupRepositoryStub groupRepositoryStub = new GroupRepositoryStub();
-    private NotificationService notificationService = new NotificationService( new UserRepositoryStub(), new EventBusSpy());
+    private UserRepositoryStub userRepositoryStub = new UserRepositoryStub();
+    private NotificationService notificationService;
+    private EventBusSpy eventBusSpy;
 
     @BeforeEach
     void clear() {
+        eventBusSpy = new EventBusSpy();
+        notificationService = new NotificationService(userRepositoryStub,eventBusSpy);
         initPerimeterRepository();
         initGroupRepository();
+        initUserRepository();
     }
 
     private void initPerimeterRepository() {
@@ -98,6 +105,17 @@ public class PerimetersServiceShould {
         groupRepositoryStub.insert(g3);
     }
 
+    private void initUserRepository() {
+        userRepositoryStub.deleteAll();
+        Set<String> groupForUser1 = new HashSet<>();
+        groupForUser1.add("group1");
+        userRepositoryStub.insert(new UserData("user1", "test", null, null, groupForUser1, null, null));
+        Set<String> groupForUser2 = new HashSet<>();
+        groupForUser2.add("group1");
+        userRepositoryStub.insert(new UserData("user2", "test", null, null, groupForUser2, null, null));
+
+    }
+ 
     @Nested
     @DisplayName("Fetch")
     class Fetch {
@@ -226,7 +244,7 @@ public class PerimetersServiceShould {
         }
 
         @Test
-        void GIVEN_A_Valid_Perimeter_WHEN_Update_None_Exiting_Perimeter_With_One_State_THEN_Success_And_Perimeter_Is_Created() {
+        void GIVEN_A_Valid_Perimeter_WHEN_Update_Non_Exiting_Perimeter_With_One_State_THEN_Success_And_Perimeter_Is_Created() {
             Perimeter perimeter = PerimeterData.builder().id("newPerimeter").process("processId")
                     .stateRights(new HashSet<>(Arrays.asList(new StateRightData("state1", RightsEnum.RECEIVE, true))))
                     .build();
@@ -238,7 +256,7 @@ public class PerimetersServiceShould {
         }
 
         @Test
-        void GIVEN_A_Valid_Perimeter_WHEN_Update_None_Existing_Perimeter_With_Two_States_THEN_Success_And_Perimeter_Is_Created() {
+        void GIVEN_A_Valid_Perimeter_WHEN_Update_Non_Existing_Perimeter_With_Two_States_THEN_Success_And_Perimeter_Is_Created() {
 
             Perimeter perimeter = PerimeterData.builder().id("newPerimeter").process("processId")
                     .stateRights(
@@ -301,8 +319,8 @@ public class PerimetersServiceShould {
 
     @Nested
     @DisplayName("Groups")
-    class Users {
-
+    class Groups {
+         
         @Nested
         @DisplayName("Add")
         class Add {
@@ -350,6 +368,7 @@ public class PerimetersServiceShould {
         @Nested
         @DisplayName("Update")
         class Update {
+            
             @Test
             void GIVEN_Perimeter_Does_Not_Exist_WHEN_Updating_Group_List_THEN_Return_NotFound() {
                 OperationResult<String> result = perimetersService.updatePerimeterGroups("dummyid", null);
@@ -387,6 +406,21 @@ public class PerimetersServiceShould {
 
             }
 
+
+            @Test
+            void GIVEN_Existing_Perimeter_WHEN_Update_Group_List_THEN_A_Notification_Containing_Users_Impacted_Is_Sent_To_Other_Services() {
+                
+                ArrayList<String> groups = new ArrayList<>();
+                groups.add("group1");
+                groups.add("group2");
+                OperationResult<String> result = perimetersService.updatePerimeterGroups("perimeter2", groups);
+
+                assertThat(result.isSuccess()).isTrue();
+                String[] expectedMessageSent1 = { "USER_EXCHANGE", "user1" };
+                String[] expectedMessageSent2 = { "USER_EXCHANGE", "user2" };
+                assertThat(eventBusSpy.getMessagesSent()).containsExactlyInAnyOrder(expectedMessageSent1,expectedMessageSent2);
+            }
+ 
             @Test
             void GIVEN_Existing_Perimeter_WHEN_Update_With_Empty_Group_List_THEN_Succeed_And_Groups_Are_Updated() {
                 ArrayList<String> groups = new ArrayList<>();
@@ -400,15 +434,15 @@ public class PerimetersServiceShould {
                 assertThat(group2Updated.get().getPerimeters()).isEmpty();
                 assertThat(group3Updated.get().getPerimeters()).containsExactly("perimeter2");
 
-            }
+            } 
         }
-
+ 
         @Nested
         @DisplayName("Remove")
         class Remove {
 
             @Test
-            void GIVEN_A_Not_Existing_Perimeter_WHEN_Try_To_Remove_Groups_THEN_Return_NOT_FOUND() {
+            void GIVEN_A_Not_Existing_Perimeter_WHEN_Try_To_Remove_From_Groups_THEN_Return_NOT_FOUND() {
                 OperationResult<String> result = perimetersService.deletePerimeterGroups("dummyPerimeter");
                 assertThat(result.isSuccess()).isFalse();
                 assertThat(result.getErrorType()).isEqualTo(OperationResult.ErrorType.NOT_FOUND);
@@ -416,7 +450,7 @@ public class PerimetersServiceShould {
             }
 
             @Test
-            void GIVEN_A_Perimeter_With_Groups_WHEN_Try_To_Remove_Groups_THEN_Success_And_Groups_Removed() {
+            void GIVEN_A_Perimeter_WHEN_Try_To_Remove_From_Groups_THEN_Success_And_Groups_Are_Not_Linked_To_The_Perimeter() {
                 OperationResult<String> result = perimetersService.deletePerimeterGroups("perimeter1");
                 Optional<Group> group1Updated = groupRepositoryStub.findById("group1");
                 Optional<Group> group2Updated = groupRepositoryStub.findById("group2");
@@ -429,7 +463,16 @@ public class PerimetersServiceShould {
             }
 
             @Test
-            void GIVEN_A_None_Existing_Perimeter_WHEN_Try_Removing_From_Group_THEN_Failed_And_Return_NOT_FOUND() {
+            void GIVEN_A_Perimeter_WHEN_Remove_From_Groups_THEN_A_Notification_Containing_Users_Impacted_Is_Sent_To_Other_Services() {
+                OperationResult<String> result = perimetersService.deletePerimeterGroups("perimeter1");
+                assertThat(result.isSuccess()).isTrue();
+                String[] expectedMessageSent1 = { "USER_EXCHANGE", "user1" };
+                String[] expectedMessageSent2 = { "USER_EXCHANGE", "user2" };
+                assertThat(eventBusSpy.getMessagesSent()).containsExactlyInAnyOrder(expectedMessageSent1,expectedMessageSent2);
+            }
+
+            @Test
+            void GIVEN_A_Non_Existing_Perimeter_WHEN_Try_Removing_From_Group_THEN_Failed_And_Return_NOT_FOUND() {
                 OperationResult<String> result = perimetersService.deletePerimeterGroup("dummyPerimeter", "group1");
                 assertThat(result.isSuccess()).isFalse();
                 assertThat(result.getErrorType()).isEqualTo(OperationResult.ErrorType.NOT_FOUND);
@@ -445,7 +488,7 @@ public class PerimetersServiceShould {
             }
 
             @Test
-            void GIVEN_A_User_WHEN_Try_Removing_From_Group_THEN_Success_And_User_Removed_From_Group() {
+            void GIVEN_A_Perimeter_WHEN_Try_Removing_From_One_Group_THEN_Success_And_Group_Is_Not_Linked_To_The_Perimeter() {
                 OperationResult<String> result = perimetersService.deletePerimeterGroup("perimeter1",
                         "group1");
                 Optional<Group> group1Updated = groupRepositoryStub.findById("group1");
@@ -457,7 +500,19 @@ public class PerimetersServiceShould {
                 assertThat(group2Updated.get().getPerimeters()).containsExactly("perimeter1");
                 assertThat(group3Updated.get().getPerimeters()).containsExactly("perimeter2");
             }
+
+
+            @Test
+            void GIVEN_A_Perimeter_WHEN_Remove_From_One_Group_THEN_A_Notification_Containing_Users_Impacted_Is_Sent_To_Other_Services() {
+                OperationResult<String> result = perimetersService.deletePerimeterGroup("perimeter1","group1");
+                assertThat(result.isSuccess()).isTrue();
+                String[] expectedMessageSent1 = { "USER_EXCHANGE", "user1" };
+                String[] expectedMessageSent2 = { "USER_EXCHANGE", "user2" };
+                assertThat(eventBusSpy.getMessagesSent()).containsExactlyInAnyOrder(expectedMessageSent1,expectedMessageSent2);
+            }
+
         }
+        
 
     }
 

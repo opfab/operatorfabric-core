@@ -43,7 +43,8 @@ class GroupsServiceShould {
     private GroupRepositoryStub groupRepositoryStub = new GroupRepositoryStub();
     private UserRepositoryStub userRepositoryStub = new UserRepositoryStub();
     private PerimeterRepositoryStub perimeterRepositoryStub = new PerimeterRepositoryStub();
-    private NotificationService notificationService = new NotificationService(userRepositoryStub,new EventBusSpy());
+    private EventBusSpy eventBusSpy;
+    private NotificationService notificationService;
     private GroupsService groupsService;
 
     @BeforeEach
@@ -51,6 +52,9 @@ class GroupsServiceShould {
         groupRepositoryStub.deleteAll();
         userRepositoryStub.deleteAll();
         perimeterRepositoryStub.deleteAll();
+
+        eventBusSpy = new EventBusSpy();
+        notificationService = new NotificationService(userRepositoryStub, eventBusSpy);
 
         List<StateRight> states = new ArrayList<>();
         states.add(new StateRightData("perimeter1", RightsEnum.RECEIVE, true));
@@ -115,7 +119,8 @@ class GroupsServiceShould {
             OperationResult<EntityCreationReport<Group>> result = groupsService.createGroup(group);
             assertThat(result.isSuccess()).isFalse();
             assertThat(result.getErrorType()).isEqualTo(OperationResult.ErrorType.BAD_REQUEST);
-            assertThat(result.getErrorMessage()).isEqualTo("Id should only contain the following characters: letters, _, - or digits (id=invalid?id).");
+            assertThat(result.getErrorMessage()).isEqualTo(
+                    "Id should only contain the following characters: letters, _, - or digits (id=invalid?id).");
         }
 
         @Test
@@ -192,11 +197,22 @@ class GroupsServiceShould {
         }
 
         @Test
-        void GIVEN_An_Existing_Group_WHEN_Deleting_Group_THEN_Success_And_Users_Are_Not_Members_Of_The_Group_Anymore(){
+        void GIVEN_An_Existing_Group_WHEN_Deleting_Group_THEN_Success_And_Users_Are_Not_Members_Of_The_Group_Anymore() {
             OperationResult<String> result = groupsService.deleteGroup("group1");
             assertThat(result.isSuccess()).isTrue();
             assertThat(userRepositoryStub.findById("user1").get().getGroups()).doesNotContain("group1");
             assertThat(userRepositoryStub.findById("user2").get().getGroups()).doesNotContain("group1");
+        }
+
+        @Test
+        void GIVEN_An_Existing_Group_WHEN_Deleting_Group_THEN_A_Notification_Containing_Users_Updated_Is_Sent_To_Other_Services() {
+            OperationResult<String> result = groupsService.deleteGroup("group1");
+            assertThat(result.isSuccess()).isTrue();
+
+            String[] expectedMessageSent1 = { "USER_EXCHANGE", "user1" };
+            String[] expectedMessageSent2 = { "USER_EXCHANGE", "user2" };
+            assertThat(eventBusSpy.getMessagesSent()).containsExactlyInAnyOrder(expectedMessageSent1,
+                    expectedMessageSent2);
         }
 
     }
@@ -247,6 +263,23 @@ class GroupsServiceShould {
                 assertThat(adminNotUpdated.get().getGroups()).doesNotContain("testGroup");
 
             }
+
+            @Test
+            void GIVEN_Existing_Users_WHEN_Adding_Them_To_Group_THEN_A_Notification_Containing_Users_Updated_Is_Sent_To_Other_Services() {
+                groupRepositoryStub.insert(new GroupData(
+                        "testGroup", "myname", null, null, null, null));
+
+                ArrayList<String> users = new ArrayList<>();
+                users.add("user1");
+                users.add("user2");
+                OperationResult<String> result = groupsService.addGroupUsers("testGroup", users);
+                assertThat(result.isSuccess()).isTrue();
+
+                String[] expectedMessageSent1 = { "USER_EXCHANGE", "user1" };
+                String[] expectedMessageSent2 = { "USER_EXCHANGE", "user2" };
+                assertThat(eventBusSpy.getMessagesSent()).containsExactlyInAnyOrder(expectedMessageSent1,
+                        expectedMessageSent2);
+            }
         }
 
         @Nested
@@ -290,6 +323,21 @@ class GroupsServiceShould {
             }
 
             @Test
+            void GIVEN_Existing_Group_WHEN_Update_Users_List_THEN_A_Notification_Containing_Users_Updated_Is_Sent_To_Other_Services() {
+                ArrayList<String> users = new ArrayList<>();
+                users.add("user1");
+                users.add("admin");
+                OperationResult<String> result = groupsService.updateGroupUsers("group1", users);
+                assertThat(result.isSuccess()).isTrue();
+
+                String[] expectedMessageSent1 = { "USER_EXCHANGE", "user1" };
+                String[] expectedMessageSent2 = { "USER_EXCHANGE", "user2" }; // Notification is send as user is deleted from groups
+                String[] expectedMessageSent3 = { "USER_EXCHANGE", "admin" };
+                assertThat(eventBusSpy.getMessagesSent()).containsExactlyInAnyOrder(expectedMessageSent1,
+                        expectedMessageSent2,expectedMessageSent3);
+            }
+
+            @Test
             void GIVEN_Existing_Group_WHEN_Update_Empty_User_List_THEN_Succeed_And_Users_Are_Updated() {
 
                 ArrayList<String> users = new ArrayList<>();
@@ -302,6 +350,19 @@ class GroupsServiceShould {
                 assertThat(user2Updated.get().getGroups()).isEmpty();
                 assertThat(adminUpdated.get().getGroups()).doesNotContain("group1");
                 assertThat(adminUpdated.get().getGroups()).contains("ADMIN");
+
+            }
+
+            @Test
+            void GIVEN_Existing_Group_WHEN_Update_Empty_User_List_THEN_A_Notification_Containing_Users_Updated_Is_Sent_To_Other_Services() {
+
+                ArrayList<String> users = new ArrayList<>();
+                OperationResult<String> result = groupsService.updateGroupUsers("group1", users);
+                assertThat(result.isSuccess()).isTrue();
+                String[] expectedMessageSent1 = { "USER_EXCHANGE", "user1" };
+                String[] expectedMessageSent2 = { "USER_EXCHANGE", "user2" }; 
+                assertThat(eventBusSpy.getMessagesSent()).containsExactlyInAnyOrder(expectedMessageSent1,
+                        expectedMessageSent2);
 
             }
         }
@@ -327,6 +388,16 @@ class GroupsServiceShould {
             }
 
             @Test
+            void GIVEN_A_Group_With_User_WHEN_Try_To_Remove_Users_THEN_A_Notification_Containing_Users_Updated_Is_Sent_To_Other_Services() {
+                OperationResult<String> result = groupsService.deleteGroupUsers("group1");
+                assertThat(result.isSuccess()).isTrue();
+                String[] expectedMessageSent1 = { "USER_EXCHANGE", "user1" };
+                String[] expectedMessageSent2 = { "USER_EXCHANGE", "user2" }; 
+                assertThat(eventBusSpy.getMessagesSent()).containsExactlyInAnyOrder(expectedMessageSent1,
+                        expectedMessageSent2);
+            }
+
+            @Test
             void GIVEN_Admin_User_WHEN_Try_Removing_From_Admin_Group_THEN_Failed_And_Return_BAD_REQUEST() {
                 OperationResult<String> result = groupsService.deleteGroupUser("admin", "admin");
                 assertThat(result.isSuccess()).isFalse();
@@ -336,7 +407,7 @@ class GroupsServiceShould {
             }
 
             @Test
-            void GIVEN_A_None_Existing_User_WHEN_Try_Removing_From_Group_THEN_Failed_And_Return_NOT_FOUND() {
+            void GIVEN_A_Non_Existing_User_WHEN_Try_Removing_From_Group_THEN_Failed_And_Return_NOT_FOUND() {
                 OperationResult<String> result = groupsService.deleteGroupUser("group1", "dummyUser");
                 assertThat(result.isSuccess()).isFalse();
                 assertThat(result.getErrorType()).isEqualTo(OperationResult.ErrorType.NOT_FOUND);
@@ -356,6 +427,14 @@ class GroupsServiceShould {
                 OperationResult<String> result = groupsService.deleteGroupUser("group1", "user1");
                 assertThat(result.isSuccess()).isTrue();
                 assertThat(userRepositoryStub.findById("user1").get().getGroups()).doesNotContain("group1");
+            }
+
+            @Test
+            void GIVEN_A_User_WHEN_Try_Removing_From_Group_THEN_A_Notification_Containing_User_Updated_Is_Sent_To_Other_Services() {
+                OperationResult<String> result = groupsService.deleteGroupUser("group1", "user1");
+                assertThat(result.isSuccess()).isTrue();
+                String[] expectedMessageSent1 = { "USER_EXCHANGE", "user1" };
+                assertThat(eventBusSpy.getMessagesSent()).containsExactlyInAnyOrder(expectedMessageSent1);
             }
         }
 
@@ -423,12 +502,13 @@ class GroupsServiceShould {
                 OperationResult<String> result = groupsService.updateGroupPerimeters("group1", perimeters);
                 assertThat(result.isSuccess()).isFalse();
                 assertThat(result.getErrorType()).isEqualTo(OperationResult.ErrorType.BAD_REQUEST);
-                assertThat(result.getErrorMessage()).isEqualTo("Bad perimeter list : perimeter dummyParimeter not found");
-                
+                assertThat(result.getErrorMessage())
+                        .isEqualTo("Bad perimeter list : perimeter dummyParimeter not found");
+
             }
 
             @Test
-            void GIVEN_None_Existing_Group_WHEN_Updating_Perimeters_THEN_Return_NOT_FOUND() {
+            void GIVEN_Non_Existing_Group_WHEN_Updating_Perimeters_THEN_Return_NOT_FOUND() {
                 OperationResult<String> result = groupsService.updateGroupPerimeters("dummyid", null);
                 assertThat(result.isSuccess()).isFalse();
                 assertThat(result.getErrorType()).isEqualTo(OperationResult.ErrorType.NOT_FOUND);
@@ -445,6 +525,20 @@ class GroupsServiceShould {
                 assertThat(result.isSuccess()).isTrue();
                 assertThat(groupUpdated.get().getPerimeters()).contains("perimeter1");
                 assertThat(groupUpdated.get().getPerimeters()).contains("perimeter2");
+            }
+
+
+            @Test
+            void GIVEN_Existing_Group_WHEN_Updating_Perimeter_List_THEN__A_Notification_Containing_User_Updated_Is_Sent_To_Other_Services() {
+                ArrayList<String> perimeters = new ArrayList<>();
+                perimeters.add("perimeter1");
+                perimeters.add("perimeter2");
+                OperationResult<String> result = groupsService.updateGroupPerimeters("group1", perimeters);
+
+                assertThat(result.isSuccess()).isTrue();
+                String[] expectedMessageSent1 = { "USER_EXCHANGE", "user1" };
+                String[] expectedMessageSent2 = { "USER_EXCHANGE", "user2" };
+                assertThat(eventBusSpy.getMessagesSent()).containsExactlyInAnyOrder(expectedMessageSent1,expectedMessageSent2);
             }
 
             @Test
@@ -469,7 +563,8 @@ class GroupsServiceShould {
                 OperationResult<String> result = groupsService.addGroupPerimeters("group1", perimeters);
                 assertThat(result.isSuccess()).isFalse();
                 assertThat(result.getErrorType()).isEqualTo(OperationResult.ErrorType.BAD_REQUEST);
-                assertThat(result.getErrorMessage()).isEqualTo("Bad perimeter list : perimeter dummyPerimeter not found");
+                assertThat(result.getErrorMessage())
+                        .isEqualTo("Bad perimeter list : perimeter dummyPerimeter not found");
             }
 
             @Test
@@ -490,6 +585,19 @@ class GroupsServiceShould {
                 assertThat(groupUpdated.get().getPerimeters()).contains("perimeter1");
                 assertThat(groupUpdated.get().getPerimeters()).contains("perimeter2");
             }
+
+            @Test
+            void GIVEN_Existing_Group_WHEN_Adding_Perimeter_THEN__A_Notification_Containing_User_Updated_Is_Sent_To_Other_Services() {
+                ArrayList<String> perimetersToAdd = new ArrayList<>();
+                perimetersToAdd.add("perimeter2");
+                OperationResult<String> result = groupsService.addGroupPerimeters("group1", perimetersToAdd);
+
+                assertThat(result.isSuccess()).isTrue();
+                String[] expectedMessageSent1 = { "USER_EXCHANGE", "user1" };
+                String[] expectedMessageSent2 = { "USER_EXCHANGE", "user2" };
+                assertThat(eventBusSpy.getMessagesSent()).containsExactlyInAnyOrder(expectedMessageSent1,expectedMessageSent2);
+            }
+
 
             @Test
             void GIVEN_Existing_Group_WHEN_Adding_Two_Perimeter_THEN_Succeed_And_Two_Perimeter_Are_Added() {
