@@ -18,26 +18,25 @@ public class NotificationService {
     private UserRepository userRepository;
     private EventBus eventBus;
 
-    public NotificationService(UserRepository userRepository,EventBus eventBus) {
+    public NotificationService(UserRepository userRepository, EventBus eventBus) {
         this.userRepository = userRepository;
         this.eventBus = eventBus;
     }
+
     public void publishUpdatedGroupMessage(String groupId) {
         List<User> foundUsers = userRepository.findByGroupSetContaining(groupId);
         if (foundUsers != null && !foundUsers.isEmpty()) {
             for (User user : foundUsers)
                 publishUpdatedUserMessage(user.getLogin());
-        } else
-            publishUpdatedConfigMessage();
+        }
     }
-   
+
     public void publishUpdatedConfigMessage() {
         publishUpdatedUserMessage("");
     }
 
     public void publishUpdatedUserMessage(String userLogin) {
-       eventBus.sendEvent("USER_EXCHANGE",userLogin);
+        eventBus.sendEvent("USER_EXCHANGE", userLogin);
     }
 
-  
 }

@@ -44,25 +44,25 @@ class EntitiesServiceShould {
     void clear() {
         entityRepositoryStub.deleteAll();
         eventBusSpy = new EventBusSpy();
-        NotificationService notificationService = new NotificationService(userRepositoryStub,eventBusSpy);
-        entitiesService = new EntitiesService(entityRepositoryStub,userRepositoryStub, notificationService);
+        NotificationService notificationService = new NotificationService(userRepositoryStub, eventBusSpy);
+        entitiesService = new EntitiesService(entityRepositoryStub, userRepositoryStub, notificationService);
         EntityData entity1 = new EntityData("entity1", "Entity 1", "Entity 1 Desc", null, null, null);
         entityRepositoryStub.save(entity1);
         EntityData entity2 = new EntityData("entity2", "Entity 2", null, null, null, null);
         entityRepositoryStub.save(entity2);
 
-        Set<String> parent = new HashSet<>(Arrays.asList("entity1","entity2"));
+        Set<String> parent = new HashSet<>(Arrays.asList("entity1", "entity2"));
         EntityData child1 = new EntityData("child1", "Entity child", null, null, null, parent);
         entityRepositoryStub.save(child1);
         Set<String> parent2 = new HashSet<>(Arrays.asList("entity1"));
         EntityData child2 = new EntityData("child2", "Entity child 2", null, null, null, parent2);
         entityRepositoryStub.save(child2);
 
-        Set<String> entitiesForUser1 = new HashSet<>(Arrays.asList("entity1","entity2"));
+        Set<String> entitiesForUser1 = new HashSet<>(Arrays.asList("entity1", "entity2"));
         Set<String> entitiesForUser2 = new HashSet<>(Arrays.asList("entity2"));
-        userRepositoryStub.insert(new UserData("user1", "test", null, entitiesForUser1,null, null, null));
-        userRepositoryStub.insert(new UserData("user2", "test", null, entitiesForUser2,null, null, null));
-        userRepositoryStub.insert(new UserData("user3", "test", null, null,null, null, null));
+        userRepositoryStub.insert(new UserData("user1", "test", null, entitiesForUser1, null, null, null));
+        userRepositoryStub.insert(new UserData("user2", "test", null, entitiesForUser2, null, null, null));
+        userRepositoryStub.insert(new UserData("user3", "test", null, null, null, null, null));
 
     }
 
@@ -74,7 +74,7 @@ class EntitiesServiceShould {
             List<Entity> groups = entitiesService.fetchEntities();
             assertThat(groups).hasSize(4);
         }
- 
+
         @Test
         void GIVEN_Not_Existing_Entity_In_Repository_WHEN_Fetch_Entity_THEN_Return_NOT_FOUND() {
             OperationResult<Entity> entity = entitiesService.fetchEntity("dummyEntity");
@@ -129,7 +129,6 @@ class EntitiesServiceShould {
         @Test
         void GIVEN_A_Entity_With_Entity_Cycle_WHEN_Create_Entity_THEN_Return_BAD_REQUEST() {
 
-           
             Set<String> childAsParent = new HashSet<>(Arrays.asList("child1"));
             EntityData group = new EntityData("entity1", "groupName", null, null, null, childAsParent);
             OperationResult<EntityCreationReport<Entity>> result = entitiesService.createEntity(group);
@@ -140,7 +139,7 @@ class EntitiesServiceShould {
         }
 
     }
- 
+
     @Nested
     @DisplayName("Delete")
     class Delete {
@@ -161,7 +160,7 @@ class EntitiesServiceShould {
         }
 
         @Test
-        void GIVEN_An_Existing_Entity_WHEN_Deleting_Entity_THEN_Success_And_Users_Are_Not_Members_Of_The_Entity_Anymore(){
+        void GIVEN_An_Existing_Entity_WHEN_Deleting_Entity_THEN_Users_Are_Not_Members_Of_The_Entity_Anymore() {
             OperationResult<String> result = entitiesService.deleteEntity("entity1");
             assertThat(result.isSuccess()).isTrue();
             assertThat(userRepositoryStub.findById("user1").get().getEntities()).doesNotContain("entity1");
@@ -169,19 +168,20 @@ class EntitiesServiceShould {
             assertThat(userRepositoryStub.findById("user2").get().getEntities()).doesNotContain("entity1");
         }
 
-        //@Test
-        void GIVEN_An_Existing_Entity_WHEN_Deleting_Entity_THEN_Success_And_A_Notification_Containing_Users_Updated_Is_Send_To_Other_Services(){
+        @Test
+        void GIVEN_An_Existing_Entity_WHEN_Deleting_Entity_THEN_A_Notification_Containing_Users_Updated_Is_Sent_To_Other_Services() {
             OperationResult<String> result = entitiesService.deleteEntity("entity2");
             assertThat(result.isSuccess()).isTrue();
 
-            String[] expectedMessageSent1 = {"USER_EXCHANGE","user1"};
-            String[] expectedMessageSent2 = {"USER_EXCHANGE","user2"};
-            assertThat(eventBusSpy.getMessagesSent()).containsExactlyInAnyOrder(expectedMessageSent1,expectedMessageSent2);
+            String[] expectedMessageSent1 = { "USER_EXCHANGE", "user1" };
+            String[] expectedMessageSent2 = { "USER_EXCHANGE", "user2" };
+            String[] expectedMessageSent3 = { "USER_EXCHANGE", "" }; // reload config for all users
+            assertThat(eventBusSpy.getMessagesSent()).containsExactlyInAnyOrder(expectedMessageSent1,
+                    expectedMessageSent2, expectedMessageSent3);
         }
 
-
         @Test
-        void GIVEN_An_Existing_Entity_WHEN_Deleting_Entity_THEN_Success_And_Child_Entities_Are_Not_Linked_The_Entity_Anymore(){
+        void GIVEN_An_Existing_Entity_WHEN_Deleting_Entity_THEN_Success_And_Child_Entities_Are_Not_Linked_The_Entity_Anymore() {
             OperationResult<String> result = entitiesService.deleteEntity("entity1");
             assertThat(result.isSuccess()).isTrue();
             assertThat(entityRepositoryStub.findById("child1").get().getParents()).doesNotContain("entity1");
@@ -229,6 +229,21 @@ class EntitiesServiceShould {
                 assertThat(user1Updated.get().getEntities()).contains("entity1");
                 assertThat(user2Updated.get().getEntities()).contains("entity1");
             }
+
+            @Test
+            void GIVEN_Existing_Users_WHEN_Adding_Them_To_Entity_THEN_A_Notification_Containing_Users_Updated_Is_Sent_To_Other_Services() {
+                ArrayList<String> users = new ArrayList<>();
+                users.add("user2");
+                users.add("user3");
+                OperationResult<String> result = entitiesService.addEntityUsers("entity1", users);
+                assertThat(result.isSuccess()).isTrue();
+
+                String[] expectedMessageSent1 = { "USER_EXCHANGE", "user2" };
+                String[] expectedMessageSent2 = { "USER_EXCHANGE", "user3" };
+                assertThat(eventBusSpy.getMessagesSent()).containsExactlyInAnyOrder(expectedMessageSent1,
+                        expectedMessageSent2);
+            }
+
         }
 
         @Nested
@@ -275,7 +290,7 @@ class EntitiesServiceShould {
             }
 
             @Test
-            void GIVEN_Existing_Group_WHEN_Update_Empty_User_List_THEN_Succeed_And_Users_Are_Updated() {
+            void GIVEN_Existing_Entity_WHEN_Update_Empty_User_List_THEN_Succeed_And_Users_Are_Updated() {
 
                 ArrayList<String> users = new ArrayList<>();
                 OperationResult<String> result = entitiesService.updateEntityUsers("entity2", users);
@@ -291,8 +306,38 @@ class EntitiesServiceShould {
                 assertThat(user3Updated.get().getEntities()).doesNotContain("entity2");
 
             }
+
+            @Test
+            void GIVEN_Existing_Entity_WHEN_Update_User_List_THEN_A_Notification_Containing_Users_Updated_Is_Sent_To_Other_Services() {
+                ArrayList<String> users = new ArrayList<>();
+                users.add("user2");
+                users.add("user3");
+                OperationResult<String> result = entitiesService.updateEntityUsers("entity1", users);
+                assertThat(result.isSuccess()).isTrue();
+
+                String[] expectedMessageSent1 = { "USER_EXCHANGE", "user1" };
+                // user1 is notified because he is in entity but he was already in entity so it is
+                // not necessary , code may be improved
+                String[] expectedMessageSent2 = { "USER_EXCHANGE", "user2" };
+                String[] expectedMessageSent3 = { "USER_EXCHANGE", "user3" };
+                assertThat(eventBusSpy.getMessagesSent()).containsExactlyInAnyOrder(expectedMessageSent1,
+                        expectedMessageSent2, expectedMessageSent3);
+            }
+
+
+            @Test
+            void GIVEN_Existing_Entity_WHEN_Update_Empty_User_List_THEN_A_Notification_Containing_Users_Updated_Is_Sent_To_Other_Services() {
+                ArrayList<String> users = new ArrayList<>();
+                OperationResult<String> result = entitiesService.updateEntityUsers("entity2", users);
+                assertThat(result.isSuccess()).isTrue();
+
+                String[] expectedMessageSent1 = { "USER_EXCHANGE", "user1" };
+                String[] expectedMessageSent2 = { "USER_EXCHANGE", "user2" };
+                assertThat(eventBusSpy.getMessagesSent()).containsExactlyInAnyOrder(expectedMessageSent1,
+                        expectedMessageSent2);
+            }
         }
- 
+
         @Nested
         @DisplayName("Remove")
         class Remove {
@@ -305,6 +350,7 @@ class EntitiesServiceShould {
                 assertThat(result.getErrorMessage()).isEqualTo("Entity dummyEntity not found");
             }
 
+
             @Test
             void GIVEN_A_Entity_With_User_WHEN_Try_To_Remove_Users_THEN_Success_And_Users_Removed() {
                 OperationResult<String> result = entitiesService.deleteEntityUsers("entity2");
@@ -313,9 +359,19 @@ class EntitiesServiceShould {
                 assertThat(userRepositoryStub.findById("user1").get().getEntities()).contains("entity1");
                 assertThat(userRepositoryStub.findById("user2").get().getEntities()).isEmpty();
             }
- 
+
             @Test
-            void GIVEN_A_None_Existing_User_WHEN_Try_Removing_From_Entity_THEN_Failed_And_Return_NOT_FOUND() {
+            void GIVEN_A_Entity_With_User_WHEN_Remove_Users_THEN_A_Notification_Containing_Users_Updated_Is_Sent_To_Other_Services() {
+                OperationResult<String> result = entitiesService.deleteEntityUsers("entity2");
+                assertThat(result.isSuccess()).isTrue();
+                String[] expectedMessageSent1 = { "USER_EXCHANGE", "user1" };
+                String[] expectedMessageSent2 = { "USER_EXCHANGE", "user2" };
+                assertThat(eventBusSpy.getMessagesSent()).containsExactlyInAnyOrder(expectedMessageSent1,
+                        expectedMessageSent2);
+            }
+
+            @Test
+            void GIVEN_A_Non_Existing_User_WHEN_Try_Removing_From_Entity_THEN_Failed_And_Return_NOT_FOUND() {
                 OperationResult<String> result = entitiesService.deleteEntityUser("entity1", "dummyUser");
                 assertThat(result.isSuccess()).isFalse();
                 assertThat(result.getErrorType()).isEqualTo(OperationResult.ErrorType.NOT_FOUND);
@@ -336,7 +392,15 @@ class EntitiesServiceShould {
                 assertThat(result.isSuccess()).isTrue();
                 assertThat(userRepositoryStub.findById("user1").get().getEntities()).doesNotContain("entity1");
                 assertThat(userRepositoryStub.findById("user1").get().getEntities()).contains("entity2");
-            } 
+            }
+
+            @Test
+            void GIVEN_A_User_WHEN_Remove_From_Entity_THEN_A_Notification_Containing_User_Updated_Is_Sent_To_Other_Services() {
+                OperationResult<String> result = entitiesService.deleteEntityUser("entity1", "user1");
+                assertThat(result.isSuccess()).isTrue();
+                String[] expectedMessageSent1 = { "USER_EXCHANGE", "user1" };
+                assertThat(eventBusSpy.getMessagesSent()).containsExactlyInAnyOrder(expectedMessageSent1);
+            }
         }
     }
 }

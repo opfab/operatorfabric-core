@@ -104,15 +104,13 @@ public class PerimetersService {
                 return new OperationResult<>(null, false, OperationResult.ErrorType.BAD_REQUEST,
                         DUPLICATE_STATE_IN_PERIMETER);
 
-            // Retrieve groups from repository
-            // TODO : code smell for notification group update 
             List<Group> foundGroups = groupRepository.findByPerimetersContaining(perimeter.getId());
+            Perimeter insertedPerimeter = perimeterRepository.save(perimeter);
             if (foundGroups != null) {
                 for (Group group : foundGroups) {
                     notificationService.publishUpdatedGroupMessage(group.getId());
                 }
             }
-            Perimeter insertedPerimeter = perimeterRepository.save(perimeter);
             EntityCreationReport<Perimeter> report = new EntityCreationReport<>(isAlreadyExisting, insertedPerimeter);
             return new OperationResult<>(report, true, null, null);
 
@@ -160,7 +158,7 @@ public class PerimetersService {
             for (Group group : foundGroups) {
                 ((GroupData) group).addPerimeter(perimeterId);
                 groupRepository.save(group);
-                notificationService.publishUpdatedUserMessage(group.getId());
+                notificationService.publishUpdatedGroupMessage(group.getId());
             }
         } else
             return new OperationResult<>(null, false, foundGroupsResult.getErrorType(),
@@ -192,7 +190,7 @@ public class PerimetersService {
                 if (!groups.contains(group.getId())) {
                     ((GroupData) group).deletePerimeter(perimeterId);
                     groupRepository.save(group);
-                    notificationService.publishUpdatedUserMessage(group.getId());
+                    notificationService.publishUpdatedGroupMessage(group.getId());
                 }
             });
             addPerimeterGroups(perimeterId, groups);
