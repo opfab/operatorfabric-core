@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2022, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2023, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -13,12 +13,8 @@ import {Store} from '@ngrx/store';
 import {TryToLogOutAction} from '@ofActions/authentication.actions';
 import {AppState} from '@ofStore/index';
 import {selectCurrentUrl} from '@ofSelectors/router.selectors';
-import {LoadMenuAction} from '@ofActions/menu.actions';
-import {selectMenuStateMenu} from '@ofSelectors/menu.selectors';
 import {BehaviorSubject, Observable} from 'rxjs';
 import {CoreMenuConfig, Menu, MenuEntry} from '@ofModel/menu.model';
-import {map, tap} from 'rxjs/operators';
-import * as _ from 'lodash-es';
 import {GlobalStyleService} from '@ofServices/global-style.service';
 import {Route} from '@angular/router';
 import {ConfigService} from 'app/business/config/config.service';
@@ -40,7 +36,7 @@ export class NavbarComponent implements OnInit {
     navbarCollapsed = true;
     navigationRoutes: Route[];
     currentPath: string[];
-    private _businessconfigMenus: Observable<Menu[]>;
+    businessconfigMenus: Menu[];
     expandedMenu: boolean[] = [];
 
     modalRef: NgbModalRef;
@@ -88,14 +84,7 @@ export class NavbarComponent implements OnInit {
                 this.currentPath = url.split('/');
             }
         });
-        this._businessconfigMenus = this.store.select(selectMenuStateMenu).pipe(
-            map((menus) => this.getCurrentUserCustomMenus(menus)),
-            tap((menus) => {
-                this.expandedMenu = new Array<boolean>(menus.length);
-                _.fill(this.expandedMenu, false);
-            })
-        );
-        this.store.dispatch(new LoadMenuAction());
+        this.businessconfigMenus = this.getCurrentUserCustomMenus(this.configService.getMenus());
         this.store.dispatch(new QueryAllEntitiesAction());
 
         const logo = this.configService.getConfigValue('logo.base64');
@@ -184,9 +173,6 @@ export class NavbarComponent implements OnInit {
         this.store.dispatch(new TryToLogOutAction());
     }
 
-    get businessconfigMenus() {
-        return this._businessconfigMenus;
-    }
 
     toggleMenu(index: number) {
         this.expandedMenu[index] = !this.expandedMenu[index];

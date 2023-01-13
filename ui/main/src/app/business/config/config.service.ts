@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2022, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2023, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -8,7 +8,7 @@
  */
 
 import {Injectable} from '@angular/core';
-import {filter, map, mergeMap, mergeWith, retry} from 'rxjs/operators';
+import {filter, map, mergeMap, mergeWith} from 'rxjs/operators';
 import * as _ from 'lodash-es';
 import {Observable, of, Subject, throwError} from 'rxjs';
 import {CoreMenuConfig, Locale, Menu, UIMenuFile} from '@ofModel/menu.model';
@@ -40,12 +40,10 @@ export class ConfigService {
     }
 
     public getConfigValue(path: string, fallback: any = null) : any {
-        console.error("this.config", this.config);
         return _.get(this.config, path, fallback);
     }
 
     public setConfigValue(path: string, value :any) {
-        console.error("Set value: ",value)
         _.set(this.config,path,value);
         this.configChangeEvent.next({path:path , value:value});
     }
@@ -65,7 +63,15 @@ export class ConfigService {
 
     public loadCoreMenuConfigurations(): Observable<CoreMenuConfig[]> {
         return this.configServer.getMenuConfiguration()
-            .pipe(map((config) => (this.coreMenuConfigurations = config.coreMenusConfiguration)));
+            .pipe(map((config) => {
+                this.coreMenuConfigurations = config.coreMenusConfiguration;
+                this.processMenuConfig(config);
+                return config.coreMenuConfiguration;
+            }));
+    }
+
+    public getMenus(): Menu[] {
+        return this.customMenus;
     }
 
     public getCoreMenuConfiguration(): CoreMenuConfig[] {

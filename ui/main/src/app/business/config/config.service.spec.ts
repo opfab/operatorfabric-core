@@ -105,7 +105,7 @@ describe('ConfigService', () => {
                   entries: [
                     {
                       id: "entry1",
-                      url: "http://test",
+                      url: "https://test",
                       label: "entry.single",
                       linkType: "BOTH"
                     }
@@ -139,7 +139,7 @@ describe('ConfigService', () => {
         it('GIVEN_A_Menu_Configuration_File_WHEN_Getting_Url_For_Custom_Menu_THEN_Url_Is_Provided', async () => {
             configServerMock.setMenuConfiguration(menuConf);
             const url = await firstValueFrom(configService.queryMenuEntryURL("menu1","entry1").pipe(timeout(100)));
-            expect(url).toEqual("http://test");
+            expect(url).toEqual("https://test");
         });
     });
 });
