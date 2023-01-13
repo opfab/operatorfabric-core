@@ -66,16 +66,6 @@
             </of-multi-select>
           </div>
 
-          <div class="opfab-edit-row">
-            <of-multi-select id="opfab-roles"
-                             multiSelectId="opfabRoles"
-                             [parentForm]="userForm"
-                             [config]="rolesMultiSelectConfig"
-                             [options]="opfabRolesOptions"
-                             [selectedOptions]="selectedOpfabRoles">
-            </of-multi-select>
-          </div>
-
           <div class="opfab-input opfab-edit-row">
             <label for="opfab-authorizedIPAddresses" translate>admin.input.user.authorizedIPAddresses</label>
             <input formControlName="authorizedIPAddresses" name="authorizedIPAddresses" id="opfab-authorizedIPAddresses" type="text">
