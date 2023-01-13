@@ -10,7 +10,7 @@
 import {Component, OnInit} from '@angular/core';
 import {Store} from '@ngrx/store';
 import {AppState} from '@ofStore/index';
-import {ConfigService} from '@ofServices/config.service';
+import {ConfigService} from 'app/business/config/config.service';
 import {LightCardsStoreService} from '@ofServices/lightcards/lightcards-store.service';
 
 @Component({

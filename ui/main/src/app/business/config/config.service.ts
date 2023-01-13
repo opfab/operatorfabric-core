@@ -8,17 +8,15 @@
  */
 
 import {Injectable} from '@angular/core';
-import {filter, map, mergeMap, mergeWith} from 'rxjs/operators';
+import {filter, map, mergeMap, mergeWith, retry} from 'rxjs/operators';
 import * as _ from 'lodash-es';
 import {Observable, of, Subject, throwError} from 'rxjs';
-import {HttpClient} from '@angular/common/http';
-import {environment} from '@env/environment';
 import {CoreMenuConfig, Locale, Menu, UIMenuFile} from '@ofModel/menu.model';
+import {ConfigServer} from './config.server';
 @Injectable({
     providedIn: 'root'
 })
 export class ConfigService {
-    private configUrl: string;
     private config;
     private customMenus: Menu[] = [];
     private coreMenuConfigurations: CoreMenuConfig[] = [];
@@ -26,20 +24,12 @@ export class ConfigService {
     private configChangeEvent =  new Subject<any>();
     private settingsOverrideEvent = new Subject<any>();
 
-    constructor(private httpClient: HttpClient) {
-        this.configUrl = `${environment.urls.config}`;
+    constructor(private configServer: ConfigServer) {
         this.customMenus = [];
     }
 
     public loadWebUIConfiguration(): Observable<any> {
-        return this.httpClient.get(`${this.configUrl}`,{responseType:'text'}).pipe(map((config) => {
-            try {
-                this.config = JSON.parse(config);
-            } catch (error) {
-                console.error("Invalid web-ui.json file:", error);
-            }
-            return this.config;
-        }));
+        return this.configServer.getWebUiConfiguration().pipe(( map((config) => {this.config = config; return config})));
     }
 
     public overrideConfigSettingsWithUserSettings(settings: any) {
@@ -50,10 +40,12 @@ export class ConfigService {
     }
 
     public getConfigValue(path: string, fallback: any = null) : any {
+        console.error("this.config", this.config);
         return _.get(this.config, path, fallback);
     }
 
     public setConfigValue(path: string, value :any) {
+        console.error("Set value: ",value)
         _.set(this.config,path,value);
         this.configChangeEvent.next({path:path , value:value});
     }
@@ -63,34 +55,35 @@ export class ConfigService {
             this.settingsOverrideEvent.asObservable().pipe(map ( () => this.getConfigValue(path,fallback) )),
             this.configChangeEvent.asObservable().pipe(
                 filter(config => config.path === path),
-                map( (config) => config.value))
+                map( (config) => {
+                    return config.value
+                }))
             ));
     }
 
     /* Configuration for core menus */
 
-    loadCoreMenuConfigurations(): Observable<CoreMenuConfig[]> {
-        return this.httpClient
-            .get<UIMenuFile>(`${environment.urls.menuConfig}`)
+    public loadCoreMenuConfigurations(): Observable<CoreMenuConfig[]> {
+        return this.configServer.getMenuConfiguration()
             .pipe(map((config) => (this.coreMenuConfigurations = config.coreMenusConfiguration)));
     }
 
-    getCoreMenuConfiguration(): CoreMenuConfig[] {
+    public getCoreMenuConfiguration(): CoreMenuConfig[] {
         return this.coreMenuConfigurations;
     }
 
     /* Configuration for custom menus */
 
-    fetchMenuTranslations(): Observable<Locale[]> {
-        return this.httpClient.get<UIMenuFile>(`${environment.urls.menuConfig}`).pipe(map((config) => config.locales));
+    public fetchMenuTranslations(): Observable<Locale[]> {
+        return this.configServer.getMenuConfiguration().pipe(map((config) => config.locales));
     }
-    computeMenu(): Observable<Menu[]> {
-        return this.httpClient
-            .get<UIMenuFile>(`${environment.urls.menuConfig}`)
+
+    public computeMenu(): Observable<Menu[]> {
+        return this.configServer.getMenuConfiguration()
             .pipe(map((config) => this.processMenuConfig(config)));
     }
 
-    queryMenuEntryURL(id: string, menuEntryId: string): Observable<string> {
+    public queryMenuEntryURL(id: string, menuEntryId: string): Observable<string> {
         if (this.customMenus.length === 0) {
             return this.computeMenu().pipe(mergeMap((menus) => this.getMenuEntryURL(menus, id, menuEntryId)));
         } else {

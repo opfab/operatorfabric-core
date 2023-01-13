@@ -41,8 +41,10 @@ import {ApplicationLoadingComponent} from './modules/core/application-loading/ap
 import {ReloadRequiredComponent} from './modules/core/reload-required/reload-required.component';
 import {ServiceWorkerModule, SwRegistrationOptions} from '@angular/service-worker';
 import {Utilities} from './common/utilities';
-import { SpinnerModule } from './modules/share/spinner/spinner.module';
+import {SpinnerModule} from './modules/share/spinner/spinner.module';
 import {UserActionLogsModule} from './modules/useractionlogs/useractionlogs.module';
+import {ConfigServer} from './business/config/config.server';
+import {AngularConfigServer} from './server/config/angularConfig.server';
 
 @NgModule({
     imports: [
@@ -94,7 +96,8 @@ import {UserActionLogsModule} from './modules/useractionlogs/useractionlogs.modu
             provide: HTTP_INTERCEPTORS,
             useClass: TokenInjector,
             multi: true
-        }
+        },
+        {provide: ConfigServer, useClass: AngularConfigServer}
     ],
     bootstrap: [AppComponent]
 })

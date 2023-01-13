@@ -22,7 +22,7 @@ import WKT from 'ol/format/WKT';
 import Overlay from 'ol/Overlay';
 import {Style, Fill, Stroke, Circle} from 'ol/style';
 import {Attribution, ZoomToExtent, Control, defaults as defaultControls} from 'ol/control';
-import {ConfigService} from '@ofServices/config.service';
+import {ConfigService} from 'app/business/config/config.service';
 import {selectGlobalStyleState} from '@ofSelectors/global-style.selectors';
 import {Store} from '@ngrx/store';
 import {AppState} from '@ofStore/index';

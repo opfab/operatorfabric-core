@@ -10,7 +10,7 @@
 import {environment} from '@env/environment';
 import {HttpClient} from '@angular/common/http';
 import {Injectable} from '@angular/core';
-import {ConfigService} from '@ofServices/config.service';
+import {ConfigService} from 'app/business/config/config.service';
 import packageInfo from '../../../../package.json';
 
 @Injectable({

@@ -8,7 +8,7 @@
  */
 
 import {AfterViewInit, Component, EventEmitter, Input, OnDestroy, OnInit, Output} from '@angular/core';
-import {ConfigService} from '@ofServices/config.service';
+import {ConfigService} from 'app/business/config/config.service';
 import {Card} from '@ofModel/card.model';
 import {LightCard} from '@ofModel/light-card.model';
 import {AbstractControl, FormGroup} from '@angular/forms';

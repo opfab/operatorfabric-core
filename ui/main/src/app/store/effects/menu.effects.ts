@@ -13,7 +13,7 @@ import {Action} from '@ngrx/store';
 import {Observable} from 'rxjs';
 import {catchError, map, switchMap} from 'rxjs/operators';
 import {LoadMenuAction, LoadMenuSuccessAction, MenuActionTypes} from '@ofActions/menu.actions';
-import {ConfigService} from '@ofServices/config.service';
+import {ConfigService} from 'app/business/config/config.service';
 
 @Injectable()
 export class MenuEffects {

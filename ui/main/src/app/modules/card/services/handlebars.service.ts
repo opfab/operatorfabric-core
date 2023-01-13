@@ -14,7 +14,7 @@ import {Observable, of} from 'rxjs';
 import {map, tap} from 'rxjs/operators';
 import {ProcessesService} from '@ofServices/processes.service';
 import {DetailContext} from '@ofModel/detail-context.model';
-import {ConfigService} from '@ofServices/config.service';
+import {ConfigService} from 'app/business/config/config.service';
 
 @Injectable({
     providedIn: 'root'

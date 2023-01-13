@@ -12,7 +12,7 @@ import {LightCard} from '@ofModel/light-card.model';
 import {Observable} from 'rxjs';
 import {NgbModalRef} from '@ng-bootstrap/ng-bootstrap/modal/modal-ref';
 import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
-import {ConfigService} from '@ofServices/config.service';
+import {ConfigService} from 'app/business/config/config.service';
 import {MessageLevel} from '@ofModel/message.model';
 import {AlertMessageAction} from '@ofActions/alert.actions';
 import {Store} from '@ngrx/store';

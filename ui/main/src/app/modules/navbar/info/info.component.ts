@@ -14,7 +14,7 @@ import {selectUserNameOrIdentifier} from '@ofSelectors/authentication.selectors'
 import {Observable} from 'rxjs';
 import {UserService} from '@ofServices/user.service';
 import {EntitiesService} from '@ofServices/entities.service';
-import {ConfigService} from '@ofServices/config.service';
+import {ConfigService} from 'app/business/config/config.service';
 import {DateTimeFormatterService} from '@ofServices/date-time-formatter.service';
 import {Actions, ofType} from '@ngrx/effects';
 import {UserActionsTypes} from '@ofStore/actions/user.actions';

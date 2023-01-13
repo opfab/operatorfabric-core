@@ -8,7 +8,7 @@
  */
 
 import {Pipe, PipeTransform} from '@angular/core';
-import {ConfigService} from '@ofServices/config.service';
+import {ConfigService} from 'app/business/config/config.service';
 
 @Pipe({
     name: 'opfabTitleCase'

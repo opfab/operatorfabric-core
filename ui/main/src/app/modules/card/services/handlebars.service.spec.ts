@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2022, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2023, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -24,6 +24,8 @@ import * as moment from 'moment';
 import {UserContext} from '@ofModel/user-context.model';
 import {DetailContext} from '@ofModel/detail-context.model';
 import {DateTimeProvider, SystemDateTimeProvider} from 'angular-oauth2-oidc';
+import {ConfigServer} from 'app/business/config/config.server';
+import {ConfigServerMock} from '@tests/mocks/configServer.mock';
 
 
 function computeTemplateUri(templateName) {
@@ -54,6 +56,7 @@ describe('Handlebars Services', () => {
                 {provide: 'TimeEventSource', useValue: null},
                 {provide: DateTimeProvider, useClass: SystemDateTimeProvider},
                 {provide: store, useClass: Store},
+                {provide: ConfigServer, useClass: ConfigServerMock},
                 HandlebarsService,
                 AuthenticationImportHelperForSpecs
             ]
