@@ -1,4 +1,4 @@
-/* Copyright (c) 2022, RTE (http://www.rte-france.com)
+/* Copyright (c) 2022-2023, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -12,6 +12,7 @@ import org.opfab.cards.publication.model.CardPublicationData;
 import org.opfab.users.model.ComputedPerimeter;
 import org.opfab.users.model.CurrentUserWithPerimeters;
 import org.opfab.users.model.OpfabRolesEnum;
+import org.opfab.users.model.PermissionEnum;
 import org.opfab.users.model.RightsEnum;
 import org.opfab.users.model.User;
 import org.springframework.stereotype.Service;
@@ -70,23 +71,29 @@ public class CardPermissionControlService {
     3rd check : the card has been sent by an entity of the user connected
     4th check : the user has the Write access to the process/state of the card */
     boolean isUserAllowedToDeleteThisCard(CardPublicationData card, CurrentUserWithPerimeters user) {
-        return !isCurrentUserReadOnly(user.getUserData()) && card.getPublisherType() == org.opfab.cards.publication.model.PublisherTypeEnum.ENTITY
+        return !isCurrentUserReadOnly(user) && card.getPublisherType() == org.opfab.cards.publication.model.PublisherTypeEnum.ENTITY
             && user.getUserData().getEntities().contains(card.getPublisher()) && checkUserPerimeterForCard(user.getComputedPerimeters(), card);
     }
 
     boolean isUserAuthorizedToSendCard(CardPublicationData card, CurrentUserWithPerimeters user){
 
-        return !isCurrentUserReadOnly(user.getUserData()) && checkUserPerimeterForCard(user.getComputedPerimeters(), card);
+        return !isCurrentUserReadOnly(user) && checkUserPerimeterForCard(user.getComputedPerimeters(), card);
     }
 
-    boolean isCurrentUserReadOnly(User user) {
-        return hasCurrentUserAnyRole(user, OpfabRolesEnum.READONLY);
+    boolean isCurrentUserReadOnly(CurrentUserWithPerimeters user) {
+        return hasCurrentUserAnyPermission(user, PermissionEnum.READONLY);
     }
 
     boolean hasCurrentUserAnyRole(User user, OpfabRolesEnum... roles) {
         if (roles == null || user.getOpfabRoles() == null) return false;
         List<OpfabRolesEnum> rolesList = Arrays.asList(roles);
         return user.getOpfabRoles().stream().filter(role -> rolesList.indexOf(role) >= 0).count() > 0;
+    }
+
+    boolean hasCurrentUserAnyPermission(CurrentUserWithPerimeters user, PermissionEnum... permissions) {
+        if (permissions == null || user.getPermissions() == null) return false;
+        List<PermissionEnum> permissionsList = Arrays.asList(permissions);
+        return user.getPermissions().stream().filter(role -> permissionsList.indexOf(role) >= 0).count() > 0;
     }
 
     private boolean checkUserPerimeterForCard(List<ComputedPerimeter> perimeters, CardPublicationData card) {

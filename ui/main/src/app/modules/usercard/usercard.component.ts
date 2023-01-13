@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2022, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2023, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -35,7 +35,7 @@ import {UserPermissionsService} from '@ofServices/user-permissions.service';
 import {Utilities} from '../../common/utilities';
 import {UsercardSelectCardEmitterFormComponent} from './selectCardEmitterForm/usercard-select-card-emitter-form.component';
 import {LogOption, OpfabLoggerService} from '@ofServices/logs/opfab-logger.service';
-import {OpfabRolesEnum} from '@ofModel/user.model';
+import {PermissionEnum} from '@ofModel/permission.model';
 
 declare const templateGateway: any;
 declare const usercardTemplateGateway: any;
@@ -157,7 +157,7 @@ export class UserCardComponent implements OnInit {
             false
         );
 
-        this.isReadOnlyUser = this.userService.hasCurrentUserAnyRole([OpfabRolesEnum.READONLY]);
+        this.isReadOnlyUser = this.userService.hasCurrentUserAnyPermission([PermissionEnum.READONLY]);
 
     }
 

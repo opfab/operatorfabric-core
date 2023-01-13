@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2022, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2023, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -14,7 +14,7 @@ import {UserService} from '../user.service';
 import {ProcessesService} from '@ofServices/processes.service';
 import {EntitiesService} from '@ofServices/entities.service';
 import {ConsideredAcknowledgedForUserWhenEnum} from '@ofModel/processes.model';
-import {OpfabRolesEnum} from '@ofModel/user.model';
+import {PermissionEnum} from '@ofModel/permission.model';
 
 /**
  *
@@ -276,7 +276,7 @@ export class LightCardsStoreService {
     ): boolean {
         return (
             consideredAcknowledgedForUserWhen === ConsideredAcknowledgedForUserWhenEnum.USER_HAS_ACKNOWLEDGED ||
-            this.userService.hasCurrentUserAnyRole([OpfabRolesEnum.READONLY]) ||
+            this.userService.hasCurrentUserAnyPermission([PermissionEnum.READONLY]) ||
             !lightCard.entityRecipients ||
             !lightCard.entityRecipients.length ||
             !this.doEntityRecipientsIncludeAtLeastOneEntityOfUser(lightCard)
