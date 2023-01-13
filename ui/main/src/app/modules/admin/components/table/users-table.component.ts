@@ -21,12 +21,11 @@ import {AdminItemType} from '../../services/sharing.service';
 export class UsersTableComponent extends AdminTableDirective implements OnInit {
     tableType = AdminItemType.USER;
     fields = [
-        new Field('login', 4, 'idCellRenderer'),
-        new Field('firstName'),
-        new Field('lastName'),
+        new Field('login', 3, 'idCellRenderer'),
+        new Field('firstName', 3),
+        new Field('lastName', 3),
         new Field('groups', 6, 'groupCellRenderer', null,'groupsColumn'),
         new Field('entities', 6, 'entityCellRenderer', null, 'entitiesColumn'),
-        new Field('opfabRoles', 6, 'arrayCellRenderer')
     ];
     idField = 'login';
     editModalComponent = EditUserModalComponent;

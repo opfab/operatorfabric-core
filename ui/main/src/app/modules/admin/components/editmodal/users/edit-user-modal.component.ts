@@ -15,7 +15,7 @@ import {
     Validators
 } from '@angular/forms';
 import {Component, Input, OnInit} from '@angular/core';
-import {OpfabRolesEnum, User} from '@ofModel/user.model';
+import {User} from '@ofModel/user.model';
 import {NgbActiveModal} from '@ng-bootstrap/ng-bootstrap';
 import {UserService} from '@ofServices/user.service';
 import {GroupsService} from '@ofServices/groups.service';
@@ -36,7 +36,6 @@ export class EditUserModalComponent implements OnInit {
         lastName: FormControl<string | null>,
         groups: FormControl<[] | null>,
         entities: FormControl<[] | null>,
-        opfabRoles: FormControl<[] | null>,
         authorizedIPAddresses: FormControl<any | null>
     }>;
 
@@ -57,15 +56,6 @@ export class EditUserModalComponent implements OnInit {
     };
 
 
-    opfabRolesOptions = [];
-    selectedOpfabRoles = [];
-
-    rolesMultiSelectConfig: MultiSelectConfig = {
-        labelKey: 'admin.input.user.opfabRoles',
-        placeholderKey: 'admin.input.selectRoleText',
-        sortOptions: true
-    };
-
     @Input() row: User;
 
 
@@ -74,10 +64,7 @@ export class EditUserModalComponent implements OnInit {
         private crudService: UserService,
         private groupsService: GroupsService,
         private entitiesService: EntitiesService
-    ) {
-        Object.values(OpfabRolesEnum).forEach((t) => this.opfabRolesOptions.push({value: String(t), label: String(t)}));
-
-    }
+    ) { }
 
     ngOnInit() {
         const uniqueLoginValidator = [];
@@ -95,7 +82,6 @@ export class EditUserModalComponent implements OnInit {
             lastName: new FormControl('', []),
             groups: new FormControl([]),
             entities: new FormControl([]),
-            opfabRoles: new FormControl([]),
             authorizedIPAddresses: new FormControl('', [])
         });
 
@@ -112,7 +98,6 @@ export class EditUserModalComponent implements OnInit {
             // Otherwise, we use the selectedItems property of the of-multiselect component
             this.selectedGroups = this.row.groups;
             this.selectedEntities = this.row.entities;
-            this.selectedOpfabRoles = this.row.opfabRoles;
         }
 
         // Initialize value lists for Entities and Groups inputs
@@ -200,10 +185,6 @@ export class EditUserModalComponent implements OnInit {
 
     get entities() {
         return this.userForm.get('entities');
-    }
-
-    get opfabRoles() {
-        return this.userForm.get('opfabRoles');
     }
 
     get authorizedIPAddresses() {
