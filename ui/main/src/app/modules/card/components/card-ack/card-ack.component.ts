@@ -11,8 +11,9 @@ import {Component, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output} fr
 import {Store} from '@ngrx/store';
 import {Card, fromCardToLightCard} from '@ofModel/card.model';
 import {MessageLevel} from '@ofModel/message.model';
+import {PermissionEnum} from '@ofModel/permission.model';
 import {AcknowledgmentAllowedEnum, ConsideredAcknowledgedForUserWhenEnum, State} from '@ofModel/processes.model';
-import {OpfabRolesEnum, User} from '@ofModel/user.model';
+import {User} from '@ofModel/user.model';
 import {AcknowledgeService} from '@ofServices/acknowledge.service';
 import {AppService, PageType} from '@ofServices/app.service';
 import {CardService} from '@ofServices/card.service';
@@ -102,7 +103,7 @@ export class CardAckComponent implements OnInit, OnChanges, OnDestroy {
     }
 
     ngOnChanges(): void {
-        this.isReadOnlyUser = this.userService.hasCurrentUserAnyRole([OpfabRolesEnum.READONLY]);
+        this.isReadOnlyUser = this.userService.hasCurrentUserAnyPermission([PermissionEnum.READONLY]);
 
         this.isUserEnabledToRespond = this.userPermissionsService.isUserEnabledToRespond(
             this.userService.getCurrentUserWithPerimeters(),

@@ -1,4 +1,4 @@
-/* Copyright (c) 2022, RTE (http://www.rte-france.com)
+/* Copyright (c) 2022-2023, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -12,8 +12,8 @@ import {NgbModal, NgbModalOptions, NgbModalRef} from '@ng-bootstrap/ng-bootstrap
 import {Store} from '@ngrx/store';
 import {Card} from '@ofModel/card.model';
 import {MessageLevel} from '@ofModel/message.model';
+import {PermissionEnum} from '@ofModel/permission.model';
 import {State} from '@ofModel/processes.model';
-import {OpfabRolesEnum} from '@ofModel/user.model';
 import {AppService, PageType} from '@ofServices/app.service';
 import {CardService} from '@ofServices/card.service';
 import {UserPermissionsService} from '@ofServices/user-permissions.service';
@@ -72,7 +72,7 @@ export class CardActionsComponent implements OnInit, OnChanges,OnDestroy {
 
     ngOnChanges(): void {
         this.setButtonsVisibility();
-        this.isReadOnlyUser = this.userService.hasCurrentUserAnyRole([OpfabRolesEnum.READONLY]);
+        this.isReadOnlyUser = this.userService.hasCurrentUserAnyPermission([PermissionEnum.READONLY]);
 
     }
 
