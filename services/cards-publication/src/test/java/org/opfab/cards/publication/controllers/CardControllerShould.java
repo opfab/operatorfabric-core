@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2022, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2023, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -15,7 +15,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.opfab.cards.publication.application.UnitTestApplication;
 import org.opfab.cards.publication.repositories.CardRepositoryForTest;
 import org.opfab.springtools.configuration.test.WithMockOpFabUser;
-import org.opfab.users.model.OpfabRolesEnum;
+import org.opfab.users.model.PermissionEnum;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
@@ -121,7 +121,7 @@ class CardControllerShould {
     }
 
     @Nested
-    @WithMockOpFabUser(login="adminUser", opfabRoles = {OpfabRolesEnum.ADMIN})
+    @WithMockOpFabUser(login="adminUser", permissions = {PermissionEnum.ADMIN})
     class AdminDeleteCardsByEndDate {
         @Test
         void deleteCardByEndDate() throws Exception {

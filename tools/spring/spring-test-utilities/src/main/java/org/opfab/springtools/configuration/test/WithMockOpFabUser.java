@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2022, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2023, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -12,6 +12,7 @@
 package org.opfab.springtools.configuration.test;
 
 import org.opfab.users.model.OpfabRolesEnum;
+import org.opfab.users.model.PermissionEnum;
 import org.springframework.security.test.context.support.WithSecurityContext;
 
 import java.lang.annotation.Retention;
@@ -33,6 +34,8 @@ public @interface WithMockOpFabUser {
     String lastName() default  "myUserLastName";
 
     String[] groups() default "";
+
+    PermissionEnum[] permissions() default {}; 
 
     OpfabRolesEnum[] opfabRoles() default {};
 
