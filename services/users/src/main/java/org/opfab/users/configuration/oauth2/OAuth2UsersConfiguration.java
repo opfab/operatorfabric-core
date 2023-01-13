@@ -16,7 +16,6 @@ import org.opfab.springtools.configuration.oauth.jwt.JwtProperties;
 import org.opfab.springtools.configuration.oauth.jwt.groups.GroupsMode;
 import org.opfab.springtools.configuration.oauth.jwt.groups.GroupsProperties;
 import org.opfab.springtools.configuration.oauth.jwt.groups.GroupsUtils;
-import org.opfab.users.model.OpfabRolesEnum;
 import org.opfab.users.model.User;
 import org.opfab.users.model.UserData;
 import org.opfab.users.mongo.repositories.MongoUserRepository;
@@ -131,13 +130,13 @@ public class OAuth2UsersConfiguration {
     }
 
     /**
-     * Creates Authority list from user's opfabRoles, taking into account only admin role (ROLE_ADMIN)
+     * Creates Authority list from user's groups, taking into account only admin role (ROLE_ADMIN)
      *
      * @param user user model data
      * @return list of authority
      */
     public static List<GrantedAuthority> computeAuthorities(User user) {
-        if (user.getOpfabRoles() != null && user.getOpfabRoles().contains(OpfabRolesEnum.ADMIN))
+        if (user.getGroups().contains("ADMIN"))
             return AuthorityUtils.createAuthorityList("ROLE_ADMIN");
         else
             return Collections.emptyList();

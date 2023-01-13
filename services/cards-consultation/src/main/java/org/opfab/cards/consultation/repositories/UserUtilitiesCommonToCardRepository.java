@@ -12,7 +12,6 @@ package org.opfab.cards.consultation.repositories;
 
 import org.opfab.cards.consultation.model.Card;
 import org.opfab.users.model.CurrentUserWithPerimeters;
-import org.opfab.users.model.OpfabRolesEnum;
 import org.opfab.users.model.PermissionEnum;
 import org.opfab.users.model.RightsEnum;
 import org.springframework.data.mongodb.core.ReactiveMongoTemplate;
@@ -22,6 +21,7 @@ import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import static org.springframework.data.mongodb.core.query.Criteria.where;
@@ -64,13 +64,17 @@ public interface UserUtilitiesCommonToCardRepository<T extends Card> {
         boolean isCurrentUserMemberOfAdminGroup = ((currentUserWithPerimeters.getUserData().getGroups() != null) &&
                                                    (currentUserWithPerimeters.getUserData().getGroups().contains("ADMIN")));
         
-         boolean hasCurrentUserAdminRole = currentUserWithPerimeters.getUserData().getOpfabRoles() != null && 
-                                 (currentUserWithPerimeters.getUserData().getOpfabRoles().contains(OpfabRolesEnum.ADMIN) || 
-                                 (currentUserWithPerimeters.getPermissions() != null && currentUserWithPerimeters.getPermissions().contains(PermissionEnum.VIEW_ALL_ARCHIVED_CARDS)));
+        boolean hasCurrentUserAdminPermission = hasCurrentUserAnyPermission(currentUserWithPerimeters, PermissionEnum.ADMIN, PermissionEnum.VIEW_ALL_ARCHIVED_CARDS);
 
-        if (! isCurrentUserMemberOfAdminGroup && !hasCurrentUserAdminRole)
+        if (! isCurrentUserMemberOfAdminGroup && !hasCurrentUserAdminPermission)
             criteria.add(computeCriteriaForUser(currentUserWithPerimeters));
         return criteria;
+    }
+
+    default boolean hasCurrentUserAnyPermission(CurrentUserWithPerimeters user, PermissionEnum... permissions) {
+        if (permissions == null || user.getPermissions() == null) return false;
+        List<PermissionEnum> permissionsList = Arrays.asList(permissions);
+        return user.getPermissions().stream().filter(role -> permissionsList.indexOf(role) >= 0).count() > 0;
     }
 
     default Criteria computeCriteriaForUser(CurrentUserWithPerimeters currentUserWithPerimeters) {

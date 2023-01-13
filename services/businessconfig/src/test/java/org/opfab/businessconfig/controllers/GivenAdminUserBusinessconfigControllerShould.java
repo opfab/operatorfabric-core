@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2022, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2023, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -14,10 +14,10 @@ package org.opfab.businessconfig.controllers;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.opfab.users.model.PermissionEnum;
 import org.opfab.businessconfig.application.IntegrationTestApplication;
 import org.opfab.businessconfig.services.ProcessesService;
 import org.opfab.springtools.configuration.test.WithMockOpFabUser;
-import org.opfab.users.model.OpfabRolesEnum;
 import org.opfab.utilities.PathUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -52,7 +52,7 @@ import static org.springframework.test.web.servlet.setup.MockMvcBuilders.webAppC
 @ActiveProfiles("test")
 @WebAppConfiguration
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-@WithMockOpFabUser(login="adminUser", opfabRoles = {OpfabRolesEnum.ADMIN})
+@WithMockOpFabUser(login="adminUser", permissions = {PermissionEnum.ADMIN})
 @Slf4j
 class GivenAdminUserBusinessconfigControllerShould {
 
@@ -210,7 +210,7 @@ class GivenAdminUserBusinessconfigControllerShould {
     }
 
     @Nested
-    @WithMockOpFabUser(login="adminUser", opfabRoles = {OpfabRolesEnum.ADMIN})
+    @WithMockOpFabUser(login="adminUser", permissions = {PermissionEnum.ADMIN})
     class CreateContent {
         @Test
         void create() throws Exception {
@@ -307,7 +307,7 @@ class GivenAdminUserBusinessconfigControllerShould {
         }
 
         @Nested
-        @WithMockOpFabUser(login="adminUser", opfabRoles = {OpfabRolesEnum.ADMIN})
+        @WithMockOpFabUser(login="adminUser", permissions = {PermissionEnum.ADMIN})
         class DeleteOnlyOneProcess {
 
             static final String bundleName = "first";
@@ -387,7 +387,7 @@ class GivenAdminUserBusinessconfigControllerShould {
             }
 
         	@Nested
-            @WithMockOpFabUser(login="adminUser", opfabRoles = {OpfabRolesEnum.ADMIN})
+            @WithMockOpFabUser(login="adminUser", permissions = {PermissionEnum.ADMIN})
             class DeleteContent {
                 @Test
                 void clean() throws Exception {
