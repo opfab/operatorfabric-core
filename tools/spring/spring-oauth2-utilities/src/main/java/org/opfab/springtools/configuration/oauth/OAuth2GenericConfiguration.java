@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2022, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2023, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -97,7 +97,7 @@ public class OAuth2GenericConfiguration {
         // override the groups list from JWT mode, otherwise, default mode is OPERATOR_FABRIC
 		if (groupsProperties.getMode() == GroupsMode.JWT) user.setGroups(getGroupsList(jwt));
         
-		List<GrantedAuthority> authorities = OAuth2JwtProcessingUtilities.computeAuthorities(user);
+		List<GrantedAuthority> authorities = OAuth2JwtProcessingUtilities.computeAuthorities(currentUserWithPerimeters.getPermissions());
 		
 		log.debug("user [{}] has these roles '{}' through the {} mode and entities {}",principalId,authorities,groupsProperties.getMode(),user.getEntities());
         

@@ -11,10 +11,8 @@ package org.opfab.cards.publication.services;
 import org.opfab.cards.publication.model.CardPublicationData;
 import org.opfab.users.model.ComputedPerimeter;
 import org.opfab.users.model.CurrentUserWithPerimeters;
-import org.opfab.users.model.OpfabRolesEnum;
 import org.opfab.users.model.PermissionEnum;
 import org.opfab.users.model.RightsEnum;
-import org.opfab.users.model.User;
 import org.springframework.stereotype.Service;
 
 import lombok.extern.slf4j.Slf4j;
@@ -82,12 +80,6 @@ public class CardPermissionControlService {
 
     boolean isCurrentUserReadOnly(CurrentUserWithPerimeters user) {
         return hasCurrentUserAnyPermission(user, PermissionEnum.READONLY);
-    }
-
-    boolean hasCurrentUserAnyRole(User user, OpfabRolesEnum... roles) {
-        if (roles == null || user.getOpfabRoles() == null) return false;
-        List<OpfabRolesEnum> rolesList = Arrays.asList(roles);
-        return user.getOpfabRoles().stream().filter(role -> rolesList.indexOf(role) >= 0).count() > 0;
     }
 
     boolean hasCurrentUserAnyPermission(CurrentUserWithPerimeters user, PermissionEnum... permissions) {

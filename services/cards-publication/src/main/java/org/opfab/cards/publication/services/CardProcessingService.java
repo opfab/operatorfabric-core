@@ -20,8 +20,7 @@ import org.opfab.springtools.configuration.oauth.ProcessesCache;
 import org.opfab.springtools.error.model.ApiError;
 import org.opfab.springtools.error.model.ApiErrorException;
 import org.opfab.users.model.CurrentUserWithPerimeters;
-import org.opfab.users.model.OpfabRolesEnum;
-import org.opfab.users.model.User;
+import org.opfab.users.model.PermissionEnum;
 import org.opfab.businessconfig.model.Process;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -359,7 +358,7 @@ public class CardProcessingService {
         CardPublicationData cardToDelete = cardRepositoryService.findCardById(id);
         if (user.isPresent()){  // if user is not present it means we have checkAuthenticationForCardSending = false 
             boolean isAdmin = (user.get().getUserData().getGroups() != null && user.get().getUserData().getGroups().contains("ADMIN"))
-                            || cardPermissionControlService.hasCurrentUserAnyRole(user.get().getUserData(), OpfabRolesEnum.ADMIN);
+                            || cardPermissionControlService.hasCurrentUserAnyPermission(user.get(), PermissionEnum.ADMIN);
             String login = user.get().getUserData().getLogin();
             if (cardToDelete != null && !isAdmin && checkAuthenticationForCardSending && !cardPermissionControlService.isCardPublisherAllowedForUser(cardToDelete,login)) {
 
