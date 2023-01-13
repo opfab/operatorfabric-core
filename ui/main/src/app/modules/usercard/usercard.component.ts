@@ -35,7 +35,7 @@ import {UserPermissionsService} from '@ofServices/user-permissions.service';
 import {Utilities} from '../../common/utilities';
 import {UsercardSelectCardEmitterFormComponent} from './selectCardEmitterForm/usercard-select-card-emitter-form.component';
 import {LogOption, OpfabLoggerService} from '@ofServices/logs/opfab-logger.service';
-import {OpfabRolesEnum} from '@ofModel/user.model';
+import {PermissionEnum} from '@ofModel/permission.model';
 
 declare const templateGateway: any;
 declare const usercardTemplateGateway: any;
@@ -157,7 +157,7 @@ export class UserCardComponent implements OnInit {
             false
         );
 
-        this.isReadOnlyUser = this.userService.hasCurrentUserAnyRole([OpfabRolesEnum.READONLY]);
+        this.isReadOnlyUser = this.userService.hasCurrentUserAnyPermission([PermissionEnum.READONLY]);
 
     }
 

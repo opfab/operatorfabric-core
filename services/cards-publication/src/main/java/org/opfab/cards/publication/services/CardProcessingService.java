@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2022, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2023, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -435,14 +435,14 @@ public class CardProcessingService {
     }
 
     
-	public UserBasedOperationResult processUserAcknowledgement(String cardUid, User user, List<String> entitiesAcks) {
+	public UserBasedOperationResult processUserAcknowledgement(String cardUid, CurrentUserWithPerimeters user, List<String> entitiesAcks) {
         if (cardPermissionControlService.isCurrentUserReadOnly(user) && entitiesAcks != null && !entitiesAcks.isEmpty())
             throw new ApiErrorException(ApiError.builder()
             .status(HttpStatus.FORBIDDEN)
             .message("Acknowledgement impossible : User has READONLY opfab role")
             .build());
 
-        if (! user.getEntities().containsAll(entitiesAcks))
+        if (! user.getUserData().getEntities().containsAll(entitiesAcks))
             throw new ApiErrorException(ApiError.builder()
                     .status(HttpStatus.FORBIDDEN)
                     .message("Acknowledgement impossible : User is not member of all the entities given in the request")
@@ -451,8 +451,8 @@ public class CardProcessingService {
         cardRepositoryService.findByUid(cardUid).ifPresent(selectedCard ->
             cardNotificationService.pushAckOfCardInRabbit(cardUid, selectedCard.getId(), entitiesAcks));
         
-        log.info("Set ack on card with uid {} for user {} and entities {}", cardUid,user.getLogin(),entitiesAcks);
-        return cardRepositoryService.addUserAck(user, cardUid, entitiesAcks);
+        log.info("Set ack on card with uid {} for user {} and entities {}", cardUid,user.getUserData().getLogin(),entitiesAcks);
+        return cardRepositoryService.addUserAck(user.getUserData(), cardUid, entitiesAcks);
 	}
 
 
