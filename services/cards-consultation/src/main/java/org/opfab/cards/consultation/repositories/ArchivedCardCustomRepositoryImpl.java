@@ -18,7 +18,6 @@ import org.opfab.cards.consultation.model.LightCard;
 import org.opfab.cards.consultation.model.LightCardConsultationData;
 import org.opfab.springtools.configuration.mongo.PaginationUtils;
 import org.opfab.users.model.CurrentUserWithPerimeters;
-import org.opfab.users.model.OpfabRolesEnum;
 import org.opfab.users.model.PermissionEnum;
 import org.springframework.data.domain.*;
 import org.springframework.data.mongodb.core.ReactiveMongoTemplate;
@@ -346,14 +345,12 @@ public class ArchivedCardCustomRepositoryImpl implements ArchivedCardCustomRepos
             boolean isCurrentUserMemberOfAdminGroup = ((currentUserWithPerimeters.getUserData().getGroups() != null) &&
                     (currentUserWithPerimeters.getUserData().getGroups().contains("ADMIN")));
 
-            boolean hasCurrentUserAdminRole = currentUserWithPerimeters.getUserData().getOpfabRoles() != null && 
-                    (currentUserWithPerimeters.getUserData().getOpfabRoles().contains(OpfabRolesEnum.ADMIN) || 
-                    (currentUserWithPerimeters.getPermissions() != null && currentUserWithPerimeters.getPermissions().contains(PermissionEnum.VIEW_ALL_ARCHIVED_CARDS)));
+            boolean hasCurrentUserAdminPermission = hasCurrentUserAnyPermission(currentUserWithPerimeters, PermissionEnum.ADMIN, PermissionEnum.VIEW_ALL_ARCHIVED_CARDS);
 
-            if (adminMode && !isCurrentUserMemberOfAdminGroup && !hasCurrentUserAdminRole)
+            if (adminMode && !isCurrentUserMemberOfAdminGroup && !hasCurrentUserAdminPermission)
                 log.warn("Parameter {} set to true in the request but the user is not member of ADMIN group", ADMIN_MODE);
 
-            return (isCurrentUserMemberOfAdminGroup || hasCurrentUserAdminRole) && adminMode;
+            return (isCurrentUserMemberOfAdminGroup || hasCurrentUserAdminPermission) && adminMode;
         }
         return false;
     }
