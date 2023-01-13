@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2021, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2023, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -19,11 +19,13 @@ import {appReducer, AppState} from '@ofStore/index';
 import {BusinessconfigI18nLoaderFactory, getRandomAlphanumericValue} from '@tests/helpers';
 import {AuthenticationService} from '@ofServices/authentication/authentication.service';
 import {GuidService} from '@ofServices/guid.service';
-import {ConfigService} from '@ofServices/config.service';
+import {ConfigService} from 'app/business/config/config.service';
 import {Process} from '@ofModel/processes.model';
 import {EffectsModule} from '@ngrx/effects';
 import {MenuEffects} from '@ofEffects/menu.effects';
 import {LightCardsStoreService} from './lightcards/lightcards-store.service';
+import {ConfigServerMock} from '@tests/mocks/configServer.mock';
+import {ConfigServer} from 'app/business/config/config.server';
 
 describe('Processes Services', () => {
     let injector: TestBed;
@@ -52,6 +54,7 @@ describe('Processes Services', () => {
                 AuthenticationService,
                 GuidService,
                 ConfigService,
+                {provide: ConfigServer, useClass: ConfigServerMock},
                 LightCardsStoreService
             ]
         });

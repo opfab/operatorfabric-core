@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2022, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2023, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -14,6 +14,8 @@ import {EntitiesService} from '@ofServices/entities.service';
 import {StoreModule} from '@ngrx/store';
 import {appReducer} from '@ofStore/index';
 import {Entity} from '../model/entity.model';
+import {ConfigServerMock} from '@tests/mocks/configServer.mock';
+import {ConfigServer} from 'app/business/config/config.server';
 
 describe('EntitiesService', () => {
     let httpMock: HttpTestingController;
@@ -21,7 +23,7 @@ describe('EntitiesService', () => {
 
     beforeEach(() => {
         TestBed.configureTestingModule({
-            providers: [EntitiesService],
+            providers: [EntitiesService, {provide: ConfigServer, useClass: ConfigServerMock},],
             imports: [HttpClientTestingModule, StoreModule.forRoot(appReducer)]
         });
         httpMock = TestBed.inject(HttpTestingController);

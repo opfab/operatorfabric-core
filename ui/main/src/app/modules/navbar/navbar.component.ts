@@ -21,7 +21,7 @@ import {map, tap} from 'rxjs/operators';
 import * as _ from 'lodash-es';
 import {GlobalStyleService} from '@ofServices/global-style.service';
 import {Route} from '@angular/router';
-import {ConfigService} from '@ofServices/config.service';
+import {ConfigService} from 'app/business/config/config.service';
 import {UserPreferencesService} from '@ofServices/user-preference.service';
 import {QueryAllEntitiesAction} from '@ofActions/user.actions';
 import {UserService} from '@ofServices/user.service';

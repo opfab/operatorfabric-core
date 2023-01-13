@@ -1,4 +1,4 @@
-/* Copyright (c) 2021-2022, RTE (http://www.rte-france.com)
+/* Copyright (c) 2021-2023, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -18,11 +18,13 @@ import {RightsEnum} from '@ofModel/perimeter.model';
 import {HttpClientTestingModule} from '@angular/common/http/testing';
 import {StoreModule} from '@ngrx/store';
 import {appReducer} from '@ofStore/index';
-import {ConfigService} from '@ofServices/config.service';
+import {ConfigService} from 'app/business/config/config.service';
 import {EntitiesService} from '@ofServices/entities.service';
 import {EntitiesServiceMock} from '@tests/mocks/entities.service.mock';
 import {LightCardsStoreService} from './lightcards/lightcards-store.service';
 import {TranslateLoader, TranslateModule} from '@ngx-translate/core';
+import {ConfigServer} from 'app/business/config/config.server';
+import {ConfigServerMock} from '@tests/mocks/configServer.mock';
 
 describe('AcknowledgeService testing ', () => {
     let acknowledgeService: AcknowledgeService;
@@ -37,6 +39,7 @@ describe('AcknowledgeService testing ', () => {
         TestBed.configureTestingModule({
             providers: [
                 ConfigService,
+                {provide: ConfigServer, useClass: ConfigServerMock},
                 LightCardsStoreService,
                 {provide: EntitiesService, useClass: EntitiesServiceMock}
             ],

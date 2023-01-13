@@ -23,7 +23,7 @@ import {HourAndMinutes, TimeSpan} from '@ofModel/card.model';
 import {ProcessesService} from '@ofServices/processes.service';
 import {LightCardsStoreService} from '@ofServices/lightcards/lightcards-store.service';
 import {FilterService} from '@ofServices/lightcards/filter.service';
-import {ConfigService} from '@ofServices/config.service';
+import {ConfigService} from 'app/business/config/config.service';
 import {Frequency} from 'rrule';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import timeGridPlugin from '@fullcalendar/timegrid';

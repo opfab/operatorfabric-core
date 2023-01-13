@@ -9,7 +9,7 @@
 
 import {Component, OnInit} from '@angular/core';
 import _ from 'lodash-es';
-import {ConfigService} from '@ofServices/config.service';
+import {ConfigService} from 'app/business/config/config.service';
 import packageInfo from '../../../../package.json';
 
 /**

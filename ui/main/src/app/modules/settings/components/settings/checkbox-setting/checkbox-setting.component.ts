@@ -12,7 +12,7 @@ import {BaseSettingDirective} from '../base-setting/base-setting.directive';
 import {Store} from '@ngrx/store';
 import {AppState} from '@ofStore/index';
 import {FormControl, FormGroup} from '@angular/forms';
-import {ConfigService} from '@ofServices/config.service';
+import {ConfigService} from 'app/business/config/config.service';
 import {SettingsService} from '@ofServices/settings.service';
 import {OpfabLoggerService} from '@ofServices/logs/opfab-logger.service';
 

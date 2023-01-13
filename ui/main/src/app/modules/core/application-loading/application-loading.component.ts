@@ -13,7 +13,7 @@ import {Store} from '@ngrx/store';
 import {TranslateService} from '@ngx-translate/core';
 import {AuthenticationService} from '@ofServices/authentication/authentication.service';
 import {CardService} from '@ofServices/card.service';
-import {ConfigService} from '@ofServices/config.service';
+import {ConfigService} from 'app/business/config/config.service';
 import {EntitiesService} from '@ofServices/entities.service';
 import {GroupsService} from '@ofServices/groups.service';
 import {I18nService} from '@ofServices/i18n.service';

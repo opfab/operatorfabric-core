@@ -16,7 +16,7 @@ import * as feedSelectors from '@ofSelectors/feed.selectors';
 import {delay, map,takeUntil} from 'rxjs/operators';
 import * as moment from 'moment';
 import {LightCardsFeedFilterService} from '@ofServices/lightcards/lightcards-feed-filter.service';
-import {ConfigService} from '@ofServices/config.service';
+import {ConfigService} from 'app/business/config/config.service';
 import {Router} from '@angular/router';
 import {selectCurrentUrl} from '@ofStore/selectors/router.selectors';
 import {UserService} from '@ofServices/user.service';

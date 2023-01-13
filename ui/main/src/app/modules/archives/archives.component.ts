@@ -14,7 +14,7 @@ import {ProcessesService} from '@ofServices/processes.service';
 import {Store} from '@ngrx/store';
 import {takeUntil, tap} from 'rxjs/operators';
 import {FormControl, FormGroup} from '@angular/forms';
-import {ConfigService} from '@ofServices/config.service';
+import {ConfigService} from 'app/business/config/config.service';
 import {DateTimeFormatterService} from '@ofServices/date-time-formatter.service';
 import {NgbModal, NgbModalOptions, NgbModalRef} from '@ng-bootstrap/ng-bootstrap';
 import {CardService} from '@ofServices/card.service';

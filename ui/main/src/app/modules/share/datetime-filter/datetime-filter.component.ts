@@ -20,7 +20,7 @@ import {Observable, Subject} from 'rxjs';
 import {TranslateService} from '@ngx-translate/core';
 import {Store} from '@ngrx/store';
 import {AppState} from '@ofStore/index';
-import {ConfigService} from '@ofServices/config.service';
+import {ConfigService} from 'app/business/config/config.service';
 
 const i18nPrefix = 'datePicker.';
 

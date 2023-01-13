@@ -8,7 +8,7 @@
  */
 
 import {Component, Input, OnChanges, OnInit} from '@angular/core';
-import {ConfigService} from '@ofServices/config.service';
+import {ConfigService} from 'app/business/config/config.service';
 import {EntitiesService} from '@ofServices/entities.service';
 import {Recipient} from '@ofModel/processes.model';
 import {Entity} from '@ofModel/entity.model';
