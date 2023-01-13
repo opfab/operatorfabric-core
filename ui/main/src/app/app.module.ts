@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2022, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2023, RTE (http://www.rte-france.com)
  * Copyright (c) 2020, RTEi (http://www.rte-international.com)
  *  See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public

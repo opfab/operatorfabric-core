@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2022, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2023, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -20,13 +20,10 @@ import {AuthenticationEffects} from '@ofEffects/authentication.effects';
 import {CardFeedState} from '@ofStates/feed.state';
 import {reducer as lightCardReducer} from '@ofStore/reducers/light-card.reducer';
 import {reducer as cardReducer} from '@ofStore/reducers/card.reducer';
-import {reducer as menuReducer} from '@ofStore/reducers/menu.reducer';
 import {reducer as globalStyleReducer} from '@ofStore/reducers/global-style.reducer';
 import {AuthState} from '@ofStates/authentication.state';
 import {CardState} from '@ofStates/card.state';
 import {CustomRouterEffects} from '@ofEffects/custom-router.effects';
-import {MenuState} from '@ofStates/menu.state';
-import {MenuEffects} from '@ofEffects/menu.effects';
 
 import {reducer as userReducer} from '@ofStore/reducers/user.reducer';
 import {UserState} from '@ofStates/user.state';
@@ -42,7 +39,6 @@ export interface AppState {
     feed: CardFeedState;
     authentication: AuthState;
     card: CardState;
-    menu: MenuState;
     user: UserState;
     cardsSubscription: CardsSubscriptionState;
     globalStyle: GlobalStyleState;
@@ -53,7 +49,6 @@ export const appEffects = [
     CardOperationEffects,
     CustomRouterEffects,
     AuthenticationEffects,
-    MenuEffects,
     UserEffects,
     ProcessesEffects
 ];
@@ -63,7 +58,6 @@ export const appReducer: ActionReducerMap<AppState> = {
     feed: lightCardReducer,
     authentication: authenticationReducer,
     card: cardReducer,
-    menu: menuReducer,
     user: userReducer,
     cardsSubscription: cardsSubscriptionReducer,
     globalStyle: globalStyleReducer

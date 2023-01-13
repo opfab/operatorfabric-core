@@ -21,8 +21,6 @@ import {AuthenticationService} from '@ofServices/authentication/authentication.s
 import {GuidService} from '@ofServices/guid.service';
 import {ConfigService} from 'app/business/config/config.service';
 import {Process} from '@ofModel/processes.model';
-import {EffectsModule} from '@ngrx/effects';
-import {MenuEffects} from '@ofEffects/menu.effects';
 import {LightCardsStoreService} from './lightcards/lightcards-store.service';
 import {ConfigServerMock} from '@tests/mocks/configServer.mock';
 import {ConfigServer} from 'app/business/config/config.server';
@@ -37,7 +35,6 @@ describe('Processes Services', () => {
         TestBed.configureTestingModule({
             imports: [
                 StoreModule.forRoot(appReducer),
-                EffectsModule.forRoot([MenuEffects]),
                 HttpClientTestingModule,
                 RouterTestingModule,
                 TranslateModule.forRoot({
