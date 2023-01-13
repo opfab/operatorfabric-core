@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2022, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2023, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -68,6 +68,8 @@ public class WithMockOpFabUserSecurityContextFactory implements WithSecurityCont
                 customUser.entities() != null ? Arrays.asList(customUser.entities()) : null,
                 customUser.authorizedIPAddresses() != null ? Arrays.asList(customUser.authorizedIPAddresses()) : null);
 
+        principal.setPermissions(Arrays.asList(customUser.permissions()));
+        
         String tokenValue = "dummyTokenValue";
         Instant issuedAt = Instant.now();
         Instant expiresAt = Instant.now().plus(365, ChronoUnit.DAYS);
@@ -75,7 +77,7 @@ public class WithMockOpFabUserSecurityContextFactory implements WithSecurityCont
         headers.put("dummyHeaderKey","dummyHeaderValue");
         Map<String, Object> claim = new HashMap<>();
         claim.put("sub",customUser.login());
-        Collection<GrantedAuthority> authorities = OAuth2JwtProcessingUtilities.computeAuthorities(principal.getUserData());
+        Collection<GrantedAuthority> authorities = OAuth2JwtProcessingUtilities.computeAuthorities(principal.getPermissions());
 
         Authentication auth = new MockAuthenticationWithDetails( 
                 new Jwt(tokenValue, issuedAt,expiresAt,headers,claim

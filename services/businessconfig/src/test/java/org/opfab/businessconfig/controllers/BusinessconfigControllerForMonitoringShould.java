@@ -1,4 +1,4 @@
-/* Copyright (c) 2021-2022, RTE (http://www.rte-france.com)
+/* Copyright (c) 2021-2023, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -31,11 +31,11 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.opfab.users.model.PermissionEnum;
 import org.opfab.businessconfig.application.IntegrationTestApplication;
 import org.opfab.businessconfig.model.Monitoring;
 import org.opfab.businessconfig.model.MonitoringData;
 import org.opfab.springtools.configuration.test.WithMockOpFabUser;
-import org.opfab.users.model.OpfabRolesEnum;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -55,7 +55,7 @@ import lombok.extern.slf4j.Slf4j;
 @ActiveProfiles("test")
 @WebAppConfiguration
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-@WithMockOpFabUser(login = "adminUser", opfabRoles = {OpfabRolesEnum.ADMIN})
+@WithMockOpFabUser(login = "adminUser", permissions = {PermissionEnum.ADMIN})
 @Slf4j
 class BusinessconfigControllerForMonitoringShould implements ResourceLoaderAware{
 
