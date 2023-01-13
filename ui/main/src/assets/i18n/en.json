@@ -415,6 +415,7 @@
       "selectStateText": "Select a State",
       "selectRightText": "Select a Right",
       "selectGroupTypeText": "Select a Type",
+      "selectGroupPermissionText": "Select a Permission",
       "edit": "Edit",
       "delete": "Delete",
       "save": "SAVE CHANGES",
