@@ -308,6 +308,10 @@ describe('AdmininstrationPages', () => {
         cy.get('#opfab-perimeters').find('.vscomp-option-text').eq(1).click({force: true});
         cy.get('#opfab-perimeters').click();
 
+        cy.get('#opfab-permissions').click();
+        cy.get('#opfab-permissions').find('.vscomp-option-text').eq(1).click({force: true});
+        cy.get('#opfab-permissions').click();
+
         cy.get('#opfab-realtime').check({force: true});
 
         cy.get('#opfab-admin-edit-btn-add').click();
@@ -330,6 +334,7 @@ describe('AdmininstrationPages', () => {
         agGrid.cellShould('ag-grid-angular', 7, 1, 'have.text', 'group name');
         agGrid.cellShould('ag-grid-angular', 7, 2, 'have.text', 'group description');
         agGrid.cellShould('ag-grid-angular', 7, 3, 'have.text', 'cypress');
+        agGrid.cellShould('ag-grid-angular', 7, 4, 'have.text', 'READONLY');
         agGrid.cellShould('ag-grid-angular', 7, 5, 'have.text', 'YES');
 
         cy.get('#opfab-name').type(' updated');
@@ -345,6 +350,14 @@ describe('AdmininstrationPages', () => {
         // Select new perimeter
         cy.get('#opfab-perimeters').find('.vscomp-option-text').eq(2).click({force: true});
         cy.get('#opfab-perimeters').click();
+
+    
+        cy.get('#opfab-permissions').click();
+        // Deselect old permission
+        cy.get('#opfab-permissions').find('.vscomp-option-text').eq(1).click({force: true});
+        // Select new permission
+        cy.get('#opfab-permissions').find('.vscomp-option-text').eq(2).click({force: true});
+        cy.get('#opfab-permissions').click();
         // Deselect realtime parameter
         cy.get('#opfab-realtime').uncheck({force: true});
 
@@ -361,6 +374,7 @@ describe('AdmininstrationPages', () => {
         agGrid.cellShould('ag-grid-angular', 7, 1, 'have.text', 'group name updated');
         agGrid.cellShould('ag-grid-angular', 7, 2, 'have.text', 'group description updated');
         agGrid.cellShould('ag-grid-angular', 7, 3, 'have.text', 'defaultProcess');
+        agGrid.cellShould('ag-grid-angular', 7, 4, 'have.text', 'VIEW_ALL_ARCHIVED_CARDS');
         agGrid.cellShould('ag-grid-angular', 7, 5, 'have.text', 'NO');
 
         // Delete previously created group
