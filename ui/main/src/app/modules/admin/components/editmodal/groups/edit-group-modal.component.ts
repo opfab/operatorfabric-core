@@ -1,5 +1,5 @@
 /* Copyright (c) 2020, RTEi (http://www.rte-international.com)
- * Copyright (c) 2021-2022, RTE (http://www.rte-france.com)
+ * Copyright (c) 2021-2023, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -29,6 +29,7 @@ import {MultiSelectConfig, MultiSelectOption} from '@ofModel/multiselect.model';
 import {GroupTypeEnum} from '@ofModel/group.model';
 import {UserService} from '@ofServices/user.service';
 import {User} from '../../../../../model/user.model';
+import {PermissionEnum} from '@ofModel/permission.model';
 
 @Component({
     selector: 'of-edit-group-modal',
@@ -41,6 +42,7 @@ export class EditGroupModalComponent implements OnInit {
         name: FormControl<string | null>,
         description: FormControl<string | null>,
         perimeters: FormControl<{}[] | null>,
+        permissions: FormControl<[] | null>,
         realtime: FormControl<boolean | null>,
         type: FormControl<string | null>
     }>;
@@ -48,6 +50,7 @@ export class EditGroupModalComponent implements OnInit {
     perimetersMultiSelectOptions: Array<MultiSelectOption> = [];
     selectedPerimeters = [];
     selectedGroupType = '';
+    selectedGroupPermissions = [];
 
     perimetersMultiSelectConfig: MultiSelectConfig = {
         labelKey: 'admin.input.group.perimeters',
@@ -61,6 +64,7 @@ export class EditGroupModalComponent implements OnInit {
     private crudService: CrudService;
 
     groupTypes = [];
+    groupPermissions = [];
 
     groupUsers: string;
 
@@ -69,6 +73,13 @@ export class EditGroupModalComponent implements OnInit {
         placeholderKey: 'admin.input.selectGroupTypeText',
         multiple: false,
         search: true,
+        sortOptions: true
+    };
+
+    public permissionsMultiSelectConfig: MultiSelectConfig = {
+        labelKey: 'admin.input.group.permissions',
+        placeholderKey: 'admin.input.selectGroupPermissionText',
+        multiple: true,
         sortOptions: true
     };
 
@@ -81,6 +92,7 @@ export class EditGroupModalComponent implements OnInit {
         private userService: UserService
     ) {
         Object.values(GroupTypeEnum).forEach((t) => this.groupTypes.push({value: String(t), label: String(t)}));
+        Object.values(PermissionEnum).forEach((t) => this.groupPermissions.push({value: String(t), label: String(t)}));
     }
 
     ngOnInit() {
@@ -98,6 +110,7 @@ export class EditGroupModalComponent implements OnInit {
             name: new FormControl('', [Validators.required]),
             description: new FormControl(''),
             perimeters: new FormControl([]),
+            permissions: new FormControl([]),
             realtime: new FormControl<boolean | null>(false),
             type: new FormControl('')
         });
@@ -114,6 +127,7 @@ export class EditGroupModalComponent implements OnInit {
             // Otherwise, we use the selectedItems property of the of-multiselect component
             this.selectedPerimeters = this.row.perimeters;
             this.selectedGroupType = this.row.type;
+            this.selectedGroupPermissions = this.row.permissions;
         }
 
         this.perimetersService.getPerimeters().forEach((perimeter) => {
@@ -203,6 +217,10 @@ export class EditGroupModalComponent implements OnInit {
 
     get perimeters() {
         return this.groupForm.get('perimeters');
+    }
+
+    get permissions() {
+        return this.groupForm.get('permissions');
     }
 
     get realtime() {
