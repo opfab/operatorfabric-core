@@ -14,7 +14,7 @@ import {UserService} from '../user.service';
 import {ProcessesService} from 'app/business/services/processes.service';
 import {EntitiesService} from '@ofServices/entities.service';
 import {ConsideredAcknowledgedForUserWhenEnum} from '@ofModel/processes.model';
-import {OpfabRolesEnum} from '@ofModel/user.model';
+import {PermissionEnum} from '@ofModel/permission.model';
 
 /**
  *
@@ -276,7 +276,7 @@ export class LightCardsStoreService {
     ): boolean {
         return (
             consideredAcknowledgedForUserWhen === ConsideredAcknowledgedForUserWhenEnum.USER_HAS_ACKNOWLEDGED ||
-            this.userService.hasCurrentUserAnyRole([OpfabRolesEnum.READONLY]) ||
+            this.userService.hasCurrentUserAnyPermission([PermissionEnum.READONLY]) ||
             !lightCard.entityRecipients ||
             !lightCard.entityRecipients.length ||
             !this.doEntityRecipientsIncludeAtLeastOneEntityOfUser(lightCard)

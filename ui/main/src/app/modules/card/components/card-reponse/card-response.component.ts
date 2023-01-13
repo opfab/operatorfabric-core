@@ -15,8 +15,9 @@ import {Card, CardForPublishing} from '@ofModel/card.model';
 import {Severity} from '@ofModel/light-card.model';
 import {MessageLevel} from '@ofModel/message.model';
 import {MultiSelectConfig} from '@ofModel/multiselect.model';
+import {PermissionEnum} from '@ofModel/permission.model';
 import {State} from '@ofModel/processes.model';
-import {OpfabRolesEnum, User} from '@ofModel/user.model';
+import {User} from '@ofModel/user.model';
 import {CardService} from '@ofServices/card.service';
 import {EntitiesService} from '@ofServices/entities.service';
 import {ProcessesService} from 'app/business/services/processes.service';
@@ -105,7 +106,7 @@ export class CardResponseComponent implements OnChanges, OnInit {
             this.card,
             this.processService.getProcess(this.card.process)
         );
-        this.isReadOnlyUser = this.userService.hasCurrentUserAnyRole([OpfabRolesEnum.READONLY]);
+        this.isReadOnlyUser = this.userService.hasCurrentUserAnyPermission([PermissionEnum.READONLY]);
 
         this.showButton = !!this.cardState.response && !this.isReadOnlyUser;
         this.userEntityIdToUseForResponse = this.userEntityIdsPossibleForResponse[0];
