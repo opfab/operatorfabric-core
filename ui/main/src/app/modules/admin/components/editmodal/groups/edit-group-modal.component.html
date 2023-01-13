@@ -1,5 +1,5 @@
 <!-- Copyright (c) 2020, RTEi (http://www.rte-international.com)           -->
-<!-- Copyright (c) 2021-2022, RTE (http://www.rte-france.com)                   -->
+<!-- Copyright (c) 2021-2023, RTE (http://www.rte-france.com)                   -->
 <!-- See AUTHORS.txt                                                       -->
 <!-- This Source Code Form is subject to the terms of the Mozilla Public   -->
 <!-- License, v. 2.0. If a copy of the MPL was not distributed with this   -->
@@ -62,6 +62,15 @@
             [config] = "perimetersMultiSelectConfig"
             [options]="perimetersMultiSelectOptions"
             [selectedOptions]="selectedPerimeters">    
+            </of-multi-select>
+          </div>
+          <div class="opfab-edit-row">
+            <of-multi-select id="opfab-permissions"
+                             multiSelectId="permissions"
+                             [parentForm]="groupForm"
+                             [config]="permissionsMultiSelectConfig"
+                             [options]="groupPermissions"
+                             [selectedOptions]="selectedGroupPermissions">
             </of-multi-select>
           </div>
           <div *ngIf="!!row" class="opfab-input opfab-edit-row" style="height: fit-content; min-height: 46px">
