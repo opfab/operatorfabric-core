@@ -66,14 +66,14 @@ ifdef::single-page-doc[<<_send_to_several_users, here>>]
 ifndef::single-page-doc[<</documentation/current/reference_doc/index.adoc#_send_to_several_users, here>>]
 .
 
-=== Roles
-Roles in `OperatorFabric` are used to configure user's permission on the UI and control the access to the APIs.
-The information about roles is stored in the user's data (`opfabRoles` field of the `user` object).
-The available roles are:
+=== Permissions
+Permissions in `OperatorFabric` are used to configure user's permission on the UI and control the access to the APIs.
+The information about permissions is stored in the data of the user's groups (`Permissions` field of the `group` object).
+The available permissions are:
 
- - `ADMIN`: Administrator role
- - `VIEW_ALL_ARCHIVED_CARDS`: Role to access all archived cards
- - `READONLY`: Readonly role user cannot send user cards, cannot respond to a card, when acknowledges a card he does not acknowledge it for his entities.
+ - `ADMIN`: Administrator permission
+ - `VIEW_ALL_ARCHIVED_CARDS`: Permission to access all archived cards
+ - `READONLY`: Readonly permission. User cannot send user cards, cannot respond to a card, when acknowledges a card he does not acknowledge it for his entities.
 
 
 === Groups
