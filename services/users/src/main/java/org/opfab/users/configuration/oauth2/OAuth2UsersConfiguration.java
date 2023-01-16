@@ -16,9 +16,12 @@ import org.opfab.springtools.configuration.oauth.jwt.JwtProperties;
 import org.opfab.springtools.configuration.oauth.jwt.groups.GroupsMode;
 import org.opfab.springtools.configuration.oauth.jwt.groups.GroupsProperties;
 import org.opfab.springtools.configuration.oauth.jwt.groups.GroupsUtils;
+import org.opfab.users.model.Group;
+import org.opfab.users.model.PermissionEnum;
 import org.opfab.users.model.User;
 import org.opfab.users.model.UserData;
 import org.opfab.users.mongo.repositories.MongoUserRepository;
+import org.opfab.users.repositories.GroupRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -32,8 +35,10 @@ import org.springframework.security.oauth2.jwt.Jwt;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 /**
  * Specific authentication configuration for the Users service It is necessary
@@ -66,7 +71,7 @@ public class OAuth2UsersConfiguration {
      * @return Converter from {@link Jwt} to {@link OpFabJwtAuthenticationToken}
      */
     @Bean
-    public Converter<Jwt, AbstractAuthenticationToken> opfabJwtConverter(@Autowired MongoUserRepository userRepository) {
+    public Converter<Jwt, AbstractAuthenticationToken> opfabJwtConverter(@Autowired MongoUserRepository userRepository, @Autowired GroupRepository groupRepository) {
 
         return new Converter<Jwt, AbstractAuthenticationToken>() {
 
@@ -118,6 +123,25 @@ public class OAuth2UsersConfiguration {
                 if (givenName == null && familyName == null) familyName = name;
                 return new UserData(principalId, givenName, familyName, null, null, null, null);
             }
+
+            /**
+             * Creates Authority list from user's groups, taking into account only admin role (ROLE_ADMIN)
+             *
+             * @param user user model data
+             * @return list of authority
+             */
+            private List<GrantedAuthority> computeAuthorities(User user) {
+                Set<PermissionEnum> permissionsData = new HashSet<>();
+                user.getGroups().forEach(groupId -> {
+                    Optional<Group> group = groupRepository.findById(groupId);
+                    group.ifPresent(g -> permissionsData.addAll(g.getPermissions()));
+                });
+
+                if (permissionsData.contains(PermissionEnum.ADMIN))
+                    return AuthorityUtils.createAuthorityList("ROLE_ADMIN");
+                else
+                    return Collections.emptyList();
+            }
         };
     }
 
@@ -127,19 +151,6 @@ public class OAuth2UsersConfiguration {
     private String extractClaimAsStringOrNull(Jwt jwt, String claim) {
         if (claim == null) return null;
         return jwt.getClaimAsString(claim);
-    }
-
-    /**
-     * Creates Authority list from user's groups, taking into account only admin role (ROLE_ADMIN)
-     *
-     * @param user user model data
-     * @return list of authority
-     */
-    public static List<GrantedAuthority> computeAuthorities(User user) {
-        if (user.getGroups().contains("ADMIN"))
-            return AuthorityUtils.createAuthorityList("ROLE_ADMIN");
-        else
-            return Collections.emptyList();
     }
 
     /**
