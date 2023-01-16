@@ -1,0 +1,22 @@
+{
+	"publisher" : "publisher_test",
+    "wktGeometry": "POINT (5.8946407 51.9848624)",
+    "wktProjection": "EPSG:4326",
+    "processVersion" : "1",
+    "process"  :"cypress",
+    "processInstanceId" : "point_card1",
+    "state": "messageState",
+    "entityRecipients": ["ENTITY1_FR","ENTITY2_FR"],
+    "severity" : "INFORMATION",
+    "startDate" : ${current_date_in_milliseconds_from_epoch_plus_2hours},
+    "endDate" : ${current_date_in_milliseconds_from_epoch_plus_8hours} ,
+	"summary" : {"key" : "message.summary"},
+	"title" : {"key" : "message.title"},
+	"data" : {"message": "Card test with location Arnhem"},
+	"timeSpans" : [
+		{"start" :${current_date_in_milliseconds_from_epoch_plus_2hours}},
+		{"start" : ${current_date_in_milliseconds_from_epoch_plus_8hours}}
+		]
+}
+
+
