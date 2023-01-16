@@ -11,7 +11,7 @@ package org.opfab.users;
 
 import org.opfab.useractiontracing.UserActionLogsConfiguration;
 import org.opfab.users.mongo.repositories.EntityRepositoryImpl;
-import org.opfab.users.mongo.repositories.GroupRepositoryImpl;
+import org.opfab.users.mongo.repositories.CachedGroupRepositoryImpl;
 import org.opfab.users.mongo.repositories.PerimeterRepositoryImpl;
 import org.opfab.users.mongo.repositories.UserRepositoryImpl;
 import org.opfab.users.mongo.repositories.UserSettingsRepositoryImpl;
@@ -28,7 +28,7 @@ import org.springframework.data.mongodb.repository.config.EnableMongoRepositorie
 @EnableOperatorFabricMongo
 @EnableMongoRepositories(basePackageClasses = UsersApplication.class)
 @EnableConfigurationProperties
-@Import({ UserActionLogsConfiguration.class, EntityRepositoryImpl.class, GroupRepositoryImpl.class,
+@Import({ UserActionLogsConfiguration.class, EntityRepositoryImpl.class, CachedGroupRepositoryImpl.class,
         PerimeterRepositoryImpl.class,UserRepositoryImpl.class, UserSettingsRepositoryImpl.class, RabbitEventBus.class })
 public class UsersApplication {
 
