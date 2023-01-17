@@ -16,7 +16,7 @@ import {Store} from '@ngrx/store';
 import {AppState} from '@ofStore/index';
 import {selectGlobalStyleState} from '@ofSelectors/global-style.selectors';
 import {GlobalStyleService} from '@ofServices/global-style.service';
-import {ConfigService} from 'app/business/config/config.service';
+import {ConfigService} from 'app/business/services/config.service';
 import {DOCUMENT} from '@angular/common';
 
 @Component({

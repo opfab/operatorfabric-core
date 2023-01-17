@@ -8,12 +8,14 @@
  */
 
 import {Observable, ReplaySubject} from 'rxjs';
-import {ConfigServer} from 'app/business/config/config.server';
+import {ConfigServer} from 'app/business/server/config.server';
+import {MonitoringConfig} from '@ofModel/monitoringConfig.model';
 
 export class ConfigServerMock implements ConfigServer {
 
     private webUiConf = new ReplaySubject<any>();
     private menuConf = new ReplaySubject<any>();
+    private monitoringConf = new ReplaySubject<MonitoringConfig>;
 
     getWebUiConfiguration(): Observable<any> {
         return this.webUiConf.asObservable();
@@ -23,11 +25,19 @@ export class ConfigServerMock implements ConfigServer {
         return this.menuConf.asObservable();
     }
 
+    getMonitoringConfiguration(): Observable<MonitoringConfig> {
+        return this.monitoringConf.asObservable();
+    }
+
     setWebUIConfiguration(webuiConf:any) {
         this.webUiConf.next(webuiConf);
     }
 
     setMenuConfiguration(menuConf:any) {
         this.menuConf.next(menuConf);
+    }
+
+    setMonitoringConfiguration(monitoringConf: MonitoringConfig) {
+        this.monitoringConf.next(monitoringConf);
     }
 }

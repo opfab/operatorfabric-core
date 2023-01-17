@@ -18,13 +18,15 @@ import {RightsEnum} from '@ofModel/perimeter.model';
 import {HttpClientTestingModule} from '@angular/common/http/testing';
 import {StoreModule} from '@ngrx/store';
 import {appReducer} from '@ofStore/index';
-import {ConfigService} from 'app/business/config/config.service';
+import {ConfigService} from 'app/business/services/config.service';
 import {EntitiesService} from '@ofServices/entities.service';
 import {EntitiesServiceMock} from '@tests/mocks/entities.service.mock';
 import {LightCardsStoreService} from './lightcards/lightcards-store.service';
 import {TranslateLoader, TranslateModule} from '@ngx-translate/core';
-import {ConfigServer} from 'app/business/config/config.server';
+import {ConfigServer} from 'app/business/server/config.server';
 import {ConfigServerMock} from '@tests/mocks/configServer.mock';
+import {ProcessServer} from 'app/business/server/process.server';
+import {ProcessServerMock} from '@tests/mocks/processServer.mock';
 
 describe('AcknowledgeService testing ', () => {
     let acknowledgeService: AcknowledgeService;
@@ -40,6 +42,7 @@ describe('AcknowledgeService testing ', () => {
             providers: [
                 ConfigService,
                 {provide: ConfigServer, useClass: ConfigServerMock},
+                {provide: ProcessServer, useClass: ProcessServerMock},
                 LightCardsStoreService,
                 {provide: EntitiesService, useClass: EntitiesServiceMock}
             ],

@@ -27,7 +27,7 @@ import {Router} from '@angular/router';
 import {selectCode} from '@ofSelectors/authentication.selectors';
 import {Message, MessageLevel} from '@ofModel/message.model';
 import {I18n} from '@ofModel/i18n.model';
-import {ConfigService} from 'app/business/config/config.service';
+import {ConfigService} from 'app/business/services/config.service';
 import {redirectToCurrentLocation} from '../../app-routing.module';
 import {CardService} from '@ofServices/card.service';
 import {SoundNotificationService} from '@ofServices/sound-notification.service';

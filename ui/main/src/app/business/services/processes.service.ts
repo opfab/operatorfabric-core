@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2022, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2023, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -8,10 +8,9 @@
  */
 
 import {Injectable} from '@angular/core';
-import {HttpClient, HttpParams, HttpUrlEncodingCodec} from '@angular/common/http';
+import {HttpParams, HttpUrlEncodingCodec} from '@angular/common/http';
 import {environment} from '@env/environment';
 import {Observable, of} from 'rxjs';
-import {TranslateService} from '@ngx-translate/core';
 import {catchError, map, tap} from 'rxjs/operators';
 import {
     ConsideredAcknowledgedForUserWhenEnum,
@@ -23,6 +22,8 @@ import {MonitoringConfig} from '@ofModel/monitoringConfig.model';
 import {Card} from '@ofModel/card.model';
 import {UserService} from '@ofServices/user.service';
 import {LightCard} from '@ofModel/light-card.model';
+import {ProcessServer} from 'app/business/server/process.server';
+import {ConfigServer} from 'app/business/server/config.server';
 
 @Injectable({
     providedIn: 'root'
@@ -40,9 +41,9 @@ export class ProcessesService {
     private typeOfStatesPerProcessAndState: Map<string, TypeOfStateEnum>;
 
     constructor(
-        private httpClient: HttpClient,
-        private translateService: TranslateService,
-        private userService: UserService
+        private userService: UserService,
+        private processServer: ProcessServer,
+        private configServer: ConfigServer
     ) {
         this.urlCleaner = new HttpUrlEncodingCodec();
         this.processesUrl = `${environment.urls.processes}`;
@@ -102,7 +103,7 @@ export class ProcessesService {
     }
 
     public loadMonitoringConfig(): Observable<MonitoringConfig> {
-        return this.httpClient.get<MonitoringConfig>(this.monitoringConfigUrl).pipe(
+        return this.configServer.getMonitoringConfiguration().pipe(
             map((monitoringConfig) => {
                 if (!!monitoringConfig) {
                     this.monitoringConfig = monitoringConfig;
@@ -177,11 +178,11 @@ export class ProcessesService {
     }
 
     queryAllProcesses(): Observable<Process[]> {
-        return this.httpClient.get<Process[]>(this.processesUrl);
+        return this.processServer.getAllProcessesDefinition();
     }
 
     queryProcessGroups(): Observable<any> {
-        return this.httpClient.get(this.processGroupsUrl);
+        return this.processServer.getProcessGroups();
     }
 
     queryProcess(id: string, version: string): Observable<Process> {
@@ -190,7 +191,7 @@ export class ProcessesService {
         if (process) {
             return of(process);
         }
-        return this.fetchProcess(id, version).pipe(
+        return this.processServer.getProcessDefinition(id, version).pipe(
             tap((t) => {
                 if (t) {
                     Object.setPrototypeOf(t, Process.prototype);
@@ -204,19 +205,8 @@ export class ProcessesService {
         );
     }
 
-    private fetchProcess(id: string, version: string): Observable<Process> {
-        const params = new HttpParams().set('version', version);
-        return this.httpClient.get<Process>(`${this.processesUrl}/${id}/`, {
-            params
-        });
-    }
-
     fetchHbsTemplate(process: string, version: string, name: string): Observable<string> {
-        const params = new HttpParams().set('version', version);
-        return this.httpClient.get(`${this.processesUrl}/${process}/templates/${name}`, {
-            params,
-            responseType: 'text'
-        });
+        return this.processServer.getTemplate(process,version,name);
     }
 
     computeBusinessconfigCssUrl(process: string, styleName: string, version: string) {
@@ -227,16 +217,7 @@ export class ProcessesService {
     }
 
     askForI18nJson(process: string, locale: string, version?: string): Observable<any> {
-        let params = new HttpParams().set('locale', locale);
-        if (version) {
-            /*
-            `params` override needed otherwise only locale is use in the request.
-            It's so because HttpParams.set(...) return a new HttpParams,
-            and basically that's why HttpParams can be set with fluent API...
-             */
-            params = params.set('version', version);
-        }
-        return this.httpClient.get(`${this.processesUrl}/${process}/i18n`, {params}).pipe(
+        return this.processServer.getI18N(process,locale,version).pipe(
             map(this.convertJsonToI18NObject(process, version)),
             catchError((error) => {
                 console.error(

@@ -36,7 +36,7 @@ import {hot} from 'jasmine-marbles';
 import * as moment from 'moment';
 import {Message} from '@ofModel/message.model';
 import {CardService} from '@ofServices/card.service';
-import {ConfigService} from 'app/business/config/config.service';
+import {ConfigService} from 'app/business/services/config.service';
 import {injectedSpy} from '@tests/helpers';
 import SpyObj = jasmine.SpyObj;
 import createSpyObj = jasmine.createSpyObj;

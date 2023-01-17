@@ -11,7 +11,7 @@ import {Component, Input, OnDestroy, OnInit} from '@angular/core';
 import {BaseSettingDirective} from '../base-setting/base-setting.directive';
 import {AppState} from '@ofStore/index';
 import {Store} from '@ngrx/store';
-import {ConfigService} from 'app/business/config/config.service';
+import {ConfigService} from 'app/business/services/config.service';
 import {SettingsService} from '@ofServices/settings.service';
 import {FormControl, FormGroup, Validators} from '@angular/forms';
 import {MultiSelectConfig} from '@ofModel/multiselect.model';

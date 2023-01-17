@@ -17,7 +17,7 @@ import {BehaviorSubject, Observable} from 'rxjs';
 import {CoreMenuConfig, Menu, MenuEntry} from '@ofModel/menu.model';
 import {GlobalStyleService} from '@ofServices/global-style.service';
 import {Route} from '@angular/router';
-import {ConfigService} from 'app/business/config/config.service';
+import {ConfigService} from 'app/business/services/config.service';
 import {UserPreferencesService} from '@ofServices/user-preference.service';
 import {QueryAllEntitiesAction} from '@ofActions/user.actions';
 import {UserService} from '@ofServices/user.service';

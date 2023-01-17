@@ -9,7 +9,7 @@
 
 import {Component, OnInit} from '@angular/core';
 import {DomSanitizer, SafeUrl} from '@angular/platform-browser';
-import {ConfigService} from 'app/business/config/config.service';
+import {ConfigService} from 'app/business/services/config.service';
 
 @Component({
     selector: 'of-changepassword',

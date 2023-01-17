@@ -12,7 +12,7 @@ import {IframeDisplayComponent} from './iframedisplay.component';
 import {TestBed} from '@angular/core/testing';
 import {ActivatedRoute, convertToParamMap, Router} from '@angular/router';
 import {of} from 'rxjs';
-import {ConfigService} from 'app/business/config/config.service';
+import {ConfigService} from 'app/business/services/config.service';
 import {provideMockStore} from '@ngrx/store/testing';
 import {selectGlobalStyleStateStyle} from '@ofSelectors/global-style.selectors';
 import {GlobalStyleService} from '@ofServices/global-style.service';

@@ -9,7 +9,7 @@
 
 import {Injectable} from '@angular/core';
 import * as moment from 'moment';
-import {ConfigService} from '../business/config/config.service';
+import {ConfigService} from '../business/services/config.service';
 
 @Injectable({
     providedIn: 'root'

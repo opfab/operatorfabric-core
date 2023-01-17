@@ -7,10 +7,13 @@
  * This file is part of the OperatorFabric project.
  */
 
+
+import {MonitoringConfig} from "@ofModel/monitoringConfig.model";
 import {Observable} from "rxjs";
 
 export abstract class ConfigServer {
 
     abstract getWebUiConfiguration():Observable<any>;
     abstract getMenuConfiguration():Observable<any>;
+    abstract getMonitoringConfiguration(): Observable<MonitoringConfig>;
 }

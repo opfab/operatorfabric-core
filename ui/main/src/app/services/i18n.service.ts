@@ -14,7 +14,7 @@ import {HttpClient} from '@angular/common/http';
 import {Observable} from 'rxjs';
 import {environment} from '@env/environment';
 import {catchError, tap} from 'rxjs/operators';
-import {ConfigService} from '../business/config/config.service';
+import {ConfigService} from '../business/services/config.service';
 import {Utilities} from 'app/common/utilities';
 
 declare const opfab: any;

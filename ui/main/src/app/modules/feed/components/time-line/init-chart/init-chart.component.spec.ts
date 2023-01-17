@@ -25,7 +25,7 @@ import {TranslateLoader, TranslateModule, TranslateService} from '@ngx-translate
 import {GlobalStyleService} from '@ofServices/global-style.service';
 import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
 import {TimelineButtonsComponent} from '../../../../share/timeline-buttons/timeline-buttons.component';
-import {ConfigService} from 'app/business/config/config.service';
+import {ConfigService} from 'app/business/services/config.service';
 import {HttpClient, HttpHandler} from '@angular/common/http';
 import {AppService} from '@ofServices/app.service';
 import {BusinessconfigI18nLoaderFactory} from '@tests/helpers';
@@ -35,7 +35,7 @@ import {OpfabLoggerService} from '@ofServices/logs/opfab-logger.service';
 import {RemoteLoggerService} from '@ofServices/logs/remote-logger.service';
 import {RemoteLoggerServiceMock} from '@tests/mocks/remote-logger.service.mock';
 import {DateTimeFormatterService} from '@ofServices/date-time-formatter.service';
-import {ConfigServer} from 'app/business/config/config.server';
+import {ConfigServer} from 'app/business/server/config.server';
 import {ConfigServerMock} from '@tests/mocks/configServer.mock';
 
 describe('InitChartComponent', () => {
