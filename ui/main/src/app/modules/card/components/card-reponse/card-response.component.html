@@ -39,6 +39,7 @@
         <button id="opfab-card-details-entity-choice-btn-cancel" type="button" class="opfab-btn-cancel"
             (click)="cancelEntitiesChoice()" translate>button.cancel</button>
         <button id="opfab-card-details-entity-choice-btn-confirm" type="button" class="opfab-btn"
+            [disabled]='!isEntityFormFilled'
             (click)="submitEntitiesChoice()" translate>button.ok</button>
     </div>
 </ng-template>

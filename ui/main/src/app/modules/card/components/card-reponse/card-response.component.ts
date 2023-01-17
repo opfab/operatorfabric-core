@@ -62,6 +62,7 @@ export class CardResponseComponent implements OnChanges, OnInit {
 
     public showButton = false;
     public isUserEnabledToRespond = false;
+    public isEntityFormFilled = true;
     public sendingResponseInProgress: boolean;
 
     private entityChoiceModal: NgbModalRef;
@@ -95,6 +96,7 @@ export class CardResponseComponent implements OnChanges, OnInit {
         this.selectEntitiesForm = new FormGroup({
             entities: new FormControl([])
         });
+        this.disablePopUpButtonIfNoEntitySelected();
     }
 
     ngOnChanges(): void {
@@ -118,6 +120,12 @@ export class CardResponseComponent implements OnChanges, OnInit {
         this.btnUnlockLabel = !!this.cardState.modifyAnswerButtonLabel
             ? this.cardState.modifyAnswerButtonLabel
             : 'response.btnUnlock';
+    }
+
+    private disablePopUpButtonIfNoEntitySelected(): void {
+        this.selectEntitiesForm.get('entities').valueChanges.subscribe((selectedEntities) => {
+            this.isEntityFormFilled = selectedEntities.length >= 1;
+        })
     }
 
     private computeEntityOptionsDropdownListForResponse(): void {
