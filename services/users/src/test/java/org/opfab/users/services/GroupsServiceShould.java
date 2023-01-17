@@ -265,7 +265,7 @@ class GroupsServiceShould {
             @Test
             void GIVEN_Existing_Users_WHEN_Adding_Them_To_Group_THEN_A_Notification_Containing_Users_Updated_Is_Sent_To_Other_Services() {
                 groupRepositoryStub.insert(new GroupData(
-                        "testGroup", "myname", null, null, null, null));
+                        "testGroup", "myname", null, null, null, null, null));
 
                 ArrayList<String> users = new ArrayList<>();
                 users.add("user1");
