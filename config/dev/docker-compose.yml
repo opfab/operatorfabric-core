@@ -15,6 +15,8 @@ services:
     environment:
       MONGO_INITDB_ROOT_USERNAME: root
       MONGO_INITDB_ROOT_PASSWORD: password
+    volumes:
+      - "./mongodump:/dump"
   keycloak:
     container_name: keycloak
     image: quay.io/keycloak/keycloak:19.0.3-legacy
