@@ -279,6 +279,7 @@ describe('Response card tests', function () {
         card.sendResponse();
         cy.get('#opfab-card-details-entities-choice-selector').click();
         cy.get('#opfab-card-details-entities-choice-selector').find('.vscomp-option-text').eq(0).click(); // We unselect ENTITY3_FR (East)
+        cy.get('#opfab-card-details-entity-choice-btn-confirm').should('be.disabled'); // Check if the button is disabled when no entity is selected
         cy.get('#opfab-card-details-entities-choice-selector').find('.vscomp-option-text').eq(1).click(); // We select ENTITY1_FR (North)
         cy.get('#opfab-card-details-entities-choice-selector').find('.vscomp-option-text').eq(2).click(); // We select ENTITY2_FR (South)
         cy.get('#opfab-card-details-entities-choice-selector').click();
