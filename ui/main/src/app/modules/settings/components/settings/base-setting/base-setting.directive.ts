@@ -15,7 +15,7 @@ import {debounce, distinctUntilChanged, filter, first, map, takeUntil} from 'rxj
 import {UntypedFormGroup} from '@angular/forms';
 import * as _ from 'lodash-es';
 import {selectIdentifier} from '@ofSelectors/authentication.selectors';
-import {ConfigService} from 'app/business/config/config.service';
+import {ConfigService} from 'app/business/services/config.service';
 import {SettingsService} from '@ofServices/settings.service';
 import {OpfabLoggerService} from '@ofServices/logs/opfab-logger.service';
 

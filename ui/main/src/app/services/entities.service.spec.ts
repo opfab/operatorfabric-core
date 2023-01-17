@@ -15,7 +15,7 @@ import {StoreModule} from '@ngrx/store';
 import {appReducer} from '@ofStore/index';
 import {Entity} from '../model/entity.model';
 import {ConfigServerMock} from '@tests/mocks/configServer.mock';
-import {ConfigServer} from 'app/business/config/config.server';
+import {ConfigServer} from 'app/business/server/config.server';
 
 describe('EntitiesService', () => {
     let httpMock: HttpTestingController;

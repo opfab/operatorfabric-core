@@ -11,17 +11,20 @@ import {HttpClient} from '@angular/common/http';
 import {Injectable} from '@angular/core';
 import {environment} from '@env/environment';
 import {UIMenuFile} from '@ofModel/menu.model';
+import {MonitoringConfig} from '@ofModel/monitoringConfig.model';
 import {map, Observable} from 'rxjs';
-import {ConfigServer} from '../../business/config/config.server';
+import {ConfigServer} from '../business/server/config.server';
 
 @Injectable({
     providedIn: 'root'
 })
 export class AngularConfigServer implements ConfigServer {
     private configUrl: string;
+    private monitoringConfigUrl: string;
 
     constructor(private httpClient: HttpClient) {
         this.configUrl = `${environment.urls.config}`;
+        this.monitoringConfigUrl = `${environment.urls.monitoringConfig}`;
     }
 
     getWebUiConfiguration(): Observable<any> {
@@ -40,5 +43,9 @@ export class AngularConfigServer implements ConfigServer {
     getMenuConfiguration(): Observable<any> {
         return this.httpClient
             .get<UIMenuFile>(`${environment.urls.menuConfig}`)
+    }
+
+    getMonitoringConfiguration():Observable<MonitoringConfig> {
+        return this.httpClient.get<MonitoringConfig>(this.monitoringConfigUrl)
     }
 }

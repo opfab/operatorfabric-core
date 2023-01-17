@@ -1,4 +1,4 @@
-/* Copyright (c) 2022, RTE (http://www.rte-france.com)
+/* Copyright (c) 2022-2023, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -19,7 +19,7 @@ import {State} from '@ofModel/processes.model';
 import {OpfabRolesEnum, User} from '@ofModel/user.model';
 import {CardService} from '@ofServices/card.service';
 import {EntitiesService} from '@ofServices/entities.service';
-import {ProcessesService} from '@ofServices/processes.service';
+import {ProcessesService} from 'app/business/services/processes.service';
 import {UserPermissionsService} from '@ofServices/user-permissions.service';
 import {UserService} from '@ofServices/user.service';
 import {AlertMessageAction} from '@ofStore/actions/alert.actions';

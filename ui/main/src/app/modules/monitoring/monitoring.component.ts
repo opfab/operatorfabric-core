@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2022, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2023, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -15,7 +15,7 @@ import {LightCard} from '@ofModel/light-card.model';
 import {I18n} from '@ofModel/i18n.model';
 import {MonitoringFiltersComponent} from './components/monitoring-filters/monitoring-filters.component';
 import {Process, TypeOfStateEnum} from '@ofModel/processes.model';
-import {ProcessesService} from '@ofServices/processes.service';
+import {ProcessesService} from 'app/business/services/processes.service';
 import {Filter} from '@ofModel/feed-filter.model';
 import {LightCardsStoreService} from '@ofServices/lightcards/lightcards-store.service';
 import {EntitiesService} from '@ofServices/entities.service';

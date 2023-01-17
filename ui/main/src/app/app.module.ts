@@ -43,8 +43,10 @@ import {ServiceWorkerModule, SwRegistrationOptions} from '@angular/service-worke
 import {Utilities} from './common/utilities';
 import {SpinnerModule} from './modules/share/spinner/spinner.module';
 import {UserActionLogsModule} from './modules/useractionlogs/useractionlogs.module';
-import {ConfigServer} from './business/config/config.server';
-import {AngularConfigServer} from './server/config/angularConfig.server';
+import {ConfigServer} from './business/server/config.server';
+import {AngularConfigServer} from './server/angularConfig.server';
+import {ProcessServer} from './business/server/process.server';
+import {AngularProcessServer} from './server/angularProcess.server';
 
 @NgModule({
     imports: [
@@ -97,7 +99,8 @@ import {AngularConfigServer} from './server/config/angularConfig.server';
             useClass: TokenInjector,
             multi: true
         },
-        {provide: ConfigServer, useClass: AngularConfigServer}
+        {provide: ConfigServer, useClass: AngularConfigServer},
+        {provide: ProcessServer, useClass: AngularProcessServer}
     ],
     bootstrap: [AppComponent]
 })

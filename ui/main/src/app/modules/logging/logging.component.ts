@@ -10,10 +10,10 @@
 import {AfterViewInit, Component, ElementRef, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {Subject} from 'rxjs';
 
-import {ProcessesService} from '@ofServices/processes.service';
+import {ProcessesService} from 'app/business/services/processes.service';
 import {takeUntil} from 'rxjs/operators';
 import {FormControl, FormGroup} from '@angular/forms';
-import {ConfigService} from 'app/business/config/config.service';
+import {ConfigService} from 'app/business/services/config.service';
 import {DateTimeFormatterService} from '@ofServices/date-time-formatter.service';
 import {CardService} from '@ofServices/card.service';
 import {LightCard} from '@ofModel/light-card.model';

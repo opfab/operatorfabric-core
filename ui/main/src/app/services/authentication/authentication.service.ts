@@ -27,7 +27,7 @@ import {GuidService} from '@ofServices/guid.service';
 import {UserService} from '@ofServices/user.service';
 import {AppState} from '@ofStore/index';
 import {Store} from '@ngrx/store';
-import {ConfigService} from 'app/business/config/config.service';
+import {ConfigService} from 'app/business/services/config.service';
 import jwt_decode from 'jwt-decode';
 import * as _ from 'lodash-es';
 import {User} from '@ofModel/user.model';

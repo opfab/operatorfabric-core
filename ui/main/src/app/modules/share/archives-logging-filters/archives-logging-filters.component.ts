@@ -8,11 +8,11 @@
  */
 
 import {AfterViewInit, Component, EventEmitter, Input, OnDestroy, OnInit, Output} from '@angular/core';
-import {ConfigService} from 'app/business/config/config.service';
+import {ConfigService} from 'app/business/services/config.service';
 import {Card} from '@ofModel/card.model';
 import {LightCard} from '@ofModel/light-card.model';
 import {AbstractControl, FormGroup} from '@angular/forms';
-import {ProcessesService} from '@ofServices/processes.service';
+import {ProcessesService} from 'app/business/services/processes.service';
 import {debounceTime, takeUntil} from 'rxjs/operators';
 import {Subject} from 'rxjs';
 import {NgbDateStruct, NgbTimeStruct} from '@ng-bootstrap/ng-bootstrap';

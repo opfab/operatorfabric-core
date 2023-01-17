@@ -10,7 +10,7 @@
 import {Component, OnInit} from '@angular/core';
 import {Store} from '@ngrx/store';
 import {AppState} from '@ofStore/index';
-import {ConfigService} from 'app/business/config/config.service';
+import {ConfigService} from 'app/business/services/config.service';
 import {ExternalDevicesService} from '@ofServices/external-devices.service';
 import {UserService} from '@ofServices/user.service';
 import {UserConfiguration} from '@ofModel/external-devices.model';

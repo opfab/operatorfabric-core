@@ -19,7 +19,7 @@ import {CardService} from '@ofServices/card.service';
 import {EntitiesService} from '@ofServices/entities.service';
 import {LightCardsStoreService} from '@ofServices/lightcards/lightcards-store.service';
 import {LogOption, OpfabLoggerService} from '@ofServices/logs/opfab-logger.service';
-import {ProcessesService} from '@ofServices/processes.service';
+import {ProcessesService} from 'app/business/services/processes.service';
 import {UserPermissionsService} from '@ofServices/user-permissions.service';
 import {UserService} from '@ofServices/user.service';
 import {AlertMessageAction} from '@ofStore/actions/alert.actions';

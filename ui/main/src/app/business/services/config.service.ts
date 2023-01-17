@@ -12,7 +12,7 @@ import {filter, map, mergeMap, mergeWith} from 'rxjs/operators';
 import * as _ from 'lodash-es';
 import {Observable, of, Subject, throwError} from 'rxjs';
 import {CoreMenuConfig, Locale, Menu, UIMenuFile} from '@ofModel/menu.model';
-import {ConfigServer} from './config.server';
+import {ConfigServer} from '../server/config.server';
 @Injectable({
     providedIn: 'root'
 })

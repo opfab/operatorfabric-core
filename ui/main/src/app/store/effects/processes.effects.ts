@@ -1,4 +1,4 @@
-/* Copyright (c) 2021-2022, RTE (http://www.rte-france.com)
+/* Copyright (c) 2021-2023, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -12,7 +12,7 @@ import {Actions, createEffect, ofType} from '@ngrx/effects';
 import {Observable, timer} from 'rxjs';
 import {ProcessesActionTypes} from '@ofActions/processes.actions';
 import {catchError, debounce, map} from 'rxjs/operators';
-import {ProcessesService} from '@ofServices/processes.service';
+import {ProcessesService} from 'app/business/services/processes.service';
 import {HandlebarsService} from 'app/modules/card/services/handlebars.service';
 import {TemplateCssService} from '@ofServices/template-css.service';
 

@@ -16,7 +16,7 @@ import {TranslateLoader, TranslateModule, TranslateService} from '@ngx-translate
 import {Store, StoreModule} from '@ngrx/store';
 import {appReducer, AppState} from '@ofStore/index';
 import {HttpClientTestingModule} from '@angular/common/http/testing';
-import {ProcessesService} from '@ofServices/processes.service';
+import {ProcessesService} from 'app/business/services/processes.service';
 import {Router} from '@angular/router';
 import {I18nService} from '@ofServices/i18n.service';
 import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
@@ -25,7 +25,9 @@ import createSpyObj = jasmine.createSpyObj;
 import {DateTimeFormatterService} from '@ofServices/date-time-formatter.service';
 import {PipesModule} from '../pipes/pipes.module';
 import {ConfigServerMock} from '@tests/mocks/configServer.mock';
-import {ConfigServer} from 'app/business/config/config.server';
+import {ConfigServer} from 'app/business/server/config.server';
+import {ProcessServerMock} from '@tests/mocks/processServer.mock';
+import {ProcessServer} from 'app/business/server/process.server';
 
 describe('LightCardComponent', () => {
     let lightCardDetailsComp: LightCardComponent;
@@ -64,7 +66,8 @@ describe('LightCardComponent', () => {
                 {provide: 'TimeEventSource', useValue: null},
                 DateTimeFormatterService,
                 I18nService,
-                {provide: ConfigServer, useClass: ConfigServerMock}
+                {provide: ConfigServer, useClass: ConfigServerMock},
+                {provide: ProcessServer, useClass: ProcessServerMock}
             ]
         }).compileComponents();
         store = TestBed.inject(Store);
