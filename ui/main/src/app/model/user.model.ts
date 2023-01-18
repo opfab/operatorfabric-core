@@ -14,13 +14,7 @@ export class User {
         readonly lastName: string,
         readonly groups?: Array<string>,
         readonly entities?: Array<string>,
-        readonly opfabRoles?: Array<OpfabRolesEnum>,
         readonly authorizedIPAddresses?: Array<string>
     ) {}
 }
 
-export enum OpfabRolesEnum {
-    ADMIN = 'ADMIN',
-    VIEW_ALL_ARCHIVED_CARDS = 'VIEW_ALL_ARCHIVED_CARDS',
-    READONLY = 'READONLY'
-}

@@ -10,7 +10,7 @@
 
 import {environment} from '@env/environment';
 import {Observable, Subject} from 'rxjs';
-import {OpfabRolesEnum, User} from '@ofModel/user.model';
+import {User} from '@ofModel/user.model';
 import {PermissionEnum} from '@ofModel/permission.model';
 import {UserWithPerimeters} from '@ofModel/userWithPerimeters.model';
 import {HttpClient, HttpErrorResponse} from '@angular/common/http';
@@ -118,11 +118,6 @@ export class UserService extends CrudService {
     public isCurrentUserInAnyGroup(groups: string[]): boolean {
         if (!groups) return false;
         return this._userWithPerimeters.userData.groups.filter((group) => groups.indexOf(group) >= 0).length > 0;
-    }
-
-    public hasCurrentUserAnyRole(roles: OpfabRolesEnum[]): boolean {
-        if (!roles) return false;
-        return this._userWithPerimeters.userData.opfabRoles.filter((role) => roles.indexOf(role) >= 0).length > 0;
     }
 
     public hasCurrentUserAnyPermission(permissions: PermissionEnum[]): boolean {

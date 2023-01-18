@@ -23,7 +23,6 @@ import {QueryAllEntitiesAction} from '@ofActions/user.actions';
 import {UserService} from '@ofServices/user.service';
 import {NgbModal, NgbModalOptions, NgbModalRef} from '@ng-bootstrap/ng-bootstrap';
 import {AppService} from '@ofServices/app.service';
-import {OpfabRolesEnum} from '@ofModel/user.model';
 
 @Component({
     selector: 'of-navbar',
@@ -138,7 +137,7 @@ export class NavbarComponent implements OnInit {
     private getCurrentUserCustomMenus(menus: Menu[]): Menu[] {
         const filteredMenus = [];
         menus.forEach((m) => {
-            const entries = m.entries.filter((e) => this.isMenuVisibleForUserGroupsOrRoles(e));
+            const entries = m.entries.filter((e) => this.isMenuVisibleForUserGroups(e));
             if (entries.length > 0) {
                 filteredMenus.push(new Menu(m.id, m.label, entries));
             }
@@ -152,7 +151,7 @@ export class NavbarComponent implements OnInit {
         if (coreMenuConfiguration) {
             return coreMenuConfiguration
                 .filter((coreMenuConfig: CoreMenuConfig) => {
-                    return coreMenuConfig.visible && this.isMenuVisibleForUserGroupsOrRoles(coreMenuConfig);
+                    return coreMenuConfig.visible && this.isMenuVisibleForUserGroups(coreMenuConfig);
                 })
                 .map((coreMenuConfig: CoreMenuConfig) => coreMenuConfig.id);
         } else {
@@ -161,11 +160,9 @@ export class NavbarComponent implements OnInit {
         }
     }
 
-    private isMenuVisibleForUserGroupsOrRoles(menuConfig: CoreMenuConfig | MenuEntry): boolean {
-        return ((!menuConfig.showOnlyForGroups || menuConfig.showOnlyForGroups.length === 0) &&
-            (!menuConfig.showOnlyForRoles || menuConfig.showOnlyForRoles.length === 0)) ||
-            (menuConfig.showOnlyForGroups && this.userService.isCurrentUserInAnyGroup(menuConfig.showOnlyForGroups)) ||
-            (menuConfig.showOnlyForRoles && this.userService.hasCurrentUserAnyRole(menuConfig.showOnlyForRoles.flatMap((r) => OpfabRolesEnum[r])));
+    private isMenuVisibleForUserGroups(menuConfig: CoreMenuConfig | MenuEntry): boolean {
+        return (!menuConfig.showOnlyForGroups || menuConfig.showOnlyForGroups.length === 0) ||
+            (menuConfig.showOnlyForGroups && this.userService.isCurrentUserInAnyGroup(menuConfig.showOnlyForGroups));
         }
 
     logOut() {
