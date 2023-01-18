@@ -40,7 +40,7 @@ import {AppLoadedInAnotherTabComponent} from './modules/core/application-loading
 import {ApplicationLoadingComponent} from './modules/core/application-loading/application-loading.component';
 import {ReloadRequiredComponent} from './modules/core/reload-required/reload-required.component';
 import {ServiceWorkerModule, SwRegistrationOptions} from '@angular/service-worker';
-import {Utilities} from './common/utilities';
+import {Utilities} from './business/common/utilities';
 import {SpinnerModule} from './modules/share/spinner/spinner.module';
 import {UserActionLogsModule} from './modules/useractionlogs/useractionlogs.module';
 import {ConfigServer} from './business/server/config.server';

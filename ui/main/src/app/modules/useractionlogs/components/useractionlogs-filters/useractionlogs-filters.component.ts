@@ -15,7 +15,7 @@ import {MultiSelectOption} from "@ofModel/multiselect.model";
 import {ActionTypeEnum} from "@ofModel/user-action-log.model";
 import {UserService} from "@ofServices/user.service";
 import {AlertMessageAction} from "@ofStore/actions/alert.actions";
-import {Utilities} from "app/common/utilities";
+import {Utilities} from "app/business/common/utilities";
 import {debounceTime, Subject, takeUntil} from "rxjs";
 import {Store} from '@ngrx/store';
 import {AppState} from '@ofStore/index';

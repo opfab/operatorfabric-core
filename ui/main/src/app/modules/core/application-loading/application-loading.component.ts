@@ -23,7 +23,7 @@ import {ReminderService} from '@ofServices/reminder/reminder.service';
 import {UserService} from '@ofServices/user.service';
 import {AppState} from '@ofStore/index';
 import {selectIdentifier} from '@ofStore/selectors/authentication.selectors';
-import {Utilities} from 'app/common/utilities';
+import {Utilities} from 'app/business/common/utilities';
 import {catchError, Subject} from 'rxjs';
 import {ActivityAreaChoiceAfterLoginComponent} from './activityarea-choice-after-login/activityarea-choice-after-login.component';
 import {AccountAlreadyUsedComponent} from './account-already-used/account-already-used.component';

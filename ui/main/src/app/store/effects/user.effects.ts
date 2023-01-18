@@ -25,7 +25,7 @@ import {AuthenticationService} from '@ofServices/authentication/authentication.s
 import {Entity} from '@ofModel/entity.model';
 import {EntitiesService} from '@ofServices/entities.service';
 import {GroupsService} from '@ofServices/groups.service';
-import {Utilities} from 'app/common/utilities';
+import {Utilities} from 'app/business/common/utilities';
 import {LogOption, OpfabLoggerService} from '@ofServices/logs/opfab-logger.service';
 
 @Injectable()
