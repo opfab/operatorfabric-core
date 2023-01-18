@@ -16,7 +16,7 @@ import {I18n} from '@ofModel/i18n.model';
 import {Page} from '@ofModel/page.model';
 import {AppState} from '@ofStore/index';
 import {AuthenticationService} from '@ofServices/authentication/authentication.service';
-import {GuidService} from '@ofServices/guid.service';
+import {GuidService} from 'app/business/services/guid.service';
 import {OAuthLogger, OAuthService, UrlHelperService} from 'angular-oauth2-oidc';
 import {TranslateLoader} from '@ngx-translate/core';
 import {Observable, of} from 'rxjs';

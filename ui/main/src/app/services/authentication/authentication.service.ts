@@ -23,7 +23,6 @@ import {
     UnAuthenticationFromImplicitFlowAction
 } from '@ofActions/authentication.actions';
 import {environment} from '@env/environment';
-import {GuidService} from '@ofServices/guid.service';
 import {UserService} from '@ofServices/user.service';
 import {AppState} from '@ofStore/index';
 import {Store} from '@ngrx/store';
@@ -38,6 +37,7 @@ import {Router} from '@angular/router';
 import {Message, MessageLevel} from '@ofModel/message.model';
 import {I18n} from '@ofModel/i18n.model';
 import {selectAuthenticationState} from '@ofSelectors/authentication.selectors';
+import {GuidService} from 'app/business/services/guid.service';
 
 
 export enum LocalStorageAuthContent {
