@@ -402,7 +402,6 @@
         "firstName": "FIRST NAME",
         "groups": "GROUPS",
         "entities": "ENTITIES",
-        "opfabRoles": "ROLES",
         "authorizedIPAddresses": "AUTHORIZED IP ADDRESSES",
         "confirmDelete": "Do you really want to delete user",
         "add": "ADD NEW USER"

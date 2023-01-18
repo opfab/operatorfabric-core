@@ -116,8 +116,7 @@
           "url": "https://www.wikipedia.org/",
           "label": "entry.entry2",
           "linkType": "BOTH",
-          "showOnlyForGroups": ["Dispatcher"],
-          "showOnlyForRoles": ["VIEW_ALL_ARCHIVED_CARDS"]
+          "showOnlyForGroups": ["Dispatcher"]
         },
         {
           "id": "uid_test_3",
@@ -136,8 +135,7 @@
           "url": "https://opfab.github.io/",
           "label": "entry.admin",
           "linkType": "BOTH",
-          "showOnlyForGroups": ["ADMIN"],
-          "showOnlyForRoles": ["ADMIN"]
+          "showOnlyForGroups": ["ADMIN"]
         }
       ]
     }
