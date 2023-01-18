@@ -1,4 +1,4 @@
-/* Copyright (c) 2022, RTE (http://www.rte-france.com)
+/* Copyright (c) 2022-2023, RTE (http://www.rte-france.com)
  *  See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -10,7 +10,7 @@
 import {Component, EventEmitter, Input, Output} from "@angular/core";
 import {TranslateService} from "@ngx-translate/core";
 import {UserActionLog} from "@ofModel/user-action-log.model";
-import {DateTimeFormatterService} from "@ofServices/date-time-formatter.service";
+import {DateTimeFormatterService} from "app/business/services/date-time-formatter.service";
 import {ColDef, GridOptions} from "ag-grid-community";
 import {EntitiesCellRendererComponent} from "./cell-renderers/entities-cell-renderer.component";
 

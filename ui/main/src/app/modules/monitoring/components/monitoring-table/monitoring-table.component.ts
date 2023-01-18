@@ -31,7 +31,7 @@ import {AnswerCellRendererComponent} from '../cell-renderers/answer-cell-rendere
 import {ResponsesCellRendererComponent} from '../cell-renderers/responses-cell-renderer.component';
 import {LightCard} from '@ofModel/light-card.model';
 import {LightCardsStoreService} from '@ofServices/lightcards/lightcards-store.service';
-import {DateTimeFormatterService} from '@ofServices/date-time-formatter.service';
+import {DateTimeFormatterService} from 'app/business/services/date-time-formatter.service';
 
 @Component({
     selector: 'of-monitoring-table',
