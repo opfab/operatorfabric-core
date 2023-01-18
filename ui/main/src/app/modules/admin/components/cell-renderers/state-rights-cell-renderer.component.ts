@@ -13,7 +13,7 @@ import {ICellRendererParams} from 'ag-grid-community';
 import {StateRight} from '@ofModel/perimeter.model';
 import {Process} from '@ofModel/processes.model';
 import {ProcessesService} from 'app/business/services/processes.service';
-import {Utilities} from '../../../../common/utilities';
+import {Utilities} from '../../../../business/common/utilities';
 
 @Component({
     selector: 'of-state-rights-cell-renderer',

@@ -15,7 +15,7 @@ import {Observable} from 'rxjs';
 import {environment} from '@env/environment';
 import {catchError, tap} from 'rxjs/operators';
 import {ConfigService} from '../business/services/config.service';
-import {Utilities} from 'app/common/utilities';
+import {Utilities} from 'app/business/common/utilities';
 
 declare const opfab: any;
 

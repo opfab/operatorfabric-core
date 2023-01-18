@@ -23,7 +23,7 @@ import {MessageLevel} from '@ofModel/message.model';
 import {AlertMessageAction} from '@ofStore/actions/alert.actions';
 import {FilterService} from '@ofServices/lightcards/filter.service';
 import {LightCardsFeedFilterService} from '@ofServices/lightcards/lightcards-feed-filter.service';
-import {Utilities} from 'app/common/utilities';
+import {Utilities} from 'app/business/common/utilities';
 
 @Component({
     selector: 'of-feed-filter',

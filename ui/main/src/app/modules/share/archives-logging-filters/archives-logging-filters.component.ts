@@ -25,7 +25,7 @@ import {Store} from '@ngrx/store';
 import {AppState} from '@ofStore/index';
 
 import moment from 'moment';
-import {Utilities} from 'app/common/utilities';
+import {Utilities} from 'app/business/common/utilities';
 import {UserPreferencesService} from '@ofServices/user-preference.service';
 import {UserService} from '@ofServices/user.service';
 import {OpfabRolesEnum} from '@ofModel/user.model';

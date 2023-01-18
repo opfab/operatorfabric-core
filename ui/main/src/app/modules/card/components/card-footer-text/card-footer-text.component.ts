@@ -14,7 +14,7 @@ import {CardService} from '@ofServices/card.service';
 import {DateTimeFormatterService} from '@ofServices/date-time-formatter.service';
 import {EntitiesService} from '@ofServices/entities.service';
 import {UserService} from '@ofServices/user.service';
-import {Utilities} from 'app/common/utilities';
+import {Utilities} from 'app/business/common/utilities';
 import {Subject} from 'rxjs';
 import {takeUntil} from 'rxjs/operators';
 

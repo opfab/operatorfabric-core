@@ -20,9 +20,9 @@ import {NgbModal, NgbModalOptions, NgbModalRef} from '@ng-bootstrap/ng-bootstrap
 import {Store} from '@ngrx/store';
 import {AppState} from '@ofStore/index';
 import {ProcessesService} from 'app/business/services/processes.service';
-import {Utilities} from 'app/common/utilities';
+import {Utilities} from 'app/business/common/utilities';
 import {MonitoringConfig} from '@ofModel/monitoringConfig.model';
-import {JsonToArray} from 'app/common/jsontoarray/json-to-array';
+import {JsonToArray} from 'app/business/common/jsontoarray/json-to-array';
 import {CardService} from '@ofServices/card.service';
 import {Process} from '@ofModel/processes.model';
 import {EntitiesService} from '@ofServices/entities.service';

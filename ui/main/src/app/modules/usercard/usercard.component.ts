@@ -32,7 +32,7 @@ import {UserCardDatesFormComponent} from './datesForm/usercard-dates-form.compon
 import {DateField, DatesForm} from './datesForm/dates-form.model';
 import {UserCardRecipientsFormComponent} from './recipientForm/usercard-recipients-form.component';
 import {UserPermissionsService} from '@ofServices/user-permissions.service';
-import {Utilities} from '../../common/utilities';
+import {Utilities} from '../../business/common/utilities';
 import {UsercardSelectCardEmitterFormComponent} from './selectCardEmitterForm/usercard-select-card-emitter-form.component';
 import {LogOption, OpfabLoggerService} from '@ofServices/logs/opfab-logger.service';
 import {OpfabRolesEnum} from '@ofModel/user.model';

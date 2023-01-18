@@ -11,7 +11,7 @@ import {Injectable} from '@angular/core';
 import {map, Observable, of, skip, tap} from 'rxjs';
 import {HttpClient, HttpUrlEncodingCodec, HttpParams} from '@angular/common/http';
 import {environment} from '@env/environment';
-import {Utilities} from 'app/common/utilities';
+import {Utilities} from 'app/business/common/utilities';
 
 @Injectable({
     providedIn: 'root'

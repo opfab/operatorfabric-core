@@ -18,7 +18,7 @@ import {FormArray, FormControl, FormGroup} from '@angular/forms';
 import {SettingsService} from '@ofServices/settings.service';
 import {CardService} from '@ofServices/card.service';
 import {TranslateService} from '@ngx-translate/core';
-import {Utilities} from '../../common/utilities';
+import {Utilities} from '../../business/common/utilities';
 
 @Component({
     selector: 'of-feedconfiguration',

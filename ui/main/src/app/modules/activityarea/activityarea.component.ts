@@ -16,7 +16,7 @@ import {FormControl, FormGroup} from '@angular/forms';
 import {SettingsService} from '@ofServices/settings.service';
 import {EntitiesService} from '@ofServices/entities.service';
 import {CardService} from '@ofServices/card.service';
-import {Utilities} from '../../common/utilities';
+import {Utilities} from '../../business/common/utilities';
 import {GroupsService} from '@ofServices/groups.service';
 import {Actions, ofType} from '@ngrx/effects';
 import {UserActionsTypes} from '@ofStore/actions/user.actions';
