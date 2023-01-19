@@ -11,7 +11,6 @@
 
 package org.opfab.springtools.configuration.test;
 
-import org.opfab.users.model.OpfabRolesEnum;
 import org.opfab.users.model.PermissionEnum;
 import org.springframework.security.test.context.support.WithSecurityContext;
 
@@ -36,8 +35,6 @@ public @interface WithMockOpFabUser {
     String[] groups() default "";
 
     PermissionEnum[] permissions() default {}; 
-
-    OpfabRolesEnum[] opfabRoles() default {};
 
     String[] entities() default "";
 

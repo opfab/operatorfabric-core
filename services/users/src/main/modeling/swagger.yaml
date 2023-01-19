@@ -45,11 +45,6 @@ definitions:
         items:
           type: string
           uniqueItems: true
-      opfabRoles:
-        type: array
-        items:
-          $ref: '#/definitions/OpfabRolesEnum'
-          uniqueItems: true
       authorizedIPAddresses:
         type: array
         items:
@@ -67,21 +62,10 @@ definitions:
       entities:
         - ENTITY1
         - ENTITY2
-  OpfabRolesEnum:
-    type: string
-    description: |-
-      OpFab roles values >
-      * ADMIN: Administrator role
-      * VIEW_ALL_ARCHIVED_CARDS: Role to access all archived cards
-      * READONLY: Role to view card, no rights to send cards or respond to a card.
-    enum:
-      - ADMIN
-      - VIEW_ALL_ARCHIVED_CARDS
-      - READONLY
   PermissionEnum:
     type: string
     description: |-
-      OpFab roles values >
+      Permission values >
       * ADMIN: Administrator permission
       * VIEW_ALL_ARCHIVED_CARDS: Permission to access all archived cards
       * READONLY: Permission to view card, no rights to send cards or respond to a card.

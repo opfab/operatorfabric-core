@@ -44,7 +44,6 @@ public class WithMockOpFabUserSecurityContextFactoryReactive implements WithSecu
                         customUser.firstName(),
                         customUser.lastName(),
                 Arrays.asList(customUser.groups()),
-                Arrays.asList(customUser.opfabRoles()),
                 customUser.entities() != null ? Arrays.asList(customUser.entities()) : null,
                 customUser.authorizedIPAddresses() != null ? Arrays.asList(customUser.authorizedIPAddresses()) : null);
         
