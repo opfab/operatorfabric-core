@@ -537,7 +537,7 @@ describe('AdmininstrationPages', () => {
         opfab.loginWithUser('admin');
         opfab.navigateToAdministration();
 
-        //Click on "Groups Management"
+        //Click on "Processes Management"
         cy.get('#opfab-admin-processes-tab').click();
 
         // Check the content of the first row
@@ -548,11 +548,11 @@ describe('AdmininstrationPages', () => {
         agGrid.cellShould('ag-grid-angular', 0, 2, 'have.text', '1');
 
 
-        // Check the page has 7 rows
-        agGrid.countTableRows('ag-grid-angular', 7);
+        // Check the page has 8 rows
+        agGrid.countTableRows('ag-grid-angular', 8);
 
-        // Pagination should display ' Results number  : 7 '
-        cy.get('.opfab-pagination').should('contain.text', ' Results number  : 7');
+        // Pagination should display ' Results number  : 8 '
+        cy.get('.opfab-pagination').should('contain.text', ' Results number  : 8');
 
         // Delete first process
         agGrid.clickCell('ag-grid-angular', 0, 3, 'of-action-cell-renderer');
@@ -564,10 +564,9 @@ describe('AdmininstrationPages', () => {
         cy.waitDefaultTime();
 
         //Check process was deleted
-        cy.get('.opfab-pagination').should('contain.text', ' Results number  : 6');
+        cy.get('.opfab-pagination').should('contain.text', ' Results number  : 7');
 
-        agGrid.countTableRows('ag-grid-angular', 6);
-
+        agGrid.countTableRows('ag-grid-angular', 7);
     });
 
     it('Check users export', function () {
