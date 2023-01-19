@@ -1,4 +1,4 @@
-// Copyright (c) 2018-2022 RTE (http://www.rte-france.com)
+// Copyright (c) 2018-2023 RTE (http://www.rte-france.com)
 // See AUTHORS.txt
 // This document is subject to the terms of the Creative Commons Attribution 4.0 International license.
 // If a copy of the license was not distributed with this
@@ -28,7 +28,7 @@ WARNING: The user define here is an internal representation of the individual ca
 NOTE: In the following commands the `$token` is an authentication token currently valid for the `OAuth2` service used by the current `OperatorFabric` system.
 
 
-== Users, groups, roles, entities and perimeters
+== Users, groups, entities and perimeters
 
 User service manages users, groups, entities and perimeters.
 

@@ -178,7 +178,7 @@ public class UsersServiceShould {
     class Create {
         @Test
         void GIVEN_An_Invalid_Login__WHEN_Creating_User_THEN_Return_Bad_Request() {
-            UserData user = new UserData("invalid?login", "invalid", null, null, null, null, null);
+            UserData user = new UserData("invalid?login", "invalid", null, null, null, null);
             OperationResult<EntityCreationReport<User>> result = usersService.createUser(user);
             assertThat(result.isSuccess()).isFalse();
             assertThat(result.getErrorType()).isEqualTo(OperationResult.ErrorType.BAD_REQUEST);
@@ -340,7 +340,7 @@ public class UsersServiceShould {
 
         @Test
         void GIVEN_An_Invalid_Login__WHEN_UpdateOrCreate_User_THEN_Return_Bad_Request() {
-            UserData user = new UserData("invalid?login", "invalid", null, null, null, null, null);
+            UserData user = new UserData("invalid?login", "invalid", null, null, null, null);
             OperationResult<User> result = usersService.updateOrCreateUser(user, true, true);
             assertThat(result.isSuccess()).isFalse();
             assertThat(result.getErrorType()).isEqualTo(OperationResult.ErrorType.BAD_REQUEST);
