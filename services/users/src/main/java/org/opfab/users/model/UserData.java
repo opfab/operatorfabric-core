@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2022, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2023, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -12,7 +12,6 @@
 package org.opfab.users.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.*;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
@@ -47,10 +46,6 @@ public class UserData implements User {
     @Singular("group")
     private Set<String> groupSet;
 
-    @JsonIgnore
-    @Singular("opfabRole")
-    private Set<OpfabRolesEnum> opfabRoles;
-
     @Singular("authorizedIPAddresses")
     private Set<String> authorizedIPAddresses;
 
@@ -61,7 +56,6 @@ public class UserData implements User {
         this.lastName = user.getLastName();
         this.entities = new HashSet<>(user.getEntities());
         this.groupSet = new HashSet<>(user.getGroups());
-        this.opfabRoles = new HashSet<>(user.getOpfabRoles());
         this.authorizedIPAddresses = new HashSet<>(user.getAuthorizedIPAddresses());
     }
 
@@ -119,29 +113,6 @@ public class UserData implements User {
         entities.remove(name);
     }
 
-    public void addOpfabRole(OpfabRolesEnum role){
-        if(null== opfabRoles){
-            this.opfabRoles=new HashSet<>();
-        }
-        opfabRoles.add(role);
-    }
-
-    @Override
-    public List<OpfabRolesEnum> getOpfabRoles() {
-        if(opfabRoles == null)
-            return Collections.emptyList();
-        return new ArrayList<>(opfabRoles);
-    }
-
-    @Override
-    public void setOpfabRoles(List<OpfabRolesEnum> opfabRoles) {
-        this.opfabRoles = new HashSet<>(opfabRoles);
-    }
-
-    public void deleteOpfabRole(OpfabRolesEnum role) {
-        opfabRoles.remove(role);
-
-    }
     public void addAuthorizedIPAddress(String address){
         if(null== authorizedIPAddresses){
             this.authorizedIPAddresses=new HashSet<>();
