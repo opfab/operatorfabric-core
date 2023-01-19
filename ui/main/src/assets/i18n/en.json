@@ -263,6 +263,9 @@
         "selectTypeOfStateText" : "Select a Process status"
       }
     },
+    "tips": {
+      "hasAResponseFromYourEntity" : "Your entity has already responded."
+    },
     "seeDetails": "SEE DETAILS"
   },
   "button": {

@@ -263,6 +263,9 @@
         "selectTypeOfStateText" : "Selecteer een Proces status"
       }
     },
+    "tips": {
+      "hasAResponseFromYourEntity" : "Uw entiteit heeft al gereageerd."
+    },
     "seeDetails": "DETAILS BEKIJKEN"
   },
   "button": {
