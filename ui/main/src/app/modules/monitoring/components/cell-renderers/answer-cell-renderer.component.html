@@ -6,4 +6,10 @@
 <!-- SPDX-License-Identifier: MPL-2.0                                      -->
 <!-- This file is part of the OperatorFabric project.                      -->
 
- <em *ngIf="params.value" style="color: #0082FF;" class="fa fa-reply"></em>
+<ng-template #tipHasAResponseFromYourEntity>
+    <span translate>monitoring.tips.hasAResponseFromYourEntity</span>
+</ng-template>
+<em *ngIf="params.value" 
+    [ngbPopover]="tipHasAResponseFromYourEntity" popoverClass="opfab-popover" container="body"
+    triggers="mouseenter:mouseleave"
+    style="color: #0082FF;" class="fa fa-reply"></em>
