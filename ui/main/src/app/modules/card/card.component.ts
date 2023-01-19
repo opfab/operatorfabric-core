@@ -72,25 +72,8 @@ export class CardComponent implements OnInit, OnDestroy {
                                         this.cardState = new State();
                                     }
                                 } else {
-                                    console.log(
-                                        new Date().toISOString(),
-                                        `WARNING process ` +
-                                            ` ${card.process} with version ${card.processVersion} does not exist.`
-                                    );
                                     this.cardState = new State();
                                 }
-                            },
-                            error: () => {
-                                card = card as Card;
-                                console.log(
-                                    new Date().toISOString(),
-                                    `WARNING process ` +
-                                        ` ${card.process} with version ${card.processVersion} does not exist.`
-                                );
-                                this.card = card;
-                                this.childCards = childCards;
-                                this.cardLoadingInProgress = false;
-                                this.cardState = new State();
                             }
                         });
                     } else {

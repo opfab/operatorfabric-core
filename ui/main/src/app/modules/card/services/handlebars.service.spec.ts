@@ -19,6 +19,7 @@ import {ConfigServerMock} from '@tests/mocks/configServer.mock';
 import {ProcessServerMock} from '@tests/mocks/processServer.mock';
 import {ProcessesService} from 'app/business/services/processes.service';
 import {ConfigService} from 'app/business/services/config.service';
+import {ServerResponse, ServerResponseStatus} from 'app/business/server/serverResponse';
 
 describe('Handlebars Services', () => {
     let processesService: ProcessesService;
@@ -69,7 +70,7 @@ describe('Handlebars Services', () => {
         });
 
         function testTemplate(template, expectedResult, done, contextMessage?) {
-            processServer.setTemplate(template);
+            processServer.setResponseForTemplate(new ServerResponse(template,ServerResponseStatus.OK,null));
             handlebarsService
                 .executeTemplate("test", new DetailContext(card, userContext, null))
                 .subscribe((result) => {
@@ -328,7 +329,7 @@ describe('Handlebars Services', () => {
         });
 
         it('compile  now ', (done) => {
-            processServer.setTemplate('{{now}}');
+            processServer.setResponseForTemplate(new ServerResponse('{{now}}',ServerResponseStatus.OK,null));
             handlebarsService
                 .executeTemplate("test", new DetailContext(card, userContext, null))
                 .subscribe((result) => {

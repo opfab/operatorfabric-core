@@ -10,34 +10,35 @@
 import {Observable, ReplaySubject} from 'rxjs';
 import {ConfigServer} from 'app/business/server/config.server';
 import {MonitoringConfig} from '@ofModel/monitoringConfig.model';
+import {ServerResponse} from 'app/business/server/serverResponse';
 
 export class ConfigServerMock implements ConfigServer {
 
-    private webUiConf = new ReplaySubject<any>();
-    private menuConf = new ReplaySubject<any>();
-    private monitoringConf = new ReplaySubject<MonitoringConfig>;
+    private webUiConf = new ReplaySubject<ServerResponse<any>>();
+    private menuConf = new ReplaySubject<ServerResponse<any>>();
+    private monitoringConf = new ReplaySubject<ServerResponse<MonitoringConfig>>;
 
-    getWebUiConfiguration(): Observable<any> {
+    getWebUiConfiguration(): Observable<ServerResponse<any>> {
         return this.webUiConf.asObservable();
     }
 
-    getMenuConfiguration(): Observable<any> {
+    getMenuConfiguration(): Observable<ServerResponse<any>> {
         return this.menuConf.asObservable();
     }
 
-    getMonitoringConfiguration(): Observable<MonitoringConfig> {
+    getMonitoringConfiguration(): Observable<ServerResponse<MonitoringConfig>> {
         return this.monitoringConf.asObservable();
     }
 
-    setWebUIConfiguration(webuiConf:any) {
+    setResponseForWebUIConfiguration(webuiConf:ServerResponse<any>) {
         this.webUiConf.next(webuiConf);
     }
 
-    setMenuConfiguration(menuConf:any) {
+    setResponseForMenuConfiguration(menuConf:ServerResponse<any>) {
         this.menuConf.next(menuConf);
     }
 
-    setMonitoringConfiguration(monitoringConf: MonitoringConfig) {
+    setResponseForMonitoringConfiguration(monitoringConf: ServerResponse<MonitoringConfig>) {
         this.monitoringConf.next(monitoringConf);
     }
 }
