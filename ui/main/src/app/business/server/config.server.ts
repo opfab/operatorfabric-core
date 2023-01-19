@@ -10,10 +10,11 @@
 
 import {MonitoringConfig} from "@ofModel/monitoringConfig.model";
 import {Observable} from "rxjs";
+import {ServerResponse} from "./serverResponse";
 
 export abstract class ConfigServer {
 
-    abstract getWebUiConfiguration():Observable<any>;
-    abstract getMenuConfiguration():Observable<any>;
-    abstract getMonitoringConfiguration(): Observable<MonitoringConfig>;
+    abstract getWebUiConfiguration():Observable<ServerResponse<any>>;
+    abstract getMenuConfiguration():Observable<ServerResponse<any>>;
+    abstract getMonitoringConfiguration(): Observable<ServerResponse<MonitoringConfig>>;
 }

@@ -12,23 +12,26 @@ import {Injectable} from '@angular/core';
 import {environment} from '@env/environment';
 import {UIMenuFile} from '@ofModel/menu.model';
 import {MonitoringConfig} from '@ofModel/monitoringConfig.model';
+import {ServerResponse} from 'app/business/server/serverResponse';
 import {map, Observable} from 'rxjs';
 import {ConfigServer} from '../business/server/config.server';
+import {AngularServer} from './angular.server';
 
 @Injectable({
     providedIn: 'root'
 })
-export class AngularConfigServer implements ConfigServer {
+export class AngularConfigServer extends AngularServer implements ConfigServer {
     private configUrl: string;
     private monitoringConfigUrl: string;
 
     constructor(private httpClient: HttpClient) {
+        super();
         this.configUrl = `${environment.urls.config}`;
         this.monitoringConfigUrl = `${environment.urls.monitoringConfig}`;
     }
 
-    getWebUiConfiguration(): Observable<any> {
-        return this.httpClient.get(`${this.configUrl}`, {responseType: 'text'}).pipe(
+    getWebUiConfiguration(): Observable<ServerResponse<any>> {
+        return  this.processHttpResponse(this.httpClient.get(`${this.configUrl}`, {responseType: 'text'}).pipe(
             map((config) => {
                 try {
                     config = JSON.parse(config);
@@ -37,15 +40,15 @@ export class AngularConfigServer implements ConfigServer {
                 }
                 return config;
             })
-        );
+        ));
     }
 
-    getMenuConfiguration(): Observable<any> {
-        return this.httpClient
-            .get<UIMenuFile>(`${environment.urls.menuConfig}`)
+    getMenuConfiguration(): Observable<ServerResponse<any>> {
+        return this.processHttpResponse(this.httpClient
+            .get<UIMenuFile>(`${environment.urls.menuConfig}`));
     }
 
-    getMonitoringConfiguration():Observable<MonitoringConfig> {
-        return this.httpClient.get<MonitoringConfig>(this.monitoringConfigUrl)
+    getMonitoringConfiguration():Observable<ServerResponse<MonitoringConfig>> {
+        return this.processHttpResponse(this.httpClient.get<MonitoringConfig>(this.monitoringConfigUrl));
     }
 }

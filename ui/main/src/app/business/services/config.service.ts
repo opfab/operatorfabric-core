@@ -29,7 +29,7 @@ export class ConfigService {
     }
 
     public loadWebUIConfiguration(): Observable<any> {
-        return this.configServer.getWebUiConfiguration().pipe(( map((config) => {this.config = config; return config})));
+        return this.configServer.getWebUiConfiguration().pipe(( map((serverResponse) => {this.config = serverResponse.data; return this.config})));
     }
 
     public overrideConfigSettingsWithUserSettings(settings: any) {
@@ -63,10 +63,10 @@ export class ConfigService {
 
     public loadCoreMenuConfigurations(): Observable<CoreMenuConfig[]> {
         return this.configServer.getMenuConfiguration()
-            .pipe(map((config) => {
-                this.coreMenuConfigurations = config.coreMenusConfiguration;
-                this.processMenuConfig(config);
-                return config.coreMenuConfiguration;
+            .pipe(map((serverResponse) => {
+                this.coreMenuConfigurations = serverResponse.data.coreMenusConfiguration;
+                this.processMenuConfig(serverResponse.data);
+                return this.coreMenuConfigurations;
             }));
     }
 
@@ -81,12 +81,12 @@ export class ConfigService {
     /* Configuration for custom menus */
 
     public fetchMenuTranslations(): Observable<Locale[]> {
-        return this.configServer.getMenuConfiguration().pipe(map((config) => config.locales));
+        return this.configServer.getMenuConfiguration().pipe(map((serverResponse) => serverResponse.data?.locales));
     }
 
     public computeMenu(): Observable<Menu[]> {
         return this.configServer.getMenuConfiguration()
-            .pipe(map((config) => this.processMenuConfig(config)));
+            .pipe(map((serverResponse) => this.processMenuConfig(serverResponse.data)));
     }
 
     public queryMenuEntryURL(id: string, menuEntryId: string): Observable<string> {

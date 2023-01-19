@@ -9,53 +9,48 @@
 
 import {Process} from '@ofModel/processes.model';
 import {ProcessServer} from 'app/business/server/process.server';
+import {ServerResponse} from 'app/business/server/serverResponse';
 import {Observable, ReplaySubject} from 'rxjs';
 
 export class ProcessServerMock implements ProcessServer {
-    private processSubject = new ReplaySubject<Process>();
-    private allProcessSubject = new ReplaySubject<Process[]>();
-    private i18nSubject = new ReplaySubject<any>();
-    private processGroupsSubject = new ReplaySubject<any>();
-    private templateSubject = new ReplaySubject<string>();
-    private cssSubject = new ReplaySubject<string>();
+    private processSubject = new ReplaySubject<ServerResponse<Process>>();
+    private allProcessSubject = new ReplaySubject<ServerResponse<Process[]>>();
+    private processGroupsSubject = new ReplaySubject<ServerResponse<any>>();
+    private templateSubject = new ReplaySubject<ServerResponse<string>>();
+    private cssSubject = new ReplaySubject<ServerResponse<string>>();
 
-    setProcessDefinition(process: Process) {
+    setResponseForProcessDefinition(process: ServerResponse<Process>) {
         this.processSubject.next(process);
     }
-    setAllProcessDefinition(processes: Process[]) {
+    setResponseForAllProcessDefinition(processes: ServerResponse<Process[]>) {
         this.allProcessSubject.next(processes);
     }
-    setI18N(i18n: any) {
-        this.i18nSubject.next(i18n);
-    }
-    setProcessGroups(processGroups: any) {
+
+    setResponseForProcessGroups(processGroups: ServerResponse<any>) {
         this.processGroupsSubject.next(processGroups);
     }
 
-    setTemplate(template: string) {
+    setResponseForTemplate(template: ServerResponse<string>) {
         this.templateSubject.next(template);
     }
 
-    setCss(css: string) {
+    setResponseForCss(css: ServerResponse<string>) {
         this.cssSubject.next(css);
     }
 
-    getProcessDefinition(processId: string, processVersion: string): Observable<Process> {
+    getProcessDefinition(processId: string, processVersion: string): Observable<ServerResponse<Process>> {
         return this.processSubject.asObservable();
     }
-    getAllProcessesDefinition(): Observable<Process[]> {
+    getAllProcessesDefinition(): Observable<ServerResponse<Process[]>> {
         return this.allProcessSubject.asObservable();
     }
-    getI18N(processId: string, version: string): Observable<any> {
-        return this.i18nSubject.asObservable();
-    }
-    getProcessGroups(): Observable<any> {
+    getProcessGroups(): Observable<ServerResponse<any>> {
         return this.processGroupsSubject.asObservable();
     }
-    getTemplate(processid: string, processVersion: string, templateName: string): Observable<string> {
+    getTemplate(processid: string, processVersion: string, templateName: string): Observable<ServerResponse<string>> {
         return this.templateSubject.asObservable();
     }
-    getCss(processId: string, version: string, cssName: string): Observable<string> {
+    getCss(processId: string, version: string, cssName: string): Observable<ServerResponse<string>> {
         return this.cssSubject.asObservable();
     }
 }

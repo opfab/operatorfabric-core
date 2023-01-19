@@ -11,7 +11,7 @@ import {Injectable} from '@angular/core';
 import {HttpParams, HttpUrlEncodingCodec} from '@angular/common/http';
 import {environment} from '@env/environment';
 import {Observable, of} from 'rxjs';
-import {catchError, map, tap} from 'rxjs/operators';
+import {catchError, map} from 'rxjs/operators';
 import {
     ConsideredAcknowledgedForUserWhenEnum,
     Process,
@@ -24,6 +24,7 @@ import {UserService} from '@ofServices/user.service';
 import {LightCard} from '@ofModel/light-card.model';
 import {ProcessServer} from 'app/business/server/process.server';
 import {ConfigServer} from 'app/business/server/config.server';
+import {ServerResponseStatus} from '../server/serverResponse';
 
 @Injectable({
     providedIn: 'root'
@@ -73,7 +74,8 @@ export class ProcessesService {
 
     public loadProcessGroups(): Observable<any> {
         return this.queryProcessGroups().pipe(
-            map((processGroupsFile) => {
+            map((response) => {
+                const processGroupsFile = response.data;
                 if (!!processGroupsFile) {
                     const processGroupsList = processGroupsFile.groups;
                     if (!!processGroupsList)
@@ -85,10 +87,8 @@ export class ProcessesService {
                         });
                     console.log(new Date().toISOString(), 'List of process groups loaded');
                 }
-            }),
-            catchError((error) => {
-                console.error(new Date().toISOString(), 'An error occurred when loading processGroups', error);
-                return of(error);
+                if (response.status!==ServerResponseStatus.OK) console.error(new Date().toISOString(), 'An error occurred when loading processGroups');
+                return "";
             })
         );
     }
@@ -104,16 +104,14 @@ export class ProcessesService {
 
     public loadMonitoringConfig(): Observable<MonitoringConfig> {
         return this.configServer.getMonitoringConfiguration().pipe(
-            map((monitoringConfig) => {
+            map((serverResponse) => {
+                const monitoringConfig = serverResponse.data;
                 if (!!monitoringConfig) {
                     this.monitoringConfig = monitoringConfig;
                     console.log(new Date().toISOString(), 'Monitoring config loaded');
                 } else console.log(new Date().toISOString(), 'No monitoring config to load');
+                if (serverResponse.status!==ServerResponseStatus.OK)  console.error(new Date().toISOString(), 'An error occurred when loading monitoringConfig');
                 return monitoringConfig;
-            }),
-            catchError((error) => {
-                console.error(new Date().toISOString(), 'An error occurred when loading monitoringConfig', error);
-                return of(error);
             })
         );
     }
@@ -178,7 +176,15 @@ export class ProcessesService {
     }
 
     queryAllProcesses(): Observable<Process[]> {
-        return this.processServer.getAllProcessesDefinition();
+        return this.processServer.getAllProcessesDefinition().pipe(
+            map(response => {
+                if (response.status!==ServerResponseStatus.OK)  {
+                    console.error(new Date().toISOString(), 'An error occurred when loading processes configuration');
+                    return new Array<Process>();
+                }
+                return response.data;
+            })
+        );
     }
 
     queryProcessGroups(): Observable<any> {
@@ -192,21 +198,23 @@ export class ProcessesService {
             return of(process);
         }
         return this.processServer.getProcessDefinition(id, version).pipe(
-            tap((t) => {
-                if (t) {
-                    Object.setPrototypeOf(t, Process.prototype);
-                }
-            }),
-            tap((t) => {
-                if (t) {
-                    this.processCache.set(key, t);
-                }
-            })
-        );
+            map( response => {
+                if ((response.status===ServerResponseStatus.OK) && (response.data)) this.processCache.set(key, response.data);
+                else   console.log(
+                    new Date().toISOString(),
+                    `WARNING process ` +
+                        ` ${id} with version ${version} does not exist.`);
+                return response.data
+            }));
     }
 
     fetchHbsTemplate(process: string, version: string, name: string): Observable<string> {
-        return this.processServer.getTemplate(process,version,name);
+        return this.processServer.getTemplate(process,version,name).pipe(
+            map( serverResponse => {
+                if (serverResponse.status !== ServerResponseStatus.OK) throw new Error("Template not available");
+                return serverResponse.data;
+            })
+        );
     }
 
     computeBusinessconfigCssUrl(process: string, styleName: string, version: string) {
@@ -216,27 +224,6 @@ export class ProcessesService {
         return `${resourceUrl}?${versionParam.toString()}`;
     }
 
-    askForI18nJson(process: string, locale: string, version?: string): Observable<any> {
-        return this.processServer.getI18N(process,locale,version).pipe(
-            map(this.convertJsonToI18NObject(process, version)),
-            catchError((error) => {
-                console.error(
-                    new Date().toISOString(),
-                    `error trying fetch i18n of '${process}' version:'${version}' for locale: '${locale}'`
-                );
-                return of(error);
-            })
-        );
-    }
-
-    private convertJsonToI18NObject(process: string, version: string) {
-        return (r) => {
-            const object = {};
-            object[process] = {};
-            object[process][version] = r;
-            return object;
-        };
-    }
 
     public findProcessGroupIdForProcessId(processId: string): string {
         const data = this.findProcessGroupForProcess(processId);
