@@ -24,3 +24,4 @@
       cards/deleteCardsByEndDate.feature          \
       cards/cardsWithRepresentative.feature       \
       cards/externalRecipentErrors.feature        \
+      cards/postCardWithRRuleRecurrence.feature

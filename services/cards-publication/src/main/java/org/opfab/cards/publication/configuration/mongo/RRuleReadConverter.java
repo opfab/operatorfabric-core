@@ -1,4 +1,4 @@
-/* Copyright (c) 2022, RTE (http://www.rte-france.com)
+/* Copyright (c) 2022-2023, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -44,6 +44,8 @@ public class RRuleReadConverter implements Converter<Document, RRule> {
         List<Integer> byhour = (List<Integer>) source.get("byhour");
         List<Integer> byminute = (List<Integer>) source.get("byminute");
 
+        String tzid = source.getString("tzid");
+
         RRulePublicationData.RRulePublicationDataBuilder builder = RRulePublicationData.builder()
                 .freq(freq)
                 .count(count)
@@ -52,6 +54,7 @@ public class RRuleReadConverter implements Converter<Document, RRule> {
                 .bymonth(bymonth)
                 .byhour(byhour)
                 .byminute(byminute)
+                .tzid(tzid)
                 ;
 
         return builder.build();

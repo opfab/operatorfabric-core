@@ -15,7 +15,8 @@
       "userCard" : {
         "template" : "usercard_taskAdvanced",
         "lttdVisible" : false,
-        "recipientVisible" : false
+        "recipientVisible" : false,
+        "expirationDateVisible" : false
       },
       "templateName": "taskAdvanced",
       "styles": [

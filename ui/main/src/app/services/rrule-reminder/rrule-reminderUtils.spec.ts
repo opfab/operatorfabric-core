@@ -119,8 +119,8 @@ describe('RRuleReminderUtils:getNextTimeForRepeating with recurrence hour and mi
         expect(dateForRepeating).toEqual(expectedResponseDate);
     });
 
-    it('2000/01/01 15:00 , Recurrence :10:15 , 10:10 , 10:06 / Time Zone : London  => 2000/01/02 10:06 ', () => {
-        const date = moment.tz('2000-01-01 15:00', 'Europe/London').valueOf();
+    it('2000/01/01 11:00 , Recurrence :10:15 , 10:10 , 10:06 / Time Zone : London  => 2000/01/02 10:06 ', () => {
+        const date = moment.tz('2000-01-01 11:00', 'Europe/London').valueOf();
 
         testCard.rRule = {
             freq: Frequency.DAILY,
