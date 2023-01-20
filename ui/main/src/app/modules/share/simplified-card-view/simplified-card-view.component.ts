@@ -94,6 +94,12 @@ export class SimplifiedCardViewComponent implements OnInit, OnDestroy {
         templateGateway.childCards = this.childCards;
     }
 
+    public afterTemplateRendering() {
+        if (this.displayContext === DisplayContext.ARCHIVE) {
+            templateGateway.lockAnswer();
+        }
+    }
+
     ngOnDestroy() {
         this.unsubscribe$.next();
         this.unsubscribe$.complete();
