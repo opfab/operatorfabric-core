@@ -19,7 +19,6 @@ import {GlobalStyleService} from '@ofServices/global-style.service';
 import {Route} from '@angular/router';
 import {ConfigService} from 'app/business/services/config.service';
 import {UserPreferencesService} from '@ofServices/user-preference.service';
-import {QueryAllEntitiesAction} from '@ofActions/user.actions';
 import {UserService} from '@ofServices/user.service';
 import {NgbModal, NgbModalOptions, NgbModalRef} from '@ng-bootstrap/ng-bootstrap';
 import {AppService} from '@ofServices/app.service';
@@ -84,7 +83,6 @@ export class NavbarComponent implements OnInit {
             }
         });
         this.businessconfigMenus = this.getCurrentUserCustomMenus(this.configService.getMenus());
-        this.store.dispatch(new QueryAllEntitiesAction());
 
         const logo = this.configService.getConfigValue('logo.base64');
         if (!!logo) {

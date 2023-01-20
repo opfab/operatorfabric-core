@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2022, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2023, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -12,7 +12,6 @@ import {Actions, createEffect, ofType} from '@ngrx/effects';
 import {UserService} from '@ofServices/user.service';
 import {Observable, timer} from 'rxjs';
 import {
-    LoadAllEntitiesAction,
     UserActions,
     UserActionsTypes,
     UserApplicationRegisteredAction,
@@ -22,7 +21,6 @@ import {AuthenticationActionTypes} from '@ofStore/actions/authentication.actions
 import {catchError, debounce, map, switchMap} from 'rxjs/operators';
 import {User} from '@ofModel/user.model';
 import {AuthenticationService} from '@ofServices/authentication/authentication.service';
-import {Entity} from '@ofModel/entity.model';
 import {EntitiesService} from '@ofServices/entities.service';
 import {GroupsService} from '@ofServices/groups.service';
 import {Utilities} from 'app/business/common/utilities';
@@ -62,17 +60,6 @@ export class UserEffects {
         )
     );
 
-    /**
-     * Query all existing entities from the Users service
-     */
-
-    loadAllEntities: Observable<UserActions> = createEffect(() =>
-        this.actions$.pipe(
-            ofType(UserActionsTypes.QueryAllEntities),
-            switchMap(() => this.userService.queryAllEntities()),
-            map((allEntities: Entity[]) => new LoadAllEntitiesAction({entities: allEntities}))
-        )
-    );
 
     updateUserConfig: Observable<any> = createEffect(
         () =>
