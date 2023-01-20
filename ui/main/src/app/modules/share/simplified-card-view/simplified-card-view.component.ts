@@ -91,7 +91,7 @@ export class SimplifiedCardViewComponent implements OnInit, OnDestroy {
     public beforeTemplateRendering() {
         templateGateway.userMemberOfAnEntityRequiredToRespond =
             this.userMemberOfAnEntityRequiredToRespondAndAllowedToSendCards;
-        templateGateway.childCards = this.childCards;
+        templateGateway.childCards = !!this.childCards ? this.childCards : [];
     }
 
     ngOnDestroy() {
