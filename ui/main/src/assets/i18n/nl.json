@@ -444,7 +444,8 @@
       },
       "name": {
         "required": "Naam is vereist.",
-        "label":"NAAM"
+        "label":"NAAM",
+        "alreadyExisting": "Naam bestaat al."
       },
       "description": "OMSCHRIJVING",
       "lines": "regels per pagina"

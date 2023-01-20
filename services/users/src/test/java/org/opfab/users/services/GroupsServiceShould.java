@@ -119,15 +119,15 @@ class GroupsServiceShould {
             perimeters.add("perimeter1");
             Set<PermissionEnum> permissions = new HashSet<>();
             permissions.add(PermissionEnum.READONLY);
-            GroupData group = new GroupData("newGroup", "groupName", null, null, perimeters, permissions, null);
+            GroupData group = new GroupData("newGroup", "newName", null, null, perimeters, permissions, null);
             OperationResult<EntityCreationReport<Group>> result = groupsService.createGroup(group);
             assertThat(result.isSuccess()).isTrue();
             assertThat(result.getResult().isUpdate()).isFalse();
             assertThat(result.getResult().getEntity().getId()).isEqualTo("newGroup");
-            assertThat(result.getResult().getEntity().getName()).isEqualTo("groupName");
+            assertThat(result.getResult().getEntity().getName()).isEqualTo("newName");
             assertThat(result.getResult().getEntity().getPerimeters().get(0)).isEqualTo("perimeter1");
             assertThat(result.getResult().getEntity().getPermissions().get(0)).isEqualTo(PermissionEnum.READONLY);
-            assertThat(groupRepositoryStub.findById("newGroup").get().getName()).isEqualTo("groupName");
+            assertThat(groupRepositoryStub.findById("newGroup").get().getName()).isEqualTo("newName");
             assertThat(groupRepositoryStub.findById("newGroup").get().getPerimeters().get(0)).isEqualTo("perimeter1");
             assertThat(groupRepositoryStub.findById("newGroup").get().getPermissions().get(0)).isEqualTo(PermissionEnum.READONLY);
         }
@@ -156,13 +156,38 @@ class GroupsServiceShould {
             Set<String> perimeters = new HashSet<>();
             perimeters.add("perimeter1");
             perimeters.add("dummyPerimeter");
-            GroupData group = new GroupData("groupId", "groupName", null, null, perimeters, null, null);
+            GroupData group = new GroupData("groupId", "dummyName", null, null, perimeters, null, null);
             OperationResult<EntityCreationReport<Group>> result = groupsService.createGroup(group);
             assertThat(result.isSuccess()).isFalse();
             assertThat(result.getErrorType()).isEqualTo(OperationResult.ErrorType.BAD_REQUEST);
             assertThat(result.getErrorMessage()).isEqualTo("Bad perimeter list : perimeter dummyPerimeter not found");
             assertThat(groupRepositoryStub.findById("groupId")).isEmpty();
+        }
 
+        @Test
+        void GIVEN_A_Valid_Existing_Group_WHEN_Try_To_Update_Group_with_An_Already_Existing_Name_THEN_Return_Bad_Request() {
+            Set<String> perimeters = new HashSet<>();
+            perimeters.add("perimeter1");
+            GroupData group = new GroupData("ADMIN", "groupName", null, null, perimeters, null, null);
+            OperationResult<EntityCreationReport<Group>> result = groupsService.createGroup(group);
+            assertThat(result.isSuccess()).isFalse();
+            assertThat(result.getErrorType()).isEqualTo(OperationResult.ErrorType.BAD_REQUEST);
+            assertThat(result.getErrorMessage()).isEqualTo("Group with name groupName already exists");
+        }
+
+        @Test
+        void GIVEN_A_Valid_Group_WHEN_Update_Description_With_Same_Name_THEN_Group_Is_Updated() {
+            Set<String> perimeters = new HashSet<>();
+            perimeters.add("perimeter1");
+            GroupData group = new GroupData("group1", "groupName", null, "new description", perimeters, null, null);
+            OperationResult<EntityCreationReport<Group>> result = groupsService.createGroup(group);
+            assertThat(result.isSuccess()).isTrue();
+            assertThat(result.getResult().isUpdate()).isTrue();
+            assertThat(result.getResult().getEntity().getId()).isEqualTo("group1");
+            assertThat(result.getResult().getEntity().getName()).isEqualTo("groupName");
+            assertThat(result.getResult().getEntity().getDescription()).isEqualTo("new description");
+            assertThat(groupRepositoryStub.findById("group1").get().getName()).isEqualTo("groupName");
+            assertThat(groupRepositoryStub.findById("group1").get().getDescription()).isEqualTo("new description");
         }
 
     }

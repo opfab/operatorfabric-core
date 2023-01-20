@@ -26,12 +26,13 @@ import org.opfab.users.utils.IdFormatChecker;
 
 public class GroupsService {
 
-    public static final String GROUP_NOT_FOUND_MSG = "Group %s not found";
-    public static final String BAD_USER_LIST_MSG = "Bad user list : user %s not found";
-    public static final String BAD_PERIMETER_LIST_MSG = "Bad perimeter list : perimeter %s not found";
-    public static final String USER_NOT_FOUND_MSG = "User %s not found";
-    public static final String ADMIN_GROUP_ID = "ADMIN";
-    public static final String ADMIN_LOGIN = "admin";
+    private static final String GROUP_NOT_FOUND_MSG = "Group %s not found";
+    private static final String GROUP_ALREADY_EXISTS = "Group with name %s already exists";
+    private static final String BAD_USER_LIST_MSG = "Bad user list : user %s not found";
+    private static final String BAD_PERIMETER_LIST_MSG = "Bad perimeter list : perimeter %s not found";
+    private static final String USER_NOT_FOUND_MSG = "User %s not found";
+    private static final String ADMIN_GROUP_ID = "ADMIN";
+    private static final String ADMIN_LOGIN = "admin";
 
     private GroupRepository groupRepository;
     private UserRepository userRepository;
@@ -63,7 +64,13 @@ public class GroupsService {
         IdFormatChecker.IdCheckResult formatCheckResult = IdFormatChecker.check(group.getId());
         if (formatCheckResult.isValid()) {
             OperationResult<List<Perimeter>> foundPerimetersResult = getPerimeters(group.getPerimeters());
-
+            synchronized (this) {
+                List<Group> groups = groupRepository.findAll().stream().map(Group.class::cast).toList();
+                if (groups.stream().filter(o -> !group.getId().equals(o.getId())).anyMatch(o -> group.getName().equals(o.getName()))){
+                    return new OperationResult<>(null, false, OperationResult.ErrorType.BAD_REQUEST,
+                            String.format(GROUP_ALREADY_EXISTS, group.getName()));
+                }
+            }
             if (foundPerimetersResult.isSuccess()) {
                 boolean isAlreadyExisting = groupRepository.findById(group.getId()).isPresent();
                 Group newGroup = groupRepository.save(group);

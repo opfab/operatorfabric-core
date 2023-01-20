@@ -28,6 +28,7 @@ public class EntitiesService {
     private static final String ENTITY_NOT_FOUND_MSG = "Entity %s not found";
     private static final String BAD_USER_LIST_MSG = "Bad user list : user %s not found";
     private static final String USER_NOT_FOUND_MSG = "User %s not found";
+    private static final String ENTITY_ALREADY_EXISTS_MSG = "Entity with name %s already exists";
 
     private NotificationService notificationService;
     private EntityRepository entityRepository;
@@ -62,6 +63,10 @@ public class EntitiesService {
                 if (result.hasCycle()) {
                     return new OperationResult<>(null, false, OperationResult.ErrorType.BAD_REQUEST,
                             result.getMessage());
+                }
+                if (entities.stream().filter(o -> !entity.getId().equals(o.getId())).anyMatch(o -> entity.getName().equals(o.getName()))){
+                    return new OperationResult<>(null, false, OperationResult.ErrorType.BAD_REQUEST,
+                            String.format(ENTITY_ALREADY_EXISTS_MSG, entity.getName()));
                 }
             }
             boolean isAlreadyExisting = entityRepository.findById(entity.getId()).isPresent();
