@@ -78,7 +78,7 @@ Feature: CreateEntities
 """
 {
    "id" : "valid_id",
-   "name" : "entity name",
+   "name" : "entity name 1",
    "description" : "entity description"
 }
 """
@@ -87,7 +87,7 @@ Feature: CreateEntities
 """
 {
    "id" : "valid-id",
-   "name" : "entity name",
+   "name" : "entity name 2",
    "description" : "entity description"
 }
 """
@@ -96,7 +96,7 @@ Feature: CreateEntities
 """
 {
    "id" : "validId_with-digit_0",
-   "name" : "entity name",
+   "name" : "entity name 3",
    "description" : "entity description"
 }
 """

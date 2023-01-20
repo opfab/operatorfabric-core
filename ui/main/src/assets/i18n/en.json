@@ -445,7 +445,8 @@
       },
       "name": {
         "required": "Name is required.",
-        "label":"NAME"
+        "label":"NAME",
+        "alreadyExisting": "Name already existing."
       },
       "description": "DESCRIPTION",
       "lines": "lines per page"

@@ -10,9 +10,11 @@
 
 import {Component, Input, OnInit} from '@angular/core';
 import {
+    AbstractControl,
     AsyncValidatorFn,
     FormControl,
     FormGroup,
+    ValidationErrors,
     Validators
 } from '@angular/forms';
 import {NgbActiveModal} from '@ng-bootstrap/ng-bootstrap';
@@ -24,12 +26,12 @@ import {Store} from '@ngrx/store';
 import {AppState} from '@ofStore/index';
 import {MessageLevel} from '@ofModel/message.model';
 import {GroupsService} from '@ofServices/groups.service';
-import {debounceTime, distinctUntilChanged, first, map, switchMap} from 'rxjs/operators';
 import {MultiSelectConfig, MultiSelectOption} from '@ofModel/multiselect.model';
 import {GroupTypeEnum} from '@ofModel/group.model';
 import {UserService} from '@ofServices/user.service';
 import {User} from '../../../../../model/user.model';
 import {PermissionEnum} from '@ofModel/permission.model';
+import {Observable, of} from 'rxjs';
 
 @Component({
     selector: 'of-edit-group-modal',
@@ -97,17 +99,24 @@ export class EditGroupModalComponent implements OnInit {
 
     ngOnInit() {
         const uniqueGroupIdValidator = [];
-        if (!this.row)
-            // modal used for creating a new group
+        const uniqueGroupNameValidator = [];
+        if (!this.row) {
             uniqueGroupIdValidator.push(this.uniqueGroupIdValidatorFn());
-
+        }
+        uniqueGroupNameValidator.push(this.uniqueGroupNameValidatorFn());
+            // modal used for creating a new group
+           
         this.groupForm = new FormGroup({
             id: new FormControl(
                 '',
                 [Validators.required, Validators.minLength(2), Validators.pattern(/^[A-Za-z\d\-_]+$/)],
                 uniqueGroupIdValidator
             ),
-            name: new FormControl('', [Validators.required]),
+            name: new FormControl(
+                '', 
+                [Validators.required],
+                uniqueGroupNameValidator
+            ),
             description: new FormControl(''),
             perimeters: new FormControl([]),
             permissions: new FormControl([]),
@@ -123,7 +132,6 @@ export class EditGroupModalComponent implements OnInit {
             // For 'simple' fields (where the value is directly displayed), we use the form's patching method
             const {id, name, description, realtime, type} = this.row;
             this.groupForm.patchValue({id, name, description, realtime, type}, {onlySelf: false});
-
             // Otherwise, we use the selectedItems property of the of-multiselect component
             this.selectedPerimeters = this.row.perimeters;
             this.selectedGroupType = this.row.type;
@@ -162,14 +170,24 @@ export class EditGroupModalComponent implements OnInit {
     }
 
     uniqueGroupIdValidatorFn(): AsyncValidatorFn {
-        return (control) =>
-            control.valueChanges.pipe(
-                debounceTime(500),
-                distinctUntilChanged(),
-                switchMap(async (value) => this.isUniqueGroupId(value)),
-                map((unique: boolean) => (unique ? null : {uniqueGroupIdViolation: true})),
-                first()
-            ); // important to make observable finite
+        return (control: AbstractControl): Observable<ValidationErrors> =>
+        {
+            let err : ValidationErrors = {'uniqueGroupIdViolation': true};
+            return this.isUniqueGroupId(this.groupForm.controls["id"].value)? of(null) : of(err)
+        }
+    }
+
+    isUniqueGroupName(groupName: string): boolean {
+        if (!!groupName && this.groupsService.getGroups().filter((group) => (group.name === groupName.trim()) && (group.id !== this.row?.id)).length) return false;
+        else return true;
+    }
+
+    uniqueGroupNameValidatorFn(): AsyncValidatorFn {
+        return (control: AbstractControl): Observable<ValidationErrors> =>
+        {
+            let err : ValidationErrors = {'uniqueGroupNameViolation': true};
+            return this.isUniqueGroupName(this.groupForm.controls["name"].value)? of(null) : of(err)
+        }
     }
 
     onSavesuccess() {

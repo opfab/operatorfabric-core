@@ -9,17 +9,17 @@
  */
 
 import {Component, Input, OnInit} from '@angular/core';
-import {AsyncValidatorFn, FormControl, FormGroup, Validators} from '@angular/forms';
+import {AbstractControl, AsyncValidatorFn, FormControl, FormGroup, ValidationErrors, Validators} from '@angular/forms';
 import {NgbActiveModal} from '@ng-bootstrap/ng-bootstrap';
 import {AdminItemType, SharingService} from '../../../services/sharing.service';
 import {CrudService} from '@ofServices/crud-service';
 import {EntitiesService} from '@ofServices/entities.service';
 import {Entity} from '@ofModel/entity.model';
 import {TranslateService} from '@ngx-translate/core';
-import {debounceTime, distinctUntilChanged, first, map, switchMap} from 'rxjs/operators';
 import {MultiSelectConfig, MultiSelectOption} from '@ofModel/multiselect.model';
 import {User} from '@ofModel/user.model';
 import {UserService} from '@ofServices/user.service';
+import {Observable, of} from 'rxjs';
 
 @Component({
     selector: 'of-edit-entity-modal',
@@ -63,17 +63,24 @@ export class EditEntityModalComponent implements OnInit {
 
     ngOnInit() {
         const uniqueEntityIdValidator = [];
-        if (!this.row)
-            // modal used for creating a new entity
+        const uniqueEntityNameValidator = [];
+        if (!this.row){
             uniqueEntityIdValidator.push(this.uniqueEntityIdValidatorFn());
-
+        }
+        uniqueEntityNameValidator.push(this.uniqueEntityNameValidatorFn());
+            // modal used for creating a new entity
+            
         this.entityForm = new FormGroup({
             id: new FormControl(
                 '',
                 [Validators.required, Validators.minLength(2), Validators.pattern(/^[A-Za-z\d\-_]+$/)],
                 uniqueEntityIdValidator
             ),
-            name: new FormControl('', [Validators.required]),
+            name: new FormControl(
+                '',
+                [Validators.required], 
+                uniqueEntityNameValidator
+            ),
             description: new FormControl(''),
             entityAllowedToSendCard: new FormControl<boolean | null>(false),
             labels: new FormControl([]),
@@ -135,14 +142,25 @@ export class EditEntityModalComponent implements OnInit {
     }
 
     uniqueEntityIdValidatorFn(): AsyncValidatorFn {
-        return (control) =>
-            control.valueChanges.pipe(
-                debounceTime(500),
-                distinctUntilChanged(),
-                switchMap(async (value) => this.isUniqueEntityId(value)),
-                map((unique: boolean) => (unique ? null : {uniqueEntityIdViolation: true})),
-                first()
-            ); // important to make observable finite
+    return (control: AbstractControl): Observable<ValidationErrors> =>
+        {
+            let err : ValidationErrors = {'uniqueEntityIdViolation': true};
+            return this.isUniqueEntityId(this.entityForm.controls["id"].value)? of(null) : of(err)
+        }
+    }
+
+    isUniqueEntityName(entityName: string): boolean {
+        if (!!entityName && this.entitiesService.getEntities().filter((entity) => (entity.name === entityName.trim()) && (entity.id !== this.row?.id)).length)
+            return false;
+        else return true;
+    }
+
+    uniqueEntityNameValidatorFn(): AsyncValidatorFn {
+        return (control: AbstractControl): Observable<ValidationErrors> =>
+            {
+                let err : ValidationErrors = {'uniqueEntityNameViolation': true};
+                return this.isUniqueEntityName(this.entityForm.controls["name"].value)? of(null) : of(err)
+            }
     }
 
     private cleanForm() {

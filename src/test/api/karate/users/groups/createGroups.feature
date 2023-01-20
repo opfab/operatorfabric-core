@@ -93,7 +93,7 @@ Feature: CreateGroups
 """
 {
    "id" : "valid_id",
-   "name" : "group name",
+   "name" : "group name 1",
    "description" : "group description"
 }
 """
@@ -102,7 +102,7 @@ Feature: CreateGroups
 """
 {
    "id" : "valid-id",
-   "name" : "group name",
+   "name" : "group name 2",
    "description" : "group description"
 }
 """
@@ -111,7 +111,7 @@ Feature: CreateGroups
 """
 {
    "id" : "validId_with-digit_0",
-   "name" : "group name",
+   "name" : "group name 3",
    "description" : "group description"
 }
 """
