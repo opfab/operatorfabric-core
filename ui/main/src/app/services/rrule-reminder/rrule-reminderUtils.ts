@@ -77,6 +77,11 @@ export function getNextDateTimeFromRRule(startingDate: number, card: Card): numb
             });
         }
 
+        let tzid = 'Europe/Paris';
+        if (!! card.rRule.tzid && card.rRule.tzid !== '') {
+            tzid = card.rRule.tzid;
+        }
+
         let rule = new RRule({
             freq: convertOpfabFrequencyToRRuleFrequency(card.rRule.freq),
             count: 1,
@@ -89,7 +94,7 @@ export function getNextDateTimeFromRRule(startingDate: number, card: Card): numb
         // Workaround I've found to have the right hour for dtstart. Otherwise, it is transformed in UTC time and so the result is not the good one
         // Maybe a bug of rrule.js...
         rule = RRule.fromString(rule.toString() +
-                                ';DTSTART;TZID=Europe/Paris:' +
+                                ';DTSTART;TZID=' + tzid + ':' +
                                 dateObjectToYYYYMMDDTHHmmss(new Date(startingDate + NB_MILLISECONDS_IN_ONE_MINUTE)));
 
         const nextDateTimeFromRRule = rule.all(function (date, i) {return i < 1})[0];
