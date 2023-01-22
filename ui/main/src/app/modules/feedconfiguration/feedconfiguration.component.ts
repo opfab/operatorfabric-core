@@ -16,9 +16,9 @@ import {UserWithPerimeters} from '@ofModel/userWithPerimeters.model';
 import {ProcessesService} from 'app/business/services/processes.service';
 import {FormArray, FormControl, FormGroup} from '@angular/forms';
 import {SettingsService} from '@ofServices/settings.service';
-import {CardService} from '@ofServices/card.service';
 import {TranslateService} from '@ngx-translate/core';
 import {Utilities} from '../../business/common/utilities';
+import {LightCardsStoreService} from '@ofServices/lightcards/lightcards-store.service';
 
 @Component({
     selector: 'of-feedconfiguration',
@@ -74,7 +74,7 @@ export class FeedconfigurationComponent implements OnInit, AfterViewInit {
         private processesService: ProcessesService,
         private modalService: NgbModal,
         private settingsService: SettingsService,
-        private cardService: CardService,
+        private lightCardStoreService: LightCardsStoreService,
         private translateService: TranslateService
     ) {
         this.processesStatesLabels = new Map();
@@ -368,7 +368,7 @@ export class FeedconfigurationComponent implements OnInit, AfterViewInit {
                         this.messageAfterSavingSettings = 'shared.error.impossibleToSaveSettings';
                         this.displaySendResultError = true;
                     } else {
-                        this.cardService.removeAllLightCardFromMemory();
+                        this.lightCardStoreService.removeAllLightCards();
                         this.userService.loadUserWithPerimetersData().subscribe();
                     }
                     this.modalRef.close();
@@ -386,7 +386,7 @@ export class FeedconfigurationComponent implements OnInit, AfterViewInit {
         // The modal must not be closed until the settings has been saved in the back
         // If not, with  slow network, when user go to the feed before the end of the request
         // it ends up with nothing in the feed
-        // This happens because method this.cardService.removeAllLightCardFromMemory()
+        // This happens because method this.lightCardStoreService.removeAllLightCards();
         // is called too late (in method confirmSaveSettings)
         if (!this.saveSettingsInProgress) this.modalRef.close();
     }

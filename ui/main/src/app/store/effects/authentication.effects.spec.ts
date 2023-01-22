@@ -41,6 +41,14 @@ import {injectedSpy} from '@tests/helpers';
 import SpyObj = jasmine.SpyObj;
 import createSpyObj = jasmine.createSpyObj;
 import {SoundNotificationService} from '@ofServices/sound-notification.service';
+import {OpfabEventStreamServer} from 'app/business/server/opfabEventStream.server';
+import {UserService} from '@ofServices/user.service';
+import {ProcessServer} from 'app/business/server/process.server';
+import {ConfigServer} from 'app/business/server/config.server';
+import {ConfigServerMock} from '@tests/mocks/configServer.mock';
+import {EntitiesService} from '@ofServices/entities.service';
+import {RemoteLoggerService} from '@ofServices/logs/remote-logger.service';
+import {OpfabEventStreamService} from 'app/business/services/opfabEventStream.service';
 
 describe('AuthenticationEffects', () => {
     let actions$: Observable<any>;
@@ -80,7 +88,14 @@ describe('AuthenticationEffects', () => {
                 {provide: Store, useValue: storeSpy},
                 {provide: Router, useValue: routerSpy},
                 {provide: ConfigService, useValue: configServiceSpy},
-                {provide: SoundNotificationService, useValue: soundNotificationService}
+                {provide: SoundNotificationService, useValue: soundNotificationService},
+                {provide: OpfabEventStreamServer, useValue:null},
+                {provide: OpfabEventStreamService, useValue:null},
+                {provide: UserService, useValue:null},
+                {provide: EntitiesService, useValue:null},
+                {provide: RemoteLoggerService, useValue:null},
+                {provide: ProcessServer, useValue:null},
+                {provide: ConfigServer, ConfigServerMock}
             ]
         });
 
@@ -109,7 +124,7 @@ describe('AuthenticationEffects', () => {
                 authenticationService,
                 null,
                 configService,
-                cardService,
+                null,
                 soundNotificationService
             );
             expect(effects).toBeTruthy();
@@ -117,6 +132,7 @@ describe('AuthenticationEffects', () => {
                 expect(action.type).toEqual(AuthenticationActionTypes.AcceptLogIn)
             );
         });
+
         it('should fail if JWT is not generated from backend', () => {
             const localAction$ = new Actions(
                 hot('-a--', {a: new TryToLogInAction({username: 'johndoe', password: 'pwd'})})
@@ -128,7 +144,7 @@ describe('AuthenticationEffects', () => {
                 authenticationService,
                 null,
                 configService,
-                cardService,
+                null,
                 soundNotificationService
             );
             expect(effects).toBeTruthy();
@@ -142,7 +158,7 @@ describe('AuthenticationEffects', () => {
         it('should success and navigate', () => {
             const localAction$ = new Actions(hot('-a--', {a: new AcceptLogOutAction()}));
             router.navigate.and.callThrough();
-            effects = new AuthenticationEffects(mockStore, localAction$, null, router, configService, cardService,soundNotificationService);
+            effects = new AuthenticationEffects(mockStore, localAction$, null, router, configService, null,soundNotificationService);
             expect(effects).toBeTruthy();
             effects.AcceptLogOut.subscribe((action: AuthenticationActions) => {
                 expect(action.type).toEqual(AuthenticationActionTypes.AcceptLogOutSuccess);
@@ -166,7 +182,7 @@ describe('AuthenticationEffects', () => {
                 authenticationService,
                 router,
                 configService,
-                cardService,
+                null,
                 soundNotificationService
             );
             expect(effects).toBeTruthy();
@@ -187,7 +203,7 @@ describe('AuthenticationEffects', () => {
                 authenticationService,
                 router,
                 configService,
-                cardService,
+                null,
                 soundNotificationService
             );
             expect(effects).toBeTruthy();
@@ -206,7 +222,7 @@ describe('AuthenticationEffects', () => {
                 authenticationService,
                 router,
                 configService,
-                cardService,
+                null,
                 soundNotificationService
             );
             expect(effects).toBeTruthy();

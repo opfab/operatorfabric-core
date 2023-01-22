@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2022, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2023, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -9,7 +9,6 @@
 
 import {Injectable} from '@angular/core';
 import {Actions, createEffect, ofType} from '@ngrx/effects';
-import {CardService} from '@ofServices/card.service';
 import {EMPTY, Observable} from 'rxjs';
 import {map, switchMap, withLatestFrom} from 'rxjs/operators';
 import {LightCardActionTypes, RemoveLightCardAction, SelectLightCardAction} from '@ofActions/light-card.actions';
@@ -17,13 +16,14 @@ import {Store} from '@ngrx/store';
 import {AppState} from '@ofStore/index';
 import {selectCardStateSelectedId} from '@ofSelectors/card.selectors';
 import {AppService} from '@ofServices/app.service';
+import {LightCardsStoreService} from '@ofServices/lightcards/lightcards-store.service';
 
 @Injectable()
 export class CardOperationEffects {
     constructor(
         private store: Store<AppState>,
         private actions$: Actions,
-        private cardService: CardService,
+        private lightCardsStoreService: LightCardsStoreService,
         private appService: AppService
     ) {}
 
@@ -45,7 +45,7 @@ export class CardOperationEffects {
         () =>
             this.actions$.pipe(
                 ofType(LightCardActionTypes.SelectLightCard),
-                map((a: SelectLightCardAction) => this.cardService.setSelectedCard(a.payload.selectedCardId))
+                map((a: SelectLightCardAction) => this.lightCardsStoreService.setSelectedCard(a.payload.selectedCardId))
             ),
         {dispatch: false}
     );
