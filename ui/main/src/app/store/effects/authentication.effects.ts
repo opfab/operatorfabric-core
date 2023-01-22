@@ -29,8 +29,8 @@ import {Message, MessageLevel} from '@ofModel/message.model';
 import {I18n} from '@ofModel/i18n.model';
 import {ConfigService} from 'app/business/services/config.service';
 import {redirectToCurrentLocation} from '../../app-routing.module';
-import {CardService} from '@ofServices/card.service';
 import {SoundNotificationService} from '@ofServices/sound-notification.service';
+import {OpfabEventStreamService} from 'app/business/services/opfabEventStream.service';
 
 /**
  * Management of the authentication of the current user
@@ -43,7 +43,7 @@ export class AuthenticationEffects {
         private authService: AuthenticationService,
         private router: Router,
         private configService: ConfigService,
-        private cardService: CardService,
+        private opfabEventStreamService: OpfabEventStreamService,
         private soundNotificationService: SoundNotificationService
     ) {}
 
@@ -264,7 +264,7 @@ export class AuthenticationEffects {
     }
 
     private resetState() {
-        this.cardService.closeSubscription();
+        this.opfabEventStreamService.closeEventStream();
         this.authService.clearAuthenticationInformation();
         window.location.href = this.configService.getConfigValue('security.logout-url', 'https://opfab.github.io');
     }

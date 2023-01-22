@@ -10,13 +10,13 @@
 import {Component, Input, OnChanges, OnInit} from '@angular/core';
 import {Card} from '@ofModel/card.model';
 import {User} from '@ofModel/user.model';
-import {CardService} from '@ofServices/card.service';
 import {DateTimeFormatterService} from 'app/business/services/date-time-formatter.service';
 import {EntitiesService} from '@ofServices/entities.service';
 import {UserService} from '@ofServices/user.service';
 import {Utilities} from 'app/business/common/utilities';
 import {Subject} from 'rxjs';
 import {takeUntil} from 'rxjs/operators';
+import {LightCardsStoreService} from '@ofServices/lightcards/lightcards-store.service';
 
 @Component({
     selector: 'of-card-footer-text',
@@ -37,10 +37,10 @@ export class CardFooterTextComponent implements OnChanges,OnInit {
     private unsubscribe$: Subject<void> = new Subject<void>();
 
     constructor(
-        private cardService: CardService,
         private entitiesService: EntitiesService,
         private dateTimeFormatterService: DateTimeFormatterService,
-        private userService: UserService
+        private userService: UserService,
+        private lightCardsStoreService: LightCardsStoreService
     ) {
         const userWithPerimeters = this.userService.getCurrentUserWithPerimeters();
         if (!!userWithPerimeters) this.user = userWithPerimeters.userData;
@@ -48,7 +48,7 @@ export class CardFooterTextComponent implements OnChanges,OnInit {
 
     ngOnInit() {
 
-        this.cardService
+        this.lightCardsStoreService
             .getReceivedAcks()
             .pipe(takeUntil(this.unsubscribe$))
             .subscribe((receivedAck) => {

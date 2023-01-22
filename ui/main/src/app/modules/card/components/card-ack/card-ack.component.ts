@@ -16,7 +16,6 @@ import {AcknowledgmentAllowedEnum, ConsideredAcknowledgedForUserWhenEnum, State}
 import {User} from '@ofModel/user.model';
 import {AcknowledgeService} from '@ofServices/acknowledge.service';
 import {AppService, PageType} from '@ofServices/app.service';
-import {CardService} from '@ofServices/card.service';
 import {EntitiesService} from '@ofServices/entities.service';
 import {LightCardsStoreService} from '@ofServices/lightcards/lightcards-store.service';
 import {LogOption, OpfabLoggerService} from '@ofServices/logs/opfab-logger.service';
@@ -65,7 +64,6 @@ export class CardAckComponent implements OnInit, OnChanges, OnDestroy {
         private userService: UserService,
         private userPermissionsService: UserPermissionsService,
         private processService: ProcessesService,
-        private cardService: CardService,
         private lightCardsStoreService: LightCardsStoreService,
         private logger: OpfabLoggerService
     ) {
@@ -75,7 +73,7 @@ export class CardAckComponent implements OnInit, OnChanges, OnDestroy {
 
     ngOnInit()  {
 
-            this.cardService
+            this.lightCardsStoreService
             .getReceivedAcks()
             .pipe(takeUntil(this.unsubscribe$))
             .subscribe((receivedAck) => {

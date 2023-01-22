@@ -12,7 +12,6 @@ import {Title} from '@angular/platform-browser';
 import {Store} from '@ngrx/store';
 import {TranslateService} from '@ngx-translate/core';
 import {AuthenticationService} from '@ofServices/authentication/authentication.service';
-import {CardService} from '@ofServices/card.service';
 import {ConfigService} from 'app/business/services/config.service';
 import {EntitiesService} from '@ofServices/entities.service';
 import {GroupsService} from '@ofServices/groups.service';
@@ -31,6 +30,9 @@ import {AppLoadedInAnotherTabComponent} from './app-loaded-in-another-tab/app-lo
 import {SettingsService} from '@ofServices/settings.service';
 import {GlobalStyleService} from '@ofServices/global-style.service';
 import {RRuleReminderService} from '@ofServices/rrule-reminder/rrule-reminder.service';
+import {OpfabEventStreamServer} from 'app/business/server/opfabEventStream.server';
+import {OpfabEventStreamService} from 'app/business/services/opfabEventStream.service';
+import {LightCardsStoreService} from '@ofServices/lightcards/lightcards-store.service';
 
 @Component({
     selector: 'of-application-loading',
@@ -65,7 +67,6 @@ export class ApplicationLoadingComponent implements OnInit {
         private settingsService: SettingsService,
         private translateService: TranslateService,
         private i18nService: I18nService,
-        private cardService: CardService,
         private userService: UserService,
         private entitiesService: EntitiesService,
         private groupsService: GroupsService,
@@ -73,7 +74,10 @@ export class ApplicationLoadingComponent implements OnInit {
         private reminderService: ReminderService,
         private rRuleReminderService: RRuleReminderService,
         private logger: OpfabLoggerService,
-        private globalStyleService: GlobalStyleService
+        private globalStyleService: GlobalStyleService,
+        private lightCardsStoreService: LightCardsStoreService,
+        private opfabEventStreamServer: OpfabEventStreamServer,
+        private opfabEventStreamService: OpfabEventStreamService
     ) {}
 
     ngOnInit() {
@@ -91,9 +95,8 @@ export class ApplicationLoadingComponent implements OnInit {
                     this.setTitleInBrowser();
                     this.loadTranslation(config);
                     this.loadEnvironmentName();
-                }
-                else {
-                    this.logger.info("No valid web-ui.json configuration file, stop application loading");
+                } else {
+                    this.logger.info('No valid web-ui.json configuration file, stop application loading');
                 }
             },
             error: catchError((err, caught) => {
@@ -228,18 +231,19 @@ export class ApplicationLoadingComponent implements OnInit {
 
     private chooseActivityArea(): void {
         this.activityAreaChoiceAfterLoginComponent.execute();
-        this.activityAreaChoiceAfterLoginComponent.isFinishedWithoutError().subscribe(() => this.openSubscription());
+        this.activityAreaChoiceAfterLoginComponent.isFinishedWithoutError().subscribe(() => this.finalizeApplicationLoading());
     }
 
-    private openSubscription(): void {
+    private finalizeApplicationLoading(): void {
         this.loadingInProgress = true;
-        this.cardService.initCardSubscription();
-        this.cardService.initSubscription.subscribe(() => {
+        this.opfabEventStreamService.initEventStream();
+        this.opfabEventStreamServer.getStreamInitDone().subscribe(() => {
             this.applicationLoadedDone.next(true);
             this.applicationLoadedDone.complete();
             this.loadingInProgress = false;
             this.applicationLoaded = true;
         });
+        this.lightCardsStoreService.initStore(); // this will effectively open the http stream connection
         this.reminderService.startService(this.userLogin);
         this.rRuleReminderService.startService(this.userLogin);
     }

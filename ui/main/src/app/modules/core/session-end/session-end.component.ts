@@ -1,4 +1,4 @@
-/* Copyright (c) 2022, RTE (http://www.rte-france.com)
+/* Copyright (c) 2022-2023, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -11,10 +11,10 @@ import {Component, OnInit, TemplateRef, ViewChild, ViewEncapsulation} from '@ang
 import {NgbModal, NgbModalRef} from '@ng-bootstrap/ng-bootstrap';
 import {Actions, ofType} from '@ngrx/effects';
 import {Action, Store} from '@ngrx/store';
-import {CardService} from '@ofServices/card.service';
 import {LogOption, OpfabLoggerService} from '@ofServices/logs/opfab-logger.service';
 import {SoundNotificationService} from '@ofServices/sound-notification.service';
 import {AuthenticationActionTypes, TryToLogOutAction} from '@ofStore/actions/authentication.actions';
+import {OpfabEventStreamService} from 'app/business/services/opfabEventStream.service';
 
 @Component({
     selector: 'of-session-end',
@@ -29,7 +29,7 @@ export class SessionEndComponent implements OnInit {
 
     constructor(
         private store: Store,
-        private cardService: CardService,
+        private opfabEventStreamService : OpfabEventStreamService,
         private soundNotificationService: SoundNotificationService,
         private actions$: Actions,
         private modalService: NgbModal,
@@ -45,7 +45,7 @@ export class SessionEndComponent implements OnInit {
         this.actions$.pipe(ofType<Action>(AuthenticationActionTypes.SessionExpired)).subscribe(() => {
             this.logger.info('Session expire ', LogOption.REMOTE);
             this.soundNotificationService.handleSessionEnd();
-            this.cardService.closeSubscription();
+            this.opfabEventStreamService.closeEventStream();
             this.modalRef = this.modalService.open(this.sessionEndPopupRef, {
                 centered: true,
                 backdrop: 'static',
@@ -56,7 +56,7 @@ export class SessionEndComponent implements OnInit {
     }
 
     private subscribeToSessionClosedByNewUser() {
-        this.cardService.getReceivedDisconnectUser().subscribe((isDisconnected) => {
+        this.opfabEventStreamService.getReceivedDisconnectUser().subscribe((isDisconnected) => {
             this.isDisconnectedByNewUser = isDisconnected;
 
             if (isDisconnected) {

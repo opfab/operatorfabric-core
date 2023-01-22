@@ -27,6 +27,7 @@ import {ConfigServer} from 'app/business/server/config.server';
 import {ConfigServerMock} from '@tests/mocks/configServer.mock';
 import {ProcessServer} from 'app/business/server/process.server';
 import {ProcessServerMock} from '@tests/mocks/processServer.mock';
+import {OpfabEventStreamService} from 'app/business/services/opfabEventStream.service';
 
 describe('AcknowledgeService testing ', () => {
     let acknowledgeService: AcknowledgeService;
@@ -44,7 +45,8 @@ describe('AcknowledgeService testing ', () => {
                 {provide: ConfigServer, useClass: ConfigServerMock},
                 {provide: ProcessServer, useClass: ProcessServerMock},
                 LightCardsStoreService,
-                {provide: EntitiesService, useClass: EntitiesServiceMock}
+                {provide: EntitiesService, useClass: EntitiesServiceMock},
+                {provide : OpfabEventStreamService, useValue: null}
             ],
             imports: [
                 StoreModule.forRoot(appReducer),

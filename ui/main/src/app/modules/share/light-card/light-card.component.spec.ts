@@ -28,6 +28,7 @@ import {ConfigServerMock} from '@tests/mocks/configServer.mock';
 import {ConfigServer} from 'app/business/server/config.server';
 import {ProcessServerMock} from '@tests/mocks/processServer.mock';
 import {ProcessServer} from 'app/business/server/process.server';
+import {OpfabEventStreamServer} from 'app/business/server/opfabEventStream.server';
 
 describe('LightCardComponent', () => {
     let lightCardDetailsComp: LightCardComponent;
@@ -67,7 +68,8 @@ describe('LightCardComponent', () => {
                 DateTimeFormatterService,
                 I18nService,
                 {provide: ConfigServer, useClass: ConfigServerMock},
-                {provide: ProcessServer, useClass: ProcessServerMock}
+                {provide: ProcessServer, useClass: ProcessServerMock},
+                {provide: OpfabEventStreamServer, use:null}
             ]
         }).compileComponents();
         store = TestBed.inject(Store);

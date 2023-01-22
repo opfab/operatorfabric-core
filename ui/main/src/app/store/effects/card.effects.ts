@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2022, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2023, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -22,10 +22,11 @@ import {
     LoadCardSuccessAction
 } from '@ofActions/card.actions';
 import {ClearLightCardSelectionAction, LightCardActionTypes} from '@ofStore/actions/light-card.actions';
+import {LightCardsStoreService} from '@ofServices/lightcards/lightcards-store.service';
 
 @Injectable()
 export class CardEffects {
-    constructor(private store: Store<AppState>, private actions$: Actions, private service: CardService) {}
+    constructor(private store: Store<AppState>, private actions$: Actions, private service: CardService,private lightCardsStoreService: LightCardsStoreService) {}
 
     loadById: Observable<Action> = createEffect(() =>
         this.actions$.pipe(
@@ -43,7 +44,7 @@ export class CardEffects {
         this.actions$.pipe(
             ofType<ClearLightCardSelectionAction>(LightCardActionTypes.ClearLightCardSelection),
             map(() => {
-                this.service.setSelectedCard(null);
+                this.lightCardsStoreService.setSelectedCard(null);
                 return new ClearCardAction();
             })
         )

@@ -47,6 +47,8 @@ import {ConfigServer} from './business/server/config.server';
 import {AngularConfigServer} from './server/angularConfig.server';
 import {ProcessServer} from './business/server/process.server';
 import {AngularProcessServer} from './server/angularProcess.server';
+import {AngularOpfabEventStreamServer} from './server/angularOpfabEventStream.server';
+import {OpfabEventStreamServer} from './business/server/opfabEventStream.server';
 
 @NgModule({
     imports: [
@@ -100,7 +102,8 @@ import {AngularProcessServer} from './server/angularProcess.server';
             multi: true
         },
         {provide: ConfigServer, useClass: AngularConfigServer},
-        {provide: ProcessServer, useClass: AngularProcessServer}
+        {provide: ProcessServer, useClass: AngularProcessServer},
+        {provide: OpfabEventStreamServer, useClass: AngularOpfabEventStreamServer}
     ],
     bootstrap: [AppComponent]
 })
