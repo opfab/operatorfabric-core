@@ -29,7 +29,6 @@ describe ('Core menu configuration tests',function () {
     // The menus that are accessible via the dropdown menu under the user icon on the right are listed separately as
     // it is necessary to open the menu first before checking their presence
     const userMenuItems = [
-        {menu_id: "admin", selector: "#opfab-navbar-right-menu-admin"},
         {menu_id: "settings", selector: "#opfab-navbar-right-menu-settings"},
         {menu_id: "feedconfiguration", selector: "#opfab-navbar-right-menu-feedconfiguration"},
         {menu_id: "realtimeusers", selector: "#opfab-navbar-right-menu-realtimeusers"},
@@ -38,7 +37,14 @@ describe ('Core menu configuration tests',function () {
         {menu_id: "logout", selector: "#opfab-navbar-right-menu-logout"}
     ];
 
-    const allMenuItems = navbarMenuItems.concat(userMenuItems);
+    const adminMenuItems = [
+        {menu_id: "admin", selector: "#opfab-navbar-right-menu-admin"},
+        {menu_id: "externaldevicesconfiguration", selector: "#opfab-navbar-right-menu-externaldevicesconfiguration"},
+        {menu_id: "useractionlogs", selector: "#opfab-navbar-right-menu-useractionlogs"},
+
+    ];
+
+    const allMenuItems = navbarMenuItems.concat(userMenuItems, adminMenuItems);
 
     const users = ['admin','operator1_fr'];
 
@@ -118,6 +124,9 @@ describe ('Core menu configuration tests',function () {
                 userMenuItems.forEach((item) => {
                     cy.get(item.selector).should('exist'); // Check that the corresponding element is not present
                 })
+                adminMenuItems.forEach((item) => {
+                    cy.get(item.selector).should('exist'); // Check that the corresponding element is present
+                })
 
         })
 
@@ -132,7 +141,11 @@ describe ('Core menu configuration tests',function () {
 
                 cy.get('#opfab-navbarContent').find('#opfab-navbar-drop-user-menu').click();
                 userMenuItems.forEach((item) => {
-                    cy.get(item.selector).should('exist'); // Check that the corresponding element is not present
+                    cy.get(item.selector).should('exist'); // Check that the corresponding element is  present
+                })
+                // Admin menu are not visible because ADMIN permission is needed, even if showOnlyForGroups is not set
+                adminMenuItems.forEach((item) => {
+                    cy.get(item.selector).should('not.exist'); // Check that the corresponding element is not present
                 })
 
         })
@@ -153,7 +166,10 @@ describe ('Core menu configuration tests',function () {
 
             cy.get('#opfab-navbarContent').find('#opfab-navbar-drop-user-menu').click();
             userMenuItems.forEach((item) => {
-                cy.get(item.selector).should('exist'); // Check that the corresponding element is not present
+                cy.get(item.selector).should('exist'); // Check that the corresponding element is present
+            })
+            adminMenuItems.forEach((item) => {
+                cy.get(item.selector).should('exist'); // Check that the corresponding element is present
             })
 
         })
@@ -168,6 +184,9 @@ describe ('Core menu configuration tests',function () {
 
             cy.get('#opfab-navbarContent').find('#opfab-navbar-drop-user-menu').click();
             userMenuItems.forEach((item) => {
+                cy.get(item.selector).should('not.exist'); // Check that the corresponding element is not present
+            })
+            adminMenuItems.forEach((item) => {
                 cy.get(item.selector).should('not.exist'); // Check that the corresponding element is not present
             })
 
