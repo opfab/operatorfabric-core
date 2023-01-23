@@ -1,4 +1,4 @@
-<!-- Copyright (c) 2022, RTE (http://www.rte-france.com)                   -->
+<!-- Copyright (c) 2022-2023, RTE (http://www.rte-france.com)                   -->
 <!-- See AUTHORS.txt                                                       -->
 <!-- This Source Code Form is subject to the terms of the Mozilla Public   -->
 <!-- License, v. 2.0. If a copy of the MPL was not distributed with this   -->
@@ -64,7 +64,7 @@
             <td style="width:15%">
                 <div class="opfab-input">
                     <label> TIME </label>
-                    <input type="time" id="time" style="text-align:center" value="{{card.data.byhour}}:{{card.data.byminute}}">
+                    <input type="time" id="time" style="text-align:center" value="{{padStart card.data.byhour 2 '0'}}:{{padStart card.data.byminute 2 '0'}}">
                 </div>
             </td>
 

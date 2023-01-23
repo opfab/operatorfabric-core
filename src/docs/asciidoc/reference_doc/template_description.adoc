@@ -1,4 +1,4 @@
-// Copyright (c) 2018-2022 RTE (http://www.rte-france.com)
+// Copyright (c) 2018-2023 RTE (http://www.rte-france.com)
 // See AUTHORS.txt
 // This document is subject to the terms of the Creative Commons Attribution 4.0 International license.
 // If a copy of the license was not distributed with this
@@ -266,13 +266,22 @@ for a local set to `FR_fr`
 === numberFormat
 
 formats a number parameter using
-https://developer.mozilla.org/fr/docs/Web/JavaScript/Reference/Objets_globaux/Nu
-mberFormat[Intl.NumberFormat].
+https://developer.mozilla.org/fr/docs/Web/JavaScript/Reference/Objets_globaux/NumberFormat[Intl.NumberFormat].
 The locale used is the current user selected one, and options are passed as hash
 parameters (https://handlebarsjs.com/[see Handlebars doc Literals section]).
 
 ....
 {{numberFormat card.data.price style="currency" currency="EUR"}}
+....
+
+[[padStart]]
+=== padStart
+
+pads the start of a string with a specific string to a certain length using
+https://developer.mozilla.org/fr/docs/Web/JavaScript/Reference/Global_Objects/String/padStart[String.prototype.padStart()].
+
+....
+{{padStart card.data.byhour 2 '0'}}
 ....
 
 [[preservespace]]
