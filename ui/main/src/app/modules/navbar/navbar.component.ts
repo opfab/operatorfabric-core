@@ -14,14 +14,14 @@ import {TryToLogOutAction} from '@ofActions/authentication.actions';
 import {AppState} from '@ofStore/index';
 import {selectCurrentUrl} from '@ofSelectors/router.selectors';
 import {BehaviorSubject, Observable} from 'rxjs';
-import {CoreMenuConfig, Menu, MenuEntry} from '@ofModel/menu.model';
+import {Menu} from '@ofModel/menu.model';
 import {GlobalStyleService} from '@ofServices/global-style.service';
 import {Route} from '@angular/router';
 import {ConfigService} from 'app/business/services/config.service';
 import {UserPreferencesService} from '@ofServices/user-preference.service';
-import {UserService} from '@ofServices/user.service';
 import {NgbModal, NgbModalOptions, NgbModalRef} from '@ng-bootstrap/ng-bootstrap';
 import {AppService} from '@ofServices/app.service';
+import {MenuService} from 'app/business/services/menu.service';
 
 @Component({
     selector: 'of-navbar',
@@ -68,7 +68,7 @@ export class NavbarComponent implements OnInit {
         private store: Store<AppState>,
         private globalStyleService: GlobalStyleService,
         private configService: ConfigService,
-        private userService: UserService,
+        private menuService: MenuService,
         private modalService: NgbModal,
         private appService: AppService,
         private userPreferences: UserPreferencesService
@@ -82,7 +82,7 @@ export class NavbarComponent implements OnInit {
                 this.currentPath = url.split('/');
             }
         });
-        this.businessconfigMenus = this.getCurrentUserCustomMenus(this.configService.getMenus());
+        this.businessconfigMenus = this.menuService.getCurrentUserCustomMenus(this.configService.getMenus());
 
         const logo = this.configService.getConfigValue('logo.base64');
         if (!!logo) {
@@ -101,7 +101,7 @@ export class NavbarComponent implements OnInit {
         const logo_limitSize = this.configService.getConfigValue('logo.limitSize');
         this.limitSize = logo_limitSize === true;
 
-        const visibleCoreMenus = this.computeVisibleCoreMenusForCurrentUser();
+        const visibleCoreMenus = this.menuService.computeVisibleCoreMenusForCurrentUser();
         const settings = this.configService.getConfigValue('settings');
 
         this.navigationRoutes = navigationRoutes.filter((route) => visibleCoreMenus.includes(route.path));
@@ -132,42 +132,10 @@ export class NavbarComponent implements OnInit {
         }
     }
 
-    private getCurrentUserCustomMenus(menus: Menu[]): Menu[] {
-        const filteredMenus = [];
-        menus.forEach((m) => {
-            const entries = m.entries.filter((e) => this.isMenuVisibleForUserGroups(e));
-            if (entries.length > 0) {
-                filteredMenus.push(new Menu(m.id, m.label, entries));
-            }
-        });
-        return filteredMenus;
-    }
-
-    private computeVisibleCoreMenusForCurrentUser(): string[] {
-        const coreMenuConfiguration = this.configService.getCoreMenuConfiguration();
-
-        if (coreMenuConfiguration) {
-            return coreMenuConfiguration
-                .filter((coreMenuConfig: CoreMenuConfig) => {
-                    return coreMenuConfig.visible && this.isMenuVisibleForUserGroups(coreMenuConfig);
-                })
-                .map((coreMenuConfig: CoreMenuConfig) => coreMenuConfig.id);
-        } else {
-            console.log('No coreMenusConfiguration property set in ui-menu.json');
-            return [];
-        }
-    }
-
-    private isMenuVisibleForUserGroups(menuConfig: CoreMenuConfig | MenuEntry): boolean {
-        return (!menuConfig.showOnlyForGroups || menuConfig.showOnlyForGroups.length === 0) ||
-            (menuConfig.showOnlyForGroups && this.userService.isCurrentUserInAnyGroup(menuConfig.showOnlyForGroups));
-        }
-
     logOut() {
         this.logoutInProgress = true;
         this.store.dispatch(new TryToLogOutAction());
     }
-
 
     toggleMenu(index: number) {
         this.expandedMenu[index] = !this.expandedMenu[index];
