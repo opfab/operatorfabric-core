@@ -45,6 +45,7 @@ export class HandlebarsService {
         HandlebarsService.registerMergeArrays();
         HandlebarsService.registerConditionalAttribute();
         HandlebarsService.registerReplace();
+        HandlebarsService.registerPadStart();
         HandlebarsService.registerObjectContainsKey();
         this.configService.getConfigValueAsObservable('settings.locale').subscribe((locale) => this.changeLocale(locale));
     }
@@ -235,6 +236,12 @@ export class HandlebarsService {
     private static registerReplace() {
         Handlebars.registerHelper('replace', function (find, replace, string) {
             return string.replaceAll(find, replace);
+        });
+    }
+
+    private static registerPadStart() {
+        Handlebars.registerHelper('padStart', function (stringToPad, targetLength, characterForPadding) {
+            return String(stringToPad).padStart(targetLength, characterForPadding);
         });
     }
 

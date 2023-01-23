@@ -384,5 +384,17 @@ describe('Handlebars Services', () => {
                 done
             );
         });
+
+        it('compile padStart for number which does not have the target length', (done) => {
+            testTemplate('{{padStart "7" 2 "0"}}', '07', done);
+        });
+
+        it('compile padStart for number which already has the target length', (done) => {
+            testTemplate('{{padStart "56" 2 "0"}}', '56', done);
+        });
+
+        it('compile padStart for string which does not have the target length', (done) => {
+            testTemplate('{{padStart "stringForTest" 15 " "}}', '  stringForTest', done);
+        });
     });
 });
