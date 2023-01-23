@@ -112,7 +112,7 @@ export class UserService extends CrudService {
     }
 
     public isCurrentUserAdmin(): boolean {
-        return this.isCurrentUserInAnyGroup(['ADMIN']) || this.hasCurrentUserAnyPermission([PermissionEnum.ADMIN]);
+        return this.hasCurrentUserAnyPermission([PermissionEnum.ADMIN]);
     }
 
     public isCurrentUserInAnyGroup(groups: string[]): boolean {

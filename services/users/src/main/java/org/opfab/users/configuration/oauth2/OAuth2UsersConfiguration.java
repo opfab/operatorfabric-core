@@ -134,8 +134,15 @@ public class OAuth2UsersConfiguration {
                 Set<PermissionEnum> permissionsData = new HashSet<>();
                 user.getGroups().forEach(groupId -> {
                     Optional<Group> group = groupRepository.findById(groupId);
-                    group.ifPresent(g -> permissionsData.addAll(g.getPermissions()));
+                    group.ifPresent(g -> {
+
+                        // For compatibility with old version , being in admin group gives the admin permission
+                        // to be removed in a future release
+                        if (g.getId().equals("ADMIN")) permissionsData.add(PermissionEnum.ADMIN);
+                        permissionsData.addAll(g.getPermissions());
+                    });
                 });
+                
 
                 if (permissionsData.contains(PermissionEnum.ADMIN))
                     return AuthorityUtils.createAuthorityList("ROLE_ADMIN");

@@ -37,6 +37,9 @@ class CurrentUserWithPerimetersServiceShould {
         public static final String GROUP_2 = "GROUP2";
 
         public static final String GROUP_3 = "GROUP3";
+        public static final String GROUP_ADMIN = "ADMIN";
+
+
         private static EntityRepositoryStub entityRepositoryStub = new EntityRepositoryStub();
         private static UsersServiceStub usersServiceStub;
         private static UserSettingsRepositoryStub userSettingsRepositoryStub = new UserSettingsRepositoryStub();
@@ -101,6 +104,11 @@ class CurrentUserWithPerimetersServiceShould {
                 GroupData group3 = new GroupData();
                 group3.setId(GROUP_3);
                 groupRepositoryStub.save(group3);
+
+
+                GroupData groupAdmin = new GroupData();
+                groupAdmin.setId(GROUP_ADMIN);
+                groupRepositoryStub.save(groupAdmin);
         }
 
         private static void initUserSettings() {
@@ -221,5 +229,22 @@ class CurrentUserWithPerimetersServiceShould {
                 CurrentUserWithPerimeters currentUser = currentUserWithPerimetersService
                         .fetchCurrentUserWithPerimeters(user);
                 assertThat(currentUser.getPermissions()).containsExactlyInAnyOrder(PermissionEnum.READONLY, PermissionEnum.VIEW_ALL_ARCHIVED_CARDS);
+        }
+
+        // For compatibility with old version , being in admin group gives the admin permission
+        // to be removed in a future release
+        @Test
+        void GIVEN_User_With_Group_Admin_WHEN_Fetching_CurrentUserWithPerimeters_THEN_Permission_Admin_Is_Set() {
+
+                                       
+                UserData user = UserData.builder()
+                        .login("test")
+                        .group(GROUP_ADMIN)
+                        .build();
+                CurrentUserWithPerimetersService currentUserWithPerimetersService = new CurrentUserWithPerimetersService(
+                        usersServiceStub, userSettingsService, entityRepositoryStub);
+                CurrentUserWithPerimeters currentUser = currentUserWithPerimetersService
+                        .fetchCurrentUserWithPerimeters(user);
+                assertThat(currentUser.getPermissions()).containsExactlyInAnyOrder(PermissionEnum.ADMIN);
         }
 }
