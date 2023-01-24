@@ -62,7 +62,7 @@ export class MapComponent implements OnInit, OnDestroy, AfterViewChecked {
             const enableGraph = this.configService.getConfigValue('feed.geomap.enableGraph', false);
             this.drawMap(enableGraph);
             this.lightCardsFeedFilterService
-                .getFilteredAndSortedLightCards()
+                .getFilteredAndSearchedLightCards()
                 .pipe(takeUntil(this.unsubscribe$))
                 .subscribe((cards) => {
                     setTimeout(() => this.updateMap(cards), 500);
