@@ -217,6 +217,7 @@ export class ApplicationLoadingComponent implements OnInit {
         Utilities.subscribeAndWaitForAllObservablesToEmitAnEvent(requestsToLaunch$).subscribe({
             next: () => {
                 this.loadingInProgress = false;
+                this.globalStyleService.loadUserStyle();
                 this.chooseActivityArea();
             },
             error: catchError((err, caught) => {

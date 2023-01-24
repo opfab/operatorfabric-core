@@ -13,15 +13,14 @@ import {Store} from '@ngrx/store';
 import {TryToLogOutAction} from '@ofActions/authentication.actions';
 import {AppState} from '@ofStore/index';
 import {selectCurrentUrl} from '@ofSelectors/router.selectors';
-import {BehaviorSubject, Observable} from 'rxjs';
 import {Menu} from '@ofModel/menu.model';
 import {GlobalStyleService} from '@ofServices/global-style.service';
 import {Route} from '@angular/router';
 import {ConfigService} from 'app/business/services/config.service';
-import {UserPreferencesService} from '@ofServices/user-preference.service';
 import {NgbModal, NgbModalOptions, NgbModalRef} from '@ng-bootstrap/ng-bootstrap';
 import {AppService} from '@ofServices/app.service';
 import {MenuService} from 'app/business/services/menu.service';
+import {Observable} from 'rxjs';
 
 @Component({
     selector: 'of-navbar',
@@ -29,7 +28,6 @@ import {MenuService} from 'app/business/services/menu.service';
     styleUrls: ['./navbar.component.scss']
 })
 export class NavbarComponent implements OnInit {
-    private static nightMode: BehaviorSubject<boolean>;
 
     navbarCollapsed = true;
     navigationRoutes: Route[];
@@ -64,14 +62,15 @@ export class NavbarComponent implements OnInit {
     nightDayMode = false;
     logoutInProgress = false;
 
+    nightMode : Observable<boolean>;
+
     constructor(
         private store: Store<AppState>,
         private globalStyleService: GlobalStyleService,
         private configService: ConfigService,
         private menuService: MenuService,
         private modalService: NgbModal,
-        private appService: AppService,
-        private userPreferences: UserPreferencesService
+        private appService: AppService
     ) {
         this.currentPath = ['']; // Initializing currentPath to avoid 'undefined' errors when it is used to determine 'active' look in template
     }
@@ -102,7 +101,6 @@ export class NavbarComponent implements OnInit {
         this.limitSize = logo_limitSize === true;
 
         const visibleCoreMenus = this.menuService.computeVisibleCoreMenusForCurrentUser();
-        const settings = this.configService.getConfigValue('settings');
 
         this.navigationRoutes = navigationRoutes.filter((route) => visibleCoreMenus.includes(route.path));
         this.displayAdmin = visibleCoreMenus.includes('admin');
@@ -123,13 +121,7 @@ export class NavbarComponent implements OnInit {
         this.environmentColor = this.configService.getConfigValue('environmentColor', 'blue');
         if (!!this.environmentName) this.displayEnvironmentName = true;
 
-        if (!this.nightDayMode) {
-            if (settings && settings.styleWhenNightDayModeDesactivated) {
-                this.globalStyleService.setStyle(settings.styleWhenNightDayModeDesactivated);
-            }
-        } else {
-            this.loadNightModeFromUserPreferences();
-        }
+        this.nightMode = this.globalStyleService.getNightMode();
     }
 
     logOut() {
@@ -144,31 +136,12 @@ export class NavbarComponent implements OnInit {
         }
     }
 
-    private loadNightModeFromUserPreferences() {
-        NavbarComponent.nightMode = new BehaviorSubject<boolean>(true);
-        const nightMode = this.userPreferences.getPreference('opfab.nightMode');
-        if (nightMode !== null && nightMode === 'false') {
-            NavbarComponent.nightMode.next(false);
-            this.globalStyleService.setStyle('DAY');
-        } else {
-            this.globalStyleService.setStyle('NIGHT');
-        }
-    }
-
     switchToNightMode() {
-        this.globalStyleService.setStyle('NIGHT');
-        NavbarComponent.nightMode.next(true);
-        this.userPreferences.setPreference('opfab.nightMode', 'true');
+        this.globalStyleService.switchToNightMode()
     }
 
     switchToDayMode() {
-        this.globalStyleService.setStyle('DAY');
-        NavbarComponent.nightMode.next(false);
-        this.userPreferences.setPreference('opfab.nightMode', 'false');
-    }
-
-    getNightMode(): Observable<boolean> {
-        return NavbarComponent.nightMode.asObservable();
+        this.globalStyleService.switchToDayMode()
     }
 
     openCardCreation() {
