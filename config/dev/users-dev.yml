@@ -80,7 +80,7 @@ operatorfabric.users.default:
       name: Supervisor
       description: Supervisor Group
       realtime: true
-      permissions: ["READONLY"]
+      permissions: ["READONLY","ADMIN_BUSINESS_PROCESS"]
     - id: Manager
       name: Manager
       description: Manager Group

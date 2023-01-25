@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2022, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2023, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -40,7 +40,7 @@ public class WebSecurityConfiguration {
     public static final String THIRDS_PATH = "/businessconfig/**";
 
     public static final String AUTH_AND_IP_ALLOWED = "isAuthenticated() and @webSecurityChecks.checkUserIpAddress(authentication)";
-    public static final String ADMIN_AND_IP_ALLOWED = "hasRole('ADMIN') and @webSecurityChecks.checkUserIpAddress(authentication)";
+    public static final String ADMIN_AND_IP_ALLOWED = "(hasRole('ADMIN') or hasRole('ADMIN_BUSINESS_PROCESS')) and @webSecurityChecks.checkUserIpAddress(authentication)";
 
     @Autowired
     WebSecurityChecks webSecurityChecks;

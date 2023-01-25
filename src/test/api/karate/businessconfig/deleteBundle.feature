@@ -1,12 +1,12 @@
 Feature: deleteBundle
 
   Background:
-   #Getting token for admin and operator1_fr user calling getToken.feature
-   #Using callonce to make the call just once at the beginning
     * def signIn = callonce read('../common/getToken.feature') { username: 'admin'}
     * def authToken = signIn.authToken   
-   #The "." in the middle of the following file path is just a trick to force 
-   #karate to make a second and final call to getToken.feature
+
+    * def signInAsBusinessAdmin = callonce read('../common/getToken.feature') { username: 'operator1_crisisRoom'}
+    * def authTokenAsBusinessAdmin = signInAsBusinessAdmin.authToken
+
     * def signInAsTSO = callonce read('../common/getToken.feature') { username: 'operator1_fr'}
     * def authTokenAsTSO = signInAsTSO.authToken
 
@@ -54,4 +54,25 @@ Feature: deleteBundle
     When method DELETE
     Then status 404
 
+  Scenario: Push a bundle as business process admin
+    # Push bundle
+    Given url opfabUrl + '/businessconfig/processes'
+    And header Authorization = 'Bearer ' + authTokenAsBusinessAdmin
+    And multipart file file = {read:'resources/bundle_api_test.tar.gz', contentType: 'application/gzip'}
+    When method post
+    Then status 201
 
+  Scenario: Delete a Businessconfig bundle as business process admin
+    # Delete bundle
+    Given url opfabUrl + '/businessconfig/processes/api_test'
+    And header Authorization = 'Bearer ' + authTokenAsBusinessAdmin
+    When method DELETE
+    Then status 204
+    And assert response.length == 0
+
+  Scenario: check bundle doesn't exist anymore
+    # Check bundle
+    Given url opfabUrl + '/businessconfig/processes/api_test'
+    And header Authorization = 'Bearer ' + authTokenAsBusinessAdmin
+    When method GET
+    Then status 404

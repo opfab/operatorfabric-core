@@ -5,11 +5,15 @@ Feature: Bundle
     * def signIn = callonce read('../common/getToken.feature') { username: 'admin'}
     * def authToken = signIn.authToken
 
+    # Get business process admin token
+    * def signInAsBusinessAdmin = callonce read('../common/getToken.feature') { username: 'operator1_crisisRoom'}
+    * def authTokenAsBusinessAdmin = signInAsBusinessAdmin.authToken
+
     # Get TSO-operator
     * def signInAsTSO = callonce read('../common/getToken.feature') { username: 'operator1_fr'}
     * def authTokenAsTSO = signInAsTSO.authToken
 
-  Scenario: Post Bundle
+  Scenario: Post Bundle as ADMIN
 
     # Push bundle
     Given url opfabUrl + '/businessconfig/processes'
@@ -24,6 +28,15 @@ Feature: Bundle
     And multipart file file = {read:'resources/bundle_api_test.tar.gz', contentType: 'application/gzip'}
     When method post
     Then status 401
+
+  Scenario: Post Bundle as BUSINESS ADMIN
+
+    # Push bundle
+    Given url opfabUrl + '/businessconfig/processes'
+    And header Authorization = 'Bearer ' + authTokenAsBusinessAdmin
+    And multipart file file = {read:'resources/bundle_api_test.tar.gz', contentType: 'application/gzip'}
+    When method post
+    Then status 201
 
 
   Scenario: Post Bundle without admin role
