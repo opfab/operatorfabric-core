@@ -156,7 +156,7 @@
 <br/>
 <div>
 
-    <table>
+    <table style="width:80%">
         <tr>
             <td style="width:4%">
                 AT :
@@ -168,10 +168,22 @@
                 </div>
             </td>
 
-            <td style="width:6%">
-    
+            <td style="width:2%">
+
+            <td style="width:7%">
+                OR Every :
             </td>
-            <td style="width:32%">
+            <td style="width:7%">
+                <div class="opfab-input">
+                    <label> HOURS </label>
+                    <input size="3" maxlength="3" type="text" id="intervalForHours" value="{{#if card.data.interval}}{{card.data.interval}}{{else}}2{{/if}}">
+                </div>
+            </td>
+
+            <td style="width:6%">
+
+            </td>
+            <td style="width:20%">
                 <div class="opfab-input">
                     <label> TASK DURATION (MINUTES) </label>
                     <input size="3" maxlength="3" type="text" id="durationInMinutes" value="{{#if card.data.durationInMinutes}}{{card.data.durationInMinutes}}{{else}}15{{/if}}">
@@ -180,7 +192,7 @@
             <td style="width:6%">
     
             </td>
-            <td style="width:32%">
+            <td style="width:20%">
                 <div class="opfab-input">
                     <label> MINUTES TO REMIND BEFORE TASK</label>
                     <input size="2" maxlength="2" type="text" id="minutesForReminder" value="{{#if card.data.minutesForReminder}}{{card.data.minutesForReminder}}{{else}}5{{/if}}">
