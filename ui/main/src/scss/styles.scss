@@ -1,5 +1,5 @@
 /* Copyright (c) 2020, RTEi (http://www.rte-international.com)
- * Copyright (c) 2021-2022, RTE (http://www.rte-france.com)
+ * Copyright (c) 2021-2023, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -9,16 +9,17 @@
  */
 
 /* You can add global styles to this file, and also import other style files */
+@use "../../node_modules/ag-grid-community/styles" as ag;
 
 @import 'variables';
 
 /* import bootstrap*/
 @import '../../node_modules/bootstrap/scss/bootstrap.scss';
 
-@import '../../node_modules/ag-grid-community/dist/styles/ag-grid.css';
-@import '../../node_modules/ag-grid-community/dist/styles/ag-theme-alpine.css';
-@import '../../node_modules/ag-grid-community/dist/styles/ag-theme-alpine/sass/ag-theme-alpine-mixin.scss';
+
 @import '../../node_modules/ngx-chips/core/styles/core/_core.scss';
+
+
 
 @each $color, $value in $theme-colors {
     .brand-bg-#{$color} {
@@ -425,23 +426,29 @@ body {
 
 // OpFab customization of the alpine theme for ag-grid
 // It allows the colors to match the ones from the OpFab global style and to respond to the night/day mode
-.opfab-ag-grid-theme {
-    @include ag-theme-alpine(
-        (
-            background-color: var(--opfab-bgcolor),
-            header-background-color: var(--opfab-bgcolor-darker),
-            odd-row-background-color: var(--opfab-bgcolor-darker),
-            modal-overlay-background-color: var(--opfab-bgcolor),
-            data-color: var(--opfab-text-color),
-            header-foreground-color: var(--opfab-text-color),
-            secondary-foreground-color: var(--opfab-text-color),
-            input-disabled-background-color: var(--opfab-button-disable-bgcolor),
-            input-disabled-border-color: var(--opfab-button-disable-bgcolor),
-            header-column-resize-handle-color: var(--opfab-table-border-color),
-            borders: false,
-            header-height: 70
-        )
-    );
+
+
+    @include ag.grid-styles((
+  // ^^^ Include ag.grid-styles which it is no longer nested  in .ag-theme-{name} {}
+    theme: opfab,
+    extend-theme: alpine,
+    // ^^^ Add the theme name to the mixin
+    background-color: var(--opfab-bgcolor),
+    header-background-color: var(--opfab-bgcolor-darker),
+    odd-row-background-color: var(--opfab-bgcolor-darker),
+    modal-overlay-background-color: var(--opfab-bgcolor),
+    data-color: var(--opfab-text-color),
+    header-foreground-color: var(--opfab-text-color),
+    secondary-foreground-color: var(--opfab-text-color),
+    input-disabled-background-color: var(--opfab-button-disable-bgcolor),
+    input-disabled-border-color: var(--opfab-button-disable-bgcolor),
+    header-column-resize-handle-color: var(--opfab-table-border-color)
+    ));
+
+    .ag-theme-opfab {
+
+    --ag-borders : none;
+    --ag-header-height: 70px;
 
     // This is done to reduce min-height (150px by default) in order to remove empty space when there is 1 line or 2
     // The height of a line is 42 (40 + 1*2 padding)
@@ -558,9 +565,6 @@ body {
     cursor: pointer;
 }
 
-.ag-popup {
-    @extend .opfab-ag-grid-theme;
-}
 
 // OpFab customization of the default theme for ngx-chips component
 // It allows the colors to match the ones from the OpFab global style and to respond to the night/day mode
