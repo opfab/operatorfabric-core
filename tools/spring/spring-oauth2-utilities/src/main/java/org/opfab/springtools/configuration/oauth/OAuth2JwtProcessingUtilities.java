@@ -15,7 +15,7 @@ import org.opfab.users.model.PermissionEnum;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.AuthorityUtils;
 
-import java.util.Collections;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -30,10 +30,15 @@ public class OAuth2JwtProcessingUtilities {
      * @return list of authority
      */
     public static List<GrantedAuthority> computeAuthorities(List<PermissionEnum> permissions) {
-        if (permissions != null && permissions.contains(PermissionEnum.ADMIN))
-            return AuthorityUtils.createAuthorityList("ROLE_ADMIN");
-        else
-            return Collections.emptyList();
+   
+        List<GrantedAuthority> authorities = new ArrayList<>();
+        if (permissions != null) {
+            if (permissions.contains(PermissionEnum.ADMIN))
+                authorities.addAll(AuthorityUtils.createAuthorityList("ROLE_ADMIN"));
+            if (permissions.contains(PermissionEnum.ADMIN_BUSINESS_PROCESS))
+                authorities.addAll(AuthorityUtils.createAuthorityList("ROLE_ADMIN_BUSINESS_PROCESS"));
+        }
 
+        return authorities;
     }
 }
