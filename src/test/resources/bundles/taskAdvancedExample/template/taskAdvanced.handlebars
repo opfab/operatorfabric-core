@@ -46,21 +46,27 @@ At {{padStart card.data.byhour 2 '0'}}:{{padStart card.data.byminute 2 '0'}}
                   document.getElementById("byweekday").innerHTML = textForByweekday;
 
                   const bymonth = "{{card.data.bymonth}}";
-                  //const monthsArray = bymonth.split(',');
                   let textForBymonth = "";
-                  if (bymonth.includes("1"))  textForBymonth += " January";
-                  if (bymonth.includes("2"))  textForBymonth += " February";
-                  if (bymonth.includes("3"))  textForBymonth += " March";
-                  if (bymonth.includes("4"))  textForBymonth += " April ";
-                  if (bymonth.includes("5"))  textForBymonth += " May";
-                  if (bymonth.includes("6"))  textForBymonth += " June";
-                  if (bymonth.includes("7"))  textForBymonth += " July";
-                  if (bymonth.includes("8"))  textForBymonth += " August";
-                  if (bymonth.includes("9"))  textForBymonth += " September";
-                  if (bymonth.includes("10")) textForBymonth += " October";
-                  if (bymonth.includes("11")) textForBymonth += " November";
-                  if (bymonth.includes("12")) textForBymonth += " December";
-                  if (textForBymonth !== "")  textForBymonth = "in" + textForBymonth;
+
+                  if (!!bymonth) {
+                      const bymonthArray = bymonth.split(',');
+
+                      if (bymonthArray.includes("1"))  textForBymonth += " January";
+                      if (bymonthArray.includes("2"))  textForBymonth += " February";
+                      if (bymonthArray.includes("3"))  textForBymonth += " March";
+                      if (bymonthArray.includes("4"))  textForBymonth += " April ";
+                      if (bymonthArray.includes("5"))  textForBymonth += " May";
+                      if (bymonthArray.includes("6"))  textForBymonth += " June";
+                      if (bymonthArray.includes("7"))  textForBymonth += " July";
+                      if (bymonthArray.includes("8"))  textForBymonth += " August";
+                      if (bymonthArray.includes("9"))  textForBymonth += " September";
+                      if (bymonthArray.includes("10")) textForBymonth += " October";
+                      if (bymonthArray.includes("11")) textForBymonth += " November";
+                      if (bymonthArray.includes("12")) textForBymonth += " December";
+                  }
+                  if (textForBymonth !== "") {
+                      textForBymonth = "in" + textForBymonth;
+                  }
                   document.getElementById("bymonth").innerHTML = textForBymonth;
             }
       }
