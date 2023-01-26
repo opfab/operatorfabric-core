@@ -118,7 +118,9 @@ export class AngularOpfabEventStreamServer extends AngularServer implements Opfa
 
     public closeStream() {
         this.httpClient.delete<any>(`${this.closeEventStreamUrl}`).subscribe();
-        this.eventSource.close();
+        if (this.eventSource && this.eventSource.readyState !== this.eventSource.CLOSED) {
+            this.eventSource.close();
+        }
     }
     public getEvents(): Observable<any> {
         return this.businessEvents.asObservable();
