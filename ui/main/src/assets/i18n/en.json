@@ -297,7 +297,8 @@
       "templateError": "Technical error : invalid template",
       "impossibleToSendCard": "Impossible to send card for technical reasons",
       "lttdBeforeStartDate": "Limit date for response must be after start date.",
-      "lttdAfterEndDate": "Limit date for response must be before end date."
+      "lttdAfterEndDate": "Limit date for response must be before end date.",
+      "expirationDateBeforeStartDate": "Expiration date must be after start date."
     },
     "filters": {
       "severity": "SEVERITY",
