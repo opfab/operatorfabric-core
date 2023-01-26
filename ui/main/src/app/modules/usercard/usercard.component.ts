@@ -631,7 +631,7 @@ export class UserCardComponent implements OnInit {
             return false;
         }
         if (!!expirationDate && expirationDate < startDate) {
-            this.displayMessage('shared.expirationDateBeforeStartDate', '', MessageLevel.ERROR);
+            this.displayMessage('userCard.error.expirationDateBeforeStartDate', '', MessageLevel.ERROR);
             return false;
         }
         return true;

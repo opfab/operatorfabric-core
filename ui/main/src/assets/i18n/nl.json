@@ -297,7 +297,8 @@
       "templateError": "Technische fout: ongeldige sjabloon",
       "impossibleToSendCard": "Om technische redenen is het onmogelijk om de kaart te verzenden",
       "lttdBeforeStartDate": "De beperkingsdatum voor reactie moet na de startdatum liggen.",
-      "lttdAfterEndDate": "De beperkingsdatum voor reactie moet vóór de einddatum liggen."
+      "lttdAfterEndDate": "De beperkingsdatum voor reactie moet vóór de einddatum liggen.",
+      "expirationDateBeforeStartDate": "De vervaldatum moet na de startdatum liggen."
     },
     "filters": {
       "severity": "ERNST",

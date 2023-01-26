@@ -297,7 +297,8 @@
       "templateError" : "Erreur technique : template non conforme",
       "impossibleToSendCard" : "Impossible d'envoyer la carte pour des raisons techniques",
       "lttdBeforeStartDate": "La date limite de réponse doit être postérieure à la date de début.",
-      "lttdAfterEndDate": "La date limite de réponse doit être antérieure à la date de fin."
+      "lttdAfterEndDate": "La date limite de réponse doit être antérieure à la date de fin.",
+      "expirationDateBeforeStartDate": "La date d'expiration doit être postérieure à la date de début."
     },
     "filters": {
       "severity": "SÉVÉRITÉ",
