@@ -7,17 +7,11 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {User} from '@ofModel/user.model';
 import {Action} from '@ngrx/store';
 
 export enum UserActionsTypes {
-    UserApplicationRegistered = '[User] User application registered',
     UserConfigChange = '[User] User config changed',
     UserConfigLoaded = '[User] User config loaded'
-}
-export class UserApplicationRegisteredAction implements Action {
-    readonly type = UserActionsTypes.UserApplicationRegistered;
-    constructor(public payload: {user: User}) {}
 }
 
 export class UserConfigChangeAction implements Action {
@@ -29,6 +23,5 @@ export class UserConfigLoadedAction implements Action {
 }
 
 export type UserActions =
-    | UserApplicationRegisteredAction
     | UserConfigChangeAction
     | UserConfigLoadedAction;
