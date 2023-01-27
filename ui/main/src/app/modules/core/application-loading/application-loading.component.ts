@@ -176,10 +176,18 @@ export class ApplicationLoadingComponent implements OnInit {
         this.store.select(selectIdentifier).subscribe((identifier) => {
             if (identifier) {
                 this.logger.info(`User ${identifier} logged`);
+                this.synchronizeUserTokenWithOpfabUserDatabase();
                 this.showLoginScreen = false;
                 this.userLogin = identifier;
                 this.loadSettings();
             }
+        });
+    }
+
+    private synchronizeUserTokenWithOpfabUserDatabase() {
+        this.userService.synchronizeWithToken().subscribe({
+            next: () =>  this.logger.info("Synchronization of user token with user database done"),
+            error: () => this.logger.warn("Impossible to synchronize user token with user database")
         });
     }
 

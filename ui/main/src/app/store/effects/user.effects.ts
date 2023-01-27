@@ -12,15 +12,10 @@ import {Actions, createEffect, ofType} from '@ngrx/effects';
 import {UserService} from '@ofServices/user.service';
 import {Observable, timer} from 'rxjs';
 import {
-    UserActions,
     UserActionsTypes,
-    UserApplicationRegisteredAction,
     UserConfigLoadedAction
 } from '@ofStore/actions/user.actions';
-import {AuthenticationActionTypes} from '@ofStore/actions/authentication.actions';
 import {catchError, debounce, map, switchMap} from 'rxjs/operators';
-import {User} from '@ofModel/user.model';
-import {AuthenticationService} from '@ofServices/authentication/authentication.service';
 import {EntitiesService} from '@ofServices/entities.service';
 import {GroupsService} from '@ofServices/groups.service';
 import {Utilities} from 'app/business/common/utilities';
@@ -33,32 +28,9 @@ export class UserEffects {
         private userService: UserService,
         private entitieservice: EntitiesService,
         private groupservice: GroupsService,
-        private authService: AuthenticationService,
         private logger: OpfabLoggerService
     ) {}
 
-    /**
-     * after that the user is authenticated through the token,
-     * synchronize user data from the token with the backend
-     * (if the user does not exist in the database it will be created)
-     * and raise the UserApplicationRegistered action.
-     */
-
-    checkUserApplication: Observable<UserActions> = createEffect(() =>
-        this.actions$.pipe(
-            ofType(AuthenticationActionTypes.AcceptLogIn),
-            switchMap(() => {
-                return this.userService.synchronizeWithToken().pipe(
-                    map((user: User) => new UserApplicationRegisteredAction({user})),
-                    catchError((_error, caught) => {
-                        console.log('Error in synchronizeWithToken');
-                        this.authService.clearAuthenticationInformation();
-                        return caught;
-                    })
-                );
-            })
-        )
-    );
 
 
     updateUserConfig: Observable<any> = createEffect(
