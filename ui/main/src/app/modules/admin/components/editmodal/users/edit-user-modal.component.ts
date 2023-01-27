@@ -122,7 +122,7 @@ export class EditUserModalComponent implements OnInit {
 
     update() {
         this.cleanForm();
-        const isAuthorizedIPAdressesAString = this.authorizedIPAddresses.value instanceof String;
+        const isAuthorizedIPAdressesAString = this.userForm.value['authorizedIPAddresses'];
         const ipList = isAuthorizedIPAdressesAString && this.authorizedIPAddresses.value.trim().length > 0 ? this.authorizedIPAddresses.value.split(',') : [];
         this.authorizedIPAddresses.setValue(ipList.map((str) => str.trim()));
         this.crudService.update(this.userForm.value).subscribe(() => {
