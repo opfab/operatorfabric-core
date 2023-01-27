@@ -46,9 +46,20 @@ Scenario: Check Archives / must insert 10 cards first with other scenarios
 
 
 #get cards from archives with user operator1_fr
-  Given url opfabUrl + 'cards/archives/?size=10&page=0'
+
+* def filter1 =
+"""
+{
+  "page" : 0,
+  "size" : 10,
+  "filters" : []
+}
+"""
+
+  Given url opfabUrl + 'cards/archives'
   And header Authorization = 'Bearer ' + authToken
-  When method get
+  And request filter1
+  Then method post
   Then status 200
   And match response.size == 10
   And match response.totalPages == '#?  response.totalPages > 1'

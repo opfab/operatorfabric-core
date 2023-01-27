@@ -1,4 +1,4 @@
-/* Copyright (c) 2022, RTE (http://www.rte-france.com)
+/* Copyright (c) 2022-2023, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -9,7 +9,7 @@
 
 import {Injectable} from '@angular/core';
 import {Process} from '@ofModel/processes.model';
-import {ProcessesService} from '@ofServices/processes.service';
+import {ProcessesService} from 'app/business/services/processes.service';
 import {UserService} from '@ofServices/user.service';
 
 export const DEFAULT_PROCESS_GROUP_ID = '--';
@@ -62,7 +62,7 @@ export class MonitoringProcessList {
 
     private loadProcessGroups() {
         this.processGroups = [];
-        for (let processGroup of this.processByProcessGroup.keys()) {
+        for (const processGroup of this.processByProcessGroup.keys()) {
             this.processGroups.push({
                 id: processGroup,
                 name: this.processesService.getProcessGroupName(processGroup)

@@ -30,10 +30,14 @@ done
  ./addPerimeterToGroup.sh taskExample Dispatcher $1
  ./addPerimeterToGroup.sh taskExample Planner $1
  ./addPerimeterToGroup.sh taskExample Supervisor $1
+ ./addPerimeterToGroup.sh taskAdvancedExample Dispatcher $1
+ ./addPerimeterToGroup.sh taskAdvancedExample Planner $1
+ ./addPerimeterToGroup.sh taskAdvancedExample Supervisor $1
  ./addPerimeterToGroup.sh gridCooperation Dispatcher $1
  ./addPerimeterToGroup.sh gridCooperation Planner $1
  ./addPerimeterToGroup.sh gridCooperation Supervisor $1
  ./addPerimeterToGroup.sh cypress Dispatcher $1
  ./addPerimeterToGroup.sh cypress Planner $1
+ ./addPerimeterToGroup.sh cypress Supervisor $1
  ./addPerimeterToGroup.sh questionReceiveOnly Supervisor $1
  ./addPerimeterToGroup.sh externalRecipent Dispatcher $1

@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2022, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2023, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -7,7 +7,7 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {LightCard, PublisherType, Severity} from '@ofModel/light-card.model';
+import {Day, Frequency, LightCard, PublisherType, Severity} from '@ofModel/light-card.model';
 import {I18n} from '@ofModel/i18n.model';
 
 export class Card {
@@ -19,6 +19,7 @@ export class Card {
         readonly publishDate: number,
         readonly startDate: number,
         readonly endDate: number,
+        readonly expirationDate: number,
         readonly severity: Severity,
         public hasBeenAcknowledged: boolean = false,
         readonly hasBeenRead: boolean = false,
@@ -50,7 +51,8 @@ export class Card {
         public secondsBeforeTimeSpanForReminder?: number,
         public timeSpans?: TimeSpan[],
         readonly entitiesAcks?: string[],
-        readonly deletionDate?: number
+        readonly deletionDate?: number,
+        public rRule?: RRule
     ) {}
 }
 
@@ -60,6 +62,7 @@ export class CardForPublishing {
         readonly processVersion: string,
         readonly startDate: number,
         readonly endDate: number,
+        readonly expirationDate: number,
         readonly severity: Severity,
         readonly process?: string,
         readonly processInstanceId?: string,
@@ -84,7 +87,8 @@ export class CardForPublishing {
         readonly wktGeometry?: string,
         readonly wktProjection?: string,
         readonly secondsBeforeTimeSpanForReminder?: number,
-        readonly timeSpans?: TimeSpan[]
+        readonly timeSpans?: TimeSpan[],
+        readonly rRule?: RRule
     ) {}
 }
 
@@ -114,6 +118,19 @@ export class HourAndMinutes {
     constructor(public hours: number, public minutes: number) {}
 }
 
+export class RRule {
+    constructor(
+        public freq?: Frequency,
+        public count?: number,
+        public wkst?: Day,
+        public byweekday?: Day[],
+        public bymonth?: number[],
+        public byhour?: number[],
+        public byminute?: number[],
+        public tzid?: string
+    ) {}
+}
+
 export function fromCardToLightCard(card: Card): LightCard {
     return new LightCard(
         card.uid,
@@ -123,6 +140,7 @@ export function fromCardToLightCard(card: Card): LightCard {
         card.publishDate,
         card.startDate,
         card.endDate,
+        card.expirationDate,
         card.severity,
         card.hasBeenAcknowledged,
         card.hasBeenRead,
@@ -135,6 +153,7 @@ export function fromCardToLightCard(card: Card): LightCard {
         card.summaryTranslated,
         null,
         [],
+        card.rRule,
         card.process,
         card.state,
         card.parentCardId,
@@ -155,6 +174,7 @@ export function fromCardToCardForPublishing(card: Card): CardForPublishing {
         card.processVersion,
         card.startDate,
         card.endDate,
+        card.expirationDate,
         card.severity,
         card.process,
         card.processInstanceId,
@@ -179,6 +199,7 @@ export function fromCardToCardForPublishing(card: Card): CardForPublishing {
         card.wktGeometry,
         card.wktProjection,
         card.secondsBeforeTimeSpanForReminder,
-        card.timeSpans
+        card.timeSpans,
+        card.rRule
     );
 }

@@ -16,6 +16,7 @@ protocol CardProtocol {
 		union {null, timestamp_ms} lttd = null;
 		timestamp_ms startDate;
 		union {null, timestamp_ms} endDate = null;
+		union {null, timestamp_ms} expirationDate = null;
 		SeverityType severity;
 		union {null, array<string>} tags = null;
 		union {null, array<TimeSpan>} timeSpans = null;

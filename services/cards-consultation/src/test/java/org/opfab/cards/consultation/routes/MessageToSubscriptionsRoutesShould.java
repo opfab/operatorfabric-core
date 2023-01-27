@@ -1,4 +1,4 @@
-/* Copyright (c) 2022, RTE (http://www.rte-france.com)
+/* Copyright (c) 2022-2023, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -14,6 +14,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.opfab.users.model.PermissionEnum;
 import org.opfab.cards.consultation.application.IntegrationTestApplication;
 import org.opfab.cards.consultation.configuration.webflux.MessageToSubscriptionsRoutesConfig;
 import org.opfab.cards.consultation.controllers.CardOperationsController;
@@ -51,7 +52,7 @@ class MessageToSubscriptionsRoutesShould {
     }
 
     @Nested
-    @WithMockOpFabUserReactive(login = "userWithGroup", roles = { "ADMIN" })
+    @WithMockOpFabUserReactive(login = "userWithGroup", permissions = {PermissionEnum.ADMIN})
     class MessageToSubscriptionsRoutesForAdminShould {
 
         @Test
@@ -66,7 +67,7 @@ class MessageToSubscriptionsRoutesShould {
     }
 
     @Nested
-    @WithMockOpFabUserReactive(login = "userWithGroup", roles = { "TEST" })
+    @WithMockOpFabUserReactive(login = "userWithGroup")
     class MessageToSubscriptionsRoutesForNonAdminShould {
 
         @Test

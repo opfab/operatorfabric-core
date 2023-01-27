@@ -1,4 +1,4 @@
-/* Copyright (c) 2022, RTE (http://www.rte-france.com)
+/* Copyright (c) 2022-2023, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -70,6 +70,21 @@ export class ScriptCommands extends OpfabCommands {
         cy.exec('cp ../../../config/cypress/ui-config/ui-menu-base.json ../../../config/cypress/ui-config/ui-menu.json');
     }
 
+    configureMenuNotDefined = function () {
+        cy.exec('cp ../resources/uiConfig/ui-menu-not-defined.json ../../../config/cypress/ui-config/ui-menu.json');
+    }
+    configureMenuVisibleForAllUsers = function () {
+        cy.exec('cp ../resources/uiConfig/ui-menu-visible-to-all.json ../../../config/cypress/ui-config/ui-menu.json');
+    }
+
+    configureMenuNotVisibleForAllUsers = function () {
+        cy.exec('cp ../resources/uiConfig/ui-menu-not-visible-to-all.json ../../../config/cypress/ui-config/ui-menu.json');
+    }
+
+    configureMenuForAdminGroup = function () {
+        cy.exec('cp ../resources/uiConfig/ui-menu-only-admin-group.json ../../../config/cypress/ui-config/ui-menu.json');
+    }
+
     removePropertyInConf = function (property, file) {
         switch (file) {
             case 'web-ui':
@@ -99,11 +114,6 @@ export class ScriptCommands extends OpfabCommands {
         cy.exec(`cd ../../.. && ./src/test/resources/uiConfig/updateCoreMenu.sh ${filePath} ${menu} ${property} ${value}`);
     }
 
-    deleteCoreMenuFromConf = function (menu) {
-        const filePath = `./config/cypress/ui-config/ui-menu.json`;
-        cy.exec(`cd ../../.. && ./src/test/resources/uiConfig/deleteCoreMenu.sh ${filePath} ${menu}`);
-    }
-
     deleteAllArchivedCards = function () {
         cy.exec('cd .. && ./resources/deleteAllArchivedCards.sh ' + Cypress.env('host'));
     }
@@ -114,6 +124,10 @@ export class ScriptCommands extends OpfabCommands {
 
     deleteAllSettings = function () {
         cy.exec('cd .. && ./resources/deleteAllSettings.sh ' + Cypress.env('host'));
+    }
+
+    deleteAllUserActionLogs = function () {
+        cy.exec('cd .. && ./resources/deleteAllUserActionLogs.sh ' + Cypress.env('host'));
     }
 
     waitForOpfabToStart = function () {

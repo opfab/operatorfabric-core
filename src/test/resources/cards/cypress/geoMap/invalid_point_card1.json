@@ -1,0 +1,20 @@
+{
+	"publisher" : "publisher_test",
+    "wktGeometry": "POINT (invalid data)",
+    "wktProjection": "EPSG:4326",
+    "processVersion" : "1",
+    "process"  :"cypress",
+    "processInstanceId" : "invalid_point_card1",
+    "state": "messageState",
+    "entityRecipients": ["ENTITY1_FR","ENTITY2_FR"],
+    "severity" : "INFORMATION",
+    "startDate" : ${current_date_in_milliseconds_from_epoch_plus_2hours},
+    "endDate" : ${current_date_in_milliseconds_from_epoch_plus_8hours} ,
+	"summary" : {"key" : "message.summary"},
+	"title" : {"key" : "message.title"},
+	"data" : {"message": "Card test with invalid point data"},
+	"timeSpans" : [
+		{"start" :${current_date_in_milliseconds_from_epoch_plus_2hours}},
+		{"start" : ${current_date_in_milliseconds_from_epoch_plus_8hours}}
+		]
+}

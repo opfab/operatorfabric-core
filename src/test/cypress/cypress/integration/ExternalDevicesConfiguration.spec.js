@@ -135,9 +135,9 @@ describe('ExternalDevicesconfigurationPage', () => {
         // Go to the users configuration screen
         cy.get('#opfab-externaldevices-tabs').find('#opfab-externaldevices-users-tab').click();
 
-        // We iterate 10 times because there are 16 users and 4 users have already a configuration
-        for (let i = 0; i < 12; i++) {
-            cy.get('#addItem').click();
+        // We iterate 10 times because there are 17 users and 4 users have already a configuration
+        for (let i = 0; i < 13; i++) {
+            cy.get('#addItem').should('be.visible').click();
 
             cy.get('of-externaldevices-modal').should('exist');
 
@@ -146,14 +146,14 @@ describe('ExternalDevicesconfigurationPage', () => {
             clickOnNthDeviceInDropdown(0);
 
             // Wait for the dropdown to disappear before clicking add button
-            cy.get('#opfab-admin-edit-btn-add').should('be.visible').click();
+            cy.get('#opfab-admin-edit-btn-add').should('be.visible').click({force: true});
         }
 
         //First page is 10 rows
         agGrid.countTableRows('#opfab-externaldevices-table-grid', 10);
 
-        // Pagination should display ' Results number  : 16 '
-        cy.get('.opfab-pagination').should('contain.text', ' Results number  : 16');
+        // Pagination should display ' Results number  : 17 '
+        cy.get('.opfab-pagination').should('contain.text', ' Results number  : 17');
 
         // When all users devices are configured it is not possible to add new configurations
         cy.get('#addItem').click();
@@ -173,9 +173,11 @@ describe('ExternalDevicesconfigurationPage', () => {
         cy.get('#opfab-externaldevices-tabs').find('#opfab-externaldevices-users-tab').click();
 
         cy.get('#opfab-externaldevices-table-grid').should('exist');
+        //First page is 10 rows
+        agGrid.countTableRows('#opfab-externaldevices-table-grid', 10);
 
         // Delete previously created configurations
-        for (let j = 16; j > 4; j--) {
+        for (let j = 17; j > 4; j--) {
             agGrid.clickCell('#opfab-externaldevices-table-grid', 4, 3, 'of-action-cell-renderer');
 
             cy.get('of-confirmation-dialog').should('exist');

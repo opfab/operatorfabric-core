@@ -47,7 +47,6 @@ public class BusinessconfigController implements BusinessconfigApi {
     private ProcessesService processService;
     private MonitoringService monitoringService;
 
-    @Autowired
     public BusinessconfigController(ProcessesService processService, MonitoringService monitoringService) {
         this.processService = processService;
         this.monitoringService = monitoringService;

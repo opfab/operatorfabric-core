@@ -1,0 +1,20 @@
+{
+	"publisher" : "publisher_test",
+    "wktGeometry": "POLYGON ((5.5339097 52.0233042,  5.7162495 51.7603784, 5.0036701 51.573684, 4.8339214 52.3547498, 5.5339097 52.0233042))",
+    "wktProjection": "EPSG:4326",
+    "processVersion" : "1",
+    "process"  :"cypress",
+    "processInstanceId" : "polygon_card1",
+    "state": "messageState",
+    "entityRecipients": ["ENTITY1_FR","ENTITY2_FR"],
+    "severity" : "INFORMATION",
+    "startDate" : ${current_date_in_milliseconds_from_epoch_plus_2hours},
+    "endDate" : ${current_date_in_milliseconds_from_epoch_plus_8hours} ,
+	"summary" : {"key" : "message.summary"},
+	"title" : {"key" : "message.title"},
+	"data" : {"message": "Card test with location Arnhem"},
+	"timeSpans" : [
+		{"start" :${current_date_in_milliseconds_from_epoch_plus_2hours}},
+		{"start" : ${current_date_in_milliseconds_from_epoch_plus_8hours}}
+		]
+}

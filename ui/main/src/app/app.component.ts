@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2022, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2023, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -8,13 +8,11 @@
  */
 
 import {Component, HostListener, TemplateRef, ViewChild} from '@angular/core';
-import {AppState} from '@ofStore/index';
-import {CardService} from '@ofServices/card.service';
-import {NgbModal, NgbModalRef} from '@ng-bootstrap/ng-bootstrap';
+import {NgbModalRef} from '@ng-bootstrap/ng-bootstrap';
 import {LogOption, OpfabLoggerService} from '@ofServices/logs/opfab-logger.service';
 import {RemoteLoggerService} from '@ofServices/logs/remote-logger.service';
-import {Store} from '@ngrx/store';
 import {SoundNotificationService} from '@ofServices/sound-notification.service';
+import {OpfabEventStreamService} from './business/services/opfabEventStream.service';
 
 @Component({
     selector: 'of-root',
@@ -46,7 +44,7 @@ export class AppComponent {
     @HostListener('window:beforeunload')
     onBeforeUnload() {
         this.logger.info('Unload opfab', LogOption.LOCAL_AND_REMOTE);
-        this.cardService.closeSubscription();
+        this.opfabEventStreamService.closeEventStream();
         this.remoteLogger.flush(); // flush log before exiting opfab
         return null;
     }
@@ -70,11 +68,9 @@ export class AppComponent {
     }
 
     constructor(
-        private store: Store<AppState>,
-        private cardService: CardService,
-        private modalService: NgbModal,
         private soundNotificationService: SoundNotificationService,
         private logger: OpfabLoggerService,
+        private opfabEventStreamService: OpfabEventStreamService,
         private remoteLogger: RemoteLoggerService
     ) {}
 

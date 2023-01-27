@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2022, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2023, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -16,7 +16,7 @@ import {I18n} from '@ofModel/i18n.model';
 import {Page} from '@ofModel/page.model';
 import {AppState} from '@ofStore/index';
 import {AuthenticationService} from '@ofServices/authentication/authentication.service';
-import {GuidService} from '@ofServices/guid.service';
+import {GuidService} from 'app/business/services/guid.service';
 import {OAuthLogger, OAuthService, UrlHelperService} from 'angular-oauth2-oidc';
 import {TranslateLoader} from '@ngx-translate/core';
 import {Observable, of} from 'rxjs';
@@ -29,8 +29,6 @@ export const emptyAppState4Test: AppState = {
     feed: null,
     authentication: null,
     card: null,
-    menu: null,
-    user: null,
     cardsSubscription: null,
     globalStyle: null
 };
@@ -132,6 +130,9 @@ export function getOneRandomLightCard(lightCardTemplate?: any): LightCard {
         lightCardTemplate.endDate
             ? lightCardTemplate.endDate
             : startTime + generateRandomPositiveIntegerWithinRangeWithOneAsMinimum(3455),
+        lightCardTemplate.expirationDate
+            ? lightCardTemplate.expirationDate
+            : startTime + generateRandomPositiveIntegerWithinRangeWithOneAsMinimum(3455),
         lightCardTemplate.severity ? lightCardTemplate.severity : getRandomSeverity(),
         lightCardTemplate.hasBeenAcknowledged ? lightCardTemplate.hasBeenAcknowledged : false,
         lightCardTemplate.hasBeenRead ? lightCardTemplate.hasBeenRead : false,
@@ -175,6 +176,9 @@ export function getOneRandomCard(cardTemplate?: any): Card {
         cardTemplate.startDate ? cardTemplate.startDate : startTime,
         cardTemplate.endDate
             ? cardTemplate.endDate
+            : startTime + generateRandomPositiveIntegerWithinRangeWithOneAsMinimum(3455),
+        cardTemplate.expirationDate
+            ? cardTemplate.expirationDate
             : startTime + generateRandomPositiveIntegerWithinRangeWithOneAsMinimum(3455),
         cardTemplate.severity ? cardTemplate.severity : getRandomSeverity(),
         false,

@@ -6,7 +6,7 @@
 <!-- SPDX-License-Identifier: MPL-2.0                                      -->
 <!-- This file is part of the OperatorFabric project.                      -->
 <div style="background-color: var(--opfab-bgcolor-darker);border: solid 5px var(--opfab-bgcolor-darker)">
-    <div style="padding: 10px"><a class="btn btn-primary" (click)="createNewItem()" id ="add-item">
+    <div *ngIf="showAddButton" style="padding: 10px"><a class="btn btn-primary" (click)="createNewItem()" id ="add-item">
         <em class="fas fa-plus-circle"></em></a>
         <span>&nbsp;<label for="add-item" translate> admin.input.{{this.tableType}}.add </label></span>
     </div>

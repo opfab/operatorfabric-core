@@ -170,7 +170,7 @@ Feature: CreateUsers
     And header Authorization = 'Bearer ' + authToken
     And request adminUser
     When method post
-    Then status 403
+    Then status 400
     And match response.message == 'Removing group ADMIN from user admin is not allowed'
 
   Scenario: bad request

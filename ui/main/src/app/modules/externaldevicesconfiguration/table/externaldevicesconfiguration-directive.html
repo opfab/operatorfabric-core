@@ -10,8 +10,8 @@
 <div *ngIf="!technicalError">
     <div style="background-color: var(--opfab-bgcolor-darker); border: solid 5px var(--opfab-bgcolor-darker)">
     
-        <div *ngIf="canAddItems">
-            <div *ngIf="canAddItems" style="padding: 10px"><a class="btn btn-primary" (click)="createNewItem()" id ="addItem">
+        <div *ngIf="canAddItems" [hidden]="this.isLoadingData">
+            <div style="padding: 10px"><a class="btn btn-primary" (click)="createNewItem()" id ="addItem">
                 <em class="fas fa-plus-circle"></em></a>
                 <span>&nbsp;<label for="addItem" translate> externalDevicesConfiguration.input.add </label></span>
             </div>

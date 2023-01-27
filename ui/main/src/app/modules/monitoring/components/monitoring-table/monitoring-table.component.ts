@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2022, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2023, RTE (http://www.rte-france.com)
  * Copyright (c) 2020, RTEi (http://www.rte-international.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
@@ -19,10 +19,10 @@ import {LoadCardAction} from '@ofActions/card.actions';
 import {NgbModal, NgbModalOptions, NgbModalRef} from '@ng-bootstrap/ng-bootstrap';
 import {Store} from '@ngrx/store';
 import {AppState} from '@ofStore/index';
-import {ProcessesService} from '@ofServices/processes.service';
-import {Utilities} from 'app/common/utilities';
+import {ProcessesService} from 'app/business/services/processes.service';
+import {Utilities} from 'app/business/common/utilities';
 import {MonitoringConfig} from '@ofModel/monitoringConfig.model';
-import {JsonToArray} from 'app/common/jsontoarray/json-to-array';
+import {JsonToArray} from 'app/business/common/jsontoarray/json-to-array';
 import {CardService} from '@ofServices/card.service';
 import {Process} from '@ofModel/processes.model';
 import {EntitiesService} from '@ofServices/entities.service';
@@ -31,7 +31,7 @@ import {AnswerCellRendererComponent} from '../cell-renderers/answer-cell-rendere
 import {ResponsesCellRendererComponent} from '../cell-renderers/responses-cell-renderer.component';
 import {LightCard} from '@ofModel/light-card.model';
 import {LightCardsStoreService} from '@ofServices/lightcards/lightcards-store.service';
-import {DateTimeFormatterService} from '@ofServices/date-time-formatter.service';
+import {DateTimeFormatterService} from 'app/business/services/date-time-formatter.service';
 
 @Component({
     selector: 'of-monitoring-table',
@@ -443,3 +443,5 @@ export class MonitoringTableComponent implements OnChanges, OnDestroy {
         });
     }
 }
+
+

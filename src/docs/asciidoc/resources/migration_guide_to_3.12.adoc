@@ -1,0 +1,51 @@
+// Copyright (c) 2022 RTE (http://www.rte-france.com)
+// See AUTHORS.txt
+// This document is subject to the terms of the Creative Commons Attribution 4.0 International license.
+// If a copy of the license was not distributed with this
+// file, You can obtain one at https://creativecommons.org/licenses/by/4.0/.
+// SPDX-License-Identifier: CC-BY-4.0
+
+= Migration Guide from release 3.11.x to release 3.12.0
+
+== Java 17 
+
+OperatorFabric now runs on java 17, which means that the client library is now compiled with java 17. If you are using the client library, you may need to upgrade your application to java 17 or use client 3.11.2 which is compatible with version 3.12.0 and compiled with java 11.
+
+== Expiration date
+
+A new 'expirationDate' field has been added to the card.
+Cards with an expiration date will be automatically deleted from the card feed after the expiration date is passed.
+
+The expiration date is by default visible in the usercard screen.
+You can hide the expiration date in the usercard screen by adding the new 'expirationDateVisible' value to your
+usercard configuration in the config.json of your bundle.
+
+- Hide expiration date -> "expirationDateVisible" : false
+
+    "processState": {
+      "name": "Process example ",
+      "description": "Process state",
+      "color": "#0070C0",
+      "userCard" : {
+        "template" : "usercard_process",
+        "lttdVisible" : false,
+        "expirationDateVisible" : false,
+        "recipientList" : [{"id": "ENTITY_FR", "levels": [0,1]}, {"id": "IT_SUPERVISOR_ENTITY"}]
+      },
+
+- Show expiration date -> "expirationDateVisible" : false
+
+    "processState": {
+      "name": "Process example ",
+      "description": "Process state",
+      "color": "#0070C0",
+      "userCard" : {
+        "template" : "usercard_process",
+        "lttdVisible" : false,
+        "expirationDateVisible" : true,
+        "recipientList" : [{"id": "ENTITY_FR", "levels": [0,1]}, {"id": "IT_SUPERVISOR_ENTITY"}]
+      },
+
+=== Remove deprecated method templateGateway.getSpecificCardInformation() 
+  
+The deprecated method 'templateGateway.getSpecificCardInformation()' in usercard templates has been removed, use 'usercardTemplateGateway.getSpecificCardInformation()' method instead.

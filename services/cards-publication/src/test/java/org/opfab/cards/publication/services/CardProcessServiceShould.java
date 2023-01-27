@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2022, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2023, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -580,6 +580,7 @@ class CardProcessServiceShould {
                 .collect(Collectors.toList());
 
         // endDate must be after startDate
+        // expirationDate must be after startDate
         // toNotify must be true
         if (cardsList != null) {
             for (CardPublicationData cardPublicationData : cardsList) {
@@ -588,6 +589,10 @@ class CardProcessServiceShould {
                     if (startDateInstant != null && startDateInstant
                             .compareTo(cardPublicationData.getEndDate()) >= 0) {
                         cardPublicationData.setEndDate(startDateInstant.plusSeconds(86400));
+                    }
+                    if (startDateInstant != null && startDateInstant
+                            .compareTo(cardPublicationData.getExpirationDate()) >= 0) {
+                        cardPublicationData.setExpirationDate(startDateInstant.plusSeconds(86400));
                     }
                     cardPublicationData.setProcess("api_test");
                     cardPublicationData.setState("messageState");
@@ -712,7 +717,7 @@ class CardProcessServiceShould {
         String cardUid = firstCard.getUid();
         user.setLogin("aaa");
 
-        UserBasedOperationResult res = cardProcessingService.processUserAcknowledgement(cardUid, user, user.getEntities());
+        UserBasedOperationResult res = cardProcessingService.processUserAcknowledgement(cardUid, currentUserWithPerimeters, user.getEntities());
         Assertions.assertThat(res.isCardFound() && res.getOperationDone()).as("Expecting one successful addition").isTrue();
         
         CardPublicationData cardReloaded = cardRepository.findByUid(cardUid).get();
@@ -721,7 +726,7 @@ class CardProcessServiceShould {
 
         user.setLogin("bbb");
         user.setEntities(Arrays.asList("newPublisherId_bbb", "entity2_bbb"));
-        res = cardProcessingService.processUserAcknowledgement(cardUid, user, user.getEntities());
+        res = cardProcessingService.processUserAcknowledgement(cardUid, currentUserWithPerimeters, user.getEntities());
         Assertions.assertThat(res.isCardFound() && res.getOperationDone()).as("Expecting one successful addition").isTrue();
         
         cardReloaded = cardRepository.findByUid(cardUid).get();
@@ -732,7 +737,7 @@ class CardProcessServiceShould {
         //try to insert aaa again
         user.setLogin("aaa");
         user.setEntities(Arrays.asList("newPublisherId", "entity2"));
-        res = cardProcessingService.processUserAcknowledgement(cardUid, user, user.getEntities());
+        res = cardProcessingService.processUserAcknowledgement(cardUid, currentUserWithPerimeters, user.getEntities());
         Assertions.assertThat(res.isCardFound() && res.getOperationDone()).as("Expecting update to lastAckDate is done").isTrue();
         
         cardReloaded = cardRepository.findByUid(cardUid).get();
@@ -1043,6 +1048,7 @@ class CardProcessServiceShould {
         cards.forEach(c -> {
             c.setParentCardId(null);
             c.setInitialParentCardUid(null);
+            c.setExpirationDate(null);
 
             if (i.get() % 2 == 0) {
                 c.setEndDate(null);
@@ -1071,7 +1077,44 @@ class CardProcessServiceShould {
 
     }
 
+    @Test
+    void deleteCards_by_expirationDate() {
 
+        EasyRandom easyRandom = instantiateRandomCardGenerator();
+        int numberOfCards = 10;
+
+        List<CardPublicationData> cards = instantiateSeveralRandomCards(easyRandom, numberOfCards);
+
+        Instant ref = Instant.now();
+        AtomicInteger i = new AtomicInteger(1);
+        cards.forEach(c -> {
+            c.setParentCardId(null);
+            c.setInitialParentCardUid(null);
+            c.setEndDate(null);
+
+            if (i.get() % 2 == 0) {
+                c.setExpirationDate(null);
+            } else {
+                c.setExpirationDate(ref.minus(i.get(),ChronoUnit.DAYS));
+            }
+            if (i.get() > 8) {
+                c.setExpirationDate(ref.minus(1,ChronoUnit.DAYS));
+            }
+            if (i.get() == 2) {
+                c.setExpirationDate(ref.plus(i.incrementAndGet(),ChronoUnit.DAYS));
+            } else  {
+                c.setStartDate(ref.minus(i.incrementAndGet(),ChronoUnit.DAYS));
+            }
+        });
+
+        cards.forEach(card -> cardProcessingService.processCard(card));
+        cardProcessingService.deleteCardsByExpirationDate(Instant.now());
+
+        /* 6 cards should be removed */
+        int thereShouldBeFourCardLeft = numberOfCards - 6;
+        Assertions.assertThat(cardRepository.count()).isEqualTo(thereShouldBeFourCardLeft);
+
+    }
 
     @Test
     void checkUserPublisher() {

@@ -30,7 +30,10 @@
       "invalidActiveStartDate": "'Active from' date is invalid.",
       "invalidActiveEndDate": "'Active to' date is invalid.",
       "publishEndDateBeforeStartDate" : "'Publish to' date must be after 'Publish from' date.",
-      "activeEndDateBeforeStartDate" : "'Active to' date must be after 'Active from' date."
+      "activeEndDateBeforeStartDate" : "'Active to' date must be after 'Active from' date.",
+      "invalidFromDate": "'From' date is invalid.",
+      "invalidToDate": "'To' date is invalid.",
+      "toDateBeforeFromDate" : "'To' date must be after 'From' date."
     },
     "result": {
       "severity": "SEVERITY",
@@ -105,7 +108,8 @@
     "switchToDayMode": "Day mode",
     "realTimeUsers": "Real time users",
     "externalDevicesConfiguration": "External devices configuration",
-    "activityArea": "Activity area"
+    "activityArea": "Activity area",
+    "useractionlogs": "User action logs"
   },
   "timeline": {
     "hideTimeline" : "Hide Timeline",
@@ -182,7 +186,8 @@
       "lttd": "Time remaining to decide",
       "hasAResponseFromYourEntity" : "Your entity has already responded.",
       "loadingInProgress": "Card loading in progress",
-      "seeGroupedCards": "Open this card to see grouped cards"
+      "seeGroupedCards": "Open this card to see grouped cards",
+      "expirationDate": "Expiration date"
     },
     "acknowledgeAllCards": {
       "label": "Acknowledge all cards",
@@ -201,7 +206,8 @@
     "moreCards": "cards more",
     "lastResponse": "Last response :",
     "cardLoadingInProgress":"Loading card...",
-    "cardNotFound": "The card you are looking for was not found."
+    "cardNotFound": "The card you are looking for was not found.",
+    "entityRecipients" : "Entity recipients :"
   },
   "login": {
     "reset": "Reset",
@@ -257,6 +263,9 @@
         "selectTypeOfStateText" : "Select a Process status"
       }
     },
+    "tips": {
+      "hasAResponseFromYourEntity" : "Your entity has already responded."
+    },
     "seeDetails": "SEE DETAILS"
   },
   "button": {
@@ -288,12 +297,14 @@
       "templateError": "Technical error : invalid template",
       "impossibleToSendCard": "Impossible to send card for technical reasons",
       "lttdBeforeStartDate": "Limit date for response must be after start date.",
-      "lttdAfterEndDate": "Limit date for response must be before end date."
+      "lttdAfterEndDate": "Limit date for response must be before end date.",
+      "expirationDateBeforeStartDate": "Expiration date must be after start date."
     },
     "filters": {
       "severity": "SEVERITY",
       "startDate":  "START DATE",
       "endDate":  "END DATE",
+      "expirationDate":  "EXPIRATION DATE",
       "lttd": "LIMIT DATE FOR RESPONSE",
       "recipients": "RECIPIENTS"
     },
@@ -350,6 +361,7 @@
         "name": "NAME",
         "description": "DESCRIPTION",
         "perimeters" : "PERIMETERS",
+        "permissions" : "PERMISSIONS",
         "users": "USERS",
         "realtime": "REAL TIME",
         "type": "TYPE",
@@ -382,6 +394,12 @@
         "confirmDelete": "Do you really want to delete perimeter",
         "add":"ADD NEW PERIMETER"
       },
+      "process": {
+        "id": "ID",
+        "name": "PROCESS",
+        "version": "CURRENT VERSION",
+        "confirmDelete": "Do you really want to delete processus"
+      },
       "user": {
         "login": "LOGIN",
         "lastName": "LAST NAME",
@@ -399,6 +417,7 @@
       "selectStateText": "Select a State",
       "selectRightText": "Select a Right",
       "selectGroupTypeText": "Select a Type",
+      "selectGroupPermissionText": "Select a Permission",
       "edit": "Edit",
       "delete": "Delete",
       "save": "SAVE CHANGES",
@@ -435,7 +454,8 @@
       "users": "Users Management",
       "groups": "Groups Management",
       "entities": "Entities Management",
-      "perimeters": "Perimeters Management"
+      "perimeters": "Perimeters Management",
+      "processes": "Processes Management"
     }
   },
   "processGroup": {
@@ -490,6 +510,21 @@
     "isEnabled": "IS ENABLED",
     "edit": "EDIT",
     "delete": "DELETE"
+  },
+  "useractionlogs": {
+    "title": "USER ACTION LOGS",
+    "date": "Date",
+    "action": "Action",
+    "login": "Username",
+    "entities": "Entities",
+    "cardUid": "Card UID",
+    "comment": "Comment",
+    "filters": {
+      "action": "ACTION",
+      "login": "USERNAME",
+      "dateFrom": "FROM",
+      "dateTo": "TO"
+    }
   },
   "datePicker": {
     "monday": "Mo",

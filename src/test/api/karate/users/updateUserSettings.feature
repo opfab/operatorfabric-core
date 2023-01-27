@@ -88,7 +88,7 @@ Feature: update user settings
     And header Authorization = 'Bearer ' + authTokenAsTSO
     And request userSettingsDispatcherWithFilteringNotificationNotAllowed
     When method put
-    Then status 403
+    Then status 400
     And match response.message == 'Filtering notification not allowed for at least one process/state'
 
 

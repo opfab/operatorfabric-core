@@ -12,7 +12,7 @@ import moment from 'moment-timezone';
 
 const MAX_MILLISECONDS_FOR_REMINDING_AFTER_EVENT_STARTS = 60000 * 15; // 15 minutes
 
-export function getNextTimeForRepeating(card: Card, startingDate?: number) {
+export function getNextTimeForRepeating(card: Card, startingDate?: number): number {
     if (!!card.timeSpans) {
         let nextTime = -1;
         card.timeSpans.forEach((timeSpan) => {
@@ -26,7 +26,7 @@ export function getNextTimeForRepeating(card: Card, startingDate?: number) {
     return -1;
 }
 
-function getNextTimeForRepeatingFromTimeSpan(timeSpan: TimeSpan, startingDate?: number) {
+function getNextTimeForRepeatingFromTimeSpan(timeSpan: TimeSpan, startingDate?: number): number {
     if (!!timeSpan) {
         if (!startingDate) {
             startingDate = new Date().valueOf();

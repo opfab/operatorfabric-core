@@ -1,4 +1,4 @@
-// Copyright (c) 2018-2021 RTE (http://www.rte-france.com)
+// Copyright (c) 2018-2023 RTE (http://www.rte-france.com)
 // See AUTHORS.txt
 // This document is subject to the terms of the Creative Commons Attribution 4.0 International license.
 // If a copy of the license was not distributed with this
@@ -35,8 +35,8 @@ for each core menu:
 * If a core menu doesn't have a `visible` property, or it is set to null or false, it won't be visible.
 * For a core menu with `"visible": true`:
 ** If `showOnlyForGroups` is not present, null or an empty array : the menu is visible for all users.
-** If `showOnlyForGroups` is present and with a non-empty array as a value: menu is visible only for users from the
-listed groups.
+** If `showOnlyForGroups` is present and with a non-empty array as a value: menu is visible only for users from the listed groups.
+
 
 .List of core menus and corresponding ids
 |===
@@ -130,6 +130,7 @@ Each `menu entry` declares the attributes listed below:
 **
 - `showOnlyForGroups`: Defines the list of user groups entitled to see the menu entry, if not defined or empty it will be visible to every user.
 
+Menu entry 
 In the following example, the configuration file declares two additional business menus.
 The first has only one entry, the second has two entries.
 The sample also contains the i18n translations in English and in French.

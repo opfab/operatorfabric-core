@@ -16,7 +16,6 @@ import org.opfab.cards.consultation.model.CardConsultationData;
 import org.opfab.cards.consultation.model.CardData;
 import org.opfab.cards.consultation.repositories.CardRepository;
 import org.opfab.users.model.CurrentUserWithPerimeters;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.MediaType;
@@ -35,7 +34,7 @@ public class CardRoutesConfig implements UserExtractor {
 
     private final CardRepository cardRepository;
 
-    @Autowired
+
     public CardRoutesConfig(CardRepository cardRepository) {
         this.cardRepository = cardRepository;
     }

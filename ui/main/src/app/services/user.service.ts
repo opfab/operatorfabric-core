@@ -1,5 +1,5 @@
 /* Copyright (c) 2020, RTEi (http://www.rte-international.com)
- * Copyright (c) 2021-2022, RTE (http://www.rte-france.com)
+ * Copyright (c) 2021-2023, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -11,6 +11,7 @@
 import {environment} from '@env/environment';
 import {Observable, Subject} from 'rxjs';
 import {User} from '@ofModel/user.model';
+import {PermissionEnum} from '@ofModel/permission.model';
 import {UserWithPerimeters} from '@ofModel/userWithPerimeters.model';
 import {HttpClient, HttpErrorResponse} from '@angular/common/http';
 import {catchError, takeUntil, tap} from 'rxjs/operators';
@@ -111,12 +112,17 @@ export class UserService extends CrudService {
     }
 
     public isCurrentUserAdmin(): boolean {
-        return this.isCurrentUserInAnyGroup(['ADMIN']);
+        return this.hasCurrentUserAnyPermission([PermissionEnum.ADMIN]);
     }
 
     public isCurrentUserInAnyGroup(groups: string[]): boolean {
         if (!groups) return false;
         return this._userWithPerimeters.userData.groups.filter((group) => groups.indexOf(group) >= 0).length > 0;
+    }
+
+    public hasCurrentUserAnyPermission(permissions: PermissionEnum[]): boolean {
+        if (!permissions) return false;
+        return this._userWithPerimeters.permissions.filter((permission) => permissions.indexOf(permission) >= 0).length > 0;
     }
 
     private loadUserRightsPerProcessAndState() {

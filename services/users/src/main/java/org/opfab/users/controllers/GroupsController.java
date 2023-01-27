@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2022, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2023, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -14,282 +14,137 @@ package org.opfab.users.controllers;
 import org.opfab.springtools.error.model.ApiError;
 import org.opfab.springtools.error.model.ApiErrorException;
 import org.opfab.users.model.*;
+import org.opfab.users.rabbit.RabbitEventBus;
 import org.opfab.users.repositories.GroupRepository;
 import org.opfab.users.repositories.PerimeterRepository;
 import org.opfab.users.repositories.UserRepository;
-import org.opfab.users.services.UserServiceImp;
-import org.opfab.users.model.GroupData;
-import org.opfab.users.model.UserData;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.opfab.users.services.GroupsService;
+import org.opfab.users.services.NotificationService;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
-import java.util.stream.Collectors;
 
-
-/**
- * GroupsController, documented at {@link GroupsApi}
- *
- */
 @RestController
 @RequestMapping("/groups")
 public class GroupsController implements GroupsApi {
 
-    public static final String GROUP_NOT_FOUND_MSG = "Group %s not found";
-    public static final String USER_NOT_FOUND_MSG = "User %s not found";
-    public static final String BAD_USER_LIST_MSG = "Bad user list : user %s not found";
-    public static final String BAD_PERIMETER_LIST_MSG = "Bad perimeter list : perimeter %s not found";
-    public static final String NO_MATCHING_GROUP_ID_MSG = "Payload Group id does not match URL Group id";
-    public static final String ADMIN_GROUP_ID = "ADMIN";
-    @Autowired
-    private GroupRepository groupRepository;
-    @Autowired
-    private UserRepository userRepository;
-    @Autowired
-    private PerimeterRepository perimeterRepository;
-    @Autowired
-    private UserServiceImp userService;
+    private static final String NO_MATCHING_GROUP_ID_MSG = "Payload Group id does not match URL Group id";
+    
+    private GroupsService groupsService; 
 
-    @Override
-    public Void addGroupUsers(HttpServletRequest request, HttpServletResponse response, String id, List<String> users) throws Exception {
-
-        //Only existing groups can be updated
-        findGroupOrThrow(id);
-
-        //Retrieve users from repository for users list, throwing an error if a login is not found
-        List<UserData> foundUsers = retrieveUsers(users);
-
-        for (UserData userData : foundUsers) {
-            userData.addGroup(id);
-            userService.publishUpdatedUserMessage(userData.getLogin());
-        }
-        userRepository.saveAll(foundUsers);
-        return null;
-    }
-
-    @Override
-    public Group createGroup(HttpServletRequest request, HttpServletResponse response, Group group) throws Exception {
-        userService.checkFormatOfIdField(group.getId());
-
-        if (group.getPerimeters() != null) {
-            retrievePerimeters(group.getPerimeters());
-        }
-        if (groupRepository.findById(group.getId()).orElse(null) == null) {
-            response.addHeader("Location", request.getContextPath() + "/groups/" + group.getId());
-            response.setStatus(201);
-        }
-        userService.publishUpdatedGroupMessage(group.getId());
-        return groupRepository.save((GroupData)group);
-    }
-
-    @Override
-    public Void deleteGroupUsers(HttpServletRequest request, HttpServletResponse response, String id) throws Exception {
-
-        //Only existing groups can be updated
-         findGroupOrThrow(id);
-
-        //We delete the link between the group and its users
-        removeTheReferenceToTheGroupForMemberUsers(id);
-        userService.publishUpdatedGroupMessage(id);
-        return null;
-    }
-
-    @Override
-    public Void deleteGroupUser(HttpServletRequest request, HttpServletResponse response, String id, String login) throws Exception {
-
-        if (id.equalsIgnoreCase(ADMIN_GROUP_ID) && login.equalsIgnoreCase(UsersController.ADMIN_LOGIN)) {
-            throw buildApiException(HttpStatus.FORBIDDEN, "Removing group ADMIN from user admin is not allowed");
-        }
-
-        //Only existing groups can be updated
-        findGroupOrThrow(id);
-
-        //Retrieve users from repository for users list, throwing an error if a login is not found
-        UserData foundUser = userRepository.findById(login).orElseThrow(
-            ()-> buildApiException(HttpStatus.NOT_FOUND, String.format(USER_NOT_FOUND_MSG,login))
-        );
-
-        if(foundUser!=null) {
-            foundUser.deleteGroup(id);
-            userRepository.save(foundUser);
-            userService.publishUpdatedUserMessage(foundUser.getLogin());
-        }
-
-        return null;
-    }
-
-    private ApiErrorException buildApiException(HttpStatus httpStatus, String errorMessage) {
-        return new ApiErrorException(
-                ApiError.builder()
-                        .status(httpStatus)
-                        .message(errorMessage)
-                        .build());
+    public GroupsController(GroupRepository groupRepository,UserRepository userRepository,PerimeterRepository perimeterRepository,RabbitEventBus rabbitEventBus) {
+        NotificationService notificationService = new NotificationService(userRepository, rabbitEventBus);
+        this.groupsService = new GroupsService(groupRepository, userRepository, perimeterRepository, notificationService);
     }
 
     @Override
     public List<Group> fetchGroups(HttpServletRequest request, HttpServletResponse response) throws Exception {
-        return groupRepository.findAll().stream().map(Group.class::cast).collect(Collectors.toList());
+        return groupsService.fetchGroups();
     }
 
     @Override
     public Group fetchGroup(HttpServletRequest request, HttpServletResponse response, String id) throws Exception {
-        return groupRepository.findById(id).orElseThrow(
-           ()-> buildApiException(HttpStatus.NOT_FOUND, String.format(GROUP_NOT_FOUND_MSG,id)));
+        OperationResult<Group>  operationResult = groupsService.fetchGroup(id);
+        if (!operationResult.isSuccess()) throw createExceptionFromOperationResult(operationResult);
+        return operationResult.getResult();
     }
+
+    private  <S extends Object>  Exception createExceptionFromOperationResult(OperationResult<S> operationResult) {
+        HttpStatus status = HttpStatus.INTERNAL_SERVER_ERROR;
+        if (operationResult.getErrorType().equals(OperationResult.ErrorType.NOT_FOUND)) status = HttpStatus.NOT_FOUND;
+        if (operationResult.getErrorType().equals(OperationResult.ErrorType.BAD_REQUEST)) status = HttpStatus.BAD_REQUEST;
+        return  new ApiErrorException(
+            ApiError.builder()
+                    .status(status)
+                    .message(operationResult.getErrorMessage())
+                    .build());
+    } 
+
+    @Override
+    public Group createGroup(HttpServletRequest request, HttpServletResponse response, Group group) throws Exception {
+        OperationResult<EntityCreationReport<Group>> result = groupsService.createGroup(group);
+        if (result.isSuccess()) {
+            if (!result.getResult().isUpdate()) {
+                response.addHeader("Location", request.getContextPath() + "/groups/" + group.getId());
+                response.setStatus(201);
+            }
+            return result.getResult().getEntity();
+        }
+        else throw  createExceptionFromOperationResult(result);
+    }
+
 
     @Override
     public Group updateGroup(HttpServletRequest request, HttpServletResponse response, String id, Group group) throws Exception {
         //id from group body parameter should match id path parameter
         if(!group.getId().equals(id)){
-            throw buildApiException(HttpStatus.BAD_REQUEST, NO_MATCHING_GROUP_ID_MSG);
+            throw new ApiErrorException(
+                ApiError.builder()
+                        .status(HttpStatus.BAD_REQUEST)
+                        .message(NO_MATCHING_GROUP_ID_MSG)
+                        .build());
         } else {
             return createGroup(request,response,group);
         }
     }
 
     @Override
-    public Void updateGroupUsers(HttpServletRequest request, HttpServletResponse response, String id, List<String> users) throws Exception {
+    public Void deleteGroup(HttpServletRequest request, HttpServletResponse response, String id) throws Exception {
+        OperationResult<String> result = groupsService.deleteGroup(id);
+        if (result.isSuccess()) return null;
+        else throw  createExceptionFromOperationResult(result);
+    }
 
-        //Only existing groups can be updated
-        findGroupOrThrow(id);
+    @Override
+    public Void addGroupUsers(HttpServletRequest request, HttpServletResponse response, String id, List<String> users) throws Exception {
+        OperationResult<String> result = groupsService.addGroupUsers(id, users);
+        if (result.isSuccess()) return null;
+        else throw  createExceptionFromOperationResult(result);
+    }
 
-        List<UserData> formerlyBelongs = userRepository.findByGroupSetContaining(id);
-        List<String> newUsersInGroup = new ArrayList<>(users);
-
-        //Make sure the intended updated users list only contains logins existing in the repository, throwing an error if this is not the case
-        retrieveUsers(users);
-
-        List<UserData> toUpdate =
-                formerlyBelongs.stream()
-                        .filter(u->!users.contains(u.getLogin()))
-                        .peek(u-> {
-                            u.deleteGroup(id);
-                            newUsersInGroup.remove(u.getLogin());
-                            //Send a user config change event for all users that are updated because they're removed from the group
-                            userService.publishUpdatedUserMessage(u.getLogin());
-                        }).collect(Collectors.toList());
-
-        userRepository.saveAll(toUpdate);
-        addGroupUsers(request, response, id, newUsersInGroup); //For users that are added to the group, the event will be published by addGroupUsers.
+    @Override
+    public Void deleteGroupUsers(HttpServletRequest request, HttpServletResponse response, String groupId) throws Exception {
+        OperationResult<String> operationResult = groupsService.deleteGroupUsers(groupId);
+        if (!operationResult.isSuccess()) throw createExceptionFromOperationResult(operationResult);
         return null;
+    }
+
+    @Override
+    public Void deleteGroupUser(HttpServletRequest request, HttpServletResponse response, String id, String login) throws Exception {
+        OperationResult<String> operationResult =  groupsService.deleteGroupUser(id, login);
+        if (!operationResult.isSuccess()) throw createExceptionFromOperationResult(operationResult);
+        return null;
+    }
+
+    @Override
+    public Void updateGroupUsers(HttpServletRequest request, HttpServletResponse response, String id, List<String> users) throws Exception {
+        OperationResult<String> result = groupsService.updateGroupUsers(id, users);
+        if (result.isSuccess()) return null;
+        else throw  createExceptionFromOperationResult(result);
     }
 
     @Override
     public List<Perimeter> fetchGroupPerimeters(HttpServletRequest request, HttpServletResponse response, String id) throws Exception{
-
-        List<String> perimeters = findGroupOrThrow(id).getPerimeters();
-
-        //Retrieve perimeters from repository for perimeters list, throwing an error if a perimeter is not found
-        if (perimeters != null)
-            return retrievePerimeters(perimeters);
-
-        return Collections.emptyList();
+        OperationResult<List<Perimeter>> result = groupsService.fetchGroupPerimeters(id);
+        if (result.isSuccess()) return result.getResult();
+        else throw  createExceptionFromOperationResult(result);
     }
 
     @Override
     public Void updateGroupPerimeters(HttpServletRequest request, HttpServletResponse response, String id, List<String> perimeters) throws Exception{
-
-        //Only existing groups can be updated
-        GroupData group = findGroupOrThrow(id);
-
-        //Make sure the intended updated perimeters list only contains perimeter ids existing in the repository, throwing an error if this is not the case
-        retrievePerimeters(perimeters);
-
-        group.setPerimeters(perimeters);
-        userService.publishUpdatedGroupMessage(id);
-        groupRepository.save(group);
-        return null;
+        OperationResult<String> result = groupsService.updateGroupPerimeters(id, perimeters);
+        if (result.isSuccess()) return null;
+        else throw  createExceptionFromOperationResult(result);
     }
 
     @Override
     public Void addGroupPerimeters(HttpServletRequest request, HttpServletResponse response, String id, List<String> perimeters) throws Exception{
-
-        //Only existing groups can be updated
-        GroupData group = findGroupOrThrow(id);
-
-        //Make sure the perimeters list only contains perimeter ids existing in the repository, throwing an error if this is not the case
-        retrievePerimeters(perimeters);
-
-        for (String perimeter : perimeters)
-            group.addPerimeter(perimeter);
-
-        userService.publishUpdatedGroupMessage(id);
-        groupRepository.save(group);
-        return null;
-    }
-
-    @Override
-    public Void deleteGroup(HttpServletRequest request, HttpServletResponse response, String id) throws Exception {
-
-        // Only existing group can be deleted
-        GroupData foundGroupData = findGroupOrThrow(id);
-
-        // ADMIN group cannot be deleted
-        if (ADMIN_GROUP_ID.equals(id)) {
-            throw buildApiException(HttpStatus.FORBIDDEN, "Deleting group ADMIN is not allowed");
-        }
-
-        // First we have to delete the link between the group to delete and its users
-        removeTheReferenceToTheGroupForMemberUsers(id);
-
-        // Then we can delete the group
-        groupRepository.delete(foundGroupData);
-        return null;
-    }
-
-    // Remove the link between the group and all its members (this link is in "user" mongo collection)
-    private void removeTheReferenceToTheGroupForMemberUsers(String idGroup) {
-        List<UserData> foundUsers = userRepository.findByGroupSetContaining(idGroup);
-
-        if (foundUsers != null && !foundUsers.isEmpty()) {
-            for (UserData userData : foundUsers) {
-                userData.deleteGroup(idGroup);
-                userService.publishUpdatedUserMessage(userData.getLogin());
-            }
-            userRepository.saveAll(foundUsers);
-        } else  userService.publishUpdatedConfigMessage();
-
-    }
-
-    private GroupData findGroupOrThrow(String id) {
-        return groupRepository.findById(id).orElseThrow(
-                ()-> new ApiErrorException(
-                        ApiError.builder()
-                                .status(HttpStatus.NOT_FOUND)
-                                .message(String.format(GROUP_NOT_FOUND_MSG, id))
-                                .build()
-                ));
-    }
-
-    /** Retrieve users from repository for logins list, throwing an error if a login is not found
-     * */
-    private List<UserData> retrieveUsers(List<String> logins) {
-
-        List<UserData> foundUsers = new ArrayList<>();
-        for(String login : logins){
-            UserData foundUser = userRepository.findById(login).orElseThrow(
-                    () -> buildApiException(HttpStatus.BAD_REQUEST, String.format(BAD_USER_LIST_MSG,login)));
-            foundUsers.add(foundUser);
-        }
-        return foundUsers;
-    }
-
-    /** Retrieve perimeters from repository for perimeter list, throwing an error if a perimeter is not found
-     * */
-    private List<Perimeter> retrievePerimeters(List<String> perimeterIds) {
-
-        List<Perimeter> foundPerimeters = new ArrayList<>();
-        for(String perimeterId : perimeterIds){
-            Perimeter foundPerimeter = perimeterRepository.findById(perimeterId).orElseThrow(
-                    () -> buildApiException(HttpStatus.BAD_REQUEST, String.format(BAD_PERIMETER_LIST_MSG, perimeterId)));
-            foundPerimeters.add(foundPerimeter);
-        }
-        return foundPerimeters;
+        OperationResult<String> result = groupsService.addGroupPerimeters(id, perimeters);
+        if (result.isSuccess()) return null;
+        else throw  createExceptionFromOperationResult(result);
     }
 }

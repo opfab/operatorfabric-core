@@ -125,7 +125,8 @@ describe('Archives screen tests', function () {
         archivesAndLogging.clickOnSearchButton();
         checkNumberOfLineDisplayedIs(6);
 
-        openAndCheckArchiveCardContent('Electricity consumption forecast', 'Daily electrical consumption forecast');
+        openAndCheckArchiveCardContent('Electricity consumption forecast', 'Daily electrical consumption forecast',
+                            'Entity recipients : Control Center FR East, Control Center FR North, Control Center FR South');
 
         // We deactivate the admin mode
         archivesAndLogging.clickAdminModeCheckbox();
@@ -166,6 +167,31 @@ describe('Archives screen tests', function () {
         archivesAndLogging.checkAdminModeLinkIsDisplayed();
     });
 
+
+
+    it('Check admin mode for for operator2_it with VIEW_ALL_ARCHIVED_CARDS role ', function () {
+        opfab.loginWithUser('operator2_fr');
+        opfab.navigateToArchives();
+
+        cy.waitDefaultTime();
+
+        archivesAndLogging.checkAdminModeCheckboxIsDisplayed();
+        archivesAndLogging.checkAdminModeCheckboxIsNotChecked();
+
+        archivesAndLogging.clickOnSearchButton();
+        checkNumberOfLineDisplayedIs(3);
+        // We activate the admin mode
+        archivesAndLogging.clickAdminModeCheckbox();
+        archivesAndLogging.clickOnSearchButton();
+
+        checkNumberOfLineDisplayedIs(6);
+
+        openAndCheckArchiveCardContent('⚠️ NETWORK CONTINGENCIES ⚠️', 'ASPHL71SIERE',
+        'Entity recipients : Control Center FR North');
+
+
+    });
+
     it('Check composition of multi-filters for process groups/processes/states for operator1_fr, with a config without process group', function () {
         script.loadEmptyProcessGroups();
         opfab.loginWithUser('operator1_fr');
@@ -175,11 +201,12 @@ describe('Archives screen tests', function () {
         archivesAndLogging.checkAdminModeLinkDoesNotExist();
 
         archivesAndLogging.clickOnProcessSelect();
-        archivesAndLogging.checkNumberOfProcessEntriesIs(7);
+        archivesAndLogging.checkNumberOfProcessEntriesIs(8);
         archivesAndLogging.checkProcessSelectContains('Conference and IT incident');
         archivesAndLogging.checkProcessSelectContains('External recipient');
         archivesAndLogging.checkProcessSelectContains('Message or question');
         archivesAndLogging.checkProcessSelectContains('Task');
+        archivesAndLogging.checkProcessSelectContains('Task Advanced');
         archivesAndLogging.checkProcessSelectContains('IGCC');
         archivesAndLogging.checkProcessSelectContains('Process example');
         archivesAndLogging.checkProcessSelectContains('Test process for cypress');
@@ -188,7 +215,7 @@ describe('Archives screen tests', function () {
 
         archivesAndLogging.clickOnStateSelect();
         archivesAndLogging.selectAllStates();
-        archivesAndLogging.checkNumberOfStateSelectedIs(32);
+        archivesAndLogging.checkNumberOfStateSelectedIs(33);
         // We check this state is not present because it is only a child state
         archivesAndLogging.checkStateSelectDoesNotContains('Planned outage date response');
 
@@ -407,7 +434,7 @@ describe('Archives screen tests', function () {
     }
 
     function delayArchiveRequest() {
-        cy.intercept('/cards/archives/*', (req) => {
+        cy.intercept('/cards/archives', (req) => {
             req.reply((res) => {
                 res.delay = 2000;
             });
@@ -429,20 +456,25 @@ describe('Archives screen tests', function () {
         expect(row['BUSINESS PERIOD']).to.match(/^\d{2}:\d{2} \d{2}\/\d{2}\/\d{4}-$/);
     }
 
-    function openAndCheckArchiveCardContent(cellContent, cardText) {
+    function openAndCheckArchiveCardContent(cellContent, cardText, entityRecipientsFooterText = '') {
         cy.get('#opfab-archives-cards-list').find('td').contains(cellContent.toUpperCase()).should('exist').click();
         cy.get('#opfab-div-card-template-processed').contains(cardText).should('exist');
+
+        if (entityRecipientsFooterText !== '')
+            cy.get('#opfab-archives-card-footer').contains(entityRecipientsFooterText).should('exist');
+
         cy.get('#opfab-archives-card-detail-close').click({force: true});
     }
 
     function checkMultifiltersWhenAllProcessStatesAreDisplayed() {
         // We check we have 6 items in process multi-filter, even without choosing a process group
         archivesAndLogging.clickOnProcessSelect();
-        archivesAndLogging.checkNumberOfProcessEntriesIs(7);
+        archivesAndLogging.checkNumberOfProcessEntriesIs(8);
         archivesAndLogging.checkProcessSelectContains('Conference and IT incident');
         archivesAndLogging.checkProcessSelectContains('External recipient');
         archivesAndLogging.checkProcessSelectContains('Message or question');
         archivesAndLogging.checkProcessSelectContains('Task');
+        archivesAndLogging.checkProcessSelectContains('Task Advanced');
         archivesAndLogging.checkProcessSelectContains('IGCC');
         archivesAndLogging.checkProcessSelectContains('Process example');
         archivesAndLogging.checkProcessSelectContains('Test process for cypress');
@@ -455,11 +487,12 @@ describe('Archives screen tests', function () {
         archivesAndLogging.selectAllProcessGroups();
 
         archivesAndLogging.clickOnProcessSelect();
-        archivesAndLogging.checkNumberOfProcessEntriesIs(7);
+        archivesAndLogging.checkNumberOfProcessEntriesIs(8);
         archivesAndLogging.checkProcessSelectContains('Conference and IT incident');
         archivesAndLogging.checkProcessSelectContains('External recipient');
         archivesAndLogging.checkProcessSelectContains('Message or question');
         archivesAndLogging.checkProcessSelectContains('Task');
+        archivesAndLogging.checkProcessSelectContains('Task Advanced');
         archivesAndLogging.checkProcessSelectContains('IGCC');
         archivesAndLogging.checkProcessSelectContains('Process example');
         archivesAndLogging.checkProcessSelectContains('Test process for cypress');
@@ -468,7 +501,7 @@ describe('Archives screen tests', function () {
 
         archivesAndLogging.clickOnStateSelect();
         archivesAndLogging.selectAllStates();
-        archivesAndLogging.checkNumberOfStateSelectedIs(32);
+        archivesAndLogging.checkNumberOfStateSelectedIs(33);
 
         archivesAndLogging.clickOnProcessSelect();
         archivesAndLogging.unselectAllProcesses();
@@ -486,34 +519,39 @@ describe('Archives screen tests', function () {
     }
 
     function checkMultifiltersForNotAdminModeForItsupervisor1() {
-        // We check we have 5 items in process multi-filter, even without choosing a process group
+        // We check we have 7 items in process multi-filter, even without choosing a process group
         archivesAndLogging.clickOnProcessSelect();
-        archivesAndLogging.checkNumberOfProcessEntriesIs(5);
+        archivesAndLogging.checkNumberOfProcessEntriesIs(7);
         archivesAndLogging.checkProcessSelectContains('Conference and IT incident');
         archivesAndLogging.checkProcessSelectContains('Message or question');
         archivesAndLogging.checkProcessSelectContains('Task');
+        archivesAndLogging.checkProcessSelectContains('Task Advanced');
         archivesAndLogging.checkProcessSelectContains('IGCC');
         archivesAndLogging.checkProcessSelectContains('Process example');
+        archivesAndLogging.checkProcessSelectContains('Test process for cypress');
 
         archivesAndLogging.clickOnProcessGroupSelect();
-        archivesAndLogging.checkNumberOfProcessGroupEntriesIs(2);
+        archivesAndLogging.checkNumberOfProcessGroupEntriesIs(3);
+        archivesAndLogging.checkProcessGroupSelectContains('--');
         archivesAndLogging.checkProcessGroupSelectContains('Base Examples');
         archivesAndLogging.checkProcessGroupSelectContains('User card examples');
         archivesAndLogging.selectAllProcessGroups();
 
         archivesAndLogging.clickOnProcessSelect();
-        archivesAndLogging.checkNumberOfProcessEntriesIs(5);
+        archivesAndLogging.checkNumberOfProcessEntriesIs(7);
         archivesAndLogging.checkProcessSelectContains('Conference and IT incident');
         archivesAndLogging.checkProcessSelectContains('Message or question');
         archivesAndLogging.checkProcessSelectContains('Task');
+        archivesAndLogging.checkProcessSelectContains('Task Advanced');
         archivesAndLogging.checkProcessSelectContains('IGCC');
         archivesAndLogging.checkProcessSelectContains('Process example');
+        archivesAndLogging.checkProcessSelectContains('Test process for cypress');
         archivesAndLogging.selectAllProcesses();
         archivesAndLogging.clickOnProcessSelect();
 
         archivesAndLogging.clickOnStateSelect();
         archivesAndLogging.selectAllStates();
-        archivesAndLogging.checkNumberOfStateSelectedIs(13);
+        archivesAndLogging.checkNumberOfStateSelectedIs(26);
 
         archivesAndLogging.clickOnProcessSelect();
         archivesAndLogging.unselectAllProcesses();

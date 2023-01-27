@@ -32,7 +32,7 @@ After connection, you should see the following screen
 
 image::empty-opfab-page.png[empty opfab screenshot]
 
-To stop the server (if you start it in background), use:
+To stop the server (if you started it in background), use:
 
 ----
 docker-compose down & 
@@ -40,15 +40,15 @@ docker-compose down &
 
 == Examples 
 
-For each example, useful files and scripts are in the directory `client/exampleX`.
+For each example, relevant files and scripts are in the directory `client/exampleX`.
 
 All examples assume you connect to the server from `localhost` (otherwise change the provided scripts)
  
 === Example 1: Send and update a basic card
 
-Go in directory `client/example1`.
+Go in the directory `client/example1`.
 
-To receive the test cards it is necessary to configure a perimeter as you will see in details in Example 5.
+To receive the test cards it is necessary to configure a perimeter which you will have a closer look at in Example 5.
 
 Configure the required perimeter by executing the provided script:
 
@@ -145,7 +145,7 @@ or use provided script:
 
 === Example 2: Publish a new bundle
 
-The way the card is display in the UI is defined via a Bundle containing templates and process description.
+The way the card is displayed on the UI is defined by a Bundle containing templates and a process description.
 
 The bundle structure is the following:
 
@@ -153,7 +153,7 @@ The bundle structure is the following:
 ├── css : stylesheets files
 └── template : handlebar templates for detail card rendering
 config.json : process description and global configuration 
-i18n.json : internalization file
+i18n.json : internationalization file
 ----
 
 The bundle is provided in the bundle directory of example2. It contains a new version of the bundle used in example1.
@@ -205,7 +205,7 @@ To keep the old bundle, we create a new version by setting version to 2.
 
 ==== Package your bundle
 
-Your bundle need to be package in a tar.gz file, a script is available 
+Your bundle needs to be packaged in a tar.gz file, a script is available: 
 ----
 ./packageBundle.sh
 ---- 
@@ -235,9 +235,9 @@ This should return a JSON a response like this:
 
 Your token is the `access_token` value in the JSON, which the script will export to a `$token` environment variable.
 
-The sendBundle.sh script below will use of this variable.
+The sendBundle.sh script below will use this variable.
 
-NOTE: The token will be valid for 10 hours, after you will need to ask for a new one.
+NOTE: The token will be valid for 10 hours, after that you will need to ask for a new one.
 
 ==== Send the bundle 
 
@@ -249,7 +249,7 @@ You can now execute the script, it will send the bundle.
 ./sendBundle.sh
 ----
 
-You should received the following JSON in response, describing your bundle.
+You should receive the following JSON in response, describing your bundle.
 
 [source,JSON]
 ----
@@ -327,9 +327,9 @@ of the bundle:
 
 You can see in the JSON we define a process name "criticalSituation" with 3 states: criticalSituation-begin,
 criticalSituation-update and criticalSituation-end. For each state we define a title for the card, and the template
-a stylesheets to use.
+of stylesheet to use.
 
-The title is a key which refer to i18n.json file:
+The title is a key which refers to the i18n.json file:
 
 [source,JSON]
 ----
@@ -378,13 +378,13 @@ We can now send cards and simulate the process, first we send a card at the begi
 ----
 
 The card refers to the process "criticalSituation" as defined in the config.json, the state attribute is put to
-"criticalSituation-begin" which is the first step of the process, again as defined in the config.json. The card can be sent via provided script :
+"criticalSituation-begin" which is the first step of the process, again as defined in the config.json. The card can be sent via the provided script :
 
 ----
 ./sendCard.sh card.json
 ----
 
-Two other card have be provided to continue the process
+Two other cards have been provided to continue the process
 
 - cardUpdate.json: the state is criticalSituation-update
 - cardEnd.json: the state is criticalSituation-end and severity set to "compliant"
@@ -435,14 +435,14 @@ corresponding bundle to the businessconfig service as it has been loaded in adva
 getting started). If you want to take a look at its content you can find it under
 server/businessconfig-storage/scheduledMaintenance-publisher/1.
 
-Before sending the provided card provided, you need to set the good time values as
+Before sending the provided cards, you need to set the correct time values as
 link:https://en.wikipedia.org/wiki/Epoch_(computing)[epoch] (ms) in the json. For each value you set, you will have a
-point in the timeline. In our example, the first point represent the beginning of the maintenance operation, and the
+dot on the timeline. In our example, the first dot represents the beginning of the maintenance operation, and the
 second the end of the maintenance operation.
 
 For example cards the dates are calculated automatically in the provided `sendCard.sh` script.
 
-It is possible to change dates values by editing the card json file. To get the dates in Epoch, you can use the following commands:
+It is possible to change dates values by editing the card's json file. To get the dates in Epoch, you can use the following commands:
 
 For the first date: 
 ---- 
@@ -472,7 +472,7 @@ A second card (card2.json) is provided as example, as before you can eventually 
 ----
 ./sendCard.sh card2.json
 ----
-This time the severity of the card is ALERT, you should see the point in red in the timeline
+This time the severity of the card is ALERT, you should see the dot in red on the timeline
 
 image::example4.png[example 4 screenshot]
 
@@ -509,7 +509,7 @@ Use the provided script :
 
 The result should be a 201 Http status.
 
-See the result in the UI, you should not see the card.
+Look at the result in the UI, you should not be able to see the card.
 
 To receive the card you need to create a perimeter and to do it you need to be authenticated. To get a token you can *source* the provided script:
 
@@ -565,7 +565,7 @@ The result should be a 200 Http status.
 Now, if you refresh the UI or send again the card, you should see the card.
 
 ==== Card sent to a group and an entity
-If a card is sent to a group and an entity, then to receive the card the user must both a member of this entity and a member of this group and have the process / state of the card within the group's perimeter.
+If a card is sent to a group and an entity, then to receive the card the user must be both a member of this entity and a member of this group and have the process / state of the card within the group's perimeter.
 
 Let's send this card (for ENTITY1_FR and Dispatcher group with process/state not in user's perimeter) :
 [source,JSON]
@@ -593,7 +593,7 @@ Use the provided script :
 
 The result should be a 201 Http status.
 
-See the result in the UI, you should not see the card.
+Look at the result in the UI, you should not be able to see the card.
 
 
 
@@ -623,6 +623,158 @@ Use the provided script :
 
 The result should be a 201 Http status.
 
-See the result in the UI, you should see the card.
+Look at the result in the UI, you should be able to see the card.
+
+=== Example 6: Sending cards from the UI
+
+==== Updating the perimeter
+In the top right corner, left to your username, there is the button to send a new card. 
+
+image::example6_button.png[example 6 screen shot]
+
+If you click on it now, you shouldn't be able to send a card because none of the groups you're part of has the right to send a card. So first we need to set up a new perimeter with the correct rights and associate it to one of your group.
+
+[source,JSON]
+----
+{
+	"id" : "example6-Perimeter",
+	"process" : "defaultProcess",
+	"stateRights" : [
+		{
+			"state" : "messageState",
+			"right" : "ReceiveAndWrite"
+		}
+	]
+}
+----
+Use the provided script :
+----
+./setupPerimeter.sh perimeter.json
+----
+
+
+==== Creating the template to send a card
+Now you need to update the bundle to include a template for the card sending screen. In the *config.json* file of the bundle, it is necessary to define the userCard object.
+
+[source, JSON]
+----
+{
+	"id":"defaultProcess",
+	"name": "Message process",
+	"version":"2",
+	"states": {
+		"messageState": {
+		  "name": "Message",
+		  "description": "Message",
+		  "userCard" : {
+			"template" : "usercard_message",
+			"startDateVisible": false,
+			"endDateVisible" : false,
+			"lttdVisible" : false,
+			"expirationDateVisible" : false
+		  },
+		  "templateName": "message"
+		}
+	}
+}
+----
+
+The bundle folder now contains usercard_message.handlebars:
+[source,handlebars]
+----
+<div class="opfab-textarea">
+	<label> MESSAGE </label>
+	<textarea id="message" name="message" placeholder="Write something.."
+		style="width:100%">{{card.data.message}}</textarea>
+</div>
+
+
+<script>
+    usercardTemplateGateway.getSpecificCardInformation = function () {
+        const message = document.getElementById('message').value;
+        const card = {
+        summary : {key : "message.summary"},
+		title : {key : "message.title"},
+        data : {message: message},
+        };
+        if (message.length<1) return { valid:false , errorMsg:'You must provide a message'}
+        return {
+            valid: true,
+            card: card
+        };
+
+    }
+
+</script>
+----
+
+You can package it and send it to the server with the provided scripts :
+
+----
+./packageBundle.sh | ./sendBundle.sh
+----
+
+Now if you reload the page, you should be able to send a card. Don't forget to send it to an entity you're a part of to receive it. For instance *Control Center FR North*.
+
+image::example6_card_send.png[example 6 screen shot #2]
+
+==== Customize the card sending template
+To go further you can check out the folder named *bundle_updated* to see a template where it is possible to add an object to the message similar to e-mails.
+
+You can see the updated UI using this command line and refreshing the page to update the bundle.
+
+----
+./packageBundle_updated.sh | ./sendBundle.sh
+----
+
+image::example6_card_send_updated.png[example 6 screen shot #3]
+
+
+The object attribute is defined in the userCard template in the *usercard_message.handlebars* file. 
+[source,handlebars]
+----
+        <div class="opfab-textarea">
+            <label> Object </label>
+            <textarea id="object" name="object" placeholder="Write something.."
+                style="width:100%">{{card.data.object}}</textarea>
+        </div>
+        <br/>
+
+        <div class="opfab-textarea">
+            <label> MESSAGE </label>
+            <textarea id="message" name="message" placeholder="Write something.."
+                style="width:100%">{{card.data.message}}</textarea>
+        </div>
+
+<script>
+    usercardTemplateGateway.getSpecificCardInformation = function () {
+        const message = document.getElementById('message').value;
+        const object = document.getElementById('object').value;
+        const card = {
+        summary : {key : "message.summary"},
+		title : {key : "message.title"},
+        data : {message: message, object: object},
+        };
+        if (message.length<1) return { valid:false , errorMsg:'You must provide a message'}
+        return {
+            valid: true,
+            card: card
+        };
+
+    }
+
+</script>
+----
+
+If you look at the *message.handlebars* file in the bundle, you will see how the template was changed to take the object attribute into account:
+
+[source,handlebars]
+----
+<h2><b>Object:</b> {{card.data.object}}</h2>
+
+{{card.data.message}}
+----
+
+See the link:https://opfab.github.io/documentation/current/reference_doc/#user_cards[card documentation] for further informations on cards.
 
 include::troubleshooting.adoc[leveloffset=+1]

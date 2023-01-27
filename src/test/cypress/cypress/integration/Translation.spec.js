@@ -291,7 +291,7 @@ describe('Test translations', function () {
     });
 
     it('Check Business period translations', function () {
-        const currentDate = new Date(2030, 11, 31, 23, 46);
+        const currentDate = new Date(2020, 11, 31, 23, 46); // Date must be in the past to avoid session close with token expiration
         opfab.loginWithUser('operator1_fr');
         cy.clock(currentDate);
        
@@ -299,33 +299,33 @@ describe('Test translations', function () {
         cy.tick(1000);
         cy.get('#opfab-navbar-menu-feed').click();
         cy.tick(5000);
-        cy.get('#opfab-timeline-title').should('have.text', ' 31 December 2030 ');
+        cy.get('#opfab-timeline-title').should('have.text', ' 31 December 2020 ');
         checkBusinessPeriodLinks('Real Time', 'Day', '7 Days', 'Week', 'Month', 'Year');
 
         cy.get('#opfab-navbar-menu-monitoring').should('exist').click();
-        cy.get('.opfab-business-period').should('have.text', 'Business period : 21:30 31/12/2030 -- 09:00 01/01/2031 ');
+        cy.get('.opfab-business-period').should('have.text', 'Business period : 21:30 31/12/2020 -- 09:00 01/01/2021 ');
         cy.tick(1000);
 
         changeLanguage(FRENCH, true);
         cy.tick(1000);
         cy.get('#opfab-navbar-menu-feed').click();
         cy.tick(5000);
-        cy.get('#opfab-timeline-title').should('have.text', ' 31 décembre 2030 ');
+        cy.get('#opfab-timeline-title').should('have.text', ' 31 décembre 2020 ');
         checkBusinessPeriodLinks('Temps réel', 'Jour', '7 Jours', 'Semaine', 'Mois', 'Année');
 
         cy.get('#opfab-navbar-menu-monitoring').should('exist').click();
-        cy.get('.opfab-business-period').should('have.text', 'Période métier : 21:30 31/12/2030 -- 09:00 01/01/2031 ');
+        cy.get('.opfab-business-period').should('have.text', 'Période métier : 21:30 31/12/2020 -- 09:00 01/01/2021 ');
         cy.tick(1000);
 
         changeLanguage(DUTCH, true);
         cy.tick(1000);
         cy.get('#opfab-navbar-menu-feed').click();
         cy.tick(5000);
-        cy.get('#opfab-timeline-title').should('have.text', ' 31 december 2030 ');
+        cy.get('#opfab-timeline-title').should('have.text', ' 31 december 2020 ');
         checkBusinessPeriodLinks('Realtime', 'Dag', '7 Dagen', 'Week', 'Maand', 'Jaar');
 
         cy.get('#opfab-navbar-menu-monitoring').should('exist').click();
-        cy.get('.opfab-business-period').should('have.text', 'Bedrijfsperiode : 21:30 31/12/2030 -- 09:00 01/01/2031 ');
+        cy.get('.opfab-business-period').should('have.text', 'Bedrijfsperiode : 21:30 31/12/2020 -- 09:00 01/01/2021 ');
     });
 
     it('Check Feed filter translations', function () {

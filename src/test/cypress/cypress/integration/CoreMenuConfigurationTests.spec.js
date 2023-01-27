@@ -1,4 +1,4 @@
-/* Copyright (c) 2021-2022, RTE (http://www.rte-france.com)
+/* Copyright (c) 2021-2023, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -29,7 +29,6 @@ describe ('Core menu configuration tests',function () {
     // The menus that are accessible via the dropdown menu under the user icon on the right are listed separately as
     // it is necessary to open the menu first before checking their presence
     const userMenuItems = [
-        {menu_id: "admin", selector: "#opfab-navbar-right-menu-admin"},
         {menu_id: "settings", selector: "#opfab-navbar-right-menu-settings"},
         {menu_id: "feedconfiguration", selector: "#opfab-navbar-right-menu-feedconfiguration"},
         {menu_id: "realtimeusers", selector: "#opfab-navbar-right-menu-realtimeusers"},
@@ -38,7 +37,14 @@ describe ('Core menu configuration tests',function () {
         {menu_id: "logout", selector: "#opfab-navbar-right-menu-logout"}
     ];
 
-    const allMenuItems = navbarMenuItems.concat(userMenuItems);
+    const adminMenuItems = [
+        {menu_id: "admin", selector: "#opfab-navbar-right-menu-admin"},
+        {menu_id: "externaldevicesconfiguration", selector: "#opfab-navbar-right-menu-externaldevicesconfiguration"},
+        {menu_id: "useractionlogs", selector: "#opfab-navbar-right-menu-useractionlogs"},
+
+    ];
+
+    const allMenuItems = navbarMenuItems.concat(userMenuItems, adminMenuItems);
 
     const users = ['admin','operator1_fr'];
 
@@ -60,17 +66,8 @@ describe ('Core menu configuration tests',function () {
         users.forEach((user) => {
 
             it('Menu should not be visible for ' + user, ()=>{
-
+                script.configureMenuNotDefined();
                 opfab.loginWithUser(user);
-
-                allMenuItems.forEach((item) => {
-                    script.deleteCoreMenuFromConf(item.menu_id); // Remove menu item with given id from ui-menu.json
-                    // Reload and check was initially performed after each update rather than globally to make sure that
-                    // there was no interference between menus (for example if a menu was linked to another menus configuration by mistake)
-                    // Unfortunately it made the tests too long.
-                })
-
-                cy.reload();
 
                 navbarMenuItems.forEach((item) => {
                     cy.get(item.selector).should('not.exist'); // Check that the corresponding element is not present
@@ -93,14 +90,8 @@ describe ('Core menu configuration tests',function () {
         users.forEach((user) => {
 
             it('Menu should not be visible for ' + user, ()=>{
-
+                script.configureMenuNotVisibleForAllUsers();
                 opfab.loginWithUser(user);
-
-                allMenuItems.forEach((item) => {
-                    script.updateCoreMenuInConf(item.menu_id,"visible",false);
-                })
-
-                cy.reload();
 
                 navbarMenuItems.forEach((item) => {
                     cy.get(item.selector).should('not.exist'); // Check that the corresponding element is not present
@@ -115,22 +106,15 @@ describe ('Core menu configuration tests',function () {
         })
 
     })
+    
 
-    describe('Check behaviour if defined and visibility is true and showOnlyForGroups is not set', function () {
+    describe('Check behaviour if defined and visibility is true and showOnlyForGroups not set', function () {
         // If core menu is defined with visibility true and showOnlyForGroups not defined, menu should be visible for all users
+        it('Menu should be visible for admin' , ()=>{
+            script.configureMenuVisibleForAllUsers();
 
-        users.forEach((user) => {
 
-            it('Menu should be visible for ' + user, ()=>{
-
-                opfab.loginWithUser(user);
-
-                allMenuItems.forEach((item) => {
-                    script.deleteCoreMenuFromConf(item.menu_id); // Remove menu item with given id from ui-menu.json
-                    script.updateCoreMenuInConf(item.menu_id,"visible",true);
-                })
-
-                cy.reload();
+                opfab.loginWithUser('admin');
 
                 navbarMenuItems.forEach((item) => {
                     cy.get(item.selector).should('exist'); // Check that the corresponding element is present
@@ -140,24 +124,41 @@ describe ('Core menu configuration tests',function () {
                 userMenuItems.forEach((item) => {
                     cy.get(item.selector).should('exist'); // Check that the corresponding element is not present
                 })
+                adminMenuItems.forEach((item) => {
+                    cy.get(item.selector).should('exist'); // Check that the corresponding element is present
+                })
 
-            })
         })
 
+        it('Menu should be visible for operator1_fr' , ()=>{
+            script.configureMenuVisibleForAllUsers();
+
+                opfab.loginWithUser('operator1_fr');
+
+                navbarMenuItems.forEach((item) => {
+                    cy.get(item.selector).should('exist'); // Check that the corresponding element is present
+                })
+
+                cy.get('#opfab-navbarContent').find('#opfab-navbar-drop-user-menu').click();
+                userMenuItems.forEach((item) => {
+                    cy.get(item.selector).should('exist'); // Check that the corresponding element is  present
+                })
+                // Admin menu are not visible because ADMIN permission is needed, even if showOnlyForGroups is not set
+                adminMenuItems.forEach((item) => {
+                    cy.get(item.selector).should('not.exist'); // Check that the corresponding element is not present
+                })
+
+        })
     })
 
+
     describe('Check behaviour if defined and visibility is true and showOnlyForGroups is set to ["ADMIN"]', function () {
-   
-        it('Menu should be visible for admin', ()=>{
+
+        it('Menu should be visible for admin group', ()=>{
+            script.configureMenuForAdminGroup();
+
 
             opfab.loginWithUser('admin');
-
-            allMenuItems.forEach((item) => {
-                script.updateCoreMenuInConf(item.menu_id,"visible",true);
-                script.updateCoreMenuInConf(item.menu_id,"showOnlyForGroups",'[\\\"ADMIN\\\"]');
-            })
-
-            cy.reload();
 
             navbarMenuItems.forEach((item) => {
                 cy.get(item.selector).should('exist');
@@ -165,21 +166,17 @@ describe ('Core menu configuration tests',function () {
 
             cy.get('#opfab-navbarContent').find('#opfab-navbar-drop-user-menu').click();
             userMenuItems.forEach((item) => {
-                cy.get(item.selector).should('exist'); // Check that the corresponding element is not present
+                cy.get(item.selector).should('exist'); // Check that the corresponding element is present
+            })
+            adminMenuItems.forEach((item) => {
+                cy.get(item.selector).should('exist'); // Check that the corresponding element is present
             })
 
         })
 
         it('Menu should be not be visible for operator1_fr', ()=>{
-
+            script.configureMenuForAdminGroup();
             opfab.loginWithUser('operator1_fr');
-
-            allMenuItems.forEach((item) => {
-                script.updateCoreMenuInConf(item.menu_id,"visible",true);
-                script.updateCoreMenuInConf(item.menu_id,"showOnlyForGroups",'[\\\"ADMIN\\\"]');
-            })
-
-            cy.reload();
 
             navbarMenuItems.forEach((item) => {
                 cy.get(item.selector).should('not.exist');
@@ -187,6 +184,9 @@ describe ('Core menu configuration tests',function () {
 
             cy.get('#opfab-navbarContent').find('#opfab-navbar-drop-user-menu').click();
             userMenuItems.forEach((item) => {
+                cy.get(item.selector).should('not.exist'); // Check that the corresponding element is not present
+            })
+            adminMenuItems.forEach((item) => {
                 cy.get(item.selector).should('not.exist'); // Check that the corresponding element is not present
             })
 
@@ -222,9 +222,9 @@ describe ('Core menu configuration tests',function () {
 
         })
 
-        it('Tests with operator1_fr', ()=>{
+        it('Tests with operator2_fr', ()=>{
 
-            opfab.loginWithUser('operator1_fr');
+            opfab.loginWithUser('operator2_fr');
 
             cy.log('Testing visible: true and showOnlyForGroups: []')
             script.updateCoreMenuInConf(item.menu_id,"visible",true);
@@ -248,8 +248,6 @@ describe ('Core menu configuration tests',function () {
 
 
     })
-
-
 
 
 })

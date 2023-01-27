@@ -82,6 +82,9 @@ public class CardPublicationData implements Card {
     @Indexed
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private Instant endDate;
+    @Indexed
+    @JsonInclude(JsonInclude.Include.NON_NULL)
+    private Instant expirationDate;
     
     private SeverityEnum severity;
     @Singular
@@ -137,6 +140,9 @@ public class CardPublicationData implements Card {
 
     private Boolean toNotify;
 
+    @JsonInclude(JsonInclude.Include.NON_EMPTY)
+    private RRule rRule;
+
     @Indexed
     private Instant lastAckDate;
 
@@ -164,6 +170,7 @@ public class CardPublicationData implements Card {
                 .lttd(this.getLttd())
                 .startDate(this.getStartDate())
                 .endDate(this.getEndDate())
+                .expirationDate(this.getExpirationDate())
                 .publishDate(this.getPublishDate())
                 .severity(this.getSeverity())
                 .tags(this.getTags())
@@ -181,8 +188,12 @@ public class CardPublicationData implements Card {
                 .secondsBeforeTimeSpanForReminder(this.secondsBeforeTimeSpanForReminder)
                 .entityRecipients(this.getEntityRecipients());
 
-        if(this.getTimeSpans()!=null)
+        if (this.getTimeSpans() != null)
             result.timeSpansSet(new HashSet<>(this.getTimeSpans()));
+
+        if (this.getRRule() != null)
+            result.rRule(this.getRRule());
+
         return result.build();
     }
 
@@ -192,6 +203,6 @@ public class CardPublicationData implements Card {
     }
 
     public void setKeepChildCards(Boolean keepChildCards) {
-        this.keepChildCards = keepChildCards != null ? keepChildCards : false;
+        this.keepChildCards = (keepChildCards != null) && keepChildCards;
     }
 }

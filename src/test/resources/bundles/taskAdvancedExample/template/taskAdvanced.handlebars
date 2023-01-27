@@ -1,0 +1,75 @@
+
+<!-- Copyright (c) 2022-2023, RTE (http://www.rte-france.com)                   -->
+<!-- See AUTHORS.txt                                                       -->
+<!-- This Source Code Form is subject to the terms of the Mozilla Public   -->
+<!-- License, v. 2.0. If a copy of the MPL was not distributed with this   -->
+<!-- file, You can obtain one at http://mozilla.org/MPL/2.0/.              -->
+<!-- SPDX-License-Identifier: MPL-2.0                                      -->
+<!-- This file is part of the OperatorFabric project.                      -->
+
+
+<h2> You have the following task to do  :  </h2>
+<br/>
+<br/>
+<center>
+<h3 >
+
+{{keepSpacesAndEndOfLine card.data.taskDescription }}
+
+
+<br/>
+Duration: {{card.data.durationInMinutes}} minutes<br/>
+<br/> 
+
+At {{padStart card.data.byhour 2 '0'}}:{{padStart card.data.byminute 2 '0'}}
+<span id="byweekday"></span><br/>
+<br/>
+<span id="bymonth"></span>
+
+</h3>
+</center>
+
+<script>
+
+      cardTemplate = {
+            init: function() {
+                  const byweekday = "{{card.data.byweekday}}";
+                  let textForByweekday ="";
+                  if (byweekday.includes("MO"))  textForByweekday += " Monday";
+                  if (byweekday.includes("TU"))  textForByweekday += " Tuesday";
+                  if (byweekday.includes("WE"))  textForByweekday += " Wednesday";
+                  if (byweekday.includes("TH"))  textForByweekday += " Thursday ";
+                  if (byweekday.includes("FR"))  textForByweekday += " Friday";
+                  if (byweekday.includes("SA"))  textForByweekday += " Saturday";
+                  if (byweekday.includes("SU"))  textForByweekday += " Sunday";
+                  if (textForByweekday !== "")   textForByweekday = "on" + textForByweekday;
+                  document.getElementById("byweekday").innerHTML = textForByweekday;
+
+                  const bymonth = "{{card.data.bymonth}}";
+                  let textForBymonth = "";
+
+                  if (!!bymonth) {
+                      const bymonthArray = bymonth.split(',');
+
+                      if (bymonthArray.includes("1"))  textForBymonth += " January";
+                      if (bymonthArray.includes("2"))  textForBymonth += " February";
+                      if (bymonthArray.includes("3"))  textForBymonth += " March";
+                      if (bymonthArray.includes("4"))  textForBymonth += " April ";
+                      if (bymonthArray.includes("5"))  textForBymonth += " May";
+                      if (bymonthArray.includes("6"))  textForBymonth += " June";
+                      if (bymonthArray.includes("7"))  textForBymonth += " July";
+                      if (bymonthArray.includes("8"))  textForBymonth += " August";
+                      if (bymonthArray.includes("9"))  textForBymonth += " September";
+                      if (bymonthArray.includes("10")) textForBymonth += " October";
+                      if (bymonthArray.includes("11")) textForBymonth += " November";
+                      if (bymonthArray.includes("12")) textForBymonth += " December";
+                  }
+                  if (textForBymonth !== "") {
+                      textForBymonth = "in" + textForBymonth;
+                  }
+                  document.getElementById("bymonth").innerHTML = textForBymonth;
+            }
+      }
+      cardTemplate.init();
+
+</script>

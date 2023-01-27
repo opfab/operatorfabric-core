@@ -30,7 +30,10 @@
       "invalidActiveStartDate": "Datum 'Actief van' is ongeldig.",
       "invalidActiveEndDate": "Datum 'Actief tot' is ongeldig.",
       "publishEndDateBeforeStartDate" : "'Publiceren tot' moet na 'Publiceren van' liggen.",
-      "activeEndDateBeforeStartDate" : "'Actief tot' moet na 'Actief van' liggen."
+      "activeEndDateBeforeStartDate" : "'Actief tot' moet na 'Actief van' liggen.",
+      "invalidFromDate": "Datum 'Van' is ongeldig.",
+      "invalidToDate": "Datum 'Tot' is ongeldig.",
+      "toDateBeforeFromDate" : "'Tot' moet na 'Van' liggen."
     },
     "result": {
       "severity": "ERNST",
@@ -105,7 +108,8 @@
     "switchToDayMode": "Dag modus",
     "realTimeUsers": "Realtime gebruikers",
     "externalDevicesConfiguration": "Extern apparaat configuratie",
-    "activityArea": "Activiteitengebied"
+    "activityArea": "Activiteitengebied",
+    "useractionlogs": "Logboek"
   },
   "timeline": {
     "hideTimeline" : "Verberg Tijdlijn",
@@ -182,7 +186,8 @@
       "lttd": "Resterende tijd om te beslissen",
       "hasAResponseFromYourEntity" : "Uw entiteit heeft al gereageerd.",
       "loadingInProgress": "Kaart wordt geladen",
-      "seeGroupedCards": "Open deze kaart om gegroepeerde kaarten te zien"
+      "seeGroupedCards": "Open deze kaart om gegroepeerde kaarten te zien",
+      "expirationDate": "Vervaldatum"
     },
     "acknowledgeAllCards": {
       "label": "Bevestig alle kaarten",
@@ -201,7 +206,8 @@
     "moreCards": "kaarten over",
     "lastResponse": "Laatste reactie :",
     "cardLoadingInProgress":"Bezig met laden van de kaart...",
-    "cardNotFound": "De kaart die u zoekt werd niet gevonden."
+    "cardNotFound": "De kaart die u zoekt werd niet gevonden.",
+    "entityRecipients" : "Ontvangers entiteiten :"
   },
   "login": {
     "reset": "Opnieuw instellen",
@@ -257,6 +263,9 @@
         "selectTypeOfStateText" : "Selecteer een Proces status"
       }
     },
+    "tips": {
+      "hasAResponseFromYourEntity" : "Uw entiteit heeft al gereageerd."
+    },
     "seeDetails": "DETAILS BEKIJKEN"
   },
   "button": {
@@ -288,12 +297,14 @@
       "templateError": "Technische fout: ongeldige sjabloon",
       "impossibleToSendCard": "Om technische redenen is het onmogelijk om de kaart te verzenden",
       "lttdBeforeStartDate": "De beperkingsdatum voor reactie moet na de startdatum liggen.",
-      "lttdAfterEndDate": "De beperkingsdatum voor reactie moet vóór de einddatum liggen."
+      "lttdAfterEndDate": "De beperkingsdatum voor reactie moet vóór de einddatum liggen.",
+      "expirationDateBeforeStartDate": "De vervaldatum moet na de startdatum liggen."
     },
     "filters": {
       "severity": "ERNST",
       "startDate":  "STARTDATUM",
       "endDate":  "EINDDATUM",
+      "expirationDate": "VERVALDATUM",
       "lttd": "BEPERK DATUM VOOR REACTIE",
       "recipients": "ONTVANGERS"
     },
@@ -350,6 +361,7 @@
         "name": "NAAM",
         "description": "OMSCHRIJVING",
         "perimeters" : "PERIMETERS",
+        "permissions" : "TOESTEMMING",
         "users": "GEBRUIKERS",
         "realtime": "REAL TIME",
         "type": "TYPE",
@@ -382,6 +394,12 @@
         "confirmDelete": "Wilt u de perimeter echt verwijderen?",
         "add":"NIEUWE PERIMETER TOEVOEGEN"
       },
+      "process": {
+        "ProcessId": "ID",
+        "ProcessName": "PROCES",
+        "ProcessVersion": "HUIDIGE VERSIE",
+        "confirmDelete": "Wilt u het proces echt verwijderen?"
+      },
       "user": {
         "login": "GEBRUIKERSNAAM",
         "lastName": "ACHTERNAAM",
@@ -399,6 +417,7 @@
       "selectStateText": "Selecteer een Status",
       "selectRightText": "Selecteer een Recht",
       "selectGroupTypeText": "Selecteer een Type",
+      "selectGroupPermissionText": "Selecteer een Toestemming",
       "edit": "Wijzigen",
       "delete": "Verwijderen",
       "save": "WIJZIGINGEN OPSLAAN",
@@ -490,6 +509,21 @@
     "delete": "VERWIJDEREN",
     "id": "APPARATEN",
     "isEnabled": "IS INGESCHAKELD"
+  },
+  "useractionlogs": {
+    "title": "LOGBOEKEN VAN GEBRUIKERSACTIES",
+    "date": "Datum",
+    "action": "Actie",
+    "login": "Gebruikersnaam",
+    "entities": "Entiteiten",
+    "cardUid": "Kaart UID",
+    "comment": "Opmerking",
+    "filters": {
+      "action": "ACTIE",
+      "login": "GEBRUIKERSNAAM",
+      "dateFrom": "VAN",
+      "dateTo": "TOT"
+    }
   },
   "datePicker": {
     "monday": "Ma",

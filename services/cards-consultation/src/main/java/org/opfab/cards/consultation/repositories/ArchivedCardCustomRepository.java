@@ -11,10 +11,10 @@
 package org.opfab.cards.consultation.repositories;
 
 import org.opfab.cards.consultation.model.ArchivedCardConsultationData;
+import org.opfab.cards.consultation.model.ArchivedCardsFilter;
 import org.opfab.cards.consultation.model.LightCard;
 import org.opfab.users.model.CurrentUserWithPerimeters;
 import org.springframework.data.domain.Page;
-import org.springframework.util.MultiValueMap;
 
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
@@ -22,6 +22,6 @@ import reactor.util.function.Tuple2;
 
 public interface ArchivedCardCustomRepository extends UserUtilitiesCommonToCardRepository<ArchivedCardConsultationData> {
 
-    Mono<Page<LightCard>> findWithUserAndParams(Tuple2<CurrentUserWithPerimeters,MultiValueMap<String, String>> params);
     Flux<ArchivedCardConsultationData> findByParentCard(ArchivedCardConsultationData parent);
+    Mono<Page<LightCard>> findWithUserAndFilter(Tuple2<CurrentUserWithPerimeters, ArchivedCardsFilter> filter);
 }

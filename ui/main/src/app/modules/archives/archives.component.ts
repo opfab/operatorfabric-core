@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2022, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2023, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -10,12 +10,11 @@
 import {Component, ElementRef, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {Observable, Subject} from 'rxjs';
 import {AppState} from '@ofStore/index';
-import {ProcessesService} from '@ofServices/processes.service';
+import {ProcessesService} from 'app/business/services/processes.service';
 import {Store} from '@ngrx/store';
 import {takeUntil, tap} from 'rxjs/operators';
 import {FormControl, FormGroup} from '@angular/forms';
-import {ConfigService} from '@ofServices/config.service';
-import {DateTimeFormatterService} from '@ofServices/date-time-formatter.service';
+import {ConfigService} from 'app/business/services/config.service';
 import {NgbModal, NgbModalOptions, NgbModalRef} from '@ng-bootstrap/ng-bootstrap';
 import {CardService} from '@ofServices/card.service';
 import {LightCard} from '@ofModel/light-card.model';
@@ -23,11 +22,14 @@ import {Page} from '@ofModel/page.model';
 import {ExportService} from '@ofServices/export.service';
 import {TranslateService} from '@ngx-translate/core';
 import {UserPreferencesService} from '@ofServices/user-preference.service';
-import {Utilities} from 'app/common/utilities';
+import {Utilities} from 'app/business/common/utilities';
 import {Card, CardData} from '@ofModel/card.model';
 import {ArchivesLoggingFiltersComponent} from '../share/archives-logging-filters/archives-logging-filters.component';
 import {EntitiesService} from '@ofServices/entities.service';
 import {DisplayContext} from '@ofModel/templateGateway.model';
+import {FilterMatchTypeEnum, FilterModel} from '@ofModel/filter-model';
+import {ArchivedCardsFilter} from '@ofModel/archived-cards-filter.model';
+import {DateTimeFormatterService} from 'app/business/services/date-time-formatter.service';
 
 @Component({
     selector: 'of-archives',
@@ -78,6 +80,7 @@ export class ArchivesComponent implements OnDestroy, OnInit {
     selectedCard: Card;
     selectedChildCards: Card[];
     fromEntityOrRepresentativeSelectedCard = null;
+    entityRecipientsForFooter = '';
     listOfProcesses = [];
 
     lastRequestID: number;
@@ -147,13 +150,12 @@ export class ArchivesComponent implements OnDestroy, OnInit {
         this.technicalError = false;
         this.loadingInProgress = true;
 
-        this.filtersTemplate.filters.set('page', [page_number]);
-        this.filtersTemplate.filters.set('latestUpdateOnly', [String(this.isCollapsibleUpdatesActivated)]);
-
         const isAdminModeChecked = this.filtersTemplate.filters.get('adminMode')[0];
 
+        const filter = this.getFilter(page_number, Number(this.size), this.filtersTemplate.filters, this.isCollapsibleUpdatesActivated);
+
         this.cardService
-        .fetchArchivedCards(this.filtersTemplate.filters)
+        .fetchFilteredArchivedCards(filter)
         .pipe(takeUntil(this.unsubscribe$))
         .subscribe({
             next: (page: Page<LightCard>) => {
@@ -186,6 +188,19 @@ export class ArchivesComponent implements OnDestroy, OnInit {
                 this.technicalError = true;
             }
         });
+    }
+
+    private getFilter(page: number, size: number, filtersMap: Map<string, any[]>, latestUpdateOnly: boolean) : ArchivedCardsFilter {
+        const filters = [];
+        let isAdminMode = false;
+        filtersMap.forEach( (values, key) => {
+            if (key === 'adminMode')
+                isAdminMode = values[0];
+            else
+                filters.push(new FilterModel(key,null,FilterMatchTypeEnum.IN, values));
+        });
+
+        return new ArchivedCardsFilter(page, size, isAdminMode, false, latestUpdateOnly, filters);
     }
 
     // we show a spinner on screen if archives loading takes more than 1 second
@@ -233,20 +248,20 @@ export class ArchivesComponent implements OnDestroy, OnInit {
         const filters: Map<string, string[]> = new Map();
         filters.set('process', [lightCard.process]);
         filters.set('processInstanceId', [lightCard.processInstanceId]);
-        filters.set('size', [(1 + this.historySize).toString()]);
-        filters.set('page', ['0']);
 
         if (isAdminModeChecked) {
             filters.set('adminMode', ['true']);
         }
+        const filter = this.getFilter(0, 1 + this.historySize , filters, false);
 
-        return this.cardService.fetchArchivedCards(filters).pipe(
+
+        return this.cardService.fetchFilteredArchivedCards(filter).pipe(
             takeUntil(this.unsubscribe$),
             tap({
                 next: (page: Page<LightCard>) => {
                     this.removeMostRecentCardFromHistories(lightCard.id, page.content);
                     // log to debug CI/CD Failures
-                    console.debug(new Date().toISOString, 'Archives : receive card update ');
+                    console.debug(new Date().toISOString(), 'Archives : receive card update ');
                     // since we are in asynchronous mode, we test requestId to avoid that the requests "overlap" and that the results appear in a wrong order
                     if (requestID === this.lastRequestID)
                         this.updatesByCardId.splice(index, 1, {
@@ -287,18 +302,16 @@ export class ArchivesComponent implements OnDestroy, OnInit {
     initExportArchiveData(): void {
         const exportArchiveData = [];
 
-        this.filtersTemplate.filters.delete('size');
-        this.filtersTemplate.filters.delete('page');
-        this.filtersTemplate.filters.delete('latestUpdateOnly');
-
         const modalOptions: NgbModalOptions = {
             centered: true,
             backdrop: 'static', // Modal shouldn't close even if we click outside it
             size: 'sm'
         };
         this.modalRef = this.modalService.open(this.exportTemplate, modalOptions);
+
+        const filter = this.getFilter(0, 1 + this.historySize, this.filtersTemplate.filters, false);
         this.cardService
-            .fetchArchivedCards(this.filtersTemplate.filters)
+            .fetchFilteredArchivedCards(filter)
             .pipe(takeUntil(this.unsubscribe$))
             .subscribe((page: Page<LightCard>) => {
                 const lines = page.content;
@@ -370,6 +383,7 @@ export class ArchivesComponent implements OnDestroy, OnInit {
             this.selectedCard = card.card;
             this.selectedChildCards = card.childCards;
             this.computeFromEntity();
+            this.computeEntityRecipientsForFooter();
             const options: NgbModalOptions = {
                 size: 'fullscreen'
             };
@@ -395,6 +409,26 @@ export class ArchivesComponent implements OnDestroy, OnInit {
                 this.fromEntityOrRepresentativeSelectedCard += ' (' + representative + ')';
             }
         } else this.fromEntityOrRepresentativeSelectedCard = null;
+    }
+
+    private computeEntityRecipientsForFooter() {
+        const listOfEntityRecipients = [];
+        this.entityRecipientsForFooter = '';
+
+        if (!! this.selectedCard.entityRecipients) {
+            this.selectedCard.entityRecipients.forEach((entityRecipient) => {
+                listOfEntityRecipients.push(this.entitiesService.getEntityName(entityRecipient));
+            });
+        }
+        listOfEntityRecipients.sort();
+
+        listOfEntityRecipients.forEach((entityRecipient) => {
+            this.entityRecipientsForFooter += ' ' + entityRecipient + ',';
+        });
+        if (this.entityRecipientsForFooter.length > 0) {
+            this.entityRecipientsForFooter = this.translate.instant('feed.entityRecipients') +
+                this.entityRecipientsForFooter.slice(0, -1); // we remove the last comma
+        }
     }
 
     getFormattedPublishDate(): any {

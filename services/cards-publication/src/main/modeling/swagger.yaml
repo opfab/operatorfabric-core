@@ -1,7 +1,7 @@
 swagger: '2.0'
 info:
   description: IMPORTANT - The Try it Out button will generate curl requests for examples, but executing them through the UI will not work as authentication has not been set up. This page is for documentation only.
-  version: 3.11.0.RELEASE
+  version: 3.12.0.RELEASE
   title: Card Management API
   termsOfService: ''
   contact:
@@ -99,6 +99,82 @@ definitions:
     example:
       type: DELETE
       cardId: 12345
+  FreqEnum:
+    type: string
+    description: |-
+      Frequency for the recurrence >
+      * SECONDLY
+      * MINUTELY
+      * HOURLY
+      * DAILY
+      * WEEKLY
+      * MONTHLY
+      * YEARLY
+    enum:
+      - SECONDLY
+      - MINUTELY
+      - HOURLY
+      - DAILY
+      - WEEKLY
+      - MONTHLY
+      - YEARLY
+    example: WEEKLY
+  DayEnum:
+    type: string
+    description: |-
+      Defines the days of the week >
+      * MO
+      * TU
+      * WE
+      * TH
+      * FR
+      * SA
+      * SU
+    enum:
+      - MO
+      - TU
+      - WE
+      - TH
+      - FR
+      - SA
+      - SU
+    example: SU
+  RRule:
+    type: object
+    description: An object representing the recurrence of the card (as defined in the RFC 5545)
+    properties:
+      freq:
+        description: Frequency of the recurrence
+        $ref: '#/definitions/FreqEnum'
+      count:
+        description: Defines the number of occurrences at which to range-bound the recurrence
+        type: integer
+      wkst:
+        description: Defines the day on which the workweek starts. Valid values are MO, TU, WE, TH, FR, SA, and SU.
+        $ref: '#/definitions/DayEnum'
+      byweekday:
+        description: Defines a list of days of the week for the recurrence
+        type: array
+        items:
+          $ref: '#/definitions/DayEnum'
+      bymonth:
+        description: Defines a list of months of the year for the recurrence (from 1 to 12, 1 representing January)
+        type: array
+        items:
+          type: integer
+      byhour:
+        description: Defines a list of hours of the day for the recurrence (from 0 to 23)
+        type: array
+        items:
+          type: integer
+      byminute:
+        description: Defines a list of minutes within an hour for the recurrence (from 0 to 59)
+        type: array
+        items:
+          type: integer
+      tzid:
+        description: Time zone identifier (for example 'Europe/Paris', 'Europe/London', ...)
+        type: string
   TimeSpan:
     type: object
     description: An object to define a business time span
@@ -202,6 +278,9 @@ definitions:
       endDate:
         $ref: '#/definitions/EpochDate'
         description: Card validity end time (must be after startDate)
+      expirationDate:
+        $ref: '#/definitions/EpochDate'
+        description: Card deletion time (must be after startDate)
       severity:
         $ref: '#/definitions/SeverityEnum'
         description: Card severity
@@ -210,6 +289,9 @@ definitions:
         items:
           type: string
         description: Tags associated with the card
+      rRule:
+        description: Json object representing the recurrence of the card (as defined in the RFC 5545)
+        $ref: '#/definitions/RRule'
       timeSpans:
         type: array
         description: List of business time span associated to card
@@ -324,6 +406,7 @@ definitions:
       lttd: 1546387230000
       startDate: 1546387200000
       endDate: 1546387250000
+      expirationDate: 1546397250000
       severity: ACTION
       tags:
         - MyService
@@ -408,6 +491,9 @@ definitions:
       endDate:
         $ref: '#/definitions/EpochDate'
         description: Card validity end time
+      expirationDate:
+        $ref: '#/definitions/EpochDate'
+        description: Card deletion time
       publishDate:
         $ref: '#/definitions/EpochDate'
         description: Publication time of the Card
@@ -452,6 +538,9 @@ definitions:
       summaryTranslated:
         description: Card summary translated
         type: string
+      rRule:
+        description: Json object representing the recurrence of the card (as defined in the RFC 5545)
+        $ref: '#/definitions/RRule'
       timeSpans:
         type: array
         description: List of business time span associated to card
@@ -508,6 +597,7 @@ definitions:
       lttd: 1546387230000
       startDate: 1546387200000
       endDate: 1546387250000
+      expirationDate: 1546397250000
       severity: ACTION
       tags:
         - MyService
@@ -564,6 +654,65 @@ definitions:
         type: number
         description: >-
           Page number
+  FilterOperationTypeEnum:
+    type: string
+    description: |-
+      Type of operation between 2 filter conditions
+    enum:
+      - AND
+      - OR
+  FilterMatchTypeEnum:
+    type: string
+    description: |-
+      Type of match to do between column value and filter value
+    enum:
+      - EQUALS
+      - NOTEQUAL
+      - STARTSWITH
+      - ENDSWITH
+      - CONTAINS
+      - NOTCONTAINS
+      - BLANK
+      - NOTBLANK
+      - IN
+  ArchivedCardsFilter:
+    type: object
+    properties:
+      page:
+        type: number
+        description: >-
+          Page number
+      size:
+        type: number
+        description: >-
+          Page size (max number of items in page)
+      adminMode:
+        type: boolean
+      includeChildCards:
+        type: boolean
+      latestUpdateOnly:
+        type: boolean
+      filters:
+        type: array
+        items:
+          $ref: '#/definitions/FilterModel'
+  FilterModel:
+    type: object
+    properties:
+      columnName:
+        type: string
+      matchType:
+        $ref: '#/definitions/FilterMatchTypeEnum'
+      filter:
+        type: array
+        items:
+          type: string
+      condition1:
+        $ref: '#/definitions/FilterModel'
+      condition2:
+        $ref: '#/definitions/FilterModel'
+      operation:
+        $ref: '#/definitions/FilterOperationTypeEnum'
   PublisherTypeEnum:
     type: string
     description: |-
@@ -856,6 +1005,37 @@ paths:
           description: OK
           schema:
             $ref: '#/definitions/Card'
+        '401':
+          description: Authentication required
+        '403':
+          description: Forbidden - User doesn't have any group
+  /archives:
+    post:
+      tags:
+        - archives
+        - read
+      summary: get archived cards matching given criteria
+      description: >-
+        get archived cards matching the criteria given as parameters. Results are limited to the cards that
+        the calling user is allowed to see (based on the card recipients). For performance reasons, the response 
+        does not contain all lightCard fields, the returned fields are : id, uid,publisher, processVersion,process,
+        processInstanceId,state,title,summary,publishDate,startDate,endDate,severity, publisherType,
+        representative,representativeType. The other fields are set to null.
+      operationId: fetchArchivedCardsWithFilterinCriteria
+      consumes:
+        - application/json
+      parameters:
+        - name: filter
+          in: body
+          schema:
+            $ref: '#/definitions/ArchivedCardsFilter'
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/LightCardPage'
+        '400':
+          description: Bad request
         '401':
           description: Authentication required
         '403':

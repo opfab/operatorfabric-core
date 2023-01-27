@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2021, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2022, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -7,25 +7,27 @@
  * This file is part of the OperatorFabric project.
  */
 
-
-
 package org.opfab.users.repositories;
 
 import java.util.List;
+import java.util.Optional;
 
-import org.opfab.users.model.EntityData;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.mongodb.repository.MongoRepository;
-import org.springframework.stereotype.Repository;
+import org.opfab.users.model.Entity;
 
-/**
- * Mongo {@link EntityData} repository
- */
-@Repository
-public interface EntityRepository extends MongoRepository<EntityData,String> {
+public interface EntityRepository {
 
-    Page<EntityData> findAll(Pageable pageable);
-    List<EntityData> findByParentsContaining(String entityId);
+    public List<Entity> findAll();
+
+    public Entity insert(Entity entity);
+
+    public Entity save(Entity entity);
+
+    public Optional<Entity> findById(String id);
+
+    public void delete(Entity entity);
+
+    public void deleteAll();
+
+    public List<Entity> findByParentsContaining(String entityId);
 
 }

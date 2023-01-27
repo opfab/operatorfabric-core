@@ -1,5 +1,5 @@
 /* Copyright (c) 2020, RTEi (http://www.rte-international.com)
- * Copyright (c) 2021-2022, RTE (http://www.rte-france.com)
+ * Copyright (c) 2021-2023, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -23,11 +23,10 @@ import {
     UnAuthenticationFromImplicitFlowAction
 } from '@ofActions/authentication.actions';
 import {environment} from '@env/environment';
-import {GuidService} from '@ofServices/guid.service';
 import {UserService} from '@ofServices/user.service';
 import {AppState} from '@ofStore/index';
 import {Store} from '@ngrx/store';
-import {ConfigService} from '@ofServices/config.service';
+import {ConfigService} from 'app/business/services/config.service';
 import jwt_decode from 'jwt-decode';
 import * as _ from 'lodash-es';
 import {User} from '@ofModel/user.model';
@@ -38,6 +37,7 @@ import {Router} from '@angular/router';
 import {Message, MessageLevel} from '@ofModel/message.model';
 import {I18n} from '@ofModel/i18n.model';
 import {selectAuthenticationState} from '@ofSelectors/authentication.selectors';
+import {GuidService} from 'app/business/services/guid.service';
 
 
 export enum LocalStorageAuthContent {

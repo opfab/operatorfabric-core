@@ -61,10 +61,12 @@ Scenario: Post Card
   When method patch
   Then status 200
 
-# Push card 
+# Push card , retry because it can happen that the new  perimeter has not been propagated
+# to the publication service causing the test to fail 
 Given url opfabPublishCardUrl + 'cards' 
 And header Authorization = 'Bearer ' + authToken 
-And request card  
+And request card
+And retry until responseStatus == 201
 When method post
 Then status 201
 

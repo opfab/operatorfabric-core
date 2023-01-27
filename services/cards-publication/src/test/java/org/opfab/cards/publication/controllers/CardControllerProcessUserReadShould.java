@@ -39,7 +39,7 @@ import java.util.Optional;
 @ActiveProfiles("test")
 @WebAppConfiguration
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-@WithMockOpFabUser(login = "someUser", roles = { "AROLE" })
+@WithMockOpFabUser(login = "someUser")
 class CardControllerProcessUserReadShould extends CardControllerShouldBase {
 
 	String cardUid;
@@ -101,7 +101,7 @@ class CardControllerProcessUserReadShould extends CardControllerShouldBase {
 	}
 
 	@Nested
-	@WithMockOpFabUser(login = "someOtherUser", roles = { "AROLE" })
+	@WithMockOpFabUser(login = "someOtherUser")
 	@TestInstance(Lifecycle.PER_CLASS)
 	class ProcessUserReadNested {
 		@Test
@@ -118,8 +118,7 @@ class CardControllerProcessUserReadShould extends CardControllerShouldBase {
 		}
 
 		@Nested
-		@WithMockOpFabUser(login = "someUser", roles = { "AROLE" })
-		@TestInstance(Lifecycle.PER_CLASS)
+		@WithMockOpFabUser(login = "someUser")
 		class ProcessUserReadNestedTwice {
 
 			@Test
@@ -134,7 +133,7 @@ class CardControllerProcessUserReadShould extends CardControllerShouldBase {
 				Assertions.assertThat(card.get().getUsersReads().size()).isEqualTo(initialNumOfReads);
 			}
 			@Nested
-			@WithMockOpFabUser(login = "someUser", roles = { "AROLE" })
+			@WithMockOpFabUser(login = "someUser")
 			@TestInstance(Lifecycle.PER_CLASS)
 			class ProcessDeleteUserRead {
 
@@ -152,7 +151,7 @@ class CardControllerProcessUserReadShould extends CardControllerShouldBase {
 				}
 
 				@Nested
-				@WithMockOpFabUser(login = "someUser", roles = { "AROLE" })
+				@WithMockOpFabUser(login = "someUser")
 				@TestInstance(Lifecycle.PER_CLASS)
 				class ProcessDeleteUserReadSecond {
 

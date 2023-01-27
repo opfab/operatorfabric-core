@@ -12,7 +12,6 @@ package org.opfab.externalapp.cards;
 import org.opfab.cards.model.Card;
 import org.opfab.cards.model.CardCreationReport;
 import org.opfab.externalapp.common.HttpClientInterceptor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -28,8 +27,11 @@ import java.util.Map;
 @Component
 public class CardClient {
 
-    @Autowired
-    public RestTemplateBuilder builder;
+    private RestTemplateBuilder builder;
+
+    public CardClient(RestTemplateBuilder builder) {
+        this.builder = builder;
+    }
 
     public CardCreationReport postCard(String url, String authToken, Card card) {
         RestTemplate restTemplate = builder.build();

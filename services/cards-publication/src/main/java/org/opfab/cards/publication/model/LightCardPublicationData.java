@@ -48,6 +48,7 @@ public class LightCardPublicationData implements LightCard {
     private Instant publishDate;
     private Instant startDate;
     private Instant endDate;
+    private Instant expirationDate;
     private SeverityEnum severity;
     @JsonInclude(JsonInclude.Include.NON_EMPTY)
     //@Singular not used because lead to a NPE when built from Card
@@ -91,6 +92,9 @@ public class LightCardPublicationData implements LightCard {
     private String wktProjection;
 
     private Integer  secondsBeforeTimeSpanForReminder;
+
+    @JsonInclude(JsonInclude.Include.NON_EMPTY)
+    private RRule rRule;
 
     /**
      * @return timespans, may be null

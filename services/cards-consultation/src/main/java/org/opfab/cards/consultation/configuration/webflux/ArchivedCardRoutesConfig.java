@@ -16,15 +16,13 @@ import lombok.extern.slf4j.Slf4j;
 
 import org.opfab.cards.consultation.model.ArchivedCardConsultationData;
 import org.opfab.cards.consultation.model.ArchivedCardData;
+import org.opfab.cards.consultation.model.ArchivedCardsFilter;
 import org.opfab.cards.consultation.repositories.ArchivedCardRepository;
 import org.opfab.springtools.configuration.oauth.OpFabJwtAuthenticationToken;
 import org.opfab.users.model.CurrentUserWithPerimeters;
-import org.opfab.users.model.User;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.MediaType;
-import org.springframework.util.MultiValueMap;
 import org.springframework.web.reactive.function.server.*;
 import reactor.core.publisher.Mono;
 import reactor.util.function.Tuple2;
@@ -40,7 +38,7 @@ public class ArchivedCardRoutesConfig implements UserExtractor {
 
     private final ArchivedCardRepository archivedCardRepository;
 
-    @Autowired
+    
     public ArchivedCardRoutesConfig(ArchivedCardRepository archivedCardRepository) { this.archivedCardRepository = archivedCardRepository; }
 
     /**
@@ -51,16 +49,24 @@ public class ArchivedCardRoutesConfig implements UserExtractor {
     public RouterFunction<ServerResponse> archivedCardRoutes() {
         return RouterFunctions
                 .route(RequestPredicates.GET("/archives/{id}"),archivedCardGetRoute())
-                .andRoute(RequestPredicates.GET("/archives/**"),archivedCardGetWithQueryRoute())
-                .andRoute(RequestPredicates.OPTIONS("/archives/**"),archivedCardOptionRoute());
+                .andRoute(RequestPredicates.OPTIONS("/archives/**"),archivedCardOptionRoute())
+                .andRoute(RequestPredicates.POST("/archives"),archivedCardPostRoute());
     }
 
-    private HandlerFunction<ServerResponse> archivedCardGetWithQueryRoute() {
-        return request ->
-                extractParameters(request)
-                        .flatMap(params -> archivedCardRepository.findWithUserAndParams(params)
-                                .flatMap(archivedCards-> ok().contentType(MediaType.APPLICATION_JSON)
-                                                .body(fromValue(archivedCards))));
+    private HandlerFunction<ServerResponse> archivedCardPostRoute() {
+        return request -> extractFilterOnPost(request).flatMap(params -> archivedCardRepository.findWithUserAndFilter(params)
+                .flatMap(archivedCards-> ok().contentType(MediaType.APPLICATION_JSON)
+                        .body(fromValue(archivedCards))));
+    }
+
+    private Mono<Tuple2<CurrentUserWithPerimeters, ArchivedCardsFilter>> extractFilterOnPost(ServerRequest request){
+        Mono<ArchivedCardsFilter> filter = request.bodyToMono(ArchivedCardsFilter.class);
+        return request.principal().zipWith(filter)
+                .map(t->{
+                    OpFabJwtAuthenticationToken jwtPrincipal = (OpFabJwtAuthenticationToken) t.getT1();
+                    CurrentUserWithPerimeters c = (CurrentUserWithPerimeters) jwtPrincipal.getPrincipal();
+                    return of(c,t.getT2());
+                });
     }
 
     private HandlerFunction<ServerResponse> archivedCardGetRoute() {
@@ -83,20 +89,6 @@ public class ArchivedCardRoutesConfig implements UserExtractor {
 
     private HandlerFunction<ServerResponse> archivedCardOptionRoute() {
         return request -> ok().build();
-    }
-
-    /**
-     * Extracts request parameters from Authentication and Query parameters
-     * @param request the http request
-     * @return a Tuple containing the principal as a {@link User} and query parameters as a {@link MultiValueMap}
-     */
-    private Mono<Tuple2<CurrentUserWithPerimeters,MultiValueMap<String, String>>> extractParameters(ServerRequest request) {
-        return request.principal()
-                .map( principal ->  {
-                    OpFabJwtAuthenticationToken jwtPrincipal = (OpFabJwtAuthenticationToken) principal;
-                    CurrentUserWithPerimeters c = (CurrentUserWithPerimeters) jwtPrincipal.getPrincipal();
-                    return of(c, request.queryParams());
-                });
     }
 
 }

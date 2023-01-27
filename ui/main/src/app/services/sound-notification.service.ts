@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2022, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2023, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -17,8 +17,9 @@ import {LightCardsStoreService} from './lightcards/lightcards-store.service';
 import {EMPTY, iif, merge, of, Subject, timer} from 'rxjs';
 import {filter, map, switchMap, takeUntil} from 'rxjs/operators';
 import {ExternalDevicesService} from '@ofServices/external-devices.service';
-import {ConfigService} from '@ofServices/config.service';
+import {ConfigService} from 'app/business/services/config.service';
 import {LogOption, OpfabLoggerService} from './logs/opfab-logger.service';
+import {OpfabEventStreamService} from 'app/business/services/opfabEventStream.service';
 
 @Injectable({
     providedIn: 'root'
@@ -58,6 +59,7 @@ export class SoundNotificationService implements OnDestroy {
         private lightCardsStoreService: LightCardsStoreService,
         private externalDevicesService: ExternalDevicesService,
         private configService: ConfigService,
+        private opfabEventStreamService: OpfabEventStreamService,
         private logger: OpfabLoggerService
     ) {
         // use to have access from cypress to the current object for stubbing method playSound
@@ -113,6 +115,7 @@ export class SoundNotificationService implements OnDestroy {
         this.initSoundPlayingForSessionEnd();
 
         this.listenForCardUpdate();
+        this.listenForDisconnection();
     }
 
 
@@ -130,6 +133,10 @@ export class SoundNotificationService implements OnDestroy {
 
     private listenForCardUpdate() {
         this.lightCardsStoreService.getNewLightCards().subscribe((card) => this.handleLoadedCard(card));
+    }
+
+    private listenForDisconnection() {
+        this.opfabEventStreamService.getReceivedDisconnectUser().subscribe( () => this.stopService());
     }
 
     ngOnDestroy() {

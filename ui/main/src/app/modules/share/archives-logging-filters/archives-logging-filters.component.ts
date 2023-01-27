@@ -1,4 +1,4 @@
-/* Copyright (c) 2021-2022, RTE (http://www.rte-france.com)
+/* Copyright (c) 2021-2023, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -8,11 +8,11 @@
  */
 
 import {AfterViewInit, Component, EventEmitter, Input, OnDestroy, OnInit, Output} from '@angular/core';
-import {ConfigService} from '@ofServices/config.service';
+import {ConfigService} from 'app/business/services/config.service';
 import {Card} from '@ofModel/card.model';
 import {LightCard} from '@ofModel/light-card.model';
 import {AbstractControl, FormGroup} from '@angular/forms';
-import {ProcessesService} from '@ofServices/processes.service';
+import {ProcessesService} from 'app/business/services/processes.service';
 import {debounceTime, takeUntil} from 'rxjs/operators';
 import {Subject} from 'rxjs';
 import {NgbDateStruct, NgbTimeStruct} from '@ng-bootstrap/ng-bootstrap';
@@ -25,9 +25,10 @@ import {Store} from '@ngrx/store';
 import {AppState} from '@ofStore/index';
 
 import moment from 'moment';
-import {Utilities} from 'app/common/utilities';
+import {Utilities} from 'app/business/common/utilities';
 import {UserPreferencesService} from '@ofServices/user-preference.service';
 import {UserService} from '@ofServices/user.service';
+import {PermissionEnum} from '@ofModel/permission.model';
 
 export enum FilterDateTypes {
     PUBLISH_DATE_FROM_PARAM = 'publishDateFrom',
@@ -66,7 +67,7 @@ export class ArchivesLoggingFiltersComponent implements OnInit, OnDestroy, After
     @Output() search = new EventEmitter<string>();
     @Output() reset = new EventEmitter<string>();
 
-    isCurrentUserInAdminGroup: boolean;
+    hasCurrentUserRigthsToViewAllArchivedCards: boolean;
     isAdminModeChecked: boolean;
 
     unsubscribe$: Subject<void> = new Subject<void>();
@@ -134,10 +135,10 @@ export class ArchivesLoggingFiltersComponent implements OnInit, OnDestroy, After
         private userPreferences: UserPreferencesService,
         private userService: UserService
     ) {
-        this.isCurrentUserInAdminGroup = this.userService.isCurrentUserAdmin();
+        this.hasCurrentUserRigthsToViewAllArchivedCards = this.userService.isCurrentUserAdmin() || this.userService.hasCurrentUserAnyPermission([PermissionEnum.VIEW_ALL_ARCHIVED_CARDS]);
 
         const isAdminModeCheckedInStorage = this.userPreferences.getPreference('opfab.isAdminModeChecked');
-        this.isAdminModeChecked = this.isCurrentUserInAdminGroup && isAdminModeCheckedInStorage === 'true';
+        this.isAdminModeChecked = this.hasCurrentUserRigthsToViewAllArchivedCards && isAdminModeCheckedInStorage === 'true';
     }
 
     ngOnInit() {
@@ -265,6 +266,7 @@ export class ArchivesLoggingFiltersComponent implements OnInit, OnDestroy, After
         if (!this.filters.get('process')) this.filters.set('process', ids);
     }
 
+
     addProcessesDropdownList(processesDropdownList: any[]): void {
         processesDropdownList.forEach((processMultiSelectOptions) =>
             this.processMultiSelectOptionsWhenSelectedProcessGroup.push(processMultiSelectOptions)
@@ -336,12 +338,15 @@ export class ArchivesLoggingFiltersComponent implements OnInit, OnDestroy, After
                 day: this.parentForm.value.publishDateFrom.date.day
             };
         }
+
         if (this.parentForm.value.publishDateTo?.date) {
             this.publishMaxDate = {
                 year: this.parentForm.value.publishDateTo.date.year,
                 month: this.parentForm.value.publishDateTo.date.month,
                 day: this.parentForm.value.publishDateTo.date.day
             };
+        } else {
+            this.publishMaxDate = null;
         }
 
         if (this.parentForm.value.activeFrom?.date) {
@@ -350,6 +355,8 @@ export class ArchivesLoggingFiltersComponent implements OnInit, OnDestroy, After
                 month: this.parentForm.value.activeFrom.date.month,
                 day: this.parentForm.value.activeFrom.date.day
             };
+        } else {
+            this.activeMinDate = null;
         }
         if (this.parentForm.value.activeTo?.date) {
             this.activeMaxDate = {
@@ -357,6 +364,8 @@ export class ArchivesLoggingFiltersComponent implements OnInit, OnDestroy, After
                 month: this.parentForm.value.activeTo.date.month,
                 day: this.parentForm.value.activeTo.date.day
             };
+        } else {
+            this.activeMaxDate = null;
         }
     }
 

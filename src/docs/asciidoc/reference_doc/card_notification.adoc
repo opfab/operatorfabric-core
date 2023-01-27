@@ -133,7 +133,39 @@ If a timespan is present without a recurrence object, a reminder will arise at `
 
 === Recurrent reminder
 
-It is possible to set a recurrent reminder via the structure recurrence which define a regular event in the timespan structure. It is defined with the following fields : 
+It is possible to set a recurrent reminder for a card. There are two ways to do it :
+
+==== Using `rRule` field :
+
+`rRule` field defines a regular event (as defined in the RFC 5545). It is defined with the following fields :
+
+- freq : frequency of the recurrence (possible values : 'SECONDLY', 'MINUTELY', 'HOURLY', 'DAILY', 'WEEKLY', 'MONTHLY', 'YEARLY')
+
+- byweekday : list of days of the week when the event arises (possible values : 'MO', 'TU', 'WE', 'TH', 'FR', 'SA', 'SU')
+
+- bymonth : list of months of the year when the event arises (possible values : number from 1 to 12, 1 being January and 12 being December)
+
+- byhour : list of hours of the day for the recurrence (from 0 to 23)
+
+- byminute : list of minutes within an hour for the recurrence (from 0 to 59)
+
+The reminder will arise for each `recurrent date of event - secondsBeforeTimeSpanForReminder` starting from startDate.
+
+===== Recurrent reminder example using `rRule` field :
+
+....
+rRule : {
+    freq : 'DAILY',
+    byweekday : ['TU', 'WE'],
+    bymonth : [1, 3],
+    byhour : [11],
+    byminute : [30]
+}
+....
+
+==== Using `recurrence` field in the timespan object (deprecated)
+
+`recurrence` field defines a regular event in the timespan structure. It is defined with the following fields :
 
  - HoursAndMinutes : hours and minutes of day when the event arise
 
@@ -147,7 +179,7 @@ It is possible to set a recurrent reminder via the structure recurrence which de
 
 The reminder will arise for each `recurrent date of event - secondsBeforeTimeSpanForReminder` starting from startDate. 
 
-==== Recurrent reminder example 
+===== Recurrent reminder example using `recurrence` field :
 
 If timespan is defined as follows :
 

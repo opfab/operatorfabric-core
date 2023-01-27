@@ -4,7 +4,7 @@ Feature: fetchArchive
 
     * def signIn = callonce read('../common/getToken.feature') { username: 'operator1_fr'}
     * def authToken = signIn.authToken
-    * def signInTSO2 = callonce read('../common/getToken.feature') { username: 'operator2_fr'}
+    * def signInTSO2 = callonce read('../common/getToken.feature') { username: 'operator2_it'}
     * def authTokenTSO2 = signInTSO2.authToken
     * def signInAdmin = callonce read('../common/getToken.feature') { username: 'admin'}
     * def authTokenAdmin = signInAdmin.authToken
@@ -98,8 +98,6 @@ Feature: fetchArchive
 
 
 # get card form archives with user operator2_fr
-
-
     Given url opfabUrl + 'cards/archives/' + cardUid
     And header Authorization = 'Bearer ' + authTokenTSO2
     When method get

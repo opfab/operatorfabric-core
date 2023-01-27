@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2022, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2023, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -12,9 +12,9 @@ import {userRight, UserWithPerimeters} from '@ofModel/userWithPerimeters.model';
 import {Card} from '@ofModel/card.model';
 import {Process, ShowAcknowledgmentFooterEnum} from '@ofModel/processes.model';
 import {RightsEnum} from '@ofModel/perimeter.model';
-import {ConfigService} from '@ofServices/config.service';
+import {ConfigService} from 'app/business/services/config.service';
 import {EntitiesService} from '@ofServices/entities.service';
-import {ProcessesService} from "@ofServices/processes.service";
+import {ProcessesService} from "app/business/services/processes.service";
 import {User} from "@ofModel/user.model";
 
 /** This class contains functions allowing to know if the user has the right to answer to the card or not */

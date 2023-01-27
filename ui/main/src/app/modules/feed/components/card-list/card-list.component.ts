@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2022, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2023, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -12,12 +12,12 @@ import {LightCard} from '@ofModel/light-card.model';
 import {Observable} from 'rxjs';
 import {NgbModalRef} from '@ng-bootstrap/ng-bootstrap/modal/modal-ref';
 import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
-import {ConfigService} from '@ofServices/config.service';
+import {ConfigService} from 'app/business/services/config.service';
 import {MessageLevel} from '@ofModel/message.model';
 import {AlertMessageAction} from '@ofActions/alert.actions';
 import {Store} from '@ngrx/store';
 import {AppState} from '@ofStore/index';
-import {ProcessesService} from '@ofServices/processes.service';
+import {ProcessesService} from 'app/business/services/processes.service';
 import {AppService} from '@ofServices/app.service';
 import {AcknowledgeService} from '@ofServices/acknowledge.service';
 import {UserService} from '@ofServices/user.service';

@@ -16,7 +16,6 @@ import org.opfab.cards.publication.model.CardPublicationData;
 import org.opfab.cards.publication.services.clients.ExternalAppClient;
 import org.opfab.springtools.error.model.ApiError;
 import org.opfab.springtools.error.model.ApiErrorException;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -48,14 +47,16 @@ public class ExternalAppClientImpl implements ExternalAppClient {
     public static final String NO_EXTERNALRECIPIENTS_MESSAGE = "No external recipients found in the card";
     public static final String ERR_CONNECTION_REFUSED = "I/O exception accessing external application endpoint";
 
-    @Autowired
     private ExternalRecipients externalRecipients;
-
-    @Autowired
     private RestTemplate restTemplate;
-
-    @Autowired
     private ResponseCardProducer responseCardProducer;
+
+
+    public ExternalAppClientImpl(ExternalRecipients externalRecipients,RestTemplate restTemplate,ResponseCardProducer responseCardProducer) {
+        this.externalRecipients = externalRecipients;
+        this.restTemplate = restTemplate;
+        this.responseCardProducer = responseCardProducer;
+    }
 
     public void sendCardToExternalApplication(CardPublicationData card, Optional<Jwt> jwt) {
 
@@ -138,11 +139,12 @@ public class ExternalAppClientImpl implements ExternalAppClient {
 
             HttpEntity<CardPublicationData> requestBody = new HttpEntity<>(card, headers);
 
-            restTemplate.postForObject(externalRecipientUrl, requestBody, CardPublicationData.class);
+            restTemplate.postForObject(externalRecipientUrl, requestBody, Void.class);
 
             log.debug("End to Send card {} \n", card);
 
         } catch (Exception ex) {
+            log.error("Error calling external application ", ex);
             throwException(ex);
         }
 
@@ -152,9 +154,10 @@ public class ExternalAppClientImpl implements ExternalAppClient {
         try {
             HttpHeaders headers = createRequestHeader(jwt);
             HttpEntity<String> requestBody = new HttpEntity<>("", headers);
-            restTemplate.exchange(externalRecipientUrl + "/" + card.getId(), HttpMethod.DELETE, requestBody, String.class);
+            restTemplate.exchange(externalRecipientUrl + "/" + card.getId(), HttpMethod.DELETE, requestBody, Void.class);
 
         } catch (Exception ex) {
+            log.error("Error sending card deletion notification to external application ", ex);
             throwException(ex);
         }
 

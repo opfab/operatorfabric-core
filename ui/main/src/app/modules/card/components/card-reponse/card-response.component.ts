@@ -1,4 +1,4 @@
-/* Copyright (c) 2022, RTE (http://www.rte-france.com)
+/* Copyright (c) 2022-2023, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -15,16 +15,17 @@ import {Card, CardForPublishing} from '@ofModel/card.model';
 import {Severity} from '@ofModel/light-card.model';
 import {MessageLevel} from '@ofModel/message.model';
 import {MultiSelectConfig} from '@ofModel/multiselect.model';
+import {PermissionEnum} from '@ofModel/permission.model';
 import {State} from '@ofModel/processes.model';
 import {User} from '@ofModel/user.model';
 import {CardService} from '@ofServices/card.service';
 import {EntitiesService} from '@ofServices/entities.service';
-import {ProcessesService} from '@ofServices/processes.service';
+import {ProcessesService} from 'app/business/services/processes.service';
 import {UserPermissionsService} from '@ofServices/user-permissions.service';
 import {UserService} from '@ofServices/user.service';
 import {AlertMessageAction} from '@ofStore/actions/alert.actions';
 import {AppState} from '@ofStore/index';
-import {Utilities} from 'app/common/utilities';
+import {Utilities} from 'app/business/common/utilities';
 
 declare const templateGateway: any;
 
@@ -62,6 +63,7 @@ export class CardResponseComponent implements OnChanges, OnInit {
 
     public showButton = false;
     public isUserEnabledToRespond = false;
+    public isEntityFormFilled = true;
     public sendingResponseInProgress: boolean;
 
     private entityChoiceModal: NgbModalRef;
@@ -76,6 +78,7 @@ export class CardResponseComponent implements OnChanges, OnInit {
     };
     public btnValidateLabel = 'response.btnValidate';
     public btnUnlockLabel = 'response.btnUnlock';
+    isReadOnlyUser: boolean;
 
     constructor(
         private store: Store<AppState>,
@@ -94,6 +97,7 @@ export class CardResponseComponent implements OnChanges, OnInit {
         this.selectEntitiesForm = new FormGroup({
             entities: new FormControl([])
         });
+        this.disablePopUpButtonIfNoEntitySelected();
     }
 
     ngOnChanges(): void {
@@ -102,7 +106,9 @@ export class CardResponseComponent implements OnChanges, OnInit {
             this.card,
             this.processService.getProcess(this.card.process)
         );
-        this.showButton = !!this.cardState.response;
+        this.isReadOnlyUser = this.userService.hasCurrentUserAnyPermission([PermissionEnum.READONLY]);
+
+        this.showButton = !!this.cardState.response && !this.isReadOnlyUser;
         this.userEntityIdToUseForResponse = this.userEntityIdsPossibleForResponse[0];
         this.setButtonLabels();
         this.computeEntityOptionsDropdownListForResponse();
@@ -115,6 +121,12 @@ export class CardResponseComponent implements OnChanges, OnInit {
         this.btnUnlockLabel = !!this.cardState.modifyAnswerButtonLabel
             ? this.cardState.modifyAnswerButtonLabel
             : 'response.btnUnlock';
+    }
+
+    private disablePopUpButtonIfNoEntitySelected(): void {
+        this.selectEntitiesForm.get('entities').valueChanges.subscribe((selectedEntities) => {
+            this.isEntityFormFilled = selectedEntities.length >= 1;
+        })
     }
 
     private computeEntityOptionsDropdownListForResponse(): void {
@@ -151,6 +163,7 @@ export class CardResponseComponent implements OnChanges, OnInit {
                 state: responseData.responseState ? responseData.responseState : this.cardState.response.state,
                 startDate: this.card.startDate,
                 endDate: this.card.endDate,
+                expirationDate: this.card.expirationDate,
                 severity: Severity.INFORMATION,
                 entityRecipients: this.card.entityRecipients,
                 userRecipients: this.card.userRecipients,

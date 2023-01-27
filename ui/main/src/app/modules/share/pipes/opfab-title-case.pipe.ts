@@ -1,4 +1,5 @@
 /* Copyright (c) 2022, Alliander (http://www.alliander.com)
+ * Copyright (c) 2023, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -8,7 +9,7 @@
  */
 
 import {Pipe, PipeTransform} from '@angular/core';
-import {ConfigService} from '@ofServices/config.service';
+import {ConfigService} from 'app/business/services/config.service';
 
 @Pipe({
     name: 'opfabTitleCase'

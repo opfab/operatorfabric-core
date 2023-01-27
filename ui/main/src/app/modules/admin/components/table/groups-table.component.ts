@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021-2022, RTE (http://www.rte-france.com)
+ * Copyright (c) 2021-2023, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -21,13 +21,31 @@ import {EditGroupModalComponent} from '../editmodal/groups/edit-group-modal.comp
 export class GroupsTableComponent extends AdminTableDirective implements OnInit {
     tableType = AdminItemType.GROUP;
     fields = [
-        new Field('id', 6, 'idCellRenderer'),
+        new Field('id', 4, 'idCellRenderer'),
         new Field('name', 6),
-        new Field('description', 6),
-        new Field('type', 3),
+        new Field('description', 5),
         new Field('perimeters', 8, 'perimetersCellRenderer'),
-        new Field('realtime', 3, null, this.translateValue)
+        new Field('permissions', 6, 'arrayCellRenderer'),
+        new Field('realtime', 3, null, this.translateValue, 'realtimeColumn')
     ];
     idField = 'id';
     editModalComponent = EditGroupModalComponent;
+
+    ngOnInit(){
+        this.gridOptions.columnTypes['realtimeColumn'] = {
+            sortable: true,
+            filter: 'agTextColumnFilter',
+            filterParams: {
+                valueGetter: (params) => {
+                    return params.data.realtime
+                        ? this.translateService.instant('admin.input.group.true')
+                        : this.translateService.instant('admin.input.group.false');
+                }
+            },
+            wrapText: true,
+            autoHeight: true,
+            flex: 4
+        };
+        super.ngOnInit();
+    }
 }

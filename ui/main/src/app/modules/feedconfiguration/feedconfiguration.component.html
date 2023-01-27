@@ -1,4 +1,4 @@
-<!-- Copyright (c) 2020-2022, RTE (http://www.rte-france.com)              -->
+<!-- Copyright (c) 2020-2023, RTE (http://www.rte-france.com)              -->
 <!-- See AUTHORS.txt                                                       -->
 <!-- This Source Code Form is subject to the terms of the Mozilla Public   -->
 <!-- License, v. 2.0. If a copy of the MPL was not distributed with this   -->
@@ -36,9 +36,8 @@
                         </p>
                         <div style="margin-left: 15px;" class="row" formArrayName="processesStates" *ngFor="let state of processData.states; ">
                             <label class="opfab-checkbox">{{state.stateLabel}}
-                                <input type="checkbox" *ngIf="state.filteringNotificationAllowed" [formControlName]=state.stateControlIndex [id]=state.stateControlIndex
+                                <input type="checkbox" [formControlName]=state.stateControlIndex [id]=state.stateControlIndex
                                        (change)="updateIsAllStatesSelected(processIdAndLabel.processId, processGroup.groupId)">
-                                <input type="checkbox" *ngIf="!state.filteringNotificationAllowed" disabled [formControlName]=state.stateControlIndex [id]=state.stateControlIndex>
                                 <span class="opfab-checkbox-checkmark"></span>
                             </label>
                         </div>
@@ -63,9 +62,8 @@
                 </p>
                 <div style="margin-left: 15px;" class="row" formArrayName="processesStates" *ngFor="let state of processesStatesLabels.get(process.idProcess).states; ">
                     <label class="opfab-checkbox"> {{state.stateLabel}}
-                        <input type="checkbox" *ngIf="state.filteringNotificationAllowed" [formControlName]=state.stateControlIndex [id]=state.stateControlIndex
+                        <input type="checkbox" [formControlName]=state.stateControlIndex [id]=state.stateControlIndex
                                (change)="updateIsAllStatesSelected(process.idProcess, '')">
-                        <input type="checkbox" *ngIf="!state.filteringNotificationAllowed" disabled [formControlName]=state.stateControlIndex [id]=state.stateControlIndex>
                         <span class="opfab-checkbox-checkmark"></span>
                     </label>
                 </div>

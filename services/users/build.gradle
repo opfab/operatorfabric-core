@@ -18,8 +18,7 @@ dependencies {
     implementation project(':tools:spring:spring-mongo-utilities')
     implementation project(':tools:spring:spring-oauth2-utilities')
     implementation project(':tools:generic:utilities')
-
-    testImplementation spring.securityTest
+    implementation project(':tools:user-action-tracing')
 }
 
 bootJar {

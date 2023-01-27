@@ -44,9 +44,8 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class CardTranslationService {
 
-    @Autowired
+
     private I18nProcessesCache i18nProcessesCache;
-    @Autowired
     private ProcessesCache processesCache;
     private ConnectionFactory connectionFactory;
     private AmqpAdmin amqpAdmin;
@@ -60,10 +59,12 @@ public class CardTranslationService {
 
     @Value("${authorizeToSendCardWithInvalidProcessState:false}") boolean authorizeToSendCardWithInvalidProcessState;
 
-    @Autowired
-    public CardTranslationService(FanoutExchange processExchange, ConnectionFactory connectionFactory, AmqpAdmin amqpAdmin,
+
+    public CardTranslationService(I18nProcessesCache i18nProcessesCache,ProcessesCache processesCache, FanoutExchange processExchange, ConnectionFactory connectionFactory, AmqpAdmin amqpAdmin,
     @Value("${operatorfabric.amqp.connectionRetryInterval:5000}") long retryInterval,
     @Value("${operatorfabric.amqp.connectionRetries:10}") int retries) {
+        this.i18nProcessesCache = i18nProcessesCache;
+        this.processesCache = processesCache;
         this.connectionFactory = connectionFactory;
         this.amqpAdmin = amqpAdmin;
         processQueue = AmqpUtils.createQueue(amqpAdmin, PROCESS_QUEUE_NAME, processExchange, retries, retryInterval);

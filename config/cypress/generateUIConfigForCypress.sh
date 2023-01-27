@@ -33,6 +33,7 @@ pathToTargetWebUIFile="$pathToTargetConfigFolder/web-ui.json"
 ../../src/test/resources/uiConfig/updatePropertyInJsonWithString.sh $pathToTargetWebUIFile "environmentName" "CYPRESS TEST ENV"
 ../../src/test/resources/uiConfig/updatePropertyInJsonWithString.sh $pathToTargetWebUIFile "environmentColor" "green"
 ../../src/test/resources/uiConfig/updatePropertyInJson.sh $pathToTargetWebUIFile "feed.card.secondsBeforeLttdForClockDisplay" 3700
+../../src/test/resources/uiConfig/updatePropertyInJson.sh $pathToTargetWebUIFile "checkIfUrlIsLocked" false
 
 # ui-menu.json customization
 # None needed so far

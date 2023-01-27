@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2022, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2023, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -20,11 +20,16 @@ import {LoadCardAction} from '@ofActions/card.actions';
 import {NgbModal, NgbModalOptions, NgbModalRef} from '@ng-bootstrap/ng-bootstrap';
 import {FilterType} from '@ofModel/feed-filter.model';
 import {HourAndMinutes, TimeSpan} from '@ofModel/card.model';
-import {ProcessesService} from '@ofServices/processes.service';
+import {ProcessesService} from 'app/business/services/processes.service';
 import {LightCardsStoreService} from '@ofServices/lightcards/lightcards-store.service';
 import {FilterService} from '@ofServices/lightcards/filter.service';
-import {ConfigService} from '@ofServices/config.service';
+import {ConfigService} from 'app/business/services/config.service';
 import {Frequency} from 'rrule';
+import dayGridPlugin from '@fullcalendar/daygrid';
+import timeGridPlugin from '@fullcalendar/timegrid';
+import interactionPlugin from '@fullcalendar/interaction';
+import bootstrapPlugin from '@fullcalendar/bootstrap';
+import rrulePlugin from '@fullcalendar/rrule';
 
 @Component({
     selector: 'of-calendar',
@@ -58,6 +63,12 @@ export class CalendarComponent implements OnInit, OnDestroy, AfterViewInit {
     // allDaySlot is now specific to timeGrid views (since v4), so it generates an error in build if we specify that the type of calendarOptions is
     // CalendarOptions... Yet it seems to be the correct way to set this property since it works as intended.
     calendarOptions = {
+        plugins: [
+            dayGridPlugin,
+            timeGridPlugin,
+            bootstrapPlugin,
+            interactionPlugin,
+            rrulePlugin],
         initialView: 'dayGridMonth',
         headerToolbar: {
             left: 'prev,today,next',
@@ -161,11 +172,36 @@ export class CalendarComponent implements OnInit, OnDestroy, AfterViewInit {
                         }
                     }
                 }
+                this.computeRRuleCalendarEvents(card);
             }
         }
         // It is necessary to reassign the updated events to the corresponding options property to trigger change detection
         // See https://fullcalendar.io/docs/angular §Modifying properties
         this.calendarOptions.events = this.calendarEvents;
+    }
+
+    private computeRRuleCalendarEvents(card: any) {
+
+        if (!! card.rRule) {
+            this.calendarEvents = this.calendarEvents.concat({
+                id: card.id,
+                title: card.titleTranslated,
+                allDay: false,
+                className: [
+                    'opfab-calendar-event',
+                    'opfab-calendar-event-' + card.severity.toLowerCase()
+                ],
+                rrule: {
+                    freq: card.rRule.freq,
+                    byweekday: card.rRule.byweekday,
+                    bymonth: card.rRule.bymonth,
+                    dtstart: new Date(card.startDate),
+                    until: card.endDate,
+                    byhour: card.rRule.byhour,
+                    byminute: card.rRule.byminute
+                }
+            });
+        }
     }
 
     private getDaysOfWeek(timeSpan: TimeSpan):Array<number>

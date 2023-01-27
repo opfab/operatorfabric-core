@@ -112,6 +112,21 @@ describe('Response card tests', function () {
         cy.get('#opfab-feed-lightcard-hasChildCardFromCurrentUserEntity');
     });
 
+    it('Check READONLY operator1_crisisroom cannot respond ', function () {
+        opfab.loginWithUser('operator1_crisisroom');
+        feed.checkNumberOfDisplayedCardsIs(1);
+
+        // See in the feed the fact that user has not responded (no icon)
+        cy.get('#opfab-feed-lightcard-hasChildCardFromCurrentUserEntity').should('not.exist');
+
+        feed.openFirstCard();
+
+        // Check the correct rendering of card
+        cy.get('#question-choice1');
+
+        cy.get('#opfab-card-details-btn-response').should('not.exist');
+    });
+
     it('Check card response for operator2_fr ', function () {
         opfab.loginWithUser('operator2_fr');
         feed.checkNumberOfDisplayedCardsIs(1);
@@ -264,6 +279,7 @@ describe('Response card tests', function () {
         card.sendResponse();
         cy.get('#opfab-card-details-entities-choice-selector').click();
         cy.get('#opfab-card-details-entities-choice-selector').find('.vscomp-option-text').eq(0).click(); // We unselect ENTITY3_FR (East)
+        cy.get('#opfab-card-details-entity-choice-btn-confirm').should('be.disabled'); // Check if the button is disabled when no entity is selected
         cy.get('#opfab-card-details-entities-choice-selector').find('.vscomp-option-text').eq(1).click(); // We select ENTITY1_FR (North)
         cy.get('#opfab-card-details-entities-choice-selector').find('.vscomp-option-text').eq(2).click(); // We select ENTITY2_FR (South)
         cy.get('#opfab-card-details-entities-choice-selector').click();
@@ -526,11 +542,10 @@ describe('Response card tests', function () {
         opfab.loginWithUser('operator1_fr');
         feed.openFirstCard();
 
-        // Delay send card response
-        cy.intercept('/cardspub/cards/userCard', (req) => {
-            req.reply((res) => {
-                res.delay = 3000;
-            });
+        // Mock and delay card response 
+        cy.intercept('/cardspub/cards/userCard', {
+            statusCode: 201,
+            delay: 3000
         });
 
         // Check template is loaded

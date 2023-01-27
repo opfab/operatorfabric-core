@@ -11,7 +11,6 @@ package org.opfab.externalapp.security;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -25,11 +24,14 @@ import org.springframework.web.client.RestTemplate;
 @Component
 public class AuthClient {
 
-    @Autowired
-    public RestTemplateBuilder builder;
+    private RestTemplateBuilder builder;
 
-    @Autowired
     private ObjectMapper objectMapper;
+
+    public AuthClient(RestTemplateBuilder builder,ObjectMapper objectMapper) {
+        this.builder = builder;
+        this.objectMapper = objectMapper;
+    }
 
     public String getToken(String url) throws JsonProcessingException {
 

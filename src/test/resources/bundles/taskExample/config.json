@@ -15,7 +15,8 @@
       "userCard" : {
         "template" : "usercard_task",
         "lttdVisible" : false,
-        "recipientVisible" : false
+        "recipientVisible" : false,
+        "expirationDateVisible" : false
       },
       "templateName": "task",
       "styles": [

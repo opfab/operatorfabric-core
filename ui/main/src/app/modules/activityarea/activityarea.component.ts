@@ -1,4 +1,4 @@
-/* Copyright (c) 2022, RTE (http://www.rte-france.com)
+/* Copyright (c) 2022-2023, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -15,11 +15,11 @@ import {UserWithPerimeters} from '@ofModel/userWithPerimeters.model';
 import {FormControl, FormGroup} from '@angular/forms';
 import {SettingsService} from '@ofServices/settings.service';
 import {EntitiesService} from '@ofServices/entities.service';
-import {CardService} from '@ofServices/card.service';
-import {Utilities} from '../../common/utilities';
+import {Utilities} from '../../business/common/utilities';
 import {GroupsService} from '@ofServices/groups.service';
 import {Actions, ofType} from '@ngrx/effects';
 import {UserActionsTypes} from '@ofStore/actions/user.actions';
+import {LightCardsStoreService} from '@ofServices/lightcards/lightcards-store.service';
 
 @Component({
     selector: 'of-activityarea',
@@ -51,7 +51,7 @@ export class ActivityareaComponent implements OnInit, OnDestroy {
         private groupsService: GroupsService,
         private modalService: NgbModal,
         private settingsService: SettingsService,
-        private cardService: CardService,
+        private lightCardStoreService : LightCardsStoreService,
         private actions$: Actions
     ) {}
 
@@ -68,11 +68,9 @@ export class ActivityareaComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit() {
-       this.loadUserData();
+        this.loadUserData();
 
-       this.actions$.pipe(
-        ofType(UserActionsTypes.UserConfigLoaded)
-        ).subscribe(() => this.loadUserData());
+        this.actions$.pipe(ofType(UserActionsTypes.UserConfigLoaded)).subscribe(() => this.loadUserData());
 
         this.interval = setInterval(() => {
             this.refresh();
@@ -84,7 +82,7 @@ export class ActivityareaComponent implements OnInit, OnDestroy {
         this.currentUserWithPerimeters = this.userService.getCurrentUserWithPerimeters();
 
         // we retrieve all the entities to which the user can connect
-        this.userService.getUser(this.currentUserWithPerimeters.userData.login).subscribe((currentUser) => {  
+        this.userService.getUser(this.currentUserWithPerimeters.userData.login).subscribe((currentUser) => {
             const entities = this.entitiesService.getEntitiesFromIds(currentUser.entities);
             entities.forEach((entity) => {
                 if (entity.entityAllowedToSendCard) {
@@ -109,6 +107,7 @@ export class ActivityareaComponent implements OnInit, OnDestroy {
                     this.groupsService.isRealtimeGroup(groupId)
                 );
             this.isScreenLoaded = true;
+
             this.refresh();
         });
     }
@@ -120,7 +119,10 @@ export class ActivityareaComponent implements OnInit, OnDestroy {
             connectedUsers.sort((obj1, obj2) => Utilities.compareObj(obj1.login, obj2.login));
 
             connectedUsers.forEach((connectedUser) => {
-                if ((connectedUser.login !== this.currentUserWithPerimeters.userData.login) && (!! connectedUser.entitiesConnected)) {
+                if (
+                    connectedUser.login !== this.currentUserWithPerimeters.userData.login &&
+                    !!connectedUser.entitiesConnected
+                ) {
                     connectedUser.entitiesConnected.forEach((entityConnectedId) => {
                         if (this.userEntities.map((userEntity) => userEntity.entityId).includes(entityConnectedId)) {
                             connectedUser.groups.forEach((groupId) => {
@@ -199,7 +201,7 @@ export class ActivityareaComponent implements OnInit, OnDestroy {
                         this.messageAfterSavingSettings = 'shared.error.impossibleToSaveSettings';
                         this.displaySendResultError = true;
                     } else {
-                        this.cardService.removeAllLightCardFromMemory();
+                        this.lightCardStoreService.removeAllLightCards();
                         this.userService.loadUserWithPerimetersData().subscribe();
                     }
                     if (!!this.modalRef) this.modalRef.close();
@@ -219,7 +221,7 @@ export class ActivityareaComponent implements OnInit, OnDestroy {
         // The modal must not be closed until the settings has been saved in the back
         // If not, with slow network, when user goes to the feed before the end of the request
         // it ends up with nothing in the feed
-        // This happens because method this.cardService.removeAllLightCardFromMemory()
+        // This happens because method this.lightCardStoreService.removeAllLightCards();
         // is called too late (in method confirmSaveSettings)
         if (!this.saveSettingsInProgress) this.modalRef.close();
     }

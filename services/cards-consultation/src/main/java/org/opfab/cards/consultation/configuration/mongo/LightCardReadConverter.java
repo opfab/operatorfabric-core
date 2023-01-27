@@ -33,6 +33,7 @@ import java.util.List;
 public class LightCardReadConverter implements Converter<Document, LightCardConsultationData> {
     private I18nReadConverter i18nReadConverter = new I18nReadConverter();
     private TimeSpanReadConverter timeSpanConverter = new TimeSpanReadConverter();
+    private RRuleReadConverter rRuleConverter = new RRuleReadConverter();
 
     @Override
     public LightCardConsultationData convert(Document source) {
@@ -50,6 +51,7 @@ public class LightCardReadConverter implements Converter<Document, LightCardCons
                 .lttd(source.getDate("lttd") == null ? null : source.getDate("lttd").toInstant())
                 .startDate(source.getDate("startDate") == null ? null : source.getDate("startDate").toInstant())
                 .endDate(source.getDate("endDate") == null ? null : source.getDate("endDate").toInstant())
+                .expirationDate(source.getDate("expirationDate") == null ? null : source.getDate("expirationDate").toInstant())
                 .publishDate(source.getDate("publishDate") == null ? null : source.getDate("publishDate").toInstant())
                 .severity(SeverityEnum.valueOf(source.getString("severity")))
                 .titleTranslated(source.getString("titleTranslated"))
@@ -76,17 +78,25 @@ public class LightCardReadConverter implements Converter<Document, LightCardCons
             for (String t : tags) {
                 builder.tag(t);
             }
+
         List<String> entitiesAllowedToRespond = (List<String>) source.get("entitiesAllowedToRespond");
         if (entitiesAllowedToRespond != null) {
             for (String entities : entitiesAllowedToRespond) {
                 builder.tag(entities);
             }
         }
+
         List<Document> timeSpans = (List<Document>) source.get("timeSpans");
-        if (timeSpans != null)
+        if (timeSpans != null) {
             for (Document d : timeSpans) {
                 builder.timeSpan(timeSpanConverter.convert(d));
             }
+        }
+
+        Document rRuleDoc = (Document) source.get("rRule");
+        if (rRuleDoc != null)
+            builder.rRule(rRuleConverter.convert(rRuleDoc));
+
         return builder.build();
     }
 }

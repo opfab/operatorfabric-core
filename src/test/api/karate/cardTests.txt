@@ -1,4 +1,4 @@
-      cards/fetchArchivedCardsWithParams.feature  \
+      cards/fetchArchivedCardsWithParamsOrFilter.feature  \
       cards/cards.feature                         \
       cards/cardsWithTimespans.feature            \
       cards/fetchArchivedCard.feature             \
@@ -24,3 +24,4 @@
       cards/deleteCardsByEndDate.feature          \
       cards/cardsWithRepresentative.feature       \
       cards/externalRecipentErrors.feature        \
+      cards/postCardWithRRuleRecurrence.feature

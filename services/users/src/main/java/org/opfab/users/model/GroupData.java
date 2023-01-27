@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2022, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2023, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -38,12 +38,30 @@ public class GroupData implements Group {
     private GroupTypeEnum type;
     private String description;
 
+
     @JsonIgnore
     @Singular("perimeter")
     private Set<String> perimeters;
 
+    @JsonIgnore
+    @Singular("permission")
+    private Set<PermissionEnum> permissions;
+
     @Builder.Default
     private Boolean realtime = false;
+
+
+    public GroupData(GroupData groupData) {
+        this.id = groupData.id;
+        this.name = groupData.name;
+        this.type = groupData.type;
+        this.description = groupData.description;
+        if (groupData.perimeters == null) this.perimeters = new HashSet<>();
+        else this.perimeters = new HashSet<>(groupData.perimeters);
+        if (groupData.permissions == null) this.permissions = new HashSet<>();
+        else this.permissions = new HashSet<>(groupData.permissions);
+        this.realtime = groupData.realtime;
+    }
 
     @Override
     public List<String> getPerimeters() {
@@ -66,5 +84,28 @@ public class GroupData implements Group {
 
     public void deletePerimeter(String id) {
         perimeters.remove(id);
+    }
+
+    @Override
+    public List<PermissionEnum> getPermissions() {
+        if (permissions == null)
+            return Collections.emptyList();
+        return new ArrayList<>(permissions);
+    }
+
+    @Override
+    public void setPermissions(List<PermissionEnum> permissions) {
+        this.permissions = new HashSet<>(permissions);
+    }
+
+    public void addPermission(PermissionEnum permission){
+        if (null == permissions){
+            this.permissions = new HashSet<>();
+        }
+        permissions.add(permission);
+    }
+
+    public void deletePermission(PermissionEnum permission) {
+        permissions.remove(permission);
     }
 }

@@ -12,7 +12,6 @@ package org.opfab.cards.consultation.configuration.webflux;
 
 import lombok.extern.slf4j.Slf4j;
 import org.opfab.cards.consultation.controllers.CardOperationsController;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.MediaType;
@@ -27,7 +26,7 @@ public class MessageToSubscriptionsRoutesConfig {
 
     private final CardOperationsController cardOperationsController;
 
-    @Autowired
+    
     public MessageToSubscriptionsRoutesConfig(CardOperationsController cardOperationsController){
         this.cardOperationsController = cardOperationsController;
     }

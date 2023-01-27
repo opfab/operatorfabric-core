@@ -11,6 +11,7 @@
 
 package org.opfab.cards.publication.application;
 
+import org.opfab.useractiontracing.UserActionLogsConfiguration;
 import org.opfab.cards.publication.configuration.TestCardReceiver;
 import org.opfab.cards.publication.configuration.TestConsumerConfig;
 import org.opfab.cards.publication.configuration.WebSecurityConfigurationTest;
@@ -45,9 +46,8 @@ import org.springframework.context.annotation.ImportResource;
     CardRepositoryService.class, CardPermissionControlService.class, ExternalAppClientImpl.class , ResponseCardProducer.class
 , CardCommandFactory.class, CardObjectMapper.class, TestCardReceiver.class , TestConsumerConfig.class, JacksonConfig.class
 , Common.class , CardController.class, WebSecurityConfigurationTest.class, I18nProcessesCache.class, I18nProcessesCacheTestApplication.class, 
-ExternalRecipients.class})
+ExternalRecipients.class, UserActionLogsConfiguration.class})
 @ImportResource({"classpath:/amqp.xml", "classpath:/security.xml"})
-
 public class UnitTestApplication {
 
     public static void main(String[] args) {

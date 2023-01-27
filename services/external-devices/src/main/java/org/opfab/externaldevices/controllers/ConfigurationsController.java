@@ -12,6 +12,7 @@ package org.opfab.externaldevices.controllers;
 
 import lombok.extern.slf4j.Slf4j;
 import org.opfab.externaldevices.drivers.ExternalDeviceConfigurationException;
+import org.opfab.externaldevices.drivers.ExternalDeviceDriverException;
 import org.opfab.externaldevices.drivers.UnknownExternalDeviceException;
 import org.opfab.externaldevices.model.DeviceConfiguration;
 import org.opfab.externaldevices.model.SignalMapping;
@@ -61,6 +62,13 @@ public class ConfigurationsController implements ConfigurationsApi {
 
         String id = deviceConfiguration.getId();
         configService.insertDeviceConfiguration(deviceConfiguration);
+        if (Boolean.TRUE.equals(deviceConfiguration.getIsEnabled())) {
+            try {
+                devicesService.enableDevice(id);
+            } catch (Exception exc) {
+                log.warn("Impossible to enable driver {} ", id, exc);
+            }
+        }
         response.addHeader(LOCATION_HEADER_NAME, request.getContextPath() + "/configurations/devices/" + id);
         response.setStatus(201);
         log.info(CREATED_LOG, DEVICE_CONFIGURATION_NAME, id);
@@ -93,11 +101,11 @@ public class ConfigurationsController implements ConfigurationsApi {
     }
 
     @Override
-    public Void deleteDeviceConfiguration(HttpServletRequest request, HttpServletResponse response, String deviceId) {
+    public Void deleteDeviceConfiguration(HttpServletRequest request, HttpServletResponse response, String deviceId) throws ExternalDeviceDriverException{
 
         try {
+            devicesService.disableDevice(deviceId);
             configService.deleteDeviceConfiguration(deviceId);
-            devicesService.removeDevice(deviceId);
         } catch (ExternalDeviceConfigurationException | UnknownExternalDeviceException e) {
             throw buildApiNotFoundException(e, String.format(NOT_FOUND_MESSAGE, DEVICE_CONFIGURATION_NAME, deviceId));
         }

@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2022, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2023, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -16,14 +16,19 @@ import {TranslateLoader, TranslateModule, TranslateService} from '@ngx-translate
 import {Store, StoreModule} from '@ngrx/store';
 import {appReducer, AppState} from '@ofStore/index';
 import {HttpClientTestingModule} from '@angular/common/http/testing';
-import {ProcessesService} from '@ofServices/processes.service';
+import {ProcessesService} from 'app/business/services/processes.service';
 import {Router} from '@angular/router';
 import {I18nService} from '@ofServices/i18n.service';
 import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
 import {CountDownModule} from '../countdown/countdown.module';
 import createSpyObj = jasmine.createSpyObj;
-import {DateTimeFormatterService} from '@ofServices/date-time-formatter.service';
+import {DateTimeFormatterService} from 'app/business/services/date-time-formatter.service';
 import {PipesModule} from '../pipes/pipes.module';
+import {ConfigServerMock} from '@tests/mocks/configServer.mock';
+import {ConfigServer} from 'app/business/server/config.server';
+import {ProcessServerMock} from '@tests/mocks/processServer.mock';
+import {ProcessServer} from 'app/business/server/process.server';
+import {OpfabEventStreamServer} from 'app/business/server/opfabEventStream.server';
 
 describe('LightCardComponent', () => {
     let lightCardDetailsComp: LightCardComponent;
@@ -61,7 +66,10 @@ describe('LightCardComponent', () => {
                 ProcessesService,
                 {provide: 'TimeEventSource', useValue: null},
                 DateTimeFormatterService,
-                I18nService
+                I18nService,
+                {provide: ConfigServer, useClass: ConfigServerMock},
+                {provide: ProcessServer, useClass: ProcessServerMock},
+                {provide: OpfabEventStreamServer, use:null}
             ]
         }).compileComponents();
         store = TestBed.inject(Store);

@@ -1,0 +1,10 @@
+{
+	"id" : "taskAdvancedExample",
+	"process" : "taskAdvancedExample",
+	"stateRights" : [
+	  {
+		"state" : "taskAdvancedState",
+		"right" : "ReceiveAndWrite"
+	  }
+	]
+}

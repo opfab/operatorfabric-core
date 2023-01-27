@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2022, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2023, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -10,7 +10,7 @@
 import {Component, OnInit} from '@angular/core';
 import {Store} from '@ngrx/store';
 import {AppState} from '@ofStore/index';
-import {ConfigService} from '@ofServices/config.service';
+import {ConfigService} from 'app/business/services/config.service';
 import {LightCardsStoreService} from '@ofServices/lightcards/lightcards-store.service';
 
 @Component({
@@ -24,13 +24,14 @@ export class FiltersComponent implements OnInit {
     hideApplyFiltersToTimeLineChoice: boolean;
     defaultSorting: string;
     defaultAcknowledgmentFilter: string;
+    showSearchFilter: boolean;
 
     loadingInProgress = false;
 
     constructor(
         private store: Store<AppState>,
         private configService: ConfigService,
-        private lightCardsStoreService: LightCardsStoreService
+        private lightCardsStoreService: LightCardsStoreService,
     ) {}
 
     ngOnInit() {
@@ -42,6 +43,7 @@ export class FiltersComponent implements OnInit {
             'feed.card.hideApplyFiltersToTimeLineChoice',
             false
         );
+        this.showSearchFilter = this.configService.getConfigValue('feed.showSearchFilter', false);
         this.lightCardsStoreService
             .getLoadingInProgress()
             .subscribe((inProgress: boolean) => (this.loadingInProgress = inProgress));

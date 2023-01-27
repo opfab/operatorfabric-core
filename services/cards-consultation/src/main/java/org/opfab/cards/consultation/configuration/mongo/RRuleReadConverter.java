@@ -1,0 +1,62 @@
+/* Copyright (c) 2022-2023, RTE (http://www.rte-france.com)
+ * See AUTHORS.txt
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ * SPDX-License-Identifier: MPL-2.0
+ * This file is part of the OperatorFabric project.
+ */
+
+
+
+package org.opfab.cards.consultation.configuration.mongo;
+
+import org.bson.Document;
+import org.opfab.cards.consultation.model.RRule;
+import org.opfab.cards.consultation.model.RRuleConsultationData;
+import org.opfab.cards.model.DayEnum;
+import org.opfab.cards.model.FreqEnum;
+import org.springframework.core.convert.converter.Converter;
+
+import java.util.ArrayList;
+import java.util.List;
+
+
+public class RRuleReadConverter implements Converter<Document, RRule> {
+
+    @Override
+    public RRule convert(Document source) {
+
+        List<DayEnum> byweekdayEnumList = new ArrayList<>();
+
+        FreqEnum freq = FreqEnum.valueOf(source.getString("freq"));
+        Integer count = source.getInteger("count");
+        DayEnum wkst = DayEnum.valueOf(source.getString("wkst"));
+
+        List<String> byweekdayStringList = (List<String>) source.get("byweekday");
+        if (byweekdayStringList != null) {
+            for (String byweekdayString : byweekdayStringList) {
+                byweekdayEnumList.add(DayEnum.valueOf(byweekdayString));
+            }
+        }
+
+        List<Integer> bymonth = (List<Integer>) source.get("bymonth");
+        List<Integer> byhour = (List<Integer>) source.get("byhour");
+        List<Integer> byminute = (List<Integer>) source.get("byminute");
+
+        String tzid = source.getString("tzid");
+
+        RRuleConsultationData.RRuleConsultationDataBuilder builder = RRuleConsultationData.builder()
+                .freq(freq)
+                .count(count)
+                .wkst(wkst)
+                .byweekday(byweekdayEnumList)
+                .bymonth(bymonth)
+                .byhour(byhour)
+                .byminute(byminute)
+                .tzid(tzid)
+                ;
+
+        return builder.build();
+    }
+}

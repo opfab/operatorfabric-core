@@ -1,4 +1,4 @@
-/* Copyright (c) 2021-2022, RTE (http://www.rte-france.com)
+/* Copyright (c) 2021-2023, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -12,8 +12,8 @@ import {ICellRendererAngularComp} from 'ag-grid-angular';
 import {ICellRendererParams} from 'ag-grid-community';
 import {StateRight} from '@ofModel/perimeter.model';
 import {Process} from '@ofModel/processes.model';
-import {ProcessesService} from '@ofServices/processes.service';
-import {Utilities} from '../../../../common/utilities';
+import {ProcessesService} from 'app/business/services/processes.service';
+import {Utilities} from '../../../../business/common/utilities';
 
 @Component({
     selector: 'of-state-rights-cell-renderer',

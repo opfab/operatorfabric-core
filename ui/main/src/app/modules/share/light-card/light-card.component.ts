@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2022, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2023, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -15,17 +15,18 @@ import {Store} from '@ngrx/store';
 import {AppState} from '@ofStore/index';
 import {takeUntil} from 'rxjs/operators';
 import {Observable, Subject} from 'rxjs';
-import {ConfigService} from '@ofServices/config.service';
+import {ConfigService} from 'app/business/services/config.service';
 import {AppService, PageType} from '@ofServices/app.service';
 import {EntitiesService} from '@ofServices/entities.service';
-import {ProcessesService} from '@ofServices/processes.service';
+import {ProcessesService} from 'app/business/services/processes.service';
 import {UserPreferencesService} from '@ofServices/user-preference.service';
 import {DisplayContext} from '@ofModel/templateGateway.model';
 import {GroupedCardsService} from '@ofServices/grouped-cards.service';
 import {TypeOfStateEnum} from '@ofModel/processes.model';
 import {SoundNotificationService} from '@ofServices/sound-notification.service';
-import {DateTimeFormatterService} from '@ofServices/date-time-formatter.service';
+import {DateTimeFormatterService} from 'app/business/services/date-time-formatter.service';
 import {MapService} from '@ofServices/map.service';
+import {TranslateService} from '@ngx-translate/core';
 
 @Component({
     selector: 'of-light-card',
@@ -48,6 +49,7 @@ export class LightCardComponent implements OnInit, OnDestroy {
     showExpiredIcon = true;
     showExpiredLabel = true;
     expiredLabel = 'feed.lttdFinished';
+    expirationDateToDisplay: string;
 
     showGroupedCardsIcon = false;
     groupedCardsVisible = true;
@@ -67,7 +69,8 @@ export class LightCardComponent implements OnInit, OnDestroy {
         private userPreferencesService: UserPreferencesService,
         private groupedCardsService: GroupedCardsService,
         private soundNotificationService: SoundNotificationService,
-        private mapService: MapService
+        private mapService: MapService,
+        private translateService: TranslateService
     ) {}
 
     ngOnInit() {
@@ -81,10 +84,13 @@ export class LightCardComponent implements OnInit, OnDestroy {
                     this.currentPath = urlParts[1];
                 }
             });
+        this.groupedCardsService.computeEvent
+            .pipe(takeUntil(this.ngUnsubscribe))
+            .subscribe((x) => this.computeGroupedCardsIcon());
         this.computeFromEntity();
         this.computeDisplayedDate();
         this.computeLttdParams();
-        this.computeGroupedCardsIcon();
+        this.computeDisplayedExpirationDate();
         this.hasGeoLocation =
             this.lightCard.wktGeometry === undefined ||
             this.lightCard.wktGeometry == null ||
@@ -134,6 +140,10 @@ export class LightCardComponent implements OnInit, OnDestroy {
                     this.lightCard.endDate
                 )}`;
         }
+    }
+
+    computeDisplayedExpirationDate() {
+        this.expirationDateToDisplay = `${this.translateService.instant('feed.tips.expirationDate')}: ${this.handleDate(this.lightCard.expirationDate)}`;
     }
 
     private computeGroupedCardsIcon() {

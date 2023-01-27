@@ -1,4 +1,4 @@
-// Copyright (c) 2018-2022 RTE (http://www.rte-france.com)
+// Copyright (c) 2018-2023 RTE (http://www.rte-france.com)
 // See AUTHORS.txt
 // This document is subject to the terms of the Creative Commons Attribution 4.0 International license.
 // If a copy of the license was not distributed with this
@@ -66,8 +66,18 @@ ifdef::single-page-doc[<<_send_to_several_users, here>>]
 ifndef::single-page-doc[<</documentation/current/reference_doc/index.adoc#_send_to_several_users, here>>]
 .
 
+=== Permissions
+Permissions in `OperatorFabric` are used to configure user's permission on the UI and control the access to the APIs.
+The information about permissions is stored in the data of the user's groups (`Permissions` field of the `group` object).
+The available permissions are:
+
+ - `ADMIN`: Administrator permission
+ - `VIEW_ALL_ARCHIVED_CARDS`: Permission to access all archived cards
+ - `READONLY`: Readonly permission. User cannot send user cards, cannot respond to a card, when acknowledges a card he does not acknowledge it for his entities.
+
+
 === Groups
-The notion of group is loose and can be used to simulate role in `OperatorFabric` (examples : supervisor, dispatcher ... ) by setting group type to 'ROLE' or to define permissions on processes/states by setting the group type to 'PERMISSION'.
+The notion of group is loose and can be used to simulate business role in `OperatorFabric` (examples : supervisor, dispatcher ... ) by setting group type to 'ROLE' or to define permissions on processes/states by setting the group type to 'PERMISSION'.
 Groups are used to send cards to several users without a name specifically. The information about membership to a
 group is stored in the user information. A group contains a list of perimeters which define the rights of reception/writing for a couple process/state. The rules used to send cards are described in the
 ifdef::single-page-doc[<<reception_rules, recipients section>>]
@@ -290,3 +300,32 @@ If set visible in ui-menu.json, this interface is accessible via the user menu (
 The choice of activity area may be done during user logging phase if you set selectActivityAreaOnLogin to true in web-ui.json.
 
 If the user is a member of one (or more) real-time group(s), then he will see on the screen the members of these groups, currently connected.
+
+== User actions logs
+
+OperatorFabric allows you to view most relevant user actions:
+
+- OPEN_SUBSCRIPTION 
+- CLOSE_SUBSCRIPTION 
+- ACK_CARD
+- UNACK_CARD
+- READ_CARD
+- UNREAD_CARD
+- SEND_CARD
+- SEND_RESPONSE
+
+For each action the following information are available: 
+
+- `date`: date and time of the action 
+- `action`: type of action 
+- `login`: username of te user who performed the action
+- `entities`: list of user entities
+- `cardUid`: card Uid
+- `comment`: textual information
+
+
+If set visible in ui-menu.json and user is admin, this interface is accessible via the user menu (top right of the screen).
+
+
+
+

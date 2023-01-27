@@ -54,8 +54,9 @@ public class ArchivedCardConsultationData implements Card {
     private String state;
     private I18n title;
     private I18n summary;
-
+    @Indexed
     private String titleTranslated;
+    @Indexed
     private String summaryTranslated;
     
     @CreatedDate
@@ -65,6 +66,8 @@ public class ArchivedCardConsultationData implements Card {
     private Instant startDate;
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private Instant endDate;
+    @JsonInclude(JsonInclude.Include.NON_NULL)
+    private Instant expirationDate;
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private String media;
     private SeverityEnum severity;
@@ -122,4 +125,7 @@ public class ArchivedCardConsultationData implements Card {
 
     @JsonIgnore
     private List<String> entitiesAcks;
+
+    @JsonInclude(JsonInclude.Include.NON_EMPTY)
+    private RRule rRule;
 }

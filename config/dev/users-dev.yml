@@ -16,7 +16,7 @@ operatorfabric.users.default:
       groups: ["Dispatcher","ReadOnly"]
       entities: ["ENTITY1_FR"]
     - login: operator2_fr
-      groups: ["Planner", "ReadOnly"]
+      groups: ["Planner", "ReadOnly", "Manager"]
       entities: ["ENTITY2_FR"]
     - login: operator3_fr
       groups: [ "RTE","ADMIN","ReadOnly","Dispatcher"]
@@ -33,6 +33,9 @@ operatorfabric.users.default:
     - login: itsupervisor1
       groups: ["ADMIN", "Supervisor"]
       entities: ["IT_SUPERVISOR_ENTITY"]
+    - login: operator1_crisisRoom
+      groups: ["Supervisor"]
+      entities: ["ENTITY1_FR", "ENTITY2_FR", "ENTITY3_FR", "ENTITY4_FR"]
     - login: operator1_it
       groups: ["Dispatcher", "ReadOnly"]
       entities: ["ENTITY1_IT"]
@@ -55,11 +58,12 @@ operatorfabric.users.default:
       groups: ["Planner", "ReadOnly"]
       entities: ["ENTITY2_EU"]
     - login: publisher_test
-      groups: ["Dispatcher", "ReadOnly", "Supervisor"]
+      groups: ["Dispatcher", "ReadOnly"]
   groups:
     - id: ADMIN
       name: ADMINISTRATORS
       description: The admin group
+      permissions: ["ADMIN"]
     - id: RTE
       name: RTE France
       description: RTE TSO Group
@@ -76,10 +80,12 @@ operatorfabric.users.default:
       name: Supervisor
       description: Supervisor Group
       realtime: true
+      permissions: ["READONLY"]
     - id: Manager
       name: Manager
       description: Manager Group
       realtime: false
+      permissions: ["VIEW_ALL_ARCHIVED_CARDS"]
     - id: ReadOnly
       name: ReadOnly
       description: ReadOnly Group

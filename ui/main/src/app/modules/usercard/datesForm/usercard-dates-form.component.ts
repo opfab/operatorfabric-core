@@ -12,7 +12,7 @@ import {FormControl, FormGroup} from '@angular/forms';
 import {Subject} from 'rxjs';
 import {debounceTime, takeUntil} from 'rxjs/operators';
 import {DatesForm} from './dates-form.model';
-import {Utilities} from 'app/common/utilities';
+import {Utilities} from 'app/business/common/utilities';
 
 @Component({
     selector: 'of-usercard-dates-form',
@@ -24,11 +24,13 @@ export class UserCardDatesFormComponent implements OnInit, OnDestroy, OnChanges 
     @Output() public startDateFilterChange = new Subject();
     @Output() public endDateFilterChange = new Subject();
     @Output() public lttdFilterChange = new Subject();
+    @Output() public expirationDateFilterChange = new Subject();
 
     datesForm: FormGroup<{
         startDate: FormControl<any | null>;
         endDate: FormControl<any | null>;
         lttd: FormControl<any | null>;
+        expirationDate: FormControl<any | null>;
     }>;
     unsubscribe$: Subject<void> = new Subject<void>();
 
@@ -38,7 +40,8 @@ export class UserCardDatesFormComponent implements OnInit, OnDestroy, OnChanges 
         this.datesForm = new FormGroup({
             startDate: new FormControl(''),
             endDate: new FormControl(''),
-            lttd: new FormControl('')
+            lttd: new FormControl(''),
+            expirationDate: new FormControl('')
         });
         this.setInitialDateValues();
         this.changeEndDateFilterBoundsWhenStartDateChange();
@@ -48,6 +51,7 @@ export class UserCardDatesFormComponent implements OnInit, OnDestroy, OnChanges 
         this.setInitialStartDate();
         this.setInitialEndDate();
         this.setInitialLttd();
+        this.setInitialExpirationDate();
         this.setEndDateFilterBounds();
     }
 
@@ -87,6 +91,18 @@ export class UserCardDatesFormComponent implements OnInit, OnDestroy, OnChanges 
         }
     }
 
+    private setInitialExpirationDate() {
+        if (this.datesFormInputData.expirationDate.isVisible) {
+            this.datesForm
+                .get('expirationDate')
+                .setValue(
+                    this.datesFormInputData.expirationDate.initialEpochDate != null
+                        ? Utilities.convertEpochDateToNgbDateTime(this.datesFormInputData.expirationDate.initialEpochDate)
+                        : ''
+                );
+        }
+    }
+
     private changeEndDateFilterBoundsWhenStartDateChange() {
         this.startDateFilterChange
             .pipe(takeUntil(this.unsubscribe$), debounceTime(1000))
@@ -119,6 +135,10 @@ export class UserCardDatesFormComponent implements OnInit, OnDestroy, OnChanges 
         return Utilities.convertNgbDateTimeToEpochDate(this.datesForm.get('lttd').value);
     }
 
+    public getExpirationDateAsEpoch(): number {
+        return Utilities.convertNgbDateTimeToEpochDate(this.datesForm.get('expirationDate').value);
+    }
+
     // Hack : The three following method use setTimeout to let the component update the date internally
     // otherwise when we get the date we obtain the old one
     // refactoring of the date component may be needed to solve this problem
@@ -132,6 +152,10 @@ export class UserCardDatesFormComponent implements OnInit, OnDestroy, OnChanges 
 
     onLttdChange() {
         setTimeout(() => this.lttdFilterChange.next(null), 0);
+    }
+
+    onExpirationDateChange() {
+        setTimeout(() => this.expirationDateFilterChange.next(null), 0);
     }
 
     ngOnChanges() {

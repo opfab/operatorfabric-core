@@ -1,4 +1,4 @@
-/* Copyright (c) 2021, RTE (http://www.rte-france.com)
+/* Copyright (c) 2021-2023, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -43,10 +43,11 @@ public class WithMockOpFabUserSecurityContextFactoryReactive implements WithSecu
                         customUser.login(),
                         customUser.firstName(),
                         customUser.lastName(),
-                Arrays.asList(customUser.roles()),
+                Arrays.asList(customUser.groups()),
                 customUser.entities() != null ? Arrays.asList(customUser.entities()) : null,
                 customUser.authorizedIPAddresses() != null ? Arrays.asList(customUser.authorizedIPAddresses()) : null);
-
+        
+        principal.setPermissions(Arrays.asList(customUser.permissions()));
         String tokenValue = "dummyTokenValue";
         Instant issuedAt = Instant.now();
         Instant expiresAt = Instant.now().plus(365, ChronoUnit.DAYS);
@@ -54,7 +55,7 @@ public class WithMockOpFabUserSecurityContextFactoryReactive implements WithSecu
         headers.put("dummyHeaderKey","dummyHeaderValue");
         Map<String, Object> claim = new HashMap<>();
         claim.put("sub",customUser.login());
-        Collection<GrantedAuthority> authorities = OAuth2JwtProcessingUtilities.computeAuthorities(principal.getUserData());
+        Collection<GrantedAuthority> authorities = OAuth2JwtProcessingUtilities.computeAuthorities(principal.getPermissions());
 
         Authentication auth = new OpFabJwtAuthenticationToken( 
                 new Jwt(tokenValue, issuedAt,expiresAt,headers,claim

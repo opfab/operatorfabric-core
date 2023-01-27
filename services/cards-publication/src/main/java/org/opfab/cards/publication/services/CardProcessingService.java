@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2022, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2023, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -20,7 +20,7 @@ import org.opfab.springtools.configuration.oauth.ProcessesCache;
 import org.opfab.springtools.error.model.ApiError;
 import org.opfab.springtools.error.model.ApiErrorException;
 import org.opfab.users.model.CurrentUserWithPerimeters;
-import org.opfab.users.model.User;
+import org.opfab.users.model.PermissionEnum;
 import org.opfab.businessconfig.model.Process;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -183,6 +183,10 @@ public class CardProcessingService {
         if (!checkIsEndDateAfterStartDate(c))
             throw new ConstraintViolationException("constraint violation : endDate must be after startDate", null);
 
+        // constraint check : expirationDate must be after startDate
+        if (!checkIsExpirationDateAfterStartDate(c))
+            throw new ConstraintViolationException("constraint violation : expirationDate must be after startDate", null);
+
         // constraint check : timeSpans list : each end date must be after his start date
         if (!checkIsAllTimeSpanEndDateAfterStartDate(c))
             throw new ConstraintViolationException("constraint violation : TimeSpan.end must be after TimeSpan.start", null);
@@ -243,8 +247,14 @@ public class CardProcessingService {
         return ! ((endDateInstant != null) && (startDateInstant != null) && (endDateInstant.compareTo(startDateInstant) < 0));
     }
 
+    boolean checkIsExpirationDateAfterStartDate(CardPublicationData c) {
+        Instant expirationDateInstant = c.getExpirationDate();
+        Instant startDateInstant = c.getStartDate();
+        return ! ((expirationDateInstant != null) && (startDateInstant != null) && (expirationDateInstant.compareTo(startDateInstant) < 0));
+    }
+
     boolean checkIsDotCharacterNotInProcessAndState(CardPublicationData c) {
-        return ! ((c.getProcess() != null && c.getProcess().contains(Character.toString('.'))) ||
+        return ! ((c.getProcess().contains(Character.toString('.'))) ||
                   (c.getState() != null && c.getState().contains(Character.toString('.'))));
     }
 
@@ -347,7 +357,7 @@ public class CardProcessingService {
         
         CardPublicationData cardToDelete = cardRepositoryService.findCardById(id);
         if (user.isPresent()){  // if user is not present it means we have checkAuthenticationForCardSending = false 
-            boolean isAdmin = user.get().getUserData().getGroups() != null && user.get().getUserData().getGroups().contains("ADMIN");
+            boolean isAdmin = cardPermissionControlService.hasCurrentUserAnyPermission(user.get(), PermissionEnum.ADMIN);
             String login = user.get().getUserData().getLogin();
             if (cardToDelete != null && !isAdmin && checkAuthenticationForCardSending && !cardPermissionControlService.isCardPublisherAllowedForUser(cardToDelete,login)) {
 
@@ -385,6 +395,11 @@ public class CardProcessingService {
         }
     }
 
+    public void deleteCardsByExpirationDate(Instant expirationDate) {
+        cardRepositoryService.findCardsByExpirationDate(expirationDate).forEach(cardToDelete ->
+                deleteCard(cardToDelete, expirationDate, Optional.empty()));
+    }
+
     private Optional<CardPublicationData> deleteCard(CardPublicationData cardToDelete, Optional<Jwt> jwt) {
         return deleteCard(cardToDelete, Instant.now(), jwt);
     }
@@ -418,8 +433,14 @@ public class CardProcessingService {
     }
 
     
-	public UserBasedOperationResult processUserAcknowledgement(String cardUid, User user, List<String> entitiesAcks) {
-        if (! user.getEntities().containsAll(entitiesAcks))
+	public UserBasedOperationResult processUserAcknowledgement(String cardUid, CurrentUserWithPerimeters user, List<String> entitiesAcks) {
+        if (cardPermissionControlService.isCurrentUserReadOnly(user) && entitiesAcks != null && !entitiesAcks.isEmpty())
+            throw new ApiErrorException(ApiError.builder()
+            .status(HttpStatus.FORBIDDEN)
+            .message("Acknowledgement impossible : User has READONLY opfab role")
+            .build());
+
+        if (! user.getUserData().getEntities().containsAll(entitiesAcks))
             throw new ApiErrorException(ApiError.builder()
                     .status(HttpStatus.FORBIDDEN)
                     .message("Acknowledgement impossible : User is not member of all the entities given in the request")
@@ -428,8 +449,8 @@ public class CardProcessingService {
         cardRepositoryService.findByUid(cardUid).ifPresent(selectedCard ->
             cardNotificationService.pushAckOfCardInRabbit(cardUid, selectedCard.getId(), entitiesAcks));
         
-        log.info("Set ack on card with uid {} for user {} and entities {}", cardUid,user.getLogin(),entitiesAcks);
-        return cardRepositoryService.addUserAck(user, cardUid, entitiesAcks);
+        log.info("Set ack on card with uid {} for user {} and entities {}", cardUid,user.getUserData().getLogin(),entitiesAcks);
+        return cardRepositoryService.addUserAck(user.getUserData(), cardUid, entitiesAcks);
 	}
 
 

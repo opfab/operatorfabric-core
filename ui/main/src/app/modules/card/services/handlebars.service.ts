@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2022, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2023, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -12,9 +12,9 @@ import * as Handlebars from 'handlebars/dist/handlebars.js';
 import * as moment from 'moment';
 import {Observable, of} from 'rxjs';
 import {map, tap} from 'rxjs/operators';
-import {ProcessesService} from '@ofServices/processes.service';
+import {ProcessesService} from 'app/business/services/processes.service';
 import {DetailContext} from '@ofModel/detail-context.model';
-import {ConfigService} from '@ofServices/config.service';
+import {ConfigService} from 'app/business/services/config.service';
 
 @Injectable({
     providedIn: 'root'
@@ -45,6 +45,7 @@ export class HandlebarsService {
         HandlebarsService.registerMergeArrays();
         HandlebarsService.registerConditionalAttribute();
         HandlebarsService.registerReplace();
+        HandlebarsService.registerPadStart();
         HandlebarsService.registerObjectContainsKey();
         this.configService.getConfigValueAsObservable('settings.locale').subscribe((locale) => this.changeLocale(locale));
     }
@@ -235,6 +236,12 @@ export class HandlebarsService {
     private static registerReplace() {
         Handlebars.registerHelper('replace', function (find, replace, string) {
             return string.replaceAll(find, replace);
+        });
+    }
+
+    private static registerPadStart() {
+        Handlebars.registerHelper('padStart', function (stringToPad, targetLength, characterForPadding) {
+            return String(stringToPad).padStart(targetLength, characterForPadding);
         });
     }
 

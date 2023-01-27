@@ -1,4 +1,4 @@
-/* Copyright (c) 2022, RTE (http://www.rte-france.com)
+/* Copyright (c) 2022-2023, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -8,7 +8,7 @@
  */
 
 import {OnInit, Component, OnDestroy, Input, OnChanges} from '@angular/core';
-import {ProcessesService} from '@ofServices/processes.service';
+import {ProcessesService} from 'app/business/services/processes.service';
 import {Store} from '@ngrx/store';
 import {AppState} from '@ofStore/index';
 import {LightCardsStoreService} from '@ofServices/lightcards/lightcards-store.service';
@@ -16,7 +16,7 @@ import {Subject, takeUntil, timer} from 'rxjs';
 import {LightCard} from '@ofModel/light-card.model';
 import {Router} from '@angular/router';
 import {selectCurrentUrl} from '@ofStore/selectors/router.selectors';
-import {Utilities} from 'app/common/utilities';
+import {Utilities} from 'app/business/common/utilities';
 
 @Component({
     selector: 'of-pinned-cards',
@@ -75,15 +75,17 @@ export class PinnedCardsComponent implements OnInit, OnDestroy, OnChanges {
     }
 
     private setVisiblePinnedCards() {
-        this.visiblePinnedCards = [];
-        this.hiddenPinnedCards = [];
-        if (this.pinnedCards.length > this.maxVisiblePinnedCards) {
-            this.visiblePinnedCards = this.pinnedCards.slice(0, this.maxVisiblePinnedCards);
-            this.hiddenPinnedCards = this.pinnedCards.slice(this.maxVisiblePinnedCards);
-            if (this.hiddenPinnedCards.length > this.maxHiddenPinnedCards) {
-                this.hiddenPinnedCards = this.hiddenPinnedCards.slice(0, this.maxHiddenPinnedCards);
-            }
-        } else this.visiblePinnedCards = this.pinnedCards;
+        if (!!this.pinnedCards) {
+            this.visiblePinnedCards = [];
+            this.hiddenPinnedCards = [];
+            if (this.pinnedCards.length > this.maxVisiblePinnedCards) {
+                this.visiblePinnedCards = this.pinnedCards.slice(0, this.maxVisiblePinnedCards);
+                this.hiddenPinnedCards = this.pinnedCards.slice(this.maxVisiblePinnedCards);
+                if (this.hiddenPinnedCards.length > this.maxHiddenPinnedCards) {
+                    this.hiddenPinnedCards = this.hiddenPinnedCards.slice(0, this.maxHiddenPinnedCards);
+                }
+            } else this.visiblePinnedCards = this.pinnedCards;
+        }
     }
 
     private getPinnedCards(cards: LightCard[]) {

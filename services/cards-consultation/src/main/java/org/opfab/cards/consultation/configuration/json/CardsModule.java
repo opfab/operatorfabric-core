@@ -28,5 +28,6 @@ public class CardsModule extends SimpleModule {
     addAbstractTypeMapping(TimeSpan.class, TimeSpanConsultationData.class);
     addAbstractTypeMapping(Recurrence.class, RecurrenceConsultationData.class);
     addAbstractTypeMapping(HoursAndMinutes.class, HoursAndMinutesConsultationData.class);
+    addAbstractTypeMapping(RRule.class, RRuleConsultationData.class);
     }
 }

@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2022, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2023, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -10,6 +10,8 @@
 
 package org.opfab.cards.publication.controllers;
 
+import org.opfab.useractiontracing.model.UserActionEnum;
+import org.opfab.useractiontracing.services.UserActionLogService;
 import org.opfab.cards.publication.model.CardCreationReportData;
 import org.opfab.cards.publication.model.CardPublicationData;
 import org.opfab.cards.publication.model.FieldToTranslateData;
@@ -19,6 +21,7 @@ import org.opfab.cards.publication.services.UserBasedOperationResult;
 import org.opfab.springtools.configuration.oauth.OpFabJwtAuthenticationToken;
 import org.opfab.users.model.CurrentUserWithPerimeters;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.oauth2.jwt.Jwt;
 
@@ -44,6 +47,11 @@ public class CardController {
     @Autowired
     private CardTranslationService cardTranslationService;
 
+    @Autowired
+    private UserActionLogService userActionLogService;
+
+    private @Value("${traceUserAction:true}") boolean traceUserAction;
+
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public @Valid CardCreationReportData createCard(@Valid @RequestBody CardPublicationData card, HttpServletResponse response, Principal principal) {
@@ -58,6 +66,9 @@ public class CardController {
         }
 
         cardProcessingService.processCard(card, Optional.ofNullable(user), Optional.ofNullable(token));
+
+        logUserAction(user != null ? user.getUserData().getLogin() : null, card.getParentCardId() != null ? UserActionEnum.SEND_RESPONSE : UserActionEnum.SEND_CARD, user != null ? user.getUserData().getEntities() : null, card.getUid(), null);
+
         return CardCreationReportData.builder().id(card.getId()).uid(card.getUid()).build();
     }
 
@@ -75,6 +86,8 @@ public class CardController {
         CurrentUserWithPerimeters user = (CurrentUserWithPerimeters) jwtPrincipal.getPrincipal();
         Jwt token = jwtPrincipal.getToken();
         cardProcessingService.processUserCard(card, user, Optional.of(token));
+
+        logUserAction(user.getUserData().getLogin(), card.getParentCardId() != null ? UserActionEnum.SEND_RESPONSE : UserActionEnum.SEND_CARD, user.getUserData().getEntities(), card.getUid(), null);
         return CardCreationReportData.builder().id(card.getId()).uid(card.getUid()).build();
     }
 
@@ -124,7 +137,7 @@ public class CardController {
         OpFabJwtAuthenticationToken jwtPrincipal = (OpFabJwtAuthenticationToken) principal;
         CurrentUserWithPerimeters user = (CurrentUserWithPerimeters) jwtPrincipal.getPrincipal();
 
-        UserBasedOperationResult result = cardProcessingService.processUserAcknowledgement(cardUid, user.getUserData(), entitiesAcks);
+        UserBasedOperationResult result = cardProcessingService.processUserAcknowledgement(cardUid, user, entitiesAcks);
  
         if (!result.isCardFound()) response.setStatus(404);
         else {
@@ -132,6 +145,9 @@ public class CardController {
                 response.setStatus(201);
             else
                 response.setStatus(200);
+
+            logUserAction(user.getUserData().getLogin(),  UserActionEnum.ACK_CARD, user.getUserData().getEntities(), cardUid, null);
+
         }
         return null;
     }
@@ -144,6 +160,9 @@ public class CardController {
     @PostMapping("/userCardRead/{cardUid}")
     public Void postUserCardRead(Principal principal,
                                        @PathVariable("cardUid") String cardUid, HttpServletResponse response) {
+        OpFabJwtAuthenticationToken jwtPrincipal = (OpFabJwtAuthenticationToken) principal;
+        CurrentUserWithPerimeters user = (CurrentUserWithPerimeters) jwtPrincipal.getPrincipal();
+
         UserBasedOperationResult result= cardProcessingService.processUserRead(cardUid, principal.getName());
         if (!result.isCardFound()) response.setStatus(404); 
         else { 
@@ -151,6 +170,8 @@ public class CardController {
                 response.setStatus(201);
             else
                 response.setStatus(200);
+
+            logUserAction(user.getUserData().getLogin(),  UserActionEnum.READ_CARD, user.getUserData().getEntities(), cardUid, null);
         }
         return null;
     }
@@ -163,6 +184,8 @@ public class CardController {
     @DeleteMapping("/userAcknowledgement/{cardUid}")
     public Void deleteUserAcknowledgement(Principal principal, @PathVariable("cardUid") String cardUid,
                                                 HttpServletResponse response) {
+        OpFabJwtAuthenticationToken jwtPrincipal = (OpFabJwtAuthenticationToken) principal;
+        CurrentUserWithPerimeters user = (CurrentUserWithPerimeters) jwtPrincipal.getPrincipal();
         UserBasedOperationResult result = cardProcessingService.deleteUserAcknowledgement(cardUid, principal.getName());
         if (!result.isCardFound()) response.setStatus(404);
         else {
@@ -170,6 +193,8 @@ public class CardController {
                 response.setStatus(200);
             else
                 response.setStatus(204);
+
+            logUserAction(user.getUserData().getLogin(),  UserActionEnum.UNACK_CARD, user.getUserData().getEntities(), cardUid, null);
         }
         return null;
     }
@@ -182,6 +207,8 @@ public class CardController {
     @DeleteMapping("/userCardRead/{cardUid}")
     public Void deleteUserRead(Principal principal, @PathVariable("cardUid") String cardUid,
                                                 HttpServletResponse response) {
+        OpFabJwtAuthenticationToken jwtPrincipal = (OpFabJwtAuthenticationToken) principal;
+        CurrentUserWithPerimeters user = (CurrentUserWithPerimeters) jwtPrincipal.getPrincipal();
         UserBasedOperationResult result =  cardProcessingService.deleteUserRead(cardUid,principal.getName());
         if (!result.isCardFound()) response.setStatus(404);
         else {
@@ -189,6 +216,9 @@ public class CardController {
                 response.setStatus(200);
             else
                 response.setStatus(204);
+
+            logUserAction(user.getUserData().getLogin(),  UserActionEnum.UNREAD_CARD, user.getUserData().getEntities(), cardUid, null);
+
         }
         return null;
     }
@@ -215,5 +245,9 @@ public class CardController {
                     fieldToTranslate.getI18nValue());
             return "{\"translatedField\": \"" + translatedField + "\"}";
         }
+    }
+
+    private void logUserAction(String login, UserActionEnum actionType, List<String> entities, String cardUid, String comment) {
+        if (traceUserAction) userActionLogService.insertUserActionLog(login,  actionType, entities, cardUid, comment);
     }
 }

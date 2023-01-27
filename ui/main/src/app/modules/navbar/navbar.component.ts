@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2022, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2023, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -13,20 +13,15 @@ import {Store} from '@ngrx/store';
 import {TryToLogOutAction} from '@ofActions/authentication.actions';
 import {AppState} from '@ofStore/index';
 import {selectCurrentUrl} from '@ofSelectors/router.selectors';
-import {LoadMenuAction} from '@ofActions/menu.actions';
-import {selectMenuStateMenu} from '@ofSelectors/menu.selectors';
 import {BehaviorSubject, Observable} from 'rxjs';
-import {CoreMenuConfig, Menu} from '@ofModel/menu.model';
-import {map, tap} from 'rxjs/operators';
-import * as _ from 'lodash-es';
+import {Menu} from '@ofModel/menu.model';
 import {GlobalStyleService} from '@ofServices/global-style.service';
 import {Route} from '@angular/router';
-import {ConfigService} from '@ofServices/config.service';
+import {ConfigService} from 'app/business/services/config.service';
 import {UserPreferencesService} from '@ofServices/user-preference.service';
-import {QueryAllEntitiesAction} from '@ofActions/user.actions';
-import {UserService} from '@ofServices/user.service';
 import {NgbModal, NgbModalOptions, NgbModalRef} from '@ng-bootstrap/ng-bootstrap';
 import {AppService} from '@ofServices/app.service';
+import {MenuService} from 'app/business/services/menu.service';
 
 @Component({
     selector: 'of-navbar',
@@ -39,7 +34,7 @@ export class NavbarComponent implements OnInit {
     navbarCollapsed = true;
     navigationRoutes: Route[];
     currentPath: string[];
-    private _businessconfigMenus: Observable<Menu[]>;
+    businessconfigMenus: Menu[];
     expandedMenu: boolean[] = [];
 
     modalRef: NgbModalRef;
@@ -56,6 +51,7 @@ export class NavbarComponent implements OnInit {
     displayFeedConfiguration: boolean;
     displayRealTimeUsers: boolean;
     displayExternalDevicesConfiguration: boolean;
+    displayUserActionLogs: boolean;
     displayCreateUserCard: boolean;
     displayCalendar: boolean;
     displaySettings: boolean;
@@ -72,7 +68,7 @@ export class NavbarComponent implements OnInit {
         private store: Store<AppState>,
         private globalStyleService: GlobalStyleService,
         private configService: ConfigService,
-        private userService: UserService,
+        private menuService: MenuService,
         private modalService: NgbModal,
         private appService: AppService,
         private userPreferences: UserPreferencesService
@@ -86,15 +82,7 @@ export class NavbarComponent implements OnInit {
                 this.currentPath = url.split('/');
             }
         });
-        this._businessconfigMenus = this.store.select(selectMenuStateMenu).pipe(
-            map((menus) => this.getCurrentUserCustomMenus(menus)),
-            tap((menus) => {
-                this.expandedMenu = new Array<boolean>(menus.length);
-                _.fill(this.expandedMenu, false);
-            })
-        );
-        this.store.dispatch(new LoadMenuAction());
-        this.store.dispatch(new QueryAllEntitiesAction());
+        this.businessconfigMenus = this.menuService.getCurrentUserCustomMenus(this.configService.getMenus());
 
         const logo = this.configService.getConfigValue('logo.base64');
         if (!!logo) {
@@ -113,7 +101,7 @@ export class NavbarComponent implements OnInit {
         const logo_limitSize = this.configService.getConfigValue('logo.limitSize');
         this.limitSize = logo_limitSize === true;
 
-        const visibleCoreMenus = this.computeVisibleCoreMenusForCurrentUser();
+        const visibleCoreMenus = this.menuService.computeVisibleCoreMenusForCurrentUser();
         const settings = this.configService.getConfigValue('settings');
 
         this.navigationRoutes = navigationRoutes.filter((route) => visibleCoreMenus.includes(route.path));
@@ -122,6 +110,7 @@ export class NavbarComponent implements OnInit {
         this.displayFeedConfiguration = visibleCoreMenus.includes('feedconfiguration');
         this.displayRealTimeUsers = visibleCoreMenus.includes('realtimeusers');
         this.displayExternalDevicesConfiguration = visibleCoreMenus.includes('externaldevicesconfiguration');
+        this.displayUserActionLogs = visibleCoreMenus.includes('useractionlogs');
         this.displayCreateUserCard = visibleCoreMenus.includes('usercard');
         this.displayCalendar = visibleCoreMenus.includes('calendar');
         this.displaySettings = visibleCoreMenus.includes('settings');
@@ -143,46 +132,9 @@ export class NavbarComponent implements OnInit {
         }
     }
 
-    private getCurrentUserCustomMenus(menus: Menu[]): Menu[] {
-        const filteredMenus = [];
-        menus.forEach((m) => {
-            const entries = m.entries.filter(
-                (e) => !e.showOnlyForGroups || this.userService.isCurrentUserInAnyGroup(e.showOnlyForGroups)
-            );
-            if (entries.length > 0) {
-                filteredMenus.push(new Menu(m.id, m.label, entries));
-            }
-        });
-        return filteredMenus;
-    }
-
-    private computeVisibleCoreMenusForCurrentUser(): string[] {
-        const coreMenuConfiguration = this.configService.getCoreMenuConfiguration();
-
-        if (coreMenuConfiguration) {
-            return coreMenuConfiguration
-                .filter((coreMenuConfig: CoreMenuConfig) => {
-                    return (
-                        coreMenuConfig.visible &&
-                        (!coreMenuConfig.showOnlyForGroups ||
-                            coreMenuConfig.showOnlyForGroups.length == 0 ||
-                            this.userService.isCurrentUserInAnyGroup(coreMenuConfig.showOnlyForGroups))
-                    );
-                })
-                .map((coreMenuConfig: CoreMenuConfig) => coreMenuConfig.id);
-        } else {
-            console.log('No coreMenusConfiguration property set in ui-menu.json');
-            return [];
-        }
-    }
-
     logOut() {
         this.logoutInProgress = true;
         this.store.dispatch(new TryToLogOutAction());
-    }
-
-    get businessconfigMenus() {
-        return this._businessconfigMenus;
     }
 
     toggleMenu(index: number) {

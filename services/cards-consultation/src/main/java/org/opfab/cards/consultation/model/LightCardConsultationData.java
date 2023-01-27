@@ -50,6 +50,7 @@ public class LightCardConsultationData implements LightCard {
     private Instant publishDate;
     private Instant startDate;
     private Instant endDate;
+    private Instant expirationDate;
     private SeverityEnum severity;
     @JsonInclude(JsonInclude.Include.NON_EMPTY)
     @Singular
@@ -92,6 +93,9 @@ public class LightCardConsultationData implements LightCard {
 
     private Integer  secondsBeforeTimeSpanForReminder;
 
+    @JsonInclude(JsonInclude.Include.NON_EMPTY)
+    private RRule rRule;
+
     /**
      * @return timespans, may return null
      */
@@ -99,14 +103,14 @@ public class LightCardConsultationData implements LightCard {
     @JsonInclude(JsonInclude.Include.NON_EMPTY)
     @Override
     public List<TimeSpan> getTimeSpans() {
-        if(this.timeSpansSet!=null)
+        if (this.timeSpansSet != null)
             return new ArrayList<>(this.timeSpansSet);
         return null;
     }
 
     @Override
     public void setTimeSpans(List<TimeSpan> timeSpans) {
-        if(timeSpans != null)
+        if (timeSpans != null)
             this.timeSpansSet = new HashSet<>(timeSpans);
 
     }
@@ -126,6 +130,7 @@ public class LightCardConsultationData implements LightCard {
                 .startDate(other.getStartDate())
                 .publishDate(other.getPublishDate())
                 .endDate(other.getEndDate())
+                .expirationDate(other.getExpirationDate())
                 .severity(other.getSeverity())
                 .title(I18nConsultationData.copy(other.getTitle()))
                 .summary(I18nConsultationData.copy(other.getSummary()))
@@ -138,7 +143,8 @@ public class LightCardConsultationData implements LightCard {
                 .representativeType(other.getRepresentativeType())
                 .wktGeometry(other.getWktGeometry())
                 .wktProjection(other.getWktProjection())
-                .secondsBeforeTimeSpanForReminder(other.getSecondsBeforeTimeSpanForReminder());
+                .secondsBeforeTimeSpanForReminder(other.getSecondsBeforeTimeSpanForReminder())
+                .rRule(other.getRRule());
 
         if (other.getTags() != null && ! other.getTags().isEmpty())
             builder.tags(other.getTags());

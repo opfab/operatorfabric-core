@@ -1,0 +1,20 @@
+{
+	"publisher" : "publisher_test",
+    "wktGeometry": "POINT (2.349014 48.864716)",
+    "wktProjection": "EPSG:4326",
+    "processVersion" : "1",
+    "process"  :"cypress",
+    "processInstanceId" : "point_card3",
+    "state": "messageState",
+    "entityRecipients": ["ENTITY1_FR","ENTITY2_FR"],
+    "severity" : "ALARM",
+    "startDate" : ${current_date_in_milliseconds_from_epoch_plus_2hours},
+    "endDate" : ${current_date_in_milliseconds_from_epoch_plus_8hours} ,
+	"summary" : {"key" : "message.summary"},
+	"title" : {"key" : "message.title"},
+	"data" : {"message": "Card test with location Paris"},
+	"timeSpans" : [
+		{"start" :${current_date_in_milliseconds_from_epoch_plus_2hours}},
+		{"start" : ${current_date_in_milliseconds_from_epoch_plus_8hours}}
+		]
+}

@@ -5,7 +5,7 @@ Background:
 
   * def signInTso1 = callonce read('../common/getToken.feature') { username: 'operator1_fr'}
   * def authTokenTso1 = signInTso1.authToken
-  * def signInTso2 = callonce read('../common/getToken.feature') { username: 'operator2_fr'}
+  * def signInTso2 = callonce read('../common/getToken.feature') { username: 'operator2_it'}
   * def authTokenTso2 = signInTso2.authToken
   * def signInAdmin = callonce read('../common/getToken.feature') { username: 'admin'}
   * def authTokenAdmin = signInAdmin.authToken

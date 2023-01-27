@@ -1,0 +1,153 @@
+{
+  "coreMenusConfiguration":
+  [
+  ],
+  "menus": [
+    {
+      "id": "menu1",
+      "label": "title.single",
+      "entries": [
+        {
+          "id": "uid_test_0",
+          "url": "https://en.wikipedia.org/w/index.php",
+          "label": "entry.single",
+          "linkType": "BOTH"
+        }
+      ]
+    },
+    {
+      "id": "menu2",
+      "label": "title.multi",
+      "entries": [
+        {
+          "id": "uid_test_1",
+          "url": "https://opfab.github.io/",
+          "label": "entry.entry1",
+          "linkType": "BOTH",
+          "showOnlyForGroups": ["ReadOnly","Planner"]
+        },
+        {
+          "id": "uid_test_2",
+          "url": "https://www.wikipedia.org/",
+          "label": "entry.entry2",
+          "linkType": "BOTH",
+          "showOnlyForGroups": ["Dispatcher"]
+        },
+        {
+          "id": "uid_test_3",
+          "url": "http://localhost:2002/external/appExample/",
+          "label": "entry.entry3",
+          "linkType": "BOTH"
+        }
+      ]
+    },
+    {
+      "id": "adminmenu",
+      "label": "title.admin",
+      "entries": [
+        {
+          "id": "uid_test_3",
+          "url": "https://opfab.github.io/",
+          "label": "entry.admin",
+          "linkType": "BOTH",
+          "showOnlyForGroups": ["ADMIN"]
+        }
+      ]
+    }
+  ],
+  "locales": [
+    {
+      "language": "en",
+      "i18n": {
+        "menu1": {
+          "title": {
+            "single": "First menu"
+          },
+          "entry": {
+            "single": "Single menu entry"
+          }
+        },
+        "menu2": {
+          "title": {
+            "multi": "Second menu"
+          },
+          "entry": {
+            "entry1": "First menu entry",
+            "entry2": "Second menu entry",
+            "entry3": "External application"
+          }
+        },
+        "adminmenu": {
+          "title": {
+            "admin": "Admin menu"
+          },
+          "entry": {
+            "admin": "Admin menu entry"
+          }
+        }
+      }
+    },
+    {
+      "language": "fr",
+      "i18n": {
+        "menu1": {
+          "title": {
+            "single": "Premier menu"
+          },
+          "entry": {
+            "single": "Unique élément"
+          }
+        },
+        "menu2": {
+          "title": {
+            "multi": "Deuxième menu"
+          },
+          "entry": {
+            "entry1": "Premier élément",
+            "entry2": "Deuxième élément",
+            "entry3": "Application externe"
+          }
+        },
+        "adminmenu": {
+          "title": {
+            "admin": "Admin menu"
+          },
+          "entry": {
+            "admin": "Admin menu entry"
+          }
+        }
+      }
+    },
+    {
+      "language": "nl",
+      "i18n": {
+        "menu1": {
+          "title": {
+            "single": "Eerste menu"
+          },
+          "entry": {
+            "single": "Enkel menu-item"
+          }
+        },
+        "menu2": {
+          "title": {
+            "multi": "Tweede menu"
+          },
+          "entry": {
+            "entry1": "Eerste menu-item",
+            "entry2": "Tweede menu-item",
+            "entry3": "TExterne applicatie"
+          }
+        },
+        "adminmenu": {
+          "title": {
+            "admin": "Admin menu"
+          },
+          "entry": {
+            "admin": "Admin menu-item"
+          }
+        }
+      }
+    }
+  ]
+}

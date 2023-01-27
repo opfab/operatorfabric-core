@@ -11,7 +11,6 @@
 
 package org.opfab.springtools.configuration.oauth;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.cache.annotation.EnableCaching;
@@ -33,10 +32,13 @@ import java.util.Map;
 @Component
 public class ProcessesCache {
 
-    @Autowired
     private ProcessesProxy client;
 
     protected static final Map<String,String> tokens = new HashMap<>();
+
+    public ProcessesCache(ProcessesProxy processesProxy) {
+        this.client = processesProxy; 
+    }
 
     // The token is stored in the service as when the org.lfenergy.operatorfabric.cards.consultation.services.CardSubscription
     // class call the cache , it does not have the user token

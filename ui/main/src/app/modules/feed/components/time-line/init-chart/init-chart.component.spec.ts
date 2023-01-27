@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2022, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2023, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -25,7 +25,7 @@ import {TranslateLoader, TranslateModule, TranslateService} from '@ngx-translate
 import {GlobalStyleService} from '@ofServices/global-style.service';
 import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
 import {TimelineButtonsComponent} from '../../../../share/timeline-buttons/timeline-buttons.component';
-import {ConfigService} from '@ofServices/config.service';
+import {ConfigService} from 'app/business/services/config.service';
 import {HttpClient, HttpHandler} from '@angular/common/http';
 import {AppService} from '@ofServices/app.service';
 import {BusinessconfigI18nLoaderFactory} from '@tests/helpers';
@@ -34,7 +34,9 @@ import {LightCardsFeedFilterService} from '@ofServices/lightcards/lightcards-fee
 import {OpfabLoggerService} from '@ofServices/logs/opfab-logger.service';
 import {RemoteLoggerService} from '@ofServices/logs/remote-logger.service';
 import {RemoteLoggerServiceMock} from '@tests/mocks/remote-logger.service.mock';
-import {DateTimeFormatterService} from '@ofServices/date-time-formatter.service';
+import {DateTimeFormatterService} from 'app/business/services/date-time-formatter.service';
+import {ConfigServer} from 'app/business/server/config.server';
+import {ConfigServerMock} from '@tests/mocks/configServer.mock';
 
 describe('InitChartComponent', () => {
     let component: InitChartComponent;
@@ -74,6 +76,7 @@ describe('InitChartComponent', () => {
                 {provide: RouterStateSerializer, useClass: CustomRouterStateSerializer},
                 {provide: DateTimeFormatterService, useClass: DateTimeFormatterService},
                 {provide: ConfigService, useClass: ConfigService},
+                {provide: ConfigServer, useClass: ConfigServerMock},
                 {provide: HttpClient, useClass: HttpClient},
                 {provide: HttpHandler, useClass: HttpHandler},
                 {provide: AppService, useClass: AppService},

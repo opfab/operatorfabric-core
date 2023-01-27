@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2021, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2023, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -15,6 +15,10 @@ import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.opfab.users.configuration.users.UsersProperties;
 import org.opfab.users.model.*;
+import org.opfab.users.mongo.repositories.MongoEntityRepository;
+import org.opfab.users.mongo.repositories.MongoGroupRepository;
+import org.opfab.users.mongo.repositories.MongoUserSettingsRepository;
+import org.opfab.users.mongo.repositories.MongoUserRepository;
 import org.opfab.users.repositories.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DuplicateKeyException;
@@ -38,19 +42,19 @@ public class DataInitComponent {
     private UsersProperties usersProperties;
 
     @Autowired
-    private UserRepository userRepository;
+    private MongoUserRepository userRepository;
 
     @Autowired
-    private GroupRepository groupRepository;
+    private MongoGroupRepository groupRepository;
 
     @Autowired
-    private EntityRepository entityRepository;
+    private MongoEntityRepository entityRepository;
 
     @Autowired
     private PerimeterRepository perimeterRepository;
 
     @Autowired
-    private UserSettingsRepository userSettingsRepository;
+    private MongoUserSettingsRepository userSettingsRepository;
 
     @Getter
     private boolean initiated;

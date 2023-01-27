@@ -17,7 +17,6 @@ import org.opfab.cards.model.I18n;
 import org.opfab.cards.model.SeverityEnum;
 import org.opfab.externalapp.cards.CardClient;
 import org.opfab.externalapp.security.AuthClient;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
@@ -36,11 +35,14 @@ public class ExternalAppServiceImpl implements ExternalAppService {
 	@Value("${opfab.auth.url:http://web-ui/auth/token}")
 	private String opfabAuthUrl;
 
-	@Autowired
-	public CardClient cardClient;
+	private CardClient cardClient;
 
-	@Autowired
-	public AuthClient authClient;
+	private AuthClient authClient;
+
+	public ExternalAppServiceImpl(CardClient cardClient,AuthClient authClient) {
+		this.cardClient = cardClient;
+		this.authClient =authClient;
+	}
 
 	@Override
 	public void receiveCard(Optional<JsonNode> requestBody) {

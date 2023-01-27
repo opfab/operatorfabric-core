@@ -1,5 +1,5 @@
 /* Copyright (c) 2022, Alliander (http://www.alliander.com)
-/* Copyright (c) 2018-2022, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2023, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -22,7 +22,7 @@ import WKT from 'ol/format/WKT';
 import Overlay from 'ol/Overlay';
 import {Style, Fill, Stroke, Circle} from 'ol/style';
 import {Attribution, ZoomToExtent, Control, defaults as defaultControls} from 'ol/control';
-import {ConfigService} from '@ofServices/config.service';
+import {ConfigService} from 'app/business/services/config.service';
 import {selectGlobalStyleState} from '@ofSelectors/global-style.selectors';
 import {Store} from '@ngrx/store';
 import {AppState} from '@ofStore/index';
@@ -62,7 +62,7 @@ export class MapComponent implements OnInit, OnDestroy, AfterViewChecked {
             const enableGraph = this.configService.getConfigValue('feed.geomap.enableGraph', false);
             this.drawMap(enableGraph);
             this.lightCardsFeedFilterService
-                .getFilteredAndSortedLightCards()
+                .getFilteredAndSearchedLightCards()
                 .pipe(takeUntil(this.unsubscribe$))
                 .subscribe((cards) => {
                     setTimeout(() => this.updateMap(cards), 500);

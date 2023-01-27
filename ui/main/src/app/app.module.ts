@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2022, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2023, RTE (http://www.rte-france.com)
  * Copyright (c) 2020, RTEi (http://www.rte-international.com)
  *  See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
@@ -40,8 +40,15 @@ import {AppLoadedInAnotherTabComponent} from './modules/core/application-loading
 import {ApplicationLoadingComponent} from './modules/core/application-loading/application-loading.component';
 import {ReloadRequiredComponent} from './modules/core/reload-required/reload-required.component';
 import {ServiceWorkerModule, SwRegistrationOptions} from '@angular/service-worker';
-import {Utilities} from './common/utilities';
-import { SpinnerModule } from './modules/share/spinner/spinner.module';
+import {Utilities} from './business/common/utilities';
+import {SpinnerModule} from './modules/share/spinner/spinner.module';
+import {UserActionLogsModule} from './modules/useractionlogs/useractionlogs.module';
+import {ConfigServer} from './business/server/config.server';
+import {AngularConfigServer} from './server/angularConfig.server';
+import {ProcessServer} from './business/server/process.server';
+import {AngularProcessServer} from './server/angularProcess.server';
+import {AngularOpfabEventStreamServer} from './server/angularOpfabEventStream.server';
+import {OpfabEventStreamServer} from './business/server/opfabEventStream.server';
 
 @NgModule({
     imports: [
@@ -66,6 +73,7 @@ import { SpinnerModule } from './modules/share/spinner/spinner.module';
         CalendarModule,
         NavbarModule,
         ActivityareaModule,
+        UserActionLogsModule,
         ServiceWorkerModule.register('ngsw-worker.js')
     ],
     declarations: [
@@ -92,7 +100,10 @@ import { SpinnerModule } from './modules/share/spinner/spinner.module';
             provide: HTTP_INTERCEPTORS,
             useClass: TokenInjector,
             multi: true
-        }
+        },
+        {provide: ConfigServer, useClass: AngularConfigServer},
+        {provide: ProcessServer, useClass: AngularProcessServer},
+        {provide: OpfabEventStreamServer, useClass: AngularOpfabEventStreamServer}
     ],
     bootstrap: [AppComponent]
 })

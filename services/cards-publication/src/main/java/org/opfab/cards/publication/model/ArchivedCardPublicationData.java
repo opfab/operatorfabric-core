@@ -11,6 +11,7 @@
 
 package org.opfab.cards.publication.model;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.Singular;
@@ -58,8 +59,9 @@ public class ArchivedCardPublicationData implements Card {
     private String state;
     private I18n title;
     private I18n summary;
-
+    @Indexed
     private String titleTranslated;
+    @Indexed
     private String summaryTranslated;
 
     @CreatedDate
@@ -71,6 +73,8 @@ public class ArchivedCardPublicationData implements Card {
     private Instant startDate;
     @Indexed
     private Instant endDate;
+    @Indexed
+    private Instant expirationDate;
     private SeverityEnum severity;
     @Indexed
     private List<String> tags;
@@ -124,6 +128,8 @@ public class ArchivedCardPublicationData implements Card {
 
     private List<String> entitiesAcks;
 
+    private RRule rRule;
+
     public Instant getDeletionDate() {
         return this.deletionDate;
     }
@@ -145,6 +151,7 @@ public class ArchivedCardPublicationData implements Card {
         this.state = card.getState();
         this.startDate = card.getStartDate();
         this.endDate = card.getEndDate();
+        this.expirationDate = card.getExpirationDate();
         this.lttd = card.getLttd();
         this.title = card.getTitle();
         this.summary = card.getSummary();
@@ -170,6 +177,8 @@ public class ArchivedCardPublicationData implements Card {
         this.wktProjection = card.getWktProjection();
         this.secondsBeforeTimeSpanForReminder = card.getSecondsBeforeTimeSpanForReminder();
         this.toNotify = card.getToNotify();
+
+        this.rRule = card.getRRule();
     }
 
 }

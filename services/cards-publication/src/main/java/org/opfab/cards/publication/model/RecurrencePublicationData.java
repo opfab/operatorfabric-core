@@ -19,6 +19,7 @@ import java.util.List;
 @Builder
 public class RecurrencePublicationData implements Recurrence {
 
+    @Builder.Default
     private String timeZone = "Europe/Paris";
     private List<Integer> daysOfWeek;
     HoursAndMinutes hoursAndMinutes;

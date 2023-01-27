@@ -43,6 +43,7 @@ export abstract class ExternalDevicesConfigurationDirective {
 
     protected fields: Field[];
     protected canAddItems: boolean;
+    private isLoadingData = true;
 
     constructor(
         protected externalDevicesService: ExternalDevicesService,
@@ -153,13 +154,16 @@ export abstract class ExternalDevicesConfigurationDirective {
     }
 
     refreshData() {
+        this.isLoadingData = true;
         this.queryData().subscribe({
             next: (configurations) => {
                 this.technicalError = false;
                 this.configurations = configurations;
+                this.isLoadingData = false;
             },
             error: () => {
                 this.technicalError = true;
+                this.isLoadingData = false;
             }
         });
     }

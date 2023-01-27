@@ -1,7 +1,7 @@
 swagger: '2.0'
 info:
   description: IMPORTANT - The Try it Out button will generate curl requests for examples, but executing them through the UI will not work as authentication has not been set up. This page is for documentation only.
-  version: 3.11.0.RELEASE
+  version: 3.12.0.RELEASE
   title: User Management
   termsOfService: ''
   contact:
@@ -62,6 +62,17 @@ definitions:
       entities:
         - ENTITY1
         - ENTITY2
+  PermissionEnum:
+    type: string
+    description: |-
+      Permission values >
+      * ADMIN: Administrator permission
+      * VIEW_ALL_ARCHIVED_CARDS: Permission to access all archived cards
+      * READONLY: Permission to view card, no rights to send cards or respond to a card.
+    enum:
+      - ADMIN
+      - VIEW_ALL_ARCHIVED_CARDS
+      - READONLY
   GroupTypeEnum:
     type: string
     description: |-
@@ -87,6 +98,11 @@ definitions:
         type: array
         items:
           type: string
+          uniqueItems: true
+      permissions:
+        type: array
+        items:
+          $ref: '#/definitions/PermissionEnum'
           uniqueItems: true
       realtime:
         type: boolean
@@ -252,6 +268,11 @@ definitions:
           description: List of process states for which the user will not be notified
           items:
             type: string
+      permissions:
+        type: array
+        items:
+          $ref: '#/definitions/PermissionEnum'
+          uniqueItems: true
   ComputedPerimeter:
     type: object
     properties:
@@ -273,7 +294,61 @@ definitions:
         type: array
         items:
           type: string
-
+  UserActionLog:
+    type: object
+    properties:
+      login:
+        type: string
+      entities:
+        type: array
+        items:
+          type: string
+      action:
+        type: string
+      cardUid:
+        type: string
+      comment:
+        type: string
+  UserActionLogPage:
+    type: object
+    description: >-
+      This object contains the result of a paginated query returning ActionLog: a list of ActionLog
+      as well as additional information on the result: total number of items, page number, page size, etc.
+    properties:
+      content:
+        type: array
+        items:
+          $ref: '#/definitions/UserActionLog'
+        description: >-
+          ActionLog objects making up the required result page
+      first:
+        type: boolean
+        description: >-
+          Is true for the first page (page number = 0)
+      last:
+        type: boolean
+        description: >-
+          Is true for the last page
+      totalPages:
+        type: number
+        description: >-
+          Total number of pages returned by the query
+      totalElements:
+        type: number
+        description: >-
+          Total number of elements returned by the query
+      numberOfElements:
+        type: number
+        description: >-
+          Number of elements in the current page
+      size:
+        type: number
+        description: >-
+          Page size (max number of items in page)
+      number:
+        type: number
+        description: >-
+          Page number
 paths:
   /users:
     get:
@@ -1590,3 +1665,69 @@ paths:
                   rights: ReceiveAndWrite
         '401':
           description: Authentication required
+  /userActionLogs:
+    get:
+      tags:
+        - user actions logs
+      summary: Get user action logs
+      description: 'Get the list the user actions.'
+      operationId: getUserActionLogs
+      parameters:
+        - in: query
+          name: login
+          type: array
+          items:
+            type: string
+          required: false
+          description: 'usernames of the users who performed the actions'
+        - in: query
+          name: action
+          type: array
+          items:
+            type: string
+          required: false
+          description: 'types of actions performed'
+        - in: query
+          name: dateFrom
+          type: number
+          required: false
+          description: >-
+            Date as number of milliseconds since epoch. If this query parameter is set, only cards
+            with a publishDate that is after this date will be returned.
+            This parameter should be unique or a BAD REQUEST will be returned.
+        - in: query
+          name: dateTo
+          type: number
+          required: false
+          description: >-
+            Date as number of milliseconds since epoch. If this query parameter is set, only cards
+            with a publishDate that is before this date will be returned.
+            This parameter should be unique or a BAD REQUEST will be returned.
+        - name: page
+          in: query
+          type: number
+          required: false
+          description: >-
+            Page number of the page to retrieve.
+            If "size" is set but "page" isn't, the default page returned will be the first (number 0).
+            If "page" is set but "size" isn't, the default size will be 10 items.
+            If neither "page" nor "size" is set, the response will contain a single page containing all matching cards.
+            This parameter should be unique or a BAD REQUEST will be returned.
+        - in: query
+          name: size
+          type: number
+          required: false
+          description: >-
+            Size of the results pages.
+            If "size" is set but "page" isn't, the default page returned will be the first (number 0).
+            If "page" is set but "size" isn't, the default size will be 10 items.
+            If neither "page" nor "size" is set, the response will contain a single page containing all matching cards.
+            This parameter should be unique or a BAD REQUEST will be returned.
+      produces:
+        - application/json
+      responses:
+        '200':
+          description: OK
+          schema:
+            type: object
+            $ref: '#/definitions/UserActionLogPage'

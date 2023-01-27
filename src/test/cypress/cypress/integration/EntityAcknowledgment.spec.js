@@ -1,4 +1,4 @@
-/* Copyright (c) 2022, RTE (http://www.rte-france.com)
+/* Copyright (c) 2022-2023, RTE (http://www.rte-france.com)
 * See AUTHORS.txt
 * This Source Code Form is subject to the terms of the Mozilla Public
 * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -28,6 +28,42 @@ describe('Entity acknowledgment tests for icon in light-card', function () {
 
     beforeEach('Delete all cards', function () {
         script.deleteAllCards();
+    });
+
+    // card "message3" has the state with parameter consideredAcknowledgedForUserWhen set to OneEntityOfUserHasAcknowledged
+    it('READONLY user operator1_crisisroom acknowledges card, check the card is not acknoledged at entity level', function () {
+
+        script.sendCard('cypress/entitiesAcks/message3.json');
+        opfab.loginWithUser('operator1_crisisroom');
+
+        // Set feed filter to see only un-acknowledged cards
+        cy.get('#opfab-feed-filter-btn-filter').click();
+        cy.get('#opfab-feed-filter-ack-notack').click();
+        cy.waitDefaultTime(); // let time before closing popup to avoid flaky error on CI/CD
+        cy.get('#opfab-feed-filter-btn-filter').click();
+
+        cy.get('of-light-card').should('have.length', 1);
+        // Click on card (message2) and acknowledge it
+        cy.get('#opfab-feed-light-card-cypress-entitiesAcksMessage3').click();
+        card.acknowledge();
+        // Card is not anymore in the feed
+        cy.get('#opfab-feed-light-card-cypress-entitiesAcksMessage2').should('not.exist');
+        // Detail card is not present anymore
+        cy.get('of-card-body').should('not.exist');
+
+        opfab.logout();
+
+        opfab.loginWithUser('operator4_fr');
+
+        // Set feed filter to see all cards
+        cy.get('#opfab-feed-filter-btn-filter').click();
+        cy.get('#opfab-feed-filter-ack-all').click();
+        cy.waitDefaultTime(); // let time before closing popup to avoid flaky error on CI/CD
+        cy.get('#opfab-feed-filter-btn-filter').click();
+
+        cy.get('of-light-card').should('have.length', 1);
+        cy.get('#opfab-feed-light-card-cypress-entitiesAcksMessage3 .fa-check').should('not.exist');
+
     });
 
     // card "message2" has the state with parameter consideredAcknowledgedForUserWhen set to UserHasAcknowledged
@@ -99,18 +135,19 @@ describe('Entity acknowledgment tests for icon in light-card', function () {
         cy.get('#opfab-feed-light-card-cypress-entitiesAcksMessage3 .fa-check').should('exist');
         // Click on card message
         cy.get('#opfab-feed-light-card-cypress-entitiesAcksMessage3').click();
-        card.unacknowledge();
-        // Check icon is still present
-        cy.get('#opfab-feed-light-card-cypress-entitiesAcksMessage3 .fa-check').should('exist');
+
+        // Check "Cancel acknowledgment" button is not present
+        cy.get("#opfab-card-details-btn-unack").should('not.exist');
 
         // operator4_fr un-ack the card "message4", the icon should not disappear (because entities acks are never removed)
         // First, check icon is present
         cy.get('#opfab-feed-light-card-cypress-entitiesAcksMessage4 .fa-check').should('exist');
         // Click on card message
         cy.get('#opfab-feed-light-card-cypress-entitiesAcksMessage4').click();
-        card.unacknowledge();
-        // Check icon is still present
-        cy.get('#opfab-feed-light-card-cypress-entitiesAcksMessage4 .fa-check').should('exist');
+
+        // Check "Cancel acknowledgment" button is not present
+        cy.get("#opfab-card-details-btn-unack").should('not.exist');
+
     });
 
     it('1) operator1_fr acknowledges the card "message2", and we check the icon is not present for operator4_fr\n' +

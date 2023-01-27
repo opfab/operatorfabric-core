@@ -135,6 +135,10 @@ config/dev/ui-config/**
 # now script generated
 config/dev/nginx.conf
 
+# Back up of the test config
+config/dev/mongodump/**
+config/docker/mongodump/**
+
 # MacOS metadata files
 **/.DS_Store
 

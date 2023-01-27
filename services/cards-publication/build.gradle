@@ -7,7 +7,6 @@ dependencies {
 
     compileOnly boot.annotationConfiguration
     annotationProcessor boot.annotationConfiguration
-    
 
     implementation cloud.springKafka
     implementation cloud.kafkaAvroSchemaRegistryClient
@@ -27,6 +26,7 @@ dependencies {
     implementation project(':client:businessconfig-client-data')
     implementation project(':tools:spring:spring-mongo-utilities')
     implementation project(':tools:spring:spring-oauth2-utilities')
+    implementation project(':tools:user-action-tracing')
     testImplementation project(':tools:spring:spring-test-utilities')
 }
 

@@ -1,5 +1,5 @@
 <!-- Copyright (c) 2020, RTEi (http://www.rte-international.com)           -->
-<!-- Copyright (c) 2021, RTE (http://www.rte-france.com)                   -->
+<!-- Copyright (c) 2021-2023, RTE (http://www.rte-france.com)                   -->
 <!-- See AUTHORS.txt                                                       -->
 <!-- This Source Code Form is subject to the terms of the Mozilla Public   -->
 <!-- License, v. 2.0. If a copy of the MPL was not distributed with this   -->
@@ -16,6 +16,6 @@
 <div class="modal-body text-center">
   <p>{{ message }}</p>
   <button id="opfab-admin-confirmation-btn-cancel" type="button" class="opfab-btn-cancel" (click)="decline()">{{ btnCancelText }}</button>
-  <button id="opfab-admin-confirmation-btn-ok"  type="button" class="opfab-btn" (click)="accept()">{{ btnOkText }}</button>
+  <button id="opfab-admin-confirmation-btn-ok"  type="button" class="opfab-btn" (click)="accept()" ngbAutofocus>{{ btnOkText }}</button>
 </div>
 

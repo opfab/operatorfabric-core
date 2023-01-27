@@ -30,7 +30,10 @@
       "invalidActiveStartDate": "La date 'Active à partir de' est invalide.",
       "invalidActiveEndDate": "La date 'Active jusqu'à' est invalide.",
       "publishEndDateBeforeStartDate" : "La date 'Publiée jusqu'à' doit être postérieure à la date 'Publiée à partir de'.",
-      "activeEndDateBeforeStartDate" : "La date 'Active jusqu'à' doit être postérieure à la date 'Active à partir de'."
+      "activeEndDateBeforeStartDate" : "La date 'Active jusqu'à' doit être postérieure à la date 'Active à partir de'.",
+      "invalidFromDate": "La date 'À partir de' est invalide.",
+      "invalidToDate": "La date 'Jusqu'à' est invalide.",
+      "toDateBeforeFromDate" :  "La date 'Jusqu'à' doit être postérieure à la date 'À partir de'."
     },
     "result": {
       "severity": "SÉVÉRITÉ",
@@ -105,7 +108,8 @@
     "switchToDayMode": "Mode jour",
     "realTimeUsers": "Utilisateurs temps réel",
     "externalDevicesConfiguration": "Configuration des périphériques externes",
-    "activityArea": "Zone d'activité"
+    "activityArea": "Zone d'activité",
+    "useractionlogs": "Trace des actions utilisateurs"
   },
   "timeline": {
     "hideTimeline" : "Masquer la timeline",
@@ -182,7 +186,8 @@
       "lttd": "Temps restant pour décider",
       "hasAResponseFromYourEntity" : "Votre entité a déjà répondu.",
       "loadingInProgress": "Chargement de cartes en cours",
-      "seeGroupedCards": "Ouvrez cette carte pour voir les cartes groupées"
+      "seeGroupedCards": "Ouvrez cette carte pour voir les cartes groupées",
+      "expirationDate": "Date d'expiration"
     },
     "acknowledgeAllCards": {
       "label": "Acquitter toutes les cartes",
@@ -201,7 +206,8 @@
     "moreCards": "cartes supplémentaires",
     "lastResponse": "Dernière réponse :",
     "cardLoadingInProgress":"Chargement de la carte...",
-    "cardNotFound": "La carte que vous cherchez n'a pas été trouvée."
+    "cardNotFound": "La carte que vous cherchez n'a pas été trouvée.",
+    "entityRecipients" : "Entités destinataires :"
   },
   "login": {
     "reset": "RaZ",
@@ -257,6 +263,9 @@
         "selectTypeOfStateText": "Sélectionner un État de processus"
       }
     },
+    "tips": {
+      "hasAResponseFromYourEntity" : "Votre entité a déjà répondu."
+    },
     "seeDetails": "VOIR LES DETAILS"
   },
   "button": {
@@ -288,12 +297,14 @@
       "templateError" : "Erreur technique : template non conforme",
       "impossibleToSendCard" : "Impossible d'envoyer la carte pour des raisons techniques",
       "lttdBeforeStartDate": "La date limite de réponse doit être postérieure à la date de début.",
-      "lttdAfterEndDate": "La date limite de réponse doit être antérieure à la date de fin."
+      "lttdAfterEndDate": "La date limite de réponse doit être antérieure à la date de fin.",
+      "expirationDateBeforeStartDate": "La date d'expiration doit être postérieure à la date de début."
     },
     "filters": {
       "severity": "SÉVÉRITÉ",
       "startDate": "DATE DE DÉBUT ",
       "endDate": "DATE DE FIN ",
+      "expirationDate": "DATE D'EXPIRATION",
       "lttd": "DATE LIMITE DE RÉPONSE",
       "recipients": "DESTINATAIRES"
     },
@@ -349,6 +360,7 @@
         "id": "ID",
         "name": "NOM",
         "perimeters" : "PÉRIMÈTRES",
+        "permissions" : "PERMISSIONS",
         "description": "DESCRIPTION",
         "users": "UTILISATEURS",
         "realtime": "TEMPS RÉEL",
@@ -382,6 +394,12 @@
         "confirmDelete": "Voulez-vous vraiment supprimer le périmètre",
         "add":"AJOUTER UN NOUVEAU PÉRIMÈTRE"
       },
+      "process": {
+        "id": "ID",
+        "name": "PROCESSUS",
+        "version": "VERSION ACTUELLE",
+        "confirmDelete": "Voulez-vous vraiment supprimer le processus"
+      },
       "user": {
         "login": "IDENTIFIANT",
         "lastName": "NOM",
@@ -399,6 +417,7 @@
       "selectStateText": "Sélectionner un État",
       "selectRightText": "Sélectionner une Permission",
       "selectGroupTypeText": "Sélectionner un Type",
+      "selectGroupPermissionText": "Sélectionner une Permission",
       "edit": "Éditer",
       "delete": "Supprimer",
       "save": "SAUVEGARDER LES CHANGEMENTS",
@@ -490,6 +509,21 @@
     "delete": "SUPPRIMER",
     "id": "PÉRIPHÉRIQUES",
     "isEnabled": "EST ACTIVÉ"
+  },
+  "useractionlogs": {
+    "title": "TRACES DES ACTIONS UTILISATEURS",
+    "date": "Date",
+    "action": "Action",
+    "login": "Utilisateur",
+    "entities": "Entités",
+    "cardUid": "Uid de la carte",
+    "comment": "Commentaire",
+    "filters": {
+      "action": "ACTION",
+      "login": "UTILISATEUR",
+      "dateFrom": "À PARTIR DE",
+      "dateTo": "JUSQU'À"
+    }
   },
   "datePicker": {
     "monday": "Lu",

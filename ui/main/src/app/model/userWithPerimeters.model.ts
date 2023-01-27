@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2022, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2023, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -9,12 +9,14 @@
 
 import {User} from '@ofModel/user.model';
 import {RightsEnum} from '@ofModel/perimeter.model';
+import {PermissionEnum} from '@ofModel/permission.model';
 
 export class UserWithPerimeters {
     public constructor(
         readonly userData: User,
         readonly computedPerimeters?: Array<ComputedPerimeter>,
-        readonly processesStatesNotNotified?: Map<string, Array<string>>
+        readonly permissions?: Array<PermissionEnum>,
+        readonly processesStatesNotNotified?: Map<string, Array<string>>,
     ) {}
 }
 

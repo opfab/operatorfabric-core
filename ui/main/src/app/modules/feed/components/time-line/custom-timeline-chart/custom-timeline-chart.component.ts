@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2022, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2023, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -38,6 +38,7 @@ import {Router} from '@angular/router';
 import {Subject} from 'rxjs';
 import {takeUntil} from 'rxjs/operators';
 import {getNextTimeForRepeating} from '@ofServices/reminder/reminderUtils';
+import {getNextTimeForRepeating as getNextTimeForRepeatingUsingRRule} from '@ofServices/rrule-reminder/rrule-reminderUtils';
 import {NgbPopover} from '@ng-bootstrap/ng-bootstrap';
 import {LightCardsFeedFilterService} from '@ofServices/lightcards/lightcards-feed-filter.service';
 import {FilterService} from '@ofServices/lightcards/filter.service';
@@ -326,60 +327,64 @@ export class CustomTimelineChartComponent extends BaseChartComponent implements 
         for (const card of cards) {
             if (!card.parentCardId) {
                 // is not child card
-                if (card.timeSpans && card.timeSpans.length > 0) {
-                    card.timeSpans.forEach((timeSpan) => {
-                        if (!!timeSpan.recurrence) {
-                            let dateForReminder: number = getNextTimeForRepeating(
-                                card,
-                                this.xDomainForTimeLineGridDisplay[0].valueOf() +
-                                    1000 * card.secondsBeforeTimeSpanForReminder
-                            );
-
-                            while (
-                                dateForReminder >= 0 &&
-                                (!timeSpan.end || dateForReminder < timeSpan.end) &&
-                                dateForReminder < this.xDomainForTimeLineGridDisplay[1].valueOf()
-                            ) {
-                                const myCardTimeline = {
-                                    date: dateForReminder,
-                                    id: card.id,
-                                    severity: card.severity,
-                                    process: card.process,
-                                    processVersion: card.processVersion,
-                                    titleTranslated: card.titleTranslated
-                                };
-                                myCardsTimeline.push(myCardTimeline);
-                                const nextDate = moment(dateForReminder).add(1, 'minute');
-
-                                dateForReminder = getNextTimeForRepeating(
-                                    card,
-                                    nextDate.valueOf() + 1000 * card.secondsBeforeTimeSpanForReminder
-                                );
-                            }
-                        } else {
-                            if (!!timeSpan.start) {
-                                const myCardTimeline = {
-                                    date: timeSpan.start,
-                                    id: card.id,
-                                    severity: card.severity,
-                                    process: card.process,
-                                    processVersion: card.processVersion,
-                                    titleTranslated: card.titleTranslated
-                                };
-                                myCardsTimeline.push(myCardTimeline);
-                            }
-                        }
-                    });
+                if (!! card.rRule) {
+                    this.computeCardsToDrawOnTheTimelineUsingRRule(card, myCardsTimeline);
                 } else {
-                    const myCardTimeline = {
-                        date: card.startDate,
-                        id: card.id,
-                        severity: card.severity,
-                        process: card.process,
-                        processVersion: card.processVersion,
-                        titleTranslated: card.titleTranslated
-                    };
-                    myCardsTimeline.push(myCardTimeline);
+                    if (card.timeSpans && card.timeSpans.length > 0) {
+                        card.timeSpans.forEach((timeSpan) => {
+                            if (!!timeSpan.recurrence) {
+                                let dateForReminder: number = getNextTimeForRepeating(
+                                    card,
+                                    this.xDomainForTimeLineGridDisplay[0].valueOf() +
+                                    1000 * card.secondsBeforeTimeSpanForReminder
+                                );
+
+                                while (
+                                    dateForReminder >= 0 &&
+                                    (!timeSpan.end || dateForReminder < timeSpan.end) &&
+                                    dateForReminder < this.xDomainForTimeLineGridDisplay[1].valueOf()
+                                    ) {
+                                    const myCardTimeline = {
+                                        date: dateForReminder,
+                                        id: card.id,
+                                        severity: card.severity,
+                                        process: card.process,
+                                        processVersion: card.processVersion,
+                                        titleTranslated: card.titleTranslated
+                                    };
+                                    myCardsTimeline.push(myCardTimeline);
+                                    const nextDate = moment(dateForReminder).add(1, 'minute');
+
+                                    dateForReminder = getNextTimeForRepeating(
+                                        card,
+                                        nextDate.valueOf() + 1000 * card.secondsBeforeTimeSpanForReminder
+                                    );
+                                }
+                            } else {
+                                if (!!timeSpan.start) {
+                                    const myCardTimeline = {
+                                        date: timeSpan.start,
+                                        id: card.id,
+                                        severity: card.severity,
+                                        process: card.process,
+                                        processVersion: card.processVersion,
+                                        titleTranslated: card.titleTranslated
+                                    };
+                                    myCardsTimeline.push(myCardTimeline);
+                                }
+                            }
+                        });
+                    } else {
+                        const myCardTimeline = {
+                            date: card.startDate,
+                            id: card.id,
+                            severity: card.severity,
+                            process: card.process,
+                            processVersion: card.processVersion,
+                            titleTranslated: card.titleTranslated
+                        };
+                        myCardsTimeline.push(myCardTimeline);
+                    }
                 }
             }
         }
@@ -387,9 +392,35 @@ export class CustomTimelineChartComponent extends BaseChartComponent implements 
         this.createCircles();
     }
 
+    computeCardsToDrawOnTheTimelineUsingRRule(card: any, myCardsTimeline: any[]) {
+        let dateForReminder: number = getNextTimeForRepeatingUsingRRule(
+            card,
+            this.xDomainForTimeLineGridDisplay[0].valueOf() +
+            1000 * card.secondsBeforeTimeSpanForReminder
+        );
+
+        while ((dateForReminder >= 0) &&
+               (!card.endDate || dateForReminder < card.endDate) &&
+               (dateForReminder < this.xDomainForTimeLineGridDisplay[1].valueOf())) {
+            const myCardTimeline = {
+                date: dateForReminder,
+                id: card.id,
+                severity: card.severity,
+                process: card.process,
+                processVersion: card.processVersion,
+                titleTranslated: card.titleTranslated
+            };
+            myCardsTimeline.push(myCardTimeline);
+            const nextDate = moment(dateForReminder).add(1, 'minute');
+
+            dateForReminder = getNextTimeForRepeatingUsingRRule(card,
+                nextDate.valueOf() + 1000 * card.secondsBeforeTimeSpanForReminder);
+        }
+    }
+
     createCircles(): void {
         this.circles = [];
-        if (this.cardsData === undefined || this.cardsData === []) {
+        if (this.cardsData === undefined) {
             return;
         }
 

@@ -1,0 +1,34 @@
+<!-- Copyright (c) 2022, RTE (http://www.rte-france.com)              -->
+<!-- See AUTHORS.txt                                                       -->
+<!-- This Source Code Form is subject to the terms of the Mozilla Public   -->
+<!-- License, v. 2.0. If a copy of the MPL was not distributed with this   -->
+<!-- file, You can obtain one at http://mozilla.org/MPL/2.0/.              -->
+<!-- SPDX-License-Identifier: MPL-2.0                                      -->
+<!-- This file is part of the OperatorFabric project.                      -->
+
+<div id="opfab-useractionlogs-table" style="background-color: var(--opfab-bgcolor-darker);border: solid 0px var(--opfab-bgcolor-darker)">
+
+    
+
+    <ag-grid-angular id="opfab-useractionlogs-table-grid" aria-describedby="User action logs results table"
+            (gridReady)="onGridReady($event)"
+            [gridOptions]="gridOptions"
+            [rowData]="actions"
+            class="opfab-ag-grid-theme">
+    </ag-grid-angular>
+
+
+    <div *ngIf="gridApi" class="opfab-pagination" style="padding-bottom: 5px">
+        <div style="white-space: nowrap;margin-top:17px">
+        <span translate> shared.resultsNumber </span> : {{totalElements}}
+        </div>
+        <div style="width:40%;margin-top:5px">
+        <ngb-pagination *ngIf="totalPages > 1" [collectionSize]="totalElements"
+            [page]="page" (pageChange)="updateResultPage($event)" [maxSize]="3" [rotate]="true">
+        </ngb-pagination>
+        </div>
+    </div>
+
+    
+
+</div>

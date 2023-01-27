@@ -6,7 +6,7 @@
 <!-- SPDX-License-Identifier: MPL-2.0                                      -->
 <!-- This file is part of the OperatorFabric project.                      -->
 
-<div [hidden]="displayPreview" [hidden]="displaySendingCardInProgress" *ngIf="!pageLoading && displayForm()" class="container" style="padding-top:20px">
+<div [hidden]="displayPreview" [hidden]="displaySendingCardInProgress" *ngIf="!isReadOnlyUser && !pageLoading && displayForm()" class="container" style="padding-top:20px">
     
     <of-spinner *ngIf="isPreparingCard"></of-spinner>
 
@@ -50,6 +50,7 @@
                     (startDateFilterChange)="onStartDateChange()"
                     (endDateFilterChange)="onEndDateChange()"
                     (lttdFilterChange)="onLttdChange()"
+                    (expirationDateFilterChange)="onExpirationDateChange()"
                     #datesForm> </of-usercard-dates-form>
 
 
@@ -127,7 +128,7 @@
 
 <ng-container *ngIf="!displayForm() && !pageLoading">
     <div class="alert alert-info">
-        <h1 *ngIf="userEntitiesAllowedToSendCardOptions.length > 0"><label translate>userCard.error.notAvailable</label></h1>
+        <h1 *ngIf="isReadOnlyUser || (userEntitiesAllowedToSendCardOptions.length > 0)"><label translate>userCard.error.notAvailable</label></h1>
         <h1 *ngIf="userEntitiesAllowedToSendCardOptions.length === 0"><label translate>userCard.error.userHasNoEntityThatCanSendCard</label></h1>
     </div>
 </ng-container>
