@@ -1,4 +1,4 @@
-/* Copyright (c) 2022, RTE (http://www.rte-france.com)
+/* Copyright (c) 2022-2023, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -8,9 +8,8 @@
  */
 
 import {Component, OnInit} from '@angular/core';
-import {Store} from '@ngrx/store';
 import {LogOption, OpfabLoggerService} from '@ofServices/logs/opfab-logger.service';
-import {selectRelodRequested} from '@ofStore/selectors/cards-subscription.selectors';
+import {OpfabEventStreamService} from 'app/business/services/opfabEventStream.service';
 
 
 @Component({
@@ -22,7 +21,7 @@ export class ReloadRequiredComponent implements OnInit {
     displayReloadRequired: boolean;
 
     constructor(
-        private store: Store,
+        private opfabEventStreamService: OpfabEventStreamService,
         private logger: OpfabLoggerService
     ) {}
 
@@ -31,12 +30,9 @@ export class ReloadRequiredComponent implements OnInit {
     }
 
     private detectReloadRequested() {
-        this.store.select(selectRelodRequested).subscribe((reloadRequested) => {
-            if (reloadRequested) {
+        this.opfabEventStreamService.getReloadRequest().subscribe(() => {
                 this.logger.info('Application reload requested', LogOption.LOCAL_AND_REMOTE);
                 this.displayReloadRequired = true;
-
-            }
         });
     }
 

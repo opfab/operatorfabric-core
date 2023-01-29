@@ -14,8 +14,7 @@ import {FilterService} from '@ofServices/lightcards/filter.service';
 import {LogOption, OpfabLoggerService} from '@ofServices/logs/opfab-logger.service';
 import {
     CardSubscriptionOpenAction,
-    CardSubscriptionClosedAction,
-    UIReloadRequestedAction
+    CardSubscriptionClosedAction
 } from '@ofStore/actions/cards-subscription.actions';
 import {BusinessConfigChangeAction} from '@ofStore/actions/processes.actions';
 import {UserConfigChangeAction} from '@ofStore/actions/user.actions';
@@ -33,6 +32,7 @@ export class OpfabEventStreamService {
     private endOfAlreadyLoadedPeriod: number;
 
     private receivedDisconnectedSubject = new Subject<boolean>();
+    private reloadRequest = new Subject<void>();
 
     private eventStreamClosed = false;
 
@@ -72,7 +72,7 @@ export class OpfabEventStreamService {
                 switch (event.data) {
                     case 'RELOAD':
                         this.logger.info(`EventStreamService - RELOAD received`, LogOption.LOCAL_AND_REMOTE);
-                        this.store.dispatch(new UIReloadRequestedAction());
+                        this.reloadRequest.next();
                         break;
                     case 'BUSINESS_CONFIG_CHANGE':
                         this.store.dispatch(new BusinessConfigChangeAction());
@@ -148,5 +148,9 @@ export class OpfabEventStreamService {
 
     getReceivedDisconnectUser(): Observable<boolean> {
         return this.receivedDisconnectedSubject.asObservable();
+    }
+
+    getReloadRequest(): Observable<void> {
+        return this.reloadRequest.asObservable();
     }
 }

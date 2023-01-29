@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2022, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2023, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -11,8 +11,7 @@ import {Action} from '@ngrx/store';
 
 export enum CardsSubscriptionActionTypes {
     CardSubscriptionOpen = '[Card] Subscription open',
-    CardSubscriptionClosed = '[Card] Subscription closed',
-    UIReloadRequested = '[UI] Reload requested'
+    CardSubscriptionClosed = '[Card] Subscription closed'
 }
 
 export class CardSubscriptionOpenAction implements Action {
@@ -23,11 +22,7 @@ export class CardSubscriptionClosedAction implements Action {
     readonly type = CardsSubscriptionActionTypes.CardSubscriptionClosed;
 }
 
-export class UIReloadRequestedAction implements Action {
-    readonly type = CardsSubscriptionActionTypes.UIReloadRequested;
-}
 
 export type CardSubscriptionActions =
     | CardSubscriptionOpenAction
-    | CardSubscriptionClosedAction
-    | UIReloadRequestedAction;
+    | CardSubscriptionClosedAction;
