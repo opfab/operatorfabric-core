@@ -29,7 +29,6 @@ export const emptyAppState4Test: AppState = {
     feed: null,
     authentication: null,
     card: null,
-    cardsSubscription: null,
     globalStyle: null
 };
 

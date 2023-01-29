@@ -27,7 +27,6 @@ import {CustomRouterEffects} from '@ofEffects/custom-router.effects';
 import {UserEffects} from '@ofEffects/user.effects';
 
 import {GlobalStyleState} from './states/global-style.state';
-import {ProcessesEffects} from './effects/processes.effects';
 
 export interface AppState {
     router: RouterReducerState<RouterStateUrl>;
@@ -42,8 +41,7 @@ export const appEffects = [
     CardOperationEffects,
     CustomRouterEffects,
     AuthenticationEffects,
-    UserEffects,
-    ProcessesEffects
+    UserEffects
 ];
 
 export const appReducer: ActionReducerMap<AppState> = {

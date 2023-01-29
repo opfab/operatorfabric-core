@@ -33,6 +33,7 @@ import {RRuleReminderService} from '@ofServices/rrule-reminder/rrule-reminder.se
 import {OpfabEventStreamServer} from 'app/business/server/opfabEventStream.server';
 import {OpfabEventStreamService} from 'app/business/services/opfabEventStream.service';
 import {LightCardsStoreService} from '@ofServices/lightcards/lightcards-store.service';
+import {ApplicationUpdateService} from 'app/business/services/application-update.service';
 
 @Component({
     selector: 'of-application-loading',
@@ -77,7 +78,8 @@ export class ApplicationLoadingComponent implements OnInit {
         private globalStyleService: GlobalStyleService,
         private lightCardsStoreService: LightCardsStoreService,
         private opfabEventStreamServer: OpfabEventStreamServer,
-        private opfabEventStreamService: OpfabEventStreamService
+        private opfabEventStreamService: OpfabEventStreamService,
+        private applicationUpdateService: ApplicationUpdateService
     ) {}
 
     ngOnInit() {
@@ -245,6 +247,7 @@ export class ApplicationLoadingComponent implements OnInit {
             this.applicationLoaded = true;
         });
         this.lightCardsStoreService.initStore(); // this will effectively open the http stream connection
+        this.applicationUpdateService.init();
         this.reminderService.startService(this.userLogin);
         this.rRuleReminderService.startService(this.userLogin);
     }
