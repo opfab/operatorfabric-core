@@ -12,7 +12,6 @@ import {Store} from '@ngrx/store';
 import {CardOperation} from '@ofModel/card-operation.model';
 import {FilterService} from '@ofServices/lightcards/filter.service';
 import {LogOption, OpfabLoggerService} from '@ofServices/logs/opfab-logger.service';
-import {BusinessConfigChangeAction} from '@ofStore/actions/processes.actions';
 import {UserConfigChangeAction} from '@ofStore/actions/user.actions';
 import {AppState} from '@ofStore/index';
 import {filter, map, Observable, Subject} from 'rxjs';
@@ -29,6 +28,7 @@ export class OpfabEventStreamService {
 
     private receivedDisconnectedSubject = new Subject<boolean>();
     private reloadRequest = new Subject<void>();
+    private businessConfigChange = new Subject<void>();
 
     private eventStreamClosed = false;
 
@@ -67,7 +67,7 @@ export class OpfabEventStreamService {
                         this.reloadRequest.next();
                         break;
                     case 'BUSINESS_CONFIG_CHANGE':
-                        this.store.dispatch(new BusinessConfigChangeAction());
+                        this.businessConfigChange.next();
                         this.logger.info(`EventStreamService - BUSINESS_CONFIG_CHANGE received`);
                         break;
                     case 'USER_CONFIG_CHANGE':
@@ -144,5 +144,9 @@ export class OpfabEventStreamService {
 
     getReloadRequest(): Observable<void> {
         return this.reloadRequest.asObservable();
+    }
+
+    getBusinessConfigChange(): Observable<void> {
+        return this.businessConfigChange.asObservable();
     }
 }
