@@ -12,10 +12,6 @@ import {Store} from '@ngrx/store';
 import {CardOperation} from '@ofModel/card-operation.model';
 import {FilterService} from '@ofServices/lightcards/filter.service';
 import {LogOption, OpfabLoggerService} from '@ofServices/logs/opfab-logger.service';
-import {
-    CardSubscriptionOpenAction,
-    CardSubscriptionClosedAction
-} from '@ofStore/actions/cards-subscription.actions';
 import {BusinessConfigChangeAction} from '@ofStore/actions/processes.actions';
 import {UserConfigChangeAction} from '@ofStore/actions/user.actions';
 import {AppState} from '@ofStore/index';
@@ -44,10 +40,6 @@ export class OpfabEventStreamService {
     ) {}
 
     public initEventStream() {
-        this.opfabEventStreamServer.getStreamStatus().subscribe((status) => {
-            if (status === 'open') this.store.dispatch(new CardSubscriptionOpenAction());
-            else this.store.dispatch(new CardSubscriptionClosedAction());
-        });
         this.opfabEventStreamServer.initStream();
         this.listenForFilterChange();
     }

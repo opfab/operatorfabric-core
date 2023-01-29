@@ -1,4 +1,4 @@
-/* Copyright (c) 2022, RTE (http://www.rte-france.com)
+/* Copyright (c) 2022-2023, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -8,9 +8,7 @@
  */
 
 import {Component, OnInit} from '@angular/core';
-import {Store} from '@ngrx/store';
-import {selectSubscriptionOpen} from '@ofStore/selectors/cards-subscription.selectors';
-
+import {OpfabEventStreamServer} from 'app/business/server/opfabEventStream.server';
 
 @Component({
     selector: 'of-connection-lost',
@@ -18,27 +16,28 @@ import {selectSubscriptionOpen} from '@ofStore/selectors/cards-subscription.sele
     templateUrl: './connection-lost.component.html'
 })
 export class ConnectionLostComponent implements OnInit {
-
     connectionLostForMoreThanTenSeconds = false;
     connectionLost = false;
+    previousStatus = '';
 
-    constructor(private store: Store) {
-    }
+    constructor(private opfabEventStreamServer: OpfabEventStreamServer) {}
 
     ngOnInit(): void {
         this.detectConnectionLost();
-
     }
 
     private detectConnectionLost() {
-        this.store.select(selectSubscriptionOpen).subscribe((subscriptionOpen) => {
-            this.connectionLostForMoreThanTenSeconds = false;
-            this.connectionLost = !subscriptionOpen;
-            // Wait 10s before showing "connection lost" to the user to avoid alerting on short connection loss
-            if (this.connectionLost)
-                setTimeout(() => {
-                    if (this.connectionLost) this.connectionLostForMoreThanTenSeconds = true;
-                }, 10000);
+        this.opfabEventStreamServer.getStreamStatus().subscribe((status) => {
+            if (status !== this.previousStatus) {
+                this.previousStatus = status;
+                this.connectionLostForMoreThanTenSeconds = false;
+                this.connectionLost = status !== 'open';
+                // Wait 10s before showing "connection lost" to the user to avoid alerting on short connection loss
+                if (this.connectionLost)
+                    setTimeout(() => {
+                        if (this.connectionLost) this.connectionLostForMoreThanTenSeconds = true;
+                    }, 10000);
+            }
         });
     }
 }
