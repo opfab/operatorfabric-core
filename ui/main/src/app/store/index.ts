@@ -26,8 +26,6 @@ import {CardState} from '@ofStates/card.state';
 import {CustomRouterEffects} from '@ofEffects/custom-router.effects';
 import {UserEffects} from '@ofEffects/user.effects';
 
-import {CardsSubscriptionState} from '@ofStates/cards-subscription.state';
-import {cardsSubscriptionReducer} from '@ofStore/reducers/cards-subscription.reducer';
 import {GlobalStyleState} from './states/global-style.state';
 import {ProcessesEffects} from './effects/processes.effects';
 
@@ -36,7 +34,6 @@ export interface AppState {
     feed: CardFeedState;
     authentication: AuthState;
     card: CardState;
-    cardsSubscription: CardsSubscriptionState;
     globalStyle: GlobalStyleState;
 }
 
@@ -54,7 +51,6 @@ export const appReducer: ActionReducerMap<AppState> = {
     feed: lightCardReducer,
     authentication: authenticationReducer,
     card: cardReducer,
-    cardsSubscription: cardsSubscriptionReducer,
     globalStyle: globalStyleReducer
 };
 
