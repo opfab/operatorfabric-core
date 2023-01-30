@@ -13,7 +13,7 @@ import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
 import {NgbModalRef} from '@ng-bootstrap/ng-bootstrap/modal/modal-ref';
 import {UserWithPerimeters} from '@ofModel/userWithPerimeters.model';
 import {FormControl, FormGroup} from '@angular/forms';
-import {SettingsService} from '@ofServices/settings.service';
+import {SettingsService} from 'app/business/services/settings.service';
 import {EntitiesService} from '@ofServices/entities.service';
 import {Utilities} from '../../business/common/utilities';
 import {GroupsService} from '@ofServices/groups.service';
