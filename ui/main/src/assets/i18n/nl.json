@@ -207,7 +207,8 @@
     "lastResponse": "Laatste reactie :",
     "cardLoadingInProgress":"Bezig met laden van de kaart...",
     "cardNotFound": "De kaart die u zoekt werd niet gevonden.",
-    "entityRecipients" : "Ontvangers entiteiten :"
+    "entityRecipients" : "Ontvangers entiteiten :",
+    "searchPlaceholderText": "Zoeken..."
   },
   "login": {
     "reset": "Opnieuw instellen",

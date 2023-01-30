@@ -207,7 +207,8 @@
     "lastResponse": "Last response :",
     "cardLoadingInProgress":"Loading card...",
     "cardNotFound": "The card you are looking for was not found.",
-    "entityRecipients" : "Entity recipients :"
+    "entityRecipients" : "Entity recipients :",
+    "searchPlaceholderText": "Search..."
   },
   "login": {
     "reset": "Reset",
