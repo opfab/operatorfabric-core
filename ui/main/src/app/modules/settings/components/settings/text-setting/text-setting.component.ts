@@ -13,7 +13,7 @@ import {AppState} from '@ofStore/index';
 import {Store} from '@ngrx/store';
 import {FormControl, FormGroup, Validators} from '@angular/forms';
 import {ConfigService} from 'app/business/services/config.service';
-import {SettingsService} from '@ofServices/settings.service';
+import {SettingsService} from 'app/business/services/settings.service';
 import {OpfabLoggerService} from '@ofServices/logs/opfab-logger.service';
 
 @Component({

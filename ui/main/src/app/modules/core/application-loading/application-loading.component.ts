@@ -27,13 +27,14 @@ import {catchError, Subject} from 'rxjs';
 import {ActivityAreaChoiceAfterLoginComponent} from './activityarea-choice-after-login/activityarea-choice-after-login.component';
 import {AccountAlreadyUsedComponent} from './account-already-used/account-already-used.component';
 import {AppLoadedInAnotherTabComponent} from './app-loaded-in-another-tab/app-loaded-in-another-tab.component';
-import {SettingsService} from '@ofServices/settings.service';
+import {SettingsService} from 'app/business/services/settings.service';
 import {GlobalStyleService} from '@ofServices/global-style.service';
 import {RRuleReminderService} from '@ofServices/rrule-reminder/rrule-reminder.service';
 import {OpfabEventStreamServer} from 'app/business/server/opfabEventStream.server';
 import {OpfabEventStreamService} from 'app/business/services/opfabEventStream.service';
 import {LightCardsStoreService} from '@ofServices/lightcards/lightcards-store.service';
 import {ApplicationUpdateService} from 'app/business/services/application-update.service';
+import {ServerResponseStatus} from 'app/business/server/serverResponse';
 
 @Component({
     selector: 'of-application-loading',
@@ -194,16 +195,17 @@ export class ApplicationLoadingComponent implements OnInit {
     }
 
     private loadSettings() {
-        this.settingsService.fetchUserSettings().subscribe({
-            next: (settings) => {
-                console.log(new Date().toISOString(), `Settings loaded`, settings);
-                this.configService.overrideConfigSettingsWithUserSettings(settings);
-                this.checkIfAccountIsAlreadyUsed();
-            },
-            error: (err) => {
-                if (err.status === 404) console.log(new Date().toISOString(), 'No settings for user');
-                else console.error(new Date().toISOString(), 'Error when loading settings', err);
-                this.checkIfAccountIsAlreadyUsed();
+        this.settingsService.getUserSettings().subscribe({
+            next: (response) => {
+                if (response.status === ServerResponseStatus.OK){
+                    this.logger.info(new Date().toISOString() + `Settings loaded` + response.data);
+                    this.configService.overrideConfigSettingsWithUserSettings(response.data);
+                    this.checkIfAccountIsAlreadyUsed();
+                } else {
+                    if (response.status === ServerResponseStatus.NOT_FOUND) console.log(new Date().toISOString(), 'No settings for user');
+                    else this.logger.error(new Date().toISOString() + 'Error when loading settings' + response.status);
+                    this.checkIfAccountIsAlreadyUsed();
+                }
             }
         });
     }

@@ -16,7 +16,7 @@ import {UntypedFormGroup} from '@angular/forms';
 import * as _ from 'lodash-es';
 import {selectIdentifier} from '@ofSelectors/authentication.selectors';
 import {ConfigService} from 'app/business/services/config.service';
-import {SettingsService} from '@ofServices/settings.service';
+import {SettingsService} from 'app/business/services/settings.service';
 import {OpfabLoggerService} from '@ofServices/logs/opfab-logger.service';
 
 @Directive()
