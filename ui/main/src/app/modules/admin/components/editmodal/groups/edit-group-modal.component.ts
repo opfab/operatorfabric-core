@@ -136,15 +136,17 @@ export class EditGroupModalComponent implements OnInit {
             this.selectedPerimeters = this.row.perimeters;
             this.selectedGroupType = this.row.type;
             this.selectedGroupPermissions = this.row.permissions;
+
+            this.userService.getAll().subscribe(users => {
+                this.groupUsers = users.filter(usr => this.isUserInCurrentGroup(usr)).map(usr => usr.login).join(', ');
+            });
         }
 
         this.perimetersService.getPerimeters().forEach((perimeter) => {
             this.perimetersMultiSelectOptions.push(new MultiSelectOption(perimeter.id, perimeter.id));
         });
 
-        this.userService.getAll().subscribe(users => {
-            this.groupUsers = users.filter(usr => this.isUserInCurrentGroup(usr)).map(usr => usr.login).join(', ');
-        });
+
 
     }
 
