@@ -261,7 +261,7 @@ export abstract class AdminTableDirective implements OnInit, OnDestroy {
                 this.translateService.instant('admin.input.' + this.tableType + '.confirmDelete') +
                     ' ' +
                     row[this.idField] +
-                    '?',
+                    ' ?',
                 'OK',
                 this.translateService.instant('admin.input.cancel')
             )
