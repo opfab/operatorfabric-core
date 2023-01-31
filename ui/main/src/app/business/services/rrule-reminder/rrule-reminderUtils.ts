@@ -61,15 +61,6 @@ export function getNextDateTimeFromRRule(startingDate: number, card: Card): numb
 
     if (!!card.rRule && !!card.rRule.freq) {
 
-        const byhourSorted = !!card.rRule.byhour ? card.rRule.byhour : null;
-        if (!! byhourSorted) {
-            byhourSorted.sort(function (a, b) {return a - b;});
-        }
-        const byminuteSorted = !!card.rRule.byminute ? card.rRule.byminute : null;
-        if (!! byminuteSorted) {
-            byminuteSorted.sort(function (a, b) {return a - b;});
-        }
-
         const byweekdayForRRule = [];
         if (!! card.rRule.byweekday) {
             card.rRule.byweekday.forEach(weekday => {
@@ -82,7 +73,21 @@ export function getNextDateTimeFromRRule(startingDate: number, card: Card): numb
             tzid = card.rRule.tzid;
         }
 
-        let rule = new RRule({
+        if (!!card.rRule.interval) {
+            return getNextDateTimeFromRRuleInCaseOfInterval(startingDate, card, byweekdayForRRule, tzid);
+        }
+
+        const byhourSorted = !!card.rRule.byhour ? card.rRule.byhour : null;
+        if (!! byhourSorted) {
+            byhourSorted.sort(function (a, b) {return a - b;});
+        }
+        const byminuteSorted = !!card.rRule.byminute ? card.rRule.byminute : null;
+        if (!! byminuteSorted) {
+            byminuteSorted.sort(function (a, b) {return a - b;});
+        }
+
+        let rule: RRule;
+        rule = new RRule({
             freq: convertOpfabFrequencyToRRuleFrequency(card.rRule.freq),
             count: 1,
             bymonth: card.rRule.bymonth,
@@ -106,6 +111,36 @@ export function getNextDateTimeFromRRule(startingDate: number, card: Card): numb
                 nextDateTimeFromRRule.getTimezoneOffset() * NB_MILLISECONDS_IN_ONE_MINUTE);
     }
     return -1;
+}
+
+export function getNextDateTimeFromRRuleInCaseOfInterval(startingDate: number,
+                                                         card: Card,
+                                                         byweekdayForRRule: Weekday[],
+                                                         tzid: string): number {
+
+    let rule: RRule;
+    let nextDateTimeNumber = card.startDate;
+    const ruleBase = new RRule({
+        freq: convertOpfabFrequencyToRRuleFrequency(card.rRule.freq),
+        count: 1,
+        interval: card.rRule.interval,
+        bymonth: card.rRule.bymonth,
+        byweekday: byweekdayForRRule,
+        byminute: new Date(card.startDate).getMinutes()
+    });
+
+    do {
+        rule = RRule.fromString(ruleBase.toString() +
+            ';DTSTART;TZID=' + tzid + ':' +
+            dateObjectToYYYYMMDDTHHmmss(new Date(nextDateTimeNumber + NB_MILLISECONDS_IN_ONE_MINUTE)));
+
+        const nextDateTimeFromRRule = rule.all(function (date, i) {return i < 1})[0];
+
+        nextDateTimeNumber = nextDateTimeFromRRule.valueOf() +
+            nextDateTimeFromRRule.getTimezoneOffset() * NB_MILLISECONDS_IN_ONE_MINUTE;
+    } while (nextDateTimeNumber <= startingDate);
+
+    return nextDateTimeNumber;
 }
 
 function convertOpfabFrequencyToRRuleFrequency(opfabFrequency: OpfabFrequency): Frequency {
