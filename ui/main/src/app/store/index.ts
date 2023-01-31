@@ -24,7 +24,6 @@ import {reducer as globalStyleReducer} from '@ofStore/reducers/global-style.redu
 import {AuthState} from '@ofStates/authentication.state';
 import {CardState} from '@ofStates/card.state';
 import {CustomRouterEffects} from '@ofEffects/custom-router.effects';
-import {UserEffects} from '@ofEffects/user.effects';
 
 import {GlobalStyleState} from './states/global-style.state';
 
@@ -40,8 +39,7 @@ export const appEffects = [
     CardEffects,
     CardOperationEffects,
     CustomRouterEffects,
-    AuthenticationEffects,
-    UserEffects
+    AuthenticationEffects
 ];
 
 export const appReducer: ActionReducerMap<AppState> = {

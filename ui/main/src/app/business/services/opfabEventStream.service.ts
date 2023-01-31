@@ -8,12 +8,9 @@
  */
 
 import {Injectable} from '@angular/core';
-import {Store} from '@ngrx/store';
 import {CardOperation} from '@ofModel/card-operation.model';
 import {FilterService} from '@ofServices/lightcards/filter.service';
 import {LogOption, OpfabLoggerService} from '@ofServices/logs/opfab-logger.service';
-import {UserConfigChangeAction} from '@ofStore/actions/user.actions';
-import {AppState} from '@ofStore/index';
 import {filter, map, Observable, Subject} from 'rxjs';
 import {OpfabEventStreamServer} from '../server/opfabEventStream.server';
 
@@ -29,12 +26,12 @@ export class OpfabEventStreamService {
     private receivedDisconnectedSubject = new Subject<boolean>();
     private reloadRequest = new Subject<void>();
     private businessConfigChange = new Subject<void>();
+    private userConfigChange = new Subject<void>();
 
     private eventStreamClosed = false;
 
     constructor(
         private opfabEventStreamServer: OpfabEventStreamServer,
-        private store: Store<AppState>,
         private filterService: FilterService,
         private logger: OpfabLoggerService
     ) {}
@@ -71,7 +68,7 @@ export class OpfabEventStreamService {
                         this.logger.info(`EventStreamService - BUSINESS_CONFIG_CHANGE received`);
                         break;
                     case 'USER_CONFIG_CHANGE':
-                        this.store.dispatch(new UserConfigChangeAction());
+                        this.userConfigChange.next();
                         this.logger.info(`EventStreamService - USER_CONFIG_CHANGE received`);
                         break;
                     case 'DISCONNECT_USER_DUE_TO_NEW_CONNECTION':
@@ -142,11 +139,15 @@ export class OpfabEventStreamService {
         return this.receivedDisconnectedSubject.asObservable();
     }
 
-    getReloadRequest(): Observable<void> {
+    getReloadRequests(): Observable<void> {
         return this.reloadRequest.asObservable();
     }
 
-    getBusinessConfigChange(): Observable<void> {
+    getBusinessConfigChangeRequests(): Observable<void> {
         return this.businessConfigChange.asObservable();
+    }
+
+    getUserConfigChangeRequests(): Observable<void> {
+        return this.userConfigChange.asObservable();
     }
 }
