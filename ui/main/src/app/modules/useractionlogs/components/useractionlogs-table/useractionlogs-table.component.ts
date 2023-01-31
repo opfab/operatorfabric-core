@@ -13,6 +13,7 @@ import {UserActionLog} from "@ofModel/user-action-log.model";
 import {DateTimeFormatterService} from "app/business/services/date-time-formatter.service";
 import {ColDef, GridOptions} from "ag-grid-community";
 import {EntitiesCellRendererComponent} from "./cell-renderers/entities-cell-renderer.component";
+import moment from "moment";
 
 
 @Component({
@@ -71,7 +72,7 @@ export class UserActionLogsTableComponent {
                     filter: false,
                     wrapText: false,
                     autoHeight: false,
-                    width: 150,
+                    width: 180,
                     valueGetter: params => {
                         return this.getFormattedDateTime(params.data.date);
                     }
@@ -141,6 +142,6 @@ export class UserActionLogsTableComponent {
     }
 
     getFormattedDateTime(epochDate: number):string {
-        return this.dateTimeFormatter.getFormattedDateAndTimeFromEpochDate(epochDate);
+        return moment(epochDate).format('HH:mm:ss DD/MM/YYYY');
     }
 }
