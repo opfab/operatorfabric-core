@@ -27,6 +27,10 @@ At {{padStart card.data.byhour 2 '0'}}:{{padStart card.data.byminute 2 '0'}}
 <span id="bymonthday"></span>
 <span id="bymonth"></span>
 
+{{!-- <span id="atTime" hidden>At {{padStart card.data.byhour 2 '0'}}:{{padStart card.data.byminute 2 '0'}}</span>
+<span id="every" hidden>Every {{card.data.interval}} hours</span>
+<span id="byweekday"></span><br/> --}}
+
 </h3>
 </center>
 
@@ -34,6 +38,18 @@ At {{padStart card.data.byhour 2 '0'}}:{{padStart card.data.byminute 2 '0'}}
 
       cardTemplate = {
             init: function() {
+
+            /* const byhour = "{{card.data.byhour}}";
+                              const byminute = "{{card.data.byminute}}";
+                              if (!!byhour && !!byminute) {
+                                  document.getElementById("atTime").hidden = false;
+                              }
+
+                              const freq = "{{card.data.freq}}";
+                              if (!!freq && freq === 'HOURLY') {
+                                  document.getElementById("every").hidden = false;
+                              } */
+
                   const freq = "{{card.data.freq}}";
                   const byweekday = "{{card.data.byweekday}}";
                   const bysetpos = "{{card.data.bysetpos}}";

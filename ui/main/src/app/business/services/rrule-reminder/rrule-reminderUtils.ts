@@ -73,16 +73,19 @@ export function getNextDateTimeFromRRule(startingDate: number, card: Card): numb
             tzid = card.rRule.tzid;
         }
 
-        if (!!card.rRule.interval) {
-            return getNextDateTimeFromRRuleInCaseOfInterval(startingDate, card, byweekdayForRRule, tzid);
+        if (card.rRule.freq === OpfabFrequency.HOURLY) {
+            return getNextDateTimeFromRRuleInCaseOfHourlyRecurrence(startingDate, card, byweekdayForRRule, tzid);
         }
 
-        const byhourSorted = !!card.rRule.byhour ? card.rRule.byhour : null;
-        if (!! byhourSorted) {
+        let byhourSorted = null;
+        if (!!card.rRule.byhour) {
+            byhourSorted = card.rRule.byhour;
             byhourSorted.sort(function (a, b) {return a - b;});
         }
-        const byminuteSorted = !!card.rRule.byminute ? card.rRule.byminute : null;
-        if (!! byminuteSorted) {
+
+        let byminuteSorted = null;
+        if (!!card.rRule.byminute) {
+            byminuteSorted = card.rRule.byminute;
             byminuteSorted.sort(function (a, b) {return a - b;});
         }
 
@@ -113,10 +116,10 @@ export function getNextDateTimeFromRRule(startingDate: number, card: Card): numb
     return -1;
 }
 
-export function getNextDateTimeFromRRuleInCaseOfInterval(startingDate: number,
-                                                         card: Card,
-                                                         byweekdayForRRule: Weekday[],
-                                                         tzid: string): number {
+export function getNextDateTimeFromRRuleInCaseOfHourlyRecurrence(startingDate: number,
+                                                                 card: Card,
+                                                                 byweekdayForRRule: Weekday[],
+                                                                 tzid: string): number {
 
     let rule: RRule;
     let nextDateTimeNumber = card.startDate;
