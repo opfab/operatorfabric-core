@@ -387,11 +387,13 @@
         },
 
         initTimeForRecurrence: function() {
+            const freq = "{{card.data.freq}}";
+
             const defaultTimeForRecurrence = new Date();
             defaultTimeForRecurrence.setTime(defaultTimeForRecurrence.getTime() + 3600000);
 
             const timeControl = document.getElementById('time');
-            if (! timeControl.value) {
+            if ((! timeControl.value) && (freq !== 'HOURLY')) {
                 timeControl.value = defaultTimeForRecurrence.getHours() + ':' + defaultTimeForRecurrence.getMinutes();
             }
         },
