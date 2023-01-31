@@ -8,10 +8,15 @@
  */
 
 import {Injectable} from '@angular/core';
-import {OpfabLoggerService} from '@ofServices/logs/opfab-logger.service';
+import {EntitiesService} from '@ofServices/entities.service';
+import {GroupsService} from '@ofServices/groups.service';
+import {LogOption, OpfabLoggerService} from '@ofServices/logs/opfab-logger.service';
 import {TemplateCssService} from '@ofServices/template-css.service';
+import {UserService} from '@ofServices/user.service';
 import {HandlebarsService} from 'app/modules/card/services/handlebars.service';
-import {debounce, timer, map, catchError} from 'rxjs';
+import {debounce, timer, map, catchError, switchMap} from 'rxjs';
+import {Utilities} from '../common/utilities';
+import {ApplicationEventsService} from './application-events.service';
 import {OpfabEventStreamService} from './opfabEventStream.service';
 import {ProcessesService} from './processes.service';
 
@@ -19,36 +24,63 @@ import {ProcessesService} from './processes.service';
     providedIn: 'root'
 })
 export class ApplicationUpdateService {
- 
-
     constructor(
-        private opfabEventStreamService : OpfabEventStreamService,
+        private opfabEventStreamService: OpfabEventStreamService,
         private processService: ProcessesService,
         private handlebarsService: HandlebarsService,
         private templateCssService: TemplateCssService,
-        private logger : OpfabLoggerService
+        private userService: UserService,
+        private entitiesService: EntitiesService,
+        private groupsService: GroupsService,
+        private applicationEventsService: ApplicationEventsService,
+        private logger: OpfabLoggerService
     ) {}
-
 
     init() {
         this.listenForBusinessConfigUpdate();
+        this.listenForUserConfigUpdate();
     }
 
     private listenForBusinessConfigUpdate() {
-        this.opfabEventStreamService.getBusinessConfigChange().pipe(
-                debounce(() => timer(5000 + Math.floor(Math.random() * 5000))), // use a random  part to avoid all UI to access at the same time the server
+        this.opfabEventStreamService
+            .getBusinessConfigChangeRequests()
+            .pipe(
+                debounce(() => timer(5000 + Math.floor(Math.random() * 5000))),// use a random  part to avoid all UI to access at the same time the server
                 map(() => {
-                    this.logger.info("Update business config");
+                    this.logger.info('Update business config');
                     this.handlebarsService.clearCache();
                     this.templateCssService.clearCache();
                     this.processService.loadAllProcesses().subscribe();
                     this.processService.loadProcessGroups().subscribe();
                 }),
                 catchError((error, caught) => {
-                    console.error('ProcessesEffects - Error in update business config ', error);
+                    this.logger.error('Error in update business config ', error);
                     return caught;
                 })
-            ).subscribe();
+            )
+            .subscribe();
     }
 
+    private listenForUserConfigUpdate() {
+        this.opfabEventStreamService
+            .getUserConfigChangeRequests()
+            .pipe(
+                debounce(() => timer(5000 + Math.floor(Math.random() * 5000))),  // use a random  part to avoid all UI to access at the same time the server
+                switchMap(() => {
+                    const requestsToLaunch$ = [
+                        this.userService.loadUserWithPerimetersData(),
+                        this.entitiesService.loadAllEntitiesData(),
+                        this.groupsService.loadAllGroupsData()
+                    ];
+                    this.logger.info('Update user perimeter, entities and groups', LogOption.LOCAL_AND_REMOTE);
+                    return Utilities.subscribeAndWaitForAllObservablesToEmitAnEvent(requestsToLaunch$);
+                }),
+                map(() => this.applicationEventsService.setUserConfigChange()),
+                catchError((error, caught) => {
+                    this.logger.error('Error in update user config ', error);
+                    return caught;
+                })
+            )
+            .subscribe();
+    }
 }

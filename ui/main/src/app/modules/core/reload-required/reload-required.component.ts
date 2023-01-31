@@ -30,7 +30,7 @@ export class ReloadRequiredComponent implements OnInit {
     }
 
     private detectReloadRequested() {
-        this.opfabEventStreamService.getReloadRequest().subscribe(() => {
+        this.opfabEventStreamService.getReloadRequests().subscribe(() => {
                 this.logger.info('Application reload requested', LogOption.LOCAL_AND_REMOTE);
                 this.displayReloadRequired = true;
         });

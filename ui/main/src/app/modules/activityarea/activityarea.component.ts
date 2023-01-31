@@ -17,9 +17,8 @@ import {SettingsService} from '@ofServices/settings.service';
 import {EntitiesService} from '@ofServices/entities.service';
 import {Utilities} from '../../business/common/utilities';
 import {GroupsService} from '@ofServices/groups.service';
-import {Actions, ofType} from '@ngrx/effects';
-import {UserActionsTypes} from '@ofStore/actions/user.actions';
 import {LightCardsStoreService} from '@ofServices/lightcards/lightcards-store.service';
+import {ApplicationEventsService} from 'app/business/services/application-events.service';
 
 @Component({
     selector: 'of-activityarea',
@@ -52,7 +51,7 @@ export class ActivityareaComponent implements OnInit, OnDestroy {
         private modalService: NgbModal,
         private settingsService: SettingsService,
         private lightCardStoreService : LightCardsStoreService,
-        private actions$: Actions
+        private applicationEventsService : ApplicationEventsService,
     ) {}
 
     private initForm() {
@@ -70,7 +69,7 @@ export class ActivityareaComponent implements OnInit, OnDestroy {
     ngOnInit() {
         this.loadUserData();
 
-        this.actions$.pipe(ofType(UserActionsTypes.UserConfigLoaded)).subscribe(() => this.loadUserData());
+        this.applicationEventsService.getUserConfigChanges().subscribe(() => this.loadUserData());
 
         this.interval = setInterval(() => {
             this.refresh();
