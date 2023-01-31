@@ -399,7 +399,7 @@
         "id": "ID",
         "name": "PROCESS",
         "version": "CURRENT VERSION",
-        "confirmDelete": "Do you really want to delete processus"
+        "confirmDelete": "Do you really want to delete process"
       },
       "user": {
         "login": "LOGIN",
