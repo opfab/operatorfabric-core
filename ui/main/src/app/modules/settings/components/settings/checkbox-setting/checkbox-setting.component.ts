@@ -14,7 +14,7 @@ import {AppState} from '@ofStore/index';
 import {FormControl, FormGroup} from '@angular/forms';
 import {ConfigService} from 'app/business/services/config.service';
 import {SettingsService} from 'app/business/services/settings.service';
-import {OpfabLoggerService} from '@ofServices/logs/opfab-logger.service';
+import {OpfabLoggerService} from 'app/business/services/logs/opfab-logger.service';
 
 @Component({
     selector: 'of-checkbox-setting',

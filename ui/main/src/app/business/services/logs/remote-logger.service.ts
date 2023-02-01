@@ -7,22 +7,19 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {environment} from '@env/environment';
-import {HttpClient} from '@angular/common/http';
 import {Injectable} from '@angular/core';
 import {ConfigService} from 'app/business/services/config.service';
-import packageInfo from '../../../../package.json';
+import packageInfo from '../../../../../package.json';
+import {RemoteLoggerServer} from 'app/business/server/remote-logger.server';
 
 @Injectable({
     providedIn: 'root'
 })
 export class RemoteLoggerService {
-    private remoteLogsUrl;
     private isActive = false;
     private logs = [];
 
-    constructor(private httpClient: HttpClient, private configService: ConfigService) {
-        this.remoteLogsUrl = `${environment.urls.remoteLogs}`;
+    constructor(private configService: ConfigService, private remoteLoggerServer: RemoteLoggerServer) {
         configService
             .getConfigValueAsObservable('settings.remoteLoggingEnabled', false)
             .subscribe((remoteLoggingEnabled) => this.setRemoteLoggerActive(remoteLoggingEnabled));
@@ -52,7 +49,7 @@ export class RemoteLoggerService {
         if (this.logs.length > 0) {
             const logsToPush = this.buildLogsToPush(this.logs);
             this.logs = [];
-            this.httpClient.post<string[]>(`${this.remoteLogsUrl}`, logsToPush).subscribe();
+            this.remoteLoggerServer.postLogs(logsToPush).subscribe();
         }
     }
 
@@ -66,4 +63,7 @@ export class RemoteLoggerService {
         });
         return logsToPush;
     }
+
+
+    
 }

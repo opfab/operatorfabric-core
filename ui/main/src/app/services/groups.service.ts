@@ -14,7 +14,7 @@ import {HttpClient, HttpErrorResponse} from '@angular/common/http';
 import {catchError, takeUntil, tap} from 'rxjs/operators';
 import {Injectable, OnDestroy} from '@angular/core';
 import {CachedCrudService} from '@ofServices/cached-crud-service';
-import {OpfabLoggerService} from './logs/opfab-logger.service';
+import {OpfabLoggerService} from '../business/services/logs/opfab-logger.service';
 import {AlertMessageService} from '../business/services/alert-message.service';
 @Injectable({
     providedIn: 'root'

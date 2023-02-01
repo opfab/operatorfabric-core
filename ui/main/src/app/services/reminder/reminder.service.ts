@@ -13,8 +13,8 @@ import {ReminderList} from './reminderList';
 import {AcknowledgeService} from 'app/business/services/acknowledge.service';
 import {LightCardsStoreService} from '@ofServices/lightcards/lightcards-store.service';
 import {SoundNotificationService} from '@ofServices/sound-notification.service';
-import {LogOption, OpfabLoggerService} from '@ofServices/logs/opfab-logger.service';
-import { ServerResponseStatus } from 'app/business/server/serverResponse';
+import {LogOption, OpfabLoggerService} from 'app/business/services/logs/opfab-logger.service';
+import {ServerResponseStatus} from 'app/business/server/serverResponse';
 
 @Injectable({
     providedIn: 'root'

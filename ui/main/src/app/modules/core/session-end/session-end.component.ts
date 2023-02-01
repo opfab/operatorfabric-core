@@ -11,7 +11,7 @@ import {Component, OnInit, TemplateRef, ViewChild, ViewEncapsulation} from '@ang
 import {NgbModal, NgbModalRef} from '@ng-bootstrap/ng-bootstrap';
 import {Actions, ofType} from '@ngrx/effects';
 import {Action, Store} from '@ngrx/store';
-import {LogOption, OpfabLoggerService} from '@ofServices/logs/opfab-logger.service';
+import {LogOption, OpfabLoggerService} from 'app/business/services/logs/opfab-logger.service';
 import {SoundNotificationService} from '@ofServices/sound-notification.service';
 import {AuthenticationActionTypes, TryToLogOutAction} from '@ofStore/actions/authentication.actions';
 import {OpfabEventStreamService} from 'app/business/services/opfabEventStream.service';

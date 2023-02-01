@@ -16,7 +16,7 @@ import {
     Process,
 } from '@ofModel/processes.model';
 import {CachedCrudService} from './cached-crud-service';
-import { OpfabLoggerService } from './logs/opfab-logger.service';
+import {OpfabLoggerService} from '../business/services/logs/opfab-logger.service';
 import {AlertMessageService} from '../business/services/alert-message.service';
 
 @Injectable({

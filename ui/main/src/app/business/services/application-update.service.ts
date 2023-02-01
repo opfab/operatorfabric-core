@@ -10,7 +10,7 @@
 import {Injectable} from '@angular/core';
 import {EntitiesService} from '@ofServices/entities.service';
 import {GroupsService} from '@ofServices/groups.service';
-import {LogOption, OpfabLoggerService} from '@ofServices/logs/opfab-logger.service';
+import {LogOption, OpfabLoggerService} from 'app/business/services/logs/opfab-logger.service';
 import {TemplateCssService} from '@ofServices/template-css.service';
 import {UserService} from '@ofServices/user.service';
 import {HandlebarsService} from 'app/modules/card/services/handlebars.service';

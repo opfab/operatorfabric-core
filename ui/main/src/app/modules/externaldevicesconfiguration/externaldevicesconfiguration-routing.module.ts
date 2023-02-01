@@ -10,8 +10,8 @@
 import {NgModule} from '@angular/core';
 import {RouterModule, Routes} from '@angular/router';
 import {ExternaldevicesconfigurationComponent} from './externaldevicesconfiguration.component';
-import { DevicesTableComponent } from './table/devices.table.component';
-import { UsersTableComponent } from './table/users.table.component';
+import {DevicesTableComponent} from './table/devices.table.component';
+import {UsersTableComponent} from './table/users.table.component';
 
 
 const defaultPath = 'devices';

@@ -8,9 +8,9 @@
  */
 
 import {Component} from '@angular/core';
-import { MessageLevel } from '@ofModel/message.model';
-import { Observable } from 'rxjs';
-import { ExternalDevicesConfigurationDirective, Field, FieldType } from './externaldevicesconfiguration-directive';
+import {MessageLevel} from '@ofModel/message.model';
+import {Observable} from 'rxjs';
+import {ExternalDevicesConfigurationDirective, Field, FieldType} from './externaldevicesconfiguration-directive';
 
 @Component({
     selector: 'of-externaldevices',

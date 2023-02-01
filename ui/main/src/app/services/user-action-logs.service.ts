@@ -12,7 +12,7 @@ import {HttpClient, HttpParams} from '@angular/common/http';
 import {Observable} from 'rxjs';
 import {Injectable} from '@angular/core';
 import {ErrorService} from 'app/business/services/error-service';
-import {OpfabLoggerService} from './logs/opfab-logger.service';
+import {OpfabLoggerService} from '../business/services/logs/opfab-logger.service';
 import {UserActionLog} from '@ofModel/user-action-log.model';
 import {Page} from '@ofModel/page.model';
 import {AlertMessageService} from '../business/services/alert-message.service';

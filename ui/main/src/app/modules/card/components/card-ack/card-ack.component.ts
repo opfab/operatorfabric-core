@@ -17,7 +17,7 @@ import {AcknowledgeService} from 'app/business/services/acknowledge.service';
 import {AppService, PageType} from '@ofServices/app.service';
 import {EntitiesService} from '@ofServices/entities.service';
 import {LightCardsStoreService} from '@ofServices/lightcards/lightcards-store.service';
-import {LogOption, OpfabLoggerService} from '@ofServices/logs/opfab-logger.service';
+import {LogOption, OpfabLoggerService} from 'app/business/services/logs/opfab-logger.service';
 import {ProcessesService} from 'app/business/services/processes.service';
 import {UserPermissionsService} from '@ofServices/user-permissions.service';
 import {UserService} from '@ofServices/user.service';

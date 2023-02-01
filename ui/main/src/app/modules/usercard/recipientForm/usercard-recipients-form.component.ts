@@ -12,7 +12,7 @@ import {ConfigService} from 'app/business/services/config.service';
 import {EntitiesService} from '@ofServices/entities.service';
 import {Recipient} from '@ofModel/processes.model';
 import {Entity} from '@ofModel/entity.model';
-import {OpfabLoggerService} from '@ofServices/logs/opfab-logger.service';
+import {OpfabLoggerService} from 'app/business/services/logs/opfab-logger.service';
 import {FormControl, FormGroup} from '@angular/forms';
 import {MultiSelectConfig, MultiSelectOption} from '@ofModel/multiselect.model';
 

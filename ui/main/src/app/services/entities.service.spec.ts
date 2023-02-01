@@ -16,6 +16,7 @@ import {appReducer} from '@ofStore/index';
 import {Entity} from '@ofModel/entity.model';
 import {ConfigServerMock} from '@tests/mocks/configServer.mock';
 import {ConfigServer} from 'app/business/server/config.server';
+import {RemoteLoggerServer} from 'app/business/server/remote-logger.server';
 
 describe('EntitiesService', () => {
     let httpMock: HttpTestingController;
@@ -23,7 +24,11 @@ describe('EntitiesService', () => {
 
     beforeEach(() => {
         TestBed.configureTestingModule({
-            providers: [EntitiesService, {provide: ConfigServer, useClass: ConfigServerMock},],
+            providers: [
+                EntitiesService, 
+                {provide: ConfigServer, useClass: ConfigServerMock},
+                {provide: RemoteLoggerServer, useValue: null},
+            ],
             imports: [HttpClientTestingModule, StoreModule.forRoot(appReducer)]
         });
         httpMock = TestBed.inject(HttpTestingController);

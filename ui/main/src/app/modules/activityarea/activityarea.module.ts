@@ -13,7 +13,7 @@ import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {TranslateModule} from '@ngx-translate/core';
 import {ActivityareaComponent} from './activityarea.component';
 import {ActivityareaRoutingModule} from './activityarea-routing.module';
-import { SpinnerModule } from '../share/spinner/spinner.module';
+import {SpinnerModule} from '../share/spinner/spinner.module';
 
 @NgModule({
     declarations: [ActivityareaComponent],

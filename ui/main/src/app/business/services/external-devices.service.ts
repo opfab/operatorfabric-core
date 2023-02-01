@@ -12,7 +12,7 @@ import {Observable, Subject} from 'rxjs';
 import {Device, Notification, UserConfiguration} from '@ofModel/external-devices.model';
 import {Injectable} from '@angular/core';
 import {ErrorService} from 'app/business/services/error-service';
-import {OpfabLoggerService} from '../../services/logs/opfab-logger.service';
+import {OpfabLoggerService} from 'app/business/services/logs/opfab-logger.service';
 import {ExternalDevicesServer} from '../server/external-devices.server';
 import {ServerResponseStatus} from '../server/serverResponse';
 import {AlertMessageService} from './alert-message.service';

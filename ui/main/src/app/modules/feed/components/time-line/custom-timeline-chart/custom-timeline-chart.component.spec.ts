@@ -26,7 +26,7 @@ import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
 import {LightCardsFeedFilterService} from '@ofServices/lightcards/lightcards-feed-filter.service';
 import {LightCardsServiceMock} from '@tests/mocks/lightcards.service.mock';
 import {DateTimeFormatterService} from 'app/business/services/date-time-formatter.service';
-import {RemoteLoggerService} from '@ofServices/logs/remote-logger.service';
+import {RemoteLoggerService} from 'app/business/services/logs/remote-logger.service';
 import {RemoteLoggerServiceMock} from '@tests/mocks/remote-logger.service.mock';
 
 describe('CustomTimelineChartComponent', () => {

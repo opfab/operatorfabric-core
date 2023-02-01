@@ -10,11 +10,11 @@
 import {Directive, Injectable} from '@angular/core';
 import {NgbModal, NgbModalOptions} from '@ng-bootstrap/ng-bootstrap';
 import {TranslateService} from '@ngx-translate/core';
-import { MessageLevel } from '@ofModel/message.model';
+import {MessageLevel} from '@ofModel/message.model';
 import {AlertMessageService} from 'app/business/services/alert-message.service';
 import {ExternalDevicesService} from 'app/business/services/external-devices.service';
 import {ColDef, GridOptions, ICellRendererParams} from 'ag-grid-community';
-import { CheckboxCellRendererComponent } from 'app/modules/admin/components/cell-renderers/checkbox-cell-renderer.component';
+import {CheckboxCellRendererComponent} from 'app/modules/admin/components/cell-renderers/checkbox-cell-renderer.component';
 import {Observable, throwError} from 'rxjs';
 import {ActionCellRendererComponent} from '../../admin/components/cell-renderers/action-cell-renderer.component';
 import {ConfirmationDialogService} from '../../admin/services/confirmation-dialog.service';

@@ -14,7 +14,7 @@ import {Observable, Subject} from 'rxjs';
 import {Entity} from '@ofModel/entity.model';
 import {Injectable, OnDestroy} from '@angular/core';
 import {CachedCrudService} from '@ofServices/cached-crud-service';
-import {OpfabLoggerService} from './logs/opfab-logger.service';
+import {OpfabLoggerService} from '../business/services/logs/opfab-logger.service';
 import {AlertMessageService} from '../business/services/alert-message.service';
 
 declare const templateGateway: any;

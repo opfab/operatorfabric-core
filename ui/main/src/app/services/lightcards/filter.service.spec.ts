@@ -10,7 +10,7 @@
 import {TestBed} from '@angular/core/testing';
 import {FilterType} from '@ofModel/feed-filter.model';
 import {LightCard, Severity} from '@ofModel/light-card.model';
-import {RemoteLoggerService} from '@ofServices/logs/remote-logger.service';
+import {RemoteLoggerService} from 'app/business/services/logs/remote-logger.service';
 import {getSeveralRandomLightCards} from '@tests/helpers';
 import {RemoteLoggerServiceMock} from '@tests/mocks/remote-logger.service.mock';
 import {FilterService} from './filter.service';

@@ -29,6 +29,7 @@ import {ProcessServer} from 'app/business/server/process.server';
 import {ProcessServerMock} from '@tests/mocks/processServer.mock';
 import {OpfabEventStreamService} from 'app/business/services/opfabEventStream.service';
 import {AcknowledgeServer} from '../server/acknowledge.server';
+import {RemoteLoggerServer} from '../server/remote-logger.server';
 
 describe('AcknowledgeService testing ', () => {
     let acknowledgeService: AcknowledgeService;
@@ -44,6 +45,7 @@ describe('AcknowledgeService testing ', () => {
             providers: [
                 ConfigService,
                 {provide: ConfigServer, useClass: ConfigServerMock},
+                {provide: RemoteLoggerServer, useValue: null},
                 {provide: ProcessServer, useClass: ProcessServerMock},
                 {provide : AcknowledgeServer, useValue: null},
                 LightCardsStoreService,

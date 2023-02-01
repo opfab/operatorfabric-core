@@ -30,6 +30,7 @@ import {ProcessServerMock} from '@tests/mocks/processServer.mock';
 import {ProcessServer} from 'app/business/server/process.server';
 import {OpfabEventStreamServer} from 'app/business/server/opfabEventStream.server';
 import {ExternalDevicesServer} from 'app/business/server/external-devices.server';
+import {RemoteLoggerServer} from 'app/business/server/remote-logger.server';
 
 describe('LightCardComponent', () => {
     let lightCardDetailsComp: LightCardComponent;
@@ -70,6 +71,7 @@ describe('LightCardComponent', () => {
                 I18nService,
                 {provide: ConfigServer, useClass: ConfigServerMock},
                 {provide: ProcessServer, useClass: ProcessServerMock},
+                {provide: RemoteLoggerServer, useValue: null},
                 {provide: OpfabEventStreamServer, use:null},
                 {provide: ExternalDevicesServer, use:null}
             ]
