@@ -7,7 +7,7 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {AcknowledgeService} from '@ofServices/acknowledge.service';
+import {AcknowledgeService} from './acknowledge.service';
 import {TestBed} from '@angular/core/testing';
 import {AcknowledgmentAllowedEnum, Response, State} from '@ofModel/processes.model';
 import {BusinessconfigI18nLoaderFactory, getOneRandomCard, getOneRandomProcess} from '@tests/helpers';
@@ -21,13 +21,14 @@ import {appReducer} from '@ofStore/index';
 import {ConfigService} from 'app/business/services/config.service';
 import {EntitiesService} from '@ofServices/entities.service';
 import {EntitiesServiceMock} from '@tests/mocks/entities.service.mock';
-import {LightCardsStoreService} from './lightcards/lightcards-store.service';
+import {LightCardsStoreService} from '../../services/lightcards/lightcards-store.service';
 import {TranslateLoader, TranslateModule} from '@ngx-translate/core';
 import {ConfigServer} from 'app/business/server/config.server';
 import {ConfigServerMock} from '@tests/mocks/configServer.mock';
 import {ProcessServer} from 'app/business/server/process.server';
 import {ProcessServerMock} from '@tests/mocks/processServer.mock';
 import {OpfabEventStreamService} from 'app/business/services/opfabEventStream.service';
+import {AcknowledgeServer} from '../server/acknowledge.server';
 
 describe('AcknowledgeService testing ', () => {
     let acknowledgeService: AcknowledgeService;
@@ -44,6 +45,7 @@ describe('AcknowledgeService testing ', () => {
                 ConfigService,
                 {provide: ConfigServer, useClass: ConfigServerMock},
                 {provide: ProcessServer, useClass: ProcessServerMock},
+                {provide : AcknowledgeServer, useValue: null},
                 LightCardsStoreService,
                 {provide: EntitiesService, useClass: EntitiesServiceMock},
                 {provide : OpfabEventStreamService, useValue: null}

@@ -48,6 +48,8 @@ import {AngularConfigServer} from './server/angularConfig.server';
 import {ProcessServer} from './business/server/process.server';
 import {AngularProcessServer} from './server/angularProcess.server';
 import {AngularSettingsServer} from './server/angularSettings.server';
+import {AcknowledgeServer} from './business/server/acknowledge.server';
+import {AngularAcknowledgeServer} from './server/angularAcknowledgement.server';
 import {AngularOpfabEventStreamServer} from './server/angularOpfabEventStream.server';
 import {OpfabEventStreamServer} from './business/server/opfabEventStream.server';
 import { SettingsServer } from './business/server/settings.server';
@@ -103,6 +105,7 @@ import { SettingsServer } from './business/server/settings.server';
             useClass: TokenInjector,
             multi: true
         },
+        {provide: AcknowledgeServer, useClass: AngularAcknowledgeServer},
         {provide: ConfigServer, useClass: AngularConfigServer},
         {provide: ProcessServer, useClass: AngularProcessServer},
         {provide: SettingsServer, useClass: AngularSettingsServer},

@@ -14,7 +14,7 @@ import {MessageLevel} from '@ofModel/message.model';
 import {PermissionEnum} from '@ofModel/permission.model';
 import {AcknowledgmentAllowedEnum, ConsideredAcknowledgedForUserWhenEnum, State} from '@ofModel/processes.model';
 import {User} from '@ofModel/user.model';
-import {AcknowledgeService} from '@ofServices/acknowledge.service';
+import {AcknowledgeService} from 'app/business/services/acknowledge.service';
 import {AppService, PageType} from '@ofServices/app.service';
 import {EntitiesService} from '@ofServices/entities.service';
 import {LightCardsStoreService} from '@ofServices/lightcards/lightcards-store.service';
@@ -25,6 +25,7 @@ import {UserService} from '@ofServices/user.service';
 import {AlertMessageAction} from '@ofStore/actions/alert.actions';
 import {AppState} from '@ofStore/index';
 import {Subject, takeUntil} from 'rxjs';
+import {ServerResponseStatus} from 'app/business/server/serverResponse';
 
 const enum AckI18nKeys {
     BUTTON_TEXT_ACK = 'cardAcknowledgment.button.ack',
@@ -160,7 +161,7 @@ export class CardAckComponent implements OnInit, OnChanges, OnDestroy {
 
         this.acknowledgeService.postUserAcknowledgement(this.card.uid, entitiesAcks).subscribe((resp) => {
             this.ackOrUnackInProgress = false;
-            if (resp.status === 201 || resp.status === 200) {
+            if (resp.status === ServerResponseStatus.OK) {
                 this.acknowledgeService.updateAcknowledgementOnLightCard(this.card.id, true);
                 this.card = {...this.card, hasBeenAcknowledged: true};
                 this.setAcknowledgeButtonVisibility();
@@ -199,7 +200,7 @@ export class CardAckComponent implements OnInit, OnChanges, OnDestroy {
         this.ackOrUnackInProgress = true;
         this.acknowledgeService.deleteUserAcknowledgement(this.card.uid).subscribe((resp) => {
             this.ackOrUnackInProgress = false;
-            if (resp.status === 200 || resp.status === 204) {
+            if (resp.status === ServerResponseStatus.OK) {
                 this.card = {...this.card, hasBeenAcknowledged: false};
                 this.setAcknowledgeButtonVisibility();
                 this.acknowledgeService.updateAcknowledgementOnLightCard(this.card.id, false);

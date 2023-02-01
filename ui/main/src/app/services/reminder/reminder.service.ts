@@ -10,10 +10,11 @@
 import {Injectable} from '@angular/core';
 import {CardService} from '@ofServices/card.service';
 import {ReminderList} from './reminderList';
-import {AcknowledgeService} from '@ofServices/acknowledge.service';
+import {AcknowledgeService} from 'app/business/services/acknowledge.service';
 import {LightCardsStoreService} from '@ofServices/lightcards/lightcards-store.service';
 import {SoundNotificationService} from '@ofServices/sound-notification.service';
 import {LogOption, OpfabLoggerService} from '@ofServices/logs/opfab-logger.service';
+import { ServerResponseStatus } from 'app/business/server/serverResponse';
 
 @Injectable({
     providedIn: 'root'
@@ -55,7 +56,7 @@ export class ReminderService {
         if (!!lightCard) {
             this.reminderList.setCardHasBeenRemind(lightCard);
             this.acknowledgeService.deleteUserAcknowledgement(lightCard.uid).subscribe((resp) => {
-                if (!(resp.status === 200 || resp.status === 204))
+                if (resp.status !== ServerResponseStatus.OK)
                     this.logger.error(
                         'Reminder : the remote acknowledgement endpoint returned an error status' + resp.status
                     );

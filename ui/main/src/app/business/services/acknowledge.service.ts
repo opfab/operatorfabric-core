@@ -13,10 +13,11 @@ import {Card} from '@ofModel/card.model';
 import {UserWithPerimeters} from '@ofModel/userWithPerimeters.model';
 import {LightCard} from '@ofModel/light-card.model';
 import {Observable} from 'rxjs';
-import {HttpClient, HttpResponse} from '@angular/common/http';
 import {environment} from '@env/environment';
+import {AcknowledgeServer} from '../server/acknowledge.server';
+import {ServerResponse, ServerResponseStatus} from '../server/serverResponse';
 import {UserPermissionsService} from '@ofServices/user-permissions.service';
-import {LightCardsStoreService} from './lightcards/lightcards-store.service';
+import {LightCardsStoreService} from '@ofServices/lightcards/lightcards-store.service';
 
 @Injectable({
     providedIn: 'root'
@@ -25,24 +26,24 @@ export class AcknowledgeService {
     readonly userAckUrl: string;
 
     constructor(
+        private acknowledgeServer: AcknowledgeServer,
         private userPermissionsService: UserPermissionsService,
-        private httpClient: HttpClient,
         private lightCardsStoreService: LightCardsStoreService
     ) {
         this.userAckUrl = `${environment.urls.cardspub}/cards/userAcknowledgement`;
     }
 
-    postUserAcknowledgement(cardUid: string, entitiesAcks: string[]): Observable<HttpResponse<void>> {
-        return this.httpClient.post<void>(`${this.userAckUrl}/${cardUid}`, entitiesAcks, {observe: 'response'});
+    postUserAcknowledgement(cardUid: string, entitiesAcks: string[]): Observable<ServerResponse<void>> {
+        return this.acknowledgeServer.postUserAcknowledgement(cardUid, entitiesAcks);
     }
 
-    deleteUserAcknowledgement(cardUid: string): Observable<HttpResponse<void>> {
-        return this.httpClient.delete<void>(`${this.userAckUrl}/${cardUid}`, {observe: 'response'});
+    deleteUserAcknowledgement(cardUid: string): Observable<ServerResponse<void>> {
+        return this.acknowledgeServer.deleteUserAcknowledgement(cardUid);
     }
 
     acknowledgeCard(lightCard: LightCard, entitiesAcks: string[]) {
-        this.postUserAcknowledgement(lightCard.uid, entitiesAcks).subscribe((resp) => {
-            if (resp.status === 201 || resp.status === 200) {
+        this.acknowledgeServer.postUserAcknowledgement(lightCard.uid, entitiesAcks).subscribe((resp) => {
+            if (resp.status === ServerResponseStatus.OK) {
                 this.updateAcknowledgementOnLightCard(lightCard.id, true);
             } else {
                 throw new Error('the remote acknowledgement endpoint returned an error status(' + resp.status + ')');
