@@ -23,11 +23,13 @@ import {AngularServer} from './angular.server';
 export class AngularConfigServer extends AngularServer implements ConfigServer {
     private configUrl: string;
     private monitoringConfigUrl: string;
+    private localUrl: string;
 
     constructor(private httpClient: HttpClient) {
         super();
         this.configUrl = `${environment.urls.config}`;
         this.monitoringConfigUrl = `${environment.urls.monitoringConfig}`;
+        this.localUrl = `${environment.paths.i18n}`;
     }
 
     getWebUiConfiguration(): Observable<ServerResponse<any>> {
@@ -50,5 +52,9 @@ export class AngularConfigServer extends AngularServer implements ConfigServer {
 
     getMonitoringConfiguration():Observable<ServerResponse<MonitoringConfig>> {
         return this.processHttpResponse(this.httpClient.get<MonitoringConfig>(this.monitoringConfigUrl));
+    }
+
+    getLocale(locale: string): Observable<ServerResponse<any>> {
+        return this.processHttpResponse(this.httpClient.get(`${this.localUrl}${locale}.json`));
     }
 }
