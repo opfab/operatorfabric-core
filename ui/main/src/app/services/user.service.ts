@@ -19,9 +19,8 @@ import {CrudService} from './crud-service';
 import {Injectable} from '@angular/core';
 import {Entity} from '@ofModel/entity.model';
 import {RightsEnum} from '@ofModel/perimeter.model';
-import {Store} from '@ngrx/store';
-import {AppState} from '@ofStore/index';
 import {OpfabLoggerService} from './logs/opfab-logger.service';
+import {AlertMessageService} from '../business/services/alert-message.service';
 
 @Injectable({
     providedIn: 'root'
@@ -39,8 +38,8 @@ export class UserService extends CrudService {
      * @constructor
      * @param httpClient - Angular build-in
      */
-    constructor(protected store: Store<AppState>, private httpClient: HttpClient, protected loggerService: OpfabLoggerService) {
-        super(store, loggerService);
+    constructor(private httpClient: HttpClient, protected loggerService: OpfabLoggerService, protected alertMessageService: AlertMessageService) {
+        super(loggerService, alertMessageService);
         this.userUrl = `${environment.urls.users}`;
         this.connectionsUrl = `${environment.urls.cards}/connections`;
         this.willNewSubscriptionDisconnectAnExistingSubscriptionUrl = `${environment.urls.cards}/willNewSubscriptionDisconnectAnExistingSubscription`;

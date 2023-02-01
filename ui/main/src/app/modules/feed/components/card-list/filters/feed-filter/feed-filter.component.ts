@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2022, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2023, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -9,8 +9,6 @@
 
 import {Component, Input, OnDestroy, OnInit, ViewEncapsulation} from '@angular/core';
 import {Subject, timer} from 'rxjs';
-import {Store} from '@ngrx/store';
-import {AppState} from '@ofStore/index';
 import {AbstractControl, FormControl, FormGroup} from '@angular/forms';
 import {debounce, debounceTime, distinctUntilChanged, takeUntil} from 'rxjs/operators';
 import * as _ from 'lodash-es';
@@ -20,10 +18,10 @@ import {UserPreferencesService} from '@ofServices/user-preference.service';
 import {DateTimeNgb} from '@ofModel/datetime-ngb.model';
 import moment from 'moment';
 import {MessageLevel} from '@ofModel/message.model';
-import {AlertMessageAction} from '@ofStore/actions/alert.actions';
 import {FilterService} from '@ofServices/lightcards/filter.service';
 import {LightCardsFeedFilterService} from '@ofServices/lightcards/lightcards-feed-filter.service';
 import {Utilities} from 'app/business/common/utilities';
+import {AlertMessageService} from 'app/business/services/alert-message.service';
 
 @Component({
     selector: 'of-feed-filter',
@@ -66,10 +64,10 @@ export class FeedFilterComponent implements OnInit, OnDestroy {
     private dateFilterType = FilterType.PUBLISHDATE_FILTER;
 
     constructor(
-        private store: Store<AppState>,
         private userPreferences: UserPreferencesService,
         private filterService: FilterService,
-        private lightCardsFeedFilterService: LightCardsFeedFilterService
+        private lightCardsFeedFilterService: LightCardsFeedFilterService,
+        private alertMessageService: AlertMessageService
     ) {
         this.typeFilterForm = this.createFormGroup();
         this.ackFilterForm = this.createAckFormGroup();
@@ -380,8 +378,6 @@ export class FeedFilterComponent implements OnInit, OnDestroy {
     }
 
     private displayMessage(i18nKey: string, msg: string, severity: MessageLevel = MessageLevel.ERROR) {
-        this.store.dispatch(
-            new AlertMessageAction({alertMessage: {message: msg, level: severity, i18n: {key: i18nKey}}})
-        );
+        this.alertMessageService.sendAlertMessage({message: msg, level: severity, i18n: {key: i18nKey}});
     }
 }

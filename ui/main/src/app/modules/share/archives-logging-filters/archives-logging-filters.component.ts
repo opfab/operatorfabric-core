@@ -20,15 +20,12 @@ import {DateTimeNgb} from '@ofModel/datetime-ngb.model';
 import {ProcessStatesMultiSelectOptionsService} from '@ofServices/process-states-multi-select-options.service';
 import {MultiSelectOption} from '@ofModel/multiselect.model';
 import {MessageLevel} from '@ofModel/message.model';
-import {AlertMessageAction} from '@ofStore/actions/alert.actions';
-import {Store} from '@ngrx/store';
-import {AppState} from '@ofStore/index';
-
 import moment from 'moment';
 import {Utilities} from 'app/business/common/utilities';
 import {UserPreferencesService} from '@ofServices/user-preference.service';
 import {UserService} from '@ofServices/user.service';
 import {PermissionEnum} from '@ofModel/permission.model';
+import {AlertMessageService} from 'app/business/services/alert-message.service';
 
 export enum FilterDateTypes {
     PUBLISH_DATE_FROM_PARAM = 'publishDateFrom',
@@ -128,12 +125,12 @@ export class ArchivesLoggingFiltersComponent implements OnInit, OnDestroy, After
     defaultMinPublishDate: NgbDateStruct;
 
     constructor(
-        private store: Store<AppState>,
         private configService: ConfigService,
         private processesService: ProcessesService,
         private processStatesDropdownListService: ProcessStatesMultiSelectOptionsService,
         private userPreferences: UserPreferencesService,
-        private userService: UserService
+        private userService: UserService,
+        private alertMessageService: AlertMessageService
     ) {
         this.hasCurrentUserRigthsToViewAllArchivedCards = this.userService.isCurrentUserAdmin() || this.userService.hasCurrentUserAnyPermission([PermissionEnum.VIEW_ALL_ARCHIVED_CARDS]);
 
@@ -453,9 +450,7 @@ export class ArchivesLoggingFiltersComponent implements OnInit, OnDestroy, After
     }
 
     private displayMessage(i18nKey: string, msg: string, severity: MessageLevel = MessageLevel.ERROR) {
-        this.store.dispatch(
-            new AlertMessageAction({alertMessage: {message: msg, level: severity, i18n: {key: i18nKey}}})
-        );
+        this.alertMessageService.sendAlertMessage({message: msg, level: severity, i18n: {key: i18nKey}});
     }
 
     private areDatesInCorrectOrder() {

@@ -10,7 +10,6 @@
 import {Component, EventEmitter, Input, OnChanges, OnInit, Output, TemplateRef, ViewChild} from '@angular/core';
 import {FormControl, FormGroup} from '@angular/forms';
 import {NgbModal, NgbModalRef} from '@ng-bootstrap/ng-bootstrap';
-import {Store} from '@ngrx/store';
 import {Card, CardForPublishing} from '@ofModel/card.model';
 import {Severity} from '@ofModel/light-card.model';
 import {MessageLevel} from '@ofModel/message.model';
@@ -23,9 +22,8 @@ import {EntitiesService} from '@ofServices/entities.service';
 import {ProcessesService} from 'app/business/services/processes.service';
 import {UserPermissionsService} from '@ofServices/user-permissions.service';
 import {UserService} from '@ofServices/user.service';
-import {AlertMessageAction} from '@ofStore/actions/alert.actions';
-import {AppState} from '@ofStore/index';
 import {Utilities} from 'app/business/common/utilities';
+import {AlertMessageService} from 'app/business/services/alert-message.service';
 
 declare const templateGateway: any;
 
@@ -81,13 +79,13 @@ export class CardResponseComponent implements OnChanges, OnInit {
     isReadOnlyUser: boolean;
 
     constructor(
-        private store: Store<AppState>,
         private cardService: CardService,
         private entitiesService: EntitiesService,
         private modalService: NgbModal,
         private userService: UserService,
         private userPermissionsService: UserPermissionsService,
-        private processService: ProcessesService
+        private processService: ProcessesService,
+        private alertMessageService: AlertMessageService
     ) {
         const userWithPerimeters = this.userService.getCurrentUserWithPerimeters();
         if (!!userWithPerimeters) this.user = userWithPerimeters.userData;
@@ -202,9 +200,7 @@ export class CardResponseComponent implements OnChanges, OnInit {
     }
 
     private displayMessage(i18nKey: string, msg: string, severity: MessageLevel = MessageLevel.ERROR) {
-        this.store.dispatch(
-            new AlertMessageAction({alertMessage: {message: msg, level: severity, i18n: {key: i18nKey}}})
-        );
+        this.alertMessageService.sendAlertMessage({message: msg, level: severity, i18n: {key: i18nKey}});
     }
 
     public submitEntitiesChoice() {
