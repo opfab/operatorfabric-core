@@ -9,8 +9,6 @@
 
 import {Component, ElementRef, Input, OnInit, ViewChild} from '@angular/core';
 import {FormControl, FormGroup} from '@angular/forms';
-import {Store} from '@ngrx/store';
-import {AppState} from '@ofStore/index';
 import {CardService} from '@ofServices/card.service';
 import {UserService} from '@ofServices/user.service';
 import {Card, CardCreationReportData, CardData, fromCardToCardForPublishing, TimeSpan} from '@ofModel/card.model';
@@ -24,7 +22,6 @@ import {HandlebarsService} from '../card/services/handlebars.service';
 import {DetailContext} from '@ofModel/detail-context.model';
 import {map} from 'rxjs/operators';
 import {MessageLevel} from '@ofModel/message.model';
-import {AlertMessageAction} from '@ofStore/actions/alert.actions';
 import {ConfigService} from 'app/business/services/config.service';
 import {DisplayContext} from '@ofModel/templateGateway.model';
 import {SoundNotificationService} from '@ofServices/sound-notification.service';
@@ -36,6 +33,7 @@ import {Utilities} from '../../business/common/utilities';
 import {UsercardSelectCardEmitterFormComponent} from './selectCardEmitterForm/usercard-select-card-emitter-form.component';
 import {LogOption, OpfabLoggerService} from '@ofServices/logs/opfab-logger.service';
 import {PermissionEnum} from '@ofModel/permission.model';
+import {AlertMessageService} from 'app/business/services/alert-message.service';
 
 declare const templateGateway: any;
 declare const usercardTemplateGateway: any;
@@ -112,7 +110,6 @@ export class UserCardComponent implements OnInit {
     public userCardTemplate: SafeHtml;
 
     constructor(
-        private store: Store<AppState>,
         private cardService: CardService,
         private userService: UserService,
         private entitiesService: EntitiesService,
@@ -123,6 +120,7 @@ export class UserCardComponent implements OnInit {
         private handlebars: HandlebarsService,
         protected soundNotificationService: SoundNotificationService,
         protected userPermissionsService: UserPermissionsService,
+        private alertMessageService: AlertMessageService,
         private opfabLogger: OpfabLoggerService
     ) {
         this.setDefaultDateFormValues();
@@ -721,9 +719,7 @@ export class UserCardComponent implements OnInit {
     }
 
     private displayMessage(i18nKey: string, msg: string, severity: MessageLevel = MessageLevel.ERROR) {
-        this.store.dispatch(
-            new AlertMessageAction({alertMessage: {message: msg, level: severity, i18n: {key: i18nKey}}})
-        );
+        this.alertMessageService.sendAlertMessage({message: msg, level: severity, i18n: {key: i18nKey}});
     }
 
     public getEntityName(id: string): string {

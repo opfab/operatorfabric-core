@@ -21,9 +21,6 @@ import {NgbActiveModal} from '@ng-bootstrap/ng-bootstrap';
 import {AdminItemType, SharingService} from '../../../services/sharing.service';
 import {CrudService} from '@ofServices/crud-service';
 import {PerimetersService} from '@ofServices/perimeters.service';
-import {AlertMessageAction} from '@ofStore/actions/alert.actions';
-import {Store} from '@ngrx/store';
-import {AppState} from '@ofStore/index';
 import {MessageLevel} from '@ofModel/message.model';
 import {GroupsService} from '@ofServices/groups.service';
 import {MultiSelectConfig, MultiSelectOption} from '@ofModel/multiselect.model';
@@ -32,6 +29,8 @@ import {UserService} from '@ofServices/user.service';
 import {User} from '../../../../../model/user.model';
 import {PermissionEnum} from '@ofModel/permission.model';
 import {Observable, of} from 'rxjs';
+import {AlertMessageService} from 'app/business/services/alert-message.service';
+
 
 @Component({
     selector: 'of-edit-group-modal',
@@ -86,12 +85,12 @@ export class EditGroupModalComponent implements OnInit {
     };
 
     constructor(
-        private store: Store<AppState>,
         private activeModal: NgbActiveModal,
         private dataHandlingService: SharingService,
         private perimetersService: PerimetersService,
         private groupsService: GroupsService,
-        private userService: UserService
+        private userService: UserService,
+        private alertMessageService: AlertMessageService
     ) {
         Object.values(GroupTypeEnum).forEach((t) => this.groupTypes.push({value: String(t), label: String(t)}));
         Object.values(PermissionEnum).forEach((t) => this.groupPermissions.push({value: String(t), label: String(t)}));
@@ -202,11 +201,9 @@ export class EditGroupModalComponent implements OnInit {
                 return {id: perimeterId, itemName: perimeterId};
             })
         );
-        this.store.dispatch(
-            new AlertMessageAction({
-                alertMessage: {message: res.originalError.error.message, level: MessageLevel.ERROR}
-            })
-        );
+
+        this.alertMessageService.sendAlertMessage({message: res.originalError.error.message, level: MessageLevel.ERROR});
+
     }
 
     private cleanForm() {

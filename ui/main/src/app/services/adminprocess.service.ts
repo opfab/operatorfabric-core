@@ -16,9 +16,8 @@ import {
     Process,
 } from '@ofModel/processes.model';
 import {CachedCrudService} from './cached-crud-service';
-import {Store} from '@ngrx/store';
-import {AppState} from '@ofStore/index';
 import { OpfabLoggerService } from './logs/opfab-logger.service';
+import {AlertMessageService} from '../business/services/alert-message.service';
 
 @Injectable({
     providedIn: 'root'
@@ -30,11 +29,11 @@ export class AdminProcessesService extends CachedCrudService{
     readonly monitoringConfigUrl: string;
     private processes: Process[];
     constructor(
-        protected store: Store<AppState>,
         private httpClient: HttpClient,
+        protected alertMessageService: AlertMessageService,
         protected loggerService: OpfabLoggerService
     ) {
-        super(store, loggerService);
+        super(loggerService, alertMessageService);
         this.processesUrl = `${environment.urls.processes}`;
         this.processGroupsUrl = `${environment.urls.processGroups}`;
         this.monitoringConfigUrl = `${environment.urls.monitoringConfig}`;

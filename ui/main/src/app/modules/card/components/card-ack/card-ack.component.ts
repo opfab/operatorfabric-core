@@ -8,7 +8,6 @@
  */
 
 import {Component, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output} from '@angular/core';
-import {Store} from '@ngrx/store';
 import {Card, fromCardToLightCard} from '@ofModel/card.model';
 import {MessageLevel} from '@ofModel/message.model';
 import {PermissionEnum} from '@ofModel/permission.model';
@@ -22,10 +21,9 @@ import {LogOption, OpfabLoggerService} from '@ofServices/logs/opfab-logger.servi
 import {ProcessesService} from 'app/business/services/processes.service';
 import {UserPermissionsService} from '@ofServices/user-permissions.service';
 import {UserService} from '@ofServices/user.service';
-import {AlertMessageAction} from '@ofStore/actions/alert.actions';
-import {AppState} from '@ofStore/index';
 import {Subject, takeUntil} from 'rxjs';
 import {ServerResponseStatus} from 'app/business/server/serverResponse';
+import {AlertMessageService} from 'app/business/services/alert-message.service';
 
 const enum AckI18nKeys {
     BUTTON_TEXT_ACK = 'cardAcknowledgment.button.ack',
@@ -58,7 +56,6 @@ export class CardAckComponent implements OnInit, OnChanges, OnDestroy {
     isReadOnlyUser: any;
 
     constructor(
-        private store: Store<AppState>,
         private _appService: AppService,
         private entitiesService: EntitiesService,
         private acknowledgeService: AcknowledgeService,
@@ -66,6 +63,7 @@ export class CardAckComponent implements OnInit, OnChanges, OnDestroy {
         private userPermissionsService: UserPermissionsService,
         private processService: ProcessesService,
         private lightCardsStoreService: LightCardsStoreService,
+        private alertMessageService: AlertMessageService,
         private logger: OpfabLoggerService
     ) {
         const userWithPerimeters = this.userService.getCurrentUserWithPerimeters();
@@ -191,9 +189,7 @@ export class CardAckComponent implements OnInit, OnChanges, OnDestroy {
     }
 
     private displayMessage(i18nKey: string, msg: string, severity: MessageLevel = MessageLevel.ERROR) {
-        this.store.dispatch(
-            new AlertMessageAction({alertMessage: {message: msg, level: severity, i18n: {key: i18nKey}}})
-        );
+        this.alertMessageService.sendAlertMessage({message: msg, level: severity, i18n: {key: i18nKey}});
     }
 
     public cancelAcknowledgement() {

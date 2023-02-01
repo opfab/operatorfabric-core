@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2022, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2023, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -14,9 +14,8 @@ import {HttpClient, HttpErrorResponse} from '@angular/common/http';
 import {catchError, takeUntil, tap} from 'rxjs/operators';
 import {Injectable, OnDestroy} from '@angular/core';
 import {CachedCrudService} from '@ofServices/cached-crud-service';
-import {Store} from '@ngrx/store';
-import {AppState} from '@ofStore/index';
 import {OpfabLoggerService} from './logs/opfab-logger.service';
+import {AlertMessageService} from '../business/services/alert-message.service';
 @Injectable({
     providedIn: 'root'
 })
@@ -30,8 +29,8 @@ export class GroupsService extends CachedCrudService implements OnDestroy {
      * @constructor
      * @param httpClient - Angular build-in
      */
-    constructor(protected store: Store<AppState>, private httpClient: HttpClient, protected loggerService: OpfabLoggerService) {
-        super(store, loggerService);
+    constructor( private httpClient: HttpClient, protected loggerService: OpfabLoggerService, protected alertMessageService: AlertMessageService) {
+        super(loggerService, alertMessageService);
         this.groupsUrl = `${environment.urls.groups}`;
     }
 

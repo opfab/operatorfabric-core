@@ -1,4 +1,4 @@
-/* Copyright (c) 2022, RTE (http://www.rte-france.com)
+/* Copyright (c) 2022-2023, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -8,9 +8,8 @@
  */
 
 import {Component, OnInit} from '@angular/core';
-import {Actions, ofType} from '@ngrx/effects';
 import {Message, MessageLevel} from '@ofModel/message.model';
-import {AlertActions, AlertActionTypes} from '@ofStore/actions/alert.actions';
+import {AlertMessageService} from 'app/business/services/alert-message.service';
 
 class Alert {
     alert: Message;
@@ -27,14 +26,13 @@ export class AlertComponent implements OnInit {
 
     alertMessage: Alert = {alert: undefined, className: undefined, display: false};
 
-    constructor(private actions$: Actions) {
+    constructor(private alertMessageService: AlertMessageService) {
     }
 
     ngOnInit(): void {
-        this.actions$
-        .pipe(ofType<AlertActions>(AlertActionTypes.AlertMessage))
+        this.alertMessageService.getAlertMessage()
         .subscribe((alert) => {
-            this.displayAlert(alert.payload.alertMessage);
+            this.displayAlert(alert);
         });
     }
 

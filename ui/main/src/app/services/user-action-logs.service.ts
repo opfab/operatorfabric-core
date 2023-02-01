@@ -1,4 +1,4 @@
-/* Copyright (c) 2022, RTE (http://www.rte-france.com)
+/* Copyright (c) 2022-2023, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -12,11 +12,10 @@ import {HttpClient, HttpParams} from '@angular/common/http';
 import {Observable} from 'rxjs';
 import {Injectable} from '@angular/core';
 import {ErrorService} from '@ofServices/error-service';
-import {Store} from '@ngrx/store';
-import {AppState} from '@ofStore/index';
 import {OpfabLoggerService} from './logs/opfab-logger.service';
 import {UserActionLog} from '@ofModel/user-action-log.model';
 import {Page} from '@ofModel/page.model';
+import {AlertMessageService} from '../business/services/alert-message.service';
 
 @Injectable({
     providedIn: 'root'
@@ -28,8 +27,8 @@ export class UserActionLogsService extends ErrorService {
      * @constructor
      * @param httpClient - Angular build-in
      */
-    constructor(protected store: Store<AppState>, private httpClient: HttpClient, protected loggerService: OpfabLoggerService) {
-        super(store, loggerService);
+    constructor(private httpClient: HttpClient, protected loggerService: OpfabLoggerService, protected alertMessageService: AlertMessageService) {
+        super(loggerService, alertMessageService);
         this.userActionsUrl = `${environment.urls.userActionLogs}`;
     }
 

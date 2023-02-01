@@ -9,12 +9,10 @@
 
 import {Directive, Injectable} from '@angular/core';
 import {NgbModal, NgbModalOptions} from '@ng-bootstrap/ng-bootstrap';
-import { Store } from '@ngrx/store';
 import {TranslateService} from '@ngx-translate/core';
 import { MessageLevel } from '@ofModel/message.model';
+import {AlertMessageService} from 'app/business/services/alert-message.service';
 import {ExternalDevicesService} from '@ofServices/external-devices.service';
-import {AlertMessageAction} from '@ofStore/actions/alert.actions';
-import {AppState} from '@ofStore/index';
 import {ColDef, GridOptions, ICellRendererParams} from 'ag-grid-community';
 import { CheckboxCellRendererComponent } from 'app/modules/admin/components/cell-renderers/checkbox-cell-renderer.component';
 import {Observable, throwError} from 'rxjs';
@@ -50,7 +48,7 @@ export abstract class ExternalDevicesConfigurationDirective {
         protected confirmationDialogService: ConfirmationDialogService,
         private translateService: TranslateService,
         protected modalService: NgbModal,
-        private store: Store<AppState>,
+        private alertMessageService: AlertMessageService
     ) {
         this.gridOptions = <GridOptions>{
             context: {
@@ -237,9 +235,7 @@ export abstract class ExternalDevicesConfigurationDirective {
     }
 
     protected displayMessage(i18nKey: string, msg: string, severity: MessageLevel = MessageLevel.ERROR) {
-        this.store.dispatch(
-            new AlertMessageAction({alertMessage: {message: msg, level: severity, i18n: {key: i18nKey}}})
-        );
+        this.alertMessageService.sendAlertMessage({message: msg, level: severity, i18n: {key: i18nKey}});
     }
 
 

@@ -21,10 +21,9 @@ import {ProcessesService} from 'app/business/services/processes.service';
 import {PerimetersService} from '@ofServices/perimeters.service';
 import {Process} from '@ofModel/processes.model';
 import {MessageLevel} from '@ofModel/message.model';
-import {Store} from '@ngrx/store';
-import {AppState} from '@ofStore/index';
-import {AlertMessageAction} from '@ofStore/actions/alert.actions';
+
 import {MultiSelectConfig} from '@ofModel/multiselect.model';
+import {AlertMessageService} from 'app/business/services/alert-message.service';
 
 @Component({
     selector: 'of-edit-perimeter-modal',
@@ -33,10 +32,11 @@ import {MultiSelectConfig} from '@ofModel/multiselect.model';
 })
 export class EditPerimeterModalComponent implements OnInit {
     constructor(
-        private store: Store<AppState>,
         private activeModal: NgbActiveModal,
         private crudService: PerimetersService,
-        private processesService: ProcessesService
+        private processesService: ProcessesService,
+        private alertMessageService: AlertMessageService
+
     ) {
         Object.keys(RightsEnum).forEach((key) => {
             this.rightOptions.push({value: key, label: key});
@@ -234,11 +234,7 @@ export class EditPerimeterModalComponent implements OnInit {
     }
 
     onSaveError(res) {
-        this.store.dispatch(
-            new AlertMessageAction({
-                alertMessage: {message: res.originalError.error.message, level: MessageLevel.ERROR}
-            })
-        );
+        this.alertMessageService.sendAlertMessage({message: res.originalError.error.message, level: MessageLevel.ERROR});
     }
 
     public removeOrClearStateRight(indexToRemove: number) {

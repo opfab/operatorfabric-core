@@ -14,11 +14,11 @@ import {Card} from '@ofModel/card.model';
 import {MessageLevel} from '@ofModel/message.model';
 import {PermissionEnum} from '@ofModel/permission.model';
 import {State} from '@ofModel/processes.model';
+import {AlertMessageService} from 'app/business/services/alert-message.service';
 import {AppService, PageType} from '@ofServices/app.service';
 import {CardService} from '@ofServices/card.service';
 import {UserPermissionsService} from '@ofServices/user-permissions.service';
 import {UserService} from '@ofServices/user.service';
-import {AlertMessageAction} from '@ofStore/actions/alert.actions';
 import {AppState} from '@ofStore/index';
 import {selectCurrentUrl} from '@ofStore/selectors/router.selectors';
 import {Subject, takeUntil} from 'rxjs';
@@ -54,7 +54,8 @@ export class CardActionsComponent implements OnInit, OnChanges,OnDestroy {
         private modalService: NgbModal,
         private _appService: AppService,
         private cardService: CardService,
-        private store: Store<AppState>
+        private store: Store<AppState>,
+        private alertMessageService: AlertMessageService
     ) {}
 
     ngOnInit() : void {
@@ -163,9 +164,7 @@ export class CardActionsComponent implements OnInit, OnChanges,OnDestroy {
     }
 
     private displayMessage(i18nKey: string, msg: string, severity: MessageLevel = MessageLevel.ERROR) {
-        this.store.dispatch(
-            new AlertMessageAction({alertMessage: {message: msg, level: severity, i18n: {key: i18nKey}}})
-        );
+        this.alertMessageService.sendAlertMessage({message: msg, level: severity, i18n: {key: i18nKey}});
     }
 
     ngOnDestroy() {

@@ -1,4 +1,4 @@
-/* Copyright (c) 2021-2022, RTE (http://www.rte-france.com)
+/* Copyright (c) 2021-2023, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -13,10 +13,9 @@ import {HttpClient, HttpErrorResponse} from '@angular/common/http';
 import {catchError, takeUntil, tap} from 'rxjs/operators';
 import {Injectable, OnDestroy} from '@angular/core';
 import {CachedCrudService} from '@ofServices/cached-crud-service';
-import {Perimeter} from '@ofModel/perimeter.model';
-import {Store} from '@ngrx/store';
-import {AppState} from '@ofStore/index';
+import {Perimeter} from '@ofModel/perimeter.model';;
 import {OpfabLoggerService} from './logs/opfab-logger.service';
+import {AlertMessageService} from '../business/services/alert-message.service';
 
 @Injectable({
     providedIn: 'root'
@@ -31,8 +30,8 @@ export class PerimetersService extends CachedCrudService implements OnDestroy {
      * @constructor
      * @param httpClient - Angular build-in
      */
-    constructor(protected store: Store<AppState>, private httpClient: HttpClient, protected loggerService: OpfabLoggerService) {
-        super(store, loggerService);
+    constructor(private httpClient: HttpClient, protected loggerService: OpfabLoggerService, alertMessageService: AlertMessageService) {
+        super(loggerService, alertMessageService);
         this.perimetersUrl = `${environment.urls.perimeters}`;
     }
 
