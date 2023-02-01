@@ -9,8 +9,8 @@
 
 import {Component, HostListener, TemplateRef, ViewChild} from '@angular/core';
 import {NgbModalRef} from '@ng-bootstrap/ng-bootstrap';
-import {LogOption, OpfabLoggerService} from '@ofServices/logs/opfab-logger.service';
-import {RemoteLoggerService} from '@ofServices/logs/remote-logger.service';
+import {LogOption, OpfabLoggerService} from 'app/business/services/logs/opfab-logger.service';
+import {RemoteLoggerService} from 'app/business/services/logs/remote-logger.service';
 import {SoundNotificationService} from '@ofServices/sound-notification.service';
 import {OpfabEventStreamService} from './business/services/opfabEventStream.service';
 

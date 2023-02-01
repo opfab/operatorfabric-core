@@ -16,7 +16,7 @@ import {FilterService} from './filter.service';
 import {SortService} from './sort.service';
 import {GroupedCardsService} from '@ofServices/grouped-cards.service';
 import {ConfigService} from 'app/business/services/config.service';
-import {LogOption, OpfabLoggerService} from '@ofServices/logs/opfab-logger.service';
+import {LogOption, OpfabLoggerService} from 'app/business/services/logs/opfab-logger.service';
 import {SearchService} from '@ofServices/lightcards/search-service';
 
 @Injectable({

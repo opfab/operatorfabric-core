@@ -9,7 +9,7 @@
 
 import {Component, HostListener,TemplateRef, ViewChild} from '@angular/core';
 import {NgbModal, NgbModalRef} from '@ng-bootstrap/ng-bootstrap';
-import {LogOption, OpfabLoggerService} from '@ofServices/logs/opfab-logger.service';
+import {LogOption, OpfabLoggerService} from 'app/business/services/logs/opfab-logger.service';
 import {UrlLockService} from './url-lock.service';
 import {UserService} from '@ofServices/user.service';
 import {ApplicationLoadingStep} from '../application-loading-step';

@@ -52,9 +52,11 @@ import {AcknowledgeServer} from './business/server/acknowledge.server';
 import {AngularAcknowledgeServer} from './server/angularAcknowledgement.server';
 import {AngularOpfabEventStreamServer} from './server/angularOpfabEventStream.server';
 import {OpfabEventStreamServer} from './business/server/opfabEventStream.server';
-import { SettingsServer } from './business/server/settings.server';
+import {SettingsServer} from './business/server/settings.server';
 import {AngularExternalDevicesServer} from './server/angularExternalDevices.server';
 import {ExternalDevicesServer} from './business/server/external-devices.server';
+import {RemoteLoggerServer} from './business/server/remote-logger.server';
+import {AngularRemoteLoggerServer} from './server/angularRemoteLogger.server';
 
 @NgModule({
     imports: [
@@ -108,6 +110,7 @@ import {ExternalDevicesServer} from './business/server/external-devices.server';
             multi: true
         },
         {provide: AcknowledgeServer, useClass: AngularAcknowledgeServer},
+        {provide: RemoteLoggerServer, useClass: AngularRemoteLoggerServer},
         {provide: ConfigServer, useClass: AngularConfigServer},
         {provide: ProcessServer, useClass: AngularProcessServer},
         {provide: SettingsServer, useClass: AngularSettingsServer},

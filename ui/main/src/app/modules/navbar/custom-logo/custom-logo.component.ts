@@ -9,7 +9,7 @@
 
 import {Component, OnInit, Input} from '@angular/core';
 import {DomSanitizer, SafeUrl} from '@angular/platform-browser';
-import {OpfabLoggerService} from '@ofServices/logs/opfab-logger.service';
+import {OpfabLoggerService} from 'app/business/services/logs/opfab-logger.service';
 
 @Component({
     selector: 'of-custom-logo',

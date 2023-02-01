@@ -29,7 +29,7 @@ import {ConsideredAcknowledgedForUserWhenEnum} from '@ofModel/processes.model';
 import {PermissionEnum} from '@ofModel/permission.model';
 import {OpfabEventStreamService} from 'app/business/services/opfabEventStream.service';
 import {CardOperationType} from '@ofModel/card-operation.model';
-import {LogOption, OpfabLoggerService} from '@ofServices/logs/opfab-logger.service';
+import {LogOption, OpfabLoggerService} from 'app/business/services/logs/opfab-logger.service';
 import {LoadCardAction} from '@ofStore/actions/card.actions';
 import {RemoveLightCardAction} from '@ofStore/actions/light-card.actions';
 import {AppState} from '@ofStore/index';

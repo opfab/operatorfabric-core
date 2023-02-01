@@ -47,7 +47,7 @@ import {ProcessServer} from 'app/business/server/process.server';
 import {ConfigServer} from 'app/business/server/config.server';
 import {ConfigServerMock} from '@tests/mocks/configServer.mock';
 import {EntitiesService} from '@ofServices/entities.service';
-import {RemoteLoggerService} from '@ofServices/logs/remote-logger.service';
+import {RemoteLoggerService} from 'app/business/services/logs/remote-logger.service';
 import {OpfabEventStreamService} from 'app/business/services/opfabEventStream.service';
 
 describe('AuthenticationEffects', () => {

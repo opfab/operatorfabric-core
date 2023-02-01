@@ -13,7 +13,7 @@ import {Observable} from "rxjs";
 import {SettingsServer} from "../server/settings.server";
 import {Store} from '@ngrx/store';
 import {AppState} from '@ofStore/index';
-import {LogOption, OpfabLoggerService} from '@ofServices/logs/opfab-logger.service';
+import {LogOption, OpfabLoggerService} from 'app/business/services/logs/opfab-logger.service';
 
 
 @Injectable({

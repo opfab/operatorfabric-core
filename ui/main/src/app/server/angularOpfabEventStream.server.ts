@@ -11,7 +11,7 @@ import {HttpClient} from '@angular/common/http';
 import {Injectable} from '@angular/core';
 import {environment} from '@env/environment';
 import {AuthenticationService} from '@ofServices/authentication/authentication.service';
-import {LogOption, OpfabLoggerService} from '@ofServices/logs/opfab-logger.service';
+import {LogOption, OpfabLoggerService} from 'app/business/services/logs/opfab-logger.service';
 import {OpfabEventStreamServer} from 'app/business/server/opfabEventStream.server';
 import {ServerResponse} from 'app/business/server/serverResponse';
 import {GuidService} from 'app/business/services/guid.service';

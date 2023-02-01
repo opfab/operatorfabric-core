@@ -15,7 +15,7 @@ import {ROUTER_NAVIGATION, ROUTER_REQUEST, RouterNavigationAction, RouterRequest
 import {filter, map, switchMap} from 'rxjs/operators';
 import {LoadCardAction} from '@ofActions/card.actions';
 import {ClearLightCardSelectionAction, SelectLightCardAction} from '@ofActions/light-card.actions';
-import {LogOption, OpfabLoggerService} from '@ofServices/logs/opfab-logger.service';
+import {LogOption, OpfabLoggerService} from 'app/business/services/logs/opfab-logger.service';
 
 @Injectable()
 export class CustomRouterEffects {

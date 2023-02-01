@@ -16,7 +16,7 @@ import {ConfigService} from 'app/business/services/config.service';
 import {EntitiesService} from '@ofServices/entities.service';
 import {GroupsService} from '@ofServices/groups.service';
 import {I18nService} from 'app/business/services/i18n.service';
-import {LogOption, OpfabLoggerService} from '@ofServices/logs/opfab-logger.service';
+import {LogOption, OpfabLoggerService} from 'app/business/services/logs/opfab-logger.service';
 import {ProcessesService} from 'app/business/services/processes.service';
 import {ReminderService} from '@ofServices/reminder/reminder.service';
 import {UserService} from '@ofServices/user.service';

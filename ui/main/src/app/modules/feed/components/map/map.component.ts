@@ -27,7 +27,7 @@ import {selectGlobalStyleState} from '@ofSelectors/global-style.selectors';
 import {Store} from '@ngrx/store';
 import {AppState} from '@ofStore/index';
 import {MapService} from '@ofServices/map.service';
-import {OpfabLoggerService} from '@ofServices/logs/opfab-logger.service';
+import {OpfabLoggerService} from 'app/business/services/logs/opfab-logger.service';
 import Chart from 'chart.js/auto';
 import ChartDataLabels from 'chartjs-plugin-datalabels';
 import {TranslateService} from '@ngx-translate/core';

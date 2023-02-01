@@ -19,7 +19,7 @@ import {CrudService} from './crud-service';
 import {Injectable} from '@angular/core';
 import {Entity} from '@ofModel/entity.model';
 import {RightsEnum} from '@ofModel/perimeter.model';
-import {OpfabLoggerService} from './logs/opfab-logger.service';
+import {OpfabLoggerService} from '../business/services/logs/opfab-logger.service';
 import {AlertMessageService} from '../business/services/alert-message.service';
 
 @Injectable({

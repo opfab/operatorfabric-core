@@ -27,7 +27,7 @@ import {UserPermissionsService} from '@ofServices/user-permissions.service';
 import {DisplayContext} from '@ofModel/templateGateway.model';
 import {LightCardsStoreService} from '@ofServices/lightcards/lightcards-store.service';
 import {CardComponent} from '../../card.component';
-import {OpfabLoggerService} from '@ofServices/logs/opfab-logger.service';
+import {OpfabLoggerService} from 'app/business/services/logs/opfab-logger.service';
 import {UserWithPerimeters} from "@ofModel/userWithPerimeters.model";
 
 declare const templateGateway: any;

@@ -9,7 +9,7 @@
  */
 
 import {MessageLevel} from '@ofModel/message.model';
-import {OpfabLoggerService} from '../../services/logs/opfab-logger.service';
+import {OpfabLoggerService} from 'app/business/services/logs/opfab-logger.service';
 import {throwError} from 'rxjs';
 import {HttpErrorResponse} from '@angular/common/http';
 import {Injectable} from '@angular/core';

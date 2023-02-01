@@ -18,7 +18,7 @@ import {DatetimeFilterModule} from '../share/datetime-filter/datetime-filter.mod
 import {SimplifiedCardViewModule} from 'app/modules/share/simplified-card-view/simplified-card-view.module';
 import {LoggingEntryPointComponent} from './logging-entry-point.component';
 import {ArchivesLoggingFiltersModule} from '../share/archives-logging-filters/archives-logging-filters.module';
-import { SpinnerModule } from '../share/spinner/spinner.module';
+import {SpinnerModule} from '../share/spinner/spinner.module';
 import {LoggingTableComponent} from './components/logging-table/logging-table.component';
 import {AgGridModule} from 'ag-grid-angular';
 import {TimeCellRendererComponent} from './components/cell-renderers/time-cell-renderer.component';
