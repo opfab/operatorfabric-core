@@ -17,7 +17,7 @@ export class Card {
         readonly publisher: string,
         readonly processVersion: string,
         readonly publishDate: number,
-        readonly startDate: number,
+        public startDate: number,
         readonly endDate: number,
         readonly expirationDate: number,
         readonly severity: Severity,

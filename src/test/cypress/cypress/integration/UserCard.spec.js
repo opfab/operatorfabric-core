@@ -230,12 +230,12 @@ describe('User Card ', function () {
       usercard.checkEmitterSelectDoesNotExist();
     })
 
-    it('Only start dates choices should be displayed in Message user card', () => {
+    it('Only start dates choices should be displayed in Message user card (Process example)', () => {
 
       opfab.loginWithUser('operator1_fr');
       opfab.navigateToUserCard();
-      usercard.selectService('User card examples');
-      usercard.selectProcess('Message or question');
+      usercard.selectService('Base Examples');
+      usercard.selectProcess('Process example');
       usercard.selectState('Message');
       usercard.checkStartDateChoiceExists();
       usercard.checkEndDateChoiceDoesNotExist();
@@ -421,7 +421,6 @@ describe('User Card ', function () {
       usercard.checkEmitterSelectDoesNotExist();
       cy.get('#message').type('Hello, that\'s a test message / Result is <OK> & work done is 100%');
       cy.setFormDateTime('startDate','2020','Jan',20,8,0);
-      cy.setFormDateTime('endDate','2029','Jun',25,11,10);
       usercard.selectRecipient('Control Center FR South');
       usercard.previewThenSendCard();
       feed.openFirstCard();
@@ -437,7 +436,7 @@ describe('User Card ', function () {
 
       opfab.loginWithUser('operator2_fr');
       feed.checkNumberOfDisplayedCardsIs(1);
-      cy.get('#opfab-lightcard-dates').contains('(08:00 20/01/2020 - 11:10 25/06/2029)');
+      cy.get('#opfab-lightcard-dates').contains('(08:00 20/01/2020 - )');
       feed.openFirstCard();
       feed.checkSelectedCardHasTitle("Message");
       feed.checkSelectedCardHasSummary("Message received :   Hello, that's a test message / Result is <OK> & work done is 100%");
@@ -655,7 +654,6 @@ describe('User Card ', function () {
       cy.get('#of-usercard-card-emitter-selector').find('.vscomp-option-text').eq(2).click({force: true});
       cy.get('#message').type('Hello, that\'s a test message / Result is <OK> & work done is 100%');
       cy.setFormDateTime('startDate', '2020', 'Jan', 20, 8, 0);
-      cy.setFormDateTime('endDate', '2029', 'Jun', 25, 11, 10);
       usercard.selectRecipient('Control Center FR South');
       usercard.previewThenSendCard();
       feed.checkNumberOfDisplayedCardsIs(1);

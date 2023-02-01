@@ -61,7 +61,7 @@ export class UserCardComponent implements OnInit {
     // Dates
     @ViewChild('datesForm') datesForm: UserCardDatesFormComponent;
     public datesFormValue: DatesForm;
-    readonly defaultStartDate = new Date().valueOf() + 60000;
+    private usePublishDateForStartDate = true;
     readonly defaultEndDate = new Date().valueOf() + 60000 * 60 * 24;
     readonly defaultLttdDate = this.defaultEndDate - 60000;
     readonly defaultExpirationDate = null;
@@ -195,7 +195,7 @@ export class UserCardComponent implements OnInit {
     }
 
     private setDefaultDateFormValues(): void {
-        const startDate = new DateField(this.startDateVisible, this.defaultStartDate);
+        const startDate = new DateField(this.startDateVisible, new Date().valueOf());
         const endDate = new DateField(this.endDateVisible, this.defaultEndDate);
         const lttd = new DateField(this.lttdVisible, this.defaultLttdDate);
         const expirationDate = new DateField(this.expirationDateVisible, this.defaultExpirationDate);
@@ -574,11 +574,14 @@ export class UserCardComponent implements OnInit {
     }
 
     private getStartDate(): number {
-        let startDate = this.defaultStartDate;
+        let startDate = new Date().valueOf();
+        this.usePublishDateForStartDate = true;
         if (this.startDateVisible) {
             startDate = this.currentStartDate;
+            this.usePublishDateForStartDate = false;
         } else if (this.specificInformation && this.specificInformation.card.startDate) {
             startDate = this.specificInformation.card.startDate;
+            this.usePublishDateForStartDate = false;
         }
         return startDate;
     }
@@ -764,6 +767,12 @@ export class UserCardComponent implements OnInit {
         this.displayPreview = false;
         this.displaySendingCardInProgress = true;
 
+        // If start date is set to publish date 
+        // we need to set again the start date to current time
+        // because the user can stay on the preview for a long time
+        // and start date is then too much in the past regarding the publish date
+        if (this.usePublishDateForStartDate) this.card.startDate = new Date().valueOf();
+
         // Exclude card from sound notifications before publishing to avoid synchronization problems
         this.soundNotificationService.lastSentCard(this.card.process + '.' + this.card.processInstanceId);
         const selectedProcess = this.processesService.getProcess(this.selectedProcessId);
@@ -780,7 +789,11 @@ export class UserCardComponent implements OnInit {
         ) {
             childCard = this.specificInformation.childCard;
         }
+        this.postCardAndChildCard(childCard);
 
+    }
+
+    private postCardAndChildCard(childCard:any) {
         this.cardService.postCard(fromCardToCardForPublishing(this.card)).subscribe(
             (resp) => {
                 if (resp.status !== 201) {
