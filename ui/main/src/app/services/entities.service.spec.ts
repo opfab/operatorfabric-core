@@ -13,7 +13,7 @@ import {environment} from '../../environments/environment';
 import {EntitiesService} from '@ofServices/entities.service';
 import {StoreModule} from '@ngrx/store';
 import {appReducer} from '@ofStore/index';
-import {Entity} from '../model/entity.model';
+import {Entity} from '@ofModel/entity.model';
 import {ConfigServerMock} from '@tests/mocks/configServer.mock';
 import {ConfigServer} from 'app/business/server/config.server';
 
