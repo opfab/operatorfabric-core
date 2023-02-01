@@ -29,7 +29,7 @@
         "app/services/*"
       ],
       "@ofModel/*": [
-        "app/model/*"
+        "app/business/model/*"
       ],
       "@tests/*": [
         "tests/*"

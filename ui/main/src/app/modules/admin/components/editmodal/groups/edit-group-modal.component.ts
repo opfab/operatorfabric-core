@@ -29,7 +29,7 @@ import {GroupsService} from '@ofServices/groups.service';
 import {MultiSelectConfig, MultiSelectOption} from '@ofModel/multiselect.model';
 import {GroupTypeEnum} from '@ofModel/group.model';
 import {UserService} from '@ofServices/user.service';
-import {User} from '../../../../../model/user.model';
+import {User} from '@ofModel/user.model';
 import {PermissionEnum} from '@ofModel/permission.model';
 import {Observable, of} from 'rxjs';
 
