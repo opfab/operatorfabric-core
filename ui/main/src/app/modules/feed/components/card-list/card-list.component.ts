@@ -19,7 +19,7 @@ import {Store} from '@ngrx/store';
 import {AppState} from '@ofStore/index';
 import {ProcessesService} from 'app/business/services/processes.service';
 import {AppService} from '@ofServices/app.service';
-import {AcknowledgeService} from '@ofServices/acknowledge.service';
+import {AcknowledgeService} from 'app/business/services/acknowledge.service';
 import {UserService} from '@ofServices/user.service';
 import {UserWithPerimeters} from '@ofModel/userWithPerimeters.model';
 import {EntitiesService} from '@ofServices/entities.service';
@@ -83,7 +83,6 @@ export class CardListComponent implements AfterViewChecked, OnInit {
 
     private acknowledgeVisibleCardInTheFeed(lightCard: LightCard): void {
         const processDefinition = this.processesService.getProcess(lightCard.process);
-
         if (
             !lightCard.hasBeenAcknowledged &&
             this.isCardPublishedBeforeAckDemand(lightCard) &&
