@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2023, RTE (http://www.rte-france.com)
+/* Copyright (c) 2023, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -10,12 +10,12 @@
 import {Injectable} from '@angular/core';
 import * as moment from 'moment';
 import {TranslateService} from '@ngx-translate/core';
-import {HttpClient} from '@angular/common/http';
 import {Observable} from 'rxjs';
-import {environment} from '@env/environment';
 import {catchError, tap} from 'rxjs/operators';
-import {ConfigService} from '../business/services/config.service';
+import {ConfigService} from 'app/business/services/config.service';
 import {Utilities} from 'app/business/common/utilities';
+import {ConfigServer} from '../server/config.server';
+import {ServerResponseStatus} from '../server/serverResponse';
 
 declare const opfab: any;
 
@@ -27,11 +27,10 @@ export class I18nService {
     private _locale: string;
 
     constructor(
-        private httpClient: HttpClient,
+        private configServer: ConfigServer,
         private translate: TranslateService,
         private configService: ConfigService
     ) {
-        I18nService.localUrl = `${environment.paths.i18n}`;
     }
 
 
@@ -72,14 +71,18 @@ export class I18nService {
     }
 
     public loadLocale(locale: string): Observable<any> {
-        return this.httpClient.get(`${I18nService.localUrl}${locale}.json`).pipe(
+        return this.configServer.getLocale(locale).pipe(
             tap({
-                next: (translation) => this.translate.setTranslation(locale, translation, true),
-                error: () =>
-                    console.log(
-                        new Date().toISOString(),
-                        `Error : impossible to load locale ${I18nService.localUrl}${locale}.json`
-                    )
+                next: (serverResponse) => {
+                    if (serverResponse.status === ServerResponseStatus.OK) {
+                     this.translate.setTranslation(locale, serverResponse.data, true)
+                    }
+                    else {
+                        console.log(
+                            new Date().toISOString(),
+                            `Error : impossible to load locale ${I18nService.localUrl}${locale}.json`
+                        )
+                    }},
             })
         );
     }

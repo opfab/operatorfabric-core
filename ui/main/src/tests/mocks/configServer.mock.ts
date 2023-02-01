@@ -17,6 +17,7 @@ export class ConfigServerMock implements ConfigServer {
     private webUiConf = new ReplaySubject<ServerResponse<any>>();
     private menuConf = new ReplaySubject<ServerResponse<any>>();
     private monitoringConf = new ReplaySubject<ServerResponse<MonitoringConfig>>;
+    private locale = new ReplaySubject<ServerResponse<any>>();
 
     getWebUiConfiguration(): Observable<ServerResponse<any>> {
         return this.webUiConf.asObservable();
@@ -28,6 +29,10 @@ export class ConfigServerMock implements ConfigServer {
 
     getMonitoringConfiguration(): Observable<ServerResponse<MonitoringConfig>> {
         return this.monitoringConf.asObservable();
+    }
+
+    getLocale(localUrl: string): Observable<ServerResponse<any>> {
+        return this.locale.asObservable();
     }
 
     setResponseForWebUIConfiguration(webuiConf:ServerResponse<any>) {

@@ -18,7 +18,7 @@ import {appReducer, AppState} from '@ofStore/index';
 import {HttpClientTestingModule} from '@angular/common/http/testing';
 import {ProcessesService} from 'app/business/services/processes.service';
 import {Router} from '@angular/router';
-import {I18nService} from '@ofServices/i18n.service';
+import {I18nService} from 'app/business/services/i18n.service';
 import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
 import {CountDownModule} from '../countdown/countdown.module';
 import createSpyObj = jasmine.createSpyObj;

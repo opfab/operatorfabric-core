@@ -17,4 +17,5 @@ export abstract class ConfigServer {
     abstract getWebUiConfiguration():Observable<ServerResponse<any>>;
     abstract getMenuConfiguration():Observable<ServerResponse<any>>;
     abstract getMonitoringConfiguration(): Observable<ServerResponse<MonitoringConfig>>;
+    abstract getLocale(locale: string):Observable<ServerResponse<any>>;
 }
