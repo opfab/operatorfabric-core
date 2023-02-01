@@ -15,6 +15,7 @@
       "userCard" : {
         "template" : "usercard_message",
         "lttdVisible" : false,
+        "endDateVisible" : false,
         "expirationDateVisible" : false
       },
       "templateName": "template",
