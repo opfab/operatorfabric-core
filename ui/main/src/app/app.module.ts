@@ -53,6 +53,8 @@ import {AngularAcknowledgeServer} from './server/angularAcknowledgement.server';
 import {AngularOpfabEventStreamServer} from './server/angularOpfabEventStream.server';
 import {OpfabEventStreamServer} from './business/server/opfabEventStream.server';
 import { SettingsServer } from './business/server/settings.server';
+import {AngularExternalDevicesServer} from './server/angularExternalDevices.server';
+import {ExternalDevicesServer} from './business/server/external-devices.server';
 
 @NgModule({
     imports: [
@@ -109,7 +111,8 @@ import { SettingsServer } from './business/server/settings.server';
         {provide: ConfigServer, useClass: AngularConfigServer},
         {provide: ProcessServer, useClass: AngularProcessServer},
         {provide: SettingsServer, useClass: AngularSettingsServer},
-        {provide: OpfabEventStreamServer, useClass: AngularOpfabEventStreamServer}
+        {provide: OpfabEventStreamServer, useClass: AngularOpfabEventStreamServer},
+        {provide: ExternalDevicesServer, useClass: AngularExternalDevicesServer},
     ],
     bootstrap: [AppComponent]
 })

@@ -9,11 +9,12 @@
  */
 
 import {MessageLevel} from '@ofModel/message.model';
-import {OpfabLoggerService} from './logs/opfab-logger.service';
+import {OpfabLoggerService} from '../../services/logs/opfab-logger.service';
 import {throwError} from 'rxjs';
 import {HttpErrorResponse} from '@angular/common/http';
 import {Injectable} from '@angular/core';
-import {AlertMessageService} from '../business/services/alert-message.service';
+import {ServerResponse, ServerResponseStatus} from 'app/business/server/serverResponse';
+import {AlertMessageService} from './alert-message.service';
 
 /** This class describes what errors should be thrown depending on the API `Response`
  * Services requiring this behaviour should extend this class (see `GroupService` for example).
@@ -37,6 +38,18 @@ export abstract class ErrorService {
             this.alertMessageService.sendAlertMessage({message: '', i18n: {key: "errors.notAllowed"}, level: MessageLevel.ERROR});
         }
         this.loggerService.error(error.status + " " + error.statusText + " " + error.message);
+        return throwError(() => error);
+
+    }
+
+    protected handleServerResponseError(error: ServerResponse<any>) {
+        if (error.status === ServerResponseStatus.NOT_FOUND) {
+            this.alertMessageService.sendAlertMessage({message: '', i18n: {key: "errors.notFound"}, level: MessageLevel.ERROR});
+        }
+        if (error.status=== ServerResponseStatus.FORBIDDEN) {
+            this.alertMessageService.sendAlertMessage({message: '', i18n: {key: "errors.notAllowed"}, level: MessageLevel.ERROR});
+        }
+        this.loggerService.error(error.status + " " + error.statusMessage);
         return throwError(() => error);
 
     }

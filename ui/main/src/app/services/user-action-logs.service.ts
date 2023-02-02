@@ -11,7 +11,7 @@ import {environment} from '@env/environment';
 import {HttpClient, HttpParams} from '@angular/common/http';
 import {Observable} from 'rxjs';
 import {Injectable} from '@angular/core';
-import {ErrorService} from '@ofServices/error-service';
+import {ErrorService} from 'app/business/services/error-service';
 import {OpfabLoggerService} from './logs/opfab-logger.service';
 import {UserActionLog} from '@ofModel/user-action-log.model';
 import {Page} from '@ofModel/page.model';
