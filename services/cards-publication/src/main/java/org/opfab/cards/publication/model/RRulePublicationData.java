@@ -34,6 +34,8 @@ public class RRulePublicationData implements RRule {
 
     private FreqEnum freq;
     private Integer count;
+    @Builder.Default
+    private Integer interval = 1;
 
     @Builder.Default
     private DayEnum wkst = DayEnum.MO;
@@ -41,6 +43,8 @@ public class RRulePublicationData implements RRule {
     private List<Integer> bymonth;
     private List<Integer> byhour;
     private List<Integer> byminute;
+    private List<Integer> bysetpos;
+    private List<Integer> bymonthday;
     @Builder.Default
     private String tzid = "Europe/Paris";
 }

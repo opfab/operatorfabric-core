@@ -88,7 +88,9 @@ export function getNextDateTimeFromRRule(startingDate: number, card: Card): numb
             bymonth: card.rRule.bymonth,
             byweekday: byweekdayForRRule,
             byhour: byhourSorted,
-            byminute: byminuteSorted
+            byminute: byminuteSorted,
+            bysetpos: card.rRule.bysetpos,
+            bymonthday: card.rRule.bymonthday
         });
 
         // Workaround I've found to have the right hour for dtstart. Otherwise, it is transformed in UTC time and so the result is not the good one

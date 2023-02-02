@@ -27,10 +27,13 @@ public class RRuleConsultationData implements RRule {
 
     private FreqEnum freq;
     private Integer count;
+    private Integer interval;
     private DayEnum wkst;
     private List<DayEnum> byweekday;
     private List<Integer> bymonth;
     private List<Integer> byhour;
     private List<Integer> byminute;
+    private List<Integer> bysetpos;
+    private List<Integer> bymonthday;
     private String tzid;
 }
