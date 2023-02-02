@@ -25,7 +25,7 @@ import {GroupedCardsService} from '@ofServices/grouped-cards.service';
 import {TypeOfStateEnum} from '@ofModel/processes.model';
 import {SoundNotificationService} from '@ofServices/sound-notification.service';
 import {DateTimeFormatterService} from 'app/business/services/date-time-formatter.service';
-import {MapService} from '@ofServices/map.service';
+import {MapService} from 'app/business/services/map.service';
 import {TranslateService} from '@ngx-translate/core';
 
 @Component({

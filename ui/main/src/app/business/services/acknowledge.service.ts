@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2022, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2023, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -16,7 +16,7 @@ import {Observable} from 'rxjs';
 import {environment} from '@env/environment';
 import {AcknowledgeServer} from '../server/acknowledge.server';
 import {ServerResponse, ServerResponseStatus} from '../server/serverResponse';
-import {UserPermissionsService} from '@ofServices/user-permissions.service';
+import {UserPermissionsService} from 'app/business/services/user-permissions.service';
 import {LightCardsStoreService} from '@ofServices/lightcards/lightcards-store.service';
 
 @Injectable({

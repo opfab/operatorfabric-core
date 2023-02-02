@@ -23,7 +23,7 @@ import {ClearLightCardSelectionAction} from '@ofStore/actions/light-card.actions
 import {UserService} from '@ofServices/user.service';
 import {EntitiesService} from '@ofServices/entities.service';
 import {NgbModalRef} from '@ng-bootstrap/ng-bootstrap';
-import {UserPermissionsService} from '@ofServices/user-permissions.service';
+import {UserPermissionsService} from 'app/business/services/user-permissions.service';
 import {DisplayContext} from '@ofModel/templateGateway.model';
 import {LightCardsStoreService} from '@ofServices/lightcards/lightcards-store.service';
 import {CardComponent} from '../../card.component';

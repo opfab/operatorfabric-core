@@ -17,7 +17,7 @@ import {State} from '@ofModel/processes.model';
 import {AlertMessageService} from 'app/business/services/alert-message.service';
 import {AppService, PageType} from '@ofServices/app.service';
 import {CardService} from '@ofServices/card.service';
-import {UserPermissionsService} from '@ofServices/user-permissions.service';
+import {UserPermissionsService} from 'app/business/services/user-permissions.service';
 import {UserService} from '@ofServices/user.service';
 import {AppState} from '@ofStore/index';
 import {selectCurrentUrl} from '@ofStore/selectors/router.selectors';

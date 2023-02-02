@@ -12,10 +12,9 @@ import {userRight, UserWithPerimeters} from '@ofModel/userWithPerimeters.model';
 import {Card} from '@ofModel/card.model';
 import {Process, ShowAcknowledgmentFooterEnum} from '@ofModel/processes.model';
 import {RightsEnum} from '@ofModel/perimeter.model';
-import {ConfigService} from 'app/business/services/config.service';
 import {EntitiesService} from '@ofServices/entities.service';
-import {ProcessesService} from "app/business/services/processes.service";
-import {User} from "@ofModel/user.model";
+import {ProcessesService} from 'app/business/services/processes.service';
+import {User} from '@ofModel/user.model';
 
 /** This class contains functions allowing to know if the user has the right to answer to the card or not */
 
@@ -23,9 +22,7 @@ import {User} from "@ofModel/user.model";
     providedIn: 'root'
 })
 export class UserPermissionsService {
-    constructor(private configService: ConfigService,
-                private entitiesService: EntitiesService,
-                private processesService: ProcessesService) {}
+    constructor(private entitiesService: EntitiesService, private processesService: ProcessesService) {}
 
     public isUserEnabledToRespond(user: UserWithPerimeters, card: Card, processDefinition: Process): boolean {
         if (this.isLttdExpired(card)) return false;
@@ -71,21 +68,17 @@ export class UserPermissionsService {
         return permission;
     }
 
-    private isUserInEntityAllowedToEditCard(user: User, card: Card) : boolean {
-        if (! card.entitiesAllowedToEdit) {
+    private isUserInEntityAllowedToEditCard(user: User, card: Card): boolean {
+        if (!card.entitiesAllowedToEdit) {
             return false;
         }
 
-        const userEntitiesAllowed = user.entities.filter((entity) =>
-            card.entitiesAllowedToEdit.includes(entity)
-        );
+        const userEntitiesAllowed = user.entities.filter((entity) => card.entitiesAllowedToEdit.includes(entity));
         return userEntitiesAllowed.length > 0;
     }
 
     public isUserAuthorizedToSeeAcknowledgmentFooter(userWithPerimeters: UserWithPerimeters, card: Card) {
-
-        const showAcknowledgmentFooter =
-            this.processesService.getShowAcknowledgmentFooterForACard(card);
+        const showAcknowledgmentFooter = this.processesService.getShowAcknowledgmentFooterForACard(card);
 
         if (showAcknowledgmentFooter === ShowAcknowledgmentFooterEnum.FOR_ALL_USERS) {
             return true;
