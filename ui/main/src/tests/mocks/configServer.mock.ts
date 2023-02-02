@@ -11,6 +11,7 @@ import {Observable, ReplaySubject} from 'rxjs';
 import {ConfigServer} from 'app/business/server/config.server';
 import {MonitoringConfig} from '@ofModel/monitoringConfig.model';
 import {ServerResponse} from 'app/business/server/serverResponse';
+import { RealTimeScreens } from '@ofModel/real-time-screens.model';
 
 export class ConfigServerMock implements ConfigServer {
 
@@ -18,6 +19,7 @@ export class ConfigServerMock implements ConfigServer {
     private menuConf = new ReplaySubject<ServerResponse<any>>();
     private monitoringConf = new ReplaySubject<ServerResponse<MonitoringConfig>>;
     private locale = new ReplaySubject<ServerResponse<any>>();
+    private realtimescreenconfiguration = new ReplaySubject<ServerResponse<RealTimeScreens>>;
 
     getWebUiConfiguration(): Observable<ServerResponse<any>> {
         return this.webUiConf.asObservable();
@@ -33,6 +35,10 @@ export class ConfigServerMock implements ConfigServer {
 
     getLocale(localUrl: string): Observable<ServerResponse<any>> {
         return this.locale.asObservable();
+    }
+
+    getRealTimeScreenConfiguration(): Observable<ServerResponse<RealTimeScreens>> {
+        return this.realtimescreenconfiguration.asObservable();
     }
 
     setResponseForWebUIConfiguration(webuiConf:ServerResponse<any>) {

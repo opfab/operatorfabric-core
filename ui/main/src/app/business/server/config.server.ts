@@ -9,6 +9,7 @@
 
 
 import {MonitoringConfig} from "@ofModel/monitoringConfig.model";
+import {RealTimeScreens} from "@ofModel/real-time-screens.model";
 import {Observable} from "rxjs";
 import {ServerResponse} from "./serverResponse";
 
@@ -18,4 +19,5 @@ export abstract class ConfigServer {
     abstract getMenuConfiguration():Observable<ServerResponse<any>>;
     abstract getMonitoringConfiguration(): Observable<ServerResponse<MonitoringConfig>>;
     abstract getLocale(locale: string):Observable<ServerResponse<any>>;
+    abstract getRealTimeScreenConfiguration():Observable<ServerResponse<RealTimeScreens>>;
 }

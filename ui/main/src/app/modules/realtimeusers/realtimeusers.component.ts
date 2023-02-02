@@ -1,4 +1,4 @@
-/* Copyright (c) 2021-2022, RTE (http://www.rte-france.com)
+/* Copyright (c) 2021-2023, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -9,14 +9,16 @@
 
 import {Component, OnDestroy, OnInit} from '@angular/core';
 import {UserService} from '@ofServices/user.service';
-import {RealTimeScreensService} from '@ofServices/real-time-screens.service';
 import {RealTimeScreen} from '@ofModel/real-time-screens.model';
-import {EntitiesService} from '@ofServices/entities.service';
-import {GroupsService} from '@ofServices/groups.service';
 import {FormControl, FormGroup} from '@angular/forms';
 import {UserPreferencesService} from '@ofServices/user-preference.service';
 import {Utilities} from '../../business/common/utilities';
 import {MultiSelectConfig} from '@ofModel/multiselect.model';
+import {EntitiesService} from '@ofServices/entities.service';
+import {GroupsService} from '@ofServices/groups.service';
+import {ConfigServer} from 'app/business/server/config.server';
+import {ServerResponseStatus} from 'app/business/server/serverResponse';
+import {OpfabLoggerService} from 'app/business/services/logs/opfab-logger.service';
 
 @Component({
     selector: 'of-realtimeusers',
@@ -45,10 +47,11 @@ export class RealtimeusersComponent implements OnInit, OnDestroy {
 
     constructor(
         private userService: UserService,
-        private realTimeScreensService: RealTimeScreensService,
+        private userPreferences: UserPreferencesService,
         private entitiesService: EntitiesService,
         private groupsService: GroupsService,
-        private userPreferences: UserPreferencesService
+        private configServer: ConfigServer,
+        private logger: OpfabLoggerService
     ) {}
 
     ngOnInit(): void {
@@ -58,24 +61,32 @@ export class RealtimeusersComponent implements OnInit, OnDestroy {
 
         this.changeScreenWhenSelectRealTimeScreen();
 
-        this.realTimeScreensService.loadRealTimeScreensData().subscribe((result) => {
-            this.realTimeScreens = result.realTimeScreens;
+        this.configServer.getRealTimeScreenConfiguration().subscribe((result) => {
 
-            this.realTimeScreens.forEach((realTimeScreen, index) => {
-                this.realTimeScreensOptions.push({value: String(index), label: realTimeScreen.screenName});
-            });
-            this.isRealTimeScreensLoaded = true;
+            if (result.status === ServerResponseStatus.OK) {
+                this.logger.info('List of realTimeScreens loaded');
+            
+                
+                this.realTimeScreens = result.data.realTimeScreens;
 
-            const screenIndexToDisplayFirst = this.userPreferences.getPreference(
-                'opfab.realTimeScreens.screenIndexToDisplayFirst'
-            );
-            if (!!screenIndexToDisplayFirst) {
-                this.displayRealTimeScreenIndex(Number(screenIndexToDisplayFirst));
+                this.realTimeScreens.forEach((realTimeScreen, index) => {
+                    this.realTimeScreensOptions.push({value: String(index), label: realTimeScreen.screenName});
+                });
+                this.isRealTimeScreensLoaded = true;
+
+                const screenIndexToDisplayFirst = this.userPreferences.getPreference(
+                    'opfab.realTimeScreens.screenIndexToDisplayFirst'
+                );
+                if (!!screenIndexToDisplayFirst) {
+                    this.displayRealTimeScreenIndex(Number(screenIndexToDisplayFirst));
+                } else {
+                    this.displayRealTimeScreenIndex(0);
+                }
+
+                this.loadColumnsNumberPerScreenAndScreenColumn();
             } else {
-                this.displayRealTimeScreenIndex(0);
+                this.logger.error('The real time screen could not be loaded');
             }
-
-            this.loadColumnsNumberPerScreenAndScreenColumn();
         });
 
         this.refresh();
