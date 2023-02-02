@@ -12,6 +12,7 @@ import {Injectable} from '@angular/core';
 import {environment} from '@env/environment';
 import {UIMenuFile} from '@ofModel/menu.model';
 import {MonitoringConfig} from '@ofModel/monitoringConfig.model';
+import {RealTimeScreens} from '@ofModel/real-time-screens.model';
 import {ServerResponse} from 'app/business/server/serverResponse';
 import {map, Observable} from 'rxjs';
 import {ConfigServer} from '../business/server/config.server';
@@ -24,12 +25,14 @@ export class AngularConfigServer extends AngularServer implements ConfigServer {
     private configUrl: string;
     private monitoringConfigUrl: string;
     private localUrl: string;
+    readonly realTimeScreensUrl: string;
 
     constructor(private httpClient: HttpClient) {
         super();
         this.configUrl = `${environment.urls.config}`;
         this.monitoringConfigUrl = `${environment.urls.monitoringConfig}`;
         this.localUrl = `${environment.paths.i18n}`;
+        this.realTimeScreensUrl = `${environment.urls.realTimeScreens}`;
     }
 
     getWebUiConfiguration(): Observable<ServerResponse<any>> {
@@ -56,5 +59,9 @@ export class AngularConfigServer extends AngularServer implements ConfigServer {
 
     getLocale(locale: string): Observable<ServerResponse<any>> {
         return this.processHttpResponse(this.httpClient.get(`${this.localUrl}${locale}.json`));
+    }
+
+    getRealTimeScreenConfiguration(): Observable<ServerResponse<RealTimeScreens>> {
+        return this.processHttpResponse(this.httpClient.get<RealTimeScreens>(`${this.realTimeScreensUrl}`))
     }
 }
