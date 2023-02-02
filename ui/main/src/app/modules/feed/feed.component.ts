@@ -12,7 +12,6 @@ import {Store} from '@ngrx/store';
 import {AppState} from '@ofStore/index';
 import {Observable, Subject} from 'rxjs';
 import {LightCard} from '@ofModel/light-card.model';
-import * as feedSelectors from '@ofSelectors/feed.selectors';
 import {delay, map,takeUntil} from 'rxjs/operators';
 import * as moment from 'moment';
 import {LightCardsFeedFilterService} from '@ofServices/lightcards/lightcards-feed-filter.service';
@@ -20,6 +19,7 @@ import {ConfigService} from 'app/business/services/config.service';
 import {Router} from '@angular/router';
 import {selectCurrentUrl} from '@ofStore/selectors/router.selectors';
 import {UserService} from '@ofServices/user.service';
+import {SelectedCardService} from 'app/business/services/selectedCard.service';
 
 @Component({
     selector: 'of-cards',
@@ -41,7 +41,8 @@ export class FeedComponent implements OnInit,OnDestroy {
         private lightCardsFeedFilterService: LightCardsFeedFilterService,
         private configService: ConfigService,
         private router: Router,
-        private user : UserService
+        private user : UserService,
+        private selectedCardService : SelectedCardService
     ) {
         this.maxNbOfCardsToDisplay = this.configService.getConfigValue('feed.card.maxNbOfCardsToDisplay', 100);
         this.configureExperimentalHallwayMode();
@@ -56,7 +57,7 @@ export class FeedComponent implements OnInit,OnDestroy {
     }
 
     ngOnInit() {
-        this.selection$ = this.store.select(feedSelectors.selectLightCardSelection);
+        this.selection$ = this.selectedCardService.getSelectCardIdChanges();
 
         moment.updateLocale('en', {
             week: {

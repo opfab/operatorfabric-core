@@ -26,9 +26,7 @@ import {TestBed} from '@angular/core/testing';
 
 export const emptyAppState4Test: AppState = {
     router: null,
-    feed: null,
     authentication: null,
-    card: null,
     globalStyle: null
 };
 

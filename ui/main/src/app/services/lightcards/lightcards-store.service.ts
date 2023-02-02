@@ -31,9 +31,10 @@ import {OpfabEventStreamService} from 'app/business/services/opfabEventStream.se
 import {CardOperationType} from '@ofModel/card-operation.model';
 import {LogOption, OpfabLoggerService} from 'app/business/services/logs/opfab-logger.service';
 import {LoadCardAction} from '@ofStore/actions/card.actions';
-import {RemoveLightCardAction} from '@ofStore/actions/light-card.actions';
 import {AppState} from '@ofStore/index';
 import {Store} from '@ngrx/store';
+import {AppService} from '@ofServices/app.service';
+import {SelectedCardService} from 'app/business/services/selectedCard.service';
 
 /**
  *
@@ -48,7 +49,7 @@ import {Store} from '@ngrx/store';
  *
  * This feature was previously implemented with NGRX, but it was not fast enough, so it has been changed with a custom implementation
  *
- * This class does not hold the selected lightCard or the current loaded card, this is done via NGRX store.
+ * This class does not hold the selected lightCard or the current loaded card.
  */
 @Injectable({
     providedIn: 'root'
@@ -71,7 +72,6 @@ export class LightCardsStoreService {
     private nbCardLoadedInPreviousHalfSecondInterval = 0;
     private loadingInProgress = new Subject();
     private receivedAcksSubject = new Subject<{cardUid: string; entitiesAcks: string[]}>();
-    private selectedCardId: string = null;
 
     constructor(
         private userService: UserService,
@@ -79,6 +79,8 @@ export class LightCardsStoreService {
         private entitiesService: EntitiesService,
         private opfabEventStreamService: OpfabEventStreamService,
         private store: Store<AppState>,
+        private appService: AppService,
+        private selectedCardService: SelectedCardService,
         private logger: OpfabLoggerService
     ) {
         this.getLightCardsWithLimitedUpdateRate().subscribe();
@@ -167,7 +169,7 @@ export class LightCardsStoreService {
                             LogOption.LOCAL_AND_REMOTE
                         );
                         this.addOrUpdateLightCard(operation.card);
-                        if (operation.card.id === this.selectedCardId)
+                        if (operation.card.id === this.selectedCardService.getSelectedCardId())
                             this.store.dispatch(new LoadCardAction({id: operation.card.id}));
                         break;
                     case CardOperationType.DELETE:
@@ -176,8 +178,6 @@ export class LightCardsStoreService {
                             LogOption.LOCAL_AND_REMOTE
                         );
                         this.removeLightCard(operation.cardId);
-                        if (operation.cardId === this.selectedCardId)
-                            this.store.dispatch(new RemoveLightCardAction({card: operation.cardId}));
                         break;
                     case CardOperationType.ACK:
                         this.logger.info(
@@ -385,6 +385,7 @@ export class LightCardsStoreService {
     }
 
     public removeLightCard(cardId) {
+        this.closeCardIfOpen(cardId);
         const card = this.lightCards.get(cardId);
         if (!card) {
             // is a child card
@@ -394,6 +395,13 @@ export class LightCardsStoreService {
             this.lightCards.delete(cardId);
         }
         this.lightCardsEvents.next(this.lightCards);
+    }
+
+    private closeCardIfOpen(cardId) {
+        if (cardId === this.selectedCardService.getSelectedCardId()) {
+            this.appService.closeDetails();
+            this.selectedCardService.setSelectedCardId(null);
+        }
     }
 
     private removeChildCard(cardId) {
@@ -430,10 +438,6 @@ export class LightCardsStoreService {
             card.hasBeenAcknowledged = this.isLightCardHasBeenAcknowledgedByUserOrByUserEntity(card);
             this.lightCardsEvents.next(this.lightCards);
         }
-    }
-
-    public setSelectedCard(cardId) {
-        this.selectedCardId = cardId;
     }
 
     public getReceivedAcks(): Observable<{cardUid: string; entitiesAcks: string[]}> {

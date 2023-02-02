@@ -20,5 +20,5 @@
 </of-spinner>
 
 
-<div *ngIf="cardNotFound" id="opfab-feed-card-not-found" style="font-size:1.5em; text-align:center; padding-top: 3em;"
+<div *ngIf="cardNotFound && !cardLoadingInProgress" id="opfab-feed-card-not-found" style="font-size:1.5em; text-align:center; padding-top: 3em;"
   translate>feed.cardNotFound</div>

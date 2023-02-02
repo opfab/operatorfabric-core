@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2022, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2023, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -11,8 +11,8 @@ import {Injectable} from '@angular/core';
 import {Router} from '@angular/router';
 import {Store} from '@ngrx/store';
 import {AppState} from '@ofStore/index';
-import {ClearLightCardSelectionAction} from '@ofStore/actions/light-card.actions';
 import {selectCurrentUrl} from '@ofSelectors/router.selectors';
+import {SelectedCardService} from 'app/business/services/selectedCard.service';
 
 export enum PageType {
     UNKNOWN,
@@ -43,7 +43,7 @@ export class AppService {
         ['usercard', PageType.USERCARD]
     ]);
 
-    constructor(private store: Store<AppState>, private _router: Router) {
+    constructor(private store: Store<AppState>, private _router: Router, private selectedCardService: SelectedCardService) {
         this.store.select(selectCurrentUrl).subscribe((url) => {
             if (!!url) {
                 const urlParts = url.split('/');
@@ -62,7 +62,7 @@ export class AppService {
     }
 
     closeDetails() {
-        this.store.dispatch(new ClearLightCardSelectionAction());
+        this.selectedCardService.clearSelectedCardId();
         this._router.navigate(['/' + this._currentPath]);
     }
 

@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2022, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2023, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -8,20 +8,23 @@
  */
 
 import {Injectable} from '@angular/core';
-import {Action} from '@ngrx/store';
 import {Actions, createEffect, ofType} from '@ngrx/effects';
 import {EMPTY, Observable} from 'rxjs';
 import {ROUTER_NAVIGATION, ROUTER_REQUEST, RouterNavigationAction, RouterRequestAction} from '@ngrx/router-store';
 import {filter, map, switchMap} from 'rxjs/operators';
 import {LoadCardAction} from '@ofActions/card.actions';
-import {ClearLightCardSelectionAction, SelectLightCardAction} from '@ofActions/light-card.actions';
 import {LogOption, OpfabLoggerService} from 'app/business/services/logs/opfab-logger.service';
+import {SelectedCardService} from 'app/business/services/selectedCard.service';
 
 @Injectable()
 export class CustomRouterEffects {
-    constructor(private actions$: Actions, private opfabLogger: OpfabLoggerService) {}
+    constructor(
+        private actions$: Actions,
+        private opfabLogger: OpfabLoggerService,
+        private selectedCardService: SelectedCardService
+    ) {}
 
-    navigateToCard: Observable<Action> = createEffect(() =>
+    navigateToCard: Observable<any> = createEffect(() =>
         this.actions$.pipe(
             ofType(ROUTER_NAVIGATION),
             filter((action: RouterNavigationAction) => {
@@ -29,25 +32,28 @@ export class CustomRouterEffects {
             }),
             switchMap((action) => {
                 const routerState: any = action.payload.routerState;
-                return [
-                    new LoadCardAction({id: routerState.params['cid']}),
-                    new SelectLightCardAction({selectedCardId: routerState.params['cid']})
-                ];
+                this.selectedCardService.setSelectedCardId(routerState.params['cid']);
+                return [new LoadCardAction({id: routerState.params['cid']})];
             })
         )
     );
 
-    navigateAwayFromFeed: Observable<Action> = createEffect(() =>
-        this.actions$.pipe(
-            ofType(ROUTER_REQUEST),
-            filter((action: RouterRequestAction) => {
-                return (
-                    action.payload.routerState.url.indexOf('/feed/cards/') >= 0 &&
-                    action.payload.event.url.indexOf('/feed/') < 0
-                ); //If navigating from /feed/cards/ to somewhere else
-            }),
-            map(() => new ClearLightCardSelectionAction())
-        )
+    navigateAwayFromFeed: Observable<any> = createEffect(
+        () =>
+            this.actions$.pipe(
+                ofType(ROUTER_REQUEST),
+                filter((action: RouterRequestAction) => {
+                    return (
+                        action.payload.routerState.url.indexOf('/feed/cards/') >= 0 &&
+                        action.payload.event.url.indexOf('/feed/') < 0
+                    ); //If navigating from /feed/cards/ to somewhere else
+                }),
+                map(() => {
+                    this.selectedCardService.clearSelectedCardId();
+                    return EMPTY;
+                })
+            ),
+        {dispatch: false}
     );
 
     remoteLogNavigate: Observable<any> = createEffect(

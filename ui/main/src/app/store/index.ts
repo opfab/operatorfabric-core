@@ -15,38 +15,28 @@ import {ActionReducerMap, MetaReducer} from '@ngrx/store';
 import {environment} from '@env/environment';
 import {storeFreeze} from 'ngrx-store-freeze';
 import {CardEffects} from '@ofEffects/card.effects';
-import {CardOperationEffects} from '@ofEffects/card-operation.effects';
 import {AuthenticationEffects} from '@ofEffects/authentication.effects';
-import {CardFeedState} from '@ofStates/feed.state';
-import {reducer as lightCardReducer} from '@ofStore/reducers/light-card.reducer';
-import {reducer as cardReducer} from '@ofStore/reducers/card.reducer';
 import {reducer as globalStyleReducer} from '@ofStore/reducers/global-style.reducer';
 import {AuthState} from '@ofStates/authentication.state';
-import {CardState} from '@ofStates/card.state';
 import {CustomRouterEffects} from '@ofEffects/custom-router.effects';
 
 import {GlobalStyleState} from './states/global-style.state';
 
 export interface AppState {
     router: RouterReducerState<RouterStateUrl>;
-    feed: CardFeedState;
     authentication: AuthState;
-    card: CardState;
     globalStyle: GlobalStyleState;
 }
 
 export const appEffects = [
     CardEffects,
-    CardOperationEffects,
     CustomRouterEffects,
     AuthenticationEffects
 ];
 
 export const appReducer: ActionReducerMap<AppState> = {
     router: fromRouter.routerReducer,
-    feed: lightCardReducer,
     authentication: authenticationReducer,
-    card: cardReducer,
     globalStyle: globalStyleReducer
 };
 
