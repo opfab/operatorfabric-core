@@ -28,7 +28,7 @@ import {Group} from '@ofModel/group.model';
 import {Entity} from '@ofModel/entity.model';
 import {EntitiesService} from '@ofServices/entities.service';
 import {PerimetersCellRendererComponent} from '../cell-renderers/perimeters-cell-renderer.component';
-import {ExportService} from '@ofServices/export.service';
+import {ExcelExport} from 'app/business/common/excel-export';
 import {IdCellRendererComponent} from '../cell-renderers/id-cell-renderer.component';
 import {ArrayCellRendererComponent} from '../cell-renderers/array-cell-renderer.component';
 
@@ -312,7 +312,7 @@ export abstract class AdminTableDirective implements OnInit, OnDestroy {
     }
 
     export(): void {
-        ExportService.exportJsonToExcelFile(this.getDataForExportFile(), this.tableType);
+        ExcelExport.exportJsonToExcelFile(this.getDataForExportFile(), this.tableType);
     }
 
     ngOnDestroy() {

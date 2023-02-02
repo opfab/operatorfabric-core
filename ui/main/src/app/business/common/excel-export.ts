@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2021, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2023, RTE (http://www.rte-france.com)
  * Copyright (c) 2020, RTEi (http://www.rte-international.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
@@ -13,7 +13,7 @@ import {saveAs} from 'file-saver-es';
 const EXCEL_TYPE = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8';
 const EXCEL_EXTENSION = '.xlsx';
 
-export abstract class ExportService {
+export class ExcelExport {
     public static exportJsonToExcelFile(json: any[], excelFileName: string): void {
         const opts: XLSX.JSON2SheetOpts = {dateNF: 'dd/mm/yy hh:mm'};
         this.exportWorksheet(XLSX.utils.json_to_sheet(json, opts), excelFileName);

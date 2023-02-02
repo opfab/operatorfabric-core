@@ -19,7 +19,7 @@ import {NgbModal, NgbModalOptions, NgbModalRef} from '@ng-bootstrap/ng-bootstrap
 import {CardService} from '@ofServices/card.service';
 import {LightCard} from '@ofModel/light-card.model';
 import {Page} from '@ofModel/page.model';
-import {ExportService} from '@ofServices/export.service';
+import {ExcelExport} from 'app/business/common/excel-export';
 import {TranslateService} from '@ngx-translate/core';
 import {UserPreferencesService} from '@ofServices/user-preference.service';
 import {Utilities} from 'app/business/common/utilities';
@@ -353,7 +353,7 @@ export class ArchivesComponent implements OnDestroy, OnInit {
                             });
                     }
                 });
-                ExportService.exportJsonToExcelFile(exportArchiveData, 'Archive');
+                ExcelExport.exportJsonToExcelFile(exportArchiveData, 'Archive');
                 this.modalRef.close();
             });
     }
