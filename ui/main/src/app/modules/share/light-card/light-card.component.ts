@@ -40,7 +40,6 @@ export class LightCardComponent implements OnInit, OnDestroy {
     @Input() public lightCard: LightCard;
     @Input() public displayUnreadIcon = true;
     @Input() displayContext: any = DisplayContext.REALTIME;
-    @Input() lightCardDisplayedInMapComponent = false;
 
     currentPath: any;
     protected _i18nPrefix: string;
