@@ -18,7 +18,7 @@ import {DateTimeFormatterService} from 'app/business/services/date-time-formatte
 import {CardService} from '@ofServices/card.service';
 import {LightCard} from '@ofModel/light-card.model';
 import {Page} from '@ofModel/page.model';
-import {ExportService} from '@ofServices/export.service';
+import {ExcelExport} from 'app/business/common/excel-export';
 import {TranslateService} from '@ngx-translate/core';
 import {ArchivesLoggingFiltersComponent} from '../share/archives-logging-filters/archives-logging-filters.component';
 import {EntitiesService} from '@ofServices/entities.service';
@@ -298,7 +298,7 @@ export class LoggingComponent implements OnDestroy, OnInit, AfterViewInit {
                             [representativeColumnName]: this.translateColumn(card.representative)
                         });
                 });
-                ExportService.exportJsonToExcelFile(exportArchiveData, 'Logging');
+                ExcelExport.exportJsonToExcelFile(exportArchiveData, 'Logging');
                 this.modalRef.close();
             });
     }

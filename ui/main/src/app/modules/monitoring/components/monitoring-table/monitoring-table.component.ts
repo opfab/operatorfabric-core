@@ -11,7 +11,7 @@
 import {Component, ElementRef, Input, OnChanges, OnDestroy, ViewChild} from '@angular/core';
 import {LineOfMonitoringResult} from '@ofModel/line-of-monitoring-result.model';
 import {TranslateService} from '@ngx-translate/core';
-import {ExportService} from '@ofServices/export.service';
+import {ExcelExport} from 'app/business/common/excel-export';
 import {takeUntil} from 'rxjs/operators';
 import {Observable, Subject} from 'rxjs';
 import {ClearLightCardSelectionAction, SelectLightCardAction} from '@ofActions/light-card.actions';
@@ -345,7 +345,7 @@ export class MonitoringTableComponent implements OnChanges, OnDestroy {
         // generic export
         else {
             this.initStandardExportMonitoringData();
-            ExportService.exportJsonToExcelFile(this.exportMonitoringData, 'Monitoring');
+            ExcelExport.exportJsonToExcelFile(this.exportMonitoringData, 'Monitoring');
         }
     }
 
@@ -359,7 +359,7 @@ export class MonitoringTableComponent implements OnChanges, OnDestroy {
             this.exportProgress = 10 * Math.round(lineNumber / 10);
 
             if (lineNumber === this.result.length) {
-                ExportService.exportArrayToExcelFile(this.jsonToArray.getJsonAsArray(), 'Monitoring');
+                ExcelExport.exportArrayToExcelFile(this.jsonToArray.getJsonAsArray(), 'Monitoring');
                 this.exportInProgress = false;
             } else {
                 this.exportInProgress = true;
