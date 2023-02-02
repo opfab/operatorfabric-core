@@ -20,8 +20,8 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.kafka.support.SendResult;
 import org.springframework.stereotype.Component;
-import org.springframework.util.concurrent.ListenableFuture;
-import org.springframework.util.concurrent.ListenableFutureCallback;
+
+import java.util.concurrent.CompletableFuture;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -38,24 +38,20 @@ public class ResponseCardProducer {
 
         CardCommand cardCommand = cardCommandFactory.createResponseCard(cardPublicationData);
 
-        ListenableFuture<SendResult<String, CardCommand>> future =
+        CompletableFuture<SendResult<String, CardCommand>> future =
                 kafkaTemplate.send(topic, cardCommand.getResponseCard().getProcess(), cardCommand);
-        future.addCallback(new ListenableFutureCallback<>() {
-            @Override
-            public void onFailure(Throwable throwable) {
-                log.error("Failure to send responseCard: {}", throwable.getMessage());
-            }
-
-            @Override
-            public void onSuccess(SendResult<String, CardCommand> sendResult) {
-                RecordMetadata metaData = sendResult.getRecordMetadata();
+        future.whenComplete((result, ex) -> {
+            if (ex == null) {
+                RecordMetadata metaData = result.getRecordMetadata();
                 log.debug("Received new metadata. \n" +
                         "Topic: " + metaData.topic() + "\n" +
                         "Partition: " + metaData.partition() + "\n" +
                         "Offset: " + metaData.offset() + "\n" +
                         "Timestamp: " + metaData.timestamp()
                 );
-                log.debug(sendResult.getProducerRecord().value().toString());
+                log.debug(result.getProducerRecord().value().toString());
+            } else {
+                log.error("Failure to send responseCard: {}", ex.getMessage());
             }
         });
     }
