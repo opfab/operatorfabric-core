@@ -16,7 +16,11 @@
 .opfab-ol-popup {
     position: absolute;
     left: -50px;
-    min-width: 380px;
+    display: block;
+    width: max-content;
+    border-radius: 10px;
+    padding: 10px;
+    background-color: var(--opfab-popover-bgcolor);
 }
 
 .opfab-ol-popup-closer {

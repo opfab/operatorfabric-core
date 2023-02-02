@@ -1,4 +1,4 @@
-/* Copyright (c) 2022, Alliander (http://www.alliander.com)
+/* Copyright (c) 2023, Alliander (http://www.alliander.com)
 /* Copyright (c) 2018-2023, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
@@ -29,6 +29,11 @@ import Chart from 'chart.js/auto';
 import ChartDataLabels from 'chartjs-plugin-datalabels';
 import {TranslateService} from '@ngx-translate/core';
 import {GlobalStyleService} from '@ofServices/global-style.service';
+import {Router} from "@angular/router";
+import {DateTimeFormatterService} from "../../../../business/services/date-time-formatter.service";
+import {AppState} from "@ofStore/index";
+import {Store} from "@ngrx/store";
+import {selectCurrentUrl} from "@ofSelectors/router.selectors";
 
 let self;
 
@@ -42,7 +47,9 @@ export class MapComponent implements OnInit, OnDestroy, AfterViewChecked {
     private map: OpenLayersMap;
     private vectorLayer: VectorLayer;
     private graphChart = null;
-    lightCardToDisplay: LightCard;
+    private currentPath: any;
+    public lightCardsToDisplay: LightCard[];
+
 
     constructor(
         private lightCardsFeedFilterService: LightCardsFeedFilterService,
@@ -50,7 +57,10 @@ export class MapComponent implements OnInit, OnDestroy, AfterViewChecked {
         private logger: OpfabLoggerService,
         private mapService: MapService,
         private translate: TranslateService,
-        private globalStyleService: GlobalStyleService
+        private globalStyleService: GlobalStyleService,
+        private store: Store<AppState>,
+        private router: Router,
+        private dateTimeFormatterService: DateTimeFormatterService
     ) {}
 
     ngOnInit() {
@@ -58,6 +68,15 @@ export class MapComponent implements OnInit, OnDestroy, AfterViewChecked {
 
         if (this.configService.getConfigValue('feed.geomap.enableMap', false)) {
             const enableGraph = this.configService.getConfigValue('feed.geomap.enableGraph', false);
+            this.store
+                .select(selectCurrentUrl)
+                .pipe(takeUntil(this.unsubscribe$))
+                .subscribe((url) => {
+                    if (url) {
+                        const urlParts = url.split('/');
+                        this.currentPath = urlParts[1];
+                    }
+                });
             this.drawMap(enableGraph);
             this.lightCardsFeedFilterService
                 .getFilteredAndSearchedLightCards()
@@ -201,11 +220,24 @@ export class MapComponent implements OnInit, OnDestroy, AfterViewChecked {
         });
 
         function displayLightCardIfNecessary(evt) {
-            self.map.forEachFeatureAtPixel(evt.pixel, function (feature) {
+            const featureArray = [];
+            if (self.map.hasFeatureAtPixel(evt.pixel)) {
+                self.map.getFeaturesAtPixel(evt.pixel).forEach((feature => {
+                    featureArray.push(feature.get('lightCard'));
+                }));
                 overlay.setPosition(evt.coordinate);
-                self.lightCardToDisplay = feature.get('lightCard');
-            });
+                self.lightCardsToDisplay = featureArray;
+            }
         }
+    }
+
+    showCard(lightCardId): void {
+        this.router.navigate(['/' + this.currentPath, 'cards', lightCardId]);
+    }
+
+    displayCardDetailsOnButton(lightCard: LightCard): string {
+        const publishDate = this.dateTimeFormatterService.getFormattedDateAndTimeFromEpochDate(lightCard.publishDate);
+        return `${publishDate} : ${lightCard.titleTranslated}`;
     }
 
     private getExtentWithMargin() {

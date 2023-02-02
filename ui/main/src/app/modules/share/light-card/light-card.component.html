@@ -46,16 +46,13 @@
                         <ng-template #tipTags>
                             <span translate>feed.tips.seeGroupedCards</span>
                         </ng-template>
-                        <span *ngIf="showGroupedCardsIcon && !lightCardDisplayedInMapComponent" class="p-1"
+                        <span *ngIf="showGroupedCardsIcon" class="p-1"
                               [ngbPopover]="tipTags" popoverClass="opfab-popover" container="body"
                               triggers="mouseenter:mouseleave">
                             <em style="color: #0082FF;" class="fa " [class.fa-angle-down]="open" [class.fa-angle-left]="!open || !groupedCardsVisible"></em>
                         </span>
                         <span *ngIf="isGeoMapEnabled && hasGeoLocation" (click)='zoomToLocation($event)' class="p-1">
                                <em style="color: #0082FF;" class="fa fa-location-crosshairs"></em>
-                        </span>
-                        <span *ngIf="lightCardDisplayedInMapComponent" class="p-2" >
-                                <!-- Space for the close button on the popup of the geo-map -->
                         </span>
                     </div>
                 </div>
@@ -97,6 +94,6 @@
 
 </div>
 
-<div *ngIf="open && groupedCardsVisible && !lightCardDisplayedInMapComponent">
+<div *ngIf="open && groupedCardsVisible">
     <of-grouped-card-list [lightCards]="getGroupedChildCards()" [selection]="selection"> </of-grouped-card-list>
 </div>

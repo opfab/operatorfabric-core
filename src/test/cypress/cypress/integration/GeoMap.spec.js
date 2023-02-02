@@ -65,7 +65,7 @@ describe('GeoMap tests', function () {
             cy.get('[id^="opfab-feed-light-card-cypress-point_card1"]').find('em.fa.fa-location-crosshairs').click();
             cy.wait(3000);
             cy.get('of-map').click();
-            cy.get('[id^="opfab-feed-light-card-cypress-point_card1"]').should('have.length', 2);
+            cy.get('button.btn.btn-cardlink.btn-sm').should('exist');
         });
 
         it('Card without point data is not pointed on the geomap', () => {
@@ -74,7 +74,7 @@ describe('GeoMap tests', function () {
             script.sendCard('cypress/geoMap/message1.json');
             cy.get('[id^="opfab-feed-light-card-cypress-message1"]').find('em.fa.fa-location-crosshairs').should('not.exist');
             cy.get('of-map').click();
-            cy.get('[id^="opfab-feed-light-card-cypress-message1"]').should('have.length', 1);
+            cy.get('button.btn.btn-cardlink.btn-sm').should('not.exist');
         });
 
         it('Card with invalid point data is not pointed on the geomap', () => {
@@ -84,11 +84,11 @@ describe('GeoMap tests', function () {
             cy.get('[id^="opfab-feed-light-card-cypress-invalid_point_card1"]').find('em.fa.fa-location-crosshairs').click();
             cy.wait(3000);
             cy.get('of-map').click();
-            cy.get('[id^="opfab-feed-light-card-cypress-invalid_point_card1"]').should('have.length', 1);
+            cy.get('button.btn.btn-cardlink.btn-sm').should('not.exist');
         });
     });
 
-    describe('Check if polygon points are shown on the geomap', function () {
+    describe('Check if polygons are drawn on the geomap', function () {
         it('Card with polygon data is drawn on the geomap', () => {
             script.setPropertyInConf('feed.geomap.enableMap', 'web-ui', true);
             opfab.loginWithUser('operator1_fr');
@@ -96,26 +96,120 @@ describe('GeoMap tests', function () {
             cy.get('[id^="opfab-feed-light-card-cypress-polygon_card1"]').find('em.fa.fa-location-crosshairs').click();
             cy.wait(3000);
             cy.get('of-map').click();
-            cy.get('[id^="opfab-feed-light-card-cypress-polygon_card1"]').should('have.length', 2);
+            cy.get('button.btn.btn-cardlink.btn-sm').should('exist');
         });
 
-        it('Card without polygon data is not pointed on the geomap', () => {
+        it('Card without polygon data is not drawn on the geomap', () => {
             script.setPropertyInConf('feed.geomap.enableMap', 'web-ui', true);
             opfab.loginWithUser('operator1_fr');
             script.sendCard('cypress/geoMap/message1.json');
             cy.get('[id^="opfab-feed-light-card-cypress-message1"]').find('em.fa.fa-location-crosshairs').should('not.exist');
             cy.get('of-map').click();
-            cy.get('[id^="opfab-feed-light-card-cypress-message1"]').should('have.length', 1);
+            cy.get('button.btn.btn-cardlink.btn-sm').should('not.exist');
         });
 
-        it('Card with invalid polygon data is not pointed on the geomap', () => {
+        it('Card with invalid polygon data is not drawn on the geomap', () => {
             script.setPropertyInConf('feed.geomap.enableMap', 'web-ui', true);
             opfab.loginWithUser('operator1_fr');
             script.sendCard('cypress/geoMap/invalid_polygon_card1.json');
             cy.get('[id^="opfab-feed-light-card-cypress-invalid_polygon_card1"]').find('em.fa.fa-location-crosshairs').click();
             cy.wait(3000);
             cy.get('of-map').click();
-            cy.get('[id^="opfab-feed-light-card-cypress-invalid_polygon_card1"]').should('have.length', 1);
+            cy.get('button.btn.btn-cardlink.btn-sm').should('not.exist');
+        });
+    });
+
+    describe('Check if the popup works', function () {
+        it('Card with geo-location is visible in the popup', () => {
+            script.setPropertyInConf('feed.geomap.enableMap', 'web-ui', true);
+            opfab.loginWithUser('operator1_fr');
+            script.sendCard('cypress/geoMap/point_card1.json');
+            cy.get('[id^="opfab-feed-light-card-cypress-point_card1"]').find('em.fa.fa-location-crosshairs').click();
+            cy.wait(3000);
+            cy.get('of-map').click();
+            cy.get('button.btn.btn-cardlink.btn-sm').should('have.length', 1)
+                .and('contain.text', 'Message');
+        });
+
+        it('Multiple cards with the same geo-location are all visible in the popup', () => {
+            script.setPropertyInConf('feed.geomap.enableMap', 'web-ui', true);
+            opfab.loginWithUser('operator1_fr');
+            script.sendCard('cypress/geoMap/point_same_location_card1.json');
+            script.sendCard('cypress/geoMap/point_same_location_card2.json');
+            cy.get('[id^="opfab-feed-light-card-cypress-point_same_location_card1"]').find('em.fa.fa-location-crosshairs').click();
+            cy.wait(3000);
+            cy.get('of-map').click();
+            cy.get('button.btn.btn-cardlink.btn-sm').should('have.length', 2);
+            cy.get('button.btn.btn-cardlink.btn-sm').eq(0).should('contain.text', 'Message');
+            cy.get('button.btn.btn-cardlink.btn-sm').eq(1).should('contain.text', 'Test state with no type');
+        });
+
+        it('Clicking on a card in the popup will open that card', () => {
+            script.setPropertyInConf('feed.geomap.enableMap', 'web-ui', true);
+            opfab.loginWithUser('operator1_fr');
+            script.sendCard('cypress/geoMap/point_card1.json')
+            cy.get('[id^="opfab-feed-light-card-cypress-point_card1"]').find('em.fa.fa-location-crosshairs').click();
+            cy.wait(3000);
+            cy.get('of-map').click();
+            cy.get('button.btn.btn-cardlink.btn-sm').click();
+            cy.get("#opfab-card-title").should("have.text", 'MESSAGE');
+        });
+
+        it('Close icon is visible and will close the popup when clicking on it', () => {
+            script.setPropertyInConf('feed.geomap.enableMap', 'web-ui', true);
+            opfab.loginWithUser('operator1_fr');
+            script.sendCard('cypress/geoMap/point_card1.json');
+            cy.get('[id^="opfab-feed-light-card-cypress-point_card1"]').find('em.fa.fa-location-crosshairs').click();
+            cy.wait(3000);
+            cy.get('of-map').click();
+            cy.get('button.btn.btn-cardlink.btn-sm').get('a#popup-closer.opfab-ol-popup-closer').click();
+            cy.get('button.btn.btn-cardlink.btn-sm').should('not.be.visible');
+        });
+    })
+
+    describe('Check if geomap updates correctly with new cards', function () {
+        it('A new card with point data should be visible in the geomap', () => {
+            script.setPropertyInConf('feed.geomap.enableMap', 'web-ui', true);
+            opfab.loginWithUser('operator1_fr');
+            script.sendCard('cypress/geoMap/point_card1.json');
+            script.sendCard('cypress/geoMap/point_card2.json');
+            script.sendCard('cypress/geoMap/message1.json');
+            cy.wait(3000);
+            script.sendCard('cypress/geoMap/point_card3.json');
+            cy.wait(2000);
+            cy.get('[id^="opfab-feed-light-card-cypress-point_card3"]').find('em.fa.fa-location-crosshairs').click();
+            cy.get('of-map').click();
+            cy.get('button.btn.btn-cardlink.btn-sm').should('exist');
+        });
+
+        it('A new card with the same geo-location should be shown on the geomap and added to the popup', () => {
+            script.setPropertyInConf('feed.geomap.enableMap', 'web-ui', true);
+            opfab.loginWithUser('operator1_fr');
+            script.sendCard('cypress/geoMap/point_same_location_card1.json');
+            script.sendCard('cypress/geoMap/point_same_location_card2.json');
+            cy.get('[id^="opfab-feed-light-card-cypress-point_same_location_card1"]').find('em.fa.fa-location-crosshairs').click();
+            cy.wait(3000);
+            cy.get('of-map').click();
+            cy.get('button.btn.btn-cardlink.btn-sm').should('have.length', 2);
+            cy.get('button.btn.btn-cardlink.btn-sm').get('a#popup-closer.opfab-ol-popup-closer').click();
+            script.sendCard('cypress/geoMap/point_same_location_card3.json');
+            cy.get('[id^="opfab-feed-light-card-cypress-point_same_location_card3"]').find('em.fa.fa-location-crosshairs').click();
+            cy.wait(3000);
+            cy.get('of-map').click();
+            cy.get('button.btn.btn-cardlink.btn-sm').should('have.length', 3);
+        });
+
+        it('A new card with invalid geo-location data should not be visible on the geomap, but should be visible in the card feed', () => {
+            script.setPropertyInConf('feed.geomap.enableMap', 'web-ui', true);
+            opfab.loginWithUser('operator1_fr');
+            script.sendCard('cypress/geoMap/point_card1.json');
+            script.sendCard('cypress/geoMap/point_card2.json');
+            cy.wait(3000);
+            script.sendCard('cypress/geoMap/invalid_polygon_card1.json');
+            cy.wait(2000);
+            cy.get('[id^="opfab-feed-light-card-cypress-invalid_polygon_card1"]').find('em.fa.fa-location-crosshairs').click();
+            cy.get('of-map').click();
+            cy.get('button.btn.btn-cardlink.btn-sm').should('not.exist');
         });
     });
 
@@ -134,41 +228,12 @@ describe('GeoMap tests', function () {
             cy.get('[id^="opfab-feed-light-card-cypress-message1"]').find('em.fa.fa-location-crosshairs').should('not.exist');
         });
 
-        it('Card with invalid geo-location data shoudl have the crosshair icon', () => {
+        it('Card with invalid geo-location data should have the crosshair icon', () => {
             script.setPropertyInConf('feed.geomap.enableMap', 'web-ui', true);
             opfab.loginWithUser('operator1_fr');
             script.sendCard('cypress/geoMap/invalid_point_card1.json');
             cy.get('[id^="opfab-feed-light-card-cypress-invalid_point_card1"]').find('em.fa.fa-location-crosshairs').should('exist');
         })
-    });
-
-    describe('Check if map updates correctly with new cards', function () {
-        it('A new card with point data should be visible in the geomap', () => {
-            script.setPropertyInConf('feed.geomap.enableMap', 'web-ui', true);
-            opfab.loginWithUser('operator1_fr');
-            script.sendCard('cypress/geoMap/point_card1.json');
-            script.sendCard('cypress/geoMap/point_card2.json');
-            script.sendCard('cypress/geoMap/message1.json');
-            cy.wait(3000);
-            script.sendCard('cypress/geoMap/point_card3.json');
-            cy.wait(2000);
-            cy.get('[id^="opfab-feed-light-card-cypress-point_card3"]').find('em.fa.fa-location-crosshairs').click();
-            cy.get('of-map').click();
-            cy.get('[id^="opfab-feed-light-card-cypress-point_card3"]').should('have.length', 2);
-        });
-
-        it('A new card with invalid geo-location data should not be visible on the geomap, but should be visible in the card feed', () => {
-            script.setPropertyInConf('feed.geomap.enableMap', 'web-ui', true);
-            opfab.loginWithUser('operator1_fr');
-            script.sendCard('cypress/geoMap/point_card1.json');
-            script.sendCard('cypress/geoMap/point_card2.json');
-            cy.wait(3000);
-            script.sendCard('cypress/geoMap/invalid_polygon_card1.json');
-            cy.wait(2000);
-            cy.get('[id^="opfab-feed-light-card-cypress-invalid_polygon_card1"]').find('em.fa.fa-location-crosshairs').click();
-            cy.get('of-map').click();
-            cy.get('[id^="opfab-feed-light-card-cypress-invalid_polygon_card1"]').should('have.length', 1);
-        });
     });
 
 })
