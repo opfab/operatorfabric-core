@@ -20,7 +20,7 @@ import {User} from '@ofModel/user.model';
 import {CardService} from '@ofServices/card.service';
 import {EntitiesService} from '@ofServices/entities.service';
 import {ProcessesService} from 'app/business/services/processes.service';
-import {UserPermissionsService} from '@ofServices/user-permissions.service';
+import {UserPermissionsService} from 'app/business/services/user-permissions.service';
 import {UserService} from '@ofServices/user.service';
 import {Utilities} from 'app/business/common/utilities';
 import {AlertMessageService} from 'app/business/services/alert-message.service';

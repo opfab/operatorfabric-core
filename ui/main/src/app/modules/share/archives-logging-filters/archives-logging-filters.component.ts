@@ -17,7 +17,7 @@ import {debounceTime, takeUntil} from 'rxjs/operators';
 import {Subject} from 'rxjs';
 import {NgbDateStruct, NgbTimeStruct} from '@ng-bootstrap/ng-bootstrap';
 import {DateTimeNgb} from '@ofModel/datetime-ngb.model';
-import {ProcessStatesMultiSelectOptionsService} from '@ofServices/process-states-multi-select-options.service';
+import {ProcessStatesMultiSelectOptionsService} from 'app/business/services/process-states-multi-select-options.service';
 import {MultiSelectOption} from '@ofModel/multiselect.model';
 import {MessageLevel} from '@ofModel/message.model';
 import moment from 'moment';

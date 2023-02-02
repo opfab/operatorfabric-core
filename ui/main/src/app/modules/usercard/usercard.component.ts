@@ -28,7 +28,7 @@ import {SoundNotificationService} from '@ofServices/sound-notification.service';
 import {UserCardDatesFormComponent} from './datesForm/usercard-dates-form.component';
 import {DateField, DatesForm} from './datesForm/dates-form.model';
 import {UserCardRecipientsFormComponent} from './recipientForm/usercard-recipients-form.component';
-import {UserPermissionsService} from '@ofServices/user-permissions.service';
+import {UserPermissionsService} from 'app/business/services/user-permissions.service';
 import {Utilities} from '../../business/common/utilities';
 import {UsercardSelectCardEmitterFormComponent} from './selectCardEmitterForm/usercard-select-card-emitter-form.component';
 import {LogOption, OpfabLoggerService} from 'app/business/services/logs/opfab-logger.service';

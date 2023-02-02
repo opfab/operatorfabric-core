@@ -1,5 +1,5 @@
 /* Copyright (c) 2022, Alliander (http://www.alliander.com)
-/* Copyright (c) 2018-2022, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2023, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -16,8 +16,6 @@ import {LightCard} from '@ofModel/light-card.model';
 export class MapService {
     highlightCardEvent = new EventEmitter<any>();
     zoomToLocationEvent = new EventEmitter<string>();
-
-    constructor() {}
 
     highlightOnMap(highLight: boolean, lightCard: LightCard) {
         const lightCardId = lightCard.id;
