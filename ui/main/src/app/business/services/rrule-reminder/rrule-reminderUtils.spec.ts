@@ -779,3 +779,235 @@ describe('RRuleReminderUtils:getNextTimeForRepeating without or invalid recurren
         expect(dateForRepeating).toEqual(expectedResponseDate);
     });
 });
+
+describe('RRuleReminderUtils:getNextTimeForRepeating with recurrence on months with bymonthday and bysetpos fields  ', () => {
+    let testCard: Card;
+
+    beforeAll(() => {
+        const cardTemplate = {startDate: moment.tz('2000-01-01 08:00', 'Europe/Paris').valueOf()};
+        testCard = getOneRandomCard(cardTemplate);
+    });
+
+    it('2000/01/01 10:00 , Recurrence :10:00, first day of months  => 2000/02/01 10:00 ', () => {
+        const date = moment.tz('2000-01-01 10:00', 'Europe/Paris').valueOf();
+
+        testCard.rRule = {
+            freq: Frequency.MONTHLY,
+            byhour: [10],
+            byminute: [0],
+            bymonthday: [1]
+        };
+
+        const expectedResponseDate = new Date('2000-02-01 10:00').valueOf();
+        const dateForRepeating = getNextTimeForRepeating(testCard, date.valueOf());
+        expect(dateForRepeating).toEqual(expectedResponseDate);
+    });
+
+    it('2000/01/01 10:00 , Recurrence :10:00, first day of december and april  => 2000/04/01 10:00 ', () => {
+        const date = moment.tz('2000-01-01 10:00', 'Europe/Paris').valueOf();
+
+        testCard.rRule = {
+            freq: Frequency.MONTHLY,
+            bymonth: [12, 4],
+            byhour: [10],
+            byminute: [0],
+            bymonthday: [1]
+        };
+
+        const expectedResponseDate = new Date('2000-04-01 10:00').valueOf();
+        const dateForRepeating = getNextTimeForRepeating(testCard, date.valueOf());
+        expect(dateForRepeating).toEqual(expectedResponseDate);
+    });
+
+    it('2000/01/01 10:00 , Recurrence :10:00, last day of months  => 2000/01/31 10:00 ', () => {
+        const date = moment.tz('2000-01-01 10:00', 'Europe/Paris').valueOf();
+
+        testCard.rRule = {
+            freq: Frequency.MONTHLY,
+            byhour: [10],
+            byminute: [0],
+            bymonthday: [-1]
+        };
+
+        const expectedResponseDate = new Date('2000-01-31 10:00').valueOf();
+        const dateForRepeating = getNextTimeForRepeating(testCard, date.valueOf());
+        expect(dateForRepeating).toEqual(expectedResponseDate);
+    });
+
+    it('2000/01/01 10:00 , Recurrence :10:00, last day of february  => 2000/02/29 10:00 ', () => {
+        const date = moment.tz('2000-01-01 10:00', 'Europe/Paris').valueOf();
+
+        testCard.rRule = {
+            freq: Frequency.MONTHLY,
+            byhour: [10],
+            byminute: [0],
+            bymonth: [2],
+            bymonthday: [-1]
+        };
+
+        const expectedResponseDate = new Date('2000-02-29 10:00').valueOf();
+        const dateForRepeating = getNextTimeForRepeating(testCard, date.valueOf());
+        expect(dateForRepeating).toEqual(expectedResponseDate);
+    });
+
+    it('2001/01/01 10:00 , Recurrence :10:00, last day of february  => 2001/02/28 10:00 ', () => {
+        const date = moment.tz('2001-01-01 10:00', 'Europe/Paris').valueOf();
+
+        testCard.rRule = {
+            freq: Frequency.MONTHLY,
+            byhour: [10],
+            byminute: [0],
+            bymonth: [2],
+            bymonthday: [-1]
+        };
+
+        const expectedResponseDate = new Date('2001-02-28 10:00').valueOf();
+        const dateForRepeating = getNextTimeForRepeating(testCard, date.valueOf());
+        expect(dateForRepeating).toEqual(expectedResponseDate);
+    });
+
+    it('2000/01/01 10:00 , Recurrence :10:00, first and last days of months  => 2000/01/31 10:00 ', () => {
+        const date = moment.tz('2000-01-01 10:00', 'Europe/Paris').valueOf();
+
+        testCard.rRule = {
+            freq: Frequency.MONTHLY,
+            byhour: [10],
+            byminute: [0],
+            bymonthday: [-1, 1]
+        };
+
+        const expectedResponseDate = new Date('2000-01-31 10:00').valueOf();
+        const dateForRepeating = getNextTimeForRepeating(testCard, date.valueOf());
+        expect(dateForRepeating).toEqual(expectedResponseDate);
+    });
+
+    it('2000/01/31 10:00 , Recurrence :10:00, first and last days of months  => 2000/02/01 10:00 ', () => {
+        const date = moment.tz('2000-01-31 10:00', 'Europe/Paris').valueOf();
+
+        testCard.rRule = {
+            freq: Frequency.MONTHLY,
+            byhour: [10],
+            byminute: [0],
+            bymonthday: [-1, 1]
+        };
+
+        const expectedResponseDate = new Date('2000-02-01 10:00').valueOf();
+        const dateForRepeating = getNextTimeForRepeating(testCard, date.valueOf());
+        expect(dateForRepeating).toEqual(expectedResponseDate);
+    });
+
+    it('2000/01/31 10:00 , Recurrence :10:00, first and last days of september and july => 2000/07/01 10:00 ', () => {
+        const date = moment.tz('2000-01-31 10:00', 'Europe/Paris').valueOf();
+
+        testCard.rRule = {
+            freq: Frequency.MONTHLY,
+            byhour: [10],
+            byminute: [0],
+            bymonth: [9, 7],
+            bymonthday: [-1, 1]
+        };
+
+        const expectedResponseDate = new Date('2000-07-01 10:00').valueOf();
+        const dateForRepeating = getNextTimeForRepeating(testCard, date.valueOf());
+        expect(dateForRepeating).toEqual(expectedResponseDate);
+    });
+
+    it('2000/01/31 10:00 , Recurrence :10:00, first and last mondays of june and september=> 2000/06/05 10:00 ', () => {
+        const date = moment.tz('2000-01-31 10:00', 'Europe/Paris').valueOf();
+
+        testCard.rRule = {
+            freq: Frequency.MONTHLY,
+            byhour: [10],
+            byminute: [0],
+            bymonth: [9, 6],
+            byweekday: [Day.MO],
+            bysetpos: [-1, 1]
+        };
+
+        const expectedResponseDate = new Date('2000-06-05 10:00').valueOf();
+        const dateForRepeating = getNextTimeForRepeating(testCard, date.valueOf());
+        expect(dateForRepeating).toEqual(expectedResponseDate);
+    });
+
+    it('2000/01/31 10:00 , Recurrence :10:00, second and last mondays of june and september=> 2000/06/12 10:00 ', () => {
+        const date = moment.tz('2000-01-31 10:00', 'Europe/Paris').valueOf();
+
+        testCard.rRule = {
+            freq: Frequency.MONTHLY,
+            byhour: [10],
+            byminute: [0],
+            bymonth: [6, 9],
+            byweekday: [Day.MO],
+            bysetpos: [-1, 2]
+        };
+
+        const expectedResponseDate = new Date('2000-06-12 10:00').valueOf();
+        const dateForRepeating = getNextTimeForRepeating(testCard, date.valueOf());
+        expect(dateForRepeating).toEqual(expectedResponseDate);
+    });
+
+    it('2000/01/31 10:00 , Recurrence :16:00, every 26 of each months=> 2000/02/26 16:00 ', () => {
+        const date = moment.tz('2000-01-31 10:00', 'Europe/Paris').valueOf();
+
+        testCard.rRule = {
+            freq: Frequency.MONTHLY,
+            byhour: [16],
+            byminute: [0],
+            bymonthday: [26]
+        };
+
+        const expectedResponseDate = new Date('2000-02-26 16:00').valueOf();
+        const dateForRepeating = getNextTimeForRepeating(testCard, date.valueOf());
+        expect(dateForRepeating).toEqual(expectedResponseDate);
+    });
+
+    it('2000/01/31 10:00 , Recurrence :16:00, every last friday of each months=> 2000/02/25 16:00 ', () => {
+        const date = moment.tz('2000-01-31 10:00', 'Europe/Paris').valueOf();
+
+        testCard.rRule = {
+            freq: Frequency.MONTHLY,
+            byhour: [16],
+            byminute: [0],
+            byweekday: [Day.FR],
+            bysetpos: [-1]
+        };
+
+        const expectedResponseDate = new Date('2000-02-25 16:00').valueOf();
+        const dateForRepeating = getNextTimeForRepeating(testCard, date.valueOf());
+        expect(dateForRepeating).toEqual(expectedResponseDate);
+    });
+
+    it('2000/07/20 10:00 , Recurrence :16:00, every last friday of each months except august => 2000/07/28 16:00 ', () => {
+        const date = moment.tz('2000-07-20 10:00', 'Europe/Paris').valueOf();
+
+        testCard.rRule = {
+            freq: Frequency.MONTHLY,
+            byhour: [16],
+            byminute: [0],
+            bymonth: [1,2,3,4,5,6,7,9,10,11,12],
+            byweekday: [Day.FR],
+            bysetpos: [-1]
+        };
+
+        const expectedResponseDate = new Date('2000-07-28 16:00').valueOf();
+        const dateForRepeating = getNextTimeForRepeating(testCard, date.valueOf());
+        expect(dateForRepeating).toEqual(expectedResponseDate);
+    });
+
+    it('2000/07/31 10:00 , Recurrence :16:00, every last friday of each months except august => 2000/09/29 16:00 ', () => {
+        const date = moment.tz('2000-07-31 10:00', 'Europe/Paris').valueOf();
+
+        testCard.rRule = {
+            freq: Frequency.MONTHLY,
+            byhour: [16],
+            byminute: [0],
+            bymonth: [1,2,3,4,5,6,7,9,10,11,12],
+            byweekday: [Day.FR],
+            bysetpos: [-1]
+        };
+
+        const expectedResponseDate = new Date('2000-09-29 16:00').valueOf();
+        const dateForRepeating = getNextTimeForRepeating(testCard, date.valueOf());
+        expect(dateForRepeating).toEqual(expectedResponseDate);
+    });
+});

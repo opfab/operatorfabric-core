@@ -199,7 +199,9 @@ export class CalendarComponent implements OnInit, OnDestroy, AfterViewInit {
                     dtstart: new Date(card.startDate),
                     until: card.endDate,
                     byhour: card.rRule.byhour,
-                    byminute: card.rRule.byminute
+                    byminute: card.rRule.byminute,
+                    bymonthday: card.rRule.bymonthday,
+                    bysetpos: card.rRule.bysetpos
                 }
             });
         }

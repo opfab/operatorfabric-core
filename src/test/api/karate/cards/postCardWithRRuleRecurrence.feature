@@ -54,6 +54,7 @@ Feature: postCardWithRRuleRecurrence
 	"rRule": {
 		"freq" : "WEEKLY",
 		"count" : 10,
+		"interval" : 2,
 		"byweekday" : ["TU", "FR"],
 		"byminute" : [10, 30],
 		"byhour" : [14, 16],
@@ -112,6 +113,7 @@ Feature: postCardWithRRuleRecurrence
     And match response.card.data.message == 'a message with RRule recurrence object'
     And match response.card.rRule.freq == 'WEEKLY'
     And match response.card.rRule.count == 10
+    And match response.card.rRule.interval == 1
     And match response.card.rRule.wkst == 'MO'
     And match response.card.rRule.byweekday[0] == 'TU'
     And match response.card.rRule.byweekday[1] == 'FR'
@@ -134,6 +136,7 @@ Feature: postCardWithRRuleRecurrence
     And match response.card.data.message == 'a message with RRule recurrence object'
     And match response.card.rRule.freq == 'WEEKLY'
     And match response.card.rRule.count == 10
+    And match response.card.rRule.interval == 1
     And match response.card.rRule.wkst == 'MO'
     And match response.card.rRule.byweekday[0] == 'TU'
     And match response.card.rRule.byweekday[1] == 'FR'
@@ -163,6 +166,7 @@ Feature: postCardWithRRuleRecurrence
     And match response.card.data.message == 'a message with RRule recurrence object and timezone field'
     And match response.card.rRule.freq == 'WEEKLY'
     And match response.card.rRule.count == 10
+    And match response.card.rRule.interval == 2
     And match response.card.rRule.wkst == 'MO'
     And match response.card.rRule.byweekday[0] == 'TU'
     And match response.card.rRule.byweekday[1] == 'FR'
@@ -184,6 +188,7 @@ Feature: postCardWithRRuleRecurrence
     And match response.card.data.message == 'a message with RRule recurrence object and timezone field'
     And match response.card.rRule.freq == 'WEEKLY'
     And match response.card.rRule.count == 10
+    And match response.card.rRule.interval == 2
     And match response.card.rRule.wkst == 'MO'
     And match response.card.rRule.byweekday[0] == 'TU'
     And match response.card.rRule.byweekday[1] == 'FR'
