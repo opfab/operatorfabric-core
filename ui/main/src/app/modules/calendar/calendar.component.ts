@@ -15,7 +15,6 @@ import {AfterViewInit, Component, ElementRef, OnDestroy, OnInit, ViewChild} from
 import {FullCalendarComponent} from '@fullcalendar/angular';
 import {EventInput} from '@fullcalendar/core';
 import allLocales from '@fullcalendar/core/locales-all';
-import {ClearLightCardSelectionAction, SelectLightCardAction} from '@ofActions/light-card.actions';
 import {LoadCardAction} from '@ofActions/card.actions';
 import {NgbModal, NgbModalOptions, NgbModalRef} from '@ng-bootstrap/ng-bootstrap';
 import {FilterType} from '@ofModel/feed-filter.model';
@@ -30,6 +29,7 @@ import timeGridPlugin from '@fullcalendar/timegrid';
 import interactionPlugin from '@fullcalendar/interaction';
 import bootstrapPlugin from '@fullcalendar/bootstrap';
 import rrulePlugin from '@fullcalendar/rrule';
+import {SelectedCardService} from 'app/business/services/selectedCard.service';
 
 @Component({
     selector: 'of-calendar',
@@ -40,10 +40,11 @@ export class CalendarComponent implements OnInit, OnDestroy, AfterViewInit {
     constructor(
         private store: Store<AppState>,
         private modalService: NgbModal,
-        private processesService: ProcessesService,
+        processesService: ProcessesService,
         private lightCardsStoreService: LightCardsStoreService,
         private filterService: FilterService,
-        private configService: ConfigService
+        private configService: ConfigService,
+        private selectedCardService: SelectedCardService
     ) {
         processesService.getAllProcesses().forEach((process) => {
             if (!!process.uiVisibility && !!process.uiVisibility.calendar) this.mapOfProcesses.set(process.id, 1);
@@ -231,7 +232,7 @@ export class CalendarComponent implements OnInit, OnDestroy, AfterViewInit {
     }
 
     selectCard(info) {
-        this.store.dispatch(new SelectLightCardAction({selectedCardId: info.event.id}));
+        this.selectedCardService.setSelectedCardId(info.event.id);
         this.store.dispatch(new LoadCardAction({id: info.event.id}));
         const options: NgbModalOptions = {
             size: 'fullscreen'
@@ -241,7 +242,7 @@ export class CalendarComponent implements OnInit, OnDestroy, AfterViewInit {
         // Clear card selection when modal is dismissed by pressing escape key or clicking outside of modal
         // Closing event is already handled in card detail component
         this.modalRef.dismissed.subscribe(() => {
-            this.store.dispatch(new ClearLightCardSelectionAction());
+            this.selectedCardService.clearSelectedCardId();
         });
     }
 

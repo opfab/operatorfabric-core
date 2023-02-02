@@ -12,14 +12,11 @@ import {Card} from '@ofModel/card.model';
 import {ProcessesService} from 'app/business/services/processes.service';
 import {SafeHtml} from '@angular/platform-browser';
 import {AcknowledgmentAllowedEnum, State} from '@ofModel/processes.model';
-import {Store} from '@ngrx/store';
-import {AppState} from '@ofStore/index';
 import {map, takeUntil} from 'rxjs/operators';
 import {CardService} from '@ofServices/card.service';
 import {Subject} from 'rxjs';
 import {AppService, PageType} from '@ofServices/app.service';
 import {User} from '@ofModel/user.model';
-import {ClearLightCardSelectionAction} from '@ofStore/actions/light-card.actions';
 import {UserService} from '@ofServices/user.service';
 import {EntitiesService} from '@ofServices/entities.service';
 import {NgbModalRef} from '@ng-bootstrap/ng-bootstrap';
@@ -29,6 +26,7 @@ import {LightCardsStoreService} from '@ofServices/lightcards/lightcards-store.se
 import {CardComponent} from '../../card.component';
 import {OpfabLoggerService} from 'app/business/services/logs/opfab-logger.service';
 import {UserWithPerimeters} from "@ofModel/userWithPerimeters.model";
+import {SelectedCardService} from 'app/business/services/selectedCard.service';
 
 declare const templateGateway: any;
 
@@ -71,13 +69,13 @@ export class CardBodyComponent implements OnChanges, OnInit, OnDestroy {
 
     constructor(
         private businessconfigService: ProcessesService,
-        private store: Store<AppState>,
         private cardService: CardService,
         private _appService: AppService,
         private userService: UserService,
         private entitiesService: EntitiesService,
         private userPermissionsService: UserPermissionsService,
         private lightCardsStoreService: LightCardsStoreService,
+        private selectedCardService: SelectedCardService,
         private logger: OpfabLoggerService
     ) {
         this.userWithPerimeters = this.userService.getCurrentUserWithPerimeters();
@@ -333,7 +331,7 @@ export class CardBodyComponent implements OnChanges, OnInit, OnDestroy {
         this.updateLastReadCardStatusOnFeedIfNeeded();
         if (this.parentModalRef) {
             this.parentModalRef.close();
-            this.store.dispatch(new ClearLightCardSelectionAction());
+            this.selectedCardService.clearSelectedCardId();
         } else this._appService.closeDetails();
     }
 

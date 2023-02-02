@@ -14,7 +14,6 @@ import {TranslateService} from '@ngx-translate/core';
 import {ExcelExport} from 'app/business/common/excel-export';
 import {takeUntil} from 'rxjs/operators';
 import {Observable, Subject} from 'rxjs';
-import {ClearLightCardSelectionAction, SelectLightCardAction} from '@ofActions/light-card.actions';
 import {LoadCardAction} from '@ofActions/card.actions';
 import {NgbModal, NgbModalOptions, NgbModalRef} from '@ng-bootstrap/ng-bootstrap';
 import {Store} from '@ngrx/store';
@@ -32,6 +31,7 @@ import {ResponsesCellRendererComponent} from '../cell-renderers/responses-cell-r
 import {LightCard} from '@ofModel/light-card.model';
 import {LightCardsStoreService} from '@ofServices/lightcards/lightcards-store.service';
 import {DateTimeFormatterService} from 'app/business/services/date-time-formatter.service';
+import {SelectedCardService} from 'app/business/services/selectedCard.service';
 
 @Component({
     selector: 'of-monitoring-table',
@@ -90,6 +90,7 @@ export class MonitoringTableComponent implements OnChanges, OnDestroy {
         private processesService: ProcessesService,
         private cardService: CardService,
         private entitiesService: EntitiesService,
+        private selectedCardService: SelectedCardService,
         private lightCardsStoreService: LightCardsStoreService
     ) {
         this.monitoringConfig = processesService.getMonitoringConfig();
@@ -429,7 +430,7 @@ export class MonitoringTableComponent implements OnChanges, OnDestroy {
     }
 
     selectCard(info) {
-        this.store.dispatch(new SelectLightCardAction({selectedCardId: info}));
+        this.selectedCardService.setSelectedCardId(info);
         this.store.dispatch(new LoadCardAction({id: info}));
         const options: NgbModalOptions = {
             size: 'fullscreen'
@@ -439,7 +440,7 @@ export class MonitoringTableComponent implements OnChanges, OnDestroy {
         // Clear card selection when modal is dismissed by pressing escape key or clicking outside of modal
         // Closing event is already handled in card detail component
         this.modalRef.dismissed.subscribe(() => {
-            this.store.dispatch(new ClearLightCardSelectionAction());
+            this.selectedCardService.clearSelectedCardId();
         });
     }
 }
