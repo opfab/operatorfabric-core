@@ -16,7 +16,7 @@ import {LightCardsFeedFilterService} from './lightcards/lightcards-feed-filter.s
 import {LightCardsStoreService} from './lightcards/lightcards-store.service';
 import {EMPTY, iif, merge, of, Subject, timer} from 'rxjs';
 import {filter, map, switchMap, takeUntil} from 'rxjs/operators';
-import {ExternalDevicesService} from '@ofServices/external-devices.service';
+import {ExternalDevicesService} from 'app/business/services/external-devices.service';
 import {ConfigService} from 'app/business/services/config.service';
 import {LogOption, OpfabLoggerService} from './logs/opfab-logger.service';
 import {OpfabEventStreamService} from 'app/business/services/opfabEventStream.service';
