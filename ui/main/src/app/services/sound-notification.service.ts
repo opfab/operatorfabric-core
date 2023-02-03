@@ -20,6 +20,8 @@ import {ExternalDevicesService} from '@ofServices/external-devices.service';
 import {ConfigService} from 'app/business/services/config.service';
 import {LogOption, OpfabLoggerService} from './logs/opfab-logger.service';
 import {OpfabEventStreamService} from 'app/business/services/opfabEventStream.service';
+import {AlertMessageService} from 'app/business/services/alert-message.service';
+import {MessageLevel} from '@ofModel/message.model';
 
 @Injectable({
     providedIn: 'root'
@@ -60,6 +62,7 @@ export class SoundNotificationService implements OnDestroy {
         private externalDevicesService: ExternalDevicesService,
         private configService: ConfigService,
         private opfabEventStreamService: OpfabEventStreamService,
+        private alertMessageService: AlertMessageService,
         private logger: OpfabLoggerService
     ) {
         // use to have access from cypress to the current object for stubbing method playSound
@@ -156,10 +159,14 @@ export class SoundNotificationService implements OnDestroy {
         if (card.id === this.lastSentCardId)
             this.lastSentCardId = ''; // no sound as the card was send by the current user
         else {
-            if (this.lightCardsFeedFilterService.isCardVisibleInFeed(card) && this.checkCardIsRecent(card))
+            if (this.checkCardIsRecent(card)) {
                 this.incomingCardOrReminder.next(card);
+                if (!this.lightCardsFeedFilterService.isCardVisibleInFeed(card))
+                    this.alertMessageService.sendAlertMessage({message: null, level: MessageLevel.BUSINESS, i18n: {key: 'feed.hiddenCardReceived'}});
+            }
         }
     }
+
 
     public handleSessionEnd() {
         if (this.playSoundWhenSessionEnd) {

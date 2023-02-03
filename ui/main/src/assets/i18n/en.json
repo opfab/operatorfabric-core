@@ -208,7 +208,8 @@
     "cardLoadingInProgress":"Loading card...",
     "cardNotFound": "The card you are looking for was not found.",
     "entityRecipients" : "Entity recipients :",
-    "searchPlaceholderText": "Search..."
+    "searchPlaceholderText": "Search...",
+    "hiddenCardReceived": "You have received a card hidden by the filters you have activated (Timeline or card feed)"
   },
   "login": {
     "reset": "Reset",

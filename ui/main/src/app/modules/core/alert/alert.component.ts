@@ -32,12 +32,14 @@ export class AlertComponent implements OnInit {
     ngOnInit(): void {
         this.alertMessageService.getAlertMessage()
         .subscribe((alert) => {
-            this.displayAlert(alert);
+            if (!this.alertMessage.display || this.alertMessage.alert.level !== MessageLevel.BUSINESS )
+                this.displayAlert(alert);
         });
     }
 
     private displayAlert(message: Message) {
         let className = '';
+        let autoClose = true;
         switch (message.level) {
             case MessageLevel.DEBUG:
                 className = 'opfab-alert-debug';
@@ -48,6 +50,10 @@ export class AlertComponent implements OnInit {
             case MessageLevel.ERROR:
                 className = 'opfab-alert-error';
                 break;
+            case MessageLevel.BUSINESS:
+                className = 'opfab-alert-business';
+                autoClose = false;
+                break;
             default :
                 className = 'opfab-alert-info';
                 break;
@@ -57,10 +63,15 @@ export class AlertComponent implements OnInit {
             className: className,
             display: true
         };
+        if (autoClose) {
+            setTimeout(() => {
+                this.alertMessage.display = false;
+            }, 5000);
+        }
+    }
 
-        setTimeout(() => {
-            this.alertMessage.display = false;
-        }, 5000);
+    closeAlert() {
+        this.alertMessage.display = false;
     }
 }
 

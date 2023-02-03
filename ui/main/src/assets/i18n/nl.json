@@ -208,7 +208,8 @@
     "cardLoadingInProgress":"Bezig met laden van de kaart...",
     "cardNotFound": "De kaart die u zoekt werd niet gevonden.",
     "entityRecipients" : "Ontvangers entiteiten :",
-    "searchPlaceholderText": "Zoeken..."
+    "searchPlaceholderText": "Zoeken...",
+    "hiddenCardReceived": "Je hebt een kaart ontvangen die verborgen is door de filters die je hebt geactiveerd (tijdlijn of kaart feed)"
   },
   "login": {
     "reset": "Opnieuw instellen",
