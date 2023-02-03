@@ -57,6 +57,8 @@ import {AngularExternalDevicesServer} from './server/angularExternalDevices.serv
 import {ExternalDevicesServer} from './business/server/external-devices.server';
 import {RemoteLoggerServer} from './business/server/remote-logger.server';
 import {AngularRemoteLoggerServer} from './server/angularRemoteLogger.server';
+import {UserActionLogsServer} from './business/server/user-action-logs.server';
+import { AngularUserActionLogsServer } from './server/angularUser-Action-Logs.server';
 
 @NgModule({
     imports: [
@@ -110,6 +112,7 @@ import {AngularRemoteLoggerServer} from './server/angularRemoteLogger.server';
             multi: true
         },
         {provide: AcknowledgeServer, useClass: AngularAcknowledgeServer},
+        {provide: UserActionLogsServer, useClass: AngularUserActionLogsServer},
         {provide: RemoteLoggerServer, useClass: AngularRemoteLoggerServer},
         {provide: ConfigServer, useClass: AngularConfigServer},
         {provide: ProcessServer, useClass: AngularProcessServer},

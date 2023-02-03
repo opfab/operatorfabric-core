@@ -29,7 +29,4 @@ export class AngularRemoteLoggerServer extends AngularServer implements RemoteLo
         return this.processHttpResponse(this.httpClient.post<string[]>(`${this.remoteLogsUrl}`, logsToPush))
 
     }
-
-
-   
 }
