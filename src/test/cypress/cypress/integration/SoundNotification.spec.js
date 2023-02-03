@@ -1,4 +1,4 @@
-/* Copyright (c) 2021-2022, RTE (http://www.rte-france.com)
+/* Copyright (c) 2021-2023, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -11,6 +11,7 @@ import {OpfabGeneralCommands} from '../support/opfabGeneralCommands';
 import {SoundCommands} from '../support/soundCommands';
 import {SettingsCommands} from '../support/settingsCommands'
 import {ScriptCommands} from "../support/scriptCommands";
+import {FeedCommands} from '../support/feedCommands'
 
 describe('Sound notification test', function () {
     const user = 'operator1_fr';
@@ -18,9 +19,10 @@ describe('Sound notification test', function () {
     const sound = new SoundCommands();
     const settings = new SettingsCommands();
     const script = new ScriptCommands();
+    const feed = new FeedCommands();
 
     before('Reset UI configuration file ', function () {
-        //script.loadTestConf(); Avoid to launch it as it is time consuming
+        //script.loadTestConf(); //Avoid to launch it as it is time consuming
         script.resetUIConfigurationFiles();
     });
 
@@ -87,7 +89,7 @@ describe('Sound notification test', function () {
 
             // After 10 seconds more , one more sound
             cy.tick(10000);
-            cy.get('@playSound').its('callCount').should('eq', 3);
+            sound.checkNumberOfEmittedSoundIs(3);
 
             // Click somewhere to stop repeating sound
             cy.get('#opfab-navbar-menu-feed').click();
@@ -155,8 +157,79 @@ describe('Sound notification test', function () {
             cy.tick(10000);
             sound.checkNumberOfEmittedSoundIs(3);
         });
+
+
+
     });
 
+    describe('Checking sound and alert when receiving notification for hidden cards', function () {
+        it('Check sound and alert when receiving card hidden by filters', () => {
+            opfab.loginWithUser(user);
+            sound.stubPlaySound();
+
+            opfab.navigateToSettings();
+            settings.clickOnSeverity('alarm');  // set severity alarm to be notified by sound
+            opfab.navigateToFeed();
+            // Use cypress time simulation
+            cy.clock(new Date());
+
+            feed.filterByAcknowledgement('ack');
+            feed.checkFilterIsActive();
+
+            sendCardAndCheckSoundAndAlertMessage();
+        });
+
+        it('Check sound and alert when receiving card hidden by timeline', () => {
+            opfab.loginWithUser(user);
+            sound.stubPlaySound();
+
+            opfab.navigateToSettings();
+            settings.clickOnSeverity('alarm');  // set severity alarm to be notified by sound
+            opfab.navigateToFeed();
+
+            cy.clock(new Date());
+
+            // reset ack filter
+            feed.filterByAcknowledgement('notack');
+            feed.checkFilterIsNotActive();
+            // Set timeline to day domain
+            setTimeLineDomain('J');
+            // shift timeline forward by 2 days
+            moveTimelineRight();
+            moveTimelineRight();
+            
+            sendCardAndCheckSoundAndAlertMessage();
+        });
+    });
+
+    function sendCardAndCheckSoundAndAlertMessage() {
+
+        cy.tick(1000);
+        feed.checkNumberOfDisplayedCardsIs(0);
+
+        sendCardWithSeverityAlarm();
+        cy.tick(1000);
+        sound.checkNumberOfEmittedSoundIs(1);
+        feed.checkNumberOfDisplayedCardsIs(0);
+
+        cy.get('#div-detail-msg').find('span').eq(0).contains('You have received a card hidden by the filters you have activated (Timeline or card feed)');
+        // Check that alert message css class
+        cy.get('of-alert').find('.opfab-alert-business').should('exist');
+        cy.tick(6000);
+        // Check that alert message is not closed automatically after 6 seconds
+        cy.get('#div-detail-msg').should('exist');
+        // close it
+        cy.get('#opfab-close-alert').click();
+        cy.get('div-detail-msg').should('not.exist');
+    }
+
+    function setTimeLineDomain(domain) {
+        cy.get('#opfab-timeline-link-period-' + domain).click();
+    }
+
+    function moveTimelineRight() {
+        cy.get("#opfab-timeline-link-move-right").click();
+    }
 
     function sendCardWithSeverityAlarm() {
         script.sendCard('defaultProcess/contingencies.json');

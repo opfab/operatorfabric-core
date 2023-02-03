@@ -210,7 +210,8 @@
     "cardLoadingInProgress":"Chargement de la carte...",
     "cardNotFound": "La carte que vous cherchez n'a pas été trouvée.",
     "entityRecipients" : "Entités destinataires :",
-    "searchPlaceholderText": "Rechercher..."
+    "searchPlaceholderText": "Rechercher...",
+    "hiddenCardReceived": "Vous avez reçu une carte masquée par les filtres que vous avez activés (Timeline ou flux de cartes)"
   },
   "login": {
     "reset": "RaZ",
