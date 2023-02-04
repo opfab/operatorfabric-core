@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2023, RTE (http://www.rte-france.com)
+/* Copyright (c) 2023, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -9,7 +9,7 @@
 
 import {Injectable} from '@angular/core';
 import {Card} from '@ofModel/card.model';
-import {Observable, ReplaySubject, Subject} from 'rxjs';
+import {Observable, ReplaySubject} from 'rxjs';
 
 @Injectable({
     providedIn: 'root'
@@ -19,23 +19,24 @@ export class SelectedCardService {
     private selectedCardIdChange = new ReplaySubject<string>(1);
     private selectedCardNotFound = false;
 
-    private selectedCardWithChildrenChange = new Subject<[Card, Card[]]>();
+    private selectedCardWithChildrenChange = new ReplaySubject<SelectedCard>(1);
 
     public setSelectedCardId(cardId: string) {
         this.selectedCardId = cardId;
         this.selectedCardNotFound = false;
+        this.selectedCardWithChildrenChange.next(new SelectedCard(null,null,false));
         this.selectedCardIdChange.next(cardId);
     }
 
     public setSelectedCardWithChildren(card: Card, childCards: Card[]) {
         this.selectedCardNotFound = false;
         if (!childCards) childCards = [];
-        this.selectedCardWithChildrenChange.next([card, childCards]);
+        this.selectedCardWithChildrenChange.next(new SelectedCard(card, childCards,false));
     }
 
     public setSelectedCardNotFound() {
         this.selectedCardNotFound = true;
-        this.selectedCardWithChildrenChange.next([null,null]);
+        this.selectedCardWithChildrenChange.next(new SelectedCard(null,null,true));
     }
 
     public isSelectedCardNotFound():boolean {
@@ -56,7 +57,21 @@ export class SelectedCardService {
         return this.selectedCardIdChange.asObservable();
     }
 
-    public getSelectCardWithChildsChanges(): Observable<[Card, Card[]]> {
+    public getSelectCard(): Observable<SelectedCard> {
         return this.selectedCardWithChildrenChange.asObservable();
     }
+}
+
+
+export class SelectedCard {
+    public readonly card: Card;
+    public readonly childCards: Card[];
+    public readonly notFound: boolean;
+
+    constructor(card:Card,childCards: Card[],notFound: boolean) {
+        this.card = card;
+        this.childCards = childCards;
+        this.notFound = notFound;
+    }
+
 }

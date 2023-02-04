@@ -26,7 +26,7 @@ import {LightCardsStoreService} from '@ofServices/lightcards/lightcards-store.se
 import {CardComponent} from '../../card.component';
 import {OpfabLoggerService} from 'app/business/services/logs/opfab-logger.service';
 import {UserWithPerimeters} from "@ofModel/userWithPerimeters.model";
-import {SelectedCardService} from 'app/business/services/selectedCard.service';
+import {SelectedCardService} from 'app/business/services/card/selectedCard.service';
 
 declare const templateGateway: any;
 

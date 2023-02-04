@@ -7,15 +7,12 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {AppState} from '@ofStore/index';
-import {Store} from '@ngrx/store';
 import {debounceTime, distinctUntilChanged, takeUntil} from 'rxjs/operators';
 import {Subject} from 'rxjs';
 import {AfterViewInit, Component, ElementRef, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {FullCalendarComponent} from '@fullcalendar/angular';
 import {EventInput} from '@fullcalendar/core';
 import allLocales from '@fullcalendar/core/locales-all';
-import {LoadCardAction} from '@ofActions/card.actions';
 import {NgbModal, NgbModalOptions, NgbModalRef} from '@ng-bootstrap/ng-bootstrap';
 import {FilterType} from '@ofModel/feed-filter.model';
 import {HourAndMinutes, TimeSpan} from '@ofModel/card.model';
@@ -29,7 +26,7 @@ import timeGridPlugin from '@fullcalendar/timegrid';
 import interactionPlugin from '@fullcalendar/interaction';
 import bootstrapPlugin from '@fullcalendar/bootstrap';
 import rrulePlugin from '@fullcalendar/rrule';
-import {SelectedCardService} from 'app/business/services/selectedCard.service';
+import {SelectedCardService} from 'app/business/services/card/selectedCard.service';
 
 @Component({
     selector: 'of-calendar',
@@ -38,7 +35,6 @@ import {SelectedCardService} from 'app/business/services/selectedCard.service';
 })
 export class CalendarComponent implements OnInit, OnDestroy, AfterViewInit {
     constructor(
-        private store: Store<AppState>,
         private modalService: NgbModal,
         processesService: ProcessesService,
         private lightCardsStoreService: LightCardsStoreService,
@@ -233,7 +229,6 @@ export class CalendarComponent implements OnInit, OnDestroy, AfterViewInit {
 
     selectCard(info) {
         this.selectedCardService.setSelectedCardId(info.event.id);
-        this.store.dispatch(new LoadCardAction({id: info.event.id}));
         const options: NgbModalOptions = {
             size: 'fullscreen'
         };

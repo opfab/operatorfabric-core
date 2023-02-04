@@ -9,9 +9,7 @@
 
 import {Component, ElementRef, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {Observable, Subject} from 'rxjs';
-import {AppState} from '@ofStore/index';
 import {ProcessesService} from 'app/business/services/processes.service';
-import {Store} from '@ngrx/store';
 import {takeUntil, tap} from 'rxjs/operators';
 import {FormControl, FormGroup} from '@angular/forms';
 import {ConfigService} from 'app/business/services/config.service';
@@ -88,7 +86,6 @@ export class ArchivesComponent implements OnDestroy, OnInit {
     displayContext: any = DisplayContext.ARCHIVE;
 
     constructor(
-        private store: Store<AppState>,
         private processesService: ProcessesService,
         private configService: ConfigService,
         private dateTimeFormatter: DateTimeFormatterService,

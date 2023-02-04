@@ -12,7 +12,7 @@ import {Router} from '@angular/router';
 import {Store} from '@ngrx/store';
 import {AppState} from '@ofStore/index';
 import {selectCurrentUrl} from '@ofSelectors/router.selectors';
-import {SelectedCardService} from 'app/business/services/selectedCard.service';
+import {SelectedCardService} from 'app/business/services/card/selectedCard.service';
 
 export enum PageType {
     UNKNOWN,

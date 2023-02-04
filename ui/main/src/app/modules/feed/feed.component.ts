@@ -19,7 +19,7 @@ import {ConfigService} from 'app/business/services/config.service';
 import {Router} from '@angular/router';
 import {selectCurrentUrl} from '@ofStore/selectors/router.selectors';
 import {UserService} from '@ofServices/user.service';
-import {SelectedCardService} from 'app/business/services/selectedCard.service';
+import {SelectedCardService} from 'app/business/services/card/selectedCard.service';
 
 @Component({
     selector: 'of-cards',
