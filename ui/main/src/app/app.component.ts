@@ -13,6 +13,8 @@ import {LogOption, OpfabLoggerService} from 'app/business/services/logs/opfab-lo
 import {RemoteLoggerService} from 'app/business/services/logs/remote-logger.service';
 import {SoundNotificationService} from '@ofServices/sound-notification.service';
 import {OpfabEventStreamService} from './business/services/opfabEventStream.service';
+import {RouterNavigationService} from '@ofServices/router-navigation.service';
+import {SelectedCardLoaderService} from './business/services/card/selectedCardLoader.service';
 
 @Component({
     selector: 'of-root',
@@ -71,7 +73,9 @@ export class AppComponent {
         private soundNotificationService: SoundNotificationService,
         private logger: OpfabLoggerService,
         private opfabEventStreamService: OpfabEventStreamService,
-        private remoteLogger: RemoteLoggerService
+        private remoteLogger: RemoteLoggerService,
+        private routerNavigationService: RouterNavigationService, // put it here to have it injected and started a startup
+        private selectedCardLoaderService: SelectedCardLoaderService  // put it here to have it injected and started a startup
     ) {}
 
     onApplicationLoaded() {

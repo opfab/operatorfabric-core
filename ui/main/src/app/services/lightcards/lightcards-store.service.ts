@@ -30,11 +30,8 @@ import {PermissionEnum} from '@ofModel/permission.model';
 import {OpfabEventStreamService} from 'app/business/services/opfabEventStream.service';
 import {CardOperationType} from '@ofModel/card-operation.model';
 import {LogOption, OpfabLoggerService} from 'app/business/services/logs/opfab-logger.service';
-import {LoadCardAction} from '@ofStore/actions/card.actions';
-import {AppState} from '@ofStore/index';
-import {Store} from '@ngrx/store';
 import {AppService} from '@ofServices/app.service';
-import {SelectedCardService} from 'app/business/services/selectedCard.service';
+import {SelectedCardService} from 'app/business/services/card/selectedCard.service';
 
 /**
  *
@@ -78,7 +75,6 @@ export class LightCardsStoreService {
         private processesService: ProcessesService,
         private entitiesService: EntitiesService,
         private opfabEventStreamService: OpfabEventStreamService,
-        private store: Store<AppState>,
         private appService: AppService,
         private selectedCardService: SelectedCardService,
         private logger: OpfabLoggerService
@@ -170,7 +166,7 @@ export class LightCardsStoreService {
                         );
                         this.addOrUpdateLightCard(operation.card);
                         if (operation.card.id === this.selectedCardService.getSelectedCardId())
-                            this.store.dispatch(new LoadCardAction({id: operation.card.id}));
+                            this.selectedCardService.setSelectedCardId(operation.card.id); // to update the selected card
                         break;
                     case CardOperationType.DELETE:
                         this.logger.info(

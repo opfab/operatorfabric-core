@@ -14,10 +14,7 @@ import {TranslateService} from '@ngx-translate/core';
 import {ExcelExport} from 'app/business/common/excel-export';
 import {takeUntil} from 'rxjs/operators';
 import {Observable, Subject} from 'rxjs';
-import {LoadCardAction} from '@ofActions/card.actions';
 import {NgbModal, NgbModalOptions, NgbModalRef} from '@ng-bootstrap/ng-bootstrap';
-import {Store} from '@ngrx/store';
-import {AppState} from '@ofStore/index';
 import {ProcessesService} from 'app/business/services/processes.service';
 import {Utilities} from 'app/business/common/utilities';
 import {MonitoringConfig} from '@ofModel/monitoringConfig.model';
@@ -31,7 +28,7 @@ import {ResponsesCellRendererComponent} from '../cell-renderers/responses-cell-r
 import {LightCard} from '@ofModel/light-card.model';
 import {LightCardsStoreService} from '@ofServices/lightcards/lightcards-store.service';
 import {DateTimeFormatterService} from 'app/business/services/date-time-formatter.service';
-import {SelectedCardService} from 'app/business/services/selectedCard.service';
+import {SelectedCardService} from 'app/business/services/card/selectedCard.service';
 
 @Component({
     selector: 'of-monitoring-table',
@@ -85,7 +82,6 @@ export class MonitoringTableComponent implements OnChanges, OnDestroy {
     constructor(
         readonly dateTimeFormatter: DateTimeFormatterService,
         private translate: TranslateService,
-        private store: Store<AppState>,
         private modalService: NgbModal,
         private processesService: ProcessesService,
         private cardService: CardService,
@@ -431,7 +427,6 @@ export class MonitoringTableComponent implements OnChanges, OnDestroy {
 
     selectCard(info) {
         this.selectedCardService.setSelectedCardId(info);
-        this.store.dispatch(new LoadCardAction({id: info}));
         const options: NgbModalOptions = {
             size: 'fullscreen'
         };

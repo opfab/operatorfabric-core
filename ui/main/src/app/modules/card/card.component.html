@@ -6,8 +6,8 @@
 <!-- SPDX-License-Identifier: MPL-2.0                                      -->
 <!-- This file is part of the OperatorFabric project.                      -->
 
-<div *ngIf="card && cardState;" style="font-size:13px;" [hidden]="cardLoadingInProgress || cardNotFound">
-  <of-card-body [cardState]="cardState" [card]="card" [childCards]="childCards"
+<div  style="font-size:13px;" [hidden]="cardLoadingInProgress || cardNotFound">
+  <of-card-body *ngIf="card && cardState;" [cardState]="cardState" [card]="card" [childCards]="childCards"
     [parentModalRef]="parentModalRef" [screenSize]="screenSize"
     [parentComponent]=this>
   </of-card-body>

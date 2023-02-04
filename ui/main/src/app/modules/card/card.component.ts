@@ -16,7 +16,7 @@ import {UserService} from '@ofServices/user.service';
 import {AppService} from '@ofServices/app.service';
 import {State} from '@ofModel/processes.model';
 import {NgbModalRef} from '@ng-bootstrap/ng-bootstrap';
-import {SelectedCardService} from 'app/business/services/selectedCard.service';
+import {SelectedCard, SelectedCardService} from 'app/business/services/card/selectedCard.service';
 
 @Component({
     selector: 'of-card',
@@ -43,36 +43,39 @@ export class CardComponent implements OnInit, OnDestroy {
     ) {}
 
     ngOnInit() {
-        if (this.selectedCardService.isSelectedCardNotFound()) this.cardNotFound = true;
         this.selectedCardService
-            .getSelectCardWithChildsChanges()
+            .getSelectCard()
             .pipe(takeUntil(this.unsubscribe$))
-            .subscribe(([card, childCards]: [Card, Card[]]) => {
-                if (!!card) {
+            .subscribe((selectedCard: SelectedCard) => {
+                if (!!selectedCard.card) {
                     this.cardNotFound = false;
-                    this.businessconfigService.queryProcess(card.process, card.processVersion).subscribe({
-                        next: (businessconfig) => {
-                            this.card = card;
-                            this.childCards = childCards;
-                            this.cardLoadingInProgress = false;
-                            if (!!businessconfig) {
-                                this.cardState = businessconfig.extractState(card);
-                                if (!this.cardState) {
-                                    console.log(
-                                        new Date().toISOString(),
-                                        `WARNING state ${card.state} does not exist for process ${card.process}`
-                                    );
+                    this.businessconfigService
+                        .queryProcess(selectedCard.card.process, selectedCard.card.processVersion)
+                        .subscribe({
+                            next: (businessconfig) => {
+                                this.card = selectedCard.card;
+                                this.childCards = selectedCard.childCards;
+                                this.cardLoadingInProgress = false;
+                                if (!!businessconfig) {
+                                    this.cardState = businessconfig.extractState(selectedCard.card);
+                                    if (!this.cardState) {
+                                        console.log(
+                                            new Date().toISOString(),
+                                            `WARNING state ${selectedCard.card.state} does not exist for process ${selectedCard.card.process}`
+                                        );
+                                        this.cardState = new State();
+                                    }
+                                } else {
                                     this.cardState = new State();
                                 }
-                            } else {
-                                this.cardState = new State();
                             }
-                        }
-                    });
+                        });
                 } else {
-                    this.cardNotFound = true;
-                    this.cardLoadingInProgress = false;
-                    console.log(new Date().toISOString(), 'WARNING card not found.');
+                    if (selectedCard.notFound) {
+                        this.cardNotFound = true;
+                        this.cardLoadingInProgress = false;
+                        console.log(new Date().toISOString(), 'WARNING card not found.');
+                    }
                 }
             });
         this.checkForCardLoadingInProgressForMoreThanOneSecond();
@@ -80,7 +83,8 @@ export class CardComponent implements OnInit, OnDestroy {
 
     // we show a spinner on screen if card loading takes more than 1 second
     checkForCardLoadingInProgressForMoreThanOneSecond() {
-        this.selectedCardService.getSelectCardIdChanges()
+        this.selectedCardService
+            .getSelectCardIdChanges()
             .pipe(takeUntil(this.unsubscribe$))
             .subscribe((cardId) => {
                 // a new card has been selected and will be downloaded
