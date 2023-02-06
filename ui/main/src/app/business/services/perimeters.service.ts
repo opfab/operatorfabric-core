@@ -1,4 +1,4 @@
-/* Copyright (c) 2021-2023, RTE (http://www.rte-france.com)
+/* Copyright (c) 2023, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -9,19 +9,20 @@
 
 import {Observable, Subject} from 'rxjs';
 import {environment} from '@env/environment';
-import {HttpClient, HttpErrorResponse} from '@angular/common/http';
-import {catchError, takeUntil, tap} from 'rxjs/operators';
-import {Injectable, OnDestroy} from '@angular/core';
+import {map, takeUntil, tap} from 'rxjs/operators';
+import {Injectable} from '@angular/core';
 import {CachedCrudService} from '@ofServices/cached-crud-service';
 import {Perimeter} from '@ofModel/perimeter.model';;
-import {OpfabLoggerService} from '../business/services/logs/opfab-logger.service';
-import {AlertMessageService} from '../business/services/alert-message.service';
+import {OpfabLoggerService} from './logs/opfab-logger.service';
+import {AlertMessageService} from './alert-message.service';
+import {PerimetersServer} from '../server/perimeters.server';
+import {ServerResponseStatus} from '../server/serverResponse';
 
 
 @Injectable({
     providedIn: 'root'
 })
-export class PerimetersService extends CachedCrudService implements OnDestroy {
+export class PerimetersService extends CachedCrudService {
     readonly perimetersUrl: string;
     private _perimeters: Perimeter[];
 
@@ -31,22 +32,21 @@ export class PerimetersService extends CachedCrudService implements OnDestroy {
      * @constructor
      * @param httpClient - Angular build-in
      */
-    constructor(private httpClient: HttpClient, protected loggerService: OpfabLoggerService, alertMessageService: AlertMessageService) {
+    constructor(protected loggerService: OpfabLoggerService, 
+        alertMessageService: AlertMessageService,
+        private perimeterServer: PerimetersServer) {
         super(loggerService, alertMessageService);
         this.perimetersUrl = `${environment.urls.perimeters}`;
     }
 
-    ngOnDestroy() {
-        this.ngUnsubscribe$.next();
-        this.ngUnsubscribe$.complete();
-    }
-
     deleteById(id: string) {
-        const url = `${this.perimetersUrl}/${id}`;
-        return this.httpClient.delete(url).pipe(
-            catchError((error: HttpErrorResponse) => this.handleError(error)),
-            tap(() => {
-                this.deleteFromCachedPerimeters(id);
+        return this.perimeterServer.deleteById(id).pipe(
+            map((perimetersResponse) => {
+                if (perimetersResponse.status === ServerResponseStatus.OK) {
+                    this.deleteFromCachedPerimeters(id);
+                } else {
+                    this.handleServerResponseError(perimetersResponse);
+                }
             })
         );
     }
@@ -62,9 +62,16 @@ export class PerimetersService extends CachedCrudService implements OnDestroy {
     }
 
     private queryAllPerimeters(): Observable<Perimeter[]> {
-        return this.httpClient
-            .get<Perimeter[]>(`${this.perimetersUrl}`)
-            .pipe(catchError((error: HttpErrorResponse) => this.handleError(error)));
+        return this.perimeterServer.queryAllPerimeters().pipe(
+            map((perimetersResponse) => {
+                if (perimetersResponse.status === ServerResponseStatus.OK) {
+                    return perimetersResponse.data;
+                } else {
+                    this.handleServerResponseError(perimetersResponse);
+                    return [];
+                }
+            })
+        );
     }
 
     public loadAllPerimetersData(): Observable<any> {
@@ -91,19 +98,29 @@ export class PerimetersService extends CachedCrudService implements OnDestroy {
     }
 
     createPerimeter(perimeterData: Perimeter): Observable<Perimeter> {
-        return this.httpClient.post<Perimeter>(`${this.perimetersUrl}`, perimeterData).pipe(
-            catchError((error: HttpErrorResponse) => this.handleError(error)),
-            tap(() => {
-                this.updateCachedPerimeters(perimeterData);
+        return this.perimeterServer.createPerimeter(perimeterData).pipe(
+            map((perimetersResponse) => {
+                if (perimetersResponse.status === ServerResponseStatus.OK) {
+                    this.updateCachedPerimeters(perimeterData);
+                    return perimetersResponse.data;
+                } else {
+                    this.handleServerResponseError(perimetersResponse);
+                    return null;
+                }
             })
         );
     }
 
     updatePerimeter(perimeterData: Perimeter): Observable<Perimeter> {
-        return this.httpClient.put<Perimeter>(`${this.perimetersUrl}` + '/' + perimeterData.id, perimeterData).pipe(
-            catchError((error: HttpErrorResponse) => this.handleError(error)),
-            tap(() => {
-                this.updateCachedPerimeters(perimeterData);
+        return this.perimeterServer.updatePerimeter(perimeterData).pipe(
+            map((perimetersResponse) => {
+                if (perimetersResponse.status === ServerResponseStatus.OK) {
+                    this.updateCachedPerimeters(perimeterData);
+                    return perimetersResponse.data;
+                } else {
+                    this.handleServerResponseError(perimetersResponse);
+                    return null;
+                }
             })
         );
     }
