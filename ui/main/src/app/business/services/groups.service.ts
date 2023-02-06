@@ -10,16 +10,18 @@
 import {Observable, Subject} from 'rxjs';
 import {Group} from '@ofModel/group.model';
 import {environment} from '@env/environment';
-import {HttpClient, HttpErrorResponse} from '@angular/common/http';
-import {catchError, takeUntil, tap} from 'rxjs/operators';
-import {Injectable, OnDestroy} from '@angular/core';
+import {takeUntil, tap, map} from 'rxjs/operators';
+import {Injectable} from '@angular/core';
 import {CachedCrudService} from '@ofServices/cached-crud-service';
-import {OpfabLoggerService} from '../business/services/logs/opfab-logger.service';
-import {AlertMessageService} from '../business/services/alert-message.service';
+import {OpfabLoggerService} from './logs/opfab-logger.service';
+import {AlertMessageService} from './alert-message.service';
+import {GroupsServer} from '../server/groups.server';
+import {ServerResponseStatus} from '../server/serverResponse';
+
 @Injectable({
     providedIn: 'root'
 })
-export class GroupsService extends CachedCrudService implements OnDestroy {
+export class GroupsService extends CachedCrudService {
     readonly groupsUrl: string;
     private _groups: Group[];
 
@@ -29,22 +31,22 @@ export class GroupsService extends CachedCrudService implements OnDestroy {
      * @constructor
      * @param httpClient - Angular build-in
      */
-    constructor( private httpClient: HttpClient, protected loggerService: OpfabLoggerService, protected alertMessageService: AlertMessageService) {
+    constructor(
+        protected loggerService: OpfabLoggerService, 
+        protected alertMessageService: AlertMessageService,
+        private groupsServer: GroupsServer) {
         super(loggerService, alertMessageService);
         this.groupsUrl = `${environment.urls.groups}`;
     }
 
-    ngOnDestroy() {
-        this.ngUnsubscribe$.next();
-        this.ngUnsubscribe$.complete();
-    }
-
     deleteById(id: string) {
-        const url = `${this.groupsUrl}/${id}`;
-        return this.httpClient.delete(url).pipe(
-            catchError((error: HttpErrorResponse) => this.handleError(error)),
-            tap(() => {
-                this.deleteFromCachedGroups(id);
+        return this.groupsServer.deleteById(id).pipe(
+            tap((groupsResponse) => {
+                if (groupsResponse.status === ServerResponseStatus.OK) {
+                    this.deleteFromCachedGroups(id);
+                } else {
+                    this.handleServerResponseError(groupsResponse);
+                }
             })
         );
     }
@@ -60,9 +62,16 @@ export class GroupsService extends CachedCrudService implements OnDestroy {
     }
 
     private queryAllGroups(): Observable<Group[]> {
-        return this.httpClient
-            .get<Group[]>(`${this.groupsUrl}`)
-            .pipe(catchError((error: HttpErrorResponse) => this.handleError(error)));
+        return this.groupsServer.queryAllGroups().pipe(
+            map(((groupsResponse) => {
+                if (groupsResponse.status === ServerResponseStatus.OK) {
+                    return groupsResponse.data;
+                } else {
+                    this.handleServerResponseError(groupsResponse);
+                    return [];
+                }
+            }))
+            );
     }
 
     public loadAllGroupsData(): Observable<any> {
@@ -89,10 +98,15 @@ export class GroupsService extends CachedCrudService implements OnDestroy {
     }
 
     updateGroup(groupData: Group): Observable<Group> {
-        return this.httpClient.post<Group>(`${this.groupsUrl}`, groupData).pipe(
-            catchError((error: HttpErrorResponse) => this.handleError(error)),
-            tap(() => {
-                this.updateCachedGroups(groupData);
+        return this.groupsServer.updateGroup(groupData).pipe(
+            map((groupsResponse) => {
+                if (groupsResponse.status === ServerResponseStatus.OK) {
+                    this.updateCachedGroups(groupData);
+                    return groupsResponse.data;
+                } else {
+                    this.handleServerResponseError(groupsResponse);
+                    return null;
+                }
             })
         );
     }

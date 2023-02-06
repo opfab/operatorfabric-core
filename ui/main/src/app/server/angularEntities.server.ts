@@ -12,8 +12,6 @@ import {HttpClient} from '@angular/common/http';
 import {Observable} from 'rxjs';
 import {Entity} from '@ofModel/entity.model';
 import {Injectable} from '@angular/core';
-import {OpfabLoggerService} from '../business/services/logs/opfab-logger.service';
-import {AlertMessageService} from '../business/services/alert-message.service';
 import {ServerResponse} from 'app/business/server/serverResponse';
 import {AngularServer} from './angular.server';
 import {EntitiesServer} from 'app/business/server/entities.server';
@@ -30,9 +28,7 @@ export class AngularEntitiesServer extends AngularServer implements EntitiesServ
      * @constructor
      * @param httpClient - Angular build-in
      */
-    constructor(private httpClient: HttpClient, 
-        protected loggerService: OpfabLoggerService, 
-        protected alertMessageService: AlertMessageService) {
+    constructor(private httpClient: HttpClient) {
         super();
         this.entitiesUrl = `${environment.urls.entities}`;
     }

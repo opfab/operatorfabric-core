@@ -15,7 +15,7 @@ import {UserPreferencesService} from '@ofServices/user-preference.service';
 import {Utilities} from '../../business/common/utilities';
 import {MultiSelectConfig} from '@ofModel/multiselect.model';
 import {EntitiesService} from 'app/business/services/entities.service';
-import {GroupsService} from '@ofServices/groups.service';
+import {GroupsService} from 'app/business/services/groups.service';
 import {ConfigServer} from 'app/business/server/config.server';
 import {ServerResponseStatus} from 'app/business/server/serverResponse';
 import {OpfabLoggerService} from 'app/business/services/logs/opfab-logger.service';

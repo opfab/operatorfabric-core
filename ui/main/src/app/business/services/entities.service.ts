@@ -8,7 +8,6 @@
  */
 
 import {environment} from '@env/environment';
-import {HttpClient} from '@angular/common/http';
 import {map, takeUntil, tap} from 'rxjs/operators';
 import {Observable, Subject} from 'rxjs';
 import {Entity} from '@ofModel/entity.model';
@@ -32,7 +31,7 @@ export class EntitiesService extends CachedCrudService {
      * @constructor
      * @param httpClient - Angular build-in
      */
-    constructor(private httpClient: HttpClient, 
+    constructor(
         protected loggerService: OpfabLoggerService, 
         private entitiesServer: EntitiesServer,
         protected alertMessageService: AlertMessageService) {
@@ -73,6 +72,7 @@ export class EntitiesService extends CachedCrudService {
         return this.entitiesServer.updateEntity(entityData).pipe(
             map((responseEntities) => {
                 if (responseEntities.status === ServerResponseStatus.OK) {
+                    this.updateCachedEntity(entityData);
                     return responseEntities.data;
                 } else {
                     this.handleServerResponseError(responseEntities);
