@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2023, RTE (http://www.rte-france.com)
+/* Copyright (c) 2023, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -8,21 +8,23 @@
  */
 
 import {environment} from '@env/environment';
-import {HttpClient, HttpErrorResponse} from '@angular/common/http';
-import {catchError, takeUntil, tap} from 'rxjs/operators';
+import {HttpClient} from '@angular/common/http';
+import {map, takeUntil, tap} from 'rxjs/operators';
 import {Observable, Subject} from 'rxjs';
 import {Entity} from '@ofModel/entity.model';
-import {Injectable, OnDestroy} from '@angular/core';
+import {Injectable} from '@angular/core';
 import {CachedCrudService} from '@ofServices/cached-crud-service';
-import {OpfabLoggerService} from '../business/services/logs/opfab-logger.service';
-import {AlertMessageService} from '../business/services/alert-message.service';
+import {OpfabLoggerService} from './logs/opfab-logger.service';
+import {AlertMessageService} from './alert-message.service';
+import {EntitiesServer} from '../server/entities.server';
+import {ServerResponseStatus} from '../server/serverResponse';
 
 declare const templateGateway: any;
 
 @Injectable({
     providedIn: 'root'
 })
-export class EntitiesService extends CachedCrudService implements OnDestroy {
+export class EntitiesService extends CachedCrudService {
     readonly entitiesUrl: string;
     protected _entities: Entity[];
     private ngUnsubscribe$ = new Subject<void>();
@@ -30,22 +32,22 @@ export class EntitiesService extends CachedCrudService implements OnDestroy {
      * @constructor
      * @param httpClient - Angular build-in
      */
-    constructor(private httpClient: HttpClient, protected loggerService: OpfabLoggerService, protected alertMessageService: AlertMessageService) {
+    constructor(private httpClient: HttpClient, 
+        protected loggerService: OpfabLoggerService, 
+        private entitiesServer: EntitiesServer,
+        protected alertMessageService: AlertMessageService) {
         super(loggerService, alertMessageService);
         this.entitiesUrl = `${environment.urls.entities}`;
     }
 
-    ngOnDestroy() {
-        this.ngUnsubscribe$.next();
-        this.ngUnsubscribe$.complete();
-    }
-
     deleteById(id: string) {
-        const url = `${this.entitiesUrl}/${id}`;
-        return this.httpClient.delete(url).pipe(
-            catchError((error: HttpErrorResponse) => this.handleError(error)),
-            tap(() => {
-                this.deleteFromCachedEntities(id);
+        return this.entitiesServer.deleteById(id).pipe(
+            tap((entitiesResponse) => {
+                if (entitiesResponse.status === ServerResponseStatus.OK){
+                    this.deleteFromCachedEntities(id);
+                } else {
+                    this.handleServerResponseError(entitiesResponse);
+                }
             })
         );
     }
@@ -55,16 +57,27 @@ export class EntitiesService extends CachedCrudService implements OnDestroy {
     }
 
     queryAllEntities(): Observable<Entity[]> {
-        return this.httpClient
-            .get<Entity[]>(`${this.entitiesUrl}`)
-            .pipe(catchError((error: HttpErrorResponse) => this.handleError(error)));
+        return this.entitiesServer.queryAllEntities().pipe(
+            map((entitiesResponse) => {
+                if (entitiesResponse.status === ServerResponseStatus.OK){
+                    return entitiesResponse.data;
+                } else {
+                    this.handleServerResponseError(entitiesResponse);
+                    return [];
+                }
+            })
+            );
     }
 
     updateEntity(entityData: Entity): Observable<Entity> {
-        return this.httpClient.post<Entity>(`${this.entitiesUrl}`, entityData).pipe(
-            catchError((error: HttpErrorResponse) => this.handleError(error)),
-            tap(() => {
-                this.updateCachedEntity(entityData);
+        return this.entitiesServer.updateEntity(entityData).pipe(
+            map((responseEntities) => {
+                if (responseEntities.status === ServerResponseStatus.OK) {
+                    return responseEntities.data;
+                } else {
+                    this.handleServerResponseError(responseEntities);
+                    return null;
+                }
             })
         );
     }

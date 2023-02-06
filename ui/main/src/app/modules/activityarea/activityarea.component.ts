@@ -14,7 +14,7 @@ import {NgbModalRef} from '@ng-bootstrap/ng-bootstrap/modal/modal-ref';
 import {UserWithPerimeters} from '@ofModel/userWithPerimeters.model';
 import {FormControl, FormGroup} from '@angular/forms';
 import {SettingsService} from 'app/business/services/settings.service';
-import {EntitiesService} from '@ofServices/entities.service';
+import {EntitiesService} from 'app/business/services/entities.service';
 import {Utilities} from '../../business/common/utilities';
 import {GroupsService} from '@ofServices/groups.service';
 import {LightCardsStoreService} from '@ofServices/lightcards/lightcards-store.service';

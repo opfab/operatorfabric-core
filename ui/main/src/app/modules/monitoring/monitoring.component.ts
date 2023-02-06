@@ -18,7 +18,7 @@ import {Process, TypeOfStateEnum} from '@ofModel/processes.model';
 import {ProcessesService} from 'app/business/services/processes.service';
 import {Filter} from '@ofModel/feed-filter.model';
 import {LightCardsStoreService} from '@ofServices/lightcards/lightcards-store.service';
-import {EntitiesService} from '@ofServices/entities.service';
+import {EntitiesService} from 'app/business/services/entities.service';
 
 @Component({
     selector: 'of-monitoring',

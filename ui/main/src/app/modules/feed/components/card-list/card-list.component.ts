@@ -19,7 +19,7 @@ import {AppService} from '@ofServices/app.service';
 import {AcknowledgeService} from 'app/business/services/acknowledge.service';
 import {UserService} from '@ofServices/user.service';
 import {UserWithPerimeters} from '@ofModel/userWithPerimeters.model';
-import {EntitiesService} from '@ofServices/entities.service';
+import {EntitiesService} from 'app/business/services/entities.service';
 import {GroupedCardsService} from '@ofServices/grouped-cards.service';
 import {AlertMessageService} from 'app/business/services/alert-message.service';
 

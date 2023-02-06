@@ -26,7 +26,7 @@ import {Process} from '@ofModel/processes.model';
 import {GroupsService} from '@ofServices/groups.service';
 import {Group} from '@ofModel/group.model';
 import {Entity} from '@ofModel/entity.model';
-import {EntitiesService} from '@ofServices/entities.service';
+import {EntitiesService} from 'app/business/services/entities.service';
 import {PerimetersCellRendererComponent} from '../cell-renderers/perimeters-cell-renderer.component';
 import {ExcelExport} from 'app/business/common/excel-export';
 import {IdCellRendererComponent} from '../cell-renderers/id-cell-renderer.component';

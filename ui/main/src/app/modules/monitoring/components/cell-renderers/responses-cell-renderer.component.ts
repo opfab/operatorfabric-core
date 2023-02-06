@@ -9,7 +9,7 @@
 
 import {Component, OnDestroy} from '@angular/core';
 import {Card} from '@ofModel/card.model';
-import {EntitiesService} from '@ofServices/entities.service';
+import {EntitiesService} from 'app/business/services/entities.service';
 import {LightCardsStoreService} from '@ofServices/lightcards/lightcards-store.service';
 import {ICellRendererAngularComp} from 'ag-grid-angular';
 import {ICellRendererParams} from 'ag-grid-community';

@@ -14,7 +14,7 @@ import {FormControl, FormGroup} from '@angular/forms';
 import {UserPreferencesService} from '@ofServices/user-preference.service';
 import {Utilities} from '../../business/common/utilities';
 import {MultiSelectConfig} from '@ofModel/multiselect.model';
-import {EntitiesService} from '@ofServices/entities.service';
+import {EntitiesService} from 'app/business/services/entities.service';
 import {GroupsService} from '@ofServices/groups.service';
 import {ConfigServer} from 'app/business/server/config.server';
 import {ServerResponseStatus} from 'app/business/server/serverResponse';

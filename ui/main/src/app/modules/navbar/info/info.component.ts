@@ -13,7 +13,7 @@ import {Store} from '@ngrx/store';
 import {selectUserNameOrIdentifier} from '@ofSelectors/authentication.selectors';
 import {Observable} from 'rxjs';
 import {UserService} from '@ofServices/user.service';
-import {EntitiesService} from '@ofServices/entities.service';
+import {EntitiesService} from 'app/business/services/entities.service';
 import {ConfigService} from 'app/business/services/config.service';
 import {DateTimeFormatterService} from 'app/business/services/date-time-formatter.service';
 import {ApplicationEventsService} from 'app/business/services/application-events.service';
