@@ -109,7 +109,9 @@
     "realTimeUsers": "Realtime gebruikers",
     "externalDevicesConfiguration": "Extern apparaat configuratie",
     "activityArea": "Activiteitengebied",
-    "useractionlogs": "Logboek"
+    "useractionlogs": "Logboek",
+    "newcardTooltip": "Maak een nieuwe kaart",
+    "calendarTooltip": "Kalender" 
   },
   "timeline": {
     "hideTimeline" : "Verberg Tijdlijn",
