@@ -20,7 +20,7 @@ import {
 import {NgbActiveModal} from '@ng-bootstrap/ng-bootstrap';
 import {AdminItemType, SharingService} from '../../../services/sharing.service';
 import {CrudService} from '@ofServices/crud-service';
-import {PerimetersService} from '@ofServices/perimeters.service';
+import {PerimetersService} from 'app/business/services/perimeters.service';
 import {MessageLevel} from '@ofModel/message.model';
 import {GroupsService} from '@ofServices/groups.service';
 import {MultiSelectConfig, MultiSelectOption} from '@ofModel/multiselect.model';

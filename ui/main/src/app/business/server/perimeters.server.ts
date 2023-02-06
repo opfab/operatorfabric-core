@@ -7,12 +7,13 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {Entity} from '@ofModel/entity.model';
+import {Perimeter} from '@ofModel/perimeter.model';
 import {Observable} from 'rxjs';
 import {ServerResponse} from './serverResponse';
 
-export abstract class EntitiesServer {
+export abstract class PerimetersServer {
     abstract deleteById(id: string): Observable<ServerResponse<any>>; 
-    abstract queryAllEntities(): Observable<ServerResponse<Entity[]>>;
-    abstract updateEntity(entityData: Entity): Observable<ServerResponse<Entity>>;
+    abstract queryAllPerimeters(): Observable<ServerResponse<Perimeter[]>>;
+    abstract createPerimeter(perimeterData: Perimeter): Observable<ServerResponse<Perimeter>>;
+    abstract updatePerimeter(perimeterData: Perimeter): Observable<ServerResponse<Perimeter>>;
 }

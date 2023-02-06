@@ -18,7 +18,7 @@ import {Component, Input, OnInit} from '@angular/core';
 import {NgbActiveModal} from '@ng-bootstrap/ng-bootstrap';
 import {Perimeter, RightsEnum} from '@ofModel/perimeter.model';
 import {ProcessesService} from 'app/business/services/processes.service';
-import {PerimetersService} from '@ofServices/perimeters.service';
+import {PerimetersService} from 'app/business/services/perimeters.service';
 import {Process} from '@ofModel/processes.model';
 import {MessageLevel} from '@ofModel/message.model';
 
