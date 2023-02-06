@@ -8,16 +8,15 @@
  */
 
 import {Injectable} from '@angular/core';
-import {HttpClient, HttpErrorResponse} from '@angular/common/http';
 import {environment} from '@env/environment';
 import {Observable} from 'rxjs';
-import {catchError} from 'rxjs/operators';
-import {
-    Process,
-} from '@ofModel/processes.model';
-import {CachedCrudService} from './cached-crud-service';
-import {OpfabLoggerService} from '../business/services/logs/opfab-logger.service';
-import {AlertMessageService} from '../business/services/alert-message.service';
+import {map} from 'rxjs/operators';
+import {Process} from '@ofModel/processes.model';
+import {CachedCrudService} from '@ofServices/cached-crud-service';
+import {OpfabLoggerService} from './logs/opfab-logger.service';
+import {AlertMessageService} from './alert-message.service';
+import {AdminProcessServer} from '../server/adminprocess.server';
+import {ServerResponseStatus} from '../server/serverResponse';
 
 @Injectable({
     providedIn: 'root'
@@ -29,7 +28,7 @@ export class AdminProcessesService extends CachedCrudService{
     readonly monitoringConfigUrl: string;
     private processes: Process[];
     constructor(
-        private httpClient: HttpClient,
+        private adminprocessServer: AdminProcessServer,
         protected alertMessageService: AlertMessageService,
         protected loggerService: OpfabLoggerService
     ) {
@@ -50,10 +49,16 @@ export class AdminProcessesService extends CachedCrudService{
         return this.queryAllProcesses();
     }
     private queryAllProcesses(): Observable<Process[]> {
-        return this.httpClient
-            .get<Process[]>(`${this.processesUrl}`)
-            .pipe(catchError((error: HttpErrorResponse) => this.handleError(error))
-            );
+        return this.adminprocessServer.queryAllProcesses().pipe(
+            map((adminprocessResponse) => {
+                if (adminprocessResponse.status === ServerResponseStatus.OK){
+                    return adminprocessResponse.data;
+                } else {
+                    this.handleServerResponseError(adminprocessResponse);
+                    return [];
+                }
+            })
+        );  
     }
 
     update(data: any): Observable<any> {
@@ -61,9 +66,12 @@ export class AdminProcessesService extends CachedCrudService{
     }
 
     public deleteById(id: string) {
-        const url = `${this.processesUrl}/${id}`;
-        return this.httpClient.delete(url).pipe(
-            catchError((error: HttpErrorResponse) => this.handleError(error))
+        return this.adminprocessServer.deleteById(id).pipe(
+            map((adminprocessResponse) => {
+                if (adminprocessResponse.status !== ServerResponseStatus.OK){
+                    this.handleServerResponseError(adminprocessResponse);
+                }
+            })
         );
     }
 

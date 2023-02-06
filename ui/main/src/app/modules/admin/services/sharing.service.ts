@@ -16,7 +16,7 @@ import {CachedCrudService} from '@ofServices/cached-crud-service';
 import {Observable, ReplaySubject, Subject} from 'rxjs';
 import {takeUntil} from 'rxjs/operators';
 import {PerimetersService} from 'app/business/services/perimeters.service';
-import {AdminProcessesService} from '@ofServices/adminprocess.service';
+import {AdminProcessesService} from 'app/business/services/adminprocess.service';
 
 /** The aim of this service is to provide the services that need to be shared between components of the admin screen. For example, a single
  * instance of `EntitiesService` should be used across all components so a update to the cache is visible from all components.
