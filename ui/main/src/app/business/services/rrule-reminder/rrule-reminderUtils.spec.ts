@@ -326,9 +326,9 @@ describe('RRuleReminderUtils:getNextTimeForRepeating hour/minutes/daysOfWeek   '
         expect(dateForRepeating).toEqual(expectedResponseDate);
     });
 
-    it('2020/11/09 Monday 12:00 , \
-        Recurrence : 10:30 5:30 18:30 / Saturday Sunday Wednesday \
-        => 2020/11/11 Wednesday 5:30 ', () => {
+    it('2020/11/09 Monday 12:00 , ' +
+       'Recurrence : 10:30 5:30 18:30 / Saturday Sunday Wednesday ' +
+       '=> 2020/11/11 Wednesday 5:30 ', () => {
         const date = moment.tz('2020-11-09 12:00', 'Europe/Paris').valueOf();
 
         testCard.rRule = {
@@ -343,9 +343,9 @@ describe('RRuleReminderUtils:getNextTimeForRepeating hour/minutes/daysOfWeek   '
         expect(dateForRepeating).toEqual(expectedResponseDate);
     });
 
-    it('2020/11/09 Monday 12:00  TimeZone : London \
-        Recurrence : 10:30 5:30 18:30  TimeZone : London / Saturday(6) Sunday(7) Wednesday(3) \
-        => 2020/11/11 Wednesday 5:30  TimeZone : London ', () => {
+    it('2020/11/09 Monday 12:00  TimeZone : London ' +
+       'Recurrence : 10:30 5:30 18:30  TimeZone : London / Saturday(6) Sunday(7) Wednesday(3) ' +
+       '=> 2020/11/11 Wednesday 5:30  TimeZone : London ', () => {
         const date = moment.tz('2020-11-09 12:00', 'Europe/London').valueOf();
 
         testCard.rRule = {
@@ -361,9 +361,9 @@ describe('RRuleReminderUtils:getNextTimeForRepeating hour/minutes/daysOfWeek   '
         expect(dateForRepeating).toEqual(expectedResponseDate);
     });
 
-    it('2020/11/09 Monday 11:00 TimeZone : London  \
-        Recurrence : 10:30 5:30 18:30 TimeZone Paris / Saturday(6) Sunday(7) Wednesday(3) \
-        => 2020/11/11 Wednesday 4:30 TimeZone : London ', () => {
+    it('2020/11/09 Monday 11:00 TimeZone : London  ' +
+       'Recurrence : 10:30 5:30 18:30 TimeZone Paris / Saturday(6) Sunday(7) Wednesday(3) ' +
+       '=> 2020/11/11 Wednesday 4:30 TimeZone : London ', () => {
         const date = moment.tz('2020-11-09 11:00', 'Europe/London').valueOf();
 
         testCard.rRule = {

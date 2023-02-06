@@ -18,7 +18,7 @@ import {GroupsService} from '@ofServices/groups.service';
 import {I18nService} from 'app/business/services/i18n.service';
 import {LogOption, OpfabLoggerService} from 'app/business/services/logs/opfab-logger.service';
 import {ProcessesService} from 'app/business/services/processes.service';
-import {ReminderService} from '@ofServices/reminder/reminder.service';
+import {ReminderService} from 'app/business/services/reminder/reminder.service';
 import {UserService} from '@ofServices/user.service';
 import {AppState} from '@ofStore/index';
 import {selectIdentifier} from '@ofStore/selectors/authentication.selectors';
@@ -29,7 +29,7 @@ import {AccountAlreadyUsedComponent} from './account-already-used/account-alread
 import {AppLoadedInAnotherTabComponent} from './app-loaded-in-another-tab/app-loaded-in-another-tab.component';
 import {SettingsService} from 'app/business/services/settings.service';
 import {GlobalStyleService} from '@ofServices/global-style.service';
-import {RRuleReminderService} from '@ofServices/rrule-reminder/rrule-reminder.service';
+import {RRuleReminderService} from 'app/business/services/rrule-reminder/rrule-reminder.service';
 import {OpfabEventStreamServer} from 'app/business/server/opfabEventStream.server';
 import {OpfabEventStreamService} from 'app/business/services/opfabEventStream.service';
 import {LightCardsStoreService} from '@ofServices/lightcards/lightcards-store.service';
