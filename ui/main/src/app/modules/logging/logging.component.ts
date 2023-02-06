@@ -21,7 +21,7 @@ import {Page} from '@ofModel/page.model';
 import {ExcelExport} from 'app/business/common/excel-export';
 import {TranslateService} from '@ngx-translate/core';
 import {ArchivesLoggingFiltersComponent} from '../share/archives-logging-filters/archives-logging-filters.component';
-import {EntitiesService} from '@ofServices/entities.service';
+import {EntitiesService} from 'app/business/services/entities.service';
 import {Utilities} from 'app/business/common/utilities';
 import {NgbModal, NgbModalOptions, NgbModalRef} from '@ng-bootstrap/ng-bootstrap';
 import {ArchivedCardsFilter} from '@ofModel/archived-cards-filter.model';

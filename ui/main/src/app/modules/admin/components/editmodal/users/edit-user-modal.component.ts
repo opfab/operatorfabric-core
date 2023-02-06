@@ -19,7 +19,7 @@ import {User} from '@ofModel/user.model';
 import {NgbActiveModal} from '@ng-bootstrap/ng-bootstrap';
 import {UserService} from '@ofServices/user.service';
 import {GroupsService} from '@ofServices/groups.service';
-import {EntitiesService} from '@ofServices/entities.service';
+import {EntitiesService} from 'app/business/services/entities.service';
 import {debounceTime, distinctUntilChanged, first, map, switchMap} from 'rxjs/operators';
 import {Observable, Subject} from 'rxjs';
 import {MultiSelectConfig, MultiSelectOption} from '@ofModel/multiselect.model';

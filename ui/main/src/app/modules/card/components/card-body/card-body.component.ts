@@ -18,7 +18,7 @@ import {Subject} from 'rxjs';
 import {AppService, PageType} from '@ofServices/app.service';
 import {User} from '@ofModel/user.model';
 import {UserService} from '@ofServices/user.service';
-import {EntitiesService} from '@ofServices/entities.service';
+import {EntitiesService} from 'app/business/services/entities.service';
 import {NgbModalRef} from '@ng-bootstrap/ng-bootstrap';
 import {UserPermissionsService} from 'app/business/services/user-permissions.service';
 import {DisplayContext} from '@ofModel/templateGateway.model';

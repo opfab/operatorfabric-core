@@ -9,7 +9,7 @@
 
 import {Component, Input, OnChanges, OnDestroy, OnInit} from '@angular/core';
 import {Card} from '@ofModel/card.model';
-import {EntitiesService} from '@ofServices/entities.service';
+import {EntitiesService} from 'app/business/services/entities.service';
 import {LightCardsStoreService} from '@ofServices/lightcards/lightcards-store.service';
 import {Utilities} from 'app/business/common/utilities';
 import {Subject} from 'rxjs';

@@ -18,7 +18,7 @@ import {PermissionEnum} from '@ofModel/permission.model';
 import {State} from '@ofModel/processes.model';
 import {User} from '@ofModel/user.model';
 import {CardService} from '@ofServices/card.service';
-import {EntitiesService} from '@ofServices/entities.service';
+import {EntitiesService} from 'app/business/services/entities.service';
 import {ProcessesService} from 'app/business/services/processes.service';
 import {UserPermissionsService} from 'app/business/services/user-permissions.service';
 import {UserService} from '@ofServices/user.service';

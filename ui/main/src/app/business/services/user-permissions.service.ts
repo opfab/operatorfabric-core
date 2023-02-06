@@ -12,7 +12,7 @@ import {userRight, UserWithPerimeters} from '@ofModel/userWithPerimeters.model';
 import {Card} from '@ofModel/card.model';
 import {Process, ShowAcknowledgmentFooterEnum} from '@ofModel/processes.model';
 import {RightsEnum} from '@ofModel/perimeter.model';
-import {EntitiesService} from '@ofServices/entities.service';
+import {EntitiesService} from 'app/business/services/entities.service';
 import {ProcessesService} from 'app/business/services/processes.service';
 import {User} from '@ofModel/user.model';
 

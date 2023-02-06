@@ -19,7 +19,7 @@ import {HttpClientTestingModule} from '@angular/common/http/testing';
 import {StoreModule} from '@ngrx/store';
 import {appReducer} from '@ofStore/index';
 import {ConfigService} from 'app/business/services/config.service';
-import {EntitiesService} from '@ofServices/entities.service';
+import {EntitiesService} from 'app/business/services/entities.service';
 import {EntitiesServiceMock} from '@tests/mocks/entities.service.mock';
 import {LightCardsStoreService} from '../../services/lightcards/lightcards-store.service';
 import {TranslateLoader, TranslateModule} from '@ngx-translate/core';
@@ -30,6 +30,7 @@ import {ProcessServerMock} from '@tests/mocks/processServer.mock';
 import {OpfabEventStreamService} from 'app/business/services/opfabEventStream.service';
 import {AcknowledgeServer} from '../server/acknowledge.server';
 import {RemoteLoggerServer} from '../server/remote-logger.server';
+import {EntitiesServer} from '../server/entities.server';
 
 describe('AcknowledgeService testing ', () => {
     let acknowledgeService: AcknowledgeService;
@@ -50,6 +51,7 @@ describe('AcknowledgeService testing ', () => {
                 {provide : AcknowledgeServer, useValue: null},
                 LightCardsStoreService,
                 {provide: EntitiesService, useClass: EntitiesServiceMock},
+                {provide: EntitiesServer, useValue: null},
                 {provide : OpfabEventStreamService, useValue: null}
             ],
             imports: [

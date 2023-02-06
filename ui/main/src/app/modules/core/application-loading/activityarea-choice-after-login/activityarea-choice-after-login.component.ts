@@ -10,7 +10,7 @@
 import {Component, TemplateRef, ViewChild} from '@angular/core';
 import {NgbModal, NgbModalRef} from '@ng-bootstrap/ng-bootstrap';
 import {ConfigService} from 'app/business/services/config.service';
-import {EntitiesService} from '@ofServices/entities.service';
+import {EntitiesService} from 'app/business/services/entities.service';
 import {UserService} from '@ofServices/user.service';
 import {ApplicationLoadingStep} from '../application-loading-step';
 

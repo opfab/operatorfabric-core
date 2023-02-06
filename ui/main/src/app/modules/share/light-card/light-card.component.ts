@@ -17,7 +17,7 @@ import {takeUntil} from 'rxjs/operators';
 import {Observable, Subject} from 'rxjs';
 import {ConfigService} from 'app/business/services/config.service';
 import {AppService, PageType} from '@ofServices/app.service';
-import {EntitiesService} from '@ofServices/entities.service';
+import {EntitiesService} from 'app/business/services/entities.service';
 import {ProcessesService} from 'app/business/services/processes.service';
 import {UserPreferencesService} from '@ofServices/user-preference.service';
 import {DisplayContext} from '@ofModel/templateGateway.model';

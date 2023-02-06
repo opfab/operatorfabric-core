@@ -8,7 +8,7 @@
  */
 
 import {Injectable} from '@angular/core';
-import {EntitiesService} from '@ofServices/entities.service';
+import {EntitiesService} from 'app/business/services/entities.service';
 import {GroupsService} from '@ofServices/groups.service';
 import {LogOption, OpfabLoggerService} from 'app/business/services/logs/opfab-logger.service';
 import {TemplateCssService} from '@ofServices/template-css.service';

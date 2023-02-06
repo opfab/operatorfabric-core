@@ -10,7 +10,7 @@
 import {Component, ViewChild} from "@angular/core";
 import {FormControl, FormGroup} from "@angular/forms";
 import {UserActionLog} from "@ofModel/user-action-log.model";
-import { ServerResponseStatus } from "app/business/server/serverResponse";
+import {ServerResponseStatus} from "app/business/server/serverResponse";
 import {UserActionLogsServer} from "app/business/server/user-action-logs.server";
 import moment from "moment";
 import {UserActionLogsFiltersComponent} from "./components/useractionlogs-filters/useractionlogs-filters.component";

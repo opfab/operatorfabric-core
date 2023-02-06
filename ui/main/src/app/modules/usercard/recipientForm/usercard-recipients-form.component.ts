@@ -9,7 +9,7 @@
 
 import {Component, Input, OnChanges, OnInit} from '@angular/core';
 import {ConfigService} from 'app/business/services/config.service';
-import {EntitiesService} from '@ofServices/entities.service';
+import {EntitiesService} from 'app/business/services/entities.service';
 import {Recipient} from '@ofModel/processes.model';
 import {Entity} from '@ofModel/entity.model';
 import {OpfabLoggerService} from 'app/business/services/logs/opfab-logger.service';

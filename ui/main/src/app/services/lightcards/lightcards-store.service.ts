@@ -24,7 +24,7 @@ import {
 } from 'rxjs';
 import {UserService} from '../user.service';
 import {ProcessesService} from 'app/business/services/processes.service';
-import {EntitiesService} from '@ofServices/entities.service';
+import {EntitiesService} from 'app/business/services/entities.service';
 import {ConsideredAcknowledgedForUserWhenEnum} from '@ofModel/processes.model';
 import {PermissionEnum} from '@ofModel/permission.model';
 import {OpfabEventStreamService} from 'app/business/services/opfabEventStream.service';
