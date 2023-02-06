@@ -16,7 +16,7 @@ import {FormControl, FormGroup} from '@angular/forms';
 import {SettingsService} from 'app/business/services/settings.service';
 import {EntitiesService} from 'app/business/services/entities.service';
 import {Utilities} from '../../business/common/utilities';
-import {GroupsService} from '@ofServices/groups.service';
+import {GroupsService} from 'app/business/services/groups.service';
 import {LightCardsStoreService} from '@ofServices/lightcards/lightcards-store.service';
 import {ApplicationEventsService} from 'app/business/services/application-events.service';
 

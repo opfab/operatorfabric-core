@@ -14,7 +14,7 @@ import {TranslateService} from '@ngx-translate/core';
 import {AuthenticationService} from '@ofServices/authentication/authentication.service';
 import {ConfigService} from 'app/business/services/config.service';
 import {EntitiesService} from 'app/business/services/entities.service';
-import {GroupsService} from '@ofServices/groups.service';
+import {GroupsService} from 'app/business/services/groups.service';
 import {I18nService} from 'app/business/services/i18n.service';
 import {LogOption, OpfabLoggerService} from 'app/business/services/logs/opfab-logger.service';
 import {ProcessesService} from 'app/business/services/processes.service';

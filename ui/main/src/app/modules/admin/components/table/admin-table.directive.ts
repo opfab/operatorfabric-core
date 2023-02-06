@@ -23,7 +23,7 @@ import {takeUntil} from 'rxjs/operators';
 import {StateRightsCellRendererComponent} from '../cell-renderers/state-rights-cell-renderer.component';
 import {ProcessesService} from 'app/business/services/processes.service';
 import {Process} from '@ofModel/processes.model';
-import {GroupsService} from '@ofServices/groups.service';
+import {GroupsService} from 'app/business/services/groups.service';
 import {Group} from '@ofModel/group.model';
 import {Entity} from '@ofModel/entity.model';
 import {EntitiesService} from 'app/business/services/entities.service';

@@ -63,6 +63,8 @@ import {EntitiesServer} from './business/server/entities.server';
 import {AngularEntitiesServer} from './server/angularEntities.server';
 import {PerimetersServer} from './business/server/perimeters.server';
 import {AngularPerimetersServer} from './server/angularPerimeters.server';
+import {GroupsServer} from './business/server/groups.server';
+import {AngularGroupsServer} from './server/angularGroups.server';
 
 @NgModule({
     imports: [
@@ -118,6 +120,7 @@ import {AngularPerimetersServer} from './server/angularPerimeters.server';
         {provide: AcknowledgeServer, useClass: AngularAcknowledgeServer},
         {provide: EntitiesServer, useClass: AngularEntitiesServer},
         {provide: PerimetersServer, useClass: AngularPerimetersServer},
+        {provide: GroupsServer, useClass: AngularGroupsServer},
         {provide: UserActionLogsServer, useClass: AngularUserActionLogsServer},
         {provide: RemoteLoggerServer, useClass: AngularRemoteLoggerServer},
         {provide: ConfigServer, useClass: AngularConfigServer},
