@@ -11,6 +11,7 @@ import {CountDown as CountDown} from './countdown';
 
 describe('countdown testing ', () => {
     beforeEach(() => {
+        jasmine.clock().uninstall();
         jasmine.clock().install();
         jasmine.clock().mockDate(new Date(0));
     });
