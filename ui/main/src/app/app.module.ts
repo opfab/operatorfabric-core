@@ -67,6 +67,8 @@ import {GroupsServer} from './business/server/groups.server';
 import {AngularGroupsServer} from './server/angularGroups.server';
 import {UserServer} from './business/server/user.server';
 import {AngularUserServer} from './server/angularUser.server';
+import {AdminProcessServer} from './business/server/adminprocess.server';
+import {AngularAdminProcessesServer} from './server/angularAdminProcess.server';
 
 @NgModule({
     imports: [
@@ -125,6 +127,7 @@ import {AngularUserServer} from './server/angularUser.server';
         {provide: GroupsServer, useClass: AngularGroupsServer},
         {provide: UserServer, useClass: AngularUserServer},
         {provide: UserActionLogsServer, useClass: AngularUserActionLogsServer},
+        {provide: AdminProcessServer, useClass: AngularAdminProcessesServer},
         {provide: RemoteLoggerServer, useClass: AngularRemoteLoggerServer},
         {provide: ConfigServer, useClass: AngularConfigServer},
         {provide: ProcessServer, useClass: AngularProcessServer},
