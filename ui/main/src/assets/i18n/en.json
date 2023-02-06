@@ -109,7 +109,9 @@
     "realTimeUsers": "Real time users",
     "externalDevicesConfiguration": "External devices configuration",
     "activityArea": "Activity area",
-    "useractionlogs": "User action logs"
+    "useractionlogs": "User action logs",
+    "newcardTooltip": "Create a new card",
+    "calendarTooltip": "Calendar" 
   },
   "timeline": {
     "hideTimeline" : "Hide Timeline",
@@ -290,7 +292,7 @@
     "youWillBeSubscribedAgain": "\n\nBy clicking OK, you will be subscribed to these notifications again."
   },
   "userCard": {
-    "title": "CREATE A NEW CARD ",
+    "title": "CREATE A NEW CARD",
     "editTitle" : "EDIT A NEW CARD",
     "error": {
       "notAvailable": "You are not allowed to send card.",

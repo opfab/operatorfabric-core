@@ -109,7 +109,9 @@
     "realTimeUsers": "Utilisateurs temps réel",
     "externalDevicesConfiguration": "Configuration des périphériques externes",
     "activityArea": "Zone d'activité",
-    "useractionlogs": "Trace des actions utilisateurs"
+    "useractionlogs": "Trace des actions utilisateurs",
+    "newcardTooltip": "Créer une nouvelle carte",
+    "calendarTooltip": "Calendrier" 
   },
   "timeline": {
     "hideTimeline" : "Masquer la timeline",
