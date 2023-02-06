@@ -160,9 +160,9 @@ describe('ReminderUtils:getNextTimeForRepeating with recurrence hour and minutes
         expect(dateForRepeating).toEqual(expectedResponseDate);
     });
 
-    it('2000/01/01 14:00 TimeZone London , \
-   Recurrence :10:15 , 10:10 ,15:00, 10:06 / Time Zone : Paris \
-    => 2000/01/02 9:06 TimeZone London ', () => {
+    it('2000/01/01 14:00 TimeZone London , ' +
+    'Recurrence :10:15 , 10:10 ,15:00, 10:06 / Time Zone : Paris ' +
+    '=> 2000/01/02 9:06 TimeZone London ', () => {
         const date = moment.tz('2000-01-01 14:00', 'Europe/London').valueOf();
 
         recurrence.hoursAndMinutes = {hours: 10, minutes: 15};
@@ -357,9 +357,9 @@ describe('ReminderUtils:getNextTimeForRepeating hour/minutes/daysOfWeek   ', () 
         expect(dateForRepeating).toEqual(expectedResponseDate);
     });
 
-    it('2020/11/09 Monday 12:00 , \
-   Recurrence :10:30 5:20 18:00 / Saturday(6) Sunday(7) Wednesday(3) \
-   => 2020/11/11 Wednesday 5:20 ', () => {
+    it('2020/11/09 Monday 12:00 , ' +
+    'Recurrence :10:30 5:20 18:00 / Saturday(6) Sunday(7) Wednesday(3) ' +
+    '=> 2020/11/11 Wednesday 5:20 ', () => {
         const date = moment.tz('2020-11-09 12:00', 'Europe/Paris').valueOf();
         recurrence.hoursAndMinutes = {hours: 10, minutes: 30};
         recurrence2.hoursAndMinutes = {hours: 5, minutes: 20};
@@ -378,9 +378,9 @@ describe('ReminderUtils:getNextTimeForRepeating hour/minutes/daysOfWeek   ', () 
         expect(dateForRepeating).toEqual(expectedResponseDate);
     });
 
-    it('2020/11/09 Monday 12:00 , \
-  Recurrence :10:30 5:20  / Saturday(6) Sunday(7)  / 18:00 Wednesday(3) \
-  => 2020/11/11 Wednesday 5:20 ', () => {
+    it('2020/11/09 Monday 12:00 , ' +
+    'Recurrence :10:30 5:20  / Saturday(6) Sunday(7)  / 18:00 Wednesday(3) ' +
+    '=> 2020/11/11 Wednesday 5:20 ', () => {
         const date = moment.tz('2020-11-09 12:00', 'Europe/Paris').valueOf();
         recurrence.hoursAndMinutes = {hours: 10, minutes: 30};
         recurrence2.hoursAndMinutes = {hours: 5, minutes: 20};
@@ -399,9 +399,9 @@ describe('ReminderUtils:getNextTimeForRepeating hour/minutes/daysOfWeek   ', () 
         expect(dateForRepeating).toEqual(expectedResponseDate);
     });
 
-    it('2020/11/09 Monday 12:00 , \
- Recurrence :10:30 5:20  / Saturday(6) Sunday(7)  / 18:00 Wednesday(3) \
- => 2020/11/11 Wednesday 5:20 ', () => {
+    it('2020/11/09 Monday 12:00 , ' +
+    'Recurrence :10:30 5:20  / Saturday(6) Sunday(7)  / 18:00 Wednesday(3) ' +
+    '=> 2020/11/11 Wednesday 5:20 ', () => {
         const date = moment.tz('2020-11-09 12:00', 'Europe/Paris').valueOf();
         recurrence.hoursAndMinutes = {hours: 10, minutes: 30};
         recurrence2.hoursAndMinutes = {hours: 5, minutes: 20};
@@ -439,9 +439,9 @@ describe('ReminderUtils:getNextTimeForRepeating hour/minutes/daysOfWeek   ', () 
         expect(dateForRepeating).toEqual(expectedResponseDate);
     });
 
-    it('2020/11/09 Monday 12:00  Time Zone : London \
-   Recurrence :10:30 5:20 18:00  Time Zone : London / Saturday(6) Sunday(7) Wednesday(3) \
-   => 2020/11/11 Wednesday 5:20  Time Zone : London ', () => {
+    it('2020/11/09 Monday 12:00  Time Zone : London ' +
+    'Recurrence :10:30 5:20 18:00  Time Zone : London / Saturday(6) Sunday(7) Wednesday(3) ' +
+    '=> 2020/11/11 Wednesday 5:20  Time Zone : London ', () => {
         const date = moment.tz('2020-11-09 12:00', 'Europe/London').valueOf();
         recurrence.hoursAndMinutes = {hours: 10, minutes: 30};
         recurrence2.hoursAndMinutes = {hours: 5, minutes: 20};
@@ -463,9 +463,9 @@ describe('ReminderUtils:getNextTimeForRepeating hour/minutes/daysOfWeek   ', () 
         expect(dateForRepeating).toEqual(expectedResponseDate);
     });
 
-    it('2020/11/09 Monday 11:00 Time Zone : London  \
-  Recurrence :10:30 5:20 18:00 Time Zone Paris/ Saturday(6) Sunday(7) Wednesday(3) \
-  => 2020/11/11 Wednesday 4:20 Time Zone : London ', () => {
+    it('2020/11/09 Monday 11:00 Time Zone : London  ' +
+    'Recurrence :10:30 5:20 18:00 Time Zone Paris/ Saturday(6) Sunday(7) Wednesday(3) ' +
+    '=> 2020/11/11 Wednesday 4:20 Time Zone : London ', () => {
         const date = moment.tz('2020-11-09 11:00', 'Europe/London').valueOf();
         recurrence.hoursAndMinutes = {hours: 10, minutes: 30};
         recurrence2.hoursAndMinutes = {hours: 5, minutes: 20};
