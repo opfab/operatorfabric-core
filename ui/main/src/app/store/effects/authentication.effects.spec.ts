@@ -42,7 +42,7 @@ import SpyObj = jasmine.SpyObj;
 import createSpyObj = jasmine.createSpyObj;
 import {SoundNotificationService} from '@ofServices/sound-notification.service';
 import {OpfabEventStreamServer} from 'app/business/server/opfabEventStream.server';
-import {UserService} from '@ofServices/user.service';
+import {UserService} from 'app/business/services/user.service';
 import {ProcessServer} from 'app/business/server/process.server';
 import {ConfigServer} from 'app/business/server/config.server';
 import {ConfigServerMock} from '@tests/mocks/configServer.mock';

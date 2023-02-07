@@ -12,7 +12,7 @@ import {Card} from '@ofModel/card.model';
 import {ProcessesService} from 'app/business/services/processes.service';
 import {Subject} from 'rxjs';
 import {takeUntil} from 'rxjs/operators';
-import {UserService} from '@ofServices/user.service';
+import {UserService} from 'app/business/services/user.service';
 import {AppService} from '@ofServices/app.service';
 import {State} from '@ofModel/processes.model';
 import {NgbModalRef} from '@ng-bootstrap/ng-bootstrap';

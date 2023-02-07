@@ -17,7 +17,7 @@ import {
 import {Component, Input, OnInit} from '@angular/core';
 import {User} from '@ofModel/user.model';
 import {NgbActiveModal} from '@ng-bootstrap/ng-bootstrap';
-import {UserService} from '@ofServices/user.service';
+import {UserService} from 'app/business/services/user.service';
 import {GroupsService} from 'app/business/services/groups.service';
 import {EntitiesService} from 'app/business/services/entities.service';
 import {debounceTime, distinctUntilChanged, first, map, switchMap} from 'rxjs/operators';

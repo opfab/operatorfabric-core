@@ -20,7 +20,7 @@ import {
 } from '@ofModel/processes.model';
 import {MonitoringConfig} from '@ofModel/monitoringConfig.model';
 import {Card} from '@ofModel/card.model';
-import {UserService} from '@ofServices/user.service';
+import {UserService} from 'app/business/services/user.service';
 import {LightCard} from '@ofModel/light-card.model';
 import {ProcessServer} from 'app/business/server/process.server';
 import {ConfigServer} from 'app/business/server/config.server';

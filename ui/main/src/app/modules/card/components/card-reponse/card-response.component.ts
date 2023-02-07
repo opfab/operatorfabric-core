@@ -21,7 +21,7 @@ import {CardService} from '@ofServices/card.service';
 import {EntitiesService} from 'app/business/services/entities.service';
 import {ProcessesService} from 'app/business/services/processes.service';
 import {UserPermissionsService} from 'app/business/services/user-permissions.service';
-import {UserService} from '@ofServices/user.service';
+import {UserService} from 'app/business/services/user.service';
 import {Utilities} from 'app/business/common/utilities';
 import {AlertMessageService} from 'app/business/services/alert-message.service';
 

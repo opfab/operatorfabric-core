@@ -18,7 +18,7 @@ import {Entity} from '@ofModel/entity.model';
 import {TranslateService} from '@ngx-translate/core';
 import {MultiSelectConfig, MultiSelectOption} from '@ofModel/multiselect.model';
 import {User} from '@ofModel/user.model';
-import {UserService} from '@ofServices/user.service';
+import {UserService} from 'app/business/services/user.service';
 import {Observable, of} from 'rxjs';
 
 @Component({

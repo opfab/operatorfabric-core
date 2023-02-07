@@ -10,7 +10,7 @@
 import {Injectable, OnDestroy} from '@angular/core';
 import {EntitiesService} from 'app/business/services/entities.service';
 import {GroupsService} from 'app/business/services/groups.service';
-import {UserService} from '@ofServices/user.service';
+import {UserService} from 'app/business/services/user.service';
 import {CrudService} from '@ofServices/crud-service';
 import {CachedCrudService} from '@ofServices/cached-crud-service';
 import {Observable, ReplaySubject, Subject} from 'rxjs';

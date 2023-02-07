@@ -7,16 +7,16 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {Component, EventEmitter, Input, OnDestroy, OnInit, Output} from "@angular/core";
-import {AbstractControl} from "@angular/forms";
-import {DateTimeNgb} from "@ofModel/datetime-ngb.model";
-import {MessageLevel} from "@ofModel/message.model";
-import {MultiSelectOption} from "@ofModel/multiselect.model";
-import {ActionTypeEnum} from "@ofModel/user-action-log.model";
-import {UserService} from "@ofServices/user.service";
-import {Utilities} from "app/business/common/utilities";
-import {debounceTime, Subject, takeUntil} from "rxjs";
-import {AlertMessageService} from "app/business/services/alert-message.service";
+import {Component, EventEmitter, Input, OnDestroy, OnInit, Output} from '@angular/core';
+import {AbstractControl} from '@angular/forms';
+import {DateTimeNgb} from '@ofModel/datetime-ngb.model';
+import {MessageLevel} from '@ofModel/message.model';
+import {MultiSelectOption} from '@ofModel/multiselect.model';
+import {ActionTypeEnum} from '@ofModel/user-action-log.model';
+import {UserService} from 'app/business/services/user.service';
+import {Utilities} from 'app/business/common/utilities';
+import {debounceTime, Subject, takeUntil} from 'rxjs';
+import {AlertMessageService} from 'app/business/services/alert-message.service';
 
 @Component({
     selector: 'of-useractionlogs-filters',

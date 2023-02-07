@@ -12,7 +12,7 @@ import {AppState} from '@ofStore/index';
 import {Store} from '@ngrx/store';
 import {selectUserNameOrIdentifier} from '@ofSelectors/authentication.selectors';
 import {Observable} from 'rxjs';
-import {UserService} from '@ofServices/user.service';
+import {UserService} from 'app/business/services/user.service';
 import {EntitiesService} from 'app/business/services/entities.service';
 import {ConfigService} from 'app/business/services/config.service';
 import {DateTimeFormatterService} from 'app/business/services/date-time-formatter.service';

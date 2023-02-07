@@ -31,6 +31,7 @@ import {OpfabEventStreamService} from 'app/business/services/opfabEventStream.se
 import {AcknowledgeServer} from '../server/acknowledge.server';
 import {RemoteLoggerServer} from '../server/remote-logger.server';
 import {EntitiesServer} from '../server/entities.server';
+import {UserServer} from '../server/user.server';
 
 describe('AcknowledgeService testing ', () => {
     let acknowledgeService: AcknowledgeService;
@@ -52,6 +53,7 @@ describe('AcknowledgeService testing ', () => {
                 LightCardsStoreService,
                 {provide: EntitiesService, useClass: EntitiesServiceMock},
                 {provide: EntitiesServer, useValue: null},
+                {provide: UserServer, useValue: null},
                 {provide : OpfabEventStreamService, useValue: null}
             ],
             imports: [

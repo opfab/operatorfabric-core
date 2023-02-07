@@ -32,6 +32,7 @@ import {OpfabEventStreamServer} from 'app/business/server/opfabEventStream.serve
 import {ExternalDevicesServer} from 'app/business/server/external-devices.server';
 import {RemoteLoggerServer} from 'app/business/server/remote-logger.server';
 import {EntitiesServer} from 'app/business/server/entities.server';
+import {UserServer} from 'app/business/server/user.server';
 
 describe('LightCardComponent', () => {
     let lightCardDetailsComp: LightCardComponent;
@@ -75,6 +76,7 @@ describe('LightCardComponent', () => {
                 {provide: RemoteLoggerServer, useValue: null},
                 {provide: OpfabEventStreamServer, use:null},
                 {provide: EntitiesServer, useValue: null},
+                {provide: UserServer, useValue: null},
                 {provide: ExternalDevicesServer, use:null}
             ]
         }).compileComponents();

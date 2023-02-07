@@ -11,7 +11,7 @@ import {Component, HostListener,TemplateRef, ViewChild} from '@angular/core';
 import {NgbModal, NgbModalRef} from '@ng-bootstrap/ng-bootstrap';
 import {LogOption, OpfabLoggerService} from 'app/business/services/logs/opfab-logger.service';
 import {UrlLockService} from './url-lock.service';
-import {UserService} from '@ofServices/user.service';
+import {UserService} from 'app/business/services/user.service';
 import {ApplicationLoadingStep} from '../application-loading-step';
 import {SoundNotificationService} from '@ofServices/sound-notification.service';
 import {OpfabEventStreamService} from 'app/business/services/opfabEventStream.service';

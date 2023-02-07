@@ -8,7 +8,7 @@
  */
 
 import {Component, OnDestroy, OnInit} from '@angular/core';
-import {UserService} from '@ofServices/user.service';
+import {UserService} from 'app/business/services/user.service';
 import {RealTimeScreen} from '@ofModel/real-time-screens.model';
 import {FormControl, FormGroup} from '@angular/forms';
 import {UserPreferencesService} from '@ofServices/user-preference.service';

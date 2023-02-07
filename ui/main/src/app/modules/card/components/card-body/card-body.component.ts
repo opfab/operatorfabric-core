@@ -17,7 +17,7 @@ import {CardService} from '@ofServices/card.service';
 import {Subject} from 'rxjs';
 import {AppService, PageType} from '@ofServices/app.service';
 import {User} from '@ofModel/user.model';
-import {UserService} from '@ofServices/user.service';
+import {UserService} from 'app/business/services/user.service';
 import {EntitiesService} from 'app/business/services/entities.service';
 import {NgbModalRef} from '@ng-bootstrap/ng-bootstrap';
 import {UserPermissionsService} from 'app/business/services/user-permissions.service';

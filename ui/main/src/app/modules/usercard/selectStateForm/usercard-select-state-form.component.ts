@@ -15,7 +15,7 @@ import {RightsEnum} from '@ofModel/perimeter.model';
 import {Process} from '@ofModel/processes.model';
 import {ComputedPerimeter, UserWithPerimeters} from '@ofModel/userWithPerimeters.model';
 import {ProcessesService} from 'app/business/services/processes.service';
-import {UserService} from '@ofServices/user.service';
+import {UserService} from 'app/business/services/user.service';
 import {Utilities} from 'app/business/common/utilities';
 import {MultiSelectComponent} from 'app/modules/share/multi-select/multi-select.component';
 import {Subject} from 'rxjs';

@@ -20,7 +20,7 @@ import {LightCardsStoreService} from '@ofServices/lightcards/lightcards-store.se
 import {LogOption, OpfabLoggerService} from 'app/business/services/logs/opfab-logger.service';
 import {ProcessesService} from 'app/business/services/processes.service';
 import {UserPermissionsService} from 'app/business/services/user-permissions.service';
-import {UserService} from '@ofServices/user.service';
+import {UserService} from 'app/business/services/user.service';
 import {Subject, takeUntil} from 'rxjs';
 import {ServerResponseStatus} from 'app/business/server/serverResponse';
 import {AlertMessageService} from 'app/business/services/alert-message.service';

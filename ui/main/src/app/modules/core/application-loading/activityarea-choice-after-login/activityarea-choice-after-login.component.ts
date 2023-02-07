@@ -11,7 +11,7 @@ import {Component, TemplateRef, ViewChild} from '@angular/core';
 import {NgbModal, NgbModalRef} from '@ng-bootstrap/ng-bootstrap';
 import {ConfigService} from 'app/business/services/config.service';
 import {EntitiesService} from 'app/business/services/entities.service';
-import {UserService} from '@ofServices/user.service';
+import {UserService} from 'app/business/services/user.service';
 import {ApplicationLoadingStep} from '../application-loading-step';
 
 @Component({

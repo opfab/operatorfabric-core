@@ -25,7 +25,7 @@ import {MessageLevel} from '@ofModel/message.model';
 import {GroupsService} from 'app/business/services/groups.service';
 import {MultiSelectConfig, MultiSelectOption} from '@ofModel/multiselect.model';
 import {GroupTypeEnum} from '@ofModel/group.model';
-import {UserService} from '@ofServices/user.service';
+import {UserService} from 'app/business/services/user.service';
 import {User} from '@ofModel/user.model';
 import {PermissionEnum} from '@ofModel/permission.model';
 import {Observable, of} from 'rxjs';
