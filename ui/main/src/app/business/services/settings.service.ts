@@ -8,12 +8,10 @@
  */
 
 import {Injectable} from "@angular/core";
-import {selectIdentifier} from "@ofStore/selectors/authentication.selectors";
 import {Observable} from "rxjs";
 import {SettingsServer} from "../server/settings.server";
-import {Store} from '@ngrx/store';
-import {AppState} from '@ofStore/index';
 import {LogOption, OpfabLoggerService} from 'app/business/services/logs/opfab-logger.service';
+import {CurrentUserStore} from "../store/current-user.store";
 
 
 @Injectable({
@@ -25,10 +23,10 @@ export class SettingsService {
 
     constructor(
         private settingsServer: SettingsServer,
-        private store: Store<AppState>,
-        private logger: OpfabLoggerService
+        private logger: OpfabLoggerService,
+        private currentUserStore: CurrentUserStore
         ) {
-        this.store.select(selectIdentifier).subscribe((id) => (this.userId = id));
+            this.currentUserStore.getCurrentUserLogin().subscribe((id) => (this.userId = id));
         }
 
     getUserSettings(): Observable<any> {

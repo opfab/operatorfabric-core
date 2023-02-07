@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2022, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2023, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -10,13 +10,13 @@
 import {Injectable} from '@angular/core';
 import {HttpEvent, HttpHandler, HttpInterceptor, HttpRequest} from '@angular/common/http';
 import {Observable} from 'rxjs';
-import {AuthenticationService} from './authentication/authentication.service';
+import {CurrentUserStore} from 'app/business/store/current-user.store';
 
 @Injectable({
     providedIn: 'root'
 })
 export class TokenInjector implements HttpInterceptor {
-    constructor(private authService: AuthenticationService) {}
+    constructor(private currentUserStore: CurrentUserStore) {}
 
     intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
         return next.handle(this.addAuthHeadersIfNecessary(request));
@@ -25,14 +25,13 @@ export class TokenInjector implements HttpInterceptor {
     addAuthHeadersIfNecessary(request: HttpRequest<any>): HttpRequest<any> {
         const url = request.url;
 
-        const notCheckTokenRequest = !(
+        const isUrlWithToken = !(
             url.endsWith('/auth/check_token') ||
             url.endsWith('/auth/token') ||
             url.endsWith('/auth/code')
         );
-        const authModeNone = this.authService.isAuthModeNone();
-        if (notCheckTokenRequest && !authModeNone) {
-            const securityHeader = this.authService.getSecurityHeader();
+        if (isUrlWithToken && this.currentUserStore.doesAuthenticationUseToken()) {
+            const securityHeader = {Authorization: `Bearer ${this.currentUserStore.getToken()}`}
             const update = {setHeaders: securityHeader};
             request = request.clone(update);
         }
