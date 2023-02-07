@@ -23,7 +23,6 @@ import {UserPreferencesService} from '@ofServices/user-preference.service';
 import {Utilities} from 'app/business/common/utilities';
 import {Card, CardData} from '@ofModel/card.model';
 import {ArchivesLoggingFiltersComponent} from '../share/archives-logging-filters/archives-logging-filters.component';
-import {EntitiesService} from 'app/business/services/entities.service';
 import {DisplayContext} from '@ofModel/templateGateway.model';
 import {FilterMatchTypeEnum, FilterModel} from '@ofModel/filter-model';
 import {ArchivedCardsFilter} from '@ofModel/archived-cards-filter.model';
@@ -77,8 +76,7 @@ export class ArchivesComponent implements OnDestroy, OnInit {
 
     selectedCard: Card;
     selectedChildCards: Card[];
-    fromEntityOrRepresentativeSelectedCard = null;
-    entityRecipientsForFooter = '';
+
     listOfProcesses = [];
 
     lastRequestID: number;
@@ -92,8 +90,7 @@ export class ArchivesComponent implements OnDestroy, OnInit {
         private cardService: CardService,
         private translate: TranslateService,
         private userPreferences: UserPreferencesService,
-        private modalService: NgbModal,
-        private entitiesService: EntitiesService
+        private modalService: NgbModal
     ) {
         processesService.getAllProcesses().forEach((process) => {
             let itemName = process.name;
@@ -200,20 +197,7 @@ export class ArchivesComponent implements OnDestroy, OnInit {
         return new ArchivedCardsFilter(page, size, isAdminMode, false, latestUpdateOnly, filters);
     }
 
-    // we show a spinner on screen if archives loading takes more than 1 second
-    private checkForCardLoadingInProgressForMoreThanOneSecond() {
-        setTimeout(() => {
-            this.cardLoadingIsTakingMoreThanOneSecond = this.cardLoadingInProgress;
-            if (this.cardLoadingIsTakingMoreThanOneSecond) {
-                const modalOptions: NgbModalOptions = {
-                    centered: true,
-                    backdrop: 'static', // Modal shouldn't close even if we click outside it
-                    size: 'sm'
-                };
-                this.modalRef = this.modalService.open(this.cardLoadingTemplate, modalOptions);
-            }
-        }, 1000);
-    }
+
 
     loadUpdatesByCardId(requestID: number, isAdminModeChecked: boolean) {
         this.updatesByCardId = [];
@@ -379,8 +363,7 @@ export class ArchivesComponent implements OnDestroy, OnInit {
         this.cardService.loadArchivedCard(cardId).subscribe((card: CardData) => {
             this.selectedCard = card.card;
             this.selectedChildCards = card.childCards;
-            this.computeFromEntity();
-            this.computeEntityRecipientsForFooter();
+
             const options: NgbModalOptions = {
                 size: 'fullscreen'
             };
@@ -391,49 +374,19 @@ export class ArchivesComponent implements OnDestroy, OnInit {
         });
     }
 
-    private computeFromEntity() {
-        if (this.selectedCard.publisherType === 'ENTITY') {
-            this.fromEntityOrRepresentativeSelectedCard = this.entitiesService.getEntityName(
-                this.selectedCard.publisher
-            );
-
-            if (!!this.selectedCard.representativeType && !!this.selectedCard.representative) {
-                const representative =
-                    this.selectedCard.representativeType === 'ENTITY'
-                        ? this.entitiesService.getEntityName(this.selectedCard.representative)
-                        : this.selectedCard.representative;
-
-                this.fromEntityOrRepresentativeSelectedCard += ' (' + representative + ')';
+    // we show a spinner on screen if archives loading takes more than 1 second
+    private checkForCardLoadingInProgressForMoreThanOneSecond() {
+        setTimeout(() => {
+            this.cardLoadingIsTakingMoreThanOneSecond = this.cardLoadingInProgress;
+            if (this.cardLoadingIsTakingMoreThanOneSecond) {
+                const modalOptions: NgbModalOptions = {
+                    centered: true,
+                    backdrop: 'static', // Modal shouldn't close even if we click outside it
+                    size: 'sm'
+                };
+                this.modalRef = this.modalService.open(this.cardLoadingTemplate, modalOptions);
             }
-        } else this.fromEntityOrRepresentativeSelectedCard = null;
-    }
-
-    private computeEntityRecipientsForFooter() {
-        const listOfEntityRecipients = [];
-        this.entityRecipientsForFooter = '';
-
-        if (!! this.selectedCard.entityRecipients) {
-            this.selectedCard.entityRecipients.forEach((entityRecipient) => {
-                listOfEntityRecipients.push(this.entitiesService.getEntityName(entityRecipient));
-            });
-        }
-        listOfEntityRecipients.sort();
-
-        listOfEntityRecipients.forEach((entityRecipient) => {
-            this.entityRecipientsForFooter += ' ' + entityRecipient + ',';
-        });
-        if (this.entityRecipientsForFooter.length > 0) {
-            this.entityRecipientsForFooter = this.translate.instant('feed.entityRecipients') +
-                this.entityRecipientsForFooter.slice(0, -1); // we remove the last comma
-        }
-    }
-
-    getFormattedPublishDate(): any {
-        return this.dateTimeFormatter.getFormattedDateFromEpochDate(this.selectedCard.publishDate);
-    }
-
-    getFormattedPublishTime(): any {
-        return this.dateTimeFormatter.getFormattedTimeFromEpochDate(this.selectedCard.publishDate);
+        }, 1000);
     }
 
     getFormattedDate(date: number): any {

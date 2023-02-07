@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2022, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2023, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -20,6 +20,7 @@ import {ArchivesEntryPointComponent} from './archives-entry-point.component';
 import {ArchivesLoggingFiltersModule} from '../share/archives-logging-filters/archives-logging-filters.module';
 import {SpinnerModule} from '../share/spinner/spinner.module';
 import {PipesModule} from '../share/pipes/pipes.module';
+import {ArchivedCardDetailComponent} from './components/archived-card-detail/archived-card-detail.component';
 
 @NgModule({
     imports: [
@@ -35,6 +36,7 @@ import {PipesModule} from '../share/pipes/pipes.module';
         SpinnerModule,
         PipesModule
     ],
-    declarations: [ArchivesComponent, ArchivesEntryPointComponent]
+    exports: [ArchivedCardDetailComponent],
+    declarations: [ArchivesComponent, ArchivedCardDetailComponent, ArchivesEntryPointComponent]
 })
 export class ArchivesModule {}
