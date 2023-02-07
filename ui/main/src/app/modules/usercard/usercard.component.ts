@@ -212,25 +212,25 @@ export class UserCardComponent implements OnInit {
     }
 
     private setInitialDateFormValues(): void {
-        let startDate = new DateField(
+        const startDate = new DateField(
             this.startDateVisible,
             this.datesFromTemplate && !!usercardTemplateGateway.getStartDate()
                 ? usercardTemplateGateway.getStartDate()
                 : this.getStartDate()
         );
-        let endDate = new DateField(
+        const endDate = new DateField(
             this.endDateVisible,
             this.datesFromTemplate && !!usercardTemplateGateway.getEndDate()
                 ? usercardTemplateGateway.getEndDate()
                 : this.getEndDate()
         );
-        let lttd = new DateField(
+        const lttd = new DateField(
             this.lttdVisible,
             this.datesFromTemplate && !!usercardTemplateGateway.getLttd()
                 ? usercardTemplateGateway.getLttd()
                 : this.getLttd()
         );
-        let expirationDate = new DateField(
+        const expirationDate = new DateField(
             this.expirationDateVisible,
             this.datesFromTemplate && !!usercardTemplateGateway.getExpirationDate()
                 ? usercardTemplateGateway.getExpirationDate()
@@ -353,11 +353,11 @@ export class UserCardComponent implements OnInit {
                     : this.userCardConfiguration.endDateVisible;
             this.lttdVisible =
                 this.userCardConfiguration.lttdVisible === undefined
-                    ? true
+                    ? false
                     : this.userCardConfiguration.lttdVisible;
             this.expirationDateVisible =
                 this.userCardConfiguration.expirationDateVisible === undefined
-                    ? true
+                    ? false
                     : this.userCardConfiguration.expirationDateVisible;
             this.recipientVisible =
                 this.userCardConfiguration.recipientVisible === undefined

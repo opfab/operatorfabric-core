@@ -17,3 +17,7 @@ If, for example, one makes a request like https://opfab/businessconfig/processes
 == viewCardInAgenda Parameter renamed
 
 The viewCardInAgenda parameter (specified in the usercard template through getSpecificCardInformation) has been renamed viewCardInCalendar to be consistent with other parts of the software. So you may have to update your usercard templates.
+
+== Default value set to false for lttdVisible and expirationDateVisible
+
+In usercard state definition, the default value for fields `lttdVisible` and `expirationDateVisible` is now set to false.

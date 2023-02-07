@@ -682,8 +682,10 @@ definitions:
         type: boolean
       expirationDateVisible:
         type: boolean
+        description: Default value set to false.
       lttdVisible: 
         type: boolean
+        description: Default value set to false.
       recipientVisible: # tells whether to display recipient dropdown when creating a user card
         type: boolean
       recipientList:
