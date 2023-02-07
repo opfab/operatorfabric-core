@@ -1,4 +1,4 @@
-/* Copyright (c) 2022, RTE (http://www.rte-france.com)
+/* Copyright (c) 2022-2023, RTE (http://www.rte-france.com)
  *  See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -20,6 +20,8 @@ import {UserActionLogsComponent} from "./useractionlogs.component";
 import {UserActionLogsTableComponent} from "./components/useractionlogs-table/useractionlogs-table.component";
 import {UserActionLogsFiltersComponent} from "./components/useractionlogs-filters/useractionlogs-filters.component";
 import {SpinnerModule} from '../share/spinner/spinner.module';
+import {ArchivesModule} from "../archives/archives.module";
+import {PipesModule} from "../share/pipes/pipes.module";
 
 @NgModule({
     declarations: [UserActionLogsComponent, UserActionLogsTableComponent, UserActionLogsFiltersComponent],
@@ -33,6 +35,8 @@ import {SpinnerModule} from '../share/spinner/spinner.module';
     DatetimeFilterModule,
     AppRoutingModule,
     MultiSelectModule,
-    AgGridModule]
+    AgGridModule,
+    ArchivesModule,
+    PipesModule]
 })
 export class UserActionLogsModule {}

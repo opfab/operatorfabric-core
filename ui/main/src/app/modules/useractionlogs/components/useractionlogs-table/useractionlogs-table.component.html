@@ -1,4 +1,4 @@
-<!-- Copyright (c) 2022, RTE (http://www.rte-france.com)              -->
+<!-- Copyright (c) 2022-2023, RTE (http://www.rte-france.com)              -->
 <!-- See AUTHORS.txt                                                       -->
 <!-- This Source Code Form is subject to the terms of the Mozilla Public   -->
 <!-- License, v. 2.0. If a copy of the MPL was not distributed with this   -->
@@ -14,6 +14,7 @@
             (gridReady)="onGridReady($event)"
             [gridOptions]="gridOptions"
             [rowData]="actions"
+            (rowClicked)="selectRow($event.data)"
             class="ag-theme-opfab">
     </ag-grid-angular>
 
@@ -29,6 +30,30 @@
         </div>
     </div>
 
+    <ng-template #cardDetail let-modal>
+        <div class="modal-header">
+          <div id="opfab-archives-card-title">{{selectedCard.titleTranslated | opfabTitleCase}}</div>
+          <div id="opfab-archives-card-detail-close" class="opfab-close-modal-icon" aria-label="Close"
+            (click)="modal.dismiss('Cross click')">
+            <span aria-hidden="true">&times;</span>
+          </div>
+        </div>
+      
+        <div class="modal-body">
+          <of-archived-card-detail [card]="selectedCard" [childCards]="selectedChildCards"></of-archived-card-detail>
+        </div>
+      </ng-template>
+      
+      <ng-template #cardLoadingInProgress let-modal>
+        <div class="modal-body">
+          <div class="opfab-card-loading-spinner">
+            <em  class="fas fa-spinner fa-spin opfab-slow-spinner" ></em>
+          </div>
+          <div style="text-align: center;font-size:16px;font-weight: bold;margin-top:10px" translate>
+            archive.cardLoadingInProgress
+          </div>
+        </div>
+      </ng-template>
     
 
 </div>

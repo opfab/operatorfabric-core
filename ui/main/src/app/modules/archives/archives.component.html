@@ -1,4 +1,4 @@
-<!-- Copyright (c) 2018-2022, RTE (http://www.rte-france.com)              -->
+<!-- Copyright (c) 2018-2023, RTE (http://www.rte-france.com)              -->
 <!-- See AUTHORS.txt                                                       -->
 <!-- This Source Code Form is subject to the terms of the Mozilla Public   -->
 <!-- License, v. 2.0. If a copy of the MPL was not distributed with this   -->
@@ -116,28 +116,7 @@
   </div>
 
   <div class="modal-body">
-
-    <div style="height: calc(100% - 70px);">
-      <of-simplified-card-view [card]="selectedCard" [childCards]="selectedChildCards" [screenSize]="'lg'"
-        [displayContext]="displayContext"> </of-simplified-card-view>
-    </div>
-    <div id="opfab-archives-card-footer">
-      <span class="opfab-card-received-footer">
-        <span translate>feed.received</span>
-        {{getFormattedDate(selectedCard.publishDate)}} <span translate> feed.at </span> {{getFormattedTime(selectedCard.publishDate)}}
-        <span *ngIf="fromEntityOrRepresentativeSelectedCard">
-          <span translate> feed.from</span>
-          {{fromEntityOrRepresentativeSelectedCard}}
-        </span>
-        <span *ngIf="!!selectedCard.deletionDate">
-          <span style="margin-left: 10px; margin-right: 10px;">-</span>
-          <span translate>feed.deleted</span>
-          {{getFormattedDate(selectedCard.deletionDate)}} <span translate> feed.at </span> {{getFormattedTime(selectedCard.deletionDate)}}
-        </span>
-        <br>
-        {{entityRecipientsForFooter}}
-      </span>
-    </div>
+    <of-archived-card-detail [card]="selectedCard" [childCards]="selectedChildCards"></of-archived-card-detail>
   </div>
 </ng-template>
 
