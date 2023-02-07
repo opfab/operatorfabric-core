@@ -628,7 +628,7 @@ You can set selected values via method setSelectedValues();
 ....
 
 
-If you want to set the options list after init use setOptions method : 
+If you want to set the options list after init, use setOptions method :
 
 ....
 
@@ -639,6 +639,13 @@ If you want to set the options list after init use setOptions method :
   ];
 
   myMultiSelect.setOptions(options);
+....
+
+You can enable (or disable) the multiselect component using enable (or disable) method :
+
+....
+  myMultiSelect.enable();
+  myMultiSelect.disable();
 ....
 
 

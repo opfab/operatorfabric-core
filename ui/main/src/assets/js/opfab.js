@@ -1,4 +1,4 @@
-/* Copyright (c) 2022, RTE (http://www.rte-france.com)
+/* Copyright (c) 2022-2023, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -10,7 +10,7 @@
 const opfab = {};
 
 opfab.multiSelect = {
-    // these value is to be provide at startup by opfab angular application
+    // these value is to be provided at startup by opfab angular application
     // it is done in i18n.service.ts
     searchPlaceholderText: '',
     clearButtonText: 'test',
@@ -28,6 +28,12 @@ opfab.multiSelect = {
             },
             setOptions(options) {
                 document.querySelector('#' + config.id).setOptions(options);
+            },
+            enable() {
+                document.querySelector('#' + config.id).enable();
+            },
+            disable() {
+                document.querySelector('#' + config.id).disable();
             }
         };
         VirtualSelect.init({
