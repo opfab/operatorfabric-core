@@ -13,3 +13,7 @@ When calling an opfab API you cannot use anymore trailing slash on url.
 
 
 If, for example, one makes a request like https://opfab/businessconfig/processes/, it must be replace by https://opfab/businessconfig/processes
+
+== viewCardInAgenda Parameter renamed
+
+The viewCardInAgenda parameter (specified in the usercard template through getSpecificCardInformation) has been renamed viewCardInCalendar to be consistent with other parts of the software. So you may have to update your usercard templates.

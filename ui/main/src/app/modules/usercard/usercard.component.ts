@@ -542,7 +542,7 @@ export class UserCardComponent implements OnInit {
     private isSpecificInformationValid(): boolean {
         if (!usercardTemplateGateway.getSpecificCardInformation) {
             this.opfabLogger.error(
-                'ERROR : No usercardTemplateGateway.getSpecificCardInformationMethod() in template, card cannot be send'
+                'ERROR : No usercardTemplateGateway.getSpecificCardInformationMethod() in template, card cannot be sent'
             );
             this.displayMessage('userCard.error.templateError', null, MessageLevel.ERROR);
             return false;
@@ -551,7 +551,7 @@ export class UserCardComponent implements OnInit {
         const specificInformation = usercardTemplateGateway.getSpecificCardInformation();
         if (!specificInformation) {
             this.opfabLogger.error(
-                'ERROR : usercardTemplateGateway.getSpecificCardInformationMethod() in template return no information, card cannot be send'
+                'ERROR : usercardTemplateGateway.getSpecificCardInformationMethod() in template return no information, card cannot be sent'
             );
             this.displayMessage('userCard.error.templateError', null, MessageLevel.ERROR);
             return false;
@@ -564,7 +564,7 @@ export class UserCardComponent implements OnInit {
 
         if (!specificInformation.card) {
             this.opfabLogger.error(
-                'ERROR : usercardTemplateGateway.getSpecificCardInformationMethod() in template return specificInformation with no card field, card cannot be send'
+                'ERROR : usercardTemplateGateway.getSpecificCardInformationMethod() in template return specificInformation with no card field, card cannot be sent'
             );
             this.displayMessage('userCard.error.templateError', null, MessageLevel.ERROR);
             return false;
@@ -713,7 +713,7 @@ export class UserCardComponent implements OnInit {
             specificInformation.timeSpans.forEach((ts) => {
                 timeSpans.push(new TimeSpan(ts.startDate, ts.endDate, ts.recurrence));
             });
-        } else if (!!specificInformation.viewCardInAgenda) {
+        } else if (!!specificInformation.viewCardInCalendar) {
             timeSpans = !!specificInformation.recurrence
                 ? [new TimeSpan(startDate, endDate, specificInformation.recurrence)]
                 : [new TimeSpan(startDate, endDate)];
