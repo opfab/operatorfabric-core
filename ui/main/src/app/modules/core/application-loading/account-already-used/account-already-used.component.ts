@@ -11,7 +11,7 @@ import {Component, Input, TemplateRef, ViewChild} from '@angular/core';
 import {NgbModal, NgbModalRef} from '@ng-bootstrap/ng-bootstrap';
 import {Store} from '@ngrx/store';
 import {LogOption, OpfabLoggerService} from 'app/business/services/logs/opfab-logger.service';
-import {UserService} from '@ofServices/user.service';
+import {UserService} from 'app/business/services/user.service';
 import {TryToLogOutAction} from '@ofStore/actions/authentication.actions';
 import {ApplicationLoadingStep} from '../application-loading-step';
 

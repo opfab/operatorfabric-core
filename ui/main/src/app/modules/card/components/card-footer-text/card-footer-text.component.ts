@@ -12,7 +12,7 @@ import {Card} from '@ofModel/card.model';
 import {User} from '@ofModel/user.model';
 import {DateTimeFormatterService} from 'app/business/services/date-time-formatter.service';
 import {EntitiesService} from 'app/business/services/entities.service';
-import {UserService} from '@ofServices/user.service';
+import {UserService} from 'app/business/services/user.service';
 import {Utilities} from 'app/business/common/utilities';
 import {Subject} from 'rxjs';
 import {takeUntil} from 'rxjs/operators';

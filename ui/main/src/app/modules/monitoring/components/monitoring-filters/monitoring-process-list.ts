@@ -10,7 +10,7 @@
 import {Injectable} from '@angular/core';
 import {Process} from '@ofModel/processes.model';
 import {ProcessesService} from 'app/business/services/processes.service';
-import {UserService} from '@ofServices/user.service';
+import {UserService} from 'app/business/services/user.service';
 
 export const DEFAULT_PROCESS_GROUP_ID = '--';
 

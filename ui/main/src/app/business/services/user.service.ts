@@ -1,5 +1,4 @@
-/* Copyright (c) 2020, RTEi (http://www.rte-international.com)
- * Copyright (c) 2021-2023, RTE (http://www.rte-france.com)
+/* Copyright (c) 2023, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -8,27 +7,24 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {environment} from '@env/environment';
 import {Observable, Subject} from 'rxjs';
 import {User} from '@ofModel/user.model';
 import {PermissionEnum} from '@ofModel/permission.model';
 import {UserWithPerimeters} from '@ofModel/userWithPerimeters.model';
-import {HttpClient, HttpErrorResponse} from '@angular/common/http';
-import {catchError, takeUntil, tap} from 'rxjs/operators';
-import {CrudService} from './crud-service';
+import {HttpErrorResponse} from '@angular/common/http';
+import {catchError, map, takeUntil, tap} from 'rxjs/operators';
+import {CrudService} from '@ofServices/crud-service';
 import {Injectable} from '@angular/core';
-import {Entity} from '@ofModel/entity.model';
 import {RightsEnum} from '@ofModel/perimeter.model';
-import {OpfabLoggerService} from '../business/services/logs/opfab-logger.service';
-import {AlertMessageService} from '../business/services/alert-message.service';
+import {OpfabLoggerService} from './logs/opfab-logger.service';
+import {AlertMessageService} from './alert-message.service';
+import {UserServer} from '../server/user.server';
+import {ServerResponseStatus} from '../server/serverResponse';
 
 @Injectable({
     providedIn: 'root'
 })
 export class UserService extends CrudService {
-    readonly userUrl: string;
-    readonly connectionsUrl: string;
-    readonly willNewSubscriptionDisconnectAnExistingSubscriptionUrl: string;
     private _userWithPerimeters: UserWithPerimeters;
     private ngUnsubscribe = new Subject<void>();
     private _userRightsPerProcessAndState: Map<string, {rights: RightsEnum, filteringNotificationAllowed: boolean}>;
@@ -36,38 +32,69 @@ export class UserService extends CrudService {
 
     /**
      * @constructor
-     * @param httpClient - Angular build-in
+     * @param userServer - Angular build-in
      */
-    constructor(private httpClient: HttpClient, protected loggerService: OpfabLoggerService, protected alertMessageService: AlertMessageService) {
+    constructor(private userServer: UserServer, 
+        protected loggerService: OpfabLoggerService, protected alertMessageService: AlertMessageService) {
         super(loggerService, alertMessageService);
-        this.userUrl = `${environment.urls.users}`;
-        this.connectionsUrl = `${environment.urls.cards}/connections`;
-        this.willNewSubscriptionDisconnectAnExistingSubscriptionUrl = `${environment.urls.cards}/willNewSubscriptionDisconnectAnExistingSubscription`;
         this._userRightsPerProcessAndState = new Map();
         this._receiveRightPerProcess = new Map();
     }
 
     deleteById(login: string) {
-        const url = `${this.userUrl}/users/${login}`;
-        return this.httpClient.delete(url).pipe(catchError((error: HttpErrorResponse) => this.handleError(error)));
+        return this.userServer.deleteById(login).pipe(catchError((error: HttpErrorResponse) => this.handleError(error)));
     }
 
     getUser(user: string): Observable<User> {
-        return this.httpClient.get<User>(`${this.userUrl}/users/${user}`);
+        return this.userServer.getUser(user).pipe(
+            map((userResponse) => {
+                if (userResponse.status === ServerResponseStatus.OK){
+                    return userResponse.data;
+                } else {
+                    this.handleServerResponseError(userResponse);
+                    return null;
+                }
+            })
+            );
     }
 
     synchronizeWithToken(): Observable<User> {
-        return this.httpClient.post<User>(`${this.userUrl}/users/synchronizeWithToken`, null);
+        return this.userServer.synchronizeWithToken().pipe(
+            map((userResponse) => {
+                if (userResponse.status === ServerResponseStatus.OK){
+                    return userResponse.data;
+                } else {
+                    this.loggerService.error("Impossible to synchronize token")
+                    return null;
+                }
+            })
+            );
     }
 
     currentUserWithPerimeters(): Observable<UserWithPerimeters> {
-        return this.httpClient.get<UserWithPerimeters>(`${this.userUrl}/CurrentUserWithPerimeters`);
+        return this.userServer.currentUserWithPerimeters().pipe(
+            map((userResponse) => {
+                if (userResponse.status === ServerResponseStatus.OK){
+                    return userResponse.data;
+                } else {
+                    this.loggerService.error("Impossible to load user perimeter")
+                    return null;
+                }
+            })
+            );
     }
 
     queryAllUsers(): Observable<User[]> {
-        return this.httpClient
-            .get<User[]>(`${this.userUrl}`)
-            .pipe(catchError((error: HttpErrorResponse) => this.handleError(error)));
+        return this.userServer.queryAllUsers().pipe(
+            map((userResponse) => {
+                if (userResponse.status === ServerResponseStatus.OK){
+                    return userResponse.data;
+                } else {
+                    this.handleServerResponseError(userResponse);
+                    return [];
+                }
+            })
+            );
     }
 
     getAll(): Observable<User[]> {
@@ -75,18 +102,20 @@ export class UserService extends CrudService {
     }
 
     updateUser(userData: User): Observable<User> {
-        return this.httpClient
-            .post<User>(`${this.userUrl}`, userData)
-            .pipe(catchError((error: HttpErrorResponse) => this.handleError(error)));
+        return this.userServer.updateUser(userData).pipe(
+            map((userResponse) => {
+                if (userResponse.status === ServerResponseStatus.OK){
+                    return userResponse.data;
+                } else {
+                    this.handleServerResponseError(userResponse);
+                    return null;
+                }
+            })
+            );
     }
 
     update(userData: User | any): Observable<User> {
         return this.updateUser(userData);
-    }
-
-    queryAllEntities(): Observable<Entity[]> {
-        const url = `${this.userUrl}/entities`;
-        return this.httpClient.get<Entity[]>(url).pipe(catchError((error: HttpErrorResponse) => this.handleError(error)));
     }
 
     public loadUserWithPerimetersData(): Observable<any> {
@@ -166,10 +195,28 @@ export class UserService extends CrudService {
     }
 
     loadConnectedUsers(): Observable<any[]> {
-        return this.httpClient.get<any[]>(`${this.connectionsUrl}`);
+        return this.userServer.loadConnectedUsers().pipe(
+            map((userResponse) => {
+                if (userResponse.status === ServerResponseStatus.OK){
+                    return userResponse.data;
+                } else {
+                    this.handleServerResponseError(userResponse);
+                    return [];
+                }
+            })
+            );
     }
 
     willNewSubscriptionDisconnectAnExistingSubscription(): Observable<boolean> {
-        return this.httpClient.get<boolean>(`${this.willNewSubscriptionDisconnectAnExistingSubscriptionUrl}`);
+        return this.userServer.willNewSubscriptionDisconnectAnExistingSubscription().pipe(
+            map((userResponse) => {
+                if (userResponse.status === ServerResponseStatus.OK){
+                    return userResponse.data;
+                } else {
+                    this.loggerService.error("Impossible to check if new connection will disconnect existing subscription")
+                    return null;
+                }
+            })
+            );
     }
 }

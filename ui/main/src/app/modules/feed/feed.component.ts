@@ -18,7 +18,7 @@ import {LightCardsFeedFilterService} from '@ofServices/lightcards/lightcards-fee
 import {ConfigService} from 'app/business/services/config.service';
 import {Router} from '@angular/router';
 import {selectCurrentUrl} from '@ofStore/selectors/router.selectors';
-import {UserService} from '@ofServices/user.service';
+import {UserService} from 'app/business/services/user.service';
 import {SelectedCardService} from 'app/business/services/card/selectedCard.service';
 
 @Component({

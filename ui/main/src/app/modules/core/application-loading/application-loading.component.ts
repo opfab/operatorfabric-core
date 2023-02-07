@@ -19,7 +19,7 @@ import {I18nService} from 'app/business/services/i18n.service';
 import {LogOption, OpfabLoggerService} from 'app/business/services/logs/opfab-logger.service';
 import {ProcessesService} from 'app/business/services/processes.service';
 import {ReminderService} from 'app/business/services/reminder/reminder.service';
-import {UserService} from '@ofServices/user.service';
+import {UserService} from 'app/business/services/user.service';
 import {AppState} from '@ofStore/index';
 import {selectIdentifier} from '@ofStore/selectors/authentication.selectors';
 import {Utilities} from 'app/business/common/utilities';

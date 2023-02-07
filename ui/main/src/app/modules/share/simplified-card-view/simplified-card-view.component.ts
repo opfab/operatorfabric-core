@@ -12,7 +12,7 @@ import {Card} from '@ofModel/card.model';
 import {ProcessesService} from 'app/business/services/processes.service';
 import {takeUntil} from 'rxjs/operators';
 import {Subject} from 'rxjs';
-import {UserService} from '@ofServices/user.service';
+import {UserService} from 'app/business/services/user.service';
 import {User} from '@ofModel/user.model';
 import {EntitiesService} from 'app/business/services/entities.service';
 import {State} from '@ofModel/processes.model';

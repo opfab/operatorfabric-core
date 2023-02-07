@@ -17,7 +17,7 @@ import {MessageLevel} from '@ofModel/message.model';
 import {ProcessesService} from 'app/business/services/processes.service';
 import {AppService} from '@ofServices/app.service';
 import {AcknowledgeService} from 'app/business/services/acknowledge.service';
-import {UserService} from '@ofServices/user.service';
+import {UserService} from 'app/business/services/user.service';
 import {UserWithPerimeters} from '@ofModel/userWithPerimeters.model';
 import {EntitiesService} from 'app/business/services/entities.service';
 import {GroupedCardsService} from '@ofServices/grouped-cards.service';

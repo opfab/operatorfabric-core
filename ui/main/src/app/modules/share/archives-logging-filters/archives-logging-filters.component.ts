@@ -23,7 +23,7 @@ import {MessageLevel} from '@ofModel/message.model';
 import moment from 'moment';
 import {Utilities} from 'app/business/common/utilities';
 import {UserPreferencesService} from '@ofServices/user-preference.service';
-import {UserService} from '@ofServices/user.service';
+import {UserService} from 'app/business/services/user.service';
 import {PermissionEnum} from '@ofModel/permission.model';
 import {AlertMessageService} from 'app/business/services/alert-message.service';
 

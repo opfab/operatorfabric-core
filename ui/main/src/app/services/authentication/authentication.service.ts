@@ -23,7 +23,7 @@ import {
     UnAuthenticationFromImplicitFlowAction
 } from '@ofActions/authentication.actions';
 import {environment} from '@env/environment';
-import {UserService} from '@ofServices/user.service';
+import {UserService} from 'app/business/services/user.service';
 import {AppState} from '@ofStore/index';
 import {Store} from '@ngrx/store';
 import {ConfigService} from 'app/business/services/config.service';

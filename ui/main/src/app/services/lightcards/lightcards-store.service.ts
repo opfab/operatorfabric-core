@@ -22,7 +22,7 @@ import {
     Subject,
     tap
 } from 'rxjs';
-import {UserService} from '../user.service';
+import {UserService} from 'app/business/services/user.service';
 import {ProcessesService} from 'app/business/services/processes.service';
 import {EntitiesService} from 'app/business/services/entities.service';
 import {ConsideredAcknowledgedForUserWhenEnum} from '@ofModel/processes.model';
