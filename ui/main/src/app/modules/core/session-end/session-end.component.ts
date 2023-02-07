@@ -9,12 +9,11 @@
 
 import {Component, OnInit, TemplateRef, ViewChild, ViewEncapsulation} from '@angular/core';
 import {NgbModal, NgbModalRef} from '@ng-bootstrap/ng-bootstrap';
-import {Actions, ofType} from '@ngrx/effects';
-import {Action, Store} from '@ngrx/store';
 import {LogOption, OpfabLoggerService} from 'app/business/services/logs/opfab-logger.service';
 import {SoundNotificationService} from '@ofServices/sound-notification.service';
-import {AuthenticationActionTypes, TryToLogOutAction} from '@ofStore/actions/authentication.actions';
 import {OpfabEventStreamService} from 'app/business/services/opfabEventStream.service';
+import {AuthService} from 'app/authentication/auth.service';
+import {CurrentUserStore} from 'app/business/store/current-user.store';
 
 @Component({
     selector: 'of-session-end',
@@ -28,12 +27,12 @@ export class SessionEndComponent implements OnInit {
     @ViewChild('sessionEnd') sessionEndPopupRef: TemplateRef<any>;
 
     constructor(
-        private store: Store,
         private opfabEventStreamService : OpfabEventStreamService,
         private soundNotificationService: SoundNotificationService,
-        private actions$: Actions,
         private modalService: NgbModal,
-        private logger: OpfabLoggerService
+        private authService: AuthService,
+        private logger: OpfabLoggerService,
+        private currentUserStore: CurrentUserStore
     ) {}
 
     ngOnInit(): void {
@@ -42,7 +41,7 @@ export class SessionEndComponent implements OnInit {
     }
 
     private subscribeToSessionEnd() {
-        this.actions$.pipe(ofType<Action>(AuthenticationActionTypes.SessionExpired)).subscribe(() => {
+        this.currentUserStore.getSessionExpired().subscribe(() => {
             this.logger.info('Session expire ', LogOption.REMOTE);
             this.soundNotificationService.handleSessionEnd();
             this.opfabEventStreamService.closeEventStream();
@@ -68,6 +67,6 @@ export class SessionEndComponent implements OnInit {
     public logout() {
         this.logger.info('Logout ', LogOption.REMOTE);
         this.modalRef.close();
-        this.store.dispatch(new TryToLogOutAction());
+        this.authService.logout();
     }
 }

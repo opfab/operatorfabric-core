@@ -1,4 +1,4 @@
-/* Copyright (c) 2022, RTE (http://www.rte-france.com)
+/* Copyright (c) 2022-2023, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -9,11 +9,10 @@
 
 import {Component, Input, TemplateRef, ViewChild} from '@angular/core';
 import {NgbModal, NgbModalRef} from '@ng-bootstrap/ng-bootstrap';
-import {Store} from '@ngrx/store';
 import {LogOption, OpfabLoggerService} from 'app/business/services/logs/opfab-logger.service';
 import {UserService} from 'app/business/services/user.service';
-import {TryToLogOutAction} from '@ofStore/actions/authentication.actions';
 import {ApplicationLoadingStep} from '../application-loading-step';
+import {AuthService} from 'app/authentication/auth.service';
 
 @Component({
     selector: 'of-account-already-used',
@@ -29,9 +28,9 @@ export class AccountAlreadyUsedComponent extends ApplicationLoadingStep {
     public isDisconnectedByUserWithSameUrl = false;
 
     constructor(
-        private store: Store,
         private userService: UserService,
         private modalService: NgbModal,
+        private authService: AuthService,
         private logger: OpfabLoggerService
     ) {
         super();
@@ -62,7 +61,7 @@ export class AccountAlreadyUsedComponent extends ApplicationLoadingStep {
     public logoutBecauseAccountIsAlreadyUsed() {
         this.logger.info('Logout with user ' + this.userLogin + ' because account already used ', LogOption.REMOTE);
         this.questionModal.close();
-        this.store.dispatch(new TryToLogOutAction());
+        this.authService.logout();
     }
 
     private sendEventAccountAlreadyInUseCheckDone() {

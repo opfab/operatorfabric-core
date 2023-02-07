@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2022, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2023, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -9,12 +9,9 @@
 
 import {Component, OnInit} from '@angular/core';
 import {FormControl, FormGroup} from '@angular/forms';
-import {Store} from '@ngrx/store';
-import {TryToLogInAction} from '@ofActions/authentication.actions';
-import {AppState} from '@ofStore/index';
 import {filter} from 'rxjs/operators';
-import {selectMessage} from '@ofSelectors/authentication.selectors';
 import {Message, MessageLevel} from '@ofModel/message.model';
+import {AuthService} from 'app/authentication/auth.service';
 
 @Component({
     selector: 'of-login',
@@ -28,11 +25,10 @@ export class LoginComponent implements OnInit {
     }>;
     loginMessage: Message;
 
-    constructor(private store: Store<AppState>) {}
+    constructor(private authService: AuthService) {}
 
     ngOnInit() {
-        this.store
-            .select(selectMessage)
+        this.authService.getRejectLoginMessage()
             .pipe(filter((m) => m != null && m.level === MessageLevel.ERROR))
             .subscribe((m) => (this.loginMessage = m));
         this.userForm = new FormGroup({
@@ -45,7 +41,7 @@ export class LoginComponent implements OnInit {
         if (this.userForm.valid) {
             const username = this.userForm.get('identifier').value.trim();
             const password = this.userForm.get('password').value;
-            this.store.dispatch(new TryToLogInAction({username: username, password: password}));
+            this.authService.tryToLogin(username,password);
         }
     }
 

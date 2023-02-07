@@ -9,12 +9,11 @@
 
 import {Component, OnDestroy, OnInit} from '@angular/core';
 import {BaseSettingDirective} from '../base-setting/base-setting.directive';
-import {Store} from '@ngrx/store';
-import {AppState} from '@ofStore/index';
 import {FormControl, FormGroup, Validators} from '@angular/forms';
 import {ConfigService} from 'app/business/services/config.service';
 import {SettingsService} from 'app/business/services/settings.service';
 import {OpfabLoggerService} from 'app/business/services/logs/opfab-logger.service';
+import {CurrentUserStore} from 'app/business/store/current-user.store';
 
 @Component({
     selector: 'of-multi-settings',
@@ -22,12 +21,12 @@ import {OpfabLoggerService} from 'app/business/services/logs/opfab-logger.servic
 })
 export class MultiSettingsComponent extends BaseSettingDirective implements OnInit, OnDestroy {
     constructor(
-        protected store: Store<AppState>,
         protected configService: ConfigService,
         protected settingsService: SettingsService,
+        protected currentUserStore: CurrentUserStore,
         protected logger: OpfabLoggerService
     ) {
-        super(store, configService, settingsService,logger);
+        super(configService, settingsService,currentUserStore,logger);
     }
 
     initFormGroup() {

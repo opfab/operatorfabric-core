@@ -8,16 +8,14 @@
  */
 
 import {Directive,Input, OnDestroy, OnInit} from '@angular/core';
-import {AppState} from '@ofStore/index';
-import {Store} from '@ngrx/store';
 import {Subject, timer} from 'rxjs';
 import {debounce, distinctUntilChanged, filter, first, map, takeUntil} from 'rxjs/operators';
 import {UntypedFormGroup} from '@angular/forms';
 import * as _ from 'lodash-es';
-import {selectIdentifier} from '@ofSelectors/authentication.selectors';
 import {ConfigService} from 'app/business/services/config.service';
 import {SettingsService} from 'app/business/services/settings.service';
 import {OpfabLoggerService} from 'app/business/services/logs/opfab-logger.service';
+import {CurrentUserStore} from 'app/business/store/current-user.store';
 
 @Directive()
 export abstract class BaseSettingDirective implements OnInit, OnDestroy {
@@ -30,9 +28,9 @@ export abstract class BaseSettingDirective implements OnInit, OnDestroy {
     private baseSettings = {};
 
     protected constructor(
-        protected store: Store<AppState>,
         protected configService: ConfigService,
         protected settingsService: SettingsService,
+        protected currentUserStore: CurrentUserStore,
         protected logger: OpfabLoggerService
     ) {}
 
@@ -54,8 +52,7 @@ export abstract class BaseSettingDirective implements OnInit, OnDestroy {
                 .subscribe((next) => this.dispatch(this.convert(next)))
         );
 
-        this.store
-            .select(selectIdentifier)
+        this.currentUserStore.getCurrentUserLogin()
             .pipe(
                 takeUntil(this.ngUnsubscribe$),
                 map((id) => {

@@ -10,26 +10,20 @@
 import * as fromRouter from '@ngrx/router-store';
 import {RouterReducerState} from '@ngrx/router-store';
 import {RouterStateUrl} from '@ofStore/states/router.state';
-import {reducer as authenticationReducer} from '@ofStore/reducers/authentication.reducer';
 import {ActionReducerMap, MetaReducer} from '@ngrx/store';
 import {environment} from '@env/environment';
 import {storeFreeze} from 'ngrx-store-freeze';
-import {AuthenticationEffects} from '@ofEffects/authentication.effects';
-import {AuthState} from '@ofStates/authentication.state';
 
 
 export interface AppState {
     router: RouterReducerState<RouterStateUrl>;
-    authentication: AuthState;
 }
 
 export const appEffects = [
-    AuthenticationEffects
 ];
 
 export const appReducer: ActionReducerMap<AppState> = {
     router: fromRouter.routerReducer,
-    authentication: authenticationReducer
 };
 
 export const appMetaReducers: MetaReducer<AppState>[] = !environment.production ? [storeFreeze] : [];

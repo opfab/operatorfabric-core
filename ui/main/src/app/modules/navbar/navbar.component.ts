@@ -10,7 +10,6 @@
 import {Component, ElementRef, OnInit, ViewChild} from '@angular/core';
 import {navigationRoutes} from '../../app-routing.module';
 import {Store} from '@ngrx/store';
-import {TryToLogOutAction} from '@ofActions/authentication.actions';
 import {AppState} from '@ofStore/index';
 import {selectCurrentUrl} from '@ofSelectors/router.selectors';
 import {Menu} from '@ofModel/menu.model';
@@ -21,6 +20,7 @@ import {NgbModal, NgbModalOptions, NgbModalRef} from '@ng-bootstrap/ng-bootstrap
 import {AppService} from '@ofServices/app.service';
 import {MenuService} from 'app/business/services/menu.service';
 import {Observable} from 'rxjs';
+import {AuthService} from 'app/authentication/auth.service';
 
 @Component({
     selector: 'of-navbar',
@@ -70,7 +70,8 @@ export class NavbarComponent implements OnInit {
         private configService: ConfigService,
         private menuService: MenuService,
         private modalService: NgbModal,
-        private appService: AppService
+        private appService: AppService,
+        private authService: AuthService
     ) {
         this.currentPath = ['']; // Initializing currentPath to avoid 'undefined' errors when it is used to determine 'active' look in template
     }
@@ -126,7 +127,7 @@ export class NavbarComponent implements OnInit {
 
     logOut() {
         this.logoutInProgress = true;
-        this.store.dispatch(new TryToLogOutAction());
+        this.authService.logout();
     }
 
     toggleMenu(index: number) {

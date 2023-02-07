@@ -9,9 +9,7 @@
 
 import {Component, OnInit, Output, ViewChild} from '@angular/core';
 import {Title} from '@angular/platform-browser';
-import {Store} from '@ngrx/store';
 import {TranslateService} from '@ngx-translate/core';
-import {AuthenticationService} from '@ofServices/authentication/authentication.service';
 import {ConfigService} from 'app/business/services/config.service';
 import {EntitiesService} from 'app/business/services/entities.service';
 import {GroupsService} from 'app/business/services/groups.service';
@@ -20,8 +18,6 @@ import {LogOption, OpfabLoggerService} from 'app/business/services/logs/opfab-lo
 import {ProcessesService} from 'app/business/services/processes.service';
 import {ReminderService} from 'app/business/services/reminder/reminder.service';
 import {UserService} from 'app/business/services/user.service';
-import {AppState} from '@ofStore/index';
-import {selectIdentifier} from '@ofStore/selectors/authentication.selectors';
 import {Utilities} from 'app/business/common/utilities';
 import {catchError, Subject} from 'rxjs';
 import {ActivityAreaChoiceAfterLoginComponent} from './activityarea-choice-after-login/activityarea-choice-after-login.component';
@@ -35,6 +31,9 @@ import {OpfabEventStreamService} from 'app/business/services/opfabEventStream.se
 import {LightCardsStoreService} from 'app/business/services/lightcards/lightcards-store.service';
 import {ApplicationUpdateService} from 'app/business/services/application-update.service';
 import {ServerResponseStatus} from 'app/business/server/serverResponse';
+import {CurrentUserStore} from 'app/business/store/current-user.store';
+import {AuthService} from 'app/authentication/auth.service';
+import {AuthenticationMode} from 'app/authentication/auth.model';
 
 @Component({
     selector: 'of-application-loading',
@@ -62,9 +61,8 @@ export class ApplicationLoadingComponent implements OnInit {
      * NB: I18nService is injected to trigger its constructor at application startup
      */
     constructor(
-        private store: Store<AppState>,
         private titleService: Title,
-        private authenticationService: AuthenticationService,
+        private authService: AuthService,
         private configService: ConfigService,
         private settingsService: SettingsService,
         private translateService: TranslateService,
@@ -80,7 +78,8 @@ export class ApplicationLoadingComponent implements OnInit {
         private lightCardsStoreService: LightCardsStoreService,
         private opfabEventStreamServer: OpfabEventStreamServer,
         private opfabEventStreamService: OpfabEventStreamService,
-        private applicationUpdateService: ApplicationUpdateService
+        private applicationUpdateService: ApplicationUpdateService,
+        private currentUserStore: CurrentUserStore
     ) {}
 
     ngOnInit() {
@@ -159,8 +158,8 @@ export class ApplicationLoadingComponent implements OnInit {
         this.loadingInProgress = true;
         this.logger.info(`Launch authentication process`);
         this.waitForEndOfAuthentication();
-        this.authenticationService.initializeAuthentication();
-        if (!this.authenticationService.isAuthModeCodeOrImplicitFlow() && !this.authenticationService.isAuthModeNone())
+        this.authService.initializeAuthentication();
+        if (this.authService.getAuthMode()=== AuthenticationMode.PASSWORD)
             this.waitForEmptyTokenInStorageToShowLoginForm();
     }
 
@@ -176,7 +175,7 @@ export class ApplicationLoadingComponent implements OnInit {
     }
 
     private waitForEndOfAuthentication(): void {
-        this.store.select(selectIdentifier).subscribe((identifier) => {
+        this.currentUserStore.getCurrentUserLogin().subscribe((identifier) => {
             if (identifier) {
                 this.logger.info(`User ${identifier} logged`);
                 this.synchronizeUserTokenWithOpfabUserDatabase();
