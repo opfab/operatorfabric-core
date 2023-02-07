@@ -38,7 +38,7 @@ public class CardSubscriptionService {
     protected UserServiceCache userServiceCache;
     protected UserActionLogService userActionLogService;
 
-    private @Value("${traceUserAction:true}") boolean traceUserAction;
+    private @Value("${operatorfabric.userActionLogActivated:true}") boolean userActionLogActivated;
 
 
     public CardSubscriptionService(
@@ -237,7 +237,7 @@ public class CardSubscriptionService {
     }
 
     private void logUserAction(String login, UserActionEnum actionType, List<String> entities, String cardUid, String comment) {
-        if (traceUserAction) userActionLogService.insertUserActionLog(login,  actionType, entities, cardUid, comment);
+        if (userActionLogActivated) userActionLogService.insertUserActionLog(login,  actionType, entities, cardUid, comment);
     }
 
 }

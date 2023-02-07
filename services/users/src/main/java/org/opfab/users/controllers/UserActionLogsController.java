@@ -43,7 +43,14 @@ public class UserActionLogsController implements UserActionLogsApi{
     }
 
     @Override
-    public UserActionLogPage getUserActionLogs(HttpServletRequest request, HttpServletResponse response, List<String> login, List<String> action, BigDecimal dateFrom, BigDecimal dateTo, BigDecimal page, BigDecimal size) throws Exception {
+    public UserActionLogPage getUserActionLogs(HttpServletRequest request,
+                                               HttpServletResponse response,
+                                               List<String> login,
+                                               List<String> action,
+                                               BigDecimal dateFrom,
+                                               BigDecimal dateTo,
+                                               BigDecimal page,
+                                               BigDecimal size) throws Exception {
         Pageable pageable = PaginationUtils.createPageable(page != null ? page.intValue() : null , size != null ? size.intValue() : null);
         Map<String, List<String>> queryParams = new HashMap<>();
         if (login != null)
@@ -67,6 +74,4 @@ public class UserActionLogsController implements UserActionLogsApi{
                 .last(actionsPage.isLast())
                 .build();
     }
-
-
 }

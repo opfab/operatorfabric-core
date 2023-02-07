@@ -60,6 +60,7 @@ In this file you will find, among others, the parameters below :
 
 
 |operatorfabric.servicesUrls.users||yes|Indicates where the Users service can we reached (to get information about the current user).
+|operatorfabric.userActionLogActivated|yes|no|Indicates if the user action log feature is enabled or not.
 
 |===
 
