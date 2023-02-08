@@ -11,7 +11,7 @@ import {Injectable} from '@angular/core';
 import {EntitiesService} from 'app/business/services/entities.service';
 import {GroupsService} from 'app/business/services/groups.service';
 import {LogOption, OpfabLoggerService} from 'app/business/services/logs/opfab-logger.service';
-import {TemplateCssService} from '@ofServices/template-css.service';
+import {TemplateCssService} from 'app/business/services/template-css.service';
 import {UserService} from 'app/business/services/user.service';
 import {HandlebarsService} from 'app/modules/card/services/handlebars.service';
 import {debounce, timer, map, catchError, switchMap} from 'rxjs';
