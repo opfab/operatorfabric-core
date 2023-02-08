@@ -41,6 +41,7 @@
       "templateName": "incidentInProgress",
       "styles": [],
       "acknowledgmentAllowed": "OnlyWhenResponseDisabledForUser",
+      "showAcknowledgmentFooter": "Never",
       "type" : "INPROGRESS",
       "validateAnswerButtonLabel" : "SEND IMPACT",
       "modifyAnswerButtonLabel" : "MODIFY IMPACT"
