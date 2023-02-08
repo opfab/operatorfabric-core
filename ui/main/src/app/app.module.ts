@@ -69,6 +69,8 @@ import {UserServer} from './business/server/user.server';
 import {AngularUserServer} from './server/angularUser.server';
 import {AdminProcessServer} from './business/server/adminprocess.server';
 import {AngularAdminProcessesServer} from './server/angularAdminProcess.server';
+import {TemplateCssServer} from './business/server/template-css.server';
+import {AngularTemplateCssServer} from './server/angularTemplate-css.service';
 
 @NgModule({
     imports: [
@@ -130,6 +132,7 @@ import {AngularAdminProcessesServer} from './server/angularAdminProcess.server';
         {provide: AdminProcessServer, useClass: AngularAdminProcessesServer},
         {provide: RemoteLoggerServer, useClass: AngularRemoteLoggerServer},
         {provide: ConfigServer, useClass: AngularConfigServer},
+        {provide: TemplateCssServer, useClass: AngularTemplateCssServer},
         {provide: ProcessServer, useClass: AngularProcessServer},
         {provide: SettingsServer, useClass: AngularSettingsServer},
         {provide: OpfabEventStreamServer, useClass: AngularOpfabEventStreamServer},

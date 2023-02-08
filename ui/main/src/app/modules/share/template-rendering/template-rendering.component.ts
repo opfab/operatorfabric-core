@@ -35,7 +35,7 @@ import {Observable, Subject, zip} from 'rxjs';
 import {User} from '@ofModel/user.model';
 import {OpfabLoggerService} from 'app/business/services/logs/opfab-logger.service';
 import {DisplayContext} from '@ofModel/templateGateway.model';
-import {TemplateCssService} from '@ofServices/template-css.service';
+import {TemplateCssService} from 'app/business/services/template-css.service';
 
 declare const templateGateway: any;
 
