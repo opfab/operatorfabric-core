@@ -15,15 +15,12 @@ import {ActionReducerMap, MetaReducer} from '@ngrx/store';
 import {environment} from '@env/environment';
 import {storeFreeze} from 'ngrx-store-freeze';
 import {AuthenticationEffects} from '@ofEffects/authentication.effects';
-import {reducer as globalStyleReducer} from '@ofStore/reducers/global-style.reducer';
 import {AuthState} from '@ofStates/authentication.state';
 
-import {GlobalStyleState} from './states/global-style.state';
 
 export interface AppState {
     router: RouterReducerState<RouterStateUrl>;
     authentication: AuthState;
-    globalStyle: GlobalStyleState;
 }
 
 export const appEffects = [
@@ -32,8 +29,7 @@ export const appEffects = [
 
 export const appReducer: ActionReducerMap<AppState> = {
     router: fromRouter.routerReducer,
-    authentication: authenticationReducer,
-    globalStyle: globalStyleReducer
+    authentication: authenticationReducer
 };
 
 export const appMetaReducers: MetaReducer<AppState>[] = !environment.production ? [storeFreeze] : [];

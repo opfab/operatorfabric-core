@@ -23,14 +23,12 @@ import Overlay from 'ol/Overlay';
 import {Style, Fill, Stroke, Circle} from 'ol/style';
 import {Attribution, ZoomToExtent, Control, defaults as defaultControls} from 'ol/control';
 import {ConfigService} from 'app/business/services/config.service';
-import {selectGlobalStyleState} from '@ofSelectors/global-style.selectors';
-import {Store} from '@ngrx/store';
-import {AppState} from '@ofStore/index';
 import {OpfabLoggerService} from 'app/business/services/logs/opfab-logger.service';
 import {MapService} from 'app/business/services/map.service';
 import Chart from 'chart.js/auto';
 import ChartDataLabels from 'chartjs-plugin-datalabels';
 import {TranslateService} from '@ngx-translate/core';
+import {GlobalStyleService} from '@ofServices/global-style.service';
 
 let self;
 
@@ -49,10 +47,10 @@ export class MapComponent implements OnInit, OnDestroy, AfterViewChecked {
     constructor(
         private lightCardsFeedFilterService: LightCardsFeedFilterService,
         private configService: ConfigService,
-        private store: Store<AppState>,
         private logger: OpfabLoggerService,
         private mapService: MapService,
-        private translate: TranslateService
+        private translate: TranslateService,
+        private globalStyleService: GlobalStyleService
     ) {}
 
     ngOnInit() {
@@ -87,16 +85,13 @@ export class MapComponent implements OnInit, OnDestroy, AfterViewChecked {
     }
 
     private updateMapWhenGlobalStyleChange() {
-        this.store
-            .select(selectGlobalStyleState)
-            .pipe(takeUntil(this.unsubscribe$))
-            .subscribe((style) => this.updateMapColors(style));
+        this.globalStyleService.getStyleChange().subscribe(style => this.updateMapColors(style));
     }
 
     private updateMapColors(style) {
         if (this.map) {
             let filter = '';
-            if (style.style === 'NIGHT') {
+            if (style === GlobalStyleService.NIGHT) {
                 //change map color to Dark Mode
                 filter = 'invert(100%) hue-rotate(180deg) brightness(95%) contrast(90%)';
             }

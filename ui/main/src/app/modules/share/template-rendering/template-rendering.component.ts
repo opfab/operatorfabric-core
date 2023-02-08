@@ -1,4 +1,4 @@
-/* Copyright (c) 2022, RTE (http://www.rte-france.com)
+/* Copyright (c) 2022-2023, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -28,7 +28,6 @@ import {DetailContext} from '@ofModel/detail-context.model';
 import {Store} from '@ngrx/store';
 import {AppState} from '@ofStore/index';
 import {selectAuthenticationState} from '@ofSelectors/authentication.selectors';
-import {selectGlobalStyleState} from '@ofSelectors/global-style.selectors';
 import {UserContext} from '@ofModel/user-context.model';
 import {map, skip, takeUntil} from 'rxjs/operators';
 import {Observable, Subject, zip} from 'rxjs';
@@ -36,6 +35,7 @@ import {User} from '@ofModel/user.model';
 import {OpfabLoggerService} from 'app/business/services/logs/opfab-logger.service';
 import {DisplayContext} from '@ofModel/templateGateway.model';
 import {TemplateCssService} from 'app/business/services/template-css.service';
+import {GlobalStyleService} from '@ofServices/global-style.service';
 
 declare const templateGateway: any;
 
@@ -72,6 +72,7 @@ export class TemplateRenderingComponent implements OnChanges, OnInit, OnDestroy,
         private sanitizer: DomSanitizer,
         private store: Store<AppState>,
         private templateCssService: TemplateCssService,
+        private globalStyleService: GlobalStyleService,
         private logger: OpfabLoggerService
     ) {}
 
@@ -82,8 +83,7 @@ export class TemplateRenderingComponent implements OnChanges, OnInit, OnDestroy,
     // For certain types of template , we need to inform it to take into account
     // the new css style (for example with chart done with chart.js)
     private informTemplateWhenGlobalStyleChange() {
-        this.store
-            .select(selectGlobalStyleState)
+        this.globalStyleService.getStyleChange()
             .pipe(takeUntil(this.unsubscribeToGlobalStyle$), skip(1))
             .subscribe(() => templateGateway.onStyleChange());
     }

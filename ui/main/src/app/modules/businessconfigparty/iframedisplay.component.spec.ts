@@ -11,10 +11,8 @@
 import {IframeDisplayComponent} from './iframedisplay.component';
 import {TestBed} from '@angular/core/testing';
 import {ActivatedRoute, convertToParamMap, Router} from '@angular/router';
-import {of} from 'rxjs';
+import {of, Subject} from 'rxjs';
 import {ConfigService} from 'app/business/services/config.service';
-import {provideMockStore} from '@ngrx/store/testing';
-import {selectGlobalStyleStateStyle} from '@ofSelectors/global-style.selectors';
 import {GlobalStyleService} from '@ofServices/global-style.service';
 import {DomSanitizer, SafeUrl} from '@angular/platform-browser';
 import {DOCUMENT} from '@angular/common';
@@ -45,15 +43,7 @@ describe('IFrameDisplayComponent', () => {
                 IframeDisplayComponent,
                 {provide: ActivatedRoute, useValue: new ActivatedRouteMock()},
                 {provide: ConfigService, useValue: jasmine.createSpyObj('ConfigService', ['queryMenuEntryURL'])},
-                {provide: GlobalStyleService, useValue: jasmine.createSpyObj('GlobalStyleService', ['getStyle'])},
-                provideMockStore({
-                    selectors: [
-                        {
-                            selector: selectGlobalStyleStateStyle,
-                            value: () => 'dark'
-                        }
-                    ]
-                }),
+                {provide: GlobalStyleService, useValue: jasmine.createSpyObj('GlobalStyleService', ['getStyle','getStyleChange'])},
                 {
                     provide: DomSanitizer,
                     useValue: jasmine.createSpyObj('DomSanitizer', ['bypassSecurityTrustResourceUrl'])
@@ -67,6 +57,7 @@ describe('IFrameDisplayComponent', () => {
 
         mockConfigService.queryMenuEntryURL.and.returnValue(of('https://wikipedia.org'));
         mockGlobalStyleService.getStyle.and.returnValue('dark');
+        mockGlobalStyleService.getStyleChange.and.returnValue(new Subject<string>().asObservable());
         mockDomSanitizer.bypassSecurityTrustResourceUrl.and.returnValue(fakeSafeIFrameUrl);
 
         component = TestBed.inject(IframeDisplayComponent);
