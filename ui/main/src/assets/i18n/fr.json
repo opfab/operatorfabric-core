@@ -311,7 +311,8 @@
       "endDate": "DATE DE FIN ",
       "expirationDate": "DATE D'EXPIRATION",
       "lttd": "DATE LIMITE DE RÉPONSE",
-      "recipients": "DESTINATAIRES"
+      "recipients": "DESTINATAIRES",
+      "recipientsForInformation": "DESTINATAIRES POUR INFORMATION"
     },
     "prepareCard": "VISUALISATION AVANT ENVOI",
     "confirmSending": "Envoyer la carte suivante ?",
@@ -320,6 +321,7 @@
     "processInstanceId": "Identifiant",
     "state": "État",
     "recipients": "DESTINATAIRES:",
+    "recipientsForInformation": "DESTINATAIRES POUR INFORMATION:",
     "youAreTheOnlyRecipient": "Vous êtes l'unique destinataire de cette carte.",
     "feedPreview": "PRÉVISUALISATION FLUX DE CARTES:",
     "contentPreview": "PRÉVISUALISATION CONTENU:",

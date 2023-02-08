@@ -239,7 +239,7 @@ describe('Acknowledgment tests', function () {
         usercard.selectState('Message');
         cy.get('#message').type('Test message for entities acks');
         cy.get('#opfab-recipients').click();
-        cy.get('.vscomp-toggle-all-checkbox').click();
+        cy.get('#opfab-recipients').find('.vscomp-toggle-all-checkbox').click();
         cy.get('#opfab-recipients').click();
 
         usercard.previewThenSendCard();

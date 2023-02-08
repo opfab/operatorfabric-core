@@ -15,7 +15,8 @@
       "userCard" : {
         "template" : "usercard_message",
         "startDateVisible": false,
-        "endDateVisible" : false
+        "endDateVisible" : false,
+        "recipientForInformationVisible" : true
       },
       "templateName": "message",
       "styles": [],

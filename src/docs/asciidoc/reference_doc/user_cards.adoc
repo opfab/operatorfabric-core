@@ -1,4 +1,4 @@
-// Copyright (c) 2021-2022 RTE (http://www.rte-france.com)
+// Copyright (c) 2021-2023 RTE (http://www.rte-france.com)
 // See AUTHORS.txt
 // This document is subject to the terms of the Creative Commons Attribution 4.0 International license.
 // If a copy of the license was not distributed with this
@@ -166,7 +166,7 @@ edit or delete it.
 [[restrict_possible_recipients]]
 == Restrict the list of possible recipients
 
-When sending a user card, by default it is possible to choose the recipients from all the available entities. To limit the list of available recipients it is possible to configure the list of possible recipients via javascript in the user template 
+When sending a user card, by default it is possible to choose the recipients from all the available entities. To limit the list of available recipients it is possible to configure the list of possible recipients via javascript in the user template.
 
 For example : 
 
@@ -180,10 +180,24 @@ For example :
 
 In this example the list of available recipients will contain: "ENTITY_FR" (level 0), all the first level children of "ENTITY_FR" (level 1) and "IT_SUPERVISOR_ENTITY".
 
+NOTE: The list of 'recipients for information' can also be limited via javascript in the user template.
+
+For example :
+
+....
+    usercardTemplateGateway.setDropdownEntityRecipientForInformationList([
+            {"id": "ENTITY_FR", "levels": [0,1]},
+            {"id": "IT_SUPERVISOR_ENTITY"}
+        ]);
+....
+
+
 [[preselect_initial_recipients]]
 == Configure the list of initially selected recipients
 
-It is possible to configure the list of initially selected recipients via javascript in the user template by implementing the `usercardTemplateGateway.setInitialSelectedRecipients(selectedEntities)` method. The method takes as input the list of Entity ids to be preselected.
+It is possible to configure the list of initially selected recipients via javascript in the user template by
+implementing the `usercardTemplateGateway.setInitialSelectedRecipients(selectedEntities)` method. The method takes as
+input the list of Entity ids to be preselected.
 
 For example : 
 
@@ -196,6 +210,17 @@ For example :
 
 
 In this example the dropdown list of available recipients will have "ENTITY_FR" and "IT_SUPERVISOR_ENTITY" preselected. The user can anyway change the selected recipients.
+
+NOTE: The list of initially selected 'recipients for information' can also be configured via javascript in the user
+template by implementing the `usercardTemplateGateway.setInitialSelectedRecipientsForInformation(selectedEntities)` method.
+
+For example :
+
+....
+    usercardTemplateGateway.setInitialSelectedRecipientsForInformation([
+            "ENTITY4_FR"
+        ]);
+....
 
 [[set_recipients_via_code]]
 == Set the list of recipients via the template
@@ -285,6 +310,12 @@ The template can know the list of entities selected by the users as recipients o
 
 An example of _usercardTemplateGateway.getSelectedEntityRecipients()_ usage can be found in the file
 https://github.com/opfab/operatorfabric-core/tree/master/src/test/resources/bundles/defaultProcess_V1/template/usercard_process.handlebars[src/test/resources/bundles/defaultProcess_V1/template/usercard_process.handlebars].
+
+
+== Get selected recipient entities for information list
+The template can know the list of entities selected by the users as recipients for information of the card by calling
+the _usercardTemplateGateway.getSelectedEntityRecipientsForInformation()_ function.
+
 
 
 == Send response automatically (experimental feature)

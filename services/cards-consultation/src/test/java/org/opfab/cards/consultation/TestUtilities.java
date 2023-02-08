@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2022, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2023, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -259,11 +259,18 @@ public class TestUtilities {
         return false;
     }
 
-    public static CardConsultationData configureRecipientReferencesAndStartDate(CardConsultationData card, String user, Instant startDate, String[] groups, String[] entities,
-                                                                                String process, String state) {
+    public static CardConsultationData configureRecipientReferencesAndStartDate(CardConsultationData card,
+                                                                                String user,
+                                                                                Instant startDate,
+                                                                                String[] groups,
+                                                                                String[] entities,
+                                                                                String process,
+                                                                                String state,
+                                                                                String[] entitiesForInformation) {
         card.setStartDate(startDate);
         card.setGroupRecipients(groups != null ? Arrays.asList(groups) : null);
         card.setEntityRecipients(entities != null ? Arrays.asList(entities) : null);
+        card.setEntityRecipientsForInformation(entitiesForInformation != null ? Arrays.asList(entitiesForInformation) : null);
         card.setUserRecipients(Arrays.asList(user));
 
         if (process != null) card.setProcess(process);

@@ -95,10 +95,10 @@ public interface UserUtilitiesCommonToCardRepository<T extends Card> {
 
     1) If the card is sent to user1, the card is received and visible for user1 if he has the receive right for the
        corresponding process/state (Receive or ReceiveAndWrite)
-    2) If the card is sent to GROUP1 (or ENTITY1), the card is received and visible for user if all of the following is true :
+    2) If the card is sent to GROUP1 (or ENTITY1), the card is received and visible for user if all the following is true :
          - he's a member of GROUP1 (or ENTITY1)
          - he has the receive right for the corresponding process/state (Receive or ReceiveAndWrite)
-    3) If the card is sent to ENTITY1 and GROUP1, the card is received and visible for user if all of the following is true :
+    3) If the card is sent to ENTITY1 and GROUP1, the card is received and visible for user if all the following is true :
          - he's a member of ENTITY1 (either directly or through one of its children entities)
          - he's a member of GROUP1
          - he has the receive right for the corresponding process/state (Receive or ReceiveAndWrite)
@@ -109,13 +109,13 @@ public interface UserUtilitiesCommonToCardRepository<T extends Card> {
 
         return  new Criteria().andOperator(where(PROCESS_STATE_KEY).in(processStateList),
                 new Criteria().orOperator(where(USER_RECIPIENTS).in(login),
-                                          where(GROUP_RECIPIENTS).in(groupsList).andOperator
-                                              (new Criteria().orOperator
-                                                  (where(ENTITY_RECIPIENTS).exists(false), where(ENTITY_RECIPIENTS).size(0))),
-                                          where(ENTITY_RECIPIENTS).in(entitiesList).andOperator
-                                              (new Criteria().orOperator
-                                                  (where(GROUP_RECIPIENTS).exists(false), where(GROUP_RECIPIENTS).size(0))),
-                                          where(GROUP_RECIPIENTS).in(groupsList).and(ENTITY_RECIPIENTS).in(entitiesList)));
+                        where(GROUP_RECIPIENTS).in(groupsList).andOperator
+                                (new Criteria().orOperator
+                                        (where(ENTITY_RECIPIENTS).exists(false), where(ENTITY_RECIPIENTS).size(0))),
+                        where(ENTITY_RECIPIENTS).in(entitiesList).andOperator
+                                (new Criteria().orOperator
+                                        (where(GROUP_RECIPIENTS).exists(false), where(GROUP_RECIPIENTS).size(0))),
+                        where(GROUP_RECIPIENTS).in(groupsList).and(ENTITY_RECIPIENTS).in(entitiesList)));
     }
 
 

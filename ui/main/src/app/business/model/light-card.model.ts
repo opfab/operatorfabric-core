@@ -44,6 +44,7 @@ export class LightCard {
         readonly wktProjection?: string,
         readonly entitiesAcks?: string[],
         readonly entityRecipients?: string[],
+        readonly entityRecipientsForInformation?: string[],
         readonly entitiesAllowedToRespond?: string[],
         readonly entitiesRequiredToRespond?: string[],
         readonly entitiesAllowedToEdit?: string[],

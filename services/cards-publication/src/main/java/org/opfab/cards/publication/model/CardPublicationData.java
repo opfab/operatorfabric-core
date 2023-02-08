@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2022, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2023, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -79,54 +79,76 @@ public class CardPublicationData implements Card {
     
     @Indexed
     private Instant startDate;
+
     @Indexed
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private Instant endDate;
+
     @Indexed
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private Instant expirationDate;
     
     private SeverityEnum severity;
+
     @Singular
     @JsonInclude(JsonInclude.Include.NON_EMPTY)
     private List<String> tags;
+
     @Singular
     @JsonInclude(JsonInclude.Include.NON_EMPTY)
     private List<TimeSpan> timeSpans;
+
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private Object data;
+
     @Singular
     @JsonInclude(JsonInclude.Include.NON_EMPTY)
     @Indexed
     private List<String> userRecipients;
+
     @Singular
     @JsonInclude(JsonInclude.Include.NON_EMPTY)
     @Indexed
     private List<String> groupRecipients;
+
     @Singular("entityAllowedToRespond")
     private List<String> entitiesAllowedToRespond;
+
     @Singular("entityRequiredToRespond")
     private List<String> entitiesRequiredToRespond;
+
     @Singular("entityAllowedToEdit")
     private List<String> entitiesAllowedToEdit;
+
     @Singular
     @Indexed
     private List<String> entityRecipients;
+
+    @Singular("entityRecipientForInformation")
+    @Indexed
+    private List<String> entityRecipientsForInformation;
+
     @Singular
     private List<String> externalRecipients;
+
     @JsonIgnore
     private List<String> usersAcks;
+
     @JsonIgnore
     private List<String> entitiesAcks;
+
     @JsonIgnore
     private List<String> usersReads;
 
     @Transient
     private Boolean hasBeenAcknowledged;
+
     @Transient
     private Boolean hasBeenRead;
+
     @Indexed
     private String processStateKey;
+
     @Builder.Default
     private PublisherTypeEnum publisherType = PublisherTypeEnum.EXTERNAL;
 
@@ -186,7 +208,8 @@ public class CardPublicationData implements Card {
                 .wktGeometry(this.wktGeometry)
                 .wktProjection(this.wktProjection)
                 .secondsBeforeTimeSpanForReminder(this.secondsBeforeTimeSpanForReminder)
-                .entityRecipients(this.getEntityRecipients());
+                .entityRecipients(this.getEntityRecipients())
+                .entityRecipientsForInformation(this.getEntityRecipientsForInformation());
 
         if (this.getTimeSpans() != null)
             result.timeSpansSet(new HashSet<>(this.getTimeSpans()));

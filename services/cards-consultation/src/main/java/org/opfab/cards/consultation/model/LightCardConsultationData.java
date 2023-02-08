@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2022, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2023, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -52,9 +52,11 @@ public class LightCardConsultationData implements LightCard {
     private Instant endDate;
     private Instant expirationDate;
     private SeverityEnum severity;
+
     @JsonInclude(JsonInclude.Include.NON_EMPTY)
     @Singular
     private List<String> tags;
+
     private I18n title;
     private I18n summary;
 
@@ -68,10 +70,13 @@ public class LightCardConsultationData implements LightCard {
     
     @JsonIgnore
     private List<String> usersAcks;
+
     @Transient
     private Boolean hasBeenAcknowledged;
+
     private List<String> entitiesAcks;
     private List<String> entityRecipients;
+    private List<String> entityRecipientsForInformation;
 
     @Transient
     private Boolean hasBeenRead;
@@ -159,6 +164,8 @@ public class LightCardConsultationData implements LightCard {
             builder.entitiesAcks(other.getEntitiesAcks());
         if (other.getEntityRecipients() != null && ! other.getEntityRecipients().isEmpty())
             builder.entityRecipients(other.getEntityRecipients());
+        if (other.getEntityRecipientsForInformation() != null && !other.getEntityRecipientsForInformation().isEmpty())
+            builder.entityRecipientsForInformation(other.getEntityRecipientsForInformation());
         return builder.build();
 
     }

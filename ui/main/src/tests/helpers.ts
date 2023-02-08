@@ -177,6 +177,7 @@ export function getOneRandomCard(cardTemplate?: any): Card {
         undefined,
         undefined,
         undefined,
+        undefined,
         cardTemplate.entitiesAllowedToRespond ? cardTemplate.entitiesAllowedToRespond : null,
         cardTemplate.entitiesRequiredToRespond ? cardTemplate.entitiesRequiredToRespond : null,
         cardTemplate.entitiesAllowedToEdit ? cardTemplate.entitiesAllowedToEdit : null
