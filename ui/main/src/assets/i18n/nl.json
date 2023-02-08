@@ -311,7 +311,8 @@
       "endDate":  "EINDDATUM",
       "expirationDate": "VERVALDATUM",
       "lttd": "BEPERK DATUM VOOR REACTIE",
-      "recipients": "ONTVANGERS"
+      "recipients": "ONTVANGERS",
+      "recipientsForInformation": "ONTVANGERS VOOR INFORMATIE"
     },
     "prepareCard": "BEKIJK VOOR VERZENDING",
     "confirmSending": "Wilt u deze kaart versturen?",
@@ -320,6 +321,7 @@
     "processInstanceId": "Id",
     "state": "Status",
     "recipients": "ONTVANGERS:",
+    "recipientsForInformation": "ONTVANGERS VOOR INFORMATIE:",
     "youAreTheOnlyRecipient": "U bent de enige ontvanger van deze kaart.",
     "feedPreview": "FEED PREVIEW:",
     "contentPreview": "CONTENT PREVIEW:",

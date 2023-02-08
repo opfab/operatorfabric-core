@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2022, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2023, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -50,9 +50,11 @@ public class LightCardPublicationData implements LightCard {
     private Instant endDate;
     private Instant expirationDate;
     private SeverityEnum severity;
+
     @JsonInclude(JsonInclude.Include.NON_EMPTY)
     //@Singular not used because lead to a NPE when built from Card
     private List<String> tags;
+
     private I18n title;
     private I18n summary;
     
@@ -66,8 +68,10 @@ public class LightCardPublicationData implements LightCard {
     
     @Transient
     private Boolean hasBeenAcknowledged;
+
     private List<String> entitiesAcks;
     private List<String> entityRecipients;
+    private List<String> entityRecipientsForInformation;
     
     @Transient
     public Boolean hasBeenRead;

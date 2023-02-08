@@ -690,6 +690,8 @@ definitions:
         description: Default value set to false.
       recipientVisible: # tells whether to display recipient dropdown when creating a user card
         type: boolean
+      recipientForInformationVisible: # tells whether to display recipient for information dropdown when creating a user card
+        type: boolean
       recipientList:
         type: array
         items:

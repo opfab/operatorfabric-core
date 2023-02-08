@@ -14,7 +14,8 @@
       "color": "#CC9900",
       "userCard" : {
         "template" : "usercard_message",
-        "endDateVisible" : false
+        "endDateVisible" : false,
+        "recipientForInformationVisible" : true
       },
       "templateName": "template",
       "styles": [

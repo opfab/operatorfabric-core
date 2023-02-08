@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2022, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2023, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -64,43 +64,62 @@ public class ArchivedCardConsultationData implements Card {
     private Instant lttd;
 
     private Instant startDate;
+
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private Instant endDate;
+
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private Instant expirationDate;
+
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private String media;
+
     private SeverityEnum severity;
+
     @JsonInclude(JsonInclude.Include.NON_EMPTY)
     @Singular
     private List<String> tags;
+
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private Object data;
+
     @JsonInclude(JsonInclude.Include.NON_EMPTY)
     @Singular
     private List<String> userRecipients;
+
     @JsonInclude(JsonInclude.Include.NON_EMPTY)
     @Singular
     private List<String> groupRecipients;
+
     @Singular
     private List<String> entityRecipients;
+
+    @Singular("entityRecipientForInformation")
+    private List<String> entityRecipientsForInformation;
+
     @Singular("entityAllowedToRespond")
     private List<String> entitiesAllowedToRespond;
+
     @Singular("entityRequiredToRespond")
     private List<String> entitiesRequiredToRespond;
+
     @Singular("entityAllowedToEdit")
     private List<String> entitiesAllowedToEdit;
+
     @Singular
     private List<String> externalRecipients;
+
     @JsonInclude(JsonInclude.Include.NON_EMPTY)
     private List<TimeSpan> timeSpans;
     
     @JsonIgnore
     @Transient
     private Boolean hasBeenAcknowledged;
+
     @JsonIgnore
     @Transient
     private Boolean hasBeenRead;
+
     private PublisherTypeEnum publisherType;
     private String  representative;
     private PublisherTypeEnum representativeType;

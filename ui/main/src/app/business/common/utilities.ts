@@ -1,4 +1,4 @@
-/* Copyright (c) 2021-2022, RTE (http://www.rte-france.com)
+/* Copyright (c) 2021-2023, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -85,5 +85,18 @@ export class Utilities {
 
     public static isNavigatorChromiumBased() {
         return navigator.userAgent.indexOf('Chrom') > -1;
+    }
+
+    public static removeElementsFromArray(arrayToFilter: string[], arrayToDelete: string[]): string[] {
+
+        if ((!!arrayToDelete) && (arrayToDelete.length > 0)) {
+            const elementsToDeleteSet = new Set(arrayToDelete);
+            const newArray = arrayToFilter.filter((name) => {
+                return !elementsToDeleteSet.has(name);
+            });
+            return newArray;
+        } else {
+            return arrayToFilter;
+        }
     }
 }

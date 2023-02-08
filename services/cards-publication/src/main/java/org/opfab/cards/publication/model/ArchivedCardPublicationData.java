@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2022, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2023, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -92,6 +92,8 @@ public class ArchivedCardPublicationData implements Card {
     @Indexed
     private List<String> entityRecipients;
 
+    private List<String> entityRecipientsForInformation;
+
     private List<String> externalRecipients;
 
     @Singular("entityAllowedToRespond")
@@ -164,6 +166,7 @@ public class ArchivedCardPublicationData implements Card {
         this.userRecipients = ObjectUtils.getNotNullOrDefault(card.getUserRecipients(), null, ArrayList::new);
         this.groupRecipients = ObjectUtils.getNotNullOrDefault(card.getGroupRecipients(), null, ArrayList::new);
         this.entityRecipients = ObjectUtils.getNotNullOrDefault(card.getEntityRecipients(), null, ArrayList::new);
+        this.entityRecipientsForInformation = ObjectUtils.getNotNullOrDefault(card.getEntityRecipientsForInformation(), null, ArrayList::new);
         this.externalRecipients = ObjectUtils.getNotNullOrDefault(card.getExternalRecipients(), null, ArrayList::new);
         this.entitiesAllowedToRespond = ObjectUtils.getNotNullOrDefault(card.getEntitiesAllowedToRespond(), null, ArrayList::new);
         this.entitiesRequiredToRespond = ObjectUtils.getNotNullOrDefault(card.getEntitiesRequiredToRespond(), null, ArrayList::new);

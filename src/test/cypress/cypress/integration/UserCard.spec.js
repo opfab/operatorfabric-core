@@ -1,4 +1,4 @@
-/* Copyright (c) 2021-2022, RTE (http://www.rte-france.com)
+/* Copyright (c) 2021-2023, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -115,7 +115,7 @@ describe('User Card ', function () {
       usercard.selectProcess('Task');
       usercard.checkRecipientSelectDoesNotExist();
       usercard.preview();
-      usercard.checkEntityRecipientsInPreviewContains("You are the only recipient of this card");
+      usercard.checkSenderIsTheOnlyOneRecipient();
     })
 
     it('Recipients should not be displayed in IT incident user card but set via template code', () => {
@@ -1070,6 +1070,162 @@ describe('User Card ', function () {
       usercard.checkSelectedServiceIs('--');
       usercard.checkSelectedProcessIs('Task');
       usercard.checkStateSelectDoesNotExist();
+    })
+  })
+
+  describe('Check entityRecipientsForInformation field', function () {
+
+    it('Choose an entity recipient for information not included in entity recipients', () => {
+      script.deleteAllCards();
+      script.loadProcessGroups();
+      opfab.loginWithUser('operator1_fr');
+      opfab.navigateToUserCard();
+
+      usercard.selectProcess('Process example');
+      usercard.selectState('Process example');
+      usercard.checkRecipientForInformationSelectDoesNotExist();
+
+      usercard.selectState('Message');
+      // We check all entities are proposed in the dropdown list
+      cy.get('#opfab-recipients-for-information').find('.vscomp-option-text').should("have.length", 15);
+
+      usercard.selectRecipient('Control Center FR North');
+      usercard.selectRecipientForInformation('Control Center FR West');
+      usercard.selectRecipientForInformation('Control Center FR East');
+      usercard.preview();
+
+      cy.get("#opfab-entity-recipients").find('span').should('have.length', 2);
+      usercard.checkEntityRecipientsInPreviewContains("Control Center FR North");
+
+      cy.get("#opfab-entity-recipients-for-information").find('span').should('have.length', 3);
+      usercard.checkEntityRecipientsForInformationInPreviewContains("Control Center FR West");
+      usercard.checkEntityRecipientsForInformationInPreviewContains("Control Center FR East");
+
+      usercard.sendCard();
+      feed.openFirstCard();
+
+      // We check only Control Center FR North is in the ack footer
+      cy.get('#opfab-card-acknowledged-footer').should('exist');
+      cy.get('#opfab-card-acknowledged-footer').find('span').should("have.length", 2); // 1 entity + 1 for 'Acknowledged :' label
+      cy.get('#opfab-card-acknowledged-footer').find('span').eq(1).should("have.text", "\u00a0 Control Center FR North \u00a0")
+          .and('have.css', 'color', 'rgb(255, 102, 0)');
+
+      // We check operator3_fr has received the card (member of Control Center FR East)
+      opfab.logout();
+      opfab.loginWithUser('operator3_fr');
+      cy.get('of-light-card').should('have.length', 1);
+
+      // We check operator4_fr has received the card (member of Control Center FR West)
+      opfab.logout();
+      opfab.loginWithUser('operator4_fr');
+      cy.get('of-light-card').should('have.length', 1);
+    })
+
+    it('Choose an entity recipient for information also present in entity recipients', () => {
+      script.deleteAllCards();
+      opfab.loginWithUser('operator1_fr');
+      opfab.navigateToUserCard();
+
+      usercard.selectState('Message');
+
+      usercard.selectRecipient('Control Center FR North');
+      usercard.selectRecipient('Control Center FR East');
+      usercard.selectRecipientForInformation('Control Center FR West');
+      usercard.selectRecipientForInformation('Control Center FR East');
+      usercard.preview();
+
+      // We check Control Center FR East is displayed in 'Recipients' section and not in 'Recipients for information'
+      cy.get("#opfab-entity-recipients").find('span').should('have.length', 3);
+      usercard.checkEntityRecipientsInPreviewContains("Control Center FR North");
+      usercard.checkEntityRecipientsInPreviewContains("Control Center FR East");
+
+      cy.get("#opfab-entity-recipients-for-information").find('span').should('have.length', 2);
+      usercard.checkEntityRecipientsForInformationInPreviewContains("Control Center FR West");
+
+      usercard.sendCard();
+      feed.openFirstCard();
+
+      // We check Control Center FR North and Control Center FR East is in the ack footer
+      cy.get('#opfab-card-acknowledged-footer').should('exist');
+      cy.get('#opfab-card-acknowledged-footer').find('span').should("have.length", 3); // 2 entities + 1 for 'Acknowledged :' label
+      cy.get('#opfab-card-acknowledged-footer').find('span').eq(1).should("have.text", "\u00a0 Control Center FR East \u00a0")
+          .and('have.css', 'color', 'rgb(255, 102, 0)');
+      cy.get('#opfab-card-acknowledged-footer').find('span').eq(2).should("have.text", "\u00a0 Control Center FR North \u00a0")
+          .and('have.css', 'color', 'rgb(255, 102, 0)');
+
+      // We check operator3_fr has received the card (member of Control Center FR East)
+      opfab.logout();
+      opfab.loginWithUser('operator3_fr');
+      cy.get('of-light-card').should('have.length', 1);
+
+      // We check operator4_fr has received the card (member of Control Center FR West)
+      opfab.logout();
+      opfab.loginWithUser('operator4_fr');
+      cy.get('of-light-card').should('have.length', 1);
+    })
+
+    it('Check restricted list of entity recipients for information and values selected by default', () => {
+      script.deleteAllCards();
+      opfab.loginWithUser('operator1_fr');
+      opfab.navigateToUserCard();
+
+      usercard.selectService('User card examples');
+      usercard.selectProcess('Message or question');
+      usercard.selectState('Message');
+
+      // We check the list of entities is restricted in the dropdown list
+      cy.get('#opfab-recipients-for-information').click();
+      cy.get('#opfab-recipients-for-information').find('.vscomp-option-text').should('have.length', 6);
+      cy.get('#opfab-recipients-for-information').find('.vscomp-option-text').eq(0).contains("Control Center FR East");
+      cy.get('#opfab-recipients-for-information').find('.vscomp-option-text').eq(1).contains("Control Center FR North");
+      cy.get('#opfab-recipients-for-information').find('.vscomp-option-text').eq(2).contains("Control Center FR South");
+      cy.get('#opfab-recipients-for-information').find('.vscomp-option-text').eq(3).contains("Control Center FR West");
+      cy.get('#opfab-recipients-for-information').find('.vscomp-option-text').eq(4).contains("French Control Centers");
+      cy.get('#opfab-recipients-for-information').find('.vscomp-option-text').eq(5).contains("IT SUPERVISION CENTER");
+
+      cy.get('#opfab-recipients-for-information').find('.vscomp-value').contains("Control Center FR East").should('not.exist');
+      cy.get('#opfab-recipients-for-information').find('.vscomp-value').contains("Control Center FR North").should('not.exist');
+      cy.get('#opfab-recipients-for-information').find('.vscomp-value').contains("Control Center FR South").should('not.exist');
+      cy.get('#opfab-recipients-for-information').find('.vscomp-value').contains("Control Center FR West");
+      cy.get('#opfab-recipients-for-information').find('.vscomp-value').contains("French Control Centers").should('not.exist');
+      cy.get('#opfab-recipients-for-information').find('.vscomp-value').contains("IT SUPERVISION CENTER").should('not.exist');
+
+      cy.get('#message').type('Hello');
+      // We check we can add an entity to the default selected value
+      usercard.selectRecipientForInformation('IT SUPERVISION CENTER');
+      usercard.preview();
+
+      cy.get("#opfab-entity-recipients").find('span').should('have.length', 4);
+      usercard.checkEntityRecipientsInPreviewContains("Control Center FR North");
+      usercard.checkEntityRecipientsInPreviewContains("Control Center FR South");
+      usercard.checkEntityRecipientsInPreviewContains("Control Center FR East");
+
+      cy.get("#opfab-entity-recipients-for-information").find('span').should('have.length', 3);
+      usercard.checkEntityRecipientsForInformationInPreviewContains("Control Center FR West");
+      usercard.checkEntityRecipientsForInformationInPreviewContains("IT SUPERVISION CENTER");
+
+      usercard.sendCard();
+      feed.openFirstCard();
+
+      // We check only Control Center FR North, East and South is in the ack footer
+      cy.get('#opfab-card-acknowledged-footer').should('exist');
+      cy.get('#opfab-card-acknowledged-footer').find('span').should("have.length", 4); // 3 entities + 1 for 'Acknowledged :' label
+      cy.get('#opfab-card-acknowledged-footer').find('span').eq(1).should("have.text", "\u00a0 Control Center FR East \u00a0")
+          .and('have.css', 'color', 'rgb(255, 102, 0)');
+      cy.get('#opfab-card-acknowledged-footer').find('span').eq(2).should("have.text", "\u00a0 Control Center FR North \u00a0")
+          .and('have.css', 'color', 'rgb(255, 102, 0)');
+      cy.get('#opfab-card-acknowledged-footer').find('span').eq(3).should("have.text", "\u00a0 Control Center FR South \u00a0")
+          .and('have.css', 'color', 'rgb(255, 102, 0)');
+
+      // We check operator4_fr has received the card (member of Control Center FR West)
+      opfab.logout();
+      opfab.loginWithUser('operator4_fr');
+      cy.get('of-light-card').should('have.length', 1);
+
+      // We check itsupervisor1 has received the card (member of IT SUPERVISION CENTER)
+      opfab.logout();
+      opfab.loginWithUser('itsupervisor1');
+      cy.get('of-light-card').should('have.length', 1);
     })
   })
 })

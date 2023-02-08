@@ -18,7 +18,6 @@ import org.opfab.users.model.RightsEnum;
 
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 @Slf4j
 public class CardRoutingUtilities {
@@ -71,16 +70,16 @@ public class CardRoutingUtilities {
     }
 
     /** Rules for receiving cards :
-    1) If the card is sent to user1, the card is received and visible for user1 if he has the receive right for the
-       corresponding process/state (Receive or ReceiveAndWrite)
-    2) If the card is sent to GROUP1 (or ENTITY1), the card is received and visible for user if all of the following is true :
-         - he's a member of GROUP1 (or ENTITY1)
-         - he has the receive right for the corresponding process/state (Receive or ReceiveAndWrite)
-    3) If the card is sent to ENTITY1 and GROUP1, the card is received and visible for user if all of the following is true :
-         - he's a member of ENTITY1 (either directly or through one of its children entities)
-         - he's a member of GROUP1
-         - he has the receive right for the corresponding process/state (Receive or ReceiveAndWrite)
-    **/
+     1) If the card is sent to user1, the card is received and visible for user1 if he has the receive right for the
+     corresponding process/state (Receive or ReceiveAndWrite)
+     2) If the card is sent to GROUP1 (or ENTITY1), the card is received and visible for user if all the following is true :
+     - he's a member of GROUP1 (or ENTITY1)
+     - he has the receive right for the corresponding process/state (Receive or ReceiveAndWrite)
+     3) If the card is sent to ENTITY1 and GROUP1, the card is received and visible for user if all the following is true :
+     - he's a member of ENTITY1 (either directly or through one of its children entities)
+     - he's a member of GROUP1
+     - he has the receive right for the corresponding process/state (Receive or ReceiveAndWrite)
+     **/
     public static boolean checkIfUserMustReceiveTheCard(JSONObject cardOperation, CurrentUserWithPerimeters currentUserWithPerimeters) {
         Map<String, RightsEnum> userRightsPerProcessAndState = loadUserRightsPerProcessAndState(currentUserWithPerimeters);
 
@@ -131,7 +130,7 @@ public class CardRoutingUtilities {
     }
 
     private static boolean checkInCaseOfCardSentToGroupOrEntityOrBoth(List<String> userGroups, JSONArray groupRecipientsIdsArray,
-                                                               List<String> userEntities, JSONArray entityRecipientsIdsArray) {
+                                                                      List<String> userEntities, JSONArray entityRecipientsIdsArray) {
         if ((groupRecipientsIdsArray != null) && (!groupRecipientsIdsArray.isEmpty())
                 && (Collections.disjoint(userGroups, groupRecipientsIdsArray)))
             return false;

@@ -36,6 +36,7 @@ export class Card {
         readonly userRecipients?: string[],
         readonly groupRecipients?: string[],
         readonly entityRecipients?: string[],
+        readonly entityRecipientsForInformation?: string[],
         readonly externalRecipients?: string[],
         readonly entitiesAllowedToRespond?: string[],
         readonly entitiesRequiredToRespond?: string[],
@@ -74,6 +75,7 @@ export class CardForPublishing {
         readonly userRecipients?: string[],
         readonly groupRecipients?: string[],
         readonly entityRecipients?: string[],
+        readonly entityRecipientsForInformation?: string[],
         readonly externalRecipients?: string[],
         readonly entitiesAllowedToRespond?: string[],
         readonly entitiesRequiredToRespond?: string[],
@@ -167,7 +169,8 @@ export function fromCardToLightCard(card: Card): LightCard {
         card.wktGeometry,
         card.wktProjection,
         card.entitiesAcks,
-        card.entityRecipients
+        card.entityRecipients,
+        card.entityRecipientsForInformation
     );
 }
 
@@ -189,6 +192,7 @@ export function fromCardToCardForPublishing(card: Card): CardForPublishing {
         card.userRecipients,
         card.groupRecipients,
         card.entityRecipients,
+        card.entityRecipientsForInformation,
         card.externalRecipients,
         card.entitiesAllowedToRespond,
         card.entitiesRequiredToRespond,

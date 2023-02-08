@@ -36,6 +36,11 @@ export class ScriptCommands extends OpfabCommands {
         cy.exec('cd ../resources/processGroups && ./loadProcessGroups.sh processGroupsNotTotallyConfigure.json ' + Cypress.env('host'));
     }
 
+    loadProcessGroups = function () {
+        cy.exec('cd ../resources/processGroups && ./loadProcessGroups.sh processGroups.json ' + Cypress.env('host'));
+    }
+
+
     send6TestCards = function () {
         cy.exec('cd .. && ./resources/send6TestCards.sh ' + Cypress.env('host'));
     }
