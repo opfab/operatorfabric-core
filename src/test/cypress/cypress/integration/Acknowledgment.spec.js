@@ -784,6 +784,32 @@ describe('Acknowledgment tests', function () {
         cy.get('#opfab-card-acknowledged-footer').should('not.exist');
     });
 
+    it('Check display of acknowledgments footer for parameter "showAcknowledgmentFooter" set to "Never"', function () {
+
+        // Clean up existing cards
+        script.deleteAllCards();
+        opfab.loginWithUser('operator1_fr');
+
+        cy.get('of-light-card').should('have.length', 0);
+
+        // We create a usercard for a process/state which has "showAcknowledgmentFooter" set to "Never"
+        opfab.navigateToUserCard();
+        usercard.selectService('User card examples')
+        usercard.selectProcess('Conference and IT incident');
+        usercard.selectState('IT Incident');
+        cy.waitDefaultTime();
+        usercard.previewThenSendCard();
+        cy.waitDefaultTime();
+
+        // We display the created card
+        // And we check that the ack footer doesn't exist
+        cy.get('of-light-card').eq(0).click();
+        cy.get('#opfab-div-card-template-processed').should('exist');
+        cy.get('#opfab-card-acknowledged-footer').should('not.exist');
+
+        opfab.logout();
+    });
+
     it('Check display of acknowledgments footer for parameter "showAcknowledgmentFooter" set to "OnlyForUsersAllowedToEdit"', function () {
 
         // Clean up existing cards

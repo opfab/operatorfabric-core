@@ -79,9 +79,11 @@ export class UserPermissionsService {
 
     public isUserAuthorizedToSeeAcknowledgmentFooter(userWithPerimeters: UserWithPerimeters, card: Card) {
         const showAcknowledgmentFooter = this.processesService.getShowAcknowledgmentFooterForACard(card);
-
         if (showAcknowledgmentFooter === ShowAcknowledgmentFooterEnum.FOR_ALL_USERS) {
             return true;
+        }
+        if (showAcknowledgmentFooter === ShowAcknowledgmentFooterEnum.NEVER) {
+            return false;
         }
         if (showAcknowledgmentFooter === ShowAcknowledgmentFooterEnum.ONLY_FOR_USERS_ALLOWED_TO_EDIT) {
             return this.doesTheUserHavePermissionToEditCard(userWithPerimeters, card);

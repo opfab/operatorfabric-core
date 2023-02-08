@@ -91,6 +91,7 @@ that has created the card
 
 - "ForAllUsers" : the entities acknowledgments are displayed for the members of all the entities
 
+- "Never" : The entities acknowledgments are displayed to no one
 
 == Pin cards
 It is possible to configure the state of a process so that cards are automatically "pinned" when acknowledged. Pinned cards are displayed in Feed page as small boxes with the title of the card just under the timeline Pinned cards are still visible even if the card is no more visible in the feed. A pinned card remains visible until card end date. If no end date, card will always be visible unless it is updated or deleted.
