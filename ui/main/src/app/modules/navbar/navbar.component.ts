@@ -62,7 +62,7 @@ export class NavbarComponent implements OnInit {
     nightDayMode = false;
     logoutInProgress = false;
 
-    nightMode : Observable<boolean>;
+    styleMode : Observable<string>;
 
     constructor(
         private store: Store<AppState>,
@@ -121,7 +121,7 @@ export class NavbarComponent implements OnInit {
         this.environmentColor = this.configService.getConfigValue('environmentColor', 'blue');
         if (!!this.environmentName) this.displayEnvironmentName = true;
 
-        this.nightMode = this.globalStyleService.getNightMode();
+        this.styleMode = this.globalStyleService.getStyleChange();
     }
 
     logOut() {

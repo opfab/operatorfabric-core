@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2022, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2023, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -8,9 +8,6 @@
  */
 
 import {Injectable} from '@angular/core';
-import {Store} from '@ngrx/store';
-import {AppState} from '@ofStore/index';
-import {GlobalStyleUpdateAction} from '@ofActions/global-style.actions';
 import {BehaviorSubject, Observable} from 'rxjs';
 import {UserPreferencesService} from './user-preference.service';
 import {ConfigService} from 'app/business/services/config.service';
@@ -22,22 +19,25 @@ declare const opfabStyle: any;
     providedIn: 'root'
 })
 export class GlobalStyleService {
+    public static DAY = 'DAY';
+    public static NIGHT = 'NIGHT';
+
     private static style: string;
 
-    private static nightMode: BehaviorSubject<boolean>;
+    private static styleChangeEvent: BehaviorSubject<string>;
 
-
-    constructor(private store: Store<AppState>,
+    constructor(
         private userPreferences: UserPreferencesService,
         private configService: ConfigService,
         private menuService: MenuService,) {
         opfabStyle.init();
+        GlobalStyleService.styleChangeEvent = new BehaviorSubject<string>(GlobalStyleService.NIGHT);
+
     }
 
     public loadUserStyle() {
         const visibleCoreMenus = this.menuService.computeVisibleCoreMenusForCurrentUser();
         const nightDayMode = visibleCoreMenus.includes('nightdaymode');
-
 
         const settings = this.configService.getConfigValue('settings');
         if (!nightDayMode) {
@@ -55,47 +55,35 @@ export class GlobalStyleService {
 
     public setStyle(style: string) {
         GlobalStyleService.style = style;
-        switch (style) {
-            case 'DAY': {
-                opfabStyle.setCss(opfabStyle.DAY_STYLE);
-                break;
-            }
-            case 'NIGHT': {
-                opfabStyle.setCss(opfabStyle.NIGHT_STYLE);
-                break;
-            }
-            default:
-                opfabStyle.setCss(opfabStyle.DAY_STYLE);
-        }
-        this.store.dispatch(new GlobalStyleUpdateAction({style: style}));
+        opfabStyle.setCss(style === GlobalStyleService.NIGHT ? opfabStyle.NIGHT_STYLE : opfabStyle.DAY_STYLE);
+        this.styleChanged();
     }
 
-
     private loadNightModeFromUserPreferences() {
-        GlobalStyleService.nightMode = new BehaviorSubject<boolean>(true);
         const nightMode = this.userPreferences.getPreference('opfab.nightMode');
         if (nightMode !== null && nightMode === 'false') {
-            GlobalStyleService.nightMode.next(false);
-            this.setStyle('DAY');
+            this.setStyle(GlobalStyleService.DAY);
         } else {
-            this.setStyle('NIGHT');
+            this.setStyle(GlobalStyleService.NIGHT);
         }
     }
 
     public switchToNightMode() {
-        this.setStyle('NIGHT');
-        GlobalStyleService.nightMode.next(true);
+        this.setStyle(GlobalStyleService.NIGHT);
         this.userPreferences.setPreference('opfab.nightMode', 'true');
     }
 
     public switchToDayMode() {
-        this.setStyle('DAY');
-        GlobalStyleService.nightMode.next(false);
+        this.setStyle(GlobalStyleService.DAY);
         this.userPreferences.setPreference('opfab.nightMode', 'false');
     }
 
-    public getNightMode(): Observable<boolean> {
-        return GlobalStyleService.nightMode.asObservable();
+    public getStyleChange(): Observable<string> {
+        return GlobalStyleService.styleChangeEvent.asObservable();
+    }
+
+    private styleChanged() {
+        GlobalStyleService.styleChangeEvent.next(GlobalStyleService.style);
     }
 
 }

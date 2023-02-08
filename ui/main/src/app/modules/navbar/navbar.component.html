@@ -115,11 +115,11 @@
         </a>
       </li>
 
-      <li class="nav-item" *ngIf="(nightDayMode)">
-        <a id="opfab-navbar-right-menu-night-mode-collapsed" *ngIf="((nightMode|async) === false)" class="opfab-right-menu-link" (click)='switchToNightMode()'>
+      <li class="nav-item" >
+        <a id="opfab-navbar-right-menu-night-mode-collapsed" *ngIf="((styleMode|async) === 'DAY')" class="opfab-right-menu-link" (click)='switchToNightMode()'>
           <div class="opfab-menu-icon opfab-menu-icon-dark-light"></div>
         </a>
-        <a id="opfab-navbar-right-menu-day-mode-collapsed"  *ngIf="(nightMode|async)" class="opfab-right-menu-link"  (click)='switchToDayMode()'>
+        <a id="opfab-navbar-right-menu-day-mode-collapsed"  *ngIf="((styleMode|async) === 'NIGHT')" class="opfab-right-menu-link"  (click)='switchToDayMode()'>
           <div class="opfab-menu-icon opfab-menu-icon-dark-light"></div>
         </a>
       </li>
@@ -196,11 +196,11 @@
     </div>
 
     <div class="opfab-right-menu-item" *ngIf="(nightDayMode)">
-      <a id="opfab-navbar-right-menu-night-mode" *ngIf="((nightMode|async) === false)" class="opfab-right-menu-link" (click)='switchToNightMode()'>
+      <a id="opfab-navbar-right-menu-night-mode" *ngIf="((styleMode|async) === 'DAY')" class="opfab-right-menu-link" (click)='switchToNightMode()'>
         <div class="opfab-menu-icon opfab-menu-icon-dark-light"></div>
         <div translate>menu.switchToNightMode</div>
       </a>
-      <a id="opfab-navbar-right-menu-day-mode"  *ngIf="(nightMode|async)" class="opfab-right-menu-link"  (click)='switchToDayMode()'>
+      <a id="opfab-navbar-right-menu-day-mode"  *ngIf="((styleMode|async) === 'NIGHT')" class="opfab-right-menu-link"  (click)='switchToDayMode()'>
         <div class="opfab-menu-icon opfab-menu-icon-dark-light"></div>
         <div translate>menu.switchToDayMode</div>
       </a>

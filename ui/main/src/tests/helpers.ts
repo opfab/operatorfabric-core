@@ -26,8 +26,7 @@ import {TestBed} from '@angular/core/testing';
 
 export const emptyAppState4Test: AppState = {
     router: null,
-    authentication: null,
-    globalStyle: null
+    authentication: null
 };
 
 export const AuthenticationImportHelperForSpecs = [
