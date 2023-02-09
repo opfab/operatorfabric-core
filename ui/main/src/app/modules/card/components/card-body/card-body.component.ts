@@ -7,7 +7,7 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {Component, Input, OnChanges, OnDestroy, OnInit, SimpleChanges, ViewEncapsulation} from '@angular/core';
+import {Component, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output, SimpleChanges, ViewEncapsulation} from '@angular/core';
 import {Card} from '@ofModel/card.model';
 import {ProcessesService} from 'app/business/services/processes.service';
 import {SafeHtml} from '@angular/platform-browser';
@@ -44,6 +44,8 @@ export class CardBodyComponent implements OnChanges, OnInit, OnDestroy {
     @Input() parentModalRef: NgbModalRef;
     @Input() screenSize: string;
     @Input() parentComponent: CardComponent;
+
+    @Output() closeCardDetail: EventEmitter<boolean> = new EventEmitter<boolean>();
 
     public displayContext: DisplayContext = DisplayContext.REALTIME;
     public isUserEnabledToRespond = false;
@@ -328,6 +330,7 @@ export class CardBodyComponent implements OnChanges, OnInit, OnDestroy {
     }
 
     public closeDetails() {
+        this.closeCardDetail.next(true);
         this.updateLastReadCardStatusOnFeedIfNeeded();
         if (this.parentModalRef) {
             this.parentModalRef.close();
