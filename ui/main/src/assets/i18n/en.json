@@ -410,7 +410,7 @@
         "firstName": "FIRST NAME",
         "groups": "GROUPS",
         "entities": "ENTITIES",
-        "authorizedIPAddresses": "AUTHORIZED IP ADDRESSES",
+        "authorizedIPAddresses": "AUTHORIZED IP ADDRESSES (separated by ',')",
         "confirmDelete": "Do you really want to delete user",
         "add": "ADD NEW USER"
       },
@@ -433,6 +433,9 @@
         "minLength": "Login should be minimum 2 characters.",
         "pattern": "Login should only contain the following characters: lowercase letters, _, -, . or digits.",
         "alreadyExisting": "Login already existing."
+      },
+      "authorizedIPAddresses": {
+        "pattern": "IP addresses need to follow the format XXX.XXX.XXX.XXX, XXX.XXX..."
       },
       "firstName": {
         "required": "First name is required."

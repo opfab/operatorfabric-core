@@ -410,7 +410,7 @@
         "firstName": "VOORNAAM",
         "groups": "GROEPEN",
         "entities": "ENTITEITEN",
-        "authorizedIPAddresses": "GEAUTHORIZEERDE IP ADRESSEN",
+        "authorizedIPAddresses": "GEAUTHORIZEERDE IP ADRESSEN (gescheiden door ',')",
         "confirmDelete": "Wilt u de gebruiker echt verwijderen?",
         "add": "NIEUWE GEBRUIKER TOEVOEGEN"
       },
@@ -433,6 +433,9 @@
         "minLength": "Gebruikersnaam moet minimaal 2 tekens bevatten.",
         "pattern": "Gebruikersnaam mag alleen de volgende tekens bevatten: kleine letters, _, -, . of cijfers.",
         "alreadyExisting": "Gebruikersnaam bestaat al."
+      },
+      "authorizedIPAddresses": {
+        "pattern": "IP-adressen moeten het formaat XXX.XXX.XXX.XXX, XXX.XXX... volgen"
       },
       "firstName": {
         "required": "Voornaam is vereist."

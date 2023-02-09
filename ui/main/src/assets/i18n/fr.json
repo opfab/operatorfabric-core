@@ -410,7 +410,7 @@
         "firstName": "PRÉNOM",
         "groups": "GROUPES",
         "entities": "ENTITÉS",
-        "authorizedIPAddresses": "ADRESSES IP AUTORISÉES",
+        "authorizedIPAddresses": "ADRESSES IP AUTORISÉES (séparées par ',')",
         "confirmDelete": "Voulez-vous vraiment supprimer l'utilisateur",
         "add":"AJOUTER UN NOUVEL UTILISATEUR"
       },
@@ -433,6 +433,9 @@
         "minLength": "L'identifiant doit avoir au moins 2 caractères.",
         "pattern": "L'identifiant ne peut contenir que les caractères suivants : lettres minuscules, _, -, . ou chiffres.",
         "alreadyExisting": "L'identifiant existe déjà."
+      },
+      "authorizedIPAddresses": {
+        "pattern": "Les adresses IP doivent être au format XXX.XXX.XXX.XXX, XXX.XXX..."
       },
       "firstName": {
         "required": "Le prénom est obligatoire."
