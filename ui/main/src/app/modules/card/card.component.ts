@@ -7,7 +7,7 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {Component, Input, OnDestroy, OnInit} from '@angular/core';
+import {Component, ElementRef, Input, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {Card} from '@ofModel/card.model';
 import {ProcessesService} from 'app/business/services/processes.service';
 import {Subject} from 'rxjs';
@@ -15,7 +15,7 @@ import {takeUntil} from 'rxjs/operators';
 import {UserService} from 'app/business/services/user.service';
 import {AppService} from '@ofServices/app.service';
 import {State} from '@ofModel/processes.model';
-import {NgbModalRef} from '@ng-bootstrap/ng-bootstrap';
+import {NgbModal, NgbModalOptions, NgbModalRef} from '@ng-bootstrap/ng-bootstrap';
 import {SelectedCard, SelectedCardService} from 'app/business/services/card/selectedCard.service';
 
 @Component({
@@ -27,6 +27,9 @@ export class CardComponent implements OnInit, OnDestroy {
     @Input() parentModalRef: NgbModalRef;
     @Input() screenSize = 'md';
 
+    modalRef: NgbModalRef;
+    @ViewChild('cardDeleted') cardDeleted: ElementRef;
+
     card: Card;
     childCards: Card[];
     cardState: State;
@@ -34,12 +37,14 @@ export class CardComponent implements OnInit, OnDestroy {
     cardLoadingInProgress = false;
     cardNotFound = false;
     currentSelectedCardId: string;
+    detailClosed: boolean;
 
     constructor(
         protected businessconfigService: ProcessesService,
         protected userService: UserService,
         protected selectedCardService: SelectedCardService,
-        protected appService?: AppService
+        protected modalService: NgbModal,
+        protected appService?: AppService,
     ) {}
 
     ngOnInit() {
@@ -79,6 +84,7 @@ export class CardComponent implements OnInit, OnDestroy {
                 }
             });
         this.checkForCardLoadingInProgressForMoreThanOneSecond();
+        this.checkForCardDeleted();
     }
 
     // we show a spinner on screen if card loading takes more than 1 second
@@ -102,6 +108,43 @@ export class CardComponent implements OnInit, OnDestroy {
                     }
                 }, 1000);
             });
+    }
+
+    checkForCardDeleted() {
+        this.selectedCardService
+            .getSelectedCardsDeleted()
+            .pipe(takeUntil(this.unsubscribe$))
+            .subscribe(cardId => {
+                setTimeout(() => {
+                    if (!this.detailClosed) {
+                        const modalOptions: NgbModalOptions = {
+                            centered: true,
+                            backdrop: 'static', // Modal shouldn't close even if we click outside it
+                            size: 'sm'
+                        };
+                        this.modalRef = this.modalService.open(this.cardDeleted, modalOptions);
+
+                        // Close card detail modal is dismissed by pressing escape key
+                        this.modalRef.dismissed.subscribe(() => {
+                            this.modalRef = null;
+                            this.closeDeletedCard();
+                        });
+                    }
+                }, 500);
+            });
+    }
+
+    closeDeletedCard() {
+        this.closeDetails();
+        if (this.parentModalRef) {
+            this.parentModalRef.close();
+            this.selectedCardService.clearSelectedCardId();
+        } else this.appService.closeDetails();
+    }
+
+    closeDetails() {
+        this.detailClosed = true;
+        if (!!this.modalRef) this.modalRef.dismiss();
     }
 
     public isSmallscreen() {

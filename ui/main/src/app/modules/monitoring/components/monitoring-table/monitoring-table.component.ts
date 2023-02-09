@@ -238,39 +238,43 @@ export class MonitoringTableComponent implements OnChanges, OnDestroy {
     }
 
     refreshData(): void {
-        this.displayedResults = this.result;
-        this.rowData = [];
-        this.displayedResults.forEach((line) => {
-            const entitiesNamesResponses = [];
-            const entitiesResponses =
-                !!line.requiredResponses && line.requiredResponses.length
-                    ? line.requiredResponses
-                    : line.allowedOrRequiredResponses;
+        if (!!this.result) {
 
-            entitiesResponses.forEach((entityId) => {
-                entitiesNamesResponses.push(this.entitiesService.getEntityName(entityId));
-            });
+            this.displayedResults = this.result;
+            this.rowData = [];
+            this.displayedResults.forEach((line) => {
+                const entitiesNamesResponses = [];
+                const entitiesResponses =
+                    !!line.requiredResponses && line.requiredResponses.length
+                        ? line.requiredResponses
+                        : line.allowedOrRequiredResponses;
 
-            this.rowData.push({
-                severityNumber: this.mapSeverity.get(line.severity),
-                time: this.getFormattedDateTime(line.creationDateTime),
-                title: line.titleTranslated,
-                summary: line.summaryTranslated,
-                processStatus: this.translateValue('shared.typeOfState.' + line.typeOfState),
-                typeOfState: line.typeOfState,
-                cardId: line.cardId,
-                cardUid: line.cardUid,
-                severity: line.severity,
-                answer: line.answer,
-                emitter: line.emitter,
-                requiredResponses: line.requiredResponses,
-                entitiesResponses: entitiesResponses,
-                entitiesNamesResponses: entitiesNamesResponses,
-                beginningOfBusinessPeriod: line.beginningOfBusinessPeriod,
-                endOfBusinessPeriod: line.endOfBusinessPeriod
+                entitiesResponses.forEach((entityId) => {
+                    entitiesNamesResponses.push(this.entitiesService.getEntityName(entityId));
+                });
+
+                this.rowData.push({
+                    severityNumber: this.mapSeverity.get(line.severity),
+                    time: this.getFormattedDateTime(line.creationDateTime),
+                    title: line.titleTranslated,
+                    summary: line.summaryTranslated,
+                    processStatus: this.translateValue('shared.typeOfState.' + line.typeOfState),
+                    typeOfState: line.typeOfState,
+                    cardId: line.cardId,
+                    cardUid: line.cardUid,
+                    severity: line.severity,
+                    answer: line.answer,
+                    emitter: line.emitter,
+                    requiredResponses: line.requiredResponses,
+                    entitiesResponses: entitiesResponses,
+                    entitiesNamesResponses: entitiesNamesResponses,
+                    beginningOfBusinessPeriod: line.beginningOfBusinessPeriod,
+                    endOfBusinessPeriod: line.endOfBusinessPeriod
+                });
             });
-        });
+        }
         this.rowDataSubject.next(this.rowData);
+
     }
 
     getFormattedDateTime(epochDate: number):string {

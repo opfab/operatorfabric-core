@@ -163,6 +163,8 @@ export class CardActionsComponent implements OnInit, OnChanges,OnDestroy {
     }
 
     ngOnDestroy() {
+        if (this.deleteConfirmationModal)
+            this.deleteConfirmationModal.dismiss();
         this.unsubscribe$.next();
         this.unsubscribe$.complete();
     }

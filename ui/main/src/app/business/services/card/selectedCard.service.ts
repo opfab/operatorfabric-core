@@ -9,7 +9,7 @@
 
 import {Injectable} from '@angular/core';
 import {Card} from '@ofModel/card.model';
-import {Observable, ReplaySubject} from 'rxjs';
+import {Observable, ReplaySubject, Subject} from 'rxjs';
 
 @Injectable({
     providedIn: 'root'
@@ -20,6 +20,8 @@ export class SelectedCardService {
     private selectedCardNotFound = false;
 
     private selectedCardWithChildrenChange = new ReplaySubject<SelectedCard>(1);
+
+    private selectedCardDeleted = new Subject<any>();
 
     public setSelectedCardId(cardId: string) {
         this.selectedCardId = cardId;
@@ -59,6 +61,15 @@ export class SelectedCardService {
 
     public getSelectCard(): Observable<SelectedCard> {
         return this.selectedCardWithChildrenChange.asObservable();
+    }
+
+    public setCardDeleted(cardId: string) {
+        if (this.selectedCardId === cardId)
+            this.selectedCardDeleted.next(cardId);
+    }
+
+    public getSelectedCardsDeleted(): Observable<any> {
+        return this.selectedCardDeleted.asObservable();
     }
 }
 

@@ -395,8 +395,7 @@ export class LightCardsStoreService {
 
     private closeCardIfOpen(cardId) {
         if (cardId === this.selectedCardService.getSelectedCardId()) {
-            this.appService.closeDetails();
-            this.selectedCardService.setSelectedCardId(null);
+            this.selectedCardService.setCardDeleted(cardId);
         }
     }
 
