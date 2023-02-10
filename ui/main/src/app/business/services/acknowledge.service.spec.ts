@@ -21,7 +21,7 @@ import {appReducer} from '@ofStore/index';
 import {ConfigService} from 'app/business/services/config.service';
 import {EntitiesService} from 'app/business/services/entities.service';
 import {EntitiesServiceMock} from '@tests/mocks/entities.service.mock';
-import {LightCardsStoreService} from '../../services/lightcards/lightcards-store.service';
+import {LightCardsStoreService} from './lightcards/lightcards-store.service';
 import {TranslateLoader, TranslateModule} from '@ngx-translate/core';
 import {ConfigServer} from 'app/business/server/config.server';
 import {ConfigServerMock} from '@tests/mocks/configServer.mock';

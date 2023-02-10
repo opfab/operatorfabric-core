@@ -12,7 +12,7 @@ import {FormControl, FormGroup} from '@angular/forms';
 import {Subject} from 'rxjs';
 import {takeUntil} from 'rxjs/operators';
 import {UserPreferencesService} from '@ofServices/user-preference.service';
-import {SortService} from '@ofServices/lightcards/sort.service';
+import {SortService} from 'app/business/services/lightcards/sort.service';
 
 @Component({
     selector: 'of-feed-sort',

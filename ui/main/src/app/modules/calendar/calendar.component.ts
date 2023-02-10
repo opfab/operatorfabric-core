@@ -17,8 +17,8 @@ import {NgbModal, NgbModalOptions, NgbModalRef} from '@ng-bootstrap/ng-bootstrap
 import {FilterType} from '@ofModel/feed-filter.model';
 import {HourAndMinutes, TimeSpan} from '@ofModel/card.model';
 import {ProcessesService} from 'app/business/services/processes.service';
-import {LightCardsStoreService} from '@ofServices/lightcards/lightcards-store.service';
-import {FilterService} from '@ofServices/lightcards/filter.service';
+import {LightCardsStoreService} from 'app/business/services/lightcards/lightcards-store.service';
+import {FilterService} from 'app/business/services/lightcards/filter.service';
 import {ConfigService} from 'app/business/services/config.service';
 import {Frequency} from 'rrule';
 import dayGridPlugin from '@fullcalendar/daygrid';

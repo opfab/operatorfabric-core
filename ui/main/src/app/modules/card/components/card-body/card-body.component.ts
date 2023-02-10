@@ -22,7 +22,7 @@ import {EntitiesService} from 'app/business/services/entities.service';
 import {NgbModalRef} from '@ng-bootstrap/ng-bootstrap';
 import {UserPermissionsService} from 'app/business/services/user-permissions.service';
 import {DisplayContext} from '@ofModel/templateGateway.model';
-import {LightCardsStoreService} from '@ofServices/lightcards/lightcards-store.service';
+import {LightCardsStoreService} from 'app/business/services/lightcards/lightcards-store.service';
 import {CardComponent} from '../../card.component';
 import {OpfabLoggerService} from 'app/business/services/logs/opfab-logger.service';
 import {UserWithPerimeters} from "@ofModel/userWithPerimeters.model";

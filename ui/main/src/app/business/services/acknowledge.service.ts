@@ -17,7 +17,7 @@ import {environment} from '@env/environment';
 import {AcknowledgeServer} from '../server/acknowledge.server';
 import {ServerResponse, ServerResponseStatus} from '../server/serverResponse';
 import {UserPermissionsService} from 'app/business/services/user-permissions.service';
-import {LightCardsStoreService} from '@ofServices/lightcards/lightcards-store.service';
+import {LightCardsStoreService} from 'app/business/services/lightcards/lightcards-store.service';
 
 @Injectable({
     providedIn: 'root'

@@ -17,7 +17,7 @@ import {SortService} from './sort.service';
 import {GroupedCardsService} from '@ofServices/grouped-cards.service';
 import {ConfigService} from 'app/business/services/config.service';
 import {LogOption, OpfabLoggerService} from 'app/business/services/logs/opfab-logger.service';
-import {SearchService} from '@ofServices/lightcards/search-service';
+import {SearchService} from './search-service';
 
 @Injectable({
     providedIn: 'root'

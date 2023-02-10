@@ -32,7 +32,7 @@ import {GlobalStyleService} from '@ofServices/global-style.service';
 import {RRuleReminderService} from 'app/business/services/rrule-reminder/rrule-reminder.service';
 import {OpfabEventStreamServer} from 'app/business/server/opfabEventStream.server';
 import {OpfabEventStreamService} from 'app/business/services/opfabEventStream.service';
-import {LightCardsStoreService} from '@ofServices/lightcards/lightcards-store.service';
+import {LightCardsStoreService} from 'app/business/services/lightcards/lightcards-store.service';
 import {ApplicationUpdateService} from 'app/business/services/application-update.service';
 import {ServerResponseStatus} from 'app/business/server/serverResponse';
 
