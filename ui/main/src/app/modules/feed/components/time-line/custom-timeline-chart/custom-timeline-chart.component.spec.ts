@@ -23,11 +23,11 @@ import {appReducer, storeConfig} from '@ofStore/index';
 import {RouterTestingModule} from '@angular/router/testing';
 import {HttpClientTestingModule} from '@angular/common/http/testing';
 import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
-import {LightCardsFeedFilterService} from '@ofServices/lightcards/lightcards-feed-filter.service';
+import {LightCardsFeedFilterService} from 'app/business/services/lightcards/lightcards-feed-filter.service';
 import {LightCardsServiceMock} from '@tests/mocks/lightcards.service.mock';
 import {DateTimeFormatterService} from 'app/business/services/date-time-formatter.service';
 import {RemoteLoggerService} from 'app/business/services/logs/remote-logger.service';
-import {RemoteLoggerServiceMock} from '@tests/mocks/remote-logger.service.mock';
+import {RemoteLoggerServiceMockAngular} from '@tests/mocks/remote-logger.service-angular.mock';
 
 describe('CustomTimelineChartComponent', () => {
     let component: CustomTimelineChartComponent;
@@ -56,7 +56,7 @@ describe('CustomTimelineChartComponent', () => {
                 {provide: RouterStateSerializer, useClass: CustomRouterStateSerializer},
                 {provide: DateTimeFormatterService, useClass: DateTimeFormatterService},
                 {provide: LightCardsFeedFilterService, useClass: LightCardsServiceMock},
-                {provide: RemoteLoggerService, useClass: RemoteLoggerServiceMock}
+                {provide: RemoteLoggerService, useClass: RemoteLoggerServiceMockAngular}
             ],
             schemas: [NO_ERRORS_SCHEMA]
         }).compileComponents();

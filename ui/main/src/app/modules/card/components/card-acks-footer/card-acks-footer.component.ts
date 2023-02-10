@@ -10,7 +10,7 @@
 import {Component, Input, OnChanges, OnDestroy, OnInit} from '@angular/core';
 import {Card} from '@ofModel/card.model';
 import {EntitiesService} from 'app/business/services/entities.service';
-import {LightCardsStoreService} from '@ofServices/lightcards/lightcards-store.service';
+import {LightCardsStoreService} from 'app/business/services/lightcards/lightcards-store.service';
 import {Utilities} from 'app/business/common/utilities';
 import {Subject} from 'rxjs';
 import {takeUntil} from 'rxjs/operators';

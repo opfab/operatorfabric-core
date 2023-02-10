@@ -14,7 +14,7 @@ import {Observable, Subject} from 'rxjs';
 import {LightCard} from '@ofModel/light-card.model';
 import {delay, map,takeUntil} from 'rxjs/operators';
 import * as moment from 'moment';
-import {LightCardsFeedFilterService} from '@ofServices/lightcards/lightcards-feed-filter.service';
+import {LightCardsFeedFilterService} from 'app/business/services/lightcards/lightcards-feed-filter.service';
 import {ConfigService} from 'app/business/services/config.service';
 import {Router} from '@angular/router';
 import {selectCurrentUrl} from '@ofStore/selectors/router.selectors';

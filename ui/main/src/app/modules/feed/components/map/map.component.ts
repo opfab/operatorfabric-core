@@ -15,7 +15,7 @@ import {Tile as TileLayer, Vector as VectorLayer} from 'ol/layer';
 import {OSM, XYZ, Vector as VectorSource} from 'ol/source';
 import {fromLonLat} from 'ol/proj';
 import {LightCard, Severity} from '@ofModel/light-card.model';
-import {LightCardsFeedFilterService} from '@ofServices/lightcards/lightcards-feed-filter.service';
+import {LightCardsFeedFilterService} from 'app/business/services/lightcards/lightcards-feed-filter.service';
 import {Subject} from 'rxjs';
 import {takeUntil} from 'rxjs/operators';
 import WKT from 'ol/format/WKT';

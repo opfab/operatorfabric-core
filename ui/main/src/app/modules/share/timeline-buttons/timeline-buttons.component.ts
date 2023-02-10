@@ -13,7 +13,7 @@ import moment from 'moment';
 import {FilterType} from '@ofModel/feed-filter.model';
 import {UserPreferencesService} from '@ofServices/user-preference.service';
 import {DateTimeFormatterService} from 'app/business/services/date-time-formatter.service';
-import {FilterService} from '@ofServices/lightcards/filter.service';
+import {FilterService} from 'app/business/services/lightcards/filter.service';
 import {LogOption, OpfabLoggerService} from 'app/business/services/logs/opfab-logger.service';
 
 @Component({

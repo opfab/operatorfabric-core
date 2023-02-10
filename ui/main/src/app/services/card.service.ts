@@ -15,7 +15,7 @@ import {environment} from '@env/environment';
 import {LightCard} from '@ofModel/light-card.model';
 import {Page} from '@ofModel/page.model';
 import {map} from 'rxjs/operators';
-import {LightCardsStoreService} from './lightcards/lightcards-store.service';
+import {LightCardsStoreService} from '../business/services/lightcards/lightcards-store.service';
 import {I18n} from '@ofModel/i18n.model';
 import {ArchivedCardsFilter} from '@ofModel/archived-cards-filter.model';
 

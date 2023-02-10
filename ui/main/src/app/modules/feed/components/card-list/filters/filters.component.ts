@@ -9,7 +9,7 @@
 
 import {Component, OnInit} from '@angular/core';
 import {ConfigService} from 'app/business/services/config.service';
-import {LightCardsStoreService} from '@ofServices/lightcards/lightcards-store.service';
+import {LightCardsStoreService} from 'app/business/services/lightcards/lightcards-store.service';
 
 @Component({
     selector: 'of-filters',

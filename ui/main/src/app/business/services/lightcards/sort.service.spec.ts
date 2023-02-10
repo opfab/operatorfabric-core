@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2021, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2023, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -7,7 +7,6 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {TestBed} from '@angular/core/testing';
 import {LightCard, Severity} from '@ofModel/light-card.model';
 import {getSeveralRandomLightCards} from '@tests/helpers';
 import {SortService} from './sort.service';
@@ -17,10 +16,7 @@ describe('NewFilterService ', () => {
     const ONE_HOUR = 3600000;
 
     beforeEach(() => {
-        TestBed.configureTestingModule({
-            providers: [SortService]
-        });
-        service = TestBed.inject(SortService);
+        service = new SortService();
     });
 
     function getFourCard() {

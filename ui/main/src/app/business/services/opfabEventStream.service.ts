@@ -9,7 +9,7 @@
 
 import {Injectable} from '@angular/core';
 import {CardOperation} from '@ofModel/card-operation.model';
-import {FilterService} from '@ofServices/lightcards/filter.service';
+import {FilterService} from 'app/business/services/lightcards/filter.service';
 import {LogOption, OpfabLoggerService} from 'app/business/services/logs/opfab-logger.service';
 import {filter, map, Observable, Subject} from 'rxjs';
 import {OpfabEventStreamServer} from '../server/opfabEventStream.server';

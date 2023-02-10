@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2022, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2023, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -7,23 +7,20 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {TestBed} from '@angular/core/testing';
 import {FilterType} from '@ofModel/feed-filter.model';
 import {LightCard, Severity} from '@ofModel/light-card.model';
-import {RemoteLoggerService} from 'app/business/services/logs/remote-logger.service';
 import {getSeveralRandomLightCards} from '@tests/helpers';
 import {RemoteLoggerServiceMock} from '@tests/mocks/remote-logger.service.mock';
 import {FilterService} from './filter.service';
+import {OpfabLoggerService} from '../logs/opfab-logger.service';
 
 describe('NewFilterService ', () => {
     let service: FilterService;
     const ONE_HOUR = 3600000;
 
     beforeEach(() => {
-        TestBed.configureTestingModule( {providers: [
-            {provide: RemoteLoggerService, useClass: RemoteLoggerServiceMock}
-        ]});
-        service = TestBed.inject(FilterService);
+        const loggerService = new OpfabLoggerService(new RemoteLoggerServiceMock());
+        service = new FilterService(loggerService);
     });
 
     function getFourCards() {

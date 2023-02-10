@@ -9,7 +9,7 @@
  */
 
 import {Component, Input, OnInit} from '@angular/core';
-import {SearchService} from '@ofServices/lightcards/search-service';
+import {SearchService} from 'app/business/services/lightcards/search-service';
 import {FormControl} from '@angular/forms';
 import {TranslateService} from '@ngx-translate/core';
 

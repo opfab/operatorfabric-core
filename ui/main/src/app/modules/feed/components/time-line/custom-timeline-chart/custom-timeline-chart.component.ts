@@ -40,8 +40,8 @@ import {takeUntil} from 'rxjs/operators';
 import {getNextTimeForRepeating} from 'app/business/services/reminder/reminderUtils';
 import {getNextTimeForRepeating as getNextTimeForRepeatingUsingRRule} from 'app/business/services/rrule-reminder/rrule-reminderUtils';
 import {NgbPopover} from '@ng-bootstrap/ng-bootstrap';
-import {LightCardsFeedFilterService} from '@ofServices/lightcards/lightcards-feed-filter.service';
-import {FilterService} from '@ofServices/lightcards/filter.service';
+import {LightCardsFeedFilterService} from 'app/business/services/lightcards/lightcards-feed-filter.service';
+import {FilterService} from 'app/business/services/lightcards/filter.service';
 
 @Component({
     selector: 'of-custom-timeline-chart',

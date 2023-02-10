@@ -18,7 +18,7 @@ import {FormArray, FormControl, FormGroup} from '@angular/forms';
 import {SettingsService} from 'app/business/services/settings.service';
 import {TranslateService} from '@ngx-translate/core';
 import {Utilities} from '../../business/common/utilities';
-import {LightCardsStoreService} from '@ofServices/lightcards/lightcards-store.service';
+import {LightCardsStoreService} from 'app/business/services/lightcards/lightcards-store.service';
 
 @Component({
     selector: 'of-feedconfiguration',

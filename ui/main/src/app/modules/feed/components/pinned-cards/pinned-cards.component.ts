@@ -11,7 +11,7 @@ import {OnInit, Component, OnDestroy, Input, OnChanges} from '@angular/core';
 import {ProcessesService} from 'app/business/services/processes.service';
 import {Store} from '@ngrx/store';
 import {AppState} from '@ofStore/index';
-import {LightCardsStoreService} from '@ofServices/lightcards/lightcards-store.service';
+import {LightCardsStoreService} from 'app/business/services/lightcards/lightcards-store.service';
 import {Subject, takeUntil, timer} from 'rxjs';
 import {LightCard} from '@ofModel/light-card.model';
 import {Router} from '@angular/router';
