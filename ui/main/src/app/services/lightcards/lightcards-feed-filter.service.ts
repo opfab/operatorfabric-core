@@ -106,7 +106,7 @@ export class LightCardsFeedFilterService {
     private computeFilteredAndSearchedLightCards() {
         combineLatest([this.searchService.getSearchChanges(), this.getFilteredLightCards()])
             .pipe(map((results) => {
-                return this.searchService.searchLightCards(results[0], results[1]);
+                return this.searchService.searchLightCards(results[1]);
             }))
             .subscribe((lightCards) => {
                 this.logger.debug('Number of cards visible after filtering and searching : ' +  lightCards.length, LogOption.LOCAL_AND_REMOTE);
@@ -119,7 +119,7 @@ export class LightCardsFeedFilterService {
     }
 
     public isCardVisibleInFeed(card: LightCard) {
-        return this.filterService.filterLightCards([card]).length > 0;
+        return this.searchService.searchLightCards(this.filterService.filterLightCards([card])).length > 0;
     }
 
     public getFilteredAndSortedLightCards(): Observable<any> {

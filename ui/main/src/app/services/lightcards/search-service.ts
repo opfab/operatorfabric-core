@@ -1,4 +1,5 @@
 /* Copyright (c) 2022, Alliander (http://www.alliander.com)
+ * Copyright (c) 2023, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -27,8 +28,8 @@ export class SearchService {
         this.searchChanges.next(this.searchTerm);
     }
 
-    public searchLightCards(searchTerm: string, cards: LightCard[]): LightCard[] {
-        if (!searchTerm) {
+    public searchLightCards(cards: LightCard[]): LightCard[] {
+        if (!this.searchTerm) {
             return cards;
         } else {
             const titleCards = cards.filter(card => card.titleTranslated.toUpperCase().includes(this.searchTerm));
