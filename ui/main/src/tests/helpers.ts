@@ -129,7 +129,9 @@ export function getOneRandomLightCard(lightCardTemplate?: any): LightCard {
         getRandomAlphanumericValue(3, 24),
         lightCardTemplate.tags ? lightCardTemplate.tags : null,
         lightCardTemplate.timeSpans ? lightCardTemplate.timeSpans : null,
-        lightCardTemplate.process ? lightCardTemplate.process : 'testProcess'
+        lightCardTemplate.rrule ? lightCardTemplate.rrule : null,
+        lightCardTemplate.process ? lightCardTemplate.process : 'testProcess',
+        lightCardTemplate.state ? lightCardTemplate.state : 'testState'
     );
 }
 

@@ -94,6 +94,7 @@
   "menu": {
     "feed": "Card Feed",
     "calendar": "Calendar",
+    "dashboard": "Dashboard",
     "archives": "Archives",
     "logging": "Logging",
     "admin": "Administration",

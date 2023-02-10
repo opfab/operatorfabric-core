@@ -28,10 +28,9 @@ import {LightCardsServiceMock} from '@tests/mocks/lightcards.service.mock';
 import {LightCardsFeedFilterService} from 'app/business/services/lightcards/lightcards-feed-filter.service';
 import {OpfabLoggerService} from 'app/business/services/logs/opfab-logger.service';
 import {RemoteLoggerService} from 'app/business/services/logs/remote-logger.service';
-import {DateTimeFormatterService} from 'app/business/services/date-time-formatter.service';
+import {AngularRemoteLoggerServiceMock} from '@tests/mocks/angular-remote-logger.service.mock';import {DateTimeFormatterService} from 'app/business/services/date-time-formatter.service';
 import {ConfigServer} from 'app/business/server/config.server';
 import {ConfigServerMock} from '@tests/mocks/configServer.mock';
-import {RemoteLoggerServiceMockAngular} from '@tests/mocks/remote-logger.service-angular.mock';
 
 describe('InitChartComponent', () => {
     let component: InitChartComponent;
@@ -73,7 +72,7 @@ describe('InitChartComponent', () => {
                 {provide: GlobalStyleService, useClass: GlobalStyleService},
                 {provide: LightCardsFeedFilterService, useClass: LightCardsServiceMock},
                 {provide: OpfabLoggerService, useClass: OpfabLoggerService},
-                {provide: RemoteLoggerService, useClass: RemoteLoggerServiceMockAngular}
+                {provide: RemoteLoggerService, useClass: AngularRemoteLoggerServiceMock}
             ],
             schemas: [NO_ERRORS_SCHEMA]
         }).compileComponents();

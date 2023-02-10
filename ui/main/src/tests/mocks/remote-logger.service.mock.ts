@@ -7,15 +7,10 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {ConfigService} from 'app/business/services/config.service';
 import {RemoteLoggerService} from 'app/business/services/logs/remote-logger.service';
-import {ConfigServerMock} from './configServer.mock';
 
 export class RemoteLoggerServiceMock extends RemoteLoggerService {
 
-    public constructor() {
-        super(new ConfigService(new ConfigServerMock()),null);
-    }
 
     public setRemoteLoggerActive(_active: boolean) {
         // mock

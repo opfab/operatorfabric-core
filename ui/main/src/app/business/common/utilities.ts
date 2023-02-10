@@ -12,6 +12,7 @@ import {TranslateService} from '@ngx-translate/core';
 import {Observable, Subject} from 'rxjs';
 import {NgbDate} from '@ng-bootstrap/ng-bootstrap';
 import {DateTimeNgb} from '@ofModel/datetime-ngb.model';
+import { Severity } from '@ofModel/light-card.model';
 
 export class Utilities {
     private static readonly _stringPrefixToAddForTranslation: string = 'shared.severity.';
@@ -25,6 +26,25 @@ export class Utilities {
         return translateService.instant(rawSeverityString);
     }
 
+    public static getSeverityColor(severity: Severity): string {
+        if (severity) {
+            switch (severity) {
+                case 'ALARM':
+                    return '#A71A1A'; // red
+                case 'ACTION':
+                    return '#FD9313'; // orange
+                case 'COMPLIANT':
+                    return '#00BB03'; // green
+                case 'INFORMATION':
+                    return '#1074AD'; // blue
+                default:
+                    return 'blue';
+            }
+        } else {
+            return 'blue';
+        }
+    }
+
     public static compareObj(obj1, obj2) {
         if (typeof obj1 === "string" && typeof obj2 === "string") {
             obj1 = this.removeEmojis(obj1)
@@ -36,7 +56,15 @@ export class Utilities {
     }
 
     private static removeEmojis(str: string): string{
-        return str.replace(/\u00a9|\u00ae|[\u2000-\u3300]|\ud83c[\ud000-\udfff]|\ud83d[\ud000-\udfff]|\ud83e[\ud000-\udfff]/g,'')
+        // regex to find all emojis (see https://www.regextester.com/106421 )
+        let temp = str.replace(/\u00a9|\u00ae|[\u2000-\u3300]|\ud83c[\ud000-\udfff]|\ud83d[\ud000-\udfff]|\ud83e[\ud000-\udfff]/g,"")
+        // The ⚠️ emoji (\u26A0) has a base64 code of "4pqg77iP". This code is made up of 2 parts: 
+        //  -"4pqg" which is an alternate version of the emoji 
+        //  -"77iP" which is a variation selector, which left alone is an empty character  
+        // When using .replace() only the first part is removed and the empty character messes up the string comparison
+        // The variation selector's UTF-8 code is "%EF%B8%8F"
+        temp = temp.replace(decodeURIComponent("%EF%B8%8F"), "").trim()
+        return temp
     }
 
     // Returns an observable that provides an array. Each item of the array represents either first value of Observable, or its error

@@ -1,4 +1,4 @@
-<!-- Copyright (c) 2018-2022, RTE (http://www.rte-france.com)              -->
+<!-- Copyright (c) 2018-2023, RTE (http://www.rte-france.com)              -->
 <!--Copyright (c) 2023, Alliander (http://www.alliander.com)               -->
 <!-- See AUTHORS.txt                                                       -->
 <!-- This Source Code Form is subject to the terms of the Mozilla Public   -->
@@ -117,7 +117,14 @@
 
 
         <svg:g *ngFor="let circle of circles;let index = index;" type="button">
-        <svg:g id="opfab-timelineCircle-{{index}}" (click)="onCircleClick(circle)" (mouseenter)="feedCircleHovered(circle, p1)" container="body" #p1="ngbPopover" [ngbPopover]="tooltipTemplate" triggers="mouseenter" popoverClass="opfab-popover popover-timeline">
+        <svg:g id="opfab-timelineCircle-{{index}}" 
+            (click)="onCircleClick(circle)" 
+            (mouseenter)="feedCircleHovered(circle, p1)" 
+            container="body" 
+            #p1="ngbPopover" 
+            [ngbPopover]="tooltipTemplate" 
+            triggers="mouseenter" 
+            popoverClass="opfab-popover opfab-popover-with-scrolling">
             <svg:g (mouseleave)="onMouseLeave()"/>
             <svg:ellipse [attr.cx]="xScale(circle.date)"
                 [attr.cy]="yScale(circle.circleYPosition)" [attr.ry]="'10'" [attr.rx]="circle.width" [attr.fill]=circle.color [attr.stroke]="'stroke'"

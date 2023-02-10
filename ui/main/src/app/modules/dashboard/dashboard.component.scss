@@ -1,0 +1,56 @@
+/* Copyright (c) 2023, RTE (http://www.rte-france.com)
+ * See AUTHORS.txt
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ * SPDX-License-Identifier: MPL-2.0
+ * This file is part of the OperatorFabric project.
+ */
+
+ @import 'src/scss/_variables.scss';
+
+ .opfab-dashboard {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(100px, 300px));
+    margin-left: 15px;
+    margin-right: 15px;
+    padding-left: 10%;
+    padding-right: 10%;
+    margin-top: 20px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+}
+
+
+.opfab-dashboard-cell {
+    background-color: var(--opfab-bgcolor-darker);
+    border-radius: 2px;
+    margin-right: 4px;
+    align-content: center;
+    padding: 2px;
+    padding-top: 8px;
+    padding-bottom: 8px;
+}
+
+.opfab-dashboard-process {
+    border-radius: 2px;
+    margin-left: 4px;
+    margin-right: 4px;
+    margin-bottom: 20px;
+    padding: 2px;
+}
+
+.btn-verycardlink {
+    color: var(--opfab-timeline-cardlink);
+    background-color: var(--opfab-popover-bgcolor);
+    border-color: var(--opfab-popover-bgcolor);
+}
+
+.btn-verycardlink:hover,
+.btn-verycardlink:focus,
+.btn-verycardlink.focus {
+    color: var(--opfab-timeline-cardlink);
+    background-color: var(--opfab-timeline-cardlink-bgcolor-hover);
+    border-color: var(--opfab-timeline-cardlink-bordercolor-hover);
+    box-shadow: 0 0 0 0rem;
+}
