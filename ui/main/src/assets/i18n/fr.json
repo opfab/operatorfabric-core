@@ -94,6 +94,7 @@
   "menu": {
     "feed": "Flux de cartes",
     "calendar" : "Calendrier",
+    "dashboard": "Tableau de bord",
     "archives": "Archives",
     "logging": "Logging",
     "admin": "Administration",

@@ -9,11 +9,8 @@
 
 import {Injectable} from '@angular/core';
 
-// Use this mock for test depending on angular
 @Injectable()
-export class RemoteLoggerServiceMockAngular{
-
-
+export class AngularRemoteLoggerServiceMock {
     public setRemoteLoggerActive(_active: boolean) {
         // mock
     }

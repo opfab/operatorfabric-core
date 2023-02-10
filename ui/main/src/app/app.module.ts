@@ -74,6 +74,7 @@ import {AngularCardServer} from './server/angularCard.server';
 import {CardServer} from './business/server/card.server';
 import {SoundServer} from './business/server/sound.server';
 import {AngularSoundServer} from './server/angularSound.server';
+import {DashboardModule} from './modules/dashboard/dashboard.module';
 
 @NgModule({
     imports: [
@@ -91,6 +92,7 @@ import {AngularSoundServer} from './server/angularSound.server';
         ArchivesModule,
         LoggingModule,
         MonitoringModule,
+        DashboardModule,
         NgbModalModule,
         AppRoutingModule,
         AdminModule,

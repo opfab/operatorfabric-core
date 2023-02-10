@@ -65,7 +65,7 @@ export class FilterService {
         return cards.filter((card) => Filter.chainFilter(card, this.filters));
     }
 
-    public getFilters(): Array<any> {
+    public getFilters(): Array<Filter> {
         return this.filters;
     }
 
@@ -109,7 +109,7 @@ export class FilterService {
         return new Filter(
             (card: LightCard, status) => {
                 if (!!status.start && !!status.end) {
-                    return this.chechCardVisibilityinRange(card, status.start, status.end);
+                    return this.checkCardVisibilityinRange(card, status.start, status.end);
                 } else if (!!status.start) {
                     return (
                         card.publishDate >= status.start ||
@@ -130,7 +130,7 @@ export class FilterService {
         );
     }
 
-    private chechCardVisibilityinRange(card: LightCard, start, end) {
+    private checkCardVisibilityinRange(card: LightCard, start, end) {
         if (start <= card.publishDate && card.publishDate <= end) {
             return true;
         }

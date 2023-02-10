@@ -79,6 +79,7 @@ classes
 services/*/bin
 tools/spring/spring-oauth2-utilities/bin
 src/test/externalApp/bin
+src/test/dummyModbusDevice/bin
 */**/*.class
 
 ### Gradle ###
