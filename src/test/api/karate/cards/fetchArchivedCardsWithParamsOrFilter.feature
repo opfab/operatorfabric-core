@@ -269,10 +269,12 @@ Feature: Archives
     When method patch
     Then status 200
 
-# Push cards
+# Push cards, do retry on first post request because it can happen that the new  perimeter has not yet been propagated 
+# to the publication service causing the test to fail 
     Given url opfabPublishCardUrl + 'cards'
 	And header Authorization = 'Bearer ' + authTokenAsTSO
     And request card1
+	And retry until responseStatus == 201
     When method post
     Then status 201
 
