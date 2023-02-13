@@ -43,7 +43,7 @@ export class LoginComponent implements OnInit {
 
     onSubmit(): void {
         if (this.userForm.valid) {
-            const username = this.userForm.get('identifier').value;
+            const username = this.userForm.get('identifier').value.trim();
             const password = this.userForm.get('password').value;
             this.store.dispatch(new TryToLogInAction({username: username, password: password}));
         }
