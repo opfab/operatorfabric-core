@@ -8,13 +8,13 @@
  */
 
 import {Injectable} from '@angular/core';
-import {CardService} from '@ofServices/card.service';
 import {ReminderList} from './reminderList';
 import {AcknowledgeService} from 'app/business/services/acknowledge.service';
 import {LightCardsStoreService} from 'app/business/services/lightcards/lightcards-store.service';
 import {SoundNotificationService} from '@ofServices/sound-notification.service';
 import {LogOption, OpfabLoggerService} from 'app/business/services/logs/opfab-logger.service';
 import {ServerResponseStatus} from 'app/business/server/serverResponse';
+import {CardService} from '../card.service';
 
 @Injectable({
     providedIn: 'root'
@@ -62,7 +62,7 @@ export class ReminderService {
                     );
             });
             this.cardService.deleteUserCardRead(lightCard.uid).subscribe((resp) => {
-                if (!(resp.status === 200 || resp.status === 204))
+                if (resp.status !== ServerResponseStatus.OK)
                     this.logger.error('Reminder : the remote read endpoint returned an error status' + resp.status);
             });
             this.lightCardsStoreService.setLightCardAcknowledgment(cardId, false);

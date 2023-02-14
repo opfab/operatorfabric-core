@@ -17,13 +17,14 @@ import {MultiSelectConfig} from '@ofModel/multiselect.model';
 import {PermissionEnum} from '@ofModel/permission.model';
 import {State} from '@ofModel/processes.model';
 import {User} from '@ofModel/user.model';
-import {CardService} from '@ofServices/card.service';
 import {EntitiesService} from 'app/business/services/entities.service';
 import {ProcessesService} from 'app/business/services/processes.service';
 import {UserPermissionsService} from 'app/business/services/user-permissions.service';
 import {UserService} from 'app/business/services/user.service';
 import {Utilities} from 'app/business/common/utilities';
 import {AlertMessageService} from 'app/business/services/alert-message.service';
+import {CardService} from 'app/business/services/card.service';
+import {ServerResponseStatus} from 'app/business/server/serverResponse';
 
 declare const templateGateway: any;
 
@@ -175,21 +176,16 @@ export class CardResponseComponent implements OnChanges, OnInit {
             };
             this.sendingResponseInProgress = true;
             this.cardService.postCard(card).subscribe(
-                (rep) => {
+                (resp) => {
                     this.sendingResponseInProgress = false;
-                    if (rep.status !== 201) {
+                    if (resp.status !== ServerResponseStatus.OK) {
                         this.displayMessage(ResponseI18nKeys.SUBMIT_ERROR_MSG, null, MessageLevel.ERROR);
-                        console.error(rep);
+                        console.error(resp);
                     } else {
                         this.isResponseLocked = true;
                         templateGateway.lockAnswer();
                         this.displayMessage(ResponseI18nKeys.SUBMIT_SUCCESS_MSG, null, MessageLevel.INFO);
                     }
-                },
-                (err) => {
-                    this.sendingResponseInProgress = false;
-                    this.displayMessage(ResponseI18nKeys.SUBMIT_ERROR_MSG, null, MessageLevel.ERROR);
-                    console.error(err);
                 }
             );
         } else {

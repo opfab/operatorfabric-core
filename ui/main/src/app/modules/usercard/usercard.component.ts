@@ -9,7 +9,6 @@
 
 import {Component, ElementRef, Input, OnInit, ViewChild} from '@angular/core';
 import {FormControl, FormGroup} from '@angular/forms';
-import {CardService} from '@ofServices/card.service';
 import {UserService} from 'app/business/services/user.service';
 import {Card, CardCreationReportData, CardData, fromCardToCardForPublishing, TimeSpan} from '@ofModel/card.model';
 import {UserCard} from '@ofModel/processes.model';
@@ -34,6 +33,8 @@ import {UsercardSelectCardEmitterFormComponent} from './selectCardEmitterForm/us
 import {LogOption, OpfabLoggerService} from 'app/business/services/logs/opfab-logger.service';
 import {PermissionEnum} from '@ofModel/permission.model';
 import {AlertMessageService} from 'app/business/services/alert-message.service';
+import {CardService} from 'app/business/services/card.service';
+import {ServerResponseStatus} from 'app/business/server/serverResponse';
 
 declare const templateGateway: any;
 declare const usercardTemplateGateway: any;
@@ -796,25 +797,21 @@ export class UserCardComponent implements OnInit {
     private postCardAndChildCard(childCard:any) {
         this.cardService.postCard(fromCardToCardForPublishing(this.card)).subscribe(
             (resp) => {
-                if (resp.status !== 201) {
-                    const msg = !!resp.message ? resp.message : '';
-                    const error = !!resp.error ? resp.error : '';
+                if (resp.status !== ServerResponseStatus.OK) {
+                    const msg = !!resp.statusMessage ? resp.statusMessage : '';
+                    const error = !!resp.status ? resp.status : '';
                     this.opfabLogger.error(
                         'Impossible to send card , message from service : ' + msg + '. Error message : ' + error
                     );
                     this.displayMessage('userCard.error.impossibleToSendCard', null, MessageLevel.ERROR);
+                    this.displaySendingCardInProgress = false;
                 } else {
                     if (!!childCard) {
-                        this.sendAutomatedResponse(this.getChildCard(childCard), resp.body);
+                        this.sendAutomatedResponse(this.getChildCard(childCard), resp.data);
                     } else this.displayMessage('userCard.cardSendWithNoError', null, MessageLevel.INFO);
                 }
 
                 this.userCardModal.dismiss('Close');
-            },
-            (err) => {
-                this.opfabLogger.error('Error when sending card :', err);
-                this.displayMessage('userCard.error.impossibleToSendCard', null, MessageLevel.ERROR);
-                this.displaySendingCardInProgress = false;
             }
         );
     }
@@ -825,26 +822,21 @@ export class UserCardComponent implements OnInit {
             parentCardId: cardCreationReport.id,
             initialParentCardUid: cardCreationReport.uid
         };
-
         this.cardService.postCard(automatedResponseCard).subscribe(
             (resp) => {
-                if (resp.status !== 201) {
-                    const msg = !!resp.message ? resp.message : '';
-                    const error = !!resp.error ? resp.error : '';
+                if (resp.status !== ServerResponseStatus.OK) {
+                    const msg = !!resp.statusMessage ? resp.statusMessage : '';
+                    const error = !!resp.status ? resp.status : '';
                     this.opfabLogger.error(
                         'Impossible to send child card , message from service : ' + msg + '. Error message : ' + error
                     );
                     this.displayMessage('userCard.error.impossibleToSendCard', null, MessageLevel.ERROR);
+                    this.displaySendingCardInProgress = false;
                 } else {
                     this.displayMessage('userCard.cardSendWithNoError', null, MessageLevel.INFO);
                 }
 
                 this.userCardModal.dismiss('Close');
-            },
-            (err) => {
-                this.opfabLogger.error('Error when sending child card :' + err);
-                this.displayMessage('userCard.error.impossibleToSendCard', null, MessageLevel.ERROR);
-                this.displaySendingCardInProgress = false;
             }
         );
     }

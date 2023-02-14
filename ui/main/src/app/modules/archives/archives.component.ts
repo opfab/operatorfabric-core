@@ -14,7 +14,6 @@ import {takeUntil, tap} from 'rxjs/operators';
 import {FormControl, FormGroup} from '@angular/forms';
 import {ConfigService} from 'app/business/services/config.service';
 import {NgbModal, NgbModalOptions, NgbModalRef} from '@ng-bootstrap/ng-bootstrap';
-import {CardService} from '@ofServices/card.service';
 import {LightCard} from '@ofModel/light-card.model';
 import {Page} from '@ofModel/page.model';
 import {ExcelExport} from 'app/business/common/excel-export';
@@ -27,6 +26,7 @@ import {DisplayContext} from '@ofModel/templateGateway.model';
 import {FilterMatchTypeEnum, FilterModel} from '@ofModel/filter-model';
 import {ArchivedCardsFilter} from '@ofModel/archived-cards-filter.model';
 import {DateTimeFormatterService} from 'app/business/services/date-time-formatter.service';
+import {CardService} from 'app/business/services/card.service';
 
 @Component({
     selector: 'of-archives',

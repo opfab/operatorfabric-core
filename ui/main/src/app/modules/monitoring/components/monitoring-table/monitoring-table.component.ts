@@ -19,7 +19,6 @@ import {ProcessesService} from 'app/business/services/processes.service';
 import {Utilities} from 'app/business/common/utilities';
 import {MonitoringConfig} from '@ofModel/monitoringConfig.model';
 import {JsonToArray} from 'app/business/common/jsontoarray/json-to-array';
-import {CardService} from '@ofServices/card.service';
 import {Process} from '@ofModel/processes.model';
 import {EntitiesService} from 'app/business/services/entities.service';
 import {ColDef, GridOptions} from 'ag-grid-community';
@@ -29,6 +28,7 @@ import {LightCard} from '@ofModel/light-card.model';
 import {LightCardsStoreService} from 'app/business/services/lightcards/lightcards-store.service';
 import {DateTimeFormatterService} from 'app/business/services/date-time-formatter.service';
 import {SelectedCardService} from 'app/business/services/card/selectedCard.service';
+import {CardService} from 'app/business/services/card.service';
 
 @Component({
     selector: 'of-monitoring-table',
