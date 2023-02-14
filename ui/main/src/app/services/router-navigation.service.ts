@@ -12,7 +12,7 @@ import {NavigationEnd, Router} from '@angular/router';
 import {LogOption, OpfabLoggerService} from 'app/business/services/logs/opfab-logger.service';
 import {SelectedCardService} from 'app/business/services/card/selectedCard.service';
 import {filter} from 'rxjs';
-import {CardService} from './card.service';
+import {CardService} from '../business/services/card.service';
 
 @Injectable({
     providedIn: 'root'

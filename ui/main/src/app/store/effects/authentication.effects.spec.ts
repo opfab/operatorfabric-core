@@ -35,7 +35,6 @@ import {Router} from '@angular/router';
 import {hot} from 'jasmine-marbles';
 import * as moment from 'moment';
 import {Message} from '@ofModel/message.model';
-import {CardService} from '@ofServices/card.service';
 import {ConfigService} from 'app/business/services/config.service';
 import {injectedSpy} from '@tests/helpers';
 import SpyObj = jasmine.SpyObj;
@@ -49,6 +48,7 @@ import {ConfigServerMock} from '@tests/mocks/configServer.mock';
 import {EntitiesService} from 'app/business/services/entities.service';
 import {RemoteLoggerService} from 'app/business/services/logs/remote-logger.service';
 import {OpfabEventStreamService} from 'app/business/services/opfabEventStream.service';
+import {CardService} from 'app/business/services/card.service';
 
 describe('AuthenticationEffects', () => {
     let actions$: Observable<any>;

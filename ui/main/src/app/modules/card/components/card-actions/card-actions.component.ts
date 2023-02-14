@@ -16,12 +16,13 @@ import {PermissionEnum} from '@ofModel/permission.model';
 import {State} from '@ofModel/processes.model';
 import {AlertMessageService} from 'app/business/services/alert-message.service';
 import {AppService, PageType} from '@ofServices/app.service';
-import {CardService} from '@ofServices/card.service';
 import {UserPermissionsService} from 'app/business/services/user-permissions.service';
 import {UserService} from 'app/business/services/user.service';
 import {AppState} from '@ofStore/index';
 import {selectCurrentUrl} from '@ofStore/selectors/router.selectors';
 import {Subject, takeUntil} from 'rxjs';
+import {CardService} from 'app/business/services/card.service';
+import {ServerResponseStatus} from 'app/business/server/serverResponse';
 
 @Component({
     selector: 'of-card-actions',
@@ -143,10 +144,9 @@ export class CardActionsComponent implements OnInit, OnChanges,OnDestroy {
     public confirmDeleteCard(): void {
         this.deleteInProgress = true;
         if (!!this.deleteConfirmationModal) this.deleteConfirmationModal.close();
-        this.cardService.deleteCard(this.card).subscribe({
-            next: (resp) => {
+        this.cardService.deleteCard(this.card).subscribe(resp => {
                 const status = resp.status;
-                if (status === 200) {
+                if (status === ServerResponseStatus.OK) {
                     this.closeDetails();
                     this.displayMessage('userCard.deleteCard.cardDeletedWithNoError', null, MessageLevel.INFO);
                 } else {
@@ -154,13 +154,8 @@ export class CardActionsComponent implements OnInit, OnChanges,OnDestroy {
                     this.displayMessage('userCard.deleteCard.error.impossibleToDeleteCard ', null, MessageLevel.ERROR);
                 }
                 this.deleteInProgress = false;
-            },
-            error: (err) => {
-                console.error('Error when deleting card :', err);
-                this.displayMessage('userCard.deleteCard.error.impossibleToDeleteCard ', null, MessageLevel.ERROR);
-                this.deleteInProgress = false;
             }
-        });
+        );
     }
 
     private displayMessage(i18nKey: string, msg: string, severity: MessageLevel = MessageLevel.ERROR) {

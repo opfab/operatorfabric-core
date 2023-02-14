@@ -71,6 +71,8 @@ import {AdminProcessServer} from './business/server/adminprocess.server';
 import {AngularAdminProcessesServer} from './server/angularAdminProcess.server';
 import {TemplateCssServer} from './business/server/template-css.server';
 import {AngularTemplateCssServer} from './server/angularTemplate-css.service';
+import {AngularCardServer} from './server/angularCard.server';
+import {CardServer} from './business/server/card.server';
 
 @NgModule({
     imports: [
@@ -137,6 +139,7 @@ import {AngularTemplateCssServer} from './server/angularTemplate-css.service';
         {provide: SettingsServer, useClass: AngularSettingsServer},
         {provide: OpfabEventStreamServer, useClass: AngularOpfabEventStreamServer},
         {provide: ExternalDevicesServer, useClass: AngularExternalDevicesServer},
+        {provide: CardServer, useClass: AngularCardServer}
     ],
     bootstrap: [AppComponent]
 })

@@ -38,7 +38,7 @@ export class AngularUserServer extends AngularServer implements UserServer {
 
     deleteById(login: string) {
         const url = `${this.userUrl}/users/${login}`;
-        return this.processHttpResponse(this.processHttpResponse(this.httpClient.delete(url)));
+        return this.processHttpResponse(this.httpClient.delete(url));
     }
 
     getUser(user: string): Observable<ServerResponse<User>> {

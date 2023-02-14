@@ -13,7 +13,6 @@ import {ProcessesService} from 'app/business/services/processes.service';
 import {SafeHtml} from '@angular/platform-browser';
 import {AcknowledgmentAllowedEnum, State} from '@ofModel/processes.model';
 import {map, takeUntil} from 'rxjs/operators';
-import {CardService} from '@ofServices/card.service';
 import {Subject} from 'rxjs';
 import {AppService, PageType} from '@ofServices/app.service';
 import {User} from '@ofModel/user.model';
@@ -27,6 +26,7 @@ import {CardComponent} from '../../card.component';
 import {OpfabLoggerService} from 'app/business/services/logs/opfab-logger.service';
 import {UserWithPerimeters} from "@ofModel/userWithPerimeters.model";
 import {SelectedCardService} from 'app/business/services/card/selectedCard.service';
+import {CardService} from 'app/business/services/card.service';
 
 declare const templateGateway: any;
 
