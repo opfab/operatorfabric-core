@@ -30,7 +30,7 @@
             <br>
         </div>
 
-        <div class="row">
+        <div class="row" style="margin-left: 0px; margin-right: 0px;">
             <div class="col-sm" *ngFor="let column of this.realTimeScreens[realTimeScreenIndexToDisplay].screenColumns; let colIndex = index;">
                 <div class="opfab-realtimeusers-entitiesgroups " *ngFor="let entitiesGroupsElement of column.entitiesGroups;">
                     <span class="opfab-realtimeusers-entitiesgroups-title">{{entitiesGroupsElement.name}}</span>
