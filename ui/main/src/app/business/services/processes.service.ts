@@ -87,8 +87,9 @@ export class ProcessesService {
                         });
                     console.log(new Date().toISOString(), 'List of process groups loaded');
                 }
-                if (response.status!==ServerResponseStatus.OK) console.error(new Date().toISOString(), 'An error occurred when loading processGroups');
-                return "";
+                if (response.status !== ServerResponseStatus.OK)
+                    console.error(new Date().toISOString(), 'An error occurred when loading processGroups');
+                return '';
             })
         );
     }
@@ -110,7 +111,8 @@ export class ProcessesService {
                     this.monitoringConfig = monitoringConfig;
                     console.log(new Date().toISOString(), 'Monitoring config loaded');
                 } else console.log(new Date().toISOString(), 'No monitoring config to load');
-                if (serverResponse.status!==ServerResponseStatus.OK)  console.error(new Date().toISOString(), 'An error occurred when loading monitoringConfig');
+                if (serverResponse.status !== ServerResponseStatus.OK)
+                    console.error(new Date().toISOString(), 'An error occurred when loading monitoringConfig');
                 return monitoringConfig;
             })
         );
@@ -177,8 +179,8 @@ export class ProcessesService {
 
     queryAllProcesses(): Observable<Process[]> {
         return this.processServer.getAllProcessesDefinition().pipe(
-            map(response => {
-                if (response.status!==ServerResponseStatus.OK)  {
+            map((response) => {
+                if (response.status !== ServerResponseStatus.OK) {
                     console.error(new Date().toISOString(), 'An error occurred when loading processes configuration');
                     return new Array<Process>();
                 }
@@ -198,20 +200,23 @@ export class ProcessesService {
             return of(process);
         }
         return this.processServer.getProcessDefinition(id, version).pipe(
-            map( response => {
-                if ((response.status===ServerResponseStatus.OK) && (response.data)) this.processCache.set(key, response.data);
-                else   console.log(
-                    new Date().toISOString(),
-                    `WARNING process ` +
-                        ` ${id} with version ${version} does not exist.`);
-                return response.data
-            }));
+            map((response) => {
+                if (response.status === ServerResponseStatus.OK && response.data)
+                    this.processCache.set(key, response.data);
+                else
+                    console.log(
+                        new Date().toISOString(),
+                        `WARNING process ` + ` ${id} with version ${version} does not exist.`
+                    );
+                return response.data;
+            })
+        );
     }
 
     fetchHbsTemplate(process: string, version: string, name: string): Observable<string> {
-        return this.processServer.getTemplate(process,version,name).pipe(
-            map( serverResponse => {
-                if (serverResponse.status !== ServerResponseStatus.OK) throw new Error("Template not available");
+        return this.processServer.getTemplate(process, version, name).pipe(
+            map((serverResponse) => {
+                if (serverResponse.status !== ServerResponseStatus.OK) throw new Error('Template not available');
                 return serverResponse.data;
             })
         );
@@ -224,11 +229,10 @@ export class ProcessesService {
         return `${resourceUrl}?${versionParam.toString()}`;
     }
 
-
     public findProcessGroupIdForProcessId(processId: string): string {
         const data = this.findProcessGroupForProcess(processId);
 
-        if (!! data) {
+        if (!!data) {
             return data.id;
         }
         return null;
@@ -284,8 +288,9 @@ export class ProcessesService {
         this.typeOfStatesPerProcessAndState = new Map();
 
         for (const process of this.processes) {
-            for (const state in process.states)
-                this.typeOfStatesPerProcessAndState.set(process.id + '.' + state, process.states[state].type);
+            process.states.forEach((state, stateid) => {
+                this.typeOfStatesPerProcessAndState.set(process.id + '.' + stateid, state.type);
+            });
         }
     }
 
@@ -299,16 +304,16 @@ export class ProcessesService {
 
         this.getAllProcesses().forEach((process) => {
             const statesDropdownList = [];
-            for (const state in process.states) {
+            process.states.forEach((state, stateid) => {
                 if (
-                    !(hideChildStates && process.states[state].isOnlyAChildState) &&
-                    (isAdminMode || this.userService.isReceiveRightsForProcessAndState(process.id, state))
+                    !(hideChildStates && state.isOnlyAChildState) &&
+                    (isAdminMode || this.userService.isReceiveRightsForProcessAndState(process.id, stateid))
                 ) {
                     statesDropdownList.push({
-                        id: process.id + '.' + state
+                        id: process.id + '.' + stateid
                     });
                 }
-            }
+            });
             if (statesDropdownList.length) statesListPerProcess.set(process.id, statesDropdownList);
         });
         return statesListPerProcess;
@@ -320,7 +325,7 @@ export class ProcessesService {
         let consideredAcknowledgedForUserWhen = ConsideredAcknowledgedForUserWhenEnum.USER_HAS_ACKNOWLEDGED;
 
         this.queryProcess(lightCard.process, lightCard.processVersion).subscribe((process) => {
-            const state = process.extractState(lightCard);
+            const state = process.states.get(lightCard.state);
             if (!!state.consideredAcknowledgedForUserWhen)
                 consideredAcknowledgedForUserWhen = state.consideredAcknowledgedForUserWhen;
         });
@@ -331,9 +336,8 @@ export class ProcessesService {
         let showAcknowledgmentFooter = ShowAcknowledgmentFooterEnum.ONLY_FOR_EMITTING_ENTITY;
 
         this.queryProcess(card.process, card.processVersion).subscribe((process) => {
-            const state = process.extractState(card);
-            if (!!state.showAcknowledgmentFooter)
-                showAcknowledgmentFooter = state.showAcknowledgmentFooter;
+            const state = process.states.get(card.state);
+            if (!!state.showAcknowledgmentFooter) showAcknowledgmentFooter = state.showAcknowledgmentFooter;
         });
         return showAcknowledgmentFooter;
     }

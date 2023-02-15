@@ -94,7 +94,7 @@ export class UserCardComponent implements OnInit {
     private datesFromTemplate: boolean;
     isLoadingCardTemplate = false;
     isPreparingCard = false;
-    isReadOnlyUser : boolean;
+    isReadOnlyUser: boolean;
 
     // Preview and send card
     readonly displayContext = DisplayContext.PREVIEW;
@@ -156,7 +156,6 @@ export class UserCardComponent implements OnInit {
         );
 
         this.isReadOnlyUser = this.userService.hasCurrentUserAnyPermission([PermissionEnum.READONLY]);
-
     }
 
     private loadCardForEdition() {
@@ -257,11 +256,17 @@ export class UserCardComponent implements OnInit {
         this.currentExpirationDate = this.datesFormValue.expirationDate.initialEpochDate;
     }
 
-    private setDatesFromCardToEdit(startDate: DateField, endDate: DateField, lttd: DateField, expirationDate: DateField): DatesForm {
+    private setDatesFromCardToEdit(
+        startDate: DateField,
+        endDate: DateField,
+        lttd: DateField,
+        expirationDate: DateField
+    ): DatesForm {
         if (!!this.cardToEdit.card.startDate) startDate.initialEpochDate = this.cardToEdit.card.startDate;
         if (!!this.cardToEdit.card.endDate) endDate.initialEpochDate = this.cardToEdit.card.endDate;
         if (!!this.cardToEdit.card.lttd) lttd.initialEpochDate = this.cardToEdit.card.lttd;
-        if (!!this.cardToEdit.card.expirationDate) expirationDate.initialEpochDate = this.cardToEdit.card.expirationDate;
+        if (!!this.cardToEdit.card.expirationDate)
+            expirationDate.initialEpochDate = this.cardToEdit.card.expirationDate;
         this.datesFromCardToEdit = false;
         return new DatesForm(startDate, endDate, lttd, expirationDate);
     }
@@ -324,9 +329,9 @@ export class UserCardComponent implements OnInit {
         usercardTemplateGateway.setInitialExpirationDate(null);
         usercardTemplateGateway.setInitialSeverity(null);
 
-        this.userCardConfiguration = this.processesService.getProcess(this.selectedProcessId).states[
-            this.selectedStateId
-        ].userCard;
+        this.userCardConfiguration = this.processesService
+            .getProcess(this.selectedProcessId)
+            .states.get(this.selectedStateId).userCard;
         this.setFieldsVisibility();
         if (!this.cardToEdit) this.initialSelectedRecipients = [];
 
@@ -352,9 +357,7 @@ export class UserCardComponent implements OnInit {
                     ? true
                     : this.userCardConfiguration.endDateVisible;
             this.lttdVisible =
-                this.userCardConfiguration.lttdVisible === undefined
-                    ? false
-                    : this.userCardConfiguration.lttdVisible;
+                this.userCardConfiguration.lttdVisible === undefined ? false : this.userCardConfiguration.lttdVisible;
             this.expirationDateVisible =
                 this.userCardConfiguration.expirationDateVisible === undefined
                     ? false
@@ -644,14 +647,18 @@ export class UserCardComponent implements OnInit {
             this.recipientsForm.getSelectedRecipients().forEach((entity) => recipients.push(entity));
         }
         if (this.specificInformation.card.entityRecipients) {
-            this.specificInformation.card.entityRecipients.forEach((entity) => {if (!recipients.includes(entity)) recipients.push(entity)});
+            this.specificInformation.card.entityRecipients.forEach((entity) => {
+                if (!recipients.includes(entity)) recipients.push(entity);
+            });
         } else {
             const recipientListFromStateConfig = this.getRecipientListFromState_Deprecated();
             if (recipientListFromStateConfig !== undefined) {
                 this.opfabLogger.info(
                     'Use of state configuration to define list of recipient is deprecated, provide it via usercardTemplateGateway.getSpecificCardInformation() '
                 );
-                recipientListFromStateConfig.forEach((entity) => {if (!recipients.includes(entity.id)) recipients.push(entity.id)});
+                recipientListFromStateConfig.forEach((entity) => {
+                    if (!recipients.includes(entity.id)) recipients.push(entity.id);
+                });
             }
         }
 
@@ -660,12 +667,12 @@ export class UserCardComponent implements OnInit {
 
     private getRecipientListFromState_Deprecated() {
         const selectedProcess = this.processesService.getProcess(this.selectedProcessId);
-        return selectedProcess.states[this.selectedStateId].userCard.recipientList;
+        return selectedProcess.states.get(this.selectedStateId).userCard.recipientList;
     }
 
     private getEntitiesAllowedTorespond(recipients): string[] {
         let entitiesAllowedToRespond = [];
-        if (this.processesService.getProcess(this.selectedProcessId).states[this.selectedStateId].response) {
+        if (this.processesService.getProcess(this.selectedProcessId).states.get(this.selectedStateId).response) {
             const defaultEntityAllowedToRespond = [];
             recipients.forEach((entity) => defaultEntityAllowedToRespond.push(entity));
 
@@ -732,7 +739,7 @@ export class UserCardComponent implements OnInit {
     }
 
     public getChildCard(childCard) {
-        const cardState = this.processesService.getProcess(this.selectedProcessId).states[this.selectedStateId];
+        const cardState = this.processesService.getProcess(this.selectedProcessId).states.get(this.selectedStateId);
 
         return {
             id: null,
@@ -767,7 +774,7 @@ export class UserCardComponent implements OnInit {
         this.displayPreview = false;
         this.displaySendingCardInProgress = true;
 
-        // If start date is set to publish date 
+        // If start date is set to publish date
         // we need to set again the start date to current time
         // because the user can stay on the preview for a long time
         // and start date is then too much in the past regarding the publish date
@@ -790,10 +797,9 @@ export class UserCardComponent implements OnInit {
             childCard = this.specificInformation.childCard;
         }
         this.postCardAndChildCard(childCard);
-
     }
 
-    private postCardAndChildCard(childCard:any) {
+    private postCardAndChildCard(childCard: any) {
         this.cardService.postCard(fromCardToCardForPublishing(this.card)).subscribe(
             (resp) => {
                 if (resp.status !== 201) {

@@ -172,9 +172,9 @@ export class EditPerimeterModalComponent implements OnInit {
                     .filter((processDef) => processDef.id === process)
                     .flatMap((processDef: Process) => {
                         const statesToShow = [];
-                        for (const [stateId, value] of Object.entries(processDef.states)) {
+                        processDef.states.forEach( (value, stateId) => {
                             statesToShow.push({value: stateId, label: value.name});
-                        }
+                        })
                         return statesToShow;
                     });
             }

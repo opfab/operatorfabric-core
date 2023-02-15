@@ -226,8 +226,8 @@ export class FeedconfigurationComponent implements OnInit, AfterViewInit {
 
             const processLabel = !!process.name ? process.name : process.id;
 
-            for (const stateId of Object.keys(process.states)) {
-                const state = process.states[stateId];
+            for (const stateId of process.states.keys()) {
+                const state = process.states.get(stateId);
 
                 if (this.checkIfStateMustBeDisplayed(state, process, stateId)) {
                     const stateLabel = !!state.name ? state.name : stateId;

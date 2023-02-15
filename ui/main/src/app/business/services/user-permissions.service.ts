@@ -115,9 +115,9 @@ export class UserPermissionsService {
                 .filter((entity) => entitiesAllowedToRespondAndEntitiesRequiredToRespond.includes(entity.id));
 
             let emittingEntityAllowedToRespond = false;
-            if (!!processDefinition.extractState(card).response)
+            if (!!processDefinition.states.get((card.state)).response)
                 emittingEntityAllowedToRespond =
-                    !!processDefinition.extractState(card).response.emittingEntityAllowedToRespond;
+                    !!processDefinition.states.get((card.state)).response.emittingEntityAllowedToRespond;
 
             const allowed = this.entitiesService
                 .resolveEntitiesAllowedToSendCards(entitiesAllowedToRespond)
@@ -143,7 +143,7 @@ export class UserPermissionsService {
     ): boolean {
         let permission = false;
         user.computedPerimeters.forEach((perim) => {
-            const stateOfTheCard = Process.prototype.extractState.call(processDefinition, card);
+            const stateOfTheCard =   processDefinition.states.get((card.state));
 
             if (
                 !!stateOfTheCard &&

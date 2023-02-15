@@ -7,26 +7,15 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {Card} from '@ofModel/card.model';
-import {LightCard} from '@ofModel/light-card.model';
-
 export class Process {
     constructor(
         readonly id: string,
         readonly version: string,
         readonly name?: string,
         readonly locales?: string[],
-        readonly states?: Map<string,State>,
+        readonly states?: Map<string, State>,
         readonly uiVisibility?: UiVisibility
     ) {}
-
-    public extractState(card: Card | LightCard): State {
-        if (!!this.states && !!card.state && this.states[card.state]) {
-            return this.states[card.state];
-        } else {
-            return null;
-        }
-    }
 }
 
 export class UiVisibility {

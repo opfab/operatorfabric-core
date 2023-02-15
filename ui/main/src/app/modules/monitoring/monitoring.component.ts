@@ -168,12 +168,8 @@ export class MonitoringComponent implements OnInit, OnDestroy {
 
         if (!!this.mapOfProcesses && this.mapOfProcesses.has(procId) && !card.parentCardId) {
             const currentProcess = this.mapOfProcesses.get(procId);
-            /**
-             * work around because Object.setPrototypeOf(currentProcess, Process.prototype);
-             * can't be applied to currentProcess, for some reason.
-             * and thus currentProcess.extractState(…) throws an error
-             */
-            const state = Process.prototype.extractState.call(currentProcess, card);
+            
+            const state = currentProcess.states.get(card.state);
 
             if (!!state && !!state.type) {
                 typeOfState = state.type;

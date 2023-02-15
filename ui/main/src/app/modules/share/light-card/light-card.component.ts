@@ -103,7 +103,7 @@ export class LightCardComponent implements OnInit, OnDestroy {
         this.processesService
             .queryProcess(this.lightCard.process, this.lightCard.processVersion)
             .subscribe((process) => {
-                const state = process.extractState(this.lightCard);
+                const state = process.states.get((this.lightCard.state));
                 if (state.type === TypeOfStateEnum.FINISHED) {
                     this.showExpiredIcon = false;
                     this.showExpiredLabel = false;

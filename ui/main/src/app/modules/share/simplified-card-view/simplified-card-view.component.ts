@@ -76,7 +76,7 @@ export class SimplifiedCardViewComponent implements OnInit, OnDestroy {
             .subscribe({
                 next: (businessconfig) => {
                     if (!!businessconfig) {
-                        this.cardState = businessconfig.extractState(this.card);
+                        this.cardState = businessconfig.states.get((this.card.state));
                         this.isLoading = false;
                     }
                 },

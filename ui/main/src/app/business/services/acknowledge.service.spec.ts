@@ -38,10 +38,10 @@ describe('AcknowledgeService testing ', () => {
     let entitiesService: EntitiesService;
     let card: Card, cardForEntityParent: Card;
     let userMemberOfEntity1: User, userMemberOfEntity2: User;
-    let statesList;
+    let statesList: Map<string, State>;
 
     beforeEach(() => {
-        statesList = new Map();
+        statesList = new Map<string, State>();
 
         TestBed.configureTestingModule({
             providers: [
@@ -49,12 +49,12 @@ describe('AcknowledgeService testing ', () => {
                 {provide: ConfigServer, useClass: ConfigServerMock},
                 {provide: RemoteLoggerServer, useValue: null},
                 {provide: ProcessServer, useClass: ProcessServerMock},
-                {provide : AcknowledgeServer, useValue: null},
+                {provide: AcknowledgeServer, useValue: null},
                 LightCardsStoreService,
                 {provide: EntitiesService, useClass: EntitiesServiceMock},
                 {provide: EntitiesServer, useValue: null},
                 {provide: UserServer, useValue: null},
-                {provide : OpfabEventStreamService, useValue: null}
+                {provide: OpfabEventStreamService, useValue: null}
             ],
             imports: [
                 StoreModule.forRoot(appReducer),
@@ -90,7 +90,7 @@ describe('AcknowledgeService testing ', () => {
     });
 
     it('acknowledgmentAllowed of the state is not present , isAcknowledgmentAllowed() must return true (default value)', () => {
-        statesList['testState'] = new State(null, null, null, null);
+        statesList.set('testState', new State(null, null, null, null));
         const processDefinition = getOneRandomProcess({id: 'testProcess', version: '1', states: statesList});
         const userWithPerimeters = new UserWithPerimeters(userMemberOfEntity1, [
             {process: 'testProcess', state: 'testState', rights: RightsEnum.Receive, filteringNotificationAllowed: true}
@@ -109,7 +109,7 @@ describe('AcknowledgeService testing ', () => {
     });
 
     it('state does not exist , isAcknowledgmentAllowed() must return true (default value)', () => {
-        statesList['dummyState'] = new State(null, null, null, null);
+        statesList.set('dummyState', new State(null, null, null, null));
         const processDefinition = getOneRandomProcess({id: 'testProcess', version: '1', states: statesList});
         const userWithPerimeters = new UserWithPerimeters(userMemberOfEntity1, [
             {process: 'testProcess', state: 'testState', rights: RightsEnum.Receive, filteringNotificationAllowed: true}
@@ -120,8 +120,9 @@ describe('AcknowledgeService testing ', () => {
     });
 
     it('acknowledgmentAllowed of the state is Never, isAcknowledgmentAllowed() must return false', () => {
-        statesList['testState'] = new State(null, null, null, AcknowledgmentAllowedEnum.NEVER);
+        statesList.set('testState', new State(null, null, null, AcknowledgmentAllowedEnum.NEVER));
         const processDefinition = getOneRandomProcess({id: 'testProcess', version: '1', states: statesList});
+
         const userWithPerimeters = new UserWithPerimeters(userMemberOfEntity1, [
             {process: 'testProcess', state: 'testState', rights: RightsEnum.Receive, filteringNotificationAllowed: true}
         ]);
@@ -131,7 +132,7 @@ describe('AcknowledgeService testing ', () => {
     });
 
     it('acknowledgmentAllowed of the state is Always, isAcknowledgmentAllowed() must return true', () => {
-        statesList['testState'] = new State(null, null, null, AcknowledgmentAllowedEnum.ALWAYS);
+        statesList.set('testState', new State(null, null, null, AcknowledgmentAllowedEnum.ALWAYS));
         const processDefinition = getOneRandomProcess({id: 'testProcess', version: '1', states: statesList});
         const userWithPerimeters = new UserWithPerimeters(userMemberOfEntity1, [
             {process: 'testProcess', state: 'testState', rights: RightsEnum.Receive, filteringNotificationAllowed: true}
@@ -146,15 +147,23 @@ describe('AcknowledgeService testing ', () => {
             'user cannot respond (user is a member of entity allowed to respond but user rights for the state of the response is Receive), ' +
             'isAcknowledgmentAllowed() must return true',
         () => {
-            statesList['testState'] = new State(
-                null,
-                null,
-                new Response(null, 'responseState'),
-                AcknowledgmentAllowedEnum.ONLY_WHEN_RESPONSE_DISABLED_FOR_USER
+            statesList.set(
+                'testState',
+                new State(
+                    null,
+                    null,
+                    new Response(null, 'responseState'),
+                    AcknowledgmentAllowedEnum.ONLY_WHEN_RESPONSE_DISABLED_FOR_USER
+                )
             );
             const processDefinition = getOneRandomProcess({id: 'testProcess', version: '1', states: statesList});
             const userWithPerimeters = new UserWithPerimeters(userMemberOfEntity1, [
-                {process: 'testProcess', state: 'responseState', rights: RightsEnum.Receive, filteringNotificationAllowed: true}
+                {
+                    process: 'testProcess',
+                    state: 'responseState',
+                    rights: RightsEnum.Receive,
+                    filteringNotificationAllowed: true
+                }
             ]);
 
             const res = acknowledgeService.isAcknowledgmentAllowed(userWithPerimeters, card, processDefinition);
@@ -167,15 +176,23 @@ describe('AcknowledgeService testing ', () => {
             'user can respond (user is a member of entity allowed to respond and user rights for the state of the response is Write), ' +
             'isAcknowledgmentAllowed() must return false',
         () => {
-            statesList['testState'] = new State(
-                null,
-                null,
-                new Response(null, 'responseState'),
-                AcknowledgmentAllowedEnum.ONLY_WHEN_RESPONSE_DISABLED_FOR_USER
+            statesList.set(
+                'testState',
+                new State(
+                    null,
+                    null,
+                    new Response(null, 'responseState'),
+                    AcknowledgmentAllowedEnum.ONLY_WHEN_RESPONSE_DISABLED_FOR_USER
+                )
             );
             const processDefinition = getOneRandomProcess({id: 'testProcess', version: '1', states: statesList});
             const userWithPerimeters = new UserWithPerimeters(userMemberOfEntity1, [
-                {process: 'testProcess', state: 'responseState', rights: RightsEnum.Write, filteringNotificationAllowed: true}
+                {
+                    process: 'testProcess',
+                    state: 'responseState',
+                    rights: RightsEnum.Write,
+                    filteringNotificationAllowed: true
+                }
             ]);
 
             const res = acknowledgeService.isAcknowledgmentAllowed(userWithPerimeters, card, processDefinition);
@@ -188,15 +205,23 @@ describe('AcknowledgeService testing ', () => {
             'user can respond (user is a member of entity allowed to respond and user rights for the state of the response is ReceiveAndWrite), ' +
             'isAcknowledgmentAllowed() must return false',
         () => {
-            statesList['testState'] = new State(
-                null,
-                null,
-                new Response(null, 'responseState'),
-                AcknowledgmentAllowedEnum.ONLY_WHEN_RESPONSE_DISABLED_FOR_USER
+            statesList.set(
+                'testState',
+                new State(
+                    null,
+                    null,
+                    new Response(null, 'responseState'),
+                    AcknowledgmentAllowedEnum.ONLY_WHEN_RESPONSE_DISABLED_FOR_USER
+                )
             );
             const processDefinition = getOneRandomProcess({id: 'testProcess', version: '1', states: statesList});
             const userWithPerimeters = new UserWithPerimeters(userMemberOfEntity1, [
-                {process: 'testProcess', state: 'responseState', rights: RightsEnum.ReceiveAndWrite, filteringNotificationAllowed: true}
+                {
+                    process: 'testProcess',
+                    state: 'responseState',
+                    rights: RightsEnum.ReceiveAndWrite,
+                    filteringNotificationAllowed: true
+                }
             ]);
 
             const res = acknowledgeService.isAcknowledgmentAllowed(userWithPerimeters, card, processDefinition);
@@ -209,15 +234,23 @@ describe('AcknowledgeService testing ', () => {
             'user cannot respond (user is not a member of entity allowed to respond and user rights for the state of the response is Receive), ' +
             'isAcknowledgmentAllowed() must return true',
         () => {
-            statesList['testState'] = new State(
-                null,
-                null,
-                new Response(null, 'responseState'),
-                AcknowledgmentAllowedEnum.ONLY_WHEN_RESPONSE_DISABLED_FOR_USER
+            statesList.set(
+                'testState',
+                new State(
+                    null,
+                    null,
+                    new Response(null, 'responseState'),
+                    AcknowledgmentAllowedEnum.ONLY_WHEN_RESPONSE_DISABLED_FOR_USER
+                )
             );
             const processDefinition = getOneRandomProcess({id: 'testProcess', version: '1', states: statesList});
             const userWithPerimeters = new UserWithPerimeters(userMemberOfEntity2, [
-                {process: 'testProcess', state: 'responseState', rights: RightsEnum.Receive, filteringNotificationAllowed: true}
+                {
+                    process: 'testProcess',
+                    state: 'responseState',
+                    rights: RightsEnum.Receive,
+                    filteringNotificationAllowed: true
+                }
             ]);
 
             const res = acknowledgeService.isAcknowledgmentAllowed(userWithPerimeters, card, processDefinition);
@@ -230,15 +263,23 @@ describe('AcknowledgeService testing ', () => {
             'user cannot respond (user is not a member of entity allowed to respond and user rights for the state of the response is Write), ' +
             'isAcknowledgmentAllowed() must return true',
         () => {
-            statesList['testState'] = new State(
-                null,
-                null,
-                new Response(null, 'responseState'),
-                AcknowledgmentAllowedEnum.ONLY_WHEN_RESPONSE_DISABLED_FOR_USER
+            statesList.set(
+                'testState',
+                new State(
+                    null,
+                    null,
+                    new Response(null, 'responseState'),
+                    AcknowledgmentAllowedEnum.ONLY_WHEN_RESPONSE_DISABLED_FOR_USER
+                )
             );
             const processDefinition = getOneRandomProcess({id: 'testProcess', version: '1', states: statesList});
             const userWithPerimeters = new UserWithPerimeters(userMemberOfEntity2, [
-                {process: 'testProcess', state: 'responseState', rights: RightsEnum.Write, filteringNotificationAllowed: true}
+                {
+                    process: 'testProcess',
+                    state: 'responseState',
+                    rights: RightsEnum.Write,
+                    filteringNotificationAllowed: true
+                }
             ]);
 
             const res = acknowledgeService.isAcknowledgmentAllowed(userWithPerimeters, card, processDefinition);
@@ -251,15 +292,23 @@ describe('AcknowledgeService testing ', () => {
             'user cannot respond (user is not a member of entity allowed to respond and user rights for the state of the response is ReceiveAndWrite), ' +
             'isAcknowledgmentAllowed() must return true',
         () => {
-            statesList['testState'] = new State(
-                null,
-                null,
-                new Response(null, 'responseState'),
-                AcknowledgmentAllowedEnum.ONLY_WHEN_RESPONSE_DISABLED_FOR_USER
+            statesList.set(
+                'testState',
+                new State(
+                    null,
+                    null,
+                    new Response(null, 'responseState'),
+                    AcknowledgmentAllowedEnum.ONLY_WHEN_RESPONSE_DISABLED_FOR_USER
+                )
             );
             const processDefinition = getOneRandomProcess({id: 'testProcess', version: '1', states: statesList});
             const userWithPerimeters = new UserWithPerimeters(userMemberOfEntity2, [
-                {process: 'testProcess', state: 'responseState', rights: RightsEnum.ReceiveAndWrite, filteringNotificationAllowed: true}
+                {
+                    process: 'testProcess',
+                    state: 'responseState',
+                    rights: RightsEnum.ReceiveAndWrite,
+                    filteringNotificationAllowed: true
+                }
             ]);
 
             const res = acknowledgeService.isAcknowledgmentAllowed(userWithPerimeters, card, processDefinition);
@@ -272,15 +321,23 @@ describe('AcknowledgeService testing ', () => {
             'user can respond (user is a member of entity allowed to respond (ENTITY_FR) and user rights for the state of the response is Write), ' +
             'isAcknowledgmentAllowed() must return false',
         () => {
-            statesList['testState'] = new State(
-                null,
-                null,
-                new Response(null, 'responseState'),
-                AcknowledgmentAllowedEnum.ONLY_WHEN_RESPONSE_DISABLED_FOR_USER
+            statesList.set(
+                'testState',
+                new State(
+                    null,
+                    null,
+                    new Response(null, 'responseState'),
+                    AcknowledgmentAllowedEnum.ONLY_WHEN_RESPONSE_DISABLED_FOR_USER
+                )
             );
             const processDefinition = getOneRandomProcess({id: 'testProcess', version: '1', states: statesList});
             const userWithPerimeters = new UserWithPerimeters(userMemberOfEntity1, [
-                {process: 'testProcess', state: 'responseState', rights: RightsEnum.Write, filteringNotificationAllowed: true}
+                {
+                    process: 'testProcess',
+                    state: 'responseState',
+                    rights: RightsEnum.Write,
+                    filteringNotificationAllowed: true
+                }
             ]);
 
             const res = acknowledgeService.isAcknowledgmentAllowed(
@@ -297,15 +354,23 @@ describe('AcknowledgeService testing ', () => {
             'user cannot respond (user is a member of entity allowed to respond (ENTITY_FR) but user rights for the state of the response is Receive), ' +
             'isAcknowledgmentAllowed() must return true',
         () => {
-            statesList['testState'] = new State(
-                null,
-                null,
-                new Response(null, 'responseState'),
-                AcknowledgmentAllowedEnum.ONLY_WHEN_RESPONSE_DISABLED_FOR_USER
+            statesList.set(
+                'testState',
+                new State(
+                    null,
+                    null,
+                    new Response(null, 'responseState'),
+                    AcknowledgmentAllowedEnum.ONLY_WHEN_RESPONSE_DISABLED_FOR_USER
+                )
             );
             const processDefinition = getOneRandomProcess({id: 'testProcess', version: '1', states: statesList});
             const userWithPerimeters = new UserWithPerimeters(userMemberOfEntity1, [
-                {process: 'testProcess', state: 'responseState', rights: RightsEnum.Receive, filteringNotificationAllowed: true}
+                {
+                    process: 'testProcess',
+                    state: 'responseState',
+                    rights: RightsEnum.Receive,
+                    filteringNotificationAllowed: true
+                }
             ]);
 
             const res = acknowledgeService.isAcknowledgmentAllowed(
@@ -330,15 +395,23 @@ describe('AcknowledgeService testing ', () => {
                 entitiesAllowedToRespond: ['ENTITY1'],
                 lttd: lttdInTheFuture
             });
-            statesList['testState'] = new State(
-                null,
-                null,
-                new Response(null, 'responseState'),
-                AcknowledgmentAllowedEnum.ONLY_WHEN_RESPONSE_DISABLED_FOR_USER
+            statesList.set(
+                'testState',
+                new State(
+                    null,
+                    null,
+                    new Response(null, 'responseState'),
+                    AcknowledgmentAllowedEnum.ONLY_WHEN_RESPONSE_DISABLED_FOR_USER
+                )
             );
             const processDefinition = getOneRandomProcess({id: 'testProcess', version: '1', states: statesList});
             const userWithPerimeters = new UserWithPerimeters(userMemberOfEntity1, [
-                {process: 'testProcess', state: 'responseState', rights: RightsEnum.Write, filteringNotificationAllowed: true}
+                {
+                    process: 'testProcess',
+                    state: 'responseState',
+                    rights: RightsEnum.Write,
+                    filteringNotificationAllowed: true
+                }
             ]);
 
             const res = acknowledgeService.isAcknowledgmentAllowed(userWithPerimeters, cardWithLttd, processDefinition);
@@ -359,15 +432,23 @@ describe('AcknowledgeService testing ', () => {
                 entitiesAllowedToRespond: ['ENTITY1'],
                 lttd: lttdInThePast
             });
-            statesList['testState'] = new State(
-                null,
-                null,
-                new Response(null, 'responseState'),
-                AcknowledgmentAllowedEnum.ONLY_WHEN_RESPONSE_DISABLED_FOR_USER
+            statesList.set(
+                'testState',
+                new State(
+                    null,
+                    null,
+                    new Response(null, 'responseState'),
+                    AcknowledgmentAllowedEnum.ONLY_WHEN_RESPONSE_DISABLED_FOR_USER
+                )
             );
             const processDefinition = getOneRandomProcess({id: 'testProcess', version: '1', states: statesList});
             const userWithPerimeters = new UserWithPerimeters(userMemberOfEntity1, [
-                {process: 'testProcess', state: 'responseState', rights: RightsEnum.Write, filteringNotificationAllowed: true}
+                {
+                    process: 'testProcess',
+                    state: 'responseState',
+                    rights: RightsEnum.Write,
+                    filteringNotificationAllowed: true
+                }
             ]);
 
             const res = acknowledgeService.isAcknowledgmentAllowed(userWithPerimeters, cardWithLttd, processDefinition);

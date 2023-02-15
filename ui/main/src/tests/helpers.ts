@@ -69,7 +69,7 @@ export function getOneRandomProcess(processTemplate?: any): Process {
 
     for (let j = 0; j < stateCount; j++) {
         const templateName = 'template1';
-        states[getRandomAlphanumericValue(3, 10)] = new State(templateName, ['style1', 'style2']);
+        states.set(getRandomAlphanumericValue(3, 10), new State(templateName, ['style1', 'style2']));
     }
 
     return new Process(

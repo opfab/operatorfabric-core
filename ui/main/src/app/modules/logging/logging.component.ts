@@ -98,10 +98,10 @@ export class LoggingComponent implements OnDestroy, OnInit, AfterViewInit {
             if (!!process.uiVisibility && !!process.uiVisibility.logging) {
                 const itemName = !!process.name ? process.name : process.id;
                 this.processNames.set(process.id, itemName);
-                for (const key in process.states) {
-                    this.processStateDescription.set(process.id + '.' + key, process.states[key].description);
-                    this.processStateName.set(process.id + '.' + key, process.states[key].name);
-                    this.stateColors.set(process.id + '.' + key, process.states[key].color);
+                for (let key of process.states.keys()) {
+                    this.processStateDescription.set(process.id + '.' + key, process.states.get(key).description);
+                    this.processStateName.set(process.id + '.' + key, process.states.get(key).name);
+                    this.stateColors.set(process.id + '.' + key, process.states.get(key).color);
                 }
 
                 this.listOfProcessesForRequest.push(process.id);

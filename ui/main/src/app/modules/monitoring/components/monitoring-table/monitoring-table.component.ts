@@ -381,7 +381,7 @@ export class MonitoringTableComponent implements OnChanges, OnDestroy {
         const process: Process = this.processesService.getProcess(card.card.process);
         if (!!process) {
             card.card.processName = process.name;
-            const state = process.states[card.card.state];
+            const state = process.states.get(card.card.state);
             if (!!state) card.card.typeOfState = this.translateValue('shared.typeOfState.' + state.type);
         }
         card.card.title = card.card.titleTranslated;
