@@ -156,7 +156,7 @@ export class UserCardSelectStateFormComponent implements OnInit, OnDestroy {
     }
 
     getStateFromProcessDefinition(process: Process, stateId: string): {value: string; label: string} {
-        const stateFromProcessDefinition = process.states[stateId];
+        const stateFromProcessDefinition = process.states.get(stateId);
         if (!!stateFromProcessDefinition) {
             if (!!stateFromProcessDefinition.userCard) {
                 const label = !!stateFromProcessDefinition.name ? stateFromProcessDefinition.name : stateId;

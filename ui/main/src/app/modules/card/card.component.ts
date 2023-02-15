@@ -62,7 +62,7 @@ export class CardComponent implements OnInit, OnDestroy {
                                 this.childCards = selectedCard.childCards;
                                 this.cardLoadingInProgress = false;
                                 if (!!businessconfig) {
-                                    this.cardState = businessconfig.extractState(selectedCard.card);
+                                    this.cardState = businessconfig.states.get(selectedCard.card.state);
                                     if (!this.cardState) {
                                         console.log(
                                             new Date().toISOString(),

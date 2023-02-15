@@ -38,9 +38,9 @@ export class StateRightsCellRendererComponent implements ICellRendererAngularCom
         )[0];
         if (!!currentProcessDef) {
             stateRightsValues.forEach((stateRight) => {
-                if (!!currentProcessDef.states[stateRight.state])
+                if (!!currentProcessDef.states.get(stateRight.state))
                     this._stateRightsValues.push({
-                        stateName: currentProcessDef.states[stateRight.state].name,
+                        stateName: currentProcessDef.states.get(stateRight.state).name,
                         stateRight: stateRight
                     });
                 else

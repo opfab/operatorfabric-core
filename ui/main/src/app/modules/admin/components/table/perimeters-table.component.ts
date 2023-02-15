@@ -34,7 +34,7 @@ export class PerimetersTableComponent extends AdminTableDirective implements OnI
         if (renderer && renderer === 'stateRightsCellRenderer') {
             arr.map((str) => {
                 const currentProcessDef = this.processesDefinition.filter((processDef) => processDef.id === data.id)[0];
-                if (!!currentProcessDef) str.state = currentProcessDef.states[str.state].name;
+                if (!!currentProcessDef) str.state = currentProcessDef.states.get(str.state).name;
                 return str;
             });
             arr.sort((a, b) => Utilities.compareObj(a.state, b.state));
@@ -52,8 +52,8 @@ export class PerimetersTableComponent extends AdminTableDirective implements OnI
                     )[0];
                     let text = '';
                     params.data.stateRights.forEach((stateRight) => {
-                        if (!!currentProcessDef.states[stateRight.state])
-                            text += currentProcessDef.states[stateRight.state].name + ' ';
+                        if (!!currentProcessDef.states.get(stateRight.state))
+                            text += currentProcessDef.states.get(stateRight.state).name + ' ';
                     });
                     return text;
                 }

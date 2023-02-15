@@ -30,21 +30,19 @@ export class ProcessStatesMultiSelectOptionsService {
         this.processesService.getAllProcesses().forEach((process) => {
             const stateOptions = new MultiSelectOption(process.id, process.name);
             stateOptions.options = [];
-            for (const state in process.states) {
+            process.states.forEach((state, stateid) => {
                 if (
                     this.doesStateHaveToBeDisplayedInFilters(
                         hideChildStates,
-                        process.states[state].isOnlyAChildState,
+                        state.isOnlyAChildState,
                         process.id,
-                        state,
+                        stateid,
                         isAdminMode
                     )
                 ) {
-                    stateOptions.options.push(
-                        new MultiSelectOption(process.id + '.' + state, process.states[state].name)
-                    );
+                    stateOptions.options.push(new MultiSelectOption(process.id + '.' + state, state.name));
                 }
-            }
+            });
             if (stateOptions.options.length > 0) statesMultiSelectOptionsPerProcess.push(stateOptions);
         });
         return statesMultiSelectOptionsPerProcess;

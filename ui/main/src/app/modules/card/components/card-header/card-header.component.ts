@@ -48,7 +48,7 @@ export class CardHeaderComponent implements OnChanges {
 
     private computeExpireLabelAndIcon() {
         this.businessconfigService.queryProcess(this.card.process, this.card.processVersion).subscribe((process) => {
-            const state = process.extractState(this.card);
+            const state = process.states.get((this.card.state));
             if (state.type === TypeOfStateEnum.FINISHED) {
                 this.showExpiredIcon = false;
                 this.showExpiredLabel = false;
