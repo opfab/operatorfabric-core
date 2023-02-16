@@ -9,10 +9,8 @@
 
 import {Injectable} from '@angular/core';
 import {Router} from '@angular/router';
-import {Store} from '@ngrx/store';
-import {AppState} from '@ofStore/index';
-import {selectCurrentUrl} from '@ofSelectors/router.selectors';
 import {SelectedCardService} from 'app/business/services/card/selectedCard.service';
+import {RouterStore} from 'app/business/store/router.store';
 
 export enum PageType {
     UNKNOWN,
@@ -30,7 +28,7 @@ export enum PageType {
     providedIn: 'root'
 })
 export class AppService {
-    private _currentPath: string;
+
 
     private pageConf = new Map([
         ['feed', PageType.FEED],
@@ -43,30 +41,25 @@ export class AppService {
         ['usercard', PageType.USERCARD]
     ]);
 
-    constructor(private store: Store<AppState>, private _router: Router, private selectedCardService: SelectedCardService) {
-        this.store.select(selectCurrentUrl).subscribe((url) => {
-            if (!!url) {
-                const urlParts = url.split('/');
-                const CURRENT_PAGE_INDEX = 1;
-                this._currentPath = urlParts[CURRENT_PAGE_INDEX];
-            }
-        });
+    constructor(
+        private routerStore: RouterStore,
+        private _router: Router,
+        private selectedCardService: SelectedCardService
+    ) {
     }
 
     get pageType(): PageType {
-        const UrlElements = this._router.routerState.snapshot.url.split('/');
-        const PAGE_NAME_INDEX = 1;
-        const pageName = UrlElements[PAGE_NAME_INDEX];
+        const pageName = this.routerStore.getCurrentRoute()
         const currentPageType = this.pageConf.get(pageName);
         return !!currentPageType ? currentPageType : PageType.UNKNOWN;
     }
 
     closeDetails() {
         this.selectedCardService.clearSelectedCardId();
-        this._router.navigate(['/' + this._currentPath]);
+        this._router.navigate(['/' + this.routerStore.getCurrentRoute()]);
     }
 
     reopenDetails(currentPath: string, cardId: string) {
-        this._router.navigate(['/' + currentPath, 'cards', cardId]);
+        this._router.navigate(['/' + this.routerStore.getCurrentRoute(), 'cards', cardId]);
     }
 }

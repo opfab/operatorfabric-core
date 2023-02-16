@@ -11,8 +11,6 @@ import {TestBed} from '@angular/core/testing';
 import {HttpClientTestingModule, HttpTestingController} from '@angular/common/http/testing';
 import {environment} from '../../../environments/environment';
 import {EntitiesService} from 'app/business/services/entities.service';
-import {StoreModule} from '@ngrx/store';
-import {appReducer} from '@ofStore/index';
 import {Entity} from '@ofModel/entity.model';
 import {ConfigServerMock} from '@tests/mocks/configServer.mock';
 import {ConfigServer} from 'app/business/server/config.server';
@@ -32,7 +30,7 @@ describe('EntitiesService', () => {
                 {provide: EntitiesServer, useClass: AngularEntitiesServer},
                 {provide: RemoteLoggerServer, useValue: null},
             ],
-            imports: [HttpClientTestingModule, StoreModule.forRoot(appReducer)]
+            imports: [HttpClientTestingModule]
         });
         httpMock = TestBed.inject(HttpTestingController);
         entitiesService = TestBed.inject(EntitiesService);

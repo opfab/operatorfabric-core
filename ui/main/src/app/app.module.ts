@@ -14,7 +14,6 @@ import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {HttpClientModule, HTTP_INTERCEPTORS} from '@angular/common/http';
 import {CommonModule, HashLocationStrategy, LocationStrategy} from '@angular/common';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
-import {StateModule} from '@ofStore/state.module';
 import {AppRoutingModule} from './app-routing.module';
 import {AppComponent} from './app.component';
 import {LoginComponent} from './modules/core/application-loading/login/login.component';
@@ -84,7 +83,6 @@ import {CardServer} from './business/server/card.server';
         TagInputModule,
         OAuthModule.forRoot(),
         HttpClientModule,
-        StateModule.forRoot(),
         NgbModule,
         TranslateModule.forRoot(),
         SpinnerModule,

@@ -13,7 +13,6 @@ import {Router} from '@angular/router';
 import {Message} from '@ofModel/message.model';
 import {SoundNotificationService} from '@ofServices/sound-notification.service';
 import {OAuthService} from 'angular-oauth2-oidc';
-import {redirectToCurrentLocation} from 'app/app-routing.module';
 import {ConfigService} from 'app/business/services/config.service';
 import {GuidService} from 'app/business/services/guid.service';
 import {OpfabLoggerService} from 'app/business/services/logs/opfab-logger.service';
@@ -99,7 +98,7 @@ export class AuthService {
             }
             this.currentUserStore.setCurrentUserAuthenticationValid(this.login);
             this.authHandler.regularCheckTokenValidity();
-            redirectToCurrentLocation(this.router);
+            this.redirectToCurrentLocation();
         });
         this.authHandler.getSessionExpired().subscribe(() => {
             this.currentUserStore.setSessionExpired();
@@ -117,6 +116,14 @@ export class AuthService {
         localStorage.setItem('expirationDate', user.expirationDate?.getTime().toString());
         localStorage.setItem('clientId', user.clientId.toString());
     }
+
+    private redirectToCurrentLocation(): void {
+            const pathname = window.location.hash;
+            const hashLength = pathname.length;
+            const lastDestination = hashLength > 2 ? pathname.substring(1, hashLength) : '/feed';
+            this.router.navigate([lastDestination]);
+    }
+    
 
     public rejectLogin(message: Message) {
         this.removeUserFromStorage();
@@ -144,7 +151,7 @@ export class AuthService {
     private goBackToLoginPage() {
         this.logger.info('Go back to login page');
         this.removeUserFromStorage();
-        this.router.navigate(['/login']);
+        this.redirectToCurrentLocation();
     }
 
     public getAuthMode(): AuthenticationMode {
