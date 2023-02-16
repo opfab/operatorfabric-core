@@ -16,8 +16,6 @@ import {UserWithPerimeters} from '@ofModel/userWithPerimeters.model';
 import {User} from '@ofModel/user.model';
 import {RightsEnum} from '@ofModel/perimeter.model';
 import {HttpClientTestingModule} from '@angular/common/http/testing';
-import {StoreModule} from '@ngrx/store';
-import {appReducer} from '@ofStore/index';
 import {ConfigService} from 'app/business/services/config.service';
 import {EntitiesService} from 'app/business/services/entities.service';
 import {EntitiesServiceMock} from '@tests/mocks/entities.service.mock';
@@ -57,7 +55,6 @@ describe('AcknowledgeService testing ', () => {
                 {provide : OpfabEventStreamService, useValue: null}
             ],
             imports: [
-                StoreModule.forRoot(appReducer),
                 HttpClientTestingModule,
                 TranslateModule.forRoot({
                     loader: {

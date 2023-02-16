@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2022, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2023, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -8,7 +8,7 @@
  */
 
 import {NgModule} from '@angular/core';
-import {PreloadAllModules, Router, RouterModule, Routes} from '@angular/router';
+import {PreloadAllModules,RouterModule, Routes} from '@angular/router';
 import {LoginComponent} from './modules/core/application-loading/login/login.component';
 import {LoggingEntryPointComponent} from './modules/logging/logging-entry-point.component';
 import {MonitoringComponent} from './modules/monitoring/monitoring.component';
@@ -17,7 +17,11 @@ import {ArchivesEntryPointComponent} from './modules/archives/archives-entry-poi
 import {UserActionLogsComponent} from './modules/useractionlogs/useractionlogs.component';
 
 const defaultPath = '/feed';
-const archivePath = 'archives';
+
+
+// !!! WARNING !!!
+//  WHEN MODIFYING THE CODE
+//  DO NOT USE path starting with "state" as it is a reserved path for implicit authentication mode 
 
 const routes: Routes = [
     {
@@ -94,19 +98,7 @@ const numberOfRoutes = routes.length;
 const lastIndexOfVisibleElements = numberOfRoutes - numberOfHiddenRoutes - manageIndexesWhichBeginAtZero;
 export const navigationRoutes: Routes = routes.slice(startIndex, lastIndexOfVisibleElements);
 
-/**
- * Redirect the page to the same place.
- * Useful for page refresh action
- * @param currentRouter - the router configured in the object calling this function
- */
-export function redirectToCurrentLocation(currentRouter: Router): void {
-    const pathname = window.location.hash;
-    const hashLength = pathname.length;
-    const destination = hashLength > 2 ? pathname.substring(1, hashLength) : defaultPath;
-    // as archive searches are not stored need to got back to archives root path
-    const lastDestination = destination.includes(archivePath) ? archivePath : destination;
-    currentRouter.navigate([lastDestination]);
-}
+
 
 @NgModule({
     imports: [

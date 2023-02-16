@@ -13,8 +13,6 @@ import {LightCardComponent} from './light-card.component';
 import {BusinessconfigI18nLoaderFactory, injectedSpy} from '@tests/helpers';
 import {RouterTestingModule} from '@angular/router/testing';
 import {TranslateLoader, TranslateModule, TranslateService} from '@ngx-translate/core';
-import {Store, StoreModule} from '@ngrx/store';
-import {appReducer, AppState} from '@ofStore/index';
 import {HttpClientTestingModule} from '@angular/common/http/testing';
 import {ProcessesService} from 'app/business/services/processes.service';
 import {Router} from '@angular/router';
@@ -37,7 +35,6 @@ import {UserServer} from 'app/business/server/user.server';
 describe('LightCardComponent', () => {
     let lightCardDetailsComp: LightCardComponent;
     let fixture: ComponentFixture<LightCardComponent>;
-    let store: Store<AppState>;
     let injector: TestBed;
     let translateService: TranslateService;
     let i18nService: I18nService;
@@ -49,7 +46,6 @@ describe('LightCardComponent', () => {
         TestBed.configureTestingModule({
             imports: [
                 HttpClientTestingModule,
-                StoreModule.forRoot(appReducer),
                 RouterTestingModule,
                 HttpClientTestingModule,
                 CountDownModule,
@@ -65,7 +61,6 @@ describe('LightCardComponent', () => {
             ],
             declarations: [LightCardComponent],
             providers: [
-                {provide: store, useClass: Store},
                 {provide: Router, useValue: myrout},
                 ProcessesService,
                 {provide: 'TimeEventSource', useValue: null},
@@ -80,8 +75,6 @@ describe('LightCardComponent', () => {
                 {provide: ExternalDevicesServer, use:null}
             ]
         }).compileComponents();
-        store = TestBed.inject(Store);
-        spyOn(store, 'dispatch').and.callThrough();
         // avoid exceptions during construction and init of the component
         injector = getTestBed();
         translateService = injector.get(TranslateService);

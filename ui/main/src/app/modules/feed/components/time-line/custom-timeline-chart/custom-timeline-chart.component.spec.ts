@@ -16,10 +16,6 @@ import {NgxChartsModule} from '@swimlane/ngx-charts';
 import {NO_ERRORS_SCHEMA} from '@angular/core';
 import * as moment from 'moment';
 import {MouseWheelDirective} from '../directives/mouse-wheel.directive';
-import {Store, StoreModule} from '@ngrx/store';
-import {RouterStateSerializer, StoreRouterConnectingModule} from '@ngrx/router-store';
-import {CustomRouterStateSerializer} from '@ofStates/router.state';
-import {appReducer, storeConfig} from '@ofStore/index';
 import {RouterTestingModule} from '@angular/router/testing';
 import {HttpClientTestingModule} from '@angular/common/http/testing';
 import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
@@ -42,9 +38,7 @@ describe('CustomTimelineChartComponent', () => {
                 CommonModule,
                 BrowserAnimationsModule,
                 FormsModule,
-                StoreModule.forRoot(appReducer, storeConfig),
                 RouterTestingModule,
-                StoreRouterConnectingModule.forRoot(),
                 NgxChartsModule,
                 NgbModule,
                 HttpClientTestingModule
@@ -52,8 +46,6 @@ describe('CustomTimelineChartComponent', () => {
             declarations: [CustomTimelineChartComponent, MouseWheelDirective],
             providers: [
                 {provide: APP_BASE_HREF, useValue: '/'},
-                {provide: Store, useClass: Store},
-                {provide: RouterStateSerializer, useClass: CustomRouterStateSerializer},
                 {provide: DateTimeFormatterService, useClass: DateTimeFormatterService},
                 {provide: LightCardsFeedFilterService, useClass: LightCardsServiceMock},
                 {provide: RemoteLoggerService, useClass: RemoteLoggerServiceMockAngular}

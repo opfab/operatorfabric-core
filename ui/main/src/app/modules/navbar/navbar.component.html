@@ -27,7 +27,7 @@
     <ul class="navbar-nav mr-auto ">
       <!-- Links to OperatorFabric pages as defined in app-rooting.module.ts (e.g. Card Feed, Archive) -->
       <li class="nav-item" *ngFor="let link of navigationRoutes, let i = index"
-        [class.active]="link.path === currentPath[1]">
+        [class.active]="link.path === currentRoute">
         <a id="opfab-navbar-menu-{{link.path}}" class="nav-link" [routerLink]="link.path" routerLinkActive #rla="routerLinkActive"
           (click)="activeLinkIndex = i" translate>{{'menu.'+link.path}}</a>
       </li>
@@ -64,7 +64,7 @@
       <span translate>menu.calendarTooltip</span>
     </ng-template>
       <li id="opfab-calendar-menu" style="display:flex;margin-top: 12px;cursor:pointer;" [routerLink]="'calendar'" routerLinkActive #rla="routerLinkActive" *ngIf="(displayCalendar)">
-        <a  href="javascript:void(0)" [class.active]="(currentPath.includes('calendar'))" class="opfab-menu-icon-calendar"
+        <a  href="javascript:void(0)" [class.active]="(currentRoute.includes('calendar'))" class="opfab-menu-icon-calendar"
         [ngbPopover]="calendartooltip" popoverClass="opfab-popover" container="body"
         triggers="mouseenter:mouseleave"></a>
      </li>
@@ -95,7 +95,7 @@
 <ng-template #menuCollapsedContent>
   <div>
     <ul class="navbar-nav mr-auto " style="flex-direction: row; float:left;">
-      <li class="nav-item" [class.active]="'feed' === currentPath[1]">
+      <li class="nav-item" [class.active]="'feed' === currentRoute">
         <a id="opfab-navbar-menu-feed-collapsed" class="nav-link" routerLink="/feed"  routerLinkActive #rla="routerLinkActive"
           translate>{{'menu.feed'}}</a>
       </li>

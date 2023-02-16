@@ -1,4 +1,4 @@
-/* Copyright (c) 2021, RTE (http://www.rte-france.com)
+/* Copyright (c) 2021-2023, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -39,10 +39,7 @@ describe ('Unauthenticated user should be redirected',()=>{
     featureUrls.forEach((url) => {
         it('Unauthenticated attempt to access url ' + url, ()=>{
 
-            cy.visit(url)
-
-            //Check that the browser has been redirected to the feed page
-            cy.hash().should('eq', '#/feed')
+            cy.visit(url);
 
             //Check that it is showing the login component
             cy.get('#opfab-login').should('be.visible')

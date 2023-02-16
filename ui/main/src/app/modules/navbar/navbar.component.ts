@@ -9,9 +9,6 @@
 
 import {Component, ElementRef, OnInit, ViewChild} from '@angular/core';
 import {navigationRoutes} from '../../app-routing.module';
-import {Store} from '@ngrx/store';
-import {AppState} from '@ofStore/index';
-import {selectCurrentUrl} from '@ofSelectors/router.selectors';
 import {Menu} from '@ofModel/menu.model';
 import {GlobalStyleService} from '@ofServices/global-style.service';
 import {Route} from '@angular/router';
@@ -21,6 +18,7 @@ import {AppService} from '@ofServices/app.service';
 import {MenuService} from 'app/business/services/menu.service';
 import {Observable} from 'rxjs';
 import {AuthService} from 'app/authentication/auth.service';
+import {RouterStore} from 'app/business/store/router.store';
 
 @Component({
     selector: 'of-navbar',
@@ -31,7 +29,7 @@ export class NavbarComponent implements OnInit {
 
     navbarCollapsed = true;
     navigationRoutes: Route[];
-    currentPath: string[];
+    currentRoute = '';
     businessconfigMenus: Menu[];
     expandedMenu: boolean[] = [];
 
@@ -65,7 +63,7 @@ export class NavbarComponent implements OnInit {
     styleMode : Observable<string>;
 
     constructor(
-        private store: Store<AppState>,
+        private routerStore: RouterStore,
         private globalStyleService: GlobalStyleService,
         private configService: ConfigService,
         private menuService: MenuService,
@@ -73,15 +71,14 @@ export class NavbarComponent implements OnInit {
         private appService: AppService,
         private authService: AuthService
     ) {
-        this.currentPath = ['']; // Initializing currentPath to avoid 'undefined' errors when it is used to determine 'active' look in template
     }
 
     ngOnInit() {
-        this.store.select(selectCurrentUrl).subscribe((url) => {
-            if (url) {
-                this.currentPath = url.split('/');
-            }
+
+        this.routerStore.getCurrentRouteEvent().subscribe((route)=> {
+            this.currentRoute = route;
         });
+
         this.businessconfigMenus = this.menuService.getCurrentUserCustomMenus(this.configService.getMenus());
 
         const logo = this.configService.getConfigValue('logo.base64');
@@ -163,9 +160,8 @@ export class NavbarComponent implements OnInit {
 
      Furthermore, having the same template open twice in the application may cause unwanted behavior as
      we could have duplicated element html ids in the html document.
-
-     */
-        if (this.currentPath[1] === 'feed') this.appService.closeDetails();
+*/
+        if (this.currentRoute === 'feed') this.appService.closeDetails();
 
         const options: NgbModalOptions = {
             size: 'usercard',

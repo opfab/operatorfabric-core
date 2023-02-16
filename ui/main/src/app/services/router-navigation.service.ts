@@ -12,7 +12,7 @@ import {NavigationEnd, Router} from '@angular/router';
 import {LogOption, OpfabLoggerService} from 'app/business/services/logs/opfab-logger.service';
 import {SelectedCardService} from 'app/business/services/card/selectedCard.service';
 import {filter} from 'rxjs';
-import {CardService} from '../business/services/card.service';
+import {RouterStore} from 'app/business/store/router.store';
 
 @Injectable({
     providedIn: 'root'
@@ -20,11 +20,12 @@ import {CardService} from '../business/services/card.service';
 export class RouterNavigationService {
     constructor(
         private router: Router,
+        private routerStore: RouterStore,
         private logger: OpfabLoggerService,
-        private selectedCardService: SelectedCardService,
-        private cardService: CardService
+        private selectedCardService: SelectedCardService
     ) {
         this.logNavigation();
+        this.updateRouterStore();
         this.clearSelectedCardWhenUserNavigateAwayFromTheFeed();
         this.loadCardWhenUserNavigateToFeedCardDetail();
     }
@@ -32,6 +33,12 @@ export class RouterNavigationService {
     logNavigation() {
         this.router.events.pipe(filter((event) => event instanceof NavigationEnd)).subscribe((event: NavigationEnd) => {
             this.logger.info('Navigate to ' + event.url, LogOption.REMOTE);
+        });
+    }
+
+    updateRouterStore() {
+        this.router.events.pipe(filter((event) => event instanceof NavigationEnd)).subscribe((event: NavigationEnd) => {
+            this.routerStore.setCurrentRoute(event.url.split('/')[1]);
         });
     }
 
