@@ -13,10 +13,11 @@ import {ProcessesService} from 'app/business/services/processes.service';
 import {Subject} from 'rxjs';
 import {takeUntil} from 'rxjs/operators';
 import {UserService} from 'app/business/services/user.service';
-import {AppService} from '@ofServices/app.service';
 import {State} from '@ofModel/processes.model';
 import {NgbModal, NgbModalOptions, NgbModalRef} from '@ng-bootstrap/ng-bootstrap';
 import {SelectedCard, SelectedCardService} from 'app/business/services/card/selectedCard.service';
+import {Router} from '@angular/router';
+import {RouterStore} from 'app/business/store/router.store';
 
 @Component({
     selector: 'of-card',
@@ -44,7 +45,8 @@ export class CardComponent implements OnInit, OnDestroy {
         protected userService: UserService,
         protected selectedCardService: SelectedCardService,
         protected modalService: NgbModal,
-        protected appService?: AppService,
+        protected router: Router,
+        protected routerStore: RouterStore
     ) {}
 
     ngOnInit() {
@@ -139,7 +141,7 @@ export class CardComponent implements OnInit, OnDestroy {
         if (this.parentModalRef) {
             this.parentModalRef.close();
             this.selectedCardService.clearSelectedCardId();
-        } else this.appService.closeDetails();
+        } else this.selectedCardService.clearSelectedCardId();
     }
 
     closeDetails() {

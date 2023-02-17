@@ -13,7 +13,6 @@ import {Router} from '@angular/router';
 import {takeUntil} from 'rxjs/operators';
 import {Observable, Subject} from 'rxjs';
 import {ConfigService} from 'app/business/services/config.service';
-import {AppService, PageType} from '@ofServices/app.service';
 import {EntitiesService} from 'app/business/services/entities.service';
 import {ProcessesService} from 'app/business/services/processes.service';
 import {DisplayContext} from '@ofModel/templateGateway.model';
@@ -58,7 +57,6 @@ export class LightCardComponent implements OnInit, OnDestroy {
         private routerStore: RouterStore,
         private dateTimeFormatter: DateTimeFormatterService,
         private configService: ConfigService,
-        private _appService: AppService,
         private entitiesService: EntitiesService,
         private processesService: ProcessesService,
         private groupedCardsService: GroupedCardsService,
@@ -160,10 +158,6 @@ export class LightCardComponent implements OnInit, OnDestroy {
 
     get i18nPrefix(): string {
         return this._i18nPrefix;
-    }
-
-    isArchivePageType(): boolean {
-        return this._appService.pageType === PageType.ARCHIVE;
     }
 
     ngOnDestroy(): void {

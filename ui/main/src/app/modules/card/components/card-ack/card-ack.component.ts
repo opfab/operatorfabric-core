@@ -14,7 +14,6 @@ import {PermissionEnum} from '@ofModel/permission.model';
 import {AcknowledgmentAllowedEnum, ConsideredAcknowledgedForUserWhenEnum, State} from '@ofModel/processes.model';
 import {User} from '@ofModel/user.model';
 import {AcknowledgeService} from 'app/business/services/acknowledge.service';
-import {AppService, PageType} from '@ofServices/app.service';
 import {EntitiesService} from 'app/business/services/entities.service';
 import {LightCardsStoreService} from 'app/business/services/lightcards/lightcards-store.service';
 import {LogOption, OpfabLoggerService} from 'app/business/services/logs/opfab-logger.service';
@@ -24,6 +23,7 @@ import {UserService} from 'app/business/services/user.service';
 import {Subject, takeUntil} from 'rxjs';
 import {ServerResponseStatus} from 'app/business/server/serverResponse';
 import {AlertMessageService} from 'app/business/services/alert-message.service';
+import {RouterStore,PageType} from 'app/business/store/router.store';
 
 const enum AckI18nKeys {
     BUTTON_TEXT_ACK = 'cardAcknowledgment.button.ack',
@@ -56,7 +56,7 @@ export class CardAckComponent implements OnInit, OnChanges, OnDestroy {
     isReadOnlyUser: any;
 
     constructor(
-        private _appService: AppService,
+        private routerStore: RouterStore,
         private entitiesService: EntitiesService,
         private acknowledgeService: AcknowledgeService,
         private userService: UserService,
@@ -113,10 +113,10 @@ export class CardAckComponent implements OnInit, OnChanges, OnDestroy {
 
     private setAcknowledgeButtonVisibility() {
         this.showAckButton = this.card.hasBeenAcknowledged ? false
-            : this.isAcknowledgmentAllowed() && this._appService.pageType !== PageType.CALENDAR;
+            : this.isAcknowledgmentAllowed() && this.routerStore.getCurrentPageType() !== PageType.CALENDAR;
 
         this.showUnAckButton = this.card.hasBeenAcknowledged && this.isCardAcknowledgedAtEntityLevel() && !this.isReadOnlyUser ? false
-            : this.isCancelAcknowledgmentAllowed() && this._appService.pageType !== PageType.CALENDAR;
+            : this.isCancelAcknowledgmentAllowed() &&  this.routerStore.getCurrentPageType() !== PageType.CALENDAR;
     }
 
     private isAcknowledgmentAllowed(): boolean {

@@ -30,7 +30,6 @@ import {PermissionEnum} from '@ofModel/permission.model';
 import {OpfabEventStreamService} from 'app/business/services/opfabEventStream.service';
 import {CardOperationType} from '@ofModel/card-operation.model';
 import {LogOption, OpfabLoggerService} from 'app/business/services/logs/opfab-logger.service';
-import {AppService} from '@ofServices/app.service';
 import {SelectedCardService} from 'app/business/services/card/selectedCard.service';
 
 /**
@@ -75,7 +74,6 @@ export class LightCardsStoreService {
         private processesService: ProcessesService,
         private entitiesService: EntitiesService,
         private opfabEventStreamService: OpfabEventStreamService,
-        private appService: AppService,
         private selectedCardService: SelectedCardService,
         private logger: OpfabLoggerService
     ) {
