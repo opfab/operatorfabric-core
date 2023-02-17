@@ -12,7 +12,7 @@ import {environment} from '@env/environment';
 import {Observable} from 'rxjs';
 import {map} from 'rxjs/operators';
 import {Process} from '@ofModel/processes.model';
-import {CachedCrudService} from '@ofServices/cached-crud-service';
+import {CachedCrudService} from 'app/business/services/cached-crud-service';
 import {OpfabLoggerService} from './logs/opfab-logger.service';
 import {AlertMessageService} from './alert-message.service';
 import {AdminProcessServer} from '../server/adminprocess.server';

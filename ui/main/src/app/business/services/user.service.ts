@@ -13,7 +13,7 @@ import {PermissionEnum} from '@ofModel/permission.model';
 import {UserWithPerimeters} from '@ofModel/userWithPerimeters.model';
 import {HttpErrorResponse} from '@angular/common/http';
 import {catchError, map, takeUntil, tap} from 'rxjs/operators';
-import {CrudService} from '@ofServices/crud-service';
+import {CrudService} from 'app/business/services/crud-service';
 import {Injectable} from '@angular/core';
 import {RightsEnum} from '@ofModel/perimeter.model';
 import {OpfabLoggerService} from './logs/opfab-logger.service';

@@ -24,7 +24,7 @@ import {ActivityAreaChoiceAfterLoginComponent} from './activityarea-choice-after
 import {AccountAlreadyUsedComponent} from './account-already-used/account-already-used.component';
 import {AppLoadedInAnotherTabComponent} from './app-loaded-in-another-tab/app-loaded-in-another-tab.component';
 import {SettingsService} from 'app/business/services/settings.service';
-import {GlobalStyleService} from '@ofServices/global-style.service';
+import {GlobalStyleService} from 'app/business/services/global-style.service';
 import {RRuleReminderService} from 'app/business/services/rrule-reminder/rrule-reminder.service';
 import {OpfabEventStreamServer} from 'app/business/server/opfabEventStream.server';
 import {OpfabEventStreamService} from 'app/business/services/opfabEventStream.service';

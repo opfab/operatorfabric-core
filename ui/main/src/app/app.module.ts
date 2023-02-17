@@ -27,7 +27,7 @@ import {ArchivesModule} from './modules/archives/archives.module';
 import {NavbarModule} from './modules/navbar/navbar.module';
 import {NgbModalModule, NgbModule} from '@ng-bootstrap/ng-bootstrap';
 import {TagInputModule} from 'ngx-chips';
-import {TokenInjector} from '@ofServices/interceptors.service';
+import {TokenInjector} from 'app/server/interceptors.service';
 import {ActivityareaModule} from './modules/activityarea/activityarea.module';
 import {AlertComponent} from './modules/core/alert/alert.component';
 import {ConnectionLostComponent} from './modules/core/connection-lost/connection-lost.component';
@@ -72,6 +72,8 @@ import {TemplateCssServer} from './business/server/template-css.server';
 import {AngularTemplateCssServer} from './server/angularTemplate-css.service';
 import {AngularCardServer} from './server/angularCard.server';
 import {CardServer} from './business/server/card.server';
+import {SoundServer} from './business/server/sound.server';
+import {AngularSoundServer} from './server/angularSound.server';
 
 @NgModule({
     imports: [
@@ -137,7 +139,8 @@ import {CardServer} from './business/server/card.server';
         {provide: SettingsServer, useClass: AngularSettingsServer},
         {provide: OpfabEventStreamServer, useClass: AngularOpfabEventStreamServer},
         {provide: ExternalDevicesServer, useClass: AngularExternalDevicesServer},
-        {provide: CardServer, useClass: AngularCardServer}
+        {provide: CardServer, useClass: AngularCardServer},
+        {provide: SoundServer, useClass: AngularSoundServer}
     ],
     bootstrap: [AppComponent]
 })

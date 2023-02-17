@@ -1,5 +1,5 @@
 /* Copyright (c) 2020, RTEi (http://www.rte-international.com)
- * Copyright (c) 2021-2022, RTE (http://www.rte-france.com)
+ * Copyright (c) 2021-2023, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -12,7 +12,7 @@ import {Component, Input, OnInit} from '@angular/core';
 import {AbstractControl, AsyncValidatorFn, FormControl, FormGroup, ValidationErrors, Validators} from '@angular/forms';
 import {NgbActiveModal} from '@ng-bootstrap/ng-bootstrap';
 import {AdminItemType, SharingService} from '../../../services/sharing.service';
-import {CrudService} from '@ofServices/crud-service';
+import {CrudService} from 'app/business/services/crud-service';
 import {EntitiesService} from 'app/business/services/entities.service';
 import {Entity} from '@ofModel/entity.model';
 import {TranslateService} from '@ngx-translate/core';

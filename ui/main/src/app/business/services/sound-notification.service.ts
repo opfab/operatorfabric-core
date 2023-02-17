@@ -9,19 +9,19 @@
 
 
 import {Injectable, OnDestroy} from '@angular/core';
-import {PlatformLocation} from '@angular/common';
 import {LightCard, Severity} from '@ofModel/light-card.model';
 import {Notification} from '@ofModel/external-devices.model';
-import {LightCardsFeedFilterService} from '../business/services/lightcards/lightcards-feed-filter.service';
-import {LightCardsStoreService} from '../business/services/lightcards/lightcards-store.service';
+import {LightCardsFeedFilterService} from './lightcards/lightcards-feed-filter.service';
+import {LightCardsStoreService} from './lightcards/lightcards-store.service';
 import {EMPTY, iif, merge, of, Subject, timer} from 'rxjs';
 import {filter, map, switchMap, takeUntil} from 'rxjs/operators';
 import {ExternalDevicesService} from 'app/business/services/external-devices.service';
 import {ConfigService} from 'app/business/services/config.service';
-import {LogOption, OpfabLoggerService} from '../business/services/logs/opfab-logger.service';
+import {LogOption, OpfabLoggerService} from './logs/opfab-logger.service';
 import {OpfabEventStreamService} from 'app/business/services/opfabEventStream.service';
 import {AlertMessageService} from 'app/business/services/alert-message.service';
 import {MessageLevel} from '@ofModel/message.model';
+import {SoundServer} from 'app/business/server/sound.server';
 
 @Injectable({
     providedIn: 'root'
@@ -45,7 +45,6 @@ export class SoundNotificationService implements OnDestroy {
     private replayEnabled: boolean;
     private playSoundWhenSessionEnd = false;
 
-    private soundFileBasePath: string;
 
     private incomingCardOrReminder = new Subject();
     private sessionEnd = new Subject();
@@ -56,7 +55,7 @@ export class SoundNotificationService implements OnDestroy {
     private isServiceActive = true;
 
     constructor(
-        private platformLocation: PlatformLocation,
+        private soundServer: SoundServer,
         private lightCardsFeedFilterService: LightCardsFeedFilterService,
         private lightCardsStoreService: LightCardsStoreService,
         private externalDevicesService: ExternalDevicesService,
@@ -93,8 +92,6 @@ export class SoundNotificationService implements OnDestroy {
             soundEnabledSetting: 'settings.playSoundForInformation'
         });
 
-        const baseHref = this.platformLocation.getBaseHrefFromDOM();
-        this.soundFileBasePath = (baseHref ? baseHref : '/') + 'assets/sounds/';
 
         this.soundEnabled = new Map<Severity, boolean>();
         this.soundConfigBySeverity.forEach((soundConfig, severity) => {
@@ -183,7 +180,7 @@ export class SoundNotificationService implements OnDestroy {
     }
 
     private getSoundForSeverity(severity: Severity): HTMLAudioElement {
-        return new Audio(this.soundFileBasePath + this.soundConfigBySeverity.get(severity).soundFileName);
+        return this.soundServer.getSound(this.soundConfigBySeverity.get(severity).soundFileName);
     }
 
     private playSoundForSeverityEnabled(severity: Severity) {

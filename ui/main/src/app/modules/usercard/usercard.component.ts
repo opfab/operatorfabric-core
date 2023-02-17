@@ -23,7 +23,7 @@ import {map} from 'rxjs/operators';
 import {MessageLevel} from '@ofModel/message.model';
 import {ConfigService} from 'app/business/services/config.service';
 import {DisplayContext} from '@ofModel/templateGateway.model';
-import {SoundNotificationService} from '@ofServices/sound-notification.service';
+import {SoundNotificationService} from 'app/business/services/sound-notification.service';
 import {UserCardDatesFormComponent} from './datesForm/usercard-dates-form.component';
 import {DateField, DatesForm} from './datesForm/dates-form.model';
 import {UserCardRecipientsFormComponent} from './recipientForm/usercard-recipients-form.component';

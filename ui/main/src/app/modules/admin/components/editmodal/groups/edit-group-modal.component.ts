@@ -19,7 +19,7 @@ import {
 } from '@angular/forms';
 import {NgbActiveModal} from '@ng-bootstrap/ng-bootstrap';
 import {AdminItemType, SharingService} from '../../../services/sharing.service';
-import {CrudService} from '@ofServices/crud-service';
+import {CrudService} from 'app/business/services/crud-service';
 import {PerimetersService} from 'app/business/services/perimeters.service';
 import {MessageLevel} from '@ofModel/message.model';
 import {GroupsService} from 'app/business/services/groups.service';

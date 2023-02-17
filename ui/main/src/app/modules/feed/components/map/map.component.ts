@@ -28,7 +28,7 @@ import {MapService} from 'app/business/services/map.service';
 import Chart from 'chart.js/auto';
 import ChartDataLabels from 'chartjs-plugin-datalabels';
 import {TranslateService} from '@ngx-translate/core';
-import {GlobalStyleService} from '@ofServices/global-style.service';
+import {GlobalStyleService} from 'app/business/services/global-style.service';
 import {Router} from "@angular/router";
 import {DateTimeFormatterService} from "../../../../business/services/date-time-formatter.service";
 

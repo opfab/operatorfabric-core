@@ -12,7 +12,7 @@ import {Group} from '@ofModel/group.model';
 import {environment} from '@env/environment';
 import {takeUntil, tap, map} from 'rxjs/operators';
 import {Injectable} from '@angular/core';
-import {CachedCrudService} from '@ofServices/cached-crud-service';
+import {CachedCrudService} from 'app/business/services/cached-crud-service';
 import {OpfabLoggerService} from './logs/opfab-logger.service';
 import {AlertMessageService} from './alert-message.service';
 import {GroupsServer} from '../server/groups.server';

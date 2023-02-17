@@ -13,7 +13,7 @@ import {TestBed} from '@angular/core/testing';
 import {ActivatedRoute, convertToParamMap, Router} from '@angular/router';
 import {of, Subject} from 'rxjs';
 import {ConfigService} from 'app/business/services/config.service';
-import {GlobalStyleService} from '@ofServices/global-style.service';
+import {GlobalStyleService} from 'app/business/services/global-style.service';
 import {DomSanitizer, SafeUrl} from '@angular/platform-browser';
 import {DOCUMENT} from '@angular/common';
 

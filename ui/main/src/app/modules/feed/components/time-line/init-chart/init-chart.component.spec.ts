@@ -18,7 +18,7 @@ import {NO_ERRORS_SCHEMA} from '@angular/core';
 import {RouterTestingModule} from '@angular/router/testing';
 import {MouseWheelDirective} from '../directives/mouse-wheel.directive';
 import {TranslateLoader, TranslateModule, TranslateService} from '@ngx-translate/core';
-import {GlobalStyleService} from '@ofServices/global-style.service';
+import {GlobalStyleService} from 'app/business/services/global-style.service';
 import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
 import {TimelineButtonsComponent} from '../../../../share/timeline-buttons/timeline-buttons.component';
 import {ConfigService} from 'app/business/services/config.service';

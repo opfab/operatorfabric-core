@@ -1,4 +1,4 @@
-/* Copyright (c) 2021-2022, RTE (http://www.rte-france.com)
+/* Copyright (c) 2021-2023, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -8,7 +8,7 @@
  */
 
 import {Injectable} from '@angular/core';
-import {CrudService} from '@ofServices/crud-service';
+import {CrudService} from 'app/business/services/crud-service';
 
 /** This class further specifies `CrudServices` that maintain a cache of returned values and as such can synchronously provide a
  * cached version. It inheritance becomes an issue, it could be replaced by a mixin. */

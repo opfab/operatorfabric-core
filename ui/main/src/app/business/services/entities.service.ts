@@ -12,7 +12,7 @@ import {map, takeUntil, tap} from 'rxjs/operators';
 import {Observable, Subject} from 'rxjs';
 import {Entity} from '@ofModel/entity.model';
 import {Injectable} from '@angular/core';
-import {CachedCrudService} from '@ofServices/cached-crud-service';
+import {CachedCrudService} from 'app/business/services/cached-crud-service';
 import {OpfabLoggerService} from './logs/opfab-logger.service';
 import {AlertMessageService} from './alert-message.service';
 import {EntitiesServer} from '../server/entities.server';
