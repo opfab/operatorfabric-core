@@ -23,7 +23,6 @@ import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
 import {TimelineButtonsComponent} from '../../../../share/timeline-buttons/timeline-buttons.component';
 import {ConfigService} from 'app/business/services/config.service';
 import {HttpClient, HttpHandler} from '@angular/common/http';
-import {AppService} from '@ofServices/app.service';
 import {BusinessconfigI18nLoaderFactory} from '@tests/helpers';
 import {LightCardsServiceMock} from '@tests/mocks/lightcards.service.mock';
 import {LightCardsFeedFilterService} from 'app/business/services/lightcards/lightcards-feed-filter.service';
@@ -71,7 +70,6 @@ describe('InitChartComponent', () => {
                 {provide: ConfigServer, useClass: ConfigServerMock},
                 {provide: HttpClient, useClass: HttpClient},
                 {provide: HttpHandler, useClass: HttpHandler},
-                {provide: AppService, useClass: AppService},
                 {provide: GlobalStyleService, useClass: GlobalStyleService},
                 {provide: LightCardsFeedFilterService, useClass: LightCardsServiceMock},
                 {provide: OpfabLoggerService, useClass: OpfabLoggerService},

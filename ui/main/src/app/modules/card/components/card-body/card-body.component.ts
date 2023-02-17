@@ -14,7 +14,6 @@ import {SafeHtml} from '@angular/platform-browser';
 import {AcknowledgmentAllowedEnum, State} from '@ofModel/processes.model';
 import {map, takeUntil} from 'rxjs/operators';
 import {Subject} from 'rxjs';
-import {AppService, PageType} from '@ofServices/app.service';
 import {User} from '@ofModel/user.model';
 import {UserService} from 'app/business/services/user.service';
 import {EntitiesService} from 'app/business/services/entities.service';
@@ -27,6 +26,8 @@ import {OpfabLoggerService} from 'app/business/services/logs/opfab-logger.servic
 import {UserWithPerimeters} from "@ofModel/userWithPerimeters.model";
 import {SelectedCardService} from 'app/business/services/card/selectedCard.service';
 import {CardService} from 'app/business/services/card.service';
+import {RouterStore,PageType} from 'app/business/store/router.store';
+import {Router} from '@angular/router';
 
 declare const templateGateway: any;
 
@@ -71,8 +72,9 @@ export class CardBodyComponent implements OnChanges, OnInit, OnDestroy {
 
     constructor(
         private businessconfigService: ProcessesService,
+        private routerStore: RouterStore,
         private cardService: CardService,
-        private _appService: AppService,
+        private router: Router,
         private userService: UserService,
         private entitiesService: EntitiesService,
         private userPermissionsService: UserPermissionsService,
@@ -88,9 +90,10 @@ export class CardBodyComponent implements OnChanges, OnInit, OnDestroy {
 
     ngOnInit() {
         this.integrateChildCardsInRealTime();
-        if (this._appService.pageType === PageType.MONITORING || this._appService.pageType === PageType.CALENDAR)
+        const pageType = this.routerStore.getCurrentPageType();
+        if (pageType === PageType.MONITORING || pageType === PageType.CALENDAR)
             this.templateOffset = 35;
-        if (this._appService.pageType !== PageType.CALENDAR && this._appService.pageType !== PageType.MONITORING)
+        if (pageType !== PageType.CALENDAR && pageType !== PageType.MONITORING)
             this.showMaxAndReduceButton = true;
     }
 
@@ -335,7 +338,10 @@ export class CardBodyComponent implements OnChanges, OnInit, OnDestroy {
         if (this.parentModalRef) {
             this.parentModalRef.close();
             this.selectedCardService.clearSelectedCardId();
-        } else this._appService.closeDetails();
+        } else {
+            this.selectedCardService.clearSelectedCardId();
+            this.router.navigate(['/' + this.routerStore.getCurrentRoute()]);
+        }
     }
 
     ngOnDestroy() {

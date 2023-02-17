@@ -11,10 +11,9 @@ import {Component, ElementRef, OnInit, ViewChild} from '@angular/core';
 import {navigationRoutes} from '../../router/app-routing.module';
 import {Menu} from '@ofModel/menu.model';
 import {GlobalStyleService} from 'app/business/services/global-style.service';
-import {Route} from '@angular/router';
+import {Route, Router} from '@angular/router';
 import {ConfigService} from 'app/business/services/config.service';
 import {NgbModal, NgbModalOptions, NgbModalRef} from '@ng-bootstrap/ng-bootstrap';
-import {AppService} from '@ofServices/app.service';
 import {MenuService} from 'app/business/services/menu.service';
 import {Observable} from 'rxjs';
 import {AuthService} from 'app/authentication/auth.service';
@@ -64,11 +63,11 @@ export class NavbarComponent implements OnInit {
 
     constructor(
         private routerStore: RouterStore,
+        private router: Router,
         private globalStyleService: GlobalStyleService,
         private configService: ConfigService,
         private menuService: MenuService,
         private modalService: NgbModal,
-        private appService: AppService,
         private authService: AuthService
     ) {
     }
@@ -161,7 +160,7 @@ export class NavbarComponent implements OnInit {
      Furthermore, having the same template open twice in the application may cause unwanted behavior as
      we could have duplicated element html ids in the html document.
 */
-        if (this.currentRoute === 'feed') this.appService.closeDetails();
+        if (this.currentRoute === 'feed')  this.router.navigate(['/feed']);
 
         const options: NgbModalOptions = {
             size: 'usercard',

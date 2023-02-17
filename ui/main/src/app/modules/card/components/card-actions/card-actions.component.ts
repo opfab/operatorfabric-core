@@ -14,13 +14,13 @@ import {MessageLevel} from '@ofModel/message.model';
 import {PermissionEnum} from '@ofModel/permission.model';
 import {State} from '@ofModel/processes.model';
 import {AlertMessageService} from 'app/business/services/alert-message.service';
-import {AppService, PageType} from '@ofServices/app.service';
 import {UserPermissionsService} from 'app/business/services/user-permissions.service';
 import {UserService} from 'app/business/services/user.service';
 import {Subject} from 'rxjs';
 import {CardService} from 'app/business/services/card.service';
 import {ServerResponseStatus} from 'app/business/server/serverResponse';
-import {RouterStore} from 'app/business/store/router.store';
+import {RouterStore,PageType} from 'app/business/store/router.store';
+import {Router} from '@angular/router';
 
 @Component({
     selector: 'of-card-actions',
@@ -50,9 +50,9 @@ export class CardActionsComponent implements OnChanges, OnDestroy {
         private userPermissionsService: UserPermissionsService,
         private userService: UserService,
         private modalService: NgbModal,
-        private _appService: AppService,
         private cardService: CardService,
         private alertMessageService: AlertMessageService,
+        private router: Router,
         private routerStore: RouterStore
     ) {}
 
@@ -106,14 +106,14 @@ export class CardActionsComponent implements OnChanges, OnDestroy {
     }
 
     private reopenCardDetailOnceEditionIsFinished() {
-        if (this._appService.pageType !== PageType.CALENDAR && this._appService.pageType !== PageType.MONITORING) {
+        if (this.routerStore.getCurrentPageType() !== PageType.CALENDAR && this.routerStore.getCurrentPageType() !== PageType.MONITORING) {
             this.editModal.result.then(
                 () => {
-                    // If modal is closed
-                    this._appService.reopenDetails(this.routerStore.getCurrentRoute(), this.card.id);
+                     // If modal is closed
+                    this.router.navigate(['/' + this.routerStore.getCurrentRoute(), 'cards', this.card.id]);
                 },
                 () => {
-                    this._appService.reopenDetails(this.routerStore.getCurrentRoute(), this.card.id);
+                    this.router.navigate(['/' + this.routerStore.getCurrentRoute(), 'cards', this.card.id]);
                 }
             );
         }

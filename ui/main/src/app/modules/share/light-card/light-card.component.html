@@ -1,4 +1,4 @@
-<!-- Copyright (c) 2018-2022, RTE (http://www.rte-france.com)              -->
+<!-- Copyright (c) 2018-2023, RTE (http://www.rte-france.com)              -->
 <!-- See AUTHORS.txt                                                       -->
 <!-- This Source Code Form is subject to the terms of the Mozilla Public   -->
 <!-- License, v. 2.0. If a copy of the MPL was not distributed with this   -->
@@ -12,7 +12,7 @@
      attr.data-urlId="{{lightCard.process}}.{{lightCard.processInstanceId}}"
      class="card light-card-detail "
      [class.light-card-detail-selected]="open || groupedCardOpen" [class.light-card-detail-unselected]="!open && !groupedCardOpen"
-     [class.light-card-detail-unread]="displayUnreadIcon && !isArchivePageType() && !lightCard.hasBeenRead"
+     [class.light-card-detail-unread]="displayUnreadIcon && !lightCard.hasBeenRead"
      (click)="select($event)"
      (mouseenter)='highlightOnMap(true)'
      (mouseleave)='highlightOnMap(false)'
