@@ -17,7 +17,7 @@ import {MonitoringComponent} from './monitoring.component';
 import {MonitoringFiltersComponent} from './components/monitoring-filters/monitoring-filters.component';
 import {MonitoringTableComponent} from './components/monitoring-table/monitoring-table.component';
 import {DatetimeFilterModule} from '../../modules/share/datetime-filter/datetime-filter.module';
-import {AppRoutingModule} from '../../app-routing.module';
+import {AppRoutingModule} from '../../router/app-routing.module';
 import {TimelineButtonsModule} from '../share/timeline-buttons/timeline-buttons.module';
 import {AgGridModule} from 'ag-grid-angular';
 import {AnswerCellRendererComponent} from './components/cell-renderers/answer-cell-renderer.component';

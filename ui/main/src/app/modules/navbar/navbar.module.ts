@@ -15,7 +15,7 @@ import {CustomLogoComponent} from './custom-logo/custom-logo.component';
 import {IconComponent} from './icon/icon.component';
 import {InfoComponent} from './info/info.component';
 import {MenuLinkComponent} from './menus/menu-link/menu-link.component';
-import {AppRoutingModule} from 'app/app-routing.module';
+import {AppRoutingModule} from 'app/router/app-routing.module';
 import {UserCardModule} from '../usercard/usercard.module';
 import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
 import {AboutComponent} from '../about/about.component';

@@ -8,7 +8,7 @@
  */
 
 import {Component, ElementRef, OnInit, ViewChild} from '@angular/core';
-import {navigationRoutes} from '../../app-routing.module';
+import {navigationRoutes} from '../../router/app-routing.module';
 import {Menu} from '@ofModel/menu.model';
 import {GlobalStyleService} from 'app/business/services/global-style.service';
 import {Route} from '@angular/router';

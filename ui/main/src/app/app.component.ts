@@ -13,7 +13,7 @@ import {LogOption, OpfabLoggerService} from 'app/business/services/logs/opfab-lo
 import {RemoteLoggerService} from 'app/business/services/logs/remote-logger.service';
 import {SoundNotificationService} from 'app/business/services/sound-notification.service';
 import {OpfabEventStreamService} from './business/services/opfabEventStream.service';
-import {RouterNavigationService} from '@ofServices/router-navigation.service';
+import {RouterNavigationService} from 'app/router/router-navigation.service';
 import {SelectedCardLoaderService} from './business/services/card/selectedCardLoader.service';
 
 @Component({
