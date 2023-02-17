@@ -208,10 +208,7 @@ describe('Sound notification test', function () {
         feed.checkNumberOfDisplayedCardsIs(0);
 
         sendCardWithSeverityAlarm();
-        cy.tick(100);
-        cy.tick(100);
-        cy.tick(100);
-        cy.tick(100);
+        for (let i=0;i<20;i++) cy.tick(50); // simulate time passing 
         sound.checkNumberOfEmittedSoundIs(1);
         feed.checkNumberOfDisplayedCardsIs(0);
 
