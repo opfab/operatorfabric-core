@@ -18,7 +18,7 @@ import {LightCard} from '@ofModel/light-card.model';
 import {Page} from '@ofModel/page.model';
 import {ExcelExport} from 'app/business/common/excel-export';
 import {TranslateService} from '@ngx-translate/core';
-import {UserPreferencesService} from '@ofServices/user-preference.service';
+import {UserPreferencesService} from 'app/business/services/user-preference.service';
 import {Utilities} from 'app/business/common/utilities';
 import {Card, CardData} from '@ofModel/card.model';
 import {ArchivesLoggingFiltersComponent} from '../share/archives-logging-filters/archives-logging-filters.component';

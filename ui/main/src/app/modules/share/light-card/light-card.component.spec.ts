@@ -31,6 +31,7 @@ import {ExternalDevicesServer} from 'app/business/server/external-devices.server
 import {RemoteLoggerServer} from 'app/business/server/remote-logger.server';
 import {EntitiesServer} from 'app/business/server/entities.server';
 import {UserServer} from 'app/business/server/user.server';
+import {SoundServer} from 'app/business/server/sound.server';
 
 describe('LightCardComponent', () => {
     let lightCardDetailsComp: LightCardComponent;
@@ -72,7 +73,8 @@ describe('LightCardComponent', () => {
                 {provide: OpfabEventStreamServer, use:null},
                 {provide: EntitiesServer, useValue: null},
                 {provide: UserServer, useValue: null},
-                {provide: ExternalDevicesServer, use:null}
+                {provide: ExternalDevicesServer, use:null},
+                {provide: SoundServer, use: null}
             ]
         }).compileComponents();
         // avoid exceptions during construction and init of the component

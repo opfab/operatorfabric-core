@@ -10,7 +10,7 @@
 import {Component, ElementRef, OnInit, ViewChild} from '@angular/core';
 import {navigationRoutes} from '../../app-routing.module';
 import {Menu} from '@ofModel/menu.model';
-import {GlobalStyleService} from '@ofServices/global-style.service';
+import {GlobalStyleService} from 'app/business/services/global-style.service';
 import {Route} from '@angular/router';
 import {ConfigService} from 'app/business/services/config.service';
 import {NgbModal, NgbModalOptions, NgbModalRef} from '@ng-bootstrap/ng-bootstrap';

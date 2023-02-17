@@ -13,7 +13,7 @@ import {AbstractControl, FormControl, FormGroup} from '@angular/forms';
 import {debounce, debounceTime, distinctUntilChanged, takeUntil} from 'rxjs/operators';
 import * as _ from 'lodash-es';
 import {FilterType} from '@ofModel/feed-filter.model';
-import {UserPreferencesService} from '@ofServices/user-preference.service';
+import {UserPreferencesService} from 'app/business/services/user-preference.service';
 
 import {DateTimeNgb} from '@ofModel/datetime-ngb.model';
 import moment from 'moment';

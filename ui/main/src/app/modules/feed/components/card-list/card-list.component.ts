@@ -20,7 +20,7 @@ import {AcknowledgeService} from 'app/business/services/acknowledge.service';
 import {UserService} from 'app/business/services/user.service';
 import {UserWithPerimeters} from '@ofModel/userWithPerimeters.model';
 import {EntitiesService} from 'app/business/services/entities.service';
-import {GroupedCardsService} from '@ofServices/grouped-cards.service';
+import {GroupedCardsService} from 'app/business/services/grouped-cards.service';
 import {AlertMessageService} from 'app/business/services/alert-message.service';
 
 @Component({

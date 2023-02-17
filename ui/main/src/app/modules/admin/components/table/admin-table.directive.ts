@@ -14,7 +14,7 @@ import {TranslateService} from '@ngx-translate/core';
 import {NgbModal, NgbModalOptions} from '@ng-bootstrap/ng-bootstrap';
 import {Subject, throwError} from 'rxjs';
 import {ConfirmationDialogService} from '../../services/confirmation-dialog.service';
-import {CrudService} from '@ofServices/crud-service';
+import {CrudService} from 'app/business/services/crud-service';
 import {ActionCellRendererComponent} from '../cell-renderers/action-cell-renderer.component';
 import {EntityCellRendererComponent} from '../cell-renderers/entity-cell-renderer.component';
 import {GroupCellRendererComponent} from '../cell-renderers/group-cell-renderer.component';

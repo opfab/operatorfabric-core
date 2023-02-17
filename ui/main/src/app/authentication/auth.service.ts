@@ -11,7 +11,7 @@ import {HttpClient} from '@angular/common/http';
 import {Injectable} from '@angular/core';
 import {Router} from '@angular/router';
 import {Message} from '@ofModel/message.model';
-import {SoundNotificationService} from '@ofServices/sound-notification.service';
+import {SoundNotificationService} from 'app/business/services/sound-notification.service';
 import {OAuthService} from 'angular-oauth2-oidc';
 import {ConfigService} from 'app/business/services/config.service';
 import {GuidService} from 'app/business/services/guid.service';

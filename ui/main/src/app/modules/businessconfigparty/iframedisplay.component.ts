@@ -12,7 +12,7 @@ import {DomSanitizer, SafeUrl} from '@angular/platform-browser';
 import {ActivatedRoute, Router} from '@angular/router';
 import {map, skip, takeUntil} from 'rxjs/operators';
 import {Subject} from 'rxjs';
-import {GlobalStyleService} from '@ofServices/global-style.service';
+import {GlobalStyleService} from 'app/business/services/global-style.service';
 import {ConfigService} from 'app/business/services/config.service';
 import {DOCUMENT} from '@angular/common';
 
