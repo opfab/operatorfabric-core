@@ -13,7 +13,7 @@ import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import {NgbModule} from "@ng-bootstrap/ng-bootstrap";
 import {TranslateModule} from "@ngx-translate/core";
 import {AgGridModule} from "ag-grid-angular";
-import {AppRoutingModule} from "app/app-routing.module";
+import {AppRoutingModule} from "app/router/app-routing.module";
 import {DatetimeFilterModule} from "../share/datetime-filter/datetime-filter.module";
 import {MultiSelectModule} from "../share/multi-select/multi-select.module";
 import {UserActionLogsComponent} from "./useractionlogs.component";

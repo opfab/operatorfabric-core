@@ -9,12 +9,12 @@
 
 import {NgModule} from '@angular/core';
 import {PreloadAllModules,RouterModule, Routes} from '@angular/router';
-import {LoginComponent} from './modules/core/application-loading/login/login.component';
-import {LoggingEntryPointComponent} from './modules/logging/logging-entry-point.component';
-import {MonitoringComponent} from './modules/monitoring/monitoring.component';
-import {CalendarComponent} from './modules/calendar/calendar.component';
-import {ArchivesEntryPointComponent} from './modules/archives/archives-entry-point.component';
-import {UserActionLogsComponent} from './modules/useractionlogs/useractionlogs.component';
+import {LoginComponent} from '../modules/core/application-loading/login/login.component';
+import {LoggingEntryPointComponent} from '../modules/logging/logging-entry-point.component';
+import {MonitoringComponent} from '../modules/monitoring/monitoring.component';
+import {CalendarComponent} from '../modules/calendar/calendar.component';
+import {ArchivesEntryPointComponent} from '../modules/archives/archives-entry-point.component';
+import {UserActionLogsComponent} from '../modules/useractionlogs/useractionlogs.component';
 
 const defaultPath = '/feed';
 
@@ -26,7 +26,7 @@ const defaultPath = '/feed';
 const routes: Routes = [
     {
         path: 'feed',
-        loadChildren: () => import('./modules/feed/feed.module').then((m) => m.FeedModule)
+        loadChildren: () => import('../modules/feed/feed.module').then((m) => m.FeedModule)
     },
     {
         path: 'archives',
@@ -47,11 +47,11 @@ const routes: Routes = [
     {
         path: 'businessconfigparty',
         loadChildren: () =>
-            import('./modules/businessconfigparty/businessconfigparty.module').then((m) => m.BusinessconfigpartyModule)
+            import('../modules/businessconfigparty/businessconfigparty.module').then((m) => m.BusinessconfigpartyModule)
     },
     {
         path: 'settings',
-        loadChildren: () => import('./modules/settings/settings.module').then((m) => m.SettingsModule)
+        loadChildren: () => import('../modules/settings/settings.module').then((m) => m.SettingsModule)
     },
     {
         path: 'navbar',
@@ -59,29 +59,29 @@ const routes: Routes = [
     },
     {
         path: 'admin',
-        loadChildren: () => import('./modules/admin/admin.module').then((m) => m.AdminModule)
+        loadChildren: () => import('../modules/admin/admin.module').then((m) => m.AdminModule)
     },
     {
         path: 'realtimeusers',
-        loadChildren: () => import('./modules/realtimeusers/realtimeusers.module').then((m) => m.RealtimeusersModule)
+        loadChildren: () => import('../modules/realtimeusers/realtimeusers.module').then((m) => m.RealtimeusersModule)
     },
     {
         path: 'activityarea',
-        loadChildren: () => import('./modules/activityarea/activityarea.module').then((m) => m.ActivityareaModule)
+        loadChildren: () => import('../modules/activityarea/activityarea.module').then((m) => m.ActivityareaModule)
     },
     {
         path: 'feedconfiguration',
         loadChildren: () =>
-            import('./modules/feedconfiguration/feedconfiguration.module').then((m) => m.FeedconfigurationModule)
+            import('../modules/feedconfiguration/feedconfiguration.module').then((m) => m.FeedconfigurationModule)
     },
     {
         path: 'changepassword',
-        loadChildren: () => import('./modules/changepassword/changepassword.module').then((m) => m.ChangepasswordModule)
+        loadChildren: () => import('../modules/changepassword/changepassword.module').then((m) => m.ChangepasswordModule)
     },
     {
         path: 'externaldevicesconfiguration',
         loadChildren: () =>
-            import('./modules/externaldevicesconfiguration/externaldevicesconfiguration.module').then(
+            import('../modules/externaldevicesconfiguration/externaldevicesconfiguration.module').then(
                 (m) => m.ExternaldevicesModule
             )
     },
