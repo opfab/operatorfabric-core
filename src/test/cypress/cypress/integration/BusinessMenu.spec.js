@@ -11,7 +11,7 @@ import {OpfabGeneralCommands} from '../support/opfabGeneralCommands'
 import {FeedCommands} from '../support/feedCommands'
 import {ScriptCommands} from "../support/scriptCommands";
 
-describe ('Business nenu',()=>{
+describe ('Business menu',()=>{
 
     const opfab = new OpfabGeneralCommands();
     const feed = new FeedCommands();
@@ -30,13 +30,15 @@ describe ('Business nenu',()=>{
         feed.openFirstCard();
         clickLinkInsideCard();
         checkUrlDisplayedIs('https://en.wikipedia.org/w/index.php?opfab_theme=NIGHT&search=chart&fulltext=1');
- 
+
         openBusinessDropdownMenu();
         checkDropdownMenuIconLinks();
         clickOnDropdownMenuEntryNumber(1);
         checkUrlDisplayedIs('https://opfab.github.io/?opfab_theme=NIGHT');
+        openBusinessDropdownMenu();
         clickOnDropdownMenuEntryNumber(2);
         checkUrlDisplayedIs('https://www.wikipedia.org/?opfab_theme=NIGHT');
+        openBusinessDropdownMenu();
         clickOnDropdownMenuEntryNumber(3);
         checkUrlDisplayedIs('http://localhost:2002/external/appExample/?opfab_theme=NIGHT');
 
@@ -56,16 +58,19 @@ describe ('Business nenu',()=>{
         checkUrlDisplayedIs('https://en.wikipedia.org/w/index.php?opfab_theme=DAY&search=chart&fulltext=1');
 
         openBusinessDropdownMenu();
+        checkDropdownMenuIconLinks();
         clickOnDropdownMenuEntryNumber(1);
         checkUrlDisplayedIs('https://opfab.github.io/?opfab_theme=DAY');
+        openBusinessDropdownMenu();
         clickOnDropdownMenuEntryNumber(2);
         checkUrlDisplayedIs('https://www.wikipedia.org/?opfab_theme=DAY');
+        openBusinessDropdownMenu();
         clickOnDropdownMenuEntryNumber(3);
         checkUrlDisplayedIs('http://localhost:2002/external/appExample/?opfab_theme=DAY');
 
         openBusinessSingleMenu();
+        checkSingleMenuIconLink();
         checkUrlDisplayedIs('https://en.wikipedia.org/w/index.php?opfab_theme=DAY');
-
     });
 
     function clickLinkInsideCard() {
@@ -77,7 +82,7 @@ describe ('Business nenu',()=>{
     }
 
     function openBusinessDropdownMenu() {
-        cy.get('#opfab-navbar-menu-dropdown-menu2').click();
+        cy.get('#opfab-navbar-menu-dropdown-menu2').trigger('mouseenter');
     }
 
     function checkDropdownMenuIconLinks() {

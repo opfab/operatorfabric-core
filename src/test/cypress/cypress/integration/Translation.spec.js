@@ -80,12 +80,12 @@ describe('Test translations', function () {
         cy.get('#opfab-navbar-menu-logging').should('have.text', loggingTitle);
         cy.get('#opfab-navbar-menu-menu1').should('have.text', singleMenuTitle);
         cy.get('#opfab-navbar-menu-dropdown-menu2').should('have.text', secondMenuTitle);
-        cy.get('#opfab-navbar-menu-dropdown-menu2').click();
+        cy.get('#opfab-navbar-menu-dropdown-menu2').trigger('mouseenter');
 
         // Test dropdown menus titles
-        cy.get('#opfab-navbar-menu-dropdown-menu2').click();
-        cy.get('.dropdown-menu').find('.text-link').eq(0).should('have.text', firstEntryTitle);
-        cy.get('.dropdown-menu').find('.text-link').eq(1).should('have.text', secondEntryTitle);
+        cy.get('#opfab-navbar-menu-dropdown-menu2').trigger('mouseenter');
+        cy.get('.opfab-dropdown-menu').find('.text-link').eq(0).should('have.text', firstEntryTitle);
+        cy.get('.opfab-dropdown-menu').find('.text-link').eq(1).should('have.text', secondEntryTitle);
     }
 
     function checkRightMenuStaticEntries(realTimeTitle, settingsTitle, activityAreaTitle, feedConfigurationTitle, aboutTitle,
@@ -231,13 +231,13 @@ describe('Test translations', function () {
         opfab.loginWithUser('operator1_fr');
 
         changeLanguage(ENGLISH);
-        checkMenuTitles('Card Feed', 'Archives', 'Monitoring', 'Logging', 'Single menu entry', 'Second menu', 'First menu entry', 'Second menu entry');
+        checkMenuTitles('Card Feed', 'Archives', 'Monitoring', 'Logging', 'Single menu entry', 'Second menu ', 'First menu entry', 'Second menu entry');
 
         changeLanguage(FRENCH);
-        checkMenuTitles('Flux de cartes', 'Archives', 'Monitoring', 'Logging', 'Unique élément', 'Deuxième menu', 'Premier élément', 'Deuxième élément');
+        checkMenuTitles('Flux de cartes', 'Archives', 'Monitoring', 'Logging', 'Unique élément', 'Deuxième menu ', 'Premier élément', 'Deuxième élément');
 
         changeLanguage(DUTCH);
-        checkMenuTitles('Kaart Feed', 'Archieven', 'Bewaking','Logboek', 'Enkel menu-item', 'Tweede menu', 'Eerste menu-item', 'Tweede menu-item');
+        checkMenuTitles('Kaart Feed', 'Archieven', 'Bewaking','Logboek', 'Enkel menu-item', 'Tweede menu ', 'Eerste menu-item', 'Tweede menu-item');
 
     })
 

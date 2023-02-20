@@ -416,10 +416,10 @@ body {
         color: var(--opfab-text-color);
     }
 
-    .arrow {
+    .popover-arrow {
         display: none;
     }
-    .arrow::after {
+    .popover-arrow::after {
         border-bottom: 0px;
     }
 }

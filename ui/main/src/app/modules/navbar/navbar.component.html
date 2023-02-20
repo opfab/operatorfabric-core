@@ -35,15 +35,18 @@
       <li *ngFor="let tMenu of (businessconfigMenus); let index = index;" class="nav-item"
         [class.dropdown]="tMenu.entries.length>1" [class.businessconfig-dropdown]="tMenu.entries.length>1">
         <!-- Dropdown menu if at least 2 entries-->
-        <a id="opfab-navbar-menu-dropdown-{{tMenu.id}}" class="nav-link"  [attr.aria-expanded]="expandedMenu[index]"
-          (click)="toggleMenu(index)" *ngIf="tMenu.entries.length>1" translate
-          href="javascript:void(0)">{{tMenu.id}}.{{tMenu.label}}</a>
-        <div class="dropdown-menu  dropdown-menu-left " *ngIf="tMenu.entries.length>1"
-          [ngbCollapse]="!expandedMenu[index]">
-          <div class="dropdown-item " *ngFor="let entry of tMenu.entries">
-            <of-menu-link [menu]="tMenu" [menuEntry]="entry"></of-menu-link>
+        <a class="nav-link" id="opfab-navbar-menu-dropdown-{{tMenu.id}}" *ngIf="tMenu.entries.length>1"
+           (mouseenter)="toggleMenu(tMenu, p1)" triggers="mouseenter:mouseleave" closeDelay="3000"
+           #p1="ngbPopover" [ngbPopover]="navbarDropdown" popoverClass="opfab-popover-no-arrow" placement="bottom-left" container="body"
+           href="javascript:void(0)" translate>{{tMenu.id}}.{{tMenu.label}} <em class="fa fa-caret-down"></em>
+        </a>
+        <ng-template #navbarDropdown>
+          <div class="opfab-dropdown-menu" (mouseleave)="openDropdownPopover.close()">
+            <div class="opfab-dropdown-menu-item" *ngFor="let entry of tMenu.entries">
+              <of-menu-link [menu]="tMenu" [menuEntry]="entry"></of-menu-link>
+            </div>
           </div>
-        </div>
+        </ng-template>
         <!-- Navbar link if only one entry -->
         <div class="nav-link" *ngIf="tMenu.entries.length === 1">
           <of-menu-link [menu]="tMenu" [menuEntry]="tMenu.entries[0]"></of-menu-link>

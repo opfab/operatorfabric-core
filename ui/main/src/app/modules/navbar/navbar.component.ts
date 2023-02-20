@@ -13,7 +13,7 @@ import {Menu} from '@ofModel/menu.model';
 import {GlobalStyleService} from 'app/business/services/global-style.service';
 import {Route, Router} from '@angular/router';
 import {ConfigService} from 'app/business/services/config.service';
-import {NgbModal, NgbModalOptions, NgbModalRef} from '@ng-bootstrap/ng-bootstrap';
+import {NgbModal, NgbModalOptions, NgbModalRef, NgbPopover} from '@ng-bootstrap/ng-bootstrap';
 import {MenuService} from 'app/business/services/menu.service';
 import {Observable} from 'rxjs';
 import {AuthService} from 'app/authentication/auth.service';
@@ -30,7 +30,8 @@ export class NavbarComponent implements OnInit {
     navigationRoutes: Route[];
     currentRoute = '';
     businessconfigMenus: Menu[];
-    expandedMenu: boolean[] = [];
+    openDropdownPopover: NgbPopover;
+    currentDropdownHovered;
 
     modalRef: NgbModalRef;
     @ViewChild('userCard') userCardTemplate: ElementRef;
@@ -126,11 +127,12 @@ export class NavbarComponent implements OnInit {
         this.authService.logout();
     }
 
-    toggleMenu(index: number) {
-        this.expandedMenu[index] = !this.expandedMenu[index];
-        if (this.expandedMenu[index]) {
-            setTimeout(() => (this.expandedMenu[index] = false), 5000);
+    toggleMenu(menu, p): void {
+        if (this.openDropdownPopover) {
+            this.openDropdownPopover.close();
         }
+        this.openDropdownPopover = p;
+        this.currentDropdownHovered = menu;
     }
 
     switchToNightMode() {
