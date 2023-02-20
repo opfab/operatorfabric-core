@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2022, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2023, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -164,6 +164,7 @@ export class FilterService {
     private initAcknowledgementFilter(): Filter {
         return new Filter(
             (card: LightCard, status) => {
+                if (status == null) return false;
                 return (status && card.hasBeenAcknowledged) || (!status && !card.hasBeenAcknowledged);
             },
             true,

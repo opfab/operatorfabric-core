@@ -7,7 +7,7 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {Component, Input, OnDestroy, OnInit, ViewEncapsulation} from '@angular/core';
+import {Component, Input, OnDestroy, OnInit, Output, ViewEncapsulation} from '@angular/core';
 import {Subject, timer} from 'rxjs';
 import {AbstractControl, FormControl, FormGroup} from '@angular/forms';
 import {debounce, debounceTime, distinctUntilChanged, takeUntil} from 'rxjs/operators';
@@ -33,7 +33,12 @@ export class FeedFilterComponent implements OnInit, OnDestroy {
     @Input() hideTimerTags: boolean;
     @Input() defaultAcknowledgmentFilter: string;
     @Input() hideResponseFilter: boolean;
+
+    @Input() defaultSorting: string;
+ 
     @Input() hideApplyFiltersToTimeLineChoice: boolean;
+
+    @Output() filterActiveChange = new Subject<boolean>();
 
     dateTimeFilterChange = new Subject();
 
@@ -45,7 +50,8 @@ export class FeedFilterComponent implements OnInit, OnDestroy {
         information: FormControl<boolean | null>;
     }>;
     ackFilterForm: FormGroup<{
-        ackControl: FormControl<string | null>;
+        ackControl: FormControl<boolean | null>;
+        notAckControl: FormControl<boolean | null>;
     }>;
     timeFilterForm: FormGroup<{
         dateTimeFrom: FormControl<any | null>;
@@ -109,7 +115,8 @@ export class FeedFilterComponent implements OnInit, OnDestroy {
     private createAckFormGroup() {
         return new FormGroup(
             {
-                ackControl: new FormControl<string | null>('notack')
+                ackControl: new FormControl<boolean | null>(false),
+                notAckControl: new FormControl<boolean | null>(true)
             },
             {updateOn: 'change'}
         );
@@ -150,10 +157,10 @@ export class FeedFilterComponent implements OnInit, OnDestroy {
         const savedACompliant = this.userPreferences.getPreference('opfab.feed.filter.type.compliant');
         const savedInformation = this.userPreferences.getPreference('opfab.feed.filter.type.information');
 
-        const alarmUnset = savedAlarm && savedAlarm != 'true';
-        const actionUnset = savedAction && savedAction != 'true';
-        const compliantUnset = savedACompliant && savedACompliant != 'true';
-        const informationUnset = savedInformation && savedInformation != 'true';
+        const alarmUnset = savedAlarm && savedAlarm !== 'true';
+        const actionUnset = savedAction && savedAction !== 'true';
+        const compliantUnset = savedACompliant && savedACompliant !== 'true';
+        const informationUnset = savedInformation && savedInformation !== 'true';
 
         this.typeFilterForm.get('alarm').setValue(!alarmUnset, {emitEvent: false});
         this.typeFilterForm.get('action').setValue(!actionUnset, {emitEvent: false});
@@ -179,6 +186,7 @@ export class FeedFilterComponent implements OnInit, OnDestroy {
                 this.userPreferences.setPreference('opfab.feed.filter.type.action', form.action);
                 this.userPreferences.setPreference('opfab.feed.filter.type.compliant', form.compliant);
                 this.userPreferences.setPreference('opfab.feed.filter.type.information', form.information);
+                this.filterActiveChange.next(this.isFilterActive());
                 return this.filterService.updateFilter(
                     FilterType.TYPE_FILTER,
                     !(form.alarm && form.action && form.compliant && form.information),
@@ -189,7 +197,7 @@ export class FeedFilterComponent implements OnInit, OnDestroy {
 
     private initResponseFilter() {
         const responseValue = this.userPreferences.getPreference('opfab.feed.filter.response');
-        const responseUnset = responseValue && responseValue != 'true';
+        const responseUnset = responseValue && responseValue !== 'true';
 
         this.responseFilterForm.get('responseControl').setValue(!responseUnset, {emitEvent: false});
 
@@ -199,7 +207,7 @@ export class FeedFilterComponent implements OnInit, OnDestroy {
 
         this.responseFilterForm.valueChanges.pipe(takeUntil(this.ngUnsubscribe$)).subscribe((form) => {
             this.userPreferences.setPreference('opfab.feed.filter.response', form.responseControl);
-
+            this.filterActiveChange.next(this.isFilterActive());
             return this.filterService.updateFilter(
                 FilterType.RESPONSE_FILTER,
                 !form.responseControl,
@@ -212,7 +220,7 @@ export class FeedFilterComponent implements OnInit, OnDestroy {
         const timeLineValue = this.userPreferences.getPreference('opfab.feed.filter.applyToTimeLine');
 
         let timeLineFiltered = true;
-        if (timeLineValue && timeLineValue != 'true') timeLineFiltered = false;
+        if (timeLineValue && timeLineValue !== 'true') timeLineFiltered = false;
 
         this.timeLineFilterForm.get('timeLineControl').setValue(timeLineFiltered, {emitEvent: false});
         this.lightCardsFeedFilterService.setOnlyBusinessFilterForTimeLine(!timeLineFiltered);
@@ -220,27 +228,54 @@ export class FeedFilterComponent implements OnInit, OnDestroy {
         this.timeLineFilterForm.valueChanges.pipe(takeUntil(this.ngUnsubscribe$)).subscribe((form) => {
             this.userPreferences.setPreference('opfab.feed.filter.applyToTimeLine', form.timeLineControl);
             this.lightCardsFeedFilterService.setOnlyBusinessFilterForTimeLine(!form.timeLineControl);
+            this.filterActiveChange.next(this.isFilterActive());
+
         });
     }
 
     private initAckFilter() {
         const ackValue = this.userPreferences.getPreference('opfab.feed.filter.ack');
-        if (!!ackValue) {
-            this.ackFilterForm.get('ackControl').setValue(ackValue, {emitEvent: false});
-            const active = ackValue !== 'all';
-            const ack = active && ackValue === 'ack';
-            this.filterService.updateFilter(FilterType.ACKNOWLEDGEMENT_FILTER, active, ack);
-        } else {
-            this.ackFilterForm.get('ackControl').setValue(this.defaultAcknowledgmentFilter, {emitEvent: false});
-        }
+        this.initAckFilterValues(!!ackValue ? ackValue : this.defaultAcknowledgmentFilter);
+
 
         this.ackFilterForm.valueChanges.pipe(takeUntil(this.ngUnsubscribe$)).subscribe((form) => {
-            const active = form.ackControl !== 'all';
-            const ack = active && form.ackControl === 'ack';
-            this.userPreferences.setPreference('opfab.feed.filter.ack', form.ackControl);
+            const active = !form.ackControl || !form.notAckControl;
+            const ack = active && form.ackControl;
 
+            this.userPreferences.setPreference('opfab.feed.filter.ack', this.getAckPreference(form.ackControl, form.notAckControl));
+            this.filterActiveChange.next(this.isFilterActive());
             return this.filterService.updateFilter(FilterType.ACKNOWLEDGEMENT_FILTER, active, ack);
         });
+    }
+
+    private initAckFilterValues(ackValue : string) {
+        if (ackValue === 'ack') {
+            this.ackFilterForm.get('ackControl').setValue(true, {emitEvent: false});
+            this.ackFilterForm.get('notAckControl').setValue(false, {emitEvent: false});
+
+            this.filterService.updateFilter(FilterType.ACKNOWLEDGEMENT_FILTER, true, true);
+        } else if (ackValue === 'notack') {
+            this.ackFilterForm.get('ackControl').setValue(false, {emitEvent: false});
+            this.ackFilterForm.get('notAckControl').setValue(true, {emitEvent: false});
+
+            this.filterService.updateFilter(FilterType.ACKNOWLEDGEMENT_FILTER, true, false);
+        } else  if (ackValue === 'all') {
+            this.ackFilterForm.get('ackControl').setValue(true, {emitEvent: false});
+            this.ackFilterForm.get('notAckControl').setValue(true, {emitEvent: false});
+
+            this.filterService.updateFilter(FilterType.ACKNOWLEDGEMENT_FILTER, false, false);
+        } else  if (ackValue === 'none'){
+            this.ackFilterForm.get('ackControl').setValue(false, {emitEvent: false});
+            this.ackFilterForm.get('notAckControl').setValue(false, {emitEvent: false});
+
+            this.filterService.updateFilter(FilterType.ACKNOWLEDGEMENT_FILTER, true, null);
+        }
+    }
+
+    private getAckPreference(ack: boolean, notAck: boolean) : string {
+        if (ack && notAck) return 'all';
+        else if (!ack && !notAck) return 'none';
+        else return ack ? 'ack' : 'notack';
     }
 
     initDateTimeFilter() {
@@ -307,11 +342,12 @@ export class FeedFilterComponent implements OnInit, OnDestroy {
         }
 
         this.filterService.updateFilter(this.dateFilterType, true, status);
+        this.filterActiveChange.next(this.isFilterActive());
     }
 
     private extractTime(form: AbstractControl) {
         const val = form.value;
-        if (!val || val == '') {
+        if (!val || val === '') {
             return null;
         }
 
@@ -336,21 +372,7 @@ export class FeedFilterComponent implements OnInit, OnDestroy {
             !this.typeFilterForm.get('compliant').value ||
             !this.typeFilterForm.get('information').value ||
             !this.responseFilterForm.get('responseControl').value ||
-            this.ackFilterForm.get('ackControl').value === 'ack' ||
-            !!this.extractTime(this.timeFilterForm.get('dateTimeFrom')) ||
-            !!this.extractTime(this.timeFilterForm.get('dateTimeTo'))
-        );
-    }
-
-    isFilterChanged(): boolean {
-        return (
-            !this.typeFilterForm.get('alarm').value ||
-            !this.typeFilterForm.get('action').value ||
-            !this.typeFilterForm.get('compliant').value ||
-            !this.typeFilterForm.get('information').value ||
-            !this.responseFilterForm.get('responseControl').value ||
-            this.ackFilterForm.get('ackControl').value != 'notack' ||
-            !this.timeLineFilterForm.get('timeLineControl').value ||
+            !this.ackFilterForm.get('notAckControl').value ||
             !!this.extractTime(this.timeFilterForm.get('dateTimeFrom')) ||
             !!this.extractTime(this.timeFilterForm.get('dateTimeTo'))
         );
@@ -364,8 +386,7 @@ export class FeedFilterComponent implements OnInit, OnDestroy {
         if (!this.hideResponseFilter) {
             this.responseFilterForm.get('responseControl').setValue(true, {emitEvent: true});
         }
-
-        this.ackFilterForm.get('ackControl').setValue(this.defaultAcknowledgmentFilter, {emitEvent: true});
+        this.initAckFilterValues(this.defaultAcknowledgmentFilter);
 
         if (!this.hideTimerTags) {
             this.timeFilterForm.get('dateTimeFrom').setValue(null);

@@ -31,6 +31,7 @@ export class FeedComponent implements OnInit,OnDestroy {
     private ngUnsubscribe$ = new Subject<void>();
     private hallwayMode = false;
     maxPinnedCards: number;
+    filtersVisible = false;
 
     constructor(
         private lightCardsFeedFilterService: LightCardsFeedFilterService,
@@ -83,6 +84,13 @@ export class FeedComponent implements OnInit,OnDestroy {
     public enoughSpaceForCardDetail() {
         return window.innerWidth > 1000;
     }
+
+
+
+    showFilters(visible: boolean) {
+        this.filtersVisible = visible;
+    }
+
 
     ngOnDestroy() {
         this.ngUnsubscribe$.next();

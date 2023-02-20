@@ -1,4 +1,4 @@
-/* Copyright (c) 2022, RTE (http://www.rte-france.com)
+/* Copyright (c) 2022-2023, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -177,15 +177,13 @@ describe('Test translations', function () {
     }
 
     function checkNotificationSeverityTexts(alarmSeverity, actionSeverity, compliantSeverity, informationSeverity) {
-        cy.get('.popover-body').find('.label-sev-alarm').should('have.text', ' ' + alarmSeverity + ' ');
-        cy.get('.popover-body').find('.label-sev-action').should('have.text', ' ' + actionSeverity + ' ');
-        cy.get('.popover-body').find('.label-sev-compliant').should('have.text', ' ' + compliantSeverity + ' ');
-        cy.get('.popover-body').find('.label-sev-information').should('have.text', ' ' + informationSeverity + ' ');
+        cy.get('#opfab-filters').find('.label-sev-alarm').should('have.text', ' ' + alarmSeverity + ' ');
+        cy.get('#opfab-filters').find('.label-sev-action').should('have.text', ' ' + actionSeverity + ' ');
+        cy.get('#opfab-filters').find('.label-sev-compliant').should('have.text', ' ' + compliantSeverity + ' ');
+        cy.get('#opfab-filters').find('.label-sev-information').should('have.text', ' ' + informationSeverity + ' ');
     }
 
     function checkAknowledgementTexts(acknowledgementHeader, allText, acknowledgedText, notAcknowledgedText) {
-        cy.get('#opfab-filter-ack-title').should('have.text', acknowledgementHeader);
-        cy.get('#opfab-feed-filter-ack-all-label').should('have.text', allText);
         cy.get('#opfab-feed-filter-ack-ack-label').should('have.text', acknowledgedText);
         cy.get('#opfab-feed-filter-ack-notack-label').should('have.text', notAcknowledgedText);
     }
@@ -339,8 +337,8 @@ describe('Test translations', function () {
         checkAknowledgementTexts('Acknowledgement', 'All', 'Acknowledged', 'Not acknowledged');
         checkDateFilterTexts('Receipt date', 'START', 'END', 'Apply filters to timeline ');
         
-        // Select 'All' on Acknowledgement filter to show the "Reset" link
-        cy.get('#opfab-feed-filter-ack-all').click();
+        // Deselect 'not acknowledged' checkbox on Acknowledgement filter to show the "Reset" link
+        cy.get('#opfab-feed-filter-ack-notack').click({force: true});
         checkResetText('Reset');
 
         changeLanguage(FRENCH);

@@ -124,7 +124,7 @@ describe('Acknowledgment tests', function () {
 
 
         // Set feed filter to see all cards and check message card is present
-        feed.filterByAcknowledgement('all');
+        feed.toggleFilterByAcknowledgementAck();
 
         cy.waitDefaultTime(); 
 
@@ -172,7 +172,7 @@ describe('Acknowledgment tests', function () {
         opfab.loginWithUser('operator1_fr');
 
         // Set feed filter to see all card
-        feed.filterByAcknowledgement('all');
+        feed.toggleFilterByAcknowledgementAck();
 
         // Check that all cards except one are acknowledged
         cy.get('#opfab-feed-light-card-cypress-message1 .fa-check')
@@ -186,7 +186,7 @@ describe('Acknowledgment tests', function () {
         opfab.loginWithUser('operator2_fr');
 
         // Set feed filter to see all card
-        feed.filterByAcknowledgement('all');
+        feed.toggleFilterByAcknowledgementAck();
 
         // Check that all cards are not acknowledged
         cy.get('.fa-check').should('not.exist');
@@ -199,7 +199,7 @@ describe('Acknowledgment tests', function () {
         opfab.loginWithUser('operator1_fr');
 
         // Set feed filter to see all card
-        feed.filterByAcknowledgement('all');
+        feed.toggleFilterByAcknowledgementAck();
 
         cy.get('of-light-card').should('have.length', 6);
 
@@ -347,7 +347,7 @@ describe('Acknowledgment tests', function () {
         cy.get('#opfab-card-details-address-to').find('span').eq(7).find('.fa-check').should('not.exist');
 
         // Set feed filter to see all card
-        feed.filterByAcknowledgement('all');
+        feed.toggleFilterByAcknowledgementAck();
 
         card.acknowledge();
         // We click again the card to display it
@@ -553,7 +553,7 @@ describe('Acknowledgment tests', function () {
         opfab.checkLoadingSpinnerIsNotDisplayed();
 
         // Set feed filter to see all cards and check message card is present
-        feed.filterByAcknowledgement('all');
+        feed.toggleFilterByAcknowledgementAck();
 
         cy.waitDefaultTime(); 
         
@@ -897,4 +897,5 @@ describe('Acknowledgment tests', function () {
         cy.get('#opfab-card-acknowledged-footer').find('span').eq(2).should("have.text", "\u00a0 IT SUPERVISION CENTER \u00a0")
             .and('have.css', 'color', 'rgb(255, 102, 0)');
     });
+
 })

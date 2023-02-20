@@ -1,4 +1,4 @@
-/* Copyright (c) 2021-2022, RTE (http://www.rte-france.com)
+/* Copyright (c) 2021-2023, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -38,9 +38,7 @@ describe('FeedScreen tests', function () {
         opfab.loginWithUser('operator1_fr');
         script.send6TestCards();
         // Set feed sort to "Date" so the cards don't move down the feed once they're read
-        cy.get('#opfab-feed-filter-btn-sort').click();
-        cy.get('#opfab-sort-form').find('input[value=date]').parent().click();
-        cy.get('#opfab-feed-filter-btn-sort').click();
+        feed.sortByReceptionDate();
 
         feed.checkNumberOfDisplayedCardsIs(6);
 
@@ -241,7 +239,7 @@ describe('FeedScreen tests', function () {
         cy.get('#opfab-feed-light-card-defaultProcess-process1').should('exist');
         cy.get('#opfab-feed-light-card-defaultProcess-process2').should('not.exist');
 
-        feed.filterByAcknowledgement('all');
+        feed.toggleFilterByAcknowledgementAck();
         feed.checkFilterIsNotActive();
         cy.waitDefaultTime();
         feed.checkNumberOfDisplayedCardsIs(2);
@@ -249,7 +247,7 @@ describe('FeedScreen tests', function () {
         cy.get('#opfab-feed-light-card-defaultProcess-process1').should('exist');
         cy.get('#opfab-feed-light-card-defaultProcess-process2').should('exist');
 
-        feed.filterByAcknowledgement('ack');
+        feed.toggleFilterByAcknowledgementNotAck();
         feed.checkFilterIsActive();
         cy.waitDefaultTime();
         feed.checkNumberOfDisplayedCardsIs(1);
@@ -257,9 +255,11 @@ describe('FeedScreen tests', function () {
         cy.get('#opfab-feed-light-card-defaultProcess-process1').should('not.exist');
         cy.get('#opfab-feed-light-card-defaultProcess-process2').should('exist');
 
-        feed.filterByAcknowledgement('notack');
-        feed.checkFilterIsNotActive();
+        feed.toggleFilterByAcknowledgementNotAck();
+        feed.toggleFilterByAcknowledgementAck();
         cy.waitDefaultTime();
+        feed.checkFilterIsNotActive();
+        
         feed.checkNumberOfDisplayedCardsIs(1);
         // Only not acknowledged card is visible
         cy.get('#opfab-feed-light-card-defaultProcess-process1').should('exist');
@@ -341,7 +341,7 @@ describe('FeedScreen tests', function () {
         cy.waitDefaultTime();
         feed.checkNumberOfDisplayedCardsIs(3);
 
-        feed.filterByAcknowledgement('all');
+        feed.toggleFilterByAcknowledgementAck();
         cy.waitDefaultTime();
         feed.checkNumberOfDisplayedCardsIs(4);
 

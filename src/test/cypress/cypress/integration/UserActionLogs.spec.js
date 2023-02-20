@@ -54,7 +54,8 @@ describe ('User action logs page',()=>{
         cy.get('#response').type('Response');
         card.sendResponse();
         cy.waitDefaultTime();
-        feed.filterByAcknowledgement('ack');
+        feed.toggleFilterByAcknowledgementNotAck();
+        feed.toggleFilterByAcknowledgementAck();
         feed.checkNumberOfDisplayedCardsIs(1);
         feed.openFirstCard();
         card.unacknowledge();

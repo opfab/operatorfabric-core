@@ -172,8 +172,8 @@ describe('Sound notification test', function () {
             opfab.navigateToFeed();
             // Use cypress time simulation
             cy.clock(new Date());
-
-            feed.filterByAcknowledgement('ack');
+            feed.toggleFilterByAcknowledgementNotAck();
+            feed.toggleFilterByAcknowledgementAck();
             feed.checkFilterIsActive();
 
             sendCardAndCheckSoundAndAlertMessage();
@@ -189,8 +189,6 @@ describe('Sound notification test', function () {
 
             cy.clock(new Date());
 
-            // reset ack filter
-            feed.filterByAcknowledgement('notack');
             feed.checkFilterIsNotActive();
             // Set timeline to day domain
             setTimeLineDomain('J');
