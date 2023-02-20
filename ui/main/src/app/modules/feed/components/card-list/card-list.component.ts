@@ -7,9 +7,9 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {AfterViewChecked, Component, Input, OnInit} from '@angular/core';
+import {AfterViewChecked, AfterViewInit, Component, Input, OnInit, Output} from '@angular/core';
 import {LightCard} from '@ofModel/light-card.model';
-import {Observable} from 'rxjs';
+import {Observable, Subject} from 'rxjs';
 import {NgbModalRef} from '@ng-bootstrap/ng-bootstrap/modal/modal-ref';
 import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
 import {ConfigService} from 'app/business/services/config.service';
@@ -22,23 +22,37 @@ import {EntitiesService} from 'app/business/services/entities.service';
 import {GroupedCardsService} from 'app/business/services/grouped-cards.service';
 import {AlertMessageService} from 'app/business/services/alert-message.service';
 import {Router} from '@angular/router';
+import {SortService} from 'app/business/services/lightcards/sort.service';
+import {UserPreferencesService} from 'app/business/services/user-preference.service';
 
 @Component({
     selector: 'of-card-list',
     templateUrl: './card-list.component.html',
     styleUrls: ['./card-list.component.scss']
 })
-export class CardListComponent implements AfterViewChecked, OnInit {
+export class CardListComponent implements AfterViewChecked, OnInit, AfterViewInit {
     @Input() public lightCards: LightCard[];
     @Input() public selection: Observable<string>;
     @Input() public totalNumberOfLightsCards: number;
+
+    @Output() showFilters = new Subject<boolean>();
 
     modalRef: NgbModalRef;
     hideAckAllCardsFeature: boolean;
     ackAllCardsDemandTimestamp: number;
     currentUserWithPerimeters: UserWithPerimeters;
 
+    hideResponseFilter: boolean;
+    hideTimerTags: boolean;
+    hideApplyFiltersToTimeLineChoice: boolean;
+    defaultSorting: string;
+    defaultAcknowledgmentFilter: string;
+
     domCardListElement;
+    domFiltersElement;
+
+    filterActive: boolean;
+    filterOpen: boolean;
 
     constructor(
         private modalService: NgbModal,
@@ -49,14 +63,32 @@ export class CardListComponent implements AfterViewChecked, OnInit {
         private entitiesService: EntitiesService,
         private groupedCardsService: GroupedCardsService,
         private alertMessageService: AlertMessageService,
-        private router: Router
+        private router: Router,
+        private sortService: SortService,
+        private userPreferences: UserPreferencesService
     ) {
         this.currentUserWithPerimeters = this.userService.getCurrentUserWithPerimeters();
     }
 
     ngOnInit(): void {
-        this.domCardListElement = document.getElementById('opfab-card-list');
+        this.defaultSorting = this.configService.getConfigValue('feed.defaultSorting', 'unread');
+
+        this.sortService.setSortBy(this.defaultSorting);
+
+        this.defaultAcknowledgmentFilter = this.configService.getConfigValue('feed.defaultAcknowledgmentFilter', false);
+        this.hideTimerTags = this.configService.getConfigValue('feed.card.hideTimeFilter', false);
+        this.hideResponseFilter = this.configService.getConfigValue('feed.card.hideResponseFilter', false);
+        this.hideApplyFiltersToTimeLineChoice = this.configService.getConfigValue(
+            'feed.card.hideApplyFiltersToTimeLineChoice',
+            false
+        );
+
         this.hideAckAllCardsFeature = this.configService.getConfigValue('feed.card.hideAckAllCardsFeature', true);
+        this.initFilterActive();
+    }
+
+    ngAfterViewInit() {
+        this.domCardListElement = document.getElementById('opfab-card-list');
     }
 
     ngAfterViewChecked() {
@@ -64,10 +96,46 @@ export class CardListComponent implements AfterViewChecked, OnInit {
     }
 
     adaptFrameHeight() {
-        const rect = this.domCardListElement.getBoundingClientRect();
-        let height = window.innerHeight - rect.top - 30;
-        if (this.hideAckAllCardsFeature) height = window.innerHeight - rect.top - 10;
-        this.domCardListElement.style.maxHeight = `${height}px`;
+
+        if (!!this.domCardListElement) {
+            const rect = this.domCardListElement.getBoundingClientRect();
+            let height = window.innerHeight - rect.top - 30;
+            if (this.hideAckAllCardsFeature) height = window.innerHeight - rect.top - 10;
+            this.domCardListElement.style.maxHeight = `${height}px`;
+        }
+
+        this.domFiltersElement = document.getElementById('opfab-filters');
+
+        if (!!this.domFiltersElement) {
+            const rect = this.domFiltersElement.getBoundingClientRect();
+            let height = window.innerHeight - rect.top - 30;
+            if (this.hideAckAllCardsFeature) height = window.innerHeight - rect.top - 10;
+            this.domFiltersElement.style.maxHeight = `${height}px`;
+        }
+    }
+
+    initFilterActive() {
+        const savedAlarm = this.userPreferences.getPreference('opfab.feed.filter.type.alarm');
+        const savedAction = this.userPreferences.getPreference('opfab.feed.filter.type.action');
+        const savedCompliant = this.userPreferences.getPreference('opfab.feed.filter.type.compliant');
+        const savedInformation = this.userPreferences.getPreference('opfab.feed.filter.type.information');
+
+        const alarmUnset = savedAlarm && savedAlarm !== 'true';
+        const actionUnset = savedAction && savedAction !== 'true';
+        const compliantUnset = savedCompliant && savedCompliant !== 'true';
+        const informationUnset = savedInformation && savedInformation !== 'true';
+
+        const responseValue = this.userPreferences.getPreference('opfab.feed.filter.response');
+        const responseUnset = responseValue && responseValue !== 'true';
+
+        const ackValue = this.userPreferences.getPreference('opfab.feed.filter.ack');
+        const ackSet = ackValue && (ackValue === 'ack' || ackValue === 'none');
+
+
+        const savedStart = this.userPreferences.getPreference('opfab.feed.filter.start');
+        const savedEnd = this.userPreferences.getPreference('opfab.feed.filter.end');
+
+        this.filterActive = alarmUnset || actionUnset || compliantUnset || informationUnset || responseUnset || ackSet || !!savedStart || !!savedEnd;
     }
 
     acknowledgeAllVisibleCardsInTheFeed() {
@@ -133,5 +201,19 @@ export class CardListComponent implements AfterViewChecked, OnInit {
 
     isCardInGroup(selected: string, id: string) {
         return this.groupedCardsService.isCardInGroup(selected, id);
+    }
+
+    onFilterActiveChange(active: boolean) {
+        this.filterActive = active;
+    }
+
+    onShowFiltersAndSortChange(filterAndsort: any) {
+        this.filterOpen = filterAndsort.filter;
+
+        this.showFilters.next(this.filterOpen);
+    }
+
+    public isSmallscreen() {
+        return window.innerWidth < 1000;
     }
 }

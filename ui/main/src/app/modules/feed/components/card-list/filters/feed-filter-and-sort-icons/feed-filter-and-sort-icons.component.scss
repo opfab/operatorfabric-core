@@ -1,0 +1,66 @@
+/* Copyright (c) 2023, RTE (http://www.rte-france.com)
+ * See AUTHORS.txt
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ * SPDX-License-Identifier: MPL-2.0
+ * This file is part of the OperatorFabric project.
+ */
+
+@import 'src/scss/_variables.scss';
+
+
+.opfab-icon-filter {
+    display: inline-block;
+    height: 32px;
+    width: 32px;
+    margin-top: 10px;
+    margin-right: 10px;
+    margin-left: 10px;
+    border-width: 0px;
+    background: var(--opfab-navbar-color-hover);
+    mask: url(../../../../../../../assets/images/icons/filter.svg);
+}
+
+.opfab-icon-filter-active {
+    display: inline-block;
+    height: 32px;
+    width: 32px;
+    margin-top: 10px;
+    margin-right: 10px;
+    margin-left: 10px;
+    border-width: 0px;
+    background: red;
+    mask: url(../../../../../../../assets/images/icons/filter-active.svg);
+}
+
+.opfab-icon-filter:hover {
+    background: var(--opfab-feedbar-icon-hover-color);
+}
+
+.opfab-icon-bg-color {
+    margin: 0px;
+    border-radius: 3px;
+    padding: 5px;
+}
+
+.opfab-icon-bg-color:hover {
+    background-color: var(--opfab-feedbar-icon-hover-bgcolor);
+}
+
+
+.opfab-filter-open {
+    background-color: var(--opfab-feedbar-icon-hover-bgcolor);
+}
+
+
+.opfab-icon-sort {
+    display: inline-block;
+    height: 32px;
+    width: 32px;
+    margin-top: 5px;
+    margin-right: 5px;
+    border-width: 0px;
+    background: var(--opfab-navbar-color-hover);
+    mask: url(../../../../../../../assets/images/icons/sort.svg);
+}

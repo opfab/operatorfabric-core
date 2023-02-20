@@ -1,4 +1,4 @@
-// Copyright (c) 2018-2022 RTE (http://www.rte-france.com)
+// Copyright (c) 2018-2023 RTE (http://www.rte-france.com)
 // See AUTHORS.txt
 // This document is subject to the terms of the Creative Commons Attribution 4.0 International license.
 // If a copy of the license was not distributed with this
@@ -73,7 +73,7 @@ a|card time display mode in the feed. Values :
  - LTTD: displays card with lttd date;
  - NONE: nothing displayed.
 |feed.defaultSorting|"unread"|no|Default card sorting option in feed page, possible values are : "unread", "date", "severity", "startDate", "endDate".
-|feed.defaultAcknowledgmentFilter|"notack"|no|Default card acknowlegment filtering option in feed page, possible values are : "notack", "ack", "all".
+|feed.defaultAcknowledgmentFilter|"notack"|no|Default card acknowlegment filtering option in feed page, possible values are : "notack", "ack", "all", "none".
 |feed.showSearchFilter|false|no| If set to false, the search filter is hidden.
 |feed.card.hideResponseFilter|false|no|Control if you want to show or hide the response filter in the feed page
 |feed.card.hideApplyFiltersToTimeLineChoice|false|no|Control if you want to show or hide the option of applying filters or not to timeline in the feed page

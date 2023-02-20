@@ -10,7 +10,8 @@
 import {OpfabGeneralCommands} from "../support/opfabGeneralCommands"
 import {ActivityAreaCommands} from "../support/activityAreaCommands"
 import {ScriptCommands} from "../support/scriptCommands";
-import {CardCommands} from "../support/cardCommands"
+import {CardCommands} from "../support/cardCommands";
+import {FeedCommands} from "../support/feedCommands";
 
 describe('Entity acknowledgment tests for icon in light-card', function () {
 
@@ -18,6 +19,7 @@ describe('Entity acknowledgment tests for icon in light-card', function () {
     const activityArea = new ActivityAreaCommands();
     const script = new ScriptCommands();
     const card = new CardCommands();
+    const feed = new FeedCommands();
 
     before('Set up configuration', function () {
         script.resetUIConfigurationFiles();
@@ -36,12 +38,6 @@ describe('Entity acknowledgment tests for icon in light-card', function () {
         script.sendCard('cypress/entitiesAcks/message3.json');
         opfab.loginWithUser('operator1_crisisroom');
 
-        // Set feed filter to see only un-acknowledged cards
-        cy.get('#opfab-feed-filter-btn-filter').click();
-        cy.get('#opfab-feed-filter-ack-notack').click();
-        cy.waitDefaultTime(); // let time before closing popup to avoid flaky error on CI/CD
-        cy.get('#opfab-feed-filter-btn-filter').click();
-
         cy.get('of-light-card').should('have.length', 1);
         // Click on card (message2) and acknowledge it
         cy.get('#opfab-feed-light-card-cypress-entitiesAcksMessage3').click();
@@ -56,10 +52,7 @@ describe('Entity acknowledgment tests for icon in light-card', function () {
         opfab.loginWithUser('operator4_fr');
 
         // Set feed filter to see all cards
-        cy.get('#opfab-feed-filter-btn-filter').click();
-        cy.get('#opfab-feed-filter-ack-all').click();
-        cy.waitDefaultTime(); // let time before closing popup to avoid flaky error on CI/CD
-        cy.get('#opfab-feed-filter-btn-filter').click();
+        feed.toggleFilterByAcknowledgementAck();
 
         cy.get('of-light-card').should('have.length', 1);
         cy.get('#opfab-feed-light-card-cypress-entitiesAcksMessage3 .fa-check').should('not.exist');
@@ -76,12 +69,6 @@ describe('Entity acknowledgment tests for icon in light-card', function () {
         script.sendCard('cypress/entitiesAcks/message3.json');
         script.sendCard('cypress/entitiesAcks/message4.json');
         opfab.loginWithUser('operator4_fr');
-
-        // Set feed filter to see only un-acknowledged cards
-        cy.get('#opfab-feed-filter-btn-filter').click();
-        cy.get('#opfab-feed-filter-ack-notack').click();
-        cy.waitDefaultTime(); // let time before closing popup to avoid flaky error on CI/CD
-        cy.get('#opfab-feed-filter-btn-filter').click();
 
         cy.get('of-light-card').should('have.length', 3);
         // Click on card (message2) and acknowledge it
@@ -113,10 +100,7 @@ describe('Entity acknowledgment tests for icon in light-card', function () {
         cy.get('of-light-card').should('have.length', 0);
 
         // Set feed filter to see all cards and check the three cards are present now
-        cy.get('#opfab-feed-filter-btn-filter').click();
-        cy.get('#opfab-feed-filter-ack-all').click();
-        cy.waitDefaultTime(); // let time before closing popup to avoid flaky error on CI/CD
-        cy.get('#opfab-feed-filter-btn-filter').click();
+        feed.toggleFilterByAcknowledgementAck();
 
         // Operator4_fr should see 3 cards in his feed
         cy.get('of-light-card').should('have.length', 3);
@@ -158,10 +142,7 @@ describe('Entity acknowledgment tests for icon in light-card', function () {
         opfab.loginWithUser('operator4_fr');
 
         // Set feed filter to see all cards
-        cy.get('#opfab-feed-filter-btn-filter').click();
-        cy.get('#opfab-feed-filter-ack-all').click();
-        cy.waitDefaultTime(); // let time before closing popup to avoid flaky error on CI/CD
-        cy.get('#opfab-feed-filter-btn-filter').click();
+        feed.toggleFilterByAcknowledgementAck();
 
         script.sendCard('cypress/entitiesAcks/message2.json');
         script.sendCard('cypress/entitiesAcks/message3.json');
@@ -221,10 +202,7 @@ describe('Entity acknowledgment tests for icon in light-card', function () {
         opfab.loginWithUser('operator4_fr');
 
         // Set feed filter to see all cards
-        cy.get('#opfab-feed-filter-btn-filter').click();
-        cy.get('#opfab-feed-filter-ack-all').click();
-        cy.waitDefaultTime(); // let time before closing popup to avoid flaky error on CI/CD
-        cy.get('#opfab-feed-filter-btn-filter').click();
+        feed.toggleFilterByAcknowledgementAck();
 
         opfab.navigateToActivityArea();
 
@@ -320,10 +298,7 @@ describe('Entity acknowledgment tests for icon in light-card', function () {
         opfab.loginWithUser('operator2_fr');
 
         // Set feed filter to see all cards
-        cy.get('#opfab-feed-filter-btn-filter').click();
-        cy.get('#opfab-feed-filter-ack-all').click();
-        cy.waitDefaultTime(); // let time before closing popup to avoid flaky error on CI/CD
-        cy.get('#opfab-feed-filter-btn-filter').click();
+        feed.toggleFilterByAcknowledgementAck();
 
         script.sendCard('cypress/entitiesAcks/message2_groupsOnly.json');
         script.sendCard('cypress/entitiesAcks/message3_groupsOnly.json');
@@ -391,10 +366,7 @@ describe('Entity acknowledgment tests for icon in light-card', function () {
         opfab.loginWithUser('operator4_fr');
 
         // Set feed filter to see all cards
-        cy.get('#opfab-feed-filter-btn-filter').click();
-        cy.get('#opfab-feed-filter-ack-all').click();
-        cy.waitDefaultTime(); // let time before closing popup to avoid flaky error on CI/CD
-        cy.get('#opfab-feed-filter-btn-filter').click();
+        feed.toggleFilterByAcknowledgementAck();
 
         opfab.navigateToActivityArea();
 
@@ -445,10 +417,7 @@ describe('Entity acknowledgment tests for icon in light-card', function () {
         opfab.loginWithUser('operator1_fr');
 
         // Set feed filter to see all cards
-        cy.get('#opfab-feed-filter-btn-filter').click();
-        cy.get('#opfab-feed-filter-ack-all').click();
-        cy.waitDefaultTime(); // let time before closing popup to avoid flaky error on CI/CD
-        cy.get('#opfab-feed-filter-btn-filter').click();
+        feed.toggleFilterByAcknowledgementAck();
 
         script.sendCard('cypress/entitiesAcks/message4_ItalianEntityRecipients.json');
 

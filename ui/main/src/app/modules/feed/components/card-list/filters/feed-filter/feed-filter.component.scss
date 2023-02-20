@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2022, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2023, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -66,61 +66,6 @@
     background-color: $sev-information;
 }
 
-.opfab-icon-filter {
-    display: inline-block;
-    height: 32px;
-    width: 32px;
-    margin-top: 5px;
-    margin-right: 10px;
-    border-width: 0px;
-    background: var(--opfab-navbar-color-hover);
-    mask: url(../../../../../../../assets/images/icons/filter.svg);
-}
-
-.opfab-icon-filter-active {
-    display: inline-block;
-    height: 32px;
-    width: 32px;
-    margin-top: 5px;
-    margin-right: 10px;
-    border-width: 0px;
-    background: red;
-    mask: url(../../../../../../../assets/images/icons/filter-active.svg);
-}
-
-.opfab-icon-filter:hover {
-    background: var(--opfab-feedbar-icon-hover-color);
-}
-
-.opfab-icon-bg-color {
-    margin: 0px;
-    border-radius: 3px;
-    padding: 5px;
-}
-
-.opfab-icon-bg-color:hover {
-    background-color: var(--opfab-feedbar-icon-hover-bgcolor);
-}
-
-.opfab-filters-popover {
-    margin-left: -10px !important;
-    padding-left: 2px;
-
-    background-color: var(--opfab-popover-bgcolor);
-    color: var(--opfab-text-color);
-    .popover-header {
-        color: var(--opfab-text-color);
-        background-color: var(--opfab-popover-bgcolor);
-        border-bottom: 1px solid var(--opfab-text-color);
-    }
-    .popover-body {
-        color: var(--opfab-text-color);
-    }
-    .arrow::after {
-        border-right-color: var(--opfab-popover-bgcolor);
-    }
-}
-
 .opfab-time-filter {
     .opfab-input,
     .opfab-input > input,
@@ -131,3 +76,6 @@
         color: var(--opfab-text-color-stronger);
     }
 }
+
+
+
