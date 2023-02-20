@@ -475,7 +475,7 @@ class GraphControl extends Control {
         element.className = 'ol-overlaycontainer-stopevent';
         element.style.top = '0.5em';
         element.style.right = '0.5em';
-        element.style.height = '10vh';
+        element.style.height = '10vw';
         element.style.width = '10vw';
         element.style.position = 'absolute';
         const canvas = document.createElement('canvas');
