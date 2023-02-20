@@ -49,22 +49,30 @@
     .navbar-toggler-icon {
         background-image: var(--opfab-navbar-toggler-icon);
     }
+}
 
-    .dropdown-menu {
-        background-color: var(--opfab-bgcolor);
-        color: var(--opfab-navbar-color);
-    }
+.opfab-dropdown-menu {
+    color: var(--opfab-navbar-color);
+    margin-top: -16px;
+    margin-left: -12px;
+    margin-right: -12px;
+    margin-bottom: -10px;
+    padding-top: 10px;
+    letter-spacing: normal;
+}
 
-    .dropdown-item:hover,
-    .dropdown-item:focus {
+.opfab-dropdown-menu-item {
+    color: var(--opfab-navbar-color);
+    margin-left: 10px;
+    margin-right: 10px;
+    font-size: 16px;
+    line-height: 30px;
+    letter-spacing: normal;
+    cursor: pointer;
+
+    &:hover,
+    &:focus {
         color: var(--opfab-navbar-color-hover);
-        background-color: var(--opfab-bgcolor);
-    }
-
-    .dropdown-item.active,
-    .dropdown-item:active {
-        color: var(--opfab-navbar-color-active);
-        background-color: var(--opfab-bgcolor);
     }
 }
 
