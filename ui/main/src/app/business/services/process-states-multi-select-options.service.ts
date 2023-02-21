@@ -40,7 +40,7 @@ export class ProcessStatesMultiSelectOptionsService {
                         isAdminMode
                     )
                 ) {
-                    stateOptions.options.push(new MultiSelectOption(process.id + '.' + state, state.name));
+                    stateOptions.options.push(new MultiSelectOption(process.id + '.' + stateid, state.name));
                 }
             });
             if (stateOptions.options.length > 0) statesMultiSelectOptionsPerProcess.push(stateOptions);
