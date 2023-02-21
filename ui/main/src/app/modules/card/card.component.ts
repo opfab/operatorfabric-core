@@ -138,10 +138,14 @@ export class CardComponent implements OnInit, OnDestroy {
 
     closeDeletedCard() {
         this.closeDetails();
+
         if (this.parentModalRef) {
             this.parentModalRef.close();
             this.selectedCardService.clearSelectedCardId();
-        } else this.selectedCardService.clearSelectedCardId();
+        } else {
+            this.selectedCardService.clearSelectedCardId();
+            this.router.navigate(['/feed']);
+        }
     }
 
     closeDetails() {
