@@ -131,7 +131,7 @@ public class ArchivedCardRepositoryShould {
     }
 
     @BeforeEach
-    private void initCardData() {
+    public void initCardData() {
 
         int processNo = 0;
         //create past cards

@@ -14,7 +14,7 @@ dependencies {
     testImplementation cloud.springKafkaTest
 
 
-    implementation boot.starterWeb, boot.starterJetty
+    implementation boot.starterWeb, boot.starterUndertow
     implementation spring.securityOauthResource, spring.securityOauthJose
     implementation boot.starterSecurity
     implementation boot.starterValidation

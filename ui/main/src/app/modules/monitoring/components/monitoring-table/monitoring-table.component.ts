@@ -11,27 +11,24 @@
 import {Component, ElementRef, Input, OnChanges, OnDestroy, ViewChild} from '@angular/core';
 import {LineOfMonitoringResult} from '@ofModel/line-of-monitoring-result.model';
 import {TranslateService} from '@ngx-translate/core';
-import {ExportService} from '@ofServices/export.service';
+import {ExcelExport} from 'app/business/common/excel-export';
 import {takeUntil} from 'rxjs/operators';
 import {Observable, Subject} from 'rxjs';
-import {ClearLightCardSelectionAction, SelectLightCardAction} from '@ofActions/light-card.actions';
-import {LoadCardAction} from '@ofActions/card.actions';
 import {NgbModal, NgbModalOptions, NgbModalRef} from '@ng-bootstrap/ng-bootstrap';
-import {Store} from '@ngrx/store';
-import {AppState} from '@ofStore/index';
 import {ProcessesService} from 'app/business/services/processes.service';
 import {Utilities} from 'app/business/common/utilities';
 import {MonitoringConfig} from '@ofModel/monitoringConfig.model';
 import {JsonToArray} from 'app/business/common/jsontoarray/json-to-array';
-import {CardService} from '@ofServices/card.service';
 import {Process} from '@ofModel/processes.model';
-import {EntitiesService} from '@ofServices/entities.service';
+import {EntitiesService} from 'app/business/services/entities.service';
 import {ColDef, GridOptions} from 'ag-grid-community';
 import {AnswerCellRendererComponent} from '../cell-renderers/answer-cell-renderer.component';
 import {ResponsesCellRendererComponent} from '../cell-renderers/responses-cell-renderer.component';
 import {LightCard} from '@ofModel/light-card.model';
-import {LightCardsStoreService} from '@ofServices/lightcards/lightcards-store.service';
+import {LightCardsStoreService} from 'app/business/services/lightcards/lightcards-store.service';
 import {DateTimeFormatterService} from 'app/business/services/date-time-formatter.service';
+import {SelectedCardService} from 'app/business/services/card/selectedCard.service';
+import {CardService} from 'app/business/services/card.service';
 
 @Component({
     selector: 'of-monitoring-table',
@@ -85,11 +82,11 @@ export class MonitoringTableComponent implements OnChanges, OnDestroy {
     constructor(
         readonly dateTimeFormatter: DateTimeFormatterService,
         private translate: TranslateService,
-        private store: Store<AppState>,
         private modalService: NgbModal,
         private processesService: ProcessesService,
         private cardService: CardService,
         private entitiesService: EntitiesService,
+        private selectedCardService: SelectedCardService,
         private lightCardsStoreService: LightCardsStoreService
     ) {
         this.monitoringConfig = processesService.getMonitoringConfig();
@@ -241,39 +238,43 @@ export class MonitoringTableComponent implements OnChanges, OnDestroy {
     }
 
     refreshData(): void {
-        this.displayedResults = this.result;
-        this.rowData = [];
-        this.displayedResults.forEach((line) => {
-            const entitiesNamesResponses = [];
-            const entitiesResponses =
-                !!line.requiredResponses && line.requiredResponses.length
-                    ? line.requiredResponses
-                    : line.allowedOrRequiredResponses;
+        if (!!this.result) {
 
-            entitiesResponses.forEach((entityId) => {
-                entitiesNamesResponses.push(this.entitiesService.getEntityName(entityId));
-            });
+            this.displayedResults = this.result;
+            this.rowData = [];
+            this.displayedResults.forEach((line) => {
+                const entitiesNamesResponses = [];
+                const entitiesResponses =
+                    !!line.requiredResponses && line.requiredResponses.length
+                        ? line.requiredResponses
+                        : line.allowedOrRequiredResponses;
 
-            this.rowData.push({
-                severityNumber: this.mapSeverity.get(line.severity),
-                time: this.getFormattedDateTime(line.creationDateTime),
-                title: line.titleTranslated,
-                summary: line.summaryTranslated,
-                processStatus: this.translateValue('shared.typeOfState.' + line.typeOfState),
-                typeOfState: line.typeOfState,
-                cardId: line.cardId,
-                cardUid: line.cardUid,
-                severity: line.severity,
-                answer: line.answer,
-                emitter: line.emitter,
-                requiredResponses: line.requiredResponses,
-                entitiesResponses: entitiesResponses,
-                entitiesNamesResponses: entitiesNamesResponses,
-                beginningOfBusinessPeriod: line.beginningOfBusinessPeriod,
-                endOfBusinessPeriod: line.endOfBusinessPeriod
+                entitiesResponses.forEach((entityId) => {
+                    entitiesNamesResponses.push(this.entitiesService.getEntityName(entityId));
+                });
+
+                this.rowData.push({
+                    severityNumber: this.mapSeverity.get(line.severity),
+                    time: this.getFormattedDateTime(line.creationDateTime),
+                    title: line.titleTranslated,
+                    summary: line.summaryTranslated,
+                    processStatus: this.translateValue('shared.typeOfState.' + line.typeOfState),
+                    typeOfState: line.typeOfState,
+                    cardId: line.cardId,
+                    cardUid: line.cardUid,
+                    severity: line.severity,
+                    answer: line.answer,
+                    emitter: line.emitter,
+                    requiredResponses: line.requiredResponses,
+                    entitiesResponses: entitiesResponses,
+                    entitiesNamesResponses: entitiesNamesResponses,
+                    beginningOfBusinessPeriod: line.beginningOfBusinessPeriod,
+                    endOfBusinessPeriod: line.endOfBusinessPeriod
+                });
             });
-        });
+        }
         this.rowDataSubject.next(this.rowData);
+
     }
 
     getFormattedDateTime(epochDate: number):string {
@@ -345,7 +346,7 @@ export class MonitoringTableComponent implements OnChanges, OnDestroy {
         // generic export
         else {
             this.initStandardExportMonitoringData();
-            ExportService.exportJsonToExcelFile(this.exportMonitoringData, 'Monitoring');
+            ExcelExport.exportJsonToExcelFile(this.exportMonitoringData, 'Monitoring');
         }
     }
 
@@ -359,7 +360,7 @@ export class MonitoringTableComponent implements OnChanges, OnDestroy {
             this.exportProgress = 10 * Math.round(lineNumber / 10);
 
             if (lineNumber === this.result.length) {
-                ExportService.exportArrayToExcelFile(this.jsonToArray.getJsonAsArray(), 'Monitoring');
+                ExcelExport.exportArrayToExcelFile(this.jsonToArray.getJsonAsArray(), 'Monitoring');
                 this.exportInProgress = false;
             } else {
                 this.exportInProgress = true;
@@ -384,7 +385,7 @@ export class MonitoringTableComponent implements OnChanges, OnDestroy {
         const process: Process = this.processesService.getProcess(card.card.process);
         if (!!process) {
             card.card.processName = process.name;
-            const state = process.states[card.card.state];
+            const state = process.states.get(card.card.state);
             if (!!state) card.card.typeOfState = this.translateValue('shared.typeOfState.' + state.type);
         }
         card.card.title = card.card.titleTranslated;
@@ -429,8 +430,7 @@ export class MonitoringTableComponent implements OnChanges, OnDestroy {
     }
 
     selectCard(info) {
-        this.store.dispatch(new SelectLightCardAction({selectedCardId: info}));
-        this.store.dispatch(new LoadCardAction({id: info}));
+        this.selectedCardService.setSelectedCardId(info);
         const options: NgbModalOptions = {
             size: 'fullscreen'
         };
@@ -439,7 +439,7 @@ export class MonitoringTableComponent implements OnChanges, OnDestroy {
         // Clear card selection when modal is dismissed by pressing escape key or clicking outside of modal
         // Closing event is already handled in card detail component
         this.modalRef.dismissed.subscribe(() => {
-            this.store.dispatch(new ClearLightCardSelectionAction());
+            this.selectedCardService.clearSelectedCardId();
         });
     }
 }

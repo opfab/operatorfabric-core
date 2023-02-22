@@ -1,4 +1,4 @@
-/* Copyright (c) 2022, RTE (http://www.rte-france.com)
+/* Copyright (c) 2022-2023, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -25,17 +25,16 @@ import {HandlebarsService} from '../../card/services/handlebars.service';
 import {DomSanitizer, SafeHtml} from '@angular/platform-browser';
 import {State} from '@ofModel/processes.model';
 import {DetailContext} from '@ofModel/detail-context.model';
-import {Store} from '@ngrx/store';
-import {AppState} from '@ofStore/index';
-import {selectAuthenticationState} from '@ofSelectors/authentication.selectors';
-import {selectGlobalStyleState} from '@ofSelectors/global-style.selectors';
 import {UserContext} from '@ofModel/user-context.model';
 import {map, skip, takeUntil} from 'rxjs/operators';
 import {Observable, Subject, zip} from 'rxjs';
 import {User} from '@ofModel/user.model';
-import {OpfabLoggerService} from '@ofServices/logs/opfab-logger.service';
+import {OpfabLoggerService} from 'app/business/services/logs/opfab-logger.service';
 import {DisplayContext} from '@ofModel/templateGateway.model';
-import {TemplateCssService} from '@ofServices/template-css.service';
+import {TemplateCssService} from 'app/business/services/template-css.service';
+import {GlobalStyleService} from 'app/business/services/global-style.service';
+import {CurrentUserStore} from 'app/business/store/current-user.store';
+import {UserService} from 'app/business/services/user.service';
 
 declare const templateGateway: any;
 
@@ -70,8 +69,10 @@ export class TemplateRenderingComponent implements OnChanges, OnInit, OnDestroy,
         private element: ElementRef,
         private handlebars: HandlebarsService,
         private sanitizer: DomSanitizer,
-        private store: Store<AppState>,
+        private currentUserStore: CurrentUserStore,
         private templateCssService: TemplateCssService,
+        private globalStyleService: GlobalStyleService,
+        private userService: UserService,
         private logger: OpfabLoggerService
     ) {}
 
@@ -82,8 +83,8 @@ export class TemplateRenderingComponent implements OnChanges, OnInit, OnDestroy,
     // For certain types of template , we need to inform it to take into account
     // the new css style (for example with chart done with chart.js)
     private informTemplateWhenGlobalStyleChange() {
-        this.store
-            .select(selectGlobalStyleState)
+        this.globalStyleService
+            .getStyleChange()
             .pipe(takeUntil(this.unsubscribeToGlobalStyle$), skip(1))
             .subscribe(() => templateGateway.onStyleChange());
     }
@@ -112,20 +113,18 @@ export class TemplateRenderingComponent implements OnChanges, OnInit, OnDestroy,
 
     private getUserContextAndRenderTemplate() {
         if (!this.userContext) {
-            this.store.select(selectAuthenticationState).subscribe((authState) => {
-                this.userContext = new UserContext(
-                    authState.identifier,
-                    authState.token,
-                    authState.firstName,
-                    authState.lastName,
-                    this.user.groups,
-                    this.user.entities
-                );
-                this.computeAndRenderTemplate();
-            });
-        } else {
-            this.computeAndRenderTemplate();
+            const user = this.userService.getCurrentUserWithPerimeters().userData;
+            const token = this.currentUserStore.getToken();
+            this.userContext = new UserContext(
+                user.login,
+                token,
+                user.firstName,
+                user.lastName,
+                this.user.groups,
+                this.user.entities
+            );
         }
+        this.computeAndRenderTemplate();
     }
 
     private computeAndRenderTemplate() {
@@ -182,7 +181,7 @@ export class TemplateRenderingComponent implements OnChanges, OnInit, OnDestroy,
     }
 
     private loadTemplateJSScripts(): void {
-        const scripts = <HTMLScriptElement[]> this.element.nativeElement.getElementsByTagName('script');
+        const scripts = <HTMLScriptElement[]>this.element.nativeElement.getElementsByTagName('script');
         const scriptsInitialLength = scripts.length;
         for (let i = 0; i < scriptsInitialLength; i++) {
             const script = scripts[i];

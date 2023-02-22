@@ -14,8 +14,7 @@ import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {HttpClientModule, HTTP_INTERCEPTORS} from '@angular/common/http';
 import {CommonModule, HashLocationStrategy, LocationStrategy} from '@angular/common';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
-import {StateModule} from '@ofStore/state.module';
-import {AppRoutingModule} from './app-routing.module';
+import {AppRoutingModule} from './router/app-routing.module';
 import {AppComponent} from './app.component';
 import {LoginComponent} from './modules/core/application-loading/login/login.component';
 import {TranslateModule} from '@ngx-translate/core';
@@ -28,7 +27,7 @@ import {ArchivesModule} from './modules/archives/archives.module';
 import {NavbarModule} from './modules/navbar/navbar.module';
 import {NgbModalModule, NgbModule} from '@ng-bootstrap/ng-bootstrap';
 import {TagInputModule} from 'ngx-chips';
-import {TokenInjector} from '@ofServices/interceptors.service';
+import {TokenInjector} from 'app/server/interceptors.service';
 import {ActivityareaModule} from './modules/activityarea/activityarea.module';
 import {AlertComponent} from './modules/core/alert/alert.component';
 import {ConnectionLostComponent} from './modules/core/connection-lost/connection-lost.component';
@@ -47,8 +46,34 @@ import {ConfigServer} from './business/server/config.server';
 import {AngularConfigServer} from './server/angularConfig.server';
 import {ProcessServer} from './business/server/process.server';
 import {AngularProcessServer} from './server/angularProcess.server';
+import {AngularSettingsServer} from './server/angularSettings.server';
+import {AcknowledgeServer} from './business/server/acknowledge.server';
+import {AngularAcknowledgeServer} from './server/angularAcknowledgement.server';
 import {AngularOpfabEventStreamServer} from './server/angularOpfabEventStream.server';
 import {OpfabEventStreamServer} from './business/server/opfabEventStream.server';
+import {SettingsServer} from './business/server/settings.server';
+import {AngularExternalDevicesServer} from './server/angularExternalDevices.server';
+import {ExternalDevicesServer} from './business/server/external-devices.server';
+import {RemoteLoggerServer} from './business/server/remote-logger.server';
+import {AngularRemoteLoggerServer} from './server/angularRemoteLogger.server';
+import {UserActionLogsServer} from './business/server/user-action-logs.server';
+import {AngularUserActionLogsServer} from './server/angularUser-Action-Logs.server';
+import {EntitiesServer} from './business/server/entities.server';
+import {AngularEntitiesServer} from './server/angularEntities.server';
+import {PerimetersServer} from './business/server/perimeters.server';
+import {AngularPerimetersServer} from './server/angularPerimeters.server';
+import {GroupsServer} from './business/server/groups.server';
+import {AngularGroupsServer} from './server/angularGroups.server';
+import {UserServer} from './business/server/user.server';
+import {AngularUserServer} from './server/angularUser.server';
+import {AdminProcessServer} from './business/server/adminprocess.server';
+import {AngularAdminProcessesServer} from './server/angularAdminProcess.server';
+import {TemplateCssServer} from './business/server/template-css.server';
+import {AngularTemplateCssServer} from './server/angularTemplate-css.service';
+import {AngularCardServer} from './server/angularCard.server';
+import {CardServer} from './business/server/card.server';
+import {SoundServer} from './business/server/sound.server';
+import {AngularSoundServer} from './server/angularSound.server';
 
 @NgModule({
     imports: [
@@ -60,7 +85,6 @@ import {OpfabEventStreamServer} from './business/server/opfabEventStream.server'
         TagInputModule,
         OAuthModule.forRoot(),
         HttpClientModule,
-        StateModule.forRoot(),
         NgbModule,
         TranslateModule.forRoot(),
         SpinnerModule,
@@ -101,9 +125,22 @@ import {OpfabEventStreamServer} from './business/server/opfabEventStream.server'
             useClass: TokenInjector,
             multi: true
         },
+        {provide: AcknowledgeServer, useClass: AngularAcknowledgeServer},
+        {provide: EntitiesServer, useClass: AngularEntitiesServer},
+        {provide: PerimetersServer, useClass: AngularPerimetersServer},
+        {provide: GroupsServer, useClass: AngularGroupsServer},
+        {provide: UserServer, useClass: AngularUserServer},
+        {provide: UserActionLogsServer, useClass: AngularUserActionLogsServer},
+        {provide: AdminProcessServer, useClass: AngularAdminProcessesServer},
+        {provide: RemoteLoggerServer, useClass: AngularRemoteLoggerServer},
         {provide: ConfigServer, useClass: AngularConfigServer},
+        {provide: TemplateCssServer, useClass: AngularTemplateCssServer},
         {provide: ProcessServer, useClass: AngularProcessServer},
-        {provide: OpfabEventStreamServer, useClass: AngularOpfabEventStreamServer}
+        {provide: SettingsServer, useClass: AngularSettingsServer},
+        {provide: OpfabEventStreamServer, useClass: AngularOpfabEventStreamServer},
+        {provide: ExternalDevicesServer, useClass: AngularExternalDevicesServer},
+        {provide: CardServer, useClass: AngularCardServer},
+        {provide: SoundServer, useClass: AngularSoundServer}
     ],
     bootstrap: [AppComponent]
 })

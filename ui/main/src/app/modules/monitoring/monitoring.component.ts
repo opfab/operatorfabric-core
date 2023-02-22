@@ -17,8 +17,9 @@ import {MonitoringFiltersComponent} from './components/monitoring-filters/monito
 import {Process, TypeOfStateEnum} from '@ofModel/processes.model';
 import {ProcessesService} from 'app/business/services/processes.service';
 import {Filter} from '@ofModel/feed-filter.model';
-import {LightCardsStoreService} from '@ofServices/lightcards/lightcards-store.service';
-import {EntitiesService} from '@ofServices/entities.service';
+import {LightCardsStoreService} from 'app/business/services/lightcards/lightcards-store.service';
+import {EntitiesService} from 'app/business/services/entities.service';
+import {SelectedCardService} from 'app/business/services/card/selectedCard.service';
 
 @Component({
     selector: 'of-monitoring',
@@ -44,11 +45,13 @@ export class MonitoringComponent implements OnInit, OnDestroy {
     loadingInProgress = false;
 
     isThereProcessStateToDisplay: boolean;
+    selectedCardId: string;
 
     constructor(
         private processesService: ProcessesService,
         private lightCardsStoreService: LightCardsStoreService,
-        private entitiesService: EntitiesService
+        private entitiesService: EntitiesService,
+        private selectedCardService: SelectedCardService
     ) {
         processesService.getAllProcesses().forEach((process) => {
             const id = process.id;
@@ -91,6 +94,8 @@ export class MonitoringComponent implements OnInit, OnDestroy {
             .pipe(takeUntil(this.unsubscribe$))
             .subscribe((inProgress: boolean) => (this.loadingInProgress = inProgress));
         this.isThereProcessStateToDisplay = this.processesService.getStatesListPerProcess(false, false).size > 0;
+
+        this.selectedCardService.getSelectCardIdChanges().subscribe(selectedCardId => this.selectedCardId = selectedCardId)
     }
 
     private areFiltersCorrectlySet(filters: Array<any>): boolean {
@@ -168,12 +173,8 @@ export class MonitoringComponent implements OnInit, OnDestroy {
 
         if (!!this.mapOfProcesses && this.mapOfProcesses.has(procId) && !card.parentCardId) {
             const currentProcess = this.mapOfProcesses.get(procId);
-            /**
-             * work around because Object.setPrototypeOf(currentProcess, Process.prototype);
-             * can't be applied to currentProcess, for some reason.
-             * and thus currentProcess.extractState(…) throws an error
-             */
-            const state = Process.prototype.extractState.call(currentProcess, card);
+            
+            const state = currentProcess.states.get(card.state);
 
             if (!!state && !!state.type) {
                 typeOfState = state.type;

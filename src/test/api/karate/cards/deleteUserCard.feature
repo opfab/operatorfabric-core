@@ -21,7 +21,7 @@ Feature: deleteUserCards tests
 """
 {
   "id" : "groupKarateDeleteUserCards2",
-  "name" : "groupKarate name",
+  "name" : "groupKarate name 2",
   "description" : "groupKarate description"
 }
 """

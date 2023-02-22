@@ -10,7 +10,7 @@ dependencies {
     compileOnly boot.annotationConfiguration
     annotationProcessor boot.annotationConfiguration
 
-    implementation boot.starterWeb, boot.starterJetty
+    implementation boot.starterWeb, boot.starterUndertow
     implementation project(':tools:generic:utilities')
     implementation project(':tools:spring:spring-oauth2-utilities')
     implementation project(':tools:spring:spring-utilities')

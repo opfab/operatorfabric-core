@@ -9,13 +9,10 @@
 
 import {OnInit, Component, OnDestroy, Input, OnChanges} from '@angular/core';
 import {ProcessesService} from 'app/business/services/processes.service';
-import {Store} from '@ngrx/store';
-import {AppState} from '@ofStore/index';
-import {LightCardsStoreService} from '@ofServices/lightcards/lightcards-store.service';
+import {LightCardsStoreService} from 'app/business/services/lightcards/lightcards-store.service';
 import {Subject, takeUntil, timer} from 'rxjs';
 import {LightCard} from '@ofModel/light-card.model';
 import {Router} from '@angular/router';
-import {selectCurrentUrl} from '@ofStore/selectors/router.selectors';
 import {Utilities} from 'app/business/common/utilities';
 
 @Component({
@@ -24,7 +21,6 @@ import {Utilities} from 'app/business/common/utilities';
     styleUrls: ['./pinned-cards.component.scss']
 })
 export class PinnedCardsComponent implements OnInit, OnDestroy, OnChanges {
-    currentPath: string;
     private ngUnsubscribe: Subject<void> = new Subject<void>();
     pinnedCards: LightCard[];
     visiblePinnedCards: LightCard[];
@@ -37,20 +33,10 @@ export class PinnedCardsComponent implements OnInit, OnDestroy, OnChanges {
     constructor(
         private lightCardsStoreService: LightCardsStoreService,
         private router: Router,
-        private store: Store<AppState>,
         private processesService: ProcessesService
     ) {}
 
     ngOnInit(): void {
-        this.store
-            .select(selectCurrentUrl)
-            .pipe(takeUntil(this.ngUnsubscribe))
-            .subscribe((url) => {
-                if (url) {
-                    const urlParts = url.split('/');
-                    this.currentPath = urlParts[1];
-                }
-            });
 
         this.pinnedCards = [];
 
@@ -93,7 +79,7 @@ export class PinnedCardsComponent implements OnInit, OnDestroy, OnChanges {
             .filter((card) => {
                 const processDefinition = this.processesService.getProcess(card.process);
                 return (
-                    processDefinition.extractState(card).automaticPinWhenAcknowledged &&
+                    processDefinition.states.get((card.state)).automaticPinWhenAcknowledged &&
                     card.hasBeenAcknowledged &&
                     (!card.endDate || card.endDate > Date.now())
                 );
@@ -107,7 +93,7 @@ export class PinnedCardsComponent implements OnInit, OnDestroy, OnChanges {
     }
 
     public select(id) {
-        this.router.navigate(['/' + this.currentPath, 'cards', id]);
+        this.router.navigate(['/feed', 'cards', id]);
     }
 
     ngOnDestroy(): void {

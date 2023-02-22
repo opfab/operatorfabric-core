@@ -1,7 +1,7 @@
 swagger: '2.0'
 info:
   description: IMPORTANT - The Try it Out button will generate curl requests for examples, but executing them through the UI will not work as authentication has not been set up. This page is for documentation only.
-  version: 3.12.0.RELEASE
+  version: 3.13.0.RELEASE
   title: BusinessConfig Management
   termsOfService: ''
   contact:
@@ -605,10 +605,12 @@ definitions:
       * ONLY_FOR_EMITTING_ENTITY
       * ONLY_FOR_USERS_ALLOWED_TO_EDIT
       * FOR_ALL_USERS
+      * NEVER
     enum:
       - OnlyForEmittingEntity
       - OnlyForUsersAllowedToEdit
       - ForAllUsers
+      - Never
 
   ProcessGroup:
     description: Object containing a list of processes.
@@ -682,8 +684,10 @@ definitions:
         type: boolean
       expirationDateVisible:
         type: boolean
+        description: Default value set to false.
       lttdVisible: 
         type: boolean
+        description: Default value set to false.
       recipientVisible: # tells whether to display recipient dropdown when creating a user card
         type: boolean
       recipientList:

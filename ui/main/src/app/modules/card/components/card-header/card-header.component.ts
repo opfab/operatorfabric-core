@@ -10,7 +10,7 @@
 import {Component, Input, OnChanges} from '@angular/core';
 import {Card} from '@ofModel/card.model';
 import {State, TypeOfStateEnum} from '@ofModel/processes.model';
-import {EntitiesService} from '@ofServices/entities.service';
+import {EntitiesService} from 'app/business/services/entities.service';
 import {ProcessesService} from 'app/business/services/processes.service';
 
 const maxVisibleEntitiesForCardHeader = 3;
@@ -48,7 +48,7 @@ export class CardHeaderComponent implements OnChanges {
 
     private computeExpireLabelAndIcon() {
         this.businessconfigService.queryProcess(this.card.process, this.card.processVersion).subscribe((process) => {
-            const state = process.extractState(this.card);
+            const state = process.states.get((this.card.state));
             if (state.type === TypeOfStateEnum.FINISHED) {
                 this.showExpiredIcon = false;
                 this.showExpiredLabel = false;

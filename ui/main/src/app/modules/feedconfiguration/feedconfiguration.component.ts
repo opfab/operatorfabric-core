@@ -8,17 +8,17 @@
  */
 
 import {AfterViewInit, Component, ElementRef, OnInit, ViewChild} from '@angular/core';
-import {UserService} from '@ofServices/user.service';
+import {UserService} from 'app/business/services/user.service';
 import {Process, State} from '@ofModel/processes.model';
 import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
 import {NgbModalRef} from '@ng-bootstrap/ng-bootstrap/modal/modal-ref';
 import {UserWithPerimeters} from '@ofModel/userWithPerimeters.model';
 import {ProcessesService} from 'app/business/services/processes.service';
 import {FormArray, FormControl, FormGroup} from '@angular/forms';
-import {SettingsService} from '@ofServices/settings.service';
+import {SettingsService} from 'app/business/services/settings.service';
 import {TranslateService} from '@ngx-translate/core';
 import {Utilities} from '../../business/common/utilities';
-import {LightCardsStoreService} from '@ofServices/lightcards/lightcards-store.service';
+import {LightCardsStoreService} from 'app/business/services/lightcards/lightcards-store.service';
 
 @Component({
     selector: 'of-feedconfiguration',
@@ -226,8 +226,8 @@ export class FeedconfigurationComponent implements OnInit, AfterViewInit {
 
             const processLabel = !!process.name ? process.name : process.id;
 
-            for (const stateId of Object.keys(process.states)) {
-                const state = process.states[stateId];
+            for (const stateId of process.states.keys()) {
+                const state = process.states.get(stateId);
 
                 if (this.checkIfStateMustBeDisplayed(state, process, stateId)) {
                     const stateLabel = !!state.name ? state.name : stateId;

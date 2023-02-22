@@ -9,13 +9,12 @@
 
 import {Component, Input, OnDestroy, OnInit} from '@angular/core';
 import {BaseSettingDirective} from '../base-setting/base-setting.directive';
-import {AppState} from '@ofStore/index';
-import {Store} from '@ngrx/store';
 import {ConfigService} from 'app/business/services/config.service';
-import {SettingsService} from '@ofServices/settings.service';
+import {SettingsService} from 'app/business/services/settings.service';
 import {FormControl, FormGroup, Validators} from '@angular/forms';
 import {MultiSelectConfig} from '@ofModel/multiselect.model';
-import {OpfabLoggerService} from '@ofServices/logs/opfab-logger.service';
+import {OpfabLoggerService} from 'app/business/services/logs/opfab-logger.service';
+import {CurrentUserStore} from 'app/business/store/current-user.store';
 
 @Component({
     selector: 'of-list-setting',
@@ -29,13 +28,13 @@ export class ListSettingComponent extends BaseSettingDirective implements OnInit
 
 
     constructor(
-        protected store: Store<AppState>,
         protected configService: ConfigService,
         protected settingsService: SettingsService,
+        protected currentUserStore: CurrentUserStore,
         protected logger: OpfabLoggerService
         
     ) {
-        super(store, configService, settingsService,logger);
+        super(configService, settingsService,currentUserStore,logger);
     }
 
     ngOnInit() {

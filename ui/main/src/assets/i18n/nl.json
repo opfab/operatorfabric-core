@@ -109,7 +109,9 @@
     "realTimeUsers": "Realtime gebruikers",
     "externalDevicesConfiguration": "Extern apparaat configuratie",
     "activityArea": "Activiteitengebied",
-    "useractionlogs": "Logboek"
+    "useractionlogs": "Logboek",
+    "newcardTooltip": "Maak een nieuwe kaart",
+    "calendarTooltip": "Kalender" 
   },
   "timeline": {
     "hideTimeline" : "Verberg Tijdlijn",
@@ -207,7 +209,10 @@
     "lastResponse": "Laatste reactie :",
     "cardLoadingInProgress":"Bezig met laden van de kaart...",
     "cardNotFound": "De kaart die u zoekt werd niet gevonden.",
-    "entityRecipients" : "Ontvangers entiteiten :"
+    "selectedCardDeleted": "Deze kaart werd verwijderd",
+    "entityRecipients" : "Ontvangers entiteiten :",
+    "searchPlaceholderText": "Zoeken...",
+    "hiddenCardReceived": "Je hebt een kaart ontvangen die verborgen is door de filters die je hebt geactiveerd (tijdlijn of kaart feed)"
   },
   "login": {
     "reset": "Opnieuw instellen",
@@ -406,7 +411,7 @@
         "firstName": "VOORNAAM",
         "groups": "GROEPEN",
         "entities": "ENTITEITEN",
-        "authorizedIPAddresses": "GEAUTHORIZEERDE IP ADRESSEN",
+        "authorizedIPAddresses": "GEAUTHORIZEERDE IP ADRESSEN (gescheiden door ',')",
         "confirmDelete": "Wilt u de gebruiker echt verwijderen?",
         "add": "NIEUWE GEBRUIKER TOEVOEGEN"
       },
@@ -430,6 +435,9 @@
         "pattern": "Gebruikersnaam mag alleen de volgende tekens bevatten: kleine letters, _, -, . of cijfers.",
         "alreadyExisting": "Gebruikersnaam bestaat al."
       },
+      "authorizedIPAddresses": {
+        "pattern": "IP-adressen moeten het formaat XXX.XXX.XXX.XXX, XXX.XXX... volgen"
+      },
       "firstName": {
         "required": "Voornaam is vereist."
       },
@@ -445,7 +453,8 @@
       },
       "name": {
         "required": "Naam is vereist.",
-        "label":"NAAM"
+        "label":"NAAM",
+        "alreadyExisting": "Naam bestaat al."
       },
       "description": "OMSCHRIJVING",
       "lines": "regels per pagina"

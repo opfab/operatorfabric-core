@@ -8,23 +8,22 @@
  */
 
 import {Component, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output} from '@angular/core';
-import {Store} from '@ngrx/store';
 import {Card, fromCardToLightCard} from '@ofModel/card.model';
 import {MessageLevel} from '@ofModel/message.model';
 import {PermissionEnum} from '@ofModel/permission.model';
 import {AcknowledgmentAllowedEnum, ConsideredAcknowledgedForUserWhenEnum, State} from '@ofModel/processes.model';
 import {User} from '@ofModel/user.model';
-import {AcknowledgeService} from '@ofServices/acknowledge.service';
-import {AppService, PageType} from '@ofServices/app.service';
-import {EntitiesService} from '@ofServices/entities.service';
-import {LightCardsStoreService} from '@ofServices/lightcards/lightcards-store.service';
-import {LogOption, OpfabLoggerService} from '@ofServices/logs/opfab-logger.service';
+import {AcknowledgeService} from 'app/business/services/acknowledge.service';
+import {EntitiesService} from 'app/business/services/entities.service';
+import {LightCardsStoreService} from 'app/business/services/lightcards/lightcards-store.service';
+import {LogOption, OpfabLoggerService} from 'app/business/services/logs/opfab-logger.service';
 import {ProcessesService} from 'app/business/services/processes.service';
-import {UserPermissionsService} from '@ofServices/user-permissions.service';
-import {UserService} from '@ofServices/user.service';
-import {AlertMessageAction} from '@ofStore/actions/alert.actions';
-import {AppState} from '@ofStore/index';
+import {UserPermissionsService} from 'app/business/services/user-permissions.service';
+import {UserService} from 'app/business/services/user.service';
 import {Subject, takeUntil} from 'rxjs';
+import {ServerResponseStatus} from 'app/business/server/serverResponse';
+import {AlertMessageService} from 'app/business/services/alert-message.service';
+import {RouterStore,PageType} from 'app/business/store/router.store';
 
 const enum AckI18nKeys {
     BUTTON_TEXT_ACK = 'cardAcknowledgment.button.ack',
@@ -57,14 +56,14 @@ export class CardAckComponent implements OnInit, OnChanges, OnDestroy {
     isReadOnlyUser: any;
 
     constructor(
-        private store: Store<AppState>,
-        private _appService: AppService,
+        private routerStore: RouterStore,
         private entitiesService: EntitiesService,
         private acknowledgeService: AcknowledgeService,
         private userService: UserService,
         private userPermissionsService: UserPermissionsService,
         private processService: ProcessesService,
         private lightCardsStoreService: LightCardsStoreService,
+        private alertMessageService: AlertMessageService,
         private logger: OpfabLoggerService
     ) {
         const userWithPerimeters = this.userService.getCurrentUserWithPerimeters();
@@ -114,10 +113,10 @@ export class CardAckComponent implements OnInit, OnChanges, OnDestroy {
 
     private setAcknowledgeButtonVisibility() {
         this.showAckButton = this.card.hasBeenAcknowledged ? false
-            : this.isAcknowledgmentAllowed() && this._appService.pageType !== PageType.CALENDAR;
+            : this.isAcknowledgmentAllowed() && this.routerStore.getCurrentPageType() !== PageType.CALENDAR;
 
         this.showUnAckButton = this.card.hasBeenAcknowledged && this.isCardAcknowledgedAtEntityLevel() && !this.isReadOnlyUser ? false
-            : this.isCancelAcknowledgmentAllowed() && this._appService.pageType !== PageType.CALENDAR;
+            : this.isCancelAcknowledgmentAllowed() &&  this.routerStore.getCurrentPageType() !== PageType.CALENDAR;
     }
 
     private isAcknowledgmentAllowed(): boolean {
@@ -160,7 +159,7 @@ export class CardAckComponent implements OnInit, OnChanges, OnDestroy {
 
         this.acknowledgeService.postUserAcknowledgement(this.card.uid, entitiesAcks).subscribe((resp) => {
             this.ackOrUnackInProgress = false;
-            if (resp.status === 201 || resp.status === 200) {
+            if (resp.status === ServerResponseStatus.OK) {
                 this.acknowledgeService.updateAcknowledgementOnLightCard(this.card.id, true);
                 this.card = {...this.card, hasBeenAcknowledged: true};
                 this.setAcknowledgeButtonVisibility();
@@ -190,16 +189,14 @@ export class CardAckComponent implements OnInit, OnChanges, OnDestroy {
     }
 
     private displayMessage(i18nKey: string, msg: string, severity: MessageLevel = MessageLevel.ERROR) {
-        this.store.dispatch(
-            new AlertMessageAction({alertMessage: {message: msg, level: severity, i18n: {key: i18nKey}}})
-        );
+        this.alertMessageService.sendAlertMessage({message: msg, level: severity, i18n: {key: i18nKey}});
     }
 
     public cancelAcknowledgement() {
         this.ackOrUnackInProgress = true;
         this.acknowledgeService.deleteUserAcknowledgement(this.card.uid).subscribe((resp) => {
             this.ackOrUnackInProgress = false;
-            if (resp.status === 200 || resp.status === 204) {
+            if (resp.status === ServerResponseStatus.OK) {
                 this.card = {...this.card, hasBeenAcknowledged: false};
                 this.setAcknowledgeButtonVisibility();
                 this.acknowledgeService.updateAcknowledgementOnLightCard(this.card.id, false);

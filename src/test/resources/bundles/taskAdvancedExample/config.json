@@ -14,9 +14,7 @@
       "color": "#0070C0",
       "userCard" : {
         "template" : "usercard_taskAdvanced",
-        "lttdVisible" : false,
-        "recipientVisible" : false,
-        "expirationDateVisible" : false
+        "recipientVisible" : false
       },
       "templateName": "taskAdvanced",
       "styles": [

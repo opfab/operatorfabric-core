@@ -27,7 +27,7 @@
     <ul class="navbar-nav mr-auto ">
       <!-- Links to OperatorFabric pages as defined in app-rooting.module.ts (e.g. Card Feed, Archive) -->
       <li class="nav-item" *ngFor="let link of navigationRoutes, let i = index"
-        [class.active]="link.path === currentPath[1]">
+        [class.active]="link.path === currentRoute">
         <a id="opfab-navbar-menu-{{link.path}}" class="nav-link" [routerLink]="link.path" routerLinkActive #rla="routerLinkActive"
           (click)="activeLinkIndex = i" translate>{{'menu.'+link.path}}</a>
       </li>
@@ -45,19 +45,28 @@
           </div>
         </div>
         <!-- Navbar link if only one entry -->
-        <div class="nav-link" *ngIf="tMenu.entries.length==1">
+        <div class="nav-link" *ngIf="tMenu.entries.length === 1">
           <of-menu-link [menu]="tMenu" [menuEntry]="tMenu.entries[0]"></of-menu-link>
         </div>
       </li>
     </ul>
 
     <ul class="navbar-nav navbar-right opfab-sticky-menu">
+      <ng-template #createNewCard>
+        <span translate>menu.newcardTooltip</span>
+      </ng-template>
       <li id="opfab-newcard-menu" style="display:flex;margin-top: 12px;cursor:pointer;margin-right:20px" (click)="openCardCreation()" *ngIf="(displayCreateUserCard)">
-        <span class="opfab-menu-icon-newcard"></span>
-     </li>
-
+        <span class="opfab-menu-icon-newcard"
+        [ngbPopover]="createNewCard" popoverClass="opfab-popover" container="body"
+        triggers="mouseenter:mouseleave" >></span>
+        </li> 
+     <ng-template #calendartooltip>
+      <span translate>menu.calendarTooltip</span>
+    </ng-template>
       <li id="opfab-calendar-menu" style="display:flex;margin-top: 12px;cursor:pointer;" [routerLink]="'calendar'" routerLinkActive #rla="routerLinkActive" *ngIf="(displayCalendar)">
-        <a  href="javascript:void(0)" [class.active]="(currentPath.includes('calendar'))" class="opfab-menu-icon-calendar"></a>
+        <a  href="javascript:void(0)" [class.active]="(currentRoute.includes('calendar'))" class="opfab-menu-icon-calendar"
+        [ngbPopover]="calendartooltip" popoverClass="opfab-popover" container="body"
+        triggers="mouseenter:mouseleave"></a>
      </li>
 
       <li >
@@ -86,7 +95,7 @@
 <ng-template #menuCollapsedContent>
   <div>
     <ul class="navbar-nav mr-auto " style="flex-direction: row; float:left;">
-      <li class="nav-item" [class.active]="'feed' === currentPath[1]">
+      <li class="nav-item" [class.active]="'feed' === currentRoute">
         <a id="opfab-navbar-menu-feed-collapsed" class="nav-link" routerLink="/feed"  routerLinkActive #rla="routerLinkActive"
           translate>{{'menu.feed'}}</a>
       </li>
@@ -106,11 +115,11 @@
         </a>
       </li>
 
-      <li class="nav-item" *ngIf="(nightDayMode)">
-        <a id="opfab-navbar-right-menu-night-mode-collapsed" *ngIf="(!(getNightMode()|async))" class="opfab-right-menu-link" (click)='switchToNightMode()'>
+      <li class="nav-item" >
+        <a id="opfab-navbar-right-menu-night-mode-collapsed" *ngIf="((styleMode|async) === 'DAY')" class="opfab-right-menu-link" (click)='switchToNightMode()'>
           <div class="opfab-menu-icon opfab-menu-icon-dark-light"></div>
         </a>
-        <a id="opfab-navbar-right-menu-day-mode-collapsed"  *ngIf="(getNightMode()|async)" class="opfab-right-menu-link"  (click)='switchToDayMode()'>
+        <a id="opfab-navbar-right-menu-day-mode-collapsed"  *ngIf="((styleMode|async) === 'NIGHT')" class="opfab-right-menu-link"  (click)='switchToDayMode()'>
           <div class="opfab-menu-icon opfab-menu-icon-dark-light"></div>
         </a>
       </li>
@@ -187,11 +196,11 @@
     </div>
 
     <div class="opfab-right-menu-item" *ngIf="(nightDayMode)">
-      <a id="opfab-navbar-right-menu-night-mode" *ngIf="(!(getNightMode()|async))" class="opfab-right-menu-link" (click)='switchToNightMode()'>
+      <a id="opfab-navbar-right-menu-night-mode" *ngIf="((styleMode|async) === 'DAY')" class="opfab-right-menu-link" (click)='switchToNightMode()'>
         <div class="opfab-menu-icon opfab-menu-icon-dark-light"></div>
         <div translate>menu.switchToNightMode</div>
       </a>
-      <a id="opfab-navbar-right-menu-day-mode"  *ngIf="(getNightMode()|async)" class="opfab-right-menu-link"  (click)='switchToDayMode()'>
+      <a id="opfab-navbar-right-menu-day-mode"  *ngIf="((styleMode|async) === 'NIGHT')" class="opfab-right-menu-link"  (click)='switchToDayMode()'>
         <div class="opfab-menu-icon opfab-menu-icon-dark-light"></div>
         <div translate>menu.switchToDayMode</div>
       </a>

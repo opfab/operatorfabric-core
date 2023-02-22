@@ -1,4 +1,4 @@
-<!-- Copyright (c) 2021-2022, RTE (http://www.rte-france.com)              -->
+<!-- Copyright (c) 2021-2023, RTE (http://www.rte-france.com)              -->
 <!-- See AUTHORS.txt                                                       -->
 <!-- This Source Code Form is subject to the terms of the Mozilla Public   -->
 <!-- License, v. 2.0. If a copy of the MPL was not distributed with this   -->
@@ -6,10 +6,10 @@
 <!-- SPDX-License-Identifier: MPL-2.0                                      -->
 <!-- This file is part of the OperatorFabric project.                      -->
 
-<div *ngIf="card && cardState;" style="font-size:13px;" [hidden]="cardLoadingInProgress || cardNotFound">
-  <of-card-body [cardState]="cardState" [card]="card" [childCards]="childCards"
+<div  style="font-size:13px;" [hidden]="cardLoadingInProgress || cardNotFound">
+  <of-card-body *ngIf="card && cardState;" [cardState]="cardState" [card]="card" [childCards]="childCards"
     [parentModalRef]="parentModalRef" [screenSize]="screenSize"
-    [parentComponent]=this>
+    [parentComponent]=this (closeCardDetail)="closeDetails()">
   </of-card-body>
 </div>
 
@@ -20,5 +20,16 @@
 </of-spinner>
 
 
-<div *ngIf="cardNotFound" id="opfab-feed-card-not-found" style="font-size:1.5em; text-align:center; padding-top: 3em;"
+<div *ngIf="cardNotFound && !cardLoadingInProgress" id="opfab-feed-card-not-found" style="font-size:1.5em; text-align:center; padding-top: 3em;"
   translate>feed.cardNotFound</div>
+
+  <ng-template #cardDeleted let-modal>
+
+    <div id="opfab-card-details-deleted" class="modal-body text-center" style="white-space: pre-wrap;">
+      <p>{{'feed.selectedCardDeleted'|translate }}</p> 
+
+      <button id="opfab-confirm-button" type="button" class="opfab-btn" (click)="closeDeletedCard()" translate>
+          button.ok</button>
+  </div>
+  </ng-template>
+

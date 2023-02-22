@@ -7,28 +7,27 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {Component, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output, TemplateRef, ViewChild} from '@angular/core';
+import {Component, EventEmitter, Input, OnChanges, OnDestroy, Output, TemplateRef, ViewChild} from '@angular/core';
 import {NgbModal, NgbModalOptions, NgbModalRef} from '@ng-bootstrap/ng-bootstrap';
-import {Store} from '@ngrx/store';
 import {Card} from '@ofModel/card.model';
 import {MessageLevel} from '@ofModel/message.model';
 import {PermissionEnum} from '@ofModel/permission.model';
 import {State} from '@ofModel/processes.model';
-import {AppService, PageType} from '@ofServices/app.service';
-import {CardService} from '@ofServices/card.service';
-import {UserPermissionsService} from '@ofServices/user-permissions.service';
-import {UserService} from '@ofServices/user.service';
-import {AlertMessageAction} from '@ofStore/actions/alert.actions';
-import {AppState} from '@ofStore/index';
-import {selectCurrentUrl} from '@ofStore/selectors/router.selectors';
-import {Subject, takeUntil} from 'rxjs';
+import {AlertMessageService} from 'app/business/services/alert-message.service';
+import {UserPermissionsService} from 'app/business/services/user-permissions.service';
+import {UserService} from 'app/business/services/user.service';
+import {Subject} from 'rxjs';
+import {CardService} from 'app/business/services/card.service';
+import {ServerResponseStatus} from 'app/business/server/serverResponse';
+import {RouterStore,PageType} from 'app/business/store/router.store';
+import {Router} from '@angular/router';
 
 @Component({
     selector: 'of-card-actions',
     templateUrl: './card-actions.component.html',
     styleUrls: ['./card-actions.component.scss']
 })
-export class CardActionsComponent implements OnInit, OnChanges,OnDestroy {
+export class CardActionsComponent implements OnChanges, OnDestroy {
     @Input() card: Card;
     @Input() cardState: State;
     @Input() parentModalRef: NgbModalRef;
@@ -38,7 +37,6 @@ export class CardActionsComponent implements OnInit, OnChanges,OnDestroy {
     @ViewChild('userCardEdition') userCardEditionTemplate: TemplateRef<any>;
     @ViewChild('deleteCardConfirmation') deleteCardConfirmationTemplate: TemplateRef<any>;
 
-    private currentPath: string;
     private editModal: NgbModalRef;
     private deleteConfirmationModal: NgbModalRef;
     public showEditButton = false;
@@ -52,35 +50,26 @@ export class CardActionsComponent implements OnInit, OnChanges,OnDestroy {
         private userPermissionsService: UserPermissionsService,
         private userService: UserService,
         private modalService: NgbModal,
-        private _appService: AppService,
         private cardService: CardService,
-        private store: Store<AppState>
+        private alertMessageService: AlertMessageService,
+        private router: Router,
+        private routerStore: RouterStore
     ) {}
-
-    ngOnInit() : void {
-        this.store
-        .select(selectCurrentUrl)
-        .pipe(takeUntil(this.unsubscribe$))
-        .subscribe((url) => {
-            if (!!url) {
-                const urlParts = url.split('/');
-                const CURRENT_PAGE_INDEX = 1;
-                this.currentPath = urlParts[CURRENT_PAGE_INDEX];
-            }
-        });
-    }
 
     ngOnChanges(): void {
         this.setButtonsVisibility();
         this.isReadOnlyUser = this.userService.hasCurrentUserAnyPermission([PermissionEnum.READONLY]);
-
     }
 
     private setButtonsVisibility() {
-        this.showEditButton = !this.isReadOnlyUser &&
-            this.cardState.editCardEnabledOnUserInterface && this.doesTheUserHavePermissionToEditCard();
-        this.showDeleteButton = !this.isReadOnlyUser &&
-            this.cardState.deleteCardEnabledOnUserInterface && this.doesTheUserHavePermissionToDeleteCard();
+        this.showEditButton =
+            !this.isReadOnlyUser &&
+            this.cardState.editCardEnabledOnUserInterface &&
+            this.doesTheUserHavePermissionToEditCard();
+        this.showDeleteButton =
+            !this.isReadOnlyUser &&
+            this.cardState.deleteCardEnabledOnUserInterface &&
+            this.doesTheUserHavePermissionToDeleteCard();
     }
 
     private doesTheUserHavePermissionToEditCard(): boolean {
@@ -117,14 +106,14 @@ export class CardActionsComponent implements OnInit, OnChanges,OnDestroy {
     }
 
     private reopenCardDetailOnceEditionIsFinished() {
-        if (this._appService.pageType !== PageType.CALENDAR && this._appService.pageType !== PageType.MONITORING) {
+        if (this.routerStore.getCurrentPageType() !== PageType.CALENDAR && this.routerStore.getCurrentPageType() !== PageType.MONITORING) {
             this.editModal.result.then(
                 () => {
-                    // If modal is closed
-                    this._appService.reopenDetails(this.currentPath, this.card.id);
+                     // If modal is closed
+                    this.router.navigate(['/' + this.routerStore.getCurrentRoute(), 'cards', this.card.id]);
                 },
                 () => {
-                    this._appService.reopenDetails(this.currentPath, this.card.id);
+                    this.router.navigate(['/' + this.routerStore.getCurrentRoute(), 'cards', this.card.id]);
                 }
             );
         }
@@ -142,33 +131,26 @@ export class CardActionsComponent implements OnInit, OnChanges,OnDestroy {
     public confirmDeleteCard(): void {
         this.deleteInProgress = true;
         if (!!this.deleteConfirmationModal) this.deleteConfirmationModal.close();
-        this.cardService.deleteCard(this.card).subscribe({
-            next: (resp) => {
-                const status = resp.status;
-                if (status === 200) {
-                    this.closeDetails();
-                    this.displayMessage('userCard.deleteCard.cardDeletedWithNoError', null, MessageLevel.INFO);
-                } else {
-                    console.log('Impossible to delete card , error status from service : ', status);
-                    this.displayMessage('userCard.deleteCard.error.impossibleToDeleteCard ', null, MessageLevel.ERROR);
-                }
-                this.deleteInProgress = false;
-            },
-            error: (err) => {
-                console.error('Error when deleting card :', err);
+        this.cardService.deleteCard(this.card).subscribe((resp) => {
+            const status = resp.status;
+            if (status === ServerResponseStatus.OK) {
+                this.closeDetails();
+                this.displayMessage('userCard.deleteCard.cardDeletedWithNoError', null, MessageLevel.INFO);
+            } else {
+                console.log('Impossible to delete card , error status from service : ', status);
                 this.displayMessage('userCard.deleteCard.error.impossibleToDeleteCard ', null, MessageLevel.ERROR);
-                this.deleteInProgress = false;
             }
+            this.deleteInProgress = false;
         });
     }
 
     private displayMessage(i18nKey: string, msg: string, severity: MessageLevel = MessageLevel.ERROR) {
-        this.store.dispatch(
-            new AlertMessageAction({alertMessage: {message: msg, level: severity, i18n: {key: i18nKey}}})
-        );
+        this.alertMessageService.sendAlertMessage({message: msg, level: severity, i18n: {key: i18nKey}});
     }
 
     ngOnDestroy() {
+        if (this.deleteConfirmationModal)
+            this.deleteConfirmationModal.dismiss();
         this.unsubscribe$.next();
         this.unsubscribe$.complete();
     }

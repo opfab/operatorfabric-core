@@ -59,12 +59,12 @@ public class WebSecurityConfiguration {
     public static void configureCommon(final HttpSecurity http) throws Exception {
         http
                 .authorizeRequests()
-                .antMatchers(HttpMethod.GET,PROMETHEUS_PATH).permitAll()
-                .antMatchers(LOGGERS_PATH).hasRole(ADMIN_ROLE)
-                .antMatchers(HttpMethod.POST,NOTIFICATIONS_ROOT_PATH).access(AUTH_AND_IP_ALLOWED)
-                .antMatchers(HttpMethod.GET, CONFIGURATIONS_USERS_PATH).access(AUTH_AND_IP_ALLOWED)
-                .antMatchers(CONFIGURATIONS_ROOT_PATH+"**").access(ADMIN_AND_IP_ALLOWED)
-                .antMatchers(DEVICES_ROOT_PATH+"**").access(ADMIN_AND_IP_ALLOWED)
+                .requestMatchers(HttpMethod.GET,PROMETHEUS_PATH).permitAll()
+                .requestMatchers(LOGGERS_PATH).hasRole(ADMIN_ROLE)
+                .requestMatchers(HttpMethod.POST,NOTIFICATIONS_ROOT_PATH).access(AUTH_AND_IP_ALLOWED)
+                .requestMatchers(HttpMethod.GET, CONFIGURATIONS_USERS_PATH).access(AUTH_AND_IP_ALLOWED)
+                .requestMatchers(CONFIGURATIONS_ROOT_PATH+"**").access(ADMIN_AND_IP_ALLOWED)
+                .requestMatchers(DEVICES_ROOT_PATH+"**").access(ADMIN_AND_IP_ALLOWED)
                 .anyRequest().access(AUTH_AND_IP_ALLOWED);
     }
 

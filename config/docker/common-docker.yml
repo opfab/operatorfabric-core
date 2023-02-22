@@ -22,6 +22,7 @@ spring:
 server:
   forward-headers-strategy: framework
 operatorfabric:
+  userActionLogActivated: true
   servicesUrls:
     users: "users:8080"
     businessconfig: "businessconfig:8080"

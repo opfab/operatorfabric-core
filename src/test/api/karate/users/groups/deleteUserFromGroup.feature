@@ -13,6 +13,7 @@ Feature: deleteUserFromGroup
 """
 {
   "id" : "groupKarate2",
+  "name" : "groupKarate2 name",
   "description" : "group to delete after the test"
 }
 """

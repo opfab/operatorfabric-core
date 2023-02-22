@@ -8,16 +8,12 @@
  */
 
 import {Component, OnInit} from '@angular/core';
-import {AppState} from '@ofStore/index';
-import {Store} from '@ngrx/store';
-import {selectUserNameOrIdentifier} from '@ofSelectors/authentication.selectors';
-import {Observable} from 'rxjs';
-import {UserService} from '@ofServices/user.service';
-import {EntitiesService} from '@ofServices/entities.service';
+import {UserService} from 'app/business/services/user.service';
+import {EntitiesService} from 'app/business/services/entities.service';
 import {ConfigService} from 'app/business/services/config.service';
 import {DateTimeFormatterService} from 'app/business/services/date-time-formatter.service';
-import {Actions, ofType} from '@ngrx/effects';
-import {UserActionsTypes} from '@ofStore/actions/user.actions';
+import {ApplicationEventsService} from 'app/business/services/application-events.service';
+import * as _ from 'lodash-es';
 
 @Component({
     selector: 'of-info',
@@ -25,28 +21,28 @@ import {UserActionsTypes} from '@ofStore/actions/user.actions';
     styleUrls: ['./info.component.scss']
 })
 export class InfoComponent implements OnInit {
-    _userName$: Observable<string>;
+    userName: string;
     userEntitiesToDisplay: string;
     timeToDisplay: string;
 
     constructor(
-        private store: Store<AppState>,
         private dateTimeFormatter: DateTimeFormatterService,
         private userService: UserService,
         private entitiesService: EntitiesService,
         private configService: ConfigService,
-        private actions$: Actions
+        private applicationEventsService: ApplicationEventsService
     ) {}
 
     ngOnInit() {
         this.updateTime();
-        this._userName$ = this.store.select(selectUserNameOrIdentifier);
-        if (this.configService.getConfigValue('showUserEntitiesOnTopRightOfTheScreen', false))
-        {
+        const firstName = this.userService.getCurrentUserWithPerimeters().userData.firstName;
+        const lastName = this.userService.getCurrentUserWithPerimeters().userData.lastName;
+        if (firstName && lastName) this.userName = `${_.upperFirst(firstName)} ${_.upperFirst(lastName)}`;
+        else this.userName = this.userService.getCurrentUserWithPerimeters().userData.login;
+
+        if (this.configService.getConfigValue('showUserEntitiesOnTopRightOfTheScreen', false)) {
             this.setUserEntitiesToDisplay();
-            this.actions$.pipe(
-                ofType(UserActionsTypes.UserConfigLoaded),
-                ).subscribe(() => this.setUserEntitiesToDisplay());
+            this.applicationEventsService.getUserConfigChanges().subscribe(() => this.setUserEntitiesToDisplay());
         }
     }
 

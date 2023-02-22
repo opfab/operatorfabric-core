@@ -10,7 +10,7 @@
 import {Component} from '@angular/core';
 import {ICellRendererAngularComp} from 'ag-grid-angular';
 import {ICellRendererParams} from 'ag-grid-community';
-import {CachedCrudService} from '@ofServices/cached-crud-service';
+import {CachedCrudService} from 'app/business/services/cached-crud-service';
 import {AdminItemType, SharingService} from '../../services/sharing.service';
 
 @Component({

@@ -11,10 +11,10 @@ import {Component, EventEmitter, Input, OnDestroy, OnInit, Output} from '@angula
 import {ConfigService} from 'app/business/services/config.service';
 import moment from 'moment';
 import {FilterType} from '@ofModel/feed-filter.model';
-import {UserPreferencesService} from '@ofServices/user-preference.service';
+import {UserPreferencesService} from 'app/business/services/user-preference.service';
 import {DateTimeFormatterService} from 'app/business/services/date-time-formatter.service';
-import {FilterService} from '@ofServices/lightcards/filter.service';
-import {LogOption, OpfabLoggerService} from '@ofServices/logs/opfab-logger.service';
+import {FilterService} from 'app/business/services/lightcards/filter.service';
+import {LogOption, OpfabLoggerService} from 'app/business/services/logs/opfab-logger.service';
 
 @Component({
     selector: 'of-timeline-buttons',

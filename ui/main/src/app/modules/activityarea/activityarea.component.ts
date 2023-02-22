@@ -8,18 +8,17 @@
  */
 
 import {Component, EventEmitter, Input, OnDestroy, OnInit, Output} from '@angular/core';
-import {UserService} from '@ofServices/user.service';
+import {UserService} from 'app/business/services/user.service';
 import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
 import {NgbModalRef} from '@ng-bootstrap/ng-bootstrap/modal/modal-ref';
 import {UserWithPerimeters} from '@ofModel/userWithPerimeters.model';
 import {FormControl, FormGroup} from '@angular/forms';
-import {SettingsService} from '@ofServices/settings.service';
-import {EntitiesService} from '@ofServices/entities.service';
+import {SettingsService} from 'app/business/services/settings.service';
+import {EntitiesService} from 'app/business/services/entities.service';
 import {Utilities} from '../../business/common/utilities';
-import {GroupsService} from '@ofServices/groups.service';
-import {Actions, ofType} from '@ngrx/effects';
-import {UserActionsTypes} from '@ofStore/actions/user.actions';
-import {LightCardsStoreService} from '@ofServices/lightcards/lightcards-store.service';
+import {GroupsService} from 'app/business/services/groups.service';
+import {LightCardsStoreService} from 'app/business/services/lightcards/lightcards-store.service';
+import {ApplicationEventsService} from 'app/business/services/application-events.service';
 
 @Component({
     selector: 'of-activityarea',
@@ -52,7 +51,7 @@ export class ActivityareaComponent implements OnInit, OnDestroy {
         private modalService: NgbModal,
         private settingsService: SettingsService,
         private lightCardStoreService : LightCardsStoreService,
-        private actions$: Actions
+        private applicationEventsService : ApplicationEventsService,
     ) {}
 
     private initForm() {
@@ -70,7 +69,7 @@ export class ActivityareaComponent implements OnInit, OnDestroy {
     ngOnInit() {
         this.loadUserData();
 
-        this.actions$.pipe(ofType(UserActionsTypes.UserConfigLoaded)).subscribe(() => this.loadUserData());
+        this.applicationEventsService.getUserConfigChanges().subscribe(() => this.loadUserData());
 
         this.interval = setInterval(() => {
             this.refresh();

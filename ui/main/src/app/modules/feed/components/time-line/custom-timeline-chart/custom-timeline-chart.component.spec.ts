@@ -16,18 +16,14 @@ import {NgxChartsModule} from '@swimlane/ngx-charts';
 import {NO_ERRORS_SCHEMA} from '@angular/core';
 import * as moment from 'moment';
 import {MouseWheelDirective} from '../directives/mouse-wheel.directive';
-import {Store, StoreModule} from '@ngrx/store';
-import {RouterStateSerializer, StoreRouterConnectingModule} from '@ngrx/router-store';
-import {CustomRouterStateSerializer} from '@ofStates/router.state';
-import {appReducer, storeConfig} from '@ofStore/index';
 import {RouterTestingModule} from '@angular/router/testing';
 import {HttpClientTestingModule} from '@angular/common/http/testing';
 import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
-import {LightCardsFeedFilterService} from '@ofServices/lightcards/lightcards-feed-filter.service';
+import {LightCardsFeedFilterService} from 'app/business/services/lightcards/lightcards-feed-filter.service';
 import {LightCardsServiceMock} from '@tests/mocks/lightcards.service.mock';
 import {DateTimeFormatterService} from 'app/business/services/date-time-formatter.service';
-import {RemoteLoggerService} from '@ofServices/logs/remote-logger.service';
-import {RemoteLoggerServiceMock} from '@tests/mocks/remote-logger.service.mock';
+import {RemoteLoggerService} from 'app/business/services/logs/remote-logger.service';
+import {RemoteLoggerServiceMockAngular} from '@tests/mocks/remote-logger.service-angular.mock';
 
 describe('CustomTimelineChartComponent', () => {
     let component: CustomTimelineChartComponent;
@@ -42,9 +38,7 @@ describe('CustomTimelineChartComponent', () => {
                 CommonModule,
                 BrowserAnimationsModule,
                 FormsModule,
-                StoreModule.forRoot(appReducer, storeConfig),
                 RouterTestingModule,
-                StoreRouterConnectingModule.forRoot(),
                 NgxChartsModule,
                 NgbModule,
                 HttpClientTestingModule
@@ -52,11 +46,9 @@ describe('CustomTimelineChartComponent', () => {
             declarations: [CustomTimelineChartComponent, MouseWheelDirective],
             providers: [
                 {provide: APP_BASE_HREF, useValue: '/'},
-                {provide: Store, useClass: Store},
-                {provide: RouterStateSerializer, useClass: CustomRouterStateSerializer},
                 {provide: DateTimeFormatterService, useClass: DateTimeFormatterService},
                 {provide: LightCardsFeedFilterService, useClass: LightCardsServiceMock},
-                {provide: RemoteLoggerService, useClass: RemoteLoggerServiceMock}
+                {provide: RemoteLoggerService, useClass: RemoteLoggerServiceMockAngular}
             ],
             schemas: [NO_ERRORS_SCHEMA]
         }).compileComponents();

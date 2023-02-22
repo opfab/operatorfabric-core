@@ -10,8 +10,7 @@
 import {HttpClient} from '@angular/common/http';
 import {Injectable} from '@angular/core';
 import {environment} from '@env/environment';
-import {AuthenticationService} from '@ofServices/authentication/authentication.service';
-import {LogOption, OpfabLoggerService} from '@ofServices/logs/opfab-logger.service';
+import {LogOption, OpfabLoggerService} from 'app/business/services/logs/opfab-logger.service';
 import {OpfabEventStreamServer} from 'app/business/server/opfabEventStream.server';
 import {ServerResponse} from 'app/business/server/serverResponse';
 import {GuidService} from 'app/business/services/guid.service';
@@ -19,6 +18,7 @@ import {EventSourcePolyfill} from 'ng-event-source';
 import {Observable, Subject} from 'rxjs';
 import packageInfo from '../../../package.json';
 import {AngularServer} from './angular.server';
+import {CurrentUserStore} from 'app/business/store/current-user.store';
 
 @Injectable()
 export class AngularOpfabEventStreamServer extends AngularServer implements OpfabEventStreamServer {
@@ -35,7 +35,7 @@ export class AngularOpfabEventStreamServer extends AngularServer implements Opfa
     private eventSource;
 
     constructor(
-        private authService: AuthenticationService,
+        private currentUserStore: CurrentUserStore,
         guidService: GuidService,
         private logger: OpfabLoggerService,
         private httpClient: HttpClient
@@ -49,8 +49,8 @@ export class AngularOpfabEventStreamServer extends AngularServer implements Opfa
     public initStream() {
         // security header needed here as SSE request are not intercepted by our angular header interceptor
         let securityHeader;
-        if (!this.authService.isAuthModeNone()) {
-            securityHeader = this.authService.getSecurityHeader();
+        if (this.currentUserStore.doesAuthenticationUseToken()) {
+            securityHeader = {Authorization: `Bearer ${this.currentUserStore.getToken()}`}
         }
         this.eventSource = new EventSourcePolyfill(`${this.eventStreamUrl}&notification=true`, {
             headers: securityHeader

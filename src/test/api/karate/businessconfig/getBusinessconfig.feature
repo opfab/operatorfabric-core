@@ -19,7 +19,7 @@ Feature: getBusinessconfig
   Scenario: List existing Businessconfig
 
     # Check bundle
-    Given url opfabUrl + '/businessconfig/processes/'
+    Given url opfabUrl + '/businessconfig/processes'
     And header Authorization = 'Bearer ' + authToken
     When method GET
     Then status 200
@@ -29,7 +29,7 @@ Feature: getBusinessconfig
 
     # Check bundle
 
-    Given url opfabUrl + '/businessconfig/processes/'
+    Given url opfabUrl + '/businessconfig/processes'
     When method GET
     Then status 200
     And assert response.length >= 1

@@ -181,10 +181,10 @@
         },
         "adminmenu": {
           "title": {
-            "admin": "Admin menu"
+            "admin": "Menu admin"
           },
           "entry": {
-            "admin": "Admin menu entry"
+            "admin": "Menu admin élément"
           }
         }
       }

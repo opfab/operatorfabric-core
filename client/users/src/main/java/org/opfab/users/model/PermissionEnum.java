@@ -26,6 +26,7 @@ import com.fasterxml.jackson.annotation.JsonValue;
  */
 public enum PermissionEnum {
     ADMIN("ADMIN"),
+    ADMIN_BUSINESS_PROCESS("ADMIN_BUSINESS_PROCESS"),
     VIEW_ALL_ARCHIVED_CARDS("VIEW_ALL_ARCHIVED_CARDS"),
     READONLY("READONLY");
 

@@ -28,7 +28,7 @@ import {FeedSortComponent} from './components/card-list/filters/feed-sort/feed-s
 import {LightCardModule} from 'app/modules/share/light-card/light-card.module';
 import {TimelineButtonsModule} from '../share/timeline-buttons/timeline-buttons.module';
 import {PinnedCardsComponent} from './components/pinned-cards/pinned-cards.component';
-import { MapComponent } from './components/map/map.component';
+import {MapComponent} from './components/map/map.component';
 import {FeedSearchComponent} from './components/card-list/filters/feed-search/feed-search.component';
 
 @NgModule({

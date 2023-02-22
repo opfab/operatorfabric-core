@@ -1,7 +1,7 @@
 swagger: '2.0'
 info:
   description: IMPORTANT - The Try it Out button will generate curl requests for examples, but executing them through the UI will not work as authentication has not been set up. This page is for documentation only.
-  version: 3.12.0.RELEASE
+  version: 3.13.0.RELEASE
   title: Card Management API
   termsOfService: ''
   contact:
@@ -146,6 +146,9 @@ definitions:
       freq:
         description: Frequency of the recurrence
         $ref: '#/definitions/FreqEnum'
+      interval:
+        description: Represents at which intervals the recurrence rule repeats. The default value is "1", meaning every second for a SECONDLY rule, every minute for a MINUTELY rule etc.
+        type: integer
       count:
         description: Defines the number of occurrences at which to range-bound the recurrence
         type: integer
@@ -169,6 +172,16 @@ definitions:
           type: integer
       byminute:
         description: Defines a list of minutes within an hour for the recurrence (from 0 to 59)
+        type: array
+        items:
+          type: integer
+      bysetpos:
+        description: Array of integers, positive or negative. Each given integer will specify an occurrence number, corresponding to the nth occurrence of the rule inside the frequency period
+        type: array
+        items:
+          type: integer
+      bymonthday:
+        description: Defines the month days to apply the recurrence to
         type: array
         items:
           type: integer
@@ -707,11 +720,7 @@ definitions:
         type: array
         items:
           type: string
-      condition1:
-        $ref: '#/definitions/FilterModel'
-      condition2:
-        $ref: '#/definitions/FilterModel'
-      operation:
+      operation: 
         $ref: '#/definitions/FilterOperationTypeEnum'
   PublisherTypeEnum:
     type: string

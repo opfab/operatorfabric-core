@@ -15,28 +15,23 @@ import {FormsModule} from '@angular/forms';
 import {NgxChartsModule} from '@swimlane/ngx-charts';
 import {CustomTimelineChartComponent} from '../custom-timeline-chart/custom-timeline-chart.component';
 import {NO_ERRORS_SCHEMA} from '@angular/core';
-import {Store, StoreModule} from '@ngrx/store';
-import {appReducer, storeConfig} from '@ofStore/index';
-import {RouterStateSerializer, StoreRouterConnectingModule} from '@ngrx/router-store';
-import {CustomRouterStateSerializer} from '@ofStates/router.state';
 import {RouterTestingModule} from '@angular/router/testing';
 import {MouseWheelDirective} from '../directives/mouse-wheel.directive';
 import {TranslateLoader, TranslateModule, TranslateService} from '@ngx-translate/core';
-import {GlobalStyleService} from '@ofServices/global-style.service';
+import {GlobalStyleService} from 'app/business/services/global-style.service';
 import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
 import {TimelineButtonsComponent} from '../../../../share/timeline-buttons/timeline-buttons.component';
 import {ConfigService} from 'app/business/services/config.service';
 import {HttpClient, HttpHandler} from '@angular/common/http';
-import {AppService} from '@ofServices/app.service';
 import {BusinessconfigI18nLoaderFactory} from '@tests/helpers';
 import {LightCardsServiceMock} from '@tests/mocks/lightcards.service.mock';
-import {LightCardsFeedFilterService} from '@ofServices/lightcards/lightcards-feed-filter.service';
-import {OpfabLoggerService} from '@ofServices/logs/opfab-logger.service';
-import {RemoteLoggerService} from '@ofServices/logs/remote-logger.service';
-import {RemoteLoggerServiceMock} from '@tests/mocks/remote-logger.service.mock';
+import {LightCardsFeedFilterService} from 'app/business/services/lightcards/lightcards-feed-filter.service';
+import {OpfabLoggerService} from 'app/business/services/logs/opfab-logger.service';
+import {RemoteLoggerService} from 'app/business/services/logs/remote-logger.service';
 import {DateTimeFormatterService} from 'app/business/services/date-time-formatter.service';
 import {ConfigServer} from 'app/business/server/config.server';
 import {ConfigServerMock} from '@tests/mocks/configServer.mock';
+import {RemoteLoggerServiceMockAngular} from '@tests/mocks/remote-logger.service-angular.mock';
 
 describe('InitChartComponent', () => {
     let component: InitChartComponent;
@@ -51,9 +46,7 @@ describe('InitChartComponent', () => {
                 CommonModule,
                 BrowserAnimationsModule,
                 FormsModule,
-                StoreModule.forRoot(appReducer, storeConfig),
                 RouterTestingModule,
-                StoreRouterConnectingModule.forRoot(),
                 NgxChartsModule,
                 NgbModule,
                 TranslateModule.forRoot({
@@ -72,18 +65,15 @@ describe('InitChartComponent', () => {
             ],
             providers: [
                 {provide: APP_BASE_HREF, useValue: '/'},
-                {provide: Store, useClass: Store},
-                {provide: RouterStateSerializer, useClass: CustomRouterStateSerializer},
                 {provide: DateTimeFormatterService, useClass: DateTimeFormatterService},
                 {provide: ConfigService, useClass: ConfigService},
                 {provide: ConfigServer, useClass: ConfigServerMock},
                 {provide: HttpClient, useClass: HttpClient},
                 {provide: HttpHandler, useClass: HttpHandler},
-                {provide: AppService, useClass: AppService},
                 {provide: GlobalStyleService, useClass: GlobalStyleService},
                 {provide: LightCardsFeedFilterService, useClass: LightCardsServiceMock},
                 {provide: OpfabLoggerService, useClass: OpfabLoggerService},
-                {provide: RemoteLoggerService, useClass: RemoteLoggerServiceMock}
+                {provide: RemoteLoggerService, useClass: RemoteLoggerServiceMockAngular}
             ],
             schemas: [NO_ERRORS_SCHEMA]
         }).compileComponents();

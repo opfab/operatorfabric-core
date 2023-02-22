@@ -10,7 +10,7 @@ Feature: Fetch users
 
 
   Scenario: Fetch an existing user
-    Given url opfabUrl + 'users/users/'
+    Given url opfabUrl + 'users/users'
     And header Authorization = 'Bearer ' + authToken
     When method get
     Then status 200

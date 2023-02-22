@@ -8,20 +8,16 @@
  */
 
 import {Component, ElementRef, OnInit, ViewChild} from '@angular/core';
-import {navigationRoutes} from '../../app-routing.module';
-import {Store} from '@ngrx/store';
-import {TryToLogOutAction} from '@ofActions/authentication.actions';
-import {AppState} from '@ofStore/index';
-import {selectCurrentUrl} from '@ofSelectors/router.selectors';
-import {BehaviorSubject, Observable} from 'rxjs';
+import {navigationRoutes} from '../../router/app-routing.module';
 import {Menu} from '@ofModel/menu.model';
-import {GlobalStyleService} from '@ofServices/global-style.service';
-import {Route} from '@angular/router';
+import {GlobalStyleService} from 'app/business/services/global-style.service';
+import {Route, Router} from '@angular/router';
 import {ConfigService} from 'app/business/services/config.service';
-import {UserPreferencesService} from '@ofServices/user-preference.service';
 import {NgbModal, NgbModalOptions, NgbModalRef} from '@ng-bootstrap/ng-bootstrap';
-import {AppService} from '@ofServices/app.service';
 import {MenuService} from 'app/business/services/menu.service';
+import {Observable} from 'rxjs';
+import {AuthService} from 'app/authentication/auth.service';
+import {RouterStore} from 'app/business/store/router.store';
 
 @Component({
     selector: 'of-navbar',
@@ -29,11 +25,10 @@ import {MenuService} from 'app/business/services/menu.service';
     styleUrls: ['./navbar.component.scss']
 })
 export class NavbarComponent implements OnInit {
-    private static nightMode: BehaviorSubject<boolean>;
 
     navbarCollapsed = true;
     navigationRoutes: Route[];
-    currentPath: string[];
+    currentRoute = '';
     businessconfigMenus: Menu[];
     expandedMenu: boolean[] = [];
 
@@ -64,24 +59,25 @@ export class NavbarComponent implements OnInit {
     nightDayMode = false;
     logoutInProgress = false;
 
+    styleMode : Observable<string>;
+
     constructor(
-        private store: Store<AppState>,
+        private routerStore: RouterStore,
+        private router: Router,
         private globalStyleService: GlobalStyleService,
         private configService: ConfigService,
         private menuService: MenuService,
         private modalService: NgbModal,
-        private appService: AppService,
-        private userPreferences: UserPreferencesService
+        private authService: AuthService
     ) {
-        this.currentPath = ['']; // Initializing currentPath to avoid 'undefined' errors when it is used to determine 'active' look in template
     }
 
     ngOnInit() {
-        this.store.select(selectCurrentUrl).subscribe((url) => {
-            if (url) {
-                this.currentPath = url.split('/');
-            }
+
+        this.routerStore.getCurrentRouteEvent().subscribe((route)=> {
+            this.currentRoute = route;
         });
+
         this.businessconfigMenus = this.menuService.getCurrentUserCustomMenus(this.configService.getMenus());
 
         const logo = this.configService.getConfigValue('logo.base64');
@@ -102,7 +98,6 @@ export class NavbarComponent implements OnInit {
         this.limitSize = logo_limitSize === true;
 
         const visibleCoreMenus = this.menuService.computeVisibleCoreMenusForCurrentUser();
-        const settings = this.configService.getConfigValue('settings');
 
         this.navigationRoutes = navigationRoutes.filter((route) => visibleCoreMenus.includes(route.path));
         this.displayAdmin = visibleCoreMenus.includes('admin');
@@ -123,18 +118,12 @@ export class NavbarComponent implements OnInit {
         this.environmentColor = this.configService.getConfigValue('environmentColor', 'blue');
         if (!!this.environmentName) this.displayEnvironmentName = true;
 
-        if (!this.nightDayMode) {
-            if (settings && settings.styleWhenNightDayModeDesactivated) {
-                this.globalStyleService.setStyle(settings.styleWhenNightDayModeDesactivated);
-            }
-        } else {
-            this.loadNightModeFromUserPreferences();
-        }
+        this.styleMode = this.globalStyleService.getStyleChange();
     }
 
     logOut() {
         this.logoutInProgress = true;
-        this.store.dispatch(new TryToLogOutAction());
+        this.authService.logout();
     }
 
     toggleMenu(index: number) {
@@ -144,31 +133,12 @@ export class NavbarComponent implements OnInit {
         }
     }
 
-    private loadNightModeFromUserPreferences() {
-        NavbarComponent.nightMode = new BehaviorSubject<boolean>(true);
-        const nightMode = this.userPreferences.getPreference('opfab.nightMode');
-        if (nightMode !== null && nightMode === 'false') {
-            NavbarComponent.nightMode.next(false);
-            this.globalStyleService.setStyle('DAY');
-        } else {
-            this.globalStyleService.setStyle('NIGHT');
-        }
-    }
-
     switchToNightMode() {
-        this.globalStyleService.setStyle('NIGHT');
-        NavbarComponent.nightMode.next(true);
-        this.userPreferences.setPreference('opfab.nightMode', 'true');
+        this.globalStyleService.switchToNightMode()
     }
 
     switchToDayMode() {
-        this.globalStyleService.setStyle('DAY');
-        NavbarComponent.nightMode.next(false);
-        this.userPreferences.setPreference('opfab.nightMode', 'false');
-    }
-
-    getNightMode(): Observable<boolean> {
-        return NavbarComponent.nightMode.asObservable();
+        this.globalStyleService.switchToDayMode()
     }
 
     openCardCreation() {
@@ -189,9 +159,8 @@ export class NavbarComponent implements OnInit {
 
      Furthermore, having the same template open twice in the application may cause unwanted behavior as
      we could have duplicated element html ids in the html document.
-
-     */
-        if (this.currentPath[1] === 'feed') this.appService.closeDetails();
+*/
+        if (this.currentRoute === 'feed')  this.router.navigate(['/feed']);
 
         const options: NgbModalOptions = {
             size: 'usercard',

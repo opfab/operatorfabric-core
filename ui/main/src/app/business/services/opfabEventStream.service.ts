@@ -8,18 +8,9 @@
  */
 
 import {Injectable} from '@angular/core';
-import {Store} from '@ngrx/store';
 import {CardOperation} from '@ofModel/card-operation.model';
-import {FilterService} from '@ofServices/lightcards/filter.service';
-import {LogOption, OpfabLoggerService} from '@ofServices/logs/opfab-logger.service';
-import {
-    CardSubscriptionOpenAction,
-    CardSubscriptionClosedAction,
-    UIReloadRequestedAction
-} from '@ofStore/actions/cards-subscription.actions';
-import {BusinessConfigChangeAction} from '@ofStore/actions/processes.actions';
-import {UserConfigChangeAction} from '@ofStore/actions/user.actions';
-import {AppState} from '@ofStore/index';
+import {FilterService} from 'app/business/services/lightcards/filter.service';
+import {LogOption, OpfabLoggerService} from 'app/business/services/logs/opfab-logger.service';
 import {filter, map, Observable, Subject} from 'rxjs';
 import {OpfabEventStreamServer} from '../server/opfabEventStream.server';
 
@@ -33,21 +24,19 @@ export class OpfabEventStreamService {
     private endOfAlreadyLoadedPeriod: number;
 
     private receivedDisconnectedSubject = new Subject<boolean>();
+    private reloadRequest = new Subject<void>();
+    private businessConfigChange = new Subject<void>();
+    private userConfigChange = new Subject<void>();
 
     private eventStreamClosed = false;
 
     constructor(
         private opfabEventStreamServer: OpfabEventStreamServer,
-        private store: Store<AppState>,
         private filterService: FilterService,
         private logger: OpfabLoggerService
     ) {}
 
     public initEventStream() {
-        this.opfabEventStreamServer.getStreamStatus().subscribe((status) => {
-            if (status === 'open') this.store.dispatch(new CardSubscriptionOpenAction());
-            else this.store.dispatch(new CardSubscriptionClosedAction());
-        });
         this.opfabEventStreamServer.initStream();
         this.listenForFilterChange();
     }
@@ -72,14 +61,14 @@ export class OpfabEventStreamService {
                 switch (event.data) {
                     case 'RELOAD':
                         this.logger.info(`EventStreamService - RELOAD received`, LogOption.LOCAL_AND_REMOTE);
-                        this.store.dispatch(new UIReloadRequestedAction());
+                        this.reloadRequest.next();
                         break;
                     case 'BUSINESS_CONFIG_CHANGE':
-                        this.store.dispatch(new BusinessConfigChangeAction());
+                        this.businessConfigChange.next();
                         this.logger.info(`EventStreamService - BUSINESS_CONFIG_CHANGE received`);
                         break;
                     case 'USER_CONFIG_CHANGE':
-                        this.store.dispatch(new UserConfigChangeAction());
+                        this.userConfigChange.next();
                         this.logger.info(`EventStreamService - USER_CONFIG_CHANGE received`);
                         break;
                     case 'DISCONNECT_USER_DUE_TO_NEW_CONNECTION':
@@ -148,5 +137,17 @@ export class OpfabEventStreamService {
 
     getReceivedDisconnectUser(): Observable<boolean> {
         return this.receivedDisconnectedSubject.asObservable();
+    }
+
+    getReloadRequests(): Observable<void> {
+        return this.reloadRequest.asObservable();
+    }
+
+    getBusinessConfigChangeRequests(): Observable<void> {
+        return this.businessConfigChange.asObservable();
+    }
+
+    getUserConfigChangeRequests(): Observable<void> {
+        return this.userConfigChange.asObservable();
     }
 }

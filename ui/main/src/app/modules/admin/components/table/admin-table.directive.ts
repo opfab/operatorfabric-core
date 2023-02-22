@@ -14,7 +14,7 @@ import {TranslateService} from '@ngx-translate/core';
 import {NgbModal, NgbModalOptions} from '@ng-bootstrap/ng-bootstrap';
 import {Subject, throwError} from 'rxjs';
 import {ConfirmationDialogService} from '../../services/confirmation-dialog.service';
-import {CrudService} from '@ofServices/crud-service';
+import {CrudService} from 'app/business/services/crud-service';
 import {ActionCellRendererComponent} from '../cell-renderers/action-cell-renderer.component';
 import {EntityCellRendererComponent} from '../cell-renderers/entity-cell-renderer.component';
 import {GroupCellRendererComponent} from '../cell-renderers/group-cell-renderer.component';
@@ -23,12 +23,12 @@ import {takeUntil} from 'rxjs/operators';
 import {StateRightsCellRendererComponent} from '../cell-renderers/state-rights-cell-renderer.component';
 import {ProcessesService} from 'app/business/services/processes.service';
 import {Process} from '@ofModel/processes.model';
-import {GroupsService} from '@ofServices/groups.service';
+import {GroupsService} from 'app/business/services/groups.service';
 import {Group} from '@ofModel/group.model';
 import {Entity} from '@ofModel/entity.model';
-import {EntitiesService} from '@ofServices/entities.service';
+import {EntitiesService} from 'app/business/services/entities.service';
 import {PerimetersCellRendererComponent} from '../cell-renderers/perimeters-cell-renderer.component';
-import {ExportService} from '@ofServices/export.service';
+import {ExcelExport} from 'app/business/common/excel-export';
 import {IdCellRendererComponent} from '../cell-renderers/id-cell-renderer.component';
 import {ArrayCellRendererComponent} from '../cell-renderers/array-cell-renderer.component';
 
@@ -261,7 +261,7 @@ export abstract class AdminTableDirective implements OnInit, OnDestroy {
                 this.translateService.instant('admin.input.' + this.tableType + '.confirmDelete') +
                     ' ' +
                     row[this.idField] +
-                    '?',
+                    ' ?',
                 'OK',
                 this.translateService.instant('admin.input.cancel')
             )
@@ -312,7 +312,7 @@ export abstract class AdminTableDirective implements OnInit, OnDestroy {
     }
 
     export(): void {
-        ExportService.exportJsonToExcelFile(this.getDataForExportFile(), this.tableType);
+        ExcelExport.exportJsonToExcelFile(this.getDataForExportFile(), this.tableType);
     }
 
     ngOnDestroy() {

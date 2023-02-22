@@ -109,7 +109,9 @@
     "realTimeUsers": "Real time users",
     "externalDevicesConfiguration": "External devices configuration",
     "activityArea": "Activity area",
-    "useractionlogs": "User action logs"
+    "useractionlogs": "User action logs",
+    "newcardTooltip": "Create a new card",
+    "calendarTooltip": "Calendar" 
   },
   "timeline": {
     "hideTimeline" : "Hide Timeline",
@@ -207,7 +209,10 @@
     "lastResponse": "Last response :",
     "cardLoadingInProgress":"Loading card...",
     "cardNotFound": "The card you are looking for was not found.",
-    "entityRecipients" : "Entity recipients :"
+    "selectedCardDeleted": "This card has been deleted",
+    "entityRecipients" : "Entity recipients :",
+    "searchPlaceholderText": "Search...",
+    "hiddenCardReceived": "You have received a card hidden by the filters you have activated (Timeline or card feed)"
   },
   "login": {
     "reset": "Reset",
@@ -289,7 +294,7 @@
     "youWillBeSubscribedAgain": "\n\nBy clicking OK, you will be subscribed to these notifications again."
   },
   "userCard": {
-    "title": "CREATE A NEW CARD ",
+    "title": "CREATE A NEW CARD",
     "editTitle" : "EDIT A NEW CARD",
     "error": {
       "notAvailable": "You are not allowed to send card.",
@@ -398,7 +403,7 @@
         "id": "ID",
         "name": "PROCESS",
         "version": "CURRENT VERSION",
-        "confirmDelete": "Do you really want to delete processus"
+        "confirmDelete": "Do you really want to delete process"
       },
       "user": {
         "login": "LOGIN",
@@ -406,7 +411,7 @@
         "firstName": "FIRST NAME",
         "groups": "GROUPS",
         "entities": "ENTITIES",
-        "authorizedIPAddresses": "AUTHORIZED IP ADDRESSES",
+        "authorizedIPAddresses": "AUTHORIZED IP ADDRESSES (separated by ',')",
         "confirmDelete": "Do you really want to delete user",
         "add": "ADD NEW USER"
       },
@@ -430,6 +435,9 @@
         "pattern": "Login should only contain the following characters: lowercase letters, _, -, . or digits.",
         "alreadyExisting": "Login already existing."
       },
+      "authorizedIPAddresses": {
+        "pattern": "IP addresses need to follow the format XXX.XXX.XXX.XXX, XXX.XXX..."
+      },
       "firstName": {
         "required": "First name is required."
       },
@@ -445,7 +453,8 @@
       },
       "name": {
         "required": "Name is required.",
-        "label":"NAME"
+        "label":"NAME",
+        "alreadyExisting": "Name already existing."
       },
       "description": "DESCRIPTION",
       "lines": "lines per page"

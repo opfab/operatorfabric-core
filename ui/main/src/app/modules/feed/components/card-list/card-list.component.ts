@@ -14,16 +14,14 @@ import {NgbModalRef} from '@ng-bootstrap/ng-bootstrap/modal/modal-ref';
 import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
 import {ConfigService} from 'app/business/services/config.service';
 import {MessageLevel} from '@ofModel/message.model';
-import {AlertMessageAction} from '@ofActions/alert.actions';
-import {Store} from '@ngrx/store';
-import {AppState} from '@ofStore/index';
 import {ProcessesService} from 'app/business/services/processes.service';
-import {AppService} from '@ofServices/app.service';
-import {AcknowledgeService} from '@ofServices/acknowledge.service';
-import {UserService} from '@ofServices/user.service';
+import {AcknowledgeService} from 'app/business/services/acknowledge.service';
+import {UserService} from 'app/business/services/user.service';
 import {UserWithPerimeters} from '@ofModel/userWithPerimeters.model';
-import {EntitiesService} from '@ofServices/entities.service';
-import {GroupedCardsService} from '@ofServices/grouped-cards.service';
+import {EntitiesService} from 'app/business/services/entities.service';
+import {GroupedCardsService} from 'app/business/services/grouped-cards.service';
+import {AlertMessageService} from 'app/business/services/alert-message.service';
+import {Router} from '@angular/router';
 
 @Component({
     selector: 'of-card-list',
@@ -45,13 +43,13 @@ export class CardListComponent implements AfterViewChecked, OnInit {
     constructor(
         private modalService: NgbModal,
         private configService: ConfigService,
-        private store: Store<AppState>,
         private processesService: ProcessesService,
         private acknowledgeService: AcknowledgeService,
         private userService: UserService,
-        private _appService: AppService,
         private entitiesService: EntitiesService,
-        private groupedCardsService: GroupedCardsService
+        private groupedCardsService: GroupedCardsService,
+        private alertMessageService: AlertMessageService,
+        private router: Router
     ) {
         this.currentUserWithPerimeters = this.userService.getCurrentUserWithPerimeters();
     }
@@ -83,7 +81,6 @@ export class CardListComponent implements AfterViewChecked, OnInit {
 
     private acknowledgeVisibleCardInTheFeed(lightCard: LightCard): void {
         const processDefinition = this.processesService.getProcess(lightCard.process);
-
         if (
             !lightCard.hasBeenAcknowledged &&
             this.isCardPublishedBeforeAckDemand(lightCard) &&
@@ -116,9 +113,7 @@ export class CardListComponent implements AfterViewChecked, OnInit {
     }
 
     private displayMessage(i18nKey: string, msg: string, severity: MessageLevel = MessageLevel.ERROR) {
-        this.store.dispatch(
-            new AlertMessageAction({alertMessage: {message: msg, level: severity, i18n: {key: i18nKey}}})
-        );
+        this.alertMessageService.sendAlertMessage({message: msg, level: severity, i18n: {key: i18nKey}});
     }
 
     open(content) {
@@ -129,7 +124,7 @@ export class CardListComponent implements AfterViewChecked, OnInit {
     confirmAckAllCards() {
         this.modalRef.close();
         this.acknowledgeAllVisibleCardsInTheFeed();
-        this._appService.closeDetails();
+        this.router.navigate(['/feed']);
     }
 
     declineAckAllCards(): void {

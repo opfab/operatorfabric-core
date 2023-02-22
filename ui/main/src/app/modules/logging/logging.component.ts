@@ -15,17 +15,17 @@ import {takeUntil} from 'rxjs/operators';
 import {FormControl, FormGroup} from '@angular/forms';
 import {ConfigService} from 'app/business/services/config.service';
 import {DateTimeFormatterService} from 'app/business/services/date-time-formatter.service';
-import {CardService} from '@ofServices/card.service';
 import {LightCard} from '@ofModel/light-card.model';
 import {Page} from '@ofModel/page.model';
-import {ExportService} from '@ofServices/export.service';
+import {ExcelExport} from 'app/business/common/excel-export';
 import {TranslateService} from '@ngx-translate/core';
 import {ArchivesLoggingFiltersComponent} from '../share/archives-logging-filters/archives-logging-filters.component';
-import {EntitiesService} from '@ofServices/entities.service';
+import {EntitiesService} from 'app/business/services/entities.service';
 import {Utilities} from 'app/business/common/utilities';
 import {NgbModal, NgbModalOptions, NgbModalRef} from '@ng-bootstrap/ng-bootstrap';
 import {ArchivedCardsFilter} from '@ofModel/archived-cards-filter.model';
 import {FilterMatchTypeEnum, FilterModel} from '@ofModel/filter-model';
+import {CardService} from 'app/business/services/card.service';
 
 @Component({
     selector: 'of-logging',
@@ -98,10 +98,10 @@ export class LoggingComponent implements OnDestroy, OnInit, AfterViewInit {
             if (!!process.uiVisibility && !!process.uiVisibility.logging) {
                 const itemName = !!process.name ? process.name : process.id;
                 this.processNames.set(process.id, itemName);
-                for (const key in process.states) {
-                    this.processStateDescription.set(process.id + '.' + key, process.states[key].description);
-                    this.processStateName.set(process.id + '.' + key, process.states[key].name);
-                    this.stateColors.set(process.id + '.' + key, process.states[key].color);
+                for (let key of process.states.keys()) {
+                    this.processStateDescription.set(process.id + '.' + key, process.states.get(key).description);
+                    this.processStateName.set(process.id + '.' + key, process.states.get(key).name);
+                    this.stateColors.set(process.id + '.' + key, process.states.get(key).color);
                 }
 
                 this.listOfProcessesForRequest.push(process.id);
@@ -298,7 +298,7 @@ export class LoggingComponent implements OnDestroy, OnInit, AfterViewInit {
                             [representativeColumnName]: this.translateColumn(card.representative)
                         });
                 });
-                ExportService.exportJsonToExcelFile(exportArchiveData, 'Logging');
+                ExcelExport.exportJsonToExcelFile(exportArchiveData, 'Logging');
                 this.modalRef.close();
             });
     }

@@ -15,7 +15,7 @@ import {RightsEnum} from '@ofModel/perimeter.model';
 import {Process} from '@ofModel/processes.model';
 import {ComputedPerimeter, UserWithPerimeters} from '@ofModel/userWithPerimeters.model';
 import {ProcessesService} from 'app/business/services/processes.service';
-import {UserService} from '@ofServices/user.service';
+import {UserService} from 'app/business/services/user.service';
 import {Utilities} from 'app/business/common/utilities';
 import {MultiSelectComponent} from 'app/modules/share/multi-select/multi-select.component';
 import {Subject} from 'rxjs';
@@ -156,7 +156,7 @@ export class UserCardSelectStateFormComponent implements OnInit, OnDestroy {
     }
 
     getStateFromProcessDefinition(process: Process, stateId: string): {value: string; label: string} {
-        const stateFromProcessDefinition = process.states[stateId];
+        const stateFromProcessDefinition = process.states.get(stateId);
         if (!!stateFromProcessDefinition) {
             if (!!stateFromProcessDefinition.userCard) {
                 const label = !!stateFromProcessDefinition.name ? stateFromProcessDefinition.name : stateId;
@@ -241,8 +241,8 @@ export class UserCardSelectStateFormComponent implements OnInit, OnDestroy {
                     const oldSelectedState = this.selectedState;
                     this.selectedState = this.stateOptions[0].value;
 
-                   // in case the state is the same as before , the selected value does not change for the select component 
-                   // so we need to send the event here instead of waiting for the event state change 
+                   // in case the state is the same as before , the selected value does not change for the selected component
+                   // so we need to send the event here instead of waiting for the event state change
                     if (this.selectedState === oldSelectedState) {
                         this.stateChange.emit({
                             selectedProcessId: this.selectStateForm.get('usercardProcess').value,
@@ -273,9 +273,10 @@ export class UserCardSelectStateFormComponent implements OnInit, OnDestroy {
             )
             .subscribe((state) => {
                 if (!!state) {
+                    this.selectedState = this.selectStateForm.get('usercardState').value;
                     this.stateChange.emit({
                         selectedProcessId: this.selectStateForm.get('usercardProcess').value,
-                        state: this.selectStateForm.get('usercardState').value
+                        state: this.selectedState
                     });
                 }
             });

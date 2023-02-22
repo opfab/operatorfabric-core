@@ -109,7 +109,9 @@
     "realTimeUsers": "Utilisateurs temps réel",
     "externalDevicesConfiguration": "Configuration des périphériques externes",
     "activityArea": "Zone d'activité",
-    "useractionlogs": "Trace des actions utilisateurs"
+    "useractionlogs": "Trace des actions utilisateurs",
+    "newcardTooltip": "Créer une nouvelle carte",
+    "calendarTooltip": "Calendrier" 
   },
   "timeline": {
     "hideTimeline" : "Masquer la timeline",
@@ -207,7 +209,10 @@
     "lastResponse": "Dernière réponse :",
     "cardLoadingInProgress":"Chargement de la carte...",
     "cardNotFound": "La carte que vous cherchez n'a pas été trouvée.",
-    "entityRecipients" : "Entités destinataires :"
+    "selectedCardDeleted": "Cette carte a été supprimée",
+    "entityRecipients" : "Entités destinataires :",
+    "searchPlaceholderText": "Rechercher...",
+    "hiddenCardReceived": "Vous avez reçu une carte masquée par les filtres que vous avez activés (Timeline ou flux de cartes)"
   },
   "login": {
     "reset": "RaZ",
@@ -406,7 +411,7 @@
         "firstName": "PRÉNOM",
         "groups": "GROUPES",
         "entities": "ENTITÉS",
-        "authorizedIPAddresses": "ADRESSES IP AUTORISÉES",
+        "authorizedIPAddresses": "ADRESSES IP AUTORISÉES (séparées par ',')",
         "confirmDelete": "Voulez-vous vraiment supprimer l'utilisateur",
         "add":"AJOUTER UN NOUVEL UTILISATEUR"
       },
@@ -430,6 +435,9 @@
         "pattern": "L'identifiant ne peut contenir que les caractères suivants : lettres minuscules, _, -, . ou chiffres.",
         "alreadyExisting": "L'identifiant existe déjà."
       },
+      "authorizedIPAddresses": {
+        "pattern": "Les adresses IP doivent être au format XXX.XXX.XXX.XXX, XXX.XXX..."
+      },
       "firstName": {
         "required": "Le prénom est obligatoire."
       },
@@ -445,7 +453,8 @@
       },
       "name": {
         "required": "Le nom est obligatoire.",
-        "label":"NOM"
+        "label":"NOM",
+        "alreadyExisting": "Le nom existe déjà."
       },
       "description": "DESCRIPTION",
       "lines": "lignes par page"

@@ -1,4 +1,4 @@
-/* Copyright (c) 2022, Alliander (http://www.alliander.com)
+/* Copyright (c) 2023, Alliander (http://www.alliander.com)
 /* Copyright (c) 2018-2023, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
@@ -15,7 +15,7 @@ import {Tile as TileLayer, Vector as VectorLayer} from 'ol/layer';
 import {OSM, XYZ, Vector as VectorSource} from 'ol/source';
 import {fromLonLat} from 'ol/proj';
 import {LightCard, Severity} from '@ofModel/light-card.model';
-import {LightCardsFeedFilterService} from '@ofServices/lightcards/lightcards-feed-filter.service';
+import {LightCardsFeedFilterService} from 'app/business/services/lightcards/lightcards-feed-filter.service';
 import {Subject} from 'rxjs';
 import {takeUntil} from 'rxjs/operators';
 import WKT from 'ol/format/WKT';
@@ -23,14 +23,14 @@ import Overlay from 'ol/Overlay';
 import {Style, Fill, Stroke, Circle} from 'ol/style';
 import {Attribution, ZoomToExtent, Control, defaults as defaultControls} from 'ol/control';
 import {ConfigService} from 'app/business/services/config.service';
-import {selectGlobalStyleState} from '@ofSelectors/global-style.selectors';
-import {Store} from '@ngrx/store';
-import {AppState} from '@ofStore/index';
-import {MapService} from '@ofServices/map.service';
-import {OpfabLoggerService} from '@ofServices/logs/opfab-logger.service';
+import {OpfabLoggerService} from 'app/business/services/logs/opfab-logger.service';
+import {MapService} from 'app/business/services/map.service';
 import Chart from 'chart.js/auto';
 import ChartDataLabels from 'chartjs-plugin-datalabels';
 import {TranslateService} from '@ngx-translate/core';
+import {GlobalStyleService} from 'app/business/services/global-style.service';
+import {Router} from "@angular/router";
+import {DateTimeFormatterService} from "../../../../business/services/date-time-formatter.service";
 
 let self;
 
@@ -44,15 +44,18 @@ export class MapComponent implements OnInit, OnDestroy, AfterViewChecked {
     private map: OpenLayersMap;
     private vectorLayer: VectorLayer;
     private graphChart = null;
-    lightCardToDisplay: LightCard;
+    public lightCardsToDisplay: LightCard[];
+
 
     constructor(
         private lightCardsFeedFilterService: LightCardsFeedFilterService,
         private configService: ConfigService,
-        private store: Store<AppState>,
         private logger: OpfabLoggerService,
         private mapService: MapService,
-        private translate: TranslateService
+        private translate: TranslateService,
+        private globalStyleService: GlobalStyleService,
+        private router: Router,
+        private dateTimeFormatterService: DateTimeFormatterService
     ) {}
 
     ngOnInit() {
@@ -87,16 +90,13 @@ export class MapComponent implements OnInit, OnDestroy, AfterViewChecked {
     }
 
     private updateMapWhenGlobalStyleChange() {
-        this.store
-            .select(selectGlobalStyleState)
-            .pipe(takeUntil(this.unsubscribe$))
-            .subscribe((style) => this.updateMapColors(style));
+        this.globalStyleService.getStyleChange().subscribe(style => this.updateMapColors(style));
     }
 
     private updateMapColors(style) {
         if (this.map) {
             let filter = '';
-            if (style.style === 'NIGHT') {
+            if (style === GlobalStyleService.NIGHT) {
                 //change map color to Dark Mode
                 filter = 'invert(100%) hue-rotate(180deg) brightness(95%) contrast(90%)';
             }
@@ -206,11 +206,24 @@ export class MapComponent implements OnInit, OnDestroy, AfterViewChecked {
         });
 
         function displayLightCardIfNecessary(evt) {
-            self.map.forEachFeatureAtPixel(evt.pixel, function (feature) {
+            const featureArray = [];
+            if (self.map.hasFeatureAtPixel(evt.pixel)) {
+                self.map.getFeaturesAtPixel(evt.pixel).forEach((feature => {
+                    featureArray.push(feature.get('lightCard'));
+                }));
                 overlay.setPosition(evt.coordinate);
-                self.lightCardToDisplay = feature.get('lightCard');
-            });
+                self.lightCardsToDisplay = featureArray;
+            }
         }
+    }
+
+    showCard(lightCardId): void {
+        this.router.navigate(['/feed', 'cards', lightCardId]);
+    }
+
+    displayCardDetailsOnButton(lightCard: LightCard): string {
+        const publishDate = this.dateTimeFormatterService.getFormattedDateAndTimeFromEpochDate(lightCard.publishDate);
+        return `${publishDate} : ${lightCard.titleTranslated}`;
     }
 
     private getExtentWithMargin() {
@@ -462,7 +475,7 @@ class GraphControl extends Control {
         element.className = 'ol-overlaycontainer-stopevent';
         element.style.top = '0.5em';
         element.style.right = '0.5em';
-        element.style.height = '10vh';
+        element.style.height = '10vw';
         element.style.width = '10vw';
         element.style.position = 'absolute';
         const canvas = document.createElement('canvas');

@@ -8,8 +8,8 @@
  */
 
 import {Component} from '@angular/core';
-import { Observable } from 'rxjs';
-import { ExternalDevicesConfigurationDirective, Field, FieldType } from './externaldevicesconfiguration-directive';
+import {Observable} from 'rxjs';
+import {ExternalDevicesConfigurationDirective, Field, FieldType} from './externaldevicesconfiguration-directive';
 
 @Component({
     selector: 'of-externaldevices',

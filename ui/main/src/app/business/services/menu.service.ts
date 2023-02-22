@@ -9,7 +9,7 @@
 
 import {Injectable} from '@angular/core';
 import {ConfigService} from 'app/business/services/config.service';
-import {UserService} from '../../services/user.service';
+import {UserService} from 'app/business/services/user.service';
 import {CoreMenuConfig, Menu, MenuEntry} from '@ofModel/menu.model';
 import {PermissionEnum} from '@ofModel/permission.model';
 

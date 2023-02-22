@@ -1,4 +1,4 @@
-/* Copyright (c) 2022, RTE (http://www.rte-france.com)
+/* Copyright (c) 2022-2023, RTE (http://www.rte-france.com)
  *  See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -7,18 +7,16 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {Component, EventEmitter, Input, OnDestroy, OnInit, Output} from "@angular/core";
-import {AbstractControl} from "@angular/forms";
-import {DateTimeNgb} from "@ofModel/datetime-ngb.model";
-import {MessageLevel} from "@ofModel/message.model";
-import {MultiSelectOption} from "@ofModel/multiselect.model";
-import {ActionTypeEnum} from "@ofModel/user-action-log.model";
-import {UserService} from "@ofServices/user.service";
-import {AlertMessageAction} from "@ofStore/actions/alert.actions";
-import {Utilities} from "app/business/common/utilities";
-import {debounceTime, Subject, takeUntil} from "rxjs";
-import {Store} from '@ngrx/store';
-import {AppState} from '@ofStore/index';
+import {Component, EventEmitter, Input, OnDestroy, OnInit, Output} from '@angular/core';
+import {AbstractControl} from '@angular/forms';
+import {DateTimeNgb} from '@ofModel/datetime-ngb.model';
+import {MessageLevel} from '@ofModel/message.model';
+import {MultiSelectOption} from '@ofModel/multiselect.model';
+import {ActionTypeEnum} from '@ofModel/user-action-log.model';
+import {UserService} from 'app/business/services/user.service';
+import {Utilities} from 'app/business/common/utilities';
+import {debounceTime, Subject, takeUntil} from 'rxjs';
+import {AlertMessageService} from 'app/business/services/alert-message.service';
 
 @Component({
     selector: 'of-useractionlogs-filters',
@@ -57,7 +55,9 @@ export class UserActionLogsFiltersComponent implements OnInit, OnDestroy {
 
     unsubscribe$: Subject<void> = new Subject<void>();
 
-    constructor( private store: Store<AppState>, private userService: UserService) {
+    constructor(
+        private userService: UserService,
+        private alertMessageService: AlertMessageService) {
     }
 
     ngOnInit(): void {
@@ -161,9 +161,7 @@ export class UserActionLogsFiltersComponent implements OnInit, OnDestroy {
     }
 
     private displayMessage(i18nKey: string, msg: string, severity: MessageLevel = MessageLevel.ERROR) {
-        this.store.dispatch(
-            new AlertMessageAction({alertMessage: {message: msg, level: severity, i18n: {key: i18nKey}}})
-        );
+        this.alertMessageService.sendAlertMessage({message: msg, level: severity, i18n: {key: i18nKey}});
     }
 
     private areDatesInCorrectOrder() {

@@ -10,7 +10,8 @@
 import {Component, ViewChild} from "@angular/core";
 import {FormControl, FormGroup} from "@angular/forms";
 import {UserActionLog} from "@ofModel/user-action-log.model";
-import {UserActionLogsService} from "@ofServices/user-action-logs.service";
+import {ServerResponseStatus} from "app/business/server/serverResponse";
+import {UserActionLogsServer} from "app/business/server/user-action-logs.server";
 import moment from "moment";
 import {UserActionLogsFiltersComponent} from "./components/useractionlogs-filters/useractionlogs-filters.component";
 
@@ -44,7 +45,7 @@ export class UserActionLogsComponent {
 
     defaultMinDate : {year: number; month: number; day: number} = null;
 
-    constructor(private userActionLogsService: UserActionLogsService) {
+    constructor(private userActionLogsServer: UserActionLogsServer) {
         this.setDefaultPublishDateFilter();
     }
 
@@ -74,21 +75,23 @@ export class UserActionLogsComponent {
         this.hasResult = false;
         this.loadingInProgress = true;
 
-        this.userActionLogsService.queryUserActionLogs(this.filtersTemplate.filters)
-        .subscribe({ next: (actionsPage) => {
-            this.userActions = actionsPage.content;
-            this.totalPages = actionsPage.totalPages;
-            this.totalElements = actionsPage.totalElements;
+        this.userActionLogsServer.queryUserActionLogs(this.filtersTemplate.filters)
+        .subscribe({ next: (actionPageServerResponse) => {
+            if (actionPageServerResponse.status === ServerResponseStatus.OK) {
+                this.userActions = actionPageServerResponse.data.content;
+                this.totalPages = actionPageServerResponse.data.totalPages;
+                this.totalElements = actionPageServerResponse.data.totalElements;
 
-            this.loadingInProgress = false;
-            this.firstQueryHasBeenDone = true;
-            this.hasResult = actionsPage.content.length > 0;
-        },
-        error: () => {
-            this.firstQueryHasBeenDone = false;
-            this.loadingInProgress = false;
-            this.technicalError = true;
-        }});
+                this.loadingInProgress = false;
+                this.firstQueryHasBeenDone = true;
+                this.hasResult = actionPageServerResponse.data.content.length > 0;
+            } else {
+                this.firstQueryHasBeenDone = false;
+                this.loadingInProgress = false;
+                this.technicalError = true;
+            }
+            
+        },});
     }
 
     pageChange(currentPage: number) {

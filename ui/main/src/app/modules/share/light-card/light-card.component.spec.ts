@@ -13,12 +13,10 @@ import {LightCardComponent} from './light-card.component';
 import {BusinessconfigI18nLoaderFactory, injectedSpy} from '@tests/helpers';
 import {RouterTestingModule} from '@angular/router/testing';
 import {TranslateLoader, TranslateModule, TranslateService} from '@ngx-translate/core';
-import {Store, StoreModule} from '@ngrx/store';
-import {appReducer, AppState} from '@ofStore/index';
 import {HttpClientTestingModule} from '@angular/common/http/testing';
 import {ProcessesService} from 'app/business/services/processes.service';
 import {Router} from '@angular/router';
-import {I18nService} from '@ofServices/i18n.service';
+import {I18nService} from 'app/business/services/i18n.service';
 import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
 import {CountDownModule} from '../countdown/countdown.module';
 import createSpyObj = jasmine.createSpyObj;
@@ -29,11 +27,15 @@ import {ConfigServer} from 'app/business/server/config.server';
 import {ProcessServerMock} from '@tests/mocks/processServer.mock';
 import {ProcessServer} from 'app/business/server/process.server';
 import {OpfabEventStreamServer} from 'app/business/server/opfabEventStream.server';
+import {ExternalDevicesServer} from 'app/business/server/external-devices.server';
+import {RemoteLoggerServer} from 'app/business/server/remote-logger.server';
+import {EntitiesServer} from 'app/business/server/entities.server';
+import {UserServer} from 'app/business/server/user.server';
+import {SoundServer} from 'app/business/server/sound.server';
 
 describe('LightCardComponent', () => {
     let lightCardDetailsComp: LightCardComponent;
     let fixture: ComponentFixture<LightCardComponent>;
-    let store: Store<AppState>;
     let injector: TestBed;
     let translateService: TranslateService;
     let i18nService: I18nService;
@@ -45,7 +47,6 @@ describe('LightCardComponent', () => {
         TestBed.configureTestingModule({
             imports: [
                 HttpClientTestingModule,
-                StoreModule.forRoot(appReducer),
                 RouterTestingModule,
                 HttpClientTestingModule,
                 CountDownModule,
@@ -61,7 +62,6 @@ describe('LightCardComponent', () => {
             ],
             declarations: [LightCardComponent],
             providers: [
-                {provide: store, useClass: Store},
                 {provide: Router, useValue: myrout},
                 ProcessesService,
                 {provide: 'TimeEventSource', useValue: null},
@@ -69,11 +69,14 @@ describe('LightCardComponent', () => {
                 I18nService,
                 {provide: ConfigServer, useClass: ConfigServerMock},
                 {provide: ProcessServer, useClass: ProcessServerMock},
-                {provide: OpfabEventStreamServer, use:null}
+                {provide: RemoteLoggerServer, useValue: null},
+                {provide: OpfabEventStreamServer, use:null},
+                {provide: EntitiesServer, useValue: null},
+                {provide: UserServer, useValue: null},
+                {provide: ExternalDevicesServer, use:null},
+                {provide: SoundServer, use: null}
             ]
         }).compileComponents();
-        store = TestBed.inject(Store);
-        spyOn(store, 'dispatch').and.callThrough();
         // avoid exceptions during construction and init of the component
         injector = getTestBed();
         translateService = injector.get(TranslateService);

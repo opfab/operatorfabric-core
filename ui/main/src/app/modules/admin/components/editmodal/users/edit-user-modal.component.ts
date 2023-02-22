@@ -1,5 +1,5 @@
 /* Copyright (c) 2020, RTEi (http://www.rte-international.com)
- * Copyright (c) 2021-2022, RTE (http://www.rte-france.com)
+ * Copyright (c) 2021-2023, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -17,9 +17,9 @@ import {
 import {Component, Input, OnInit} from '@angular/core';
 import {User} from '@ofModel/user.model';
 import {NgbActiveModal} from '@ng-bootstrap/ng-bootstrap';
-import {UserService} from '@ofServices/user.service';
-import {GroupsService} from '@ofServices/groups.service';
-import {EntitiesService} from '@ofServices/entities.service';
+import {UserService} from 'app/business/services/user.service';
+import {GroupsService} from 'app/business/services/groups.service';
+import {EntitiesService} from 'app/business/services/entities.service';
 import {debounceTime, distinctUntilChanged, first, map, switchMap} from 'rxjs/operators';
 import {Observable, Subject} from 'rxjs';
 import {MultiSelectConfig, MultiSelectOption} from '@ofModel/multiselect.model';
@@ -82,7 +82,9 @@ export class EditUserModalComponent implements OnInit {
             lastName: new FormControl('', []),
             groups: new FormControl([]),
             entities: new FormControl([]),
-            authorizedIPAddresses: new FormControl('', [])
+            authorizedIPAddresses: new FormControl(
+                '',
+                [Validators.pattern(/^((\d+(\.\d+){3}),?\s?)+$/)] )
         });
 
         if (this.row) {

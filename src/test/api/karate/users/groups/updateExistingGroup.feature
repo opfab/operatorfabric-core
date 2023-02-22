@@ -12,6 +12,7 @@ Feature: Update existing group
 """
 {
   "id" : "groupKarate1",
+  "name" : "groupKarate1 name",
   "description" : "group description updated"
 }
 """

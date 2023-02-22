@@ -8,11 +8,9 @@
  */
 
 import {Component, OnInit} from '@angular/core';
-import {Store} from '@ngrx/store';
-import {AppState} from '@ofStore/index';
 import {ConfigService} from 'app/business/services/config.service';
-import {ExternalDevicesService} from '@ofServices/external-devices.service';
-import {UserService} from '@ofServices/user.service';
+import {ExternalDevicesService} from 'app/business/services/external-devices.service';
+import {UserService} from 'app/business/services/user.service';
 import {UserConfiguration} from '@ofModel/external-devices.model';
 import {TranslateService} from '@ngx-translate/core';
 
@@ -38,7 +36,6 @@ export class SettingsComponent implements OnInit {
     patternReplayInterval = '[0-9]*';
 
     constructor(
-        private store: Store<AppState>,
         private configService: ConfigService,
         private userService: UserService,
         private externalDevicesService: ExternalDevicesService,

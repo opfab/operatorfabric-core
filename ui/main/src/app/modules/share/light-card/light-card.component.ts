@@ -10,23 +10,19 @@
 import {Component, Input, OnDestroy, OnInit} from '@angular/core';
 import {LightCard} from '@ofModel/light-card.model';
 import {Router} from '@angular/router';
-import {selectCurrentUrl} from '@ofStore/selectors/router.selectors';
-import {Store} from '@ngrx/store';
-import {AppState} from '@ofStore/index';
 import {takeUntil} from 'rxjs/operators';
 import {Observable, Subject} from 'rxjs';
 import {ConfigService} from 'app/business/services/config.service';
-import {AppService, PageType} from '@ofServices/app.service';
-import {EntitiesService} from '@ofServices/entities.service';
+import {EntitiesService} from 'app/business/services/entities.service';
 import {ProcessesService} from 'app/business/services/processes.service';
-import {UserPreferencesService} from '@ofServices/user-preference.service';
 import {DisplayContext} from '@ofModel/templateGateway.model';
-import {GroupedCardsService} from '@ofServices/grouped-cards.service';
+import {GroupedCardsService} from 'app/business/services/grouped-cards.service';
 import {TypeOfStateEnum} from '@ofModel/processes.model';
-import {SoundNotificationService} from '@ofServices/sound-notification.service';
+import {SoundNotificationService} from 'app/business/services/sound-notification.service';
 import {DateTimeFormatterService} from 'app/business/services/date-time-formatter.service';
-import {MapService} from '@ofServices/map.service';
+import {MapService} from 'app/business/services/map.service';
 import {TranslateService} from '@ngx-translate/core';
+import {RouterStore} from 'app/business/store/router.store';
 
 @Component({
     selector: 'of-light-card',
@@ -40,9 +36,7 @@ export class LightCardComponent implements OnInit, OnDestroy {
     @Input() public lightCard: LightCard;
     @Input() public displayUnreadIcon = true;
     @Input() displayContext: any = DisplayContext.REALTIME;
-    @Input() lightCardDisplayedInMapComponent = false;
 
-    currentPath: any;
     protected _i18nPrefix: string;
     dateToDisplay: string;
     fromEntity = null;
@@ -60,13 +54,11 @@ export class LightCardComponent implements OnInit, OnDestroy {
 
     constructor(
         private router: Router,
-        private store: Store<AppState>,
+        private routerStore: RouterStore,
         private dateTimeFormatter: DateTimeFormatterService,
         private configService: ConfigService,
-        private _appService: AppService,
         private entitiesService: EntitiesService,
         private processesService: ProcessesService,
-        private userPreferencesService: UserPreferencesService,
         private groupedCardsService: GroupedCardsService,
         private soundNotificationService: SoundNotificationService,
         private mapService: MapService,
@@ -75,15 +67,6 @@ export class LightCardComponent implements OnInit, OnDestroy {
 
     ngOnInit() {
         this._i18nPrefix = `${this.lightCard.process}.${this.lightCard.processVersion}.`;
-        this.store
-            .select(selectCurrentUrl)
-            .pipe(takeUntil(this.ngUnsubscribe))
-            .subscribe((url) => {
-                if (url) {
-                    const urlParts = url.split('/');
-                    this.currentPath = urlParts[1];
-                }
-            });
         this.groupedCardsService.computeEvent
             .pipe(takeUntil(this.ngUnsubscribe))
             .subscribe((x) => this.computeGroupedCardsIcon());
@@ -104,7 +87,7 @@ export class LightCardComponent implements OnInit, OnDestroy {
         this.processesService
             .queryProcess(this.lightCard.process, this.lightCard.processVersion)
             .subscribe((process) => {
-                const state = process.extractState(this.lightCard);
+                const state = process.states.get((this.lightCard.state));
                 if (state.type === TypeOfStateEnum.FINISHED) {
                     this.showExpiredIcon = false;
                     this.showExpiredLabel = false;
@@ -143,7 +126,9 @@ export class LightCardComponent implements OnInit, OnDestroy {
     }
 
     computeDisplayedExpirationDate() {
-        this.expirationDateToDisplay = `${this.translateService.instant('feed.tips.expirationDate')}: ${this.handleDate(this.lightCard.expirationDate)}`;
+        this.expirationDateToDisplay = `${this.translateService.instant('feed.tips.expirationDate')}: ${this.handleDate(
+            this.lightCard.expirationDate
+        )}`;
     }
 
     private computeGroupedCardsIcon() {
@@ -168,15 +153,11 @@ export class LightCardComponent implements OnInit, OnDestroy {
             this.groupedCardsVisible = true;
         }
         if (this.displayContext != DisplayContext.PREVIEW)
-            this.router.navigate(['/' + this.currentPath, 'cards', this.lightCard.id]);
+            this.router.navigate(['/' + this.routerStore.getCurrentRoute(), 'cards', this.lightCard.id]);
     }
 
     get i18nPrefix(): string {
         return this._i18nPrefix;
-    }
-
-    isArchivePageType(): boolean {
-        return this._appService.pageType === PageType.ARCHIVE;
     }
 
     ngOnDestroy(): void {

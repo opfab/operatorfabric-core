@@ -67,19 +67,19 @@ public class WebSecurityConfiguration {
         if (checkAuthenticationForCardSending) {
             http
             .authorizeRequests()
-            .antMatchers(HttpMethod.GET,PROMETHEUS_PATH).permitAll() 
-            .antMatchers(LOGGERS_PATH).hasRole(ADMIN_ROLE)
-            .antMatchers("/cards/userCard/**").access(AUTH_AND_IP_ALLOWED)
-            .antMatchers("/cards/translateCardField").access(AUTH_AND_IP_ALLOWED)
-            .antMatchers(HttpMethod.DELETE, "/cards").access(ADMIN_AND_IP_ALLOWED)
-            .antMatchers("/**").access(AUTH_AND_IP_ALLOWED);
+            .requestMatchers(HttpMethod.GET,PROMETHEUS_PATH).permitAll()
+            .requestMatchers(LOGGERS_PATH).hasRole(ADMIN_ROLE)
+            .requestMatchers("/cards/userCard/**").access(AUTH_AND_IP_ALLOWED)
+            .requestMatchers("/cards/translateCardField").access(AUTH_AND_IP_ALLOWED)
+            .requestMatchers(HttpMethod.DELETE, "/cards").access(ADMIN_AND_IP_ALLOWED)
+            .requestMatchers("/**").access(AUTH_AND_IP_ALLOWED);
         } else {
             http
             .authorizeRequests()
-            .antMatchers(LOGGERS_PATH).hasRole(ADMIN_ROLE)
-            .antMatchers("/cards/userCard/**").access(AUTH_AND_IP_ALLOWED)
-            .antMatchers("/cards/translateCardField").access(AUTH_AND_IP_ALLOWED)
-            .antMatchers("/**").permitAll();
+            .requestMatchers(LOGGERS_PATH).hasRole(ADMIN_ROLE)
+            .requestMatchers("/cards/userCard/**").access(AUTH_AND_IP_ALLOWED)
+            .requestMatchers("/cards/translateCardField").access(AUTH_AND_IP_ALLOWED)
+            .requestMatchers("/**").permitAll();
         }
     }
 

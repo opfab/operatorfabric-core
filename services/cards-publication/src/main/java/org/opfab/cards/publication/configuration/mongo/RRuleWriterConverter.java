@@ -35,6 +35,11 @@ public class RRuleWriterConverter implements Converter<RRule, Document> {
             result.append("count", count);
         }
 
+        Integer interval = source.getInterval();
+        if (interval != null) {
+            result.append("interval", interval);
+        }
+
         DayEnum wkst = source.getWkst();
         if (wkst != null) {
             result.append("wkst", wkst);
@@ -55,6 +60,14 @@ public class RRuleWriterConverter implements Converter<RRule, Document> {
         List<Integer> byminute = source.getByminute();
         if (byminute != null)
             result.append("byminute", byminute);
+
+        List<Integer> bysetpos = source.getBysetpos();
+        if (bysetpos != null)
+            result.append("bysetpos", bysetpos);
+
+        List<Integer> bymonthday = source.getBymonthday();
+        if (bymonthday != null)
+            result.append("bymonthday", bymonthday);
 
         String tzid = source.getTzid();
         if (tzid != null) {

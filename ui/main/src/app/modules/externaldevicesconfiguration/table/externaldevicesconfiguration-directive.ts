@@ -1,4 +1,4 @@
-/* Copyright (c) 2022, RTE (http://www.rte-france.com)
+/* Copyright (c) 2022-2023, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -9,14 +9,12 @@
 
 import {Directive, Injectable} from '@angular/core';
 import {NgbModal, NgbModalOptions} from '@ng-bootstrap/ng-bootstrap';
-import { Store } from '@ngrx/store';
 import {TranslateService} from '@ngx-translate/core';
-import { MessageLevel } from '@ofModel/message.model';
-import {ExternalDevicesService} from '@ofServices/external-devices.service';
-import {AlertMessageAction} from '@ofStore/actions/alert.actions';
-import {AppState} from '@ofStore/index';
+import {MessageLevel} from '@ofModel/message.model';
+import {AlertMessageService} from 'app/business/services/alert-message.service';
+import {ExternalDevicesService} from 'app/business/services/external-devices.service';
 import {ColDef, GridOptions, ICellRendererParams} from 'ag-grid-community';
-import { CheckboxCellRendererComponent } from 'app/modules/admin/components/cell-renderers/checkbox-cell-renderer.component';
+import {CheckboxCellRendererComponent} from 'app/modules/admin/components/cell-renderers/checkbox-cell-renderer.component';
 import {Observable, throwError} from 'rxjs';
 import {ActionCellRendererComponent} from '../../admin/components/cell-renderers/action-cell-renderer.component';
 import {ConfirmationDialogService} from '../../admin/services/confirmation-dialog.service';
@@ -50,7 +48,7 @@ export abstract class ExternalDevicesConfigurationDirective {
         protected confirmationDialogService: ConfirmationDialogService,
         private translateService: TranslateService,
         protected modalService: NgbModal,
-        private store: Store<AppState>,
+        private alertMessageService: AlertMessageService
     ) {
         this.gridOptions = <GridOptions>{
             context: {
@@ -220,7 +218,7 @@ export abstract class ExternalDevicesConfigurationDirective {
                 this.translateService.instant('externalDevicesConfiguration.input.confirmDelete') +
                     ' ' +
                     row['userLogin'] +
-                    '?',
+                    ' ?',
                 'OK',
                 this.translateService.instant('admin.input.cancel')
             )
@@ -237,9 +235,7 @@ export abstract class ExternalDevicesConfigurationDirective {
     }
 
     protected displayMessage(i18nKey: string, msg: string, severity: MessageLevel = MessageLevel.ERROR) {
-        this.store.dispatch(
-            new AlertMessageAction({alertMessage: {message: msg, level: severity, i18n: {key: i18nKey}}})
-        );
+        this.alertMessageService.sendAlertMessage({message: msg, level: severity, i18n: {key: i18nKey}});
     }
 
 

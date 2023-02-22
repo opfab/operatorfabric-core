@@ -10,7 +10,6 @@
 import {Component, EventEmitter, Input, OnChanges, OnInit, Output, TemplateRef, ViewChild} from '@angular/core';
 import {FormControl, FormGroup} from '@angular/forms';
 import {NgbModal, NgbModalRef} from '@ng-bootstrap/ng-bootstrap';
-import {Store} from '@ngrx/store';
 import {Card, CardForPublishing} from '@ofModel/card.model';
 import {Severity} from '@ofModel/light-card.model';
 import {MessageLevel} from '@ofModel/message.model';
@@ -18,14 +17,14 @@ import {MultiSelectConfig} from '@ofModel/multiselect.model';
 import {PermissionEnum} from '@ofModel/permission.model';
 import {State} from '@ofModel/processes.model';
 import {User} from '@ofModel/user.model';
-import {CardService} from '@ofServices/card.service';
-import {EntitiesService} from '@ofServices/entities.service';
+import {EntitiesService} from 'app/business/services/entities.service';
 import {ProcessesService} from 'app/business/services/processes.service';
-import {UserPermissionsService} from '@ofServices/user-permissions.service';
-import {UserService} from '@ofServices/user.service';
-import {AlertMessageAction} from '@ofStore/actions/alert.actions';
-import {AppState} from '@ofStore/index';
+import {UserPermissionsService} from 'app/business/services/user-permissions.service';
+import {UserService} from 'app/business/services/user.service';
 import {Utilities} from 'app/business/common/utilities';
+import {AlertMessageService} from 'app/business/services/alert-message.service';
+import {CardService} from 'app/business/services/card.service';
+import {ServerResponseStatus} from 'app/business/server/serverResponse';
 
 declare const templateGateway: any;
 
@@ -81,13 +80,13 @@ export class CardResponseComponent implements OnChanges, OnInit {
     isReadOnlyUser: boolean;
 
     constructor(
-        private store: Store<AppState>,
         private cardService: CardService,
         private entitiesService: EntitiesService,
         private modalService: NgbModal,
         private userService: UserService,
         private userPermissionsService: UserPermissionsService,
-        private processService: ProcessesService
+        private processService: ProcessesService,
+        private alertMessageService: AlertMessageService
     ) {
         const userWithPerimeters = this.userService.getCurrentUserWithPerimeters();
         if (!!userWithPerimeters) this.user = userWithPerimeters.userData;
@@ -177,21 +176,16 @@ export class CardResponseComponent implements OnChanges, OnInit {
             };
             this.sendingResponseInProgress = true;
             this.cardService.postCard(card).subscribe(
-                (rep) => {
+                (resp) => {
                     this.sendingResponseInProgress = false;
-                    if (rep.status !== 201) {
+                    if (resp.status !== ServerResponseStatus.OK) {
                         this.displayMessage(ResponseI18nKeys.SUBMIT_ERROR_MSG, null, MessageLevel.ERROR);
-                        console.error(rep);
+                        console.error(resp);
                     } else {
                         this.isResponseLocked = true;
                         templateGateway.lockAnswer();
                         this.displayMessage(ResponseI18nKeys.SUBMIT_SUCCESS_MSG, null, MessageLevel.INFO);
                     }
-                },
-                (err) => {
-                    this.sendingResponseInProgress = false;
-                    this.displayMessage(ResponseI18nKeys.SUBMIT_ERROR_MSG, null, MessageLevel.ERROR);
-                    console.error(err);
                 }
             );
         } else {
@@ -202,9 +196,7 @@ export class CardResponseComponent implements OnChanges, OnInit {
     }
 
     private displayMessage(i18nKey: string, msg: string, severity: MessageLevel = MessageLevel.ERROR) {
-        this.store.dispatch(
-            new AlertMessageAction({alertMessage: {message: msg, level: severity, i18n: {key: i18nKey}}})
-        );
+        this.alertMessageService.sendAlertMessage({message: msg, level: severity, i18n: {key: i18nKey}});
     }
 
     public submitEntitiesChoice() {

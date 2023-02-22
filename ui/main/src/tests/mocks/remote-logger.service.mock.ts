@@ -1,4 +1,4 @@
-/* Copyright (c) 2022, RTE (http://www.rte-france.com)
+/* Copyright (c) 2022-2023, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -7,10 +7,16 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {Injectable} from '@angular/core';
+import {ConfigService} from 'app/business/services/config.service';
+import {RemoteLoggerService} from 'app/business/services/logs/remote-logger.service';
+import {ConfigServerMock} from './configServer.mock';
 
-@Injectable()
-export class RemoteLoggerServiceMock {
+export class RemoteLoggerServiceMock extends RemoteLoggerService {
+
+    public constructor() {
+        super(new ConfigService(new ConfigServerMock()),null);
+    }
+
     public setRemoteLoggerActive(_active: boolean) {
         // mock
     }

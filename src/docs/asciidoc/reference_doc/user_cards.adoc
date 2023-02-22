@@ -128,11 +128,11 @@ for more information) .
 
 If you send a card to an ExternalRecipient, when the user delete it, the external recipient will receive the information via an HTTP DELETE request with the id of the deleted card at the end of the request (example : http://myexternal_app/myendpoint/ID_CARD).
 
-If you want the card to be visible in the agenda feature, you need to set 'timeSpans' field (as array of TimeSpans objects) in the object returned by the method. 
+If you want the card to be visible in the calendar feature, you need to set 'timeSpans' field (as array of TimeSpans objects) in the object returned by the method. 
 You can find an example in the file:
 https://github.com/opfab/operatorfabric-core/tree/master/src/test/resources/bundles/taskExample/template/usercard_task.handlebars[src/test/resources/bundles/taskExample/template/usercard_task.handlebars].
 
-If not using 'timeSpans' it's possible to set the 'viewCardInAgenda' field to true, the card will be visible using card's startDate and endDate as default timeSpan.
+If not using 'timeSpans' it's possible to set the 'viewCardInCalendar' field to true, the card will be visible using card's startDate and endDate as default timeSpan.
 
 The 'recurrence' field is deprecated and could be removed in the future.
 

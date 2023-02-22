@@ -10,26 +10,27 @@
 
 import {Component, Input, OnInit} from '@angular/core';
 import {
+    AbstractControl,
     AsyncValidatorFn,
     FormControl,
     FormGroup,
+    ValidationErrors,
     Validators
 } from '@angular/forms';
 import {NgbActiveModal} from '@ng-bootstrap/ng-bootstrap';
 import {AdminItemType, SharingService} from '../../../services/sharing.service';
-import {CrudService} from '@ofServices/crud-service';
-import {PerimetersService} from '@ofServices/perimeters.service';
-import {AlertMessageAction} from '@ofStore/actions/alert.actions';
-import {Store} from '@ngrx/store';
-import {AppState} from '@ofStore/index';
+import {CrudService} from 'app/business/services/crud-service';
+import {PerimetersService} from 'app/business/services/perimeters.service';
 import {MessageLevel} from '@ofModel/message.model';
-import {GroupsService} from '@ofServices/groups.service';
-import {debounceTime, distinctUntilChanged, first, map, switchMap} from 'rxjs/operators';
+import {GroupsService} from 'app/business/services/groups.service';
 import {MultiSelectConfig, MultiSelectOption} from '@ofModel/multiselect.model';
 import {GroupTypeEnum} from '@ofModel/group.model';
-import {UserService} from '@ofServices/user.service';
-import {User} from '../../../../../model/user.model';
+import {UserService} from 'app/business/services/user.service';
+import {User} from '@ofModel/user.model';
 import {PermissionEnum} from '@ofModel/permission.model';
+import {Observable, of} from 'rxjs';
+import {AlertMessageService} from 'app/business/services/alert-message.service';
+
 
 @Component({
     selector: 'of-edit-group-modal',
@@ -84,12 +85,12 @@ export class EditGroupModalComponent implements OnInit {
     };
 
     constructor(
-        private store: Store<AppState>,
         private activeModal: NgbActiveModal,
         private dataHandlingService: SharingService,
         private perimetersService: PerimetersService,
         private groupsService: GroupsService,
-        private userService: UserService
+        private userService: UserService,
+        private alertMessageService: AlertMessageService
     ) {
         Object.values(GroupTypeEnum).forEach((t) => this.groupTypes.push({value: String(t), label: String(t)}));
         Object.values(PermissionEnum).forEach((t) => this.groupPermissions.push({value: String(t), label: String(t)}));
@@ -97,17 +98,24 @@ export class EditGroupModalComponent implements OnInit {
 
     ngOnInit() {
         const uniqueGroupIdValidator = [];
-        if (!this.row)
-            // modal used for creating a new group
+        const uniqueGroupNameValidator = [];
+        if (!this.row) {
             uniqueGroupIdValidator.push(this.uniqueGroupIdValidatorFn());
-
+        }
+        uniqueGroupNameValidator.push(this.uniqueGroupNameValidatorFn());
+            // modal used for creating a new group
+           
         this.groupForm = new FormGroup({
             id: new FormControl(
                 '',
                 [Validators.required, Validators.minLength(2), Validators.pattern(/^[A-Za-z\d\-_]+$/)],
                 uniqueGroupIdValidator
             ),
-            name: new FormControl('', [Validators.required]),
+            name: new FormControl(
+                '', 
+                [Validators.required],
+                uniqueGroupNameValidator
+            ),
             description: new FormControl(''),
             perimeters: new FormControl([]),
             permissions: new FormControl([]),
@@ -123,20 +131,21 @@ export class EditGroupModalComponent implements OnInit {
             // For 'simple' fields (where the value is directly displayed), we use the form's patching method
             const {id, name, description, realtime, type} = this.row;
             this.groupForm.patchValue({id, name, description, realtime, type}, {onlySelf: false});
-
             // Otherwise, we use the selectedItems property of the of-multiselect component
             this.selectedPerimeters = this.row.perimeters;
             this.selectedGroupType = this.row.type;
             this.selectedGroupPermissions = this.row.permissions;
+
+            this.userService.getAll().subscribe(users => {
+                this.groupUsers = users.filter(usr => this.isUserInCurrentGroup(usr)).map(usr => usr.login).join(', ');
+            });
         }
 
         this.perimetersService.getPerimeters().forEach((perimeter) => {
             this.perimetersMultiSelectOptions.push(new MultiSelectOption(perimeter.id, perimeter.id));
         });
 
-        this.userService.getAll().subscribe(users => {
-            this.groupUsers = users.filter(usr => this.isUserInCurrentGroup(usr)).map(usr => usr.login).join(', ');
-        });
+
 
     }
 
@@ -162,14 +171,24 @@ export class EditGroupModalComponent implements OnInit {
     }
 
     uniqueGroupIdValidatorFn(): AsyncValidatorFn {
-        return (control) =>
-            control.valueChanges.pipe(
-                debounceTime(500),
-                distinctUntilChanged(),
-                switchMap(async (value) => this.isUniqueGroupId(value)),
-                map((unique: boolean) => (unique ? null : {uniqueGroupIdViolation: true})),
-                first()
-            ); // important to make observable finite
+        return (control: AbstractControl): Observable<ValidationErrors> =>
+        {
+            let err : ValidationErrors = {'uniqueGroupIdViolation': true};
+            return this.isUniqueGroupId(this.groupForm.controls["id"].value)? of(null) : of(err)
+        }
+    }
+
+    isUniqueGroupName(groupName: string): boolean {
+        if (!!groupName && this.groupsService.getGroups().filter((group) => (group.name === groupName.trim()) && (group.id !== this.row?.id)).length) return false;
+        else return true;
+    }
+
+    uniqueGroupNameValidatorFn(): AsyncValidatorFn {
+        return (control: AbstractControl): Observable<ValidationErrors> =>
+        {
+            let err : ValidationErrors = {'uniqueGroupNameViolation': true};
+            return this.isUniqueGroupName(this.groupForm.controls["name"].value)? of(null) : of(err)
+        }
     }
 
     onSavesuccess() {
@@ -182,11 +201,9 @@ export class EditGroupModalComponent implements OnInit {
                 return {id: perimeterId, itemName: perimeterId};
             })
         );
-        this.store.dispatch(
-            new AlertMessageAction({
-                alertMessage: {message: res.originalError.error.message, level: MessageLevel.ERROR}
-            })
-        );
+
+        this.alertMessageService.sendAlertMessage({message: res.originalError.error.message, level: MessageLevel.ERROR});
+
     }
 
     private cleanForm() {

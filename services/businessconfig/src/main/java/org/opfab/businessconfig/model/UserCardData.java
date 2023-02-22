@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2021, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2023, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -35,18 +35,27 @@ import java.util.List;
 @NoArgsConstructor
 public class UserCardData implements UserCard {
     private String template;
+
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private Boolean severityVisible;
+
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private Boolean startDateVisible;
+
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private Boolean endDateVisible;
+
     @JsonInclude(JsonInclude.Include.NON_NULL)
-    private Boolean expirationDateVisible;
+    @Builder.Default
+    private Boolean expirationDateVisible = false;
+
     @JsonInclude(JsonInclude.Include.NON_NULL)
-    private Boolean lttdVisible;
+    @Builder.Default
+    private Boolean lttdVisible = false;
+
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private Boolean recipientVisible;
+
     @JsonInclude(JsonInclude.Include.NON_EMPTY)
     private List<Recipient> recipientList;
 }

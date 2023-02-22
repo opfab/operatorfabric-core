@@ -31,17 +31,13 @@ import {
     ViewDimensions
 } from '@swimlane/ngx-charts';
 import * as moment from 'moment';
-import {Store} from '@ngrx/store';
-import {selectCurrentUrl} from '@ofStore/selectors/router.selectors';
-import {AppState} from '@ofStore/index';
 import {Router} from '@angular/router';
 import {Subject} from 'rxjs';
 import {takeUntil} from 'rxjs/operators';
-import {getNextTimeForRepeating} from '@ofServices/reminder/reminderUtils';
-import {getNextTimeForRepeating as getNextTimeForRepeatingUsingRRule} from '@ofServices/rrule-reminder/rrule-reminderUtils';
+import {getNextTimeForRepeating} from 'app/business/services/reminder/reminderUtils';
+import {getNextTimeForRepeating as getNextTimeForRepeatingUsingRRule} from 'app/business/services/rrule-reminder/rrule-reminderUtils';
 import {NgbPopover} from '@ng-bootstrap/ng-bootstrap';
-import {LightCardsFeedFilterService} from '@ofServices/lightcards/lightcards-feed-filter.service';
-import {FilterService} from '@ofServices/lightcards/filter.service';
+import {LightCardsFeedFilterService} from 'app/business/services/lightcards/lightcards-feed-filter.service';
 
 @Component({
     selector: 'of-custom-timeline-chart',
@@ -73,7 +69,6 @@ export class CustomTimelineChartComponent extends BaseChartComponent implements 
     public translateGraph: string;
     public translateXTicksTwo: string;
     public xRealTimeLine: moment.Moment;
-    private currentPath: string;
     private isDestroyed = false;
     public weekRectangles;
 
@@ -162,25 +157,14 @@ export class CustomTimelineChartComponent extends BaseChartComponent implements 
         chartElement: ElementRef,
         zone: NgZone,
         cd: ChangeDetectorRef,
-        private store: Store<AppState>,
         private router: Router,
         @Inject(PLATFORM_ID) platformId: any,
-        private lightCardsFeedFilterService: LightCardsFeedFilterService,
-        private filterService: FilterService
+        private lightCardsFeedFilterService: LightCardsFeedFilterService
     ) {
         super(chartElement, zone, cd, platformId);
     }
 
     ngOnInit(): void {
-        this.store
-            .select(selectCurrentUrl)
-            .pipe(takeUntil(this.ngUnsubscribe$))
-            .subscribe((url) => {
-                if (url) {
-                    const urlParts = url.split('/');
-                    this.currentPath = urlParts[1];
-                }
-            });
         this.initGraph();
         this.updateRealtime();
         this.initDataPipe();
@@ -586,7 +570,7 @@ export class CustomTimelineChartComponent extends BaseChartComponent implements 
     }
 
     showCard(cardId): void {
-        this.router.navigate(['/' + this.currentPath, 'cards', cardId]);
+        this.router.navigate(['/feed', 'cards', cardId]);
         this.scrollToSelectedCard();
     }
 

@@ -25,12 +25,12 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.oauth2.jwt.Jwt;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.web.bind.annotation.*;
 
 
-import javax.validation.Valid;
+import jakarta.validation.Valid;
 import java.security.Principal;
 import java.time.Instant;
 import java.util.List;
@@ -50,7 +50,7 @@ public class CardController {
     @Autowired
     private UserActionLogService userActionLogService;
 
-    private @Value("${traceUserAction:true}") boolean traceUserAction;
+    private @Value("${operatorfabric.userActionLogActivated:true}") boolean userActionLogActivated;
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
@@ -248,6 +248,6 @@ public class CardController {
     }
 
     private void logUserAction(String login, UserActionEnum actionType, List<String> entities, String cardUid, String comment) {
-        if (traceUserAction) userActionLogService.insertUserActionLog(login,  actionType, entities, cardUid, comment);
+        if (userActionLogActivated) userActionLogService.insertUserActionLog(login,  actionType, entities, cardUid, comment);
     }
 }

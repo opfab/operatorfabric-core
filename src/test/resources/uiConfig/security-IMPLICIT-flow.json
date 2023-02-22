@@ -3,7 +3,7 @@
     "expire-claim": "exp",
     "login-claim": "preferred_username"
   },
-  "logout-url": "http://localhost:89/auth/realms/dev/protocol/openid-connect/logout?redirect_uri=http://localhost:2002/ui/",
+  "logout-url": "http://localhost:89/auth/realms/dev/protocol/openid-connect/logout?post_logout_redirect_uri=http://localhost:2002/ui/&client_id=opfab-client",
   "oauth2": {
     "client-id": "opfab-client",
     "flow": {

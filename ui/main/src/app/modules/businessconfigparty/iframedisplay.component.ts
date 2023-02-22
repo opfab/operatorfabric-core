@@ -12,10 +12,7 @@ import {DomSanitizer, SafeUrl} from '@angular/platform-browser';
 import {ActivatedRoute, Router} from '@angular/router';
 import {map, skip, takeUntil} from 'rxjs/operators';
 import {Subject} from 'rxjs';
-import {Store} from '@ngrx/store';
-import {AppState} from '@ofStore/index';
-import {selectGlobalStyleState} from '@ofSelectors/global-style.selectors';
-import {GlobalStyleService} from '@ofServices/global-style.service';
+import {GlobalStyleService} from 'app/business/services/global-style.service';
 import {ConfigService} from 'app/business/services/config.service';
 import {DOCUMENT} from '@angular/common';
 
@@ -34,7 +31,6 @@ export class IframeDisplayComponent implements OnInit, OnDestroy {
         private sanitizer: DomSanitizer,
         private route: ActivatedRoute,
         private businessconfigService: ConfigService,
-        private store: Store<AppState>,
         private globalStyleService: GlobalStyleService,
         private router: Router,
         @Inject(DOCUMENT) private document: Document
@@ -101,8 +97,7 @@ export class IframeDisplayComponent implements OnInit, OnDestroy {
     }
 
     private reloadIframeWhenGlobalStyleChange() {
-        this.store
-            .select(selectGlobalStyleState)
+        this.globalStyleService.getStyleChange()
             .pipe(takeUntil(this.unsubscribe$), skip(1))
             .subscribe(() => this.loadIframe());
     }

@@ -42,7 +42,6 @@
 					"severityVisible" : true,
 					"startDateVisible" : false,
 					"endDateVisible" : false,
-					"lttdVisible" : false,
 					"recipientVisible": false,
 					"recipientList" : [{"id": "ENTITY_FR", "levels": [0,1]}, {"id": "IT_SUPERVISOR_ENTITY"}]
 				},

@@ -7,28 +7,27 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {Component, Input, OnChanges, OnDestroy, OnInit, SimpleChanges, ViewEncapsulation} from '@angular/core';
+import {Component, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output, SimpleChanges, ViewEncapsulation} from '@angular/core';
 import {Card} from '@ofModel/card.model';
 import {ProcessesService} from 'app/business/services/processes.service';
 import {SafeHtml} from '@angular/platform-browser';
 import {AcknowledgmentAllowedEnum, State} from '@ofModel/processes.model';
-import {Store} from '@ngrx/store';
-import {AppState} from '@ofStore/index';
 import {map, takeUntil} from 'rxjs/operators';
-import {CardService} from '@ofServices/card.service';
 import {Subject} from 'rxjs';
-import {AppService, PageType} from '@ofServices/app.service';
 import {User} from '@ofModel/user.model';
-import {ClearLightCardSelectionAction} from '@ofStore/actions/light-card.actions';
-import {UserService} from '@ofServices/user.service';
-import {EntitiesService} from '@ofServices/entities.service';
+import {UserService} from 'app/business/services/user.service';
+import {EntitiesService} from 'app/business/services/entities.service';
 import {NgbModalRef} from '@ng-bootstrap/ng-bootstrap';
-import {UserPermissionsService} from '@ofServices/user-permissions.service';
+import {UserPermissionsService} from 'app/business/services/user-permissions.service';
 import {DisplayContext} from '@ofModel/templateGateway.model';
-import {LightCardsStoreService} from '@ofServices/lightcards/lightcards-store.service';
+import {LightCardsStoreService} from 'app/business/services/lightcards/lightcards-store.service';
 import {CardComponent} from '../../card.component';
-import {OpfabLoggerService} from '@ofServices/logs/opfab-logger.service';
+import {OpfabLoggerService} from 'app/business/services/logs/opfab-logger.service';
 import {UserWithPerimeters} from "@ofModel/userWithPerimeters.model";
+import {SelectedCardService} from 'app/business/services/card/selectedCard.service';
+import {CardService} from 'app/business/services/card.service';
+import {RouterStore,PageType} from 'app/business/store/router.store';
+import {Router} from '@angular/router';
 
 declare const templateGateway: any;
 
@@ -46,6 +45,8 @@ export class CardBodyComponent implements OnChanges, OnInit, OnDestroy {
     @Input() parentModalRef: NgbModalRef;
     @Input() screenSize: string;
     @Input() parentComponent: CardComponent;
+
+    @Output() closeCardDetail: EventEmitter<boolean> = new EventEmitter<boolean>();
 
     public displayContext: DisplayContext = DisplayContext.REALTIME;
     public isUserEnabledToRespond = false;
@@ -71,13 +72,14 @@ export class CardBodyComponent implements OnChanges, OnInit, OnDestroy {
 
     constructor(
         private businessconfigService: ProcessesService,
-        private store: Store<AppState>,
+        private routerStore: RouterStore,
         private cardService: CardService,
-        private _appService: AppService,
+        private router: Router,
         private userService: UserService,
         private entitiesService: EntitiesService,
         private userPermissionsService: UserPermissionsService,
         private lightCardsStoreService: LightCardsStoreService,
+        private selectedCardService: SelectedCardService,
         private logger: OpfabLoggerService
     ) {
         this.userWithPerimeters = this.userService.getCurrentUserWithPerimeters();
@@ -88,9 +90,10 @@ export class CardBodyComponent implements OnChanges, OnInit, OnDestroy {
 
     ngOnInit() {
         this.integrateChildCardsInRealTime();
-        if (this._appService.pageType === PageType.MONITORING || this._appService.pageType === PageType.CALENDAR)
+        const pageType = this.routerStore.getCurrentPageType();
+        if (pageType === PageType.MONITORING || pageType === PageType.CALENDAR)
             this.templateOffset = 35;
-        if (this._appService.pageType !== PageType.CALENDAR && this._appService.pageType !== PageType.MONITORING)
+        if (pageType !== PageType.CALENDAR && pageType !== PageType.MONITORING)
             this.showMaxAndReduceButton = true;
     }
 
@@ -330,11 +333,15 @@ export class CardBodyComponent implements OnChanges, OnInit, OnDestroy {
     }
 
     public closeDetails() {
+        this.closeCardDetail.next(true);
         this.updateLastReadCardStatusOnFeedIfNeeded();
         if (this.parentModalRef) {
             this.parentModalRef.close();
-            this.store.dispatch(new ClearLightCardSelectionAction());
-        } else this._appService.closeDetails();
+            this.selectedCardService.clearSelectedCardId();
+        } else {
+            this.selectedCardService.clearSelectedCardId();
+            this.router.navigate(['/' + this.routerStore.getCurrentRoute()]);
+        }
     }
 
     ngOnDestroy() {

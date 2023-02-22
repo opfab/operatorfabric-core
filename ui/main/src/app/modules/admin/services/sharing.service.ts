@@ -8,15 +8,15 @@
  */
 
 import {Injectable, OnDestroy} from '@angular/core';
-import {EntitiesService} from '@ofServices/entities.service';
-import {GroupsService} from '@ofServices/groups.service';
-import {UserService} from '@ofServices/user.service';
-import {CrudService} from '@ofServices/crud-service';
-import {CachedCrudService} from '@ofServices/cached-crud-service';
+import {EntitiesService} from 'app/business/services/entities.service';
+import {GroupsService} from 'app/business/services/groups.service';
+import {UserService} from 'app/business/services/user.service';
+import {CrudService} from 'app/business/services/crud-service';
+import {CachedCrudService} from 'app/business/services/cached-crud-service';
 import {Observable, ReplaySubject, Subject} from 'rxjs';
 import {takeUntil} from 'rxjs/operators';
-import {PerimetersService} from '@ofServices/perimeters.service';
-import {AdminProcessesService} from '@ofServices/adminprocess.service';
+import {PerimetersService} from 'app/business/services/perimeters.service';
+import {AdminProcessesService} from 'app/business/services/adminprocess.service';
 
 /** The aim of this service is to provide the services that need to be shared between components of the admin screen. For example, a single
  * instance of `EntitiesService` should be used across all components so a update to the cache is visible from all components.

@@ -7,12 +7,15 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {Component, EventEmitter, Input, Output} from "@angular/core";
+import {Component, ElementRef, EventEmitter, Input, Output, ViewChild} from "@angular/core";
 import {TranslateService} from "@ngx-translate/core";
 import {UserActionLog} from "@ofModel/user-action-log.model";
-import {DateTimeFormatterService} from "app/business/services/date-time-formatter.service";
 import {ColDef, GridOptions} from "ag-grid-community";
 import {EntitiesCellRendererComponent} from "./cell-renderers/entities-cell-renderer.component";
+import moment from "moment";
+import {NgbModalRef, NgbModalOptions, NgbModal} from "@ng-bootstrap/ng-bootstrap";
+import {Card, CardData} from "@ofModel/card.model";
+import {CardService} from "app/business/services/card.service";
 
 
 @Component({
@@ -28,6 +31,11 @@ export class UserActionLogsTableComponent {
 
     @Output() pageChange = new EventEmitter<number>();
 
+    // View card
+    modalRef: NgbModalRef;
+    @ViewChild('cardDetail') cardDetailTemplate: ElementRef;
+    @ViewChild('cardLoadingInProgress') cardLoadingTemplate: ElementRef;
+
     // ag-grid configuration objects
     public gridOptions;
     public gridApi;
@@ -40,7 +48,14 @@ export class UserActionLogsTableComponent {
     private cardUidColumnName: string;
     private commentColumnName: string;
 
-    constructor( private translate: TranslateService, private dateTimeFormatter: DateTimeFormatterService) {
+    cardLoadingInProgress = false;
+    cardLoadingIsTakingMoreThanOneSecond = false;
+    selectedCard: Card;
+    selectedChildCards: Card[];
+
+    constructor( private translate: TranslateService,
+        private cardService: CardService,
+        private modalService: NgbModal) {
 
         this.dateColumnName = this.translate.instant('useractionlogs.date');
         this.actionColumnName = this.translate.instant('useractionlogs.action');
@@ -65,13 +80,19 @@ export class UserActionLogsTableComponent {
                 // e.g. key "to" defined by ag-grid for use with pagination can be found under "ag-grid.to" in assets
                 return translate.instant('ag-grid.' + params.key);
             },
+            getRowStyle:  function (params) {
+                if (params.data.cardUid !== null) {
+                    return {'cursor': 'pointer'}
+                }
+                return null;
+            },
             columnTypes: {
                 timeColumn: {
                     sortable: false,
                     filter: false,
                     wrapText: false,
                     autoHeight: false,
-                    width: 150,
+                    width: 180,
                     valueGetter: params => {
                         return this.getFormattedDateTime(params.data.date);
                     }
@@ -141,6 +162,48 @@ export class UserActionLogsTableComponent {
     }
 
     getFormattedDateTime(epochDate: number):string {
-        return this.dateTimeFormatter.getFormattedDateAndTimeFromEpochDate(epochDate);
+        return moment(epochDate).format('HH:mm:ss DD/MM/YYYY');
+    }
+
+    selectRow(action: UserActionLog) {
+        if (action.cardUid) this.openCardDetail(action.cardUid);
+    }
+
+    private openCardDetail(cardId: string) {
+        this.cardLoadingInProgress = true;
+        if (!this.cardLoadingIsTakingMoreThanOneSecond) this.checkForCardLoadingInProgressForMoreThanOneSecond();
+        this.cardService.loadArchivedCard(cardId).subscribe((card: CardData) => {
+            if (card.card.initialParentCardUid)
+                this.openCardDetail(card.card.initialParentCardUid);
+            else {
+                this.selectedCard = card.card;
+                this.selectedChildCards = card.childCards;
+
+                const options: NgbModalOptions = {
+                    size: 'fullscreen'
+                };
+                if (!!this.modalRef) this.modalRef.close();
+                this.modalRef = this.modalService.open(this.cardDetailTemplate, options);
+                this.cardLoadingInProgress = false;
+                this.cardLoadingIsTakingMoreThanOneSecond = false;
+            }
+
+        });
+
+    }
+
+    // we show a spinner on screen if archives loading takes more than 1 second
+    private checkForCardLoadingInProgressForMoreThanOneSecond() {
+        setTimeout(() => {
+            this.cardLoadingIsTakingMoreThanOneSecond = this.cardLoadingInProgress;
+            if (this.cardLoadingIsTakingMoreThanOneSecond) {
+                const modalOptions: NgbModalOptions = {
+                    centered: true,
+                    backdrop: 'static', // Modal shouldn't close even if we click outside it
+                    size: 'sm'
+                };
+                this.modalRef = this.modalService.open(this.cardLoadingTemplate, modalOptions);
+            }
+        }, 1000);
     }
 }

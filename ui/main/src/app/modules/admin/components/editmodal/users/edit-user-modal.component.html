@@ -70,6 +70,9 @@
             <label for="opfab-authorizedIPAddresses" translate>admin.input.user.authorizedIPAddresses</label>
             <input formControlName="authorizedIPAddresses" name="authorizedIPAddresses" id="opfab-authorizedIPAddresses" type="text">
           </div>
+          <div *ngIf="authorizedIPAddresses.invalid" class="row alert alert-danger">
+            <div *ngIf="authorizedIPAddresses.errors.pattern" translate>admin.input.authorizedIPAddresses.pattern</div>
+          </div>
         </div>
       </div>
     </form>

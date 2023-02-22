@@ -1,4 +1,4 @@
-/* Copyright (c) 2022, RTE (http://www.rte-france.com)
+/* Copyright (c) 2022-2023, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -117,6 +117,9 @@ describe ('User action logs page',()=>{
         agGrid.cellShould('ag-grid-angular', 1, 1, 'have.text', 'OPEN_SUBSCRIPTION');
         agGrid.cellShould('ag-grid-angular', 1, 2, 'have.text', 'operator1_fr');
 
+
+
+
         selectUsername(['operator1_fr','operator2_fr']);
         selectAction(['SEND_CARD','READ_CARD']);
         cy.get('#opfab-useractionlogs-btn-search').click();
@@ -141,6 +144,55 @@ describe ('User action logs page',()=>{
         cy.get('#opfab-useractionlogs-btn-search').click();
         cy.get('#opfab-useractionlogs-noResult').contains('Your search did not match any result.');
     })
+
+    it('Check card details ', ()=> {
+
+        opfab.loginWithUser('admin');
+        opfab.navigateToUserActionLogs();
+
+        cy.get('#opfab-useractionlogs-btn-search').click();
+
+        cy.get('.opfab-pagination').should('contain.text', ' Results number  : 14');
+
+        agGrid.countTableRows('#opfab-useractionlogs-table-grid', 10);
+
+        agGrid.cellShould('ag-grid-angular', 0, 1, 'have.text', 'OPEN_SUBSCRIPTION');
+        agGrid.cellShould('ag-grid-angular', 0, 2, 'have.text', 'admin');
+
+        agGrid.cellShould('ag-grid-angular', 1, 1, 'have.text', 'CLOSE_SUBSCRIPTION');
+        agGrid.cellShould('ag-grid-angular', 1, 2, 'have.text', 'admin');
+
+        agGrid.cellShould('ag-grid-angular', 2, 1, 'have.text', 'OPEN_SUBSCRIPTION');
+        agGrid.cellShould('ag-grid-angular', 2, 2, 'have.text', 'admin');
+
+        agGrid.cellShould('ag-grid-angular', 3, 1, 'have.text', 'CLOSE_SUBSCRIPTION');
+        agGrid.cellShould('ag-grid-angular', 3, 2, 'have.text', 'operator2_fr');
+
+        agGrid.cellShould('ag-grid-angular', 4, 1, 'have.text', 'UNACK_CARD');
+        agGrid.cellShould('ag-grid-angular', 4, 2, 'have.text', 'operator2_fr'); 
+
+        agGrid.cellShould('ag-grid-angular', 5, 1, 'have.text', 'SEND_RESPONSE');
+        agGrid.cellShould('ag-grid-angular', 5, 2, 'have.text', 'operator2_fr'); 
+
+        agGrid.cellShould('ag-grid-angular', 6, 1, 'have.text', 'READ_CARD');
+        agGrid.cellShould('ag-grid-angular', 6, 2, 'have.text', 'operator2_fr');
+        
+        agGrid.clickCell('ag-grid-angular', 0, 1);
+        cy.get('of-archived-card-detail').should('not.exist');
+
+        agGrid.clickCell('ag-grid-angular', 4, 1);
+        cy.get('of-simplified-card-view').should('exist');
+
+        //Close detail
+        cy.get('#opfab-archives-card-detail-close').click({force: true});
+        cy.get('of-archived-card-detail').should('not.exist');
+
+        agGrid.clickCell('ag-grid-angular', 5, 1);
+        cy.get('of-simplified-card-view').should('exist');
+        // Check the response has been integrated in the template
+        cy.get('#childs-div').find('tr').should('have.length', 2);
+
+    });
 
 
     function sendQuestionCard() {

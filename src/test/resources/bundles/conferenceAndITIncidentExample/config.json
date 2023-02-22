@@ -13,8 +13,7 @@
       "description": "Conference Call ☏",
       "color": "#CC9900",
       "userCard" : {
-        "template" : "usercard_conference",
-        "lttdVisible" : false
+        "template" : "usercard_conference"
       },
       "templateName": "conference",
       "styles": [],
@@ -27,13 +26,12 @@
       "name": "IT Incident",
       "description": "IT Incident",
       "userCard" : {
-				"template" : "usercard_incidentInProgress",
-				"severityVisible" : true,
-				"startDateVisible" : false,
-				"endDateVisible" : false,
-        "lttdVisible" : false,
+		"template" : "usercard_incidentInProgress",
+		"severityVisible" : true,
+		"startDateVisible" : false,
+		"endDateVisible" : false,
         "recipientVisible" : false
-			},
+      },
       "color": "#CC9900",
       "response": {
         "state": "incidentInProgressState"
@@ -41,6 +39,7 @@
       "templateName": "incidentInProgress",
       "styles": [],
       "acknowledgmentAllowed": "OnlyWhenResponseDisabledForUser",
+      "showAcknowledgmentFooter": "Never",
       "type" : "INPROGRESS",
       "validateAnswerButtonLabel" : "SEND IMPACT",
       "modifyAnswerButtonLabel" : "MODIFY IMPACT"

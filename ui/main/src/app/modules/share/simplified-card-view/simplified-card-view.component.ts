@@ -12,9 +12,9 @@ import {Card} from '@ofModel/card.model';
 import {ProcessesService} from 'app/business/services/processes.service';
 import {takeUntil} from 'rxjs/operators';
 import {Subject} from 'rxjs';
-import {UserService} from '@ofServices/user.service';
+import {UserService} from 'app/business/services/user.service';
 import {User} from '@ofModel/user.model';
-import {EntitiesService} from '@ofServices/entities.service';
+import {EntitiesService} from 'app/business/services/entities.service';
 import {State} from '@ofModel/processes.model';
 import {DisplayContext} from '@ofModel/templateGateway.model';
 
@@ -76,7 +76,7 @@ export class SimplifiedCardViewComponent implements OnInit, OnDestroy {
             .subscribe({
                 next: (businessconfig) => {
                     if (!!businessconfig) {
-                        this.cardState = businessconfig.extractState(this.card);
+                        this.cardState = businessconfig.states.get((this.card.state));
                         this.isLoading = false;
                     }
                 },

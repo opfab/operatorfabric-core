@@ -40,7 +40,7 @@ It aims to facilitate operational activities for utilities in two ways :
 ** event dispatching rules on a per user basis (based on groups, organizational entities, processes... )
 ** event-sending endpoints for business applications 
 ** a mechanism of templating to customize events rendering (using HTML5 )
-** a view of the events on a timeline and agenda view 
+** a view of the events on a timeline or a calendar 
 ** storage of all the events (archive feature)
 ** notifications via sounds 
 ** possibilities  to integrate screen form other applications

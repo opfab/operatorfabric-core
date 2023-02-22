@@ -72,6 +72,7 @@ The information about permissions is stored in the data of the user's groups (`P
 The available permissions are:
 
  - `ADMIN`: Administrator permission
+ - `ADMIN_BUSINESS_PROCESS`: Permission to administer process bundles (add, update, delete bundles)
  - `VIEW_ALL_ARCHIVED_CARDS`: Permission to access all archived cards
  - `READONLY`: Readonly permission. User cannot send user cards, cannot respond to a card, when acknowledges a card he does not acknowledge it for his entities.
 

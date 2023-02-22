@@ -8,10 +8,8 @@
  */
 
 import {Component, OnInit} from '@angular/core';
-import {Store} from '@ngrx/store';
-import {AppState} from '@ofStore/index';
 import {ConfigService} from 'app/business/services/config.service';
-import {LightCardsStoreService} from '@ofServices/lightcards/lightcards-store.service';
+import {LightCardsStoreService} from 'app/business/services/lightcards/lightcards-store.service';
 
 @Component({
     selector: 'of-filters',
@@ -29,7 +27,6 @@ export class FiltersComponent implements OnInit {
     loadingInProgress = false;
 
     constructor(
-        private store: Store<AppState>,
         private configService: ConfigService,
         private lightCardsStoreService: LightCardsStoreService,
     ) {}

@@ -11,7 +11,7 @@ import {NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {TranslateModule} from '@ngx-translate/core';
 import {SimplifiedCardViewComponent} from './simplified-card-view.component';
-import { SpinnerModule } from '../spinner/spinner.module';
+import {SpinnerModule} from '../spinner/spinner.module';
 import {TemplateRenderingModule} from '../template-rendering/template-rendering.module';
 
 @NgModule({

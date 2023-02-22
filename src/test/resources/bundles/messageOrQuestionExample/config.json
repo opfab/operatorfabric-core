@@ -14,9 +14,8 @@
       "color": "#CC9900",
       "userCard" : {
         "template" : "usercard_message",
-        "endDateVisible" : false,
-        "lttdVisible" : false,
-        "expirationDateVisible" : false
+        "startDateVisible": false,
+        "endDateVisible" : false
       },
       "templateName": "message",
       "styles": [],
@@ -31,13 +30,12 @@
       "showDetailCardHeader": false,
       "color": "#0070C0",
       "userCard" : {
-				"template" : "usercard_question",
-				"severityVisible" : false,
-				"startDateVisible" : true,
-				"endDateVisible" : true,
-                "lttdVisible" : true,
-                "expirationDateVisible" : false
-			},
+		"template" : "usercard_question",
+		"severityVisible" : false,
+		"startDateVisible" : true,
+		"endDateVisible" : true,
+        "lttdVisible" : true
+      },
       "response": {
         "state": "questionState",
         "emittingEntityAllowedToRespond": "true"
@@ -53,13 +51,11 @@
       "showDetailCardHeader": false,
       "color": "#0070C0",
       "userCard" : {
-				"template" : "usercard_confirmation",
-				"severityVisible" : false,
-				"startDateVisible" : true,
-				"endDateVisible" : true,
-                "lttdVisible" : false,
-                "expirationDateVisible" : false
-			},
+		"template" : "usercard_confirmation",
+		"severityVisible" : false,
+		"startDateVisible" : true,
+        "endDateVisible" : true
+      },
       "response": {
         "state": "confirmationState",
         "emittingEntityAllowedToRespond": "true"

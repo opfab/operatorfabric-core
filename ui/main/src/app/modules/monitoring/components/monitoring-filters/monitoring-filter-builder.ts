@@ -10,7 +10,7 @@
 import {Injectable} from '@angular/core';
 import {Filter} from '@ofModel/feed-filter.model';
 import {LightCard} from '@ofModel/light-card.model';
-import {FilterService} from '@ofServices/lightcards/filter.service';
+import {FilterService} from 'app/business/services/lightcards/filter.service';
 import {ProcessesService} from 'app/business/services/processes.service';
 
 @Injectable({

@@ -8,18 +8,15 @@
  */
 
 import {Component, OnDestroy, OnInit} from '@angular/core';
-import {Store} from '@ngrx/store';
-import {AppState} from '@ofStore/index';
 import {Observable, Subject} from 'rxjs';
 import {LightCard} from '@ofModel/light-card.model';
-import * as feedSelectors from '@ofSelectors/feed.selectors';
-import {delay, map,takeUntil} from 'rxjs/operators';
+import {delay, map} from 'rxjs/operators';
 import * as moment from 'moment';
-import {LightCardsFeedFilterService} from '@ofServices/lightcards/lightcards-feed-filter.service';
+import {LightCardsFeedFilterService} from 'app/business/services/lightcards/lightcards-feed-filter.service';
 import {ConfigService} from 'app/business/services/config.service';
 import {Router} from '@angular/router';
-import {selectCurrentUrl} from '@ofStore/selectors/router.selectors';
-import {UserService} from '@ofServices/user.service';
+import {UserService} from 'app/business/services/user.service';
+import {SelectedCardService} from 'app/business/services/card/selectedCard.service';
 
 @Component({
     selector: 'of-cards',
@@ -31,17 +28,16 @@ export class FeedComponent implements OnInit,OnDestroy {
     selection$: Observable<string>;
     totalNumberOfLightsCards = 0;
     maxNbOfCardsToDisplay = 100;
-    private currentPath: string;
     private ngUnsubscribe$ = new Subject<void>();
     private hallwayMode = false;
     maxPinnedCards: number;
 
     constructor(
-        private store: Store<AppState>,
         private lightCardsFeedFilterService: LightCardsFeedFilterService,
         private configService: ConfigService,
         private router: Router,
-        private user : UserService
+        private user : UserService,
+        private selectedCardService : SelectedCardService
     ) {
         this.maxNbOfCardsToDisplay = this.configService.getConfigValue('feed.card.maxNbOfCardsToDisplay', 100);
         this.configureExperimentalHallwayMode();
@@ -56,7 +52,7 @@ export class FeedComponent implements OnInit,OnDestroy {
     }
 
     ngOnInit() {
-        this.selection$ = this.store.select(feedSelectors.selectLightCardSelection);
+        this.selection$ = this.selectedCardService.getSelectCardIdChanges();
 
         moment.updateLocale('en', {
             week: {
@@ -70,20 +66,11 @@ export class FeedComponent implements OnInit,OnDestroy {
             map((cards) => {
                 this.totalNumberOfLightsCards = cards.length;
                 // Experimental hallway feature
-                if ((cards.length)&&(this.hallwayMode)) this.router.navigate(['/' + this.currentPath, 'cards', cards[0].id]);
+                if ((cards.length)&&(this.hallwayMode)) this.router.navigate(['/feed', 'cards', cards[0].id]);
                 return cards.slice(0, this.maxNbOfCardsToDisplay);
             })
         );
-
-        this.store
-        .select(selectCurrentUrl)
-        .pipe(takeUntil(this.ngUnsubscribe$))
-        .subscribe((url) => {
-            if (url) {
-                const urlParts = url.split('/');
-                this.currentPath = urlParts[1];
-            }
-        });
+;
 
         this.maxPinnedCards = Math.floor(window.innerWidth / 250);
     }

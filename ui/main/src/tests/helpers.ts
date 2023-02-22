@@ -14,32 +14,12 @@ import {Menu, MenuEntry, MenuEntryLinkTypeEnum} from '@ofModel/menu.model';
 import {Card} from '@ofModel/card.model';
 import {I18n} from '@ofModel/i18n.model';
 import {Page} from '@ofModel/page.model';
-import {AppState} from '@ofStore/index';
-import {AuthenticationService} from '@ofServices/authentication/authentication.service';
-import {GuidService} from 'app/business/services/guid.service';
-import {OAuthLogger, OAuthService, UrlHelperService} from 'angular-oauth2-oidc';
 import {TranslateLoader} from '@ngx-translate/core';
 import {Observable, of} from 'rxjs';
 import {Type} from '@angular/core';
 import SpyObj = jasmine.SpyObj;
 import {TestBed} from '@angular/core/testing';
 
-export const emptyAppState4Test: AppState = {
-    router: null,
-    feed: null,
-    authentication: null,
-    card: null,
-    cardsSubscription: null,
-    globalStyle: null
-};
-
-export const AuthenticationImportHelperForSpecs = [
-    AuthenticationService,
-    GuidService,
-    OAuthService,
-    UrlHelperService,
-    OAuthLogger
-];
 
 export function getOneRandomMenu(): Menu {
     const entries: MenuEntry[] = [];
@@ -73,7 +53,7 @@ export function getOneRandomProcess(processTemplate?: any): Process {
 
     for (let j = 0; j < stateCount; j++) {
         const templateName = 'template1';
-        states[getRandomAlphanumericValue(3, 10)] = new State(templateName, ['style1', 'style2']);
+        states.set(getRandomAlphanumericValue(3, 10), new State(templateName, ['style1', 'style2']));
     }
 
     return new Process(

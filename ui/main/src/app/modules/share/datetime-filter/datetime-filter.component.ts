@@ -17,9 +17,7 @@ import {
 import {NgbDatepickerI18n, NgbDateStruct} from '@ng-bootstrap/ng-bootstrap';
 import {takeUntil} from 'rxjs/operators';
 import {Observable, Subject} from 'rxjs';
-import {TranslateService} from '@ngx-translate/core';
-import {Store} from '@ngrx/store';
-import {AppState} from '@ofStore/index';
+import {TranslateService} from '@ngx-translate/core';;
 import {ConfigService} from 'app/business/services/config.service';
 
 const i18nPrefix = 'datePicker.';
@@ -106,7 +104,6 @@ export class DatetimeFilterComponent implements ControlValueAccessor, OnInit, On
     private control: AbstractControl;
 
     constructor(
-        private store: Store<AppState>,
         private translateService: TranslateService,
         private controlContainer: ControlContainer,
         private configService: ConfigService

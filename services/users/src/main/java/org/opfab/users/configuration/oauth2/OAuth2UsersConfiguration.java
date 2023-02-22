@@ -143,11 +143,13 @@ public class OAuth2UsersConfiguration {
                     });
                 });
                 
-
+                List<GrantedAuthority> authorities = new ArrayList<>();
                 if (permissionsData.contains(PermissionEnum.ADMIN))
-                    return AuthorityUtils.createAuthorityList("ROLE_ADMIN");
-                else
-                    return Collections.emptyList();
+                    authorities.addAll(AuthorityUtils.createAuthorityList("ROLE_ADMIN"));
+                if (permissionsData.contains(PermissionEnum.ADMIN_BUSINESS_PROCESS))
+                    authorities.addAll(AuthorityUtils.createAuthorityList("ROLE_ADMIN_BUSINESS_PROCESS"));
+                
+                return authorities;
             }
         };
     }
