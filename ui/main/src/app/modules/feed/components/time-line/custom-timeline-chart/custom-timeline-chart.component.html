@@ -1,4 +1,5 @@
 <!-- Copyright (c) 2018-2022, RTE (http://www.rte-france.com)              -->
+<!--Copyright (c) 2023, Alliander (http://www.alliander.com)               -->
 <!-- See AUTHORS.txt                                                       -->
 <!-- This Source Code Form is subject to the terms of the Mozilla Public   -->
 <!-- License, v. 2.0. If a copy of the MPL was not distributed with this   -->
@@ -116,8 +117,8 @@
 
 
         <svg:g *ngFor="let circle of circles;let index = index;" type="button">
-
-        <svg:g id="opfab-timelineCircle-{{index}}" (click)="onCircleClick(circle)" (mouseenter)="feedCircleHovered(circle, p1)" container="body" #p1="ngbPopover"   [ngbPopover]="tooltipTemplate"    triggers="mouseenter:mouseleave" closeDelay="3000" popoverClass="opfab-popover">
+        <svg:g id="opfab-timelineCircle-{{index}}" (click)="onCircleClick(circle)" (mouseenter)="feedCircleHovered(circle, p1)" container="body" #p1="ngbPopover" [ngbPopover]="tooltipTemplate" triggers="mouseenter" popoverClass="opfab-popover popover-timeline">
+            <svg:g (mouseleave)="onMouseLeave()"/>
             <svg:ellipse [attr.cx]="xScale(circle.date)"
                 [attr.cy]="yScale(circle.circleYPosition)" [attr.ry]="'10'" [attr.rx]="circle.width" [attr.fill]=circle.color [attr.stroke]="'stroke'"
                 />
@@ -127,23 +128,18 @@
                 font-weight="bold" 
                 [attr.font-size]="15" dy=".3em">{{circle.count}} </text>
         </svg:g>
-
     </svg:g>
     </svg:g>
     <ng-template #tooltipTemplate>
+        <div (mouseenter)="onMouseEnter()" (mouseleave)="openPopover.close()">
         <div *ngFor="let title of currentCircleHovered.summary;let i=index" style="padding: 0px;margin: 0px;line-height: 8px">
-            <div *ngIf="i<maxNumberLinesForBubblePopover">
                 <br *ngIf="i > 0"/>
                 <button id="opfab-timeline-bubble-btn" class="btn btn-cardlink btn-sm" (click)="showCard(title.cardId)">
                     <div style="text-align:left">
-                        {{title.summaryDate}}
-                        <span style="text-align:left;">{{title.titleTranslated}}</span>
+                        {{title.summaryDate}} {{title.titleTranslated}}
                     </div>
                 </button>
-            </div>
-            <div *ngIf="i===maxNumberLinesForBubblePopover">
-                <br/> &nbsp; &nbsp;......
-            </div>
+        </div>
         </div>
     </ng-template>
 </ngx-charts-chart>

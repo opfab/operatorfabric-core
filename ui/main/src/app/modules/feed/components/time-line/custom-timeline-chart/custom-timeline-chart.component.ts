@@ -1,4 +1,5 @@
 /* Copyright (c) 2018-2023, RTE (http://www.rte-france.com)
+ * Copyright (c) 2023, Alliander (http://www.alliander.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -12,6 +13,7 @@ import {
     Component,
     ElementRef,
     EventEmitter,
+    HostListener,
     Inject,
     Input,
     NgZone,
@@ -55,6 +57,7 @@ export class CustomTimelineChartComponent extends BaseChartComponent implements 
     public title: string;
     public oldWidth = 0;
     public openPopover: NgbPopover;
+    public popoverTimeOut;
 
     xDomainForTimeLineGridDisplay: any;
 
@@ -608,6 +611,16 @@ export class CustomTimelineChartComponent extends BaseChartComponent implements 
         this.currentCircleHovered = myCircle;
     }
 
+    @HostListener('mouseleave') onMouseLeave() {
+        this.popoverTimeOut = setTimeout(() => {
+            this.openPopover.close();
+        }, 1000)
+    }
+
+    @HostListener('mouseenter') onMouseEnter() {
+        clearTimeout(this.popoverTimeOut);
+    }
+
     getXTickOneFormatting = (value): string => {
         switch (this.domainId) {
             case 'TR':
@@ -677,9 +690,5 @@ export class CustomTimelineChartComponent extends BaseChartComponent implements 
      */
     onZoom($event: MouseEvent, direction): void {
         this.zoomChange.emit(direction);
-    }
-
-    public get maxNumberLinesForBubblePopover() {
-        return Math.ceil(window.innerHeight / 60);
     }
 }
