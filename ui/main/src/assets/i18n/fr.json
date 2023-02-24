@@ -211,6 +211,7 @@
     "cardNotFound": "La carte que vous cherchez n'a pas été trouvée.",
     "selectedCardDeleted": "Cette carte a été supprimée",
     "entityRecipients" : "Entités destinataires :",
+    "entityRecipientsForInformation" : "Entités destinataires pour information :",
     "searchPlaceholderText": "Rechercher...",
     "hiddenCardReceived": "Vous avez reçu une carte masquée par les filtres que vous avez activés (Timeline ou flux de cartes)"
   },

@@ -211,6 +211,7 @@
     "cardNotFound": "The card you are looking for was not found.",
     "selectedCardDeleted": "This card has been deleted",
     "entityRecipients" : "Entity recipients :",
+    "entityRecipientsForInformation" : "Entity recipients for information :",
     "searchPlaceholderText": "Search...",
     "hiddenCardReceived": "You have received a card hidden by the filters you have activated (Timeline or card feed)"
   },
