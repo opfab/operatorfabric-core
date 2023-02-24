@@ -13,6 +13,7 @@ import {Card} from "@ofModel/card.model";
 import {DisplayContext} from "@ofModel/templateGateway.model";
 import {DateTimeFormatterService} from "app/business/services/date-time-formatter.service";
 import {EntitiesService} from "app/business/services/entities.service";
+import {Utilities} from "../../../../business/common/utilities";
 
 @Component({
     selector: 'of-archived-card-detail',
@@ -23,6 +24,7 @@ export class ArchivedCardDetailComponent implements OnInit{
 
     fromEntityOrRepresentativeSelectedCard = null;
     entityRecipientsForFooter = '';
+    entityRecipientsForInformationForFooter = '';
 
     displayContext: any = DisplayContext.ARCHIVE;
 
@@ -39,6 +41,7 @@ export class ArchivedCardDetailComponent implements OnInit{
     ngOnInit() {
         this.computeFromEntity();
         this.computeEntityRecipientsForFooter();
+        this.computeEntityRecipientsForInformationForFooter();
     }
 
 
@@ -64,7 +67,9 @@ export class ArchivedCardDetailComponent implements OnInit{
         this.entityRecipientsForFooter = '';
 
         if (!! this.card.entityRecipients) {
-            this.card.entityRecipients.forEach((entityRecipient) => {
+            const entityRecipientsForFooter = Utilities.removeElementsFromArray(this.card.entityRecipients, this.card.entityRecipientsForInformation);
+
+            entityRecipientsForFooter.forEach((entityRecipient) => {
                 listOfEntityRecipients.push(this.entitiesService.getEntityName(entityRecipient));
             });
         }
@@ -76,6 +81,26 @@ export class ArchivedCardDetailComponent implements OnInit{
         if (this.entityRecipientsForFooter.length > 0) {
             this.entityRecipientsForFooter = this.translate.instant('feed.entityRecipients') +
                 this.entityRecipientsForFooter.slice(0, -1); // we remove the last comma
+        }
+    }
+
+    private computeEntityRecipientsForInformationForFooter() {
+        const listOfEntityRecipientsForInformation = [];
+        this.entityRecipientsForInformationForFooter = '';
+
+        if (!! this.card.entityRecipientsForInformation) {
+            this.card.entityRecipientsForInformation.forEach((entityRecipientForInformation) => {
+                listOfEntityRecipientsForInformation.push(this.entitiesService.getEntityName(entityRecipientForInformation));
+            });
+        }
+        listOfEntityRecipientsForInformation.sort();
+
+        listOfEntityRecipientsForInformation.forEach((entityRecipientForInformation) => {
+            this.entityRecipientsForInformationForFooter += ' ' + entityRecipientForInformation + ',';
+        });
+        if (this.entityRecipientsForInformationForFooter.length > 0) {
+            this.entityRecipientsForInformationForFooter = this.translate.instant('feed.entityRecipientsForInformation') +
+                this.entityRecipientsForInformationForFooter.slice(0, -1); // we remove the last comma
         }
     }
 
