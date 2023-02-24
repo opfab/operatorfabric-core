@@ -33,6 +33,8 @@ describe ('Business menu',()=>{
 
         openBusinessDropdownMenu();
         checkDropdownMenuIconLinks();
+        closeBusinessDropdownMenu();
+        openBusinessDropdownMenu();
         clickOnDropdownMenuEntryNumber(1);
         checkUrlDisplayedIs('https://opfab.github.io/?opfab_theme=NIGHT');
         openBusinessDropdownMenu();
@@ -59,6 +61,9 @@ describe ('Business menu',()=>{
 
         openBusinessDropdownMenu();
         checkDropdownMenuIconLinks();
+        closeBusinessDropdownMenu();
+        openBusinessDropdownMenu();
+
         clickOnDropdownMenuEntryNumber(1);
         checkUrlDisplayedIs('https://opfab.github.io/?opfab_theme=DAY');
         openBusinessDropdownMenu();
@@ -85,6 +90,11 @@ describe ('Business menu',()=>{
         cy.get('#opfab-navbar-menu-dropdown-menu2').trigger('mouseenter');
     }
 
+    function closeBusinessDropdownMenu() {
+        cy.get('#opfab-navbar-menu-dropdown-menu2').trigger('mouseleave');
+        cy.get('.text-link').should('have.length',1);
+    }
+
     function checkDropdownMenuIconLinks() {
         cy.get('.icon-link').eq(1).invoke('attr', 'href').should('eq', 'https://opfab.github.io/');
         cy.get('.icon-link').eq(2).invoke('attr', 'href').should('eq', 'https://www.wikipedia.org/');
@@ -92,8 +102,7 @@ describe ('Business menu',()=>{
     }
 
     function clickOnDropdownMenuEntryNumber(menuNumber) {
-        cy.get('.text-link').eq(menuNumber).as('btn');
-        cy.get('@btn').click();
+        cy.get('.text-link').eq(menuNumber).click();
     }
 
     function checkSingleMenuIconLink() {
