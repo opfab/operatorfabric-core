@@ -92,7 +92,8 @@ describe ('Business menu',()=>{
     }
 
     function clickOnDropdownMenuEntryNumber(menuNumber) {
-        cy.get('.text-link').eq(menuNumber).click();
+        cy.get('.text-link').eq(menuNumber).as('btn');
+        cy.get('@btn').click();
     }
 
     function checkSingleMenuIconLink() {
