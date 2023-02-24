@@ -1174,7 +1174,6 @@ describe('User Card ', function () {
       usercard.selectState('Message');
 
       // We check the list of entities is restricted in the dropdown list
-      cy.get('#opfab-recipients-for-information').click();
       cy.get('#opfab-recipients-for-information').find('.vscomp-option-text').should('have.length', 6);
       cy.get('#opfab-recipients-for-information').find('.vscomp-option-text').eq(0).contains("Control Center FR East");
       cy.get('#opfab-recipients-for-information').find('.vscomp-option-text').eq(1).contains("Control Center FR North");

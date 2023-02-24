@@ -413,7 +413,7 @@
         "firstName": "VOORNAAM",
         "groups": "GROEPEN",
         "entities": "ENTITEITEN",
-        "authorizedIPAddresses": "GEAUTHORIZEERDE IP ADRESSEN (gescheiden door ',')",
+        "authorizedIPAddresses": "GEAUTHORIZEERDE IP ADRESSEN VOOR GEBRUIKERSAANSLUITING (gescheiden door ',')",
         "confirmDelete": "Wilt u de gebruiker echt verwijderen?",
         "add": "NIEUWE GEBRUIKER TOEVOEGEN"
       },

@@ -413,7 +413,7 @@
         "firstName": "FIRST NAME",
         "groups": "GROUPS",
         "entities": "ENTITIES",
-        "authorizedIPAddresses": "AUTHORIZED IP ADDRESSES (separated by ',')",
+        "authorizedIPAddresses": "AUTHORIZED IP ADDRESSES FOR USER CONNECTION (separated by ',')",
         "confirmDelete": "Do you really want to delete user",
         "add": "ADD NEW USER"
       },
