@@ -147,8 +147,7 @@ export class UserCardCommands extends OpfabCommands {
 
     selectRecipientForInformation= function (recipientName) {
         cy.get('#opfab-recipients-for-information').click();
-        cy.wait(200);
-        cy.get('#opfab-recipients-for-information').find('.vscomp-search-input').clear({force: true});
+        cy.get('#opfab-recipients-for-information').find('.vscomp-search-input').clear();
         cy.get('#opfab-recipients-for-information').find('.vscomp-search-input').type(recipientName);
         cy.get('#opfab-recipients-for-information').find('.vscomp-option-text').eq(0).should('contain.text', recipientName);
         cy.get('#opfab-recipients-for-information').find('.vscomp-option-text').eq(0).click();
