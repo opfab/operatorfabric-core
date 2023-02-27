@@ -632,7 +632,7 @@ export class CustomTimelineChartComponent extends BaseChartComponent implements 
             case 'W':
                 return value.format('HH') + 'h';
             case 'M':
-                return value.format('dd').toLocaleUpperCase().substring(0, 1) + value.format(' DD');
+                return value.format('ddd').toLocaleUpperCase().substring(0, 3) + value.format(' DD');
             case 'Y':
                 return value.format('D MMM');
             default:

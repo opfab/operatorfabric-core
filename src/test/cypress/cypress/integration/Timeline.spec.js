@@ -1,4 +1,4 @@
-/* Copyright (c) 2022, RTE (http://www.rte-france.com)
+/* Copyright (c) 2022-2023, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -118,28 +118,28 @@ describe('Time line moves', function () {
         opfab.loginWithClock(new Date(2030, 2, 31, 10, 50));
 
         setTimeLineDomain('M');
-        checkFirstTickLabel(" F 01 ");
+        checkFirstTickLabel(" FRI 01 ");
         checkTitle(" MARCH 2030 ");
         moveRight();
-        checkFirstTickLabel(" M 01 ");
+        checkFirstTickLabel(" MON 01 ");
         checkTitle(" APRIL 2030 ");
         moveRight();
-        checkFirstTickLabel(" W 01 ");
+        checkFirstTickLabel(" WED 01 ");
         checkTitle(" MAY 2030 ");
 
         unlockTimeLine(); // timeline shall return to initial position
-        checkFirstTickLabel(" F 01 ");
+        checkFirstTickLabel(" FRI 01 ");
         checkTitle(" MARCH 2030 ");
 
         moveLeft();
-        checkFirstTickLabel(" F 01 ");
+        checkFirstTickLabel(" FRI 01 ");
         checkTitle(" FEBRUARY 2030 ");
         moveLeft();
-        checkFirstTickLabel(" T 01 ");
+        checkFirstTickLabel(" TUE 01 ");
         checkTitle(" JANUARY 2030 ");
 
         unlockTimeLine(); // timeline shall return to initial position
-        checkFirstTickLabel(" F 01 ");
+        checkFirstTickLabel(" FRI 01 ");
         checkTitle(" MARCH 2030 ");
     })
 
@@ -553,7 +553,7 @@ describe('Time line moves', function () {
         opfab.loginWithClock(currentDate);
 
         setTimeLineDomain('M');
-        checkFirstTickLabel(" M 01 ");
+        checkFirstTickLabel(" MON 01 ");
         checkTitle(" APRIL 2030 ");
 
         script.sendCard('cypress/feed/customEvent.json', currentDate.getTime(), currentDate.getTime() + 5 * MINUTES);
@@ -564,7 +564,7 @@ describe('Time line moves', function () {
 
         cy.tick(24 * HOURS);
         checkTimeCursorText(" 01/05/30 15:00 ");
-        checkFirstTickLabel(" W 01 ");
+        checkFirstTickLabel(" WED 01 ");
         checkTitle(" MAY 2030 ");
         checkHaveCircle(0);
 
@@ -584,7 +584,7 @@ describe('Time line moves', function () {
         setTimeLineDomain('M');
         lockTimeLine();
 
-        checkFirstTickLabel(" M 01 ");
+        checkFirstTickLabel(" MON 01 ");
         checkTitle(" APRIL 2030 ");
 
         script.sendCard('cypress/feed/customEvent.json', currentDate.getTime(), currentDate.getTime() + 5 * MINUTES);
@@ -595,7 +595,7 @@ describe('Time line moves', function () {
 
         cy.tick(24 * HOURS);
         checkNoTimeCursor();
-        checkFirstTickLabel(" M 01 ");
+        checkFirstTickLabel(" MON 01 ");
         checkTitle(" APRIL 2030 ");
         checkHaveCircle(1);
 
@@ -741,7 +741,7 @@ describe('Time line moves', function () {
         opfab.loginWithClock(currentDate);
 
         setTimeLineDomain('M');
-        checkFirstTickLabel(" M 01 ");
+        checkFirstTickLabel(" MON 01 ");
         checkTitle(" APRIL 2030 ");
 
         script.sendCard('cypress/feed/customEvent.json', currentDate.getTime(), currentDate.getTime() + 5 * MINUTES);
@@ -752,7 +752,7 @@ describe('Time line moves', function () {
 
         cy.tick(24 * HOURS);
         checkTimeCursorText(" 01/05/30 23:52 ");
-        checkFirstTickLabel(" W 01 ");
+        checkFirstTickLabel(" WED 01 ");
         checkTitle(" MAY 2030 ");
         checkHaveCircle(1);
 
