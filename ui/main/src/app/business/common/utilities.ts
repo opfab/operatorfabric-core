@@ -26,9 +26,17 @@ export class Utilities {
     }
 
     public static compareObj(obj1, obj2) {
+        if (typeof obj1 === "string" && typeof obj2 === "string") {
+            obj1 = this.removeEmojis(obj1)
+            obj2 = this.removeEmojis(obj2)
+        }
         if (obj1 > obj2) return 1;
         if (obj1 < obj2) return -1;
         return 0;
+    }
+
+    private static removeEmojis(str: string): string{
+        return str.replace(/\u00a9|\u00ae|[\u2000-\u3300]|\ud83c[\ud000-\udfff]|\ud83d[\ud000-\udfff]|\ud83e[\ud000-\udfff]/g,'')
     }
 
     // Returns an observable that provides an array. Each item of the array represents either first value of Observable, or its error
