@@ -1,4 +1,4 @@
-/* Copyright (c) 2022, RTE (http://www.rte-france.com)
+/* Copyright (c) 2022-2023, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -97,7 +97,7 @@ export class ArchivesAndLoggingCommands extends OpfabCommands {
     }
 
     selectAllProcesses = function () {
-        cy.get('#opfab-process').find('.vscomp-toggle-all-button').click();
+        cy.get('#opfab-process').find('.vscomp-toggle-all-button').click({force: true});
     }
 
     unselectAllProcesses = function () {
@@ -137,5 +137,22 @@ export class ArchivesAndLoggingCommands extends OpfabCommands {
 
     checkStateSelectDoesNotContains = function (value) {
         cy.get('#opfab-state').contains(value, {matchCase: false}).should('not.exist');
+    }
+
+    selectProcess = function (processName) {
+        cy.get('#opfab-process').click();
+        cy.get('#opfab-process').find('.vscomp-search-input').clear();
+        cy.get('#opfab-process').find('.vscomp-search-input').type(processName);
+        cy.get('#opfab-process').find('.vscomp-option-text').eq(0).should('contain.text', processName);
+        cy.get('#opfab-process').find('.vscomp-option-text').eq(0).click();
+    }
+
+    selectState = function (stateName) {
+        cy.get('#opfab-state').click();
+        cy.get('#opfab-state').find('.vscomp-option-text').contains(stateName).eq(0).click({force: true});
+    }
+
+    checkNoResultForSearch = function () {
+        cy.get('of-archives-entry-point').contains('Your search did not match any result.');
     }
 }
