@@ -192,7 +192,10 @@ export class ArchivesLoggingFiltersComponent implements OnInit, OnDestroy, After
 
         // we must filter visibleProcesses to keep only the processes in the perimeter of the user
         const processesIds = [];
-        this.statesMultiSelectOptionsPerProcesses.forEach((process) => processesIds.push(process.value));
+        this.statesMultiSelectOptionsPerProcesses.forEach((process) => {
+            processesIds.push(process.value);
+            process.options.sort((obj1, obj2) => Utilities.compareObj(obj1.label, obj2.label))
+        });
         this.processMultiSelectOptions = this.visibleProcesses.filter((visibleProcess) =>
             processesIds.includes(visibleProcess.value)
         );
