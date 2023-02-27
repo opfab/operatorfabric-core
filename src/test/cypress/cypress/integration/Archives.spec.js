@@ -1,4 +1,4 @@
-/* Copyright (c) 2021-2022, RTE (http://www.rte-france.com)
+/* Copyright (c) 2021-2023, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -16,9 +16,16 @@ describe('Archives screen tests', function () {
     const opfab = new OpfabGeneralCommands();
     const archivesAndLogging = new ArchivesAndLoggingCommands();
     const script = new ScriptCommands();
+    let exportFileName;
 
     before('Set up configuration', function () {
         script.loadTestConf();
+    });
+
+    after('Delete export file', function () {
+        if (!!exportFileName) {
+            cy.task('deleteFile', {filename: './cypress/downloads/' + exportFileName});
+        }
     });
 
     it('Check archived cards reception', function () {
@@ -277,6 +284,8 @@ describe('Archives screen tests', function () {
         // check download folder contains the export file
         cy.task('list', {dir: './cypress/downloads'}).then((files) => {
             expect(files.length).to.equal(1);
+            exportFileName = files[0];
+
             // check file name
             expect(files[0]).to.match(/^Archive_export_\d*\.xlsx/);
             // check file content
@@ -370,9 +379,6 @@ describe('Archives screen tests', function () {
                     "Message received : France-England's interconnection is 100% operational / Result of the maintenance is <OK>"
                 );
                 expect(rows[11]['SERVICE']).to.equal('Base Examples');
-
-                // Delete export file
-                cy.task('deleteFile', {filename: './cypress/downloads/' + files[0]});
             });
         });
     });
