@@ -678,16 +678,6 @@ export class UserCardComponent implements OnInit {
             this.specificInformation.card.entityRecipients.forEach((entity) => {
                 if (!recipients.includes(entity)) recipients.push(entity);
             });
-        } else {
-            const recipientListFromStateConfig = this.getRecipientListFromState_Deprecated();
-            if (recipientListFromStateConfig !== undefined) {
-                this.opfabLogger.info(
-                    'Use of state configuration to define list of recipient is deprecated, provide it via usercardTemplateGateway.getSpecificCardInformation() '
-                );
-                recipientListFromStateConfig.forEach((entity) => {
-                    if (!recipients.includes(entity.id)) recipients.push(entity.id);
-                });
-            }
         }
 
         return recipients;
@@ -707,11 +697,6 @@ export class UserCardComponent implements OnInit {
             });
         }
         return recipientsForInformation;
-    }
-
-    private getRecipientListFromState_Deprecated() {
-        const selectedProcess = this.processesService.getProcess(this.selectedProcessId);
-        return selectedProcess.states.get(this.selectedStateId).userCard.recipientList;
     }
 
     private getEntitiesAllowedTorespond(recipients): string[] {
