@@ -1,4 +1,4 @@
-/* Copyright (c) 2021-2022, RTE (http://www.rte-france.com)
+/* Copyright (c) 2021-2023, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -33,6 +33,21 @@ describe('Archives screen tests', function () {
         checkNumberOfLineDisplayedIs(6);
         archivesAndLogging.checkNoCardDetailIsDisplayed();
         checkPaginationResultsNumberIs(6);
+
+        // We check filtering by process is working
+        archivesAndLogging.selectProcess('IGCC');
+        archivesAndLogging.clickOnSearchButton();
+        archivesAndLogging.checkNoResultForSearch();
+        archivesAndLogging.unselectAllProcesses();
+        archivesAndLogging.selectProcess('Process example');
+        archivesAndLogging.clickOnSearchButton();
+        checkNumberOfLineDisplayedIs(6);
+
+        // We check filtering by state is working
+        archivesAndLogging.selectState('Message');
+        archivesAndLogging.clickOnSearchButton();
+        checkNumberOfLineDisplayedIs(1);
+        archivesAndLogging.unselectAllProcesses();
 
         // We delete the test cards, and we check that we still have the corresponding archived cards
         script.deleteAllCards();
@@ -188,8 +203,6 @@ describe('Archives screen tests', function () {
 
         openAndCheckArchiveCardContent('⚠️ NETWORK CONTINGENCIES ⚠️', 'ASPHL71SIERE',
         'Entity recipients : Control Center FR North');
-
-
     });
 
     it('Check composition of multi-filters for process groups/processes/states for operator1_fr, with a config without process group', function () {
