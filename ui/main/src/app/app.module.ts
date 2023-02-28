@@ -74,6 +74,7 @@ import {AngularCardServer} from './server/angularCard.server';
 import {CardServer} from './business/server/card.server';
 import {SoundServer} from './business/server/sound.server';
 import {AngularSoundServer} from './server/angularSound.server';
+import {WebcomponentModule} from './modules/webcomponent/webcomponent.module';
 
 @NgModule({
     imports: [
@@ -98,6 +99,7 @@ import {AngularSoundServer} from './server/angularSound.server';
         NavbarModule,
         ActivityareaModule,
         UserActionLogsModule,
+        WebcomponentModule,
         ServiceWorkerModule.register('ngsw-worker.js')
     ],
     declarations: [

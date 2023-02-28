@@ -57,6 +57,10 @@
       "showOnlyForGroups": ["ADMIN"]
     },
     {
+      "id": "webcomponents",
+      "visible": true
+    },
+    {
       "id": "nightdaymode",
       "visible": true
     },
@@ -109,6 +113,12 @@
           "url": "http://localhost:2002/external/appExample/",
           "label": "entry.entry3",
           "linkType": "BOTH"
+        },
+        {
+          "id": "uid_test_4",
+          "url": "http://localhost:2002/externalComponents/",
+          "label": "entry.entry4",
+          "linkType": "BOTH"
         }
       ]
     },
@@ -145,7 +155,8 @@
           "entry": {
             "entry1": "First menu entry",
             "entry2": "Second menu entry",
-            "entry3": "External application"
+            "entry3": "External application",
+            "entry4": "Web component"
           }
         },
         "adminmenu": {
@@ -176,7 +187,8 @@
           "entry": {
             "entry1": "Premier élément",
             "entry2": "Deuxième élément",
-            "entry3": "Application externe"
+            "entry3": "Application externe",
+            "entry4": "Web component"
           }
         },
         "adminmenu": {
@@ -207,7 +219,8 @@
           "entry": {
             "entry1": "Eerste menu-item",
             "entry2": "Tweede menu-item",
-            "entry3": "TExterne applicatie"
+            "entry3": "Externe applicatie",
+            "entry4": "Web component"
           }
         },
         "adminmenu": {

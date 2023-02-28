@@ -63,5 +63,18 @@ opfab.utils = {
               .replace(/"/g, "&quot;")
               .replace(/'/g, "&#39;");
      }
-     
+}
+
+opfab.webComponent = {
+
+    userDetails: null,
+
+    setUsetDetails : function(details) {
+        this.userDetails = details;
+    },
+
+
+    getUserDetails : function(username) {
+        return this.userDetails;
+     }
 }

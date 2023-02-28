@@ -150,3 +150,8 @@ src/test/cypress/cypress/videos
 
 # migration-opfab3
 src/tooling/migration-opfab3/node_modules
+
+# examples
+src/test/WebComponentExample/node_modules
+src/test/WebComponentExample/dist
+src/test/WebComponentExample/.angular

@@ -15,6 +15,7 @@ import {MonitoringComponent} from '../modules/monitoring/monitoring.component';
 import {CalendarComponent} from '../modules/calendar/calendar.component';
 import {ArchivesEntryPointComponent} from '../modules/archives/archives-entry-point.component';
 import {UserActionLogsComponent} from '../modules/useractionlogs/useractionlogs.component';
+import {WebcomponentComponent} from 'app/modules/webcomponent/webcomponent.component';
 
 const defaultPath = '/feed';
 
@@ -88,6 +89,10 @@ const routes: Routes = [
     {
         path: 'useractionlogs',
         component: UserActionLogsComponent
+    },
+    {
+        path: 'webcomponent',
+        component: WebcomponentComponent
     },
     {path: '**', redirectTo: defaultPath}
 ];

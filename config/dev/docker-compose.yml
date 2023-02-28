@@ -39,6 +39,7 @@ services:
       - "./favicon.ico:/usr/share/nginx/html/favicon.ico"
       - "./ui-config:/usr/share/nginx/html/opfab"
       - "../../src/test/externalWebAppExample:/usr/share/nginx/html/external/appExample"
+      - "../../src/test/WebComponentExample/webcomponent.html:/usr/share/nginx/html/externalComponents/index.html"
       - "./nginx.conf:/etc/nginx/conf.d/default.conf"
       - "./loggingResults:/etc/nginx/html/logging"
   ext-app:
