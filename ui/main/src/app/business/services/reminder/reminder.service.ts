@@ -15,6 +15,7 @@ import {SoundNotificationService} from 'app/business/services/sound-notification
 import {LogOption, OpfabLoggerService} from 'app/business/services/logs/opfab-logger.service';
 import {ServerResponseStatus} from 'app/business/server/serverResponse';
 import {CardService} from '../card.service';
+import {SystemNotificationService} from "../system-notification.service";
 
 @Injectable({
     providedIn: 'root'
@@ -27,6 +28,7 @@ export class ReminderService {
         private acknowledgeService: AcknowledgeService,
         private lightCardsStoreService: LightCardsStoreService,
         private soundNotificationService: SoundNotificationService,
+        private systemNotificationService: SystemNotificationService,
         private logger: OpfabLoggerService
     ) {}
 
@@ -68,6 +70,7 @@ export class ReminderService {
             this.lightCardsStoreService.setLightCardAcknowledgment(cardId, false);
             this.lightCardsStoreService.setLightCardRead(cardId, false);
             this.soundNotificationService.handleRemindCard(lightCard);
+            this.systemNotificationService.handleRemindCard(lightCard);
         } else {
             // the card has been deleted in this case
             this.reminderList.removeAReminder(cardId);

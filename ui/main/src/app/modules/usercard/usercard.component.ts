@@ -35,6 +35,7 @@ import {PermissionEnum} from '@ofModel/permission.model';
 import {AlertMessageService} from 'app/business/services/alert-message.service';
 import {CardService} from 'app/business/services/card.service';
 import {ServerResponseStatus} from 'app/business/server/serverResponse';
+import {SystemNotificationService} from "../../business/services/system-notification.service";
 
 declare const templateGateway: any;
 declare const usercardTemplateGateway: any;
@@ -127,7 +128,8 @@ export class UserCardComponent implements OnInit {
         protected soundNotificationService: SoundNotificationService,
         protected userPermissionsService: UserPermissionsService,
         private alertMessageService: AlertMessageService,
-        private opfabLogger: OpfabLoggerService
+        private opfabLogger: OpfabLoggerService,
+        private systemNotificationService: SystemNotificationService
     ) {
         this.setDefaultDateFormValues();
     }
@@ -809,8 +811,9 @@ export class UserCardComponent implements OnInit {
         // and start date is then too much in the past regarding the publish date
         if (this.usePublishDateForStartDate) this.card.startDate = new Date().valueOf();
 
-        // Exclude card from sound notifications before publishing to avoid synchronization problems
+        // Exclude card from sound and system notifications before publishing to avoid synchronization problems
         this.soundNotificationService.lastSentCard(this.card.process + '.' + this.card.processInstanceId);
+        this.systemNotificationService.lastSentCard(this.card.process + '.' + this.card.processInstanceId);
         const selectedProcess = this.processesService.getProcess(this.selectedProcessId);
 
         let childCard = null;
