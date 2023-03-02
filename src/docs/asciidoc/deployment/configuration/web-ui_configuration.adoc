@@ -116,6 +116,10 @@ Values should be taken from the link:https://en.wikipedia.org/wiki/List_of_tz_da
 |settings.playSoundForAction|false|no|If set to true, a sound is played when Action cards are added or updated in the feed
 |settings.playSoundForCompliant|false|no|If set to true, a sound is played when Compliant cards are added or updated in the feed
 |settings.playSoundForInformation|false|no|If set to true, a sound is played when Information cards are added or updated in the feed
+|settings.systemNotificationAlarm|false|no|If set to true, a system notification is send when Alarm cards are added or updated in the feed
+|settings.systemNotificationAction|false|no|If set to true, a system notification is send when Action cards are added or updated in the feed
+|settings.systemNotificationCompliant|false|no|If set to true, a system notification is send when Compliant cards are added or updated in the feed
+|settings.systemNotificationInformation|false|no|If set to true, a system notification is send when Information cards are added or updated in the feed
 |settings.playSoundOnExternalDevice|false|no|If set to true (and `externalDevicesEnabled` is set to true as well) and the user has an external device configured, sounds will be played on this device rather than in the browser
 |settings.replayEnabled|false|no|If set to true, sounds are replayed every `settings.replayInterval` seconds until the user interacts with the application
 |settings.replayInterval|5|no|Interval between sound replays (see `settings.replayEnabled`)

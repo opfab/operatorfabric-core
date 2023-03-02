@@ -11,7 +11,6 @@
 package org.opfab.users.model;
 
 import java.util.*;
-import java.util.function.Function;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.*;
@@ -37,6 +36,10 @@ public class UserSettingsData implements UserSettings {
     private Boolean playSoundForCompliant;
     private Boolean playSoundForInformation;
     private Boolean playSoundOnExternalDevice;
+    private Boolean systemNotificationAlarm;
+    private Boolean systemNotificationAction;
+    private Boolean systemNotificationCompliant;
+    private Boolean systemNotificationInformation;
     private Boolean replayEnabled;
     private Integer replayInterval;
     private Boolean remoteLoggingEnabled;
@@ -55,6 +58,10 @@ public class UserSettingsData implements UserSettings {
         this.playSoundForCompliant = settings.getPlaySoundForCompliant();
         this.playSoundForInformation = settings.getPlaySoundForInformation();
         this.playSoundOnExternalDevice = settings.getPlaySoundOnExternalDevice();
+        this.systemNotificationAlarm = settings.getSystemNotificationAlarm();
+        this.systemNotificationAction = settings.getSystemNotificationAction();
+        this.systemNotificationCompliant = settings.getSystemNotificationCompliant();
+        this.systemNotificationInformation = settings.getSystemNotificationInformation();
         this.replayEnabled = settings.getReplayEnabled();
         this.replayInterval = settings.getReplayInterval();
         this.remoteLoggingEnabled = settings.getRemoteLoggingEnabled();
@@ -100,6 +107,11 @@ public class UserSettingsData implements UserSettings {
         result.playSoundForAction = ObjectUtils.getNotNullOrDefault( other.getPlaySoundForAction(), this.getPlaySoundForAction());
         result.playSoundForCompliant = ObjectUtils.getNotNullOrDefault( other.getPlaySoundForCompliant(), this.getPlaySoundForCompliant());
         result.playSoundForInformation = ObjectUtils.getNotNullOrDefault( other.getPlaySoundForInformation(), this.getPlaySoundForInformation());
+
+        result.systemNotificationAlarm = ObjectUtils.getNotNullOrDefault( other.getSystemNotificationAlarm(), this.getSystemNotificationAlarm());
+        result.systemNotificationAction = ObjectUtils.getNotNullOrDefault( other.getSystemNotificationAction(), this.getSystemNotificationAction());
+        result.systemNotificationCompliant = ObjectUtils.getNotNullOrDefault( other.getSystemNotificationCompliant(), this.getSystemNotificationCompliant());
+        result.systemNotificationInformation = ObjectUtils.getNotNullOrDefault( other.getSystemNotificationInformation(), this.getSystemNotificationInformation());
 
         result.playSoundOnExternalDevice = ObjectUtils.getNotNullOrDefault( other.getPlaySoundOnExternalDevice(), this.getPlaySoundOnExternalDevice());
         result.replayEnabled = ObjectUtils.getNotNullOrDefault( other.getReplayEnabled(), this.getReplayEnabled());

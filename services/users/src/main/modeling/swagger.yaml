@@ -213,6 +213,18 @@ definitions:
       playSoundForInformation:
         type: boolean
         description: If this is set to true, a sound will be played for incoming cards with INFORMATION severity.
+      systemNotificationAlarm:
+        type: boolean
+        description: If this is set to true, a notification will be send for incoming cards with ALARM severity.
+      systemNotificationAction:
+        type: boolean
+        description: If this is set to true, a notification will be send for incoming cards with ACTION severity.
+      systemNotificationCompliant:
+        type: boolean
+        description: If this is set to true, a notification will be send for incoming cards with COMPLIANT severity.
+      systemNotificationInformation:
+        type: boolean
+        description: If this is set to true, a notification will be send for incoming cards with INFORMATION severity.
       playSoundOnExternalDevice:
         type: boolean
         description: |-

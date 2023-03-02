@@ -250,7 +250,12 @@
     "replayEnabled": "Geluidsherhaling ingeschakeld",
     "playSoundOnExternalDevice": "Geluid afspelen op extern apparaat",
     "replayInterval": "Interval tussen geluidsherhalingen (seconden)",
-    "remoteLoggingEnabled": "Loggen op afstand ingeschakeld"
+    "remoteLoggingEnabled": "Loggen op afstand ingeschakeld",
+    "notificationOnOperatingSystem": "MELDINGEN VOOR KAARTEN MET VOLGENDE ERNST",
+    "systemNotificationAlarm": "Alarm",
+    "systemNotificationAction": "Actie",
+    "systemNotificationCompliant": "Conform",
+    "systemNotificationInformation": "Informatie"
   },
   "archive": {
     "cardLoadingInProgress":"Bezig met laden van de kaart  ...",

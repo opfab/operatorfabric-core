@@ -250,7 +250,12 @@
     "replayEnabled": "Sound replay enabled",
     "playSoundOnExternalDevice": "Play sound on external device",
     "replayInterval": "INTERVAL BETWEEN SOUND REPLAYS (SECONDS)",
-    "remoteLoggingEnabled": "Remote logging enabled"
+    "remoteLoggingEnabled": "Remote logging enabled",
+    "notificationOnOperatingSystem": "SYSTEM NOTIFICATIONS FOR CARDS WITH SEVERITY",
+    "systemNotificationAlarm": "Alarm",
+    "systemNotificationAction": "Action",
+    "systemNotificationCompliant": "Compliant",
+    "systemNotificationInformation": "Information"
   },
   "archive": {
     "cardLoadingInProgress":"Loading card  ...",

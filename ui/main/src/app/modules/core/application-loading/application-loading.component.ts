@@ -34,6 +34,7 @@ import {ServerResponseStatus} from 'app/business/server/serverResponse';
 import {CurrentUserStore} from 'app/business/store/current-user.store';
 import {AuthService} from 'app/authentication/auth.service';
 import {AuthenticationMode} from 'app/authentication/auth.model';
+import {SystemNotificationService} from "../../../business/services/system-notification.service";
 
 @Component({
     selector: 'of-application-loading',
@@ -79,7 +80,8 @@ export class ApplicationLoadingComponent implements OnInit {
         private opfabEventStreamServer: OpfabEventStreamServer,
         private opfabEventStreamService: OpfabEventStreamService,
         private applicationUpdateService: ApplicationUpdateService,
-        private currentUserStore: CurrentUserStore
+        private currentUserStore: CurrentUserStore,
+        private systemNotificationService: SystemNotificationService
     ) {}
 
     ngOnInit() {
@@ -264,5 +266,6 @@ export class ApplicationLoadingComponent implements OnInit {
         this.applicationUpdateService.init();
         this.reminderService.startService(this.userLogin);
         this.rRuleReminderService.startService(this.userLogin);
+        this.systemNotificationService.initSystemNotificationService();
     }
 }
