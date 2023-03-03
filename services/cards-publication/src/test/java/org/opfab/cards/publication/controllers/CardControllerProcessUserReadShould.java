@@ -1,4 +1,4 @@
-/* Copyright (c) 2020-2022, RTE (http://www.rte-france.com)
+/* Copyright (c) 2020-2023, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -77,7 +77,7 @@ class CardControllerProcessUserReadShould extends CardControllerShouldBase {
 	void processUserReadOfUnexistingCard() throws Exception {
 		String cardUid = "NotExistingCardUid";		
 		Optional <CardPublicationData> card = cardRepository.findByUid(cardUid);
-		Assertions.assertThat(card.isPresent()).isFalse();
+		Assertions.assertThat(card).isNotPresent();
 		mockMvc.perform(post("/cards/userCardRead/" + cardUid)).andExpect(status().isNotFound());
 	}
 
@@ -85,7 +85,7 @@ class CardControllerProcessUserReadShould extends CardControllerShouldBase {
 	void deleteUserReadOfUnexistingCard() throws Exception {
 		String cardUid = "NotExistingCardUid";
 		Optional <CardPublicationData> card = cardRepository.findByUid(cardUid);
-		Assertions.assertThat(card.isPresent()).isFalse();
+		Assertions.assertThat(card).isNotPresent();
 		mockMvc.perform(delete("/cards/userCardRead/" + cardUid)).andExpect(status().isNotFound());		
 	}
 	
@@ -97,7 +97,7 @@ class CardControllerProcessUserReadShould extends CardControllerShouldBase {
 		mockMvc.perform(post("/cards/userCardRead/" + cardUid)).andExpect(status().isCreated());
 		card = cardRepository.findByUid(cardUid);
 		Assertions.assertThat(card.get().getUsersReads()).contains("someUser");
-		Assertions.assertThat(card.get().getUsersReads().size()).isEqualTo(initialNumOfReads + 1);
+		Assertions.assertThat(card.get().getUsersReads()).hasSize(initialNumOfReads + 1);
 	}
 
 	@Nested
@@ -113,7 +113,7 @@ class CardControllerProcessUserReadShould extends CardControllerShouldBase {
 			mockMvc.perform(post("/cards/userCardRead/" + cardUid)).andExpect(status().isCreated());
 			card = cardRepository.findByUid(cardUid);
 			Assertions.assertThat(card.get().getUsersReads()).contains("someUser", "someOtherUser");
-			Assertions.assertThat(card.get().getUsersReads().size()).isEqualTo(initialNumOfReads + 1);
+			Assertions.assertThat(card.get().getUsersReads()).hasSize(initialNumOfReads + 1);
 
 		}
 
@@ -130,7 +130,7 @@ class CardControllerProcessUserReadShould extends CardControllerShouldBase {
 				mockMvc.perform(post("/cards/userCardRead/" + cardUid)).andExpect(status().isOk());
 				card = cardRepository.findByUid(cardUid);
 				Assertions.assertThat(card.get().getUsersReads()).contains("someUser", "someOtherUser");
-				Assertions.assertThat(card.get().getUsersReads().size()).isEqualTo(initialNumOfReads);
+				Assertions.assertThat(card.get().getUsersReads()).hasSize(initialNumOfReads);
 			}
 			@Nested
 			@WithMockOpFabUser(login = "someUser")
@@ -147,7 +147,7 @@ class CardControllerProcessUserReadShould extends CardControllerShouldBase {
 					mockMvc.perform(delete("/cards/userCardRead/" + cardUid)).andExpect(status().isOk());
 					card = cardRepository.findByUid(cardUid);
 					Assertions.assertThat(card.get().getUsersReads()).doesNotContain("someUser");
-					Assertions.assertThat(card.get().getUsersReads().size()).isEqualTo(initialNumOfReads - 1);
+					Assertions.assertThat(card.get().getUsersReads()).hasSize(initialNumOfReads - 1);
 				}
 
 				@Nested
@@ -165,14 +165,10 @@ class CardControllerProcessUserReadShould extends CardControllerShouldBase {
 						mockMvc.perform(delete("/cards/userCardRead/" + cardUid)).andExpect(status().isNoContent());
 						card = cardRepository.findByUid(cardUid);
 						Assertions.assertThat(card.get().getUsersReads()).doesNotContain("someUser");
-						Assertions.assertThat(card.get().getUsersReads().size()).isEqualTo(initialNumOfReads);
+						Assertions.assertThat(card.get().getUsersReads()).hasSize(initialNumOfReads);
 					}
-
 				}
-
 			}
-
 		}
 	}
-	
 }
