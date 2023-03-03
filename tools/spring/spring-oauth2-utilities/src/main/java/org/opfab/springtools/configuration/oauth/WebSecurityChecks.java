@@ -1,4 +1,4 @@
-/* Copyright (c) 2021, RTE (http://www.rte-france.com)
+/* Copyright (c) 2021-2023, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -41,8 +41,8 @@ public class WebSecurityChecks {
 
         //authentication.getPrincipal() is UserData type if there is authentication
         //but is String type if there is no authentication (jira : OC-655)
-        if (authentication.getPrincipal()  instanceof String)
-            user = (String) authentication.getPrincipal();
+        if (authentication.getPrincipal()  instanceof String principal)
+            user = principal;
         else 
             user = ((User) authentication.getPrincipal()).getLogin();
 
@@ -56,12 +56,11 @@ public class WebSecurityChecks {
         String user = null;
         //authentication.getPrincipal() is UserData type if there is authentication
         //but is String type if there is no authentication (jira : OC-655)
-        if (authentication.getPrincipal()  instanceof String) {
-            user = (String) authentication.getPrincipal();
+        if (authentication.getPrincipal()  instanceof String principal) {
+            user = principal;
         }
-        else if (authentication.getPrincipal()  instanceof CurrentUserWithPerimeters){
-            CurrentUserWithPerimeters current = (CurrentUserWithPerimeters) authentication.getPrincipal();
-            userData = current.getUserData();
+        else if (authentication.getPrincipal()  instanceof CurrentUserWithPerimeters currentUserWithPerimeters){
+            userData = currentUserWithPerimeters.getUserData();
             user = userData.getLogin();
             
         } else {

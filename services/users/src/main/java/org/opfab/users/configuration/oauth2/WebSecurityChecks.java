@@ -47,8 +47,8 @@ public class WebSecurityChecks {
 
         //authentication.getPrincipal() is UserData type if there is authentication
         //but is String type if there is no authentication (jira : OC-655)
-        if (authentication.getPrincipal()  instanceof String)
-            user = (String) authentication.getPrincipal();
+        if (authentication.getPrincipal()  instanceof String principal)
+            user = principal;
         else
             user = ((User) authentication.getPrincipal()).getLogin();
 
@@ -62,8 +62,8 @@ public class WebSecurityChecks {
         String user = null;
         //authentication.getPrincipal() is UserData type if there is authentication
         //but is String type if there is no authentication (jira : OC-655)
-        if (authentication.getPrincipal()  instanceof String) {
-            user = (String) authentication.getPrincipal();
+        if (authentication.getPrincipal()  instanceof String principal) {
+            user = principal;
         } else {
             userData = (User) authentication.getPrincipal();
             user = userData.getLogin();

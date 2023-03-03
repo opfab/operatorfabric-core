@@ -1,4 +1,4 @@
-/* Copyright (c) 2021-2022, RTE (http://www.rte-france.com)
+/* Copyright (c) 2021-2023, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -86,7 +86,7 @@ public class CardTranslationService {
             card.setTitleTranslated(translation.translate(card.getTitle().getKey(), card.getTitle().getParameters()));
             card.setSummaryTranslated(translation.translate(card.getSummary().getKey(), card.getSummary().getParameters()));
         } catch (FeignException | IOException ex) {
-            if ((ex instanceof FeignException) && (((FeignException) ex).status() == HttpStatus.NOT_FOUND.value())) {
+            if ((ex instanceof FeignException feignException) && (feignException.status() == HttpStatus.NOT_FOUND.value())) {
                 throw new ApiErrorException(ApiError.builder()
                         .status(HttpStatus.BAD_REQUEST)
                         .message(String.format(NO_I18N_FILE, card.getProcess(), card.getProcessVersion(), card.getProcessInstanceId()))
