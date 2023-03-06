@@ -79,13 +79,6 @@ public class OAuth2GenericConfiguration {
         };
     }
 
-
-    @Bean
-    public WebSecurityChecks webSecurityChecks() {
-        return new WebSecurityChecks();
-    }
-
-
     public AbstractAuthenticationToken generateOpFabJwtAuthenticationToken(Jwt jwt) {
         
         String principalId = jwt.getClaimAsString(jwtProperties.getLoginClaim()).toLowerCase();

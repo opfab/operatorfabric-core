@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2022, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2023, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -11,18 +11,22 @@
 
 package org.opfab.users.configuration.oauth2;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AbstractAuthenticationToken;
+import org.springframework.security.authorization.AuthenticatedAuthorizationManager;
+import org.springframework.security.authorization.AuthorityAuthorizationManager;
+import org.springframework.security.authorization.AuthorizationManager;
+import org.springframework.security.authorization.AuthorizationManagers;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.oauth2.jwt.Jwt;
 
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.access.intercept.RequestAuthorizationContext;
+
 
 /**
  * OAuth 2 http authentication configuration and access rules
@@ -30,7 +34,6 @@ import org.springframework.security.web.SecurityFilterChain;
  *
  */
 @Configuration
-@Slf4j
 public class WebSecurityConfiguration {
 
     public static final String PROMETHEUS_PATH ="/actuator/prometheus**";
@@ -50,14 +53,7 @@ public class WebSecurityConfiguration {
     public static final String USER_ACTION_LOGS = "/userActionLogs";
     public static final String CURRENTUSER_INTERNAL_PATH = "/internal/CurrentUserWithPerimeters";
     public static final String ADMIN_ROLE = "ADMIN";
-    public static final String IS_ADMIN_OR_OWNER = "hasRole('ADMIN') or @webSecurityChecks.checkUserLogin(authentication,#login)";
-    public static final String IS_ADMIN_OR_OWNER_AND_IP_ALLOWED = "( ( hasRole('ADMIN') or @webSecurityChecks.checkUserLogin(authentication,#login) ) and @webSecurityChecks.checkUserIpAddress(authentication) )";
-    public static final String IS_ADMIN_AND_NOT_OWNER_AND_IP_ALLOWED = "hasRole('ADMIN') and ! @webSecurityChecks.checkUserLogin(authentication,#login) and @webSecurityChecks.checkUserIpAddress(authentication)";
-    public static final String IS_ADMIN_AND_IP_ALLOWED = "hasRole('ADMIN') and @webSecurityChecks.checkUserIpAddress(authentication)";
-    public static final String AUTH_AND_IP_ALLOWED = "isAuthenticated() and @webSecurityChecks.checkUserIpAddress(authentication)";
 
-    @Autowired
-    WebSecurityChecks webSecurityChecks;
     
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http,
@@ -76,27 +72,61 @@ public class WebSecurityConfiguration {
     public static void configureCommon(final HttpSecurity http) throws Exception {
         http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED)
                 .and()
-                .authorizeRequests()
+                .authorizeHttpRequests()
                 .requestMatchers(HttpMethod.GET,PROMETHEUS_PATH).permitAll()
-                .requestMatchers(HttpMethod.POST, USER_TOKEN_SYNCHRONIZATION_PATH).access(AUTH_AND_IP_ALLOWED)
-                .requestMatchers(HttpMethod.GET, USER_PATH).access(IS_ADMIN_OR_OWNER_AND_IP_ALLOWED)
-                .requestMatchers(HttpMethod.PUT, USER_PATH).access(IS_ADMIN_OR_OWNER_AND_IP_ALLOWED)
-                .requestMatchers(HttpMethod.DELETE, USER_PATH).access(IS_ADMIN_AND_NOT_OWNER_AND_IP_ALLOWED)
-                .requestMatchers(HttpMethod.GET, USERS_SETTINGS_PATH).access(IS_ADMIN_OR_OWNER_AND_IP_ALLOWED)
-                .requestMatchers(HttpMethod.PUT, USERS_SETTINGS_PATH).access(IS_ADMIN_OR_OWNER_AND_IP_ALLOWED)
-                .requestMatchers(HttpMethod.PATCH, USERS_SETTINGS_PATH).access(IS_ADMIN_OR_OWNER_AND_IP_ALLOWED)
-                .requestMatchers(HttpMethod.GET, USERS_PERIMETERS_PATH).access(IS_ADMIN_OR_OWNER_AND_IP_ALLOWED)
-                .requestMatchers(HttpMethod.GET, USERS).access(AUTH_AND_IP_ALLOWED)
-                .requestMatchers(USERS_PATH).access(IS_ADMIN_AND_IP_ALLOWED)
-                .requestMatchers(HttpMethod.GET, GROUPS).access(AUTH_AND_IP_ALLOWED)
-                .requestMatchers(GROUPS_PATH).access(IS_ADMIN_AND_IP_ALLOWED)
-                .requestMatchers(HttpMethod.GET, ENTITIES).access(AUTH_AND_IP_ALLOWED)      // OC-1067 : we authorize all users for GET /entities
-                .requestMatchers(ENTITIES_PATH).access(IS_ADMIN_AND_IP_ALLOWED)
-                .requestMatchers(PERIMETERS_PATH).access(IS_ADMIN_AND_IP_ALLOWED)
-                .requestMatchers(USER_ACTION_LOGS).access(IS_ADMIN_AND_IP_ALLOWED)
+                .requestMatchers(HttpMethod.POST, USER_TOKEN_SYNCHRONIZATION_PATH).access(authenticatedAndIpAllowed())
+                .requestMatchers(HttpMethod.GET, USER_PATH).access(hasRoleOrLoginAndIpAllowed(ADMIN_ROLE))
+                .requestMatchers(HttpMethod.PUT, USER_PATH).access(hasRoleOrLoginAndIpAllowed(ADMIN_ROLE))
+                .requestMatchers(HttpMethod.DELETE, USER_PATH).access(hasRoleAndLoginNotEqualAndIpAllowed(ADMIN_ROLE))
+                .requestMatchers(HttpMethod.GET, USERS_SETTINGS_PATH).access(hasRoleOrLoginAndIpAllowed(ADMIN_ROLE))
+                .requestMatchers(HttpMethod.PUT, USERS_SETTINGS_PATH).access(hasRoleOrLoginAndIpAllowed(ADMIN_ROLE))
+                .requestMatchers(HttpMethod.PATCH, USERS_SETTINGS_PATH).access(hasRoleOrLoginAndIpAllowed(ADMIN_ROLE))
+                .requestMatchers(HttpMethod.GET, USERS_PERIMETERS_PATH).access(hasRoleOrLoginAndIpAllowed(ADMIN_ROLE))
+                .requestMatchers(HttpMethod.GET, USERS) .access(authenticatedAndIpAllowed())
+                .requestMatchers(USERS_PATH).access(hasAnyRoleAndIpAllowed(ADMIN_ROLE))
+                .requestMatchers(HttpMethod.GET, GROUPS).access(authenticatedAndIpAllowed())
+                .requestMatchers(GROUPS_PATH).access(hasAnyRoleAndIpAllowed(ADMIN_ROLE))
+                .requestMatchers(HttpMethod.GET, ENTITIES).access(authenticatedAndIpAllowed())   // OC-1067 : we authorize all users for GET /entities
+                .requestMatchers(ENTITIES_PATH).access(hasAnyRoleAndIpAllowed(ADMIN_ROLE))
+                .requestMatchers(PERIMETERS_PATH).access(hasAnyRoleAndIpAllowed(ADMIN_ROLE))
+                .requestMatchers(USER_ACTION_LOGS).access(hasAnyRoleAndIpAllowed(ADMIN_ROLE))
                 .requestMatchers(CURRENTUSER_INTERNAL_PATH).authenticated()
                 .requestMatchers(LOGGERS_PATH).hasRole(ADMIN_ROLE)
-                .anyRequest().access(AUTH_AND_IP_ALLOWED);
+                .anyRequest().access(authenticatedAndIpAllowed());
     }
 
+
+    public static AuthorizationManager<RequestAuthorizationContext> authenticatedAndIpAllowed() {
+        return AuthorizationManagers.allOf(AuthenticatedAuthorizationManager.authenticated(),
+                            new OpfabIpAuthorizationManager());
+    }
+
+    public static AuthorizationManager<RequestAuthorizationContext> authenticatedAndLoginAllowed() {
+        return AuthorizationManagers.allOf(AuthenticatedAuthorizationManager.authenticated(),
+                            new OpfabLoginAuthorizationManager());
+    }
+
+    public static AuthorizationManager<RequestAuthorizationContext> hasAnyRoleAndIpAllowed(String... roles) {
+        return AuthorizationManagers.allOf(AuthorityAuthorizationManager.hasAnyRole(roles),
+                            new OpfabIpAuthorizationManager());
+    }
+
+    public static AuthorizationManager<RequestAuthorizationContext> hasRoleAndLoginAndIpAllowed(String role) {
+        return AuthorizationManagers.allOf(AuthorityAuthorizationManager.hasAnyRole(role),
+                            new OpfabLoginAuthorizationManager(),
+                            new OpfabIpAuthorizationManager());
+    }
+
+    public static AuthorizationManager<RequestAuthorizationContext> hasRoleOrLoginAndIpAllowed(String role) {
+        return AuthorizationManagers.allOf(
+                            AuthorizationManagers.anyOf(AuthorityAuthorizationManager.hasAnyRole(role), 
+                            new OpfabLoginAuthorizationManager()),
+                            new OpfabIpAuthorizationManager());
+    }
+
+    public static AuthorizationManager<RequestAuthorizationContext> hasRoleAndLoginNotEqualAndIpAllowed(String role) {
+        return AuthorizationManagers.allOf(AuthorityAuthorizationManager.hasAnyRole(role),
+                            new OpfabLoginNotEqualAuthorizationManager(),
+                            new OpfabIpAuthorizationManager());
+    }
 }

@@ -13,17 +13,19 @@ package org.opfab.businessconfig.configuration.oauth2;
 
 import lombok.extern.slf4j.Slf4j;
 
-import org.opfab.springtools.configuration.oauth.WebSecurityChecks;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AbstractAuthenticationToken;
+import org.springframework.security.authorization.AuthorityAuthorizationManager;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.security.web.SecurityFilterChain;
+
+import static org.opfab.springtools.configuration.oauth.OpfabAuthorizationManager.hasAnyRoleAndIpAllowed;
+import static org.opfab.springtools.configuration.oauth.OpfabAuthorizationManager.authenticatedAndIpAllowed;
 
 /**
  * OAuth 2 http authentication configuration and access rules
@@ -37,13 +39,9 @@ public class WebSecurityConfiguration {
     public static final String PROMETHEUS_PATH ="/actuator/prometheus**";
     public static final String LOGGERS_PATH ="/actuator/loggers/**";
     public static final String ADMIN_ROLE = "ADMIN";
+    public static final String ADMIN_BUSINESS_PROCESS_ROLE = "ADMIN_BUSINESS_PROCESS";
     public static final String THIRDS_PATH = "/businessconfig/**";
 
-    public static final String AUTH_AND_IP_ALLOWED = "isAuthenticated() and @webSecurityChecks.checkUserIpAddress(authentication)";
-    public static final String ADMIN_AND_IP_ALLOWED = "(hasRole('ADMIN') or hasRole('ADMIN_BUSINESS_PROCESS')) and @webSecurityChecks.checkUserIpAddress(authentication)";
-
-    @Autowired
-    WebSecurityChecks webSecurityChecks;
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http,
@@ -64,14 +62,15 @@ public class WebSecurityConfiguration {
     3) it is called for publishing card, for checking if process/state exists in the bundles */
     public static void configureCommon(final HttpSecurity http) throws Exception {
         http
-                .authorizeRequests()
-                .requestMatchers(HttpMethod.GET,PROMETHEUS_PATH).permitAll()
-                .requestMatchers(HttpMethod.GET, THIRDS_PATH).permitAll()
-                .requestMatchers(HttpMethod.POST, THIRDS_PATH).access(ADMIN_AND_IP_ALLOWED)
-                .requestMatchers(HttpMethod.PUT, THIRDS_PATH).access(ADMIN_AND_IP_ALLOWED)
-                .requestMatchers(HttpMethod.DELETE, THIRDS_PATH).access(ADMIN_AND_IP_ALLOWED)
-                .requestMatchers(LOGGERS_PATH).hasRole(ADMIN_ROLE)
-                .anyRequest().access(AUTH_AND_IP_ALLOWED);
+            .authorizeHttpRequests()
+            .requestMatchers(HttpMethod.GET, PROMETHEUS_PATH).permitAll()
+            .requestMatchers(HttpMethod.GET, THIRDS_PATH).permitAll()
+            .requestMatchers(HttpMethod.POST, THIRDS_PATH).access(hasAnyRoleAndIpAllowed(ADMIN_ROLE, ADMIN_BUSINESS_PROCESS_ROLE))
+            .requestMatchers(HttpMethod.PUT, THIRDS_PATH).access(hasAnyRoleAndIpAllowed(ADMIN_ROLE, ADMIN_BUSINESS_PROCESS_ROLE))
+            .requestMatchers(HttpMethod.DELETE, THIRDS_PATH).access(hasAnyRoleAndIpAllowed(ADMIN_ROLE, ADMIN_BUSINESS_PROCESS_ROLE))
+            .requestMatchers(LOGGERS_PATH).access(AuthorityAuthorizationManager.hasRole(ADMIN_ROLE))
+            .anyRequest().access(authenticatedAndIpAllowed());
+
     }
 
 }

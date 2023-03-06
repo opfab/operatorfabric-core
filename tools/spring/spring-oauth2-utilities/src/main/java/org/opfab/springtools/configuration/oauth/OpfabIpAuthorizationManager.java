@@ -1,4 +1,4 @@
-/* Copyright (c) 2021-2023, RTE (http://www.rte-france.com)
+/* Copyright (c) 2023, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -7,51 +7,31 @@
  * This file is part of the OperatorFabric project.
  */
 
-
-
 package org.opfab.springtools.configuration.oauth;
 
 import java.util.List;
+import java.util.function.Supplier;
 
 import org.opfab.users.model.CurrentUserWithPerimeters;
 import org.opfab.users.model.User;
+import org.springframework.security.authorization.AuthorizationDecision;
+import org.springframework.security.authorization.AuthorizationManager;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.web.access.intercept.RequestAuthorizationContext;
 import org.springframework.security.web.authentication.WebAuthenticationDetails;
-import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
 
 import lombok.extern.slf4j.Slf4j;
 
-/**
- * WebSecurityChecks
- * This class defines the access checks that can be performed, for use in {@link WebSecurityConfiguration}
- *
- *
- */
-
-@Component
 @Slf4j
-public class WebSecurityChecks {
+public class OpfabIpAuthorizationManager implements AuthorizationManager<RequestAuthorizationContext> {
 
-
-    public boolean checkUserLogin(Authentication authentication, String login) {
-
-        String user;
-
-
-        //authentication.getPrincipal() is UserData type if there is authentication
-        //but is String type if there is no authentication (jira : OC-655)
-        if (authentication.getPrincipal()  instanceof String principal)
-            user = principal;
-        else 
-            user = ((User) authentication.getPrincipal()).getLogin();
-
-        log.debug("login from the principal {} login parameter {}", user, login);
-
-        return user.equals(login);
+    @Override
+    public AuthorizationDecision check(Supplier<Authentication> supplier, RequestAuthorizationContext context) {
+        return new AuthorizationDecision(checkUserIpAddress(supplier.get()));
     }
-
-    public boolean checkUserIpAddress(Authentication authentication) {
+    
+    private boolean checkUserIpAddress(Authentication authentication) {
         User userData = null;
         String user = null;
         //authentication.getPrincipal() is UserData type if there is authentication
@@ -85,5 +65,4 @@ public class WebSecurityChecks {
         log.info("Call not allowed from not authenticated user: " + user);
         return false;
     }
-      
 }
