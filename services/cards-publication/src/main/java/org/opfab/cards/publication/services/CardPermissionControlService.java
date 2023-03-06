@@ -20,7 +20,6 @@ import lombok.extern.slf4j.Slf4j;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 /**
  * <p>
@@ -49,7 +48,7 @@ public class CardPermissionControlService {
             return true;
         List<String> entitiesAllowed = card.getEntitiesAllowedToEdit();
         if (entitiesAllowed != null) {
-            List<String> userEntitiesAllowed = user.getUserData().getEntities().stream().filter(entitiesAllowed::contains).collect(Collectors.toList());
+            List<String> userEntitiesAllowed = user.getUserData().getEntities().stream().filter(entitiesAllowed::contains).toList();
             return !userEntitiesAllowed.isEmpty();
         }
         return false;

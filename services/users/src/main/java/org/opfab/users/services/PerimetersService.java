@@ -46,7 +46,7 @@ public class PerimetersService {
     }
 
     public List<Perimeter> fetchPerimeters() {
-        return perimeterRepository.findAll().stream().map(Perimeter.class::cast).toList();
+        return perimeterRepository.findAll();
     }
 
     public OperationResult<Perimeter> fetchPerimeter(String perimeterId) {

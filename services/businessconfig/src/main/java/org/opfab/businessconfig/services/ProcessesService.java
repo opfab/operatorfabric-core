@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2022, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2023, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -101,7 +101,7 @@ public class ProcessesService implements ResourceLoaderAware {
      * @return registered processes
      */
 	public List<Process> listProcessHistory(String processId) {
-        return completeCache.values().stream().filter( p -> p.getId().equals(processId)).collect(Collectors.toList());
+        return completeCache.values().stream().filter( p -> p.getId().equals(processId)).toList();
 	}
 
     /**

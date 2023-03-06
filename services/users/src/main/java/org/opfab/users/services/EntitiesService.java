@@ -41,7 +41,7 @@ public class EntitiesService {
     }
 
     public List<Entity> fetchEntities() {
-        return entityRepository.findAll().stream().map(Entity.class::cast).toList();
+        return entityRepository.findAll();
     }
 
     public OperationResult<Entity> fetchEntity(String entityId) {
@@ -57,7 +57,7 @@ public class EntitiesService {
         IdFormatChecker.IdCheckResult formatCheckResult = IdFormatChecker.check(entity.getId());
         if (formatCheckResult.isValid()) {
             synchronized (this) {
-                List<Entity> entities = entityRepository.findAll().stream().map(Entity.class::cast).toList();
+                List<Entity> entities = entityRepository.findAll();
                 EntityCycleDetector cycleChecker = new EntityCycleDetector(entity, entities);
                 EntityCycleDetector.CycleCheckResult result = cycleChecker.getCycleDetectorResult();
                 if (result.hasCycle()) {

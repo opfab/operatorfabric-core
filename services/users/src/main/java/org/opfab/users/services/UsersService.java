@@ -53,7 +53,7 @@ public class UsersService {
     }
 
     public List<User> fetchUsers() {
-        return userRepository.findAll().stream().map(User.class::cast).toList();
+        return userRepository.findAll();
     }
 
     public OperationResult<User> fetchUser(String userId) {
