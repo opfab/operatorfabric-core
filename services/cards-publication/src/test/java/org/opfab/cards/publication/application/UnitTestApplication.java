@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2022, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2023, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -47,7 +47,7 @@ import org.springframework.context.annotation.ImportResource;
 , CardCommandFactory.class, CardObjectMapper.class, TestCardReceiver.class , TestConsumerConfig.class, JacksonConfig.class
 , Common.class , CardController.class, WebSecurityConfigurationTest.class, I18nProcessesCache.class, I18nProcessesCacheTestApplication.class, 
 ExternalRecipients.class, UserActionLogsConfiguration.class})
-@ImportResource({"classpath:/amqp.xml", "classpath:/security.xml"})
+@ImportResource({"classpath:/amqp.xml"})
 public class UnitTestApplication {
 
     public static void main(String[] args) {
