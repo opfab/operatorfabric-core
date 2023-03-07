@@ -7,7 +7,7 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {Component, Input, Output} from '@angular/core';
+import {Component, Input, OnChanges, Output} from '@angular/core';
 import {Subject} from 'rxjs';
 
 
@@ -16,7 +16,7 @@ import {Subject} from 'rxjs';
     templateUrl: './feed-filter-and-sort-icons.component.html',
     styleUrls: ['./feed-filter-and-sort-icons.component.scss']
 })
-export class FeedFilterAndSortIconsComponent {
+export class FeedFilterAndSortIconsComponent implements OnChanges {
     @Input() filterActive: boolean;
 
     @Output() showFiltersAndSort = new Subject();
@@ -25,9 +25,27 @@ export class FeedFilterAndSortIconsComponent {
     filterSelected = false;
     sortSelected = false;
 
+    filterIconCssClass = "opfab-icon-filter"
+
     toggleFilters() {
         this.filterSelected = !this.filterSelected;
         this.showFiltersAndSort.next({filter : this.filterSelected});
+        this.computeIconClass();
+    }
+
+    ngOnChanges() {
+        this.computeIconClass();
+    }
+
+    private computeIconClass(){
+        if (this.filterSelected) {
+            if (this.filterActive) this.filterIconCssClass = "opfab-icon-filter-open-active";
+            else this.filterIconCssClass = "opfab-icon-filter-open";
+        }
+        else {
+            if (this.filterActive) this.filterIconCssClass = "opfab-icon-filter-active";
+            else this.filterIconCssClass = "opfab-icon-filter";
+        }
     }
 
 }
