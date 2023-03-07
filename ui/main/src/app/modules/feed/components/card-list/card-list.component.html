@@ -14,12 +14,12 @@
   </div>
   <div class="opfab-feed-horizontal-bar"> </div>
   <div id="opfab-card-list-container" style="display: flex;">
-    <div id="opfab-filters" [class.opfab-filters-hidden]="!filterOpen" class="opfab-filters opfab-card-list"> 
+    <div id="opfab-filters" [class.opfab-filters-hidden]="!filterOpen" class="opfab-filters opfab-card-list" style="width:600px"> 
       <of-feed-filter (filterActiveChange)="onFilterActiveChange($event)" [hideTimerTags]="hideTimerTags" 
       [defaultAcknowledgmentFilter]="defaultAcknowledgmentFilter" [hideResponseFilter]="hideResponseFilter" 
       [hideApplyFiltersToTimeLineChoice]="hideApplyFiltersToTimeLineChoice" [defaultSorting]="defaultSorting"></of-feed-filter>
-  </div>
-    <div *ngIf="!isSmallscreen() || (!filterOpen)" style="width: 440px">
+    </div>
+    <div *ngIf="!isSmallscreen() || (!filterOpen)" style="width: 100%">
       <div id="opfab-card-list" class="opfab-card-list" >
         <div class="row" *ngFor="let currentLightCard of lightCards">
           <div class="col-12" style="padding-right: 20px;margin-bottom: 10px;">
