@@ -6,7 +6,7 @@
 <!-- SPDX-License-Identifier: MPL-2.0                                      -->
 <!-- This file is part of the OperatorFabric project.                      -->
 
-    <div class="opfab-icon-bg-color" [class.opfab-filter-open]="filterSelected" (click)="toggleFilters()">
-        <div id="opfab-feed-filter-btn-filter" [ngClass]="filterActive ? 'opfab-icon-filter-active' :  'opfab-icon-filter'">
+    <div class="opfab-icon-bg-color"  (click)="toggleFilters()">
+        <div id="opfab-feed-filter-btn-filter" [ngClass]="filterIconCssClass">
         </div>
     </div>
