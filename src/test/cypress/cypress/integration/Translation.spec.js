@@ -339,7 +339,7 @@ describe('Test translations', function () {
         
         // Deselect 'not acknowledged' checkbox on Acknowledgement filter to show the "Reset" link
         cy.get('#opfab-feed-filter-ack-notack').click({force: true});
-        checkResetText('Reset');
+        checkResetText('Reset filters');
 
         changeLanguage(FRENCH);
         cy.get('#opfab-navbar-menu-feed').click();
@@ -347,7 +347,7 @@ describe('Test translations', function () {
         checkNotificationSeverityTexts('Alarme', 'Action', 'Conforme', 'Information');
         checkAknowledgementTexts('Acquittement', 'Toutes', 'Acquittées', 'Non acquittées');
         checkDateFilterTexts('Date de réception', 'DÉBUT', 'FIN', 'Appliquer les filtres à la timeline ');
-        checkResetText('Réinitialiser');
+        checkResetText('Réinitialiser les filtres');
 
         changeLanguage(DUTCH);
         cy.get('#opfab-navbar-menu-feed').click();
@@ -355,7 +355,7 @@ describe('Test translations', function () {
         checkNotificationSeverityTexts('Alarm', 'Actie', 'Conform', 'Informatie');
         checkAknowledgementTexts('Bevestigen', 'Alles', 'Bevestigd', 'Niet bevestigd');
         checkDateFilterTexts('Ontvangstdatum', 'START', 'EIND', 'Filters toepassen op tijdlijn ');
-        checkResetText('Opnieuw instellen');
+        checkResetText('Filters opnieuw instellen');
     });
 
     it('Check translation for non-existent card', function () {

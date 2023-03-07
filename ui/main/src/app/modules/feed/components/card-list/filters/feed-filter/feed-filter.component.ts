@@ -240,8 +240,7 @@ export class FeedFilterComponent implements OnInit, OnDestroy {
 
         this.ackFilterForm.valueChanges.pipe(takeUntil(this.ngUnsubscribe$)).subscribe((form) => {
             const active = !form.ackControl || !form.notAckControl;
-            const ack = active && form.ackControl;
-
+            const ack = (!form.ackControl && !form.notAckControl) ? null : active && form.ackControl;
             this.userPreferences.setPreference('opfab.feed.filter.ack', this.getAckPreference(form.ackControl, form.notAckControl));
             this.filterActiveChange.next(this.isFilterActive());
             return this.filterService.updateFilter(FilterType.ACKNOWLEDGEMENT_FILTER, active, ack);

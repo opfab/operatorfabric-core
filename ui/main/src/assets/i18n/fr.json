@@ -145,7 +145,7 @@
   "feed": {
     "filters": {
       "title": "Filtres",
-      "reset": "Réinitialiser",
+      "reset": "Réinitialiser les filtres",
       "time": {
         "titleIfFilterBasedOnPublishDate": "Date de réception",
         "titleIfFilterBasedOnBusinessDate": "Période métier",
@@ -166,9 +166,6 @@
         },
         "notacknowledged": {
           "label": "Non acquittées"
-        },
-        "all": {
-          "label": "Toutes"
         }
       },
       "applyFiltersToTimeLine" : {
