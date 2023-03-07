@@ -33,7 +33,6 @@ describe('FeedScreen tests', function () {
         script.deleteAllCards();
     });
 
-
     it('Check card reception and read behaviour', function () {
         opfab.loginWithUser('operator1_fr');
         script.send6TestCards();
@@ -264,6 +263,13 @@ describe('FeedScreen tests', function () {
         // Only not acknowledged card is visible
         cy.get('#opfab-feed-light-card-defaultProcess-process1').should('exist');
         cy.get('#opfab-feed-light-card-defaultProcess-process2').should('not.exist');
+
+        feed.toggleFilterByAcknowledgementNotAck();
+        cy.waitDefaultTime();
+        feed.checkFilterIsActive();
+        // No cards visible
+        feed.checkNumberOfDisplayedCardsIs(0);
+
     });
     
 
@@ -358,7 +364,7 @@ describe('FeedScreen tests', function () {
 
         // Check there are 5 cards in the feed (acknowwledged card is not visible)
         feed.checkNumberOfDisplayedCardsIs(5);
-        feed.checkFilterIsNotActive();
+        feed.checkFilterIsOpenAndNotActive();
         checkResetAllFiltersLinkDoesNotExists();
     });
 

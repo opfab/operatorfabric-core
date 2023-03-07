@@ -145,7 +145,7 @@
   "feed": {
     "filters": {
       "title": "Filters",
-      "reset": "Opnieuw instellen",
+      "reset": "Filters opnieuw instellen",
       "time": {
         "titleIfFilterBasedOnPublishDate": "Ontvangstdatum",
         "titleIfFilterBasedOnBusinessDate": "Bedrijfsperiode",
@@ -166,9 +166,6 @@
         },
         "notacknowledged": {
           "label": "Niet bevestigd"
-        },
-        "all": {
-          "label": "Alles"
         }
       },
       "applyFiltersToTimeLine" : {
