@@ -457,16 +457,16 @@
       }
     }, 
     {
-      "id" : "168b284b-283d-4fe2-ace6-87d2597ae099",
+      "id" : "75b16b41-33a9-4caf-aa44-c213e5cb7fb3",
       "name" : "sub",
       "protocol" : "openid-connect",
-      "protocolMapper" : "oidc-usermodel-property-mapper",
+      "protocolMapper" : "oidc-script-based-protocol-mapper",
       "consentRequired" : false,
       "config" : {
-        "user.attribute" : "username",
         "id.token.claim" : "true",
         "access.token.claim" : "true",
         "claim.name" : "sub",
+        "script" : "/**\n * Available variables: \n * user - the current user\n * realm - the current realm\n * token - the current token\n * userSession - the current userSession\n * keycloakSession - the current keycloakSession\n */\n\n\n\ntoken.setSubject(user.getUsername());",
         "userinfo.token.claim" : "true"
       }
     },

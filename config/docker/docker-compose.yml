@@ -30,7 +30,8 @@ services:
 #      - "15672:15672"
   keycloak:
     image: quay.io/keycloak/keycloak:19.0.3-legacy
-    command: -Dkeycloak.migration.action=import -Dkeycloak.migration.provider=dir -Dkeycloak.migration.dir=/keycloak/export
+    command: -Dkeycloak.migration.action=import -Dkeycloak.migration.provider=dir -Dkeycloak.migration.dir=/keycloak/export -Dkeycloak.profile.feature.upload_scripts=enabled
+# -Dkeycloak.profile.feature.upload_scripts=enabled is only used for tests with version 12 from keycloak
     environment:
     - KEYCLOAK_USER=admin
     - KEYCLOAK_PASSWORD=admin
