@@ -1,4 +1,4 @@
-// Copyright (c) 2020 RTE (http://www.rte-france.com)
+// Copyright (c) 2020-2023 RTE (http://www.rte-france.com)
 // See AUTHORS.txt
 // This document is subject to the terms of the Creative Commons Attribution 4.0 International license.
 // If a copy of the license was not distributed with this
@@ -105,9 +105,9 @@ qO-fkjTVRjy_LBXGq9zkn0ZeQ3BUe1GuthvGjaA",
 
 == Extract token
 
-From the previous results, the data need to be considered to be authenticated by OperatorFabric services is the content of the `"access_token"` attribute of the body response.
+From the previous results, the data needed to be considered to be authenticated by OperatorFabric services is the content of the `"access_token"` attribute of the body response.
 
-Once this value extracted, it need to be passed at the end of the value of the http HEADER of type `Authorization:Bearer`. Note that a space is needed between `Bearer` and token actual value.
+Once this value extracted, it needs to be passed at the end of the value of the http HEADER of type `Authorization:Bearer`. Note that a space is needed between `Bearer` and token actual value.
 example from previous results:
 
 === Curl

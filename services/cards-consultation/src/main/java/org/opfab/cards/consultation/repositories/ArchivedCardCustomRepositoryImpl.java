@@ -208,7 +208,7 @@ public class ArchivedCardCustomRepositoryImpl implements ArchivedCardCustomRepos
 
         }
         if ((pageableRequest != null) && (pageableRequest.isPaged())) {
-            operations.add(skip((long) (pageableRequest.getPageNumber() * pageableRequest.getPageSize())));
+            operations.add(skip(((long) pageableRequest.getPageNumber()) * pageableRequest.getPageSize()));
             operations.add(limit(pageableRequest.getPageSize()));
         }
         return operations;

@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2022, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2023, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -33,7 +33,7 @@ public class OpfabSpringGenerator extends SpringCodegen {
   
     @Override
     public void addOperationToGroup(String tag, String resourcePath, Operation operation, CodegenOperation co, Map<String, List<CodegenOperation>> operations) {
-        try{
+        try {
             super.addOperationToGroup(tag, resourcePath, operation, co, operations);
             if((library.equals(DEFAULT_LIBRARY) || library.equals(SPRING_MVC_LIBRARY)) && !useTags) {
                 String basePath = resourcePath;
@@ -46,10 +46,10 @@ public class OpfabSpringGenerator extends SpringCodegen {
                     subPath = basePath.substring(pos);
                 }
 
-                if(subPath!=null && !"".equals(subPath))
+                if (subPath != null && !"".equals(subPath))
                     co.vendorExtensions.put("x-operatorfabric-spring-subPath",subPath);
             }
-        }catch (Exception exc){
+        } catch (Exception exc){
             log.error("Unexpected Error arose", exc);
         }
     } 
@@ -59,9 +59,9 @@ public class OpfabSpringGenerator extends SpringCodegen {
         List<Map<String, String>> imports = (List)objs.get("imports");
         ListIterator listIterator = imports.listIterator();
 
-        while(listIterator.hasNext()) {
-            String _import = (String)((Map)listIterator.next()).get("import");
-            if(_import.contains("io.swagger.annotations") ||_import.contains("springfox"))
+        while (listIterator.hasNext()) {
+            String currentImport = (String)((Map)listIterator.next()).get("import");
+            if (currentImport.contains("io.swagger.annotations") || currentImport.contains("springfox"))
                 listIterator.remove();
         }
         return result;
