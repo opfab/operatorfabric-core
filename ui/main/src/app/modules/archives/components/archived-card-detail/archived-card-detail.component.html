@@ -7,11 +7,11 @@
 <!-- This file is part of the OperatorFabric project.                      -->
 
 
-<div style="height: calc(100% - 70px);">
+  <div>
     <of-simplified-card-view [card]="card" [childCards]="childCards" [screenSize]="'lg'"
       [displayContext]="displayContext"> </of-simplified-card-view>
   </div>
-  <div id="opfab-archives-card-footer">
+  <div id="opfab-card-detail-footer">
     <span class="opfab-card-received-footer">
       <span translate>feed.received</span>
       {{getFormattedDate(card.publishDate)}} <span translate> feed.at </span> {{getFormattedTime(card.publishDate)}}
@@ -24,9 +24,9 @@
         <span translate>feed.deleted</span>
         {{getFormattedDate(card.deletionDate)}} <span translate> feed.at </span> {{getFormattedTime(card.deletionDate)}}
       </span>
-      <br>
+      <br *ngIf="entityRecipientsForFooter.length>0">
       {{entityRecipientsForFooter}}
-      <br>
+      <br *ngIf="entityRecipientsForInformationForFooter.length>0">
       {{entityRecipientsForInformationForFooter}}
     </span>
   </div>
