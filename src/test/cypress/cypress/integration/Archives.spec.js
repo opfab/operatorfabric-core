@@ -461,7 +461,7 @@ describe('Archives screen tests', function () {
         cy.get('#opfab-div-card-template-processed').contains(cardText).should('exist');
 
         if (entityRecipientsFooterText !== '')
-            cy.get('#opfab-archives-card-footer').contains(entityRecipientsFooterText).should('exist');
+            cy.get('#opfab-card-detail-footer').contains(entityRecipientsFooterText).should('exist');
 
         cy.get('#opfab-archives-card-detail-close').click({force: true});
     }
