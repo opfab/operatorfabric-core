@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2021, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2023, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -29,9 +29,9 @@ public class OpfabClientGenerator extends SpringCodegen {
         List<Map<String, String>> imports = (List)objs.get("imports");
         ListIterator listIterator = imports.listIterator();
 
-        while(listIterator.hasNext()) {
-            String _import = (String)((Map)listIterator.next()).get("import");
-            if(_import.contains("com.fasterxml.jackson.annotation") || _import.contains("io.swagger.annotation"))
+        while (listIterator.hasNext()) {
+            String currentImport = (String)((Map)listIterator.next()).get("import");
+            if (currentImport.contains("com.fasterxml.jackson.annotation") || currentImport.contains("io.swagger.annotation"))
                 listIterator.remove();
         }
         return result;
