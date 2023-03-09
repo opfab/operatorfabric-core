@@ -37,6 +37,10 @@ At {{padStart card.data.byhour 2 '0'}}:{{padStart card.data.byminute 2 '0'}}
                   const freq = "{{card.data.freq}}";
                   const byweekday = "{{card.data.byweekday}}";
                   const bysetpos = "{{card.data.bysetpos}}";
+                  const ordinalNumbersArray = ["1st", "2nd", "3rd", "4th", "5th", "6th", "7th", "8th", "9th", "10th",
+                                               "11th", "12th", "13th", "14th", "15th", "16th", "17th", "18th", "19th", "20th",
+                                               "21st", "22nd", "23rd", "24th", "25th", "26th", "27th", "28th", "29th", "30th",
+                                               "31st"];
 
                   if (freq === "MONTHLY" && bysetpos !== [] && byweekday !== []) {
                       let textForBysetpos = "";
@@ -74,7 +78,7 @@ At {{padStart card.data.byhour 2 '0'}}:{{padStart card.data.byminute 2 '0'}}
                       if (bymonthdayArray.includes("-1")) textForBymonthday += "The last day of the month, ";
                       if (bymonthdayArray.length > 0) {
                           if ((bymonthdayArray[0] !== "1") && (bymonthdayArray[0] !== "-1")) {
-                              textForBymonthday += "The " + bymonthdayArray[0] + "nth day of the month, ";
+                              textForBymonthday += "The " + ordinalNumbersArray[bymonthdayArray[0] - 1] + " day of the month, ";
                           }
                       }
                   }
