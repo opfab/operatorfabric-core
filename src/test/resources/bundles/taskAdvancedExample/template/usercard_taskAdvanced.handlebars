@@ -407,12 +407,20 @@
                         if (!!document.getElementById("nthDay").value)            bymonthday.push(document.getElementById("nthDay").value);
                         if (document.getElementById("firstDay").checked === true) bymonthday.push(1);
                         if (document.getElementById("lastDay").checked === true)  bymonthday.push(-1);
+
+                        if (bymonthday.length === 0) {
+                            return {valid: false , errorMsg: 'You must provide at least one nth day.'}
+                        }
                     }
 
                     if (document.getElementById("radioButtonNthWeekday").checked === true) {
                         bysetpos = that.occurrenceNumberSelect.getSelectedValues();
                         if (that.weekdaySelect.getSelectedValues().length > 0) {
                             byweekday = [that.weekdaySelect.getSelectedValues()];
+                        }
+
+                        if ((bysetpos.length === 0) || (byweekday.length === 0)) {
+                            return {valid: false , errorMsg: 'You must provide an occurrence number and a weekday.'}
                         }
                     }
                 } else {
