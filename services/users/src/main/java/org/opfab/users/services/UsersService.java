@@ -24,7 +24,6 @@ import org.opfab.users.repositories.EntityRepository;
 import org.opfab.users.repositories.GroupRepository;
 import org.opfab.users.repositories.PerimeterRepository;
 import org.opfab.users.repositories.UserRepository;
-import org.opfab.users.utils.LoginFormatChecker;
 
 public class UsersService {
 
@@ -66,9 +65,11 @@ public class UsersService {
     }
 
     public OperationResult<EntityCreationReport<User>> createUser(User user) {
-        LoginFormatChecker.LoginCheckResult formatCheckResult = LoginFormatChecker.check(user.getLogin());
+        boolean formatCheckResult = false;
+        if (user.getLogin().length() >= 1)
+            formatCheckResult = true;
         user.setLogin(user.getLogin().toLowerCase());
-        if (formatCheckResult.isValid()) {
+        if (formatCheckResult) {
             if (isRemovingAdminUserFromAdminGroup(user))
                 return new OperationResult<>(null, false,
                         OperationResult.ErrorType.BAD_REQUEST, CANNOT_REMOVE_ADMIN_USER_FROM_ADMIN_GROUP);
@@ -82,7 +83,7 @@ public class UsersService {
 
         } else
             return new OperationResult<>(null, false, OperationResult.ErrorType.BAD_REQUEST,
-                    formatCheckResult.getErrorMessage());
+                    "Mandatory 'login' field is missing.");
 
     }
 
@@ -161,10 +162,12 @@ public class UsersService {
     }
 
     public OperationResult<User> updateOrCreateUser(User user, boolean updateEntities, boolean updateGroups) {
-        LoginFormatChecker.LoginCheckResult formatCheckResult = LoginFormatChecker.check(user.getLogin());
+        boolean formatCheckResult = false;
+        if (user.getLogin().length() >= 1)
+            formatCheckResult = true;
         user.setLogin(user.getLogin().toLowerCase());
 
-        if (formatCheckResult.isValid()) {
+        if (formatCheckResult) {
             User existingUser = userRepository.findById(user.getLogin()).orElse(null);
 
             setEntitiesForUserUpdate(user, existingUser, updateEntities);
@@ -189,7 +192,7 @@ public class UsersService {
 
         } else
             return new OperationResult<>(null, false, OperationResult.ErrorType.BAD_REQUEST,
-                    formatCheckResult.getErrorMessage());
+                    "Mandatory 'login' field is missing.");
     }
 
     private void setEntitiesForUserUpdate(User newUser, User existingUser, boolean updateEntities) {
@@ -225,5 +228,4 @@ public class UsersService {
         user.setGroups(groups);
     }
 
- 
 }
