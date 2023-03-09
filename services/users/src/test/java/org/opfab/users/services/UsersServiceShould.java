@@ -177,16 +177,6 @@ public class UsersServiceShould {
     @DisplayName("Create")
     class Create {
         @Test
-        void GIVEN_An_Invalid_Login__WHEN_Creating_User_THEN_Return_Bad_Request() {
-            UserData user = new UserData("invalid?login", "invalid", null, null, null, null);
-            OperationResult<EntityCreationReport<User>> result = usersService.createUser(user);
-            assertThat(result.isSuccess()).isFalse();
-            assertThat(result.getErrorType()).isEqualTo(OperationResult.ErrorType.BAD_REQUEST);
-            assertThat(result.getErrorMessage()).isEqualTo(
-                    "Login should only contain the following characters: letters, _, -, . or digits (login=invalid?login).");
-        }
-
-        @Test
         void GIVEN_A_Valid_User_WHEN_Create_User_THEN_Return_Created_User() {
 
             UserData user = UserData.builder()
@@ -337,17 +327,6 @@ public class UsersServiceShould {
     @Nested
     @DisplayName("UpdateOrCreate")
     class Update {
-
-        @Test
-        void GIVEN_An_Invalid_Login__WHEN_UpdateOrCreate_User_THEN_Return_Bad_Request() {
-            UserData user = new UserData("invalid?login", "invalid", null, null, null, null);
-            OperationResult<User> result = usersService.updateOrCreateUser(user, true, true);
-            assertThat(result.isSuccess()).isFalse();
-            assertThat(result.getErrorType()).isEqualTo(OperationResult.ErrorType.BAD_REQUEST);
-            assertThat(result.getErrorMessage()).isEqualTo(
-                    "Login should only contain the following characters: letters, _, -, . or digits (login=invalid?login).");
-        }
-
         @Test
         void GIVEN_The_Admin_User_WHEN_UpdateOrCreate_User_Without_Admin_Group_THEN_Return_Bad_Request() {
 
