@@ -188,6 +188,9 @@ definitions:
       tzid:
         description: Time zone identifier (for example 'Europe/Paris', 'Europe/London', ...)
         type: string
+      durationInMinutes:
+        description: Duration in minutes of the event
+        type: integer
   TimeSpan:
     type: object
     description: An object to define a business time span

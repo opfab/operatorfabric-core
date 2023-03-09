@@ -30,7 +30,8 @@ Feature: postCardWithRRuleRecurrence
 		"byweekday" : ["TU", "FR"],
 		"byminute" : [10, 30],
 		"byhour" : [14, 16],
-		"bymonth" : [1, 12]
+		"bymonth" : [1, 12],
+        "durationInMinutes" : 120
     }
 }
 """
@@ -59,7 +60,8 @@ Feature: postCardWithRRuleRecurrence
 		"byminute" : [10, 30],
 		"byhour" : [14, 16],
 		"bymonth" : [1, 12],
-		"tzid" : "Europe/London"
+		"tzid" : "Europe/London",
+        "durationInMinutes" : 90
     }
 }
 """
@@ -124,6 +126,7 @@ Feature: postCardWithRRuleRecurrence
     And match response.card.rRule.byminute[0] == 10
     And match response.card.rRule.byminute[1] == 30
     And match response.card.rRule.tzid == 'Europe/Paris'
+    And match response.card.rRule.durationInMinutes == 120
     And def cardUid = response.card.uid
 
 
@@ -147,6 +150,7 @@ Feature: postCardWithRRuleRecurrence
     And match response.card.rRule.byminute[0] == 10
     And match response.card.rRule.byminute[1] == 30
     And match response.card.rRule.tzid == 'Europe/Paris'
+    And match response.card.rRule.durationInMinutes == 120
     And def cardUid = response.card.uid
 
 # Push card
@@ -177,6 +181,7 @@ Feature: postCardWithRRuleRecurrence
     And match response.card.rRule.byminute[0] == 10
     And match response.card.rRule.byminute[1] == 30
     And match response.card.rRule.tzid == 'Europe/London'
+    And match response.card.rRule.durationInMinutes == 90
     And def cardUid = response.card.uid
 
 #get card form archives with user operator1_fr
@@ -199,6 +204,7 @@ Feature: postCardWithRRuleRecurrence
     And match response.card.rRule.byminute[0] == 10
     And match response.card.rRule.byminute[1] == 30
     And match response.card.rRule.tzid == 'Europe/London'
+    And match response.card.rRule.durationInMinutes == 90
     And def cardUid = response.card.uid
 
 #delete perimeter created previously

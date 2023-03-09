@@ -74,6 +74,11 @@ public class RRuleWriterConverter implements Converter<RRule, Document> {
             result.append("tzid", tzid);
         }
 
+        Integer durationInMinutes = source.getDurationInMinutes();
+        if (durationInMinutes != null) {
+            result.append("durationInMinutes", durationInMinutes);
+        }
+
         return result;
     }
 }
