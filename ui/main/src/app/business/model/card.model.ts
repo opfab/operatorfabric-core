@@ -132,7 +132,8 @@ export class RRule {
         public byminute?: number[],
         public bysetpos?: number[],
         public bymonthday?: number[],
-        public tzid?: string
+        public tzid?: string,
+        public durationInMinutes?: number
     ) {}
 }
 
