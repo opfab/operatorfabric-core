@@ -49,3 +49,17 @@ usercard configuration in the config.json of your bundle.
 == Remove deprecated method templateGateway.getSpecificCardInformation() 
   
 The deprecated method 'templateGateway.getSpecificCardInformation()' in usercard templates has been removed, use 'usercardTemplateGateway.getSpecificCardInformation()' method instead.
+
+
+== Nginx configuration
+
+You need to modify your existing opfab nginx configuration (nginx.conf file), replace line : 
+
+```
+proxy_pass http://users:8080/$1;
+```
+by
+
+```
+proxy_pass http://users:8080/$1$is_args$args;
+```
