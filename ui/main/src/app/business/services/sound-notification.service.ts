@@ -149,7 +149,7 @@ export class SoundNotificationService implements OnDestroy {
     }
 
     public handleRemindCard(card: LightCard) {
-        if (this.lightCardsFeedFilterService.isCardVisibleInFeed(card)) this.incomingCardOrReminder.next(card);
+        this.incomingCardOrReminder.next(card);
     }
 
     public handleLoadedCard(card: LightCard) {
