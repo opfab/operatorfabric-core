@@ -7,7 +7,7 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {AfterViewChecked, AfterViewInit, Component, Input, OnInit, Output} from '@angular/core';
+import {AfterViewChecked, Component, Input, OnInit, Output} from '@angular/core';
 import {LightCard} from '@ofModel/light-card.model';
 import {Observable, Subject} from 'rxjs';
 import {NgbModalRef} from '@ng-bootstrap/ng-bootstrap/modal/modal-ref';
@@ -30,7 +30,7 @@ import {UserPreferencesService} from 'app/business/services/user-preference.serv
     templateUrl: './card-list.component.html',
     styleUrls: ['./card-list.component.scss']
 })
-export class CardListComponent implements AfterViewChecked, OnInit, AfterViewInit {
+export class CardListComponent implements AfterViewChecked, OnInit {
     @Input() public lightCards: LightCard[];
     @Input() public selection: Observable<string>;
     @Input() public totalNumberOfLightsCards: number;
@@ -48,8 +48,6 @@ export class CardListComponent implements AfterViewChecked, OnInit, AfterViewIni
     defaultSorting: string;
     defaultAcknowledgmentFilter: string;
 
-    domCardListElement;
-    domFiltersElement;
 
     filterActive: boolean;
     filterOpen: boolean;
@@ -87,30 +85,27 @@ export class CardListComponent implements AfterViewChecked, OnInit, AfterViewIni
         this.initFilterActive();
     }
 
-    ngAfterViewInit() {
-        this.domCardListElement = document.getElementById('opfab-card-list');
-    }
+
 
     ngAfterViewChecked() {
         this.adaptFrameHeight();
     }
 
     adaptFrameHeight() {
-
-        if (!!this.domCardListElement) {
-            const rect = this.domCardListElement.getBoundingClientRect();
-            let height = window.innerHeight - rect.top - 30;
+        const domCardListElement = document.getElementById('opfab-card-list');
+        if (!!domCardListElement) {
+            const rect = domCardListElement.getBoundingClientRect();
+            let height = window.innerHeight - rect.top - 50;
             if (this.hideAckAllCardsFeature) height = window.innerHeight - rect.top - 10;
-            this.domCardListElement.style.maxHeight = `${height}px`;
+            domCardListElement.style.maxHeight = `${height}px`;
         }
 
-        this.domFiltersElement = document.getElementById('opfab-filters');
-
-        if (!!this.domFiltersElement) {
-            const rect = this.domFiltersElement.getBoundingClientRect();
-            let height = window.innerHeight - rect.top - 30;
+        const domFiltersElement = document.getElementById('opfab-filters');
+        if (!!domFiltersElement) {
+            const rect = domFiltersElement.getBoundingClientRect();
+            let height = window.innerHeight - rect.top - 50;
             if (this.hideAckAllCardsFeature) height = window.innerHeight - rect.top - 10;
-            this.domFiltersElement.style.maxHeight = `${height}px`;
+            domFiltersElement.style.maxHeight = `${height}px`;
         }
     }
 
