@@ -364,3 +364,18 @@ opfab:
       response-card:
         topicname: opfab-card-response
 ----
+
+Example Kafka configuration OAUTHBEARER / AADToken:
+[source, yaml]
+----
+spring:
+  kafka:
+    consumer:
+      properties:
+        "[security.protocol]": SASL_SSL
+        "[sasl.jaas.config]": org.apache.kafka.common.security.oauthbearer.OAuthBearerLoginModule required ;
+        "[sasl.mechanism]": OAUTHBEARER
+        "[sasl.login.callback.handler.class]": org.opfab.cards.publication.kafka.auth.AADWorkloadIdentityLoginCallbackHandler
+    producer:
+      ...the same...
+----
