@@ -16,6 +16,7 @@ import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.aggregation.Aggregation;
 import org.springframework.data.mongodb.core.aggregation.AggregationOperation;
 import org.springframework.data.mongodb.core.query.Criteria;
+import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.util.MultiValueMap;
 
 import java.time.Instant;
@@ -31,6 +32,7 @@ import static org.springframework.data.mongodb.core.aggregation.Aggregation.*;
 public class UserActionLogCustomRepositoryImpl implements  UserActionLogCustomRepository {
 
     private final MongoTemplate template;
+    private static final String COLLECTION_NAME = "userActionLogs";
 
     public UserActionLogCustomRepositoryImpl(MongoTemplate template) {
         this.template = template;
@@ -40,8 +42,8 @@ public class UserActionLogCustomRepositoryImpl implements  UserActionLogCustomRe
     public Page<UserActionLog> findByParams(MultiValueMap<String, String> params, Pageable pageable) {
         Aggregation agg = newAggregation( this.getOperations(params, pageable));
         Aggregation countAgg = newAggregation( this.getOperationsForCount(params));
-        List<UserActionLog> results = template.aggregate(agg, "userActionLogs", UserActionLog.class).getMappedResults();
-        String count = template.aggregate(countAgg, "userActionLogs", String.class).getUniqueMappedResult();
+        List<UserActionLog> results = template.aggregate(agg, COLLECTION_NAME, UserActionLog.class).getMappedResults();
+        String count = template.aggregate(countAgg, COLLECTION_NAME, String.class).getUniqueMappedResult();
 
         long totalSize = count != null ? getCountFromJson(count) : 0;
         return new PageImpl<>(results, pageable, totalSize);
@@ -100,6 +102,12 @@ public class UserActionLogCustomRepositoryImpl implements  UserActionLogCustomRe
             else criteria.add(Criteria.where(key).in(values));
         });
         return criteria;
+    }
+
+    public void deleteExpiredLogs (Instant expirationDate) {
+        Query expiredLogs = new Query();
+        expiredLogs.addCriteria(Criteria.where("date").lt(expirationDate));
+        this.template.remove(expiredLogs, UserActionLog.class, COLLECTION_NAME);
     }
 
 }

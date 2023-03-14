@@ -101,6 +101,7 @@ The user service has these specific properties :
 |operatorfabric.users.default.user-settings|null|no| Array of user settings objects to create upon startup if they don't exist
 |operatorfabric.users.default.groups|null|no| Array of group objects to create upon startup if they don't exist
 |operatorfabric.users.default.entities|null|no| Array of entity objects to create upon startup if they don't exist
+|daysBeforeLogExpiration|61|no| Duration past which user action logs get automatically deleted
 
 |===
 

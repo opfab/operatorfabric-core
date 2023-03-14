@@ -157,3 +157,6 @@ operatorfabric.users.default:
 #logging:
 #  level:
 #    ROOT: DEBUG
+
+daysBeforeLogExpiration: 61
+hourScheduledForLogsCleaning: 0 30 0 * * *

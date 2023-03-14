@@ -1,4 +1,4 @@
-/* Copyright (c) 2022, RTE (http://www.rte-france.com)
+/* Copyright (c) 2022-2023, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -18,9 +18,13 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.util.MultiValueMap;
 
+import lombok.extern.slf4j.Slf4j;
+
 import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
 
+@Slf4j
 @Service
 public class UserActionLogService {
 
@@ -30,7 +34,8 @@ public class UserActionLogService {
         this.userActionLogRepository = userActionLogRepository;
     }
 
-    public void insertUserActionLog(String login, UserActionEnum actionType, List<String> entities, String cardUid, String comment) {
+    public void insertUserActionLog(String login, UserActionEnum actionType, List<String> entities, String cardUid,
+            String comment) {
         UserActionLog action = UserActionLog.builder().login(login)
                 .action(actionType)
                 .date(Instant.now())
@@ -40,6 +45,7 @@ public class UserActionLogService {
                 .build();
         this.insertUserActionLog(action);
     }
+
     public void insertUserActionLog(UserActionLog action) {
         this.userActionLogRepository.save(action);
     }
@@ -50,6 +56,12 @@ public class UserActionLogService {
 
     public Page<UserActionLog> getUserActionLogsByParams(MultiValueMap<String, String> params, Pageable pageable) {
         return this.userActionLogRepository.findByParams(params, pageable);
+    }
+
+    public void deleteLogsByExpirationDate(Integer daysStored) {     
+        Instant expirationDate = Instant.now().minus(daysStored, ChronoUnit.DAYS);
+        this.userActionLogRepository.deleteExpiredLogs(expirationDate);
+        log.info(String.format("User action logs older than %2d days have been deleted", daysStored));
     }
 
 }
