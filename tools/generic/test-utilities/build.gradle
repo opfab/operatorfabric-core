@@ -1,3 +1,4 @@
 dependencies{
     implementation testing_deps.assertJ
+    implementation project(':tools:generic:utilities')
 }

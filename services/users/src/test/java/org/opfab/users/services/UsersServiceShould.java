@@ -20,6 +20,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
+import org.opfab.test.EventBusSpy;
 import org.opfab.users.model.EntityCreationReport;
 import org.opfab.users.model.EntityData;
 import org.opfab.users.model.GroupData;
@@ -30,7 +31,6 @@ import org.opfab.users.model.RightsEnum;
 import org.opfab.users.model.StateRightData;
 import org.opfab.users.model.User;
 import org.opfab.users.model.UserData;
-import org.opfab.users.spies.EventBusSpy;
 import org.opfab.users.stubs.EntityRepositoryStub;
 import org.opfab.users.stubs.GroupRepositoryStub;
 import org.opfab.users.stubs.PerimeterRepositoryStub;
@@ -487,7 +487,7 @@ public class UsersServiceShould {
             assertThat(result.isSuccess()).isTrue();
             assertThat(userRepositoryStub.findById("user3").get().getFirstName()).isEqualTo("newFirstName");
             
-            String[] expectedMessageSent = {"USER_EXCHANGE","user3"};
+            String[] expectedMessageSent = {"user","user3"};
             assertThat(eventBusSpy.getMessagesSent()).containsOnly(expectedMessageSent);
         }
 

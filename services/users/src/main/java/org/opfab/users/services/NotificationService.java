@@ -12,6 +12,7 @@ import java.util.List;
 
 import org.opfab.users.model.User;
 import org.opfab.users.repositories.UserRepository;
+import org.opfab.utilities.eventbus.EventBus;
 
 public class NotificationService {
 
@@ -36,7 +37,7 @@ public class NotificationService {
     }
 
     public void publishUpdatedUserMessage(String userLogin) {
-        eventBus.sendEvent("USER_EXCHANGE", userLogin);
+        eventBus.sendEvent("user", userLogin);
     }
 
 }

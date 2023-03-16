@@ -22,13 +22,13 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.Nested;
+import org.opfab.test.EventBusSpy;
 import org.opfab.users.model.Entity;
 import org.opfab.users.model.EntityCreationReport;
 import org.opfab.users.model.EntityData;
 import org.opfab.users.model.OperationResult;
 import org.opfab.users.model.User;
 import org.opfab.users.model.UserData;
-import org.opfab.users.spies.EventBusSpy;
 import org.opfab.users.stubs.EntityRepositoryStub;
 import org.opfab.users.stubs.UserRepositoryStub;
 
@@ -204,9 +204,9 @@ class EntitiesServiceShould {
             OperationResult<String> result = entitiesService.deleteEntity("entity2");
             assertThat(result.isSuccess()).isTrue();
 
-            String[] expectedMessageSent1 = { "USER_EXCHANGE", "user1" };
-            String[] expectedMessageSent2 = { "USER_EXCHANGE", "user2" };
-            String[] expectedMessageSent3 = { "USER_EXCHANGE", "" }; // reload config for all users
+            String[] expectedMessageSent1 = { "user", "user1" };
+            String[] expectedMessageSent2 = { "user", "user2" };
+            String[] expectedMessageSent3 = { "user", "" }; // reload config for all users
             assertThat(eventBusSpy.getMessagesSent()).containsExactlyInAnyOrder(expectedMessageSent1,
                     expectedMessageSent2, expectedMessageSent3);
         }
@@ -269,8 +269,8 @@ class EntitiesServiceShould {
                 OperationResult<String> result = entitiesService.addEntityUsers("entity1", users);
                 assertThat(result.isSuccess()).isTrue();
 
-                String[] expectedMessageSent1 = { "USER_EXCHANGE", "user2" };
-                String[] expectedMessageSent2 = { "USER_EXCHANGE", "user3" };
+                String[] expectedMessageSent1 = { "user", "user2" };
+                String[] expectedMessageSent2 = { "user", "user3" };
                 assertThat(eventBusSpy.getMessagesSent()).containsExactlyInAnyOrder(expectedMessageSent1,
                         expectedMessageSent2);
             }
@@ -346,11 +346,11 @@ class EntitiesServiceShould {
                 OperationResult<String> result = entitiesService.updateEntityUsers("entity1", users);
                 assertThat(result.isSuccess()).isTrue();
 
-                String[] expectedMessageSent1 = { "USER_EXCHANGE", "user1" };
+                String[] expectedMessageSent1 = { "user", "user1" };
                 // user1 is notified because he is in entity but he was already in entity so it is
                 // not necessary , code may be improved
-                String[] expectedMessageSent2 = { "USER_EXCHANGE", "user2" };
-                String[] expectedMessageSent3 = { "USER_EXCHANGE", "user3" };
+                String[] expectedMessageSent2 = { "user", "user2" };
+                String[] expectedMessageSent3 = { "user", "user3" };
                 assertThat(eventBusSpy.getMessagesSent()).containsExactlyInAnyOrder(expectedMessageSent1,
                         expectedMessageSent2, expectedMessageSent3);
             }
@@ -362,8 +362,8 @@ class EntitiesServiceShould {
                 OperationResult<String> result = entitiesService.updateEntityUsers("entity2", users);
                 assertThat(result.isSuccess()).isTrue();
 
-                String[] expectedMessageSent1 = { "USER_EXCHANGE", "user1" };
-                String[] expectedMessageSent2 = { "USER_EXCHANGE", "user2" };
+                String[] expectedMessageSent1 = { "user", "user1" };
+                String[] expectedMessageSent2 = { "user", "user2" };
                 assertThat(eventBusSpy.getMessagesSent()).containsExactlyInAnyOrder(expectedMessageSent1,
                         expectedMessageSent2);
             }
@@ -395,8 +395,8 @@ class EntitiesServiceShould {
             void GIVEN_A_Entity_With_User_WHEN_Remove_Users_THEN_A_Notification_Containing_Users_Updated_Is_Sent_To_Other_Services() {
                 OperationResult<String> result = entitiesService.deleteEntityUsers("entity2");
                 assertThat(result.isSuccess()).isTrue();
-                String[] expectedMessageSent1 = { "USER_EXCHANGE", "user1" };
-                String[] expectedMessageSent2 = { "USER_EXCHANGE", "user2" };
+                String[] expectedMessageSent1 = { "user", "user1" };
+                String[] expectedMessageSent2 = { "user", "user2" };
                 assertThat(eventBusSpy.getMessagesSent()).containsExactlyInAnyOrder(expectedMessageSent1,
                         expectedMessageSent2);
             }
@@ -429,7 +429,7 @@ class EntitiesServiceShould {
             void GIVEN_A_User_WHEN_Remove_From_Entity_THEN_A_Notification_Containing_User_Updated_Is_Sent_To_Other_Services() {
                 OperationResult<String> result = entitiesService.deleteEntityUser("entity1", "user1");
                 assertThat(result.isSuccess()).isTrue();
-                String[] expectedMessageSent1 = { "USER_EXCHANGE", "user1" };
+                String[] expectedMessageSent1 = { "user", "user1" };
                 assertThat(eventBusSpy.getMessagesSent()).containsExactlyInAnyOrder(expectedMessageSent1);
             }
         }

@@ -16,13 +16,14 @@ import org.opfab.businessconfig.controllers.BusinessconfigController;
 import org.opfab.businessconfig.controllers.CustomExceptionHandler;
 import org.opfab.businessconfig.services.MonitoringService;
 import org.opfab.businessconfig.services.ProcessesService;
+import org.opfab.test.EventBusSpy;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.annotation.Import;
 
 @SpringBootApplication
-@Import({ProcessesService.class, MonitoringService.class, CustomExceptionHandler.class, JacksonConfig.class, BusinessconfigController.class})
+@Import({ProcessesService.class, MonitoringService.class, CustomExceptionHandler.class, JacksonConfig.class, BusinessconfigController.class,EventBusSpy.class})
 
 public class IntegrationTestApplication {
 

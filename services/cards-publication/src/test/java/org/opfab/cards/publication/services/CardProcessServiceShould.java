@@ -19,7 +19,6 @@ import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.opfab.cards.model.SeverityEnum;
 import org.opfab.cards.publication.application.UnitTestApplication;
-import org.opfab.cards.publication.configuration.TestCardReceiver;
 import org.opfab.cards.publication.model.ArchivedCardPublicationData;
 import org.opfab.cards.publication.model.CardPublicationData;
 import org.opfab.cards.publication.model.HoursAndMinutes;
@@ -31,6 +30,7 @@ import org.opfab.cards.publication.model.TimeSpanPublicationData;
 import org.opfab.cards.publication.repositories.ArchivedCardRepositoryForTest;
 import org.opfab.cards.publication.repositories.CardRepositoryForTest;
 import org.opfab.springtools.error.model.ApiErrorException;
+import org.opfab.test.EventBusSpy;
 import org.opfab.users.model.ComputedPerimeter;
 import org.opfab.users.model.CurrentUserWithPerimeters;
 import org.opfab.users.model.RightsEnum;
@@ -91,8 +91,9 @@ class CardProcessServiceShould {
     @Autowired
     private ArchivedCardRepositoryForTest archiveRepository;
 
+
     @Autowired
-    private TestCardReceiver testCardReceiver;
+    private EventBusSpy eventBusSpy;
 
     @Autowired
     private CardRepositoryService cardRepositoryService;
@@ -107,12 +108,12 @@ class CardProcessServiceShould {
     public void cleanAfter() {
         cardRepository.deleteAll();
         archiveRepository.deleteAll();
-        testCardReceiver.clear();
+        eventBusSpy.clearMessageSent();
     }
 
     @BeforeEach
     public void cleanBefore() {
-        testCardReceiver.clear();
+        eventBusSpy.clearMessageSent();
     }
 
         @BeforeEach
@@ -422,7 +423,7 @@ class CardProcessServiceShould {
         assertThat(archivedPersistedCard.getTitleTranslated()).isEqualTo("Title translated");
         assertThat(archivedPersistedCard.getSummaryTranslated()).isEqualTo("Summary translated value1");
 
-        assertThat(testCardReceiver.getCardQueue()).hasSize(1);
+        assertThat(eventBusSpy.getMessagesSent()).hasSize(1);
     }
 
     private boolean checkCardCount(long expectedCount) {

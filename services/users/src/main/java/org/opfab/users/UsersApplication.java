@@ -15,7 +15,7 @@ import org.opfab.users.mongo.repositories.CachedGroupRepositoryImpl;
 import org.opfab.users.mongo.repositories.PerimeterRepositoryImpl;
 import org.opfab.users.mongo.repositories.UserRepositoryImpl;
 import org.opfab.users.mongo.repositories.UserSettingsRepositoryImpl;
-import org.opfab.users.rabbit.RabbitEventBus;
+import org.opfab.utilities.eventbus.rabbit.RabbitEventBus;
 import org.opfab.springtools.configuration.mongo.EnableOperatorFabricMongo;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

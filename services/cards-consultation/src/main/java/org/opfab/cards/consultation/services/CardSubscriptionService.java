@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2022, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2023, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -17,6 +17,8 @@ import org.opfab.useractiontracing.model.UserActionEnum;
 import org.opfab.useractiontracing.services.UserActionLogService;
 import org.opfab.springtools.configuration.oauth.UserServiceCache;
 import org.opfab.users.model.CurrentUserWithPerimeters;
+import org.opfab.utilities.eventbus.EventBus;
+import org.opfab.utilities.eventbus.EventListener;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
@@ -25,7 +27,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 @Service
 @Slf4j
-public class CardSubscriptionService {
+public class CardSubscriptionService implements EventListener {
 
     @Value("${checkIfUserIsAlreadyConnected:true}")
     private boolean checkIfUserIsAlreadyConnected;
@@ -44,10 +46,17 @@ public class CardSubscriptionService {
     public CardSubscriptionService(
                                     UserServiceCache userServiceCache,
                                     UserActionLogService userActionLogService,
+                                    EventBus eventBus,
                                    @Value("${operatorfabric.heartbeat.delay:10000}")
                                    long heartbeatDelay) {
         this.userServiceCache = userServiceCache;
         this.userActionLogService = userActionLogService;
+
+        eventBus.addListener("card",this);
+        eventBus.addListener("process",this);
+        eventBus.addListener("user",this);
+        eventBus.addListener("ack",this);
+        
         this.heartbeatDelay = heartbeatDelay;
         Thread heartbeat = new Thread(){
             @Override
@@ -57,6 +66,7 @@ public class CardSubscriptionService {
           };
         
         heartbeat.start();
+
     }
 
 
@@ -186,26 +196,6 @@ public class CardSubscriptionService {
         return cache.values();
     }
 
-
-    public void onMessage(String queueName, String message) {
-
-        log.debug("receive from rabbit queue {} message {}", queueName, message);
-        switch (queueName) {
-            case "process":
-            case "ack":
-                cache.values().forEach(subscription -> subscription.publishDataIntoSubscription(message));
-                break;
-            case "user":
-                cache.values().forEach(subscription -> subscription.publishDataIntoSubscription("USER_CONFIG_CHANGE"));
-                break;
-            case "card":
-                cache.values().forEach(subscription -> processNewCard(message, subscription));
-                break;
-            default:
-                log.info("unrecognized queue {}" , queueName);
-        }
-    }
-
     private void processNewCard(String cardAsString, CardSubscription subscription) {
         JSONObject card;
         try {
@@ -238,6 +228,25 @@ public class CardSubscriptionService {
 
     private void logUserAction(String login, UserActionEnum actionType, List<String> entities, String cardUid, String comment) {
         if (userActionLogActivated) userActionLogService.insertUserActionLog(login,  actionType, entities, cardUid, comment);
+    }
+
+
+    @Override
+    public void onEvent(String eventKey, String message) {
+        log.debug("receive event {} with message {}", eventKey, message);
+        switch (eventKey) {
+            case "process","ack":
+                cache.values().forEach(subscription -> subscription.publishDataIntoSubscription(message));
+                break;
+            case "user":
+                cache.values().forEach(subscription -> subscription.publishDataIntoSubscription("USER_CONFIG_CHANGE"));
+                break;
+            case "card":
+                cache.values().forEach(subscription -> processNewCard(message, subscription));
+                break;
+            default:
+                log.info("unrecognized event {}" , eventKey);
+        }
     }
 
 }

@@ -1,4 +1,4 @@
-// Copyright (c) 2018-2022 RTE (http://www.rte-france.com)
+// Copyright (c) 2018-2023 RTE (http://www.rte-france.com)
 // See AUTHORS.txt
 // This document is subject to the terms of the Creative Commons Attribution 4.0 International license.
 // If a copy of the license was not distributed with this
@@ -49,14 +49,10 @@ service communication
 
 RabbitMQ is required for :
 
-* Card AMQP push
-* Multiple service sync
+* Card push
+* Service synchronization
 
-MongoDB is required for :
-
-* Current Card storage
-* Archived Card storage
-* User Storage
+MongoDB is required for data storage
 
 IMPORTANT: Installing MongoDB and RabbitMQ is not necessary as preconfigured
 MongoDB and RabbitMQ are available in the form of docker-compose configuration

@@ -7,12 +7,13 @@
  * This file is part of the OperatorFabric project.
  */
 
-package org.opfab.users.spies;
+package org.opfab.test;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import org.opfab.users.services.EventBus;
+import org.opfab.utilities.eventbus.EventBus;
+import org.opfab.utilities.eventbus.EventListener;
 
 public class EventBusSpy implements EventBus {
 
@@ -29,6 +30,15 @@ public class EventBusSpy implements EventBus {
 
     public List<String[]> getMessagesSent() {
         return new ArrayList<>(messagesSent);
+    }
+
+    public void clearMessageSent() {
+        messagesSent = new ArrayList<>();
+    }
+
+    @Override
+    public void addListener(String eventKey, EventListener eventListener) {
+        // not implemented
     }
     
 }
