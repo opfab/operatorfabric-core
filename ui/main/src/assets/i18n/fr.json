@@ -563,6 +563,7 @@
   },
   "errors" : {
     "notFound" : "Ressource non trouvée",
-    "notAllowed" : "Action non autorisée"
+    "notAllowed" : "Action non autorisée",
+    "pageNotAllowed": "Vous n'êtes pas autorisé à voir cette page"
   } 
 }

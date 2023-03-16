@@ -53,6 +53,7 @@ public class WebSecurityConfiguration {
     public static final String USER_ACTION_LOGS = "/userActionLogs";
     public static final String CURRENTUSER_INTERNAL_PATH = "/internal/CurrentUserWithPerimeters";
     public static final String ADMIN_ROLE = "ADMIN";
+    public static final String VIEW_USER_ACTION_LOGS_ROLE = "VIEW_USER_ACTION_LOGS";
 
     
     @Bean
@@ -89,7 +90,7 @@ public class WebSecurityConfiguration {
                 .requestMatchers(HttpMethod.GET, ENTITIES).access(authenticatedAndIpAllowed())   // OC-1067 : we authorize all users for GET /entities
                 .requestMatchers(ENTITIES_PATH).access(hasAnyRoleAndIpAllowed(ADMIN_ROLE))
                 .requestMatchers(PERIMETERS_PATH).access(hasAnyRoleAndIpAllowed(ADMIN_ROLE))
-                .requestMatchers(USER_ACTION_LOGS).access(hasAnyRoleAndIpAllowed(ADMIN_ROLE))
+                .requestMatchers(USER_ACTION_LOGS).access(hasAnyRoleAndIpAllowed(ADMIN_ROLE,VIEW_USER_ACTION_LOGS_ROLE))
                 .requestMatchers(CURRENTUSER_INTERNAL_PATH).authenticated()
                 .requestMatchers(LOGGERS_PATH).hasRole(ADMIN_ROLE)
                 .anyRequest().access(authenticatedAndIpAllowed());

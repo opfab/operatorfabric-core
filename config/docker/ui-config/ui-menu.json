@@ -54,7 +54,7 @@
     {
       "id": "useractionlogs",
       "visible": true,
-      "showOnlyForGroups": ["ADMIN"]
+      "showOnlyForGroups": ["ADMIN","Supervisor"]
     },
     {
       "id": "nightdaymode",
