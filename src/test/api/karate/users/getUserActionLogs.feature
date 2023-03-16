@@ -1,10 +1,12 @@
 Feature: Get user action logs
   Background:
-   #Getting token for admin and operator1_fr user calling getToken.feature
+   #Getting token for admin, supervisor and operator1_fr user calling getToken.feature
     * def signIn = callonce read('../common/getToken.feature') { username: 'admin'}
     * def authToken = signIn.authToken
     * def signInAsTSO = callonce read('../common/getToken.feature') { username: 'operator1_fr'}
     * def authTokenAsTSO = signInAsTSO.authToken
+    * def signInAsSupervisor = callonce read('../common/getToken.feature') { username: 'itsupervisor1'}
+    * def authTokenAsSupervisor = signInAsSupervisor.authToken
 
 
   Scenario: Get user actions logs as admin
@@ -14,7 +16,12 @@ Feature: Get user action logs
     When method get
     Then status 200
 
-
+  Scenario: Get user actions logs as supervisor with VIEW_ACTION_LOGS permission
+    # get all users actions as admin
+    Given url opfabUrl + 'users/userActionLogs'
+    And header Authorization = 'Bearer ' + authTokenAsSupervisor
+    When method get
+    Then status 200
 
   Scenario: Get user actions log without authentication
     # Without authentication, response expected 401

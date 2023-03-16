@@ -570,6 +570,7 @@
   },
   "errors" : {
     "notFound" : "Bron niet gevonden",
-    "notAllowed" : "Actie niet toegestaan"
+    "notAllowed" : "Actie niet toegestaan",
+    "pageNotAllowed" : "Je mag deze pagina niet bekijken"
   } 
 }

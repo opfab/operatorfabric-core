@@ -148,6 +148,8 @@ public class OAuth2UsersConfiguration {
                     authorities.addAll(AuthorityUtils.createAuthorityList("ROLE_ADMIN"));
                 if (permissionsData.contains(PermissionEnum.ADMIN_BUSINESS_PROCESS))
                     authorities.addAll(AuthorityUtils.createAuthorityList("ROLE_ADMIN_BUSINESS_PROCESS"));
+                if (permissionsData.contains(PermissionEnum.VIEW_USER_ACTION_LOGS))
+                    authorities.addAll(AuthorityUtils.createAuthorityList("ROLE_VIEW_USER_ACTION_LOGS"));
                 
                 return authorities;
             }

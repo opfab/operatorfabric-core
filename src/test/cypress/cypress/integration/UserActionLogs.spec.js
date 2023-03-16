@@ -67,7 +67,6 @@ describe ('User action logs page',()=>{
         //logout
         cy.get('#opfab-navbar-right-menu-logout').click();
 
-
         cy.waitDefaultTime();
         opfab.loginWithUser('admin');
         opfab.navigateToUserActionLogs();
@@ -193,7 +192,21 @@ describe ('User action logs page',()=>{
         // Check the response has been integrated in the template
         cy.get('#childs-div').find('tr').should('have.length', 2);
 
+
     });
+
+    it('View as itsupervisor with permission VIEW_USER_ACTION_LOGS', ()=> {
+
+        opfab.loginWithUser('itsupervisor1');
+        opfab.navigateToUserActionLogs();
+
+
+        cy.get('#opfab-useractionlogs-btn-search').click();
+
+        cy.get('.opfab-pagination').should('contain.text', ' Results number  : 16');
+        agGrid.cellShould('ag-grid-angular', 0, 1, 'have.text', 'OPEN_SUBSCRIPTION');
+        agGrid.cellShould('ag-grid-angular', 0, 2, 'have.text', 'itsupervisor1');
+    })
 
 
     function sendQuestionCard() {
