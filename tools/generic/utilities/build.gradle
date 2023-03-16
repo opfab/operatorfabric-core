@@ -1,8 +1,10 @@
 dependencies{
     implementation misc.compress
+    implementation misc.commonsPool
     implementation misc.handlebars
     implementation misc.jacksonDatabind
-    implementation boot.starterRabbitmq
+    implementation boot.starterWeb
+    implementation misc.rabbitMQ
     testImplementation misc.slf4j
     testImplementation project(':tools:generic:test-utilities')
     implementation misc.commonsText

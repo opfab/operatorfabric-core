@@ -14,7 +14,7 @@ package org.opfab.users.controllers;
 import org.opfab.springtools.error.model.ApiError;
 import org.opfab.springtools.error.model.ApiErrorException;
 import org.opfab.users.model.*;
-import org.opfab.users.rabbit.RabbitEventBus;
+import org.opfab.utilities.eventbus.EventBus;
 import org.opfab.users.repositories.GroupRepository;
 import org.opfab.users.repositories.PerimeterRepository;
 import org.opfab.users.repositories.UserRepository;
@@ -36,8 +36,8 @@ public class GroupsController implements GroupsApi {
     
     private GroupsService groupsService; 
 
-    public GroupsController(GroupRepository groupRepository,UserRepository userRepository,PerimeterRepository perimeterRepository,RabbitEventBus rabbitEventBus) {
-        NotificationService notificationService = new NotificationService(userRepository, rabbitEventBus);
+    public GroupsController(GroupRepository groupRepository,UserRepository userRepository,PerimeterRepository perimeterRepository,EventBus eventBus) {
+        NotificationService notificationService = new NotificationService(userRepository, eventBus);
         this.groupsService = new GroupsService(groupRepository, userRepository, perimeterRepository, notificationService);
     }
 

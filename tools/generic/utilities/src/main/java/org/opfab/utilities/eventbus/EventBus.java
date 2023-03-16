@@ -7,8 +7,9 @@
  * SPDX-License-Identifier: MPL-2.0
  * This file is part of the OperatorFabric project.
  */
-package org.opfab.users.services;
+package org.opfab.utilities.eventbus;
 
 public interface EventBus {
     public void sendEvent(String eventKey,String eventMessage);
+    public void addListener(String eventKey,EventListener eventListener);
 }

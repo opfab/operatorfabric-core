@@ -26,7 +26,7 @@ import org.opfab.users.repositories.UserSettingsRepository;
 import org.opfab.users.services.NotificationService;
 import org.opfab.users.services.UserSettingsService;
 import org.opfab.users.services.UsersService;
-import org.opfab.users.rabbit.RabbitEventBus;
+import org.opfab.utilities.eventbus.EventBus;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -53,8 +53,8 @@ public class UsersController implements UsersApi, UserExtractor {
     private UserSettingsService userSettingsService;
     private NotificationService notificationService;
 
-    public UsersController(UserRepository userRepository,UserSettingsRepository userSettingsRepository, GroupRepository groupRepository, EntityRepository entityRepository, PerimeterRepository perimeterRepository,RabbitEventBus rabbitEventBus) {
-        this.notificationService = new NotificationService(userRepository, rabbitEventBus);
+    public UsersController(UserRepository userRepository,UserSettingsRepository userSettingsRepository, GroupRepository groupRepository, EntityRepository entityRepository, PerimeterRepository perimeterRepository,EventBus eventBus) {
+        this.notificationService = new NotificationService(userRepository, eventBus);
         usersService = new UsersService(userRepository,groupRepository,entityRepository,perimeterRepository,notificationService);
         userSettingsService = new UserSettingsService(userSettingsRepository,usersService,notificationService);
         }

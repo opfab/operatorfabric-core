@@ -21,6 +21,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
+import org.opfab.test.EventBusSpy;
 import org.opfab.users.model.OperationResult;
 import org.opfab.users.model.Perimeter;
 import org.opfab.users.model.PerimeterData;
@@ -29,7 +30,6 @@ import org.opfab.users.model.StateRight;
 import org.opfab.users.model.StateRightData;
 import org.opfab.users.model.UserSettings;
 import org.opfab.users.model.UserSettingsData;
-import org.opfab.users.spies.EventBusSpy;
 import org.opfab.users.stubs.UserRepositoryStub;
 import org.opfab.users.stubs.UsersServiceStub;
 import org.opfab.users.stubs.UserSettingsRepositoryStub;
@@ -185,7 +185,7 @@ public class UserSettingsServiceShould {
                         OperationResult<UserSettings> settings = userSettingsService.patchUserSettings("user1",
                                         newSettings);
                         assertThat(settings.isSuccess()).isTrue();
-                        String[] expectedMessageSent1 = { "USER_EXCHANGE", "user1" };
+                        String[] expectedMessageSent1 = { "user", "user1" };
                         assertThat(eventBusSpy.getMessagesSent()).containsExactlyInAnyOrder(expectedMessageSent1);
 
                 }
@@ -280,7 +280,7 @@ public class UserSettingsServiceShould {
                         OperationResult<UserSettings> settings = userSettingsService.updateUserSettings("user1",
                                         newSettings);
                         assertThat(settings.isSuccess()).isTrue();
-                        String[] expectedMessageSent1 = { "USER_EXCHANGE", "user1" };
+                        String[] expectedMessageSent1 = { "user", "user1" };
                         assertThat(eventBusSpy.getMessagesSent()).containsExactlyInAnyOrder(expectedMessageSent1);
 
                 }
@@ -291,7 +291,7 @@ public class UserSettingsServiceShould {
                                         .build();
                         OperationResult<UserSettings> settings = userSettingsService.updateUserSettings("user1",newSettings);
                         assertThat(settings.isSuccess()).isTrue();
-                        String[] expectedMessageSent1 = { "USER_EXCHANGE", "user1" };
+                        String[] expectedMessageSent1 = { "user", "user1" };
                         assertThat(eventBusSpy.getMessagesSent()).containsExactlyInAnyOrder(expectedMessageSent1);
 
                 }

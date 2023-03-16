@@ -14,13 +14,15 @@ package org.opfab.businessconfig.services;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.collect.HashBasedTable;
 import com.google.common.collect.Table;
+
+
 import lombok.extern.slf4j.Slf4j;
 import org.opfab.businessconfig.model.Process;
 import org.opfab.businessconfig.model.*;
 import org.opfab.springtools.error.model.ApiError;
 import org.opfab.springtools.error.model.ApiErrorException;
 import org.opfab.utilities.PathUtils;
-import org.springframework.amqp.rabbit.core.RabbitTemplate;
+import org.opfab.utilities.eventbus.EventBus;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ResourceLoaderAware;
 import org.springframework.core.io.Resource;
@@ -32,7 +34,6 @@ import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
 import jakarta.annotation.PostConstruct;
 import jakarta.validation.ConstraintViolation;
 import java.io.*;
-import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -40,7 +41,6 @@ import java.nio.file.StandardCopyOption;
 import java.util.*;
 import java.util.function.BiConsumer;
 import java.util.function.Function;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 /**
@@ -64,15 +64,15 @@ public class ProcessesService implements ResourceLoaderAware {
     private LocalValidatorFactoryBean validator;
     private ProcessGroupsData processGroupsCache;
     private RealTimeScreensData realTimeScreensCache;
-    private final RabbitTemplate rabbitTemplate;
+    private EventBus eventBus;
     
 
-    public ProcessesService(ObjectMapper objectMapper, LocalValidatorFactoryBean validator, RabbitTemplate rabbitTemplate) {
+    public ProcessesService(ObjectMapper objectMapper, LocalValidatorFactoryBean validator, EventBus eventBus) {
         this.objectMapper = objectMapper;
         this.completeCache = HashBasedTable.create();
         this.defaultCache = new HashMap<>();
         this.validator = validator;
-        this.rabbitTemplate = rabbitTemplate;
+        this.eventBus = eventBus;
     }
     
     @PostConstruct
@@ -376,7 +376,7 @@ public class ProcessesService implements ResourceLoaderAware {
 
         //update cache
         processGroupsCache = newProcessGroups;
-        pushProcessChangeInRabbit();
+        pushProcessChangeInEventBus();
     }
 
     /**
@@ -411,7 +411,7 @@ public class ProcessesService implements ResourceLoaderAware {
         defaultCache.put(process.getId(),process);
         completeCache.put(process.getId(), process.getVersion(), process);
 
-        pushProcessChangeInRabbit();
+        pushProcessChangeInEventBus();
 
         //retieve newly loaded process from cache
         return fetch(process.getId(), process.getVersion());
@@ -450,7 +450,7 @@ public class ProcessesService implements ResourceLoaderAware {
     	PathUtils.delete(processRootPath);
     	log.debug("removed process:{} from filesystem", id);
     	removeFromCache(id);
-        pushProcessChangeInRabbit();
+        pushProcessChangeInEventBus();
     }
     
     /**
@@ -506,7 +506,7 @@ public class ProcessesService implements ResourceLoaderAware {
 			PathUtils.delete(processVersionPath);
 			log.debug("removed process:{} with version:{} from filesystem", id, version);
 			completeCache.remove(id,version);
-            pushProcessChangeInRabbit();
+            pushProcessChangeInEventBus();
 		}
 	}
 
@@ -534,7 +534,7 @@ public class ProcessesService implements ResourceLoaderAware {
             this.defaultCache.clear();
             this.processGroupsCache.clear();
         }
-        pushProcessChangeInRabbit();
+        pushProcessChangeInEventBus();
     }
         
     /**
@@ -574,9 +574,8 @@ public class ProcessesService implements ResourceLoaderAware {
     	return Optional.ofNullable(resultMessage);
     }
 
-    private void pushProcessChangeInRabbit() {
-        rabbitTemplate.convertAndSend("PROCESS_EXCHANGE", "", "BUSINESS_CONFIG_CHANGE");
-        log.debug("Operation BUSINESS_CONFIG_CHANGE sent to PROCESS_EXCHANGE");
+    private void pushProcessChangeInEventBus() {
+        eventBus.sendEvent("process","BUSINESS_CONFIG_CHANGE");
     }
 
     /**

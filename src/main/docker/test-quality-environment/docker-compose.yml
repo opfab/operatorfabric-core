@@ -1,11 +1,5 @@
 version: '2.1'
 services:
-  rabbitmq:
-    image: rabbitmq:3-management
-    ports:
-      - "5672:5672"
-      - "15672:15672"
-      - "15674:15674"
   mongodb:
     image: mongo:4.4.6-bionic
     ports:

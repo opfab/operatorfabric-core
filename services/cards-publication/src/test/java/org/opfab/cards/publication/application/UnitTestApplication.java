@@ -12,8 +12,6 @@
 package org.opfab.cards.publication.application;
 
 import org.opfab.useractiontracing.UserActionLogsConfiguration;
-import org.opfab.cards.publication.configuration.TestCardReceiver;
-import org.opfab.cards.publication.configuration.TestConsumerConfig;
 import org.opfab.cards.publication.configuration.WebSecurityConfigurationTest;
 import org.opfab.cards.publication.kafka.CardObjectMapper;
 import org.opfab.cards.publication.kafka.card.CardCommandFactory;
@@ -28,6 +26,7 @@ import org.springframework.context.ConfigurableApplicationContext;
 import org.opfab.springtools.configuration.mongo.EnableOperatorFabricMongo;
 import org.opfab.springtools.configuration.oauth.I18nProcessesCache;
 import org.opfab.springtools.configuration.test.I18nProcessesCacheTestApplication;
+import org.opfab.test.EventBusSpy;
 import org.springframework.data.mongodb.repository.config.EnableMongoRepositories;
 import org.springframework.http.converter.json.Jackson2ObjectMapperBuilder;
 import org.opfab.cards.publication.configuration.mongo.LocalMongoConfiguration;
@@ -37,17 +36,15 @@ import org.opfab.cards.publication.configuration.ExternalRecipients;
 import org.opfab.cards.publication.controllers.CardController;
 
 import org.springframework.context.annotation.Import;
-import org.springframework.context.annotation.ImportResource;
 
 @SpringBootApplication
 @EnableOperatorFabricMongo
 @EnableMongoRepositories(basePackageClasses = {CardRepositoryForTest.class , ArchivedCardRepositoryForTest.class})
 @Import({LocalMongoConfiguration.class, CardProcessingService.class, CardTranslationService.class, CardNotificationService.class,
     CardRepositoryService.class, CardPermissionControlService.class, ExternalAppClientImpl.class , ResponseCardProducer.class
-, CardCommandFactory.class, CardObjectMapper.class, TestCardReceiver.class , TestConsumerConfig.class, JacksonConfig.class
+, CardCommandFactory.class, CardObjectMapper.class, JacksonConfig.class
 , Common.class , CardController.class, WebSecurityConfigurationTest.class, I18nProcessesCache.class, I18nProcessesCacheTestApplication.class, 
-ExternalRecipients.class, UserActionLogsConfiguration.class})
-@ImportResource({"classpath:/amqp.xml"})
+ExternalRecipients.class, UserActionLogsConfiguration.class, EventBusSpy.class})
 public class UnitTestApplication {
 
     public static void main(String[] args) {

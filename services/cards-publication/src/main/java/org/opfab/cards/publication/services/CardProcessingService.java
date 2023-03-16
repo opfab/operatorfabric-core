@@ -447,7 +447,7 @@ public class CardProcessingService {
                     .build());
 
         cardRepositoryService.findByUid(cardUid).ifPresent(selectedCard ->
-            cardNotificationService.pushAckOfCardInRabbit(cardUid, selectedCard.getId(), entitiesAcks));
+            cardNotificationService.pushAckOfCardInEventBus(cardUid, selectedCard.getId(), entitiesAcks));
         
         log.info("Set ack on card with uid {} for user {} and entities {}", cardUid,user.getUserData().getLogin(),entitiesAcks);
         return cardRepositoryService.addUserAck(user.getUserData(), cardUid, entitiesAcks);

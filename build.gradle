@@ -25,7 +25,6 @@ ext {
             starterWebflux          : "org.springframework.boot:spring-boot-starter-webflux:$springBoot",
             actuator                : "org.springframework.boot:spring-boot-starter-actuator:$springBoot",
             starterUndertow         : "org.springframework.boot:spring-boot-starter-undertow:$springBoot",
-            starterRabbitmq         : "org.springframework.boot:spring-boot-starter-amqp:$springBoot",
             starterSecurity         : "org.springframework.boot:spring-boot-starter-security:$springBoot",
             starterMongo            : "org.springframework.boot:spring-boot-starter-data-mongodb:$springBoot",
             starterMongoR           : "org.springframework.boot:spring-boot-starter-data-mongodb-reactive:$springBoot",
@@ -81,6 +80,8 @@ ext {
             jacksonDatabind   : "com.fasterxml.jackson.core:jackson-databind:$jacksonDatabind",
             jlibmodbus     : "com.intelligt.modbus:jlibmodbus:WORKAROUND",
             commonsText    : "org.apache.commons:commons-text:$apacheCommonsText",
+            commonsPool    : "org.apache.commons:commons-pool2:$apacheCommonsPool",
+            rabbitMQ       : "com.rabbitmq:amqp-client:$rabbitMQ"
             //jakartaServletApi        : "jakarta.servlet:jakarta.servlet-api:5.0.0"
     ]
 
