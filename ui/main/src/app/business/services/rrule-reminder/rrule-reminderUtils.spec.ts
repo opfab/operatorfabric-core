@@ -1011,3 +1011,239 @@ describe('RRuleReminderUtils:getNextTimeForRepeating with recurrence on months w
         expect(dateForRepeating).toEqual(expectedResponseDate);
     });
 });
+
+describe('RRuleReminderUtils:getNextTimeForRepeating with interval, and current date after card.startDate  ', () => {
+    let testCard: Card;
+
+    beforeAll(() => {
+        const cardTemplate = {startDate: moment.tz('2000-01-01 08:00', 'Europe/Paris').valueOf()};
+        testCard = getOneRandomCard(cardTemplate);
+    });
+
+    it('2000/01/01 10:00 , Recurrence : every 3 hours  => 2000/01/01 11:00 ', () => {
+        const date = moment.tz('2000-01-01 10:00', 'Europe/Paris').valueOf();
+
+        testCard.rRule = {
+            freq: Frequency.HOURLY,
+            interval: 3
+        };
+
+        const expectedResponseDate = new Date('2000-01-01 11:00').valueOf();
+        const dateForRepeating = getNextTimeForRepeating(testCard, date.valueOf());
+        expect(dateForRepeating).toEqual(expectedResponseDate);
+    });
+
+    it('2000/01/01 10:00 , Recurrence : every 12 hours  => 2000/01/01 20:00 ', () => {
+        const date = moment.tz('2000-01-01 10:00', 'Europe/Paris').valueOf();
+
+        testCard.rRule = {
+            freq: Frequency.HOURLY,
+            interval: 12
+        };
+
+        const expectedResponseDate = new Date('2000-01-01 20:00').valueOf();
+        const dateForRepeating = getNextTimeForRepeating(testCard, date.valueOf());
+        expect(dateForRepeating).toEqual(expectedResponseDate);
+    });
+
+    it('2000/01/01 10:00 , Recurrence : every 24 hours  => 2000/01/02 08:00 ', () => {
+        const date = moment.tz('2000-01-01 10:00', 'Europe/Paris').valueOf();
+
+        testCard.rRule = {
+            freq: Frequency.HOURLY,
+            interval: 24
+        };
+
+        const expectedResponseDate = new Date('2000-01-02 08:00').valueOf();
+        const dateForRepeating = getNextTimeForRepeating(testCard, date.valueOf());
+        expect(dateForRepeating).toEqual(expectedResponseDate);
+    });
+
+    it('2000/01/01 23:00 , Recurrence : every 2 hours  => 2000/01/02 00:00 ', () => {
+        const date = moment.tz('2000-01-01 23:00', 'Europe/Paris').valueOf();
+
+        testCard.rRule = {
+            freq: Frequency.HOURLY,
+            interval: 2
+        };
+
+        const expectedResponseDate = new Date('2000-01-02 00:00').valueOf();
+        const dateForRepeating = getNextTimeForRepeating(testCard, date.valueOf());
+        expect(dateForRepeating).toEqual(expectedResponseDate);
+    });
+
+    it('2000/01/01 10:00 , Recurrence : every 3 hours, on wednesday  => 2000/01/05 02:00 ', () => {
+        const date = moment.tz('2000-01-01 10:00', 'Europe/Paris').valueOf();
+
+        testCard.rRule = {
+            freq: Frequency.HOURLY,
+            interval: 3,
+            byweekday: [Day.WE]
+        };
+
+        const expectedResponseDate = new Date('2000-01-05 02:00').valueOf();
+        const dateForRepeating = getNextTimeForRepeating(testCard, date.valueOf());
+        expect(dateForRepeating).toEqual(expectedResponseDate);
+    });
+
+    it('2000/01/01 10:00 , Recurrence : every 12 hours, on wednesday of february  => 2000/02/02 08:00 ', () => {
+        const date = moment.tz('2000-01-01 10:00', 'Europe/Paris').valueOf();
+
+        testCard.rRule = {
+            freq: Frequency.HOURLY,
+            interval: 12,
+            byweekday: [Day.WE],
+            bymonth: [2]
+        };
+
+        const expectedResponseDate = new Date('2000-02-02 08:00').valueOf();
+        const dateForRepeating = getNextTimeForRepeating(testCard, date.valueOf());
+        expect(dateForRepeating).toEqual(expectedResponseDate);
+    });
+
+    it('2000/01/01 10:00 , Recurrence : every 23 hours  => 2000/01/02 07:00 ', () => {
+        const date = moment.tz('2000-01-01 10:00', 'Europe/Paris').valueOf();
+
+        testCard.rRule = {
+            freq: Frequency.HOURLY,
+            interval: 23
+        };
+
+        const expectedResponseDate = new Date('2000-01-02 07:00').valueOf();
+        const dateForRepeating = getNextTimeForRepeating(testCard, date.valueOf());
+        expect(dateForRepeating).toEqual(expectedResponseDate);
+    });
+
+    it('2000/01/01 10:00 , Recurrence : every 23 hours, on wednesday of february  => 2000/02/02 22:00 ', () => {
+        const date = moment.tz('2000-01-01 10:00', 'Europe/Paris').valueOf();
+
+        testCard.rRule = {
+            freq: Frequency.HOURLY,
+            interval: 23,
+            byweekday: [Day.WE],
+            bymonth: [2]
+        };
+
+        const expectedResponseDate = new Date('2000-02-02 22:00').valueOf();
+        const dateForRepeating = getNextTimeForRepeating(testCard, date.valueOf());
+        expect(dateForRepeating).toEqual(expectedResponseDate);
+    });
+});
+
+describe('RRuleReminderUtils:getNextTimeForRepeating with interval, and current date before card.startDate ', () => {
+    let testCard: Card;
+
+    beforeAll(() => {
+        const cardTemplate = {startDate: moment.tz('2000-01-01 13:00', 'Europe/Paris').valueOf()};
+        testCard = getOneRandomCard(cardTemplate);
+    });
+
+    it('2000/01/01 10:00 , Recurrence : every 3 hours  => 2000/01/01 16:00 ', () => {
+        const date = moment.tz('2000-01-01 10:00', 'Europe/Paris').valueOf();
+
+        testCard.rRule = {
+            freq: Frequency.HOURLY,
+            interval: 3
+        };
+
+        const expectedResponseDate = new Date('2000-01-01 16:00').valueOf();
+        const dateForRepeating = getNextTimeForRepeating(testCard, date.valueOf());
+        expect(dateForRepeating).toEqual(expectedResponseDate);
+    });
+
+    it('2000/01/01 10:00 , Recurrence : every 12 hours  => 2000/01/02 01:00 ', () => {
+        const date = moment.tz('2000-01-01 10:00', 'Europe/Paris').valueOf();
+
+        testCard.rRule = {
+            freq: Frequency.HOURLY,
+            interval: 12
+        };
+
+        const expectedResponseDate = new Date('2000-01-02 01:00').valueOf();
+        const dateForRepeating = getNextTimeForRepeating(testCard, date.valueOf());
+        expect(dateForRepeating).toEqual(expectedResponseDate);
+    });
+
+    it('2000/01/01 10:00 , Recurrence : every 24 hours  => 2000/01/02 13:00 ', () => {
+        const date = moment.tz('2000-01-01 10:00', 'Europe/Paris').valueOf();
+
+        testCard.rRule = {
+            freq: Frequency.HOURLY,
+            interval: 24
+        };
+
+        const expectedResponseDate = new Date('2000-01-02 13:00').valueOf();
+        const dateForRepeating = getNextTimeForRepeating(testCard, date.valueOf());
+        expect(dateForRepeating).toEqual(expectedResponseDate);
+    });
+
+    it('2000/01/01 23:00 , Recurrence : every 2 hours  => 2000/01/02 01:00 ', () => {
+        const date = moment.tz('2000-01-01 23:00', 'Europe/Paris').valueOf();
+
+        testCard.rRule = {
+            freq: Frequency.HOURLY,
+            interval: 2
+        };
+
+        const expectedResponseDate = new Date('2000-01-02 01:00').valueOf();
+        const dateForRepeating = getNextTimeForRepeating(testCard, date.valueOf());
+        expect(dateForRepeating).toEqual(expectedResponseDate);
+    });
+
+    it('2000/01/01 10:00 , Recurrence : every 3 hours on wednesday  => 2000/01/05 01:00 ', () => {
+        const date = moment.tz('2000-01-01 10:00', 'Europe/Paris').valueOf();
+
+        testCard.rRule = {
+            freq: Frequency.HOURLY,
+            interval: 3,
+            byweekday: [Day.WE]
+        };
+
+        const expectedResponseDate = new Date('2000-01-05 01:00').valueOf();
+        const dateForRepeating = getNextTimeForRepeating(testCard, date.valueOf());
+        expect(dateForRepeating).toEqual(expectedResponseDate);
+    });
+
+    it('2000/01/01 10:00 , Recurrence : every 12 hours, on wednesday of february  => 2000/02/02 01:00 ', () => {
+        const date = moment.tz('2000-01-01 10:00', 'Europe/Paris').valueOf();
+
+        testCard.rRule = {
+            freq: Frequency.HOURLY,
+            interval: 12,
+            byweekday: [Day.WE],
+            bymonth: [2]
+        };
+
+        const expectedResponseDate = new Date('2000-02-02 01:00').valueOf();
+        const dateForRepeating = getNextTimeForRepeating(testCard, date.valueOf());
+        expect(dateForRepeating).toEqual(expectedResponseDate);
+    });
+
+    it('2000/01/01 10:00 , Recurrence : every 23 hours  => 2000/01/02 12:00 ', () => {
+        const date = moment.tz('2000-01-01 10:00', 'Europe/Paris').valueOf();
+
+        testCard.rRule = {
+            freq: Frequency.HOURLY,
+            interval: 23
+        };
+
+        const expectedResponseDate = new Date('2000-01-02 12:00').valueOf();
+        const dateForRepeating = getNextTimeForRepeating(testCard, date.valueOf());
+        expect(dateForRepeating).toEqual(expectedResponseDate);
+    });
+
+    it('2000/01/01 10:00 , Recurrence : every 23 hours, on wednesday of february  => 2000/02/02 04:00 ', () => {
+        const date = moment.tz('2000-01-01 10:00', 'Europe/Paris').valueOf();
+
+        testCard.rRule = {
+            freq: Frequency.HOURLY,
+            interval: 23,
+            byweekday: [Day.WE],
+            bymonth: [2]
+        };
+
+        const expectedResponseDate = new Date('2000-02-02 04:00').valueOf();
+        const dateForRepeating = getNextTimeForRepeating(testCard, date.valueOf());
+        expect(dateForRepeating).toEqual(expectedResponseDate);
+    });
+});
