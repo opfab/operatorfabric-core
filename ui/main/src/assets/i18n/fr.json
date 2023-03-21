@@ -469,7 +469,8 @@
       "users": "Gestion des utilisateurs",
       "groups": "Gestion des groupes",
       "entities": "Gestion des entités",
-      "perimeters": "Gestion des périmètres"
+      "perimeters": "Gestion des périmètres",
+      "processes": "Gestion des processus"
     }
   },
   "processGroup": {
