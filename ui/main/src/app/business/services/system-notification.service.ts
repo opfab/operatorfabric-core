@@ -37,6 +37,7 @@ export class SystemNotificationService {
     ) {}
 
     public initSystemNotificationService() {
+        this.requestPermissionForSystemNotification();
         this.systemNotificationConfigBySeverity = new Map<Severity, string>();
         this.systemNotificationConfigBySeverity.set(Severity.ALARM, 'settings.systemNotificationAlarm');
         this.systemNotificationConfigBySeverity.set(Severity.ACTION, 'settings.systemNotificationAction');
@@ -55,6 +56,12 @@ export class SystemNotificationService {
         }
 
         this.listenForCardUpdate();
+    }
+
+    public requestPermissionForSystemNotification() {
+        if (Notification.permission === "default") {
+            Notification.requestPermission();
+        }
     }
 
     listenForCardUpdate() {
