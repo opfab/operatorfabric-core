@@ -469,7 +469,8 @@
       "users": "Gebruikers Beheer",
       "groups": "Groepen Beheer",
       "entities": "Entiteiten Beheer",
-      "perimeters": "Perimeters Beheer"
+      "perimeters": "Perimeters Beheer",
+      "processes": "Processen Beheer"
     }
   },
   "processGroup": {
