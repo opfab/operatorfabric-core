@@ -121,7 +121,7 @@ export class AuthService {
             const pathname = window.location.hash;
             const hashLength = pathname.length;
             const lastDestination = hashLength > 2 ? pathname.substring(1, hashLength) : '/feed';
-            this.router.navigate([lastDestination]);
+            this.router.navigate([decodeURI(lastDestination)]);
     }
     
 
