@@ -53,6 +53,7 @@ public class ProcessesService implements ResourceLoaderAware {
 
 	private static final String PATH_PREFIX = "file:";
     private static final String CONFIG_FILE_NAME = "config.json";
+    private static final String BUNDLE_FOLDER = "bundle";
     private static final String DUPLICATE_PROCESS_IN_PROCESS_GROUPS_FILE = "There is a duplicate process in the file you have sent";
 
     @Value("${operatorfabric.businessconfig.storage.path}")
@@ -83,7 +84,7 @@ public class ProcessesService implements ResourceLoaderAware {
     }
 
     public ProcessGroups getProcessGroupsCache() {
-        return processGroupsCache;
+        return (ProcessGroups) processGroupsCache;
     }
 
     /**
@@ -112,7 +113,7 @@ public class ProcessesService implements ResourceLoaderAware {
         this.processGroupsCache = new ProcessGroupsData(new ArrayList<>());
         try {
             Path rootPath = Paths
-                    .get(this.resourceLoader.getResource(PATH_PREFIX + this.storagePath).getFile().getAbsolutePath())
+                    .get(this.storagePath)
                     .normalize();
 
             File f = new File(rootPath.toString() + "/processGroups.json");
@@ -134,7 +135,7 @@ public class ProcessesService implements ResourceLoaderAware {
         this.realTimeScreensCache = new RealTimeScreensData(new ArrayList<>());
         try {
             Path rootPath = Paths
-                    .get(this.resourceLoader.getResource(PATH_PREFIX + this.storagePath).getFile().getAbsolutePath())
+                    .get(this.storagePath)
                     .normalize();
 
             File f = new File(rootPath.toString() + "/realtimescreens.json");
@@ -262,6 +263,8 @@ public class ProcessesService implements ResourceLoaderAware {
 
         String resourcePath = PATH_PREFIX +
                 storagePath +
+                // File.separator +
+                // BUNDLE_FOLDER +
                 File.separator +
                 processId +
                 File.separator +
@@ -319,10 +322,13 @@ public class ProcessesService implements ResourceLoaderAware {
      */
     public synchronized Process updateProcess(InputStream is) throws IOException {
     	Path rootPath = Paths
-				.get(this.resourceLoader.getResource(PATH_PREFIX + this.storagePath).getFile().getAbsolutePath())
+				.get(this.storagePath)
 				.normalize();
 		if (!rootPath.toFile().exists())
 			throw new FileNotFoundException("No directory available to unzip bundle");
+        // Path bundlePath = Paths.get(this.resourceLoader.getResource(PATH_PREFIX+ this.storagePath + BUNDLE_FOLDER).getFile().getAbsolutePath()).normalize();
+        // if (!bundlePath.toFile().exists());
+            // CREE LE DOSSIER /bundle ;
 		// create a temporary output folder
 		Path outPath = rootPath.resolve(UUID.randomUUID().toString());
 		try {
@@ -357,8 +363,10 @@ public class ProcessesService implements ResourceLoaderAware {
      */
     public synchronized void updateProcessGroupsFile(String fileContent) throws IOException {
         Path rootPath = Paths
-                .get(this.resourceLoader.getResource(PATH_PREFIX + this.storagePath).getFile().getAbsolutePath())
+                .get(this.storagePath)
                 .normalize();
+                
+        System.out.println(rootPath);
         if (!rootPath.toFile().exists())
             throw new FileNotFoundException("No directory available to copy processgroups file");
 
@@ -392,8 +400,8 @@ public class ProcessesService implements ResourceLoaderAware {
         Path outConfigPath = outPath.resolve(CONFIG_FILE_NAME);
         ProcessData process = objectMapper.readValue(outConfigPath.toFile(), ProcessData.class);
         //process root
-        Path existingRootPath = Paths.get(this.resourceLoader.getResource(PATH_PREFIX + this.storagePath).getFile()
-                .getAbsolutePath())
+        // CHECK BUNDLE PATH
+        Path existingRootPath = Paths.get(this.storagePath)
                 .resolve(process.getId())
                 .normalize();
         //process default config
@@ -442,8 +450,8 @@ public class ProcessesService implements ResourceLoaderAware {
     		throw new FileNotFoundException("Unable to find a bundle with the given id");
     	}
     	//process root
-    	Path processRootPath = Paths.get(this.resourceLoader.getResource(PATH_PREFIX + this.storagePath).getFile()
-                .getAbsolutePath())
+        // BUNDLE PATH
+    	Path processRootPath = Paths.get(this.storagePath)
                 .resolve(id)
                 .normalize();
     	//delete process root from disk
@@ -464,8 +472,8 @@ public class ProcessesService implements ResourceLoaderAware {
 			throw new FileNotFoundException("Unable to find a bundle with the given id and version");
 		}
 		Process process = defaultCache.get(id);
-		Path processRootPath = Paths.get(this.resourceLoader.getResource(PATH_PREFIX + this.storagePath).getFile()
-                .getAbsolutePath())
+        // BUNDLE PATH
+		Path processRootPath = Paths.get(this.storagePath)
                 .resolve(id)
                 .normalize();
 		/* case: bundle has only one version(this control is put here to skip if it's possible
@@ -586,7 +594,7 @@ public class ProcessesService implements ResourceLoaderAware {
      */
     public synchronized void updateRealTimeScreensFile(String fileContent) throws IOException {
         Path rootPath = Paths
-                .get(this.resourceLoader.getResource(PATH_PREFIX + this.storagePath).getFile().getAbsolutePath())
+                .get(this.storagePath)
                 .normalize();
         if (!rootPath.toFile().exists())
             throw new FileNotFoundException("No directory available to copy realtimescreens file");
@@ -595,7 +603,7 @@ public class ProcessesService implements ResourceLoaderAware {
         RealTimeScreensData newRealTimeScreens = objectMapper.readValue(fileContent, RealTimeScreensData.class);
 
         //copy file
-        PathUtils.copyInputStreamToFile(new ByteArrayInputStream(fileContent.getBytes()), rootPath.toString() + "/realtimescreens.json");
+        PathUtils.copyInputStreamToFile(new ByteArrayInputStream(fileContent.getBytes()),"./" + rootPath.toString() + "/realtimescreens.json");
 
         //update cache
         realTimeScreensCache = newRealTimeScreens;
