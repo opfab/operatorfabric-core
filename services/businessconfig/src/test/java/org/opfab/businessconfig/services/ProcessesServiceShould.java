@@ -50,6 +50,7 @@ import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 class ProcessesServiceShould {
 
     private static Path testDataDir = Paths.get("./build/test-data/businessconfig-storage");
+    private static Path bundleDataDir = Paths.get("./build/test-data/businessconfig-storage/bundles");
     @Autowired
     private ProcessesService service;
 
@@ -254,7 +255,7 @@ class ProcessesServiceShould {
 
             @Test
             void deleteBundleByNameAndVersionWhichNotBeingDefault() throws Exception {
-                Path bundleDir = testDataDir.resolve(bundleName);
+                Path bundleDir = bundleDataDir.resolve(bundleName);
                 Path bundleVersionDir = bundleDir.resolve("0.1");
                 Assertions.assertTrue(Files.isDirectory(bundleDir));
                 Assertions.assertTrue(Files.isDirectory(bundleVersionDir));
@@ -269,7 +270,7 @@ class ProcessesServiceShould {
 
             @Test
             void deleteBundleByNameAndVersionWhichBeingDeafult1() throws Exception {
-                Path bundleDir = testDataDir.resolve(bundleName);
+                Path bundleDir = bundleDataDir.resolve(bundleName);
                 Process process = service.fetch(bundleName);
                 assertThat(process.getVersion()).isEqualTo("v1");
                 Path bundleVersionDir = bundleDir.resolve("v1");
@@ -291,7 +292,7 @@ class ProcessesServiceShould {
 
             @Test
             void deleteBundleByNameAndVersionWhichBeingDefault2() throws Exception {
-                Path bundleDir = testDataDir.resolve(bundleName);
+                Path bundleDir = bundleDataDir.resolve(bundleName);
                 final Process process = service.fetch(bundleName);
                 assertThat(process.getVersion()).isEqualTo("v1");
                 Path bundleVersionDir = bundleDir.resolve("v1");
@@ -323,7 +324,7 @@ class ProcessesServiceShould {
 
             @Test
             void deleteBundleByNameAndVersionHavingOnlyOneVersion() throws Exception {
-                Path bundleDir = testDataDir.resolve("deletetest");
+                Path bundleDir = bundleDataDir.resolve("deletetest");
                 Assertions.assertTrue(Files.isDirectory(bundleDir));
                 service.deleteVersion("deletetest","2.1");
                 Assertions.assertNull(service.fetch("deletetest","2.1"));
@@ -333,7 +334,7 @@ class ProcessesServiceShould {
 
             @Test
             void deleteGivenBundle() throws Exception {
-                Path bundleDir = testDataDir.resolve(bundleName);
+                Path bundleDir = bundleDataDir.resolve(bundleName);
                 Assertions.assertTrue(Files.isDirectory(bundleDir));
                 service.delete(bundleName);
                 Assertions.assertFalse(Files.isDirectory(bundleDir));
