@@ -670,11 +670,12 @@ describe('AdmininstrationPages', () => {
             //Click on tab "Groups"
             cy.get('#opfab-tabs').find('li').eq(2).click();
 
+            //Wait for table rendering
+            cy.get('.opfab-pagination').should('contain.text', ' Results number  : 7');
+
             // Do export
             cy.get('#opfab-admin-btn-exportToExcel').click();
 
-            //Wait for table rendering
-            cy.get('.opfab-pagination').should('contain.text', ' Results number  : 7');
 
             cy.waitDefaultTime();
 
