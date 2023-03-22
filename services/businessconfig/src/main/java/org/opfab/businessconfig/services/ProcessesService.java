@@ -53,7 +53,7 @@ public class ProcessesService implements ResourceLoaderAware {
 
 	private static final String PATH_PREFIX = "file:";
     private static final String CONFIG_FILE_NAME = "config.json";
-    private static final String BUNDLE_FOLDER = "bundle";
+    private static final String BUNDLE_FOLDER = "/bundles";
     private static final String DUPLICATE_PROCESS_IN_PROCESS_GROUPS_FILE = "There is a duplicate process in the file you have sent";
 
     @Value("${operatorfabric.businessconfig.storage.path}")
@@ -84,7 +84,7 @@ public class ProcessesService implements ResourceLoaderAware {
     }
 
     public ProcessGroups getProcessGroupsCache() {
-        return (ProcessGroups) processGroupsCache;
+        return processGroupsCache;
     }
 
     /**
@@ -156,7 +156,7 @@ public class ProcessesService implements ResourceLoaderAware {
         log.info("loading processes from {}", new File(storagePath).getAbsolutePath());
         try {
             Map<String, Map<String, Process>> completeResult = new HashMap<>();
-            Resource root = this.resourceLoader.getResource(PATH_PREFIX + storagePath);
+            Resource root = this.resourceLoader.getResource(PATH_PREFIX + storagePath + BUNDLE_FOLDER);
             //load default Processes and recursively loads versioned Processes
             Map<String, Process> result = loadCache0(root.getFile(),
                     Process::getId,
@@ -256,15 +256,14 @@ public class ProcessesService implements ResourceLoaderAware {
         process = versions.get(finalVersion);
 
         if (process == null)
-            throw new FileNotFoundException("Unknown version (" + finalVersion + ") for " + processId);
+            throw new FileNotFoundException("Unknown version (" + finalVersion + ") for " + processId + " at " + this.storagePath);
 
         if (type.isLocalized() && locale == null)
             throw new FileNotFoundException("Unable to determine resource for undefined locale");
 
         String resourcePath = PATH_PREFIX +
                 storagePath +
-                // File.separator +
-                // BUNDLE_FOLDER +
+                BUNDLE_FOLDER +
                 File.separator +
                 processId +
                 File.separator +
@@ -278,7 +277,7 @@ public class ProcessesService implements ResourceLoaderAware {
         log.info("loading resource: {}", resourcePath);
         Resource resource = this.resourceLoader.getResource(resourcePath);
         if (!resource.exists()) {
-            throw new FileNotFoundException("Unknown " + type + " resource for " + processId + ":" + version);
+            throw new FileNotFoundException("Unknown " + type + " resource for " + processId + ":" + version + " at " + resourcePath);
         }
         return resource;        
     }
@@ -326,9 +325,15 @@ public class ProcessesService implements ResourceLoaderAware {
 				.normalize();
 		if (!rootPath.toFile().exists())
 			throw new FileNotFoundException("No directory available to unzip bundle");
-        // Path bundlePath = Paths.get(this.resourceLoader.getResource(PATH_PREFIX+ this.storagePath + BUNDLE_FOLDER).getFile().getAbsolutePath()).normalize();
-        // if (!bundlePath.toFile().exists());
-            // CREE LE DOSSIER /bundle ;
+        Path bundlePath = Paths.get(this.storagePath + BUNDLE_FOLDER).normalize();
+        if (!bundlePath.toFile().exists()){
+            try {
+                Files.createDirectories(bundlePath);
+            } catch (IOException e) {
+                log.error("Impossible to create the necessary folder", bundlePath, e);
+            }
+        }
+            
 		// create a temporary output folder
 		Path outPath = rootPath.resolve(UUID.randomUUID().toString());
 		try {
@@ -365,8 +370,6 @@ public class ProcessesService implements ResourceLoaderAware {
         Path rootPath = Paths
                 .get(this.storagePath)
                 .normalize();
-                
-        System.out.println(rootPath);
         if (!rootPath.toFile().exists())
             throw new FileNotFoundException("No directory available to copy processgroups file");
 
@@ -400,8 +403,7 @@ public class ProcessesService implements ResourceLoaderAware {
         Path outConfigPath = outPath.resolve(CONFIG_FILE_NAME);
         ProcessData process = objectMapper.readValue(outConfigPath.toFile(), ProcessData.class);
         //process root
-        // CHECK BUNDLE PATH
-        Path existingRootPath = Paths.get(this.storagePath)
+        Path existingRootPath = Paths.get(this.storagePath + BUNDLE_FOLDER)
                 .resolve(process.getId())
                 .normalize();
         //process default config
@@ -450,8 +452,7 @@ public class ProcessesService implements ResourceLoaderAware {
     		throw new FileNotFoundException("Unable to find a bundle with the given id");
     	}
     	//process root
-        // BUNDLE PATH
-    	Path processRootPath = Paths.get(this.storagePath)
+    	Path processRootPath = Paths.get(this.storagePath + BUNDLE_FOLDER)
                 .resolve(id)
                 .normalize();
     	//delete process root from disk
@@ -472,8 +473,7 @@ public class ProcessesService implements ResourceLoaderAware {
 			throw new FileNotFoundException("Unable to find a bundle with the given id and version");
 		}
 		Process process = defaultCache.get(id);
-        // BUNDLE PATH
-		Path processRootPath = Paths.get(this.storagePath)
+		Path processRootPath = Paths.get(this.storagePath + BUNDLE_FOLDER)
                 .resolve(id)
                 .normalize();
 		/* case: bundle has only one version(this control is put here to skip if it's possible
@@ -603,7 +603,7 @@ public class ProcessesService implements ResourceLoaderAware {
         RealTimeScreensData newRealTimeScreens = objectMapper.readValue(fileContent, RealTimeScreensData.class);
 
         //copy file
-        PathUtils.copyInputStreamToFile(new ByteArrayInputStream(fileContent.getBytes()),"./" + rootPath.toString() + "/realtimescreens.json");
+        PathUtils.copyInputStreamToFile(new ByteArrayInputStream(fileContent.getBytes()), rootPath.toString() + "/realtimescreens.json");
 
         //update cache
         realTimeScreensCache = newRealTimeScreens;
