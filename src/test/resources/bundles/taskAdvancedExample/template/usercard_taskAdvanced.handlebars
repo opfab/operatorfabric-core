@@ -9,12 +9,12 @@
 <br/>
 <div class="opfab-input">
     <label for="taskDescription"> TASK DESCRIPTION</label>
-    <input size="50" type="text" id="taskDescription" value="{{card.data.taskDescription}}"> </input> 
+    <input size="50" type="text" id="taskDescription" value="{{card.data.taskDescription}}"> </input>
 </div>
 <br/>
 
 <div>
-    <table style="width: 30%;margin-bottom: -5px;">
+    <table style="width: 40%;margin-bottom: -5px;">
         <tr>
             <td>
                 <label class="opfab-radio-button"> <span> Daily frequency </span>
@@ -25,6 +25,12 @@
             <td>
                 <label class="opfab-radio-button"> <span> Monthly frequency </span>
                     <input type="radio" id="radioButtonMonthlyFreq" onclick="displayMonthlyFrequency();">
+                    <span class="opfab-radio-button-checkmark"></span>
+                </label>
+            </td>
+            <td>
+                <label class="opfab-radio-button"> <span> Time interval </span>
+                    <input type="radio" id="radioButtonTimeIntervalFrequency" onclick="displayTimeIntervalFrequency();">
                     <span class="opfab-radio-button-checkmark"></span>
                 </label>
             </td>
@@ -57,7 +63,7 @@
     <br/>
 </div>
 
-<div class="opfab-border-box">
+<div class="opfab-border-box" id="monthsCheckboxesDiv">
     <table width="100%" style="margin-bottom: -5px;">
         <tr>
             <td><label class="opfab-checkbox" style="padding-left:25px"> Select all <input type="checkbox" id="selectAllMonths" onclick="userCardTemplate.toggleSelectAllMonths();">   <span class="opfab-checkbox-checkmark"> </span>   </label> </td>
@@ -156,43 +162,37 @@
 <br/>
 <div>
 
-    <table style="width:80%">
+    <table>
         <tr>
-            <td style="width:4%">
-                AT :
-            </td>
-            <td style="width:15%">
-                <div class="opfab-input">
+            <td id="atTime" style="width:19%">
+                <div style="float: left;padding: 10px"> AT : </div>
+                <div style="float: right" class="opfab-input">
                     <label> TIME </label>
                     <input type="time" id="time" style="text-align:center" value="{{padStart card.data.byhour 2 '0'}}:{{padStart card.data.byminute 2 '0'}}">
                 </div>
             </td>
 
-            <td style="width:2%">
-
-            <td style="width:7%">
-                OR Every :
-            </td>
-            <td style="width:7%">
-                <div class="opfab-input">
-                    <label> HOURS </label>
-                    <input size="3" maxlength="3" type="text" id="intervalForHours" value="{{#if card.data.interval}}{{card.data.interval}}{{else}}2{{/if}}">
+            <td id="timeIntervalFrequency" style="width: 19%" hidden>
+                <div style="float: left;padding: 10px"> Repeat every : </div>
+                <div style="float: left;width: 36%" class="opfab-input">
+                    <label> MINUTES </label>
+                    <input size="3" maxlength="3" type="text" id="intervalMinutes" value="{{#if card.data.interval}}{{card.data.interval}}{{else}}60{{/if}}">
                 </div>
             </td>
 
             <td style="width:6%">
 
             </td>
-            <td style="width:20%">
+            <td style="width:32%">
                 <div class="opfab-input">
                     <label> TASK DURATION (MINUTES) </label>
                     <input size="3" maxlength="3" type="text" id="durationInMinutes" value="{{#if card.data.durationInMinutes}}{{card.data.durationInMinutes}}{{else}}15{{/if}}">
                 </div>
             </td>
             <td style="width:6%">
-    
+
             </td>
-            <td style="width:20%">
+            <td style="width:32%">
                 <div class="opfab-input">
                     <label> MINUTES TO REMIND BEFORE TASK</label>
                     <input size="2" maxlength="2" type="text" id="minutesForReminder" value="{{#if card.data.minutesForReminder}}{{card.data.minutesForReminder}}{{else}}5{{/if}}">
@@ -202,42 +202,72 @@
     </table>
 
 </div>
-
 <br/>
 
 <script>
 
     function displayDailyFrequency() {
         document.getElementById("radioButtonMonthlyFreq").checked = false;
+        document.getElementById("radioButtonTimeIntervalFrequency").checked = false;
         document.getElementById("daysOfWeek").hidden = false;
+
         document.getElementById("dayPositionInTheMonth").hidden = true;
         document.getElementById("monthsCheckboxesForMonthlyFreq").hidden = true;
+        document.getElementById("timeIntervalFrequency").hidden = true;
+
+        document.getElementById("monthsCheckboxesDiv").hidden = false;
         document.getElementById("monthsCheckboxesForDailyFreq").hidden = false;
+        document.getElementById("atTime").hidden = false;
         userCardTemplate.checkIsAllMonthsSelected();
     }
 
     function displayMonthlyFrequency() {
         document.getElementById("radioButtonDailyFreq").checked = false;
+        document.getElementById("radioButtonTimeIntervalFrequency").checked = false;
         document.getElementById("radioButtonMonthlyFreq").checked = true;
+
         document.getElementById("daysOfWeek").hidden = true;
         document.getElementById("monthsCheckboxesForDailyFreq").hidden = true;
+        document.getElementById("timeIntervalFrequency").hidden = true;
+
+        document.getElementById("monthsCheckboxesDiv").hidden = false;
         document.getElementById("monthsCheckboxesForMonthlyFreq").hidden = false;
         document.getElementById("dayPositionInTheMonth").hidden = false;
+        document.getElementById("atTime").hidden = false;
         userCardTemplate.checkIsAllMonthsSelected();
     }
 
     function displayNthDayTable() {
         document.getElementById("radioButtonNthWeekday").checked = false;
         document.getElementById("radioButtonNthDay").checked = true;
+
         document.getElementById("nthWeekdayTable").hidden = true;
+
         document.getElementById("nthDayTable").hidden = false;
     }
 
     function displayNthWeekdayTable() {
         document.getElementById("radioButtonNthDay").checked = false;
         document.getElementById("radioButtonNthWeekday").checked = true;
+
         document.getElementById("nthDayTable").hidden = true;
+
         document.getElementById("nthWeekdayTable").hidden = false;
+    }
+
+    function displayTimeIntervalFrequency() {
+        document.getElementById("radioButtonDailyFreq").checked = false;
+        document.getElementById("radioButtonMonthlyFreq").checked = false;
+        document.getElementById("radioButtonTimeIntervalFrequency").checked = true;
+
+        document.getElementById("daysOfWeek").hidden = true;
+        document.getElementById("dayPositionInTheMonth").hidden = true;
+        document.getElementById("monthsCheckboxesForMonthlyFreq").hidden = true;
+        document.getElementById("monthsCheckboxesForDailyFreq").hidden = true;
+        document.getElementById("monthsCheckboxesDiv").hidden = true;
+        document.getElementById("atTime").hidden = true;
+
+        document.getElementById("timeIntervalFrequency").hidden = false;
     }
 
     userCardTemplate = {
@@ -296,7 +326,12 @@
                 displayMonthlyFrequency();
                 userCardTemplate.selectValuesInEditModeForMonthlyFreq();
             } else {
-                userCardTemplate.selectValuesInEditModeForDailyFreq();
+                if (freq === 'MINUTELY') {
+                    displayTimeIntervalFrequency();
+                    userCardTemplate.selectValuesInEditModeForTimeIntervalFreq();
+                } else {
+                    userCardTemplate.selectValuesInEditModeForDailyFreq();
+                }
             }
         },
 
@@ -375,6 +410,14 @@
             }
         },
 
+        selectValuesInEditModeForTimeIntervalFreq: function () {
+            const interval = "{{card.data.interval}}";
+
+            if (!!interval) {
+                document.getElementById("intervalMinutes").value = interval;
+            }
+        },
+
         initSeverity: function() {
             usercardTemplateGateway.setInitialSeverity('ACTION');
         },
@@ -403,11 +446,11 @@
 
             usercardTemplateGateway.getSpecificCardInformation = function () {
                 const taskDescription = document.getElementById('taskDescription').value;
-                
+
                 const time = document.getElementById('time').value;
                 const byhour =  [time.slice(0, 2) * 1]; // the hours are the 2 first characters
                 const byminute =  [time.slice(-2) * 1]; // the minutes are the 2 last characters
-                
+
                 const minutesForReminder =  document.getElementById('minutesForReminder').value;
                 const durationInMinutes =  document.getElementById('durationInMinutes').value;
 
@@ -417,83 +460,101 @@
                 const bymonth = [];
                 const bymonthday = [];
                 let bysetpos = [];
+                let rRule;
+                let data;
 
-                if (document.getElementById("radioButtonMonthlyFreq").checked === true) {
-                    freq = 'MONTHLY';
+                if (document.getElementById("radioButtonTimeIntervalFrequency").checked === true) {
+                    let interval;
+                    if (!!document.getElementById("intervalMinutes").value) interval = document.getElementById("intervalMinutes").value;
 
-                    if (document.getElementById("JanuaryMonthly").checked)   bymonth.push(1);
-                    if (document.getElementById("FebruaryMonthly").checked)  bymonth.push(2);
-                    if (document.getElementById("MarchMonthly").checked)     bymonth.push(3);
-                    if (document.getElementById("AprilMonthly").checked)     bymonth.push(4);
-                    if (document.getElementById("MayMonthly").checked)       bymonth.push(5);
-                    if (document.getElementById("JuneMonthly").checked)      bymonth.push(6);
-                    if (document.getElementById("JulyMonthly").checked)      bymonth.push(7);
-                    if (document.getElementById("AugustMonthly").checked)    bymonth.push(8);
-                    if (document.getElementById("SeptemberMonthly").checked) bymonth.push(9);
-                    if (document.getElementById("OctoberMonthly").checked)   bymonth.push(10);
-                    if (document.getElementById("NovemberMonthly").checked)  bymonth.push(11);
-                    if (document.getElementById("DecemberMonthly").checked)  bymonth.push(12);
+                    freq = 'MINUTELY';
+                    rRule = {
+                        freq: freq,
+                        interval: interval,
+                        durationInMinutes: durationInMinutes
+                    };
 
-                    if (document.getElementById("radioButtonNthDay").checked === true) {
-                        if (!!document.getElementById("nthDay").value)            bymonthday.push(document.getElementById("nthDay").value);
-                        if (document.getElementById("firstDay").checked === true) bymonthday.push(1);
-                        if (document.getElementById("lastDay").checked === true)  bymonthday.push(-1);
-
-                        if (bymonthday.length === 0) {
-                            return {valid: false , errorMsg: 'You must provide at least one nth day.'}
-                        }
-                    }
-
-                    if (document.getElementById("radioButtonNthWeekday").checked === true) {
-                        bysetpos = that.occurrenceNumberSelect.getSelectedValues();
-                        if (that.weekdaySelect.getSelectedValues().length > 0) {
-                            byweekday = [that.weekdaySelect.getSelectedValues()];
-                        }
-
-                        if ((bysetpos.length === 0) || (byweekday.length === 0)) {
-                            return {valid: false , errorMsg: 'You must provide an occurrence number and a weekday.'}
-                        }
-                    }
+                    data = {
+                        taskDescription: taskDescription,
+                        freq: freq,
+                        durationInMinutes: durationInMinutes,
+                        minutesForReminder: minutesForReminder,
+                        interval: interval
+                    };
                 } else {
-                    freq = 'DAILY';
-                    if (document.getElementById("Monday").checked)    byweekday.push('MO');
-                    if (document.getElementById("Tuesday").checked)   byweekday.push('TU');
-                    if (document.getElementById("Wednesday").checked) byweekday.push('WE');
-                    if (document.getElementById("Thursday").checked)  byweekday.push('TH');
-                    if (document.getElementById("Friday").checked)    byweekday.push('FR');
-                    if (document.getElementById("Saturday").checked)  byweekday.push('SA');
-                    if (document.getElementById("Sunday").checked)    byweekday.push('SU');
+                    if (document.getElementById("radioButtonMonthlyFreq").checked === true) {
+                        freq = 'MONTHLY';
 
-                    if (document.getElementById("JanuaryDaily").checked)   bymonth.push(1);
-                    if (document.getElementById("FebruaryDaily").checked)  bymonth.push(2);
-                    if (document.getElementById("MarchDaily").checked)     bymonth.push(3);
-                    if (document.getElementById("AprilDaily").checked)     bymonth.push(4);
-                    if (document.getElementById("MayDaily").checked)       bymonth.push(5);
-                    if (document.getElementById("JuneDaily").checked)      bymonth.push(6);
-                    if (document.getElementById("JulyDaily").checked)      bymonth.push(7);
-                    if (document.getElementById("AugustDaily").checked)    bymonth.push(8);
-                    if (document.getElementById("SeptemberDaily").checked) bymonth.push(9);
-                    if (document.getElementById("OctoberDaily").checked)   bymonth.push(10);
-                    if (document.getElementById("NovemberDaily").checked)  bymonth.push(11);
-                    if (document.getElementById("DecemberDaily").checked)  bymonth.push(12);
-                }
+                        if (document.getElementById("JanuaryMonthly").checked)   bymonth.push(1);
+                        if (document.getElementById("FebruaryMonthly").checked)  bymonth.push(2);
+                        if (document.getElementById("MarchMonthly").checked)     bymonth.push(3);
+                        if (document.getElementById("AprilMonthly").checked)     bymonth.push(4);
+                        if (document.getElementById("MayMonthly").checked)       bymonth.push(5);
+                        if (document.getElementById("JuneMonthly").checked)      bymonth.push(6);
+                        if (document.getElementById("JulyMonthly").checked)      bymonth.push(7);
+                        if (document.getElementById("AugustMonthly").checked)    bymonth.push(8);
+                        if (document.getElementById("SeptemberMonthly").checked) bymonth.push(9);
+                        if (document.getElementById("OctoberMonthly").checked)   bymonth.push(10);
+                        if (document.getElementById("NovemberMonthly").checked)  bymonth.push(11);
+                        if (document.getElementById("DecemberMonthly").checked)  bymonth.push(12);
 
-                const rRule = {
-                    freq: freq,
-                    byweekday : byweekday,
-                    byhour: byhour,
-                    byminute: byminute,
-                    durationInMinutes: durationInMinutes,
-                    bymonth: bymonth,
-                    bysetpos: bysetpos,
-                    bymonthday: bymonthday
-                }
+                        if (document.getElementById("radioButtonNthDay").checked === true) {
+                            if (!!document.getElementById("nthDay").value)            bymonthday.push(document.getElementById("nthDay").value);
+                            if (document.getElementById("firstDay").checked === true) bymonthday.push(1);
+                            if (document.getElementById("lastDay").checked === true)  bymonthday.push(-1);
 
-                const card = {
-                    summary: { key: "taskAdvanced.summary" },
-                    title: { key: "taskAdvanced.title" },
-                    secondsBeforeTimeSpanForReminder: minutesForReminder * 60,
-                    data: {
+                            if (bymonthday.length === 0) {
+                                return {valid: false , errorMsg: 'You must provide at least one nth day.'}
+                            }
+                        }
+
+                        if (document.getElementById("radioButtonNthWeekday").checked === true) {
+                            bysetpos = that.occurrenceNumberSelect.getSelectedValues();
+                            if (that.weekdaySelect.getSelectedValues().length > 0) {
+                                byweekday = [that.weekdaySelect.getSelectedValues()];
+                            }
+
+                            if ((bysetpos.length === 0) || (byweekday.length === 0)) {
+                                return {valid: false , errorMsg: 'You must provide an occurrence number and a weekday.'}
+                            }
+                        }
+                    }
+                    if (document.getElementById("radioButtonDailyFreq").checked === true) {
+                        freq = 'DAILY';
+                        if (document.getElementById("Monday").checked)    byweekday.push('MO');
+                        if (document.getElementById("Tuesday").checked)   byweekday.push('TU');
+                        if (document.getElementById("Wednesday").checked) byweekday.push('WE');
+                        if (document.getElementById("Thursday").checked)  byweekday.push('TH');
+                        if (document.getElementById("Friday").checked)    byweekday.push('FR');
+                        if (document.getElementById("Saturday").checked)  byweekday.push('SA');
+                        if (document.getElementById("Sunday").checked)    byweekday.push('SU');
+
+                        if (document.getElementById("JanuaryDaily").checked)   bymonth.push(1);
+                        if (document.getElementById("FebruaryDaily").checked)  bymonth.push(2);
+                        if (document.getElementById("MarchDaily").checked)     bymonth.push(3);
+                        if (document.getElementById("AprilDaily").checked)     bymonth.push(4);
+                        if (document.getElementById("MayDaily").checked)       bymonth.push(5);
+                        if (document.getElementById("JuneDaily").checked)      bymonth.push(6);
+                        if (document.getElementById("JulyDaily").checked)      bymonth.push(7);
+                        if (document.getElementById("AugustDaily").checked)    bymonth.push(8);
+                        if (document.getElementById("SeptemberDaily").checked) bymonth.push(9);
+                        if (document.getElementById("OctoberDaily").checked)   bymonth.push(10);
+                        if (document.getElementById("NovemberDaily").checked)  bymonth.push(11);
+                        if (document.getElementById("DecemberDaily").checked)  bymonth.push(12);
+                    }
+
+                    rRule = {
+                        freq: freq,
+                        byweekday : byweekday,
+                        byhour: byhour,
+                        byminute: byminute,
+                        durationInMinutes: durationInMinutes,
+                        bymonth: bymonth,
+                        bysetpos: bysetpos,
+                        bymonthday: bymonthday
+                    };
+
+                    data = {
                         taskDescription: taskDescription,
                         freq: freq,
                         byhour: byhour,
@@ -504,33 +565,21 @@
                         bymonth: bymonth,
                         bysetpos: bysetpos,
                         bymonthday: bymonthday
-                    },
+                    };
+                }
+
+                const card = {
+                    summary: { key: "taskAdvanced.summary" },
+                    title: { key: "taskAdvanced.title" },
+                    secondsBeforeTimeSpanForReminder: minutesForReminder * 60,
+                    data: data,
                     rRule: rRule
                 };
-
-                /* card = {
-                                        summary: { key: "taskAdvanced.summary" },
-                                        title: { key: "taskAdvanced.title" },
-                                        secondsBeforeTimeSpanForReminder: minutesForReminder * 60,
-                                        data: {
-                                            taskDescription: taskDescription,
-                                            freq: freq,
-                                            byhour: byhour,
-                                            byminute: byminute,
-                                            durationInMinutes: durationInMinutes,
-                                            minutesForReminder: minutesForReminder,
-                                            byweekday: byweekday,
-                                            bymonth: bymonth
-                                        },
-                                        rRule: rRule
-                                    };
-                                } */
 
                 return {
                     valid: true,
                     card: card
                 };
-
             }
         },
 

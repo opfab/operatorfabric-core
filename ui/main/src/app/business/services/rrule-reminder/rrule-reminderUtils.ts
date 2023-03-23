@@ -13,6 +13,7 @@ import {Frequency as OpfabFrequency} from "@ofModel/light-card.model";
 
 const MAX_MILLISECONDS_FOR_REMINDING_AFTER_EVENT_STARTS = 60000 * 15; // 15 minutes
 const NB_MILLISECONDS_IN_ONE_MINUTE = 60000; // 1 minute
+const NB_MILLISECONDS_IN_ONE_SECOND = 1000; // 1 second
 
 export function getNextTimeForRepeating(card: Card, startingDate?: number): number {
     if (!startingDate) {
@@ -73,8 +74,8 @@ export function getNextDateTimeFromRRule(startingDate: number, card: Card): numb
             tzid = card.rRule.tzid;
         }
 
-        if (card.rRule.freq === OpfabFrequency.HOURLY) {
-            return getNextDateTimeFromRRuleInCaseOfHourlyRecurrence(startingDate, card, byweekdayForRRule, tzid);
+        if ((card.rRule.freq === OpfabFrequency.HOURLY) || (card.rRule.freq === OpfabFrequency.MINUTELY)) {
+            return getNextDateTimeFromRRuleInCaseOfHourlyOrMinutelyRecurrence(startingDate, card, byweekdayForRRule, tzid);
         }
 
         let byhourSorted = null;
@@ -116,10 +117,10 @@ export function getNextDateTimeFromRRule(startingDate: number, card: Card): numb
     return -1;
 }
 
-export function getNextDateTimeFromRRuleInCaseOfHourlyRecurrence(startingDate: number,
-                                                                 card: Card,
-                                                                 byweekdayForRRule: Weekday[],
-                                                                 tzid: string): number {
+export function getNextDateTimeFromRRuleInCaseOfHourlyOrMinutelyRecurrence(startingDate: number,
+                                                                           card: Card,
+                                                                           byweekdayForRRule: Weekday[],
+                                                                           tzid: string): number {
 
     let rule: RRule;
     let nextDateTimeNumber = card.startDate;
@@ -129,13 +130,19 @@ export function getNextDateTimeFromRRuleInCaseOfHourlyRecurrence(startingDate: n
         interval: card.rRule.interval,
         bymonth: card.rRule.bymonth,
         byweekday: byweekdayForRRule,
-        byminute: new Date(card.startDate).getMinutes()
+        byminute: card.rRule.freq === OpfabFrequency.HOURLY ? new Date(card.startDate).getMinutes() : null,
+        bysecond: card.rRule.freq === OpfabFrequency.MINUTELY ? new Date(card.startDate).getSeconds() : null
     });
 
     do {
+        let timeToAdd = NB_MILLISECONDS_IN_ONE_MINUTE;
+        if (card.rRule.freq === OpfabFrequency.MINUTELY) {
+            timeToAdd = NB_MILLISECONDS_IN_ONE_SECOND;
+        }
+
         rule = RRule.fromString(ruleBase.toString() +
             ';DTSTART;TZID=' + tzid + ':' +
-            dateObjectToYYYYMMDDTHHmmss(new Date(nextDateTimeNumber + NB_MILLISECONDS_IN_ONE_MINUTE)));
+            dateObjectToYYYYMMDDTHHmmss(new Date(nextDateTimeNumber + timeToAdd)));
 
         const nextDateTimeFromRRule = rule.all(function (date, i) {return i < 1})[0];
 

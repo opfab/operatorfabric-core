@@ -21,15 +21,12 @@
 Duration: {{card.data.durationInMinutes}} minutes<br/>
 <br/> 
 
-At {{padStart card.data.byhour 2 '0'}}:{{padStart card.data.byminute 2 '0'}}
+<span id="byHourByMinute"></span>
+<span id="interval"></span>
 <span id="bysetpos"></span><span id="byweekday"></span><br/>
 <br/>
 <span id="bymonthday"></span>
 <span id="bymonth"></span>
-
-{{!-- <span id="atTime" hidden>At {{padStart card.data.byhour 2 '0'}}:{{padStart card.data.byminute 2 '0'}}</span>
-<span id="every" hidden>Every {{card.data.interval}} hours</span>
-<span id="byweekday"></span><br/> --}}
 
 </h3>
 </center>
@@ -39,17 +36,6 @@ At {{padStart card.data.byhour 2 '0'}}:{{padStart card.data.byminute 2 '0'}}
       cardTemplate = {
             init: function() {
 
-            /* const byhour = "{{card.data.byhour}}";
-                              const byminute = "{{card.data.byminute}}";
-                              if (!!byhour && !!byminute) {
-                                  document.getElementById("atTime").hidden = false;
-                              }
-
-                              const freq = "{{card.data.freq}}";
-                              if (!!freq && freq === 'HOURLY') {
-                                  document.getElementById("every").hidden = false;
-                              } */
-
                   const freq = "{{card.data.freq}}";
                   const byweekday = "{{card.data.byweekday}}";
                   const bysetpos = "{{card.data.bysetpos}}";
@@ -58,75 +44,81 @@ At {{padStart card.data.byhour 2 '0'}}:{{padStart card.data.byminute 2 '0'}}
                                                "21st", "22nd", "23rd", "24th", "25th", "26th", "27th", "28th", "29th", "30th",
                                                "31st"];
 
-                  if (freq === "MONTHLY" && bysetpos !== [] && byweekday !== []) {
-                      let textForBysetpos = "";
-                      if (bysetpos.includes("1"))  textForBysetpos += " first,";
-                      if (bysetpos.includes("2"))  textForBysetpos += " second,";
-                      if (bysetpos.includes("3"))  textForBysetpos += " third,";
-                      if (bysetpos.includes("4"))  textForBysetpos += " fourth,";
-                      if (bysetpos.includes("-1")) textForBysetpos += " last,";
+                  if (freq === "MINUTELY") {
+                      document.getElementById("interval").innerHTML = "Every {{card.data.interval}} minutes";
+                  } else {
+                      document.getElementById("byHourByMinute").innerHTML =
+                          "At {{padStart card.data.byhour 2 '0'}}:{{padStart card.data.byminute 2 '0'}}";
+                      if (freq === "MONTHLY" && bysetpos !== [] && byweekday !== []) {
+                          let textForBysetpos = "";
+                          if (bysetpos.includes("1"))  textForBysetpos += " first,";
+                          if (bysetpos.includes("2"))  textForBysetpos += " second,";
+                          if (bysetpos.includes("3"))  textForBysetpos += " third,";
+                          if (bysetpos.includes("4"))  textForBysetpos += " fourth,";
+                          if (bysetpos.includes("-1")) textForBysetpos += " last,";
 
-                      if (textForBysetpos != "") {
-                          textForBysetpos = textForBysetpos.slice(0, -1); //we delete the last comma
-                          textForBysetpos = "The" + textForBysetpos + " ";
-                          document.getElementById("bysetpos").innerHTML = textForBysetpos;
-                      }
-                  }
-
-                  let textForByweekday = "";
-                  if (byweekday.includes("MO"))  textForByweekday += " Monday";
-                  if (byweekday.includes("TU"))  textForByweekday += " Tuesday";
-                  if (byweekday.includes("WE"))  textForByweekday += " Wednesday";
-                  if (byweekday.includes("TH"))  textForByweekday += " Thursday";
-                  if (byweekday.includes("FR"))  textForByweekday += " Friday";
-                  if (byweekday.includes("SA"))  textForByweekday += " Saturday";
-                  if (byweekday.includes("SU"))  textForByweekday += " Sunday";
-                  if ((freq === "DAILY") && (textForByweekday !== ""))   textForByweekday = "on" + textForByweekday;
-                  document.getElementById("byweekday").innerHTML = textForByweekday;
-
-                  const bymonthday = "{{card.data.bymonthday}}";
-                  let textForBymonthday = "";
-
-                  if (!!bymonthday) {
-                      const bymonthdayArray = bymonthday.split(',');
-
-                      if (bymonthdayArray.includes("1"))  textForBymonthday += "The first day of the month, ";
-                      if (bymonthdayArray.includes("-1")) textForBymonthday += "The last day of the month, ";
-                      if (bymonthdayArray.length > 0) {
-                          if ((bymonthdayArray[0] !== "1") && (bymonthdayArray[0] !== "-1")) {
-                              textForBymonthday += "The " + ordinalNumbersArray[bymonthdayArray[0] - 1] + " day of the month, ";
+                          if (textForBysetpos != "") {
+                              textForBysetpos = textForBysetpos.slice(0, -1); //we delete the last comma
+                              textForBysetpos = "The" + textForBysetpos + " ";
+                              document.getElementById("bysetpos").innerHTML = textForBysetpos;
                           }
                       }
-                  }
-                  if (textForBymonthday !== "") {
-                      textForBymonthday = textForBymonthday.slice(0, -2);
-                      textForBymonthday += "<br/><br/>";
-                  }
-                  document.getElementById("bymonthday").innerHTML = textForBymonthday;
 
-                  const bymonth = "{{card.data.bymonth}}";
-                  let textForBymonth = "";
+                      let textForByweekday = "";
+                      if (byweekday.includes("MO"))  textForByweekday += " Monday";
+                      if (byweekday.includes("TU"))  textForByweekday += " Tuesday";
+                      if (byweekday.includes("WE"))  textForByweekday += " Wednesday";
+                      if (byweekday.includes("TH"))  textForByweekday += " Thursday";
+                      if (byweekday.includes("FR"))  textForByweekday += " Friday";
+                      if (byweekday.includes("SA"))  textForByweekday += " Saturday";
+                      if (byweekday.includes("SU"))  textForByweekday += " Sunday";
+                      if ((freq === "DAILY") && (textForByweekday !== ""))   textForByweekday = "on" + textForByweekday;
+                      document.getElementById("byweekday").innerHTML = textForByweekday;
 
-                  if (!!bymonth) {
-                      const bymonthArray = bymonth.split(',');
+                      const bymonthday = "{{card.data.bymonthday}}";
+                      let textForBymonthday = "";
 
-                      if (bymonthArray.includes("1"))  textForBymonth += " January";
-                      if (bymonthArray.includes("2"))  textForBymonth += " February";
-                      if (bymonthArray.includes("3"))  textForBymonth += " March";
-                      if (bymonthArray.includes("4"))  textForBymonth += " April ";
-                      if (bymonthArray.includes("5"))  textForBymonth += " May";
-                      if (bymonthArray.includes("6"))  textForBymonth += " June";
-                      if (bymonthArray.includes("7"))  textForBymonth += " July";
-                      if (bymonthArray.includes("8"))  textForBymonth += " August";
-                      if (bymonthArray.includes("9"))  textForBymonth += " September";
-                      if (bymonthArray.includes("10")) textForBymonth += " October";
-                      if (bymonthArray.includes("11")) textForBymonth += " November";
-                      if (bymonthArray.includes("12")) textForBymonth += " December";
+                      if (!!bymonthday) {
+                          const bymonthdayArray = bymonthday.split(',');
+
+                          if (bymonthdayArray.includes("1"))  textForBymonthday += "The first day of the month, ";
+                          if (bymonthdayArray.includes("-1")) textForBymonthday += "The last day of the month, ";
+                          if (bymonthdayArray.length > 0) {
+                              if ((bymonthdayArray[0] !== "1") && (bymonthdayArray[0] !== "-1")) {
+                                  textForBymonthday += "The " + ordinalNumbersArray[bymonthdayArray[0] - 1] + " day of the month, ";
+                              }
+                          }
+                      }
+                      if (textForBymonthday !== "") {
+                          textForBymonthday = textForBymonthday.slice(0, -2);
+                          textForBymonthday += "<br/><br/>";
+                      }
+                      document.getElementById("bymonthday").innerHTML = textForBymonthday;
+
+                      const bymonth = "{{card.data.bymonth}}";
+                      let textForBymonth = "";
+
+                      if (!!bymonth) {
+                          const bymonthArray = bymonth.split(',');
+
+                          if (bymonthArray.includes("1"))  textForBymonth += " January";
+                          if (bymonthArray.includes("2"))  textForBymonth += " February";
+                          if (bymonthArray.includes("3"))  textForBymonth += " March";
+                          if (bymonthArray.includes("4"))  textForBymonth += " April ";
+                          if (bymonthArray.includes("5"))  textForBymonth += " May";
+                          if (bymonthArray.includes("6"))  textForBymonth += " June";
+                          if (bymonthArray.includes("7"))  textForBymonth += " July";
+                          if (bymonthArray.includes("8"))  textForBymonth += " August";
+                          if (bymonthArray.includes("9"))  textForBymonth += " September";
+                          if (bymonthArray.includes("10")) textForBymonth += " October";
+                          if (bymonthArray.includes("11")) textForBymonth += " November";
+                          if (bymonthArray.includes("12")) textForBymonth += " December";
+                      }
+                      if (textForBymonth !== "") {
+                          textForBymonth = "in" + textForBymonth;
+                      }
+                      document.getElementById("bymonth").innerHTML = textForBymonth;
                   }
-                  if (textForBymonth !== "") {
-                      textForBymonth = "in" + textForBymonth;
-                  }
-                  document.getElementById("bymonth").innerHTML = textForBymonth;
             }
       }
       cardTemplate.init();
