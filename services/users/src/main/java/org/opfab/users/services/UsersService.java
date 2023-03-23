@@ -186,7 +186,7 @@ public class UsersService {
             }
 
             User newUser = userRepository.save(user);
-            if (existingUser != null)
+            if ((existingUser != null) && !newUser.equals(existingUser))
                 notificationService.publishUpdatedUserMessage(user.getLogin());
             return new OperationResult<>(newUser, true, null, null);
 

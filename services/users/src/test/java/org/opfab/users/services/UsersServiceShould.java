@@ -491,6 +491,22 @@ public class UsersServiceShould {
             assertThat(eventBusSpy.getMessagesSent()).containsOnly(expectedMessageSent);
         }
 
+
+        @Test
+        void GIVEN_An_Existing_User_WHEN_UpdateOrCreate_With_Same_Value_THEN_Notification_Is_Not_Sent_To_Other_Services() {
+
+           UserData user2Clone = UserData.builder()
+                    .login("user2")
+                    .firstName("user2FirstName")
+                    .lastName("user2LastName")
+                    .group("group2")
+                    .entity("entity1").entity("entity2")
+                    .build();
+            OperationResult<User> result = usersService.updateOrCreateUser(user2Clone, true, true);
+            assertThat(result.isSuccess()).isTrue();
+            assertThat(eventBusSpy.getMessagesSent()).isEmpty();
+        }
+
         @Test
         void GIVEN_An_Existing_User_WHEN_UpdateOrCreate_With_UpdateGroup_True_And_UpdateEntities_False_THEN_User_Is_Update_Without_Entities_Update() {
 
