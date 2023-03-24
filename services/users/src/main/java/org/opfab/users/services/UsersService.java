@@ -171,19 +171,11 @@ public class UsersService {
             User existingUser = userRepository.findById(user.getLogin()).orElse(null);
 
             setEntitiesForUserUpdate(user, existingUser, updateEntities);
-
-            if (updateGroups) {
-                if (isRemovingAdminUserFromAdminGroup(user)) {
+            if ((updateGroups) && (isRemovingAdminUserFromAdminGroup(user))) {
                     return new OperationResult<>(null, false,
                             OperationResult.ErrorType.BAD_REQUEST, CANNOT_REMOVE_ADMIN_USER_FROM_ADMIN_GROUP);
-                }
-                removeInvalidGroups(user);
-            } else {
-                if (existingUser != null)
-                    user.setGroups(existingUser.getGroups());
-                else
-                    user.setGroups(Collections.emptyList());
             }
+            setGroupsForUserUpdate(user, existingUser, updateGroups);
 
             User newUser = userRepository.save(user);
             if ((existingUser != null) && !newUser.equals(existingUser))
@@ -203,6 +195,17 @@ public class UsersService {
                 newUser.setEntities(existingUser.getEntities());
             else
                 newUser.setEntities(Collections.emptyList());
+        }
+    }
+
+    private void setGroupsForUserUpdate(User newUser, User existingUser, boolean updateGroups) {
+        if (updateGroups) {
+            removeInvalidGroups(newUser);
+        } else {
+            if (existingUser != null)
+                newUser.setGroups(existingUser.getGroups());
+            else
+                newUser.setGroups(Collections.emptyList());
         }
     }
 
