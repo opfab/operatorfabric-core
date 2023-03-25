@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2022, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2023, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -157,15 +157,15 @@ class CardRoutingUtilitiesShould {
     }
 
     @Test
-    void testCreateDeleteCardMessageForUserNotRecipient(){
-        JSONObject cardAdd  = createJSONObjectFromString("{\"card\":{\"severity\":\"ALARM\",\"summary\":{\"parameters\":{},\"key\":\"defaultProcess.summary\"},\"process\":\"defaultProcess\",\"publishDate\":1592389043000,\"title\":{\"parameters\":{},\"key\":\"defaultProcess.title\"},\"uid\":\"db914230-a5aa-42f2-aa29-f5348700fa55\",\"publisherVersion\":\"1\",\"processInstanceId\":\"process5b\",\"publisher\":\"api_test\",\"id\":\"api_test_process5b\",\"state\":\"messageState\",\"startDate\":1592396243446},\"publishDate\":1592389043000,\"groupRecipientsIds\":[\"Dispatcher\"],\"type\":\"ADD\"}");
-        JSONObject cardAddWantedOutput = createJSONObjectFromString("{\"card\":{\"severity\":\"ALARM\",\"summary\":{\"parameters\":{},\"key\":\"defaultProcess.summary\"},\"process\":\"defaultProcess\",\"publishDate\":1592389043000,\"title\":{\"parameters\":{},\"key\":\"defaultProcess.title\"},\"uid\":\"db914230-a5aa-42f2-aa29-f5348700fa55\",\"publisherVersion\":\"1\",\"processInstanceId\":\"process5b\",\"publisher\":\"api_test\",\"id\":\"api_test_process5b\",\"state\":\"messageState\",\"startDate\":1592396243446},\"publishDate\":1592389043000,\"groupRecipientsIds\":[\"Dispatcher\"],\"type\":\"DELETE\",\"cardId\":\"api_test_process5b\"}");
-        JSONObject cardAddOutput = createJSONObjectFromString(CardRoutingUtilities.createDeleteCardMessageForUserNotRecipient(cardAdd,"test"));
-        Assertions.assertThat(cardAddOutput).isEqualTo(cardAddWantedOutput); 
+    void checkIfUserNeedToReceiveADeleteCardOperation() {
+        JSONObject messageBodyWithUdpateAndProcessStateInPerimeter = createJSONObjectFromString("{" + processStateInPerimeter + ", \"type\":\"UPDATE\"}");
+        JSONObject messageBodyWithUpdateButProcessStateNotInPerimeter = createJSONObjectFromString("{" + processStateNotInPerimeter + ", \"type\":\"UPDATE\"}");
+        JSONObject messageBodyWithAddAndProcessStateInPerimeter = createJSONObjectFromString("{" + processStateInPerimeter + ", \"type\":\"ADD\"}");
+         
+        Assertions.assertThat(CardRoutingUtilities.checkIfUserNeedToReceiveADeleteCardOperation(messageBodyWithUdpateAndProcessStateInPerimeter, currentUserWithPerimeters)).isTrue();
+        Assertions.assertThat(CardRoutingUtilities.checkIfUserNeedToReceiveADeleteCardOperation(messageBodyWithUpdateButProcessStateNotInPerimeter, currentUserWithPerimeters)).isFalse();
+        Assertions.assertThat(CardRoutingUtilities.checkIfUserNeedToReceiveADeleteCardOperation(messageBodyWithAddAndProcessStateInPerimeter, currentUserWithPerimeters)).isFalse();
+     
 
-        String messageBodyDelete = "{\"card\":{\"severity\":\"ALARM\",\"summary\":{\"parameters\":{},\"key\":\"defaultProcess.summary\"},\"process\":\"defaultProcess\",\"publishDate\":1592389043000,\"title\":{\"parameters\":{},\"key\":\"defaultProcess.title\"},\"uid\":\"db914230-a5aa-42f2-aa29-f5348700fa55\",\"publisherVersion\":\"1\",\"processInstanceId\":\"process5b\",\"publisher\":\"api_test\",\"id\":\"api_test_process5d\",\"state\":\"messageState\",\"startDate\":1592396243446},\"publishDate\":1592389043000,\"groupRecipientsIds\":[\"Dispatcher\"],\"type\":\"DELETE\"}";
-        JSONObject inputDelete = createJSONObjectFromString(messageBodyDelete);
-        String outputDelete = CardRoutingUtilities.createDeleteCardMessageForUserNotRecipient(inputDelete,"test");
-        Assertions.assertThat(outputDelete).isEmpty(); 
     }
 }
