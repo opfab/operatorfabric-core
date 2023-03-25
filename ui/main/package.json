@@ -34,7 +34,7 @@
     "@fullcalendar/timegrid": "6.1.5",
     "@ng-bootstrap/ng-bootstrap": "14.0.1",
     "@ngx-translate/core": "14.0.0",
-    "@popperjs/core": "2.11.6",
+    "@popperjs/core": "2.11.7",
     "@swimlane/ngx-charts": "20.1.2",
     "@types/jwt-decode": "2.2.1",
     "ag-grid-angular": "29.0.0",
