@@ -196,26 +196,29 @@ public class CardSubscriptionService implements EventListener {
         return cache.values();
     }
 
-    private void processNewCard(String cardAsString, CardSubscription subscription) {
-        JSONObject card;
+    private void processNewCard(String cardOperationAsString, CardSubscription subscription) {
+        JSONObject cardOperation;
         try {
-            card = (JSONObject) (new JSONParser(JSONParser.MODE_PERMISSIVE)).parse(cardAsString);
+            cardOperation = (JSONObject) (new JSONParser(JSONParser.MODE_PERMISSIVE)).parse(cardOperationAsString);
         } catch (ParseException e) {
             log.error(ERROR_MESSAGE_PARSING, e);
             return;
         }
 
-        if (CardRoutingUtilities.checkIfUserMustReceiveTheCard(card,
+        if (CardRoutingUtilities.checkIfUserMustReceiveTheCard(cardOperation,
                 subscription.getCurrentUserWithPerimeters())) {
-            subscription.publishDataIntoSubscription(cardAsString);
+            if (cardOperation.get("type").equals("UPDATE")) { //for the front an update is considered as an ADD
+                cardOperation.put("type", "ADD");
+                subscription.publishDataIntoSubscription(cardOperation.toJSONString());
+            }
+            else subscription.publishDataIntoSubscription(cardOperationAsString);
         }
-        // In case of ADD or UPDATE, we send a delete card operation (to delete the card
-        // from the feed, more information in OC-297)
         else {
-            String deleteMessage = CardRoutingUtilities.createDeleteCardMessageForUserNotRecipient(card,
-                    subscription.getUserLogin());
-            if (!deleteMessage.isEmpty())
-                subscription.publishDataIntoSubscription(deleteMessage);
+            if (CardRoutingUtilities.checkIfUserNeedToReceiveADeleteCardOperation(cardOperation,subscription.getCurrentUserWithPerimeters())) { 
+                cardOperation.replace("type", "DELETE");
+                cardOperation.replace("card","");
+                subscription.publishDataIntoSubscription(cardOperation.toJSONString());
+            } 
         }
     }
 

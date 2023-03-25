@@ -109,9 +109,8 @@ public class CardProcessingService {
     private void processOneCard(CardPublicationData card, Optional<CurrentUserWithPerimeters> user, Optional<Jwt> jwt) {
         card.prepare(Instant.ofEpochMilli(Instant.now().toEpochMilli()));
         cardTranslationService.translate(card);
-
+        CardPublicationData oldCard = getExistingCard(card.getId());
         if (user.isPresent()) {
-            CardPublicationData oldCard = getExistingCard(card.getId());
             if (oldCard != null && !cardPermissionControlService.isUserAllowedToEditCard(user.get(), card, oldCard))
                 throw new ApiErrorException(ApiError.builder()
                         .status(HttpStatus.FORBIDDEN)
@@ -131,13 +130,15 @@ public class CardProcessingService {
         }
         deleteChildCardsProcess(card, jwt);
 
-        if ((card.getToNotify() == null) || card.getToNotify())
+        if ((card.getToNotify() == null) || Boolean.TRUE.equals(card.getToNotify()))
             cardRepositoryService.saveCard(card);
 
         cardRepositoryService.saveCardToArchive(new ArchivedCardPublicationData(card));
 
-        if ((card.getToNotify() == null) || card.getToNotify())
-            cardNotificationService.notifyOneCard(card, CardOperationTypeEnum.ADD);
+        if ((card.getToNotify() == null) || card.getToNotify()) {
+            if (oldCard==null) cardNotificationService.notifyOneCard(card, CardOperationTypeEnum.ADD);
+            else cardNotificationService.notifyOneCard(card, CardOperationTypeEnum.UPDATE);
+        }
 
         log.debug("Card persisted (process = {} , processInstanceId= {} , state = {} ", card.getProcess(),card.getProcessInstanceId(),card.getState());
     }

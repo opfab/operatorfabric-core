@@ -43,15 +43,8 @@ public class CardNotificationService {
     public void notifyOneCard(CardPublicationData card, CardOperationTypeEnum type) {
         CardOperationData.BuilderEncapsulator builderEncapsulator = CardOperationData.encapsulatedBuilder();
         builderEncapsulator.builder().type(type);
-        switch (type) {
-            case ADD:
-            case UPDATE:
-                builderEncapsulator.builder().card(card.toLightCard());
-                break;
-            case DELETE:
-                builderEncapsulator.builder().cardId(card.getId());
-
-        }
+        builderEncapsulator.builder().card(card.toLightCard());
+        builderEncapsulator.builder().cardId(card.getId());
         CardOperationData cardOperation = builderEncapsulator.builder().build();
         List<String> listOfGroupRecipients = new ArrayList<>();
         if (card.getGroupRecipients() != null)
