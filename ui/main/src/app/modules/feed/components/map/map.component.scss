@@ -1,4 +1,4 @@
-/* Copyright (c) 2022, Alliander (http://www.alliander.com)
+/* Copyright (c) 2022-2023, Alliander (http://www.alliander.com)
 /* Copyright (c) 2018-2022, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
@@ -21,6 +21,9 @@
     border-radius: 10px;
     padding: 10px;
     background-color: var(--opfab-popover-bgcolor);
+    max-height: 250px;
+    overflow: auto;
+    overflow-x: hidden;
 }
 
 .opfab-ol-popup-closer {
