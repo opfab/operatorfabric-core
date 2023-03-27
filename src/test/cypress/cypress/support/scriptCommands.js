@@ -146,5 +146,9 @@ export class ScriptCommands extends OpfabCommands {
     sendMessageToSubscriptions = function (message) {
         cy.exec('cd .. && ./resources/sendMessageToSubscriptions.sh ' + message);
     }
+
+    cleanDownloadsDir = function () {
+        cy.exec('./cypress/scripts/cleanDownloadsDir.sh');
+    }
 }
 

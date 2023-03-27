@@ -22,6 +22,7 @@ describe ('Monitoring screen tests',function () {
     before('Set up configuration', function () {
         script.deleteAllSettings();
         script.deleteAllCards();
+        script.cleanDownloadsDir();
         script.resetUIConfigurationFiles();
         script.loadTestConf();
         script.send6TestCards();
@@ -490,12 +491,8 @@ describe ('Monitoring screen tests',function () {
 
     describe('Check export file', function () {
 
-        let exportFileName;
-
-        afterEach('Delete export file', function () {
-            if (!!exportFileName) {
-                cy.task('deleteFile', {filename: './cypress/downloads/' + exportFileName});
-            }
+        afterEach('Clean export directory', function () {
+            script.cleanDownloadsDir();
         });
 
         it('Check export', function () {
@@ -521,7 +518,6 @@ describe ('Monitoring screen tests',function () {
             // check download folder contains the export file
             cy.task('list', {dir: './cypress/downloads'}).then((files) => {
                 expect(files.length).to.equal(1);
-                exportFileName = files[0];
 
                 // check file name
                 expect(files[0]).to.match(/^Monitoring_export_\d*\.xlsx/);
@@ -606,7 +602,6 @@ describe ('Monitoring screen tests',function () {
             // check download folder contains the export file
             cy.task('list', {dir: './cypress/downloads'}).then((files) => {
                 expect(files.length).to.equal(1);
-                exportFileName = files[0];
 
                 // check file name
                 expect(files[0]).to.match(/^Monitoring_export_\d*\.xlsx/);
