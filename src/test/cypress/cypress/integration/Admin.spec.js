@@ -20,8 +20,9 @@ describe('AdmininstrationPages', () => {
 
     before('Set up configuration', function () {
         script.loadTestConf();
+        script.cleanDownloadsDir();
     });
-    
+
     it('List, add, edit, delete users', () => {
         opfab.loginWithUser('admin');
         opfab.navigateToAdministration();
@@ -570,12 +571,9 @@ describe('AdmininstrationPages', () => {
 
     describe('Check export files', function () {
 
-        let exportFileName;
 
-        afterEach('Delete export file', function () {
-            if (!!exportFileName) {
-                cy.task('deleteFile', {filename: './cypress/downloads/' + exportFileName});
-            }
+        afterEach('Clean export directory', function () {
+            script.cleanDownloadsDir();
         });
 
         it('Check users export', function () {
@@ -596,7 +594,6 @@ describe('AdmininstrationPages', () => {
             // check download folder contains the export file
             cy.task('list', {dir: './cypress/downloads'}).then((files) => {
                 expect(files.length).to.equal(1);
-                exportFileName = files[0];
 
                 // check file name
                 expect(files[0]).to.match(/^user_export_\d*\.xlsx/);
@@ -639,7 +636,6 @@ describe('AdmininstrationPages', () => {
             // check download folder contains the export file
             cy.task('list', {dir: './cypress/downloads'}).then((files) => {
                 expect(files.length).to.equal(1);
-                exportFileName = files[0];
 
                 // check file name
                 expect(files[0]).to.match(/^entity_export_\d*\.xlsx/);
@@ -682,7 +678,6 @@ describe('AdmininstrationPages', () => {
             // check download folder contains the export file
             cy.task('list', {dir: './cypress/downloads'}).then((files) => {
                 expect(files.length).to.equal(1);
-                exportFileName = files[0];
 
                 // check file name
                 expect(files[0]).to.match(/^group_export_\d*\.xlsx/);
@@ -726,7 +721,6 @@ describe('AdmininstrationPages', () => {
             // check download folder contains the export file
             cy.task('list', {dir: './cypress/downloads'}).then((files) => {
                 expect(files.length).to.equal(1);
-                exportFileName = files[0];
 
                 // check file name
                 expect(files[0]).to.match(/^perimeter_export_\d*\.xlsx/);

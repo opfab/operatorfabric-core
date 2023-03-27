@@ -16,17 +16,16 @@ describe('Archives screen tests', function () {
     const opfab = new OpfabGeneralCommands();
     const archivesAndLogging = new ArchivesAndLoggingCommands();
     const script = new ScriptCommands();
-    let exportFileName;
 
     before('Set up configuration', function () {
         script.loadTestConf();
+        script.cleanDownloadsDir();
     });
 
-    after('Delete export file', function () {
-        if (!!exportFileName) {
-            cy.task('deleteFile', {filename: './cypress/downloads/' + exportFileName});
-        }
+    after('Clean export directory', function () {
+        script.cleanDownloadsDir();
     });
+
 
     it('Check archived cards reception', function () {
         script.deleteAllArchivedCards();
@@ -297,7 +296,6 @@ describe('Archives screen tests', function () {
         // check download folder contains the export file
         cy.task('list', {dir: './cypress/downloads'}).then((files) => {
             expect(files.length).to.equal(1);
-            exportFileName = files[0];
 
             // check file name
             expect(files[0]).to.match(/^Archive_export_\d*\.xlsx/);

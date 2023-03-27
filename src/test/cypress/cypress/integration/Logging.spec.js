@@ -18,16 +18,14 @@ describe('Logging screen tests', function () {
     const archivesAndLogging = new ArchivesAndLoggingCommands();
     const agGrid = new AgGridCommands();
     const script = new ScriptCommands();
-    let exportFileName;
 
     before('Set up configuration', function () {
         script.loadTestConf();
+        script.cleanDownloadsDir();
     });
 
     after('Delete export file', function () {
-        if (!!exportFileName) {
-            cy.task('deleteFile', {filename: './cypress/downloads/' + exportFileName});
-        }
+        script.cleanDownloadsDir();
     });
 
     it('Check composition of multi-filters for process groups/processes/states for operator1_fr', function () {
@@ -212,7 +210,6 @@ describe('Logging screen tests', function () {
         // check download folder contains the export file
         cy.task('list', {dir: './cypress/downloads'}).then((files) => {
             expect(files.length).to.equal(1);
-            exportFileName = files[0];
 
             // check file name
             expect(files[0]).to.match(/^Logging_export_\d*\.xlsx/);
