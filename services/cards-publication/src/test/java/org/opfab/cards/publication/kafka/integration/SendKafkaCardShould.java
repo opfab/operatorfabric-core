@@ -1,5 +1,5 @@
 /* Copyright (c) 2020-2021 Alliander (http://www.alliander.com)
- * Copyright (c) 2022, RTE (http://www.rte-france.com)
+ * Copyright (c) 2022-2023, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -22,11 +22,10 @@ import org.opfab.cards.publication.configuration.kafka.KafkaListenerContainerFac
 import org.opfab.cards.publication.configuration.kafka.ProducerFactoryAutoConfiguration;
 import org.opfab.cards.publication.kafka.command.CreateCardCommandHandler;
 import org.opfab.cards.publication.kafka.consumer.CardCommandConsumerListener;
+import org.opfab.cards.publication.mocks.CardRepositoryMock;
 import org.opfab.cards.publication.model.CardPublicationData;
 import org.opfab.cards.publication.model.I18nPublicationData;
 import org.opfab.cards.publication.model.TimeSpanPublicationData;
-import org.opfab.cards.publication.repositories.ArchivedCardRepositoryForTest;
-import org.opfab.cards.publication.repositories.CardRepositoryForTest;
 import org.opfab.cards.publication.services.clients.impl.ExternalAppClientImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -76,11 +75,10 @@ class SendKafkaCardShould {
     @Autowired
     private EmbeddedKafkaBroker embeddedKafkaBroker;
 
-    @Autowired
-    private CardRepositoryForTest cardRepository;
 
     @Autowired
-    private ArchivedCardRepositoryForTest archiveRepository;
+    private CardRepositoryMock cardRepositoryMock;
+
 
     @Autowired
     private ExternalAppClientImpl appClient;
@@ -95,11 +93,20 @@ class SendKafkaCardShould {
     private static volatile boolean receiveCardCommandResultIsOK;
     private KafkaMessageListenerContainer<String, String> container;
 
+
+
+    @BeforeEach
+    public void cleanBefore() {
+        cardRepositoryMock.clear();
+    }
+
+
     @AfterEach
     public void cleanAfter() {
-        cardRepository.deleteAll();
-        archiveRepository.deleteAll();
+        cardRepositoryMock.clear();
     }
+
+
 
     // Configure a dummy topic and listener so we know Kafka is ready when this method finishes
     @BeforeAll
@@ -149,10 +156,10 @@ class SendKafkaCardShould {
 
         kafkaTemplate.send(commandTopic,cardCommand);
 
-        CardPublicationData card = cardRepository.findByProcessInstanceId(processInstanceId);
+        CardPublicationData card = cardRepositoryMock.findCardById(taskId + "." + processInstanceId);
         for (int retries = 10; retries >0 && card == null; retries--){
-            Thread.sleep(250);  // Give the database some time to persist the card
-            card = cardRepository.findByProcessInstanceId(processInstanceId);
+            Thread.sleep(250);  // Give the service some time to process the card 
+            card = cardRepositoryMock.findCardById(taskId + "." + processInstanceId);
         }
 
         assertThat( card, is(notNullValue()));

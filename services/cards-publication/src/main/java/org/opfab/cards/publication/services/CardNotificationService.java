@@ -18,12 +18,9 @@ import org.opfab.cards.model.CardOperationTypeEnum;
 import org.opfab.cards.publication.model.CardOperationData;
 import org.opfab.cards.publication.model.CardPublicationData;
 import org.opfab.utilities.eventbus.EventBus;
-import org.springframework.stereotype.Service;
 
 import java.util.*;
 
-
-@Service
 @Slf4j
 public class CardNotificationService {
 

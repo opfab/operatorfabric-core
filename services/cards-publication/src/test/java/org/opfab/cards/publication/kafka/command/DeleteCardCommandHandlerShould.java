@@ -1,5 +1,5 @@
 /* Copyright (c) 2020, Alliander (http://www.alliander.com)
- * Copyright (c) 2021, RTE (http://www.rte-france.com)
+ * Copyright (c) 2021-2023, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -17,6 +17,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.opfab.avro.Card;
 import org.opfab.avro.CardCommand;
 import org.opfab.avro.CommandType;
+import org.opfab.cards.publication.configuration.Services;
 import org.opfab.cards.publication.kafka.CardObjectMapper;
 import org.opfab.cards.publication.model.CardPublicationData;
 import org.opfab.cards.publication.services.CardProcessingService;
@@ -38,6 +39,8 @@ import static org.mockito.Mockito.when;
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class DeleteCardCommandHandlerShould {
 
+    private Services services;
+
     private CardProcessingService cardProcessingService;
 
     private CardObjectMapper objectMapper;
@@ -46,9 +49,10 @@ class DeleteCardCommandHandlerShould {
 
     @BeforeAll
     public void setUp() {
+        services = mock(Services.class);
         cardProcessingService = mock(CardProcessingService.class);
         objectMapper = mock(CardObjectMapper.class);
-        cut = new DeleteCardCommandHandler(cardProcessingService);
+        cut = new DeleteCardCommandHandler(services);
         ReflectionTestUtils.setField(cut, "objectMapper", objectMapper);
     }
 
@@ -65,6 +69,7 @@ class DeleteCardCommandHandlerShould {
         when(cardCommandMock.getCard()).thenReturn(cardMock);
         when(objectMapper.writeValueAsString(any())).thenReturn("");
         when(objectMapper.readValue(anyString(), eq(CardPublicationData.class))).thenReturn(cardPublicationDataMock);
+        when(services.getCardProcessingService()).thenReturn(cardProcessingService);
         cut.executeCommand(cardCommandMock);
 
         verify(cardProcessingService, times(1)).prepareAndDeleteCard(eq(cardPublicationDataMock));
