@@ -128,17 +128,15 @@ public class CardProcessingService {
             log.info("Send user card to external app with jwt present " + jwt.isPresent());
             externalAppClient.sendCardToExternalApplication(card, jwt);
         }
-        deleteChildCardsProcess(card, jwt);
-
-        if ((card.getToNotify() == null) || Boolean.TRUE.equals(card.getToNotify()))
+        
+        if ((card.getToNotify() == null) || Boolean.TRUE.equals(card.getToNotify())) {
+            if (oldCard!=null) deleteChildCardsProcess(card, jwt);
             cardRepositoryService.saveCard(card);
-
-        cardRepositoryService.saveCardToArchive(new ArchivedCardPublicationData(card));
-
-        if ((card.getToNotify() == null) || card.getToNotify()) {
             if (oldCard==null) cardNotificationService.notifyOneCard(card, CardOperationTypeEnum.ADD);
             else cardNotificationService.notifyOneCard(card, CardOperationTypeEnum.UPDATE);
         }
+
+        cardRepositoryService.saveCardToArchive(new ArchivedCardPublicationData(card));
 
         log.debug("Card persisted (process = {} , processInstanceId= {} , state = {} ", card.getProcess(),card.getProcessInstanceId(),card.getState());
     }
