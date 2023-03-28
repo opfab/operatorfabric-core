@@ -12,6 +12,7 @@
 package org.opfab.cards.consultation;
 
 import org.opfab.useractiontracing.UserActionLogsConfiguration;
+import org.opfab.useractiontracing.mongo.UserActionLogRepositoryImpl;
 import org.opfab.utilities.eventbus.rabbit.RabbitEventBus;
 import org.opfab.springtools.configuration.mongo.EnableOperatorFabricMongo;
 import org.opfab.springtools.configuration.oauth.EnableReactiveOperatorFabricOAuth2;
@@ -26,7 +27,7 @@ import org.springframework.data.mongodb.repository.config.EnableReactiveMongoRep
 @EnableReactiveOperatorFabricOAuth2
 @EnableOperatorFabricMongo
 @EnableReactiveMongoRepositories
-@Import({ UserActionLogsConfiguration.class,RabbitEventBus.class})
+@Import({ UserActionLogsConfiguration.class,UserActionLogRepositoryImpl.class,RabbitEventBus.class})
 public class CardConsultationApplication {
 
     public static void main(String[] args) {

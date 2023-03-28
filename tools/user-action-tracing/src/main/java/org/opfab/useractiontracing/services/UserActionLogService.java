@@ -10,11 +10,10 @@
 package org.opfab.useractiontracing.services;
 
 import org.opfab.useractiontracing.model.UserActionLog;
-import org.opfab.useractiontracing.model.UserActionEnum;
 import org.opfab.useractiontracing.repositories.UserActionLogRepository;
+import org.opfab.useractiontracing.model.UserActionEnum;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.util.MultiValueMap;
 
@@ -51,7 +50,7 @@ public class UserActionLogService {
     }
 
     public List<UserActionLog> getUserActionLogs() {
-        return this.userActionLogRepository.findAll(Sort.by("date").descending());
+        return this.userActionLogRepository.findAll();
     }
 
     public Page<UserActionLog> getUserActionLogsByParams(MultiValueMap<String, String> params, Pageable pageable) {

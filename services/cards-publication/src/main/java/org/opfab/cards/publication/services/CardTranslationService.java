@@ -25,13 +25,10 @@ import org.opfab.utilities.eventbus.EventBus;
 import org.opfab.utilities.eventbus.EventListener;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
-import org.springframework.stereotype.Service;
-
 import feign.FeignException;
 import lombok.extern.slf4j.Slf4j;
 
 
-@Service
 @Slf4j
 public class CardTranslationService implements EventListener{
 
@@ -43,7 +40,8 @@ public class CardTranslationService implements EventListener{
     public static final String NO_I18N_FOR_KEY = "Impossible to publish card : no i18n translation for key=%1$s (process=%2$s, processVersion=%3$s, processInstanceId=%4$s)";
     public static final String NO_I18N_FILE = "Impossible to publish card : no i18n file for process=%1$s, processVersion=%2$s (processInstanceId=%3$s)";
 
-    @Value("${authorizeToSendCardWithInvalidProcessState:false}") boolean authorizeToSendCardWithInvalidProcessState;
+    @Value("${authorizeToSendCardWithInvalidProcessState:false}") 
+    boolean authorizeToSendCardWithInvalidProcessState;
 
 
     public CardTranslationService(I18nProcessesCache i18nProcessesCache,ProcessesCache processesCache, EventBus eventBus) {

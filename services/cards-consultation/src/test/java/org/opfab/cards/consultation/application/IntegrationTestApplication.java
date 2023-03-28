@@ -12,6 +12,7 @@
 package org.opfab.cards.consultation.application;
 
 import org.opfab.useractiontracing.UserActionLogsConfiguration;
+import org.opfab.useractiontracing.mongo.UserActionLogRepositoryImpl;
 import org.opfab.cards.consultation.configuration.ThreadPoolTaskSchedulerConfiguration;
 import org.opfab.cards.consultation.configuration.json.JacksonConfig;
 import org.opfab.cards.consultation.configuration.mongo.LocalMongoConfiguration;
@@ -29,7 +30,7 @@ import org.springframework.data.mongodb.repository.config.EnableReactiveMongoRep
 @SpringBootApplication
 @EnableOperatorFabricMongo
 @EnableReactiveMongoRepositories(basePackageClasses = {CardRepository.class, ArchivedCardRepository.class})
-@Import({JacksonConfig.class, LocalMongoConfiguration.class, ThreadPoolTaskSchedulerConfiguration.class, UserActionLogsConfiguration.class, EventBusSpy.class})
+@Import({JacksonConfig.class, LocalMongoConfiguration.class, ThreadPoolTaskSchedulerConfiguration.class, UserActionLogsConfiguration.class,UserActionLogRepositoryImpl.class,EventBusSpy.class})
 public class IntegrationTestApplication {
 
     public static void main(String[] args) {

@@ -13,20 +13,14 @@ import org.opfab.users.model.ComputedPerimeter;
 import org.opfab.users.model.CurrentUserWithPerimeters;
 import org.opfab.users.model.PermissionEnum;
 import org.opfab.users.model.RightsEnum;
-import org.springframework.stereotype.Service;
 
-import lombok.extern.slf4j.Slf4j;
+
 
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
-/**
- * <p>
- * Responsible of checking user rights to publish, edit or delete a card
- */
-@Service
-@Slf4j
+
 public class CardPermissionControlService {
 
     boolean isCardPublisherAllowedForUser(CardPublicationData card, String login) {

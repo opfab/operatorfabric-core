@@ -171,8 +171,7 @@ public class CardPublicationData implements Card {
     public void prepare(Instant publishDate) {
         this.publishDate = publishDate;
         this.id = process + "." + processInstanceId;
-        if (null == this.uid)
-        	this.uid = UUID.randomUUID().toString();
+        this.uid = UUID.randomUUID().toString();
         this.processStateKey = process + "." + state;
         this.entitiesAcks = Collections.emptyList();
     }

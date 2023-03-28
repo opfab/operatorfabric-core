@@ -1,4 +1,4 @@
-/* Copyright (c) 2022, RTE (http://www.rte-france.com)
+/* Copyright (c) 2022-2023, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -10,46 +10,28 @@
 
 package org.opfab.cards.publication.services;
 
-import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.opfab.cards.model.SeverityEnum;
-import org.opfab.cards.publication.application.UnitTestApplication;
 import org.opfab.cards.publication.model.*;
 import org.opfab.users.model.ComputedPerimeter;
 import org.opfab.users.model.CurrentUserWithPerimeters;
 import org.opfab.users.model.RightsEnum;
 import org.opfab.users.model.User;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.context.annotation.Import;
-import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
-import org.springframework.web.client.RestTemplate;
-
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-@ExtendWith(SpringExtension.class)
-@SpringBootTest(classes = {UnitTestApplication.class})
-@ActiveProfiles(profiles = {"native", "test"})
-@Import({RestTemplate.class})
-@Slf4j
 class CardPermissionControlServiceShould {
 
-    @Autowired
+    
     private CardPermissionControlService cardPermissionControlService;
-
-    @Autowired
-    RestTemplate restTemplate;
-
     private User user;
     private CurrentUserWithPerimeters currentUserWithPerimeters;
 
     public CardPermissionControlServiceShould() {
+        cardPermissionControlService = new CardPermissionControlService();
 
         user = new User();
         user.setLogin("dummyUser");
