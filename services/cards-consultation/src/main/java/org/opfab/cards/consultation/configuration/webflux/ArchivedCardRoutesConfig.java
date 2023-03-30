@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2022, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2023, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -16,7 +16,7 @@ import lombok.extern.slf4j.Slf4j;
 
 import org.opfab.cards.consultation.model.ArchivedCardConsultationData;
 import org.opfab.cards.consultation.model.ArchivedCardData;
-import org.opfab.cards.consultation.model.ArchivedCardsFilter;
+import org.opfab.cards.consultation.model.CardsFilter;
 import org.opfab.cards.consultation.repositories.ArchivedCardRepository;
 import org.opfab.springtools.configuration.oauth.OpFabJwtAuthenticationToken;
 import org.opfab.users.model.CurrentUserWithPerimeters;
@@ -59,8 +59,8 @@ public class ArchivedCardRoutesConfig implements UserExtractor {
                         .body(fromValue(archivedCards))));
     }
 
-    private Mono<Tuple2<CurrentUserWithPerimeters, ArchivedCardsFilter>> extractFilterOnPost(ServerRequest request){
-        Mono<ArchivedCardsFilter> filter = request.bodyToMono(ArchivedCardsFilter.class);
+    private Mono<Tuple2<CurrentUserWithPerimeters, CardsFilter>> extractFilterOnPost(ServerRequest request){
+        Mono<CardsFilter> filter = request.bodyToMono(CardsFilter.class);
         return request.principal().zipWith(filter)
                 .map(t->{
                     OpFabJwtAuthenticationToken jwtPrincipal = (OpFabJwtAuthenticationToken) t.getT1();

@@ -341,7 +341,7 @@ Feature: Archives
 
 Scenario: fetch the first page
 
-	* def filter1 =
+	* def filter =
 	"""
 	{
 	  "page" : 0,
@@ -352,7 +352,7 @@ Scenario: fetch the first page
   
 	  Given url opfabUrl + 'cards/archives'
 	  And header Authorization = 'Bearer ' + authTokenAsTSO
-	  And request filter1
+	  And request filter
 	  Then method post
 	  Then status 200
 	  And match response.numberOfElements == 9
@@ -360,7 +360,7 @@ Scenario: fetch the first page
   
 	Scenario: fetch all archived cards for operator1_fr, not in admin mode
   
-	  * def filter2 =
+	  * def filter =
 	  """
 	  {
 		"page" : 0,
@@ -372,7 +372,7 @@ Scenario: fetch the first page
   
 	  Given url opfabUrl + 'cards/archives'
 	  And header Authorization = 'Bearer ' + authTokenAsTSO
-	  And request filter2
+	  And request filter
 	  Then method post
 	  Then status 200
 	  And assert response.numberOfElements == 9
@@ -381,7 +381,7 @@ Scenario: fetch the first page
 	#Test parameter adminMode
 	Scenario: fetch all archived cards for operator1_fr, in admin mode
   
-	  * def filter3 =
+	  * def filter =
 	  """
 	  {
 		"page" : 0,
@@ -393,7 +393,7 @@ Scenario: fetch the first page
   
 	  Given url opfabUrl + 'cards/archives'
 	  And header Authorization = 'Bearer ' + authTokenAsTSO
-	  And request filter3
+	  And request filter
 	  Then method post
 	  And assert response.numberOfElements == 9
   
@@ -401,7 +401,7 @@ Scenario: fetch the first page
 	#Test parameter adminMode
 	Scenario: fetch all archived cards for admin, not in admin mode
   
-	  * def filter4 =
+	  * def filter =
 	  """
 	  {
 		"page" : 0,
@@ -413,7 +413,7 @@ Scenario: fetch the first page
   
 	  Given url opfabUrl + 'cards/archives'
 	  And header Authorization = 'Bearer ' + authTokenAdmin
-	  And request filter4
+	  And request filter
 	  Then method post
 	  And assert response.numberOfElements == 0
   
@@ -422,7 +422,7 @@ Scenario: fetch the first page
   Scenario: fetch all archived cards for admin, in admin mode
   
   
-	* def filter5 =
+	* def filter =
 	"""
 	{
 	  "page" : 0,
@@ -434,14 +434,14 @@ Scenario: fetch the first page
   
 	Given url opfabUrl + 'cards/archives'
 	And header Authorization = 'Bearer ' + authTokenAdmin
-	And request filter5
+	And request filter
 	Then method post
 	And assert response.numberOfElements == 10
   
   
   Scenario: change number of elements
   
-	* def filter6 =
+	* def filter =
 	"""
 	{
 	  "page" : 0,
@@ -452,14 +452,14 @@ Scenario: fetch the first page
   
 	Given url opfabUrl + 'cards/archives'
 	And header Authorization = 'Bearer ' + authTokenAsTSO
-	And request filter6
+	And request filter
 	Then method post
 	And match response.size == 5
 	And match response.numberOfElements == 5
   
   Scenario: filter on a given publisher
   
-	* def filter7 =
+	* def filter =
 	"""
 	{
 	  "page" : 0,
@@ -476,7 +476,7 @@ Scenario: fetch the first page
   
 	Given url opfabUrl + 'cards/archives'
 	And header Authorization = 'Bearer ' + authTokenAsTSO
-	And request filter7
+	And request filter
 	Then method post
 	Then status 200
 	And assert response.numberOfElements == 9
@@ -484,7 +484,7 @@ Scenario: fetch the first page
   
   
   Scenario: without authentication
-	* def filter8 =
+	* def filter =
 	"""
 	{
 	  "page" : 0,
@@ -494,14 +494,14 @@ Scenario: fetch the first page
 	"""
   
 	Given url opfabUrl + 'cards/archives'
-	And request filter8
+	And request filter
 	Then method post
 	Then status 403
   
   
 	 Scenario: filter on tag
   
-	  * def filter9 =
+	  * def filter =
 	  """
 	  {
 		"page" : 0,
@@ -518,13 +518,13 @@ Scenario: fetch the first page
   
 	  Given url opfabUrl + 'cards/archives'
 	  And header Authorization = 'Bearer ' + authTokenAsTSO
-	  And request filter9
+	  And request filter
 	  Then method post
 	  Then status 200
   
 	Scenario: filter on a given publish date
   
-	  * def filter10 =
+	  * def filter =
 	  """
 	  {
 		"page" : 0,
@@ -540,7 +540,7 @@ Scenario: fetch the first page
   
 	  Given url opfabUrl + 'cards/archives'
 	  And header Authorization = 'Bearer ' + authTokenAsTSO
-	  And request filter10
+	  And request filter
 	  Then method post
 	  Then status 200
 	  And assert response.numberOfElements == 9
@@ -548,7 +548,7 @@ Scenario: fetch the first page
   
 	Scenario: filter by activeFrom
   
-	  * def filter11 =
+	  * def filter =
 	  """
 	  {
 		"page" : 0,
@@ -564,7 +564,7 @@ Scenario: fetch the first page
   
 	  Given url opfabUrl + 'cards/archives' +'?activeFrom=1553186770481'
 	  And header Authorization = 'Bearer ' + authTokenAsTSO
-	  And request filter11
+	  And request filter
 	  Then method post
 	  Then status 200
 	   And assert response.numberOfElements == 9
@@ -572,7 +572,7 @@ Scenario: fetch the first page
   
 	  Scenario: filter by activeFrom after startDate of card with no endDate
   
-		* def filter12 =
+		* def filter =
 		"""
 		{
 		  "page" : 0,
@@ -588,14 +588,14 @@ Scenario: fetch the first page
   
 		Given url opfabUrl + 'cards/archives'
 		And header Authorization = 'Bearer ' + authTokenAsTSO
-		And request filter12
+		And request filter
 		Then method post
 		Then status 200
 		 And assert response.numberOfElements == 8
   
 		Scenario: filter by activeTo
   
-		  * def filter13 =
+		  * def filter =
 		  """
 		  {
 			"page" : 0,
@@ -611,7 +611,7 @@ Scenario: fetch the first page
   
 		  Given url opfabUrl + 'cards/archives'
 		  And header Authorization = 'Bearer ' + authTokenAsTSO
-		  And request filter13
+		  And request filter
 		  Then method post
 		  Then status 200
 		  And assert response.numberOfElements == 9
@@ -619,7 +619,7 @@ Scenario: fetch the first page
   
 		Scenario: filter process
   
-		  * def filter14 =
+		  * def filter =
 		  """
 		  {
 			"page" : 0,
@@ -636,7 +636,7 @@ Scenario: fetch the first page
   
 		  Given url opfabUrl + 'cards/archives'
 		  And header Authorization = 'Bearer ' + authTokenAsTSO
-		  And request filter14
+		  And request filter
 		  Then method post
 		  Then status 200
 		  And assert response.numberOfElements == 9
@@ -644,7 +644,7 @@ Scenario: fetch the first page
   
 		Scenario: fetch all archived cards, child cards included
   
-		  * def filter15 =
+		  * def filter =
 		  """
 		  {
 			"page" : 0,
@@ -656,14 +656,14 @@ Scenario: fetch the first page
   
 		  Given url opfabUrl + 'cards/archives'
 		  And header Authorization = 'Bearer ' + authTokenAsTSO
-		  And request filter15
+		  And request filter
 		  Then method post
 		  Then status 200
 		  And assert response.numberOfElements == 10
   
 		Scenario: fetch archived cards, child cards excluded
   
-		  * def filter16 =
+		  * def filter =
 		  """
 		  {
 			"page" : 0,
@@ -675,14 +675,14 @@ Scenario: fetch the first page
   
 		  Given url opfabUrl + 'cards/archives'
 		  And header Authorization = 'Bearer ' + authTokenAsTSO
-		  And request filter16
+		  And request filter
 		  Then method post
 		  Then status 200
 		  And assert response.numberOfElements == 9
   
 		Scenario: fetch archived cards (child cards excluded by default)
   
-		  * def filter17 =
+		  * def filter =
 		  """
 		  {
 			"page" : 0,
@@ -693,7 +693,7 @@ Scenario: fetch the first page
   
 		  Given url opfabUrl + 'cards/archives'
 		  And header Authorization = 'Bearer ' + authTokenAsTSO
-		  And request filter17
+		  And request filter
 		  Then method post
 		  Then status 200
 		  And assert response.numberOfElements == 9

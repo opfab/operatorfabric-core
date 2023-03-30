@@ -15,7 +15,7 @@ import {HttpClient} from '@angular/common/http';
 import {environment} from "@env/environment";
 import {Injectable} from "@angular/core";
 import {CardServer} from "app/business/server/card.server";
-import {ArchivedCardsFilter} from "@ofModel/archived-cards-filter.model";
+import {CardsFilter} from "@ofModel/cards-filter.model";
 import {CardForPublishing, Card, CardData, CardCreationReportData} from "@ofModel/card.model";
 import {FieldToTranslate} from "@ofModel/field-to-translate.model";
 import {LightCard} from "@ofModel/light-card.model";
@@ -49,7 +49,7 @@ export class AngularCardServer extends AngularServer implements CardServer {
         return this.processHttpResponse(this.httpClient.get<CardData>(`${this.archivesUrl}/${id}`));
     }
 
-    fetchFilteredArchivedCards(filter: ArchivedCardsFilter): Observable<ServerResponse<any>> {
+    fetchFilteredArchivedCards(filter: CardsFilter): Observable<ServerResponse<any>> {
         return this.processHttpResponse(this.httpClient.post<Page<LightCard>>(`${this.archivesUrl}`, filter));
     }
 

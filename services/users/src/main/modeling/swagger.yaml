@@ -70,11 +70,13 @@ definitions:
       * ADMIN_BUSINESS_PROCESS: Permission to administer bundles and processes
       * VIEW_ALL_ARCHIVED_CARDS: Permission to access all archived cards
       * VIEW_USER_ACTION_LOGS: Permission to view user action logs
+      * VIEW_ALL_CARDS: Permission to query all published cards
       * READONLY: Permission to view card, no rights to send cards or respond to a card.
     enum:
       - ADMIN
       - ADMIN_BUSINESS_PROCESS
       - VIEW_ALL_ARCHIVED_CARDS
+      - VIEW_ALL_CARDS
       - VIEW_USER_ACTION_LOGS
       - READONLY
   GroupTypeEnum:

@@ -14,13 +14,6 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
 
 /**
- * Group type 
- *
- * <dl>
- *     <dt>ADMIN</dt><dd> Administrator permission </dd>
- *     <dt>VIEW_ALL_ARCHIVED_CARDS</dt><dd> Permission to access all archived cards </dd>
- *     <dt>READONLY</dt><dd> Permission to view card, no rights to send cards or respond to a card </dd>
- * </dl>
  * Note : This enum is created by hand because Swagger can't handle enums. It should match the corresponding enum definition in the Users API.
  *
  */
@@ -28,6 +21,7 @@ public enum PermissionEnum {
     ADMIN("ADMIN"),
     ADMIN_BUSINESS_PROCESS("ADMIN_BUSINESS_PROCESS"),
     VIEW_ALL_ARCHIVED_CARDS("VIEW_ALL_ARCHIVED_CARDS"),
+    VIEW_ALL_CARDS("VIEW_ALL_CARDS"),
     VIEW_USER_ACTION_LOGS("VIEW_USER_ACTION_LOGS"),
     READONLY("READONLY");
 

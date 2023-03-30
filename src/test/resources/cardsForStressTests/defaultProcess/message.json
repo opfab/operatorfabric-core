@@ -3,6 +3,8 @@
 	"publisherType": "ENTITY",
 	"representative": "publisher_test",
 	"representativeType": "EXTERNAL",
+	"wktGeometry": "POINT (5.8946407 51.9848624)",
+	"wktProjection": "EPSG:4326",
 	"processVersion" : "1",
 	"process"  :"defaultProcess",
 	"processInstanceId" : $random,
