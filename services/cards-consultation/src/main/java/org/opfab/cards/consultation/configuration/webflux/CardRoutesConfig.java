@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2021, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2023, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -12,21 +12,27 @@
 package org.opfab.cards.consultation.configuration.webflux;
 
 import lombok.extern.slf4j.Slf4j;
+
+import org.opfab.cards.consultation.model.CardsFilter;
 import org.opfab.cards.consultation.model.CardConsultationData;
 import org.opfab.cards.consultation.model.CardData;
 import org.opfab.cards.consultation.repositories.CardRepository;
+import org.opfab.springtools.configuration.oauth.OpFabJwtAuthenticationToken;
 import org.opfab.users.model.CurrentUserWithPerimeters;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.MediaType;
 import org.springframework.web.reactive.function.server.*;
 import reactor.core.publisher.Mono;
+import reactor.util.function.Tuple2;
 
 import java.util.List;
 
 import static org.springframework.web.reactive.function.BodyInserters.fromValue;
 import static org.springframework.web.reactive.function.server.ServerResponse.notFound;
 import static org.springframework.web.reactive.function.server.ServerResponse.ok;
+import static reactor.util.function.Tuples.of;
+
 
 @Slf4j
 @Configuration
@@ -48,7 +54,8 @@ public class CardRoutesConfig implements UserExtractor {
     public RouterFunction<ServerResponse> cardRoutes() {
         return RouterFunctions
                 .route(RequestPredicates.GET("/cards/{id}"), cardGetRoute())
-                .andRoute(RequestPredicates.OPTIONS("/cards/{id}"), cardOptionRoute());
+                .andRoute(RequestPredicates.OPTIONS("/cards/{id}"), cardOptionRoute())
+                .andRoute(RequestPredicates.POST("/cards"),queryCardPostRoute());
     }
 
 
@@ -75,5 +82,21 @@ public class CardRoutesConfig implements UserExtractor {
 
     private HandlerFunction<ServerResponse> cardOptionRoute() {
         return request -> ok().build();
+    }
+
+    private HandlerFunction<ServerResponse> queryCardPostRoute() {
+        return request -> extractFilterOnPost(request).flatMap(params -> cardRepository.findWithUserAndFilter(params)
+                .flatMap(cards-> ok().contentType(MediaType.APPLICATION_JSON)
+                        .body(fromValue(cards))));
+    }
+
+    private Mono<Tuple2<CurrentUserWithPerimeters, CardsFilter>> extractFilterOnPost(ServerRequest request){
+        Mono<CardsFilter> filter = request.bodyToMono(CardsFilter.class);
+        return request.principal().zipWith(filter)
+                .map(t->{
+                    OpFabJwtAuthenticationToken jwtPrincipal = (OpFabJwtAuthenticationToken) t.getT1();
+                    CurrentUserWithPerimeters c = (CurrentUserWithPerimeters) jwtPrincipal.getPrincipal();
+                    return of(c,t.getT2());
+                });
     }
 }

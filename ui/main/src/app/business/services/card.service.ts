@@ -12,7 +12,7 @@ import {Observable} from 'rxjs';
 import {Card, CardCreationReportData, CardData, CardForPublishing, fromCardToLightCard} from '@ofModel/card.model';
 import {map} from 'rxjs/operators';
 import {I18n} from '@ofModel/i18n.model';
-import {ArchivedCardsFilter} from '@ofModel/archived-cards-filter.model';
+import {CardsFilter} from '@ofModel/cards-filter.model';
 import {CardServer} from '../server/card.server';
 import {ServerResponse, ServerResponseStatus} from '../server/serverResponse';
 import {LightCardsStoreService} from './lightcards/lightcards-store.service';
@@ -49,7 +49,7 @@ export class CardService {
         return this.cardServer.loadArchivedCard(id).pipe(map((serverResponse) => serverResponse.data));
     }
 
-    fetchFilteredArchivedCards(filter: ArchivedCardsFilter) {
+    fetchFilteredArchivedCards(filter: CardsFilter) {
         return this.cardServer.fetchFilteredArchivedCards(filter).pipe(map((serverResponse) => serverResponse.data));
     }
 

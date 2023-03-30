@@ -8,7 +8,7 @@
  */
 
 
-import {ArchivedCardsFilter} from '@ofModel/archived-cards-filter.model';
+import {CardsFilter} from '@ofModel/cards-filter.model';
 import {CardForPublishing, Card, CardCreationReportData} from '@ofModel/card.model';
 import {FieldToTranslate} from '@ofModel/field-to-translate.model';
 import {Observable} from 'rxjs';
@@ -18,7 +18,7 @@ export abstract class CardServer {
 
     abstract loadCard(id: string): Observable<ServerResponse<any>>;
     abstract loadArchivedCard(id: string): Observable<ServerResponse<any>>;
-    abstract fetchFilteredArchivedCards(filter: ArchivedCardsFilter): Observable<ServerResponse<any>>;
+    abstract fetchFilteredArchivedCards(filter: CardsFilter): Observable<ServerResponse<any>>;
     abstract postCard(card: CardForPublishing): Observable<ServerResponse<CardCreationReportData>>;
     abstract deleteCard(card: Card): Observable<ServerResponse<any>>;
     abstract postUserCardRead(cardUid: string): Observable<ServerResponse<any>>;

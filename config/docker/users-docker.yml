@@ -83,7 +83,7 @@ operatorfabric.users.default:
       name: Supervisor
       description: Supervisor Group
       realtime: true
-      permissions: ["READONLY","ADMIN_BUSINESS_PROCESS"]
+      permissions: ["READONLY","ADMIN_BUSINESS_PROCESS","VIEW_ALL_CARDS"]
     - id: Manager
       name: Manager
       description: Manager Group

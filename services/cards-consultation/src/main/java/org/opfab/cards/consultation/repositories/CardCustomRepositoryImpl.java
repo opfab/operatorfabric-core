@@ -10,17 +10,28 @@
 package org.opfab.cards.consultation.repositories;
 
 import lombok.extern.slf4j.Slf4j;
+
+import org.opfab.cards.consultation.model.CardsFilter;
 import org.opfab.cards.consultation.model.CardConsultationData;
 import org.opfab.cards.consultation.model.CardOperation;
 import org.opfab.cards.consultation.model.CardOperationConsultationData;
+import org.opfab.cards.consultation.model.LightCard;
 import org.opfab.cards.consultation.model.LightCardConsultationData;
 import org.opfab.cards.model.CardOperationTypeEnum;
+import org.opfab.springtools.configuration.mongo.PaginationUtils;
 import org.opfab.users.model.CurrentUserWithPerimeters;
+import org.opfab.users.model.PermissionEnum;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.mongodb.core.ReactiveMongoTemplate;
+import org.springframework.data.mongodb.core.aggregation.Aggregation;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
+
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
+import reactor.util.function.Tuple2;
 
 import java.time.Instant;
 import java.util.ArrayList;
@@ -28,9 +39,13 @@ import java.util.List;
 import java.util.Map;
 
 import static org.springframework.data.mongodb.core.query.Criteria.where;
+import static org.springframework.data.mongodb.core.aggregation.Aggregation.*;
+
 
 @Slf4j
 public class CardCustomRepositoryImpl implements CardCustomRepository {
+
+	private static final String CARDS_COLLECTION = "cards";
 
 
 	private static final String PUBLISH_DATE_FIELD = "publishDate";
@@ -146,4 +161,66 @@ public class CardCustomRepositoryImpl implements CardCustomRepository {
 				where(LAST_ACK_DATE_FIELD).gte(publishFrom));
 		return publishCriteria;
 	}
+
+
+    public Mono<Page<LightCard>> findWithUserAndFilter(
+            Tuple2<CurrentUserWithPerimeters, CardsFilter> filter) {
+		CardsFilter queryFilter = filter.getT2();
+        log.info("findWithUserAndFilter" + queryFilter);
+
+        Pageable pageableRequest = PaginationUtils.createPageable(queryFilter.getPage() != null ? queryFilter.getPage().intValue() : null , queryFilter.getSize() != null ? queryFilter.getSize().intValue() : null);
+        String[] fields = {"uid",
+        "publisher",
+        "processVersion",
+        PROCESS_FIELD,
+        PROCESS_INSTANCE_ID_FIELD,
+        "state",
+        "titleTranslated",
+        "summaryTranslated",
+        PUBLISH_DATE_FIELD,
+        START_DATE_FIELD,
+        END_DATE_FIELD,
+        "severity",
+        "publisherType",
+        "representative",
+        "representativeType",
+		"entitiesAcks"};
+        Aggregation agg = newAggregation( this.getFilterOperations(filter,pageableRequest, fields));
+        Aggregation countAgg = newAggregation( this.getFilterOperationsForCount(filter));
+
+        if (pageableRequest.isPaged()) {
+            return template.aggregate(agg, CARDS_COLLECTION, LightCardConsultationData.class)
+                    .cast(LightCard.class).collectList()
+                    .zipWith(template.aggregate(countAgg, CARDS_COLLECTION, String.class)
+                            .defaultIfEmpty("{\"count\":0}")
+                            .single())
+                    .map(tuple -> new PageImpl<>(tuple.getT1(), pageableRequest, PaginationUtils.getCountFromJson(tuple.getT2())));
+        } else {
+            return template.aggregate(agg, CARDS_COLLECTION, LightCardConsultationData.class)
+                    .cast(LightCard.class).collectList()
+                    .map(PageImpl::new);
+        }
+	}
+
+
+    public boolean checkIfInAdminMode(CurrentUserWithPerimeters currentUserWithPerimeters,
+            CardsFilter filter) {
+        if (filter.getAdminMode() != null) {
+            boolean adminMode = Boolean.TRUE.equals(filter.getAdminMode());
+            boolean isCurrentUserMemberOfAdminGroup = ((currentUserWithPerimeters.getUserData().getGroups() != null) &&
+                    (currentUserWithPerimeters.getUserData().getGroups().contains("ADMIN")));
+
+            boolean hasCurrentUserAdminPermission = hasCurrentUserAnyPermission(currentUserWithPerimeters,
+                    PermissionEnum.ADMIN, PermissionEnum.VIEW_ALL_CARDS);
+
+            if (adminMode && !isCurrentUserMemberOfAdminGroup &&
+                    !hasCurrentUserAdminPermission)
+                log.warn("Parameter {} set to true in the request but the user is not member of ADMIN group",
+                        ADMIN_MODE);
+
+            return (isCurrentUserMemberOfAdminGroup || hasCurrentUserAdminPermission) && adminMode;
+        }
+        return false;
+    }
+
 }
