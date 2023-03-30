@@ -1,4 +1,5 @@
 /* Copyright (c) 2022-2023, RTE (http://www.rte-france.com)
+ * Copyright (c) 2023, Alliander (http://www.alliander.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -10,6 +11,7 @@
 import {Component, OnInit} from '@angular/core';
 import {Message, MessageLevel} from '@ofModel/message.model';
 import {AlertMessageService} from 'app/business/services/alert-message.service';
+import {ConfigService} from "../../../business/services/config.service";
 
 class Alert {
     alert: Message;
@@ -25,11 +27,18 @@ class Alert {
 export class AlertComponent implements OnInit {
 
     alertMessage: Alert = {alert: undefined, className: undefined, display: false};
+    alertMessageBusinessAutoClose: boolean;
+    alertMessageOnBottomOfTheScreen: boolean;
 
-    constructor(private alertMessageService: AlertMessageService) {
-    }
+    constructor(
+        private alertMessageService: AlertMessageService,
+        private configService: ConfigService
+    ) {}
 
     ngOnInit(): void {
+        this.alertMessageBusinessAutoClose = this.configService.getConfigValue('alertMessageBusinessAutoClose', false);
+        this.alertMessageOnBottomOfTheScreen = this.configService.getConfigValue('alertMessageOnBottomOfTheScreen', false);
+
         this.alertMessageService.getAlertMessage()
         .subscribe((alert) => {
             if (!this.alertMessage.display || this.alertMessage.alert.level !== MessageLevel.BUSINESS )
@@ -52,7 +61,7 @@ export class AlertComponent implements OnInit {
                 break;
             case MessageLevel.BUSINESS:
                 className = 'opfab-alert-business';
-                autoClose = false;
+                autoClose = this.alertMessageBusinessAutoClose;
                 break;
             default :
                 className = 'opfab-alert-info';
@@ -72,6 +81,14 @@ export class AlertComponent implements OnInit {
 
     closeAlert() {
         this.alertMessage.display = false;
+    }
+
+    alertMessagePosition() {
+        if (this.alertMessageOnBottomOfTheScreen) {
+            return 'bottom: 0';
+        } else {
+            return 'top: 0';
+        }
     }
 }
 
