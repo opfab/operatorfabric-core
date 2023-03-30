@@ -1,4 +1,5 @@
 <!-- Copyright (c) 2018-2023, RTE (http://www.rte-france.com)              -->
+<!-- Copyright (c) 2023, Alliander (http://www.alliander.com)              -->
 <!-- See AUTHORS.txt                                                       -->
 <!-- This Source Code Form is subject to the terms of the Mozilla Public   -->
 <!-- License, v. 2.0. If a copy of the MPL was not distributed with this   -->
@@ -6,10 +7,10 @@
 <!-- SPDX-License-Identifier: MPL-2.0                                      -->
 <!-- This file is part of the OperatorFabric project.                      -->
 
-<div id='div-detail-msg' class="opfab-info-message {{alertMessage.className}}" *ngIf='alertMessage && alertMessage.display'>
+<div id='div-detail-msg' class="opfab-info-message {{alertMessage.className}}" *ngIf='alertMessage && alertMessage.display' [style]="alertMessagePosition()">
     <span *ngIf="alertMessage.alert.i18n" translate>{{alertMessage.alert.i18n.key}}</span>
     <span *ngIf="alertMessage.alert.message">&nbsp; {{alertMessage.alert.message}}</span>
     <div id="opfab-close-alert" class="opfab-alert-close" aria-label="Close" (click)="closeAlert()">
       <span aria-hidden="true">&times;</span>
     </div>
-  </div>
+</div>

@@ -5,6 +5,8 @@
   "showUserEntitiesOnTopRightOfTheScreen": true,
   "externalDevicesEnabled": true,
   "selectActivityAreaOnLogin": false,
+  "alertMessageBusinessAutoClose": false,
+  "alertMessageOnBottomOfTheScreen": false,
   "archive": {
     "filters": {
       "page": {
