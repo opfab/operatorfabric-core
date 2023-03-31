@@ -15,6 +15,7 @@ import {SoundNotificationService} from 'app/business/services/sound-notification
 import {OpfabEventStreamService} from './business/services/opfabEventStream.service';
 import {RouterNavigationService} from 'app/router/router-navigation.service';
 import {SelectedCardLoaderService} from './business/services/card/selectedCardLoader.service';
+import {PageType, RouterStore} from './business/store/router.store';
 
 @Component({
     selector: 'of-root',
@@ -66,7 +67,8 @@ export class AppComponent {
 
     @HostListener('document:click', ['$event.target'])
     public onPageClickClearSoundNotification() {
-        this.soundNotificationService.clearOutstandingNotifications();
+        const pageType =  this.routerStore.getCurrentPageType();
+        if (pageType === PageType.FEED) this.soundNotificationService.clearOutstandingNotifications();
     }
 
     constructor(
@@ -74,6 +76,7 @@ export class AppComponent {
         private logger: OpfabLoggerService,
         private opfabEventStreamService: OpfabEventStreamService,
         private remoteLogger: RemoteLoggerService,
+        private routerStore: RouterStore,
         private routerNavigationService: RouterNavigationService, // put it here to have it injected and started a startup
         private selectedCardLoaderService: SelectedCardLoaderService  // put it here to have it injected and started a startup
     ) {}

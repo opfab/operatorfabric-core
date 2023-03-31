@@ -7,7 +7,6 @@
  * This file is part of the OperatorFabric project.
  */
 
-
 import {Injectable, OnDestroy} from '@angular/core';
 import {LightCard, Severity} from '@ofModel/light-card.model';
 import {Notification} from '@ofModel/external-devices.model';
@@ -27,7 +26,9 @@ import {SoundServer} from 'app/business/server/sound.server';
     providedIn: 'root'
 })
 export class SoundNotificationService implements OnDestroy {
-    private static RECENT_THRESHOLD = 4000; // in milliseconds
+    private static RECENT_THRESHOLD = 18000000; // in milliseconds , 30 minutes
+    private static ERROR_MARGIN = 4000 // in milliseconds
+
     /* The subscription used by the front end to get cards to display in the feed from the backend doesn't distinguish
      * between old cards loaded from the database and new cards arriving through the notification broker.
      * In addition, the getCardOperation observable on which this sound notification is hooked will also emit events
@@ -45,12 +46,12 @@ export class SoundNotificationService implements OnDestroy {
     private replayEnabled: boolean;
     private playSoundWhenSessionEnd = false;
 
-
     private incomingCardOrReminder = new Subject();
     private sessionEnd = new Subject();
     private clearSignal = new Subject();
     private ngUnsubscribe$ = new Subject<void>();
     private lastSentCardId: string;
+    private lastUserAction = new Date().valueOf();
 
     private isServiceActive = true;
 
@@ -70,7 +71,7 @@ export class SoundNotificationService implements OnDestroy {
 
     public stopService() {
         this.isServiceActive = false;
-        this.logger.info("Stopping sound service",LogOption.LOCAL_AND_REMOTE);
+        this.logger.info('Stopping sound service', LogOption.LOCAL_AND_REMOTE);
     }
 
     public initSoundService() {
@@ -92,7 +93,6 @@ export class SoundNotificationService implements OnDestroy {
             soundEnabledSetting: 'settings.playSoundForInformation'
         });
 
-
         this.soundEnabled = new Map<Severity, boolean>();
         this.soundConfigBySeverity.forEach((soundConfig, severity) => {
             this.configService.getConfigValueAsObservable(soundConfig.soundEnabledSetting, false).subscribe((x) => {
@@ -106,9 +106,10 @@ export class SoundNotificationService implements OnDestroy {
         this.configService.getConfigValueAsObservable('settings.replayEnabled', false).subscribe((x) => {
             this.replayEnabled = x;
         });
-        this.configService.getConfigValueAsObservable('settings.replayInterval', SoundNotificationService.DEFAULT_REPLAY_INTERVAL)
+        this.configService
+            .getConfigValueAsObservable('settings.replayInterval', SoundNotificationService.DEFAULT_REPLAY_INTERVAL)
             .subscribe((x) => {
-                this.replayInterval = Math.max(3,x);
+                this.replayInterval = Math.max(3, x);
             });
 
         for (const severity of Object.values(Severity)) this.initSoundPlayingForSeverity(severity);
@@ -117,8 +118,6 @@ export class SoundNotificationService implements OnDestroy {
         this.listenForCardUpdate();
         this.listenForDisconnection();
     }
-
-
 
     public getPlaySoundOnExternalDevice(): boolean {
         return this.configService.getConfigValue('externalDevicesEnabled') && this.playSoundOnExternalDevice;
@@ -136,7 +135,7 @@ export class SoundNotificationService implements OnDestroy {
     }
 
     private listenForDisconnection() {
-        this.opfabEventStreamService.getReceivedDisconnectUser().subscribe( () => this.stopService());
+        this.opfabEventStreamService.getReceivedDisconnectUser().subscribe(() => this.stopService());
     }
 
     ngOnDestroy() {
@@ -146,6 +145,7 @@ export class SoundNotificationService implements OnDestroy {
 
     public clearOutstandingNotifications() {
         this.clearSignal.next(null);
+        this.lastUserAction = new Date().valueOf();
     }
 
     public handleRemindCard(card: LightCard) {
@@ -156,14 +156,21 @@ export class SoundNotificationService implements OnDestroy {
         if (card.id === this.lastSentCardId)
             this.lastSentCardId = ''; // no sound as the card was send by the current user
         else {
-            if (this.checkCardIsRecent(card)) {
+            if (
+                !card.hasBeenRead &&
+                this.checkCardHasBeenPublishAfterLastUserAction(card)&&
+                this.checkCardIsRecent(card)
+            ) {
                 this.incomingCardOrReminder.next(card);
                 if (!this.lightCardsFeedFilterService.isCardVisibleInFeed(card))
-                    this.alertMessageService.sendAlertMessage({message: null, level: MessageLevel.BUSINESS, i18n: {key: 'feed.hiddenCardReceived'}});
+                    this.alertMessageService.sendAlertMessage({
+                        message: null,
+                        level: MessageLevel.BUSINESS,
+                        i18n: {key: 'feed.hiddenCardReceived'}
+                    });
             }
         }
     }
-
 
     public handleSessionEnd() {
         if (this.playSoundWhenSessionEnd) {
@@ -173,6 +180,11 @@ export class SoundNotificationService implements OnDestroy {
 
     public lastSentCard(cardId: string) {
         this.lastSentCardId = cardId;
+
+    }
+
+    private checkCardHasBeenPublishAfterLastUserAction(card: LightCard) {
+        return card.publishDate + SoundNotificationService.ERROR_MARGIN - this.lastUserAction  > 0;
     }
 
     private checkCardIsRecent(card: LightCard): boolean {
@@ -185,17 +197,24 @@ export class SoundNotificationService implements OnDestroy {
 
     private playSoundForSeverityEnabled(severity: Severity) {
         if (this.soundEnabled.get(severity)) this.playSound(severity);
-        else this.logger.debug('No sound was played for ' + severity + ' as sound is disabled for this severity',LogOption.LOCAL);
+        else
+            this.logger.debug(
+                'No sound was played for ' + severity + ' as sound is disabled for this severity',
+                LogOption.LOCAL
+            );
     }
 
     private playSound(severity: Severity) {
         if (!this.isServiceActive) return;
         if (this.configService.getConfigValue('externalDevicesEnabled') && this.playSoundOnExternalDevice) {
-            this.logger.debug('External devices enabled. Sending notification for ' + severity + '.',LogOption.LOCAL_AND_REMOTE);
+            this.logger.debug(
+                'External devices enabled. Sending notification for ' + severity + '.',
+                LogOption.LOCAL_AND_REMOTE
+            );
             const notification = new Notification(severity.toString());
             this.externalDevicesService.sendNotification(notification).subscribe();
         } else {
-            this.logger.debug('Play sound on browser with severity ' + severity + '.',LogOption.LOCAL_AND_REMOTE);
+            this.logger.debug('Play sound on browser with severity ' + severity + '.', LogOption.LOCAL_AND_REMOTE);
             this.playSoundOnBrowser(this.getSoundForSeverity(severity));
         }
     }
