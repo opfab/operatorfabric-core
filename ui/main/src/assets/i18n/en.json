@@ -209,7 +209,7 @@
     "cardNotFound": "The card you are looking for was not found.",
     "selectedCardDeleted": "This card has been deleted",
     "entityRecipients" : "Entity recipients :",
-    "entityRecipientsForInformation" : "Entity recipients for information :",
+    "entityRecipientsForInformation" : "Entity recipients in copy :",
     "searchPlaceholderText": "Search...",
     "hiddenCardReceived": "You have received a card hidden by the filters you have activated (Timeline or card feed)"
   },
@@ -316,7 +316,7 @@
       "expirationDate":  "EXPIRATION DATE",
       "lttd": "LIMIT DATE FOR RESPONSE",
       "recipients": "RECIPIENTS",
-      "recipientsForInformation": "RECIPIENTS FOR INFORMATION"
+      "recipientsForInformation": "RECIPIENTS IN COPY"
     },
     "prepareCard": "SEE BEFORE SENDING",
     "confirmSending": "Send the following card?",
@@ -325,7 +325,7 @@
     "processInstanceId": "Id",
     "state": "State",
     "recipients": "RECIPIENTS:",
-    "recipientsForInformation": "RECIPIENTS FOR INFORMATION:",
+    "recipientsForInformation": "RECIPIENTS IN COPY:",
     "youAreTheOnlyRecipient": "You are the only recipient of this card.",
     "feedPreview": "FEED PREVIEW:",
     "contentPreview": "CONTENT PREVIEW:",

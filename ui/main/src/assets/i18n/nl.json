@@ -209,7 +209,7 @@
     "cardNotFound": "De kaart die u zoekt werd niet gevonden.",
     "selectedCardDeleted": "Deze kaart werd verwijderd",
     "entityRecipients" : "Ontvangers entiteiten :",
-    "entityRecipientsForInformation" : "Ontvangers entiteiten voor informatie :",
+    "entityRecipientsForInformation" : "Ontvangers entiteiten in kopie :",
     "searchPlaceholderText": "Zoeken...",
     "hiddenCardReceived": "Je hebt een kaart ontvangen die verborgen is door de filters die je hebt geactiveerd (tijdlijn of kaart feed)"
   },
@@ -316,7 +316,7 @@
       "expirationDate": "VERVALDATUM",
       "lttd": "BEPERK DATUM VOOR REACTIE",
       "recipients": "ONTVANGERS",
-      "recipientsForInformation": "ONTVANGERS VOOR INFORMATIE"
+      "recipientsForInformation": "ONTVANGERS IN KOPIE"
     },
     "prepareCard": "BEKIJK VOOR VERZENDING",
     "confirmSending": "Wilt u deze kaart versturen?",
@@ -325,7 +325,7 @@
     "processInstanceId": "Id",
     "state": "Status",
     "recipients": "ONTVANGERS:",
-    "recipientsForInformation": "ONTVANGERS VOOR INFORMATIE:",
+    "recipientsForInformation": "ONTVANGERS IN KOPIE:",
     "youAreTheOnlyRecipient": "U bent de enige ontvanger van deze kaart.",
     "feedPreview": "FEED PREVIEW:",
     "contentPreview": "CONTENT PREVIEW:",
