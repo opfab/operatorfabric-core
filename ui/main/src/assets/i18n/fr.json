@@ -209,7 +209,7 @@
     "cardNotFound": "La carte que vous cherchez n'a pas été trouvée.",
     "selectedCardDeleted": "Cette carte a été supprimée",
     "entityRecipients" : "Entités destinataires :",
-    "entityRecipientsForInformation" : "Entités destinataires pour information :",
+    "entityRecipientsForInformation" : "Entités destinataires en copie :",
     "searchPlaceholderText": "Rechercher...",
     "hiddenCardReceived": "Vous avez reçu une carte masquée par les filtres que vous avez activés (Timeline ou flux de cartes)"
   },
@@ -316,7 +316,7 @@
       "expirationDate": "DATE D'EXPIRATION",
       "lttd": "DATE LIMITE DE RÉPONSE",
       "recipients": "DESTINATAIRES",
-      "recipientsForInformation": "DESTINATAIRES POUR INFORMATION"
+      "recipientsForInformation": "DESTINATAIRES EN COPIE"
     },
     "prepareCard": "VISUALISATION AVANT ENVOI",
     "confirmSending": "Envoyer la carte suivante ?",
@@ -325,7 +325,7 @@
     "processInstanceId": "Identifiant",
     "state": "État",
     "recipients": "DESTINATAIRES:",
-    "recipientsForInformation": "DESTINATAIRES POUR INFORMATION:",
+    "recipientsForInformation": "DESTINATAIRES EN COPIE:",
     "youAreTheOnlyRecipient": "Vous êtes l'unique destinataire de cette carte.",
     "feedPreview": "PRÉVISUALISATION FLUX DE CARTES:",
     "contentPreview": "PRÉVISUALISATION CONTENU:",

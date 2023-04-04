@@ -180,7 +180,7 @@ For example :
 
 In this example the list of available recipients will contain: "ENTITY_FR" (level 0), all the first level children of "ENTITY_FR" (level 1) and "IT_SUPERVISOR_ENTITY".
 
-NOTE: The list of 'recipients for information' can also be limited via javascript in the user template.
+NOTE: The list of 'recipients in copy' can also be limited via javascript in the user template.
 
 For example :
 
@@ -211,7 +211,7 @@ For example :
 
 In this example the dropdown list of available recipients will have "ENTITY_FR" and "IT_SUPERVISOR_ENTITY" preselected. The user can anyway change the selected recipients.
 
-NOTE: The list of initially selected 'recipients for information' can also be configured via javascript in the user
+NOTE: The list of initially selected 'recipients in copy' can also be configured via javascript in the user
 template by implementing the `usercardTemplateGateway.setInitialSelectedRecipientsForInformation(selectedEntities)` method.
 
 For example :
@@ -312,8 +312,8 @@ An example of _usercardTemplateGateway.getSelectedEntityRecipients()_ usage can 
 https://github.com/opfab/operatorfabric-core/tree/master/src/test/resources/bundles/defaultProcess_V1/template/usercard_process.handlebars[src/test/resources/bundles/defaultProcess_V1/template/usercard_process.handlebars].
 
 
-== Get selected recipient entities for information list
-The template can know the list of entities selected by the users as recipients for information of the card by calling
+== Get selected recipient entities in copy list
+The template can know the list of entities selected by the users as recipients in copy of the card by calling
 the _usercardTemplateGateway.getSelectedEntityRecipientsForInformation()_ function.
 
 
