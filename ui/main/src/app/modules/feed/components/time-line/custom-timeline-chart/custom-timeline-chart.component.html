@@ -138,15 +138,15 @@
     </svg:g>
     </svg:g>
     <ng-template #tooltipTemplate>
-        <div (mouseenter)="onMouseEnter()" (mouseleave)="openPopover.close()">
-        <div *ngFor="let title of currentCircleHovered.summary;let i=index" style="padding: 0px;margin: 0px;line-height: 8px">
-                <br *ngIf="i > 0"/>
-                <button id="opfab-timeline-bubble-btn" class="btn btn-cardlink btn-sm" (click)="showCard(title.cardId)">
-                    <div style="text-align:left">
-                        {{title.summaryDate}} {{title.titleTranslated}}
-                    </div>
-                </button>
-        </div>
+        <div (mouseenter)="onMouseEnter()" (mouseleave)="openPopover.close()"  style="padding:10px">
+                <div *ngFor="let title of currentCircleHovered.summary;let i=index" style="padding: 0px;margin: 0px;line-height: 8px">
+                    <br *ngIf="i > 0"/>
+                    <button id="opfab-timeline-bubble-btn" class="btn btn-cardlink btn-sm" (click)="showCard(title.cardId)" style="width:100%" >
+                        <div style="text-align:left">
+                            {{title.summaryDate}} {{title.titleTranslated}}
+                        </div>
+                    </button>
+                </div>
         </div>
     </ng-template>
 </ngx-charts-chart>

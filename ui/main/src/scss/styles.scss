@@ -389,6 +389,7 @@ body {
 .opfab-popover-with-scrolling {
     max-width: 800px;
     .popover-body {
+        padding: 0px;
         max-height: 500px;
         overflow: auto;
         overflow-x: hidden;
