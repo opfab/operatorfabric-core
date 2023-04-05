@@ -116,11 +116,17 @@ public class OAuth2UsersConfiguration {
              */
             private UserData createUserDataVirtualFromJwt(Jwt jwt) {
                 String principalId = extractClaimAsStringOrNull(jwt, jwtProperties.getLoginClaim());
-                if(principalId != null) principalId = principalId.toLowerCase();
+
+                if (principalId != null)
+                    principalId = principalId.toLowerCase();
+
                 String givenName = extractClaimAsStringOrNull(jwt, jwtProperties.getGivenNameClaim());
                 String familyName = extractClaimAsStringOrNull(jwt, jwtProperties.getFamilyNameClaim());
                 String name = extractClaimAsStringOrNull(jwt, jwtProperties.getNameClaim());
-                if (givenName == null && familyName == null) familyName = name;
+
+                if (givenName == null && familyName == null)
+                    familyName = name;
+
                 return new UserData(principalId, givenName, familyName, null, null, null);
             }
 
