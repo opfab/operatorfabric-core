@@ -25,8 +25,8 @@ public class JwtProperties {
 	private String loginClaim = "sub";
 	
 	// optional claims
-	private String givenNameClaim = "given-name";
-	private String familyNameClaim = "family-name";
+	private String givenNameClaim = "given_name";
+	private String familyNameClaim = "family_name";
 	private String nameClaim = "name";
 
 	
