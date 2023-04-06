@@ -27,7 +27,6 @@ import java.util.Map;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-@Slf4j
 @JsonInclude(JsonInclude.Include.NON_EMPTY)
 public class ProcessData implements Process {
 

@@ -34,8 +34,10 @@ import {ServerResponseStatus} from 'app/business/server/serverResponse';
 import {CurrentUserStore} from 'app/business/store/current-user.store';
 import {AuthService} from 'app/authentication/auth.service';
 import {AuthenticationMode} from 'app/authentication/auth.model';
-import {SystemNotificationService} from "../../../business/services/system-notification.service";
+import {SystemNotificationService} from '../../../business/services/system-notification.service';
+import {BusinessDataService} from 'app/business/services/businessdata.service';
 
+declare const opfab: any;
 @Component({
     selector: 'of-application-loading',
     styleUrls: ['./application-loading.component.scss'],
@@ -71,6 +73,7 @@ export class ApplicationLoadingComponent implements OnInit {
         private userService: UserService,
         private entitiesService: EntitiesService,
         private groupsService: GroupsService,
+        private businessDataService: BusinessDataService,
         private processesService: ProcessesService,
         private reminderService: ReminderService,
         private rRuleReminderService: RRuleReminderService,
@@ -161,7 +164,7 @@ export class ApplicationLoadingComponent implements OnInit {
         this.logger.info(`Launch authentication process`);
         this.waitForEndOfAuthentication();
         this.authService.initializeAuthentication();
-        if (this.authService.getAuthMode()=== AuthenticationMode.PASSWORD)
+        if (this.authService.getAuthMode() === AuthenticationMode.PASSWORD)
             this.waitForEmptyTokenInStorageToShowLoginForm();
     }
 
@@ -190,15 +193,15 @@ export class ApplicationLoadingComponent implements OnInit {
 
     private synchronizeUserTokenWithOpfabUserDatabase() {
         this.userService.synchronizeWithToken().subscribe({
-            next: () =>  this.logger.info("Synchronization of user token with user database done"),
-            error: () => this.logger.warn("Impossible to synchronize user token with user database")
+            next: () => this.logger.info('Synchronization of user token with user database done'),
+            error: () => this.logger.warn('Impossible to synchronize user token with user database')
         });
     }
 
     private loadSettings() {
         this.settingsService.getUserSettings().subscribe({
             next: (response) => {
-                if (response.status === ServerResponseStatus.OK){
+                if (response.status === ServerResponseStatus.OK) {
                     this.logger.info('Settings loaded' + response.data);
                     this.configService.overrideConfigSettingsWithUserSettings(response.data);
                     this.checkIfAccountIsAlreadyUsed();
@@ -208,8 +211,7 @@ export class ApplicationLoadingComponent implements OnInit {
                         this.logger.error('Access forbidden when loading settings');
                         this.authService.logout();
                         return;
-                    }
-                    else this.logger.error('Error when loading settings' + response.status);
+                    } else this.logger.error('Error when loading settings' + response.status);
                     this.checkIfAccountIsAlreadyUsed();
                 }
             }
@@ -250,7 +252,9 @@ export class ApplicationLoadingComponent implements OnInit {
 
     private chooseActivityArea(): void {
         this.activityAreaChoiceAfterLoginComponent.execute();
-        this.activityAreaChoiceAfterLoginComponent.isFinishedWithoutError().subscribe(() => this.finalizeApplicationLoading());
+        this.activityAreaChoiceAfterLoginComponent
+            .isFinishedWithoutError()
+            .subscribe(() => this.finalizeApplicationLoading());
     }
 
     private finalizeApplicationLoading(): void {
@@ -267,5 +271,15 @@ export class ApplicationLoadingComponent implements OnInit {
         this.reminderService.startService(this.userLogin);
         this.rRuleReminderService.startService(this.userLogin);
         this.systemNotificationService.initSystemNotificationService();
+        this.initOpFabAPI();
     }
+
+    private initOpFabAPI(): void {
+        const that = this;
+        opfab.businessconfig.businessData.get = async function (resourceName) {
+            const resource = await that.businessDataService.getBusinessData(resourceName);
+            return resource;
+        };
+    }
+
 }

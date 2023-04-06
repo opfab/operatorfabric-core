@@ -11,9 +11,6 @@
 
 package org.opfab.businessconfig.configuration.oauth2;
 
-import lombok.extern.slf4j.Slf4j;
-
-
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.convert.converter.Converter;
@@ -33,7 +30,6 @@ import static org.opfab.springtools.configuration.oauth.OpfabAuthorizationManage
  *
  */
 @Configuration
-@Slf4j
 public class WebSecurityConfiguration {
 
     public static final String PROMETHEUS_PATH ="/actuator/prometheus**";
@@ -41,6 +37,7 @@ public class WebSecurityConfiguration {
     public static final String ADMIN_ROLE = "ADMIN";
     public static final String ADMIN_BUSINESS_PROCESS_ROLE = "ADMIN_BUSINESS_PROCESS";
     public static final String THIRDS_PATH = "/businessconfig/**";
+    public static final String BUSINESS_DATA_PATH = "/businessconfig/businessdata/**";
 
 
     @Bean
@@ -66,6 +63,7 @@ public class WebSecurityConfiguration {
             .requestMatchers(HttpMethod.GET, PROMETHEUS_PATH).permitAll()
             .requestMatchers(HttpMethod.GET, THIRDS_PATH).permitAll()
             .requestMatchers(HttpMethod.POST, THIRDS_PATH).access(hasAnyRoleAndIpAllowed(ADMIN_ROLE, ADMIN_BUSINESS_PROCESS_ROLE))
+            .requestMatchers(HttpMethod.POST, BUSINESS_DATA_PATH).access(hasAnyRoleAndIpAllowed(ADMIN_ROLE, ADMIN_BUSINESS_PROCESS_ROLE))
             .requestMatchers(HttpMethod.PUT, THIRDS_PATH).access(hasAnyRoleAndIpAllowed(ADMIN_ROLE, ADMIN_BUSINESS_PROCESS_ROLE))
             .requestMatchers(HttpMethod.DELETE, THIRDS_PATH).access(hasAnyRoleAndIpAllowed(ADMIN_ROLE, ADMIN_BUSINESS_PROCESS_ROLE))
             .requestMatchers(LOGGERS_PATH).access(AuthorityAuthorizationManager.hasRole(ADMIN_ROLE))

@@ -7,6 +7,8 @@
 	"wktProjection": "EPSG:4326",
 	"processVersion" : "1",
 	"process"  :"defaultProcess",
+	"wktGeometry": "POINT (5.8946407 51.9848624)",
+	"wktProjection": "EPSG:4326",
 	"processInstanceId" : $random,
 	"state": "messageState",
 	"tags":["tag1"],

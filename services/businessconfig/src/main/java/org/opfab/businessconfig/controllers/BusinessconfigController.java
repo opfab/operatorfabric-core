@@ -33,6 +33,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
 
+import net.minidev.json.parser.ParseException;
+
 /**
  * BusinessconfigController, documented at {@link BusinessconfigApi}
  *
@@ -42,6 +44,8 @@ import java.util.List;
 public class BusinessconfigController implements BusinessconfigApi {
 
     public static final String UNABLE_TO_LOAD_FILE_MSG = "Unable to load submitted file";
+    public static final String UNABLE_TO_POST_FILE_MSG = "Unable to post submitted file";
+    public static final String FILE = " file";
     public static final String LOCATION = "Location";
     private ProcessesService processService;
     private MonitoringService monitoringService;
@@ -139,7 +143,7 @@ public class BusinessconfigController implements BusinessconfigApi {
 
     @Override
     public Void uploadProcessgroups(HttpServletRequest request, HttpServletResponse response, @Valid MultipartFile file) {
-        return uploadFile(request, response, file, "processgroups");
+        return uploadFile(request, response, file, "processgroups", null);
     }
 
     @Override
@@ -239,19 +243,21 @@ public class BusinessconfigController implements BusinessconfigApi {
         return null;
     }
 
-    public Void uploadFile(HttpServletRequest request, HttpServletResponse response, @Valid MultipartFile file, String endPointName) {
+    public Void uploadFile(HttpServletRequest request, HttpServletResponse response, @Valid MultipartFile file, String endPointName, String resourceName) {
  
         try  {
             if (endPointName.equals("processgroups"))
                 processService.updateProcessGroupsFile(new String(file.getBytes()));
-            else
+            if (endPointName.equals("realtimescreens"))
                 processService.updateRealTimeScreensFile(new String(file.getBytes()));
+            if (endPointName.equals("businessdata"))
+                processService.updateBusinessDataFile(new String(file.getBytes()), resourceName);
 
             response.addHeader(LOCATION, request.getContextPath() + "/businessconfig/" + endPointName);
             response.setStatus(201);
             return null;
         } catch (FileNotFoundException e) {
-            log.error("File not found while loading " + endPointName + " file", e);
+            log.error("File not found while loading " + endPointName + FILE, e);
             throw new ApiErrorException(
                     ApiError.builder()
                             .status(HttpStatus.BAD_REQUEST)
@@ -261,7 +267,7 @@ public class BusinessconfigController implements BusinessconfigApi {
                     UNABLE_TO_LOAD_FILE_MSG
                     , e);
         } catch (IOException e) {
-            log.error("IOException while loading " + endPointName + " file", e);
+            log.error("IOException while loading " + endPointName + FILE, e);
             throw new ApiErrorException(
                     ApiError.builder()
                             .status(HttpStatus.BAD_REQUEST)
@@ -270,12 +276,22 @@ public class BusinessconfigController implements BusinessconfigApi {
                             .build(),
                     UNABLE_TO_LOAD_FILE_MSG
                     , e);
+        } catch (ParseException e) {
+            log.error("ParseException while posting the " + resourceName + FILE, e);
+            throw new ApiErrorException(
+                    ApiError.builder()
+                            .status(HttpStatus.BAD_REQUEST)
+                            .message( "The file " + resourceName + " is not json compliant")
+                            .error(e.getMessage())
+                            .build(),
+                    UNABLE_TO_POST_FILE_MSG
+                    , e);
         }
     }
 
     @Override
     public Void uploadRealTimeScreens(HttpServletRequest request, HttpServletResponse response, @Valid MultipartFile file) {
-        return uploadFile(request, response, file, "realtimescreens");
+        return uploadFile(request, response, file, "realtimescreens", null);
     }
 
     @Override
@@ -295,6 +311,39 @@ public class BusinessconfigController implements BusinessconfigApi {
         }
         return history;
     }
+
+    @Override
+    public byte[] getBusinessData(HttpServletRequest request, HttpServletResponse response, String resourceName) throws IOException {
+        Resource resource;
+        resource = processService.getBusinessData(resourceName);
+        return loadResource(resource);
+    }
     
+    @Override
+    public Void uploadBusinessData(HttpServletRequest request, HttpServletResponse response, @Valid MultipartFile file, String resourceName) {
+        return uploadFile(request, response, file, "businessdata", resourceName);
+    }
+
+    @Override
+	public Void deleteBusinessData(HttpServletRequest request, HttpServletResponse response, String resourceName)
+			throws ApiErrorException {
+		try {
+			processService.deleteFile(resourceName);
+			// leaving response body empty
+			response.setStatus(204);
+			return null;
+		} catch (FileNotFoundException e) {
+			log.error("Resource not found", e);
+			throw new ApiErrorException(ApiError.builder().status(HttpStatus.NOT_FOUND)
+					.message("Resource not found").error(e.getMessage()).build(),
+					"Resource directory not found", e);
+		} catch (IOException e) {
+			String message = "IOException while deleting resource file";
+			log.error(message, e);
+			throw new ApiErrorException(ApiError.builder().status(HttpStatus.INTERNAL_SERVER_ERROR)
+					.message("unable to delete submitted resource").error(e.getMessage()).build(),
+					message, e);
+		}
+	}
 
 }

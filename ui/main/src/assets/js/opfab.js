@@ -63,5 +63,10 @@ opfab.utils = {
               .replace(/"/g, "&quot;")
               .replace(/'/g, "&#39;");
      }
-     
+}
+
+opfab.businessconfig = {
+    businessData : {
+        get : function(resourceName) {}
+    }
 }
