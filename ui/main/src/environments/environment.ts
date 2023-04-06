@@ -26,6 +26,7 @@ export const environment = {
         processes: 'http://localhost:2002/businessconfig/processes',
         processGroups: 'http://localhost:2002/businessconfig/processgroups',
         realTimeScreens: 'http://localhost:2002/businessconfig/realtimescreens',
+        businessData: 'http://localhost:2002/businessconfig/businessData',
         monitoringConfig: 'http://localhost:2002/businessconfig/monitoring',
         config: 'http://localhost:2002/config/web-ui.json',
         menuConfig: 'http://localhost:2002/config/ui-menu.json',

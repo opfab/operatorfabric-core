@@ -15,6 +15,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.collect.HashBasedTable;
 import com.google.common.collect.Table;
 
+import net.minidev.json.JSONObject;
+import net.minidev.json.parser.JSONParser;
+import net.minidev.json.parser.ParseException;
 
 import lombok.extern.slf4j.Slf4j;
 import org.opfab.businessconfig.model.Process;
@@ -610,4 +613,58 @@ public class ProcessesService implements ResourceLoaderAware {
     }
 
     public RealTimeScreens getRealTimeScreensCache() { return realTimeScreensCache; }
+
+    /**
+     * Deletes {@link Process} for specified id
+     * @param id process id
+     * @throws IOException 
+     */
+    public synchronized void deleteFile(String resourceName) throws IOException {
+    	Path resourcePath = Paths.get(this.storagePath + "/businessdata/")
+                .resolve(resourceName)
+                .normalize();
+        if (!resourcePath.toFile().exists()) {
+            throw new FileNotFoundException("Unable to find the resource " + resourceName);
+        }
+    	//delete resource from disk
+    	PathUtils.delete(resourcePath);
+    	log.debug("removed resource:{} from filesystem", resourceName);
+    }
+
+    private void isResourceJSON(String fileContent) throws ParseException {
+        (new JSONParser(JSONParser.MODE_PERMISSIVE)).parse(fileContent);
+    }
+
+    /**
+     * Updates or creates businessdata file from a file uploaded from POST /businessconfig/businessdata
+     *
+     * @param is businessdata file input stream
+     * @throws IOException if error arise during stream reading
+     */
+    public synchronized void updateBusinessDataFile (String fileContent, String resourceName) throws IOException, ParseException {   
+        Path businessDataPath = Paths.get(this.storagePath + "/businessdata").normalize();
+        
+        if (!businessDataPath.toFile().exists()){
+            try {
+                Files.createDirectories(businessDataPath);
+            } catch (IOException e) {
+                log.error("Impossible to create the necessary folder", businessDataPath.toString(), e);
+            }
+        }
+
+        this.isResourceJSON(fileContent);
+        
+        //copy file
+        PathUtils.copyInputStreamToFile(new ByteArrayInputStream(fileContent.getBytes()), businessDataPath.toString() + "/" + resourceName);
+    }
+
+    public Resource getBusinessData(String resourceName) throws FileNotFoundException {
+        Path resourcePath = Paths.get(this.storagePath + "/businessdata/")
+                .resolve(resourceName)
+                .normalize();
+        if (!resourcePath.toFile().exists()) {
+            throw new FileNotFoundException("Unable to find the resource " + resourceName);
+        }
+        return this.resourceLoader.getResource(PATH_PREFIX + resourcePath.toString());        
+    }
 }

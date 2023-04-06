@@ -973,7 +973,7 @@ describe('User Card ', function () {
     })
   })
 
-  describe('Check search feature in dropdown select', function () {
+  describe('Check search feature in dropdown select and if businessdata were correctly imported', function () {
     
     it('Search feature should be enabled on services dropdown for "IT incident" user card', () => {
       opfab.loginWithUser('operator1_fr');
