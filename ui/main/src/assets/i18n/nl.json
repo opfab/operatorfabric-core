@@ -255,7 +255,8 @@
     "systemNotificationAlarm": "Alarm",
     "systemNotificationAction": "Actie",
     "systemNotificationCompliant": "Conform",
-    "systemNotificationInformation": "Informatie"
+    "systemNotificationInformation": "Informatie",
+    "systemNotificationsDisabledInBrowser": "Systeemmeldingen zijn uitgeschakeld in uw browser, u ontvangt geen melding."
   },
   "archive": {
     "cardLoadingInProgress":"Bezig met laden van de kaart  ...",

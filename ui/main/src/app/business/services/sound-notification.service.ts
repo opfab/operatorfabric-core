@@ -154,7 +154,7 @@ export class SoundNotificationService implements OnDestroy {
 
     public handleLoadedCard(card: LightCard) {
         if (card.id === this.lastSentCardId)
-            this.lastSentCardId = ''; // no sound as the card was send by the current user
+            this.lastSentCardId = ''; // no sound as the card was sent by the current user
         else {
             if (
                 !card.hasBeenRead &&

@@ -255,7 +255,8 @@
     "systemNotificationAlarm": "Alarme",
     "systemNotificationAction": "Action",
     "systemNotificationCompliant": "Conforme",
-    "systemNotificationInformation": "Information"
+    "systemNotificationInformation": "Information",
+    "systemNotificationsDisabledInBrowser": "Les notifications du système d'exploitation sont désactivées dans votre navigateur, vous ne serez pas notifié."
   },
   "archive": {
     "cardLoadingInProgress":"Chargement de la carte...",
