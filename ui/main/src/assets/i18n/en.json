@@ -255,7 +255,8 @@
     "systemNotificationAlarm": "Alarm",
     "systemNotificationAction": "Action",
     "systemNotificationCompliant": "Compliant",
-    "systemNotificationInformation": "Information"
+    "systemNotificationInformation": "Information",
+    "systemNotificationsDisabledInBrowser": "System notifications are disabled in your browser, you will not be notified."
   },
   "archive": {
     "cardLoadingInProgress":"Loading card  ...",

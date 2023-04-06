@@ -9,14 +9,14 @@
 
 import {Injectable} from "@angular/core";
 import {Message} from "@ofModel/message.model";
-import {Observable, Subject} from "rxjs";
+import {Observable, ReplaySubject} from "rxjs";
 
 @Injectable({
     providedIn: 'root'
 })
 export class AlertMessageService {
 
-    private alertEvent = new Subject<Message>();
+    private alertEvent = new ReplaySubject<Message>(1);
 
     public sendAlertMessage(message: Message) {
         this.alertEvent.next(message);
