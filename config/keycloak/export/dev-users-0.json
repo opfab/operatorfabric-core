@@ -704,7 +704,7 @@
     "firstName" : "",
     "lastName" : "",
     "attributes" : {
-      "groups" : ["Dispatcher;ReadOnly"]
+      "groups" : ["Dispatcher;ReadOnly,Manager"]
     },
     "credentials" : [ {
       "type" : "password",

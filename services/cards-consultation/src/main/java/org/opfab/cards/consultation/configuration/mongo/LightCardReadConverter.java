@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2021, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2023, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -17,6 +17,7 @@ import org.opfab.cards.consultation.model.PublisherTypeEnum;
 import org.opfab.cards.model.SeverityEnum;
 import org.springframework.core.convert.converter.Converter;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -56,7 +57,12 @@ public class LightCardReadConverter implements Converter<Document, LightCardCons
                 .severity(SeverityEnum.valueOf(source.getString("severity")))
                 .titleTranslated(source.getString("titleTranslated"))
                 .summaryTranslated(source.getString("summaryTranslated"))
+                .tags(source.getList("tags", String.class) == null ? new ArrayList<String>() : source.getList("tags", String.class))
                 .usersAcks(source.getList("usersAcks", String.class))
+                .entityRecipients(source.getList("entityRecipients", String.class))
+                .entityRecipientsForInformation(source.getList("entityRecipientsForInformation", String.class))
+                .entitiesAcks(source.getList("entitiesAcks", String.class))
+                .entitiesAllowedToRespond(source.getList("entitiesAllowedToRespond", String.class))
                 .publisherType(PublisherTypeEnum.valueOf(source.getString("publisherType")))
                 .representative(source.getString("representative") == null ? null : source.getString("representative"))
                 .representativeType(source.getString("representativeType") == null ? null :
@@ -72,20 +78,7 @@ public class LightCardReadConverter implements Converter<Document, LightCardCons
         Document summaryDoc = (Document) source.get("summary");
         if (summaryDoc != null)
             builder.summary(i18nReadConverter.convert(summaryDoc));
-
-        List<String> tags = (List<String>) source.get("tags");
-        if (tags != null)
-            for (String t : tags) {
-                builder.tag(t);
-            }
-
-        List<String> entitiesAllowedToRespond = (List<String>) source.get("entitiesAllowedToRespond");
-        if (entitiesAllowedToRespond != null) {
-            for (String entities : entitiesAllowedToRespond) {
-                builder.tag(entities);
-            }
-        }
-
+ 
         List<Document> timeSpans = (List<Document>) source.get("timeSpans");
         if (timeSpans != null) {
             for (Document d : timeSpans) {

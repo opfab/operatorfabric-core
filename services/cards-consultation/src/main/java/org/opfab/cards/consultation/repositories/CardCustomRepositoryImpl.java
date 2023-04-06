@@ -184,7 +184,10 @@ public class CardCustomRepositoryImpl implements CardCustomRepository {
         "publisherType",
         "representative",
         "representativeType",
-		"entitiesAcks"};
+		"entityRecipients",
+		"entityRecipientsForInformation",
+        "entitiesAcks"
+	};
         Aggregation agg = newAggregation( this.getFilterOperations(filter,pageableRequest, fields));
         Aggregation countAgg = newAggregation( this.getFilterOperationsForCount(filter));
 
