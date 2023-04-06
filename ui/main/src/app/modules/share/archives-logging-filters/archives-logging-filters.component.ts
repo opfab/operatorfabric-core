@@ -64,7 +64,7 @@ export class ArchivesLoggingFiltersComponent implements OnInit, OnDestroy, After
     @Output() search = new EventEmitter<string>();
     @Output() reset = new EventEmitter<string>();
 
-    hasCurrentUserRigthsToViewAllArchivedCards: boolean;
+    hasCurrentUserRightsToViewAllArchivedCards: boolean;
     isAdminModeChecked: boolean;
 
     unsubscribe$: Subject<void> = new Subject<void>();
@@ -132,10 +132,10 @@ export class ArchivesLoggingFiltersComponent implements OnInit, OnDestroy, After
         private userService: UserService,
         private alertMessageService: AlertMessageService
     ) {
-        this.hasCurrentUserRigthsToViewAllArchivedCards = this.userService.isCurrentUserAdmin() || this.userService.hasCurrentUserAnyPermission([PermissionEnum.VIEW_ALL_ARCHIVED_CARDS]);
+        this.hasCurrentUserRightsToViewAllArchivedCards = this.userService.isCurrentUserAdmin() || this.userService.hasCurrentUserAnyPermission([PermissionEnum.VIEW_ALL_ARCHIVED_CARDS]);
 
         const isAdminModeCheckedInStorage = this.userPreferences.getPreference('opfab.isAdminModeChecked');
-        this.isAdminModeChecked = this.hasCurrentUserRigthsToViewAllArchivedCards && isAdminModeCheckedInStorage === 'true';
+        this.isAdminModeChecked = this.hasCurrentUserRightsToViewAllArchivedCards && isAdminModeCheckedInStorage === 'true';
     }
 
     ngOnInit() {
@@ -314,7 +314,8 @@ export class ArchivesLoggingFiltersComponent implements OnInit, OnDestroy, After
     }
 
     isThereProcessStateToDisplay(): boolean {
-        return !!this.statesMultiSelectOptionsPerProcesses && this.statesMultiSelectOptionsPerProcesses.length > 0;
+        return !!this.processMultiSelectOptions && this.processMultiSelectOptions.length > 0 &&
+               !!this.statesMultiSelectOptionsPerProcesses && this.statesMultiSelectOptionsPerProcesses.length > 0;
     }
 
     setDefaultPublishDateFilter() {
