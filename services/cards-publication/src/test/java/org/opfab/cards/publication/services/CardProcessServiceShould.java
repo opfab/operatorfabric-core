@@ -11,10 +11,6 @@ package org.opfab.cards.publication.services;
 
 import lombok.extern.slf4j.Slf4j;
 import org.assertj.core.api.Assertions;
-import org.hamcrest.core.StringContains;
-import org.jeasy.random.EasyRandom;
-import org.jeasy.random.EasyRandomParameters;
-import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.opfab.cards.model.SeverityEnum;
@@ -52,27 +48,17 @@ import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
 import org.springframework.web.client.RestTemplate;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.google.common.eventbus.EventBus;
-
 import jakarta.validation.ConstraintViolationException;
 
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.time.Instant;
-import java.time.LocalDate;
-import java.time.LocalTime;
-import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Optional;
-import java.util.concurrent.atomic.AtomicInteger;
-import java.util.stream.Collectors;
-
-import static java.nio.charset.Charset.forName;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.jeasy.random.FieldPredicates.named;
 import static org.springframework.test.web.client.match.MockRestRequestMatchers.method;
 import static org.springframework.test.web.client.match.MockRestRequestMatchers.requestTo;
 import static org.springframework.test.web.client.response.MockRestResponseCreators.withStatus;
@@ -530,65 +516,6 @@ class CardProcessServiceShould {
                 Assertions.assertThat(checkCardCount(0)).isTrue();
         }
 
-        private List<CardPublicationData> instantiateSeveralRandomCards(EasyRandom randomGenerator, int cardNumber) {
-
-                List<CardPublicationData> cardsList = randomGenerator.objects(CardPublicationData.class, cardNumber)
-                                .collect(Collectors.toList());
-
-                // endDate must be after startDate
-                // expirationDate must be after startDate
-                // toNotify must be true
-                if (cardsList != null) {
-                        for (CardPublicationData cardPublicationData : cardsList) {
-                                if (cardPublicationData != null) {
-                                        Instant startDateInstant = cardPublicationData.getStartDate();
-                                        if (startDateInstant != null && startDateInstant
-                                                        .compareTo(cardPublicationData.getEndDate()) >= 0) {
-                                                cardPublicationData.setEndDate(startDateInstant.plusSeconds(86400));
-                                        }
-                                        if (startDateInstant != null && startDateInstant
-                                                        .compareTo(cardPublicationData.getExpirationDate()) >= 0) {
-                                                cardPublicationData
-                                                                .setExpirationDate(startDateInstant.plusSeconds(86400));
-                                        }
-                                        cardPublicationData.setProcess("api_test");
-                                        cardPublicationData.setState("messageState");
-                                        cardPublicationData.setProcessVersion("1");
-                                        cardPublicationData.setToNotify(true);
-
-                                        // process, processVersion, title and summary can't be random anymore because we
-                                        // check if i18n file exists via a mock (see issue #3178)
-                                        cardPublicationData.setProcess("process1");
-                                        cardPublicationData.setProcessVersion("0");
-                                        cardPublicationData
-                                                        .setTitle(I18nPublicationData.builder().key("title").build());
-                                        cardPublicationData.setSummary(
-                                                        I18nPublicationData.builder().key("summary").build());
-                                }
-                        }
-                }
-                return cardsList;
-        }
-
-        @NotNull
-        private EasyRandom instantiateRandomCardGenerator() {
-                LocalDate today = LocalDate.now();
-                LocalDate tomorrow = today.plus(1, ChronoUnit.DAYS);
-
-                LocalTime nine = LocalTime.of(9, 0);
-                LocalTime fifteen = LocalTime.of(17, 0);
-
-                EasyRandomParameters parameters = new EasyRandomParameters().seed(5467L).objectPoolSize(100)
-                                .randomizationDepth(3).charset(forName("UTF-8")).timeRange(nine, fifteen)
-                                .dateRange(today, tomorrow).stringLengthRange(5, 50).collectionSizeRange(1, 10)
-                                .excludeField(named("data"))
-                                .excludeField(named("parameters"))
-                                .excludeField(named("timeSpans"))
-                                .scanClasspathForConcreteTypes(true).overrideDefaultInitialization(false)
-                                .ignoreRandomizationErrors(true);
-
-                return new EasyRandom(parameters);
-        }
 
         @Test
         void GIVEN_existing_cards_WHEN_try_to_delete_card_with_none_existing_id_THEN_no_card_is_delete() {
@@ -671,43 +598,25 @@ class CardProcessServiceShould {
                 Assertions.assertThat(cardSaved.getKeepChildCards()).isFalse();
         }
 
-        // @Test
-        void deleteCards_by_expirationDate() {
-
-                EasyRandom easyRandom = instantiateRandomCardGenerator();
-                int numberOfCards = 10;
-
-                List<CardPublicationData> cards = instantiateSeveralRandomCards(easyRandom, numberOfCards);
-
+        @Test
+        void GIVEN_5_cards_with_two_cards_expiration_date_in_the_past_WHEN_delete_cards_by_expirationDate_set_to_now_THEN_2_cards_are_deleted() {
+                List<CardPublicationData> cards = generateFiveCards();
                 Instant ref = Instant.now();
-                AtomicInteger i = new AtomicInteger(1);
-                cards.forEach(c -> {
-                        c.setParentCardId(null);
-                        c.setInitialParentCardUid(null);
-                        c.setEndDate(null);
-
-                        if (i.get() % 2 == 0) {
-                                c.setExpirationDate(null);
-                        } else {
-                                c.setExpirationDate(ref.minus(i.get(), ChronoUnit.DAYS));
-                        }
-                        if (i.get() > 8) {
-                                c.setExpirationDate(ref.minus(1, ChronoUnit.DAYS));
-                        }
-                        if (i.get() == 2) {
-                                c.setExpirationDate(ref.plus(i.incrementAndGet(), ChronoUnit.DAYS));
-                        } else {
-                                c.setStartDate(ref.minus(i.incrementAndGet(), ChronoUnit.DAYS));
-                        }
-                });
-
+                cards.get(0).setExpirationDate(null);
+                cards.get(1).setExpirationDate(null);
+                cards.get(2).setExpirationDate(ref.plusSeconds(10000));
+                cards.get(3).setStartDate(ref.minusSeconds(20000));
+                cards.get(3).setExpirationDate(ref.minusSeconds(10000));
+                cards.get(4).setStartDate(ref.minusSeconds(20000));
+                cards.get(4).setExpirationDate(ref.minusSeconds(10000));
                 cards.forEach(card -> cardProcessingService.processCard(card));
+
                 cardProcessingService.deleteCardsByExpirationDate(Instant.now());
 
-                /* 6 cards should be removed */
-                int thereShouldBeFourCardLeft = numberOfCards - 6;
-                Assertions.assertThat(cardRepositoryMock.count()).isEqualTo(thereShouldBeFourCardLeft);
-
+                // 5 add message and 2 delete messages
+                Assertions.assertThat(eventBusSpy.getMessagesSent()).hasSize(7);
+                /* 2 cards should be removed */
+                Assertions.assertThat(cardRepositoryMock.count()).isEqualTo(3);
         }
 
         @Test

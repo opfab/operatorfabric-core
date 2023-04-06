@@ -23,7 +23,6 @@ import org.opfab.cards.publication.repositories.UserBasedOperationResult;
 import org.opfab.users.model.User;
 import org.springframework.stereotype.Service;
 
-
 @Service
 public class CardRepositoryMock implements CardRepository {
 
@@ -91,7 +90,7 @@ public class CardRepositoryMock implements CardRepository {
         List<CardPublicationData> children = new ArrayList<CardPublicationData>();
         if (card != null)
             cardsById.values().stream().forEach(child -> {
-                if ((child.getParentCardId()!=null) && child.getParentCardId().equals(card.getId()))
+                if ((child.getParentCardId() != null) && child.getParentCardId().equals(card.getId()))
                     children.add(child);
             });
         return Optional.of(children);
@@ -141,8 +140,14 @@ public class CardRepositoryMock implements CardRepository {
 
     @Override
     public List<CardPublicationData> findCardsByExpirationDate(Instant expirationDate) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'findCardsByExpirationDate'");
+        List<CardPublicationData> cards = new ArrayList<CardPublicationData>();
+        cardsById.values().stream().forEach(card -> {
+            if (((card.getExpirationDate() != null)
+                    && (card.getExpirationDate().toEpochMilli() < expirationDate.toEpochMilli()))) {
+                cards.add(card);
+            }
+        });
+        return cards;
     }
 
     public int count() {
