@@ -524,7 +524,7 @@ public class ProcessesService implements ResourceLoaderAware {
      * @throws IOException multiple underlying cases (file system access, file system manipulation - deletion)
      */
     public void clear() throws IOException {    	
-        Resource resource = this.resourceLoader.getResource(PATH_PREFIX + this.storagePath);
+        Resource resource = this.resourceLoader.getResource(PATH_PREFIX + this.storagePath + BUNDLE_FOLDER);
         File file = resource.getFile();
         if(file.exists()) {
             Path storageRoot = PathUtils.getPath(file);
