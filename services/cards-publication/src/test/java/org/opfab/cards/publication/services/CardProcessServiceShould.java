@@ -261,14 +261,14 @@ class CardProcessServiceShould {
 
         @Test
         void GIVEN_a_publisher_WHEN_sending_a_new_card_THEN_card_event_ADD_is_send_to_eventBus() {
-                
+
                 cardProcessingService.processCard(generateOneCard());
                 Assertions.assertThat(eventBusSpy.getMessagesSent().get(0)[1]).contains("{\"type\":\"ADD\"");
         }
 
         @Test
         void GIVEN_a_publisher_WHEN_sending_an_updated_card_THEN_card_event_UPDATE_is_send_to_eventBus() {
-                
+
                 cardProcessingService.processCard(generateOneCard());
                 cardProcessingService.processCard(generateOneCard());
                 Assertions.assertThat(eventBusSpy.getMessagesSent().get(1)[1]).contains("{\"type\":\"UPDATE\"");
@@ -516,7 +516,6 @@ class CardProcessServiceShould {
                 Assertions.assertThat(checkCardCount(0)).isTrue();
         }
 
-
         @Test
         void GIVEN_existing_cards_WHEN_try_to_delete_card_with_none_existing_id_THEN_no_card_is_delete() {
                 List<CardPublicationData> cards = generateFiveCards();
@@ -661,8 +660,8 @@ class CardProcessServiceShould {
                 Assertions.assertThat(checkCardCount(1)).isTrue();
         }
 
-        // @Test
-        void checkUserRepresentative() {
+        @Test
+        void GIVEN_a_card_with_representative_dummyUser_WHEN_wrongUser_send_the_card_THEN_card_is_rejected() {
 
                 User user = new User();
                 user.setLogin("wrongUser");
@@ -680,6 +679,23 @@ class CardProcessServiceShould {
                                 .isInstanceOf(ApiErrorException.class).hasMessage(
                                                 "Card representative is set to dummyUser and account login is wrongUser, the card cannot be sent");
                 Assertions.assertThat(checkCardCount(0)).isTrue();
+        }
+
+        @Test
+        void GIVEN_a_card_created_by_dummyUser_WHEN_wrongUser_delete_the_card_with_representative_dummyUser_THEN_card_is_rejected() {
+
+                User user = new User();
+                user.setLogin("wrongUser");
+                user.setFirstName("Test");
+                user.setLastName("User");
+                CurrentUserWithPerimeters wrongUser = new CurrentUserWithPerimeters();
+                wrongUser.setUserData(user);
+
+                CardPublicationData card = generateOneCard("IGNORED_PUBLISHER");
+                card.setPublisherType(PublisherTypeEnum.EXTERNAL);
+                card.setRepresentativeType(PublisherTypeEnum.EXTERNAL);
+                card.setRepresentative(currentUserWithPerimeters.getUserData().getLogin());
+                Optional<CurrentUserWithPerimeters> optionalWrongUser = Optional.of(wrongUser);
 
                 cardProcessingService.processCard(card, Optional.of(currentUserWithPerimeters), token);
                 Assertions.assertThat(checkCardCount(1)).isTrue();
@@ -688,9 +704,6 @@ class CardProcessServiceShould {
                                 .isInstanceOf(ApiErrorException.class).hasMessage(
                                                 "Card representative is set to dummyUser and account login is wrongUser, the card cannot be deleted");
                 Assertions.assertThat(checkCardCount(1)).isTrue();
-
-                cardProcessingService.deleteCard(card.getId(), Optional.of(currentUserWithPerimeters), token);
-                Assertions.assertThat(checkCardCount(0)).isTrue();
         }
 
         @Test
