@@ -1,4 +1,4 @@
-/* Copyright (c) 2021-2022, RTE (http://www.rte-france.com)
+/* Copyright (c) 2021-2023, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -6,14 +6,13 @@
  * SPDX-License-Identifier: MPL-2.0
  * This file is part of the OperatorFabric project.
  */
-package org.opfab.cards.publication.services.clients.impl;
+package org.opfab.cards.publication.services;
 
 import lombok.extern.slf4j.Slf4j;
 
 import org.opfab.cards.publication.configuration.ExternalRecipients;
 import org.opfab.cards.publication.kafka.producer.ResponseCardProducer;
 import org.opfab.cards.publication.model.CardPublicationData;
-import org.opfab.cards.publication.services.clients.ExternalAppClient;
 import org.opfab.springtools.error.model.ApiError;
 import org.opfab.springtools.error.model.ApiErrorException;
 import org.springframework.http.*;
@@ -33,7 +32,7 @@ import java.util.Optional;
 
 @Service
 @Slf4j
-public class ExternalAppClientImpl implements ExternalAppClient {
+public class ExternalAppService {
 
     public static final String REMOTE_404_MESSAGE = "External application endpoint not found (HTTP 404)";
     public static final String UNEXPECTED_REMOTE_MESSAGE = "Unexpected behavior of external application endpoint";
@@ -47,7 +46,7 @@ public class ExternalAppClientImpl implements ExternalAppClient {
     private ResponseCardProducer responseCardProducer;
 
 
-    public ExternalAppClientImpl(ExternalRecipients externalRecipients,RestTemplate restTemplate,ResponseCardProducer responseCardProducer) {
+    public ExternalAppService(ExternalRecipients externalRecipients,RestTemplate restTemplate,ResponseCardProducer responseCardProducer) {
         this.externalRecipients = externalRecipients;
         this.restTemplate = restTemplate;
         this.responseCardProducer = responseCardProducer;

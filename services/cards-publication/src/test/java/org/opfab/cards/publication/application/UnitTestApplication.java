@@ -18,7 +18,6 @@ import org.opfab.cards.publication.kafka.card.CardCommandFactory;
 import org.opfab.cards.publication.kafka.producer.ResponseCardProducer;
 import org.opfab.cards.publication.mocks.CardRepositoryMock;
 import org.opfab.cards.publication.services.*;
-import org.opfab.cards.publication.services.clients.impl.ExternalAppClientImpl;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ConfigurableApplicationContext;
@@ -36,7 +35,7 @@ import org.springframework.context.annotation.Import;
 
 @SpringBootApplication
 @Import({CardTranslationService.class, CardNotificationService.class,
-     ExternalAppClientImpl.class , ResponseCardProducer.class
+     ExternalAppService.class , ResponseCardProducer.class
 , CardCommandFactory.class, CardObjectMapper.class, JacksonConfig.class
 , Common.class , CardController.class,  I18nProcessesCache.class, I18nProcessesCacheTestApplication.class, 
 ExternalRecipients.class, UserActionLogsConfiguration.class, UserActionLogRepositoryImpl.class, EventBusSpy.class,CardRepositoryMock.class,Services.class})

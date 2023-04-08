@@ -14,7 +14,7 @@ import org.opfab.cards.publication.repositories.CardRepository;
 import org.opfab.cards.publication.services.CardNotificationService;
 import org.opfab.cards.publication.services.CardProcessingService;
 import org.opfab.cards.publication.services.CardTranslationService;
-import org.opfab.cards.publication.services.clients.impl.ExternalAppClientImpl;
+import org.opfab.cards.publication.services.ExternalAppService;
 import org.opfab.springtools.configuration.oauth.I18nProcessesCache;
 import org.opfab.springtools.configuration.oauth.ProcessesCache;
 import org.opfab.useractiontracing.services.UserActionLogService;
@@ -38,7 +38,7 @@ public class Services {
             UserActionLogService userActionLogService,
             LocalValidatorFactoryBean localValidatorFactoryBean,
             CardRepository cardRepository,
-            ExternalAppClientImpl externalAppClient,
+            ExternalAppService externalAppService,
             I18nProcessesCache i18nProcessesCache, ProcessesCache processesCache, EventBus eventBus,
             ObjectMapper objectMapper,
             @Value("${checkAuthenticationForCardSending:true}") boolean checkAuthenticationForCardSending,
@@ -48,7 +48,7 @@ public class Services {
         this.userActionLogService = userActionLogService;
         CardNotificationService cardNotificationService = new CardNotificationService(eventBus, objectMapper);
         cardProcessingService = new CardProcessingService(localValidatorFactoryBean, cardNotificationService,
-                cardRepository, externalAppClient,
+                cardRepository, externalAppService,
                 cardTranslationService, processesCache, checkAuthenticationForCardSending, checkPerimeterForCardSending,
                 authorizeToSendCardWithInvalidProcessState);
 

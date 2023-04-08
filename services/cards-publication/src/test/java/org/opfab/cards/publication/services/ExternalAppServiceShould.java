@@ -1,5 +1,5 @@
 /* Copyright (c) 2020, Alliander (http://www.alliander.com)
- * Copyright (c) 2021-2022, RTE (http://www.rte-france.com)
+ * Copyright (c) 2021-2023, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -7,7 +7,7 @@
  * SPDX-License-Identifier: MPL-2.0
  * This file is part of the OperatorFabric project.
  */
-package org.opfab.cards.publication.services.clients.impl;
+package org.opfab.cards.publication.services;
 
 
 import org.junit.jupiter.api.BeforeAll;
@@ -30,9 +30,7 @@ import org.springframework.web.client.RestTemplate;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 
 import static org.mockito.ArgumentMatchers.any;
@@ -42,7 +40,7 @@ import static org.mockito.Mockito.verify;
 @ExtendWith(MockitoExtension.class)
 @ActiveProfiles(profiles = {"native", "test"})
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-class ExternalAppClientImplShould {
+class ExternalAppServiceShould {
 
     @Mock
     private ResponseCardProducer responseCardProducer;
@@ -51,7 +49,7 @@ class ExternalAppClientImplShould {
     private RestTemplate restTemplate;
 
     @InjectMocks
-    private ExternalAppClientImpl cut;
+    private ExternalAppService externalAppService;
 
     private final String externalRecipientKafka = "kafka_recipient";
     private final String externalRecipientHttp = "http_recipient";
@@ -77,16 +75,16 @@ class ExternalAppClientImplShould {
     @Test
     void sendCardToExternalApplicationKafka() {
         CardPublicationData card = createCardPublicationData(externalRecipientKafka);
-        ReflectionTestUtils.setField(cut, "externalRecipients", externalRecipients);
-        cut.sendCardToExternalApplication(card, Optional.empty());
+        ReflectionTestUtils.setField(externalAppService, "externalRecipients", externalRecipients);
+        externalAppService.sendCardToExternalApplication(card, Optional.empty());
         verify (responseCardProducer).send(card);
     }
 
     @Test
     void sendCardToExternalApplicationHttp() {
         CardPublicationData card = createCardPublicationData(externalRecipientHttp);
-        ReflectionTestUtils.setField(cut, "externalRecipients", externalRecipients);
-        cut.sendCardToExternalApplication(card, Optional.empty());
+        ReflectionTestUtils.setField(externalAppService, "externalRecipients", externalRecipients);
+        externalAppService.sendCardToExternalApplication(card, Optional.empty());
         verify (restTemplate).postForObject(anyString(), any(), any());
     }
 
