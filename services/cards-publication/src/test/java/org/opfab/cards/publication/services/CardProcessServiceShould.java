@@ -24,7 +24,6 @@ import org.opfab.cards.publication.model.I18nPublicationData;
 import org.opfab.cards.publication.model.PublisherTypeEnum;
 import org.opfab.cards.publication.model.RecurrencePublicationData;
 import org.opfab.cards.publication.model.TimeSpanPublicationData;
-import org.opfab.cards.publication.services.clients.impl.ExternalAppClientImpl;
 import org.opfab.springtools.configuration.oauth.I18nProcessesCache;
 import org.opfab.springtools.configuration.oauth.ProcessesCache;
 import org.opfab.springtools.error.model.ApiErrorException;
@@ -81,7 +80,7 @@ class CardProcessServiceShould {
         private ObjectMapper objectMapper;
 
         @Autowired
-        private ExternalAppClientImpl externalAppClient;
+        private ExternalAppService externalAppService;
         @Autowired
         private I18nProcessesCache i18nProcessesCache;
         @Autowired
@@ -107,7 +106,7 @@ class CardProcessServiceShould {
                 cardNotificationService = new CardNotificationService(eventBusSpy, objectMapper);
                 cardTranslationService = new CardTranslationService(i18nProcessesCache, processesCache, eventBusSpy);
                 cardProcessingService = new CardProcessingService(localValidatorFactoryBean, cardNotificationService,
-                                cardRepositoryMock, externalAppClient,
+                                cardRepositoryMock, externalAppService,
                                 cardTranslationService, processesCache, true, true,
                                 false);
                 initCurrentUser();

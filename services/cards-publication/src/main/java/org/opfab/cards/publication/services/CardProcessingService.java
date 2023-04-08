@@ -17,7 +17,6 @@ import org.opfab.cards.model.CardOperationTypeEnum;
 import org.opfab.cards.publication.model.*;
 import org.opfab.cards.publication.repositories.CardRepository;
 import org.opfab.cards.publication.repositories.UserBasedOperationResult;
-import org.opfab.cards.publication.services.clients.impl.ExternalAppClientImpl;
 import org.opfab.springtools.configuration.oauth.ProcessesCache;
 import org.opfab.springtools.error.model.ApiError;
 import org.opfab.springtools.error.model.ApiErrorException;
@@ -51,7 +50,7 @@ public class CardProcessingService {
     private LocalValidatorFactoryBean localValidatorFactoryBean;
     private CardNotificationService cardNotificationService;
     private CardRepository cardRepository;
-    private ExternalAppClientImpl externalAppClient;
+    private ExternalAppService externalAppService;
     private CardPermissionControlService cardPermissionControlService;
     private CardTranslationService cardTranslationService;
     private ProcessesCache processesCache;
@@ -66,7 +65,7 @@ public class CardProcessingService {
         LocalValidatorFactoryBean localValidatorFactoryBean,
         CardNotificationService cardNotificationService,
         CardRepository cardRepository,
-        ExternalAppClientImpl externalAppClient,
+        ExternalAppService externalAppService,
         CardTranslationService cardTranslationService,
         ProcessesCache processesCache,
         boolean checkAuthenticationForCardSending,
@@ -76,7 +75,7 @@ public class CardProcessingService {
         this.localValidatorFactoryBean = localValidatorFactoryBean;
         this.cardNotificationService = cardNotificationService;
         this.cardRepository = cardRepository;
-        this.externalAppClient = externalAppClient;
+        this.externalAppService = externalAppService;
         this.cardPermissionControlService = new CardPermissionControlService();
         this.cardTranslationService = cardTranslationService;
         this.processesCache = processesCache;
@@ -139,7 +138,7 @@ public class CardProcessingService {
                 // throw a runtime exception to be handled by Mono.onErrorResume()
                 throw new IllegalArgumentException("Publisher is not valid, the card is rejected");
             log.info("Send user card to external app with jwt present " + jwt.isPresent());
-            externalAppClient.sendCardToExternalApplication(card, jwt);
+            externalAppService.sendCardToExternalApplication(card, jwt);
         }
         
         if ((card.getToNotify() == null) || Boolean.TRUE.equals(card.getToNotify())) {
@@ -427,7 +426,7 @@ public class CardProcessingService {
                 cardRepository.updateArchivedCard(deleted);
             });
             
-            externalAppClient.notifyExternalApplicationThatCardIsDeleted(cardToDelete, jwt);
+            externalAppService.notifyExternalApplicationThatCardIsDeleted(cardToDelete, jwt);
             Optional<List<CardPublicationData>> childCard=cardRepository.findChildCard(cardToDelete);
             if(childCard.isPresent()){
                 childCard.get().forEach(x->deleteCard(x.getId(), deletionDate, jwt));

@@ -26,7 +26,7 @@ import org.opfab.cards.publication.mocks.CardRepositoryMock;
 import org.opfab.cards.publication.model.CardPublicationData;
 import org.opfab.cards.publication.model.I18nPublicationData;
 import org.opfab.cards.publication.model.TimeSpanPublicationData;
-import org.opfab.cards.publication.services.clients.impl.ExternalAppClientImpl;
+import org.opfab.cards.publication.services.ExternalAppService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -81,7 +81,7 @@ class SendKafkaCardShould {
 
 
     @Autowired
-    private ExternalAppClientImpl appClient;
+    private ExternalAppService externalAppService;
 
     @Autowired
     private KafkaTemplate<String, CardCommand> kafkaTemplate;
@@ -200,7 +200,7 @@ class SendKafkaCardShould {
                 .externalRecipient("camunda1")
                 .build();
 
-        appClient.sendCardToExternalApplication(cardPublicationData, Optional.empty());
+        externalAppService.sendCardToExternalApplication(cardPublicationData, Optional.empty());
 
         assertThat (latch.await(5, TimeUnit.SECONDS), is (true));
         assertThat(receiveCardCommandResultIsOK, is(true));
