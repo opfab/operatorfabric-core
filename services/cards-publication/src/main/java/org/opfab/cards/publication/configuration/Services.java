@@ -21,7 +21,6 @@ import org.opfab.useractiontracing.services.UserActionLogService;
 import org.opfab.utilities.eventbus.EventBus;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -36,7 +35,6 @@ public class Services {
 
     Services(
             UserActionLogService userActionLogService,
-            LocalValidatorFactoryBean localValidatorFactoryBean,
             CardRepository cardRepository,
             ExternalAppService externalAppService,
             I18nProcessesCache i18nProcessesCache, ProcessesCache processesCache, EventBus eventBus,
@@ -47,7 +45,7 @@ public class Services {
         this.cardTranslationService = new CardTranslationService(i18nProcessesCache, processesCache, eventBus);
         this.userActionLogService = userActionLogService;
         CardNotificationService cardNotificationService = new CardNotificationService(eventBus, objectMapper);
-        cardProcessingService = new CardProcessingService(localValidatorFactoryBean, cardNotificationService,
+        cardProcessingService = new CardProcessingService(cardNotificationService,
                 cardRepository, externalAppService,
                 cardTranslationService, processesCache, checkAuthenticationForCardSending, checkPerimeterForCardSending,
                 authorizeToSendCardWithInvalidProcessState);
