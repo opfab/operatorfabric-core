@@ -43,7 +43,6 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.client.ExpectedCount;
 import org.springframework.test.web.client.MockRestServiceServer;
-import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
 import org.springframework.web.client.RestTemplate;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -74,8 +73,7 @@ class CardProcessServiceShould {
 
         @Autowired
         private RestTemplate restTemplate;
-        @Autowired
-        private LocalValidatorFactoryBean localValidatorFactoryBean;
+        
         @Autowired
         private ObjectMapper objectMapper;
 
@@ -105,7 +103,7 @@ class CardProcessServiceShould {
                 eventBusSpy = new EventBusSpy();
                 cardNotificationService = new CardNotificationService(eventBusSpy, objectMapper);
                 cardTranslationService = new CardTranslationService(i18nProcessesCache, processesCache, eventBusSpy);
-                cardProcessingService = new CardProcessingService(localValidatorFactoryBean, cardNotificationService,
+                cardProcessingService = new CardProcessingService(cardNotificationService,
                                 cardRepositoryMock, externalAppService,
                                 cardTranslationService, processesCache, true, true,
                                 false);
@@ -798,6 +796,110 @@ class CardProcessServiceShould {
                                 () -> cardProcessingService.processUserCard(card, currentUserWithPerimeters, token))
                                 .isInstanceOf(ApiErrorException.class)
                                 .hasMessage("Impossible to publish card because process and/or state does not exist (process=PROCESS_CARD_USER, state=state1, processVersion=99, processInstanceId=PROCESS_1)");
+
+        }
+
+
+        @Test
+        void GIVEN_a_card_with_no_publisher_WHEN_sending_card_THEN_card_is_rejected() {
+                CardPublicationData card = generateOneCard("entity2");
+                card.setPublisher(null);
+                Assertions.assertThatThrownBy(
+                                () -> cardProcessingService.processUserCard(card, currentUserWithPerimeters, token))
+                                .isInstanceOf(ConstraintViolationException.class)
+                                .hasMessage("Impossible to publish card because there is no publisher");
+
+        }
+
+
+        @Test
+        void GIVEN_a_card_with_no_process_WHEN_sending_card_THEN_card_is_rejected() {
+                CardPublicationData card = generateOneCard("entity2");
+                card.setProcess(null);
+                Assertions.assertThatThrownBy(
+                                () -> cardProcessingService.processUserCard(card, currentUserWithPerimeters, token))
+                                .isInstanceOf(ConstraintViolationException.class)
+                                .hasMessage("Impossible to publish card because there is no process");
+
+        }
+
+
+        @Test
+        void GIVEN_a_card_with_no_processVersion_WHEN_sending_card_THEN_card_is_rejected() {
+                CardPublicationData card = generateOneCard("entity2");
+                card.setProcessVersion(null);
+                Assertions.assertThatThrownBy(
+                                () -> cardProcessingService.processUserCard(card, currentUserWithPerimeters, token))
+                                .isInstanceOf(ConstraintViolationException.class)
+                                .hasMessage("Impossible to publish card because there is no processVersion");
+
+        }
+
+
+        @Test
+        void GIVEN_a_card_with_no_state_WHEN_sending_card_THEN_card_is_rejected() {
+                CardPublicationData card = generateOneCard("entity2");
+                card.setState(null);
+                Assertions.assertThatThrownBy(
+                                () -> cardProcessingService.processUserCard(card, currentUserWithPerimeters, token))
+                                .isInstanceOf(ConstraintViolationException.class)
+                                .hasMessage("Impossible to publish card because there is no state");
+
+        }
+
+
+        @Test
+        void GIVEN_a_card_with_no_processInstanceId_WHEN_sending_card_THEN_card_is_rejected() {
+                CardPublicationData card = generateOneCard("entity2");
+                card.setProcessInstanceId(null);
+                Assertions.assertThatThrownBy(
+                                () -> cardProcessingService.processUserCard(card, currentUserWithPerimeters, token))
+                                .isInstanceOf(ConstraintViolationException.class)
+                                .hasMessage("Impossible to publish card because there is no processInstanceId");
+
+        }
+
+        @Test
+        void GIVEN_a_card_with_no_severity_WHEN_sending_card_THEN_card_is_rejected() {
+                CardPublicationData card = generateOneCard("entity2");
+                card.setSeverity(null);
+                Assertions.assertThatThrownBy(
+                                () -> cardProcessingService.processUserCard(card, currentUserWithPerimeters, token))
+                                .isInstanceOf(ConstraintViolationException.class)
+                                .hasMessage("Impossible to publish card because there is no severity");
+
+        }
+
+        @Test
+        void GIVEN_a_card_with_no_title_WHEN_sending_card_THEN_card_is_rejected() {
+                CardPublicationData card = generateOneCard("entity2");
+                card.setTitle(null);
+                Assertions.assertThatThrownBy(
+                                () -> cardProcessingService.processUserCard(card, currentUserWithPerimeters, token))
+                                .isInstanceOf(ConstraintViolationException.class)
+                                .hasMessage("Impossible to publish card because there is no title");
+
+        }
+
+        @Test
+        void GIVEN_a_card_with_no_summary_WHEN_sending_card_THEN_card_is_rejected() {
+                CardPublicationData card = generateOneCard("entity2");
+                card.setSummary(null);
+                Assertions.assertThatThrownBy(
+                                () -> cardProcessingService.processUserCard(card, currentUserWithPerimeters, token))
+                                .isInstanceOf(ConstraintViolationException.class)
+                                .hasMessage("Impossible to publish card because there is no summary");
+
+        }
+
+        @Test
+        void GIVEN_a_card_with_no_startDate_WHEN_sending_card_THEN_card_is_rejected() {
+                CardPublicationData card = generateOneCard("entity2");
+                card.setStartDate(null);
+                Assertions.assertThatThrownBy(
+                                () -> cardProcessingService.processUserCard(card, currentUserWithPerimeters, token))
+                                .isInstanceOf(ConstraintViolationException.class)
+                                .hasMessage("Impossible to publish card because there is no startDate");
 
         }
 
