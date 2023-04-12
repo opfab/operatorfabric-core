@@ -112,7 +112,7 @@ export class LoggingTableComponent implements OnDestroy {
                     },
                     wrapText: true,
                     autoHeight: true,
-                    width: 200,
+                    flex: 1,
                     resizable: false
                 },
                 summaryColumn: {
@@ -123,7 +123,7 @@ export class LoggingTableComponent implements OnDestroy {
                     },
                     wrapText: true,
                     autoHeight: true,
-                    width: 350,
+                    flex: 1,
                     resizable: false
                 },
                 stateDataColumn: {
@@ -140,7 +140,7 @@ export class LoggingTableComponent implements OnDestroy {
                     wrapText: true,
                     autoHeight: false,
                     minWidth: 120,
-                    flex: 1,
+                    flex: 0.6,
                     resizable: false
                 },
                 severityColumn: {
