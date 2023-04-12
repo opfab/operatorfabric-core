@@ -656,6 +656,9 @@ public class ProcessesService implements ResourceLoaderAware {
         
         //copy file
         PathUtils.copyInputStreamToFile(new ByteArrayInputStream(fileContent.getBytes()), businessDataPath.toString() + "/" + resourceName);
+
+        eventBus.sendEvent("process","BUSINESS_DATA_CHANGE");
+
     }
 
     public Resource getBusinessData(String resourceName) throws FileNotFoundException {
