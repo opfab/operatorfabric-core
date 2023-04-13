@@ -73,7 +73,7 @@ include::workflow.adoc[leveloffset=+2]
 
 === Code Guidelines
 
-* We don't mention specific authors by name in each file (in Javadoc or in the documentation for example), so as not
+* We don't mention specific authors by name in each file so as not
 to have to maintain these mentions (since this information is tracked by git anyway).
 * For ui code, you must use prettier (https://prettier.io/)  to format the code (config provided in .prettierrc.json in the git root repository). The file types to format via prettier are the following : js, ts, css and scss.
 * When adding a dependency, define a precise version of the dependency
@@ -82,11 +82,10 @@ to have to maintain these mentions (since this information is tracked by git any
 
 ==== Angular/TypeScript development caution and guidelines
 
-* Use `foreach` to iterate over an array (instead of `for(let i = ..`) . In some cases, foreach do not work and you can use it this way `Array.prototype.forEach.call(myArray, element => .... )` (see https://stackoverflow.com/questions/43743560/foreach-vs-array-prototype-foreach-call)
+* Use `foreach` to iterate over an array (instead of `for(let i = ..`).
 * Do not use ngFor / ngIf  with methods with computing as angular will call these methods very regularly
 (around ten times per seconds), use instead variables and compute them only when necessary.
 * ngOnInit() :  ngOnInit is called when component is created, the creation is made by the parent component : be careful to check when initialization is done when calling method inside ngOnInit. When the context of the parent component change, it can lead to a new initialization or not.
-* Do not store Moment objects in ngrx store (see for example : https://github.com/ngrx/platform/issues/2690)
 * Prefer using `*ngIf` over `hidden` property  to hide elements : https://stackoverflow.com/questions/51317666/when-should-i-use-ngif-over-hidden-property-and-vice-versa/51317774
 * Do not use console.log or console.error, use specific opfab service : OpfabLoggerService
 * To give id to an HTML element, please use dashes between words and only lowercase letters. Example id="opfab-feed-filter-publish-date-to"

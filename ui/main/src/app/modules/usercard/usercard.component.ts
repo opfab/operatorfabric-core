@@ -460,11 +460,10 @@ export class UserCardComponent implements OnInit {
     }
 
     private reinsertScripts(): void {
-        const scripts = <HTMLScriptElement[]> this.element.nativeElement.getElementsByTagName('script');
-        Array.prototype.forEach.call(scripts, (script) => {
-            // scripts.foreach does not work ...
+        const scripts = <HTMLCollection> this.element.nativeElement.getElementsByTagName('script');
+        Array.from(scripts).forEach((script) => {
             const scriptCopy = document.createElement('script');
-            scriptCopy.type = script.type ? script.type : 'text/javascript';
+            scriptCopy.type = (<HTMLScriptElement>script).type ? (<HTMLScriptElement>script).type : 'text/javascript';
             if (!!script.innerHTML) {
                 scriptCopy.innerHTML = script.innerHTML;
             }
