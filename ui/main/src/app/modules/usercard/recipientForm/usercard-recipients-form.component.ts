@@ -107,7 +107,7 @@ export class UserCardRecipientsFormComponent implements OnInit, OnChanges {
 
     private loadRestrictedRecipientList(recipients: Recipient[]): void {
         this.recipientsOptions = [];
-        Array.prototype.forEach.call(recipients, (r) => {
+        recipients.forEach((r) => {
             if (!!r.levels) {
                 r.levels.forEach((l) => {
                     this.entitiesService.resolveChildEntitiesByLevel(r.id, l).forEach((entity) => {
@@ -129,7 +129,7 @@ export class UserCardRecipientsFormComponent implements OnInit, OnChanges {
 
     private loadRestrictedRecipientForInformationList(recipientsForInformation: Recipient[]): void {
         this.recipientsForInformationOptions = [];
-        Array.prototype.forEach.call(recipientsForInformation, (r) => {
+        recipientsForInformation.forEach((r) => {
             if (!!r.levels) {
                 r.levels.forEach((l) => {
                     this.entitiesService.resolveChildEntitiesByLevel(r.id, l).forEach((entity) => {
