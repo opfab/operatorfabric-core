@@ -203,9 +203,11 @@ Feature: Posting card with a process and/or a state that doesn't exist in bundle
 
 
     # We push same card than previously, and we check now pushing the card is successful (this test is to be sure the cache is updated when we push a bundle)
+    # Use retry to avoid falky test when cache is not yet updated
     Given url opfabPublishCardUrl + 'cards'
     And header Authorization = 'Bearer ' + authTokenAsTSO
     And request card
+    And retry until responseStatus == 201
     When method post
     Then status 201
     And match response.id == 'api_test.cardWithNewState'
