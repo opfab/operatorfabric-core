@@ -615,9 +615,11 @@ export class CustomTimelineChartComponent extends BaseChartComponent implements 
     }
 
     @HostListener('mouseleave') onMouseLeave() {
-        this.popoverTimeOut = setTimeout(() => {
-            this.openPopover.close();
-        }, 1000);
+        if (this.openPopover) {
+            this.popoverTimeOut = setTimeout(() => {
+                this.openPopover.close();
+            }, 1000);
+        }
     }
 
     @HostListener('mouseenter') onMouseEnter() {
@@ -695,4 +697,3 @@ export class CustomTimelineChartComponent extends BaseChartComponent implements 
         this.zoomChange.emit(direction);
     }
 }
-
