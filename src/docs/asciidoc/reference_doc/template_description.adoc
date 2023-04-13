@@ -803,3 +803,6 @@ To avoid script injection, OperatorFabric provides an utility function 'opfab.ut
 
 
 ....
+
+=== Redirect to another card 
+It is possible from the template to show another card detail in feed page by calling the method `opfab.navigation.showCardDetail(cardId)`. See an example in this template (https://github.com/opfab/operatorfabric-core/tree/develop/src/test/resources/bundles/cypress/template/kitchenSink.handlebars[kitchenSink.handlebars]).
