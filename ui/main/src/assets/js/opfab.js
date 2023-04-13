@@ -70,3 +70,7 @@ opfab.businessconfig = {
         get : function(resourceName) {}
     }
 }
+
+opfab.navigate = {
+    showCardInFeed : function(cardId) {}
+}

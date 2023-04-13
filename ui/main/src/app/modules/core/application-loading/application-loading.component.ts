@@ -7,7 +7,7 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {Component, OnInit, Output, ViewChild} from '@angular/core';
+import {Component, NgZone, OnInit, Output, ViewChild} from '@angular/core';
 import {Title} from '@angular/platform-browser';
 import {TranslateService} from '@ngx-translate/core';
 import {ConfigService} from 'app/business/services/config.service';
@@ -36,6 +36,7 @@ import {AuthService} from 'app/authentication/auth.service';
 import {AuthenticationMode} from 'app/authentication/auth.model';
 import {SystemNotificationService} from '../../../business/services/system-notification.service';
 import {BusinessDataService} from 'app/business/services/businessdata.service';
+import {Router} from '@angular/router';
 
 declare const opfab: any;
 @Component({
@@ -84,7 +85,9 @@ export class ApplicationLoadingComponent implements OnInit {
         private opfabEventStreamService: OpfabEventStreamService,
         private applicationUpdateService: ApplicationUpdateService,
         private currentUserStore: CurrentUserStore,
-        private systemNotificationService: SystemNotificationService
+        private systemNotificationService: SystemNotificationService,
+        private router: Router,
+        private ngZone: NgZone
     ) {}
 
     ngOnInit() {
@@ -280,6 +283,10 @@ export class ApplicationLoadingComponent implements OnInit {
             const resource = await that.businessDataService.getBusinessData(resourceName);
             return resource;
         };
+
+        opfab.navigate.showCardInFeed = function(cardId: string) {
+            that.ngZone.run(() => that.router.navigate(['feed/cards/', cardId]));
+        }
     }
 
 }
