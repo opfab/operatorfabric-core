@@ -376,6 +376,19 @@ paths:
           description: Authentication required
         '403':
           description: Forbidden - ADMIN role necessary
+  '/businessconfig/businessData':
+    get:
+      summary: Get the list of the available business data
+      description: >-
+        Get the list of the available business data
+      operationId: getAllBusinessData
+      produces: 
+        - application/json
+      responses:
+        '200':
+          description: OK
+          schema:
+            type: object
   '/businessconfig/businessData/{resourceName}':
     get:
       summary: Get the business data

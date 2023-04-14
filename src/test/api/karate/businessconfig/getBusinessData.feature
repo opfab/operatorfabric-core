@@ -35,6 +35,20 @@ Feature: deleteBusinessData
       Then status 200
       And match response == {"dummy": []}
 
+    Scenario: post second file
+      Given url opfabUrl + 'businessconfig/businessData/businessdata_bis'
+      And header Authorization = 'Bearer ' + authToken
+      And multipart file file = { read: 'resources/businessdata_bis' }
+      When method POST
+      Then status 201
+
+    Scenario: list all files
+      Given url opfabUrl + 'businessconfig/businessData'
+      And header Authorization = 'Bearer ' + authToken
+      When method GET
+      Then status 200
+      And match response == ["businessdata", "businessdata_bis"]
+
     
     Scenario: delete dummy file
       Given url opfabUrl + 'businessconfig/businessData/businessdata'
