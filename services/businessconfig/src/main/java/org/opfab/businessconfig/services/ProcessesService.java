@@ -37,6 +37,7 @@ import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
 import jakarta.annotation.PostConstruct;
 import jakarta.validation.ConstraintViolation;
 import java.io.*;
+import java.nio.file.DirectoryStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -57,6 +58,7 @@ public class ProcessesService implements ResourceLoaderAware {
 	private static final String PATH_PREFIX = "file:";
     private static final String CONFIG_FILE_NAME = "config.json";
     private static final String BUNDLE_FOLDER = "/bundles";
+    private static final String BUSINESS_DATA_FOLDER = "/businessdata/";
     private static final String DUPLICATE_PROCESS_IN_PROCESS_GROUPS_FILE = "There is a duplicate process in the file you have sent";
 
     @Value("${operatorfabric.businessconfig.storage.path}")
@@ -620,7 +622,7 @@ public class ProcessesService implements ResourceLoaderAware {
      * @throws IOException 
      */
     public synchronized void deleteFile(String resourceName) throws IOException {
-    	Path resourcePath = Paths.get(this.storagePath + "/businessdata/")
+    	Path resourcePath = Paths.get(this.storagePath + BUSINESS_DATA_FOLDER)
                 .resolve(resourceName)
                 .normalize();
         if (!resourcePath.toFile().exists()) {
@@ -662,12 +664,26 @@ public class ProcessesService implements ResourceLoaderAware {
     }
 
     public Resource getBusinessData(String resourceName) throws FileNotFoundException {
-        Path resourcePath = Paths.get(this.storagePath + "/businessdata/")
+        Path resourcePath = Paths.get(this.storagePath + BUSINESS_DATA_FOLDER)
                 .resolve(resourceName)
                 .normalize();
         if (!resourcePath.toFile().exists()) {
             throw new FileNotFoundException("Unable to find the resource " + resourceName);
         }
         return this.resourceLoader.getResource(PATH_PREFIX + resourcePath.toString());        
+    }
+
+    public String getAllBusinessData() throws IOException {
+        Path resourcePath = Paths.get(this.storagePath + BUSINESS_DATA_FOLDER).normalize();
+        Set<String> fileSet = new HashSet<>();
+        try (DirectoryStream<Path> stream = Files.newDirectoryStream(resourcePath)) {
+            for (Path path : stream) {
+                if (!Files.isDirectory(path)) {
+                    fileSet.add(path.getFileName()
+                        .toString());
+                }
+            }
+        } 
+        return this.objectMapper.writeValueAsString(fileSet);
     }
 }

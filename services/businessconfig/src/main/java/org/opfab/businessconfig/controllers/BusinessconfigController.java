@@ -318,6 +318,11 @@ public class BusinessconfigController implements BusinessconfigApi {
         resource = processService.getBusinessData(resourceName);
         return loadResource(resource);
     }
+
+    @Override
+    public String getAllBusinessData(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        return processService.getAllBusinessData();
+    }
     
     @Override
     public Void uploadBusinessData(HttpServletRequest request, HttpServletResponse response, @Valid MultipartFile file, String resourceName) {
