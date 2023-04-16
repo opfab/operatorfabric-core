@@ -14,17 +14,34 @@ import {User} from '@ofModel/user.model';
 import {UserWithPerimeters} from '@ofModel/userWithPerimeters.model';
 
 export class UserServerMock implements UserServer {
-    private currentUserWithPerimeterSubject = new ReplaySubject<ServerResponse<UserWithPerimeters>>();
+    private currentUserWithPerimeterSubject: ReplaySubject<ServerResponse<UserWithPerimeters>>;
+    private userSubject: ReplaySubject<ServerResponse<User>>;
+    private connectedUsersSubject: ReplaySubject<ServerResponse<any>>;
+
 
     setResponseForCurrentUserWithPerimeter(currentUserWithPerimeter: ServerResponse<UserWithPerimeters>) {
+        this.currentUserWithPerimeterSubject = new ReplaySubject<ServerResponse<UserWithPerimeters>>();
         this.currentUserWithPerimeterSubject.next(currentUserWithPerimeter);
+        this.currentUserWithPerimeterSubject.complete();
+    }
+
+    setResponseForUser(user: ServerResponse<User>) {
+        this.userSubject = new ReplaySubject<ServerResponse<User>>();
+        this.userSubject.next(user);
+        this.userSubject.complete();
+    }
+
+    setResponseForConnectedUsers(connectedUsers: ServerResponse<any>) {
+        this.connectedUsersSubject = new ReplaySubject<ServerResponse<any>>();
+        this.connectedUsersSubject.next(connectedUsers);
+        this.connectedUsersSubject.complete();
     }
 
     deleteById(login: string): Observable<ServerResponse<any>> {
         throw new Error('Method not implemented.');
     }
     getUser(user: string): Observable<ServerResponse<User>> {
-        throw new Error('Method not implemented.');
+        return this.userSubject.asObservable();
     }
     synchronizeWithToken(): Observable<ServerResponse<User>> {
         throw new Error('Method not implemented.');
@@ -39,7 +56,7 @@ export class UserServerMock implements UserServer {
         throw new Error('Method not implemented.');
     }
     loadConnectedUsers(): Observable<ServerResponse<any[]>> {
-        throw new Error('Method not implemented.');
+        return this.connectedUsersSubject.asObservable();
     }
     willNewSubscriptionDisconnectAnExistingSubscription(): Observable<ServerResponse<boolean>> {
         throw new Error('Method not implemented.');

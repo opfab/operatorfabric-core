@@ -1,4 +1,4 @@
-/* Copyright (c) 2022, RTE (http://www.rte-france.com)
+/* Copyright (c) 2022-2023, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -26,51 +26,11 @@ describe('ActivityAreaPage', () => {
         script.send6TestCards();
     });
 
-    it('Connection of operator4_fr, which is connected to ENTITY1_FR, ENTITY2_FR, ENTITY3_FR, ENTITY4_FR and check of the activity area page', () => {
-
-        opfab.loginWithUser('operator4_fr');
-        opfab.navigateToActivityArea();
-
-        // We check the title of the page
-        cy.get('.opfab-activityarea-title').should('have.text', ' ACTIVITY AREA\n');
-
-        // We should have only one 'block'
-        cy.get('.opfab-activityarea-entitieslist').should('have.length', 1);
-
-        // We should have 4 checkboxes corresponding to the four entities of the user
-        cy.get('.opfab-checkbox').should('have.length', 4);
-        cy.get('.opfab-checkbox').eq(0).should('have.text', 'Control Center FR East ');
-        cy.get('.opfab-checkbox').eq(1).should('have.text', 'Control Center FR North ');
-        cy.get('.opfab-checkbox').eq(2).should('have.text', 'Control Center FR South ');
-        cy.get('.opfab-checkbox').eq(3).should('have.text', 'Control Center FR West ');
-
-        // We check all the checkboxes are checked
-        cy.get('.opfab-checkbox').eq(0).find('input').should('be.checked');
-        cy.get('.opfab-checkbox').eq(1).find('input').should('be.checked');
-        cy.get('.opfab-checkbox').eq(2).find('input').should('be.checked');
-        cy.get('.opfab-checkbox').eq(3).find('input').should('be.checked');
-
-        // We disconnect from ENTITY1_FR
-        cy.get('.opfab-checkbox').contains('Control Center FR North').click();
-        activityArea.save();
-
-        // We navigate to another page (archives for example)
-        cy.get('#opfab-navbar-menu-archives').click();
-
-        // We go back to activity area page, we check ENTITY1_FR is unchecked and all other checkboxes are checked
-        opfab.navigateToActivityArea();
-        cy.get('.opfab-checkbox').eq(0).find('input').should('be.checked');
-        cy.get('.opfab-checkbox').eq(1).find('input').should('not.be.checked');
-        cy.get('.opfab-checkbox').eq(2).find('input').should('be.checked');
-        cy.get('.opfab-checkbox').eq(3).find('input').should('be.checked');
-
-        // We reconnect to ENTITY1_FR
-        cy.get('.opfab-checkbox').contains('Control Center FR North').click();
-        activityArea.save();
-    });
 
     it('Connection of operator4_fr, disconnection from ENTITY1_FR, ENTITY2_FR and ENTITY3_FR and check of feed and archives pages', () => {
         opfab.loginWithUser('operator4_fr');
+
+
 
         // operator4_fr is connected to all his entities, he should receive 6 cards in the feed
         cy.get('of-light-card').should('have.length', 6);
@@ -88,6 +48,9 @@ describe('ActivityAreaPage', () => {
 
         // operator4_fr disconnect from ENTITY1_FR, ENTITY2_FR and ENTITY3_FR
         opfab.navigateToActivityArea();
+
+        // We check the title of the page
+        cy.get('.opfab-activityarea-title').should('have.text', ' ACTIVITY AREA\n');
 
         // check every checkbox to let the time for the ui to set to true before we click
         cy.get('.opfab-checkbox').eq(0).find('input').should('be.checked');
