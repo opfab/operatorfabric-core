@@ -576,6 +576,9 @@ export class CustomTimelineChartComponent extends BaseChartComponent implements 
     }
 
     showCard(cardId): void {
+        if (this.openPopover) {
+            this.openPopover.close();
+        }
         this.router.navigate(['/feed', 'cards', cardId]);
         this.scrollToSelectedCard();
     }
