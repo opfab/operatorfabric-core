@@ -103,7 +103,7 @@ export class CardListComponent implements AfterViewChecked, OnInit {
         const domFiltersElement = document.getElementById('opfab-filters');
         if (!!domFiltersElement) {
             const rect = domFiltersElement.getBoundingClientRect();
-            let height = window.innerHeight - rect.top - 50;
+            let height = window.innerHeight - rect.top - 45;
             if (this.hideAckAllCardsFeature) height = window.innerHeight - rect.top - 10;
             domFiltersElement.style.maxHeight = `${height}px`;
         }
