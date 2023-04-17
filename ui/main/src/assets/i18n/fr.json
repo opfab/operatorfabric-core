@@ -94,6 +94,7 @@
   "menu": {
     "feed": "Flux de cartes",
     "calendar" : "Calendrier",
+    "dashboard": "Tableau de bord",
     "archives": "Archives",
     "logging": "Logging",
     "admin": "Administration",
@@ -145,7 +146,7 @@
   "feed": {
     "filters": {
       "title": "Filtres",
-      "reset": "Réinitialiser",
+      "reset": "Réinitialiser les filtres",
       "time": {
         "titleIfFilterBasedOnPublishDate": "Date de réception",
         "titleIfFilterBasedOnBusinessDate": "Période métier",
@@ -166,9 +167,6 @@
         },
         "notacknowledged": {
           "label": "Non acquittées"
-        },
-        "all": {
-          "label": "Toutes"
         }
       },
       "applyFiltersToTimeLine" : {
@@ -211,6 +209,7 @@
     "cardNotFound": "La carte que vous cherchez n'a pas été trouvée.",
     "selectedCardDeleted": "Cette carte a été supprimée",
     "entityRecipients" : "Entités destinataires :",
+    "entityRecipientsForInformation" : "Entités destinataires en copie :",
     "searchPlaceholderText": "Rechercher...",
     "hiddenCardReceived": "Vous avez reçu une carte masquée par les filtres que vous avez activés (Timeline ou flux de cartes)"
   },
@@ -251,7 +250,13 @@
     "replayEnabled": "Répétition des sons activée",
     "playSoundOnExternalDevice": "Jouer le son sur un appareil externe",
     "replayInterval": "DÉLAI ENTRE LES RÉPÉTITIONS (EN SECONDES)",
-    "remoteLoggingEnabled": "Journalisation à distance activée"
+    "remoteLoggingEnabled": "Journalisation à distance activée",
+    "notificationOnOperatingSystem": "NOTIFICATIONS SYSTEM POUR LES CARTES DE TYPE",
+    "systemNotificationAlarm": "Alarme",
+    "systemNotificationAction": "Action",
+    "systemNotificationCompliant": "Conforme",
+    "systemNotificationInformation": "Information",
+    "systemNotificationsDisabledInBrowser": "Les notifications du système d'exploitation sont désactivées dans votre navigateur, vous ne serez pas notifié."
   },
   "archive": {
     "cardLoadingInProgress":"Chargement de la carte...",
@@ -311,7 +316,8 @@
       "endDate": "DATE DE FIN ",
       "expirationDate": "DATE D'EXPIRATION",
       "lttd": "DATE LIMITE DE RÉPONSE",
-      "recipients": "DESTINATAIRES"
+      "recipients": "DESTINATAIRES",
+      "recipientsForInformation": "DESTINATAIRES EN COPIE"
     },
     "prepareCard": "VISUALISATION AVANT ENVOI",
     "confirmSending": "Envoyer la carte suivante ?",
@@ -320,6 +326,7 @@
     "processInstanceId": "Identifiant",
     "state": "État",
     "recipients": "DESTINATAIRES:",
+    "recipientsForInformation": "DESTINATAIRES EN COPIE:",
     "youAreTheOnlyRecipient": "Vous êtes l'unique destinataire de cette carte.",
     "feedPreview": "PRÉVISUALISATION FLUX DE CARTES:",
     "contentPreview": "PRÉVISUALISATION CONTENU:",
@@ -411,7 +418,7 @@
         "firstName": "PRÉNOM",
         "groups": "GROUPES",
         "entities": "ENTITÉS",
-        "authorizedIPAddresses": "ADRESSES IP AUTORISÉES (séparées par ',')",
+        "authorizedIPAddresses": "ADRESSES IP AUTORISÉES POUR LA CONNEXION UTILISATEUR (séparées par ',')",
         "confirmDelete": "Voulez-vous vraiment supprimer l'utilisateur",
         "add":"AJOUTER UN NOUVEL UTILISATEUR"
       },
@@ -463,7 +470,8 @@
       "users": "Gestion des utilisateurs",
       "groups": "Gestion des groupes",
       "entities": "Gestion des entités",
-      "perimeters": "Gestion des périmètres"
+      "perimeters": "Gestion des périmètres",
+      "processes": "Gestion des processus"
     }
   },
   "processGroup": {
@@ -563,6 +571,7 @@
   },
   "errors" : {
     "notFound" : "Ressource non trouvée",
-    "notAllowed" : "Action non autorisée"
+    "notAllowed" : "Action non autorisée",
+    "pageNotAllowed": "Vous n'êtes pas autorisé à voir cette page"
   } 
 }

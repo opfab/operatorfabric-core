@@ -92,6 +92,11 @@ export class OpfabGeneralCommands extends OpfabCommands {
         cy.get('of-archives').should('exist');
     }
 
+    navigateToDashboard = function () {
+        cy.get('#opfab-navbar-menu-dashboard').click();
+        cy.get('of-dashboard').should('exist');
+    }
+
     navigateToRealTimeUsers = function () {
         cy.get('#opfab-navbar-drop-user-menu').click();
         cy.get('#opfab-navbar-right-menu-realtimeusers').click();

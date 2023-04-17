@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2022, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2023, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -14,13 +14,18 @@ package org.opfab.businessconfig.services;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.collect.HashBasedTable;
 import com.google.common.collect.Table;
+
+import net.minidev.json.JSONObject;
+import net.minidev.json.parser.JSONParser;
+import net.minidev.json.parser.ParseException;
+
 import lombok.extern.slf4j.Slf4j;
 import org.opfab.businessconfig.model.Process;
 import org.opfab.businessconfig.model.*;
 import org.opfab.springtools.error.model.ApiError;
 import org.opfab.springtools.error.model.ApiErrorException;
 import org.opfab.utilities.PathUtils;
-import org.springframework.amqp.rabbit.core.RabbitTemplate;
+import org.opfab.utilities.eventbus.EventBus;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ResourceLoaderAware;
 import org.springframework.core.io.Resource;
@@ -32,7 +37,7 @@ import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
 import jakarta.annotation.PostConstruct;
 import jakarta.validation.ConstraintViolation;
 import java.io.*;
-import java.nio.charset.StandardCharsets;
+import java.nio.file.DirectoryStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -40,7 +45,6 @@ import java.nio.file.StandardCopyOption;
 import java.util.*;
 import java.util.function.BiConsumer;
 import java.util.function.Function;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 /**
@@ -53,6 +57,8 @@ public class ProcessesService implements ResourceLoaderAware {
 
 	private static final String PATH_PREFIX = "file:";
     private static final String CONFIG_FILE_NAME = "config.json";
+    private static final String BUNDLE_FOLDER = "/bundles";
+    private static final String BUSINESS_DATA_FOLDER = "/businessdata/";
     private static final String DUPLICATE_PROCESS_IN_PROCESS_GROUPS_FILE = "There is a duplicate process in the file you have sent";
 
     @Value("${operatorfabric.businessconfig.storage.path}")
@@ -64,15 +70,15 @@ public class ProcessesService implements ResourceLoaderAware {
     private LocalValidatorFactoryBean validator;
     private ProcessGroupsData processGroupsCache;
     private RealTimeScreensData realTimeScreensCache;
-    private final RabbitTemplate rabbitTemplate;
+    private EventBus eventBus;
     
 
-    public ProcessesService(ObjectMapper objectMapper, LocalValidatorFactoryBean validator, RabbitTemplate rabbitTemplate) {
+    public ProcessesService(ObjectMapper objectMapper, LocalValidatorFactoryBean validator, EventBus eventBus) {
         this.objectMapper = objectMapper;
         this.completeCache = HashBasedTable.create();
         this.defaultCache = new HashMap<>();
         this.validator = validator;
-        this.rabbitTemplate = rabbitTemplate;
+        this.eventBus = eventBus;
     }
     
     @PostConstruct
@@ -101,7 +107,7 @@ public class ProcessesService implements ResourceLoaderAware {
      * @return registered processes
      */
 	public List<Process> listProcessHistory(String processId) {
-        return completeCache.values().stream().filter( p -> p.getId().equals(processId)).collect(Collectors.toList());
+        return completeCache.values().stream().filter( p -> p.getId().equals(processId)).toList();
 	}
 
     /**
@@ -112,7 +118,7 @@ public class ProcessesService implements ResourceLoaderAware {
         this.processGroupsCache = new ProcessGroupsData(new ArrayList<>());
         try {
             Path rootPath = Paths
-                    .get(this.resourceLoader.getResource(PATH_PREFIX + this.storagePath).getFile().getAbsolutePath())
+                    .get(this.storagePath)
                     .normalize();
 
             File f = new File(rootPath.toString() + "/processGroups.json");
@@ -134,7 +140,7 @@ public class ProcessesService implements ResourceLoaderAware {
         this.realTimeScreensCache = new RealTimeScreensData(new ArrayList<>());
         try {
             Path rootPath = Paths
-                    .get(this.resourceLoader.getResource(PATH_PREFIX + this.storagePath).getFile().getAbsolutePath())
+                    .get(this.storagePath)
                     .normalize();
 
             File f = new File(rootPath.toString() + "/realtimescreens.json");
@@ -155,7 +161,7 @@ public class ProcessesService implements ResourceLoaderAware {
         log.info("loading processes from {}", new File(storagePath).getAbsolutePath());
         try {
             Map<String, Map<String, Process>> completeResult = new HashMap<>();
-            Resource root = this.resourceLoader.getResource(PATH_PREFIX + storagePath);
+            Resource root = this.resourceLoader.getResource(PATH_PREFIX + storagePath + BUNDLE_FOLDER);
             //load default Processes and recursively loads versioned Processes
             Map<String, Process> result = loadCache0(root.getFile(),
                     Process::getId,
@@ -255,13 +261,14 @@ public class ProcessesService implements ResourceLoaderAware {
         process = versions.get(finalVersion);
 
         if (process == null)
-            throw new FileNotFoundException("Unknown version (" + finalVersion + ") for " + processId);
+            throw new FileNotFoundException("Unknown version (" + finalVersion + ") for " + processId + " at " + this.storagePath);
 
         if (type.isLocalized() && locale == null)
             throw new FileNotFoundException("Unable to determine resource for undefined locale");
 
         String resourcePath = PATH_PREFIX +
                 storagePath +
+                BUNDLE_FOLDER +
                 File.separator +
                 processId +
                 File.separator +
@@ -275,7 +282,7 @@ public class ProcessesService implements ResourceLoaderAware {
         log.info("loading resource: {}", resourcePath);
         Resource resource = this.resourceLoader.getResource(resourcePath);
         if (!resource.exists()) {
-            throw new FileNotFoundException("Unknown " + type + " resource for " + processId + ":" + version);
+            throw new FileNotFoundException("Unknown " + type + " resource for " + processId + ":" + version + " at " + resourcePath);
         }
         return resource;        
     }
@@ -319,10 +326,19 @@ public class ProcessesService implements ResourceLoaderAware {
      */
     public synchronized Process updateProcess(InputStream is) throws IOException {
     	Path rootPath = Paths
-				.get(this.resourceLoader.getResource(PATH_PREFIX + this.storagePath).getFile().getAbsolutePath())
+				.get(this.storagePath)
 				.normalize();
 		if (!rootPath.toFile().exists())
 			throw new FileNotFoundException("No directory available to unzip bundle");
+        Path bundlePath = Paths.get(this.storagePath + BUNDLE_FOLDER).normalize();
+        if (!bundlePath.toFile().exists()){
+            try {
+                Files.createDirectories(bundlePath);
+            } catch (IOException e) {
+                log.error("Impossible to create the necessary folder", bundlePath, e);
+            }
+        }
+            
 		// create a temporary output folder
 		Path outPath = rootPath.resolve(UUID.randomUUID().toString());
 		try {
@@ -357,7 +373,7 @@ public class ProcessesService implements ResourceLoaderAware {
      */
     public synchronized void updateProcessGroupsFile(String fileContent) throws IOException {
         Path rootPath = Paths
-                .get(this.resourceLoader.getResource(PATH_PREFIX + this.storagePath).getFile().getAbsolutePath())
+                .get(this.storagePath)
                 .normalize();
         if (!rootPath.toFile().exists())
             throw new FileNotFoundException("No directory available to copy processgroups file");
@@ -376,7 +392,7 @@ public class ProcessesService implements ResourceLoaderAware {
 
         //update cache
         processGroupsCache = newProcessGroups;
-        pushProcessChangeInRabbit();
+        pushProcessChangeInEventBus();
     }
 
     /**
@@ -392,8 +408,7 @@ public class ProcessesService implements ResourceLoaderAware {
         Path outConfigPath = outPath.resolve(CONFIG_FILE_NAME);
         ProcessData process = objectMapper.readValue(outConfigPath.toFile(), ProcessData.class);
         //process root
-        Path existingRootPath = Paths.get(this.resourceLoader.getResource(PATH_PREFIX + this.storagePath).getFile()
-                .getAbsolutePath())
+        Path existingRootPath = Paths.get(this.storagePath + BUNDLE_FOLDER)
                 .resolve(process.getId())
                 .normalize();
         //process default config
@@ -411,7 +426,7 @@ public class ProcessesService implements ResourceLoaderAware {
         defaultCache.put(process.getId(),process);
         completeCache.put(process.getId(), process.getVersion(), process);
 
-        pushProcessChangeInRabbit();
+        pushProcessChangeInEventBus();
 
         //retieve newly loaded process from cache
         return fetch(process.getId(), process.getVersion());
@@ -442,15 +457,14 @@ public class ProcessesService implements ResourceLoaderAware {
     		throw new FileNotFoundException("Unable to find a bundle with the given id");
     	}
     	//process root
-    	Path processRootPath = Paths.get(this.resourceLoader.getResource(PATH_PREFIX + this.storagePath).getFile()
-                .getAbsolutePath())
+    	Path processRootPath = Paths.get(this.storagePath + BUNDLE_FOLDER)
                 .resolve(id)
                 .normalize();
     	//delete process root from disk
     	PathUtils.delete(processRootPath);
     	log.debug("removed process:{} from filesystem", id);
     	removeFromCache(id);
-        pushProcessChangeInRabbit();
+        pushProcessChangeInEventBus();
     }
     
     /**
@@ -464,8 +478,7 @@ public class ProcessesService implements ResourceLoaderAware {
 			throw new FileNotFoundException("Unable to find a bundle with the given id and version");
 		}
 		Process process = defaultCache.get(id);
-		Path processRootPath = Paths.get(this.resourceLoader.getResource(PATH_PREFIX + this.storagePath).getFile()
-                .getAbsolutePath())
+		Path processRootPath = Paths.get(this.storagePath + BUNDLE_FOLDER)
                 .resolve(id)
                 .normalize();
 		/* case: bundle has only one version(this control is put here to skip if it's possible
@@ -506,7 +519,7 @@ public class ProcessesService implements ResourceLoaderAware {
 			PathUtils.delete(processVersionPath);
 			log.debug("removed process:{} with version:{} from filesystem", id, version);
 			completeCache.remove(id,version);
-            pushProcessChangeInRabbit();
+            pushProcessChangeInEventBus();
 		}
 	}
 
@@ -516,7 +529,7 @@ public class ProcessesService implements ResourceLoaderAware {
      * @throws IOException multiple underlying cases (file system access, file system manipulation - deletion)
      */
     public void clear() throws IOException {    	
-        Resource resource = this.resourceLoader.getResource(PATH_PREFIX + this.storagePath);
+        Resource resource = this.resourceLoader.getResource(PATH_PREFIX + this.storagePath + BUNDLE_FOLDER);
         File file = resource.getFile();
         if(file.exists()) {
             Path storageRoot = PathUtils.getPath(file);
@@ -534,7 +547,7 @@ public class ProcessesService implements ResourceLoaderAware {
             this.defaultCache.clear();
             this.processGroupsCache.clear();
         }
-        pushProcessChangeInRabbit();
+        pushProcessChangeInEventBus();
     }
         
     /**
@@ -574,9 +587,8 @@ public class ProcessesService implements ResourceLoaderAware {
     	return Optional.ofNullable(resultMessage);
     }
 
-    private void pushProcessChangeInRabbit() {
-        rabbitTemplate.convertAndSend("PROCESS_EXCHANGE", "", "BUSINESS_CONFIG_CHANGE");
-        log.debug("Operation BUSINESS_CONFIG_CHANGE sent to PROCESS_EXCHANGE");
+    private void pushProcessChangeInEventBus() {
+        eventBus.sendEvent("process","BUSINESS_CONFIG_CHANGE");
     }
 
     /**
@@ -587,7 +599,7 @@ public class ProcessesService implements ResourceLoaderAware {
      */
     public synchronized void updateRealTimeScreensFile(String fileContent) throws IOException {
         Path rootPath = Paths
-                .get(this.resourceLoader.getResource(PATH_PREFIX + this.storagePath).getFile().getAbsolutePath())
+                .get(this.storagePath)
                 .normalize();
         if (!rootPath.toFile().exists())
             throw new FileNotFoundException("No directory available to copy realtimescreens file");
@@ -603,4 +615,75 @@ public class ProcessesService implements ResourceLoaderAware {
     }
 
     public RealTimeScreens getRealTimeScreensCache() { return realTimeScreensCache; }
+
+    /**
+     * Deletes {@link Process} for specified id
+     * @param id process id
+     * @throws IOException 
+     */
+    public synchronized void deleteFile(String resourceName) throws IOException {
+    	Path resourcePath = Paths.get(this.storagePath + BUSINESS_DATA_FOLDER)
+                .resolve(resourceName)
+                .normalize();
+        if (!resourcePath.toFile().exists()) {
+            throw new FileNotFoundException("Unable to find the resource " + resourceName);
+        }
+    	//delete resource from disk
+    	PathUtils.delete(resourcePath);
+    	log.debug("removed resource:{} from filesystem", resourceName);
+    }
+
+    private void isResourceJSON(String fileContent) throws ParseException {
+        (new JSONParser(JSONParser.MODE_PERMISSIVE)).parse(fileContent);
+    }
+
+    /**
+     * Updates or creates businessdata file from a file uploaded from POST /businessconfig/businessdata
+     *
+     * @param is businessdata file input stream
+     * @throws IOException if error arise during stream reading
+     */
+    public synchronized void updateBusinessDataFile (String fileContent, String resourceName) throws IOException, ParseException {   
+        Path businessDataPath = Paths.get(this.storagePath + "/businessdata").normalize();
+        
+        if (!businessDataPath.toFile().exists()){
+            try {
+                Files.createDirectories(businessDataPath);
+            } catch (IOException e) {
+                log.error("Impossible to create the necessary folder", businessDataPath.toString(), e);
+            }
+        }
+
+        this.isResourceJSON(fileContent);
+        
+        //copy file
+        PathUtils.copyInputStreamToFile(new ByteArrayInputStream(fileContent.getBytes()), businessDataPath.toString() + "/" + resourceName);
+
+        eventBus.sendEvent("process","BUSINESS_DATA_CHANGE");
+
+    }
+
+    public Resource getBusinessData(String resourceName) throws FileNotFoundException {
+        Path resourcePath = Paths.get(this.storagePath + BUSINESS_DATA_FOLDER)
+                .resolve(resourceName)
+                .normalize();
+        if (!resourcePath.toFile().exists()) {
+            throw new FileNotFoundException("Unable to find the resource " + resourceName);
+        }
+        return this.resourceLoader.getResource(PATH_PREFIX + resourcePath.toString());        
+    }
+
+    public String getAllBusinessData() throws IOException {
+        Path resourcePath = Paths.get(this.storagePath + BUSINESS_DATA_FOLDER).normalize();
+        Set<String> fileSet = new HashSet<>();
+        try (DirectoryStream<Path> stream = Files.newDirectoryStream(resourcePath)) {
+            for (Path path : stream) {
+                if (!Files.isDirectory(path)) {
+                    fileSet.add(path.getFileName()
+                        .toString());
+                }
+            }
+        } 
+        return this.objectMapper.writeValueAsString(fileSet);
+    }
 }

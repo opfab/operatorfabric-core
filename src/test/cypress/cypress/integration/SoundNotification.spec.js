@@ -172,8 +172,8 @@ describe('Sound notification test', function () {
             opfab.navigateToFeed();
             // Use cypress time simulation
             cy.clock(new Date());
-
-            feed.filterByAcknowledgement('ack');
+            feed.toggleFilterByAcknowledgementNotAck();
+            feed.toggleFilterByAcknowledgementAck();
             feed.checkFilterIsActive();
 
             sendCardAndCheckSoundAndAlertMessage();
@@ -189,8 +189,6 @@ describe('Sound notification test', function () {
 
             cy.clock(new Date());
 
-            // reset ack filter
-            feed.filterByAcknowledgement('notack');
             feed.checkFilterIsNotActive();
             // Set timeline to day domain
             setTimeLineDomain('J');
@@ -206,15 +204,14 @@ describe('Sound notification test', function () {
 
         cy.tick(1000);
         feed.checkNumberOfDisplayedCardsIs(0);
-
         sendCardWithSeverityAlarm();
-        for (let i=0;i<20;i++) cy.tick(50); // simulate time passing 
-        sound.checkNumberOfEmittedSoundIs(1);
-        feed.checkNumberOfDisplayedCardsIs(0);
-
         cy.get('#div-detail-msg').find('span').eq(0).contains('You have received a card hidden by the filters you have activated (Timeline or card feed)');
         // Check that alert message css class
         cy.get('of-alert').find('.opfab-alert-business').should('exist');
+        cy.tick(100);
+        sound.checkNumberOfEmittedSoundIs(1);
+        feed.checkNumberOfDisplayedCardsIs(0);
+
         cy.tick(6000);
         // Check that alert message is not closed automatically after 6 seconds
         cy.get('#div-detail-msg').should('exist');

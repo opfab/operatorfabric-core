@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2021, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2023, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -10,10 +10,16 @@
 package org.opfab.cards.consultation.repositories;
 
 
+import org.opfab.cards.consultation.model.CardsFilter;
 import org.opfab.cards.consultation.model.CardConsultationData;
 import org.opfab.cards.consultation.model.CardOperation;
+import org.opfab.cards.consultation.model.LightCard;
 import org.opfab.users.model.CurrentUserWithPerimeters;
+import org.springframework.data.domain.Page;
+
 import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
+import reactor.util.function.Tuple2;
 
 import java.time.Instant;
 
@@ -43,4 +49,7 @@ public interface CardCustomRepository extends UserUtilitiesCommonToCardRepositor
     Flux<CardOperation> getCardOperations(Instant publishFrom, Instant rangeStart, Instant rangeEnd,
     CurrentUserWithPerimeters currentUserWithPerimeters);
 
+
+    Mono<Page<LightCard>> findWithUserAndFilter(
+            Tuple2<CurrentUserWithPerimeters, CardsFilter> params);
 }

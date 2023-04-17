@@ -1,4 +1,4 @@
-/* Copyright (c) 2021-2022, RTE (http://www.rte-france.com)
+/* Copyright (c) 2021-2023, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -21,6 +21,11 @@ describe('Logging screen tests', function () {
 
     before('Set up configuration', function () {
         script.loadTestConf();
+        script.cleanDownloadsDir();
+    });
+
+    after('Delete export file', function () {
+        script.cleanDownloadsDir();
     });
 
     it('Check composition of multi-filters for process groups/processes/states for operator1_fr', function () {
@@ -205,6 +210,7 @@ describe('Logging screen tests', function () {
         // check download folder contains the export file
         cy.task('list', {dir: './cypress/downloads'}).then((files) => {
             expect(files.length).to.equal(1);
+
             // check file name
             expect(files[0]).to.match(/^Logging_export_\d*\.xlsx/);
             // check file content
@@ -278,9 +284,6 @@ describe('Logging screen tests', function () {
                 expect(rows[5]['STATE DESCRIPTION']).to.equal('Message state');
                 expect(rows[5]['ACTOR']).to.equal('Control Center FR North');
                 expect(rows[5]['REPRESENTATIVE']).to.equal('publisher_test');
-
-                // Delete export file
-                cy.task('deleteFile', {filename: './cypress/downloads/' + files[0]});
             });
         });
     });

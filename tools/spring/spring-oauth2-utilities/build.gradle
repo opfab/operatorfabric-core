@@ -1,6 +1,5 @@
 dependencies{
     implementation boot.starterSecurity
-    implementation boot.starterRabbitmq
     implementation boot.starterValidation
     implementation spring.securityOauthResource, spring.securityOauthJose
     implementation cloud.starterFeign

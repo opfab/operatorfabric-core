@@ -27,74 +27,79 @@ import {ServerResponseStatus} from '../server/serverResponse';
 export class UserService extends CrudService {
     private _userWithPerimeters: UserWithPerimeters;
     private ngUnsubscribe = new Subject<void>();
-    private _userRightsPerProcessAndState: Map<string, {rights: RightsEnum, filteringNotificationAllowed: boolean}>;
+    private _userRightsPerProcessAndState: Map<string, {rights: RightsEnum; filteringNotificationAllowed: boolean}>;
     private _receiveRightPerProcess: Map<string, number>;
 
     /**
      * @constructor
      * @param userServer - Angular build-in
      */
-    constructor(private userServer: UserServer, 
-        protected loggerService: OpfabLoggerService, protected alertMessageService: AlertMessageService) {
+    constructor(
+        private userServer: UserServer,
+        protected loggerService: OpfabLoggerService,
+        protected alertMessageService: AlertMessageService
+    ) {
         super(loggerService, alertMessageService);
         this._userRightsPerProcessAndState = new Map();
         this._receiveRightPerProcess = new Map();
     }
 
     deleteById(login: string) {
-        return this.userServer.deleteById(login).pipe(catchError((error: HttpErrorResponse) => this.handleError(error)));
+        return this.userServer
+            .deleteById(login)
+            .pipe(catchError((error: HttpErrorResponse) => this.handleError(error)));
     }
 
     getUser(user: string): Observable<User> {
         return this.userServer.getUser(user).pipe(
             map((userResponse) => {
-                if (userResponse.status === ServerResponseStatus.OK){
+                if (userResponse.status === ServerResponseStatus.OK) {
                     return userResponse.data;
                 } else {
                     this.handleServerResponseError(userResponse);
                     return null;
                 }
             })
-            );
+        );
     }
 
     synchronizeWithToken(): Observable<User> {
         return this.userServer.synchronizeWithToken().pipe(
             map((userResponse) => {
-                if (userResponse.status === ServerResponseStatus.OK){
+                if (userResponse.status === ServerResponseStatus.OK) {
                     return userResponse.data;
                 } else {
-                    this.loggerService.error("Impossible to synchronize token")
+                    this.loggerService.error('Impossible to synchronize token');
                     return null;
                 }
             })
-            );
+        );
     }
 
     currentUserWithPerimeters(): Observable<UserWithPerimeters> {
         return this.userServer.currentUserWithPerimeters().pipe(
             map((userResponse) => {
-                if (userResponse.status === ServerResponseStatus.OK){
+                if (userResponse.status === ServerResponseStatus.OK) {
                     return userResponse.data;
                 } else {
-                    this.loggerService.error("Impossible to load user perimeter")
+                    this.loggerService.error('Impossible to load user perimeter');
                     return null;
                 }
             })
-            );
+        );
     }
 
     queryAllUsers(): Observable<User[]> {
         return this.userServer.queryAllUsers().pipe(
             map((userResponse) => {
-                if (userResponse.status === ServerResponseStatus.OK){
+                if (userResponse.status === ServerResponseStatus.OK) {
                     return userResponse.data;
                 } else {
                     this.handleServerResponseError(userResponse);
                     return [];
                 }
             })
-            );
+        );
     }
 
     getAll(): Observable<User[]> {
@@ -104,14 +109,14 @@ export class UserService extends CrudService {
     updateUser(userData: User): Observable<User> {
         return this.userServer.updateUser(userData).pipe(
             map((userResponse) => {
-                if (userResponse.status === ServerResponseStatus.OK){
+                if (userResponse.status === ServerResponseStatus.OK) {
                     return userResponse.data;
                 } else {
                     this.handleServerResponseError(userResponse);
                     return null;
                 }
             })
-            );
+        );
     }
 
     update(userData: User | any): Observable<User> {
@@ -150,16 +155,18 @@ export class UserService extends CrudService {
 
     public hasCurrentUserAnyPermission(permissions: PermissionEnum[]): boolean {
         if (!permissions) return false;
-        return this._userWithPerimeters.permissions.filter((permission) => permissions.indexOf(permission) >= 0).length > 0;
+        return (
+            this._userWithPerimeters.permissions.filter((permission) => permissions.indexOf(permission) >= 0).length > 0
+        );
     }
 
     private loadUserRightsPerProcessAndState() {
         this._userRightsPerProcessAndState = new Map();
         this._userWithPerimeters.computedPerimeters.forEach((computedPerimeter) => {
-            this._userRightsPerProcessAndState.set(
-                computedPerimeter.process + '.' + computedPerimeter.state,
-                {rights: computedPerimeter.rights, filteringNotificationAllowed: computedPerimeter.filteringNotificationAllowed}
-            );
+            this._userRightsPerProcessAndState.set(computedPerimeter.process + '.' + computedPerimeter.state, {
+                rights: computedPerimeter.rights,
+                filteringNotificationAllowed: computedPerimeter.filteringNotificationAllowed
+            });
             if (
                 computedPerimeter.rights === RightsEnum.Receive ||
                 computedPerimeter.rights === RightsEnum.ReceiveAndWrite
@@ -169,21 +176,24 @@ export class UserService extends CrudService {
     }
 
     public isReceiveRightsForProcessAndState(processId: string, stateId: string): boolean {
-        const rightsAndFilteringNotificationAllowed = this._userRightsPerProcessAndState.get(processId + '.' + stateId);
-        if (!! rightsAndFilteringNotificationAllowed) {
-            const rights = rightsAndFilteringNotificationAllowed.rights;
-            if (rights && (rights === RightsEnum.Receive || rights === RightsEnum.ReceiveAndWrite)) {
-                return true;
-            }
+        const processState = this._userRightsPerProcessAndState.get(processId + '.' + stateId);
+        if (!processState) return false;
+        const rights = processState.rights;
+        if (rights && (rights === RightsEnum.Receive || rights === RightsEnum.ReceiveAndWrite)) {
+            return true;
         }
         return false;
     }
 
     public isFilteringNotificationAllowedForProcessAndState(processId: string, stateId: string): boolean {
         const rightsAndFilteringNotificationAllowed = this._userRightsPerProcessAndState.get(processId + '.' + stateId);
-        if (!! rightsAndFilteringNotificationAllowed) {
+        if (!!rightsAndFilteringNotificationAllowed) {
             const filteringNotificationAllowed = rightsAndFilteringNotificationAllowed.filteringNotificationAllowed;
-            if ((filteringNotificationAllowed !== null)  && (filteringNotificationAllowed !== undefined) && (! filteringNotificationAllowed)) {
+            if (
+                filteringNotificationAllowed !== null &&
+                filteringNotificationAllowed !== undefined &&
+                !filteringNotificationAllowed
+            ) {
                 return false;
             }
         }
@@ -197,26 +207,28 @@ export class UserService extends CrudService {
     loadConnectedUsers(): Observable<any[]> {
         return this.userServer.loadConnectedUsers().pipe(
             map((userResponse) => {
-                if (userResponse.status === ServerResponseStatus.OK){
+                if (userResponse.status === ServerResponseStatus.OK) {
                     return userResponse.data;
                 } else {
                     this.handleServerResponseError(userResponse);
                     return [];
                 }
             })
-            );
+        );
     }
 
     willNewSubscriptionDisconnectAnExistingSubscription(): Observable<boolean> {
         return this.userServer.willNewSubscriptionDisconnectAnExistingSubscription().pipe(
             map((userResponse) => {
-                if (userResponse.status === ServerResponseStatus.OK){
+                if (userResponse.status === ServerResponseStatus.OK) {
                     return userResponse.data;
                 } else {
-                    this.loggerService.error("Impossible to check if new connection will disconnect existing subscription")
+                    this.loggerService.error(
+                        'Impossible to check if new connection will disconnect existing subscription'
+                    );
                     return null;
                 }
             })
-            );
+        );
     }
 }

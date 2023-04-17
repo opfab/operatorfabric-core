@@ -21,8 +21,8 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.Nested;
+import org.opfab.test.EventBusSpy;
 import org.opfab.users.model.*;
-import org.opfab.users.spies.EventBusSpy;
 import org.opfab.users.stubs.GroupRepositoryStub;
 import org.opfab.users.stubs.PerimeterRepositoryStub;
 import org.opfab.users.stubs.UserRepositoryStub;
@@ -232,8 +232,8 @@ class GroupsServiceShould {
             OperationResult<String> result = groupsService.deleteGroup("group1");
             assertThat(result.isSuccess()).isTrue();
 
-            String[] expectedMessageSent1 = { "USER_EXCHANGE", "user1" };
-            String[] expectedMessageSent2 = { "USER_EXCHANGE", "user2" };
+            String[] expectedMessageSent1 = { "user", "user1" };
+            String[] expectedMessageSent2 = { "user", "user2" };
             assertThat(eventBusSpy.getMessagesSent()).containsExactlyInAnyOrder(expectedMessageSent1,
                     expectedMessageSent2);
         }
@@ -298,8 +298,8 @@ class GroupsServiceShould {
                 OperationResult<String> result = groupsService.addGroupUsers("testGroup", users);
                 assertThat(result.isSuccess()).isTrue();
 
-                String[] expectedMessageSent1 = { "USER_EXCHANGE", "user1" };
-                String[] expectedMessageSent2 = { "USER_EXCHANGE", "user2" };
+                String[] expectedMessageSent1 = { "user", "user1" };
+                String[] expectedMessageSent2 = { "user", "user2" };
                 assertThat(eventBusSpy.getMessagesSent()).containsExactlyInAnyOrder(expectedMessageSent1,
                         expectedMessageSent2);
             }
@@ -353,9 +353,9 @@ class GroupsServiceShould {
                 OperationResult<String> result = groupsService.updateGroupUsers("group1", users);
                 assertThat(result.isSuccess()).isTrue();
 
-                String[] expectedMessageSent1 = { "USER_EXCHANGE", "user1" };
-                String[] expectedMessageSent2 = { "USER_EXCHANGE", "user2" }; // Notification is send as user is deleted from groups
-                String[] expectedMessageSent3 = { "USER_EXCHANGE", "admin" };
+                String[] expectedMessageSent1 = { "user", "user1" };
+                String[] expectedMessageSent2 = { "user", "user2" }; // Notification is send as user is deleted from groups
+                String[] expectedMessageSent3 = { "user", "admin" };
                 assertThat(eventBusSpy.getMessagesSent()).containsExactlyInAnyOrder(expectedMessageSent1,
                         expectedMessageSent2,expectedMessageSent3);
             }
@@ -382,8 +382,8 @@ class GroupsServiceShould {
                 ArrayList<String> users = new ArrayList<>();
                 OperationResult<String> result = groupsService.updateGroupUsers("group1", users);
                 assertThat(result.isSuccess()).isTrue();
-                String[] expectedMessageSent1 = { "USER_EXCHANGE", "user1" };
-                String[] expectedMessageSent2 = { "USER_EXCHANGE", "user2" }; 
+                String[] expectedMessageSent1 = { "user", "user1" };
+                String[] expectedMessageSent2 = { "user", "user2" }; 
                 assertThat(eventBusSpy.getMessagesSent()).containsExactlyInAnyOrder(expectedMessageSent1,
                         expectedMessageSent2);
 
@@ -414,8 +414,8 @@ class GroupsServiceShould {
             void GIVEN_A_Group_With_User_WHEN_Try_To_Remove_Users_THEN_A_Notification_Containing_Users_Updated_Is_Sent_To_Other_Services() {
                 OperationResult<String> result = groupsService.deleteGroupUsers("group1");
                 assertThat(result.isSuccess()).isTrue();
-                String[] expectedMessageSent1 = { "USER_EXCHANGE", "user1" };
-                String[] expectedMessageSent2 = { "USER_EXCHANGE", "user2" }; 
+                String[] expectedMessageSent1 = { "user", "user1" };
+                String[] expectedMessageSent2 = { "user", "user2" }; 
                 assertThat(eventBusSpy.getMessagesSent()).containsExactlyInAnyOrder(expectedMessageSent1,
                         expectedMessageSent2);
             }
@@ -456,7 +456,7 @@ class GroupsServiceShould {
             void GIVEN_A_User_WHEN_Try_Removing_From_Group_THEN_A_Notification_Containing_User_Updated_Is_Sent_To_Other_Services() {
                 OperationResult<String> result = groupsService.deleteGroupUser("group1", "user1");
                 assertThat(result.isSuccess()).isTrue();
-                String[] expectedMessageSent1 = { "USER_EXCHANGE", "user1" };
+                String[] expectedMessageSent1 = { "user", "user1" };
                 assertThat(eventBusSpy.getMessagesSent()).containsExactlyInAnyOrder(expectedMessageSent1);
             }
         }
@@ -559,8 +559,8 @@ class GroupsServiceShould {
                 OperationResult<String> result = groupsService.updateGroupPerimeters("group1", perimeters);
 
                 assertThat(result.isSuccess()).isTrue();
-                String[] expectedMessageSent1 = { "USER_EXCHANGE", "user1" };
-                String[] expectedMessageSent2 = { "USER_EXCHANGE", "user2" };
+                String[] expectedMessageSent1 = { "user", "user1" };
+                String[] expectedMessageSent2 = { "user", "user2" };
                 assertThat(eventBusSpy.getMessagesSent()).containsExactlyInAnyOrder(expectedMessageSent1,expectedMessageSent2);
             }
 
@@ -616,8 +616,8 @@ class GroupsServiceShould {
                 OperationResult<String> result = groupsService.addGroupPerimeters("group1", perimetersToAdd);
 
                 assertThat(result.isSuccess()).isTrue();
-                String[] expectedMessageSent1 = { "USER_EXCHANGE", "user1" };
-                String[] expectedMessageSent2 = { "USER_EXCHANGE", "user2" };
+                String[] expectedMessageSent1 = { "user", "user1" };
+                String[] expectedMessageSent2 = { "user", "user2" };
                 assertThat(eventBusSpy.getMessagesSent()).containsExactlyInAnyOrder(expectedMessageSent1,expectedMessageSent2);
             }
 

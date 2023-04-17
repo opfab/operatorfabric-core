@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2022, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2023, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -6,7 +6,6 @@
  * SPDX-License-Identifier: MPL-2.0
  * This file is part of the OperatorFabric project.
  */
-
 
 
 package org.opfab.cards.publication.services;
@@ -18,35 +17,22 @@ import lombok.extern.slf4j.Slf4j;
 import org.opfab.cards.model.CardOperationTypeEnum;
 import org.opfab.cards.publication.model.CardOperationData;
 import org.opfab.cards.publication.model.CardPublicationData;
-import org.springframework.amqp.rabbit.core.RabbitTemplate;
-import org.springframework.stereotype.Service;
+import org.opfab.utilities.eventbus.EventBus;
 
 import java.util.*;
 
-/**
- * <p>Aim of this service whose sole externally accessible method is
- * {@link #notifyOneCard(CardPublicationData, CardOperationTypeEnum)} is to
- * prepare data and notify AMQP exchange of it. Information about card
- * publication and deletion is then accessible to other services or
- * entities through bindings to these exchanges.
- * </p>
- * <p>One exchange is used, carsExchange 
- * See amqp.xml resource file ([project]/services/cards-publication/src/main/resources/amqp.xml)
- * for the exact configuration</p>
- */
-@Service
 @Slf4j
 public class CardNotificationService {
 
     
-    private final RabbitTemplate rabbitTemplate;
+    private final EventBus eventBus;
     private final ObjectMapper mapper;
 
    
-    public CardNotificationService(RabbitTemplate rabbitTemplate,
+    public CardNotificationService(EventBus eventBus,
                                    ObjectMapper mapper
     ) {
-        this.rabbitTemplate = rabbitTemplate;
+        this.eventBus = eventBus;
         this.mapper = mapper;
         this.mapper.setSerializationInclusion(JsonInclude.Include.NON_EMPTY);
     }
@@ -54,15 +40,8 @@ public class CardNotificationService {
     public void notifyOneCard(CardPublicationData card, CardOperationTypeEnum type) {
         CardOperationData.BuilderEncapsulator builderEncapsulator = CardOperationData.encapsulatedBuilder();
         builderEncapsulator.builder().type(type);
-        switch (type) {
-            case ADD:
-            case UPDATE:
-                builderEncapsulator.builder().card(card.toLightCard());
-                break;
-            case DELETE:
-                builderEncapsulator.builder().cardId(card.getId());
-
-        }
+        builderEncapsulator.builder().card(card.toLightCard());
+        builderEncapsulator.builder().cardId(card.getId());
         CardOperationData cardOperation = builderEncapsulator.builder().build();
         List<String> listOfGroupRecipients = new ArrayList<>();
         if (card.getGroupRecipients() != null)
@@ -79,13 +58,13 @@ public class CardNotificationService {
             card.getUserRecipients().forEach(listOfUserRecipients::add);
         cardOperation.setUserRecipientsIds(listOfUserRecipients);
 
-        pushCardInRabbit(cardOperation);
+        pushCardInEventBus(cardOperation);
     }
 
-    private void pushCardInRabbit(CardOperationData cardOperation) {
+    private void pushCardInEventBus(CardOperationData cardOperation) {
         try {
-            rabbitTemplate.convertAndSend("CARD_EXCHANGE", "", mapper.writeValueAsString(cardOperation));
-            log.debug("Operation sent to CARD_EXCHANGE, type={}, ids={}, cards={}, groupRecipientsIds={}, entityRecipientsIds={}, userRecipientsIds={}"
+            eventBus.sendEvent("card",mapper.writeValueAsString(cardOperation));
+            log.debug("Card operation sent to eventbus, type={}, ids={}, cards={}, groupRecipientsIds={}, entityRecipientsIds={}, userRecipientsIds={}"
                     , cardOperation.getType()
                     , cardOperation.getCardId()
                     , (cardOperation.getCard() != null ? cardOperation.getCard().toString() : "")
@@ -93,11 +72,11 @@ public class CardNotificationService {
                     , cardOperation.getEntityRecipientsIds().toString()
                     , cardOperation.getUserRecipientsIds().toString());
         } catch (JsonProcessingException e) {
-            log.error("Unable to linearize card to json on amqp notification");
+            log.error("Unable to linearize card to json on event bus");
         }
     }
 
-    public void pushAckOfCardInRabbit(String cardUid, String cardId, List<String> entitiesAcks) {
+    public void pushAckOfCardInEventBus(String cardUid, String cardId, List<String> entitiesAcks) {
         CardOperationData.BuilderEncapsulator builderEncapsulator = CardOperationData.encapsulatedBuilder();
         builderEncapsulator.builder().type(CardOperationTypeEnum.ACK);
         builderEncapsulator.builder().cardUid(cardUid);
@@ -106,10 +85,10 @@ public class CardNotificationService {
         CardOperationData cardOperation = builderEncapsulator.builder().build();
 
         try {
-            rabbitTemplate.convertAndSend("ACK_EXCHANGE", "", mapper.writeValueAsString(cardOperation));
-            log.debug("Acknowledgement for cardUid={} and cardId={} with entitiesAcks={} sent to ACK_EXCHANGE", cardUid, cardId, entitiesAcks);
+            eventBus.sendEvent("ack", mapper.writeValueAsString(cardOperation));
+            log.debug("Acknowledgement for cardUid={} and cardId={} with entitiesAcks={} sent to event bus", cardUid, cardId, entitiesAcks);
         } catch (JsonProcessingException e) {
-            log.error("Unable to linearize card operation for acknowledgement to json on amqp notification");
+            log.error("Unable to linearize card operation for acknowledgement to json on event bus");
         }
     }
 }

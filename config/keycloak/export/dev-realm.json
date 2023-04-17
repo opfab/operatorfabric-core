@@ -455,7 +455,8 @@
         "claim.name" : "clientHost",
         "jsonType.label" : "String"
       }
-    }, {
+    }, 
+    {
       "id" : "168b284b-283d-4fe2-ace6-87d2597ae099",
       "name" : "sub",
       "protocol" : "openid-connect",

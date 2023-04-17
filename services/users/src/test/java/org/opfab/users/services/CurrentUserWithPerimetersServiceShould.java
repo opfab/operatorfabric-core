@@ -120,7 +120,7 @@ class CurrentUserWithPerimetersServiceShould {
                 List<String> entitiesDisconnected = new ArrayList<>();
                 entitiesDisconnected.add(ENTITY_NOT_CONNECTED);
                 UserSettingsData userSettings = new UserSettingsData("test", "test", "fr",
-                                true, true, true, true,
+                                true, true, true, true, true, true, true, true,
                                 null,
                                 true, 10,
                                 false, processesStatesNotNotified, entitiesDisconnected);

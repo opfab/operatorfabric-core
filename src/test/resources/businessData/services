@@ -1,0 +1,16 @@
+[{
+    "label": "Group 1",
+    "options" : [
+        { "label": "Service A", "value": "SA" },
+        { "label": "Service B", "value": "SB" },
+        { "label": "Service C", "value": "SC" }
+    ]
+},
+{
+    "label": "Group 2",
+    "options": [
+        { "label": "Service D", "value": "SD" },
+        { "label": "Service E", "value": "SE" },
+        { "label": "Service F", "value": "SF" }
+    ]
+}]

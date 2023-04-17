@@ -11,7 +11,7 @@ Feature: Cards
     * def card =
 """
 {
-	"publisher" : "api_test",
+	"publisher" : "operator1_fr",
 	"processVersion" : "1",
 	"process"  :"defaultProcess",
 	"processInstanceId" : "process1WithNoStateField",
@@ -31,6 +31,6 @@ Feature: Cards
     When method post
     Then status 400
     And match response.status == 'BAD_REQUEST'
-    And match response.message == 'Uncaught internal server exception'
-    And match response.errors[0] contains "Field error in object 'cardPublicationData' on field 'state': rejected value [null]"
+    And match response.message == 'Constraint violation in the request'
+    And match response.errors[0] contains "Impossible to publish card because there is no state"
 

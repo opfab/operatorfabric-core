@@ -1,5 +1,5 @@
 /* Copyright (c) 2020, Alliander (http://www.alliander.com)
-*  Copyright (c) 2021, RTE (http://www.rte-france.com)
+*  Copyright (c) 2021-2023, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -15,8 +15,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.opfab.avro.Card;
 import org.opfab.avro.CardCommand;
 import org.opfab.avro.CommandType;
+import org.opfab.cards.publication.configuration.Services;
 import org.opfab.cards.publication.model.CardPublicationData;
-import org.opfab.cards.publication.services.CardProcessingService;
 import org.springframework.stereotype.Component;
 
 @Slf4j
@@ -24,7 +24,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class CreateCardCommandHandler extends BaseCommandHandler implements CommandHandler {
 
-    private final CardProcessingService cardProcessingService;
+    private final Services services;
 
     @Override
     public CommandType getCommandType() {
@@ -39,7 +39,7 @@ public class CreateCardCommandHandler extends BaseCommandHandler implements Comm
 
         CardPublicationData card = buildCardPublicationData(cardCommand);
         if (card != null) {
-            cardProcessingService.processCard(card);
+            services.getCardProcessingService().processCard(card);
         }
     }
 }

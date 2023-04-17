@@ -1,0 +1,23 @@
+// Copyright (c) 2023 RTE (http://www.rte-france.com)
+// See AUTHORS.txt
+// This document is subject to the terms of the Creative Commons Attribution 4.0 International license.
+// If a copy of the license was not distributed with this
+// file, You can obtain one at https://creativecommons.org/licenses/by/4.0/.
+// SPDX-License-Identifier: CC-BY-4.0
+
+[[business_data]]
+= Business Data
+
+Using the API, it is now possible to store business data and then call it from the templates. This storage system is intended for light documents and should not be treated as a database.
+
+
+== Pushing data
+
+It is expected for the data being pushed to be compliant with the `json` format. The different methods are detailed in the (https://opfab.github.io/documentation/current/api/businessconfig/#/default/getBusinessData[API documentation]).
+
+
+== Calling a resource
+
+Once a resource has been stored, it is possible to call it from the template of a card. See in this template (https://github.com/opfab/operatorfabric-core/tree/develop/src/test/resources/bundles/conferenceAndITIncidentExample/template/usercard_incidentInProgress.handlebars[usercard_incidentInProgress.handlebars]) how the resource `services` is called with the method `opfab.businessconfig.businessData.get()`
+
+This prevents writing directly in the template's code long lists and allows easy data duplication between templates.

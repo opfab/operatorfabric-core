@@ -110,9 +110,9 @@ export class LoggingTableComponent implements OnDestroy {
                     filterParams: {
                         suppressAndOrCondition: true
                     },
-                    wrapText: true,
+                    wrapText: false,
                     autoHeight: true,
-                    width: 200,
+                    flex: 1,
                     resizable: false
                 },
                 summaryColumn: {
@@ -121,15 +121,15 @@ export class LoggingTableComponent implements OnDestroy {
                     filterParams: {
                         suppressAndOrCondition: true
                     },
-                    wrapText: true,
+                    wrapText: false,
                     autoHeight: true,
-                    width: 350,
+                    flex: 1,
                     resizable: false
                 },
                 stateDataColumn: {
                     sortable: false,
                     filter: false,
-                    wrapText: true,
+                    wrapText: false,
                     autoHeight: false,
                     width: 190,
                     resizable: false
@@ -137,10 +137,10 @@ export class LoggingTableComponent implements OnDestroy {
                 senderColumn: {
                     sortable: false,
                     filter: false,
-                    wrapText: true,
+                    wrapText: false,
                     autoHeight: false,
                     minWidth: 120,
-                    flex: 1,
+                    flex: 0.6,
                     resizable: false
                 },
                 severityColumn: {

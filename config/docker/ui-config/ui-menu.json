@@ -10,6 +10,10 @@
       "visible": true
     },
     {
+      "id": "dashboard",
+      "visible": true
+    },
+    {
       "id": "monitoring",
       "visible": true
     },
@@ -54,7 +58,7 @@
     {
       "id": "useractionlogs",
       "visible": true,
-      "showOnlyForGroups": ["ADMIN"]
+      "showOnlyForGroups": ["ADMIN","Supervisor"]
     },
     {
       "id": "nightdaymode",

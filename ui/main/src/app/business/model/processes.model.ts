@@ -24,26 +24,26 @@ export class UiVisibility {
 
 export class State {
     constructor(
-        readonly templateName?: string,
-        readonly styles?: string[],
-        readonly response?: Response,
-        readonly acknowledgmentAllowed?: AcknowledgmentAllowedEnum,
-        readonly cancelAcknowledgmentAllowed?: boolean,
-        readonly closeCardWhenUserAcknowledges?: boolean,
-        readonly editCardEnabledOnUserInterface?: boolean,
-        readonly deleteCardEnabledOnUserInterface?: boolean,
-        readonly name?: string,
-        readonly color?: string,
-        readonly userCard?: UserCard,
-        readonly description?: string,
-        readonly showDetailCardHeader?: boolean,
-        readonly type?: TypeOfStateEnum,
-        readonly isOnlyAChildState?: boolean,
-        readonly validateAnswerButtonLabel?: string,
-        readonly modifyAnswerButtonLabel?: string,
-        readonly automaticPinWhenAcknowledged?: boolean,
-        readonly consideredAcknowledgedForUserWhen?: ConsideredAcknowledgedForUserWhenEnum,
-        readonly showAcknowledgmentFooter?: ShowAcknowledgmentFooterEnum
+        public templateName?: string,
+        public styles?: string[],
+        public response?: Response,
+        public acknowledgmentAllowed?: AcknowledgmentAllowedEnum,
+        public cancelAcknowledgmentAllowed?: boolean,
+        public closeCardWhenUserAcknowledges?: boolean,
+        public editCardEnabledOnUserInterface?: boolean,
+        public deleteCardEnabledOnUserInterface?: boolean,
+        public name?: string,
+        public color?: string,
+        public userCard?: UserCard,
+        public description?: string,
+        public showDetailCardHeader?: boolean,
+        public type?: TypeOfStateEnum,
+        public isOnlyAChildState?: boolean,
+        public validateAnswerButtonLabel?: string,
+        public modifyAnswerButtonLabel?: string,
+        public automaticPinWhenAcknowledged?: boolean,
+        public consideredAcknowledgedForUserWhen?: ConsideredAcknowledgedForUserWhenEnum,
+        public showAcknowledgmentFooter?: ShowAcknowledgmentFooterEnum
     ) {}
 }
 
@@ -56,7 +56,8 @@ export class UserCard {
         readonly lttdVisible?: boolean,
         readonly expirationDateVisible?: boolean,
         readonly recipientVisible?: boolean,
-        readonly recipientList?: Recipient[]
+        readonly recipientList?: Recipient[],
+        readonly recipientForInformationVisible?: boolean
     ) {}
 }
 

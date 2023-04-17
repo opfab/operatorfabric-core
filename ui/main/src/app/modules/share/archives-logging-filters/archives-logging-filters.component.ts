@@ -64,7 +64,7 @@ export class ArchivesLoggingFiltersComponent implements OnInit, OnDestroy, After
     @Output() search = new EventEmitter<string>();
     @Output() reset = new EventEmitter<string>();
 
-    hasCurrentUserRigthsToViewAllArchivedCards: boolean;
+    hasCurrentUserRightsToViewAllArchivedCards: boolean;
     isAdminModeChecked: boolean;
 
     unsubscribe$: Subject<void> = new Subject<void>();
@@ -132,10 +132,10 @@ export class ArchivesLoggingFiltersComponent implements OnInit, OnDestroy, After
         private userService: UserService,
         private alertMessageService: AlertMessageService
     ) {
-        this.hasCurrentUserRigthsToViewAllArchivedCards = this.userService.isCurrentUserAdmin() || this.userService.hasCurrentUserAnyPermission([PermissionEnum.VIEW_ALL_ARCHIVED_CARDS]);
+        this.hasCurrentUserRightsToViewAllArchivedCards = this.userService.isCurrentUserAdmin() || this.userService.hasCurrentUserAnyPermission([PermissionEnum.VIEW_ALL_ARCHIVED_CARDS]);
 
         const isAdminModeCheckedInStorage = this.userPreferences.getPreference('opfab.isAdminModeChecked');
-        this.isAdminModeChecked = this.hasCurrentUserRigthsToViewAllArchivedCards && isAdminModeCheckedInStorage === 'true';
+        this.isAdminModeChecked = this.hasCurrentUserRightsToViewAllArchivedCards && isAdminModeCheckedInStorage === 'true';
     }
 
     ngOnInit() {
@@ -192,7 +192,10 @@ export class ArchivesLoggingFiltersComponent implements OnInit, OnDestroy, After
 
         // we must filter visibleProcesses to keep only the processes in the perimeter of the user
         const processesIds = [];
-        this.statesMultiSelectOptionsPerProcesses.forEach((process) => processesIds.push(process.value));
+        this.statesMultiSelectOptionsPerProcesses.forEach((process) => {
+            processesIds.push(process.value);
+            process.options.sort((obj1, obj2) => Utilities.compareObj(obj1.label, obj2.label))
+        });
         this.processMultiSelectOptions = this.visibleProcesses.filter((visibleProcess) =>
             processesIds.includes(visibleProcess.value)
         );
@@ -311,7 +314,8 @@ export class ArchivesLoggingFiltersComponent implements OnInit, OnDestroy, After
     }
 
     isThereProcessStateToDisplay(): boolean {
-        return !!this.statesMultiSelectOptionsPerProcesses && this.statesMultiSelectOptionsPerProcesses.length > 0;
+        return !!this.processMultiSelectOptions && this.processMultiSelectOptions.length > 0 &&
+               !!this.statesMultiSelectOptionsPerProcesses && this.statesMultiSelectOptionsPerProcesses.length > 0;
     }
 
     setDefaultPublishDateFilter() {

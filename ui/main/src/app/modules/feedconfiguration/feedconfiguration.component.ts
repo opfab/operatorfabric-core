@@ -175,8 +175,8 @@ export class FeedconfigurationComponent implements OnInit, AfterViewInit {
 
         this.preparedListOfProcessesStates.forEach((processState) => {
             const notNotifiedStatesForThisProcess = !!processesStatesNotNotified
-                ? processesStatesNotNotified[processState.processId]
-                : null;
+            ? processesStatesNotNotified.get(processState.processId)
+            : null;
 
             let isChecked = true;
 

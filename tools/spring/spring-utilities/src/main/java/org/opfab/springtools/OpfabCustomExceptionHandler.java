@@ -1,4 +1,4 @@
-/* Copyright (c) 2022, RTE (http://www.rte-france.com)
+/* Copyright (c) 2022-2023, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -13,6 +13,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.opfab.springtools.error.model.ApiError;
 import org.opfab.springtools.error.model.ApiErrorException;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -46,7 +47,11 @@ public class OpfabCustomExceptionHandler extends ResponseEntityExceptionHandler 
     @ExceptionHandler(ApiErrorException.class)
     public ResponseEntity<Object> handleApiError(ApiErrorException exception, final WebRequest
             request) {
-        log.info(GENERIC_MSG, request, exception);
+        if (exception.getError().getStatus() == HttpStatus.NOT_FOUND) {
+            log.info(GENERIC_MSG + " {}", request, exception.getError().getMessage());
+        } else {
+            log.info(GENERIC_MSG, request, exception);
+        }
         return new ResponseEntity<>(exception.getError(), exception.getError().getStatus());
     }
 

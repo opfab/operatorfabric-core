@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2022, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2023, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -16,7 +16,6 @@ import {FeedRoutingModule} from './feed-routing.module';
 import {TimeLineComponent} from './components/time-line/time-line.component';
 import {CardModule} from '../card/card.module';
 import {FiltersComponent} from './components/card-list/filters/filters.component';
-import {FeedFilterComponent} from './components/card-list/filters/feed-filter/feed-filter.component';
 import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
 import {TranslateModule} from '@ngx-translate/core';
 import {ChartCommonModule, NgxChartsModule} from '@swimlane/ngx-charts';
@@ -30,6 +29,8 @@ import {TimelineButtonsModule} from '../share/timeline-buttons/timeline-buttons.
 import {PinnedCardsComponent} from './components/pinned-cards/pinned-cards.component';
 import {MapComponent} from './components/map/map.component';
 import {FeedSearchComponent} from './components/card-list/filters/feed-search/feed-search.component';
+import {FeedFilterComponent} from './components/card-list/filters/feed-filter/feed-filter.component';
+import {FeedFilterAndSortIconsComponent} from './components/card-list/filters/feed-filter-and-sort-icons/feed-filter-and-sort-icons.component';
 
 @NgModule({
     imports: [
@@ -58,7 +59,8 @@ import {FeedSearchComponent} from './components/card-list/filters/feed-search/fe
         FeedSortComponent,
         PinnedCardsComponent,
         MapComponent,
-        FeedSearchComponent
+        FeedSearchComponent,
+        FeedFilterAndSortIconsComponent
     ],
     exports: [FeedComponent]
 })

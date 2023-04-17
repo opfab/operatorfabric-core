@@ -82,7 +82,7 @@ describe('Resilience tests', function () {
 
     function restartRabbitMQ() {
         cy.exec('docker restart rabbit');
-        cy.wait(10000); // Wait for rabbitMQ to be fully up
+        cy.wait(25000); // Wait for rabbitMQ to be fully up
     }
 
     function restartCardsConsultationService() {

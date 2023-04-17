@@ -324,6 +324,7 @@ For each action the following information are available:
 - `cardUid`: card Uid
 - `comment`: textual information
 
+By default, logs older than 61 days are automatically deleted.
 
 If set visible in ui-menu.json and user is admin, this interface is accessible via the user menu (top right of the screen).
 

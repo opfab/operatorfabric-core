@@ -56,6 +56,9 @@ public class UserCardData implements UserCard {
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private Boolean recipientVisible;
 
+    @JsonInclude(JsonInclude.Include.NON_NULL)
+    private Boolean recipientForInformationVisible;
+
     @JsonInclude(JsonInclude.Include.NON_EMPTY)
     private List<Recipient> recipientList;
 }

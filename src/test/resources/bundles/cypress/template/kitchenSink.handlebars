@@ -1,4 +1,4 @@
-<!-- Copyright (c) 2021-2022, RTE (http://www.rte-france.com)              -->
+<!-- Copyright (c) 2021-2023, RTE (http://www.rte-france.com)              -->
 <!-- See AUTHORS.txt                                                       -->
 <!-- This Source Code Form is subject to the terms of the Mozilla Public   -->
 <!-- License, v. 2.0. If a copy of the MPL was not distributed with this   -->
@@ -31,6 +31,9 @@
 <div> screenSize : <span id="screenSize"> </span>  </div>
 <div> onTemplateRenderingComplete : <span id="templateGateway-onTemplateRenderingComplete"> </span>  </div>
 
+<H3> OPFAB CALLS</H3>
+<div><span id="showCardLink" style="cursor:pointer;color:blue;text-decoration:underline;" onclick="opfab.navigate.showCardInFeed('defaultProcess.process1')">LINK TO ANOTHER CARD</span></div>
+
 <H3> HANDLEBARS TEMPLATING </H3>
 
 <div> Simple Data  : <span id="handlebars-simpleData" >{{card.data.message}}</span></div>
@@ -38,9 +41,8 @@
 <div> Each feature : <span id="handlebars-each">{{#each card.data.array}}{{this}}{{/each}}</span> 
 </div>
 
-<div> Card id : <span id="cardId">{{card.id}}</span></div>
+<div> Card id : <a onclick="opfab.navigate.showCardInFeed('{{card.id}}')"><span id="cardId">{{card.id}}</span></a></div>
 <div> Card uid : <span id="cardUid">{{card.uid}}</span></div>
-
 <script>
 
 

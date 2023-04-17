@@ -20,6 +20,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
+import org.opfab.test.EventBusSpy;
 import org.opfab.users.model.EntityCreationReport;
 import org.opfab.users.model.EntityData;
 import org.opfab.users.model.GroupData;
@@ -30,7 +31,6 @@ import org.opfab.users.model.RightsEnum;
 import org.opfab.users.model.StateRightData;
 import org.opfab.users.model.User;
 import org.opfab.users.model.UserData;
-import org.opfab.users.spies.EventBusSpy;
 import org.opfab.users.stubs.EntityRepositoryStub;
 import org.opfab.users.stubs.GroupRepositoryStub;
 import org.opfab.users.stubs.PerimeterRepositoryStub;
@@ -176,16 +176,6 @@ public class UsersServiceShould {
     @Nested
     @DisplayName("Create")
     class Create {
-        @Test
-        void GIVEN_An_Invalid_Login__WHEN_Creating_User_THEN_Return_Bad_Request() {
-            UserData user = new UserData("invalid?login", "invalid", null, null, null, null);
-            OperationResult<EntityCreationReport<User>> result = usersService.createUser(user);
-            assertThat(result.isSuccess()).isFalse();
-            assertThat(result.getErrorType()).isEqualTo(OperationResult.ErrorType.BAD_REQUEST);
-            assertThat(result.getErrorMessage()).isEqualTo(
-                    "Login should only contain the following characters: letters, _, -, . or digits (login=invalid?login).");
-        }
-
         @Test
         void GIVEN_A_Valid_User_WHEN_Create_User_THEN_Return_Created_User() {
 
@@ -337,17 +327,6 @@ public class UsersServiceShould {
     @Nested
     @DisplayName("UpdateOrCreate")
     class Update {
-
-        @Test
-        void GIVEN_An_Invalid_Login__WHEN_UpdateOrCreate_User_THEN_Return_Bad_Request() {
-            UserData user = new UserData("invalid?login", "invalid", null, null, null, null);
-            OperationResult<User> result = usersService.updateOrCreateUser(user, true, true);
-            assertThat(result.isSuccess()).isFalse();
-            assertThat(result.getErrorType()).isEqualTo(OperationResult.ErrorType.BAD_REQUEST);
-            assertThat(result.getErrorMessage()).isEqualTo(
-                    "Login should only contain the following characters: letters, _, -, . or digits (login=invalid?login).");
-        }
-
         @Test
         void GIVEN_The_Admin_User_WHEN_UpdateOrCreate_User_Without_Admin_Group_THEN_Return_Bad_Request() {
 
@@ -508,8 +487,24 @@ public class UsersServiceShould {
             assertThat(result.isSuccess()).isTrue();
             assertThat(userRepositoryStub.findById("user3").get().getFirstName()).isEqualTo("newFirstName");
             
-            String[] expectedMessageSent = {"USER_EXCHANGE","user3"};
+            String[] expectedMessageSent = {"user","user3"};
             assertThat(eventBusSpy.getMessagesSent()).containsOnly(expectedMessageSent);
+        }
+
+
+        @Test
+        void GIVEN_An_Existing_User_WHEN_UpdateOrCreate_With_Same_Value_THEN_Notification_Is_Not_Sent_To_Other_Services() {
+
+           UserData user2Clone = UserData.builder()
+                    .login("user2")
+                    .firstName("user2FirstName")
+                    .lastName("user2LastName")
+                    .group("group2")
+                    .entity("entity1").entity("entity2")
+                    .build();
+            OperationResult<User> result = usersService.updateOrCreateUser(user2Clone, true, true);
+            assertThat(result.isSuccess()).isTrue();
+            assertThat(eventBusSpy.getMessagesSent()).isEmpty();
         }
 
         @Test

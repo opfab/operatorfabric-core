@@ -6,7 +6,7 @@ plugins {
     id "org.springframework.boot" version "$springBoot" apply false
     id "io.spring.dependency-management" version "1.1.0" apply false
     id 'org.sonarqube' version '3.5.0.2730'
-    id "com.github.davidmc24.gradle.plugin.avro" version "1.5.0" apply false
+    id "com.github.davidmc24.gradle.plugin.avro" version "1.6.0" apply false
     id "com.palantir.docker" version "0.34.0" apply false
     id "org.hidetake.swagger.generator" version "2.19.2" apply false
 }
@@ -25,7 +25,6 @@ ext {
             starterWebflux          : "org.springframework.boot:spring-boot-starter-webflux:$springBoot",
             actuator                : "org.springframework.boot:spring-boot-starter-actuator:$springBoot",
             starterUndertow         : "org.springframework.boot:spring-boot-starter-undertow:$springBoot",
-            starterRabbitmq         : "org.springframework.boot:spring-boot-starter-amqp:$springBoot",
             starterSecurity         : "org.springframework.boot:spring-boot-starter-security:$springBoot",
             starterMongo            : "org.springframework.boot:spring-boot-starter-data-mongodb:$springBoot",
             starterMongoR           : "org.springframework.boot:spring-boot-starter-data-mongodb-reactive:$springBoot",
@@ -76,11 +75,13 @@ ext {
             collections4   : "org.apache.commons:commons-collections4:$apacheCommonsCollections4",
             commonsIO      : "commons-io:commons-io:$commonsIO",
             micrometer     : "io.micrometer:micrometer-registry-prometheus:$micrometer",
-            jsonSmart      : "net.minidev:json-smart:2.4.8",
+            jsonSmart      : "net.minidev:json-smart:2.4.10",
             handlebars     : "com.github.jknack:handlebars:4.3.1",
             jacksonDatabind   : "com.fasterxml.jackson.core:jackson-databind:$jacksonDatabind",
             jlibmodbus     : "com.intelligt.modbus:jlibmodbus:WORKAROUND",
             commonsText    : "org.apache.commons:commons-text:$apacheCommonsText",
+            commonsPool    : "org.apache.commons:commons-pool2:$apacheCommonsPool",
+            rabbitMQ       : "com.rabbitmq:amqp-client:$rabbitMQ"
             //jakartaServletApi        : "jakarta.servlet:jakarta.servlet-api:5.0.0"
     ]
 

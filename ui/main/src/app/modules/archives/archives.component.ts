@@ -24,7 +24,7 @@ import {Card, CardData} from '@ofModel/card.model';
 import {ArchivesLoggingFiltersComponent} from '../share/archives-logging-filters/archives-logging-filters.component';
 import {DisplayContext} from '@ofModel/templateGateway.model';
 import {FilterMatchTypeEnum, FilterModel} from '@ofModel/filter-model';
-import {ArchivedCardsFilter} from '@ofModel/archived-cards-filter.model';
+import {CardsFilter} from '@ofModel/cards-filter.model';
 import {DateTimeFormatterService} from 'app/business/services/date-time-formatter.service';
 import {CardService} from 'app/business/services/card.service';
 
@@ -184,7 +184,7 @@ export class ArchivesComponent implements OnDestroy, OnInit {
         });
     }
 
-    private getFilter(page: number, size: number, filtersMap: Map<string, any[]>, latestUpdateOnly: boolean) : ArchivedCardsFilter {
+    private getFilter(page: number, size: number, filtersMap: Map<string, any[]>, latestUpdateOnly: boolean) : CardsFilter {
         const filters = [];
         let isAdminMode = false;
         filtersMap.forEach( (values, key) => {
@@ -194,7 +194,7 @@ export class ArchivesComponent implements OnDestroy, OnInit {
                 filters.push(new FilterModel(key,null,FilterMatchTypeEnum.IN, values));
         });
 
-        return new ArchivedCardsFilter(page, size, isAdminMode, false, latestUpdateOnly, filters);
+        return new CardsFilter(page, size, isAdminMode, false, latestUpdateOnly, filters);
     }
 
 

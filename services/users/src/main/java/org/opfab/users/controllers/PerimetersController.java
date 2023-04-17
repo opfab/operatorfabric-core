@@ -12,7 +12,7 @@ package org.opfab.users.controllers;
 import org.opfab.springtools.error.model.ApiError;
 import org.opfab.springtools.error.model.ApiErrorException;
 import org.opfab.users.model.*;
-import org.opfab.users.rabbit.RabbitEventBus;
+import org.opfab.utilities.eventbus.EventBus;
 import org.opfab.users.repositories.PerimeterRepository;
 import org.opfab.users.repositories.UserRepository;
 import org.opfab.users.repositories.GroupRepository;
@@ -36,8 +36,8 @@ public class PerimetersController implements PerimetersApi {
 
     public PerimetersController(PerimeterRepository perimeterRepository, GroupRepository groupRepository,
             UserRepository userRepository,
-            RabbitEventBus rabbitEventBus) {
-        NotificationService notificationService = new NotificationService(userRepository, rabbitEventBus);
+            EventBus eventBus) {
+        NotificationService notificationService = new NotificationService(userRepository, eventBus);
         perimetersService = new PerimetersService(perimeterRepository, groupRepository, notificationService);
     }
 

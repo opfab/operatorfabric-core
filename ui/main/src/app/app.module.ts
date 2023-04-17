@@ -74,6 +74,9 @@ import {AngularCardServer} from './server/angularCard.server';
 import {CardServer} from './business/server/card.server';
 import {SoundServer} from './business/server/sound.server';
 import {AngularSoundServer} from './server/angularSound.server';
+import {DashboardModule} from './modules/dashboard/dashboard.module';
+import {BusinessDataServer} from './business/server/businessData.server';
+import {AngularBusinessDataServer} from './server/angularBusinessData.server';
 
 @NgModule({
     imports: [
@@ -91,6 +94,7 @@ import {AngularSoundServer} from './server/angularSound.server';
         ArchivesModule,
         LoggingModule,
         MonitoringModule,
+        DashboardModule,
         NgbModalModule,
         AppRoutingModule,
         AdminModule,
@@ -136,6 +140,7 @@ import {AngularSoundServer} from './server/angularSound.server';
         {provide: ConfigServer, useClass: AngularConfigServer},
         {provide: TemplateCssServer, useClass: AngularTemplateCssServer},
         {provide: ProcessServer, useClass: AngularProcessServer},
+        {provide: BusinessDataServer, useClass: AngularBusinessDataServer},
         {provide: SettingsServer, useClass: AngularSettingsServer},
         {provide: OpfabEventStreamServer, useClass: AngularOpfabEventStreamServer},
         {provide: ExternalDevicesServer, useClass: AngularExternalDevicesServer},

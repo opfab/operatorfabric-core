@@ -1,4 +1,4 @@
-/* Copyright (c) 2022, RTE (http://www.rte-france.com)
+/* Copyright (c) 2022-2023, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -80,12 +80,12 @@ describe('Test translations', function () {
         cy.get('#opfab-navbar-menu-logging').should('have.text', loggingTitle);
         cy.get('#opfab-navbar-menu-menu1').should('have.text', singleMenuTitle);
         cy.get('#opfab-navbar-menu-dropdown-menu2').should('have.text', secondMenuTitle);
-        cy.get('#opfab-navbar-menu-dropdown-menu2').click();
+        cy.get('#opfab-navbar-menu-dropdown-menu2').trigger('mouseenter');
 
         // Test dropdown menus titles
-        cy.get('#opfab-navbar-menu-dropdown-menu2').click();
-        cy.get('.dropdown-menu').find('.text-link').eq(0).should('have.text', firstEntryTitle);
-        cy.get('.dropdown-menu').find('.text-link').eq(1).should('have.text', secondEntryTitle);
+        cy.get('#opfab-navbar-menu-dropdown-menu2').trigger('mouseenter');
+        cy.get('.opfab-dropdown-menu').find('.text-link').eq(0).should('have.text', firstEntryTitle);
+        cy.get('.opfab-dropdown-menu').find('.text-link').eq(1).should('have.text', secondEntryTitle);
     }
 
     function checkRightMenuStaticEntries(realTimeTitle, settingsTitle, activityAreaTitle, feedConfigurationTitle, aboutTitle,
@@ -177,15 +177,13 @@ describe('Test translations', function () {
     }
 
     function checkNotificationSeverityTexts(alarmSeverity, actionSeverity, compliantSeverity, informationSeverity) {
-        cy.get('.popover-body').find('.label-sev-alarm').should('have.text', ' ' + alarmSeverity + ' ');
-        cy.get('.popover-body').find('.label-sev-action').should('have.text', ' ' + actionSeverity + ' ');
-        cy.get('.popover-body').find('.label-sev-compliant').should('have.text', ' ' + compliantSeverity + ' ');
-        cy.get('.popover-body').find('.label-sev-information').should('have.text', ' ' + informationSeverity + ' ');
+        cy.get('#opfab-filters').find('.label-sev-alarm').should('have.text', ' ' + alarmSeverity + ' ');
+        cy.get('#opfab-filters').find('.label-sev-action').should('have.text', ' ' + actionSeverity + ' ');
+        cy.get('#opfab-filters').find('.label-sev-compliant').should('have.text', ' ' + compliantSeverity + ' ');
+        cy.get('#opfab-filters').find('.label-sev-information').should('have.text', ' ' + informationSeverity + ' ');
     }
 
     function checkAknowledgementTexts(acknowledgementHeader, allText, acknowledgedText, notAcknowledgedText) {
-        cy.get('#opfab-filter-ack-title').should('have.text', acknowledgementHeader);
-        cy.get('#opfab-feed-filter-ack-all-label').should('have.text', allText);
         cy.get('#opfab-feed-filter-ack-ack-label').should('have.text', acknowledgedText);
         cy.get('#opfab-feed-filter-ack-notack-label').should('have.text', notAcknowledgedText);
     }
@@ -231,13 +229,13 @@ describe('Test translations', function () {
         opfab.loginWithUser('operator1_fr');
 
         changeLanguage(ENGLISH);
-        checkMenuTitles('Card Feed', 'Archives', 'Monitoring', 'Logging', 'Single menu entry', 'Second menu', 'First menu entry', 'Second menu entry');
+        checkMenuTitles('Card Feed', 'Archives', 'Monitoring', 'Logging', 'Single menu entry', 'Second menu ', 'First menu entry', 'Second menu entry');
 
         changeLanguage(FRENCH);
-        checkMenuTitles('Flux de cartes', 'Archives', 'Monitoring', 'Logging', 'Unique élément', 'Deuxième menu', 'Premier élément', 'Deuxième élément');
+        checkMenuTitles('Flux de cartes', 'Archives', 'Monitoring', 'Logging', 'Unique élément', 'Deuxième menu ', 'Premier élément', 'Deuxième élément');
 
         changeLanguage(DUTCH);
-        checkMenuTitles('Kaart Feed', 'Archieven', 'Bewaking','Logboek', 'Enkel menu-item', 'Tweede menu', 'Eerste menu-item', 'Tweede menu-item');
+        checkMenuTitles('Kaart Feed', 'Archieven', 'Bewaking','Logboek', 'Enkel menu-item', 'Tweede menu ', 'Eerste menu-item', 'Tweede menu-item');
 
     })
 
@@ -339,9 +337,9 @@ describe('Test translations', function () {
         checkAknowledgementTexts('Acknowledgement', 'All', 'Acknowledged', 'Not acknowledged');
         checkDateFilterTexts('Receipt date', 'START', 'END', 'Apply filters to timeline ');
         
-        // Select 'All' on Acknowledgement filter to show the "Reset" link
-        cy.get('#opfab-feed-filter-ack-all').click();
-        checkResetText('Reset');
+        // Deselect 'not acknowledged' checkbox on Acknowledgement filter to show the "Reset" link
+        cy.get('#opfab-feed-filter-ack-notack').click({force: true});
+        checkResetText('Reset filters');
 
         changeLanguage(FRENCH);
         cy.get('#opfab-navbar-menu-feed').click();
@@ -349,7 +347,7 @@ describe('Test translations', function () {
         checkNotificationSeverityTexts('Alarme', 'Action', 'Conforme', 'Information');
         checkAknowledgementTexts('Acquittement', 'Toutes', 'Acquittées', 'Non acquittées');
         checkDateFilterTexts('Date de réception', 'DÉBUT', 'FIN', 'Appliquer les filtres à la timeline ');
-        checkResetText('Réinitialiser');
+        checkResetText('Réinitialiser les filtres');
 
         changeLanguage(DUTCH);
         cy.get('#opfab-navbar-menu-feed').click();
@@ -357,7 +355,7 @@ describe('Test translations', function () {
         checkNotificationSeverityTexts('Alarm', 'Actie', 'Conform', 'Informatie');
         checkAknowledgementTexts('Bevestigen', 'Alles', 'Bevestigd', 'Niet bevestigd');
         checkDateFilterTexts('Ontvangstdatum', 'START', 'EIND', 'Filters toepassen op tijdlijn ');
-        checkResetText('Opnieuw instellen');
+        checkResetText('Filters opnieuw instellen');
     });
 
     it('Check translation for non-existent card', function () {

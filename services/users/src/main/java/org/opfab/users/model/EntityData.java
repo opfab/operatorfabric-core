@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2022, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2023, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -71,7 +71,7 @@ public class EntityData implements Entity {
     @Override
     public List<String> getLabels(){
         if (labels == null) return Collections.emptyList();
-        return labels.stream().collect(Collectors.toList());
+        return labels.stream().toList();
     }
 
     @Override

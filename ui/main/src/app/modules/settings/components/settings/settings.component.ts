@@ -1,4 +1,5 @@
 /* Copyright (c) 2018-2023, RTE (http://www.rte-france.com)
+ * Copyright (c) 2023, Alliander (http://www.alliander.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -30,6 +31,10 @@ export class SettingsComponent implements OnInit {
     replayEnabledDefaultValue: boolean;
     replayIntervalDefaultValue: number;
     remoteLoggingEnabledDefaultValue: boolean;
+    systemNotificationAlarmDefaultValue: boolean;
+    systemNotificationActionDefaultValue: boolean;
+    systemNotificationCompliantDefaultValue: boolean;
+    systemNotificationInformationDefaultValue: boolean;
 
     userConfiguration: UserConfiguration;
 
@@ -55,9 +60,7 @@ export class SettingsComponent implements OnInit {
         this.playSoundForCompliantDefaultValue = !!this.configService.getConfigValue('settings.playSoundForCompliant')
             ? this.configService.getConfigValue('settings.playSoundForCompliant')
             : false;
-        this.playSoundForInformationDefaultValue = !!this.configService.getConfigValue(
-            'settings.playSoundForInformation'
-        )
+        this.playSoundForInformationDefaultValue = !!this.configService.getConfigValue('settings.playSoundForInformation')
             ? this.configService.getConfigValue('settings.playSoundForInformation')
             : false;
         this.replayEnabledDefaultValue = !!this.configService.getConfigValue('settings.replayEnabled')
@@ -68,6 +71,18 @@ export class SettingsComponent implements OnInit {
             : 5;
         this.remoteLoggingEnabledDefaultValue = !!this.configService.getConfigValue('settings.remoteLoggingEnabled')
             ? this.configService.getConfigValue('settings.remoteLoggingEnabled')
+            : false;
+        this.systemNotificationAlarmDefaultValue = !!this.configService.getConfigValue('settings.systemNotificationAlarm')
+            ? this.configService.getConfigValue('settings.systemNotificationAlarm')
+            : false;
+        this.systemNotificationActionDefaultValue = !!this.configService.getConfigValue('settings.systemNotificationAction')
+            ? this.configService.getConfigValue('settings.systemNotificationAction')
+            : false;
+        this.systemNotificationCompliantDefaultValue = !!this.configService.getConfigValue('settings.systemNotificationCompliant')
+            ? this.configService.getConfigValue('settings.systemNotificationCompliant')
+            : false;
+        this.systemNotificationInformationDefaultValue = !!this.configService.getConfigValue('settings.systemNotificationInformation')
+            ? this.configService.getConfigValue('settings.systemNotificationInformation')
             : false;
 
         const userLogin = this.userService.getCurrentUserWithPerimeters().userData.login;

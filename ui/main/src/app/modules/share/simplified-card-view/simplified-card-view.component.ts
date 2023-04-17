@@ -29,6 +29,7 @@ export class SimplifiedCardViewComponent implements OnInit, OnDestroy {
     @Input() screenSize = 'md';
     @Input() displayContext: DisplayContext;
     @Input() childCards: Card[] = [];
+    @Input() fixedBottomOffset = 30;
 
     public cardState: State;
     public active = false;
@@ -36,7 +37,6 @@ export class SimplifiedCardViewComponent implements OnInit, OnDestroy {
     private user: User;
     private userMemberOfAnEntityRequiredToRespondAndAllowedToSendCards = false;
     public isLoading = true;
-    public fixedBottomOffset = 90;
 
     constructor(
         private businessconfigService: ProcessesService,

@@ -1,4 +1,4 @@
-/* Copyright (c) 2022, RTE (http://www.rte-france.com)
+/* Copyright (c) 2022-2023, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -50,39 +50,39 @@ export class FeedCommands extends OpfabCommands {
     }
 
     sortByUnread= function () {
-        cy.get('#opfab-feed-filter-btn-sort').click();
+        cy.get('#opfab-feed-filter-btn-filter').click();
         cy.get('#opfab-sort-form').should('exist');
         cy.get('#opfab-feed-filter-unread').check();
-        cy.get('#opfab-feed-filter-btn-sort').click();
+        cy.get('#opfab-feed-filter-btn-filter').click();
     }
 
     sortByReceptionDate= function () {
-        cy.get('#opfab-feed-filter-btn-sort').click();
+        cy.get('#opfab-feed-filter-btn-filter').click();
         cy.get('#opfab-sort-form').should('exist');
         cy.get('#opfab-feed-filter-publication-date').check();
-        cy.get('#opfab-feed-filter-btn-sort').click();
+        cy.get('#opfab-feed-filter-btn-filter').click();
     }
 
     sortBySeverity= function () {
-        cy.get('#opfab-feed-filter-btn-sort').click();
+        cy.get('#opfab-feed-filter-btn-filter').click();
         cy.get('#opfab-sort-form').should('exist');
         cy.get('#opfab-feed-filter-severity').check();
-        cy.get('#opfab-feed-filter-btn-sort').click();
+        cy.get('#opfab-feed-filter-btn-filter').click();
     }
 
     sortByStartDate= function () {
-        cy.get('#opfab-feed-filter-btn-sort').click();
+        cy.get('#opfab-feed-filter-btn-filter').click();
         cy.get('#opfab-sort-form').should('exist');
         cy.get('#opfab-feed-filter-start-date').check();
-        cy.get('#opfab-feed-filter-btn-sort').click();
+        cy.get('#opfab-feed-filter-btn-filter').click();
     }
 
 
     sortByEndDate= function () {
-        cy.get('#opfab-feed-filter-btn-sort').click();
+        cy.get('#opfab-feed-filter-btn-filter').click();
         cy.get('#opfab-sort-form').should('exist');
         cy.get('#opfab-feed-filter-end-date').check();
-        cy.get('#opfab-feed-filter-btn-sort').click();
+        cy.get('#opfab-feed-filter-btn-filter').click();
     }
 
     toggleFilterByPriority = function (priorities) {
@@ -102,10 +102,17 @@ export class FeedCommands extends OpfabCommands {
         cy.get('#opfab-feed-filter-btn-filter').click();
     }
 
-    filterByAcknowledgement = function (acknowledgementOption) {
+    toggleFilterByAcknowledgementAck = function () {
         cy.get('#opfab-feed-filter-btn-filter').click();
         cy.get('#opfab-ack-filter-form').should('exist');
-        cy.get('#opfab-feed-filter-ack-' + acknowledgementOption).check();
+        cy.get('#opfab-feed-filter-ack-ack').click({force: true});
+        cy.get('#opfab-feed-filter-btn-filter').click();
+    }
+
+    toggleFilterByAcknowledgementNotAck = function () {
+        cy.get('#opfab-feed-filter-btn-filter').click();
+        cy.get('#opfab-ack-filter-form').should('exist');
+        cy.get('#opfab-feed-filter-ack-notack').click({force: true});
         cy.get('#opfab-feed-filter-btn-filter').click();
     }
 
@@ -122,6 +129,14 @@ export class FeedCommands extends OpfabCommands {
 
     checkFilterIsNotActive= function() {
         cy.get('#opfab-feed-filter-btn-filter').should('have.class', 'opfab-icon-filter');
+    }
+
+    checkFilterIsOpenAndNotActive= function() {
+        cy.get('#opfab-feed-filter-btn-filter').should('have.class', 'opfab-icon-filter-open');
+    }
+
+    checkFilterIsOpenAndActive= function() {
+        cy.get('#opfab-feed-filter-btn-filter').should('have.class', 'opfab-icon-filter-open-active');
     }
 
     resetAllFilters() {

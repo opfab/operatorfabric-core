@@ -2,8 +2,8 @@ dependencies {
     swaggerCodegen generator.swagger, project(':tools:swagger-spring-generators')
     swaggerUI generator.swaggerUI
     implementation project(':tools:generic:utilities'), project(':tools:spring:spring-utilities')
-    implementation boot.starterRabbitmq
     implementation misc.jsonSmart
+    implementation spring.securityOauthResource, spring.securityOauthJose
 
     compileOnly boot.annotationConfiguration
     annotationProcessor boot.annotationConfiguration

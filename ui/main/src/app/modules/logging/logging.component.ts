@@ -23,7 +23,7 @@ import {ArchivesLoggingFiltersComponent} from '../share/archives-logging-filters
 import {EntitiesService} from 'app/business/services/entities.service';
 import {Utilities} from 'app/business/common/utilities';
 import {NgbModal, NgbModalOptions, NgbModalRef} from '@ng-bootstrap/ng-bootstrap';
-import {ArchivedCardsFilter} from '@ofModel/archived-cards-filter.model';
+import {CardsFilter} from '@ofModel/cards-filter.model';
 import {FilterMatchTypeEnum, FilterModel} from '@ofModel/filter-model';
 import {CardService} from 'app/business/services/card.service';
 
@@ -172,7 +172,7 @@ export class LoggingComponent implements OnDestroy, OnInit, AfterViewInit {
             });
     }
 
-    private getFilter(page: number, size: number, filtersMap: Map<string, any[]>) : ArchivedCardsFilter {
+    private getFilter(page: number, size: number, filtersMap: Map<string, any[]>) : CardsFilter {
         const filters = [];
         let isAdminMode = false;
         filtersMap.forEach( (values, key) => {
@@ -186,7 +186,7 @@ export class LoggingComponent implements OnDestroy, OnInit, AfterViewInit {
             filters.push(new FilterModel('process',null,FilterMatchTypeEnum.IN, this.listOfProcessesForRequest));
 
         this.columnFilters.forEach(filter => filters.push(filter));
-        return new ArchivedCardsFilter(page, size, isAdminMode, true, false, filters);
+        return new CardsFilter(page, size, isAdminMode, true, false, filters);
     }
 
     cardPostProcessing(card) {

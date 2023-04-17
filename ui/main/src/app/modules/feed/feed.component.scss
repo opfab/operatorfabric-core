@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2020, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2023, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -20,4 +20,20 @@
 
 .opfab-standard-screen {
     width: 440px;
+}
+
+.opfab-standard-filters-screen {
+    width: 780px;
+}
+
+.opfab-standard-card-detail {
+    padding-left: 0px;
+    padding-right: 0px;
+    width:calc(100% - 440px)
+}
+
+.opfab-slim-card-detail {
+    padding-left: 0px;
+    padding-right: 0px;
+    width:calc(100% - 780px)
 }

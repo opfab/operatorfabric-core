@@ -454,7 +454,7 @@ export class LightCardsStoreService {
     }
 
     // for observable subscribe after the events are emitted we use replaySubject
-    public getLightCards(): Observable<any> {
+    public getLightCards(): Observable<LightCard[]> {
         return this.lightCardsEventsWithLimitedUpdateRate.asObservable();
     }
 

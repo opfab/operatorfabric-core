@@ -15,6 +15,7 @@ import {MonitoringComponent} from '../modules/monitoring/monitoring.component';
 import {CalendarComponent} from '../modules/calendar/calendar.component';
 import {ArchivesEntryPointComponent} from '../modules/archives/archives-entry-point.component';
 import {UserActionLogsComponent} from '../modules/useractionlogs/useractionlogs.component';
+import { DashboardComponent } from 'app/modules/dashboard/dashboard.component';
 
 const defaultPath = '/feed';
 
@@ -35,6 +36,10 @@ const routes: Routes = [
     {
         path: 'monitoring',
         component: MonitoringComponent
+    },
+    {
+        path: 'dashboard',
+        component: DashboardComponent,
     },
     {
         path: 'logging',

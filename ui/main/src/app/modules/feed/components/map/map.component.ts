@@ -19,6 +19,7 @@ import {LightCardsFeedFilterService} from 'app/business/services/lightcards/ligh
 import {Subject} from 'rxjs';
 import {takeUntil} from 'rxjs/operators';
 import WKT from 'ol/format/WKT';
+import GeoJSON from 'ol/format/GeoJSON.js';
 import Overlay from 'ol/Overlay';
 import {Style, Fill, Stroke, Circle} from 'ol/style';
 import {Attribution, ZoomToExtent, Control, defaults as defaultControls} from 'ol/control';
@@ -90,7 +91,10 @@ export class MapComponent implements OnInit, OnDestroy, AfterViewChecked {
     }
 
     private updateMapWhenGlobalStyleChange() {
-        this.globalStyleService.getStyleChange().subscribe(style => this.updateMapColors(style));
+        this.globalStyleService.getStyleChange().subscribe(style => {
+            this.updateMapColors(style);
+            this.addGeoJSONLayer(style);
+        });
     }
 
     private updateMapColors(style) {
@@ -213,6 +217,41 @@ export class MapComponent implements OnInit, OnDestroy, AfterViewChecked {
                 }));
                 overlay.setPosition(evt.coordinate);
                 self.lightCardsToDisplay = featureArray;
+            }
+        }
+    }
+
+    private addGeoJSONLayer(style) {
+        if (this.map) {
+            const geojsonUrl = this.configService.getConfigValue('feed.geomap.layer.geojson.url', null);
+            const gjCrossOrigin = this.configService.getConfigValue('feed.geomap.layer.geojson.crossOrigin', null);
+            if (geojsonUrl) {
+                let colorStroke = 'rgba(0, 0, 0, 0.6)';
+                let colorFill = 'rgba(0, 0, 0, 0.05)';
+                if (style === GlobalStyleService.NIGHT) {
+                    colorStroke = 'rgba(255, 255, 255, 0.6)';
+                    colorFill = 'rgba(255, 255, 255, 0.05)';
+                }
+                const vectorLayer = new VectorLayer({
+                    source: new VectorSource({
+                        format: new GeoJSON(),
+                        url: geojsonUrl,
+                        crossOrigin: gjCrossOrigin
+                    }),
+                    style: [
+                        new Style({
+                            stroke: new Stroke({
+                                color: colorStroke,
+                                width: 1.5
+                            }),
+                            fill: new Fill({
+                                color: colorFill
+                            })
+                        })
+                    ]
+                });
+                this.map.removeLayer(vectorLayer);
+                this.map.addLayer(vectorLayer);
             }
         }
     }

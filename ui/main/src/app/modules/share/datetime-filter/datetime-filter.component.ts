@@ -87,6 +87,7 @@ export class DatetimeFilterComponent implements ControlValueAccessor, OnInit, On
     @Output() change = new EventEmitter();
     @Input() minDate: {year: number; month: number; day: number};
     @Input() maxDate: {year: number; month: number; day: number};
+    @Input() timeSpinners = true;
 
     placeholder: string;
 

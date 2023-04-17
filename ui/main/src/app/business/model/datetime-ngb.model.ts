@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2022, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2023, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -55,21 +55,27 @@ export class DateTimeNgb {
 
     format(): string {
         const {date} = this;
-        return date
-            ? `${date.year}-${isNumber(date.month) ? padNumber(date.month) : ''}-${
-                  isNumber(date.day) ? padNumber(date.day) : ''
-              }`
-            : '';
+        let str = '';
+
+        if (date) {
+            str = date.year.toString();
+            str += '-' + (isNumber(date.month) ? padNumber(date.month) : '');
+            str += '-' + (isNumber(date.day) ? padNumber(date.day) : '');
+        }
+        return str;
     }
+
 
     // a function that transform timestruct to string
     formatTime(): string {
         const {time} = this;
-        return time
-            ? `${isNumber(time.hour) ? padNumber(time.hour) : ''}:${
-                  isNumber(time.minute) ? padNumber(time.minute) : ''
-              }`
-            : '';
+        let str = '';
+
+        if (time) {
+            str = isNumber(time.hour) ? padNumber(time.hour) : '';
+            str += ':' + (isNumber(time.minute) ? padNumber(time.minute) : '');
+        }
+        return str;
     }
 
     formatDateTime() {

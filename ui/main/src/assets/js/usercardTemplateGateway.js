@@ -1,4 +1,4 @@
-/* Copyright (c) 2022, RTE (http://www.rte-france.com)
+/* Copyright (c) 2022-2023, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -18,12 +18,13 @@ const usercardTemplateGateway = {
     expirationDate: null,
     initialSeverity: null,
     selectedEntityRecipients: [],
+    selectedEntityRecipientsForInformation: [],
 
     setUserEntityChildCardFromCurrentCard: function (childCard) {
         this.childCard = childCard;
     },
 
-    // The template calls this method to get the editon mode (CREATE/EDITION)
+    // The template calls this method to get the edition mode (CREATE/EDITION)
     getEditionMode() {
         return this.editionMode;
     },
@@ -64,6 +65,10 @@ const usercardTemplateGateway = {
         return this.selectedEntityRecipients;
     },
 
+    getSelectedEntityRecipientsForInformation() {
+        return this.selectedEntityRecipientsForInformation;
+    },
+
     setInitialStartDate: function (start) {
         if (this.editionMode === 'CREATE') this.startDate = start;
     },
@@ -95,6 +100,7 @@ const usercardTemplateGateway = {
         this.expirationDate = null;
         this.initialSeverity = null;
         this.selectedEntityRecipients = [];
+        this.selectedEntityRecipientsForInformation = [];
 
         // OpFab calls this function to inform the template on sender entity
         this.setEntityUsedForSendingCard = function (senderEntity) {

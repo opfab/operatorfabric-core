@@ -1,4 +1,5 @@
 /* Copyright (c) 2018-2023, RTE (http://www.rte-france.com)
+ * Copyright (c) 2023, Alliander (http://www.alliander.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -12,6 +13,7 @@ import {
     Component,
     ElementRef,
     EventEmitter,
+    HostListener,
     Inject,
     Input,
     NgZone,
@@ -55,6 +57,7 @@ export class CustomTimelineChartComponent extends BaseChartComponent implements 
     public title: string;
     public oldWidth = 0;
     public openPopover: NgbPopover;
+    public popoverTimeOut;
 
     xDomainForTimeLineGridDisplay: any;
 
@@ -77,7 +80,7 @@ export class CustomTimelineChartComponent extends BaseChartComponent implements 
     public circles;
     public cardsData;
 
-    @Input() prod; // Workaround for testing, the variable is not set  in unit test an true in production mode
+    @Input() prod; // Workaround for testing, the variable is not set in unit test an true in production mode
     @Input() domainId;
     @Input()
     set valueDomain(value: any) {
@@ -311,7 +314,7 @@ export class CustomTimelineChartComponent extends BaseChartComponent implements 
         for (const card of cards) {
             if (!card.parentCardId) {
                 // is not child card
-                if (!! card.rRule) {
+                if (!!card.rRule) {
                     this.computeCardsToDrawOnTheTimelineUsingRRule(card, myCardsTimeline);
                 } else {
                     if (card.timeSpans && card.timeSpans.length > 0) {
@@ -320,14 +323,14 @@ export class CustomTimelineChartComponent extends BaseChartComponent implements 
                                 let dateForReminder: number = getNextTimeForRepeating(
                                     card,
                                     this.xDomainForTimeLineGridDisplay[0].valueOf() +
-                                    1000 * card.secondsBeforeTimeSpanForReminder
+                                        1000 * card.secondsBeforeTimeSpanForReminder
                                 );
 
                                 while (
                                     dateForReminder >= 0 &&
                                     (!timeSpan.end || dateForReminder < timeSpan.end) &&
                                     dateForReminder < this.xDomainForTimeLineGridDisplay[1].valueOf()
-                                    ) {
+                                ) {
                                     const myCardTimeline = {
                                         date: dateForReminder,
                                         id: card.id,
@@ -379,13 +382,14 @@ export class CustomTimelineChartComponent extends BaseChartComponent implements 
     computeCardsToDrawOnTheTimelineUsingRRule(card: any, myCardsTimeline: any[]) {
         let dateForReminder: number = getNextTimeForRepeatingUsingRRule(
             card,
-            this.xDomainForTimeLineGridDisplay[0].valueOf() +
-            1000 * card.secondsBeforeTimeSpanForReminder
+            this.xDomainForTimeLineGridDisplay[0].valueOf() + 1000 * card.secondsBeforeTimeSpanForReminder
         );
 
-        while ((dateForReminder >= 0) &&
-               (!card.endDate || dateForReminder < card.endDate) &&
-               (dateForReminder < this.xDomainForTimeLineGridDisplay[1].valueOf())) {
+        while (
+            dateForReminder >= 0 &&
+            (!card.endDate || dateForReminder < card.endDate) &&
+            dateForReminder < this.xDomainForTimeLineGridDisplay[1].valueOf()
+        ) {
             const myCardTimeline = {
                 date: dateForReminder,
                 id: card.id,
@@ -397,8 +401,10 @@ export class CustomTimelineChartComponent extends BaseChartComponent implements 
             myCardsTimeline.push(myCardTimeline);
             const nextDate = moment(dateForReminder).add(1, 'minute');
 
-            dateForReminder = getNextTimeForRepeatingUsingRRule(card,
-                nextDate.valueOf() + 1000 * card.secondsBeforeTimeSpanForReminder);
+            dateForReminder = getNextTimeForRepeatingUsingRRule(
+                card,
+                nextDate.valueOf() + 1000 * card.secondsBeforeTimeSpanForReminder
+            );
         }
     }
 
@@ -423,7 +429,7 @@ export class CustomTimelineChartComponent extends BaseChartComponent implements 
             cardsBySeverity[card.circleYPosition - 1].push(card);
         }
 
-        // foreach severity array create the circles
+        // for each severity array create the circles
         for (const cards of cardsBySeverity) {
             let cardIndex = 0;
             // move index to the first card in the time domain
@@ -455,7 +461,7 @@ export class CustomTimelineChartComponent extends BaseChartComponent implements 
                             summary: []
                         };
 
-                        // while cards date is inside the interval of the two current ticks ,add card information in the circle
+                        // while cards date is inside the interval of the two current ticks, add card information in the circle
                         while (cards[cardIndex] && cards[cardIndex].date < endLimit) {
                             circle.count++;
                             circle.end = cards[cardIndex].date;
@@ -570,6 +576,9 @@ export class CustomTimelineChartComponent extends BaseChartComponent implements 
     }
 
     showCard(cardId): void {
+        if (this.openPopover) {
+            this.openPopover.close();
+        }
         this.router.navigate(['/feed', 'cards', cardId]);
         this.scrollToSelectedCard();
     }
@@ -608,6 +617,18 @@ export class CustomTimelineChartComponent extends BaseChartComponent implements 
         this.currentCircleHovered = myCircle;
     }
 
+    @HostListener('mouseleave') onMouseLeave() {
+        if (this.openPopover) {
+            this.popoverTimeOut = setTimeout(() => {
+                this.openPopover.close();
+            }, 1000);
+        }
+    }
+
+    @HostListener('mouseenter') onMouseEnter() {
+        clearTimeout(this.popoverTimeOut);
+    }
+
     getXTickOneFormatting = (value): string => {
         switch (this.domainId) {
             case 'TR':
@@ -619,7 +640,7 @@ export class CustomTimelineChartComponent extends BaseChartComponent implements 
             case 'W':
                 return value.format('HH') + 'h';
             case 'M':
-                return value.format('dd').toLocaleUpperCase().substring(0, 1) + value.format(' DD');
+                return value.format('ddd').toLocaleUpperCase().substring(0, 3) + value.format(' DD');
             case 'Y':
                 return value.format('D MMM');
             default:
@@ -677,9 +698,5 @@ export class CustomTimelineChartComponent extends BaseChartComponent implements 
      */
     onZoom($event: MouseEvent, direction): void {
         this.zoomChange.emit(direction);
-    }
-
-    public get maxNumberLinesForBubblePopover() {
-        return Math.ceil(window.innerHeight / 60);
     }
 }

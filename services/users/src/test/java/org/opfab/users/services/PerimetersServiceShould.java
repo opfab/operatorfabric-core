@@ -22,6 +22,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
+import org.opfab.test.EventBusSpy;
 import org.opfab.users.model.EntityCreationReport;
 import org.opfab.users.model.Group;
 import org.opfab.users.model.GroupData;
@@ -32,7 +33,6 @@ import org.opfab.users.model.RightsEnum;
 import org.opfab.users.model.StateRight;
 import org.opfab.users.model.StateRightData;
 import org.opfab.users.model.UserData;
-import org.opfab.users.spies.EventBusSpy;
 import org.opfab.users.stubs.GroupRepositoryStub;
 import org.opfab.users.stubs.PerimeterRepositoryStub;
 import org.opfab.users.stubs.UserRepositoryStub;
@@ -416,8 +416,8 @@ public class PerimetersServiceShould {
                 OperationResult<String> result = perimetersService.updatePerimeterGroups("perimeter2", groups);
 
                 assertThat(result.isSuccess()).isTrue();
-                String[] expectedMessageSent1 = { "USER_EXCHANGE", "user1" };
-                String[] expectedMessageSent2 = { "USER_EXCHANGE", "user2" };
+                String[] expectedMessageSent1 = { "user", "user1" };
+                String[] expectedMessageSent2 = { "user", "user2" };
                 assertThat(eventBusSpy.getMessagesSent()).containsExactlyInAnyOrder(expectedMessageSent1,expectedMessageSent2);
             }
  
@@ -466,8 +466,8 @@ public class PerimetersServiceShould {
             void GIVEN_A_Perimeter_WHEN_Remove_From_Groups_THEN_A_Notification_Containing_Users_Impacted_Is_Sent_To_Other_Services() {
                 OperationResult<String> result = perimetersService.deletePerimeterGroups("perimeter1");
                 assertThat(result.isSuccess()).isTrue();
-                String[] expectedMessageSent1 = { "USER_EXCHANGE", "user1" };
-                String[] expectedMessageSent2 = { "USER_EXCHANGE", "user2" };
+                String[] expectedMessageSent1 = { "user", "user1" };
+                String[] expectedMessageSent2 = { "user", "user2" };
                 assertThat(eventBusSpy.getMessagesSent()).containsExactlyInAnyOrder(expectedMessageSent1,expectedMessageSent2);
             }
 
@@ -506,8 +506,8 @@ public class PerimetersServiceShould {
             void GIVEN_A_Perimeter_WHEN_Remove_From_One_Group_THEN_A_Notification_Containing_Users_Impacted_Is_Sent_To_Other_Services() {
                 OperationResult<String> result = perimetersService.deletePerimeterGroup("perimeter1","group1");
                 assertThat(result.isSuccess()).isTrue();
-                String[] expectedMessageSent1 = { "USER_EXCHANGE", "user1" };
-                String[] expectedMessageSent2 = { "USER_EXCHANGE", "user2" };
+                String[] expectedMessageSent1 = { "user", "user1" };
+                String[] expectedMessageSent2 = { "user", "user2" };
                 assertThat(eventBusSpy.getMessagesSent()).containsExactlyInAnyOrder(expectedMessageSent1,expectedMessageSent2);
             }
 

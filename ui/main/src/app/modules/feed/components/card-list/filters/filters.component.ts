@@ -7,9 +7,10 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {Component, OnInit} from '@angular/core';
+import {Component, Input, OnInit, Output} from '@angular/core';
 import {ConfigService} from 'app/business/services/config.service';
 import {LightCardsStoreService} from 'app/business/services/lightcards/lightcards-store.service';
+import {Subject} from 'rxjs';
 
 @Component({
     selector: 'of-filters',
@@ -17,11 +18,11 @@ import {LightCardsStoreService} from 'app/business/services/lightcards/lightcard
     styleUrls: ['./filters.component.scss']
 })
 export class FiltersComponent implements OnInit {
-    hideResponseFilter: boolean;
-    hideTimerTags: boolean;
-    hideApplyFiltersToTimeLineChoice: boolean;
-    defaultSorting: string;
-    defaultAcknowledgmentFilter: string;
+
+    @Input() filterActive: boolean;
+
+    @Output() showFiltersAndSort = new Subject<any>();
+
     showSearchFilter: boolean;
 
     loadingInProgress = false;
@@ -29,20 +30,19 @@ export class FiltersComponent implements OnInit {
     constructor(
         private configService: ConfigService,
         private lightCardsStoreService: LightCardsStoreService,
+
     ) {}
 
     ngOnInit() {
-        this.defaultSorting = this.configService.getConfigValue('feed.defaultSorting', 'unread');
-        this.defaultAcknowledgmentFilter = this.configService.getConfigValue('feed.defaultAcknowledgmentFilter', 'notack');
-        this.hideTimerTags = this.configService.getConfigValue('feed.card.hideTimeFilter', false);
-        this.hideResponseFilter = this.configService.getConfigValue('feed.card.hideResponseFilter', false);
-        this.hideApplyFiltersToTimeLineChoice = this.configService.getConfigValue(
-            'feed.card.hideApplyFiltersToTimeLineChoice',
-            false
-        );
         this.showSearchFilter = this.configService.getConfigValue('feed.showSearchFilter', false);
+
         this.lightCardsStoreService
             .getLoadingInProgress()
             .subscribe((inProgress: boolean) => (this.loadingInProgress = inProgress));
     }
+
+    onShowFiltersAndSortChange(filterAndsort: any) {
+        this.showFiltersAndSort.next(filterAndsort);
+    }
+
 }

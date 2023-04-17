@@ -94,6 +94,7 @@
   "menu": {
     "feed": "Card Feed",
     "calendar": "Calendar",
+    "dashboard": "Dashboard",
     "archives": "Archives",
     "logging": "Logging",
     "admin": "Administration",
@@ -145,7 +146,7 @@
   "feed": {
     "filters": {
       "title": "Filters",
-      "reset": "Reset",
+      "reset": "Reset filters",
       "time": {
         "titleIfFilterBasedOnPublishDate": "Receipt date",
         "titleIfFilterBasedOnBusinessDate": "Business period",
@@ -166,9 +167,6 @@
         },
         "notacknowledged": {
           "label": "Not acknowledged"
-        },
-        "all": {
-          "label": "All"
         }
       },
       "applyFiltersToTimeLine" : {
@@ -211,6 +209,7 @@
     "cardNotFound": "The card you are looking for was not found.",
     "selectedCardDeleted": "This card has been deleted",
     "entityRecipients" : "Entity recipients :",
+    "entityRecipientsForInformation" : "Entity recipients in copy :",
     "searchPlaceholderText": "Search...",
     "hiddenCardReceived": "You have received a card hidden by the filters you have activated (Timeline or card feed)"
   },
@@ -251,7 +250,13 @@
     "replayEnabled": "Sound replay enabled",
     "playSoundOnExternalDevice": "Play sound on external device",
     "replayInterval": "INTERVAL BETWEEN SOUND REPLAYS (SECONDS)",
-    "remoteLoggingEnabled": "Remote logging enabled"
+    "remoteLoggingEnabled": "Remote logging enabled",
+    "notificationOnOperatingSystem": "SYSTEM NOTIFICATIONS FOR CARDS WITH SEVERITY",
+    "systemNotificationAlarm": "Alarm",
+    "systemNotificationAction": "Action",
+    "systemNotificationCompliant": "Compliant",
+    "systemNotificationInformation": "Information",
+    "systemNotificationsDisabledInBrowser": "System notifications are disabled in your browser, you will not be notified."
   },
   "archive": {
     "cardLoadingInProgress":"Loading card  ...",
@@ -311,7 +316,8 @@
       "endDate":  "END DATE",
       "expirationDate":  "EXPIRATION DATE",
       "lttd": "LIMIT DATE FOR RESPONSE",
-      "recipients": "RECIPIENTS"
+      "recipients": "RECIPIENTS",
+      "recipientsForInformation": "RECIPIENTS IN COPY"
     },
     "prepareCard": "SEE BEFORE SENDING",
     "confirmSending": "Send the following card?",
@@ -320,6 +326,7 @@
     "processInstanceId": "Id",
     "state": "State",
     "recipients": "RECIPIENTS:",
+    "recipientsForInformation": "RECIPIENTS IN COPY:",
     "youAreTheOnlyRecipient": "You are the only recipient of this card.",
     "feedPreview": "FEED PREVIEW:",
     "contentPreview": "CONTENT PREVIEW:",
@@ -411,7 +418,7 @@
         "firstName": "FIRST NAME",
         "groups": "GROUPS",
         "entities": "ENTITIES",
-        "authorizedIPAddresses": "AUTHORIZED IP ADDRESSES (separated by ',')",
+        "authorizedIPAddresses": "AUTHORIZED IP ADDRESSES FOR USER CONNECTION (separated by ',')",
         "confirmDelete": "Do you really want to delete user",
         "add": "ADD NEW USER"
       },
@@ -564,6 +571,7 @@
   },
   "errors" : {
     "notFound" : "Resource not found",
-    "notAllowed" : "Action not allowed"
+    "notAllowed" : "Action not allowed",
+    "pageNotAllowed": "You are not allowed to view this page"
   } 
 }

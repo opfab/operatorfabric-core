@@ -58,7 +58,7 @@ operatorfabric.users.default:
       groups: ["Planner", "ReadOnly"]
       entities: ["ENTITY2_EU"]
     - login: publisher_test
-      groups: ["Dispatcher", "ReadOnly"]
+      groups: ["Dispatcher", "ReadOnly", "Manager"]
   groups:
     - id: ADMIN
       name: ADMINISTRATORS
@@ -80,12 +80,12 @@ operatorfabric.users.default:
       name: Supervisor
       description: Supervisor Group
       realtime: true
-      permissions: ["READONLY","ADMIN_BUSINESS_PROCESS"]
+      permissions: ["READONLY","ADMIN_BUSINESS_PROCESS","VIEW_ALL_CARDS"]
     - id: Manager
       name: Manager
       description: Manager Group
       realtime: false
-      permissions: ["VIEW_ALL_ARCHIVED_CARDS"]
+      permissions: ["VIEW_ALL_ARCHIVED_CARDS","VIEW_ALL_CARDS"]
     - id: ReadOnly
       name: ReadOnly
       description: ReadOnly Group
@@ -157,3 +157,6 @@ operatorfabric.users.default:
 #logging:
 #  level:
 #    ROOT: DEBUG
+
+daysBeforeLogExpiration: 61
+hourScheduledForLogsCleaning: 0 30 0 * * *

@@ -95,6 +95,7 @@
     "feed": "Kaart Feed",
     "calendar": "Kalender",
     "archives": "Archieven",
+    "dashboard": "Dashboard",
     "logging": "Logboek",
     "admin": "Administratie",
     "monitoring": "Bewaking",
@@ -145,7 +146,7 @@
   "feed": {
     "filters": {
       "title": "Filters",
-      "reset": "Opnieuw instellen",
+      "reset": "Filters opnieuw instellen",
       "time": {
         "titleIfFilterBasedOnPublishDate": "Ontvangstdatum",
         "titleIfFilterBasedOnBusinessDate": "Bedrijfsperiode",
@@ -166,9 +167,6 @@
         },
         "notacknowledged": {
           "label": "Niet bevestigd"
-        },
-        "all": {
-          "label": "Alles"
         }
       },
       "applyFiltersToTimeLine" : {
@@ -211,6 +209,7 @@
     "cardNotFound": "De kaart die u zoekt werd niet gevonden.",
     "selectedCardDeleted": "Deze kaart werd verwijderd",
     "entityRecipients" : "Ontvangers entiteiten :",
+    "entityRecipientsForInformation" : "Ontvangers entiteiten in kopie :",
     "searchPlaceholderText": "Zoeken...",
     "hiddenCardReceived": "Je hebt een kaart ontvangen die verborgen is door de filters die je hebt geactiveerd (tijdlijn of kaart feed)"
   },
@@ -251,7 +250,13 @@
     "replayEnabled": "Geluidsherhaling ingeschakeld",
     "playSoundOnExternalDevice": "Geluid afspelen op extern apparaat",
     "replayInterval": "Interval tussen geluidsherhalingen (seconden)",
-    "remoteLoggingEnabled": "Loggen op afstand ingeschakeld"
+    "remoteLoggingEnabled": "Loggen op afstand ingeschakeld",
+    "notificationOnOperatingSystem": "MELDINGEN VOOR KAARTEN MET VOLGENDE ERNST",
+    "systemNotificationAlarm": "Alarm",
+    "systemNotificationAction": "Actie",
+    "systemNotificationCompliant": "Conform",
+    "systemNotificationInformation": "Informatie",
+    "systemNotificationsDisabledInBrowser": "Systeemmeldingen zijn uitgeschakeld in uw browser, u ontvangt geen melding."
   },
   "archive": {
     "cardLoadingInProgress":"Bezig met laden van de kaart  ...",
@@ -311,7 +316,8 @@
       "endDate":  "EINDDATUM",
       "expirationDate": "VERVALDATUM",
       "lttd": "BEPERK DATUM VOOR REACTIE",
-      "recipients": "ONTVANGERS"
+      "recipients": "ONTVANGERS",
+      "recipientsForInformation": "ONTVANGERS IN KOPIE"
     },
     "prepareCard": "BEKIJK VOOR VERZENDING",
     "confirmSending": "Wilt u deze kaart versturen?",
@@ -320,6 +326,7 @@
     "processInstanceId": "Id",
     "state": "Status",
     "recipients": "ONTVANGERS:",
+    "recipientsForInformation": "ONTVANGERS IN KOPIE:",
     "youAreTheOnlyRecipient": "U bent de enige ontvanger van deze kaart.",
     "feedPreview": "FEED PREVIEW:",
     "contentPreview": "CONTENT PREVIEW:",
@@ -411,7 +418,7 @@
         "firstName": "VOORNAAM",
         "groups": "GROEPEN",
         "entities": "ENTITEITEN",
-        "authorizedIPAddresses": "GEAUTHORIZEERDE IP ADRESSEN (gescheiden door ',')",
+        "authorizedIPAddresses": "GEAUTHORIZEERDE IP ADRESSEN VOOR GEBRUIKERSAANSLUITING (gescheiden door ',')",
         "confirmDelete": "Wilt u de gebruiker echt verwijderen?",
         "add": "NIEUWE GEBRUIKER TOEVOEGEN"
       },
@@ -463,7 +470,8 @@
       "users": "Gebruikers Beheer",
       "groups": "Groepen Beheer",
       "entities": "Entiteiten Beheer",
-      "perimeters": "Perimeters Beheer"
+      "perimeters": "Perimeters Beheer",
+      "processes": "Processen Beheer"
     }
   },
   "processGroup": {
@@ -563,6 +571,7 @@
   },
   "errors" : {
     "notFound" : "Bron niet gevonden",
-    "notAllowed" : "Actie niet toegestaan"
+    "notAllowed" : "Actie niet toegestaan",
+    "pageNotAllowed" : "Je mag deze pagina niet bekijken"
   } 
 }

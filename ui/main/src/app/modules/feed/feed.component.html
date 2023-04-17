@@ -1,4 +1,4 @@
-<!-- Copyright (c) 2018-2022, RTE (http://www.rte-france.com)              -->
+<!-- Copyright (c) 2018-2023, RTE (http://www.rte-france.com)              -->
 <!-- See AUTHORS.txt                                                       -->
 <!-- This Source Code Form is subject to the terms of the Mozilla Public   -->
 <!-- License, v. 2.0. If a copy of the MPL was not distributed with this   -->
@@ -21,10 +21,10 @@
     </div>
 
     <div id="opfab-parentFeedContent" class="row" style="margin-left: 38px;margin-right:20px;display:flex">
-        <div style="padding-left: 0px;padding-right:0px"  [class.opfab-standard-screen]="enoughSpaceForCardDetail()" [class.opfab-small-screen]="!enoughSpaceForCardDetail()">
-            <of-card-list [lightCards]="lightCards$|async" [selection]="selection$" [totalNumberOfLightsCards]="totalNumberOfLightsCards"></of-card-list>
+        <div style="padding-left: 0px;padding-right:0px" [class.opfab-standard-filters-screen]="enoughSpaceForCardDetail() && filtersVisible" [class.opfab-standard-screen]="enoughSpaceForCardDetail() && !filtersVisible" [class.opfab-small-screen]="!enoughSpaceForCardDetail()">
+            <of-card-list (showFilters)="showFilters($event)" [lightCards]="lightCards$|async" [selection]="selection$" [totalNumberOfLightsCards]="totalNumberOfLightsCards"></of-card-list>
         </div>
-        <div  style="padding-left: 0px;padding-right: 0px;width:calc(100% - 440px)">
+        <div [class.opfab-standard-card-detail]="!filtersVisible" [class.opfab-slim-card-detail]="filtersVisible">
             <router-outlet></router-outlet>
         </div>
     </div>

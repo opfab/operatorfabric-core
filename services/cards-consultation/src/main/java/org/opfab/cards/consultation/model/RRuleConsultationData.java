@@ -36,4 +36,5 @@ public class RRuleConsultationData implements RRule {
     private List<Integer> bysetpos;
     private List<Integer> bymonthday;
     private String tzid;
+    private Integer durationInMinutes;
 }

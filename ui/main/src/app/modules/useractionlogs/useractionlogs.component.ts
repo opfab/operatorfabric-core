@@ -1,4 +1,4 @@
-/* Copyright (c) 2022, RTE (http://www.rte-france.com)
+/* Copyright (c) 2022-2023, RTE (http://www.rte-france.com)
  *  See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -9,9 +9,11 @@
 
 import {Component, ViewChild} from "@angular/core";
 import {FormControl, FormGroup} from "@angular/forms";
+import {PermissionEnum} from "@ofModel/permission.model";
 import {UserActionLog} from "@ofModel/user-action-log.model";
 import {ServerResponseStatus} from "app/business/server/serverResponse";
 import {UserActionLogsServer} from "app/business/server/user-action-logs.server";
+import {UserService} from "app/business/services/user.service";
 import moment from "moment";
 import {UserActionLogsFiltersComponent} from "./components/useractionlogs-filters/useractionlogs-filters.component";
 
@@ -44,8 +46,11 @@ export class UserActionLogsComponent {
     totalElements: number;
 
     defaultMinDate : {year: number; month: number; day: number} = null;
+    isUserAllowed: boolean;
 
-    constructor(private userActionLogsServer: UserActionLogsServer) {
+    constructor(private userActionLogsServer: UserActionLogsServer, private userService: UserService) {
+        this.isUserAllowed = this.userService.hasCurrentUserAnyPermission([PermissionEnum.ADMIN, PermissionEnum.VIEW_USER_ACTION_LOGS]);
+
         this.setDefaultPublishDateFilter();
     }
 
@@ -90,7 +95,7 @@ export class UserActionLogsComponent {
                 this.loadingInProgress = false;
                 this.technicalError = true;
             }
-            
+
         },});
     }
 

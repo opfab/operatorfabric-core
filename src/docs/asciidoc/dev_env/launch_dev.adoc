@@ -1,4 +1,4 @@
-// Copyright (c) 2018-2022 RTE (http://www.rte-france.com)
+// Copyright (c) 2018-2023 RTE (http://www.rte-france.com)
 // See AUTHORS.txt
 // This document is subject to the terms of the Creative Commons Attribution 4.0 International license.
 // If a copy of the license was not distributed with this
@@ -49,16 +49,13 @@ the home repository of `OperatorFabric`.
 
 === A Minimal Configuration for `gradle` Build
 
-The gradle build of `OperatorFabric` requires (for the unit tests) two docker containers running:
+The gradle build of `OperatorFabric` requires (for the unit tests) one docker container running MongoDB.
 
-* RabbitMQ;
-* MongoDB.
-
-Launch them using the `${OF_HOME}/src/main/docker/test-environment/docker-compose.yml`.
+Launch it using the `${OF_HOME}/src/main/docker/test-environment/docker-compose.yml`.
 
 === Enabling local quality report generation
 
-Sonarqube reporting, in addition to the two previously listed docker containers, needs a `SonarQube` docker container.
+Sonarqube reporting, in addition to the previous docker container, needs a `SonarQube` docker container.
 Use the `${OF_HOME}/src/main/docker/test-quality-environment/docker-compose.yml` to get them all running.
 
 To generate the quality report, run the following commands:
@@ -137,7 +134,7 @@ bin/run_all.sh status
 *_login:_* operator1_fr +
 *_password:_* test
 
-The other users available in development mode are `operator3_fr` and `admin`, both with `test` as password.
+Other users available in development mode are `operator3_fr` and `admin`, both with `test` as password.
 
 WARNING: It might take a little while for the UI to load even after all services are running.
 

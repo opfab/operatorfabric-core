@@ -39,13 +39,18 @@
         <label> REPEAT EVERY</label>
         <table width="100%" style="margin-bottom: -5px;">
             <tr>
-                <td><label class="opfab-checkbox" style="padding-left:25px"> MONDAY <input type="checkbox" id="Monday" >   <span class="opfab-checkbox-checkmark"> </span>   </label> </td>
-                <td><label class="opfab-checkbox" style="padding-left:25px"> TUESDAY <input type="checkbox" id="Tuesday" >   <span class="opfab-checkbox-checkmark"> </span>   </label> </td>
-                <td><label class="opfab-checkbox" style="padding-left:25px"> WEDNESDAY <input type="checkbox" id="Wednesday" >   <span class="opfab-checkbox-checkmark"> </span>   </label> </td>
-                <td><label class="opfab-checkbox" style="padding-left:25px"> THURSDAY <input type="checkbox" id="Thursday" >   <span class="opfab-checkbox-checkmark"> </span>   </label> </td>
-                <td><label class="opfab-checkbox" style="padding-left:25px"> FRIDAY <input type="checkbox" id="Friday" >   <span class="opfab-checkbox-checkmark"> </span>   </label> </td>
-                <td><label class="opfab-checkbox" style="padding-left:25px"> SATURDAY <input type="checkbox" id="Saturday" >   <span class="opfab-checkbox-checkmark"> </span>   </label> </td>
-                <td><label class="opfab-checkbox" style="padding-left:25px"> SUNDAY <input type="checkbox" id="Sunday" >   <span class="opfab-checkbox-checkmark"> </span>   </label> </td>
+                <td><label class="opfab-checkbox" style="padding-left:25px"> Select all <input type="checkbox" id="selectAllDays" onclick="userCardTemplate.toggleSelectAllDays();">   <span class="opfab-checkbox-checkmark"> </span>   </label> </td>
+            </tr>
+        </table>
+        <table width="100%" style="margin-bottom: -5px;">
+            <tr>
+                <td><label class="opfab-checkbox" style="padding-left:25px"> MONDAY <input type="checkbox" id="Monday" onclick="userCardTemplate.checkIsAllDaysSelected();" >   <span class="opfab-checkbox-checkmark"> </span>   </label> </td>
+                <td><label class="opfab-checkbox" style="padding-left:25px"> TUESDAY <input type="checkbox" id="Tuesday" onclick="userCardTemplate.checkIsAllDaysSelected();" >   <span class="opfab-checkbox-checkmark"> </span>   </label> </td>
+                <td><label class="opfab-checkbox" style="padding-left:25px"> WEDNESDAY <input type="checkbox" id="Wednesday" onclick="userCardTemplate.checkIsAllDaysSelected();" >   <span class="opfab-checkbox-checkmark"> </span>   </label> </td>
+                <td><label class="opfab-checkbox" style="padding-left:25px"> THURSDAY <input type="checkbox" id="Thursday" onclick="userCardTemplate.checkIsAllDaysSelected();" >   <span class="opfab-checkbox-checkmark"> </span>   </label> </td>
+                <td><label class="opfab-checkbox" style="padding-left:25px"> FRIDAY <input type="checkbox" id="Friday" onclick="userCardTemplate.checkIsAllDaysSelected();" >   <span class="opfab-checkbox-checkmark"> </span>   </label> </td>
+                <td><label class="opfab-checkbox" style="padding-left:25px"> SATURDAY <input type="checkbox" id="Saturday" onclick="userCardTemplate.checkIsAllDaysSelected();" >   <span class="opfab-checkbox-checkmark"> </span>   </label> </td>
+                <td><label class="opfab-checkbox" style="padding-left:25px"> SUNDAY <input type="checkbox" id="Sunday" onclick="userCardTemplate.checkIsAllDaysSelected();" >   <span class="opfab-checkbox-checkmark"> </span>   </label> </td>
             </tr>
         </table>
     </div>
@@ -54,33 +59,38 @@
 
 <div class="opfab-border-box">
     <table width="100%" style="margin-bottom: -5px;">
+        <tr>
+            <td><label class="opfab-checkbox" style="padding-left:25px"> Select all <input type="checkbox" id="selectAllMonths" onclick="userCardTemplate.toggleSelectAllMonths();">   <span class="opfab-checkbox-checkmark"> </span>   </label> </td>
+        </tr>
+    </table>
+    <table width="100%" style="margin-bottom: -5px;">
         <tr id="monthsCheckboxesForDailyFreq">
-            <td><label class="opfab-checkbox" style="padding-left:25px"> JANUARY <input type="checkbox" id="JanuaryDaily" >   <span class="opfab-checkbox-checkmark"> </span>   </label> </td>
-            <td><label class="opfab-checkbox" style="padding-left:25px"> FEBRUARY <input type="checkbox" id="FebruaryDaily" >   <span class="opfab-checkbox-checkmark"> </span>   </label> </td>
-            <td><label class="opfab-checkbox" style="padding-left:25px"> MARCH <input type="checkbox" id="MarchDaily" >   <span class="opfab-checkbox-checkmark"> </span>   </label> </td>
-            <td><label class="opfab-checkbox" style="padding-left:25px"> APRIL <input type="checkbox" id="AprilDaily">   <span class="opfab-checkbox-checkmark"> </span>   </label> </td>
-            <td><label class="opfab-checkbox" style="padding-left:25px"> MAY <input type="checkbox" id="MayDaily" >   <span class="opfab-checkbox-checkmark"> </span>   </label> </td>
-            <td><label class="opfab-checkbox" style="padding-left:25px"> JUNE <input type="checkbox" id="JuneDaily" >   <span class="opfab-checkbox-checkmark"> </span>   </label> </td>
-            <td><label class="opfab-checkbox" style="padding-left:25px"> JULY <input type="checkbox" id="JulyDaily" >   <span class="opfab-checkbox-checkmark"> </span>   </label> </td>
-            <td><label class="opfab-checkbox" style="padding-left:25px"> AUGUST <input type="checkbox" id="AugustDaily" >   <span class="opfab-checkbox-checkmark"> </span>   </label> </td>
-            <td><label class="opfab-checkbox" style="padding-left:25px"> SEPTEMBER <input type="checkbox" id="SeptemberDaily" >   <span class="opfab-checkbox-checkmark"> </span>   </label> </td>
-            <td><label class="opfab-checkbox" style="padding-left:25px"> OCTOBER <input type="checkbox" id="OctoberDaily" >   <span class="opfab-checkbox-checkmark"> </span>   </label> </td>
-            <td><label class="opfab-checkbox" style="padding-left:25px"> NOVEMBER <input type="checkbox" id="NovemberDaily" >   <span class="opfab-checkbox-checkmark"> </span>   </label> </td>
-            <td><label class="opfab-checkbox" style="padding-left:25px"> DECEMBER <input type="checkbox" id="DecemberDaily" >   <span class="opfab-checkbox-checkmark"> </span>   </label> </td>
+            <td><label class="opfab-checkbox" style="padding-left:25px"> JANUARY <input type="checkbox" id="JanuaryDaily" onclick="userCardTemplate.checkIsAllMonthsSelected();" >   <span class="opfab-checkbox-checkmark"> </span>   </label> </td>
+            <td><label class="opfab-checkbox" style="padding-left:25px"> FEBRUARY <input type="checkbox" id="FebruaryDaily" onclick="userCardTemplate.checkIsAllMonthsSelected();" >   <span class="opfab-checkbox-checkmark"> </span>   </label> </td>
+            <td><label class="opfab-checkbox" style="padding-left:25px"> MARCH <input type="checkbox" id="MarchDaily" onclick="userCardTemplate.checkIsAllMonthsSelected();" >   <span class="opfab-checkbox-checkmark"> </span>   </label> </td>
+            <td><label class="opfab-checkbox" style="padding-left:25px"> APRIL <input type="checkbox" id="AprilDaily" onclick="userCardTemplate.checkIsAllMonthsSelected();" >   <span class="opfab-checkbox-checkmark"> </span>   </label> </td>
+            <td><label class="opfab-checkbox" style="padding-left:25px"> MAY <input type="checkbox" id="MayDaily" onclick="userCardTemplate.checkIsAllMonthsSelected();" >   <span class="opfab-checkbox-checkmark"> </span>   </label> </td>
+            <td><label class="opfab-checkbox" style="padding-left:25px"> JUNE <input type="checkbox" id="JuneDaily" onclick="userCardTemplate.checkIsAllMonthsSelected();" >   <span class="opfab-checkbox-checkmark"> </span>   </label> </td>
+            <td><label class="opfab-checkbox" style="padding-left:25px"> JULY <input type="checkbox" id="JulyDaily" onclick="userCardTemplate.checkIsAllMonthsSelected();" >   <span class="opfab-checkbox-checkmark"> </span>   </label> </td>
+            <td><label class="opfab-checkbox" style="padding-left:25px"> AUGUST <input type="checkbox" id="AugustDaily" onclick="userCardTemplate.checkIsAllMonthsSelected();" >   <span class="opfab-checkbox-checkmark"> </span>   </label> </td>
+            <td><label class="opfab-checkbox" style="padding-left:25px"> SEPTEMBER <input type="checkbox" id="SeptemberDaily" onclick="userCardTemplate.checkIsAllMonthsSelected();" >   <span class="opfab-checkbox-checkmark"> </span>   </label> </td>
+            <td><label class="opfab-checkbox" style="padding-left:25px"> OCTOBER <input type="checkbox" id="OctoberDaily" onclick="userCardTemplate.checkIsAllMonthsSelected();" >   <span class="opfab-checkbox-checkmark"> </span>   </label> </td>
+            <td><label class="opfab-checkbox" style="padding-left:25px"> NOVEMBER <input type="checkbox" id="NovemberDaily" onclick="userCardTemplate.checkIsAllMonthsSelected();" >   <span class="opfab-checkbox-checkmark"> </span>   </label> </td>
+            <td><label class="opfab-checkbox" style="padding-left:25px"> DECEMBER <input type="checkbox" id="DecemberDaily" onclick="userCardTemplate.checkIsAllMonthsSelected();" >   <span class="opfab-checkbox-checkmark"> </span>   </label> </td>
         </tr>
         <tr id="monthsCheckboxesForMonthlyFreq" hidden>
-            <td><label class="opfab-checkbox" style="padding-left:25px"> JANUARY <input type="checkbox" id="JanuaryMonthly" >   <span class="opfab-checkbox-checkmark"> </span>   </label> </td>
-            <td><label class="opfab-checkbox" style="padding-left:25px"> FEBRUARY <input type="checkbox" id="FebruaryMonthly" >   <span class="opfab-checkbox-checkmark"> </span>   </label> </td>
-            <td><label class="opfab-checkbox" style="padding-left:25px"> MARCH <input type="checkbox" id="MarchMonthly" >   <span class="opfab-checkbox-checkmark"> </span>   </label> </td>
-            <td><label class="opfab-checkbox" style="padding-left:25px"> APRIL <input type="checkbox" id="AprilMonthly" >   <span class="opfab-checkbox-checkmark"> </span>   </label> </td>
-            <td><label class="opfab-checkbox" style="padding-left:25px"> MAY <input type="checkbox" id="MayMonthly" >   <span class="opfab-checkbox-checkmark"> </span>   </label> </td>
-            <td><label class="opfab-checkbox" style="padding-left:25px"> JUNE <input type="checkbox" id="JuneMonthly" >   <span class="opfab-checkbox-checkmark"> </span>   </label> </td>
-            <td><label class="opfab-checkbox" style="padding-left:25px"> JULY <input type="checkbox" id="JulyMonthly" >   <span class="opfab-checkbox-checkmark"> </span>   </label> </td>
-            <td><label class="opfab-checkbox" style="padding-left:25px"> AUGUST <input type="checkbox" id="AugustMonthly" >   <span class="opfab-checkbox-checkmark"> </span>   </label> </td>
-            <td><label class="opfab-checkbox" style="padding-left:25px"> SEPTEMBER <input type="checkbox" id="SeptemberMonthly" >   <span class="opfab-checkbox-checkmark"> </span>   </label> </td>
-            <td><label class="opfab-checkbox" style="padding-left:25px"> OCTOBER <input type="checkbox" id="OctoberMonthly" >   <span class="opfab-checkbox-checkmark"> </span>   </label> </td>
-            <td><label class="opfab-checkbox" style="padding-left:25px"> NOVEMBER <input type="checkbox" id="NovemberMonthly" >   <span class="opfab-checkbox-checkmark"> </span>   </label> </td>
-            <td><label class="opfab-checkbox" style="padding-left:25px"> DECEMBER <input type="checkbox" id="DecemberMonthly" >   <span class="opfab-checkbox-checkmark"> </span>   </label> </td>
+            <td><label class="opfab-checkbox" style="padding-left:25px"> JANUARY <input type="checkbox" id="JanuaryMonthly" onclick="userCardTemplate.checkIsAllMonthsSelected();" >   <span class="opfab-checkbox-checkmark"> </span>   </label> </td>
+            <td><label class="opfab-checkbox" style="padding-left:25px"> FEBRUARY <input type="checkbox" id="FebruaryMonthly" onclick="userCardTemplate.checkIsAllMonthsSelected();" >   <span class="opfab-checkbox-checkmark"> </span>   </label> </td>
+            <td><label class="opfab-checkbox" style="padding-left:25px"> MARCH <input type="checkbox" id="MarchMonthly" onclick="userCardTemplate.checkIsAllMonthsSelected();" >   <span class="opfab-checkbox-checkmark"> </span>   </label> </td>
+            <td><label class="opfab-checkbox" style="padding-left:25px"> APRIL <input type="checkbox" id="AprilMonthly" onclick="userCardTemplate.checkIsAllMonthsSelected();" >   <span class="opfab-checkbox-checkmark"> </span>   </label> </td>
+            <td><label class="opfab-checkbox" style="padding-left:25px"> MAY <input type="checkbox" id="MayMonthly" onclick="userCardTemplate.checkIsAllMonthsSelected();" >   <span class="opfab-checkbox-checkmark"> </span>   </label> </td>
+            <td><label class="opfab-checkbox" style="padding-left:25px"> JUNE <input type="checkbox" id="JuneMonthly" onclick="userCardTemplate.checkIsAllMonthsSelected();" >   <span class="opfab-checkbox-checkmark"> </span>   </label> </td>
+            <td><label class="opfab-checkbox" style="padding-left:25px"> JULY <input type="checkbox" id="JulyMonthly" onclick="userCardTemplate.checkIsAllMonthsSelected();" >   <span class="opfab-checkbox-checkmark"> </span>   </label> </td>
+            <td><label class="opfab-checkbox" style="padding-left:25px"> AUGUST <input type="checkbox" id="AugustMonthly" onclick="userCardTemplate.checkIsAllMonthsSelected();" >   <span class="opfab-checkbox-checkmark"> </span>   </label> </td>
+            <td><label class="opfab-checkbox" style="padding-left:25px"> SEPTEMBER <input type="checkbox" id="SeptemberMonthly" onclick="userCardTemplate.checkIsAllMonthsSelected();" >   <span class="opfab-checkbox-checkmark"> </span>   </label> </td>
+            <td><label class="opfab-checkbox" style="padding-left:25px"> OCTOBER <input type="checkbox" id="OctoberMonthly" onclick="userCardTemplate.checkIsAllMonthsSelected();" >   <span class="opfab-checkbox-checkmark"> </span>   </label> </td>
+            <td><label class="opfab-checkbox" style="padding-left:25px"> NOVEMBER <input type="checkbox" id="NovemberMonthly" onclick="userCardTemplate.checkIsAllMonthsSelected();" >   <span class="opfab-checkbox-checkmark"> </span>   </label> </td>
+            <td><label class="opfab-checkbox" style="padding-left:25px"> DECEMBER <input type="checkbox" id="DecemberMonthly" onclick="userCardTemplate.checkIsAllMonthsSelected();" >   <span class="opfab-checkbox-checkmark"> </span>   </label> </td>
         </tr>
     </table>
 </div>
@@ -191,6 +201,7 @@
         document.getElementById("dayPositionInTheMonth").hidden = true;
         document.getElementById("monthsCheckboxesForMonthlyFreq").hidden = true;
         document.getElementById("monthsCheckboxesForDailyFreq").hidden = false;
+        userCardTemplate.checkIsAllMonthsSelected();
     }
 
     function displayMonthlyFrequency() {
@@ -200,6 +211,7 @@
         document.getElementById("monthsCheckboxesForDailyFreq").hidden = true;
         document.getElementById("monthsCheckboxesForMonthlyFreq").hidden = false;
         document.getElementById("dayPositionInTheMonth").hidden = false;
+        userCardTemplate.checkIsAllMonthsSelected();
     }
 
     function displayNthDayTable() {
@@ -219,6 +231,9 @@
     userCardTemplate = {
         occurrenceNumberSelect: null,
         weekdaySelect: null,
+        daysArray: ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"],
+        monthsArrayDaily: ["JanuaryDaily", "FebruaryDaily", "MarchDaily", "AprilDaily", "MayDaily", "JuneDaily", "JulyDaily", "AugustDaily", "SeptemberDaily", "OctoberDaily", "NovemberDaily", "DecemberDaily"],
+        monthsArrayMonthly: ["JanuaryMonthly", "FebruaryMonthly", "MarchMonthly", "AprilMonthly", "MayMonthly", "JuneMonthly", "JulyMonthly", "AugustMonthly", "SeptemberMonthly", "OctoberMonthly", "NovemberMonthly", "DecemberMonthly"],
 
         init: function() {
             this.initMultiSelects();
@@ -227,6 +242,8 @@
             this.initUserCardTemplateGateway();
             this.initTimeForRecurrence();
             this.doWeHaveToDisplayMonthlyFreqInEditMode();
+            this.checkIsAllDaysSelected();
+            this.checkIsAllMonthsSelected();
         },
 
         initMultiSelects: function() {
@@ -407,12 +424,20 @@
                         if (!!document.getElementById("nthDay").value)            bymonthday.push(document.getElementById("nthDay").value);
                         if (document.getElementById("firstDay").checked === true) bymonthday.push(1);
                         if (document.getElementById("lastDay").checked === true)  bymonthday.push(-1);
+
+                        if (bymonthday.length === 0) {
+                            return {valid: false , errorMsg: 'You must provide at least one nth day.'}
+                        }
                     }
 
                     if (document.getElementById("radioButtonNthWeekday").checked === true) {
                         bysetpos = that.occurrenceNumberSelect.getSelectedValues();
                         if (that.weekdaySelect.getSelectedValues().length > 0) {
                             byweekday = [that.weekdaySelect.getSelectedValues()];
+                        }
+
+                        if ((bysetpos.length === 0) || (byweekday.length === 0)) {
+                            return {valid: false , errorMsg: 'You must provide an occurrence number and a weekday.'}
                         }
                     }
                 } else {
@@ -475,8 +500,74 @@
                 };
 
             }
-        }
+        },
 
+        checkIsAllDaysSelected: function() {
+            document.getElementById("selectAllDays").checked = this.isAllDaysSelected();
+        },
+
+        isAllDaysSelected: function() {
+            for (const day of this.daysArray) {
+                if (!document.getElementById(day).checked)
+                    return false;
+            }
+            return true;
+        },
+
+        toggleSelectAllDays: function() {
+            if (this.isAllDaysSelected()) { // we unselect all
+                for (const day of this.daysArray) {
+                    document.getElementById(day).click();
+                }
+            } else { // we select all
+                for (const day of this.daysArray) {
+                    if (!document.getElementById(day).checked) document.getElementById(day).click();
+                }
+            }
+        },
+
+        checkIsAllMonthsSelected: function() {
+            document.getElementById("selectAllMonths").checked = this.isAllMonthsSelected();
+        },
+
+        isAllMonthsSelected: function() {
+            if (document.getElementById("monthsCheckboxesForMonthlyFreq").hidden === true) { // Daily frequency
+                for (const month of this.monthsArrayDaily) {
+                    if (!document.getElementById(month).checked)
+                        return false;
+                }
+            } else { // Monthly frequency
+                for (const month of this.monthsArrayMonthly) {
+                    if (!document.getElementById(month).checked)
+                        return false;
+                }
+            }
+            return true;
+        },
+
+        toggleSelectAllMonths: function() {
+            if (this.isAllMonthsSelected()) { // we unselect all
+                if (document.getElementById("monthsCheckboxesForMonthlyFreq").hidden === true) { // Daily frequency
+                    for (const month of this.monthsArrayDaily) {
+                        document.getElementById(month).click();
+                    }
+                } else { // Monthly frequency
+                    for (const month of this.monthsArrayMonthly) {
+                        document.getElementById(month).click();
+                    }
+                }
+            } else { // we select all
+                if (document.getElementById("monthsCheckboxesForMonthlyFreq").hidden === true) { // Daily frequency
+                    for (const month of this.monthsArrayDaily) {
+                        if (!document.getElementById(month).checked) document.getElementById(month).click();
+                    }
+                } else { // Monthly frequency
+                    for (const month of this.monthsArrayMonthly) {
+                        if (!document.getElementById(month).checked) document.getElementById(month).click();
+                    }
+                }
+            }
+        }
     }
 
     userCardTemplate.init();

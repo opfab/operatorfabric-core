@@ -27,6 +27,7 @@ export class OpfabEventStreamService {
     private reloadRequest = new Subject<void>();
     private businessConfigChange = new Subject<void>();
     private userConfigChange = new Subject<void>();
+    private businessDataChange = new Subject<void>();
 
     private eventStreamClosed = false;
 
@@ -77,6 +78,9 @@ export class OpfabEventStreamService {
                         );
                         this.closeEventStream();
                         this.receivedDisconnectedSubject.next(true);
+                        break;
+                    case 'BUSINESS_DATA_CHANGE':
+                        this.businessDataChange.next();
                         break;
                     default:
                         let cardOperation;
@@ -145,6 +149,10 @@ export class OpfabEventStreamService {
 
     getBusinessConfigChangeRequests(): Observable<void> {
         return this.businessConfigChange.asObservable();
+    }
+
+    getBusinessDataChanges(): Observable<void> {
+        return this.businessDataChange.asObservable();
     }
 
     getUserConfigChangeRequests(): Observable<void> {

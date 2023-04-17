@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2021, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2023, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -41,9 +41,9 @@ public class GlobalErrorAttributes extends DefaultErrorAttributes {
         
         Throwable originThrowable = getError(request);
         map.put("origin",originThrowable);
-        if(originThrowable instanceof ApiErrorException) {
-            map.put("status", ((ApiErrorException)originThrowable).getError().getStatus());
-            map.put("message", ((ApiErrorException)originThrowable).getError().getMessage());
+        if (originThrowable instanceof ApiErrorException apiErrorException) {
+            map.put("status", apiErrorException.getError().getStatus());
+            map.put("message", apiErrorException.getError().getMessage());
         }
         return map;
     }

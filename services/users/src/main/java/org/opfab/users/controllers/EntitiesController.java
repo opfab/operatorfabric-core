@@ -14,7 +14,7 @@ import org.opfab.springtools.error.model.ApiErrorException;
 import org.opfab.users.model.Entity;
 import org.opfab.users.model.EntityCreationReport;
 import org.opfab.users.model.OperationResult;
-import org.opfab.users.rabbit.RabbitEventBus;
+import org.opfab.utilities.eventbus.EventBus;
 import org.opfab.users.repositories.EntityRepository;
 import org.opfab.users.repositories.UserRepository;
 import org.opfab.users.services.EntitiesService;
@@ -37,7 +37,7 @@ public class EntitiesController implements EntitiesApi {
     private EntitiesService entitiesService;
 
     public EntitiesController(EntityRepository entityRepository, UserRepository userRepository,
-            RabbitEventBus eventBus) {
+            EventBus eventBus) {
         this.entitiesService = new EntitiesService(entityRepository, userRepository, new NotificationService(userRepository, eventBus));
     }
 

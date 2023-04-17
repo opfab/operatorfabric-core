@@ -97,6 +97,7 @@ Feature: CardsUserAcknowledgement
     When method get
     Then status 200
     And match response.card.hasBeenAcknowledged == false
+    And match response.card.entitiesAcks == '#notpresent'
     And def uid = response.card.uid
 
 #make an acknowledgement to the card with operator1_fr with entities for which the user is not a member
@@ -127,6 +128,7 @@ Feature: CardsUserAcknowledgement
     When method get
     Then status 200
     And match response.card.hasBeenAcknowledged == true
+    And match response.card.entitiesAcks ==  ["ENTITY1_FR"]
     And match response.card.uid == uid
 
 #get card with user operator2_fr and check containing no ack for him
@@ -151,6 +153,7 @@ Feature: CardsUserAcknowledgement
     When method get
     Then status 200
     And match response.card.hasBeenAcknowledged == true
+    And match response.card.entitiesAcks ==  ["ENTITY1_FR","ENTITY2_FR"]
     And match response.card.uid == uid
 
 #get card with user operator2_fr and check containing his ack
@@ -159,6 +162,7 @@ Feature: CardsUserAcknowledgement
     When method get
     Then status 200
     And match response.card.hasBeenAcknowledged == true
+    And match response.card.entitiesAcks ==  ["ENTITY1_FR","ENTITY2_FR"]
     And match response.card.uid == uid
 
 
@@ -180,6 +184,8 @@ Feature: CardsUserAcknowledgement
     And header Authorization = 'Bearer ' + authToken
     When method get
     Then status 200
+    # unacknowledgment is onluy possible at the user level and not at the entity level
+    And match response.card.entitiesAcks ==  ["ENTITY1_FR","ENTITY2_FR"]
     And match response.card.hasBeenAcknowledged == false
     And match response.card.uid == uid
 
@@ -188,6 +194,8 @@ Feature: CardsUserAcknowledgement
     When method delete
     Then status 204
 
+
+    #ack unexisting card 
 
     Given url opfabUrl + 'cardspub/cards/userAcknowledgement/unexisting_card____uid'
     And header Authorization = 'Bearer ' + authToken

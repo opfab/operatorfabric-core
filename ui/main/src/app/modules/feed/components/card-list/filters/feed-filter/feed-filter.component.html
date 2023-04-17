@@ -1,4 +1,4 @@
-<!-- Copyright (c) 2018-2022, RTE (http://www.rte-france.com)              -->
+<!-- Copyright (c) 2018-2023, RTE (http://www.rte-france.com)              -->
 <!-- See AUTHORS.txt                                                       -->
 <!-- This Source Code Form is subject to the terms of the Mozilla Public   -->
 <!-- License, v. 2.0. If a copy of the MPL was not distributed with this   -->
@@ -7,89 +7,79 @@
 <!-- This file is part of the OperatorFabric project.                      -->
 
 
-
-<ng-template #filterTypeContent>
-
-    <div class="row opfab-filter-type-header"></div>
-
-    <form [formGroup]="typeFilterForm" id="opfab-type-filter-form" style="padding-left: 3px;">
-
-        <label class="opfab-checkbox "> <span class="label-sev-alarm" translate> shared.severity.alarm </span>
-            <input id="opfab-feed-filter-severity-alarm" type="checkbox" formControlName="alarm" >
-            <span class="opfab-checkbox-checkmark"></span>
-        </label>
+    <form [formGroup]="typeFilterForm" id="opfab-type-filter-form" style="padding-left: 10px; padding-top: 5px;">
+        <div style="display: flex;">
+            <div>
+                <label class="opfab-checkbox"> <span class="label-sev-alarm" translate> shared.severity.alarm </span>
+                    <input id="opfab-feed-filter-severity-alarm" type="checkbox" formControlName="alarm" >
+                    <span class="opfab-checkbox-checkmark"></span>
+                </label>
 
 
-        <label class="opfab-checkbox "> <span class="label-sev-action" translate> shared.severity.action </span>
-            <input id="opfab-feed-filter-severity-action" type="checkbox" formControlName="action" >
-            <span class="opfab-checkbox-checkmark"></span>
-        </label>
+                <label class="opfab-checkbox"> <span class="label-sev-action" translate> shared.severity.action </span>
+                    <input id="opfab-feed-filter-severity-action" type="checkbox" formControlName="action" >
+                    <span class="opfab-checkbox-checkmark"></span>
+                </label>
+            </div>
+            <div style="margin-left: 30px">
+                <label class="opfab-checkbox"> <span class="label-sev-compliant" translate> shared.severity.compliant </span>
+                    <input id="opfab-feed-filter-severity-compliant" type="checkbox" formControlName="compliant" >
+                    <span class="opfab-checkbox-checkmark"></span>
+                </label>
 
 
-        <label class="opfab-checkbox "> <span class="label-sev-compliant" translate> shared.severity.compliant </span>
-            <input id="opfab-feed-filter-severity-compliant" type="checkbox" formControlName="compliant" >
-            <span class="opfab-checkbox-checkmark"></span>
-        </label>
-
-
-        <label class="opfab-checkbox "> <span class="label-sev-information" translate> shared.severity.information </span>
-            <input id="opfab-feed-filter-severity-information" type="checkbox" formControlName="information" >
-            <span class="opfab-checkbox-checkmark"></span>
-        </label>
-
+                <label class="opfab-checkbox"> <span class="label-sev-information" translate> shared.severity.information </span>
+                    <input id="opfab-feed-filter-severity-information" type="checkbox" formControlName="information" >
+                    <span class="opfab-checkbox-checkmark"></span>
+                </label>
+            </div>
+        </div>
     </form>
     <div *ngIf="!(hideResponseFilter)">
         
-        <form [formGroup]="responseFilterForm" id="opfab-response-filter-form"  style="padding-left: 3px; padding-top: 15px;">
-            <label class="opfab-checkbox "> <span translate>feed.filters.showCardsWithResponse.label</span>
+        <form [formGroup]="responseFilterForm" id="opfab-response-filter-form"  style="padding-left: 10px; padding-top: 15px;">
+            <label class="opfab-checkbox"> <span translate>feed.filters.showCardsWithResponse.label</span>
                 <input type="checkbox"  id="opfab-feed-filter-response" formControlName="responseControl">
                 <span class="opfab-checkbox-checkmark"></span>
             </label>
         </form>
     </div>
     <div>
-        <div class="row opfab-filter-header">
-            <span id='opfab-filter-ack-title' translate>feed.filters.ack.title</span>
+        <form [formGroup]="ackFilterForm" id="opfab-ack-filter-form"  style="padding-left: 10px">
+            <div style="display:flex">
+            <label class="opfab-checkbox" id="opfab-feed-filter-ack-ack-label"> <span  translate>feed.filters.ack.acknowledged.label</span>
+                <input type="checkbox"  id="opfab-feed-filter-ack-ack" formControlName="ackControl">
+                <span class="opfab-checkbox-checkmark"></span>
+            </label>
+            <label class="opfab-checkbox" id="opfab-feed-filter-ack-notack-label" style="margin-left: 10px"> <span  translate>feed.filters.ack.notacknowledged.label</span>
+                <input type="checkbox"  id="opfab-feed-filter-ack-notack" formControlName="notAckControl">
+                <span class="opfab-checkbox-checkmark"></span>
+            </label>
         </div>
-        <form [formGroup]="ackFilterForm" id="opfab-ack-filter-form"  style="padding-left: 3px;">
-
-            <label class="opfab-radio-button" id="opfab-feed-filter-ack-all-label"> <span  translate>feed.filters.ack.all.label</span>
-                <input type="radio"  id="opfab-feed-filter-ack-all" formControlName="ackControl" value="all">
-                <span class="opfab-radio-button-checkmark"></span>
-            </label>
-
-            <label class="opfab-radio-button" id="opfab-feed-filter-ack-ack-label"> <span  translate>feed.filters.ack.acknowledged.label</span>
-                <input type="radio"  id="opfab-feed-filter-ack-ack" formControlName="ackControl" value="ack">
-                <span class="opfab-radio-button-checkmark"></span>
-            </label>
-
-            <label class="opfab-radio-button" id="opfab-feed-filter-ack-notack-label"> <span  translate>feed.filters.ack.notacknowledged.label</span>
-                <input type="radio"  id="opfab-feed-filter-ack-notack" formControlName="ackControl" value="notack">
-                <span class="opfab-radio-button-checkmark"></span>
-            </label>
-
         </form>
     </div>
+
+    <of-feed-sort [defaultSorting]="defaultSorting"></of-feed-sort>
     
-    <div *ngIf="!(hideTimerTags)" style="width:300px;margin-top:-5px">
+    <div *ngIf="!(hideTimerTags)" style="margin-top:-5px;">
 
         <div class="row opfab-filter-header">
             <span id='opfab-feed-filter-date-title' translate>feed.filters.time.titleIfFilterBasedOnPublishDate</span>
         </div>
 
-        <form class="opfab-time-filter" [formGroup]="timeFilterForm" id="opfab-time-filter-form">
+        <form class="opfab-time-filter" [formGroup]="timeFilterForm" id="opfab-time-filter-form" style="padding-left: 7px;">
 
-            <div style="margin-left: 2px; margin-right: 2px;margin-top:-10px;width:200px">
+            <div style="margin-left: 2px; margin-right: 2px;margin-top: 20px;width:200px">
                 <div class="form-group" id="opfab-start">
                     <of-datetime-filter id="opfab-feed-filter-dateTimeFrom"  (change)="onDateTimeChange($event)" filterPath="start.label" formControlName="dateTimeFrom"
-                      [maxDate]="startMaxDate"  labelKey="feed.filters.time."></of-datetime-filter>
+                      [maxDate]="startMaxDate"  labelKey="feed.filters.time." [timeSpinners]="false"></of-datetime-filter>
                 </div>
             </div>
 
-            <div style="margin-left: 2px; margin-right: 2px;margin-top:-20px;width:200px;margin-bottom:-15px">
+            <div style="margin-left: 2px; margin-right: 2px;margin-top:20px;width:200px;">
                 <div class="form-group" id="opfab-end">
                     <of-datetime-filter id="opfab-feed-filter-dateTimeTo" filterPath="end.label" formControlName="dateTimeTo"
-                    [minDate]="endMinDate"  labelKey="feed.filters.time." (change)="onDateTimeChange($event)"></of-datetime-filter>
+                    [minDate]="endMinDate"  labelKey="feed.filters.time." [timeSpinners]="false" (change)="onDateTimeChange($event)"></of-datetime-filter>
                 </div>
 
             </div>
@@ -98,7 +88,7 @@
     </div>
     <div *ngIf="!(hideApplyFiltersToTimeLineChoice)">
         
-        <form [formGroup]="timeLineFilterForm" id="opfab-timeline-filter-form"  style="padding-left: 3px; padding-top: 0px;margin-top:20px">
+        <form [formGroup]="timeLineFilterForm" id="opfab-timeline-filter-form"  style="padding-left: 10px; padding-top: 0px;margin-top:20px">
             <label class="opfab-checkbox" translate>feed.filters.applyFiltersToTimeLine.label
                 <input type="checkbox"  id="opfab-feed-filter-timeline" formControlName="timeLineControl">
                 <span class="opfab-checkbox-checkmark"></span>
@@ -106,22 +96,9 @@
         </form>
     </div>
 
-    <div *ngIf="isFilterChanged()" style="display: flex; justify-content: center">
+    <div *ngIf="isFilterActive()" style="display: flex; justify-content: center;">
         <div id='opfab-feed-filter-reset' class="opfab-link" style="width: max-content" (click)="reset()">
             <span translate>feed.filters.reset</span>
         </div>
     </div>
-</ng-template>
 
-
-
-
-
-<ng-template #filterTypeTitle><span translate>feed.filters.type.title</span></ng-template>
-
-
-<div class="opfab-icon-bg-color">
-    <div id="opfab-feed-filter-btn-filter" [ngClass]="isFilterActive() ? 'opfab-icon-filter-active' :  'opfab-icon-filter'" popoverClass="opfab-filters-popover" placement="bottom-left" [ngbPopover]="filterTypeContent"
-        container="body" [autoClose]="'outside'">
-    </div>
-</div>

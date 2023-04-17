@@ -386,6 +386,17 @@ body {
     }
 }
 
+.opfab-popover-with-scrolling {
+    max-width: 800px;
+    .popover-body {
+        padding: 0px;
+        max-height: 500px;
+        overflow: hidden;
+        margin-top: 0;
+        margin-bottom: 0;
+    }
+}
+
 .opfab-popover-left-menu {
     background-color: var(--opfab-popover-bgcolor);
     color: var(--opfab-text-color);
@@ -416,10 +427,10 @@ body {
         color: var(--opfab-text-color);
     }
 
-    .arrow {
+    .popover-arrow {
         display: none;
     }
-    .arrow::after {
+    .popover-arrow::after {
         border-bottom: 0px;
     }
 }

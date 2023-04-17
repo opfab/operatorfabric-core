@@ -1,7 +1,7 @@
 swagger: '2.0'
 info:
   description: IMPORTANT - The Try it Out button will generate curl requests for examples, but executing them through the UI will not work as authentication has not been set up. This page is for documentation only.
-  version: 3.13.0.RELEASE
+  version: 3.14.0.RELEASE
   title: User Management
   termsOfService: ''
   contact:
@@ -69,11 +69,15 @@ definitions:
       * ADMIN: Administrator permission
       * ADMIN_BUSINESS_PROCESS: Permission to administer bundles and processes
       * VIEW_ALL_ARCHIVED_CARDS: Permission to access all archived cards
+      * VIEW_USER_ACTION_LOGS: Permission to view user action logs
+      * VIEW_ALL_CARDS: Permission to query all published cards
       * READONLY: Permission to view card, no rights to send cards or respond to a card.
     enum:
       - ADMIN
       - ADMIN_BUSINESS_PROCESS
       - VIEW_ALL_ARCHIVED_CARDS
+      - VIEW_ALL_CARDS
+      - VIEW_USER_ACTION_LOGS
       - READONLY
   GroupTypeEnum:
     type: string
@@ -213,6 +217,18 @@ definitions:
       playSoundForInformation:
         type: boolean
         description: If this is set to true, a sound will be played for incoming cards with INFORMATION severity.
+      systemNotificationAlarm:
+        type: boolean
+        description: If this is set to true, a notification will be send for incoming cards with ALARM severity.
+      systemNotificationAction:
+        type: boolean
+        description: If this is set to true, a notification will be send for incoming cards with ACTION severity.
+      systemNotificationCompliant:
+        type: boolean
+        description: If this is set to true, a notification will be send for incoming cards with COMPLIANT severity.
+      systemNotificationInformation:
+        type: boolean
+        description: If this is set to true, a notification will be send for incoming cards with INFORMATION severity.
       playSoundOnExternalDevice:
         type: boolean
         description: |-

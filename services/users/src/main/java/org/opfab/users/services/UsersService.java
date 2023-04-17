@@ -24,7 +24,6 @@ import org.opfab.users.repositories.EntityRepository;
 import org.opfab.users.repositories.GroupRepository;
 import org.opfab.users.repositories.PerimeterRepository;
 import org.opfab.users.repositories.UserRepository;
-import org.opfab.users.utils.LoginFormatChecker;
 
 public class UsersService {
 
@@ -53,7 +52,7 @@ public class UsersService {
     }
 
     public List<User> fetchUsers() {
-        return userRepository.findAll().stream().map(User.class::cast).toList();
+        return userRepository.findAll();
     }
 
     public OperationResult<User> fetchUser(String userId) {
@@ -66,9 +65,11 @@ public class UsersService {
     }
 
     public OperationResult<EntityCreationReport<User>> createUser(User user) {
-        LoginFormatChecker.LoginCheckResult formatCheckResult = LoginFormatChecker.check(user.getLogin());
+        boolean formatCheckResult = false;
+        if (user.getLogin().length() >= 1)
+            formatCheckResult = true;
         user.setLogin(user.getLogin().toLowerCase());
-        if (formatCheckResult.isValid()) {
+        if (formatCheckResult) {
             if (isRemovingAdminUserFromAdminGroup(user))
                 return new OperationResult<>(null, false,
                         OperationResult.ErrorType.BAD_REQUEST, CANNOT_REMOVE_ADMIN_USER_FROM_ADMIN_GROUP);
@@ -82,7 +83,7 @@ public class UsersService {
 
         } else
             return new OperationResult<>(null, false, OperationResult.ErrorType.BAD_REQUEST,
-                    formatCheckResult.getErrorMessage());
+                    "Mandatory 'login' field is missing.");
 
     }
 
@@ -161,35 +162,29 @@ public class UsersService {
     }
 
     public OperationResult<User> updateOrCreateUser(User user, boolean updateEntities, boolean updateGroups) {
-        LoginFormatChecker.LoginCheckResult formatCheckResult = LoginFormatChecker.check(user.getLogin());
+        boolean formatCheckResult = false;
+        if (user.getLogin().length() >= 1)
+            formatCheckResult = true;
         user.setLogin(user.getLogin().toLowerCase());
 
-        if (formatCheckResult.isValid()) {
+        if (formatCheckResult) {
             User existingUser = userRepository.findById(user.getLogin()).orElse(null);
 
             setEntitiesForUserUpdate(user, existingUser, updateEntities);
-
-            if (updateGroups) {
-                if (isRemovingAdminUserFromAdminGroup(user)) {
+            if ((updateGroups) && (isRemovingAdminUserFromAdminGroup(user))) {
                     return new OperationResult<>(null, false,
                             OperationResult.ErrorType.BAD_REQUEST, CANNOT_REMOVE_ADMIN_USER_FROM_ADMIN_GROUP);
-                }
-                removeInvalidGroups(user);
-            } else {
-                if (existingUser != null)
-                    user.setGroups(existingUser.getGroups());
-                else
-                    user.setGroups(Collections.emptyList());
             }
+            setGroupsForUserUpdate(user, existingUser, updateGroups);
 
             User newUser = userRepository.save(user);
-            if (existingUser != null)
+            if ((existingUser != null) && !newUser.equals(existingUser))
                 notificationService.publishUpdatedUserMessage(user.getLogin());
             return new OperationResult<>(newUser, true, null, null);
 
         } else
             return new OperationResult<>(null, false, OperationResult.ErrorType.BAD_REQUEST,
-                    formatCheckResult.getErrorMessage());
+                    "Mandatory 'login' field is missing.");
     }
 
     private void setEntitiesForUserUpdate(User newUser, User existingUser, boolean updateEntities) {
@@ -200,6 +195,17 @@ public class UsersService {
                 newUser.setEntities(existingUser.getEntities());
             else
                 newUser.setEntities(Collections.emptyList());
+        }
+    }
+
+    private void setGroupsForUserUpdate(User newUser, User existingUser, boolean updateGroups) {
+        if (updateGroups) {
+            removeInvalidGroups(newUser);
+        } else {
+            if (existingUser != null)
+                newUser.setGroups(existingUser.getGroups());
+            else
+                newUser.setGroups(Collections.emptyList());
         }
     }
 
@@ -225,5 +231,4 @@ public class UsersService {
         user.setGroups(groups);
     }
 
- 
 }

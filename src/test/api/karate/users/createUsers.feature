@@ -51,33 +51,6 @@ Feature: CreateUsers
 }
 """
 
-    * def userToTestBadRequest1 =
-"""
-{
-   "login" : "a",
-   "firstName" : "first name",
-   "lastName" : "last name"
-}
-"""
-
-    * def userToTestBadRequest2 =
-"""
-{
-   "login" : "aé",
-   "firstName" : "first name",
-   "lastName" : "last name"
-}
-"""
-
-    * def userToTestBadRequest3 =
-"""
-{
-   "login" : "é",
-   "firstName" : "first name",
-   "lastName" : "last name"
-}
-"""
-
     * def userWithValidLoginFormat0 =
 """
 {
@@ -194,9 +167,6 @@ Feature: CreateUsers
     Examples:
       | userToTestBadRequest  | expectedMessage                                                                                                                            |
       | userToTestBadRequest0 | "Mandatory 'login' field is missing."                                                                                                      |
-      | userToTestBadRequest1 | "Login should be minimum 2 characters (login=a)."                                                                                          |
-      | userToTestBadRequest2 | "Login should only contain the following characters: letters, _, -, . or digits (login=aé)."                                               |
-      | userToTestBadRequest3 | "Login should be minimum 2 characters (login=é).Login should only contain the following characters: letters, _, -, . or digits (login=é)." |
 
 
   Scenario Outline: request successful

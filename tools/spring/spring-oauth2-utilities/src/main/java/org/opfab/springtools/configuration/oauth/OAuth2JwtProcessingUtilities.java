@@ -37,6 +37,8 @@ public class OAuth2JwtProcessingUtilities {
                 authorities.addAll(AuthorityUtils.createAuthorityList("ROLE_ADMIN"));
             if (permissions.contains(PermissionEnum.ADMIN_BUSINESS_PROCESS))
                 authorities.addAll(AuthorityUtils.createAuthorityList("ROLE_ADMIN_BUSINESS_PROCESS"));
+            if (permissions.contains(PermissionEnum.VIEW_USER_ACTION_LOGS))
+                authorities.addAll(AuthorityUtils.createAuthorityList("ROLE_VIEW_USER_ACTION_LOGS"));            
         }
 
         return authorities;

@@ -24,13 +24,22 @@ declare const usercardTemplateGateway: any;
 export class UserCardRecipientsFormComponent implements OnInit, OnChanges {
     @Input() public userCardConfiguration;
     @Input() public initialSelectedRecipients;
+    @Input() public initialSelectedRecipientsForInformation;
+    @Input() public recipientForInformationVisible;
     public recipientForm: FormGroup<{
         userCardRecipients: FormControl<[] | null>;
+        userCardRecipientsForInformation: FormControl<[] | null>;
     }>;
     private useDescriptionFieldForEntityList = false;
     public recipientsOptions: Array<MultiSelectOption> = [];
+    public recipientsForInformationOptions: Array<MultiSelectOption> = [];
     public multiSelectConfig: MultiSelectConfig = {
         labelKey: 'userCard.filters.recipients',
+        sortOptions: true
+    };
+
+    public multiSelectConfigForInformation: MultiSelectConfig = {
+        labelKey: 'userCard.filters.recipientsForInformation',
         sortOptions: true
     };
 
@@ -47,18 +56,29 @@ export class UserCardRecipientsFormComponent implements OnInit, OnChanges {
 
     ngOnInit() {
         this.recipientForm = new FormGroup({
-            userCardRecipients: new FormControl([])
+            userCardRecipients: new FormControl([]),
+            userCardRecipientsForInformation: new FormControl([])
         });
         this.listenForDropdownRecipientList();
         this.listenForInitialSelectedRecipientList();
+
+        this.listenForDropdownRecipientForInformationList();
+        this.listenForInitialSelectedRecipientForInformationList();
     }
 
     ngOnChanges() {
-        if (this.userCardConfiguration) this.loadRecipientsOptions();
+        if (this.userCardConfiguration) {
+            this.loadRecipientsOptions();
+            this.loadRecipientsForInformationOptions();
+        }
     }
 
     public getSelectedRecipients() {
         return this.recipientForm.value['userCardRecipients'];
+    }
+
+    public getSelectedRecipientsForInformation() {
+        return this.recipientForm.value['userCardRecipientsForInformation'];
     }
 
     private loadRecipientsOptions() {
@@ -77,9 +97,17 @@ export class UserCardRecipientsFormComponent implements OnInit, OnChanges {
         }
     }
 
+    private loadRecipientsForInformationOptions() {
+        this.recipientsForInformationOptions = [];
+        this.entitiesService
+            .getEntities()
+            .forEach((entity) =>
+                this.recipientsForInformationOptions.push(new MultiSelectOption(entity.id, this.getEntityLabel(entity))));
+    }
+
     private loadRestrictedRecipientList(recipients: Recipient[]): void {
         this.recipientsOptions = [];
-        Array.prototype.forEach.call(recipients, (r) => {
+        recipients.forEach((r) => {
             if (!!r.levels) {
                 r.levels.forEach((l) => {
                     this.entitiesService.resolveChildEntitiesByLevel(r.id, l).forEach((entity) => {
@@ -94,6 +122,28 @@ export class UserCardRecipientsFormComponent implements OnInit, OnChanges {
                     if (!!entity)
                         this.recipientsOptions.push(new MultiSelectOption(entity.id, this.getEntityLabel(entity)));
                     else this.opfabLogger.info('Recipient entity not found : ' + r.id);
+                }
+            }
+        });
+    }
+
+    private loadRestrictedRecipientForInformationList(recipientsForInformation: Recipient[]): void {
+        this.recipientsForInformationOptions = [];
+        recipientsForInformation.forEach((r) => {
+            if (!!r.levels) {
+                r.levels.forEach((l) => {
+                    this.entitiesService.resolveChildEntitiesByLevel(r.id, l).forEach((entity) => {
+                        if (!this.recipientsForInformationOptions.find((o) => o.value === entity.id)) {
+                            this.recipientsForInformationOptions.push(new MultiSelectOption(entity.id, this.getEntityLabel(entity)));
+                        }
+                    });
+                });
+            } else {
+                if (!this.recipientsForInformationOptions.find((o) => o.value === r.id)) {
+                    const entity = this.entitiesService.getEntities().find((e) => e.id === r.id);
+                    if (!!entity)
+                        this.recipientsForInformationOptions.push(new MultiSelectOption(entity.id, this.getEntityLabel(entity)));
+                    else this.opfabLogger.info('\"Recipient for information\" entity not found : ' + r.id);
                 }
             }
         });
@@ -116,7 +166,24 @@ export class UserCardRecipientsFormComponent implements OnInit, OnChanges {
         };
     }
 
+    private listenForDropdownRecipientForInformationList() {
+        usercardTemplateGateway.setDropdownEntityRecipientForInformationList = (recipients) =>
+            this.loadRestrictedRecipientForInformationList(recipients);
+    }
+
+    private listenForInitialSelectedRecipientForInformationList() {
+        // Set initial recipient for information list from template only if not in edition mode
+        usercardTemplateGateway.setInitialSelectedRecipientsForInformation = (recipients) => {
+            if (!this.initialSelectedRecipientsForInformation || this.initialSelectedRecipientsForInformation.length === 0)
+                this.initialSelectedRecipientsForInformation = recipients;
+        };
+    }
+
     public recipientChoiceChanged(selected: any) {
         usercardTemplateGateway.selectedEntityRecipients = selected;
+    }
+
+    public recipientForInformationChoiceChanged(selected: any) {
+        usercardTemplateGateway.selectedEntityRecipientsForInformation = selected;
     }
 }

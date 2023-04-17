@@ -1,4 +1,4 @@
-<!-- Copyright (c) 2018-2020, RTE (http://www.rte-france.com)              -->
+<!-- Copyright (c) 2018-2023, RTE (http://www.rte-france.com)              -->
 <!-- See AUTHORS.txt                                                       -->
 <!-- This Source Code Form is subject to the terms of the Mozilla Public   -->
 <!-- License, v. 2.0. If a copy of the MPL was not distributed with this   -->
@@ -10,29 +10,35 @@
 
 <div class="container-fluid feed-content">
   <div>
-    <of-filters></of-filters>
+    <of-filters [filterActive]="filterActive" (showFiltersAndSort)="onShowFiltersAndSortChange($event)"></of-filters>
   </div>
-
   <div class="opfab-feed-horizontal-bar"> </div>
+  <div id="opfab-card-list-container" style="display: flex;">
+    <div id="opfab-filters" [class.opfab-filters-hidden]="!filterOpen" class="opfab-filters opfab-card-list" style="width:600px"> 
+      <of-feed-filter (filterActiveChange)="onFilterActiveChange($event)" [hideTimerTags]="hideTimerTags" 
+      [defaultAcknowledgmentFilter]="defaultAcknowledgmentFilter" [hideResponseFilter]="hideResponseFilter" 
+      [hideApplyFiltersToTimeLineChoice]="hideApplyFiltersToTimeLineChoice" [defaultSorting]="defaultSorting"></of-feed-filter>
+    </div>
+    <div *ngIf="!isSmallscreen() || (!filterOpen)" style="width: 100%">
+      <div id="opfab-card-list" class="opfab-card-list" >
+        <div class="row" *ngFor="let currentLightCard of lightCards">
+          <div class="col-12" style="padding-right: 20px;margin-bottom: 10px;">
+            <of-light-card [lightCard]="currentLightCard" [open]="(currentLightCard.id === (selection|async)) ||
+                isCardInGroup(selection|async, currentLightCard.id)" [selection]="selection">
+            </of-light-card>
+          </div>
+        </div>
+        <div *ngIf="!!lightCards && totalNumberOfLightsCards > lightCards.length" style="text-align:right;font-weight: bold;margin-top:0px;margin-right:10px;">
+          ... {{ totalNumberOfLightsCards - lightCards.length }} <span translate> feed.moreCards </span>
+        </div>
+      
+      </div>
 
-  <div id="opfab-card-list" class="opfab-card-list">
-    <div class="row" *ngFor="let currentLightCard of lightCards">
-      <div class="col-12" style="padding-right: 20px;margin-bottom: 10px;">
-        <of-light-card [lightCard]="currentLightCard" [open]="(currentLightCard.id === (selection|async)) ||
-            isCardInGroup(selection|async, currentLightCard.id)" [selection]="selection">
-        </of-light-card>
+      <div *ngIf="! hideAckAllCardsFeature && !!lightCards && lightCards.length" class="opfab-ack-all-cards">
+        <a id="opfab-feed-ack-all-link" (click)="open(confirmationPopup)"><span translate> feed.acknowledgeAllCards.label </span></a>
       </div>
     </div>
-    <div *ngIf="!!lightCards && totalNumberOfLightsCards > lightCards.length" style="text-align:right;font-weight: bold;margin-top:0px;margin-right:10px;">
-       ... {{ totalNumberOfLightsCards - lightCards.length }} <span translate> feed.moreCards </span>
-    </div>
-  
   </div>
-
-  <div *ngIf="! hideAckAllCardsFeature && !!lightCards && lightCards.length" class="opfab-ack-all-cards">
-    <a id="opfab-feed-ack-all-link" (click)="open(confirmationPopup)"><span translate> feed.acknowledgeAllCards.label </span></a>
-  </div>
-
 </div>
 
 

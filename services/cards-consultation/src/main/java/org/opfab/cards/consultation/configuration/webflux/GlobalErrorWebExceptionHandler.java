@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2021, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2023, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -60,9 +60,9 @@ public class GlobalErrorWebExceptionHandler extends AbstractErrorWebExceptionHan
                 .contentType(MediaType.APPLICATION_JSON);
         Throwable originThrowable = (Throwable) errorPropertiesMap.get("origin");
         log.error("Error during http request processing.", originThrowable);
-        if(originThrowable instanceof ApiErrorException){
+        if (originThrowable instanceof ApiErrorException apiErrorException){
             return bodyBuilder
-                    .body(BodyInserters.fromValue(((ApiErrorException)originThrowable).getError()));
+                    .body(BodyInserters.fromValue(apiErrorException.getError()));
         }
         return bodyBuilder
            .body(BodyInserters.fromValue(errorPropertiesMap));

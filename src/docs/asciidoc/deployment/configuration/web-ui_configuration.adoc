@@ -1,4 +1,4 @@
-// Copyright (c) 2018-2022 RTE (http://www.rte-france.com)
+// Copyright (c) 2018-2023 RTE (http://www.rte-france.com)
 // See AUTHORS.txt
 // This document is subject to the terms of the Creative Commons Attribution 4.0 International license.
 // If a copy of the license was not distributed with this
@@ -73,7 +73,7 @@ a|card time display mode in the feed. Values :
  - LTTD: displays card with lttd date;
  - NONE: nothing displayed.
 |feed.defaultSorting|"unread"|no|Default card sorting option in feed page, possible values are : "unread", "date", "severity", "startDate", "endDate".
-|feed.defaultAcknowledgmentFilter|"notack"|no|Default card acknowlegment filtering option in feed page, possible values are : "notack", "ack", "all".
+|feed.defaultAcknowledgmentFilter|"notack"|no|Default card acknowlegment filtering option in feed page, possible values are : "notack", "ack", "all", "none".
 |feed.showSearchFilter|false|no| If set to false, the search filter is hidden.
 |feed.card.hideResponseFilter|false|no|Control if you want to show or hide the response filter in the feed page
 |feed.card.hideApplyFiltersToTimeLineChoice|false|no|Control if you want to show or hide the option of applying filters or not to timeline in the feed page
@@ -96,6 +96,8 @@ a|card time display mode in the feed. Values :
 |feed.geomap.bglayer.xyz.url|null|no|Custom xyz/tiled background layer service URL, Replaces OSM background layer (Add endpoint with {x}{y}{z} variables. Example: "https://service.pdok.nl/brt/achtergrondkaart/wmts/v2_0/grijs/EPSG:3857/{z}/{x}/{y}.png".
 |feed.geomap.bglayer.xyz.tileSize|null|no|Custom xyz/tiled background layer tile size (Int value, example: 256. Required when using custom background layer).
 |feed.geomap.bglayer.xyz.crossOrigin|null|no|Custom xyz/tiled background layer crossOrigin setting.
+|feed.geomap.layer.geojson.url|null|no|Add a GeoJSON layer to the map. Example: "https://localhost:8000/service-area.geojson"
+|feed.geomap.layer.geojson.crossOrigin|null|no|Configure CrossOrigin settings for GeoJSON layer. Example: 'anonymous'.
 |i18n.supported.locales||no|List of supported locales (Only fr and en so far)
 Values should be taken from the link:https://en.wikipedia.org/wiki/List_of_tz_database_time_zones[TZ database].
 
@@ -114,6 +116,10 @@ Values should be taken from the link:https://en.wikipedia.org/wiki/List_of_tz_da
 |settings.playSoundForAction|false|no|If set to true, a sound is played when Action cards are added or updated in the feed
 |settings.playSoundForCompliant|false|no|If set to true, a sound is played when Compliant cards are added or updated in the feed
 |settings.playSoundForInformation|false|no|If set to true, a sound is played when Information cards are added or updated in the feed
+|settings.systemNotificationAlarm|false|no|If set to true, a system notification is send when Alarm cards are added or updated in the feed
+|settings.systemNotificationAction|false|no|If set to true, a system notification is send when Action cards are added or updated in the feed
+|settings.systemNotificationCompliant|false|no|If set to true, a system notification is send when Compliant cards are added or updated in the feed
+|settings.systemNotificationInformation|false|no|If set to true, a system notification is send when Information cards are added or updated in the feed
 |settings.playSoundOnExternalDevice|false|no|If set to true (and `externalDevicesEnabled` is set to true as well) and the user has an external device configured, sounds will be played on this device rather than in the browser
 |settings.replayEnabled|false|no|If set to true, sounds are replayed every `settings.replayInterval` seconds until the user interacts with the application
 |settings.replayInterval|5|no|Interval between sound replays (see `settings.replayEnabled`)
@@ -154,6 +160,8 @@ For example adding `Keycloak` application, with `'Keycloak'` as `name`, `1` as `
 |secondsToCloseSession|60|no|Number of seconds between logout and token expiration
 |selectActivityAreaOnLogin|false|no| if set to true the users belonging to multiple Entities will be required to configure activity area on login 
 |checkIfUrlIsLocked|true|no| if set to false, an OperatorFabric url can be used by several tabs in the same browser. Note that there can only be one token per browser for a given OperatorFabric url, so the first session will be replaced by the second one
+|alertMessageBusinessAutoClose|false|no| if set to to true, the (red) business alert message will automatically close after a few seconds.
+|alertMessageOnBottomOfTheScreen|false|no| if set to true, the alert message is shown on the bottom of the page.
 
 |===
 

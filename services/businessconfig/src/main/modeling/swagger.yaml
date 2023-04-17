@@ -1,7 +1,7 @@
 swagger: '2.0'
 info:
   description: IMPORTANT - The Try it Out button will generate curl requests for examples, but executing them through the UI will not work as authentication has not been set up. This page is for documentation only.
-  version: 3.13.0.RELEASE
+  version: 3.14.0.RELEASE
   title: BusinessConfig Management
   termsOfService: ''
   contact:
@@ -376,6 +376,87 @@ paths:
           description: Authentication required
         '403':
           description: Forbidden - ADMIN role necessary
+  '/businessconfig/businessData':
+    get:
+      summary: Get the list of the available business data
+      description: >-
+        Get the list of the available business data
+      operationId: getAllBusinessData
+      produces: 
+        - application/json
+      responses:
+        '200':
+          description: OK
+          schema:
+            type: object
+  '/businessconfig/businessData/{resourceName}':
+    get:
+      summary: Get the business data
+      description: >-
+        Get the business data
+      operationId: getBusinessData
+      produces: 
+        - application/json
+      parameters:
+        - name: resourceName
+          in: path
+          description: Name of the resource
+          required: true
+          type: string
+      responses:
+        '200':
+          description: OK
+          schema:
+            type: object
+    post:
+      summary: Upload file containing businessdata
+      description: >-
+        Upload file containing businessdata
+        This file must be in json format and is saved to disk.
+      operationId: uploadBusinessData
+      consumes:
+        - multipart/form-data
+      produces:
+        - application/json
+      parameters:
+        - name: file
+          in: formData
+          description: file to upload
+          required: true
+          type: file
+        - name: resourceName
+          in: path
+          description: Name of the resource
+          required: true
+          type: string
+      responses:
+        '201':
+          description: Successful creation
+        '401':
+          description: Authentication required
+        '403':
+          description: Forbidden - ADMIN role necessary
+    delete:
+      summary: Delete existing resource
+      description: Delete existing resource
+      operationId: deleteBusinessData
+      produces:
+        - application/json
+      parameters:
+        - name: resourceName
+          in: path
+          description: Name of the resource
+          required: true
+          type: string
+      responses:
+        '204':
+          description: OK          
+        '401':
+          description: Authentication required
+        '404':
+          description: Not found  
+        '500':
+          description: Unable to delete resource
   '/businessconfig/monitoring':
     get:
       summary: Get the monitoring configuration 
@@ -689,6 +770,8 @@ definitions:
         type: boolean
         description: Default value set to false.
       recipientVisible: # tells whether to display recipient dropdown when creating a user card
+        type: boolean
+      recipientForInformationVisible: # tells whether to display recipient for information dropdown when creating a user card
         type: boolean
       recipientList:
         type: array

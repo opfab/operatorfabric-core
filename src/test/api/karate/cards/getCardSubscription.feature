@@ -147,7 +147,6 @@ Feature: get card Subscription
       And request card
       When method post
       Then status 201
-      And print response
       And def cardUid = response.uid
 
     # Get subscription and check that card is returned
@@ -155,7 +154,6 @@ Feature: get card Subscription
       And header Authorization = 'Bearer ' + authTokenAsTSO
       When method get
       Then status 200
-      And print response
       And match response contains '"card":{"uid":"' + cardUid + '"'
 
     * def cardAckDate = new Date().valueOf();

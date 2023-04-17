@@ -142,6 +142,7 @@ export class CalendarComponent implements OnInit, OnDestroy, AfterViewInit {
                                         'opfab-calendar-event',
                                         'opfab-calendar-event-' + card.severity.toLowerCase()
                                     ],
+                                    duration: {minutes: timespan.recurrence.durationInMinutes},
                                     rrule: {
                                         freq: Frequency.WEEKLY,
                                         byweekday: this.getDaysOfWeek(timespan),
@@ -178,7 +179,6 @@ export class CalendarComponent implements OnInit, OnDestroy, AfterViewInit {
     }
 
     private computeRRuleCalendarEvents(card: any) {
-
         if (!! card.rRule) {
             this.calendarEvents = this.calendarEvents.concat({
                 id: card.id,
@@ -188,6 +188,7 @@ export class CalendarComponent implements OnInit, OnDestroy, AfterViewInit {
                     'opfab-calendar-event',
                     'opfab-calendar-event-' + card.severity.toLowerCase()
                 ],
+                duration: {minutes: card.rRule.durationInMinutes},
                 rrule: {
                     freq: card.rRule.freq,
                     byweekday: card.rRule.byweekday,

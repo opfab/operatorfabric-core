@@ -11,7 +11,7 @@ package org.opfab.users.controllers;
 
 import org.opfab.users.configuration.oauth2.UserExtractor;
 import org.opfab.users.model.*;
-import org.opfab.users.rabbit.RabbitEventBus;
+import org.opfab.utilities.eventbus.EventBus;
 import org.opfab.users.repositories.EntityRepository;
 import org.opfab.users.repositories.GroupRepository;
 import org.opfab.users.repositories.PerimeterRepository;
@@ -35,9 +35,9 @@ public class CurrentUserWithPerimetersController implements CurrentUserWithPerim
     private CurrentUserWithPerimetersService currentUserWithPerimetersService;
 
     public CurrentUserWithPerimetersController(UserRepository userRepository, GroupRepository groupRepository,
-            PerimeterRepository perimeterRepository, EntityRepository entityRepository, UserSettingsRepository userSettingsRepository, RabbitEventBus rabbitEventBus) {
+            PerimeterRepository perimeterRepository, EntityRepository entityRepository, UserSettingsRepository userSettingsRepository, EventBus eventBus) {
         
-                NotificationService notificationService = new NotificationService(userRepository,rabbitEventBus);
+                NotificationService notificationService = new NotificationService(userRepository,eventBus);
         UsersService usersService = new UsersService(userRepository, groupRepository, entityRepository, perimeterRepository,notificationService);
         UserSettingsService userSettingsService = new UserSettingsService(userSettingsRepository, usersService, notificationService);
         this.currentUserWithPerimetersService = new CurrentUserWithPerimetersService(usersService, userSettingsService,

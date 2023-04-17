@@ -54,7 +54,8 @@ describe ('User action logs page',()=>{
         cy.get('#response').type('Response');
         card.sendResponse();
         cy.waitDefaultTime();
-        feed.filterByAcknowledgement('ack');
+        feed.toggleFilterByAcknowledgementNotAck();
+        feed.toggleFilterByAcknowledgementAck();
         feed.checkNumberOfDisplayedCardsIs(1);
         feed.openFirstCard();
         card.unacknowledge();
@@ -65,7 +66,6 @@ describe ('User action logs page',()=>{
 
         //logout
         cy.get('#opfab-navbar-right-menu-logout').click();
-
 
         cy.waitDefaultTime();
         opfab.loginWithUser('admin');
@@ -192,7 +192,21 @@ describe ('User action logs page',()=>{
         // Check the response has been integrated in the template
         cy.get('#childs-div').find('tr').should('have.length', 2);
 
+
     });
+
+    it('View as itsupervisor with permission VIEW_USER_ACTION_LOGS', ()=> {
+
+        opfab.loginWithUser('itsupervisor1');
+        opfab.navigateToUserActionLogs();
+
+
+        cy.get('#opfab-useractionlogs-btn-search').click();
+
+        cy.get('.opfab-pagination').should('contain.text', ' Results number  : 16');
+        agGrid.cellShould('ag-grid-angular', 0, 1, 'have.text', 'OPEN_SUBSCRIPTION');
+        agGrid.cellShould('ag-grid-angular', 0, 2, 'have.text', 'itsupervisor1');
+    })
 
 
     function sendQuestionCard() {

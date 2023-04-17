@@ -47,4 +47,5 @@ public class RRulePublicationData implements RRule {
     private List<Integer> bymonthday;
     @Builder.Default
     private String tzid = "Europe/Paris";
+    private Integer durationInMinutes;
 }

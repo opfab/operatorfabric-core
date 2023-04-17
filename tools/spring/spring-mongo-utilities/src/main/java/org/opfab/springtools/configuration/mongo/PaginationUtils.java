@@ -1,4 +1,4 @@
-/* Copyright (c) 2022, RTE (http://www.rte-france.com)
+/* Copyright (c) 2022-2023, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -12,12 +12,19 @@ package org.opfab.springtools.configuration.mongo;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 
+import net.minidev.json.JSONObject;
+import net.minidev.json.parser.JSONParser;
+import net.minidev.json.parser.ParseException;
+
 public class PaginationUtils {
 
     public static final int DEFAULT_PAGE_SIZE = 10;
+    public static final String COUNT = "count";
+
 
     private PaginationUtils() {
     }
+
     public static Pageable createPageable(Integer page, Integer size) {
         if (page != null && size != null) {
             return PageRequest.of(page.intValue(), size.intValue());
@@ -30,5 +37,15 @@ public class PaginationUtils {
         } else {
             return Pageable.unpaged();
         }
+    }
+
+    public static long getCountFromJson(String json ) {
+        JSONObject count;
+        try {
+            count = (JSONObject) (new JSONParser(JSONParser.MODE_PERMISSIVE)).parse(json);
+        } catch (ParseException e) {
+            return 0;
+        }
+        return ((Integer) count.get(COUNT)).longValue();
     }
 }

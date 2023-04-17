@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2022, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2023, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -17,6 +17,8 @@ import org.opfab.useractiontracing.model.UserActionEnum;
 import org.opfab.useractiontracing.services.UserActionLogService;
 import org.opfab.springtools.configuration.oauth.UserServiceCache;
 import org.opfab.users.model.CurrentUserWithPerimeters;
+import org.opfab.utilities.eventbus.EventBus;
+import org.opfab.utilities.eventbus.EventListener;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
@@ -25,7 +27,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 @Service
 @Slf4j
-public class CardSubscriptionService {
+public class CardSubscriptionService implements EventListener {
 
     @Value("${checkIfUserIsAlreadyConnected:true}")
     private boolean checkIfUserIsAlreadyConnected;
@@ -44,10 +46,17 @@ public class CardSubscriptionService {
     public CardSubscriptionService(
                                     UserServiceCache userServiceCache,
                                     UserActionLogService userActionLogService,
+                                    EventBus eventBus,
                                    @Value("${operatorfabric.heartbeat.delay:10000}")
                                    long heartbeatDelay) {
         this.userServiceCache = userServiceCache;
         this.userActionLogService = userActionLogService;
+
+        eventBus.addListener("card",this);
+        eventBus.addListener("process",this);
+        eventBus.addListener("user",this);
+        eventBus.addListener("ack",this);
+        
         this.heartbeatDelay = heartbeatDelay;
         Thread heartbeat = new Thread(){
             @Override
@@ -57,6 +66,7 @@ public class CardSubscriptionService {
           };
         
         heartbeat.start();
+
     }
 
 
@@ -186,46 +196,29 @@ public class CardSubscriptionService {
         return cache.values();
     }
 
-
-    public void onMessage(String queueName, String message) {
-
-        log.debug("receive from rabbit queue {} message {}", queueName, message);
-        switch (queueName) {
-            case "process":
-            case "ack":
-                cache.values().forEach(subscription -> subscription.publishDataIntoSubscription(message));
-                break;
-            case "user":
-                cache.values().forEach(subscription -> subscription.publishDataIntoSubscription("USER_CONFIG_CHANGE"));
-                break;
-            case "card":
-                cache.values().forEach(subscription -> processNewCard(message, subscription));
-                break;
-            default:
-                log.info("unrecognized queue {}" , queueName);
-        }
-    }
-
-    private void processNewCard(String cardAsString, CardSubscription subscription) {
-        JSONObject card;
+    private void processNewCard(String cardOperationAsString, CardSubscription subscription) {
+        JSONObject cardOperation;
         try {
-            card = (JSONObject) (new JSONParser(JSONParser.MODE_PERMISSIVE)).parse(cardAsString);
+            cardOperation = (JSONObject) (new JSONParser(JSONParser.MODE_PERMISSIVE)).parse(cardOperationAsString);
         } catch (ParseException e) {
             log.error(ERROR_MESSAGE_PARSING, e);
             return;
         }
 
-        if (CardRoutingUtilities.checkIfUserMustReceiveTheCard(card,
+        if (CardRoutingUtilities.checkIfUserMustReceiveTheCard(cardOperation,
                 subscription.getCurrentUserWithPerimeters())) {
-            subscription.publishDataIntoSubscription(cardAsString);
+            if (cardOperation.get("type").equals("UPDATE")) { //for the front an update is considered as an ADD
+                cardOperation.put("type", "ADD");
+                subscription.publishDataIntoSubscription(cardOperation.toJSONString());
+            }
+            else subscription.publishDataIntoSubscription(cardOperationAsString);
         }
-        // In case of ADD or UPDATE, we send a delete card operation (to delete the card
-        // from the feed, more information in OC-297)
         else {
-            String deleteMessage = CardRoutingUtilities.createDeleteCardMessageForUserNotRecipient(card,
-                    subscription.getUserLogin());
-            if (!deleteMessage.isEmpty())
-                subscription.publishDataIntoSubscription(deleteMessage);
+            if (CardRoutingUtilities.checkIfUserNeedToReceiveADeleteCardOperation(cardOperation,subscription.getCurrentUserWithPerimeters())) { 
+                cardOperation.replace("type", "DELETE");
+                cardOperation.replace("card","");
+                subscription.publishDataIntoSubscription(cardOperation.toJSONString());
+            } 
         }
     }
 
@@ -238,6 +231,25 @@ public class CardSubscriptionService {
 
     private void logUserAction(String login, UserActionEnum actionType, List<String> entities, String cardUid, String comment) {
         if (userActionLogActivated) userActionLogService.insertUserActionLog(login,  actionType, entities, cardUid, comment);
+    }
+
+
+    @Override
+    public void onEvent(String eventKey, String message) {
+        log.debug("receive event {} with message {}", eventKey, message);
+        switch (eventKey) {
+            case "process","ack":
+                cache.values().forEach(subscription -> subscription.publishDataIntoSubscription(message));
+                break;
+            case "user":
+                cache.values().forEach(subscription -> subscription.publishDataIntoSubscription("USER_CONFIG_CHANGE"));
+                break;
+            case "card":
+                cache.values().forEach(subscription -> processNewCard(message, subscription));
+                break;
+            default:
+                log.info("unrecognized event {}" , eventKey);
+        }
     }
 
 }

@@ -33,6 +33,7 @@ public class RRuleReadConverter implements Converter<Document, RRule> {
         Integer count = source.getInteger("count");
         Integer interval = source.getInteger("interval");
         DayEnum wkst = DayEnum.valueOf(source.getString("wkst"));
+        Integer durationInMinutes = source.getInteger("durationInMinutes");
 
         List<String> byweekdayStringList = (List<String>) source.get("byweekday");
         if (byweekdayStringList != null) {
@@ -61,6 +62,7 @@ public class RRuleReadConverter implements Converter<Document, RRule> {
                 .bysetpos(bysetpos)
                 .bymonthday(bymonthday)
                 .tzid(tzid)
+                .durationInMinutes(durationInMinutes)
                 ;
 
         return builder.build();

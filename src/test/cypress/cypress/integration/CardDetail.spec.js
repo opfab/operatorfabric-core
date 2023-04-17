@@ -1,4 +1,4 @@
-/* Copyright (c) 2021-2022, RTE (http://www.rte-france.com)
+/* Copyright (c) 2021-2023, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -30,6 +30,7 @@ describe('Card detail', function () {
     });
 
     describe('Check card detail', function () {
+
         it(`Check card detail`, function () {
             opfab.loginWithUser('operator1_fr');
             feed.openFirstCard();
@@ -230,6 +231,26 @@ describe('Card detail', function () {
             cy.get('.opfab-card-received-footer').contains(
                 /Deleted or updated : \d{2}\/\d{2}\/\d{4} at ((1[0-2]|0?[1-9]):([0-5][0-9]) ([AP]M))/
             );
+        });
+        
+
+        it(`Check showCard link`, function () {
+            script.sendCard('cypress/userCard/message.json');
+            script.sendCard('cypress/cardDetail/cardDetail.json');
+
+            opfab.loginWithUser('operator1_fr');
+
+            feed.openFirstCard();
+            cy.hash().should('eq', '#/feed/cards/cypress.kitchenSink');
+
+            
+            // We click on show card link
+            cy.get('#showCardLink').click();
+  
+            cy.hash().should('eq', '#/feed/cards/defaultProcess.process1');
+            cy.get('#opfab-div-card-template-processed').contains('Hello operator1_fr, you received the following message');
+            
+
         });
     });
 

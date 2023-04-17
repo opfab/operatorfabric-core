@@ -29,6 +29,8 @@ class UserSettingsDataShould {
                 .locale("fr")
                 .playSoundForAlarm(true)
                 .playSoundForAction(false)
+                .systemNotificationAlarm(true)
+                .systemNotificationAction(false)
                 //Not setting Compliant and Information to test patch on empty
                 .playSoundOnExternalDevice(true)
                 .replayEnabled(true)
@@ -65,6 +67,22 @@ class UserSettingsDataShould {
         patched = userData.patch(UserSettingsData.builder().playSoundForInformation(true).build().clearProcessesStatesNotNotified());
         assertThat(patched).usingRecursiveComparison().ignoringFields("playSoundForInformation").isEqualTo(userData);
         assertThat(patched.getPlaySoundForInformation()).isTrue();
+
+        patched = userData.patch(UserSettingsData.builder().systemNotificationAlarm(false).build().clearProcessesStatesNotNotified());
+        assertThat(patched).usingRecursiveComparison().ignoringFields("systemNotificationAlarm").isEqualTo(userData);
+        assertThat(patched.getSystemNotificationAlarm()).isFalse();
+
+        patched = userData.patch(UserSettingsData.builder().systemNotificationAction(true).build().clearProcessesStatesNotNotified());
+        assertThat(patched).usingRecursiveComparison().ignoringFields("systemNotificationAction").isEqualTo(userData);
+        assertThat(patched.getSystemNotificationAction()).isTrue();
+
+        patched = userData.patch(UserSettingsData.builder().systemNotificationCompliant(false).build().clearProcessesStatesNotNotified());
+        assertThat(patched).usingRecursiveComparison().ignoringFields("systemNotificationCompliant").isEqualTo(userData);
+        assertThat(patched.getSystemNotificationCompliant()).isFalse();
+
+        patched = userData.patch(UserSettingsData.builder().systemNotificationInformation(true).build().clearProcessesStatesNotNotified());
+        assertThat(patched).usingRecursiveComparison().ignoringFields("systemNotificationInformation").isEqualTo(userData);
+        assertThat(patched.getSystemNotificationInformation()).isTrue();
 
         patched = userData.patch(UserSettingsData.builder().playSoundOnExternalDevice(false).build().clearProcessesStatesNotNotified());
         assertThat(patched).usingRecursiveComparison().ignoringFields("playSoundOnExternalDevice").isEqualTo(userData);

@@ -1,8 +1,8 @@
 dependencies {
     swaggerCodegen generator.swagger, project(':tools:swagger-spring-generators')
     swaggerUI generator.swaggerUI
-    implementation boot.starterRabbitmq
     implementation boot.starterSecurity
+    implementation misc.jsonSmart
     implementation spring.securityOauthResource, spring.securityOauthJose
     implementation boot.starterValidation
     implementation misc.guava
@@ -14,7 +14,6 @@ dependencies {
     implementation project(':tools:generic:utilities')
     implementation project(':tools:spring:spring-oauth2-utilities')
     implementation project(':tools:spring:spring-utilities')
-    implementation project(':client:businessconfig-client-data')
     implementation project(':client:users-client-data')
     testImplementation project(':tools:spring:spring-test-utilities')
     testImplementation spring.securityTest

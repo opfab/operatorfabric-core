@@ -1,4 +1,4 @@
-/* Copyright (c) 2021-2022, RTE (http://www.rte-france.com)
+/* Copyright (c) 2021-2023, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -47,14 +47,11 @@ describe ('Feed configuration tests',function () {
         cy.get('#opfab-ack-filter-form');
         cy.get('#opfab-response-filter-form');
 
-        // Open sort menu
-        cy.get('#opfab-feed-filter-btn-sort').click();
-
         // Check elements visibility
         cy.get('#opfab-feed-filter-unread');
         cy.get('#opfab-feed-filter-severity');
 
-        cy.get('#opfab-feed-ack-all-link').should('not.exist');
+        cy.get('#opfab-feed-ack-ack-link').should('not.exist');
 
 
     })
@@ -74,9 +71,6 @@ describe ('Feed configuration tests',function () {
         // Check elements visibility
         cy.get('#opfab-time-filter-form').should('not.exist');
         cy.get('#opfab-response-filter-form').should('not.exist');
-
-        // Open sort menu
-        cy.get('#opfab-feed-filter-btn-sort').click();
 
         // Check elements visibility
         cy.get('#opfab-feed-ack-all-link').should('not.exist');
@@ -99,9 +93,6 @@ describe ('Feed configuration tests',function () {
         cy.get('#opfab-time-filter-form');
         cy.get('#opfab-response-filter-form');
 
-        // Open sort menu
-        cy.get('#opfab-feed-filter-btn-sort').click();
-
         // Check elements visibility
         cy.get('#opfab-feed-ack-all-link');
 
@@ -122,9 +113,6 @@ describe ('Feed configuration tests',function () {
         // Check notack option is selected
         cy.get('#opfab-feed-filter-ack-ack').should('be.checked');
 
-        // Open sort menu
-        cy.get('#opfab-feed-filter-btn-sort').click();
-
         // Check publication date option is selected
         cy.get('#opfab-feed-filter-publication-date').should('be.checked');
 
@@ -142,10 +130,7 @@ describe ('Feed configuration tests',function () {
         cy.get('#opfab-feed-filter-btn-filter').click();
 
         // Check notack option is selected
-        cy.get('#opfab-feed-filter-ack-notack').should('be.checked');
-
-        // Open sort menu
-        cy.get('#opfab-feed-filter-btn-sort').click();
+        cy.get('#opfab-feed-filter-ack-ack').should('not.be.checked');
 
         // Check uread option is selected
         cy.get('#opfab-feed-filter-unread').should('be.checked');

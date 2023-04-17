@@ -48,7 +48,7 @@ public class GroupsService {
     }
 
     public List<Group> fetchGroups() {
-        return groupRepository.findAll().stream().map(Group.class::cast).toList();
+        return groupRepository.findAll();
     }
 
     public OperationResult<Group> fetchGroup(String groupId) {
@@ -65,7 +65,7 @@ public class GroupsService {
         if (formatCheckResult.isValid()) {
             OperationResult<List<Perimeter>> foundPerimetersResult = getPerimeters(group.getPerimeters());
             synchronized (this) {
-                List<Group> groups = groupRepository.findAll().stream().map(Group.class::cast).toList();
+                List<Group> groups = groupRepository.findAll();
                 if (groups.stream().filter(o -> !group.getId().equals(o.getId())).anyMatch(o -> group.getName().equals(o.getName()))){
                     return new OperationResult<>(null, false, OperationResult.ErrorType.BAD_REQUEST,
                             String.format(GROUP_ALREADY_EXISTS, group.getName()));

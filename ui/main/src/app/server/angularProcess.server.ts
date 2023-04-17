@@ -32,7 +32,7 @@ export class AngularProcessServer extends AngularServer implements ProcessServer
     getProcessDefinition(processId: string, processVersion: string): Observable<ServerResponse<Process>> {
         const params = new HttpParams().set('version', processVersion);
         return this.processHttpResponse(
-            this.httpClient.get(`${this.processesUrl}/${processId}/`, {
+            this.httpClient.get(`${this.processesUrl}/${processId}`, {
                 params: params,
                 responseType: 'text'
             })

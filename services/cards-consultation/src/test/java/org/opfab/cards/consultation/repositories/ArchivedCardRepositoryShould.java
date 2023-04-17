@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2022, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2023, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -16,8 +16,8 @@ import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.opfab.cards.consultation.application.IntegrationTestApplication;
 import org.opfab.cards.consultation.model.ArchivedCardConsultationData;
-import org.opfab.cards.consultation.model.ArchivedCardsFilter;
-import org.opfab.cards.consultation.model.ArchivedCardsFilterData;
+import org.opfab.cards.consultation.model.CardsFilter;
+import org.opfab.cards.consultation.model.CardsFilterData;
 import org.opfab.cards.consultation.model.FilterModelData;
 import org.opfab.cards.model.FilterMatchTypeEnum;
 import org.opfab.users.model.ComputedPerimeter;
@@ -258,10 +258,10 @@ public class ArchivedCardRepositoryShould {
             .build();
 
             
-        ArchivedCardsFilter filters = ArchivedCardsFilterData.builder()
+        CardsFilter filters = CardsFilterData.builder()
             .filters(List.of(filter1, filter2)).build();
 
-        Tuple2<CurrentUserWithPerimeters, ArchivedCardsFilter> filterParams = of(currentUser1, filters);
+        Tuple2<CurrentUserWithPerimeters, CardsFilter> filterParams = of(currentUser1, filters);
 
 
         StepVerifier.create(repository.findWithUserAndFilter(filterParams))
@@ -288,10 +288,10 @@ public class ArchivedCardRepositoryShould {
             .filter(List.of("noSuchPublisher"))
             .build();
             
-        ArchivedCardsFilter filters = ArchivedCardsFilterData.builder()
+        CardsFilter filters = CardsFilterData.builder()
             .filters(List.of(filter1)).build();
 
-        Tuple2<CurrentUserWithPerimeters, ArchivedCardsFilter> filterParams = of(currentUser1, filters);
+        Tuple2<CurrentUserWithPerimeters, CardsFilter> filterParams = of(currentUser1, filters);
 
         StepVerifier.create(repository.findWithUserAndFilter(filterParams))
                 .assertNext(page -> {
@@ -320,10 +320,10 @@ public class ArchivedCardRepositoryShould {
             .filter(List.of(Long.toString(end.toEpochMilli())))
             .build();
             
-        ArchivedCardsFilter filters = ArchivedCardsFilterData.builder()
+        CardsFilter filters = CardsFilterData.builder()
             .filters(List.of(filter1, filter2)).build();
 
-        Tuple2<CurrentUserWithPerimeters, ArchivedCardsFilter> filterParams = of(currentUser1, filters);
+        Tuple2<CurrentUserWithPerimeters, CardsFilter> filterParams = of(currentUser1, filters);
 
 
         StepVerifier.create(repository.findWithUserAndFilter(filterParams))
@@ -352,10 +352,10 @@ public class ArchivedCardRepositoryShould {
             .filter(List.of(Long.toString(start.toEpochMilli())))
             .build();
             
-        ArchivedCardsFilter filters = ArchivedCardsFilterData.builder()
+        CardsFilter filters = CardsFilterData.builder()
             .filters(List.of(filter1)).build();
 
-        Tuple2<CurrentUserWithPerimeters, ArchivedCardsFilter> filterParams = of(currentUser1, filters);
+        Tuple2<CurrentUserWithPerimeters, CardsFilter> filterParams = of(currentUser1, filters);
 
 
         StepVerifier.create(repository.findWithUserAndFilter(filterParams))
@@ -384,10 +384,10 @@ public class ArchivedCardRepositoryShould {
             .filter(List.of(Long.toString(end.toEpochMilli())))
             .build();
         
-        ArchivedCardsFilter filters = ArchivedCardsFilterData.builder()
+        CardsFilter filters = CardsFilterData.builder()
             .filters(List.of(filter1)).build();
 
-        Tuple2<CurrentUserWithPerimeters, ArchivedCardsFilter> filterParams = of(currentUser1, filters);
+        Tuple2<CurrentUserWithPerimeters, CardsFilter> filterParams = of(currentUser1, filters);
 
 
         StepVerifier.create(repository.findWithUserAndFilter(filterParams))
@@ -421,10 +421,10 @@ public class ArchivedCardRepositoryShould {
             .filter(List.of(Long.toString(end.toEpochMilli())))
             .build();
         
-        ArchivedCardsFilter filters = ArchivedCardsFilterData.builder()
+        CardsFilter filters = CardsFilterData.builder()
             .filters(List.of(filter1, filter2)).build();
 
-        Tuple2<CurrentUserWithPerimeters, ArchivedCardsFilter> filterParams = of(currentUser1, filters);
+        Tuple2<CurrentUserWithPerimeters, CardsFilter> filterParams = of(currentUser1, filters);
 
 
         StepVerifier.create(repository.findWithUserAndFilter(filterParams))
@@ -453,10 +453,10 @@ public class ArchivedCardRepositoryShould {
             .filter(List.of(Long.toString(start.toEpochMilli())))
             .build();
             
-        ArchivedCardsFilter filters = ArchivedCardsFilterData.builder()
+        CardsFilter filters = CardsFilterData.builder()
             .filters(List.of(filter1)).build();
 
-        Tuple2<CurrentUserWithPerimeters, ArchivedCardsFilter> filterParams = of(currentUser1, filters);
+        Tuple2<CurrentUserWithPerimeters, CardsFilter> filterParams = of(currentUser1, filters);
 
 
         StepVerifier.create(repository.findWithUserAndFilter(filterParams))
@@ -488,12 +488,12 @@ public class ArchivedCardRepositoryShould {
             .build();
             
         //Page 1
-        ArchivedCardsFilter filters = ArchivedCardsFilterData.builder()
+        CardsFilter filters = CardsFilterData.builder()
             .size(BigDecimal.valueOf(2))
             .page(BigDecimal.ZERO)
             .filters(List.of(filter1)).build();
 
-        Tuple2<CurrentUserWithPerimeters, ArchivedCardsFilter> filterParams = of(currentUser1, filters);
+        Tuple2<CurrentUserWithPerimeters, CardsFilter> filterParams = of(currentUser1, filters);
 
 
         StepVerifier.create(repository.findWithUserAndFilter(filterParams))
@@ -573,10 +573,10 @@ public class ArchivedCardRepositoryShould {
             .build();
 
         
-        ArchivedCardsFilter filters = ArchivedCardsFilterData.builder()
+        CardsFilter filters = CardsFilterData.builder()
             .filters(List.of(filter1)).build();
 
-        Tuple2<CurrentUserWithPerimeters, ArchivedCardsFilter> filterParams = of(currentUser1, filters);
+        Tuple2<CurrentUserWithPerimeters, CardsFilter> filterParams = of(currentUser1, filters);
 
         
         StepVerifier.create(repository.findWithUserAndFilter(filterParams))
@@ -622,10 +622,10 @@ public class ArchivedCardRepositoryShould {
             .filter(List.of(firstPublisher))
             .build();
 
-        ArchivedCardsFilter filters = ArchivedCardsFilterData.builder()
+        CardsFilter filters = CardsFilterData.builder()
             .filters(List.of(filter1, filter2, filter3, filter4)).build();
 
-        Tuple2<CurrentUserWithPerimeters, ArchivedCardsFilter> filterParams = of(currentUser1, filters);
+        Tuple2<CurrentUserWithPerimeters, CardsFilter> filterParams = of(currentUser1, filters);
 
 
         StepVerifier.create(repository.findWithUserAndFilter(filterParams))
@@ -651,9 +651,9 @@ public class ArchivedCardRepositoryShould {
     void fetchArchivedCardsUserRecipientIsAllowedToSee() {
 
         //Cards visible by user1
-        ArchivedCardsFilter filters = ArchivedCardsFilterData.builder().filters(List.of()).build();
+        CardsFilter filters = CardsFilterData.builder().filters(List.of()).build();
 
-        Tuple2<CurrentUserWithPerimeters, ArchivedCardsFilter> filterParams = of(currentUser1, filters);
+        Tuple2<CurrentUserWithPerimeters, CardsFilter> filterParams = of(currentUser1, filters);
 
 
         StepVerifier.create(repository.findWithUserAndFilter(filterParams))
@@ -672,9 +672,9 @@ public class ArchivedCardRepositoryShould {
     void fetchArchivedCardsGroupRecipientIsAllowedToSee() {
 
         //Cards visible by someone from group "rte"
-        ArchivedCardsFilter filters = ArchivedCardsFilterData.builder().filters(List.of()).build();
+        CardsFilter filters = CardsFilterData.builder().filters(List.of()).build();
 
-        Tuple2<CurrentUserWithPerimeters, ArchivedCardsFilter> filterParams = of(currentUser2, filters);
+        Tuple2<CurrentUserWithPerimeters, CardsFilter> filterParams = of(currentUser2, filters);
 
 
         StepVerifier.create(repository.findWithUserAndFilter(filterParams))
@@ -693,8 +693,8 @@ public class ArchivedCardRepositoryShould {
     void fetchArchivedCardsUserRecipientWithNoGroupIsAllowedToSee() {
 
         //Cards visible by user3 (who has no groups at all)
-        ArchivedCardsFilter filters = ArchivedCardsFilterData.builder().filters(List.of()).build();
-        Tuple2<CurrentUserWithPerimeters, ArchivedCardsFilter> filterParams = of(currentUser3, filters);
+        CardsFilter filters = CardsFilterData.builder().filters(List.of()).build();
+        Tuple2<CurrentUserWithPerimeters, CardsFilter> filterParams = of(currentUser3, filters);
 
 
         StepVerifier.create(repository.findWithUserAndFilter(filterParams))
@@ -708,8 +708,8 @@ public class ArchivedCardRepositoryShould {
     void fetchArchivedCardsEntityRecipientIsAllowedToSee() {
 
         //Cards visible by someone from entity "someEntity"
-        ArchivedCardsFilter filters = ArchivedCardsFilterData.builder().filters(List.of()).build();
-        Tuple2<CurrentUserWithPerimeters, ArchivedCardsFilter> filterParams = of(currentUser4, filters);
+        CardsFilter filters = CardsFilterData.builder().filters(List.of()).build();
+        Tuple2<CurrentUserWithPerimeters, CardsFilter> filterParams = of(currentUser4, filters);
 
 
         StepVerifier.create(repository.findWithUserAndFilter(filterParams))
@@ -723,8 +723,8 @@ public class ArchivedCardRepositoryShould {
     void fetchArchivedCardsGroupAndEntityRecipientAreAllowedToSee() {
 
         //Cards visible by someone from group "group1" and from entity "entity1"
-        ArchivedCardsFilter filters = ArchivedCardsFilterData.builder().filters(List.of()).build();
-        Tuple2<CurrentUserWithPerimeters, ArchivedCardsFilter> filterParams = of(currentUser5, filters);
+        CardsFilter filters = CardsFilterData.builder().filters(List.of()).build();
+        Tuple2<CurrentUserWithPerimeters, CardsFilter> filterParams = of(currentUser5, filters);
 
 
         StepVerifier.create(repository.findWithUserAndFilter(filterParams))

@@ -11,16 +11,11 @@
     <div id='popup' class='opfab-ol-popup'>
         <a href='#' id='popup-closer' class='opfab-ol-popup-closer'></a>
         <div *ngFor="let lightCard of lightCardsToDisplay; let i=index">
-            <div *ngIf="i<5">
                 <button class="btn btn-cardlink btn-sm" (click)="showCard(lightCard.id)">
                     <span style="text-align:left">
                         {{this.displayCardDetailsOnButton(lightCard)}}
                     </span>
                 </button>
-            </div>
-            <div *ngIf="i===5">
-                &nbsp;&nbsp;&nbsp;...
-            </div>
         </div>
     </div>
 </div>
