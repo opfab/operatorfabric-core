@@ -92,7 +92,7 @@ public class ArchivedCardCustomRepositoryImpl implements ArchivedCardCustomRepos
     @Override
     public Mono<Page<LightCard>> findWithUserAndFilter(Tuple2<CurrentUserWithPerimeters, CardsFilter> filter) {
         CardsFilter queryFilter = filter.getT2();
-        log.info("findWithUserAndFilter" + queryFilter);
+        log.debug("findWithUserAndFilter {}", queryFilter);
 
         Pageable pageableRequest = PaginationUtils.createPageable(queryFilter.getPage() != null ? queryFilter.getPage().intValue() : null , queryFilter.getSize() != null ? queryFilter.getSize().intValue() : null);
         String[] fields = {"uid",
