@@ -28,6 +28,7 @@
                         #p1="ngbPopover"
                         [ngbPopover]="tooltipTemplate"
                         triggers="mouseenter"
+                        [autoClose]="false"
                         popoverClass="opfab-popover opfab-popover-with-scrolling"
                         xmlns="http://www.w3.org/2000/svg"
                         xmlns:xlink="http://www.w3.org/1999/xlink"
@@ -74,7 +75,7 @@
 
 
 <ng-template #tooltipTemplate>
-    <div (mouseenter)="onMouseEnter()" (mouseleave)="openPopover.close()" style="padding:10px">
+    <div (mouseenter)="onMouseEnter()" (mouseleave)="openPopover.close()" style="padding:10px;overflow-y: auto;max-height: 500px;">
             <div *ngFor="let card of currentCircleHovered.cards" style="padding: 0px; margin: 0px; line-height: 8px">
                 <button id="opfab-dashboard-bubble-btn-{{card.id}}" class="btn btn-verycardlink btn-sm" (click)="selectCard(card.id)" style="width:100%">
                     <div style="text-align: left">
