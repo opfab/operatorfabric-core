@@ -13,6 +13,7 @@ import {BusinessDataServer} from '../server/businessData.server';
 import {ServerResponseStatus} from '../server/serverResponse';
 import {LogOption, OpfabLoggerService} from './logs/opfab-logger.service';
 import {OpfabEventStreamService} from './opfabEventStream.service';
+import * as _ from 'lodash-es';
 
 @Injectable({
     providedIn: 'root'
@@ -41,12 +42,12 @@ export class BusinessDataService {
 
     public async getBusinessData(resourceName: string): Promise<any> {
         if (this._cachedResources.has(resourceName)) {
-            return this.getCachedValue(resourceName);
+            return _.clone(this.getCachedValue(resourceName));
         }
         const resource = await firstValueFrom(this.businessDataServer.getBusinessData(resourceName));
         if (resource.status === ServerResponseStatus.OK) {
             this.addResourceToCache(resourceName, resource.data);
-            return resource.data;
+            return _.clone(resource.data);
         } else {
             this.loggerService.info(`Could not find the resource. See : ${resource.statusMessage}`);
             return {};
