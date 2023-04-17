@@ -389,6 +389,19 @@ paths:
           description: OK
           schema:
             type: object
+    delete:
+      summary: Delete every resource
+      description: Delete every resource
+      operationId: deleteAllBusinessData
+      produces:
+        - application/json
+      responses:
+        '200':
+          description: OK          
+        '401':
+          description: Authentication required
+        '403':
+          description: Forbidden - ADMIN role necessary
   '/businessconfig/businessData/{resourceName}':
     get:
       summary: Get the business data

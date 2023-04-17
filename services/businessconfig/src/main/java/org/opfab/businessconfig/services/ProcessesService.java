@@ -14,6 +14,7 @@ package org.opfab.businessconfig.services;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.collect.HashBasedTable;
 import com.google.common.collect.Table;
+import org.apache.commons.io.FileUtils;
 
 import net.minidev.json.JSONObject;
 import net.minidev.json.parser.JSONParser;
@@ -685,5 +686,11 @@ public class ProcessesService implements ResourceLoaderAware {
             }
         } 
         return this.objectMapper.writeValueAsString(fileSet);
+    }
+    
+    public void deleteAllBusinessData() throws IOException {
+        Path resourcePath = Paths.get(this.storagePath + BUSINESS_DATA_FOLDER).normalize();
+        File dataDirectory = new File(resourcePath.toString());
+        FileUtils.cleanDirectory(dataDirectory);
     }
 }

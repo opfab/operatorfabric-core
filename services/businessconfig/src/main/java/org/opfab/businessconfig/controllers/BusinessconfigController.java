@@ -323,6 +323,12 @@ public class BusinessconfigController implements BusinessconfigApi {
     public String getAllBusinessData(HttpServletRequest request, HttpServletResponse response) throws IOException {
         return processService.getAllBusinessData();
     }
+
+    @Override
+    public Void deleteAllBusinessData(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        processService.deleteAllBusinessData();
+        return null;
+    }
     
     @Override
     public Void uploadBusinessData(HttpServletRequest request, HttpServletResponse response, @Valid MultipartFile file, String resourceName) {
