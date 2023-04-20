@@ -1,0 +1,39 @@
+{
+  "opfab": {
+    "login": "admin",
+    "password": "test",
+    "url": "http://localhost:2002",
+    "connectedUsersUrl": "http://cards-consultation:8080/connections",
+    "cardsUrl": "http://cards-consultation:8080/cards",
+    "usersUrl": "http://users:8080/users",
+    "getTokenUrl": "http://web-ui/auth/token",
+    "tokenExpireClaim": "exp"
+  },
+  "rabbitmq": {
+    "host": "rabbitmq",
+    "port": 5672,
+    "username": "guest",
+    "password": "guest"
+  },
+  "logConfig": {
+    "logLevel": "info"
+  },
+  "adminPort" : 3100,
+  "activeOnStartup" : true,
+  "mail" : {
+    "host": "mailhog",
+    "port": 1025,
+    "auth": {
+        "user": "guest",
+        "pass": "guest"
+    }
+  },
+  "defaultConfig": {
+    "mailFrom" : "opfab@localhost.it",
+    "subjectPrefix" : "Opfab card received ",
+    "bodyPrefix" : "You received a card in opfab : ",
+    "windowInSecondsForCardSearch": 360,
+    "secondsAfterPublicationToConsiderCardAsNotRead" : 60,
+    "checkPeriodInSeconds" : 10
+  }
+}

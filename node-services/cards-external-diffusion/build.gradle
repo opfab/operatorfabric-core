@@ -1,0 +1,69 @@
+plugins {
+    id "base"
+    id 'com.github.node-gradle.node'
+    id "com.palantir.docker"
+}
+
+npmInstall {
+    inputs.files(fileTree('node_modules'))
+    inputs.file('package.json')
+    inputs.file('package-lock.json')
+
+    outputs.dir('build')
+
+}
+
+task runBuild(type: NpmTask) {
+    inputs.files(fileTree('src'))
+    inputs.files(fileTree('node_modules'))
+    inputs.file('package.json')
+    inputs.file('package-lock.json')
+
+    outputs.dir('build')
+
+    dependsOn npmInstall
+    args = ['run', 'build']
+}
+
+task runTests(type: NpmTask) {
+    inputs.files(fileTree('src'))
+    inputs.files(fileTree('node_modules'))
+    inputs.file('package.json')
+    inputs.file('package-lock.json')
+    inputs.file('jest.config.js')
+
+    dependsOn runBuild
+    args = ['run', 'test']
+}
+
+docker {
+    name "lfeoperatorfabric/of-${project.name}:${project.version}"
+    if (!project.version.equals("SNAPSHOT"))
+        tag "latest", "latest"
+    labels (['project':"${project.group}"])
+    copySpec.with {
+				from('build') {
+					include '**'
+					into 'build'
+				}
+                from('config') {
+					include '**'
+					into 'config'
+				}
+				from('.') {
+					include 'startCardsExternalDiffusion.sh'
+					include 'package.json'
+					into '.'
+				}
+			}
+    files( "build", "package.json", "config")
+    buildArgs([
+                'https_proxy'    : proxy.https
+                ])
+    dockerfile file("docker/Dockerfile")
+}
+
+build.dependsOn(runTests)
+build.dependsOn(runBuild)
+assemble.dependsOn(runBuild)
+tasks.dockerPrepare.dependsOn runBuild

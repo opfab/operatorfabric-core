@@ -61,6 +61,8 @@ public class LightCardReadConverter implements Converter<Document, LightCardCons
                 .usersAcks(source.getList("usersAcks", String.class))
                 .entityRecipients(source.getList("entityRecipients", String.class))
                 .entityRecipientsForInformation(source.getList("entityRecipientsForInformation", String.class))
+                .userRecipients(source.getList("userRecipients", String.class))
+                .groupRecipients(source.getList("groupRecipients", String.class))
                 .entitiesAcks(source.getList("entitiesAcks", String.class))
                 .entitiesAllowedToRespond(source.getList("entitiesAllowedToRespond", String.class))
                 .publisherType(PublisherTypeEnum.valueOf(source.getString("publisherType")))

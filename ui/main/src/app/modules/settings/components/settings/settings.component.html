@@ -39,6 +39,14 @@
     <div class="opfab-settings-item" *ngIf="!hiddenSettings?.includes('language')">
       <of-list-setting settingPath="locale" [values]="locales" ></of-list-setting>
     </div>
+
+    <div class="opfab-settings-item" *ngIf="!hiddenSettings?.includes('sendCardsByEmail')">
+      <of-checkbox-setting settingPath="sendCardsByEmail" labelClass="label-sendCardsByEmail" name="sendCardsByEmail" [checked]=sendCardsByEmailDefaultValue></of-checkbox-setting>
+    </div>
+
+    <div class="opfab-settings-item" *ngIf="!hiddenSettings?.includes('sendCardsByEmail')">
+      <of-text-setting settingPath="email" [text]=''></of-text-setting>
+    </div>
     <div class="opfab-settings-item" *ngIf="!hiddenSettings?.includes('remoteLoggingEnabled')">
       <of-checkbox-setting settingPath="remoteLoggingEnabled" labelClass="label-remoteLoggingEnabled" name="remoteLoggingEnabled" [checked]=remoteLoggingEnabledDefaultValue></of-checkbox-setting>
     </div>

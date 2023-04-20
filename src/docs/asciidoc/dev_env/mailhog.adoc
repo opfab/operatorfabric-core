@@ -1,0 +1,36 @@
+// Copyright (c) 2023 RTE (http://www.rte-france.com)
+// See AUTHORS.txt
+// This document is subject to the terms of the Creative Commons Attribution 4.0 International license.
+// If a copy of the license was not distributed with this
+// file, You can obtain one at https://creativecommons.org/licenses/by/4.0/.
+// SPDX-License-Identifier: CC-BY-4.0
+
+= MailHog SMTP server
+
+MailHog is an SMTP mail server suitable for testing.
+Opfab uses MailHog to test mail notification service.
+MailHog allows to view sent messages in the web UI, or retrieve them with the JSON API.
+
+== MailHog docker container
+
+A MailHog docker container is configured in Opfab docker-compose.yaml:
+
+[source,yaml]
+----
+  mailhog:
+    image: mailhog/mailhog:v1.0.1
+    ports:
+      - 1025:1025
+      - 8025:8025
+----
+
+The container exposes port 1025 for SMTP protocol and port 8025 for web UI and HTTP REST API.
+Mailhog web interface is accesible at `http://localhost:8025`.
+Mailhog REST API allows to list, retrieve and delete messages.
+
+For example, to retrieve the list of received messages, send an http GET request to: `http://localhost:8025/api/v2/messages`
+
+
+
+
+

@@ -43,6 +43,8 @@ public class UserSettingsData implements UserSettings {
     private Boolean replayEnabled;
     private Integer replayInterval;
     private Boolean remoteLoggingEnabled;
+    private Boolean sendCardsByEmail;
+    private String email;
 
     @Singular("processStatesNotNotified")
     private Map<String, List<String>> processesStatesNotNotified;
@@ -65,6 +67,8 @@ public class UserSettingsData implements UserSettings {
         this.replayEnabled = settings.getReplayEnabled();
         this.replayInterval = settings.getReplayInterval();
         this.remoteLoggingEnabled = settings.getRemoteLoggingEnabled();
+        this.sendCardsByEmail = settings.getSendCardsByEmail();
+        this.email = settings.getEmail();
 
         if (settings.getProcessesStatesNotNotified() != null)
             this.processesStatesNotNotified = new HashMap<>(settings.getProcessesStatesNotNotified());
@@ -120,6 +124,8 @@ public class UserSettingsData implements UserSettings {
         result.remoteLoggingEnabled = ObjectUtils.getNotNullOrDefault( other.getRemoteLoggingEnabled(), this.getRemoteLoggingEnabled());
         result.processesStatesNotNotified = ObjectUtils.getNotNullOrDefault( other.getProcessesStatesNotNotified(), this.getProcessesStatesNotNotified(), HashMap::new);
         result.entitiesDisconnected = ObjectUtils.getNotNullOrDefault( other.getEntitiesDisconnected(), this.getEntitiesDisconnected(), ArrayList::new);
+        result.sendCardsByEmail = ObjectUtils.getNotNullOrDefault( other.getSendCardsByEmail(), this.getSendCardsByEmail());
+        result.email = ObjectUtils.getNotNullOrDefault( other.getEmail(), this.getEmail());
 
         return result;
     }
