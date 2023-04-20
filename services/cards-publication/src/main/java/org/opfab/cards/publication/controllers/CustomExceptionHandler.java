@@ -1,4 +1,4 @@
-/* Copyright (c) 2021-2022, RTE (http://www.rte-france.com)
+/* Copyright (c) 2021-2023, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -17,6 +17,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.context.request.WebRequest;
@@ -48,10 +49,22 @@ public class CustomExceptionHandler extends OpfabCustomExceptionHandler {
     @ExceptionHandler(ConstraintViolationException.class)
     public ResponseEntity<Object> handleConstraintViolationException(ConstraintViolationException exception, final WebRequest
             request) {
-        log.info(GENERIC_MSG, request, exception);
+        log.info(GENERIC_MSG + ",  {}", request, exception.getMessage());
         ApiError error = ApiError.builder()
                 .status(HttpStatus.BAD_REQUEST)
                 .message("Constraint violation in the request")
+                .error(exception.getMessage())
+                .build();
+        return new ResponseEntity<>(error, error.getStatus());
+    }
+
+    @ExceptionHandler(AccessDeniedException.class)
+    public ResponseEntity<Object> handleAccessDeniedException(AccessDeniedException exception, final WebRequest
+            request) {
+        log.warn(GENERIC_MSG + " , {} ", request, exception.getMessage());
+        ApiError error = ApiError.builder()
+                .status(HttpStatus.FORBIDDEN)
+                .message("Action unauthorized")
                 .error(exception.getMessage())
                 .build();
         return new ResponseEntity<>(error, error.getStatus());

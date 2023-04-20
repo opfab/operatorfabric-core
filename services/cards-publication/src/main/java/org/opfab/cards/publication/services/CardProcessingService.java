@@ -27,7 +27,6 @@ import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.AccessDeniedException;
 
-
 import jakarta.validation.ConstraintViolationException;
 
 import java.time.Instant;
@@ -98,7 +97,9 @@ public class CardProcessingService {
             checkProcessStateExistsInBundles(card);
         if (user.isPresent() && checkPerimeterForCardSending
                 && !cardPermissionControlService.isUserAuthorizedToSendCard(card, user.get())) {
-            throw new AccessDeniedException("user not authorized, the card is rejected");
+            throw new AccessDeniedException(String.format(
+                    "user not authorized to send card with process %s and state %s as it is not permitted by his perimeters, the card is rejected",
+                    card.getProcess(), card.getState()));
         }
         // set empty user otherwise it will be processed as a usercard
         processOneCard(card, Optional.empty(), jwt);
@@ -125,7 +126,9 @@ public class CardProcessingService {
                         .build());
 
             if (!cardPermissionControlService.isUserAuthorizedToSendCard(card, user.get())) {
-                throw new AccessDeniedException("user not authorized, the card is rejected");
+                throw new AccessDeniedException(String.format(
+                    "user not authorized to send card with process %s and state %s as it is not permitted by his perimeters, the card is rejected",
+                    card.getProcess(), card.getState()));
             }
 
             if (!cardPermissionControlService.isCardPublisherInUserEntities(card, user.get()))
