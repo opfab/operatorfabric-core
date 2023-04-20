@@ -50,5 +50,9 @@ services:
       - SPRING_PROFILES_ACTIVE=docker
     volumes:
       - "../certificates:/certificates_to_add"
-
+  mailhog:
+    image: mailhog/mailhog:v1.0.1
+    ports:
+      - 1025:1025
+      - 8025:8025
 

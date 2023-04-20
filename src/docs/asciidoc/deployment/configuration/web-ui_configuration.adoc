@@ -123,6 +123,9 @@ Values should be taken from the link:https://en.wikipedia.org/wiki/List_of_tz_da
 |settings.replayEnabled|false|no|If set to true, sounds are replayed every `settings.replayInterval` seconds until the user interacts with the application
 |settings.replayInterval|5|no|Interval between sound replays (see `settings.replayEnabled`)
 |settings.remoteLoggingEnabled|false|no| If set to true, some logs form the UI are sent to the back and write in the log file of the cards-consultation service
+|settings.sendCardsByEmail|false|no|If set to true, Opfab will send cards notification by email
+|settings.email||no|Email address to use as recipient for email notifications (see `settings.sendCardsByEmail`)
+
 |settingsScreen.hiddenSettings||no|Array of string indicating which field(s) we want to hide in the settings screen. Possible values : +
 "description" : if present, description field will not be displayed +
 "language" : if present, language field will not be displayed +

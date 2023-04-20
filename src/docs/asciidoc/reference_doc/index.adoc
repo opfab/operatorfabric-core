@@ -26,6 +26,8 @@ include::card_rendering.adoc[leveloffset=+1]
 
 include::card_notification.adoc[leveloffset=+1]
 
+include::mail_notification.adoc[leveloffset=+1]
+
 include::response_cards.adoc[leveloffset=+1]
 
 include::user_cards.adoc[leveloffset=+1]

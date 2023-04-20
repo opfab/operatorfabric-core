@@ -42,6 +42,11 @@ services:
     - "89:8080"
 #    Debug port closed for security reasons, be careful if you open it 
 #    - "90:9990"
+  mailhog:
+    image: mailhog/mailhog:v1.0.1
+    ports:
+      - 1025:1025
+      - 8025:8025
   users:
     container_name: users
     image: "lfeoperatorfabric/of-users-service:SNAPSHOT"
@@ -127,6 +132,17 @@ services:
       - "./ui-config:/usr/share/nginx/html/opfab"
       - "./nginx.conf:/etc/nginx/conf.d/default.conf"
       - "../../src/test/externalWebAppExample:/usr/share/nginx/html/external/appExample"
+  cards-external-diffusion:
+    container_name: cards-external-diffusion
+    image: "lfeoperatorfabric/of-cards-external-diffusion-service:SNAPSHOT"
+    depends_on:
+      - cards-consultation
+      - web-ui
+      - users
+      - mailhog
+    user: ${USER_ID}:${USER_GID}
+    ports:
+      - "3100:3100"
 
 # Uncomment the line below to customize sounds for notification
 #     - "./custom-sounds:/usr/share/nginx/html/assets/sounds"

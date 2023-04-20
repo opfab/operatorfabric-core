@@ -1,4 +1,4 @@
-// Copyright (c) 2018-2022 RTE (http://www.rte-france.com)
+// Copyright (c) 2018-2023 RTE (http://www.rte-france.com)
 // See AUTHORS.txt
 // This document is subject to the terms of the Creative Commons Attribution 4.0 International license.
 // If a copy of the license was not distributed with this
@@ -151,6 +151,46 @@ The external devices service can be configured with the following properties:
 |operatorfabric.externaldevices.watchdog.cron|`*/5 * * * * *`|no|CRON expression determining when watchdog signals should be sent to external devices.
 |operatorfabric.externaldevices.watchdog.signalId|0|no|Id the signal the external devices are expecting as watchdog
 |===
+
+== Mail notification service configuration
+
+The mail notification service configuration file is located in node-services/cards-external-diffusion/conf folder.
+The are 2 configuration files: one for running the service into a docker container ('default-docker.json') and one to run the service from command line (default.json). 
+
+The main notification service can be configured with the following properties:
+
+|===
+|name|default|mandatory?|Description
+|adminPort||yes|Listen port
+|activeOnStartup||yes|Flag to start the notification service on startup
+|opfab.login||yes|user account used to call Opfab services
+|opfab.password||yes|user password to call Opfab services
+|opfab.url||yes| Opfab URL
+|opfab.connectedUsersUrl||yes|Service URL to get the list of users currently connected to Opfab
+|opfab.cardsUrl||yes|Cards consultation service URL
+|opfab.usersUrl||yes|Users service URL
+|opfab.getTokenUrl||yes|Authentication service URL
+|opfab.tokenExpireClaim||yes|Token expiration property
+|rabbitmq.host||yes|
+|rabbitmq.port||yes|
+|rabbitmq.username||yes|
+|rabbitmq.password||yes|
+|logConfig.logFolder||yes|
+|logConfig.logFile||yes|
+|logConfig.logLevel||yes|
+|mail.host||yes|Mail server host
+|mail.port||yes|Mail server host
+|mail.auth.user||yes|Mail server authentication user
+|mail.auth.pass||yes|Mail server authentication password
+|defaultConfig.mailFrom|||yes|Mail from address
+|defaultConfig.subjectPrefix||yes|Mail subject prefix
+|defaultConfig.bodyPrefix||||Mail body prefix
+|defaultConfig.windowInSecondsForCardSearch||||Max time interval used to query new cards (in seconds) 
+|defaultConfig.secondsAfterPublicationToConsiderCardAsNotRead||||Time period after card publication before sending mail notification
+|defaultConfig.checkPeriodInSeconds||||Time interval between consecutive checks
+
+The parameters in "defaultConfig" section can be modified at runtime by sending an http POST request to the `/config` API with a JSON payload containing the config parameters to be changed.
+
 
 include::web-ui_configuration.adoc[leveloffset=+1]
 
