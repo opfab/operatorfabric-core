@@ -71,6 +71,8 @@ public class LightCardPublicationData implements LightCard {
 
     private List<String> entitiesAcks;
     private List<String> entityRecipients;
+    private List<String> groupRecipients;
+    private List<String> userRecipients;
     private List<String> entityRecipientsForInformation;
     
     @Transient

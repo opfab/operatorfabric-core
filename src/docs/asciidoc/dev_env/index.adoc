@@ -45,3 +45,5 @@ include::keycloak-configuration.adoc[leveloffset=+1]
 include::token.adoc[leveloffset=+1]
 
 include::kafka.adoc[leveloffset=+1]
+
+include::mailhog.adoc[leveloffset=+1]

@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2021, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2023, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -26,7 +26,7 @@
     padding-left: 10%;
     padding-right: 10%;
     margin-top: 40px;
-    padding-bottom: 20px;
+    padding-bottom: 40px;
 }
 
 // if screen too small use only one column
@@ -37,7 +37,7 @@
 }
 
 .opfab-settings-item {
-    margin-top: 20px;
+    margin-top: 40px;
     margin-left: 10px;
     margin-right: 5px;
 }
@@ -45,7 +45,7 @@
 .opfab-settings-sounds {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    margin-top: 22px;
+    margin-top: 42px;
 }
 
 // if screen too small use only one column
