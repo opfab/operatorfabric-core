@@ -923,7 +923,7 @@ class CardProcessServiceShould {
 
                 Assertions.assertThatThrownBy(() -> cardProcessingService.processCard(card, user, token))
                                 .isInstanceOf(AccessDeniedException.class)
-                                .hasMessage("user not authorized, the card is rejected");
+                                .hasMessage("user not authorized to send card with process PROCESS_CARD_USER and state state1 as it is not permitted by his perimeters, the card is rejected");
                 Assertions.assertThat(checkCardCount(0)).isTrue();
 
         }
