@@ -12,6 +12,11 @@
 			"description": "Message",
 			"styles" : [ "style" ]
 		},
+		"mailState" : {
+			"templateName" : "template",
+			"description": "Mail",
+			"styles" : [ "style" ]
+		},
 		"questionState": {
 		  "name": "question.title",
 		  "description": "Question",

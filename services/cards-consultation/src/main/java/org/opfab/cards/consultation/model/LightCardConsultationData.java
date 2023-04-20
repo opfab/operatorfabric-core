@@ -77,6 +77,8 @@ public class LightCardConsultationData implements LightCard {
     private List<String> entitiesAcks;
     private List<String> entityRecipients;
     private List<String> entityRecipientsForInformation;
+    private List<String> userRecipients;
+    private List<String> groupRecipients;
 
     @Transient
     private Boolean hasBeenRead;
@@ -166,6 +168,12 @@ public class LightCardConsultationData implements LightCard {
             builder.entityRecipients(other.getEntityRecipients());
         if (other.getEntityRecipientsForInformation() != null && !other.getEntityRecipientsForInformation().isEmpty())
             builder.entityRecipientsForInformation(other.getEntityRecipientsForInformation());
+        if (other.getGroupRecipients() != null && !other.getGroupRecipients().isEmpty())
+            builder.groupRecipients(other.getGroupRecipients());
+        if (other.getUserRecipients() != null && !other.getUserRecipients().isEmpty()) {
+            builder.userRecipients(other.getUserRecipients());            
+        }
+
         return builder.build();
 
     }

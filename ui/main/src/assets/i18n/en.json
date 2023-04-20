@@ -256,7 +256,9 @@
     "systemNotificationAction": "Action",
     "systemNotificationCompliant": "Compliant",
     "systemNotificationInformation": "Information",
-    "systemNotificationsDisabledInBrowser": "System notifications are disabled in your browser, you will not be notified."
+    "systemNotificationsDisabledInBrowser": "System notifications are disabled in your browser, you will not be notified.",
+    "sendCardsByEmail" : "Send notification by email",
+    "email": "Email"
   },
   "archive": {
     "cardLoadingInProgress":"Loading card  ...",
