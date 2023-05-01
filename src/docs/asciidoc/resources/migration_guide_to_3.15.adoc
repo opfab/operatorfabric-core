@@ -1,0 +1,12 @@
+// Copyright (c) 2023 RTE (http://www.rte-france.com)
+// See AUTHORS.txt
+// This document is subject to the terms of the Creative Commons Attribution 4.0 International license.
+// If a copy of the license was not distributed with this
+// file, You can obtain one at https://creativecommons.org/licenses/by/4.0/.
+// SPDX-License-Identifier: CC-BY-4.0
+
+= Migration Guide from release 3.14.0 to release 3.15.0
+
+== CrossOrigin for GeoJSON
+
+The option `feed.geomap.layer.geojson.crossOrigin`, used to set a cross-origin option when downloading GeoJSON, has been removed.

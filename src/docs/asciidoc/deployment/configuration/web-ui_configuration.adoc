@@ -97,7 +97,6 @@ a|card time display mode in the feed. Values :
 |feed.geomap.bglayer.xyz.tileSize|null|no|Custom xyz/tiled background layer tile size (Int value, example: 256. Required when using custom background layer).
 |feed.geomap.bglayer.xyz.crossOrigin|null|no|Custom xyz/tiled background layer crossOrigin setting.
 |feed.geomap.layer.geojson.url|null|no|Add a GeoJSON layer to the map. Example: "https://localhost:8000/service-area.geojson"
-|feed.geomap.layer.geojson.crossOrigin|null|no|Configure CrossOrigin settings for GeoJSON layer. Example: 'anonymous'.
 |i18n.supported.locales||no|List of supported locales (Only fr and en so far)
 Values should be taken from the link:https://en.wikipedia.org/wiki/List_of_tz_database_time_zones[TZ database].
 
