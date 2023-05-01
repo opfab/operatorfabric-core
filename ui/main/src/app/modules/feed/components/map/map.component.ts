@@ -30,8 +30,8 @@ import Chart from 'chart.js/auto';
 import ChartDataLabels from 'chartjs-plugin-datalabels';
 import {TranslateService} from '@ngx-translate/core';
 import {GlobalStyleService} from 'app/business/services/global-style.service';
-import {Router} from "@angular/router";
-import {DateTimeFormatterService} from "../../../../business/services/date-time-formatter.service";
+import {Router} from '@angular/router';
+import {DateTimeFormatterService} from '../../../../business/services/date-time-formatter.service';
 
 let self;
 
@@ -43,10 +43,9 @@ let self;
 export class MapComponent implements OnInit, OnDestroy, AfterViewChecked {
     private unsubscribe$ = new Subject<void>();
     private map: OpenLayersMap;
-    private vectorLayer: VectorLayer;
+    private vectorLayer: VectorLayer<VectorSource<any>>;
     private graphChart = null;
     public lightCardsToDisplay: LightCard[];
-
 
     constructor(
         private lightCardsFeedFilterService: LightCardsFeedFilterService,
@@ -91,7 +90,7 @@ export class MapComponent implements OnInit, OnDestroy, AfterViewChecked {
     }
 
     private updateMapWhenGlobalStyleChange() {
-        this.globalStyleService.getStyleChange().subscribe(style => {
+        this.globalStyleService.getStyleChange().subscribe((style) => {
             this.updateMapColors(style);
             this.addGeoJSONLayer(style);
         });
@@ -157,7 +156,7 @@ export class MapComponent implements OnInit, OnDestroy, AfterViewChecked {
                         duration: 0,
                         maxZoom: zoomLevelWhenZoomToLocation,
                         padding: [20, 20, 20, 20],
-                        callback: this.map.updateSize()
+                        callback: (_) => this.map.updateSize()
                     });
                 }
             });
@@ -188,17 +187,21 @@ export class MapComponent implements OnInit, OnDestroy, AfterViewChecked {
         const bgTileSize = this.configService.getConfigValue('feed.geomap.bglayer.xyz.tileSize', null);
         if (bgUrl && bgTileSize) {
             const bgCrossOrigin = this.configService.getConfigValue('feed.geomap.bglayer.xyz.crossOrigin', null);
-            this.map.addLayer(new TileLayer({
-                source: new XYZ({
-                    url: bgUrl,
-                    tileSize: bgTileSize,
-                    crossOrigin: bgCrossOrigin
+            this.map.addLayer(
+                new TileLayer({
+                    source: new XYZ({
+                        url: bgUrl,
+                        tileSize: bgTileSize,
+                        crossOrigin: bgCrossOrigin
+                    })
                 })
-            }))
+            );
         } else {
-            this.map.addLayer(new TileLayer({
-                source: new OSM()
-            }));
+            this.map.addLayer(
+                new TileLayer({
+                    source: new OSM()
+                })
+            );
         }
 
         if (enableGraph) {
@@ -212,9 +215,9 @@ export class MapComponent implements OnInit, OnDestroy, AfterViewChecked {
         function displayLightCardIfNecessary(evt) {
             const featureArray = [];
             if (self.map.hasFeatureAtPixel(evt.pixel)) {
-                self.map.getFeaturesAtPixel(evt.pixel).forEach((feature => {
+                self.map.getFeaturesAtPixel(evt.pixel).forEach((feature) => {
                     featureArray.push(feature.get('lightCard'));
-                }));
+                });
                 overlay.setPosition(evt.coordinate);
                 self.lightCardsToDisplay = featureArray;
             }
@@ -224,7 +227,6 @@ export class MapComponent implements OnInit, OnDestroy, AfterViewChecked {
     private addGeoJSONLayer(style) {
         if (this.map) {
             const geojsonUrl = this.configService.getConfigValue('feed.geomap.layer.geojson.url', null);
-            const gjCrossOrigin = this.configService.getConfigValue('feed.geomap.layer.geojson.crossOrigin', null);
             if (geojsonUrl) {
                 let colorStroke = 'rgba(0, 0, 0, 0.6)';
                 let colorFill = 'rgba(0, 0, 0, 0.05)';
@@ -235,8 +237,7 @@ export class MapComponent implements OnInit, OnDestroy, AfterViewChecked {
                 const vectorLayer = new VectorLayer({
                     source: new VectorSource({
                         format: new GeoJSON(),
-                        url: geojsonUrl,
-                        crossOrigin: gjCrossOrigin
+                        url: geojsonUrl
                     }),
                     style: [
                         new Style({
@@ -319,7 +320,7 @@ export class MapComponent implements OnInit, OnDestroy, AfterViewChecked {
                 duration: zoomDuration,
                 maxZoom: maxZoom,
                 padding: [20, 20, 20, 20],
-                callback: this.map.updateSize()
+                callback: (_) => this.map.updateSize()
             });
 
             this.map.getControls().push(
@@ -397,7 +398,7 @@ export class MapComponent implements OnInit, OnDestroy, AfterViewChecked {
     }
 
     private static severityToColorMap(opacity: number) {
-        const severityColors: {[name: string]: Style} = {
+        const severityColors: {[name: string]: string} = {
             [Severity.ALARM]: `rgba(167, 26, 26, ${opacity})`,
             [Severity.ACTION]: `rgba(253, 147, 18, ${opacity})`,
             [Severity.COMPLIANT]: `rgba(0, 187, 3, ${opacity})`,
