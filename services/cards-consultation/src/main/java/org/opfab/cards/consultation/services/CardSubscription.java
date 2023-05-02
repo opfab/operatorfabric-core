@@ -34,6 +34,7 @@ public class CardSubscription {
 
     private String userLogin;
     protected UserServiceCache userServiceCache;
+    public long lastHeartBeatReceived;
 
 
     /**
@@ -45,7 +46,6 @@ public class CardSubscription {
         userLogin = currentUserWithPerimeters.getUserData().getLogin();
         this.id = computeSubscriptionId(userLogin, clientId);
         this.currentUserWithPerimeters = currentUserWithPerimeters;
-
     }
 
     public String getUserLogin()
@@ -90,6 +90,7 @@ public class CardSubscription {
             if (sendReload)
                 emitter.next("RELOAD");
         });
+        this.lastHeartBeatReceived = System.currentTimeMillis();
 
     }
 

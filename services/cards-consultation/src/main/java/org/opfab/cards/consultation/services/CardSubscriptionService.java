@@ -66,7 +66,32 @@ public class CardSubscriptionService implements EventListener {
           };
         
         heartbeat.start();
+        Thread heartbeatFromFront = new Thread(){
+            @Override
+            public void run(){
+                checkHeartBeatFromFront();
+            }
+          };
+        
+        heartbeatFromFront.start();
 
+    }
+
+    private void checkHeartBeatFromFront()
+    {
+        for(;;)
+        {
+            cache.keySet().forEach(key -> {
+                CardSubscription sub = cache.get(key); 
+                if (sub != null) // subscription can be null if it has been evicted during the process of going throw the keys
+                {
+                    if ( System.currentTimeMillis() - sub.lastHeartBeatReceived > 150 && sub.lastHeartBeatReceived >= 0 ) {
+                        evictSubscription(sub.getId());
+                    }
+                }
+            });
+
+        }
     }
 
 
@@ -237,6 +262,7 @@ public class CardSubscriptionService implements EventListener {
     @Override
     public void onEvent(String eventKey, String message) {
         log.debug("receive event {} with message {}", eventKey, message);
+        cache.values().forEach(subscription -> subscription.lastHeartBeatReceived = System.currentTimeMillis());
         switch (eventKey) {
             case "process","ack":
                 cache.values().forEach(subscription -> subscription.publishDataIntoSubscription(message));

@@ -64,7 +64,10 @@ export class Dashboard {
             processContent.name = process.name;
             statesContent.sort((obj1, obj2) => Utilities.compareObj(obj1.name, obj2.name));
             processContent.states = statesContent;
+
             if (processContent.states.length > 0) this.dashboardPage.processes.push(processContent);
+            
+            this.dashboardPage.processes.sort((obj1, obj2) => Utilities.compareObj(obj1.name, obj2.name));
         });
     }
 

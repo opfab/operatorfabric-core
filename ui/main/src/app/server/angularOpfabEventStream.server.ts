@@ -86,6 +86,7 @@ export class AngularOpfabEventStreamServer extends AngularServer implements Opfa
         };
         this.eventSource.onopen = (open) => {
             this.streamStatusEvents.next('open');
+            this.sendHeartBeat();
             console.log(new Date().toISOString(), `EventStreamServer - Open card subscription`);
         };
     }
@@ -98,6 +99,16 @@ export class AngularOpfabEventStreamServer extends AngularServer implements Opfa
                     'ms ago',
                 LogOption.LOCAL_AND_REMOTE
             );
+        }, 60000);
+    }
+
+    private sendHeartBeat() {
+        setInterval(() => {
+            this.logger.info(
+                'EventStreamServer - Heartbeat sent ',
+                LogOption.LOCAL_AND_REMOTE
+            );
+            this.processHttpResponse(this.httpClient.post(this.eventStreamUrl, "TEST"))
         }, 60000);
     }
 
