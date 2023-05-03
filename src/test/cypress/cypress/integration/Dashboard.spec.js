@@ -100,9 +100,10 @@ function checkDisplayedCardTitle(title) {
 }
 
 function setTimeLineDomain(domain) {
-    cy.get('#opfab-timeline-link-period-' + domain).click();
+    // Forcing the click because the scrolling is anchored to the bottom of the page, hiding the timeline.
+    cy.get('#opfab-timeline-link-period-' + domain).click({force: true});
 }
 
 function moveLeft() {
-    cy.get("#timeline-left-arrow").click();
+    cy.get("#timeline-left-arrow").click({force: true});
 }
