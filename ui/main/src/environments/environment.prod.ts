@@ -25,7 +25,7 @@ export const environment = {
         realTimeScreens: '/businessconfig/realtimescreens',
         monitoringConfig: '/businessconfig/monitoring',
         config: '/config/web-ui.json',
-        menuConfig: '/config/ui-menu.json',
+        menuConfig: '/businessconfig/uiMenu',
         externalDevices: '/externaldevices',
         remoteLogs: '/cards/logs',
         userActionLogs: '/users/userActionLogs'

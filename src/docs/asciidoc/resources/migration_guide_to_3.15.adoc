@@ -10,3 +10,9 @@
 == CrossOrigin for GeoJSON
 
 The option `feed.geomap.layer.geojson.crossOrigin`, used to set a cross-origin option when downloading GeoJSON, has been removed.
+
+== `ui-menu.json` file
+
+To be able to dynamically reload the navigation bar and its menus, instead of having `ui-menu.json` as a file in
+the configuration directory, now the file can be created (and updated) via a POST
+request to the endpoint `/businessconfig/uiMenu`.

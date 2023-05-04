@@ -29,7 +29,7 @@ export const environment = {
         businessData: 'http://localhost:2002/businessconfig/businessData',
         monitoringConfig: 'http://localhost:2002/businessconfig/monitoring',
         config: 'http://localhost:2002/config/web-ui.json',
-        menuConfig: 'http://localhost:2002/config/ui-menu.json',
+        menuConfig: 'http://localhost:2002/businessconfig/uiMenu',
         externalDevices: 'http://localhost:2002/externaldevices',
         remoteLogs: 'http://localhost:2002/cards/logs',
         userActionLogs: 'http://localhost:2002/users/userActionLogs'

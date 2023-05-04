@@ -38,6 +38,7 @@ import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
 import jakarta.annotation.PostConstruct;
 import jakarta.validation.ConstraintViolation;
 import java.io.*;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.DirectoryStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -61,6 +62,7 @@ public class ProcessesService implements ResourceLoaderAware {
     private static final String BUNDLE_FOLDER = "/bundles";
     private static final String BUSINESS_DATA_FOLDER = "/businessdata/";
     private static final String DUPLICATE_PROCESS_IN_PROCESS_GROUPS_FILE = "There is a duplicate process in the file you have sent";
+    private static final String PROCESS = "process";
 
     @Value("${operatorfabric.businessconfig.storage.path}")
     private String storagePath;
@@ -429,7 +431,7 @@ public class ProcessesService implements ResourceLoaderAware {
 
         pushProcessChangeInEventBus();
 
-        //retieve newly loaded process from cache
+        //retrieve newly loaded process from cache
         return fetch(process.getId(), process.getVersion());
     }
 
@@ -589,7 +591,7 @@ public class ProcessesService implements ResourceLoaderAware {
     }
 
     private void pushProcessChangeInEventBus() {
-        eventBus.sendEvent("process","BUSINESS_CONFIG_CHANGE");
+        eventBus.sendEvent(PROCESS,"BUSINESS_CONFIG_CHANGE");
     }
 
     /**
@@ -660,7 +662,7 @@ public class ProcessesService implements ResourceLoaderAware {
         //copy file
         PathUtils.copyInputStreamToFile(new ByteArrayInputStream(fileContent.getBytes()), businessDataPath.toString() + "/" + resourceName);
 
-        eventBus.sendEvent("process","BUSINESS_DATA_CHANGE");
+        eventBus.sendEvent(PROCESS,"BUSINESS_DATA_CHANGE");
 
     }
 
@@ -692,5 +694,36 @@ public class ProcessesService implements ResourceLoaderAware {
         Path resourcePath = Paths.get(this.storagePath + BUSINESS_DATA_FOLDER).normalize();
         File dataDirectory = new File(resourcePath.toString());
         FileUtils.cleanDirectory(dataDirectory);
+    }
+
+    public String getUIMenu() throws IOException {
+        Path rootPath = Paths
+                .get(this.storagePath)
+                .normalize();
+
+        File f = new File(rootPath.toString() + "/ui-menu.json");
+        if (f.exists() && f.isFile()) {
+            log.info("getting ui-menu.json file from {}", new File(storagePath).getAbsolutePath());
+        }
+        return FileUtils.readFileToString(f, StandardCharsets.UTF_8);
+    }
+
+    /**
+     * Updates or creates ui-menu file from a file uploaded from POST /businessconfig/uiMenu
+     *
+     * @param fileContent ui-menu file input stream
+     * @throws IOException if error arise during stream reading
+     */
+    public synchronized void updateUIMenuFile(String fileContent) throws IOException {
+        Path rootPath = Paths
+                .get(this.storagePath)
+                .normalize();
+        if (!rootPath.toFile().exists())
+            throw new FileNotFoundException("No directory available to copy ui-menu file");
+
+        //copy file
+        PathUtils.copyInputStreamToFile(new ByteArrayInputStream(fileContent.getBytes()), rootPath.toString() + "/ui-menu.json");
+
+        eventBus.sendEvent(PROCESS,"UI_MENU_CHANGE");
     }
 }

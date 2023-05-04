@@ -252,6 +252,8 @@ public class BusinessconfigController implements BusinessconfigApi {
                 processService.updateRealTimeScreensFile(new String(file.getBytes()));
             if (endPointName.equals("businessdata"))
                 processService.updateBusinessDataFile(new String(file.getBytes()), resourceName);
+            if (endPointName.equals("uimenu"))
+                processService.updateUIMenuFile(new String(file.getBytes()));
 
             response.addHeader(LOCATION, request.getContextPath() + "/businessconfig/" + endPointName);
             response.setStatus(201);
@@ -356,5 +358,15 @@ public class BusinessconfigController implements BusinessconfigApi {
 					message, e);
 		}
 	}
+
+    @Override
+    public Void uploadUIMenu(HttpServletRequest request, HttpServletResponse response, @Valid MultipartFile file) {
+        return uploadFile(request, response, file, "uimenu", null);
+    }
+
+    @Override
+    public String getUIMenu(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        return processService.getUIMenu();
+    }
 
 }

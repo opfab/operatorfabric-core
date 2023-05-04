@@ -28,6 +28,7 @@ export class OpfabEventStreamService {
     private businessConfigChange = new Subject<void>();
     private userConfigChange = new Subject<void>();
     private businessDataChange = new Subject<void>();
+    private uiMenuChange = new Subject<void>();
 
     private eventStreamClosed = false;
 
@@ -81,6 +82,10 @@ export class OpfabEventStreamService {
                         break;
                     case 'BUSINESS_DATA_CHANGE':
                         this.businessDataChange.next();
+                        break;
+                    case 'UI_MENU_CHANGE':
+                        this.uiMenuChange.next();
+                        this.logger.info(`EventStreamService - UI_MENU_CHANGE received`);
                         break;
                     default:
                         let cardOperation;
@@ -157,5 +162,9 @@ export class OpfabEventStreamService {
 
     getUserConfigChangeRequests(): Observable<void> {
         return this.userConfigChange.asObservable();
+    }
+
+    getUiMenuChanges(): Observable<void> {
+        return this.uiMenuChange.asObservable();
     }
 }

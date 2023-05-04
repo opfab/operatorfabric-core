@@ -18,6 +18,7 @@ describe ('RealTimeUsersPage',()=>{
     const script = new ScriptCommands();
 
     before('Set up configuration', function () {
+        script.loadUiMenuConf();
         script.loadRealTimeScreensConf();
         script.deleteAllSettings();
     });

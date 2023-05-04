@@ -18,6 +18,9 @@ import {MenuService} from 'app/business/services/menu.service';
 import {Observable} from 'rxjs';
 import {AuthService} from 'app/authentication/auth.service';
 import {RouterStore} from 'app/business/store/router.store';
+import {LogOption, OpfabLoggerService} from "../../business/services/logs/opfab-logger.service";
+import {OpfabEventStreamService} from "../../business/services/opfabEventStream.service";
+import {I18nService} from "../../business/services/i18n.service";
 
 @Component({
     selector: 'of-navbar',
@@ -69,7 +72,10 @@ export class NavbarComponent implements OnInit {
         private configService: ConfigService,
         private menuService: MenuService,
         private modalService: NgbModal,
-        private authService: AuthService
+        private authService: AuthService,
+        private opfabEventStreamService: OpfabEventStreamService,
+        private i18nService: I18nService,
+        protected loggerService: OpfabLoggerService
     ) {
     }
 
@@ -79,7 +85,7 @@ export class NavbarComponent implements OnInit {
             this.currentRoute = route;
         });
 
-        this.businessconfigMenus = this.menuService.getCurrentUserCustomMenus(this.configService.getMenus());
+        this.computeMenus();
 
         const logo = this.configService.getConfigValue('logo.base64');
         if (!!logo) {
@@ -98,6 +104,32 @@ export class NavbarComponent implements OnInit {
         const logo_limitSize = this.configService.getConfigValue('logo.limitSize');
         this.limitSize = logo_limitSize === true;
 
+        this.environmentName = this.configService.getConfigValue('environmentName');
+        this.environmentColor = this.configService.getConfigValue('environmentColor', 'blue');
+        if (!!this.environmentName) this.displayEnvironmentName = true;
+
+        this.styleMode = this.globalStyleService.getStyleChange();
+
+        this.listenForUiMenuUpdate();
+    }
+
+    listenForUiMenuUpdate() {
+        this.opfabEventStreamService.getUiMenuChanges().subscribe(() => {
+            this.loggerService.info(`New ui-menu.json file posted, re-loading navbar`, LogOption.LOCAL_AND_REMOTE);
+            this.refreshNavbarWithNewUiMenuConfig();
+        });
+    }
+
+    refreshNavbarWithNewUiMenuConfig() {
+        this.configService.loadCoreMenuConfigurations().subscribe(() => {
+            this.i18nService.loadTranslationForMenu();
+            this.computeMenus();
+        });
+    }
+
+    computeMenus() {
+        this.businessconfigMenus = this.menuService.getCurrentUserCustomMenus(this.configService.getMenus());
+
         const visibleCoreMenus = this.menuService.computeVisibleCoreMenusForCurrentUser();
 
         this.navigationRoutes = navigationRoutes.filter((route) => visibleCoreMenus.includes(route.path));
@@ -114,12 +146,6 @@ export class NavbarComponent implements OnInit {
         this.displayLogOut = visibleCoreMenus.includes('logout');
         this.displayChangePassword = visibleCoreMenus.includes('changepassword');
         this.nightDayMode = visibleCoreMenus.includes('nightdaymode');
-
-        this.environmentName = this.configService.getConfigValue('environmentName');
-        this.environmentColor = this.configService.getConfigValue('environmentColor', 'blue');
-        if (!!this.environmentName) this.displayEnvironmentName = true;
-
-        this.styleMode = this.globalStyleService.getStyleChange();
     }
 
     logOut() {

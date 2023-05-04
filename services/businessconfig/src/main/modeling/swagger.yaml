@@ -507,6 +507,44 @@ paths:
           description: Authentication required
         '403':
           description: Forbidden - ADMIN role necessary
+  '/businessconfig/uiMenu':
+    get:
+      summary: Get the configuration of the UI menus
+      description: >-
+        Get the configuration of the UI menus
+      operationId: getUIMenu
+      produces:
+        - application/json
+      responses:
+        '200':
+          description: OK
+          schema:
+            type: object
+        '401':
+          description: Authentication required
+    post:
+      summary: Upload file defining the configuration of the UI menus
+      description: >-
+        Upload file defining the configuration of the UI menus.
+        This file must be in json format and is saved to disk, under the name 'ui-menu.json'.
+      operationId: uploadUIMenu
+      consumes:
+        - multipart/form-data
+      produces:
+        - application/json
+      parameters:
+        - name: file
+          in: formData
+          description: file to upload
+          required: true
+          type: file
+      responses:
+        '201':
+          description: Successful creation
+        '401':
+          description: Authentication required
+        '403':
+          description: Forbidden - ADMIN role necessary
 
 definitions:
   Process:

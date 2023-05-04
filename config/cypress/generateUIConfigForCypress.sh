@@ -16,6 +16,7 @@ display_usage() {
 }
 
 pathToSourceConfigFolder="../docker/ui-config"
+pathToSourceUiMenuConfigFolder="../../src/test/resources/uiConfig"
 pathToTargetConfigFolder="../cypress/ui-config"
 
 mkdir -p $pathToTargetConfigFolder
@@ -24,6 +25,7 @@ pathToTargetWebUIFile="$pathToTargetConfigFolder/web-ui.json"
 pathToTargetUIMenuFile="$pathToTargetConfigFolder/ui-menu.json"
 
 cp $pathToSourceConfigFolder/* $pathToTargetConfigFolder
+cp $pathToSourceUiMenuConfigFolder/ui-menu.json $pathToTargetConfigFolder
 
 echo "Will generate base ui configuration for Cypress. Source folder: $pathToSourceConfigFolder, target folder: $pathToTargetConfigFolder"
 

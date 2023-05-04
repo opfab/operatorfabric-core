@@ -20,6 +20,8 @@ The `ui-menu.json` file is used:
 * To manage the visibility of core OperatorFabric menus (feed, monitoring, etc.)
 * To declare specific business menus to be displayed in the navigation bar of OperatorFabric
 
+The `ui-menu.json` file must be created (and updated) via a POST request to the endpoint '/businessconfig/uiMenu'.
+
 [[core_menu_config]]
 === Core menus
 
@@ -95,7 +97,7 @@ for each core menu:
 See `/config/docker/ui-menu.json` for an example containing all core menus.
 
 IMPORTANT: This property only manages menu visibility, not resource access rights. For example, if visibility of the
-Administration menu is granted to groups other than the `ADMIN` group, users will be able to see the administration
+Administration menu is granted to the groups other than the `ADMIN` group, users will be able to see the administration
 screen but not to perform administration tasks, as they require administrator privileges.
 
 NOTE: If you decide not to make the night/day toggle visible (globally or for certain users), you should consider

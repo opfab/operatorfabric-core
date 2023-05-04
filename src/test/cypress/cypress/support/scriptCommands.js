@@ -21,6 +21,14 @@ export class ScriptCommands extends OpfabCommands {
         cy.exec('cd .. && ./resources/loadTestConf.sh ' + Cypress.env('host'));
     }
 
+    loadUiMenuConf = function () {
+        cy.exec('cd ../resources/uiConfig && ./loadUiMenu.sh ui-menu.json ' + Cypress.env('host'));
+    }
+
+    loadUiMenuBaseConf = function () {
+        cy.exec('cd ../resources/uiConfig && ./loadUiMenu.sh ../../../../config/cypress/ui-config/ui-menu-base.json ' + Cypress.env('host'));
+    }
+
     loadRealTimeScreensConf = function () {
         // This clears existing realtimescreens.json and loads a new one
         cy.exec('cd ../resources/realTimeScreens && ./loadRealTimeScreens.sh realTimeScreens.json ' + Cypress.env('host'));
@@ -72,22 +80,22 @@ export class ScriptCommands extends OpfabCommands {
 
     resetUIConfigurationFiles = function () {
         cy.exec('cp ../../../config/cypress/ui-config/web-ui-base.json ../../../config/cypress/ui-config/web-ui.json');
-        cy.exec('cp ../../../config/cypress/ui-config/ui-menu-base.json ../../../config/cypress/ui-config/ui-menu.json');
+        this.loadUiMenuBaseConf();
     }
 
     configureMenuNotDefined = function () {
-        cy.exec('cp ../resources/uiConfig/ui-menu-not-defined.json ../../../config/cypress/ui-config/ui-menu.json');
+        cy.exec('cd ../resources/uiConfig && ./loadUiMenu.sh ui-menu-not-defined.json ' + Cypress.env('host'));
     }
     configureMenuVisibleForAllUsers = function () {
-        cy.exec('cp ../resources/uiConfig/ui-menu-visible-to-all.json ../../../config/cypress/ui-config/ui-menu.json');
+        cy.exec('cd ../resources/uiConfig && ./loadUiMenu.sh ui-menu-visible-to-all.json ' + Cypress.env('host'));
     }
 
     configureMenuNotVisibleForAllUsers = function () {
-        cy.exec('cp ../resources/uiConfig/ui-menu-not-visible-to-all.json ../../../config/cypress/ui-config/ui-menu.json');
+        cy.exec('cd ../resources/uiConfig && ./loadUiMenu.sh ui-menu-not-visible-to-all.json ' + Cypress.env('host'));
     }
 
     configureMenuForAdminGroup = function () {
-        cy.exec('cp ../resources/uiConfig/ui-menu-only-admin-group.json ../../../config/cypress/ui-config/ui-menu.json');
+        cy.exec('cd ../resources/uiConfig && ./loadUiMenu.sh ui-menu-only-admin-group.json ' + Cypress.env('host'));
     }
 
     removePropertyInConf = function (property, file) {
@@ -117,6 +125,7 @@ export class ScriptCommands extends OpfabCommands {
     updateCoreMenuInConf = function (menu, property, value) {
         const filePath = `./config/cypress/ui-config/ui-menu.json`;
         cy.exec(`cd ../../.. && ./src/test/resources/uiConfig/updateCoreMenu.sh ${filePath} ${menu} ${property} ${value}`);
+        cy.exec('cd ../resources/uiConfig && ./loadUiMenu.sh ../../../../config/cypress/ui-config/ui-menu.json ' + Cypress.env('host'));
     }
 
     deleteAllArchivedCards = function () {

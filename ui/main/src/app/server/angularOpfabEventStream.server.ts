@@ -71,6 +71,7 @@ export class AngularOpfabEventStreamServer extends AngularServer implements Opfa
                         // so reload both configuration
                         this.businessEvents.next({data: 'BUSINESS_CONFIG_CHANGE'});
                         this.businessEvents.next({data: 'USER_CONFIG_CHANGE'});
+                        this.businessEvents.next({data: 'UI_MENU_CHANGE'});
                     } else {
                         this.firstSubscriptionInitDone = true;
                         this.streamInitDoneEvent.next();

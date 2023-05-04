@@ -245,9 +245,5 @@ describe ('Core menu configuration tests',function () {
             cy.get(item.selector).should('not.exist');
 
         })
-
-
     })
-
-
 })
