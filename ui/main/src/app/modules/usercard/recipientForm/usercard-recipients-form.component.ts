@@ -82,19 +82,12 @@ export class UserCardRecipientsFormComponent implements OnInit, OnChanges {
     }
 
     private loadRecipientsOptions() {
-        if (!!this.userCardConfiguration.recipientList) {
-            this.opfabLogger.info(
-                'Use of restricted recipient list option in config.json is deprecated, use method usercardTemplateGateway.setDropdownEntityRecipientList in template '
+        this.recipientsOptions = [];
+        this.entitiesService
+            .getEntities()
+            .forEach((entity) =>
+                this.recipientsOptions.push(new MultiSelectOption(entity.id, this.getEntityLabel(entity)))
             );
-            this.loadRestrictedRecipientList(this.userCardConfiguration.recipientList);
-        } else {
-            this.recipientsOptions = [];
-            this.entitiesService
-                .getEntities()
-                .forEach((entity) =>
-                    this.recipientsOptions.push(new MultiSelectOption(entity.id, this.getEntityLabel(entity)))
-                );
-        }
     }
 
     private loadRecipientsForInformationOptions() {

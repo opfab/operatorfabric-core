@@ -786,10 +786,6 @@ definitions:
         type: boolean
       recipientForInformationVisible: # tells whether to display recipient for information dropdown when creating a user card
         type: boolean
-      recipientList:
-        type: array
-        items:
-          $ref: '#/definitions/Recipient'
   Recipient:
     description: >- 
       Object containing the id of the recipient entity and an optional list of connection levels 
