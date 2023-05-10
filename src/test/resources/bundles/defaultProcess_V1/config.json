@@ -52,8 +52,7 @@
       "color": "#0070C0",
       "userCard" : {
         "template" : "usercard_process",
-        "expirationDateVisible" : true,
-        "recipientList" : [{"id": "ENTITY_FR", "levels": [0,1]}, {"id": "IT_SUPERVISOR_ENTITY"}]
+        "expirationDateVisible" : true
       },
       "templateName": "process",
       "styles": [

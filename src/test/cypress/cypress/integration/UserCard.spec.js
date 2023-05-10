@@ -144,22 +144,6 @@ describe('User Card ', function () {
       usercard.checkEntityRecipientsInPreviewContains("Control Center FR East");
     })
 
-    it('Recipients dropdown should be restricted in message user card  - Deprecated method using state config ', () => {
-
-      opfab.loginWithUser('operator1_fr');
-      opfab.navigateToUserCard();
-      usercard.selectProcess('Process example');
-      usercard.selectState('Process example');
-      cy.get('#opfab-recipients').click();
-      cy.get('#opfab-recipients').find('.vscomp-option-text').should('have.length', 6);
-      cy.get('#opfab-recipients').find('.vscomp-option-text').eq(0).contains("Control Center FR East");
-      cy.get('#opfab-recipients').find('.vscomp-option-text').eq(1).contains("Control Center FR North");
-      cy.get('#opfab-recipients').find('.vscomp-option-text').eq(2).contains("Control Center FR South");
-      cy.get('#opfab-recipients').find('.vscomp-option-text').eq(3).contains("Control Center FR West");
-      cy.get('#opfab-recipients').find('.vscomp-option-text').eq(4).contains("French Control Centers");
-      cy.get('#opfab-recipients').find('.vscomp-option-text').eq(5).contains("IT SUPERVISION CENTER");
-    })
-
     it('Recipients dropdown should be restricted and initial recipients preselected in message user card', () => {
 
       opfab.loginWithUser('operator1_fr');

@@ -10,3 +10,7 @@
 == CrossOrigin for GeoJSON
 
 The option `feed.geomap.layer.geojson.crossOrigin`, used to set a cross-origin option when downloading GeoJSON, has been removed.
+
+== Remove deprecated field from state definition
+The deprecated field `recipientList` has been removed from card state definition.
+To restrict the recipient list options use the method `usercardTemplateGateway.setDropdownEntityRecipientList` in template.
