@@ -5,29 +5,8 @@
 // file, You can obtain one at https://creativecommons.org/licenses/by/4.0/.
 // SPDX-License-Identifier: CC-BY-4.0
 
-
-
-
 [[setup_dev_env]]
 = Setting up your development environment
-
-WARNING: The steps below assume that you have installed and are using
-https://sdkman.io/[sdkman] and
-https://github.com/nvm-sh/nvm[nvm] to manage tool versions ( for java,
- node and npm).
-
-There are several ways to get started with `OperatorFabric`. Please look into
-the section that best fits your needs.
-
-TIP: If you encounter any issue, see
-ifdef::single-page-doc[<<troubleshooting, Troubleshooting>>]
-ifndef::single-page-doc[<</documentation/current/dev_env/index.adoc#troubleshooting, Troubleshooting>>]
-below. In particular,
-a command that hangs then fails is often a proxy issue.
-
-The following steps describe how to launch MongoDB, RabbitMQ and Keycloak
-using Docker,  build OperatorFabric using gradle and run it using the
-`run_all.sh` script.
 
 == Clone repository
 [source,shell]
@@ -36,14 +15,75 @@ git clone https://github.com/opfab/operatorfabric-core.git
 cd operatorfabric-core
 ----
 
-== Set up your environment (environment variables & appropriate versions of tools)
-[source,shell]
+Do not forget to set proxy if needed , for example : 
+
+```
+git config --global http.proxy http://LOGIN:PWD@PROXY_URL:PORT
+```
+
+== Install sdkman and  nvm 
+
+sdkman is used to manage java version , see https://sdkman.io/ for installation
+
+nvm is used to manage node and npm version , see https://github.com/nvm-sh/nvm for installation 
+See : 
+
+Do not forget to set proxy if needed , for example : 
+
+```
+export https_proxy= http://LOGIN:PWD@PROXY_URL:PORT
+``` 
+
+Once you have installed sdkman and nvm, you can **source** the following
+script to set up your development environment (appropriate versions of Node 
+Java and project variables set):
+
+[source]
 ----
 source bin/load_environment_light.sh
 ----
 
 TIP: From now on, you can use environment variable `${OF_HOME}` to go back to
 the home repository of `OperatorFabric`.
+
+== Setting up your proxy configuration 
+
+If you use a proxy to access internet, you must configure it for all tools needed to build opfab 
+
+=== Docker 
+
+To download images , you need to set the proxy for the docker daemon 
+
+See  https://docs.docker.com/config/daemon/systemd/[docker documentation] to set the proxy 
+
+To build docker images, you need to set a proxy via the variable https_proxy
+
+```
+export https_proxy= http://LOGIN:PWD@PROXY_URL:PORT
+``` 
+
+You may have some DNS error when building docker images, in this case use the IP address of your proxy instead of the FQDN .
+
+=== Gradle 
+
+In gradle.properties (in ~/.gradle repository)
+
+
+Example : 
+```
+systemProp.https.proxyHost=PROXY_URL
+systemProp.https.proxyPort=PROXY_PORT
+systemProp.https.proxyUser=LOGIN
+systemProp.https.proxyPassword=PASSWORD
+```
+
+=== Npm  
+
+Example : 
+
+```
+npm config set https-proxy http://LOGIN:PWD@PROXY_URL:PORT
+```
 
 == Deploy needed docker containers
 
@@ -54,6 +94,8 @@ The gradle build of `OperatorFabric` requires (for the unit tests) one docker co
 Launch it using the `${OF_HOME}/src/main/docker/test-environment/docker-compose.yml`.
 
 === Enabling local quality report generation
+
+This step is optional (only needed if you want a Sonarqube report locally)
 
 Sonarqube reporting, in addition to the previous docker container, needs a `SonarQube` docker container.
 Use the `${OF_HOME}/src/main/docker/test-quality-environment/docker-compose.yml` to get them all running.

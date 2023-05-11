@@ -1,4 +1,4 @@
-// Copyright (c) 2018-2021 RTE (http://www.rte-france.com)
+// Copyright (c) 2018-2023 RTE (http://www.rte-france.com)
 // See AUTHORS.txt
 // This document is subject to the terms of the Creative Commons Attribution 4.0 International license.
 // If a copy of the license was not distributed with this
@@ -14,11 +14,3 @@ These variables are loaded by bin/load_environment_light.sh
 * OF_VERSION : OperatorFabric version, as defined in the `$OF_HOME/VERSION` file
 * OF_CLIENT_REL_COMPONENTS : List of modules for the client libraries
 
-Additionally, you may want to configure the following variables
-
-* Docker build proxy configuration (used to configure alpine apk proxy
-settings)
-** APK_PROXY_URI
-** APK_PROXY_HTTPS_URI
-** APK_PROXY_USER
-** APK_PROXY_PASSWORD
