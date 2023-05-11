@@ -88,6 +88,15 @@
       },
       "automaticPinWhenAcknowledged" : true
     },
+    "kitchenSinkDeprecated":
+    {
+      "name":"State to test template deprecated rendering features",
+      "templateName" : "kitchenSinkDeprecated",
+      "response": {
+        "state": "dummyResponseState"
+      },
+      "automaticPinWhenAcknowledged" : true
+    },
     "stateWithUserHasAcknowledged":
     {
       "name":"State to test UserHasAcknowledged",

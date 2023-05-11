@@ -81,7 +81,7 @@ tools/spring/spring-oauth2-utilities/bin
 src/test/externalApp/bin
 src/test/dummyModbusDevice/bin
 */**/*.class
-node-services/cards-external-diffusion/node_modules
+
 
 ### Gradle ###
 .gradle
@@ -157,3 +157,4 @@ src/tooling/migration-opfab3/node_modules
 node-services/cards-external-diffusion/node_modules
 node-services/cards-external-diffusion/coverage
 node-services/cards-external-diffusion/logs
+

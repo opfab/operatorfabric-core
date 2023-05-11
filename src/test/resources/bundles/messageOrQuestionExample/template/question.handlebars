@@ -1,4 +1,4 @@
-<!-- Copyright (c) 2022, RTE (http://www.rte-france.com)              -->
+<!-- Copyright (c) 2022-2023, RTE (http://www.rte-france.com)              -->
 <!-- See AUTHORS.txt                                                       -->
 <!-- This Source Code Form is subject to the terms of the Mozilla Public   -->
 <!-- License, v. 2.0. If a copy of the MPL was not distributed with this   -->
@@ -38,11 +38,12 @@
         },
 
         disableResponseIfNotInRealTimeContext: function() {
-            if (templateGateway.getDisplayContext() != 'realtime' ) {
+            if (opfab.currentCard.getDisplayContext() != 'realtime' ) {
             document.getElementById("response").disabled = true;
             }
         },
 
+        // use deprecated methods for testing only
         initTemplateGatewayMethods: function() {
             
             templateGateway.applyChildCards = () => {
@@ -55,7 +56,7 @@
                     responses += ' </tr>';
 
                     templateGateway.childCards.forEach((c, i) => {
-                        responses += `<tr> <td> ${templateGateway.getEntityName(c.publisher)} </td>`
+                        responses += `<tr> <td> ${opfab.users.entities.getEntityName(c.publisher)} </td>`
                         responses += `<td> ${c.data.response} </td>`;
                         responses += "</tr>";
                     });
@@ -85,7 +86,7 @@
             entities.forEach( 
                 id => {
                     text += "&nbsp; &nbsp; &nbsp;";
-                    text +=  templateGateway.getEntityName(id);
+                    text +=  opfab.users.entities.getEntityName(id);
                     }
             );
             // if it is in card preview (usercard) , the template gateway does not contain the list 
@@ -95,10 +96,10 @@
 
         loadEntityUsedForResponse: function() {
             let responseEntityDiv = document.getElementById("response-entity-div");
-            let responseEntity = templateGateway.getEntityUsedForUserResponse();
-            let userAllowedToRespond = templateGateway.isUserAllowedToRespond();
+            let responseEntity = opfab.currentCard.getEntityUsedForUserResponse();
+            let userAllowedToRespond = opfab.currentCard.isUserAllowedToRespond();
             if (userAllowedToRespond && responseEntity) 
-                responseEntityDiv.innerHTML = "Entity used by user to respond : " + templateGateway.getEntityName(responseEntity);
+                responseEntityDiv.innerHTML = "Entity used by user to respond : " + opfab.users.entities.getEntityName(responseEntity);
         }
 
     }

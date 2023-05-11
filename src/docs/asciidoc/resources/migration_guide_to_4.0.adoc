@@ -5,7 +5,7 @@
 // file, You can obtain one at https://creativecommons.org/licenses/by/4.0/.
 // SPDX-License-Identifier: CC-BY-4.0
 
-= Migration Guide from release 3.14.0 to release 4.0.0
+= Migration Guide from release 3.15.0 to release 4.0.0
 
 == Management of core menus and custom menus
 The structure of the `ui-menu.json` file has changed. Fields `coreMenusConfiguration` and `menus` do not exist anymore.
@@ -21,3 +21,76 @@ NOTE: With the new structure of the file, it is now possible to mix core menus a
 
 You can find more information and a full example in the documentation :
 https://opfab.github.io/documentation/current/reference_doc/#menu_entries
+
+
+== OpfabAPI 
+
+Use of methods or attributes starting with templateGateway are now deprecated , the following table give you the new methods to use 
+
+|===
+|Deprecated method or attribute | New method 
+
+|templateGateway.getEntityName(entityId)
+|opfab.users.entities.getEntityName(entityId)
+
+|templateGateway.getEntity(entityId)
+|opfab.users.entities.getEntity(entityId)
+
+|templateGateway.getAllEntities()
+|opfab.users.entities.getAllEntities()
+
+|templateGateway.redirectToBusinessMenu(menuId, menuItemId, urlExtension)
+|opfab.navigate.redirectToBusinessMenu(menuId, menuItemId, urlExtension)
+
+|templateGateway.isUserAllowedToRespond()
+|opfab.currentCard.isUserAllowedToRespond()
+
+|templateGateway.isUserMemberOfAnEntityRequiredToRespond()
+|opfab.currentCard.isUserMemberOfAnEntityRequiredToRespond()
+
+|templateGateway.getEntitiesAllowedToRespond()
+|opfab.currentCard.getEntitiesAllowedToRespond()
+
+|templateGateway.getEntityUsedForUserResponse()
+|opfab.currentCard.getEntityUsedForUserResponse()
+
+|templateGateway.getDisplayContext()
+|opfab.currentCard.getDisplayContext()
+
+|templateGateway.displayLoadingSpinner()
+|opfab.currentCard.displayLoadingSpinner()
+
+|templateGateway.hideLoadingSpinner()
+|opfab.currentCard.hideLoadingSpinner()
+
+|templateGateway.childCards
+|opfab.currentCard.getChildCards()
+
+|templateGateway.isLocked
+|opfab.currentCard.isResponseLocked()
+
+|templateGateway.lockAnswer = function () {//do some stuff}
+|opfab.currentCard.listenToResponseLock( () => {//do some stuff} )
+
+|templateGateway.unlockAnswer = function () {//do some stuff}
+|opfab.currentCard.listenToResponseUnlock( ()  => {//do some stuff} )
+
+|templateGateway.setLttdExpired = function () {//do some stuff}
+|opfab.currentCard.listenToLttdExpired( ()  => {//do some stuff} )
+
+|templateGateway.onStyleChange = function () {//do some stuff}
+|opfab.currentCard.listenToStyleChange( ()  => {//do some stuff} )
+
+|templateGateway.setScreenSize =  function () {//do some stuff}
+|opfab.currentCard.listenToScreenSize( ()  => {//do some stuff} )
+
+|templateGateway.onTemplateRenderingComplete =  function () {//do some stuff}
+|opfab.currentCard.listenToTemplateRenderingComplete( ()  => {//do some stuff} )
+
+|templateGateway.getUserResponse =  function () {//do some stuff}
+|opfab.currentCard.registerFunctionToGetUserResponse( ()  => {//do some stuff} )
+
+|templateGateway.applyChildCards =  function () {//do some stuff}
+|opfab.currentCard.listenToChildCards( ()  => {//do some stuff} )
+
+|===

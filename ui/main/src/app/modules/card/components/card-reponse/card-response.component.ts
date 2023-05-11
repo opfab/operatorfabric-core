@@ -25,8 +25,7 @@ import {Utilities} from 'app/business/common/utilities';
 import {AlertMessageService} from 'app/business/services/alert-message.service';
 import {CardService} from 'app/business/services/card.service';
 import {ServerResponseStatus} from 'app/business/server/serverResponse';
-
-declare const templateGateway: any;
+import {OpfabAPIService} from 'app/business/services/opfabAPI.service';
 
 class FormResult {
     valid: boolean;
@@ -86,7 +85,8 @@ export class CardResponseComponent implements OnChanges, OnInit {
         private userService: UserService,
         private userPermissionsService: UserPermissionsService,
         private processService: ProcessesService,
-        private alertMessageService: AlertMessageService
+        private alertMessageService: AlertMessageService,
+        private opfabAPIService: OpfabAPIService
     ) {
         const userWithPerimeters = this.userService.getCurrentUserWithPerimeters();
         if (userWithPerimeters) this.user = userWithPerimeters.userData;
@@ -150,7 +150,7 @@ export class CardResponseComponent implements OnChanges, OnInit {
     }
 
     private submitResponse() {
-        const responseData: FormResult = templateGateway.getUserResponse();
+        const responseData: FormResult = this.opfabAPIService.templateInterface.getUserResponse();
 
         if (responseData.valid) {
             const card: CardForPublishing = {
@@ -183,7 +183,7 @@ export class CardResponseComponent implements OnChanges, OnInit {
                         console.error(resp);
                     } else {
                         this.isResponseLocked = true;
-                        templateGateway.lockAnswer();
+                        this.opfabAPIService.templateInterface.lockAnswer();
                         this.displayMessage(ResponseI18nKeys.SUBMIT_SUCCESS_MSG, null, MessageLevel.INFO);
                     }
                 }

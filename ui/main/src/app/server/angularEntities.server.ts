@@ -16,7 +16,6 @@ import {ServerResponse} from 'app/business/server/serverResponse';
 import {AngularServer} from './angular.server';
 import {EntitiesServer} from 'app/business/server/entities.server';
 
-declare const templateGateway: any;
 
 @Injectable({
     providedIn: 'root'

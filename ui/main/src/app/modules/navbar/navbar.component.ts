@@ -161,8 +161,8 @@ export class NavbarComponent implements OnInit {
 
      REASONS :
 
-     The card template in the preview  may redefine method templateGateway.applyChild
-     This will override method templateGateway.applyChild  form the card on the feed
+     The card template in the preview  may redefine listener set via opfab.currentCard.listenToChildCards
+     This will override listener form the card on the feed
      As a consequence, the card on the feed will never receive new (or updated) child cards
 
      Furthermore, having the same template open twice in the application may cause unwanted behavior as
