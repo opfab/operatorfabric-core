@@ -89,44 +89,40 @@ describe('ConfigService', () => {
 
     describe('Menu config', () => {
         const menuConf = {
-            coreMenusConfiguration: [
+            navigationBar: [
                 {
-                    id: 'feed',
+                    opfabCoreMenuId: 'feed',
                     visible: true
                 },
                 {
-                    id: 'archives',
+                    opfabCoreMenuId: 'archives',
                     visible: true
-                }
-            ],
-            menus: [
+                },
                 {
                   id: "menu1",
                   label: "title.single",
                   entries: [
                     {
-                      id: "entry1",
+                      customMenuId: "entry1",
                       url: "https://test",
                       label: "entry.single",
                       linkType: "BOTH"
                     }
                   ]
-                },],
+                }],
             locales : [{
                 language: "en",
                 i18n: {
-                    menu1: {
-                        title: "First menu",
-                        entry: "Single menu entry"
-                    },
+                    title: "First menu",
+                    entry: "Single menu entry"
                 }
             }]
         };
 
         it('GIVEN_A_Menu_Configuration_File_WHEN_Loading_Core_Menu_THEN_Core_Menu_Configuration_Is_Available', async () => {
             configServerMock.setResponseForMenuConfiguration(new ServerResponse(menuConf,ServerResponseStatus.OK,null));
-            await firstValueFrom(configService.loadCoreMenuConfigurations().pipe(timeout(100)));
-            expect(configService.getCoreMenuConfiguration()[0].id).toEqual("feed");
+            await firstValueFrom(configService.loadUiMenuConfig().pipe(timeout(100)));
+            expect(configService.getNavigationBar()[0].opfabCoreMenuId).toEqual("feed");
         });
 
 
@@ -134,7 +130,7 @@ describe('ConfigService', () => {
             configServerMock.setResponseForMenuConfiguration(new ServerResponse(menuConf,ServerResponseStatus.OK,null));
             const translation = await firstValueFrom(configService.fetchMenuTranslations().pipe(timeout(100)));
             expect(translation[0].language).toEqual("en");
-            expect(translation[0].i18n["menu1"]["title"]).toEqual("First menu");
+            expect(translation[0].i18n["title"]).toEqual("First menu");
         });
 
         it('GIVEN_A_Menu_Configuration_File_WHEN_Getting_Url_For_Custom_Menu_THEN_Url_Is_Provided', async () => {

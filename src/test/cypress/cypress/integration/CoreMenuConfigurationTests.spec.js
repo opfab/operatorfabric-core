@@ -196,29 +196,26 @@ describe ('Core menu configuration tests',function () {
 
     describe('Check behaviour for edge cases', function () {
 
-        const item = navbarMenuItems[0];
+        const item = navbarMenuItems[0];    //feed
 
         it('Tests with admin', ()=>{
 
             opfab.loginWithUser('admin');
 
             cy.log('Testing visible: true and showOnlyForGroups: []')
-            script.updateCoreMenuInConf(item.menu_id,"visible",true);
             script.updateCoreMenuInConf(item.menu_id,"showOnlyForGroups","[]");
             cy.reload();
             cy.get(item.selector).should('exist');
 
             cy.log('Testing visible: true and showOnlyForGroups: null')
-            script.updateCoreMenuInConf(item.menu_id,"visible",true);
             script.updateCoreMenuInConf(item.menu_id,"showOnlyForGroups",null);
             cy.reload();
             cy.get(item.selector).should('exist');
 
-            cy.log('Testing visible: false and showOnlyForGroups: ["ADMIN"]')
-            script.updateCoreMenuInConf(item.menu_id,"visible",false);
+            cy.log('Testing visible: showOnlyForGroups: ["ADMIN"]')
             script.updateCoreMenuInConf(item.menu_id,"showOnlyForGroups",'[\\\"ADMIN\\\"]');
             cy.reload();
-            cy.get(item.selector).should('not.exist');
+            cy.get(item.selector).should('exist');
 
         })
 
@@ -227,19 +224,16 @@ describe ('Core menu configuration tests',function () {
             opfab.loginWithUser('operator2_fr');
 
             cy.log('Testing visible: true and showOnlyForGroups: []')
-            script.updateCoreMenuInConf(item.menu_id,"visible",true);
             script.updateCoreMenuInConf(item.menu_id,"showOnlyForGroups","[]");
             cy.reload();
             cy.get(item.selector).should('exist');
 
             cy.log('Testing visible: true and showOnlyForGroups: null')
-            script.updateCoreMenuInConf(item.menu_id,"visible",true);
             script.updateCoreMenuInConf(item.menu_id,"showOnlyForGroups",null);
             cy.reload();
             cy.get(item.selector).should('exist');
 
-            cy.log('Testing visible: false and showOnlyForGroups: ["ADMIN"]')
-            script.updateCoreMenuInConf(item.menu_id,"visible",false);
+            cy.log('Testing visible: showOnlyForGroups: ["ADMIN"]')
             script.updateCoreMenuInConf(item.menu_id,"showOnlyForGroups",'[\\\"ADMIN\\\"]');
             cy.reload();
             cy.get(item.selector).should('not.exist');

@@ -38,7 +38,7 @@
         <a class="nav-link" id="opfab-navbar-menu-dropdown-{{tMenu.id}}" *ngIf="tMenu.entries.length>1"
            (mouseenter)="toggleMenu(tMenu, p1)" triggers="mouseenter:mouseleave" closeDelay="3000"
            #p1="ngbPopover" [ngbPopover]="navbarDropdown" popoverClass="opfab-popover-no-arrow" placement="bottom-left" container="body"
-           href="javascript:void(0)" translate>{{tMenu.id}}.{{tMenu.label}} <em class="fa fa-caret-down"></em>
+           href="javascript:void(0)" translate>{{tMenu.label}} <em class="fa fa-caret-down"></em>
         </a>
         <ng-template #navbarDropdown>
           <div class="opfab-dropdown-menu" (mouseleave)="openDropdownPopover.close()">
