@@ -9,8 +9,10 @@
 
 import {I18n} from './i18n.model';
 
-export class Menu {
-    constructor(readonly id: string, readonly label: string, readonly entries: MenuEntry[]) {}
+export class CustomMenu {
+    constructor(readonly id: string,
+                readonly label: string,
+                readonly entries: (MenuEntry | CoreMenuConfig)[]) {}
 }
 
 export class MenuEntry {
@@ -38,12 +40,14 @@ export class Locale {
 
 export class UIMenuFile {
     constructor(
-        readonly menus: Menu[],
+        readonly navigationBar: (CoreMenuConfig | CustomMenu)[],
+        readonly topRightIconMenus: CoreMenuConfig[],
+        readonly topRightMenus: CoreMenuConfig[],
         readonly locales: Locale[],
-        readonly coreMenusConfiguration: CoreMenuConfig[]
     ) {}
 }
 
 export class CoreMenuConfig {
-    constructor(readonly id: string, readonly visible?: boolean, readonly showOnlyForGroups?: string[]) {}
+    constructor(readonly opfabCoreMenuId: string, readonly visible = true, readonly showOnlyForGroups?: string[]) {}
 }
+

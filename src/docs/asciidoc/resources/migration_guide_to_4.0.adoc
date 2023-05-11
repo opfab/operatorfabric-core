@@ -1,0 +1,23 @@
+// Copyright (c) 2023 RTE (http://www.rte-france.com)
+// See AUTHORS.txt
+// This document is subject to the terms of the Creative Commons Attribution 4.0 International license.
+// If a copy of the license was not distributed with this
+// file, You can obtain one at https://creativecommons.org/licenses/by/4.0/.
+// SPDX-License-Identifier: CC-BY-4.0
+
+= Migration Guide from release 3.14.0 to release 4.0.0
+
+== Management of core menus and custom menus
+The structure of the `ui-menu.json` file has changed. Fields `coreMenusConfiguration` and `menus` do not exist anymore.
+
+Now `ui-menu.json` file contains 4 fields :
+
+* `navigationBar` : contains the navigation bar mixing core menus and custom menus
+* `topRightIconMenus` : contains only the two menu icons `agenda` and `usercard` on the top right of the screen
+* `topRightMenus` : contains the core menus you want to see when you click the user, on the top right of the screen
+* `locales` : contains the translations for the custom menus
+
+NOTE: With the new structure of the file, it is now possible to mix core menus and custom menus in the navigation bar.
+
+You can find more information and a full example in the documentation :
+https://opfab.github.io/documentation/current/reference_doc/#menu_entries
