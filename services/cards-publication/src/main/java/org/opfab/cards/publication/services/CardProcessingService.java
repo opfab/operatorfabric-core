@@ -53,6 +53,7 @@ public class CardProcessingService {
     boolean authorizeToSendCardWithInvalidProcessState;
 
     public static final String UNEXISTING_PROCESS_STATE = "Impossible to publish card because process and/or state does not exist (process=%1$s, state=%2$s, processVersion=%3$s, processInstanceId=%4$s)";
+    public static final String FORBIDDEN_CHARS_REGEX = ".*[#\\?\\/].*";
 
     public CardProcessingService(
             CardNotificationService cardNotificationService,
@@ -245,6 +246,11 @@ public class CardProcessingService {
         if (!checkIsDotCharacterNotInProcessAndState(c))
             throw new ConstraintViolationException(
                     "constraint violation : character '.' is forbidden in process and state", null);
+
+        // constraint check : process and processInstanceId must not contain ('#','?','/') 
+        if (!checkForbiddenChars(c))
+            throw new ConstraintViolationException(
+                    "constraint violation : forbidden characters ('#','?','/') in process or processInstanceId", null);
     }
 
     private CardPublicationData getExistingCard(String cardId) {
@@ -298,6 +304,10 @@ public class CardProcessingService {
     boolean checkIsDotCharacterNotInProcessAndState(CardPublicationData c) {
         return !((c.getProcess().contains(Character.toString('.'))) ||
                 (c.getState() != null && c.getState().contains(Character.toString('.'))));
+    }
+
+    boolean checkForbiddenChars(CardPublicationData c) {
+        return !c.getProcess().matches(FORBIDDEN_CHARS_REGEX)  && !c.getState().matches(FORBIDDEN_CHARS_REGEX) && !c.getProcessInstanceId().matches(FORBIDDEN_CHARS_REGEX);
     }
 
     boolean checkIsAllTimeSpanEndDateAfterStartDate(CardPublicationData c) {
