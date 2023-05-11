@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# Copyright (c) 2021, RTE (http://www.rte-france.com)
+# Copyright (c) 2021-2023, RTE (http://www.rte-france.com)
 # See AUTHORS.txt
 # This Source Code Form is subject to the terms of the Mozilla Public
 # License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -37,13 +37,13 @@ else
 	(
   echo "Will update menu $menu_id with value $value for property $property. Source file: $pathToSourceJsonFile, target file: $pathToTargetJsonFile"
 
-	export menuExists=$(jq --arg m "$menu_id" 'path(.coreMenusConfiguration[] | select(.id == $m))' $pathToSourceJsonFile)
+	export menuExists=$(jq --arg m "$menu_id" 'path(.navigationBar[] | select(.opfabCoreMenuId == $m))' $pathToSourceJsonFile)
 
 	if [ -z "$menuExists" ]
 	then # Create menu with given id and property
-	  jq --arg m "$menu_id" --arg p $property --argjson v $value '.coreMenusConfiguration += [{id: $m, ($p): $v}]' $pathToSourceJsonFile > "tmp" && mv "tmp" $pathToTargetJsonFile
+	  jq --arg m "$menu_id" --arg p $property --argjson v $value '.navigationBar += [{opfabCoreMenuId: $m, ($p): $v}]' $pathToSourceJsonFile > "tmp" && mv "tmp" $pathToTargetJsonFile
   else # Update existing menu
-	  jq --arg m "$menu_id" --arg p $property --argjson v $value 'setpath(path(.coreMenusConfiguration[] | select(.id == $m)) | . += [$p]; $v)' $pathToSourceJsonFile > "tmp" && mv "tmp" $pathToTargetJsonFile
+	  jq --arg m "$menu_id" --arg p $property --argjson v $value 'setpath(path(.navigationBar[] | select(.opfabCoreMenuId == $m)) | . += [$p]; $v)' $pathToSourceJsonFile > "tmp" && mv "tmp" $pathToTargetJsonFile
   fi
 	)
 fi

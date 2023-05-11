@@ -1,4 +1,4 @@
-<!-- Copyright (c) 2018-2021, RTE (http://www.rte-france.com)              -->
+<!-- Copyright (c) 2018-2023, RTE (http://www.rte-france.com)              -->
 <!-- See AUTHORS.txt                                                       -->
 <!-- This Source Code Form is subject to the terms of the Mozilla Public   -->
 <!-- License, v. 2.0. If a copy of the MPL was not distributed with this   -->
@@ -8,14 +8,21 @@
 
 
 <div *ngIf=hasLinkType(LinkType.TAB)>
-  <a id="opfab-navbar-menu-{{menu.id}}" class="text-link " [href]="menuEntry.url" target="_blank" rel="noopener noreferrer" translate>{{menu.id}}.{{menuEntry.label}}</a>
+  <a id="opfab-navbar-menu-{{menu.id}}" class="text-link " [href]="menuEntry.url" target="_blank" rel="noopener noreferrer" translate>{{menuEntry.label}}</a>
 </div>
+
 <div *ngIf=hasLinkType(LinkType.IFRAME)>
-  <a id="opfab-navbar-menu-{{menu.id}}" class="text-link " [routerLink]="['/businessconfigparty',menu.id,menuEntry.id]" translate>{{menu.id}}.{{menuEntry.label}}</a>
+  <a id="opfab-navbar-menu-{{menu.id}}" class="text-link " [routerLink]="['/businessconfigparty',menu.id,menuEntry.customMenuId]" translate>{{menuEntry.label}}</a>
 </div>
+
 <div *ngIf=hasLinkType(LinkType.BOTH)>
-  <a id="opfab-navbar-menu-{{menu.id}}" class="text-link " [routerLink]="['/businessconfigparty',menu.id,menuEntry.id]" translate>{{menu.id}}.{{menuEntry.label}}</a>
+  <a id="opfab-navbar-menu-{{menu.id}}" class="text-link " [routerLink]="['/businessconfigparty',menu.id,menuEntry.customMenuId]" translate>{{menuEntry.label}}</a>
   <a id="opfab-navbar-menu-icon-{{menu.id}}" class="icon-link " [href]="menuEntry.url" rel="noopener noreferrer" target="_blank">
     <em class="fas fa-external-link-alt" ></em>
   </a>
+</div>
+
+<div *ngIf=isLinkACoreMenu()>
+  <a id="opfab-navbar-menu-{{menuEntry.opfabCoreMenuId}}" class="text-link" [routerLink]="menuEntry.opfabCoreMenuId" routerLinkActive #rla="routerLinkActive"
+     translate>{{'menu.'+this.menuEntry.opfabCoreMenuId}}</a>
 </div>

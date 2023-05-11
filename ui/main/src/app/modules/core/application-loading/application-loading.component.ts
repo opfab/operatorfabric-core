@@ -232,7 +232,7 @@ export class ApplicationLoadingComponent implements OnInit {
 
     private loadAllConfigurations(): void {
         const requestsToLaunch$ = [
-            this.configService.loadCoreMenuConfigurations(),
+            this.configService.loadUiMenuConfig(),
             this.userService.loadUserWithPerimetersData(),
             this.entitiesService.loadAllEntitiesData(),
             this.groupsService.loadAllGroupsData(),
