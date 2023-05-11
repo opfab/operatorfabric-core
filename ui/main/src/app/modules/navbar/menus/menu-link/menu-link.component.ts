@@ -9,7 +9,7 @@
 
 import {Component, Input} from '@angular/core';
 import {Router} from '@angular/router';
-import {Menu, MenuEntry, MenuEntryLinkTypeEnum} from '@ofModel/menu.model';
+import {CustomMenu, MenuEntryLinkTypeEnum} from '@ofModel/menu.model';
 
 @Component({
     selector: 'of-menu-link',
@@ -17,15 +17,19 @@ import {Menu, MenuEntry, MenuEntryLinkTypeEnum} from '@ofModel/menu.model';
     styleUrls: ['./menu-link.component.scss']
 })
 export class MenuLinkComponent {
-    @Input() public menu: Menu;
-    @Input() public menuEntry: MenuEntry;
+    @Input() public menu: CustomMenu;
+    @Input() public menuEntry: any;
 
     constructor(private router: Router) {}
 
     LinkType = MenuEntryLinkTypeEnum;
 
     public hasLinkType(type: MenuEntryLinkTypeEnum) {
-        return this.menuEntry.linkType === type;
+        return !!this.menuEntry.customMenuId && this.menuEntry.linkType === type;
+    }
+
+    public isLinkACoreMenu() {
+        return !!this.menuEntry.opfabCoreMenuId;
     }
 
     goToLink() {

@@ -1,99 +1,28 @@
 {
-  "coreMenusConfiguration":
+  "navigationBar":
   [
     {
-      "id": "feed",
-      "visible": true,
+      "opfabCoreMenuId": "feed",
       "showOnlyForGroups": ["ADMIN"]
     },
     {
-      "id": "archives",
-      "visible": true,
+      "opfabCoreMenuId": "archives",
       "showOnlyForGroups": ["ADMIN"]
     },
     {
-      "id": "monitoring",
-      "visible": true,
+      "opfabCoreMenuId": "monitoring",
       "showOnlyForGroups": ["ADMIN"]
     },
     {
-      "id": "logging",
-      "visible": true,
+      "opfabCoreMenuId": "logging",
       "showOnlyForGroups": ["ADMIN"]
     },
-    {
-      "id": "usercard",
-      "visible": true,
-      "showOnlyForGroups": ["ADMIN"]
-    },
-    {
-      "id": "calendar",
-      "visible": true,
-      "showOnlyForGroups": ["ADMIN"]
-    },
-    {
-      "id": "admin",
-      "visible": true,
-      "showOnlyForGroups": ["ADMIN"]
-    },
-    {
-      "id": "settings",
-      "visible": true,
-      "showOnlyForGroups": ["ADMIN"]
-    },
-    {
-      "id": "activityarea",
-      "visible": true,
-      "showOnlyForGroups": ["ADMIN"]
-    },
-    {
-      "id": "feedconfiguration",
-      "visible": true,
-      "showOnlyForGroups": ["ADMIN"]
-    },
-    {
-      "id": "realtimeusers",
-      "visible": true,
-      "showOnlyForGroups": ["ADMIN"]
-    },
-    {
-      "id": "externaldevicesconfiguration",
-      "visible": true,
-      "showOnlyForGroups": ["ADMIN"]
-    },
-    {
-      "id": "useractionlogs",
-      "visible": true,
-      "showOnlyForGroups": ["ADMIN"]
-    },
-    {
-      "id": "nightdaymode",
-      "visible": true,
-      "showOnlyForGroups": ["ADMIN"]
-    },
-    {
-      "id": "about",
-      "visible": true,
-      "showOnlyForGroups": ["ADMIN"]
-    },
-    {
-      "id": "changepassword",
-      "visible": true,
-      "showOnlyForGroups": ["ADMIN"]
-    },
-    {
-      "id": "logout",
-      "visible": true,
-      "showOnlyForGroups": ["ADMIN"]
-    }
-  ],
-  "menus": [
     {
       "id": "menu1",
       "label": "title.single",
       "entries": [
         {
-          "id": "uid_test_0",
+          "customMenuId": "uid_test_0",
           "url": "https://en.wikipedia.org/w/index.php",
           "label": "entry.single",
           "linkType": "BOTH"
@@ -105,21 +34,21 @@
       "label": "title.multi",
       "entries": [
         {
-          "id": "uid_test_1",
+          "customMenuId": "uid_test_1",
           "url": "https://opfab.github.io/",
           "label": "entry.entry1",
           "linkType": "BOTH",
           "showOnlyForGroups": ["ReadOnly","Planner"]
         },
         {
-          "id": "uid_test_2",
+          "customMenuId": "uid_test_2",
           "url": "https://www.wikipedia.org/",
           "label": "entry.entry2",
           "linkType": "BOTH",
           "showOnlyForGroups": ["Dispatcher"]
         },
         {
-          "id": "uid_test_3",
+          "customMenuId": "uid_test_3",
           "url": "http://localhost:2002/external/appExample/",
           "label": "entry.entry3",
           "linkType": "BOTH"
@@ -131,7 +60,7 @@
       "label": "title.admin",
       "entries": [
         {
-          "id": "uid_test_3",
+          "customMenuId": "uid_test_3",
           "url": "https://opfab.github.io/",
           "label": "entry.admin",
           "linkType": "BOTH",
@@ -140,97 +69,124 @@
       ]
     }
   ],
+  "topRightIconMenus": [
+    {
+      "opfabCoreMenuId": "usercard",
+      "visible": true,
+      "showOnlyForGroups": ["ADMIN"]
+    },
+    {
+      "opfabCoreMenuId": "calendar",
+      "visible": true,
+      "showOnlyForGroups": ["ADMIN"]
+    }
+  ],
+  "topRightMenus": [
+    {
+      "opfabCoreMenuId": "admin",
+      "visible": true,
+      "showOnlyForGroups": ["ADMIN"]
+    },
+    {
+      "opfabCoreMenuId": "settings",
+      "visible": true,
+      "showOnlyForGroups": ["ADMIN"]
+    },
+    {
+      "opfabCoreMenuId": "activityarea",
+      "visible": true,
+      "showOnlyForGroups": ["ADMIN"]
+    },
+    {
+      "opfabCoreMenuId": "feedconfiguration",
+      "visible": true,
+      "showOnlyForGroups": ["ADMIN"]
+    },
+    {
+      "opfabCoreMenuId": "realtimeusers",
+      "visible": true,
+      "showOnlyForGroups": ["ADMIN"]
+    },
+    {
+      "opfabCoreMenuId": "externaldevicesconfiguration",
+      "visible": true,
+      "showOnlyForGroups": ["ADMIN"]
+    },
+    {
+      "opfabCoreMenuId": "useractionlogs",
+      "visible": true,
+      "showOnlyForGroups": ["ADMIN"]
+    },
+    {
+      "opfabCoreMenuId": "nightdaymode",
+      "visible": true,
+      "showOnlyForGroups": ["ADMIN"]
+    },
+    {
+      "opfabCoreMenuId": "about",
+      "visible": true,
+      "showOnlyForGroups": ["ADMIN"]
+    },
+    {
+      "opfabCoreMenuId": "changepassword",
+      "visible": true,
+      "showOnlyForGroups": ["ADMIN"]
+    },
+    {
+      "opfabCoreMenuId": "logout",
+      "visible": true,
+      "showOnlyForGroups": ["ADMIN"]
+    }
+  ],
   "locales": [
     {
       "language": "en",
       "i18n": {
-        "menu1": {
-          "title": {
-            "single": "First menu"
-          },
-          "entry": {
-            "single": "Single menu entry"
-          }
+        "title": {
+          "single": "First menu",
+          "multi": "Second menu",
+          "admin": "Admin menu"
         },
-        "menu2": {
-          "title": {
-            "multi": "Second menu"
-          },
-          "entry": {
-            "entry1": "First menu entry",
-            "entry2": "Second menu entry",
-            "entry3": "External application"
-          }
-        },
-        "adminmenu": {
-          "title": {
-            "admin": "Admin menu"
-          },
-          "entry": {
-            "admin": "Admin menu entry"
-          }
+        "entry": {
+          "single": "Single menu entry",
+          "entry1": "First menu entry",
+          "entry2": "Second menu entry",
+          "entry3": "External application",
+          "admin": "Admin menu entry"
         }
       }
     },
     {
       "language": "fr",
       "i18n": {
-        "menu1": {
-          "title": {
-            "single": "Premier menu"
-          },
-          "entry": {
-            "single": "Unique élément"
-          }
+        "title": {
+          "single": "Premier menu",
+          "multi": "Deuxième menu",
+          "admin": "Admin menu"
         },
-        "menu2": {
-          "title": {
-            "multi": "Deuxième menu"
-          },
-          "entry": {
-            "entry1": "Premier élément",
-            "entry2": "Deuxième élément",
-            "entry3": "Application externe"
-          }
-        },
-        "adminmenu": {
-          "title": {
-            "admin": "Admin menu"
-          },
-          "entry": {
-            "admin": "Admin menu entry"
-          }
+        "entry": {
+          "single": "Unique élément",
+          "entry1": "Premier élément",
+          "entry2": "Deuxième élément",
+          "entry3": "Application externe",
+          "admin": "Admin menu entry"
         }
       }
     },
     {
       "language": "nl",
       "i18n": {
-        "menu1": {
-          "title": {
-            "single": "Eerste menu"
-          },
-          "entry": {
-            "single": "Enkel menu-item"
-          }
+        "title": {
+          "single": "Eerste menu",
+          "multi": "Tweede menu",
+          "admin": "Admin menu"
         },
-        "menu2": {
-          "title": {
-            "multi": "Tweede menu"
-          },
-          "entry": {
-            "entry1": "Eerste menu-item",
-            "entry2": "Tweede menu-item",
-            "entry3": "TExterne applicatie"
-          }
-        },
-        "adminmenu": {
-          "title": {
-            "admin": "Admin menu"
-          },
-          "entry": {
-            "admin": "Admin menu-item"
-          }
+        "entry": {
+          "single": "Enkel menu-item",
+          "entry1": "Eerste menu-item",
+          "entry2": "Tweede menu-item",
+          "entry3": "TExterne applicatie",
+          "admin": "Admin menu-item"
         }
       }
     }
