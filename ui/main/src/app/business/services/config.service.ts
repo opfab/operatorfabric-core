@@ -11,15 +11,18 @@ import {Injectable} from '@angular/core';
 import {filter, map, mergeMap, mergeWith} from 'rxjs/operators';
 import * as _ from 'lodash-es';
 import {Observable, of, Subject, throwError} from 'rxjs';
-import {CoreMenuConfig, Locale, Menu, UIMenuFile} from '@ofModel/menu.model';
+import {CoreMenuConfig, Locale, CustomMenu, UIMenuFile} from '@ofModel/menu.model';
 import {ConfigServer} from '../server/config.server';
 @Injectable({
     providedIn: 'root'
 })
 export class ConfigService {
     private config;
-    private customMenus: Menu[] = [];
-    private coreMenuConfigurations: CoreMenuConfig[] = [];
+    private customMenus: CustomMenu[] = [];
+
+    private navigationBar: (CoreMenuConfig | CustomMenu)[];
+    private topRightIconMenus: CoreMenuConfig[];
+    private topRightMenus: CoreMenuConfig[];
 
     private configChangeEvent =  new Subject<any>();
     private settingsOverrideEvent = new Subject<any>();
@@ -59,23 +62,31 @@ export class ConfigService {
             ));
     }
 
-    /* Configuration for core menus */
-
-    public loadCoreMenuConfigurations(): Observable<CoreMenuConfig[]> {
+    public loadUiMenuConfig(): Observable<(CoreMenuConfig | CustomMenu)[]> {
         return this.configServer.getMenuConfiguration()
             .pipe(map((serverResponse) => {
-                this.coreMenuConfigurations = serverResponse.data.coreMenusConfiguration;
-                this.processMenuConfig(serverResponse.data);
-                return this.coreMenuConfigurations;
+                this.navigationBar = serverResponse.data.navigationBar;
+                this.topRightIconMenus = serverResponse.data.topRightIconMenus;
+                this.topRightMenus = serverResponse.data.topRightMenus;
+                this.computeCustomMenuList(serverResponse.data);
+                return this.navigationBar;
             }));
     }
 
-    public getMenus(): Menu[] {
+    public getMenus(): CustomMenu[] {
         return this.customMenus;
     }
 
-    public getCoreMenuConfiguration(): CoreMenuConfig[] {
-        return this.coreMenuConfigurations;
+    public getNavigationBar(): any[] {
+        return this.navigationBar;
+    }
+
+    public getTopRightIconMenus(): CoreMenuConfig[] {
+        return this.topRightIconMenus;
+    }
+
+    public getTopRightMenus(): CoreMenuConfig[] {
+        return this.topRightMenus;
     }
 
     /* Configuration for custom menus */
@@ -84,9 +95,9 @@ export class ConfigService {
         return this.configServer.getMenuConfiguration().pipe(map((serverResponse) => serverResponse.data?.locales));
     }
 
-    public computeMenu(): Observable<Menu[]> {
+    public computeMenu(): Observable<CustomMenu[]> {
         return this.configServer.getMenuConfiguration()
-            .pipe(map((serverResponse) => this.processMenuConfig(serverResponse.data)));
+            .pipe(map((serverResponse) => this.computeCustomMenuList(serverResponse.data)));
     }
 
     public queryMenuEntryURL(id: string, menuEntryId: string): Observable<string> {
@@ -97,10 +108,16 @@ export class ConfigService {
         }
     }
 
-    private getMenuEntryURL(menus: Menu[], id: string, menuEntryId: string): Observable<string> {
+    private getMenuEntryURL(menus: CustomMenu[], id: string, menuEntryId: string): Observable<string> {
         const menu = menus.find((m) => m.id === id);
         if (menu) {
-            const entry = menu.entries.filter((e) => e.id === menuEntryId);
+            const entry: any = menu.entries.filter((e: any) => {
+                if (e.customMenuId) {
+                    return e.customMenuId === menuEntryId;
+                }
+                return false;
+            });
+
             if (entry.length === 1) {
                 return of(entry[0].url);
             } else {
@@ -111,13 +128,13 @@ export class ConfigService {
         }
     }
 
-    private processMenuConfig(config: UIMenuFile): Menu[] {
+    private computeCustomMenuList(config: UIMenuFile): CustomMenu[] {
         this.customMenus = [];
-        return config.menus
-            .map((menu) => new Menu(menu.id, menu.label, menu.entries))
-            .reduce((menus: Menu[], menu: Menu) => {
-                this.customMenus.push(menu);
-                return this.customMenus;
-            }, []);
+
+        config.navigationBar.forEach((menuConfig: any) => {
+            if (menuConfig.id)
+                this.customMenus.push(new CustomMenu(menuConfig.id, menuConfig.label, menuConfig.entries));
+        });
+        return this.customMenus;
     }
 }

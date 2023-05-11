@@ -1,82 +1,12 @@
 {
-  "coreMenusConfiguration":
+  "navigationBar":
   [
-    {
-      "id": "feed",
-      "visible": false
-    },
-    {
-      "id": "archives",
-      "visible": false
-    },
-    {
-      "id": "monitoring",
-      "visible": false
-    },
-    {
-      "id": "logging",
-      "visible": false
-    },
-    {
-      "id": "usercard",
-      "visible": false
-    },
-    {
-      "id": "calendar",
-      "visible": false
-    },
-    {
-      "id": "admin",
-      "visible": false
-    },
-    {
-      "id": "settings",
-      "visible": false
-    },
-    {
-      "id": "activityarea",
-      "visible": true
-    },
-    {
-      "id": "feedconfiguration",
-      "visible": false
-    },
-    {
-      "id": "realtimeusers",
-      "visible": false
-    },
-    {
-      "id": "externaldevicesconfiguration",
-      "visible": false
-    },
-    {
-      "id": "useractionlogs",
-      "visible": false
-    },
-    {
-      "id": "nightdaymode",
-      "visible": false
-    },
-    {
-      "id": "about",
-      "visible": false
-    },
-    {
-      "id": "changepassword",
-      "visible": false
-    },
-    {
-      "id": "logout",
-      "visible": false
-    }
-  ],
-  "menus": [
     {
       "id": "menu1",
       "label": "title.single",
       "entries": [
         {
-          "id": "uid_test_0",
+          "customMenuId": "uid_test_0",
           "url": "https://en.wikipedia.org/w/index.php",
           "label": "entry.single",
           "linkType": "BOTH"
@@ -88,21 +18,21 @@
       "label": "title.multi",
       "entries": [
         {
-          "id": "uid_test_1",
+          "customMenuId": "uid_test_1",
           "url": "https://opfab.github.io/",
           "label": "entry.entry1",
           "linkType": "BOTH",
           "showOnlyForGroups": ["ReadOnly","Planner"]
         },
         {
-          "id": "uid_test_2",
+          "customMenuId": "uid_test_2",
           "url": "https://www.wikipedia.org/",
           "label": "entry.entry2",
           "linkType": "BOTH",
           "showOnlyForGroups": ["Dispatcher"]
         },
         {
-          "id": "uid_test_3",
+          "customMenuId": "uid_test_3",
           "url": "http://localhost:2002/external/appExample/",
           "label": "entry.entry3",
           "linkType": "BOTH"
@@ -114,7 +44,7 @@
       "label": "title.admin",
       "entries": [
         {
-          "id": "uid_test_3",
+          "customMenuId": "uid_test_3",
           "url": "https://opfab.github.io/",
           "label": "entry.admin",
           "linkType": "BOTH",
@@ -123,97 +53,111 @@
       ]
     }
   ],
+  "topRightIconMenus": [
+    {
+      "opfabCoreMenuId": "usercard",
+      "visible": false
+    },
+    {
+      "opfabCoreMenuId": "calendar",
+      "visible": false
+    }
+  ],
+  "topRightMenus": [
+    {
+      "opfabCoreMenuId": "admin",
+      "visible": false
+    },
+    {
+      "opfabCoreMenuId": "settings",
+      "visible": false
+    },
+    {
+      "opfabCoreMenuId": "activityarea",
+      "visible": true
+    },
+    {
+      "opfabCoreMenuId": "feedconfiguration",
+      "visible": false
+    },
+    {
+      "opfabCoreMenuId": "realtimeusers",
+      "visible": false
+    },
+    {
+      "opfabCoreMenuId": "externaldevicesconfiguration",
+      "visible": false
+    },
+    {
+      "opfabCoreMenuId": "useractionlogs",
+      "visible": false
+    },
+    {
+      "opfabCoreMenuId": "nightdaymode",
+      "visible": false
+    },
+    {
+      "opfabCoreMenuId": "about",
+      "visible": false
+    },
+    {
+      "opfabCoreMenuId": "changepassword",
+      "visible": false
+    },
+    {
+      "opfabCoreMenuId": "logout",
+      "visible": false
+    }
+  ],
   "locales": [
     {
       "language": "en",
       "i18n": {
-        "menu1": {
-          "title": {
-            "single": "First menu"
-          },
-          "entry": {
-            "single": "Single menu entry"
-          }
+        "title": {
+          "single": "First menu",
+          "multi": "Second menu",
+          "admin": "Admin menu"
         },
-        "menu2": {
-          "title": {
-            "multi": "Second menu"
-          },
-          "entry": {
-            "entry1": "First menu entry",
-            "entry2": "Second menu entry",
-            "entry3": "External application"
-          }
-        },
-        "adminmenu": {
-          "title": {
-            "admin": "Admin menu"
-          },
-          "entry": {
-            "admin": "Admin menu entry"
-          }
+        "entry": {
+          "single": "Single menu entry",
+          "entry1": "First menu entry",
+          "entry2": "Second menu entry",
+          "entry3": "External application",
+          "admin": "Admin menu entry"
         }
       }
     },
     {
       "language": "fr",
       "i18n": {
-        "menu1": {
-          "title": {
-            "single": "Premier menu"
-          },
-          "entry": {
-            "single": "Unique élément"
-          }
+        "title": {
+          "single": "Premier menu",
+          "multi": "Deuxième menu",
+          "admin": "Admin menu"
         },
-        "menu2": {
-          "title": {
-            "multi": "Deuxième menu"
-          },
-          "entry": {
-            "entry1": "Premier élément",
-            "entry2": "Deuxième élément",
-            "entry3": "Application externe"
-          }
-        },
-        "adminmenu": {
-          "title": {
-            "admin": "Admin menu"
-          },
-          "entry": {
-            "admin": "Admin menu entry"
-          }
+        "entry": {
+          "single": "Unique élément",
+          "entry1": "Premier élément",
+          "entry2": "Deuxième élément",
+          "entry3": "Application externe",
+          "admin": "Admin menu entry"
         }
       }
     },
     {
       "language": "nl",
       "i18n": {
-        "menu1": {
-          "title": {
-            "single": "Eerste menu"
-          },
-          "entry": {
-            "single": "Enkel menu-item"
-          }
+        "title": {
+          "single": "Eerste menu",
+          "multi": "Tweede menu",
+          "admin": "Admin menu"
         },
-        "menu2": {
-          "title": {
-            "multi": "Tweede menu"
-          },
-          "entry": {
-            "entry1": "Eerste menu-item",
-            "entry2": "Tweede menu-item",
-            "entry3": "TExterne applicatie"
-          }
-        },
-        "adminmenu": {
-          "title": {
-            "admin": "Admin menu"
-          },
-          "entry": {
-            "admin": "Admin menu-item"
-          }
+        "entry": {
+          "single": "Enkel menu-item",
+          "entry1": "Eerste menu-item",
+          "entry2": "Tweede menu-item",
+          "entry3": "TExterne applicatie",
+          "admin": "Admin menu-item"
         }
       }
     }

@@ -9,7 +9,7 @@
 
 import {Component, ElementRef, OnInit, ViewChild} from '@angular/core';
 import {navigationRoutes} from '../../router/app-routing.module';
-import {Menu} from '@ofModel/menu.model';
+import {CustomMenu} from '@ofModel/menu.model';
 import {GlobalStyleService} from 'app/business/services/global-style.service';
 import {Route, Router} from '@angular/router';
 import {ConfigService} from 'app/business/services/config.service';
@@ -29,7 +29,7 @@ export class NavbarComponent implements OnInit {
     navbarCollapsed = true;
     navigationRoutes: Route[];
     currentRoute = '';
-    businessconfigMenus: Menu[];
+    businessconfigMenus: CustomMenu[];
     openDropdownPopover: NgbPopover;
     currentDropdownHovered;
 
