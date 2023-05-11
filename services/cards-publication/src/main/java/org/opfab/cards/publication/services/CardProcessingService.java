@@ -53,7 +53,7 @@ public class CardProcessingService {
     boolean authorizeToSendCardWithInvalidProcessState;
 
     public static final String UNEXISTING_PROCESS_STATE = "Impossible to publish card because process and/or state does not exist (process=%1$s, state=%2$s, processVersion=%3$s, processInstanceId=%4$s)";
-    public static final String FORBIDDEN_CHARS_REGEX = ".*[#\\?\\/].*";
+    protected static final char[] FORBIDDEN_CHARS = new char[] {'#','?','/'};
 
     public CardProcessingService(
             CardNotificationService cardNotificationService,
@@ -306,8 +306,13 @@ public class CardProcessingService {
                 (c.getState() != null && c.getState().contains(Character.toString('.'))));
     }
 
-    boolean checkForbiddenChars(CardPublicationData c) {
-        return !c.getProcess().matches(FORBIDDEN_CHARS_REGEX)  && !c.getState().matches(FORBIDDEN_CHARS_REGEX) && !c.getProcessInstanceId().matches(FORBIDDEN_CHARS_REGEX);
+    boolean checkForbiddenChars(CardPublicationData card) {
+        for (char ch : FORBIDDEN_CHARS)
+        {
+            if (card.getProcess().contains(Character.toString(ch)) || card.getProcessInstanceId().contains(Character.toString(ch)))
+                return false;
+        }
+        return true;
     }
 
     boolean checkIsAllTimeSpanEndDateAfterStartDate(CardPublicationData c) {
