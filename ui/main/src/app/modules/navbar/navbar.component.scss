@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2022, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2023, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -11,7 +11,7 @@
     padding-left: 20px;
     background-color: var(--opfab-bgcolor);
     font-size: 16px;
-    top: 5px;
+    padding-top: 13px;
 
     .navbar-nav {
         .nav-link {
@@ -44,6 +44,7 @@
     .navbar-toggler {
         color: var(--opfab-navbar-color);
         border-color: var(--opfab-navbar-toggler-border-color);
+        padding-top: 4px;
     }
 
     .navbar-toggler-icon {
@@ -226,7 +227,6 @@
 
 .opfab-sticky-menu {
     position: absolute;
-    top: 3px;
     right: 0;
     padding-right: 30px;
     padding-left: 15px;
