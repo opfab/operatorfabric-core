@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2022, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2023, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -11,35 +11,39 @@
 
 package org.opfab.cards.consultation.configuration.webflux;
 
-import lombok.extern.slf4j.Slf4j;
 import org.opfab.cards.consultation.controllers.CardOperationsController;
 import org.opfab.cards.consultation.controllers.CardOperationsGetParameters;
 import org.opfab.cards.consultation.model.CardSubscriptionDto;
+import org.opfab.cards.consultation.services.CardSubscriptionService;
 import org.opfab.springtools.configuration.oauth.OpFabJwtAuthenticationToken;
 import org.opfab.users.model.CurrentUserWithPerimeters;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.MediaType;
 import org.springframework.web.reactive.function.server.*;
+
+import lombok.extern.slf4j.Slf4j;
 import reactor.core.publisher.Mono;
 
 import java.time.Instant;
 
 import static org.springframework.web.reactive.function.server.ServerResponse.ok;
-
 @Slf4j
 @Configuration
-public class CardSubscriptionRoutesConfig {
+public class CardSubscriptionRoutesConfig implements UserExtractor  {
 
     public static final String FALSE = "false";
     public static final String TRUE = "true";
     public static final String CARD_SUBSCRIPTION_PATH = "/cardSubscription";
     public static final String CLIENT_ID = "clientId";
+    public static final String CARD_SUBSCRIPTION_HEARTBEAT = "/cardSubscriptionHeartbeat";
 
     private final CardOperationsController cardOperationsController;
+    private final CardSubscriptionService cardSubscriptionService;
 
-    public CardSubscriptionRoutesConfig(CardOperationsController cardOperationsController){
+    public CardSubscriptionRoutesConfig(CardOperationsController cardOperationsController, CardSubscriptionService cardSubscriptionService){
         this.cardOperationsController = cardOperationsController;
+        this.cardSubscriptionService = cardSubscriptionService;
     }
 
     /**
@@ -50,6 +54,7 @@ public class CardSubscriptionRoutesConfig {
     public RouterFunction<ServerResponse> cardOperationRoutes() {
         return RouterFunctions
                 .route(RequestPredicates.GET(CARD_SUBSCRIPTION_PATH), cardSubscriptionGetRoute())
+                .andRoute(RequestPredicates.GET(CARD_SUBSCRIPTION_HEARTBEAT),cardSubscriptionHeartbeatGetRoute())
                 .andRoute(RequestPredicates.POST(CARD_SUBSCRIPTION_PATH),cardSubscriptionPostRoute())
                 .andRoute(RequestPredicates.OPTIONS(CARD_SUBSCRIPTION_PATH), cardSubscriptionOptionsRoute())
                 .andRoute(RequestPredicates.DELETE(CARD_SUBSCRIPTION_PATH), cardSubscriptionDeleteRoute());
@@ -78,6 +83,16 @@ public class CardSubscriptionRoutesConfig {
 
     private HandlerFunction<ServerResponse> cardSubscriptionOptionsRoute() {
         return request -> ok().build();
+    }
+
+    private HandlerFunction<ServerResponse> cardSubscriptionHeartbeatGetRoute() {
+        return request -> extractUserFromJwtToken(request)
+        .flatMap(currentUserWithPerimeters -> {
+            String clientId = request.queryParam(CLIENT_ID).orElse(null);
+            cardSubscriptionService.saveHeartbeat(currentUserWithPerimeters, clientId);
+            return ok().build();
+        });
+
     }
 
     private HandlerFunction<ServerResponse> cardSubscriptionDeleteRoute() {

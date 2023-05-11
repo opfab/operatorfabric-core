@@ -162,6 +162,8 @@ For example adding `Keycloak` application, with `'Keycloak'` as `name`, `1` as `
 |checkIfUrlIsLocked|true|no| if set to false, an OperatorFabric url can be used by several tabs in the same browser. Note that there can only be one token per browser for a given OperatorFabric url, so the first session will be replaced by the second one
 |alertMessageBusinessAutoClose|false|no| if set to to true, the (red) business alert message will automatically close after a few seconds.
 |alertMessageOnBottomOfTheScreen|false|no| if set to true, the alert message is shown on the bottom of the page.
+|heardbeatSendingInterval|30|yes| Frequency at which the ui sends heartbeat to the server.
+
 
 |===
 

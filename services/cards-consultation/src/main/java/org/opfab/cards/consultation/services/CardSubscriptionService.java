@@ -22,6 +22,7 @@ import org.opfab.utilities.eventbus.EventListener;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import java.time.Instant;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -34,6 +35,9 @@ public class CardSubscriptionService implements EventListener {
 
     private static final String ERROR_MESSAGE_PARSING = "ERROR during received message parsing";
     private final long heartbeatDelay;
+    private final long heartbeatDelayInSecondsToConsiderUserDisconnected;
+
+    private final long heartbeatCheckIntervalInSeconds;
     private Map<String, CardSubscription> cache = new ConcurrentHashMap<>();
 
 
@@ -47,8 +51,12 @@ public class CardSubscriptionService implements EventListener {
                                     UserServiceCache userServiceCache,
                                     UserActionLogService userActionLogService,
                                     EventBus eventBus,
-                                   @Value("${operatorfabric.heartbeat.delay:10000}")
-                                   long heartbeatDelay) {
+                                    @Value("${operatorfabric.heartbeat.checkIntervalInSeconds:10000}")
+                                    long heartbeatCheckIntervalInSeconds,
+                                    @Value("${operatorfabric.heartbeat.disconnect:100000}")
+                                    long heartbeatDelayInSecondsToConsiderUserDisconnected,
+                                    @Value("${operatorfabric.heartbeat.delay:10000}")
+                                    long heartbeatDelay) {
         this.userServiceCache = userServiceCache;
         this.userActionLogService = userActionLogService;
 
@@ -58,14 +66,23 @@ public class CardSubscriptionService implements EventListener {
         eventBus.addListener("ack",this);
         
         this.heartbeatDelay = heartbeatDelay;
+        this.heartbeatDelayInSecondsToConsiderUserDisconnected = heartbeatDelayInSecondsToConsiderUserDisconnected;
+        this.heartbeatCheckIntervalInSeconds = heartbeatCheckIntervalInSeconds;
         Thread heartbeat = new Thread(){
             @Override
             public void run(){
                 sendHeartbeatMessageInAllSubscriptions();
             }
           };
+        Thread heartbeatFromFront = new Thread(){
+        @Override
+        public void run(){
+            compareLastHeartbeatReceived();
+        }
+        };
         
         heartbeat.start();
+        heartbeatFromFront.start();
 
     }
 
@@ -93,6 +110,35 @@ public class CardSubscriptionService implements EventListener {
                     sub.publishDataIntoSubscription("HEARTBEAT");
                 }
             });
+        }
+    }
+
+    private void compareLastHeartbeatReceived()
+    {
+        for(;;)
+        {
+            try
+                {
+                Thread.sleep(heartbeatCheckIntervalInSeconds);
+                }
+                catch (InterruptedException ex)
+                {
+                    log.error("Impossible to read receiving heartbeats",ex);
+                    Thread.currentThread().interrupt(); // Cf sonar java:S2142 "InterruptedException" should not be ignored
+                    return; 
+                }
+            log.debug("Comparing last heartbeat received");
+            cache.keySet().forEach(key -> {
+                CardSubscription sub = cache.get(key); 
+                if (sub != null) // subscription can be null if it has been evicted during the process of going throw the keys
+                {
+                    log.debug("Time since last heart beat : {}", Instant.now().getEpochSecond() - sub.getHeartbeatReceptionDate().getEpochSecond());
+                    if (Instant.now().getEpochSecond() - sub.getHeartbeatReceptionDate().getEpochSecond()  > heartbeatDelayInSecondsToConsiderUserDisconnected) {
+                        log.info("User with subscription id  {}  has not sent heartbeat for more than {} seconds and got disconnected", sub.getId(), heartbeatDelayInSecondsToConsiderUserDisconnected) ; 
+                        this.evictSubscription(sub.getId());                
+                    }
+                }
+            });
 
         }
     }
@@ -103,6 +149,15 @@ public class CardSubscriptionService implements EventListener {
 
     public boolean willDisconnectAnExistingSubscriptionWhenLoggingIn(String userLogin) {
         return mustCheckIfUserIsAlreadyConnected() && isUserAlreadyConnected(userLogin);
+    }
+
+    public void saveHeartbeat(CurrentUserWithPerimeters currentUserWithPerimeters, String clientId) {
+        CardSubscription sub = this.findSubscription(currentUserWithPerimeters, clientId);
+        if (sub != null) {
+            sub.setHeartbeatReceptionDate(Instant.now());
+        } else {
+            log.info("This user {} has no card subscription", currentUserWithPerimeters.getUserData().getLogin());
+        }
     }
 
     public CardSubscription subscribe(CurrentUserWithPerimeters currentUserWithPerimeters, String clientId) {
@@ -178,12 +233,12 @@ public class CardSubscriptionService implements EventListener {
      * @param uiId Unique client id whom subscription we search
      * @return
      */
-    public CardSubscription findSubscription(CurrentUserWithPerimeters currentUserWithPerimeters, String uiId) {
+    public CardSubscription findSubscription(CurrentUserWithPerimeters currentUserWithPerimeters, String clientId) {
         if (currentUserWithPerimeters == null)
             throw new IllegalArgumentException("user is a mandatory parameter of CardSubscriptionService#findSubscription");
-        if (uiId == null)
-            throw new IllegalArgumentException("uiId is a mandatory parameter of CardSubscriptionService#findSubscription");
-        String subId = CardSubscription.computeSubscriptionId(currentUserWithPerimeters.getUserData().getLogin(), uiId);
+        if (clientId == null)
+            throw new IllegalArgumentException("clientId is a mandatory parameter of CardSubscriptionService#findSubscription");
+        String subId = CardSubscription.computeSubscriptionId(currentUserWithPerimeters.getUserData().getLogin(), clientId);
         return cache.get(subId);
     }
 
