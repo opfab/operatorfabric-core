@@ -40,9 +40,8 @@ docker {
             ,'../../main/docker/add-certificates.sh')
 	dockerfile file('src/main/docker/Dockerfile')
 	buildArgs(['JAR_FILE'       : "externalApp-${project.version.toUpperCase()}.jar",
-                       'http_proxy'     : apk.proxy.uri,
-                       'https_proxy'    : apk.proxy.uri,
-                       'HTTP_PROXY_AUTH': "basic:*:$apk.proxy.user:$apk.proxy.password"])
+               'https_proxy'    : proxy.https
+			 ])
 }
 
 dependencies {
