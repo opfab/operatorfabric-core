@@ -71,6 +71,36 @@ opfab.businessconfig = {
     }
 }
 
+
+opfab.users = {
+    entities: {
+        getEntityName: function(entityId) {},
+        getEntity: function(entityId) {},
+        getAllEntities: function () {}
+    }
+}
+
 opfab.navigate = {
-    showCardInFeed : function(cardId) {}
+    showCardInFeed : function(cardId) {},
+    redirectToBusinessMenu : function (menuId, menuItemId, urlExtension) {}
+}
+
+opfab.currentCard = {
+    isUserAllowedToRespond: function () {},
+    isUserMemberOfAnEntityRequiredToRespond: function () {},
+    getEntitiesAllowedToRespond: function () {},
+    getEntityUsedForUserResponse: function() {},
+    getDisplayContext: function() {},
+    isResponseLocked: function() {},
+    getChildCards: function() {},
+    displayLoadingSpinner: function() {},
+    hideLoadingSpinner: function() {},
+    registerFunctionToGetUserResponse: function(getUserResponse) {},
+    listenToResponseLock(listener) {},
+    listenToResponseUnlock(listener) {},
+    listenToLttdExpired(listener) {},
+    listenToStyleChange(listener) {},
+    listenToScreenSize(listener) {},
+    listenToTemplateRenderingComplete(listener) {}, 
+    listenToChildCards(listener) {}
 }

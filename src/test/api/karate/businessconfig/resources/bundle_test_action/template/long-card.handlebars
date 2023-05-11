@@ -1,3 +1,11 @@
+<!-- Copyright (c) 2021-2023, RTE (http://www.rte-france.com)              -->
+<!-- See AUTHORS.txt                                                       -->
+<!-- This Source Code Form is subject to the terms of the Mozilla Public   -->
+<!-- License, v. 2.0. If a copy of the MPL was not distributed with this   -->
+<!-- file, You can obtain one at http://mozilla.org/MPL/2.0/.              -->
+<!-- SPDX-License-Identifier: MPL-2.0                                      -->
+<!-- This file is part of the OperatorFabric project.                      -->
+
 <div id='opfab-description'></div>
 
 <form id='opfab-form'>
@@ -31,14 +39,14 @@
   xhttp.open("GET", "https://opfab.github.io/", true);
   xhttp.send();
 
-  templateGateway.applyChildCards = () => {
+  opfab.currentCard.listenToChildCards(() => {
     let childsDiv = document.getElementById("childs-div");
     childsDiv.innerHTML = '<p>Responses:</p>';
-    templateGateway.childCards.forEach( (c, i) => {
+    opfab.currentCard.getChildCards().forEach( (c, i) => {
       let text = `<p>Entity ${c.publisher} OpFab opinion: ${c.data.opfabOpinion}</p>`;
       childsDiv.innerHTML += text;
     });
-  }
+  });
 
   var errorMsg;
 
@@ -51,7 +59,7 @@
     }
   }
 
-  templateGateway.getUserResponse = function() {
+  opfab.currentCard.registerFunctionToGetUserResponse(() => {
 
     const responseCardData = {};
 
@@ -71,6 +79,6 @@
         errorMsg: errorMsg
       }
     }
-  }
+  });
 
 </script>

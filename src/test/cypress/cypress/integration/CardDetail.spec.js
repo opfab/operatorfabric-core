@@ -43,36 +43,36 @@ describe('Card detail', function () {
             cy.get('#userContext-groups').contains(/^ReadOnly,Dispatcher$/);
             cy.get('#userContext-entities').contains(/^ENTITY_FR,ENTITY1_FR$/);
 
-            // Check templateGateway calls
-            cy.get('#templateGateway-getEntityName').contains('Control Center FR North');
-            cy.get('#templateGateway-getEntityName-unknownEntity').contains('unknownEntity');
-            cy.get('#templateGateway-isUserAllowedToRespond').contains('true');
-            cy.get('#templateGateway-isUserMemberOfAnEntityRequiredToRespond').contains('true');
-            cy.get('#templateGateway-getEntityUsedForUserResponse').contains(/^ENTITY1_FR$/);
-            cy.get('#templateGateway-getDisplayContext').contains(/^realtime$/);
-            cy.get('#templateGateway-getAllEntities').contains(
+            // Check opfab API  calls
+            cy.get('#opfab-users-entities-getEntityName').contains('Control Center FR North');
+            cy.get('#opfab-users-entities-getEntityName-unknownEntity').contains('unknownEntity');
+            cy.get('#opfab-currentCard-isUserAllowedToRespond').contains('true');
+            cy.get('#opfab-currentCard-isUserMemberOfAnEntityRequiredToRespond').contains('true');
+            cy.get('#opfab-currentCard-getEntityUsedForUserResponse').contains(/^ENTITY1_FR$/);
+            cy.get('#opfab-currentCard-getDisplayContext').contains(/^realtime$/);
+            cy.get('#opfab-users-entities-getAllEntities').contains(
                 'entity[0]:id=ENTITY1_FR,name=Control Center FR North,description=Control Center FR North,entityAllowedToSendCard=true,parents=ENTITY_FR,labels=FR1 label'
             );
-            cy.get('#templateGateway-getAllEntities').contains(
+            cy.get('#opfab-users-entities-getAllEntities').contains(
                 'entity[1]:id=ENTITY2_FR,name=Control Center FR South,description=Control Center FR South,entityAllowedToSendCard=true,parents=ENTITY_FR,labels=undefined'
             );
-            cy.get('#templateGateway-getAllEntities').contains(
+            cy.get('#opfab-users-entities-getAllEntities').contains(
                 'entity[2]:id=ENTITY3_FR,name=Control Center FR East,description=Control Center FR East,entityAllowedToSendCard=true,parents=ENTITY_FR,labels=undefined'
             );
-            cy.get('#templateGateway-getAllEntities').contains(
+            cy.get('#opfab-users-entities-getAllEntities').contains(
                 'entity[3]:id=ENTITY4_FR,name=Control Center FR West,description=Control Center FR West,entityAllowedToSendCard=true,parents=ENTITY_FR,labels=undefined'
             );
-            cy.get('#templateGateway-getAllEntities').contains(
+            cy.get('#opfab-users-entities-getAllEntities').contains(
                 'entity[4]:id=ENTITY_FR,name=French Control Centers,description=French Control Centers,entityAllowedToSendCard=false,parents=undefined,labels=undefined'
             );
-            cy.get('#templateGateway-getAllEntities').contains(
+            cy.get('#opfab-users-entities-getAllEntities').contains(
                 'entity[5]:id=IT_SUPERVISOR_ENTITY,name=IT SUPERVISION CENTER,description=IT SUPERVISION CENTER,entityAllowedToSendCard=true,parents=undefined,labels=undefined'
             );
-            cy.get('#templateGateway-getEntity-ENTITY1_FR').contains(
+            cy.get('#opfab-users-entities-getEntity-ENTITY1_FR').contains(
                 /^ENTITY1_FR,Control Center FR North,Control Center FR North,true,ENTITY_FR,FR1 label$/
             );
             cy.get('#screenSize').contains('md');
-            cy.get('#templateGateway-onTemplateRenderingComplete').contains('ok');
+            cy.get('#opfab-currentCard-onTemplateRenderingComplete').contains('ok');
 
             // see card in full screen
             cy.get('#opfab-card-detail-fullscreen-button').click();
@@ -108,7 +108,7 @@ describe('Card detail', function () {
         it(`Check card detail spinner when simulating card processed `, function () {
             opfab.loginWithUser('operator1_fr');
             feed.openFirstCard();
-            cy.get('#templateGateway-display-spinner-button').click();
+            cy.get('#opfabAPI-display-spinner-button').click();
             opfab.checkLoadingSpinnerIsDisplayed();
             opfab.checkLoadingSpinnerIsNotDisplayed();
         });
@@ -124,7 +124,7 @@ describe('Card detail', function () {
             cy.get('#opfab-archives-cards-list').find('.opfab-archive-sev-information').first().click();
 
             // Check the spinner appears when clicking on the button
-            cy.get('#templateGateway-display-spinner-button').click();
+            cy.get('#opfabAPI-display-spinner-button').click();
             opfab.checkLoadingSpinnerIsDisplayed();
             opfab.checkLoadingSpinnerIsNotDisplayed();
 
@@ -136,17 +136,17 @@ describe('Card detail', function () {
             cy.get('#userContext-groups').contains(/^ReadOnly,Dispatcher$/);
             cy.get('#userContext-entities').contains(/^ENTITY_FR,ENTITY1_FR$/);
 
-            // Check templateGateway calls
-            cy.get('#templateGateway-getEntityName').contains('Control Center FR North');
-            cy.get('#templateGateway-getEntityName-unknownEntity').contains('unknownEntity');
+            // Check opfab API calls
+            cy.get('#opfab-users-entities-getEntityName').contains('Control Center FR North');
+            cy.get('#opfab-users-entities-getEntityName-unknownEntity').contains('unknownEntity');
 
             // in archives is isUserAllowedToRespond always return false
-            cy.get('#templateGateway-isUserAllowedToRespond').contains('false');
+            cy.get('#opfab-currentCard-isUserAllowedToRespond').contains('false');
 
-            cy.get('#templateGateway-isUserMemberOfAnEntityRequiredToRespond').contains('true');
-            cy.get('#templateGateway-getDisplayContext').contains(/^archive$/);
+            cy.get('#opfab-currentCard-isUserMemberOfAnEntityRequiredToRespond').contains('true');
+            cy.get('#opfab-currentCard-getDisplayContext').contains(/^archive$/);
             cy.get('#screenSize').contains('lg');
-            cy.get('#templateGateway-onTemplateRenderingComplete').contains('ok');
+            cy.get('#opfab-currentCard-onTemplateRenderingComplete').contains('ok');
 
             // handlebars templating
             cy.get('#handlebars-simpleData').contains(/^test$/);
@@ -172,7 +172,7 @@ describe('Card detail', function () {
             cy.get('#opfab-archives-cards-list').find('.opfab-archive-sev-information').first().click();
 
             // Check the spinner appears when clicking on the button
-            cy.get('#templateGateway-display-spinner-button').click();
+            cy.get('#opfabAPI-display-spinner-button').click();
             opfab.checkLoadingSpinnerIsDisplayed();
             opfab.checkLoadingSpinnerIsNotDisplayed();
 
@@ -183,20 +183,20 @@ describe('Card detail', function () {
             cy.get('#opfab-card-details-address-to').should('not.exist');
         });
 
-        it(`Check templateGateway when response not required `, function () {
+        it(`Check opfab API when response not required `, function () {
             script.sendCard('cypress/cardDetail/cardDetailResponseNotRequired.json');
             opfab.loginWithUser('operator1_fr');
             feed.openFirstCard();
-            cy.get('#templateGateway-isUserAllowedToRespond').contains('true');
-            cy.get('#templateGateway-isUserMemberOfAnEntityRequiredToRespond').contains('false');
+            cy.get('#opfab-currentCard-isUserAllowedToRespond').contains('true');
+            cy.get('#opfab-currentCard-isUserMemberOfAnEntityRequiredToRespond').contains('false');
         });
 
-        it(`Check templateGateway when response is not possible `, function () {
+        it(`Check opfab API when response is not possible `, function () {
             script.sendCard('cypress/cardDetail/cardDetailResponseNotPossible.json');
             opfab.loginWithUser('operator1_fr');
             feed.openFirstCard();
-            cy.get('#templateGateway-isUserAllowedToRespond').contains('false');
-            cy.get('#templateGateway-isUserMemberOfAnEntityRequiredToRespond').contains('false');
+            cy.get('#opfab-currentCard-isUserAllowedToRespond').contains('false');
+            cy.get('#opfab-currentCard-isUserMemberOfAnEntityRequiredToRespond').contains('false');
         });
 
         it(`Check that a spinner is displayed when the card takes time to load `, function () {

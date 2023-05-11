@@ -10,7 +10,7 @@
 import {Component, Input, OnInit} from "@angular/core";
 import {TranslateService} from "@ngx-translate/core";
 import {Card} from "@ofModel/card.model";
-import {DisplayContext} from "@ofModel/templateGateway.model";
+import {DisplayContext} from "@ofModel/template.model";
 import {DateTimeFormatterService} from "app/business/services/date-time-formatter.service";
 import {EntitiesService} from "app/business/services/entities.service";
 import {Utilities} from "../../../../business/common/utilities";

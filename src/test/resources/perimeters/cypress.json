@@ -43,6 +43,10 @@
       "right": "ReceiveAndWrite"
     },
     {
+      "state": "kitchenSinkDeprecated",
+      "right": "ReceiveAndWrite"
+    },
+    {
       "state": "stateWithUserHasAcknowledged",
       "right": "ReceiveAndWrite"
     },

@@ -21,7 +21,7 @@ import {UserPreferencesService} from 'app/business/services/user-preference.serv
 import {Utilities} from 'app/business/common/utilities';
 import {Card, CardData} from '@ofModel/card.model';
 import {ArchivesLoggingFiltersComponent} from '../share/archives-logging-filters/archives-logging-filters.component';
-import {DisplayContext} from '@ofModel/templateGateway.model';
+import {DisplayContext} from '@ofModel/template.model';
 import {FilterMatchTypeEnum, FilterModel} from '@ofModel/filter-model';
 import {CardsFilter} from '@ofModel/cards-filter.model';
 import {DateTimeFormatterService} from 'app/business/services/date-time-formatter.service';

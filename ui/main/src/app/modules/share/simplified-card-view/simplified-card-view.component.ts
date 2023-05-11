@@ -16,9 +16,9 @@ import {UserService} from 'app/business/services/user.service';
 import {User} from '@ofModel/user.model';
 import {EntitiesService} from 'app/business/services/entities.service';
 import {State} from '@ofModel/processes.model';
-import {DisplayContext} from '@ofModel/templateGateway.model';
+import {DisplayContext} from '@ofModel/template.model';
+import {OpfabAPIService} from 'app/business/services/opfabAPI.service';
 
-declare const templateGateway: any;
 
 @Component({
     selector: 'of-simplified-card-view',
@@ -41,7 +41,8 @@ export class SimplifiedCardViewComponent implements OnInit, OnDestroy {
     constructor(
         private businessconfigService: ProcessesService,
         private userService: UserService,
-        private entitiesService: EntitiesService
+        private entitiesService: EntitiesService,
+        private opfabAPIService: OpfabAPIService
     ) {
         const userWithPerimeters = this.userService.getCurrentUserWithPerimeters();
         if (userWithPerimeters) this.user = userWithPerimeters.userData;
@@ -89,14 +90,14 @@ export class SimplifiedCardViewComponent implements OnInit, OnDestroy {
     }
 
     public beforeTemplateRendering() {
-        templateGateway.userMemberOfAnEntityRequiredToRespond =
+        this.opfabAPIService.currentCard.isUserMemberOfAnEntityRequiredToRespond =
             this.userMemberOfAnEntityRequiredToRespondAndAllowedToSendCards;
-        templateGateway.childCards = this.childCards ? this.childCards : [];
+        this.opfabAPIService.currentCard.childCards = this.childCards ? this.childCards : [];
     }
 
     public afterTemplateRendering() {
         if (this.displayContext === DisplayContext.ARCHIVE) {
-            templateGateway.lockAnswer();
+            this.opfabAPIService.templateInterface.lockAnswer();
         }
     }
 

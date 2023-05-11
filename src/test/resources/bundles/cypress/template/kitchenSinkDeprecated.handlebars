@@ -7,11 +7,14 @@
 <!-- This file is part of the OperatorFabric project.                      -->
 
 
-<button id="opfabAPI-display-spinner-button" type="button"  
+<button id="templateGateway-display-spinner-button" type="button"  
         onclick="simulateCardProcessing()">Simulate card processing</button>
 
 
 <br>
+
+USE TEMPLATEGATEWAY DEPRECATED METHOS 
+
 <br>
 
 <H3> USER CONTEXT VALUES </H3>
@@ -26,10 +29,10 @@
 <br>
 <H3> TEMPLATE GATEWAY CALLS</H3>
 
-<div id="opfabApiResults"></div>
+<div id="templateGatewayResults"></div>
 
 <div> screenSize : <span id="screenSize"> </span>  </div>
-<div> onTemplateRenderingComplete : <span id="opfab-currentCard-onTemplateRenderingComplete"> </span>  </div>
+<div> onTemplateRenderingComplete : <span id="templateGateway-onTemplateRenderingComplete"> </span>  </div>
 
 <H3> OPFAB CALLS</H3>
 <div><span id="showCardLink" style="cursor:pointer;color:blue;text-decoration:underline;" onclick="opfab.navigate.showCardInFeed('defaultProcess.process1')">LINK TO ANOTHER CARD</span></div>
@@ -52,35 +55,35 @@ loadData();
 
 function loadData() {
     
-  let opfabApiResults = document.getElementById("opfabApiResults");
+  let templateGatewayResults = document.getElementById("templateGatewayResults");
   
-  let responses = '<div> getEntityName("ENTITY1_FR") : <span id="opfab-users-entities-getEntityName">';
-  responses += opfab.users.entities.getEntityName('ENTITY1_FR');
+  let responses = '<div> getEntityName("ENTITY1_FR") : <span id="templateGateway-getEntityName">';
+  responses += templateGateway.getEntityName('ENTITY1_FR');
   responses += '</span></div>';
 
-  responses += '<div> getEntityName("unknownEntity") : <span id="opfab-users-entities-getEntityName-unknownEntity">';
-  responses += opfab.users.entities.getEntityName('unknownEntity');
+  responses += '<div> getEntityName("unknownEntity") : <span id="templateGateway-getEntityName-unknownEntity">';
+  responses += templateGateway.getEntityName('unknownEntity');
   responses += '</span></div>';
 
 
-  responses += '<div> isUserAllowedToRespond() : <span id="opfab-currentCard-isUserAllowedToRespond">';
-  responses += opfab.currentCard.isUserAllowedToRespond();
+  responses += '<div> isUserAllowedToRespond() : <span id="templateGateway-isUserAllowedToRespond">';
+  responses += templateGateway.isUserAllowedToRespond();
   responses += '</span></div>';
 
-  responses += '<div> isUserMemberOfAnEntityRequiredToRespond() : <span id="opfab-currentCard-isUserMemberOfAnEntityRequiredToRespond">';
-  responses += opfab.currentCard.isUserMemberOfAnEntityRequiredToRespond();
+  responses += '<div> isUserMemberOfAnEntityRequiredToRespond() : <span id="templateGateway-isUserMemberOfAnEntityRequiredToRespond">';
+  responses += templateGateway.isUserMemberOfAnEntityRequiredToRespond();
   responses += '</span></div>';
 
-  responses += '<div> getEntityUsedForUserResponse() : <span id="opfab-currentCard-getEntityUsedForUserResponse">';
-  responses += opfab.currentCard.getEntityUsedForUserResponse();
+  responses += '<div> getEntityUsedForUserResponse() : <span id="templateGateway-getEntityUsedForUserResponse">';
+  responses += templateGateway.getEntityUsedForUserResponse();
   responses += '</span></div>';
 
-  responses += '<div> getDisplayContext() : <span id="opfab-currentCard-getDisplayContext">';
-  responses += opfab.currentCard.getDisplayContext();
+  responses += '<div> getDisplayContext() : <span id="templateGateway-getDisplayContext">';
+  responses += templateGateway.getDisplayContext();
   responses += '</span></div>';
 
-  responses += '<div> getAllEntities() : <span id="opfab-users-entities-getAllEntities">';
-  opfab.users.entities.getAllEntities().forEach((entity, i) => {
+  responses += '<div> getAllEntities() : <span id="templateGateway-getAllEntities">';
+  templateGateway.getAllEntities().forEach((entity, i) => {
       responses += '<br>entity[' + i + ']:' + 'id=' + entity.id + ',';
       responses += 'name=' + entity.name + ',';
       responses += 'description=' + entity.description + ',';
@@ -91,29 +94,29 @@ function loadData() {
     );
   responses += '</span></div>';
 
-  responses += '<div> getEntity("ENTITY1_FR") : <span id="opfab-users-entities-getEntity-ENTITY1_FR">';
-  responses += opfab.users.entities.getEntity('ENTITY1_FR').id + ',';
-  responses += opfab.users.entities.getEntity('ENTITY1_FR').name + ',';
-  responses += opfab.users.entities.getEntity('ENTITY1_FR').description + ',';
-  responses += opfab.users.entities.getEntity('ENTITY1_FR').entityAllowedToSendCard + ',';
-  responses += opfab.users.entities.getEntity('ENTITY1_FR').parents+ ',';
-  responses += opfab.users.entities.getEntity('ENTITY1_FR').labels;
+  responses += '<div> getEntity("ENTITY1_FR") : <span id="templateGateway-getEntity-ENTITY1_FR">';
+  responses += templateGateway.getEntity('ENTITY1_FR').id + ',';
+  responses += templateGateway.getEntity('ENTITY1_FR').name + ',';
+  responses += templateGateway.getEntity('ENTITY1_FR').description + ',';
+  responses += templateGateway.getEntity('ENTITY1_FR').entityAllowedToSendCard + ',';
+  responses += templateGateway.getEntity('ENTITY1_FR').parents+ ',';
+  responses += templateGateway.getEntity('ENTITY1_FR').labels;
   responses += '</span></div>';
 
-  opfabApiResults.innerHTML = responses;
+  templateGatewayResults.innerHTML = responses;
 }
 
 function simulateCardProcessing() {
-  opfab.currentCard.displayLoadingSpinner()
-  setTimeout(() => opfab.currentCard.hideLoadingSpinner(), 2000);
+  templateGateway.displayLoadingSpinner();
+  setTimeout(() => templateGateway.hideLoadingSpinner(), 2000);
 }
 
-opfab.currentCard.listenToScreenSize( (size) =>
-        document.getElementById("screenSize").innerHTML = size
-);
+templateGateway.setScreenSize =  function (size) {
+        document.getElementById("screenSize").innerHTML = size;
+};
 
-opfab.currentCard.listenToTemplateRenderingComplete( () => 
-        document.getElementById("opfab-currentCard-onTemplateRenderingComplete").innerHTML = "ok"
-);
+templateGateway.onTemplateRenderingComplete =  function () {
+        document.getElementById("templateGateway-onTemplateRenderingComplete").innerHTML = "ok";
+};
 
 </script>

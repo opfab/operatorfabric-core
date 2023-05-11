@@ -19,7 +19,6 @@ import {EntitiesServer} from '../server/entities.server';
 import {ServerResponseStatus} from '../server/serverResponse';
 import {EntitiesTree} from '@ofModel/processes.model';
 
-declare const templateGateway: any;
 
 @Injectable({
     providedIn: 'root'
@@ -104,14 +103,17 @@ export class EntitiesService extends CachedCrudService {
                 next: (entities) => {
                     if (entities) {
                         this._entities = entities;
-                        this.setEntityNamesInTemplateGateway();
-                        this.setEntitiesInTemplateGateway();
                         console.log(new Date().toISOString(), 'List of entities loaded');
                     }
                 },
                 error: (error) => console.error(new Date().toISOString(), 'an error occurred', error)
             })
         );
+    }
+
+    public getEntity(entityId) : Entity {
+        const entity = this._entities.find((entity) => entity.id === entityId);
+        return entity;
     }
 
     public getEntities(): Entity[] {
@@ -136,27 +138,6 @@ export class EntitiesService extends CachedCrudService {
     public isEntityAllowedToSendCard(idEntity: string): boolean {
         const found = this._entities.find((entity) => entity.id === idEntity);
         return found && found.entityAllowedToSendCard;
-    }
-
-    private setEntityNamesInTemplateGateway(): void {
-        const entityNames = new Map();
-        this._entities.forEach((entity) => entityNames.set(entity.id, entity.name));
-        templateGateway.setEntityNames(entityNames);
-    }
-
-    private setEntitiesInTemplateGateway(): void {
-        const entities = new Map();
-        this._entities.forEach((entity) =>
-            entities.set(entity.id, {
-                id: entity.id,
-                name: entity.name,
-                description: entity.description,
-                entityAllowedToSendCard: entity.entityAllowedToSendCard,
-                parents: entity.parents,
-                labels: entity.labels
-            })
-        );
-        templateGateway.setEntities(entities);
     }
 
     /** Given a list of entities that might contain parent entities, this method returns the list of entities

@@ -37,6 +37,7 @@ import {AuthenticationMode} from 'app/authentication/auth.model';
 import {SystemNotificationService} from '../../../business/services/system-notification.service';
 import {BusinessDataService} from 'app/business/services/businessdata.service';
 import {Router} from '@angular/router';
+import {OpfabAPIService} from 'app/business/services/opfabAPI.service';
 
 declare const opfab: any;
 @Component({
@@ -86,6 +87,7 @@ export class ApplicationLoadingComponent implements OnInit {
         private applicationUpdateService: ApplicationUpdateService,
         private currentUserStore: CurrentUserStore,
         private systemNotificationService: SystemNotificationService,
+        private opfabAPIService: OpfabAPIService,
         private router: Router,
         private ngZone: NgZone
     ) {}
@@ -274,19 +276,17 @@ export class ApplicationLoadingComponent implements OnInit {
         this.reminderService.startService(this.userLogin);
         this.rRuleReminderService.startService(this.userLogin);
         this.systemNotificationService.initSystemNotificationService();
-        this.initOpFabAPI();
+        this.initOpfabAPI();
     }
 
-    private initOpFabAPI(): void {
+    private initOpfabAPI(): void {
         const that = this;
-        opfab.businessconfig.businessData.get = async function (resourceName) {
-            const resource = await that.businessDataService.getBusinessData(resourceName);
-            return resource;
-        };
 
         opfab.navigate.showCardInFeed = function(cardId: string) {
             that.ngZone.run(() => that.router.navigate(['feed/cards/', cardId]));
         }
+
+        this.opfabAPIService.initAPI();
     }
 
 }
