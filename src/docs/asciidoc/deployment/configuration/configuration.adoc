@@ -137,6 +137,7 @@ The cards-consultation service has these specific properties :
 |name|default|mandatory?|Description
 
 |checkIfUserIsAlreadyConnected|true|no|If false, OperatorFabric will allow a user to have several sessions opened at the same time. However, it may cause synchronization problems between the sessions using the same login, so it is recommended to let it to true, its default value. 
+|operatorfabric.heartbeat.checkIntervalInSeconds|10|no|Frequency at which the heartbeat from the ui to the server is checked.
 |===
 
 [[external-devices-conf]]
