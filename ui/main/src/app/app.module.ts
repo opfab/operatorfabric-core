@@ -77,6 +77,8 @@ import {AngularSoundServer} from './server/angularSound.server';
 import {DashboardModule} from './modules/dashboard/dashboard.module';
 import {BusinessDataServer} from './business/server/businessData.server';
 import {AngularBusinessDataServer} from './server/angularBusinessData.server';
+import {TranslationService} from './business/services/translation.service';
+import {AngularTranslationService} from '@ofServices/angularTranslationService';
 
 @NgModule({
     imports: [
@@ -145,7 +147,8 @@ import {AngularBusinessDataServer} from './server/angularBusinessData.server';
         {provide: OpfabEventStreamServer, useClass: AngularOpfabEventStreamServer},
         {provide: ExternalDevicesServer, useClass: AngularExternalDevicesServer},
         {provide: CardServer, useClass: AngularCardServer},
-        {provide: SoundServer, useClass: AngularSoundServer}
+        {provide: SoundServer, useClass: AngularSoundServer},
+        {provide: TranslationService, useClass: AngularTranslationService}
     ],
     bootstrap: [AppComponent]
 })
