@@ -9,13 +9,13 @@
 
 import {Injectable} from '@angular/core';
 import * as moment from 'moment';
-import {TranslateService} from '@ngx-translate/core';
 import {Observable} from 'rxjs';
 import {catchError, tap} from 'rxjs/operators';
 import {ConfigService} from 'app/business/services/config.service';
 import {Utilities} from 'app/business/common/utilities';
 import {ConfigServer} from '../server/config.server';
 import {ServerResponseStatus} from '../server/serverResponse';
+import {TranslationService} from './translation.service';
 
 declare const opfab: any;
 
@@ -28,7 +28,7 @@ export class I18nService {
 
     constructor(
         private configServer: ConfigServer,
-        private translate: TranslateService,
+        private translationService: TranslationService,
         private configService: ConfigService
     ) {
     }
@@ -47,23 +47,15 @@ export class I18nService {
             this._locale = 'en';
         }
         moment.locale(this._locale);
-        this.translate.use(this._locale);
+        this.translationService.setLang(this._locale);
         this.setTranslationForMultiSelectUsedInTemplates();
     }
 
     public setTranslationForMultiSelectUsedInTemplates() {
-        this.translate
-            .get('multiSelect.searchPlaceholderText')
-            .subscribe((translated) => (opfab.multiSelect.searchPlaceholderText = translated));
-        this.translate
-            .get('multiSelect.clearButtonText')
-            .subscribe((translated) => (opfab.multiSelect.clearButtonText = translated));
-        this.translate
-            .get('multiSelect.noOptionsText')
-            .subscribe((translated) => (opfab.multiSelect.noOptionsText = translated));
-        this.translate
-            .get('multiSelect.noSearchResultsText')
-            .subscribe((translated) => (opfab.multiSelect.noSearchResultsText = translated));
+        opfab.multiSelect.searchPlaceholderText = this.translationService.getTranslation('multiSelect.searchPlaceholderText');
+        opfab.multiSelect.clearButtonText = this.translationService.getTranslation('multiSelect.clearButtonText');
+        opfab.multiSelect.noOptionsText = this.translationService.getTranslation('multiSelect.noOptionsText');
+        opfab.multiSelect.noSearchResultsText = this.translationService.getTranslation('multiSelect.noSearchResultsText');
     }
 
     public get locale() {
@@ -75,7 +67,7 @@ export class I18nService {
             tap({
                 next: (serverResponse) => {
                     if (serverResponse.status === ServerResponseStatus.OK) {
-                     this.translate.setTranslation(locale, serverResponse.data, true)
+                     this.translationService.setTranslation(locale, serverResponse.data, true)
                     }
                     else {
                         console.log(
@@ -98,7 +90,7 @@ export class I18nService {
     public loadTranslationForMenu(): void {
         this.configService.fetchMenuTranslations().subscribe((locales) => {
             locales.forEach((locale) => {
-                this.translate.setTranslation(locale.language, locale.i18n, true);
+                this.translationService.setTranslation(locale.language, locale.i18n, true);
             });
         });
 

@@ -10,9 +10,7 @@
 
 import {Component, ElementRef, Input, OnChanges, OnDestroy, ViewChild} from '@angular/core';
 import {LineOfMonitoringResult} from '@ofModel/line-of-monitoring-result.model';
-import {TranslateService} from '@ngx-translate/core';
 import {ExcelExport} from 'app/business/common/excel-export';
-import {takeUntil} from 'rxjs/operators';
 import {Observable, Subject} from 'rxjs';
 import {NgbModal, NgbModalOptions, NgbModalRef} from '@ng-bootstrap/ng-bootstrap';
 import {ProcessesService} from 'app/business/services/processes.service';
@@ -29,6 +27,7 @@ import {LightCardsStoreService} from 'app/business/services/lightcards/lightcard
 import {DateTimeFormatterService} from 'app/business/services/date-time-formatter.service';
 import {SelectedCardService} from 'app/business/services/card/selectedCard.service';
 import {CardService} from 'app/business/services/card.service';
+import {TranslationService} from 'app/business/services/translation.service';
 
 @Component({
     selector: 'of-monitoring-table',
@@ -81,7 +80,7 @@ export class MonitoringTableComponent implements OnChanges, OnDestroy {
 
     constructor(
         readonly dateTimeFormatter: DateTimeFormatterService,
-        private translate: TranslateService,
+        private translationService: TranslationService,
         private modalService: NgbModal,
         private processesService: ProcessesService,
         private cardService: CardService,
@@ -117,7 +116,7 @@ export class MonitoringTableComponent implements OnChanges, OnDestroy {
             getLocaleText: function (params) {
                 // To avoid clashing with opfab assets, all keys defined by ag-grid are prefixed with "ag-grid."
                 // e.g. key "to" defined by ag-grid for use with pagination can be found under "ag-grid.to" in assets
-                return translate.instant('ag-grid.' + params.key);
+                return translationService.getTranslation('ag-grid.' + params.key);
             },
             columnTypes: {
                 timeColumn: {
@@ -317,7 +316,7 @@ export class MonitoringTableComponent implements OnChanges, OnDestroy {
                     [this.titleColumnName]: line.data.title,
                     [this.summaryColumnName]: line.data.summary,
                     [this.typeOfStateColumnName]: line.data.processStatus,
-                    [this.severityColumnName]: Utilities.translateSeverity(this.translate, line.data.severity),
+                    [this.severityColumnName]: Utilities.translateSeverity(this.translationService, line.data.severity),
                     [this.emitterColumnName]: line.data.emitter,
                     [this.requiredResponsesColumnName]: line.data.requiredResponses
                         ? this.getEntitiesNames(line.data.requiredResponses).join()
@@ -390,7 +389,7 @@ export class MonitoringTableComponent implements OnChanges, OnDestroy {
         }
         card.card.title = card.card.titleTranslated;
         card.card.summary = card.card.summaryTranslated;
-        card.card.severity = Utilities.translateSeverity(this.translate, card.card.severity);
+        card.card.severity = Utilities.translateSeverity(this.translationService, card.card.severity);
         if (!!card.childCards) {
             card.childCards.forEach((childCard) => {
                 if (childCard.publisherType === 'ENTITY')
@@ -401,22 +400,15 @@ export class MonitoringTableComponent implements OnChanges, OnDestroy {
         return card;
     }
 
-    translateValue(key: string, interpolateParams?: Object): any {
-        return this.translate.instant(key, interpolateParams); // we can use synchronous method as translation has already been load for UI before
+    translateValue(key: string, interpolateParams?: Map<string,string>): any {
+        return this.translationService.getTranslation(key, interpolateParams); // we can use synchronous method as translation has already been load for UI before
     }
 
-    translateColumn(key: string | Array<string>, interpolateParams?: Object): any {
-        let translatedColumn: number;
-
-        this.translate
-            .get(key, interpolateParams)
-            .pipe(takeUntil(this.unsubscribe$))
-            .subscribe((translate) => {
-                translatedColumn = translate;
-            });
-
-        return translatedColumn;
+    translateColumn(key: string, interpolateParams?: Map<string,string>): any {
+        if (!key) return '';
+        return this.translationService.getTranslation(key,interpolateParams);
     }
+
 
     ngOnDestroy() {
         if (!!this.modalRef) {
