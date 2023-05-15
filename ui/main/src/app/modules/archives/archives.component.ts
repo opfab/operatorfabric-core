@@ -290,7 +290,7 @@ export class ArchivesComponent implements OnDestroy, OnInit {
         };
         this.modalRef = this.modalService.open(this.exportTemplate, modalOptions);
 
-        const filter = this.getFilter(0, 1 + this.historySize, this.filtersTemplate.filters, false);
+        const filter = this.getFilter(null, null, this.filtersTemplate.filters, false);
         this.cardService
             .fetchFilteredArchivedCards(filter)
             .pipe(takeUntil(this.unsubscribe$))
