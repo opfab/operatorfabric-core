@@ -131,10 +131,6 @@ Here is an example of the configuration file :
                 "ENTITY2_FR",
                 "ENTITY3_FR",
                 "ENTITY4_FR"
-              ],
-              "groups": [
-                "Dispatcher",
-                "Planner"
               ]
             },
             {
@@ -143,10 +139,6 @@ Here is an example of the configuration file :
                 "ENTITY1_IT",
                 "ENTITY2_IT",
                 "ENTITY3_IT"
-              ],
-              "groups": [
-                "Dispatcher",
-                "Planner"
               ]
             },
             {
@@ -154,10 +146,6 @@ Here is an example of the configuration file :
               "entities": [
                 "ENTITY1_NL",
                 "ENTITY2_NL"
-              ],
-              "groups": [
-                "Dispatcher",
-                "Planner"
               ]
             }
           ]
@@ -168,9 +156,6 @@ Here is an example of the configuration file :
               "name": "Central Supervision Centers",
               "entities": [
                 "IT_SUPERVISOR_ENTITY"
-              ],
-              "groups": [
-                "Supervisor"
               ]
             }
           ]
@@ -189,10 +174,6 @@ Here is an example of the configuration file :
                 "ENTITY2_FR",
                 "ENTITY3_FR",
                 "ENTITY4_FR"
-              ],
-              "groups": [
-                "Dispatcher",
-                "Planner"
               ]
             }
           ]
@@ -203,9 +184,6 @@ Here is an example of the configuration file :
               "name": "Central Supervision Centers",
               "entities": [
                 "IT_SUPERVISOR_ENTITY"
-              ],
-              "groups": [
-                "Supervisor"
               ]
             }
           ]
@@ -223,10 +201,6 @@ Here is an example of the configuration file :
                 "ENTITY1_IT",
                 "ENTITY2_IT",
                 "ENTITY3_IT"
-              ],
-              "groups": [
-                "Dispatcher",
-                "Planner"
               ]
             }
           ]
@@ -237,9 +211,6 @@ Here is an example of the configuration file :
               "name": "Central Supervision Centers",
               "entities": [
                 "IT_SUPERVISOR_ENTITY"
-              ],
-              "groups": [
-                "Supervisor"
               ]
             }
           ]
@@ -256,10 +227,6 @@ Here is an example of the configuration file :
               "entities": [
                 "ENTITY1_NL",
                 "ENTITY2_NL"
-              ],
-              "groups": [
-                "Dispatcher",
-                "Planner"
               ]
             }
           ]
@@ -270,9 +237,6 @@ Here is an example of the configuration file :
               "name": "Central Supervision Centers",
               "entities": [
                 "IT_SUPERVISOR_ENTITY"
-              ],
-              "groups": [
-                "Supervisor"
               ]
             }
           ]

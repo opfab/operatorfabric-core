@@ -20,5 +20,5 @@ export class ScreenColumn {
 }
 
 export class EntitiesGroups {
-    constructor(readonly name: string, readonly entities: Array<string>, readonly groups: Array<string>) {}
+    constructor(readonly name: string, readonly entities: Array<string>) {}
 }
