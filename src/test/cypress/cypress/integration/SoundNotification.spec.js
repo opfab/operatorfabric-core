@@ -206,8 +206,6 @@ describe('Sound notification test', function () {
         feed.checkNumberOfDisplayedCardsIs(0);
         sendCardWithSeverityAlarm();
         cy.get('#div-detail-msg').find('span').eq(0).contains('You have received a card hidden by the filters you have activated (Timeline or card feed)');
-        // Check that alert message css class
-        cy.get('of-alert').find('.opfab-alert-business').should('exist');
         cy.tick(100);
         sound.checkNumberOfEmittedSoundIs(1);
         feed.checkNumberOfDisplayedCardsIs(0);

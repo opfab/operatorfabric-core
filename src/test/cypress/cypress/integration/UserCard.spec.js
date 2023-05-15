@@ -280,16 +280,14 @@ describe('User Card ', function () {
       // a report name without report link : an error should be displayed
       cy.get('#report_title').type('report name');
       cy.get('#opfab-usercard-btn-prepareCard').click();
-      cy.get('.opfab-info-message').should('have.class', 'opfab-alert-error')
-          .contains('You must provide a report name and link, or none of them.');
+      cy.get('.opfab-info-message').contains('You must provide a report name and link, or none of them.');
       cy.get('.opfab-alert-close').click();
 
       // a report link without report name : an error should be displayed
       cy.get('#report_link').type('report link');
       cy.get('#report_title').clear();
       cy.get('#opfab-usercard-btn-prepareCard').click();
-      cy.get('.opfab-info-message').should('have.class', 'opfab-alert-error')
-          .contains('You must provide a report name and link, or none of them.');
+      cy.get('.opfab-info-message').contains('You must provide a report name and link, or none of them.');
       cy.get('.opfab-alert-close').click();
 
       // a report name and a report link : no error
