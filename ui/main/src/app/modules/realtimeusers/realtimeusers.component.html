@@ -1,4 +1,4 @@
-<!-- Copyright (c) 2021-2022, RTE (http://www.rte-france.com)                   -->
+<!-- Copyright (c) 2021-2023, RTE (http://www.rte-france.com)                   -->
 <!-- See AUTHORS.txt                                                       -->
 <!-- This Source Code Form is subject to the terms of the Mozilla Public   -->
 <!-- License, v. 2.0. If a copy of the MPL was not distributed with this   -->
@@ -35,34 +35,28 @@
                 <div class="opfab-realtimeusers-entitiesgroups " *ngFor="let entitiesGroupsElement of column.entitiesGroups;">
                     <span class="opfab-realtimeusers-entitiesgroups-title">{{entitiesGroupsElement.name}}</span>
                     <table aria-describedby="real time users table" style="width: 100%;table-layout: fixed">
-                        <tr>
-                            <th scope="col"></th>
-                            <th scope="col" *ngFor="let group of entitiesGroupsElement.groups;">{{this.groupsService.getGroupName(group)}}</th>
-                            <!-- below, we create empty columns (if necessary) to have same number of columns per screenColumns -->
-                            <th scope="col" *ngFor="let item of [].constructor(this.columnsNumberPerScreenAndScreenColumn.get(realTimeScreenIndexToDisplay + '.' + colIndex)
-                                - entitiesGroupsElement.groups.length)">
-                        </tr>
                         <tr *ngFor="let entity of entitiesGroupsElement.entities;">
                             <th scope="row">{{this.entitiesService.getEntityName(entity)}}</th>
-                            <td *ngFor="let group of entitiesGroupsElement.groups;">
+
+                            <td>
                                 <ng-template #connected>
-                                    <span class="badge rounded-pill bg-success">{{getNumberOfConnectedUsersInEntityAndGroup(entity + '.' + group)}}
-                                    </span>&nbsp;<span [id]="'grouped-label-' + entity + '.' + group" class="opfab-group-label"
-                                        [disablePopover]="!isEllipsisActive('grouped-label-' + entity + '.' + group)"
+                                    <span class="badge rounded-pill bg-success">{{getNumberOfConnectedUsersInEntity(entity)}}
+                                    </span>&nbsp;<span [id]="'grouped-label-' + entity" class="opfab-group-label"
+                                        [disablePopover]="!isEllipsisActive('grouped-label-' + entity)"
                                         placement="top-left"
                                         [ngbPopover]="usersDropdown" container="body"
                                         triggers="mouseenter:mouseleave"
                                         popoverClass="opfab-popover-no-arrow">
-                                        {{getLabelForConnectedUsers(entity + '.' + group)}}
+                                        {{getLabelForConnectedUsers(entity)}}
                                       </span>
                                 </ng-template>
                                 <ng-template #usersDropdown>
-                                    <div *ngFor="let login of connectedUsersPerEntityAndGroup.get(entity + '.' + group)">
+                                    <div *ngFor="let login of connectedUsersPerEntity.get(entity)">
                                       &nbsp; {{login}} &nbsp;
                                     </div>
                                   </ng-template>
                                 <ng-template #disconnected><span class="badge rounded-pill bg-danger">0</span></ng-template>
-                                <span *ngIf="getNumberOfConnectedUsersInEntityAndGroup(entity + '.' + group);then connected else disconnected"></span>
+                                <span *ngIf="getNumberOfConnectedUsersInEntity(entity);then connected else disconnected"></span>
                             </td>
                         </tr>
                     </table>

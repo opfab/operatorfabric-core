@@ -52,7 +52,6 @@ Feature: uploadRealTimeScreens
     Then assert response.realTimeScreens[0].screenColumns[0].entitiesGroups.length == 3
     Then match response.realTimeScreens[0].screenColumns[0].entitiesGroups[0].name == 'French Control Centers'
     Then assert response.realTimeScreens[0].screenColumns[0].entitiesGroups[0].entities.length == 4
-    Then assert response.realTimeScreens[0].screenColumns[0].entitiesGroups[0].groups.length == 2
 
 
   Scenario: Post a new realtime screens configuration file
@@ -74,7 +73,6 @@ Feature: uploadRealTimeScreens
     Then assert response.realTimeScreens[0].screenColumns[0].entitiesGroups.length == 1
     Then match response.realTimeScreens[0].screenColumns[0].entitiesGroups[0].name == 'Central Supervision Centers'
     Then assert response.realTimeScreens[0].screenColumns[0].entitiesGroups[0].entities.length == 1
-    Then assert response.realTimeScreens[0].screenColumns[0].entitiesGroups[0].groups.length == 1
 
 
   Scenario: Get realtime screens configuration without authentication
@@ -87,4 +85,3 @@ Feature: uploadRealTimeScreens
     Then assert response.realTimeScreens[0].screenColumns[0].entitiesGroups.length == 1
     Then match response.realTimeScreens[0].screenColumns[0].entitiesGroups[0].name == 'Central Supervision Centers'
     Then assert response.realTimeScreens[0].screenColumns[0].entitiesGroups[0].entities.length == 1
-    Then assert response.realTimeScreens[0].screenColumns[0].entitiesGroups[0].groups.length == 1

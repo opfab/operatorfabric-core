@@ -297,7 +297,7 @@ paths:
         '401':
           description: Authentication required
         '404':
-          description: Not found  
+          description: Not found
         '500':
           description: Unable to delete version of process
   '/businessconfig/processgroups':
@@ -759,10 +759,6 @@ definitions:
       name:
         type: string
       entities:
-        type: array
-        items:
-          type: string
-      groups:
         type: array
         items:
           type: string

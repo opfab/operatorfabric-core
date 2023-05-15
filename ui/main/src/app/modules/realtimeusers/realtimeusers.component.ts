@@ -34,9 +34,8 @@ export class RealtimeusersComponent implements OnInit, OnDestroy {
     realTimeScreens: Array<RealTimeScreen>;
     isRealTimeScreensLoaded = false;
     realTimeScreenIndexToDisplay: string;
-    connectedUsersPerEntityAndGroup: Map<string, Array<string>> = new Map<string, Array<string>>();
+    connectedUsersPerEntity: Map<string, Array<string>> = new Map<string, Array<string>>();
     realTimeScreensOptions = [];
-    columnsNumberPerScreenAndScreenColumn: Map<string, number> = new Map<string, number>();
 
     public multiSelectConfig: MultiSelectConfig = {
         labelKey: 'realTimeUsers.realTimeScreen',
@@ -65,8 +64,7 @@ export class RealtimeusersComponent implements OnInit, OnDestroy {
 
             if (result.status === ServerResponseStatus.OK) {
                 this.logger.info('List of realTimeScreens loaded');
-            
-                
+
                 this.realTimeScreens = result.data.realTimeScreens;
 
                 this.realTimeScreens.forEach((realTimeScreen, index) => {
@@ -82,8 +80,6 @@ export class RealtimeusersComponent implements OnInit, OnDestroy {
                 } else {
                     this.displayRealTimeScreenIndex(0);
                 }
-
-                this.loadColumnsNumberPerScreenAndScreenColumn();
             } else {
                 this.logger.error('The real time screen could not be loaded');
             }
@@ -96,45 +92,30 @@ export class RealtimeusersComponent implements OnInit, OnDestroy {
         }, 2000);
     }
 
-    loadColumnsNumberPerScreenAndScreenColumn() {
-        this.realTimeScreens.forEach((realTimeScreen, screenIndex) => {
-            realTimeScreen.screenColumns.forEach((screenColumn, columnIndex) => {
-                let biggerNumberOfColumns = 0;
-
-                screenColumn.entitiesGroups.forEach((entityGroup) => {
-                    if (entityGroup.groups.length > biggerNumberOfColumns)
-                        biggerNumberOfColumns = entityGroup.groups.length;
-                });
-
-                this.columnsNumberPerScreenAndScreenColumn.set(screenIndex + '.' + columnIndex, biggerNumberOfColumns);
-            });
-        });
-    }
-
     refresh() {
         this.userService.loadConnectedUsers().subscribe((connectedUsers) => {
-            this.connectedUsersPerEntityAndGroup.clear();
+            this.connectedUsersPerEntity.clear();
 
             connectedUsers.sort((obj1, obj2) => Utilities.compareObj(obj1.login, obj2.login));
 
             connectedUsers.forEach((realTimeUserConnected) => {
                 if (!! realTimeUserConnected.entitiesConnected) {
                     realTimeUserConnected.entitiesConnected.forEach((entityConnected) => {
-                        realTimeUserConnected.groups.forEach((group) => {
-                            let usersConnectedPerEntityAndGroup = this.connectedUsersPerEntityAndGroup.get(
-                                entityConnected + '.' + group
-                            );
+                        let usersConnectedPerEntity = this.connectedUsersPerEntity.get(
+                            entityConnected
+                        );
 
-                            if (!usersConnectedPerEntityAndGroup) usersConnectedPerEntityAndGroup = [];
+                        if (!usersConnectedPerEntity) {
+                            usersConnectedPerEntity = [];
+                        }
 
-                            // we don't want duplicates for the same user
-                            if (!usersConnectedPerEntityAndGroup.includes(realTimeUserConnected.login))
-                                usersConnectedPerEntityAndGroup.push(realTimeUserConnected.login);
-                            this.connectedUsersPerEntityAndGroup.set(
-                                entityConnected + '.' + group,
-                                usersConnectedPerEntityAndGroup
-                            );
-                        });
+                        // we don't want duplicates for the same user
+                        if (!usersConnectedPerEntity.includes(realTimeUserConnected.login))
+                            usersConnectedPerEntity.push(realTimeUserConnected.login);
+                        this.connectedUsersPerEntity.set(
+                            entityConnected,
+                            usersConnectedPerEntity
+                        );
                     });
                 }
             });
@@ -158,17 +139,17 @@ export class RealtimeusersComponent implements OnInit, OnDestroy {
         });
     }
 
-    getLabelForConnectedUsers(entityAndGroup: string): string {
+    getLabelForConnectedUsers(entity: string): string {
         let label = '';
-        const connectedUsers = this.connectedUsersPerEntityAndGroup.get(entityAndGroup);
+        const connectedUsers = this.connectedUsersPerEntity.get(entity);
         connectedUsers.forEach(login => {
-            label += login + ' ';
+            label += login + ', ';
         });
-        return label.trim();
+        return label.slice(0, -2);
     }
 
-    getNumberOfConnectedUsersInEntityAndGroup(entityAndGroup: string): number {
-        const connectedUsers = this.connectedUsersPerEntityAndGroup.get(entityAndGroup);
+    getNumberOfConnectedUsersInEntity(entity: string): number {
+        const connectedUsers = this.connectedUsersPerEntity.get(entity);
         if (!!connectedUsers) return connectedUsers.length;
         return 0;
     }

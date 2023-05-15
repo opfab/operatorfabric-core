@@ -302,8 +302,7 @@ class GivenAdminUserBusinessconfigControllerShould {
                     .andExpect(jsonPath("$.realTimeScreens[0].screenColumns", hasSize(2)))
                     .andExpect(jsonPath("$.realTimeScreens[0].screenColumns[0].entitiesGroups", hasSize(3)))
                     .andExpect(jsonPath("$.realTimeScreens[0].screenColumns[0].entitiesGroups[0].name", is("French Control Centers")))
-                    .andExpect(jsonPath("$.realTimeScreens[0].screenColumns[0].entitiesGroups[0].entities", hasSize(4)))
-                    .andExpect(jsonPath("$.realTimeScreens[0].screenColumns[0].entitiesGroups[0].groups", hasSize(2)));
+                    .andExpect(jsonPath("$.realTimeScreens[0].screenColumns[0].entitiesGroups[0].entities", hasSize(4)));
         }
 
         @Nested

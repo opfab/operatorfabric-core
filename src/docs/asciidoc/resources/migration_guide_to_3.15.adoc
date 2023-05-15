@@ -14,3 +14,7 @@ The option `feed.geomap.layer.geojson.crossOrigin`, used to set a cross-origin o
 == Remove deprecated field from state definition
 The deprecated field `recipientList` has been removed from card state definition.
 To restrict the recipient list options use the method `usercardTemplateGateway.setDropdownEntityRecipientList` in template.
+
+== Remove use of groups column in realtime screen
+The field `groups` has been removed from the object `entitiesGroups` of the configuration file `realtimescreens.json`.
+To conform to this new structure, you have to remove this field from your configuration file.
