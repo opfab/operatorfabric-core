@@ -832,11 +832,7 @@ describe('Time line moves', function () {
         cy.get("#opfab-div-card-template-processed").should("exist");
         checkDisplayedCardTitle("State to test template rendering features");
 
-        // hide and show time line to avoid detached dom error when clicking on popover after
-        hideTimeLine();
-        showTimeLine();
 
-        hoverNthCircle(1);
         cy.get(".popover-body").find('button').should("have.length", 2);
         cy.get(".popover-body").find('button').eq(1).click();
         
