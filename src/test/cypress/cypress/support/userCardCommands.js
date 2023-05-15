@@ -1,4 +1,4 @@
-/* Copyright (c) 2022, RTE (http://www.rte-france.com)
+/* Copyright (c) 2022-2023, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -182,7 +182,7 @@ export class UserCardCommands extends OpfabCommands {
     // SENDING CARD COMMANDS
     sendCard= function () {
         cy.get('#opfab-usercard-btn-accept').click();
-        cy.get('.opfab-info-message').should('have.class', 'opfab-alert-info').contains('Your card is published');
+        cy.get('.opfab-info-message').contains('Your card is published');
         cy.get('#opfab-close-alert').click();
     }
 
@@ -190,7 +190,7 @@ export class UserCardCommands extends OpfabCommands {
         cy.get('#opfab-usercard-btn-prepareCard').click();
         cy.get('of-simplified-card-view').should('exist');
         cy.get('#opfab-usercard-btn-accept').click();
-        cy.get('.opfab-info-message').should('have.class', 'opfab-alert-info').contains('Your card is published');
+        cy.get('.opfab-info-message').contains('Your card is published');
         cy.get('#opfab-close-alert').click();
     }
 }

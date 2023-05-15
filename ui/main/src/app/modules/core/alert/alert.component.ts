@@ -8,88 +8,34 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {Component, OnInit} from '@angular/core';
-import {Message, MessageLevel} from '@ofModel/message.model';
+import {Component} from '@angular/core';
 import {AlertMessageService} from 'app/business/services/alert-message.service';
+import {TranslationService} from 'app/business/services/translation.service';
+import {AlertView} from 'app/business/view/core/alert/alert.view';
+import {AlertPage} from 'app/business/view/core/alert/alertPage';
 import {ConfigService} from "../../../business/services/config.service";
 
-class Alert {
-    alert: Message;
-    display: boolean;
-    className: string;
-}
 
 @Component({
     selector: 'of-alert',
     styleUrls: ['./alert.component.scss'],
     templateUrl: './alert.component.html'
 })
-export class AlertComponent implements OnInit {
+export class AlertComponent  {
 
-    alertMessage: Alert = {alert: undefined, className: undefined, display: false};
-    alertMessageBusinessAutoClose: boolean;
-    alertMessageOnBottomOfTheScreen: boolean;
+    public alertView: AlertView;
+    public alertPage : AlertPage;
 
     constructor(
-        private alertMessageService: AlertMessageService,
-        private configService: ConfigService
-    ) {}
-
-    ngOnInit(): void {
-        this.alertMessageBusinessAutoClose = this.configService.getConfigValue('alertMessageBusinessAutoClose', false);
-        this.alertMessageOnBottomOfTheScreen = this.configService.getConfigValue('alertMessageOnBottomOfTheScreen', false);
-
-        this.alertMessageService.getAlertMessage()
-        .subscribe((alert) => {
-            if (!this.alertMessage.display || this.alertMessage.alert.level !== MessageLevel.BUSINESS )
-                this.displayAlert(alert);
-        });
+        alertMessageService: AlertMessageService,
+        configService: ConfigService,
+        translationService: TranslationService
+    ) {
+        this.alertView = new AlertView(configService,alertMessageService,translationService);
+        this.alertPage = this.alertView.getAlertPage();
     }
 
-    private displayAlert(message: Message) {
-        let className = '';
-        let autoClose = true;
-        switch (message.level) {
-            case MessageLevel.DEBUG:
-                className = 'opfab-alert-debug';
-                break;
-            case MessageLevel.INFO:
-                className = 'opfab-alert-info';
-                break;
-            case MessageLevel.ERROR:
-                className = 'opfab-alert-error';
-                break;
-            case MessageLevel.BUSINESS:
-                className = 'opfab-alert-business';
-                autoClose = this.alertMessageBusinessAutoClose;
-                break;
-            default :
-                className = 'opfab-alert-info';
-                break;
-        }
-        this.alertMessage = {
-            alert: message,
-            className: className,
-            display: true
-        };
-        if (autoClose) {
-            setTimeout(() => {
-                this.alertMessage.display = false;
-            }, 5000);
-        }
-    }
 
-    closeAlert() {
-        this.alertMessage.display = false;
-    }
-
-    alertMessagePosition() {
-        if (this.alertMessageOnBottomOfTheScreen) {
-            return 'bottom: 0';
-        } else {
-            return 'top: 0';
-        }
-    }
 }
 
 
