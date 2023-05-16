@@ -27,7 +27,7 @@ import {RouterStore} from 'app/business/store/router.store';
 export class NavbarComponent implements OnInit {
 
     navbarCollapsed = true;
-    navigationRoutes: Route[];
+    navigationRoutes: Route[] = [];
     currentRoute = '';
     businessconfigMenus: CustomMenu[];
     openDropdownPopover: NgbPopover;
@@ -99,8 +99,14 @@ export class NavbarComponent implements OnInit {
         this.limitSize = logo_limitSize === true;
 
         const visibleCoreMenus = this.menuService.computeVisibleCoreMenusForCurrentUser();
+        visibleCoreMenus.forEach(visibleCoreMenu => {
+            const route = navigationRoutes.find(route => route.path === visibleCoreMenu);
 
-        this.navigationRoutes = navigationRoutes.filter((route) => visibleCoreMenus.includes(route.path));
+            if (route) {
+                this.navigationRoutes.push(route);
+            }
+        });
+
         this.displayAdmin = visibleCoreMenus.includes('admin');
         this.displayActivityArea = visibleCoreMenus.includes('activityarea');
         this.displayFeedConfiguration = visibleCoreMenus.includes('feedconfiguration');
