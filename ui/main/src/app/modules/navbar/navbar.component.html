@@ -43,13 +43,13 @@
         <ng-template #navbarDropdown>
           <div class="opfab-dropdown-menu" (mouseleave)="openDropdownPopover.close()">
             <div class="opfab-dropdown-menu-item" *ngFor="let entry of tMenu.entries">
-              <of-menu-link [menu]="tMenu" [menuEntry]="entry"></of-menu-link>
+              <of-menu-link [currentRoute]= "currentRoute" [menu]="tMenu" [menuEntry]="entry"></of-menu-link>
             </div>
           </div>
         </ng-template>
         <!-- Navbar link if only one entry -->
-        <div class="nav-link" style="cursor: pointer;" *ngIf="tMenu.entries.length === 1">
-          <of-menu-link [menu]="tMenu" [menuEntry]="tMenu.entries[0]"></of-menu-link>
+        <div class="nav-link"  style="cursor: pointer;" *ngIf="tMenu.entries.length === 1">
+          <of-menu-link [currentRoute]= "currentRoute" [menu]="tMenu" [menuEntry]="tMenu.entries[0]"></of-menu-link>
         </div>
       </li>
     </ul>

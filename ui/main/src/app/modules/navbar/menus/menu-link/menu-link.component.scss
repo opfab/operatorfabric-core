@@ -25,3 +25,13 @@
         color: var(--opfab-navbar-color-hover);
     }
 }
+
+.text-link.active {
+    color: var(--opfab-navbar-color-active);
+    font-weight: bold;
+    padding-bottom: 3px;
+    padding-left: 3px;
+    padding-right: 3px;
+    border-bottom-width: 2px;
+    border-bottom-style: solid;
+}
