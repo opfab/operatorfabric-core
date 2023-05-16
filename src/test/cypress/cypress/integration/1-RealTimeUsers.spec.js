@@ -22,14 +22,14 @@ describe ('RealTimeUsersPage',()=>{
         script.deleteAllSettings();
     });
 
-    it('Connection of admin and check of Real time users screen : no one should be connected', ()=> {
+    it('Connection of admin and check of Real time users screen : no one except admin should be connected', ()=> {
         opfab.loginWithUser('admin');
         opfab.navigateToRealTimeUsers();
 
-        // we should have 10 disconnected entities and 0 connected
+        // we should have 8 disconnected entities and 2 connected (because admin is member of 2 entities)
         cy.get('.badge').should('have.length', 10);
-        cy.get('.bg-success').should('have.length', 0);
-        cy.get('.bg-danger').should('have.length', 10);
+        cy.get('.bg-success').should('have.length', 2);
+        cy.get('.bg-danger').should('have.length', 8);
     })
 
     it('Connection of operator3_fr and check of Real time users screen', ()=> {
