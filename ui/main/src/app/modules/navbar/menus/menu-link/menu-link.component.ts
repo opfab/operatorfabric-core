@@ -18,6 +18,7 @@ import {CustomMenu, MenuEntryLinkTypeEnum} from '@ofModel/menu.model';
 export class MenuLinkComponent {
     @Input() public menu: CustomMenu;
     @Input() public menuEntry: any;
+    @Input() public currentRoute: string;
 
     constructor() {
         // No body because all members are Inputs.
