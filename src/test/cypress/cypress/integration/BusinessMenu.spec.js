@@ -29,7 +29,7 @@ describe ('Business menu',()=>{
 
         feed.openFirstCard();
         clickLinkInsideCard();
-        checkUrlDisplayedIs('https://en.wikipedia.org/w/index.php?opfab_theme=NIGHT&search=chart&fulltext=1');
+        checkUrlDisplayedIs('https://en.wikipedia.org/w/index.php?search=chart&fulltext=1&opfab_theme=NIGHT');
 
         openBusinessDropdownMenu();
         checkDropdownMenuIconLinks();
@@ -57,7 +57,7 @@ describe ('Business menu',()=>{
 
         feed.openFirstCard();
         clickLinkInsideCard();
-        checkUrlDisplayedIs('https://en.wikipedia.org/w/index.php?opfab_theme=DAY&search=chart&fulltext=1');
+        checkUrlDisplayedIs('https://en.wikipedia.org/w/index.php?search=chart&fulltext=1&opfab_theme=DAY');
 
         openBusinessDropdownMenu();
         checkDropdownMenuIconLinks();

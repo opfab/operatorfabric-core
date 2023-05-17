@@ -346,7 +346,7 @@ export class CardBodyComponent implements OnChanges, OnInit, OnDestroy {
             this.selectedCardService.clearSelectedCardId();
         } else {
             this.selectedCardService.clearSelectedCardId();
-            this.router.navigate(['/' + this.routerStore.getCurrentRoute()]);
+            this.router.navigate(['/' + this.routerStore.getCurrentRoute().split('/')[1]]);
         }
     }
 

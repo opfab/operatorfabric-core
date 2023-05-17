@@ -38,6 +38,8 @@ export class RouterStore {
         return this.currentRouteEvent.asObservable();
     }
 
+
+
     public setCurrentRoute(route: string) {
         if (this.isRouteUrlAfterImplicitAuth(route)) this.currentRoute ='/feed'
         else this.currentRoute = route;
@@ -45,12 +47,12 @@ export class RouterStore {
     }
 
     private isRouteUrlAfterImplicitAuth(route: string): boolean {
-        return route.startsWith('state');
+        return route.startsWith('/state');
     }
 
 
     public getCurrentPageType(): PageType {
-        const pageName = this.getCurrentRoute()
+        const pageName = this.getCurrentRoute().split('/')[1];
         const currentPageType = this.pageConf.get(pageName);
         return !!currentPageType ? currentPageType : PageType.UNKNOWN;
     }

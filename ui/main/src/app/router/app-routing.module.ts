@@ -116,7 +116,11 @@ export const navigationRoutes: Routes = routes.slice(startIndex, lastIndexOfVisi
     /* sets initialNavigation to false is needed to enable authentication implicit flow
      * otherwise HashLocationStrategy breaks it by handling '#' within `window.location`.
      */
-    initialNavigation: 'disabled'
+    initialNavigation: 'disabled',
+    
+    // required to reload external application when user click again on the same link
+    // see https://github.com/opfab/operatorfabric-core/issues/4509
+    onSameUrlNavigation: 'reload'
 })
     ],
     exports: [RouterModule]
