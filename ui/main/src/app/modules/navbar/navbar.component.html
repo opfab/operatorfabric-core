@@ -48,7 +48,7 @@
           </div>
         </ng-template>
         <!-- Navbar link if only one entry -->
-        <div class="nav-link" *ngIf="tMenu.entries.length === 1">
+        <div class="nav-link" style="cursor: pointer;" *ngIf="tMenu.entries.length === 1">
           <of-menu-link [menu]="tMenu" [menuEntry]="tMenu.entries[0]"></of-menu-link>
         </div>
       </li>
