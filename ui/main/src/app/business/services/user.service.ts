@@ -185,6 +185,18 @@ export class UserService extends CrudService {
         return false;
     }
 
+    public isWriteRightsForProcessAndState(processId: string, stateId: string): boolean {
+        const processState = this._userRightsPerProcessAndState.get(processId + '.' + stateId);
+        if (!processState) {
+            return false;
+        }
+        const rights = processState.rights;
+        if (rights && (rights === RightsEnum.Write || rights === RightsEnum.ReceiveAndWrite)) {
+            return true;
+        }
+        return false;
+    }
+
     public isFilteringNotificationAllowedForProcessAndState(processId: string, stateId: string): boolean {
         const rightsAndFilteringNotificationAllowed = this._userRightsPerProcessAndState.get(processId + '.' + stateId);
         if (!!rightsAndFilteringNotificationAllowed) {

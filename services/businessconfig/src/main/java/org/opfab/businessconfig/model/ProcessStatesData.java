@@ -33,6 +33,8 @@ public class ProcessStatesData implements ProcessStates {
     @Builder.Default
     private Boolean editCardEnabledOnUserInterface = true;
     @Builder.Default
+    private Boolean copyCardEnabledOnUserInterface = true;
+    @Builder.Default
     private Boolean deleteCardEnabledOnUserInterface = true;
 
     private String color;
@@ -120,6 +122,16 @@ public class ProcessStatesData implements ProcessStates {
     @Override
     public void setEditCardEnabledOnUserInterface(Boolean editCardEnabledOnUserInterface) {
         this.editCardEnabledOnUserInterface = editCardEnabledOnUserInterface;
+    }
+
+    @Override
+    public Boolean getCopyCardEnabledOnUserInterface() {
+        return copyCardEnabledOnUserInterface;
+    }
+
+    @Override
+    public void setCopyCardEnabledOnUserInterface(Boolean copyCardEnabledOnUserInterface) {
+        this.copyCardEnabledOnUserInterface = copyCardEnabledOnUserInterface;
     }
 
     @Override

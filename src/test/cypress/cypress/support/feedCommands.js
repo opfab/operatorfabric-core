@@ -27,6 +27,11 @@ export class FeedCommands extends OpfabCommands {
         cy.get('#opfab-div-card-template-processed');
     }
 
+    openNthCard= function (nth) {
+        cy.get('of-light-card').eq(nth).click();
+        cy.get('#opfab-div-card-template-processed');
+    }
+
     checkSelectedCardHasTitle= function (title) {
         cy.get('.light-card-detail-selected .card-title').should('have.text',title.toUpperCase());
     }
@@ -46,6 +51,11 @@ export class FeedCommands extends OpfabCommands {
 
     editCurrentCard= function () {
         cy.get('#opfab-card-edit').click();
+        cy.get("of-usercard").should('exist');
+    }
+
+    copyCurrentCard= function () {
+        cy.get('#opfab-card-create-copy').click();
         cy.get("of-usercard").should('exist');
     }
 

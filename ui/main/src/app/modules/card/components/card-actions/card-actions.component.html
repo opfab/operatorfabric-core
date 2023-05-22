@@ -1,4 +1,4 @@
-<!-- Copyright (c) 2022, RTE (http://www.rte-france.com)              -->
+<!-- Copyright (c) 2022-2023, RTE (http://www.rte-france.com)              -->
 <!-- See AUTHORS.txt                                                       -->
 <!-- This Source Code Form is subject to the terms of the Mozilla Public   -->
 <!-- License, v. 2.0. If a copy of the MPL was not distributed with this   -->
@@ -6,6 +6,13 @@
 <!-- SPDX-License-Identifier: MPL-2.0                                      -->
 <!-- This file is part of the OperatorFabric project.                      -->
 
+
+<div class="opfab-right-menu-item" *ngIf='showCreateCopyButton'>
+    <a id="opfab-card-create-copy" class="opfab-right-menu-link" (click)='createCopy()'>
+        <div class="opfab-menu-icon opfab-icon-copy"></div>
+        <div translate>{{'button.createCopy'}}</div>
+    </a>
+</div>
 
 <div class="opfab-right-menu-item" *ngIf='showEditButton'>
     <a id="opfab-card-edit" class="opfab-right-menu-link" (click)='editCard()'>
@@ -54,6 +61,20 @@
     </div>
 </ng-template>
 
+<ng-template #userCardCreateCopy let-modal>
+    <div class="modal-header">
+        <div translate> userCard.title </div>
+        <div id="opfab-usercard-close" class="opfab-close-modal-icon" aria-label="Close"
+             (click)="modal.dismiss('Cross click')">
+            <span aria-hidden="true">&times;</span>
+        </div>
+    </div>
+    <div class="modal-body">
+        <div>
+            <of-usercard [cardIdToCopy]="card.id" [userCardModal]="modal"></of-usercard>
+        </div>
+    </div>
+</ng-template>
 
 <of-spinner *ngIf="deleteInProgress" [seeInModal]="true" loadingText="shared.deleteInProgress">
 </of-spinner>

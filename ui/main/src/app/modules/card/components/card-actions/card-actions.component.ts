@@ -35,12 +35,14 @@ export class CardActionsComponent implements OnChanges, OnDestroy {
     @Output() closeCardDetail: EventEmitter<boolean> = new EventEmitter<boolean>();
 
     @ViewChild('userCardEdition') userCardEditionTemplate: TemplateRef<any>;
+    @ViewChild('userCardCreateCopy') userCardCreateCopyTemplate: TemplateRef<any>;
     @ViewChild('deleteCardConfirmation') deleteCardConfirmationTemplate: TemplateRef<any>;
 
     private editModal: NgbModalRef;
     private deleteConfirmationModal: NgbModalRef;
     public showEditButton = false;
     public showDeleteButton = false;
+    public showCreateCopyButton = false;
     public deleteInProgress = false;
 
     private unsubscribe$: Subject<void> = new Subject<void>();
@@ -66,10 +68,16 @@ export class CardActionsComponent implements OnChanges, OnDestroy {
             !this.isReadOnlyUser &&
             this.cardState.editCardEnabledOnUserInterface &&
             this.doesTheUserHavePermissionToEditCard();
+
         this.showDeleteButton =
             !this.isReadOnlyUser &&
             this.cardState.deleteCardEnabledOnUserInterface &&
             this.doesTheUserHavePermissionToDeleteCard();
+
+        this.showCreateCopyButton =
+            this.cardState.copyCardEnabledOnUserInterface &&
+            !!this.cardState.userCard &&
+            this.userService.isWriteRightsForProcessAndState(this.card.process, this.card.state);
     }
 
     private doesTheUserHavePermissionToEditCard(): boolean {
@@ -98,6 +106,18 @@ export class CardActionsComponent implements OnChanges, OnDestroy {
             backdrop: 'static'
         };
         this.editModal = this.modalService.open(this.userCardEditionTemplate, options);
+        this.reopenCardDetailOnceEditionIsFinished();
+    }
+
+    public createCopy(): void {
+        this.closeDetails();
+        if (this.parentModalRef) this.parentModalRef.close();
+
+        const options: NgbModalOptions = {
+            size: 'usercard',
+            backdrop: 'static'
+        };
+        this.editModal = this.modalService.open(this.userCardCreateCopyTemplate, options);
         this.reopenCardDetailOnceEditionIsFinished();
     }
 
