@@ -78,7 +78,8 @@ export class AuthService {
                     this.configService,
                     this.httpClient,
                     this.logger,
-                    this.oauthServiceForImplicitMode
+                    this.oauthServiceForImplicitMode,
+                    this.currentUserStore
                 );
                 break;
             default:
