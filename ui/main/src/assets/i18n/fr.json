@@ -286,6 +286,7 @@
     "reset": "RÉINITIALISER",
     "delete": "Supprimer",
     "edit" : "Éditer",
+    "createCopy": "Créer une copie",
     "yes": "OUI",
     "search": "RECHERCHER"
   },

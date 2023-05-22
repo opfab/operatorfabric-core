@@ -31,6 +31,7 @@ export class State {
         public cancelAcknowledgmentAllowed?: boolean,
         public closeCardWhenUserAcknowledges?: boolean,
         public editCardEnabledOnUserInterface?: boolean,
+        public copyCardEnabledOnUserInterface?: boolean,
         public deleteCardEnabledOnUserInterface?: boolean,
         public name?: string,
         public color?: string,

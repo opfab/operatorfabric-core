@@ -97,6 +97,12 @@ export class UserCardComponent implements OnInit {
     private cardToEdit: CardData;
     public editCardProcessId: string;
     public editCardStateId: string;
+
+    @Input() cardIdToCopy: string = null;
+    private cardToCopy: CardData;
+    public copyCardProcessId: string;
+    public copyCardStateId: string;
+
     private datesFromCardToEdit: boolean;
     private datesFromTemplate: boolean;
     isLoadingCardTemplate = false;
@@ -150,7 +156,15 @@ export class UserCardComponent implements OnInit {
             this.loadCardForEdition();
         } else {
             usercardTemplateGateway.editionMode = 'CREATE';
-            this.pageLoading = false;
+            if (this.userEntitiesAllowedToSendCardOptions.length > 0) {
+                this.publisherForCreatingUsercard = this.userEntitiesAllowedToSendCardOptions[0].value;
+            }
+
+            if (this.cardIdToCopy) {
+                this.loadCardForCopy();
+            } else {
+                this.pageLoading = false;
+            }
         }
 
         this.useDescriptionFieldForEntityList = this.configService.getConfigValue(
@@ -185,6 +199,19 @@ export class UserCardComponent implements OnInit {
                 );
                 usercardTemplateGateway.setUserEntityChildCardFromCurrentCard(userResponse);
             }
+        });
+    }
+
+    private loadCardForCopy() {
+        this.cardService.loadCard(this.cardIdToCopy).subscribe((card) => {
+            this.cardToCopy = card;
+            this.copyCardProcessId = this.cardToCopy.card.process;
+            this.copyCardStateId = this.cardToCopy.card.state;
+            this.severityForm.get('severity').setValue(this.cardToCopy.card.severity);
+            this.initialSelectedRecipients = Utilities.removeElementsFromArray(this.cardToCopy.card.entityRecipients, this.cardToCopy.card.entityRecipientsForInformation);
+            this.initialSelectedRecipientsForInformation = this.cardToCopy.card.entityRecipientsForInformation;
+            this.pageLoading = false;
+            this.datesFromCardToEdit = false;
         });
     }
 
@@ -354,7 +381,7 @@ export class UserCardComponent implements OnInit {
             .getProcess(this.selectedProcessId)
             .states.get(this.selectedStateId).userCard;
         this.setFieldsVisibility();
-        if (!this.cardToEdit) {
+        if (!this.cardToEdit && !this.cardToCopy) {
             this.initialSelectedRecipients = [];
             this.initialSelectedRecipientsForInformation = [];
         }
@@ -413,7 +440,12 @@ export class UserCardComponent implements OnInit {
 
     private loadTemplate() {
         let card;
-        if (this.cardToEdit) card = this.cardToEdit.card;
+        if (this.cardToEdit) {
+            card = this.cardToEdit.card;
+        } else if (this.cardToCopy) {
+            card = this.cardToCopy.card;
+        }
+
         const selected = this.processesService.getProcess(this.selectedProcessId);
 
         if (this.userCardConfiguration?.template) {
@@ -437,7 +469,7 @@ export class UserCardComponent implements OnInit {
                             // wait for DOM rendering
                             this.reinsertScripts();
                             this.setInitialDateFormValues();
-                            if (this.severityVisible && !this.cardToEdit) this.setInitialSeverityValue();
+                            if (this.severityVisible && !this.cardToEdit && !this.cardToCopy) this.setInitialSeverityValue();
                             usercardTemplateGateway.setEntityUsedForSendingCard(
                                 this.findPublisherForCreatingUsercard()
                             );
@@ -733,8 +765,11 @@ export class UserCardComponent implements OnInit {
 
     private getProcessInstanceId(): string {
         let processInstanceId;
-        if (this.editCardMode) processInstanceId = this.cardToEdit.card.processInstanceId;
-        else processInstanceId = Guid.create().toString();
+        if (this.editCardMode) {
+            processInstanceId = this.cardToEdit.card.processInstanceId;
+        } else {
+            processInstanceId = Guid.create().toString();
+        }
         return processInstanceId;
     }
 

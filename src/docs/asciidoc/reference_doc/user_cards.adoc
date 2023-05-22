@@ -298,6 +298,10 @@ Once a user card has been sent it can be edited by a user member of the publishe
 It is possible to allow other entities to edit the card by specifying the 'entitiesAllowedToEdit' card field.
 It is possible to hide card edit button on UI by setting 'editCardEnabledOnUserInterface' to false in card's process/state definition.
 
+== Card copy
+A user can copy a card and send it if he has write access for the process/state of the card. Before sending the card, the user can modify it if he wants.
+It is possible to hide card copy button on UI by setting 'copyCardEnabledOnUserInterface' to false in card's process/state definition.
+
 == Card delete
 Once a user card has been sent it can be deleted by a user member of the publisher entity who has write access for the process/state of the card.
 It is possible to hide card delete button on UI by setting 'deleteCardEnabledOnUserInterface' to false in card's process/state definition.
