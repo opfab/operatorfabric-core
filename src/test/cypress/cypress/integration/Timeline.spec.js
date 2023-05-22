@@ -834,7 +834,7 @@ describe('Time line moves', function () {
 
 
         cy.get(".popover-body").find('button').should("have.length", 2);
-        cy.get(".popover-body").find('button').eq(1).click();
+        cy.get("#opfab-timeline-bubble-btn1").click();
         
         checkDisplayedCardTitle("Electricity consumption forecast");
     });
