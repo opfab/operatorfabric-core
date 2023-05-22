@@ -162,6 +162,24 @@ or `Write` for the chosen process and state. For example:
 NOTE: Using the `ReceiveAndWrite` right instead of the `Write` right allows the user to receive the card they sent and
 edit or delete it.
 
+[[restrict_possible_emitters]]
+== Restrict the list of possible emitter entities
+
+When sending a user card, if the user is member of multiple entities, it is possible to choose the emitter entity from all the available user entities. To limit the list of available emitter entities, it is possible to configure the property `publisherList` in userCard state definition with the list of allowed publisher entities.
+For example : 
+
+....
+"processState": {
+      "name": "Process example ",
+      "description": "Process state",
+      "userCard" : {
+        "template" : "usercard_process",
+        "expirationDateVisible" : true,
+        "publisherList": [{"id":"ENTITY_FR", "levels":[1]},{"id":"IT_SUPERVISOR_ENTITY"}]
+      }
+....
+In this example the list of available publisher entities will contain all the first level children of "ENTITY_FR" (level 1) and "IT_SUPERVISOR_ENTITY".
+
 [[restrict_possible_recipients]]
 == Restrict the list of possible recipients
 

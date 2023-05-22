@@ -12,7 +12,7 @@ import {FormControl, FormGroup} from '@angular/forms';
 import {TranslateService} from '@ngx-translate/core';
 import {MultiSelectConfig, MultiSelectOption} from '@ofModel/multiselect.model';
 import {RightsEnum} from '@ofModel/perimeter.model';
-import {Process} from '@ofModel/processes.model';
+import {Process, UserCard} from '@ofModel/processes.model';
 import {ComputedPerimeter, UserWithPerimeters} from '@ofModel/userWithPerimeters.model';
 import {ProcessesService} from 'app/business/services/processes.service';
 import {UserService} from 'app/business/services/user.service';
@@ -20,6 +20,7 @@ import {Utilities} from 'app/business/common/utilities';
 import {MultiSelectComponent} from 'app/modules/share/multi-select/multi-select.component';
 import {Subject} from 'rxjs';
 import {debounceTime, takeUntil} from 'rxjs/operators';
+import {EntitiesService} from 'app/business/services/entities.service';
 
 @Component({
     selector: 'of-usercard-select-state-form',
@@ -88,6 +89,7 @@ export class UserCardSelectStateFormComponent implements OnInit, OnDestroy {
     constructor(
         private processesService: ProcessesService,
         private userService: UserService,
+        private entitiesService: EntitiesService,
         private translateService: TranslateService
     ) {}
 
@@ -116,7 +118,7 @@ export class UserCardSelectStateFormComponent implements OnInit, OnDestroy {
     }
 
     isProcessGroupFilterVisible(): boolean {
-        return !!this.processGroupOptions && this.processGroupOptions.length > 1;
+        return this.processGroupOptions && this.processGroupOptions.length > 1;
     }
 
     loadAllProcessAndStateInUserPerimeter(): void {
@@ -148,7 +150,7 @@ export class UserCardSelectStateFormComponent implements OnInit, OnDestroy {
         this.currentUserWithPerimeters.computedPerimeters.forEach((perimeter) => {
             if (perimeter.process === process.id && this.isUserAllowedToSendCard(perimeter)) {
                 const state = this.getStateFromProcessDefinition(process, perimeter.state);
-                if (!!state) statesList.push(state);
+                if (state) statesList.push(state);
             }
         });
         statesList.sort((a, b) => Utilities.compareObj(a.label, b.label));
@@ -157,9 +159,9 @@ export class UserCardSelectStateFormComponent implements OnInit, OnDestroy {
 
     getStateFromProcessDefinition(process: Process, stateId: string): {value: string; label: string} {
         const stateFromProcessDefinition = process.states.get(stateId);
-        if (!!stateFromProcessDefinition) {
-            if (!!stateFromProcessDefinition.userCard) {
-                const label = !!stateFromProcessDefinition.name ? stateFromProcessDefinition.name : stateId;
+        if (stateFromProcessDefinition) {
+            if (stateFromProcessDefinition.userCard && this.isUserAllowedToPublishCardForState(stateFromProcessDefinition.userCard)) {
+                const label = stateFromProcessDefinition.name ? stateFromProcessDefinition.name : stateId;
                 return {value: stateId, label: label};
             }
         } else
@@ -171,6 +173,15 @@ export class UserCardSelectStateFormComponent implements OnInit, OnDestroy {
                 'but not in process definition'
             );
         return null;
+    }
+
+    isUserAllowedToPublishCardForState(userCard: UserCard) {
+        if (userCard.publisherList?.length > 0) {
+            const configuredPublisherList = [];
+            this.entitiesService.resolveEntities(userCard.publisherList).forEach(e => configuredPublisherList.push(e.id));
+            return this.currentUserWithPerimeters.userData.entities.filter( entity => configuredPublisherList.includes(entity)).length > 0;
+        }
+        return true;
     }
 
     private loadAllProcessGroupsRelatingToUserPerimeter(): void {
@@ -209,7 +220,7 @@ export class UserCardSelectStateFormComponent implements OnInit, OnDestroy {
     }
 
     private isProcessInProcessesGroup(idProcess: string, processesGroup: {name: string; processes: string[]}): boolean {
-        return !!processesGroup.processes.find((process) => process === idProcess);
+        return processesGroup.processes.includes(idProcess);
     }
 
     private loadProcessesWithoutProcessGroup(): void {
@@ -221,7 +232,7 @@ export class UserCardSelectStateFormComponent implements OnInit, OnDestroy {
 
     changeProcessesWhenSelectProcessGroup(): void {
         this.selectStateForm.get('usercardProcessGroup').valueChanges.subscribe((processGroup) => {
-            if (!!processGroup) {
+            if (processGroup) {
                 if (processGroup === '--')
                     this.processOptionsWhenSelectedProcessGroup = this.processesWithoutProcessGroup;
                 else this.processOptionsWhenSelectedProcessGroup = this.processesPerProcessGroups.get(processGroup);
@@ -235,7 +246,7 @@ export class UserCardSelectStateFormComponent implements OnInit, OnDestroy {
 
     changeStatesWhenSelectProcess(): void {
         this.selectStateForm.get('usercardProcess').valueChanges.subscribe((process) => {
-            if (!!process) {
+            if (process) {
                 this.stateOptions = this.statesPerProcesses.get(process);
                 if (!this.cardIdToEdit) {
                     const oldSelectedState = this.selectedState;
@@ -272,7 +283,7 @@ export class UserCardSelectStateFormComponent implements OnInit, OnDestroy {
                 debounceTime(10) //See #1891 Cypress usercard test was flaky without this debounce
             )
             .subscribe((state) => {
-                if (!!state) {
+                if (state) {
                     this.selectedState = this.selectStateForm.get('usercardState').value;
                     this.stateChange.emit({
                         selectedProcessId: this.selectStateForm.get('usercardProcess').value,
