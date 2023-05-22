@@ -15,7 +15,8 @@
       "userCard" : {
         "template" : "usercard_message",
         "endDateVisible" : false,
-        "recipientForInformationVisible" : true
+        "recipientForInformationVisible" : true,
+        "publisherList": [{"id":"ENTITY_FR", "levels":[1]}]
       },
       "templateName": "template",
       "styles": [
@@ -52,7 +53,8 @@
       "color": "#0070C0",
       "userCard" : {
         "template" : "usercard_process",
-        "expirationDateVisible" : true
+        "expirationDateVisible" : true,
+        "publisherList": [{"id":"ENTITY1_FR"},{"id":"ENTITY3_FR"}]
       },
       "templateName": "process",
       "styles": [

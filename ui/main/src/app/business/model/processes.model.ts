@@ -56,11 +56,12 @@ export class UserCard {
         readonly lttdVisible?: boolean,
         readonly expirationDateVisible?: boolean,
         readonly recipientVisible?: boolean,
-        readonly recipientForInformationVisible?: boolean
+        readonly recipientForInformationVisible?: boolean,
+        readonly publisherList?: EntitiesTree[]
     ) {}
 }
 
-export class Recipient {
+export class EntitiesTree {
     constructor(readonly id: string, readonly levels?: number[]) {}
 }
 

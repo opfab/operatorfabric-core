@@ -17,6 +17,7 @@ import {OpfabLoggerService} from './logs/opfab-logger.service';
 import {AlertMessageService} from './alert-message.service';
 import {EntitiesServer} from '../server/entities.server';
 import {ServerResponseStatus} from '../server/serverResponse';
+import {EntitiesTree} from '@ofModel/processes.model';
 
 declare const templateGateway: any;
 
@@ -32,7 +33,7 @@ export class EntitiesService extends CachedCrudService {
      * @param httpClient - Angular build-in
      */
     constructor(
-        protected loggerService: OpfabLoggerService, 
+        protected loggerService: OpfabLoggerService,
         private entitiesServer: EntitiesServer,
         protected alertMessageService: AlertMessageService) {
         super(loggerService, alertMessageService);
@@ -174,6 +175,29 @@ export class EntitiesService extends CachedCrudService {
         });
 
         return Array.from(allowed);
+    }
+
+    public resolveEntities(recipients: EntitiesTree[]): Entity[] {
+        const resolvedEntities = [];
+        recipients.forEach((r) => {
+            if (r.levels) {
+                r.levels.forEach((l) => {
+                    this.resolveChildEntitiesByLevel(r.id, l).forEach((entity) => {
+                        if (!resolvedEntities.find((o) => o.id === entity.id)) {
+                            resolvedEntities.push(entity);
+                        }
+                    });
+                });
+            } else {
+                if (!resolvedEntities.find((o) => o.id === r.id)) {
+                    const entity = this.getEntities().find((e) => e.id === r.id);
+                    if (entity)
+                        resolvedEntities.push(entity);
+                    else this.loggerService.info('Entity not found : ' + r.id);
+                }
+            }
+        });
+        return resolvedEntities;
     }
 
     /** This method returns the list of entities related to a given parent entity by a specified level of relationship **/
