@@ -27,7 +27,7 @@ import {EntitiesService} from 'app/business/services/entities.service';
     templateUrl: './usercard-select-state-form.component.html'
 })
 export class UserCardSelectStateFormComponent implements OnInit, OnDestroy {
-    @Input() public cardIdToEdit;
+    @Input() public cardIdToEditOrCopy;
     @Input() public initialProcess;
     @Input() public initialState;
 
@@ -35,11 +35,11 @@ export class UserCardSelectStateFormComponent implements OnInit, OnDestroy {
     @Output() public emptyProcessList: EventEmitter<any> = new EventEmitter<any>();
 
     @ViewChild('processGroupSelect') set processGroup(processGroupSelect: MultiSelectComponent) {
-        if (processGroupSelect && this.cardIdToEdit) processGroupSelect.disable();
+        if (processGroupSelect && this.cardIdToEditOrCopy) processGroupSelect.disable();
     }
 
     @ViewChild('processSelect') set process(processSelect: MultiSelectComponent) {
-        if (processSelect && this.cardIdToEdit) processSelect.disable();
+        if (processSelect && this.cardIdToEditOrCopy) processSelect.disable();
     }
 
     processesDefinition: Process[];
@@ -106,10 +106,10 @@ export class UserCardSelectStateFormComponent implements OnInit, OnDestroy {
         this.changeProcessesWhenSelectProcessGroup();
         this.loadAllProcessGroupsRelatingToUserPerimeter();
 
-        if (!this.cardIdToEdit && this.processGroupOptions.length <= 1 && this.processOptions.length > 0) {
+        if (!this.cardIdToEditOrCopy && this.processGroupOptions.length <= 1 && this.processOptions.length > 0) {
             this.selectedProcess = this.processOptions[0].value;
         }
-        if (!this.cardIdToEdit && this.processGroupOptions.length > 1) {
+        if (!this.cardIdToEditOrCopy && this.processGroupOptions.length > 1) {
             this.selectedProcessGroupOption = this.processGroupOptions[0].value;
         }
         this.initProcessState();
@@ -215,7 +215,7 @@ export class UserCardSelectStateFormComponent implements OnInit, OnDestroy {
             );
         }
 
-        if (!this.cardIdToEdit && this.processGroupOptions.length > 0)
+        if (!this.cardIdToEditOrCopy && this.processGroupOptions.length > 0)
             this.selectedProcessGroupOption = this.processGroupOptions[0].value;
     }
 
@@ -237,7 +237,7 @@ export class UserCardSelectStateFormComponent implements OnInit, OnDestroy {
                     this.processOptionsWhenSelectedProcessGroup = this.processesWithoutProcessGroup;
                 else this.processOptionsWhenSelectedProcessGroup = this.processesPerProcessGroups.get(processGroup);
                 this.processOptionsWhenSelectedProcessGroup.sort((a, b) => Utilities.compareObj(a.label, b.label));
-                if (!this.cardIdToEdit) {
+                if (!this.cardIdToEditOrCopy) {
                     this.selectedProcess = this.processOptionsWhenSelectedProcessGroup[0].value;
                 }
             }
@@ -248,7 +248,7 @@ export class UserCardSelectStateFormComponent implements OnInit, OnDestroy {
         this.selectStateForm.get('usercardProcess').valueChanges.subscribe((process) => {
             if (process) {
                 this.stateOptions = this.statesPerProcesses.get(process);
-                if (!this.cardIdToEdit) {
+                if (!this.cardIdToEditOrCopy) {
                     const oldSelectedState = this.selectedState;
                     this.selectedState = this.stateOptions[0].value;
 
@@ -266,7 +266,7 @@ export class UserCardSelectStateFormComponent implements OnInit, OnDestroy {
     }
 
     private initProcessState() {
-        if (this.cardIdToEdit) {
+        if (this.cardIdToEditOrCopy) {
             const processGroupForCardToEdit = this.processGroupPerProcesses.get(this.initialProcess);
             if (processGroupForCardToEdit) this.selectedProcessGroupOption = processGroupForCardToEdit;
             else this.selectedProcessGroupOption = '--';

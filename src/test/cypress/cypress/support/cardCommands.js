@@ -25,6 +25,14 @@ export class CardCommands extends OpfabCommands {
         cy.get('#opfab-card-edit').should('not.exist');
     }
 
+    checkCopyButtonDoesNotExist = function () {
+        cy.get('#opfab-card-create-copy').should('not.exist');
+    }
+
+    checkCopyButtonDoesExist = function () {
+        cy.get('#opfab-card-create-copy').should('exist');
+    }
+
     checkDeleteButtonDoesNotExist = function () {
         cy.get('#opfab-card-delete').should('not.exist');
     }

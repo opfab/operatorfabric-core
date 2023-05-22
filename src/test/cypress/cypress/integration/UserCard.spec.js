@@ -31,7 +31,7 @@ describe('User Card ', function () {
     script.deleteAllArchivedCards();
     script.deleteAllSettings();
   });
- 
+
   describe('Check READONLY user cannot send usercard', function () {
     it('Check error message when READONLY user try to create a usercard', () => {
       opfab.loginWithUser('operator1_crisisroom');
@@ -40,7 +40,7 @@ describe('User Card ', function () {
     })
   })
 
-  describe('Check edit and delete buttons visibility', function () {
+  describe('Check edit, copy and delete buttons visibility', function () {
     it('Check edit button is not present when editCardEnabledOnUserInterface is false', () => {
       opfab.loginWithUser('operator1_fr');
       opfab.navigateToUserCard();
@@ -53,6 +53,19 @@ describe('User Card ', function () {
       card.delete();
       feed.checkNumberOfDisplayedCardsIs(0);
 
+    })
+
+    it('Check copy button is not present when copyCardEnabledOnUserInterface is false ', () => {
+      opfab.loginWithUser('operator1_fr');
+      opfab.navigateToUserCard();
+      usercard.selectService('User card examples');
+      usercard.selectProcess('Conference and IT incident');
+      usercard.selectState('Conference Call ☏');
+      usercard.previewThenSendCard();
+      feed.openFirstCard();
+      card.checkCopyButtonDoesNotExist();
+      card.delete();
+      feed.checkNumberOfDisplayedCardsIs(0);
     })
 
     it('Check delete button is not present when deleteCardEnabledOnUserInterface is false ', () => {
@@ -709,13 +722,13 @@ describe('User Card ', function () {
       cy.get('#of-usercard-card-emitter-selector').find('.vscomp-option-text').eq(0).should("contain.text", "Control Center FR East");
       cy.get('#of-usercard-card-emitter-selector').find('.vscomp-option-text').eq(1).should("contain.text", "Control Center FR South");
       cy.get('#of-usercard-card-emitter-selector').find('.vscomp-option-text').eq(2).should("contain.text", "Control Center FR West");
-    
-    
+
+
     })
 
 
     it('Send User card from operator4_fr with restricted list of emitters for a state', () => {
-      
+
       opfab.loginWithUser('operator4_fr');
       feed.checkNumberOfDisplayedCardsIs(1);
 
@@ -773,15 +786,15 @@ describe('User Card ', function () {
 
       opfab.navigateToFeed();
       feed.checkNumberOfDisplayedCardsIs(2);
-     
+
     })
 
 
     it('Edit User card from operator4_fr with restricted list of emitters for a state', () => {
-      
+
       opfab.loginWithUser('operator4_fr');
       feed.checkNumberOfDisplayedCardsIs(2);
-      
+
       feed.openFirstCard();
 
       cy.get('#opfab-div-card-template-processed').contains('Process is in state');
@@ -1315,4 +1328,71 @@ describe('User Card ', function () {
     })
   })
 
+  describe('Check "create a copy" feature', function () {
+    it('Check "create a copy" button is present only when it should', () => {
+      script.deleteAllCards();
+      script.send6TestCards();
+      opfab.loginWithUser('operator1_fr');
+      feed.sortByReceptionDate();
+      feed.checkNumberOfDisplayedCardsIs(6);
+
+      feed.openNthCard(0);
+      card.checkEditButtonDoesNotExist();
+
+      feed.openNthCard(1);
+      card.checkEditButtonDoesNotExist();
+
+      feed.openNthCard(2);
+      card.checkEditButtonDoesNotExist();
+
+      feed.openNthCard(3);
+      card.checkCopyButtonDoesExist();
+
+      feed.openNthCard(4);
+      card.checkEditButtonDoesNotExist();
+
+      feed.openNthCard(5);
+      card.checkCopyButtonDoesExist();
+    })
+
+    it('Check fields service/process/state/severity/data/recipients/recipients for information are copied from the original ' +
+        'card and emitter field is not copied', () => {
+      script.deleteAllCards();
+      opfab.loginWithUser('operator4_fr');
+      opfab.navigateToUserCard();
+      usercard.selectService('User card examples');
+      usercard.selectProcess('Message or question');
+      usercard.selectState('Message');
+
+      cy.waitDefaultTime();
+      cy.get('#opfab-sev-information').check(); // we set severity different from default value
+      cy.get('#message').type('Test for copy card feature');
+
+      usercard.selectEmitter('Control Center FR West');
+
+      usercard.clearSelectedRecipients();
+      usercard.selectRecipient('Control Center FR South');
+
+      usercard.clearSelectedRecipientsForInformation();
+      usercard.selectRecipientForInformation('Control Center FR East');
+
+      usercard.previewThenSendCard();
+      feed.openFirstCard();
+      feed.copyCurrentCard();
+
+      //we check the fields have been copied in the usercard form
+      usercard.checkSelectedServiceIs('User card examples');
+      usercard.checkSelectedProcessIs('Message or question');
+      usercard.checkSelectedStateIs('Message');
+      usercard.checkSelectedSeverityIs('INFORMATION');
+      cy.get('#message').should('contain.text', 'Test for copy card feature');
+      usercard.checkNumberOfRecipientsIs(1);
+      usercard.checkRecipientsContain('Control Center FR South');
+      usercard.checkNumberOfRecipientsForInformationIs(1);
+      usercard.checkRecipientsForInformationContain('Control Center FR East');
+
+      //we check the emitter is not copied (emitter value should be set to the default value)
+      usercard.checkEmitterIs('Control Center FR East');
+    })
+  })
 })

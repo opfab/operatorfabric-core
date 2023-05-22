@@ -286,6 +286,7 @@
     "reset": "HERSTEL",
     "delete": "Verwijderen",
     "edit": "Wijzigen",
+    "createCopy": "Een kopie maken",
     "yes": "JA",
     "search" : "ZOEK"
   },

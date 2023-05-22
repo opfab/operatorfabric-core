@@ -12,6 +12,7 @@
 			"styles" : [ "style" ],
 			"type" : "CANCELED",
 			"editCardEnabledOnUserInterface": false,
+			"copyCardEnabledOnUserInterface": false,
 		    "showAcknowledgmentFooter" : "OnlyForEmittingEntity"
 		},
 		"questionState": {

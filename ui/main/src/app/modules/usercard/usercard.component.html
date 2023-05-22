@@ -11,13 +11,22 @@
     <of-spinner *ngIf="isPreparingCard"></of-spinner>
 
     <div [hidden]="isPreparingCard" id="opfab-usercard-creation">
-        <of-usercard-select-state-form 
-                [cardIdToEdit]="this.cardIdToEdit" 
+        <of-usercard-select-state-form *ngIf="!this.cardIdToCopy"
+                [cardIdToEditOrCopy]="this.cardIdToEdit"
                 [initialProcess]="this.editCardProcessId" 
                 [initialState]="this.editCardStateId"
                 (stateChange)="stateChanged($event)"
                 (emptyProcessList)="setEmptyProcessList()"
                 > </of-usercard-select-state-form>
+        <br/>
+
+        <of-usercard-select-state-form *ngIf="this.cardIdToCopy"
+                [cardIdToEditOrCopy]="this.cardIdToCopy"
+                [initialProcess]="this.copyCardProcessId"
+                [initialState]="this.copyCardStateId"
+                (stateChange)="stateChanged($event)"
+                (emptyProcessList)="setEmptyProcessList()"
+        > </of-usercard-select-state-form>
         <br/>
     
         <form [formGroup]="severityForm" class="opfab-form-lighter" >
