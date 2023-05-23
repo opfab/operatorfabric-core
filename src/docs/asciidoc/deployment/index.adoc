@@ -76,6 +76,11 @@ The response will be a json object like the following:
 }
 ----
 
+To get the log level for ROOT logger of a service it is possible to call the provided script  
+https://github.com/opfab/operatorfabric-core/tree/master/src/test/resources/logs/getLogs.sh[src/test/resources/logs/getLogs.sh] as follows: `getLogs.sh <server:port> <user> <opfab_url>`. For example to get the current log level for "card-publication" service  execute: `getLogs.sh localhost:2102 admin http://localhost`
+
+  
+
 To configure a given logger, POST a json entity to the '/actuator/logger' URI, as follows:
 
 ----
@@ -83,6 +88,10 @@ curl -i -X POST http://<server>:<port>/actuator/loggers/${logger} -H "Authorizat
 ----
 
 To “reset” the specific level of the logger (and use the default configuration instead) it is possible to pass a value of null as the configuredLevel.
+
+To set the log level for ROOT logger of a service it is possible to call the provided script  
+https://github.com/opfab/operatorfabric-core/tree/master/src/test/resources/logs/setLogs.sh[src/test/resources/logs/setLogs.sh] as follows: `setLogs.sh <server:port> <log_level>  <user> <opfab_url>`. For example to set the log level to DEBUG for "card-publication" service  execute: `setLogs.sh localhost:2102 DEBUG admin http://localhost`
+
 
 
 include::users_groups_admin.adoc[leveloffset=+1]
