@@ -51,9 +51,9 @@ public class CardSubscriptionService implements EventListener {
                                     UserServiceCache userServiceCache,
                                     UserActionLogService userActionLogService,
                                     EventBus eventBus,
-                                    @Value("${operatorfabric.heartbeat.checkIntervalInSeconds:10000}")
+                                    @Value("${operatorfabric.heartbeat.checkIntervalInSeconds:10}")
                                     long heartbeatCheckIntervalInSeconds,
-                                    @Value("${operatorfabric.heartbeat.disconnect:100000}")
+                                    @Value("${operatorfabric.heartbeat.delayInSecondsToConsiderUserDisconnected:100}")
                                     long heartbeatDelayInSecondsToConsiderUserDisconnected,
                                     @Value("${operatorfabric.heartbeat.delay:10000}")
                                     long heartbeatDelay) {
@@ -119,7 +119,7 @@ public class CardSubscriptionService implements EventListener {
         {
             try
                 {
-                Thread.sleep(heartbeatCheckIntervalInSeconds);
+                Thread.sleep(heartbeatCheckIntervalInSeconds*1000);
                 }
                 catch (InterruptedException ex)
                 {

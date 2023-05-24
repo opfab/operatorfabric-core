@@ -29,7 +29,7 @@ export class AngularOpfabEventStreamServer extends AngularServer implements Opfa
     private heartbeatUrl: string;
     private isHeartbeatRunning: boolean;
     private heartbeatSendingIntervalId;
-    private heartbeatSendingInterval;
+    private heartbeatSendingIntervalSeconds;
     private heartbeatReceptionIntervalId;
 
     private businessEvents = new Subject<any>();
@@ -52,11 +52,13 @@ export class AngularOpfabEventStreamServer extends AngularServer implements Opfa
         this.eventStreamUrl = `${environment.urls.cards}/cardSubscription?clientId=${clientId}&version=${packageInfo.opfabVersion}`;
         this.closeEventStreamUrl = `${environment.urls.cards}/cardSubscription?clientId=${clientId}`;
         this.heartbeatUrl = `${environment.urls.cards}/cardSubscriptionHeartbeat?clientId=${clientId}`;
-        this.heartbeatSendingInterval = configService.getConfigValue('heartbeatSendingInterval', 60000);
         this.isHeartbeatRunning = false;
     }
 
     public initStream() {
+
+        this.heartbeatSendingIntervalSeconds = this.configService.getConfigValue('heartbeatSendingInterval', 30);
+
         // security header needed here as SSE request are not intercepted by our angular header interceptor
         let securityHeader;
         if (this.currentUserStore.doesAuthenticationUseToken()) {
@@ -122,7 +124,7 @@ export class AngularOpfabEventStreamServer extends AngularServer implements Opfa
                 'EventStreamServer - Heartbeat sent to the server',
                 LogOption.LOCAL_AND_REMOTE
             );
-        }, this.heartbeatSendingInterval);
+        }, this.heartbeatSendingIntervalSeconds*1000);
     }
 
     private recoverAnyLostCardWhenConnectionHasBeenReset() {

@@ -7,7 +7,7 @@
   "selectActivityAreaOnLogin": false,
   "alertMessageBusinessAutoClose": false,
   "alertMessageOnBottomOfTheScreen": false,
-  "heartbeatSendingInterval": 60000,
+  "heartbeatSendingInterval": 30,
   "archive": {
     "filters": {
       "page": {
