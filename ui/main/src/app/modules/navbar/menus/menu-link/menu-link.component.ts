@@ -48,7 +48,7 @@ export class MenuLinkComponent {
             '/businessconfigparty/' +
                 encodeURIComponent(encodeURIComponent(this.menu.id)) +
                 '/' +
-                encodeURIComponent(encodeURIComponent(this.menuEntry.id))
+                encodeURIComponent(encodeURIComponent(this.menuEntry.customMenuId))
         ]);
     }
 }
