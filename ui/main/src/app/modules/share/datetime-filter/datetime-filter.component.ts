@@ -120,7 +120,7 @@ export class DatetimeFilterComponent implements ControlValueAccessor, OnInit, On
                 this.translateService.use(locale);
                 this.placeholder = this.translateService.instant(i18nPrefix + 'placeholder');
             });
-        if (!!this.controlContainer && !!this.filterPath) {
+        if (this.controlContainer && this.filterPath) {
             this.control = this.controlContainer.control.get(this.filterPath);
         }
     }
@@ -141,7 +141,7 @@ export class DatetimeFilterComponent implements ControlValueAccessor, OnInit, On
         this.disabled = true;
         if (!val) {
             this.resetDateAndTime();
-        } else if (!!val.date) {
+        } else if (val.date) {
             this.disabled = false;
             this.datetimeForm.setValue(val, {emitEvent: false});
         }
@@ -195,7 +195,7 @@ export class DatetimeFilterComponent implements ControlValueAccessor, OnInit, On
 
     resetDateAndTime() {
         let val = {hour: 0, minute: 0, second: 0};
-        if (!!this.defaultTime) {
+        if (this.defaultTime) {
             val = {...this.defaultTime, second: 0};
         }
         // option `{emitEvent: false})` to reset completely control and mark it as 'pristine'

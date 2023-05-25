@@ -65,7 +65,7 @@ export abstract class AuthHandler {
 
     protected checkAuthentication(): Observable<any> {
         const token = localStorage.getItem('token');
-        if (!!token) {
+        if (token) {
             const postData = new URLSearchParams();
             postData.append('token', token);
             const headers = new HttpHeaders({'Content-type': 'application/x-www-form-urlencoded; charset=utf-8'});
@@ -77,9 +77,9 @@ export abstract class AuthHandler {
     protected getUserFromAuthInfo(authInfo: HttpAuthInfo): AuthenticatedUser {
         let expirationDate;
         const jwt = this.decodeToken(authInfo.access_token);
-        if (!!authInfo.expires_in) {
+        if (authInfo.expires_in) {
             expirationDate = Date.now() + ONE_SECOND * authInfo.expires_in;
-        } else if (!!this.expireClaim) {
+        } else if (this.expireClaim) {
             expirationDate = jwt[this.expireClaim];
         } else {
             expirationDate = 0;

@@ -46,7 +46,7 @@ export class FeedComponent implements OnInit,OnDestroy {
 
     configureExperimentalHallwayMode() {
         const usersInHallwayMode = this.configService.getConfigValue('settings.usersInHallwayMode',null);
-        if ((!!usersInHallwayMode) && (usersInHallwayMode.includes(this.user.getCurrentUserWithPerimeters().userData.login))) {
+        if (usersInHallwayMode?.includes(this.user.getCurrentUserWithPerimeters().userData.login)) {
             this.hallwayMode = true;
             console.log("User in hallwayMode");
         }

@@ -359,7 +359,7 @@ export class ArchivesComponent implements OnDestroy, OnInit {
             const options: NgbModalOptions = {
                 size: 'fullscreen'
             };
-            if (!!this.modalRef) this.modalRef.close();
+            if (this.modalRef) this.modalRef.close();
             this.modalRef = this.modalService.open(this.cardDetailTemplate, options);
             this.cardLoadingInProgress = false;
             this.cardLoadingIsTakingMoreThanOneSecond = false;
@@ -390,7 +390,7 @@ export class ArchivesComponent implements OnDestroy, OnInit {
     }
 
     ngOnDestroy() {
-        if (!!this.modalRef) {
+        if (this.modalRef) {
             this.modalRef.close();
         }
         this.unsubscribe$.next();

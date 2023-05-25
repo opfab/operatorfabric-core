@@ -80,7 +80,7 @@ export class I18nService {
     }
 
     public loadGlobalTranslations(locales: Array<string>): Observable<any[]> {
-        if (!!locales) {
+        if (locales) {
             const localeRequests$ = [];
             locales.forEach((locale) => localeRequests$.push(this.loadLocale(locale)));
             return Utilities.subscribeAndWaitForAllObservablesToEmitAnEvent(localeRequests$);

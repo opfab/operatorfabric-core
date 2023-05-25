@@ -55,7 +55,7 @@ export class InfoComponent implements OnInit {
 
     setUserEntitiesToDisplay() {
         const user_entities = this.userService.getCurrentUserWithPerimeters().userData.entities;
-        if (!!user_entities) {
+        if (user_entities) {
             this.userEntitiesToDisplay = '';
             const entities = this.entitiesService.getEntitiesFromIds(user_entities);
             entities.forEach((entity) => {

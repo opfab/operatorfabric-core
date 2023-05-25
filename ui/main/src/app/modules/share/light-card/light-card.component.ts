@@ -91,7 +91,7 @@ export class LightCardComponent implements OnInit, OnDestroy {
                 if (state.type === TypeOfStateEnum.FINISHED) {
                     this.showExpiredIcon = false;
                     this.showExpiredLabel = false;
-                } else if (!!state.response) {
+                } else if (state.response) {
                     this.showExpiredIcon = false;
                     this.expiredLabel = 'feed.responsesClosed';
                 }

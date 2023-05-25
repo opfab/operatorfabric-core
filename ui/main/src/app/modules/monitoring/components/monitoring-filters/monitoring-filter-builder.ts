@@ -34,7 +34,7 @@ export class MonitoringFilterBuilder {
         return new Filter(
             (card: LightCard, status) => {
                 const processList = status.processes;
-                if (!!processList) {
+                if (processList) {
                     return processList.includes(card.process);
                 }
                 return true;
@@ -60,7 +60,7 @@ export class MonitoringFilterBuilder {
         return new Filter(
             (card: LightCard, status) => {
                 const typeOfStatesList = status.typeOfStates;
-                if (!!typeOfStatesList) {
+                if (typeOfStatesList) {
                     const typeOfStateOfTheCard = status.mapOfTypeOfStates.get(card.process + '.' + card.state);
                     return typeOfStatesList.includes(typeOfStateOfTheCard);
                 }

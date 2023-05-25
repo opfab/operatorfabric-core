@@ -237,14 +237,14 @@ export class MonitoringTableComponent implements OnChanges, OnDestroy {
     }
 
     refreshData(): void {
-        if (!!this.result) {
+        if (this.result) {
 
             this.displayedResults = this.result;
             this.rowData = [];
             this.displayedResults.forEach((line) => {
                 const entitiesNamesResponses = [];
                 const entitiesResponses =
-                    !!line.requiredResponses && line.requiredResponses.length
+                    line.requiredResponses?.length
                         ? line.requiredResponses
                         : line.allowedOrRequiredResponses;
 
@@ -309,7 +309,7 @@ export class MonitoringTableComponent implements OnChanges, OnDestroy {
                 const responses = this.getResponses(line.data.cardId, line.data.entitiesResponses);
                 this.exportMonitoringData.push({
                     [this.timeColumnName]: line.data.time,
-                    [this.answerColumnName]: !!line.data.answer ? line.data.answer : false,
+                    [this.answerColumnName]: line.data.answer ? line.data.answer : false,
                     [this.businessPeriodColumnName]: this.getFormattedDateTime(line.data.beginningOfBusinessPeriod)
                         .concat('-')
                         .concat(this.getFormattedDateTime(line.data.endOfBusinessPeriod)),
@@ -382,15 +382,15 @@ export class MonitoringTableComponent implements OnChanges, OnDestroy {
             this.processesService.findProcessGroupLabelForProcess(card.card.process)
         );
         const process: Process = this.processesService.getProcess(card.card.process);
-        if (!!process) {
+        if (process) {
             card.card.processName = process.name;
             const state = process.states.get(card.card.state);
-            if (!!state) card.card.typeOfState = this.translateValue('shared.typeOfState.' + state.type);
+            if (state) card.card.typeOfState = this.translateValue('shared.typeOfState.' + state.type);
         }
         card.card.title = card.card.titleTranslated;
         card.card.summary = card.card.summaryTranslated;
         card.card.severity = Utilities.translateSeverity(this.translationService, card.card.severity);
-        if (!!card.childCards) {
+        if (card.childCards) {
             card.childCards.forEach((childCard) => {
                 if (childCard.publisherType === 'ENTITY')
                     childCard.publisherName = this.entitiesService.getEntityName(childCard.publisher);
@@ -411,10 +411,10 @@ export class MonitoringTableComponent implements OnChanges, OnDestroy {
 
 
     ngOnDestroy() {
-        if (!!this.modalRef) {
+        if (this.modalRef) {
             this.modalRef.close();
         }
-        if (!!this.exportModalRef) {
+        if (this.exportModalRef) {
             this.exportModalRef.close();
         }
         this.unsubscribe$.next();

@@ -84,7 +84,7 @@ export class CardBodyComponent implements OnChanges, OnInit, OnDestroy {
         private logger: OpfabLoggerService
     ) {
         this.userWithPerimeters = this.userService.getCurrentUserWithPerimeters();
-        if (!!this.userWithPerimeters) {
+        if (this.userWithPerimeters) {
             this.user = this.userWithPerimeters.userData;
         }
     }
@@ -104,7 +104,7 @@ export class CardBodyComponent implements OnChanges, OnInit, OnDestroy {
             .pipe(
                 takeUntil(this.unsubscribe$),
                 map((lastCardLoaded) => {
-                    if (!!lastCardLoaded) {
+                    if (lastCardLoaded) {
                         if (
                             lastCardLoaded.parentCardId === this.card.id &&
                             !this.childCards.map((childCard) => childCard.uid).includes(lastCardLoaded.uid)
@@ -122,8 +122,7 @@ export class CardBodyComponent implements OnChanges, OnInit, OnDestroy {
                 takeUntil(this.unsubscribe$),
                 map((lastCardDeleted) => {
                     if (
-                        !!lastCardDeleted &&
-                        lastCardDeleted.parentCardId === this.card.id &&
+                        lastCardDeleted?.parentCardId === this.card.id &&
                         this.childCards.map((childCard) => childCard.id).includes(lastCardDeleted.cardId)
                     ) {
                         this.removeChildCard(lastCardDeleted.cardId);
@@ -171,7 +170,7 @@ export class CardBodyComponent implements OnChanges, OnInit, OnDestroy {
     }
 
     ngOnChanges(changes: SimpleChanges): void {
-        if (!!changes.card || !!changes.cardState) {
+        if (changes.card || changes.cardState) {
             if (this.cardState.response != null && this.cardState.response !== undefined) {
                 this.computeEntityIdsAllowedOrRequiredToRespondAndAllowedToSendCards();
                 this.computeUserEntityIdsPossibleForResponse();
@@ -274,7 +273,7 @@ export class CardBodyComponent implements OnChanges, OnInit, OnDestroy {
     public displayCardAcknowledgedFooter(): boolean {
 
         let entityRecipientsToAck = [];
-        if (!!this.card.entityRecipients) {
+        if (this.card.entityRecipients) {
             entityRecipientsToAck = Utilities.removeElementsFromArray(this.card.entityRecipients, this.card.entityRecipientsForInformation);
         }
 
@@ -335,7 +334,7 @@ export class CardBodyComponent implements OnChanges, OnInit, OnDestroy {
 
     public setFullScreen(active) {
         this.fullscreen = active;
-        if (!!this.parentComponent) this.parentComponent.screenSize = active ? 'lg' : 'md';
+        if (this.parentComponent) this.parentComponent.screenSize = active ? 'lg' : 'md';
     }
 
     public closeDetails() {

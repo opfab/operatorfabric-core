@@ -206,7 +206,7 @@ export class LightCardsStoreService {
 
     public addOrUpdateLightCard(card) {
         this.nbCardLoadedInHalfSecondInterval++;
-        if (!!card.parentCardId) {
+        if (card.parentCardId) {
             this.addChildCard(card);
             const isFromCurrentUser = this.isLightChildCardFromCurrentUserEntity(card);
             if (isFromCurrentUser) {
@@ -232,7 +232,7 @@ export class LightCardsStoreService {
     }
 
     private addChildCard(card: LightCard) {
-        if (!!card.parentCardId) {
+        if (card.parentCardId) {
             const children = this.childCards.get(card.parentCardId);
             if (children) {
                 children.push(card);
@@ -305,8 +305,7 @@ export class LightCardsStoreService {
         const listEntitiesToAck = this.computeListEntitiesToAck(lightCard);
 
         if (
-            !!listEntitiesToAck &&
-            listEntitiesToAck.length > 0 &&
+            listEntitiesToAck?.length > 0 &&
             consideredAcknowledgedForUserWhen !== ConsideredAcknowledgedForUserWhenEnum.USER_HAS_ACKNOWLEDGED
         ) {
             return (
@@ -326,9 +325,9 @@ export class LightCardsStoreService {
     private computeListEntitiesToAck(lightCard: LightCard): string[] {
         const listEntitiesToAck = [];
 
-        if (!!lightCard.entityRecipients) {
+        if (lightCard.entityRecipients) {
             const listOfEntityRecipients = this.entitiesService.getEntitiesFromIds(lightCard.entityRecipients);
-            if (!!listOfEntityRecipients)
+            if (listOfEntityRecipients)
                 this.entitiesService
                     .resolveEntitiesAllowedToSendCards(listOfEntityRecipients)
                     .forEach((entityToAdd) => listEntitiesToAck.push(entityToAdd.id));
@@ -343,7 +342,7 @@ export class LightCardsStoreService {
         if (
             consideredAcknowledgedForUserWhen ===
                 ConsideredAcknowledgedForUserWhenEnum.ONE_ENTITY_OF_USER_HAS_ACKNOWLEDGED &&
-            !!lightCard.entitiesAcks
+            lightCard.entitiesAcks
         ) {
             return (
                 lightCard.entitiesAcks.filter((entityId) =>
@@ -361,7 +360,7 @@ export class LightCardsStoreService {
         if (
             consideredAcknowledgedForUserWhen ===
                 ConsideredAcknowledgedForUserWhenEnum.ALL_ENTITIES_OF_USER_HAVE_ACKNOWLEDGED &&
-            !!lightCard.entitiesAcks
+            lightCard.entitiesAcks
         ) {
             // We compute the entities for which the ack is pending
             const entitiesWaitedForAck = listEntitiesToAck.filter(
@@ -424,8 +423,8 @@ export class LightCardsStoreService {
     public addEntitiesAcksForLightCard(cardId: string, entitiesAcksToAdd: string[]) {
         const card = this.lightCards.get(cardId);
 
-        if (!!card && !!entitiesAcksToAdd) {
-            card.entitiesAcks = !!card.entitiesAcks
+        if (card && entitiesAcksToAdd) {
+            card.entitiesAcks = card.entitiesAcks
                 ? [...new Set([...card.entitiesAcks, ...entitiesAcksToAdd])]
                 : entitiesAcksToAdd;
             card.hasBeenAcknowledged = this.isLightCardHasBeenAcknowledgedByUserOrByUserEntity(card);
@@ -474,7 +473,7 @@ export class LightCardsStoreService {
 
     public setLightCardRead(cardId: string, read: boolean) {
         const card = this.lightCards.get(cardId);
-        if (!!card) {
+        if (card) {
             card.hasBeenRead = read;
             this.lightCardsEvents.next(this.lightCards);
         }
@@ -482,7 +481,7 @@ export class LightCardsStoreService {
 
     public setLightCardAcknowledgment(cardId: string, ack: boolean) {
         const card = this.lightCards.get(cardId);
-        if (!!card) {
+        if (card) {
             card.hasBeenAcknowledged = ack;
 
             // Each time hasBeenAcknowledged is updated, we have to compute it again, relating to entities acks

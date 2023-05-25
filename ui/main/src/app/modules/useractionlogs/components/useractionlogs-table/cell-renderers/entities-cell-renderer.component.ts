@@ -29,9 +29,9 @@ export class EntitiesCellRendererComponent implements ICellRendererAngularComp {
     agInit(params: any): void {
         this.entities = this.entitiesService.getCachedValues();
         // Look up code in values returned by the corresponding service, if it exists return corresponding name, otherwise return code
-        if (!!this.entities) {
+        if (this.entities) {
             const value = params.getValue();
-            if (!!value) {
+            if (value) {
                 this._nameValues = value
                     .map((code) => {
                         const lookedUpName = this.entities

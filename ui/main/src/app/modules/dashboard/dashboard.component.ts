@@ -47,7 +47,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
     }
 
     ngOnDestroy() {
-        if (!!this.modalRef) {
+        if (this.modalRef) {
             this.modalRef.close();
         }
     }

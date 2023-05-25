@@ -1,4 +1,4 @@
-/* Copyright (c) 2021-2022, RTE (http://www.rte-france.com)
+/* Copyright (c) 2021-2023, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -32,11 +32,11 @@ export class ArrayCellRendererComponent implements ICellRendererAngularComp {
         const value = params.getValue();
         this._nameValues = value;;
 
-        if (!!this.itemType) {
+        if (this.itemType) {
             this.cachedCrudService = this.dataHandlingService.resolveCachedCrudServiceDependingOnType(this.itemType);
             this.mapping = this.cachedCrudService.getCachedValues();
 
-            if (!!this.mapping && !!value) {
+            if (this.mapping && value) {
                 this._nameValues = value
                     .map((code) => {
                         // This entails that the items that need to be rendered have an `id` and a `name` property.

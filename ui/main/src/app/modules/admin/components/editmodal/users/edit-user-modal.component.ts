@@ -94,7 +94,7 @@ export class EditUserModalComponent implements OnInit {
             const {login, firstName, lastName} = this.row;
             this.userForm.patchValue({login, firstName, lastName}, {onlySelf: false});
 
-            if (!!this.row.authorizedIPAddresses) {
+            if (this.row.authorizedIPAddresses) {
                 this.userForm.patchValue({authorizedIPAddresses: this.row.authorizedIPAddresses.join(',')});
             }
             // Otherwise, we use the selectedItems property of the of-multiselect component
@@ -139,7 +139,7 @@ export class EditUserModalComponent implements OnInit {
     isUniqueLogin(login: string): Observable<boolean> {
         const subject = new Subject<boolean>();
 
-        if (!!login) {
+        if (login) {
             this.crudService.queryAllUsers().subscribe((users) => {
                 if (users.filter((user) => user.login === login).length) subject.next(false);
                 else subject.next(true);
@@ -165,8 +165,8 @@ export class EditUserModalComponent implements OnInit {
             this.userForm.value['login'] = this.row.login;
         }
         this.login.setValue((this.login.value as string).trim());
-        if (!!this.lastName.value) this.lastName.setValue((this.lastName.value as string).trim());
-        if (!!this.firstName.value) this.firstName.setValue((this.firstName.value as string).trim());
+        if (this.lastName.value) this.lastName.setValue((this.lastName.value as string).trim());
+        if (this.firstName.value) this.firstName.setValue((this.firstName.value as string).trim());
     }
 
     get login() {

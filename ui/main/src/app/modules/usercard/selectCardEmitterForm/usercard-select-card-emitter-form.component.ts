@@ -55,7 +55,7 @@ export class UsercardSelectCardEmitterFormComponent implements OnInit {
             .get('cardEmitter')
             .valueChanges.pipe(takeUntil(this.unsubscribe$), debounceTime(10))
             .subscribe((state) => {
-                if (!!state) {
+                if (state) {
                     this.cardEmitterChange.emit({
                         emitter: this.selectCardEmitterForm.get('cardEmitter').value
                     });

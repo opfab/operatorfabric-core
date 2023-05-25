@@ -75,7 +75,7 @@ export class RealtimeusersComponent implements OnInit, OnDestroy {
                 const screenIndexToDisplayFirst = this.userPreferences.getPreference(
                     'opfab.realTimeScreens.screenIndexToDisplayFirst'
                 );
-                if (!!screenIndexToDisplayFirst) {
+                if (screenIndexToDisplayFirst) {
                     this.displayRealTimeScreenIndex(Number(screenIndexToDisplayFirst));
                 } else {
                     this.displayRealTimeScreenIndex(0);
@@ -99,7 +99,7 @@ export class RealtimeusersComponent implements OnInit, OnDestroy {
             connectedUsers.sort((obj1, obj2) => Utilities.compareObj(obj1.login, obj2.login));
 
             connectedUsers.forEach((realTimeUserConnected) => {
-                if (!! realTimeUserConnected.entitiesConnected) {
+                if (realTimeUserConnected.entitiesConnected) {
                     realTimeUserConnected.entitiesConnected.forEach((entityConnected) => {
                         let usersConnectedPerEntity = this.connectedUsersPerEntity.get(
                             entityConnected
@@ -123,13 +123,13 @@ export class RealtimeusersComponent implements OnInit, OnDestroy {
     }
 
     displayRealTimeScreenIndex(index: number): void {
-        this.realTimeScreenIndexToDisplay = !!this.realTimeScreens[index] ? String(index) : '0';
+        this.realTimeScreenIndexToDisplay = this.realTimeScreens[index] ? String(index) : '0';
         this.realTimeScreensForm.get('realTimeScreen').setValue(this.realTimeScreenIndexToDisplay);
     }
 
     changeScreenWhenSelectRealTimeScreen(): void {
         this.realTimeScreensForm.get('realTimeScreen').valueChanges.subscribe((realTimeScreenIndex) => {
-            if (!!realTimeScreenIndex) {
+            if (realTimeScreenIndex) {
                 this.realTimeScreenIndexToDisplay = realTimeScreenIndex;
                 this.userPreferences.setPreference(
                     'opfab.realTimeScreens.screenIndexToDisplayFirst',
@@ -150,7 +150,7 @@ export class RealtimeusersComponent implements OnInit, OnDestroy {
 
     getNumberOfConnectedUsersInEntity(entity: string): number {
         const connectedUsers = this.connectedUsersPerEntity.get(entity);
-        if (!!connectedUsers) return connectedUsers.length;
+        if (connectedUsers) return connectedUsers.length;
         return 0;
     }
 

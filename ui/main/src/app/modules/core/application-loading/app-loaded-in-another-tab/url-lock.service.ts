@@ -30,7 +30,7 @@ export class UrlLockService {
 
     public isUrlLocked(): boolean {
         const urlLock = this.store.getItem(this.IS_OPFAB_URL_CURRENTLY_USED_KEY);
-        return  !!urlLock ? JSON.parse(urlLock) : false;
+        return  urlLock ? JSON.parse(urlLock) : false;
     }
 
     public disconnectOtherUsers() : void {

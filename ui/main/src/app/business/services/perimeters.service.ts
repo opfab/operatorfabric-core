@@ -79,7 +79,7 @@ export class PerimetersService extends CachedCrudService {
             takeUntil(this.ngUnsubscribe$),
             tap({
                 next: (perimeters) => {
-                    if (!!perimeters) {
+                    if (perimeters) {
                         this._perimeters = perimeters;
                         console.log(new Date().toISOString(), 'List of perimeters loaded');
                     }

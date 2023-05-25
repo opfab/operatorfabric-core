@@ -31,8 +31,7 @@ export class MonitoringProcessList {
     private loadVisibleProcessesForCurrentUser() {
         this.processesService.getAllProcesses().forEach((process) => {
             if (
-                !!process.uiVisibility &&
-                !!process.uiVisibility.monitoring &&
+                process.uiVisibility?.monitoring &&
                 this.userService.isReceiveRightsForProcess(process.id)
             ) {
                 this.processList.push(process);
@@ -49,7 +48,7 @@ export class MonitoringProcessList {
 
     private getProcessGroupIdForProcess(processId): string {
         const processGroup = this.processesService.findProcessGroupForProcess(processId);
-        if (!!processGroup) return processGroup.id;
+        if (processGroup) return processGroup.id;
         return DEFAULT_PROCESS_GROUP_ID;
     }
 

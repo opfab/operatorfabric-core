@@ -19,7 +19,7 @@ export function getNextTimeForRepeating(card: Card, startingDate?: number): numb
         startingDate = new Date().valueOf();
     }
 
-    if (!!card.timeSpans) {
+    if (card.timeSpans) {
         let nextTime = -1;
         card.timeSpans.forEach((timeSpan) => {
             const timeForRepeating = getNextTimeForRepeatingFromTimeSpan(timeSpan, card, startingDate);
@@ -39,7 +39,7 @@ export function getNextTimeForRepeating(card: Card, startingDate?: number): numb
 }
 
 function getNextTimeForRepeatingFromTimeSpan(timeSpan: TimeSpan, card: Card, startingDate: number): number {
-    if (!!timeSpan) {
+    if (timeSpan) {
         if (!timeSpan.recurrence) {
             if (timeSpan.start + MAX_MILLISECONDS_FOR_REMINDING_AFTER_EVENT_STARTS < startingDate) {
                 return -1;
@@ -59,26 +59,26 @@ function getNextTimeForRepeatingFromTimeSpan(timeSpan: TimeSpan, card: Card, sta
 
 export function getNextDateTimeFromRRule(startingDate: number, card: Card): number {
 
-    if (!!card.rRule && !!card.rRule.freq) {
+    if (card?.rRule?.freq) {
 
-        const byhourSorted = !!card.rRule.byhour ? card.rRule.byhour : null;
-        if (!! byhourSorted) {
+        const byhourSorted = card.rRule.byhour ? card.rRule.byhour : null;
+        if (byhourSorted) {
             byhourSorted.sort(function (a, b) {return a - b;});
         }
-        const byminuteSorted = !!card.rRule.byminute ? card.rRule.byminute : null;
-        if (!! byminuteSorted) {
+        const byminuteSorted = card.rRule.byminute ? card.rRule.byminute : null;
+        if (byminuteSorted) {
             byminuteSorted.sort(function (a, b) {return a - b;});
         }
 
         const byweekdayForRRule = [];
-        if (!! card.rRule.byweekday) {
+        if (card.rRule.byweekday) {
             card.rRule.byweekday.forEach(weekday => {
                 byweekdayForRRule.push(Weekday.fromStr(weekday));
             });
         }
 
         let tzid = 'Europe/Paris';
-        if (!! card.rRule.tzid && card.rRule.tzid !== '') {
+        if (card.rRule.tzid && card.rRule.tzid !== '') {
             tzid = card.rRule.tzid;
         }
 
@@ -113,7 +113,7 @@ function convertOpfabFrequencyToRRuleFrequency(opfabFrequency: OpfabFrequency): 
 }
 
 function dateObjectToYYYYMMDDTHHmmss(date: Date): string {
-    if (!!date) {
+    if (date) {
         return '' + date.getFullYear() +
             pad(date.getMonth() + 1) +
             pad(date.getDate()) +

@@ -69,7 +69,7 @@ export class EditEntityModalComponent implements OnInit {
         }
         uniqueEntityNameValidator.push(this.uniqueEntityNameValidatorFn());
             // modal used for creating a new entity
-            
+
         this.entityForm = new FormGroup({
             id: new FormControl(
                 '',
@@ -117,7 +117,7 @@ export class EditEntityModalComponent implements OnInit {
     }
 
     private isUserInCurrentEntity(usr: User) :boolean {
-        return !!usr.entities && usr.entities.findIndex(g => g === this.row.id) >= 0;
+        return usr.entities && usr.entities.findIndex(g => g === this.row.id) >= 0;
     }
 
     update() {
@@ -136,7 +136,7 @@ export class EditEntityModalComponent implements OnInit {
     }
 
     isUniqueEntityId(entityId: string): boolean {
-        if (!!entityId && this.entitiesService.getEntities().filter((entity) => entity.id === entityId).length)
+        if (entityId && this.entitiesService.getEntities().filter((entity) => entity.id === entityId).length)
             return false;
         else return true;
     }
@@ -150,7 +150,7 @@ export class EditEntityModalComponent implements OnInit {
     }
 
     isUniqueEntityName(entityName: string): boolean {
-        if (!!entityName && this.entitiesService.getEntities().filter((entity) => (entity.name === entityName.trim()) && (entity.id !== this.row?.id)).length)
+        if (entityName && this.entitiesService.getEntities().filter((entity) => (entity.name === entityName.trim()) && (entity.id !== this.row?.id)).length)
             return false;
         else return true;
     }

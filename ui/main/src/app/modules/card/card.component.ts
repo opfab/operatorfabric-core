@@ -54,7 +54,7 @@ export class CardComponent implements OnInit, OnDestroy {
             .getSelectCard()
             .pipe(takeUntil(this.unsubscribe$))
             .subscribe((selectedCard: SelectedCard) => {
-                if (!!selectedCard.card) {
+                if (selectedCard.card) {
                     this.cardNotFound = false;
                     this.businessconfigService
                         .queryProcess(selectedCard.card.process, selectedCard.card.processVersion)
@@ -63,7 +63,7 @@ export class CardComponent implements OnInit, OnDestroy {
                                 this.card = selectedCard.card;
                                 this.childCards = selectedCard.childCards;
                                 this.cardLoadingInProgress = false;
-                                if (!!businessconfig) {
+                                if (businessconfig) {
                                     this.cardState = businessconfig.states.get(selectedCard.card.state);
                                     if (!this.cardState) {
                                         console.log(
@@ -150,7 +150,7 @@ export class CardComponent implements OnInit, OnDestroy {
 
     closeDetails() {
         this.detailClosed = true;
-        if (!!this.modalRef) this.modalRef.dismiss();
+        if (this.modalRef) this.modalRef.dismiss();
     }
 
     public isSmallscreen() {
