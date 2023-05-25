@@ -200,7 +200,7 @@ export class ArchivesLoggingFiltersComponent implements OnInit, OnDestroy, After
             processesIds.includes(visibleProcess.value)
         );
 
-        if (!!this.tags) {
+        if (this.tags) {
             this.tags.forEach((tag) => this.tagsMultiSelectOptions.push(new MultiSelectOption(tag.value, tag.label)));
         }
         this.setDefaultPublishDateFilter();
@@ -275,7 +275,7 @@ export class ArchivesLoggingFiltersComponent implements OnInit, OnDestroy, After
 
     changeProcessesWhenSelectProcessGroup(): void {
         this.parentForm.get('processGroup').valueChanges.subscribe((selectedProcessGroups) => {
-            if (!!selectedProcessGroups && selectedProcessGroups.length > 0) {
+            if (selectedProcessGroups?.length > 0) {
                 this.processMultiSelectOptionsWhenSelectedProcessGroup = [];
                 selectedProcessGroups.forEach((processGroup) => {
                     if (processGroup === '--')
@@ -291,7 +291,7 @@ export class ArchivesLoggingFiltersComponent implements OnInit, OnDestroy, After
         this.parentForm.get('process').valueChanges.subscribe((selectedProcesses) => {
             this.stateSelected = [];
             this.stateMultiSelectOptions = [];
-            if (!!selectedProcesses && selectedProcesses.length > 0) {
+            if (selectedProcesses?.length > 0) {
                 this.statesMultiSelectOptionsPerProcesses.forEach((processStates) => {
                     if (selectedProcesses.includes(processStates.value)) {
                         this.stateMultiSelectOptions.push(processStates);
@@ -302,20 +302,20 @@ export class ArchivesLoggingFiltersComponent implements OnInit, OnDestroy, After
     }
 
     isProcessGroupFilterVisible(): boolean {
-        return !!this.processGroupMultiSelectOptions && this.processGroupMultiSelectOptions.length > 1;
+        return this.processGroupMultiSelectOptions?.length > 1;
     }
 
     isThereProcessGroup(): boolean {
-        return !!this.processesGroups && this.processesGroups.size > 0;
+        return this.processesGroups?.size > 0;
     }
 
     isThereOnlyOneProcessGroupInDropdownList(): boolean {
-        return !!this.processGroupMultiSelectOptions && this.processGroupMultiSelectOptions.length === 1;
+        return this.processGroupMultiSelectOptions?.length === 1;
     }
 
     isThereProcessStateToDisplay(): boolean {
-        return !!this.processMultiSelectOptions && this.processMultiSelectOptions.length > 0 &&
-               !!this.statesMultiSelectOptionsPerProcesses && this.statesMultiSelectOptionsPerProcesses.length > 0;
+        return this.processMultiSelectOptions?.length > 0 &&
+               this.statesMultiSelectOptionsPerProcesses?.length > 0;
     }
 
     setDefaultPublishDateFilter() {

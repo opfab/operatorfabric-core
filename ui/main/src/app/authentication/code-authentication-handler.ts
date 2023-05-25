@@ -23,7 +23,7 @@ export class CodeAuthenticationHandler extends AuthHandler {
         this.checkAuthentication().subscribe((payload) => {
             // no token stored or token invalid
             if (!payload) {
-                if (!!authCode) {
+                if (authCode) {
                     this.askToken(authCode).subscribe({
                         next: (authInfo) => {
                             this.userAuthenticated.next(this.getUserFromAuthInfo(authInfo));

@@ -162,7 +162,7 @@ export class EditPerimeterModalComponent implements OnInit {
             let isSelectedProcessDifferentFromPrevious = false;
 
             // Update state options based on selected process
-            if (!!process) {
+            if (process) {
                 if (process !== this.processIdEdited) {
                     isSelectedProcessDifferentFromPrevious = true;
                     this.processIdEdited = process;

@@ -125,7 +125,7 @@ export class Utilities {
 
     public static removeElementsFromArray(arrayToFilter: string[], arrayToDelete: string[]): string[] {
 
-        if ((!!arrayToDelete) && (arrayToDelete.length > 0)) {
+        if ((arrayToDelete?.length > 0)) {
             const elementsToDeleteSet = new Set(arrayToDelete);
             const newArray = arrayToFilter.filter((name) => {
                 return !elementsToDeleteSet.has(name);

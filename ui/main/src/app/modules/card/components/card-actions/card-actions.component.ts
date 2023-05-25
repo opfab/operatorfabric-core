@@ -76,7 +76,7 @@ export class CardActionsComponent implements OnChanges, OnDestroy {
 
         this.showCreateCopyButton =
             this.cardState.copyCardEnabledOnUserInterface &&
-            !!this.cardState.userCard &&
+            this.cardState.userCard &&
             this.userService.isWriteRightsForProcessAndState(this.card.process, this.card.state);
     }
 
@@ -99,7 +99,7 @@ export class CardActionsComponent implements OnChanges, OnDestroy {
         // Otherwise, this can cause issues with templates functions referencing elements by id as there are two elements with the same id
         // in the document.
         this.closeDetails();
-        if (!!this.parentModalRef) this.parentModalRef.close();
+        if (this.parentModalRef) this.parentModalRef.close();
 
         const options: NgbModalOptions = {
             size: 'usercard',
@@ -152,7 +152,7 @@ export class CardActionsComponent implements OnChanges, OnDestroy {
 
     public confirmDeleteCard(): void {
         this.deleteInProgress = true;
-        if (!!this.deleteConfirmationModal) this.deleteConfirmationModal.close();
+        if (this.deleteConfirmationModal) this.deleteConfirmationModal.close();
         this.cardService.deleteCard(this.card).subscribe((resp) => {
             const status = resp.status;
             if (status === ServerResponseStatus.OK) {

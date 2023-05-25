@@ -61,7 +61,7 @@ export class FeedSortComponent implements OnInit, OnDestroy {
     private getInitialSort(): string {
         let sortedChoice = this.defaultSorting;
         const sortedPreference = this.userPreferences.getPreference('opfab.feed.sort.type');
-        if (!!sortedPreference)  sortedChoice = sortedPreference;
+        if (sortedPreference)  sortedChoice = sortedPreference;
         return sortedChoice;
     }
 

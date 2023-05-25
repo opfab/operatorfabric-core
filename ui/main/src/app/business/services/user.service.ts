@@ -128,7 +128,7 @@ export class UserService extends CrudService {
             takeUntil(this.ngUnsubscribe),
             tap({
                 next: (userWithPerimeters) => {
-                    if (!!userWithPerimeters) {
+                    if (userWithPerimeters) {
                         this._userWithPerimeters = userWithPerimeters;
                         console.log(new Date().toISOString(), 'User perimeter loaded');
                         this.loadUserRightsPerProcessAndState();
@@ -199,7 +199,7 @@ export class UserService extends CrudService {
 
     public isFilteringNotificationAllowedForProcessAndState(processId: string, stateId: string): boolean {
         const rightsAndFilteringNotificationAllowed = this._userRightsPerProcessAndState.get(processId + '.' + stateId);
-        if (!!rightsAndFilteringNotificationAllowed) {
+        if (rightsAndFilteringNotificationAllowed) {
             const filteringNotificationAllowed = rightsAndFilteringNotificationAllowed.filteringNotificationAllowed;
             if (
                 filteringNotificationAllowed !== null &&

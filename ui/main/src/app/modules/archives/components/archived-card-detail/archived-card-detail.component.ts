@@ -51,7 +51,7 @@ export class ArchivedCardDetailComponent implements OnInit{
                 this.card.publisher
             );
 
-            if (!!this.card.representativeType && !!this.card.representative) {
+            if (this.card.representativeType && this.card.representative) {
                 const representative =
                     this.card.representativeType === 'ENTITY'
                         ? this.entitiesService.getEntityName(this.card.representative)
@@ -66,7 +66,7 @@ export class ArchivedCardDetailComponent implements OnInit{
         const listOfEntityRecipients = [];
         this.entityRecipientsForFooter = '';
 
-        if (!! this.card.entityRecipients) {
+        if (this.card.entityRecipients) {
             const entityRecipientsForFooter = Utilities.removeElementsFromArray(this.card.entityRecipients, this.card.entityRecipientsForInformation);
 
             entityRecipientsForFooter.forEach((entityRecipient) => {
@@ -88,7 +88,7 @@ export class ArchivedCardDetailComponent implements OnInit{
         const listOfEntityRecipientsForInformation = [];
         this.entityRecipientsForInformationForFooter = '';
 
-        if (!! this.card.entityRecipientsForInformation) {
+        if (this.card.entityRecipientsForInformation) {
             this.card.entityRecipientsForInformation.forEach((entityRecipientForInformation) => {
                 listOfEntityRecipientsForInformation.push(this.entitiesService.getEntityName(entityRecipientForInformation));
             });

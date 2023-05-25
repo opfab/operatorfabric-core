@@ -100,7 +100,7 @@ export class CardListComponent implements AfterViewChecked, OnInit {
 
     adaptFrameHeight() {
         const domCardListElement = document.getElementById('opfab-card-list');
-        if (!!domCardListElement) {
+        if (domCardListElement) {
             const rect = domCardListElement.getBoundingClientRect();
             let height = window.innerHeight - rect.top - 50;
             if (this.hideAckAllCardsFeature) height = window.innerHeight - rect.top - 10;
@@ -108,7 +108,7 @@ export class CardListComponent implements AfterViewChecked, OnInit {
         }
 
         const domFiltersElement = document.getElementById('opfab-filters');
-        if (!!domFiltersElement) {
+        if (domFiltersElement) {
             const rect = domFiltersElement.getBoundingClientRect();
             let height = window.innerHeight - rect.top - 45;
             if (this.hideAckAllCardsFeature) height = window.innerHeight - rect.top - 10;

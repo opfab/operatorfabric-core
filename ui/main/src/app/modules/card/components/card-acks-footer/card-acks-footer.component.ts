@@ -40,7 +40,7 @@ export class CardAcksFooterComponent implements OnChanges, OnInit, OnDestroy {
     }
 
     private addAckFromSubscription(entitiesAcksToAdd: string[]) {
-        if (!!this.listEntitiesToAck && this.listEntitiesToAck.length > 0) {
+        if (this.listEntitiesToAck?.length > 0) {
             entitiesAcksToAdd.forEach((entityAckToAdd) => {
                 const indexToUpdate = this.listEntitiesToAck.findIndex(
                     (entityToAck) => entityToAck.id === entityAckToAdd
@@ -58,7 +58,7 @@ export class CardAcksFooterComponent implements OnChanges, OnInit, OnDestroy {
 
     setAcksList() {
         this.listEntitiesToAck = [];
-        if (!!this.card.entityRecipients) this.computeListEntitiesToAck();
+        if (this.card.entityRecipients) this.computeListEntitiesToAck();
     }
 
     private computeListEntitiesToAck() {
@@ -89,7 +89,7 @@ export class CardAcksFooterComponent implements OnChanges, OnInit, OnDestroy {
     }
 
     private checkEntityAcknowledged(entityId: string): boolean {
-        return !!this.card.entitiesAcks && this.card.entitiesAcks.includes(entityId);
+        return this.card.entitiesAcks?.includes(entityId);
     }
 
     ngOnDestroy() {

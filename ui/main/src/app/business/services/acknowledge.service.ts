@@ -59,7 +59,7 @@ export class AcknowledgeService {
         if (!processDefinition) return true;
         const state = processDefinition.states.get(card.state);
 
-        if (!!state) {
+        if (state) {
             if (state.acknowledgmentAllowed === AcknowledgmentAllowedEnum.NEVER) return false;
             if (state.acknowledgmentAllowed === AcknowledgmentAllowedEnum.ALWAYS) return true;
             return !this.userPermissionsService.isUserEnabledToRespond(user, card, processDefinition);

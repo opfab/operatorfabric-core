@@ -47,7 +47,7 @@ export class ReminderService {
 
     private listenForCardsToAddInReminder() {
         this.lightCardsStoreService.getNewLightCards().subscribe((card) => {
-            if (!!card) this.reminderList.addAReminder(card);
+            if (card) this.reminderList.addAReminder(card);
         });
     }
 
@@ -55,7 +55,7 @@ export class ReminderService {
         this.logger.info('Reminder : will remind card = ' + cardId, LogOption.LOCAL_AND_REMOTE);
         const lightCard = this.lightCardsStoreService.getLightCard(cardId);
 
-        if (!!lightCard) {
+        if (lightCard) {
             this.reminderList.setCardHasBeenRemind(lightCard);
             this.acknowledgeService.deleteUserAcknowledgement(lightCard.uid).subscribe((resp) => {
                 if (resp.status !== ServerResponseStatus.OK)

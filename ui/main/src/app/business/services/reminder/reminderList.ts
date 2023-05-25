@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2021, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2023, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -26,11 +26,11 @@ export class ReminderList {
     }
 
     public addAReminder(card: Card, startingDate?: number) {
-        if (!!card) {
+        if (card) {
             if (card.secondsBeforeTimeSpanForReminder === undefined || card.secondsBeforeTimeSpanForReminder === null)
                 return;
             const reminderItem = this.reminderList.get(card.id);
-            if (!!reminderItem && reminderItem.cardUid === card.uid) return;
+            if (reminderItem?.cardUid === card.uid) return;
             const dateForReminder: number = getNextTimeForRepeating(card, startingDate);
             if (dateForReminder >= 0) {
                 this.reminderList.set(
@@ -71,7 +71,7 @@ export class ReminderList {
 
     public setCardHasBeenRemind(card) {
         const reminderItem = this.reminderList.get(card.id);
-        if (!!reminderItem) {
+        if (reminderItem) {
             if (!card.timeSpans[0].recurrence) reminderItem.hasBeenRemind = true;
             else this.setNextRemindWhenRecurrenceAndRemindHasBeenDone(card, reminderItem);
             this.persistReminder();
@@ -90,7 +90,7 @@ export class ReminderList {
     private loadRemindersFromLocalStorage() {
         const list = localStorage.getItem(this.userLogin + '.reminderList');
         const reminderArray = JSON.parse(list);
-        if (!!reminderArray) this.reminderList = new Map(reminderArray);
+        if (reminderArray) this.reminderList = new Map(reminderArray);
     }
 
     private persistReminder() {

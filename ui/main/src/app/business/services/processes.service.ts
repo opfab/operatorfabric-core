@@ -55,7 +55,7 @@ export class ProcessesService {
     public loadAllProcesses(): Observable<any> {
         return this.queryAllProcesses().pipe(
             map((processesLoaded) => {
-                if (!!processesLoaded) {
+                if (processesLoaded) {
                     this.processes = processesLoaded;
                     if (this.processes.length === 0) {
                         console.log(new Date().toISOString(), 'WARNING : no processes configured');
@@ -76,9 +76,9 @@ export class ProcessesService {
         return this.queryProcessGroups().pipe(
             map((response) => {
                 const processGroupsFile = response.data;
-                if (!!processGroupsFile) {
+                if (processGroupsFile) {
                     const processGroupsList = processGroupsFile.groups;
-                    if (!!processGroupsList)
+                    if (processGroupsList)
                         processGroupsList.forEach((processGroup) => {
                             this.processGroups.set(processGroup.id, {
                                 name: processGroup.name,
@@ -107,7 +107,7 @@ export class ProcessesService {
         return this.configServer.getMonitoringConfiguration().pipe(
             map((serverResponse) => {
                 const monitoringConfig = serverResponse.data;
-                if (!!monitoringConfig) {
+                if (monitoringConfig) {
                     this.monitoringConfig = monitoringConfig;
                     console.log(new Date().toISOString(), 'Monitoring config loaded');
                 } else console.log(new Date().toISOString(), 'No monitoring config to load');
@@ -128,7 +128,7 @@ export class ProcessesService {
 
     public getProcessGroupName(id: string) {
         const processGroup = this.processGroups.get(id);
-        if (!!processGroup) return processGroup.name;
+        if (processGroup) return processGroup.name;
         return '';
     }
 
@@ -159,14 +159,14 @@ export class ProcessesService {
                 if (processDefinition)
                     processIdAndLabels.push({
                         processId: processId,
-                        processLabel: !!processDefinition.name ? processDefinition.name : processDefinition.id
+                        processLabel: processDefinition.name ? processDefinition.name : processDefinition.id
                     });
                 else processIdAndLabels.push({processId: processId, processLabel: ''});
             });
 
             processGroupsAndLabels.push({
                 groupId: groupId,
-                groupLabel: !!group.name ? group.name : groupId,
+                groupLabel: group.name ? group.name : groupId,
                 processes: processIdAndLabels
             });
         });
@@ -232,7 +232,7 @@ export class ProcessesService {
     public findProcessGroupIdForProcessId(processId: string): string {
         const data = this.findProcessGroupForProcess(processId);
 
-        if (!!data) {
+        if (data) {
             return data.id;
         }
         return null;
@@ -252,8 +252,8 @@ export class ProcessesService {
         this.getAllProcesses().forEach((process) => {
             if (!processesFilter || processesFilter.includes(process.id)) {
                 const processGroup = this.findProcessGroupForProcess(process.id);
-                if (!!processGroup) {
-                    const processes = !!processesPerProcessGroups.get(processGroup.id)
+                if (processGroup) {
+                    const processes = processesPerProcessGroups.get(processGroup.id)
                         ? processesPerProcessGroups.get(processGroup.id)
                         : [];
                     processes.push({
@@ -281,7 +281,7 @@ export class ProcessesService {
 
     public findProcessGroupLabelForProcess(processId: string): string {
         const processGroup = this.findProcessGroupForProcess(processId);
-        return !!processGroup ? processGroup.name : 'processGroup.defaultLabel';
+        return processGroup ? processGroup.name : 'processGroup.defaultLabel';
     }
 
     private loadTypeOfStatesPerProcessAndState() {
@@ -326,7 +326,7 @@ export class ProcessesService {
 
         this.queryProcess(lightCard.process, lightCard.processVersion).subscribe((process) => {
             const state = process.states.get(lightCard.state);
-            if (!!state.consideredAcknowledgedForUserWhen)
+            if (state.consideredAcknowledgedForUserWhen)
                 consideredAcknowledgedForUserWhen = state.consideredAcknowledgedForUserWhen;
         });
         return consideredAcknowledgedForUserWhen;
@@ -337,7 +337,7 @@ export class ProcessesService {
 
         this.queryProcess(card.process, card.processVersion).subscribe((process) => {
             const state = process.states.get(card.state);
-            if (!!state.showAcknowledgmentFooter) showAcknowledgmentFooter = state.showAcknowledgmentFooter;
+            if (state.showAcknowledgmentFooter) showAcknowledgmentFooter = state.showAcknowledgmentFooter;
         });
         return showAcknowledgmentFooter;
     }

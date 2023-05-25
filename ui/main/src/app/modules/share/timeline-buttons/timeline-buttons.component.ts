@@ -109,14 +109,14 @@ export class TimelineButtonsComponent implements OnInit, OnDestroy {
 
         const savedDomain = this.userPreferences.getPreference('opfab.timeLine.domain');
 
-        if (!!savedDomain) {
+        if (savedDomain) {
             const savedConf = this.buttonList.find((b) => b.domainId === savedDomain);
-            if (!!savedConf) {
+            if (savedConf) {
                 initialGraphConf = savedConf;
             }
         }
 
-        if (!!initialGraphConf) {
+        if (initialGraphConf) {
             this.changeGraphConf(initialGraphConf);
         }
     }

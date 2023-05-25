@@ -1,4 +1,4 @@
-/* Copyright (c) 2021, RTE (http://www.rte-france.com)
+/* Copyright (c) 2021-2023, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -36,7 +36,7 @@ export class JsonToArray {
 
     private processRule(rule, innerRule: boolean) {
         if (!rule.jsonField) return;
-        if (!!rule.fields) {
+        if (rule.fields) {
             this.fieldDescriptions.push(new FieldDescription(rule.jsonField, rule.type, -1, true));
             if (rule.processOnlyIfPreviousArraysAreEmpty)
                 this.fieldsProcessOnlyIfPreviousArraysAreEmpty.add(rule.jsonField);
@@ -76,8 +76,8 @@ export class JsonToArray {
     private addFieldsToAppend(jsonObject, linesToAppend) {
         this.fieldDescriptions.forEach((fieldDescription) => {
             let fieldValue = _.get(jsonObject, fieldDescription.jsonField);
-            if (!!fieldValue) {
-                if (!!fieldDescription.type && fieldDescription.type === 'EPOCHDATE' && !isNaN(fieldValue))
+            if (fieldValue) {
+                if (fieldDescription.type && fieldDescription.type === 'EPOCHDATE' && !isNaN(fieldValue))
                     fieldValue = new Date(fieldValue);
                 linesToAppend[0][fieldDescription.columnNumber] = fieldValue;
             }
@@ -91,7 +91,7 @@ export class JsonToArray {
         for (let [jsonField, nestedJsonToArray] of this.nestedJsonToArrays) {
             const nestedJsonObjects = _.get(jsonObject, jsonField);
             if (
-                !!nestedJsonObjects &&
+                nestedJsonObjects &&
                 (noArrayProcessedYet || !this.fieldsProcessOnlyIfPreviousArraysAreEmpty.has(jsonField))
             ) {
                 nestedJsonObjects.forEach((nestedObject) => {

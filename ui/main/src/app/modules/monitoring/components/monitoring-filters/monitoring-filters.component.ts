@@ -141,7 +141,7 @@ export class MonitoringFiltersComponent implements OnInit {
     private getSelectedProcessesForQuery(): Array<string> {
         const selectedProcessGroups = this.getSelectedProcessGroups();
         let selectedProcesses = this.getSelectedProcesses();
-        if (!!selectedProcessGroups && selectedProcessGroups.length > 0 && selectedProcesses.length === 0)
+        if (selectedProcessGroups?.length > 0 && selectedProcesses.length === 0)
             selectedProcesses = this.monitoringProcessList.getProcessesIdForProcessGroups(selectedProcessGroups);
         return selectedProcesses;
     }

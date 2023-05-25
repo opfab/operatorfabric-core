@@ -95,8 +95,8 @@ export class LoggingComponent implements OnDestroy, OnInit, AfterViewInit {
         private modalService: NgbModal
     ) {
         processesService.getAllProcesses().forEach((process) => {
-            if (!!process.uiVisibility && !!process.uiVisibility.logging) {
-                const itemName = !!process.name ? process.name : process.id;
+            if (process.uiVisibility?.logging) {
+                const itemName = process.name ? process.name : process.id;
                 this.processNames.set(process.id, itemName);
                 for (let key of process.states.keys()) {
                     this.processStateDescription.set(process.id + '.' + key, process.states.get(key).description);
@@ -194,7 +194,7 @@ export class LoggingComponent implements OnDestroy, OnInit, AfterViewInit {
         const sender = isThirdPartyPublisher ? card.publisher : this.entitiesService.getEntityName(card.publisher);
 
         let representative = '';
-        if (!!card.representativeType && !!card.representative) {
+        if (card.representativeType && card.representative) {
             const isThirdPartyRepresentative = card.representativeType === 'EXTERNAL';
             representative = isThirdPartyRepresentative
                 ? card.representative
@@ -309,7 +309,7 @@ export class LoggingComponent implements OnDestroy, OnInit, AfterViewInit {
     }
 
     ngOnDestroy() {
-        if (!!this.modalRef) {
+        if (this.modalRef) {
             this.modalRef.close();
         }
         this.unsubscribe$.next();

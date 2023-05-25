@@ -25,11 +25,11 @@ export class MenuLinkComponent {
 
     LinkType = MenuEntryLinkTypeEnum;
 
-    public hasLinkType(type: MenuEntryLinkTypeEnum) {
+    public hasLinkType(type: MenuEntryLinkTypeEnum) : boolean {
         return !!this.menuEntry.customMenuId && this.menuEntry.linkType === type;
     }
 
-    public isLinkACoreMenu() {
+    public isLinkACoreMenu() : boolean {
         return !!this.menuEntry.opfabCoreMenuId;
     }
 

@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2022, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2023, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -13,7 +13,7 @@ import moment from 'moment-timezone';
 const MAX_MILLISECONDS_FOR_REMINDING_AFTER_EVENT_STARTS = 60000 * 15; // 15 minutes
 
 export function getNextTimeForRepeating(card: Card, startingDate?: number): number {
-    if (!!card.timeSpans) {
+    if (card.timeSpans) {
         let nextTime = -1;
         card.timeSpans.forEach((timeSpan) => {
             const timeForRepeating = getNextTimeForRepeatingFromTimeSpan(timeSpan, startingDate);
@@ -27,7 +27,7 @@ export function getNextTimeForRepeating(card: Card, startingDate?: number): numb
 }
 
 function getNextTimeForRepeatingFromTimeSpan(timeSpan: TimeSpan, startingDate?: number): number {
-    if (!!timeSpan) {
+    if (timeSpan) {
         if (!startingDate) {
             startingDate = new Date().valueOf();
         }
@@ -97,7 +97,7 @@ function getNextDateTimeFromRecurrence(StartingDate: number, recurrence: Recurre
 }
 
 function isRecurrenceObjectInValidFormat(recurrence: Recurrence): boolean {
-    if (!! recurrence.months) {
+    if (recurrence.months) {
         for (const month of recurrence.months) {
             if (month < 0 || month > 11) {
                 return false;
@@ -105,7 +105,7 @@ function isRecurrenceObjectInValidFormat(recurrence: Recurrence): boolean {
         }
     }
 
-    if (!! recurrence.daysOfWeek) {
+    if (recurrence.daysOfWeek) {
         for (const dayOfWeek of recurrence.daysOfWeek) {
             if (dayOfWeek < 1 || dayOfWeek > 7) {
                 return false;
@@ -137,5 +137,5 @@ function isFirstHoursMinutesInferiorOrEqualToSecondOne(hm1: HourAndMinutes, hm2:
 }
 
 function isDaysOfWeekFieldSet(recurrence: Recurrence): boolean {
-    return !!recurrence.daysOfWeek && recurrence.daysOfWeek.length > 0;
+    return recurrence.daysOfWeek?.length > 0;
 }

@@ -44,7 +44,7 @@ export class FilterService {
             this.newBusinessDateFilter.next(this.businessDateFilter);
         } else {
             const filterToUpdate = this.filters[filterType];
-            if (!!filterToUpdate) {
+            if (filterToUpdate) {
                 filterToUpdate.active = active;
                 filterToUpdate.status = status;
             }
@@ -108,15 +108,15 @@ export class FilterService {
     private initBusinessDateFilter() {
         return new Filter(
             (card: LightCard, status) => {
-                if (!!status.start && !!status.end) {
+                if (status.start && status.end) {
                     return this.checkCardVisibilityinRange(card, status.start, status.end);
-                } else if (!!status.start) {
+                } else if (status.start) {
                     return (
                         card.publishDate >= status.start ||
                         (!card.endDate && card.startDate >= status.start) ||
-                        (!!card.endDate && status.start <= card.endDate)
+                        (card.endDate && status.start <= card.endDate)
                     );
-                } else if (!!status.end) {
+                } else if (status.end) {
                     return card.publishDate <= status.end || card.startDate <= status.end;
                 }
                 console.warn(new Date().toISOString(), 'Unexpected business date filter situation');
@@ -147,11 +147,11 @@ export class FilterService {
     private initPublishDateFilter(): Filter {
         return new Filter(
             (card: LightCard, status) => {
-                if (!!status.start && !!status.end) {
+                if (status.start && status.end) {
                     return status.start <= card.publishDate && card.publishDate <= status.end;
-                } else if (!!status.start) {
+                } else if (status.start) {
                     return status.start <= card.publishDate;
-                } else if (!!status.end) {
+                } else if (status.end) {
                     return card.publishDate <= status.end;
                 }
                 return true;

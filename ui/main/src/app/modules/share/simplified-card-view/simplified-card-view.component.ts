@@ -44,7 +44,7 @@ export class SimplifiedCardViewComponent implements OnInit, OnDestroy {
         private entitiesService: EntitiesService
     ) {
         const userWithPerimeters = this.userService.getCurrentUserWithPerimeters();
-        if (!!userWithPerimeters) this.user = userWithPerimeters.userData;
+        if (userWithPerimeters) this.user = userWithPerimeters.userData;
     }
 
     ngOnInit() {
@@ -75,7 +75,7 @@ export class SimplifiedCardViewComponent implements OnInit, OnDestroy {
             .pipe(takeUntil(this.unsubscribe$))
             .subscribe({
                 next: (businessconfig) => {
-                    if (!!businessconfig) {
+                    if (businessconfig) {
                         this.cardState = businessconfig.states.get((this.card.state));
                         this.isLoading = false;
                     }
@@ -91,7 +91,7 @@ export class SimplifiedCardViewComponent implements OnInit, OnDestroy {
     public beforeTemplateRendering() {
         templateGateway.userMemberOfAnEntityRequiredToRespond =
             this.userMemberOfAnEntityRequiredToRespondAndAllowedToSendCards;
-        templateGateway.childCards = !!this.childCards ? this.childCards : [];
+        templateGateway.childCards = this.childCards ? this.childCards : [];
     }
 
     public afterTemplateRendering() {

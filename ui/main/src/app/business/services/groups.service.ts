@@ -79,7 +79,7 @@ export class GroupsService extends CachedCrudService {
             takeUntil(this.ngUnsubscribe$),
             tap({
                 next: (groups) => {
-                    if (!!groups) {
+                    if (groups) {
                         this._groups = groups;
                         console.log(new Date().toISOString(), 'List of groups loaded');
                     }

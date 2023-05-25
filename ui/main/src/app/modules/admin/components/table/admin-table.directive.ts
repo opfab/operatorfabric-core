@@ -180,11 +180,10 @@ export abstract class AdminTableDirective implements OnInit, OnDestroy {
                 type: field.type,
                 headerName: i18nPrefixForHeader + field.name,
                 field: field.name
-                
             };
-            if (!!field.flex) columnDef['flex'] = field.flex;
-            if (!!field.cellRendererName) columnDef['cellRenderer'] = field.cellRendererName;
-            if (!!field.valueFormatter) {
+            if (field.flex) columnDef['flex'] = field.flex;
+            if (field.cellRendererName) columnDef['cellRenderer'] = field.cellRendererName;
+            if (field.valueFormatter) {
                 columnDef['valueFormatter'] = field.valueFormatter;
             }
             columnDefs[index] = columnDef;

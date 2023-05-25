@@ -89,7 +89,7 @@ export class CardResponseComponent implements OnChanges, OnInit {
         private alertMessageService: AlertMessageService
     ) {
         const userWithPerimeters = this.userService.getCurrentUserWithPerimeters();
-        if (!!userWithPerimeters) this.user = userWithPerimeters.userData;
+        if (userWithPerimeters) this.user = userWithPerimeters.userData;
     }
 
     ngOnInit() {
@@ -107,17 +107,17 @@ export class CardResponseComponent implements OnChanges, OnInit {
         );
         this.isReadOnlyUser = this.userService.hasCurrentUserAnyPermission([PermissionEnum.READONLY]);
 
-        this.showButton = !!this.cardState.response && !this.isReadOnlyUser;
+        this.showButton = this.cardState.response && !this.isReadOnlyUser;
         this.userEntityIdToUseForResponse = this.userEntityIdsPossibleForResponse[0];
         this.setButtonLabels();
         this.computeEntityOptionsDropdownListForResponse();
     }
 
     private setButtonLabels() {
-        this.btnValidateLabel = !!this.cardState.validateAnswerButtonLabel
+        this.btnValidateLabel = this.cardState.validateAnswerButtonLabel
             ? this.cardState.validateAnswerButtonLabel
             : 'response.btnValidate';
-        this.btnUnlockLabel = !!this.cardState.modifyAnswerButtonLabel
+        this.btnUnlockLabel = this.cardState.modifyAnswerButtonLabel
             ? this.cardState.modifyAnswerButtonLabel
             : 'response.btnUnlock';
     }
@@ -130,7 +130,7 @@ export class CardResponseComponent implements OnChanges, OnInit {
 
     private computeEntityOptionsDropdownListForResponse(): void {
         this.userEntityOptionsDropdownList = [];
-        if (!!this.userEntityIdsPossibleForResponse)
+        if (this.userEntityIdsPossibleForResponse)
             this.userEntityIdsPossibleForResponse.forEach((entityId) => {
                 const entity = this.entitiesService.getEntities().find((e) => e.id === entityId);
                 this.userEntityOptionsDropdownList.push({value: entity.id, label: entity.name});

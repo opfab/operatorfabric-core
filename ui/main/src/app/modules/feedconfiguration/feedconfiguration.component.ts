@@ -157,7 +157,7 @@ export class FeedconfigurationComponent implements OnInit, AfterViewInit {
     private makeProcessesWithoutGroup() {
         this.processesDefinition.forEach((process) => {
             if (!this.findInProcessGroups(process.id)) {
-                let processLabel = !!process.name ? process.name : process.id;
+                let processLabel = process.name ? process.name : process.id;
 
                 this.translateService.get(processLabel).subscribe((translate) => {
                     processLabel = translate;
@@ -169,18 +169,18 @@ export class FeedconfigurationComponent implements OnInit, AfterViewInit {
     }
 
     private addCheckboxesInFormArray() {
-        const processesStatesNotNotified = !!this.currentUserWithPerimeters.processesStatesNotNotified
+        const processesStatesNotNotified = this.currentUserWithPerimeters.processesStatesNotNotified
             ? this.currentUserWithPerimeters.processesStatesNotNotified
             : null;
 
         this.preparedListOfProcessesStates.forEach((processState) => {
-            const notNotifiedStatesForThisProcess = !!processesStatesNotNotified
+            const notNotifiedStatesForThisProcess = processesStatesNotNotified
             ? processesStatesNotNotified.get(processState.processId)
             : null;
 
             let isChecked = true;
 
-            if (!!notNotifiedStatesForThisProcess && notNotifiedStatesForThisProcess.includes(processState.stateId)) {
+            if (notNotifiedStatesForThisProcess?.includes(processState.stateId)) {
                 isChecked = false;
                 if (
                     this.checkStateUnsubscribedButWithFilteringNotificationNotAllowed(
@@ -224,17 +224,17 @@ export class FeedconfigurationComponent implements OnInit, AfterViewInit {
                 filteringNotificationAllowed: boolean;
             }[] = [];
 
-            const processLabel = !!process.name ? process.name : process.id;
+            const processLabel = process.name ? process.name : process.id;
 
             for (const stateId of process.states.keys()) {
                 const state = process.states.get(stateId);
 
                 if (this.checkIfStateMustBeDisplayed(state, process, stateId)) {
-                    const stateLabel = !!state.name ? state.name : stateId;
+                    const stateLabel = state.name ? state.name : stateId;
 
                     const filteringNotificationAllowed =
                         this.userService.isFilteringNotificationAllowedForProcessAndState(process.id, stateId);
-                    if (!!filteringNotificationAllowed) this.setProcessAndProcessGroupCheckboxesEnabled(process.id);
+                    if (filteringNotificationAllowed) this.setProcessAndProcessGroupCheckboxesEnabled(process.id);
 
                     states.push({stateId, stateLabel, stateControlIndex, filteringNotificationAllowed});
                     this.preparedListOfProcessesStates.push({processId: process.id, stateId});
@@ -252,7 +252,7 @@ export class FeedconfigurationComponent implements OnInit, AfterViewInit {
     private setProcessAndProcessGroupCheckboxesEnabled(processId: string) {
         this.isAllStatesCheckboxDisabledPerProcessId.set(processId, false);
         const processGroupId = this.processesService.findProcessGroupIdForProcessId(processId);
-        if (!!processGroupId) {
+        if (processGroupId) {
             this.isAllProcessesCheckboxDisabledPerProcessGroup.set(processGroupId, false);
         }
     }
@@ -270,13 +270,13 @@ export class FeedconfigurationComponent implements OnInit, AfterViewInit {
         const toRemove = [];
         this.processGroupsAndLabels.forEach((processGroupData) => {
             processGroupData.processes = processGroupData.processes.filter(
-                (processData) => !!this.processesStatesLabels.get(processData.processId)
+                (processData) => this.processesStatesLabels.has(processData.processId)
             );
             if (processGroupData.processes.length === 0) toRemove.push(processGroupData.groupId);
         });
         this.processGroupsAndLabels = this.processGroupsAndLabels.filter((group) => !toRemove.includes(group.groupId));
         this.processesWithoutGroup = this.processesWithoutGroup.filter(
-            (processData) => !!this.processesStatesLabels.get(processData.idProcess)
+            (processData) => this.processesStatesLabels.has(processData.idProcess)
         );
     }
 
@@ -316,7 +316,7 @@ export class FeedconfigurationComponent implements OnInit, AfterViewInit {
     }
 
     initIsAllProcessesCheckboxDisabledPerProcessGroup() {
-        if (!!this.processGroupsAndLabels) {
+        if (this.processGroupsAndLabels) {
             this.processGroupsAndLabels.forEach((processGroupAndLabel) => {
                 this.isAllProcessesCheckboxDisabledPerProcessGroup.set(processGroupAndLabel.groupId, true);
             });
@@ -347,7 +347,7 @@ export class FeedconfigurationComponent implements OnInit, AfterViewInit {
                 const currentStateId = this.preparedListOfProcessesStates[i].stateId;
 
                 const statesNotNotifiedUpdate = processesStatesNotNotifiedUpdate.get(currentProcessId);
-                if (!!statesNotNotifiedUpdate)
+                if (statesNotNotifiedUpdate)
                     statesNotNotifiedUpdate.push(this.preparedListOfProcessesStates[i].stateId);
                 else processesStatesNotNotifiedUpdate.set(currentProcessId, [currentStateId]);
             }
@@ -363,7 +363,7 @@ export class FeedconfigurationComponent implements OnInit, AfterViewInit {
                     this.saveSettingsInProgress = false;
                     this.messageAfterSavingSettings = '';
                     const msg = resp.message;
-                    if (!!msg && msg.includes('unable')) {
+                    if (msg?.includes('unable')) {
                         console.log('Impossible to save settings, error message from service : ', msg);
                         this.messageAfterSavingSettings = 'shared.error.impossibleToSaveSettings';
                         this.displaySendResultError = true;

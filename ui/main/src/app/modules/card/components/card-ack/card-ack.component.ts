@@ -67,7 +67,7 @@ export class CardAckComponent implements OnInit, OnChanges, OnDestroy {
         private logger: OpfabLoggerService
     ) {
         const userWithPerimeters = this.userService.getCurrentUserWithPerimeters();
-        if (!!userWithPerimeters) this.user = userWithPerimeters.userData;
+        if (userWithPerimeters) this.user = userWithPerimeters.userData;
     }
 
     ngOnInit()  {
@@ -84,8 +84,8 @@ export class CardAckComponent implements OnInit, OnChanges, OnDestroy {
 
     private addAckFromSubscription(entitiesAcksToAdd: string[]) {
         let lightcard = fromCardToLightCard(this.card);
-        if (!!lightcard && !!entitiesAcksToAdd) {
-            const newentitiesAcks = !!lightcard.entitiesAcks
+        if (lightcard && entitiesAcksToAdd) {
+            const newentitiesAcks = lightcard.entitiesAcks
                 ? [...new Set([...lightcard.entitiesAcks, ...entitiesAcksToAdd])]
                 : entitiesAcksToAdd;
            lightcard = {...lightcard, entitiesAcks: newentitiesAcks};

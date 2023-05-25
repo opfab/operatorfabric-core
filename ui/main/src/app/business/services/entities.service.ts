@@ -102,7 +102,7 @@ export class EntitiesService extends CachedCrudService {
             takeUntil(this.ngUnsubscribe$),
             tap({
                 next: (entities) => {
-                    if (!!entities) {
+                    if (entities) {
                         this._entities = entities;
                         this.setEntityNamesInTemplateGateway();
                         this.setEntitiesInTemplateGateway();
@@ -168,7 +168,7 @@ export class EntitiesService extends CachedCrudService {
             if (entity.entityAllowedToSendCard) {
                 allowed.add(entity);
             } else {
-                const children = this._entities.filter((child) => !!child.parents && child.parents.includes(entity.id));
+                const children = this._entities.filter((child) => child.parents?.includes(entity.id));
                 const childrenAllowed = this.resolveEntitiesAllowedToSendCards(children);
                 childrenAllowed.forEach((c) => allowed.add(c));
             }
@@ -204,7 +204,7 @@ export class EntitiesService extends CachedCrudService {
     public resolveChildEntitiesByLevel(parentId: string, level: number): Entity[] {
         const resolved = new Set<Entity>();
         const parent = this._entities.find((e) => e.id === parentId);
-        if (!!parent) {
+        if (parent) {
             if (level === 0) {
                 resolved.add(parent);
             } else if (level > 0) {
@@ -216,7 +216,7 @@ export class EntitiesService extends CachedCrudService {
 
     private findChildEntitiesByLevel(parent: Entity, currentLevel: number, level: number): Entity[] {
         const resolved = new Set<Entity>();
-        const children = this._entities.filter((child) => !!child.parents &&  child.parents.includes(parent.id));
+        const children = this._entities.filter((child) => child.parents?.includes(parent.id));
 
         if (currentLevel === level) {
             children.forEach((c) => resolved.add(c));
@@ -232,7 +232,7 @@ export class EntitiesService extends CachedCrudService {
     public resolveChildEntities(parentId: string): Entity[] {
         const resolved = new Set<Entity>();
         const parent = this._entities.find((e) => e.id === parentId);
-        if (!!parent) {
+        if (parent) {
             this.findChildEntities(parent).forEach((cc) => resolved.add(cc));
         }
         return Array.from(resolved);
@@ -240,7 +240,7 @@ export class EntitiesService extends CachedCrudService {
 
     private findChildEntities(parent: Entity): Entity[] {
         const resolved = new Set<Entity>();
-        const children = this._entities.filter((child) => !!child.parents && child.parents.includes(parent.id));
+        const children = this._entities.filter((child) => child.parents?.includes(parent.id));
         children.forEach((c) => {
             resolved.add(c);
             this.findChildEntities(c).forEach((cc) => resolved.add(cc));

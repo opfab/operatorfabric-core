@@ -21,7 +21,7 @@ export class TemplateCssService {
     private styleContentCache: Map<string,string> = new Map();
 
     constructor(private templatecssServer: TemplateCssServer,
-            private logger: OpfabLoggerService, 
+            private logger: OpfabLoggerService
         ) {}
 
 
@@ -44,7 +44,7 @@ export class TemplateCssService {
         styleFileNames.forEach(styleFileName =>  {
             const cacheKey = this.getCacheKey(process, version, styleFileName);
             const styleContent = this.styleContentCache.get(cacheKey);
-            if (!!cacheKey) stylesContent += '\n' + styleContent;
+            if (cacheKey) stylesContent += '\n' + styleContent;
 
         });
         return stylesContent;
@@ -60,7 +60,7 @@ export class TemplateCssService {
                 } else {
                     this.logger.error(`Impossible to load ${styleFileName} from process ${process} version ${version}`);
                     return '';
-                }            
+                }
         }));
     }
 

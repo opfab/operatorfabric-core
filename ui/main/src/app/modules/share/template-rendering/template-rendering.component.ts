@@ -90,7 +90,7 @@ export class TemplateRenderingComponent implements OnChanges, OnInit, OnDestroy,
     }
 
     ngOnChanges(changes: SimpleChanges) {
-        if (!!changes.screenSize && this.templateLoaded) templateGateway.setScreenSize(this.screenSize);
+        if (changes.screenSize && this.templateLoaded) templateGateway.setScreenSize(this.screenSize);
         else this.render();
     }
 
@@ -128,7 +128,7 @@ export class TemplateRenderingComponent implements OnChanges, OnInit, OnDestroy,
     }
 
     private computeAndRenderTemplate() {
-        if (!!this.cardState.templateName) {
+        if (this.cardState.templateName) {
             this.isLoadingSpinnerToDisplay = true;
             if (this.functionToCallBeforeRendering) this.functionToCallBeforeRendering.call(this.parentComponent);
             templateGateway.displayContext = this.displayContext;
@@ -208,11 +208,11 @@ export class TemplateRenderingComponent implements OnChanges, OnInit, OnDestroy,
 
     private computeRenderingHeight() {
         const htmlElementForCardRendering = document.getElementById('opfab-div-card-template');
-        if (!!htmlElementForCardRendering) {
+        if (htmlElementForCardRendering) {
             const renderingRect = htmlElementForCardRendering.getBoundingClientRect();
             let renderingHeight = window.innerHeight - renderingRect.top - this.fixedBottomOffset;
 
-            if (!!this.cardFooterHtmlElementId) {
+            if (this.cardFooterHtmlElementId) {
                 const cardFooterElement = document.getElementById(this.cardFooterHtmlElementId);
                 if (cardFooterElement) {
                     renderingHeight -= cardFooterElement.scrollHeight;

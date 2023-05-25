@@ -82,16 +82,16 @@ export class NavbarComponent implements OnInit {
         this.businessconfigMenus = this.menuService.getCurrentUserCustomMenus(this.configService.getMenus());
 
         const logo = this.configService.getConfigValue('logo.base64');
-        if (!!logo) {
+        if (logo) {
             this.customLogo = `data:image/svg+xml;base64,${logo}`;
         }
         const logo_height = this.configService.getConfigValue('logo.height');
-        if (!!logo_height) {
+        if (logo_height) {
             this.height = logo_height;
         }
 
         const logo_width = this.configService.getConfigValue('logo.width');
-        if (!!logo_width) {
+        if (logo_width) {
             this.width = logo_width;
         }
 
@@ -123,7 +123,7 @@ export class NavbarComponent implements OnInit {
 
         this.environmentName = this.configService.getConfigValue('environmentName');
         this.environmentColor = this.configService.getConfigValue('environmentColor', 'blue');
-        if (!!this.environmentName) this.displayEnvironmentName = true;
+        if (this.environmentName) this.displayEnvironmentName = true;
 
         this.styleMode = this.globalStyleService.getStyleChange();
     }

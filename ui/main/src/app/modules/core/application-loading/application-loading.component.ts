@@ -100,7 +100,7 @@ export class ApplicationLoadingComponent implements OnInit {
         this.configService.loadWebUIConfiguration().subscribe({
             //This configuration needs to be loaded first as it defines the authentication mode
             next: (config) => {
-                if (!!config) {
+                if (config) {
                     this.logger.info(`Configuration loaded (web-ui.json)`);
                     this.setTitleInBrowser();
                     this.loadTranslation(config);
@@ -119,7 +119,7 @@ export class ApplicationLoadingComponent implements OnInit {
     private loadEnvironmentName() {
         this.environmentName = this.configService.getConfigValue('environmentName');
         this.environmentColor = this.configService.getConfigValue('environmentColor', 'blue');
-        if (!!this.environmentName) {
+        if (this.environmentName) {
             this.displayEnvironmentName = true;
         }
     }
@@ -130,7 +130,7 @@ export class ApplicationLoadingComponent implements OnInit {
     }
 
     private loadTranslation(config) {
-        if (!!config.i18n.supported.locales) {
+        if (config.i18n.supported.locales) {
             this.i18nService.loadGlobalTranslations(config.i18n.supported.locales).subscribe(() => {
                 this.logger.info(
                     'opfab translation loaded for locales: ' + this.translateService.getLangs(),
