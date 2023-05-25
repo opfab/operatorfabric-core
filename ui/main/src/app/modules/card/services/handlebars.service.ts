@@ -47,6 +47,7 @@ export class HandlebarsService {
         HandlebarsService.registerReplace();
         HandlebarsService.registerPadStart();
         HandlebarsService.registerObjectContainsKey();
+        HandlebarsService.registerFindObjectByProperty();
         this.configService.getConfigValueAsObservable('settings.locale').subscribe((locale) => this.changeLocale(locale));
     }
 
@@ -248,6 +249,12 @@ export class HandlebarsService {
     private static registerConditionalAttribute() {
         Handlebars.registerHelper('conditionalAttribute', function (condition, attribute) {
             return condition ? attribute : '';
+        });
+    }
+
+    private static registerFindObjectByProperty() {
+        Handlebars.registerHelper('findObjectByProperty', function (list, propertyName, propertyValue) {
+            return list.find(obj => obj[propertyName] === propertyValue);
         });
     }
 
