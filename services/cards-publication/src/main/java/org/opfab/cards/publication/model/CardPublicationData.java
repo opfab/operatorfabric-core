@@ -207,6 +207,8 @@ public class CardPublicationData implements Card {
                 .wktGeometry(this.wktGeometry)
                 .wktProjection(this.wktProjection)
                 .secondsBeforeTimeSpanForReminder(this.secondsBeforeTimeSpanForReminder)
+                .userRecipients(this.getUserRecipients())
+                .groupRecipients(this.getGroupRecipients())
                 .entityRecipients(this.getEntityRecipients())
                 .entityRecipientsForInformation(this.getEntityRecipientsForInformation());
 
