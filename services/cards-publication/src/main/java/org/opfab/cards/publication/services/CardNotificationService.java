@@ -17,6 +17,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.opfab.cards.model.CardOperationTypeEnum;
 import org.opfab.cards.publication.model.CardOperationData;
 import org.opfab.cards.publication.model.CardPublicationData;
+import org.opfab.cards.publication.model.LightCard;
 import org.opfab.utilities.eventbus.EventBus;
 
 import java.util.*;
@@ -43,20 +44,6 @@ public class CardNotificationService {
         builderEncapsulator.builder().card(card.toLightCard());
         builderEncapsulator.builder().cardId(card.getId());
         CardOperationData cardOperation = builderEncapsulator.builder().build();
-        List<String> listOfGroupRecipients = new ArrayList<>();
-        if (card.getGroupRecipients() != null)
-            card.getGroupRecipients().forEach(listOfGroupRecipients::add);
-        cardOperation.setGroupRecipientsIds(listOfGroupRecipients);
-
-        List<String> listOfEntityRecipients = new ArrayList<>();
-        if (card.getEntityRecipients() != null)
-            card.getEntityRecipients().forEach(listOfEntityRecipients::add);
-        cardOperation.setEntityRecipientsIds(listOfEntityRecipients);
-
-        List<String> listOfUserRecipients = new ArrayList<>();
-        if (card.getUserRecipients() != null)
-            card.getUserRecipients().forEach(listOfUserRecipients::add);
-        cardOperation.setUserRecipientsIds(listOfUserRecipients);
 
         pushCardInEventBus(cardOperation);
     }
@@ -64,13 +51,15 @@ public class CardNotificationService {
     private void pushCardInEventBus(CardOperationData cardOperation) {
         try {
             eventBus.sendEvent("card",mapper.writeValueAsString(cardOperation));
-            log.debug("Card operation sent to eventbus, type={}, ids={}, cards={}, groupRecipientsIds={}, entityRecipientsIds={}, userRecipientsIds={}"
+
+            LightCard card = cardOperation.getCard();
+            log.debug("Card operation sent to eventbus, type={}, ids={}, cards={}, groupRecipients={}, entityRecipients={}, userRecipients={}"
                     , cardOperation.getType()
                     , cardOperation.getCardId()
-                    , (cardOperation.getCard() != null ? cardOperation.getCard().toString() : "")
-                    , cardOperation.getGroupRecipientsIds().toString()
-                    , cardOperation.getEntityRecipientsIds().toString()
-                    , cardOperation.getUserRecipientsIds().toString());
+                    , (card != null ? card.toString() : "")
+                    , (card != null && card.getGroupRecipients() != null) ? card.getGroupRecipients().toString() : ""
+                    , (card != null && card.getEntityRecipients() != null) ? card.getEntityRecipients().toString() : ""
+                    , (card != null && card.getUserRecipients() != null) ? card.getUserRecipients().toString() : "");
         } catch (JsonProcessingException e) {
             log.error("Unable to linearize card to json on event bus");
         }
