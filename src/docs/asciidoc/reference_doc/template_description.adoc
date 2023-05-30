@@ -482,7 +482,16 @@ Verify if a JavaScript object contains the specified key. It returns true if it 
 {{objectContainsKey card.data.myObject 'myKey' }}
 ....
 
+[[findObjectByProperty]]
+=== findObjectByProperty
 
+Searching directly an object in a list using the value of a property. Returns the object if it contains it, null otherwise.
+
+....
+{{#with (findObjectByProperty card.data.myObjectsList propertyName propertyValue)}}
+  <p>Property value of found object: {{this.propertyName}}</p>
+{{/with}}
+....
 
 == Naming convention  
 
