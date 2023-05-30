@@ -73,7 +73,14 @@ export class CardListComponent implements AfterViewChecked, OnInit {
 
         this.sortService.setSortBy(this.defaultSorting);
 
-        this.defaultAcknowledgmentFilter = this.configService.getConfigValue('feed.defaultAcknowledgmentFilter', false);
+        this.defaultAcknowledgmentFilter = this.configService.getConfigValue('feed.defaultAcknowledgmentFilter', 'notack');
+        if (
+            this.defaultAcknowledgmentFilter !== 'ack' &&
+            this.defaultAcknowledgmentFilter !== 'notack' &&
+            this.defaultAcknowledgmentFilter !== 'all'
+        )
+            this.defaultAcknowledgmentFilter = 'notack';
+
         this.hideTimerTags = this.configService.getConfigValue('feed.card.hideTimeFilter', false);
         this.hideResponseFilter = this.configService.getConfigValue('feed.card.hideResponseFilter', false);
         this.hideApplyFiltersToTimeLineChoice = this.configService.getConfigValue(
