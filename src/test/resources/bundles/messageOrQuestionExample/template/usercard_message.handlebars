@@ -1,4 +1,3 @@
-
 <!-- Copyright (c) 2020-2023, RTE (http://www.rte-france.com)              -->
 <!-- See AUTHORS.txt                                                       -->
 <!-- This Source Code Form is subject to the terms of the Mozilla Public   -->
@@ -7,52 +6,10 @@
 <!-- SPDX-License-Identifier: MPL-2.0                                      -->
 <!-- This file is part of the OperatorFabric project.                      -->
 
-
-        <div class="opfab-textarea">
-            <label> MESSAGE </label>
-            <textarea id="message" name="message" placeholder="Write something.."
-                style="width:100%">{{card.data.message}}</textarea>
-        </div>
-
-
-<script>
-    opfab.currentUserCard.registerFunctionToGetSpecificCardInformation(() => {
-        const message = document.getElementById('message').value;
-        const card = {
-        summary : {key : "message.summary"},
-		title : {key : "message.title"},
-        data : {message: message},
-        externalRecipients : ["externalRecipient1", "externalRecipient2"]
-        };
-        if (message.length<1) return { valid:false , errorMsg:'You must provide a message'}
-        return {
-            valid: true,
-            card: card
-        };
-
-    });
-
-    // keep deprecated method for cypress test only
-    usercardTemplateGateway.setDropdownEntityRecipientList([
-            {"id": "ENTITY_FR", "levels": [0,1]},
-            {"id": "ENTITY_IT"},
-            {"id": "IT_SUPERVISOR_ENTITY"}
-        ]);
-    // keep deprecated method for cypress test only
-    usercardTemplateGateway.setInitialSelectedRecipients([
-            "ENTITY1_FR",
-            "ENTITY2_FR",
-            "ENTITY3_FR"
-        ]);
-
-    // keep deprecated method for cypress test only
-    usercardTemplateGateway.setDropdownEntityRecipientForInformationList([
-            {"id": "ENTITY_FR", "levels": [0,1]},
-            {"id": "IT_SUPERVISOR_ENTITY"}
-        ]);
-    // keep deprecated method for cypress test only
-    usercardTemplateGateway.setInitialSelectedRecipientsForInformation([
-            "ENTITY4_FR"
-        ]);
-
-</script>
+<opfab-message-usercard
+    entityRecipientList='[{"id": "ENTITY_FR", "levels": [0, 1]}, {"id": "ENTITY_IT"},{"id": "IT_SUPERVISOR_ENTITY"}]'
+    initialSelectedRecipients='["ENTITY1_FR", "ENTITY2_FR", "ENTITY3_FR"]'
+    entityRecipientForInformationList='[{"id": "ENTITY_FR", "levels": [0, 1]},{"id": "IT_SUPERVISOR_ENTITY"}]'
+    initialSelectedRecipientsForInformation='["ENTITY4_FR"]'
+    externalRecipients='["externalRecipient1", "externalRecipient2"]'>
+</opfab-message-usercard>

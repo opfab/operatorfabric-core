@@ -584,5 +584,25 @@
     "notFound" : "Bron niet gevonden",
     "notAllowed" : "Actie niet toegestaan",
     "pageNotAllowed" : "Je mag deze pagina niet bekijken"
-  } 
+  } ,
+  "buildInTemplate" : {
+    "messageCard" : {
+      "message" : "U hebt een bericht ontvangen :"
+    },
+    "messageUserCard": {
+      "noMessageError":"U moet een bericht opgeven",
+      "textareaLabel":"BERICHT"
+    },
+    "questionCard" :{
+      "responseInputLabel" : "ANTWOORD",
+      "responsesReceivedLabel":"Ontvangen reacties :",
+      "entityColumnLabel":"Entiteit",
+      "responseColumnLabel":"Antwoord"
+    },
+    "questionUserCard": {
+      "noMessageError":"U moet een vraag opgeven",
+      "textareaLabel":"VRAAG"
+    } 
+
+  }
 }

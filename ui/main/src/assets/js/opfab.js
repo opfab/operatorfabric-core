@@ -56,54 +56,61 @@ opfab.multiSelect = {
 };
 
 opfab.utils = {
-    escapeHtml : function(htmlStr) {
-        return htmlStr.replace(/&/g, "&amp;")
-              .replace(/</g, "&lt;")
-              .replace(/>/g, "&gt;")
-              .replace(/"/g, "&quot;")
-              .replace(/'/g, "&#39;");
-     }
-}
+    escapeHtml: function (htmlStr) {
+        return htmlStr
+            .replace(/&/g, '&amp;')
+            .replace(/</g, '&lt;')
+            .replace(/>/g, '&gt;')
+            .replace(/"/g, '&quot;')
+            .replace(/'/g, '&#39;');
+    },
+
+    convertSpacesAndNewLinesInHTML: function (txt) {
+        return txt.replace(/\n/g, '<br/>').replace(/\s\s/g, '&nbsp;&nbsp;');
+    },
+
+    getTranslation: function (key, param) {}
+};
 
 opfab.businessconfig = {
-    businessData : {
-        get : function(resourceName) {}
+    businessData: {
+        get: function (resourceName) {}
     }
-}
-
+};
 
 opfab.users = {
     entities: {
-        getEntityName: function(entityId) {},
-        getEntity: function(entityId) {},
+        getEntityName: function (entityId) {},
+        getEntity: function (entityId) {},
         getAllEntities: function () {}
     }
-}
+};
 
 opfab.navigate = {
-    showCardInFeed : function(cardId) {},
-    redirectToBusinessMenu : function (menuId, menuItemId, urlExtension) {}
-}
+    showCardInFeed: function (cardId) {},
+    redirectToBusinessMenu: function (menuId, menuItemId, urlExtension) {}
+};
 
 opfab.currentCard = {
+    getCard: function() {},
     isUserAllowedToRespond: function () {},
     isUserMemberOfAnEntityRequiredToRespond: function () {},
     getEntitiesAllowedToRespond: function () {},
-    getEntityUsedForUserResponse: function() {},
-    getDisplayContext: function() {},
-    isResponseLocked: function() {},
-    getChildCards: function() {},
-    displayLoadingSpinner: function() {},
-    hideLoadingSpinner: function() {},
-    registerFunctionToGetUserResponse: function(getUserResponse) {},
+    getEntityUsedForUserResponse: function () {},
+    getDisplayContext: function () {},
+    isResponseLocked: function () {},
+    getChildCards: function () {},
+    displayLoadingSpinner: function () {},
+    hideLoadingSpinner: function () {},
+    registerFunctionToGetUserResponse: function (getUserResponse) {},
     listenToResponseLock(listener) {},
     listenToResponseUnlock(listener) {},
     listenToLttdExpired(listener) {},
     listenToStyleChange(listener) {},
     listenToScreenSize(listener) {},
-    listenToTemplateRenderingComplete(listener) {}, 
+    listenToTemplateRenderingComplete(listener) {},
     listenToChildCards(listener) {}
-}
+};
 
 opfab.currentUserCard = {
     getEditionMode: function () {},
@@ -111,20 +118,20 @@ opfab.currentUserCard = {
     getExpirationDate: function () {},
     getLttd: function () {},
     getProcessId: function () {},
-    getSelectedEntityRecipients: function() {},
-    getSelectedEntityForInformationRecipients: function() {},
+    getSelectedEntityRecipients: function () {},
+    getSelectedEntityForInformationRecipients: function () {},
     getStartDate: function () {},
     getState: function () {},
     getUserEntityChildCard: function () {},
-    listenToEntityUsedForSendingCard: function(listener) {},
-    registerFunctionToGetSpecificCardInformation: function(getSpecificCardInformation) {},
-    setDropdownEntityRecipientList: function(recipients) {},
-    setDropdownEntityRecipientForInformationList: function(recipients) {},
-    setInitialEndDate : function(endDate) {},
-    setInitialExpirationDate : function(expirationDate) {},
-    setInitialLttd : function(lttd) {},
-    setInitialSelectedRecipients : function(recipients) {},
-    setInitialSelectedRecipientsForInformation : function(recipients) {},
-    setInitialSeverity : function(initialSeverity) {},
-    setInitialStartDate : function(startDate) {}
-}
+    listenToEntityUsedForSendingCard: function (listener) {},
+    registerFunctionToGetSpecificCardInformation: function (getSpecificCardInformation) {},
+    setDropdownEntityRecipientList: function (recipients) {},
+    setDropdownEntityRecipientForInformationList: function (recipients) {},
+    setInitialEndDate: function (endDate) {},
+    setInitialExpirationDate: function (expirationDate) {},
+    setInitialLttd: function (lttd) {},
+    setInitialSelectedRecipients: function (recipients) {},
+    setInitialSelectedRecipientsForInformation: function (recipients) {},
+    setInitialSeverity: function (initialSeverity) {},
+    setInitialStartDate: function (startDate) {}
+};

@@ -758,7 +758,7 @@ describe('Acknowledgment tests', function () {
         usercard.selectProcess('Message or question');
         usercard.selectState('Message');
         cy.waitDefaultTime();
-        cy.get('#message').type('Test message for ack footer');
+        cy.get('#usercard_message_input').type('Test message for ack footer');
         usercard.previewThenSendCard();
         cy.waitDefaultTime();
 

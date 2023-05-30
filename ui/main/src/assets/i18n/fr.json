@@ -574,6 +574,7 @@
     "november": "Nov", 
     "december": "Déc",
     "week": "sem",
+
     "placeholder": "AAAA-MM-JJ"
   },
   "reloadRequired" : {
@@ -584,5 +585,25 @@
     "notFound" : "Ressource non trouvée",
     "notAllowed" : "Action non autorisée",
     "pageNotAllowed": "Vous n'êtes pas autorisé à voir cette page"
-  } 
+  },
+  "buildInTemplate" : {
+    "messageCard" : {
+      "message" : "Vous avez reçu un message :"
+    },
+    "messageUserCard": {
+      "noMessageError":"Vous devez fournir un message",
+      "textareaLabel":"MESSAGE"
+    },
+    "questionCard" :{
+      "responseInputLabel" : "REPONSE",
+      "responsesReceivedLabel":"Réponses reçues :",
+      "entityColumnLabel":"Entité",
+      "responseColumnLabel":"Réponse"
+    },
+    "questionUserCard": {
+      "noMessageError":"Vous devez fournir une question",
+      "textareaLabel":"QUESTION"
+    } 
+
+  }
 }

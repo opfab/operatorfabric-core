@@ -169,6 +169,7 @@ export class UserCardComponent implements OnInit, OnDestroy {
             }
 
             if (this.cardIdToCopy) {
+                this.opfabAPIService.currentUserCard.editionMode = 'COPY';
                 this.loadCardForCopy();
             } else {
                 this.pageLoading = false;

@@ -584,5 +584,24 @@
     "notFound" : "Resource not found",
     "notAllowed" : "Action not allowed",
     "pageNotAllowed": "You are not allowed to view this page"
-  } 
+  },
+  "buildInTemplate" : {
+    "messageCard" : {
+      "message" : "You received a message : "
+    },
+    "messageUserCard": {
+      "noMessageError":"You must provide a message",
+      "textareaLabel" :"MESSAGE"
+    },
+    "questionCard" :{
+      "responseInputLabel" : "RESPONSE",
+      "responsesReceivedLabel":"Responses received :",
+      "entityColumnLabel":"Entity",
+      "responseColumnLabel":"Response"
+    },
+    "questionUserCard": {
+      "noMessageError":"You must provide a question",
+      "textareaLabel":"QUESTION"
+    } 
+  }
 }

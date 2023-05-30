@@ -178,7 +178,8 @@ export class CardBodyComponent implements OnChanges, OnInit, OnDestroy {
     }
 
     ngOnChanges(changes: SimpleChanges): void {
-        if (changes.card || changes.cardState) {
+        if (!!changes.card || !!changes.cardState) {
+            if (changes.card) this.opfabAPIService.currentCard.card = this.card;
             if (this.cardState.response != null && this.cardState.response !== undefined) {
                 this.computeEntityIdsAllowedOrRequiredToRespondAndAllowedToSendCards();
                 this.computeUserEntityIdsPossibleForResponse();

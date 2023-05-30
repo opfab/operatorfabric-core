@@ -1,67 +1,68 @@
 {
-  "id": "messageOrQuestionExample",
-  "name": "Message or question",
-  "version": "1",
-  "uiVisibility": {
-    "monitoring": true,
-    "logging": true,
-    "calendar": true
-  },
-  "states": {
-    "messageState": {
-      "name": "Message",
-      "description": "Message",
-      "color": "#CC9900",
-      "userCard" : {
-        "template" : "usercard_message",
-        "startDateVisible": false,
-        "endDateVisible" : false,
-        "recipientForInformationVisible" : true
-      },
-      "templateName": "message",
-      "styles": [],
-      "acknowledgmentAllowed": "Always",
-      "showAcknowledgmentFooter" : "OnlyForEmittingEntity",
-      "type" : "INPROGRESS",
-      "consideredAcknowledgedForUserWhen" : "AllEntitiesOfUserHaveAcknowledged"
+    "id": "messageOrQuestionExample",
+    "name": "Message or question",
+    "version": "1",
+    "uiVisibility": {
+        "monitoring": true,
+        "logging": true,
+        "calendar": true
     },
-    "questionState": {
-      "name": "Question ",
-      "description": "Question ",
-      "color": "#0070C0",
-      "userCard" : {
-		"template" : "usercard_question",
-		"severityVisible" : false,
-		"startDateVisible" : true,
-		"endDateVisible" : true,
-        "lttdVisible" : true
-      },
-      "response": {
-        "state": "questionState",
-        "emittingEntityAllowedToRespond": "true"
-      },
-      "templateName": "question",
-      "styles": [],
-      "acknowledgmentAllowed": "Never",
-      "type" : "INPROGRESS"
-    },
-    "confirmationState": {
-      "name": "Confirmation",
-      "description": "Please confirm",
-      "color": "#0070C0",
-      "userCard" : {
-		"template" : "usercard_confirmation",
-		"severityVisible" : false,
-		"startDateVisible" : true,
-        "endDateVisible" : true
-      },
-      "response": {
-        "state": "confirmationState",
-        "emittingEntityAllowedToRespond": "true"
-      },
-      "templateName": "confirmation",
-      "styles": [],
-      "type" : "INPROGRESS"
+    "states": {
+        "messageState": {
+            "name": "Message",
+            "description": "Message",
+            "color": "#CC9900",
+            "userCard": {
+                "template": "usercard_message",
+                "startDateVisible": false,
+                "endDateVisible": false,
+                "recipientForInformationVisible": true
+            },
+            "templateName": "message",
+            "styles": [],
+            "acknowledgmentAllowed": "Always",
+            "showAcknowledgmentFooter": "OnlyForEmittingEntity",
+            "type": "INPROGRESS",
+            "consideredAcknowledgedForUserWhen": "AllEntitiesOfUserHaveAcknowledged"
+        },
+        "questionState": {
+            "name": "Question ",
+            "description": "Question ",
+            "color": "#0070C0",
+            "userCard": {
+                "template": "usercard_question",
+                "severityVisible": false,
+                "startDateVisible": true,
+                "endDateVisible": true,
+                "lttdVisible": true
+            },
+            "response": {
+                "state": "questionState",
+                "emittingEntityAllowedToRespond": "true"
+            },
+            "templateName": "question",
+            "styles": [],
+            "acknowledgmentAllowed": "Never",
+            "type": "INPROGRESS"
+        },
+        "confirmationState": {
+            "name": "Confirmation",
+            "description": "Please confirm",
+            "color": "#0070C0",
+            "userCard": {
+                "template": "usercard_confirmation",
+                "severityVisible": false,
+                "startDateVisible": true,
+                "endDateVisible": true,
+                "lttdVisible": true
+            },
+            "response": {
+                "state": "confirmationState",
+                "emittingEntityAllowedToRespond": "true"
+            },
+            "templateName": "confirmation",
+            "styles": [],
+            "type": "INPROGRESS"
+        }
     }
-  }
 }
