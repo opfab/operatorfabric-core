@@ -93,6 +93,7 @@ export class MapComponent implements OnInit, OnDestroy, AfterViewChecked {
         this.globalStyleService.getStyleChange().subscribe((style) => {
             this.updateMapColors(style);
             this.addGeoJSONLayer(style);
+            this.map.render();
         });
     }
 
