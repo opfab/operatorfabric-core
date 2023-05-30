@@ -26,6 +26,8 @@ export class UserCardRecipientsFormComponent implements OnInit, OnChanges {
     @Input() public initialSelectedRecipients;
     @Input() public initialSelectedRecipientsForInformation;
     @Input() public recipientForInformationVisible;
+    @Input() public editCardMode;
+
     public recipientForm: FormGroup<{
         userCardRecipients: FormControl<[] | null>;
         userCardRecipientsForInformation: FormControl<[] | null>;
@@ -120,7 +122,7 @@ export class UserCardRecipientsFormComponent implements OnInit, OnChanges {
     private listenForInitialSelectedRecipientList() {
         // Set initial recipient list from template only if not in edition mode
         usercardTemplateGateway.setInitialSelectedRecipients = (recipients) => {
-            if (!this.initialSelectedRecipients || this.initialSelectedRecipients.length === 0)
+            if (!this.editCardMode && (!this.initialSelectedRecipients || this.initialSelectedRecipients.length === 0))
                 this.initialSelectedRecipients = recipients;
         };
     }
@@ -133,7 +135,7 @@ export class UserCardRecipientsFormComponent implements OnInit, OnChanges {
     private listenForInitialSelectedRecipientForInformationList() {
         // Set initial recipient for information list from template only if not in edition mode
         usercardTemplateGateway.setInitialSelectedRecipientsForInformation = (recipients) => {
-            if (!this.initialSelectedRecipientsForInformation || this.initialSelectedRecipientsForInformation.length === 0)
+            if (!this.editCardMode && (!this.initialSelectedRecipientsForInformation || this.initialSelectedRecipientsForInformation.length === 0))
                 this.initialSelectedRecipientsForInformation = recipients;
         };
     }
