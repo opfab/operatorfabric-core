@@ -36,6 +36,7 @@ import {SystemNotificationService} from '../../../business/services/notification
 import {BusinessDataService} from 'app/business/services/businessconfig/businessdata.service';
 import {Router} from '@angular/router';
 import {OpfabAPIService} from 'app/business/services/opfabAPI.service';
+import {loadBuildInTemplates} from 'app/business/buildInTemplates/templatesLoader';
 
 declare const opfab: any;
 @Component({
@@ -271,6 +272,7 @@ export class ApplicationLoadingComponent implements OnInit {
         this.applicationUpdateService.init();
         this.systemNotificationService.initSystemNotificationService();
         this.initOpfabAPI();
+        loadBuildInTemplates();
     }
 
     private initOpfabAPI(): void {
@@ -281,5 +283,6 @@ export class ApplicationLoadingComponent implements OnInit {
         }
 
         this.opfabAPIService.initAPI();
+        
     }
 }

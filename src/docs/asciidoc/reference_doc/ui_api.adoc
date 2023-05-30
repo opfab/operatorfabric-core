@@ -93,10 +93,10 @@ It is possible from the template to redirect the user to another "card detail" i
 Once the card is loaded, there may be some processing that is time consuming. In this case, it is possible to show a spinner using the method displayLoadingSpinner and hideLoadingSpinner in the card template .
 
 ```
-opfab.currentCard.displayLoadingSpinner();
-// Time consumming code 
-.... 
-opfab.currentCard.hideLoadingSpinner(); 
+        opfab.currentCard.displayLoadingSpinner();
+        // Time consumming code 
+        .... 
+        opfab.currentCard.hideLoadingSpinner(); 
 ```
 
 === Function hideLoadingSpinner
@@ -110,7 +110,15 @@ Hide loading spinner previously open with displayLoadingSpinner()
 
  Returns an array of the child cards. The structure of a child card is the same as the structure of a classic card.
 ```
-const childCards =  opfab.currentCard.getChildCards(); 
+        const childCards =  opfab.currentCard.getChildCards(); 
+```
+
+=== Function getCard()
+
+You can access the current selected card as a js object using the getCard() method.
+
+```
+        const currentCard = opfab.currentCard.getCard();
 ```
 
 === Function getDisplayContext

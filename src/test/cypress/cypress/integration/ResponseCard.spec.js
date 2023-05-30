@@ -569,8 +569,8 @@ describe('Response card tests', function () {
         usercard.selectService('User card examples');
         usercard.selectProcess('Message or question');
         usercard.selectState('Question');
-        cy.get('#label').should('have.text', ' QUESTION ');
-        cy.get('#question').invoke('val', 'question'); // the cy.type does not work (no explanation found),  using invoke works 
+        cy.get('#opfab-question-label').should('have.text', 'QUESTION');
+        cy.get('#usercard_question_input').invoke('val', 'question'); // the cy.type does not work (no explanation found),  using invoke works 
         usercard.selectRecipient('Control Center FR East');
         usercard.selectRecipient('Control Center FR North');
         usercard.selectRecipient('Control Center FR South');
@@ -597,7 +597,7 @@ describe('Response card tests', function () {
         opfab.logout();
         opfab.loginWithUser('operator1_it');
         feed.openFirstCard();
-        cy.get('#response').type('my response');
+        cy.get('#template_response_input').type('my response');
         card.sendResponse();
 
         card.openEntityDropdownInCardHeader();

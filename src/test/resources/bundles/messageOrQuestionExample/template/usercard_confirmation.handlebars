@@ -8,7 +8,7 @@
 <!-- This file is part of the OperatorFabric project.                      -->
 
 <div class="opfab-input">
-    <label> QUESTION </label>
+     <label id="label"> QUESTION </label>
     <input id="question" name="question" style="width:100%" value="{{card.data.question}}">
 </div>
 <br/>
@@ -32,7 +32,29 @@
     userCardTemplate = {
         init: function() {
             this.showCurrentUserResponse();
+            this.changeLabelInEditionMode();
+            this.setInitialDates();
             this.initTemplateGatewayMethod();
+        },
+
+
+        changeLabelInEditionMode: function() {
+            // keep deprecated method for cypress test only
+            if (usercardTemplateGateway.getEditionMode() == 'EDITION') {
+                const question = document.getElementById('label').innerHTML = ' QUESTION (New) ';
+            }
+        },
+
+        setInitialDates: function() {
+            var mystartDate = new Date();
+            mystartDate.setTime(mystartDate.getTime()+ 3600000);
+            mystartDate.setMinutes(0);
+            mystartDate.setSeconds(0);
+            opfab.currentUserCard.setInitialStartDate(mystartDate.getTime());
+            opfab.currentUserCard.setInitialEndDate(mystartDate.getTime() + 8 * 3600000);
+
+            // keep deprecated method for cypress test only
+            usercardTemplateGateway.setInitialLttd(mystartDate.getTime() + 4 * 3600000);
         },
 
         showCurrentUserResponse: function(){

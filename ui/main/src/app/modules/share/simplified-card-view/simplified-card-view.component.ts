@@ -20,6 +20,7 @@ import {DisplayContext} from '@ofModel/template.model';
 import {OpfabAPIService} from 'app/business/services/opfabAPI.service';
 
 
+
 @Component({
     selector: 'of-simplified-card-view',
     templateUrl: './simplified-card-view.component.html'
@@ -49,6 +50,7 @@ export class SimplifiedCardViewComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit() {
+        this.opfabAPIService.currentCard.card = this.card;
         this.computeEntitiesForResponses();
         this.getTemplateAndStyle();
     }

@@ -9,6 +9,7 @@
 
 import {Injectable} from '@angular/core';
 import {BusinessDataService} from './businessconfig/businessdata.service';
+import {TranslationService} from './translation/translation.service';
 import {EntitiesService} from './users/entities.service';
 
 declare const opfab: any;
@@ -23,7 +24,7 @@ export class OpfabAPIService {
     public templateInterface: any;
     public userCardTemplateInterface: any;
 
-    constructor(private entityService: EntitiesService, private businessDataService: BusinessDataService) {
+    constructor(private entityService: EntitiesService, private businessDataService: BusinessDataService,private translationService: TranslationService) {
         this.initCurrentCard();
         this.initCurrentUserCard();
     }
@@ -31,6 +32,7 @@ export class OpfabAPIService {
     public initCurrentCard() {
         const self = this;
         this.currentCard = {
+            card: null,
             childCards: [],
             isUserAllowedToRespond: false,
             isUserMemberOfAnEntityRequiredToRespond: false,
@@ -140,6 +142,10 @@ export class OpfabAPIService {
             document.location.href = newUrl;
         };
 
+        opfab.utils.getTranslation = function (key,params) {
+            return self.translationService.getTranslation(key,params)
+        }
+
 
         this.initUserApi();
         this.initCurrentCardApi();
@@ -171,6 +177,10 @@ export class OpfabAPIService {
 
         opfab.currentCard.displayLoadingSpinner = function () {
             self.currentCard.displayLoadingSpinner();
+        };
+
+        opfab.currentCard.getCard = function () {
+            return self.currentCard.card;
         };
 
         opfab.currentCard.getChildCards = function () {

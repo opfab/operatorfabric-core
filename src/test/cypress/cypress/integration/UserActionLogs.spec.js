@@ -51,7 +51,7 @@ describe ('User action logs page',()=>{
         cy.waitDefaultTime();
         feed.checkNumberOfDisplayedCardsIs(1);
         feed.openFirstCard();
-        cy.get('#response').type('Response');
+        cy.get('#template_response_input').type('Response');
         card.sendResponse();
         cy.waitDefaultTime();
         feed.toggleFilterByAcknowledgementNotAck();
@@ -190,7 +190,7 @@ describe ('User action logs page',()=>{
         agGrid.clickCell('ag-grid-angular', 5, 1);
         cy.get('of-simplified-card-view').should('exist');
         // Check the response has been integrated in the template
-        cy.get('#childs-div').find('tr').should('have.length', 2);
+        cy.get('#template_responses').find('tr').should('have.length', 2);
 
 
     });
@@ -214,9 +214,9 @@ describe ('User action logs page',()=>{
         usercard.selectService('User card examples');
         usercard.selectProcess('Message or question');
         usercard.selectState('Question');
-        cy.get('#label').should('have.text',' QUESTION ');
+        cy.get('#opfab-question-label').should('have.text','QUESTION');
         usercard.selectRecipient('Control Center FR South');
-        cy.get('#question').type('First question');
+        cy.get('#usercard_question_input').type('First question');
         usercard.previewThenSendCard();
     }
     

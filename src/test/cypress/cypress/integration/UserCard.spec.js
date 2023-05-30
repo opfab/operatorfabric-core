@@ -105,7 +105,7 @@ describe('User Card ', function () {
       opfab.navigateToUserCard();
       usercard.selectService('User card examples');
       usercard.selectProcess('Message or question');
-      usercard.selectState('Question');
+      usercard.selectState('Confirmation');
       cy.get('#label').should('have.text',' QUESTION ');
       cy.get('#question').invoke('val', 'First question'); // the cy.type does not work (no explanation found),  using invoke works 
       usercard.selectRecipient('Control Center FR East');
@@ -887,15 +887,15 @@ describe('User Card ', function () {
 
   describe('Loading start date, end date and lttd from template', function () {
 
-    it('Check dates are loaded from template for Question user card', () => {
+    it('Check dates are loaded from template for confirmation user card', () => {
 
       opfab.loginWithUser('operator1_fr');
       opfab.navigateToUserCard();
       usercard.selectService('User card examples');
       usercard.selectProcess('Message or question');
-      usercard.selectState('Question');
+      usercard.selectState('Confirmation');
 
-      var startDate = new Date();
+      const startDate = new Date();
       startDate.setTime(startDate.getTime()+ 3600000);
       startDate.setMinutes(0);
       startDate.setSeconds(0);
@@ -1050,7 +1050,7 @@ describe('User Card ', function () {
       feed.openFirstCard();
       feed.editCurrentCard();
       usercard.checkSelectedSeverityIs('INFORMATION');
-
+      
     })
   })
   
@@ -1294,11 +1294,10 @@ describe('User Card ', function () {
       cy.get('#opfab-recipients-for-information').find('.vscomp-value').contains("Control Center FR West");
       cy.get('#opfab-recipients-for-information').find('.vscomp-value').contains("French Control Centers").should('not.exist');
       cy.get('#opfab-recipients-for-information').find('.vscomp-value').contains("IT SUPERVISION CENTER").should('not.exist');
-
-    
+      
       // We check we can add an entity to the default selected value
       usercard.selectRecipientForInformation('IT SUPERVISION CENTER');
-      cy.get('#message').type('Hello');
+      cy.get('#usercard_message_input').type('Hello');
       usercard.preview();
 
       cy.get("#opfab-entity-recipients").find('span').should('have.length', 4);
@@ -1336,6 +1335,7 @@ describe('User Card ', function () {
   })
 
   describe('Check "create a copy" feature', function () {
+    
     it('Check "create a copy" button is present only when it should', () => {
       script.deleteAllCards();
       script.send6TestCards();
@@ -1362,6 +1362,7 @@ describe('User Card ', function () {
       card.checkCopyButtonDoesExist();
     })
 
+    
     it('Check fields service/process/state/severity/data/recipients/recipients for information are copied from the original ' +
         'card and emitter field is not copied', () => {
       script.deleteAllCards();
@@ -1373,7 +1374,7 @@ describe('User Card ', function () {
 
       cy.waitDefaultTime();
       cy.get('#opfab-sev-information').check(); // we set severity different from default value
-      cy.get('#message').type('Test for copy card feature');
+      cy.get('#usercard_message_input').type('Test for copy card feature');
 
       usercard.selectEmitter('Control Center FR West');
 
@@ -1392,7 +1393,7 @@ describe('User Card ', function () {
       usercard.checkSelectedProcessIs('Message or question');
       usercard.checkSelectedStateIs('Message');
       usercard.checkSelectedSeverityIs('INFORMATION');
-      cy.get('#message').should('contain.text', 'Test for copy card feature');
+      cy.get('#usercard_message_input').should('contain.text', 'Test for copy card feature');
       usercard.checkNumberOfRecipientsIs(1);
       usercard.checkRecipientsContain('Control Center FR South');
       usercard.checkNumberOfRecipientsForInformationIs(1);
