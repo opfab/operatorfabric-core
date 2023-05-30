@@ -67,7 +67,7 @@ a|Url to redirect the browser to for authentication. Mandatory with:
 |feed.card.time.display|BUSINESS|no
 a|card time display mode in the feed. Values :
 
- - BUSINESS: displays card with entire business period. It the fallback if the set value is none of the values listed here;
+ - BUSINESS: displays card with entire business period. It is the fallback if the set value is none of the values listed here;
  - BUSINESS_START: displays card with business start date;
  - PUBLICATION: displays card with publication date;
  - LTTD: displays card with lttd date;
@@ -115,10 +115,10 @@ Values should be taken from the link:https://en.wikipedia.org/wiki/List_of_tz_da
 |settings.playSoundForAction|false|no|If set to true, a sound is played when Action cards are added or updated in the feed
 |settings.playSoundForCompliant|false|no|If set to true, a sound is played when Compliant cards are added or updated in the feed
 |settings.playSoundForInformation|false|no|If set to true, a sound is played when Information cards are added or updated in the feed
-|settings.systemNotificationAlarm|false|no|If set to true, a system notification is send when Alarm cards are added or updated in the feed
-|settings.systemNotificationAction|false|no|If set to true, a system notification is send when Action cards are added or updated in the feed
-|settings.systemNotificationCompliant|false|no|If set to true, a system notification is send when Compliant cards are added or updated in the feed
-|settings.systemNotificationInformation|false|no|If set to true, a system notification is send when Information cards are added or updated in the feed
+|settings.systemNotificationAlarm|false|no|If set to true, a system notification is sent when Alarm cards are added or updated in the feed
+|settings.systemNotificationAction|false|no|If set to true, a system notification is sent when Action cards are added or updated in the feed
+|settings.systemNotificationCompliant|false|no|If set to true, a system notification is sent when Compliant cards are added or updated in the feed
+|settings.systemNotificationInformation|false|no|If set to true, a system notification is sent when Information cards are added or updated in the feed
 |settings.playSoundOnExternalDevice|false|no|If set to true (and `externalDevicesEnabled` is set to true as well) and the user has an external device configured, sounds will be played on this device rather than in the browser
 |settings.replayEnabled|false|no|If set to true, sounds are replayed every `settings.replayInterval` seconds until the user interacts with the application
 |settings.replayInterval|5|no|Interval between sound replays (see `settings.replayEnabled`)
@@ -159,7 +159,7 @@ For example adding `Keycloak` application, with `'Keycloak'` as `name`, `1` as `
 |secondsToCloseSession|60|no|Number of seconds between logout and token expiration
 |selectActivityAreaOnLogin|false|no| if set to true the users belonging to multiple Entities will be required to configure activity area on login 
 |checkIfUrlIsLocked|true|no| if set to false, an OperatorFabric url can be used by several tabs in the same browser. Note that there can only be one token per browser for a given OperatorFabric url, so the first session will be replaced by the second one
-|alertMessageBusinessAutoClose|false|no| if set to to true, the (red) business alert message will automatically close after a few seconds.
+|alertMessageBusinessAutoClose|false|no| if set to true, the (red) business alert message will automatically close after a few seconds.
 |alertMessageOnBottomOfTheScreen|false|no| if set to true, the alert message is shown on the bottom of the page.
 |heardbeatSendingInterval|30|yes| Frequency in seconds at which the ui sends heartbeat to the server.
 
