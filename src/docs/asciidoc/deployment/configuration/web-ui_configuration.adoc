@@ -73,7 +73,7 @@ a|card time display mode in the feed. Values :
  - LTTD: displays card with lttd date;
  - NONE: nothing displayed.
 |feed.defaultSorting|"unread"|no|Default card sorting option in feed page, possible values are : "unread", "date", "severity", "startDate", "endDate".
-|feed.defaultAcknowledgmentFilter|"notack"|no|Default card acknowlegment filtering option in feed page, possible values are : "notack", "ack", "all", "none".
+|feed.defaultAcknowledgmentFilter|"notack"|no|Default card acknowledgment filtering option in feed page, possible values are : "notack", "ack", "all".
 |feed.showSearchFilter|false|no| If set to false, the search filter is hidden.
 |feed.card.hideResponseFilter|false|no|Control if you want to show or hide the response filter in the feed page
 |feed.card.hideApplyFiltersToTimeLineChoice|false|no|Control if you want to show or hide the option of applying filters or not to timeline in the feed page

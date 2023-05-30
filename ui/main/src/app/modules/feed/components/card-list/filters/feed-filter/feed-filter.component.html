@@ -96,7 +96,7 @@
         </form>
     </div>
 
-    <div *ngIf="isFilterActive()" style="display: flex; justify-content: center;">
+    <div *ngIf="showResetLink()" style="display: flex; justify-content: center;">
         <div id='opfab-feed-filter-reset' class="opfab-link" style="width: max-content" (click)="reset()">
             <span translate>feed.filters.reset</span>
         </div>
