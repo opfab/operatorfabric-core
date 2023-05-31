@@ -589,7 +589,9 @@ export class UserCardComponent implements OnInit {
                         ? this.specificInformation.card.keepChildCards
                         : false,
                     data: this.specificInformation.card.data,
-                    rRule: this.specificInformation.card.rRule ? this.specificInformation.card.rRule : null
+                    rRule: this.specificInformation.card.rRule ? this.specificInformation.card.rRule : null,
+                    wktGeometry: this.cardToEdit?.card.wktGeometry ? this.cardToEdit?.card.wktGeometry : null,
+                    wktProjection: this.cardToEdit?.card.wktProjection ? this.cardToEdit?.card.wktProjection : null
                 } as Card;
 
                 this.childCards =
