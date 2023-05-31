@@ -1,4 +1,4 @@
-// Copyright (c) 2018-2022 RTE (http://www.rte-france.com)
+// Copyright (c) 2018-2023 RTE (http://www.rte-france.com)
 // See AUTHORS.txt
 // This document is subject to the terms of the Creative Commons Attribution 4.0 International license.
 // If a copy of the license was not distributed with this
@@ -21,12 +21,12 @@ So the rules for receiving cards are :
 
 1) If the card is sent to user1, the card is received and visible for user1 if he has the receive right for the corresponding process/state
 
-2) If the card is sent to GROUP1 (or ENTITY1_FR), the card is received and visible for user if *all* of the following is true :
+2) If the card is sent to GROUP1 (or ENTITY1_FR), the card is received and visible for user if *all* the following is true :
 
 * he's a member of GROUP1 (or ENTITY1_FR)
 * he has the receive right for the corresponding process/state
 
-3) If the card is sent to ENTITY1_FR and GROUP1, the card is received and visible for user if *all* of the following is true :
+3) If the card is sent to ENTITY1_FR and GROUP1, the card is received and visible for user if *all* the following is true :
 
 * he's a member of ENTITY1_FR (either directly or through one of its children entities)
 * he's a member of GROUP1
@@ -231,27 +231,30 @@ When a card is selected in the feed (of the GUI), the data is displayed in the d
 The way details are formatted depends on the template contained in the bundle associated with the process as
 ifdef::single-page-doc[<<template_description, described here>>]
 ifndef::single-page-doc[<</documentation/current/reference_doc/index.adoc#template_description, described here>>]
-. To have an effective example without to many actions to performed, the following example will use an already existing
-configuration.The one presents in the development version of OperatorFabric, for test purpose(`TEST` bundle).
+. To have an effective example without too many actions to perform, the following example will use an already existing
+configuration. You can find the corresponding bundle of the following example in the test directory of OperatorFabric
+(src/test/resources/bundles).
 
-At the card level, the attributes in the card telling OperatorFabric which template to use are the `process` and `state` attributes, the `templateName` can be retrieved from the definition of the bundle.
+At the card level, the attributes in the card telling OperatorFabric which template to use are the `process` and `state`
+attributes, the `templateName` can be retrieved from the definition of the bundle.
 
 ....
 {
 	"publisher":"TEST_PUBLISHER",
 	"processVersion":"1",
-	"process":"TEST",
+	"process":"defaultProcess",
 	"processInstanceId":"process-000",
-	"state":"myState",
+	"state":"messageState",
 	"startDate":1546297200000,
 	"severity":"INFORMATION",
-	"title":{"key":"process.title"},
-	"summary":{"key":"process.summary"},
+	"title":{"key":"message.title"},
+	"summary":{"key":"message.summary"},
 	"userRecipients": ["operator1_fr"],
-	"data":{"rootProp":"Data displayed in the detail panel"},
+	"data":{"message":"Data displayed in the detail panel"},
 
 }
 ....
 
-So here a single custom data is defined and it's `rootProp`. This attribute is used by the template called by the `templateName` attribute.
+So here a single custom data is defined, and it's `message`. This attribute is used by the template called by the
+`templateName` attribute.
 
