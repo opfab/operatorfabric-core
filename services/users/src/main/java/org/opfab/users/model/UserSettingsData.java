@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2022, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2023, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -29,7 +29,6 @@ public class UserSettingsData implements UserSettings {
 
     @Id
     private String login;
-    private String description;
     private String locale;
     private Boolean playSoundForAlarm;
     private Boolean playSoundForAction;
@@ -53,7 +52,6 @@ public class UserSettingsData implements UserSettings {
 
     public UserSettingsData(UserSettings settings) {
         this.login = settings.getLogin();
-        this.description = settings.getDescription();
         this.locale = settings.getLocale();
         this.playSoundForAlarm = settings.getPlaySoundForAlarm();
         this.playSoundForAction = settings.getPlaySoundForAction();
@@ -104,7 +102,6 @@ public class UserSettingsData implements UserSettings {
     public UserSettingsData patch(UserSettings other) {
         UserSettingsData result = new UserSettingsData();
         result.login = this.login;
-        result.description = ObjectUtils.getNotNullOrDefault(other.getDescription(), this.getDescription());
         result.locale = ObjectUtils.getNotNullOrDefault( other.getLocale(), this.getLocale());
 
         result.playSoundForAlarm = ObjectUtils.getNotNullOrDefault( other.getPlaySoundForAlarm(), this.getPlaySoundForAlarm());
