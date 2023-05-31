@@ -1,4 +1,4 @@
-// Copyright (c) 2018-2021 RTE (http://www.rte-france.com)
+// Copyright (c) 2018-2023 RTE (http://www.rte-france.com)
 // See AUTHORS.txt
 // This document is subject to the terms of the Creative Commons Attribution 4.0 International license.
 // If a copy of the license was not distributed with this
@@ -168,13 +168,13 @@ NOTE: Only the POINT and POLYGON are supported.
 
 === Business period 
 
-We define the business period as starting form startDate to endDate.  The card will be visible on the UI if the business period overlap the user chosen period (i.e the period selected on  the timeline). If endDate is not set, the card will be visible as soon as the startDate is between start and end date of the chosen period.
+We define the business period as starting form startDate to endDate.  The card will be visible on the UI if the business period overlap the user chosen period (i.e. the period selected on  the timeline). If endDate is not set, the card will be visible as soon as the startDate is between start and end date of the chosen period.
 
 === Store information 
 
 ==== uid (`uid`)
 
-Unique identifier of the card in the OperatorFabric system. This attribute can be sent with card, but by default it's managed by OperatorFabric.
+Unique identifier of the card in the OperatorFabric system. This attribute is always set by OperatorFabric.
 
 ==== id (`id`)
 
@@ -182,7 +182,7 @@ State id of the associated process, determined by `OperatorFabric` can be set ar
 
 ==== Publish Date (`publishDate`)
 
-Indicates when the card has been registered in `OperatorFabric` system. This is a technical information exclusively managed by `OperatorFabric`.
+Indicates when the card has been registered in `OperatorFabric` system. This is technical information exclusively managed by `OperatorFabric`.
 
 == User destined Information of the card
 
@@ -247,8 +247,8 @@ card:
 
 }
 ....
-In this sample, the card will be displayed twice in the time line. The card
+In this sample, the card will be displayed twice in the timeline. The card
 start date will be ignored.
 
 
-For timeSpans, you can specify an end date but it is not implemented in OperatorFabric (it was intended for future uses but it will be deprecated).
+For timeSpans, you can specify an end date, but it is not implemented in OperatorFabric (it was intended for future uses, but it will be deprecated).
