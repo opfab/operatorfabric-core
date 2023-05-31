@@ -127,7 +127,6 @@ Values should be taken from the link:https://en.wikipedia.org/wiki/List_of_tz_da
 |settings.email||no|Email address to use as recipient for email notifications (see `settings.sendCardsByEmail`)
 
 |settingsScreen.hiddenSettings||no|Array of string indicating which field(s) we want to hide in the settings screen. Possible values : +
-"description" : if present, description field will not be displayed +
 "language" : if present, language field will not be displayed +
 "remoteLoggingEnabled" : if present, the checkbox to activate remote logging will not be displayed +
 "sounds" : if present, the checkboxes for sound notifications will not be displayed

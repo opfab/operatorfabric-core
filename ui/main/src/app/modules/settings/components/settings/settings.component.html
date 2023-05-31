@@ -1,4 +1,4 @@
-<!-- Copyright (c) 2018-2022, RTE (http://www.rte-france.com)              -->
+<!-- Copyright (c) 2018-2023, RTE (http://www.rte-france.com)              -->
 <!-- Copyright (c) 2023, Alliander (http://www.alliander.com)              -->
 <!-- See AUTHORS.txt                                                       -->
 <!-- This Source Code Form is subject to the terms of the Mozilla Public   -->
@@ -26,9 +26,6 @@
     </div>
     <of-text-setting settingPath="replayInterval" [pattern]=patternReplayInterval [text]=replayIntervalDefaultValue></of-text-setting>
   </div>
-    <div class="opfab-settings-item" *ngIf="!hiddenSettings?.includes('description')">
-      <of-text-setting settingPath="description" [disabled]="(disableInfos)"></of-text-setting>
-    </div>
   <div class="opfab-border-box opfab-settings-item" *ngIf="!hiddenSettings?.includes('systemNotifications')">
     <label translate>settings.notificationOnOperatingSystem</label>
     <of-checkbox-setting settingPath="systemNotificationAlarm" labelClass="label-sev-alarm" name="alarm" [checked]="systemNotificationAlarmDefaultValue"></of-checkbox-setting>

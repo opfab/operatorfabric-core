@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2022, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2023, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -25,7 +25,6 @@ class UserSettingsDataShould {
     void patch(){
         UserSettingsData userData = UserSettingsData.builder()
                 .login("test-login")
-                .description("test-description")
                 .locale("fr")
                 .playSoundForAlarm(true)
                 .playSoundForAction(false)
@@ -44,9 +43,8 @@ class UserSettingsDataShould {
         patched = userData.patch(UserSettingsData.builder().login("new-login").build().clearProcessesStatesNotNotified());
         assertThat(patched).usingRecursiveComparison().isEqualTo(userData);
 
-        patched = userData.patch(UserSettingsData.builder().description("patched-description").build().clearProcessesStatesNotNotified());
+        patched = userData.patch(UserSettingsData.builder().build().clearProcessesStatesNotNotified());
         assertThat(patched).usingRecursiveComparison().ignoringFields("description").isEqualTo(userData);
-        assertThat(patched.getDescription()).isEqualTo("patched-description");
 
         patched = userData.patch(UserSettingsData.builder().locale("patched-locale").build().clearProcessesStatesNotNotified());
         assertThat(patched).usingRecursiveComparison().ignoringFields("locale").isEqualTo(userData);
