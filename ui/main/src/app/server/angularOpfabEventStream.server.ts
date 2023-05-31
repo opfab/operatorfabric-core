@@ -19,12 +19,18 @@ import {Observable, Subject} from 'rxjs';
 import packageInfo from '../../../package.json';
 import {AngularServer} from './angular.server';
 import {CurrentUserStore} from 'app/business/store/current-user.store';
+import { ConfigService } from 'app/business/services/config.service';
 
 @Injectable()
 export class AngularOpfabEventStreamServer extends AngularServer implements OpfabEventStreamServer {
     private static TWO_MINUTES = 120000;
     private eventStreamUrl: string;
     private closeEventStreamUrl: string;
+    private heartbeatUrl: string;
+    private isHeartbeatRunning: boolean;
+    private heartbeatSendingIntervalId;
+    private heartbeatSendingIntervalSeconds;
+    private heartbeatReceptionIntervalId;
 
     private businessEvents = new Subject<any>();
     private streamInitDoneEvent = new Subject<void>();
@@ -38,15 +44,21 @@ export class AngularOpfabEventStreamServer extends AngularServer implements Opfa
         private currentUserStore: CurrentUserStore,
         guidService: GuidService,
         private logger: OpfabLoggerService,
+        private configService: ConfigService,
         private httpClient: HttpClient
     ) {
         super();
         const clientId = guidService.getCurrentGuidString();
         this.eventStreamUrl = `${environment.urls.cards}/cardSubscription?clientId=${clientId}&version=${packageInfo.opfabVersion}`;
         this.closeEventStreamUrl = `${environment.urls.cards}/cardSubscription?clientId=${clientId}`;
+        this.heartbeatUrl = `${environment.urls.cards}/cardSubscriptionHeartbeat?clientId=${clientId}`;
+        this.isHeartbeatRunning = false;
     }
 
     public initStream() {
+
+        this.heartbeatSendingIntervalSeconds = this.configService.getConfigValue('heartbeatSendingInterval', 30);
+
         // security header needed here as SSE request are not intercepted by our angular header interceptor
         let securityHeader;
         if (this.currentUserStore.doesAuthenticationUseToken()) {
@@ -86,12 +98,15 @@ export class AngularOpfabEventStreamServer extends AngularServer implements Opfa
         };
         this.eventSource.onopen = (open) => {
             this.streamStatusEvents.next('open');
+            if (!this.isHeartbeatRunning) {
+                this.sendHeartBeat();
+            }
             console.log(new Date().toISOString(), `EventStreamServer - Open card subscription`);
         };
     }
 
     private checkHeartBeatReceive() {
-        setInterval(() => {
+        this.heartbeatReceptionIntervalId = setInterval(() => {
             this.logger.info(
                 'EventStreamServer - Last heart beat received ' +
                     (new Date().valueOf() - this.lastHeardBeatDate) +
@@ -99,6 +114,17 @@ export class AngularOpfabEventStreamServer extends AngularServer implements Opfa
                 LogOption.LOCAL_AND_REMOTE
             );
         }, 60000);
+    }
+
+    private sendHeartBeat() {
+        this.isHeartbeatRunning = true;
+        this.heartbeatSendingIntervalId = setInterval(() => {
+            this.httpClient.get(`${this.heartbeatUrl}`).subscribe();
+            this.logger.info(
+                'EventStreamServer - Heartbeat sent to the server',
+                LogOption.LOCAL_AND_REMOTE
+            );
+        }, this.heartbeatSendingIntervalSeconds*1000);
     }
 
     private recoverAnyLostCardWhenConnectionHasBeenReset() {
@@ -118,6 +144,9 @@ export class AngularOpfabEventStreamServer extends AngularServer implements Opfa
 
     public closeStream() {
         this.httpClient.delete<any>(`${this.closeEventStreamUrl}`).subscribe();
+        clearInterval(this.heartbeatSendingIntervalId);
+        clearInterval(this.heartbeatReceptionIntervalId);
+        this.isHeartbeatRunning = false;
         if (this.eventSource && this.eventSource.readyState !== this.eventSource.CLOSED) {
             this.eventSource.close();
         }

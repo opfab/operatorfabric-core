@@ -14,13 +14,15 @@ import {environment} from '@env/environment';
 import {AuthHandler} from './auth-handler';
 import {HttpClient} from '@angular/common/http';
 import {OpfabLoggerService} from 'app/business/services/logs/opfab-logger.service';
+import {CurrentUserStore} from 'app/business/store/current-user.store';
 
 export class ImplicitAuthenticationHandler extends AuthHandler {
     constructor(
         configService: ConfigService,
         httpClient: HttpClient,
         logger: OpfabLoggerService,
-        private oauthService: OAuthService
+        private oauthService: OAuthService,
+        private currentUserStore: CurrentUserStore
     ) {
         super(configService, httpClient, logger);
     }
@@ -56,11 +58,24 @@ export class ImplicitAuthenticationHandler extends AuthHandler {
         await this.oauthService.tryLogin().then(() => {
             if (this.oauthService.hasValidAccessToken()) {
                 this.setUserAuthenticated();
+                this.updateAfterSilentRefresh();
             } else {
                 sessionStorage.setItem('flow', 'implicit');
                 this.oauthService.initImplicitFlow();
             }
         });
+    }
+
+    // hack to update token as silent refresh updates the token in background
+    // we need to update regularly as we do not catch when refresh is done
+    updateAfterSilentRefresh() {
+        setInterval(() => {
+            const token = this.oauthService.getAccessToken();
+            const expirationDate = new Date(this.oauthService.getAccessTokenExpiration());
+            localStorage.setItem('token', token);
+            localStorage.setItem('expirationDate', expirationDate?.getTime().toString());
+            this.currentUserStore.setToken(token);
+        }, 5000);
     }
 
     private setUserAuthenticated() {
@@ -86,11 +101,6 @@ export class ImplicitAuthenticationHandler extends AuthHandler {
                 break;
             }
         }
-    }
-
-    public regularCheckTokenValidity() {
-        // Override because there is no regularly check in implicit mode
-        // it is done via the oauthService
     }
 
     public logout() {

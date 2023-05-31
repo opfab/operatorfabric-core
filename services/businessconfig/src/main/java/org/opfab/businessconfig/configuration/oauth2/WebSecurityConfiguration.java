@@ -63,7 +63,6 @@ public class WebSecurityConfiguration {
             .requestMatchers(HttpMethod.GET, PROMETHEUS_PATH).permitAll()
             .requestMatchers(HttpMethod.GET, THIRDS_PATH).permitAll()
             .requestMatchers(HttpMethod.POST, THIRDS_PATH).access(hasAnyRoleAndIpAllowed(ADMIN_ROLE, ADMIN_BUSINESS_PROCESS_ROLE))
-            .requestMatchers(HttpMethod.POST, BUSINESS_DATA_PATH).access(hasAnyRoleAndIpAllowed(ADMIN_ROLE, ADMIN_BUSINESS_PROCESS_ROLE))
             .requestMatchers(HttpMethod.PUT, THIRDS_PATH).access(hasAnyRoleAndIpAllowed(ADMIN_ROLE, ADMIN_BUSINESS_PROCESS_ROLE))
             .requestMatchers(HttpMethod.DELETE, THIRDS_PATH).access(hasAnyRoleAndIpAllowed(ADMIN_ROLE, ADMIN_BUSINESS_PROCESS_ROLE))
             .requestMatchers(LOGGERS_PATH).access(AuthorityAuthorizationManager.hasRole(ADMIN_ROLE))

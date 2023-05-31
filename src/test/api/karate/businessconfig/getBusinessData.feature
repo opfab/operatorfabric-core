@@ -56,3 +56,15 @@ Feature: deleteBusinessData
       When method DELETE
       Then status 204
 
+    Scenario: delete every file with wrong authentication
+      Given url opfabUrl + 'businessconfig/businessData'
+      And header Authorization = 'Bearer ' + authTokenAsTSO
+      When method DELETE
+      Then status 403
+
+    Scenario: delete every file
+      Given url opfabUrl + 'businessconfig/businessData'
+      And header Authorization = 'Bearer ' + authToken
+      When method DELETE
+      Then status 200
+

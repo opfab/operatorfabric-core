@@ -22,6 +22,13 @@ describe('Time line moves', function () {
 
     before('Set up configuration and cards', function () {
         script.loadTestConf();
+        // send heardbeat every 100 hours 
+        // to avoid sending many heartbeats request when going in the future with clock
+        script.setPropertyInConf('heartbeatSendingInterval','web-ui',360000);
+    });
+
+    after('Reset conf', function () {
+        script.resetUIConfigurationFiles();
     });
 
     beforeEach('Reset UI configuration file ', function () {
@@ -31,7 +38,9 @@ describe('Time line moves', function () {
     it('Check timelime manual moves in TR mode', function () {
 
         // NB : month  starts at 0
+       
         opfab.loginWithClock(new Date(2030, 2, 31, 11, 59));
+        
 
         setTimeLineDomain('TR');
         checkFirstTickLabel(" 09h30 ");
@@ -832,13 +841,9 @@ describe('Time line moves', function () {
         cy.get("#opfab-div-card-template-processed").should("exist");
         checkDisplayedCardTitle("State to test template rendering features");
 
-        // hide and show time line to avoid detached dom error when clicking on popover after
-        hideTimeLine();
-        showTimeLine();
 
-        hoverNthCircle(1);
         cy.get(".popover-body").find('button').should("have.length", 2);
-        cy.get(".popover-body").find('button').eq(1).click();
+        cy.get("#opfab-timeline-bubble-btn1").click();
         
         checkDisplayedCardTitle("Electricity consumption forecast");
     });

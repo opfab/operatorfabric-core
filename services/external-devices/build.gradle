@@ -91,9 +91,7 @@ docker {
             , '../../src/main/docker/java-config-docker-entrypoint.sh'
             ,'../../src/main/docker/add-certificates.sh')
     buildArgs(['JAR_FILE'       : "${project.name.toLowerCase()}-${project.version.toUpperCase()}.jar",
-               'http_proxy'     : apk.proxy.uri,
-               'https_proxy'    : apk.proxy.uri,
-               'HTTP_PROXY_AUTH': "basic:*:$apk.proxy.user:$apk.proxy.password"])
+               'https_proxy'    : proxy.https])
     dockerfile file("src/main/docker/Dockerfile")
 }
 

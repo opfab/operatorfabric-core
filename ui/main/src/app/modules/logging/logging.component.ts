@@ -18,7 +18,6 @@ import {DateTimeFormatterService} from 'app/business/services/date-time-formatte
 import {LightCard} from '@ofModel/light-card.model';
 import {Page} from '@ofModel/page.model';
 import {ExcelExport} from 'app/business/common/excel-export';
-import {TranslateService} from '@ngx-translate/core';
 import {ArchivesLoggingFiltersComponent} from '../share/archives-logging-filters/archives-logging-filters.component';
 import {EntitiesService} from 'app/business/services/entities.service';
 import {Utilities} from 'app/business/common/utilities';
@@ -26,6 +25,7 @@ import {NgbModal, NgbModalOptions, NgbModalRef} from '@ng-bootstrap/ng-bootstrap
 import {CardsFilter} from '@ofModel/cards-filter.model';
 import {FilterMatchTypeEnum, FilterModel} from '@ofModel/filter-model';
 import {CardService} from 'app/business/services/card.service';
+import {TranslationService} from 'app/business/services/translation.service';
 
 @Component({
     selector: 'of-logging',
@@ -90,7 +90,7 @@ export class LoggingComponent implements OnDestroy, OnInit, AfterViewInit {
         private configService: ConfigService,
         private dateTimeFormatter: DateTimeFormatterService,
         private cardService: CardService,
-        private translate: TranslateService,
+        private translationService: TranslationService,
         private entitiesService: EntitiesService,
         private modalService: NgbModal
     ) {
@@ -268,7 +268,7 @@ export class LoggingComponent implements OnDestroy, OnInit, AfterViewInit {
                     // TO DO translation for old process should be done  , but loading local arrive to late , solution to find
                     if (this.filtersTemplate.isProcessGroupFilterVisible())
                         exportArchiveData.push({
-                            [severityColumnName]: Utilities.translateSeverity(this.translate, card.severity),
+                            [severityColumnName]: Utilities.translateSeverity(this.translationService, card.severity),
                             [timeOfActionColumnName]: this.dateTimeFormatter.getFormattedDateAndTimeFromEpochDate(
                                 card.publishDate
                             ),
@@ -303,18 +303,9 @@ export class LoggingComponent implements OnDestroy, OnInit, AfterViewInit {
             });
     }
 
-    translateColumn(key: string | Array<string>, interpolateParams?: Object): any {
+    translateColumn(key: string, interpolateParams?: Map<string,string>): any {
         if (!key) return '';
-        let translatedColumn: number;
-
-        this.translate
-            .get(key, interpolateParams)
-            .pipe(takeUntil(this.unsubscribe$))
-            .subscribe((translate) => {
-                translatedColumn = translate;
-            });
-
-        return translatedColumn;
+        return this.translationService.getTranslation(key,interpolateParams);
     }
 
     ngOnDestroy() {

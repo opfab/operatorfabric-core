@@ -31,7 +31,7 @@ describe('User Card ', function () {
     script.deleteAllArchivedCards();
     script.deleteAllSettings();
   });
-
+ 
   describe('Check READONLY user cannot send usercard', function () {
     it('Check error message when READONLY user try to create a usercard', () => {
       opfab.loginWithUser('operator1_crisisroom');
@@ -142,22 +142,6 @@ describe('User Card ', function () {
       usercard.preview();
       usercard.checkEntityRecipientsInPreviewContains("IT SUPERVISION CENTER");
       usercard.checkEntityRecipientsInPreviewContains("Control Center FR East");
-    })
-
-    it('Recipients dropdown should be restricted in message user card  - Deprecated method using state config ', () => {
-
-      opfab.loginWithUser('operator1_fr');
-      opfab.navigateToUserCard();
-      usercard.selectProcess('Process example');
-      usercard.selectState('Process example');
-      cy.get('#opfab-recipients').click();
-      cy.get('#opfab-recipients').find('.vscomp-option-text').should('have.length', 6);
-      cy.get('#opfab-recipients').find('.vscomp-option-text').eq(0).contains("Control Center FR East");
-      cy.get('#opfab-recipients').find('.vscomp-option-text').eq(1).contains("Control Center FR North");
-      cy.get('#opfab-recipients').find('.vscomp-option-text').eq(2).contains("Control Center FR South");
-      cy.get('#opfab-recipients').find('.vscomp-option-text').eq(3).contains("Control Center FR West");
-      cy.get('#opfab-recipients').find('.vscomp-option-text').eq(4).contains("French Control Centers");
-      cy.get('#opfab-recipients').find('.vscomp-option-text').eq(5).contains("IT SUPERVISION CENTER");
     })
 
     it('Recipients dropdown should be restricted and initial recipients preselected in message user card', () => {
@@ -296,16 +280,14 @@ describe('User Card ', function () {
       // a report name without report link : an error should be displayed
       cy.get('#report_title').type('report name');
       cy.get('#opfab-usercard-btn-prepareCard').click();
-      cy.get('.opfab-info-message').should('have.class', 'opfab-alert-error')
-          .contains('You must provide a report name and link, or none of them.');
+      cy.get('.opfab-info-message').contains('You must provide a report name and link, or none of them.');
       cy.get('.opfab-alert-close').click();
 
       // a report link without report name : an error should be displayed
       cy.get('#report_link').type('report link');
       cy.get('#report_title').clear();
       cy.get('#opfab-usercard-btn-prepareCard').click();
-      cy.get('.opfab-info-message').should('have.class', 'opfab-alert-error')
-          .contains('You must provide a report name and link, or none of them.');
+      cy.get('.opfab-info-message').contains('You must provide a report name and link, or none of them.');
       cy.get('.opfab-alert-close').click();
 
       // a report name and a report link : no error
@@ -727,7 +709,112 @@ describe('User Card ', function () {
       cy.get('#of-usercard-card-emitter-selector').find('.vscomp-option-text').eq(0).should("contain.text", "Control Center FR East");
       cy.get('#of-usercard-card-emitter-selector').find('.vscomp-option-text').eq(1).should("contain.text", "Control Center FR South");
       cy.get('#of-usercard-card-emitter-selector').find('.vscomp-option-text').eq(2).should("contain.text", "Control Center FR West");
+    
+    
     })
+
+
+    it('Send User card from operator4_fr with restricted list of emitters for a state', () => {
+      
+      opfab.loginWithUser('operator4_fr');
+      feed.checkNumberOfDisplayedCardsIs(1);
+
+      // operator4_fr reconnect to Control Center FR North (ENTITY1_FR)
+      opfab.navigateToActivityArea();
+
+      // Check every checkbox to let the time for the ui to set to true before we click
+      cy.get('.opfab-checkbox').eq(0).find('input').should('be.checked');
+      cy.get('.opfab-checkbox').eq(1).find('input').should('not.be.checked');
+      cy.get('.opfab-checkbox').eq(2).find('input').should('be.checked');
+      cy.get('.opfab-checkbox').eq(3).find('input').should('be.checked');
+
+      activityArea.clickOnCheckbox('Control Center FR North');
+
+      // Check every checkbox to let the time for the ui to set to true before we click
+      cy.get('.opfab-checkbox').eq(0).find('input').should('be.checked');
+      cy.get('.opfab-checkbox').eq(1).find('input').should('be.checked');
+      cy.get('.opfab-checkbox').eq(2).find('input').should('be.checked');
+      cy.get('.opfab-checkbox').eq(3).find('input').should('be.checked');
+
+      activityArea.save();
+
+      opfab.navigateToUserCard();
+
+      // check template rendering done
+      cy.get('#message').should('be.visible');
+
+      usercard.selectState('Process example');
+
+      usercard.checkEmitterSelectExists();
+      cy.get('#of-usercard-card-emitter-selector').find('label').should("have.text", "EMITTER");
+      cy.get('#of-usercard-card-emitter-selector').find('.vscomp-option-text').should("have.length", 2);
+      cy.get('#of-usercard-card-emitter-selector').find('.vscomp-option-text').eq(0).should("contain.text", "Control Center FR East");
+      cy.get('#of-usercard-card-emitter-selector').find('.vscomp-option-text').eq(1).should("contain.text", "Control Center FR North");
+
+      usercard.selectState('Message');
+
+      cy.get('#of-usercard-card-emitter-selector').find('.vscomp-option-text').should("have.length",4);
+      cy.get('#of-usercard-card-emitter-selector').find('.vscomp-option-text').eq(0).should("contain.text", "Control Center FR East");
+      cy.get('#of-usercard-card-emitter-selector').find('.vscomp-option-text').eq(1).should("contain.text", "Control Center FR North");
+      cy.get('#of-usercard-card-emitter-selector').find('.vscomp-option-text').eq(2).should("contain.text", "Control Center FR South");
+      cy.get('#of-usercard-card-emitter-selector').find('.vscomp-option-text').eq(3).should("contain.text", "Control Center FR West");
+
+      usercard.selectState('Process example');
+
+      usercard.checkEmitterSelectExists();
+      cy.get('#of-usercard-card-emitter-selector').find('label').should("have.text", "EMITTER");
+      cy.get('#of-usercard-card-emitter-selector').find('.vscomp-option-text').should("have.length", 2);
+      cy.get('#of-usercard-card-emitter-selector').find('.vscomp-option-text').eq(0).should("contain.text", "Control Center FR East");
+      cy.get('#of-usercard-card-emitter-selector').find('.vscomp-option-text').eq(1).should("contain.text", "Control Center FR North");
+
+       // Now we choose Control Center FR North as card emitter
+       cy.get("#of-usercard-card-emitter-selector").find('.vscomp-option-text').eq(1).click({force: true});
+      usercard.previewThenSendCard();
+
+      opfab.navigateToFeed();
+      feed.checkNumberOfDisplayedCardsIs(2);
+     
+    })
+
+
+    it('Edit User card from operator4_fr with restricted list of emitters for a state', () => {
+      
+      opfab.loginWithUser('operator4_fr');
+      feed.checkNumberOfDisplayedCardsIs(2);
+      
+      feed.openFirstCard();
+
+      cy.get('#opfab-div-card-template-processed').contains('Process is in state');
+
+      feed.editCurrentCard();
+
+      usercard.checkEmitterSelectExists();
+
+      cy.get('#of-usercard-card-emitter-selector').find('label').should("have.text", "EMITTER");
+      cy.get('#of-usercard-card-emitter-selector').find('.vscomp-option-text').should("have.length", 2);
+      cy.get('#of-usercard-card-emitter-selector').find('.vscomp-option-text').eq(0).should("contain.text", "Control Center FR East");
+      cy.get('#of-usercard-card-emitter-selector').find('.vscomp-option-text').eq(1).should("contain.text", "Control Center FR North");
+
+      usercard.selectState('Message');
+
+      cy.get('#of-usercard-card-emitter-selector').find('.vscomp-option-text').should("have.length",4);
+      cy.get('#of-usercard-card-emitter-selector').find('.vscomp-option-text').eq(0).should("contain.text", "Control Center FR East");
+      cy.get('#of-usercard-card-emitter-selector').find('.vscomp-option-text').eq(1).should("contain.text", "Control Center FR North");
+      cy.get('#of-usercard-card-emitter-selector').find('.vscomp-option-text').eq(2).should("contain.text", "Control Center FR South");
+      cy.get('#of-usercard-card-emitter-selector').find('.vscomp-option-text').eq(3).should("contain.text", "Control Center FR West");
+
+      usercard.selectState('Process example');
+
+      usercard.checkEmitterSelectExists();
+      cy.get('#of-usercard-card-emitter-selector').find('label').should("have.text", "EMITTER");
+      cy.get('#of-usercard-card-emitter-selector').find('.vscomp-option-text').should("have.length", 2);
+      cy.get('#of-usercard-card-emitter-selector').find('.vscomp-option-text').eq(0).should("contain.text", "Control Center FR East");
+      cy.get('#of-usercard-card-emitter-selector').find('.vscomp-option-text').eq(1).should("contain.text", "Control Center FR North");
+
+
+    })
+
+
   })
 
   describe("Should load state and process from gateway", function() {
@@ -877,7 +964,7 @@ describe('User Card ', function () {
       cy.get("#hidden_sender").should("have.value", "ENTITY3_FR");
 
       // Now we choose Control Center FR South as card emitter
-      cy.get("#of-usercard-card-emitter-selector").find('.vscomp-option-text').eq(1).click({force: true});
+      cy.get("#of-usercard-card-emitter-selector").find('.vscomp-option-text').eq(2).click({force: true});
       cy.get('#of-usercard-card-emitter-selector').find('.vscomp-value').should('contain.text', 'Control Center FR South');
       cy.get("#hidden_sender").should("have.value", "ENTITY2_FR");
 
@@ -1227,4 +1314,5 @@ describe('User Card ', function () {
       cy.get('of-light-card').should('have.length', 1);
     })
   })
+
 })

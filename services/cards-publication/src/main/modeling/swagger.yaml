@@ -1,7 +1,7 @@
 swagger: '2.0'
 info:
   description: IMPORTANT - The Try it Out button will generate curl requests for examples, but executing them through the UI will not work as authentication has not been set up. This page is for documentation only.
-  version: 3.14.0.RELEASE
+  version: 3.15.0.RELEASE
   title: Card Management API
   termsOfService: ''
   contact:
@@ -711,7 +711,7 @@ definitions:
         type: number
         description: >-
           Page number
-      size:
+      size: 
         type: number
         description: >-
           Page size (max number of items in page)
@@ -732,9 +732,9 @@ definitions:
         type: string
       matchType:
         $ref: '#/definitions/FilterMatchTypeEnum'
-      filter:
+      filter: 
         type: array
-        items:
+        items: 
           type: string
       operation: 
         $ref: '#/definitions/FilterOperationTypeEnum'

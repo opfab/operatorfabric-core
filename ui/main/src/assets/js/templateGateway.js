@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2022, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2023, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -58,8 +58,23 @@ const templateGateway = {
 
     redirectToBusinessMenu: function (menuId, menuItemId, urlExtension) {
         const urlSplit = document.location.href.split('#');
-        var newUrl = urlSplit[0] + '#/businessconfigparty/' + menuId + '/' + menuItemId;
-        if (!!urlExtension) newUrl += urlExtension;
+        // WARNING : HACK
+        //
+        // When user makes a reload (for example via F5) or use a bookmark link, the browser encodes what is after #
+        // if user makes a second reload, the browser encodes again the encoded link
+        // and after if user reload again, this time it is not encoded anymore by the browser
+        // So it ends up with 3 possible links: a none encoded link, an encoded link or a twice encoding link
+        // and we have no way to know which one it is when processing the url
+        //
+        // To solve the problem we encode two times the url before giving it to the browser
+        // so we always have a unique case : a double encoded url
+        let newUrl =
+            urlSplit[0] +
+            '#/businessconfigparty/' +
+            encodeURIComponent(encodeURIComponent(menuId)) +
+            '/' +
+            encodeURIComponent(encodeURIComponent(menuItemId));
+        if (urlExtension) newUrl += encodeURIComponent(encodeURIComponent(urlExtension));
         document.location.href = newUrl;
     },
 
@@ -144,13 +159,13 @@ const templateGateway = {
         };
 
         // The template may call this method to display a spinner when the card is loaded but is in a time consuming process
-        this.displayLoadingSpinner = function() {
+        this.displayLoadingSpinner = function () {
             // This function is overridden in CardBodyComponent and in CardDetailComponent.
         };
 
         // The template may call this method to hide the spinner displayed after displayLoadingSpinner(), once the computations
         // of the template are done.
-        this.hideLoadingSpinner = function() {
+        this.hideLoadingSpinner = function () {
             // This function is overridden in CardBodyComponent and in CardDetailComponent.
         };
 

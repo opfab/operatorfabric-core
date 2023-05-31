@@ -17,7 +17,6 @@ import {NgbModal, NgbModalOptions, NgbModalRef} from '@ng-bootstrap/ng-bootstrap
 import {LightCard} from '@ofModel/light-card.model';
 import {Page} from '@ofModel/page.model';
 import {ExcelExport} from 'app/business/common/excel-export';
-import {TranslateService} from '@ngx-translate/core';
 import {UserPreferencesService} from 'app/business/services/user-preference.service';
 import {Utilities} from 'app/business/common/utilities';
 import {Card, CardData} from '@ofModel/card.model';
@@ -27,6 +26,7 @@ import {FilterMatchTypeEnum, FilterModel} from '@ofModel/filter-model';
 import {CardsFilter} from '@ofModel/cards-filter.model';
 import {DateTimeFormatterService} from 'app/business/services/date-time-formatter.service';
 import {CardService} from 'app/business/services/card.service';
+import {TranslationService} from 'app/business/services/translation.service';
 
 @Component({
     selector: 'of-archives',
@@ -88,7 +88,7 @@ export class ArchivesComponent implements OnDestroy, OnInit {
         private configService: ConfigService,
         private dateTimeFormatter: DateTimeFormatterService,
         private cardService: CardService,
-        private translate: TranslateService,
+        private translationService: TranslationService,
         private userPreferences: UserPreferencesService,
         private modalService: NgbModal
     ) {
@@ -290,7 +290,7 @@ export class ArchivesComponent implements OnDestroy, OnInit {
         };
         this.modalRef = this.modalService.open(this.exportTemplate, modalOptions);
 
-        const filter = this.getFilter(0, 1 + this.historySize, this.filtersTemplate.filters, false);
+        const filter = this.getFilter(null, null, this.filtersTemplate.filters, false);
         this.cardService
             .fetchFilteredArchivedCards(filter)
             .pipe(takeUntil(this.unsubscribe$))
@@ -309,7 +309,7 @@ export class ArchivesComponent implements OnDestroy, OnInit {
                         // TO DO translation for old process should be done, but loading local arrives too late, solution to find
                         if (this.filtersTemplate.isProcessGroupFilterVisible())
                             exportArchiveData.push({
-                                [severityColumnName]: Utilities.translateSeverity(this.translate, card.severity),
+                                [severityColumnName]: Utilities.translateSeverity(this.translationService, card.severity),
                                 [publishDateColumnName]: this.dateTimeFormatter.getFormattedDateAndTimeFromEpochDate(
                                     card.publishDate
                                 ),
@@ -323,7 +323,7 @@ export class ArchivesComponent implements OnDestroy, OnInit {
                             });
                         else
                             exportArchiveData.push({
-                                [severityColumnName]: Utilities.translateSeverity(this.translate, card.severity),
+                                [severityColumnName]: Utilities.translateSeverity(this.translationService, card.severity),
                                 [publishDateColumnName]: this.dateTimeFormatter.getFormattedDateAndTimeFromEpochDate(
                                     card.publishDate
                                 ),
@@ -343,17 +343,9 @@ export class ArchivesComponent implements OnDestroy, OnInit {
         this.initExportArchiveData();
     }
 
-    translateColumn(key: string | Array<string>, interpolateParams?: Object): any {
-        let translatedColumn: number;
-
-        this.translate
-            .get(key, interpolateParams)
-            .pipe(takeUntil(this.unsubscribe$))
-            .subscribe((translate) => {
-                translatedColumn = translate;
-            });
-
-        return translatedColumn;
+    translateColumn(key: string, interpolateParams?: Map<string,string>): any {
+        if (!key) return '';
+        return this.translationService.getTranslation(key,interpolateParams);
     }
 
     openCard(cardId) {

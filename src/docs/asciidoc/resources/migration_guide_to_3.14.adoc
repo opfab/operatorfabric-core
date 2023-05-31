@@ -10,3 +10,5 @@
 == Bundles folder
 
 Bundles are not stored directly into the business config storage path defined in configuration anymore (operatorfabric.businessconfig.storage.path) but in a subdirectory named bundles. So in order to migrate, it is needed to move your bundles directories to a subdirectory named bundles.
+
+To help you migrate your production environment you can use the following script : https://github.com/opfab/operatorfabric-core/tree/develop/src/tooling/migration-opfab3.13/moveBundles.sh

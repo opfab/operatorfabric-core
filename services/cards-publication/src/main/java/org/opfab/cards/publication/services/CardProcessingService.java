@@ -27,7 +27,6 @@ import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.AccessDeniedException;
 
-
 import jakarta.validation.ConstraintViolationException;
 
 import java.time.Instant;
@@ -54,6 +53,7 @@ public class CardProcessingService {
     boolean authorizeToSendCardWithInvalidProcessState;
 
     public static final String UNEXISTING_PROCESS_STATE = "Impossible to publish card because process and/or state does not exist (process=%1$s, state=%2$s, processVersion=%3$s, processInstanceId=%4$s)";
+    protected static final char[] FORBIDDEN_CHARS = new char[] {'#','?','/'};
 
     public CardProcessingService(
             CardNotificationService cardNotificationService,
@@ -98,7 +98,9 @@ public class CardProcessingService {
             checkProcessStateExistsInBundles(card);
         if (user.isPresent() && checkPerimeterForCardSending
                 && !cardPermissionControlService.isUserAuthorizedToSendCard(card, user.get())) {
-            throw new AccessDeniedException("user not authorized, the card is rejected");
+            throw new AccessDeniedException(String.format(
+                    "user not authorized to send card with process %s and state %s as it is not permitted by his perimeters, the card is rejected",
+                    card.getProcess(), card.getState()));
         }
         // set empty user otherwise it will be processed as a usercard
         processOneCard(card, Optional.empty(), jwt);
@@ -125,7 +127,9 @@ public class CardProcessingService {
                         .build());
 
             if (!cardPermissionControlService.isUserAuthorizedToSendCard(card, user.get())) {
-                throw new AccessDeniedException("user not authorized, the card is rejected");
+                throw new AccessDeniedException(String.format(
+                    "user not authorized to send card with process %s and state %s as it is not permitted by his perimeters, the card is rejected",
+                    card.getProcess(), card.getState()));
             }
 
             if (!cardPermissionControlService.isCardPublisherInUserEntities(card, user.get()))
@@ -242,6 +246,11 @@ public class CardProcessingService {
         if (!checkIsDotCharacterNotInProcessAndState(c))
             throw new ConstraintViolationException(
                     "constraint violation : character '.' is forbidden in process and state", null);
+
+        // constraint check : process and processInstanceId must not contain ('#','?','/') 
+        if (!checkForbiddenChars(c))
+            throw new ConstraintViolationException(
+                    "constraint violation : forbidden characters ('#','?','/') in process or processInstanceId", null);
     }
 
     private CardPublicationData getExistingCard(String cardId) {
@@ -295,6 +304,15 @@ public class CardProcessingService {
     boolean checkIsDotCharacterNotInProcessAndState(CardPublicationData c) {
         return !((c.getProcess().contains(Character.toString('.'))) ||
                 (c.getState() != null && c.getState().contains(Character.toString('.'))));
+    }
+
+    boolean checkForbiddenChars(CardPublicationData card) {
+        for (char ch : FORBIDDEN_CHARS)
+        {
+            if (card.getProcess().contains(Character.toString(ch)) || card.getProcessInstanceId().contains(Character.toString(ch)))
+                return false;
+        }
+        return true;
     }
 
     boolean checkIsAllTimeSpanEndDateAfterStartDate(CardPublicationData c) {

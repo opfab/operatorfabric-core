@@ -12,10 +12,6 @@
                 "ENTITY2_FR",
                 "ENTITY3_FR",
                 "ENTITY4_FR"
-              ],
-              "groups": [
-                "Dispatcher",
-                "Planner"
               ]
             },
             {
@@ -24,10 +20,6 @@
                 "ENTITY1_IT",
                 "ENTITY2_IT",
                 "ENTITY3_IT"
-              ],
-              "groups": [
-                "Dispatcher",
-                "Planner"
               ]
             },
             {
@@ -35,10 +27,6 @@
               "entities": [
                 "ENTITY1_NL",
                 "ENTITY2_NL"
-              ],
-              "groups": [
-                "Dispatcher",
-                "Planner"
               ]
             }
           ]
@@ -49,9 +37,6 @@
               "name": "Central Supervision Centers",
               "entities": [
                 "IT_SUPERVISOR_ENTITY"
-              ],
-              "groups": [
-                "Supervisor"
               ]
             }
           ]

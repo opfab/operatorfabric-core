@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2022, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2023, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -26,7 +26,7 @@ public class BusinessconfigModule extends SimpleModule {
         addAbstractTypeMapping(Process.class,ProcessData.class);
         addAbstractTypeMapping(ProcessStates.class, ProcessStatesData.class);
         addAbstractTypeMapping(I18n.class, I18nData.class);
-        addAbstractTypeMapping(Recipient.class, RecipientData.class);
+        addAbstractTypeMapping(EntitiesTree.class, EntitiesTreeData.class);
         addAbstractTypeMapping(UserCard.class, UserCardData.class);
         addAbstractTypeMapping(Response.class, ResponseData.class);
         addAbstractTypeMapping(ProcessUiVisibility.class,ProcessUiVisibilityData.class);

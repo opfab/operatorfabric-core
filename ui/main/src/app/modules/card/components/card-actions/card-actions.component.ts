@@ -110,10 +110,10 @@ export class CardActionsComponent implements OnChanges, OnDestroy {
             this.editModal.result.then(
                 () => {
                      // If modal is closed
-                    this.router.navigate(['/' + this.routerStore.getCurrentRoute(), 'cards', this.card.id]);
+                    this.router.navigate([this.routerStore.getCurrentRoute(), 'cards', this.card.id]);
                 },
                 () => {
-                    this.router.navigate(['/' + this.routerStore.getCurrentRoute(), 'cards', this.card.id]);
+                    this.router.navigate([this.routerStore.getCurrentRoute(), 'cards', this.card.id]);
                 }
             );
         }

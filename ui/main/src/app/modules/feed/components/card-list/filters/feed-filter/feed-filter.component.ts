@@ -35,7 +35,7 @@ export class FeedFilterComponent implements OnInit, OnDestroy {
     @Input() hideResponseFilter: boolean;
 
     @Input() defaultSorting: string;
- 
+
     @Input() hideApplyFiltersToTimeLineChoice: boolean;
 
     @Output() filterActiveChange = new Subject<boolean>();
@@ -201,7 +201,7 @@ export class FeedFilterComponent implements OnInit, OnDestroy {
 
         this.responseFilterForm.get('responseControl').setValue(!responseUnset, {emitEvent: false});
 
-        if (!!responseValue) {
+        if (responseValue) {
             this.filterService.updateFilter(FilterType.RESPONSE_FILTER, responseUnset, !responseUnset);
         }
 
@@ -235,7 +235,7 @@ export class FeedFilterComponent implements OnInit, OnDestroy {
 
     private initAckFilter() {
         const ackValue = this.userPreferences.getPreference('opfab.feed.filter.ack');
-        this.initAckFilterValues(!!ackValue ? ackValue : this.defaultAcknowledgmentFilter);
+        this.initAckFilterValues(ackValue ? ackValue : this.defaultAcknowledgmentFilter);
 
 
         this.ackFilterForm.valueChanges.pipe(takeUntil(this.ngUnsubscribe$)).subscribe((form) => {
@@ -283,10 +283,10 @@ export class FeedFilterComponent implements OnInit, OnDestroy {
         const savedStart = this.userPreferences.getPreference('opfab.feed.filter.start');
         const savedEnd = this.userPreferences.getPreference('opfab.feed.filter.end');
 
-        if (!!savedStart) {
+        if (savedStart) {
             this.timeFilterForm.get('dateTimeFrom').setValue(Utilities.convertEpochDateToNgbDateTime(moment(+savedStart).valueOf()));
         }
-        if (!!savedEnd) {
+        if (savedEnd) {
             this.timeFilterForm.get('dateTimeTo').setValue(Utilities.convertEpochDateToNgbDateTime(moment(+savedEnd).valueOf()));
         }
 
@@ -377,6 +377,19 @@ export class FeedFilterComponent implements OnInit, OnDestroy {
         );
     }
 
+    showResetLink(): boolean {
+        return (
+            !this.typeFilterForm.get('alarm').value ||
+            !this.typeFilterForm.get('action').value ||
+            !this.typeFilterForm.get('compliant').value ||
+            !this.typeFilterForm.get('information').value ||
+            !this.responseFilterForm.get('responseControl').value ||
+            this.defaultAcknowledgmentFilter !== this.getAckPreference(this.ackFilterForm.get('ackControl').value, this.ackFilterForm.get('notAckControl').value) ||
+            !!this.extractTime(this.timeFilterForm.get('dateTimeFrom')) ||
+            !!this.extractTime(this.timeFilterForm.get('dateTimeTo'))
+        );
+    }
+
     reset() {
         this.typeFilterForm.get('alarm').setValue(true, {emitEvent: true});
         this.typeFilterForm.get('action').setValue(true, {emitEvent: true});
@@ -386,6 +399,7 @@ export class FeedFilterComponent implements OnInit, OnDestroy {
             this.responseFilterForm.get('responseControl').setValue(true, {emitEvent: true});
         }
         this.initAckFilterValues(this.defaultAcknowledgmentFilter);
+        this.userPreferences.setPreference('opfab.feed.filter.ack', this.defaultAcknowledgmentFilter);
 
         if (!this.hideTimerTags) {
             this.timeFilterForm.get('dateTimeFrom').setValue(null);

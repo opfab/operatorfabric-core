@@ -143,19 +143,14 @@ export class UserCardComponent implements OnInit {
         });
         this.severityForm.get('severity').setValue(Severity.ALARM);
 
-        this.userEntitiesAllowedToSendCardOptions = this.findUserEntitiesAllowedToSendCard();
-        this.userEntitiesAllowedToSendCardOptions.sort((a, b) => Utilities.compareObj(a.label, b.label));
+        this.setPublisherForCreatingUsercard();
 
-        if (!!this.cardIdToEdit) {
+        if (this.cardIdToEdit) {
             usercardTemplateGateway.editionMode = 'EDITION';
             this.loadCardForEdition();
         } else {
             usercardTemplateGateway.editionMode = 'CREATE';
             this.pageLoading = false;
-
-            if (this.userEntitiesAllowedToSendCardOptions.length > 0) {
-                this.publisherForCreatingUsercard = this.userEntitiesAllowedToSendCardOptions[0].value;
-            }
         }
 
         this.useDescriptionFieldForEntityList = this.configService.getConfigValue(
@@ -184,7 +179,7 @@ export class UserCardComponent implements OnInit {
 
             this.setPublisherForCreatingUsercardForCardToEdit();
 
-            if (!!this.cardToEdit.childCards) {
+            if (this.cardToEdit.childCards) {
                 const userResponse = this.cardToEdit.childCards.find(
                     (child) => child.publisher === this.publisherForCreatingUsercard
                 );
@@ -193,9 +188,15 @@ export class UserCardComponent implements OnInit {
         });
     }
 
-    private setPublisherForCreatingUsercardForCardToEdit() {
-        this.publisherForCreatingUsercard = this.userEntitiesAllowedToSendCardOptions[0].value;
+    private setPublisherForCreatingUsercard() {
+        this.userEntitiesAllowedToSendCardOptions = this.findUserEntitiesAllowedToSendCard();
+        this.userEntitiesAllowedToSendCardOptions.sort((a, b) => Utilities.compareObj(a.label, b.label));
+        if (this.userEntitiesAllowedToSendCardOptions.length > 0) {
+            this.publisherForCreatingUsercard = this.userEntitiesAllowedToSendCardOptions[0].value;
+        }
+    }
 
+    private setPublisherForCreatingUsercardForCardToEdit() {
         this.userEntitiesAllowedToSendCardOptions.forEach((entityOption) => {
             if (entityOption.value === this.cardToEdit.card.publisher)
                 this.publisherForCreatingUsercard = this.cardToEdit.card.publisher;
@@ -222,35 +223,35 @@ export class UserCardComponent implements OnInit {
     private setInitialDateFormValues(): void {
         const startDate = new DateField(
             this.startDateVisible,
-            this.datesFromTemplate && !!usercardTemplateGateway.getStartDate()
+            this.datesFromTemplate && usercardTemplateGateway.getStartDate()
                 ? usercardTemplateGateway.getStartDate()
                 : this.getStartDate()
         );
         const endDate = new DateField(
             this.endDateVisible,
-            this.datesFromTemplate && !!usercardTemplateGateway.getEndDate()
+            this.datesFromTemplate && usercardTemplateGateway.getEndDate()
                 ? usercardTemplateGateway.getEndDate()
                 : this.getEndDate()
         );
         const lttd = new DateField(
             this.lttdVisible,
-            this.datesFromTemplate && !!usercardTemplateGateway.getLttd()
+            this.datesFromTemplate && usercardTemplateGateway.getLttd()
                 ? usercardTemplateGateway.getLttd()
                 : this.getLttd()
         );
         const expirationDate = new DateField(
             this.expirationDateVisible,
-            this.datesFromTemplate && !!usercardTemplateGateway.getExpirationDate()
+            this.datesFromTemplate && usercardTemplateGateway.getExpirationDate()
                 ? usercardTemplateGateway.getExpirationDate()
                 : this.getExpirationDate()
         );
 
         if (
-            !!usercardTemplateGateway.getStartDate() ||
-            !!usercardTemplateGateway.getEndDate() ||
-            !!usercardTemplateGateway.getEndDate() ||
-            !!usercardTemplateGateway.getLttd() ||
-            !!usercardTemplateGateway.getExpirationDate()
+            usercardTemplateGateway.getStartDate() ||
+            usercardTemplateGateway.getEndDate() ||
+            usercardTemplateGateway.getEndDate() ||
+            usercardTemplateGateway.getLttd() ||
+            usercardTemplateGateway.getExpirationDate()
         ) {
             this.datesFromTemplate = false;
         }
@@ -271,10 +272,10 @@ export class UserCardComponent implements OnInit {
         lttd: DateField,
         expirationDate: DateField
     ): DatesForm {
-        if (!!this.cardToEdit.card.startDate) startDate.initialEpochDate = this.cardToEdit.card.startDate;
-        if (!!this.cardToEdit.card.endDate) endDate.initialEpochDate = this.cardToEdit.card.endDate;
-        if (!!this.cardToEdit.card.lttd) lttd.initialEpochDate = this.cardToEdit.card.lttd;
-        if (!!this.cardToEdit.card.expirationDate)
+        if (this.cardToEdit.card.startDate) startDate.initialEpochDate = this.cardToEdit.card.startDate;
+        if (this.cardToEdit.card.endDate) endDate.initialEpochDate = this.cardToEdit.card.endDate;
+        if (this.cardToEdit.card.lttd) lttd.initialEpochDate = this.cardToEdit.card.lttd;
+        if (this.cardToEdit.card.expirationDate)
             expirationDate.initialEpochDate = this.cardToEdit.card.expirationDate;
         this.datesFromCardToEdit = false;
         return new DatesForm(startDate, endDate, lttd, expirationDate);
@@ -282,21 +283,32 @@ export class UserCardComponent implements OnInit {
 
     private findUserEntitiesAllowedToSendCard(): Array<any> {
         const entitiesList = [];
-        this.userService.getCurrentUserWithPerimeters().userData.entities.forEach((userEntityId) => {
+
+        let alloweUserEntities = this.userService.getCurrentUserWithPerimeters().userData.entities;
+        if (this.userCardConfiguration?.publisherList?.length > 0) {
+            const configuredPublisherList = [];
+            this.entitiesService.resolveEntities(this.userCardConfiguration.publisherList).forEach(e => configuredPublisherList.push(e.id))
+
+            alloweUserEntities = alloweUserEntities.filter(entity => configuredPublisherList.includes(entity))
+        }
+
+        alloweUserEntities.forEach((userEntityId) => {
             const entity = this.entitiesService.getEntities().find((e) => e.id === userEntityId);
             if (entity.entityAllowedToSendCard) entitiesList.push({value: entity.id, label: entity.name});
         });
         return entitiesList;
     }
 
+
+
     private findPublisherForCreatingUsercard(): string {
-        if (!!this.userEntitiesAllowedToSendCardOptions && this.userEntitiesAllowedToSendCardOptions.length === 1)
+        if (this.userEntitiesAllowedToSendCardOptions && this.userEntitiesAllowedToSendCardOptions.length === 1)
             return this.userEntitiesAllowedToSendCardOptions[0].value;
         return this.cardEmitterForm.getSelectedCardEmitter();
     }
 
     public displayForm() {
-        return !!this.publisherForCreatingUsercard && !this.emptyProcessList && !this.isReadOnlyUser;
+        return this.publisherForCreatingUsercard && !this.emptyProcessList && !this.isReadOnlyUser;
     }
 
     public setEmptyProcessList(): void {
@@ -347,6 +359,12 @@ export class UserCardComponent implements OnInit {
             this.initialSelectedRecipientsForInformation = [];
         }
 
+
+        this.setPublisherForCreatingUsercard();
+        if (this.cardIdToEdit)
+            this.setPublisherForCreatingUsercardForCardToEdit();
+
+
         this.loadTemplate();
     }
 
@@ -355,7 +373,7 @@ export class UserCardComponent implements OnInit {
     }
 
     private setFieldsVisibility() {
-        if (!!this.userCardConfiguration) {
+        if (this.userCardConfiguration) {
             this.severityVisible =
                 this.userCardConfiguration.severityVisible === undefined
                     ? true
@@ -395,10 +413,10 @@ export class UserCardComponent implements OnInit {
 
     private loadTemplate() {
         let card;
-        if (!!this.cardToEdit) card = this.cardToEdit.card;
+        if (this.cardToEdit) card = this.cardToEdit.card;
         const selected = this.processesService.getProcess(this.selectedProcessId);
 
-        if (!!this.userCardConfiguration && !!this.userCardConfiguration.template) {
+        if (this.userCardConfiguration?.template) {
             const templateName = this.userCardConfiguration.template;
             usercardTemplateGateway.setEntityUsedForSendingCard = () => {
                 // default method if not override by template
@@ -464,7 +482,7 @@ export class UserCardComponent implements OnInit {
         Array.from(scripts).forEach((script) => {
             const scriptCopy = document.createElement('script');
             scriptCopy.type = (<HTMLScriptElement>script).type ? (<HTMLScriptElement>script).type : 'text/javascript';
-            if (!!script.innerHTML) {
+            if (script.innerHTML) {
                 scriptCopy.innerHTML = script.innerHTML;
             }
             scriptCopy.async = false;
@@ -486,7 +504,7 @@ export class UserCardComponent implements OnInit {
         usercardTemplateGateway.lttd = lttd;
         usercardTemplateGateway.expirationDate = expirationDate;
 
-        const title = !!this.specificInformation.card.title ? this.specificInformation.card.title : 'UNDEFINED';
+        const title = this.specificInformation.card.title ? this.specificInformation.card.title : 'UNDEFINED';
         const selectedProcess = this.processesService.getProcess(this.selectedProcessId);
         const cardEmitter = this.findPublisherForCreatingUsercard();
         this.recipients = this.getRecipients();
@@ -521,31 +539,31 @@ export class UserCardComponent implements OnInit {
                     entityRecipients: this.recipients.concat(recipientsForInformation),
                     entityRecipientsForInformation: recipientsForInformation,
                     entitiesAllowedToRespond: this.getEntitiesAllowedTorespond(this.recipients),
-                    entitiesRequiredToRespond: !!this.specificInformation.card.entitiesRequiredToRespond
+                    entitiesRequiredToRespond: this.specificInformation.card.entitiesRequiredToRespond
                         ? this.specificInformation.card.entitiesRequiredToRespond
                         : [],
                     entitiesAllowedToEdit: this.getValueOrNull(this.specificInformation.card.entitiesAllowedToEdit),
                     externalRecipients: this.getValueOrNull(this.specificInformation.card.externalRecipients),
                     title: title,
                     titleTranslated: titleTranslated,
-                    summary: !!this.specificInformation.card.summary
+                    summary: this.specificInformation.card.summary
                         ? this.specificInformation.card.summary
                         : 'UNDEFINED',
                     secondsBeforeTimeSpanForReminder: this.getValueOrNull(
                         this.specificInformation.card.secondsBeforeTimeSpanForReminder
                     ),
                     timeSpans: this.getTimeSpans(this.specificInformation, startDate, endDate),
-                    keepChildCards: !!this.specificInformation.card.keepChildCards
+                    keepChildCards: this.specificInformation.card.keepChildCards
                         ? this.specificInformation.card.keepChildCards
                         : false,
                     data: this.specificInformation.card.data,
-                    rRule: !!this.specificInformation.card.rRule ? this.specificInformation.card.rRule : null
+                    rRule: this.specificInformation.card.rRule ? this.specificInformation.card.rRule : null
                 } as Card;
 
                 this.childCards =
-                    !!this.cardToEdit && this.cardToEdit.card.keepChildCards ? this.cardToEdit.childCards : [];
+                    this.cardToEdit?.card.keepChildCards ? this.cardToEdit.childCards : [];
                 if (
-                    !!this.specificInformation.childCard &&
+                    this.specificInformation.childCard &&
                     this.userPermissionsService.isUserEnabledToRespond(
                         this.userService.getCurrentUserWithPerimeters(),
                         this.card,
@@ -563,7 +581,7 @@ export class UserCardComponent implements OnInit {
     }
 
     private removeEntityRecipientForInformationIfPresentInEntityRecipient(recipientsForInformation: string[], recipients): string[] {
-        if (!! recipientsForInformation) {
+        if ( recipientsForInformation) {
             recipientsForInformation = recipientsForInformation.filter(function(val) {
                 return recipients.indexOf(val) === -1;
             });
@@ -649,21 +667,21 @@ export class UserCardComponent implements OnInit {
     }
 
     private areDatesValid(startDate, endDate, lttd, expirationDate): boolean {
-        if (!!endDate && endDate < startDate) {
+        if (endDate && endDate < startDate) {
             this.displayMessage('shared.endDateBeforeStartDate', '', MessageLevel.ERROR);
             return false;
         }
 
-        if (!!lttd && lttd < startDate) {
+        if (lttd && lttd < startDate) {
             this.displayMessage('userCard.error.lttdBeforeStartDate', '', MessageLevel.ERROR);
             return false;
         }
 
-        if (!!lttd && !!endDate && lttd > endDate) {
+        if (lttd && endDate && lttd > endDate) {
             this.displayMessage('userCard.error.lttdAfterEndDate', '', MessageLevel.ERROR);
             return false;
         }
-        if (!!expirationDate && expirationDate < startDate) {
+        if (expirationDate && expirationDate < startDate) {
             this.displayMessage('userCard.error.expirationDateBeforeStartDate', '', MessageLevel.ERROR);
             return false;
         }
@@ -706,7 +724,7 @@ export class UserCardComponent implements OnInit {
             const defaultEntityAllowedToRespond = [];
             recipients.forEach((entity) => defaultEntityAllowedToRespond.push(entity));
 
-            entitiesAllowedToRespond = !!this.specificInformation.card.entitiesAllowedToRespond
+            entitiesAllowedToRespond = this.specificInformation.card.entitiesAllowedToRespond
                 ? this.specificInformation.card.entitiesAllowedToRespond
                 : defaultEntityAllowedToRespond;
         }
@@ -740,18 +758,18 @@ export class UserCardComponent implements OnInit {
     private getTimeSpans(specificInformation, startDate, endDate): TimeSpan[] {
         let timeSpans = [];
 
-        if (!!specificInformation.recurrence)
+        if (specificInformation.recurrence)
             this.opfabLogger.warn(
                 "Using deprecated field 'specificInformation.recurrence'. Use 'specificInformation.timeSpan' field instead to configure timespans",
                 LogOption.LOCAL
             );
 
-        if (!!specificInformation.timeSpans) {
+        if (specificInformation.timeSpans) {
             specificInformation.timeSpans.forEach((ts) => {
                 timeSpans.push(new TimeSpan(ts.startDate, ts.endDate, ts.recurrence));
             });
-        } else if (!!specificInformation.viewCardInCalendar) {
-            timeSpans = !!specificInformation.recurrence
+        } else if (specificInformation.viewCardInCalendar) {
+            timeSpans = specificInformation.recurrence
                 ? [new TimeSpan(startDate, endDate, specificInformation.recurrence)]
                 : [new TimeSpan(startDate, endDate)];
         }
@@ -818,7 +836,7 @@ export class UserCardComponent implements OnInit {
         let childCard = null;
 
         if (
-            !!this.specificInformation.childCard &&
+            this.specificInformation.childCard &&
             this.userPermissionsService.isUserEnabledToRespond(
                 this.userService.getCurrentUserWithPerimeters(),
                 this.card,
@@ -834,15 +852,15 @@ export class UserCardComponent implements OnInit {
         this.cardService.postCard(fromCardToCardForPublishing(this.card)).subscribe(
             (resp) => {
                 if (resp.status !== ServerResponseStatus.OK) {
-                    const msg = !!resp.statusMessage ? resp.statusMessage : '';
-                    const error = !!resp.status ? resp.status : '';
+                    const msg = resp.statusMessage ? resp.statusMessage : '';
+                    const error = resp.status ? resp.status : '';
                     this.opfabLogger.error(
                         'Impossible to send card , message from service : ' + msg + '. Error message : ' + error
                     );
                     this.displayMessage('userCard.error.impossibleToSendCard', null, MessageLevel.ERROR);
                     this.displaySendingCardInProgress = false;
                 } else {
-                    if (!!childCard) {
+                    if (childCard) {
                         this.sendAutomatedResponse(this.getChildCard(childCard), resp.data);
                     } else this.displayMessage('userCard.cardSendWithNoError', null, MessageLevel.INFO);
                 }
@@ -861,8 +879,8 @@ export class UserCardComponent implements OnInit {
         this.cardService.postCard(automatedResponseCard).subscribe(
             (resp) => {
                 if (resp.status !== ServerResponseStatus.OK) {
-                    const msg = !!resp.statusMessage ? resp.statusMessage : '';
-                    const error = !!resp.status ? resp.status : '';
+                    const msg = resp.statusMessage ? resp.statusMessage : '';
+                    const error = resp.status ? resp.status : '';
                     this.opfabLogger.error(
                         'Impossible to send child card , message from service : ' + msg + '. Error message : ' + error
                     );

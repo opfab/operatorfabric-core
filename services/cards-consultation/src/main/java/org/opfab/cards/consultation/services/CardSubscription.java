@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2022, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2023, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -15,6 +15,9 @@ import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
+
+import java.time.Instant;
+
 import org.opfab.springtools.configuration.oauth.UserServiceCache;
 import org.opfab.users.model.CurrentUserWithPerimeters;
 import reactor.core.publisher.Flux;
@@ -25,6 +28,7 @@ import reactor.core.publisher.FluxSink;
 @EqualsAndHashCode
 public class CardSubscription {
 
+    private Instant lastHearbeatReceptionDate;
     private CurrentUserWithPerimeters currentUserWithPerimeters;
     @Getter
     private String id;
@@ -45,6 +49,7 @@ public class CardSubscription {
         userLogin = currentUserWithPerimeters.getUserData().getLogin();
         this.id = computeSubscriptionId(userLogin, clientId);
         this.currentUserWithPerimeters = currentUserWithPerimeters;
+        this.lastHearbeatReceptionDate = Instant.now();
 
     }
 
@@ -102,6 +107,14 @@ public class CardSubscription {
     public void publishDataFluxIntoSubscription(Flux<String> messageFlux) {
 
         messageFlux.subscribe(next -> this.messageSink.next(next));
+    }
+
+    public void setHeartbeatReceptionDate(Instant date){
+        this.lastHearbeatReceptionDate = date;
+    }
+
+    public Instant getHeartbeatReceptionDate(){
+        return this.lastHearbeatReceptionDate;
     }
 
 }

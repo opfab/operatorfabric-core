@@ -38,7 +38,7 @@ export class RouterNavigationService {
 
     updateRouterStore() {
         this.router.events.pipe(filter((event) => event instanceof NavigationEnd)).subscribe((event: NavigationEnd) => {
-            this.routerStore.setCurrentRoute(event.url.split('/')[1]);
+            this.routerStore.setCurrentRoute(event.url);
         });
     }
 
@@ -53,7 +53,6 @@ export class RouterNavigationService {
     loadCardWhenUserNavigateToFeedCardDetail() {
         this.router.events.pipe(filter((event) => event instanceof NavigationEnd)).subscribe((event: NavigationEnd) => {
             if (event.url.startsWith('/feed/cards/')) {
-                
                 const cardId = event.url.split('cards/')[1];
                 this.selectedCardService.setSelectedCardId(decodeURI(cardId));
             }

@@ -76,7 +76,7 @@ export class NavbarComponent implements OnInit {
     ngOnInit() {
 
         this.routerStore.getCurrentRouteEvent().subscribe((route)=> {
-            this.currentRoute = route;
+            this.currentRoute = route.split('/')[1];
         });
 
         this.businessconfigMenus = this.menuService.getCurrentUserCustomMenus(this.configService.getMenus());

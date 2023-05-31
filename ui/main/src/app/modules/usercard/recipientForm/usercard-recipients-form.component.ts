@@ -10,7 +10,7 @@
 import {Component, Input, OnChanges, OnInit} from '@angular/core';
 import {ConfigService} from 'app/business/services/config.service';
 import {EntitiesService} from 'app/business/services/entities.service';
-import {Recipient} from '@ofModel/processes.model';
+import {EntitiesTree} from '@ofModel/processes.model';
 import {Entity} from '@ofModel/entity.model';
 import {OpfabLoggerService} from 'app/business/services/logs/opfab-logger.service';
 import {FormControl, FormGroup} from '@angular/forms';
@@ -82,19 +82,12 @@ export class UserCardRecipientsFormComponent implements OnInit, OnChanges {
     }
 
     private loadRecipientsOptions() {
-        if (!!this.userCardConfiguration.recipientList) {
-            this.opfabLogger.info(
-                'Use of restricted recipient list option in config.json is deprecated, use method usercardTemplateGateway.setDropdownEntityRecipientList in template '
+        this.recipientsOptions = [];
+        this.entitiesService
+            .getEntities()
+            .forEach((entity) =>
+                this.recipientsOptions.push(new MultiSelectOption(entity.id, this.getEntityLabel(entity)))
             );
-            this.loadRestrictedRecipientList(this.userCardConfiguration.recipientList);
-        } else {
-            this.recipientsOptions = [];
-            this.entitiesService
-                .getEntities()
-                .forEach((entity) =>
-                    this.recipientsOptions.push(new MultiSelectOption(entity.id, this.getEntityLabel(entity)))
-                );
-        }
     }
 
     private loadRecipientsForInformationOptions() {
@@ -105,48 +98,14 @@ export class UserCardRecipientsFormComponent implements OnInit, OnChanges {
                 this.recipientsForInformationOptions.push(new MultiSelectOption(entity.id, this.getEntityLabel(entity))));
     }
 
-    private loadRestrictedRecipientList(recipients: Recipient[]): void {
+    private loadRestrictedRecipientList(recipients: EntitiesTree[]): void {
         this.recipientsOptions = [];
-        recipients.forEach((r) => {
-            if (!!r.levels) {
-                r.levels.forEach((l) => {
-                    this.entitiesService.resolveChildEntitiesByLevel(r.id, l).forEach((entity) => {
-                        if (!this.recipientsOptions.find((o) => o.value === entity.id)) {
-                            this.recipientsOptions.push(new MultiSelectOption(entity.id, this.getEntityLabel(entity)));
-                        }
-                    });
-                });
-            } else {
-                if (!this.recipientsOptions.find((o) => o.value === r.id)) {
-                    const entity = this.entitiesService.getEntities().find((e) => e.id === r.id);
-                    if (!!entity)
-                        this.recipientsOptions.push(new MultiSelectOption(entity.id, this.getEntityLabel(entity)));
-                    else this.opfabLogger.info('Recipient entity not found : ' + r.id);
-                }
-            }
-        });
+        this.entitiesService.resolveEntities(recipients).forEach(entity => this.recipientsOptions.push(new MultiSelectOption(entity.id, this.getEntityLabel(entity))));
     }
 
-    private loadRestrictedRecipientForInformationList(recipientsForInformation: Recipient[]): void {
+    private loadRestrictedRecipientForInformationList(recipientsForInformation: EntitiesTree[]): void {
         this.recipientsForInformationOptions = [];
-        recipientsForInformation.forEach((r) => {
-            if (!!r.levels) {
-                r.levels.forEach((l) => {
-                    this.entitiesService.resolveChildEntitiesByLevel(r.id, l).forEach((entity) => {
-                        if (!this.recipientsForInformationOptions.find((o) => o.value === entity.id)) {
-                            this.recipientsForInformationOptions.push(new MultiSelectOption(entity.id, this.getEntityLabel(entity)));
-                        }
-                    });
-                });
-            } else {
-                if (!this.recipientsForInformationOptions.find((o) => o.value === r.id)) {
-                    const entity = this.entitiesService.getEntities().find((e) => e.id === r.id);
-                    if (!!entity)
-                        this.recipientsForInformationOptions.push(new MultiSelectOption(entity.id, this.getEntityLabel(entity)));
-                    else this.opfabLogger.info('\"Recipient for information\" entity not found : ' + r.id);
-                }
-            }
-        });
+        this.entitiesService.resolveEntities(recipientsForInformation).forEach(entity => this.recipientsForInformationOptions.push(new MultiSelectOption(entity.id, this.getEntityLabel(entity))));
     }
 
     private getEntityLabel(entity: Entity) {

@@ -8,11 +8,11 @@
  */
 
 import {Process} from '@ofModel/processes.model';
-import {TranslateService} from '@ngx-translate/core';
 import {Observable, Subject} from 'rxjs';
 import {NgbDate} from '@ng-bootstrap/ng-bootstrap';
 import {DateTimeNgb} from '@ofModel/datetime-ngb.model';
 import { Severity } from '@ofModel/light-card.model';
+import {TranslationService} from '../services/translation.service';
 
 export class Utilities {
     private static readonly _stringPrefixToAddForTranslation: string = 'shared.severity.';
@@ -21,9 +21,9 @@ export class Utilities {
         return process.id + '.' + process.version + '.';
     }
 
-    public static translateSeverity(translateService: TranslateService, severity: string): string {
+    public static translateSeverity(translatationService: TranslationService, severity: string): string {
         const rawSeverityString: string = Utilities._stringPrefixToAddForTranslation + severity.toLowerCase();
-        return translateService.instant(rawSeverityString);
+        return translatationService.getTranslation(rawSeverityString);
     }
 
     public static getSeverityColor(severity: Severity): string {
