@@ -83,7 +83,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
 
     @HostListener('mouseleave') onMouseLeave() {
         this.popoverTimeOut = setTimeout(() => {
-            this.openPopover.close();
+            this.openPopover?.close();
         }, 1000);
     }
 
