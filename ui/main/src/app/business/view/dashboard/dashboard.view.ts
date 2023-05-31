@@ -71,9 +71,9 @@ export class Dashboard {
     }
 
     private processLightCards() {
-        combineLatest([this.filterService.getBusinessDateFilterChanges(), 
+        combineLatest([this.filterService.getBusinessDateFilterChanges(),
                        this.lightCardsStoreService.getLightCards()]).subscribe((results) => {
-                let cards = results[1].filter((card) => results[0].applyFilter(card));
+                const cards = results[1].filter((card) => results[0].applyFilter(card));
                 this.loadProcesses();
                 cards.forEach((lightCard) => {
                     const dashboardCard = new CardForDashboard();
@@ -105,10 +105,6 @@ export class Dashboard {
             if (circle.severity === severity) {
                 circle.numberOfCards += 1;
                 circle.width = 10 + 2 * this.getEllipseWidth(circle.numberOfCards);
-                if (circle.numberOfCards ==98) {
-                    console.log("STATE:", stateContent.name);
-                    console.log("CIRCLE:", circle.width);
-                }
                 circle.cards.push(dashboardCard);
                 noCircle = false;
             }
@@ -128,7 +124,7 @@ export class Dashboard {
     }
 
     private severityCompare(circleA: DashboardCircle, circleB: DashboardCircle) {
-        let customOrder = new Map<Severity, number>();
+        const customOrder = new Map<Severity, number>();
         customOrder.set(Severity.ALARM, 1);
         customOrder.set(Severity.ACTION, 2);
         customOrder.set(Severity.COMPLIANT, 3);
