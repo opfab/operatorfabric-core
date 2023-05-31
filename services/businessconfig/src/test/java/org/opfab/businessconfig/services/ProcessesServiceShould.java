@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2022, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2023, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -122,7 +122,7 @@ class ProcessesServiceShould {
                 .hasContent(".bold {\n" +
                         "    font-weight: bolder;\n" +
                         "}");
-        styleFile = service.fetchResource("first", CSS, "0.1", "fr", "style1").getFile();
+        styleFile = service.fetchResource("first", CSS, "0.1", "style1").getFile();
         assertThat(styleFile)
                 .exists()
                 .isFile()
@@ -134,20 +134,20 @@ class ProcessesServiceShould {
 
     @Test
     void fetchTemplate() throws IOException {
-        File templateFile = service.fetchResource("first", TEMPLATE, null,null,"template1").getFile();
+        File templateFile = service.fetchResource("first", TEMPLATE, null, "template1").getFile();
         assertThat(templateFile.getParentFile()).isDirectory().hasName("template");
         assertThat(templateFile)
                 .exists()
                 .isFile()
                 .hasName("template1.handlebars")
                 .hasContent("{{service}}");
-        templateFile = service.fetchResource("first", TEMPLATE, "0.1", null, "template").getFile();
+        templateFile = service.fetchResource("first", TEMPLATE, "0.1", "template").getFile();
         assertThat(templateFile)
                 .exists()
                 .isFile()
                 .hasName("template.handlebars")
                 .hasContent("{{service}} 0.1");
-        templateFile = service.fetchResource("first", TEMPLATE, "0.1", null, "template").getFile();
+        templateFile = service.fetchResource("first", TEMPLATE, "0.1", "template").getFile();
         assertThat(templateFile)
                 .exists()
                 .isFile()
@@ -157,13 +157,13 @@ class ProcessesServiceShould {
 
     @Test
     void fetchTranslation() throws IOException {
-        File i18nFile = service.fetchResource("first", I18N,null,null, "i18n").getFile();
+        File i18nFile = service.fetchResource("first", I18N, null, "i18n").getFile();
         assertThat(i18nFile)
                 .exists()
                 .isFile()
                 .hasName("i18n.json")
                 .hasContent("card.title=\"Title $1\"");
-        i18nFile = service.fetchResource("first", I18N, "0.1", null, "i18n").getFile();
+        i18nFile = service.fetchResource("first", I18N, "0.1", "i18n").getFile();
         assertThat(i18nFile)
                 .exists()
                 .isFile()
@@ -177,25 +177,21 @@ class ProcessesServiceShould {
                 service.fetchResource("what",
                         TEMPLATE,
                         "0.1",
-                        null,
                         "template"));
         assertThatExceptionOfType(FileNotFoundException.class).isThrownBy(() ->
                 service.fetchResource("first",
                         TEMPLATE,
                         "0.2",
-                        null,
                         "template"));
         assertThatExceptionOfType(FileNotFoundException.class).isThrownBy(() ->
                 service.fetchResource("first",
                         CSS,
                         "0.1",
-                        null,
                         "styleWhat"));
         assertThatExceptionOfType(FileNotFoundException.class).isThrownBy(() ->
                 service.fetchResource("first",
                         TEMPLATE,
                         "0.1",
-                        null,
                         "template1")
                         .getInputStream()
         );

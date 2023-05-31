@@ -232,7 +232,7 @@ public class ProcessesService implements ResourceLoaderAware {
      */
     public Resource fetchResource(String process, ResourceTypeEnum type, String name) throws
             FileNotFoundException {
-        return fetchResource(process, type, null, null, name);
+        return fetchResource(process, type, null, name);
     }
 
     /**
@@ -241,12 +241,11 @@ public class ProcessesService implements ResourceLoaderAware {
      * @param processId Process id
      * @param type      resource type
      * @param version   process configuration version
-     * @param locale    chosen locale use default if not set
      * @param name      resource name
      * @return resource handle
      * @throws FileNotFoundException if corresponding file does not exist
      */
-    public Resource fetchResource(String processId, ResourceTypeEnum type, String version, String locale,
+    public Resource fetchResource(String processId, ResourceTypeEnum type, String version,
                                   String name) throws FileNotFoundException {
         Map<String, Process> versions = completeCache.row(processId);
         if (versions.isEmpty())
@@ -264,9 +263,6 @@ public class ProcessesService implements ResourceLoaderAware {
         if (process == null)
             throw new FileNotFoundException("Unknown version (" + finalVersion + ") for " + processId + " at " + this.storagePath);
 
-        if (type.isLocalized() && locale == null)
-            throw new FileNotFoundException("Unable to determine resource for undefined locale");
-
         String resourcePath = PATH_PREFIX +
                 storagePath +
                 BUNDLE_FOLDER +
@@ -277,7 +273,6 @@ public class ProcessesService implements ResourceLoaderAware {
                 File.separator +
                 type.getFolder() +
                 File.separator +
-                (type.isLocalized() ? (locale + File.separator) : "") +
                 name + type.getSuffix();
 
         log.info("loading resource: {}", resourcePath);
@@ -296,21 +291,6 @@ public class ProcessesService implements ResourceLoaderAware {
      */
     public Process fetch(String id) {
         return fetch(id, null);
-    }
-
-    /**
-     * Computes resource handle
-     *
-     * @param process Process id
-     * @param type      resource type
-     * @param version   process configuration version
-     * @param name      resource name
-     * @return resource handle
-     * @throws FileNotFoundException if corresponding resource does not exist
-     */
-    public Resource fetchResource(String process, ResourceTypeEnum type, String version, String name) throws
-            FileNotFoundException {
-        return fetchResource(process, type, version, null, name);
     }
 
     @Override
@@ -369,7 +349,7 @@ public class ProcessesService implements ResourceLoaderAware {
     /**
      * Updates or creates processgroups file from a file uploaded from POST /businessconfig/processgroups
      *
-     * @param is processgroups file input stream
+     * @param fileContent processgroups file input stream
      * @throws IOException if error arise during stream reading
      */
     public synchronized void updateProcessGroupsFile(String fileContent) throws IOException {
