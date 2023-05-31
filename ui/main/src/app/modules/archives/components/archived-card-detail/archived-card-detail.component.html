@@ -14,11 +14,10 @@
   <div id="opfab-card-detail-footer">
     <span class="opfab-card-received-footer">
       <span translate>feed.received</span>
-      {{getFormattedDate(card.publishDate)}} <span translate> feed.at </span> {{getFormattedTime(card.publishDate)}}
-      <span *ngIf="fromEntityOrRepresentativeSelectedCard">
-        <span translate> feed.from</span>
-        {{fromEntityOrRepresentativeSelectedCard}}
-      </span>
+      {{getFormattedDate(card.publishDate)}} <span translate> feed.at </span>
+      <span>{{getFormattedTime(card.publishDate)}}</span>
+      <span *ngIf="fromEntityOrRepresentativeSelectedCard" translate> feed.from </span>
+      <span>{{fromEntityOrRepresentativeSelectedCard}}</span>
       <span *ngIf="!!card.deletionDate">
         <span style="margin-left: 10px; margin-right: 10px;">-</span>
         <span translate>feed.deleted</span>
