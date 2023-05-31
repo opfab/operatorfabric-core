@@ -44,7 +44,7 @@ services:
 #    - "90:9990"
   users:
     container_name: users
-    image: "lfeoperatorfabric/of-users-service:SNAPSHOT"
+    image: "lfeoperatorfabric/of-users-service:3.15.0.RELEASE"
     depends_on:
       - mongodb
       - rabbitmq
@@ -62,7 +62,7 @@ services:
     - ${CONFIG_PATH}:/external-config
   businessconfig:
     container_name: businessconfig
-    image: "lfeoperatorfabric/of-businessconfig-service:SNAPSHOT"
+    image: "lfeoperatorfabric/of-businessconfig-service:3.15.0.RELEASE"
     depends_on:
       - mongodb
     user: ${USER_ID}:${USER_GID}
@@ -80,7 +80,7 @@ services:
      - ${CONFIG_PATH}:/external-config
   cards-publication:
     container_name: cards-publication
-    image: "lfeoperatorfabric/of-cards-publication-service:SNAPSHOT"
+    image: "lfeoperatorfabric/of-cards-publication-service:3.15.0.RELEASE"
     depends_on:
       - mongodb
       - rabbitmq
@@ -98,7 +98,7 @@ services:
       - ${CONFIG_PATH}:/external-config
   cards-consultation:
     container_name: cards-consultation
-    image: "lfeoperatorfabric/of-cards-consultation-service:SNAPSHOT"
+    image: "lfeoperatorfabric/of-cards-consultation-service:3.15.0.RELEASE"
     depends_on:
       - mongodb
       - rabbitmq
@@ -116,7 +116,7 @@ services:
       - ${CONFIG_PATH}:/external-config
   web-ui:
     container_name: web-ui
-    image: "lfeoperatorfabric/of-web-ui:SNAPSHOT"
+    image: "lfeoperatorfabric/of-web-ui:3.15.0.RELEASE"
     ports:
     - "2002:80"
     depends_on:
@@ -132,7 +132,7 @@ services:
 #     - "./custom-sounds:/usr/share/nginx/html/assets/sounds"
   external-devices:
     container_name: external-devices
-    image: "lfeoperatorfabric/of-external-devices-service:SNAPSHOT"
+    image: "lfeoperatorfabric/of-external-devices-service:3.15.0.RELEASE"
     depends_on:
       - mongodb
       - users
@@ -153,7 +153,7 @@ services:
 # External application example
   ext-app:
     container_name: external-app
-    image: "lfeoperatorfabric/of-external-app:SNAPSHOT"
+    image: "lfeoperatorfabric/of-external-app:3.15.0.RELEASE"
     ports:
       - "8090:8090"
     environment:
@@ -166,7 +166,7 @@ services:
 # Dummy external devices using Modbus Protocol
   dummy-modbus-device_1:
     container_name: dummy-modbus-device_1
-    image: "lfeoperatorfabric/of-dummy-modbus-device:SNAPSHOT"
+    image: "lfeoperatorfabric/of-dummy-modbus-device:3.15.0.RELEASE"
     user: ${USER_ID}:${USER_GID}
     ports:
       - "4031:4030"
@@ -179,7 +179,7 @@ services:
       - ${CONFIG_PATH}:/external-config
   dummy-modbus-device_2:
     container_name: dummy-modbus-device_2
-    image: "lfeoperatorfabric/of-dummy-modbus-device:SNAPSHOT"
+    image: "lfeoperatorfabric/of-dummy-modbus-device:3.15.0.RELEASE"
     user: ${USER_ID}:${USER_GID}
     ports:
       - "4032:4030"
