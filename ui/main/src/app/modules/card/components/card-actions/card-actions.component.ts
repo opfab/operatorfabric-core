@@ -19,7 +19,7 @@ import {UserService} from 'app/business/services/user.service';
 import {Subject} from 'rxjs';
 import {CardService} from 'app/business/services/card.service';
 import {ServerResponseStatus} from 'app/business/server/serverResponse';
-import {RouterStore,PageType} from 'app/business/store/router.store';
+import {PageType, RouterStore} from 'app/business/store/router.store';
 import {Router} from '@angular/router';
 
 @Component({
@@ -126,7 +126,9 @@ export class CardActionsComponent implements OnChanges, OnDestroy {
     }
 
     private reopenCardDetailOnceEditionIsFinished() {
-        if (this.routerStore.getCurrentPageType() !== PageType.CALENDAR && this.routerStore.getCurrentPageType() !== PageType.MONITORING) {
+        if (this.routerStore.getCurrentPageType() !== PageType.CALENDAR &&
+            this.routerStore.getCurrentPageType() !== PageType.MONITORING &&
+            this.routerStore.getCurrentPageType() !== PageType.DASHBOARD) {
             this.editModal.result.then(
                 () => {
                      // If modal is closed

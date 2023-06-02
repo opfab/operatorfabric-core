@@ -76,7 +76,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
 
     onCircleClick(circle) {
         if (circle.numberOfCards == 1) {
-            let cardId = circle.cards[0].id;
+            const cardId = circle.cards[0].id;
             this.selectCard(cardId);
         }
     }
