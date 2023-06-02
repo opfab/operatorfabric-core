@@ -23,7 +23,8 @@ export class RouterStore {
         ['about', PageType.ABOUT],
         ['calendar', PageType.CALENDAR],
         ['monitoring', PageType.MONITORING],
-        ['usercard', PageType.USERCARD]
+        ['usercard', PageType.USERCARD],
+        ['dashboard', PageType.DASHBOARD]
     ]);
 
 
@@ -68,5 +69,6 @@ export enum PageType {
     ABOUT,
     CALENDAR,
     MONITORING,
-    USERCARD
+    USERCARD,
+    DASHBOARD
 }
