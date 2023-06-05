@@ -40,9 +40,6 @@ describe('Opfab interface', function () {
         const opfabServicesInterface = getOpfabServicesInterface();
         opfabServicesInterface.setAuthenticationService(authenticationService);
 
-
-
-
         sinon.stub(opfabServicesInterface, 'sendRequest').callsFake((request) => {
             if (request.url.includes('token')) return Promise.resolve({status: 200, data: {access_token: 'fakeToken'}});
             else {

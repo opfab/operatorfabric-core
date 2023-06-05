@@ -33,7 +33,6 @@ export default class OpfabServicesInterface implements EventListener{
     private listener: EventBusListener;
 
 
-
     constructor() {
         this.listener = new EventBusListener()
             .addListener(this);
@@ -152,8 +151,6 @@ export default class OpfabServicesInterface implements EventListener{
         }
        
     }
-
-
 
     public async fetchAllUsers(): Promise<GetResponse> {
         try {
