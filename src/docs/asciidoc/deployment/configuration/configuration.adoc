@@ -184,13 +184,13 @@ The main notification service can be configured with the following properties:
 |mail.port||yes|Mail server host
 |mail.auth.user||yes|Mail server authentication user
 |mail.auth.pass||yes|Mail server authentication password
-|defaultConfig.mailFrom|||yes|Mail from address
+|defaultConfig.mailFrom||yes|Mail from address
 |defaultConfig.subjectPrefix||yes|Mail subject prefix
-|defaultConfig.bodyPrefix||||Mail body prefix
-|defaultConfig.windowInSecondsForCardSearch||||Max time interval used to query new cards (in seconds) 
-|defaultConfig.secondsAfterPublicationToConsiderCardAsNotRead||||Time period after card publication before sending mail notification
-|defaultConfig.checkPeriodInSeconds||||Time interval between consecutive checks
-
+|defaultConfig.bodyPrefix|||Mail body prefix
+|defaultConfig.windowInSecondsForCardSearch|||Max time interval used to query new cards (in seconds)
+|defaultConfig.secondsAfterPublicationToConsiderCardAsNotRead|||Time period after card publication before sending mail notification
+|defaultConfig.checkPeriodInSeconds|||Time interval between consecutive checks
+|===
 The parameters in "defaultConfig" section can be modified at runtime by sending an http POST request to the `/config` API with a JSON payload containing the config parameters to be changed.
 
 

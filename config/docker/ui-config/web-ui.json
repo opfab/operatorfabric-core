@@ -134,6 +134,7 @@
     }
   },
   "usercard": {
-    "useDescriptionFieldForEntityList": false
+    "useDescriptionFieldForEntityList": false,
+    "displayConnectionCirclesInPreview": false
   }
 }

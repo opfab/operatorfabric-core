@@ -133,6 +133,7 @@ describe('User Card ', function () {
 
     it('Recipients should not be displayed in IT incident user card but set via template code', () => {
 
+      script.setPropertyInConf('usercard.displayConnectionCirclesInPreview','web-ui','\\"true\\"');
       opfab.loginWithUser('operator1_fr');
       opfab.navigateToUserCard();
       usercard.selectService('User card examples');
@@ -142,6 +143,11 @@ describe('User Card ', function () {
       usercard.preview();
       usercard.checkEntityRecipientsInPreviewContains("French Control Centers");
       usercard.checkEntityRecipientsInPreviewContains("IT SUPERVISION CENTER");
+      // Check circles for connected entities
+      cy.get('#opfab-entity-recipients').get('.badge').should('have.length', 2);
+      cy.get('#opfab-entity-recipients').get('.bg-success').should('have.length', 1);
+      cy.get('#opfab-entity-recipients').get('.bg-danger').should('have.length', 1);
+      script.resetUIConfigurationFiles();
     })
 
     it('Recipients should be the union of user selection and template defined recipients in conference user card', () => {
