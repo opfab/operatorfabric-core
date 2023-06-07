@@ -22,7 +22,7 @@ describe('Time line moves', function () {
 
     before('Set up configuration and cards', function () {
         script.loadTestConf();
-        // send heardbeat every 100 hours 
+        // send heartbeat every 100 hours 
         // to avoid sending many heartbeats request when going in the future with clock
         script.setPropertyInConf('heartbeatSendingInterval','web-ui',360000);
     });
