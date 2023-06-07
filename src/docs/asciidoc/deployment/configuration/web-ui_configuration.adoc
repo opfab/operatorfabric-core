@@ -156,6 +156,7 @@ For example adding `Keycloak` application, with `'Keycloak'` as `name`, `1` as `
 |environmentName||no| Name of the environment to display in the top-right corner (examples: PROD , TEST .. ), if the value not set the environment name is not shown .
 |environmentColor|blue|no| Color of the background of the environment name. The format of color is css, for example : `red` , `#4052FF`
 |showUserEntitiesOnTopRightOfTheScreen|false|no| if set to true the users entities will be displayed under the login on top right of the screen
+|usercard.displayConnectionCirclesInPreview|false|no|Displays a green circle next to the recipient entities if any account associated to the entity is connected. If not, displays a red circle. The green circle doesn't take filters or perimeters into account. It doesn't warrant that the message will be received.
 |usercard.useDescriptionFieldForEntityList|false|no|If true, show entity `description` field instead of `name` in user card page
 |externalDevicesEnabled|false|no|If true, users have the opportunity to play sounds on external devices rather than in the browser. See `settings.playSoundOnExternalDevice`
 |secondsToCloseSession|60|no|Number of seconds between logout and token expiration
