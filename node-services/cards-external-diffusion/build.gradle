@@ -66,4 +66,4 @@ docker {
 build.dependsOn(runTests)
 build.dependsOn(runBuild)
 assemble.dependsOn(runBuild)
-tasks.dockerPrepare.dependsOn runBuild
+tasks.dockerPrepare.dependsOn runTests
