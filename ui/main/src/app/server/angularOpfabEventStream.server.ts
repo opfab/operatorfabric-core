@@ -36,7 +36,7 @@ export class AngularOpfabEventStreamServer extends AngularServer implements Opfa
     private streamInitDoneEvent = new Subject<void>();
     private streamStatusEvents = new Subject<string>();
 
-    private lastHeardBeatDate = 0;
+    private lastheartbeatDate = 0;
     private firstSubscriptionInitDone = false;
     private eventSource;
 
@@ -73,7 +73,7 @@ export class AngularOpfabEventStreamServer extends AngularServer implements Opfa
 
         this.eventSource.onmessage = (message) => {
             if (message.data === 'HEARTBEAT') {
-                this.lastHeardBeatDate = new Date().valueOf();
+                this.lastheartbeatDate = new Date().valueOf();
                 this.logger.info(`EventStreamServer - HEARTBEAT received - Connection alive `, LogOption.LOCAL);
             } else {
                 if (message.data === 'INIT') {
@@ -87,7 +87,7 @@ export class AngularOpfabEventStreamServer extends AngularServer implements Opfa
                         this.firstSubscriptionInitDone = true;
                         this.streamInitDoneEvent.next();
                         this.streamInitDoneEvent.complete();
-                        this.lastHeardBeatDate = new Date().valueOf();
+                        this.lastheartbeatDate = new Date().valueOf();
                     }
                 } else this.businessEvents.next(message);
             }
@@ -109,7 +109,7 @@ export class AngularOpfabEventStreamServer extends AngularServer implements Opfa
         this.heartbeatReceptionIntervalId = setInterval(() => {
             this.logger.info(
                 'EventStreamServer - Last heart beat received ' +
-                    (new Date().valueOf() - this.lastHeardBeatDate) +
+                    (new Date().valueOf() - this.lastheartbeatDate) +
                     'ms ago',
                 LogOption.LOCAL_AND_REMOTE
             );
@@ -129,7 +129,7 @@ export class AngularOpfabEventStreamServer extends AngularServer implements Opfa
 
     private recoverAnyLostCardWhenConnectionHasBeenReset() {
         // Subtracts two minutes from the last heart beat to avoid loosing card due to latency, buffering and not synchronized clock
-        const dateForRecovering = this.lastHeardBeatDate - AngularOpfabEventStreamServer.TWO_MINUTES;
+        const dateForRecovering = this.lastheartbeatDate - AngularOpfabEventStreamServer.TWO_MINUTES;
         this.logger.info(
             `EventStreamServer - Card subscription has been init again , recover any lost card from date ` +
                 new Date(dateForRecovering),
