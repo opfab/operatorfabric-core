@@ -381,6 +381,7 @@ export class ArchivesLoggingFiltersComponent implements OnInit, OnDestroy, After
     }
 
     resetForm() {
+        this.reset.emit(null);
         this.tagsSelected = [];
         this.processGroupSelected = [];
         this.processSelected = [];
@@ -390,7 +391,6 @@ export class ArchivesLoggingFiltersComponent implements OnInit, OnDestroy, After
         this.activeMinDate = null;
         this.activeMaxDate = null;
         this.setDateFilterBounds();
-        this.reset.emit(null);
     }
 
     ngOnDestroy() {
