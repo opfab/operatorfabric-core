@@ -99,6 +99,8 @@ export class UserActionLogsFiltersComponent implements OnInit, OnDestroy {
     resetForm() {
         this.loginsSelected = [];
         this.actionsSelected = [];
+        this.minDate = this.defaultMinDate;
+        this.maxDate = null;
         this.reset.emit(null);
     }
 
