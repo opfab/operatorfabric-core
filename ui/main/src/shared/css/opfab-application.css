@@ -599,6 +599,7 @@ input:-webkit-autofill {
 
 .opfab-btn-cancel {
     color: #2784ff;
+    outline:none;
     background-color: var(--opfab-bg-color);
     border-width: 0px;
     border-radius: 2px;
