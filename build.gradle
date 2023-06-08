@@ -104,7 +104,7 @@ sonar {
         property 'sonar.sources', 'ui/main,node-services/cards-external-diffusion'
         property 'sonar.junit.reportPaths','build/test-results/test'
         property 'sonar.coverage.jacoco.xmlReportPaths','build/reports/jacoco/xml/report.xml'
-        property 'sonar.javascript.lcov.reportPaths','coverage/lcov.info'
+        property 'sonar.javascript.lcov.reportPaths','./coverage/lcov.info'
         // **/src/tooling/** : one-time migration tools, not meant to evolve or be tested for regressions
         property 'sonar.coverage.exclusions','**/config*/**/*,**/ui/**/*,**/controllers/**,**/src/tooling/**,**/src/test/**'
         property 'sonar.exclusions','**/generated/**/*,**/src/docs/**/*,**/*Application.java,**/node_modules/**/*'
