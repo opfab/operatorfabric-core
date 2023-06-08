@@ -25,7 +25,7 @@ task runBuild(type: NpmTask) {
     args = ['run', 'build']
 }
 
-task runTests(type: NpmTask) {
+task test(type: NpmTask) {
     inputs.files(fileTree('src'))
     inputs.files(fileTree('node_modules'))
     inputs.file('package.json')
@@ -63,7 +63,8 @@ docker {
     dockerfile file("docker/Dockerfile")
 }
 
-build.dependsOn(runTests)
+build.dependsOn(test)
 build.dependsOn(runBuild)
+
 assemble.dependsOn(runBuild)
-tasks.dockerPrepare.dependsOn runTests
+tasks.dockerPrepare.dependsOn test
