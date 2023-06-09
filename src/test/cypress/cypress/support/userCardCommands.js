@@ -209,7 +209,7 @@ export class UserCardCommands extends OpfabCommands {
     }
 
     checkSenderIsTheOnlyOneRecipient= function () {
-        cy.get('#opfab-you-are-only-one-recipient').find('span').should('contain.text', "You are the only recipient of this card.");
+        cy.get('#opfab-you-are-only-one-recipient').find('span').should('contain.text', "No recipient are set.");
     }
 
     cancelCardSending= function () {

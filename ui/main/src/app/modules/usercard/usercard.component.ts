@@ -585,7 +585,7 @@ export class UserCardComponent implements OnInit, OnDestroy {
                     severity: this.getSeverity(),
                     hasBeenAcknowledged: false,
                     hasBeenRead: false,
-                    userRecipients: [this.userService.getCurrentUserWithPerimeters().userData.login],
+                    userRecipients: [],
                     entityRecipients: this.recipients.concat(recipientsForInformation),
                     entityRecipientsForInformation: recipientsForInformation,
                     entitiesAllowedToRespond: this.getEntitiesAllowedTorespond(this.recipients),

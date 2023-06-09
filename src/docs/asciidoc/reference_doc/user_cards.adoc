@@ -380,5 +380,6 @@ https://github.com/opfab/operatorfabric-core/tree/master/src/test/resources/bund
 
 == Misc
 
-When a user send a card, it is always sent to himself whatever he chooses in the recipient list.
+When a user send a card, the card is also sent to the members of the entity that publish the card (and therefore also to
+the sender himself), whatever the user chooses in the recipient list.
 
