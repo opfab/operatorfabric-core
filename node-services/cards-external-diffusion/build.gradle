@@ -43,12 +43,13 @@ docker {
     labels (['project':"${project.group}"])
     copySpec.with {
 				from('build') {
-					include '**'
-					into 'build'
+					include 'domain/**'
+                    include 'cardsExternalDiffusion.js'
+					into 'dockerBuild'
 				}
                 from('config') {
-					include '**'
-					into 'config'
+					include 'default-docker.json'
+					into 'dockerConfig'
 				}
 				from('.') {
 					include 'startCardsExternalDiffusion.sh'
@@ -56,7 +57,7 @@ docker {
 					into '.'
 				}
 			}
-    files( "build", "package.json", "config")
+    files( "bin", "package.json", "config")
     buildArgs([
                 'https_proxy'    : proxy.https
                 ])
