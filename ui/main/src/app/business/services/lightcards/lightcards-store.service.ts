@@ -270,9 +270,11 @@ export class LightCardsStoreService {
         const consideredAcknowledgedForUserWhen =
             this.processesService.getConsideredAcknowledgedForUserWhenForALightCard(lightCard);
 
-        if (this.areWeInModeUserHasAcknowledged(lightCard, consideredAcknowledgedForUserWhen))
+        if (this.areWeInModeUserHasAcknowledged(lightCard, consideredAcknowledgedForUserWhen)) {
             return lightCard.hasBeenAcknowledged;
-        else return this.isLightCardHasBeenAcknowledgedByUserEntity(lightCard, consideredAcknowledgedForUserWhen);
+        } else {
+            return this.isLightCardHasBeenAcknowledgedByUserEntity(lightCard, consideredAcknowledgedForUserWhen);
+        }
     }
 
     private areWeInModeUserHasAcknowledged(
@@ -298,16 +300,17 @@ export class LightCardsStoreService {
         return entitiesOfUserThatAreRecipients.length > 0;
     }
 
-    private isLightCardHasBeenAcknowledgedByUserEntity(
-        lightCard: LightCard,
-        consideredAcknowledgedForUserWhen: ConsideredAcknowledgedForUserWhenEnum
-    ): boolean {
+    private isLightCardHasBeenAcknowledgedByUserEntity(lightCard: LightCard,
+                                                       consideredAcknowledgedForUserWhen: ConsideredAcknowledgedForUserWhenEnum): boolean {
+
         const listEntitiesToAck = this.computeListEntitiesToAck(lightCard);
 
-        if (
-            listEntitiesToAck?.length > 0 &&
-            consideredAcknowledgedForUserWhen !== ConsideredAcknowledgedForUserWhenEnum.USER_HAS_ACKNOWLEDGED
-        ) {
+        if (this.isMemberOfEntityThatPublishedTheCard(lightCard) &&
+            !lightCard.entitiesAcks?.includes(lightCard.publisher)) {
+                return false;
+        }
+
+        if (listEntitiesToAck?.length > 0) {
             return (
                 this.checkIsAcknowledgedForTheCaseOfOneEntitySufficesForAck(
                     consideredAcknowledgedForUserWhen,
@@ -319,7 +322,8 @@ export class LightCardsStoreService {
                     listEntitiesToAck
                 )
             );
-        } else return false;
+        }
+        return false;
     }
 
     private computeListEntitiesToAck(lightCard: LightCard): string[] {
@@ -487,6 +491,17 @@ export class LightCardsStoreService {
             // Each time hasBeenAcknowledged is updated, we have to compute it again, relating to entities acks
             card.hasBeenAcknowledged = this.isLightCardHasBeenAcknowledgedByUserOrByUserEntity(card);
             this.lightCardsEvents.next(this.lightCards);
+        }
+    }
+
+    private isMemberOfEntityThatPublishedTheCard(lightCard: LightCard): boolean {
+        if (lightCard.publisherType === 'ENTITY' &&
+            this.userService
+                .getCurrentUserWithPerimeters()
+                .userData.entities?.includes(lightCard.publisher)) {
+            return true;
+        } else {
+            return false;
         }
     }
 }
