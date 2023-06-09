@@ -17,6 +17,7 @@ import {BehaviorSubject} from 'rxjs';
 export class GroupedCardsService {
     private groupedChildCards: LightCard[] = [];
     private parentsOfGroupedCards: LightCard[] = [];
+    private tagsMap = new Map();
 
     computeEvent = new BehaviorSubject(null);
 
@@ -25,27 +26,24 @@ export class GroupedCardsService {
     }
 
     computeGroupedCards(lightCards: LightCard[]) {
+        this.tagsMap.clear();
         this.groupedChildCards = [];
         this.parentsOfGroupedCards = [];
-        const allTags = [];
-        const parentTags = new Set<string>();
 
         lightCards.forEach((lightCard) => {
-            allTags.push(GroupedCardsService.tagsAsString(lightCard.tags));
-        });
 
-        lightCards.forEach((lightCard) => {
             const tagString = GroupedCardsService.tagsAsString(lightCard.tags);
-
-            if (allTags.indexOf(tagString) !== allTags.lastIndexOf(tagString)) {
-                if (!parentTags.has(tagString)) {
-                    this.parentsOfGroupedCards.push(lightCard);
-                    parentTags.add(tagString);
-                } else {
-                    this.groupedChildCards.push(lightCard);
-                }
+            let cardsByTag = this.tagsMap.get(tagString);
+            if (!cardsByTag) {
+                cardsByTag = [];
+                this.parentsOfGroupedCards.push(lightCard);
+            } else {
+                this.groupedChildCards.push(lightCard);
+                cardsByTag.push(lightCard)
             }
+            this.tagsMap.set(tagString, cardsByTag);
         });
+
         this.computeEvent.next(null);
     }
 
@@ -59,10 +57,8 @@ export class GroupedCardsService {
 
     getChildCardsByTags(tags: string[]): LightCard[] {
         const tagString = GroupedCardsService.tagsAsString(tags);
-        return this.groupedChildCards.filter((e) => {
-            const childTagString = GroupedCardsService.tagsAsString(e.tags);
-            return childTagString === tagString;
-        });
+        const groupedChildCardsByTags = this.tagsMap.get(tagString);
+        return groupedChildCardsByTags ? groupedChildCardsByTags : [];
     }
 
     isCardInGroup(child: string, parent: string): boolean {
