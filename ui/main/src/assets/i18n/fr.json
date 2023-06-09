@@ -327,7 +327,7 @@
     "state": "État",
     "recipients": "DESTINATAIRES:",
     "recipientsForInformation": "DESTINATAIRES EN COPIE:",
-    "youAreTheOnlyRecipient": "Vous êtes l'unique destinataire de cette carte.",
+    "youAreTheOnlyRecipient": "Aucun destinataire n'est défini.",
     "feedPreview": "PRÉVISUALISATION FLUX DE CARTES:",
     "contentPreview": "PRÉVISUALISATION CONTENU:",
     "send-another-one": "ENVOYER UNE AUTRE CARTE",

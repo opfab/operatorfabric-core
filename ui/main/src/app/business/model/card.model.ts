@@ -171,7 +171,11 @@ export function fromCardToLightCard(card: Card): LightCard {
         card.wktProjection,
         card.entitiesAcks,
         card.entityRecipients,
-        card.entityRecipientsForInformation
+        card.entityRecipientsForInformation,
+        card.entitiesAllowedToRespond,
+        card.entitiesRequiredToRespond,
+        card.entitiesAllowedToEdit,
+        card.publisherType
     );
 }
 

@@ -327,7 +327,7 @@
     "state": "Status",
     "recipients": "ONTVANGERS:",
     "recipientsForInformation": "ONTVANGERS IN KOPIE:",
-    "youAreTheOnlyRecipient": "U bent de enige ontvanger van deze kaart.",
+    "youAreTheOnlyRecipient": "Er is geen ontvanger ingesteld.",
     "feedPreview": "FEED PREVIEW:",
     "contentPreview": "CONTENT PREVIEW:",
     "send-another-one": "SEND ANOTHER CARD",

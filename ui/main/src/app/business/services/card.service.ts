@@ -36,9 +36,8 @@ export class CardService {
                 if (cardResponse.status === ServerResponseStatus.OK) {
                         const cardData = cardResponse.data;
                         cardData.card.hasBeenAcknowledged =
-                        this.lightCardsStoreService.isLightCardHasBeenAcknowledgedByUserOrByUserEntity(
-                            fromCardToLightCard(cardData.card)
-                        );
+                            this.lightCardsStoreService.isLightCardHasBeenAcknowledgedByUserOrByUserEntity(
+                                fromCardToLightCard(cardData.card));
                     return cardData;
                 }
             })

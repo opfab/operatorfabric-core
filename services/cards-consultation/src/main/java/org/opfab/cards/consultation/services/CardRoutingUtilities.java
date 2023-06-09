@@ -14,6 +14,7 @@ import net.minidev.json.JSONArray;
 import net.minidev.json.JSONObject;
 import org.opfab.users.model.CurrentUserWithPerimeters;
 import org.opfab.users.model.RightsEnum;
+import org.opfab.cards.consultation.model.PublisherTypeEnum;
 
 import java.util.*;
 
@@ -131,6 +132,14 @@ public class CardRoutingUtilities {
                     currentUserWithPerimeters.getUserData().getLogin(), idCard);
             return true;
         }
+
+        // FE-4573 : from now, we want user receives all the cards sent by its entities
+        if (checkInCaseOfCardSentByEntitiesOfTheUser(cardObj, userEntities)) {
+            log.debug("User {} is member of the entity that published the card {} so he shall receive it",
+                    currentUserWithPerimeters.getUserData().getLogin(), idCard);
+            return true;
+        }
+
         return false;
     }
 
@@ -150,5 +159,11 @@ public class CardRoutingUtilities {
             return false;
         return !((groupRecipientsIdsArray == null || groupRecipientsIdsArray.isEmpty()) &&
                 (entityRecipientsIdsArray == null || entityRecipientsIdsArray.isEmpty()));
+    }
+
+    private static boolean checkInCaseOfCardSentByEntitiesOfTheUser(JSONObject cardObj,
+                                                                    List<String> userEntities) {
+        return (cardObj.get("publisherType").equals(PublisherTypeEnum.ENTITY.toString()) &&
+            userEntities.contains(cardObj.get("publisher")));
     }
 }

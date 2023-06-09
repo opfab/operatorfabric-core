@@ -327,7 +327,7 @@
     "state": "State",
     "recipients": "RECIPIENTS:",
     "recipientsForInformation": "RECIPIENTS IN COPY:",
-    "youAreTheOnlyRecipient": "You are the only recipient of this card.",
+    "youAreTheOnlyRecipient": "No recipient are set.",
     "feedPreview": "FEED PREVIEW:",
     "contentPreview": "CONTENT PREVIEW:",
     "send-another-one": "SEND ANOTHER CARD",
