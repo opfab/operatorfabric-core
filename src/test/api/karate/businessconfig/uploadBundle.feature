@@ -112,3 +112,11 @@ Feature: Bundle
     When method post
     Then status 201
 
+  Scenario: Post Bundle with forbidden character in process id field
+    Given url opfabUrl + '/businessconfig/processes'
+    And header Authorization = 'Bearer ' + authToken
+    And multipart file file = {read:'resources/bundle_api_test_with_forbidden_processId.tar.gz', contentType: 'application/gzip'}
+    When method post
+    Then status 400
+    And match response.message == 'The id of the process should not contain characters #, ?, /, \\'
+
