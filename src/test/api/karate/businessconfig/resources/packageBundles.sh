@@ -47,3 +47,8 @@ cd bundle_processDeleteUserCard
 tar -czvf bundle_processDeleteUserCard.tar.gz config.json i18n.json css/ template/
 mv bundle_processDeleteUserCard.tar.gz ../
 cd ..
+
+cd bundle_api_test_with_forbidden_processId
+tar -czvf bundle_api_test_with_forbidden_processId.tar.gz config.json css/ template/
+mv bundle_api_test_with_forbidden_processId.tar.gz ../
+cd ..
