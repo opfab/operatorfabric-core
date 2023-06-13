@@ -16,7 +16,6 @@ import com.google.common.collect.HashBasedTable;
 import com.google.common.collect.Table;
 import org.apache.commons.io.FileUtils;
 
-import net.minidev.json.JSONObject;
 import net.minidev.json.parser.JSONParser;
 import net.minidev.json.parser.ParseException;
 
@@ -61,6 +60,7 @@ public class ProcessesService implements ResourceLoaderAware {
     private static final String BUNDLE_FOLDER = "/bundles";
     private static final String BUSINESS_DATA_FOLDER = "/businessdata/";
     private static final String DUPLICATE_PROCESS_IN_PROCESS_GROUPS_FILE = "There is a duplicate process in the file you have sent";
+    private static final String FORBIDDEN_CHARACTERS_IN_ID_OF_PROCESS = "The id of the process should not contain characters #, ?, /, \\";
 
     @Value("${operatorfabric.businessconfig.storage.path}")
     private String storagePath;
@@ -408,6 +408,16 @@ public class ProcessesService implements ResourceLoaderAware {
         // load Process from config
         Path outConfigPath = outPath.resolve(CONFIG_FILE_NAME);
         ProcessData process = objectMapper.readValue(outConfigPath.toFile(), ProcessData.class);
+
+        if (process.getId().contains("#") || process.getId().contains("?") ||
+            process.getId().contains("/") || process.getId().contains("\\")) {
+            throw new ApiErrorException(
+                            ApiError.builder()
+                            .status(HttpStatus.BAD_REQUEST)
+                            .message(FORBIDDEN_CHARACTERS_IN_ID_OF_PROCESS)
+                            .build());
+        }
+
         //process root
         Path existingRootPath = Paths.get(this.storagePath + BUNDLE_FOLDER)
                 .resolve(process.getId())
@@ -429,7 +439,7 @@ public class ProcessesService implements ResourceLoaderAware {
 
         pushProcessChangeInEventBus();
 
-        //retieve newly loaded process from cache
+        //retrieve newly loaded process from cache
         return fetch(process.getId(), process.getVersion());
     }
 
@@ -595,7 +605,7 @@ public class ProcessesService implements ResourceLoaderAware {
     /**
      * Updates or creates realtimescreens file from a file uploaded from POST /businessconfig/realtimescreens
      *
-     * @param is realtimescreens file input stream
+     * @param fileContent realtimescreens file input stream
      * @throws IOException if error arise during stream reading
      */
     public synchronized void updateRealTimeScreensFile(String fileContent) throws IOException {
@@ -619,7 +629,7 @@ public class ProcessesService implements ResourceLoaderAware {
 
     /**
      * Deletes {@link Process} for specified id
-     * @param id process id
+     * @param resourceName process id
      * @throws IOException 
      */
     public synchronized void deleteFile(String resourceName) throws IOException {
