@@ -89,7 +89,8 @@
     "sessionExpiredText":"Your session has expired.",
     "disconnected": "You are disconnected.",
     "disconnectedByNewUser": "You have been disconnected because another user logged in using this account.",
-    "disconnectByAppLoadedInAnotherTab": "You have been disconnected because another tab of this browser was used to log in using this URL."
+    "disconnectByAppLoadedInAnotherTab": "You have been disconnected because another tab of this browser was used to log in using this URL.",
+    "reloadPageButton": "Reload page"
   },
   "menu": {
     "feed": "Card Feed",

@@ -288,5 +288,4 @@ export class ApplicationLoadingComponent implements OnInit {
 
         this.opfabAPIService.initAPI();
     }
-
 }
