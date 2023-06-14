@@ -89,7 +89,8 @@
     "sessionExpiredText":"Votre session a expiré.",
     "disconnected": "Vous êtes déconnecté.",
     "disconnectedByNewUser": "Vous avez été déconnecté car un autre utilisateur s'est connecté avec ce compte.",
-    "disconnectByAppLoadedInAnotherTab": "Vous avez été déconnecté car un autre onglet de ce navigateur a été utilisé pour se connecter à cette URL."
+    "disconnectByAppLoadedInAnotherTab": "Vous avez été déconnecté car un autre onglet de ce navigateur a été utilisé pour se connecter à cette URL.",
+    "reloadPageButton": "Rafraîchir la page"
   },
   "menu": {
     "feed": "Flux de cartes",
