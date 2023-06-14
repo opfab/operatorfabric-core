@@ -28,7 +28,6 @@
     "questionState": {
       "name": "Question ",
       "description": "Question ",
-      "showDetailCardHeader": false,
       "color": "#0070C0",
       "userCard" : {
 		"template" : "usercard_question",
@@ -49,7 +48,6 @@
     "confirmationState": {
       "name": "Confirmation",
       "description": "Please confirm",
-      "showDetailCardHeader": false,
       "color": "#0070C0",
       "userCard" : {
 		"template" : "usercard_confirmation",
