@@ -57,7 +57,7 @@ export class CardBodyComponent implements OnChanges, OnInit, OnDestroy {
     public isResponseLocked = false;
     public fullscreen = false;
     public showMaxAndReduceButton = false;
-    public showDetailCardHeader = false;
+    public showDetailCardHeader= true;
     public htmlTemplateContent: SafeHtml;
     public templateOffset = 15;
 
@@ -240,9 +240,10 @@ export class CardBodyComponent implements OnChanges, OnInit, OnDestroy {
 
     public computeShowDetailCardHeader() {
         this.showDetailCardHeader =
-            (!this.cardState.showDetailCardHeader || this.cardState.showDetailCardHeader === true) &&
+            (this.cardState.showDetailCardHeader === undefined || this.cardState.showDetailCardHeader === true) &&
             this.cardState.response != null &&
             this.cardState.response !== undefined;
+        
     }
 
     private markAsReadIfNecessary() {
