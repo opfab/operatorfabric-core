@@ -193,7 +193,7 @@
       "label": "Acknowledge all cards",
       "popup": {
         "title": "CONFIRMATION",
-        "doYouReallyWant": "This will ack all visible cards of your feed, please confirm."
+        "doYouReallyWant": "This will acknowledge all visible cards of your feed, please confirm."
       }
     },
     "lttdFinished": "Finished",
