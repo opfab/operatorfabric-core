@@ -5,6 +5,8 @@ Feature: Cards
 
     * def signIn = callonce read('../common/getToken.feature') { username: 'operator1_fr'}
     * def authToken = signIn.authToken
+    * def signInForOperator5 = callonce read('../common/getToken.feature') { username: 'operator5_fr'}
+    * def authTokenForOperator5 = signInForOperator5.authToken
     * def signInUserWithNoGroupNoEntity = callonce read('../common/getToken.feature') { username: 'userwithnogroupnoentity'}
     * def authTokenUserWithNoGroupNoEntity = signInUserWithNoGroupNoEntity.authToken
     * def signInAdmin = callonce read('../common/getToken.feature') { username: 'admin'}
@@ -192,10 +194,10 @@ Feature: Cards
 # Make sure externalRecipients are notified of card suppression
 * configure retry = { count: 3, interval: 3000 }
     Given url opfabUrl + 'cards/cards/api_test.process1_deleted'
-    And header Authorization = 'Bearer ' + authToken
+    And header Authorization = 'Bearer ' + authTokenForOperator5
     And retry until responseStatus == 200 
     When method get
-    Then match response.card.data == "Card with id=api_test.process1 received by externalApp"
+    Then match response.card.data.message == "Card with id=api_test.process1 received by externalApp. Card sent for karate tests, addressed to : operator5_fr   "
 
 
 # Delete the confirmation card to clean the test environnement
