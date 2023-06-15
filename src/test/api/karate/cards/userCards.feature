@@ -306,7 +306,7 @@ Feature: UserCards tests
     * configure retry = { count: 3, interval: 3000 }
     Given url opfabUrl + 'cards/cards/api_test.process_id_w'
     And header Authorization = 'Bearer ' + authTokenAsItsupervisor1
-    And retry until responseStatus == 200 && response.card.data == "Card with id=process_1.process_id_w received by externalApp"
+    And retry until responseStatus == 200 && response.card.data.message == "Card with id=process_1.process_id_w received by externalApp. Card sent for karate tests, addressed to :   IT_SUPERVISOR_ENTITY "
     When method get
 
 
