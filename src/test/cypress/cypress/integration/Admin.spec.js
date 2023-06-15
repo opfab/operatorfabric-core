@@ -434,7 +434,7 @@ describe('AdmininstrationPages', () => {
         cy.get('#opfab-admin-perimeter-right-filter')
             .find('.vscomp-option-text')
             .eq(0)
-            .should('contain.text', 'Write')
+            .should('contain.text', 'ReceiveAndWrite')
             .click({force: true});
 
         cy.get('#opfab-admin-perimeter-btn-add').should('not.be.disabled');
@@ -450,13 +450,13 @@ describe('AdmininstrationPages', () => {
         agGrid.cellShould('ag-grid-angular', 0, 0, 'have.text', 'testperimeter');
         agGrid.cellShould('ag-grid-angular', 0, 1, 'have.text', 'cypress');
         agGrid.cellShould('ag-grid-angular', 0, 2, 'have.text', 'Message');
-        // We check the right for Message is Write (the badge must be from class opfab-bg-right-write)
+        // We check the right for Message is ReceiveAndWrite (the badge must be from class opfab-bg-right-receiveandwrite)
         cy.get('ag-grid-angular')
             .find('.ag-center-cols-container')
             .find('.ag-row')
             .eq(0)
             .find('.ag-cell-value')
-            .find('.opfab-bg-right-write')
+            .find('.opfab-bg-right-receiveandwrite')
             .eq(0)
             .should('exist');
 
@@ -479,7 +479,7 @@ describe('AdmininstrationPages', () => {
         cy.get('#opfab-admin-perimeter-right-filter')
             .find('.vscomp-option-text')
             .eq(1)
-            .should('contain.text', 'ReceiveAndWrite')
+            .should('contain.text', 'Receive')
             .click({force: true});
 
         // We uncheck the field 'filtering notification allowed'
@@ -501,13 +501,13 @@ describe('AdmininstrationPages', () => {
         agGrid.cellShould('ag-grid-angular', 0, 0, 'have.text', 'testperimeter');
         agGrid.cellShould('ag-grid-angular', 0, 1, 'have.text', 'cypress');
         agGrid.cellShould('ag-grid-angular', 0, 2, 'have.text', 'Message with no ack');
-        // We check the right for Message is ReceiveAndWrite (the badge must be from class opfab-bg-right-receiveandwrite)
+        // We check the right for Message is Receive (the badge must be from class opfab-bg-right-receive)
         cy.get('ag-grid-angular')
             .find('.ag-center-cols-container')
             .find('.ag-row')
             .eq(0)
             .find('.ag-cell-value')
-            .find('.opfab-bg-right-receiveandwrite')
+            .find('.opfab-bg-right-receive')
             .eq(0)
             .should('exist');
 

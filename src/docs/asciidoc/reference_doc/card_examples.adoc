@@ -117,7 +117,7 @@ Given this perimeter :
         },
         {
             "state" : "myState2",
-            "right" : "Write"
+            "right" : "ReceiveAndWrite"
         }
     ]
 }
@@ -147,7 +147,9 @@ Then you can see `group1` is now :
 }
 ....
 
-If the connected user is a member of `group1`, then he has a `Receive` right on process/state `process/myState`. So if the user is also a member of `ENTITY1_FR` then he will receive the card.
+If the connected user is a member of `group1`, then he has a `Receive` right on process/state
+`process/myState` (and also on`process/myState2`). So if the user is also a member of `ENTITY1_FR`
+then he will receive the card.
 
 
 ==== Simple case (sending to a group and an entity)

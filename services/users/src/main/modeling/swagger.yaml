@@ -150,11 +150,9 @@ definitions:
     description: |-
       Different rights possible >
       * Receive: Only receive rights (receiving card)
-      * Write: Write rights (creating new card)
       * ReceiveAndWrite: Receive and write rights (receiving card and creating new card)
     enum:
       - Receive
-      - Write
       - ReceiveAndWrite
   StateRight:
     type: object

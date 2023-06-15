@@ -181,7 +181,7 @@ public class PerimetersServiceShould {
             Perimeter perimeter = PerimeterData.builder().id("newPerimeter").process("processId")
                     .stateRights(
                             new HashSet<>(Arrays.asList(new StateRightData("state1", RightsEnum.RECEIVEANDWRITE, true),
-                                    new StateRightData("state2", RightsEnum.WRITE, true))))
+                                    new StateRightData("state2", RightsEnum.RECEIVEANDWRITE, true))))
                     .build();
 
             OperationResult<EntityCreationReport<Perimeter>> result = perimetersService.createPerimeter(perimeter);
@@ -195,8 +195,8 @@ public class PerimetersServiceShould {
         void GIVEN_A_Perimeter_With_2_States_And_Duplicate_State_WHEN_Create_Perimeter_THEN_Return_BAD_REQUEST() {
 
             Perimeter perimeter = PerimeterData.builder().id("INVALID").process("process2")
-                    .stateRights(new HashSet<>(Arrays.asList(new StateRightData("state1", RightsEnum.WRITE, true),
-                            new StateRightData("state1", RightsEnum.RECEIVEANDWRITE, true))))
+                    .stateRights(new HashSet<>(Arrays.asList(new StateRightData("state1", RightsEnum.RECEIVEANDWRITE, true),
+                            new StateRightData("state1", RightsEnum.RECEIVE, true))))
                     .build();
 
             OperationResult<EntityCreationReport<Perimeter>> result = perimetersService.createPerimeter(perimeter);
@@ -209,8 +209,8 @@ public class PerimetersServiceShould {
         void GIVEN_A_Perimeter_With_3_States_And_Duplicate_State_WHEN_Create_Perimeter_THEN_Return_BAD_REQUEST() {
 
             Perimeter perimeter = PerimeterData.builder().id("INVALID").process("process2")
-                    .stateRights(new HashSet<>(Arrays.asList(new StateRightData("state1", RightsEnum.WRITE, true),
-                            new StateRightData("state1", RightsEnum.RECEIVEANDWRITE, true),
+                    .stateRights(new HashSet<>(Arrays.asList(new StateRightData("state1", RightsEnum.RECEIVEANDWRITE, true),
+                            new StateRightData("state1", RightsEnum.RECEIVE, true),
                             new StateRightData("state2", RightsEnum.RECEIVEANDWRITE, true))))
                     .build();
 
@@ -261,7 +261,7 @@ public class PerimetersServiceShould {
             Perimeter perimeter = PerimeterData.builder().id("newPerimeter").process("processId")
                     .stateRights(
                             new HashSet<>(Arrays.asList(new StateRightData("state1", RightsEnum.RECEIVEANDWRITE, true),
-                                    new StateRightData("state2", RightsEnum.WRITE, true))))
+                                    new StateRightData("state2", RightsEnum.RECEIVEANDWRITE, true))))
                     .build();
 
             OperationResult<EntityCreationReport<Perimeter>> result = perimetersService.updatePerimeter(perimeter);
@@ -275,7 +275,7 @@ public class PerimetersServiceShould {
         void GIVEN_A_Perimeter_With_2_States_And_Duplicate_State_WHEN_Update_Perimeter_THEN_Return_BAD_REQUEST_And_Perimter_Is_Not_Updated() {
 
             Perimeter perimeter = PerimeterData.builder().id("perimeter1").process("newProcess")
-                    .stateRights(new HashSet<>(Arrays.asList(new StateRightData("state1", RightsEnum.WRITE, true),
+                    .stateRights(new HashSet<>(Arrays.asList(new StateRightData("state1", RightsEnum.RECEIVEANDWRITE, true),
                             new StateRightData("state1", RightsEnum.RECEIVEANDWRITE, true))))
                     .build();
 

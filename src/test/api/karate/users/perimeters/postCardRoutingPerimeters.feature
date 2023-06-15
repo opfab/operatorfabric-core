@@ -73,26 +73,6 @@ Feature: CreatePerimeters (endpoint tested : POST /perimeters)
 """
 
 
-     #Card must not be received, because the user is in entity and group but doesn't have receive right for this process/state
-    * def cardForEntityAndGroupButNotRights =
-"""
-{
-	"publisher" : "operator1_fr",
-	"processVersion" : "1",
-	"process"  :"api_test",
-	"processInstanceId" : "cardForEntityAndGroupButNotRights",
-	"state": "incidentInProgressState",
-	"groupRecipients": ["Dispatcher"],
-	"severity" : "INFORMATION",
-	"startDate" : 1553186770681,
-	"summary" : {"key" : "defaultProcess.summary"},
-	"title" : {"key" : "defaultProcess.title"},
-	"data" : {"message":"a message"},
-	"entityRecipients" : ["ENTITY1_FR"]
-}
-"""
-
-
     #Card must not be received, because the user is in entity and has the right for process/state but is not in group Planner
     * def cardForEntityAndOtherGroupAndPerimeter =
 """
@@ -134,7 +114,7 @@ Feature: CreatePerimeters (endpoint tested : POST /perimeters)
     "stateRights" : [
         {
           "state" : "incidentInProgressState",
-          "right" : "Write"
+          "right" : "ReceiveAndWrite"
         }
       ]
   }
@@ -190,13 +170,6 @@ Feature: CreatePerimeters (endpoint tested : POST /perimeters)
     Then status 201
 
 
-  Scenario: Push the card 'cardForEntityAndGroupButNotRights'
-    Given url opfabPublishCardUrl + 'cards'
-    And header Authorization = 'Bearer ' + authTokenAsTSO
-    And request cardForEntityAndGroupButNotRights
-    When method post
-    Then status 201
-
 
   Scenario: Push the card 'cardForEntityAndOtherGroupAndPerimeter'
     Given url opfabPublishCardUrl + 'cards'
@@ -220,12 +193,6 @@ Feature: CreatePerimeters (endpoint tested : POST /perimeters)
     When method get
     Then status 200
 
-
-  Scenario: Get the card 'cardForEntityAndGroupButNotRights'
-    Given url opfabUrl + 'cards/cards/api_test.cardForEntityAndGroupButNotRights'
-    And header Authorization = 'Bearer ' + authTokenAsTSO
-    When method get
-    Then status 404
 
 
   Scenario: Get the card 'cardForEntityAndOtherGroupAndPerimeter'

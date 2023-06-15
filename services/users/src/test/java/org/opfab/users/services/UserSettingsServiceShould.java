@@ -69,7 +69,7 @@ public class UserSettingsServiceShould {
                 stateRight1.setRight(RightsEnum.RECEIVE);
                 StateRight stateRight2 = new StateRightData();
                 stateRight2.setState("state2");
-                stateRight2.setRight(RightsEnum.WRITE);
+                stateRight2.setRight(RightsEnum.RECEIVEANDWRITE);
                 stateRight2.setFilteringNotificationAllowed(true);
                 StateRight stateRightNotFilterable = new StateRightData();
                 stateRightNotFilterable.setState("stateRightNotFilterable");

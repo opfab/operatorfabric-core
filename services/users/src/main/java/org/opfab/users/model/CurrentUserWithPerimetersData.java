@@ -159,12 +159,6 @@ public class CurrentUserWithPerimetersData implements CurrentUserWithPerimeters 
         if (rightsList.get(size - 2) == RightsEnum.RECEIVEANDWRITE || rightsList.get(size - 1) == RightsEnum.RECEIVEANDWRITE)
             return RightsEnum.RECEIVEANDWRITE;
 
-        if (rightsList.get(size - 2) == RightsEnum.RECEIVE && rightsList.get(size - 1) == RightsEnum.WRITE)
-            return RightsEnum.RECEIVEANDWRITE;
-
-        if (rightsList.get(size - 2) == RightsEnum.WRITE && rightsList.get(size - 1) == RightsEnum.RECEIVE)
-            return RightsEnum.RECEIVEANDWRITE;
-
         if (rightsList.get(size - 2) == rightsList.get(size - 1)) {
             rightsList.remove(size - 1);
             return mergeRights(rightsList);

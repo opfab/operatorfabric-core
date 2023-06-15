@@ -58,7 +58,7 @@ class CardPermissionControlServiceShould {
         c2.setRights(RightsEnum.RECEIVE);
         c3.setProcess("PROCESS_CARD_USER") ;
         c3.setState("STATE3");
-        c3.setRights(RightsEnum.WRITE);
+        c3.setRights(RightsEnum.RECEIVEANDWRITE);
         List<ComputedPerimeter> list=new ArrayList<>();
         list.add(c1);
         list.add(c2);

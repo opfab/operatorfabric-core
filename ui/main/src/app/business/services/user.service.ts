@@ -191,7 +191,7 @@ export class UserService extends CrudService {
             return false;
         }
         const rights = processState.rights;
-        if (rights && (rights === RightsEnum.Write || rights === RightsEnum.ReceiveAndWrite)) {
+        if (rights && rights === RightsEnum.ReceiveAndWrite) {
             return true;
         }
         return false;

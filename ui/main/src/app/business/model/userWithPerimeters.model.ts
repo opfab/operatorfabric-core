@@ -27,14 +27,11 @@ export class ComputedPerimeter {
 export function userRight(rights: RightsEnum) {
     let result;
     switch (rights) {
-        case RightsEnum.Write:
+        case RightsEnum.ReceiveAndWrite:
             result = 0;
             break;
-        case RightsEnum.ReceiveAndWrite:
-            result = 1;
-            break;
         case RightsEnum.Receive:
-            result = 2;
+            result = 1;
             break;
     }
     return result;

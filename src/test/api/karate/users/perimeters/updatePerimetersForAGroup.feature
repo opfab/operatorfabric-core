@@ -29,7 +29,7 @@ Feature: Update perimeters for a group (endpoint tested : PUT /groups/{id}/perim
     },
     {
       "state" : "state2",
-      "right" : "Write",
+      "right" : "ReceiveAndWrite",
       "filteringNotificationAllowed" : true
     }
   ]
@@ -163,7 +163,7 @@ Feature: Update perimeters for a group (endpoint tested : PUT /groups/{id}/perim
     When method get
     Then status 200
     And assert response.length == 1
-    And match response contains only [{"id":"perimeterKarate13_1","process":"process13","stateRights":[{"state":"state1","right":"Receive","filteringNotificationAllowed":true},{"state":"state2","right":"Write","filteringNotificationAllowed":true}]}]
+    And match response contains only [{"id":"perimeterKarate13_1","process":"process13","stateRights":[{"state":"state1","right":"Receive","filteringNotificationAllowed":true},{"state":"state2","right":"ReceiveAndWrite","filteringNotificationAllowed":true}]}]
 
 
   Scenario: Put perimeter13_2 for group13

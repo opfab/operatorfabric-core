@@ -29,7 +29,7 @@ class CurrentUserWithPerimetersDataShould {
         Perimeter p2 = PerimeterData.builder().
                     id("perimeterKarate10_1_R").
                     process("process10").
-                    stateRights(new HashSet<>(Arrays.asList(new StateRightData("state2", RightsEnum.WRITE, true)))).
+                    stateRights(new HashSet<>(Arrays.asList(new StateRightData("state2", RightsEnum.RECEIVEANDWRITE, true)))).
                     build();
 
         CurrentUserWithPerimetersData c = new CurrentUserWithPerimetersData();
@@ -56,21 +56,14 @@ class CurrentUserWithPerimetersDataShould {
         List<RightsEnum>    list00 = new ArrayList<>();
 
         List<RightsEnum>    list1 = new ArrayList<>(Arrays.asList(RightsEnum.RECEIVE, RightsEnum.RECEIVE));
-        List<RightsEnum>    list2 = new ArrayList<>(Arrays.asList(RightsEnum.RECEIVE, RightsEnum.WRITE));
-        List<RightsEnum>    list3 = new ArrayList<>(Arrays.asList(RightsEnum.RECEIVE, RightsEnum.RECEIVEANDWRITE));
+        List<RightsEnum>    list2 = new ArrayList<>(Arrays.asList(RightsEnum.RECEIVE, RightsEnum.RECEIVEANDWRITE));
 
-        List<RightsEnum>    list4 = new ArrayList<>(Arrays.asList(RightsEnum.WRITE, RightsEnum.RECEIVE));
-        List<RightsEnum>    list5 = new ArrayList<>(Arrays.asList(RightsEnum.WRITE, RightsEnum.WRITE));
-        List<RightsEnum>    list6 = new ArrayList<>(Arrays.asList(RightsEnum.WRITE, RightsEnum.RECEIVEANDWRITE));
+        List<RightsEnum>    list3 = new ArrayList<>(Arrays.asList(RightsEnum.RECEIVEANDWRITE, RightsEnum.RECEIVE));
+        List<RightsEnum>    list4 = new ArrayList<>(Arrays.asList(RightsEnum.RECEIVEANDWRITE, RightsEnum.RECEIVEANDWRITE));
 
-        List<RightsEnum>    list7 = new ArrayList<>(Arrays.asList(RightsEnum.RECEIVEANDWRITE, RightsEnum.RECEIVE));
-        List<RightsEnum>    list8 = new ArrayList<>(Arrays.asList(RightsEnum.RECEIVEANDWRITE, RightsEnum.WRITE));
-        List<RightsEnum>    list9 = new ArrayList<>(Arrays.asList(RightsEnum.RECEIVEANDWRITE, RightsEnum.RECEIVEANDWRITE));
-
-        List<RightsEnum>    list10 = new ArrayList<>(Arrays.asList(RightsEnum.RECEIVE, RightsEnum.RECEIVE, RightsEnum.RECEIVE)); //RECEIVE
-        List<RightsEnum>    list11 = new ArrayList<>(Arrays.asList(RightsEnum.RECEIVEANDWRITE, RightsEnum.RECEIVE, RightsEnum.RECEIVE)); //RECEIVEANDWRITE
-        List<RightsEnum>    list12 = new ArrayList<>(Arrays.asList(RightsEnum.RECEIVE, RightsEnum.RECEIVEANDWRITE, RightsEnum.WRITE));  //RECEIVEANDWRITE
-        List<RightsEnum>    list13 = new ArrayList<>(Arrays.asList(RightsEnum.RECEIVE, RightsEnum.WRITE));  //RECEIVEANDWRITE
+        List<RightsEnum>    list5 = new ArrayList<>(Arrays.asList(RightsEnum.RECEIVE, RightsEnum.RECEIVE, RightsEnum.RECEIVE)); //RECEIVE
+        List<RightsEnum>    list6 = new ArrayList<>(Arrays.asList(RightsEnum.RECEIVEANDWRITE, RightsEnum.RECEIVE, RightsEnum.RECEIVE)); //RECEIVEANDWRITE
+        List<RightsEnum>    list7 = new ArrayList<>(Arrays.asList(RightsEnum.RECEIVE, RightsEnum.RECEIVEANDWRITE, RightsEnum.RECEIVEANDWRITE));  //RECEIVEANDWRITE
 
         CurrentUserWithPerimetersData c = new CurrentUserWithPerimetersData();
 
@@ -79,20 +72,13 @@ class CurrentUserWithPerimetersDataShould {
 
         org.assertj.core.api.Assertions.assertThat(c.mergeRights(list1)).isEqualByComparingTo(RightsEnum.RECEIVE);
         org.assertj.core.api.Assertions.assertThat(c.mergeRights(list2)).isEqualByComparingTo(RightsEnum.RECEIVEANDWRITE);
+
         org.assertj.core.api.Assertions.assertThat(c.mergeRights(list3)).isEqualByComparingTo(RightsEnum.RECEIVEANDWRITE);
-
         org.assertj.core.api.Assertions.assertThat(c.mergeRights(list4)).isEqualByComparingTo(RightsEnum.RECEIVEANDWRITE);
-        org.assertj.core.api.Assertions.assertThat(c.mergeRights(list5)).isEqualByComparingTo(RightsEnum.WRITE);
+
+        org.assertj.core.api.Assertions.assertThat(c.mergeRights(list5)).isEqualByComparingTo(RightsEnum.RECEIVE);
         org.assertj.core.api.Assertions.assertThat(c.mergeRights(list6)).isEqualByComparingTo(RightsEnum.RECEIVEANDWRITE);
-
         org.assertj.core.api.Assertions.assertThat(c.mergeRights(list7)).isEqualByComparingTo(RightsEnum.RECEIVEANDWRITE);
-        org.assertj.core.api.Assertions.assertThat(c.mergeRights(list8)).isEqualByComparingTo(RightsEnum.RECEIVEANDWRITE);
-        org.assertj.core.api.Assertions.assertThat(c.mergeRights(list9)).isEqualByComparingTo(RightsEnum.RECEIVEANDWRITE);
-
-        org.assertj.core.api.Assertions.assertThat(c.mergeRights(list10)).isEqualByComparingTo(RightsEnum.RECEIVE);
-        org.assertj.core.api.Assertions.assertThat(c.mergeRights(list11)).isEqualByComparingTo(RightsEnum.RECEIVEANDWRITE);
-        org.assertj.core.api.Assertions.assertThat(c.mergeRights(list12)).isEqualByComparingTo(RightsEnum.RECEIVEANDWRITE);
-        org.assertj.core.api.Assertions.assertThat(c.mergeRights(list13)).isEqualByComparingTo(RightsEnum.RECEIVEANDWRITE);
     }
 }
 
