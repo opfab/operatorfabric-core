@@ -18,8 +18,8 @@ describe('Card routing', function () {
 
     it('Card routing using only group', async function() {
         const user = {login: 'operator_1', groups: ['Dispatcher'], entities: ['ENTITY1']};
-        const perimetersWithReadingRigth = [{process: "defaultProcess", stateRights:[{state:"processState",right:"ReceiveAndWrite",filteringNotificationAllowed:true}]} ];
-        const perimetersWithoutReadingRigth = [{process: "defaultProcess", stateRights:[{state:"processState",right:"Write",filteringNotificationAllowed:true}]} ];
+        const perimetersWithReceiveAndWriteRight = [{process: "defaultProcess", stateRights:[{state:"processState",right:"ReceiveAndWrite",filteringNotificationAllowed:true}]} ];
+        const perimetersWithReceiveRight = [{process: "defaultProcess", stateRights:[{state:"processState",right:"Receive",filteringNotificationAllowed:true}]} ];
 
         const cardSentToGroupOfTheUser = {uid: "1001", id:"defaultProcess.process1", process: "defaultProcess", state: "processState", groupRecipients:["Dispatcher"]};
         const cardSentToGroupNotOfUser = {uid: "1001", id:"defaultProcess.process1", process: "defaultProcess", state: "processState", groupRecipients:["Supervisor"]};
@@ -28,18 +28,22 @@ describe('Card routing', function () {
 
         const userSettings = {}
 
-        expect(CardsRoutingUtilities.shouldUserReceiveTheCard(user, perimetersWithReadingRigth, userSettings, cardSentToGroupOfTheUser)).toBeTruthy();
-        expect(CardsRoutingUtilities.shouldUserReceiveTheCard(user, perimetersWithoutReadingRigth, userSettings, cardSentToGroupOfTheUser)).toBeFalsy();
-        expect(CardsRoutingUtilities.shouldUserReceiveTheCard(user, perimetersWithReadingRigth, userSettings, cardSentToGroupNotOfUser)).toBeFalsy();
-        expect(CardsRoutingUtilities.shouldUserReceiveTheCard(user, perimetersWithReadingRigth, userSettings, cardSentToGroupOfTheUserAndEmptyEntities)).toBeTruthy();
-        expect(CardsRoutingUtilities.shouldUserReceiveTheCard(user, perimetersWithReadingRigth, userSettings, cardSentToGroupNotOfUserAndEmptyEntities)).toBeFalsy();
+        expect(CardsRoutingUtilities.shouldUserReceiveTheCard(user, perimetersWithReceiveAndWriteRight, userSettings, cardSentToGroupOfTheUser)).toBeTruthy();
+        expect(CardsRoutingUtilities.shouldUserReceiveTheCard(user, perimetersWithReceiveAndWriteRight, userSettings, cardSentToGroupNotOfUser)).toBeFalsy();
+        expect(CardsRoutingUtilities.shouldUserReceiveTheCard(user, perimetersWithReceiveAndWriteRight, userSettings, cardSentToGroupOfTheUserAndEmptyEntities)).toBeTruthy();
+        expect(CardsRoutingUtilities.shouldUserReceiveTheCard(user, perimetersWithReceiveAndWriteRight, userSettings, cardSentToGroupNotOfUserAndEmptyEntities)).toBeFalsy();
 
+        expect(CardsRoutingUtilities.shouldUserReceiveTheCard(user, perimetersWithReceiveRight, userSettings, cardSentToGroupOfTheUser)).toBeTruthy();
+        expect(CardsRoutingUtilities.shouldUserReceiveTheCard(user, perimetersWithReceiveRight, userSettings, cardSentToGroupNotOfUser)).toBeFalsy();
+        expect(CardsRoutingUtilities.shouldUserReceiveTheCard(user, perimetersWithReceiveRight, userSettings, cardSentToGroupOfTheUserAndEmptyEntities)).toBeTruthy();
+        expect(CardsRoutingUtilities.shouldUserReceiveTheCard(user, perimetersWithReceiveRight, userSettings, cardSentToGroupNotOfUserAndEmptyEntities)).toBeFalsy();
     })
+
 
     it('Card routing using only entity', async function() {
         const user = {login: 'operator_1', groups: ['Dispatcher'], entities: ['ENTITY1']};
-        const perimetersWithReadingRigth = [{process: "defaultProcess", stateRights:[{state:"processState",right:"ReceiveAndWrite",filteringNotificationAllowed:true}]} ];
-        const perimetersWithoutReadingRigth = [{process: "defaultProcess", stateRights:[{state:"processState",right:"Write",filteringNotificationAllowed:true}]} ];
+        const perimetersWithReceiveAndWriteRight = [{process: "defaultProcess", stateRights:[{state:"processState",right:"ReceiveAndWrite",filteringNotificationAllowed:true}]} ];
+        const perimetersWithReceiveRight = [{process: "defaultProcess", stateRights:[{state:"processState",right:"Receive",filteringNotificationAllowed:true}]} ];
 
         const cardSentToEntityOfTheUser = {uid: "1001", id:"defaultProcess.process1", process: "defaultProcess", state: "processState", entityRecipients:["ENTITY1"]};
         const cardSentToEntityNotOfUser = {uid: "1001", id:"defaultProcess.process1", process: "defaultProcess", state: "processState", entityRecipients:["ENTITY2"]};
@@ -48,46 +52,53 @@ describe('Card routing', function () {
 
         const userSettings = {}
 
-        expect(CardsRoutingUtilities.shouldUserReceiveTheCard(user, perimetersWithReadingRigth, userSettings, cardSentToEntityOfTheUser)).toBeTruthy();
-        expect(CardsRoutingUtilities.shouldUserReceiveTheCard(user, perimetersWithoutReadingRigth, userSettings, cardSentToEntityOfTheUser)).toBeFalsy();
-        expect(CardsRoutingUtilities.shouldUserReceiveTheCard(user, perimetersWithReadingRigth, userSettings, cardSentToEntityNotOfUser)).toBeFalsy();
-        expect(CardsRoutingUtilities.shouldUserReceiveTheCard(user, perimetersWithReadingRigth, userSettings, cardSentToEntityOfTheUserAndEmptyGroups)).toBeTruthy();
-        expect(CardsRoutingUtilities.shouldUserReceiveTheCard(user, perimetersWithReadingRigth, userSettings, cardSentToEntityNotOfUserAndEmptyGrroup)).toBeFalsy();
+        expect(CardsRoutingUtilities.shouldUserReceiveTheCard(user, perimetersWithReceiveAndWriteRight, userSettings, cardSentToEntityOfTheUser)).toBeTruthy();
+        expect(CardsRoutingUtilities.shouldUserReceiveTheCard(user, perimetersWithReceiveAndWriteRight, userSettings, cardSentToEntityNotOfUser)).toBeFalsy();
+        expect(CardsRoutingUtilities.shouldUserReceiveTheCard(user, perimetersWithReceiveAndWriteRight, userSettings, cardSentToEntityOfTheUserAndEmptyGroups)).toBeTruthy();
+        expect(CardsRoutingUtilities.shouldUserReceiveTheCard(user, perimetersWithReceiveAndWriteRight, userSettings, cardSentToEntityNotOfUserAndEmptyGrroup)).toBeFalsy();
 
+        expect(CardsRoutingUtilities.shouldUserReceiveTheCard(user, perimetersWithReceiveRight, userSettings, cardSentToEntityOfTheUser)).toBeTruthy();
+        expect(CardsRoutingUtilities.shouldUserReceiveTheCard(user, perimetersWithReceiveRight, userSettings, cardSentToEntityNotOfUser)).toBeFalsy();
+        expect(CardsRoutingUtilities.shouldUserReceiveTheCard(user, perimetersWithReceiveRight, userSettings, cardSentToEntityOfTheUserAndEmptyGroups)).toBeTruthy();
+        expect(CardsRoutingUtilities.shouldUserReceiveTheCard(user, perimetersWithReceiveRight, userSettings, cardSentToEntityNotOfUserAndEmptyGrroup)).toBeFalsy();
     })
-    
+
+
     it('Card routing with no groups and no entities', async function() {
         const user = {login: 'operator_1', groups: ['Dispatcher'], entities: ['ENTITY1']};
-        const perimetersWithReadingRigth = [{process: "defaultProcess", stateRights:[{state:"processState",right:"ReceiveAndWrite",filteringNotificationAllowed:true}]} ];
+        const perimetersWithReceiveAndWriteRight = [{process: "defaultProcess", stateRights:[{state:"processState",right:"ReceiveAndWrite",filteringNotificationAllowed:true}]} ];
+        const perimetersWithReceiveRight = [{process: "defaultProcess", stateRights:[{state:"processState",right:"Receive",filteringNotificationAllowed:true}]} ];
 
         const cardSentToEmptyGroupsAndEnties = {uid: "1001", id:"defaultProcess.process1", process: "defaultProcess", state: "processState", groupRecipients:[], entityRecipients:[]};
         const cardwithNoEntityAndGroup = {uid: "1001", id:"defaultProcess.process1", process: "defaultProcess", state: "processState"};
 
         const userSettings = {}
 
-        expect(CardsRoutingUtilities.shouldUserReceiveTheCard(user, perimetersWithReadingRigth, userSettings, cardSentToEmptyGroupsAndEnties)).toBeFalsy();
-        expect(CardsRoutingUtilities.shouldUserReceiveTheCard(user, perimetersWithReadingRigth, userSettings, cardwithNoEntityAndGroup)).toBeFalsy();
+        expect(CardsRoutingUtilities.shouldUserReceiveTheCard(user, perimetersWithReceiveAndWriteRight, userSettings, cardSentToEmptyGroupsAndEnties)).toBeFalsy();
+        expect(CardsRoutingUtilities.shouldUserReceiveTheCard(user, perimetersWithReceiveAndWriteRight, userSettings, cardwithNoEntityAndGroup)).toBeFalsy();
 
+        expect(CardsRoutingUtilities.shouldUserReceiveTheCard(user, perimetersWithReceiveRight, userSettings, cardSentToEmptyGroupsAndEnties)).toBeFalsy();
+        expect(CardsRoutingUtilities.shouldUserReceiveTheCard(user, perimetersWithReceiveRight, userSettings, cardwithNoEntityAndGroup)).toBeFalsy();
     })
    
     it('Card routing to user recipient', async function() {
         const user = {login: 'operator_1'};
-        const perimetersWithReadingRigth = [{process: "defaultProcess", stateRights:[{state:"processState",right:"ReceiveAndWrite",filteringNotificationAllowed:true}]} ];
-        const perimetersWithoutReadingRigth = [{process: "defaultProcess", stateRights:[{state:"processState",right:"Write",filteringNotificationAllowed:true}]} ];
-        const perimetersWithReadingRigthAndFilteringNotificationAllowedFalse = [{process: "defaultProcess", stateRights:[{state:"processState",right:"ReceiveAndWrite",filteringNotificationAllowed:false}]} ];
+        const perimetersWithReceiveAndWriteRight = [{process: "defaultProcess", stateRights:[{state:"processState",right:"ReceiveAndWrite",filteringNotificationAllowed:true}]} ];
+        const perimetersWithReceiveRight = [{process: "defaultProcess", stateRights:[{state:"processState",right:"Receive",filteringNotificationAllowed:true}]} ];
 
         const card = {uid: "1001", id:"defaultProcess.process1", process: "defaultProcess", state: "processState", userRecipients:["operator_1"]};
 
         const userSettings = {}
 
-        expect(CardsRoutingUtilities.shouldUserReceiveTheCard(user, perimetersWithReadingRigth,userSettings,  card)).toBeTruthy();
-        expect(CardsRoutingUtilities.shouldUserReceiveTheCard(user, perimetersWithoutReadingRigth, userSettings, card)).toBeFalsy();
-
+        expect(CardsRoutingUtilities.shouldUserReceiveTheCard(user, perimetersWithReceiveAndWriteRight,userSettings,  card)).toBeTruthy();
+        expect(CardsRoutingUtilities.shouldUserReceiveTheCard(user, perimetersWithReceiveRight,userSettings,  card)).toBeTruthy();
     })
+
 
     it('Card routing with filtering notification', async function() {
         const user = {login: 'operator_1'};
-        const perimetersWithReadingRigth = [{process: "defaultProcess", stateRights:[{state:"processState",right:"ReceiveAndWrite",filteringNotificationAllowed:true}]} ];
+        const perimetersWithReceiveAndWriteRight = [{process: "defaultProcess", stateRights:[{state:"processState",right:"ReceiveAndWrite",filteringNotificationAllowed:true}]} ];
+        const perimetersWithReceiveRight = [{process: "defaultProcess", stateRights:[{state:"processState",right:"Receive",filteringNotificationAllowed:true}]} ];
 
         const card = {uid: "1001", id:"defaultProcess.process1", process: "defaultProcess", state: "processState", userRecipients:["operator_1"]};
 
@@ -95,11 +106,12 @@ describe('Card routing', function () {
         const userSettingsWithFilteringNotification = {processesStatesNotNotified:{defaultProcess: ["processState"]}}
         const userSettingsWithFilteringNotificationNotForProcessState = {processesStatesNotNotified:{defaultProcess: ["otherState"]}}
 
-        expect(CardsRoutingUtilities.shouldUserReceiveTheCard(user, perimetersWithReadingRigth, userSettingsWithNoFilteringNotification,  card)).toBeTruthy();
-        expect(CardsRoutingUtilities.shouldUserReceiveTheCard(user, perimetersWithReadingRigth, userSettingsWithFilteringNotification, card)).toBeFalsy();
-        expect(CardsRoutingUtilities.shouldUserReceiveTheCard(user, perimetersWithReadingRigth, userSettingsWithFilteringNotificationNotForProcessState, card)).toBeTruthy();
+        expect(CardsRoutingUtilities.shouldUserReceiveTheCard(user, perimetersWithReceiveAndWriteRight, userSettingsWithNoFilteringNotification,  card)).toBeTruthy();
+        expect(CardsRoutingUtilities.shouldUserReceiveTheCard(user, perimetersWithReceiveAndWriteRight, userSettingsWithFilteringNotification, card)).toBeFalsy();
+        expect(CardsRoutingUtilities.shouldUserReceiveTheCard(user, perimetersWithReceiveAndWriteRight, userSettingsWithFilteringNotificationNotForProcessState, card)).toBeTruthy();
 
-
+        expect(CardsRoutingUtilities.shouldUserReceiveTheCard(user, perimetersWithReceiveRight, userSettingsWithNoFilteringNotification,  card)).toBeTruthy();
+        expect(CardsRoutingUtilities.shouldUserReceiveTheCard(user, perimetersWithReceiveRight, userSettingsWithFilteringNotification, card)).toBeFalsy();
+        expect(CardsRoutingUtilities.shouldUserReceiveTheCard(user, perimetersWithReceiveRight, userSettingsWithFilteringNotificationNotForProcessState, card)).toBeTruthy();
     })
-
 })

@@ -341,7 +341,7 @@ Feature: UserCards tests
     * card.state = "state1"
 
 
-# Push user card with good perimeter ==> Write perimeter
+# Push user card with good perimeter ==> ReceiveAndWrite perimeter
     Given url opfabPublishCardUrl + 'cards/userCard'
     And header Authorization = 'Bearer ' + authTokenAsTSO
     And request card

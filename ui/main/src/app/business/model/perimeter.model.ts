@@ -16,7 +16,6 @@ export class StateRight {
 }
 
 export enum RightsEnum {
-    Write = 'Write',
     ReceiveAndWrite = 'ReceiveAndWrite',
     Receive = 'Receive'
 }

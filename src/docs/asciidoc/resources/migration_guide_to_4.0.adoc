@@ -94,3 +94,15 @@ Use of methods or attributes starting with templateGateway are now deprecated , 
 |opfab.currentCard.listenToChildCards( ()  => {//do some stuff} )
 
 |===
+
+
+== Write right for user (RightsEnum.Write)
+
+The `Write` right has been removed. Considering `Receive` and `ReceiveAndWrite` rights, `Write` was useless
+and confusing for the code.
+
+Before upgrading to 4.0, you must replace all "Write" rights by "ReceiveAndWrite" rights. If you want to
+automate it, you can do it directly in the database via the following request :
+
+`db.perimeter.updateMany({"stateRights.right": "Write"}, {"$set": {"stateRights.$.right": "ReceiveAndWrite"}});`
+

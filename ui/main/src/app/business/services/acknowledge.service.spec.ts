@@ -187,7 +187,7 @@ describe('AcknowledgeService testing ', () => {
                 {
                     process: 'testProcess',
                     state: 'responseState',
-                    rights: RightsEnum.Write,
+                    rights: RightsEnum.ReceiveAndWrite,
                     filteringNotificationAllowed: true
                 }
             ]);
@@ -274,7 +274,7 @@ describe('AcknowledgeService testing ', () => {
                 {
                     process: 'testProcess',
                     state: 'responseState',
-                    rights: RightsEnum.Write,
+                    rights: RightsEnum.ReceiveAndWrite,
                     filteringNotificationAllowed: true
                 }
             ]);
@@ -332,7 +332,7 @@ describe('AcknowledgeService testing ', () => {
                 {
                     process: 'testProcess',
                     state: 'responseState',
-                    rights: RightsEnum.Write,
+                    rights: RightsEnum.ReceiveAndWrite,
                     filteringNotificationAllowed: true
                 }
             ]);
@@ -406,7 +406,7 @@ describe('AcknowledgeService testing ', () => {
                 {
                     process: 'testProcess',
                     state: 'responseState',
-                    rights: RightsEnum.Write,
+                    rights: RightsEnum.ReceiveAndWrite,
                     filteringNotificationAllowed: true
                 }
             ]);
@@ -443,7 +443,7 @@ describe('AcknowledgeService testing ', () => {
                 {
                     process: 'testProcess',
                     state: 'responseState',
-                    rights: RightsEnum.Write,
+                    rights: RightsEnum.ReceiveAndWrite,
                     filteringNotificationAllowed: true
                 }
             ]);

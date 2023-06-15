@@ -142,7 +142,7 @@ export class UserCardSelectStateFormComponent implements OnInit, OnDestroy {
     }
 
     private isUserAllowedToSendCard(perimeter: ComputedPerimeter): boolean {
-        return perimeter.rights === RightsEnum.ReceiveAndWrite || perimeter.rights === RightsEnum.Write;
+        return perimeter.rights === RightsEnum.ReceiveAndWrite;
     }
 
     private loadStatesForProcess(process: Process): void {

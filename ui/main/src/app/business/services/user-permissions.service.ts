@@ -58,8 +58,7 @@ export class UserPermissionsService {
             if (
                 perim.process === card.process &&
                 perim.state === card.state &&
-                (this.compareRightAction(perim.rights, RightsEnum.Write) ||
-                    this.compareRightAction(perim.rights, RightsEnum.ReceiveAndWrite))
+                this.compareRightAction(perim.rights, RightsEnum.ReceiveAndWrite)
             ) {
                 permission = true;
                 return true;
@@ -149,8 +148,7 @@ export class UserPermissionsService {
                 stateOfTheCard?.response &&
                 perim.process === card.process &&
                 perim.state === stateOfTheCard.response.state &&
-                (this.compareRightAction(perim.rights, RightsEnum.Write) ||
-                    this.compareRightAction(perim.rights, RightsEnum.ReceiveAndWrite))
+                this.compareRightAction(perim.rights, RightsEnum.ReceiveAndWrite)
             ) {
                 permission = true;
             }
