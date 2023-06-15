@@ -102,8 +102,8 @@ export class CardBodyComponent implements OnChanges, OnInit, OnDestroy {
     ngOnInit() {
         this.integrateChildCardsInRealTime();
         const pageType = this.routerStore.getCurrentPageType();
-        if (pageType === PageType.MONITORING || pageType === PageType.CALENDAR) this.templateOffset = 35;
-        if (pageType !== PageType.CALENDAR && pageType !== PageType.MONITORING) this.showMaxAndReduceButton = true;
+        if (pageType === PageType.CALENDAR || pageType === PageType.MONITORING || pageType === PageType.DASHBOARD) this.templateOffset = 35;
+        if (pageType !== PageType.CALENDAR && pageType !== PageType.MONITORING && pageType !== PageType.DASHBOARD) this.showMaxAndReduceButton = true;
     }
 
     private integrateChildCardsInRealTime() {
