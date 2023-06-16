@@ -32,6 +32,7 @@ export class NavbarComponent implements OnInit {
     businessconfigMenus: CustomMenu[];
     openDropdownPopover: NgbPopover;
     currentDropdownHovered;
+    showDropdownMenuEvenIfOnlyOneEntry = false;
 
     modalRef: NgbModalRef;
     @ViewChild('userCard') userCardTemplate: ElementRef;
@@ -80,6 +81,8 @@ export class NavbarComponent implements OnInit {
         });
 
         this.businessconfigMenus = this.menuService.getCurrentUserCustomMenus(this.configService.getMenus());
+
+        this.showDropdownMenuEvenIfOnlyOneEntry = this.configService.getShowDropdownMenuEvenIfOnlyOneEntry();
 
         const logo = this.configService.getConfigValue('logo.base64');
         if (logo) {

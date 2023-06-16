@@ -23,6 +23,7 @@ export class ConfigService {
     private navigationBar: (CoreMenuConfig | CustomMenu)[];
     private topRightIconMenus: CoreMenuConfig[];
     private topRightMenus: CoreMenuConfig[];
+    private showDropdownMenuEvenIfOnlyOneEntry = false;
 
     private configChangeEvent =  new Subject<any>();
     private settingsOverrideEvent = new Subject<any>();
@@ -68,9 +69,17 @@ export class ConfigService {
                 this.navigationBar = serverResponse.data.navigationBar;
                 this.topRightIconMenus = serverResponse.data.topRightIconMenus;
                 this.topRightMenus = serverResponse.data.topRightMenus;
+
+                if (serverResponse.data.showDropdownMenuEvenIfOnlyOneEntry !== undefined) {
+                    this.showDropdownMenuEvenIfOnlyOneEntry = serverResponse.data.showDropdownMenuEvenIfOnlyOneEntry;
+                }
                 this.computeCustomMenuList(serverResponse.data);
                 return this.navigationBar;
             }));
+    }
+
+    public getShowDropdownMenuEvenIfOnlyOneEntry(): boolean {
+        return this.showDropdownMenuEvenIfOnlyOneEntry;
     }
 
     public getMenus(): CustomMenu[] {

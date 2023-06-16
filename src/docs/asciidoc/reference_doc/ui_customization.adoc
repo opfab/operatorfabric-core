@@ -26,6 +26,9 @@ This file contains 4 fields :
 * `topRightIconMenus` : contains only the two menu icons `agenda` and `usercard` on the top right of the screen
 * `topRightMenus` : contains core menus you want to see when you click the user, on the top right of the screen
 * `locales` : contains the translations for the custom menus
+* `showDropdownMenuEvenIfOnlyOneEntry` : indicates if the name of the menu and a dropdown menu are displayed if it
+contains only one submenu entry. If false, the submenu entry will be displayed directly in the navigation bar. This field is
+optional, the default value is false.
 
 
 [[core_menu_config]]
