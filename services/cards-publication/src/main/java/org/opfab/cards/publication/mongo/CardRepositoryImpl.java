@@ -36,6 +36,8 @@ public class CardRepositoryImpl implements CardRepository {
     private MongoTemplate template;
 
     static final String END_DATE = "endDate";
+    static final String USERS_ACKS = "usersAcks";
+    static final String USERS_READS = "usersReads";
 
     public CardRepositoryImpl(MongoTemplate template) {
         this.template = template;
@@ -101,7 +103,7 @@ public class CardRepositoryImpl implements CardRepository {
     }
 
     public UserBasedOperationResult addUserAck(User user, String cardUid, List<String> entitiesAcks) {
-        Update update = new Update().addToSet("usersAcks", user.getLogin());
+        Update update = new Update().addToSet(USERS_ACKS, user.getLogin());
         update.addToSet(
                 "entitiesAcks",
                 BasicDBObjectBuilder.start("$each", entitiesAcks).get());
@@ -117,7 +119,7 @@ public class CardRepositoryImpl implements CardRepository {
 
     public UserBasedOperationResult addUserRead(String name, String cardUid) {
         UpdateResult updateFirst = template.updateFirst(Query.query(Criteria.where("uid").is(cardUid)),
-                new Update().addToSet("usersReads", name), CardPublicationData.class);
+                new Update().addToSet(USERS_READS, name), CardPublicationData.class);
         log.debug("added {} occurrence of {}'s userReads in the card with uid: {}", updateFirst.getModifiedCount(),
                 cardUid);
         return toUserBasedOperationResult(updateFirst);
@@ -125,7 +127,7 @@ public class CardRepositoryImpl implements CardRepository {
 
     public UserBasedOperationResult deleteUserAck(String userName, String cardUid) {
         UpdateResult updateFirst = template.updateFirst(Query.query(Criteria.where("uid").is(cardUid)),
-                new Update().pull("usersAcks", userName), CardPublicationData.class);
+                new Update().pull(USERS_ACKS, userName), CardPublicationData.class);
         log.debug("removed {} occurrence of {}'s userAcks in the card with uid: {}", updateFirst.getModifiedCount(),
                 cardUid);
         return toUserBasedOperationResult(updateFirst);
@@ -133,7 +135,7 @@ public class CardRepositoryImpl implements CardRepository {
 
     public UserBasedOperationResult deleteUserRead(String userName, String cardUid) {
         UpdateResult updateFirst = template.updateFirst(Query.query(Criteria.where("uid").is(cardUid)),
-                new Update().pull("usersReads", userName), CardPublicationData.class);
+                new Update().pull(USERS_READS, userName), CardPublicationData.class);
         log.debug("removed {} occurrence of {}'s usersReads in the card with uid: {}", updateFirst.getModifiedCount(),
                 cardUid);
         return toUserBasedOperationResult(updateFirst);
@@ -170,4 +172,13 @@ public class CardRepositoryImpl implements CardRepository {
         findCardByExpirationDate.addCriteria(expirationDateCriteria);
         return template.find(findCardByExpirationDate, CardPublicationData.class);
     }
+
+    public UserBasedOperationResult deleteAcksAndReads(String cardUid) {
+        UpdateResult updateFirst = template.updateFirst(Query.query(Criteria.where("uid").is(cardUid)),
+                new Update().unset(USERS_ACKS).unset(USERS_READS).set("publishDate", Instant.now()), CardPublicationData.class);
+        log.debug("removed {} occurrence of userAcks in the card with uid: {}", updateFirst.getModifiedCount(),
+                cardUid);
+        return toUserBasedOperationResult(updateFirst);
+    }
+
 }

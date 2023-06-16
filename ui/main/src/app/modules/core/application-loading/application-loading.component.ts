@@ -16,7 +16,6 @@ import {GroupsService} from 'app/business/services/users/groups.service';
 import {I18nService} from 'app/business/services/translation/i18n.service';
 import {LogOption, OpfabLoggerService} from 'app/business/services/logs/opfab-logger.service';
 import {ProcessesService} from 'app/business/services/businessconfig/processes.service';
-import {ReminderService} from 'app/business/services/reminder/reminder.service';
 import {UserService} from 'app/business/services/users/user.service';
 import {Utilities} from 'app/business/common/utilities';
 import {catchError, Subject} from 'rxjs';
@@ -25,7 +24,6 @@ import {AccountAlreadyUsedComponent} from './account-already-used/account-alread
 import {AppLoadedInAnotherTabComponent} from './app-loaded-in-another-tab/app-loaded-in-another-tab.component';
 import {SettingsService} from 'app/business/services/users/settings.service';
 import {GlobalStyleService} from 'app/business/services/global-style.service';
-import {RRuleReminderService} from 'app/business/services/rrule-reminder/rrule-reminder.service';
 import {OpfabEventStreamServer} from 'app/business/server/opfabEventStream.server';
 import {OpfabEventStreamService} from 'app/business/services/events/opfabEventStream.service';
 import {LightCardsStoreService} from 'app/business/services/lightcards/lightcards-store.service';
@@ -77,8 +75,6 @@ export class ApplicationLoadingComponent implements OnInit {
         private groupsService: GroupsService,
         private businessDataService: BusinessDataService,
         private processesService: ProcessesService,
-        private reminderService: ReminderService,
-        private rRuleReminderService: RRuleReminderService,
         private logger: OpfabLoggerService,
         private globalStyleService: GlobalStyleService,
         private lightCardsStoreService: LightCardsStoreService,
@@ -273,8 +269,6 @@ export class ApplicationLoadingComponent implements OnInit {
         });
         this.lightCardsStoreService.initStore(); // this will effectively open the http stream connection
         this.applicationUpdateService.init();
-        this.reminderService.startService(this.userLogin);
-        this.rRuleReminderService.startService(this.userLogin);
         this.systemNotificationService.initSystemNotificationService();
         this.initOpfabAPI();
     }

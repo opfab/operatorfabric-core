@@ -47,4 +47,7 @@ public interface CardRepository {
     public List<CardPublicationData>  deleteCardsByEndDateBefore(Instant endDateBefore);
 
     public List<CardPublicationData> findCardsByExpirationDate(Instant expirationDate);
+
+    public UserBasedOperationResult deleteAcksAndReads(String cardUid);
+
 }

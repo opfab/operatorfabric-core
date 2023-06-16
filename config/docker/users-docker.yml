@@ -64,6 +64,9 @@ operatorfabric.users.default:
       groups: ["Dispatcher", "ReadOnly", "Manager"]
     - login: service_supervisor
       groups: ["Dispatcher", "ReadOnly", "Manager","ADMIN"]
+    - login: opfab_internal_account
+      groups: []
+      entities: []
   groups:
     - id: ADMIN
       name: ADMINISTRATORS

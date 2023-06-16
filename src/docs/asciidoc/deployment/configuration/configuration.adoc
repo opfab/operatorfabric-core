@@ -159,7 +159,7 @@ The external devices service can be configured with the following properties:
 The mail notification service configuration file is located in node-services/cards-external-diffusion/conf folder.
 The are 2 configuration files: one for running the service into a docker container ('default-docker.json') and one to run the service from command line (default.json). 
 
-The main notification service can be configured with the following properties:
+The mail notification service can be configured with the following properties:
 
 |===
 |name|default|mandatory?|Description
@@ -193,6 +193,30 @@ The main notification service can be configured with the following properties:
 |===
 The parameters in "defaultConfig" section can be modified at runtime by sending an http POST request to the `/config` API with a JSON payload containing the config parameters to be changed.
 
+== Cards reminder service configuration
+
+The cards reminder service configuration file is located in node-services/cards-reminder/conf folder.
+The 'default-docker.json' file is an example that can be used to configure the environment by loading it into the docker container (erasing the existing one).
+The service can be configured with the following properties:
+
+|===
+|name|default|mandatory?|Description
+|adminPort||yes|Listen port
+|activeOnStartup||yes|Flag to start the notification service on startup
+|opfab.login||yes|user account used to call Opfab services
+|opfab.password||yes|user password to call Opfab services
+|opfab.cardReminderUrl||yes| Opfab card resetReadAndAcks endpoint URL
+|rabbitmq.host||yes|
+|rabbitmq.port||yes|
+|rabbitmq.username||yes|
+|rabbitmq.password||yes|
+|mongodb.database||yes|
+|mongodb.uri||yes|
+|logConfig.logFolder||yes|
+|logConfig.logFile||yes|
+|logConfig.logLevel||yes|
+|defaultConfig.checkPeriodInSeconds|||Time interval between consecutive checks
+|===
 
 include::web-ui_configuration.adoc[leveloffset=+1]
 
