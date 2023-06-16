@@ -535,4 +535,14 @@ public class CardProcessingService {
 
     }
 
+    public UserBasedOperationResult resetReadAndAcks(String cardUid) {
+        log.info("Delete ack and reads on card with uid {}  ", cardUid);
+        UserBasedOperationResult acksResult = cardRepository.deleteAcksAndReads(cardUid);
+        if (acksResult.isCardFound()) {
+            cardRepository.findByUid(cardUid).ifPresent(card -> cardNotificationService.notifyOneCard(card, CardOperationTypeEnum.UPDATE));
+        }
+
+        return acksResult;
+    }
+
 }

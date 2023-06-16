@@ -162,4 +162,9 @@ public class CardRepositoryMock implements CardRepository {
     public List<CardPublicationData> findAll() {
         return cardsById.values().stream().toList();
     }
+
+    @Override
+    public UserBasedOperationResult deleteAcksAndReads(String cardUid) {
+        return UserBasedOperationResult.cardFound().operationDone(true);
+    }
 }

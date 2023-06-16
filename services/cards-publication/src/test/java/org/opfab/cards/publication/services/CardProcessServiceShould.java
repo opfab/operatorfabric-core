@@ -1006,4 +1006,12 @@ class CardProcessServiceShould {
                 Assertions.assertThat(checkCardCount(1)).isTrue();
         }
 
+        @Test
+        void GIVEN_a_card_WHEN_reset_reads_and_acks_THEN_card_event_UPDATE_is_sent_to_eventBus() {
+                CardPublicationData card = generateOneCard();
+                cardProcessingService.processCard(card);
+                cardProcessingService.resetReadAndAcks(card.getUid());
+                Assertions.assertThat(eventBusSpy.getMessagesSent().get(1)[1]).contains("{\"type\":\"UPDATE\"");
+        }
+
 }

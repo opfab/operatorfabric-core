@@ -143,6 +143,17 @@ services:
     user: ${USER_ID}:${USER_GID}
     ports:
       - "3100:3100"
+  cards-reminder:
+    container_name: cards-reminder
+    image: "lfeoperatorfabric/of-cards-reminder:SNAPSHOT"
+    depends_on:
+      - cards-publication
+      - users
+    user: ${USER_ID}:${USER_GID}
+    ports:
+      - "3200:3200"
+    environment:
+      - TZ=Europe/Paris
 
 # Uncomment the line below to customize sounds for notification
 #     - "./custom-sounds:/usr/share/nginx/html/assets/sounds"

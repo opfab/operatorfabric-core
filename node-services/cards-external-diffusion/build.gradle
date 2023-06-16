@@ -36,6 +36,10 @@ task test(type: NpmTask) {
     args = ['run', 'test']
 }
 
+task deleteRuntimeConfigFile(type: Delete) {
+    delete 'config/serviceConfig.json'
+}
+
 docker {
     name "lfeoperatorfabric/of-${project.name}:${project.version}"
     if (!project.version.equals("SNAPSHOT"))
@@ -66,6 +70,8 @@ docker {
 
 build.dependsOn(test)
 build.dependsOn(runBuild)
+
+clean.dependsOn(deleteRuntimeConfigFile)
 
 assemble.dependsOn(runBuild)
 tasks.dockerPrepare.dependsOn test

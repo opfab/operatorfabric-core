@@ -25,6 +25,7 @@ import org.springframework.security.web.SecurityFilterChain;
 import static org.opfab.springtools.configuration.oauth.OpfabAuthorizationManager.authenticatedAndIpAllowed;
 
 import static org.opfab.springtools.configuration.oauth.OpfabAuthorizationManager.hasAnyRoleAndIpAllowed;
+import static org.opfab.springtools.configuration.oauth.OpfabAuthorizationManager.hasAnyUsernameAndIpAllowed;
 
 /**
  * OAuth 2 http authentication configuration and access rules
@@ -63,6 +64,7 @@ public class WebSecurityConfiguration {
                     .requestMatchers(LOGGERS_PATH).hasRole(ADMIN_ROLE)
                     .requestMatchers("/cards/userCard/**").access(authenticatedAndIpAllowed())
                     .requestMatchers("/cards/translateCardField").access(authenticatedAndIpAllowed())
+                    .requestMatchers("/cards/resetReadAndAcks/**").access(hasAnyUsernameAndIpAllowed("opfab_internal_account"))
                     .requestMatchers(HttpMethod.DELETE, "/cards").access(hasAnyRoleAndIpAllowed(ADMIN_ROLE))
                     .requestMatchers("/**").access(authenticatedAndIpAllowed());
         } else {
@@ -71,6 +73,7 @@ public class WebSecurityConfiguration {
                     .requestMatchers(LOGGERS_PATH).hasRole(ADMIN_ROLE)
                     .requestMatchers("/cards/userCard/**").access(authenticatedAndIpAllowed())
                     .requestMatchers("/cards/translateCardField").access(authenticatedAndIpAllowed())
+                    .requestMatchers("/cards/resetReadAndAcks/**").access(hasAnyUsernameAndIpAllowed("opfab_internal_account"))
                     .requestMatchers("/**").permitAll();
         }
     }

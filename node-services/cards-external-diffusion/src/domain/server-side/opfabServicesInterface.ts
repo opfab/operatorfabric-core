@@ -11,7 +11,7 @@ import axios from 'axios';
 
 import GetResponse from './getResponse';
 import AuthenticationService from '../client-side/authenticationService';
-import EventBusListener from './eventBusListener';
+import EventBusListener from './eventBus';
 import {EventListener} from './eventListener';
 
 export default class OpfabServicesInterface implements EventListener{
@@ -36,14 +36,6 @@ export default class OpfabServicesInterface implements EventListener{
     constructor() {
         this.listener = new EventBusListener()
             .addListener(this);
-    }
-
-    async onConnection() {
-        this.logger.info('EventBusListener connected!');
-    }
-
-    async onDisconnection(error: any) {
-        this.logger.error('EventBusListener disconnected!', error);
     }
 
     async onMessage(message: any) {

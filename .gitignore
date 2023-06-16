@@ -82,7 +82,6 @@ src/test/externalApp/bin
 src/test/dummyModbusDevice/bin
 */**/*.class
 
-
 ### Gradle ###
 .gradle
 **/build
@@ -153,8 +152,7 @@ src/test/cypress/cypress/videos
 # migration-opfab3
 src/tooling/migration-opfab3/node_modules
 
-# Card external distribution
-node-services/cards-external-diffusion/node_modules
-node-services/cards-external-diffusion/coverage
-node-services/cards-external-diffusion/logs
-
+# Node modules 
+node-services/*/node_modules
+node-services/*/coverage
+node-services/*/logs

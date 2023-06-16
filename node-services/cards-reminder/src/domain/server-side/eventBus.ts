@@ -11,15 +11,15 @@ import manager from 'amqp-connection-manager';
 import {IAmqpConnectionManager} from 'amqp-connection-manager/dist/esm/AmqpConnectionManager';
 import {EventListener} from './eventListener';
 
-export default class EventBusListener {
+export default class EventBus {
     host: string;
     port: number;
     username: string;
     password: string;
     logger: any;
 
-    QUEUE_NAME = '';
-    EXCHANGE_NAME = 'user';
+    QUEUE_NAME = 'reminder.card';
+    EXCHANGE_NAME = 'card';
 
     onConnectionCallback: Function;
     onDisconnectionCallback: Function;
@@ -53,11 +53,11 @@ export default class EventBusListener {
     }
 
     private onConnection() {
-        this.listeners.forEach(listener => listener.onConnection());
+        this.logger.info('EventBusListener connected!');
     }
 
     private onDisconnection(error: any) {
-        this.listeners.forEach(listener => listener.onDisconnection(error));
+        this.logger.error('EventBusListener disconnected!', error);
     }
 
     private onMessage(message: any) {
@@ -79,7 +79,7 @@ export default class EventBusListener {
             setup: (channel : any) => 
 
              Promise.all([
-                channel.assertQueue(this.QUEUE_NAME, { exclusive: true, autoDelete: true }),
+                channel.assertQueue(this.QUEUE_NAME, { durable: true, autoDelete: false }),
                 channel.assertExchange(this.EXCHANGE_NAME, 'fanout', { }),
                 channel.prefetch(1),
                 channel.bindQueue(this.QUEUE_NAME, this.EXCHANGE_NAME, '#'),

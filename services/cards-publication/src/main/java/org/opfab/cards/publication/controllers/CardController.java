@@ -269,6 +269,25 @@ public class CardController {
         }
     }
 
+    /**
+     * POST request to reset acks and reads for a card and resend card as reminder
+     *
+     * @param cardUid of the card 
+     */
+    @PostMapping("/resetReadAndAcks/{cardUid}")
+    public Void postResetReadAndAcks(Principal principal,
+            @PathVariable("cardUid") String cardUid, HttpServletResponse response) {
+
+        UserBasedOperationResult result = cardProcessingService.resetReadAndAcks(cardUid);
+        if (!result.isCardFound())
+            response.setStatus(404);
+        else {
+            if (Boolean.TRUE.equals(result.getOperationDone()))
+                response.setStatus(200);
+        }
+        return null;
+    }
+
     private void logUserAction(String login, UserActionEnum actionType, List<String> entities, String cardUid,
             String comment) {
         if (userActionLogActivated)
