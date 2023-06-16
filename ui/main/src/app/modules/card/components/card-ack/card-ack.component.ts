@@ -160,7 +160,7 @@ export class CardAckComponent implements OnInit, OnChanges, OnDestroy {
         this.acknowledgeService.postUserAcknowledgement(this.card.uid, entitiesAcks).subscribe((resp) => {
             this.ackOrUnackInProgress = false;
             if (resp.status === ServerResponseStatus.OK) {
-                this.acknowledgeService.updateAcknowledgementOnLightCard(this.card.id, true);
+                this.lightCardsStoreService.setLightCardAcknowledgment(this.card.id, true);
                 this.card = {...this.card, hasBeenAcknowledged: true};
                 this.setAcknowledgeButtonVisibility();
                 if (this.shouldCloseCardWhenUserAcknowledges()) this.closeDetails();
@@ -199,7 +199,7 @@ export class CardAckComponent implements OnInit, OnChanges, OnDestroy {
             if (resp.status === ServerResponseStatus.OK) {
                 this.card = {...this.card, hasBeenAcknowledged: false};
                 this.setAcknowledgeButtonVisibility();
-                this.acknowledgeService.updateAcknowledgementOnLightCard(this.card.id, false);
+                this.lightCardsStoreService.setLightCardAcknowledgment(this.card.id, false);
             } else {
                 this.logger.error(`The remote acknowledgement endpoint returned an error status(${resp.status})`,LogOption.LOCAL_AND_REMOTE);
                 this.displayMessage(AckI18nKeys.ERROR_MSG, null, MessageLevel.ERROR);
