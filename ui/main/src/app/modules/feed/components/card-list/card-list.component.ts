@@ -24,6 +24,8 @@ import {AlertMessageService} from 'app/business/services/alert-message.service';
 import {Router} from '@angular/router';
 import {SortService} from 'app/business/services/lightcards/sort.service';
 import {UserPreferencesService} from 'app/business/services/user-preference.service';
+import {LightCardsStoreService} from 'app/business/services/lightcards/lightcards-store.service';
+import {ServerResponseStatus} from 'app/business/server/serverResponse';
 
 @Component({
     selector: 'of-card-list',
@@ -63,7 +65,8 @@ export class CardListComponent implements AfterViewChecked, OnInit {
         private alertMessageService: AlertMessageService,
         private router: Router,
         private sortService: SortService,
-        private userPreferences: UserPreferencesService
+        private userPreferences: UserPreferencesService,
+        private lightCardsStoreService: LightCardsStoreService,
     ) {
         this.currentUserWithPerimeters = this.userService.getCurrentUserWithPerimeters();
     }
@@ -170,7 +173,13 @@ export class CardListComponent implements AfterViewChecked, OnInit {
                         // this avoids to display entities used only for grouping
                         entitiesAcks.push(entity.id);
                 });
-                this.acknowledgeService.acknowledgeCard(lightCard, entitiesAcks);
+                this.acknowledgeService.postUserAcknowledgement(lightCard.uid, entitiesAcks).subscribe((resp) => {
+                    if (resp.status === ServerResponseStatus.OK) {
+                        this.lightCardsStoreService.setLightCardAcknowledgment(lightCard.id, true);
+                    } else {
+                        throw new Error('the remote acknowledgement endpoint returned an error status(' + resp.status + ')');
+                    }
+                });
             } catch (err) {
                 console.error(err);
                 this.displayMessage('response.error.ack', null, MessageLevel.ERROR);

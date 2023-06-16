@@ -15,9 +15,8 @@ import {LightCard} from '@ofModel/light-card.model';
 import {Observable} from 'rxjs';
 import {environment} from '@env/environment';
 import {AcknowledgeServer} from '../server/acknowledge.server';
-import {ServerResponse, ServerResponseStatus} from '../server/serverResponse';
+import {ServerResponse} from '../server/serverResponse';
 import {UserPermissionsService} from 'app/business/services/user-permissions.service';
-import {LightCardsStoreService} from 'app/business/services/lightcards/lightcards-store.service';
 
 @Injectable({
     providedIn: 'root'
@@ -27,8 +26,7 @@ export class AcknowledgeService {
 
     constructor(
         private acknowledgeServer: AcknowledgeServer,
-        private userPermissionsService: UserPermissionsService,
-        private lightCardsStoreService: LightCardsStoreService
+        private userPermissionsService: UserPermissionsService
     ) {
         this.userAckUrl = `${environment.urls.cardspub}/cards/userAcknowledgement`;
     }
@@ -39,20 +37,6 @@ export class AcknowledgeService {
 
     deleteUserAcknowledgement(cardUid: string): Observable<ServerResponse<void>> {
         return this.acknowledgeServer.deleteUserAcknowledgement(cardUid);
-    }
-
-    acknowledgeCard(lightCard: LightCard, entitiesAcks: string[]) {
-        this.acknowledgeServer.postUserAcknowledgement(lightCard.uid, entitiesAcks).subscribe((resp) => {
-            if (resp.status === ServerResponseStatus.OK) {
-                this.updateAcknowledgementOnLightCard(lightCard.id, true);
-            } else {
-                throw new Error('the remote acknowledgement endpoint returned an error status(' + resp.status + ')');
-            }
-        });
-    }
-
-    updateAcknowledgementOnLightCard(lightCardId: string, hasBeenAcknowledged: boolean) {
-        this.lightCardsStoreService.setLightCardAcknowledgment(lightCardId, hasBeenAcknowledged);
     }
 
     isAcknowledgmentAllowed(user: UserWithPerimeters, card: Card | LightCard, processDefinition: Process): boolean {
