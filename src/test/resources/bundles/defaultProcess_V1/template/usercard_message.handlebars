@@ -35,10 +35,10 @@
     
     // The two following lines are used for cypress test 
     // remove them if you use this template as example 
-    document.getElementById("hidden_process").value = usercardTemplateGateway.getCurrentProcess();
-    document.getElementById("hidden_state").value = usercardTemplateGateway.getCurrentState();
+    document.getElementById("hidden_process").value = opfab.currentUserCard.getProcessId();
+    document.getElementById("hidden_state").value = opfab.currentUserCard.getState();
 
-    usercardTemplateGateway.getSpecificCardInformation = function () {
+    opfab.currentUserCard.registerFunctionToGetSpecificCardInformation(() => {
         const message = document.getElementById('message').value;
         let summaryParameter = message.slice(0, 100);
         if (message.length > summaryParameter.length)
@@ -56,8 +56,9 @@
             card: card
         };
 
-    };
+    });
 
+    // keep deprecated method for cypress test only 
     usercardTemplateGateway.setEntityUsedForSendingCard = function(senderEntity) {
         document.getElementById("hidden_sender").value = senderEntity;
     };

@@ -104,3 +104,27 @@ opfab.currentCard = {
     listenToTemplateRenderingComplete(listener) {}, 
     listenToChildCards(listener) {}
 }
+
+opfab.currentUserCard = {
+    getEditionMode: function () {},
+    getEndDate: function () {},
+    getExpirationDate: function () {},
+    getLttd: function () {},
+    getProcessId: function () {},
+    getSelectedEntityRecipients: function() {},
+    getSelectedEntityForInformationRecipients: function() {},
+    getStartDate: function () {},
+    getState: function () {},
+    getUserEntityChildCard: function () {},
+    listenToEntityUsedForSendingCard: function(listener) {},
+    registerFunctionToGetSpecificCardInformation: function(getSpecificCardInformation) {},
+    setDropdownEntityRecipientList: function(recipients) {},
+    setDropdownEntityRecipientForInformationList: function(recipients) {},
+    setInitialEndDate : function(endDate) {},
+    setInitialExpirationDate : function(expirationDate) {},
+    setInitialLttd : function(lttd) {},
+    setInitialSelectedRecipients : function(recipients) {},
+    setInitialSelectedRecipientsForInformation : function(recipients) {},
+    setInitialSeverity : function(initialSeverity) {},
+    setInitialStartDate : function(startDate) {}
+}

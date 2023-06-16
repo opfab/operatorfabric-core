@@ -16,7 +16,7 @@
 
 
 <script>
-    usercardTemplateGateway.getSpecificCardInformation = function () {
+    opfab.currentUserCard.registerFunctionToGetSpecificCardInformation(() => {
         const message = document.getElementById('message').value;
         const card = {
         summary : {key : "message.summary"},
@@ -30,25 +30,27 @@
             card: card
         };
 
-    }
+    });
 
+    // keep deprecated method for cypress test only
     usercardTemplateGateway.setDropdownEntityRecipientList([
             {"id": "ENTITY_FR", "levels": [0,1]},
             {"id": "ENTITY_IT"},
             {"id": "IT_SUPERVISOR_ENTITY"}
         ]);
-
+    // keep deprecated method for cypress test only
     usercardTemplateGateway.setInitialSelectedRecipients([
             "ENTITY1_FR",
             "ENTITY2_FR",
             "ENTITY3_FR"
         ]);
 
+    // keep deprecated method for cypress test only
     usercardTemplateGateway.setDropdownEntityRecipientForInformationList([
             {"id": "ENTITY_FR", "levels": [0,1]},
             {"id": "IT_SUPERVISOR_ENTITY"}
         ]);
-
+    // keep deprecated method for cypress test only
     usercardTemplateGateway.setInitialSelectedRecipientsForInformation([
             "ENTITY4_FR"
         ]);

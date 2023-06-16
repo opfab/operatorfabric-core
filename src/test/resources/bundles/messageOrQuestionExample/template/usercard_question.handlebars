@@ -1,5 +1,5 @@
 
-<!-- Copyright (c) 2020-2022, RTE (http://www.rte-france.com)              -->
+<!-- Copyright (c) 2020-2023, RTE (http://www.rte-france.com)              -->
 <!-- See AUTHORS.txt                                                       -->
 <!-- This Source Code Form is subject to the terms of the Mozilla Public   -->
 <!-- License, v. 2.0. If a copy of the MPL was not distributed with this   -->
@@ -22,6 +22,7 @@
         },
 
         changeLabelInEditionMode: function() {
+            // keep deprecated method for cypress test only
             if (usercardTemplateGateway.getEditionMode() == 'EDITION') {
                 const question = document.getElementById('label').innerHTML = ' QUESTION (New) ';
             }
@@ -32,15 +33,15 @@
             mystartDate.setTime(mystartDate.getTime()+ 3600000);
             mystartDate.setMinutes(0);
             mystartDate.setSeconds(0);
-            usercardTemplateGateway.setInitialStartDate(mystartDate.getTime());
+            opfab.currentUserCard.setInitialStartDate(mystartDate.getTime());
+            opfab.currentUserCard.setInitialEndDate(mystartDate.getTime() + 8 * 3600000);
 
-            usercardTemplateGateway.setInitialEndDate(mystartDate.getTime() + 8 * 3600000);
-
+            // keep deprecated method for cypress test only
             usercardTemplateGateway.setInitialLttd(mystartDate.getTime() + 4 * 3600000);
         },
 
         initUserCardTemplateGateway: function() {
-            usercardTemplateGateway.getSpecificCardInformation = function () {
+            opfab.currentUserCard.registerFunctionToGetSpecificCardInformation( () => {
                 const question = document.getElementById('question').value;
 
                 if (question.length <1) return {
@@ -62,7 +63,7 @@
                     viewCardInCalendar: false
                 };
 
-            }
+            });
         }
     }
     

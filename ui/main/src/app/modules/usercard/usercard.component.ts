@@ -37,8 +37,8 @@ import {CardService} from 'app/business/services/card/card.service';
 import {ServerResponseStatus} from 'app/business/server/serverResponse';
 import {SystemNotificationService} from '../../business/services/notifications/system-notification.service';
 import {Observable} from 'rxjs';
+import {OpfabAPIService} from 'app/business/services/opfabAPI.service';
 
-declare const usercardTemplateGateway: any;
 @Component({
     selector: 'of-usercard',
     templateUrl: './usercard.component.html',
@@ -139,7 +139,8 @@ export class UserCardComponent implements OnInit, OnDestroy {
         protected userPermissionsService: UserPermissionsService,
         private alertMessageService: AlertMessageService,
         private opfabLogger: OpfabLoggerService,
-        private systemNotificationService: SystemNotificationService
+        private systemNotificationService: SystemNotificationService,
+        private opfabAPIService: OpfabAPIService
     ) {
         this.setDefaultDateFormValues();
     }
@@ -148,7 +149,8 @@ export class UserCardComponent implements OnInit, OnDestroy {
         this.pageLoading = true;
         this.datesFromTemplate = true;
         this.displayConnectionCircles = this.configService.getConfigValue('usercard.displayConnectionCirclesInPreview', false)
-        usercardTemplateGateway.initUsercardTemplateGateway();
+        this.opfabAPIService.initUserCardTemplateInterface();
+        this.opfabAPIService.initCurrentUserCard();
         this.severityForm = new FormGroup({
             severity: new FormControl('')
         });
@@ -157,10 +159,11 @@ export class UserCardComponent implements OnInit, OnDestroy {
         this.setPublisherForCreatingUsercard();
 
         if (this.cardIdToEdit) {
-            usercardTemplateGateway.editionMode = 'EDITION';
+
+            this.opfabAPIService.currentUserCard.editionMode = 'EDITION'
             this.loadCardForEdition();
         } else {
-            usercardTemplateGateway.editionMode = 'CREATE';
+            this.opfabAPIService.currentUserCard.editionMode = 'CREATE';
             if (this.userEntitiesAllowedToSendCardOptions.length > 0) {
                 this.publisherForCreatingUsercard = this.userEntitiesAllowedToSendCardOptions[0].value;
             }
@@ -201,10 +204,10 @@ export class UserCardComponent implements OnInit, OnDestroy {
             this.initialSelectedRecipientsForInformation = this.cardToEdit.card.entityRecipientsForInformation;
             this.pageLoading = false;
             this.datesFromCardToEdit = true;
-            usercardTemplateGateway.startDate = this.cardToEdit.card.startDate;
-            usercardTemplateGateway.endDate = this.cardToEdit.card.endDate;
-            usercardTemplateGateway.lttd = this.cardToEdit.card.lttd;
-            usercardTemplateGateway.expirationDate = this.cardToEdit.card.expirationDate;
+            this.opfabAPIService.currentUserCard.startDate =  this.cardToEdit.card.startDate;
+            this.opfabAPIService.currentUserCard.endDate = this.cardToEdit.card.endDate;
+            this.opfabAPIService.currentUserCard.lttd = this.cardToEdit.card.lttd;
+            this.opfabAPIService.currentUserCard.expirationDate = this.cardToEdit.card.expirationDate;
 
             this.setPublisherForCreatingUsercardForCardToEdit();
 
@@ -212,7 +215,7 @@ export class UserCardComponent implements OnInit, OnDestroy {
                 const userResponse = this.cardToEdit.childCards.find(
                     (child) => child.publisher === this.publisherForCreatingUsercard
                 );
-                usercardTemplateGateway.setUserEntityChildCardFromCurrentCard(userResponse);
+                this.opfabAPIService.currentUserCard.userEntityChildCard = userResponse;
             }
         });
     }
@@ -256,47 +259,46 @@ export class UserCardComponent implements OnInit, OnDestroy {
         this.datesFormValue = new DatesForm(startDate, endDate, lttd, expirationDate);
         this.datesFromTemplate = true;
         this.currentStartDate = startDate.initialEpochDate;
-        usercardTemplateGateway.setInitialStartDate(null);
+        this.opfabAPIService.currentUserCard.startDate = null;
         this.currentEndDate = endDate.initialEpochDate;
-        usercardTemplateGateway.setInitialEndDate(null);
+        this.opfabAPIService.currentUserCard.endDate = null;
         this.currentLttd = lttd.initialEpochDate;
-        usercardTemplateGateway.setInitialLttd(null);
+        this.opfabAPIService.currentUserCard.lttd = null;
         this.currentExpirationDate = expirationDate.initialEpochDate;
-        usercardTemplateGateway.setInitialExpirationDate(null);
+        this.opfabAPIService.currentUserCard.expirationDate = null;
     }
 
     private setInitialDateFormValues(): void {
         const startDate = new DateField(
             this.startDateVisible,
-            this.datesFromTemplate && usercardTemplateGateway.getStartDate()
-                ? usercardTemplateGateway.getStartDate()
+            this.datesFromTemplate && this.opfabAPIService.currentUserCard.startDate
+                ? this.opfabAPIService.currentUserCard.startDate
                 : this.getStartDate()
         );
         const endDate = new DateField(
             this.endDateVisible,
-            this.datesFromTemplate && usercardTemplateGateway.getEndDate()
-                ? usercardTemplateGateway.getEndDate()
+            this.datesFromTemplate && this.opfabAPIService.currentUserCard.endDate
+                ? this.opfabAPIService.currentUserCard.endDate
                 : this.getEndDate()
         );
         const lttd = new DateField(
             this.lttdVisible,
-            this.datesFromTemplate && usercardTemplateGateway.getLttd()
-                ? usercardTemplateGateway.getLttd()
+            this.datesFromTemplate && this.opfabAPIService.currentUserCard.lttd
+                ? this.opfabAPIService.currentUserCard.lttd
                 : this.getLttd()
         );
         const expirationDate = new DateField(
             this.expirationDateVisible,
-            this.datesFromTemplate && usercardTemplateGateway.getExpirationDate()
-                ? usercardTemplateGateway.getExpirationDate()
+            this.datesFromTemplate && this.opfabAPIService.currentUserCard.expirationDate
+                ? this.opfabAPIService.currentUserCard.expirationDate
                 : this.getExpirationDate()
         );
 
         if (
-            usercardTemplateGateway.getStartDate() ||
-            usercardTemplateGateway.getEndDate() ||
-            usercardTemplateGateway.getEndDate() ||
-            usercardTemplateGateway.getLttd() ||
-            usercardTemplateGateway.getExpirationDate()
+            this.opfabAPIService.currentUserCard.startDate ||
+            this.opfabAPIService.currentUserCard.endDate||
+            this.opfabAPIService.currentUserCard.lttd ||
+            this.opfabAPIService.currentUserCard.expirationDate
         ) {
             this.datesFromTemplate = false;
         }
@@ -362,37 +364,38 @@ export class UserCardComponent implements OnInit, OnDestroy {
     public onStartDateChange() {
         const startDate = this.datesForm.getStartDateAsEpoch();
         this.currentStartDate = startDate;
-        usercardTemplateGateway.startDate = startDate;
+        this.opfabAPIService.currentUserCard.startDate = startDate;
     }
 
     public onEndDateChange() {
         const endDate = this.datesForm.getEndDateAsEpoch();
         this.currentEndDate = endDate;
-        usercardTemplateGateway.endDate = endDate;
+        this.opfabAPIService.currentUserCard.endDate = endDate;
     }
 
     public onLttdChange() {
         const lttd = this.datesForm.getLttdAsEpoch();
         this.currentLttd = lttd;
-        usercardTemplateGateway.lttd = lttd;
+        this.opfabAPIService.currentUserCard.lttd = lttd;
     }
 
     public onExpirationDateChange() {
         const expirationDate = this.datesForm.getExpirationDateAsEpoch();
         this.currentExpirationDate = expirationDate;
-        usercardTemplateGateway.expirationDate = expirationDate;
+        this.opfabAPIService.currentUserCard.expirationDate = expirationDate;
     }
 
     public stateChanged(event: any) {
         this.selectedStateId = event.state;
         this.selectedProcessId = event.selectedProcessId;
-        usercardTemplateGateway.currentState = event.state;
-        usercardTemplateGateway.currentProcess = event.selectedProcessId;
-        usercardTemplateGateway.setInitialStartDate(null);
-        usercardTemplateGateway.setInitialEndDate(null);
-        usercardTemplateGateway.setInitialLttd(null);
-        usercardTemplateGateway.setInitialExpirationDate(null);
-        usercardTemplateGateway.setInitialSeverity(null);
+        this.opfabAPIService.currentUserCard.state = event.state;
+        this.opfabAPIService.currentUserCard.processId = event.selectedProcessId;
+        this.opfabAPIService.currentUserCard.startDate = null;
+        this.opfabAPIService.currentUserCard.endDate = null;
+        this.opfabAPIService.currentUserCard.lttd = null;
+        this.opfabAPIService.currentUserCard.expirationDate = null;
+        this.opfabAPIService.currentUserCard.initialSeverity = null;
+
 
         this.userCardConfiguration = this.processesService
             .getProcess(this.selectedProcessId)
@@ -410,7 +413,7 @@ export class UserCardComponent implements OnInit, OnDestroy {
     }
 
     public cardEmitterChanged(event: any) {
-        usercardTemplateGateway.setEntityUsedForSendingCard(event.emitter);
+        this.opfabAPIService.userCardTemplateInterface.setEntityUsedForSendingCard(event.emitter);
     }
 
     private setFieldsVisibility() {
@@ -452,10 +455,8 @@ export class UserCardComponent implements OnInit, OnDestroy {
 
         if (this.userCardConfiguration?.template) {
             const templateName = this.userCardConfiguration.template;
-            usercardTemplateGateway.setEntityUsedForSendingCard = () => {
-                // default method if not override by template
-            };
-            usercardTemplateGateway.getSpecificCardInformation = null;
+            this.opfabAPIService.initUserCardTemplateInterface();
+
             if (!this.cardToEdit) this.setDefaultDateFormValues();
 
             this.isLoadingCardTemplate = true;
@@ -465,6 +466,7 @@ export class UserCardComponent implements OnInit, OnDestroy {
                 .pipe(map((t) => t(new DetailContext(card, null, null))))
                 .subscribe({
                     next: (template) => {
+                        console.log(new Date().toISOString(), "Template loaded");
                         this.isLoadingCardTemplate = false;
                         this.userCardTemplate = this.sanitizer.bypassSecurityTrustHtml(template);
                         setTimeout(() => {
@@ -473,7 +475,7 @@ export class UserCardComponent implements OnInit, OnDestroy {
                             this.setInitialDateFormValues();
                             if (this.severityVisible && !this.cardToEdit && !this.cardToCopy)
                                 this.setInitialSeverityValue();
-                            usercardTemplateGateway.setEntityUsedForSendingCard(
+                            this.opfabAPIService.userCardTemplateInterface.setEntityUsedForSendingCard(
                                 this.findPublisherForCreatingUsercard()
                             );
                         }, 10);
@@ -493,7 +495,7 @@ export class UserCardComponent implements OnInit, OnDestroy {
     setInitialSeverityValue() {
         let initialSeverity;
 
-        switch (usercardTemplateGateway.getInitialSeverity()) {
+        switch (this.opfabAPIService.currentUserCard.initialSeverity) {
             case 'ALARM':
                 initialSeverity = Severity.ALARM;
                 break;
@@ -527,17 +529,17 @@ export class UserCardComponent implements OnInit, OnDestroy {
 
     public prepareCard() {
         if (!this.isSpecificInformationValid()) return;
-        this.specificInformation = usercardTemplateGateway.getSpecificCardInformation();
+        this.specificInformation = this.opfabAPIService.userCardTemplateInterface.getSpecificCardInformation();
         const startDate = this.getStartDate();
         const endDate = this.getEndDate();
         const lttd = this.getLttd();
         const expirationDate = this.getExpirationDate();
         if (!this.areDatesValid(startDate, endDate, lttd, expirationDate)) return;
 
-        usercardTemplateGateway.startDate = startDate;
-        usercardTemplateGateway.endDate = endDate;
-        usercardTemplateGateway.lttd = lttd;
-        usercardTemplateGateway.expirationDate = expirationDate;
+        this.opfabAPIService.currentUserCard.startDate = startDate;
+        this.opfabAPIService.currentUserCard.endDate = endDate;
+        this.opfabAPIService.currentUserCard.lttd = lttd;
+        this.opfabAPIService.currentUserCard.expirationDate = expirationDate;
 
         const title = this.specificInformation.card.title ? this.specificInformation.card.title : 'UNDEFINED';
         const selectedProcess = this.processesService.getProcess(this.selectedProcessId);
@@ -637,7 +639,7 @@ export class UserCardComponent implements OnInit, OnDestroy {
                             this.connectedRecipients.add(entity)
                         }
                     })
-                    
+
                 });
                 return true;
             })
@@ -662,18 +664,11 @@ export class UserCardComponent implements OnInit, OnDestroy {
     }
 
     private isSpecificInformationValid(): boolean {
-        if (!usercardTemplateGateway.getSpecificCardInformation) {
-            this.opfabLogger.error(
-                'ERROR : No usercardTemplateGateway.getSpecificCardInformationMethod() in template, card cannot be sent'
-            );
-            this.displayMessage('userCard.error.templateError', null, MessageLevel.ERROR);
-            return false;
-        }
 
-        const specificInformation = usercardTemplateGateway.getSpecificCardInformation();
+        const specificInformation = this.opfabAPIService.userCardTemplateInterface.getSpecificCardInformation();
         if (!specificInformation) {
             this.opfabLogger.error(
-                'ERROR : usercardTemplateGateway.getSpecificCardInformationMethod() in template return no information, card cannot be sent'
+                'ERROR : registered method getSpecificCardInformation in template return no information, card cannot be sent'
             );
             this.displayMessage('userCard.error.templateError', null, MessageLevel.ERROR);
             return false;
@@ -686,7 +681,7 @@ export class UserCardComponent implements OnInit, OnDestroy {
 
         if (!specificInformation.card) {
             this.opfabLogger.error(
-                'ERROR : usercardTemplateGateway.getSpecificCardInformationMethod() in template return specificInformation with no card field, card cannot be sent'
+                'ERROR : registered method getSpecificCardInformation in template return specificInformation with no card field, card cannot be sent'
             );
             this.displayMessage('userCard.error.templateError', null, MessageLevel.ERROR);
             return false;

@@ -18,11 +18,14 @@ declare const opfab: any;
 })
 export class OpfabAPIService {
     public currentCard;
+    public currentUserCard;
 
     public templateInterface: any;
+    public userCardTemplateInterface: any;
 
     constructor(private entityService: EntitiesService, private businessDataService: BusinessDataService) {
         this.initCurrentCard();
+        this.initCurrentUserCard();
     }
 
     public initCurrentCard() {
@@ -39,6 +42,26 @@ export class OpfabAPIService {
             hideLoadingSpinner: function () {},
             applyChildCards: function() { self.templateInterface.setChildCards(self.currentCard.childCards)}
         };
+    }
+
+    public initCurrentUserCard() {
+        this.currentUserCard = {
+            editionMode: null,
+            endDate: null,
+            expirationDate : null,
+            initialSeverity: null,
+            lttd: null,
+            processId : null,
+            state: null,
+            startDate: null,
+            userEntityChildCard: null,
+            selectedEntityRecipients: null,
+            selectedEntityForInformationRecipients: null,
+            setInitialSelectedRecipients: function(recipients) {},
+            setInitialSelectedRecipientsForInformation: function(recipients) {},
+            setDropdownEntityRecipientList: function (recipients) {},
+            setDropdownEntityRecipientForInformationList: function (recipients) {}
+        }
     }
 
     public initTemplateInterface() {
@@ -70,6 +93,22 @@ export class OpfabAPIService {
             // OpFab calls this function when global style has changed
             setStyleChange: function () {}
         };
+    }
+
+    public initUserCardTemplateInterface() {
+        this.userCardTemplateInterface = {
+            setEntityUsedForSendingCard: function (senderEntity) {},
+
+
+
+            getSpecificCardInformation: function () {
+                console.log(
+                    new Date().toISOString(),
+                    ` Template : no getSpecificCardInformation method registered , valid set to false`
+                );
+                return {valid: false, errorMsg: 'Impossible to respond due to a technical error in the template'};
+            }
+        }
     }
 
     public initAPI() {
@@ -104,6 +143,7 @@ export class OpfabAPIService {
 
         this.initUserApi();
         this.initCurrentCardApi();
+        this.initCurrentUserCardApi();
     }
 
     private initUserApi() {
@@ -201,5 +241,97 @@ export class OpfabAPIService {
 
         // prevent unwanted modifications from templates code
         Object.freeze(opfab.currentCard);
+    }
+
+    private initCurrentUserCardApi() {
+        const self = this;
+
+        opfab.currentUserCard.getEditionMode = function () {
+            return self.currentUserCard.editionMode;
+        };
+
+        opfab.currentUserCard.getEndDate = function () {
+            return self.currentUserCard.endDate;
+        };
+
+        opfab.currentUserCard.getExpirationDate = function () {
+            return self.currentUserCard.expirationDate;
+        };
+
+        opfab.currentUserCard.getLttd = function () {
+            return self.currentUserCard.lttd;
+        };
+
+        opfab.currentUserCard.getProcessId = function () {
+            return self.currentUserCard.processId;
+        };
+
+        opfab.currentUserCard.getSelectedEntityRecipients = function () {
+            return self.currentUserCard.selectedEntityRecipients;
+        };
+
+        opfab.currentUserCard.getSelectedEntityForInformationRecipients = function () {
+            return self.currentUserCard.selectedEntityForInformationRecipients;
+        };
+
+        opfab.currentUserCard.getStartDate = function () {
+            return self.currentUserCard.startDate;
+        };
+
+        opfab.currentUserCard.getState = function () {
+            return self.currentUserCard.state;
+        };
+
+        opfab.currentUserCard.getUserEntityChildCard = function () {
+            return self.currentUserCard.userEntityChildCard;
+        };
+
+        opfab.currentUserCard.listenToEntityUsedForSendingCard = function (listener) {
+            self.userCardTemplateInterface.setEntityUsedForSendingCard = listener;
+        };
+
+        opfab.currentUserCard.registerFunctionToGetSpecificCardInformation = function (getSpecificCardInformation) {
+            self.userCardTemplateInterface.getSpecificCardInformation = getSpecificCardInformation;
+        };
+
+        opfab.currentUserCard.setDropdownEntityRecipientList = function (recipients) {
+            self.currentUserCard.setDropdownEntityRecipientList(recipients);
+        };
+
+        opfab.currentUserCard.setDropdownEntityRecipientForInformationList = function (recipients) {
+            self.currentUserCard.setDropdownEntityRecipientForInformationList(recipients);
+        };
+        
+        opfab.currentUserCard.setInitialEndDate = function (endDate) {
+            if (opfab.currentUserCard.getEditionMode() === 'CREATE') self.currentUserCard.endDate  = endDate;
+        };
+
+        opfab.currentUserCard.setInitialExpirationDate = function (expirationDate) {
+            if (opfab.currentUserCard.getEditionMode() === 'CREATE') self.currentUserCard.expirationDate  = expirationDate;
+        };
+
+        opfab.currentUserCard.setInitialLttd = function (lttd) {
+            if (opfab.currentUserCard.getEditionMode() === 'CREATE') self.currentUserCard.lttd  = lttd;
+        };
+
+        opfab.currentUserCard.setInitialStartDate = function (startDate) {
+            if (opfab.currentUserCard.getEditionMode() === 'CREATE') self.currentUserCard.startDate  = startDate;
+        };
+
+        opfab.currentUserCard.setInitialSeverity = function (initialSeverity) {
+            self.currentUserCard.initialSeverity = initialSeverity;
+        };
+
+        opfab.currentUserCard.setInitialSelectedRecipients = function (recipients) {
+            self.currentUserCard.setInitialSelectedRecipients(recipients);
+        };
+
+        opfab.currentUserCard.setInitialSelectedRecipientsForInformation = function (recipients) {
+            self.currentUserCard.setInitialSelectedRecipientsForInformation(recipients);
+        };
+
+
+        // prevent unwanted modifications from templates code
+        Object.freeze(opfab.currentUserCard);
     }
 }

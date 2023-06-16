@@ -1,5 +1,5 @@
 
-<!-- Copyright (c) 2022, RTE (http://www.rte-france.com)              -->
+<!-- Copyright (c) 2022-2023, RTE (http://www.rte-france.com)              -->
 <!-- See AUTHORS.txt                                                       -->
 <!-- This Source Code Form is subject to the terms of the Mozilla Public   -->
 <!-- License, v. 2.0. If a copy of the MPL was not distributed with this   -->
@@ -36,20 +36,21 @@
         },
 
         showCurrentUserResponse: function(){
-            if (usercardTemplateGateway.getUserEntityChildCardFromCurrentCard()) {
-                if (usercardTemplateGateway.getUserEntityChildCardFromCurrentCard().data.confirm == 'YES') {
+            if (opfab.currentUserCard.getUserEntityChildCard()) {
+                if (opfab.currentUserCard.getUserEntityChildCard().data.confirm == 'YES') {
                     document.getElementById('yes').selected=true;
                     document.getElementById('no').selected=false;
                 } else {
                     document.getElementById('yes').selected=false;
                     document.getElementById('no').selected=true;
                 }
+                // keep deprecated method for cypress test only
                 document.getElementById('message').value=usercardTemplateGateway.getUserEntityChildCardFromCurrentCard().data.message;
             }
         },
 
         initTemplateGatewayMethod: function() {
-            usercardTemplateGateway.getSpecificCardInformation = function () {
+            opfab.currentUserCard.registerFunctionToGetSpecificCardInformation( () => {
                 const question = document.getElementById('question').value;
                 if (question.length <1) return {
                     valid: false,
@@ -85,7 +86,7 @@
                     childCard: childCard,
                     viewCardInCalendar: false
                 };
-            }
+            });
         }
     }
     
