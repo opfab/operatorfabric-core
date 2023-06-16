@@ -93,8 +93,70 @@ Use of methods or attributes starting with templateGateway are now deprecated , 
 |templateGateway.applyChildCards =  function () {//do some stuff}
 |opfab.currentCard.listenToChildCards( ()  => {//do some stuff} )
 
-|===
+|usercardTemplateGateway.getCurrentProcess()
+|opfab.currentUserCard.getProcessId()
 
+|usercardTemplateGateway.getEditionMode()
+|opfab.currentUserCard.getEditionMode()
+
+|usercardTemplateGateway.getEndDate()
+|opfab.currentUserCard.getEndDate()
+
+|usercardTemplateGateway.getExpirationDate()
+|opfab.currentUserCard.getExpirationDate()
+
+|usercardTemplateGateway.getLttd()
+|opfab.currentUserCard.getLttd()
+
+|usercardTemplateGateway.getSelectedEntityRecipients()
+|opfab.currentUserCard.getSelectedEntityRecipients()
+
+|usercardTemplateGateway.getSelectedEntityForInformationRecipients()
+|opfab.currentUserCard.getSelectedEntityForInformationRecipients()
+
+|usercardTemplateGateway.getStartDate()
+|opfab.currentUserCard.getStartDate()
+
+|usercardTemplateGateway.getCurrentState()
+|opfab.currentUserCard.getState()
+
+|usercardTemplateGateway.getUserEntityChildCardFromCurrentCard()
+|opfab.currentUserCard.getUserEntityChildCard()
+
+|usercardTemplateGateway.getSpecificCardInformation =  function () {//do some stuff}
+|opfab.currentUserCard.registerFunctionToGetSpecificCardInformation( ()  => {//do some stuff} )
+
+|usercardTemplateGateway.setDropdownEntityRecipientList(recipients)
+|opfab.currentUserCard.setDropdownEntityRecipientList(recipients)
+
+|usercardTemplateGateway.setDropdownEntityRecipientForInformationList(recipients)
+|opfab.currentUserCard.setDropdownEntityRecipientForInformationList(recipients)
+
+|userCardTemplateGateway.setEntityUsedForSendingCard = function (entityID) {//do some stuff}
+|opfab.currentUserCard.listenToEntityUsedForSendingCard( (entityID)  => {//do some stuff} )
+
+|usercardTemplateGateway.setInitialEndDate(endDate)
+|opfab.currentUserCard.setInitialEndDate(endDate)
+
+|usercardTemplateGateway.setInitialExpirationDate(expirationDate)
+|opfab.currentUserCard.setInitialExpirationDate(expirationDate)
+
+|usercardTemplateGateway.setInitialLttd(lttd)
+|opfab.currentUserCard.setInitialLttd(lttd)
+
+|usercardTemplateGateway.setInitialSelectedRecipients(recipients)
+|opfab.currentUserCard.setInitialSelectedRecipients(recipients)
+
+|usercardTemplateGateway.setInitialSelectedRecipientsForInformation(recipients)
+|opfab.currentUserCard.setInitialSelectedRecipientsForInformation(recipients)
+
+|usercardTemplateGateway.setInitialSeverity(initialSeverity)
+|opfab.currentUserCard.setInitialSeverity(initialSeverity)
+
+|usercardTemplateGateway.setInitialStartDate(startDate)
+|opfab.currentUserCard.setInitialStartDate(startDate)
+
+|===
 
 == Write right for user (RightsEnum.Write)
 

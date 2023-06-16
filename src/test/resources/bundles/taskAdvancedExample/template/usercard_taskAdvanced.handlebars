@@ -364,14 +364,14 @@
         },
 
         initSeverity: function() {
-            usercardTemplateGateway.setInitialSeverity('ACTION');
+            opfab.currentUserCard.setInitialSeverity('ACTION');
         },
 
         initInitialDates: function() {
             const mystartDate = new Date();
             mystartDate.setTime(mystartDate.getTime());
-            usercardTemplateGateway.setInitialStartDate(mystartDate.getTime() + 3600000);
-            usercardTemplateGateway.setInitialEndDate(mystartDate.getTime() + 7 * 24 * 3600000);
+            opfab.currentUserCard.setInitialStartDate(mystartDate.getTime() + 3600000);
+            opfab.currentUserCard.setInitialEndDate(mystartDate.getTime() + 7 * 24 * 3600000);
         },
 
         initTimeForRecurrence: function() {
@@ -387,7 +387,7 @@
         initUserCardTemplateGateway: function() {
             that = this;
 
-            usercardTemplateGateway.getSpecificCardInformation = function () {
+            opfab.currentUserCard.registerFunctionToGetSpecificCardInformation(() => {
                 const taskDescription = document.getElementById('taskDescription').value;
                 
                 const time = document.getElementById('time').value;
@@ -499,7 +499,7 @@
                     card: card
                 };
 
-            }
+            });
         },
 
         checkIsAllDaysSelected: function() {

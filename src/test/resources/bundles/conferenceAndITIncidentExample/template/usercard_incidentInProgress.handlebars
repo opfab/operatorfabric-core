@@ -83,6 +83,7 @@
 
         initUserCardTemplateGateway :function() {
             that = this;
+            // keep deprecated getSpecificCardInformation for testing 
             usercardTemplateGateway.getSpecificCardInformation = function () {
 
                 const selectedValues = that.serviceSelect.getSelectedValues(); 
@@ -139,8 +140,8 @@
 
     // The two following lines are used for cypress test 
     // remove them if you use this template as example 
-    document.getElementById("hidden_process").value = usercardTemplateGateway.getCurrentProcess();
-    document.getElementById("hidden_state").value = usercardTemplateGateway.getCurrentState();
+    document.getElementById("hidden_process").value = usercardTemplateGateway.getCurrentProcess(); // keep deprecated version for testing
+    document.getElementById("hidden_state").value = usercardTemplateGateway.getCurrentState(); // keep deprecated version for testing
 
 
 </script>

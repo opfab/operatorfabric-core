@@ -622,7 +622,7 @@ OperatorFabric provides a multiselect component based on https://sa-si-dev.githu
             });
   
 
-  usercardTemplateGateway.getSpecificCardInformation = function () {
+  opfab.currentUserCard.registerFunctionToGetSpecificCardInformation(() => {
 
         const selectedValues = myMultiSelect.getSelectedValues(); 
   ...
@@ -689,7 +689,7 @@ It is possible to use the component also as single value select. The advantage o
             });
   
 
-  usercardTemplateGateway.getSpecificCardInformation = function () {
+   opfab.currentUserCard.registerFunctionToGetSpecificCardInformation(()  => {
 
         const selectedValues = document.getElementById('my-singleselect').value; 
 
