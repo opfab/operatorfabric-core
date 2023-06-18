@@ -15,7 +15,7 @@ import {I18n} from '@ofModel/i18n.model';
 import {CardsFilter} from '@ofModel/cards-filter.model';
 import {CardServer} from '../server/card.server';
 import {ServerResponse, ServerResponseStatus} from '../server/serverResponse';
-import {LightCardsStoreService} from './lightcards/lightcards-store.service';
+import {AcknowledgeService} from "./acknowledge.service";
 
 @Injectable({
     providedIn: 'root'
@@ -24,7 +24,7 @@ export class CardService {
 
     constructor(
         private cardServer: CardServer,
-        private lightCardsStoreService: LightCardsStoreService,
+        private acknowledgeService: AcknowledgeService,
     ) {
 
     }
@@ -36,7 +36,7 @@ export class CardService {
                 if (cardResponse.status === ServerResponseStatus.OK) {
                         const cardData = cardResponse.data;
                         cardData.card.hasBeenAcknowledged =
-                            this.lightCardsStoreService.isLightCardHasBeenAcknowledgedByUserOrByUserEntity(
+                            this.acknowledgeService.isLightCardHasBeenAcknowledgedByUserOrByUserEntity(
                                 fromCardToLightCard(cardData.card));
                     return cardData;
                 }

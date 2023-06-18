@@ -93,7 +93,7 @@ export class CardAckComponent implements OnInit, OnChanges, OnDestroy {
 
         this.card = {
             ...this.card,
-            hasBeenAcknowledged: this.lightCardsStoreService.isLightCardHasBeenAcknowledgedByUserOrByUserEntity(lightcard)
+            hasBeenAcknowledged: this.acknowledgeService.isLightCardHasBeenAcknowledgedByUserOrByUserEntity(lightcard)
         };
         this.setAcknowledgeButtonVisibility();
 

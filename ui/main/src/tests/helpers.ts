@@ -163,7 +163,7 @@ export function getOneRandomCard(cardTemplate?: any): Card {
             ? cardTemplate.expirationDate
             : startTime + generateRandomPositiveIntegerWithinRangeWithOneAsMinimum(3455),
         cardTemplate.severity ? cardTemplate.severity : getRandomSeverity(),
-        false,
+        cardTemplate.hasBeenAcknowledged ? cardTemplate.hasBeenAcknowledged : false,
         false,
         false,
         cardTemplate.process ? cardTemplate.process : 'testProcess',
@@ -175,14 +175,25 @@ export function getOneRandomCard(cardTemplate?: any): Card {
         getRandomAlphanumericValue(3, 24),
         getRandomAlphanumericValue(3, 24),
         cardTemplate.data ? cardTemplate.data : {data: 'data'},
-        undefined,
-        undefined,
-        undefined,
+        cardTemplate.userRecipients ? cardTemplate.userRecipients : null,
+        cardTemplate.groupRecipients ? cardTemplate.groupRecipients : null,
+        cardTemplate.entityRecipients ? cardTemplate.entityRecipients : null,
         undefined,
         undefined,
         cardTemplate.entitiesAllowedToRespond ? cardTemplate.entitiesAllowedToRespond : null,
         cardTemplate.entitiesRequiredToRespond ? cardTemplate.entitiesRequiredToRespond : null,
-        cardTemplate.entitiesAllowedToEdit ? cardTemplate.entitiesAllowedToEdit : null
+        cardTemplate.entitiesAllowedToEdit ? cardTemplate.entitiesAllowedToEdit : null,
+        cardTemplate.parentCardId ? cardTemplate.parentCardId : null,
+        cardTemplate.initialParentCardUid ? cardTemplate.initialParentCardUid : null,
+        cardTemplate.keepChildCards ? cardTemplate.keepChildCards : null,
+        cardTemplate.publisherType ? cardTemplate.publisherType : null,
+        cardTemplate.representative ? cardTemplate.representative : null,
+        cardTemplate.representativeType ? cardTemplate.representativeType : null,
+        cardTemplate.wktGeometry ? cardTemplate.wktGeometry : null,
+        cardTemplate.wktProjection ? cardTemplate.wktProjection : null,
+        cardTemplate.secondsBeforeTimeSpanForReminder ? cardTemplate.secondsBeforeTimeSpanForReminder : null,
+        cardTemplate.timeSpans ? cardTemplate.timeSpans : null,
+        cardTemplate.entitiesAcks ? cardTemplate.entitiesAcks : null
     );
 }
 

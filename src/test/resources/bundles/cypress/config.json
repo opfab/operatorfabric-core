@@ -107,16 +107,6 @@
         "state": "dummyResponseState"
       }
     },
-    "stateWithOneEntityOfUserHasAcknowledged":
-    {
-      "name":"State to test OneEntityOfUserHasAcknowledged",
-      "description": "State to test entities acks with consideredAcknowledgedForUserWhen=OneEntityOfUserHasAcknowledged",
-      "consideredAcknowledgedForUserWhen": "OneEntityOfUserHasAcknowledged",
-      "templateName" : "kitchenSink",
-      "response": {
-        "state": "dummyResponseState"
-      }
-    },
     "stateWithAllEntitiesOfUserHaveAcknowledged":
     {
       "name":"State to test AllEntitiesOfUserHaveAcknowledged",

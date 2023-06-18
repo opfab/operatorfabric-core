@@ -13,7 +13,6 @@ import {UserWithPerimeters} from '@ofModel/userWithPerimeters.model';
 import {ConfigServerMock} from '@tests/mocks/configServer.mock';
 import {EntitiesServerMock} from '@tests/mocks/entitiesServer.mock';
 import {OpfabEventStreamServerMock} from '@tests/mocks/opfab-event-stream.server.mock';
-import {ProcessServerMock} from '@tests/mocks/processServer.mock';
 import {RemoteLoggerServiceMock} from '@tests/mocks/remote-logger.service.mock';
 import {SettingsServerMock} from '@tests/mocks/settingsServer.mock';
 import {UserServerMock} from '@tests/mocks/userServer.mock';
@@ -23,7 +22,6 @@ import {EntitiesService} from 'app/business/services/entities.service';
 import {LightCardsStoreService} from 'app/business/services/lightcards/lightcards-store.service';
 import {OpfabLoggerService} from 'app/business/services/logs/opfab-logger.service';
 import {OpfabEventStreamService} from 'app/business/services/opfabEventStream.service';
-import {ProcessesService} from 'app/business/services/processes.service';
 import {SettingsService} from 'app/business/services/settings.service';
 import {UserService} from 'app/business/services/user.service';
 import {CurrentUserStore} from 'app/business/store/current-user.store';
@@ -84,11 +82,10 @@ describe('ActivityAreaView', () => {
     function mockLightCardStoreService() {
         lightCardsStoreService = new LightCardsStoreService(
             userService,
-            new ProcessesService(userService, new ProcessServerMock(), new ConfigServerMock()),
-            entitiesService,
             new OpfabEventStreamService(new OpfabEventStreamServerMock(), null, opfabLoggerService),
             null,
-            opfabLoggerService
+            opfabLoggerService,
+            null
         );
     }
 

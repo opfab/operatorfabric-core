@@ -156,7 +156,7 @@ export class UserService extends CrudService {
     public hasCurrentUserAnyPermission(permissions: PermissionEnum[]): boolean {
         if (!permissions) return false;
         return (
-            this._userWithPerimeters.permissions.filter((permission) => permissions.indexOf(permission) >= 0).length > 0
+            this._userWithPerimeters.permissions?.filter((permission) => permissions.indexOf(permission) >= 0).length > 0
         );
     }
 

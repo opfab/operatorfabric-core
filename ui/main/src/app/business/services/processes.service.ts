@@ -140,6 +140,10 @@ export class ProcessesService {
         return this.processes.find((process) => processId === process.id);
     }
 
+    public getProcessWithVersion(processId: string, processVersion: string): Process {
+        return this.processes.find((process) => (processId === process.id && processVersion === process.version));
+    }
+
     public getProcessGroupsAndLabels(): {
         groupId: string;
         groupLabel: string;
@@ -319,26 +323,33 @@ export class ProcessesService {
         return statesListPerProcess;
     }
 
-    public getConsideredAcknowledgedForUserWhenForALightCard(
-        lightCard: LightCard
-    ): ConsideredAcknowledgedForUserWhenEnum {
+    public getConsideredAcknowledgedForUserWhenForALightCard(lightCard: LightCard): ConsideredAcknowledgedForUserWhenEnum {
         let consideredAcknowledgedForUserWhen = ConsideredAcknowledgedForUserWhenEnum.USER_HAS_ACKNOWLEDGED;
 
-        this.queryProcess(lightCard.process, lightCard.processVersion).subscribe((process) => {
-            const state = process.states.get(lightCard.state);
-            if (state.consideredAcknowledgedForUserWhen)
+        const processDef = this.getProcessWithVersion(lightCard.process, lightCard.processVersion);
+
+        if (processDef) {
+            const state = processDef.states.get(lightCard.state);
+            if (state?.consideredAcknowledgedForUserWhen) {
                 consideredAcknowledgedForUserWhen = state.consideredAcknowledgedForUserWhen;
-        });
+            }
+        }
+
         return consideredAcknowledgedForUserWhen;
     }
 
     public getShowAcknowledgmentFooterForACard(card: Card): ShowAcknowledgmentFooterEnum {
         let showAcknowledgmentFooter = ShowAcknowledgmentFooterEnum.ONLY_FOR_EMITTING_ENTITY;
 
-        this.queryProcess(card.process, card.processVersion).subscribe((process) => {
-            const state = process.states.get(card.state);
-            if (state.showAcknowledgmentFooter) showAcknowledgmentFooter = state.showAcknowledgmentFooter;
-        });
+        const processDef = this.getProcessWithVersion(card.process, card.processVersion);
+
+        if (processDef) {
+            const state = processDef.states.get(card.state);
+            if (state?.showAcknowledgmentFooter) {
+                showAcknowledgmentFooter = state.showAcknowledgmentFooter;
+            }
+        }
+
         return showAcknowledgmentFooter;
     }
 }
