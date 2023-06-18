@@ -51,10 +51,6 @@
       "right": "ReceiveAndWrite"
     },
     {
-      "state": "stateWithOneEntityOfUserHasAcknowledged",
-      "right": "ReceiveAndWrite"
-    },
-    {
       "state": "stateWithAllEntitiesOfUserHaveAcknowledged",
       "right": "ReceiveAndWrite"
     }

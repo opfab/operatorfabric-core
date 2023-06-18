@@ -362,7 +362,7 @@ describe('FeedScreen tests', function () {
         feed.resetAllFilters();
         cy.waitDefaultTime();
 
-        // Check there are 5 cards in the feed (acknowwledged card is not visible)
+        // Check there are 5 cards in the feed (acknowledged card is not visible)
         feed.checkNumberOfDisplayedCardsIs(5);
         feed.checkFilterIsOpenAndNotActive();
         checkResetAllFiltersLinkDoesNotExists();

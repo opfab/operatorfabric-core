@@ -30,6 +30,10 @@ import {Severity} from '@ofModel/light-card.model';
 import {Utilities} from 'app/business/common/utilities';
 import {FilterService} from 'app/business/services/lightcards/filter.service';
 import {FilterType} from '@ofModel/feed-filter.model';
+import {AcknowledgeService} from "../../services/acknowledge.service";
+import {EntitiesService} from "../../services/entities.service";
+import {UserPermissionsService} from "../../services/user-permissions.service";
+import {AlertMessageService} from "../../services/alert-message.service";
 
 describe('Dashboard', () => {
     let dashboard: Dashboard;
@@ -42,6 +46,7 @@ describe('Dashboard', () => {
     let lightCardsStoreService: LightCardsStoreService;
     let filterService: FilterService;
     let opfabEventStreamServerMock: OpfabEventStreamServerMock;
+    let acknowledgeService: AcknowledgeService;
 
     beforeEach(() => {
         configServerMock = new ConfigServerMock();
@@ -60,13 +65,17 @@ describe('Dashboard', () => {
             null,
             opfabLoggerService
         );
+
+        const entitiesService = new EntitiesService(opfabLoggerService, null, new AlertMessageService());
+        const userPermissionService = new UserPermissionsService(entitiesService, processesService);
+        acknowledgeService = new AcknowledgeService(null, userPermissionService, userService, processesService, entitiesService);
+
         lightCardsStoreService = new LightCardsStoreService(
             userService,
-            processesService,
-            null,
             opfabEventStreamService,
             new SelectedCardService(),
-            opfabLoggerService
+            opfabLoggerService,
+            acknowledgeService
         );
         lightCardsStoreService.initStore();
     });

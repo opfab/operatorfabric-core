@@ -1,4 +1,4 @@
-// Copyright (c) 2018-2022 RTE (http://www.rte-france.com)
+// Copyright (c) 2018-2023 RTE (http://www.rte-france.com)
 // See AUTHORS.txt
 // This document is subject to the terms of the Creative Commons Attribution 4.0 International license.
 // If a copy of the license was not distributed with this
@@ -74,8 +74,6 @@ To configure how a card is considered as acknowledged for the user, it has to be
 The configuration is done on a state by setting the `consideredAcknowledgedForUserWhen` field. Allowed values are :
 
 - "UserHasAcknowledged" : the card is set as acknowledged if the user acknowledges it
-
-- "OneEntityOfUserHasAcknowledged" : the card is set as acknowledged if one (or more) entity(ies) of the user acknowledges it
 
 - "AllEntitiesOfUserHaveAcknowledged" : the card is set as acknowledged if all the entities of the user acknowledge it
 

@@ -34,6 +34,7 @@ import {UserServer} from 'app/business/server/user.server';
 import {SoundServer} from 'app/business/server/sound.server';
 import {TranslationService} from 'app/business/services/translation.service';
 import {TranslationServiceMock} from '@tests/mocks/translation.service.mock';
+import {AcknowledgeServer} from "../../../business/server/acknowledge.server";
 
 describe('LightCardComponent', () => {
     let lightCardDetailsComp: LightCardComponent;
@@ -77,7 +78,8 @@ describe('LightCardComponent', () => {
                 {provide: UserServer, useValue: null},
                 {provide: ExternalDevicesServer, use:null},
                 {provide: SoundServer, use: null},
-                {provide: TranslationService, useClass: TranslationServiceMock}
+                {provide: TranslationService, useClass: TranslationServiceMock},
+                {provide: AcknowledgeServer, useClass: null}
             ]
         }).compileComponents();
         // avoid exceptions during construction and init of the component
