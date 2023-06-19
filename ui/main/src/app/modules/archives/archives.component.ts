@@ -309,7 +309,7 @@ export class ArchivesComponent implements OnDestroy, OnInit {
                         // TO DO translation for old process should be done, but loading local arrives too late, solution to find
                         if (this.filtersTemplate.isProcessGroupFilterVisible())
                             exportArchiveData.push({
-                                [severityColumnName]: Utilities.translateSeverity(this.translationService, card.severity),
+                                [severityColumnName]: this.translationService.translateSeverity(card.severity),
                                 [publishDateColumnName]: this.dateTimeFormatter.getFormattedDateAndTimeFromEpochDate(
                                     card.publishDate
                                 ),
@@ -323,7 +323,7 @@ export class ArchivesComponent implements OnDestroy, OnInit {
                             });
                         else
                             exportArchiveData.push({
-                                [severityColumnName]: Utilities.translateSeverity(this.translationService, card.severity),
+                                [severityColumnName]: this.translationService.translateSeverity(card.severity),
                                 [publishDateColumnName]: this.dateTimeFormatter.getFormattedDateAndTimeFromEpochDate(
                                     card.publishDate
                                 ),

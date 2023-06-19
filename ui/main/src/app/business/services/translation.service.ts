@@ -12,4 +12,9 @@ export abstract class TranslationService {
     abstract setLang(lang:string);
     abstract setTranslation(lang: string,translation: Object,shouldMerge : boolean);
 
+    public translateSeverity(severity: string): string {
+        return this.getTranslation('shared.severity.' + severity.toLowerCase());
+    }
+
+
 }

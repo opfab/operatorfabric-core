@@ -20,7 +20,6 @@ import {Page} from '@ofModel/page.model';
 import {ExcelExport} from 'app/business/common/excel-export';
 import {ArchivesLoggingFiltersComponent} from '../share/archives-logging-filters/archives-logging-filters.component';
 import {EntitiesService} from 'app/business/services/entities.service';
-import {Utilities} from 'app/business/common/utilities';
 import {NgbModal, NgbModalOptions, NgbModalRef} from '@ng-bootstrap/ng-bootstrap';
 import {CardsFilter} from '@ofModel/cards-filter.model';
 import {FilterMatchTypeEnum, FilterModel} from '@ofModel/filter-model';
@@ -268,7 +267,7 @@ export class LoggingComponent implements OnDestroy, OnInit, AfterViewInit {
                     // TO DO translation for old process should be done  , but loading local arrive to late , solution to find
                     if (this.filtersTemplate.isProcessGroupFilterVisible())
                         exportArchiveData.push({
-                            [severityColumnName]: Utilities.translateSeverity(this.translationService, card.severity),
+                            [severityColumnName]: this.translationService.translateSeverity(card.severity),
                             [timeOfActionColumnName]: this.dateTimeFormatter.getFormattedDateAndTimeFromEpochDate(
                                 card.publishDate
                             ),
