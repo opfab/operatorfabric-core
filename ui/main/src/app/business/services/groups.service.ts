@@ -9,7 +9,6 @@
 
 import {Observable, Subject} from 'rxjs';
 import {Group} from '@ofModel/group.model';
-import {environment} from '@env/environment';
 import {takeUntil, tap, map} from 'rxjs/operators';
 import {Injectable} from '@angular/core';
 import {CachedCrudService} from 'app/business/services/cached-crud-service';
@@ -22,7 +21,6 @@ import {ServerResponseStatus} from '../server/serverResponse';
     providedIn: 'root'
 })
 export class GroupsService extends CachedCrudService {
-    readonly groupsUrl: string;
     private _groups: Group[];
 
     private ngUnsubscribe$ = new Subject<void>();
@@ -36,7 +34,6 @@ export class GroupsService extends CachedCrudService {
         protected alertMessageService: AlertMessageService,
         private groupsServer: GroupsServer) {
         super(loggerService, alertMessageService);
-        this.groupsUrl = `${environment.urls.groups}`;
     }
 
     deleteById(id: string) {

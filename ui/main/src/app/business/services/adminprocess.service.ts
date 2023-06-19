@@ -8,7 +8,6 @@
  */
 
 import {Injectable} from '@angular/core';
-import {environment} from '@env/environment';
 import {Observable} from 'rxjs';
 import {map} from 'rxjs/operators';
 import {Process} from '@ofModel/processes.model';
@@ -23,9 +22,6 @@ import {ServerResponseStatus} from '../server/serverResponse';
 })
 export class AdminProcessesService extends CachedCrudService{
     
-    readonly processesUrl: string;
-    readonly processGroupsUrl: string;
-    readonly monitoringConfigUrl: string;
     private processes: Process[];
     constructor(
         private adminprocessServer: AdminProcessServer,
@@ -33,9 +29,6 @@ export class AdminProcessesService extends CachedCrudService{
         protected loggerService: OpfabLoggerService
     ) {
         super(loggerService, alertMessageService);
-        this.processesUrl = `${environment.urls.processes}`;
-        this.processGroupsUrl = `${environment.urls.processGroups}`;
-        this.monitoringConfigUrl = `${environment.urls.monitoringConfig}`;
     }
 
     public getCachedValues():  Array<Process> {
