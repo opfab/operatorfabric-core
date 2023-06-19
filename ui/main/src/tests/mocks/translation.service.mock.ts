@@ -7,7 +7,7 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {TranslationService} from "app/business/services/translation.service";
+import {TranslationService} from "app/business/services/translation/translation.service";
 
 export class TranslationServiceMock extends TranslationService {
 

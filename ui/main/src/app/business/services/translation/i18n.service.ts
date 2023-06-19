@@ -13,8 +13,8 @@ import {Observable} from 'rxjs';
 import {catchError, tap} from 'rxjs/operators';
 import {ConfigService} from 'app/business/services/config.service';
 import {Utilities} from 'app/business/common/utilities';
-import {ConfigServer} from '../server/config.server';
-import {ServerResponseStatus} from '../server/serverResponse';
+import {ConfigServer} from '../../server/config.server';
+import {ServerResponseStatus} from '../../server/serverResponse';
 import {TranslationService} from './translation.service';
 
 declare const opfab: any;

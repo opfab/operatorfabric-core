@@ -26,7 +26,7 @@ import {LightCardsStoreService} from 'app/business/services/lightcards/lightcard
 import {DateTimeFormatterService} from 'app/business/services/date-time-formatter.service';
 import {SelectedCardService} from 'app/business/services/card/selectedCard.service';
 import {CardService} from 'app/business/services/card/card.service';
-import {TranslationService} from 'app/business/services/translation.service';
+import {TranslationService} from 'app/business/services/translation/translation.service';
 
 @Component({
     selector: 'of-monitoring-table',

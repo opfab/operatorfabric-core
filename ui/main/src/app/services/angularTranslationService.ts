@@ -8,7 +8,7 @@
  */
 
 import {Injectable} from '@angular/core';
-import {TranslationService} from 'app/business/services/translation.service';
+import {TranslationService} from 'app/business/services/translation/translation.service';
 import {TranslateService} from '@ngx-translate/core';
 
 @Injectable({
