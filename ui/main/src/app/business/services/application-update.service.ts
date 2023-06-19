@@ -13,7 +13,7 @@ import {GroupsService} from 'app/business/services/groups.service';
 import {LogOption, OpfabLoggerService} from 'app/business/services/logs/opfab-logger.service';
 import {TemplateCssService} from 'app/business/services/template-css.service';
 import {UserService} from 'app/business/services/user.service';
-import {HandlebarsService} from 'app/modules/card/services/handlebars.service';
+import {HandlebarsService} from 'app/business/services/card/handlebars.service';
 import {debounce, timer, map, catchError, switchMap} from 'rxjs';
 import {Utilities} from '../common/utilities';
 import {ApplicationEventsService} from './application-events.service';
