@@ -14,7 +14,7 @@ import {LightCard} from '@ofModel/light-card.model';
 import {LightCardsStoreService} from './lightcards-store.service';
 import {FilterService} from './filter.service';
 import {SortService} from './sort.service';
-import {GroupedCardsService} from 'app/business/services/grouped-cards.service';
+import {GroupedCardsService} from 'app/business/services/lightcards/grouped-cards.service';
 import {ConfigService} from 'app/business/services/config.service';
 import {LogOption, OpfabLoggerService} from 'app/business/services/logs/opfab-logger.service';
 import {SearchService} from './search-service';

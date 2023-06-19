@@ -16,7 +16,7 @@ import {ConfigService} from 'app/business/services/config.service';
 import {EntitiesService} from 'app/business/services/entities.service';
 import {ProcessesService} from 'app/business/services/processes.service';
 import {DisplayContext} from '@ofModel/template.model';
-import {GroupedCardsService} from 'app/business/services/grouped-cards.service';
+import {GroupedCardsService} from 'app/business/services/lightcards/grouped-cards.service';
 import {TypeOfStateEnum} from '@ofModel/processes.model';
 import {SoundNotificationService} from 'app/business/services/sound-notification.service';
 import {DateTimeFormatterService} from 'app/business/services/date-time-formatter.service';
