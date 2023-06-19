@@ -34,7 +34,7 @@ import {ServerResponseStatus} from 'app/business/server/serverResponse';
 import {CurrentUserStore} from 'app/business/store/current-user.store';
 import {AuthService} from 'app/authentication/auth.service';
 import {AuthenticationMode} from 'app/authentication/auth.model';
-import {SystemNotificationService} from '../../../business/services/system-notification.service';
+import {SystemNotificationService} from '../../../business/services/notifications/system-notification.service';
 import {BusinessDataService} from 'app/business/services/businessdata.service';
 import {Router} from '@angular/router';
 import {OpfabAPIService} from 'app/business/services/opfabAPI.service';

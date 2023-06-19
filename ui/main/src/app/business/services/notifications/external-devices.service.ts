@@ -1,4 +1,4 @@
-/* Copyright (c) 2021-2022, RTE (http://www.rte-france.com)
+/* Copyright (c) 2021-2023, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -13,9 +13,9 @@ import {Device, Notification, UserConfiguration} from '@ofModel/external-devices
 import {Injectable} from '@angular/core';
 import {ErrorService} from 'app/business/services/error-service';
 import {OpfabLoggerService} from 'app/business/services/logs/opfab-logger.service';
-import {ExternalDevicesServer} from '../server/external-devices.server';
-import {ServerResponseStatus} from '../server/serverResponse';
-import {AlertMessageService} from './alert-message.service';
+import {ExternalDevicesServer} from '../../server/external-devices.server';
+import {ServerResponseStatus} from '../../server/serverResponse';
+import {AlertMessageService} from '../alert-message.service';
 
 @Injectable({
     providedIn: 'root'

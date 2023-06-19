@@ -10,13 +10,13 @@
 import {Injectable, OnDestroy} from '@angular/core';
 import {LightCard, Severity} from '@ofModel/light-card.model';
 import {Notification} from '@ofModel/external-devices.model';
-import {LightCardsFeedFilterService} from './lightcards/lightcards-feed-filter.service';
-import {LightCardsStoreService} from './lightcards/lightcards-store.service';
+import {LightCardsFeedFilterService} from '../lightcards/lightcards-feed-filter.service';
+import {LightCardsStoreService} from '../lightcards/lightcards-store.service';
 import {EMPTY, iif, merge, of, Subject, timer} from 'rxjs';
 import {filter, map, switchMap, takeUntil} from 'rxjs/operators';
-import {ExternalDevicesService} from 'app/business/services/external-devices.service';
+import {ExternalDevicesService} from 'app/business/services/notifications/external-devices.service';
 import {ConfigService} from 'app/business/services/config.service';
-import {LogOption, OpfabLoggerService} from './logs/opfab-logger.service';
+import {LogOption, OpfabLoggerService} from '../logs/opfab-logger.service';
 import {OpfabEventStreamService} from 'app/business/services/opfabEventStream.service';
 import {AlertMessageService} from 'app/business/services/alert-message.service';
 import {MessageLevel} from '@ofModel/message.model';

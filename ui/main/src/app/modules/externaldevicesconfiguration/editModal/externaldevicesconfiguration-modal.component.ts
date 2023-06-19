@@ -12,7 +12,7 @@ import {FormControl, FormGroup, Validators} from '@angular/forms';
 import {NgbActiveModal} from '@ng-bootstrap/ng-bootstrap';
 import {User} from '@ofModel/user.model';
 import {UserService} from 'app/business/services/user.service';
-import {ExternalDevicesService} from 'app/business/services/external-devices.service';
+import {ExternalDevicesService} from 'app/business/services/notifications/external-devices.service';
 import {Device, UserConfiguration} from '@ofModel/external-devices.model';
 import {MultiSelectConfig} from '@ofModel/multiselect.model';
 

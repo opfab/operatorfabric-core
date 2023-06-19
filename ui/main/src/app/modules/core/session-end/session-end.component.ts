@@ -10,7 +10,7 @@
 import {Component, OnInit, TemplateRef, ViewChild, ViewEncapsulation} from '@angular/core';
 import {NgbModal, NgbModalRef} from '@ng-bootstrap/ng-bootstrap';
 import {LogOption, OpfabLoggerService} from 'app/business/services/logs/opfab-logger.service';
-import {SoundNotificationService} from 'app/business/services/sound-notification.service';
+import {SoundNotificationService} from 'app/business/services/notifications/sound-notification.service';
 import {OpfabEventStreamService} from 'app/business/services/opfabEventStream.service';
 import {AuthService} from 'app/authentication/auth.service';
 import {CurrentUserStore} from 'app/business/store/current-user.store';
