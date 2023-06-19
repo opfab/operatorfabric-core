@@ -14,7 +14,6 @@ import {ExcelExport} from 'app/business/common/excel-export';
 import {Observable, Subject} from 'rxjs';
 import {NgbModal, NgbModalOptions, NgbModalRef} from '@ng-bootstrap/ng-bootstrap';
 import {ProcessesService} from 'app/business/services/processes.service';
-import {Utilities} from 'app/business/common/utilities';
 import {MonitoringConfig} from '@ofModel/monitoringConfig.model';
 import {JsonToArray} from 'app/business/common/jsontoarray/json-to-array';
 import {Process} from '@ofModel/processes.model';
@@ -316,7 +315,7 @@ export class MonitoringTableComponent implements OnChanges, OnDestroy {
                     [this.titleColumnName]: line.data.title,
                     [this.summaryColumnName]: line.data.summary,
                     [this.typeOfStateColumnName]: line.data.processStatus,
-                    [this.severityColumnName]: Utilities.translateSeverity(this.translationService, line.data.severity),
+                    [this.severityColumnName]: this.translationService.translateSeverity(line.data.severity),
                     [this.emitterColumnName]: line.data.emitter,
                     [this.requiredResponsesColumnName]: line.data.requiredResponses
                         ? this.getEntitiesNames(line.data.requiredResponses).join()
@@ -389,7 +388,7 @@ export class MonitoringTableComponent implements OnChanges, OnDestroy {
         }
         card.card.title = card.card.titleTranslated;
         card.card.summary = card.card.summaryTranslated;
-        card.card.severity = Utilities.translateSeverity(this.translationService, card.card.severity);
+        card.card.severity = this.translationService.translateSeverity(card.card.severity);
         if (card.childCards) {
             card.childCards.forEach((childCard) => {
                 if (childCard.publisherType === 'ENTITY')

@@ -12,18 +12,12 @@ import {Observable, Subject} from 'rxjs';
 import {NgbDate} from '@ng-bootstrap/ng-bootstrap';
 import {DateTimeNgb} from '@ofModel/datetime-ngb.model';
 import { Severity } from '@ofModel/light-card.model';
-import {TranslationService} from '../services/translation.service';
 
 export class Utilities {
-    private static readonly _stringPrefixToAddForTranslation: string = 'shared.severity.';
+
 
     public static getI18nPrefixFromProcess(process: Process): string {
         return process.id + '.' + process.version + '.';
-    }
-
-    public static translateSeverity(translatationService: TranslationService, severity: string): string {
-        const rawSeverityString: string = Utilities._stringPrefixToAddForTranslation + severity.toLowerCase();
-        return translatationService.getTranslation(rawSeverityString);
     }
 
     public static getSeverityColor(severity: Severity): string {

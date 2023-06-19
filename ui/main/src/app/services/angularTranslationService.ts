@@ -14,9 +14,10 @@ import {TranslateService} from '@ngx-translate/core';
 @Injectable({
     providedIn: 'root'
 })
-export class AngularTranslationService  implements TranslationService {
+export class AngularTranslationService  extends TranslationService {
 
     constructor(private translateService: TranslateService) {
+        super();
     }
     setTranslation(lang: string, translation: Object, shouldMerge: boolean) {
         this.translateService.setTranslation(lang,translation,shouldMerge);

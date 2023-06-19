@@ -9,7 +9,7 @@
 
 import {TranslationService} from "app/business/services/translation.service";
 
-export class TranslationServiceMock implements TranslationService {
+export class TranslationServiceMock extends TranslationService {
 
     getTranslation(key: string, params?: Map<string,string>): string {
         let translation = "{TranslationMock : key=" + key;
