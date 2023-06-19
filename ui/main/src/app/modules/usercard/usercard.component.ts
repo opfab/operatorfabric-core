@@ -23,7 +23,7 @@ import {map} from 'rxjs/operators';
 import {MessageLevel} from '@ofModel/message.model';
 import {ConfigService} from 'app/business/services/config.service';
 import {DisplayContext} from '@ofModel/template.model';
-import {SoundNotificationService} from 'app/business/services/sound-notification.service';
+import {SoundNotificationService} from 'app/business/services/notifications/sound-notification.service';
 import {UserCardDatesFormComponent} from './datesForm/usercard-dates-form.component';
 import {DateField, DatesForm} from './datesForm/dates-form.model';
 import {UserCardRecipientsFormComponent} from './recipientForm/usercard-recipients-form.component';
@@ -35,7 +35,7 @@ import {PermissionEnum} from '@ofModel/permission.model';
 import {AlertMessageService} from 'app/business/services/alert-message.service';
 import {CardService} from 'app/business/services/card.service';
 import {ServerResponseStatus} from 'app/business/server/serverResponse';
-import {SystemNotificationService} from '../../business/services/system-notification.service';
+import {SystemNotificationService} from '../../business/services/notifications/system-notification.service';
 import {Observable} from 'rxjs';
 
 declare const usercardTemplateGateway: any;

@@ -11,11 +11,11 @@ import {Injectable} from '@angular/core';
 import {ReminderList} from './reminderList';
 import {AcknowledgeService} from 'app/business/services/acknowledge.service';
 import {LightCardsStoreService} from 'app/business/services/lightcards/lightcards-store.service';
-import {SoundNotificationService} from 'app/business/services/sound-notification.service';
+import {SoundNotificationService} from 'app/business/services/notifications/sound-notification.service';
 import {LogOption, OpfabLoggerService} from 'app/business/services/logs/opfab-logger.service';
 import {ServerResponseStatus} from 'app/business/server/serverResponse';
 import {CardService} from '../card.service';
-import {SystemNotificationService} from "../system-notification.service";
+import {SystemNotificationService} from "../notifications/system-notification.service";
 
 @Injectable({
     providedIn: 'root'

@@ -11,14 +11,14 @@
 import {Injectable} from "@angular/core";
 import {LightCard, Severity} from "@ofModel/light-card.model";
 import {merge, Subject} from "rxjs";
-import {LightCardsFeedFilterService} from "./lightcards/lightcards-feed-filter.service";
-import {LightCardsStoreService} from "./lightcards/lightcards-store.service";
-import {ConfigService} from "./config.service";
-import {LogOption, OpfabLoggerService} from "./logs/opfab-logger.service";
+import {LightCardsFeedFilterService} from "../lightcards/lightcards-feed-filter.service";
+import {LightCardsStoreService} from "../lightcards/lightcards-store.service";
+import {ConfigService} from "../config.service";
+import {LogOption, OpfabLoggerService} from "../logs/opfab-logger.service";
 import {Router} from "@angular/router";
 import {filter} from "rxjs/operators";
 import {MessageLevel} from "@ofModel/message.model";
-import {AlertMessageService} from "./alert-message.service";
+import {AlertMessageService} from "../alert-message.service";
 
 @Injectable({
     providedIn: 'root'

@@ -11,7 +11,7 @@ import {Component, HostListener, TemplateRef, ViewChild} from '@angular/core';
 import {NgbModalRef} from '@ng-bootstrap/ng-bootstrap';
 import {LogOption, OpfabLoggerService} from 'app/business/services/logs/opfab-logger.service';
 import {RemoteLoggerService} from 'app/business/services/logs/remote-logger.service';
-import {SoundNotificationService} from 'app/business/services/sound-notification.service';
+import {SoundNotificationService} from 'app/business/services/notifications/sound-notification.service';
 import {OpfabEventStreamService} from './business/services/opfabEventStream.service';
 import {RouterNavigationService} from 'app/router/router-navigation.service';
 import {SelectedCardLoaderService} from './business/services/card/selectedCardLoader.service';
