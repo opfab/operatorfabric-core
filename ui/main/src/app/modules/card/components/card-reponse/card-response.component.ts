@@ -23,7 +23,7 @@ import {UserPermissionsService} from 'app/business/services/user-permissions.ser
 import {UserService} from 'app/business/services/user.service';
 import {Utilities} from 'app/business/common/utilities';
 import {AlertMessageService} from 'app/business/services/alert-message.service';
-import {CardService} from 'app/business/services/card.service';
+import {CardService} from 'app/business/services/card/card.service';
 import {ServerResponseStatus} from 'app/business/server/serverResponse';
 import {OpfabAPIService} from 'app/business/services/opfabAPI.service';
 

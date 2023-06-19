@@ -33,7 +33,7 @@ import {UsercardSelectCardEmitterFormComponent} from './selectCardEmitterForm/us
 import {LogOption, OpfabLoggerService} from 'app/business/services/logs/opfab-logger.service';
 import {PermissionEnum} from '@ofModel/permission.model';
 import {AlertMessageService} from 'app/business/services/alert-message.service';
-import {CardService} from 'app/business/services/card.service';
+import {CardService} from 'app/business/services/card/card.service';
 import {ServerResponseStatus} from 'app/business/server/serverResponse';
 import {SystemNotificationService} from '../../business/services/notifications/system-notification.service';
 import {Observable} from 'rxjs';

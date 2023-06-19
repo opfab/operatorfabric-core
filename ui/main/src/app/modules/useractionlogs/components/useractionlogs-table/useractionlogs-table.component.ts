@@ -15,7 +15,7 @@ import {EntitiesCellRendererComponent} from "./cell-renderers/entities-cell-rend
 import moment from "moment";
 import {NgbModalRef, NgbModalOptions, NgbModal} from "@ng-bootstrap/ng-bootstrap";
 import {Card, CardData} from "@ofModel/card.model";
-import {CardService} from "app/business/services/card.service";
+import {CardService} from "app/business/services/card/card.service";
 
 
 @Component({

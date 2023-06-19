@@ -25,7 +25,7 @@ import {DisplayContext} from '@ofModel/template.model';
 import {FilterMatchTypeEnum, FilterModel} from '@ofModel/filter-model';
 import {CardsFilter} from '@ofModel/cards-filter.model';
 import {DateTimeFormatterService} from 'app/business/services/date-time-formatter.service';
-import {CardService} from 'app/business/services/card.service';
+import {CardService} from 'app/business/services/card/card.service';
 import {TranslationService} from 'app/business/services/translation.service';
 
 @Component({

@@ -17,7 +17,7 @@ import {AlertMessageService} from 'app/business/services/alert-message.service';
 import {UserPermissionsService} from 'app/business/services/user-permissions.service';
 import {UserService} from 'app/business/services/user.service';
 import {Subject} from 'rxjs';
-import {CardService} from 'app/business/services/card.service';
+import {CardService} from 'app/business/services/card/card.service';
 import {ServerResponseStatus} from 'app/business/server/serverResponse';
 import {PageType, RouterStore} from 'app/business/store/router.store';
 import {Router} from '@angular/router';
