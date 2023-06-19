@@ -12,7 +12,7 @@ import {AlertMessageService} from 'app/business/services/alert-message.service';
 import {ConfigService} from 'app/business/services/config.service';
 import {AlertPage} from './alertPage';
 import {Message, MessageLevel} from '@ofModel/message.model';
-import {TranslationService} from 'app/business/services/translation.service';
+import {TranslationService} from 'app/business/services/translation/translation.service';
 
 export class AlertView {
     private alertMessageBusinessAutoClose: boolean;
