@@ -35,7 +35,7 @@ import {CardComponent} from '../../card.component';
 import {OpfabLoggerService} from 'app/business/services/logs/opfab-logger.service';
 import {UserWithPerimeters} from '@ofModel/userWithPerimeters.model';
 import {SelectedCardService} from 'app/business/services/card/selectedCard.service';
-import {CardService} from 'app/business/services/card.service';
+import {CardService} from 'app/business/services/card/card.service';
 import {RouterStore, PageType} from 'app/business/store/router.store';
 import {Router} from '@angular/router';
 import {Utilities} from '../../../../business/common/utilities';

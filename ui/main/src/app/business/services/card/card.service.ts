@@ -13,9 +13,10 @@ import {Card, CardCreationReportData, CardData, CardForPublishing, fromCardToLig
 import {map} from 'rxjs/operators';
 import {I18n} from '@ofModel/i18n.model';
 import {CardsFilter} from '@ofModel/cards-filter.model';
-import {CardServer} from '../server/card.server';
-import {ServerResponse, ServerResponseStatus} from '../server/serverResponse';
-import {AcknowledgeService} from "./acknowledge.service";
+import {CardServer} from '../../server/card.server';
+import {ServerResponse, ServerResponseStatus} from '../../server/serverResponse';
+import {AcknowledgeService} from '../acknowledge.service';
+
 
 @Injectable({
     providedIn: 'root'

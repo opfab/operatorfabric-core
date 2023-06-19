@@ -23,7 +23,7 @@ import {EntitiesService} from 'app/business/services/entities.service';
 import {NgbModal, NgbModalOptions, NgbModalRef} from '@ng-bootstrap/ng-bootstrap';
 import {CardsFilter} from '@ofModel/cards-filter.model';
 import {FilterMatchTypeEnum, FilterModel} from '@ofModel/filter-model';
-import {CardService} from 'app/business/services/card.service';
+import {CardService} from 'app/business/services/card/card.service';
 import {TranslationService} from 'app/business/services/translation.service';
 
 @Component({

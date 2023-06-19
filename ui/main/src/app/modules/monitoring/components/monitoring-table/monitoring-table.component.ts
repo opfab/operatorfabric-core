@@ -25,7 +25,7 @@ import {LightCard} from '@ofModel/light-card.model';
 import {LightCardsStoreService} from 'app/business/services/lightcards/lightcards-store.service';
 import {DateTimeFormatterService} from 'app/business/services/date-time-formatter.service';
 import {SelectedCardService} from 'app/business/services/card/selectedCard.service';
-import {CardService} from 'app/business/services/card.service';
+import {CardService} from 'app/business/services/card/card.service';
 import {TranslationService} from 'app/business/services/translation.service';
 
 @Component({

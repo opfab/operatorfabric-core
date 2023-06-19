@@ -14,7 +14,7 @@ import {LightCardsStoreService} from 'app/business/services/lightcards/lightcard
 import {SoundNotificationService} from 'app/business/services/notifications/sound-notification.service';
 import {LogOption, OpfabLoggerService} from 'app/business/services/logs/opfab-logger.service';
 import {ServerResponseStatus} from 'app/business/server/serverResponse';
-import {CardService} from '../card.service';
+import {CardService} from '../card/card.service';
 import {SystemNotificationService} from "../notifications/system-notification.service";
 
 @Injectable({
