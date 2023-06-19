@@ -7,7 +7,7 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {environment} from '@env/environment';
+
 import {map, takeUntil, tap} from 'rxjs/operators';
 import {Observable, Subject} from 'rxjs';
 import {Entity} from '@ofModel/entity.model';
@@ -24,7 +24,6 @@ import {EntitiesTree} from '@ofModel/processes.model';
     providedIn: 'root'
 })
 export class EntitiesService extends CachedCrudService {
-    readonly entitiesUrl: string;
     protected _entities: Entity[];
     private ngUnsubscribe$ = new Subject<void>();
     /**
@@ -36,7 +35,6 @@ export class EntitiesService extends CachedCrudService {
         private entitiesServer: EntitiesServer,
         protected alertMessageService: AlertMessageService) {
         super(loggerService, alertMessageService);
-        this.entitiesUrl = `${environment.urls.entities}`;
     }
 
     deleteById(id: string) {

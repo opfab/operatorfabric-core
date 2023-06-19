@@ -8,8 +8,6 @@
  */
 
 import {Injectable} from '@angular/core';
-import {HttpParams, HttpUrlEncodingCodec} from '@angular/common/http';
-import {environment} from '@env/environment';
 import {Observable, of} from 'rxjs';
 import {catchError, map} from 'rxjs/operators';
 import {
@@ -30,10 +28,6 @@ import {ServerResponseStatus} from '../server/serverResponse';
     providedIn: 'root'
 })
 export class ProcessesService {
-    readonly processesUrl: string;
-    readonly processGroupsUrl: string;
-    readonly monitoringConfigUrl: string;
-    private urlCleaner: HttpUrlEncodingCodec;
     private processCache = new Map();
     private processes: Process[];
     private processGroups = new Map<string, {name: string; processes: string[]}>();
@@ -45,12 +39,7 @@ export class ProcessesService {
         private userService: UserService,
         private processServer: ProcessServer,
         private configServer: ConfigServer
-    ) {
-        this.urlCleaner = new HttpUrlEncodingCodec();
-        this.processesUrl = `${environment.urls.processes}`;
-        this.processGroupsUrl = `${environment.urls.processGroups}`;
-        this.monitoringConfigUrl = `${environment.urls.monitoringConfig}`;
-    }
+    ) {}
 
     public loadAllProcesses(): Observable<any> {
         return this.queryAllProcesses().pipe(
@@ -222,13 +211,6 @@ export class ProcessesService {
         );
     }
 
-    computeBusinessconfigCssUrl(process: string, styleName: string, version: string) {
-        // manage url character encoding
-        const resourceUrl = this.urlCleaner.encodeValue(`${this.processesUrl}/${process}/css/${styleName}`);
-        const versionParam = new HttpParams().set('version', version);
-        return `${resourceUrl}?${versionParam.toString()}`;
-    }
-
     public findProcessGroupIdForProcessId(processId: string): string {
         const data = this.findProcessGroupForProcess(processId);
 
@@ -239,7 +221,7 @@ export class ProcessesService {
     }
 
     public findProcessGroupForProcess(processId: string) {
-        for (let [groupId, group] of this.processGroups) {
+        for (const [groupId, group] of this.processGroups) {
             if (group.processes.find((process) => process === processId))
                 return {id: groupId, name: group.name, processes: group.processes};
         }
