@@ -19,6 +19,7 @@ import {Utilities} from '../../common/utilities';
 import {ApplicationEventsService} from './application-events.service';
 import {OpfabEventStreamService} from './opfabEventStream.service';
 import {ProcessesService} from '../processes.service';
+import {BusinessDataService} from '../businessdata.service';
 
 @Injectable({
     providedIn: 'root'
@@ -33,12 +34,14 @@ export class ApplicationUpdateService {
         private entitiesService: EntitiesService,
         private groupsService: GroupsService,
         private applicationEventsService: ApplicationEventsService,
+        private businessDataService: BusinessDataService,
         private logger: OpfabLoggerService
     ) {}
 
     init() {
         this.listenForBusinessConfigUpdate();
         this.listenForUserConfigUpdate();
+        this.listenForBusinessDataUpdate();
     }
 
     private listenForBusinessConfigUpdate() {
@@ -82,5 +85,12 @@ export class ApplicationUpdateService {
                 })
             )
             .subscribe();
+    }
+
+    private listenForBusinessDataUpdate() {
+        this.opfabEventStreamService.getBusinessDataChanges().subscribe(() => {
+                this.logger.info(`New business data posted, emptying cache`, LogOption.LOCAL_AND_REMOTE);
+                this.businessDataService.emptyCache();
+            });
     }
 }

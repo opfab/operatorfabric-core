@@ -11,8 +11,7 @@ import {Injectable} from '@angular/core';
 import {firstValueFrom} from 'rxjs';
 import {BusinessDataServer} from '../server/businessData.server';
 import {ServerResponseStatus} from '../server/serverResponse';
-import {LogOption, OpfabLoggerService} from './logs/opfab-logger.service';
-import {OpfabEventStreamService} from './events/opfabEventStream.service';
+import {OpfabLoggerService} from './logs/opfab-logger.service';
 import * as _ from 'lodash-es';
 
 @Injectable({
@@ -22,21 +21,12 @@ export class BusinessDataService {
     private _cachedResources = new Map<string, string>();
 
     constructor(
-        private opfabEventStreamService: OpfabEventStreamService,
         private businessDataServer: BusinessDataServer,
         protected loggerService: OpfabLoggerService
     ) {
-        this.listenForBusinessDataUpdate();
     }
 
-    listenForBusinessDataUpdate() {
-        this.opfabEventStreamService.getBusinessDataChanges().subscribe(() => {
-                this.loggerService.info(`New business data posted, emptying cache`, LogOption.LOCAL_AND_REMOTE);
-                this.emptyCache();
-            });
-    }
-
-    emptyCache() {
+    public emptyCache() {
         this._cachedResources.clear();
     }
 
