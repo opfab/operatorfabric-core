@@ -18,6 +18,7 @@ import {MenuService} from 'app/business/services/menu.service';
 import {Observable} from 'rxjs';
 import {AuthService} from 'app/authentication/auth.service';
 import {RouterStore} from 'app/business/store/router.store';
+import {TranslateService} from "@ngx-translate/core";
 
 @Component({
     selector: 'of-navbar',
@@ -73,7 +74,8 @@ export class NavbarComponent implements OnInit {
         private configService: ConfigService,
         private menuService: MenuService,
         private modalService: NgbModal,
-        private authService: AuthService
+        private authService: AuthService,
+        private translate: TranslateService
     ) {
     }
 
@@ -136,6 +138,11 @@ export class NavbarComponent implements OnInit {
         this.navigationRoutesMap = new Map(this.navigationRoutes.map(element => [element.path, element]));
         this.businessconfigMenusMap = new Map(this.businessconfigMenus.map(element => [element.id, element]));
         this.navigationBar = this.configService.getNavigationBar();
+    }
+
+    ngAfterViewInit(): void {
+        document.getElementById('opfab-tooltip-create-new-card').setAttribute('data-text', this.translate.instant('menu.newcardTooltip'));
+        document.getElementById('opfab-tooltip-calendar').setAttribute('data-text', this.translate.instant('menu.calendarTooltip'));
     }
 
     logOut() {
