@@ -37,6 +37,7 @@ import {TagInputModule} from 'ngx-chips';
 import {MultiSelectModule} from '../share/multi-select/multi-select.module';
 import {IdCellRendererComponent} from './components/cell-renderers/id-cell-renderer.component';
 import {ProcessCellRendererComponent} from './components/cell-renderers/process-cell-renderer.component';
+import {BusinessDataTableComponent} from './components/table/businessData-table.component';
 
 @NgModule({
     declarations: [
@@ -46,6 +47,7 @@ import {ProcessCellRendererComponent} from './components/cell-renderers/process-
         GroupsTableComponent,
         PerimetersTableComponent,
         ProcessesTableComponent,
+        BusinessDataTableComponent,
         EditUserModalComponent,
         ConfirmationDialogComponent,
         EditEntityModalComponent,
@@ -70,7 +72,7 @@ import {ProcessCellRendererComponent} from './components/cell-renderers/process-
         MultiSelectModule,
         TranslateModule,
         NgbModule,
-        AgGridModule,
+        AgGridModule
     ],
     providers: [{provide: SharingService, useClass: SharingService}]
 })

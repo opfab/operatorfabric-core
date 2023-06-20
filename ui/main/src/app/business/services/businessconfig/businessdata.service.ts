@@ -8,25 +8,39 @@
  */
 
 import {Injectable} from '@angular/core';
-import {firstValueFrom} from 'rxjs';
+import {firstValueFrom, map, Observable} from 'rxjs';
 import {BusinessDataServer} from '../../server/businessData.server';
 import {ServerResponseStatus} from '../../server/serverResponse';
-import {OpfabLoggerService} from '../logs/opfab-logger.service';
+import {LogOption, OpfabLoggerService} from '../logs/opfab-logger.service';
+import {AlertMessageService} from '../alert-message.service';
+import {OpfabEventStreamService} from '../events/opfabEventStream.service';
 import * as _ from 'lodash-es';
+import {CachedCrudService} from '../cached-crud-service';
 
 @Injectable({
     providedIn: 'root'
 })
-export class BusinessDataService {
+export class BusinessDataService extends CachedCrudService {
     private _cachedResources = new Map<string, string>();
 
     constructor(
+        private opfabEventStreamService: OpfabEventStreamService,
         private businessDataServer: BusinessDataServer,
+        protected alertMessageService: AlertMessageService,
         protected loggerService: OpfabLoggerService
     ) {
+        super(loggerService, alertMessageService);
+        this.listenForBusinessDataUpdate();
     }
 
-    public emptyCache() {
+    listenForBusinessDataUpdate() {
+        this.opfabEventStreamService.getBusinessDataChanges().subscribe(() => {
+            this.loggerService.info(`New business data posted, emptying cache`, LogOption.LOCAL_AND_REMOTE);
+            this.emptyCache();
+        });
+    }
+
+    emptyCache() {
         this._cachedResources.clear();
     }
 
@@ -50,5 +64,62 @@ export class BusinessDataService {
 
     addResourceToCache(resourceName: string, resourceContent: string) {
         this._cachedResources.set(resourceName, resourceContent);
+    }
+
+    getCachedValues(): any[] {
+        return Array.from(this._cachedResources.keys());
+    }
+
+    public getAll(): Observable<any[]> {
+        return this.queryAllBusinessData().pipe(
+            map((data) => {
+                let businessDataList = [];
+                data.forEach((businessDataTitle) => {
+                    businessDataList.push({name: businessDataTitle});
+                });
+                return businessDataList;
+            })
+        );
+    }
+
+    private queryAllBusinessData(): Observable<string[]> {
+        return this.businessDataServer.queryAllBusinessData().pipe(
+            map((response) => {
+                if (response.status === ServerResponseStatus.OK) {
+                    return response.data;
+                } else {
+                    this.handleServerResponseError(response);
+                    return [];
+                }
+            })
+        );
+    }
+
+    update(data: any): Observable<any> {
+        return null;
+    }
+
+    updateBusinessData(resourceName: string, data: FormData): Observable<any> {
+        return this.businessDataServer.updateBusinessData(resourceName, data).pipe(
+            map((responseBusinessData) => {
+                if (responseBusinessData.status === ServerResponseStatus.OK) {
+                    return responseBusinessData.data;
+                } else {
+                    this.handleServerResponseError(responseBusinessData);
+                    return null;
+                }
+            })
+        );
+    }
+
+    public deleteById(id: string) {
+        return this.businessDataServer.deleteById(id).pipe(
+            map((response) => {
+                if (response.status !== ServerResponseStatus.OK) {
+                    this.emptyCache();
+                    this.handleServerResponseError(response);
+                }
+            })
+        );
     }
 }

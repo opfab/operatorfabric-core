@@ -13,6 +13,7 @@ import {AdminTableDirective, Field} from './admin-table.directive';
 import {AdminItemType} from '../../services/sharing.service';
 import {EditPerimeterModalComponent} from '../editmodal/perimeters/edit-perimeter-modal.component';
 import {Utilities} from 'app/business/common/utilities';
+import {ActionButton} from '../cell-renderers/action-cell-renderer.component';
 
 @Component({
     templateUrl: 'admin-table.directive.html',
@@ -27,6 +28,7 @@ export class PerimetersTableComponent extends AdminTableDirective implements OnI
         new Field('stateRights', 7, 'stateRightsCellRenderer', null, 'stateRightsColumn')
     ];
     idField = 'id';
+    actionButtonsDisplayed = [ActionButton.EDIT, ActionButton.DELETE];
     editModalComponent = EditPerimeterModalComponent;
     modalOptions = {...AdminTableDirective.defaultEditionModalOptions, size: 'xl'};
 
@@ -41,7 +43,7 @@ export class PerimetersTableComponent extends AdminTableDirective implements OnI
         }
         return JSON.stringify(arr);
     }
-    ngOnInit(){
+    ngOnInit() {
         this.gridOptions.columnTypes['stateRightsColumn'] = {
             sortable: false,
             filter: 'agTextColumnFilter',
@@ -65,4 +67,3 @@ export class PerimetersTableComponent extends AdminTableDirective implements OnI
         super.ngOnInit();
     }
 }
-

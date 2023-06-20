@@ -426,6 +426,12 @@
         "confirmDelete": "Wilt u de gebruiker echt verwijderen?",
         "add": "NIEUWE GEBRUIKER TOEVOEGEN"
       },
+      "businessData": {
+        "name": "ZAKELIJKE GEGEVENS",
+        "add": "NIEUWE ZAKELIJKE GEGEVENS TOEVOEGEN",
+        "confirmDelete": "Wilt u het bestand met zakelijke gegevens echt verwijderen?"
+
+      },
       "selectGroupText": "Selecteer een Groep",
       "selectEntityText": "Selecteen een Entiteit",
       "selectPerimeterText": "Selecteen een Perimeter",

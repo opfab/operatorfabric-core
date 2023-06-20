@@ -1,4 +1,4 @@
-/* Copyright (c) 2021, RTE (http://www.rte-france.com)
+/* Copyright (c) 2021-2023, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -19,12 +19,14 @@ export class ActionCellRendererComponent implements ICellRendererAngularComp {
     // For explanations regarding ag-grid CellRenderers see
     // https://www.ag-grid.com/documentation/angular/component-cell-renderer/#example-rendering-using-angular-components
     public params: any;
-    private actionType: string;
+    public actionType: string;
 
     // Defines icons to display depending on action type
     private actionIconsMapping = {
         edit: 'fas fa-pen',
-        delete: 'far fa-trash-alt'
+        delete: 'far fa-trash-alt',
+        download:'fas fa-download',
+        update:'fas fa-file-pen'
     };
 
     agInit(params: any): void {
@@ -47,4 +49,18 @@ export class ActionCellRendererComponent implements ICellRendererAngularComp {
     getIconForAction(): string {
         return this.actionIconsMapping[this.actionType];
     }
+
+    onFileSelectedForUpdate(event, resourceName?) {
+        const file: File = event.target.files[0];
+        if (file) {
+            this.params.context.componentParent.uploadFile(file, resourceName)
+        }
+    }
+}
+
+export enum ActionButton {
+    EDIT = 'edit',
+    DELETE = 'delete',
+    UPDATE = 'update',
+    DOWNLOAD = 'download'
 }

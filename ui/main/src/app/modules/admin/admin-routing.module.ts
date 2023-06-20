@@ -15,6 +15,7 @@ import {GroupsTableComponent} from './components/table/groups-table.component';
 import {EntitiesTableComponent} from './components/table/entities-table.component';
 import {PerimetersTableComponent} from './components/table/perimeters-table.component';
 import {ProcessesTableComponent} from './components/table/processes-table.component';
+import {BusinessDataTableComponent} from './components/table/businessData-table.component';
 
 const defaultPath = 'users';
 
@@ -42,6 +43,10 @@ const routes: Routes = [
             {
                 path: 'processes',
                 component: ProcessesTableComponent
+            },
+            {
+                path: 'businessData',
+                component: BusinessDataTableComponent
             },
             {path: '**', redirectTo: defaultPath}
         ]

@@ -29,4 +29,17 @@ export class AngularBusinessDataServer extends AngularServer implements Business
     getBusinessData(resourceName: string): Observable<ServerResponse<any>> {
         return this.processHttpResponse(this.httpClient.get(`${this.businessDataUrl}` + '/' + resourceName));
     }
+
+    deleteById(id: string): Observable<ServerResponse<any>> {
+        const url = `${this.businessDataUrl}/${id}`;
+        return this.processHttpResponse(this.httpClient.delete(url));
+    }
+
+    queryAllBusinessData(): Observable<ServerResponse<any>> {
+        return this.processHttpResponse(this.httpClient.get(`${this.businessDataUrl}`));
+    }
+
+    updateBusinessData(resourceName: string, data: FormData): Observable<ServerResponse<any>> {
+        return this.processHttpResponse(this.httpClient.post(`${this.businessDataUrl}` + '/' + resourceName, data));
+    }
 }
