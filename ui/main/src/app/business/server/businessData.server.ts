@@ -11,5 +11,8 @@ import {Observable} from 'rxjs';
 import {ServerResponse} from './serverResponse';
 
 export abstract class BusinessDataServer {
+    abstract deleteById(id: string): Observable<ServerResponse<any>>;
     abstract getBusinessData(resourceName: string): Observable<ServerResponse<any>>;
+    abstract queryAllBusinessData(): Observable<ServerResponse<any>>;
+    abstract updateBusinessData(resourceName: string, data: FormData): Observable<ServerResponse<any>>;
 }

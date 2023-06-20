@@ -17,6 +17,7 @@ import {Observable, ReplaySubject, Subject} from 'rxjs';
 import {takeUntil} from 'rxjs/operators';
 import {PerimetersService} from 'app/business/services/users/perimeters.service';
 import {AdminProcessesService} from 'app/business/services/businessconfig/adminprocess.service';
+import {BusinessDataService} from 'app/business/services/businessconfig/businessdata.service';
 
 /** The aim of this service is to provide the services that need to be shared between components of the admin screen. For example, a single
  * instance of `EntitiesService` should be used across all components so a update to the cache is visible from all components.
@@ -34,6 +35,7 @@ export class SharingService implements OnDestroy {
         private groupsService: GroupsService,
         private userService: UserService,
         private perimetersService: PerimetersService,
+        private businessDataService: BusinessDataService,
         private adminprocessesService: AdminProcessesService
     ) {
         this._paginationPageSize$ = new ReplaySubject<number>();
@@ -57,6 +59,8 @@ export class SharingService implements OnDestroy {
                 return this.perimetersService;
             case AdminItemType.PROCESS:
                 return this.adminprocessesService;
+            case AdminItemType.BUSINESSDATA:
+                return this.businessDataService;
             default:
                 throw Error('No CrudService associated with ' + adminItemType);
         }
@@ -101,5 +105,6 @@ export enum AdminItemType {
     ENTITY = 'entity',
     GROUP = 'group',
     PERIMETER = 'perimeter',
-    PROCESS = 'process'
+    PROCESS = 'process',
+    BUSINESSDATA = 'businessData'
 }

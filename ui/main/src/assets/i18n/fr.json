@@ -426,6 +426,12 @@
         "confirmDelete": "Voulez-vous vraiment supprimer l'utilisateur",
         "add":"AJOUTER UN NOUVEL UTILISATEUR"
       },
+      "businessData": {
+        "name": "DONNEES METIER",
+        "add": "AJOUTER UN FICHIER DE DONNEES METIER",
+        "confirmDelete": "Voulez vous vraiment supprimer le fichier de données métier"
+
+      },
       "selectGroupText": "Sélectionner un Groupe",
       "selectEntityText": "Sélectionner une Entité",
       "selectPerimeterText": "Sélectionner un Périmètre",

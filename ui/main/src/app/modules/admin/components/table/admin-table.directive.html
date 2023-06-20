@@ -5,6 +5,12 @@
 <!-- file, You can obtain one at http://mozilla.org/MPL/2.0/.              -->
 <!-- SPDX-License-Identifier: MPL-2.0                                      -->
 <!-- This file is part of the OperatorFabric project.                      -->
+
+<span *ngIf="this.tableType === 'businessData'" >
+    <form action="/" method="post" enctype="multipart/form-data">
+        <input id="fileUploader" type="file" class="file-input" (change)="onFileSelected($event)">
+    </form>
+</span>
 <div style="background-color: var(--opfab-bgcolor-darker);border: solid 5px var(--opfab-bgcolor-darker)">
     <div *ngIf="showAddButton" style="padding: 10px"><a class="btn btn-primary" (click)="createNewItem()" id ="add-item">
         <em class="fas fa-plus-circle"></em></a>

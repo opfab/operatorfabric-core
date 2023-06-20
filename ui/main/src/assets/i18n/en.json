@@ -426,6 +426,11 @@
         "confirmDelete": "Do you really want to delete user",
         "add": "ADD NEW USER"
       },
+      "businessData": {
+        "name": "BUSINESS DATA",
+        "add": "ADD NEW BUSINESS DATA FILE",
+        "confirmDelete": "Do you really want to delete the business data file"
+      },
       "selectGroupText": "Select a Group",
       "selectEntityText": "Select an Entity",
       "selectPerimeterText": "Select a Perimeter",
@@ -475,7 +480,8 @@
       "groups": "Groups Management",
       "entities": "Entities Management",
       "perimeters": "Perimeters Management",
-      "processes": "Processes Management"
+      "processes": "Processes Management",
+      "businessData": "Business Data Management"
     }
   },
   "processGroup": {
