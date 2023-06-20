@@ -12,7 +12,7 @@ import {ICellRendererAngularComp} from 'ag-grid-angular';
 import {ICellRendererParams} from 'ag-grid-community';
 import {StateRight} from '@ofModel/perimeter.model';
 import {Process} from '@ofModel/processes.model';
-import {ProcessesService} from 'app/business/services/processes.service';
+import {ProcessesService} from 'app/business/services/businessconfig/processes.service';
 import {Utilities} from '../../../../business/common/utilities';
 
 @Component({

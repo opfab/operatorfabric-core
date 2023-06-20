@@ -9,7 +9,7 @@
 
 import {Component, Input, OnDestroy, OnInit} from '@angular/core';
 import {Card} from '@ofModel/card.model';
-import {ProcessesService} from 'app/business/services/processes.service';
+import {ProcessesService} from 'app/business/services/businessconfig/processes.service';
 import {takeUntil} from 'rxjs/operators';
 import {Subject} from 'rxjs';
 import {UserService} from 'app/business/services/users/user.service';

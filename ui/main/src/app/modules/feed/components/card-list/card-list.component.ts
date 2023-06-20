@@ -14,7 +14,7 @@ import {NgbModalRef} from '@ng-bootstrap/ng-bootstrap/modal/modal-ref';
 import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
 import {ConfigService} from 'app/business/services/config.service';
 import {MessageLevel} from '@ofModel/message.model';
-import {ProcessesService} from 'app/business/services/processes.service';
+import {ProcessesService} from 'app/business/services/businessconfig/processes.service';
 import {AcknowledgeService} from 'app/business/services/acknowledge.service';
 import {UserService} from 'app/business/services/users/user.service';
 import {UserWithPerimeters} from '@ofModel/userWithPerimeters.model';

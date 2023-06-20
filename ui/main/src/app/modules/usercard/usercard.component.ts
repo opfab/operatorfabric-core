@@ -16,7 +16,7 @@ import {Severity} from '@ofModel/light-card.model';
 import {Guid} from 'guid-typescript';
 import {DomSanitizer, SafeHtml} from '@angular/platform-browser';
 import {EntitiesService} from 'app/business/services/users/entities.service';
-import {ProcessesService} from 'app/business/services/processes.service';
+import {ProcessesService} from 'app/business/services/businessconfig/processes.service';
 import {HandlebarsService} from '../../business/services/card/handlebars.service';
 import {DetailContext} from '@ofModel/detail-context.model';
 import {map} from 'rxjs/operators';

@@ -18,8 +18,8 @@ import {debounce, timer, map, catchError, switchMap} from 'rxjs';
 import {Utilities} from '../../common/utilities';
 import {ApplicationEventsService} from './application-events.service';
 import {OpfabEventStreamService} from './opfabEventStream.service';
-import {ProcessesService} from '../processes.service';
-import {BusinessDataService} from '../businessdata.service';
+import {ProcessesService} from '../businessconfig/processes.service';
+import {BusinessDataService} from '../businessconfig/businessdata.service';
 
 @Injectable({
     providedIn: 'root'

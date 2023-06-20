@@ -11,7 +11,7 @@ import {Component, Input, OnChanges} from '@angular/core';
 import {Card} from '@ofModel/card.model';
 import {State, TypeOfStateEnum} from '@ofModel/processes.model';
 import {EntitiesService} from 'app/business/services/users/entities.service';
-import {ProcessesService} from 'app/business/services/processes.service';
+import {ProcessesService} from 'app/business/services/businessconfig/processes.service';
 
 const maxVisibleEntitiesForCardHeader = 3;
 

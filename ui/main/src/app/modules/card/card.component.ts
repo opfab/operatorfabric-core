@@ -9,7 +9,7 @@
 
 import {Component, ElementRef, Input, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {Card} from '@ofModel/card.model';
-import {ProcessesService} from 'app/business/services/processes.service';
+import {ProcessesService} from 'app/business/services/businessconfig/processes.service';
 import {Subject} from 'rxjs';
 import {takeUntil} from 'rxjs/operators';
 import {UserService} from 'app/business/services/users/user.service';

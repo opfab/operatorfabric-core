@@ -17,7 +17,7 @@ import {DetailContext} from '@ofModel/detail-context.model';
 import {ConfigServer} from 'app/business/server/config.server';
 import {ConfigServerMock} from '@tests/mocks/configServer.mock';
 import {ProcessServerMock} from '@tests/mocks/processServer.mock';
-import {ProcessesService} from 'app/business/services/processes.service';
+import {ProcessesService} from 'app/business/services/businessconfig/processes.service';
 import {ConfigService} from 'app/business/services/config.service';
 import {ServerResponse, ServerResponseStatus} from 'app/business/server/serverResponse';
 

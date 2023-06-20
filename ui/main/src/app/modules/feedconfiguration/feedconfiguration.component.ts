@@ -13,7 +13,7 @@ import {Process, State} from '@ofModel/processes.model';
 import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
 import {NgbModalRef} from '@ng-bootstrap/ng-bootstrap/modal/modal-ref';
 import {UserWithPerimeters} from '@ofModel/userWithPerimeters.model';
-import {ProcessesService} from 'app/business/services/processes.service';
+import {ProcessesService} from 'app/business/services/businessconfig/processes.service';
 import {FormArray, FormControl, FormGroup} from '@angular/forms';
 import {SettingsService} from 'app/business/services/users/settings.service';
 import {TranslateService} from '@ngx-translate/core';

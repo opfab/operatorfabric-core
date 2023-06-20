@@ -13,7 +13,7 @@ import {Card} from '@ofModel/card.model';
 import {Process, ShowAcknowledgmentFooterEnum} from '@ofModel/processes.model';
 import {RightsEnum} from '@ofModel/perimeter.model';
 import {EntitiesService} from 'app/business/services/users/entities.service';
-import {ProcessesService} from 'app/business/services/processes.service';
+import {ProcessesService} from 'app/business/services/businessconfig/processes.service';
 import {User} from '@ofModel/user.model';
 
 /** This class contains functions allowing to know if the user has the right to answer to the card or not */

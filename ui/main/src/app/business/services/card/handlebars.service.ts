@@ -12,7 +12,7 @@ import * as Handlebars from 'handlebars/dist/handlebars.js';
 import * as moment from 'moment';
 import {Observable, of} from 'rxjs';
 import {map, tap} from 'rxjs/operators';
-import {ProcessesService} from 'app/business/services/processes.service';
+import {ProcessesService} from 'app/business/services/businessconfig/processes.service';
 import {DetailContext} from '@ofModel/detail-context.model';
 import {ConfigService} from 'app/business/services/config.service';
 
