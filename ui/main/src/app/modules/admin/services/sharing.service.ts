@@ -8,14 +8,14 @@
  */
 
 import {Injectable, OnDestroy} from '@angular/core';
-import {EntitiesService} from 'app/business/services/entities.service';
-import {GroupsService} from 'app/business/services/groups.service';
-import {UserService} from 'app/business/services/user.service';
+import {EntitiesService} from 'app/business/services/users/entities.service';
+import {GroupsService} from 'app/business/services/users/groups.service';
+import {UserService} from 'app/business/services/users/user.service';
 import {CrudService} from 'app/business/services/crud-service';
 import {CachedCrudService} from 'app/business/services/cached-crud-service';
 import {Observable, ReplaySubject, Subject} from 'rxjs';
 import {takeUntil} from 'rxjs/operators';
-import {PerimetersService} from 'app/business/services/perimeters.service';
+import {PerimetersService} from 'app/business/services/users/perimeters.service';
 import {AdminProcessesService} from 'app/business/services/adminprocess.service';
 
 /** The aim of this service is to provide the services that need to be shared between components of the admin screen. For example, a single

@@ -9,10 +9,10 @@
 
 import {Utilities} from 'app/business/common/utilities';
 import {ServerResponseStatus} from 'app/business/server/serverResponse';
-import {EntitiesService} from 'app/business/services/entities.service';
+import {EntitiesService} from 'app/business/services/users/entities.service';
 import {LightCardsStoreService} from 'app/business/services/lightcards/lightcards-store.service';
-import {SettingsService} from 'app/business/services/settings.service';
-import {UserService} from 'app/business/services/user.service';
+import {SettingsService} from 'app/business/services/users/settings.service';
+import {UserService} from 'app/business/services/users/user.service';
 import {map, Observable, ReplaySubject} from 'rxjs';
 import {ActivityAreaLine, ActivityAreaPage} from './activityareaPage';
 

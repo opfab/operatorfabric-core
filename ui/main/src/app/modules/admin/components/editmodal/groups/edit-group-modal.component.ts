@@ -20,12 +20,12 @@ import {
 import {NgbActiveModal} from '@ng-bootstrap/ng-bootstrap';
 import {AdminItemType, SharingService} from '../../../services/sharing.service';
 import {CrudService} from 'app/business/services/crud-service';
-import {PerimetersService} from 'app/business/services/perimeters.service';
+import {PerimetersService} from 'app/business/services/users/perimeters.service';
 import {MessageLevel} from '@ofModel/message.model';
-import {GroupsService} from 'app/business/services/groups.service';
+import {GroupsService} from 'app/business/services/users/groups.service';
 import {MultiSelectConfig, MultiSelectOption} from '@ofModel/multiselect.model';
 import {GroupTypeEnum} from '@ofModel/group.model';
-import {UserService} from 'app/business/services/user.service';
+import {UserService} from 'app/business/services/users/user.service';
 import {User} from '@ofModel/user.model';
 import {PermissionEnum} from '@ofModel/permission.model';
 import {Observable, of} from 'rxjs';

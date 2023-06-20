@@ -9,9 +9,9 @@
 
 import {Injectable} from "@angular/core";
 import {Observable} from "rxjs";
-import {SettingsServer} from "../server/settings.server";
+import {SettingsServer} from "../../server/settings.server";
 import {LogOption, OpfabLoggerService} from 'app/business/services/logs/opfab-logger.service';
-import {CurrentUserStore} from "../store/current-user.store";
+import {CurrentUserStore} from "../../store/current-user.store";
 
 
 @Injectable({

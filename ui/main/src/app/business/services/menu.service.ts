@@ -9,7 +9,7 @@
 
 import {Injectable} from '@angular/core';
 import {ConfigService} from 'app/business/services/config.service';
-import {UserService} from 'app/business/services/user.service';
+import {UserService} from 'app/business/services/users/user.service';
 import {CoreMenuConfig, CustomMenu} from '@ofModel/menu.model';
 import {PermissionEnum} from '@ofModel/permission.model';
 import {OpfabLoggerService} from "./logs/opfab-logger.service";

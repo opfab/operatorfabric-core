@@ -10,7 +10,7 @@
 import {Component, Input, OnDestroy, OnInit} from '@angular/core';
 import {BaseSettingDirective} from '../base-setting/base-setting.directive';
 import {ConfigService} from 'app/business/services/config.service';
-import {SettingsService} from 'app/business/services/settings.service';
+import {SettingsService} from 'app/business/services/users/settings.service';
 import {FormControl, FormGroup, Validators} from '@angular/forms';
 import {MultiSelectConfig} from '@ofModel/multiselect.model';
 import {OpfabLoggerService} from 'app/business/services/logs/opfab-logger.service';

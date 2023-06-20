@@ -13,10 +13,10 @@ import {Observable, Subject} from 'rxjs';
 import {Entity} from '@ofModel/entity.model';
 import {Injectable} from '@angular/core';
 import {CachedCrudService} from 'app/business/services/cached-crud-service';
-import {OpfabLoggerService} from './logs/opfab-logger.service';
-import {AlertMessageService} from './alert-message.service';
-import {EntitiesServer} from '../server/entities.server';
-import {ServerResponseStatus} from '../server/serverResponse';
+import {OpfabLoggerService} from '../logs/opfab-logger.service';
+import {AlertMessageService} from '../alert-message.service';
+import {EntitiesServer} from '../../server/entities.server';
+import {ServerResponseStatus} from '../../server/serverResponse';
 import {EntitiesTree} from '@ofModel/processes.model';
 
 

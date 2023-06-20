@@ -17,7 +17,7 @@ import {ConfigService} from 'app/business/services/config.service';
 import {GuidService} from 'app/business/services/guid.service';
 import {OpfabLoggerService} from 'app/business/services/logs/opfab-logger.service';
 import {OpfabEventStreamService} from 'app/business/services/opfabEventStream.service';
-import {UserService} from 'app/business/services/user.service';
+import {UserService} from 'app/business/services/users/user.service';
 import {CurrentUserStore} from 'app/business/store/current-user.store';
 import {Observable, Subject} from 'rxjs';
 import {AuthHandler} from './auth-handler';

@@ -8,12 +8,12 @@
  */
 
 import {Component, EventEmitter, Input, OnDestroy, OnInit, Output} from '@angular/core';
-import {UserService} from 'app/business/services/user.service';
+import {UserService} from 'app/business/services/users/user.service';
 import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
 import {NgbModalRef} from '@ng-bootstrap/ng-bootstrap/modal/modal-ref';
 import {FormControl, FormGroup} from '@angular/forms';
-import {SettingsService} from 'app/business/services/settings.service';
-import {EntitiesService} from 'app/business/services/entities.service';
+import {SettingsService} from 'app/business/services/users/settings.service';
+import {EntitiesService} from 'app/business/services/users/entities.service';
 import {LightCardsStoreService} from 'app/business/services/lightcards/lightcards-store.service';
 import {ActivityAreaView} from 'app/business/view/activityarea/activityarea.view';
 import {ActivityAreaPage} from 'app/business/view/activityarea/activityareaPage';

@@ -11,7 +11,7 @@
 import {Component, OnInit} from '@angular/core';
 import {ConfigService} from 'app/business/services/config.service';
 import {ExternalDevicesService} from 'app/business/services/notifications/external-devices.service';
-import {UserService} from 'app/business/services/user.service';
+import {UserService} from 'app/business/services/users/user.service';
 import {UserConfiguration} from '@ofModel/external-devices.model';
 import {TranslateService} from '@ngx-translate/core';
 

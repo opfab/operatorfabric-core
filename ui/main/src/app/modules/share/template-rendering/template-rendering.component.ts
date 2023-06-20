@@ -34,7 +34,7 @@ import {DisplayContext} from '@ofModel/template.model';
 import {TemplateCssService} from 'app/business/services/template-css.service';
 import {GlobalStyleService} from 'app/business/services/global-style.service';
 import {CurrentUserStore} from 'app/business/store/current-user.store';
-import {UserService} from 'app/business/services/user.service';
+import {UserService} from 'app/business/services/users/user.service';
 import {OpfabAPIService} from 'app/business/services/opfabAPI.service';
 
 
