@@ -12,7 +12,7 @@ import {CardOperation} from '@ofModel/card-operation.model';
 import {FilterService} from 'app/business/services/lightcards/filter.service';
 import {LogOption, OpfabLoggerService} from 'app/business/services/logs/opfab-logger.service';
 import {filter, map, Observable, Subject} from 'rxjs';
-import {OpfabEventStreamServer} from '../server/opfabEventStream.server';
+import {OpfabEventStreamServer} from '../../server/opfabEventStream.server';
 
 @Injectable({
     providedIn: 'root'

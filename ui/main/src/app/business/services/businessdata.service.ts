@@ -12,7 +12,7 @@ import {firstValueFrom} from 'rxjs';
 import {BusinessDataServer} from '../server/businessData.server';
 import {ServerResponseStatus} from '../server/serverResponse';
 import {LogOption, OpfabLoggerService} from './logs/opfab-logger.service';
-import {OpfabEventStreamService} from './opfabEventStream.service';
+import {OpfabEventStreamService} from './events/opfabEventStream.service';
 import * as _ from 'lodash-es';
 
 @Injectable({

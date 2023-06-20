@@ -14,7 +14,7 @@ import {UrlLockService} from './url-lock.service';
 import {UserService} from 'app/business/services/users/user.service';
 import {ApplicationLoadingStep} from '../application-loading-step';
 import {SoundNotificationService} from 'app/business/services/notifications/sound-notification.service';
-import {OpfabEventStreamService} from 'app/business/services/opfabEventStream.service';
+import {OpfabEventStreamService} from 'app/business/services/events/opfabEventStream.service';
 
 /** This component checks if the url of opfab is already in use
  *  in the browser (there should not be several accounts connected

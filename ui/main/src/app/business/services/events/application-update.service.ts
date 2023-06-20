@@ -15,10 +15,10 @@ import {TemplateCssService} from 'app/business/services/card/template-css.servic
 import {UserService} from 'app/business/services/users/user.service';
 import {HandlebarsService} from 'app/business/services/card/handlebars.service';
 import {debounce, timer, map, catchError, switchMap} from 'rxjs';
-import {Utilities} from '../common/utilities';
+import {Utilities} from '../../common/utilities';
 import {ApplicationEventsService} from './application-events.service';
 import {OpfabEventStreamService} from './opfabEventStream.service';
-import {ProcessesService} from './processes.service';
+import {ProcessesService} from '../processes.service';
 
 @Injectable({
     providedIn: 'root'

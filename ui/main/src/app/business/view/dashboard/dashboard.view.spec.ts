@@ -22,7 +22,7 @@ import {ComputedPerimeter, UserWithPerimeters} from '@ofModel/userWithPerimeters
 import {RightsEnum} from '@ofModel/perimeter.model';
 import {LightCardsStoreService} from 'app/business/services/lightcards/lightcards-store.service';
 import {OpfabEventStreamServerMock} from '@tests/mocks/opfab-event-stream.server.mock';
-import {OpfabEventStreamService} from 'app/business/services/opfabEventStream.service';
+import {OpfabEventStreamService} from 'app/business/services/events/opfabEventStream.service';
 import {SelectedCardService} from 'app/business/services/card/selectedCard.service';
 import {getOneRandomLightCard} from '@tests/helpers';
 import {firstValueFrom, skip} from 'rxjs';
