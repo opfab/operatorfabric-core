@@ -9,7 +9,7 @@
 
 import {Injectable} from '@angular/core';
 import {BusinessDataService} from './businessdata.service';
-import {EntitiesService} from './entities.service';
+import {EntitiesService} from './users/entities.service';
 
 declare const opfab: any;
 

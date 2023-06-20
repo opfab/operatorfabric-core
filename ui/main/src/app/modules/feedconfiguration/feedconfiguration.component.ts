@@ -8,14 +8,14 @@
  */
 
 import {AfterViewInit, Component, ElementRef, OnInit, ViewChild} from '@angular/core';
-import {UserService} from 'app/business/services/user.service';
+import {UserService} from 'app/business/services/users/user.service';
 import {Process, State} from '@ofModel/processes.model';
 import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
 import {NgbModalRef} from '@ng-bootstrap/ng-bootstrap/modal/modal-ref';
 import {UserWithPerimeters} from '@ofModel/userWithPerimeters.model';
 import {ProcessesService} from 'app/business/services/processes.service';
 import {FormArray, FormControl, FormGroup} from '@angular/forms';
-import {SettingsService} from 'app/business/services/settings.service';
+import {SettingsService} from 'app/business/services/users/settings.service';
 import {TranslateService} from '@ngx-translate/core';
 import {Utilities} from '../../business/common/utilities';
 import {LightCardsStoreService} from 'app/business/services/lightcards/lightcards-store.service';

@@ -16,10 +16,10 @@ import {catchError, map, takeUntil, tap} from 'rxjs/operators';
 import {CrudService} from 'app/business/services/crud-service';
 import {Injectable} from '@angular/core';
 import {RightsEnum} from '@ofModel/perimeter.model';
-import {OpfabLoggerService} from './logs/opfab-logger.service';
-import {AlertMessageService} from './alert-message.service';
-import {UserServer} from '../server/user.server';
-import {ServerResponseStatus} from '../server/serverResponse';
+import {OpfabLoggerService} from '../logs/opfab-logger.service';
+import {AlertMessageService} from '../alert-message.service';
+import {UserServer} from '../../server/user.server';
+import {ServerResponseStatus} from '../../server/serverResponse';
 
 @Injectable({
     providedIn: 'root'

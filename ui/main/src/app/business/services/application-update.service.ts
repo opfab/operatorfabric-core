@@ -8,11 +8,11 @@
  */
 
 import {Injectable} from '@angular/core';
-import {EntitiesService} from 'app/business/services/entities.service';
-import {GroupsService} from 'app/business/services/groups.service';
+import {EntitiesService} from 'app/business/services/users/entities.service';
+import {GroupsService} from 'app/business/services/users/groups.service';
 import {LogOption, OpfabLoggerService} from 'app/business/services/logs/opfab-logger.service';
 import {TemplateCssService} from 'app/business/services/template-css.service';
-import {UserService} from 'app/business/services/user.service';
+import {UserService} from 'app/business/services/users/user.service';
 import {HandlebarsService} from 'app/business/services/card/handlebars.service';
 import {debounce, timer, map, catchError, switchMap} from 'rxjs';
 import {Utilities} from '../common/utilities';

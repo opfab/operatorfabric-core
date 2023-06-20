@@ -9,13 +9,13 @@
 
 import {Component, ElementRef, Input, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {FormControl, FormGroup} from '@angular/forms';
-import {UserService} from 'app/business/services/user.service';
+import {UserService} from 'app/business/services/users/user.service';
 import {Card, CardCreationReportData, CardData, fromCardToCardForPublishing, TimeSpan} from '@ofModel/card.model';
 import {UserCard} from '@ofModel/processes.model';
 import {Severity} from '@ofModel/light-card.model';
 import {Guid} from 'guid-typescript';
 import {DomSanitizer, SafeHtml} from '@angular/platform-browser';
-import {EntitiesService} from 'app/business/services/entities.service';
+import {EntitiesService} from 'app/business/services/users/entities.service';
 import {ProcessesService} from 'app/business/services/processes.service';
 import {HandlebarsService} from '../../business/services/card/handlebars.service';
 import {DetailContext} from '@ofModel/detail-context.model';

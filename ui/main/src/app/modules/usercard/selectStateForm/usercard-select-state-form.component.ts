@@ -15,12 +15,12 @@ import {RightsEnum} from '@ofModel/perimeter.model';
 import {Process, UserCard} from '@ofModel/processes.model';
 import {ComputedPerimeter, UserWithPerimeters} from '@ofModel/userWithPerimeters.model';
 import {ProcessesService} from 'app/business/services/processes.service';
-import {UserService} from 'app/business/services/user.service';
+import {UserService} from 'app/business/services/users/user.service';
 import {Utilities} from 'app/business/common/utilities';
 import {MultiSelectComponent} from 'app/modules/share/multi-select/multi-select.component';
 import {Subject} from 'rxjs';
 import {debounceTime, takeUntil} from 'rxjs/operators';
-import {EntitiesService} from 'app/business/services/entities.service';
+import {EntitiesService} from 'app/business/services/users/entities.service';
 
 @Component({
     selector: 'of-usercard-select-state-form',

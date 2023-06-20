@@ -10,7 +10,7 @@
 import {Component, Input, TemplateRef, ViewChild} from '@angular/core';
 import {NgbModal, NgbModalRef} from '@ng-bootstrap/ng-bootstrap';
 import {LogOption, OpfabLoggerService} from 'app/business/services/logs/opfab-logger.service';
-import {UserService} from 'app/business/services/user.service';
+import {UserService} from 'app/business/services/users/user.service';
 import {ApplicationLoadingStep} from '../application-loading-step';
 import {AuthService} from 'app/authentication/auth.service';
 

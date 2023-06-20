@@ -18,7 +18,7 @@ import {Process, TypeOfStateEnum} from '@ofModel/processes.model';
 import {ProcessesService} from 'app/business/services/processes.service';
 import {Filter} from '@ofModel/feed-filter.model';
 import {LightCardsStoreService} from 'app/business/services/lightcards/lightcards-store.service';
-import {EntitiesService} from 'app/business/services/entities.service';
+import {EntitiesService} from 'app/business/services/users/entities.service';
 import {SelectedCardService} from 'app/business/services/card/selectedCard.service';
 
 @Component({

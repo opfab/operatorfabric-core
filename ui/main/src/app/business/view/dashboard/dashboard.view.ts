@@ -12,7 +12,7 @@ import {Utilities} from 'app/business/common/utilities';
 import {FilterService} from 'app/business/services/lightcards/filter.service';
 import {LightCardsStoreService} from 'app/business/services/lightcards/lightcards-store.service';
 import {ProcessesService} from 'app/business/services/processes.service';
-import {UserService} from 'app/business/services/user.service';
+import {UserService} from 'app/business/services/users/user.service';
 import moment from 'moment';
 import {combineLatest, Observable, ReplaySubject} from 'rxjs';
 import {DashboardPage, ProcessContent, StateContent, CardForDashboard, DashboardCircle} from './dashboardPage';

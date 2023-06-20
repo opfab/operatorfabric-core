@@ -12,10 +12,10 @@ import {Group} from '@ofModel/group.model';
 import {takeUntil, tap, map} from 'rxjs/operators';
 import {Injectable} from '@angular/core';
 import {CachedCrudService} from 'app/business/services/cached-crud-service';
-import {OpfabLoggerService} from './logs/opfab-logger.service';
-import {AlertMessageService} from './alert-message.service';
-import {GroupsServer} from '../server/groups.server';
-import {ServerResponseStatus} from '../server/serverResponse';
+import {OpfabLoggerService} from '../logs/opfab-logger.service';
+import {AlertMessageService} from '../alert-message.service';
+import {GroupsServer} from '../../server/groups.server';
+import {ServerResponseStatus} from '../../server/serverResponse';
 
 @Injectable({
     providedIn: 'root'

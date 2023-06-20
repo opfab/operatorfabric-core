@@ -17,7 +17,7 @@ import {NgbModal, NgbModalOptions, NgbModalRef} from '@ng-bootstrap/ng-bootstrap
 import {LightCard} from '@ofModel/light-card.model';
 import {Page} from '@ofModel/page.model';
 import {ExcelExport} from 'app/business/common/excel-export';
-import {UserPreferencesService} from 'app/business/services/user-preference.service';
+import {UserPreferencesService} from 'app/business/services/users/user-preference.service';
 import {Utilities} from 'app/business/common/utilities';
 import {Card, CardData} from '@ofModel/card.model';
 import {ArchivesLoggingFiltersComponent} from '../share/archives-logging-filters/archives-logging-filters.component';

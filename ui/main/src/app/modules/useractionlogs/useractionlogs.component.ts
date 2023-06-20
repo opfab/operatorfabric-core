@@ -13,7 +13,7 @@ import {PermissionEnum} from "@ofModel/permission.model";
 import {UserActionLog} from "@ofModel/user-action-log.model";
 import {ServerResponseStatus} from "app/business/server/serverResponse";
 import {UserActionLogsServer} from "app/business/server/user-action-logs.server";
-import {UserService} from "app/business/services/user.service";
+import {UserService} from "app/business/services/users/user.service";
 import moment from "moment";
 import {UserActionLogsFiltersComponent} from "./components/useractionlogs-filters/useractionlogs-filters.component";
 

@@ -8,7 +8,7 @@
  */
 
 import {Entity} from '@ofModel/entity.model';
-import {EntitiesService} from 'app/business/services/entities.service';
+import {EntitiesService} from 'app/business/services/users/entities.service';
 import {Observable, of} from 'rxjs';
 import {Injectable} from '@angular/core';
 

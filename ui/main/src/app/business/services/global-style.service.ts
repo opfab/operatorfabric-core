@@ -9,7 +9,7 @@
 
 import {Injectable} from '@angular/core';
 import {BehaviorSubject, Observable} from 'rxjs';
-import {UserPreferencesService} from './user-preference.service';
+import {UserPreferencesService} from './users/user-preference.service';
 import {ConfigService} from 'app/business/services/config.service';
 import {MenuService} from 'app/business/services/menu.service';
 

@@ -12,7 +12,7 @@ import {LightCardsStoreService} from 'app/business/services/lightcards/lightcard
 import {ProcessesService} from 'app/business/services/processes.service';
 import {Dashboard} from 'app/business/view/dashboard/dashboard.view';
 import {DashboardPage} from 'app/business/view/dashboard/dashboardPage';
-import {UserService} from 'app/business/services/user.service';
+import {UserService} from 'app/business/services/users/user.service';
 import {NgbModal, NgbModalOptions, NgbModalRef, NgbPopover} from '@ng-bootstrap/ng-bootstrap';
 import {SelectedCardService} from 'app/business/services/card/selectedCard.service';
 import {FilterService} from 'app/business/services/lightcards/filter.service';

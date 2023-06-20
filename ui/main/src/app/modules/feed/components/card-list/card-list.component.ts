@@ -16,14 +16,14 @@ import {ConfigService} from 'app/business/services/config.service';
 import {MessageLevel} from '@ofModel/message.model';
 import {ProcessesService} from 'app/business/services/processes.service';
 import {AcknowledgeService} from 'app/business/services/acknowledge.service';
-import {UserService} from 'app/business/services/user.service';
+import {UserService} from 'app/business/services/users/user.service';
 import {UserWithPerimeters} from '@ofModel/userWithPerimeters.model';
-import {EntitiesService} from 'app/business/services/entities.service';
+import {EntitiesService} from 'app/business/services/users/entities.service';
 import {GroupedCardsService} from 'app/business/services/lightcards/grouped-cards.service';
 import {AlertMessageService} from 'app/business/services/alert-message.service';
 import {Router} from '@angular/router';
 import {SortService} from 'app/business/services/lightcards/sort.service';
-import {UserPreferencesService} from 'app/business/services/user-preference.service';
+import {UserPreferencesService} from 'app/business/services/users/user-preference.service';
 import {LightCardsStoreService} from 'app/business/services/lightcards/lightcards-store.service';
 import {ServerResponseStatus} from 'app/business/server/serverResponse';
 
