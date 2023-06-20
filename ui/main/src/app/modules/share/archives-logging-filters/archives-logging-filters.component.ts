@@ -26,6 +26,7 @@ import {UserPreferencesService} from 'app/business/services/users/user-preferenc
 import {UserService} from 'app/business/services/users/user.service';
 import {PermissionEnum} from '@ofModel/permission.model';
 import {AlertMessageService} from 'app/business/services/alert-message.service';
+import {TranslateService} from "@ngx-translate/core";
 
 export enum FilterDateTypes {
     PUBLISH_DATE_FROM_PARAM = 'publishDateFrom',
@@ -130,7 +131,8 @@ export class ArchivesLoggingFiltersComponent implements OnInit, OnDestroy, After
         private processStatesDropdownListService: ProcessStatesMultiSelectOptionsService,
         private userPreferences: UserPreferencesService,
         private userService: UserService,
-        private alertMessageService: AlertMessageService
+        private alertMessageService: AlertMessageService,
+        private translate: TranslateService
     ) {
         this.hasCurrentUserRightsToViewAllArchivedCards = this.userService.isCurrentUserAdmin() || this.userService.hasCurrentUserAnyPermission([PermissionEnum.VIEW_ALL_ARCHIVED_CARDS]);
 
@@ -154,6 +156,7 @@ export class ArchivesLoggingFiltersComponent implements OnInit, OnDestroy, After
 
     ngAfterViewInit(): void {
         this.setDateFilterBounds();
+        document.getElementById('opfab-admin-mode-help').setAttribute('data-text', this.translate.instant('shared.adminModeHelp'));
     }
 
     clearMultiFilters() {

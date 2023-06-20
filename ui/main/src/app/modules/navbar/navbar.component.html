@@ -35,7 +35,7 @@
              [routerLink]="link.path" routerLinkActive #rla="routerLinkActive"
              (click)="activeLinkIndex = i" translate>{{'menu.'+link.path}}</a>
         </li>
-        
+
         <!-- Links from menus declared in businessconfig-party bundles-->
         <li class="nav-item" *ngIf="businessconfigMenusMap.get(navBarElement.id) as tMenu"
             [class.dropdown]="tMenu.entries.length>1 || showDropdownMenuEvenIfOnlyOneEntry"
@@ -71,7 +71,7 @@
         <span class="opfab-menu-icon-newcard"
         [ngbPopover]="createNewCard" popoverClass="opfab-popover-unclickable" container="body"
         triggers="mouseenter:mouseleave" >></span>
-        </li> 
+        </li>
      <ng-template #calendartooltip>
       <span translate>menu.calendarTooltip</span>
     </ng-template>
