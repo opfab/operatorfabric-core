@@ -23,7 +23,7 @@ import {
     tap
 } from 'rxjs';
 import {UserService} from 'app/business/services/users/user.service';
-import {OpfabEventStreamService} from 'app/business/services/opfabEventStream.service';
+import {OpfabEventStreamService} from 'app/business/services/events/opfabEventStream.service';
 import {CardOperationType} from '@ofModel/card-operation.model';
 import {LogOption, OpfabLoggerService} from 'app/business/services/logs/opfab-logger.service';
 import {SelectedCardService} from 'app/business/services/card/selectedCard.service';

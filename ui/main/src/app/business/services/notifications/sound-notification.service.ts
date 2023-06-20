@@ -17,7 +17,7 @@ import {filter, map, switchMap, takeUntil} from 'rxjs/operators';
 import {ExternalDevicesService} from 'app/business/services/notifications/external-devices.service';
 import {ConfigService} from 'app/business/services/config.service';
 import {LogOption, OpfabLoggerService} from '../logs/opfab-logger.service';
-import {OpfabEventStreamService} from 'app/business/services/opfabEventStream.service';
+import {OpfabEventStreamService} from 'app/business/services/events/opfabEventStream.service';
 import {AlertMessageService} from 'app/business/services/alert-message.service';
 import {MessageLevel} from '@ofModel/message.model';
 import {SoundServer} from 'app/business/server/sound.server';

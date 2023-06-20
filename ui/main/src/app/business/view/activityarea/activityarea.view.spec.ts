@@ -21,7 +21,7 @@ import {ConfigService} from 'app/business/services/config.service';
 import {EntitiesService} from 'app/business/services/users/entities.service';
 import {LightCardsStoreService} from 'app/business/services/lightcards/lightcards-store.service';
 import {OpfabLoggerService} from 'app/business/services/logs/opfab-logger.service';
-import {OpfabEventStreamService} from 'app/business/services/opfabEventStream.service';
+import {OpfabEventStreamService} from 'app/business/services/events/opfabEventStream.service';
 import {SettingsService} from 'app/business/services/users/settings.service';
 import {UserService} from 'app/business/services/users/user.service';
 import {CurrentUserStore} from 'app/business/store/current-user.store';

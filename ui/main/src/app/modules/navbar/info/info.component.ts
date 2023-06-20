@@ -12,7 +12,7 @@ import {UserService} from 'app/business/services/users/user.service';
 import {EntitiesService} from 'app/business/services/users/entities.service';
 import {ConfigService} from 'app/business/services/config.service';
 import {DateTimeFormatterService} from 'app/business/services/date-time-formatter.service';
-import {ApplicationEventsService} from 'app/business/services/application-events.service';
+import {ApplicationEventsService} from 'app/business/services/events/application-events.service';
 import * as _ from 'lodash-es';
 
 @Component({
