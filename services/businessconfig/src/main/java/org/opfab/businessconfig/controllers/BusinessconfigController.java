@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2022, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2023, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -18,6 +18,7 @@ import org.opfab.businessconfig.services.MonitoringService;
 import org.opfab.businessconfig.services.ProcessesService;
 import org.opfab.springtools.error.model.ApiError;
 import org.opfab.springtools.error.model.ApiErrorException;
+import org.opfab.utilities.StringUtils;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -57,6 +58,11 @@ public class BusinessconfigController implements BusinessconfigApi {
 
     @Override
     public byte[] getCss(HttpServletRequest request, HttpServletResponse response, String processId, String cssFileName, String version) throws IOException {
+
+        processId = StringUtils.sanitize(processId);
+        cssFileName = StringUtils.sanitize(cssFileName);
+        version = StringUtils.sanitize(version);
+
         Resource resource = processService.fetchResource(processId, ResourceTypeEnum.CSS, version, cssFileName);
         return loadResource(resource);
     }
@@ -77,6 +83,10 @@ public class BusinessconfigController implements BusinessconfigApi {
 
     @Override
     public byte[] getI18n(HttpServletRequest request, HttpServletResponse response, String processId, String version) throws IOException {
+
+        processId = StringUtils.sanitize(processId);
+        version = StringUtils.sanitize(version);
+
         Resource resource = processService.fetchResource(processId, ResourceTypeEnum.I18N, version, "i18n");
         return loadResource(resource);
     }
@@ -84,6 +94,11 @@ public class BusinessconfigController implements BusinessconfigApi {
     @Override
     public byte[] getTemplate(HttpServletRequest request, HttpServletResponse response, String processId, String templateName, String version) throws
             IOException {
+
+        processId = StringUtils.sanitize(processId);
+        templateName = StringUtils.sanitize(templateName);
+        version = StringUtils.sanitize(version);
+
         Resource resource;
         resource = processService.fetchResource(processId, ResourceTypeEnum.TEMPLATE, version, templateName);
         return loadResource(resource);
@@ -244,7 +259,9 @@ public class BusinessconfigController implements BusinessconfigApi {
     }
 
     public Void uploadFile(HttpServletRequest request, HttpServletResponse response, @Valid MultipartFile file, String endPointName, String resourceName) {
- 
+
+        resourceName = StringUtils.sanitize(resourceName);
+
         try  {
             if (endPointName.equals("processgroups"))
                 processService.updateProcessGroupsFile(new String(file.getBytes()));
@@ -314,6 +331,9 @@ public class BusinessconfigController implements BusinessconfigApi {
 
     @Override
     public byte[] getBusinessData(HttpServletRequest request, HttpServletResponse response, String resourceName) throws IOException {
+
+        resourceName = StringUtils.sanitize(resourceName);
+
         Resource resource;
         resource = processService.getBusinessData(resourceName);
         return loadResource(resource);
@@ -338,6 +358,9 @@ public class BusinessconfigController implements BusinessconfigApi {
     @Override
 	public Void deleteBusinessData(HttpServletRequest request, HttpServletResponse response, String resourceName)
 			throws ApiErrorException {
+
+        resourceName = StringUtils.sanitize(resourceName);
+
 		try {
 			processService.deleteFile(resourceName);
 			// leaving response body empty
