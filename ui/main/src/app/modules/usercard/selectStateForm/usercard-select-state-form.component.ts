@@ -14,7 +14,7 @@ import {MultiSelectConfig, MultiSelectOption} from '@ofModel/multiselect.model';
 import {RightsEnum} from '@ofModel/perimeter.model';
 import {Process, UserCard} from '@ofModel/processes.model';
 import {ComputedPerimeter, UserWithPerimeters} from '@ofModel/userWithPerimeters.model';
-import {ProcessesService} from 'app/business/services/processes.service';
+import {ProcessesService} from 'app/business/services/businessconfig/processes.service';
 import {UserService} from 'app/business/services/users/user.service';
 import {Utilities} from 'app/business/common/utilities';
 import {MultiSelectComponent} from 'app/modules/share/multi-select/multi-select.component';

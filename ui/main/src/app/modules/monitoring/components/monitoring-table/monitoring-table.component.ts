@@ -13,7 +13,7 @@ import {LineOfMonitoringResult} from '@ofModel/line-of-monitoring-result.model';
 import {ExcelExport} from 'app/business/common/excel-export';
 import {Observable, Subject} from 'rxjs';
 import {NgbModal, NgbModalOptions, NgbModalRef} from '@ng-bootstrap/ng-bootstrap';
-import {ProcessesService} from 'app/business/services/processes.service';
+import {ProcessesService} from 'app/business/services/businessconfig/processes.service';
 import {MonitoringConfig} from '@ofModel/monitoringConfig.model';
 import {JsonToArray} from 'app/business/common/jsontoarray/json-to-array';
 import {Process} from '@ofModel/processes.model';

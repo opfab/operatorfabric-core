@@ -15,7 +15,7 @@ import {EntitiesService} from 'app/business/services/users/entities.service';
 import {GroupsService} from 'app/business/services/users/groups.service';
 import {I18nService} from 'app/business/services/translation/i18n.service';
 import {LogOption, OpfabLoggerService} from 'app/business/services/logs/opfab-logger.service';
-import {ProcessesService} from 'app/business/services/processes.service';
+import {ProcessesService} from 'app/business/services/businessconfig/processes.service';
 import {ReminderService} from 'app/business/services/reminder/reminder.service';
 import {UserService} from 'app/business/services/users/user.service';
 import {Utilities} from 'app/business/common/utilities';
@@ -35,7 +35,7 @@ import {CurrentUserStore} from 'app/business/store/current-user.store';
 import {AuthService} from 'app/authentication/auth.service';
 import {AuthenticationMode} from 'app/authentication/auth.model';
 import {SystemNotificationService} from '../../../business/services/notifications/system-notification.service';
-import {BusinessDataService} from 'app/business/services/businessdata.service';
+import {BusinessDataService} from 'app/business/services/businessconfig/businessdata.service';
 import {Router} from '@angular/router';
 import {OpfabAPIService} from 'app/business/services/opfabAPI.service';
 

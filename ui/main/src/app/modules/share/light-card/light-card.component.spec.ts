@@ -14,7 +14,7 @@ import {BusinessconfigI18nLoaderFactory, injectedSpy} from '@tests/helpers';
 import {RouterTestingModule} from '@angular/router/testing';
 import {TranslateLoader, TranslateModule, TranslateService} from '@ngx-translate/core';
 import {HttpClientTestingModule} from '@angular/common/http/testing';
-import {ProcessesService} from 'app/business/services/processes.service';
+import {ProcessesService} from 'app/business/services/businessconfig/processes.service';
 import {Router} from '@angular/router';
 import {I18nService} from 'app/business/services/translation/i18n.service';
 import {NgbModule} from '@ng-bootstrap/ng-bootstrap';

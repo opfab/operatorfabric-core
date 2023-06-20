@@ -10,7 +10,7 @@
 import {AfterViewInit, Component, ElementRef, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {Subject} from 'rxjs';
 
-import {ProcessesService} from 'app/business/services/processes.service';
+import {ProcessesService} from 'app/business/services/businessconfig/processes.service';
 import {takeUntil} from 'rxjs/operators';
 import {FormControl, FormGroup} from '@angular/forms';
 import {ConfigService} from 'app/business/services/config.service';

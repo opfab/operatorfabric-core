@@ -19,7 +19,7 @@ import {
     ViewEncapsulation
 } from '@angular/core';
 import {Card} from '@ofModel/card.model';
-import {ProcessesService} from 'app/business/services/processes.service';
+import {ProcessesService} from 'app/business/services/businessconfig/processes.service';
 import {SafeHtml} from '@angular/platform-browser';
 import {AcknowledgmentAllowedEnum, State} from '@ofModel/processes.model';
 import {map, takeUntil} from 'rxjs/operators';

@@ -8,7 +8,7 @@
  */
 
 import {OnInit, Component, OnDestroy, Input, OnChanges} from '@angular/core';
-import {ProcessesService} from 'app/business/services/processes.service';
+import {ProcessesService} from 'app/business/services/businessconfig/processes.service';
 import {LightCardsStoreService} from 'app/business/services/lightcards/lightcards-store.service';
 import {Subject, takeUntil, timer} from 'rxjs';
 import {LightCard} from '@ofModel/light-card.model';

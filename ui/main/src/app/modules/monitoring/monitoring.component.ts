@@ -15,7 +15,7 @@ import {LightCard} from '@ofModel/light-card.model';
 import {I18n} from '@ofModel/i18n.model';
 import {MonitoringFiltersComponent} from './components/monitoring-filters/monitoring-filters.component';
 import {Process, TypeOfStateEnum} from '@ofModel/processes.model';
-import {ProcessesService} from 'app/business/services/processes.service';
+import {ProcessesService} from 'app/business/services/businessconfig/processes.service';
 import {Filter} from '@ofModel/feed-filter.model';
 import {LightCardsStoreService} from 'app/business/services/lightcards/lightcards-store.service';
 import {EntitiesService} from 'app/business/services/users/entities.service';

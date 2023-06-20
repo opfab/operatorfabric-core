@@ -22,7 +22,7 @@ import {UserService} from 'app/business/services/users/user.service';
 import {LightCard} from '@ofModel/light-card.model';
 import {ProcessServer} from 'app/business/server/process.server';
 import {ConfigServer} from 'app/business/server/config.server';
-import {ServerResponseStatus} from '../server/serverResponse';
+import {ServerResponseStatus} from '../../server/serverResponse';
 
 @Injectable({
     providedIn: 'root'

@@ -12,10 +12,10 @@ import {Observable} from 'rxjs';
 import {map} from 'rxjs/operators';
 import {Process} from '@ofModel/processes.model';
 import {CachedCrudService} from 'app/business/services/cached-crud-service';
-import {OpfabLoggerService} from './logs/opfab-logger.service';
-import {AlertMessageService} from './alert-message.service';
-import {AdminProcessServer} from '../server/adminprocess.server';
-import {ServerResponseStatus} from '../server/serverResponse';
+import {OpfabLoggerService} from '../logs/opfab-logger.service';
+import {AlertMessageService} from '../alert-message.service';
+import {AdminProcessServer} from '../../server/adminprocess.server';
+import {ServerResponseStatus} from '../../server/serverResponse';
 
 @Injectable({
     providedIn: 'root'

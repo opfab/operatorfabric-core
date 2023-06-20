@@ -21,7 +21,7 @@ import {GroupCellRendererComponent} from '../cell-renderers/group-cell-renderer.
 import {AdminItemType, SharingService} from '../../services/sharing.service';
 import {takeUntil} from 'rxjs/operators';
 import {StateRightsCellRendererComponent} from '../cell-renderers/state-rights-cell-renderer.component';
-import {ProcessesService} from 'app/business/services/processes.service';
+import {ProcessesService} from 'app/business/services/businessconfig/processes.service';
 import {Process} from '@ofModel/processes.model';
 import {GroupsService} from 'app/business/services/users/groups.service';
 import {Group} from '@ofModel/group.model';

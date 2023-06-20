@@ -7,7 +7,7 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {ProcessesService} from 'app/business/services/processes.service';
+import {ProcessesService} from 'app/business/services/businessconfig/processes.service';
 import {ConfigServerMock} from '@tests/mocks/configServer.mock';
 import {ProcessServerMock} from '@tests/mocks/processServer.mock';
 import {Dashboard} from './dashboard.view';

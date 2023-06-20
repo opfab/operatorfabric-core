@@ -9,9 +9,9 @@
 
 import {Injectable} from '@angular/core';
 import {firstValueFrom} from 'rxjs';
-import {BusinessDataServer} from '../server/businessData.server';
-import {ServerResponseStatus} from '../server/serverResponse';
-import {OpfabLoggerService} from './logs/opfab-logger.service';
+import {BusinessDataServer} from '../../server/businessData.server';
+import {ServerResponseStatus} from '../../server/serverResponse';
+import {OpfabLoggerService} from '../logs/opfab-logger.service';
 import * as _ from 'lodash-es';
 
 @Injectable({
