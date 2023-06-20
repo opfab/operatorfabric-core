@@ -10,9 +10,9 @@
 import {Injectable} from '@angular/core';
 import {map, Observable, of} from 'rxjs';
 import {Utilities} from 'app/business/common/utilities';
-import {TemplateCssServer} from '../server/template-css.server';
-import {ServerResponseStatus} from '../server/serverResponse';
-import {OpfabLoggerService} from './logs/opfab-logger.service';
+import {TemplateCssServer} from '../../server/template-css.server';
+import {ServerResponseStatus} from '../../server/serverResponse';
+import {OpfabLoggerService} from '../logs/opfab-logger.service';
 
 @Injectable({
     providedIn: 'root'

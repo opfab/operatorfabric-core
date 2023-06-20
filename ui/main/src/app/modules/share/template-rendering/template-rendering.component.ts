@@ -31,7 +31,7 @@ import {Observable, Subject, zip} from 'rxjs';
 import {User} from '@ofModel/user.model';
 import {OpfabLoggerService} from 'app/business/services/logs/opfab-logger.service';
 import {DisplayContext} from '@ofModel/template.model';
-import {TemplateCssService} from 'app/business/services/template-css.service';
+import {TemplateCssService} from 'app/business/services/card/template-css.service';
 import {GlobalStyleService} from 'app/business/services/global-style.service';
 import {CurrentUserStore} from 'app/business/store/current-user.store';
 import {UserService} from 'app/business/services/users/user.service';
