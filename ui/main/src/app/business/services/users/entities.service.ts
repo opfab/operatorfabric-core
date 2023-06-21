@@ -128,14 +128,14 @@ export class EntitiesService extends CachedCrudService {
 
     public getEntityName(idEntity: string): string {
         const found = this._entities.find((entity) => entity.id === idEntity);
-        if (found && found.name) return found.name;
+        if (found?.name) return found.name;
 
         return idEntity;
     }
 
     public isEntityAllowedToSendCard(idEntity: string): boolean {
         const found = this._entities.find((entity) => entity.id === idEntity);
-        return found && found.entityAllowedToSendCard;
+        return found?.entityAllowedToSendCard;
     }
 
     /** Given a list of entities that might contain parent entities, this method returns the list of entities

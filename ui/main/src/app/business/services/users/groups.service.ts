@@ -110,14 +110,14 @@ export class GroupsService extends CachedCrudService {
 
     public getGroupName(idGroup: string): string {
         const found = this._groups.find((group) => group.id === idGroup);
-        if (found && found.name) return found.name;
+        if (found?.name) return found.name;
 
         return idGroup;
     }
 
     public isRealtimeGroup(idGroup: string): boolean {
         const found = this._groups.find((group) => group.id === idGroup);
-        return found && found.realtime;
+        return found?.realtime;
     }
 
     getAll(): Observable<any[]> {
