@@ -119,7 +119,7 @@ export class UserService extends CrudService {
         );
     }
 
-    update(userData: User | any): Observable<User> {
+    update(userData: any): Observable<User> {
         return this.updateUser(userData);
     }
 
