@@ -25,7 +25,6 @@ import {EntitiesService} from 'app/business/services/users/entities.service';
 import {ConfigServerMock} from '@tests/mocks/configServer.mock';
 import {ProcessServerMock} from '@tests/mocks/processServer.mock';
 import {UserPermissionsService} from './user-permissions.service';
-import {ProcessesService} from './processes.service';
 import {UserService} from './users/user.service';
 import {OpfabLoggerService} from './logs/opfab-logger.service';
 import {RemoteLoggerServiceMock} from '@tests/mocks/remote-logger.service.mock';
@@ -34,6 +33,7 @@ import {AlertMessageService} from './alert-message.service';
 import {EntitiesServerMock} from '@tests/mocks/entitiesServer.mock';
 import {Entity} from '@ofModel/entity.model';
 import {ServerResponse, ServerResponseStatus} from '../server/serverResponse';
+import {ProcessesService} from './businessconfig/processes.service';
 
 describe('AcknowledgeService testing ', () => {
     let acknowledgeService: AcknowledgeService;

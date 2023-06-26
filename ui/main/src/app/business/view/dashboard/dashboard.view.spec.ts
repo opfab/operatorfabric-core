@@ -31,9 +31,9 @@ import {Utilities} from 'app/business/common/utilities';
 import {FilterService} from 'app/business/services/lightcards/filter.service';
 import {FilterType} from '@ofModel/feed-filter.model';
 import {AcknowledgeService} from "../../services/acknowledge.service";
-import {EntitiesService} from "../../services/entities.service";
 import {UserPermissionsService} from "../../services/user-permissions.service";
 import {AlertMessageService} from "../../services/alert-message.service";
+import {EntitiesService} from 'app/business/services/users/entities.service';
 
 describe('Dashboard', () => {
     let dashboard: Dashboard;

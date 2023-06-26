@@ -17,9 +17,9 @@ import {AcknowledgeServer} from '../server/acknowledge.server';
 import {ServerResponse} from '../server/serverResponse';
 import {UserPermissionsService} from 'app/business/services/user-permissions.service';
 import {PermissionEnum} from "@ofModel/permission.model";
-import {ProcessesService} from "./processes.service";
-import {EntitiesService} from "./entities.service";
-import {UserService} from "./user.service";
+import {ProcessesService} from './businessconfig/processes.service';
+import {EntitiesService} from './users/entities.service';
+import {UserService} from './users/user.service';
 
 @Injectable({
     providedIn: 'root'
