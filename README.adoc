@@ -83,10 +83,10 @@ cd operatorfabric-core
 +
 ----
 cd ./config/docker
-./docker-compose.sh
+./startOpfab.sh
 ----
 
-. After a little while, log into the application UI at *localhost:2002/* using operator1_fr/test as credentials.
+. Once script is finished, log into the application UI at *localhost:2002/* using operator1_fr/test as credentials.
 
 . Push basic configuration and cards using the following test scripts
 +

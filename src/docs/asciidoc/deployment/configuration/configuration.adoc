@@ -39,7 +39,7 @@ When starting docker in the full docker environment an external environment file
 
 ----
 cd ./config/docker
-./docker-compose.sh ~/config/local.env
+./startOpfab.sh ~/config/local.env
 ----
 In the provided environment file the Spring active profiles can be set.
 
