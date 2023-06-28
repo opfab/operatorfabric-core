@@ -22,7 +22,7 @@ export class GroupedCardsService {
     computeEvent = new BehaviorSubject(null);
 
     static tagsAsString(tags: string[]): string {
-        return tags ? JSON.stringify([...tags].sort()) : '';
+        return tags ? JSON.stringify([...tags].sort((a, b) => (a.localeCompare(b)))) : '';
     }
 
     computeGroupedCards(lightCards: LightCard[]) {

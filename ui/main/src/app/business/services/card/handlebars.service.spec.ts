@@ -45,6 +45,7 @@ describe('Handlebars Services', () => {
                 numbers: [0, 1, 2, 3, 4, 5],
                 unsortedNumbers: [2, 1, 4, 0, 5, 3],
                 numberStrings: ['0', '1', '2', '3', '4', '5'],
+                unsortedStrings: ["jack", "john", "hubert"],
                 arrays: [[], [0, 1, 2], ['0', '1', '2', '3']],
                 undefinedValue: undefined,
                 nullValue: null,
@@ -310,6 +311,10 @@ describe('Handlebars Services', () => {
 
         it('compile each sort primitive array', (done) => {
             testTemplate('{{#each (sort card.data.unsortedNumbers)}}{{this}} {{/each}}', '0 1 2 3 4 5 ', done);
+        });
+
+        it('compile each sort string array', (done) => {
+            testTemplate('{{#each (sort card.data.unsortedStrings)}}{{this}} {{/each}}', 'hubert jack john ', done);
         });
 
         it('compile each sort', (done) => {
