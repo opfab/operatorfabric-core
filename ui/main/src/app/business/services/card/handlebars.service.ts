@@ -323,7 +323,12 @@ export class HandlebarsService {
                 } else if (isObject) {
                     arrayToSort.sort(sortOnKey('templatedObjectkey'));
                 } else {
-                    arrayToSort.sort();
+                    if (typeof arrayToSort[0] === 'string') {
+                        arrayToSort.sort((a, b) => (a.localeCompare(b)));
+                    }
+                    else {
+                        arrayToSort.sort((a, b) => (a - b));
+                    }
                 }
             }
             return arrayToSort;

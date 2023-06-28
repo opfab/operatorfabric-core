@@ -73,7 +73,7 @@ export class ArchivedCardDetailComponent implements OnInit{
                 listOfEntityRecipients.push(this.entitiesService.getEntityName(entityRecipient));
             });
         }
-        listOfEntityRecipients.sort();
+        listOfEntityRecipients.sort((a, b) => (a.localeCompare(b)));
 
         listOfEntityRecipients.forEach((entityRecipient) => {
             this.entityRecipientsForFooter += ' ' + entityRecipient + ',';
@@ -93,7 +93,7 @@ export class ArchivedCardDetailComponent implements OnInit{
                 listOfEntityRecipientsForInformation.push(this.entitiesService.getEntityName(entityRecipientForInformation));
             });
         }
-        listOfEntityRecipientsForInformation.sort();
+        listOfEntityRecipientsForInformation.sort((a, b) => (a.localeCompare(b)));
 
         listOfEntityRecipientsForInformation.forEach((entityRecipientForInformation) => {
             this.entityRecipientsForInformationForFooter += ' ' + entityRecipientForInformation + ',';
