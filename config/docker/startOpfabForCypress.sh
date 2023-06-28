@@ -1,8 +1,8 @@
 #!/bin/bash
 
 echo "Usage: "
-echo "   1: ./docker-compose.sh"
-echo "   2: ./docker-compose.sh <pathToExternalEnvironmentFile>"
+echo "   1: ./startOpfabForCypress.sh"
+echo "   2: ./startOpfabForCypress.sh <pathToExternalEnvironmentFile>"
 
 echo USER_ID="$(id -u)" > .env
 echo USER_GID="$(id -g)" >> .env
@@ -21,4 +21,8 @@ cat .env
 ../cypress/generateUIConfigForCypress.sh
 
 # Using an override file to launch docker-compose while mounting the cypress-specific ui configuration
-docker-compose -f docker-compose.yml -f ../cypress/docker-compose.ui-config.override.yml -f ../cypress/docker-compose.nginx-cors-permissive.override.yml up -d
+docker-compose -f docker-compose.yml -f ../cypress/docker-compose.ui-config.override.yml -f docker-compose.nginx-cors-permissive.override.yml up -d
+(
+  cd ../../bin
+  ./waitForOpfabToStart.sh
+)

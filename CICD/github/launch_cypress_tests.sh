@@ -24,11 +24,9 @@ export NVM_DIR="$HOME/.nvm"
 [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
 source ./bin/load_environment_light.sh;
 cd config/docker
-./docker-compose-cypress.sh
+./startOpfabForCypress.sh
 docker-compose logs --follow > ../../opfab.log &
-cd ../../bin
-./waitForOpfabToStart.sh
-cd ../
+cd ../../
 # Set a more important timeout for CI/CD as it is usually slower than local computer 
 export CYPRESS_defaultCommandTimeout=15000
 ./gradlew runSomeCypressTests -PspecFiles=$testFiles

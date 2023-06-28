@@ -39,7 +39,7 @@ instance in docker mode, just substitute `dev` for `docker` to launch it in dev 
 ----
 cd config/docker
 docker-compose down <1>
-./docker-compose-cypress.sh <2>
+./startOpfabForCypress.sh <2>
 ----
 <1> Remove existing config/docker containers to avoid conflicts
 <2> Start "Cypress-flavoured" containers
@@ -77,7 +77,7 @@ before each test or series of test.
 
 The docker container relies on the `XXX.json` files under `config/cypress/ui-config`.
 
-For convenience, the `generateUIConfigForCypress.sh` is launched as part of the `docker-compose-cypress.sh` scripts.
+For convenience, the `generateUIConfigForCypress.sh` is launched as part of the `startOpfabForCypress.sh` scripts.
 
 == Running existing tests
 

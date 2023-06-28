@@ -17,10 +17,8 @@ export NVM_DIR="$HOME/.nvm"
 [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
 source ./bin/load_environment_light.sh;
 cd config/docker
-./docker-compose.sh
-cd ../../bin
-./waitForOpfabToStart.sh
-cd ../src/test/api/karate
+./startOpfabInProductionMode.sh
+cd ../../src/test/api/karate
 ./launchAll.sh
 status_code=$?
 cd ../../../../config/docker

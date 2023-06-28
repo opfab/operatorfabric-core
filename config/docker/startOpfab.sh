@@ -1,8 +1,8 @@
 #!/bin/bash
 
 echo "Usage: "
-echo "   1: ./docker-compose.sh"
-echo "   2: ./docker-compose.sh <pathToExternalEnvironmentFile>"
+echo "   1: ./startOpfab.sh"
+echo "   2: ./startOpfab.sh <pathToExternalEnvironmentFile>"
 
 echo USER_ID="$(id -u)" > .env
 echo USER_GID="$(id -g)" >> .env
@@ -18,4 +18,10 @@ else
   echo CONFIG_PATH="$CONFIG_PATH" >> .env
 fi
 cat .env
-docker-compose up -d
+
+# Using an override file to launch docker-compose with permissive cors config
+docker-compose -f docker-compose.yml -f docker-compose.nginx-cors-permissive.override.yml up -d
+(
+  cd ../../bin
+  ./waitForOpfabToStart.sh
+)

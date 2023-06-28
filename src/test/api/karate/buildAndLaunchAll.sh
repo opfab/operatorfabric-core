@@ -29,11 +29,8 @@ echo "Stop docker-compose for building"
 docker-compose -f ${dockerComposeFile} down
 echo "Start opfab"
 cd config/docker
-./docker-compose.sh
-echo "Starting in progress..."
-cd ../../bin
-./waitForOpfabToStart.sh
-cd ../src/test/api/karate
+./startOpfabInProductionMode.sh
+cd ../../src/test/api/karate
 echo "Start karate testing"
 ./launchAll.sh
 google-chrome target/karate-reports/karate-summary.html &

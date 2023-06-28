@@ -10,7 +10,7 @@
 == Docker mode
 
 To test the External Devices service with dummy devices, launch an OperatorFabric instance using the
-`$OF_HOME/config/docker/docker-compose.sh` script.
+`$OF_HOME/config/docker/startOpfab.sh` script.
 
 As described in `$OF_HOME/config/docker/docker-compose.yml`, in addition to lauching all OperatorFabric services it
 will also start up two containers based on the dummy-modbus-device image: `dummy-modbus-device_1` and
