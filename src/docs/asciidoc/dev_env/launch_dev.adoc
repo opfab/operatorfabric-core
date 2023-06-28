@@ -87,17 +87,78 @@ npm config set https-proxy http://LOGIN:PWD@PROXY_URL:PORT
 
 == Deploy needed docker containers
 
-=== A Minimal Configuration for `gradle` Build
+`OperatorFabric` development needs docker images of `MongoDB`, `RabbitMQ`, `web-ui` and `Keycloak` running.
 
-The gradle build of `OperatorFabric` requires (for the unit tests) one docker container running MongoDB.
+For this, use:
+[source,shell]
+----
+cd ${OF_HOME}/config/dev
+./docker-compose.sh
+----
 
-Launch it using the `${OF_HOME}/src/main/docker/test-environment/docker-compose.yml`.
+== Build OperatorFabric with Gradle
 
-=== Enabling local quality report generation
+Using the wrapper in order to ensure building the project the same way from one machine to another.
 
-This step is optional (only needed if you want a Sonarqube report locally)
 
-Sonarqube reporting, in addition to the previous docker container, needs a `SonarQube` docker container.
+To fully build opfab : 
+
+[source,shell]
+----
+cd ${OF_HOME}
+./gradlew dockerTagSnapshot
+----
+
+Optionally, it is possible to 
+
+=== Only compile and package the jars
+[source,shell]
+----
+cd ${OF_HOME}
+./gradlew assemble
+----
+
+=== Only launch the Unit Test, compile and package the jars
+[source,shell]
+----
+cd ${OF_HOME}
+./gradlew build
+----
+
+== Run OperatorFabric Services using the `run_all.sh` script
+[source,shell]
+----
+cd ${OF_HOME}
+bin/run_all.sh -w start
+----
+
+TIP: See `bin/run_all.sh -h` for details.
+
+
+== Log into the UI
+
+*_URL:_* localhost:2002 +
+*_login:_* operator1_fr +
+*_password:_* test
+
+Other users available in development mode are `operator2_fr`, `operator3_fr`, `operator4_fr` and `admin`, with `test` as password.
+
+
+
+== Push cards to the feed
+
+You can check that you see cards into the feed by running the following scripts.
+[source,shell]
+----
+./src/test/resources/loadTestConf.sh
+./src/test/resources/send6TestCards.sh
+----
+
+== Enabling local quality report generation
+
+This step is optional and is generally not needed (only needed if you want a Sonarqube report locally)
+
+Sonarqube reporting needs a `SonarQube` docker container.
 Use the `${OF_HOME}/src/main/docker/test-quality-environment/docker-compose.yml` to get them all running.
 
 To generate the quality report, run the following commands:
@@ -108,85 +169,3 @@ cd ${OF_HOME}
 ----
 
 To export the reports into the `SonarQube` docker instance, install and use link:https://docs.sonarqube.org/latest/analysis/scan/sonarscanner/[SonarScanner].
-
-[[_docker_dev_env]]
-=== Development environment
-
-`OperatorFabric` development needs docker images of `MongoDB`, `RabbitMQ`, `web-ui` and `Keycloak` running.
-The `web-ui` configuration needs a `nginx.conf`.
-
-The `${OF_HOME}/config/dev/docker-compose.sh` creates the `nginx.conf` file and then runs `docker-compose` in detached mode.
-For this, use:
-[source,shell]
-----
-cd ${OF_HOME}/config/dev
-./docker-compose.sh
-----
-
-Once the `nginx.conf` created, run `docker-compose` independently is possible using:
-[source,shell]
-----
-cd ${OF_HOME}/config/dev
-docker-compose up -d
-----
-
-
-The configuration of the `web-ui` embeds a grayscale favicon which can be useful to spot the `OperatorFabric` dev tab in the browser.
-To refresh the favicon, hit `CTRL+F5` on the page.
-
-== Build OperatorFabric with Gradle
-
-Using the wrapper in order to ensure building the project the same way from one machine to another.
-
-To only compile and package the jars:
-[source,shell]
-----
-cd ${OF_HOME}
-./gradlew assemble
-----
-
-To launch the Unit Test, compile and package the jars:
-[source,shell]
-----
-cd ${OF_HOME}
-docker-compose -f ${OF_HOME}/src/main/docker/test-environment/docker-compose.yml up -d
-./gradlew build
-----
-
-== Run OperatorFabric Services using the `run_all.sh` script
-[source,shell]
-----
-cd ${OF_HOME}
-docker-compose -f ${OF_HOME}/config/dev/docker-compose.yml up -d
-bin/run_all.sh start
-----
-
-TIP: See `bin/run_all.sh -h` for details.
-
-== Check services status
-[source,shell]
-----
-cd ${OF_HOME}
-bin/run_all.sh status
-----
-
-== Log into the UI
-
-*_URL:_* localhost:2002/ +
-*_login:_* operator1_fr +
-*_password:_* test
-
-Other users available in development mode are `operator3_fr` and `admin`, both with `test` as password.
-
-WARNING: It might take a little while for the UI to load even after all services are running.
-
-WARNING: Don't forget the *final slash* in the URL or you will get an error, a `404` page.
-
-== Push cards to the feed
-
-You can check that you see cards into the feed by running the following scripts.
-[source,shell]
-----
-./src/test/resources/loadTestConf.sh
-./src/test/resources/send6TestCards.sh
-----
