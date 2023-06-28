@@ -416,31 +416,19 @@ export class UserCardComponent implements OnInit, OnDestroy {
     private setFieldsVisibility() {
         if (this.userCardConfiguration) {
             this.severityVisible =
-                this.userCardConfiguration.severityVisible === undefined
-                    ? true
-                    : this.userCardConfiguration.severityVisible;
+                this.userCardConfiguration.severityVisible ?? true;
             this.startDateVisible =
-                this.userCardConfiguration.startDateVisible === undefined
-                    ? true
-                    : this.userCardConfiguration.startDateVisible;
+                this.userCardConfiguration.startDateVisible ?? true;
             this.endDateVisible =
-                this.userCardConfiguration.endDateVisible === undefined
-                    ? true
-                    : this.userCardConfiguration.endDateVisible;
+                this.userCardConfiguration.endDateVisible ?? true;
             this.lttdVisible =
-                this.userCardConfiguration.lttdVisible === undefined ? false : this.userCardConfiguration.lttdVisible;
+                this.userCardConfiguration.lttdVisible ?? false;
             this.expirationDateVisible =
-                this.userCardConfiguration.expirationDateVisible === undefined
-                    ? false
-                    : this.userCardConfiguration.expirationDateVisible;
+                this.userCardConfiguration.expirationDateVisible ?? false;
             this.recipientVisible =
-                this.userCardConfiguration.recipientVisible === undefined
-                    ? true
-                    : this.userCardConfiguration.recipientVisible;
+                this.userCardConfiguration.recipientVisible ?? true;
             this.recipientForInformationVisible =
-                this.userCardConfiguration.recipientForInformationVisible === undefined
-                    ? false
-                    : this.userCardConfiguration.recipientForInformationVisible;
+                this.userCardConfiguration.recipientForInformationVisible ?? false;
         } else {
             this.severityVisible = true;
             this.startDateVisible = true;
