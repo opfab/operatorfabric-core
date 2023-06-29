@@ -329,7 +329,7 @@ export class MonitoringTableComponent implements OnChanges, OnDestroy {
     export(): void {
         this.exportCancelled = false;
         // if monitoring has a specific configuration
-        if (this.monitoringConfig && this.monitoringConfig.export && this.monitoringConfig.export.fields) {
+        if (this.monitoringConfig.export?.fields) {
             this.jsonToArray = new JsonToArray(this.monitoringConfig.export.fields);
             const modalOptions: NgbModalOptions = {
                 centered: true,

@@ -37,11 +37,11 @@ export class ActivityAreaView {
                 const entities = this.entitiesService.getEntitiesFromIds(user.entities);
                 entities.sort((a, b) => Utilities.compareObj(a.name, b.name));
                 entities.forEach((entity) => {
-                    if (entity && entity.entityAllowedToSendCard) {
+                    if (entity?.entityAllowedToSendCard) {
                         const activityAreaLine = new ActivityAreaLine();
                         activityAreaLine.entityId = entity.id;
                         activityAreaLine.entityName = entity.name;
-                        activityAreaLine.isUserConnected = entitiesConnected && entitiesConnected.includes(entity.id);
+                        activityAreaLine.isUserConnected = entitiesConnected?.includes(entity.id);
                         this.activityAreaPage.lines.push(activityAreaLine);
                     }
                 });

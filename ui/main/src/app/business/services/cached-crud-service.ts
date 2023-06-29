@@ -21,6 +21,6 @@ export abstract class CachedCrudService extends CrudService {
 
     public getNameFromId(id: string): string {
         const found = this.getCachedValues().find(e => e.id === id);
-        return found && found.name ? found.name : id;
+        return found?.name ? found.name : id;
     }
 }

@@ -491,7 +491,7 @@ export class MapComponent implements OnInit, OnDestroy, AfterViewChecked {
     }
 
     private updateGraphChart(chart, data) {
-        if (chart != null && chart.data != null) {
+        if (chart?.data != null) {
             chart.data.datasets.forEach((dataset) => {
                 dataset.data = data;
             });
