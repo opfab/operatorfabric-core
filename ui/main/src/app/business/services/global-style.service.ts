@@ -41,7 +41,7 @@ export class GlobalStyleService {
 
         const settings = this.configService.getConfigValue('settings');
         if (!nightDayMode) {
-            if (settings && settings.styleWhenNightDayModeDesactivated) {
+            if (settings?.styleWhenNightDayModeDesactivated) {
                 this.setStyle(settings.styleWhenNightDayModeDesactivated);
             }
         } else {

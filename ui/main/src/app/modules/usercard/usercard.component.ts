@@ -701,7 +701,7 @@ export class UserCardComponent implements OnInit, OnDestroy {
         if (this.startDateVisible) {
             startDate = this.currentStartDate;
             this.usePublishDateForStartDate = false;
-        } else if (this.specificInformation && this.specificInformation.card.startDate) {
+        } else if (this.specificInformation?.card.startDate) {
             startDate = this.specificInformation.card.startDate;
             this.usePublishDateForStartDate = false;
         }
@@ -712,7 +712,7 @@ export class UserCardComponent implements OnInit, OnDestroy {
         let endDate = null;
         if (this.endDateVisible) endDate = this.currentEndDate;
         else {
-            if (this.specificInformation && this.specificInformation.card.endDate)
+            if (this.specificInformation?.card.endDate)
                 endDate = this.specificInformation.card.endDate;
         }
         return endDate;
@@ -722,7 +722,7 @@ export class UserCardComponent implements OnInit, OnDestroy {
         let lttd = null;
         if (this.lttdVisible) lttd = this.currentLttd;
         else {
-            if (this.specificInformation && this.specificInformation.card.lttd)
+            if (this.specificInformation?.card.lttd)
                 lttd = this.specificInformation.card.lttd;
         }
         return lttd;
@@ -732,7 +732,7 @@ export class UserCardComponent implements OnInit, OnDestroy {
         let expirationDate = null;
         if (this.expirationDateVisible) expirationDate = this.currentExpirationDate;
         else {
-            if (this.specificInformation && this.specificInformation.card.expirationDate)
+            if (this.specificInformation?.card.expirationDate)
                 expirationDate = this.specificInformation.card.expirationDate;
         }
         return expirationDate;
