@@ -443,7 +443,7 @@
       "login": {
         "required": "L'identifiant est obligatoire.",
         "minLength": "L'identifiant doit avoir au moins 2 caractères.",
-        "pattern": "L'identifiant ne peut contenir que les caractères suivants : lettres minuscules, _, -, . ou chiffres.",
+        "pattern": "L'identifiant ne doit contenir aucun espace.",
         "alreadyExisting": "L'identifiant existe déjà."
       },
       "authorizedIPAddresses": {
