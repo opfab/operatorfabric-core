@@ -443,7 +443,7 @@
       "login": {
         "required": "Gebruikersnaam is vereist.",
         "minLength": "Gebruikersnaam moet minimaal 2 tekens bevatten.",
-        "pattern": "Gebruikersnaam mag alleen de volgende tekens bevatten: kleine letters, _, -, . of cijfers.",
+        "pattern": "Gebruikersnaam mag geen spaties bevatten.",
         "alreadyExisting": "Gebruikersnaam bestaat al."
       },
       "authorizedIPAddresses": {

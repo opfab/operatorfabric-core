@@ -443,7 +443,7 @@
       "login": {
         "required": "Login is required.",
         "minLength": "Login should be minimum 2 characters.",
-        "pattern": "Login should only contain the following characters: lowercase letters, _, -, . or digits.",
+        "pattern": "Login should not contain any whitespace character.",
         "alreadyExisting": "Login already existing."
       },
       "authorizedIPAddresses": {
