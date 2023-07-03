@@ -54,8 +54,8 @@ export class FeedFilterComponent implements OnInit, OnDestroy {
         notAckControl: FormControl<boolean | null>;
     }>;
     timeFilterForm: FormGroup<{
-        dateTimeFrom: FormControl<any | null>;
-        dateTimeTo: FormControl<any | null>;
+        dateTimeFrom: FormControl<any>;
+        dateTimeTo: FormControl<any>;
     }>;
     responseFilterForm: FormGroup<{
         responseControl: FormControl<boolean | null>;
@@ -124,8 +124,8 @@ export class FeedFilterComponent implements OnInit, OnDestroy {
 
     private createDateTimeForm() {
         return new FormGroup({
-            dateTimeFrom: new FormControl<any | null>(''),
-            dateTimeTo: new FormControl<any | null>('')
+            dateTimeFrom: new FormControl<any>(''),
+            dateTimeTo: new FormControl<any>('')
         });
     }
 

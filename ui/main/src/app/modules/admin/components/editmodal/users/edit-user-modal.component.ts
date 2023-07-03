@@ -36,7 +36,7 @@ export class EditUserModalComponent implements OnInit {
         lastName: FormControl<string | null>,
         groups: FormControl<[] | null>,
         entities: FormControl<[] | null>,
-        authorizedIPAddresses: FormControl<any | null>
+        authorizedIPAddresses: FormControl<any>
     }>;
 
     entitiesMultiSelectOptions: Array<MultiSelectOption> = [];
