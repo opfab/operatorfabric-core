@@ -80,7 +80,7 @@ export class DateTimeNgb {
 
     formatDateTime() {
         let result = '';
-        const {date, time} = this;
+        const {date} = this;
         // if date is present
         if (date) {
             result = `${this.format()}T${this.formatTime()}`;
