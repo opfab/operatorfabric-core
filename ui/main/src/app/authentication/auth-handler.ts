@@ -94,7 +94,7 @@ export abstract class AuthHandler {
     private decodeToken(token: string): any {
         try {
             return jwt_decode(token);
-        } catch (Error) {
+        } catch (err) {
             return null;
         }
     }
