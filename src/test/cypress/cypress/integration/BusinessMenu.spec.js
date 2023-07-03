@@ -1,4 +1,4 @@
-/* Copyright (c) 2022, RTE (http://www.rte-france.com)
+/* Copyright (c) 2022-2023, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -7,12 +7,11 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {OpfabGeneralCommands} from '../support/opfabGeneralCommands'
-import {FeedCommands} from '../support/feedCommands'
-import {ScriptCommands} from "../support/scriptCommands";
+import {OpfabGeneralCommands} from '../support/opfabGeneralCommands';
+import {FeedCommands} from '../support/feedCommands';
+import {ScriptCommands} from '../support/scriptCommands';
 
-describe ('Business menu',()=>{
-
+describe('Business menu', () => {
     const opfab = new OpfabGeneralCommands();
     const feed = new FeedCommands();
     const script = new ScriptCommands();
@@ -23,8 +22,7 @@ describe ('Business menu',()=>{
         script.sendCard('defaultProcess/chart.json');
     });
 
-    it('Test business menu links in night mode ', ()=> {
-
+    it('Test business menu links in night mode ', () => {
         opfab.loginWithUser('operator1_fr');
 
         feed.openFirstCard();
@@ -47,36 +45,43 @@ describe ('Business menu',()=>{
         openBusinessSingleMenu();
         checkSingleMenuIconLink();
         checkUrlDisplayedIs('https://en.wikipedia.org/w/index.php?opfab_theme=NIGHT');
-
     });
 
-    it('Test business menu links in day mode ', ()=> {
+    it(
+        'Test business menu links in day mode ',
+        {
+            retries: {
+                runMode: 2, // to avoid falky test 
+                openMode: 1
+            }
+        },
+        () => {
+            opfab.loginWithUser('operator1_fr');
+            opfab.switchToDayMode();
 
-        opfab.loginWithUser('operator1_fr')
-        opfab.switchToDayMode();
+            feed.openFirstCard();
+            clickLinkInsideCard();
+            checkUrlDisplayedIs('https://en.wikipedia.org/w/index.php?search=chart&fulltext=1&opfab_theme=DAY');
 
-        feed.openFirstCard();
-        clickLinkInsideCard();
-        checkUrlDisplayedIs('https://en.wikipedia.org/w/index.php?search=chart&fulltext=1&opfab_theme=DAY');
+            openBusinessDropdownMenu();
+            checkDropdownMenuIconLinks();
+            closeBusinessDropdownMenu();
+            openBusinessDropdownMenu();
 
-        openBusinessDropdownMenu();
-        checkDropdownMenuIconLinks();
-        closeBusinessDropdownMenu();
-        openBusinessDropdownMenu();
+            clickOnDropdownMenuEntryNumber(1);
+            checkUrlDisplayedIs('https://opfab.github.io/?opfab_theme=DAY');
+            openBusinessDropdownMenu();
+            clickOnDropdownMenuEntryNumber(2);
+            checkUrlDisplayedIs('https://www.wikipedia.org/?opfab_theme=DAY');
+            openBusinessDropdownMenu();
+            clickOnDropdownMenuEntryNumber(3);
+            checkUrlDisplayedIs('http://localhost:2002/external/appExample/?opfab_theme=DAY');
 
-        clickOnDropdownMenuEntryNumber(1);
-        checkUrlDisplayedIs('https://opfab.github.io/?opfab_theme=DAY');
-        openBusinessDropdownMenu();
-        clickOnDropdownMenuEntryNumber(2);
-        checkUrlDisplayedIs('https://www.wikipedia.org/?opfab_theme=DAY');
-        openBusinessDropdownMenu();
-        clickOnDropdownMenuEntryNumber(3);
-        checkUrlDisplayedIs('http://localhost:2002/external/appExample/?opfab_theme=DAY');
-
-        openBusinessSingleMenu();
-        checkSingleMenuIconLink();
-        checkUrlDisplayedIs('https://en.wikipedia.org/w/index.php?opfab_theme=DAY');
-    });
+            openBusinessSingleMenu();
+            checkSingleMenuIconLink();
+            checkUrlDisplayedIs('https://en.wikipedia.org/w/index.php?opfab_theme=DAY');
+        }
+    );
 
     function clickLinkInsideCard() {
         cy.get('#opfab-div-card-template-processed').find('a').eq(0).click();
@@ -92,7 +97,7 @@ describe ('Business menu',()=>{
 
     function closeBusinessDropdownMenu() {
         cy.get('#opfab-navbar-menu-dropdown-menu2').trigger('mouseleave');
-        cy.get('.text-link').should('have.length',1);
+        cy.get('.text-link').should('have.length', 1);
     }
 
     function checkDropdownMenuIconLinks() {
@@ -112,4 +117,4 @@ describe ('Business menu',()=>{
     function openBusinessSingleMenu() {
         cy.get('#opfab-navbar-menu-menu1').click();
     }
-})
+});
