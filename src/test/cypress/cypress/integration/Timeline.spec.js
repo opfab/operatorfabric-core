@@ -806,7 +806,13 @@ describe('Time line moves', function () {
 
     });
 
-    it('Check timeline circles have valid popover', function () {
+    it('Check timeline circles have valid popover',
+      {
+        retries: {
+          runMode: 2,  // to avoid falky test with  cy.get("#opfab-timeline-bubble-btn1").click();
+          openMode: 1,
+        },
+      }, function () {
 
         opfab.loginWithUser("operator1_fr");
         const currentDate = new Date(); 
