@@ -95,6 +95,7 @@ export abstract class AuthHandler {
         try {
             return jwt_decode(token);
         } catch (err) {
+            this.logger.error(" Error in token decoding " + err);
             return null;
         }
     }
