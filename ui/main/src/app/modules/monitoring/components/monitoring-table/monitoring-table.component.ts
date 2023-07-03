@@ -304,7 +304,7 @@ export class MonitoringTableComponent implements OnChanges, OnDestroy {
         this.exportMonitoringData = [];
 
         this.gridApi.rowModel.rowsToDisplay.forEach((line) => {
-            if (typeof line !== undefined) {
+            if (line) {
                 const responses = this.getResponses(line.data.cardId, line.data.entitiesResponses);
                 this.exportMonitoringData.push({
                     [this.timeColumnName]: line.data.time,

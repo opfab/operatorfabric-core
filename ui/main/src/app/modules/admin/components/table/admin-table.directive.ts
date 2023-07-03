@@ -323,7 +323,7 @@ export abstract class AdminTableDirective implements OnInit, OnDestroy {
         const exportData = [];
 
         this.gridApi.rowModel.rowsToDisplay.forEach((line) => {
-            if (typeof line !== undefined) {
+            if (line) {
                 const item = {};
                 this.fields.forEach((field) => {
                     if (Array.isArray(line.data[field.name]))
