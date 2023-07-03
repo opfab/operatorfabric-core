@@ -305,7 +305,7 @@ export class ArchivesComponent implements OnDestroy, OnInit {
                 const processGroupColumnName = this.translateColumn('shared.result.processGroup');
 
                 lines.forEach((card: LightCard) => {
-                    if (typeof card !== undefined) {
+                    if (card) {
                         // TO DO translation for old process should be done, but loading local arrives too late, solution to find
                         if (this.filtersTemplate.isProcessGroupFilterVisible())
                             exportArchiveData.push({
