@@ -294,7 +294,7 @@ export class HandlebarsService {
             for (let index = 0; index < arguments.length - 1; index++) {
                 args.push(arguments[index]);
             }
-            const context: any | any[] = args[0];
+            const context: any = args[0];
             const sortKey = args[1];
             let arrayToSort: any[];
             let isObject: boolean;
