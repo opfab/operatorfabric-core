@@ -25,12 +25,12 @@ app.disable("x-powered-by");
 app.use(bodyParser.json());
 
 app.use(express.static("public"));
-const adminPort = config.get('adminPort');
+const adminPort = config.get('cardsExternalDiffusion.adminPort');
 
 
-const activeOnStartUp = config.get('activeOnStartup');
+const activeOnStartUp = config.get('cardsExternalDiffusion.activeOnStartup');
 
-const configService = new ConfigService(config.get('defaultConfig'), 'config/serviceConfig.json', logger);
+const configService = new ConfigService(config.get('cardsExternalDiffusion.defaultConfig'), 'config/serviceConfig.json', logger);
 
 
 
@@ -42,8 +42,8 @@ const authenticationService = new AuthenticationService()
 const mailService = new SendMailService(config.get('mail'));
     
 const opfabServicesInterface = new OpfabServicesInterface()
-    .setLogin(config.get('opfab.login'))
-    .setPassword(config.get('opfab.password'))
+    .setLogin(config.get('cardsExternalDiffusion.opfab.login'))
+    .setPassword(config.get('cardsExternalDiffusion.opfab.password'))
     .setOpfabUrl(config.get('opfab.url'))
     .setOpfabGetUsersUrl(config.get('opfab.usersUrl'))
     .setOpfabGetUsersConnectedUrl(config.get('opfab.connectedUsersUrl'))

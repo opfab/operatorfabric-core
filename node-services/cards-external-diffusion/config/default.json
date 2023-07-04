@@ -20,8 +20,6 @@
     "logFile": "%DATE%.log",
     "logLevel": "info"
   },
-  "adminPort" : 3100,
-  "activeOnStartup" : true,
   "mail" : {
     "host": "localhost",
     "port": 1025,
@@ -30,13 +28,22 @@
         "pass": "guest"
     }
   },
-  "defaultConfig": {
-    "mailFrom" : "opfab@localhost.it",
-    "subjectPrefix" : "Opfab card received ",
-    "bodyPrefix" : "You received a card in opfab : ",
-    "windowInSecondsForCardSearch": 360,
-    "secondsAfterPublicationToConsiderCardAsNotRead" : 60,
-    "checkPeriodInSeconds" : 10
+  "cardsExternalDiffusion": {
+    "adminPort" : 3100,
+    "activeOnStartup" : true,
+    "opfab": {
+      "login": "admin",
+      "password": "test"
+    },
+    "defaultConfig": {
+      "mailFrom" : "opfab@localhost.it",
+      "subjectPrefix" : "Opfab card received ",
+      "bodyPrefix" : "You received a card in opfab : ",
+      "windowInSecondsForCardSearch": 360,
+      "secondsAfterPublicationToConsiderCardAsNotRead" : 60,
+      "checkPeriodInSeconds" : 10
+    }
+  
   }
 
 }

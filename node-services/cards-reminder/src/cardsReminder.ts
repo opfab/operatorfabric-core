@@ -17,7 +17,6 @@ import AuthenticationService from './domain/client-side/authenticationService';
 import ReminderService from './domain/application/reminderService';
 import OpfabServicesInterface from './domain/server-side/opfabServicesInterface';
 import CardsReminderService from './domain/client-side/cardsRemiderService';
-import ConfigService from './domain/client-side/configService';
 import {RRuleReminderService} from './domain/application/rruleReminderService';
 import RemindDatabaseService from './domain/server-side/remindDatabaseService';
 
@@ -27,12 +26,10 @@ app.disable("x-powered-by");
 app.use(bodyParser.json());
 
 app.use(express.static("public"));
-const adminPort = config.get('adminPort');
+const adminPort = config.get('cardsReminder.adminPort');
 
 
-const activeOnStartUp = config.get('activeOnStartup');
-
-const configService = new ConfigService(config.get('defaultConfig'), 'config/serviceConfig.json', logger);
+const activeOnStartUp = config.get('cardsReminder.activeOnStartup');
 
 const authenticationService = new AuthenticationService()
     .setTokenExpireClaim(config.get('opfab.tokenExpireClaim'))
@@ -55,8 +52,8 @@ const rruleReminderService = new RRuleReminderService()
     .setDatabaseService(rrRuleRemindDatabaseService);
 
 const opfabServicesInterface = new OpfabServicesInterface()
-    .setLogin(config.get('opfab.login'))
-    .setPassword(config.get('opfab.password'))
+    .setLogin(config.get('cardsReminder.opfab.login'))
+    .setPassword(config.get('cardsReminder.opfab.password'))
     .setOpfabCardRemindUrl(config.get('opfab.cardReminderUrl'))
     .setOpfabGetTokenUrl(config.get('opfab.getTokenUrl'))
     .setAuthenticationService(authenticationService)
@@ -65,13 +62,7 @@ const opfabServicesInterface = new OpfabServicesInterface()
     .addListener(rruleReminderService)
     .addListener(reminderService);
 
-
-const serviceConfig = configService.getConfig();
-
-
-
-const cardsReminderService = new CardsReminderService(opfabServicesInterface, rruleReminderService, reminderService, serviceConfig, logger);
-
+const cardsReminderService = new CardsReminderService(opfabServicesInterface, rruleReminderService, reminderService, config.get('cardsReminder.checkPeriodInSeconds'), logger);
 
 
 app.get('/status', (req, res) => {
@@ -101,15 +92,6 @@ app.get('/stop', (req, res) => {
         logger.info('Stop card reminder service asked');
         cardsReminderService.stop();
         res.send('Stop service');
-    }
-
-});
-
-app.get('/config', (req, res) => {
-    if (!authenticationService.authorize(req))
-        res.status(403).send();
-    else {
-        res.send(configService.getConfig());
     }
 
 });

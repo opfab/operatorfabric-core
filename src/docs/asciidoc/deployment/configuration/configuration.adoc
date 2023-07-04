@@ -154,69 +154,51 @@ The external devices service can be configured with the following properties:
 |operatorfabric.externaldevices.watchdog.signalId|0|no|Id the signal the external devices are expecting as watchdog
 |===
 
-== Mail notification service configuration
+== Node services configuration
 
-The mail notification service configuration file is located in node-services/cards-external-diffusion/conf folder.
-The are 2 configuration files: one for running the service into a docker container ('default-docker.json') and one to run the service from command line (default.json). 
-
-The mail notification service can be configured with the following properties:
+The configuration of node services (cards-external-diffusion and cards-reminder) is located in config/docker folder.
+The 'node-services.json' configuration file contains parameters common to all the node services and a dedicated section for each service.
+Node services can be configured with the following properties:
 
 |===
 |name|default|mandatory?|Description
-|adminPort||yes|Listen port
-|activeOnStartup||yes|Flag to start the notification service on startup
-|opfab.login||yes|user account used to call Opfab services
-|opfab.password||yes|user password to call Opfab services
 |opfab.url||yes| Opfab URL
 |opfab.connectedUsersUrl||yes|Service URL to get the list of users currently connected to Opfab
 |opfab.cardsUrl||yes|Cards consultation service URL
 |opfab.usersUrl||yes|Users service URL
+|opfab.cardReminderUrl||yes| Opfab card resetReadAndAcks endpoint URL
 |opfab.getTokenUrl||yes|Authentication service URL
 |opfab.tokenExpireClaim||yes|Token expiration property
-|rabbitmq.host||yes|
-|rabbitmq.port||yes|
-|rabbitmq.username||yes|
-|rabbitmq.password||yes|
-|logConfig.logFolder||yes|
-|logConfig.logFile||yes|
-|logConfig.logLevel||yes|
+|rabbitmq.host||yes|RabbitMQ host address
+|rabbitmq.port||yes|RabbitMQ listen port
+|rabbitmq.username||yes|RabbitMQ username
+|rabbitmq.password||yes|RabbitMQ password
+|logConfig.logFolder||yes|Log file folder
+|logConfig.logFile||yes|Log file name
+|logConfig.logLevel||yes|Default log level
 |mail.host||yes|Mail server host
-|mail.port||yes|Mail server host
+|mail.port||yes|Mail server port
 |mail.auth.user||yes|Mail server authentication user
 |mail.auth.pass||yes|Mail server authentication password
-|defaultConfig.mailFrom||yes|Mail from address
-|defaultConfig.subjectPrefix||yes|Mail subject prefix
-|defaultConfig.bodyPrefix|||Mail body prefix
-|defaultConfig.windowInSecondsForCardSearch|||Max time interval used to query new cards (in seconds)
-|defaultConfig.secondsAfterPublicationToConsiderCardAsNotRead|||Time period after card publication before sending mail notification
-|defaultConfig.checkPeriodInSeconds|||Time interval between consecutive checks
+|mongodb.database||yes|MongoDB database name
+|mongodb.uri||yes|MongoDB connection URI
+|cardsExternalDiffusion.adminPort||yes|Listen port
+|cardsExternalDiffusion.activeOnStartup||yes|Flag to start the notification service on startup
+|cardsExternalDiffusion.opfab.login||yes|user account used to call Opfab services
+|cardsExternalDiffusion.opfab.password||yes|user password to call Opfab services
+|cardsExternalDiffusion.defaultConfig.mailFrom||yes|Mail from address
+|cardsExternalDiffusion.defaultConfig.subjectPrefix||yes|Mail subject prefix
+|cardsExternalDiffusion.defaultConfig.bodyPrefix|||Mail body prefix
+|cardsExternalDiffusion.defaultConfig.windowInSecondsForCardSearch|||Max time interval used to query new cards (in seconds)
+|cardsExternalDiffusion.defaultConfig.secondsAfterPublicationToConsiderCardAsNotRead|||Time period after card publication before sending mail notification
+|cardsExternalDiffusion.defaultConfig.checkPeriodInSeconds|||Time interval between consecutive checks
+|cardsReminder.adminPort||yes|Cards reminder service Listen port
+|cardsReminder.activeOnStartup||yes|Flag to start the cards reminder service on startup
+|cardsReminder.checkPeriodInSeconds|||Cards remonder time interval between consecutive checks
 |===
-The parameters in "defaultConfig" section can be modified at runtime by sending an http POST request to the `/config` API with a JSON payload containing the config parameters to be changed.
 
-== Cards reminder service configuration
+The parameters in "cardsExternalDiffusion.defaultConfig" section of cards externa diffusion can be modified at runtime by sending an http POST request to the `/config` API with a JSON payload containing the config parameters to be changed.
 
-The cards reminder service configuration file is located in node-services/cards-reminder/conf folder.
-The 'default-docker.json' file is an example that can be used to configure the environment by loading it into the docker container (erasing the existing one).
-The service can be configured with the following properties:
-
-|===
-|name|default|mandatory?|Description
-|adminPort||yes|Listen port
-|activeOnStartup||yes|Flag to start the notification service on startup
-|opfab.login||yes|user account used to call Opfab services
-|opfab.password||yes|user password to call Opfab services
-|opfab.cardReminderUrl||yes| Opfab card resetReadAndAcks endpoint URL
-|rabbitmq.host||yes|
-|rabbitmq.port||yes|
-|rabbitmq.username||yes|
-|rabbitmq.password||yes|
-|mongodb.database||yes|
-|mongodb.uri||yes|
-|logConfig.logFolder||yes|
-|logConfig.logFile||yes|
-|logConfig.logLevel||yes|
-|defaultConfig.checkPeriodInSeconds|||Time interval between consecutive checks
-|===
 
 include::web-ui_configuration.adoc[leveloffset=+1]
 
