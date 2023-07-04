@@ -21,9 +21,9 @@ export default class CardsReminderService {
     private logger: any;
 
 
-    constructor(opfabServicesInterface: OpfabServicesInterface, rruleReminderService: RRuleReminderService, reminderService: ReminderService, serviceConfig: any, logger: any) {
+    constructor(opfabServicesInterface: OpfabServicesInterface, rruleReminderService: RRuleReminderService, reminderService: ReminderService, checkPeriodInSeconds: number, logger: any) {
         this.logger = logger;
-        this.checkPeriodInSeconds = serviceConfig.checkPeriodInSeconds;
+        this.checkPeriodInSeconds = checkPeriodInSeconds;
 
         this.cardsReminderControl = new CardsReminderControl()
             .setOpfabServicesInterface(opfabServicesInterface)

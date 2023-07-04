@@ -1,7 +1,5 @@
 {
   "opfab": {
-    "login": "opfab_internal_account",
-    "password": "test",
     "cardReminderUrl": "http://cards-publication:8080/cards/resetReadAndAcks",
     "getTokenUrl": "http://web-ui/auth/token",
     "tokenExpireClaim": "exp"
@@ -19,9 +17,14 @@
   "logConfig": {
     "logLevel": "info"
   },
-  "adminPort" : 3200,
-  "activeOnStartup" : true,
-  "defaultConfig": {
-    "checkPeriodInSeconds" : 5
+  "cardsReminder": {
+    "adminPort" : 3200,
+    "activeOnStartup" : true,
+    "checkPeriodInSeconds" : 5,
+    "opfab": {
+      "login": "opfab_internal_account",
+      "password": "test"
+    }
   }
+
 }

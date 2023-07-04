@@ -143,6 +143,10 @@ services:
     user: ${USER_ID}:${USER_GID}
     ports:
       - "3100:3100"
+    environment:
+      - NODE_ENV=docker
+    volumes:
+      - "./node-services.json:/usr/app/config/docker.json"
   cards-reminder:
     container_name: cards-reminder
     image: "lfeoperatorfabric/of-cards-reminder:SNAPSHOT"
@@ -154,7 +158,9 @@ services:
       - "3200:3200"
     environment:
       - TZ=Europe/Paris
-
+      - NODE_ENV=docker
+    volumes:
+      - "./node-services.json:/usr/app/config/docker.json"
 # Uncomment the line below to customize sounds for notification
 #     - "./custom-sounds:/usr/share/nginx/html/assets/sounds"
   external-devices:
