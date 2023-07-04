@@ -8,7 +8,7 @@
  */
 
 import SendMailService from '../server-side/sendMailService';
-import GetResponse from '../server-side/getResponse';
+import GetResponse from '../../common/server-side/getResponse';
 import OpfabServicesInterface from '../server-side/opfabServicesInterface';
 import CardsRoutingUtilities from './cardRoutingUtilities';
 import ConfigDTO from '../client-side/configDTO';

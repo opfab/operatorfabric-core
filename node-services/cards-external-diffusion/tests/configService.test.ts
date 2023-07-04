@@ -8,7 +8,7 @@
  */
 
 import 'jest';
-import logger from '../src/domain/server-side/logger';
+import logger from '../src/common/server-side/logger';
 import ConfigService from '../src/domain/client-side/configService';
 import ConfigDTO from '../src/domain/client-side/configDTO';
 

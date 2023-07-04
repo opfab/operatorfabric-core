@@ -8,7 +8,7 @@
  */
 
 
-import {EventListener} from '../server-side/eventListener';
+import {EventListener} from '../../common/server-side/eventListener';
 import {getNextTimeForRepeating} from '../application/reminderUtils';
 import {Card} from '../model/card.model';
 import {Reminder} from '../model/reminder.model';

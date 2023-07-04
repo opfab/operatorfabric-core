@@ -7,7 +7,7 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {EventListener} from '../server-side/eventListener';
+import {EventListener} from '../../common/server-side/eventListener';
 import {getNextTimeForRepeating} from './rrule-reminderUtils';
 import {Card} from '../model/card.model';
 import {Reminder} from '../model/reminder.model';

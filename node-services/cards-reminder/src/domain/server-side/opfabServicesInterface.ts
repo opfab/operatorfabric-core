@@ -9,11 +9,11 @@
 
 import axios from 'axios';
 
-import GetResponse from './getResponse';
-import AuthenticationService from '../client-side/authenticationService';
-import EventBus from './eventBus';
-import {EventListener} from './eventListener';
+import GetResponse from '../../common/server-side/getResponse';
 
+import EventBus from '../../common/server-side/eventBus';
+import {EventListener} from '../../common/server-side/eventListener';
+import AuthenticationService from '../../common/client-side/authenticationService'
 
 export default class OpfabServicesInterface {
 
@@ -37,7 +37,8 @@ export default class OpfabServicesInterface {
         this.listener.setHost(eventBusConfig.host)
             .setPort(eventBusConfig.port)
             .setUsername(eventBusConfig.username)
-            .setPassword(eventBusConfig.password);
+            .setPassword(eventBusConfig.password)
+            .setQueue("card","reminder.card",{ durable: true, autoDelete: false })
         return this;
     }
 

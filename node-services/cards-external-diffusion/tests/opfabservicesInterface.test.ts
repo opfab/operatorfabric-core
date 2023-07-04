@@ -9,10 +9,12 @@
 
 import 'jest';
 import sinon from 'sinon';
-import GetResponse from '../src/domain/server-side/getResponse';
+import GetResponse from '../src/common/server-side/getResponse';
 import OpfabServicesInterface from '../src/domain/server-side/opfabServicesInterface';
-import logger from '../src/domain/server-side/logger';
-import AuthenticationService from '../src/domain/client-side/authenticationService';
+import logger from '../src/common/server-side/logger';
+import AuthenticationService from '../src/common/client-side/authenticationService';
+
+
 
 function getOpfabServicesInterface() {
     return new OpfabServicesInterface()
