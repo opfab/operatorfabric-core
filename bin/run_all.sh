@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# Copyright (c) 2018-2022, RTE (http://www.rte-france.com)
+# Copyright (c) 2018-2023, RTE (http://www.rte-france.com)
 # See AUTHORS.txt
 # This Source Code Form is subject to the terms of the Mozilla Public
 # License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -108,7 +108,7 @@ startProject(){
       bootstrapLocation=${OF_HOME}/$3/src/main/resources/bootstrap-dev.yml
       debugOptions=-agentlib:jdwp=transport=dt_socket,address=$2,server=y,suspend=n
 
-      applicationOptions="--spring.profiles.active=dev --spring.config.location=classpath:/application.yml,file:${OF_HOME}/config/dev/ --spring.config.name=common,$4"
+      applicationOptions="--spring.profiles.active=dev --spring.config.location=classpath:/application.yml,file:${OF_HOME}/config/docker/,file:${OF_HOME}/config/dev/ --spring.config.name=common,$4"
       echo "applicationOptions: $applicationOptions"
       echo "pid file: $projectBuildPath/PIDFILE"
       if [ -f $projectBuildPath/PIDFILE ] ; then

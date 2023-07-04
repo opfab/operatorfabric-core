@@ -171,3 +171,35 @@ automate it, you can do it directly in the database via the following request :
 == Cards reminder
 Cards reminder logic has been moved from front-end to back-end. The reminder logic is handled by the new "cards-reminder" service.
 You must adapt the configuration to your environment by using the configuration file config/docker/node-services.json and adapt it to your deployment context.
+
+
+== Port mapping
+
+In release 4.0, the listening port is not any more 8080 for services in docker, it is now identical to the default port mapping outside the docker. 
+
+So you need to modify your port mapping to migrate replacing the 8080 legacy port by the new port :
+
+|===
+|2100 |businessconfig
+|2102 |cards-publication
+|2103 |users
+|2104 |cards-consultation
+|2105 |external-devices
+|===
+
+Depending on your production configuration, you may need as well to change the ports in your nginx conf file.
+
+If you want to keep the old port 8080, you can change it via the server.port parameter in the yml config files of the services.
+
+== Configuration
+
+
+The configuration has been simplified, you have now default parameters you do not need to set anymore :
+
+ - in all yml file you do not need to set anymore spring.application.name
+ - a default kafka configuration is provided, you only have to add "kafka.consumer.group-id : opfab-command" to enable kafka
+ - a default rabbit configuration is provided
+ - default value are provided for "operatorfabric.servicesUrls.users" and "operatorfabric.servicesUrls.businessconfig"
+ - "data.mongodb.database" is not to be set anymore but you still need to set "data.mongodb.uri"
+ - you still need to set "management.endpoints.web.exposure.include: '*'" if you want to monitor opfab via prometheus
+ - operatorfabric.businessconfig.storage.path is set by default to "/businessconfig-storage"

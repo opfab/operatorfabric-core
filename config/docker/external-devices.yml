@@ -1,6 +1,7 @@
-spring:
-  application:
-    name: external-devices
+#  POPULATE THE EXTERNAL DATABASE ON INIT
+# !!!! WARNING: VALUES SHOULD BE CHANGED FOR PRODUCTION MODE !!!!
+#
+
 operatorfabric:
   externaldevices:
     watchdog:

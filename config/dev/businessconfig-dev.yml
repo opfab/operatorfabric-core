@@ -1,8 +1,4 @@
-server:
-  port: 2100
-spring:
-  application:
-    name: businessconfig
+# This file contains only parameters that need to be overridden from the docker configuration
 
 operatorfabric.businessconfig:
   storage:

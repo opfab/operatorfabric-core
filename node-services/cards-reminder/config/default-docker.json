@@ -1,6 +1,6 @@
 {
   "opfab": {
-    "cardReminderUrl": "http://cards-publication:8080/cards/resetReadAndAcks",
+    "cardReminderUrl": "http://cards-publication:2102/cards/resetReadAndAcks",
     "getTokenUrl": "http://web-ui/auth/token",
     "tokenExpireClaim": "exp"
   },

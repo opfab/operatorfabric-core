@@ -1,4 +1,0 @@
-spring:
-  application:
-    name: dummy-modbus-device
-logging.level.org.opfab: debug

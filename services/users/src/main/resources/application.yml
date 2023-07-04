@@ -1,6 +1,18 @@
+server:
+  port : 2103
+  forward-headers-strategy: framework # Needed for IP control feature
 spring:
   application:
     name: users
   data:
     mongodb:
       database: operator-fabric
+
+
+# default values for docker mode 
+  rabbitmq:
+    host: rabbitmq
+    port: 5672
+    username: guest
+    password: guest
+

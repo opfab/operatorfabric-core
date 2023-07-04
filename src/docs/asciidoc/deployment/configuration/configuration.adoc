@@ -14,78 +14,55 @@
 
 = Configuration
 
-OperatorFabric has multiple services to configure. 
+The configuration is divided into two parts, the configuration of the business services and the configuration of the UI. 
 
-See the
-ifdef::single-page-doc[<<architecture, architecture documentation>>]
-ifndef::single-page-doc[<</documentation/current/architecture/index.adoc#architecture, architecture documentation>>]
-for more information on the different services.
+Opfab comes with a default embedded configuration, but certain parameters need to be provided and configured.
 
-All services are SpringBoot applications and use jetty as an embedded servlet container. As such, they share some common
-configuration which is described in the following documentation:
-
- * link:{springboot_doc}/reference/htmlsingle/[Springboot documentation]
- * link:{springboot_doc}/reference/htmlsingle/#boot-features-external-config[Springboot external configuration]
- * link:{springboot_doc}/reference/htmlsingle/#common-application-properties[Common application properties from Springboot documentation]
-
-Configuration is centralized in the *config* directory, the *dev* subdirectory is specific to development environments
-while the *docker* subdirectory is a specific configuration meant for use in a full docker environment.
+The configuration is centralized in the *config* directory of the GitHub repository. The dev subdirectory contains confi
+gurations specific to development environments, while the *docker* subdirectory contains a specific configuration meant for use in a full docker environment.
 
 == Business service configuration
-
-=== Specify an external configuration
-
-When starting docker in the full docker environment an external environment file could be provided like:
-
-----
-cd ./config/docker
-./startOpfab.sh ~/config/local.env
-----
-In the provided environment file the Spring active profiles can be set.
-
-----
-SPRING_PROFILES_ACTIVE=docker,local
-----
-This way the configuration file 'cards-publication-local.yml' can be provided in the same configuration directory and can be read by SpringBoot
 
 
 === Shared service configuration
 
 The configuration shared by all services is in a yaml file, you can find an example with the file
-/config/docker/common-docker.yml.
-In this file you will find, among others, the parameters below :
+/config/docker/common.yml.
+
+==== Mongo configuration
+
+We only use URI configuration for mongo through the usage of the ```spring.data.mongodb.uris```,
+it allows us to share the same configuration behavior for simple or cluster
+configuration and with both spring classic and reactive mongo configuration.
+See link:{mongo_doc}connection-string/[mongo connection string] for the complete URI syntax.
+
+This configuration is mandatory (no default configuration is provided).
+
+==== Optional configuration values 
 
 |===
-|name|default|mandatory?|Description
+|name|default|Description
 
 
-|operatorfabric.servicesUrls.users||yes|Indicates where the Users service can we reached (to get information about the current user).
-|operatorfabric.userActionLogActivated|yes|no|Indicates if the user action log feature is enabled or not.
-
+|operatorfabric.servicesUrls.users|users:2103|Indicates where the Users service can be reached from the other services.
+|operatorfabric.servicesUrls.businessconfig|businessconfig:2100|Indicates where the Business service can be reached from the other services.
+|operatorfabric.userActionLogActivated|yes|Indicates whether the user action log feature is enabled or not.
 |===
 
 === Service specific configurations
 
-Each service has a specific yaml configuration file. It should a least contain the name of the service:
+Each service can have a specific yaml configuration file that can override the default configuration
 
-[source, yaml]
-----
-spring:
-  application:
-    name: businessconfig
-----
-
-Examples of configuration of each service can be found either under config/docker or config/dev depending on
-the type of deployment you're looking for.
+Examples of configuration of each service can be found under config/docker or config/dev . 
 
 ==== Businessconfig service
 
 The businessconfig service has this specific property : 
 
 |===
-|name|default|mandatory?|Description
+|name|default|Description
 
-|operatorfabric.businessconfig.storage.path|null|no|File path to data storage folder
+|operatorfabric.businessconfig.storage.path|/businessconfig-storage|File path to data storage folder
 
 |===
 
@@ -95,143 +72,41 @@ The businessconfig service has this specific property :
 The user service has these specific properties :
 
 |===
-|name|default|mandatory?|Description
+|name|default|Description
 
-|operatorfabric.users.default.users|null|no| Array of user objects to create upon startup if they don't exist
-|operatorfabric.users.default.user-settings|null|no| Array of user settings objects to create upon startup if they don't exist
-|operatorfabric.users.default.groups|null|no| Array of group objects to create upon startup if they don't exist
-|operatorfabric.users.default.entities|null|no| Array of entity objects to create upon startup if they don't exist
-|daysBeforeLogExpiration|61|no| Duration past which user action logs get automatically deleted
+|operatorfabric.users.default.users|null| Array of user objects to create upon startup if they don't exist
+|operatorfabric.users.default.user-settings|null| Array of user settings objects to create upon startup if they don't exist
+|operatorfabric.users.default.groups|null| Array of group objects to create upon startup if they don't exist
+|operatorfabric.users.default.entities|null| Array of entity objects to create upon startup if they don't exist
+|daysBeforeLogExpiration|61| Duration beyond which user action logs get automatically deleted
 
 |===
 
 [[cards-pub-conf]]
 ==== Cards-publication service
 
-The cards-publication service has these specific properties :
+The cards publication service has these specific properties :
 
 |===
-|name|default|mandatory?|Description
+|name|default|Description
 
-|checkAuthenticationForCardSending|true|no|If false, OperatorFabric will not require user authentication to send or delete a card via endpoint /cards (it does not concern user cards which always need authentication). Be careful when setting the value to false, nginx conf must be adapted for security reasons (see security warning in link:https://github.com/opfab/operatorfabric-core/blob/master/config/docker/nginx.conf[the reference nginx.conf])
-|authorizeToSendCardWithInvalidProcessState|false|no|If true, OperatorFabric will allow to publish a card referring a not existent process or state 
-|checkPerimeterForCardSending|true|no|If true, OperatorFabric will check user perimeter for card sending via endpoint /cards (it does not concern user cards which are always controlled).
-|spring.kafka.consumer.group-id |null|no| If set, support for receiving cards via Kafka is enabled
+|checkAuthenticationForCardSending|true|If false, OperatorFabric will not require user authentication to send or delete a card via endpoint /cards (it does not concern user cards which always need authentication). Be careful when setting the value to false, nginx conf must be adapted for security reasons (see security warning in link:https://github.com/opfab/operatorfabric-core/blob/master/config/docker/nginx.conf[the reference nginx.conf])
+|authorizeToSendCardWithInvalidProcessState|false|If true, OperatorFabric will allow to publish a card referring a not existent process or state 
+|checkPerimeterForCardSending|true|If true, OperatorFabric will check user perimeter for card sending via endpoint /cards (it does not concern user cards which are always controlled).
+|spring.kafka.consumer.group-id |null| If set, support for receiving cards via Kafka is enabled
 |spring.deserializer.value.delegate.class|io.confluent.kafka.serializers.
-KafkaAvroDeserializer|yes| Deserializer used to convert the received bytes into objects
+KafkaAvroDeserializer| Deserializer used to convert the received bytes into objects
 |spring.serializer.value.delegate.class |io.confluent.kafka.serializers.
-KafkaAvroSerializer|yes|Serializer used to convert cards to bytes
-|spring.kafka.producer.bootstrap-servers|http://localhost:9092|no|comma separated list of URL(s) of the broker(s) / bootstrap server(s)
-|opfab.kafka.topics.card.topicname |opfab|no|Name of the topic to read the messages from
-|opfab.kafka.topics.response-card.topicname |opfab|no|Name of the topic to place the response cards to
-|opfab.kafka.schema.registry.url|http://localhost:8081|yes|URL of the schema registry. Can be set to the empty string "" is no registry is used
-|delayForDeleteExpiredCardsScheduling|60000|no|The delay in millisecond after the last execution finished and the next execution starts.
+KafkaAvroSerializer|Serializer used to convert cards to bytes
+|spring.kafka.producer.bootstrap-servers|http://localhost:9092|comma separated list of URL(s) of the broker(s) / bootstrap server(s)
+|opfab.kafka.topics.card.topicname |opfab|Name of the topic to read the messages from
+|opfab.kafka.topics.response-card.topicname |opfab|Name of the topic to place the response cards to
+|opfab.kafka.schema.registry.url|http://localhost:8081|URL of the schema registry. Can be set to the empty string "" is no registry is used
+|delayForDeleteExpiredCardsScheduling|60000|The delay in millisecond after the last execution finished and the next execution starts.
 |===
 
 
-==== Cards-consultation service
-
-The cards-consultation service has these specific properties :
-
-|===
-|name|default|mandatory?|Description
-
-|checkIfUserIsAlreadyConnected|true|no|If false, OperatorFabric will allow a user to have several sessions opened at the same time. However, it may cause synchronization problems between the sessions using the same login, so it is recommended to let it to true, its default value. 
-|operatorfabric.heartbeat.checkIntervalInSeconds|10|no|Frequency at which the heartbeat from the ui to the server is checked.
-|operatorfabric.heartbeat.delayInSecondsToConsiderUserDisconnected|100|no| After how many seconds without heartbeat, the user is considered disconnected
-|===
-
-[[external-devices-conf]]
-==== External devices service
-
-The external devices service can be configured with the following properties:
-
-|===
-|name|default|mandatory?|Description
-
-|operatorfabric.externaldevices.watchdog.enabled|false|no|If true, watchdog signals will be sent to external devices to show that the OperatorFabric is running and connected.
-|operatorfabric.externaldevices.watchdog.cron|`*/5 * * * * *`|no|CRON expression determining when watchdog signals should be sent to external devices.
-|operatorfabric.externaldevices.watchdog.signalId|0|no|Id the signal the external devices are expecting as watchdog
-|===
-
-== Node services configuration
-
-The configuration of node services (cards-external-diffusion and cards-reminder) is located in config/docker folder.
-The 'node-services.json' configuration file contains parameters common to all the node services and a dedicated section for each service.
-Node services can be configured with the following properties:
-
-|===
-|name|default|mandatory?|Description
-|opfab.url||yes| Opfab URL
-|opfab.connectedUsersUrl||yes|Service URL to get the list of users currently connected to Opfab
-|opfab.cardsUrl||yes|Cards consultation service URL
-|opfab.usersUrl||yes|Users service URL
-|opfab.cardReminderUrl||yes| Opfab card resetReadAndAcks endpoint URL
-|opfab.getTokenUrl||yes|Authentication service URL
-|opfab.tokenExpireClaim||yes|Token expiration property
-|rabbitmq.host||yes|RabbitMQ host address
-|rabbitmq.port||yes|RabbitMQ listen port
-|rabbitmq.username||yes|RabbitMQ username
-|rabbitmq.password||yes|RabbitMQ password
-|logConfig.logFolder||yes|Log file folder
-|logConfig.logFile||yes|Log file name
-|logConfig.logLevel||yes|Default log level
-|mail.host||yes|Mail server host
-|mail.port||yes|Mail server port
-|mail.auth.user||yes|Mail server authentication user
-|mail.auth.pass||yes|Mail server authentication password
-|mongodb.database||yes|MongoDB database name
-|mongodb.uri||yes|MongoDB connection URI
-|cardsExternalDiffusion.adminPort||yes|Listen port
-|cardsExternalDiffusion.activeOnStartup||yes|Flag to start the notification service on startup
-|cardsExternalDiffusion.opfab.login||yes|user account used to call Opfab services
-|cardsExternalDiffusion.opfab.password||yes|user password to call Opfab services
-|cardsExternalDiffusion.defaultConfig.mailFrom||yes|Mail from address
-|cardsExternalDiffusion.defaultConfig.subjectPrefix||yes|Mail subject prefix
-|cardsExternalDiffusion.defaultConfig.bodyPrefix|||Mail body prefix
-|cardsExternalDiffusion.defaultConfig.windowInSecondsForCardSearch|||Max time interval used to query new cards (in seconds)
-|cardsExternalDiffusion.defaultConfig.secondsAfterPublicationToConsiderCardAsNotRead|||Time period after card publication before sending mail notification
-|cardsExternalDiffusion.defaultConfig.checkPeriodInSeconds|||Time interval between consecutive checks
-|cardsReminder.adminPort||yes|Cards reminder service Listen port
-|cardsReminder.activeOnStartup||yes|Flag to start the cards reminder service on startup
-|cardsReminder.checkPeriodInSeconds|||Cards remonder time interval between consecutive checks
-|===
-
-The parameters in "cardsExternalDiffusion.defaultConfig" section of cards externa diffusion can be modified at runtime by sending an http POST request to the `/config` API with a JSON payload containing the config parameters to be changed.
-
-
-include::web-ui_configuration.adoc[leveloffset=+1]
-
-
-
-[[opfab_spec_conf]]
-include::security_configuration.adoc[leveloffset=+1]
-
-== OperatorFabric Mongo configuration
-
-We only use URI configuration for mongo through the usage of the ```spring.data.mongodb.uris```,
-it allows us to share the same configuration behavior for simple or cluster
-configuration and with both spring classic and reactive mongo configuration.
-See link:{mongo_doc}connection-string/[mongo connection string] for the complete URI syntax.
-
-=== Define time to live for archived cards
-
-By default, archived cards will remain stored in the database forever. It is possible to have them automatically
-removed after a specified duration by using the link:https://docs.mongodb.com/manual/core/index-ttl/[TTL index feature of mongoDB] on their publishDate field.
-
-For example, to have cards expire after 10 days (864000s), enter the following commands in the mongo shell:
-
-[source,shell]
-----
-use operator-fabric
-db.archivedCards.createIndex( { "publishDate": 1 }, { expireAfterSeconds: 864000 } )
-----
-
-IMPORTANT: You cannot use createIndex() to change the value of expireAfterSeconds of an existing index.
-Instead use the link:https://docs.mongodb.com/manual/reference/command/collMod/#dbcmd.collMod[collMod] database command in conjunction with the index collection flag. Otherwise, to
-change the value of the option of an existing index, you must drop the index first and recreate.
-
-== OperatorFabric Kafka configuration
+===== OperatorFabric Kafka configuration
 
 Next to publishing cards to OperatorFabric using the REST API, OperatorFabric also supports publishing cards via a Kafka Topic. In the default configuration Kafka is disabled.
 To enable Kafka you need to set the consumer group to the consumer group you assign to the OpFab Kafka consumer. This can be any group-id, as long as it isn't used by other consumers
@@ -427,3 +302,83 @@ spring:
     producer:
       ...the same...
 ----
+
+
+==== Cards-consultation service
+
+The cards-consultation service has these specific properties :
+
+|===
+|name|default|Description
+
+|checkIfUserIsAlreadyConnected|true|If false, OperatorFabric will allow a user to have several sessions opened at the same time. However, it may cause synchronization problems between the sessions using the same login, so it is recommended to let it true, its default value. 
+|operatorfabric.heartbeat.checkIntervalInSeconds|10| Frequency at which the heartbeat from the ui to the server is checked.
+|operatorfabric.heartbeat.delayInSecondsToConsiderUserDisconnected|100| After how many seconds without heartbeat, the user is considered disconnected
+|===
+
+[[external-devices-conf]]
+==== External devices service
+
+The external devices service can be configured with the following properties:
+
+|===
+|name|default|Description
+
+|operatorfabric.externaldevices.watchdog.enabled|false|If true, watchdog signals will be sent to external devices to show that the OperatorFabric is running and connected.
+|operatorfabric.externaldevices.watchdog.cron|`*/5 * * * * *`|CRON expression determining when watchdog signals should be sent to external devices.
+|operatorfabric.externaldevices.watchdog.signalId|0|Id of the signal the external devices are expecting as watchdog
+|===
+
+==== Node services configuration
+
+The configuration of node services (cards-external-diffusion and cards-reminder) is located in config/docker folder.
+The 'node-services.json' configuration file contains parameters common to all the node services and a dedicated section for each service.
+Node services can be configured with the following properties:
+
+|===
+|name|default|mandatory?|Description
+|opfab.url||yes| Opfab URL
+|opfab.connectedUsersUrl||yes|Service URL to get the list of users currently connected to Opfab
+|opfab.cardsUrl||yes|Cards consultation service URL
+|opfab.usersUrl||yes|Users service URL
+|opfab.cardReminderUrl||yes| Opfab card resetReadAndAcks endpoint URL
+|opfab.getTokenUrl||yes|Authentication service URL
+|opfab.tokenExpireClaim||yes|Token expiration property
+|rabbitmq.host||yes|RabbitMQ host address
+|rabbitmq.port||yes|RabbitMQ listen port
+|rabbitmq.username||yes|RabbitMQ username
+|rabbitmq.password||yes|RabbitMQ password
+|logConfig.logFolder||yes|Log file folder
+|logConfig.logFile||yes|Log file name
+|logConfig.logLevel||yes|Default log level
+|mail.host||yes|Mail server host
+|mail.port||yes|Mail server port
+|mail.auth.user||yes|Mail server authentication user
+|mail.auth.pass||yes|Mail server authentication password
+|mongodb.database||yes|MongoDB database name
+|mongodb.uri||yes|MongoDB connection URI
+|cardsExternalDiffusion.adminPort||yes|Listen port
+|cardsExternalDiffusion.activeOnStartup||yes|Flag to start the notification service on startup
+|cardsExternalDiffusion.opfab.login||yes|user account used to call Opfab services
+|cardsExternalDiffusion.opfab.password||yes|user password to call Opfab services
+|cardsExternalDiffusion.defaultConfig.mailFrom||yes|Mail from address
+|cardsExternalDiffusion.defaultConfig.subjectPrefix||yes|Mail subject prefix
+|cardsExternalDiffusion.defaultConfig.bodyPrefix|||Mail body prefix
+|cardsExternalDiffusion.defaultConfig.windowInSecondsForCardSearch|||Max time interval used to query new cards (in seconds)
+|cardsExternalDiffusion.defaultConfig.secondsAfterPublicationToConsiderCardAsNotRead|||Time period after card publication before sending mail notification
+|cardsExternalDiffusion.defaultConfig.checkPeriodInSeconds|||Time interval between consecutive checks
+|cardsReminder.adminPort||yes|Cards reminder service Listen port
+|cardsReminder.activeOnStartup||yes|Flag to start the cards reminder service on startup
+|cardsReminder.checkPeriodInSeconds|||Cards reminder time interval between consecutive checks
+|===
+
+The parameters in "cardsExternalDiffusion.defaultConfig" section of cards external diffusion can be modified at runtime by sending an http POST request to the `/config` API with a JSON payload containing the config parameters to be changed.
+
+
+
+include::web-ui_configuration.adoc[leveloffset=+1]
+
+
+
+[[opfab_spec_conf]]
+include::security_configuration.adoc[leveloffset=+1]

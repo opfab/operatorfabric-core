@@ -1,10 +1,10 @@
 {
   "opfab": {
     "url": "http://localhost:2002",
-    "connectedUsersUrl": "http://cards-consultation:8080/connections",
-    "cardsUrl": "http://cards-consultation:8080/cards",
-    "usersUrl": "http://users:8080/users",
-    "cardReminderUrl": "http://cards-publication:8080/cards/resetReadAndAcks",
+    "connectedUsersUrl": "http://cards-consultation:2104/connections",
+    "cardsUrl": "http://cards-consultation:2104/cards",
+    "usersUrl": "http://users:2103/users",
+    "cardReminderUrl": "http://cards-publication:2102/cards/resetReadAndAcks",
     "getTokenUrl": "http://web-ui/auth/token",
     "tokenExpireClaim": "exp"
   },
