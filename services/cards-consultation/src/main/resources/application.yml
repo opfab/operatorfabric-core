@@ -1,3 +1,22 @@
+server:
+  port: 2104
+  forward-headers-strategy: framework # Needed for IP control feature
 spring:
   application:
     name: cards-consultation
+  data:
+    mongodb:
+      database: operator-fabric
+
+
+# default values for docker mode 
+  rabbitmq:
+    host: rabbitmq
+    port: 5672
+    username: guest
+    password: guest
+    
+operatorfabric:
+  servicesUrls:
+    businessconfig: "businessconfig:2100"
+    users: "users:2103"

@@ -30,7 +30,7 @@ services:
 #      - "15672:15672"
   keycloak:
     image: quay.io/keycloak/keycloak:19.0.3-legacy
-    command: -Dkeycloak.migration.action=import -Dkeycloak.migration.provider=dir -Dkeycloak.migration.dir=/keycloak/export -Dkeycloak.profile.feature.upload_scripts=enabled
+    command: -Dkeycloak.migration.action=import -Dkeycloak.migration.provider=dir -Dkeycloak.migration.dir=/keycloak/export -Dkeycloak.profile.feature.upload_scripts=enabled -Djboss.http.port=89
 # -Dkeycloak.profile.feature.upload_scripts=enabled is only used for tests with version 12 from keycloak
     environment:
     - KEYCLOAK_USER=admin
@@ -39,7 +39,7 @@ services:
     volumes:
     - ../keycloak:/keycloak
     ports:
-    - "89:8080"
+    - "89:89"
 #    Debug port closed for security reasons, be careful if you open it 
 #    - "90:9990"
   mailhog:
@@ -55,15 +55,13 @@ services:
       - rabbitmq
     user: ${USER_ID}:${USER_GID}
     ports:
-     - "2103:8080"
+     - "2103:2103"
 #    Debug port closed for security reasons, be careful if you open it 
 #     - "4103:5005"
-    environment:
-      - SPRING_PROFILES_ACTIVE
     volumes:
     - "../certificates:/certificates_to_add"
-    - "./users-docker.yml:/config/application.yml"
-    - "./common-docker.yml:/config/common-docker.yml"
+    - "./users.yml:/config/application.yml"
+    - "./common.yml:/config/common.yml"
     - ${CONFIG_PATH}:/external-config
   businessconfig:
     container_name: businessconfig
@@ -72,16 +70,14 @@ services:
       - mongodb
     user: ${USER_ID}:${USER_GID}
     ports:
-     - "2100:8080"
+     - "2100:2100"
 #    Debug port closed for security reasons, be careful if you open it 
 #     - "4100:5005"
-    environment:
-      - SPRING_PROFILES_ACTIVE
     volumes:
      - "../certificates:/certificates_to_add"
      - "./businessconfig-storage:/businessconfig-storage"
-     - "./common-docker.yml:/config/common-docker.yml"
-     - "./businessconfig-docker.yml:/config/application-docker.yml"
+     - "./common.yml:/config/common.yml"
+     - "./businessconfig.yml:/config/application.yml"
      - ${CONFIG_PATH}:/external-config
   cards-publication:
     container_name: cards-publication
@@ -91,15 +87,13 @@ services:
       - rabbitmq
     user: ${USER_ID}:${USER_GID}
     ports:
-     - "2102:8080"
+     - "2102:2102"
 #    Debug port closed for security reasons, be careful if you open it 
 #     - "4102:5005"
-    environment:
-      - SPRING_PROFILES_ACTIVE
     volumes:
       - "../certificates:/certificates_to_add"
-      - "./common-docker.yml:/config/common-docker.yml"
-      - "./cards-publication-docker.yml:/config/application-docker.yml"
+      - "./common.yml:/config/common.yml"
+      - "./cards-publication.yml:/config/application.yml"
       - ${CONFIG_PATH}:/external-config
   cards-consultation:
     container_name: cards-consultation
@@ -109,15 +103,14 @@ services:
       - rabbitmq
     user: ${USER_ID}:${USER_GID}
     ports:
-     - "2104:8080"
+     - "2104:2104"
 #    Debug port closed for security reasons, be careful if you open it 
 #     - "4104:5005"
-    environment:
-      - SPRING_PROFILES_ACTIVE
+
     volumes:
       - "../certificates:/certificates_to_add"
-      - "./common-docker.yml:/config/common-docker.yml"
-      - "./cards-consultation-docker.yml:/config/application-docker.yml"
+      - "./common.yml:/config/common.yml"
+      - "./cards-consultation.yml:/config/application.yml"
       - ${CONFIG_PATH}:/external-config
   web-ui:
     container_name: web-ui
@@ -171,15 +164,13 @@ services:
       - users
     user: ${USER_ID}:${USER_GID}
     ports:
-      - "2105:8080"
+      - "2105:2105"
     #    Debug port closed for security reasons, be careful if you open it
     #     - "4105:5005"
-    environment:
-      - SPRING_PROFILES_ACTIVE
     volumes:
       - "../certificates:/certificates_to_add"
-      - "./common-docker.yml:/config/common-docker.yml"
-      - "./external-devices-docker.yml:/config/application-docker.yml"
+      - "./common.yml:/config/common.yml"
+      - "./external-devices.yml:/config/application.yml"
       - ${CONFIG_PATH}:/external-config
 
 #### Dummy services for dev/tests purposes - NOT FOR PRODUCTION ####
@@ -189,12 +180,9 @@ services:
     image: "lfeoperatorfabric/of-external-app:SNAPSHOT"
     ports:
       - "8090:8090"
-    environment:
-      - SPRING_PROFILES_ACTIVE
     volumes:
       - "../certificates:/certificates_to_add"
-      - "./common-docker.yml:/config/common-docker.yml"
-      - "./external-app-docker.yml:/config/application-docker.yml"
+      - "./common.yml:/config/common.yml"
       - ${CONFIG_PATH}:/external-config
 # Dummy external devices using Modbus Protocol
   dummy-modbus-device_1:
@@ -203,12 +191,8 @@ services:
     user: ${USER_ID}:${USER_GID}
     ports:
       - "4031:4030"
-    environment:
-      - SPRING_PROFILES_ACTIVE
     volumes:
       - "../certificates:/certificates_to_add"
-      - "./common-docker.yml:/config/common-docker.yml"
-      - "./dummy-modbus-device-docker.yml:/config/application-docker.yml"
       - ${CONFIG_PATH}:/external-config
   dummy-modbus-device_2:
     container_name: dummy-modbus-device_2
@@ -216,10 +200,6 @@ services:
     user: ${USER_ID}:${USER_GID}
     ports:
       - "4032:4030"
-    environment:
-      - SPRING_PROFILES_ACTIVE
     volumes:
       - "../certificates:/certificates_to_add"
-      - "./common-docker.yml:/config/common-docker.yml"
-      - "./dummy-modbus-device-docker.yml:/config/application-docker.yml"
       - ${CONFIG_PATH}:/external-config

@@ -10,7 +10,6 @@ echo USER_GID="$(id -g)" >> .env
 mkdir -p businessconfig-storage
 if [ "$#" -eq 0 ]; then
   echo CONFIG_PATH=./ >> .env
-  echo SPRING_PROFILES_ACTIVE=docker >> .env
 else
   EXTERNAL_CONFIGURATION_FILE=$1
   CONFIG_PATH=$(dirname "$1")

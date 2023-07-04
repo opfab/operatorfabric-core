@@ -52,7 +52,7 @@ to log to the Authentication Provider (keycloak). The cient-id and the client-se
 **Example of the `docker` configuration**
 ----
 # Url of the Authentication provider
-    set $KeycloakBaseUrl "http://keycloak:8080";
+    set $KeycloakBaseUrl "http://keycloak:89";
 # Realm associated to OperatorFabric within the Authentication provider
     set $OperatorFabricRealm "dev";
 

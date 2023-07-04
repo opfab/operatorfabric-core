@@ -12,7 +12,7 @@ server {
   access_log /var/log/nginx/access.log opfab-log;
   ### CUSTOMIZATION - BEGIN
   # Url of the Authentication provider
-  set $KeycloakBaseUrl "http://keycloak:8080";
+  set $KeycloakBaseUrl "http://keycloak:89";
   # Realm associated to OperatorFabric within the Authentication provider
   set $OperatorFabricRealm "dev";
   # base64 encoded pair of authentication in the form of 'client-id:secret-id'
@@ -62,7 +62,7 @@ server {
     proxy_set_header X-Forwarded-For $proxy_protocol_addr;
     proxy_set_header X-Forwarded-Proto $scheme;
     proxy_set_header Host $host;
-    proxy_pass http://keycloak:8080/auth;
+    proxy_pass http://keycloak:89/auth;
   }
   # for angular hot reload in `ng serve` mode
   location ^~ /sockjs-node/ {

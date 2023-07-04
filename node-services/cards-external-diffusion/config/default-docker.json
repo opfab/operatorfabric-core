@@ -3,9 +3,9 @@
     "login": "admin",
     "password": "test",
     "url": "http://localhost:2002",
-    "connectedUsersUrl": "http://cards-consultation:8080/connections",
-    "cardsUrl": "http://cards-consultation:8080/cards",
-    "usersUrl": "http://users:8080/users",
+    "connectedUsersUrl": "http://cards-consultation:2104/connections",
+    "cardsUrl": "http://cards-consultation:2104/cards",
+    "usersUrl": "http://users:2103/users",
     "getTokenUrl": "http://web-ui/auth/token",
     "tokenExpireClaim": "exp"
   },

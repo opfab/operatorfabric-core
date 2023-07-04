@@ -1,10 +1,6 @@
-server:
-  port: 2103
-spring:
-  application:
-    name: users
-
-
+#  POPULATE THE USER DATABASE ON INIT
+# !!!! WARNING: VALUES SHOULD BE CHANGED FOR PRODUCTION MODE !!!!
+#
 operatorfabric.users.default:
   users:
     - login: admin
@@ -159,9 +155,5 @@ operatorfabric.users.default:
   user-settings:
     - login: operator3_fr
       description: Da Operator Rulez
-#logging:
-#  level:
-#    ROOT: DEBUG
 
-daysBeforeLogExpiration: 61
-hourScheduledForLogsCleaning: 0 30 0 * * *
+#logging.level.org.opfab: debug

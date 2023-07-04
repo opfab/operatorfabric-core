@@ -1,63 +1,19 @@
-server:
-  forward-headers-strategy: framework
+# This file contains only parameters that need to be overridden form the docker configuration
 spring:
   rabbitmq:
     host: localhost
-    port: 5672
-    username: guest
-    password: guest
   security:
     provider-url: http://localhost:89
-    provider-realm: dev
     oauth2:
       resourceserver:
         jwt:
-          jwk-set-uri: ${spring.security.provider-url}/auth/realms/${spring.security.provider-realm}/protocol/openid-connect/certs
+          jwk-set-uri: ${spring.security.provider-url}/auth/realms/dev/protocol/openid-connect/certs
   data:
     mongodb:
-      database: operator-fabric
       uri: mongodb://root:password@localhost:27017/operator-fabric?authSource=admin&authMode=scram-sha1
-security:
-  basic:
-    enabled: false
 
 operatorfabric:
-  userActionLogActivated: true
   servicesUrls:
     users: "http://localhost:2103"
     businessconfig: "http://localhost:2100"
 
-### activate the following if you want to the groups or entities to come from the token and not mongo DB
-#  security:
-#    jwt:
-
-### activate the folLowing if you want the entities of the user to come from the token and not mongoDB
-### entitiesIdClaim is the name of the field in the token     
-#      entitiesIdClaim : entitiesId
-#      gettingEntitiesFromToken: true
-###
-
-### activate the following if you want the groups of the user to come from the token and not mongoDB
-#      groups: 
-#        mode: JWT
-#        rolesClaim:
-#          rolesClaimStandard:
-#            - path: "ATTR1"
-#            - path: "ATTR2"            
-#          rolesClaimStandardArray:  
-#            - path: "resource_access/opfab-client/roles"
-#          rolesClaimStandardList:  
-#            - path: "groups" 
-#              separator: ";"           
-#          rolesClaimCheckExistPath: 
-#            - path: "resource_access/AAA" 
-#              roleValue: "roleAAA"      
-#            - path: "resource_access/BBB"
-#              roleValue: "roleBBB"  
-### 
-message: common message
-management:
-  endpoints:
-    web:
-      exposure:
-        include: '*'
