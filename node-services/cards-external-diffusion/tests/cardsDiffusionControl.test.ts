@@ -10,9 +10,9 @@
 import 'jest'
 import OpfabServicesInterface from '../src/domain/server-side/opfabServicesInterface';
 import CardsDiffusionControl from '../src/domain/application/cardsDiffusionControl'
-import logger from '../src/domain/server-side/logger';
-import GetResponse from '../src/domain/server-side/getResponse';
 import SendMailService from '../src/domain/server-side/sendMailService';
+import GetResponse from '../src/common/server-side/getResponse';
+import logger from '../src/common/server-side/logger';
 
 
 

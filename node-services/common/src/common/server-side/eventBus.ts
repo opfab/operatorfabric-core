@@ -16,10 +16,12 @@ export default class EventBus {
     port: number;
     username: string;
     password: string;
-    logger: any;
+        
+    exchange: string;
+    queue: string;
+    queueConfig: any;
 
-    QUEUE_NAME = 'reminder.card';
-    EXCHANGE_NAME = 'card';
+    logger: any;
 
     onConnectionCallback: Function;
     onDisconnectionCallback: Function;
@@ -27,6 +29,7 @@ export default class EventBus {
     connection: IAmqpConnectionManager;
 
     listeners : Array<EventListener> = [];
+
 
     public setHost(host: string) {
         this.host = host;
@@ -42,8 +45,16 @@ export default class EventBus {
         this.username = username;
         return this;
     }
+
     public setPassword(password: string) {
         this.password = password;
+        return this;
+    }
+
+    public setQueue(exchange: string, queue: string, queueConfig: any) {
+        this.exchange = exchange;
+        this.queue = queue;
+        this.queueConfig = queueConfig;
         return this;
     }
 
@@ -79,11 +90,11 @@ export default class EventBus {
             setup: (channel : any) => 
 
              Promise.all([
-                channel.assertQueue(this.QUEUE_NAME, { durable: true, autoDelete: false }),
-                channel.assertExchange(this.EXCHANGE_NAME, 'fanout', { }),
+                channel.assertQueue(this.queue, this.queueConfig),
+                channel.assertExchange(this.exchange, 'fanout', { }),
                 channel.prefetch(1),
-                channel.bindQueue(this.QUEUE_NAME, this.EXCHANGE_NAME, '#'),
-                channel.consume(this.QUEUE_NAME, function(msg: any) {
+                channel.bindQueue(this.queue, this.exchange, '#'),
+                channel.consume(this.queue, function(msg: any) {
                     that.onMessage(msg);
                   }, {
                       noAck: true

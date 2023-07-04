@@ -40,6 +40,7 @@ task deleteRuntimeConfigFile(type: Delete) {
     delete 'config/serviceConfig.json'
 }
 
+
 docker {
     name "lfeoperatorfabric/of-${project.name}:${project.version}"
     if (!project.version.equals("SNAPSHOT"))
@@ -48,6 +49,7 @@ docker {
     copySpec.with {
 				from('build') {
 					include 'domain/**'
+                    include 'common/**'
                     include 'cardsExternalDiffusion.js'
 					into 'dockerBuild'
 				}
@@ -67,6 +69,8 @@ docker {
                 ])
     dockerfile file("docker/Dockerfile")
 }
+
+tasks.runBuild.dependsOn(':node-services:node-common:npmInstall')
 
 build.dependsOn(test)
 build.dependsOn(runBuild)

@@ -44,6 +44,7 @@ docker {
     copySpec.with {
 				from('build') {
 					include 'domain/**'
+                    include 'common/**'
                     include 'cardsReminder.js'
 					into 'dockerBuild'
 				}
@@ -63,6 +64,9 @@ docker {
                 ])
     dockerfile file("docker/Dockerfile")
 }
+
+tasks.runBuild.dependsOn(':node-services:node-common:npmInstall')
+
 build.dependsOn(test)
 build.dependsOn(runBuild)
 

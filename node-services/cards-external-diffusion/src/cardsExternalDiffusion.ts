@@ -11,9 +11,8 @@ import express from 'express';
 import bodyParser from 'body-parser';
 import config from 'config';
 
-import logger from './domain/server-side/logger';
-
-import AuthenticationService from './domain/client-side/authenticationService';
+import logger from './common/server-side/logger';
+import AuthenticationService from './common/client-side/authenticationService'
 import SendMailService from './domain/server-side/sendMailService';
 import OpfabServicesInterface from './domain/server-side/opfabServicesInterface';
 import CardsExternalDiffusionService from './domain/client-side/cardsExternalDiffusionService';
