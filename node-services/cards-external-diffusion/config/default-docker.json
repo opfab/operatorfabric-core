@@ -27,7 +27,7 @@
     }
   },
   "cardsExternalDiffusion": {
-    "adminPort" : 3100,
+    "adminPort" : 2106,
     "activeOnStartup" : true,
     "opfab": {
       "login": "admin",
