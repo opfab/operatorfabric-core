@@ -20,7 +20,7 @@
     "logLevel": "info"
   },
   "cardsReminder": {
-    "adminPort" : 3200,
+    "adminPort" : 2107,
     "activeOnStartup" : true,
     "checkPeriodInSeconds" : 5,
     "opfab": {

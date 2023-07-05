@@ -142,7 +142,7 @@ services:
       - mailhog
     user: ${USER_ID}:${USER_GID}
     ports:
-      - "3100:3100"
+      - "2106:2106"
     environment:
       - NODE_ENV=docker
     volumes:
@@ -155,7 +155,7 @@ services:
       - users
     user: ${USER_ID}:${USER_GID}
     ports:
-      - "3200:3200"
+      - "2107:2107"
     environment:
       - TZ=Europe/Paris
       - NODE_ENV=docker

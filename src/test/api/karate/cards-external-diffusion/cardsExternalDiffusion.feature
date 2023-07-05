@@ -100,7 +100,7 @@ Feature: Cards external diffusion
     """
 
 
-    Given url 'http://localhost:3100/config'
+    Given url 'http://localhost:2106/config'
 	And header Authorization = 'Bearer ' + authTokenAsTSO
     And request updateConfig
     When method post
@@ -128,7 +128,7 @@ Scenario: Restore
     }
     """
 # restore default configuration
-    Given url 'http://localhost:3100/config'
+    Given url 'http://localhost:2106/config'
 	And header Authorization = 'Bearer ' + authTokenAsTSO
     And request defaultConfig
     When method post
