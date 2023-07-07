@@ -107,7 +107,7 @@ describe('User Card ', function () {
       usercard.selectProcess('Message or question');
       usercard.selectState('Question');
       cy.get('#label').should('have.text',' QUESTION ');
-      cy.get('#question').type('First question');
+      cy.get('#question').invoke('val', 'First question'); // the cy.type does not work (no explanation found),  using invoke works 
       usercard.selectRecipient('Control Center FR East');
       usercard.previewThenSendCard();
       feed.openFirstCard();
@@ -645,7 +645,7 @@ describe('User Card ', function () {
       cy.get('#message').should('be.visible');
 
       usercard.checkEmitterSelectExists();
-      cy.get('#of-usercard-card-emitter-selector').find('label').should("have.text", "EMITTER");
+      cy.get('#of-usercard-card-emitter-selector').find('label').first().should("have.text", "EMITTER");
       cy.get('#of-usercard-card-emitter-selector').find('.vscomp-option-text').should("have.length", 4);
       cy.get('#of-usercard-card-emitter-selector').find('.vscomp-option-text').eq(0).should("contain.text", "Control Center FR East");
       cy.get('#of-usercard-card-emitter-selector').find('.vscomp-option-text').eq(1).should("contain.text", "Control Center FR North");
@@ -765,7 +765,7 @@ describe('User Card ', function () {
       usercard.selectState('Process example');
 
       usercard.checkEmitterSelectExists();
-      cy.get('#of-usercard-card-emitter-selector').find('label').should("have.text", "EMITTER");
+      cy.get('#of-usercard-card-emitter-selector').find('label').first().should("have.text", "EMITTER");
       cy.get('#of-usercard-card-emitter-selector').find('.vscomp-option-text').should("have.length", 2);
       cy.get('#of-usercard-card-emitter-selector').find('.vscomp-option-text').eq(0).should("contain.text", "Control Center FR East");
       cy.get('#of-usercard-card-emitter-selector').find('.vscomp-option-text').eq(1).should("contain.text", "Control Center FR North");
@@ -781,7 +781,7 @@ describe('User Card ', function () {
       usercard.selectState('Process example');
 
       usercard.checkEmitterSelectExists();
-      cy.get('#of-usercard-card-emitter-selector').find('label').should("have.text", "EMITTER");
+      cy.get('#of-usercard-card-emitter-selector').find('label').first().should("have.text", "EMITTER");
       cy.get('#of-usercard-card-emitter-selector').find('.vscomp-option-text').should("have.length", 2);
       cy.get('#of-usercard-card-emitter-selector').find('.vscomp-option-text').eq(0).should("contain.text", "Control Center FR East");
       cy.get('#of-usercard-card-emitter-selector').find('.vscomp-option-text').eq(1).should("contain.text", "Control Center FR North");
@@ -809,7 +809,7 @@ describe('User Card ', function () {
 
       usercard.checkEmitterSelectExists();
 
-      cy.get('#of-usercard-card-emitter-selector').find('label').should("have.text", "EMITTER");
+      cy.get('#of-usercard-card-emitter-selector').find('label').first().should("have.text", "EMITTER");
       cy.get('#of-usercard-card-emitter-selector').find('.vscomp-option-text').should("have.length", 2);
       cy.get('#of-usercard-card-emitter-selector').find('.vscomp-option-text').eq(0).should("contain.text", "Control Center FR East");
       cy.get('#of-usercard-card-emitter-selector').find('.vscomp-option-text').eq(1).should("contain.text", "Control Center FR North");
@@ -825,7 +825,7 @@ describe('User Card ', function () {
       usercard.selectState('Process example');
 
       usercard.checkEmitterSelectExists();
-      cy.get('#of-usercard-card-emitter-selector').find('label').should("have.text", "EMITTER");
+      cy.get('#of-usercard-card-emitter-selector').find('label').first().should("have.text", "EMITTER");
       cy.get('#of-usercard-card-emitter-selector').find('.vscomp-option-text').should("have.length", 2);
       cy.get('#of-usercard-card-emitter-selector').find('.vscomp-option-text').eq(0).should("contain.text", "Control Center FR East");
       cy.get('#of-usercard-card-emitter-selector').find('.vscomp-option-text').eq(1).should("contain.text", "Control Center FR North");
@@ -1295,9 +1295,10 @@ describe('User Card ', function () {
       cy.get('#opfab-recipients-for-information').find('.vscomp-value').contains("French Control Centers").should('not.exist');
       cy.get('#opfab-recipients-for-information').find('.vscomp-value').contains("IT SUPERVISION CENTER").should('not.exist');
 
-      cy.get('#message').type('Hello');
+    
       // We check we can add an entity to the default selected value
       usercard.selectRecipientForInformation('IT SUPERVISION CENTER');
+      cy.get('#message').type('Hello');
       usercard.preview();
 
       cy.get("#opfab-entity-recipients").find('span').should('have.length', 4);

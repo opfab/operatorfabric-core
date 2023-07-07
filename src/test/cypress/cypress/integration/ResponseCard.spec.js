@@ -570,7 +570,7 @@ describe('Response card tests', function () {
         usercard.selectProcess('Message or question');
         usercard.selectState('Question');
         cy.get('#label').should('have.text', ' QUESTION ');
-        cy.get('#question').type('question');
+        cy.get('#question').invoke('val', 'question'); // the cy.type does not work (no explanation found),  using invoke works 
         usercard.selectRecipient('Control Center FR East');
         usercard.selectRecipient('Control Center FR North');
         usercard.selectRecipient('Control Center FR South');

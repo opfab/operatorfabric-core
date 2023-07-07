@@ -163,11 +163,13 @@ describe('AdmininstrationPages', () => {
 
         cy.get('#opfab-entity-allowed-to-send-card').check({force: true});
 
+        cy.get('tag-input').find('[aria-label="Add label"]').eq(0).type('Label1');
+
         cy.get('#opfab-parents').click();
         cy.get('#opfab-parents').find('.vscomp-option-text').eq(1).click({force: true});
         cy.get('#opfab-parents').click();
 
-        cy.get('tag-input').find('[aria-label="Add label"]').eq(0).type('Label1');
+       
 
         cy.get('#opfab-admin-edit-btn-add').click();
 
@@ -201,12 +203,6 @@ describe('AdmininstrationPages', () => {
         cy.get('#opfab-entity-allowed-to-send-card').should('be.checked');
         cy.get('#opfab-entity-allowed-to-send-card').uncheck({force: true});
 
-        cy.get('#opfab-parents').click();
-        // Deselect old parents
-        cy.get('#opfab-parents').find('.vscomp-option-text').eq(1).click({force: true});
-        // Select new parent
-        cy.get('#opfab-parents').find('.vscomp-option-text').eq(2).click({force: true});
-        cy.get('#opfab-parents').click();
 
         cy.get('tag-input').find('[aria-label="Label1"]').should('exist');
         // Add Label2
@@ -217,6 +213,15 @@ describe('AdmininstrationPages', () => {
         cy.get('tag-input').find('[aria-label="Label1"]').should('not.exist');
         cy.get('tag-input').find('[aria-label="Label2"]').should('exist');
 
+
+        cy.get('#opfab-parents').click();
+        // Deselect old parents
+        cy.get('#opfab-parents').find('.vscomp-option-text').eq(1).click({force: true});
+        // Select new parent
+        cy.get('#opfab-parents').find('.vscomp-option-text').eq(2).click({force: true});
+        cy.get('#opfab-parents').click();
+
+ 
         cy.get('#opfab-admin-entity-btn-save').click();
 
         // Check entity is updated

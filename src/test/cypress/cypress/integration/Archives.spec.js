@@ -520,9 +520,9 @@ describe('Archives screen tests', function () {
         archivesAndLogging.selectAllStates();
         archivesAndLogging.checkNumberOfStateSelectedIs(33);
 
-        archivesAndLogging.clickOnProcessSelect();
-        archivesAndLogging.unselectAllProcesses();
-        cy.selectProcess('Process example');
+        archivesAndLogging.clickOnProcessGroupSelect();
+        archivesAndLogging.selectAllProcessGroups();
+        archivesAndLogging.selectProcess('Process example');
         archivesAndLogging.clickOnProcessSelect();
         archivesAndLogging.clickOnStateSelect();
         archivesAndLogging.checkNumberOfStateEntriesIs(8);

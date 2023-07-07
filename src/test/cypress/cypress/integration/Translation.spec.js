@@ -201,11 +201,7 @@ describe('Test translations', function () {
     }
 
     function checkLabel(labelId, labelText) {
-        cy.get(labelId).find('label').then(($labels) => {
-            const length = $labels.length;
-            cy.get(labelId).find('label').eq(length-1).should('exist').should('have.text', labelText);
-        })
-
+        cy.get(labelId).find('label').first().should("have.text",labelText);
     }
 
     function checkPlaceholderText(selectId, placeholderText) {
