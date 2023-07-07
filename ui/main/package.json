@@ -56,7 +56,7 @@
     "ol": "7.4.0",
     "rrule": "2.7.2",
     "rxjs": "7.8.1",
-    "virtual-select-plugin": "1.0.37",
+    "virtual-select-plugin": "1.0.39",
     "xlsx": "0.18.5"
   },
   "devDependencies": {

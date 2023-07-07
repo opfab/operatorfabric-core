@@ -330,9 +330,9 @@ describe('Logging screen tests', function () {
         archivesAndLogging.selectAllStates();
         archivesAndLogging.checkNumberOfStateSelectedIs(19);
 
-        archivesAndLogging.clickOnProcessSelect();
-        archivesAndLogging.unselectAllProcesses();
-        cy.selectProcess('Process example');
+        archivesAndLogging.clickOnProcessGroupSelect();
+        archivesAndLogging.selectAllProcessGroups();
+        archivesAndLogging.selectProcess('Process example');
         archivesAndLogging.clickOnProcessSelect();
         archivesAndLogging.clickOnStateSelect();
         archivesAndLogging.checkNumberOfStateEntriesIs(9);

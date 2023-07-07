@@ -215,8 +215,8 @@ describe ('User action logs page',()=>{
         usercard.selectProcess('Message or question');
         usercard.selectState('Question');
         cy.get('#label').should('have.text',' QUESTION ');
-        cy.get('#question').type('First question');
         usercard.selectRecipient('Control Center FR South');
+        cy.get('#question').type('First question');
         usercard.previewThenSendCard();
     }
     
