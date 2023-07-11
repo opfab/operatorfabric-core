@@ -1,0 +1,81 @@
+/* Copyright (c) 2023, RTE (http://www.rte-france.com)
+ * See AUTHORS.txt
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ * SPDX-License-Identifier: MPL-2.0
+ * This file is part of the OperatorFabric project.
+ */
+import ConfigDTO from './configDTO';
+const fs = require('fs');
+
+
+
+export default class ConfigService {
+
+    supervisorConfig: ConfigDTO;
+    configFilePath: string | null;
+    logger: any;
+
+    constructor(defaulConfig: any, configFilePath: string | null, logger: any) {
+
+
+
+        this.configFilePath = configFilePath;
+        this.logger = logger;
+
+        try {
+            if (configFilePath && fs.existsSync(configFilePath)) {
+                this.loadFromFile();
+            } else {
+                this.supervisorConfig = new ConfigDTO();
+                this.supervisorConfig.secondsBetweenConnectionChecks = defaulConfig.secondsBetweenConnectionChecks;
+                this.supervisorConfig.nbOfConsecutiveNotConnectedToSendFirstCard = defaulConfig.nbOfConsecutiveNotConnectedToSendFirstCard;
+                this.supervisorConfig.nbOfConsecutiveNotConnectedToSendSecondCard =  defaulConfig.nbOfConsecutiveNotConnectedToSendSecondCard;
+                this.supervisorConfig.entitiesToSupervise =  defaulConfig.entitiesToSupervise;
+                this.supervisorConfig.processesToSupervise =  defaulConfig.processesToSupervise;
+                this.supervisorConfig.windowInSecondsForCardSearch  = defaulConfig.windowInSecondsForCardSearch ;
+                this.supervisorConfig.secondsBetweenAcknowledmentChecks = defaulConfig.secondsBetweenAcknowledmentChecks;
+                this.supervisorConfig.secondsAfterPublicationToConsiderCardAsNotAcknowleged = defaulConfig.secondsAfterPublicationToConsiderCardAsNotAcknowleged;
+                this.supervisorConfig.disconnectedCardTemplate = defaulConfig.disconnectedCardTemplate;
+                this.supervisorConfig.unackCardTemplate = defaulConfig.unackCardTemplate;
+                this.save();
+            }
+          } catch(err) {
+            this.logger.error(err)
+          }
+
+    }
+
+    private loadFromFile() {
+        let rawdata = fs.readFileSync(this.configFilePath);
+        this.supervisorConfig = JSON.parse(rawdata);
+    }
+
+    private save() {
+      if (this.configFilePath) {
+        let data = JSON.stringify(this.supervisorConfig);
+        fs.writeFileSync(this.configFilePath, data);
+      }
+    }
+
+    getSupervisorConfig() : ConfigDTO {
+        return this.supervisorConfig;
+    }
+
+    public patch(update: any) : ConfigDTO {
+        try {
+            for (const [key, value] of Object.entries(update)) {          
+              if (this.supervisorConfig.hasOwnProperty(key) && value != null && value != undefined) {
+                (this.supervisorConfig as any)[key] = value;
+              }
+            }
+            this.save();
+          } catch (error) {
+            this.logger.error(error);
+          }
+
+        return this.supervisorConfig;
+
+    }
+}

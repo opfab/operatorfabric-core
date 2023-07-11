@@ -342,6 +342,7 @@ Node services can be configured with the following properties:
 |opfab.cardsUrl||yes|Cards consultation service URL
 |opfab.usersUrl||yes|Users service URL
 |opfab.cardReminderUrl||yes| Opfab card resetReadAndAcks endpoint URL
+|opfab.entitiesUrl||yes|Entities endpoint URL
 |opfab.getTokenUrl||yes|Authentication service URL
 |opfab.tokenExpireClaim||yes|Token expiration property
 |rabbitmq.host||yes|RabbitMQ host address
@@ -369,11 +370,25 @@ Node services can be configured with the following properties:
 |cardsExternalDiffusion.defaultConfig.checkPeriodInSeconds|||Time interval between consecutive checks
 |cardsReminder.adminPort||yes|Cards reminder service Listen port
 |cardsReminder.activeOnStartup||yes|Flag to start the cards reminder service on startup
-|cardsReminder.checkPeriodInSeconds|||Cards reminder time interval between consecutive checks
+|cardsReminder.checkPeriodInSeconds|||Cards remonder time interval between consecutive checks
+|supervisor.adminPort||yes|Cards reminder service Listen port
+|supervisor.activeOnStartup||yes|Flag to start the cards reminder service on startup
+|supervisor.defaultConfig.entitiesToSupervise|||List of entity id and related supervisor list ({ "id": "ENTITY1", "supervisors": ["ENTITY2"] })
+|supervisor.defaultConfig.disconnectedCardTemplate|||Card template used to send connections alerts
+|supervisor.defaultConfig.secondsBetweenConnectionChecks|||Connection check period
+|supervisor.defaultConfig.nbOfConsecutiveNotConnectedToSendFirstCard|||Number of consecutive failed checks before sending first alert card
+|supervisor.defaultConfig.nbOfConsecutiveNotConnectedToSendSecondCard|||Number of consecutive failed checks before sending second alert card
+|supervisor.defaultConfig.processesToSupervise|||List of processes and related states to monitor for missing acknowledgment ({ "process": "defaultProcess", "states": ["processState"] })
+|supervisor.defaultConfig.unackCardTemplate|||Card template used to send acknowledgment alerts
+|supervisor.defaultConfig.windowInSecondsForCardSearch|||Time period used to search for not acknowledged cards
+|supervisor.defaultConfig.secondsBetweenAcknowledmentChecks|||Card acknoledgement check period
+|supervisor.defaultConfig.secondsAfterPublicationToConsiderCardAsNotAcknowleged|||Time period to wait after card publishing to consider a card as not acknowleged and send the alert
 |===
 
-The parameters in "cardsExternalDiffusion.defaultConfig" section of cards external diffusion can be modified at runtime by sending an http POST request to the `/config` API with a JSON payload containing the config parameters to be changed.
 
+The parameters in "cardsExternalDiffusion.defaultConfig" section can be modified at runtime by sending an http POST request to the `/config` API of cards external diffusion service with a JSON payload containing the config parameters to be changed.
+
+The parameters in "supervisor.defaultConfig" section can be modified at runtime by sending an http POST request to the `/config` API of supervisor service with a JSON payloadcontaining the config parameters to be changed.
 
 
 include::web-ui_configuration.adoc[leveloffset=+1]

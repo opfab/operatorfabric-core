@@ -220,7 +220,7 @@ describe('Archives screen tests', function () {
         archivesAndLogging.checkAdminModeLinkDoesNotExist();
 
         archivesAndLogging.clickOnProcessSelect();
-        archivesAndLogging.checkNumberOfProcessEntriesIs(8);
+        archivesAndLogging.checkNumberOfProcessEntriesIs(9);
         archivesAndLogging.checkProcessSelectContains('Conference and IT incident');
         archivesAndLogging.checkProcessSelectContains('External recipient');
         archivesAndLogging.checkProcessSelectContains('Message or question');
@@ -229,12 +229,13 @@ describe('Archives screen tests', function () {
         archivesAndLogging.checkProcessSelectContains('IGCC');
         archivesAndLogging.checkProcessSelectContains('Process example');
         archivesAndLogging.checkProcessSelectContains('Test process for cypress');
+        archivesAndLogging.checkProcessSelectContains('Supervisor');
         archivesAndLogging.selectAllProcesses();
         archivesAndLogging.clickOnProcessSelect();
 
         archivesAndLogging.clickOnStateSelect();
         archivesAndLogging.selectAllStates();
-        archivesAndLogging.checkNumberOfStateSelectedIs(33);
+        archivesAndLogging.checkNumberOfStateSelectedIs(35);
         // We check this state is not present because it is only a child state
         archivesAndLogging.checkStateSelectDoesNotContains('Planned outage date response');
 
@@ -484,9 +485,9 @@ describe('Archives screen tests', function () {
     }
 
     function checkMultifiltersWhenAllProcessStatesAreDisplayed() {
-        // We check we have 6 items in process multi-filter, even without choosing a process group
+        // We check we have 9 items in process multi-filter, even without choosing a process group
         archivesAndLogging.clickOnProcessSelect();
-        archivesAndLogging.checkNumberOfProcessEntriesIs(8);
+        archivesAndLogging.checkNumberOfProcessEntriesIs(9);
         archivesAndLogging.checkProcessSelectContains('Conference and IT incident');
         archivesAndLogging.checkProcessSelectContains('External recipient');
         archivesAndLogging.checkProcessSelectContains('Message or question');
@@ -495,6 +496,7 @@ describe('Archives screen tests', function () {
         archivesAndLogging.checkProcessSelectContains('IGCC');
         archivesAndLogging.checkProcessSelectContains('Process example');
         archivesAndLogging.checkProcessSelectContains('Test process for cypress');
+        archivesAndLogging.checkProcessSelectContains('Supervisor');
 
         archivesAndLogging.clickOnProcessGroupSelect();
         archivesAndLogging.checkNumberOfProcessGroupEntriesIs(3);
@@ -504,7 +506,7 @@ describe('Archives screen tests', function () {
         archivesAndLogging.selectAllProcessGroups();
 
         archivesAndLogging.clickOnProcessSelect();
-        archivesAndLogging.checkNumberOfProcessEntriesIs(8);
+        archivesAndLogging.checkNumberOfProcessEntriesIs(9);
         archivesAndLogging.checkProcessSelectContains('Conference and IT incident');
         archivesAndLogging.checkProcessSelectContains('External recipient');
         archivesAndLogging.checkProcessSelectContains('Message or question');
@@ -513,12 +515,14 @@ describe('Archives screen tests', function () {
         archivesAndLogging.checkProcessSelectContains('IGCC');
         archivesAndLogging.checkProcessSelectContains('Process example');
         archivesAndLogging.checkProcessSelectContains('Test process for cypress');
+        archivesAndLogging.checkProcessSelectContains('Supervisor');
+
         archivesAndLogging.selectAllProcesses();
         archivesAndLogging.clickOnProcessSelect();
 
         archivesAndLogging.clickOnStateSelect();
         archivesAndLogging.selectAllStates();
-        archivesAndLogging.checkNumberOfStateSelectedIs(33);
+        archivesAndLogging.checkNumberOfStateSelectedIs(35);
 
         archivesAndLogging.clickOnProcessGroupSelect();
         archivesAndLogging.selectAllProcessGroups();

@@ -23,6 +23,7 @@
 |2105 |external-devices |External devices management service http (REST)
 |2106 |cards-external-diffusion|Mail notification service http (REST)
 |2107 |cards-reminder|Cards reminder service http (REST)
+|2108 |supervisor |Supervisor service http (REST)
 |27017 |mongo |Mongo api port
 |5672 |rabbitmq |Amqp api port
 |15672 |rabbitmq |Rabbitmq api port

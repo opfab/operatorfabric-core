@@ -1,0 +1,29 @@
+
+<br/>
+<br/>
+<center>
+
+<h2> Card <span style="cursor:pointer;color:blue;text-decoration:underline;" onclick="opfab.navigate.showCardInFeed('{{card.data.cardId}}')">{{card.data.title}} - {{card.data.summary}}</span>  </h2>
+<h2> was not acknowledged by : 
+    <br>
+    <br>
+    <ul> <span id="missingAcks" style="color:red; display: inline-block; text-align: left;"></ul></div>
+</h2>
+
+</center>
+<script>
+
+    loadData();
+
+function loadData() {
+    
+  let missingAcks = document.getElementById("missingAcks");
+  let missingEntities = '';
+  "{{card.data.missingAcks}}".split(',').forEach(entity => {
+    missingEntities += "<li>" + templateGateway.getEntityName(entity) + "</li>"
+  });
+  missingAcks.innerHTML = missingEntities;
+}
+  
+
+</script>

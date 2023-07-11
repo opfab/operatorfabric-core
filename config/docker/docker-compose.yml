@@ -154,6 +154,20 @@ services:
       - NODE_ENV=docker
     volumes:
       - "./node-services.json:/usr/app/config/docker.json"
+  supervisor:
+    container_name: supervisor
+    image: "lfeoperatorfabric/of-supervisor:SNAPSHOT"
+    depends_on:
+      - cards-publication
+      - users
+    user: ${USER_ID}:${USER_GID}
+    ports:
+      - "2108:2108"
+    environment:
+      - TZ=Europe/Paris
+      - NODE_ENV=docker
+    volumes:
+      - "./node-services.json:/usr/app/config/docker.json"
 # Uncomment the line below to customize sounds for notification
 #     - "./custom-sounds:/usr/share/nginx/html/assets/sounds"
   external-devices:
