@@ -622,6 +622,8 @@ input:-webkit-autofill {
 
 .opfab-tooltip {
     position: relative; /* making the .tooltip span a container for the tooltip text */
+    font-weight: normal;
+    font-style: normal;
 }
 
 .opfab-tooltip:before {
@@ -641,7 +643,7 @@ input:-webkit-autofill {
     min-width: 200px;
     padding: 10px;
     border-radius: 10px;
-    background: red;/*var(--opfab-popover-bgcolor);*/
+    background: var(--opfab-popover-bgcolor);
     color: var(--opfab-text-color);
     text-align: center;
 
