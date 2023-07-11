@@ -41,3 +41,5 @@ done
  ./addPerimeterToGroup.sh cypress Supervisor $1
  ./addPerimeterToGroup.sh questionReceiveOnly Supervisor $1
  ./addPerimeterToGroup.sh externalRecipent Dispatcher $1
+ ./addPerimeterToGroup.sh supervisor Dispatcher $1
+ 

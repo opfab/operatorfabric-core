@@ -44,6 +44,8 @@ include::users_management.adoc[leveloffset=+1]
 
 include::ui_customization.adoc[leveloffset=+1]
 
+include::supervisor.adoc[leveloffset=+1]
+
 include::external_devices_service.adoc[leveloffset=+1]
 
 include::external_applications_integration.adoc[leveloffset=+1]

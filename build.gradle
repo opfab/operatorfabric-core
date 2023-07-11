@@ -101,7 +101,7 @@ sonar {
         property "sonar.host.url", "https://sonarcloud.io"
         property "sonar.organization" , "opfab"
         property "sonar.projectKey" , "org.lfenergy.operatorfabric:operatorfabric-core"
-        property 'sonar.sources', 'ui/main,node-services/cards-external-diffusion,node-services/cards-reminder,node-services/common'
+        property 'sonar.sources', 'ui/main,node-services/cards-external-diffusion,node-services/cards-reminder,node-services/supervisor,node-services/common'
         property 'sonar.junit.reportPaths','build/test-results/test'
         property 'sonar.coverage.jacoco.xmlReportPaths','build/reports/jacoco/xml/report.xml'
         property 'sonar.javascript.lcov.reportPaths','node-services/**/coverage/lcov.info'
