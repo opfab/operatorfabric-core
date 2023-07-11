@@ -578,10 +578,63 @@ describe('AdmininstrationPages', () => {
         agGrid.countTableRows('ag-grid-angular', 8);
     });
 
+    it('List, delete businessdata', () => {
+        opfab.loginWithUser('admin');
+        opfab.navigateToAdministration();
+
+        //Click on "Business Data"
+        cy.get('#opfab-admin-businessData-tab').click();
+
+        // Check the content of the first row
+        agGrid.cellShould('ag-grid-angular', 0, 0, 'have.text', 'services');
+
+        // Check the page has 1 rows
+        agGrid.countTableRows('ag-grid-angular', 1);
+
+        // Pagination should display ' Results number  : 1 '
+        cy.get('.opfab-pagination').should('contain.text', ' Results number  : 1');
+
+        // Upload test file
+        cy.get('#add-item').click()
+        cy.get('#fileUploader').selectFile('cypress/fixtures/businessDataTest', {force: true});
+
+        cy.waitDefaultTime();
+
+        // Delete first business data file
+        agGrid.clickCell('ag-grid-angular', 0, 3, 'of-action-cell-renderer');
+
+        cy.get('of-confirmation-dialog').should('exist');
+
+        cy.get('#opfab-admin-confirmation-btn-ok').click();
+
+        cy.waitDefaultTime();
+
+        //Check the business data file that was created is deleted
+        cy.get('.opfab-pagination').should('contain.text', ' Results number  : 1');
+
+        // Download the first file
+        agGrid.clickCell('ag-grid-angular', 0, 2, 'of-action-cell-renderer');
+
+        cy.waitDefaultTime();
+
+        // check download folder contains the export file
+        cy.task('list', {dir: './cypress/downloads'}).then((files) => {
+            expect(files.length).to.equal(1);
+            // check file name
+            expect(files[0]).to.match(/^services.json/);
+            cy.readFile('./cypress/downloads/services.json').then(labels => {
+                expect(labels[0].label).to.eq("Group 1")
+                expect(labels[1].label).to.eq("Group 2")
+            });
+        });
+
+        agGrid.countTableRows('ag-grid-angular', 1);
+    });
+
     describe('Check export files', function () {
 
 
-        afterEach('Clean export directory', function () {
+        beforeEach('Clean export directory', function () {
             script.cleanDownloadsDir();
         });
 
@@ -740,6 +793,37 @@ describe('AdmininstrationPages', () => {
                     expect(rows[0].ID).to.equal('conferenceAndITIncidentExample');
                     expect(rows[0].PROCESS).to.equal('conferenceAndITIncidentExample');
                     expect(rows[0]['STATE RIGHTS']).to.equal('{"state":"Conference Call ☏","right":"ReceiveAndWrite","filteringNotificationAllowed":true},{"state":"IT Incident","right":"ReceiveAndWrite","filteringNotificationAllowed":true}');
+                })
+            })
+        })
+
+        it('Check business data export', function () {
+
+            opfab.loginWithUser('admin');
+            opfab.navigateToAdministration();
+
+            //Click on "Business Data"
+            cy.get('#opfab-admin-businessData-tab').click();
+
+            //Wait for table rendering
+            cy.get('.opfab-pagination').should('contain.text', ' Results number  : 1');
+
+            // Do export
+            cy.get('#opfab-admin-btn-exportToExcel').click();
+
+
+            cy.waitDefaultTime();
+
+            // check download folder contains the export file
+            cy.task('list', {dir: './cypress/downloads'}).then((files) => {
+                expect(files.length).to.equal(1);
+
+                // check file name
+                expect(files[0]).to.match(/^businessData_export_\d*\.xlsx/);
+                // check file content
+                cy.task('readXlsx', {file: './cypress/downloads/' + files[0], sheet: "data"}).then((rows) => {
+                    expect(rows.length).to.equal(1);
+                    expect(rows[0]['BUSINESS DATA']).to.equal('services');
                 })
             })
         })
