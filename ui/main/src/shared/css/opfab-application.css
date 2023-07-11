@@ -637,10 +637,11 @@ input:-webkit-autofill {
     margin-left: 15px; /* and add a small left margin */
 
     /* basic styles */
-    width: 200px;
+    width: fit-content;
+    min-width: 200px;
     padding: 10px;
     border-radius: 10px;
-    background: var(--opfab-popover-bgcolor);
+    background: red;/*var(--opfab-popover-bgcolor);*/
     color: var(--opfab-text-color);
     text-align: center;
 

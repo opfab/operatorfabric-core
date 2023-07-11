@@ -156,7 +156,6 @@ export class ArchivesLoggingFiltersComponent implements OnInit, OnDestroy, After
 
     ngAfterViewInit(): void {
         this.setDateFilterBounds();
-        document.getElementById('opfab-admin-mode-help').setAttribute('data-text', this.translate.instant('shared.adminModeHelp'));
     }
 
     clearMultiFilters() {
