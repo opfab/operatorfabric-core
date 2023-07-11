@@ -383,7 +383,7 @@
         "type": "TYPE",
         "true": "JA",
         "false": "NEE",
-        "confirmDelete": "Wilt u de groep echt verwijderen?",
+        "confirmDelete": "Wilt u de groep echt verwijderen",
         "add": "NIEUWE GROEP TOEVOEGEN"
       },
       "entity": {
@@ -394,7 +394,7 @@
         "labels": "LABELS",
         "users": "GEBRUIKERS",
         "entityAllowedToSendCard": "KAARTEN VERSTUREN TOEGESTAAN",
-        "confirmDelete": "Wilt u de entiteit echt verwijderen?",
+        "confirmDelete": "Wilt u de entiteit echt verwijderen",
         "add": "NIEUWE ENTITEIT TOEVOEGEN",
         "true": "JA",
         "false": "NEE",
@@ -407,14 +407,14 @@
         "state": "STATUS",
         "right": "RECHT",
         "filteringNotificationAllowed": "FILTERBERICHT\nTOEGESTAAN",
-        "confirmDelete": "Wilt u de perimeter echt verwijderen?",
+        "confirmDelete": "Wilt u de perimeter echt verwijderen",
         "add":"NIEUWE PERIMETER TOEVOEGEN"
       },
       "process": {
         "ProcessId": "ID",
         "ProcessName": "PROCES",
         "ProcessVersion": "HUIDIGE VERSIE",
-        "confirmDelete": "Wilt u het proces echt verwijderen?"
+        "confirmDelete": "Wilt u het proces echt verwijderen"
       },
       "user": {
         "login": "GEBRUIKERSNAAM",
@@ -423,13 +423,13 @@
         "groups": "GROEPEN",
         "entities": "ENTITEITEN",
         "authorizedIPAddresses": "GEAUTHORIZEERDE IP ADRESSEN VOOR GEBRUIKERSAANSLUITING (gescheiden door ',')",
-        "confirmDelete": "Wilt u de gebruiker echt verwijderen?",
+        "confirmDelete": "Wilt u de gebruiker echt verwijderen",
         "add": "NIEUWE GEBRUIKER TOEVOEGEN"
       },
       "businessData": {
         "name": "ZAKELIJKE GEGEVENS",
         "add": "NIEUWE ZAKELIJKE GEGEVENS TOEVOEGEN",
-        "confirmDelete": "Wilt u het bestand met zakelijke gegevens echt verwijderen?"
+        "confirmDelete": "Wilt u het bestand met zakelijke gegevens echt verwijderen"
 
       },
       "selectGroupText": "Selecteer een Groep",
