@@ -34,6 +34,7 @@ import {EntitiesServerMock} from '@tests/mocks/entitiesServer.mock';
 import {Entity} from '@ofModel/entity.model';
 import {ServerResponse, ServerResponseStatus} from '../server/serverResponse';
 import {ProcessesService} from './businessconfig/processes.service';
+import { PermissionEnum } from '@ofModel/permission.model';
 
 describe('AcknowledgeService testing ', () => {
     let acknowledgeService: AcknowledgeService;
@@ -135,6 +136,24 @@ describe('AcknowledgeService testing ', () => {
                 filteringNotificationAllowed: true
             }
         ]);
+    }
+
+    function getUserMemberOfEntity1WithPerimeterAndReadonly(): UserWithPerimeters {
+        return  new UserWithPerimeters(userMemberOfEntity1, [
+            {
+                process: 'testProcess',
+                state: 'state1',
+                rights: RightsEnum.ReceiveAndWrite,
+                filteringNotificationAllowed: true
+            },
+            {
+                process: 'testProcess',
+                state: 'state2',
+                rights: RightsEnum.ReceiveAndWrite,
+                filteringNotificationAllowed: true
+            }
+        ],
+        [PermissionEnum.READONLY]);
     }
 
     it('acknowledgmentAllowed of the state is not present , isAcknowledgmentAllowed() must return true (default value)', () => {
@@ -865,6 +884,73 @@ describe('AcknowledgeService testing ', () => {
                 entityRecipients: ["ENTITY2"],
                 hasBeenAcknowledged: true,
                 entitiesAcks: ["ENTITY3"]
+            });
+
+            const res = acknowledgeService.isLightCardHasBeenAcknowledgedByUserOrByUserEntity(cardWithAck);
+            expect(res).toBeTrue();
+        }
+    );
+
+    it('consideredAcknowledgedForUserWhen of the state is AllEntitiesOfUserHaveAcknowledged, ' +
+        'user is member of publisher entity ENTITY1, ' +
+        'user has ack the card with only ENTITY3 connected, other entity has ack the card, ' +
+        'isLightCardHasBeenAcknowledgedByUserOrByUserEntity() must return false',
+        () => {
+            userServerMock.setResponseForCurrentUserWithPerimeter(new ServerResponse(getUserMemberOfEntity1AndEntity3WithPerimeter(), ServerResponseStatus.OK, ""));
+            userService.loadUserWithPerimetersData().subscribe();
+            const cardWithAck = getOneRandomCard({
+                publisher: 'ENTITY1',
+                publisherType: 'ENTITY',
+                process: 'testProcess',
+                processVersion: '1',
+                state: 'state2',
+                entityRecipients: ["ENTITY2", "ENTITY3"],
+                hasBeenAcknowledged: true,
+                entitiesAcks: ["ENTITY2", "ENTITY3"]
+            });
+
+            const res = acknowledgeService.isLightCardHasBeenAcknowledgedByUserOrByUserEntity(cardWithAck);
+            expect(res).toBeFalse();
+        }
+    );
+
+    it('consideredAcknowledgedForUserWhen of the state is AllEntitiesOfUserHaveAcknowledged, ' +
+        'user is member of publisher entity ENTITY1, ' +
+        'user has ack the card with all of his entities (publisher ENTITY1 and ENTITY3), other entity has ack the card, ' +
+        'isLightCardHasBeenAcknowledgedByUserOrByUserEntity() must return true',
+        () => {
+            userServerMock.setResponseForCurrentUserWithPerimeter(new ServerResponse(getUserMemberOfEntity1AndEntity3WithPerimeter(), ServerResponseStatus.OK, ""));
+            userService.loadUserWithPerimetersData().subscribe();
+            const cardWithAck = getOneRandomCard({
+                publisher: 'ENTITY1',
+                publisherType: 'ENTITY',
+                process: 'testProcess',
+                processVersion: '1',
+                state: 'state2',
+                entityRecipients: ["ENTITY2", "ENTITY3"],
+                hasBeenAcknowledged: true,
+                entitiesAcks: ["ENTITY1", "ENTITY2", "ENTITY3"]
+            });
+
+            const res = acknowledgeService.isLightCardHasBeenAcknowledgedByUserOrByUserEntity(cardWithAck);
+            expect(res).toBeTrue();
+        }
+    );
+
+    it('consideredAcknowledgedForUserWhen of the state is AllEntitiesOfUserHaveAcknowledged, ' +
+        'user has Readonly permissions, ' +
+        'user has ack the card, no other entity has ack the card, ' +
+        'isLightCardHasBeenAcknowledgedByUserOrByUserEntity() must return true',
+        () => {
+            userServerMock.setResponseForCurrentUserWithPerimeter(new ServerResponse(getUserMemberOfEntity1WithPerimeterAndReadonly(), ServerResponseStatus.OK, ""));
+            userService.loadUserWithPerimetersData().subscribe();
+            const cardWithAck = getOneRandomCard({
+                process: 'testProcess',
+                processVersion: '1',
+                state: 'state2',
+                entityRecipients: ["ENTITY1"],
+                hasBeenAcknowledged: true,
+                entitiesAcks: []
             });
 
             const res = acknowledgeService.isLightCardHasBeenAcknowledgedByUserOrByUserEntity(cardWithAck);
