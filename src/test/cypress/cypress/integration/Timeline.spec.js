@@ -859,11 +859,11 @@ describe('Time line moves', function () {
     }
 
     function lockTimeLine() {
-        cy.get("#opfab-timeline-lock").click();
+        cy.get("#opfab-timeline-lock").click({force: true});
     }
 
     function unlockTimeLine() {
-        cy.get("#opfab-timeline-unlock").click();
+        cy.get("#opfab-timeline-unlock").click({force: true});
     }
 
     function moveRight() {

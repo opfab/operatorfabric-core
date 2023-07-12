@@ -15,7 +15,6 @@ import {UserPreferencesService} from 'app/business/services/users/user-preferenc
 import {DateTimeFormatterService} from 'app/business/services/date-time-formatter.service';
 import {FilterService} from 'app/business/services/lightcards/filter.service';
 import {LogOption, OpfabLoggerService} from 'app/business/services/logs/opfab-logger.service';
-import {TranslateService} from "@ngx-translate/core";
 
 @Component({
     selector: 'of-timeline-buttons',
@@ -50,8 +49,7 @@ export class TimelineButtonsComponent implements OnInit, OnDestroy {
         private userPreferences: UserPreferencesService,
         private configService: ConfigService,
         private filterService: FilterService,
-        private opfabLogger: OpfabLoggerService,
-        private translate: TranslateService
+        private opfabLogger: OpfabLoggerService
     ) {}
 
     ngOnInit() {

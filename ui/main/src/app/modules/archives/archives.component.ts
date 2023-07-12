@@ -129,7 +129,6 @@ export class ArchivesComponent implements OnDestroy, OnInit {
     }
 
     resetForm() {
-        console.log('-------------------- appel à resetForm de archives.component.ts');
         this.archiveForm.reset();
         this.firstQueryHasBeenDone = false;
         this.hasResult = false;
