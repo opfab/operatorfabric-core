@@ -12,6 +12,7 @@ export class User {
         readonly login: string,
         readonly firstName: string,
         readonly lastName: string,
+        readonly comment?: string,
         readonly groups?: Array<string>,
         readonly entities?: Array<string>,
         readonly authorizedIPAddresses?: Array<string>

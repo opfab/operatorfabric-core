@@ -45,9 +45,9 @@ describe('AcknowledgeService testing ', () => {
     let userService: UserService;
 
     beforeEach(() => {
-        userMemberOfEntity1 = new User('userMemberOfEntity1', 'firstName', 'lastName', ['group1'], ['ENTITY1']);
-        userMemberOfEntity2 = new User('userMemberOfEntity2', 'firstName', 'lastName', ['group1'], ['ENTITY2']);
-        userMemberOfEntity1AndEntity3 = new User('userMemberOfEntity1AndEntity3', 'firstName', 'lastName', ['group1'], ['ENTITY1', 'ENTITY3']);
+        userMemberOfEntity1 = new User('userMemberOfEntity1', 'firstName', 'lastName', null, ['group1'], ['ENTITY1']);
+        userMemberOfEntity2 = new User('userMemberOfEntity2', 'firstName', 'lastName', null, ['group1'], ['ENTITY2']);
+        userMemberOfEntity1AndEntity3 = new User('userMemberOfEntity1AndEntity3', 'firstName', null, 'lastName', ['group1'], ['ENTITY1', 'ENTITY3']);
 
         statesList = new Map<string, State>();
         const configServerMock = new ConfigServerMock();

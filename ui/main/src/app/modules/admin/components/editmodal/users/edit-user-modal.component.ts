@@ -34,6 +34,7 @@ export class EditUserModalComponent implements OnInit {
         login: FormControl<string | null>,
         firstName: FormControl<string | null>,
         lastName: FormControl<string | null>,
+        comment: FormControl<string | null>,
         groups: FormControl<[] | null>,
         entities: FormControl<[] | null>,
         authorizedIPAddresses: FormControl<any>
@@ -80,6 +81,7 @@ export class EditUserModalComponent implements OnInit {
             ),
             firstName: new FormControl('', []),
             lastName: new FormControl('', []),
+            comment: new FormControl('', []),
             groups: new FormControl([]),
             entities: new FormControl([]),
             authorizedIPAddresses: new FormControl(
@@ -91,8 +93,8 @@ export class EditUserModalComponent implements OnInit {
             // If the modal is used for edition, initialize the modal with current data from this row
 
             // For 'simple' fields (where the value is directly displayed), we use the form's patching method
-            const {login, firstName, lastName} = this.row;
-            this.userForm.patchValue({login, firstName, lastName}, {onlySelf: false});
+            const {login, firstName, lastName, comment} = this.row;
+            this.userForm.patchValue({login, firstName, lastName, comment}, {onlySelf: false});
 
             if (this.row.authorizedIPAddresses) {
                 this.userForm.patchValue({authorizedIPAddresses: this.row.authorizedIPAddresses.join(',')});
@@ -167,6 +169,7 @@ export class EditUserModalComponent implements OnInit {
         this.login.setValue((this.login.value as string).trim());
         if (this.lastName.value) this.lastName.setValue((this.lastName.value as string).trim());
         if (this.firstName.value) this.firstName.setValue((this.firstName.value as string).trim());
+        if (this.comment.value) this.comment.setValue((this.comment.value as string).trim());
     }
 
     get login() {
@@ -179,6 +182,10 @@ export class EditUserModalComponent implements OnInit {
 
     get lastName() {
         return this.userForm.get('lastName');
+    }
+
+    get comment() {
+        return this.userForm.get('comment')
     }
 
     get groups() {

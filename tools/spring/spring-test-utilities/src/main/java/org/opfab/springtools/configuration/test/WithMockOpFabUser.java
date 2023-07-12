@@ -32,6 +32,8 @@ public @interface WithMockOpFabUser {
 
     String lastName() default  "myUserLastName";
 
+    String comment() default  "";
+
     String[] groups() default "";
 
     PermissionEnum[] permissions() default {}; 

@@ -49,6 +49,8 @@ describe('AdmininstrationPages', () => {
 
         cy.get('#opfab-lastName').type('surname');
 
+        cy.get('#opfab-comment').type('comment');
+
         cy.get('#opfab-groups').click();
         cy.get('#opfab-groups').find('.vscomp-option-text').eq(1).click({force: true});
         cy.get('#opfab-groups').click();
@@ -83,6 +85,8 @@ describe('AdmininstrationPages', () => {
         cy.get('#opfab-firstName').type(' updated');
 
         cy.get('#opfab-lastName').type(' updated');
+
+        cy.get('#opfab-comment').should('have.value', 'comment')
 
         cy.get('#opfab-groups').click();
         // Deselect old group
