@@ -37,6 +37,7 @@ public class UserData implements User {
     private String login;
     private String firstName;
     private String lastName;
+    private String comment;
 
     @JsonIgnore
     @Singular("entity")
@@ -54,6 +55,7 @@ public class UserData implements User {
         this.login = user.getLogin();
         this.firstName = user.getFirstName();
         this.lastName = user.getLastName();
+        this.comment = user.getComment();
         this.entities = new HashSet<>(user.getEntities());
         this.groupSet = new HashSet<>(user.getGroups());
         this.authorizedIPAddresses = new HashSet<>(user.getAuthorizedIPAddresses());

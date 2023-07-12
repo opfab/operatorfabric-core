@@ -13,7 +13,8 @@ Feature: CreateUsers
 {
    "login" : "loginkarate1",
    "firstName" : "name",
-   "lastName" : "familyName"
+   "lastName" : "familyName",
+   "comment" : "comment"
 }
 """
 
@@ -108,6 +109,7 @@ Feature: CreateUsers
     And match response.login == userKarate.login
     And match response.firstName == userKarate.firstName
     And match response.lastName == userKarate.lastName
+    And match response.comment == userKarate.comment
 
   Scenario: Update users
     #post /users

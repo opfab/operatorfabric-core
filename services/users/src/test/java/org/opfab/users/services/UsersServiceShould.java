@@ -124,6 +124,7 @@ public class UsersServiceShould {
                 .login("user1")
                 .firstName("user1FirstName")
                 .lastName("user1LastName")
+                .comment("comment")
                 .group("group1").group("group2")
                 .build();
         u2 = UserData.builder()

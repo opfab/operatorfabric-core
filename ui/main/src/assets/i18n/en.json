@@ -420,6 +420,7 @@
         "login": "LOGIN",
         "lastName": "LAST NAME",
         "firstName": "FIRST NAME",
+        "comment": "COMMENT",
         "groups": "GROUPS",
         "entities": "ENTITIES",
         "authorizedIPAddresses": "AUTHORIZED IP ADDRESSES FOR USER CONNECTION (separated by ',')",

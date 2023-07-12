@@ -95,9 +95,9 @@ describe('ActivityAreaView', () => {
     });
 
     async function mockUserConfig(userEntities: string[], userConnectedEntities: string[]) {
-        user = new User('currentUser', 'firstname', 'lastname', [], userEntities);
+        user = new User('currentUser', 'firstname', 'lastname', null, [], userEntities);
         userServerMock.setResponseForUser(new ServerResponse(user, ServerResponseStatus.OK, null));
-        const userForPerimeter = new User('currentUser', 'firstname', 'lastname', [], userConnectedEntities);
+        const userForPerimeter = new User('currentUser', 'firstname', 'lastname', null, [], userConnectedEntities);
         const userWithPerimeters = new UserWithPerimeters(userForPerimeter, new Array(), null, new Map());
         userServerMock.setResponseForCurrentUserWithPerimeter(
             new ServerResponse(userWithPerimeters, ServerResponseStatus.OK, null)

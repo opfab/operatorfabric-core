@@ -31,6 +31,8 @@ public @interface WithMockOpFabUserReactive {
     String firstName() default  "myUserFirstName";
 
     String lastName() default  "myUserLastName";
+    
+    String comment() default  "";
 
     String[] groups() default "";
 
