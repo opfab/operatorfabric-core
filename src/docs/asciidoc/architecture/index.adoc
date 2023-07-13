@@ -23,7 +23,7 @@ of the cards, the operator can send back information to the third party via a "r
 
 === Business components
 
-image::FunctionalDiagram.jpg[functional diagram]
+image::FunctionalDiagram.png[functional diagram]
 
 To do the job, the following business components are defined :
 
@@ -32,6 +32,9 @@ To do the job, the following business components are defined :
 - Card rendering and process definition : this component stores the information for the card rendering (templates, internationalization, ...) and a light description of the process associate (states, response card, ...). This configuration data can be provided either by an administrator or by a third party tool.
 - User Management : this component is used to manage users, groups, entities and perimeters.
 - External devices : this optional component permit to send alarm to an external device instead of playing a sound on the user computer. For now, only one driver exists using modbus protocol. 
+- Cards Reminder : this component is used to handle cards reminders.
+- Cards External Diffusion : this optional component allows to send cards notifications via email
+- Supervisor : this optional component allows to monitor users connections and card acknowledgements.
 
 === Business objects 
 
@@ -56,7 +59,7 @@ A card can have a parent card, in this case the card can be named child card.
 
 The architecture is based on independent modules. All business services are accessible via REST API.
 
-image::LogicalDiagram.jpg[functional diagram]
+image::LogicalDiagram.png[functional diagram]
 
 === Business components
 
@@ -70,7 +73,7 @@ We find here the business component seen before:
 	** internationalization information
  
  
-Except form the UI, which is based on angular, all business components are based on https://spring.io/projects/spring-boot[SpringBoot] and packaged via https://www.docker.com/[Docker]. 
+Business components are based on https://spring.io/projects/spring-boot[SpringBoot] or https://nodejs.or[Node.js] and are packaged via https://www.docker.com/[Docker]. 
 
 https://docs.spring.io/spring/docs/current/spring-framework-reference/web-reactive.html[Spring WebFlux] is used to provide the card in a fluid way.
 
@@ -101,9 +104,9 @@ WARNING: The current software does not yet fully follow the architecture describ
 
 === Back Architecture 
 
-The main idea is to make the business code as technology independent as possible. This means that the business code should be independent of the Spring Framework for example. Inspired by the hexagonal architecture, this leads to the following simplified view:
+The main idea is to make the business code as technology independent as possible. This means that the business code should be independent of the Spring Framework or Node.js for example. Inspired by the hexagonal architecture, this leads to the following simplified view:
 
-image::SoftwareArchitecture-Back.jpg[back software architecture diagram]
+image::SoftwareArchitecture-Back.png[back software architecture diagram]
 
 
 Unit testing consists in testing the business code and using mock objects to simulate the servers (mongoDB, rabbit ...) 
