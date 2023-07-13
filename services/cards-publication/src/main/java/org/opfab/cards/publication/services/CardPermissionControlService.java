@@ -26,9 +26,9 @@ public class CardPermissionControlService {
     boolean isCardPublisherAllowedForUser(CardPublicationData card, String login) {
         if (card.getRepresentative() != null) {
             if (card.getRepresentativeType().equals(org.opfab.cards.publication.model.PublisherTypeEnum.EXTERNAL))
-                return card.getRepresentative().equals(login);
+                return card.getRepresentative().equalsIgnoreCase(login);
         } else if (card.getPublisherType().equals(org.opfab.cards.publication.model.PublisherTypeEnum.EXTERNAL)) {
-            return card.getPublisher().equals(login);
+            return card.getPublisher().equalsIgnoreCase(login);
         }
         return true;
     }
@@ -66,8 +66,7 @@ public class CardPermissionControlService {
             && user.getUserData().getEntities().contains(card.getPublisher()) && checkUserPerimeterForCard(user.getComputedPerimeters(), card);
     }
 
-    boolean isUserAuthorizedToSendCard(CardPublicationData card, CurrentUserWithPerimeters user){
-
+    boolean isUserAuthorizedToSendCard(CardPublicationData card, CurrentUserWithPerimeters user) {
         return !isCurrentUserReadOnly(user) && checkUserPerimeterForCard(user.getComputedPerimeters(), card);
     }
 

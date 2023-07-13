@@ -691,6 +691,29 @@ class CardProcessServiceShould {
         }
 
         @Test
+        void GIVEN_a_card_WHEN_card_is_send_with_a_login_case_different_than_publisher_THEN_card_is_accepted() {
+                User user = new User();
+                user.setLogin("DummyUser");
+                CurrentUserWithPerimeters sameUser = new CurrentUserWithPerimeters();
+                sameUser.setUserData(user);
+
+                ComputedPerimeter cp = new ComputedPerimeter();
+                cp.setProcess("PROCESS_CARD_USER");
+                cp.setState("state1");
+                cp.setRights(RightsEnum.RECEIVEANDWRITE);
+                List<ComputedPerimeter> list = new ArrayList<>();
+                list.add(cp);
+                sameUser.setComputedPerimeters(list);
+
+                CardPublicationData card = generateOneCard(currentUserWithPerimeters.getUserData().getLogin());
+                card.setPublisherType(PublisherTypeEnum.EXTERNAL);
+                Optional<CurrentUserWithPerimeters> optionalSameUser = Optional.of(sameUser);
+
+                cardProcessingService.processCard(card, optionalSameUser, token);
+                Assertions.assertThat(checkCardCount(1)).isTrue();
+        }
+
+        @Test
         void GIVEN_an_existing_card_WHEN_card_is_deleted_with_a_login_different_than_publisher_THEN_card_deletion_is_rejected() {
                 User user = new User();
                 user.setLogin("wrongUser");
@@ -732,6 +755,32 @@ class CardProcessServiceShould {
                                 .isInstanceOf(ApiErrorException.class).hasMessage(
                                                 "Card representative is set to dummyUser and account login is wrongUser, the card cannot be sent");
                 Assertions.assertThat(checkCardCount(0)).isTrue();
+        }
+
+        @Test
+        void GIVEN_a_card_with_representative_dummyUser_WHEN_card_is_send_with_a_login_case_different_than_representative_THEN_card_is_accepted() {
+
+                User user = new User();
+                user.setLogin("DummyUser");
+                CurrentUserWithPerimeters sameUser = new CurrentUserWithPerimeters();
+                sameUser.setUserData(user);
+
+                ComputedPerimeter cp = new ComputedPerimeter();
+                cp.setProcess("PROCESS_CARD_USER");
+                cp.setState("state1");
+                cp.setRights(RightsEnum.RECEIVEANDWRITE);
+                List<ComputedPerimeter> list = new ArrayList<>();
+                list.add(cp);
+                sameUser.setComputedPerimeters(list);
+
+                CardPublicationData card = generateOneCard("IGNORED_PUBLISHER");
+                card.setPublisherType(PublisherTypeEnum.EXTERNAL);
+                card.setRepresentativeType(PublisherTypeEnum.EXTERNAL);
+                card.setRepresentative(currentUserWithPerimeters.getUserData().getLogin());
+                Optional<CurrentUserWithPerimeters> optionalSameUser = Optional.of(sameUser);
+
+                cardProcessingService.processCard(card, optionalSameUser, token);
+                Assertions.assertThat(checkCardCount(1)).isTrue();
         }
 
         @Test
