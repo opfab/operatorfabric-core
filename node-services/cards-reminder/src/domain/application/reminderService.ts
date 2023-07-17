@@ -116,4 +116,14 @@ export default class ReminderService implements EventListener {
             reminderDate + card.secondsBeforeTimeSpanForReminder + ReminderService.MAX_MILLISECONDS_FOR_REMINDING_AFTER_EVENT_STARTS
         );
     }
+
+
+    public async getAllCardsToRemind(): Promise<Card[]> {
+        return this.databaseService.getAllCardsToRemind();
+    }
+
+    public clearReminders() {
+        this.databaseService.clearReminders();
+    }
+
 }
