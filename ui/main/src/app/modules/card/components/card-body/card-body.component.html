@@ -10,7 +10,7 @@
   <div style="display: block;  margin-top:10px;">
     <ul class="nav nav-tabs opfab-line-undertab">
       <li class="nav-item opfab-tab opfab-menu-item-left" data-toggle="tab">
-        <span class="opfab-tab" id="opfab-card-title">{{card.titleTranslated | opfabTitleCase}}</span>
+        <span class="opfab-tab" id="opfab-card-title">{{this.truncatedTitle | opfabTitleCase}}</span>
       </li>
       <li class="nav-item opfab-menu-item-right">
         <div *ngIf="!isSmallscreen()" style="display:flex">

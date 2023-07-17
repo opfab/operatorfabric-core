@@ -371,9 +371,10 @@ input:-webkit-autofill {
         border-bottom: 1px solid var(--opfab-table-border-color);
     }
 
-    /* #2588 : Logging screen : summary column extends without limit if the message contains no space character */
+/* #2588 : Logging screen : summary column extends without limit if the message contains no space character */
 .opfab-table td {
-        overflow: hidden;
+    overflow: hidden;
+    word-break: break-all;
     }
 
 .opfab-pagination {
@@ -613,5 +614,12 @@ input:-webkit-autofill {
 
 .opfab-btn-cancel:hover {
     color: #2268ff;
+}
+
+.opfab-bubble-text{
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 600px;
 }
 /* END BUTTON STYLE */

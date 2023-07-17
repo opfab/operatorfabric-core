@@ -44,16 +44,16 @@
       <tbody>
       <ng-container *ngFor="let updates of updatesByCardId">
         <tr  (click)="openCard(updates.mostRecent.id)" class="opfab-archives-table-line" style="cursor: pointer;">
-          <td class="opfab-archive-sev opfab-archive-sev-{{updates.mostRecent.severity.toLowerCase()}}"></td>
+          <td style ="min-width: 15px" class="opfab-archive-sev opfab-archive-sev-{{updates.mostRecent.severity.toLowerCase()}}"></td>
           <td class="opfab-archive-sev"></td>
           <td *ngIf="isCollapsibleUpdatesActivated && updates.cardHistories.length > 0 && !updates.displayHistory" class="opfab-archives-icon-plus" (click)="$event.stopPropagation();displayHistoryOfACard(updates)"></td>
           <td *ngIf="isCollapsibleUpdatesActivated && updates.cardHistories.length > 0 && updates.displayHistory" class="opfab-archives-icon-minus" (click)="$event.stopPropagation();hideHistoryOfACard(updates)"></td>
           <td *ngIf="isCollapsibleUpdatesActivated && ! updates.cardHistories.length"></td>
-          <td style="padding-left: 5px"> {{displayTime(updates.mostRecent.publishDate)}} </td>
-          <td> {{displayTime(updates.mostRecent.startDate)}} - {{displayTime(updates.mostRecent.endDate)}} </td>
-          <td>{{updates.mostRecent.titleTranslated | opfabTitleCase}}</td>
+          <td style="padding-left: 5px;min-width: 114px"> {{displayTime(updates.mostRecent.publishDate)}} </td>
+          <td style ="min-width: 242px"> {{displayTime(updates.mostRecent.startDate)}} - {{displayTime(updates.mostRecent.endDate)}} </td>
+          <td style ="width: 20%;">{{updates.mostRecent.titleTranslated | opfabTitleCase}}</td>
           <td>{{updates.mostRecent.summaryTranslated}}</td>
-          <td *ngIf="filtersTemplate.isProcessGroupFilterVisible()" translate>{{ processesService.findProcessGroupLabelForProcess(updates.mostRecent.process) }}</td>
+          <td style ="min-width: 130px" *ngIf="filtersTemplate.isProcessGroupFilterVisible()" translate>{{ processesService.findProcessGroupLabelForProcess(updates.mostRecent.process) }}</td>
         </tr>
 
         <!--history of the card-->
@@ -64,8 +64,8 @@
             <td></td>
             <td style="padding-left: 30px"> {{displayTime(historyCard.publishDate)}} </td>
             <td style="padding-left: 30px"> {{displayTime(historyCard.startDate)}} - {{displayTime(historyCard.endDate)}} </td>
-            <td style="padding-left: 30px">{{historyCard.titleTranslated | opfabTitleCase}}</td>
-            <td style="padding-left: 30px">{{ historyCard.summaryTranslated}}</td>
+            <td style="padding-left: 30px"> {{historyCard.titleTranslated | opfabTitleCase}}</td>
+            <td style="padding-left: 30px"> {{historyCard.summaryTranslated}}</td>
             <td style="padding-left: 30px" *ngIf="filtersTemplate.isProcessGroupFilterVisible()" translate>{{ processesService.findProcessGroupLabelForProcess(historyCard.process) }}</td>
           </tr>
           <tr *ngIf="updates.tooManyRows">
@@ -108,7 +108,7 @@
 
 <ng-template #cardDetail let-modal>
   <div class="modal-header">
-    <div id="opfab-archives-card-title">{{selectedCard.titleTranslated | opfabTitleCase}}</div>
+    <div id="opfab-archives-card-title">{{selectedCardTruncatedTitle | opfabTitleCase}}</div>
     <div id="opfab-archives-card-detail-close" class="opfab-close-modal-icon" aria-label="Close"
       (click)="modal.dismiss('Cross click')">
       <span aria-hidden="true">&times;</span>

@@ -23,6 +23,7 @@ import {DateTimeFormatterService} from 'app/business/services/date-time-formatte
 import {MapService} from 'app/business/services/map.service';
 import {TranslateService} from '@ngx-translate/core';
 import {RouterStore} from 'app/business/store/router.store';
+import {Utilities} from 'app/business/common/utilities';
 
 @Component({
     selector: 'of-light-card',
@@ -39,6 +40,7 @@ export class LightCardComponent implements OnInit, OnDestroy {
 
     protected _i18nPrefix: string;
     dateToDisplay: string;
+    truncatedTitle: string;
     fromEntity = null;
     showExpiredIcon = true;
     showExpiredLabel = true;
@@ -74,6 +76,7 @@ export class LightCardComponent implements OnInit, OnDestroy {
         this.computeDisplayedDate();
         this.computeLttdParams();
         this.computeDisplayedExpirationDate();
+        this.truncatedTitle = Utilities.sliceForFormat(this.lightCard.titleTranslated, 75);
         this.hasGeoLocation =
             this.lightCard.wktGeometry === undefined ||
             this.lightCard.wktGeometry == null ||
