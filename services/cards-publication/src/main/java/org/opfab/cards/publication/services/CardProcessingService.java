@@ -14,6 +14,7 @@ import lombok.extern.slf4j.Slf4j;
 
 import org.opfab.cards.model.CardOperationTypeEnum;
 import org.opfab.cards.publication.model.*;
+import org.opfab.cards.publication.ratelimiter.CardSendingLimiter;
 import org.opfab.cards.publication.repositories.CardRepository;
 import org.opfab.cards.publication.repositories.UserBasedOperationResult;
 import org.opfab.springtools.configuration.oauth.ProcessesCache;
@@ -47,10 +48,12 @@ public class CardProcessingService {
     private CardPermissionControlService cardPermissionControlService;
     private CardTranslationService cardTranslationService;
     private ProcessesCache processesCache;
+    private CardSendingLimiter cardSendingLimiter;
 
     boolean checkAuthenticationForCardSending;
     boolean checkPerimeterForCardSending;
     boolean authorizeToSendCardWithInvalidProcessState;
+    boolean activateCardSendingLimiter;
 
     public static final String UNEXISTING_PROCESS_STATE = "Impossible to publish card because process and/or state does not exist (process=%1$s, state=%2$s, processVersion=%3$s, processInstanceId=%4$s)";
     protected static final char[] FORBIDDEN_CHARS = new char[] {'#','?','/'};
@@ -63,16 +66,21 @@ public class CardProcessingService {
             ProcessesCache processesCache,
             boolean checkAuthenticationForCardSending,
             boolean checkPerimeterForCardSending,
-            boolean authorizeToSendCardWithInvalidProcessState) {
+            boolean authorizeToSendCardWithInvalidProcessState,
+            int cardSendingLimitCardCount,
+            int cardSendingLimitPeriod,
+            boolean activateCardSendingLimiter) {
         this.cardNotificationService = cardNotificationService;
         this.cardRepository = cardRepository;
         this.externalAppService = externalAppService;
         this.cardPermissionControlService = new CardPermissionControlService();
+        this.cardSendingLimiter = new CardSendingLimiter(cardSendingLimitCardCount, cardSendingLimitPeriod);
         this.cardTranslationService = cardTranslationService;
         this.processesCache = processesCache;
         this.checkAuthenticationForCardSending = checkAuthenticationForCardSending;
         this.checkPerimeterForCardSending = checkPerimeterForCardSending;
         this.authorizeToSendCardWithInvalidProcessState = authorizeToSendCardWithInvalidProcessState;
+        this.activateCardSendingLimiter = activateCardSendingLimiter;
 
     }
 
@@ -102,6 +110,11 @@ public class CardProcessingService {
                     "user not authorized to send card with process %s and state %s as it is not permitted by his perimeters, the card is rejected",
                     card.getProcess(), card.getState()));
         }
+        if (activateCardSendingLimiter && !cardSendingLimiter.isNewSendingAllowed(card.getPublisher()))
+            throw new ApiErrorException(ApiError.builder()
+                    .status(HttpStatus.TOO_MANY_REQUESTS)
+                    .message(String.format("Publisher %s has reached the card sending limit", card.getPublisher()))
+                    .build());
         // set empty user otherwise it will be processed as a usercard
         processOneCard(card, Optional.empty(), jwt);
     }

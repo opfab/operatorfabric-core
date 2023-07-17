@@ -41,14 +41,17 @@ public class Services {
             ObjectMapper objectMapper,
             @Value("${checkAuthenticationForCardSending:true}") boolean checkAuthenticationForCardSending,
             @Value("${checkPerimeterForCardSending:true}") boolean checkPerimeterForCardSending,
-            @Value("${authorizeToSendCardWithInvalidProcessState:false}") boolean authorizeToSendCardWithInvalidProcessState) {
+            @Value("${authorizeToSendCardWithInvalidProcessState:false}") boolean authorizeToSendCardWithInvalidProcessState,
+            @Value("${cardSendingLimitCardCount:1000}") int cardSendingLimitCardCount,
+            @Value("${cardSendingLimitPeriod:3600}") int cardSendingLimitPeriod,
+            @Value("${activateCardSendingLimiter:true}") boolean activateCardSendingLimiter) {
         this.cardTranslationService = new CardTranslationService(i18nProcessesCache, processesCache, eventBus);
         this.userActionLogService = userActionLogService;
         CardNotificationService cardNotificationService = new CardNotificationService(eventBus, objectMapper);
         cardProcessingService = new CardProcessingService(cardNotificationService,
                 cardRepository, externalAppService,
                 cardTranslationService, processesCache, checkAuthenticationForCardSending, checkPerimeterForCardSending,
-                authorizeToSendCardWithInvalidProcessState);
+                authorizeToSendCardWithInvalidProcessState, cardSendingLimitCardCount, cardSendingLimitPeriod, activateCardSendingLimiter);
 
     }
 
