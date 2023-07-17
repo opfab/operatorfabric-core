@@ -693,9 +693,9 @@ class CardProcessServiceShould {
         @Test
         void GIVEN_a_card_WHEN_card_is_send_with_a_login_case_different_than_publisher_THEN_card_is_accepted() {
                 User user = new User();
-                user.setLogin("DummyUser");
-                CurrentUserWithPerimeters sameUser = new CurrentUserWithPerimeters();
-                sameUser.setUserData(user);
+                user.setLogin("DUMMYUSER");
+                CurrentUserWithPerimeters caseDifferentUser = new CurrentUserWithPerimeters();
+                caseDifferentUser.setUserData(user);
 
                 ComputedPerimeter cp = new ComputedPerimeter();
                 cp.setProcess("PROCESS_CARD_USER");
@@ -703,13 +703,13 @@ class CardProcessServiceShould {
                 cp.setRights(RightsEnum.RECEIVEANDWRITE);
                 List<ComputedPerimeter> list = new ArrayList<>();
                 list.add(cp);
-                sameUser.setComputedPerimeters(list);
+                caseDifferentUser.setComputedPerimeters(list);
 
                 CardPublicationData card = generateOneCard(currentUserWithPerimeters.getUserData().getLogin());
                 card.setPublisherType(PublisherTypeEnum.EXTERNAL);
-                Optional<CurrentUserWithPerimeters> optionalSameUser = Optional.of(sameUser);
+                Optional<CurrentUserWithPerimeters> optionalCaseDifferentUser = Optional.of(caseDifferentUser);
 
-                cardProcessingService.processCard(card, optionalSameUser, token);
+                cardProcessingService.processCard(card, optionalCaseDifferentUser, token);
                 Assertions.assertThat(checkCardCount(1)).isTrue();
         }
 
@@ -761,9 +761,9 @@ class CardProcessServiceShould {
         void GIVEN_a_card_with_representative_dummyUser_WHEN_card_is_send_with_a_login_case_different_than_representative_THEN_card_is_accepted() {
 
                 User user = new User();
-                user.setLogin("DummyUser");
-                CurrentUserWithPerimeters sameUser = new CurrentUserWithPerimeters();
-                sameUser.setUserData(user);
+                user.setLogin("DUMMYUSER");
+                CurrentUserWithPerimeters caseDifferentUser = new CurrentUserWithPerimeters();
+                caseDifferentUser.setUserData(user);
 
                 ComputedPerimeter cp = new ComputedPerimeter();
                 cp.setProcess("PROCESS_CARD_USER");
@@ -771,15 +771,15 @@ class CardProcessServiceShould {
                 cp.setRights(RightsEnum.RECEIVEANDWRITE);
                 List<ComputedPerimeter> list = new ArrayList<>();
                 list.add(cp);
-                sameUser.setComputedPerimeters(list);
+                caseDifferentUser.setComputedPerimeters(list);
 
                 CardPublicationData card = generateOneCard("IGNORED_PUBLISHER");
                 card.setPublisherType(PublisherTypeEnum.EXTERNAL);
                 card.setRepresentativeType(PublisherTypeEnum.EXTERNAL);
                 card.setRepresentative(currentUserWithPerimeters.getUserData().getLogin());
-                Optional<CurrentUserWithPerimeters> optionalSameUser = Optional.of(sameUser);
+                Optional<CurrentUserWithPerimeters> optionalCaseDifferentUser = Optional.of(caseDifferentUser);
 
-                cardProcessingService.processCard(card, optionalSameUser, token);
+                cardProcessingService.processCard(card, optionalCaseDifferentUser, token);
                 Assertions.assertThat(checkCardCount(1)).isTrue();
         }
 
