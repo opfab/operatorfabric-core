@@ -31,6 +31,9 @@ export default class RemindDatabaseService {
         return this.mongoDB.collection(this.remindersCollection).find({hasBeenRemind: false, timeForReminding: { $lte: new Date().valueOf() }}).toArray();
     }
 
+    public async getAllCardsToRemind(): Promise<any[]> {       
+        return this.mongoDB.collection('cards').find({$and: [{secondsBeforeTimeSpanForReminder: { $exists: true}}, {$or: [{endDate: { $exists: false}}, {endDate: { $gte: new Date() } }] }]}).toArray();
+    }    
 
     public getReminder(id: string) {
         return this.mongoDB.collection(this.remindersCollection).findOne({cardId: id});
@@ -48,4 +51,9 @@ export default class RemindDatabaseService {
     public getCardByUid(uid: string) {
         return this.mongoDB.collection("cards").findOne({uid: uid});
     }
+
+    public clearReminders() {
+        this.mongoDB.collection(this.remindersCollection).deleteMany({});
+    }
+
 }

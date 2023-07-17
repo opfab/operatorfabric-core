@@ -53,4 +53,19 @@ export default class CardsReminderControl {
             })
         )
     }
+
+    public resetReminderDatabase() {
+        this.reminderService.clearReminders();
+        this.rruleReminderService.clearReminders();
+
+        this.rruleReminderService.getAllCardsToRemind().then(cardsWithReminders => 
+
+            cardsWithReminders.forEach(card => {
+                this.reminderService.addCardReminder(card);
+                this.rruleReminderService.addCardReminder(card);
+            })
+        );
+
+    }
+
 }

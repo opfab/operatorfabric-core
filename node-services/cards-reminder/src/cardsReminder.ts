@@ -96,6 +96,18 @@ app.get('/stop', (req, res) => {
 
 });
 
+app.get('/reset', (req, res) => {
+
+    if (!authenticationService.authorize(req))
+        res.status(403).send();
+    else {
+        logger.info('Reset card reminder service asked');
+        cardsReminderService.reset();
+        res.send('Reset service');
+    }
+
+});
+
 app.listen(adminPort, () => {
     logger.info(`Opfab cards reminder service listening on port ${adminPort}`);
 });

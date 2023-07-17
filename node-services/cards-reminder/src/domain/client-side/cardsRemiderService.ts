@@ -42,6 +42,16 @@ export default class CardsReminderService {
         this.active = false;
     }
 
+    public reset() {
+        const wasActive = this.active;
+        this.stop();
+
+        this.cardsReminderControl.resetReminderDatabase();
+
+        if (wasActive) this.start();
+    }
+
+
     private checkRegularly() {
         if (this.active) {
             this.logger.debug("checkRegularly");
