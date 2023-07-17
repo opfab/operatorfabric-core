@@ -103,6 +103,12 @@ KafkaAvroSerializer|Serializer used to convert cards to bytes
 |opfab.kafka.topics.response-card.topicname |opfab|Name of the topic to place the response cards to
 |opfab.kafka.schema.registry.url|http://localhost:8081|URL of the schema registry. Can be set to the empty string "" is no registry is used
 |delayForDeleteExpiredCardsScheduling|60000|The delay in millisecond after the last execution finished and the next execution starts.
+[[cardSendingLimitCardCount]]
+|cardSendingLimitCardCount|1000|For the Rate limiter, this defines how many cards can be sent during `cardSendingLimitPeriod`.
+[[cardSendingLimitPeriod]]
+|cardSendingLimitPeriod|3600|For the Rate limiter, this defines the time period (in seconds) during which `cardSendingLimitCardCount` is applied.
+[[activateCardSendingLimiter]]
+|activateCardSendingLimiter|true|If false, the Rate limiter will be ignored when sending cards.
 |===
 
 

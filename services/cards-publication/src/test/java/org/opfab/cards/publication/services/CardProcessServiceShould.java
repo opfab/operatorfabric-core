@@ -106,7 +106,7 @@ class CardProcessServiceShould {
                 cardProcessingService = new CardProcessingService(cardNotificationService,
                                 cardRepositoryMock, externalAppService,
                                 cardTranslationService, processesCache, true, true,
-                                false);
+                                false, 1000, 3600, true);
                 initCurrentUser();
                 cardRepositoryMock.clear();
                 eventBusSpy.clearMessageSent();
