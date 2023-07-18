@@ -4,6 +4,7 @@
     "version": "1",
     "uiVisibility": {
         "monitoring": true,
+        "processMonitoring": true,
         "logging": true,
         "calendar": true
     },

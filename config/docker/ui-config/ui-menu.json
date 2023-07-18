@@ -13,6 +13,10 @@
       "opfabCoreMenuId": "monitoring"
     },
     {
+      "opfabCoreMenuId": "processmonitoring",
+      "showOnlyForGroups": ["Manager"]
+    },
+    {
       "opfabCoreMenuId": "logging"
     },
     {

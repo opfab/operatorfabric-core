@@ -62,6 +62,7 @@ export class ArchivesLoggingFiltersComponent implements OnInit, OnDestroy, After
     @Input() visibleProcesses: any[];
     @Input() hideChildStates: boolean;
     @Input() tags: any[];
+    @Input() displayPublishDateFilter = true;
     @Output() search = new EventEmitter<string>();
     @Output() reset = new EventEmitter<string>();
 
@@ -429,7 +430,7 @@ export class ArchivesLoggingFiltersComponent implements OnInit, OnDestroy, After
     private isDateWellFormatted(dateFieldName: string): boolean {
         const dateControl = this.parentForm.get(dateFieldName);
         const dateValue = this.extractTime(dateControl);
-        const isFieldEmpty = dateControl.value.date == null;
+        const isFieldEmpty = dateControl.value?.date == null;
 
         return isFieldEmpty || !isNaN(dateValue);
     }

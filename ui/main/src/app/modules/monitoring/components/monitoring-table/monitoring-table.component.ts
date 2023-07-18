@@ -404,8 +404,7 @@ export class MonitoringTableComponent implements OnChanges, OnDestroy {
     }
 
     translateColumn(key: string, interpolateParams?: Map<string,string>): any {
-        if (!key) return '';
-        return this.translationService.getTranslation(key,interpolateParams);
+        return this.translationService.getTranslation(key, interpolateParams);
     }
 
 

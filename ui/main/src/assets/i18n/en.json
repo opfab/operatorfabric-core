@@ -122,6 +122,7 @@
     "logging": "Logging",
     "admin": "Administration",
     "monitoring": "Monitoring",
+    "processmonitoring": "Monitoring processus",
     "logout": "Logout",
     "changePassword": "Change password",
     "settings": "Settings",

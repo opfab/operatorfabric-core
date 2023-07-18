@@ -53,6 +53,10 @@ export class CardService {
         return this.cardServer.fetchFilteredArchivedCards(filter).pipe(map((serverResponse) => serverResponse.data));
     }
 
+    fetchFilteredCards(filter: CardsFilter) {
+        return this.cardServer.fetchFilteredCards(filter).pipe(map((serverResponse) => serverResponse.data));
+    }
+
     postCard(card: CardForPublishing): Observable<ServerResponse<CardCreationReportData>> {
         return this.cardServer.postCard(card);
     }

@@ -122,6 +122,7 @@
     "logging": "Logboek",
     "admin": "Administratie",
     "monitoring": "Bewaking",
+    "processmonitoring": "Monitoring processus",
     "logout": "Uitloggen",
     "changePassword": "Wachtwoord wijzigen",
     "settings": "Instellingen",
