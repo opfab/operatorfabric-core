@@ -5,9 +5,12 @@
   "showUserEntitiesOnTopRightOfTheScreen": true,
   "externalDevicesEnabled": true,
   "selectActivityAreaOnLogin": false,
-  "alertMessageBusinessAutoClose": false,
-  "alertMessageOnBottomOfTheScreen": false,
   "heartbeatSendingInterval": 30,
+  "alerts": {
+    "messageBusinessAutoClose": false,
+    "messageOnBottomOfTheScreen": false,
+    "hideBusinessMessages": false
+  },
   "archive": {
     "filters": {
       "page": {

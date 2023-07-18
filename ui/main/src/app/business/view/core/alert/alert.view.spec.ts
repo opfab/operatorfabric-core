@@ -116,9 +116,9 @@ describe('Alert view ', () => {
         expect(alertView.getAlertPage().backgroundColor).toEqual('#a71a1a');
     });
 
-    it('GIVEN alertMessageOnBottomOfTheScreen is true  WHEN message is display THEN message is on bottom of the screen ', async () => {
+    it('GIVEN messageOnBottomOfTheScreen is true  WHEN message is display THEN message is on bottom of the screen ', async () => {
         configServerMock.setResponseForWebUIConfiguration(
-            new ServerResponse({alertMessageOnBottomOfTheScreen: true}, ServerResponseStatus.OK, null)
+            new ServerResponse({alerts: {messageOnBottomOfTheScreen: true}}, ServerResponseStatus.OK, null)
         );
         await firstValueFrom(configService.loadWebUIConfiguration());
 
@@ -130,9 +130,9 @@ describe('Alert view ', () => {
         expect(alertView.getAlertPage().style).toEqual('bottom: 0');
     });
 
-    it('GIVEN alertMessageOnBottomOfTheScreen is false  WHEN message is display THEN message is on top of the screen ', async () => {
+    it('GIVEN messageOnBottomOfTheScreen is false  WHEN message is display THEN message is on top of the screen ', async () => {
         configServerMock.setResponseForWebUIConfiguration(
-            new ServerResponse({alertMessageOnBottomOfTheScreen: false}, ServerResponseStatus.OK, null)
+            new ServerResponse({alerts: {messageOnBottomOfTheScreen: false}}, ServerResponseStatus.OK, null)
         );
         await firstValueFrom(configService.loadWebUIConfiguration());
 
@@ -146,7 +146,7 @@ describe('Alert view ', () => {
 
     it('GIVEN a message WHEN alert is closed THEN message disappear', async () => {
         configServerMock.setResponseForWebUIConfiguration(
-            new ServerResponse({alertMessageOnBottomOfTheScreen: false}, ServerResponseStatus.OK, null)
+            new ServerResponse({alerts: {messageOnBottomOfTheScreen: false}}, ServerResponseStatus.OK, null)
         );
         await firstValueFrom(configService.loadWebUIConfiguration());
 
@@ -161,7 +161,7 @@ describe('Alert view ', () => {
 
     it('GIVEN a message WHEN message is displayed THEN message disappears after 5 seconds', async () => {
         configServerMock.setResponseForWebUIConfiguration(
-            new ServerResponse({alertMessageOnBottomOfTheScreen: false}, ServerResponseStatus.OK, null)
+            new ServerResponse({alerts: {messageOnBottomOfTheScreen: false}}, ServerResponseStatus.OK, null)
         );
         await firstValueFrom(configService.loadWebUIConfiguration());
 
@@ -181,7 +181,7 @@ describe('Alert view ', () => {
 
     it('GIVEN a message is displayed WHEN a new message arrives THEN the new message disappears after 5 seconds', async () => {
         configServerMock.setResponseForWebUIConfiguration(
-            new ServerResponse({alertMessageOnBottomOfTheScreen: false}, ServerResponseStatus.OK, null)
+            new ServerResponse({alerts: {messageOnBottomOfTheScreen: false}}, ServerResponseStatus.OK, null)
         );
         await firstValueFrom(configService.loadWebUIConfiguration());
 
@@ -204,9 +204,9 @@ describe('Alert view ', () => {
         expect(alertView.getAlertPage().display).toBeFalsy();
     });
 
-    it('GIVEN a message of level BUSINESS WHEN alertMessageBusinessAutoClose is false or not set THEN message never disappear automatically', async () => {
+    it('GIVEN a message of level BUSINESS WHEN messageBusinessAutoClose is false or not set THEN message never disappear automatically', async () => {
         configServerMock.setResponseForWebUIConfiguration(
-            new ServerResponse({alertMessageOnBottomOfTheScreen: false}, ServerResponseStatus.OK, null)
+            new ServerResponse({alerts: {messageOnBottomOfTheScreen: false}}, ServerResponseStatus.OK, null)
         );
         await firstValueFrom(configService.loadWebUIConfiguration());
 
@@ -228,9 +228,9 @@ describe('Alert view ', () => {
         expect(alertView.getAlertPage().message).toEqual('message');
     });
 
-    it('GIVEN a message of level BUSINESS WHEN alertMessageBusinessAutoClose is true THEN message disappear after 5 seconds', async () => {
+    it('GIVEN a message of level BUSINESS WHEN messageBusinessAutoClose is true THEN message disappear after 5 seconds', async () => {
         configServerMock.setResponseForWebUIConfiguration(
-            new ServerResponse({alertMessageBusinessAutoClose: true}, ServerResponseStatus.OK, null)
+            new ServerResponse({alerts: {messageBusinessAutoClose: true}}, ServerResponseStatus.OK, null)
         );
         await firstValueFrom(configService.loadWebUIConfiguration());
 
@@ -251,4 +251,40 @@ describe('Alert view ', () => {
     function delay() {
         return new Promise((resolve) => setTimeout(resolve, 1));
     }
+
+    it('Given a message of level BUSINESS WHEN hideBusinessMessages is true THEN message should not appear', async () => {
+        configServerMock.setResponseForWebUIConfiguration(
+            new ServerResponse({alerts: {hideBusinessMessages: true}}, ServerResponseStatus.OK, null)
+        );
+        await firstValueFrom(configService.loadWebUIConfiguration());
+
+        const alertView = new AlertView(configService, alertMessageService, translationService);
+        alertMessageService.sendAlertMessage(new Message('message', MessageLevel.BUSINESS));
+        await delay();
+        expect(alertView.getAlertPage().display).toBeFalsy();
+    });
+
+    it('Given a message of level BUSINESS WHEN hideBusinessMessages is false THEN message should appear', async () => {
+        configServerMock.setResponseForWebUIConfiguration(
+            new ServerResponse({alerts: {hideBusinessMessages: false}}, ServerResponseStatus.OK, null)
+        );
+        await firstValueFrom(configService.loadWebUIConfiguration());
+
+        const alertView = new AlertView(configService, alertMessageService, translationService);
+        alertMessageService.sendAlertMessage(new Message('message', MessageLevel.BUSINESS));
+        await delay();
+        expect(alertView.getAlertPage().display).toBeTruthy();
+    });
+
+    it('Given a message of level BUSINESS WHEN hideBusinessMessages is not set THEN message should appear', async () => {
+        configServerMock.setResponseForWebUIConfiguration(
+            new ServerResponse({}, ServerResponseStatus.OK, null)
+        );
+        await firstValueFrom(configService.loadWebUIConfiguration());
+
+        const alertView = new AlertView(configService, alertMessageService, translationService);
+        alertMessageService.sendAlertMessage(new Message('message', MessageLevel.BUSINESS));
+        await delay();
+        expect(alertView.getAlertPage().display).toBeTruthy();
+    });
 });
