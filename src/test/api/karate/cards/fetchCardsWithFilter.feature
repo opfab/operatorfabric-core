@@ -400,7 +400,7 @@ Scenario: fetch the first page
 			Then status 200
 			And match response.numberOfElements == 10
 
-	Scenario: fetch as user with permision VIEW_ALL_CARDS) without adminMode
+	Scenario: fetch as user with permission VIEW_ALL_CARDS) without adminMode
 
 		* def filter =
 		"""
@@ -419,7 +419,7 @@ Scenario: fetch the first page
 			Then status 200
 			And match response.numberOfElements == 0
 		
-	Scenario: fetch as user with permision VIEW_ALL_CARDS with adminMode
+	Scenario: fetch as user with permission VIEW_ALL_CARDS with adminMode
 
 		* def filter =
 		"""
