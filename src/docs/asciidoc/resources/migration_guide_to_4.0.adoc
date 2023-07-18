@@ -22,13 +22,18 @@ NOTE: With the new structure of the file, it is now possible to mix core menus a
 You can find more information and a full example in the documentation :
 https://opfab.github.io/documentation/current/reference_doc/#menu_entries
 
+== UI Configuration
+Some fields of the `web-ui.json` file have changed and renamed:
 
-== OpfabAPI 
+* `alertMessageBusinessAutoClose` has been moved to the  `alerts` section and is now called `messageBusinessAutoClose`
+* `alertMessageOnBottomOfTheScreen` has been moved to the  `alerts` section and is now called `messageOnBottomOfTheScreen`
 
-Use of methods or attributes starting with templateGateway are now deprecated , the following table give you the new methods to use 
+== OpfabAPI
+
+Use of methods or attributes starting with templateGateway are now deprecated , the following table give you the new methods to use
 
 |===
-|Deprecated method or attribute | New method 
+|Deprecated method or attribute | New method
 
 |templateGateway.getEntityName(entityId)
 |opfab.users.entities.getEntityName(entityId)
@@ -175,7 +180,7 @@ You must adapt the configuration to your environment by using the configuration 
 
 == Port mapping
 
-In release 4.0, the listening port is not any more 8080 for services in docker, it is now identical to the default port mapping outside the docker. 
+In release 4.0, the listening port is not any more 8080 for services in docker, it is now identical to the default port mapping outside the docker.
 
 So you need to modify your port mapping to migrate replacing the 8080 legacy port by the new port :
 
