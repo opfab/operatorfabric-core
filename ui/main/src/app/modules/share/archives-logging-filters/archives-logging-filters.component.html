@@ -81,8 +81,8 @@
             </div>
 
 
-            <div class="opfab-vertical-bar"></div>
-            <div class="opfab-publish-date" [formGroup]="this.parentForm">
+            <div class="opfab-vertical-bar" *ngIf="displayPublishDateFilter"></div>
+            <div class="opfab-publish-date" [formGroup]="this.parentForm" *ngIf="displayPublishDateFilter">
                 <div>
                     <of-datetime-filter id="opfab-publish-date-from" filterPath="publishDateFrom" formControlName="publishDateFrom" [defaultDate]="defaultMinPublishDate" [defaultTime]="{ hour: 0, minute: 0}"
                     labelKey="shared.filters." [maxDate]="publishMaxDate" (change)="onDateTimeChange()"></of-datetime-filter>

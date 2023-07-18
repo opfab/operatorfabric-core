@@ -532,6 +532,7 @@ export class UserCardComponent implements OnInit, OnDestroy {
         const endDate = this.getEndDate();
         const lttd = this.getLttd();
         const expirationDate = this.getExpirationDate();
+        let tags = this.getTags();
         let wktGeometry = this.getWktGeometry();
         let wktProjection = this.getWktProjection();
         if (!this.areDatesValid(startDate, endDate, lttd, expirationDate)) return;
@@ -562,6 +563,9 @@ export class UserCardComponent implements OnInit, OnDestroy {
                 this.isPreparingCard = false;
                 const titleTranslated = response.body.translatedField;
 
+                if (!tags) {
+                    tags = this.cardToEdit?.card.tags ? this.cardToEdit?.card.tags : null
+                }
                 if (!wktGeometry) {
                     wktGeometry = this.cardToEdit?.card.wktGeometry ? this.cardToEdit?.card.wktGeometry : null
                 }
@@ -609,9 +613,9 @@ export class UserCardComponent implements OnInit, OnDestroy {
                     data: this.specificInformation.card.data,
                     rRule: this.specificInformation.card.rRule ? this.specificInformation.card.rRule : null,
                     wktGeometry: wktGeometry,
-                    wktProjection: wktProjection
+                    wktProjection: wktProjection,
+                    tags: tags
                 } as Card;
-
                 this.childCards = this.cardToEdit?.card.keepChildCards ? this.cardToEdit.childCards : [];
                 if (
                     this.specificInformation.childCard &&
@@ -733,6 +737,15 @@ export class UserCardComponent implements OnInit, OnDestroy {
                 lttd = this.specificInformation.card.lttd;
         }
         return lttd;
+    }
+
+    private getTags(): Array<string> {
+        let tags = null;
+        if (this.specificInformation?.card.tags) {
+            tags = this.specificInformation.card.tags;
+        }
+        return tags;
+
     }
 
     private getWktGeometry(): string {

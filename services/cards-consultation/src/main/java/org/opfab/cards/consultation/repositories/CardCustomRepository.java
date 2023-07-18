@@ -13,7 +13,6 @@ package org.opfab.cards.consultation.repositories;
 import org.opfab.cards.consultation.model.CardsFilter;
 import org.opfab.cards.consultation.model.CardConsultationData;
 import org.opfab.cards.consultation.model.CardOperation;
-import org.opfab.cards.consultation.model.LightCard;
 import org.opfab.users.model.CurrentUserWithPerimeters;
 import org.springframework.data.domain.Page;
 
@@ -50,6 +49,6 @@ public interface CardCustomRepository extends UserUtilitiesCommonToCardRepositor
     CurrentUserWithPerimeters currentUserWithPerimeters);
 
 
-    Mono<Page<LightCard>> findWithUserAndFilter(
+    Mono<Page<Object>> findWithUserAndFilter(
             Tuple2<CurrentUserWithPerimeters, CardsFilter> params);
 }

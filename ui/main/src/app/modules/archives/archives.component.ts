@@ -361,7 +361,6 @@ export class ArchivesComponent implements OnDestroy, OnInit {
     }
 
     translateColumn(key: string, interpolateParams?: Map<string,string>): any {
-        if (!key) return '';
         return this.translationService.getTranslation(key,interpolateParams);
     }
 

@@ -24,6 +24,7 @@ export class AngularTranslationService  extends TranslationService {
     }
 
     getTranslation(key: string, params?: Map<string,string>): string {
+        if (!key) return '';
         return this.translateService.instant(key,params);
     }
     setLang(lang: string) {

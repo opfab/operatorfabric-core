@@ -67,9 +67,9 @@ export class MonitoringComponent implements OnInit, OnDestroy {
             this.responseFilter$.asObservable(),
             this.lightCardsStoreService.getLightCards()
         ]).pipe(
-            debounceTime(0), // Add this to avoid ExpressionChangedAfterItHasBeenCheckedError so it waits for component init before processing
+            debounceTime(0), // Add this to avoid ExpressionChangedAfterItHasBeenCheckedError, so it waits for component init before processing
             takeUntil(this.unsubscribe$),
-            // the filters are set   by the monitoring filter and by the time line
+            // the filters are set   by the monitoring filter and by the timeline
             // so it generates two events , we need to wait until every filter is set
             filter((results) => this.areFiltersCorrectlySet(results[0])),
             map((results) => {

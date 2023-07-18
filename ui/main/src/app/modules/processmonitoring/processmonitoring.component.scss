@@ -1,0 +1,53 @@
+/* Copyright (c) 2023, RTE (http://www.rte-france.com)
+ * See AUTHORS.txt
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ * SPDX-License-Identifier: MPL-2.0
+ * This file is part of the OperatorFabric project.
+ */
+
+@import 'src/scss/_variables.scss';
+
+.opfab-processmonitoring-sev {
+    width: 15px;
+}
+
+.opfab-processmonitoring-sev-alarm {
+    background-color: $sev-alarm;
+}
+.opfab-processmonitoring-sev-action {
+    background-color: $sev-action;
+}
+.opfab-processmonitoring-sev-compliant {
+    background-color: $sev-compliant;
+}
+.opfab-processmonitoring-sev-information {
+    background-color: $sev-information;
+}
+
+.processmonitoring {
+    background-color: var(--opfab-bgcolor-darker);
+    padding-left: 5%;
+}
+
+td {
+    max-width: 350px;
+    padding-left: 5px;
+    padding-right: 5px;
+}
+
+th {
+    padding-left: 5px;
+    padding-right: 5px;
+}
+
+// ADAPT MARGINS TO SCREEN SIZE
+
+@media all and (max-width: 1700px) {
+    .opfab-processmonitoring {
+        padding-left: 2%;
+    }
+}
+
+// END - ADAPT MARGINS TO SCREEN SIZE
