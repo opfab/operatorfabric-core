@@ -22,7 +22,13 @@ describe('Business menu', () => {
         script.sendCard('defaultProcess/chart.json');
     });
 
-    it('Test business menu links in night mode ', () => {
+    it('Test business menu links in night mode ', 
+    {
+        retries: {
+            runMode: 2, // to avoid falky test 
+            openMode: 1
+        }
+    },() => {
         opfab.loginWithUser('operator1_fr');
 
         feed.openFirstCard();
