@@ -19,6 +19,9 @@ jobs:
         docker pull lfeoperatorfabric/of-users-service:SNAPSHOT
         docker pull lfeoperatorfabric/of-businessconfig-service:SNAPSHOT
         docker pull lfeoperatorfabric/of-external-devices-service:SNAPSHOT
+        docker pull lfeoperatorfabric/of-cards-external-diffusion-service:SNAPSHOT
+        docker pull lfeoperatorfabric/of-cards-reminder:SNAPSHOT
+        docker pull lfeoperatorfabric/of-supervisor:SNAPSHOT
         docker pull lfeoperatorfabric/of-web-ui:SNAPSHOT
     - name: Analyse card consultation 
       uses: anchore/scan-action@v3
@@ -86,3 +89,36 @@ jobs:
       with:
         sarif_file: results.sarif
         category: web-ui
+    - name: Analyse external-diffusion
+      uses: anchore/scan-action@v3
+      with:
+        image: "lfeoperatorfabric/of-cards-external-diffusion-service:SNAPSHOT"
+        acs-report-enable: true
+        fail-build: false
+    - name: Upload Anchore Scan Report for external-diffusion
+      uses: github/codeql-action/upload-sarif@v2
+      with:
+        sarif_file: results.sarif
+        category: external-diffusion
+    - name: Analyse cards reminder 
+      uses: anchore/scan-action@v3
+      with:
+        image: "lfeoperatorfabric/of-cards-reminder:SNAPSHOT"
+        acs-report-enable: true
+        fail-build: false
+    - name: Upload Anchore Scan Report for cards-reminder
+      uses: github/codeql-action/upload-sarif@v2
+      with:
+        sarif_file: results.sarif
+        category: cards-reminder
+    - name: Analyse supervisor 
+      uses: anchore/scan-action@v3
+      with:
+        image: "lfeoperatorfabric/of-supervisor:SNAPSHOT"
+        acs-report-enable: true
+        fail-build: false
+    - name: Upload Anchore Scan Report for supervisor
+      uses: github/codeql-action/upload-sarif@v2
+      with:
+        sarif_file: results.sarif
+        category: supervisor
