@@ -8,7 +8,7 @@
  */
 
 import GetResponse from '../../common/server-side/getResponse';
-import OpfabServicesInterface from '../server-side/opfabServicesInterface';
+import OpfabServicesInterface from '../../common/server-side/opfabServicesInterface';
 
 export default class AcknowledgementChecker {
 

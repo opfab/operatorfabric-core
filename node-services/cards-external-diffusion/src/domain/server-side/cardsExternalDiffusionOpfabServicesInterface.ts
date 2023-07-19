@@ -7,33 +7,22 @@
  * This file is part of the OperatorFabric project.
  */
 
-import axios from 'axios';
-
 import GetResponse from '../../common/server-side/getResponse';
-import AuthenticationService from '../../common/client-side/authenticationService'
 import EventBusListener from '../../common/server-side/eventBus';
 import {EventListener} from '../../common/server-side/eventListener';
+import OpfabServicesInterface from '../../common/server-side/opfabServicesInterface'
 
-export default class OpfabServicesInterface implements EventListener{
+export default class CardsExternalDiffusionOpfabServicesInterface extends OpfabServicesInterface implements EventListener{
 
-    private token: string = '';
-    private tokenExpirationMargin: number = 60000;
-    private login: string = '';
-    private password: string = '';
-    private opfabUrl = '';
-    private opfabGetUsersConnectedUrl: string = '';
-    private opfabGetUsersUrl: string = '';
-    private opfabGetCardsUrl: string = '';
-    private opfabGetTokenUrl: string = '';
-    private logger: any;
-    private authenticationService: AuthenticationService;
     private users : any[] = [];
     private userSettings = new Map<string,any>();
     private userPerimeters = new Map<string,any>();
+
     private listener: EventBusListener;
 
 
     constructor() {
+        super();
         this.listener = new EventBusListener()
             .addListener(this);
     }
@@ -53,50 +42,6 @@ export default class OpfabServicesInterface implements EventListener{
             .setUsername(eventBusConfig.username)
             .setPassword(eventBusConfig.password)
             .setQueue("user","", { exclusive: true, autoDelete: true })
-        return this;
-    }
-
-    public setLogin(login: string) {
-        this.login = login;
-        return this;
-    }
-
-    public setPassword(password: string) {
-        this.password = password;
-        return this;
-    }
-
-    public setOpfabUrl(opfabUrl: string) {
-        this.opfabUrl = opfabUrl;
-        return this;
-    }
-
-    public getOpfabUrl() : string {
-        return this.opfabUrl
-    }
-
-    public setOpfabGetTokenUrl(opfabGetTokenUrl: string) {
-        this.opfabGetTokenUrl = opfabGetTokenUrl;
-        return this;
-    }
-
-    public setAuthenticationService(authenticationService: AuthenticationService) {
-        this.authenticationService = authenticationService;
-        return this;
-    }
-
-    public setOpfabGetUsersUrl(opfabGetUsersUrl: string) {
-        this.opfabGetUsersUrl = opfabGetUsersUrl;
-        return this;
-    }
-
-    public setOpfabGetUsersConnectedUrl(opfabGetUsersConnectedUrl: string) {
-        this.opfabGetUsersConnectedUrl = opfabGetUsersConnectedUrl;
-        return this;
-    }
-
-    public setOpfabGetCardsUrl(opfabGetCardsUrl: string) {
-        this.opfabGetCardsUrl = opfabGetCardsUrl;
         return this;
     }
 
@@ -126,7 +71,7 @@ export default class OpfabServicesInterface implements EventListener{
             return this.fetchUser(login);
     }
 
-    private async fetchUser(login: string): Promise<GetResponse> {
+    public async fetchUser(login: string): Promise<GetResponse> {
         try {
             await this.getToken();
             const response = await this.sendGetUserRequest(login);
@@ -274,53 +219,6 @@ export default class OpfabServicesInterface implements EventListener{
         }
     }
 
-
-    private async getToken() {
-        if (!this.authenticationService.validateToken(this.token, this.tokenExpirationMargin)) {
-            const response = await this.sendRequest({
-                method: 'post',
-                url: this.opfabGetTokenUrl,
-                data: `username=${this.login}&password=${this.password}&grant_type=password&client_id=opfab-client`
-            });
-            this.token = response?.data?.access_token;
-            if (!this.token) throw new Error('No token provided , http response = ' + response);
-        }
-    }
-
-    public sendRequest(request: any) {
-        return <Promise<any>>axios(request);
-    }
-
-    private sendUsersConnectedRequest() {
-        return this.sendRequest({
-            method: 'get',
-            url: this.opfabGetUsersConnectedUrl,
-            headers: {
-                Authorization: 'Bearer ' + this.token
-            }
-        });
-    }
-
-    private sendGetUserRequest(login: string) {
-        return this.sendRequest({
-            method: 'get',
-            url: this.opfabGetUsersUrl + '/' + login,
-            headers: {
-                Authorization: 'Bearer ' + this.token
-            }
-        });
-    }
-
-    private sendGetAllUsersRequest() {
-        return this.sendRequest({
-            method: 'get',
-            url: this.opfabGetUsersUrl,
-            headers: {
-                Authorization: 'Bearer ' + this.token
-            }
-        });
-    }
-
     private sendGetUserSettingRequest(login: string) {
         return this.sendRequest({
             method: 'get',
@@ -335,18 +233,6 @@ export default class OpfabServicesInterface implements EventListener{
         return this.sendRequest({
             method: 'get',
             url: this.opfabGetUsersUrl +'/' + login + '/perimeters',
-            headers: {
-                Authorization: 'Bearer ' + this.token
-            }
-        });
-    }
-    
-
-    private sendGetCardsRequest(filter: any) {
-        return this.sendRequest({
-            method: 'post',
-            url: this.opfabGetCardsUrl,
-            data: filter,
             headers: {
                 Authorization: 'Bearer ' + this.token
             }

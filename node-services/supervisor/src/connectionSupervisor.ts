@@ -15,7 +15,7 @@ import config from 'config';
 import ConfigService from './domain/client-side/configService';
 import SupervisorService from './domain/client-side/supervisorService';
 import AuthenticationService from './common/client-side/authenticationService';
-import OpfabServicesInterface from './domain/server-side/opfabServicesInterface';
+import OpfabServicesInterface from './common/server-side/opfabServicesInterface';
 import logger from './common/server-side/logger';
 
 const app = express();
@@ -42,6 +42,7 @@ const opfabServicesInterface = new OpfabServicesInterface()
     .setOpfabGetUsersConnectedUrl(config.get('opfab.connectedUsersUrl'))
     .setOpfabGetCardsUrl(config.get('opfab.cardsUrl'))
     .setOpfabPublicationUrl(config.get('opfab.publicationUrl'))
+    .setOpfabCurrentUserWithPerimetersUrl(config.get('opfab.currentUserWithPerimetersUrl'))
     .setOpfabGetTokenUrl(config.get('opfab.getTokenUrl'))
     .setAuthenticationService(authenticationService)
     .setLogger(logger);
@@ -91,12 +92,19 @@ app.post('/config', (req, res) => {
     if (!authenticationService.authorize(req))
         res.status(403).send();
     else {
-        logger.info('Update configuration');
-        const updated = configService.patch(req.body);
-        supervisorService.setConfiguration(updated);
-        res.send(updated);
-    }
+        const userLogin = authenticationService.getLogin(req);
 
+        opfabServicesInterface.fetchUser(userLogin).then(userResp => {
+            if (!authenticationService.hasUserAnyPermission(userResp.getData(), ['ADMIN']))
+                res.status(403).send();
+            else {
+                logger.info('Update configuration');
+                const updated = configService.patch(req.body);
+                supervisorService.setConfiguration(updated);
+                res.send(updated);
+            }
+        })
+    }
 });
 
 app.listen(adminPort, () => {

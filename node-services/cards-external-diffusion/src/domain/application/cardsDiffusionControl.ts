@@ -9,12 +9,12 @@
 
 import SendMailService from '../server-side/sendMailService';
 import GetResponse from '../../common/server-side/getResponse';
-import OpfabServicesInterface from '../server-side/opfabServicesInterface';
+import CardsExternalDiffusionOpfabServicesInterface from '../server-side/cardsExternalDiffusionOpfabServicesInterface';
 import CardsRoutingUtilities from './cardRoutingUtilities';
 import ConfigDTO from '../client-side/configDTO';
 
 export default class CardsDiffusionControl {
-    private opfabServicesInterface: OpfabServicesInterface;
+    private opfabServicesInterface: CardsExternalDiffusionOpfabServicesInterface;
     private logger: any;
     private secondsAfterPublicationToConsiderCardAsNotRead: number;
     private windowInSecondsForCardSearch: number;
@@ -24,7 +24,7 @@ export default class CardsDiffusionControl {
     private subjectPrefix: string;
     private bodyPrefix: string;
 
-    public setOpfabServicesInterface(opfabServicesInterface: OpfabServicesInterface) {
+    public setOpfabServicesInterface(opfabServicesInterface: CardsExternalDiffusionOpfabServicesInterface) {
         this.opfabServicesInterface = opfabServicesInterface;
         return this;
     }

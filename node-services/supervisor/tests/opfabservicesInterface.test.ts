@@ -9,8 +9,7 @@
 
 import 'jest';
 import sinon from 'sinon';
-import GetResponse from '../src/common/server-side/getResponse';
-import OpfabServicesInterface from '../src/domain/server-side/opfabServicesInterface';
+import OpfabServicesInterface from '../src/common/server-side/opfabServicesInterface';
 import logger from '../src/common/server-side/logger';
 import AuthenticationService from '../src/common/client-side/authenticationService';
 
@@ -52,8 +51,9 @@ describe('Opfab interface', function () {
                 else return Promise.resolve({status: 400});
             }
         });
-        const users = await opfabServicesInterface.getUsersConnected();
-        expect(users).toEqual(new GetResponse([{login: 'user1'}], true));
+        const GetResponse = await opfabServicesInterface.getUsersConnected();
+        expect(GetResponse.isValid()).toBe(true);
+        expect(GetResponse.getData()).toEqual(["user1"]);
     });
 
     it('Should return invalid reponse  when impossible to authenticate to opfab ', async function () {

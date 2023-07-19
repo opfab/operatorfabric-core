@@ -7,28 +7,20 @@
  * This file is part of the OperatorFabric project.
  */
 
-import axios from 'axios';
-
 import GetResponse from '../../common/server-side/getResponse';
 
 import EventBus from '../../common/server-side/eventBus';
 import {EventListener} from '../../common/server-side/eventListener';
-import AuthenticationService from '../../common/client-side/authenticationService'
+import OpfabServicesInterface from '../../common/server-side/opfabServicesInterface'
 
-export default class OpfabServicesInterface {
+export default class CardsReminderOpfabServicesInterface extends OpfabServicesInterface {
 
-    private token: string = '';
-    private tokenExpirationMargin: number = 60000;
-    private login: string = '';
-    private password: string = '';
     private opfabCardRemindUrl = '';
-    private opfabGetTokenUrl: string = '';
-    private logger: any;
-    private authenticationService: AuthenticationService;
     private listener: EventBus;
 
 
     constructor() {
+        super();
         this.listener = new EventBus();
     }
 
@@ -56,31 +48,11 @@ export default class OpfabServicesInterface {
         return this;
     }
 
-    public setLogin(login: string) {
-        this.login = login;
-        return this;
-    }
-
-    public setPassword(password: string) {
-        this.password = password;
-        return this;
-    }
 
     public setOpfabCardRemindUrl(opfabCardRemindUrl: string) {
         this.opfabCardRemindUrl = opfabCardRemindUrl;
         return this;
     }
-
-    public setOpfabGetTokenUrl(opfabGetTokenUrl: string) {
-        this.opfabGetTokenUrl = opfabGetTokenUrl;
-        return this;
-    }
-
-    public setAuthenticationService(authenticationService: AuthenticationService) {
-        this.authenticationService = authenticationService;
-        return this;
-    }
-
 
     public setLogger(logger: any) {
         this.logger = logger;
@@ -117,23 +89,6 @@ export default class OpfabServicesInterface {
                 Authorization: 'Bearer ' + this.token
             }
         });
-    }
-
-
-    private async getToken() {
-        if (!this.authenticationService.validateToken(this.token, this.tokenExpirationMargin)) {
-            const response = await this.sendRequest({
-                method: 'post',
-                url: this.opfabGetTokenUrl,
-                data: `username=${this.login}&password=${this.password}&grant_type=password&client_id=opfab-client`
-            });
-            this.token = response?.data?.access_token;
-            if (!this.token) throw new Error('No token provided , http response = ' + response);
-        }
-    }
-
-    public sendRequest(request: any) {
-        return axios(request);
     }
 
 }

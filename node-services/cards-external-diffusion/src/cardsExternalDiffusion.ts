@@ -14,7 +14,7 @@ import config from 'config';
 import logger from './common/server-side/logger';
 import AuthenticationService from './common/client-side/authenticationService'
 import SendMailService from './domain/server-side/sendMailService';
-import OpfabServicesInterface from './domain/server-side/opfabServicesInterface';
+import CardsExternalDiffusionOpfabServicesInterface from './domain/server-side/cardsExternalDiffusionOpfabServicesInterface';
 import CardsExternalDiffusionService from './domain/client-side/cardsExternalDiffusionService';
 import ConfigService from './domain/client-side/configService';
 
@@ -40,13 +40,14 @@ const authenticationService = new AuthenticationService()
 
 const mailService = new SendMailService(config.get('mail'));
     
-const opfabServicesInterface = new OpfabServicesInterface()
+const opfabServicesInterface = new CardsExternalDiffusionOpfabServicesInterface()
     .setLogin(config.get('cardsExternalDiffusion.opfab.login'))
     .setPassword(config.get('cardsExternalDiffusion.opfab.password'))
     .setOpfabUrl(config.get('opfab.url'))
     .setOpfabGetUsersUrl(config.get('opfab.usersUrl'))
     .setOpfabGetUsersConnectedUrl(config.get('opfab.connectedUsersUrl'))
     .setOpfabGetCardsUrl(config.get('opfab.cardsUrl'))
+    .setOpfabCurrentUserWithPerimetersUrl(config.get('opfab.currentUserWithPerimetersUrl'))    
     .setOpfabGetTokenUrl(config.get('opfab.getTokenUrl'))
     .setEventBusConfiguration(config.get('rabbitmq'))
     .setAuthenticationService(authenticationService)
@@ -109,11 +110,19 @@ app.post('/config', (req, res) => {
     if (!authenticationService.authorize(req))
         res.status(403).send();
     else {
-        logger.info('Reconfiguration asked ' + JSON.stringify(req.body));
-        const updated = configService.patch(req.body);
-        cardsExternalDiffusionService.setConfiguration(updated);
+        const token = authenticationService.getRequestToken(req);
 
-        res.send(updated);
+        opfabServicesInterface.getUserWithPerimeters(token).then(userResp => {
+            logger.info("Got user data " + JSON.stringify(userResp.getData()));
+            if (!authenticationService.hasUserAnyPermission(userResp.getData(), ['ADMIN']))
+                res.status(403).send();
+            else {
+                logger.info('Reconfiguration asked: ' + JSON.stringify(req.body));
+                const updated = configService.patch(req.body);
+                cardsExternalDiffusionService.setConfiguration(updated);
+                res.send(updated);
+            }
+        })
     }
 
 });

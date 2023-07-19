@@ -7,14 +7,14 @@
  * This file is part of the OperatorFabric project.
  */
 
-import OpfabServicesInterface from '../server-side/opfabServicesInterface';
+import CardsReminderOpfabServicesInterface from '../server-side/cardsReminderOpfabServicesInterface';
 
 import ReminderService from '../application/reminderService';
 import {RRuleReminderService} from './rruleReminderService';
 
 export default class CardsReminderControl {
 
-    private opfabServicesInterface: OpfabServicesInterface;
+    private opfabServicesInterface: CardsReminderOpfabServicesInterface;
     private reminderService: ReminderService;
     private rruleReminderService: RRuleReminderService;
 
@@ -29,7 +29,7 @@ export default class CardsReminderControl {
         return this;
     }
 
-    public setOpfabServicesInterface(opfabServicesInterface: OpfabServicesInterface): this {
+    public setOpfabServicesInterface(opfabServicesInterface: CardsReminderOpfabServicesInterface): this {
         this.opfabServicesInterface = opfabServicesInterface;
         return this;
     }
