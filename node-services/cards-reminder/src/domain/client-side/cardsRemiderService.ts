@@ -8,7 +8,7 @@
  */
 
 import CardsReminderControl from '../application/cardsReminderControl';
-import OpfabServicesInterface from '../server-side/opfabServicesInterface';
+import CardsReminderOpfabServicesInterface from '../server-side/cardsReminderOpfabServicesInterface';
 import ReminderService from '../application/reminderService';
 import {RRuleReminderService} from '../application/rruleReminderService';
 
@@ -21,7 +21,7 @@ export default class CardsReminderService {
     private logger: any;
 
 
-    constructor(opfabServicesInterface: OpfabServicesInterface, rruleReminderService: RRuleReminderService, reminderService: ReminderService, checkPeriodInSeconds: number, logger: any) {
+    constructor(opfabServicesInterface: CardsReminderOpfabServicesInterface, rruleReminderService: RRuleReminderService, reminderService: ReminderService, checkPeriodInSeconds: number, logger: any) {
         this.logger = logger;
         this.checkPeriodInSeconds = checkPeriodInSeconds;
 

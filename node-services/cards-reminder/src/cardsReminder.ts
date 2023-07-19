@@ -15,7 +15,7 @@ import logger from './common/server-side/logger';
 
 import AuthenticationService from './common/client-side/authenticationService'
 import ReminderService from './domain/application/reminderService';
-import OpfabServicesInterface from './domain/server-side/opfabServicesInterface';
+import CardsReminderOpfabServicesInterface from './domain/server-side/cardsReminderOpfabServicesInterface';
 import CardsReminderService from './domain/client-side/cardsRemiderService';
 import {RRuleReminderService} from './domain/application/rruleReminderService';
 import RemindDatabaseService from './domain/server-side/remindDatabaseService';
@@ -51,7 +51,7 @@ const rruleReminderService = new RRuleReminderService()
     .setLogger(logger)
     .setDatabaseService(rrRuleRemindDatabaseService);
 
-const opfabServicesInterface = new OpfabServicesInterface()
+const opfabServicesInterface = new CardsReminderOpfabServicesInterface()
     .setLogin(config.get('cardsReminder.opfab.login'))
     .setPassword(config.get('cardsReminder.opfab.password'))
     .setOpfabCardRemindUrl(config.get('opfab.cardReminderUrl'))

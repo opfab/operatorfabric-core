@@ -6,6 +6,7 @@
     "publicationUrl": "http://cards-publication:2102/cards",
     "cardsUrl": "http://cards-publication:2102/cards/cards",
     "entitiesUrl": "http://users:2103/users/entities",
+    "currentUserWithPerimetersUrl": "http://users:2103/CurrentUserWithPerimeters",
     "getTokenUrl": "http://web-ui/auth/token",
     "tokenExpireClaim": "exp"
   },

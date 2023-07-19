@@ -12,6 +12,8 @@ import jwt_decode from 'jwt-decode';
 
 export default class AuthenticationService {
     tokenExpireClaim: any;
+    loginClaim: any = 'preferred_username';
+
     logger: any;
 
 
@@ -33,6 +35,33 @@ export default class AuthenticationService {
         return false;
     }
 
+    public getLogin(req: Request) : string {
+        let login = null;
+        if (req.headers.authorization) {
+            const token = req.headers.authorization.split(' ')[1]; 
+            const jwt = this.decodeToken(token);
+
+            if (jwt) {
+                login = jwt[this.loginClaim];
+            }
+        }
+        return login;
+    }
+
+    public getRequestToken(req: Request) : string | null {
+        let res = null;
+        if (req.headers.authorization) {
+            res = req.headers.authorization.split(' ')[1]; 
+        }
+        return res;
+    }
+
+    public hasUserAnyPermission(user: any, permissions: string[]): boolean {
+        if (!user || !permissions) return false;
+        return (
+            user.permissions?.filter((permission: string) => permissions.includes(permission)).length > 0
+        );
+    }
 
     public validateToken(token: string, margin: number) : boolean {
         if (token) {

@@ -11,7 +11,7 @@ import 'jest'
 import AcknowledgementChecker from '../src/domain/application/acknowledgmentChecker'
 import logger from '../src/common/server-side/logger';
 import GetResponse from '../src/common/server-side/getResponse';
-import OpfabServicesInterface from '../src/domain/server-side/opfabServicesInterface';
+import OpfabServicesInterface from '../src/common/server-side/opfabServicesInterface';
 
 
 

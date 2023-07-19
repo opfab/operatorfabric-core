@@ -6,6 +6,7 @@
     "publicationUrl": "http://localhost:2102/cards",
     "cardsUrl": "http://localhost:2002/cards/cards",
     "entitiesUrl": "http://127.0.0.1:2103/entities",
+    "currentUserWithPerimetersUrl": "http://127.0.0.1:2103/currentUserWithPerimeters",
     "getTokenUrl": "http://localhost:2002/auth/token",
     "tokenExpireClaim": "exp"
   },

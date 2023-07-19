@@ -10,14 +10,14 @@
 import 'jest';
 import sinon from 'sinon';
 import GetResponse from '../src/common/server-side/getResponse';
-import OpfabServicesInterface from '../src/domain/server-side/opfabServicesInterface';
 import logger from '../src/common/server-side/logger';
 import AuthenticationService from '../src/common/client-side/authenticationService';
+import CardsExternalDiffusionOpfabServicesInterface from '../src/domain/server-side/cardsExternalDiffusionOpfabServicesInterface';
 
 
 
 function getOpfabServicesInterface() {
-    return new OpfabServicesInterface()
+    return new CardsExternalDiffusionOpfabServicesInterface()
         .setLogin('test')
         .setPassword('test')
         .setOpfabUrl('url')

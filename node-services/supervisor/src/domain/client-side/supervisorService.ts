@@ -9,7 +9,7 @@
 
 import AcknowledgementChecker from '../application/acknowledgmentChecker';
 import ConnectionChecker from '../application/connectionChecker';
-import OpfabServicesInterface from '../server-side/opfabServicesInterface';
+import OpfabServicesInterface from '../../common/server-side/opfabServicesInterface';
 import ConfigDTO from './configDTO';
 
 export default class SupervisorService {

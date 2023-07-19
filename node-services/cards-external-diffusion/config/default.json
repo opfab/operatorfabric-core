@@ -6,6 +6,7 @@
     "connectedUsersUrl": "http://127.0.0.1:2104/connections",
     "cardsUrl": "http://127.0.0.1:2104/cards",
     "usersUrl": "http://127.0.0.1:2103/users",
+    "currentUserWithPerimetersUrl": "http://127.0.0.1:2103/currentUserWithPerimeters",    
     "getTokenUrl": "http://127.0.0.1:2002/auth/token",
     "tokenExpireClaim": "exp"
   },

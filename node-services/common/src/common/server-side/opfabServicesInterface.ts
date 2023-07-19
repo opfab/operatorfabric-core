@@ -9,23 +9,27 @@
 
 import axios from 'axios';
 
-import GetResponse from '../../common/server-side/getResponse';
-import AuthenticationService from '../../common/client-side/authenticationService';
+import GetResponse from './getResponse';
+import AuthenticationService from '../client-side/authenticationService'
+
 
 export default class OpfabServicesInterface {
 
-    private token: string = '';
-    private tokenExpirationMargin: number = 60000;
-    private login: string = '';
-    private password: string = '';
-    private opfabUrl = '';
-    private opfabGetUsersConnectedUrl: string = '';
-    private opfabGetEntityUrl: string = '';
-    private opfabGetCardsUrl: string = '';
-    private opfabGetTokenUrl: string = '';
-    private opfabPublicationUrl: string = '';
-    private logger: any;
-    private authenticationService: AuthenticationService;
+    token: string = '';
+    tokenExpirationMargin: number = 60000;
+    login: string = '';
+    password: string = '';
+    opfabUrl = '';
+    opfabGetUsersConnectedUrl: string = '';
+    opfabGetUsersUrl: string = '';
+    opfabGetCardsUrl: string = '';
+    opfabGetTokenUrl: string = '';
+    opfabPublicationUrl: string = '';
+    opfabGetCurrentUserWithPerimetersUrl: string = '';
+    opfabGetEntityUrl: string = '';
+
+    logger: any;
+    authenticationService: AuthenticationService;
 
     public setLogin(login: string) {
         this.login = login;
@@ -56,8 +60,8 @@ export default class OpfabServicesInterface {
         return this;
     }
 
-    public setOpfabGetEntityUrl(opfabGetEntityUrl: string) {
-        this.opfabGetEntityUrl = opfabGetEntityUrl;
+    public setOpfabGetUsersUrl(opfabGetUsersUrl: string) {
+        this.opfabGetUsersUrl = opfabGetUsersUrl;
         return this;
     }
 
@@ -66,13 +70,24 @@ export default class OpfabServicesInterface {
         return this;
     }
 
+    public setOpfabGetEntityUrl(opfabGetEntityUrl: string) {
+        this.opfabGetEntityUrl = opfabGetEntityUrl;
+        return this;
+    }
+
     public setOpfabGetCardsUrl(opfabGetCardsUrl: string) {
         this.opfabGetCardsUrl = opfabGetCardsUrl;
         return this;
     }
 
+
     public setOpfabPublicationUrl(opfabPublicationUrl: string) {
         this.opfabPublicationUrl = opfabPublicationUrl;
+        return this;
+    }
+
+    public setOpfabCurrentUserWithPerimetersUrl(opfabGetCurrentUserWithPerimetersUrl: string) {
+        this.opfabGetCurrentUserWithPerimetersUrl = opfabGetCurrentUserWithPerimetersUrl;
         return this;
     }
 
@@ -81,10 +96,10 @@ export default class OpfabServicesInterface {
         return this;
     }
 
-    public async getEntity(id: string): Promise<GetResponse> {
+    public async fetchUser(login: string): Promise<GetResponse> {
         try {
             await this.getToken();
-            const response = await this.sendGetEntityRequest(id);
+            const response = await this.sendGetUserRequest(login);
             if (response?.data) {
                 return new GetResponse(response.data, true);
             }
@@ -93,7 +108,25 @@ export default class OpfabServicesInterface {
                 return new GetResponse([], false);
             }
         } catch (e) {
-            this.logger.warn('Impossible to get entity ' + id, e);
+            this.logger.warn('Impossible to get user', e);
+            return new GetResponse([], false);
+        }
+       
+    }
+
+    public async fetchAllUsers(): Promise<GetResponse> {
+        try {
+            await this.getToken();
+            const response = await this.sendGetAllUsersRequest();
+            if (response?.data) {
+                return new GetResponse(response.data, true);
+            }
+            else {
+                this.logger.warn("No data in HTTP response")
+                return new GetResponse([], false);
+            }
+        } catch (e) {
+            this.logger.warn('Impossible to get users', e);
             return new GetResponse([], false);
         }
        
@@ -106,7 +139,7 @@ export default class OpfabServicesInterface {
             const users = new Array();
             if (response?.data) {
                 response.data.forEach((user: any) => {
-                    users.push(user);
+                    users.push(user.login);
                 });
                 return new GetResponse(users, true);
             }
@@ -142,8 +175,32 @@ export default class OpfabServicesInterface {
         }
     }
 
+    public async getUserWithPerimeters(userToken: string | null) {
 
-    private async getToken() {
+        try {
+            const response = await this.sendRequest({
+                method: 'get',
+                url: this.opfabGetCurrentUserWithPerimetersUrl,
+                headers: {
+                    Authorization: 'Bearer ' + userToken
+                }
+            });
+            if (response?.data) {
+                return new GetResponse(response?.data, true);
+            }
+            else {
+                this.logger.warn("No data in HTTP response")
+                return new GetResponse(null, false);
+            }
+        } catch (e) {
+            this.logger.warn('Impossible to get user with perimeters', e);
+            return new GetResponse(null, false);
+        }
+
+    }
+
+
+    async getToken() {
         if (!this.authenticationService.validateToken(this.token, this.tokenExpirationMargin)) {
             const response = await this.sendRequest({
                 method: 'post',
@@ -155,11 +212,7 @@ export default class OpfabServicesInterface {
         }
     }
 
-    public sendRequest(request: any) : Promise<any> {
-        return axios(request);
-    }
-
-    private sendUsersConnectedRequest() {
+    sendUsersConnectedRequest() {
         return this.sendRequest({
             method: 'get',
             url: this.opfabGetUsersConnectedUrl,
@@ -169,17 +222,27 @@ export default class OpfabServicesInterface {
         });
     }
 
-    private sendGetEntityRequest(id: string) {
+    sendGetUserRequest(login: string) {
         return this.sendRequest({
             method: 'get',
-            url: this.opfabGetEntityUrl + '/' + id,
+            url: this.opfabGetUsersUrl + '/' + login,
             headers: {
                 Authorization: 'Bearer ' + this.token
             }
         });
     }
 
-    private sendGetCardsRequest(filter: any) {
+    sendGetAllUsersRequest() {
+        return this.sendRequest({
+            method: 'get',
+            url: this.opfabGetUsersUrl,
+            headers: {
+                Authorization: 'Bearer ' + this.token
+            }
+        });
+    }
+
+    sendGetCardsRequest(filter: any) {
         return this.sendRequest({
             method: 'post',
             url: this.opfabGetCardsUrl,
@@ -189,6 +252,7 @@ export default class OpfabServicesInterface {
             }
         });
     }
+
 
     public async sendCard(card: any) {
         try {
@@ -208,4 +272,36 @@ export default class OpfabServicesInterface {
     }
 
 
+    public async getEntity(id: string): Promise<GetResponse> {
+        try {
+            await this.getToken();
+            const response = await this.sendGetEntityRequest(id);
+            if (response?.data) {
+                return new GetResponse(response.data, true);
+            }
+            else {
+                this.logger.warn("No data in HTTP response")
+                return new GetResponse([], false);
+            }
+        } catch (e) {
+            this.logger.warn('Impossible to get entity ' + id, e);
+            return new GetResponse([], false);
+        }
+       
+    }
+
+    private sendGetEntityRequest(id: string) {
+        return this.sendRequest({
+            method: 'get',
+            url: this.opfabGetEntityUrl + '/' + id,
+            headers: {
+                Authorization: 'Bearer ' + this.token
+            }
+        });
+    }
+
+    sendRequest(request: any) {
+        // Cast to <Promise<any>> required for testing, to be able to stub the call
+        return <Promise<any>>axios(request);
+    }
 }

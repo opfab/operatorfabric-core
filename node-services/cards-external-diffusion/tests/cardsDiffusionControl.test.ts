@@ -8,17 +8,13 @@
  */
 
 import 'jest'
-import OpfabServicesInterface from '../src/domain/server-side/opfabServicesInterface';
 import CardsDiffusionControl from '../src/domain/application/cardsDiffusionControl'
 import SendMailService from '../src/domain/server-side/sendMailService';
 import GetResponse from '../src/common/server-side/getResponse';
 import logger from '../src/common/server-side/logger';
+import CardsExternalDiffusionOpfabServicesInterface from '../src/domain/server-side/cardsExternalDiffusionOpfabServicesInterface';
 
-
-
-
-class OpfabServicesInterfaceStub extends OpfabServicesInterface {
-
+class OpfabServicesInterfaceStub extends CardsExternalDiffusionOpfabServicesInterface {
 
     public isResponseValid = true;
 
@@ -26,11 +22,11 @@ class OpfabServicesInterfaceStub extends OpfabServicesInterface {
     allUsers: Array<any> = new Array();
     connectedUsers: Array<any> = new Array();
     settings:  Map<string, any> = new Map();
-    perimeters: Array<any> = new Array();;
+    perimeters: Array<any> = new Array();
 
 
     async getCards() {
-            return new GetResponse(this.cards,this.isResponseValid);
+        return new GetResponse(this.cards,this.isResponseValid);
     }
 
     public getUsers() {
@@ -88,24 +84,38 @@ describe('Cards external diffusion', function () {
     let opfabServicesInterfaceStub : OpfabServicesInterfaceStub;
     let mailService : SendMailServiceStub;
 
-    beforeEach(() => {
-        opfabServicesInterfaceStub = new OpfabServicesInterfaceStub();
-        opfabServicesInterfaceStub.setOpfabUrl('http://localhost')
-        mailService = new SendMailServiceStub({smtpHost: "localhost", smtpPort: 1025});
-        cardsDiffusionControl = new CardsDiffusionControl()
-        .setLogger(logger)
-        .setOpfabServicesInterface(opfabServicesInterfaceStub)
-        .setMailService(mailService)
-        .setFrom('test@opfab.com')
-        .setSubjectPrefix('Subject')
-        .setBodyPrefix('Body')
-        .setSecondsAfterPublicationToConsiderCardAsNotRead(60)
-        .setWindowInSecondsForCardSearch(120);
+    opfabServicesInterfaceStub = new OpfabServicesInterfaceStub();
+
+    opfabServicesInterfaceStub.setOpfabUrl('http://localhost')
+    mailService = new SendMailServiceStub({smtpHost: "localhost", smtpPort: 1025});
+    cardsDiffusionControl = new CardsDiffusionControl()
+    .setLogger(logger)
+    .setOpfabServicesInterface(opfabServicesInterfaceStub)
+    .setMailService(mailService)
+    .setFrom('test@opfab.com')
+    .setSubjectPrefix('Subject')
+    .setBodyPrefix('Body')
+    .setSecondsAfterPublicationToConsiderCardAsNotRead(60)
+    .setWindowInSecondsForCardSearch(120);
+
+    // Using this setup function instead of beforeEach hook because it was not working correctly 
+    // after making CardsExternalDiffusionOpfabServicesInterface extend OpfabServicesInterface
+    function setup() {
         
-    })
+        opfabServicesInterfaceStub.cards = new Array();
+        opfabServicesInterfaceStub.allUsers = new Array();
+        opfabServicesInterfaceStub.connectedUsers = new Array();
+        opfabServicesInterfaceStub.settings = new Map();
+        opfabServicesInterfaceStub.perimeters = new Array();
+
+        mailService.numberOfMailsSent = 0;
+        mailService.sent = [];
+    }
 
     it('Should not send card when publishDate is before configured period', async function() {
         const publishDateAfterAlertingPeriod = Date.now() - 55 * 1000;
+        setup();
+        opfabServicesInterfaceStub.setOpfabUrl('http://localhost')
         opfabServicesInterfaceStub.allUsers = [{login: 'operator_1', entities: ['ENTITY1']}, {login: 'operator_2', entities: ['ENTITY1', 'ENTITY2']}];
         opfabServicesInterfaceStub.perimeters = [{process: "defaultProcess", stateRights:[{state:"processState",right:"ReceiveAndWrite",filteringNotificationAllowed:true}]} ];
         opfabServicesInterfaceStub.connectedUsers = ['operator_1'];
@@ -121,6 +131,7 @@ describe('Cards external diffusion', function () {
     
     it('Should send card when publishDate if after configured period', async function() {
         const publishDateAfterAlertingPeriod = Date.now() - 65 * 1000;
+        setup();
         opfabServicesInterfaceStub.allUsers = [{login: 'operator_1', entities: ['ENTITY1']}, {login: 'operator_2', entities: ['ENTITY1', 'ENTITY2']}];
         opfabServicesInterfaceStub.perimeters = [{process: "defaultProcess", stateRights:[{state:"processState",right:"ReceiveAndWrite",filteringNotificationAllowed:true}]} ];
         opfabServicesInterfaceStub.connectedUsers = ['operator_1'];
@@ -138,6 +149,7 @@ describe('Cards external diffusion', function () {
 
     it('Should not send same card twice', async function() {
         const publishDateAfterAlertingPeriod = Date.now() - 65 * 1000;
+        setup();
         opfabServicesInterfaceStub.allUsers = [{login: 'operator_1', entities: ['ENTITY1']}, {login: 'operator_2', entities: ['ENTITY1', 'ENTITY2']}];
         opfabServicesInterfaceStub.perimeters = [{process: "defaultProcess", stateRights:[{state:"processState",right:"ReceiveAndWrite",filteringNotificationAllowed:true}]} ];
         opfabServicesInterfaceStub.connectedUsers = ['operator_1'];
@@ -154,6 +166,7 @@ describe('Cards external diffusion', function () {
 
     it('Should not send card when setting sendCardsByEmail is set to false', async function() {
         const publishDateAfterAlertingPeriod = Date.now() - 65 * 1000;
+        setup();
         opfabServicesInterfaceStub.allUsers = [{login: 'operator_1', entities: ['ENTITY1']}, {login: 'operator_2', entities: ['ENTITY1', 'ENTITY2']}];
         opfabServicesInterfaceStub.perimeters = [{process: "defaultProcess", stateRights:[{state:"processState",right:"ReceiveAndWrite",filteringNotificationAllowed:true}]} ];
         opfabServicesInterfaceStub.connectedUsers = ['operator_1'];
@@ -169,6 +182,7 @@ describe('Cards external diffusion', function () {
 
     it('Should not send card when setting sendCardsByEmail is not set', async function() {
         const publishDateAfterAlertingPeriod = Date.now() - 65 * 1000;
+        setup();
         opfabServicesInterfaceStub.allUsers = [{login: 'operator_1', entities: ['ENTITY1']}, {login: 'operator_2', entities: ['ENTITY1', 'ENTITY2']}];
         opfabServicesInterfaceStub.perimeters = [{process: "defaultProcess", stateRights:[{state:"processState",right:"ReceiveAndWrite",filteringNotificationAllowed:true}]} ];
         opfabServicesInterfaceStub.connectedUsers = ['operator_1'];
@@ -184,6 +198,7 @@ describe('Cards external diffusion', function () {
     
     it('Should not send card when email not set', async function() {
         const publishDateAfterAlertingPeriod = Date.now() - 65 * 1000;
+        setup();
         opfabServicesInterfaceStub.allUsers = [{login: 'operator_1', entities: ['ENTITY1']}, {login: 'operator_2', entities: ['ENTITY1', 'ENTITY2']}];
         opfabServicesInterfaceStub.perimeters = [{process: "defaultProcess", stateRights:[{state:"processState",right:"ReceiveAndWrite",filteringNotificationAllowed:true}]} ];
         opfabServicesInterfaceStub.connectedUsers = ['operator_1'];
@@ -199,6 +214,7 @@ describe('Cards external diffusion', function () {
 
     it('Should not send card when email is empty', async function() {
         const publishDateAfterAlertingPeriod = Date.now() - 65 * 1000;
+        setup();
         opfabServicesInterfaceStub.allUsers = [{login: 'operator_1', entities: ['ENTITY1']}, {login: 'operator_2', entities: ['ENTITY1', 'ENTITY2']}];
         opfabServicesInterfaceStub.perimeters = [{process: "defaultProcess", stateRights:[{state:"processState",right:"ReceiveAndWrite",filteringNotificationAllowed:true}]} ];
         opfabServicesInterfaceStub.connectedUsers = ['operator_1'];
@@ -214,6 +230,7 @@ describe('Cards external diffusion', function () {
 
     it('Should send card to all enabled users', async function() {
         const publishDateAfterAlertingPeriod = Date.now() - 65 * 1000;
+        setup();
         opfabServicesInterfaceStub.allUsers = [{login: 'operator_1', entities: ['ENTITY1']}, {login: 'operator_2', entities: ['ENTITY1', 'ENTITY2']}];
         opfabServicesInterfaceStub.perimeters = [{process: "defaultProcess", stateRights:[{state:"processState",right:"ReceiveAndWrite",filteringNotificationAllowed:true}]} ];
         opfabServicesInterfaceStub.connectedUsers = [];

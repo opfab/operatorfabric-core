@@ -99,12 +99,21 @@ Feature: Cards external diffusion
     }
     """
 
-
+    # Post configuration change with non admin user should fail
     Given url 'http://localhost:2106/config'
 	And header Authorization = 'Bearer ' + authTokenAsTSO
     And request updateConfig
     When method post
+    Then status 403
+
+    # Post configuration change with  admin user
+    Given url 'http://localhost:2106/config'
+	And header Authorization = 'Bearer ' + authTokenAdmin
+    And request updateConfig
+    When method post
     Then status 200
+
+    
 
 
 * configure retry = { count: 15, interval: 1000 }
@@ -128,11 +137,11 @@ Scenario: Restore
     }
     """
 # restore default configuration
-    Given url 'http://localhost:2106/config'
-	And header Authorization = 'Bearer ' + authTokenAsTSO
-    And request defaultConfig
-    When method post
-    Then status 200
+Given url 'http://localhost:2106/config'
+And header Authorization = 'Bearer ' + authTokenAdmin
+And request defaultConfig
+When method post
+Then status 200
 
 # delete perimeter created previously
   Given url opfabUrl + 'users/perimeters/perimeter'

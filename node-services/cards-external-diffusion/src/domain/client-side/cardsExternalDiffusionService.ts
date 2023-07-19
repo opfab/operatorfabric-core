@@ -8,7 +8,7 @@
  */
 
 import CardsDiffusionControl from '../application/cardsDiffusionControl';
-import OpfabServicesInterface from '../server-side/opfabServicesInterface';
+import CardsExternalDiffusionOpfabServicesInterface from '../server-side/cardsExternalDiffusionOpfabServicesInterface';
 import SendMailService from '../server-side/sendMailService';
 import ConfigDTO from './configDTO';
 
@@ -21,7 +21,7 @@ export default class CardsExternalDiffusionService {
     private logger: any;
 
 
-    constructor(opfabServicesInterface: OpfabServicesInterface, mailService: SendMailService, serviceConfig: any, logger: any) {
+    constructor(opfabServicesInterface: CardsExternalDiffusionOpfabServicesInterface, mailService: SendMailService, serviceConfig: any, logger: any) {
         this.logger = logger;
         this.checkPeriodInSeconds = serviceConfig.checkPeriodInSeconds;
 

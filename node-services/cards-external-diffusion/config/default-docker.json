@@ -6,6 +6,7 @@
     "connectedUsersUrl": "http://cards-consultation:2104/connections",
     "cardsUrl": "http://cards-consultation:2104/cards",
     "usersUrl": "http://users:2103/users",
+    "currentUserWithPerimetersUrl": "http://users:2103/CurrentUserWithPerimeters",
     "getTokenUrl": "http://web-ui/auth/token",
     "tokenExpireClaim": "exp"
   },
