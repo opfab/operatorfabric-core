@@ -735,6 +735,10 @@ definitions:
         type: array
         items:
           $ref: '#/definitions/FilterModel'
+      selectedFields:
+        type: array
+        items:
+          type: string
   FilterModel:
     type: object
     properties:

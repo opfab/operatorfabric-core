@@ -9,8 +9,11 @@
 
 package org.opfab.cards.consultation.repositories;
 
+import com.nimbusds.jose.util.ArrayUtils;
 import lombok.extern.slf4j.Slf4j;
 
+import net.minidev.json.JSONObject;
+import netscape.javascript.JSObject;
 import org.opfab.cards.consultation.model.CardsFilter;
 import org.opfab.cards.consultation.model.CardConsultationData;
 import org.opfab.cards.consultation.model.CardOperation;
@@ -29,17 +32,21 @@ import org.springframework.data.mongodb.core.aggregation.Aggregation;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 
+import org.springframework.http.MediaType;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import reactor.util.function.Tuple2;
 
 import java.time.Instant;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
 import static org.springframework.data.mongodb.core.query.Criteria.where;
 import static org.springframework.data.mongodb.core.aggregation.Aggregation.*;
+import static org.springframework.web.reactive.function.BodyInserters.fromValue;
+import static org.springframework.web.reactive.function.server.ServerResponse.ok;
 
 
 @Slf4j
@@ -163,9 +170,14 @@ public class CardCustomRepositoryImpl implements CardCustomRepository {
 	}
 
 
-    public Mono<Page<LightCard>> findWithUserAndFilter(
+    public Mono<Page<Object>> findWithUserAndFilter(
             Tuple2<CurrentUserWithPerimeters, CardsFilter> filter) {
 		CardsFilter queryFilter = filter.getT2();
+
+		if ((queryFilter.getSelectedFields() != null) && (!queryFilter.getSelectedFields().isEmpty())) {
+			return findWithUserAndFilterAndSelectedFields(filter);
+		}
+
         log.info("findWithUserAndFilter" + queryFilter);
 
         Pageable pageableRequest = PaginationUtils.createPageable(queryFilter.getPage() != null ? queryFilter.getPage().intValue() : null , queryFilter.getSize() != null ? queryFilter.getSize().intValue() : null);
@@ -195,16 +207,64 @@ public class CardCustomRepositoryImpl implements CardCustomRepository {
 
         if (pageableRequest.isPaged()) {
             return template.aggregate(agg, CARDS_COLLECTION, LightCardConsultationData.class)
-                    .cast(LightCard.class).collectList()
+                    .cast(Object.class).collectList()
                     .zipWith(template.aggregate(countAgg, CARDS_COLLECTION, String.class)
                             .defaultIfEmpty("{\"count\":0}")
                             .single())
                     .map(tuple -> new PageImpl<>(tuple.getT1(), pageableRequest, PaginationUtils.getCountFromJson(tuple.getT2())));
         } else {
             return template.aggregate(agg, CARDS_COLLECTION, LightCardConsultationData.class)
-                    .cast(LightCard.class).collectList()
+                    .cast(Object.class).collectList()
                     .map(PageImpl::new);
         }
+	}
+
+	public Mono<Page<Object>> findWithUserAndFilterAndSelectedFields(
+			Tuple2<CurrentUserWithPerimeters, CardsFilter> filter) {
+		CardsFilter queryFilter = filter.getT2();
+		log.info("findWithUserAndFilterAndSelectedFields" + queryFilter);
+
+		Pageable pageableRequest = PaginationUtils.createPageable(queryFilter.getPage() != null ? queryFilter.getPage().intValue() : null , queryFilter.getSize() != null ? queryFilter.getSize().intValue() : null);
+		List<String> fields = new ArrayList<>(List.of(
+				"uid",
+				"publisher",
+				"processVersion",
+				PROCESS_FIELD,
+				PROCESS_INSTANCE_ID_FIELD,
+				"state",
+				"titleTranslated",
+				"summaryTranslated",
+				PUBLISH_DATE_FIELD,
+				START_DATE_FIELD,
+				END_DATE_FIELD,
+				"severity",
+				"publisherType",
+				"representative",
+				"representativeType",
+				"entityRecipients",
+				"entityRecipientsForInformation",
+				"entitiesAcks",
+				"userRecipients",
+				"groupRecipients"));
+
+		fields.addAll(queryFilter.getSelectedFields());
+		String[] selectedFields = fields.toArray(String[]::new);
+
+		Aggregation agg = newAggregation( this.getFilterOperations(filter, pageableRequest, selectedFields));
+		Aggregation countAgg = newAggregation( this.getFilterOperationsForCount(filter));
+
+		if (pageableRequest.isPaged()) {
+			return template.aggregate(agg, CARDS_COLLECTION, Object.class)
+					.collectList()
+					.zipWith(template.aggregate(countAgg, CARDS_COLLECTION, String.class)
+							.defaultIfEmpty("{\"count\":0}")
+							.single())
+					.map(tuple -> new PageImpl<>(tuple.getT1(), pageableRequest, PaginationUtils.getCountFromJson(tuple.getT2())));
+		} else {
+			return template.aggregate(agg, CARDS_COLLECTION, Object.class)
+					.collectList()
+					.map(PageImpl::new);
+		}
 	}
 
 

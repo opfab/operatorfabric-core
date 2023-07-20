@@ -32,6 +32,7 @@ public class CardsFilterData implements CardsFilter {
     @Builder.Default
     private Boolean latestUpdateOnly = false;
     private List<FilterModel> filters;
+    private List<String> selectedFields;
 
     public void setAdminMode(Boolean adminMode) {
         this.adminMode = adminMode != null && adminMode;

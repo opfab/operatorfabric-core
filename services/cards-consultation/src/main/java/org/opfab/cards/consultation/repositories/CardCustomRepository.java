@@ -10,6 +10,7 @@
 package org.opfab.cards.consultation.repositories;
 
 
+import net.minidev.json.JSONObject;
 import org.opfab.cards.consultation.model.CardsFilter;
 import org.opfab.cards.consultation.model.CardConsultationData;
 import org.opfab.cards.consultation.model.CardOperation;
@@ -50,6 +51,6 @@ public interface CardCustomRepository extends UserUtilitiesCommonToCardRepositor
     CurrentUserWithPerimeters currentUserWithPerimeters);
 
 
-    Mono<Page<LightCard>> findWithUserAndFilter(
+    Mono<Page<Object>> findWithUserAndFilter(
             Tuple2<CurrentUserWithPerimeters, CardsFilter> params);
 }

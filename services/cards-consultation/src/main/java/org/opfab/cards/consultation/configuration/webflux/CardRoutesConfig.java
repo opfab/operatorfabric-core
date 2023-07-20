@@ -55,7 +55,7 @@ public class CardRoutesConfig implements UserExtractor {
         return RouterFunctions
                 .route(RequestPredicates.GET("/cards/{id}"), cardGetRoute())
                 .andRoute(RequestPredicates.OPTIONS("/cards/{id}"), cardOptionRoute())
-                .andRoute(RequestPredicates.POST("/cards"),queryCardPostRoute());
+                .andRoute(RequestPredicates.POST("/cards"), queryCardPostRoute());
     }
 
 
