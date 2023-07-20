@@ -1,4 +1,4 @@
-FROM azul/zulu-openjdk-alpine:17.0.4.1-jre
+FROM azul/zulu-openjdk-alpine:17.0.7-jre
 VOLUME /tmp
 RUN env
 ARG JAR_FILE
