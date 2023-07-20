@@ -10,11 +10,9 @@
 package org.opfab.cards.consultation.repositories;
 
 
-import net.minidev.json.JSONObject;
 import org.opfab.cards.consultation.model.CardsFilter;
 import org.opfab.cards.consultation.model.CardConsultationData;
 import org.opfab.cards.consultation.model.CardOperation;
-import org.opfab.cards.consultation.model.LightCard;
 import org.opfab.users.model.CurrentUserWithPerimeters;
 import org.springframework.data.domain.Page;
 

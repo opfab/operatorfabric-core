@@ -27,7 +27,7 @@ Feature: Card Filter
 	"lttd" : 1583733122000,
 	"summary" : {"key" : "defaultProcess.summary"},
 	"title" : {"key" : "defaultProcess.title"},
-	"data" : {"message":"new message (card 1)"}
+	"data" : {"message1": "new message (card 1)", "message2": "another new message (card 1)"}
 }
 """
 	* def card2 =
@@ -486,7 +486,35 @@ Scenario: fetch the first page
 		Then method post
 		Then status 200
 		And assert response.numberOfElements == 10
-  
+
+
+	Scenario: filter processInstanceId which returns only one card, specifying selected fields in return
+
+		* def filter =
+		"""
+		{
+		  "page" : 0,
+		  "size" : 10,
+		  "filters" : [
+			{
+			  "columnName": "processInstanceId",
+			  "filter" : ["process2card1"],
+			  "matchType": "EQUALS"
+			}
+		  ],
+		  "selectedFields" : ["data.message1", "data.message2"]
+		}
+		"""
+
+		Given url opfabUrl + 'cards/cards'
+		And header Authorization = 'Bearer ' + authTokenAsTSO
+		And request filter
+		Then method post
+		Then status 200
+		And assert response.numberOfElements == 1
+		And match response.content[0].message1 == "new message (card 1)"
+		And match response.content[0].message2 == "another new message (card 1)"
+
 	Scenario: filter by wrong process
   
 		* def filter =
