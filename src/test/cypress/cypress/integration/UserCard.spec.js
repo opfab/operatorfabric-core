@@ -874,6 +874,7 @@ describe('User Card ', function () {
 
       // Test on existing card, opened from the feed
       usercard.previewThenSendCard();
+      cy.get("#opfab-card-list").contains("IT INCIDENT"); // to be sure card is in the feed (avoid flaky test with github CI)
       feed.openFirstCard();
       feed.editCurrentCard();
       cy.get("#hidden_process").should("exist");
