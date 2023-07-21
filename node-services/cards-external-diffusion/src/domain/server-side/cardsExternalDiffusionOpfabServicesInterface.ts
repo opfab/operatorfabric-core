@@ -72,64 +72,19 @@ export default class CardsExternalDiffusionOpfabServicesInterface extends OpfabS
     }
 
     public async fetchUser(login: string): Promise<GetResponse> {
-        try {
-            await this.getToken();
-            const response = await this.sendGetUserRequest(login);
-            if (response?.data) {
-                this.addUserToCache(response.data);
-                return new GetResponse(response.data, true);
-            }
-            else {
-                this.logger.warn("No data in HTTP response")
-                return new GetResponse([], false);
-            }
-        } catch (e) {
-            this.logger.warn('Impossible to get user', e);
-            return new GetResponse([], false);
+        let response = await super.fetchUser(login);
+        if (response.isValid()) {
+            this.addUserToCache(response.getData());
         }
-       
+        return response;
     }
 
     public async fetchAllUsers(): Promise<GetResponse> {
-        try {
-            await this.getToken();
-            const response = await this.sendGetAllUsersRequest();
-            if (response?.data) {
-                this.users = response.data;
-
-                return new GetResponse(this.users, true);
-            }
-            else {
-                this.logger.warn("No data in HTTP response")
-                return new GetResponse([], false);
-            }
-        } catch (e) {
-            this.logger.warn('Impossible to get users', e);
-            return new GetResponse([], false);
+        let response = await super.fetchAllUsers();
+        if (response.isValid()) {
+            this.users = response.getData();
         }
-       
-    }
-
-    public async getUsersConnected(): Promise<GetResponse> {
-        try {
-            await this.getToken();
-            const response = await this.sendUsersConnectedRequest();
-            const users = new Array();
-            if (response?.data) {
-                response.data.forEach((user: any) => {
-                    users.push(user.login);
-                });
-                return new GetResponse(users, true);
-            }
-            else {
-                this.logger.warn("No data in HTTP response")
-                return new GetResponse(null, false);
-            }
-        } catch (e) {
-            this.logger.warn('Impossible to get connected users', e);
-            return new GetResponse(null, false);
-        }
-       
+        return response;
     }
 
     public async getUserSettings(login: string): Promise<GetResponse> {
@@ -177,7 +132,6 @@ export default class CardsExternalDiffusionOpfabServicesInterface extends OpfabS
         }
     }
 
-
     public async loadUsersData() {
         await this.fetchAllUsers();
         this.userPerimeters.clear();
@@ -196,27 +150,6 @@ export default class CardsExternalDiffusionOpfabServicesInterface extends OpfabS
             this.users.splice(usrIndex, 1, user);
         else
             this.users.push(user);
-    }
-
-    public async getCards(filter: any) {
-        try {
-            await this.getToken();
-            const response = await this.sendGetCardsRequest(filter);
-            const cards = new Array();
-            if (response?.data) {
-                response.data.content.forEach((card: any) => {
-                    cards.push(card);
-                });
-                return new GetResponse(cards, true);
-            }
-            else {
-                this.logger.warn("No data in HTTP response")
-                return new GetResponse(null, false);
-            }
-        } catch (e) {
-            this.logger.warn('Impossible to get cards', e);
-            return new GetResponse(null, false);
-        }
     }
 
     private sendGetUserSettingRequest(login: string) {

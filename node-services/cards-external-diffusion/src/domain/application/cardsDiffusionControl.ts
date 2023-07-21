@@ -14,6 +14,8 @@ import CardsRoutingUtilities from './cardRoutingUtilities';
 import ConfigDTO from '../client-side/configDTO';
 
 export default class CardsDiffusionControl {
+    opfabUrlInMailContent: any;
+
     private opfabServicesInterface: CardsExternalDiffusionOpfabServicesInterface;
     private logger: any;
     private secondsAfterPublicationToConsiderCardAsNotRead: number;
@@ -51,6 +53,11 @@ export default class CardsDiffusionControl {
 
     public setBodyPrefix(bodyPrefix: string) {
         this.bodyPrefix = bodyPrefix;
+        return this;
+    }
+
+    public setOpfabUrlInMailContent(opfabUrlInMailContent: any) {
+        this.opfabUrlInMailContent = opfabUrlInMailContent;
         return this;
     }
 
@@ -186,7 +193,7 @@ export default class CardsDiffusionControl {
         const body =
             this.bodyPrefix +
             ' <a href="' +
-            this.opfabServicesInterface.getOpfabUrl() +
+            this.opfabUrlInMailContent +
             '/#/feed/cards/' +
             card.id +
             '">' +

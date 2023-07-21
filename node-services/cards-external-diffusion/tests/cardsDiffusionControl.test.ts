@@ -86,7 +86,6 @@ describe('Cards external diffusion', function () {
 
     opfabServicesInterfaceStub = new OpfabServicesInterfaceStub();
 
-    opfabServicesInterfaceStub.setOpfabUrl('http://localhost')
     mailService = new SendMailServiceStub({smtpHost: "localhost", smtpPort: 1025});
     cardsDiffusionControl = new CardsDiffusionControl()
     .setLogger(logger)
@@ -95,6 +94,7 @@ describe('Cards external diffusion', function () {
     .setFrom('test@opfab.com')
     .setSubjectPrefix('Subject')
     .setBodyPrefix('Body')
+    .setOpfabUrlInMailContent('http://localhost')
     .setSecondsAfterPublicationToConsiderCardAsNotRead(60)
     .setWindowInSecondsForCardSearch(120);
 
