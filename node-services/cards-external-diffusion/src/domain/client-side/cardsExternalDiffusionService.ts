@@ -32,6 +32,7 @@ export default class CardsExternalDiffusionService {
             .setFrom(serviceConfig.mailFrom)
             .setSubjectPrefix(serviceConfig.subjectPrefix)
             .setBodyPrefix(serviceConfig.bodyPrefix)
+            .setOpfabUrlInMailContent(serviceConfig.opfabUrlInMailContent)
             .setWindowInSecondsForCardSearch(serviceConfig.windowInSecondsForCardSearch)
             .setSecondsAfterPublicationToConsiderCardAsNotRead(serviceConfig.secondsAfterPublicationToConsiderCardAsNotRead);
 
