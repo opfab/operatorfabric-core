@@ -11,7 +11,7 @@
 
 source ${BASH_SOURCE%/*}/load_variables.sh
 
-sdk install java 17.0.7-zulu
-sdk use java 17.0.7-zulu
+sdk install java 17.0.8-zulu
+sdk use java 17.0.8-zulu
 nvm install v18.12.1
 nvm use v18.12.1
