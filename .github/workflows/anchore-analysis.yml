@@ -2,8 +2,9 @@
 name: Anchore Container Scan
 
 on:
-  push:
-    branches: [ develop]
+  schedule:
+    # launch analysis every day on develop (shall be launch after snapshot build)
+    - cron:  '0 1 * * *'
   workflow_dispatch:
 
 jobs:
