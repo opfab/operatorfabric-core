@@ -7,7 +7,7 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {CountDown as CountDown} from './countdown';
+import {CountDown} from './countdown';
 
 describe('countdown testing ', () => {
     beforeEach(() => {

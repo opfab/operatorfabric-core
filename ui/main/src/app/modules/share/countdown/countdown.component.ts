@@ -10,7 +10,7 @@
 import {Component, Input, OnChanges, OnDestroy, OnInit} from '@angular/core';
 import {TranslateService} from '@ngx-translate/core';
 import {ConfigService} from 'app/business/services/config.service';
-import {CountDown} from './countdown';
+import {CountDown} from '../../../business/common/countdown/countdown';
 
 @Component({
     selector: 'of-countdown',
