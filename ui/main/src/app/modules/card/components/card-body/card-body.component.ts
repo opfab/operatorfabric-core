@@ -69,6 +69,7 @@ export class CardBodyComponent implements OnChanges, OnInit, OnDestroy {
     public showDetailCardHeader= true;
     public htmlTemplateContent: SafeHtml;
     public templateOffset = 15;
+    public truncatedTitle: string;
 
     private lastCardSetToReadButNotYetOnFeed;
     private entityIdsAllowedOrRequiredToRespondAndAllowedToSendCards = [];
@@ -190,6 +191,7 @@ export class CardBodyComponent implements OnChanges, OnInit, OnDestroy {
                     this.businessconfigService.getProcess(this.card.process)
                 );
             }
+            this.truncatedTitle = this.card.titleTranslated;
             this.computeShowDetailCardHeader();
             this.lockResponseIfOneUserEntityHasAlreadyRespond();
             this.markAsReadIfNecessary();
