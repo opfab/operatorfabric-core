@@ -19,6 +19,7 @@ export abstract class CardServer {
     abstract loadCard(id: string): Observable<ServerResponse<any>>;
     abstract loadArchivedCard(id: string): Observable<ServerResponse<any>>;
     abstract fetchFilteredArchivedCards(filter: CardsFilter): Observable<ServerResponse<any>>;
+    abstract fetchFilteredCards(filter: CardsFilter): Observable<ServerResponse<any>>;
     abstract postCard(card: CardForPublishing): Observable<ServerResponse<CardCreationReportData>>;
     abstract deleteCard(card: Card): Observable<ServerResponse<any>>;
     abstract postUserCardRead(cardUid: string): Observable<ServerResponse<any>>;

@@ -53,6 +53,10 @@ export class AngularCardServer extends AngularServer implements CardServer {
         return this.processHttpResponse(this.httpClient.post<Page<LightCard>>(`${this.archivesUrl}`, filter));
     }
 
+    fetchFilteredCards(filter: CardsFilter): Observable<ServerResponse<any>> {
+        return this.processHttpResponse(this.httpClient.post<Page<any>>(`${this.cardsUrl}`, filter));
+    }
+
     postCard(card: CardForPublishing): Observable<ServerResponse<CardCreationReportData>> {
         return this.processHttpResponse(this.httpClient.post<CardCreationReportData>(`${this.cardsPubUrl}/userCard`, card));
     }

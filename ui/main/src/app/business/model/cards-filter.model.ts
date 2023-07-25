@@ -17,6 +17,7 @@ export class CardsFilter {
         readonly includeChildCards: boolean,
         readonly latestUpdateOnly: boolean,
         readonly filters: FilterModel[],
+        readonly selectedFields?: string[]
     ) {}
 }
 

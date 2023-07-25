@@ -61,6 +61,7 @@ export class ArchivesLoggingFiltersComponent implements OnInit, OnDestroy, After
     @Input() visibleProcesses: any[];
     @Input() hideChildStates: boolean;
     @Input() tags: any[];
+    @Input() displayPublishDateFilter = true;
     @Output() search = new EventEmitter<string>();
     @Output() reset = new EventEmitter<string>();
 

@@ -29,6 +29,7 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.mongodb.core.ReactiveMongoTemplate;
 import org.springframework.data.mongodb.core.aggregation.Aggregation;
+import org.springframework.data.mongodb.core.aggregation.AggregationOptions;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 
@@ -42,6 +43,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import static org.springframework.data.mongodb.core.query.Criteria.where;
 import static org.springframework.data.mongodb.core.aggregation.Aggregation.*;
@@ -248,10 +250,12 @@ public class CardCustomRepositoryImpl implements CardCustomRepository {
 				"groupRecipients"));
 
 		fields.addAll(queryFilter.getSelectedFields());
-		String[] selectedFields = fields.toArray(String[]::new);
+		List<String> fieldsWithoutDuplicates = fields.stream().distinct().collect(Collectors.toList());
+		String[] selectedFields = fieldsWithoutDuplicates.toArray(String[]::new);
 
-		Aggregation agg = newAggregation( this.getFilterOperations(filter, pageableRequest, selectedFields));
-		Aggregation countAgg = newAggregation( this.getFilterOperationsForCount(filter));
+		Aggregation agg = newAggregation(this.getFilterOperations(filter, pageableRequest, selectedFields));
+		agg = agg.withOptions(AggregationOptions.builder().strictMapping().build());
+		Aggregation countAgg = newAggregation(this.getFilterOperationsForCount(filter));
 
 		if (pageableRequest.isPaged()) {
 			return template.aggregate(agg, CARDS_COLLECTION, Object.class)

@@ -1,0 +1,48 @@
+<!-- Copyright (c) 2018-2022, RTE (http://www.rte-france.com)              -->
+<!-- See AUTHORS.txt                                                       -->
+<!-- This Source Code Form is subject to the terms of the Mozilla Public   -->
+<!-- License, v. 2.0. If a copy of the MPL was not distributed with this   -->
+<!-- file, You can obtain one at http://mozilla.org/MPL/2.0/.              -->
+<!-- SPDX-License-Identifier: MPL-2.0                                      -->
+<!-- This file is part of the OperatorFabric project.                      -->
+
+
+<div class="monitoringexp-page">
+    <form [formGroup]="monitoringExpForm" #currentForm>
+          <of-archives-logging-filters [parentForm]="monitoringExpForm" [visibleProcesses]="listOfProcessesForFilter"
+                                       (reset)='resetForm()' (search)='search()'
+                                       [tags]="tags" [hideChildStates]="false"
+                                       [displayPublishDateFilter]="false" #filters>
+          </of-archives-logging-filters>
+
+    </form>
+</div>
+
+<!-- Display spinner if loading cards is taking more than 1s -->
+<of-spinner *ngIf="loadingInProgress && !firstQueryHasBeenDone"></of-spinner>
+
+
+<div style="height:5%"> </div>
+
+<div *ngIf="firstQueryHasBeenDone" [hidden]="!firstQueryHasResults || technicalError" style="margin-left:5%;margin-right:5%">
+  <of-monitoringexp-table [result]="results" [processGroupVisible]="isProcessGroupFilterVisible"
+    [page]="page" [totalElements]="totalElements" [totalPages]="totalPages"
+    [processStateNameMap]="processStateName" [processStateDescriptionMap]="processStateDescription"
+    [processMonitoring]="processMonitoring"
+    (filterChange)="onTableFilterChange($event)" (pageChange)="onPageChange($event)" (export)="exportToExcel()">
+  </of-monitoringexp-table>
+
+</div>
+
+<div *ngIf="firstQueryHasBeenDone&&!firstQueryHasResults&&!loadingInProgress" style="text-align: center;font-size: 20px;" translate>shared.noResult
+</div>
+
+<div *ngIf="technicalError" style="text-align: center;font-size: 20px;" translate> shared.error.technicalError
+</div>
+
+
+<ng-template #exportInProgress let-modal>
+  <div class="modal-body">
+    <of-spinner timeBeforeDisplayingSpinner="0" loadingText="shared.exportInProgress"></of-spinner>
+  </div>
+</ng-template>

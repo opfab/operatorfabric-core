@@ -140,5 +140,12 @@
   "usercard": {
     "useDescriptionFieldForEntityList": false,
     "displayConnectionCirclesInPreview": false
-  }
+  },
+  "processMonitoring": [
+    { "field": "startDate", "colName": "Start Date", "size": "50px"},
+    { "field": "titleTranslated", "colName": "Title", "size": "5%"},
+    { "field": "data.message", "colName": "My field", "size": "5%"},
+    { "field": "summaryTranslated", "colName": "Summary", "size": "100px"},
+    { "field": "data.error", "colName": "My second field", "size": "100px"}
+  ]
 }

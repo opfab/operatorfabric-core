@@ -7,7 +7,7 @@
  * This file is part of the OperatorFabric project.
  */
 
-// intermediate component used to avoir circular dependency with router module
+// intermediate component used to avoid circular dependency with router module
 
 import {Component} from '@angular/core';
 

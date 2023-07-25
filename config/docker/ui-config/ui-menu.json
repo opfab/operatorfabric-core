@@ -13,6 +13,9 @@
       "opfabCoreMenuId": "monitoring"
     },
     {
+      "opfabCoreMenuId": "monitoringexp"
+    },
+    {
       "opfabCoreMenuId": "logging"
     },
     {

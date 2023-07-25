@@ -101,6 +101,7 @@
     "logging": "Logboek",
     "admin": "Administratie",
     "monitoring": "Bewaking",
+    "monitoringexp": "Monitoring exp.",
     "logout": "Uitloggen",
     "changePassword": "Wachtwoord wijzigen",
     "settings": "Instellingen",

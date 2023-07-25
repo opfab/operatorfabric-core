@@ -80,6 +80,7 @@ import {AngularBusinessDataServer} from './server/angularBusinessData.server';
 import {TranslationService} from './business/services/translation/translation.service';
 import {AngularTranslationService} from '@ofServices/angularTranslationService';
 import {LoadingInProgress} from "./modules/core/application-loading/loading-in-progress/loading-in-progress";
+import {MonitoringexpModule} from "./modules/monitoringexp/monitoringexp.module";
 
 @NgModule({
     imports: [
@@ -97,6 +98,7 @@ import {LoadingInProgress} from "./modules/core/application-loading/loading-in-p
         ArchivesModule,
         LoggingModule,
         MonitoringModule,
+        MonitoringexpModule,
         DashboardModule,
         NgbModalModule,
         AppRoutingModule,

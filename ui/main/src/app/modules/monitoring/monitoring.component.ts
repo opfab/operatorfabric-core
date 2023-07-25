@@ -20,6 +20,7 @@ import {Filter} from '@ofModel/feed-filter.model';
 import {LightCardsStoreService} from 'app/business/services/lightcards/lightcards-store.service';
 import {EntitiesService} from 'app/business/services/users/entities.service';
 import {SelectedCardService} from 'app/business/services/card/selectedCard.service';
+import {ConfigService} from "../../business/services/config.service";
 
 @Component({
     selector: 'of-monitoring',
@@ -67,9 +68,9 @@ export class MonitoringComponent implements OnInit, OnDestroy {
             this.responseFilter$.asObservable(),
             this.lightCardsStoreService.getLightCards()
         ]).pipe(
-            debounceTime(0), // Add this to avoid ExpressionChangedAfterItHasBeenCheckedError so it waits for component init before processing
+            debounceTime(0), // Add this to avoid ExpressionChangedAfterItHasBeenCheckedError, so it waits for component init before processing
             takeUntil(this.unsubscribe$),
-            // the filters are set   by the monitoring filter and by the time line
+            // the filters are set   by the monitoring filter and by the timeline
             // so it generates two events , we need to wait until every filter is set
             filter((results) => this.areFiltersCorrectlySet(results[0])),
             map((results) => {

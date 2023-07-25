@@ -1,0 +1,37 @@
+<!-- Copyright (c) 2023, RTE (http://www.rte-france.com)              -->
+<!-- See AUTHORS.txt                                                       -->
+<!-- This Source Code Form is subject to the terms of the Mozilla Public   -->
+<!-- License, v. 2.0. If a copy of the MPL was not distributed with this   -->
+<!-- file, You can obtain one at http://mozilla.org/MPL/2.0/.              -->
+<!-- SPDX-License-Identifier: MPL-2.0                                      -->
+<!-- This file is part of the OperatorFabric project.                      -->
+
+
+<div id="opfab-monitoringexp-table" style="background-color: var(--opfab-bgcolor-darker);border: solid 0px var(--opfab-bgcolor-darker)">
+    <ag-grid-angular id="opfab-monitoring-table-grid" aria-describedby="Monitoring exp. results table"
+            (gridReady)="onGridReady($event)"
+            [gridOptions]="gridOptions"
+            [rowData]="result"
+            (filterChanged)="onFilterChanged($event)"
+            class="ag-theme-opfab">
+    </ag-grid-angular>
+
+
+    <div *ngIf="gridApi" class="opfab-pagination" style="padding-bottom: 5px">
+        <div style="white-space: nowrap;margin-top:17px" id ="opfab-monitoringexp-results-number">
+        <span translate> shared.resultsNumber </span> : {{totalElements}}
+        </div>
+        <div style="width:40%;margin-top:5px">
+        <ngb-pagination *ngIf="totalPages > 1" [collectionSize]="totalElements"
+            [page]="page" (pageChange)="updateResultPage($event)" [maxSize]="3" [rotate]="true">
+        </ngb-pagination>
+        </div>
+        <div style="width:50%;text-align:right;padding-right:8px;">
+            <div id="opfab-monitoringexp-btn-exportToExcel" style="float: right;cursor:pointer" (click)="exportToExcel()" fileName="monitoringexpResults" >
+              <span class="opfab-icon-export-data"></span>
+              <span style="font-weight: bold;" translate>shared.exportToExcel</span>
+            </div>
+        </div>
+    </div>
+
+</div>
