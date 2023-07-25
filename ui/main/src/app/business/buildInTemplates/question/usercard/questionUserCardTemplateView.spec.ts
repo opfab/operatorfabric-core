@@ -13,7 +13,7 @@ import {QuestionUserCardTemplateView} from './questionUserCardTemplateView';
 
 declare const opfab;
 
-fdescribe('Question UserCard template', () => {
+describe('Question UserCard template', () => {
     beforeEach(() => {
         initOpfabApiMock();
     });

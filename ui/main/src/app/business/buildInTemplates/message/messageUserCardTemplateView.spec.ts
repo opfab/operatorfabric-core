@@ -12,7 +12,7 @@ import {MessageUserCardTemplateView} from './messageUserCardTemplateView';
 
 declare const opfab;
 
-fdescribe('Message UserCard template', () => {
+describe('Message UserCard template', () => {
     beforeEach(() => {
         initOpfabApiMock();
     });
