@@ -207,7 +207,7 @@ describe('RRuleReminderUtils:getNextTimeForRepeating hour/minutes/daysOfWeek   '
     });
 
     it('2020/11/10 Tuesday 8:00 , Recurrence :10:30 / Monday => 2020/11/16 Monday 10:30 ', () => {
-        const date = moment.tz('2020-11-10 8:00', 'Europe/Paris').valueOf();
+        const date = moment.tz('2020-11-10 08:00', 'Europe/Paris').valueOf();
 
         testCard.rRule = {
             freq: Frequency.WEEKLY,
