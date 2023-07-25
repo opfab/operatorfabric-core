@@ -170,7 +170,7 @@ export class MonitoringexpTableComponent implements OnDestroy {
         if (!!this.processMonitoring) {
             this.processMonitoring.forEach(column => {
                 this.columnDefs.push({type: 'summaryColumn', headerName: column.colName, field: String(column.field).split(".").pop(),
-                    headerClass: 'opfab-ag-cheader-with-right-padding', cellClass: 'opfab-ag-cell-with-no-padding'});
+                    headerClass: 'opfab-ag-cheader-with-right-padding', cellClass: 'opfab-ag-cell-with-no-padding', minWidth:column.size});
             });
         }
 
