@@ -7,6 +7,8 @@
  * This file is part of the OperatorFabric project.
  */
 
+/* CSS file intended for the style of external applications */
+
  @font-face {
     font-family: 'Open Sans';
     src: url('/shared/fonts/OpenSans-Bold.ttf') format('truetype');
@@ -371,9 +373,10 @@ input:-webkit-autofill {
         border-bottom: 1px solid var(--opfab-table-border-color);
     }
 
-    /* #2588 : Logging screen : summary column extends without limit if the message contains no space character */
+/* #2588 : Logging screen : summary column extends without limit if the message contains no space character */
 .opfab-table td {
-        overflow: hidden;
+    overflow: hidden;
+    word-break: break-all;
     }
 
 .opfab-pagination {
@@ -614,4 +617,5 @@ input:-webkit-autofill {
 .opfab-btn-cancel:hover {
     color: #2268ff;
 }
+
 /* END BUTTON STYLE */

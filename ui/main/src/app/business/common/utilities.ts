@@ -129,4 +129,8 @@ export class Utilities {
             return arrayToFilter;
         }
     }
+
+    public static sliceForFormat(str: string, charactersToKeep: number) {
+        return str.length <= charactersToKeep ? str : str.slice(0,charactersToKeep) + "...";
+    }
 }

@@ -75,6 +75,7 @@ export class ArchivesComponent implements OnDestroy, OnInit {
     @ViewChild('filters') filtersTemplate: ArchivesLoggingFiltersComponent;
 
     selectedCard: Card;
+    selectedCardTruncatedTitle: string;
     selectedChildCards: Card[];
 
     listOfProcesses = [];
@@ -306,7 +307,6 @@ export class ArchivesComponent implements OnDestroy, OnInit {
 
                 lines.forEach((card: LightCard) => {
                     if (card) {
-                        // TO DO translation for old process should be done, but loading local arrives too late, solution to find
                         if (this.filtersTemplate.isProcessGroupFilterVisible())
                             exportArchiveData.push({
                                 [severityColumnName]: this.translationService.translateSeverity(card.severity),
@@ -354,6 +354,7 @@ export class ArchivesComponent implements OnDestroy, OnInit {
 
         this.cardService.loadArchivedCard(cardId).subscribe((card: CardData) => {
             this.selectedCard = card.card;
+            this.selectedCardTruncatedTitle = Utilities.sliceForFormat(card.card.titleTranslated,100);
             this.selectedChildCards = card.childCards;
 
             const options: NgbModalOptions = {

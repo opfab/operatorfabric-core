@@ -435,6 +435,13 @@ body {
     }
 }
 
+.opfab-bubble-text{
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 600px;
+}
+
 // OpFab customization of the alpine theme for ag-grid
 // It allows the colors to match the ones from the OpFab global style and to respond to the night/day mode
 
