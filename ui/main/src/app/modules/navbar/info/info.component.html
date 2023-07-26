@@ -11,7 +11,12 @@
     <div class="time" >{{timeToDisplay}}</div>
 </div>
 
-<div class="text-center navbar-info-block" style="margin-left: 5px;">
+<ng-template #userEntitiesTooltip>
+    <p *ngFor="let entity of userEntities">{{entity}}</p>
+</ng-template>
+<div class="text-center navbar-info-block" style="margin-left: 5px;"
+[ngbPopover]="userEntitiesTooltip" #p="ngbPopover" popoverClass="opfab-popover" container="body"
+triggers="manual" (mouseenter)="userEntitiesToDisplayTrimmed && p.open()" (mouseleave)="p.close()">
     <div class="user-name" style="font-size:15px;text-align:right;padding-right:8px;">{{userName}}</div>
     <div *ngIf="userEntitiesToDisplay"  class="user-entities" style="padding-top:10px;margin-left:5px;text-align:center; padding-right: 8px;">{{userEntitiesToDisplay}}</div>
     <div *ngIf="!userEntitiesToDisplay" class="user-entities" style="padding-top:5px; padding-right: 8px;"> &nbsp;</div>
