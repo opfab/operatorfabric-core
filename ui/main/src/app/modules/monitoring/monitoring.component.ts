@@ -20,7 +20,6 @@ import {Filter} from '@ofModel/feed-filter.model';
 import {LightCardsStoreService} from 'app/business/services/lightcards/lightcards-store.service';
 import {EntitiesService} from 'app/business/services/users/entities.service';
 import {SelectedCardService} from 'app/business/services/card/selectedCard.service';
-import {ConfigService} from "../../business/services/config.service";
 
 @Component({
     selector: 'of-monitoring',

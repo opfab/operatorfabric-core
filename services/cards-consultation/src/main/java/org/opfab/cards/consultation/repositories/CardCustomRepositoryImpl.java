@@ -250,7 +250,7 @@ public class CardCustomRepositoryImpl implements CardCustomRepository {
 				"groupRecipients"));
 
 		fields.addAll(queryFilter.getSelectedFields());
-		List<String> fieldsWithoutDuplicates = fields.stream().distinct().collect(Collectors.toList());
+		List<String> fieldsWithoutDuplicates = fields.stream().distinct().toList();
 		String[] selectedFields = fieldsWithoutDuplicates.toArray(String[]::new);
 
 		Aggregation agg = newAggregation(this.getFilterOperations(filter, pageableRequest, selectedFields));
