@@ -24,11 +24,11 @@ check_patterns() {
 for file in "$@"; do
     case "$file" in
         *.ts | *.js | *.java | *.html | *.css | *.scss | *.handlebars | *.sh)
-            check_patterns "$file" "Copyright (c)" "2023" "mozilla.org/MPL"
+            check_patterns "$file" "Copyright (c)" "$(date +%Y)" "mozilla.org/MPL"
             ;;
 
         *.adoc | *.svg)
-            check_patterns "$file" "Copyright (c)" "2023" "creativecommons.org/licenses"
+            check_patterns "$file" "Copyright (c)" "$(date +%Y)" "creativecommons.org/licenses"
             ;;
     esac
 done
