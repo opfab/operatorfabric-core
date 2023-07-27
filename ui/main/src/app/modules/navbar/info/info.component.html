@@ -12,7 +12,7 @@
 </div>
 
 <ng-template #userEntitiesTooltip>
-    <p *ngFor="let entity of userEntities">{{entity}}</p>
+    <div *ngFor="let entity of userEntities" style="margin-bottom: 5px;">{{entity}}</div>
 </ng-template>
 <div class="text-center navbar-info-block" style="margin-left: 5px;"
 [ngbPopover]="userEntitiesTooltip" #p="ngbPopover" popoverClass="opfab-popover" container="body"
