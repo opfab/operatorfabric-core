@@ -13,8 +13,6 @@ import {takeUntil} from 'rxjs/operators';
 import {ColDef, GridOptions} from 'ag-grid-community';
 import {LightCard} from '@ofModel/light-card.model';
 import {TimeCellRendererComponent} from '../cell-renderers/time-cell-renderer.component';
-import {StateCellRendererComponent} from '../cell-renderers/state-cell-renderer.component';
-import {StateDescriptionCellRendererComponent} from '../cell-renderers/state-description-cell-renderer.component';
 import {SenderCellRendererComponent} from '../cell-renderers/sender-cell-renderer.component';
 import {Subject} from 'rxjs';
 
@@ -53,8 +51,6 @@ export class MonitoringexpTableComponent implements OnDestroy {
             },
             components: {
                 timeCellRenderer: TimeCellRendererComponent,
-                stateCellRenderer: StateCellRendererComponent,
-                stateDescriptionCellRenderer: StateDescriptionCellRendererComponent,
                 senderCellRenderer: SenderCellRendererComponent
             },
             domLayout: 'autoHeight',

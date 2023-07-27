@@ -101,7 +101,7 @@
     "logging": "Logging",
     "admin": "Administration",
     "monitoring": "Monitoring",
-    "monitoringexp": "Monitoring exp.",
+    "monitoringexp": "Monitoring processus",
     "logout": "Déconnexion",
     "changePassword": "Modifier votre mot de passe",
     "settings": "Paramètres",

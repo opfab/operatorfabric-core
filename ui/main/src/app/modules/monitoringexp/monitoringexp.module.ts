@@ -22,8 +22,6 @@ import {SpinnerModule} from '../share/spinner/spinner.module';
 import {MonitoringexpTableComponent} from './components/monitoringexp-table/monitoringexp-table.component';
 import {AgGridModule} from 'ag-grid-angular';
 import {TimeCellRendererComponent} from './components/cell-renderers/time-cell-renderer.component';
-import {StateCellRendererComponent} from './components/cell-renderers/state-cell-renderer.component';
-import {StateDescriptionCellRendererComponent} from './components/cell-renderers/state-description-cell-renderer.component';
 import {SenderCellRendererComponent} from './components/cell-renderers/sender-cell-renderer.component';
 
 @NgModule({
@@ -41,7 +39,7 @@ import {SenderCellRendererComponent} from './components/cell-renderers/sender-ce
         AgGridModule
     ],
     declarations: [MonitoringExpComponent, MonitoringexpTableComponent, MonitoringExpEntryPointComponent,
-        TimeCellRendererComponent, StateCellRendererComponent,
-        StateDescriptionCellRendererComponent, SenderCellRendererComponent]
+        TimeCellRendererComponent,
+        SenderCellRendererComponent]
 })
 export class MonitoringexpModule {}
