@@ -8,7 +8,7 @@
  */
 
 import manager from 'amqp-connection-manager';
-import {IAmqpConnectionManager} from 'amqp-connection-manager/dist/esm/AmqpConnectionManager';
+import {IAmqpConnectionManager} from 'amqp-connection-manager/dist/types/AmqpConnectionManager';
 import {EventListener} from './eventListener';
 
 export default class EventBus {

@@ -17,7 +17,7 @@
     "config": "3.3.9",
     "express": "4.18.2",
     "jwt-decode": "3.1.2",
-    "amqp-connection-manager": "4.1.13",
+    "amqp-connection-manager": "4.1.14",
     "amqplib": "0.10.3",
     "winston": "3.10.0",
     "winston-daily-rotate-file": "4.7.1"
