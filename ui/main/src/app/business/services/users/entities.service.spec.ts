@@ -51,7 +51,7 @@ describe('EntitiesService', () => {
                 expect(result[0].id).toBe('ENTITY1');
                 expect(result[1].id).toBe('ENTITY2');
             });
-            const req = httpMock.expectOne(`${environment.urls.entities}`);
+            const req = httpMock.expectOne(`${environment.url}/users/entities`);
             expect(req.request.method).toBe('GET');
             req.flush(listEntities);
         });
@@ -101,7 +101,7 @@ describe('EntitiesService', () => {
                 expect(allowedEntities[1].id).toBe('ENTITY3.1.2');
                 expect(allowedEntities[2].id).toBe('ENTITY3.2');
             });
-            const req = httpMock.expectOne(`${environment.urls.entities}`);
+            const req = httpMock.expectOne(`${environment.url}/users/entities`);
             expect(req.request.method).toBe('GET');
             req.flush(listEntities);
         });
@@ -126,7 +126,7 @@ describe('EntitiesService', () => {
                 expect(allowedEntities.length).toBe(1);
                 expect(allowedEntities[0].id).toBe('ENTITYGROUP');
             });
-            const req = httpMock.expectOne(`${environment.urls.entities}`);
+            const req = httpMock.expectOne(`${environment.url}/users/entities`);
             expect(req.request.method).toBe('GET');
             req.flush(listEntities);
         });
@@ -154,7 +154,7 @@ describe('EntitiesService', () => {
                 expect(allowedEntities[0].id).toBe('ENTITY1');
                 expect(allowedEntities[1].id).toBe('ENTITY2');
             });
-            const req = httpMock.expectOne(`${environment.urls.entities}`);
+            const req = httpMock.expectOne(`${environment.url}/users/entities`);
             expect(req.request.method).toBe('GET');
             req.flush(listEntities);
         });
@@ -215,7 +215,7 @@ describe('EntitiesService', () => {
                 const allowedEntities4 = entitiesService.resolveChildEntitiesByLevel('ENTITY2', 2);
                 expect(allowedEntities4.length).toBe(0);
             });
-            const req = httpMock.expectOne(`${environment.urls.entities}`);
+            const req = httpMock.expectOne(`${environment.url}/users/entities`);
             expect(req.request.method).toBe('GET');
             req.flush(listEntities);
         });
@@ -273,7 +273,7 @@ describe('EntitiesService', () => {
                 expect(allowedEntities3[2].id).toBe('ENTITY3.1.2');
                 expect(allowedEntities3[3].id).toBe('ENTITY3.2');
             });
-            const req = httpMock.expectOne(`${environment.urls.entities}`);
+            const req = httpMock.expectOne(`${environment.url}/users/entities`);
             expect(req.request.method).toBe('GET');
             req.flush(listEntities);
         });

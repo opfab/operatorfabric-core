@@ -30,6 +30,22 @@ server {
 
 
   location / {
+    # enables `ng serve` mode
+    if ($request_method = 'OPTIONS') {
+      add_header 'Access-Control-Allow-Origin' '*';
+      add_header 'Access-Control-Allow-Credentials' 'true';
+      add_header 'Access-Control-Allow-Methods' '*';
+      add_header 'Access-Control-Allow-Headers' '*';
+      add_header 'Content-Length' 0;
+      add_header 'Vary' 'Origin';
+      add_header 'Vary' 'Access-Control-Request-Method' ;
+      add_header 'Vary' 'Access-Control-Request-Headers';
+      return 204;
+    }
+    add_header 'Access-Control-Allow-Origin' '*' always;
+    add_header 'Access-Control-Allow-Credentials' 'true' always;
+    add_header 'Access-Control-Allow-Methods' '*' always;
+    add_header 'Access-Control-Allow-Headers' '*' always;
     add_header Cache-Control "no-cache";
     alias /usr/share/nginx/html/;
     index index.html index.htm;
@@ -38,11 +54,7 @@ server {
     alias /usr/share/nginx/html/external/;
     index index.html index.htm;
   }
-  location /ui/ {
-    add_header Cache-Control "no-cache";
-    alias /usr/share/nginx/html/;
-    index index.html index.htm;
-  }
+
   location /auth/check_token {
     proxy_set_header Host $http_host;
     proxy_set_header Authorization $BasicValue ;
@@ -64,6 +76,8 @@ server {
     proxy_set_header Host $host;
     proxy_pass http://keycloak:89/auth;
   }
+
+
   # for angular hot reload in `ng serve` mode
   location ^~ /sockjs-node/ {
     proxy_pass http://127.0.0.1:4200;
@@ -72,54 +86,6 @@ server {
     proxy_set_header Host $host;
     proxy_http_version 1.1;
     proxy_cache_bypass $http_upgrade;
-  }
-
-  # To be sure new files are downloaded when version change 
-  # we set no-cache for json config files and for i18n files 
-
-  location /config/web-ui.json {
-    # enables `ng serve` mode
-    if ($request_method = 'OPTIONS') {
-      add_header 'Access-Control-Allow-Origin' '*';
-      add_header 'Access-Control-Allow-Credentials' 'true';
-      add_header 'Access-Control-Allow-Methods' '*';
-      add_header 'Access-Control-Allow-Headers' '*';
-      add_header 'Content-Length' 0;
-      add_header 'Vary' 'Origin';
-      add_header 'Vary' 'Access-Control-Request-Method' ;
-      add_header 'Vary' 'Access-Control-Request-Headers';
-      return 204;
-    }
-    add_header 'Access-Control-Allow-Origin' '*' always;
-    add_header 'Access-Control-Allow-Credentials' 'true' always;
-    add_header 'Access-Control-Allow-Methods' '*' always;
-    add_header 'Access-Control-Allow-Headers' '*' always;
-    add_header Cache-Control "no-cache";
-    alias /usr/share/nginx/html/opfab/web-ui.json;
-  }
-  location /config/ui-menu.json {
-    # enables `ng serve` mode
-    if ($request_method = 'OPTIONS') {
-      add_header 'Access-Control-Allow-Origin' '*';
-      add_header 'Access-Control-Allow-Credentials' 'true';
-      add_header 'Access-Control-Allow-Methods' '*';
-      add_header 'Access-Control-Allow-Headers' '*';
-      add_header 'Content-Length' 0;
-      add_header 'Vary' 'Origin';
-      add_header 'Vary' 'Access-Control-Request-Method' ;
-      add_header 'Vary' 'Access-Control-Request-Headers';
-      return 204;
-    }
-    add_header 'Access-Control-Allow-Origin' '*' always;
-    add_header 'Access-Control-Allow-Credentials' 'true' always;
-    add_header 'Access-Control-Allow-Methods' '*' always;
-    add_header 'Access-Control-Allow-Headers' '*' always;
-    add_header Cache-Control "no-cache";
-    alias /usr/share/nginx/html/opfab/ui-menu.json;
-  }
-  location /ui/assets/i18n/ {
-    add_header Cache-Control "no-cache";
-    alias /usr/share/nginx/html/assets/i18n/;
   }
 
   location /businessconfig {
@@ -140,23 +106,6 @@ server {
     proxy_set_header X-Forwarded-For $remote_addr;
   }
 
-  location /users {
-    # enables `ng serve` mode
-    if ($request_method = 'OPTIONS') {
-      add_header 'Access-Control-Allow-Origin' '*';
-      add_header 'Access-Control-Allow-Credentials' 'true';
-      add_header 'Access-Control-Allow-Methods' '*';
-      add_header 'Access-Control-Allow-Headers' '*';
-      add_header 'Content-Length' 0;
-      add_header 'Vary' 'Origin';
-      add_header 'Vary' 'Access-Control-Request-Method' ;
-      add_header 'Vary' 'Access-Control-Request-Headers';
-      return 204;
-    }
-    proxy_set_header Host $http_host;
-    proxy_pass http://${MY_DOCKER_HOST}:2103/users;
-    proxy_set_header X-Forwarded-For $remote_addr;
-  }
 
   location ~ "^/users/internal/(.*)" {
     return 404;
@@ -215,45 +164,6 @@ server {
     proxy_pass http://${MY_DOCKER_HOST}:2102/cards;
     proxy_set_header X-Forwarded-For $remote_addr;
   }
-  location /archives {
-    # enables `ng serve` mode
-    if ($request_method = 'OPTIONS') {
-      add_header 'Access-Control-Allow-Origin' '*';
-      add_header 'Access-Control-Allow-Credentials' 'true';
-      add_header 'Access-Control-Allow-Methods' '*';
-      add_header 'Access-Control-Allow-Headers' '*';
-      add_header 'Content-Length' 0;
-      add_header 'Vary' 'Origin';
-      add_header 'Vary' 'Access-Control-Request-Method' ;
-      add_header 'Vary' 'Access-Control-Request-Headers';
-      return 204;
-    }
-    proxy_set_header Host $http_host;
-    proxy_pass http://${MY_DOCKER_HOST}:2104;
-    proxy_set_header X-Forwarded-For $remote_addr;
-  }
-  error_page 500 502 503 504 /50x.html;
-  location = /50x.html {
-    root /usr/share/nginx/html;
-  }
-  location /externaldevices {
-      # enables `ng serve` mode
-      if ($request_method = 'OPTIONS') {
-        add_header 'Access-Control-Allow-Origin' '*';
-        add_header 'Access-Control-Allow-Credentials' 'true';
-        add_header 'Access-Control-Allow-Methods' '*';
-        add_header 'Access-Control-Allow-Headers' '*';
-        add_header 'Content-Length' 0;
-        add_header 'Vary' 'Origin';
-        add_header 'Vary' 'Access-Control-Request-Method' ;
-        add_header 'Vary' 'Access-Control-Request-Headers';
-        return 204;
-      }
-      proxy_set_header Host $http_host;
-      proxy_pass http://${MY_DOCKER_HOST}:2105;
-      proxy_set_header X-Forwarded-For $remote_addr;
-    }
-
     location ~ "^/externaldevices/(.*)" {
       # enables `ng serve` mode
       if ($request_method = 'OPTIONS') {
@@ -272,23 +182,9 @@ server {
       proxy_set_header X-Forwarded-For $remote_addr;
     }
 
+  error_page 500 502 503 504 /50x.html;
+  location = /50x.html {
+    root /usr/share/nginx/html;
+  }
 
-
-  # TEST configuration
-  location  /logging/ {
-      # enables `ng serve` mode
-      if ($request_method = 'OPTIONS') {
-        add_header 'Access-Control-Allow-Origin' '*';
-        add_header 'Access-Control-Allow-Credentials' 'true';
-        add_header 'Access-Control-Allow-Methods' '*';
-        add_header 'Access-Control-Allow-Headers' '*';
-        add_header 'Content-Length' 0;
-        add_header 'Vary' 'Origin';
-        add_header 'Vary' 'Access-Control-Request-Method' ;
-        add_header 'Vary' 'Access-Control-Request-Headers';
-        return 204;
-      }
-      try_files   $uri $uri/ /logging/Empty.json;
-
-    }
 }

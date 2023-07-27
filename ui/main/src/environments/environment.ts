@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2022, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2023, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -13,30 +13,7 @@
 
 export const environment = {
     production: false,
-    urls: {
-        authentication: '',
-        auth: 'http://localhost:2002/auth',
-        cards: 'http://localhost:2002/cards',
-        cardspub: 'http://localhost:2002/cardspub',
-        users: 'http://localhost:2002/users',
-        groups: 'http://localhost:2002/users/groups',
-        entities: 'http://localhost:2002/users/entities',
-        perimeters: 'http://localhost:2002/users/perimeters',
-        archives: '',
-        processes: 'http://localhost:2002/businessconfig/processes',
-        processGroups: 'http://localhost:2002/businessconfig/processgroups',
-        realTimeScreens: 'http://localhost:2002/businessconfig/realtimescreens',
-        businessData: 'http://localhost:2002/businessconfig/businessData',
-        monitoringConfig: 'http://localhost:2002/businessconfig/monitoring',
-        config: 'http://localhost:2002/config/web-ui.json',
-        menuConfig: 'http://localhost:2002/config/ui-menu.json',
-        externalDevices: 'http://localhost:2002/externaldevices',
-        remoteLogs: 'http://localhost:2002/cards/logs',
-        userActionLogs: 'http://localhost:2002/users/userActionLogs'
-    },
-    paths: {
-        i18n: '/assets/i18n/'
-    }
+    url: 'http://localhost:2002',
 };
 
 /*

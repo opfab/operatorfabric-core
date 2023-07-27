@@ -213,3 +213,21 @@ The configuration has been simplified, you have now default parameters you do no
  - "data.mongodb.database" is not to be set anymore but you still need to set "data.mongodb.uri"
  - you still need to set "management.endpoints.web.exposure.include: '*'" if you want to monitor opfab via prometheus
  - operatorfabric.businessconfig.storage.path is set by default to "/businessconfig-storage"
+
+
+The nginx configuration has been simplified as well , the best is to redefine your actual nginx based on the example /config/docker/nginx.conf 
+
+
+The nginx conf is not loaded anymore in /usr/share/nginx/html/opfab in the docker but in /usr/share/nginx/html/config. You need to modify you volume configuration . For example in docker compose : 
+
+```
+    volumes:
+      - "./ui-config:/usr/share/nginx/html/opfab"
+```
+
+becomes : 
+
+```
+    volumes:
+      - "./ui-config:/usr/share/nginx/html/config"
+```
