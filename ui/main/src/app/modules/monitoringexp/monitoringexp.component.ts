@@ -273,7 +273,12 @@ export class MonitoringExpComponent implements OnDestroy, OnInit, AfterViewInit 
                     let lineForExport = {};
                     lineForExport[severityColumnName] = card.severity;
                     this.processMonitoring.forEach(column => {
-                        lineForExport[column.colName] = card[String(column.field).split(".").pop()];
+                        if (column.type === 'date') {
+                            lineForExport[column.colName] = this.dateTimeFormatter.getFormattedDateAndTimeFromEpochDate(
+                                card[String(column.field).split(".").pop()]);
+                        } else {
+                            lineForExport[column.colName] = card[String(column.field).split(".").pop()];
+                        }
                     });
 
                     exportArchiveData.push(lineForExport);
