@@ -33,7 +33,7 @@ public class WebSecurityConfiguration {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         org.opfab.businessconfig.configuration.oauth2.WebSecurityConfiguration.configureCommon(http);
-        http.csrf().disable();
+        http.csrf(csrf -> csrf.disable());
         return http.build();
     }
 }

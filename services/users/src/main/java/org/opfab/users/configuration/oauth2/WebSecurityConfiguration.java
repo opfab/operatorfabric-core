@@ -61,9 +61,10 @@ public class WebSecurityConfiguration {
                                            Converter<Jwt, AbstractAuthenticationToken> opfabJwtConverter) throws Exception {
         configureCommon(http);
         http
-                .oauth2ResourceServer()
-                .jwt()
-                .jwtAuthenticationConverter(opfabJwtConverter);
+                .oauth2ResourceServer(oauth2ResourceServer -> oauth2ResourceServer
+                    .jwt(jwt -> jwt
+                        .jwtAuthenticationConverter(opfabJwtConverter))
+                );
 
         return http.build();
     }
@@ -73,27 +74,28 @@ public class WebSecurityConfiguration {
     public static void configureCommon(final HttpSecurity http) throws Exception {
         http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED)
                 .and()
-                .authorizeHttpRequests()
-                .requestMatchers(HttpMethod.GET,PROMETHEUS_PATH).permitAll()
-                .requestMatchers(HttpMethod.POST, USER_TOKEN_SYNCHRONIZATION_PATH).access(authenticatedAndIpAllowed())
-                .requestMatchers(HttpMethod.GET, USER_PATH).access(hasRoleOrLoginAndIpAllowed(ADMIN_ROLE))
-                .requestMatchers(HttpMethod.PUT, USER_PATH).access(hasRoleOrLoginAndIpAllowed(ADMIN_ROLE))
-                .requestMatchers(HttpMethod.DELETE, USER_PATH).access(hasRoleAndLoginNotEqualAndIpAllowed(ADMIN_ROLE))
-                .requestMatchers(HttpMethod.GET, USERS_SETTINGS_PATH).access(hasRoleOrLoginAndIpAllowed(ADMIN_ROLE))
-                .requestMatchers(HttpMethod.PUT, USERS_SETTINGS_PATH).access(hasRoleOrLoginAndIpAllowed(ADMIN_ROLE))
-                .requestMatchers(HttpMethod.PATCH, USERS_SETTINGS_PATH).access(hasRoleOrLoginAndIpAllowed(ADMIN_ROLE))
-                .requestMatchers(HttpMethod.GET, USERS_PERIMETERS_PATH).access(hasRoleOrLoginAndIpAllowed(ADMIN_ROLE))
-                .requestMatchers(HttpMethod.GET, USERS) .access(authenticatedAndIpAllowed())
-                .requestMatchers(USERS_PATH).access(hasAnyRoleAndIpAllowed(ADMIN_ROLE))
-                .requestMatchers(HttpMethod.GET, GROUPS).access(authenticatedAndIpAllowed())
-                .requestMatchers(GROUPS_PATH).access(hasAnyRoleAndIpAllowed(ADMIN_ROLE))
-                .requestMatchers(HttpMethod.GET, ENTITIES).access(authenticatedAndIpAllowed())   // OC-1067 : we authorize all users for GET /entities
-                .requestMatchers(ENTITIES_PATH).access(hasAnyRoleAndIpAllowed(ADMIN_ROLE))
-                .requestMatchers(PERIMETERS_PATH).access(hasAnyRoleAndIpAllowed(ADMIN_ROLE))
-                .requestMatchers(USER_ACTION_LOGS).access(hasAnyRoleAndIpAllowed(ADMIN_ROLE,VIEW_USER_ACTION_LOGS_ROLE))
-                .requestMatchers(CURRENTUSER_INTERNAL_PATH).authenticated()
-                .requestMatchers(LOGGERS_PATH).hasRole(ADMIN_ROLE)
-                .anyRequest().access(authenticatedAndIpAllowed());
+                .authorizeHttpRequests(authorizeHttpRequests -> authorizeHttpRequests
+                    .requestMatchers(HttpMethod.GET,PROMETHEUS_PATH).permitAll()
+                    .requestMatchers(HttpMethod.POST, USER_TOKEN_SYNCHRONIZATION_PATH).access(authenticatedAndIpAllowed())
+                    .requestMatchers(HttpMethod.GET, USER_PATH).access(hasRoleOrLoginAndIpAllowed(ADMIN_ROLE))
+                    .requestMatchers(HttpMethod.PUT, USER_PATH).access(hasRoleOrLoginAndIpAllowed(ADMIN_ROLE))
+                    .requestMatchers(HttpMethod.DELETE, USER_PATH).access(hasRoleAndLoginNotEqualAndIpAllowed(ADMIN_ROLE))
+                    .requestMatchers(HttpMethod.GET, USERS_SETTINGS_PATH).access(hasRoleOrLoginAndIpAllowed(ADMIN_ROLE))
+                    .requestMatchers(HttpMethod.PUT, USERS_SETTINGS_PATH).access(hasRoleOrLoginAndIpAllowed(ADMIN_ROLE))
+                    .requestMatchers(HttpMethod.PATCH, USERS_SETTINGS_PATH).access(hasRoleOrLoginAndIpAllowed(ADMIN_ROLE))
+                    .requestMatchers(HttpMethod.GET, USERS_PERIMETERS_PATH).access(hasRoleOrLoginAndIpAllowed(ADMIN_ROLE))
+                    .requestMatchers(HttpMethod.GET, USERS) .access(authenticatedAndIpAllowed())
+                    .requestMatchers(USERS_PATH).access(hasAnyRoleAndIpAllowed(ADMIN_ROLE))
+                    .requestMatchers(HttpMethod.GET, GROUPS).access(authenticatedAndIpAllowed())
+                    .requestMatchers(GROUPS_PATH).access(hasAnyRoleAndIpAllowed(ADMIN_ROLE))
+                    .requestMatchers(HttpMethod.GET, ENTITIES).access(authenticatedAndIpAllowed())   // OC-1067 : we authorize all users for GET /entities
+                    .requestMatchers(ENTITIES_PATH).access(hasAnyRoleAndIpAllowed(ADMIN_ROLE))
+                    .requestMatchers(PERIMETERS_PATH).access(hasAnyRoleAndIpAllowed(ADMIN_ROLE))
+                    .requestMatchers(USER_ACTION_LOGS).access(hasAnyRoleAndIpAllowed(ADMIN_ROLE,VIEW_USER_ACTION_LOGS_ROLE))
+                    .requestMatchers(CURRENTUSER_INTERNAL_PATH).authenticated()
+                    .requestMatchers(LOGGERS_PATH).hasRole(ADMIN_ROLE)
+                    .anyRequest().access(authenticatedAndIpAllowed())
+                );
     }
 
 

@@ -48,10 +48,12 @@ public class WebSecurityConfiguration {
     public SecurityFilterChain filterChain(HttpSecurity http,
                                            Converter<Jwt, AbstractAuthenticationToken> opfabJwtConverter) throws Exception {
         configureCommon(http, checkAuthenticationForCardSending);
-        http.csrf().disable();
+        http.csrf(csrf -> csrf.disable());
         http
-                .oauth2ResourceServer()
-                .jwt().jwtAuthenticationConverter(opfabJwtConverter);
+                .oauth2ResourceServer(oauth2ResourceServer -> oauth2ResourceServer
+                    .jwt(jwt -> jwt
+                        .jwtAuthenticationConverter(opfabJwtConverter))
+                );
 
         return http.build();
     }
@@ -59,22 +61,24 @@ public class WebSecurityConfiguration {
     public static void configureCommon(final HttpSecurity http, boolean checkAuthenticationForCardSending) throws Exception {
         if (checkAuthenticationForCardSending) {
             http
-                    .authorizeHttpRequests()
-                    .requestMatchers(HttpMethod.GET, PROMETHEUS_PATH).permitAll()
-                    .requestMatchers(LOGGERS_PATH).hasRole(ADMIN_ROLE)
-                    .requestMatchers("/cards/userCard/**").access(authenticatedAndIpAllowed())
-                    .requestMatchers("/cards/translateCardField").access(authenticatedAndIpAllowed())
-                    .requestMatchers("/cards/resetReadAndAcks/**").access(hasAnyUsernameAndIpAllowed("opfab_internal_account"))
-                    .requestMatchers(HttpMethod.DELETE, "/cards").access(hasAnyRoleAndIpAllowed(ADMIN_ROLE))
-                    .requestMatchers("/**").access(authenticatedAndIpAllowed());
+                    .authorizeHttpRequests(authorizeHttpRequests -> authorizeHttpRequests
+                        .requestMatchers(HttpMethod.GET, PROMETHEUS_PATH).permitAll()
+                        .requestMatchers(LOGGERS_PATH).hasRole(ADMIN_ROLE)
+                        .requestMatchers("/cards/userCard/**").access(authenticatedAndIpAllowed())
+                        .requestMatchers("/cards/translateCardField").access(authenticatedAndIpAllowed())
+                        .requestMatchers("/cards/resetReadAndAcks/**").access(hasAnyUsernameAndIpAllowed("opfab_internal_account"))
+                        .requestMatchers(HttpMethod.DELETE, "/cards").access(hasAnyRoleAndIpAllowed(ADMIN_ROLE))
+                        .requestMatchers("/**").access(authenticatedAndIpAllowed())
+                    );
         } else {
             http
-                    .authorizeHttpRequests()
-                    .requestMatchers(LOGGERS_PATH).hasRole(ADMIN_ROLE)
-                    .requestMatchers("/cards/userCard/**").access(authenticatedAndIpAllowed())
-                    .requestMatchers("/cards/translateCardField").access(authenticatedAndIpAllowed())
-                    .requestMatchers("/cards/resetReadAndAcks/**").access(hasAnyUsernameAndIpAllowed("opfab_internal_account"))
-                    .requestMatchers("/**").permitAll();
+                    .authorizeHttpRequests(authorizeHttpRequests -> authorizeHttpRequests
+                        .requestMatchers(LOGGERS_PATH).hasRole(ADMIN_ROLE)
+                        .requestMatchers("/cards/userCard/**").access(authenticatedAndIpAllowed())
+                        .requestMatchers("/cards/translateCardField").access(authenticatedAndIpAllowed())
+                        .requestMatchers("/cards/resetReadAndAcks/**").access(hasAnyUsernameAndIpAllowed("opfab_internal_account"))
+                        .requestMatchers("/**").permitAll()
+                    );
         }
     }
 

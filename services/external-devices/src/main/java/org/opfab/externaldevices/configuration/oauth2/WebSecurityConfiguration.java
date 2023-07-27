@@ -43,22 +43,25 @@ public class WebSecurityConfiguration {
                                            Converter<Jwt, AbstractAuthenticationToken> opfabJwtConverter) throws Exception {
         configureCommon(http);
         http
-                .oauth2ResourceServer()
-                .jwt().jwtAuthenticationConverter(opfabJwtConverter);
+                .oauth2ResourceServer(oauth2ResourceServer -> oauth2ResourceServer
+                    .jwt(jwt -> jwt
+                        .jwtAuthenticationConverter(opfabJwtConverter))
+                );
 
         return http.build();
     }
 
     public static void configureCommon(final HttpSecurity http) throws Exception {
         http
-                .authorizeHttpRequests()
-                .requestMatchers(HttpMethod.GET,PROMETHEUS_PATH).permitAll()
-                .requestMatchers(LOGGERS_PATH).hasRole(ADMIN_ROLE)
-                .requestMatchers(HttpMethod.POST,NOTIFICATIONS_ROOT_PATH).access(authenticatedAndIpAllowed())
-                .requestMatchers(HttpMethod.GET, CONFIGURATIONS_USERS_PATH).access(authenticatedAndIpAllowed())
-                .requestMatchers(CONFIGURATIONS_ROOT_PATH+"**").access(hasAnyRoleAndIpAllowed(ADMIN_ROLE))
-                .requestMatchers(DEVICES_ROOT_PATH+"**").access(hasAnyRoleAndIpAllowed(ADMIN_ROLE))
-                .anyRequest().access(hasAnyRoleAndIpAllowed(ADMIN_ROLE));
+                .authorizeHttpRequests(authorizeHttpRequests -> authorizeHttpRequests
+                    .requestMatchers(HttpMethod.GET,PROMETHEUS_PATH).permitAll()
+                    .requestMatchers(LOGGERS_PATH).hasRole(ADMIN_ROLE)
+                    .requestMatchers(HttpMethod.POST,NOTIFICATIONS_ROOT_PATH).access(authenticatedAndIpAllowed())
+                    .requestMatchers(HttpMethod.GET, CONFIGURATIONS_USERS_PATH).access(authenticatedAndIpAllowed())
+                    .requestMatchers(CONFIGURATIONS_ROOT_PATH+"**").access(hasAnyRoleAndIpAllowed(ADMIN_ROLE))
+                    .requestMatchers(DEVICES_ROOT_PATH+"**").access(hasAnyRoleAndIpAllowed(ADMIN_ROLE))
+                    .anyRequest().access(hasAnyRoleAndIpAllowed(ADMIN_ROLE))
+                );
     }
 
 }

@@ -46,8 +46,10 @@ public class WebSecurityConfiguration {
         configureCommon(http);
 
         http
-                .oauth2ResourceServer()
-                .jwt().jwtAuthenticationConverter(opfabJwtConverter);
+                .oauth2ResourceServer(oauth2ResourceServer -> oauth2ResourceServer
+                    .jwt(jwt -> jwt
+                        .jwtAuthenticationConverter(opfabJwtConverter))
+                );
 
 
         return http.build();
@@ -59,14 +61,15 @@ public class WebSecurityConfiguration {
     3) it is called for publishing card, for checking if process/state exists in the bundles */
     public static void configureCommon(final HttpSecurity http) throws Exception {
         http
-            .authorizeHttpRequests()
-            .requestMatchers(HttpMethod.GET, PROMETHEUS_PATH).permitAll()
-            .requestMatchers(HttpMethod.GET, THIRDS_PATH).permitAll()
-            .requestMatchers(HttpMethod.POST, THIRDS_PATH).access(hasAnyRoleAndIpAllowed(ADMIN_ROLE, ADMIN_BUSINESS_PROCESS_ROLE))
-            .requestMatchers(HttpMethod.PUT, THIRDS_PATH).access(hasAnyRoleAndIpAllowed(ADMIN_ROLE, ADMIN_BUSINESS_PROCESS_ROLE))
-            .requestMatchers(HttpMethod.DELETE, THIRDS_PATH).access(hasAnyRoleAndIpAllowed(ADMIN_ROLE, ADMIN_BUSINESS_PROCESS_ROLE))
-            .requestMatchers(LOGGERS_PATH).access(AuthorityAuthorizationManager.hasRole(ADMIN_ROLE))
-            .anyRequest().access(authenticatedAndIpAllowed());
+            .authorizeHttpRequests(authorizeHttpRequests -> authorizeHttpRequests
+                .requestMatchers(HttpMethod.GET, PROMETHEUS_PATH).permitAll()
+                .requestMatchers(HttpMethod.GET, THIRDS_PATH).permitAll()
+                .requestMatchers(HttpMethod.POST, THIRDS_PATH).access(hasAnyRoleAndIpAllowed(ADMIN_ROLE, ADMIN_BUSINESS_PROCESS_ROLE))
+                .requestMatchers(HttpMethod.PUT, THIRDS_PATH).access(hasAnyRoleAndIpAllowed(ADMIN_ROLE, ADMIN_BUSINESS_PROCESS_ROLE))
+                .requestMatchers(HttpMethod.DELETE, THIRDS_PATH).access(hasAnyRoleAndIpAllowed(ADMIN_ROLE, ADMIN_BUSINESS_PROCESS_ROLE))
+                .requestMatchers(LOGGERS_PATH).access(AuthorityAuthorizationManager.hasRole(ADMIN_ROLE))
+                .anyRequest().access(authenticatedAndIpAllowed())
+            );
 
     }
 
