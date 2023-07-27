@@ -264,6 +264,7 @@ export class LoggingComponent implements OnDestroy, OnInit, AfterViewInit {
 
                 lines.forEach((card: any) => {
                     this.cardPostProcessing(card);
+                    // TO DO translation for old process should be done  , but loading local arrives too late , solution to find
                     if (this.filtersTemplate.isProcessGroupFilterVisible())
                         exportArchiveData.push({
                             [severityColumnName]: this.translationService.translateSeverity(card.severity),

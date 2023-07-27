@@ -142,9 +142,9 @@
     "displayConnectionCirclesInPreview": false
   },
   "processMonitoring": [
-    { "field": "startDate", "colName": "Start Date", "size": "100"},
+    { "field": "startDate", "type": "date", "colName": "Start Date", "size": "200"},
     { "field": "titleTranslated", "colName": "Title", "size": "250"},
-    { "field": "data.message", "colName": "My field", "size": "800"},
+    { "field": "data.message", "colName": "My field", "size": "700"},
     { "field": "summaryTranslated", "colName": "Summary", "size": "250"},
     { "field": "data.error", "colName": "My second field", "size": "100"}
   ]

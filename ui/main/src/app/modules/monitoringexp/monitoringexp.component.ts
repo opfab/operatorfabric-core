@@ -295,4 +295,6 @@ export class MonitoringExpComponent implements OnDestroy, OnInit, AfterViewInit 
         this.unsubscribe$.next();
         this.unsubscribe$.complete();
     }
+
+    protected readonly document = document;
 }
