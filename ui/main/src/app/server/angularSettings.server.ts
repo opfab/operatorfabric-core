@@ -22,7 +22,7 @@ export class AngularSettingsServer extends AngularServer implements SettingsServ
     usersUrl: string;
     constructor(private httpClient: HttpClient) {
         super();
-        this.usersUrl = `${environment.urls.users}`;
+        this.usersUrl = `${environment.url}/users`;
     }
 
 
@@ -32,5 +32,5 @@ export class AngularSettingsServer extends AngularServer implements SettingsServ
 
     patchUserSettings(userId: string, settings: any): Observable<ServerResponse<any>> {
         return this.processHttpResponse(this.httpClient.patch(`${this.usersUrl}/users/${userId}/settings`, settings));
-    } 
+    }
 }

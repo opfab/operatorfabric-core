@@ -21,8 +21,8 @@ import {Observable, of, Subject} from 'rxjs';
 export const ONE_SECOND = 1000;
 export const MILLIS_TO_WAIT_BETWEEN_TOKEN_EXPIRATION_DATE_CONTROLS = 5000;
 export abstract class AuthHandler {
-    protected checkTokenUrl = `${environment.urls.auth}/check_token`;
-    protected askTokenUrl = `${environment.urls.auth}/token`;
+    protected checkTokenUrl = `${environment.url}/auth/check_token`;
+    protected askTokenUrl = `${environment.url}/auth/token`;
 
     protected sessionExpired = new Subject<boolean>();
     protected userAuthenticated = new Subject<AuthenticatedUser>();

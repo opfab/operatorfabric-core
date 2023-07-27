@@ -10,7 +10,6 @@
 import {AuthConfig, EventType as OAuthType, JwksValidationHandler, OAuthEvent, OAuthService} from 'angular-oauth2-oidc';
 import {AuthenticatedUser} from './auth.model';
 import {ConfigService} from 'app/business/services/config.service';
-import {environment} from '@env/environment';
 import {AuthHandler} from './auth-handler';
 import {HttpClient} from '@angular/common/http';
 import {OpfabLoggerService} from 'app/business/services/logs/opfab-logger.service';
@@ -30,7 +29,7 @@ export class ImplicitAuthenticationHandler extends AuthHandler {
     public async initializeAuthentication() {
         const authConfig: AuthConfig = {
             issuer: this.delegateUrl,
-            redirectUri: window.location.origin + environment.urls.authentication,
+            redirectUri: window.location.origin,
             silentRefreshRedirectUri: window.location.origin + this.getPathEnd() + '/silent-refresh.html',
             clientId: this.clientId,
             scope: 'openid profile email',

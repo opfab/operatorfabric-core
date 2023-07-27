@@ -24,7 +24,7 @@ export class AngularTemplateCssServer extends AngularServer implements TemplateC
 
     constructor(private httpClient: HttpClient) {
         super();
-        this.processesUrl = `${environment.urls.processes}`;
+        this.processesUrl = `${environment.url}/businessconfig/processes`;
         this.urlCleaner = new HttpUrlEncodingCodec();
     }
 

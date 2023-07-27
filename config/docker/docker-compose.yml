@@ -122,7 +122,7 @@ services:
       - businessconfig
       - cards-consultation
     volumes:
-      - "./ui-config:/usr/share/nginx/html/opfab"
+      - "./ui-config:/usr/share/nginx/html/config"
       - "./nginx.conf:/etc/nginx/conf.d/default.conf"
       - "../../src/test/externalWebAppExample:/usr/share/nginx/html/external/appExample"
   cards-external-diffusion:
