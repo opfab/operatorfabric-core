@@ -28,7 +28,7 @@
     "@types/sinon": "10.0.15",
     "@types/express": "4.17.17",
     "@types/config": "3.3.0",
-    "jest": "29.6.1",
+    "jest": "29.6.2",
     "nodemon": "3.0.1",
     "rimraf": "5.0.1",
     "sinon": "15.2.0",
