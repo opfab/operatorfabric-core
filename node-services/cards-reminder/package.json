@@ -13,7 +13,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "amqp-connection-manager": "4.1.13",
+    "amqp-connection-manager": "4.1.14",
     "amqplib": "0.10.3",
     "axios": "1.4.0",
     "config": "3.3.9",
