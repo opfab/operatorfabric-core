@@ -29,7 +29,7 @@ export class AngularEntitiesServer extends AngularServer implements EntitiesServ
      */
     constructor(private httpClient: HttpClient) {
         super();
-        this.entitiesUrl = `${environment.urls.entities}`;
+        this.entitiesUrl = `${environment.url}/users/entities`;
     }
 
     deleteById(id: string): Observable<ServerResponse<any>> {

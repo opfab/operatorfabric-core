@@ -56,7 +56,7 @@ export class CodeAuthenticationHandler extends AuthHandler {
 
     private moveToLoginPage() {
         if (!this.delegateUrl) {
-            window.location.href = `${environment.urls.auth}/code/redirect_uri=${this.computeRedirectUri()}`;
+            window.location.href = `${environment.url}/auth/code/redirect_uri=${this.computeRedirectUri()}`;
         } else {
             window.location.href = `${this.delegateUrl}&redirect_uri=${this.computeRedirectUri()}`;
         }

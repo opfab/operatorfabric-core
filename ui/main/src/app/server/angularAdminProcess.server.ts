@@ -27,7 +27,7 @@ export class AngularAdminProcessesServer extends AngularServer implements AdminP
         private httpClient: HttpClient,
     ) {
         super();
-        this.processesUrl = `${environment.urls.processes}`;
+        this.processesUrl = `${environment.url}/businessconfig/processes`;
     }
 
     queryAllProcesses(): Observable<ServerResponse<Process[]>> {

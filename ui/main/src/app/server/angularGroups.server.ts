@@ -27,7 +27,7 @@ export class AngularGroupsServer extends AngularServer implements GroupsServer {
      */
     constructor( private httpClient: HttpClient) {
         super();
-        this.groupsUrl = `${environment.urls.groups}`;
+        this.groupsUrl = `${environment.url}/users/groups`;
     }
 
     deleteById(id: string): Observable<ServerResponse<any>> {

@@ -37,7 +37,7 @@ services:
       - "2002:80"
     volumes:
       - "./favicon.ico:/usr/share/nginx/html/favicon.ico"
-      - "./ui-config:/usr/share/nginx/html/opfab"
+      - "./ui-config:/usr/share/nginx/html/config"
       - "../../src/test/externalWebAppExample:/usr/share/nginx/html/external/appExample"
       - "./nginx.conf:/etc/nginx/conf.d/default.conf"
   ext-app:

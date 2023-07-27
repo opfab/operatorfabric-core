@@ -31,7 +31,7 @@ export class AngularExternalDevicesServer extends AngularServer implements Exter
         private httpClient: HttpClient,
     ) {
         super();
-        this.externalDevicesUrl = `${environment.urls.externalDevices}`;
+        this.externalDevicesUrl = `${environment.url}/externaldevices`;
         this.notificationsUrl = this.externalDevicesUrl + '/notifications';
         this.configurationsUrl = this.externalDevicesUrl + '/configurations';
         this.devicesUrl = this.externalDevicesUrl + '/devices';
@@ -40,7 +40,7 @@ export class AngularExternalDevicesServer extends AngularServer implements Exter
     sendNotification(notification: Notification): Observable<ServerResponse<any>> {
         return this.processHttpResponse(this.httpClient
             .post<Notification>(`${this.notificationsUrl}`, notification));
-          //  .pipe(catchError((error: HttpErrorResponse) => this.handleError(error)));
+
     }
 
     fetchUserConfiguration(login: string): Observable<ServerResponse<any>> {
@@ -58,7 +58,6 @@ export class AngularExternalDevicesServer extends AngularServer implements Exter
     updateUserConfiguration(userconfigData: UserConfiguration): Observable<ServerResponse<any>> {
         return this.processHttpResponse(this.httpClient
             .post<UserConfiguration>(`${this.configurationsUrl}/users`, userconfigData));
-            //.pipe(catchError((error: HttpErrorResponse) => this.handleError(error)));
     }
 
     enableDevice(deviceId: string): Observable<ServerResponse<any>> {
@@ -74,7 +73,6 @@ export class AngularExternalDevicesServer extends AngularServer implements Exter
     deleteByUserLogin(login: string): Observable<ServerResponse<any>> {
         const url = `${this.configurationsUrl}/users/${login}`;
         return this.processHttpResponse(this.httpClient.delete(url));
-        //.pipe(catchError((error: HttpErrorResponse) => this.handleError(error))));
     }
 
 }

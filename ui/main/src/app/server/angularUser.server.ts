@@ -29,9 +29,9 @@ export class AngularUserServer extends AngularServer implements UserServer {
      */
     constructor(private httpClient: HttpClient) {
         super();
-        this.userUrl = `${environment.urls.users}`;
-        this.connectionsUrl = `${environment.urls.cards}/connections`;
-        this.willNewSubscriptionDisconnectAnExistingSubscriptionUrl = `${environment.urls.cards}/willNewSubscriptionDisconnectAnExistingSubscription`;
+        this.userUrl = `${environment.url}/users`;
+        this.connectionsUrl = `${environment.url}/cards/connections`;
+        this.willNewSubscriptionDisconnectAnExistingSubscriptionUrl = `${environment.url}/cards/willNewSubscriptionDisconnectAnExistingSubscription`;
     }
     deleteById(login: string) {
         const url = `${this.userUrl}/users/${login}`;
@@ -73,10 +73,10 @@ export class AngularUserServer extends AngularServer implements UserServer {
         return value;
     }
     queryAllUsers(): Observable<ServerResponse<User[]>> {
-        return this.processHttpResponse(this.httpClient.get<User[]>(`${this.userUrl}`));
+        return this.processHttpResponse(this.httpClient.get<User[]>(`${this.userUrl}/users`));
     }
     updateUser(userData: User): Observable<ServerResponse<User>> {
-        return this.processHttpResponse(this.httpClient.post<User>(`${this.userUrl}`, userData));
+        return this.processHttpResponse(this.httpClient.post<User>(`${this.userUrl}/users`, userData));
     }
     loadConnectedUsers(): Observable<ServerResponse<any[]>> {
         return this.processHttpResponse(this.httpClient.get<any[]>(`${this.connectionsUrl}`));

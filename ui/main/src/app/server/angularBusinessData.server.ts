@@ -23,7 +23,7 @@ export class AngularBusinessDataServer extends AngularServer implements Business
 
     constructor(private httpClient: HttpClient) {
         super();
-        this.businessDataUrl = `${environment.urls.businessData}`;
+        this.businessDataUrl = `${environment.url}/businessconfig/businessData`;
     }
 
     getBusinessData(resourceName: string): Observable<ServerResponse<any>> {
