@@ -115,8 +115,8 @@ export class MonitoringExpComponent implements OnDestroy, OnInit, AfterViewInit 
     }
 
     ngOnInit() {
-        this.size = this.configService.getConfigValue('logging.filters.page.size', 10);
-        this.tags = this.configService.getConfigValue('logging.filters.tags.list');
+        this.size = this.configService.getConfigValue('monitoringexp.filters.page.size', 10);
+        this.tags = this.configService.getConfigValue('monitoringexp.filters.tags.list');
 
         this.results = [];
 
