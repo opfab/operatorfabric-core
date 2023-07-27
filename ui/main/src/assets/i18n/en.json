@@ -607,6 +607,19 @@
     "questionUserCard": {
       "noMessageError":"You must provide a question",
       "textareaLabel":"QUESTION"
-    } 
+    }, 
+    "message-or-question-listCard": {
+      "yes": "Yes",
+      "no": "No",
+      "entityColumnLabel": "ENTITY",
+      "responseColumnLabel": "RESPONSE",
+      "commentColumnLabel": "COMMENT",
+      "comment": "COMMENT"
+    },
+    "message-or-question-listUserCard": {
+      "titleLabel": "TITLE",
+      "messageLabel": "MESSAGE",
+      "emptyMessage": "You can't send an empty message"
+    }
   }
 }

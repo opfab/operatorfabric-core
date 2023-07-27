@@ -20,7 +20,7 @@ import {Entity} from '@ofModel/entity.model';
 import {RealtimeUsersView} from './realtimeusers.view';
 import {RealtimePage} from './realtimePage';
 
-fdescribe('Realtimeusers', () => {
+describe('Realtimeusers', () => {
     let view: RealtimeUsersView;
     let page: RealtimePage;
     let clock: jasmine.Clock;

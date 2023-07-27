@@ -294,6 +294,7 @@ The template can know if the user is creating a new card or editing an existing 
 
 * 'CREATE'
 * 'EDITION'
+* 'COPY'
 
 ```
         const mode = opfab.currentUserCard.getEditionMode();

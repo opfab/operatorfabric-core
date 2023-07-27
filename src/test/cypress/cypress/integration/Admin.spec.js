@@ -585,14 +585,15 @@ describe('AdmininstrationPages', () => {
         //Click on "Business Data"
         cy.get('#opfab-admin-businessData-tab').click();
 
-        // Check the content of the first row
+        // Check the content of the rows
         agGrid.cellShould('ag-grid-angular', 0, 0, 'have.text', 'services');
+        agGrid.cellShould('ag-grid-angular', 1, 0, 'have.text', 'message-and-question-list');
 
-        // Check the page has 1 rows
-        agGrid.countTableRows('ag-grid-angular', 1);
+        // Check the page has 3 rows
+        agGrid.countTableRows('ag-grid-angular', 2);
 
-        // Pagination should display ' Results number  : 1 '
-        cy.get('.opfab-pagination').should('contain.text', ' Results number  : 1');
+        // Pagination should display ' Results number  : 3 '
+        cy.get('.opfab-pagination').should('contain.text', ' Results number  : 2');
 
         // Upload test file
         cy.get('#add-item').click()
@@ -610,9 +611,9 @@ describe('AdmininstrationPages', () => {
         cy.waitDefaultTime();
 
         //Check the business data file that was created is deleted
-        cy.get('.opfab-pagination').should('contain.text', ' Results number  : 1');
+        cy.get('.opfab-pagination').should('contain.text', ' Results number  : 2');
 
-        // Download the first file
+        // Download the services file
         agGrid.clickCell('ag-grid-angular', 0, 2, 'of-action-cell-renderer');
 
         cy.waitDefaultTime();
@@ -628,7 +629,7 @@ describe('AdmininstrationPages', () => {
             });
         });
 
-        agGrid.countTableRows('ag-grid-angular', 1);
+        agGrid.countTableRows('ag-grid-angular', 2);
     });
 
     describe('Check export files', function () {
@@ -806,7 +807,7 @@ describe('AdmininstrationPages', () => {
             cy.get('#opfab-admin-businessData-tab').click();
 
             //Wait for table rendering
-            cy.get('.opfab-pagination').should('contain.text', ' Results number  : 1');
+            cy.get('.opfab-pagination').should('contain.text', ' Results number  : 2');
 
             // Do export
             cy.get('#opfab-admin-btn-exportToExcel').click();
@@ -822,8 +823,9 @@ describe('AdmininstrationPages', () => {
                 expect(files[0]).to.match(/^businessData_export_\d*\.xlsx/);
                 // check file content
                 cy.task('readXlsx', {file: './cypress/downloads/' + files[0], sheet: "data"}).then((rows) => {
-                    expect(rows.length).to.equal(1);
+                    expect(rows.length).to.equal(2);
                     expect(rows[0]['BUSINESS DATA']).to.equal('services');
+                    expect(rows[1]['BUSINESS DATA']).to.equal('message-and-question-list');
                 })
             })
         })

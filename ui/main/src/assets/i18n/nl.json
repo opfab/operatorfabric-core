@@ -607,6 +607,19 @@
     "questionUserCard": {
       "noMessageError":"U moet een vraag opgeven",
       "textareaLabel":"VRAAG"
+    }, 
+    "message-or-question-listCard": {
+      "yes": "Ja",
+      "no": "Nee",
+      "entityColumnLabel": "ENTITEIT",
+      "responseColumnLabel": "ANTWOORD",
+      "commentColumnLabel": "OPMERKING",
+      "comment": "OPMERKING"
+    },
+    "message-or-question-listUserCard": {
+      "titleLabel": "TITEL",
+      "messageLabel": "BERICHT",
+      "emptyMessage": "U kunt geen leeg bericht verzenden"
     } 
 
   }

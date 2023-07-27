@@ -45,6 +45,23 @@
             "acknowledgmentAllowed": "Never",
             "type": "INPROGRESS"
         },
+        "messageOrQuestionListState": {
+            "name": "Message or question list",
+            "description": "Message or question list",
+            "userCard": {
+                "template": "usercard_message_or_question_list",
+                "startDateVisible": false,
+                "endDateVisible": false,
+                "severityVisible": false
+            },
+            "response": {
+                "state": "messageOrQuestionListState",
+                "emittingEntityAllowedToRespond": "false"
+            },
+            "templateName": "message_or_question_list",
+            "styles": [],
+            "type": "INPROGRESS"
+        },
         "confirmationState": {
             "name": "Confirmation",
             "description": "Please confirm",
