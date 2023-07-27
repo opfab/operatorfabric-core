@@ -229,25 +229,7 @@ public class CardCustomRepositoryImpl implements CardCustomRepository {
 		Pageable pageableRequest = PaginationUtils.createPageable(queryFilter.getPage() != null ? queryFilter.getPage().intValue() : null , queryFilter.getSize() != null ? queryFilter.getSize().intValue() : null);
 		List<String> fields = new ArrayList<>(List.of(
 				"uid",
-				"publisher",
-				"processVersion",
-				PROCESS_FIELD,
-				PROCESS_INSTANCE_ID_FIELD,
-				"state",
-				"titleTranslated",
-				"summaryTranslated",
-				PUBLISH_DATE_FIELD,
-				START_DATE_FIELD,
-				END_DATE_FIELD,
-				"severity",
-				"publisherType",
-				"representative",
-				"representativeType",
-				"entityRecipients",
-				"entityRecipientsForInformation",
-				"entitiesAcks",
-				"userRecipients",
-				"groupRecipients"));
+				"severity"));
 
 		fields.addAll(queryFilter.getSelectedFields());
 		List<String> fieldsWithoutDuplicates = fields.stream().distinct().toList();
