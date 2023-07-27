@@ -25,7 +25,6 @@ import {CardsFilter} from '@ofModel/cards-filter.model';
 import {FilterMatchTypeEnum, FilterModel} from '@ofModel/filter-model';
 import {CardService} from 'app/business/services/card/card.service';
 import {TranslationService} from 'app/business/services/translation/translation.service';
-import {Interval} from "chart.js/dist/scales/scale.time";
 
 @Component({
     selector: 'of-monitoringexp',
