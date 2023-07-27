@@ -235,7 +235,7 @@ describe('Archives screen tests', function () {
 
         archivesAndLogging.clickOnStateSelect();
         archivesAndLogging.selectAllStates();
-        archivesAndLogging.checkNumberOfStateSelectedIs(35);
+        archivesAndLogging.checkNumberOfStateSelectedIs(36);
         // We check this state is not present because it is only a child state
         archivesAndLogging.checkStateSelectDoesNotContains('Planned outage date response');
 
@@ -544,7 +544,7 @@ describe('Archives screen tests', function () {
 
         archivesAndLogging.clickOnStateSelect();
         archivesAndLogging.selectAllStates();
-        archivesAndLogging.checkNumberOfStateSelectedIs(35);
+        archivesAndLogging.checkNumberOfStateSelectedIs(36);
 
         archivesAndLogging.clickOnProcessGroupSelect();
         archivesAndLogging.selectAllProcessGroups();
@@ -594,7 +594,7 @@ describe('Archives screen tests', function () {
 
         archivesAndLogging.clickOnStateSelect();
         archivesAndLogging.selectAllStates();
-        archivesAndLogging.checkNumberOfStateSelectedIs(26);
+        archivesAndLogging.checkNumberOfStateSelectedIs(27);
 
         archivesAndLogging.clickOnProcessSelect();
         archivesAndLogging.unselectAllProcesses();

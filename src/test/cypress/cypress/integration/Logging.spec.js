@@ -60,10 +60,10 @@ describe('Logging screen tests', function () {
         archivesAndLogging.selectAllProcesses();
         archivesAndLogging.clickOnProcessSelect();
 
-        // We check we have 19 states
+        // We check we have 20 states
         archivesAndLogging.clickOnStateSelect();
         archivesAndLogging.selectAllStates();
-        archivesAndLogging.checkNumberOfStateSelectedIs(19);
+        archivesAndLogging.checkNumberOfStateSelectedIs(20);
 
         // We unselect all processes then we select 'Process example' process, and we check there are 8 states for this process
         archivesAndLogging.clickOnProcessSelect();
@@ -162,10 +162,10 @@ describe('Logging screen tests', function () {
         archivesAndLogging.selectAllProcesses();
         archivesAndLogging.clickOnProcessSelect();
 
-        // We check we have 19 states (and 4 items for their process)
+        // We check we have 20 states (and 4 items for their process)
         archivesAndLogging.clickOnStateSelect();
         archivesAndLogging.selectAllStates();
-        archivesAndLogging.checkNumberOfStateSelectedIs(19);
+        archivesAndLogging.checkNumberOfStateSelectedIs(20);
 
         archivesAndLogging.clickOnProcessSelect();
         archivesAndLogging.unselectAllProcesses();
@@ -328,7 +328,7 @@ describe('Logging screen tests', function () {
 
         archivesAndLogging.clickOnStateSelect();
         archivesAndLogging.selectAllStates();
-        archivesAndLogging.checkNumberOfStateSelectedIs(19);
+        archivesAndLogging.checkNumberOfStateSelectedIs(20);
 
         archivesAndLogging.clickOnProcessGroupSelect();
         archivesAndLogging.selectAllProcessGroups();
@@ -372,7 +372,7 @@ describe('Logging screen tests', function () {
 
         archivesAndLogging.clickOnStateSelect();
         archivesAndLogging.selectAllStates();
-        archivesAndLogging.checkNumberOfStateSelectedIs(12);
+        archivesAndLogging.checkNumberOfStateSelectedIs(13);
 
         archivesAndLogging.clickOnProcessSelect();
         archivesAndLogging.unselectAllProcesses();

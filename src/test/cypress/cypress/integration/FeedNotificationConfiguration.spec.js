@@ -75,7 +75,7 @@ describe ('Feed notification configuration tests',function () {
 
         // We check the number of states for each process
         cy.get('.opfab-feedconfiguration-processlist').eq(1).find('.opfab-feedconfiguration-process').first().find('tr').should('have.length', 2);
-        cy.get('.opfab-feedconfiguration-processlist').eq(1).find('.opfab-feedconfiguration-process').eq(1).find('tr').should('have.length', 3);
+        cy.get('.opfab-feedconfiguration-processlist').eq(1).find('.opfab-feedconfiguration-process').eq(1).find('tr').should('have.length', 4);
         cy.get('.opfab-feedconfiguration-processlist').eq(1).find('.opfab-feedconfiguration-process').eq(2).find('tr').should('have.length', 1);
         cy.get('.opfab-feedconfiguration-processlist').eq(1).find('.opfab-feedconfiguration-process').last().find('tr').should('have.length', 1);
 
@@ -135,7 +135,7 @@ describe ('Feed notification configuration tests',function () {
 
         // We check the number of states for each process
         cy.get('.opfab-feedconfiguration-processlist').eq(1).find('.opfab-feedconfiguration-process').first().find('tr').should('have.length', 2);
-        cy.get('.opfab-feedconfiguration-processlist').eq(1).find('.opfab-feedconfiguration-process').eq(1).find('tr').should('have.length', 3);
+        cy.get('.opfab-feedconfiguration-processlist').eq(1).find('.opfab-feedconfiguration-process').eq(1).find('tr').should('have.length', 4);
         cy.get('.opfab-feedconfiguration-processlist').eq(1).find('.opfab-feedconfiguration-process').eq(2).find('tr').should('have.length', 1);
         cy.get('.opfab-feedconfiguration-processlist').eq(1).find('.opfab-feedconfiguration-process').last().find('tr').should('have.length', 1);
     
@@ -195,7 +195,7 @@ describe ('Feed notification configuration tests',function () {
         cy.get('.opfab-feedconfiguration-processlist').first().find('.opfab-feedconfiguration-process').eq(0).find('tr').should('have.length', 2);
         cy.get('.opfab-feedconfiguration-processlist').first().find('.opfab-feedconfiguration-process').eq(1).find('tr').should('have.length', 1);
         cy.get('.opfab-feedconfiguration-processlist').first().find('.opfab-feedconfiguration-process').eq(2).find('tr').should('have.length', 6);
-        cy.get('.opfab-feedconfiguration-processlist').first().find('.opfab-feedconfiguration-process').eq(3).find('tr').should('have.length', 3);
+        cy.get('.opfab-feedconfiguration-processlist').first().find('.opfab-feedconfiguration-process').eq(3).find('tr').should('have.length', 4);
         cy.get('.opfab-feedconfiguration-processlist').first().find('.opfab-feedconfiguration-process').eq(4).find('tr').should('have.length', 7);
         cy.get('.opfab-feedconfiguration-processlist').first().find('.opfab-feedconfiguration-process').eq(5).find('tr').should('have.length', 2);
         cy.get('.opfab-feedconfiguration-processlist').first().find('.opfab-feedconfiguration-process').eq(6).find('tr').should('have.length', 1);
@@ -250,6 +250,7 @@ describe ('Feed notification configuration tests',function () {
         // We check 'Message or question' process and all of its states are checked
         cy.get('.opfab-feedconfiguration-processlist').eq(1).find('p').eq(1).find('input').should('be.checked');
         cy.get('@MessageOrQuestionStates').contains('Message').find('input').should('be.checked');
+        cy.get('@MessageOrQuestionStates').contains('Message or question list').find('input').should('be.checked');
         cy.get('@MessageOrQuestionStates').contains('Question').find('input').should('be.checked');
 
         // We unselect 'Process example' process (to test the state 'Network Contingencies' is still checked (because filtering notification on this state is not allowed))

@@ -73,6 +73,60 @@ By using attributes you can set some parameters regarding recipients, see
 ifdef::single-page-doc[<<'build-in_templates_common_usercard_attributes,common attributes for user cards'>>]
 ifndef::single-page-doc[<</documentation/current/reference_doc/index.adoc#build-in_templates_common_usercard_attributes, common attributes for user cards>>]
 
+== Message Or Question List 
+
+=== Card template
+
+If you want to show a message or a question and the answers, you can use the message or question list build-in template, to do that just put in your handlebar file:
+
+```
+<opfab-message-or-question-list-card> </opfab-message-or-question-list-card>
+
+```
+
+The build-in template supposes the message or question is stored in the card in the field `data.message`.
+
+
+=== User card template 
+
+
+If you want to create a user card where you can select a list of messages or questions linked to a json file, just add in your handlebar file : 
+
+```
+<opfab-message-or-question-list-usercard businessData="businessDataFileName"> </opfab-message-or-question-list-usercard>
+
+```
+The message will be stored in the field `data.message` of the card
+You need to set the json file name with the `businessData` attribute
+If you want to use the template as is, the json file must follow this structure :
+
+`{   "possibleRecipients": [
+    {"id": "ENTITY1_FR"},
+    {"id": "ENTITY2_FR"}
+    ],
+
+    "messagesList": [{
+        "id": "Warning",
+        "title": "Warning about the state of the grid",
+        "message": "A problem has been detected, please put maintenance work on hold and be on stand by",
+        "question": false,
+        "recipients" : [
+            "ENTITY1_FR",
+            "ENTITY2_FR"
+        ]
+    },
+    {
+        "id": "Confirmation",
+        "title": "Confirmation the issues have been fixed",
+        "message": "Please confirm the issues in your area have been fixed",
+        "question": true,
+        "recipients" : [
+            "ENTITY1_FR"
+        ]
+    }]
+
+}`
+
 
 [[build-in_templates_common_usercard_attributes]]
 == Common attributes for user cards build-in templates 

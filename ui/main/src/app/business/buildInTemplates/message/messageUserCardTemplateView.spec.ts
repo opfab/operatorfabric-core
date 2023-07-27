@@ -18,7 +18,7 @@ describe('Message UserCard template', () => {
     });
 
 
-    it('GIVEN an existing card WHEN user edit card THEN message is  actual message', () => {
+    it('GIVEN an existing card WHEN user edit card THEN message is actual message', () => {
         const view = new MessageUserCardTemplateView();
         opfab.currentUserCard.getEditionMode = function () {
             return 'EDITION';
@@ -58,7 +58,7 @@ describe('Message UserCard template', () => {
         expect(specficCardInformation.card.data.message).toEqual('My message');
     });
 
-    it('GIVEN a user WHEN create card with empty  message THEN card is not valid with error message ', () => {
+    it('GIVEN a user WHEN create card with empty message THEN card is not valid with error message ', () => {
         const view = new MessageUserCardTemplateView();
         const specficCardInformation = view.getSpecificCardInformation('');
         expect(specficCardInformation.valid).toEqual(false);

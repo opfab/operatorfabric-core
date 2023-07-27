@@ -7,15 +7,18 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {MessageCardTemplate} from "./message/messageCardTemplate";
-import {MessageUserCardTemplate} from "./message/messageUserCardTemplate";
-import {QuestionCardTemplate} from "./question/card/questionCardTemplate";
-import {QuestionUserCardTemplate} from "./question/usercard/questionUserCardTemplate";
+import {MessageOrQuestionListCardTemplate} from './message-or-question-list/card/message-or-question-listCardTemplate';
+import {MessageOrQuestionListUserCardTemplate} from './message-or-question-list/usercard/message-or-question-listUserCardTemplate';
+import {MessageCardTemplate} from './message/messageCardTemplate';
+import {MessageUserCardTemplate} from './message/messageUserCardTemplate';
+import {QuestionCardTemplate} from './question/card/questionCardTemplate';
+import {QuestionUserCardTemplate} from './question/usercard/questionUserCardTemplate';
 
-
-export const loadBuildInTemplates = (() => {
+export const loadBuildInTemplates = () => {
     customElements.define('opfab-message-card', MessageCardTemplate);
     customElements.define('opfab-message-usercard', MessageUserCardTemplate);
     customElements.define('opfab-question-card', QuestionCardTemplate);
     customElements.define('opfab-question-usercard', QuestionUserCardTemplate);
-});
+    customElements.define('opfab-message-or-question-list-usercard', MessageOrQuestionListUserCardTemplate);
+    customElements.define('opfab-message-or-question-list-card', MessageOrQuestionListCardTemplate);
+};

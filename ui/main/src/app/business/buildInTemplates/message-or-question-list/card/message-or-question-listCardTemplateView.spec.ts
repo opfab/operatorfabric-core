@@ -8,29 +8,30 @@
  */
 
 import {initOpfabApiMock} from '../../../../../tests/mocks/opfabApi.mock';
-import {QuestionCardTemplateView} from './questionCardTemplateView';
+import {MessageOrQuestionListCardTemplateView} from './message-or-question-listCardTemplateView';
 
 declare const opfab;
 
-describe('Question Card template', () => {
-    let view: QuestionCardTemplateView;
+describe('MessageOrQuestionList Card template', () => {
+    let view: MessageOrQuestionListCardTemplateView;
     beforeEach(() => {
         initOpfabApiMock();
-        view = new QuestionCardTemplateView();
+        view = new MessageOrQuestionListCardTemplateView();
     });
 
-    it('GIVEN a card WHEN get question THEN question is provided', () => {
+    it('GIVEN a card WHEN get title and message THEN title and message are provided', () => {
         opfab.currentCard.getCard = function () {
-            return {data: {question: 'My question'}};
+            return {data: {title: 'My title', message: 'My message'}};
         };
-        expect(view.getQuestion()).toEqual('My question');
+        expect(view.getTitle()).toEqual('My title');
+        expect(view.getMessage()).toEqual('My message');
     });
 
-    it('GIVEN a card WHEN get question with new line THEN question is provided with <br> tag', () => {
+    it('GIVEN a card WHEN get message with new line THEN message is provided with <br> tag', () => {
         opfab.currentCard.getCard = function () {
-            return {data: {question: 'My question \n question'}};
+            return {data: {message: 'My message \n message'}};
         };
-        expect(view.getQuestion()).toEqual('My question <br/> question');
+        expect(view.getMessage()).toEqual('My message <br/> message');
     });
 
     it('Given a card WHEN user is not allowed to response THEN response input is hidden', () => {
@@ -40,8 +41,28 @@ describe('Question Card template', () => {
         expect(inputFieldVisibility).toBeFalse();
     });
 
-    it('Given a card WHEN user card is locked THEN response input is hidden', () => {
+    it('GIVEN input is "my response" and "Yes" WHEN get user response THEN responseCardData.comment is "my_response", responseCardData.agreement is "Yes" and response is valid', () => {
+        // Simulate opfabAPI
+        let getUserResponseFromTemplate;
+        opfab.currentCard.registerFunctionToGetUserResponse = (getUserResponse) => {
+            getUserResponseFromTemplate = getUserResponse;
+        };
+
+        // Simulate input "my response"
+        view.setFunctionToGetResponseInput(() => {
+            return [true, 'my response'];
+        });
+
+        expect(getUserResponseFromTemplate().valid).toBeTrue();
+        expect(getUserResponseFromTemplate().responseCardData.comment).toEqual('my response');
+        expect(getUserResponseFromTemplate().responseCardData.agreement).toEqual(true);
+    });
+
+    it('Given a question card WHEN user card is locked THEN response input is hidden', () => {
         opfab.currentCard.isUserAllowedToRespond = () => true;
+        opfab.currentCard.getCard = function () {
+            return {data: {question: true}};
+        };
 
         let listenToResponseLockTemplateFunction;
         opfab.currentCard.listenToResponseLock = (listenLockFunction) =>
@@ -55,8 +76,11 @@ describe('Question Card template', () => {
         expect(inputFieldVisibility).toBeFalse();
     });
 
-    it('Given a card WHEN user card is unlocked THEN response input is visible', () => {
+    it('Given a question card WHEN user card is unlocked THEN response input is visible', () => {
         opfab.currentCard.isUserAllowedToRespond = () => true;
+        opfab.currentCard.getCard = function () {
+            return {data: {question: true}};
+        };
 
         let listenToResponseUnlockTemplateFunction;
         opfab.currentCard.listenToResponseUnlock = (listenUnlockFunction) =>
@@ -70,29 +94,15 @@ describe('Question Card template', () => {
         expect(inputFieldVisibility).toBeTrue();
     });
 
-    it('GIVEN input is "my response" WHEN get user response THEN responseCardData.response is "my_response" and response is valid', () => {
-        // Simulate opfabAPI
-        let getUserResponseFromTemplate;
-        opfab.currentCard.registerFunctionToGetUserResponse = (getUserResponse) => {
-            getUserResponseFromTemplate = getUserResponse;
-        };
-
-        // Simulate input "my response"
-        view.setFunctionToGetResponseInput(() => 'my response');
-
-        expect(getUserResponseFromTemplate().valid).toBeTrue();
-        expect(getUserResponseFromTemplate().responseCardData.response).toEqual('my response');
-    });
-
     it('GIVEN 2 child cards WHEN listen to child card THEN received 2 response', () => {
         const childcards = [
             {
                 publisher: 'entity1',
-                data: {response: 'response_entity1'}
+                data: {comment: 'my response 1', agreement: true}
             },
             {
                 publisher: 'entity2',
-                data: {response: 'response_entity2'}
+                data: {comment: 'my response 2', agreement: false}
             }
         ];
 
@@ -110,8 +120,10 @@ describe('Question Card template', () => {
 
         sendChildCards(childcards);
         expect(responsesResult[0].entityName).toEqual('entity1 name');
-        expect(responsesResult[0].response).toEqual('response_entity1');
+        expect(responsesResult[0].comment).toEqual('my response 1');
+        expect(responsesResult[0].agreement).toEqual(true);
         expect(responsesResult[1].entityName).toEqual('entity2 name');
-        expect(responsesResult[1].response).toEqual('response_entity2');
+        expect(responsesResult[1].comment).toEqual('my response 2');
+        expect(responsesResult[1].agreement).toEqual(false);
     });
 });

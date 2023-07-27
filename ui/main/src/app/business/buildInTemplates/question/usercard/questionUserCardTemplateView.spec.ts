@@ -58,7 +58,7 @@ describe('Question UserCard template', () => {
         expect(specficCardInformation.card.data.question).toEqual('My question');
     });
 
-    it('GIVEN a user WHEN create card with empty  question THEN card is not valid with error message ', () => {
+    it('GIVEN a user WHEN create card with empty question THEN card is not valid with error message ', () => {
         const view = new QuestionUserCardTemplateView();
         const specficCardInformation = view.getSpecificCardInformation('');
         expect(specficCardInformation.valid).toEqual(false);

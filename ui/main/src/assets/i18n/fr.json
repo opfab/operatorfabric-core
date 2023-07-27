@@ -608,6 +608,19 @@
     "questionUserCard": {
       "noMessageError":"Vous devez fournir une question",
       "textareaLabel":"QUESTION"
+    }, 
+    "message-or-question-listCard": {
+      "yes": "Oui",
+      "no": "Non",
+      "entityColumnLabel": "ENTITÉ",
+      "responseColumnLabel": "RÉPONSE",
+      "commentColumnLabel": "COMMENTAIRE",
+      "comment": "COMMENTAIRE"
+    },
+    "message-or-question-listUserCard": {
+      "titleLabel": "TITRE",
+      "messageLabel": "MESSAGE",
+      "emptyMessage": "Vous ne pouvez pas envoyer de message vide"
     } 
 
   }

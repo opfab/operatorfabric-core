@@ -1,0 +1,56 @@
+{   "possibleRecipients": [
+    {"id": "ENTITY1_FR"},
+    {"id": "ENTITY2_FR"},
+    {"id": "ENTITY3_FR"},
+    {"id": "ENTITY4_FR"},
+    {"id": "ENTITY1_IT"},
+    {"id": "ENTITY2_IT"},
+    {"id": "ENTITY3_IT"},
+    {"id": "ENTITY1_NL"},
+    {"id": "ENTITY2_NL"},
+    {"id": "ENTITY1_EU"},
+    {"id": "ENTITY2_EU"}
+    
+    ],
+
+    "messagesList": [{
+        "id": "Warning",
+        "title": "Warning about the state of the grid",
+        "message": "A problem has been detected, please put maintenance work on hold and be on stand by",
+        "question": false,
+        "recipients" : [
+            "ENTITY1_FR",
+            "ENTITY2_FR",
+            "ENTITY4_FR",
+            "ENTITY1_IT",
+            "ENTITY1_NL",
+            "ENTITY1_EU"
+        ]
+    },
+    {
+        "id": "Confirmation",
+        "title": "Confirmation the issues have been fixed",
+        "message": "Please confirm the issues in your area have been fixed",
+        "question": true,
+        "recipients" : [
+            "ENTITY1_FR",
+            "ENTITY2_FR",
+            "ENTITY4_FR"
+        ]
+    },
+    {
+        "id": "Situation_solved",
+        "title": "Situation solved",
+        "message": "All the problems have been dealt with, please resume normal operations",
+        "question": false,
+        "recipients" : [
+            "ENTITY1_FR",
+            "ENTITY2_FR",
+            "ENTITY4_FR",
+            "ENTITY1_IT",
+            "ENTITY1_NL",
+            "ENTITY1_EU"
+        ]
+    }]
+
+}
