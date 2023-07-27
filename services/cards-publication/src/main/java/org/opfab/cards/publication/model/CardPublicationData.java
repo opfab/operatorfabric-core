@@ -46,6 +46,7 @@ public class CardPublicationData implements Card {
     @Id
     private String id;
 
+    @Indexed
     private String parentCardId;
 
     private String initialParentCardUid;
