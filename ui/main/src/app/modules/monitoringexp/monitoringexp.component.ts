@@ -25,6 +25,7 @@ import {CardsFilter} from '@ofModel/cards-filter.model';
 import {FilterMatchTypeEnum, FilterModel} from '@ofModel/filter-model';
 import {CardService} from 'app/business/services/card/card.service';
 import {TranslationService} from 'app/business/services/translation/translation.service';
+import {Interval} from "chart.js/dist/scales/scale.time";
 
 @Component({
     selector: 'of-monitoringexp',
@@ -55,7 +56,6 @@ export class MonitoringExpComponent implements OnDestroy, OnInit, AfterViewInit 
     page: number;
 
     firstQueryHasBeenDone = false;
-    firstQueryHasResults = false;
     loadingInProgress = false;
     technicalError = false;
 
@@ -65,6 +65,8 @@ export class MonitoringExpComponent implements OnDestroy, OnInit, AfterViewInit 
     processStateName = new Map();
     processNames = new Map();
     stateColors = new Map();
+
+    interval: any;
 
     @ViewChild('filters') filtersTemplate: ArchivesLoggingFiltersComponent;
 
@@ -120,7 +122,7 @@ export class MonitoringExpComponent implements OnDestroy, OnInit, AfterViewInit 
 
         this.results = [];
 
-        setInterval(() => {
+        this.interval = setInterval(() => {
             if (this.currentPage === 0) {
                 this.sendFilterQuery(0);
             } else {
@@ -159,7 +161,6 @@ export class MonitoringExpComponent implements OnDestroy, OnInit, AfterViewInit 
                     this.currentPage = page_number + 1; // page on ngb-pagination component starts at 1, and page on backend starts at 0
 
                     if (!this.firstQueryHasBeenDone) {
-                        this.firstQueryHasResults=page.content.length > 0;
                         this.resultsNumber = page.totalElements;
                     }
 
@@ -293,6 +294,10 @@ export class MonitoringExpComponent implements OnDestroy, OnInit, AfterViewInit 
     }
 
     ngOnDestroy() {
+        if (this.interval) {
+            clearInterval(this.interval);
+        }
+
         if (this.modalRef) {
             this.modalRef.close();
         }

@@ -429,7 +429,7 @@ export class ArchivesLoggingFiltersComponent implements OnInit, OnDestroy, After
     private isDateWellFormatted(dateFieldName: string): boolean {
         const dateControl = this.parentForm.get(dateFieldName);
         const dateValue = this.extractTime(dateControl);
-        const isFieldEmpty = dateControl.value.date == null;
+        const isFieldEmpty = dateControl.value?.date == null;
 
         return isFieldEmpty || !isNaN(dateValue);
     }
