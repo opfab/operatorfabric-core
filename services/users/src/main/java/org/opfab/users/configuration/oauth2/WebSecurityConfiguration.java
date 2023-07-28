@@ -72,8 +72,10 @@ public class WebSecurityConfiguration {
     /**This method handles the configuration to be shared with the test WebSecurityConfiguration class (access rules to be tested)
      * */
     public static void configureCommon(final HttpSecurity http) throws Exception {
-        http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED)
-                .and()
+        http
+                .sessionManagement(sessionManagement -> sessionManagement
+                    .sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED)
+                )
                 .authorizeHttpRequests(authorizeHttpRequests -> authorizeHttpRequests
                     .requestMatchers(HttpMethod.GET,PROMETHEUS_PATH).permitAll()
                     .requestMatchers(HttpMethod.POST, USER_TOKEN_SYNCHRONIZATION_PATH).access(authenticatedAndIpAllowed())
