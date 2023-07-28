@@ -25,6 +25,7 @@ import {CardsFilter} from '@ofModel/cards-filter.model';
 import {FilterMatchTypeEnum, FilterModel} from '@ofModel/filter-model';
 import {CardService} from 'app/business/services/card/card.service';
 import {TranslationService} from 'app/business/services/translation/translation.service';
+import {SelectedCardService} from "../../business/services/card/selectedCard.service";
 
 @Component({
     selector: 'of-monitoringexp',
@@ -85,6 +86,7 @@ export class MonitoringExpComponent implements OnDestroy, OnInit, AfterViewInit 
         ['information', 4]
     ]);
     private processMonitoring: any[];
+    selectedCardId: string;
 
     constructor(
         private processesService: ProcessesService,
@@ -93,7 +95,8 @@ export class MonitoringExpComponent implements OnDestroy, OnInit, AfterViewInit 
         private cardService: CardService,
         private translationService: TranslationService,
         private entitiesService: EntitiesService,
-        private modalService: NgbModal
+        private modalService: NgbModal,
+        private selectedCardService: SelectedCardService
     ) {
         this.processMonitoring = this.configService.getConfigValue('processMonitoring');
 
@@ -128,6 +131,8 @@ export class MonitoringExpComponent implements OnDestroy, OnInit, AfterViewInit 
                 this.sendFilterQuery(this.currentPage - 1);
             }
         }, 5000);
+
+        this.selectedCardService.getSelectCardIdChanges().subscribe(selectedCardId => this.selectedCardId = selectedCardId)
     }
 
     ngAfterViewInit() {

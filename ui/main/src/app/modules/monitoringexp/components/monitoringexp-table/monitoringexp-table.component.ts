@@ -7,7 +7,7 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {Component, EventEmitter, Input, OnDestroy, Output} from '@angular/core';
+import {Component, ElementRef, EventEmitter, Input, OnDestroy, Output, ViewChild} from '@angular/core';
 import {TranslateService} from '@ngx-translate/core';
 import {takeUntil} from 'rxjs/operators';
 import {ColDef, GridOptions} from 'ag-grid-community';
@@ -15,6 +15,8 @@ import {LightCard} from '@ofModel/light-card.model';
 import {TimeCellRendererComponent} from '../cell-renderers/time-cell-renderer.component';
 import {SenderCellRendererComponent} from '../cell-renderers/sender-cell-renderer.component';
 import {Subject} from 'rxjs';
+import {NgbModal, NgbModalOptions, NgbModalRef} from "@ng-bootstrap/ng-bootstrap";
+import {SelectedCardService} from "../../../../business/services/card/selectedCard.service";
 
 @Component({
     selector: 'of-monitoringexp-table',
@@ -22,6 +24,7 @@ import {Subject} from 'rxjs';
 })
 export class MonitoringexpTableComponent implements OnDestroy {
 
+    @ViewChild('cardDetail') cardDetailTemplate: ElementRef;
     @Input() result: LightCard[];
     @Input() processGroupVisible: boolean;
     @Input() totalElements: number;
@@ -36,6 +39,7 @@ export class MonitoringexpTableComponent implements OnDestroy {
     @Output() export = new EventEmitter<number>();
 
     unsubscribe$: Subject<void> = new Subject<void>();
+    modalRef: NgbModalRef;
 
     // ag-grid configuration objects
     gridOptions;
@@ -43,7 +47,9 @@ export class MonitoringexpTableComponent implements OnDestroy {
 
     private columnDefs: ColDef[] = [];
 
-    constructor(private translate: TranslateService) {
+    constructor(private translate: TranslateService,
+                private selectedCardService: SelectedCardService,
+                private modalService: NgbModal) {
 
         this.gridOptions = <GridOptions>{
             context: {
@@ -214,6 +220,20 @@ export class MonitoringexpTableComponent implements OnDestroy {
             });
 
         return translatedColumn;
+    }
+
+    selectCard(info) {
+        this.selectedCardService.setSelectedCardId(info);
+        const options: NgbModalOptions = {
+            size: 'fullscreen'
+        };
+        this.modalRef = this.modalService.open(this.cardDetailTemplate, options);
+
+        // Clear card selection when modal is dismissed by pressing escape key or clicking outside of modal
+        // Closing event is already handled in card detail component
+        this.modalRef.dismissed.subscribe(() => {
+            this.selectedCardService.clearSelectedCardId();
+        });
     }
 
     ngOnDestroy() {

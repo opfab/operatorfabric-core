@@ -13,6 +13,7 @@
             [gridOptions]="gridOptions"
             [rowData]="result"
             (filterChanged)="onFilterChanged($event)"
+            (rowClicked)="selectCard($event.data._id)"
             class="ag-theme-opfab">
     </ag-grid-angular>
 
@@ -35,3 +36,11 @@
     </div>
 
 </div>
+
+<ng-template #cardDetail let-modal>
+    <div class="modal-body">
+        <div>
+            <of-card [parentModalRef] = "modalRef" [screenSize]="'lg'"> </of-card>
+        </div>
+    </div>
+</ng-template>
