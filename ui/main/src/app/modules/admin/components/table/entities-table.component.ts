@@ -36,13 +36,6 @@ export class EntitiesTableComponent extends AdminTableDirective implements OnIni
         this.gridOptions.columnTypes['entityAllowedToSendCardColumn'] = {
             sortable: true,
             filter: 'agTextColumnFilter',
-            filterParams: {
-                valueGetter: (params) => {
-                    return params.data.entityAllowedToSendCard
-                        ? this.translateService.instant('admin.input.entity.true')
-                        : this.translateService.instant('admin.input.entity.false');
-                }
-            },
             wrapText: true,
             autoHeight: true,
             flex: 4

@@ -186,7 +186,7 @@ describe('AdmininstrationPages', () => {
         agGrid.cellShould('ag-grid-angular', 5, 0, 'have.text', 'entityId');
         agGrid.cellShould('ag-grid-angular', 5, 1, 'have.text', 'entity name');
         agGrid.cellShould('ag-grid-angular', 5, 2, 'have.text', 'entity description');
-        agGrid.cellShould('ag-grid-angular', 5, 3, 'have.text', 'YES');
+        agGrid.cellElementShould('ag-grid-angular', 5, 3, 'input', 'be.checked');
         agGrid.cellShould('ag-grid-angular', 5, 4, 'have.text', 'Control Center FR North');
 
         // Edit previously created entity
@@ -238,7 +238,7 @@ describe('AdmininstrationPages', () => {
         agGrid.cellShould('ag-grid-angular', 5, 0, 'have.text', 'entityId');
         agGrid.cellShould('ag-grid-angular', 5, 1, 'have.text', 'entity name updated');
         agGrid.cellShould('ag-grid-angular', 5, 2, 'have.text', 'entity description updated');
-        agGrid.cellShould('ag-grid-angular', 5, 3, 'have.text', 'NO');
+        agGrid.cellElementShould('ag-grid-angular', 5, 3, 'input', 'not.be.checked');
         agGrid.cellShould('ag-grid-angular', 5, 4, 'have.text', 'Control Center FR South');
 
         // Delete previously created entity
@@ -332,7 +332,7 @@ describe('AdmininstrationPages', () => {
         agGrid.cellShould('ag-grid-angular', 7, 2, 'have.text', 'group description');
         agGrid.cellShould('ag-grid-angular', 7, 3, 'have.text', 'cypress');
         agGrid.cellShould('ag-grid-angular', 7, 4, 'have.text', 'READONLY');
-        agGrid.cellShould('ag-grid-angular', 7, 5, 'have.text', 'YES');
+        agGrid.cellElementShould('ag-grid-angular', 7, 5, 'input', 'be.checked');
 
         cy.get('#opfab-name').type(' updated');
 
@@ -372,7 +372,7 @@ describe('AdmininstrationPages', () => {
         agGrid.cellShould('ag-grid-angular', 7, 2, 'have.text', 'group description updated');
         agGrid.cellShould('ag-grid-angular', 7, 3, 'have.text', 'defaultProcess');
         agGrid.cellShould('ag-grid-angular', 7, 4, 'have.text', 'VIEW_ALL_ARCHIVED_CARDS');
-        agGrid.cellShould('ag-grid-angular', 7, 5, 'have.text', 'NO');
+        agGrid.cellElementShould('ag-grid-angular', 7, 5, 'input', 'not.be.checked');
 
         // Delete previously created group
         agGrid.clickCell('ag-grid-angular', 7, 7, 'of-action-cell-renderer');

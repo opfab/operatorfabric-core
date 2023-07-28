@@ -504,7 +504,10 @@
     "of": "of",
     "page": "Page",
     "blank": "Blank",
-    "notBlank": "Not blank"
+    "notBlank": "Not blank",
+    "true": "YES",
+    "false": "NO",
+    "empty": " "
   },
   "realTimeUsers": {
     "connected": "Connected",

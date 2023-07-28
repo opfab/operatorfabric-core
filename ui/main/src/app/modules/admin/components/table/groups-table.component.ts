@@ -37,13 +37,6 @@ export class GroupsTableComponent extends AdminTableDirective implements OnInit 
         this.gridOptions.columnTypes['realtimeColumn'] = {
             sortable: true,
             filter: 'agTextColumnFilter',
-            filterParams: {
-                valueGetter: (params) => {
-                    return params.data.realtime
-                        ? this.translateService.instant('admin.input.group.true')
-                        : this.translateService.instant('admin.input.group.false');
-                }
-            },
             wrapText: true,
             autoHeight: true,
             flex: 4
