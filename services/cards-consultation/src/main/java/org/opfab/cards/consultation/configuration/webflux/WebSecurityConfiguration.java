@@ -68,14 +68,18 @@ public class WebSecurityConfiguration {
      */
     public static void configureCommon(final ServerHttpSecurity http) {
         http
-                .headers().frameOptions().disable()
-                .and()
-                .authorizeExchange()
-                .pathMatchers(HttpMethod.GET, PROMETHEUS_PATH).permitAll()
-                .pathMatchers(HttpMethod.GET, CONNECTIONS).authenticated()
-                .pathMatchers(CONNECTIONS_PATH).hasRole(ADMIN_ROLE)
-                .pathMatchers(LOGGERS_PATH).hasRole(ADMIN_ROLE)
-                .pathMatchers(MESSAGE_TO_SUBSCRIPTIONS).hasRole(ADMIN_ROLE)
-                .anyExchange().access(new IpAddressAuthorizationManager());
+                .headers(headers -> headers
+                    .frameOptions(frameOptions -> frameOptions
+                        .disable()
+                    )
+                )
+                .authorizeExchange(authorizeExchange -> authorizeExchange
+                    .pathMatchers(HttpMethod.GET, PROMETHEUS_PATH).permitAll()
+                    .pathMatchers(HttpMethod.GET, CONNECTIONS).authenticated()
+                    .pathMatchers(CONNECTIONS_PATH).hasRole(ADMIN_ROLE)
+                    .pathMatchers(LOGGERS_PATH).hasRole(ADMIN_ROLE)
+                    .pathMatchers(MESSAGE_TO_SUBSCRIPTIONS).hasRole(ADMIN_ROLE)
+                    .anyExchange().access(new IpAddressAuthorizationManager())
+                );
     }
 }
