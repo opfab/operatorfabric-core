@@ -504,7 +504,10 @@
     "of": "de",
     "page": "Page",
     "blank": "Vide",
-    "notBlank": "Pas vide"
+    "notBlank": "Pas vide",
+    "true": "OUI",
+    "false": "NON",
+    "empty": " "
   },
   "realTimeUsers": {
     "connected": "Connecté",

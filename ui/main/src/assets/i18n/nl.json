@@ -504,7 +504,10 @@
     "of": "van",
     "page": "Pagina",
     "blank": "Leeg",
-    "notBlank": "Niet leeg"
+    "notBlank": "Niet leeg",
+    "true": "JA",
+    "false": "NEE",
+    "empty": " "
   },
   "realTimeUsers": {
     "connected": "Verbonden",

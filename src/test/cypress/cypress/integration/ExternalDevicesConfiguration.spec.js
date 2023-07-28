@@ -1,4 +1,4 @@
-/* Copyright (c) 2022, RTE (http://www.rte-france.com)
+/* Copyright (c) 2022-2023, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -118,7 +118,7 @@ describe('ExternalDevicesconfigurationPage', () => {
         opfab.openExternalDevices();
         cy.get('#opfab-externaldevices-tabs').find('#opfab-externaldevices-users-tab').click();
 
-        agGrid.cellShould('#opfab-externaldevices-table-grid', 4, 1, 'have.text', 'CDS_1, CDS_2');
+        agGrid.cellShould('#opfab-externaldevices-table-grid', 4, 1, 'have.text', 'CDS_1,CDS_2');
 
         // Delete previously created row
         agGrid.clickCell('#opfab-externaldevices-table-grid', 4, 3, 'of-action-cell-renderer');
