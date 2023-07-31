@@ -70,7 +70,7 @@ ext {
             feignJackson   : "io.github.openfeign:feign-jackson:$feign",
             feignCore      : "io.github.openfeign:feign-core:$feign",
             feignOkhttp      : "io.github.openfeign:feign-okhttp:$feign",
-            guava          : "com.google.guava:guava:32.1.1-jre",
+            guava          : "com.google.guava:guava:32.1.2-jre",
             jacksonAnnotations   : "com.fasterxml.jackson.core:jackson-annotations:$jacksonAnnotations",
             collections4   : "org.apache.commons:commons-collections4:$apacheCommonsCollections4",
             commonsIO      : "commons-io:commons-io:$commonsIO",
