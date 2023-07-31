@@ -35,8 +35,8 @@ export default class ConfigService {
                 this.supervisorConfig.entitiesToSupervise =  defaulConfig.entitiesToSupervise;
                 this.supervisorConfig.processesToSupervise =  defaulConfig.processesToSupervise;
                 this.supervisorConfig.windowInSecondsForCardSearch  = defaulConfig.windowInSecondsForCardSearch ;
-                this.supervisorConfig.secondsBetweenAcknowledmentChecks = defaulConfig.secondsBetweenAcknowledmentChecks;
-                this.supervisorConfig.secondsAfterPublicationToConsiderCardAsNotAcknowleged = defaulConfig.secondsAfterPublicationToConsiderCardAsNotAcknowleged;
+                this.supervisorConfig.secondsBetweenAcknowledgmentChecks = defaulConfig.secondsBetweenAcknowledgmentChecks;
+                this.supervisorConfig.secondsAfterPublicationToConsiderCardAsNotAcknowledged = defaulConfig.secondsAfterPublicationToConsiderCardAsNotAcknowledged;
                 this.supervisorConfig.disconnectedCardTemplate = defaulConfig.disconnectedCardTemplate;
                 this.supervisorConfig.unackCardTemplate = defaulConfig.unackCardTemplate;
                 this.save();

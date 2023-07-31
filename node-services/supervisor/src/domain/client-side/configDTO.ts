@@ -15,8 +15,8 @@ export default class ConfigDTO {
     public entitiesToSupervise = new Array();
     public processesToSupervise = new Array();
     public windowInSecondsForCardSearch : number;
-    public secondsBetweenAcknowledmentChecks = 0;
-    public secondsAfterPublicationToConsiderCardAsNotAcknowleged: number;
+    public secondsBetweenAcknowledgmentChecks = 0;
+    public secondsAfterPublicationToConsiderCardAsNotAcknowledged: number;
     public disconnectedCardTemplate: string;
     public unackCardTemplate: string;
 }

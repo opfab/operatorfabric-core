@@ -387,14 +387,14 @@ Node services can be configured with the following properties:
 |supervisor.defaultConfig.processesToSupervise|||List of processes and related states to monitor for missing acknowledgment ({ "process": "defaultProcess", "states": ["processState"] })
 |supervisor.defaultConfig.unackCardTemplate|||Card template used to send acknowledgment alerts
 |supervisor.defaultConfig.windowInSecondsForCardSearch|||Time period used to search for not acknowledged cards
-|supervisor.defaultConfig.secondsBetweenAcknowledmentChecks|||Card acknoledgement check period
-|supervisor.defaultConfig.secondsAfterPublicationToConsiderCardAsNotAcknowleged|||Time period to wait after card publishing to consider a card as not acknowleged and send the alert
+|supervisor.defaultConfig.secondsBetweenAcknowledgmentChecks|||Card acknowledgment check period
+|supervisor.defaultConfig.secondsAfterPublicationToConsiderCardAsNotAcknowledged|||Time period to wait after card publishing to consider a card as not acknowledged and send the alert
 |===
 
 
 The parameters in "cardsExternalDiffusion.defaultConfig" section can be modified at runtime by sending an http POST request to the `/config` API of cards external diffusion service with a JSON payload containing the config parameters to be changed.
 
-The parameters in "supervisor.defaultConfig" section can be modified at runtime by sending an http POST request to the `/config` API of supervisor service with a JSON payloadcontaining the config parameters to be changed.
+The parameters in "supervisor.defaultConfig" section can be modified at runtime by sending an http POST request to the `/config` API of supervisor service with a JSON payload containing the config parameters to be changed.
 
 
 include::web-ui_configuration.adoc[leveloffset=+1]
