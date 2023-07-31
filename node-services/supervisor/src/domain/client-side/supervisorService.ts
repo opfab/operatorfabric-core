@@ -38,13 +38,13 @@ export default class SupervisorService {
         this.acknowledgementChecker = new AcknowledgementChecker()
             .setLogger(this.logger)
             .setOpfabServicesInterface(this.opfabInterface)
-            .setSecondsAfterPublicationToConsiderCardAsNotAcknowleged(this.config.secondsAfterPublicationToConsiderCardAsNotAcknowleged)
+            .setSecondsAfterPublicationToConsiderCardAsNotAcknowledged(this.config.secondsAfterPublicationToConsiderCardAsNotAcknowledged)
             .setWindowInSecondsForCardSearch(this.config.windowInSecondsForCardSearch )
             .setUnackedCardTemplate(this.config.unackCardTemplate)
             .setProcessStatesToSupervise(this.config.processesToSupervise);
 
         this.checkConnectionRegularly();
-        this.checkAcknowlegmentRegularly();
+        this.checkAcknowledgmentRegularly();
     }
 
     public setConfiguration(config: ConfigDTO) {
@@ -63,7 +63,7 @@ export default class SupervisorService {
 
     private restartAcknowledgementChecker() {
         this.acknowledgementChecker
-            .setSecondsAfterPublicationToConsiderCardAsNotAcknowleged(this.config.secondsAfterPublicationToConsiderCardAsNotAcknowleged)
+            .setSecondsAfterPublicationToConsiderCardAsNotAcknowledged(this.config.secondsAfterPublicationToConsiderCardAsNotAcknowledged)
             .setWindowInSecondsForCardSearch(this.config.windowInSecondsForCardSearch )
             .setUnackedCardTemplate(this.config.unackCardTemplate)
             .setProcessStatesToSupervise(this.config.processesToSupervise);
@@ -87,11 +87,11 @@ export default class SupervisorService {
         setTimeout(() => this.checkConnectionRegularly(), this.config.secondsBetweenConnectionChecks * 1000);
     }
 
-    private checkAcknowlegmentRegularly() {
+    private checkAcknowledgmentRegularly() {
         if (this.active) {
-            this.logger.info("checkAcknowlegmentRegularly");
-            this.acknowledgementChecker.checkAcknowlegment();
+            this.logger.info("checkAcknowledgmentRegularly");
+            this.acknowledgementChecker.checkAcknowledgment();
         }
-        setTimeout(() => this.checkAcknowlegmentRegularly(), this.config.secondsBetweenAcknowledmentChecks * 1000);
+        setTimeout(() => this.checkAcknowledgmentRegularly(), this.config.secondsBetweenAcknowledgmentChecks * 1000);
     }
 }

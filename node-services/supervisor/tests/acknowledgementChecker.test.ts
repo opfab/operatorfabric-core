@@ -54,7 +54,7 @@ describe('acknowledgement checker', function () {
         acknowledgementChecker = new AcknowledgementChecker()
         .setLogger(logger)
         .setOpfabServicesInterface(opfabInterfaceStub)
-        .setSecondsAfterPublicationToConsiderCardAsNotAcknowleged(60)
+        .setSecondsAfterPublicationToConsiderCardAsNotAcknowledged(60)
         .setWindowInSecondsForCardSearch(120)
         .setProcessStatesToSupervise([{ process: "defaultProcess", states: ["processState"]}]);
         
@@ -65,7 +65,7 @@ describe('acknowledgement checker', function () {
         
         opfabInterfaceStub.unackCards = [{uid: "1001", id:"defaultProcess.process1" , publisher: 'publisher1', publishDate: publishDateAfterAlertingPeriod, process: "defaultProcess", state: "processState", entityRecipients:["ENTITY1"]}];
 
-        await acknowledgementChecker.checkAcknowlegment();
+        await acknowledgementChecker.checkAcknowledgment();
         await new Promise(resolve => setTimeout(resolve, 1));
         expect(opfabInterfaceStub.numberOfCardSend).toEqual(0);
     })
@@ -75,14 +75,14 @@ describe('acknowledgement checker', function () {
         const publishDateBeforeAlertingPeriod = Date.now() - 65 *1000;
         opfabInterfaceStub.unackCards = [{uid: "1001",  id:"defaultProcess.process1", publisher: 'publisher1', publishDate: publishDateBeforeAlertingPeriod, process: "defaultProcess", state: "processState", entityRecipients:["ENTITY1"]}];
 
-        await acknowledgementChecker.checkAcknowlegment();
+        await acknowledgementChecker.checkAcknowledgment();
         await new Promise(resolve => setTimeout(resolve, 1));
         expect(opfabInterfaceStub.numberOfCardSend).toEqual(1);
         expect(opfabInterfaceStub.unackCardId).toEqual("defaultProcess.process1");
         expect(opfabInterfaceStub.userRecipients).toEqual(["publisher1"]);
         expect(opfabInterfaceStub.missingAcks).toEqual("ENTITY1");
 
-        await acknowledgementChecker.checkAcknowlegment();
+        await acknowledgementChecker.checkAcknowledgment();
         await new Promise(resolve => setTimeout(resolve, 1));
         expect(opfabInterfaceStub.numberOfCardSend).toEqual(1);
 
@@ -93,7 +93,7 @@ describe('acknowledgement checker', function () {
         const publishDateBeforeAlertingPeriod = Date.now() - 65 *1000;
         opfabInterfaceStub.unackCards = [{uid: "1001", id:"defaultProcess.process1", publisher: 'publisher1', publishDate: publishDateBeforeAlertingPeriod, process: "defaultProcess", state: "processState", entityRecipients:["ENTITY1"]}];
 
-        await acknowledgementChecker.checkAcknowlegment();
+        await acknowledgementChecker.checkAcknowledgment();
         await new Promise(resolve => setTimeout(resolve, 1));
         expect(opfabInterfaceStub.numberOfCardSend).toEqual(1);
         expect(opfabInterfaceStub.unackCardId).toEqual("defaultProcess.process1");
@@ -106,7 +106,7 @@ describe('acknowledgement checker', function () {
         const publishDateBeforeAlertingPeriod = Date.now() - 65 *1000;
         opfabInterfaceStub.unackCards = [{uid: "1001", id:"defaultProcess.process2", publisher: 'ENTITY3', publisherType: 'ENTITY', publishDate: publishDateBeforeAlertingPeriod, process: "defaultProcess", state: "processState", entityRecipients:["ENTITY1"]}];
 
-        await acknowledgementChecker.checkAcknowlegment();
+        await acknowledgementChecker.checkAcknowledgment();
         await new Promise(resolve => setTimeout(resolve, 1));
         expect(opfabInterfaceStub.numberOfCardSend).toEqual(1);
         expect(opfabInterfaceStub.unackCardId).toEqual("defaultProcess.process2");
@@ -124,11 +124,11 @@ describe('acknowledgement checker', function () {
             {uid: "1002", id:"defaultProcess.process2", publisher: 'publisher1', publishDate: publishDateBeforeAlertingPeriod,  process: "defaultProcess", state: "processState", entityRecipients:["ENTITY1"]},
             {uid: "2002", id:"defaultProcess.process3", publisher: 'publisher1', publishDate: publishDateBeforeAlertingPeriod,  process: "defaultProcess", state: "processState", entityRecipients:["ENTITY1"]}];
 
-        await acknowledgementChecker.checkAcknowlegment();
+        await acknowledgementChecker.checkAcknowledgment();
         await new Promise(resolve => setTimeout(resolve, 1));
         expect(opfabInterfaceStub.numberOfCardSend).toEqual(2);
 
-        await acknowledgementChecker.checkAcknowlegment();
+        await acknowledgementChecker.checkAcknowledgment();
         await new Promise(resolve => setTimeout(resolve, 1));
         expect(opfabInterfaceStub.numberOfCardSend).toEqual(2);
 
@@ -140,7 +140,7 @@ describe('acknowledgement checker', function () {
 
         opfabInterfaceStub.unackCards = [{uid: "1002", id:"defaultProcess.process2", publisher: 'publisher1',  publishDate: publishDateBeforeAlertingPeriod,  process: "defaultProcess", state: "processState", entityRecipients:["ENTITY1", "ENTITY2"], entityRecipientsForInformation:["ENTITY2"], entitiesAcks:["ENTITY1"]}];
 
-        await acknowledgementChecker.checkAcknowlegment();
+        await acknowledgementChecker.checkAcknowledgment();
         await new Promise(resolve => setTimeout(resolve, 1));
         expect(opfabInterfaceStub.numberOfCardSend).toEqual(0);
 
@@ -151,7 +151,7 @@ describe('acknowledgement checker', function () {
 
         opfabInterfaceStub.unackCards = [{uid: "1001", id:"defaultProcess.process1", publisher: 'publisher1',  publishDate: publishDateBeforeAlertingPeriod,  process: "defaultProcess", state: "processState", entityRecipients:["ENTITY1","ENTITY2"], entitiesAcks:[]}];
 
-        await acknowledgementChecker.checkAcknowlegment();
+        await acknowledgementChecker.checkAcknowledgment();
         await new Promise(resolve => setTimeout(resolve, 1));
         expect(opfabInterfaceStub.numberOfCardSend).toEqual(1);
         expect(opfabInterfaceStub.unackCardId).toEqual("defaultProcess.process1");

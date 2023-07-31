@@ -14,7 +14,7 @@ export default class AcknowledgementChecker {
 
     private opfabInterface: OpfabServicesInterface;
     private logger: any;
-    private secondsAfterPublicationToConsiderCardAsNotAcknowleged: number;
+    private secondsAfterPublicationToConsiderCardAsNotAcknowledged: number;
     private processStatesFilter: any;
     private windowInSecondsForCardSearch : number;
     private unackedCardTemplate: any = '';
@@ -31,8 +31,8 @@ export default class AcknowledgementChecker {
         return this;
     }
 
-    public setSecondsAfterPublicationToConsiderCardAsNotAcknowleged(secondsAfterPublicationToConsiderCardAsNotAcknowleged: number) {
-        this.secondsAfterPublicationToConsiderCardAsNotAcknowleged = secondsAfterPublicationToConsiderCardAsNotAcknowleged;
+    public setSecondsAfterPublicationToConsiderCardAsNotAcknowledged(secondsAfterPublicationToConsiderCardAsNotAcknowledged: number) {
+        this.secondsAfterPublicationToConsiderCardAsNotAcknowledged = secondsAfterPublicationToConsiderCardAsNotAcknowledged;
         return this;
     }
 
@@ -65,7 +65,7 @@ export default class AcknowledgementChecker {
         this.cardsAlreadySent.clear();
     }
 
-    public async checkAcknowlegment() {
+    public async checkAcknowledgment() {
         const cardFilters = [];
         cardFilters.push(this.processStatesFilter);
         const now = Date.now(); 
@@ -84,7 +84,7 @@ export default class AcknowledgementChecker {
                 recipients = this.removeElementsFromArray(recipients, card.entityRecipientsForInformation);
 
             if (recipients && (!card.entitiesAcks || card.entitiesAcks.length < recipients.length) 
-                && card.publishDate < now - (this.secondsAfterPublicationToConsiderCardAsNotAcknowleged  * 1000)
+                && card.publishDate < now - (this.secondsAfterPublicationToConsiderCardAsNotAcknowledged  * 1000)
                 && !this.cardsAlreadySent.has(card.uid)) {
                     
                 this.logger.info(card.uid + ' not ackmowledged');

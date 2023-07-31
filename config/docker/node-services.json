@@ -88,8 +88,8 @@
         "severity": "ALARM"
       },
       "windowInSecondsForCardSearch": 1200,
-      "secondsBetweenAcknowledmentChecks": 10,
-      "secondsAfterPublicationToConsiderCardAsNotAcknowleged": 600
+      "secondsBetweenAcknowledgmentChecks": 10,
+      "secondsAfterPublicationToConsiderCardAsNotAcknowledged": 600
     }
 
   }
