@@ -33,24 +33,24 @@ describe('Business menu', () => {
 
         feed.openFirstCard();
         clickLinkInsideCard();
-        checkUrlDisplayedIs('https://en.wikipedia.org/w/index.php?search=chart&fulltext=1&opfab_theme=NIGHT');
+        opfab.checkUrlDisplayedIs('https://en.wikipedia.org/w/index.php?search=chart&fulltext=1&opfab_theme=NIGHT');
 
         openBusinessDropdownMenu();
         checkDropdownMenuIconLinks();
         closeBusinessDropdownMenu();
         openBusinessDropdownMenu();
         clickOnDropdownMenuEntryNumber(1);
-        checkUrlDisplayedIs('https://opfab.github.io/?opfab_theme=NIGHT');
+        opfab.checkUrlDisplayedIs('https://opfab.github.io/?opfab_theme=NIGHT');
         openBusinessDropdownMenu();
         clickOnDropdownMenuEntryNumber(2);
-        checkUrlDisplayedIs('https://www.wikipedia.org/?opfab_theme=NIGHT');
+        opfab.checkUrlDisplayedIs('https://www.wikipedia.org/?opfab_theme=NIGHT');
         openBusinessDropdownMenu();
         clickOnDropdownMenuEntryNumber(3);
-        checkUrlDisplayedIs('http://localhost:2002/external/appExample/?opfab_theme=NIGHT');
+        opfab.checkUrlDisplayedIs('http://localhost:2002/external/appExample/?opfab_theme=NIGHT');
 
         openBusinessSingleMenu();
         checkSingleMenuIconLink();
-        checkUrlDisplayedIs('https://en.wikipedia.org/w/index.php?opfab_theme=NIGHT');
+        opfab.checkUrlDisplayedIs('https://en.wikipedia.org/w/index.php?opfab_theme=NIGHT');
     });
 
     it(
@@ -67,7 +67,7 @@ describe('Business menu', () => {
 
             feed.openFirstCard();
             clickLinkInsideCard();
-            checkUrlDisplayedIs('https://en.wikipedia.org/w/index.php?search=chart&fulltext=1&opfab_theme=DAY');
+            opfab.checkUrlDisplayedIs('https://en.wikipedia.org/w/index.php?search=chart&fulltext=1&opfab_theme=DAY');
 
             openBusinessDropdownMenu();
             checkDropdownMenuIconLinks();
@@ -75,26 +75,22 @@ describe('Business menu', () => {
             openBusinessDropdownMenu();
 
             clickOnDropdownMenuEntryNumber(1);
-            checkUrlDisplayedIs('https://opfab.github.io/?opfab_theme=DAY');
+            opfab.checkUrlDisplayedIs('https://opfab.github.io/?opfab_theme=DAY');
             openBusinessDropdownMenu();
             clickOnDropdownMenuEntryNumber(2);
-            checkUrlDisplayedIs('https://www.wikipedia.org/?opfab_theme=DAY');
+            opfab.checkUrlDisplayedIs('https://www.wikipedia.org/?opfab_theme=DAY');
             openBusinessDropdownMenu();
             clickOnDropdownMenuEntryNumber(3);
-            checkUrlDisplayedIs('http://localhost:2002/external/appExample/?opfab_theme=DAY');
+            opfab.checkUrlDisplayedIs('http://localhost:2002/external/appExample/?opfab_theme=DAY');
 
             openBusinessSingleMenu();
             checkSingleMenuIconLink();
-            checkUrlDisplayedIs('https://en.wikipedia.org/w/index.php?opfab_theme=DAY');
+            opfab.checkUrlDisplayedIs('https://en.wikipedia.org/w/index.php?opfab_theme=DAY');
         }
     );
 
     function clickLinkInsideCard() {
         cy.get('#opfab-div-card-template-processed').find('a').eq(0).click();
-    }
-
-    function checkUrlDisplayedIs(url) {
-        cy.get('iframe').invoke('attr', 'src').should('eq', url);
     }
 
     function openBusinessDropdownMenu() {

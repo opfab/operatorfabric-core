@@ -34,6 +34,7 @@ describe ('Core menu configuration tests',function () {
         {menu_id: "realtimeusers", selector: "#opfab-navbar-right-menu-realtimeusers"},
         {menu_id: "nightdaymode", selector: "#opfab-navbar-right-menu-night-mode, #opfab-navbar-right-menu-day-mode"},
         {menu_id: "about", selector: "#opfab-navbar-right-menu-about"},
+        {menu_id: "changepassword", selector: "#opfab-navbar-right-menu-change-password"},
         {menu_id: "logout", selector: "#opfab-navbar-right-menu-logout"}
     ];
 
@@ -77,11 +78,8 @@ describe ('Core menu configuration tests',function () {
                 userMenuItems.forEach((item) => {
                     cy.get(item.selector).should('not.exist'); // Check that the corresponding element is not present
                 })
-
-
             })
         })
-
     })
 
     describe('Check behaviour if menu is defined and visibility is false', function () {
@@ -174,7 +172,7 @@ describe ('Core menu configuration tests',function () {
 
         })
 
-        it('Menu should be not be visible for operator1_fr', ()=>{
+        it('Menu should not be visible for operator1_fr', ()=>{
             script.configureMenuForAdminGroup();
             opfab.loginWithUser('operator1_fr');
 
@@ -189,9 +187,20 @@ describe ('Core menu configuration tests',function () {
             adminMenuItems.forEach((item) => {
                 cy.get(item.selector).should('not.exist'); // Check that the corresponding element is not present
             })
-
         })
+    })
 
+    describe('Check behaviour of "change password" menu item', function () {
+
+        it('Check url of change password screen is displayed', ()=>{
+            script.configureMenuVisibleForAllUsers();
+            opfab.loginWithUser('operator1_fr');
+
+            cy.get('#opfab-navbarContent').find('#opfab-navbar-drop-user-menu').click();
+            cy.get('#opfab-navbar-right-menu-change-password').should('exist').click();
+
+            opfab.checkUrlDisplayedIs('http://localhost:89/auth/realms/dev/account/#/security/signingin');
+        })
     })
 
     describe('Check behaviour for edge cases', function () {
@@ -237,11 +246,6 @@ describe ('Core menu configuration tests',function () {
             script.updateCoreMenuInConf(item.menu_id,"showOnlyForGroups",'[\\\"ADMIN\\\"]');
             cy.reload();
             cy.get(item.selector).should('not.exist');
-
         })
-
-
     })
-
-
 })
