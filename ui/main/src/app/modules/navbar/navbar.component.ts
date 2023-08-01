@@ -28,11 +28,14 @@ export class NavbarComponent implements OnInit {
 
     navbarCollapsed = true;
     navigationRoutes: Route[] = [];
+    navigationRoutesMap: Map<string, Route>;
     currentRoute = '';
     businessconfigMenus: CustomMenu[];
+    businessconfigMenusMap: Map<string, CustomMenu>;
     openDropdownPopover: NgbPopover;
     currentDropdownHovered;
     showDropdownMenuEvenIfOnlyOneEntry = false;
+    navigationBar: any[];
 
     modalRef: NgbModalRef;
     @ViewChild('userCard') userCardTemplate: ElementRef;
@@ -129,6 +132,10 @@ export class NavbarComponent implements OnInit {
         if (this.environmentName) this.displayEnvironmentName = true;
 
         this.styleMode = this.globalStyleService.getStyleChange();
+
+        this.navigationRoutesMap = new Map(this.navigationRoutes.map(element => [element.path, element]));
+        this.businessconfigMenusMap = new Map(this.businessconfigMenus.map(element => [element.id, element]));
+        this.navigationBar = this.configService.getNavigationBar();
     }
 
     logOut() {
