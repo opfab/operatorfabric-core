@@ -34,10 +34,12 @@
           <th scope="col"></th>
           <th scope="col" *ngIf="isCollapsibleUpdatesActivated"></th>
           <th scope="col" style="padding-left: 5px" translate>shared.result.publishDate</th>
-          <th scope="col" translate>shared.result.businessPeriod</th>
+          <th scope="col" translate>shared.result.emitter</th>
+          <th scope="col" translate>shared.result.entityRecipients</th>
           <th scope="col" translate>shared.result.title</th>
           <th scope="col" translate>shared.result.summary</th>
           <th *ngIf="filtersTemplate.isProcessGroupFilterVisible()" scope="col" translate>shared.result.processGroup</th>
+          <th scope="col" translate>shared.result.process</th>
         </tr>
       </thead>
 
@@ -46,14 +48,24 @@
         <tr  (click)="openCard(updates.mostRecent.id)" class="opfab-archives-table-line" style="cursor: pointer;">
           <td style ="min-width: 15px" class="opfab-archive-sev opfab-archive-sev-{{updates.mostRecent.severity.toLowerCase()}}"></td>
           <td class="opfab-archive-sev"></td>
-          <td *ngIf="isCollapsibleUpdatesActivated && updates.cardHistories.length > 0 && !updates.displayHistory" class="opfab-archives-icon-plus" (click)="$event.stopPropagation();displayHistoryOfACard(updates)"></td>
-          <td *ngIf="isCollapsibleUpdatesActivated && updates.cardHistories.length > 0 && updates.displayHistory" class="opfab-archives-icon-minus" (click)="$event.stopPropagation();hideHistoryOfACard(updates)"></td>
+          <td *ngIf="isCollapsibleUpdatesActivated && updates.cardHistories.length > 0 && !updates.displayHistory" style="width: 32px;" (click)="$event.stopPropagation();displayHistoryOfACard(updates)">
+            <div class="opfab-archives-icon-plus"></div>
+          </td>
+          <td *ngIf="isCollapsibleUpdatesActivated && updates.cardHistories.length > 0 && updates.displayHistory" style="width: 32px;" (click)="$event.stopPropagation();hideHistoryOfACard(updates)">
+            <div class="opfab-archives-icon-minus"></div>
+          </td>
           <td *ngIf="isCollapsibleUpdatesActivated && ! updates.cardHistories.length"></td>
-          <td style="padding-left: 5px;min-width: 114px"> {{displayTime(updates.mostRecent.publishDate)}} </td>
-          <td style ="min-width: 242px"> {{displayTime(updates.mostRecent.startDate)}} - {{displayTime(updates.mostRecent.endDate)}} </td>
-          <td>{{updates.mostRecent.titleTranslated | opfabTitleCase}}</td>
-          <td>{{updates.mostRecent.summaryTranslated}}</td>
-          <td style ="min-width: 130px" *ngIf="filtersTemplate.isProcessGroupFilterVisible()" translate>{{ processesService.findProcessGroupLabelForProcess(updates.mostRecent.process) }}</td>
+          <td style="padding-left: 5px;min-width: 150px"> {{ displayTime(updates.mostRecent.publishDate) }} </td>
+          <td style ="min-width: 180px">{{ entitiesService.getEntityName(updates.mostRecent.publisher) }}</td>
+          <td style ="min-width: 180px"
+          [ngbPopover]="entityRecipientsTooltip" #p="ngbPopover" popoverClass="opfab-popover-unclickable" placement="top" container="body" [popoverContext]="{recipientsId: updates.mostRecent.entityRecipients}"
+          triggers="manual" (mouseenter)="updates.mostRecent.entityRecipients?.length > 2 && p.open()" (mouseleave)="p.close()">
+            <ng-container *ngFor="let recipient of getEntityRecipientsNames(updates.mostRecent.entityRecipients, 2)">{{ recipient }}<br/></ng-container>
+          </td>
+          <td style ="min-width: 280px">{{ updates.mostRecent.titleTranslated | opfabTitleCase }}</td>
+          <td style ="min-width: 280px">{{ updates.mostRecent.summaryTranslated }}</td>
+          <td style ="min-width: 150px" *ngIf="filtersTemplate.isProcessGroupFilterVisible()" translate>{{ processesService.findProcessGroupLabelForProcess(updates.mostRecent.process) }}</td>
+          <td style ="min-width: 150px">{{ getProcessName(updates.mostRecent.process) }}</td>
         </tr>
 
         <!--history of the card-->
@@ -62,11 +74,17 @@
             <td class="opfab-archive-sev"></td>
             <td class="opfab-archive-sev opfab-archive-sev-{{historyCard.severity.toLowerCase()}}"></td>
             <td></td>
-            <td style="padding-left: 30px"> {{displayTime(historyCard.publishDate)}} </td>
-            <td style="padding-left: 30px"> {{displayTime(historyCard.startDate)}} - {{displayTime(historyCard.endDate)}} </td>
-            <td style="padding-left: 30px"> {{historyCard.titleTranslated | opfabTitleCase}}</td>
-            <td style="padding-left: 30px"> {{historyCard.summaryTranslated}}</td>
+            <td style="padding-left: 30px"> {{ displayTime(historyCard.publishDate) }} </td>
+            <td style="padding-left: 30px">{{ entitiesService.getEntityName(historyCard.publisher) }}</td>
+            <td style="padding-left: 30px"
+            [ngbPopover]="entityRecipientsTooltip" #p="ngbPopover" popoverClass="opfab-popover-unclickable" placement="top" container="body" [popoverContext]="{recipientsId: historyCard.entityRecipients}"
+            triggers="manual" (mouseenter)="historyCard.entityRecipients?.length > 2 && p.open()" (mouseleave)="p.close()">
+              <ng-container *ngFor="let recipient of getEntityRecipientsNames(historyCard.entityRecipients, 2)">{{ recipient }}<br/></ng-container>
+            </td>
+            <td style="padding-left: 30px"> {{ historyCard.titleTranslated | opfabTitleCase }}</td>
+            <td style="padding-left: 30px"> {{ historyCard.summaryTranslated }}</td>
             <td style="padding-left: 30px" *ngIf="filtersTemplate.isProcessGroupFilterVisible()" translate>{{ processesService.findProcessGroupLabelForProcess(historyCard.process) }}</td>
+            <td style="padding-left: 30px">{{ getProcessName(historyCard.process) }}</td>
           </tr>
           <tr *ngIf="updates.tooManyRows">
             <td colspan="3"></td>
@@ -74,6 +92,10 @@
             <td *ngIf="filtersTemplate.isProcessGroupFilterVisible()"></td>
           </tr>
         </ng-container>
+
+        <ng-template #entityRecipientsTooltip let-recipientsId="recipientsId">
+          <div *ngFor="let recipient of getEntityRecipientsNames(recipientsId)" style="margin-bottom: 5px;">{{ recipient }}</div>
+        </ng-template>
       </ng-container>
       </tbody>
     </table>

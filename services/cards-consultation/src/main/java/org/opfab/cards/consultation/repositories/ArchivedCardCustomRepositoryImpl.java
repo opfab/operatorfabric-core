@@ -109,7 +109,8 @@ public class ArchivedCardCustomRepositoryImpl implements ArchivedCardCustomRepos
         "severity",
         "publisherType",
         "representative",
-        "representativeType"};
+        "representativeType",
+        "entityRecipients"};
         Aggregation agg = newAggregation( this.getFilterOperations(filter,pageableRequest, fields));
         Aggregation countAgg = newAggregation( this.getFilterOperationsForCount(filter));
 

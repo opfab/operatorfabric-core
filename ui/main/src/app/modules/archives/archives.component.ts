@@ -27,6 +27,7 @@ import {CardsFilter} from '@ofModel/cards-filter.model';
 import {DateTimeFormatterService} from 'app/business/services/date-time-formatter.service';
 import {CardService} from 'app/business/services/card/card.service';
 import {TranslationService} from 'app/business/services/translation/translation.service';
+import {EntitiesService} from 'app/business/services/users/entities.service';
 
 @Component({
     selector: 'of-archives',
@@ -86,6 +87,7 @@ export class ArchivesComponent implements OnDestroy, OnInit {
 
     constructor(
         private processesService: ProcessesService,
+        private entitiesService: EntitiesService,
         private configService: ConfigService,
         private dateTimeFormatter: DateTimeFormatterService,
         private cardService: CardService,
@@ -300,10 +302,12 @@ export class ArchivesComponent implements OnDestroy, OnInit {
 
                 const severityColumnName = this.translateColumn('shared.result.severity');
                 const publishDateColumnName = this.translateColumn('shared.result.publishDate');
-                const businessDateColumnName = this.translateColumn('shared.result.businessPeriod');
+                const publisherColumnName = this.translateColumn('shared.result.emitter');
+                const entityRecipientsColumnName = this.translateColumn('shared.result.entityRecipients');
                 const titleColumnName = this.translateColumn('shared.result.title');
                 const summaryColumnName = this.translateColumn('shared.result.summary');
                 const processGroupColumnName = this.translateColumn('shared.result.processGroup');
+                const processColumnName = this.translateColumn('shared.result.process');
 
                 lines.forEach((card: LightCard) => {
                     if (card) {
@@ -313,13 +317,14 @@ export class ArchivesComponent implements OnDestroy, OnInit {
                                 [publishDateColumnName]: this.dateTimeFormatter.getFormattedDateAndTimeFromEpochDate(
                                     card.publishDate
                                 ),
-                                [businessDateColumnName]:
-                                    this.displayTime(card.startDate) + '-' + this.displayTime(card.endDate),
+                                [publisherColumnName]: this.entitiesService.getEntityName(card.publisher),
+                                [entityRecipientsColumnName]: this.getEntityRecipientsNames(card.entityRecipients).join(', '),
                                 [titleColumnName]: card.titleTranslated,
                                 [summaryColumnName]: card.summaryTranslated,
                                 [processGroupColumnName]: this.translateColumn(
                                     this.processesService.findProcessGroupLabelForProcess(card.process)
-                                )
+                                ),
+                                [processColumnName]: this.getProcessName(card.process)
                             });
                         else
                             exportArchiveData.push({
@@ -327,10 +332,11 @@ export class ArchivesComponent implements OnDestroy, OnInit {
                                 [publishDateColumnName]: this.dateTimeFormatter.getFormattedDateAndTimeFromEpochDate(
                                     card.publishDate
                                 ),
-                                [businessDateColumnName]:
-                                    this.displayTime(card.startDate) + '-' + this.displayTime(card.endDate),
+                                [publisherColumnName]: this.entitiesService.getEntityName(card.publisher),
+                                [entityRecipientsColumnName]: this.getEntityRecipientsNames(card.entityRecipients).join(', '),
                                 [titleColumnName]: card.titleTranslated,
-                                [summaryColumnName]: card.summaryTranslated
+                                [summaryColumnName]: card.summaryTranslated,
+                                [processColumnName]: this.getProcessName(card.process)
                             });
                     }
                 });
@@ -388,6 +394,28 @@ export class ArchivesComponent implements OnDestroy, OnInit {
 
     getFormattedTime(date: number): any {
         return this.dateTimeFormatter.getFormattedTimeFromEpochDate(date);
+    }
+
+    getEntityRecipientsNames(entityRecipients: string[], maxLength?: number): string[] {
+        if (entityRecipients) {
+            let entityRecipientsNames = [];
+
+            entityRecipients.forEach((entityId) => {
+                entityRecipientsNames.push(this.entitiesService.getEntityName(entityId));
+            });
+
+            if (maxLength && entityRecipientsNames.length > maxLength) {
+                entityRecipientsNames = entityRecipientsNames.slice(0, maxLength);
+                entityRecipientsNames[entityRecipientsNames.length - 1] += ' ...';
+            }
+            return entityRecipientsNames;
+        }
+        return [];
+    }
+
+    getProcessName(processId: string): string {
+        const process = this.processesService.getProcess(processId);
+        return process?.name ?? processId;
     }
 
     ngOnDestroy() {
