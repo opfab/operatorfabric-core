@@ -52,7 +52,8 @@
       "answer": "ANTWOORD",
       "emitter": "ZENDER",
       "entitiesResponses": "ANTWOORDEN",
-      "requiredResponses": "VEREISTE ANTWOORDEN"
+      "requiredResponses": "VEREISTE ANTWOORDEN",
+      "entityRecipients": "ONTVANGERS ENTITEITEN"
     },
     "exportInProgress": "Bezig met exporteren",
     "loadingInProgress": "Bezig met laden",
