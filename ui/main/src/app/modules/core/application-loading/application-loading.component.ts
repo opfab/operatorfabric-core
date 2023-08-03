@@ -235,7 +235,8 @@ export class ApplicationLoadingComponent implements OnInit {
             this.userService.loadUserWithPerimetersData(),
             this.entitiesService.loadAllEntitiesData(),
             this.groupsService.loadAllGroupsData(),
-            this.processesService.loadAllProcesses(),
+            this.processesService.loadAllProcessesWithLatestVersion(),
+            this.processesService.loadAllProcessesWithAllVersions(),
             this.processesService.loadProcessGroups(),
             this.processesService.loadMonitoringConfig()
         ];

@@ -28,8 +28,9 @@ import {ServerResponseStatus} from '../../server/serverResponse';
     providedIn: 'root'
 })
 export class ProcessesService {
-    private processCache = new Map();
-    private processes: Process[];
+    private processesWithAllVersionsCache = new Map();
+    private processesWithLatestVersionOnly: Process[];
+    private processesWithAllVersions: Process[];
     private processGroups = new Map<string, {name: string; processes: string[]}>();
     private monitoringConfig: MonitoringConfig;
 
@@ -41,21 +42,40 @@ export class ProcessesService {
         private configServer: ConfigServer
     ) {}
 
-    public loadAllProcesses(): Observable<any> {
+    public loadAllProcessesWithLatestVersion(): Observable<any> {
         return this.queryAllProcesses().pipe(
             map((processesLoaded) => {
                 if (processesLoaded) {
-                    this.processes = processesLoaded;
-                    if (this.processes.length === 0) {
+                    this.processesWithLatestVersionOnly = processesLoaded;
+                    if (this.processesWithLatestVersionOnly.length === 0) {
                         console.log(new Date().toISOString(), 'WARNING : no processes configured');
                     } else {
-                        this.loadAllProcessesInCache();
                         console.log(new Date().toISOString(), 'List of processes loaded');
                     }
                 }
             }),
             catchError((error) => {
                 console.error(new Date().toISOString(), 'An error occurred when loading all processes', error);
+                return of(error);
+            })
+        );
+    }
+
+    public loadAllProcessesWithAllVersions(): Observable<any> {
+        return this.queryAllProcessesWithAllVersions().pipe(
+            map((processesLoaded) => {
+                if (processesLoaded) {
+                    this.processesWithAllVersions = processesLoaded;
+                    if (this.processesWithAllVersions.length === 0) {
+                        console.log(new Date().toISOString(), 'WARNING : no processes configured');
+                    } else {
+                        this.loadAllProcessesWithAllVersionsInCache();
+                        console.log(new Date().toISOString(), 'List of all versions of processes loaded');
+                    }
+                }
+            }),
+            catchError((error) => {
+                console.error(new Date().toISOString(), 'An error occurred when loading all versions of processes', error);
                 return of(error);
             })
         );
@@ -83,11 +103,11 @@ export class ProcessesService {
         );
     }
 
-    private loadAllProcessesInCache() {
-        this.processes.forEach((process) => {
-            this.processCache.set(
-                `${process.id}.${process.version}`,
-                Object.setPrototypeOf(process, Process.prototype)
+    private loadAllProcessesWithAllVersionsInCache() {
+        this.processesWithAllVersions.forEach((processInSomeVersion) => {
+            this.processesWithAllVersionsCache.set(
+                `${processInSomeVersion.id}.${processInSomeVersion.version}`,
+                Object.setPrototypeOf(processInSomeVersion, Process.prototype)
             );
         });
     }
@@ -108,7 +128,7 @@ export class ProcessesService {
     }
 
     public getAllProcesses(): Process[] {
-        return this.processes;
+        return this.processesWithLatestVersionOnly;
     }
 
     public getProcessGroups(): Map<string, {name: string; processes: string[]}> {
@@ -126,11 +146,11 @@ export class ProcessesService {
     }
 
     public getProcess(processId: string): Process {
-        return this.processes.find((process) => processId === process.id);
+        return this.processesWithLatestVersionOnly.find((process) => processId === process.id);
     }
 
     public getProcessWithVersion(processId: string, processVersion: string): Process {
-        return this.processes.find((process) => (processId === process.id && processVersion === process.version));
+        return this.processesWithAllVersionsCache.get(processId + "." + processVersion);
     }
 
     public getProcessGroupsAndLabels(): {
@@ -182,20 +202,32 @@ export class ProcessesService {
         );
     }
 
+    queryAllProcessesWithAllVersions(): Observable<Process[]> {
+        return this.processServer.getAllProcessesWithAllVersions().pipe(
+            map((response) => {
+                if (response.status !== ServerResponseStatus.OK) {
+                    console.error(new Date().toISOString(), 'An error occurred when loading all versions of processes');
+                    return new Array<Process>();
+                }
+                return response.data;
+            })
+        );
+    }
+
     queryProcessGroups(): Observable<any> {
         return this.processServer.getProcessGroups();
     }
 
     queryProcess(id: string, version: string): Observable<Process> {
         const key = `${id}.${version}`;
-        const process = this.processCache.get(key);
+        const process = this.processesWithAllVersionsCache.get(key);
         if (process) {
             return of(process);
         }
         return this.processServer.getProcessDefinition(id, version).pipe(
             map((response) => {
                 if (response.status === ServerResponseStatus.OK && response.data)
-                    this.processCache.set(key, response.data);
+                    this.processesWithAllVersionsCache.set(key, response.data);
                 else
                     console.log(
                         new Date().toISOString(),
@@ -273,7 +305,7 @@ export class ProcessesService {
     private loadTypeOfStatesPerProcessAndState() {
         this.typeOfStatesPerProcessAndState = new Map();
 
-        for (const process of this.processes) {
+        for (const process of this.processesWithLatestVersionOnly) {
             process.states.forEach((state, stateid) => {
                 this.typeOfStatesPerProcessAndState.set(process.id + '.' + stateid, state.type);
             });

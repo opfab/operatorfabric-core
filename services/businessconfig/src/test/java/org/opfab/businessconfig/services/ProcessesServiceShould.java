@@ -72,7 +72,7 @@ class ProcessesServiceShould {
 
     @Test
     void listProcesses() {
-        assertThat(service.listProcesses()).hasSize(2);
+        assertThat(service.listProcesses(null)).hasSize(2);
     }
 
     @Test
@@ -226,7 +226,7 @@ class ProcessesServiceShould {
                 assertThat(process.getStates()).hasSize(1);
                 assertThat(process.getStates().get("firstState").getTemplateName()).isEqualTo("template");
                 assertThat(process.getStates().get("firstState").getResponse().getExternalRecipients()).hasSize(2);
-                assertThat(service.listProcesses()).hasSize(3);
+                assertThat(service.listProcesses(null)).hasSize(3);
             } catch (IOException e) {
                 log.trace("rethrowing exception");
                 throw e;
@@ -341,7 +341,7 @@ class ProcessesServiceShould {
                 @Test
                 void clean() throws IOException {
                     service.clear();
-                    assertThat(service.listProcesses()).isEmpty();
+                    assertThat(service.listProcesses(null)).isEmpty();
                 }
             }
         }

@@ -117,8 +117,8 @@ public class BusinessconfigController implements BusinessconfigApi {
     }
 
     @Override
-    public List<Process> getProcesses(HttpServletRequest request, HttpServletResponse response) {
-        return processService.listProcesses();
+    public List<Process> getProcesses(HttpServletRequest request, HttpServletResponse response, Boolean allVersions) {
+        return processService.listProcesses(allVersions);
     }
 
     @Override

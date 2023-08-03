@@ -16,11 +16,18 @@ schemes:
 paths:
   /businessconfig/processes:
     get:
-      summary: List latest version of existing processes
-      description: List latest version of existing processes
+      summary: List existing processes.
+      description: List existing processes. If the query parameter allVersions is absent or set to false, only the latest
+        version of the processes will be returned.
       operationId: getProcesses
       produces:
         - application/json
+      parameters:
+        - name: allVersions
+          in: query
+          required: false
+          description: If true, all versions of processes will be returned.
+          type: boolean
       responses:
         '200':
           description: OK
