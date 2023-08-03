@@ -19,7 +19,7 @@
             <ng-template #tipLoadingInProgress>
                 <span translate>feed.tips.loadingInProgress</span>
             </ng-template>
-            <div [ngbPopover]="tipLoadingInProgress" popoverClass="opfab-popover" container="body"
+            <div [ngbPopover]="tipLoadingInProgress" popoverClass="opfab-popover-unclickable" container="body"
             triggers="mouseenter:mouseleave">
             <em  class="fas fa-spinner fa-spin opfab-slow-spinner"  ></em>
             </div>

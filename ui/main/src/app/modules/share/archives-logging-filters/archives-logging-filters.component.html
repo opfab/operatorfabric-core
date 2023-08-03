@@ -11,7 +11,7 @@
     <div *ngIf="hasCurrentUserRightsToViewAllArchivedCards" style="display: flex; justify-content: center; padding-top: 10px">
         <a id='opfab-admin-mode-link' class="opfab-link" (click)="toggleAdminMode()"><span translate>shared.goToAdminMode</span></a>
         <div id="opfab-admin-mode-help" class="opfab-icon-help" placement="auto" [ngbPopover]="helpContent" style="margin-top: 5px"
-             container="body" triggers="mouseenter:mouseleave" popoverClass="opfab-popover">
+             container="body" triggers="mouseenter:mouseleave" popoverClass="opfab-popover-unclickable">
         </div>
     </div>
 </ng-template>
@@ -109,7 +109,7 @@
                     <input type="checkbox" (click)="toggleAdminMode()" [checked]="isAdminModeChecked">
                     <span class="opfab-checkbox-checkmark"></span>
                     <div id="opfab-archives-logging-admin-help" class="opfab-icon-help" placement="auto" [ngbPopover]="helpContent"
-                         container="body" triggers="mouseenter:mouseleave" popoverClass="opfab-popover">
+                         container="body" triggers="mouseenter:mouseleave" popoverClass="opfab-popover-unclickable">
                     </div>
                 </label>
                 <button id="opfab-archives-logging-btn-search" [ngClass]="isCurrentUserInAdminGroup ? 'opfab-btn opfab-btn-search-admin-mode' : 'opfab-btn'" (click)='query()' translate>button.search</button>

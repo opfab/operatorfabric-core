@@ -61,7 +61,7 @@
       </ng-template>
       <li id="opfab-newcard-menu" style="display:flex;margin-top: 12px;cursor:pointer;margin-right:20px" (click)="openCardCreation()" *ngIf="(displayCreateUserCard)">
         <span class="opfab-menu-icon-newcard"
-        [ngbPopover]="createNewCard" popoverClass="opfab-popover" container="body"
+        [ngbPopover]="createNewCard" popoverClass="opfab-popover-unclickable" container="body"
         triggers="mouseenter:mouseleave" >></span>
         </li> 
      <ng-template #calendartooltip>
@@ -69,7 +69,7 @@
     </ng-template>
       <li id="opfab-calendar-menu" style="display:flex;margin-top: 12px;cursor:pointer;" [routerLink]="'calendar'" routerLinkActive #rla="routerLinkActive" *ngIf="(displayCalendar)">
         <a  href="javascript:void(0)" [class.active]="(currentRoute.includes('calendar'))" class="opfab-menu-icon-calendar"
-        [ngbPopover]="calendartooltip" popoverClass="opfab-popover" container="body"
+        [ngbPopover]="calendartooltip" popoverClass="opfab-popover-unclickable" container="body"
         triggers="mouseenter:mouseleave"></a>
      </li>
 

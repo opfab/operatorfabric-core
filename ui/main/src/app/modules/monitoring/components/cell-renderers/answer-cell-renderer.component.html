@@ -1,4 +1,4 @@
-<!-- Copyright (c) 2021, RTE (http://www.rte-france.com)                   -->
+<!-- Copyright (c) 2021-2023, RTE (http://www.rte-france.com)                   -->
 <!-- See AUTHORS.txt                                                       -->
 <!-- This Source Code Form is subject to the terms of the Mozilla Public   -->
 <!-- License, v. 2.0. If a copy of the MPL was not distributed with this   -->
@@ -10,6 +10,6 @@
     <span translate>monitoring.tips.hasAResponseFromYourEntity</span>
 </ng-template>
 <em *ngIf="params.value" 
-    [ngbPopover]="tipHasAResponseFromYourEntity" popoverClass="opfab-popover" container="body"
+    [ngbPopover]="tipHasAResponseFromYourEntity" popoverClass="opfab-popover-unclickable" container="body"
     triggers="mouseenter:mouseleave"
     style="color: #0082FF;" class="fa fa-reply"></em>

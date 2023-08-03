@@ -1,4 +1,4 @@
-<!-- Copyright (c) 2022, RTE (http://www.rte-france.com)              -->
+<!-- Copyright (c) 2022-2023, RTE (http://www.rte-france.com)              -->
 <!-- See AUTHORS.txt                                                       -->
 <!-- This Source Code Form is subject to the terms of the Mozilla Public   -->
 <!-- License, v. 2.0. If a copy of the MPL was not distributed with this   -->
@@ -23,7 +23,7 @@
 
       <div id="opfab-card-response-header-right" style="width:70%;text-align: right">
             <div id="opfab-answer-help" class="opfab-icon-help" placement="left" [ngbPopover]="helpContent"
-                  container="body" triggers="mouseenter:mouseleave" popoverClass="opfab-popover">
+                  container="body" triggers="mouseenter:mouseleave" popoverClass="opfab-popover-unclickable">
             </div>
             <span translate>response.answers</span> :
             <span *ngFor="let entity of listVisibleEntitiesToRespond; let isLast = last"
