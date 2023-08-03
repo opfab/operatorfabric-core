@@ -31,7 +31,7 @@
                             <span translate>feed.tips.hasAResponseFromYourEntity</span>
                         </ng-template>
                         <span *ngIf="lightCard.hasChildCardFromCurrentUserEntity" id="opfab-feed-lightcard-hasChildCardFromCurrentUserEntity" class="p-1"
-                            [ngbPopover]="tipHasAResponseFromYourEntity" popoverClass="opfab-popover" container="body"
+                            [ngbPopover]="tipHasAResponseFromYourEntity" popoverClass="opfab-popover-unclickable" container="body"
                             triggers="mouseenter:mouseleave">
                             <em style="color: #0082FF;" class="fa fa-reply"></em>
                         </span>
@@ -39,7 +39,7 @@
                             <span translate>feed.tips.acknowledged</span>
                         </ng-template>
                         <span *ngIf="this.lightCard.hasBeenAcknowledged" class="p-1"
-                              [ngbPopover]="tipAcknowledged" popoverClass="opfab-popover" container="body"
+                              [ngbPopover]="tipAcknowledged" popoverClass="opfab-popover-unclickable" container="body"
                               triggers="mouseenter:mouseleave">
                             <em style="color: #0082FF;" class="fa fa-check"></em>
                         </span>
@@ -47,7 +47,7 @@
                             <span translate>feed.tips.seeGroupedCards</span>
                         </ng-template>
                         <span *ngIf="showGroupedCardsIcon" class="p-1"
-                              [ngbPopover]="tipTags" popoverClass="opfab-popover" container="body"
+                              [ngbPopover]="tipTags" popoverClass="opfab-popover-unclickable" container="body"
                               triggers="mouseenter:mouseleave">
                             <em style="color: #0082FF;" class="fa " [class.fa-angle-down]="open" [class.fa-angle-left]="!open || !groupedCardsVisible"></em>
                         </span>
@@ -65,7 +65,7 @@
                         <of-countdown  *ngIf="!!lightCard.lttd" [lttd]="lightCard.lttd" [showExpiredIcon]="showExpiredIcon" [showExpiredLabel]="showExpiredLabel" [expiredLabel]="expiredLabel"></of-countdown>
 
                         <span *ngIf="lightCard.expirationDate" class="expiration-date" id="opfab-card-expiration-date"
-                              [ngbPopover]="this.expirationDateToDisplay" popoverClass="opfab-popover" container="body" placement="right"
+                              [ngbPopover]="this.expirationDateToDisplay" popoverClass="opfab-popover-unclickable" container="body" placement="right"
                               triggers="mouseenter:mouseleave">
                             <em style="color: #ff6600;margin-left: 8px;" class="fa fa-hourglass"></em>
                         </span>

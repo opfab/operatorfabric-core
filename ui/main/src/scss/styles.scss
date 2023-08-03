@@ -386,6 +386,11 @@ body {
     }
 }
 
+.opfab-popover-unclickable {
+    @extend .opfab-popover;
+    pointer-events: none;
+}
+
 .opfab-popover-with-scrolling {
     max-width: 800px;
     .popover-body {
