@@ -13,9 +13,10 @@ import {Observable} from 'rxjs';
 import {ServerResponse} from './serverResponse';
 
 export abstract class ProcessServer {
-    abstract getProcessDefinition(processId:string,processVersion:string): Observable<ServerResponse<Process>>;
+    abstract getProcessDefinition(processId:string, processVersion:string): Observable<ServerResponse<Process>>;
+    abstract getAllProcessesWithAllVersions(): Observable<ServerResponse<Process[]>>;
     abstract getAllProcessesDefinition(): Observable<ServerResponse<Process[]>>;
     abstract getProcessGroups() : Observable<ServerResponse<any>>;
-    abstract getTemplate(processid:string,processVersion:string,templateName:string) : Observable<ServerResponse<string>>;
-    abstract getCss(processId:string,version:string,cssName:string) : Observable<ServerResponse<string>>;
+    abstract getTemplate(processid:string, processVersion:string, templateName:string) : Observable<ServerResponse<string>>;
+    abstract getCss(processId:string, version:string, cssName:string) : Observable<ServerResponse<string>>;
 }

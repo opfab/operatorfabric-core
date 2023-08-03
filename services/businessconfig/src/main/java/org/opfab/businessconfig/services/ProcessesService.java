@@ -66,7 +66,7 @@ public class ProcessesService implements ResourceLoaderAware {
     private String storagePath;
     private ObjectMapper objectMapper;
     private Map<String, Process> defaultCache;
-    private Table<String,String, Process> completeCache;
+    private Table<String, String, Process> completeCache;
     private ResourceLoader resourceLoader;
     private LocalValidatorFactoryBean validator;
     private ProcessGroupsData processGroupsCache;
@@ -98,8 +98,12 @@ public class ProcessesService implements ResourceLoaderAware {
      *
      * @return registered processes
      */
-	public List<Process> listProcesses() {
-		return new ArrayList<>(defaultCache.values());		
+	public List<Process> listProcesses(Boolean allVersions) {
+        if ((allVersions == null) || Boolean.FALSE.equals(allVersions)) {
+            return new ArrayList<>(defaultCache.values());
+        } else {
+            return new ArrayList<>(completeCache.values());
+        }
 	}
 
     /**

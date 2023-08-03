@@ -53,7 +53,8 @@ export class ApplicationUpdateService {
                     this.logger.info('Update business config');
                     this.handlebarsService.clearCache();
                     this.templateCssService.clearCache();
-                    this.processService.loadAllProcesses().subscribe();
+                    this.processService.loadAllProcessesWithLatestVersion().subscribe();
+                    this.processService.loadAllProcessesWithAllVersions().subscribe();
                     this.processService.loadProcessGroups().subscribe();
                 }),
                 catchError((error, caught) => {

@@ -106,7 +106,8 @@ describe('Dashboard', () => {
         processServerMock.setResponseForAllProcessDefinition(
             new ServerResponse(processes, ServerResponseStatus.OK, null)
         );
-        await processesService.loadAllProcesses().subscribe();
+        await processesService.loadAllProcessesWithLatestVersion().subscribe();
+        await processesService.loadAllProcessesWithAllVersions().subscribe();
     }
 
     it('GIVEN an empty process list WHEN get dashboard THEN dashboard is empty', async () => {
@@ -114,7 +115,8 @@ describe('Dashboard', () => {
         processServerMock.setResponseForAllProcessDefinition(
             new ServerResponse(processes, ServerResponseStatus.OK, null)
         );
-        await processesService.loadAllProcesses().subscribe();
+        await processesService.loadAllProcessesWithLatestVersion().subscribe();
+        await processesService.loadAllProcessesWithAllVersions().subscribe();
         const userWithPerimeters = new UserWithPerimeters(null, new Array(), null, new Map());
         userServerMock.setResponseForCurrentUserWithPerimeter(new ServerResponse(userWithPerimeters, null, null));
 

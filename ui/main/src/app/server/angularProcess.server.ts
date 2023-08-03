@@ -58,6 +58,14 @@ export class AngularProcessServer extends AngularServer implements ProcessServer
         );
     }
 
+    getAllProcessesWithAllVersions(): Observable<ServerResponse<Process[]>> {
+        const params = new HttpParams().set('allVersions', true);
+        return this.processHttpResponse(this.httpClient.get(this.processesUrl, {
+            params: params,
+            responseType: 'text'
+        })).pipe(map((response) => this.convertProcessesStatesInResponseToMap(response)));
+    }
+
     convertProcessesStatesInResponseToMap(serverResponse: ServerResponse<any>): ServerResponse<Process[]> {
         let processes = null;
         if (serverResponse.status === ServerResponseStatus.OK) {

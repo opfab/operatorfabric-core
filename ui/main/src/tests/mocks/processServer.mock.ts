@@ -44,6 +44,9 @@ export class ProcessServerMock implements ProcessServer {
     getAllProcessesDefinition(): Observable<ServerResponse<Process[]>> {
         return this.allProcessSubject.asObservable();
     }
+    getAllProcessesWithAllVersions(): Observable<ServerResponse<Process[]>> {
+        return this.allProcessSubject.asObservable();
+    }
     getProcessGroups(): Observable<ServerResponse<any>> {
         return this.processGroupsSubject.asObservable();
     }
