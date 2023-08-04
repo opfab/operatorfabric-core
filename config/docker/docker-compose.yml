@@ -1,7 +1,7 @@
 version: '2.1'
 services:
   mongodb:
-    image: mongo:5.0.19-focal
+    image: mongo:6.0.9-rc0-jammy
     ports:
       - "27017:27017"
     environment:
