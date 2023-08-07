@@ -19,6 +19,7 @@ import CardsReminderOpfabServicesInterface from './domain/server-side/cardsRemin
 import CardsReminderService from './domain/client-side/cardsRemiderService';
 import {RRuleReminderService} from './domain/application/rruleReminderService';
 import RemindDatabaseService from './domain/server-side/remindDatabaseService';
+import AuthorizationService from './common/client-side/authorizationService';
 
 const app = express();
 app.disable("x-powered-by");
@@ -62,50 +63,61 @@ const opfabServicesInterface = new CardsReminderOpfabServicesInterface()
     .addListener(rruleReminderService)
     .addListener(reminderService);
 
+const authorizationService = new AuthorizationService()
+    .setAuthenticationService(authenticationService)
+    .setOpfabServicesInterface(opfabServicesInterface)
+    .setLogger(logger);
+
 const cardsReminderService = new CardsReminderService(opfabServicesInterface, rruleReminderService, reminderService, config.get('cardsReminder.checkPeriodInSeconds'), logger);
 
 
 app.get('/status', (req, res) => {
 
-    if (!authenticationService.authorize(req))
-        res.status(403).send();
-    else
-        res.send(activeOnStartUp);
+    authorizationService.isAdminUser(req).then(isAdmin => {
+        if (!isAdmin) 
+            res.status(403).send();
+        else 
+            res.send(cardsReminderService.isActive());
+    })
         
 });
 
 app.get('/start', (req, res) => {
 
-    if (!authenticationService.authorize(req))
-        res.status(403).send();
-    else {
-        cardsReminderService.start();
-        res.send('Start service');
-    }
+    authorizationService.isAdminUser(req).then(isAdmin => {
+        if (!isAdmin) 
+            res.status(403).send();
+        else {
+            cardsReminderService.start();
+            res.send('Start service');
+        }
+    })
 });
 
 app.get('/stop', (req, res) => {
 
-    if (!authenticationService.authorize(req))
-        res.status(403).send();
-    else {
-        logger.info('Stop card reminder service asked');
-        cardsReminderService.stop();
-        res.send('Stop service');
-    }
-
+    authorizationService.isAdminUser(req).then(isAdmin => {
+        if (!isAdmin) 
+            res.status(403).send();
+        else {
+            logger.info('Stop card reminder service asked');
+            cardsReminderService.stop();
+            res.send('Stop service');
+        }
+    })
 });
 
 app.get('/reset', (req, res) => {
 
-    if (!authenticationService.authorize(req))
-        res.status(403).send();
-    else {
-        logger.info('Reset card reminder service asked');
-        cardsReminderService.reset();
-        res.send('Reset service');
-    }
-
+    authorizationService.isAdminUser(req).then(isAdmin => {
+        if (!isAdmin) 
+            res.status(403).send();
+        else {
+            logger.info('Reset card reminder service asked');
+            cardsReminderService.reset();
+            res.send('Reset service');
+        }
+    })
 });
 
 app.listen(adminPort, () => {

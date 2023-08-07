@@ -9,11 +9,12 @@
 
 import {Request} from 'express';
 import jwt_decode from 'jwt-decode';
+import OpfabServicesInterface from '../server-side/opfabServicesInterface';
 
 export default class AuthenticationService {
     tokenExpireClaim: any;
     loginClaim: any = 'preferred_username';
-
+    opfabServicesInterface: OpfabServicesInterface;
     logger: any;
 
 
@@ -24,6 +25,11 @@ export default class AuthenticationService {
 
     public setLogger(logger: any) {
         this.logger = logger;
+        return this;
+    }
+
+    public setOpfabServicesInterface(opfabServicesInterface: OpfabServicesInterface) {
+        this.opfabServicesInterface = opfabServicesInterface;
         return this;
     }
 

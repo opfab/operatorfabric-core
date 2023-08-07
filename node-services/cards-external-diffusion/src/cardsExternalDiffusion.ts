@@ -13,6 +13,7 @@ import config from 'config';
 
 import logger from './common/server-side/logger';
 import AuthenticationService from './common/client-side/authenticationService'
+import AuthorizationService from './common/client-side/authorizationService'
 import SendMailService from './domain/server-side/sendMailService';
 import CardsExternalDiffusionOpfabServicesInterface from './domain/server-side/cardsExternalDiffusionOpfabServicesInterface';
 import CardsExternalDiffusionService from './domain/client-side/cardsExternalDiffusionService';
@@ -55,6 +56,13 @@ opfabServicesInterface.loadUsersData().catch(error =>
 );
 
 
+
+const authorizationService = new AuthorizationService()
+    .setAuthenticationService(authenticationService)
+    .setOpfabServicesInterface(opfabServicesInterface)
+    .setLogger(logger);
+
+
 const serviceConfig = configService.getConfig();
 
 const cardsExternalDiffusionService = new CardsExternalDiffusionService(opfabServicesInterface, mailService, serviceConfig, logger);
@@ -62,66 +70,63 @@ const cardsExternalDiffusionService = new CardsExternalDiffusionService(opfabSer
 
 app.get('/status', (req, res) => {
 
-    if (!authenticationService.authorize(req))
-        res.status(403).send();
-    else
-        res.send(activeOnStartUp);
-        
+    authorizationService.isAdminUser(req).then(isAdmin => {
+        if (!isAdmin) 
+            res.status(403).send();
+        else
+            res.send(cardsExternalDiffusionService.isActive());
+    });
 });
 
 app.get('/start', (req, res) => {
 
-    if (!authenticationService.authorize(req))
-        res.status(403).send();
-    else {
-        opfabServicesInterface.startListener();
-        cardsExternalDiffusionService.start();
-        res.send('Start service');
-    }
+    authorizationService.isAdminUser(req).then(isAdmin => {
+        if (!isAdmin) 
+            res.status(403).send();
+        else {
+            opfabServicesInterface.startListener();
+            cardsExternalDiffusionService.start();
+            res.send('Start service');
+        }
+    })
 });
 
 app.get('/stop', (req, res) => {
 
-    if (!authenticationService.authorize(req))
-        res.status(403).send();
-    else {
-        logger.info('Stop card external diffusion service asked');
-        cardsExternalDiffusionService.stop();
-        opfabServicesInterface.stopListener();
-        res.send('Stop service');
-    }
-
+    authorizationService.isAdminUser(req).then(isAdmin => {
+        if (!isAdmin) 
+            res.status(403).send();
+        else {
+            logger.info('Stop card external diffusion service asked');
+            cardsExternalDiffusionService.stop();
+            opfabServicesInterface.stopListener();
+            res.send('Stop service');
+        }
+    })
 });
 
 app.get('/config', (req, res) => {
-    if (!authenticationService.authorize(req))
-        res.status(403).send();
-    else {
-        res.send(configService.getConfig());
-    }
 
+    authorizationService.isAdminUser(req).then(isAdmin => {
+        if (!isAdmin) 
+            res.status(403).send();
+        else
+            res.send(configService.getConfig());
+    });
 });
 
 app.post('/config', (req, res) => {
 
-    if (!authenticationService.authorize(req))
-        res.status(403).send();
-    else {
-        const token = authenticationService.getRequestToken(req);
-
-        opfabServicesInterface.getUserWithPerimeters(token).then(userResp => {
-            logger.info("Got user data " + JSON.stringify(userResp.getData()));
-            if (!authenticationService.hasUserAnyPermission(userResp.getData(), ['ADMIN']))
-                res.status(403).send();
-            else {
-                logger.info('Reconfiguration asked: ' + JSON.stringify(req.body));
-                const updated = configService.patch(req.body);
-                cardsExternalDiffusionService.setConfiguration(updated);
-                res.send(updated);
-            }
-        })
-    }
-
+    authorizationService.isAdminUser(req).then(isAdmin => {
+        if (!isAdmin) 
+            res.status(403).send();
+        else {
+            logger.info('Reconfiguration asked: ' + JSON.stringify(req.body));
+            const updated = configService.patch(req.body);
+            cardsExternalDiffusionService.setConfiguration(updated);
+            res.send(updated);
+        }
+    })
 });
 
 app.listen(adminPort, () => {

@@ -89,6 +89,56 @@ Feature: Cards external diffusion
     And match response == {"id":'#notnull', uid: '#notnull'}
 
 
+Scenario: Start/Stop/Status API 
+
+    # Call API as non admin user should fail
+    Given url 'http://localhost:2106/status'
+	And header Authorization = 'Bearer ' + authTokenAsTSO
+    When method get
+    Then status 403
+
+    Given url 'http://localhost:2106/stop'
+	And header Authorization = 'Bearer ' + authTokenAsTSO
+    When method get
+    Then status 403
+
+    Given url 'http://localhost:2106/start'
+	And header Authorization = 'Bearer ' + authTokenAsTSO
+    When method get
+    Then status 403
+
+    # Call API as admin user
+    Given url 'http://localhost:2106/status'
+	And header Authorization = 'Bearer ' + authTokenAdmin
+    When method get
+    Then status 200
+    And match karate.toString(response) == 'true'
+
+    Given url 'http://localhost:2106/stop'
+    And header Authorization = 'Bearer ' + authTokenAdmin
+    When method get
+    Then status 200
+    And  match karate.toString(response) == 'Stop service'
+
+    Given url 'http://localhost:2106/status'
+	And header Authorization = 'Bearer ' + authTokenAdmin
+    When method get
+    Then status 200
+    And match karate.toString(response) ==  'false'
+
+    # Call API as admin user
+    Given url 'http://localhost:2106/start'
+    And header Authorization = 'Bearer ' + authTokenAdmin
+    When method get
+    Then status 200
+    And match karate.toString(response) ==  'Start service'
+
+    Given url 'http://localhost:2106/status'
+	And header Authorization = 'Bearer ' + authTokenAdmin
+    When method get
+    Then status 200
+    And  match karate.toString(response) ==  'true'
+
   Scenario: Check mail is sent
 
     * def updateConfig =
@@ -125,6 +175,7 @@ Feature: Cards external diffusion
     And match response.items[0].To[0].Mailbox == 'operator1_fr'
     And match response.items[0].To[0].Domain == 'opfab.com'
     And match response.items[0].Content.Headers.Subject[0].indexOf('Opfab card received  - card Title - card summary') == 0
+
 
 
 Scenario: Restore

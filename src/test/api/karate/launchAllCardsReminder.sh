@@ -8,5 +8,5 @@
 # SPDX-License-Identifier: MPL-2.0
 # This file is part of the OperatorFabric project.
 
-echo "Launch Karate tests for Cards External Diffusion"
-../../../../gradlew karate --args="`cat cardsExternalDiffusionTests.txt`"
+echo "Launch Karate tests for cards-reminder service"
+../../../../gradlew karate --args="`cat cardsReminderServiceTests.txt`"
