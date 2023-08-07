@@ -42,6 +42,10 @@ export default class CardsReminderService {
         this.active = false;
     }
 
+    public isActive() : boolean {
+        return this.active;
+    }
+
     public reset() {
         const wasActive = this.active;
         this.stop();

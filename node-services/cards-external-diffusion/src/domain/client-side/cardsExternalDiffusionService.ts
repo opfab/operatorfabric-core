@@ -59,6 +59,10 @@ export default class CardsExternalDiffusionService {
         this.active = false;
     }
 
+    public isActive() : boolean {
+        return this.active;
+    }
+
     private async checkRegularly() {
         if (this.active) {
             this.logger.info("checkRegularly");

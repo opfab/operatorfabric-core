@@ -79,6 +79,10 @@ export default class SupervisorService {
         this.connectionChecker.resetState();
     }
 
+    public isActive() : boolean {
+        return this.active;
+    }
+    
     private checkConnectionRegularly() {
         if (this.active) {
             this.logger.info("checkConnectionRegularly");

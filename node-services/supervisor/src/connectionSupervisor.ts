@@ -10,13 +10,12 @@
 import express from 'express';
 import bodyParser from 'body-parser';
 import config from 'config';
-
-
 import ConfigService from './domain/client-side/configService';
 import SupervisorService from './domain/client-side/supervisorService';
 import AuthenticationService from './common/client-side/authenticationService';
 import OpfabServicesInterface from './common/server-side/opfabServicesInterface';
 import logger from './common/server-side/logger';
+import AuthorizationService from './common/client-side/authorizationService';
 
 const app = express();
 app.disable("x-powered-by");
@@ -45,36 +44,51 @@ const opfabServicesInterface = new OpfabServicesInterface()
     .setAuthenticationService(authenticationService)
     .setLogger(logger);
 
+const authorizationService = new AuthorizationService()
+    .setAuthenticationService(authenticationService)
+    .setOpfabServicesInterface(opfabServicesInterface)
+    .setLogger(logger);
+
 const supervisorConfig = configService.getSupervisorConfig();
 
 const supervisorService = new SupervisorService(supervisorConfig, opfabServicesInterface, logger);
 
+
+
 app.get('/status', (req, res) => {
-    if (!authenticationService.authorize(req))
-        res.status(403).send();
-    else
-        res.send(activeOnStartUp);
+
+    authorizationService.isAdminUser(req).then(isAdmin => {
+        if (!isAdmin) 
+            res.status(403).send();
+        else 
+            res.send(supervisorService.isActive());
+    })
 });
 
 app.get('/start', (req, res) => {
-    if (!authenticationService.authorize(req))
-        res.status(403).send();
-    else {
-        logger.info('Start supervisor asked');
-        supervisorService.start();
-        res.send('Start supervisor');
-    }
+
+    authorizationService.isAdminUser(req).then(isAdmin => {
+        if (!isAdmin) 
+            res.status(403).send();
+        else {
+            logger.info('Start supervisor asked');
+            supervisorService.start();
+            res.send('Start supervisor');
+        }
+    })
 });
 
 app.get('/stop', (req, res) => {
-    if (!authenticationService.authorize(req))
-        res.status(403).send();
-    else {
-        logger.info('Stop supervisor asked');
-        supervisorService.stop();
-        res.send('Stop supervisor');
-    }
 
+    authorizationService.isAdminUser(req).then(isAdmin => {
+        if (!isAdmin) 
+            res.status(403).send();
+        else {
+            logger.info('Stop supervisor asked');
+            supervisorService.stop();
+            res.send('Stop supervisor');
+        }
+    })
 });
 
 app.get('/config', (req, res) => {
@@ -87,22 +101,17 @@ app.get('/config', (req, res) => {
 });
 
 app.post('/config', (req, res) => {
-    if (!authenticationService.authorize(req))
-        res.status(403).send();
-    else {
-        const userLogin = authenticationService.getLogin(req);
 
-        opfabServicesInterface.fetchUser(userLogin).then(userResp => {
-            if (!authenticationService.hasUserAnyPermission(userResp.getData(), ['ADMIN']))
-                res.status(403).send();
-            else {
-                logger.info('Update configuration');
-                const updated = configService.patch(req.body);
-                supervisorService.setConfiguration(updated);
-                res.send(updated);
-            }
-        })
-    }
+    authorizationService.isAdminUser(req).then(isAdmin => {
+        if (!isAdmin) 
+            res.status(403).send();
+        else {
+            logger.info('Update configuration');
+            const updated = configService.patch(req.body);
+            supervisorService.setConfiguration(updated);
+            res.send(updated);
+        }
+    })
 });
 
 app.listen(adminPort, () => {
