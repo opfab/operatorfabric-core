@@ -33,6 +33,10 @@ public class CurrentUserWithPerimetersData implements CurrentUserWithPerimeters 
     private User userData;
     private Set<ComputedPerimeter> computedPerimeters;
     private Map<String, List<String>> processesStatesNotNotified;
+    private Map<String, List<String>> processesStatesNotifiedByEmail;
+
+    private Boolean sendCardsByEmail;
+    private String email;
 
     private Set<PermissionEnum> permissions;
 

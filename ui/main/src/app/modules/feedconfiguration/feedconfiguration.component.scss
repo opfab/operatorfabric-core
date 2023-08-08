@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2021, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2023, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -44,4 +44,28 @@
 .modal-header {
     background-color: var(--opfab-bgcolor);
     color: var(--opfab-textcolor);
+}
+
+.opfab-feedconfiguration-icon-envelope-without-slash {
+    height: 17px;
+    width: 17px;
+    background: var(--opfab-text-color);
+    mask: url(../../../assets/images/icons/envelope-regular.svg);
+    transform: translateX(-7px) translateY(-5px);
+}
+
+.opfab-feedconfiguration-icon-envelope-with-slash {
+    height: 17px;
+    width: 17px;
+    background: var(--opfab-text-color);
+    mask: url(../../../assets/images/icons/envelope-regular.svg);
+    transform: rotate(35deg) translateX(-11px) translateY(-3px);
+}
+
+.opfab-feedconfiguration-slash {
+    width: 28px;
+    height: 1px;
+    transform: rotate(-35deg) translateY(1px);
+    display: inline-block;
+    background: red;
 }

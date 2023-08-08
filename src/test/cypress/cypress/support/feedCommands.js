@@ -40,7 +40,7 @@ export class FeedCommands extends OpfabCommands {
         cy.get('#opfab-selected-card-summary').should('have.text',summary);
     }
 
-    checkLigthCardAtIndexHasTitle= function (index, title) {
+    checkLightCardAtIndexHasTitle= function (index, title) {
         cy.get('.card-title').eq(index).should('have.text',title.toUpperCase())
     }
 

@@ -47,6 +47,10 @@ public class UserSettingsData implements UserSettings {
 
     @Singular("processStatesNotNotified")
     private Map<String, List<String>> processesStatesNotNotified;
+
+    @Singular("processStatesNotifiedByEmail")
+    private Map<String, List<String>> processesStatesNotifiedByEmail;
+
     @Singular("entityDisconnected")
     private List<String> entitiesDisconnected;
 
@@ -72,6 +76,11 @@ public class UserSettingsData implements UserSettings {
             this.processesStatesNotNotified = new HashMap<>(settings.getProcessesStatesNotNotified());
         else
             this.processesStatesNotNotified = null;
+
+        if (settings.getProcessesStatesNotifiedByEmail() != null)
+            this.processesStatesNotifiedByEmail = new HashMap<>(settings.getProcessesStatesNotifiedByEmail());
+        else
+            this.processesStatesNotifiedByEmail = null;
 
         if (settings.getEntitiesDisconnected() != null)
             this.entitiesDisconnected = new ArrayList<>(settings.getEntitiesDisconnected());
@@ -120,6 +129,7 @@ public class UserSettingsData implements UserSettings {
         result.replayInterval = ObjectUtils.getNotNullOrDefault( other.getReplayInterval(), this.getReplayInterval());
         result.remoteLoggingEnabled = ObjectUtils.getNotNullOrDefault( other.getRemoteLoggingEnabled(), this.getRemoteLoggingEnabled());
         result.processesStatesNotNotified = ObjectUtils.getNotNullOrDefault( other.getProcessesStatesNotNotified(), this.getProcessesStatesNotNotified(), HashMap::new);
+        result.processesStatesNotifiedByEmail = ObjectUtils.getNotNullOrDefault( other.getProcessesStatesNotifiedByEmail(), this.getProcessesStatesNotifiedByEmail(), HashMap::new);
         result.entitiesDisconnected = ObjectUtils.getNotNullOrDefault( other.getEntitiesDisconnected(), this.getEntitiesDisconnected(), ArrayList::new);
         result.sendCardsByEmail = ObjectUtils.getNotNullOrDefault( other.getSendCardsByEmail(), this.getSendCardsByEmail());
         result.email = ObjectUtils.getNotNullOrDefault( other.getEmail(), this.getEmail());

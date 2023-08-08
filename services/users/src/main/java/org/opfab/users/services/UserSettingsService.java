@@ -66,6 +66,7 @@ public class UserSettingsService {
         userSettingsRepository.save(newSettings);
 
         if ((userSettingsPatch.getProcessesStatesNotNotified() != null)
+                || (userSettingsPatch.getProcessesStatesNotifiedByEmail() != null)
                 || (userSettingsPatch.getEntitiesDisconnected() != null)
                 || (userSettingsPatch.getSendCardsByEmail() != null)
                 || (userSettingsPatch.getEmail() != null))

@@ -124,14 +124,15 @@ describe('Cards external diffusion', function () {
     })
 
     
-    it('Should send card when publishDate if after configured period', async function() {
+    it('Should send card when publishDate is after configured period', async function() {
         const publishDateAfterAlertingPeriod = Date.now() - 65 * 1000;
         setup();
         opfabServicesInterfaceStub.allUsers = [{login: 'operator_1', entities: ['ENTITY1']}, {login: 'operator_2', entities: ['ENTITY1', 'ENTITY2']}];
-        opfabServicesInterfaceStub.perimeters = [{process: "defaultProcess", stateRights:[{state:"processState",right:"ReceiveAndWrite",filteringNotificationAllowed:true}]} ];
+        opfabServicesInterfaceStub.perimeters = [{process: "defaultProcess", stateRights: [{state: "processState", right: "ReceiveAndWrite", filteringNotificationAllowed: true}]} ];
         opfabServicesInterfaceStub.connectedUsers = ['operator_1'];
-        opfabServicesInterfaceStub.settings.set('operator_2', {sendCardsByEmail: true, email:"operator_2@opfab.com"});
-        opfabServicesInterfaceStub.cards = [{uid: "1001", id:"defaultProcess.process1" , publisher: 'publisher1', publishDate: publishDateAfterAlertingPeriod, startDate: publishDateAfterAlertingPeriod, titleTranslated:"Title1", summaryTranslated:"Summary1", process: "defaultProcess", state: "processState", entityRecipients:["ENTITY1"]}];
+        opfabServicesInterfaceStub.settings.set('operator_2', {sendCardsByEmail: true, email: "operator_2@opfab.com", processesStatesNotifiedByEmail: {defaultProcess: ["processState"]}});
+        opfabServicesInterfaceStub.cards = [{uid: "1001", id: "defaultProcess.process1", publisher: 'publisher1', publishDate: publishDateAfterAlertingPeriod, startDate: publishDateAfterAlertingPeriod,
+            titleTranslated: "Title1", summaryTranslated: "Summary1", process: "defaultProcess", state: "processState", entityRecipients: ["ENTITY1"]}];
 
         await cardsDiffusionControl.checkUnreadCards();
         await new Promise(resolve => setTimeout(resolve, 1));
@@ -146,10 +147,11 @@ describe('Cards external diffusion', function () {
         const publishDateAfterAlertingPeriod = Date.now() - 65 * 1000;
         setup();
         opfabServicesInterfaceStub.allUsers = [{login: 'operator_1', entities: ['ENTITY1']}, {login: 'operator_2', entities: ['ENTITY1', 'ENTITY2']}];
-        opfabServicesInterfaceStub.perimeters = [{process: "defaultProcess", stateRights:[{state:"processState",right:"ReceiveAndWrite",filteringNotificationAllowed:true}]} ];
+        opfabServicesInterfaceStub.perimeters = [{process: "defaultProcess", stateRights: [{state: "processState", right: "ReceiveAndWrite", filteringNotificationAllowed: true}]} ];
         opfabServicesInterfaceStub.connectedUsers = ['operator_1'];
-        opfabServicesInterfaceStub.settings.set('operator_2', {sendCardsByEmail: true, email:"operator_2@opfab.com"});
-        opfabServicesInterfaceStub.cards = [{uid: "1002", id:"defaultProcess.process1" , publisher: 'publisher1', publishDate: publishDateAfterAlertingPeriod, startDate: publishDateAfterAlertingPeriod, titleTranslated:"Title1", summaryTranslated:"Summary1", process: "defaultProcess", state: "processState", entityRecipients:["ENTITY1"]}];
+        opfabServicesInterfaceStub.settings.set('operator_2', {sendCardsByEmail: true, email: "operator_2@opfab.com", processesStatesNotifiedByEmail: {defaultProcess: ["processState"]}});
+        opfabServicesInterfaceStub.cards = [{uid: "1002", id: "defaultProcess.process1", publisher: 'publisher1', publishDate: publishDateAfterAlertingPeriod, startDate: publishDateAfterAlertingPeriod,
+            titleTranslated: "Title1", summaryTranslated: "Summary1", process: "defaultProcess", state: "processState", entityRecipients: ["ENTITY1"]}];
 
         await cardsDiffusionControl.checkUnreadCards();
         await new Promise(resolve => setTimeout(resolve, 1));
@@ -163,10 +165,11 @@ describe('Cards external diffusion', function () {
         const publishDateAfterAlertingPeriod = Date.now() - 65 * 1000;
         setup();
         opfabServicesInterfaceStub.allUsers = [{login: 'operator_1', entities: ['ENTITY1']}, {login: 'operator_2', entities: ['ENTITY1', 'ENTITY2']}];
-        opfabServicesInterfaceStub.perimeters = [{process: "defaultProcess", stateRights:[{state:"processState",right:"ReceiveAndWrite",filteringNotificationAllowed:true}]} ];
+        opfabServicesInterfaceStub.perimeters = [{process: "defaultProcess", stateRights: [{state: "processState", right: "ReceiveAndWrite", filteringNotificationAllowed: true}]} ];
         opfabServicesInterfaceStub.connectedUsers = ['operator_1'];
-        opfabServicesInterfaceStub.settings.set('operator_2', {sendCardsByEmail: false, email:"operator_2@opfab.com"});
-        opfabServicesInterfaceStub.cards = [{uid: "1003", id:"defaultProcess.process1" , publisher: 'publisher1', publishDate: publishDateAfterAlertingPeriod, startDate: publishDateAfterAlertingPeriod, titleTranslated:"Title1", summaryTranslated:"Summary1", process: "defaultProcess", state: "processState", entityRecipients:["ENTITY1"]}];
+        opfabServicesInterfaceStub.settings.set('operator_2', {sendCardsByEmail: false, email: "operator_2@opfab.com", processesStatesNotifiedByEmail: {defaultProcess: ["processState"]}});
+        opfabServicesInterfaceStub.cards = [{uid: "1003", id: "defaultProcess.process1", publisher: 'publisher1', publishDate: publishDateAfterAlertingPeriod, startDate: publishDateAfterAlertingPeriod,
+            titleTranslated: "Title1", summaryTranslated: "Summary1", process: "defaultProcess", state: "processState", entityRecipients: ["ENTITY1"]}];
 
         await cardsDiffusionControl.checkUnreadCards();
         await new Promise(resolve => setTimeout(resolve, 1));
@@ -179,10 +182,11 @@ describe('Cards external diffusion', function () {
         const publishDateAfterAlertingPeriod = Date.now() - 65 * 1000;
         setup();
         opfabServicesInterfaceStub.allUsers = [{login: 'operator_1', entities: ['ENTITY1']}, {login: 'operator_2', entities: ['ENTITY1', 'ENTITY2']}];
-        opfabServicesInterfaceStub.perimeters = [{process: "defaultProcess", stateRights:[{state:"processState",right:"ReceiveAndWrite",filteringNotificationAllowed:true}]} ];
+        opfabServicesInterfaceStub.perimeters = [{process: "defaultProcess", stateRights: [{state: "processState", right: "ReceiveAndWrite", filteringNotificationAllowed: true}]} ];
         opfabServicesInterfaceStub.connectedUsers = ['operator_1'];
-        opfabServicesInterfaceStub.settings.set('operator_2', {});
-        opfabServicesInterfaceStub.cards = [{uid: "1004", id:"defaultProcess.process1" , publisher: 'publisher1', publishDate: publishDateAfterAlertingPeriod, startDate: publishDateAfterAlertingPeriod, titleTranslated:"Title1", summaryTranslated:"Summary1", process: "defaultProcess", state: "processState", entityRecipients:["ENTITY1"]}];
+        opfabServicesInterfaceStub.settings.set('operator_2', {processesStatesNotifiedByEmail: {defaultProcess: ["processState"]}});
+        opfabServicesInterfaceStub.cards = [{uid: "1004", id: "defaultProcess.process1", publisher: 'publisher1', publishDate: publishDateAfterAlertingPeriod, startDate: publishDateAfterAlertingPeriod,
+            titleTranslated: "Title1", summaryTranslated: "Summary1", process: "defaultProcess", state: "processState", entityRecipients: ["ENTITY1"]}];
 
         await cardsDiffusionControl.checkUnreadCards();
         await new Promise(resolve => setTimeout(resolve, 1));
@@ -195,44 +199,45 @@ describe('Cards external diffusion', function () {
         const publishDateAfterAlertingPeriod = Date.now() - 65 * 1000;
         setup();
         opfabServicesInterfaceStub.allUsers = [{login: 'operator_1', entities: ['ENTITY1']}, {login: 'operator_2', entities: ['ENTITY1', 'ENTITY2']}];
-        opfabServicesInterfaceStub.perimeters = [{process: "defaultProcess", stateRights:[{state:"processState",right:"ReceiveAndWrite",filteringNotificationAllowed:true}]} ];
+        opfabServicesInterfaceStub.perimeters = [{process: "defaultProcess", stateRights: [{state: "processState", right: "ReceiveAndWrite", filteringNotificationAllowed: true}]} ];
         opfabServicesInterfaceStub.connectedUsers = ['operator_1'];
-        opfabServicesInterfaceStub.settings.set('operator_2',  {sendCardsByEmail: true});
-        opfabServicesInterfaceStub.cards = [{uid: "1005", id:"defaultProcess.process1" , publisher: 'publisher1', publishDate: publishDateAfterAlertingPeriod, startDate: publishDateAfterAlertingPeriod, titleTranslated:"Title1", summaryTranslated:"Summary1", process: "defaultProcess", state: "processState", entityRecipients:["ENTITY1"]}];
+        opfabServicesInterfaceStub.settings.set('operator_2',  {sendCardsByEmail: true, processesStatesNotifiedByEmail: {defaultProcess: ["processState"]}});
+        opfabServicesInterfaceStub.cards = [{uid: "1005", id: "defaultProcess.process1", publisher: 'publisher1', publishDate: publishDateAfterAlertingPeriod, startDate: publishDateAfterAlertingPeriod,
+            titleTranslated: "Title1", summaryTranslated: "Summary1", process: "defaultProcess", state: "processState", entityRecipients: ["ENTITY1"]}];
 
         await cardsDiffusionControl.checkUnreadCards();
         await new Promise(resolve => setTimeout(resolve, 1));
 
         expect(mailService.numberOfMailsSent).toEqual(0);
-        
     })
 
     it('Should not send card when email is empty', async function() {
         const publishDateAfterAlertingPeriod = Date.now() - 65 * 1000;
         setup();
         opfabServicesInterfaceStub.allUsers = [{login: 'operator_1', entities: ['ENTITY1']}, {login: 'operator_2', entities: ['ENTITY1', 'ENTITY2']}];
-        opfabServicesInterfaceStub.perimeters = [{process: "defaultProcess", stateRights:[{state:"processState",right:"ReceiveAndWrite",filteringNotificationAllowed:true}]} ];
+        opfabServicesInterfaceStub.perimeters = [{process: "defaultProcess", stateRights: [{state: "processState", right: "ReceiveAndWrite", filteringNotificationAllowed: true}]} ];
         opfabServicesInterfaceStub.connectedUsers = ['operator_1'];
-        opfabServicesInterfaceStub.settings.set('operator_2',  {sendCardsByEmail: true, email: ""});
-        opfabServicesInterfaceStub.cards = [{uid: "1006", id:"defaultProcess.process1" , publisher: 'publisher1', publishDate: publishDateAfterAlertingPeriod, startDate: publishDateAfterAlertingPeriod, titleTranslated:"Title1", summaryTranslated:"Summary1", process: "defaultProcess", state: "processState", entityRecipients:["ENTITY1"]}];
+        opfabServicesInterfaceStub.settings.set('operator_2', {sendCardsByEmail: true, email: "", processesStatesNotifiedByEmail: {defaultProcess: ["processState"]}});
+        opfabServicesInterfaceStub.cards = [{uid: "1006", id: "defaultProcess.process1", publisher: 'publisher1', publishDate: publishDateAfterAlertingPeriod, startDate: publishDateAfterAlertingPeriod,
+            titleTranslated: "Title1", summaryTranslated: "Summary1", process: "defaultProcess", state: "processState", entityRecipients: ["ENTITY1"]}];
 
         await cardsDiffusionControl.checkUnreadCards();
         await new Promise(resolve => setTimeout(resolve, 1));
 
         expect(mailService.numberOfMailsSent).toEqual(0);
-        
     })
 
     it('Should send card to all enabled users', async function() {
         const publishDateAfterAlertingPeriod = Date.now() - 65 * 1000;
         setup();
         opfabServicesInterfaceStub.allUsers = [{login: 'operator_1', entities: ['ENTITY1']}, {login: 'operator_2', entities: ['ENTITY1', 'ENTITY2']}];
-        opfabServicesInterfaceStub.perimeters = [{process: "defaultProcess", stateRights:[{state:"processState",right:"ReceiveAndWrite",filteringNotificationAllowed:true}]} ];
+        opfabServicesInterfaceStub.perimeters = [{process: "defaultProcess", stateRights: [{state: "processState", right: "ReceiveAndWrite", filteringNotificationAllowed: true}]} ];
         opfabServicesInterfaceStub.connectedUsers = [];
-        opfabServicesInterfaceStub.settings.set('operator_1', {sendCardsByEmail: true, email:"operator_1@opfab.com"});
-        opfabServicesInterfaceStub.settings.set('operator_2', {sendCardsByEmail: true, email:"operator_2@opfab.com"});
+        opfabServicesInterfaceStub.settings.set('operator_1', {sendCardsByEmail: true, email: "operator_1@opfab.com", processesStatesNotifiedByEmail: {defaultProcess: ["processState"]}});
+        opfabServicesInterfaceStub.settings.set('operator_2', {sendCardsByEmail: true, email: "operator_2@opfab.com", processesStatesNotifiedByEmail: {defaultProcess: ["processState"]}});
 
-        opfabServicesInterfaceStub.cards = [{uid: "1007", id:"defaultProcess.process1" , publisher: 'publisher1', publishDate: publishDateAfterAlertingPeriod, startDate: publishDateAfterAlertingPeriod, titleTranslated:"Title1", summaryTranslated:"Summary1", process: "defaultProcess", state: "processState", entityRecipients:["ENTITY1"]}];
+        opfabServicesInterfaceStub.cards = [{uid: "1007", id: "defaultProcess.process1", publisher: 'publisher1', publishDate: publishDateAfterAlertingPeriod, startDate: publishDateAfterAlertingPeriod,
+            titleTranslated: "Title1", summaryTranslated: "Summary1", process: "defaultProcess", state: "processState", entityRecipients: ["ENTITY1"]}];
 
         await cardsDiffusionControl.checkUnreadCards();
         await new Promise(resolve => setTimeout(resolve, 1));

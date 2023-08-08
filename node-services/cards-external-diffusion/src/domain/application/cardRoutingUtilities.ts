@@ -24,11 +24,12 @@ export default class CardsRoutingUtilities {
 
         const processPerimeters = perimeters.filter((perim) => {
             if (perim.process === card.process) {
-                const stateRigth = perim.stateRights.find((st: any) => st.state === card.state);
+                const stateRight = perim.stateRights.find((st: any) => st.state === card.state);
                 if (
-                    stateRigth &&
-                    (stateRigth.right === 'Receive' || stateRigth.right === 'ReceiveAndWrite') &&
-                    CardsRoutingUtilities.checkFilteringNotification(userSettings, card.process, stateRigth )
+                    stateRight &&
+                    (stateRight.right === 'Receive' || stateRight.right === 'ReceiveAndWrite') &&
+                    CardsRoutingUtilities.checkIfMailNotifForThisProcessStateIsActivated(userSettings, card.process, stateRight) &&
+                    CardsRoutingUtilities.checkFilteringNotification(userSettings, card.process, stateRight)
                 ) {
                     return true;
                 }
@@ -39,9 +40,20 @@ export default class CardsRoutingUtilities {
         return processPerimeters.length > 0;
     }
 
-    private static checkFilteringNotification(settings: any ,process: string, stateRigth: any) {
-        if (!stateRigth.filteringNotificationAllowed || !settings.processesStatesNotNotified || settings.processesStatesNotNotified.length == 0) return true;
-        return !settings.processesStatesNotNotified[process]?.includes(stateRigth.state);
+    private static checkIfMailNotifForThisProcessStateIsActivated(settings: any, process: string, stateRight: any): boolean {
+        if (!settings.processesStatesNotifiedByEmail || settings.processesStatesNotifiedByEmail.length === 0) {
+            return false;
+        }
+        return settings.processesStatesNotifiedByEmail[process]?.includes(stateRight.state);
+    }
+
+    private static checkFilteringNotification(settings: any, process: string, stateRight: any): boolean {
+        if (!stateRight.filteringNotificationAllowed
+            || !settings.processesStatesNotNotified
+            || settings.processesStatesNotNotified.length == 0) {
+            return true;
+        }
+        return !settings.processesStatesNotNotified[process]?.includes(stateRight.state);
     }
 
     private static checkUserRecipients(user: any, card: any): boolean {

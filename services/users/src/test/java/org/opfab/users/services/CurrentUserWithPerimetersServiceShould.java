@@ -123,7 +123,7 @@ class CurrentUserWithPerimetersServiceShould {
                                 true, true, true, true, true, true, true, true,
                                 null,
                                 true, 10,
-                                false, false, null, processesStatesNotNotified, entitiesDisconnected);
+                                false, false, null, processesStatesNotNotified, null, entitiesDisconnected);
 
                 userSettingsRepositoryStub.save(userSettings);
 
