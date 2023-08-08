@@ -34,13 +34,33 @@
                                 <span class="opfab-checkbox-checkmark"></span>
                             </label>
                         </p>
-                        <div style="margin-left: 15px;" class="row" formArrayName="processesStates" *ngFor="let state of processData.states; ">
-                            <label class="opfab-checkbox">{{state.stateLabel}}
-                                <input type="checkbox" [formControlName]=state.stateControlIndex [id]=state.stateControlIndex
-                                       (change)="updateIsAllStatesSelected(processIdAndLabel.processId, processGroup.groupId)">
-                                <span class="opfab-checkbox-checkmark"></span>
-                            </label>
-                        </div>
+                        <table style="margin-left: 15px" aria-label="Table of states and email icon">
+                            <th scope="col" hidden>state</th>
+                            <th scope="col" hidden>notified by email or not</th>
+                            <tr formArrayName="processesStates" *ngFor="let state of processData.states; ">
+                                <td>
+                                    <label class="opfab-checkbox">{{state.stateLabel}}
+                                        <input type="checkbox" [formControlName]=state.stateControlIndex [id]=state.stateControlIndex
+                                               (change)="updateIsAllStatesSelected(processIdAndLabel.processId, processGroup.groupId);
+                                                         checkIfMailNotifMustBeDeleted(processIdAndLabel.processId, state.stateId, state.stateControlIndex)">
+                                        <span class="opfab-checkbox-checkmark"></span>
+                                    </label>
+                                </td>
+                                <td *ngIf="userSettings?.sendCardsByEmail
+                                    && userSettings?.email?.length
+                                    && !processesStatesNotifiedByEmail.has(processIdAndLabel.processId + '.' + state.stateId)"
+                                    (click)="selectStateForMailNotif(processIdAndLabel.processId, state.stateId, state.stateControlIndex)" style="padding-left: 13px"
+                                    class="opfab-feedconfiguration-slash">
+                                    <div class="opfab-feedconfiguration-icon-envelope-with-slash"></div>
+                                </td>
+                                <td *ngIf="userSettings?.sendCardsByEmail
+                                    && userSettings?.email?.length
+                                    && processesStatesNotifiedByEmail.has(processIdAndLabel.processId + '.' + state.stateId)"
+                                    (click)="unselectStateForMailNotif(processIdAndLabel.processId, state.stateId)" style="padding-left: 13px">
+                                    <div class="opfab-feedconfiguration-icon-envelope-without-slash"></div>
+                                </td>
+                            </tr>
+                        </table>
                     </div>
                     <br />
                 </div>
@@ -60,13 +80,33 @@
                         <span class="opfab-checkbox-checkmark"></span>
                     </label>
                 </p>
-                <div style="margin-left: 15px;" class="row" formArrayName="processesStates" *ngFor="let state of processesStatesLabels.get(process.idProcess).states; ">
-                    <label class="opfab-checkbox"> {{state.stateLabel}}
-                        <input type="checkbox" [formControlName]=state.stateControlIndex [id]=state.stateControlIndex
-                               (change)="updateIsAllStatesSelected(process.idProcess, '')">
-                        <span class="opfab-checkbox-checkmark"></span>
-                    </label>
-                </div>
+                <table style="margin-left: 15px" aria-label="Table of states and email icon">
+                    <th scope="col" hidden>state</th>
+                    <th scope="col" hidden>notified by email or not</th>
+                    <tr formArrayName="processesStates" *ngFor="let state of processesStatesLabels.get(process.idProcess).states; ">
+                        <td>
+                            <label class="opfab-checkbox"> {{state.stateLabel}}
+                                <input type="checkbox" [formControlName]=state.stateControlIndex [id]=state.stateControlIndex
+                                       (change)="updateIsAllStatesSelected(process.idProcess, '');
+                                                 checkIfMailNotifMustBeDeleted(process.idProcess, state.stateId, state.stateControlIndex)">
+                                <span class="opfab-checkbox-checkmark"></span>
+                            </label>
+                        </td>
+                        <td *ngIf="userSettings?.sendCardsByEmail
+                            && userSettings?.email?.length
+                            && !processesStatesNotifiedByEmail.has(process.idProcess + '.' + state.stateId)"
+                            (click)="selectStateForMailNotif(process.idProcess, state.stateId, state.stateControlIndex)" style="padding-left: 13px"
+                            class="opfab-feedconfiguration-slash">
+                            <div class="opfab-feedconfiguration-icon-envelope-with-slash"></div>
+                        </td>
+                        <td *ngIf="userSettings?.sendCardsByEmail
+                                    && userSettings?.email?.length
+                                    && processesStatesNotifiedByEmail.has(process.idProcess + '.' + state.stateId)"
+                            (click)="unselectStateForMailNotif(process.idProcess, state.stateId)" style="padding-left: 13px">
+                            <div class="opfab-feedconfiguration-icon-envelope-without-slash"></div>
+                        </td>
+                    </tr>
+                </table>
                 <br />
              </div>
         </div>

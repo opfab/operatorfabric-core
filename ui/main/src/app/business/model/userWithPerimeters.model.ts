@@ -17,6 +17,9 @@ export class UserWithPerimeters {
         readonly computedPerimeters?: Array<ComputedPerimeter>,
         readonly permissions?: Array<PermissionEnum>,
         readonly processesStatesNotNotified?: Map<string, Array<string>>,
+        readonly processesStatesNotifiedByEmail?: Map<string, Array<string>>,
+        readonly sendCardsByEmail?: boolean,
+        readonly email?: string
     ) {}
 }
 

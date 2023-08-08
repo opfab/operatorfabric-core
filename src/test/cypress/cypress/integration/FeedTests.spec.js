@@ -135,10 +135,10 @@ describe('FeedScreen tests', function () {
 
         feed.sortByUnread();
 
-        feed.checkLigthCardAtIndexHasTitle(0, 'Message');
-        feed.checkLigthCardAtIndexHasTitle(1, 'Process state (calcul)');
-        feed.checkLigthCardAtIndexHasTitle(2, '⚡ Planned Outage');
-        feed.checkLigthCardAtIndexHasTitle(3, 'Electricity consumption forecast');
+        feed.checkLightCardAtIndexHasTitle(0, 'Message');
+        feed.checkLightCardAtIndexHasTitle(1, 'Process state (calcul)');
+        feed.checkLightCardAtIndexHasTitle(2, '⚡ Planned Outage');
+        feed.checkLightCardAtIndexHasTitle(3, 'Electricity consumption forecast');
 
 
         // Read first card
@@ -148,47 +148,47 @@ describe('FeedScreen tests', function () {
         cy.waitDefaultTime();
 
         // Check read card is the last one
-        feed.checkLigthCardAtIndexHasTitle(0, 'Process state (calcul)');
-        feed.checkLigthCardAtIndexHasTitle(1, '⚡ Planned Outage');
-        feed.checkLigthCardAtIndexHasTitle(2, 'Electricity consumption forecast');
-        feed.checkLigthCardAtIndexHasTitle(3, 'Message');
+        feed.checkLightCardAtIndexHasTitle(0, 'Process state (calcul)');
+        feed.checkLightCardAtIndexHasTitle(1, '⚡ Planned Outage');
+        feed.checkLightCardAtIndexHasTitle(2, 'Electricity consumption forecast');
+        feed.checkLightCardAtIndexHasTitle(3, 'Message');
 
 
         feed.sortByReceptionDate();
 
         cy.waitDefaultTime();
     
-        feed.checkLigthCardAtIndexHasTitle(0, 'Message');
-        feed.checkLigthCardAtIndexHasTitle(1, 'Process state (calcul)');
-        feed.checkLigthCardAtIndexHasTitle(2, '⚡ Planned Outage');
-        feed.checkLigthCardAtIndexHasTitle(3, 'Electricity consumption forecast');
+        feed.checkLightCardAtIndexHasTitle(0, 'Message');
+        feed.checkLightCardAtIndexHasTitle(1, 'Process state (calcul)');
+        feed.checkLightCardAtIndexHasTitle(2, '⚡ Planned Outage');
+        feed.checkLightCardAtIndexHasTitle(3, 'Electricity consumption forecast');
 
         feed.sortBySeverity();
 
         cy.waitDefaultTime();
 
-        feed.checkLigthCardAtIndexHasTitle(0, 'Electricity consumption forecast');
-        feed.checkLigthCardAtIndexHasTitle(1, '⚡ Planned Outage');
-        feed.checkLigthCardAtIndexHasTitle(2, 'Process state (calcul)');
-        feed.checkLigthCardAtIndexHasTitle(3, 'Message');
+        feed.checkLightCardAtIndexHasTitle(0, 'Electricity consumption forecast');
+        feed.checkLightCardAtIndexHasTitle(1, '⚡ Planned Outage');
+        feed.checkLightCardAtIndexHasTitle(2, 'Process state (calcul)');
+        feed.checkLightCardAtIndexHasTitle(3, 'Message');
 
         feed.sortByStartDate();
 
         cy.waitDefaultTime();
 
-        feed.checkLigthCardAtIndexHasTitle(0, '⚡ Planned Outage');
-        feed.checkLigthCardAtIndexHasTitle(1, 'Electricity consumption forecast');
-        feed.checkLigthCardAtIndexHasTitle(2, 'Message');
-        feed.checkLigthCardAtIndexHasTitle(3, 'Process state (calcul)');
+        feed.checkLightCardAtIndexHasTitle(0, '⚡ Planned Outage');
+        feed.checkLightCardAtIndexHasTitle(1, 'Electricity consumption forecast');
+        feed.checkLightCardAtIndexHasTitle(2, 'Message');
+        feed.checkLightCardAtIndexHasTitle(3, 'Process state (calcul)');
 
         feed.sortByEndDate();
 
         cy.waitDefaultTime();
 
-        feed.checkLigthCardAtIndexHasTitle(0, 'Electricity consumption forecast');
-        feed.checkLigthCardAtIndexHasTitle(1, '⚡ Planned Outage');
-        feed.checkLigthCardAtIndexHasTitle(2, 'Message');
-        feed.checkLigthCardAtIndexHasTitle(3, 'Process state (calcul)');
+        feed.checkLightCardAtIndexHasTitle(0, 'Electricity consumption forecast');
+        feed.checkLightCardAtIndexHasTitle(1, '⚡ Planned Outage');
+        feed.checkLightCardAtIndexHasTitle(2, 'Message');
+        feed.checkLightCardAtIndexHasTitle(3, 'Process state (calcul)');
     });
     
 
@@ -203,18 +203,18 @@ describe('FeedScreen tests', function () {
         feed.checkFilterIsActive();
         cy.waitDefaultTime();
         feed.checkNumberOfDisplayedCardsIs(4);
-        feed.checkLigthCardAtIndexHasTitle(0, '⚡ Planned Outage');
-        feed.checkLigthCardAtIndexHasTitle(1, 'Process state (calcul)');
-        feed.checkLigthCardAtIndexHasTitle(2, 'Data quality');
-        feed.checkLigthCardAtIndexHasTitle(3, 'Message');
+        feed.checkLightCardAtIndexHasTitle(0, '⚡ Planned Outage');
+        feed.checkLightCardAtIndexHasTitle(1, 'Process state (calcul)');
+        feed.checkLightCardAtIndexHasTitle(2, 'Data quality');
+        feed.checkLightCardAtIndexHasTitle(3, 'Message');
 
         feed.toggleFilterByPriority(['compliant']);
         feed.checkFilterIsActive();
         cy.waitDefaultTime();
         feed.checkNumberOfDisplayedCardsIs(3);
-        feed.checkLigthCardAtIndexHasTitle(0, '⚡ Planned Outage');
-        feed.checkLigthCardAtIndexHasTitle(1, 'Data quality');
-        feed.checkLigthCardAtIndexHasTitle(2, 'Message');
+        feed.checkLightCardAtIndexHasTitle(0, '⚡ Planned Outage');
+        feed.checkLightCardAtIndexHasTitle(1, 'Data quality');
+        feed.checkLightCardAtIndexHasTitle(2, 'Message');
 
         feed.toggleFilterByPriority(['alarm', 'compliant']);
         feed.checkFilterIsNotActive();

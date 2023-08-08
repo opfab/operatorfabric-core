@@ -52,7 +52,8 @@ Feature: Cards external diffusion
 {
   "login" : "operator1_fr",
   "sendCardsByEmail": true,
-  "email" : "operator1_fr@opfab.com"
+  "email" : "operator1_fr@opfab.com",
+  "processesStatesNotifiedByEmail": {"api_test": ["mailState"]}
 }
 """
 
