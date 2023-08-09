@@ -1,0 +1,49 @@
+opfab:
+  login: service_supervisor
+  password: test
+  connectedUsersUrl: http://cards-consultation:2104/cards/connections
+  publicationUrl: http://cards-publication:2102/cards
+  cardsUrl: http://cards-publication:2102/cards/cards
+  entitiesUrl: http://users:2103/users/entities
+  currentUserWithPerimetersUrl: http://users:2103/CurrentUserWithPerimeters
+  getTokenUrl: http://web-ui/auth/token
+  tokenExpireClaim: exp
+logConfig:
+  logLevel: info
+supervisor:
+  defaultConfig:
+    entitiesToSupervise:
+    - id: ENTITY1_FR
+      supervisors:
+      - ENTITY2_FR
+    - id: ENTITY2_FR
+      supervisors:
+      - ENTITY1_FR
+    disconnectedCardTemplate:
+      publisher: service_supervisor
+      processVersion: '1'
+      process: supervisor
+      state: disconnectedEntity
+      severity: ALARM
+    secondsBetweenConnectionChecks: 10
+    nbOfConsecutiveNotConnectedToSendFirstCard: 3
+    nbOfConsecutiveNotConnectedToSendSecondCard: 12
+    processesToSupervise:
+    - process: messageOrQuestionExample
+      states:
+      - messageState
+      - questionState
+    - process: defaultProcess
+      states:
+      - processState
+    unackCardTemplate:
+      publisher: service_supervisor
+      processVersion: '1'
+      process: supervisor
+      state: unacknowledgedCards
+      severity: ALARM
+    windowInSecondsForCardSearch: 1200
+    secondsBetweenAcknowledgmentChecks: 10
+    secondsAfterPublicationToConsiderCardAsNotAcknowledged: 600
+  adminPort: 2108
+  activeOnStartup: false
