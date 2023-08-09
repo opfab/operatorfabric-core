@@ -7,7 +7,7 @@
 
 
 = Supervisor
-Supervisor service can monitor users connections and card acknowledgements to send alert cards when specified conditions are met. To configure the module see https://github.com/opfab/operatorfabric-core/blob/master/config/docker/node-services.json[config/docker/node-services.json]
+Supervisor service can monitor users connections and card acknowledgements to send alert cards when specified conditions are met. To configure the module see https://github.com/opfab/operatorfabric-core/blob/master/config/docker/node-services.yml[config/docker/node-services.yml]
 
 == Entities connection
 It is possible to configure supervisor module for monitoring users connections to Opfab to ensure that there is at least one user connected to Opfab for each configured entity. When no user of an entity connects to Opfab for a specified period, supervisor module will send an alert card to the configured recipient entity.

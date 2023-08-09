@@ -175,7 +175,7 @@ automate it, you can do it directly in the database via the following request :
 
 == Cards reminder
 Cards reminder logic has been moved from front-end to back-end. The reminder logic is handled by the new "cards-reminder" service.
-You must adapt the configuration to your environment by using the configuration file config/docker/node-services.json and adapt it to your deployment context.
+You must adapt the configuration to your environment by using the configuration file config/docker/node-services.yml and adapt it to your deployment context.
 
 After upgrading to 4.0, you must call the `/reset` endpoint to populate the reminders database by processing all current cards with reminder set. For example using cURL:
 ....

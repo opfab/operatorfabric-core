@@ -53,7 +53,7 @@ docker {
 					into 'dockerBuild'
 				}
                 from('config') {
-					include 'default-docker.json'
+					include 'default-docker.yml'
 					into 'dockerConfig'
 				}
 				from('.') {

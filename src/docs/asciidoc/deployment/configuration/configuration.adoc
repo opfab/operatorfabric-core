@@ -342,7 +342,7 @@ The external devices service can be configured with the following properties:
 ==== Node services configuration
 
 The configuration of node services (cards-external-diffusion and cards-reminder) is located in config/docker folder.
-The 'node-services.json' configuration file contains parameters common to all the node services and a dedicated section for each service.
+The 'node-services.yml' configuration file contains parameters common to all the node services and a dedicated section for each service.
 Node services can be configured with the following properties:
 
 |===

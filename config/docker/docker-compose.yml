@@ -139,7 +139,7 @@ services:
     environment:
       - NODE_ENV=docker
     volumes:
-      - "./node-services.json:/usr/app/config/docker.json"
+      - "./node-services.yml:/usr/app/config/docker.yml"
   cards-reminder:
     container_name: cards-reminder
     image: "lfeoperatorfabric/of-cards-reminder:SNAPSHOT"
@@ -153,7 +153,7 @@ services:
       - TZ=Europe/Paris
       - NODE_ENV=docker
     volumes:
-      - "./node-services.json:/usr/app/config/docker.json"
+      - "./node-services.yml:/usr/app/config/docker.yml"
   supervisor:
     container_name: supervisor
     image: "lfeoperatorfabric/of-supervisor:SNAPSHOT"
@@ -167,7 +167,7 @@ services:
       - TZ=Europe/Paris
       - NODE_ENV=docker
     volumes:
-      - "./node-services.json:/usr/app/config/docker.json"
+      - "./node-services.yml:/usr/app/config/docker.yml"
 # Uncomment the line below to customize sounds for notification
 #     - "./custom-sounds:/usr/share/nginx/html/assets/sounds"
   external-devices:

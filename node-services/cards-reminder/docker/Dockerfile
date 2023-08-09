@@ -6,7 +6,7 @@ USER node
 RUN mkdir -p logs
 COPY dockerBuild ./build
 RUN mkdir -m777 config
-COPY dockerConfig/default-docker.json ./config/default.json
+COPY dockerConfig/default-docker.yml ./config/default.yml
 COPY package.json ./
 COPY startCardsReminder.sh ./
 RUN npm config set https-proxy $https_proxy
