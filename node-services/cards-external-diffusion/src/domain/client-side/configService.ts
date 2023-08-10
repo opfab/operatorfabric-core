@@ -35,6 +35,7 @@ export default class ConfigService {
                 this.config.mailFrom = defaultConfig.mailFrom;
                 this.config.subjectPrefix = defaultConfig.subjectPrefix;
                 this.config.bodyPrefix =  defaultConfig.bodyPrefix;
+                this.config.opfabUrlInMailContent = defaultConfig.opfabUrlInMailContent;
                 this.config.windowInSecondsForCardSearch = defaultConfig.windowInSecondsForCardSearch;
                 this.config.secondsAfterPublicationToConsiderCardAsNotRead = defaultConfig.secondsAfterPublicationToConsiderCardAsNotRead;
                 this.config.checkPeriodInSeconds =  defaultConfig.checkPeriodInSeconds;

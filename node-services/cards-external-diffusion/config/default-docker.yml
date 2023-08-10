@@ -1,13 +1,10 @@
 opfab:
   login: admin
   password: test
-  url: http://localhost:2002
-  connectedUsersUrl: http://cards-consultation:2104/connections
-  cardsUrl: http://cards-consultation:2104/cards
-  usersUrl: http://users:2103/users
-  currentUserWithPerimetersUrl: http://users:2103/CurrentUserWithPerimeters
-  getTokenUrl: http://web-ui/auth/token
-  tokenExpireClaim: exp
+  usersUrl: "http://users:2103/users"
+  cardsConsultationUrl: "http://cards-consultation:2104"
+  getTokenUrl: "http://web-ui/auth/token"
+  tokenExpireClaim: "exp"
 rabbitmq:
   host: rabbitmq
   port: 5672

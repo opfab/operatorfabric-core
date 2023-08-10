@@ -15,7 +15,7 @@ import OpfabServicesInterface from '../../common/server-side/opfabServicesInterf
 
 export default class CardsReminderOpfabServicesInterface extends OpfabServicesInterface {
 
-    private opfabCardRemindUrl = '';
+
     private listener: EventBus;
 
 
@@ -45,12 +45,6 @@ export default class CardsReminderOpfabServicesInterface extends OpfabServicesIn
 
     public addListener(listener: EventListener) {
         this.listener.addListener(listener);
-        return this;
-    }
-
-
-    public setOpfabCardRemindUrl(opfabCardRemindUrl: string) {
-        this.opfabCardRemindUrl = opfabCardRemindUrl;
         return this;
     }
 
@@ -84,7 +78,7 @@ export default class CardsReminderOpfabServicesInterface extends OpfabServicesIn
         this.logger.info("sendCardReminder for card " + cardId);
         return this.sendRequest({
             method: 'post',
-            url: this.opfabCardRemindUrl + '/' + cardId,
+            url: this.opfabCardsPublicationUrl + '/cards/resetReadAndAcks/' + cardId,
             headers: {
                 Authorization: 'Bearer ' + this.token
             }

@@ -13,6 +13,7 @@ export default class ConfigDTO {
     public mailFrom : string;
     public subjectPrefix : string;
     public bodyPrefix : string;
+    public opfabUrlInMailContent : string;
     public windowInSecondsForCardSearch = 0;
     public secondsAfterPublicationToConsiderCardAsNotRead = 0;
     public checkPeriodInSeconds = 0;

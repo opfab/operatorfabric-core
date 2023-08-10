@@ -1,5 +1,5 @@
 opfab: 
-  cardReminderUrl: "http://cards-publication:2102/cards/resetReadAndAcks"
+  cardsPublicationUrl: "http://cards-publication:2102"
   getTokenUrl: "http://web-ui/auth/token"
   tokenExpireClaim: "exp"
 
@@ -14,8 +14,6 @@ mongodb:
   uri: "mongodb://root:password@mongodb:27017/operator-fabric?authSource=admin"
 
 logConfig:
-  logFolder: "logs/"
-  logFile: "%DATE%.log"
   logLevel: "info"
 
 cardsReminder:
