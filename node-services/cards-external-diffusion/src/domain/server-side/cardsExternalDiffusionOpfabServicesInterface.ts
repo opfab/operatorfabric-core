@@ -155,7 +155,7 @@ export default class CardsExternalDiffusionOpfabServicesInterface extends OpfabS
     private sendGetUserSettingRequest(login: string) {
         return this.sendRequest({
             method: 'get',
-            url: this.opfabGetUsersUrl +'/' + login + '/settings',
+            url: this.opfabUsersUrl +'/users/' + login + '/settings',
             headers: {
                 Authorization: 'Bearer ' + this.token
             }
@@ -165,7 +165,7 @@ export default class CardsExternalDiffusionOpfabServicesInterface extends OpfabS
     private sendGetUserPerimetersRequest(login: string) {
         return this.sendRequest({
             method: 'get',
-            url: this.opfabGetUsersUrl +'/' + login + '/perimeters',
+            url: this.opfabUsersUrl +'/users/' + login + '/perimeters',
             headers: {
                 Authorization: 'Bearer ' + this.token
             }

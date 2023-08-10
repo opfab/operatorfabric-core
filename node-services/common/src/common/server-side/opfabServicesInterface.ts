@@ -19,14 +19,11 @@ export default class OpfabServicesInterface {
     tokenExpirationMargin: number = 60000;
     login: string = '';
     password: string = '';
-    opfabUrl = '';
-    opfabGetUsersConnectedUrl: string = '';
-    opfabGetUsersUrl: string = '';
-    opfabGetCardsUrl: string = '';
+    opfabUsersUrl: string = '';
+    opfabCardsConsultationUrl: string = '';
+    opfabCardsPublicationUrl: string = '';
     opfabGetTokenUrl: string = '';
-    opfabPublicationUrl: string = '';
-    opfabGetCurrentUserWithPerimetersUrl: string = '';
-    opfabGetEntityUrl: string = '';
+
 
     logger: any;
     authenticationService: AuthenticationService;
@@ -41,15 +38,6 @@ export default class OpfabServicesInterface {
         return this;
     }
 
-    public setOpfabUrl(opfabUrl: string) {
-        this.opfabUrl = opfabUrl;
-        return this;
-    }
-
-    public getOpfabUrl() : string {
-        return this.opfabUrl
-    }
-
     public setOpfabGetTokenUrl(opfabGetTokenUrl: string) {
         this.opfabGetTokenUrl = opfabGetTokenUrl;
         return this;
@@ -60,34 +48,20 @@ export default class OpfabServicesInterface {
         return this;
     }
 
-    public setOpfabGetUsersUrl(opfabGetUsersUrl: string) {
-        this.opfabGetUsersUrl = opfabGetUsersUrl;
-        return this;
-    }
-
-    public setOpfabGetUsersConnectedUrl(opfabGetUsersConnectedUrl: string) {
-        this.opfabGetUsersConnectedUrl = opfabGetUsersConnectedUrl;
-        return this;
-    }
-
-    public setOpfabGetEntityUrl(opfabGetEntityUrl: string) {
-        this.opfabGetEntityUrl = opfabGetEntityUrl;
-        return this;
-    }
-
-    public setOpfabGetCardsUrl(opfabGetCardsUrl: string) {
-        this.opfabGetCardsUrl = opfabGetCardsUrl;
+    public setOpfabUsersUrl(opfabUsersUrl: string) {
+        this.opfabUsersUrl = opfabUsersUrl;
         return this;
     }
 
 
-    public setOpfabPublicationUrl(opfabPublicationUrl: string) {
-        this.opfabPublicationUrl = opfabPublicationUrl;
+    public setOpfabCardsConsultationUrl(opfabCardsConsultationUrl: string) {
+        this.opfabCardsConsultationUrl = opfabCardsConsultationUrl;
         return this;
     }
 
-    public setOpfabCurrentUserWithPerimetersUrl(opfabGetCurrentUserWithPerimetersUrl: string) {
-        this.opfabGetCurrentUserWithPerimetersUrl = opfabGetCurrentUserWithPerimetersUrl;
+
+    public setOpfabCardsPublicationUrl(opfabCardsPublicationUrl: string) {
+        this.opfabCardsPublicationUrl = opfabCardsPublicationUrl;
         return this;
     }
 
@@ -180,7 +154,7 @@ export default class OpfabServicesInterface {
         try {
             const response = await this.sendRequest({
                 method: 'get',
-                url: this.opfabGetCurrentUserWithPerimetersUrl,
+                url: this.opfabUsersUrl + '/CurrentUserWithPerimeters',
                 headers: {
                     Authorization: 'Bearer ' + userToken
                 }
@@ -215,7 +189,7 @@ export default class OpfabServicesInterface {
     sendUsersConnectedRequest() {
         return this.sendRequest({
             method: 'get',
-            url: this.opfabGetUsersConnectedUrl,
+            url: this.opfabCardsConsultationUrl + '/connections',
             headers: {
                 Authorization: 'Bearer ' + this.token
             }
@@ -225,7 +199,7 @@ export default class OpfabServicesInterface {
     sendGetUserRequest(login: string) {
         return this.sendRequest({
             method: 'get',
-            url: this.opfabGetUsersUrl + '/' + login,
+            url: this.opfabUsersUrl + '/users/' + login,
             headers: {
                 Authorization: 'Bearer ' + this.token
             }
@@ -235,7 +209,7 @@ export default class OpfabServicesInterface {
     sendGetAllUsersRequest() {
         return this.sendRequest({
             method: 'get',
-            url: this.opfabGetUsersUrl,
+            url: this.opfabUsersUrl + '/users',
             headers: {
                 Authorization: 'Bearer ' + this.token
             }
@@ -245,7 +219,7 @@ export default class OpfabServicesInterface {
     sendGetCardsRequest(filter: any) {
         return this.sendRequest({
             method: 'post',
-            url: this.opfabGetCardsUrl,
+            url: this.opfabCardsConsultationUrl + '/cards',
             data: filter,
             headers: {
                 Authorization: 'Bearer ' + this.token
@@ -259,7 +233,7 @@ export default class OpfabServicesInterface {
             await this.getToken();
             const request = {
                 method: 'post',
-                url: this.opfabPublicationUrl,
+                url: this.opfabCardsPublicationUrl + '/cards',
                 data: card,
                 headers: {
                     Authorization: 'Bearer ' + this.token
@@ -293,7 +267,7 @@ export default class OpfabServicesInterface {
     private sendGetEntityRequest(id: string) {
         return this.sendRequest({
             method: 'get',
-            url: this.opfabGetEntityUrl + '/' + id,
+            url: this.opfabUsersUrl + '/entities/' + id,
             headers: {
                 Authorization: 'Bearer ' + this.token
             }

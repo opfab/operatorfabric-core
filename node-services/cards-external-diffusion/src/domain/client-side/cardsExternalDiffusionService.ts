@@ -24,7 +24,6 @@ export default class CardsExternalDiffusionService {
     constructor(opfabServicesInterface: CardsExternalDiffusionOpfabServicesInterface, mailService: SendMailService, serviceConfig: any, logger: any) {
         this.logger = logger;
         this.checkPeriodInSeconds = serviceConfig.checkPeriodInSeconds;
-
         this.cardsDiffusionControl = new CardsDiffusionControl()
             .setLogger(logger)
             .setOpfabServicesInterface(opfabServicesInterface)

@@ -1,13 +1,11 @@
 opfab:
   login: service_supervisor
   password: test
-  connectedUsersUrl: http://localhost:2002/cards/connections
-  publicationUrl: http://localhost:2102/cards
-  cardsUrl: http://localhost:2002/cards/cards
-  entitiesUrl: http://127.0.0.1:2103/entities
-  currentUserWithPerimetersUrl: http://127.0.0.1:2103/currentUserWithPerimeters
-  getTokenUrl: http://localhost:2002/auth/token
-  tokenExpireClaim: exp
+  usersUrl: "http://127.0.0.1:2103"
+  cardsPublicationUrl: "http://127.0.0.1:2102"
+  cardsConsultationUrl: "http://127.0.0.1:2104"
+  getTokenUrl: "http://localhost:2002/auth/token"
+  tokenExpireClaim: "exp"
 logConfig:
   logFolder: logs/
   logFile: "%DATE%.log"

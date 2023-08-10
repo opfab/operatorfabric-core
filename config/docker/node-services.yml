@@ -1,12 +1,7 @@
 opfab:
-  url: http://localhost:2002
-  connectedUsersUrl: http://cards-consultation:2104/connections
-  cardsUrl: http://cards-consultation:2104/cards
-  usersUrl: http://users:2103/users
-  currentUserWithPerimetersUrl: http://users:2103/CurrentUserWithPerimeters
-  cardReminderUrl: http://cards-publication:2102/cards/resetReadAndAcks
-  publicationUrl: http://cards-publication:2102/cards
-  entitiesUrl: http://users:2103/entities
+  usersUrl: http://users:2103
+  cardsPublicationUrl: "http://cards-publication:2102"
+  cardsConsultationUrl: http://cards-consultation:2104
   getTokenUrl: http://web-ui/auth/token
   tokenExpireClaim: exp
 rabbitmq:

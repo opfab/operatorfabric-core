@@ -115,7 +115,6 @@ describe('Cards external diffusion', function () {
     it('Should not send card when publishDate is before configured period', async function() {
         const publishDateAfterAlertingPeriod = Date.now() - 55 * 1000;
         setup();
-        opfabServicesInterfaceStub.setOpfabUrl('http://localhost')
         opfabServicesInterfaceStub.allUsers = [{login: 'operator_1', entities: ['ENTITY1']}, {login: 'operator_2', entities: ['ENTITY1', 'ENTITY2']}];
         opfabServicesInterfaceStub.perimeters = [{process: "defaultProcess", stateRights:[{state:"processState",right:"ReceiveAndWrite",filteringNotificationAllowed:true}]} ];
         opfabServicesInterfaceStub.connectedUsers = ['operator_1'];

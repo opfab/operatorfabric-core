@@ -20,10 +20,9 @@ function getOpfabServicesInterface() {
     return new CardsExternalDiffusionOpfabServicesInterface()
         .setLogin('test')
         .setPassword('test')
-        .setOpfabUrl('url')
         .setOpfabGetTokenUrl('tokenurl')
-        .setOpfabGetUsersConnectedUrl('test')
-        .setOpfabGetCardsUrl('test')
+        .setOpfabUsersUrl('test')
+        .setOpfabCardsConsultationUrl('test')
         .setLogger(logger);
 }
 

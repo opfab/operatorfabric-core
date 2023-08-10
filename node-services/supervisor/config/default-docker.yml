@@ -1,13 +1,11 @@
 opfab:
   login: service_supervisor
   password: test
-  connectedUsersUrl: http://cards-consultation:2104/cards/connections
-  publicationUrl: http://cards-publication:2102/cards
-  cardsUrl: http://cards-publication:2102/cards/cards
-  entitiesUrl: http://users:2103/users/entities
-  currentUserWithPerimetersUrl: http://users:2103/CurrentUserWithPerimeters
-  getTokenUrl: http://web-ui/auth/token
-  tokenExpireClaim: exp
+  usersUrl: "http://users:2103"
+  cardsPublicationUrl: "http://cards-publication:2102"
+  cardsConsultationUrl: "http://cards-consultation:2104"
+  getTokenUrl: "http://web-ui/auth/token"
+  tokenExpireClaim: "exp"
 logConfig:
   logLevel: info
 supervisor:
