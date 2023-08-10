@@ -120,3 +120,12 @@ Feature: Bundle
     Then status 400
     And match response.message == 'The id of the process should not contain characters #, ?, /, \\'
 
+
+  Scenario: Post Bundle for supervisor (needed for tests in supervisor.feature)
+    # Push bundle
+    Given url opfabUrl + '/businessconfig/processes'
+    And header Authorization = 'Bearer ' + authToken
+    And multipart file file = {read:'resources/bundle_supervisor.tar.gz', contentType: 'application/gzip'}
+    When method post
+    Then status 201
+

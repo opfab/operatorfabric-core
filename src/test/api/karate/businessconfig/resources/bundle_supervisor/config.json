@@ -1,0 +1,19 @@
+{
+  "id": "supervisor",
+  "name": "Supervisor ",
+  "version": "1",
+  "states": {
+    "disconnectedEntity": {
+      "name":  "Entity disconnected",
+      "description": "Entity disconnected",
+      "templateName": "connection",
+      "acknowledgmentAllowed": "Always"
+    },
+    "unacknowledgedCards": {
+      "name":  "Card not acknowledged",
+      "description": "Card not acknowledged",
+      "templateName": "acknowledgement",
+      "acknowledgmentAllowed": "Always"
+    }
+  }
+}
