@@ -1,0 +1,10 @@
+{
+	"connection":{
+		"title": "{{disconnected}} disconnected",
+		"summary": "{{disconnected}} disconnected for at least {{minutes}} minutes "
+	},
+	"acknowledgement":{
+		"title": "Card {{title}} not acknowledged",
+		"summary": "Card {{title}} - {{summary}} not acknowledged"
+	}
+}
