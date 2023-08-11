@@ -66,7 +66,7 @@ subprojects {
         reports {
             xml.required = true
             csv.required = false
-            html.destination file("${buildDir}/reports/coverage")
+            html.outputLocation = file("${buildDir}/reports/coverage")
         }
     }
 
