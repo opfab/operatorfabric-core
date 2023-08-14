@@ -7,13 +7,20 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {AfterViewInit, Component, EventEmitter, Input, OnDestroy, OnInit, Output} from '@angular/core';
+import {
+    AfterContentInit,
+    Component,
+    EventEmitter,
+    Input,
+    OnDestroy,
+    OnInit,
+    Output
+} from '@angular/core';
 import {ConfigService} from 'app/business/services/config.service';
 import {Card} from '@ofModel/card.model';
 import {LightCard} from '@ofModel/light-card.model';
 import {AbstractControl, FormGroup} from '@angular/forms';
 import {ProcessesService} from 'app/business/services/businessconfig/processes.service';
-import {debounceTime, takeUntil} from 'rxjs/operators';
 import {Subject} from 'rxjs';
 import {NgbDateStruct, NgbTimeStruct} from '@ng-bootstrap/ng-bootstrap';
 import {DateTimeNgb} from '@ofModel/datetime-ngb.model';
@@ -55,7 +62,7 @@ export const transformToTimestamp = (date: NgbDateStruct, time: NgbTimeStruct): 
     templateUrl: './archives-logging-filters.component.html',
     styleUrls: ['./archives-logging-filters.component.scss']
 })
-export class ArchivesLoggingFiltersComponent implements OnInit, OnDestroy, AfterViewInit {
+export class ArchivesLoggingFiltersComponent implements OnInit, OnDestroy, AfterContentInit {
     @Input() public card: Card | LightCard;
     @Input() parentForm: FormGroup;
     @Input() visibleProcesses: any[];
@@ -115,8 +122,6 @@ export class ArchivesLoggingFiltersComponent implements OnInit, OnDestroy, After
     statesMultiSelectOptionsPerProcesses: Array<MultiSelectOption> = [];
     processesGroups: Map<string, {name: string; processes: string[]}>;
 
-    dateTimeFilterChange = new Subject();
-
     publishMinDate: {year: number; month: number; day: number} = null;
     publishMaxDate: {year: number; month: number; day: number} = null;
     activeMinDate: {year: number; month: number; day: number} = null;
@@ -146,13 +151,9 @@ export class ArchivesLoggingFiltersComponent implements OnInit, OnDestroy, After
         this.loadValuesForFilters();
         this.changeProcessesWhenSelectProcessGroup();
         this.changeStatesWhenSelectProcess();
-
-        this.dateTimeFilterChange
-            .pipe(takeUntil(this.unsubscribe$), debounceTime(1000))
-            .subscribe(() => this.setDateFilterBounds());
     }
 
-    ngAfterViewInit(): void {
+    ngAfterContentInit() {
         this.setDateFilterBounds();
     }
 
@@ -370,10 +371,6 @@ export class ArchivesLoggingFiltersComponent implements OnInit, OnDestroy, After
         }
     }
 
-    onDateTimeChange() {
-        this.dateTimeFilterChange.next(null);
-    }
-
     query(): void {
         if (this.isFormValid()) {
             this.search.emit(null);
@@ -390,7 +387,6 @@ export class ArchivesLoggingFiltersComponent implements OnInit, OnDestroy, After
         this.publishMaxDate = null;
         this.activeMinDate = null;
         this.activeMaxDate = null;
-        this.setDateFilterBounds();
     }
 
     ngOnDestroy() {

@@ -85,22 +85,22 @@
             <div class="opfab-publish-date" [formGroup]="this.parentForm">
                 <div>
                     <of-datetime-filter id="opfab-publish-date-from" filterPath="publishDateFrom" formControlName="publishDateFrom" [defaultDate]="defaultMinPublishDate" [defaultTime]="{ hour: 0, minute: 0}"
-                    labelKey="shared.filters." [maxDate]="publishMaxDate" (change)="onDateTimeChange()"></of-datetime-filter>
+                    labelKey="shared.filters." [maxDate]="publishMaxDate"></of-datetime-filter>
                 </div>
                 <div>
                     <of-datetime-filter id="opfab-publish-date-to" filterPath="publishDateTo" formControlName="publishDateTo"
-                    labelKey="shared.filters." [minDate]="publishMinDate" (change)="onDateTimeChange()"></of-datetime-filter>
+                    labelKey="shared.filters." [minDate]="publishMinDate"></of-datetime-filter>
                 </div>
             </div>
 
             <div class="opfab-vertical-bar"></div>
             <div style="margin-left:40px;width:230px;min-width: 230px;" [formGroup]="this.parentForm">
                 <div>
-                    <of-datetime-filter id="opfab-active-from" filterPath="activeFrom" formControlName="activeFrom" labelKey="shared.filters." [maxDate]="activeMaxDate" (change)="onDateTimeChange()">
+                    <of-datetime-filter id="opfab-active-from" filterPath="activeFrom" formControlName="activeFrom" labelKey="shared.filters." [maxDate]="activeMaxDate">
                     </of-datetime-filter>
                 </div>
                 <div>
-                    <of-datetime-filter id="opfab-active-to" filterPath="activeTo" formControlName="activeTo" labelKey="shared.filters." [minDate]="activeMinDate" (change)="onDateTimeChange()">
+                    <of-datetime-filter id="opfab-active-to" filterPath="activeTo" formControlName="activeTo" labelKey="shared.filters." [minDate]="activeMinDate">
                     </of-datetime-filter>
                 </div>
             </div>
