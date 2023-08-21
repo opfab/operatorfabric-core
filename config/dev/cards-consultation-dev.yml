@@ -1,3 +1,4 @@
 # This file contains only parameters that need to be overridden from the docker configuration
 
-checkIfUserIsAlreadyConnected: false
+operatorfabric:
+  checkIfUserIsAlreadyConnected: false

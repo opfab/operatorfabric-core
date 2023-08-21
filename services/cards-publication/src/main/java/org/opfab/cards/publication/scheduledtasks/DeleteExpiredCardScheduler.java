@@ -26,9 +26,9 @@ public class DeleteExpiredCardScheduler {
     @Autowired
     Services services;
 
-    @Value("${delayForDeleteExpiredCardsScheduling:60000}") String delayForDeleteExpiredCardsScheduling;
+    @Value("${operatorfabric.cards-publication.delayForDeleteExpiredCardsScheduling:60000}") String delayForDeleteExpiredCardsScheduling;
 
-    @Scheduled(fixedDelayString = "${delayForDeleteExpiredCardsScheduling:60000}")
+    @Scheduled(fixedDelayString = "${operatorfabric.cards-publication.delayForDeleteExpiredCardsScheduling:60000}")
     public void deleteExpiredCards() {
         services.getCardProcessingService().deleteCardsByExpirationDate(Instant.now());
     }

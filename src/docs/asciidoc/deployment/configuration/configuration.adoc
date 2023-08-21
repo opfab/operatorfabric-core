@@ -18,8 +18,9 @@ The configuration is divided into two parts, the configuration of the business s
 
 Opfab comes with a default embedded configuration, but certain parameters need to be provided and configured.
 
-The configuration is centralized in the *config* directory of the GitHub repository. The dev subdirectory contains confi
-gurations specific to development environments, while the *docker* subdirectory contains a specific configuration meant for use in a full docker environment.
+The configuration is centralized in the *config* directory of the GitHub repository. The dev subdirectory contains
+configurations specific to development environments, while the *docker* subdirectory contains a specific configuration
+meant for use in a full docker environment.
 
 == Business service configuration
 
@@ -78,7 +79,7 @@ The user service has these specific properties :
 |operatorfabric.users.default.user-settings|null| Array of user settings objects to create upon startup if they don't exist
 |operatorfabric.users.default.groups|null| Array of group objects to create upon startup if they don't exist
 |operatorfabric.users.default.entities|null| Array of entity objects to create upon startup if they don't exist
-|daysBeforeLogExpiration|61| Duration beyond which user action logs get automatically deleted
+|operatorfabric.users.daysBeforeLogExpiration|61| Duration beyond which user action logs get automatically deleted
 
 |===
 
@@ -90,19 +91,19 @@ The cards publication service has these specific properties :
 |===
 |name|default|Description
 
-|checkAuthenticationForCardSending|true|If false, OperatorFabric will not require user authentication to send or delete a card via endpoint /cards (it does not concern user cards which always need authentication). Be careful when setting the value to false, nginx conf must be adapted for security reasons (see security warning in link:https://github.com/opfab/operatorfabric-core/blob/master/config/docker/nginx.conf[the reference nginx.conf])
-|authorizeToSendCardWithInvalidProcessState|false|If true, OperatorFabric will allow to publish a card referring a not existent process or state 
-|checkPerimeterForCardSending|true|If true, OperatorFabric will check user perimeter for card sending via endpoint /cards (it does not concern user cards which are always controlled).
+|operatorfabric.cards-publication.checkAuthenticationForCardSending|true|If false, OperatorFabric will not require user authentication to send or delete a card via endpoint /cards (it does not concern user cards which always need authentication). Be careful when setting the value to false, nginx conf must be adapted for security reasons (see security warning in link:https://github.com/opfab/operatorfabric-core/blob/master/config/docker/nginx.conf[the reference nginx.conf])
+|operatorfabric.cards-publication.authorizeToSendCardWithInvalidProcessState|false|If true, OperatorFabric will allow to publish a card referring a not existent process or state
+|operatorfabric.cards-publication.checkPerimeterForCardSending|true|If true, OperatorFabric will check user perimeter for card sending via endpoint /cards (it does not concern user cards which are always controlled).
 |spring.kafka.consumer.group-id |null| If set, support for receiving cards via Kafka is enabled
 |spring.deserializer.value.delegate.class|io.confluent.kafka.serializers.
 KafkaAvroDeserializer| Deserializer used to convert the received bytes into objects
 |spring.serializer.value.delegate.class |io.confluent.kafka.serializers.
 KafkaAvroSerializer|Serializer used to convert cards to bytes
 |spring.kafka.producer.bootstrap-servers|http://localhost:9092|comma separated list of URL(s) of the broker(s) / bootstrap server(s)
-|opfab.kafka.topics.card.topicname |opfab|Name of the topic to read the messages from
-|opfab.kafka.topics.response-card.topicname |opfab|Name of the topic to place the response cards to
-|opfab.kafka.schema.registry.url|http://localhost:8081|URL of the schema registry. Can be set to the empty string "" is no registry is used
-|delayForDeleteExpiredCardsScheduling|60000|The delay in millisecond after the last execution finished and the next execution starts.
+|operatorfabric.cards-publication.kafka.topics.card.topicname |opfab|Name of the topic to read the messages from
+|operatorfabric.cards-publication.kafka.topics.response-card.topicname |opfab|Name of the topic to place the response cards to
+|operatorfabric.cards-publication.kafka.schema.registry.url|http://localhost:8081|URL of the schema registry. Can be set to the empty string "" is no registry is used
+|operatorfabric.cards-publication.delayForDeleteExpiredCardsScheduling|60000|The delay in millisecond after the last execution finished and the next execution starts.
 [[cardSendingLimitCardCount]]
 |cardSendingLimitCardCount|1000|For the Rate limiter, this defines how many cards can be sent during `cardSendingLimitPeriod`.
 [[cardSendingLimitPeriod]]
@@ -175,13 +176,14 @@ spring:
     producer:
       client-id: operatorfabric-producer
     bootstrap-servers: kafka-server:9092
-opfab:
-  kafka:
-    topics:
-      card:
-        topicname: m_opfab-card-commands_dev
-      response-card:
-        topicname: m_opfab-card-response_dev
+operatorfabric:
+  cards-publication:
+    kafka:
+      topics:
+        card:
+          topicname: m_opfab-card-commands_dev
+        response-card:
+          topicname: m_opfab-card-response_dev
 ----
 
 Example Kafka configuration SASL:
@@ -230,13 +232,14 @@ spring:
         endpoint:
           identification:
             algorithm: ""
-opfab:
-  kafka:
-    topics:
-      card:
-        topicname: opfab-card-commands
-      response-card:
-        topicname: opfab-card-response
+operatorfabric:
+  cards-publication:
+    kafka:
+      topics:
+        card:
+          topicname: opfab-card-commands
+        response-card:
+          topicname: opfab-card-response
 ----
 
 Example Kafka configuration Kerberos:
@@ -285,13 +288,14 @@ spring:
     producer:
       client-id: OPFAB
       value-serializer: org.opfab.cards.publication.kafka.producer.KafkaAvroWithoutRegistrySerializer
-opfab:
-  kafka:
-    topics:
-      card:
-        topicname: opfab-card-commands
-      response-card:
-        topicname: opfab-card-response
+operatorfabric:
+  cards-publication:
+    kafka:
+      topics:
+        card:
+          topicname: opfab-card-commands
+        response-card:
+          topicname: opfab-card-response
 ----
 
 Example Kafka configuration OAUTHBEARER / AADToken:
@@ -317,7 +321,7 @@ The cards-consultation service has these specific properties :
 |===
 |name|default|Description
 
-|checkIfUserIsAlreadyConnected|true|If false, OperatorFabric will allow a user to have several sessions opened at the same time. However, it may cause synchronization problems between the sessions using the same login, so it is recommended to let it true, its default value. 
+|operatorfabric.checkIfUserIsAlreadyConnected|true|If false, OperatorFabric will allow a user to have several sessions opened at the same time. However, it may cause synchronization problems between the sessions using the same login, so it is recommended to let it true, its default value.
 |operatorfabric.heartbeat.checkIntervalInSeconds|10| Frequency at which the heartbeat from the ui to the server is checked.
 |operatorfabric.heartbeat.delayInSecondsToConsiderUserDisconnected|100| After how many seconds without heartbeat, the user is considered disconnected
 |===

@@ -237,3 +237,18 @@ becomes :
     volumes:
       - "./ui-config:/usr/share/nginx/html/config"
 ```
+
+== Normalization of some configuration parameters
+
+Some configuration parameters have been renamed, so you have to check your config files and adapt them. Here are the
+concerned parameters (old name -> new name):
+
+- daysBeforeLogExpiration -> operatorfabric.users.daysBeforeLogExpiration
+- checkAuthenticationForCardSending -> operatorfabric.cards-publication.checkAuthenticationForCardSending
+- authorizeToSendCardWithInvalidProcessState -> operatorfabric.cards-publication.authorizeToSendCardWithInvalidProcessState
+- checkPerimeterForCardSending -> operatorfabric.cards-publication.checkPerimeterForCardSending
+- opfab.kafka.topics.card.topicname -> operatorfabric.cards-publication.kafka.topics.card.topicname
+- opfab.kafka.topics.response-card.topicname -> operatorfabric.cards-publication.kafka.topics.response-card.topicname
+- opfab.kafka.schema.registry.url -> operatorfabric.cards-publication.kafka.schema.registry.url
+- delayForDeleteExpiredCardsScheduling -> operatorfabric.cards-publication.delayForDeleteExpiredCardsScheduling
+- checkIfUserIsAlreadyConnected -> operatorfabric.checkIfUserIsAlreadyConnected

@@ -40,7 +40,7 @@ public class CardTranslationService implements EventListener{
     public static final String NO_I18N_FOR_KEY = "Impossible to publish card : no i18n translation for key=%1$s (process=%2$s, processVersion=%3$s, processInstanceId=%4$s)";
     public static final String NO_I18N_FILE = "Impossible to publish card : no i18n file for process=%1$s, processVersion=%2$s (processInstanceId=%3$s)";
 
-    @Value("${authorizeToSendCardWithInvalidProcessState:false}") 
+    @Value("${operatorfabric.cards-publication.authorizeToSendCardWithInvalidProcessState:false}")
     boolean authorizeToSendCardWithInvalidProcessState;
 
 

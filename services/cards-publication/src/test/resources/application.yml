@@ -6,6 +6,8 @@ external-recipients:
     - id:  "api_test_externalRecipient2"
       url: "http://localhost:8090/test"
       propagateUserToken: true
-checkAuthenticationForCardSending: true
-checkPerimeterForCardSending: false
-delayForDeleteExpiredCardsScheduling: "60000"
+operatorfabric:
+  cards-publication:
+    checkAuthenticationForCardSending: true
+    checkPerimeterForCardSending: false
+    delayForDeleteExpiredCardsScheduling: "60000"
