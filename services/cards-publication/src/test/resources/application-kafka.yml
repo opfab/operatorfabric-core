@@ -13,13 +13,16 @@ spring:
     consumer:
       group-id: opfab-command
 
-opfab:
-  kafka:
-    topics:
-      card:
-        topicname: m_opfab-card-commands_dev
-      response-card:
-        topicname: m_opfab-card-response_dev
+
+
+operatorfabric:
+  cards-publication:
+    kafka:
+      topics:
+        card:
+          topicname: m_opfab-card-commands_dev
+        response-card:
+          topicname: m_opfab-card-response_dev
 external-recipients:
   recipients:
     - id:  "api_test_externalRecipient1"

@@ -1,16 +1,7 @@
 server:
   port: 2102
   forward-headers-strategy: framework # Needed for IP control feature
-opfab:
-  kafka:
-    topics:
-      card:
-        topicname: opfab
-      response-card:
-        topicname: opfab-response
-    schema:
-      registry:
-        url: http://localhost:8081
+
 spring:
   application:
     name: cards-publication
@@ -37,5 +28,15 @@ operatorfabric:
   servicesUrls:
     users: "users:2103"
     businessconfig: "businessconfig:2100"
+  cards-publication:
+    kafka:
+      topics:
+        card:
+          topicname: opfab
+        response-card:
+          topicname: opfab-response
+      schema:
+        registry:
+          url: http://localhost:8081
 
 

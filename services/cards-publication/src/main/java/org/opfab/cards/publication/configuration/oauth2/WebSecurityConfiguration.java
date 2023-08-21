@@ -41,7 +41,7 @@ public class WebSecurityConfiguration {
 
     public static final String ADMIN_ROLE = "ADMIN";
 
-    @Value("${checkAuthenticationForCardSending:true}")
+    @Value("${operatorfabric.cards-publication.checkAuthenticationForCardSending:true}")
     private boolean checkAuthenticationForCardSending;
 
     @Bean

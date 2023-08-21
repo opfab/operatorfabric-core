@@ -37,7 +37,9 @@ The response card is to be received by a third party application for business pr
 will receive the card as an HTTP POST request. The card is in json format (the same format as when we send a card).
 The field data in the json contains the user response.
 
-The url of the third party receiving the response card is to be set in the .yml of the publication service. It is also possible to configure wether he user token shall be propagated to the third party or not by setting the "propagateUserToken" boolean property. Here is an example with two third parties configured.
+The url of the third party receiving the response card is to be set in the .yml of the publication service. It is also
+possible to configure whether the user token shall be propagated to the third party or not by setting the
+"propagateUserToken" boolean property. Here is an example with two third parties configured.
 ....
 external-recipients:
   recipients: 
