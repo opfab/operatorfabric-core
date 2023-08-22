@@ -40,7 +40,7 @@ describe('Question Card template', () => {
         expect(view.getQuestion()).toEqual('My question &lt;script&gt; question');
     });
 
-    it('Given a card WHEN user is not allowed to response THEN response input is hidden', () => {
+    it('Given a card WHEN user is not allowed to answer THEN response input is hidden', () => {
         opfab.currentCard.isUserAllowedToRespond = () => false;
         let inputFieldVisibility = true;
         view.listenToInputFieldVisibility((visible) => (inputFieldVisibility = visible));

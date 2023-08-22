@@ -80,6 +80,27 @@
       "impossibleToSaveSettings": "Om technische redenen is het niet mogelijk om de instellingen op te slaan",
       "incorrectSubmission": "Onjuiste invoer",
       "technicalError" : "Technische fout"
+    },
+    "calendar": {
+      "monday":"Maandag",
+      "tuesday":"Dinsdag",
+      "wednesday":"Woensdag",
+      "thursday":"Donderdag",
+      "friday":"Vrijdag",
+      "saturday":"Zaterdag",
+      "sunday":"Zondag",
+      "january":"Januari",
+      "february":"Februari",
+      "march":"Maart",
+      "april":"April",
+      "may":"Mei",
+      "june":"Juni",
+      "july":"Juli",
+      "august":"Augustus",
+      "september":"September",
+      "october":"Oktober",
+      "november":"November",
+      "december":"December"
     }
   },
   "global":{
@@ -607,6 +628,42 @@
     "questionUserCard": {
       "noQuestionError":"U moet een vraag opgeven",
       "textareaLabel":"VRAAG"
+    },
+    "taskCard": {
+      "taskToDo": "U heeft de volgende taak te doen",
+      "duration": "Duur",
+      "minutes": "minuten",
+      "at": "Op",
+      "first": "eerste",
+      "second": "tweede",
+      "third": "derde",
+      "fourth": "vierde",
+      "last": "laatste",
+      "the": "De",
+      "on": "op",
+      "firstDayOfTheMonth": "De eerste dag van de maand",
+      "lastDayOfTheMonth": "De laatste dag van de maand",
+      "dayOfTheMonth": "dag van de maand",
+      "in": "in"
+   },
+    "taskUserCard": {
+      "taskDescriptionLabel": "TAAKBESCHRIJVING",
+      "dailyFreq": "Dagelijkse frequentie",
+      "monthlyFreq": "Maandelijkse frequentie",
+      "Repeat": "HERHAAL ELKE",
+      "selectAll": "Alles selecteren",
+      "ordinalDay": "N-de dag",
+      "ordinalWeekDay": "N-de weekdag",
+      "dayNumber": "DAGNUMMER",
+      "firstDayOfTheMonth": "Eerste dag van de maand",
+      "lastDayOfTheMonth": "Laatste dag van de maand",
+      "dayOfTheMonth": "dag van de maand",
+      "occurrenceNumber": "NUMMER VAN VOORKOMEN",
+      "weekDay": "WEEKDAG",
+      "at": "OM",
+      "time": "TIJD",
+      "taskDuration": "TAAKDUUR (MINUTEN)",
+      "minutesForReminder": "MINUTEN VOOR HERINNERING VOOR TAAK"
     }, 
     "message-or-question-listCard": {
       "answers": "Antwoorden",
@@ -621,7 +678,7 @@
       "titleLabel": "TITEL",
       "messageLabel": "BERICHT",
       "emptyMessage": "U kunt geen leeg bericht verzenden"
-    } 
+    }
 
   }
 }

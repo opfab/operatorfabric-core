@@ -80,6 +80,27 @@
       "impossibleToSaveSettings": "Impossible to save settings for technical reasons",
       "incorrectSubmission": "Incorrect submission",
       "technicalError" : "Technical error"
+    },
+    "calendar": {
+      "monday":"Monday",
+      "tuesday":"Tuesday",
+      "wednesday":"Wednesday",
+      "thursday":"Thursday",
+      "friday":"Friday",
+      "saturday":"Saturday",
+      "sunday":"Sunday",
+      "january":"January",
+      "february":"February",
+      "march":"March",
+      "april":"April",
+      "may":"May",
+      "june":"June",
+      "july":"July",
+      "august":"August",
+      "september":"September",
+      "october":"October",
+      "november":"November",
+      "december":"December"
     }
   },
   "global":{
@@ -607,6 +628,42 @@
     "questionUserCard": {
       "noQuestionError":"You must provide a question",
       "textareaLabel":"QUESTION"
+    },
+    "taskCard": {
+      "taskToDo": "You have the following task to do ",
+      "duration": "Duration",
+      "minutes": "minutes",
+      "at": "At",
+      "first": "first",
+      "second": "second",
+      "third": "third",
+      "fourth": "fourth",
+      "last": "last",
+      "the": "The",
+      "on": "on",
+      "firstDayOfTheMonth": "The first day of the month",
+      "lastDayOfTheMonth": "The last day of the month",
+      "dayOfTheMonth": "day of the month",
+      "in": "in"
+    },
+    "taskUserCard": {
+      "taskDescriptionLabel": "TASK DESCRIPTION",
+      "dailyFreq": "Daily frequency",
+      "monthlyFreq": "Monthly frequency",
+      "Repeat": "REPEAT EVERY",
+      "selectAll": "Select all",
+      "ordinalDay": "Nth day",
+      "ordinalWeekDay": "Nth weekday",
+      "dayNumber": "Nth DAY",
+      "firstDayOfTheMonth": "First day of the month",
+      "lastDayOfTheMonth": "Last day of the month",
+      "dayOfTheMonth": "day of the month",
+      "occurrenceNumber": "OCCURRENCE NUMBER",
+      "weekDay": "WEEKDAY",
+      "at": "AT",
+      "time": "TIME",
+      "taskDuration": "TASK DURATION (MINUTES) ",
+      "minutesForReminder": "MINUTES TO REMIND BEFORE TASK"
     }, 
     "message-or-question-listCard": {
       "answers": "Answers",
