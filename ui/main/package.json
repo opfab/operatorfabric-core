@@ -57,7 +57,7 @@
     "rrule": "2.7.2",
     "rxjs": "7.8.1",
     "virtual-select-plugin": "1.0.39",
-    "xlsx": "0.18.5"
+    "xlsx": "https://cdn.sheetjs.com/xlsx-0.20.0/xlsx-0.20.0.tgz"
   },
   "devDependencies": {
     "@angular-devkit/build-angular": "16.2.0",
