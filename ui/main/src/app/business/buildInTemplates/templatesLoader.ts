@@ -7,15 +7,18 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {MessageCardTemplate} from "./message/messageCardTemplate";
-import {MessageUserCardTemplate} from "./message/messageUserCardTemplate";
-import {QuestionCardTemplate} from "./question/card/questionCardTemplate";
-import {QuestionUserCardTemplate} from "./question/usercard/questionUserCardTemplate";
+import {MessageCardTemplate} from './message/messageCardTemplate';
+import {MessageUserCardTemplate} from './message/messageUserCardTemplate';
+import {QuestionCardTemplate} from './question/card/questionCardTemplate';
+import {QuestionUserCardTemplate} from './question/usercard/questionUserCardTemplate';
+import {TaskCardTemplate} from './task/card/taskCardTemplate';
+import {TaskUserCardTemplate} from './task/usercard/taskUserCardTemplate';
 
-
-export const loadBuildInTemplates = (() => {
+export const loadBuildInTemplates = () => {
     customElements.define('opfab-message-card', MessageCardTemplate);
     customElements.define('opfab-message-usercard', MessageUserCardTemplate);
     customElements.define('opfab-question-card', QuestionCardTemplate);
     customElements.define('opfab-question-usercard', QuestionUserCardTemplate);
-});
+    customElements.define('opfab-task-card', TaskCardTemplate);
+    customElements.define('opfab-task-usercard', TaskUserCardTemplate);
+};

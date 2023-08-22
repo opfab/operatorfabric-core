@@ -608,7 +608,30 @@
     "questionUserCard": {
       "noMessageError":"Vous devez fournir une question",
       "textareaLabel":"QUESTION"
-    } 
-
+    },
+    "taskCard": {
+      "monday":"Lundi",
+      "tuesday":"Mardi",
+      "wednesday":"Mercredi",
+      "thursday":"Jeudi",
+      "friday":"Vendredi",
+      "saturday":"Samedi",
+      "sunday":"Dimanche",
+      "january":"Janvier",
+      "february":"Fevrier",
+      "march":"Mars",
+      "april":"Avril",
+      "may":"Mai",
+      "june":"Juin",
+      "july":"Juillet",
+      "august":"Août",
+      "september":"Septembre",
+      "october":"Octobre",
+      "november":"Novembre",
+      "december":"Décembre"
+    },
+    "taskUserCard": {
+      "taskDescriptionLabel": "DESCRIPTION DE LA TÂCHE"
+    }
   }
 }
