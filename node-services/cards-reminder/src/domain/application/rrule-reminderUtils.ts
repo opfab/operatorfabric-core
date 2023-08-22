@@ -28,13 +28,10 @@ export function getNextTimeForRepeating(card: Card, startingDate?: number): numb
             }
         });
         return nextTime;
+    } else if (startingDate > card.startDate) {
+        return getNextDateTimeFromRRule(startingDate, card);
     } else {
-        if (startingDate > card.startDate) {
-            return getNextDateTimeFromRRule(startingDate, card);
-        }
-        else {
-            return getNextDateTimeFromRRule(card.startDate, card);
-        }
+        return getNextDateTimeFromRRule(card.startDate, card);
     }
 }
 
@@ -46,12 +43,10 @@ function getNextTimeForRepeatingFromTimeSpan(timeSpan: TimeSpan, card: Card, sta
             } else {
                 return timeSpan.start;
             }
+        } else if (startingDate > timeSpan.start) {
+            return getNextDateTimeFromRRule(startingDate, card);
         } else {
-            if (startingDate > timeSpan.start) {
-                return getNextDateTimeFromRRule(startingDate, card);
-            } else {
-                return getNextDateTimeFromRRule(timeSpan.start, card);
-            }
+            return getNextDateTimeFromRRule(timeSpan.start, card);
         }
     }
     return -1;

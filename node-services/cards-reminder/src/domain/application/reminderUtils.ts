@@ -37,12 +37,10 @@ function getNextTimeForRepeatingFromTimeSpan(timeSpan: TimeSpan, startingDate?: 
             } else {
                 return timeSpan.start;
             }
+        } else if (startingDate > timeSpan.start) {
+            return getNextDateTimeFromRecurrence(startingDate, timeSpan.recurrence);
         } else {
-            if (startingDate > timeSpan.start) {
-                return getNextDateTimeFromRecurrence(startingDate, timeSpan.recurrence);
-            } else {
-                return getNextDateTimeFromRecurrence(timeSpan.start, timeSpan.recurrence);
-            }
+            return getNextDateTimeFromRecurrence(timeSpan.start, timeSpan.recurrence);
         }
     }
     return -1;
