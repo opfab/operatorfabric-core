@@ -33,7 +33,7 @@ export class AngularConfigServer extends AngularServer implements ConfigServer {
         this.configUrl = `${environment.url}/config/web-ui.json`;
         this.menuUrl = `${environment.url}/config/ui-menu.json`;
         this.monitoringConfigUrl = `${environment.url}/businessconfig/monitoring`;
-        this.localUrl = `${environment.url}/assets/i18n`;
+        this.localUrl = `/assets/i18n`;
         this.realTimeScreensUrl = `${environment.url}/businessconfig/realtimescreens`;
     }
 
