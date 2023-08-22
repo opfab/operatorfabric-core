@@ -39,41 +39,36 @@ export function getRandomIndex<E>(array: E[]) {
 }
 
 export function getOneRandomLightCard(lightCardTemplate?: any): LightCard {
-    lightCardTemplate = lightCardTemplate ? lightCardTemplate : {};
+    lightCardTemplate = lightCardTemplate ?? {};
     const today = new Date().getTime();
     const startTime = today + generateRandomPositiveIntegerWithinRangeWithOneAsMinimum(1234);
     return new LightCard(
         getRandomAlphanumericValue(3, 24),
-        lightCardTemplate.id ? lightCardTemplate.id : getRandomAlphanumericValue(3, 24),
-        lightCardTemplate.publisher ? lightCardTemplate.publisher : 'testPublisher',
-        lightCardTemplate.publisherVersion ? lightCardTemplate.publisherVersion : getRandomAlphanumericValue(3, 24),
-        lightCardTemplate.publishDate ? lightCardTemplate.publishDate : today,
-        lightCardTemplate.startDate ? lightCardTemplate.startDate : startTime,
+        lightCardTemplate.id ?? getRandomAlphanumericValue(3, 24),
+        lightCardTemplate.publisher ?? 'testPublisher',
+        lightCardTemplate.publisherVersion ?? getRandomAlphanumericValue(3, 24),
+        lightCardTemplate.publishDate ?? today,
+        lightCardTemplate.startDate ?? startTime,
         lightCardTemplate.endDate
-            ? lightCardTemplate.endDate
-            : startTime + generateRandomPositiveIntegerWithinRangeWithOneAsMinimum(3455),
+            ?? startTime + generateRandomPositiveIntegerWithinRangeWithOneAsMinimum(3455),
         lightCardTemplate.expirationDate
-            ? lightCardTemplate.expirationDate
-            : startTime + generateRandomPositiveIntegerWithinRangeWithOneAsMinimum(3455),
-        lightCardTemplate.severity ? lightCardTemplate.severity : getRandomSeverity(),
-        lightCardTemplate.hasBeenAcknowledged ? lightCardTemplate.hasBeenAcknowledged : false,
-        lightCardTemplate.hasBeenRead ? lightCardTemplate.hasBeenRead : false,
-        lightCardTemplate.hasChildCardFromCurrentUserEntity
-            ? lightCardTemplate.hasChildCardFromCurrentUserEntity
-            : false,
+            ?? startTime + generateRandomPositiveIntegerWithinRangeWithOneAsMinimum(3455),
+        lightCardTemplate.severity ?? getRandomSeverity(),
+        lightCardTemplate.hasBeenAcknowledged ?? false,
+        lightCardTemplate.hasBeenRead ?? false,
+        lightCardTemplate.hasChildCardFromCurrentUserEntity ?? false,
         getRandomAlphanumericValue(3, 24),
         lightCardTemplate.lttd
-            ? lightCardTemplate.lttd
-            : generateRandomPositiveIntegerWithinRangeWithOneAsMinimum(4654, 5666),
+            ?? generateRandomPositiveIntegerWithinRangeWithOneAsMinimum(4654, 5666),
         getRandomI18nData(),
         getRandomI18nData(),
         getRandomAlphanumericValue(3, 24),
         getRandomAlphanumericValue(3, 24),
-        lightCardTemplate.tags ? lightCardTemplate.tags : null,
-        lightCardTemplate.timeSpans ? lightCardTemplate.timeSpans : null,
-        lightCardTemplate.rrule ? lightCardTemplate.rrule : null,
-        lightCardTemplate.process ? lightCardTemplate.process : 'testProcess',
-        lightCardTemplate.state ? lightCardTemplate.state : 'testState'
+        lightCardTemplate.tags ?? null,
+        lightCardTemplate.timeSpans ?? null,
+        lightCardTemplate.rrule ?? null,
+        lightCardTemplate.process ?? 'testProcess',
+        lightCardTemplate.state ?? 'testState'
     );
 }
 
@@ -84,43 +79,41 @@ export function getRandomSeverity(): Severity {
 
 
 export function getOneRandomCard(cardTemplate?: any): Card {
-    cardTemplate = cardTemplate ? cardTemplate : {};
+    cardTemplate = cardTemplate ?? {};
     const today = new Date().getTime();
     const startTime = today + generateRandomPositiveIntegerWithinRangeWithOneAsMinimum(1234);
     return new Card(
         getRandomAlphanumericValue(3, 24),
-        cardTemplate.id ? cardTemplate.id : getRandomAlphanumericValue(3, 24),
-        cardTemplate.publisher ? cardTemplate.publisher : getRandomAlphanumericValue(3, 24),
-        cardTemplate.processVersion ? cardTemplate.processVersion : getRandomAlphanumericValue(3, 24),
-        cardTemplate.publishDate ? cardTemplate.publishDate : today,
-        cardTemplate.startDate ? cardTemplate.startDate : startTime,
+        cardTemplate.id ?? getRandomAlphanumericValue(3, 24),
+        cardTemplate.publisher ?? getRandomAlphanumericValue(3, 24),
+        cardTemplate.processVersion ?? getRandomAlphanumericValue(3, 24),
+        cardTemplate.publishDate ?? today,
+        cardTemplate.startDate ?? startTime,
         cardTemplate.endDate
-            ? cardTemplate.endDate
-            : startTime + generateRandomPositiveIntegerWithinRangeWithOneAsMinimum(3455),
+            ?? startTime + generateRandomPositiveIntegerWithinRangeWithOneAsMinimum(3455),
         cardTemplate.expirationDate
-            ? cardTemplate.expirationDate
-            : startTime + generateRandomPositiveIntegerWithinRangeWithOneAsMinimum(3455),
-        cardTemplate.severity ? cardTemplate.severity : getRandomSeverity(),
+            ?? startTime + generateRandomPositiveIntegerWithinRangeWithOneAsMinimum(3455),
+        cardTemplate.severity ?? getRandomSeverity(),
         false,
         false,
         false,
-        cardTemplate.process ? cardTemplate.process : 'testProcess',
-        cardTemplate.processInstanceId ? cardTemplate.processInstanceId : getRandomAlphanumericValue(3, 24),
-        cardTemplate.state ? cardTemplate.state : getRandomAlphanumericValue(3, 24),
-        cardTemplate.lttd ? cardTemplate.lttd : null,
+        cardTemplate.process ?? 'testProcess',
+        cardTemplate.processInstanceId ?? getRandomAlphanumericValue(3, 24),
+        cardTemplate.state ?? getRandomAlphanumericValue(3, 24),
+        cardTemplate.lttd ?? null,
         getRandomI18nData(),
         getRandomI18nData(),
         getRandomAlphanumericValue(3, 24),
         getRandomAlphanumericValue(3, 24),
-        cardTemplate.data ? cardTemplate.data : {data: 'data'},
+        cardTemplate.data ?? {data: 'data'},
         undefined,
         undefined,
         undefined,
         undefined,
         undefined,
-        cardTemplate.entitiesAllowedToRespond ? cardTemplate.entitiesAllowedToRespond : null,
-        cardTemplate.entitiesRequiredToRespond ? cardTemplate.entitiesRequiredToRespond : null,
-        cardTemplate.entitiesAllowedToEdit ? cardTemplate.entitiesAllowedToEdit : null
+        cardTemplate.entitiesAllowedToRespond ?? null,
+        cardTemplate.entitiesRequiredToRespond ?? null,
+        cardTemplate.entitiesAllowedToEdit ?? null
     );
 }
 

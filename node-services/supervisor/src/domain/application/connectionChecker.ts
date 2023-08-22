@@ -120,7 +120,7 @@ export default class ConnectionChecker {
             entityName = entityResp.getData().name;
         else
             this.logger.info("GetEntity Response not valid");
-        const card = Object.assign({}, this.disconnectedCardTemplate);
+        const card = {...this.disconnectedCardTemplate};
         card.startDate = new Date().valueOf();
         card.processInstanceId = disconnected;
         card.entityRecipients = recipients;

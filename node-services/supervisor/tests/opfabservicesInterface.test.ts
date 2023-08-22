@@ -44,11 +44,9 @@ describe('Opfab interface', function () {
         sinon.stub(opfabServicesInterface, 'sendRequest').callsFake((request) => {
             
             if (request.url.includes('token')) return Promise.resolve({status: 200, data: {access_token: 'fakeToken'}});
-            else {
-                if (request.headers?.Authorization?.includes('Bearer fakeToken'))
-                    return Promise.resolve({status: 200, data: [{login: 'user1'}]});
-                else return Promise.resolve({status: 400});
-            }
+            else if (request.headers?.Authorization?.includes('Bearer fakeToken'))
+                return Promise.resolve({status: 200, data: [{login: 'user1'}]});
+            else return Promise.resolve({status: 400});
         });
         const GetResponse = await opfabServicesInterface.getUsersConnected();
         expect(GetResponse.isValid()).toBe(true);

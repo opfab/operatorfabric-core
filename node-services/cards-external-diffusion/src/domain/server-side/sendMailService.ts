@@ -17,7 +17,6 @@ export default class SendMailService {
 
     constructor(smtpConfig: any) {
         this.transporter = nodemailer.createTransport(smtpConfig);
-        return this;
     }
 
     public setLogger(logger: any) {

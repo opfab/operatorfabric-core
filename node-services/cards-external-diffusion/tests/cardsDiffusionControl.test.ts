@@ -69,12 +69,8 @@ class SendMailServiceStub extends SendMailService {
                 body : body,
             });
 
-            return new Promise<any>((resolve, reject) => {
-                resolve({messageId: "msg1234"});
-            });
-        } else return new Promise<any>((resolve, reject) => {
-            reject({});
-        });
+            return Promise.resolve({messageId: "msg1234"});
+        } else return Promise.reject(new Error());
     }
 } 
 

@@ -100,7 +100,7 @@ export default class AcknowledgementChecker {
 
 
     private async sendUnacknowlegedCard(unackedCard: any, missingAcks: string) {
-        const card = Object.assign({}, this.unackedCardTemplate);
+        const card = {...this.unackedCardTemplate};
         card.startDate = new Date().valueOf();
         card.processInstanceId = unackedCard.id;
         if (unackedCard.publisherType === 'ENTITY') {
