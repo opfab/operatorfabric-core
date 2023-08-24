@@ -30,7 +30,7 @@ Feature: Posting cards with unexisting i18n file in bundle, and with i18n file b
 """
 
 # Create new perimeter
-# use retry to avoid falky test when previous test ask for perimeter delete
+# use retry to avoid flaky test when previous test ask for perimeter delete
 # but the processing is not finished when we create the perimeter
 # resulting in a bad response : 
 #  {"status":"BAD_REQUEST","message":"Resource creation failed because a resource with the same key already exists.","errors":["Duplicate key : perimeter"]}

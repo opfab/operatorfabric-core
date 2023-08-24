@@ -25,7 +25,7 @@ describe('Business menu', () => {
     it('Test business menu links in night mode ', 
     {
         retries: {
-            runMode: 2, // to avoid falky test 
+            runMode: 2, // to avoid flaky test 
             openMode: 1
         }
     },() => {
@@ -57,7 +57,7 @@ describe('Business menu', () => {
         'Test business menu links in day mode ',
         {
             retries: {
-                runMode: 2, // to avoid falky test 
+                runMode: 2, // to avoid flaky test 
                 openMode: 1
             }
         },
