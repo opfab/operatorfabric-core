@@ -203,7 +203,7 @@ Feature: Posting card with a process and/or a state that doesn't exist in bundle
 
 
     # We push same card than previously, and we check now pushing the card is successful (this test is to be sure the cache is updated when we push a bundle)
-    # Use retry to avoid falky test when cache is not yet updated
+    # Use retry to avoid flaky test when cache is not yet updated
     Given url opfabPublishCardUrl + 'cards'
     And header Authorization = 'Bearer ' + authTokenAsTSO
     And request card
@@ -239,7 +239,7 @@ Feature: Posting card with a process and/or a state that doesn't exist in bundle
 """
 
     # We push a card corresponding to the bundle previously deleted and we check the push is failed
-    # Add a retry to avoid falky test when the delete information has not yet been propagated 
+    # Add a retry to avoid flaky test when the delete information has not yet been propagated 
     # to the publication service when making the request 
     Given url opfabPublishCardUrl + 'cards'
     And header Authorization = 'Bearer ' + authTokenAsTSO

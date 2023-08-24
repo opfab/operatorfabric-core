@@ -297,7 +297,7 @@ describe('User Card ', function () {
       usercard.cancelCardSending();
 
       // a report name without report link : an error should be displayed
-      cy.get('#report_title').invoke('val', 'report name'); // using invoke instead of cy.type to avoid falky cypress test 
+      cy.get('#report_title').invoke('val', 'report name'); // using invoke instead of cy.type to avoid flaky cypress test 
       cy.get('#opfab-usercard-btn-prepareCard').click();
       cy.get('.opfab-info-message').contains('You must provide a report name and link, or none of them.');
       cy.get('.opfab-alert-close').click();
