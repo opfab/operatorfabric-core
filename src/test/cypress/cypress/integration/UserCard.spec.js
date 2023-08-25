@@ -431,8 +431,6 @@ describe('User Card ', function () {
 
     })
 
-
-
     it('Receive User card ', () => {
 
       opfab.loginWithUser('operator2_fr');
@@ -443,6 +441,7 @@ describe('User Card ', function () {
       feed.checkSelectedCardHasSummary("Message received :   Hello, that's a test message / Result is <OK> & work done is 100%");
       cy.get('#opfab-div-card-template-processed').find('div').eq(0).should('have.text', "\n  Hello, that's a test message / Result is <OK> & work done is 100%\n");
     })
+
   })
 
 

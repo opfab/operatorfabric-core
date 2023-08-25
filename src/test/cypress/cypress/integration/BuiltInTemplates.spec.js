@@ -60,4 +60,48 @@ describe('User Card ', function () {
       cy.get("#childs-div").contains("My answer");
     })
   })
+
+  describe('Send user card with question and answer it', function () {
+    before('Delete previous cards', function () {
+      script.deleteAllCards();
+      script.deleteAllArchivedCards();
+    });
+    it('Check task advanced card appears on the timeline and calendar', function () {
+        
+      opfab.loginWithUser('operator1_fr');
+
+      setTimeLineDomain('7D');
+      checkHaveCircle(0);
+
+      // Sends 7 cards over the coming week
+      opfab.navigateToUserCard();
+      usercard.checkEmitterSelectDoesNotExist();
+      usercard.selectService('User card examples')
+      usercard.selectProcess('Task Advanced');
+      cy.wait(100);
+      cy.get('#time').type('00:00');
+      usercard.previewThenSendCard();    
+
+      // Check first week has 7 cards 
+      checkHaveCircle(7);
+
+      cy.get('#opfab-navbarContent').find('#opfab-calendar-menu').click();
+
+      // Check 7 cards are on the calendar screen with the default month view
+      cy.get('.opfab-calendar-event').should('have.length', 7);
+
+      // Delete the recurrent cards
+      opfab.navigateToFeed();
+      feed.openFirstCard();
+      feed.deleteCurrentCard();   
+  });
+
+  function setTimeLineDomain(domain) {
+    cy.get('#opfab-timeline-link-period-' + domain).click();
+  }
+
+  function checkHaveCircle(nb) {
+      cy.get("of-custom-timeline-chart").find("ellipse").should('have.length', nb);
+  }
+})
 })

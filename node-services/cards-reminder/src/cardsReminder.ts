@@ -43,13 +43,13 @@ const reminderService = new ReminderService()
     .setLogger(logger)
     .setDatabaseService(remindDatabaseService);
 
-const rrRuleRemindDatabaseService = new RemindDatabaseService()
+const rRuleRemindDatabaseService = new RemindDatabaseService()
     .setMongoDbConfiguration(config.get("operatorfabric.mongodb"))
     .setRemindersCollection(RRuleReminderService.REMINDERS_COLLECTION);
 
 const rruleReminderService = new RRuleReminderService()
     .setLogger(logger)
-    .setDatabaseService(rrRuleRemindDatabaseService);
+    .setDatabaseService(rRuleRemindDatabaseService);
 
 const opfabServicesInterface = new CardsReminderOpfabServicesInterface()
     .setLogin(config.get('operatorfabric.cardsReminder.opfab.login'))
