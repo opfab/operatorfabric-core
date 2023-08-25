@@ -109,7 +109,7 @@ sonar {
         property 'sonar.coverage.exclusions','**/config*/**/*,**/ui/**/*,**/controllers/**,**/src/tooling/**,**/src/test/**,node-services/**/tests/*'
         property 'sonar.exclusions','**/generated/**/*,**/src/docs/**/*,**/*Application.java,**/node_modules/**/*'
         // exclusions for analyse of duplicated code , test classes are excluded 
-        property 'sonar.cpd.exclusions','**/model/**/*,**/src/test/**/*,**/*.spec.ts,src/test/**'
+        property 'sonar.cpd.exclusions','**/model/**/*,**/src/test/**/*,**/*.spec.ts,src/test/**,node-services/**/tests/*'
     }
 }
 
