@@ -33,7 +33,7 @@
     "@fullcalendar/rrule": "6.1.8",
     "@fullcalendar/timegrid": "6.1.8",
     "@ng-bootstrap/ng-bootstrap": "15.1.1",
-    "@ngx-translate/core": "14.0.0",
+    "@ngx-translate/core": "15.0.0",
     "@popperjs/core": "2.11.8",
     "@swimlane/ngx-charts": "20.4.1",
     "@types/jwt-decode": "2.2.1",
