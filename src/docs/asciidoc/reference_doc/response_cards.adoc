@@ -122,6 +122,7 @@ which returns an object containing four fields :
 - responseCardData (_any_) : the user input to send in the data field of the child card. If valid is false this field is not necessary.
 - responseState : name of the response state to use. This field is not mandatory, if it is not set the state defined in
 `config.json` will be used for the response.
+- publisher (_string_) : the id of the Entity to be used as publisher of the response. This field is not mandatory, if it is not set the publisher will be the user entity, in case the user belongs to a single entity, or it will be choosen by the user between his available entities.  
 
 
 This method is to be registered via `opfab.currentCard.registerFunctionToGetUserResponse`, the method will be called by OperatorFabric when the user clicks on the button to send the response.

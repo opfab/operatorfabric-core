@@ -861,15 +861,15 @@ export class UserCardComponent implements OnInit, OnDestroy {
 
     public getChildCard(childCard) {
         const cardState = this.processesService.getProcess(this.selectedProcessId).states.get(this.selectedStateId);
-
+        const publisher = childCard.publisher ?? this.card.publisher;
         return {
             id: null,
             uid: null,
-            publisher: this.card.publisher,
+            publisher: publisher,
             publisherType: this.card.publisherType,
             processVersion: this.card.processVersion,
             process: this.card.process,
-            processInstanceId: `${this.card.processInstanceId}_${this.card.publisher}`,
+            processInstanceId: `${this.card.processInstanceId}_${publisher}`,
             publishDate: this.card.publishDate,
             state: childCard.responseState ? childCard.responseState : cardState.response.state,
             startDate: this.card.startDate,
