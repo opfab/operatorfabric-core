@@ -26,11 +26,13 @@ import {AlertMessageService} from 'app/business/services/alert-message.service';
 import {CardService} from 'app/business/services/card/card.service';
 import {ServerResponseStatus} from 'app/business/server/serverResponse';
 import {OpfabAPIService} from 'app/business/services/opfabAPI.service';
+import {OpfabLoggerService} from 'app/business/services/logs/opfab-logger.service';
 
 class FormResult {
     valid: boolean;
     errorMsg: string;
     responseCardData: any;
+    publisher?: string
     responseState?: string;
 }
 
@@ -86,7 +88,9 @@ export class CardResponseComponent implements OnChanges, OnInit {
         private userPermissionsService: UserPermissionsService,
         private processService: ProcessesService,
         private alertMessageService: AlertMessageService,
-        private opfabAPIService: OpfabAPIService
+        private opfabAPIService: OpfabAPIService,
+        private logger: OpfabLoggerService,
+
     ) {
         const userWithPerimeters = this.userService.getCurrentUserWithPerimeters();
         if (userWithPerimeters) this.user = userWithPerimeters.userData;
@@ -139,7 +143,9 @@ export class CardResponseComponent implements OnChanges, OnInit {
     }
 
     public processClickOnSendResponse() {
-        if (this.userEntityIdsPossibleForResponse.length > 1) this.displayEntitiesChoicePopup();
+        const responseData: FormResult = this.opfabAPIService.templateInterface.getUserResponse();
+
+        if (this.userEntityIdsPossibleForResponse.length > 1 && !responseData.publisher) this.displayEntitiesChoicePopup();
         else this.submitResponse();
     }
 
@@ -153,12 +159,20 @@ export class CardResponseComponent implements OnChanges, OnInit {
         const responseData: FormResult = this.opfabAPIService.templateInterface.getUserResponse();
 
         if (responseData.valid) {
+            const publisherEntity = responseData.publisher ?? this.userEntityIdToUseForResponse;
+
+            if (!this.userEntityIdsPossibleForResponse.includes(publisherEntity)) {
+                this.logger.error("Response card publisher not allowed : " + publisherEntity);
+                this.displayMessage(ResponseI18nKeys.SUBMIT_ERROR_MSG, null, MessageLevel.ERROR);
+                return;
+            }
+
             const card: CardForPublishing = {
-                publisher: this.userEntityIdToUseForResponse,
+                publisher: publisherEntity,
                 publisherType: 'ENTITY',
                 processVersion: this.card.processVersion,
                 process: this.card.process,
-                processInstanceId: `${this.card.processInstanceId}_${this.userEntityIdToUseForResponse}`,
+                processInstanceId: `${this.card.processInstanceId}_${publisherEntity}`,
                 state: responseData.responseState ? responseData.responseState : this.cardState.response.state,
                 startDate: this.card.startDate,
                 endDate: this.card.endDate,

@@ -80,6 +80,10 @@
                 }
                 const confirm = document.getElementById('confirm').value;     
                 const message = document.getElementById('message').value;
+                
+                let publisher = null;
+                // WARNING: this setting is just for specific cypress test
+                if (message == 'Cypress test for response publisher') publisher = "ENTITY2_FR";
 
                 const card = {
                     summary: { key: "confirmation.summary" },
@@ -95,6 +99,7 @@
                 const childCard = {
                     summary: { key: "confirmation.summary" },
                     title: { key: "confirmation.title" },
+                    publisher : publisher,
                     data: {
                         question: question,
                         confirm: confirm,

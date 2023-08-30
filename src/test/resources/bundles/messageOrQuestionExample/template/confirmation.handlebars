@@ -85,12 +85,17 @@
             opfab.currentCard.registerFunctionToGetUserResponse(() => {
                 var confirm = document.getElementById('resp_confirm').value;
                 const message = document.getElementById('resp_message').value;
+                let publisher = null;
+                // WARNING: this setting is just for specific cypress test
+                if (message == 'Cypress test for response publisher') publisher = "ENTITY2_FR";
+                
                 const responseCardData = { 
                         confirm: confirm,
                         message: message
                     };
                 return {
                     valid: true,
+                    publisher : publisher,
                     responseCardData: responseCardData
                 };
 
