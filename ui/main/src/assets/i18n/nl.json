@@ -212,7 +212,8 @@
     "entityRecipients" : "Ontvangers entiteiten :",
     "entityRecipientsForInformation" : "Ontvangers entiteiten in kopie :",
     "searchPlaceholderText": "Zoeken...",
-    "hiddenCardReceived": "Je hebt een kaart ontvangen die verborgen is door de filters die je hebt geactiveerd (tijdlijn of kaart feed)"
+    "hiddenCardReceived": "Je hebt een kaart ontvangen die verborgen is door de filters die je hebt geactiveerd (tijdlijn of kaart feed)",
+    "businessPeriod": "Bedrijfsperiode :"
   },
   "login": {
     "reset": "Opnieuw instellen",

@@ -212,7 +212,8 @@
     "entityRecipients" : "Entity recipients :",
     "entityRecipientsForInformation" : "Entity recipients in copy :",
     "searchPlaceholderText": "Search...",
-    "hiddenCardReceived": "You have received a card hidden by the filters you have activated (Timeline or card feed)"
+    "hiddenCardReceived": "You have received a card hidden by the filters you have activated (Timeline or card feed)",
+    "businessPeriod": "Business period :"
   },
   "login": {
     "reset": "Reset",
