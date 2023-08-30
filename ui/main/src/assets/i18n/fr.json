@@ -213,7 +213,8 @@
     "entityRecipients" : "Entités destinataires :",
     "entityRecipientsForInformation" : "Entités destinataires en copie :",
     "searchPlaceholderText": "Rechercher...",
-    "hiddenCardReceived": "Vous avez reçu une carte masquée par les filtres que vous avez activés (Timeline ou flux de cartes)"
+    "hiddenCardReceived": "Vous avez reçu une carte masquée par les filtres que vous avez activés (Timeline ou flux de cartes)",
+    "businessPeriod": "Période métier :"
   },
   "login": {
     "reset": "RaZ",

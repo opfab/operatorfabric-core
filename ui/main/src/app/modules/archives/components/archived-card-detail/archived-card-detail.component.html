@@ -23,6 +23,9 @@
         <span translate>feed.deleted</span>
         {{getFormattedDate(card.deletionDate)}} <span translate> feed.at </span> {{getFormattedTime(card.deletionDate)}}
       </span>
+      <br>
+      <span translate> feed.businessPeriod </span>
+      {{getFormattedDateAndTime(card.startDate)}} - {{getFormattedDateAndTime(card.endDate)}}
       <br *ngIf="entityRecipientsForFooter.length>0">
       {{entityRecipientsForFooter}}
       <br *ngIf="entityRecipientsForInformationForFooter.length>0">

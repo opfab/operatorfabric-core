@@ -104,12 +104,8 @@ export class ArchivedCardDetailComponent implements OnInit{
         }
     }
 
-    getFormattedPublishDate(): any {
-        return this.dateTimeFormatter.getFormattedDateFromEpochDate(this.card.publishDate);
-    }
-
-    getFormattedPublishTime(): any {
-        return this.dateTimeFormatter.getFormattedTimeFromEpochDate(this.card.publishDate);
+    getFormattedDateAndTime(date: number): any {
+        return this.dateTimeFormatter.getFormattedDateAndTimeFromEpochDate(date);
     }
 
     getFormattedDate(date: number): any {
