@@ -24,6 +24,7 @@
     "momentjs": "2.0.0",
     "mongodb": "5.8.0",
     "rrule": "2.7.2",
+    "saslprep": "1.0.3",
     "winston": "3.10.0",
     "winston-daily-rotate-file": "4.7.1"
   },
