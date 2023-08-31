@@ -82,7 +82,9 @@ export default class SupervisorService {
     private checkConnectionRegularly() {
         if (this.active) {
             this.logger.info("checkConnectionRegularly");
-            this.connectionChecker.checkConnection();
+            this.connectionChecker.checkConnection().catch (error =>     
+                this.logger.error("error during periodic connections check" + error)
+            )
         }
         setTimeout(() => this.checkConnectionRegularly(), this.config.secondsBetweenConnectionChecks * 1000);
     }
@@ -90,7 +92,9 @@ export default class SupervisorService {
     private checkAcknowledgmentRegularly() {
         if (this.active) {
             this.logger.info("checkAcknowledgmentRegularly");
-            this.acknowledgementChecker.checkAcknowledgment();
+            this.acknowledgementChecker.checkAcknowledgment().catch (error =>     
+                this.logger.error("error during periodic acknowledgment check" + error)
+            )
         }
         setTimeout(() => this.checkAcknowledgmentRegularly(), this.config.secondsBetweenAcknowledgmentChecks * 1000);
     }

@@ -50,9 +50,7 @@ export default class CardsExternalDiffusionService {
 
     public start() {
         this.active = true;
-        this.checkRegularly().catch(error =>
-            this.logger.error("error during periodic check" + error)
-        );
+        this.checkRegularly();
     }
 
     public stop() {
@@ -62,8 +60,11 @@ export default class CardsExternalDiffusionService {
     private async checkRegularly() {
         if (this.active) {
             this.logger.info("checkRegularly");
-            await this.cardsDiffusionControl.checkUnreadCards();
-            setTimeout(() => this.checkRegularly(), this.checkPeriodInSeconds * 1000);
+            await this.cardsDiffusionControl.checkUnreadCards().catch(error =>
+                this.logger.error("error during periodic check" + error)
+            );
+            setTimeout(() => this.checkRegularly()
+            , this.checkPeriodInSeconds * 1000);
 
         }
     }

@@ -45,9 +45,11 @@ export default class CardsReminderService {
     public reset() {
         const wasActive = this.active;
         this.stop();
-
-        this.cardsReminderControl.resetReminderDatabase();
-
+        try {
+            this.cardsReminderControl.resetReminderDatabase();
+        } catch (error) {      
+            this.logger.error("error during periodic check" + error);
+        }
         if (wasActive) this.start();
     }
 
@@ -55,7 +57,11 @@ export default class CardsReminderService {
     private checkRegularly() {
         if (this.active) {
             this.logger.debug("checkRegularly");
-            this.cardsReminderControl.checkCardsReminder();
+            try {
+                this.cardsReminderControl.checkCardsReminder();
+            } catch (error) {      
+                this.logger.error("error during periodic check" + error);
+            }
             setTimeout(() => this.checkRegularly(), this.checkPeriodInSeconds * 1000);
 
         }
