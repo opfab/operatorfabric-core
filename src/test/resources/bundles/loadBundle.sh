@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Copyright (c) 2021, RTE (http://www.rte-france.com)
+# Copyright (c) 2021-2023, RTE (http://www.rte-france.com)
 # See AUTHORS.txt
 # This Source Code Form is subject to the terms of the Mozilla Public
 # License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -12,12 +12,12 @@
 # is called from another folder
 cd "$(dirname "${BASH_SOURCE[0]}")"
 
-url=$2 
-if [ -z $url ] 
+url=$2
+if [[ -z $url ]]
 then
 	url="http://localhost"
 fi
-if [ -z $1 ]
+if [[ -z $1 ]]
 then
     echo "Usage : loadBundle bundle_name opfab_url"
 else
@@ -27,11 +27,9 @@ else
 	tar -czf $1.tar.gz ./*
 	mv $1.tar.gz ../
 	cd ..
-	source ../getToken.sh "admin" $url
+	source ../getToken.sh $url
 	curl -s -X POST "$url:2100/businessconfig/processes" -H  "accept: application/json" -H  "Content-Type: multipart/form-data" -H "Authorization:Bearer $token" -F "file=@$1.tar.gz;type=application/gzip"
 	echo ""
 	rm $1.tar.gz
 	)
 fi
-
-

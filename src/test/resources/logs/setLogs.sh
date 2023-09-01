@@ -10,11 +10,11 @@
 
 cd "$(dirname "${BASH_SOURCE[0]}")"
 url=$4
-if [ -z $url ] 
+if [[ -z $url ]]
 then
 	url="http://localhost"
 fi
-if [ -z $3 ]
+if [[ -z $3 ]]
 then
     echo "Usage : setLogs.sh host:port level user opfab_url"
 else
@@ -22,10 +22,8 @@ else
 	level="{\"configuredLevel\": \"$2\"}"
 	user=$3
 	
-	source ../getToken.sh $user $url
+	source ../getToken.sh $url $user
 	
 
 	curl -s -X POST "http://$serviceAddress/actuator/loggers/ROOT" -H "Authorization: Bearer $token" -H "Content-type:application/json" -d "${level}"
 fi
-
-

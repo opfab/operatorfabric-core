@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Copyright (c) 2021, RTE (http://www.rte-france.com)
+# Copyright (c) 2021-2023, RTE (http://www.rte-france.com)
 # See AUTHORS.txt
 # This Source Code Form is subject to the terms of the Mozilla Public
 # License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -10,15 +10,15 @@
 
 RANDOM=$$
 url=$2
-if [ -z $url ] 
+if [[ -z $url ]]
 then
 	url="http://localhost"
 fi
-if [ -z $1 ]
+if [[ -z $1 ]]
 then
     echo "Usage : sendCard cardFile opfab_url"
 else
-    source ../getToken.sh "publisher_test" $url
+    source ../getToken.sh $url "publisher_test"
     export random=$RANDOM$RANDOM$RANDOM
     export current_date_in_milliseconds_from_epoch=$(($(date +%s%N)/1000000))
     export current_date_in_milliseconds_from_epoch_plus_3minutes=$(($(date +%s%N)/1000000 + 3*60*1000))
