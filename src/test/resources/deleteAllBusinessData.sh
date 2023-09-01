@@ -12,16 +12,13 @@
 # is called from another folder
 cd "$(dirname "${BASH_SOURCE[0]}")"
 
-url=$2 
-if [ -z $url ] 
+url=$1
+if [[ -z $url ]]
 then
 	url="http://localhost"
 fi
 
 echo "Will delete businessData on $url"
-source ./getToken.sh "admin" $url
+source ./getToken.sh $url
 curl -s -X DELETE "$url:2100/businessconfig/businessData" -H "accept: application/json" -H "Authorization:Bearer $token"
 echo ""
-
-
-

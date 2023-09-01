@@ -10,21 +10,19 @@
 
 cd "$(dirname "${BASH_SOURCE[0]}")"
 url=$3
-if [ -z $url ] 
+if [[ -z $url ]]
 then
 	url="http://localhost"
 fi
-if [ -z $2 ]
+if [[ -z $2 ]]
 then
     echo "Usage : getLogs.sh host:port user opfab_url"
 else
 	serviceAddress=$1
 	user=$2
 	
-	source ../getToken.sh $user $url
+	source ../getToken.sh $url $user
 	
 	response=$( curl -s "http://$serviceAddress/actuator/loggers/ROOT" -H "Authorization: Bearer $token" -H "Content-type:application/json")
 	echo $response
 fi
-
-
