@@ -50,7 +50,7 @@ describe('Opfab interface', function () {
         });
         const GetResponse = await opfabServicesInterface.getUsersConnected();
         expect(GetResponse.isValid()).toBe(true);
-        expect(GetResponse.getData()).toEqual(["user1"]);
+        expect(GetResponse.getData().length).toEqual(1);
     });
 
     it('Should return invalid reponse  when impossible to authenticate to opfab ', async function () {

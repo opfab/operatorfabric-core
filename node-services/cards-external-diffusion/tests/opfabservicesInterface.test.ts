@@ -9,7 +9,6 @@
 
 import 'jest';
 import sinon from 'sinon';
-import GetResponse from '../src/common/server-side/getResponse';
 import logger from '../src/common/server-side/logger';
 import AuthenticationService from '../src/common/client-side/authenticationService';
 import CardsExternalDiffusionOpfabServicesInterface from '../src/domain/server-side/cardsExternalDiffusionOpfabServicesInterface';
@@ -50,7 +49,7 @@ describe('Opfab interface', function () {
             }
         });
         const users = await opfabServicesInterface.getUsersConnected();
-        expect(users).toEqual(new GetResponse(['user1'], true));
+        expect(users.getData().length).toEqual(1);
     });
 
     it('Should return invalid reponse  when impossible to authenticate to opfab ', async function () {

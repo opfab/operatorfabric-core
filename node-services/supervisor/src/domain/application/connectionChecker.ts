@@ -21,6 +21,7 @@ export default class ConnectionChecker {
     private secondsBetweenConnectionChecks: number;
     private supervisorList: any;
     private entitiesList: any;
+    private groupsList: any;
     private disconnectedCardTemplate: any = '';
 
     public setOpfabServicesInterface(opfabInterface: OpfabServicesInterface) {
@@ -54,6 +55,11 @@ export default class ConnectionChecker {
         return this;
     }
     
+    public setConsiderConnectedIfUserInGroups(considerConnectedIfUserInGroups: any) {
+        this.groupsList = considerConnectedIfUserInGroups;
+        return this;
+    }
+
     public setEntitiesToSupervise(entitiesToSupervise: any) {
         this.supervisorList = new Map();
         this.entitiesList = [];
@@ -73,8 +79,15 @@ export default class ConnectionChecker {
         const GetResponse: GetResponse = await this.opfabInterface.getUsersConnected();
         if (!GetResponse.isValid()) return;
         
-        const connectedUsers = GetResponse.getData();
-        this.logger.debug('Users connected : ' + JSON.stringify(connectedUsers));
+        
+        const allConnectedUsers = GetResponse.getData();
+
+        this.logger.debug('All users connected : ' + JSON.stringify(allConnectedUsers));
+        const connectedUsers = this.groupsList ? allConnectedUsers.filter((user: {groups: any[];}) => {
+            return user?.groups.filter(group => this.groupsList.includes(group)).length > 0;
+        }) : allConnectedUsers;
+        this.logger.debug('Users connected in configured groups: ' + JSON.stringify(connectedUsers));
+
 
         const connectedEntities : string[] = [];
 

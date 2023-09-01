@@ -33,7 +33,8 @@ export default class SupervisorService {
             .setNbOfConsecutiveNotConnectedToSendFirstCard(this.config.nbOfConsecutiveNotConnectedToSendFirstCard)
             .setNbOfConsecutiveNotConnectedToSendSecondCard(this.config.nbOfConsecutiveNotConnectedToSendSecondCard)
             .setDisconnectedCardTemplate(this.config.disconnectedCardTemplate)
-            .setEntitiesToSupervise(this.config.entitiesToSupervise);
+            .setEntitiesToSupervise(this.config.entitiesToSupervise)
+            .setConsiderConnectedIfUserInGroups(this.config.considerConnectedIfUserInGroups);
 
         this.acknowledgementChecker = new AcknowledgementChecker()
             .setLogger(this.logger)
@@ -58,7 +59,8 @@ export default class SupervisorService {
             .setNbOfConsecutiveNotConnectedToSendFirstCard(this.config.nbOfConsecutiveNotConnectedToSendFirstCard)
             .setNbOfConsecutiveNotConnectedToSendSecondCard(this.config.nbOfConsecutiveNotConnectedToSendSecondCard)
             .setDisconnectedCardTemplate(this.config.disconnectedCardTemplate)
-            .setEntitiesToSupervise(this.config.entitiesToSupervise);
+            .setEntitiesToSupervise(this.config.entitiesToSupervise)
+            .setConsiderConnectedIfUserInGroups(this.config.considerConnectedIfUserInGroups);
     }
 
     private restartAcknowledgementChecker() {

@@ -32,6 +32,7 @@ export default class ConfigService {
                 this.supervisorConfig.secondsBetweenConnectionChecks = defaulConfig.secondsBetweenConnectionChecks;
                 this.supervisorConfig.nbOfConsecutiveNotConnectedToSendFirstCard = defaulConfig.nbOfConsecutiveNotConnectedToSendFirstCard;
                 this.supervisorConfig.nbOfConsecutiveNotConnectedToSendSecondCard =  defaulConfig.nbOfConsecutiveNotConnectedToSendSecondCard;
+                this.supervisorConfig.considerConnectedIfUserInGroups =  defaulConfig.considerConnectedIfUserInGroups;
                 this.supervisorConfig.entitiesToSupervise =  defaulConfig.entitiesToSupervise;
                 this.supervisorConfig.processesToSupervise =  defaulConfig.processesToSupervise;
                 this.supervisorConfig.windowInSecondsForCardSearch  = defaulConfig.windowInSecondsForCardSearch ;

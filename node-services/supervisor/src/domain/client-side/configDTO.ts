@@ -12,6 +12,7 @@ export default class ConfigDTO {
     public secondsBetweenConnectionChecks = 0;
     public nbOfConsecutiveNotConnectedToSendFirstCard = 0;
     public nbOfConsecutiveNotConnectedToSendSecondCard = 0;
+    public considerConnectedIfUserInGroups = new Array();
     public entitiesToSupervise = new Array();
     public processesToSupervise = new Array();
     public windowInSecondsForCardSearch : number;
