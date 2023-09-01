@@ -10,6 +10,7 @@ logConfig:
   logLevel: info
 supervisor:
   defaultConfig:
+    considerConnectedIfUserInGroups: ["Dispatcher","Planner"]
     entitiesToSupervise:
     - id: ENTITY1_FR
       supervisors:

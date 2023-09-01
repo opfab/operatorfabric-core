@@ -110,12 +110,8 @@ export default class OpfabServicesInterface {
         try {
             await this.getToken();
             const response = await this.sendUsersConnectedRequest();
-            const users = new Array();
             if (response?.data) {
-                response.data.forEach((user: any) => {
-                    users.push(user.login);
-                });
-                return new GetResponse(users, true);
+                return new GetResponse(response.data, true);
             }
             else {
                 this.logger.warn("No data in HTTP response")

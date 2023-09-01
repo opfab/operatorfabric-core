@@ -85,7 +85,8 @@ export default class CardsDiffusionControl {
 
         const connectedResponse = await this.opfabServicesInterface.getUsersConnected();
         if (connectedResponse.isValid()) {
-            const usersToCheck = this.removeElementsFromArray(userLogins, connectedResponse.getData());
+            const connectedUsers = connectedResponse.getData().map((u: {login: string;}) => u.login);
+            const usersToCheck = this.removeElementsFromArray(userLogins, connectedUsers);
             this.logger.debug('Disconnected users ' + usersToCheck);
             if (usersToCheck.length > 0) {
                 const cardFilters = [];

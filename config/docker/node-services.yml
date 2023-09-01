@@ -45,6 +45,7 @@ supervisor:
   adminPort: 2108
   activeOnStartup: false
   defaultConfig:
+    considerConnectedIfUserInGroups: ["Dispatcher","Planner"]
     entitiesToSupervise:
     - id: ENTITY1_FR
       supervisors:
