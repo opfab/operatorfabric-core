@@ -752,6 +752,10 @@ definitions:
     properties:
       screenName:
         type: string
+      displayOnlyUsersInGroups:
+        type: array
+        items:
+          type: string
       screenColumns:
         type: array
         items:

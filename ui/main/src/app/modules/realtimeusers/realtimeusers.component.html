@@ -51,7 +51,7 @@
                                       </span>
                                 </ng-template>
                                 <ng-template #usersDropdown>
-                                    <div *ngFor="let login of connectedUsersPerEntity.get(entity)">
+                                    <div *ngFor="let login of getConnectedUsersInDisplayedGroupsForEntity(entity)">
                                       &nbsp; {{login}} &nbsp;
                                     </div>
                                   </ng-template>

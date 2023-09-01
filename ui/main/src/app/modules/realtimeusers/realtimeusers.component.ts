@@ -35,6 +35,7 @@ export class RealtimeusersComponent implements OnInit, OnDestroy {
     isRealTimeScreensLoaded = false;
     realTimeScreenIndexToDisplay: string;
     connectedUsersPerEntity: Map<string, Array<string>> = new Map<string, Array<string>>();
+    connectedUsersGroups: Map<string, Array<string>> = new Map<string, Array<string>>();
     realTimeScreensOptions = [];
 
     public multiSelectConfig: MultiSelectConfig = {
@@ -95,19 +96,20 @@ export class RealtimeusersComponent implements OnInit, OnDestroy {
     refresh() {
         this.userService.loadConnectedUsers().subscribe((connectedUsers) => {
             this.connectedUsersPerEntity.clear();
+            this.connectedUsersGroups.clear();
 
             connectedUsers.sort((obj1, obj2) => Utilities.compareObj(obj1.login, obj2.login));
 
             connectedUsers.forEach((realTimeUserConnected) => {
                 if (realTimeUserConnected.entitiesConnected) {
+                    this.connectedUsersGroups.set(
+                        realTimeUserConnected.login,
+                        realTimeUserConnected.groups ?? []
+                    );
                     realTimeUserConnected.entitiesConnected.forEach((entityConnected) => {
                         let usersConnectedPerEntity = this.connectedUsersPerEntity.get(
                             entityConnected
-                        );
-
-                        if (!usersConnectedPerEntity) {
-                            usersConnectedPerEntity = [];
-                        }
+                        ) ?? [];
 
                         // we don't want duplicates for the same user
                         if (!usersConnectedPerEntity.includes(realTimeUserConnected.login))
@@ -140,18 +142,13 @@ export class RealtimeusersComponent implements OnInit, OnDestroy {
     }
 
     getLabelForConnectedUsers(entity: string): string {
-        let label = '';
-        const connectedUsers = this.connectedUsersPerEntity.get(entity);
-        connectedUsers.forEach(login => {
-            label += login + ', ';
-        });
-        return label.slice(0, -2);
+        const connectedUsersInDisplayedGroups = this.getConnectedUsersInDisplayedGroupsForEntity(entity);
+        return connectedUsersInDisplayedGroups.join(', ');
     }
 
     getNumberOfConnectedUsersInEntity(entity: string): number {
-        const connectedUsers = this.connectedUsersPerEntity.get(entity);
-        if (connectedUsers) return connectedUsers.length;
-        return 0;
+        const connectedUsersInDisplayedGroups = this.getConnectedUsersInDisplayedGroupsForEntity(entity);
+        return connectedUsersInDisplayedGroups.length;
     }
 
     ngOnDestroy() {
@@ -161,5 +158,25 @@ export class RealtimeusersComponent implements OnInit, OnDestroy {
     isEllipsisActive(id: string): boolean {
         const element = document.getElementById(id);
         return (element.offsetWidth < element.scrollWidth);
-   }
+    }
+
+    getConnectedUsersInDisplayedGroupsForEntity(entity: string): string[] {
+        let connectedUsersInDisplayedGroups = [];
+        const displayedGroups = this.realTimeScreens[Number(this.realTimeScreenIndexToDisplay)]
+                                    .displayOnlyUsersInGroups ?? [];
+
+        const connectedUsersUnverified = this.connectedUsersPerEntity.get(entity) ?? [];
+        if (displayedGroups.length === 0) return connectedUsersUnverified;
+
+        connectedUsersUnverified.forEach(login => {
+            const connectedUserGroups = this.connectedUsersGroups.get(login);
+            for (const userGroup of connectedUserGroups) {
+                if (displayedGroups.includes(userGroup)) {
+                    connectedUsersInDisplayedGroups.push(login);
+                    break;
+                }
+            }
+        });
+        return connectedUsersInDisplayedGroups;
+    }
 }
