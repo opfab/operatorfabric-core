@@ -40,22 +40,22 @@ public class RabbitEventBus implements EventBus {
     @Value("${spring.application.name}")
     private String appName;
 
-    @Value("${operatorfabric.amqp.connectionRetries:30}")
+    @Value("${operatorfabric.rabbitmq.connectionRetries:30}")
     private int retries;
 
-    @Value("${operatorfabric.amqp.connectionRetryInterval:5000}")
+    @Value("${operatorfabric.rabbitmq.connectionRetryInterval:5000}")
     private long retryInterval;
 
-    @Value("${spring.rabbitmq.host:localhost}")
+    @Value("${operatorfabric.rabbitmq.host:localhost}")
     private String host;
 
-    @Value("${spring.rabbitmq.port:5672}")
+    @Value("${operatorfabric.rabbitmq.port:5672}")
     private int port;
 
-    @Value("${spring.rabbitmq.username:guest}")
+    @Value("${operatorfabric.rabbitmq.username:guest}")
     private String username;
 
-    @Value("${spring.rabbitmq.password:guest}")
+    @Value("${operatorfabric.rabbitmq.password:guest}")
     private String password;
 
     private Channel channelForListening; // use to listen to events

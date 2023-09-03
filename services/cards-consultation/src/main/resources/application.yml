@@ -7,16 +7,17 @@ spring:
   data:
     mongodb:
       database: operator-fabric
+      uri: ${operatorfabric.mongodb.uri}
 
 
+# default values for docker mode 
+operatorfabric:
+  servicesUrls:
+    businessconfig: "businessconfig:2100"
+    users: "users:2103"
 # default values for docker mode 
   rabbitmq:
     host: rabbitmq
     port: 5672
     username: guest
     password: guest
-    
-operatorfabric:
-  servicesUrls:
-    businessconfig: "businessconfig:2100"
-    users: "users:2103"
