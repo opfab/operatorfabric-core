@@ -6,6 +6,11 @@ spring:
     output:
       ansi:
         enabled: DETECT
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          jwk-set-uri: ${operatorfabric.security.oauth2.resourceserver.jwt.jwk-set-uri} #To be set outside of docker
 logging:
   file: logs/externalApp.log
   pattern:

@@ -4,13 +4,6 @@ management:
     web:
       exposure:
         include: '*'
-spring:
-  security:
-    oauth2:
-      resourceserver:
-        jwt:
-          jwk-set-uri: http://keycloak:89/auth/realms/dev/protocol/openid-connect/certs
-
 
 operatorfabric:
   rabbitmq:
@@ -20,9 +13,14 @@ operatorfabric:
     # password: guest
   mongodb:
     uri: mongodb://root:password@mongodb:27017/operator-fabric?authSource=admin&authMode=scram-sha1
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          jwk-set-uri: http://keycloak:89/auth/realms/dev/protocol/openid-connect/certs
+
 
 ### activate the following if you want to the groups or entities to come from the token and not mongo DB
-#  security:
 #    jwt:
 
 ### activate the folLowing if you want the entities of the user to come from the token and not mongoDB

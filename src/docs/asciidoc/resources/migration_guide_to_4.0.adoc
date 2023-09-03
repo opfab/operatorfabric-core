@@ -254,3 +254,4 @@ concerned parameters (old name -> new name):
 - checkIfUserIsAlreadyConnected -> operatorfabric.checkIfUserIsAlreadyConnected
 - spring.data.mongodb.uri -->  operatorfabric.mongodb.uri
 - spring.rabbit.* --> operatorfabric.rabbit.*
+- spring.security.oauth2.resourceserver.jwt.jwk-set-uri -->  operatorfabric.security.oauth2.resourceserver.jwt.jwk-set-uri
