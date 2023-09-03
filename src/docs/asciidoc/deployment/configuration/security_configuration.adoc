@@ -68,11 +68,8 @@ where `b3BmYWItY2xpZW50Om9wZmFiLWtleWNsb2FrLXNlY3JldA==` is the base64 encoded s
 === Configuration file common.yml
 
 |===
-|name|default|mandatory?|Description
-
-|spring.security.provider-url|null|no|The keycloak instance url. 
-|spring.security.provider-realm|null|no|The realm name within the keycloak instance. 
-|spring.security.oauth2.resourceserver.jwt.jwk-set-uri|null|yes|The url providing the certificat used to verify the jwt signature
+|name|default|mandatory?|Description 
+|operatorfabric.security.oauth2.resourceserver.jwt.jwk-set-uri|null|yes|The url providing the certificat used to verify the jwt signature
 |===
 
 [NOTE]
@@ -83,15 +80,12 @@ where `b3BmYWItY2xpZW50Om9wZmFiLWtleWNsb2FrLXNlY3JldA==` is the base64 encoded s
 ----
 spring:
   security:
-    provider-url: http://localhost:89
-    provider-realm: dev
     oauth2:
       resourceserver:
         jwt:
-          jwk-set-uri: ${spring.security.provider-url}/auth/realms/${spring.security.provider-realm}/protocol/openid-connect/certs
+          jwk-set-uri:  http://localhost:89/auth/realms/dev/protocol/openid-connect/certs
 ----
 
-where `jwt-set-uri` reuses `provider-url` and `provider-realm` properties.
 ====
 
 === Configuration file web-ui.json

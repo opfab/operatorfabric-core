@@ -1,12 +1,4 @@
 # This file contains only parameters that need to be overridden form the docker configuration
-spring:
-  security:
-    provider-url: http://localhost:89
-    oauth2:
-      resourceserver:
-        jwt:
-          jwk-set-uri: ${spring.security.provider-url}/auth/realms/dev/protocol/openid-connect/certs
-          
 operatorfabric:
   rabbitmq:
     host: localhost
@@ -15,4 +7,11 @@ operatorfabric:
   servicesUrls:
     users: "http://localhost:2103"
     businessconfig: "http://localhost:2100"
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          jwk-set-uri: http://keycloak:89/auth/realms/dev/protocol/openid-connect/certs
+
+
 
