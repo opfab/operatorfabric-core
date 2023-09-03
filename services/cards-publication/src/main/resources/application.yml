@@ -8,6 +8,7 @@ spring:
   data:
     mongodb:
       database: operator-fabric
+      uri: ${operatorfabric.mongodb.uri}
   deserializer:
     value:
       delegate:
@@ -18,13 +19,12 @@ spring:
         class: io.confluent.kafka.serializers.KafkaAvroSerializer
 
 # default values for docker mode 
+operatorfabric:
   rabbitmq:
     host: rabbitmq
     port: 5672
     username: guest
     password: guest
-
-operatorfabric:
   servicesUrls:
     users: "users:2103"
     businessconfig: "businessconfig:2100"

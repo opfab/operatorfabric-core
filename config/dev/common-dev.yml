@@ -1,18 +1,17 @@
 # This file contains only parameters that need to be overridden form the docker configuration
 spring:
-  rabbitmq:
-    host: localhost
   security:
     provider-url: http://localhost:89
     oauth2:
       resourceserver:
         jwt:
           jwk-set-uri: ${spring.security.provider-url}/auth/realms/dev/protocol/openid-connect/certs
-  data:
-    mongodb:
-      uri: mongodb://root:password@localhost:27017/operator-fabric?authSource=admin&authMode=scram-sha1
-
+          
 operatorfabric:
+  rabbitmq:
+    host: localhost
+  mongodb:
+    uri: mongodb://root:password@mongodb:27017/operator-fabric?authSource=admin&authMode=scram-sha1
   servicesUrls:
     users: "http://localhost:2103"
     businessconfig: "http://localhost:2100"

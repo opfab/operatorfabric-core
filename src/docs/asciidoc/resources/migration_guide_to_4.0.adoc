@@ -210,7 +210,7 @@ The configuration has been simplified, you have now default parameters you do no
  - a default kafka configuration is provided, you only have to add "kafka.consumer.group-id : opfab-command" to enable kafka
  - a default rabbit configuration is provided
  - default value are provided for "operatorfabric.servicesUrls.users" and "operatorfabric.servicesUrls.businessconfig"
- - "data.mongodb.database" is not to be set anymore but you still need to set "data.mongodb.uri"
+ - "spring.data.mongodb.database" is not to be set anymore 
  - you still need to set "management.endpoints.web.exposure.include: '*'" if you want to monitor opfab via prometheus
  - operatorfabric.businessconfig.storage.path is set by default to "/businessconfig-storage"
 
@@ -252,3 +252,5 @@ concerned parameters (old name -> new name):
 - opfab.kafka.schema.registry.url -> operatorfabric.cards-publication.kafka.schema.registry.url
 - delayForDeleteExpiredCardsScheduling -> operatorfabric.cards-publication.delayForDeleteExpiredCardsScheduling
 - checkIfUserIsAlreadyConnected -> operatorfabric.checkIfUserIsAlreadyConnected
+- spring.data.mongodb.uri -->  operatorfabric.mongodb.uri
+- spring.rabbit.* --> operatorfabric.rabbit.*

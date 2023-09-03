@@ -32,7 +32,7 @@ The configuration shared by all services is in a yaml file, you can find an exam
 
 ==== Mongo configuration
 
-We only use URI configuration for mongo through the usage of the ```spring.data.mongodb.uris```,
+We only use URI configuration for mongo through the usage of the ```operatorfabric.mongodb.uri```,
 it allows us to share the same configuration behavior for simple or cluster
 configuration and with both spring classic and reactive mongo configuration.
 See link:{mongo_doc}connection-string/[mongo connection string] for the complete URI syntax.
