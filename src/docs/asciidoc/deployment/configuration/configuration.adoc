@@ -105,11 +105,11 @@ KafkaAvroSerializer|Serializer used to convert cards to bytes
 |operatorfabric.cards-publication.kafka.schema.registry.url|http://localhost:8081|URL of the schema registry. Can be set to the empty string "" is no registry is used
 |operatorfabric.cards-publication.delayForDeleteExpiredCardsScheduling|60000|The delay in millisecond after the last execution finished and the next execution starts.
 [[cardSendingLimitCardCount]]
-|cardSendingLimitCardCount|1000|For the Rate limiter, this defines how many cards can be sent during `cardSendingLimitPeriod`.
+|operatorfabric.cards-publication.cardSendingLimitCardCount|1000|For the Rate limiter, this defines how many cards can be sent during `cardSendingLimitPeriod`.
 [[cardSendingLimitPeriod]]
-|cardSendingLimitPeriod|3600|For the Rate limiter, this defines the time period (in seconds) during which `cardSendingLimitCardCount` is applied.
+|operatorfabric.cards-publication.cardSendingLimitPeriod|3600|For the Rate limiter, this defines the time period (in seconds) during which `cardSendingLimitCardCount` is applied.
 [[activateCardSendingLimiter]]
-|activateCardSendingLimiter|true|If false, the Rate limiter will be ignored when sending cards.
+|operatorfabric.cards-publication.activateCardSendingLimiter|true|If false, the Rate limiter will be ignored when sending cards.
 |===
 
 
