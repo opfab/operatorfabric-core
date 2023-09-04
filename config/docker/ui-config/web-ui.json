@@ -92,7 +92,6 @@
   },
   "security": {
     "jwt": {
-      "expire-claim": "exp",
       "login-claim": "preferred_username"
     },
     "logout-url": "http://localhost:89/auth/realms/dev/protocol/openid-connect/logout?post_logout_redirect_uri=http://localhost:2002/&client_id=opfab-client",
@@ -100,13 +99,9 @@
       "client-id": "opfab-client",
       "flow": {
         "delegate-url": "http://localhost:89/auth/realms/dev/protocol/openid-connect/auth?response_type=code&client_id=opfab-client",
-        "mode": "PASSWORD",
-        "provider": "Opfab Keycloak"
+        "mode": "PASSWORD"
       }
-    },
-    "provider-realm": "dev",
-    "provider-url": "http://localhost:89",
-    "changePasswordUrl": "http://localhost:89/auth/realms/dev/account/#/security/signingin"
+    }
   },
   "settings": {
     "locale": "en",

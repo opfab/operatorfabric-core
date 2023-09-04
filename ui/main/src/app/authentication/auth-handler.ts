@@ -20,6 +20,7 @@ import {Observable, of, Subject} from 'rxjs';
 
 export const ONE_SECOND = 1000;
 export const MILLIS_TO_WAIT_BETWEEN_TOKEN_EXPIRATION_DATE_CONTROLS = 5000;
+export const EXPIRE_CLAIM = 'exp';
 export abstract class AuthHandler {
     protected checkTokenUrl = `${environment.url}/auth/check_token`;
     protected askTokenUrl = `${environment.url}/auth/token`;
@@ -32,14 +33,12 @@ export abstract class AuthHandler {
     protected clientId: string;
     protected delegateUrl: string;
     protected loginClaim: string;
-    protected expireClaim: string;
 
     constructor(configService: ConfigService, protected httpClient: HttpClient, protected logger: OpfabLoggerService) {
         this.secondsToCloseSession = configService.getConfigValue('secondsToCloseSession', 60);
         this.clientId = configService.getConfigValue('security.oauth2.client-id', null);
         this.delegateUrl = configService.getConfigValue('security.oauth2.flow.delegate-url', null);
         this.loginClaim = configService.getConfigValue('security.jwt.login-claim', 'sub');
-        this.expireClaim = configService.getConfigValue('security.jwt.expire-claim', 'exp');
     }
 
     abstract initializeAuthentication();
@@ -79,10 +78,8 @@ export abstract class AuthHandler {
         const jwt = this.decodeToken(authInfo.access_token);
         if (authInfo.expires_in) {
             expirationDate = Date.now() + ONE_SECOND * authInfo.expires_in;
-        } else if (this.expireClaim) {
-            expirationDate = jwt[this.expireClaim];
-        } else {
-            expirationDate = 0;
+        } else  {
+            expirationDate = jwt[EXPIRE_CLAIM];
         }
         const user = new AuthenticatedUser();
         user.login = jwt[this.loginClaim];
