@@ -35,7 +35,6 @@ const configService = new ConfigService(config.get('cardsExternalDiffusion.defau
 
 
 const authenticationService = new AuthenticationService()
-    .setTokenExpireClaim(config.get('opfab.tokenExpireClaim'))
     .setLogger(logger);
 
 

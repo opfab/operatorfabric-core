@@ -1,7 +1,6 @@
 opfab: 
   cardsPublicationUrl: "http://127.0.0.1:2102"
   getTokenUrl: "http://127.0.0.1:2002/auth/token"
-  tokenExpireClaim: "exp"
 
 rabbitmq:
   host: "localhost"

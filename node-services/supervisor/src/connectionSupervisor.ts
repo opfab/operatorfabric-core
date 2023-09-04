@@ -29,7 +29,6 @@ const configService = new ConfigService(config.get('supervisor.defaultConfig'), 
 const activeOnStartUp = config.get('supervisor.activeOnStartup');
 
 const authenticationService = new AuthenticationService()
-    .setTokenExpireClaim(config.get('opfab.tokenExpireClaim'))
     .setLogger(logger);
 
 

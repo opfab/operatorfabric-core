@@ -354,7 +354,6 @@ Node services can be configured with the following properties:
 |opfab.cardReminderUrl||yes| Opfab card resetReadAndAcks endpoint URL
 |opfab.entitiesUrl||yes|Entities endpoint URL
 |opfab.getTokenUrl||yes|Authentication service URL
-|opfab.tokenExpireClaim||yes|Token expiration property
 |rabbitmq.host||yes|RabbitMQ host address
 |rabbitmq.port||yes|RabbitMQ listen port
 |rabbitmq.username||yes|RabbitMQ username

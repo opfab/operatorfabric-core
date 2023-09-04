@@ -1,7 +1,6 @@
 opfab: 
   cardsPublicationUrl: "http://cards-publication:2102"
   getTokenUrl: "http://web-ui/auth/token"
-  tokenExpireClaim: "exp"
 
 rabbitmq:
   host: "rabbitmq"
