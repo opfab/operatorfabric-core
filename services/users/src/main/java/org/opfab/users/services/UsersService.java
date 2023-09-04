@@ -216,8 +216,8 @@ public class UsersService {
                     .filter(groupId -> this.entityRepository.findById(groupId).isEmpty()).toList();
             if (!invalidEntities.isEmpty())
                 entities.removeAll(invalidEntities);
+            user.setEntities(entities);
         }
-        user.setEntities(entities);
     }
 
     private void removeInvalidGroups(User user) {
