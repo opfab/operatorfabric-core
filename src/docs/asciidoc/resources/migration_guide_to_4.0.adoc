@@ -204,7 +204,7 @@ If you want to keep the old port 8080, you can change it via the server.port par
 == Configuration
 
 
-The configuration has been simplified, you have now default parameters you do not need to set anymore :
+The configuration has been simplified, you have now default parameters you do not need to set anymore in the back configuration:
 
  - in all yml file you do not need to set anymore spring.application.name
  - a default kafka configuration is provided, you only have to add "kafka.consumer.group-id : opfab-command" to enable kafka
@@ -237,6 +237,13 @@ becomes :
     volumes:
       - "./ui-config:/usr/share/nginx/html/config"
 ```
+
+In the web-ui.json file, you do not need anymore to set :
+- security.jwt.expire-claim
+- security.oauth2.flow.provider
+- security.oauth2.provider-realm
+- security.oauth2.provider-url
+
 
 == Normalization of some configuration parameters
 

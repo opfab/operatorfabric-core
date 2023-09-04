@@ -42,9 +42,6 @@ The properties lie in the `web-ui.json`.The following table describes their mean
 |===
 |name|default|mandatory?|Description
 
-
-|security.provider-realm||yes|The realm name in keycloak server settings page. This is used for the log out process to know which realm should be affected.
-|security.provider-url||yes|The keycloak server instance
 |security.logout-url||yes
 a|The keycloak logout URL. Is a composition of:
  - Your keycloak instance and the _auth_ keyword (ex: https://www.keycloakurl.com/auth), but we also support domains without _auth_ (ex: https://www.keycloakurl.com/customPath)
@@ -57,7 +54,6 @@ a|authentication mode, available options:
  - CODE: Authorization Code Flow;
  - PASSWORD: Direct Password Flow (fallback);
  - IMPLICIT: Implicit Flow.
-|security.oauth2.flow.provider|null|no|provider name to display on log in button
 |security.oauth2.flow.delegate-url|null|no
 a|Url to redirect the browser to for authentication. Mandatory with:
 
