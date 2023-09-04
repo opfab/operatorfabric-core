@@ -4,7 +4,6 @@ opfab:
   usersUrl: "http://users:2103/users"
   cardsConsultationUrl: "http://cards-consultation:2104"
   getTokenUrl: "http://web-ui/auth/token"
-  tokenExpireClaim: "exp"
 rabbitmq:
   host: rabbitmq
   port: 5672

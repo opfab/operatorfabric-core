@@ -33,7 +33,6 @@ const adminPort = config.get('cardsReminder.adminPort');
 const activeOnStartUp = config.get('cardsReminder.activeOnStartup');
 
 const authenticationService = new AuthenticationService()
-    .setTokenExpireClaim(config.get('opfab.tokenExpireClaim'))
     .setLogger(logger);
 
 const remindDatabaseService = new RemindDatabaseService()

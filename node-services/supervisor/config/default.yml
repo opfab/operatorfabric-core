@@ -5,7 +5,6 @@ opfab:
   cardsPublicationUrl: "http://127.0.0.1:2102"
   cardsConsultationUrl: "http://127.0.0.1:2104"
   getTokenUrl: "http://localhost:2002/auth/token"
-  tokenExpireClaim: "exp"
 logConfig:
   logFolder: logs/
   logFile: "%DATE%.log"

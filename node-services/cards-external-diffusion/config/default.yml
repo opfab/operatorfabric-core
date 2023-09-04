@@ -4,7 +4,6 @@ opfab:
   usersUrl: "http://127.0.0.1:2103"
   cardsConsultationUrl: "http://127.0.0.1:2104"
   getTokenUrl: "http://127.0.0.1:2002/auth/token"
-  tokenExpireClaim: "exp"
 rabbitmq:
   host: localhost
   port: 5672

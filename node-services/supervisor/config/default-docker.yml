@@ -5,7 +5,6 @@ opfab:
   cardsPublicationUrl: "http://cards-publication:2102"
   cardsConsultationUrl: "http://cards-consultation:2104"
   getTokenUrl: "http://web-ui/auth/token"
-  tokenExpireClaim: "exp"
 logConfig:
   logLevel: info
 supervisor:

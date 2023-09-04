@@ -12,16 +12,11 @@ import jwt_decode from 'jwt-decode';
 import OpfabServicesInterface from '../server-side/opfabServicesInterface';
 
 export default class AuthenticationService {
-    tokenExpireClaim: any;
     loginClaim: any = 'preferred_username';
     opfabServicesInterface: OpfabServicesInterface;
     logger: any;
 
 
-    public setTokenExpireClaim(tokenExpireClaim: string) {
-        this.tokenExpireClaim = tokenExpireClaim;
-        return this;
-    }
 
     public setLogger(logger: any) {
         this.logger = logger;
@@ -74,7 +69,7 @@ export default class AuthenticationService {
             const jwt = this.decodeToken(token);
 
             if (jwt) {
-                const expirationDate = jwt[this.tokenExpireClaim];
+                const expirationDate = jwt['exp'];
                 if (new Date().valueOf() < (expirationDate * 1000) - margin) {
                     return true;
                 }
