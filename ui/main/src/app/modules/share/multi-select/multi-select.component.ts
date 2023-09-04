@@ -1,4 +1,4 @@
-/* Copyright (c) 2022, RTE (http://www.rte-france.com)
+/* Copyright (c) 2022-2023, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -60,8 +60,10 @@ export class MultiSelectComponent implements AfterViewInit, OnDestroy, OnChanges
     private createVirtualSelectComponent() {
         let placeholder = '';
         let nbOfDisplayValues = 50;
+        let allowNewOption = false;
         if (this.config.placeholderKey) placeholder = this.translateService.instant(this.config.placeholderKey);
         if (this.config.nbOfDisplayValues) nbOfDisplayValues = this.config.nbOfDisplayValues;
+        if (this.config.allowNewOption) allowNewOption = this.config.allowNewOption;
         VirtualSelect.init({
             ele: '#' + this.multiSelectId,
             options: [],
@@ -77,7 +79,8 @@ export class MultiSelectComponent implements AfterViewInit, OnDestroy, OnChanges
             noOptionsText: this.translateService.instant('multiSelect.noOptionsText'),
             noSearchResultsText: this.translateService.instant('multiSelect.noSearchResultsText'),
             hideClearButton: !this.getValueOrDefault(this.config.multiple, true),
-            enableSecureText: true  // Do not remove this important security control to avoid script injection see #3826
+            enableSecureText: true,  // Do not remove this important security control to avoid script injection see #3826
+            allowNewOption: allowNewOption
         });
 
         this.virtualSelectComponent = document.querySelector('#' + this.multiSelectId);
