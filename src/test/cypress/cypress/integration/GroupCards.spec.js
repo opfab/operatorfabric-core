@@ -1,4 +1,4 @@
-/* Copyright (c) 2021-2022, RTE (http://www.rte-france.com)
+/* Copyright (c) 2021-2023, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * Ther Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with ther
@@ -39,6 +39,9 @@ describe('Group Cards tests', function () {
         script.sendCard('cypress/group/message3.json');
         script.sendCard('cypress/group/message3.json');
         script.sendCard('cypress/group/message3.json');
+
+        // Send one card, having a different tag, not grouped
+        script.sendCard('cypress/group/message4.json');
     });
 
     it('Card grouping disabled -> all cards should be visible in the feed', function () {
@@ -46,8 +49,8 @@ describe('Group Cards tests', function () {
         opfab.loginWithUser('operator1_fr');
 
 
-        // Operator1 should see 10 cards in her feed
-        cy.get('of-light-card').should('have.length', 10 );
+        // Operator1 should see 11 cards in her feed
+        cy.get('of-light-card').should('have.length', 11);
 
         // // Click on a card
         cy.get('[id^="opfab-feed-light-card-cypress-message2_"]').first().click();
@@ -55,16 +58,16 @@ describe('Group Cards tests', function () {
         // Check if URL changes to display the card detail
         cy.url().should('include', 'cypress.message2_')
 
-        // Operator1 should still see 10 cards in her feed
-        cy.get('of-light-card').should('have.length', 10 );
+        // Operator1 should still see 11 cards in her feed
+        cy.get('of-light-card').should('have.length', 11);
     });
 
     it('Card grouping enabled -> only cards with unique tag strings should be visible in the feed', function () {
         script.setPropertyInConf('feed.enableGroupedCards','web-ui', true);
         opfab.loginWithUser('operator1_fr');
 
-        // Operator1 should see 3 cards in her feed
-        cy.get('of-light-card').should('have.length', 3 );
+        // Operator1 should see 4 cards in her feed
+        cy.get('of-light-card').should('have.length', 4);
 
         // // Click on a card
         cy.get('[id^="opfab-feed-light-card-cypress-message1_"]').first().click();
@@ -72,14 +75,14 @@ describe('Group Cards tests', function () {
          // Check if URL changes to display the card detail
         cy.url().should('include', 'cypress.message1_');
 
-        // Operator1 should see 4 + the 2 grouped cards == 6 cards  in her feed
-        cy.get('of-light-card').should('have.length', 6 );
+        // Operator1 should see 4 + the 2 grouped cards + 1 not grouped card == 7 cards  in her feed
+        cy.get('of-light-card').should('have.length', 7);
 
         // // Click on a card of the same group
         cy.get('[id^="opfab-feed-light-card-cypress-message1_"]').last().click();
 
-        // Operator1 should still see 4 + the 2 grouped cards == 6 cards in her feed
-        cy.get('of-light-card').should('have.length', 6 );
+        // Operator1 should still see 4 + the 2 grouped cards + 1 not grouped card == 7 cards in her feed
+        cy.get('of-light-card').should('have.length', 7);
 
         // Click on a card which has one child
         cy.get('[id^="opfab-feed-light-card-cypress-message3_"]').first().click();
@@ -87,7 +90,16 @@ describe('Group Cards tests', function () {
         // Check if URL changes to display the card detail
         cy.url().should('include', 'cypress.message3_');
 
-        // Operator1 should see 3 + the 2 grouped cards == 5 cards  in her feed
-        cy.get('of-light-card').should('have.length', 5 );
+        // Operator1 should see 3 + the 2 grouped cards + 1 not grouped card == 6 cards  in her feed
+        cy.get('of-light-card').should('have.length', 6);
+    });
+
+    it('Card grouping enabled -> only cards with childrens should display the icon', function () {
+        opfab.loginWithUser('operator1_fr');
+
+        cy.get('[id="opfab-feed-light-card-group-icon"]').should('have.length', 3);
+
+        cy.get('[id^="opfab-feed-light-card-cypress-message1_"]').first().click();
+        cy.get('[id="opfab-feed-light-card-group-icon"]').should('have.length', 3);
     });
 })

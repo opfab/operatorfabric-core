@@ -135,7 +135,8 @@ export class LightCardComponent implements OnInit, OnDestroy {
     }
 
     private computeGroupedCardsIcon() {
-        this.showGroupedCardsIcon = this.groupedCardsService.isParentGroupCard(this.lightCard);
+        this.showGroupedCardsIcon = this.groupedCardsService.isParentGroupCard(this.lightCard)
+        && this.groupedCardsService.getChildCardsByTags(this.lightCard.tags).length !== 0;
     }
 
     getGroupedChildCards() {
