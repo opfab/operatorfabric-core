@@ -4,6 +4,7 @@
   "version": "1",
   "uiVisibility": {
     "monitoring": false,
+    "monitoring_exp": false,
     "logging": false,
     "calendar": false
   },

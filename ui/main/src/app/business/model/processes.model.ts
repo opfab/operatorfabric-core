@@ -19,7 +19,7 @@ export class Process {
 }
 
 export class UiVisibility {
-    constructor(readonly monitoring: boolean, readonly logging: boolean, readonly calendar: boolean) {}
+    constructor(readonly monitoring: boolean, readonly monitoring_exp: boolean, readonly logging: boolean, readonly calendar: boolean) {}
 }
 
 export class State {

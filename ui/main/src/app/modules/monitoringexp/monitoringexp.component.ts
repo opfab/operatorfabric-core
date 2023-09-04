@@ -101,20 +101,22 @@ export class MonitoringExpComponent implements OnDestroy, OnInit, AfterViewInit 
         this.processMonitoring = this.configService.getConfigValue('processMonitoring');
 
         processesService.getAllProcesses().forEach((process) => {
-            const itemName = process.name ? process.name : process.id;
-            this.processNames.set(process.id, itemName);
-            for (let key of process.states.keys()) {
-                this.processStateDescription.set(process.id + '.' + key, process.states.get(key).description);
-                this.processStateName.set(process.id + '.' + key, process.states.get(key).name);
-                this.stateColors.set(process.id + '.' + key, process.states.get(key).color);
-            }
+            if (process.uiVisibility?.monitoring_exp) {
+                const itemName = process.name ? process.name : process.id;
+                this.processNames.set(process.id, itemName);
+                for (let key of process.states.keys()) {
+                    this.processStateDescription.set(process.id + '.' + key, process.states.get(key).description);
+                    this.processStateName.set(process.id + '.' + key, process.states.get(key).name);
+                    this.stateColors.set(process.id + '.' + key, process.states.get(key).color);
+                }
 
-            this.listOfProcessesForRequest.push(process.id);
-            this.listOfProcessesForFilter.push({
-                value: process.id,
-                label: itemName,
-                i18nPrefix: `${process.id}.${process.version}`
-            });
+                this.listOfProcessesForRequest.push(process.id);
+                this.listOfProcessesForFilter.push({
+                    value: process.id,
+                    label: itemName,
+                    i18nPrefix: `${process.id}.${process.version}`
+                });
+            }
         });
     }
 
