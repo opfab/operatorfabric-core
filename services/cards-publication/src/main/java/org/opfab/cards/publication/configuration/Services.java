@@ -42,9 +42,9 @@ public class Services {
             @Value("${operatorfabric.cards-publication.checkAuthenticationForCardSending:true}") boolean checkAuthenticationForCardSending,
             @Value("${operatorfabric.cards-publication.checkPerimeterForCardSending:true}") boolean checkPerimeterForCardSending,
             @Value("${operatorfabric.cards-publication.authorizeToSendCardWithInvalidProcessState:false}") boolean authorizeToSendCardWithInvalidProcessState,
-            @Value("${cardSendingLimitCardCount:1000}") int cardSendingLimitCardCount,
-            @Value("${cardSendingLimitPeriod:3600}") int cardSendingLimitPeriod,
-            @Value("${activateCardSendingLimiter:true}") boolean activateCardSendingLimiter) {
+            @Value("${operatorfabric.cards-publication.cardSendingLimitCardCount:1000}") int cardSendingLimitCardCount,
+            @Value("${operatorfabric.cards-publication.cardSendingLimitPeriod:3600}") int cardSendingLimitPeriod,
+            @Value("${operatorfabric.cards-publication.activateCardSendingLimiter:true}") boolean activateCardSendingLimiter) {
         this.cardTranslationService = new CardTranslationService(i18nProcessesCache, processesCache, eventBus);
         this.userActionLogService = userActionLogService;
         CardNotificationService cardNotificationService = new CardNotificationService(eventBus, objectMapper);
