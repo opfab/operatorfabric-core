@@ -49,7 +49,7 @@
                         <span *ngIf="showGroupedCardsIcon" class="p-1"
                               [ngbPopover]="tipTags" popoverClass="opfab-popover-unclickable" container="body"
                               triggers="mouseenter:mouseleave">
-                            <em style="color: #0082FF;" class="fa " [class.fa-angle-down]="open" [class.fa-angle-left]="!open || !groupedCardsVisible"></em>
+                            <em id="opfab-feed-light-card-group-icon" style="color: #0082FF;" class="fa " [class.fa-angle-down]="open" [class.fa-angle-left]="!open || !groupedCardsVisible"></em>
                         </span>
                         <span *ngIf="isGeoMapEnabled && hasGeoLocation" (click)='zoomToLocation($event)' class="p-1">
                                <em style="color: #0082FF;" class="fa fa-location-crosshairs"></em>
