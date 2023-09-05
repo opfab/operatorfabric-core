@@ -60,7 +60,6 @@ public class ProcessesService implements ResourceLoaderAware {
     private static final String BUNDLE_FOLDER = "/bundles";
     private static final String BUSINESS_DATA_FOLDER = "/businessdata/";
     private static final String DUPLICATE_PROCESS_IN_PROCESS_GROUPS_FILE = "There is a duplicate process in the file you have sent";
-    private static final String FORBIDDEN_CHARACTERS_IN_ID_OF_PROCESS = "The id of the process should not contain characters #, ?, /, \\";
 
     @Value("${operatorfabric.businessconfig.storage.path}")
     private String storagePath;
@@ -393,14 +392,7 @@ public class ProcessesService implements ResourceLoaderAware {
         Path outConfigPath = outPath.resolve(CONFIG_FILE_NAME);
         ProcessData process = objectMapper.readValue(outConfigPath.toFile(), ProcessData.class);
 
-        if (process.getId().contains("#") || process.getId().contains("?") ||
-            process.getId().contains("/") || process.getId().contains("\\")) {
-            throw new ApiErrorException(
-                            ApiError.builder()
-                            .status(HttpStatus.BAD_REQUEST)
-                            .message(FORBIDDEN_CHARACTERS_IN_ID_OF_PROCESS)
-                            .build());
-        }
+        this.checkInputDoesNotContainForbiddenCharacters("id of the process",process.getId());
 
         //process root
         Path existingRootPath = Paths.get(this.storagePath + BUNDLE_FOLDER)
@@ -659,6 +651,7 @@ public class ProcessesService implements ResourceLoaderAware {
     }
 
     public Resource getBusinessData(String resourceName) throws FileNotFoundException {
+        this.checkInputDoesNotContainForbiddenCharacters("business data file name", resourceName);
         Path resourcePath = Paths.get(this.storagePath + BUSINESS_DATA_FOLDER)
                 .resolve(resourceName)
                 .normalize();
@@ -686,5 +679,17 @@ public class ProcessesService implements ResourceLoaderAware {
         Path resourcePath = Paths.get(this.storagePath + BUSINESS_DATA_FOLDER).normalize();
         File dataDirectory = new File(resourcePath.toString());
         FileUtils.cleanDirectory(dataDirectory);
+    }
+
+    private void checkInputDoesNotContainForbiddenCharacters(String inputName, String inputValue)
+            throws ApiErrorException {
+        if (inputValue.contains("#") || inputValue.contains("?") ||
+                inputValue.contains("/") || inputValue.contains("\\")) {
+            throw new ApiErrorException(
+                    ApiError.builder()
+                            .status(HttpStatus.BAD_REQUEST)
+                            .message("The " + inputName + " should not contain characters #, ?, /, \\")
+                            .build());
+        }
     }
 }
