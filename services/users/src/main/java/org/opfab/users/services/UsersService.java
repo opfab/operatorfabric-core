@@ -227,8 +227,9 @@ public class UsersService {
                     .filter(groupId -> this.groupRepository.findById(groupId).isEmpty()).toList();
             if (!invalidGroups.isEmpty())
                 groups.removeAll(invalidGroups);
+            user.setGroups(groups);
         }
-        user.setGroups(groups);
+       
     }
 
 }
