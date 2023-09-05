@@ -23,8 +23,6 @@ import com.rabbitmq.client.Channel;
 import com.rabbitmq.client.Connection;
 import com.rabbitmq.client.ConnectionFactory;
 import com.rabbitmq.client.DeliverCallback;
-import com.rabbitmq.client.ShutdownListener;
-import com.rabbitmq.client.ShutdownSignalException;
 import com.rabbitmq.client.BuiltinExchangeType;
 
 import org.apache.commons.pool2.ObjectPool;
@@ -52,10 +50,10 @@ public class RabbitEventBus implements EventBus {
     @Value("${operatorfabric.rabbitmq.port:5672}")
     private int port;
 
-    @Value("${operatorfabric.rabbitmq.username:guest}")
+    @Value("${spring.rabbitmq.username}")
     private String username;
 
-    @Value("${operatorfabric.rabbitmq.password:guest}")
+    @Value("${spring.rabbitmq.password}")
     private String password;
 
     private Channel channelForListening; // use to listen to events
