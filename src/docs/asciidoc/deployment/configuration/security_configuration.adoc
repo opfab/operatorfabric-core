@@ -69,7 +69,7 @@ where `b3BmYWItY2xpZW50Om9wZmFiLWtleWNsb2FrLXNlY3JldA==` is the base64 encoded s
 
 |===
 |name|default|mandatory?|Description 
-|operatorfabric.security.oauth2.resourceserver.jwt.jwk-set-uri|null|yes|The url providing the certificat used to verify the jwt signature
+|operatorfabric.security.oauth2.resourceserver.jwt.jwk-set-uri|null|yes|The url providing the certificate used to verify the jwt signature
 |===
 
 [NOTE]
