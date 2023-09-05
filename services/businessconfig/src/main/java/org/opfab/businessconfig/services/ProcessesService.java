@@ -205,7 +205,7 @@ public class ProcessesService implements ResourceLoaderAware {
                     .filter(File::isDirectory)
                     .forEach(f -> {
                                 File[] configFile = f.listFiles((sf, name) -> name.equals(CONFIG_FILE_NAME));
-                                if (configFile.length >= 1) {
+                                if (configFile != null && configFile.length >= 1) {
                                     try {
                                         ProcessData process = objectMapper.readValue(configFile[0], ProcessData.class);
                                         Optional<String> validationError = getConfigFileValidationErrors(process);
