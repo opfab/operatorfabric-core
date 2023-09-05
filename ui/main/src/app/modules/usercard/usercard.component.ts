@@ -535,12 +535,16 @@ export class UserCardComponent implements OnInit, OnDestroy {
         const endDate = this.getEndDate();
         const lttd = this.getLttd();
         const expirationDate = this.getExpirationDate();
+        let wktGeometry = this.getWktGeometry();
+        let wktProjection = this.getWktProjection();
         if (!this.areDatesValid(startDate, endDate, lttd, expirationDate)) return;
 
         this.opfabAPIService.currentUserCard.startDate = startDate;
         this.opfabAPIService.currentUserCard.endDate = endDate;
         this.opfabAPIService.currentUserCard.lttd = lttd;
         this.opfabAPIService.currentUserCard.expirationDate = expirationDate;
+        this.opfabAPIService.currentUserCard.wktGeometry = wktGeometry;
+        this.opfabAPIService.currentUserCard.wktProjection = wktProjection;
 
         const title = this.specificInformation.card.title ? this.specificInformation.card.title : 'UNDEFINED';
         const selectedProcess = this.processesService.getProcess(this.selectedProcessId);
@@ -560,6 +564,14 @@ export class UserCardComponent implements OnInit, OnDestroy {
             .subscribe((response) => {
                 this.isPreparingCard = false;
                 const titleTranslated = response.body.translatedField;
+
+                if (!wktGeometry) {
+                    wktGeometry = this.cardToEdit?.card.wktGeometry ? this.cardToEdit?.card.wktGeometry : null
+                }
+                if (!wktProjection) {
+                    wktProjection = this.cardToEdit?.card.wktProjection ? this.cardToEdit?.card.wktProjection : null
+                }
+
                 this.card = {
                     id: 'dummyId',
                     publishDate: null,
@@ -599,8 +611,8 @@ export class UserCardComponent implements OnInit, OnDestroy {
                         : false,
                     data: this.specificInformation.card.data,
                     rRule: this.specificInformation.card.rRule ? this.specificInformation.card.rRule : null,
-                    wktGeometry: this.cardToEdit?.card.wktGeometry ? this.cardToEdit?.card.wktGeometry : null,
-                    wktProjection: this.cardToEdit?.card.wktProjection ? this.cardToEdit?.card.wktProjection : null
+                    wktGeometry: wktGeometry,
+                    wktProjection: wktProjection
                 } as Card;
 
                 this.childCards = this.cardToEdit?.card.keepChildCards ? this.cardToEdit.childCards : [];
@@ -722,6 +734,22 @@ export class UserCardComponent implements OnInit, OnDestroy {
                 lttd = this.specificInformation.card.lttd;
         }
         return lttd;
+    }
+
+    private getWktGeometry(): string {
+        let wktGeometry = null;
+        if (this.specificInformation?.card.wktGeometry) {
+            wktGeometry = this.specificInformation.card.wktGeometry;
+        }
+        return wktGeometry;
+    }
+
+    private getWktProjection(): string {
+        let wktProjection = null;
+        if (this.specificInformation?.card.wktProjection) {
+            wktProjection = this.specificInformation.card.wktProjection;
+        }
+        return wktProjection;
     }
 
     private getExpirationDate(): number {
