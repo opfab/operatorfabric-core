@@ -148,18 +148,18 @@ const usercardTemplateGateway = {
     setInitialSelectedRecipients(recipients) {
         console.warn(
             new Date().toISOString(),
-            ' WARNING : Use of userCardTemplateGateway.setInitialSelectedRecipients is deprecated , you shall use opfab.currentUserCard.setInitialSelectedRecipients instead'
+            ' WARNING : Use of userCardTemplateGateway.setInitialSelectedRecipients is deprecated , you shall use opfab.currentUserCard.setSelectedRecipients instead'
         );
-        opfab.currentUserCard.setInitialSelectedRecipients(recipients);
+        opfab.currentUserCard.setSelectedRecipients(recipients);
     },
 
 
     setInitialSelectedRecipientsForInformation(recipients) {
         console.warn(
             new Date().toISOString(),
-            ' WARNING : Use of userCardTemplateGateway.setInitialSelectedRecipientsForInformation is deprecated , you shall use opfab.currentUserCard.setInitialSelectedRecipientsForInformation instead'
+            ' WARNING : Use of userCardTemplateGateway.setInitialSelectedRecipientsForInformation is deprecated , you shall use opfab.currentUserCard.setSelectedRecipientsForInformation instead'
         );
-        opfab.currentUserCard.setInitialSelectedRecipientsForInformation(recipients);
+        opfab.currentUserCard.setSelectedRecipientsForInformation(recipients);
     },
 
     setInitialSeverity: function (initialSeverity) {

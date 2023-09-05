@@ -37,7 +37,7 @@ export abstract class BaseUserCardTemplate extends HTMLElement {
 
         if (initialSelectedRecipients) {
             try {
-                opfab.currentUserCard.setInitialSelectedRecipients(JSON.parse(initialSelectedRecipients));
+                opfab.currentUserCard.setSelectedRecipients(JSON.parse(initialSelectedRecipients));
             } catch (err) {
                 console.error('Invalid initialSelectedRecipients',initialSelectedRecipients, err);
             }
@@ -55,7 +55,7 @@ export abstract class BaseUserCardTemplate extends HTMLElement {
 
         if (initialSelectedRecipientsForInformation) {
             try {
-                opfab.currentUserCard.setInitialSelectedRecipientsForInformation(
+                opfab.currentUserCard.setSelectedRecipientsForInformation(
                     JSON.parse(initialSelectedRecipientsForInformation)
                 );
             } catch (err) {

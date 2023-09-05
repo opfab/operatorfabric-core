@@ -59,8 +59,8 @@ export class OpfabAPIService {
             userEntityChildCard: null,
             selectedEntityRecipients: null,
             selectedEntityForInformationRecipients: null,
-            setInitialSelectedRecipients: function(recipients) {},
-            setInitialSelectedRecipientsForInformation: function(recipients) {},
+            setSelectedRecipients: function(recipients) {},
+            setSelectedRecipientsForInformation: function(recipients) {},
             setDropdownEntityRecipientList: function (recipients) {},
             setDropdownEntityRecipientForInformationList: function (recipients) {}
         }
@@ -332,12 +332,12 @@ export class OpfabAPIService {
             self.currentUserCard.initialSeverity = initialSeverity;
         };
 
-        opfab.currentUserCard.setInitialSelectedRecipients = function (recipients) {
-            self.currentUserCard.setInitialSelectedRecipients(recipients);
+        opfab.currentUserCard.setSelectedRecipients = function (recipients) {
+            self.currentUserCard.setSelectedRecipients(recipients);
         };
 
-        opfab.currentUserCard.setInitialSelectedRecipientsForInformation = function (recipients) {
-            self.currentUserCard.setInitialSelectedRecipientsForInformation(recipients);
+        opfab.currentUserCard.setSelectedRecipientsForInformation = function (recipients) {
+            self.currentUserCard.setSelectedRecipientsForInformation(recipients);
         };
 
 

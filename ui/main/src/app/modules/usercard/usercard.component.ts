@@ -86,11 +86,11 @@ export class UserCardComponent implements OnInit, OnDestroy {
     private connectedRecipients = new Set();
     public recipientVisible = true;
     @ViewChild('recipientsForm') recipientsForm: UserCardRecipientsFormComponent;
-    public initialSelectedRecipients = [];
+    public selectedRecipients = [];
 
     // For recipients for information component
     public recipientForInformationVisible = false;
-    public initialSelectedRecipientsForInformation = [];
+    public selectedRecipientsForInformation = [];
 
     private intervalForConnectedUsersUpdate;
     public displayConnectionCircles = false;
@@ -198,11 +198,11 @@ export class UserCardComponent implements OnInit, OnDestroy {
             this.editCardProcessId = this.cardToEdit.card.process;
             this.editCardStateId = this.cardToEdit.card.state;
             this.severityForm.get('severity').setValue(this.cardToEdit.card.severity);
-            this.initialSelectedRecipients = Utilities.removeElementsFromArray(
+            this.selectedRecipients = Utilities.removeElementsFromArray(
                 this.cardToEdit.card.entityRecipients,
                 this.cardToEdit.card.entityRecipientsForInformation
             );
-            this.initialSelectedRecipientsForInformation = this.cardToEdit.card.entityRecipientsForInformation;
+            this.selectedRecipientsForInformation = this.cardToEdit.card.entityRecipientsForInformation;
             this.pageLoading = false;
             this.datesFromCardToEdit = true;
             this.opfabAPIService.currentUserCard.startDate =  this.cardToEdit.card.startDate;
@@ -227,11 +227,11 @@ export class UserCardComponent implements OnInit, OnDestroy {
             this.copyCardProcessId = this.cardToCopy.card.process;
             this.copyCardStateId = this.cardToCopy.card.state;
             this.severityForm.get('severity').setValue(this.cardToCopy.card.severity);
-            this.initialSelectedRecipients = Utilities.removeElementsFromArray(
+            this.selectedRecipients = Utilities.removeElementsFromArray(
                 this.cardToCopy.card.entityRecipients,
                 this.cardToCopy.card.entityRecipientsForInformation
             );
-            this.initialSelectedRecipientsForInformation = this.cardToCopy.card.entityRecipientsForInformation;
+            this.selectedRecipientsForInformation = this.cardToCopy.card.entityRecipientsForInformation;
             this.pageLoading = false;
             this.datesFromCardToEdit = false;
         });
@@ -403,8 +403,8 @@ export class UserCardComponent implements OnInit, OnDestroy {
             .states.get(this.selectedStateId).userCard;
         this.setFieldsVisibility();
         if (!this.cardToEdit && !this.cardToCopy) {
-            this.initialSelectedRecipients = [];
-            this.initialSelectedRecipientsForInformation = [];
+            this.selectedRecipients = [];
+            this.selectedRecipientsForInformation = [];
         }
 
         this.setPublisherForCreatingUsercard();

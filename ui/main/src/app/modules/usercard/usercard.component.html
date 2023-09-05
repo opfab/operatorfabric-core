@@ -78,8 +78,8 @@
             </div>
 
             <div *ngIf="recipientVisible">
-                <of-usercard-recipients-form [userCardConfiguration]="userCardConfiguration" [initialSelectedRecipients]="initialSelectedRecipients"
-                    [initialSelectedRecipientsForInformation]="initialSelectedRecipientsForInformation"
+                <of-usercard-recipients-form [userCardConfiguration]="userCardConfiguration" [selectedRecipients]="selectedRecipients"
+                    [selectedRecipientsForInformation]="selectedRecipientsForInformation"
                     [recipientForInformationVisible]="recipientForInformationVisible"
                     [editCardMode]="editCardMode" #recipientsForm> </of-usercard-recipients-form>
             </div>

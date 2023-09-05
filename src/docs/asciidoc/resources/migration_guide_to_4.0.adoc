@@ -150,10 +150,10 @@ Use of methods or attributes starting with templateGateway are now deprecated , 
 |opfab.currentUserCard.setInitialLttd(lttd)
 
 |usercardTemplateGateway.setInitialSelectedRecipients(recipients)
-|opfab.currentUserCard.setInitialSelectedRecipients(recipients)
+|opfab.currentUserCard.setSelectedRecipients(recipients)
 
 |usercardTemplateGateway.setInitialSelectedRecipientsForInformation(recipients)
-|opfab.currentUserCard.setInitialSelectedRecipientsForInformation(recipients)
+|opfab.currentUserCard.setSelectedRecipientsForInformation(recipients)
 
 |usercardTemplateGateway.setInitialSeverity(initialSeverity)
 |opfab.currentUserCard.setInitialSeverity(initialSeverity)
