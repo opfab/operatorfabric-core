@@ -148,7 +148,7 @@ NOTE: Geographical information  is an experimental feature
 
 You can add geographical location in  `wktGeometry` and the projection in `wktProjection`  fields.
 
-When `feed.enableGeoMapFeature` is enabled in the `web&#8288;-ui.json` configuration file and the card is visible in the line feed, a geographical map will be drawn. When the card has set its wktGeometry, the location will be highlighted on the card. Two geometrical shapes are supported `POINT`, which will show a circle on the map, and `POLYGON` which will draw the specified area on the map.  For example show a circle based on the card location:
+When `feed.enableMap` is enabled in the `web&#8288;-ui.json` configuration file and the card is visible in the line feed, a geographical map will be drawn. When the card has set its wktGeometry, the location will be highlighted on the card. Two geometrical shapes are supported `POINT`, which will show a circle on the map, and `POLYGON` which will draw the specified area on the map.  For example show a circle based on the card location:
 
 ```
 "wktGeometry": "POINT (5.8946407 51.9848624)",
