@@ -12,10 +12,10 @@
 
 <form [formGroup]="realTimeScreensForm">
 
- <of-spinner *ngIf="!this.isRealTimeScreensLoaded"></of-spinner>
+ <of-spinner *ngIf="!isPageLoaded"></of-spinner>
 
-    <div *ngIf="this.isRealTimeScreensLoaded && !this.realTimeScreens.length; then noScreenConfiguration"></div>
-    <div *ngIf="this.isRealTimeScreensLoaded && this.realTimeScreens && this.realTimeScreens.length" >
+    <div *ngIf="isPageLoaded && !realtimePage; then noScreenConfiguration"></div>
+    <div *ngIf="isPageLoaded && realtimePage">
 
         <br>
         <div style="background-color: var(--opfab-bgcolor-darker)">
@@ -23,7 +23,7 @@
             <div class="row" style="margin-left: 0px;margin-right: 0px;">
                 <div class="col-sm text-center" style="max-width: max-content;min-width: 15%;position:relative">
                     <of-multi-select id="of-realtimeusers-screen-selector" multiSelectId="realTimeScreen" [parentForm]="realTimeScreensForm"
-                                     [config]="multiSelectConfig" [options]="realTimeScreensOptions" [selectedOptions]="realTimeScreenIndexToDisplay">
+                                     [config]="multiSelectConfig" [options]="realtimePage.screenOptions" [selectedOptions]="initialScreenOption">
                     </of-multi-select>
                 </div>
             </div>
@@ -31,32 +31,32 @@
         </div>
 
         <div class="row" style="margin-left: 0px; margin-right: 0px;">
-            <div class="col-sm" *ngFor="let column of this.realTimeScreens[realTimeScreenIndexToDisplay].screenColumns; let colIndex = index;">
+            <div class="col-sm" *ngFor="let column of realtimePage.currentScreen.columns; let colIndex = index;">
                 <div class="opfab-realtimeusers-entitiesgroups " *ngFor="let entitiesGroupsElement of column.entitiesGroups;">
                     <span class="opfab-realtimeusers-entitiesgroups-title">{{entitiesGroupsElement.name}}</span>
                     <table aria-describedby="real time users table" style="width: 100%;table-layout: fixed">
-                        <tr *ngFor="let entity of entitiesGroupsElement.entities;">
-                            <th scope="row">{{this.entitiesService.getEntityName(entity)}}</th>
+                        <tr *ngFor="let line of entitiesGroupsElement.lines;">
+                            <th scope="row">{{line.entityName}}</th>
 
                             <td>
                                 <ng-template #connected>
-                                    <span class="badge rounded-pill bg-success">{{getNumberOfConnectedUsersInEntity(entity)}}
-                                    </span>&nbsp;<span [id]="'grouped-label-' + entity" class="opfab-group-label"
-                                        [disablePopover]="!isEllipsisActive('grouped-label-' + entity)"
+                                    <span class="badge rounded-pill bg-success">{{line.connectedUsersCount}}
+                                    </span>&nbsp;<span [id]="'grouped-label-' + line.entityId" class="opfab-group-label"
+                                        [disablePopover]="!isEllipsisActive('grouped-label-' + line.entityId)"
                                         placement="top-left"
                                         [ngbPopover]="usersDropdown" container="body"
                                         triggers="mouseenter:mouseleave"
                                         popoverClass="opfab-popover-no-arrow">
-                                        {{getLabelForConnectedUsers(entity)}}
+                                        {{line.connectedUsers}}
                                       </span>
                                 </ng-template>
                                 <ng-template #usersDropdown>
-                                    <div *ngFor="let login of connectedUsersPerEntity.get(entity)">
-                                      &nbsp; {{login}} &nbsp;
+                                    <div *ngFor="let user of line.connectedUsers.split(', ')">
+                                      &nbsp; {{user}} &nbsp;
                                     </div>
                                   </ng-template>
                                 <ng-template #disconnected><span class="badge rounded-pill bg-danger">0</span></ng-template>
-                                <span *ngIf="getNumberOfConnectedUsersInEntity(entity);then connected else disconnected"></span>
+                                <span *ngIf="line.connectedUsersCount;then connected else disconnected"></span>
                             </td>
                         </tr>
                     </table>
