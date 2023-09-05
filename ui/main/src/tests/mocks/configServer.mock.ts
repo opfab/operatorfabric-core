@@ -52,4 +52,8 @@ export class ConfigServerMock implements ConfigServer {
     setResponseForMonitoringConfiguration(monitoringConf: ServerResponse<MonitoringConfig>) {
         this.monitoringConf.next(monitoringConf);
     }
+
+    setResponseForRealTimeScreenConfiguration(realtimeScreenConf:ServerResponse<any>) {
+        this.realtimescreenconfiguration.next(realtimeScreenConf);
+    }
 }
