@@ -48,6 +48,7 @@ public class BusinessconfigController implements BusinessconfigApi {
     public static final String UNABLE_TO_POST_FILE_MSG = "Unable to post submitted file";
     public static final String FILE = " file";
     public static final String LOCATION = "Location";
+    public static final String IMPOSSIBLE_TO_UPDATE_BUNDLE = "Impossible to update bundle";
     private ProcessesService processService;
     private MonitoringService monitoringService;
 
@@ -130,6 +131,17 @@ public class BusinessconfigController implements BusinessconfigApi {
     public Process uploadBundle(HttpServletRequest request, HttpServletResponse response, @Valid MultipartFile file) {
         try (InputStream is = file.getInputStream()) {
             Process result = processService.updateProcess(is);
+            if (result == null) {
+                log.error(IMPOSSIBLE_TO_UPDATE_BUNDLE);
+                throw new ApiErrorException(
+                        ApiError.builder()
+                                .status(HttpStatus.BAD_REQUEST)
+                                .message(IMPOSSIBLE_TO_UPDATE_BUNDLE)
+                                .error(IMPOSSIBLE_TO_UPDATE_BUNDLE)
+                                .build(),
+                        UNABLE_TO_LOAD_FILE_MSG
+                        );
+            }
             response.addHeader(LOCATION, request.getContextPath() + "/businessconfig/processes/" + result.getId());
             response.setStatus(201);
             return result;
