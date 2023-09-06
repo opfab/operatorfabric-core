@@ -47,6 +47,7 @@ services:
       - "8090:8090"
     volumes:
       - "../certificates:/certificates_to_add"
+      - "./common-dev.yml:/config/common.yml"
   mailhog:
     image: mailhog/mailhog:v1.0.1
     ports:
