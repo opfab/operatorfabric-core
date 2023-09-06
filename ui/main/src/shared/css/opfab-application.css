@@ -643,7 +643,7 @@ input:-webkit-autofill {
     min-width: 200px;
     padding: 10px;
     border-radius: 10px;
-    background: var(--opfab-popover-bgcolor);
+    background: var(--opfab-tooltip-template-bgcolor);
     color: var(--opfab-text-color);
     text-align: center;
 
@@ -702,8 +702,8 @@ input:-webkit-autofill {
     transform: translateY(-50%);
 
     /* the arrow */
-    border: 10px solid var(--opfab-popover-bgcolor);
-    border-color: transparent var(--opfab-popover-bgcolor) transparent transparent;
+    border: 10px solid var(--opfab-tooltip-template-bgcolor);
+    border-color: transparent var(--opfab-tooltip-template-bgcolor) transparent transparent;
 
     display: none;
     opacity:0;
@@ -732,8 +732,8 @@ input:-webkit-autofill {
     transform: translateY(-50%);
 
     /* the arrow */
-    border: 10px solid var(--opfab-popover-bgcolor);
-    border-color: transparent transparent transparent var(--opfab-popover-bgcolor);
+    border: 10px solid var(--opfab-tooltip-template-bgcolor);
+    border-color: transparent transparent transparent var(--opfab-tooltip-template-bgcolor);
 
     display: none;
 }
@@ -759,8 +759,8 @@ input:-webkit-autofill {
     transform: translateX(-50%);
 
     /* the arrow */
-    border: 10px solid var(--opfab-popover-bgcolorr);
-    border-color: var(--opfab-popover-bgcolor) transparent transparent transparent;
+    border: 10px solid var(--opfab-tooltip-template-bgcolor);
+    border-color: var(--opfab-tooltip-template-bgcolor) transparent transparent transparent;
 
     display: none;
 }
@@ -786,8 +786,8 @@ input:-webkit-autofill {
     transform: translateX(-50%);
 
     /* the arrow */
-    border: 10px solid var(--opfab-popover-bgcolor);
-    border-color: transparent transparent var(--opfab-popover-bgcolor) transparent;
+    border: 10px solid var(--opfab-tooltip-template-bgcolor);
+    border-color: transparent transparent var(--opfab-tooltip-template-bgcolor) transparent;
 
     display: none;
 }
