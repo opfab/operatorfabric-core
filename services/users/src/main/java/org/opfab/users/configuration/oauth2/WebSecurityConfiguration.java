@@ -48,7 +48,6 @@ public class WebSecurityConfiguration {
     public static final String GROUPS_PATH = "/groups/**";
     public static final String GROUPS = "/groups";
     public static final String ENTITIES_PATH = "/entities/**";
-    public static final String ENTITIES = "/entities";
     public static final String PERIMETERS_PATH = "/perimeters/**";
     public static final String USER_ACTION_LOGS = "/userActionLogs";
     public static final String CURRENTUSER_INTERNAL_PATH = "/internal/CurrentUserWithPerimeters";
@@ -90,7 +89,7 @@ public class WebSecurityConfiguration {
                     .requestMatchers(USERS_PATH).access(hasAnyRoleAndIpAllowed(ADMIN_ROLE))
                     .requestMatchers(HttpMethod.GET, GROUPS).access(authenticatedAndIpAllowed())
                     .requestMatchers(GROUPS_PATH).access(hasAnyRoleAndIpAllowed(ADMIN_ROLE))
-                    .requestMatchers(HttpMethod.GET, ENTITIES).access(authenticatedAndIpAllowed())   // OC-1067 : we authorize all users for GET /entities
+                    .requestMatchers(HttpMethod.GET, ENTITIES_PATH).access(authenticatedAndIpAllowed()) 
                     .requestMatchers(ENTITIES_PATH).access(hasAnyRoleAndIpAllowed(ADMIN_ROLE))
                     .requestMatchers(PERIMETERS_PATH).access(hasAnyRoleAndIpAllowed(ADMIN_ROLE))
                     .requestMatchers(USER_ACTION_LOGS).access(hasAnyRoleAndIpAllowed(ADMIN_ROLE,VIEW_USER_ACTION_LOGS_ROLE))
