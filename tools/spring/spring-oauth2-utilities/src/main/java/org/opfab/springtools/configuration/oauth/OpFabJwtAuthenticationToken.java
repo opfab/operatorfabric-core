@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2021, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2023, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -27,8 +27,7 @@ import java.util.Collection;
  */
 public class OpFabJwtAuthenticationToken extends JwtAuthenticationToken {
     @Getter
-    private final Object principal;
-
+     private  final transient Object  principal;
     /**
      * @param jwt
      *    original Jwt object from http call
