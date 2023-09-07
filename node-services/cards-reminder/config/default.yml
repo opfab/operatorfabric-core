@@ -1,5 +1,6 @@
 opfab: 
   cardsPublicationUrl: "http://127.0.0.1:2102"
+  usersUrl: "http://127.0.0.1:2103"
   getTokenUrl: "http://127.0.0.1:2002/auth/token"
 
 rabbitmq:
@@ -18,8 +19,8 @@ logConfig:
   logLevel: "info"
 
 cardsReminder:
-  adminPort : 2107,
-  activeOnStartup : true,
+  adminPort : 2107
+  activeOnStartup : true
   checkPeriodInSeconds : 5
   opfab:
     login: "opfab_internal_account"
