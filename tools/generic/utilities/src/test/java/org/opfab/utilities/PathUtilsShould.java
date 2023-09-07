@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2022, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2023, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -74,7 +74,7 @@ class PathUtilsShould {
   }
 
   @Test
-  void untar() throws IOException {
+  void unTarGz() throws IOException {
 
     PathUtils.unTarGz(
        Files.newInputStream(basePath.resolve("archive.tar.gz")),
@@ -87,6 +87,14 @@ class PathUtilsShould {
     assertThat(basePath.resolve("archive-out").resolve("empty.file")).exists();
     assertThat(basePath.resolve("archive-out").resolve("dir").resolve("empty.file")).isRegularFile();
     assertThat(basePath.resolve("archive-out").resolve("empty.file")).isRegularFile();
+  }
+
+  @Test 
+  void isLinuxPathSafe() {
+    assertThat(PathUtils.isLinuxPathSafe("/rootPath")).isFalse();
+    assertThat(PathUtils.isLinuxPathSafe("~/homePath")).isFalse();
+    assertThat(PathUtils.isLinuxPathSafe("pathTraversal/../")).isFalse();
+    assertThat(PathUtils.isLinuxPathSafe("correctPath/dir/file")).isTrue();
   }
 
   @Test
