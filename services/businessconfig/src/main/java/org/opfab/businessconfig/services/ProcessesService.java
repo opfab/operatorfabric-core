@@ -631,6 +631,7 @@ public class ProcessesService implements ResourceLoaderAware {
      * @throws IOException if error arise during stream reading
      */
     public synchronized void updateBusinessDataFile (String fileContent, String resourceName) throws IOException, ParseException {   
+        this.checkInputDoesNotContainForbiddenCharacters("business data file name", resourceName);
         Path businessDataPath = Paths.get(this.storagePath + "/businessdata").normalize();
         
         if (!businessDataPath.toFile().exists()){
