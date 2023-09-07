@@ -23,8 +23,8 @@ import {OpfabAPIService} from 'app/business/services/opfabAPI.service';
 })
 export class UserCardRecipientsFormComponent implements OnInit, OnChanges {
     @Input() public userCardConfiguration;
-    @Input() public initialSelectedRecipients;
-    @Input() public initialSelectedRecipientsForInformation;
+    @Input() public selectedRecipients;
+    @Input() public selectedRecipientsForInformation;
     @Input() public recipientForInformationVisible;
     @Input() public editCardMode;
 
@@ -67,6 +67,9 @@ export class UserCardRecipientsFormComponent implements OnInit, OnChanges {
 
         this.listenForDropdownRecipientForInformationList();
         this.listenForInitialSelectedRecipientForInformationList();
+
+        this.listenForSelectedRecipientList();
+        this.listenForSelectedRecipientForInformationList();
     }
 
     ngOnChanges() {
@@ -132,8 +135,8 @@ export class UserCardRecipientsFormComponent implements OnInit, OnChanges {
     private listenForInitialSelectedRecipientList() {
         // Set initial recipient list from template only if not in edition mode
         this.opfabAPIService.currentUserCard.setInitialSelectedRecipients = (recipients) => {
-            if (!this.editCardMode && (!this.initialSelectedRecipients || this.initialSelectedRecipients.length === 0))
-                this.initialSelectedRecipients = recipients;
+            if (!this.editCardMode && (!this.selectedRecipients || this.selectedRecipients.length === 0))
+                this.selectedRecipients = recipients;
         };
     }
 
@@ -147,10 +150,24 @@ export class UserCardRecipientsFormComponent implements OnInit, OnChanges {
         this.opfabAPIService.currentUserCard.setInitialSelectedRecipientsForInformation = (recipients) => {
             if (
                 !this.editCardMode &&
-                (!this.initialSelectedRecipientsForInformation ||
-                    this.initialSelectedRecipientsForInformation.length === 0)
+                (!this.selectedRecipientsForInformation ||
+                    this.selectedRecipientsForInformation.length === 0)
             )
-                this.initialSelectedRecipientsForInformation = recipients;
+                this.selectedRecipientsForInformation = recipients;
+        };
+    }
+
+    private listenForSelectedRecipientList() {
+        // Set initial recipient list from template only if not in edition mode
+        this.opfabAPIService.currentUserCard.setSelectedRecipients = (recipients) => {
+                this.selectedRecipients = recipients;
+        };
+    }
+
+    private listenForSelectedRecipientForInformationList() {
+        // Set initial recipient list from template only if not in edition mode
+        this.opfabAPIService.currentUserCard.setSelectedRecipientsForInformation = (recipients) => {
+                this.selectedRecipientsForInformation = recipients;
         };
     }
 

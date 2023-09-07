@@ -472,7 +472,7 @@ From the template it is possible to set the initial value for `lttd` by calling 
 
 === Function setInitialSelectedRecipients
 
-It is possible to configure the list of initially selected recipients via javascript in the user template by calling the setInitialSelectedRecipients method. The method takes as input the list of Entity ids to be preselected.
+It is possible to configure the list of initially selected recipients via javascript in the user template by calling the setInitialSelectedRecipients method. The method takes as input the list of Entity ids to be preselected. The method will work only at template loading time, cannot be used to modify the selected recipients after the template is loaded or in card edition mode.
 
 For example : 
 
@@ -488,12 +488,45 @@ In this example the dropdown list of available recipients will have "ENTITY_FR" 
 
 === Function setInitialSelectedRecipientsForInformation
 
-It is possible to configure the list of initially selected recipients for information via javascript in the user template by calling the setInitialSelectedRecipientsForInformation method. The method takes as input the list of Entity ids to be preselected.
+It is possible to configure the list of initially selected recipients for information via javascript in the user template by calling the setInitialSelectedRecipientsForInformation method. The method takes as input the list of Entity ids to be preselected. The method will work only at template loading time, cannot be used to modify the selected recipients after the template is loaded or in card edition mode.
 
 For example : 
 
 ....
     opfab.currentUserCard.setInitialSelectedRecipientsForInformation([
+            "ENTITY_FR",
+            "IT_SUPERVISOR_ENTITY"
+        ]);
+....
+
+
+In this example the dropdown list of available recipients will have "ENTITY_FR" and "IT_SUPERVISOR_ENTITY" preselected. The user can anyway change the selected recipients for information.
+
+
+=== Function setSelectedRecipients
+
+It is possible to configure the list of selected recipients via javascript in the user template by calling the setInitialSelectedRecipients method. The method takes as input the list of Entity ids to be preselected. This method can be called at any time and also in edition mode.
+
+For example : 
+
+....
+    opfab.currentUserCard.setSelectedRecipients([
+            "ENTITY_FR",
+            "IT_SUPERVISOR_ENTITY"
+        ]);
+....
+
+
+In this example the dropdown list of available recipients will have "ENTITY_FR" and "IT_SUPERVISOR_ENTITY" preselected. The user can anyway change the selected recipients.
+
+=== Function setSelectedRecipientsForInformation
+
+It is possible to configure the list of selected recipients for information via javascript in the user template by calling the setSelectedRecipientsForInformation method. The method takes as input the list of Entity ids to be selected.  This method can be called at any time and also in edition mode.
+
+For example : 
+
+....
+    opfab.currentUserCard.setSelectedRecipientsForInformation([
             "ENTITY_FR",
             "IT_SUPERVISOR_ENTITY"
         ]);

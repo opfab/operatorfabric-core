@@ -61,6 +61,8 @@ export class OpfabAPIService {
             selectedEntityForInformationRecipients: null,
             setInitialSelectedRecipients: function(recipients) {},
             setInitialSelectedRecipientsForInformation: function(recipients) {},
+            setSelectedRecipients: function(recipients) {},
+            setSelectedRecipientsForInformation: function(recipients) {},
             setDropdownEntityRecipientList: function (recipients) {},
             setDropdownEntityRecipientForInformationList: function (recipients) {}
         }
@@ -340,6 +342,13 @@ export class OpfabAPIService {
             self.currentUserCard.setInitialSelectedRecipientsForInformation(recipients);
         };
 
+        opfab.currentUserCard.setSelectedRecipients = function (recipients) {
+            self.currentUserCard.setSelectedRecipients(recipients);
+        };
+
+        opfab.currentUserCard.setSelectedRecipientsForInformation = function (recipients) {
+            self.currentUserCard.setSelectedRecipientsForInformation(recipients);
+        };
 
         // prevent unwanted modifications from templates code
         Object.freeze(opfab.currentUserCard);
