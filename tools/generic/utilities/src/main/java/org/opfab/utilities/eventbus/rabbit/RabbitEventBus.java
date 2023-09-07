@@ -50,10 +50,10 @@ public class RabbitEventBus implements EventBus {
     @Value("${operatorfabric.rabbitmq.port:5672}")
     private int port;
 
-    @Value("${spring.rabbitmq.username}")
+    @Value("${operatorfabric.rabbitmq.username}")
     private String username;
 
-    @Value("${spring.rabbitmq.password}")
+    @Value("${operatorfabric.rabbitmq.password}")
     private String password;
 
     private Channel channelForListening; // use to listen to events
