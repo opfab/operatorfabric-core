@@ -571,6 +571,34 @@ input:-webkit-autofill {
     background-color: var(--opfab-bgcolor);
 }
 
+.opfab-form-lighter .opfab-tooltip:before {
+    background-color: var(--opfab-tooltip-template-bgcolor-for-form-lighter);
+}
+
+.opfab-form-lighter .opfab-tooltip:after {
+    /* the arrow */
+    border: 10px solid var(--opfab-tooltip-template-bgcolor-for-form-lighter);
+    border-color: transparent var(--opfab-tooltip-template-bgcolor-for-form-lighter) transparent transparent;
+}
+
+.opfab-form-lighter .opfab-tooltip.left:after {
+    /* the arrow */
+    border: 10px solid var(--opfab-tooltip-template-bgcolor-for-form-lighter);
+    border-color: transparent transparent transparent var(--opfab-tooltip-template-bgcolor-for-form-lighter);
+}
+
+.opfab-form-lighter .opfab-tooltip.top:after {
+    /* the arrow */
+    border: 10px solid var(--opfab-tooltip-template-bgcolor-for-form-lighter);
+    border-color: var(--opfab-tooltip-template-bgcolor-for-form-lighter) transparent transparent transparent;
+}
+
+.opfab-form-lighter .opfab-tooltip.bottom:after {
+    /* the arrow */
+    border: 10px solid var(--opfab-tooltip-template-bgcolor-for-form-lighter);
+    border-color: transparent transparent var(--opfab-tooltip-template-bgcolor-for-form-lighter) transparent;
+}
+
 /* BUTTON STYLE */
 
 .opfab-btn {
@@ -627,7 +655,7 @@ input:-webkit-autofill {
 }
 
 .opfab-tooltip:before {
-    content: attr(data-text); /* here's the magic */
+    content: attr(opfab-tooltip-text); /* here's the magic */
     position: absolute;
 
     /* vertically center */

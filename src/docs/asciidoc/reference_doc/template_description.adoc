@@ -595,6 +595,20 @@ Styles for buttons, for example:
   <button type="button" class="opfab-btn-cancel">CANCEL</button>
 ....
 
+== Tooltip
+OperatorFabric provides a css tooltip component. To use it, you must use the `opfab-tooltip` class style. You can define
+where the tooltip will be displayed using `left`, `top` or `bottom` (by default, it is displayed on the right). For
+example :
+
+....
+  <span opfab-tooltip-text="Here is an example of tooltip" class="opfab-tooltip">Some tooltip text</span>
+....
+
+or for a tooltip displyed on the left :
+....
+  <span opfab-tooltip-text="Here is an example of tooltip" class="opfab-tooltip left">Some tooltip text</span>
+....
+
 == Multi Select
 
 OperatorFabric provides a multiselect component based on https://sa-si-dev.github.io/virtual-select/#/[Virtual Select]. To use it, one must use the OperatorFabric style and provide javascript to initialize the component: 
