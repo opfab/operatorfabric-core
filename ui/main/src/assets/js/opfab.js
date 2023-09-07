@@ -132,6 +132,8 @@ opfab.currentUserCard = {
     setInitialLttd: function (lttd) {},
     setInitialSelectedRecipients: function (recipients) {},
     setInitialSelectedRecipientsForInformation: function (recipients) {},
+    setSelectedRecipients: function (recipients) {},
+    setSelectedRecipientsForInformation: function (recipients) {},
     setInitialSeverity: function (initialSeverity) {},
     setInitialStartDate: function (startDate) {}
 };
