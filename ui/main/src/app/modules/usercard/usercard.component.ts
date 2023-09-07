@@ -186,7 +186,7 @@ export class UserCardComponent implements OnInit, OnDestroy {
 
     ngOnDestroy() {
         if (this.intervalForConnectedUsersUpdate) {
-            this.stopUpdateRegularyConnectedUser();
+            this.stopUpdateRegularlyConnectedUser();
         }
     }
 
@@ -331,17 +331,17 @@ export class UserCardComponent implements OnInit, OnDestroy {
     private findUserEntitiesAllowedToSendCard(): Array<any> {
         const entitiesList = [];
 
-        let alloweUserEntities = this.userService.getCurrentUserWithPerimeters().userData.entities;
+        let allowedUserEntities = this.userService.getCurrentUserWithPerimeters().userData.entities;
         if (this.userCardConfiguration?.publisherList?.length > 0) {
             const configuredPublisherList = [];
             this.entitiesService
                 .resolveEntities(this.userCardConfiguration.publisherList)
                 .forEach((e) => configuredPublisherList.push(e.id));
 
-            alloweUserEntities = alloweUserEntities.filter((entity) => configuredPublisherList.includes(entity));
+            allowedUserEntities = allowedUserEntities.filter((entity) => configuredPublisherList.includes(entity));
         }
 
-        alloweUserEntities.forEach((userEntityId) => {
+        allowedUserEntities.forEach((userEntityId) => {
             const entity = this.entitiesService.getEntities().find((e) => e.id === userEntityId);
             if (entity.entityAllowedToSendCard) entitiesList.push({value: entity.id, label: entity.name});
         });
@@ -632,11 +632,12 @@ export class UserCardComponent implements OnInit, OnDestroy {
                 }
                 this.displayPreview = true;
                 if (this.displayConnectionCircles) {
-                    this.updateRegularyConnectedUsers();
+                    this.updateRegularlyConnectedUsers();
                 }
             });
     }
-    private updateRegularyConnectedUsers() {
+
+    private updateRegularlyConnectedUsers() {
         this.getConnectedUsers().subscribe();
         this.intervalForConnectedUsersUpdate = setInterval(() => {
             this.getConnectedUsers().subscribe();
@@ -659,7 +660,7 @@ export class UserCardComponent implements OnInit, OnDestroy {
         );
     }
 
-    private stopUpdateRegularyConnectedUser() {
+    private stopUpdateRegularlyConnectedUser() {
         this.connectedRecipients = new Set();
         clearInterval(this.intervalForConnectedUsersUpdate);
     }
@@ -997,7 +998,7 @@ export class UserCardComponent implements OnInit, OnDestroy {
     }
 
     public decline(): void {
-        this.stopUpdateRegularyConnectedUser();
+        this.stopUpdateRegularlyConnectedUser();
         this.displayPreview = false;
     }
 }
