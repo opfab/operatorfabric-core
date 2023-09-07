@@ -1,24 +1,26 @@
 opfab: 
   cardsPublicationUrl: "http://cards-publication:2102"
+  usersUrl: http://users:2103
   getTokenUrl: "http://web-ui/auth/token"
 
-rabbitmq:
-  host: "rabbitmq"
-  port: 5672
-  username: "guest"
-  password: "guest"
+operatorfabric:
+  rabbitmq:
+    host: "rabbitmq"
+    port: 5672
+    username: "guest"
+    password: "guest"
 
-mongodb:
-  database: "operator-fabric"
-  uri: "mongodb://root:password@mongodb:27017/operator-fabric?authSource=admin"
+  mongodb:
+    database: "operator-fabric"
+    uri: "mongodb://root:password@mongodb:27017/operator-fabric?authSource=admin"
 
-logConfig:
-  logLevel: "info"
+  logConfig:
+    logLevel: "info"
 
-cardsReminder:
-  adminPort : 2107,
-  activeOnStartup : true,
-  checkPeriodInSeconds : 5
-  opfab:
-    login: "opfab_internal_account"
-    password: "test"
+  cardsReminder:
+    adminPort : 2107,
+    activeOnStartup : true,
+    checkPeriodInSeconds : 5
+    opfab:
+      login: "opfab_internal_account"
+      password: "test"

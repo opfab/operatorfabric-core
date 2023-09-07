@@ -22,11 +22,11 @@ app.disable("x-powered-by");
 app.use(bodyParser.json());
 
 app.use(express.static("public"));
-const adminPort = config.get('supervisor.adminPort');
+const adminPort = config.get('operatorfabric.supervisor.adminPort');
 
-const configService = new ConfigService(config.get('supervisor.defaultConfig'), 'config/supervisorConfig.json', logger);
+const configService = new ConfigService(config.get('operatorfabric.supervisor.defaultConfig'), 'config/supervisorConfig.json', logger);
 
-const activeOnStartUp = config.get('supervisor.activeOnStartup');
+const activeOnStartUp = config.get('operatorfabric.supervisor.activeOnStartup');
 
 const authenticationService = new AuthenticationService()
     .setLogger(logger);

@@ -25,12 +25,12 @@ app.disable("x-powered-by");
 app.use(bodyParser.json());
 
 app.use(express.static("public"));
-const adminPort = config.get('cardsExternalDiffusion.adminPort');
+const adminPort = config.get('operatorfabric.cardsExternalDiffusion.adminPort');
 
 
-const activeOnStartUp = config.get('cardsExternalDiffusion.activeOnStartup');
+const activeOnStartUp = config.get('operatorfabric.cardsExternalDiffusion.activeOnStartup');
 
-const configService = new ConfigService(config.get('cardsExternalDiffusion.defaultConfig'), 'config/serviceConfig.json', logger);
+const configService = new ConfigService(config.get('operatorfabric.cardsExternalDiffusion.defaultConfig'), 'config/serviceConfig.json', logger);
 
 
 
@@ -38,15 +38,15 @@ const authenticationService = new AuthenticationService()
     .setLogger(logger);
 
 
-const mailService = new SendMailService(config.get('mail'));
+const mailService = new SendMailService(config.get('operatorfabric.mail'));
     
 const opfabServicesInterface = new CardsExternalDiffusionOpfabServicesInterface()
-    .setLogin(config.get('cardsExternalDiffusion.opfab.login'))
-    .setPassword(config.get('cardsExternalDiffusion.opfab.password'))
+    .setLogin(config.get('operatorfabric.cardsExternalDiffusion.opfab.login'))
+    .setPassword(config.get('operatorfabric.cardsExternalDiffusion.opfab.password'))
     .setOpfabUsersUrl(config.get('opfab.usersUrl'))
     .setOpfabCardsConsultationUrl(config.get('opfab.cardsConsultationUrl'))
     .setOpfabGetTokenUrl(config.get('opfab.getTokenUrl'))
-    .setEventBusConfiguration(config.get('rabbitmq'))
+    .setEventBusConfiguration(config.get('operatorfabric.rabbitmq'))
     .setAuthenticationService(authenticationService)
     .setLogger(logger);
 

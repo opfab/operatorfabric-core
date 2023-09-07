@@ -354,50 +354,50 @@ Node services can be configured with the following properties:
 |opfab.cardReminderUrl||yes| Opfab card resetReadAndAcks endpoint URL
 |opfab.entitiesUrl||yes|Entities endpoint URL
 |opfab.getTokenUrl||yes|Authentication service URL
-|rabbitmq.host||yes|RabbitMQ host address
-|rabbitmq.port||yes|RabbitMQ listen port
-|rabbitmq.username||yes|RabbitMQ username
-|rabbitmq.password||yes|RabbitMQ password
-|logConfig.logFolder||yes|Log file folder
-|logConfig.logFile||yes|Log file name
-|logConfig.logLevel||yes|Default log level
-|mail.host||yes|Mail server host
-|mail.port||yes|Mail server port
-|mail.auth.user||yes|Mail server authentication user
-|mail.auth.pass||yes|Mail server authentication password
-|mongodb.database||yes|MongoDB database name
-|mongodb.uri||yes|MongoDB connection URI
-|cardsExternalDiffusion.adminPort||yes|Listen port
-|cardsExternalDiffusion.activeOnStartup||yes|Flag to start the notification service on startup
-|cardsExternalDiffusion.opfab.login||yes|user account used to call Opfab services
-|cardsExternalDiffusion.opfab.password||yes|user password to call Opfab services
-|cardsExternalDiffusion.defaultConfig.mailFrom||yes|Mail from address
-|cardsExternalDiffusion.defaultConfig.subjectPrefix||yes|Mail subject prefix
-|cardsExternalDiffusion.defaultConfig.bodyPrefix|||Mail body prefix
-|cardsExternalDiffusion.defaultConfig.windowInSecondsForCardSearch|||Max time interval used to query new cards (in seconds)
-|cardsExternalDiffusion.defaultConfig.secondsAfterPublicationToConsiderCardAsNotRead|||Time period after card publication before sending mail notification
-|cardsExternalDiffusion.defaultConfig.checkPeriodInSeconds|||Time interval between consecutive checks
-|cardsReminder.adminPort||yes|Cards reminder service Listen port
-|cardsReminder.activeOnStartup||yes|Flag to start the cards reminder service on startup
-|cardsReminder.checkPeriodInSeconds|||Cards remonder time interval between consecutive checks
-|supervisor.adminPort||yes|Cards reminder service Listen port
-|supervisor.activeOnStartup||yes|Flag to start the cards reminder service on startup
-|supervisor.defaultConfig.entitiesToSupervise|||List of entity id and related supervisor list ({ "id": "ENTITY1", "supervisors": ["ENTITY2"] })
-|supervisor.defaultConfig.disconnectedCardTemplate|||Card template used to send connections alerts
-|supervisor.defaultConfig.secondsBetweenConnectionChecks|||Connection check period
-|supervisor.defaultConfig.nbOfConsecutiveNotConnectedToSendFirstCard|||Number of consecutive failed checks before sending first alert card
-|supervisor.defaultConfig.nbOfConsecutiveNotConnectedToSendSecondCard|||Number of consecutive failed checks before sending second alert card
-|supervisor.defaultConfig.processesToSupervise|||List of processes and related states to monitor for missing acknowledgment ({ "process": "defaultProcess", "states": ["processState"] })
-|supervisor.defaultConfig.unackCardTemplate|||Card template used to send acknowledgment alerts
-|supervisor.defaultConfig.windowInSecondsForCardSearch|||Time period used to search for not acknowledged cards
-|supervisor.defaultConfig.secondsBetweenAcknowledgmentChecks|||Card acknowledgment check period
-|supervisor.defaultConfig.secondsAfterPublicationToConsiderCardAsNotAcknowledged|||Time period to wait after card publishing to consider a card as not acknowledged and send the alert
+|operatorfabric.rabbitmq.host||yes|RabbitMQ host address
+|operatorfabric.rabbitmq.port||yes|RabbitMQ listen port
+|operatorfabric.rabbitmq.username||yes|RabbitMQ username
+|operatorfabric.rabbitmq.password||yes|RabbitMQ password
+|operatorfabric.logConfig.logFolder||yes|Log file folder
+|operatorfabric.logConfig.logFile||yes|Log file name
+|operatorfabric.logConfig.logLevel||yes|Default log level
+|operatorfabric.mail.host||yes|Mail server host
+|operatorfabric.mail.port||yes|Mail server port
+|operatorfabric.mail.auth.user||yes|Mail server authentication user
+|operatorfabric.mail.auth.pass||yes|Mail server authentication password
+|operatorfabric.mongodb.database||yes|MongoDB database name
+|operatorfabric.mongodb.uri||yes|MongoDB connection URI
+|operatorfabric.cardsExternalDiffusion.adminPort||yes|Listen port
+|operatorfabric.cardsExternalDiffusion.activeOnStartup||yes|Flag to start the notification service on startup
+|operatorfabric.cardsExternalDiffusion.opfab.login||yes|user account used to call Opfab services
+|operatorfabric.cardsExternalDiffusion.opfab.password||yes|user password to call Opfab services
+|operatorfabric.cardsExternalDiffusion.defaultConfig.mailFrom||yes|Mail from address
+|operatorfabric.cardsExternalDiffusion.defaultConfig.subjectPrefix||yes|Mail subject prefix
+|operatorfabric.cardsExternalDiffusion.defaultConfig.bodyPrefix|||Mail body prefix
+|operatorfabric.cardsExternalDiffusion.defaultConfig.windowInSecondsForCardSearch|||Max time interval used to query new cards (in seconds)
+|operatorfabric.cardsExternalDiffusion.defaultConfig.secondsAfterPublicationToConsiderCardAsNotRead|||Time period after card publication before sending mail notification
+|operatorfabric.cardsExternalDiffusion.defaultConfig.checkPeriodInSeconds|||Time interval between consecutive checks
+|operatorfabric.cardsReminder.adminPort||yes|Cards reminder service Listen port
+|operatorfabric.cardsReminder.activeOnStartup||yes|Flag to start the cards reminder service on startup
+|operatorfabric.cardsReminder.checkPeriodInSeconds|||Cards remonder time interval between consecutive checks
+|operatorfabric.supervisor.adminPort||yes|Cards reminder service Listen port
+|operatorfabric.supervisor.activeOnStartup||yes|Flag to start the cards reminder service on startup
+|operatorfabric.supervisor.defaultConfig.entitiesToSupervise|||List of entity id and related supervisor list ({ "id": "ENTITY1", "supervisors": ["ENTITY2"] })
+|operatorfabric.supervisor.defaultConfig.disconnectedCardTemplate|||Card template used to send connections alerts
+|operatorfabric.supervisor.defaultConfig.secondsBetweenConnectionChecks|||Connection check period
+|operatorfabric.supervisor.defaultConfig.nbOfConsecutiveNotConnectedToSendFirstCard|||Number of consecutive failed checks before sending first alert card
+|operatorfabric.supervisor.defaultConfig.nbOfConsecutiveNotConnectedToSendSecondCard|||Number of consecutive failed checks before sending second alert card
+|operatorfabric.supervisor.defaultConfig.processesToSupervise|||List of processes and related states to monitor for missing acknowledgment ({ "process": "defaultProcess", "states": ["processState"] })
+|operatorfabric.supervisor.defaultConfig.unackCardTemplate|||Card template used to send acknowledgment alerts
+|operatorfabric.supervisor.defaultConfig.windowInSecondsForCardSearch|||Time period used to search for not acknowledged cards
+|operatorfabric.supervisor.defaultConfig.secondsBetweenAcknowledgmentChecks|||Card acknowledgment check period
+|operatorfabric.supervisor.defaultConfig.secondsAfterPublicationToConsiderCardAsNotAcknowledged|||Time period to wait after card publishing to consider a card as not acknowledged and send the alert
 |===
 
 
-The parameters in "cardsExternalDiffusion.defaultConfig" section can be modified at runtime by sending an http POST request to the `/config` API of cards external diffusion service with a JSON payload containing the config parameters to be changed.
+The parameters in "operatorfabric.cardsExternalDiffusion.defaultConfig" section can be modified at runtime by sending an http POST request to the `/config` API of cards external diffusion service with a JSON payload containing the config parameters to be changed.
 
-The parameters in "supervisor.defaultConfig" section can be modified at runtime by sending an http POST request to the `/config` API of supervisor service with a JSON payload containing the config parameters to be changed.
+The parameters in "operatorfabric.supervisor.defaultConfig" section can be modified at runtime by sending an http POST request to the `/config` API of supervisor service with a JSON payload containing the config parameters to be changed.
 
 
 include::web-ui_configuration.adoc[leveloffset=+1]

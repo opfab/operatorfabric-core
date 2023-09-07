@@ -27,16 +27,16 @@ app.disable("x-powered-by");
 app.use(bodyParser.json());
 
 app.use(express.static("public"));
-const adminPort = config.get('cardsReminder.adminPort');
+const adminPort = config.get('operatorfabric.cardsReminder.adminPort');
 
 
-const activeOnStartUp = config.get('cardsReminder.activeOnStartup');
+const activeOnStartUp = config.get('operatorfabric.cardsReminder.activeOnStartup');
 
 const authenticationService = new AuthenticationService()
     .setLogger(logger);
 
 const remindDatabaseService = new RemindDatabaseService()
-    .setMongoDbConfiguration(config.get("mongodb"))
+    .setMongoDbConfiguration(config.get("operatorfabric.mongodb"))
     .setRemindersCollection(ReminderService.REMINDERS_COLLECTION);
 
 const reminderService = new ReminderService()
@@ -44,7 +44,7 @@ const reminderService = new ReminderService()
     .setDatabaseService(remindDatabaseService);
 
 const rrRuleRemindDatabaseService = new RemindDatabaseService()
-    .setMongoDbConfiguration(config.get("mongodb"))
+    .setMongoDbConfiguration(config.get("operatorfabric.mongodb"))
     .setRemindersCollection(RRuleReminderService.REMINDERS_COLLECTION);
 
 const rruleReminderService = new RRuleReminderService()
@@ -52,14 +52,14 @@ const rruleReminderService = new RRuleReminderService()
     .setDatabaseService(rrRuleRemindDatabaseService);
 
 const opfabServicesInterface = new CardsReminderOpfabServicesInterface()
-    .setLogin(config.get('cardsReminder.opfab.login'))
-    .setPassword(config.get('cardsReminder.opfab.password'))
+    .setLogin(config.get('operatorfabric.cardsReminder.opfab.login'))
+    .setPassword(config.get('operatorfabric.cardsReminder.opfab.password'))
     .setOpfabCardsPublicationUrl(config.get('opfab.cardsPublicationUrl'))
     .setOpfabUsersUrl(config.get('opfab.usersUrl'))
     .setOpfabGetTokenUrl(config.get('opfab.getTokenUrl'))
     .setAuthenticationService(authenticationService)
     .setLogger(logger)
-    .setEventBusConfiguration(config.get("rabbitmq"))
+    .setEventBusConfiguration(config.get("operatorfabric.rabbitmq"))
     .addListener(rruleReminderService)
     .addListener(reminderService);
 
@@ -68,7 +68,7 @@ const authorizationService = new AuthorizationService()
     .setOpfabServicesInterface(opfabServicesInterface)
     .setLogger(logger);
 
-const cardsReminderService = new CardsReminderService(opfabServicesInterface, rruleReminderService, reminderService, config.get('cardsReminder.checkPeriodInSeconds'), logger);
+const cardsReminderService = new CardsReminderService(opfabServicesInterface, rruleReminderService, reminderService, config.get('operatorfabric.cardsReminder.checkPeriodInSeconds'), logger);
 
 
 app.get('/status', (req, res) => {
@@ -130,3 +130,4 @@ if (activeOnStartUp) {
     cardsReminderService.start();
     opfabServicesInterface.startListener();
 }
+

@@ -5,46 +5,48 @@ opfab:
   cardsPublicationUrl: "http://127.0.0.1:2102"
   cardsConsultationUrl: "http://127.0.0.1:2104"
   getTokenUrl: "http://localhost:2002/auth/token"
-logConfig:
-  logFolder: logs/
-  logFile: "%DATE%.log"
-  logLevel: info
-supervisor:
-  defaultConfig:
-    considerConnectedIfUserInGroups: ["Dispatcher","Planner"]
-    entitiesToSupervise:
-    - id: ENTITY1_FR
-      supervisors:
-      - ENTITY2_FR
-    - id: ENTITY2_FR
-      supervisors:
-      - ENTITY1_FR
-    disconnectedCardTemplate:
-      publisher: service_supervisor
-      processVersion: '1'
-      process: supervisor
-      state: disconnectedEntity
-      severity: ALARM
-    secondsBetweenConnectionChecks: 10
-    nbOfConsecutiveNotConnectedToSendFirstCard: 3
-    nbOfConsecutiveNotConnectedToSendSecondCard: 12
-    processesToSupervise:
-    - process: messageOrQuestionExample
-      states:
-      - messageState
-      - questionState
-    - process: defaultProcess
-      states:
-      - processState
-    unackCardTemplate:
-      publisher: service_supervisor
-      processVersion: '1'
-      process: supervisor
-      state: unacknowledgedCards
-      severity: ALARM
-    windowInSecondsForCardSearch: 1200
-    secondsBetweenAcknowledgmentChecks: 10
-    secondsAfterPublicationToConsiderCardAsNotAcknowledged: 600
-  adminPort: 2108
-  activeOnStartup: true
+
+operatorfabric:
+  logConfig:
+    logFolder: logs/
+    logFile: "%DATE%.log"
+    logLevel: info
+  supervisor:
+    defaultConfig:
+      considerConnectedIfUserInGroups: ["Dispatcher","Planner"]
+      entitiesToSupervise:
+      - id: ENTITY1_FR
+        supervisors:
+        - ENTITY2_FR
+      - id: ENTITY2_FR
+        supervisors:
+        - ENTITY1_FR
+      disconnectedCardTemplate:
+        publisher: service_supervisor
+        processVersion: '1'
+        process: supervisor
+        state: disconnectedEntity
+        severity: ALARM
+      secondsBetweenConnectionChecks: 10
+      nbOfConsecutiveNotConnectedToSendFirstCard: 3
+      nbOfConsecutiveNotConnectedToSendSecondCard: 12
+      processesToSupervise:
+      - process: messageOrQuestionExample
+        states:
+        - messageState
+        - questionState
+      - process: defaultProcess
+        states:
+        - processState
+      unackCardTemplate:
+        publisher: service_supervisor
+        processVersion: '1'
+        process: supervisor
+        state: unacknowledgedCards
+        severity: ALARM
+      windowInSecondsForCardSearch: 1200
+      secondsBetweenAcknowledgmentChecks: 10
+      secondsAfterPublicationToConsiderCardAsNotAcknowledged: 600
+    adminPort: 2108
+    activeOnStartup: true
 
