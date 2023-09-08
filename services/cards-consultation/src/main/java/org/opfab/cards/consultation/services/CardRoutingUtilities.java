@@ -84,19 +84,15 @@ public class CardRoutingUtilities {
      * ReceiveAndWrite)
      **/
     public static boolean checkIfUserMustReceiveTheCard(JSONObject cardOperation,
-            CurrentUserWithPerimeters currentUserWithPerimeters) {
-
-        Map<String, RightsEnum> userRightsPerProcessAndState = loadUserRightsPerProcessAndState(
-                currentUserWithPerimeters);
-
+            CurrentUserWithPerimeters currentUserWithPerimeters) {    
+                
+        String idCard ;
+        String process ;
+        String state;
+        JSONArray groupRecipientsArray ;
+        JSONArray entityRecipientsArray ;
+        JSONArray userRecipientsArray ;
         JSONObject cardObj = (JSONObject) cardOperation.get("card");
-
-        String idCard = null;
-        String process = "";
-        String state = "";
-        JSONArray groupRecipientsArray = new JSONArray();
-        JSONArray entityRecipientsArray = new JSONArray();
-        JSONArray userRecipientsArray = new JSONArray();
 
         if (cardObj != null) {
             idCard = (cardObj.get("id") != null) ? (String) cardObj.get("id") : "";
@@ -107,6 +103,7 @@ public class CardRoutingUtilities {
             entityRecipientsArray = (JSONArray) cardObj.get("entityRecipients");
             userRecipientsArray = (JSONArray) cardObj.get("userRecipients");
         }
+        else return false; 
 
         if (!checkIfUserMustBeNotifiedForThisProcessState(process, state, currentUserWithPerimeters))
             return false;
@@ -120,6 +117,9 @@ public class CardRoutingUtilities {
 
         // First, we check if the user has the right for receiving this card (Receive or
         // ReceiveAndWrite)
+
+        Map<String, RightsEnum> userRightsPerProcessAndState = loadUserRightsPerProcessAndState(
+                currentUserWithPerimeters);
         if (!isReceiveRightsForProcessAndState(process, state, userRightsPerProcessAndState))
             return false;
 
