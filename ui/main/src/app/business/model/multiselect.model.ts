@@ -25,6 +25,7 @@ export class MultiSelectConfig {
     public multiple?: boolean;
     public search?: boolean;
     public allowNewOption?: boolean;
+    public autoSelectFirstOption?: boolean;
 }
 export class MultiSelect {
     public id: string;

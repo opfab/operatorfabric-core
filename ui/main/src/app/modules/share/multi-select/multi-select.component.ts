@@ -61,9 +61,11 @@ export class MultiSelectComponent implements AfterViewInit, OnDestroy, OnChanges
         let placeholder = '';
         let nbOfDisplayValues = 50;
         let allowNewOption = false;
+        let autoSelectFirstOption = false;
         if (this.config.placeholderKey) placeholder = this.translateService.instant(this.config.placeholderKey);
         if (this.config.nbOfDisplayValues) nbOfDisplayValues = this.config.nbOfDisplayValues;
         if (this.config.allowNewOption) allowNewOption = this.config.allowNewOption;
+        if (this.config.autoSelectFirstOption) autoSelectFirstOption = this.config.autoSelectFirstOption;
         VirtualSelect.init({
             ele: '#' + this.multiSelectId,
             options: [],
@@ -80,7 +82,8 @@ export class MultiSelectComponent implements AfterViewInit, OnDestroy, OnChanges
             noSearchResultsText: this.translateService.instant('multiSelect.noSearchResultsText'),
             hideClearButton: !this.getValueOrDefault(this.config.multiple, true),
             enableSecureText: true,  // Do not remove this important security control to avoid script injection see #3826
-            allowNewOption: allowNewOption
+            allowNewOption: allowNewOption,
+            autoSelectFirstOption: autoSelectFirstOption
         });
 
         this.virtualSelectComponent = document.querySelector('#' + this.multiSelectId);

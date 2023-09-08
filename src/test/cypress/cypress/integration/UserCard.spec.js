@@ -1103,9 +1103,10 @@ describe('User Card ', function () {
       cy.get('#service-select').find('.vscomp-option-text').eq(6).contains("Service E");
       cy.get('#service-select').find('.vscomp-option-text').eq(7).contains("Service F");
       cy.get('#service-select').find('.vscomp-search-input').eq(0).type('D');
-      cy.get('#service-select').find('.vscomp-option-text').should('have.length', 2);
-      cy.get('#service-select').find('.vscomp-option-text').eq(0).contains("Group 2");
-      cy.get('#service-select').find('.vscomp-option-text').eq(1).contains("Service D");
+      cy.get('#service-select').find('.vscomp-option-text').should('have.length', 3);
+      cy.get('#service-select').find('.vscomp-option-text').eq(0).contains("D");
+      cy.get('#service-select').find('.vscomp-option-text').eq(1).contains("Group 2");
+      cy.get('#service-select').find('.vscomp-option-text').eq(2).contains("Service D");
     })
     
     

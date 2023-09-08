@@ -49,7 +49,9 @@ opfab.multiSelect = {
             noOptionsText: this.noOptionsText,
             noSearchResultsText: this.noSearchResultsText,
             search: config.search,
-            hideClearButton: config.multiple !== undefined ? !config.multiple : false
+            hideClearButton: config.multiple !== undefined ? !config.multiple : false,
+            allowNewOption: config.allowNewOption !== undefined ? config.allowNewOption : false,
+            autoSelectFirstOption: config.autoSelectFirstOption !== undefined ? config.autoSelectFirstOption : false
         });
         return multiSelect;
     }

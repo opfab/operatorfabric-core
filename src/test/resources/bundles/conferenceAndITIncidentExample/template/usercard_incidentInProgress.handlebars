@@ -57,7 +57,8 @@
             this.serviceSelect = opfab.multiSelect.init({
                 id: "service-select",
                 multiple: true,
-                search: true
+                search: true,
+                allowNewOption: true
             });
 
             let services = await opfab.businessconfig.businessData.get("services");
