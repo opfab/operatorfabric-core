@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2022, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2023, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -42,6 +42,7 @@ public class InstantDeserializer extends StdDeserializer<Instant> {
         switch (parser.currentTokenId()) {
             case JsonTokenId.ID_START_OBJECT:
                 final ObjectNode node = new ObjectMapper().readValue(parser, ObjectNode.class);
+                if (node==null) throw new IOException("Impossible to deserialize Instant object");
                 return Instant.ofEpochSecond(Long.parseLong(node.get("epochSecond").toString()),Long.parseLong(node.get("nano").toString()));
 
             case JsonTokenId.ID_NUMBER_INT:
