@@ -15,6 +15,7 @@ import org.junit.jupiter.api.Test;
 import org.opfab.users.model.*;
 import org.opfab.users.stubs.EntityRepositoryStub;
 import org.opfab.users.stubs.GroupRepositoryStub;
+import org.opfab.users.stubs.UserRepositoryStub;
 import org.opfab.users.stubs.UserSettingsRepositoryStub;
 import org.opfab.users.stubs.UsersServiceStub;
 
@@ -46,16 +47,19 @@ class CurrentUserWithPerimetersServiceShould {
         private static UserSettingsService userSettingsService;
 
         private static GroupRepositoryStub groupRepositoryStub = new GroupRepositoryStub();
+        private static UserRepositoryStub userRepositoryStub = new UserRepositoryStub();
 
         @BeforeAll
         static void initData() {
                 groupRepositoryStub = new GroupRepositoryStub();
-                usersServiceStub = new UsersServiceStub(null, groupRepositoryStub, null, null, null);
+                userRepositoryStub = new UserRepositoryStub();
+                usersServiceStub = new UsersServiceStub(userRepositoryStub, groupRepositoryStub, null, null, null);
                 userSettingsService = new UserSettingsService(userSettingsRepositoryStub, usersServiceStub, null);
 
                 initEntities();
                 initUserSettings();
                 initGroups();
+                initUsers();
         }
 
         private static void initEntities() {
@@ -109,6 +113,15 @@ class CurrentUserWithPerimetersServiceShould {
                 GroupData groupAdmin = new GroupData();
                 groupAdmin.setId(GROUP_ADMIN);
                 groupRepositoryStub.save(groupAdmin);
+        }
+
+        private static void initUsers() {
+                UserData user = UserData.builder()
+                                .login("testLogin")
+                                .entity(GRAND_CHILD_ENTITY).entity(ENTITY_1).entity("ENTITY_NOT_CONNECTED")
+                                .group(GROUP_3)
+                                .build();
+                userRepositoryStub.save(user);
         }
 
         private static void initUserSettings() {
@@ -247,4 +260,15 @@ class CurrentUserWithPerimetersServiceShould {
                         .fetchCurrentUserWithPerimeters(user);
                 assertThat(currentUser.getPermissions()).containsExactlyInAnyOrder(PermissionEnum.ADMIN);
         }
+
+        @Test
+        void GIVEN_User_Login_WHEN_FetchingUserWithPerimeters_CurrentUserWithPerimetersShouldContainsUserEntitiesParents() throws Exception {
+                String login = "testLogin";
+                CurrentUserWithPerimetersService currentUserWithPerimetersService = new CurrentUserWithPerimetersService(
+                                usersServiceStub, userSettingsService, entityRepositoryStub);
+                CurrentUserWithPerimeters currentUser = currentUserWithPerimetersService
+                                .fetchUserWithPerimeters(login);
+                assertThat(currentUser.getUserData().getEntities()).contains(GRAND_CHILD_ENTITY, CHILD_ENTITY,
+                                ROOT_ENTITY,
+                                ENTITY_1);        }
 }

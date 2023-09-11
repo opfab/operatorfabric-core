@@ -15,8 +15,8 @@ import OpfabServicesInterface from '../../common/server-side/opfabServicesInterf
 export default class CardsExternalDiffusionOpfabServicesInterface extends OpfabServicesInterface implements EventListener{
 
     private users : any[] = [];
-    private userSettings = new Map<string,any>();
-    private userPerimeters = new Map<string,any>();
+
+    private userWithPerimeters = new Map<string,any>();
 
     private listener: EventBusListener;
 
@@ -86,61 +86,25 @@ export default class CardsExternalDiffusionOpfabServicesInterface extends OpfabS
         }
         return response;
     }
-
-    public async getUserSettings(login: string): Promise<GetResponse> {
-        try {
-            if (this.userSettings.has(login))
-                return new GetResponse(this.userSettings.get(login), true);
-
-            await this.getToken();
-            const response = await this.sendGetUserSettingRequest(login);
-            if (response?.data) {
-                this.userSettings.set(login, response.data);
-                return new GetResponse(response.data, true);
-            }
-            else {
-                this.logger.warn("No data in HTTP response")
-                return new GetResponse(null, false);
-            }
-        } catch (error: any) {
-            if (error.response.status != 404) {
-                this.logger.warn('Impossible to get user settings', error);
-            }
-
-            return new GetResponse(null, false);
+ 
+    public async getUserWithPerimetersByLogin(login: string): Promise<GetResponse> {
+        if (this.userWithPerimeters.has(login))
+            return new GetResponse(this.userWithPerimeters.get(login), true);
+        
+        let response = await this.sendGetUserWithPerimetersByLogin(login);
+        if (response.isValid()) {
+            this.userWithPerimeters.set(login, response.getData());
         }
-    }
-
-    public async getUserPerimeters(login: string): Promise<GetResponse> {
-        try {
-            if (this.userPerimeters.has(login))
-                return new GetResponse(this.userPerimeters.get(login), true);
-
-            await this.getToken();
-            const response = await this.sendGetUserPerimetersRequest(login);
-            if (response?.data) {
-                this.userPerimeters.set(login, response.data);
-                return new GetResponse(response.data, true);
-            }
-            else {
-                this.logger.warn("No data in HTTP response")
-                return new GetResponse(null, false);
-            }
-        } catch (error: any) {
-            this.logger.warn('Impossible to get user perimeters', error);
-            return new GetResponse(null, false);
-        }
+        return response;
     }
 
     public async loadUsersData() {
         await this.fetchAllUsers();
-        this.userPerimeters.clear();
-        this.userSettings.clear();
+        this.userWithPerimeters.clear();
     }
 
     public async clearCacheForUser(login: string) {
-        this.userSettings.delete(login);
-        this.userPerimeters.delete(login);
+        this.userWithPerimeters.delete(login);
         await this.fetchUser(login);
     }
 
@@ -152,25 +116,28 @@ export default class CardsExternalDiffusionOpfabServicesInterface extends OpfabS
             this.users.push(user);
     }
 
-    private sendGetUserSettingRequest(login: string) {
-        return this.sendRequest({
-            method: 'get',
-            url: this.opfabUsersUrl +'/users/' + login + '/settings',
-            headers: {
-                Authorization: 'Bearer ' + this.token
-            }
-        });
-    }
+    public async sendGetUserWithPerimetersByLogin(login: string) {
 
-    private sendGetUserPerimetersRequest(login: string) {
-        return this.sendRequest({
-            method: 'get',
-            url: this.opfabUsersUrl +'/users/' + login + '/perimeters',
-            headers: {
-                Authorization: 'Bearer ' + this.token
+        try {
+            const response = await this.sendRequest({
+                method: 'get',
+                url: this.opfabUsersUrl + '/UserWithPerimeters/' + login,
+                headers: {
+                    Authorization: 'Bearer ' + this.token
+                }
+            });
+            if (response?.data) {
+                return new GetResponse(response?.data, true);
             }
-        });
-    }
+            else {
+                this.logger.warn("No data in HTTP response")
+                return new GetResponse(null, false);
+            }
+        } catch (e) {
+            this.logger.warn('Impossible to get user with perimeters', e);
+            return new GetResponse(null, false);
+        }
 
+    }
 
 }

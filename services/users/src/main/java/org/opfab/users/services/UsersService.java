@@ -64,6 +64,10 @@ public class UsersService {
                     String.format(USER_NOT_FOUND_MSG, userId));
     }
 
+    public Optional<User> fetchUserByLogin(String userId) {
+        return userRepository.findByLogin(userId).map(User.class::cast);
+    }
+
     public OperationResult<EntityCreationReport<User>> createUser(User user) {
         boolean formatCheckResult = false;
         if (user.getLogin().length() >= 1)

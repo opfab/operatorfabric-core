@@ -30,6 +30,16 @@ public class CurrentUserWithPerimetersService {
         this.entityRepository = entityRepository;
     }
 
+    public CurrentUserWithPerimeters fetchUserWithPerimeters(String login) {
+        CurrentUserWithPerimeters currentUserWithPerimetersData = new CurrentUserWithPerimetersData();
+
+        Optional<User> userResp = usersService.fetchUserByLogin(login);
+        if (userResp.isPresent()) {
+            currentUserWithPerimetersData = fetchCurrentUserWithPerimeters(userResp.get());
+        }
+        return currentUserWithPerimetersData;
+    }
+
     public CurrentUserWithPerimeters fetchCurrentUserWithPerimeters(User user) {
         CurrentUserWithPerimetersData currentUserWithPerimetersData = new CurrentUserWithPerimetersData();
         if (user != null) {

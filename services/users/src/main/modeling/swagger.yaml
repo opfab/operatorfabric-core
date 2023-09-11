@@ -1711,6 +1711,48 @@ paths:
                   rights: ReceiveAndWrite
         '401':
           description: Authentication required
+  /UserWithPerimeters/{login}:
+    get:
+      tags:
+        - users
+      summary: Get information about a user and his perimeters
+      description: 'Get information about a user and his perimeters.'
+      operationId: fetchUserWithPerimeters
+      parameters:
+        - in: path
+          name: login
+          description: user login
+          type: string
+          required: true
+      produces:
+        - application/json
+      responses:
+        '200':
+          description: OK
+          schema:
+            type: object
+            $ref: '#/definitions/CurrentUserWithPerimeters'
+          examples:
+            application/json:
+              userData:
+                login: jcleese
+                firstName: John
+                lastName: Cleese
+                groups:
+                  - MONTY
+                  - WANDA
+                entities:
+                  - ENITY1
+                  - ENTITY2
+              computedPerimeters:
+                - process: Process1
+                  state: State1
+                  rights: Receive
+                - process: Process1
+                  state: State2
+                  rights: ReceiveAndWrite
+        '401':
+          description: Authentication required
   /userActionLogs:
     get:
       tags:
