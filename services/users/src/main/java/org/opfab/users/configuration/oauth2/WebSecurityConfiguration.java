@@ -51,6 +51,7 @@ public class WebSecurityConfiguration {
     public static final String PERIMETERS_PATH = "/perimeters/**";
     public static final String USER_ACTION_LOGS = "/userActionLogs";
     public static final String CURRENTUSER_INTERNAL_PATH = "/internal/CurrentUserWithPerimeters";
+    public static final String USER_WITH_PERIMETERS_PATH = "/UserWithPerimeters";
     public static final String ADMIN_ROLE = "ADMIN";
     public static final String VIEW_USER_ACTION_LOGS_ROLE = "VIEW_USER_ACTION_LOGS";
 
@@ -93,6 +94,7 @@ public class WebSecurityConfiguration {
                     .requestMatchers(ENTITIES_PATH).access(hasAnyRoleAndIpAllowed(ADMIN_ROLE))
                     .requestMatchers(PERIMETERS_PATH).access(hasAnyRoleAndIpAllowed(ADMIN_ROLE))
                     .requestMatchers(USER_ACTION_LOGS).access(hasAnyRoleAndIpAllowed(ADMIN_ROLE,VIEW_USER_ACTION_LOGS_ROLE))
+                    .requestMatchers(USER_WITH_PERIMETERS_PATH).access(hasAnyRoleAndIpAllowed(ADMIN_ROLE))
                     .requestMatchers(CURRENTUSER_INTERNAL_PATH).authenticated()
                     .requestMatchers(LOGGERS_PATH).hasRole(ADMIN_ROLE)
                     .anyRequest().access(authenticatedAndIpAllowed())

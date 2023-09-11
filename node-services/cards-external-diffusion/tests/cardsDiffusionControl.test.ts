@@ -21,9 +21,8 @@ class OpfabServicesInterfaceStub extends CardsExternalDiffusionOpfabServicesInte
     cards: Array<any> = new Array();
     allUsers: Array<any> = new Array();
     connectedUsers: Array<any> = new Array();
-    settings:  Map<string, any> = new Map();
-    perimeters: Array<any> = new Array();
 
+    usersWithPerimeters: Array<any> = new Array();
 
     async getCards() {
         return new GetResponse(this.cards,this.isResponseValid);
@@ -33,22 +32,16 @@ class OpfabServicesInterfaceStub extends CardsExternalDiffusionOpfabServicesInte
         return this.allUsers;
     }
 
-    public async getUser(login: string) : Promise<GetResponse>{
-        return new GetResponse(this.allUsers.find(u => u.login === login), true);
-    }
-
     public async getUsersConnected(): Promise<GetResponse> {
         return new GetResponse(this.connectedUsers,this.isResponseValid);
     }
 
-    public async getUserSettings(login: string): Promise<GetResponse> {
-        return new GetResponse(this.settings.get(login), true);
+    public async getUserWithPerimetersByLogin(login: string): Promise<GetResponse> {
+        const foundIndex = this.usersWithPerimeters.findIndex(u => u.userData.login === login);
+        return new GetResponse(foundIndex >= 0 ? this.usersWithPerimeters[foundIndex]: null, true);
     }
 
 
-    public async getUserPerimeters(login: string): Promise<GetResponse> {
-        return new GetResponse(this.perimeters, true);
-    }
 }
 
 class SendMailServiceStub extends SendMailService {
@@ -94,6 +87,10 @@ describe('Cards external diffusion', function () {
     .setSecondsAfterPublicationToConsiderCardAsNotRead(60)
     .setWindowInSecondsForCardSearch(120);
 
+
+    const perimeters = [{process: "defaultProcess", state:"processState", rights:"ReceiveAndWrite",filteringNotificationAllowed:true}];
+
+
     // Using this setup function instead of beforeEach hook because it was not working correctly 
     // after making CardsExternalDiffusionOpfabServicesInterface extend OpfabServicesInterface
     function setup() {
@@ -101,8 +98,6 @@ describe('Cards external diffusion', function () {
         opfabServicesInterfaceStub.cards = new Array();
         opfabServicesInterfaceStub.allUsers = new Array();
         opfabServicesInterfaceStub.connectedUsers = new Array();
-        opfabServicesInterfaceStub.settings = new Map();
-        opfabServicesInterfaceStub.perimeters = new Array();
 
         mailService.numberOfMailsSent = 0;
         mailService.sent = [];
@@ -112,9 +107,13 @@ describe('Cards external diffusion', function () {
         const publishDateAfterAlertingPeriod = Date.now() - 55 * 1000;
         setup();
         opfabServicesInterfaceStub.allUsers = [{login: 'operator_1', entities: ['ENTITY1']}, {login: 'operator_2', entities: ['ENTITY1', 'ENTITY2']}];
-        opfabServicesInterfaceStub.perimeters = [{process: "defaultProcess", stateRights:[{state:"processState",right:"ReceiveAndWrite",filteringNotificationAllowed:true}]} ];
         opfabServicesInterfaceStub.connectedUsers = ['operator_1'];
-        opfabServicesInterfaceStub.settings.set('operator_2', {sendCardsByEmail: true, email:"operator_2@opfab.com"});
+
+        opfabServicesInterfaceStub.usersWithPerimeters = [{userData: {login: 'operator_1', entities: ['ENTITY1']}, sendCardsByEmail: true, email: "operator_1@opfab.com", computedPerimeters: perimeters},
+                                    {userData: {login: 'operator_2', entities: ['ENTITY1', 'ENTITY2']}, sendCardsByEmail: true, email: "operator_2@opfab.com", processesStatesNotifiedByEmail: {defaultProcess: ['processState']}, computedPerimeters: perimeters}
+                                ];
+
+        
         opfabServicesInterfaceStub.cards = [{uid: "0001", id:"defaultProcess.process1" , publisher: 'publisher1', publishDate: publishDateAfterAlertingPeriod, titleTranslated:"Title1", summaryTranslated:"Summary1", process: "defaultProcess", state: "processState", entityRecipients:["ENTITY1"]}];
 
         await new Promise(resolve => setTimeout(resolve, 1));
@@ -123,14 +122,17 @@ describe('Cards external diffusion', function () {
         expect(mailService.numberOfMailsSent).toEqual(0);
     })
 
-    
+
     it('Should send card when publishDate is after configured period', async function() {
         const publishDateAfterAlertingPeriod = Date.now() - 65 * 1000;
         setup();
         opfabServicesInterfaceStub.allUsers = [{login: 'operator_1', entities: ['ENTITY1']}, {login: 'operator_2', entities: ['ENTITY1', 'ENTITY2']}];
-        opfabServicesInterfaceStub.perimeters = [{process: "defaultProcess", stateRights: [{state: "processState", right: "ReceiveAndWrite", filteringNotificationAllowed: true}]} ];
         opfabServicesInterfaceStub.connectedUsers = ['operator_1'];
-        opfabServicesInterfaceStub.settings.set('operator_2', {sendCardsByEmail: true, email: "operator_2@opfab.com", processesStatesNotifiedByEmail: {defaultProcess: ["processState"]}});
+
+        opfabServicesInterfaceStub.usersWithPerimeters = [{userData: {login: 'operator_1', entities: ['ENTITY1']}, sendCardsByEmail: true, email: "operator_1@opfab.com", computedPerimeters: perimeters},
+                                                            {userData: {login: 'operator_2', entities: ['ENTITY1', 'ENTITY2']}, sendCardsByEmail: true, email: "operator_2@opfab.com", processesStatesNotifiedByEmail: {defaultProcess: ['processState']}  , computedPerimeters: perimeters}
+                                                        ];
+
         opfabServicesInterfaceStub.cards = [{uid: "1001", id: "defaultProcess.process1", publisher: 'publisher1', publishDate: publishDateAfterAlertingPeriod, startDate: publishDateAfterAlertingPeriod,
             titleTranslated: "Title1", summaryTranslated: "Summary1", process: "defaultProcess", state: "processState", entityRecipients: ["ENTITY1"]}];
 
@@ -147,9 +149,12 @@ describe('Cards external diffusion', function () {
         const publishDateAfterAlertingPeriod = Date.now() - 65 * 1000;
         setup();
         opfabServicesInterfaceStub.allUsers = [{login: 'operator_1', entities: ['ENTITY1']}, {login: 'operator_2', entities: ['ENTITY1', 'ENTITY2']}];
-        opfabServicesInterfaceStub.perimeters = [{process: "defaultProcess", stateRights: [{state: "processState", right: "ReceiveAndWrite", filteringNotificationAllowed: true}]} ];
         opfabServicesInterfaceStub.connectedUsers = ['operator_1'];
-        opfabServicesInterfaceStub.settings.set('operator_2', {sendCardsByEmail: true, email: "operator_2@opfab.com", processesStatesNotifiedByEmail: {defaultProcess: ["processState"]}});
+        
+        opfabServicesInterfaceStub.usersWithPerimeters = [{userData: {login: 'operator_1', entities: ['ENTITY1']}, sendCardsByEmail: true, email: "operator_1@opfab.com", computedPerimeters: perimeters},
+                                                            {userData: {login: 'operator_2', entities: ['ENTITY1', 'ENTITY2']}, sendCardsByEmail: true, email: "operator_2@opfab.com", processesStatesNotifiedByEmail: {defaultProcess: ['processState']}  , computedPerimeters: perimeters}
+                                                        ];
+        
         opfabServicesInterfaceStub.cards = [{uid: "1002", id: "defaultProcess.process1", publisher: 'publisher1', publishDate: publishDateAfterAlertingPeriod, startDate: publishDateAfterAlertingPeriod,
             titleTranslated: "Title1", summaryTranslated: "Summary1", process: "defaultProcess", state: "processState", entityRecipients: ["ENTITY1"]}];
 
@@ -165,9 +170,12 @@ describe('Cards external diffusion', function () {
         const publishDateAfterAlertingPeriod = Date.now() - 65 * 1000;
         setup();
         opfabServicesInterfaceStub.allUsers = [{login: 'operator_1', entities: ['ENTITY1']}, {login: 'operator_2', entities: ['ENTITY1', 'ENTITY2']}];
-        opfabServicesInterfaceStub.perimeters = [{process: "defaultProcess", stateRights: [{state: "processState", right: "ReceiveAndWrite", filteringNotificationAllowed: true}]} ];
         opfabServicesInterfaceStub.connectedUsers = ['operator_1'];
-        opfabServicesInterfaceStub.settings.set('operator_2', {sendCardsByEmail: false, email: "operator_2@opfab.com", processesStatesNotifiedByEmail: {defaultProcess: ["processState"]}});
+        
+        opfabServicesInterfaceStub.usersWithPerimeters = [{userData: {login: 'operator_1', entities: ['ENTITY1']}, sendCardsByEmail: true, email: "operator_1@opfab.com", computedPerimeters: perimeters},
+                                                            {userData: {login: 'operator_2', entities: ['ENTITY1', 'ENTITY2']}, sendCardsByEmail: false, email: "operator_2@opfab.com", processesStatesNotifiedByEmail: {defaultProcess: ['processState']}  , computedPerimeters: perimeters}
+                                                        ];
+        
         opfabServicesInterfaceStub.cards = [{uid: "1003", id: "defaultProcess.process1", publisher: 'publisher1', publishDate: publishDateAfterAlertingPeriod, startDate: publishDateAfterAlertingPeriod,
             titleTranslated: "Title1", summaryTranslated: "Summary1", process: "defaultProcess", state: "processState", entityRecipients: ["ENTITY1"]}];
 
@@ -182,9 +190,12 @@ describe('Cards external diffusion', function () {
         const publishDateAfterAlertingPeriod = Date.now() - 65 * 1000;
         setup();
         opfabServicesInterfaceStub.allUsers = [{login: 'operator_1', entities: ['ENTITY1']}, {login: 'operator_2', entities: ['ENTITY1', 'ENTITY2']}];
-        opfabServicesInterfaceStub.perimeters = [{process: "defaultProcess", stateRights: [{state: "processState", right: "ReceiveAndWrite", filteringNotificationAllowed: true}]} ];
         opfabServicesInterfaceStub.connectedUsers = ['operator_1'];
-        opfabServicesInterfaceStub.settings.set('operator_2', {processesStatesNotifiedByEmail: {defaultProcess: ["processState"]}});
+        
+        opfabServicesInterfaceStub.usersWithPerimeters = [{userData: {login: 'operator_1', entities: ['ENTITY1']}, sendCardsByEmail: true, email: "operator_1@opfab.com", computedPerimeters: perimeters},
+                                                            {userData: {login: 'operator_2', entities: ['ENTITY1', 'ENTITY2']}, email: "operator_2@opfab.com", processesStatesNotifiedByEmail: {defaultProcess: ['processState']}  , computedPerimeters: perimeters}
+                                                        ];
+        
         opfabServicesInterfaceStub.cards = [{uid: "1004", id: "defaultProcess.process1", publisher: 'publisher1', publishDate: publishDateAfterAlertingPeriod, startDate: publishDateAfterAlertingPeriod,
             titleTranslated: "Title1", summaryTranslated: "Summary1", process: "defaultProcess", state: "processState", entityRecipients: ["ENTITY1"]}];
 
@@ -194,14 +205,17 @@ describe('Cards external diffusion', function () {
         expect(mailService.numberOfMailsSent).toEqual(0);
         
     })
-    
+  
     it('Should not send card when email not set', async function() {
         const publishDateAfterAlertingPeriod = Date.now() - 65 * 1000;
         setup();
         opfabServicesInterfaceStub.allUsers = [{login: 'operator_1', entities: ['ENTITY1']}, {login: 'operator_2', entities: ['ENTITY1', 'ENTITY2']}];
-        opfabServicesInterfaceStub.perimeters = [{process: "defaultProcess", stateRights: [{state: "processState", right: "ReceiveAndWrite", filteringNotificationAllowed: true}]} ];
         opfabServicesInterfaceStub.connectedUsers = ['operator_1'];
-        opfabServicesInterfaceStub.settings.set('operator_2',  {sendCardsByEmail: true, processesStatesNotifiedByEmail: {defaultProcess: ["processState"]}});
+        
+        opfabServicesInterfaceStub.usersWithPerimeters = [{userData: {login: 'operator_1', entities: ['ENTITY1']}, sendCardsByEmail: true, email: "operator_1@opfab.com", computedPerimeters: perimeters},
+                                                            {userData: {login: 'operator_2', entities: ['ENTITY1', 'ENTITY2']}, sendCardsByEmail: true, processesStatesNotifiedByEmail: {defaultProcess: ['processState']}  , computedPerimeters: perimeters}
+                                                        ];
+
         opfabServicesInterfaceStub.cards = [{uid: "1005", id: "defaultProcess.process1", publisher: 'publisher1', publishDate: publishDateAfterAlertingPeriod, startDate: publishDateAfterAlertingPeriod,
             titleTranslated: "Title1", summaryTranslated: "Summary1", process: "defaultProcess", state: "processState", entityRecipients: ["ENTITY1"]}];
 
@@ -215,9 +229,12 @@ describe('Cards external diffusion', function () {
         const publishDateAfterAlertingPeriod = Date.now() - 65 * 1000;
         setup();
         opfabServicesInterfaceStub.allUsers = [{login: 'operator_1', entities: ['ENTITY1']}, {login: 'operator_2', entities: ['ENTITY1', 'ENTITY2']}];
-        opfabServicesInterfaceStub.perimeters = [{process: "defaultProcess", stateRights: [{state: "processState", right: "ReceiveAndWrite", filteringNotificationAllowed: true}]} ];
         opfabServicesInterfaceStub.connectedUsers = ['operator_1'];
-        opfabServicesInterfaceStub.settings.set('operator_2', {sendCardsByEmail: true, email: "", processesStatesNotifiedByEmail: {defaultProcess: ["processState"]}});
+        
+        opfabServicesInterfaceStub.usersWithPerimeters = [{userData: {login: 'operator_1', entities: ['ENTITY1']}, sendCardsByEmail: true, email: "operator_1@opfab.com", computedPerimeters: perimeters},
+                                                            {userData: {login: 'operator_2', entities: ['ENTITY1', 'ENTITY2']}, sendCardsByEmail: true, email: "", processesStatesNotifiedByEmail: {defaultProcess: ['processState']}  , computedPerimeters: perimeters}
+                                                        ];
+        
         opfabServicesInterfaceStub.cards = [{uid: "1006", id: "defaultProcess.process1", publisher: 'publisher1', publishDate: publishDateAfterAlertingPeriod, startDate: publishDateAfterAlertingPeriod,
             titleTranslated: "Title1", summaryTranslated: "Summary1", process: "defaultProcess", state: "processState", entityRecipients: ["ENTITY1"]}];
 
@@ -231,11 +248,11 @@ describe('Cards external diffusion', function () {
         const publishDateAfterAlertingPeriod = Date.now() - 65 * 1000;
         setup();
         opfabServicesInterfaceStub.allUsers = [{login: 'operator_1', entities: ['ENTITY1']}, {login: 'operator_2', entities: ['ENTITY1', 'ENTITY2']}];
-        opfabServicesInterfaceStub.perimeters = [{process: "defaultProcess", stateRights: [{state: "processState", right: "ReceiveAndWrite", filteringNotificationAllowed: true}]} ];
         opfabServicesInterfaceStub.connectedUsers = [];
-        opfabServicesInterfaceStub.settings.set('operator_1', {sendCardsByEmail: true, email: "operator_1@opfab.com", processesStatesNotifiedByEmail: {defaultProcess: ["processState"]}});
-        opfabServicesInterfaceStub.settings.set('operator_2', {sendCardsByEmail: true, email: "operator_2@opfab.com", processesStatesNotifiedByEmail: {defaultProcess: ["processState"]}});
-
+        
+        opfabServicesInterfaceStub.usersWithPerimeters = [{userData: {login: 'operator_1', entities: ['ENTITY1']}, sendCardsByEmail: true, email: "operator_1@opfab.com", processesStatesNotifiedByEmail: {defaultProcess: ['processState']}, computedPerimeters: perimeters},
+                                                            {userData: {login: 'operator_2', entities: ['ENTITY1', 'ENTITY2']}, sendCardsByEmail: true, email: "operator_2@opfab.com", processesStatesNotifiedByEmail: {defaultProcess: ['processState']}  , computedPerimeters: perimeters}
+                                                        ];
         opfabServicesInterfaceStub.cards = [{uid: "1007", id: "defaultProcess.process1", publisher: 'publisher1', publishDate: publishDateAfterAlertingPeriod, startDate: publishDateAfterAlertingPeriod,
             titleTranslated: "Title1", summaryTranslated: "Summary1", process: "defaultProcess", state: "processState", entityRecipients: ["ENTITY1"]}];
 
@@ -246,5 +263,6 @@ describe('Cards external diffusion', function () {
         expect(mailService.sent[0].toAddress).toEqual('operator_1@opfab.com');
         expect(mailService.sent[1].toAddress).toEqual('operator_2@opfab.com');
     })
+
 
 })

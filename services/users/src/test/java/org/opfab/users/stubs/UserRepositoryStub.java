@@ -86,4 +86,9 @@ public class UserRepositoryStub implements UserRepository {
         return usersInEntities;
     }
 
+    @Override
+    public Optional<User> findByLogin(String login) {
+        return users.values().stream().filter(user -> user.getLogin().equals(login)).findFirst();
+    }
+
 }

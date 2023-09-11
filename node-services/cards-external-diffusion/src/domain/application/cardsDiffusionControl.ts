@@ -116,43 +116,36 @@ export default class CardsDiffusionControl {
 
     private async sendCardsToUserIfNecessary(cards: [], login: string) {
         this.logger.debug('Check user ' + login);
-        const resp = await this.opfabServicesInterface.getUserSettings(login);
+        
+        const resp = await this.opfabServicesInterface.getUserWithPerimetersByLogin(login);
         if (resp.isValid()) {
-            const userSettings = resp.getData();
-            this.logger.debug('Got user settings ' + JSON.stringify(userSettings));
-            if (this.isEmailSettingEnabled(userSettings)) {
-                const userDataResp = await this.opfabServicesInterface.getUser(login);
-                    if (userDataResp.isValid()) {
-                        const userData = userDataResp.getData();
-                        const unreadCards = await this.getCardsForUser(cards, userData, userSettings);
-                        unreadCards.forEach((unreadCard: any) => {
-                            if (!this.wasCardsAlreadySentToUser(unreadCard.uid, userSettings.email))
-                                this.sendMail(unreadCard, userSettings.email).catch(error =>
-                                    this.logger.error("error during sendMail ", error)
-                                )
-                        });
-                    }
+            const userWithPerimeters = resp.getData();
+            this.logger.debug('Got user with perimeters ' + JSON.stringify(userWithPerimeters));
+            if (this.isEmailSettingEnabled(userWithPerimeters)) {
+                const unreadCards = await this.getCardsForUser(cards, userWithPerimeters);
+                unreadCards.forEach((unreadCard: any) => {
+                    if (!this.wasCardsAlreadySentToUser(unreadCard.uid, userWithPerimeters.email))
+                        this.sendMail(unreadCard, userWithPerimeters.email).catch(error =>
+                            this.logger.error("error during sendMail ", error)
+                        )
+                });
             }
         }
+
     }
 
-    private async getCardsForUser(cards : [], user: any, settings: any) : Promise<any[]> {
-        const perimetersResp = await this.opfabServicesInterface.getUserPerimeters(user.login);
-        if (perimetersResp.isValid()) {
-            const perimeters = perimetersResp.getData();
-            this.logger.debug('Got user perimeters' + JSON.stringify(perimeters));
-            return cards
-            .filter(
-                (card: any) =>
-                CardsRoutingUtilities.shouldUserReceiveTheCard(
-                        user,
-                        perimeters,
-                        settings,
-                        card
-                    ) && this.isCardUnreadForUser(card, user)
-            );
-        }
-        return [];
+    private async getCardsForUser(cards : [], userWithPerimeters: any) : Promise<any[]> {
+
+        const perimeters = userWithPerimeters.computedPerimeters;
+        this.logger.debug('Got user perimeters' + JSON.stringify(perimeters));
+        return cards
+        .filter(
+            (card: any) =>
+            CardsRoutingUtilities.shouldUserReceiveTheCard(
+                userWithPerimeters,
+                    card
+                ) && this.isCardUnreadForUser(card, userWithPerimeters.userData)
+        );
     }
 
     private setCardSent(cardUid: string, email: string) {
@@ -169,8 +162,8 @@ export default class CardsDiffusionControl {
         return res;
     }
 
-    private isEmailSettingEnabled(settings: any): boolean {
-        return settings.sendCardsByEmail && settings.email;
+    private isEmailSettingEnabled(userWithPerimeters: any): boolean {
+        return userWithPerimeters.sendCardsByEmail && userWithPerimeters.email;
     }
 
     private isCardUnreadForUser(card: any, user: any): boolean {

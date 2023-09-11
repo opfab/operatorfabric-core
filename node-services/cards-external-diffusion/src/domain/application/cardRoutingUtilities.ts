@@ -10,54 +10,48 @@
 
 export default class CardsRoutingUtilities {
 
-    public static shouldUserReceiveTheCard(user: any, perimeters: any[], userSettings: any, card: any): boolean {
-        if (!this.checkUserReadPerimeter(perimeters, userSettings, card)) {
+    public static shouldUserReceiveTheCard(userWithPerimeters: any, card: any): boolean {
+        if (!this.checkUserReadPerimeter(userWithPerimeters, card)) {
             return false;
         }
-        if (this.checkUserRecipients(user, card)) {
+        if (this.checkUserRecipients(userWithPerimeters, card)) {
             return true;
-        } 
-        return this.isCardSentToUserGroupOrEntityOrBoth(user, card);
+        }
+        return this.isCardSentToUserGroupOrEntityOrBoth(userWithPerimeters.userData, card);
     }
 
-    private static checkUserReadPerimeter(perimeters: any[], userSettings: any, card: any): boolean {
+    private static checkUserReadPerimeter(userWithPerimeters: any, card: any): boolean {
+        const perimeters = userWithPerimeters.computedPerimeters;
+        const processPerimeters = perimeters.filter((perim: any) => {
+            return (perim.process === card.process && perim.state === card.state &&
+                (perim.rights === 'Receive' || perim.rights === 'ReceiveAndWrite') &&
+                    CardsRoutingUtilities.checkIfMailNotifForThisProcessStateIsActivated(userWithPerimeters, card.process, perim.state) &&
+                    CardsRoutingUtilities.checkFilteringNotification(userWithPerimeters, card.process, perim)
+                );
+        })
 
-        const processPerimeters = perimeters.filter((perim) => {
-            if (perim.process === card.process) {
-                const stateRight = perim.stateRights.find((st: any) => st.state === card.state);
-                if (
-                    stateRight &&
-                    (stateRight.right === 'Receive' || stateRight.right === 'ReceiveAndWrite') &&
-                    CardsRoutingUtilities.checkIfMailNotifForThisProcessStateIsActivated(userSettings, card.process, stateRight) &&
-                    CardsRoutingUtilities.checkFilteringNotification(userSettings, card.process, stateRight)
-                ) {
-                    return true;
-                }
-            }
-            return false;
-        
-        });
+
         return processPerimeters.length > 0;
     }
 
-    private static checkIfMailNotifForThisProcessStateIsActivated(settings: any, process: string, stateRight: any): boolean {
-        if (!settings.processesStatesNotifiedByEmail || settings.processesStatesNotifiedByEmail.length === 0) {
+    private static checkIfMailNotifForThisProcessStateIsActivated(userWithPerimeters: any, process: string, state: string): boolean {
+        if (!userWithPerimeters.processesStatesNotifiedByEmail || userWithPerimeters.processesStatesNotifiedByEmail.length === 0) {
             return false;
         }
-        return settings.processesStatesNotifiedByEmail[process]?.includes(stateRight.state);
+        return userWithPerimeters.processesStatesNotifiedByEmail[process]?.includes(state);
     }
 
-    private static checkFilteringNotification(settings: any, process: string, stateRight: any): boolean {
-        if (!stateRight.filteringNotificationAllowed
-            || !settings.processesStatesNotNotified
-            || settings.processesStatesNotNotified.length == 0) {
+    private static checkFilteringNotification(userWithPerimeters: any, process: string, perimeter: any): boolean {
+        if (!perimeter.filteringNotificationAllowed
+            || !userWithPerimeters.processesStatesNotNotified
+            || userWithPerimeters.processesStatesNotNotified.length == 0) {
             return true;
         }
-        return !settings.processesStatesNotNotified[process]?.includes(stateRight.state);
+        return !userWithPerimeters.processesStatesNotNotified[process]?.includes(perimeter.state);
     }
 
     private static checkUserRecipients(user: any, card: any): boolean {
-        return card.userRecipients && card.userRecipients.length > 0 && card.userRecipients.includes(user.login);
+        return card.userRecipients && card.userRecipients.length > 0 && card.userRecipients.includes(user.userData.login);
     }
 
     private static isCardSentToUserGroupOrEntityOrBoth(user: any, card: any): boolean {
