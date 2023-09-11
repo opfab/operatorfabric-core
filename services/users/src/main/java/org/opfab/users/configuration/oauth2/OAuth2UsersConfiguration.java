@@ -34,7 +34,6 @@ import org.springframework.security.oauth2.jwt.Jwt;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
@@ -78,8 +77,6 @@ public class OAuth2UsersConfiguration {
             @Override
             public AbstractAuthenticationToken convert(Jwt jwt) {
                 String principalId = jwt.getClaimAsString(jwtProperties.getLoginClaim()).toLowerCase();
-                log.debug("USER {}  with the token : \n{}", principalId, jwt.getTokenValue());
-
             
                 Optional<UserData> optionalUser = userRepository.findById(principalId);
 
@@ -91,7 +88,6 @@ public class OAuth2UsersConfiguration {
                     log.warn("user virtual(nonexistent in opfab) : '{}'", user.toString());
                 }
 
-    
 
                 if (groupsProperties.getMode() == GroupsMode.JWT) {
                     // override the groups list from JWT mode, otherwise, default mode is OPERATOR_FABRIC
