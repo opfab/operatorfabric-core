@@ -1,4 +1,5 @@
 /* Copyright (c) 2023, Alliander N.V. (https://www.alliander.com)
+ * Copyright (c) 2023, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -121,6 +122,7 @@ public class AADWorkloadIdentityLoginCallbackHandler implements AuthenticateCall
         final var request = tokenRequestBuilder.buildAuthTokenRequest();
         final var response = httpClient.send(request, HttpResponse.BodyHandlers.ofByteArray());
         final var result = objectMapper.readValue(response.body(), JsonNode.class);
+        if (result==null) throw new IOException("Impossible to parse response body from token request , body = " + response.body());
         return toOAuthBearerToken(result);
     }
 
