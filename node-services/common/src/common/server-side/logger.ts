@@ -1,4 +1,4 @@
-/* Copyright (c) 2022, RTE (http://www.rte-france.com)
+/* Copyright (c) 2022-2023, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -7,7 +7,7 @@
  * This file is part of the OperatorFabric project.
  */
 
-import winston from 'winston'
+import winston, {format} from 'winston'
 import DailyRotateFile from 'winston-daily-rotate-file'
 import config from 'config';
 
@@ -23,7 +23,7 @@ const logFormat = winston.format.combine(
 const logConfiguration : any = config.get("logConfig");
 
 let logger = winston.createLogger({
-  format: logFormat,
+  format: format.combine( format(info => {info.message = prefixNewLinesToAvoidLogInjection(info.message); return info})(),logFormat),
   transports: [new winston.transports.Console({level: logConfiguration.logLevel})]
 });
 
@@ -43,11 +43,15 @@ if (logConfiguration.logFile) {
   });
 
   logger = winston.createLogger({
-    format: logFormat,
+    format: format.combine( format(info => {info.message = prefixNewLinesToAvoidLogInjection(info.message); return info})(),logFormat),
     transports: [transport],
   });
 }
 
+
+function prefixNewLinesToAvoidLogInjection(message:string):string {
+  return message.replace(/[\n\r]/g,'\n       ... ');
+} 
 
 export default logger;
 
