@@ -22,6 +22,13 @@ spring:
       resourceserver:
         jwt:
           jwk-set-uri: ${operatorfabric.security.oauth2.resourceserver.jwt.jwk-set-uri} #To be set outside of docker
+
+# Patten to avoid Log Injection
+# each new line is prefix with spaces + three dots
+logging.pattern.console: "%d{yyyy-MM-dd HH:mm:ss.SSS} %5p ${PID:- } --- [%15.15t] %-40.40logger{39} : %replace(%msg){'\n|\r', '\n                 ... '}%n%wex"
+
+
+
 # default values for docker mode 
 operatorfabric:
   rabbitmq:
