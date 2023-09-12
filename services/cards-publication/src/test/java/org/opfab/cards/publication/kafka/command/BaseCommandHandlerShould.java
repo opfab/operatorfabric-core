@@ -1,5 +1,5 @@
 /* Copyright (c) 2020, Alliander (http://www.alliander.com)
- * Copyright (c) 2021, RTE (http://www.rte-france.com)
+ * Copyright (c) 2021-2023, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -10,7 +10,6 @@
 package org.opfab.cards.publication.kafka.command;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.core.type.TypeReference;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -27,7 +26,7 @@ import org.springframework.test.util.ReflectionTestUtils;
 import java.util.Collections;
 import java.util.Map;
 
-import static org.mockito.ArgumentMatchers.any;
+
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -61,7 +60,7 @@ class BaseCommandHandlerShould {
         card = mock(Card.class);
         when(cardCommand.getCard()).thenReturn(card);
         when(objectMapper.writeValueAsString(card)).thenReturn(ANY_STRING);
-        when(objectMapper.readValue(ANY_STRING, CardPublicationData.class)).thenReturn(cardPublicationData);
+        when(objectMapper.readCardPublicationDataValue(ANY_STRING)).thenReturn(cardPublicationData);
     }
 
     @Test
@@ -77,7 +76,7 @@ class BaseCommandHandlerShould {
         String cardDataAsString = "justAString";
         Map<String, Object> cardData = Collections.singletonMap(DATA_KEY, DATA_VALUE);
         when(card.getData()).thenReturn(cardDataAsString);
-        when(objectMapper.readValue(anyString(), (TypeReference<Map<String, Object>>) any())).thenReturn(cardData);
+        when(objectMapper.readJSONValue(anyString())).thenReturn(cardData);
         CardPublicationData result = cut.buildCardPublicationData(cardCommand);
         Map<String,Object> data = (Map<String,Object>) result.getData();
         Assertions.assertThat(data)

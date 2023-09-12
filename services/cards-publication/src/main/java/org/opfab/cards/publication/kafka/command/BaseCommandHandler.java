@@ -1,5 +1,5 @@
 /* Copyright (c) 2020, Alliander (http://www.alliander.com)
- * Copyright (c) 2021, RTE (http://www.rte-france.com)
+ * Copyright (c) 2021-2023, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -11,7 +11,6 @@
 package org.opfab.cards.publication.kafka.command;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.core.type.TypeReference;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -38,12 +37,11 @@ public class BaseCommandHandler {
         CardPublicationData card = null;
         Map<String, Object> cardData = Collections.emptyMap();
         try {
-            card = objectMapper.readValue(objectMapper.writeValueAsString(kafkaCard), CardPublicationData.class);
+            card = objectMapper.readCardPublicationDataValue(objectMapper.writeValueAsString(kafkaCard));
 
             String cardDataString = kafkaCard.getData();
             if (cardDataString != null) {
-                cardData = objectMapper.readValue(cardDataString, new TypeReference<Map<String, Object>>() {
-                });
+                cardData = objectMapper.readJSONValue(cardDataString);
             }
             card.setData(cardData);
         } catch (JsonProcessingException e) {
