@@ -10,6 +10,7 @@
 import {Component, Input} from '@angular/core';
 import {Router} from '@angular/router';
 import {CustomMenu, MenuEntryLinkTypeEnum} from '@ofModel/menu.model';
+import {GlobalStyleService} from 'app/business/services/global-style.service';
 
 @Component({
     selector: 'of-menu-link',
@@ -21,7 +22,7 @@ export class MenuLinkComponent {
     @Input() public menuEntry: any;
     @Input() public currentRoute: string;
 
-    constructor(private router: Router) {}
+    constructor(private router: Router, private globalStyleService: GlobalStyleService) {}
 
     LinkType = MenuEntryLinkTypeEnum;
 
@@ -51,4 +52,18 @@ export class MenuLinkComponent {
                 encodeURIComponent(encodeURIComponent(this.menuEntry.customMenuId))
         ]);
     }
+
+    addOpfabThemeParamToUrl(url: string): string {
+        return this.addParamsToUrl(url, 'opfab_theme=' + this.globalStyleService.getStyle());
+    }
+
+    private addParamsToUrl(url, params) {
+        let newUrl = url;
+        if (params) {
+            newUrl += url.includes('?') ? '&' : '?';
+            newUrl += params;
+        }
+        return newUrl;
+    }
+
 }

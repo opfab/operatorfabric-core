@@ -8,7 +8,7 @@
 
 
 <div *ngIf=hasLinkType(LinkType.TAB)>
-  <a id="opfab-navbar-menu-{{menu.id}}" class="text-link " [href]="menuEntry.url" target="_blank" rel="noopener noreferrer" translate>{{menuEntry.label}}</a>
+  <a id="opfab-navbar-menu-{{menu.id}}" class="text-link " [href]="addOpfabThemeParamToUrl(menuEntry.url)" target="_blank" rel="noopener noreferrer" translate>{{menuEntry.label}}</a>
 </div>
 
 <div *ngIf=hasLinkType(LinkType.IFRAME)>
@@ -17,7 +17,7 @@
 
 <div *ngIf=hasLinkType(LinkType.BOTH)>
   <a id="opfab-navbar-menu-{{menu.id}}" class="text-link " (click)='goToLink()' translate>{{menuEntry.label}}</a>
-  <a id="opfab-navbar-menu-icon-{{menu.id}}" class="icon-link " [href]="menuEntry.url" rel="noopener noreferrer" target="_blank">
+  <a id="opfab-navbar-menu-icon-{{menu.id}}" class="icon-link " [href]="addOpfabThemeParamToUrl(menuEntry.url)" rel="noopener noreferrer" target="_blank">
     <em class="fas fa-external-link-alt" ></em>
   </a>
 </div>
