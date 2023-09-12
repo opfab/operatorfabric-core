@@ -3,7 +3,7 @@ operatorfabric:
   rabbitmq:
     host: localhost
   mongodb:
-    uri: mongodb://root:password@localhost:27017/operator-fabric?authSource=admin&authMode=scram-sha1
+    uri: mongodb://root:password@localhost:27017/operator-fabric?authSource=admin
   servicesUrls:
     users: "http://localhost:2103"
     businessconfig: "http://localhost:2100"

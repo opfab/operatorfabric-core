@@ -5,7 +5,7 @@ USER node
 RUN mkdir -p logs
 COPY dockerBuild ./build
 RUN mkdir -m777 config
-COPY dockerConfig/default-docker.yml ./config/default.yml
+COPY dockerConfig/default-docker.yml ./config/base.yml
 COPY package.json ./
 COPY startSupervisor.sh ./
 RUN npm config set https-proxy $https_proxy

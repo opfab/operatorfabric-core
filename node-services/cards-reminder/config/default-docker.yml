@@ -12,14 +12,13 @@ operatorfabric:
 
   mongodb:
     database: "operator-fabric"
-    uri: "mongodb://root:password@mongodb:27017/operator-fabric?authSource=admin"
 
   logConfig:
     logLevel: "info"
 
   cardsReminder:
-    adminPort : 2107,
-    activeOnStartup : true,
+    adminPort : 2107
+    activeOnStartup : true
     checkPeriodInSeconds : 5
     opfab:
       login: "opfab_internal_account"

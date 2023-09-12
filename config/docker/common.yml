@@ -12,7 +12,7 @@ operatorfabric:
     # username: guest
     # password: guest
   mongodb:
-    uri: mongodb://root:password@mongodb:27017/operator-fabric?authSource=admin&authMode=scram-sha1
+    uri: mongodb://root:password@mongodb:27017/operator-fabric?authSource=admin
   security:
     oauth2:
       resourceserver:

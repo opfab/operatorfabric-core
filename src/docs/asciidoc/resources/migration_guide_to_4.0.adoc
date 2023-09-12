@@ -262,3 +262,18 @@ concerned parameters (old name -> new name):
 - spring.data.mongodb.uri -->  operatorfabric.mongodb.uri
 - spring.rabbit.* --> operatorfabric.rabbit.*
 - spring.security.oauth2.resourceserver.jwt.jwk-set-uri -->  operatorfabric.security.oauth2.resourceserver.jwt.jwk-set-uri
+
+== Mongodb uri
+The option "authMode=scram-sha1" has to be removed from mongodb uri as SCRAM authentication is enabled by default and "authMode" option is not supported by node.js mongodb driver.
+For example you should change : 
+
+```
+ mongodb:
+    uri: mongodb://root:password@mongodb:27017/operator-fabric?authSource=admin&authMode=scram-sha1
+```
+to 
+
+```
+ mongodb:
+    uri: mongodb://root:password@mongodb:27017/operator-fabric?authSource=admin
+```
