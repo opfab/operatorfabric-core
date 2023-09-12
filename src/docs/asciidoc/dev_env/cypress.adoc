@@ -1,4 +1,4 @@
-// Copyright (c) 2021 RTE (http://www.rte-france.com)
+// Copyright (c) 2021-2023 RTE (http://www.rte-france.com)
 // See AUTHORS.txt
 // This document is subject to the terms of the Creative Commons Attribution 4.0 International license.
 // If a copy of the license was not distributed with this
@@ -140,7 +140,7 @@ associated collections through the MongoDB shell with the following commands:
 [source,bash]
 ----
 docker exec -it docker_mongodb_1 bash
-mongo "mongodb://root:password@localhost:27017/?authSource=admin&authMode=scram-sha1"
+mongo "mongodb://root:password@localhost:27017/?authSource=admin"
 use operator-fabric
 db.cards.remove({})
 db.archivedCards.remove({})

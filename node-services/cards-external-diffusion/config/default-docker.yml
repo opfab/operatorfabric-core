@@ -1,7 +1,7 @@
 opfab:
   login: admin
   password: test
-  usersUrl: "http://users:2103/users"
+  usersUrl: "http://users:2103"
   cardsConsultationUrl: "http://cards-consultation:2104"
   getTokenUrl: "http://web-ui/auth/token"
 operatorfabric:

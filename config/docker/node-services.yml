@@ -4,14 +4,6 @@ opfab:
   cardsConsultationUrl: http://cards-consultation:2104
   getTokenUrl: http://web-ui/auth/token
 operatorfabric:
-  rabbitmq:
-    host: rabbitmq
-    port: 5672
-    username: guest
-    password: guest
-  mongodb:
-    database: operator-fabric
-    uri: mongodb://root:password@mongodb:27017/operator-fabric?authSource=admin
   mail:
     host: mailhog
     port: 1025
