@@ -36,7 +36,7 @@ describe('Business menu', () => {
         opfab.checkUrlDisplayedIs('https://en.wikipedia.org/w/index.php?search=chart&fulltext=1&opfab_theme=NIGHT');
 
         openBusinessDropdownMenu();
-        checkDropdownMenuIconLinks();
+        checkDropdownMenuIconLinks('NIGHT');
         closeBusinessDropdownMenu();
         openBusinessDropdownMenu();
         clickOnDropdownMenuEntryNumber(1);
@@ -49,7 +49,7 @@ describe('Business menu', () => {
         opfab.checkUrlDisplayedIs('http://localhost:2002/external/appExample/?opfab_theme=NIGHT');
 
         openBusinessSingleMenu();
-        checkSingleMenuIconLink();
+        checkSingleMenuIconLink('NIGHT');
         opfab.checkUrlDisplayedIs('https://en.wikipedia.org/w/index.php?opfab_theme=NIGHT');
     });
 
@@ -70,7 +70,7 @@ describe('Business menu', () => {
             opfab.checkUrlDisplayedIs('https://en.wikipedia.org/w/index.php?search=chart&fulltext=1&opfab_theme=DAY');
 
             openBusinessDropdownMenu();
-            checkDropdownMenuIconLinks();
+            checkDropdownMenuIconLinks('DAY');
             closeBusinessDropdownMenu();
             openBusinessDropdownMenu();
 
@@ -84,7 +84,7 @@ describe('Business menu', () => {
             opfab.checkUrlDisplayedIs('http://localhost:2002/external/appExample/?opfab_theme=DAY');
 
             openBusinessSingleMenu();
-            checkSingleMenuIconLink();
+            checkSingleMenuIconLink('DAY');
             opfab.checkUrlDisplayedIs('https://en.wikipedia.org/w/index.php?opfab_theme=DAY');
         }
     );
@@ -102,18 +102,18 @@ describe('Business menu', () => {
         cy.get('.text-link').should('have.length', 1);
     }
 
-    function checkDropdownMenuIconLinks() {
-        cy.get('.icon-link').eq(1).invoke('attr', 'href').should('eq', 'https://opfab.github.io/');
-        cy.get('.icon-link').eq(2).invoke('attr', 'href').should('eq', 'https://www.wikipedia.org/');
-        cy.get('.icon-link').eq(3).invoke('attr', 'href').should('eq', 'http://localhost:2002/external/appExample/');
+    function checkDropdownMenuIconLinks(theme) {
+        cy.get('.icon-link').eq(1).invoke('attr', 'href').should('eq', 'https://opfab.github.io/?opfab_theme=' + theme);
+        cy.get('.icon-link').eq(2).invoke('attr', 'href').should('eq', 'https://www.wikipedia.org/?opfab_theme=' + theme);
+        cy.get('.icon-link').eq(3).invoke('attr', 'href').should('eq', 'http://localhost:2002/external/appExample/?opfab_theme=' + theme);
     }
 
     function clickOnDropdownMenuEntryNumber(menuNumber) {
         cy.get('.text-link').eq(menuNumber).click();
     }
 
-    function checkSingleMenuIconLink() {
-        cy.get('.icon-link').eq(0).invoke('attr', 'href').should('eq', 'https://en.wikipedia.org/w/index.php');
+    function checkSingleMenuIconLink(theme) {
+        cy.get('.icon-link').eq(0).invoke('attr', 'href').should('eq', 'https://en.wikipedia.org/w/index.php?opfab_theme=' + theme);
     }
 
     function openBusinessSingleMenu() {
