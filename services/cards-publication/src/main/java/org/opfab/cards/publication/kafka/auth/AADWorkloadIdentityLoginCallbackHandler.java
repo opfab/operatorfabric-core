@@ -114,7 +114,6 @@ public class AADWorkloadIdentityLoginCallbackHandler implements AuthenticateCall
 
     private void handleOAuthBearerTokenCallback(final OAuthBearerTokenCallback callback) throws IOException, InterruptedException {
         final var token = acquireTokenFromIdp();
-        log.debug("acquired token '{}' for principal '{}'", token.value(), token.principalName());
         callback.token(token);
     }
 
