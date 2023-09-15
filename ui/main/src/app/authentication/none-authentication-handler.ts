@@ -39,7 +39,11 @@ export class NoneAuthenticationHandler extends AuthHandler {
         });
     }
 
-    regularCheckTokenValidity() {
+    regularCheckIfTokenExpireSoon() {
+        // Override because there is no regularly check in none mode
+    }
+
+    regularCheckIfTokenIsExpired() {
         // Override because there is no regularly check in none mode
     }
 }

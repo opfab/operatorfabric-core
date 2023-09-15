@@ -36,15 +36,18 @@ export class SessionEndComponent implements OnInit {
     ) {}
 
     ngOnInit(): void {
-        this.subscribeToSessionEnd();
+        this.subscribeToSessionWillSoonExpire();
+        this.subscribeToSessionExpired();
         this.subscribeToSessionClosedByNewUser();
     }
 
-    private subscribeToSessionEnd() {
-        this.currentUserStore.getSessionExpired().subscribe(() => {
-            this.logger.info('Session expire ', LogOption.REMOTE);
+    private subscribeToSessionWillSoonExpire() {
+        this.currentUserStore.getSessionWillSoonExpire().subscribe(() => {
+            // We inform the user that session is end before it really ends
+            // this lets the time for the UI to call external-devices services to send alarm
+            // otherwise the call for alarm would be reject as token will have expired
+            this.logger.info('Session will soon expire ', LogOption.REMOTE);
             this.soundNotificationService.handleSessionEnd();
-            this.opfabEventStreamService.closeEventStream();
             this.modalRef = this.modalService.open(this.sessionEndPopupRef, {
                 centered: true,
                 backdrop: 'static',
@@ -52,6 +55,16 @@ export class SessionEndComponent implements OnInit {
                 windowClass: 'opfab-session-end-modal'
             });
         });
+    }
+
+    private subscribeToSessionExpired() {
+        this.currentUserStore.getSessionExpired().subscribe(() => {
+            this.logger.info("Session expired");
+            // If session is expired, all requests to external devices will fail
+            // so we can stop sending request to external devices
+            if (this.soundNotificationService.getPlaySoundOnExternalDevice()) this.soundNotificationService.clearOutstandingNotifications();
+            this.opfabEventStreamService.closeEventStream();
+        })
     }
 
     private subscribeToSessionClosedByNewUser() {
@@ -67,6 +80,7 @@ export class SessionEndComponent implements OnInit {
     public logout() {
         this.logger.info('Logout ', LogOption.REMOTE);
         this.modalRef.close();
+        this.opfabEventStreamService.closeEventStream();
         this.authService.logout();
     }
 }

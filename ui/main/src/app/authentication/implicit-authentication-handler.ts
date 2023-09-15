@@ -93,7 +93,8 @@ export class ImplicitAuthenticationHandler extends AuthHandler {
             // This case arise for example when using a SSO and the session is not valid anymore (session timeout)
             case 'token_error':
             case 'token_refresh_error':
-                this.sessionExpired.next(true);
+                this.tokenWillSoonExpire.next(true);
+                this.tokenExpired.next(true);
                 break;
             case 'logout': {
                 console.log('Logout from implicit flow');

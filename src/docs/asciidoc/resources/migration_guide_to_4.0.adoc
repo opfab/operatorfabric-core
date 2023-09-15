@@ -277,3 +277,7 @@ to
  mongodb:
     uri: mongodb://root:password@mongodb:27017/operator-fabric?authSource=admin
 ```
+
+== secondsToCloseSession
+
+The default value for "secondsToCloseSession" has been updated to 600 seconds, as opposed to the previous 60 seconds. This "secondsToCloseSession" define in web-ui.json reflects the duration before the end of token validity when the end-of-session popup will be displayed.
