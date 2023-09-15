@@ -22,7 +22,7 @@ export class AngularRemoteLoggerServer extends AngularServer implements RemoteLo
     private remoteLogsUrl;
     constructor(private httpClient: HttpClient) {
         super();
-        this.remoteLogsUrl = `${environment.url}/cards/logs}`;
+        this.remoteLogsUrl = `${environment.url}/cards/logs`;
     }
 
     postLogs(logsToPush): Observable<ServerResponse<any>> {
