@@ -148,7 +148,7 @@ subprojects {
 
 
 
-    if (!project.path.contains('ui') && !project.path.contains('node-services')){
+    if (!project.path.contains('ui') && !project.path.contains('node-services') && !project.path.contains('rabbitmq')){
 
         subprojects {
             apply plugin: 'java'

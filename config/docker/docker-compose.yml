@@ -11,7 +11,7 @@ services:
       - "./mongodump:/dump"
   rabbitmq:
     container_name: rabbit
-    image: rabbitmq:3-management
+    image: lfeoperatorfabric/of-rabbitmq:SNAPSHOT
     hostname: rabbit
 
 #  If you want to persist queue after rabbit docker container removal mount 
