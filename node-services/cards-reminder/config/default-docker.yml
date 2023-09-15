@@ -1,6 +1,4 @@
 opfab: 
-  cardsPublicationUrl: "http://cards-publication:2102"
-  usersUrl: http://users:2103
   getTokenUrl: "http://web-ui/auth/token"
 
 operatorfabric:
@@ -9,10 +7,11 @@ operatorfabric:
     port: 5672
     username: "guest"
     password: "guest"
-
   mongodb:
     database: "operator-fabric"
-
+  servicesUrls:
+    users: "http://users:2103"
+    cardsPublication: "http://cards-publication:2102"
   logConfig:
     logLevel: "info"
 

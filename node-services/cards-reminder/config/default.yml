@@ -1,6 +1,4 @@
 opfab: 
-  cardsPublicationUrl: "http://127.0.0.1:2102"
-  usersUrl: "http://127.0.0.1:2103"
   getTokenUrl: "http://127.0.0.1:2002/auth/token"
 
 operatorfabric:
@@ -12,6 +10,9 @@ operatorfabric:
   mongodb:
     database: "operator-fabric"
     uri: "mongodb://root:password@localhost:27017/operator-fabric?authSource=admin"
+  servicesUrls:
+    users: "http://127.0.0.1:2103"
+    cardsPublication: "http://127.0.0.1:2102"  
   logConfig:
     logFolder: "logs/"
     logFile: "%DATE%.log"
