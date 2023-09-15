@@ -94,6 +94,8 @@ Feature: CardsUserRead
     And match response.card.hasBeenRead == true
     And match response.card.uid == uid
 
+
+
 #get card with user operator2_fr and check hasBeenRead is set to false
     Given url opfabUrl + 'cards/cards/api_test.process1'
     And header Authorization = 'Bearer ' + authToken2
@@ -117,6 +119,34 @@ Feature: CardsUserRead
     Then status 200
     And match response.card.hasBeenRead == true
     And match response.card.uid == uid
+
+ 
+
+    # Get lighcard and check it contains usersReads
+    * def filter =
+    """
+    {
+      "page" : 0,
+      "size" : 10,
+      "filters" : [
+        {
+          "columnName": "processInstanceId",
+          "filter" : ["process1"],
+          "matchType": "EQUALS"
+        }
+      ]
+    }
+    """
+
+    Given url opfabUrl + 'cards/cards'
+    And header Authorization = 'Bearer ' + authToken
+    And request filter
+    Then method post
+    Then status 200
+    And assert response.numberOfElements == 1
+    And assert response.content[0].usersReads.length == 2
+    And match response.content[0].usersReads[0] == "operator1_fr"
+    And match response.content[0].usersReads[1] == "operator2_fr"
 
 # Delete user read
     Given url opfabUrl + 'cardspub/cards/userCardRead/' + uid

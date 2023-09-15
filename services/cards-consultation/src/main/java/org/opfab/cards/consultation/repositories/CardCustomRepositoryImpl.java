@@ -187,6 +187,7 @@ public class CardCustomRepositoryImpl implements CardCustomRepository {
 		"entityRecipients",
 		"entityRecipientsForInformation",
         "entitiesAcks",
+		"usersReads",
 		"userRecipients",
 		"groupRecipients",
 	};
