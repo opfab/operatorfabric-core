@@ -98,10 +98,14 @@ export class AuthService {
                 this.currentUserStore.setToken(user.token);
             }
             this.currentUserStore.setCurrentUserAuthenticationValid(this.login);
-            this.authHandler.regularCheckTokenValidity();
+            this.authHandler.regularCheckIfTokenExpireSoon();
+            this.authHandler.regularCheckIfTokenIsExpired();
             this.redirectToCurrentLocation();
         });
-        this.authHandler.getSessionExpired().subscribe(() => {
+        this.authHandler.getTokenWillSoonExpire().subscribe(() => {
+            this.currentUserStore.setSessionWillSoonExpire();
+        });
+        this.authHandler.getTokenExpired().subscribe(() => {
             this.currentUserStore.setSessionExpired();
         });
         this.authHandler.getRejectAuthentication().subscribe((message) => {

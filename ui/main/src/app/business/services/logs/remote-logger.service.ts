@@ -64,6 +64,4 @@ export class RemoteLoggerService {
         return logsToPush;
     }
 
-
-    
 }

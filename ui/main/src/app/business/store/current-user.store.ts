@@ -15,12 +15,21 @@ import {ReplaySubject, Observable, Subject} from 'rxjs';
 })
 export class CurrentUserStore {
     private connectionEvent = new ReplaySubject<string>(1);
+    private sessionWillSoonExpireEvent = new Subject<boolean>();
     private sessionExpiredEvent = new Subject<boolean>();
     private token: string;
     private authenticationUsesToken = false;
 
     public getCurrentUserLogin(): Observable<string> {
         return this.connectionEvent.asObservable();
+    }
+
+    public setSessionWillSoonExpire() {
+        this.sessionWillSoonExpireEvent.next(true);
+    }
+
+    public getSessionWillSoonExpire(): Observable<boolean> {
+        return this.sessionWillSoonExpireEvent.asObservable();
     }
 
     public setSessionExpired() {
