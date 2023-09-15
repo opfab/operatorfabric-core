@@ -10,6 +10,9 @@ operatorfabric:
     port: 5672
     username: guest
     password: guest
+  servicesUrls:
+    users: "http://127.0.0.1:2103"
+    cardsConsultation: "http://127.0.0.1:2104"
   logConfig:
     logFolder: logs/
     logFile: "%DATE%.log"
