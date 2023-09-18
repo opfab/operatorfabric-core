@@ -283,6 +283,7 @@ concerned parameters (old name -> new name):
 - checkAuthenticationForCardSending -> operatorfabric.cards-publication.checkAuthenticationForCardSending
 - authorizeToSendCardWithInvalidProcessState -> operatorfabric.cards-publication.authorizeToSendCardWithInvalidProcessState
 - checkPerimeterForCardSending -> operatorfabric.cards-publication.checkPerimeterForCardSending
+- external-recipients.* -> operatorfabric.cards-publication.external-recipients.*
 - opfab.kafka.topics.card.topicname -> operatorfabric.cards-publication.kafka.topics.card.topicname
 - opfab.kafka.topics.response-card.topicname -> operatorfabric.cards-publication.kafka.topics.response-card.topicname
 - opfab.kafka.schema.registry.url -> operatorfabric.cards-publication.kafka.schema.registry.url

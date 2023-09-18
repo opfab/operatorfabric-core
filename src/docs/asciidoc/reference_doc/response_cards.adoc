@@ -41,14 +41,16 @@ The url of the third party receiving the response card is to be set in the .yml 
 possible to configure whether the user token shall be propagated to the third party or not by setting the
 "propagateUserToken" boolean property. Here is an example with two third parties configured.
 ....
-external-recipients:
-  recipients: 
-    - id: "third-party1"
-      url: "http://thirdparty1/test1"
-      propagateUserToken: true
-    - id: "third-party2"
-      url: "http://thirdparty2:8090/test2"
-      propagateUserToken: false
+operatorfabric:
+  cards-publication:
+    external-recipients:
+      recipients: 
+        - id: "third-party1"
+          url: "http://thirdparty1/test1"
+          propagateUserToken: true
+        - id: "third-party2"
+          url: "http://thirdparty2:8090/test2"
+          propagateUserToken: false
 ....
 
 The name to use for the third-party is the publisherId of the parent card.
