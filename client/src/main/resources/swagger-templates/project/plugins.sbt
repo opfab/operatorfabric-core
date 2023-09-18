@@ -1,4 +1,4 @@
-addSbtPlugin("com.eed3si9n" % "sbt-assembly" % "2.1.1")
+addSbtPlugin("com.eed3si9n" % "sbt-assembly" % "2.1.3")
 
 libraryDependencies <+= sbtVersion(v => v match {
   case "0.11.0" => "com.github.siasia" %% "xsbt-web-plugin" % "0.12.0-0.2.11.1"
