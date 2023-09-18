@@ -23,11 +23,11 @@ operatorfabric:
           topicname: m_opfab-card-commands_dev
         response-card:
           topicname: m_opfab-card-response_dev
-external-recipients:
-  recipients:
-    - id:  "api_test_externalRecipient1"
-      url: "http://localhost:8090/test"
-      propagateUserToken : true 
-    - id:  "camunda1"
-      url: "kafka:"
-      propagateUserToken: false 
+    external-recipients:
+      recipients:
+        - id:  "api_test_externalRecipient1"
+          url: "http://localhost:8090/test"
+          propagateUserToken : true 
+        - id:  "camunda1"
+          url: "kafka:"
+          propagateUserToken: false 

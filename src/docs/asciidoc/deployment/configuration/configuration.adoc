@@ -137,14 +137,16 @@ are to be returned via Kafka by setting the `external-recipients` in the `cards-
 
 [source, yaml]
 ----
-external-recipients:
-  recipients: 
-    - id: "processAction"
-      url: "http://localhost:8090/test"
-      propagateUserToken: true
-    - id: "mykafka"
-      url: "kafka:topicname"
-      propagateUserToken: false
+operatorfabric:
+  cards-publication:
+    external-recipients:
+      recipients: 
+        - id: "processAction"
+          url: "http://localhost:8090/test"
+          propagateUserToken: true
+        - id: "mykafka"
+          url: "kafka:topicname"
+          propagateUserToken: false
 
 ----
 
