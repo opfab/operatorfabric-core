@@ -54,8 +54,8 @@ export class ExternalAppIFrameView {
         const menuEntryId = splitedRoute[2].split('?')[0];
         const menuEntryParams = splitedRoute[2].split('?')[1];
         const deeplink = splitedRoute.slice(3).join('/');
-        const deeplinkWithoutParams = deeplink?.split('?')[0]
-        const deeplinkParams = deeplink?.split('?')[1]
+        const deeplinkWithoutParams = deeplink?.split('?')[0];
+        const deeplinkParams = deeplink?.split('?')[1];
 
         this.configService.queryMenuEntryURL(menuId, menuEntryId).subscribe((menuUrl) => {
             let url = menuUrl;
