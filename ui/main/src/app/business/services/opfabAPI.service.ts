@@ -139,7 +139,9 @@ export class OpfabAPIService {
                 '#/businessconfigparty/' +
                 encodeURIComponent(encodeURIComponent(menuId)) +
                 '/' +
-                encodeURIComponent(encodeURIComponent(menuItemId));
+                encodeURIComponent(encodeURIComponent(menuItemId)) +
+                '/';
+
             if (urlExtension) newUrl += encodeURIComponent(encodeURIComponent(urlExtension));
             document.location.href = newUrl;
         };
