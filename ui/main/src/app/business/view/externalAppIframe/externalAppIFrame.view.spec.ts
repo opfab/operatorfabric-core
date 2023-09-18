@@ -60,6 +60,9 @@ describe('ExternalAppIFrame view ', () => {
         const userService = new UserService(mockUserServer, logService, new AlertMessageService());
         const menuService = new MenuService(configService, userService, logService);
         globalStyleService = new GlobalStyleService(new UserPreferencesService(), configService, menuService);
+        
+        // Mock method not supported in test context
+        history.replaceState = () => {};
     });
 
     // menu1/entry1 ==> https://test/ ==> https://test/?opfab_theme=DAY
