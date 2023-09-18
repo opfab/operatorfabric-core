@@ -11,10 +11,12 @@ import {ConfigService} from 'app/business/services/config.service';
 import {GlobalStyleService} from 'app/business/services/global-style.service';
 import {RouterStore} from 'app/business/store/router.store';
 import {Observable, ReplaySubject, skip, Subject, takeUntil} from 'rxjs';
+import {environment} from '@env/environment';
 
 export class ExternalAppIFrameView {
     urlSubject: Subject<string> = new ReplaySubject<string>(1);
     unsubscribe$: Subject<void> = new Subject<void>();
+    private businessConfigUrl = `${environment.url}/#businessconfigparty`;
 
     constructor(
         private configService: ConfigService,
@@ -64,7 +66,13 @@ export class ExternalAppIFrameView {
             url = this.addParamsToUrl(url, deeplinkParams);
             url = this.addOpfabThemeParamToUrl(url);
             this.urlSubject.next(url);
+            this.removeParamsFromCurrentURLInBrowserNavigationBar(menuId,menuEntryId);
         });
+    }
+
+
+    private removeParamsFromCurrentURLInBrowserNavigationBar(menuId:string,menuEntryId:string) {
+        history.replaceState({},'',this.businessConfigUrl + "/" + menuId + "/" + menuEntryId + "/" );
     }
 
     private addParamsToUrl(url, params) {
