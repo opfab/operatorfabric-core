@@ -24,7 +24,11 @@ export class OpfabAPIService {
     public templateInterface: any;
     public userCardTemplateInterface: any;
 
-    constructor(private entityService: EntitiesService, private businessDataService: BusinessDataService,private translationService: TranslationService) {
+    constructor(
+        private entityService: EntitiesService,
+        private businessDataService: BusinessDataService,
+        private translationService: TranslationService
+    ) {
         this.initCurrentCard();
         this.initCurrentUserCard();
     }
@@ -42,7 +46,9 @@ export class OpfabAPIService {
             isResponseLocked: false,
             displayLoadingSpinner: function () {},
             hideLoadingSpinner: function () {},
-            applyChildCards: function() { self.templateInterface.setChildCards(self.currentCard.childCards)}
+            applyChildCards: function () {
+                self.templateInterface.setChildCards(self.currentCard.childCards);
+            }
         };
     }
 
@@ -50,22 +56,22 @@ export class OpfabAPIService {
         this.currentUserCard = {
             editionMode: null,
             endDate: null,
-            expirationDate : null,
+            expirationDate: null,
             initialSeverity: null,
             lttd: null,
-            processId : null,
+            processId: null,
             state: null,
             startDate: null,
             userEntityChildCard: null,
             selectedEntityRecipients: null,
             selectedEntityForInformationRecipients: null,
-            setInitialSelectedRecipients: function(recipients) {},
-            setInitialSelectedRecipientsForInformation: function(recipients) {},
-            setSelectedRecipients: function(recipients) {},
-            setSelectedRecipientsForInformation: function(recipients) {},
+            setInitialSelectedRecipients: function (recipients) {},
+            setInitialSelectedRecipientsForInformation: function (recipients) {},
+            setSelectedRecipients: function (recipients) {},
+            setSelectedRecipientsForInformation: function (recipients) {},
             setDropdownEntityRecipientList: function (recipients) {},
             setDropdownEntityRecipientForInformationList: function (recipients) {}
-        }
+        };
     }
 
     public initTemplateInterface() {
@@ -103,8 +109,6 @@ export class OpfabAPIService {
         this.userCardTemplateInterface = {
             setEntityUsedForSendingCard: function (senderEntity) {},
 
-
-
             getSpecificCardInformation: function () {
                 console.log(
                     new Date().toISOString(),
@@ -112,7 +116,7 @@ export class OpfabAPIService {
                 );
                 return {valid: false, errorMsg: 'Impossible to respond due to a technical error in the template'};
             }
-        }
+        };
     }
 
     public initAPI() {
@@ -146,10 +150,9 @@ export class OpfabAPIService {
             document.location.href = newUrl;
         };
 
-        opfab.utils.getTranslation = function (key,params) {
-            return self.translationService.getTranslation(key,params)
-        }
-
+        opfab.utils.getTranslation = function (key, params) {
+            return self.translationService.getTranslation(key, params);
+        };
 
         this.initUserApi();
         this.initCurrentCardApi();
@@ -231,7 +234,6 @@ export class OpfabAPIService {
         opfab.currentCard.listenToChildCards = function (listener) {
             self.templateInterface.setChildCards = listener;
         };
-
 
         opfab.currentCard.listenToLttdExpired = function (listener) {
             self.templateInterface.setLttdExpired = listener;
@@ -315,21 +317,22 @@ export class OpfabAPIService {
         opfab.currentUserCard.setDropdownEntityRecipientForInformationList = function (recipients) {
             self.currentUserCard.setDropdownEntityRecipientForInformationList(recipients);
         };
-        
+
         opfab.currentUserCard.setInitialEndDate = function (endDate) {
-            if (opfab.currentUserCard.getEditionMode() === 'CREATE') self.currentUserCard.endDate  = endDate;
+            if (opfab.currentUserCard.getEditionMode() === 'CREATE') self.currentUserCard.endDate = endDate;
         };
 
         opfab.currentUserCard.setInitialExpirationDate = function (expirationDate) {
-            if (opfab.currentUserCard.getEditionMode() === 'CREATE') self.currentUserCard.expirationDate  = expirationDate;
+            if (opfab.currentUserCard.getEditionMode() === 'CREATE')
+                self.currentUserCard.expirationDate = expirationDate;
         };
 
         opfab.currentUserCard.setInitialLttd = function (lttd) {
-            if (opfab.currentUserCard.getEditionMode() === 'CREATE') self.currentUserCard.lttd  = lttd;
+            if (opfab.currentUserCard.getEditionMode() === 'CREATE') self.currentUserCard.lttd = lttd;
         };
 
         opfab.currentUserCard.setInitialStartDate = function (startDate) {
-            if (opfab.currentUserCard.getEditionMode() === 'CREATE') self.currentUserCard.startDate  = startDate;
+            if (opfab.currentUserCard.getEditionMode() === 'CREATE') self.currentUserCard.startDate = startDate;
         };
 
         opfab.currentUserCard.setInitialSeverity = function (initialSeverity) {
