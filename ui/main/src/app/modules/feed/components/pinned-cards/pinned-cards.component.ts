@@ -79,7 +79,7 @@ export class PinnedCardsComponent implements OnInit, OnDestroy, OnChanges {
             .filter((card) => {
                 const processDefinition = this.processesService.getProcess(card.process);
                 return (
-                    processDefinition.states.get((card.state)).automaticPinWhenAcknowledged &&
+                    processDefinition.states.get((card.state))?.automaticPinWhenAcknowledged &&
                     card.hasBeenAcknowledged &&
                     (!card.endDate || card.endDate > Date.now())
                 );
