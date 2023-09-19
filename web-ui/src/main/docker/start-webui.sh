@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Copyright (c) 2018-2022, RTE (http://www.rte-france.com)
+# Copyright (c) 2018-2023, RTE (http://www.rte-france.com)
 # See AUTHORS.txt
 # This Source Code Form is subject to the terms of the Mozilla Public
 # License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -33,8 +33,6 @@ echo "nginx_conf_path_personal: $nginx_conf_path_personal"
 echo "defaultconf_default: ${defaultconf_default}"
 echo "defaultconf_personal: ${defaultconf_personal}"
 
-mkdir /personal-conf
-mkdir /personal-conf/conf.d
 
 if grep -qe "$resolver_replaced" $defaultconf_default
 then
@@ -46,8 +44,14 @@ fi
 echo "The resolver in the personal default.conf:"
 grep -e "$resolver_replaced" $defaultconf_personal
 
-cat $nginx_conf_path_default/nginx.conf > $nginx_conf_path_personal/nginx.conf
+cat $nginx_conf_path_default/nginx.conf | sed "s#/var/run/nginx.pid#/var/log/nginx/nginx.pid#" > $nginx_conf_path_personal/nginx.conf
+
+
+echo "The nginx.pid path in the personal nginx.conf file:"
+grep "nginx.pid" $nginx_conf_path_personal/nginx.conf
+
 sed -i "s/$(echo $nginx_conf_path_default | sed 's/\//\\\//g')\/conf\.d/$(echo $nginx_conf_path_personal | sed 's/\//\\\//g')\/conf\.d/" $nginx_conf_path_personal/nginx.conf
+
 
 echo "The conf.d path in the personal nginx.conf file:"
 grep "conf.d" $nginx_conf_path_personal/nginx.conf
