@@ -17,7 +17,7 @@
 	"endDate" : ${current_date_in_milliseconds_from_epoch_plus_8hours} ,
 	"summary" : {"key" : "messageState.summary", "parameters" : {"summary": "France-England's interconnection is 100% operational / Result of the maintenance is <OK>"}},
 	"title" : {"key" : "messageState.title"},
-	"data" : {"message": "France-England's interconnection is 100% operational / Result of the maintenance is <OK>"},
+	"data" : {"richMessage": "{\"ops\":[{\"insert\":\"France-England's interconnection is 100% operational / Result of the maintenance is <OK>\\n\"}]}"},
 	"timeSpans" : [
 		{"start" :${current_date_in_milliseconds_from_epoch_plus_2hours}},
 		{"start" : ${current_date_in_milliseconds_from_epoch_plus_8hours}}

@@ -9,9 +9,10 @@
 
         <div class="opfab-textarea">
             <label> MESSAGE </label>
-            <textarea id="message" name="message" placeholder="Write something.."
-                style="width:100%">{{card.data.message}}</textarea>
+            <opfab-richtext-editor id="message">{{card.data.richMessage}}</opfab-richtext-editor>
         </div>
+
+    
 
     <!-- Hidden attribute for cypress tests -->
     <!-- remove them if you use this template as example -->
@@ -29,38 +30,41 @@
             <input id="hidden_sender" name="hidden_sender">
         </div>
 
-
-
 <script>
-    
-    // The two following lines are used for cypress test 
-    // remove them if you use this template as example 
-    document.getElementById("hidden_process").value = opfab.currentUserCard.getProcessId();
-    document.getElementById("hidden_state").value = opfab.currentUserCard.getState();
+    init();
 
-    opfab.currentUserCard.registerFunctionToGetSpecificCardInformation(() => {
-        const message = document.getElementById('message').value;
-        let summaryParameter = message.slice(0, 100);
-        if (message.length > summaryParameter.length)
-            summaryParameter += '...';
+    function init() {
 
-        const card = {
-        summary : {key : "messageState.summary", parameters : {"summary": summaryParameter}},
-		title : {key : "messageState.title"},
-        data : {message: message},
-        entitiesAllowedToEdit: ['ENTITY_FR'],
-        };
-        if (message.length<1) return { valid:false , errorMsg:'You must provide a message'}
-        return {
-            valid: true,
-            card: card
-        };
+        const quillEditor = document.getElementById('message');
 
-    });
+        // The two following lines are used for cypress test 
+        // remove them if you use this template as example 
+        document.getElementById("hidden_process").value = opfab.currentUserCard.getProcessId();
+        document.getElementById("hidden_state").value = opfab.currentUserCard.getState();
 
-    // keep deprecated method for cypress test only 
-    usercardTemplateGateway.setEntityUsedForSendingCard = function(senderEntity) {
-        document.getElementById("hidden_sender").value = senderEntity;
-    };
+        opfab.currentUserCard.registerFunctionToGetSpecificCardInformation(() => {
+
+            let summaryParameter = "Message received"
+
+            const card = {
+            summary : {key : "messageState.summary", parameters : {"summary": summaryParameter}},
+            title : {key : "messageState.title"},
+            data : {  richMessage: quillEditor.getContents()},
+            entitiesAllowedToEdit: ['ENTITY_FR']
+            }
+            if (quillEditor.isEmpty()) return { valid:false , errorMsg:'You must provide a message'}
+
+            return {
+                valid: true,
+                card: card
+            };
+
+        })
+
+        // keep deprecated method for cypress test only 
+        usercardTemplateGateway.setEntityUsedForSendingCard = function(senderEntity) {
+            document.getElementById("hidden_sender").value = senderEntity;
+        }
+    }
 
 </script>

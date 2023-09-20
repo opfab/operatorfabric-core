@@ -35,7 +35,8 @@
               "node_modules/tooltip-plugin/dist/tooltip.min.css",
               "node_modules/ol/ol.css",
               "src/scss/styles.scss",
-              "src/shared/css/opfab-application.css"
+              "src/shared/css/opfab-application.css",
+              "node_modules/quill/dist/quill.snow.css"
             ],
             "scripts": [
               "node_modules/virtual-select-plugin/dist/virtual-select.min.js",
@@ -45,7 +46,8 @@
               "node_modules/chart.js/dist/chart.umd.js",
               "node_modules/chartjs-adapter-date-fns/dist/chartjs-adapter-date-fns.bundle.min.js",
               "src/assets/js/opfab.js",
-              "src/shared/js/opfab-application.js"
+              "src/shared/js/opfab-application.js",
+              "node_modules/quill/dist/quill.js"
             ],
             "allowedCommonJsDependencies": [
               "rxjs/internal/Subject",

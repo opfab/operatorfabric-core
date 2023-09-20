@@ -11,9 +11,18 @@
 <br/>
 
 <div class="template-style">
-<span opfab-tooltip-text="After reading the message, please acknowledge the card." class="opfab-tooltip">{{card.data.message}}</span>
+<span id="richMessage"></span>
 </div>
+
 
 <br/>
 <br/>
 <br/>
+<script>
+    loadData();
+
+    function loadData() {
+        document.getElementById("richMessage").innerHTML = opfab.richTextEditor.getHtml("{{card.data.richMessage}}");
+    }
+
+</script>

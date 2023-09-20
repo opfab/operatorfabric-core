@@ -223,7 +223,7 @@ describe ('User action logs page',()=>{
     function sendMessageCard() {
         opfab.navigateToUserCard();
         // Send base example message
-        cy.get('#message').should('be.visible').type('test message');
+        cy.get('#message').find('div').eq(0).should('be.visible').type('test message');
         usercard.selectRecipient('Control Center FR South');
         usercard.previewThenSendCard();
     }

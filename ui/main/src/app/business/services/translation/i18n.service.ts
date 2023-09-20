@@ -48,6 +48,7 @@ export class I18nService {
         moment.locale(this._locale);
         this.translationService.setLang(this._locale);
         this.setTranslationForMultiSelectUsedInTemplates();
+        this.setTranslationForRichTextEditor();
     }
 
     public static setTranslationForMultiSelectUsedInTemplates() {
@@ -55,6 +56,19 @@ export class I18nService {
         opfab.multiSelect.clearButtonText = this.translationService.getTranslation('multiSelect.clearButtonText');
         opfab.multiSelect.noOptionsText = this.translationService.getTranslation('multiSelect.noOptionsText');
         opfab.multiSelect.noSearchResultsText = this.translationService.getTranslation('multiSelect.noSearchResultsText');
+    }
+
+    
+    public static setTranslationForRichTextEditor() {
+        const root = document.documentElement;
+        root.style.setProperty('--opfab-richtext-link-enter', "\"" + this.translationService.getTranslation("userCard.richTextEditor.enterLink") + "\"");
+        root.style.setProperty('--opfab-richtext-link-visit', "\"" + this.translationService.getTranslation("userCard.richTextEditor.visitLink") + "\"");
+
+        root.style.setProperty('--opfab-richtext-link-save', "\"" + this.translationService.getTranslation("userCard.richTextEditor.saveLink") + "\"");
+    
+        root.style.setProperty('--opfab-richtext-link-edit', "\"" + this.translationService.getTranslation("userCard.richTextEditor.editLink") + "\"");
+        root.style.setProperty('--opfab-richtext-link-remove', "\"" + this.translationService.getTranslation("userCard.richTextEditor.removeLink") + "\"");
+
     }
 
     public static get locale() {

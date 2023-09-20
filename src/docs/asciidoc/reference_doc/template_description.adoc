@@ -711,6 +711,62 @@ It is possible to use the component also as single value select. The advantage o
 ....
 
 
+== Rich Text Editor
+
+OperatorFabric provides a rich text editor component based on https://github.com/quilljs/quill.
+The component provides the following text formatting tools :
+
+- Headings
+- Color
+- Bold
+- Underline
+- Italics
+- Link
+- Align
+- Ordered list
+- Bullet list 
+- Indent       
+
+To use the rich text editor component just add a <opfab-richtext-editor> tag in the template using the OperatorFabric style. From javascript it is then possible to get formatted text content.
+
+....
+
+        <div class="opfab-textarea">
+            <label> MESSAGE </label>
+            <opfab-richtext-editor id="quill">{{card.data.richMessage}}</opfab-richtext-editor>
+        </div>
+
+ <script>
+
+  const quillEditor = document.getElementById('quill');
+
+  opfab.currentUserCard.registerFunctionToGetSpecificCardInformation(() => {
+
+        const editorContent = quillEditor.getContents(); 
+        const editorHtml = quillEditor.getHtml();
+  ...
+  
+....
+
+The editor use a custom JSON format called Delta to store the formatted content. To get the JSON content as a string you can call the `getContents()` method. To get the HTML formatted text you can call the `getHtml()` method.
+
+To set the initial content of the editor you can either call the `setContents(delta)` method from javascript  providing the content as Delta JSON string or directly in the template by putting the Delta JSON string as content of the <opfab-richtext-editor> tag.
+ 
+
+To get a HTML representation from a Delta JSON string you can call the `opfab.richTextEditor.getHtml(delta)` method. For example:
+
+....
+<span id="richMessage"></span>
+
+<script>
+
+  document.getElementById("richMessage").innerHTML = opfab.richTextEditor.getHtml("{{card.data.richMessage}}");
+  ...
+</script>
+
+....
+
+
 == Charts
 
 The library https://www.chartjs.org/[charts.js] is integrated in OperatorFabric, it means it's possible to show charts in cards, you can find a bundle example in the operator fabric git (https://github.com/opfab/operatorfabric-core/tree/develop/src/test/resources/bundles/defaultProcess_V1[src/test/resources/bundle/defaultProcess_V1]).

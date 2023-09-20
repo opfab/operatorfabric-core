@@ -80,6 +80,7 @@ export class ServicesConfig {
                 logger.info('opfab translation loaded for locales: ' + locales, LogOption.LOCAL_AND_REMOTE);
                 I18nService.loadTranslationForMenu();
                 I18nService.setTranslationForMultiSelectUsedInTemplates();
+                I18nService.setTranslationForRichTextEditor();
                 this.loadDone.next(true);
                 this.loadDone.complete();
             });
