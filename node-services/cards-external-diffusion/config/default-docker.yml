@@ -1,6 +1,4 @@
-opfab:
-  login: admin
-  password: test
+
 operatorfabric:
   rabbitmq:
     host: rabbitmq
@@ -11,6 +9,9 @@ operatorfabric:
     authToken: "http://web-ui/auth/token"
     users: "http://users:2103"
     cardsConsultation: "http://cards-consultation:2104"
+  internalAccount:
+    login: opfab
+    password: test
   logConfig:
     logLevel: info
   mail:
@@ -22,9 +23,6 @@ operatorfabric:
   cardsExternalDiffusion:
     adminPort: 2106
     activeOnStartup: true
-    opfab:
-      login: admin
-      password: test
     defaultConfig:
       mailFrom: opfab@localhost.it
       subjectPrefix: 'Opfab card received '

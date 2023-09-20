@@ -55,11 +55,8 @@ operatorfabric.users.default:
       entities: ["ENTITY2_EU"]
     - login: publisher_test
       groups: ["Dispatcher", "ReadOnly", "Manager"]
-    - login: service_supervisor
+    - login: opfab
       groups: ["Dispatcher", "ReadOnly", "Manager","ADMIN"]
-    - login: opfab_internal_account
-      groups: []
-      entities: []
   groups:
     - id: ADMIN
       name: ADMINISTRATORS

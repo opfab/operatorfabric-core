@@ -11,6 +11,9 @@ operatorfabric:
     authToken: "http://web-ui/auth/token"
     users: "http://users:2103"
     cardsPublication: "http://cards-publication:2102"
+  internalAccount:
+    login: opfab
+    password: test
   logConfig:
     logLevel: "info"
 
@@ -18,6 +21,3 @@ operatorfabric:
     adminPort : 2107
     activeOnStartup : true
     checkPeriodInSeconds : 5
-    opfab:
-      login: "opfab_internal_account"
-      password: "test"

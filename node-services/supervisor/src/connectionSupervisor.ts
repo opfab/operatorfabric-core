@@ -34,8 +34,8 @@ const authenticationService = new AuthenticationService()
 
 
 const opfabServicesInterface = new OpfabServicesInterface()
-    .setLogin(config.get('opfab.login'))
-    .setPassword(config.get('opfab.password'))
+    .setLogin(config.get('operatorfabric.internalAccount.login'))
+    .setPassword(config.get('operatorfabric.internalAccount.password'))
     .setOpfabUsersUrl(config.get('operatorfabric.servicesUrls.users'))
     .setOpfabCardsConsultationUrl(config.get('operatorfabric.servicesUrls.cardsConsultation'))
     .setOpfabCardsPublicationUrl(config.get('operatorfabric.servicesUrls.cardsPublication'))

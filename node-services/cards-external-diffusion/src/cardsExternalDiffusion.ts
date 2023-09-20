@@ -41,8 +41,8 @@ const authenticationService = new AuthenticationService()
 const mailService = new SendMailService(config.get('operatorfabric.mail'));
     
 const opfabServicesInterface = new CardsExternalDiffusionOpfabServicesInterface()
-    .setLogin(config.get('operatorfabric.cardsExternalDiffusion.opfab.login'))
-    .setPassword(config.get('operatorfabric.cardsExternalDiffusion.opfab.password'))
+    .setLogin(config.get('operatorfabric.internalAccount.login'))
+    .setPassword(config.get('operatorfabric.internalAccount.password'))
     .setOpfabUsersUrl(config.get('operatorfabric.servicesUrls.users'))
     .setOpfabCardsConsultationUrl(config.get('operatorfabric.servicesUrls.cardsConsultation'))
     .setOpfabGetTokenUrl(config.get('operatorfabric.servicesUrls.authToken'))

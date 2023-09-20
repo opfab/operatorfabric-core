@@ -728,9 +728,9 @@
     "groups" : [ ]
   },
   {
-    "id" : "193c4556-1162-33n0-srvcsuperv",
+    "id" : "193c4556-1162-33n0-opfab",
     "createdTimestamp" : 1557499736343,
-    "username" : "service_supervisor",
+    "username" : "opfab",
     "enabled" : true,
     "totp" : false,
     "emailVerified" : false,
@@ -738,39 +738,6 @@
     "lastName" : "",
     "attributes" : {
       "groups" : ["Dispatcher;ReadOnly;Manager;ADMIN"]
-    },
-    "credentials" : [ {
-      "type" : "password",
-      "hashedSaltedValue" : "GMBbWuLbTQCAjzm46uXhvMXzkYsvrEt9zCdOafiR36ECpkHznpCP3T6wiEgfmNHHnuERdRWn5gYmAIS3A1oNWQ==",
-      "salt" : "TnbUjMTW+Iv2JiYwXAzfOw==",
-      "hashIterations" : 27500,
-      "counter" : 0,
-      "algorithm" : "pbkdf2-sha256",
-      "digits" : 0,
-      "period" : 0,
-      "createdDate" : 1557499745015,
-      "config" : { }
-    } ],
-    "disableableCredentialTypes" : [ "password" ],
-    "requiredActions" : [ ],
-    "realmRoles" : [ "uma_authorization", "offline_access" ],
-    "clientRoles" : {
-      "account" : [ "view-profile", "manage-account" ]
-    },
-    "notBefore" : 0,
-    "groups" : [ ]
-  },
-  {
-    "id" : "123c4770-1762-38n9-internal",
-    "createdTimestamp" : 1557499736343,
-    "username" : "opfab_internal_account",
-    "enabled" : true,
-    "totp" : false,
-    "emailVerified" : false,
-    "firstName" : "",
-    "lastName" : "",
-    "attributes" : {
-      "groups" : []
     },
     "credentials" : [ {
       "type" : "password",

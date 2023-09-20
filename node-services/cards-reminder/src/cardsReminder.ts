@@ -52,8 +52,8 @@ const rruleReminderService = new RRuleReminderService()
     .setDatabaseService(rrRuleRemindDatabaseService);
 
 const opfabServicesInterface = new CardsReminderOpfabServicesInterface()
-    .setLogin(config.get('operatorfabric.cardsReminder.opfab.login'))
-    .setPassword(config.get('operatorfabric.cardsReminder.opfab.password'))
+    .setLogin(config.get('operatorfabric.internalAccount.login'))
+    .setPassword(config.get('operatorfabric.internalAccount.password'))
     .setOpfabCardsPublicationUrl(config.get('operatorfabric.servicesUrls.cardsPublication'))
     .setOpfabUsersUrl(config.get('operatorfabric.servicesUrls.users'))
     .setOpfabGetTokenUrl(config.get('operatorfabric.servicesUrls.authToken'))
