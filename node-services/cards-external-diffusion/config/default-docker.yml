@@ -1,7 +1,6 @@
 opfab:
   login: admin
   password: test
-  getTokenUrl: "http://web-ui/auth/token"
 operatorfabric:
   rabbitmq:
     host: rabbitmq
@@ -9,6 +8,7 @@ operatorfabric:
     username: guest
     password: guest
   servicesUrls:
+    authToken: "http://web-ui/auth/token"
     users: "http://users:2103"
     cardsConsultation: "http://cards-consultation:2104"
   logConfig:

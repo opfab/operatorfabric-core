@@ -1,5 +1,3 @@
-opfab: 
-  getTokenUrl: "http://web-ui/auth/token"
 
 operatorfabric:
   rabbitmq:
@@ -10,6 +8,7 @@ operatorfabric:
   mongodb:
     database: "operator-fabric"
   servicesUrls:
+    authToken: "http://web-ui/auth/token"
     users: "http://users:2103"
     cardsPublication: "http://cards-publication:2102"
   logConfig:
