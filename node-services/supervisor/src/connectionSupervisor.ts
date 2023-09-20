@@ -39,7 +39,7 @@ const opfabServicesInterface = new OpfabServicesInterface()
     .setOpfabUsersUrl(config.get('operatorfabric.servicesUrls.users'))
     .setOpfabCardsConsultationUrl(config.get('operatorfabric.servicesUrls.cardsConsultation'))
     .setOpfabCardsPublicationUrl(config.get('operatorfabric.servicesUrls.cardsPublication'))
-    .setOpfabGetTokenUrl(config.get('opfab.getTokenUrl'))
+    .setOpfabGetTokenUrl(config.get('operatorfabric.servicesUrls.authToken'))
     .setAuthenticationService(authenticationService)
     .setLogger(logger);
 

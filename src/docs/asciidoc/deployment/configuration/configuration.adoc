@@ -349,7 +349,7 @@ Node services can be configured with the following properties:
 
 |===
 |name|default|mandatory?|Description
-|opfab.getTokenUrl||yes|Authentication service URL
+|operatorfabric.servicesUrls.authToken||yes|Authentication service URL
 |operatorfabric.servicesUrls.users||yes|Users service URL
 |operatorfabric.servicesUrls.cardsPublication||yes|Cards publication service URL
 |operatorfabric.servicesUrls.cardsConsultation||yes|Cards consultation service URL

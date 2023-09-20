@@ -45,7 +45,7 @@ const opfabServicesInterface = new CardsExternalDiffusionOpfabServicesInterface(
     .setPassword(config.get('operatorfabric.cardsExternalDiffusion.opfab.password'))
     .setOpfabUsersUrl(config.get('operatorfabric.servicesUrls.users'))
     .setOpfabCardsConsultationUrl(config.get('operatorfabric.servicesUrls.cardsConsultation'))
-    .setOpfabGetTokenUrl(config.get('opfab.getTokenUrl'))
+    .setOpfabGetTokenUrl(config.get('operatorfabric.servicesUrls.authToken'))
     .setEventBusConfiguration(config.get('operatorfabric.rabbitmq'))
     .setAuthenticationService(authenticationService)
     .setLogger(logger);

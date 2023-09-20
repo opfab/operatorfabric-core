@@ -1,10 +1,10 @@
 opfab:
   login: service_supervisor
   password: test
-  getTokenUrl: "http://localhost:2002/auth/token"
 
 operatorfabric:
   servicesUrls:
+    authToken: "http://127.0.0.1:2002/auth/token"
     users: "http://127.0.0.1:2103"
     cardsPublication: "http://127.0.0.1:2102"
     cardsConsultation: "http://127.0.0.1:2104"

@@ -1,9 +1,9 @@
 opfab:
   login: service_supervisor
   password: test
-  getTokenUrl: "http://web-ui/auth/token"
 operatorfabric:
   servicesUrls:
+    authToken: "http://web-ui/auth/token"
     users: "http://users:2103"
     cardsPublication: "http://cards-publication:2102"
     cardsConsultation: "http://cards-consultation:2104"
