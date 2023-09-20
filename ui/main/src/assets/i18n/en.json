@@ -367,7 +367,14 @@
         "impossibleToDeleteCard": "Impossible to delete card for technical reasons"
       }
     },
-    "sendingCardInProgress": "Sending card in progress..."
+    "sendingCardInProgress": "Sending card in progress...",
+    "richTextEditor": {
+      "enterLink": "Enter link",
+      "visitLink": "Visit link",
+      "saveLink": "Save",
+      "editLink": "Edit",
+      "removeLink": "Remove"
+    }
   },
   "response": {
     "btnValidate": "VALIDATE ANSWER",

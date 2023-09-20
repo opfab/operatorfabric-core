@@ -675,3 +675,139 @@ tag-input {
     background: var(--opfab-navbar-color-hover);
     mask: url(../assets/images/icons/help.svg);
 }
+
+// QUILLJS STYLE
+.ql-snow .ql-editor {
+    min-height: 100px;
+}
+
+.ql-snow .ql-stroke {
+    stroke: var(--opfab-text-color) !important;
+}
+
+.ql-snow .ql-picker {
+    color: var(--opfab-text-color) !important;
+}
+
+.ql-snow .ql-picker.ql-expanded .ql-picker-options {
+    z-index: 100 !important;
+}
+
+.ql-snow .ql-tooltip {
+    
+    z-index: 100 !important;
+}
+
+.ql-container.ql-snow {
+    border: 0px !important;
+}
+
+.ql-toolbar.ql-snow {
+    border: 1px solid var(--opfab-form-border-color) !important;
+    border-radius: 3px;
+}
+
+.ql-align-center {
+    text-align: center;
+}
+
+.ql-align-right {
+    text-align: right;
+}
+
+.ql-align-left {
+    text-align: left;
+}
+
+.ql-align-justify {
+    text-align: justify;
+}
+
+.ql-indent-1 {
+    margin-left: 25px;
+}
+
+li.ql-indent-1 {
+    list-style-type: lower-latin;
+}
+
+.ql-indent-2 {
+    margin-left: 50px;
+}
+
+li.ql-indent-2 {
+    list-style-type: lower-roman;
+}
+
+.ql-indent-3 {
+    margin-left: 150px;
+}
+
+li.ql-indent-3 {
+    list-style-type: decimal;
+}
+
+.ql-indent-4 {
+    margin-left: 200px;
+}
+
+li.ql-indent-4 {
+    list-style-type: lower-latin;
+}
+
+.ql-indent-5 {
+    margin-left: 250px;
+}
+
+li.ql-indent-5 {
+    list-style-type: lower-roman;
+}
+
+.ql-indent-6 {
+    margin-left: 300px;
+}
+
+li.ql-indent-6 {
+    list-style-type: decimal;
+}
+
+.ql-indent-7 {
+    margin-left: 350px;
+}
+
+li.ql-indent-7 {
+    list-style-type: lower-latin;
+}
+
+.ql-indent-8 {
+    margin-left: 400px;
+}
+
+li.ql-indent-8 {
+    list-style-type: lower-roman;
+}
+
+// END QUILLJS STYLE
+
+// QUILLJS TRANSLATION: quill.js labels are defined inside css.
+// Need to use variables to handle internationalization
+.ql-snow .ql-tooltip::before {
+    content: var(--opfab-richtext-link-visit) !important;
+}
+
+.ql-snow .ql-tooltip[data-mode=link]::before {
+    content: var(--opfab-richtext-link-enter) !important;
+}
+
+.ql-snow .ql-tooltip.ql-editing a.ql-action::after {
+    content: var(--opfab-richtext-link-save) !important;
+}
+
+.ql-snow .ql-tooltip a.ql-action::after {
+    content: var(--opfab-richtext-link-edit) !important;
+}
+
+.ql-snow .ql-tooltip a.ql-remove::before {
+    content: var(--opfab-richtext-link-remove) !important;
+}
+// END QUILLJS TRANSLATION

@@ -367,7 +367,14 @@
         "impossibleToDeleteCard": "Impossible de supprimer la carte pour des raisons techniques"
       }
     },
-    "sendingCardInProgress": "Envoi de la carte en cours..."
+    "sendingCardInProgress": "Envoi de la carte en cours...",
+    "richTextEditor": {
+      "enterLink": "Entrer le lien",
+      "visitLink": "Visiter le lien",
+      "saveLink": "Sauver",
+      "editLink": "Éditer",
+      "removeLink": "Supprimer"
+    }
   },
   "response": {
     "btnValidate": "VALIDER RÉPONSE",

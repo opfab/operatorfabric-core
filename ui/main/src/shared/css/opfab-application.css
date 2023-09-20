@@ -711,6 +711,7 @@ input:-webkit-autofill {
     /* reset defaults */
     bottom: initial;
     margin: initial;
+    content: attr(opfab-tooltip-text); /* here's the magic */
 
     /* set new values */
     top: 100%;
