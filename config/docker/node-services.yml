@@ -10,9 +10,6 @@ operatorfabric:
   cardsExternalDiffusion:
     adminPort: 2106
     activeOnStartup: true
-    opfab:
-      login: admin
-      password: test
     defaultConfig:
       mailFrom: opfab@localhost.it
       subjectPrefix: 'Opfab card received '
@@ -25,9 +22,6 @@ operatorfabric:
     adminPort: 2107
     activeOnStartup: true
     checkPeriodInSeconds: 5
-    opfab:
-      login: opfab_internal_account
-      password: test
   supervisor:
     adminPort: 2108
     activeOnStartup: false
@@ -41,7 +35,7 @@ operatorfabric:
         supervisors:
         - ENTITY1_FR
       disconnectedCardTemplate:
-        publisher: service_supervisor
+        publisher: opfab
         processVersion: '1'
         process: supervisor
         state: disconnectedEntity
@@ -58,7 +52,7 @@ operatorfabric:
         states:
         - processState
       unackCardTemplate:
-        publisher: service_supervisor
+        publisher: opfab
         processVersion: '1'
         process: supervisor
         state: unacknowledgedCards

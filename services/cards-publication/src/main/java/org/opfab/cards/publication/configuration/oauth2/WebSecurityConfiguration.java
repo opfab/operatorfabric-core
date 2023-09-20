@@ -66,7 +66,7 @@ public class WebSecurityConfiguration {
                         .requestMatchers(LOGGERS_PATH).hasRole(ADMIN_ROLE)
                         .requestMatchers("/cards/userCard/**").access(authenticatedAndIpAllowed())
                         .requestMatchers("/cards/translateCardField").access(authenticatedAndIpAllowed())
-                        .requestMatchers("/cards/resetReadAndAcks/**").access(hasAnyUsernameAndIpAllowed("opfab_internal_account"))
+                        .requestMatchers("/cards/resetReadAndAcks/**").access(hasAnyUsernameAndIpAllowed("opfab"))
                         .requestMatchers(HttpMethod.DELETE, "/cards").access(hasAnyRoleAndIpAllowed(ADMIN_ROLE))
                         .requestMatchers("/**").access(authenticatedAndIpAllowed())
                     );
@@ -76,7 +76,7 @@ public class WebSecurityConfiguration {
                         .requestMatchers(LOGGERS_PATH).hasRole(ADMIN_ROLE)
                         .requestMatchers("/cards/userCard/**").access(authenticatedAndIpAllowed())
                         .requestMatchers("/cards/translateCardField").access(authenticatedAndIpAllowed())
-                        .requestMatchers("/cards/resetReadAndAcks/**").access(hasAnyUsernameAndIpAllowed("opfab_internal_account"))
+                        .requestMatchers("/cards/resetReadAndAcks/**").access(hasAnyUsernameAndIpAllowed("opfab"))
                         .requestMatchers("/**").permitAll()
                     );
         }

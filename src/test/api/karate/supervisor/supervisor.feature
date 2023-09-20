@@ -7,7 +7,7 @@ Feature: Supervisor
     * def authTokenAsTSO = signIn.authToken
     * def signInAdmin = callonce read('../common/getToken.feature') { username: 'admin'}
     * def authTokenAdmin = signInAdmin.authToken
-    * def signInSupervisor = callonce read('../common/getToken.feature') { username: 'service_supervisor'}
+    * def signInSupervisor = callonce read('../common/getToken.feature') { username: 'opfab'}
     * def authTokenSupervisor = signInSupervisor.authToken
 
 

@@ -349,6 +349,8 @@ Node services can be configured with the following properties:
 
 |===
 |name|default|mandatory?|Description
+|operatorfabric.internalAccount.login||yes|user account used to call Opfab services
+|operatorfabric.internalAccount.password||yes|user password to call Opfab services
 |operatorfabric.servicesUrls.authToken||yes|Authentication service URL
 |operatorfabric.servicesUrls.users||yes|Users service URL
 |operatorfabric.servicesUrls.cardsPublication||yes|Cards publication service URL
@@ -368,8 +370,6 @@ Node services can be configured with the following properties:
 |operatorfabric.mongodb.uri||yes|MongoDB connection URI
 |operatorfabric.cardsExternalDiffusion.adminPort||yes|Listen port
 |operatorfabric.cardsExternalDiffusion.activeOnStartup||yes|Flag to start the notification service on startup
-|operatorfabric.cardsExternalDiffusion.opfab.login||yes|user account used to call Opfab services
-|operatorfabric.cardsExternalDiffusion.opfab.password||yes|user password to call Opfab services
 |operatorfabric.cardsExternalDiffusion.defaultConfig.mailFrom||yes|Mail from address
 |operatorfabric.cardsExternalDiffusion.defaultConfig.subjectPrefix||yes|Mail subject prefix
 |operatorfabric.cardsExternalDiffusion.defaultConfig.bodyPrefix|||Mail body prefix

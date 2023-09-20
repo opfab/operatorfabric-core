@@ -1,12 +1,12 @@
-opfab:
-  login: service_supervisor
-  password: test
 operatorfabric:
   servicesUrls:
     authToken: "http://web-ui/auth/token"
     users: "http://users:2103"
     cardsPublication: "http://cards-publication:2102"
     cardsConsultation: "http://cards-consultation:2104"
+  internalAccount:
+    login: opfab
+    password: test
   logConfig:
     logLevel: info
   supervisor:
@@ -20,7 +20,7 @@ operatorfabric:
         supervisors:
         - ENTITY1_FR
       disconnectedCardTemplate:
-        publisher: service_supervisor
+        publisher: opfab
         processVersion: '1'
         process: supervisor
         state: disconnectedEntity
@@ -37,7 +37,7 @@ operatorfabric:
         states:
         - processState
       unackCardTemplate:
-        publisher: service_supervisor
+        publisher: opfab
         processVersion: '1'
         process: supervisor
         state: unacknowledgedCards
