@@ -124,10 +124,11 @@ app.listen(adminPort, () => {
     logger.info(`Opfab cards reminder service listening on port ${adminPort}`);
 });
 
-logger.info('Application started');
+opfabServicesInterface.startListener();
 
 if (activeOnStartUp) {
     cardsReminderService.start();
-    opfabServicesInterface.startListener();
 }
+
+logger.info('Application started');
 
