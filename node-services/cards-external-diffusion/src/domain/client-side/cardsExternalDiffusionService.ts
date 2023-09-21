@@ -35,9 +35,7 @@ export default class CardsExternalDiffusionService {
             .setWindowInSecondsForCardSearch(serviceConfig.windowInSecondsForCardSearch)
             .setSecondsAfterPublicationToConsiderCardAsNotRead(serviceConfig.secondsAfterPublicationToConsiderCardAsNotRead);
 
-        this.checkRegularly().catch(error =>
-            this.logger.error("error during periodic check" + error)
-        );
+        this.checkRegularly();
     }
 
     setConfiguration(serviceConfig: ConfigDTO) {
@@ -50,7 +48,6 @@ export default class CardsExternalDiffusionService {
 
     public start() {
         this.active = true;
-        this.checkRegularly();
     }
 
     public stop() {
@@ -61,16 +58,14 @@ export default class CardsExternalDiffusionService {
         return this.active;
     }
 
-    private async checkRegularly() {
+    private checkRegularly() {
         if (this.active) {
-            this.logger.info("checkRegularly");
-            await this.cardsDiffusionControl.checkUnreadCards().catch(error =>
-                this.logger.error("error during periodic check" + error)
-            );
-            setTimeout(() => this.checkRegularly()
-            , this.checkPeriodInSeconds * 1000);
-
+            this.logger.info('checkRegularly');
+            this.cardsDiffusionControl
+                .checkUnreadCards()
+                .catch((error) => this.logger.error('error during periodic check' + error))
+                .finally(() => setTimeout(() => this.checkRegularly(), this.checkPeriodInSeconds * 1000));
         }
+        else setTimeout(() => this.checkRegularly(), this.checkPeriodInSeconds * 1000)
     }
-
 }
