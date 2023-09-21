@@ -252,6 +252,13 @@ The nginx configuration has been simplified as well, the best is to redefine you
  - /config/web-ui.json
  - /config/menu-ui.json
 
+We have also implemented data compression for the information supplied by the "businessconfig" service within the "nginx.conf" reference file. This is done by adding  in the location /businessconfig :
+
+```
+    gzip on;
+    gzip_types application/json;
+```
+
 
 The nginx conf is not loaded anymore in /usr/share/nginx/html/opfab in the docker but in /usr/share/nginx/html/config. You need to modify your volume configuration . For example in docker compose : 
 
