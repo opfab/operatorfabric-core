@@ -78,7 +78,7 @@ describe('User Card ', function () {
       usercard.checkEmitterSelectDoesNotExist();
       usercard.selectService('User card examples')
       usercard.selectProcess('Task Advanced');
-      cy.wait(100);
+      cy.waitDefaultTime();
       cy.get('#time').type('00:00');
       usercard.previewThenSendCard();    
 
