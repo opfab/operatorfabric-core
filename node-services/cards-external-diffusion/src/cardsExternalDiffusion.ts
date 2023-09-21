@@ -83,7 +83,6 @@ app.get('/start', (req, res) => {
         if (!isAdmin) 
             res.status(403).send();
         else {
-            opfabServicesInterface.startListener();
             cardsExternalDiffusionService.start();
             res.send('Start service');
         }
@@ -98,7 +97,6 @@ app.get('/stop', (req, res) => {
         else {
             logger.info('Stop card external diffusion service asked');
             cardsExternalDiffusionService.stop();
-            opfabServicesInterface.stopListener();
             res.send('Stop service');
         }
     })
@@ -132,9 +130,10 @@ app.listen(adminPort, () => {
     logger.info(`Opfab card external diffusion service listening on port ${adminPort}`);
 });
 
-logger.info('Application started');
+opfabServicesInterface.startListener();
 
 if (activeOnStartUp) {
-    opfabServicesInterface.startListener();
     cardsExternalDiffusionService.start();
 }
+
+logger.info('Application started');
