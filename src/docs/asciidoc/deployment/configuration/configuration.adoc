@@ -39,16 +39,46 @@ See link:{mongo_doc}connection-string/[mongo connection string] for the complete
 
 This configuration is mandatory (no default configuration is provided).
 
+
+=== RabbitMQ
+
+A rabbitMQ component is provided in opfab, it has a default configuration.
+
+ SECURITY WARNING : This default password is to be change if a rabbit port is exposed outside of docker network
+
+|===
+|Name|Default|Mandatory|Description
+|operatorfabric.rabbitmq.host|rabbitmq|no|RabbitMQ host address
+|operatorfabric.rabbitmq.port|5672|no|RabbitMQ listen port
+|operatorfabric.rabbitmq.username|guest|no|RabbitMQ username
+|operatorfabric.rabbitmq.password|guest|no|RabbitMQ password
+|===
+
+==== Internal account 
+
+
+The back service cards-reminder ,cards-diffusion and supervision need an internal account to communicate between opfab back services. Therefore, if you intend to utilize any of these services, it is necessary to create an Opfab technical account with ADMIN permissions and configure it
+|===
+|Name|Default|Mandatory|Description
+|operatorfabric.internalAccount.login|opfab|no|user account used to call Opfab services. 
+|operatorfabric.internalAccount.password||yes|user password to call Opfab services
+|===
+
 ==== Optional configuration values 
 
 |===
-|name|default|Description
+|Name|Default|Description
 
 
-|operatorfabric.servicesUrls.users|users:2103|Indicates where the Users service can be reached from the other services.
-|operatorfabric.servicesUrls.businessconfig|businessconfig:2100|Indicates where the Business service can be reached from the other services.
+|operatorfabric.servicesUrls.users|http://users:2103|Indicates where the Users service can be reached from the other services.
+|operatorfabric.servicesUrls.businessconfig|http://businessconfig:2100|Indicates where the Business service can be reached from the other services.
+|operatorfabric.servicesUrls.cardsPublication|http://cards-publication:2102|yes|Cards publication service URL
+|operatorfabric.servicesUrls.cardsConsultation|http://cards-consultation:2104|yes|Cards consultation service URL
+|operatorfabric.servicesUrls.authToken|http://web-ui/auth/token|Authentication service URL
 |operatorfabric.userActionLogActivated|yes|Indicates whether the user action log feature is enabled or not.
 |===
+
+
 
 === Service specific configurations
 
@@ -61,7 +91,7 @@ Examples of configuration of each service can be found under config/docker or co
 The businessconfig service has this specific property : 
 
 |===
-|name|default|Description
+|Name|Default|Description
 
 |operatorfabric.businessconfig.storage.path|/businessconfig-storage|File path to data storage folder
 
@@ -73,7 +103,7 @@ The businessconfig service has this specific property :
 The user service has these specific properties :
 
 |===
-|name|default|Description
+|Name|Default|Description
 
 |operatorfabric.users.default.users|null| Array of user objects to create upon startup if they don't exist
 |operatorfabric.users.default.user-settings|null| Array of user settings objects to create upon startup if they don't exist
@@ -89,7 +119,7 @@ The user service has these specific properties :
 The cards publication service has these specific properties :
 
 |===
-|name|default|Description
+|Name|Default|Description
 
 |operatorfabric.cards-publication.checkAuthenticationForCardSending|true|If false, OperatorFabric will not require user authentication to send or delete a card via endpoint /cards (it does not concern user cards which always need authentication). Be careful when setting the value to false, nginx conf must be adapted for security reasons (see security warning in link:https://github.com/opfab/operatorfabric-core/blob/master/config/docker/nginx.conf[the reference nginx.conf])
 |operatorfabric.cards-publication.authorizeToSendCardWithInvalidProcessState|false|If true, OperatorFabric will allow to publish a card referring a not existent process or state
@@ -321,7 +351,7 @@ spring:
 The cards-consultation service has these specific properties :
 
 |===
-|name|default|Description
+|Name|Default|Description
 
 |operatorfabric.checkIfUserIsAlreadyConnected|true|If false, OperatorFabric will allow a user to have several sessions opened at the same time. However, it may cause synchronization problems between the sessions using the same login, so it is recommended to let it true, its default value.
 |operatorfabric.heartbeat.checkIntervalInSeconds|10| Frequency at which the heartbeat from the ui to the server is checked.
@@ -334,67 +364,88 @@ The cards-consultation service has these specific properties :
 The external devices service can be configured with the following properties:
 
 |===
-|name|default|Description
+|Name|Default|Description
 
 |operatorfabric.externaldevices.watchdog.enabled|false|If true, watchdog signals will be sent to external devices to show that the OperatorFabric is running and connected.
 |operatorfabric.externaldevices.watchdog.cron|`*/5 * * * * *`|CRON expression determining when watchdog signals should be sent to external devices.
 |operatorfabric.externaldevices.watchdog.signalId|0|Id of the signal the external devices are expecting as watchdog
 |===
 
-==== Node services configuration
+[[cards-external-diffusion-conf]]
+==== Cards external diffusion service
 
-The configuration of node services (cards-external-diffusion and cards-reminder) is located in config/docker folder.
-The 'node-services.yml' configuration file contains parameters common to all the node services and a dedicated section for each service.
-Node services can be configured with the following properties:
+The card external diffusion service can be configured with the following properties:
 
 |===
-|name|default|mandatory?|Description
-|operatorfabric.internalAccount.login||yes|user account used to call Opfab services
-|operatorfabric.internalAccount.password||yes|user password to call Opfab services
-|operatorfabric.servicesUrls.authToken||yes|Authentication service URL
-|operatorfabric.servicesUrls.users||yes|Users service URL
-|operatorfabric.servicesUrls.cardsPublication||yes|Cards publication service URL
-|operatorfabric.servicesUrls.cardsConsultation||yes|Cards consultation service URL
-|operatorfabric.rabbitmq.host||yes|RabbitMQ host address
-|operatorfabric.rabbitmq.port||yes|RabbitMQ listen port
-|operatorfabric.rabbitmq.username||yes|RabbitMQ username
-|operatorfabric.rabbitmq.password||yes|RabbitMQ password
-|operatorfabric.logConfig.logFolder||yes|Log file folder
-|operatorfabric.logConfig.logFile||yes|Log file name
-|operatorfabric.logConfig.logLevel||yes|Default log level
+|Name|Default|Mandatory|Description
+|operatorfabric.logConfig.logFolder|logs|no|Log file folder (inside docker container)
+|operatorfabric.logConfig.logFile|"opfab.%DATE%.log"|no|Log file name
+|operatorfabric.logConfig.logLevel|info|no|Default log level
 |operatorfabric.mail.host||yes|Mail server host
 |operatorfabric.mail.port||yes|Mail server port
 |operatorfabric.mail.auth.user||yes|Mail server authentication user
 |operatorfabric.mail.auth.pass||yes|Mail server authentication password
-|operatorfabric.mongodb.database||yes|MongoDB database name
-|operatorfabric.mongodb.uri||yes|MongoDB connection URI
-|operatorfabric.cardsExternalDiffusion.adminPort||yes|Listen port
-|operatorfabric.cardsExternalDiffusion.activeOnStartup||yes|Flag to start the notification service on startup
+|operatorfabric.cardsExternalDiffusion.adminPort|2106|no|Listen port
+|operatorfabric.cardsExternalDiffusion.activeOnStartup|true|false|Flag to start the notification service on startup
 |operatorfabric.cardsExternalDiffusion.defaultConfig.mailFrom||yes|Mail from address
-|operatorfabric.cardsExternalDiffusion.defaultConfig.subjectPrefix||yes|Mail subject prefix
-|operatorfabric.cardsExternalDiffusion.defaultConfig.bodyPrefix|||Mail body prefix
-|operatorfabric.cardsExternalDiffusion.defaultConfig.windowInSecondsForCardSearch|||Max time interval used to query new cards (in seconds)
-|operatorfabric.cardsExternalDiffusion.defaultConfig.secondsAfterPublicationToConsiderCardAsNotRead|||Time period after card publication before sending mail notification
-|operatorfabric.cardsExternalDiffusion.defaultConfig.checkPeriodInSeconds|||Time interval between consecutive checks
-|operatorfabric.cardsReminder.adminPort||yes|Cards reminder service Listen port
-|operatorfabric.cardsReminder.activeOnStartup||yes|Flag to start the cards reminder service on startup
-|operatorfabric.cardsReminder.checkPeriodInSeconds|||Cards remonder time interval between consecutive checks
-|operatorfabric.supervisor.adminPort||yes|Cards reminder service Listen port
-|operatorfabric.supervisor.activeOnStartup||yes|Flag to start the cards reminder service on startup
-|operatorfabric.supervisor.defaultConfig.entitiesToSupervise|||List of entity id and related supervisor list ({ "id": "ENTITY1", "supervisors": ["ENTITY2"] })
-|operatorfabric.supervisor.defaultConfig.disconnectedCardTemplate|||Card template used to send connections alerts
-|operatorfabric.supervisor.defaultConfig.secondsBetweenConnectionChecks|||Connection check period
-|operatorfabric.supervisor.defaultConfig.nbOfConsecutiveNotConnectedToSendFirstCard|||Number of consecutive failed checks before sending first alert card
-|operatorfabric.supervisor.defaultConfig.nbOfConsecutiveNotConnectedToSendSecondCard|||Number of consecutive failed checks before sending second alert card
-|operatorfabric.supervisor.defaultConfig.processesToSupervise|||List of processes and related states to monitor for missing acknowledgment ({ "process": "defaultProcess", "states": ["processState"] })
-|operatorfabric.supervisor.defaultConfig.unackCardTemplate|||Card template used to send acknowledgment alerts
-|operatorfabric.supervisor.defaultConfig.windowInSecondsForCardSearch|||Time period used to search for not acknowledged cards
-|operatorfabric.supervisor.defaultConfig.secondsBetweenAcknowledgmentChecks|||Card acknowledgment check period
-|operatorfabric.supervisor.defaultConfig.secondsAfterPublicationToConsiderCardAsNotAcknowledged|||Time period to wait after card publishing to consider a card as not acknowledged and send the alert
+|operatorfabric.cardsExternalDiffusion.defaultConfig.subjectPrefix|'Opfab card received'|no|Mail subject prefix
+|operatorfabric.cardsExternalDiffusion.defaultConfig.bodyPrefix|'You received a card in opfab : '|no|Mail body prefix
+|operatorfabric.cardsExternalDiffusion.defaultConfig.opfabUrlInMailContent||yes|Url to write in mail to access the opfab server (example : https://opfab_url/)
+|operatorfabric.cardsExternalDiffusion.defaultConfig.windowInSecondsForCardSearch|360|no|Max time interval used to query new cards (in seconds)
+|operatorfabric.cardsExternalDiffusion.defaultConfig.secondsAfterPublicationToConsiderCardAsNotRead|60|no|Time period after card publication before sending mail notification
+|operatorfabric.cardsExternalDiffusion.defaultConfig.checkPeriodInSeconds|10|no|Time interval between consecutive checks
 |===
 
-
 The parameters in "operatorfabric.cardsExternalDiffusion.defaultConfig" section can be modified at runtime by sending an http POST request to the `/config` API of cards external diffusion service with a JSON payload containing the config parameters to be changed.
+
+[[cards-reminder-conf]]
+==== Cards reminder service
+
+The card reminder service can be configured with the following properties:
+
+|===
+|Name|Default|Mandatory|Description
+|operatorfabric.logConfig.logFolder|logs|no|Log file folder (inside docker container)
+|operatorfabric.logConfig.logFile|"opfab.%DATE%.log"|no|Log file name
+|operatorfabric.logConfig.logLevel|info|no|Default log level
+|operatorfabric.cardsReminder.adminPort|2107|no|Cards reminder service Listen port
+|operatorfabric.cardsReminder.activeOnStartup|yes|no|Flag to start the cards reminder service on startup
+|operatorfabric.cardsReminder.checkPeriodInSeconds|5|no|Cards reminder time interval between consecutive checks
+|===
+
+[[supervisor-conf]]
+==== Supervisor service
+
+The supervisor service can be configured with the following properties:
+
+|===
+|Name|Default|Mandatory|Description
+|operatorfabric.logConfig.logFolder|logs|no|Log file folder (inside docker container)
+|operatorfabric.logConfig.logFile|"opfab.%DATE%.log"|no|Log file name
+|operatorfabric.logConfig.logLevel|info|no|Default log level
+|operatorfabric.supervisor.adminPort|2106|no|Cards reminder service Listen port
+|operatorfabric.supervisor.activeOnStartup|yes|no|Flag to start the cards reminder service on startup
+|operatorfabric.supervisor.defaultConfig.considerConnectedIfUserInGroups||no|If set the user must be in one of the mention groups to consider his entities as connected, example :  ["Dispatcher","Planner"]
+|operatorfabric.supervisor.defaultConfig.entitiesToSupervise||no|List of entity id and related supervisor list ({ "id": "ENTITY1", "supervisors": ["ENTITY2"] })
+|operatorfabric.supervisor.defaultConfig.disconnectedCardTemplate.publisher|opfab|no|Publisher for card template used to send connections alerts
+|operatorfabric.supervisor.defaultConfig.disconnectedCardTemplate.process|supervisor|no|Process for card template used to send connections alerts
+|operatorfabric.supervisor.defaultConfig.disconnectedCardTemplate.processVersion|1|no|Process version for card template used to send connections alerts
+|operatorfabric.supervisor.defaultConfig.disconnectedCardTemplate.state|disconnectedEntity|no|State for card template used to send connections alerts
+|operatorfabric.supervisor.defaultConfig.disconnectedCardTemplate.severity|ALARM|no|Severity for card template used to send connections alerts
+|operatorfabric.supervisor.defaultConfig.secondsBetweenConnectionChecks|10|no|Connection check period
+|operatorfabric.supervisor.defaultConfig.nbOfConsecutiveNotConnectedToSendFirstCard|3|no|Number of consecutive failed checks before sending first alert card
+|operatorfabric.supervisor.defaultConfig.nbOfConsecutiveNotConnectedToSendSecondCard|12|no|Number of consecutive failed checks before sending second alert card
+|operatorfabric.supervisor.defaultConfig.processesToSupervise||no|List of processes and related states to monitor for missing acknowledgment ({ "process": "defaultProcess", "states": ["processState"] })
+|operatorfabric.supervisor.defaultConfig.unackCardTemplate.publisher|opfab|no|Publisher for card template used to send acknowledgment alerts
+|operatorfabric.supervisor.defaultConfig.unackCardTemplate.process|supervisor|no|Process for card template used to send acknowledgment alerts
+|operatorfabric.supervisor.defaultConfig.unackCardTemplate.processVersion|1|no|Process version for card template used to send acknowledgment alerts
+|operatorfabric.supervisor.defaultConfig.unackCardTemplate.state|unacknowledgedCards|no|State for card template used to send acknowledgment alerts
+|operatorfabric.supervisor.defaultConfig.unackCardTemplate.severity|ALARM|no|Severity for card template used to send acknowledgment alerts
+|operatorfabric.supervisor.defaultConfig.windowInSecondsForCardSearch|1200|no|Time period used to search for not acknowledged cards
+|operatorfabric.supervisor.defaultConfig.secondsBetweenAcknowledgmentChecks|10|no|Card acknowledgment check period
+|operatorfabric.supervisor.defaultConfig.secondsAfterPublicationToConsiderCardAsNotAcknowledged|600|no|Time period to wait after card publishing to consider a card as not acknowledged and send the alert
+|===
+
 
 The parameters in "operatorfabric.supervisor.defaultConfig" section can be modified at runtime by sending an http POST request to the `/config` API of supervisor service with a JSON payload containing the config parameters to be changed.
 

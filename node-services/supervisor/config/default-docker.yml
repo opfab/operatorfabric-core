@@ -6,19 +6,14 @@ operatorfabric:
     cardsConsultation: "http://cards-consultation:2104"
   internalAccount:
     login: opfab
-    password: test
   logConfig:
+    logFolder: logs/
+    logFile: "opfab.%DATE%.log"
     logLevel: info
   supervisor:
+    adminPort: 2108
+    activeOnStartup: true
     defaultConfig:
-      considerConnectedIfUserInGroups: ["Dispatcher","Planner"]
-      entitiesToSupervise:
-      - id: ENTITY1_FR
-        supervisors:
-        - ENTITY2_FR
-      - id: ENTITY2_FR
-        supervisors:
-        - ENTITY1_FR
       disconnectedCardTemplate:
         publisher: opfab
         processVersion: '1'
@@ -28,14 +23,6 @@ operatorfabric:
       secondsBetweenConnectionChecks: 10
       nbOfConsecutiveNotConnectedToSendFirstCard: 3
       nbOfConsecutiveNotConnectedToSendSecondCard: 12
-      processesToSupervise:
-      - process: messageOrQuestionExample
-        states:
-        - messageState
-        - questionState
-      - process: defaultProcess
-        states:
-        - processState
       unackCardTemplate:
         publisher: opfab
         processVersion: '1'
@@ -45,5 +32,3 @@ operatorfabric:
       windowInSecondsForCardSearch: 1200
       secondsBetweenAcknowledgmentChecks: 10
       secondsAfterPublicationToConsiderCardAsNotAcknowledged: 600
-    adminPort: 2108
-    activeOnStartup: false

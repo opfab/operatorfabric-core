@@ -1,30 +1,6 @@
 operatorfabric:
-  mail:
-    host: mailhog
-    port: 1025
-    auth:
-      user: guest
-      pass: guest
-  logConfig:
-    logLevel: info
-  cardsExternalDiffusion:
-    adminPort: 2106
-    activeOnStartup: true
-    defaultConfig:
-      mailFrom: opfab@localhost.it
-      subjectPrefix: 'Opfab card received '
-      bodyPrefix: 'You received a card in opfab : '
-      opfabUrlInMailContent: http://localhost:2002
-      windowInSecondsForCardSearch: 360
-      secondsAfterPublicationToConsiderCardAsNotRead: 60
-      checkPeriodInSeconds: 10
-  cardsReminder:
-    adminPort: 2107
-    activeOnStartup: true
-    checkPeriodInSeconds: 5
   supervisor:
-    adminPort: 2108
-    activeOnStartup: false
+    activeOnStartup : false
     defaultConfig:
       considerConnectedIfUserInGroups: ["Dispatcher","Planner"]
       entitiesToSupervise:
@@ -60,3 +36,5 @@ operatorfabric:
       windowInSecondsForCardSearch: 1200
       secondsBetweenAcknowledgmentChecks: 10
       secondsAfterPublicationToConsiderCardAsNotAcknowledged: 600
+#  logConfig:
+#    logLevel: debug
