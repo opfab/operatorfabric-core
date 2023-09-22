@@ -6,7 +6,7 @@ management:
         include: '*'
 
 operatorfabric:
-  rabbitmq:
+  # rabbitmq:
     # host: rabbitmq
     # SECURITY WARNING : To set and change in production if rabbit port is open outside of docker network
     # username: guest
@@ -18,7 +18,9 @@ operatorfabric:
       resourceserver:
         jwt:
           jwk-set-uri: http://keycloak:89/auth/realms/dev/protocol/openid-connect/certs
-
+  internalAccount:
+    login: opfab
+    password: test
 
 ### activate the following if you want to the groups or entities to come from the token and not mongo DB
 #    jwt:

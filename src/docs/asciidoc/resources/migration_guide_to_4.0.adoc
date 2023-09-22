@@ -183,6 +183,19 @@ curl http://localhost:2107/reset -H "Authorization:Bearer $token"
 ....
 
 
+== Internal technical account 
+
+The new back service for reminder and the new service regarding mail diffusion and supervision introduce the need of an internal account to communicate between opfab back services. Therefore, if you intend to utilize any of these services, it is necessary to create an Opfab technical account with ADMIN permissions and configure it within your shared YAML configuration file, for example : 
+
+```
+operatorfabric:
+  internalAccount:
+    login: opfab
+    password: the_password
+
+```
+
+
 == Port mapping
 
 In release 4.0, the listening port is not any more 8080 for services in docker, it is now identical to the default port mapping outside the docker.

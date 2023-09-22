@@ -137,9 +137,9 @@ services:
     ports:
       - "2106:2106"
     environment:
-      - NODE_ENV=common,docker,base
+      - NODE_ENV=base,common,docker
     volumes:
-      - "./node-services.yml:/usr/app/config/docker.yml"
+      - "./cards-external-diffusion.yml:/usr/app/config/docker.yml"
       - "./common.yml:/usr/app/config/common.yml"
   cards-reminder:
     container_name: cards-reminder
@@ -152,9 +152,9 @@ services:
       - "2107:2107"
     environment:
       - TZ=Europe/Paris
-      - NODE_ENV=common,docker,base
+      - NODE_ENV=base,common,docker
     volumes:
-      - "./node-services.yml:/usr/app/config/docker.yml"
+      - "./cards-reminder.yml:/usr/app/config/docker.yml"
       - "./common.yml:/usr/app/config/common.yml"
   supervisor:
     container_name: supervisor
@@ -167,9 +167,9 @@ services:
       - "2108:2108"
     environment:
       - TZ=Europe/Paris
-      - NODE_ENV=common,docker,base
+      - NODE_ENV=base,common,docker
     volumes:
-      - "./node-services.yml:/usr/app/config/docker.yml"
+      - "./supervisor.yml:/usr/app/config/docker.yml"
       - "./common.yml:/usr/app/config/common.yml"
 # Uncomment the line below to customize sounds for notification
 #     - "./custom-sounds:/usr/share/nginx/html/assets/sounds"

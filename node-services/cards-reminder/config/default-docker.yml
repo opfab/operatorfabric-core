@@ -13,8 +13,9 @@ operatorfabric:
     cardsPublication: "http://cards-publication:2102"
   internalAccount:
     login: opfab
-    password: test
   logConfig:
+    logFolder: logs/
+    logFile: "opfab.%DATE%.log"
     logLevel: "info"
 
   cardsReminder:

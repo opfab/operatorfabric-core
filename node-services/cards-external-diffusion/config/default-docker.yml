@@ -11,20 +11,14 @@ operatorfabric:
     cardsConsultation: "http://cards-consultation:2104"
   internalAccount:
     login: opfab
-    password: test
   logConfig:
+    logFolder: logs/
+    logFile: "opfab.%DATE%.log"
     logLevel: info
-  mail:
-    host: mailhog
-    port: 1025
-    auth:
-      user: guest
-      pass: guest
   cardsExternalDiffusion:
     adminPort: 2106
     activeOnStartup: true
     defaultConfig:
-      mailFrom: opfab@localhost.it
       subjectPrefix: 'Opfab card received '
       bodyPrefix: 'You received a card in opfab : '
       opfabUrlInMailContent: http://localhost:2002
