@@ -42,9 +42,9 @@ This configuration is mandatory (no default configuration is provided).
 
 === RabbitMQ
 
-A rabbitMQ component is provided in opfab, it has a default configuration.
+A rabbitMQ component (docker image) is provided in opfab, it has a default configuration.
 
- SECURITY WARNING : This default password is to be change if a rabbit port is exposed outside of docker network
+ SECURITY WARNING : The default user/password should be changed if a rabbit port is exposed outside of docker network. To do that, set the environment variables "RABBITMQ_DEFAULT_USER" and "RABBITMQ_DEFAULT_PASS" when starting the image and adjust the following parameters in the common yml config file.
 
 |===
 |Name|Default|Mandatory|Description
@@ -53,6 +53,8 @@ A rabbitMQ component is provided in opfab, it has a default configuration.
 |operatorfabric.rabbitmq.username|guest|no|RabbitMQ username
 |operatorfabric.rabbitmq.password|guest|no|RabbitMQ password
 |===
+
+
 
 ==== Internal account 
 
