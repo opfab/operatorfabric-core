@@ -2,7 +2,7 @@ FROM node:20.7-alpine
 WORKDIR /usr/app
 RUN chown node:node /usr/app
 USER node
-RUN mkdir -p logs
+RUN mkdir -m777 logs
 COPY dockerBuild ./build
 RUN mkdir -m777 config
 COPY dockerConfig/default-docker.yml ./config/base.yml
