@@ -66,6 +66,9 @@ The back service cards-reminder ,cards-diffusion and supervision need an interna
 |operatorfabric.internalAccount.password||yes|user password to call Opfab services
 |===
 
+
+The services require knowledge of the URL to retrieve the account's token, and this URL should be configured within operatorfabric.servicesUrls.authToken. A default value, based on OperatorFabric default installation, is set to: "http://web-ui/auth/token".
+
 ==== Optional configuration values 
 
 |===
