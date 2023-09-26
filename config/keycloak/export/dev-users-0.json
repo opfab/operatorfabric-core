@@ -218,7 +218,7 @@
     "firstName" : "",
     "lastName" : "",
     "attributes" : {
-      "entitiesId" : [ "ENTITY1_FR;ENTITY2_FR;ENTITY3_FR;ENTITY3_FR" ],
+      "entitiesId" : [ "ENTITY1_FR;ENTITY2_FR;ENTITY3_FR;ENTITY4_FR"],
       "groups" : ["Dispatcher;ReadOnly"]
     },
     "credentials" : [ {
