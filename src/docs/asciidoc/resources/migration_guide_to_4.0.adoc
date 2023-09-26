@@ -331,3 +331,19 @@ to
 == secondsToCloseSession
 
 The default value for "secondsToCloseSession" has been updated to 600 seconds, as opposed to the previous 60 seconds. This "secondsToCloseSession" define in web-ui.json reflects the duration before the end of token validity when the end-of-session popup will be displayed.
+
+== Rate limiter for card sendings
+
+External publishers are now monitored by a new module which limits how many cards they can send
+ifdef::single-page-doc[<<cardSendingLimitCardCount, `cardSendingLimitCardCount`>>]
+ifndef::single-page-doc[<</documentation/current/deployment/configuration/configuration.adoc#cardSendingLimitCardCount, `cardSendingLimitCardCount`>>]
+ in a period of time
+ifdef::single-page-doc[<<cardSendingLimitPeriod, `cardSendingLimitPeriod`>>]
+ifndef::single-page-doc[<</documentation/current/deployment/configuration/configuration.adoc#cardSendingLimitPeriod, `cardSendingLimitPeriod`>>]
+.
+This is to avoid potential overloading due to external apps stuck in a card sending loop.
+
+Default value is set to 1000 cards per hour. It can be disabled / enabled with
+ifdef::single-page-doc[<<activateCardSendingLimiter, `activateCardSendingLimiter`>>]
+ifndef::single-page-doc[<</documentation/current/deployment/configuration/configuration.adoc#activateCardSendingLimiter, `activateCardSendingLimiter`>>]
+
