@@ -620,7 +620,7 @@
     "message-or-question-listUserCard": {
       "titleLabel": "TITRE",
       "messageLabel": "MESSAGE",
-      "emptyMessage": "Vous ne pouvez pas envoyer de message vide"
+      "emptyMessage": "Vous ne pouvez pas envoyer un message vide"
     } 
 
   }
