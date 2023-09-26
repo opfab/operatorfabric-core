@@ -13,14 +13,15 @@ operatorfabric:
     # password: guest
   mongodb:
     uri: mongodb://root:password@mongodb:27017/operator-fabric?authSource=admin
+  internalAccount:
+    login: opfab
+    password: test
   security:
     oauth2:
       resourceserver:
         jwt:
           jwk-set-uri: http://keycloak:89/auth/realms/dev/protocol/openid-connect/certs
-  internalAccount:
-    login: opfab
-    password: test
+
 
 ### activate the following if you want to the groups or entities to come from the token and not mongo DB
 #    jwt:
