@@ -596,7 +596,7 @@
       "message" : "Vous avez reçu un message :"
     },
     "messageUserCard": {
-      "noMessageError":"Vous devez fournir un message",
+      "noMessageError":"Vous ne pouvez pas envoyer un message vide",
       "textareaLabel":"MESSAGE"
     },
     "questionCard" :{
