@@ -15,7 +15,7 @@
   "dependencies": {
     "amqp-connection-manager": "4.1.14",
     "amqplib": "0.10.3",
-    "axios": "1.5.0",
+    "axios": "1.5.1",
     "config": "3.3.9",
     "express": "4.18.2",
     "js-yaml": "4.1.0",
