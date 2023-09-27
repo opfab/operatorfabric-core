@@ -647,6 +647,7 @@ export class UserCardComponent implements OnInit, OnDestroy {
     private getConnectedUsers(): Observable<boolean> {
         return this.userService.loadConnectedUsers().pipe(
             map((connectedUsers) => {
+                this.connectedRecipients.clear();
                 connectedUsers.forEach((connectedUser) => {
                     connectedUser.entitiesConnected.forEach( (entity) => {
                         if (this.recipients.includes(entity) || this.card.entityRecipientsForInformation.includes(entity)) {
