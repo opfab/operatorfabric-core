@@ -62,7 +62,11 @@ export class MessageOrQuestionListUserCardTemplate extends BaseUserCardTemplate 
 
         if (['EDITION', 'COPY'].includes(opfab.currentUserCard.getEditionMode())) {
             let titleId = this.view.getTitleId();
-            this.messageSelect.setSelectedValues(titleId)
+            if (titleId) {
+                this.messageSelect.setSelectedValues(titleId)
+            } else {
+                this.messageSelect.setSelectedValues(this.titleOptions[0].value)
+            }
         }
 
         let that = this; 
