@@ -39,7 +39,7 @@ export class MessageOrQuestionListCardTemplate extends HTMLElement {
 
         <div id="reponse">
             <div style="display:flex;margin:auto;width:500px">
-                <div style="margin:10px"> Réponse : </div>
+                <div style="margin:10px"> ${opfab.utils.getTranslation('buildInTemplate.message-or-question-listCard.answers')} : </div>
                 <div style="margin:10px" id="yes_button">
                     <label class="opfab-radio-button">
                         <span> ${opfab.utils.getTranslation('buildInTemplate.message-or-question-listCard.yes')} </span>

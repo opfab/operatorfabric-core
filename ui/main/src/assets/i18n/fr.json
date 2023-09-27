@@ -610,6 +610,7 @@
       "textareaLabel":"QUESTION"
     }, 
     "message-or-question-listCard": {
+      "answers": "Réponses",
       "yes": "Oui",
       "no": "Non",
       "entityColumnLabel": "ENTITÉ",
