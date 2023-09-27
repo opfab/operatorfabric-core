@@ -606,7 +606,7 @@
       "responseColumnLabel":"Réponse"
     },
     "questionUserCard": {
-      "noMessageError":"Vous devez fournir une question",
+      "noQuestionError":"Vous devez fournir une question",
       "textareaLabel":"QUESTION"
     }, 
     "message-or-question-listCard": {
