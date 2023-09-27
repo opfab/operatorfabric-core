@@ -53,16 +53,16 @@ describe('Question UserCard template', () => {
 
     it('GIVEN a user WHEN create card with question THEN card is provided with question', () => {
         const view = new QuestionUserCardTemplateView();
-        const specficCardInformation = view.getSpecificCardInformation('My question');
-        expect(specficCardInformation.valid).toEqual(true);
-        expect(specficCardInformation.card.data.question).toEqual('My question');
+        const specificCardInformation = view.getSpecificCardInformation('My question');
+        expect(specificCardInformation.valid).toEqual(true);
+        expect(specificCardInformation.card.data.question).toEqual('My question');
     });
 
     it('GIVEN a user WHEN create card with empty question THEN card is not valid with error message ', () => {
         const view = new QuestionUserCardTemplateView();
-        const specficCardInformation = view.getSpecificCardInformation('');
-        expect(specficCardInformation.valid).toEqual(false);
-        expect(specficCardInformation.errorMsg).toEqual(
+        const specificCardInformation = view.getSpecificCardInformation('');
+        expect(specificCardInformation.valid).toEqual(false);
+        expect(specificCardInformation.errorMsg).toEqual(
             'Translation of buildInTemplate.questionUserCard.noQuestionError'
         );
     });
