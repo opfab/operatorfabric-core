@@ -156,27 +156,33 @@ export class ArchivesComponent implements OnDestroy, OnInit {
         .pipe(takeUntil(this.unsubscribe$))
         .subscribe({
             next: (page: Page<LightCard>) => {
-                this.resultsNumber = page.totalElements;
-                this.currentPage = page_number + 1; // page on ngb-pagination component starts at 1 , and page on backend starts at 0
-                this.firstQueryHasBeenDone = true;
-                this.hasResult = page.content.length > 0;
-                this.results = page.content;
+                if (page) {
+                    this.resultsNumber = page.totalElements;
+                    this.currentPage = page_number + 1; // page on ngb-pagination component starts at 1 , and page on backend starts at 0
+                    this.firstQueryHasBeenDone = true;
+                    this.hasResult = page.content.length > 0;
+                    this.results = page.content;
 
-                if (this.isCollapsibleUpdatesActivated && this.hasResult) {
-                    const requestID = new Date().valueOf();
-                    this.lastRequestID = requestID;
-                    this.loadUpdatesByCardId(requestID, isAdminModeChecked);
-                } else {
-                    this.loadingInProgress = false;
-                    this.updatesByCardId = [];
-                    this.results.forEach((lightCard) => {
-                        this.updatesByCardId.push({
-                            mostRecent: lightCard,
-                            cardHistories: [],
-                            displayHistory: false,
-                            tooManyRows: false
+                    if (this.isCollapsibleUpdatesActivated && this.hasResult) {
+                        const requestID = new Date().valueOf();
+                        this.lastRequestID = requestID;
+                        this.loadUpdatesByCardId(requestID, isAdminModeChecked);
+                    } else {
+                        this.loadingInProgress = false;
+                        this.updatesByCardId = [];
+                        this.results.forEach((lightCard) => {
+                            this.updatesByCardId.push({
+                                mostRecent: lightCard,
+                                cardHistories: [],
+                                displayHistory: false,
+                                tooManyRows: false
+                            });
                         });
-                    });
+                    }
+                } else {
+                    this.firstQueryHasBeenDone = false;
+                    this.loadingInProgress = false;
+                    this.technicalError = true;
                 }
             },
             error: () => {
@@ -359,15 +365,19 @@ export class ArchivesComponent implements OnDestroy, OnInit {
         this.checkForCardLoadingInProgressForMoreThanOneSecond();
 
         this.cardService.loadArchivedCard(cardId).subscribe((card: CardData) => {
-            this.selectedCard = card.card;
-            this.selectedCardTruncatedTitle = Utilities.sliceForFormat(card.card.titleTranslated,100);
-            this.selectedChildCards = card.childCards;
+            if (card) {
 
-            const options: NgbModalOptions = {
-                size: 'fullscreen'
-            };
-            if (this.modalRef) this.modalRef.close();
-            this.modalRef = this.modalService.open(this.cardDetailTemplate, options);
+                this.selectedCard = card.card;
+                this.selectedCardTruncatedTitle = Utilities.sliceForFormat(card.card.titleTranslated,100);
+                this.selectedChildCards = card.childCards;
+
+                const options: NgbModalOptions = {
+                    size: 'fullscreen'
+                };
+                if (this.modalRef) this.modalRef.close();
+                this.modalRef = this.modalService.open(this.cardDetailTemplate, options);
+            }
+
             this.cardLoadingInProgress = false;
             this.cardLoadingIsTakingMoreThanOneSecond = false;
         });
