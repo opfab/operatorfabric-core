@@ -43,7 +43,7 @@ export class MessageOrQuestionListCardTemplateView {
                     responses.push({
                         entityName: opfab.users.entities.getEntityName(element.publisher),
                         agreement: element.data?.agreement,
-                        comment: element.data?.comment
+                        comment: opfab.utils.escapeHtml(element.data?.comment)
                     });
                 });
             }

@@ -111,7 +111,7 @@
                         else  responses += `<td>  NO </td>`;
                         if (c.data.impacts.SF)  responses += `<td style="color:red;">  YES </td>`;
                         else  responses += `<td>  NO </td>`;
-                        responses += `<td> ${c.data.impacts.OTHERS}</td>`;
+                        responses += `<td> ${opfab.utils.escapeHtml(c.data.impacts.OTHERS)}</td>`;
                         responses += "</tr>";
                     });
 

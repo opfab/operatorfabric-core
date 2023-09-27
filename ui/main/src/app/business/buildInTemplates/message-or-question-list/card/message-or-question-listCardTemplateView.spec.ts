@@ -34,6 +34,20 @@ describe('MessageOrQuestionList Card template', () => {
         expect(view.getMessage()).toEqual('My message <br/> message');
     });
 
+    it('GIVEN a card WHEN get message with a HTML tag THEN message is provided with HTML tag escaped', () => {
+        opfab.currentCard.getCard = function () {
+            return {data: {message: 'My message <script>'}};
+        };
+        expect(view.getMessage()).toEqual('My message &lt;script&gt;');
+    });
+
+    it('GIVEN a card WHEN get title with a HTML tag THEN title is provided with HTML tag escaped', () => {
+        opfab.currentCard.getCard = function () {
+            return {data: {title: 'My title <script>'}};
+        };
+        expect(view.getTitle()).toEqual('My title &lt;script&gt;');
+    });
+
     it('Given a card WHEN user is not allowed to response THEN response input is hidden', () => {
         opfab.currentCard.isUserAllowedToRespond = () => false;
         let inputFieldVisibility = true;
@@ -125,5 +139,32 @@ describe('MessageOrQuestionList Card template', () => {
         expect(responsesResult[1].entityName).toEqual('entity2 name');
         expect(responsesResult[1].comment).toEqual('my response 2');
         expect(responsesResult[1].agreement).toEqual(false);
+    });
+
+    it('GIVEN a child card with HTML tag in data WHEN listen to child card THEN received response with HTML tag escaped', () => {
+        const childcards = [
+            {
+                publisher: 'entity1',
+                data: {comment: 'my response <script>', agreement: true}
+            }
+        ];
+
+        // Simulate opfab API
+        let sendChildCards: Function;
+        opfab.currentCard.listenToChildCards = (listenFunction) => {
+            sendChildCards = listenFunction;
+        };
+
+        // Get responses from view
+        let responsesResult;
+        view.listenToResponses((responses) => {
+            responsesResult = responses;
+        });
+
+        sendChildCards(childcards);
+        expect(responsesResult[0].entityName).toEqual('entity1 name');
+        expect(responsesResult[0].comment).toEqual('my response &lt;script&gt;');
+        expect(responsesResult[0].agreement).toEqual(true);
+
     });
 });
