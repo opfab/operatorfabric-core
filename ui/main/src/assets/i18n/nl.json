@@ -609,6 +609,7 @@
       "textareaLabel":"VRAAG"
     }, 
     "message-or-question-listCard": {
+      "answers": "Antwoorden",
       "yes": "Ja",
       "no": "Nee",
       "entityColumnLabel": "ENTITEIT",
