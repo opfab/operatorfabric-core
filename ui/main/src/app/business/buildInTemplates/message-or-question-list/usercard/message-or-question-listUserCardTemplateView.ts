@@ -18,7 +18,7 @@ export class MessageOrQuestionListUserCardTemplateView {
 
     public getMessage() {
         let message = opfab.currentCard.getCard()?.data?.message;
-        if (message) message = opfab.utils.convertSpacesAndNewLinesInHTML(opfab.utils.escapeHtml(message));
+        if (message) message = opfab.utils.escapeHtml(message);
         else message = '';
         return message;
     }
