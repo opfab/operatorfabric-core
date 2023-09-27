@@ -79,7 +79,7 @@ export class MessageOrQuestionListUserCardTemplate extends BaseUserCardTemplate 
     fillTextAndRecipientFields () {
         const messageId = this.messageSelect.getSelectedValues();
         const message = this.view.getMessageOrQuestion(messageId)
-        if ( this.previousTitleId != messageId ) {
+        if ( this.previousTitleId != messageId || opfab.currentUserCard.getEditionMode() == 'CREATE') {
             document.getElementById("message").innerHTML = message?.message;
             this.view.setRecipients(message?.recipients);
             this.previousTitleId = messageId;
