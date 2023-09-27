@@ -153,7 +153,7 @@ For example adding `Keycloak` application, with `'Keycloak'` as `name`, `1` as `
 |usercard.displayConnectionCirclesInPreview|false|no|Displays a green circle next to the recipient entities if any account associated to the entity is connected. If not, displays a red circle. The green circle doesn't take filters or perimeters into account. It doesn't warrant that the message will be received.
 |usercard.useDescriptionFieldForEntityList|false|no|If true, show entity `description` field instead of `name` in user card page
 |externalDevicesEnabled|false|no|If true, users have the opportunity to play sounds on external devices rather than in the browser. See `settings.playSoundOnExternalDevice`
-|secondsToCloseSession|600|no|Number of seconds between logout and token expiration
+|secondsToCloseSession|60|no|Number of seconds between logout and token expiration. If you use IMPLICIT authentication mode, exercise caution when modifying the value to prevent logouts before token silent refresh.
 |selectActivityAreaOnLogin|false|no| if set to true the users belonging to multiple Entities will be required to configure activity area on login
 |checkIfUrlIsLocked|true|no| if set to false, an OperatorFabric url can be used by several tabs in the same browser. Note that there can only be one token per browser for a given OperatorFabric url, so the first session will be replaced by the second one
 |alerts.messageBusinessAutoClose|false|no| if set to true, the (red) business alert message will automatically close after a few seconds

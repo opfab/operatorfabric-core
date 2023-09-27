@@ -36,7 +36,7 @@ export abstract class AuthHandler {
     protected loginClaim: string;
 
     constructor(configService: ConfigService, protected httpClient: HttpClient, protected logger: OpfabLoggerService) {
-        this.secondsToCloseSession = configService.getConfigValue('secondsToCloseSession', 600);
+        this.secondsToCloseSession = configService.getConfigValue('secondsToCloseSession', 60);
         this.clientId = configService.getConfigValue('security.oauth2.client-id', null);
         this.delegateUrl = configService.getConfigValue('security.oauth2.flow.delegate-url', null);
         this.loginClaim = configService.getConfigValue('security.jwt.login-claim', 'sub');
