@@ -31,14 +31,19 @@ export default class ReminderService implements EventListener {
     }
 
     async onMessage(message: any) {
-        const cardOperation : CardOperation = JSON.parse(message.content);
-        // Hack to fix enumeration value parsing from json
-        const type = '' + cardOperation.type;
+        try {
+            const cardOperation : CardOperation = JSON.parse(message.content);
+            // Hack to fix enumeration value parsing from json
+            const type = '' + cardOperation.type;
 
-        if (type === 'ADD' || type === 'UPDATE')
-            this.addCardReminder(cardOperation.card);
-        else if (type == 'DELETE')
-            this.databaseService.removeReminder(cardOperation.cardId);     
+            if (type === 'ADD' || type === 'UPDATE')
+                this.addCardReminder(cardOperation.card).catch(error => {
+                    this.logger.error("Error on addCardReminder " + error)});
+            else if (type == 'DELETE')
+                this.databaseService.removeReminder(cardOperation.cardId);     
+        } catch(error) {
+            this.logger.error("Error on card operation received " + error);
+        }
     }
 
     public setDatabaseService(databaseService: RemindDatabaseService) {

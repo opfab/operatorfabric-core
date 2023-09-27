@@ -28,7 +28,8 @@ export default class CardsReminderService {
         this.cardsReminderControl = new CardsReminderControl()
             .setOpfabServicesInterface(opfabServicesInterface)
             .setRruleReminderService(rruleReminderService)
-            .setReminderService(reminderService);
+            .setReminderService(reminderService)
+            .setLogger(logger);
 
         this.checkRegularly();
     }
