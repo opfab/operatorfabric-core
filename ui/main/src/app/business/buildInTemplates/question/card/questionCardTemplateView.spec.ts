@@ -33,6 +33,13 @@ describe('Question Card template', () => {
         expect(view.getQuestion()).toEqual('My question <br/> question');
     });
 
+    it('GIVEN a card WHEN get question with an HTML tag THEN question is provided with the HTML tag escape', () => {
+        opfab.currentCard.getCard = function () {
+            return {data: {question: 'My question <script> question'}};
+        };
+        expect(view.getQuestion()).toEqual('My question &lt;script&gt; question');
+    });
+
     it('Given a card WHEN user is not allowed to response THEN response input is hidden', () => {
         opfab.currentCard.isUserAllowedToRespond = () => false;
         let inputFieldVisibility = true;

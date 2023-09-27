@@ -29,6 +29,18 @@ describe('Question UserCard template', () => {
         expect(view.getQuestion()).toEqual('My question');
     });
 
+
+    it('GIVEN an existing card with an HTML tag in question WHEN user edit card THEN question is provide with HTML tag escaped', () => {
+        const view = new QuestionUserCardTemplateView();
+        opfab.currentUserCard.getEditionMode = function () {
+            return 'EDITION';
+        };
+        opfab.currentCard.getCard = function () {
+            return {data: {question: 'My question <script>'}};
+        };
+        expect(view.getQuestion()).toEqual('My question &lt;script&gt;');
+    });
+
     it('GIVEN an existing card WHEN user copy card THEN question is actual question', () => {
         const view = new QuestionUserCardTemplateView();
         opfab.currentUserCard.getEditionMode = function () {
