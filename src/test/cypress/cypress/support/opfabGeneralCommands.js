@@ -113,6 +113,11 @@ export class OpfabGeneralCommands extends OpfabCommands {
         cy.get('of-usercard').should('exist');
     }
 
+    navigateToNotificationConfiguration = function () {
+        cy.get('#opfab-navbar-drop-user-menu').click();
+        cy.get('#opfab-menu-icon-notification').click();
+    }
+
     openExternalDevices = function ()  {
         cy.get('#opfab-navbar-drop-user-menu').click();
         cy.get('#opfab-navbar-right-menu-externaldevicesconfiguration').click();
