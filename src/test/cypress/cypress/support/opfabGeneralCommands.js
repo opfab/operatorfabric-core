@@ -140,4 +140,18 @@ export class OpfabGeneralCommands extends OpfabCommands {
     checkUrlDisplayedIs = function (url) {
         cy.get('iframe').invoke('attr', 'src').should('eq', url);
     }
+
+    selectOptionsFromMultiselect= function (multiselectId, options, hasTags = false, searchResultNumber = 0) {
+        cy.get(multiselectId).click();
+        options.forEach( (option) => {
+            cy.get(multiselectId).find('.vscomp-search-input').clear();
+            cy.get(multiselectId).find('.vscomp-search-input').type(option);
+            cy.get(multiselectId).find('.vscomp-option-text').eq(searchResultNumber).should('contain.text', option);
+            cy.get(multiselectId).find('.vscomp-option-text').eq(searchResultNumber).click();
+        })
+        if(hasTags) {
+            cy.get(multiselectId).find('.vscomp-toggle-button').click();
+        }
+        cy.wait(200);
+    }
 }

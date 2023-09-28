@@ -44,9 +44,9 @@ describe('User Card ', function () {
     it('Check edit button is not present when editCardEnabledOnUserInterface is false', () => {
       opfab.loginWithUser('operator1_fr');
       opfab.navigateToUserCard();
-      usercard.selectService('User card examples');
-      usercard.selectProcess('Conference and IT incident');
-      usercard.selectState('Conference Call ☏');
+      opfab.selectOptionsFromMultiselect('#of-usercard-service-selector', ['User card examples']);
+      opfab.selectOptionsFromMultiselect('#of-usercard-process-filter', ['Conference and IT incident'], false)
+      opfab.selectOptionsFromMultiselect('#of-state-filter', ['Conference Call ☏'],false);
       usercard.previewThenSendCard();
       feed.openFirstCard();
       card.checkEditButtonDoesNotExist();
@@ -58,9 +58,9 @@ describe('User Card ', function () {
     it('Check copy button is not present when copyCardEnabledOnUserInterface is false ', () => {
       opfab.loginWithUser('operator1_fr');
       opfab.navigateToUserCard();
-      usercard.selectService('User card examples');
-      usercard.selectProcess('Conference and IT incident');
-      usercard.selectState('Conference Call ☏');
+      opfab.selectOptionsFromMultiselect('#of-usercard-service-selector', ['User card examples']);
+      opfab.selectOptionsFromMultiselect('#of-usercard-process-filter', ['Conference and IT incident'], false)
+      opfab.selectOptionsFromMultiselect('#of-state-filter', ['Conference Call ☏'],false);
       usercard.previewThenSendCard();
       feed.openFirstCard();
       card.checkCopyButtonDoesNotExist();
@@ -71,9 +71,9 @@ describe('User Card ', function () {
     it('Check delete button is not present when deleteCardEnabledOnUserInterface is false ', () => {
       opfab.loginWithUser('operator1_fr');
       opfab.navigateToUserCard();
-      usercard.selectService('Base Examples');
-      usercard.selectProcess('Process example');
-      usercard.selectState('Process example');
+      opfab.selectOptionsFromMultiselect('#of-usercard-service-selector', ['Base Examples']);
+      opfab.selectOptionsFromMultiselect('#of-usercard-process-filter', ['Process example'], false)
+      opfab.selectOptionsFromMultiselect('#of-state-filter', ['Process example'],false);
       usercard.previewThenSendCard();
       feed.openFirstCard();
       card.checkDeleteButtonDoesNotExist();
@@ -86,9 +86,9 @@ describe('User Card ', function () {
 
       opfab.loginWithUser('operator1_fr');
       opfab.navigateToUserCard();
-      usercard.selectService('Base Examples');
-      usercard.selectProcess('Process example');
-      usercard.selectState('Process example');
+      opfab.selectOptionsFromMultiselect('#of-usercard-service-selector', ['Base Examples']);
+      opfab.selectOptionsFromMultiselect('#of-usercard-process-filter', ['Process example'], false)
+      opfab.selectOptionsFromMultiselect('#of-state-filter', ['Process example'],false);
       usercard.previewThenSendCard();
       feed.openFirstCard();
       card.checkDeleteButtonDoesNotExist();
@@ -103,12 +103,12 @@ describe('User Card ', function () {
       script.deleteAllArchivedCards();
       opfab.loginWithUser('operator1_fr');
       opfab.navigateToUserCard();
-      usercard.selectService('User card examples');
-      usercard.selectProcess('Message or question');
-      usercard.selectState('Confirmation');
+      opfab.selectOptionsFromMultiselect('#of-usercard-service-selector', ['User card examples']);
+      opfab.selectOptionsFromMultiselect('#of-usercard-process-filter', ['Message or question']);
+      opfab.selectOptionsFromMultiselect('#of-state-filter', ['Confirmation'],false);
       cy.get('#label').should('have.text',' QUESTION ');
       cy.get('#question').invoke('val', 'First question'); // the cy.type does not work (no explanation found),  using invoke works 
-      usercard.selectRecipient('Control Center FR East');
+      opfab.selectOptionsFromMultiselect('#opfab-recipients', ['Control Center FR East'], true)
       usercard.previewThenSendCard();
       feed.openFirstCard();
       feed.editCurrentCard();
@@ -124,8 +124,8 @@ describe('User Card ', function () {
 
       opfab.loginWithUser('operator1_fr');
       opfab.navigateToUserCard();
-      usercard.selectService('User card examples');
-      usercard.selectProcess('Task');
+      opfab.selectOptionsFromMultiselect('#of-usercard-service-selector', ['User card examples']);
+      opfab.selectOptionsFromMultiselect('#of-usercard-process-filter', ['Task']);
       usercard.checkRecipientSelectDoesNotExist();
       usercard.preview();
       usercard.checkSenderIsTheOnlyOneRecipient();
@@ -136,9 +136,9 @@ describe('User Card ', function () {
       script.setPropertyInConf('usercard.displayConnectionCirclesInPreview','web-ui','\\"true\\"');
       opfab.loginWithUser('operator1_fr');
       opfab.navigateToUserCard();
-      usercard.selectService('User card examples');
-      usercard.selectProcess('Conference and IT incident');
-      usercard.selectState('IT Incident');
+      opfab.selectOptionsFromMultiselect('#of-usercard-service-selector', ['User card examples']);
+      opfab.selectOptionsFromMultiselect('#of-usercard-process-filter', ['Conference and IT incident']);
+      opfab.selectOptionsFromMultiselect('#of-state-filter', ['IT Incident'],false);
       usercard.checkRecipientSelectDoesNotExist();
       usercard.preview();
       usercard.checkEntityRecipientsInPreviewContains("French Control Centers");
@@ -154,10 +154,10 @@ describe('User Card ', function () {
 
       opfab.loginWithUser('operator1_fr');
       opfab.navigateToUserCard();
-      usercard.selectService('User card examples');
-      usercard.selectProcess('Conference and IT incident');
-      usercard.selectState('Conference Call ☏');
-      usercard.selectRecipient('Control Center FR East');
+      opfab.selectOptionsFromMultiselect('#of-usercard-service-selector', ['User card examples']);
+      opfab.selectOptionsFromMultiselect('#of-usercard-process-filter', ['Conference and IT incident']);
+      opfab.selectOptionsFromMultiselect('#of-state-filter', ['Conference Call ☏'],false);
+      opfab.selectOptionsFromMultiselect('#opfab-recipients', ['Control Center FR East'], true)
       usercard.preview();
       usercard.checkEntityRecipientsInPreviewContains("IT SUPERVISION CENTER");
       usercard.checkEntityRecipientsInPreviewContains("Control Center FR East");
@@ -167,9 +167,9 @@ describe('User Card ', function () {
 
       opfab.loginWithUser('operator1_fr');
       opfab.navigateToUserCard();
-      usercard.selectService('User card examples');
-      usercard.selectProcess('Message or question');
-      usercard.selectState('Message');
+      opfab.selectOptionsFromMultiselect('#of-usercard-service-selector', ['User card examples']);
+      opfab.selectOptionsFromMultiselect('#of-usercard-process-filter', ['Message or question']);
+      opfab.selectOptionsFromMultiselect('#of-state-filter', ['Message'],false);
       cy.get('#opfab-recipients').click();
       cy.get('#opfab-recipients').find('.vscomp-option-text').should('have.length', 7);
       cy.get('#opfab-recipients').find('.vscomp-option-text').eq(0).contains("Control Center FR East");
@@ -198,11 +198,11 @@ describe('User Card ', function () {
 
       opfab.loginWithUser('operator1_fr');
       opfab.navigateToUserCard();
-      usercard.selectService('User card examples');
-      usercard.selectProcess('Message or question');
-      usercard.selectState('Message');
+      opfab.selectOptionsFromMultiselect('#of-usercard-service-selector', ['User card examples']);
+      opfab.selectOptionsFromMultiselect('#of-usercard-process-filter', ['Message or question']);
+      opfab.selectOptionsFromMultiselect('#of-state-filter', ['Message'],false);
       usercard.checkSeverityChoiceExists();
-      usercard.selectState('Question');
+      opfab.selectOptionsFromMultiselect('#of-state-filter', ['Question'],false, 1);
       usercard.checkSeverityChoiceDoesNotExist();
       usercard.checkEmitterSelectDoesNotExist();
     })
@@ -211,9 +211,9 @@ describe('User Card ', function () {
 
       opfab.loginWithUser('operator1_fr');
       opfab.navigateToUserCard();
-      usercard.selectService('User card examples');
-      usercard.selectProcess('Conference and IT incident');
-      usercard.selectState('IT Incident');
+      opfab.selectOptionsFromMultiselect('#of-usercard-service-selector', ['User card examples']);
+      opfab.selectOptionsFromMultiselect('#of-usercard-process-filter', ['Conference and IT incident']);
+      opfab.selectOptionsFromMultiselect('#of-state-filter', ['IT Incident'],false);
       usercard.checkStartDateChoiceDoesNotExist();
       usercard.checkEndDateChoiceDoesNotExist();
       usercard.checkLttdChoiceDoesNotExist();
@@ -224,9 +224,9 @@ describe('User Card ', function () {
 
       opfab.loginWithUser('operator1_fr');
       opfab.navigateToUserCard();
-      usercard.selectService('User card examples');
-      usercard.selectProcess('Message or question');;
-      usercard.selectState('Question');
+      opfab.selectOptionsFromMultiselect('#of-usercard-service-selector', ['User card examples']);
+      opfab.selectOptionsFromMultiselect('#of-usercard-process-filter', ['Message or question']);
+      opfab.selectOptionsFromMultiselect('#of-state-filter', ['Question'],false, 1);
       usercard.checkStartDateChoiceExists();
       usercard.checkEndDateChoiceExists();
       usercard.checkLttdChoiceExists();
@@ -237,9 +237,9 @@ describe('User Card ', function () {
 
       opfab.loginWithUser('operator1_fr');
       opfab.navigateToUserCard();
-      usercard.selectService('Base Examples');
-      usercard.selectProcess('Process example');
-      usercard.selectState('Message');
+      opfab.selectOptionsFromMultiselect('#of-usercard-service-selector', ['Base Examples']);
+      opfab.selectOptionsFromMultiselect('#of-usercard-process-filter', ['Process example']);
+      opfab.selectOptionsFromMultiselect('#of-state-filter', ['Message'],false);
       usercard.checkStartDateChoiceExists();
       usercard.checkEndDateChoiceDoesNotExist();
       usercard.checkLttdChoiceDoesNotExist();
@@ -250,7 +250,7 @@ describe('User Card ', function () {
 
       opfab.loginWithUser('operator1_fr');
       opfab.navigateToUserCard();
-      usercard.selectService('Base Examples');
+      opfab.selectOptionsFromMultiselect('#of-usercard-service-selector', ['Base Examples']);
       cy.get("#of-usercard-process-filter").find('.vscomp-option-text').should("have.length", 1);
       cy.get("#of-usercard-process-filter").find('.vscomp-option-text').eq(0).should("contain", "Process example ");
     })
@@ -287,9 +287,9 @@ describe('User Card ', function () {
 
       opfab.loginWithUser('operator1_fr');
       opfab.navigateToUserCard();
-      usercard.selectService('User card examples');
-      usercard.selectProcess('Conference and IT incident');
-      usercard.selectState('Conference Call ☏');
+      opfab.selectOptionsFromMultiselect('#of-usercard-service-selector', ['User card examples']);
+      opfab.selectOptionsFromMultiselect('#of-usercard-process-filter', ['Conference and IT incident']);
+      opfab.selectOptionsFromMultiselect('#of-state-filter', ['Conference Call ☏'],false);
 
       // no report name and no report link : no error
       cy.get('#opfab-usercard-btn-prepareCard').click();
@@ -329,11 +329,11 @@ describe('User Card ', function () {
       opfab.checkLoadingSpinnerIsDisplayed();
       opfab.checkLoadingSpinnerIsNotDisplayed();
 
-      usercard.selectService('User card examples');
+      opfab.selectOptionsFromMultiselect('#of-usercard-service-selector', ['User card examples']);
       opfab.checkLoadingSpinnerIsDisplayed();
       opfab.checkLoadingSpinnerIsNotDisplayed();
 
-      usercard.selectState('IT Incident');
+      opfab.selectOptionsFromMultiselect('#of-state-filter', ['IT Incident'],false);
       opfab.checkLoadingSpinnerIsDisplayed();
       opfab.checkLoadingSpinnerIsNotDisplayed();
 
@@ -360,11 +360,11 @@ describe('User Card ', function () {
 
       opfab.loginWithUser('operator1_fr');
       opfab.navigateToUserCard();
-      usercard.selectService('User card examples');
-      usercard.selectProcess('Message or question');
-      usercard.selectState('Confirmation');
+      opfab.selectOptionsFromMultiselect('#of-usercard-service-selector', ['User card examples']);
+      opfab.selectOptionsFromMultiselect('#of-usercard-process-filter', ['Message or question']);
+      opfab.selectOptionsFromMultiselect('#of-state-filter', ['Confirmation'],false);
       // Select recipent entity not in user entities
-      usercard.selectRecipient('Control Center FR East');
+      opfab.selectOptionsFromMultiselect('#opfab-recipients', ['Control Center FR East'], true)
 
       cy.get('#question').type('Confirm YES or NO');
 
@@ -375,7 +375,7 @@ describe('User Card ', function () {
       usercard.cancelCardSending();
 
       // Select also one of user entities as recipent
-      usercard.selectRecipient('Control Center FR North');
+      opfab.selectOptionsFromMultiselect('#opfab-recipients', ['Control Center FR North'], true)
       usercard.preview();
 
       // Feed preview show response from current entity
@@ -422,7 +422,7 @@ describe('User Card ', function () {
       usercard.checkEmitterSelectDoesNotExist();
       cy.get('#message').type('Hello, that\'s a test message / Result is <OK> & work done is 100%');
       cy.setFormDateTime('startDate','2020','Jan',20,8,0);
-      usercard.selectRecipient('Control Center FR South');
+      opfab.selectOptionsFromMultiselect('#opfab-recipients', ['Control Center FR South'], true)
       usercard.previewThenSendCard();
       feed.openFirstCard();
       feed.checkSelectedCardHasTitle("Message");
@@ -532,7 +532,7 @@ describe('User Card ', function () {
       opfab.navigateToUserCard();
       cy.get("of-usercard").should('exist');
       cy.get('#message').type('Hello')
-      usercard.selectRecipient('Control Center FR South');
+      opfab.selectOptionsFromMultiselect('#opfab-recipients', ['Control Center FR South'], true)
       usercard.previewThenSendCard();
       feed.openFirstCard(); 
       cy.get('#opfab-div-card-template-processed').find('div').eq(0).should('have.text', '\n  Hello\n')
@@ -591,9 +591,9 @@ describe('User Card ', function () {
       feed.checkNumberOfDisplayedCardsIs(0);
 
       opfab.navigateToUserCard();
-      usercard.selectService('User card examples');
-      usercard.selectProcess('Conference and IT incident');
-      usercard.selectState('IT Incident');
+      opfab.selectOptionsFromMultiselect('#of-usercard-service-selector', ['User card examples']);
+      opfab.selectOptionsFromMultiselect('#of-usercard-process-filter', ['Conference and IT incident']);
+      opfab.selectOptionsFromMultiselect('#of-state-filter', ['IT Incident'],false);
 
       // check this to be sure template has been loaded
       cy.get('#service-select');
@@ -654,7 +654,7 @@ describe('User Card ', function () {
       cy.get('#of-usercard-card-emitter-selector').find('.vscomp-option-text').eq(2).click({force: true});
       cy.get('#message').type('Hello, that\'s a test message / Result is <OK> & work done is 100%');
       cy.setFormDateTime('startDate', '2020', 'Jan', 20, 8, 0);
-      usercard.selectRecipient('Control Center FR South');
+      opfab.selectOptionsFromMultiselect('#opfab-recipients', ['Control Center FR South'], true)
       usercard.previewThenSendCard();
       feed.checkNumberOfDisplayedCardsIs(1);
       feed.openFirstCard();
@@ -761,7 +761,7 @@ describe('User Card ', function () {
       // check template rendering done
       cy.get('#message').should('be.visible');
 
-      usercard.selectState('Process example');
+      opfab.selectOptionsFromMultiselect('#of-state-filter', ['Process example'],false);
 
       usercard.checkEmitterSelectExists();
       cy.get('#of-usercard-card-emitter-selector').find('label').first().should("have.text", "EMITTER");
@@ -769,7 +769,7 @@ describe('User Card ', function () {
       cy.get('#of-usercard-card-emitter-selector').find('.vscomp-option-text').eq(0).should("contain.text", "Control Center FR East");
       cy.get('#of-usercard-card-emitter-selector').find('.vscomp-option-text').eq(1).should("contain.text", "Control Center FR North");
 
-      usercard.selectState('Message');
+      opfab.selectOptionsFromMultiselect('#of-state-filter', ['Message'],false);
 
       cy.get('#of-usercard-card-emitter-selector').find('.vscomp-option-text').should("have.length",4);
       cy.get('#of-usercard-card-emitter-selector').find('.vscomp-option-text').eq(0).should("contain.text", "Control Center FR East");
@@ -777,7 +777,7 @@ describe('User Card ', function () {
       cy.get('#of-usercard-card-emitter-selector').find('.vscomp-option-text').eq(2).should("contain.text", "Control Center FR South");
       cy.get('#of-usercard-card-emitter-selector').find('.vscomp-option-text').eq(3).should("contain.text", "Control Center FR West");
 
-      usercard.selectState('Process example');
+      opfab.selectOptionsFromMultiselect('#of-state-filter', ['Process example'],false);
 
       usercard.checkEmitterSelectExists();
       cy.get('#of-usercard-card-emitter-selector').find('label').first().should("have.text", "EMITTER");
@@ -813,7 +813,7 @@ describe('User Card ', function () {
       cy.get('#of-usercard-card-emitter-selector').find('.vscomp-option-text').eq(0).should("contain.text", "Control Center FR East");
       cy.get('#of-usercard-card-emitter-selector').find('.vscomp-option-text').eq(1).should("contain.text", "Control Center FR North");
 
-      usercard.selectState('Message');
+      opfab.selectOptionsFromMultiselect('#of-state-filter', ['Message'],false);
 
       cy.get('#of-usercard-card-emitter-selector').find('.vscomp-option-text').should("have.length",4);
       cy.get('#of-usercard-card-emitter-selector').find('.vscomp-option-text').eq(0).should("contain.text", "Control Center FR East");
@@ -821,7 +821,7 @@ describe('User Card ', function () {
       cy.get('#of-usercard-card-emitter-selector').find('.vscomp-option-text').eq(2).should("contain.text", "Control Center FR South");
       cy.get('#of-usercard-card-emitter-selector').find('.vscomp-option-text').eq(3).should("contain.text", "Control Center FR West");
 
-      usercard.selectState('Process example');
+      opfab.selectOptionsFromMultiselect('#of-state-filter', ['Process example'],false);
 
       usercard.checkEmitterSelectExists();
       cy.get('#of-usercard-card-emitter-selector').find('label').first().should("have.text", "EMITTER");
@@ -852,8 +852,8 @@ describe('User Card ', function () {
 
 
       // Test on Conference call
-      usercard.selectService('User card examples');
-      usercard.selectProcess('Conference and IT incident');
+      opfab.selectOptionsFromMultiselect('#of-usercard-service-selector', ['User card examples']);
+      opfab.selectOptionsFromMultiselect('#of-usercard-process-filter', ['Conference and IT incident']);
       cy.get("#hidden_process").should("exist");
       cy.get("#hidden_process").should("have.value", "conferenceAndITIncidentExample");
 
@@ -863,7 +863,7 @@ describe('User Card ', function () {
 
       // Test on IT incident
 
-      usercard.selectState("IT Incident");
+      opfab.selectOptionsFromMultiselect('#of-state-filter', ["IT Incident"],false);
       cy.get("#hidden_process").should("exist");
       cy.get("#hidden_process").should("have.value", "conferenceAndITIncidentExample");
 
@@ -891,9 +891,9 @@ describe('User Card ', function () {
 
       opfab.loginWithUser('operator1_fr');
       opfab.navigateToUserCard();
-      usercard.selectService('User card examples');
-      usercard.selectProcess('Message or question');
-      usercard.selectState('Confirmation');
+      opfab.selectOptionsFromMultiselect('#of-usercard-service-selector', ['User card examples']);
+      opfab.selectOptionsFromMultiselect('#of-usercard-process-filter', ['Message or question']);
+      opfab.selectOptionsFromMultiselect('#of-state-filter', ['Confirmation'],false);
 
       const startDate = new Date();
       startDate.setTime(startDate.getTime()+ 3600000);
@@ -1007,8 +1007,8 @@ describe('User Card ', function () {
       script.deleteAllCards();
       opfab.loginWithUser('operator1_fr');
       opfab.navigateToUserCard();
-      usercard.selectService('User card examples');
-      usercard.selectProcess('Task');
+      opfab.selectOptionsFromMultiselect('#of-usercard-service-selector', ['User card examples']);
+      opfab.selectOptionsFromMultiselect('#of-usercard-process-filter', ['Task']);
       cy.waitDefaultTime();
       cy.get('#Monday').check({force: true});
       cy.get('#Tuesday').check({force: true});
@@ -1038,8 +1038,8 @@ describe('User Card ', function () {
       usercard.checkSelectedSeverityIs('ALARM');
 
       // Check initial severity level for task  value is set to 'Action'
-      usercard.selectService('User card examples');
-      usercard.selectProcess('Task');
+      opfab.selectOptionsFromMultiselect('#of-usercard-service-selector', ['User card examples']);
+      opfab.selectOptionsFromMultiselect('#of-usercard-process-filter', ['Task']);
       usercard.checkSelectedSeverityIs('ACTION');
 
       // Change severity, send card, edit it and check severity is not modified on edition
@@ -1061,17 +1061,17 @@ describe('User Card ', function () {
       opfab.loginWithUser('operator1_fr');
       opfab.navigateToUserCard();
 
-      usercard.selectProcess('Process example');
-      usercard.selectState('Process example');
+      opfab.selectOptionsFromMultiselect('#of-usercard-process-filter', ['Process example']);
+      opfab.selectOptionsFromMultiselect('#of-state-filter', ['Process example'],false);
 
-      usercard.selectRecipient('Control Center FR North');
+      opfab.selectOptionsFromMultiselect('#opfab-recipients', ['Control Center FR North'], true)
       usercard.preview();
       usercard.checkEntityRecipientsInPreviewContains("Control Center FR North");
       usercard.checkEntityRecipientsInPreviewContains("North Europe Control Center");
 
       usercard.cancelCardSending();
 
-      usercard.selectRecipient('Control Center FR South');
+      opfab.selectOptionsFromMultiselect('#opfab-recipients', ['Control Center FR South'], true)
       usercard.preview();
       usercard.checkEntityRecipientsInPreviewContains("Control Center FR South");
       usercard.checkEntityRecipientsInPreviewContains("South Europe Control Center");
@@ -1084,9 +1084,9 @@ describe('User Card ', function () {
     it('Search feature should be enabled on services dropdown for "IT incident" user card', () => {
       opfab.loginWithUser('operator1_fr');
       opfab.navigateToUserCard();
-      usercard.selectService('User card examples');
-      usercard.selectProcess('Conference and IT incident');
-      usercard.selectState('IT Incident');
+      opfab.selectOptionsFromMultiselect('#of-usercard-service-selector', ['User card examples']);
+      opfab.selectOptionsFromMultiselect('#of-usercard-process-filter', ['Conference and IT incident']);
+      opfab.selectOptionsFromMultiselect('#of-state-filter', ['IT Incident'],false);
       // check search is enabled for service select
       usercard.checkServiceSelectExists();
       cy.get('#service-select').click();
@@ -1111,8 +1111,8 @@ describe('User Card ', function () {
     it('Search feature should be enabled on states dropdown for "Process example" user card', () => {
       opfab.loginWithUser('operator1_fr');
       opfab.navigateToUserCard();
-      usercard.selectProcess('Process example');
-      usercard.selectState('Process example');
+      opfab.selectOptionsFromMultiselect('#of-usercard-process-filter', ['Process example']);
+      opfab.selectOptionsFromMultiselect('#of-state-filter', ['Process example'],false);
 
       // check search is enabled for state select
       cy.get('#state-select').should("exist");
@@ -1147,9 +1147,9 @@ describe('User Card ', function () {
     it('Check expiration date icon is present when expirationDate is set', () => {
       opfab.loginWithUser('operator1_fr');
       opfab.navigateToUserCard();
-      usercard.selectService('Base Examples');
-      usercard.selectProcess('Process example');
-      usercard.selectState('Process example');
+      opfab.selectOptionsFromMultiselect('#of-usercard-service-selector', ['Base Examples']);
+      opfab.selectOptionsFromMultiselect('#of-usercard-process-filter', ['Process example']);
+      opfab.selectOptionsFromMultiselect('#of-state-filter', ['Process example'],false);
       cy.setFormDateTime('startDate','2020','Jan',20,8,0);
       cy.setFormDateTime('endDate','2029','Jun',25,11,10);
       cy.setFormDateTime('expirationDate','2029','Jun',25,11,10);
@@ -1187,17 +1187,16 @@ describe('User Card ', function () {
       opfab.loginWithUser('operator1_fr');
       opfab.navigateToUserCard();
 
-      usercard.selectProcess('Process example');
-      usercard.selectState('Process example');
+      opfab.selectOptionsFromMultiselect('#of-usercard-process-filter', ['Process example']);
+      opfab.selectOptionsFromMultiselect('#of-state-filter', ['Process example'],false);
       usercard.checkRecipientForInformationSelectDoesNotExist();
 
-      usercard.selectState('Message');
+      opfab.selectOptionsFromMultiselect('#of-state-filter', ['Message'],false);
       // We check all entities are proposed in the dropdown list
       cy.get('#opfab-recipients-for-information').find('.vscomp-option-text').should("have.length", 15);
 
-      usercard.selectRecipient('Control Center FR North');
-      usercard.selectRecipientForInformation('Control Center FR West');
-      usercard.selectRecipientForInformation('Control Center FR East');
+      opfab.selectOptionsFromMultiselect('#opfab-recipients', ['Control Center FR North'], true)
+      opfab.selectOptionsFromMultiselect('#opfab-recipients-for-information', ['Control Center FR West', 'Control Center FR East'], true)
       usercard.preview();
 
       cy.get("#opfab-entity-recipients").find('span').should('have.length', 2);
@@ -1232,12 +1231,10 @@ describe('User Card ', function () {
       opfab.loginWithUser('operator1_fr');
       opfab.navigateToUserCard();
 
-      usercard.selectState('Message');
+      opfab.selectOptionsFromMultiselect('#of-state-filter', ['Message'],false);
 
-      usercard.selectRecipient('Control Center FR North');
-      usercard.selectRecipient('Control Center FR East');
-      usercard.selectRecipientForInformation('Control Center FR West');
-      usercard.selectRecipientForInformation('Control Center FR East');
+      opfab.selectOptionsFromMultiselect('#opfab-recipients', ['Control Center FR North', 'Control Center FR East'], true)
+      opfab.selectOptionsFromMultiselect('#opfab-recipients-for-information', ['Control Center FR West', 'Control Center FR East'], true)
       usercard.preview();
 
       // We check Control Center FR East is displayed in 'Recipients' section and not in 'Recipients for information'
@@ -1275,9 +1272,9 @@ describe('User Card ', function () {
       opfab.loginWithUser('operator1_fr');
       opfab.navigateToUserCard();
 
-      usercard.selectService('User card examples');
-      usercard.selectProcess('Message or question');
-      usercard.selectState('Message');
+      opfab.selectOptionsFromMultiselect('#of-usercard-service-selector', ['User card examples']);
+      opfab.selectOptionsFromMultiselect('#of-usercard-process-filter', ['Message or question']);
+      opfab.selectOptionsFromMultiselect('#of-state-filter', ['Message'],false);
 
       // We check the list of entities is restricted in the dropdown list
       cy.get('#opfab-recipients-for-information').find('.vscomp-option-text').should('have.length', 6);
@@ -1296,7 +1293,7 @@ describe('User Card ', function () {
       cy.get('#opfab-recipients-for-information').find('.vscomp-value').contains("IT SUPERVISION CENTER").should('not.exist');
       
       // We check we can add an entity to the default selected value
-      usercard.selectRecipientForInformation('IT SUPERVISION CENTER');
+      opfab.selectOptionsFromMultiselect('#opfab-recipients-for-information', ['IT SUPERVISION CENTER'], true)
       cy.get('#usercard_message_input').type('Hello');
       usercard.preview();
 
@@ -1368,21 +1365,21 @@ describe('User Card ', function () {
       script.deleteAllCards();
       opfab.loginWithUser('operator4_fr');
       opfab.navigateToUserCard();
-      usercard.selectService('User card examples');
-      usercard.selectProcess('Message or question');
-      usercard.selectState('Message');
+      opfab.selectOptionsFromMultiselect('#of-usercard-service-selector', ['User card examples']);
+      opfab.selectOptionsFromMultiselect('#of-usercard-process-filter', ['Message or question']);
+      opfab.selectOptionsFromMultiselect('#of-state-filter', ['Message'],false);
 
       cy.waitDefaultTime();
       cy.get('#opfab-sev-information').check(); // we set severity different from default value
       cy.get('#usercard_message_input').type('Test for copy card feature');
 
-      usercard.selectEmitter('Control Center FR West');
+      opfab.selectOptionsFromMultiselect('#of-usercard-card-emitter-selector', ['Control Center FR West'], false)
 
       usercard.clearSelectedRecipients();
-      usercard.selectRecipient('Control Center FR South');
+      opfab.selectOptionsFromMultiselect('#opfab-recipients', ['Control Center FR South'], true)
 
       usercard.clearSelectedRecipientsForInformation();
-      usercard.selectRecipientForInformation('Control Center FR East');
+      opfab.selectOptionsFromMultiselect('#opfab-recipients-for-information', ['Control Center FR East'], true)
 
       usercard.previewThenSendCard();
       feed.openFirstCard();

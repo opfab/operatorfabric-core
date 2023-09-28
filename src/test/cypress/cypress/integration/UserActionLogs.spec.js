@@ -211,11 +211,11 @@ describe ('User action logs page',()=>{
 
     function sendQuestionCard() {
         opfab.navigateToUserCard();
-        usercard.selectService('User card examples');
-        usercard.selectProcess('Message or question');
-        usercard.selectState('Question');
+        opfab.selectOptionsFromMultiselect('#of-usercard-service-selector', ['User card examples']);
+        opfab.selectOptionsFromMultiselect('#of-usercard-process-filter', ['Message or question'], false)
+        opfab.selectOptionsFromMultiselect('#of-state-filter', ['Question'], false, 1);
         cy.get('#opfab-question-label').should('have.text','QUESTION');
-        usercard.selectRecipient('Control Center FR South');
+        opfab.selectOptionsFromMultiselect('#opfab-recipients', ['Control Center FR South'], true)
         cy.get('#usercard_question_input').type('First question');
         usercard.previewThenSendCard();
     }
@@ -223,7 +223,7 @@ describe ('User action logs page',()=>{
     function sendMessageCard() {
         opfab.navigateToUserCard();
         // Send base example message
-        usercard.selectRecipient('Control Center FR South');
+        opfab.selectOptionsFromMultiselect('#opfab-recipients', ['Control Center FR South'], true)
         usercard.previewThenSendCard();
     }
 

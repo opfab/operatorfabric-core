@@ -10,6 +10,7 @@
 import {OpfabGeneralCommands} from "../support/opfabGeneralCommands"
 import {ArchivesAndLoggingCommands} from "../support/archivesAndLoggingCommands"
 import {ScriptCommands} from "../support/scriptCommands";
+import { UserCardCommands } from "../support/userCardCommands";
 
 describe('Archives screen tests', function () {
 
@@ -41,16 +42,16 @@ describe('Archives screen tests', function () {
         checkPaginationResultsNumberIs(6);
 
         // We check filtering by process is working
-        archivesAndLogging.selectProcess('IGCC');
+        opfab.selectOptionsFromMultiselect('#opfab-process',['IGCC']);
         archivesAndLogging.clickOnSearchButton();
         archivesAndLogging.checkNoResultForSearch();
         archivesAndLogging.unselectAllProcesses();
-        archivesAndLogging.selectProcess('Process example');
+        opfab.selectOptionsFromMultiselect('#opfab-process',['Process example']);
         archivesAndLogging.clickOnSearchButton();
         checkNumberOfLineDisplayedIs(6);
 
         // We check filtering by state is working
-        archivesAndLogging.selectState('Message');
+        opfab.selectOptionsFromMultiselect('#opfab-state', ['Message'], false, 1);
         archivesAndLogging.clickOnSearchButton();
         checkNumberOfLineDisplayedIs(1);
         archivesAndLogging.unselectAllProcesses();
@@ -249,9 +250,7 @@ describe('Archives screen tests', function () {
         archivesAndLogging.clickOnProcessGroupSelect();
         archivesAndLogging.selectAllProcessGroups();
 
-        archivesAndLogging.clickOnProcessSelect();
-        cy.selectProcess('Process example');
-        archivesAndLogging.clickOnProcessSelect();
+        opfab.selectOptionsFromMultiselect('#opfab-process', ['Process example'], true)
 
         archivesAndLogging.clickOnStateSelect();
         archivesAndLogging.checkNumberOfStateEntriesIs(8);
@@ -548,7 +547,7 @@ describe('Archives screen tests', function () {
 
         archivesAndLogging.clickOnProcessGroupSelect();
         archivesAndLogging.selectAllProcessGroups();
-        archivesAndLogging.selectProcess('Process example');
+        opfab.selectOptionsFromMultiselect('#opfab-process',['Process example']);
         archivesAndLogging.clickOnProcessSelect();
         archivesAndLogging.clickOnStateSelect();
         archivesAndLogging.checkNumberOfStateEntriesIs(8);

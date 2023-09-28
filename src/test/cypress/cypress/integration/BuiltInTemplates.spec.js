@@ -40,9 +40,9 @@ describe('User Card ', function () {
       opfab.loginWithUser('operator1_fr');
       feed.checkNumberOfDisplayedCardsIs(0);
       opfab.navigateToUserCard();
-      usercard.selectService('User card examples');
-      usercard.selectProcess('Message or question');
-      usercard.selectState('Message or question list');
+      opfab.selectOptionsFromMultiselect('#of-usercard-service-selector', ['User card examples']);
+      opfab.selectOptionsFromMultiselect('#of-usercard-process-filter', ['Message or question'], false)
+      opfab.selectOptionsFromMultiselect('#of-state-filter', ['Message or question list']);
       cy.get('#message-select').click();
       cy.get('#message-select').find('.vscomp-search-input').type('Confirmation the issues have been fixed');
       cy.get('#message-select').find('.vscomp-option-text').eq(0).click();
@@ -76,8 +76,8 @@ describe('User Card ', function () {
       // Sends 7 cards over the coming week
       opfab.navigateToUserCard();
       usercard.checkEmitterSelectDoesNotExist();
-      usercard.selectService('User card examples')
-      usercard.selectProcess('Task Advanced');
+      opfab.selectOptionsFromMultiselect('#of-usercard-service-selector', ['User card examples'], false)
+      opfab.selectOptionsFromMultiselect('#of-usercard-process-filter', ['Task Advanced'], false)
       cy.waitDefaultTime();
       cy.get('#time').type('00:00');
       usercard.previewThenSendCard();    

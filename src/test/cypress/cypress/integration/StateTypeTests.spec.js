@@ -1,4 +1,4 @@
-/* Copyright (c) 2021-2022, RTE (http://www.rte-france.com)
+/* Copyright (c) 2021-2023, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -164,7 +164,7 @@ describe('State type tests', function () {
             cy.get('#opfab-card-response-header-left').find('[class^="opfab-typeOfState-"]')
                 .should('have.text',"FINISHED")
                 .should('have.css','color',green);
-            cy.get('#opfab-card-response-header-left').contains('|').should('not.exist');;
+            cy.get('#opfab-card-response-header-left').contains('|').should('not.exist');
             cy.get('#opfab-card-response-header-left').find('.lttd-icon, .lttd-timeleft', '.lttd-text').should('not.exist');
         });
 

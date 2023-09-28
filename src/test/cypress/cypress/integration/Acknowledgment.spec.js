@@ -754,9 +754,9 @@ describe('Acknowledgment tests', function () {
 
         // We create a usercard for a process/state which has "showAcknowledgmentFooter" set to "OnlyForEmittingEntity"
         opfab.navigateToUserCard();
-        usercard.selectService('User card examples')
-        usercard.selectProcess('Message or question');
-        usercard.selectState('Message');
+        opfab.selectOptionsFromMultiselect('#of-usercard-service-selector', ['User card examples']);
+        opfab.selectOptionsFromMultiselect('#of-usercard-process-filter', ['Message or question']);
+        opfab.selectOptionsFromMultiselect('#of-state-filter', ['Message']);
         cy.waitDefaultTime();
         cy.get('#usercard_message_input').type('Test message for ack footer');
         usercard.previewThenSendCard();
@@ -798,9 +798,9 @@ describe('Acknowledgment tests', function () {
 
         // We create a usercard for a process/state which has "showAcknowledgmentFooter" set to "Never"
         opfab.navigateToUserCard();
-        usercard.selectService('User card examples')
-        usercard.selectProcess('Conference and IT incident');
-        usercard.selectState('IT Incident');
+        opfab.selectOptionsFromMultiselect('#of-usercard-service-selector', ['User card examples']);
+        opfab.selectOptionsFromMultiselect('#of-usercard-process-filter', ['Conference and IT incident'], false)
+        opfab.selectOptionsFromMultiselect('#of-state-filter', ['IT Incident']);
         cy.waitDefaultTime();
         usercard.previewThenSendCard();
         cy.waitDefaultTime();
@@ -866,10 +866,10 @@ describe('Acknowledgment tests', function () {
 
         // We create a usercard for a process/state which has "showAcknowledgmentFooter" set to "ForAllUsers"
         opfab.navigateToUserCard();
-        usercard.selectService('User card examples')
-        usercard.selectProcess('Conference and IT incident');
-        usercard.selectState('Conference Call');
-        usercard.selectRecipient('Control Center FR South');
+        opfab.selectOptionsFromMultiselect('#of-usercard-service-selector', ['User card examples']);
+        opfab.selectOptionsFromMultiselect('#of-usercard-process-filter', ['Conference and IT incident'], false)
+        opfab.selectOptionsFromMultiselect('#of-state-filter', ['Conference Call']);
+        opfab.selectOptionsFromMultiselect('#opfab-recipients', ['Control Center FR South'], true)
         usercard.previewThenSendCard();
         cy.waitDefaultTime();
 

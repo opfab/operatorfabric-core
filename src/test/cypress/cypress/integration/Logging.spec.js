@@ -332,7 +332,7 @@ describe('Logging screen tests', function () {
 
         archivesAndLogging.clickOnProcessGroupSelect();
         archivesAndLogging.selectAllProcessGroups();
-        archivesAndLogging.selectProcess('Process example');
+        opfab.selectOptionsFromMultiselect('#opfab-process', ['Process example'], true)
         archivesAndLogging.clickOnProcessSelect();
         archivesAndLogging.clickOnStateSelect();
         archivesAndLogging.checkNumberOfStateEntriesIs(9);

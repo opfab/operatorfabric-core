@@ -566,17 +566,18 @@ describe('Response card tests', function () {
         script.deleteAllCards();
         opfab.loginWithUser('operator1_fr');
         opfab.navigateToUserCard();
-        usercard.selectService('User card examples');
-        usercard.selectProcess('Message or question');
-        usercard.selectState('Question');
+        opfab.selectOptionsFromMultiselect('#of-usercard-service-selector', ['User card examples']);
+        opfab.selectOptionsFromMultiselect('#of-usercard-process-filter', ['Message or question']);
+        opfab.selectOptionsFromMultiselect('#of-state-filter', ['Question'], false, 1);
         cy.get('#opfab-question-label').should('have.text', 'QUESTION');
         cy.get('#usercard_question_input').invoke('val', 'question'); // the cy.type does not work (no explanation found),  using invoke works 
-        usercard.selectRecipient('Control Center FR East');
-        usercard.selectRecipient('Control Center FR North');
-        usercard.selectRecipient('Control Center FR South');
-        usercard.selectRecipient('Control Center FR West');
-        usercard.selectRecipient('Control Center IT Center');
-        usercard.selectRecipient('Control Center IT North');
+        const recipients = ['Control Center FR East', 
+        'Control Center FR North', 
+        'Control Center FR South', 
+        'Control Center FR West', 
+        'Control Center IT Center', 
+        'Control Center IT North'] 
+        opfab.selectOptionsFromMultiselect('#opfab-recipients', recipients, true)
         usercard.previewThenSendCard();
         feed.openFirstCard();
 
@@ -611,15 +612,16 @@ describe('Response card tests', function () {
         script.deleteAllCards();
         opfab.loginWithUser('operator4_fr');
         opfab.navigateToUserCard();
-        usercard.selectService('User card examples');
-        usercard.selectProcess('Message or question');
-        usercard.selectState('Confirmation');
+        opfab.selectOptionsFromMultiselect('#of-usercard-service-selector', ['User card examples']);
+        opfab.selectOptionsFromMultiselect('#of-usercard-process-filter', ['Message or question']);
+        opfab.selectOptionsFromMultiselect('#of-state-filter', ['Confirmation']);
         cy.get('#question').invoke('val', 'question'); // the cy.type does not work (no explanation found),  using invoke works 
         cy.get('#message').invoke('val', 'Cypress test for response publisher');
-        usercard.selectRecipient('Control Center FR East');
-        usercard.selectRecipient('Control Center FR North');
-        usercard.selectRecipient('Control Center FR South');
-        usercard.selectRecipient('Control Center FR West');
+        const recipients = ['Control Center FR East', 
+        'Control Center FR North', 
+        'Control Center FR South', 
+        'Control Center FR West'] 
+        opfab.selectOptionsFromMultiselect('#opfab-recipients', recipients, true)
         usercard.preview();
 
         // Feed preview show response from current entity

@@ -417,7 +417,7 @@ describe('Time line moves', function () {
 
         cy.tick(15 * MINUTES);
         checkTimeCursorText(" 01/04/30 12:20 ");
-        checkTitle(" 01/04/2030 - 09/04/2030 ");;
+        checkTitle(" 01/04/2030 - 09/04/2030 ");
         checkFirstTickLabel(" 00h ");
         checkHaveCircle(1);
 

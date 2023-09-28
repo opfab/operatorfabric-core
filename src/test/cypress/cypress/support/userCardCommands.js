@@ -25,15 +25,6 @@ export class UserCardCommands extends OpfabCommands {
         cy.get('#of-usercard-service-selector');
     }
 
-    selectService= function (serviceName) {
-        cy.get('#of-usercard-service-selector').click();
-        cy.get('#of-usercard-service-selector')
-            .find('.vscomp-option-text')
-            .contains(serviceName)
-            .eq(0)
-            .click({force: true});
-    }
-
     checkSelectedServiceIs= function (serviceName) {
         cy.get('#of-usercard-service-selector')
             .find('.vscomp-value')
@@ -46,14 +37,6 @@ export class UserCardCommands extends OpfabCommands {
         cy.get('#of-usercard-process-filter').should('not.exist');
     }
 
-    selectProcess= function (processName) {
-        cy.get('#of-usercard-process-filter').click();
-        cy.get('#of-usercard-process-filter').find('.vscomp-search-input').clear();
-        cy.get('#of-usercard-process-filter').find('.vscomp-search-input').type(processName);
-        cy.get('#of-usercard-process-filter').find('.vscomp-option-text').eq(0).should('contain.text', processName);
-        cy.get('#of-usercard-process-filter').find('.vscomp-option-text').eq(0).click();
-    }
-
     checkSelectedProcessIs= function (processName) {
         cy.get('#of-usercard-process-filter')
             .find('.vscomp-value')
@@ -63,11 +46,6 @@ export class UserCardCommands extends OpfabCommands {
     // STATES COMMANDS 
     checkStateSelectDoesNotExist= function () {
         cy.get('#of-state-filter').should('not.be.visible');
-    }
-
-    selectState= function (stateName) {
-        cy.get('#of-state-filter').click();
-        cy.get('#of-state-filter').find('.vscomp-option-text').contains(stateName).eq(0).click({force: true});
     }
 
     checkSelectedStateIs= function (stateName) {
@@ -124,16 +102,6 @@ export class UserCardCommands extends OpfabCommands {
         cy.get('#of-usercard-card-emitter-selector');
     }
 
-    selectEmitter= function (emitterName) {
-        cy.get('#of-usercard-card-emitter-selector').click();
-        cy.get('#of-usercard-card-emitter-selector').find('.vscomp-search-input').clear();
-        cy.get('#of-usercard-card-emitter-selector').find('.vscomp-search-input').type(emitterName);
-        cy.get('#of-usercard-card-emitter-selector').find('.vscomp-option-text').eq(0).should('contain.text', emitterName);
-        cy.get('#of-usercard-card-emitter-selector').find('.vscomp-option-text').eq(0).click();
-        cy.get('#of-usercard-card-emitter-selector').find('.vscomp-value').should('contain.text', emitterName);
-        cy.wait(200);
-    }
-
     checkEmitterIs= function(emitterName) {
         cy.get('#of-usercard-card-emitter-selector').find('.vscomp-value').should('contain.text', emitterName);
     }
@@ -141,17 +109,6 @@ export class UserCardCommands extends OpfabCommands {
     // RECIPIENTS COMMANDS 
     checkRecipientSelectDoesNotExist= function () {
         cy.get('#opfab-recipients').should("not.exist");
-    }
-
-    selectRecipient= function (recipientName) {
-        cy.get('#opfab-recipients').click();
-        cy.get('#opfab-recipients').find('.vscomp-search-input').clear();
-        cy.get('#opfab-recipients').find('.vscomp-search-input').type(recipientName);
-        cy.get('#opfab-recipients').find('.vscomp-option-text').eq(0).should('contain.text', recipientName);
-        cy.get('#opfab-recipients').find('.vscomp-option-text').eq(0).click();
-        cy.get('#opfab-recipients').find('.vscomp-value-tag').should('contain.text', recipientName);
-        cy.get('#opfab-recipients').find('.vscomp-toggle-button').click();
-        cy.wait(200);
     }
 
     clearSelectedRecipients= function () {
@@ -169,17 +126,6 @@ export class UserCardCommands extends OpfabCommands {
     // RECIPIENTS FOR INFORMATION COMMANDS
     checkRecipientForInformationSelectDoesNotExist= function () {
         cy.get('#opfab-recipients-for-information').should("not.exist");
-    }
-
-    selectRecipientForInformation= function (recipientName) {
-        cy.get('#opfab-recipients-for-information').click();
-        cy.get('#opfab-recipients-for-information').find('.vscomp-search-input').clear();
-        cy.get('#opfab-recipients-for-information').find('.vscomp-search-input').type(recipientName);
-        cy.get('#opfab-recipients-for-information').find('.vscomp-option-text').eq(0).should('contain.text', recipientName);
-        cy.get('#opfab-recipients-for-information').find('.vscomp-option-text').eq(0).click();
-        cy.get('#opfab-recipients-for-information').find('.vscomp-value-tag').should('contain.text', recipientName);
-        cy.get('#opfab-recipients-for-information').find('.vscomp-toggle-button').click();
-        cy.wait(200);
     }
 
     clearSelectedRecipientsForInformation= function () {
