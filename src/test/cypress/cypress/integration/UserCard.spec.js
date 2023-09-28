@@ -202,7 +202,7 @@ describe('User Card ', function () {
       usercard.selectProcess('Message or question');
       usercard.selectState('Message');
       usercard.checkSeverityChoiceExists();
-      usercard.selectState('Question');
+      usercard.selectState('Question', 1);
       usercard.checkSeverityChoiceDoesNotExist();
       usercard.checkEmitterSelectDoesNotExist();
     })
@@ -226,7 +226,7 @@ describe('User Card ', function () {
       opfab.navigateToUserCard();
       usercard.selectService('User card examples');
       usercard.selectProcess('Message or question');;
-      usercard.selectState('Question');
+      usercard.selectState('Question', 1);
       usercard.checkStartDateChoiceExists();
       usercard.checkEndDateChoiceExists();
       usercard.checkLttdChoiceExists();

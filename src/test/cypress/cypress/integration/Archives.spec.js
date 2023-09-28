@@ -50,7 +50,7 @@ describe('Archives screen tests', function () {
         checkNumberOfLineDisplayedIs(6);
 
         // We check filtering by state is working
-        archivesAndLogging.selectState('Message');
+        archivesAndLogging.selectState('Message', 1);
         archivesAndLogging.clickOnSearchButton();
         checkNumberOfLineDisplayedIs(1);
         archivesAndLogging.unselectAllProcesses();

@@ -568,7 +568,7 @@ describe('Response card tests', function () {
         opfab.navigateToUserCard();
         usercard.selectService('User card examples');
         usercard.selectProcess('Message or question');
-        usercard.selectState('Question');
+        usercard.selectState('Question', 1);
         cy.get('#opfab-question-label').should('have.text', 'QUESTION');
         cy.get('#usercard_question_input').invoke('val', 'question'); // the cy.type does not work (no explanation found),  using invoke works 
         usercard.selectRecipient('Control Center FR East');

@@ -8,8 +8,11 @@
  */
 
 import {OpfabCommands} from './opfabCommands';
+import { OpfabGeneralCommands } from './opfabGeneralCommands';
 
 export class UserCardCommands extends OpfabCommands {
+
+    opfab = new OpfabGeneralCommands();
 
     constructor() {
         super();
@@ -26,12 +29,7 @@ export class UserCardCommands extends OpfabCommands {
     }
 
     selectService= function (serviceName) {
-        cy.get('#of-usercard-service-selector').click();
-        cy.get('#of-usercard-service-selector')
-            .find('.vscomp-option-text')
-            .contains(serviceName)
-            .eq(0)
-            .click({force: true});
+        this.opfab.selectOptionsFromMultiselect('#of-usercard-service-selector', serviceName)
     }
 
     checkSelectedServiceIs= function (serviceName) {
@@ -47,11 +45,7 @@ export class UserCardCommands extends OpfabCommands {
     }
 
     selectProcess= function (processName) {
-        cy.get('#of-usercard-process-filter').click();
-        cy.get('#of-usercard-process-filter').find('.vscomp-search-input').clear();
-        cy.get('#of-usercard-process-filter').find('.vscomp-search-input').type(processName);
-        cy.get('#of-usercard-process-filter').find('.vscomp-option-text').eq(0).should('contain.text', processName);
-        cy.get('#of-usercard-process-filter').find('.vscomp-option-text').eq(0).click();
+        this.opfab.selectOptionsFromMultiselect('#of-usercard-process-filter', processName)
     }
 
     checkSelectedProcessIs= function (processName) {
@@ -65,9 +59,8 @@ export class UserCardCommands extends OpfabCommands {
         cy.get('#of-state-filter').should('not.be.visible');
     }
 
-    selectState= function (stateName) {
-        cy.get('#of-state-filter').click();
-        cy.get('#of-state-filter').find('.vscomp-option-text').contains(stateName).eq(0).click({force: true});
+    selectState= function (stateName, searchResultNumber = 0) {
+        this.opfab.selectOptionsFromMultiselect('#of-state-filter', stateName, false, searchResultNumber)
     }
 
     checkSelectedStateIs= function (stateName) {
@@ -125,13 +118,7 @@ export class UserCardCommands extends OpfabCommands {
     }
 
     selectEmitter= function (emitterName) {
-        cy.get('#of-usercard-card-emitter-selector').click();
-        cy.get('#of-usercard-card-emitter-selector').find('.vscomp-search-input').clear();
-        cy.get('#of-usercard-card-emitter-selector').find('.vscomp-search-input').type(emitterName);
-        cy.get('#of-usercard-card-emitter-selector').find('.vscomp-option-text').eq(0).should('contain.text', emitterName);
-        cy.get('#of-usercard-card-emitter-selector').find('.vscomp-option-text').eq(0).click();
-        cy.get('#of-usercard-card-emitter-selector').find('.vscomp-value').should('contain.text', emitterName);
-        cy.wait(200);
+        this.opfab.selectOptionsFromMultiselect('#of-usercard-card-emitter-selector', emitterName)
     }
 
     checkEmitterIs= function(emitterName) {
@@ -144,14 +131,7 @@ export class UserCardCommands extends OpfabCommands {
     }
 
     selectRecipient= function (recipientName) {
-        cy.get('#opfab-recipients').click();
-        cy.get('#opfab-recipients').find('.vscomp-search-input').clear();
-        cy.get('#opfab-recipients').find('.vscomp-search-input').type(recipientName);
-        cy.get('#opfab-recipients').find('.vscomp-option-text').eq(0).should('contain.text', recipientName);
-        cy.get('#opfab-recipients').find('.vscomp-option-text').eq(0).click();
-        cy.get('#opfab-recipients').find('.vscomp-value-tag').should('contain.text', recipientName);
-        cy.get('#opfab-recipients').find('.vscomp-toggle-button').click();
-        cy.wait(200);
+        this.opfab.selectOptionsFromMultiselect('#opfab-recipients', recipientName, true)
     }
 
     clearSelectedRecipients= function () {
@@ -172,14 +152,7 @@ export class UserCardCommands extends OpfabCommands {
     }
 
     selectRecipientForInformation= function (recipientName) {
-        cy.get('#opfab-recipients-for-information').click();
-        cy.get('#opfab-recipients-for-information').find('.vscomp-search-input').clear();
-        cy.get('#opfab-recipients-for-information').find('.vscomp-search-input').type(recipientName);
-        cy.get('#opfab-recipients-for-information').find('.vscomp-option-text').eq(0).should('contain.text', recipientName);
-        cy.get('#opfab-recipients-for-information').find('.vscomp-option-text').eq(0).click();
-        cy.get('#opfab-recipients-for-information').find('.vscomp-value-tag').should('contain.text', recipientName);
-        cy.get('#opfab-recipients-for-information').find('.vscomp-toggle-button').click();
-        cy.wait(200);
+        this.opfab.selectOptionsFromMultiselect('#opfab-recipients-for-information', recipientName, true)
     }
 
     clearSelectedRecipientsForInformation= function () {
