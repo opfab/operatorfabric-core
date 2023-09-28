@@ -11,12 +11,14 @@
 import {OpfabGeneralCommands} from "../support/opfabGeneralCommands"
 import {AgGridCommands} from "../support/agGridCommands";
 import {ScriptCommands} from "../support/scriptCommands";
+import {SettingsCommands} from "../support/settingsCommands";
 
 describe ('Feed notification configuration tests',function () {
 
     const opfab = new OpfabGeneralCommands();
     const agGrid = new AgGridCommands();
     const script = new ScriptCommands();
+    const settings = new SettingsCommands();
 
     const totalCards = 6;
     const cardsToTest =[
@@ -35,9 +37,7 @@ describe ('Feed notification configuration tests',function () {
     it('Check feed notification configuration screen for operator1_fr', function () {
         opfab.loginWithUser('operator1_fr');
 
-        // We move to feed notification configuration screen
-        cy.get('#opfab-navbar-drop-user-menu').click();
-        cy.get('#opfab-menu-icon-notification').click();
+        opfab.navigateToNotificationConfiguration();
 
         cy.get('.opfab-feedconfiguration-title').should('have.text', ' NOTIFICATION CONFIGURATION\n');
         cy.get('.opfab-feedconfiguration-processlist').should('have.length', 3);
@@ -99,9 +99,7 @@ describe ('Feed notification configuration tests',function () {
     it('Check feed notification configuration screen for itsupervisor1', function () {
         opfab.loginWithUser('itsupervisor1');
 
-        // We move to feed notification configuration screen
-        cy.get('#opfab-navbar-drop-user-menu').click();
-        cy.get('#opfab-menu-icon-notification').click();
+        opfab.navigateToNotificationConfiguration();
 
         cy.get('.opfab-feedconfiguration-title').should('have.text', ' NOTIFICATION CONFIGURATION\n');
         cy.get('.opfab-feedconfiguration-processlist').should('have.length', 3);
@@ -153,9 +151,7 @@ describe ('Feed notification configuration tests',function () {
     it('Check feed notification configuration screen for admin', function () {
         opfab.loginWithUser('admin');
 
-        // We move to feed notification configuration screen
-        cy.get('#opfab-navbar-drop-user-menu').click();
-        cy.get('#opfab-menu-icon-notification').click();
+        opfab.navigateToNotificationConfiguration();
 
         cy.get('.opfab-feedconfiguration-title').should('have.text', ' NOTIFICATION CONFIGURATION\n');
         cy.get('.opfab-feedconfiguration-processlist').should('have.length', 0);
@@ -170,9 +166,7 @@ describe ('Feed notification configuration tests',function () {
         script.loadEmptyProcessGroups();
         cy.reload();
 
-        // We move to feed notification configuration screen
-        cy.get('#opfab-navbar-drop-user-menu').click();
-        cy.get('#opfab-menu-icon-notification').click();
+        opfab.navigateToNotificationConfiguration();
 
         cy.get('.opfab-feedconfiguration-title').should('have.text', ' NOTIFICATION CONFIGURATION\n');
         cy.get('.opfab-feedconfiguration-processlist').should('have.length', 1);
@@ -216,9 +210,7 @@ describe ('Feed notification configuration tests',function () {
     it('Check feature select/unselect all states for a process', function () {
         opfab.loginWithUser('operator1_fr');
 
-        // We move to feed notification configuration screen
-        cy.get('#opfab-navbar-drop-user-menu').click();
-        cy.get('#opfab-menu-icon-notification').click();
+        opfab.navigateToNotificationConfiguration();
 
         // First process group (we check all processes are checked)
         cy.get('.opfab-feedconfiguration-processlist').first().find('p').as('firstGroupProcesses');
@@ -286,19 +278,14 @@ describe ('Feed notification configuration tests',function () {
 
         opfab.loginWithUser('operator1_fr');
 
-        // We move to feed notification configuration screen
-        cy.get('#opfab-navbar-drop-user-menu').click();
-        cy.get('#opfab-menu-icon-notification').click();
+        opfab.navigateToNotificationConfiguration();
 
         cy.get('.opfab-feedconfiguration-processlist').eq(0).contains('Data quality')
             .find('input').as('DataQualityState');
         cy.get('@DataQualityState').should('be.checked');
         cy.get('@DataQualityState').click({force:true}); // Unselect state
 
-        // Save
-        cy.get('#opfab-feedconfiguration-btn-confirm').click(); // Save settings
-        cy.get('#opfab-feedconfiguration-btn-yes').click(); // and confirm
-        cy.get('#opfab-feedconfiguration-btn-yes').should('not.exist'); // wait for dialog to go away
+        saveSettingsForNotificationConfigurationScreen();
 
         opfab.logout();
         opfab.loginWithUser('admin');
@@ -321,9 +308,7 @@ describe ('Feed notification configuration tests',function () {
         opfab.logout();
         opfab.loginWithUser('operator1_fr');
 
-        // We move to feed notification configuration screen
-        cy.get('#opfab-navbar-drop-user-menu').click();
-        cy.get('#opfab-menu-icon-notification').click();
+        opfab.navigateToNotificationConfiguration();
 
         // We check the text displayed in the popup
         cy.get('#opfab-feedconfiguration-states-unsubscribed-popup').should('contain.text',
@@ -372,10 +357,7 @@ describe ('Feed notification configuration tests',function () {
             cy.get('.opfab-feedconfiguration-process').contains(c).click({force:true}); // Unselect card
         })
 
-        // Save
-        cy.get('#opfab-feedconfiguration-btn-confirm').click(); // Save settings
-        cy.get('#opfab-feedconfiguration-btn-yes').click(); // and confirm
-        cy.get('#opfab-feedconfiguration-btn-yes').should('not.exist'); // wait for dialog to go away
+        saveSettingsForNotificationConfigurationScreen();
 
 
         // Check feed
@@ -436,9 +418,7 @@ describe ('Feed notification configuration tests',function () {
 
         cy.get('.opfab-feedconfiguration-processlist').contains("Base Examples").click({force:true}); // Select all
 
-        cy.get('#opfab-feedconfiguration-btn-confirm').click(); // Save settings
-        cy.get('#opfab-feedconfiguration-btn-yes').click(); // and confirm
-        cy.get('#opfab-feedconfiguration-btn-yes').should('not.exist'); // wait for dialog to go away
+        saveSettingsForNotificationConfigurationScreen();
 
         // Check feed
         cy.get('#opfab-navbar-menu-feed').click(); // Open feed
@@ -448,7 +428,7 @@ describe ('Feed notification configuration tests',function () {
             cy.get('#opfab-card-list').contains(c).should('exist');
         })
 
-        // All cards cards should be present
+        // All cards should be present
         cy.get('of-light-card').should('have.length', totalCards);
 
         // Cards should exist on the monitoring page
@@ -483,4 +463,130 @@ describe ('Feed notification configuration tests',function () {
             cy.get('of-monitoring-table').contains(c).should('exist');
         })
     })
+
+
+    it('Check envelop icon is present only if mail option is checked and mail address is filled', function () {
+        opfab.loginWithUser('operator1_fr');
+
+        opfab.navigateToNotificationConfiguration();
+
+        // We check no icon envelope is present
+        cy.get('.opfab-feedconfiguration-icon-envelope-with-slash').should('not.exist');
+        cy.get('.opfab-feedconfiguration-icon-envelope-without-slash').should('not.exist');
+
+        // We go to settings screen, and we check mail option (no mail address filled)
+        opfab.navigateToFeed(); // necessary otherwise navigateToSettings() fails
+        opfab.navigateToSettings();
+        settings.clickOnSendNotificationByEmail();
+
+        // We go back to feed notification configuration screen, and we check there is still no envelope icon
+        opfab.navigateToNotificationConfiguration();
+        cy.get('.opfab-feedconfiguration-icon-envelope-with-slash').should('not.exist');
+        cy.get('.opfab-feedconfiguration-icon-envelope-without-slash').should('not.exist');
+
+        // We go to settings screen, and we uncheck mail option, and we fill the email address field
+        opfab.navigateToFeed(); // necessary otherwise navigateToSettings() fails
+        opfab.navigateToSettings();
+        settings.clickOnSendNotificationByEmail();
+        settings.setEmailAddress('mail@test.com');
+
+        // We go back to feed notification configuration screen, and we check there is still no envelope icon
+        opfab.navigateToNotificationConfiguration();
+        cy.get('.opfab-feedconfiguration-icon-envelope-with-slash').should('not.exist');
+        cy.get('.opfab-feedconfiguration-icon-envelope-without-slash').should('not.exist');
+
+        // We go to settings screen, and we check mail option (the email address is already filled)
+        opfab.navigateToFeed(); // necessary otherwise navigateToSettings() fails
+        opfab.navigateToSettings();
+        settings.clickOnSendNotificationByEmail();
+
+        // We go back to feed notification configuration screen, and we check envelope icons are displayed
+        opfab.navigateToNotificationConfiguration();
+        cy.get('.opfab-feedconfiguration-icon-envelope-with-slash').should('have.length', 36);
+        cy.get('.opfab-feedconfiguration-icon-envelope-without-slash').should('have.length', 0);
+    })
+
+    it('Check subscription to mail notif is saved when we navigate to another screen', function () {
+        opfab.loginWithUser('operator1_fr');
+
+        opfab.navigateToNotificationConfiguration();
+        cy.get('.opfab-feedconfiguration-icon-envelope-with-slash').should('have.length', 36);
+        cy.get('.opfab-feedconfiguration-icon-envelope-without-slash').should('have.length', 0);
+
+        // We subscribe to three process/state for mail notif
+        cy.get('.opfab-feedconfiguration-processlist').eq(0).contains(/^Message $/)
+            .parentsUntil('tr').parent().as('ProcessExampleMessageState');
+        cy.get('@ProcessExampleMessageState').find('.opfab-feedconfiguration-icon-envelope-with-slash')
+            .click({force: true});
+
+        cy.get('.opfab-feedconfiguration-processlist').eq(1).contains(/^Message $/)
+            .parentsUntil('tr').parent().as('MessageOrQuestionMessageState');
+        cy.get('@MessageOrQuestionMessageState')
+            .find('.opfab-feedconfiguration-icon-envelope-with-slash').click({force: true});
+
+        cy.get('.opfab-feedconfiguration-processlist').eq(2).contains(/^ Message with no ack $/)
+            .parentsUntil('tr').parent().as('MessageWithNoAckState');
+        cy.get('@MessageWithNoAckState')
+            .find('.opfab-feedconfiguration-icon-envelope-with-slash').click({force: true});
+
+        saveSettingsForNotificationConfigurationScreen();
+
+        opfab.navigateToFeed(); // we navigate to another screen
+
+        opfab.navigateToNotificationConfiguration();
+        cy.get('.opfab-feedconfiguration-icon-envelope-with-slash').should('have.length', 33);
+        cy.get('.opfab-feedconfiguration-icon-envelope-without-slash').should('have.length', 3);
+
+        cy.get('@ProcessExampleMessageState').find('.opfab-feedconfiguration-icon-envelope-without-slash').should('exist');
+        cy.get('@MessageOrQuestionMessageState').find('.opfab-feedconfiguration-icon-envelope-without-slash').should('exist');
+        cy.get('@MessageWithNoAckState').find('.opfab-feedconfiguration-icon-envelope-without-slash').should('exist');
+    })
+
+    it('Check subscription to mail notif is automatically canceled if user has unsubscribed from a state', function () {
+        opfab.loginWithUser('operator1_fr');
+
+        opfab.navigateToNotificationConfiguration();
+        cy.get('.opfab-feedconfiguration-icon-envelope-with-slash').should('have.length', 33);
+        cy.get('.opfab-feedconfiguration-icon-envelope-without-slash').should('have.length', 3);
+
+        cy.get('.opfab-feedconfiguration-processlist').eq(0).contains(/^Message $/)
+            .parentsUntil('tr').parent().as('ProcessExampleMessageState');
+        cy.get('.opfab-feedconfiguration-processlist').eq(1).contains(/^Message $/)
+            .parentsUntil('tr').parent().as('MessageOrQuestionMessageState');
+        cy.get('.opfab-feedconfiguration-processlist').eq(2).contains(/^ Message with no ack $/)
+            .parentsUntil('tr').parent().as('MessageWithNoAckState');
+
+        cy.get('@ProcessExampleMessageState').find('.opfab-feedconfiguration-icon-envelope-without-slash')
+            .should('exist');
+        cy.get('@MessageOrQuestionMessageState').find('.opfab-feedconfiguration-icon-envelope-without-slash')
+            .should('exist');
+        cy.get('@MessageWithNoAckState').find('.opfab-feedconfiguration-icon-envelope-without-slash')
+            .should('exist');
+
+        // We unsubscribe from the state
+        cy.get('@ProcessExampleMessageState').find('input').uncheck({force: true});
+        saveSettingsForNotificationConfigurationScreen();
+
+        opfab.navigateToFeed(); // we navigate to another screen
+
+        opfab.navigateToNotificationConfiguration();
+        cy.get('.opfab-feedconfiguration-icon-envelope-with-slash').should('have.length', 34);
+        cy.get('.opfab-feedconfiguration-icon-envelope-without-slash').should('have.length', 2);
+        cy.get('@ProcessExampleMessageState').find('.opfab-feedconfiguration-icon-envelope-with-slash')
+            .should('exist'); // subscription for mail notif automatically canceled for this state
+        cy.get('@MessageOrQuestionMessageState').find('.opfab-feedconfiguration-icon-envelope-without-slash')
+            .should('exist');
+        cy.get('@MessageWithNoAckState').find('.opfab-feedconfiguration-icon-envelope-without-slash')
+            .should('exist');
+
+        // We subscribe again to the state
+        cy.get('@ProcessExampleMessageState').find('input').check({force: true});
+        saveSettingsForNotificationConfigurationScreen();
+    })
 })
+
+function saveSettingsForNotificationConfigurationScreen() {
+    cy.get('#opfab-feedconfiguration-btn-confirm').click(); // Save settings
+    cy.get('#opfab-feedconfiguration-btn-yes').click(); // and confirm
+    cy.get('#opfab-feedconfiguration-btn-yes').should('not.exist'); // wait for dialog to go away
+}
