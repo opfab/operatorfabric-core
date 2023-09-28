@@ -46,6 +46,7 @@ public class CardPublicationData implements Card {
     @Id
     private String id;
 
+    @Indexed
     private String parentCardId;
 
     private String initialParentCardUid;
@@ -207,6 +208,8 @@ public class CardPublicationData implements Card {
                 .wktGeometry(this.wktGeometry)
                 .wktProjection(this.wktProjection)
                 .secondsBeforeTimeSpanForReminder(this.secondsBeforeTimeSpanForReminder)
+                .userRecipients(this.getUserRecipients())
+                .groupRecipients(this.getGroupRecipients())
                 .entityRecipients(this.getEntityRecipients())
                 .entityRecipientsForInformation(this.getEntityRecipientsForInformation());
 

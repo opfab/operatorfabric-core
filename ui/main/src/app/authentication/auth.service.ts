@@ -11,13 +11,13 @@ import {HttpClient} from '@angular/common/http';
 import {Injectable} from '@angular/core';
 import {Router} from '@angular/router';
 import {Message} from '@ofModel/message.model';
-import {SoundNotificationService} from 'app/business/services/sound-notification.service';
+import {SoundNotificationService} from 'app/business/services/notifications/sound-notification.service';
 import {OAuthService} from 'angular-oauth2-oidc';
 import {ConfigService} from 'app/business/services/config.service';
 import {GuidService} from 'app/business/services/guid.service';
 import {OpfabLoggerService} from 'app/business/services/logs/opfab-logger.service';
-import {OpfabEventStreamService} from 'app/business/services/opfabEventStream.service';
-import {UserService} from 'app/business/services/user.service';
+import {OpfabEventStreamService} from 'app/business/services/events/opfabEventStream.service';
+import {UserService} from 'app/business/services/users/user.service';
 import {CurrentUserStore} from 'app/business/store/current-user.store';
 import {Observable, Subject} from 'rxjs';
 import {AuthHandler} from './auth-handler';
@@ -98,10 +98,14 @@ export class AuthService {
                 this.currentUserStore.setToken(user.token);
             }
             this.currentUserStore.setCurrentUserAuthenticationValid(this.login);
-            this.authHandler.regularCheckTokenValidity();
+            this.authHandler.regularCheckIfTokenExpireSoon();
+            this.authHandler.regularCheckIfTokenIsExpired();
             this.redirectToCurrentLocation();
         });
-        this.authHandler.getSessionExpired().subscribe(() => {
+        this.authHandler.getTokenWillSoonExpire().subscribe(() => {
+            this.currentUserStore.setSessionWillSoonExpire();
+        });
+        this.authHandler.getTokenExpired().subscribe(() => {
             this.currentUserStore.setSessionExpired();
         });
         this.authHandler.getRejectAuthentication().subscribe((message) => {

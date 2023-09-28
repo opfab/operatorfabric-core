@@ -13,6 +13,7 @@ import {AdminTableDirective, Field} from './admin-table.directive';
 import {AdminItemType} from '../../services/sharing.service';
 import {EditPerimeterModalComponent} from '../editmodal/perimeters/edit-perimeter-modal.component';
 import {Utilities} from 'app/business/common/utilities';
+import {ActionButton} from '../cell-renderers/action-cell-renderer.component';
 
 @Component({
     templateUrl: 'admin-table.directive.html',
@@ -22,11 +23,12 @@ import {Utilities} from 'app/business/common/utilities';
 export class PerimetersTableComponent extends AdminTableDirective implements OnInit {
     tableType = AdminItemType.PERIMETER;
     fields = [
-        new Field('id', 4, 'idCellRenderer'), 
-        new Field('process'), 
+        new Field('id', 4, 'idCellRenderer'),
+        new Field('process'),
         new Field('stateRights', 7, 'stateRightsCellRenderer', null, 'stateRightsColumn')
     ];
     idField = 'id';
+    actionButtonsDisplayed = [ActionButton.EDIT, ActionButton.DELETE];
     editModalComponent = EditPerimeterModalComponent;
     modalOptions = {...AdminTableDirective.defaultEditionModalOptions, size: 'xl'};
 
@@ -34,14 +36,14 @@ export class PerimetersTableComponent extends AdminTableDirective implements OnI
         if (renderer && renderer === 'stateRightsCellRenderer') {
             arr.map((str) => {
                 const currentProcessDef = this.processesDefinition.filter((processDef) => processDef.id === data.id)[0];
-                if (!!currentProcessDef) str.state = currentProcessDef.states.get(str.state).name;
+                if (currentProcessDef) str.state = currentProcessDef.states.get(str.state).name;
                 return str;
             });
             arr.sort((a, b) => Utilities.compareObj(a.state, b.state));
         }
         return JSON.stringify(arr);
     }
-    ngOnInit(){
+    ngOnInit() {
         this.gridOptions.columnTypes['stateRightsColumn'] = {
             sortable: false,
             filter: 'agTextColumnFilter',
@@ -52,7 +54,7 @@ export class PerimetersTableComponent extends AdminTableDirective implements OnI
                     )[0];
                     let text = '';
                     params.data.stateRights.forEach((stateRight) => {
-                        if (!!currentProcessDef.states.get(stateRight.state))
+                        if (currentProcessDef.states.get(stateRight.state))
                             text += currentProcessDef.states.get(stateRight.state).name + ' ';
                     });
                     return text;
@@ -65,4 +67,3 @@ export class PerimetersTableComponent extends AdminTableDirective implements OnI
         super.ngOnInit();
     }
 }
-

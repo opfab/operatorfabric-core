@@ -46,7 +46,7 @@ export class AgGridCommands extends OpfabCommands {
     // Click on ag-grid cell
     // Specific tag should be specified in case of cell renderers
     clickCell = function (table, row, col, tag) {
-        if (!!tag) {
+        if (tag) {
             cy.get(table)
                 .find('.ag-center-cols-container')
                 .find('.ag-row')

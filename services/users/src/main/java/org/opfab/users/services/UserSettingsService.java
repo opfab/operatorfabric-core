@@ -66,7 +66,10 @@ public class UserSettingsService {
         userSettingsRepository.save(newSettings);
 
         if ((userSettingsPatch.getProcessesStatesNotNotified() != null)
-                || (userSettingsPatch.getEntitiesDisconnected() != null))
+                || (userSettingsPatch.getProcessesStatesNotifiedByEmail() != null)
+                || (userSettingsPatch.getEntitiesDisconnected() != null)
+                || (userSettingsPatch.getSendCardsByEmail() != null)
+                || (userSettingsPatch.getEmail() != null))
             notificationService.publishUpdatedUserMessage(login);
 
         return new OperationResult<>(newSettings, true, null, null);

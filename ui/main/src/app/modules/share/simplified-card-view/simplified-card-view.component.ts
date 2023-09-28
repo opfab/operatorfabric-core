@@ -9,16 +9,17 @@
 
 import {Component, Input, OnDestroy, OnInit} from '@angular/core';
 import {Card} from '@ofModel/card.model';
-import {ProcessesService} from 'app/business/services/processes.service';
+import {ProcessesService} from 'app/business/services/businessconfig/processes.service';
 import {takeUntil} from 'rxjs/operators';
 import {Subject} from 'rxjs';
-import {UserService} from 'app/business/services/user.service';
+import {UserService} from 'app/business/services/users/user.service';
 import {User} from '@ofModel/user.model';
-import {EntitiesService} from 'app/business/services/entities.service';
+import {EntitiesService} from 'app/business/services/users/entities.service';
 import {State} from '@ofModel/processes.model';
-import {DisplayContext} from '@ofModel/templateGateway.model';
+import {DisplayContext} from '@ofModel/template.model';
+import {OpfabAPIService} from 'app/business/services/opfabAPI.service';
 
-declare const templateGateway: any;
+
 
 @Component({
     selector: 'of-simplified-card-view',
@@ -41,13 +42,15 @@ export class SimplifiedCardViewComponent implements OnInit, OnDestroy {
     constructor(
         private businessconfigService: ProcessesService,
         private userService: UserService,
-        private entitiesService: EntitiesService
+        private entitiesService: EntitiesService,
+        private opfabAPIService: OpfabAPIService
     ) {
         const userWithPerimeters = this.userService.getCurrentUserWithPerimeters();
-        if (!!userWithPerimeters) this.user = userWithPerimeters.userData;
+        if (userWithPerimeters) this.user = userWithPerimeters.userData;
     }
 
     ngOnInit() {
+        this.opfabAPIService.currentCard.card = this.card;
         this.computeEntitiesForResponses();
         this.getTemplateAndStyle();
     }
@@ -75,7 +78,7 @@ export class SimplifiedCardViewComponent implements OnInit, OnDestroy {
             .pipe(takeUntil(this.unsubscribe$))
             .subscribe({
                 next: (businessconfig) => {
-                    if (!!businessconfig) {
+                    if (businessconfig) {
                         this.cardState = businessconfig.states.get((this.card.state));
                         this.isLoading = false;
                     }
@@ -89,14 +92,14 @@ export class SimplifiedCardViewComponent implements OnInit, OnDestroy {
     }
 
     public beforeTemplateRendering() {
-        templateGateway.userMemberOfAnEntityRequiredToRespond =
+        this.opfabAPIService.currentCard.isUserMemberOfAnEntityRequiredToRespond =
             this.userMemberOfAnEntityRequiredToRespondAndAllowedToSendCards;
-        templateGateway.childCards = !!this.childCards ? this.childCards : [];
+        this.opfabAPIService.currentCard.childCards = this.childCards ? this.childCards : [];
     }
 
     public afterTemplateRendering() {
         if (this.displayContext === DisplayContext.ARCHIVE) {
-            templateGateway.lockAnswer();
+            this.opfabAPIService.templateInterface.lockAnswer();
         }
     }
 

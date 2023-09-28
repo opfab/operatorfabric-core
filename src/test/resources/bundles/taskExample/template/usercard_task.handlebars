@@ -120,14 +120,17 @@
         },
 
         initSeverity: function() {
+            // keep deprecated method for cypress test only
             usercardTemplateGateway.setInitialSeverity('ACTION');
         },
 
         initInitialDates: function() {
             const mystartDate = new Date();
             mystartDate.setTime(mystartDate.getTime());
+            // keep deprecated method for cypress test only
             usercardTemplateGateway.setInitialStartDate(mystartDate.getTime() + 3600000);
-            usercardTemplateGateway.setInitialEndDate(mystartDate.getTime() + 7 * 24 * 3600000);
+            // keep deprecated method for cypress test only
+            usercardTemplateGateway.setInitialEndDate(mystartDate.getTime() + 3600000 + 7 * 24 * 3600000);
         },
 
         initTimeForRecurrence: function() {
@@ -142,7 +145,7 @@
 
         initUserCardTemplateGateway: function() {
 
-            usercardTemplateGateway.getSpecificCardInformation = function () {
+            opfab.currentUserCard.registerFunctionToGetSpecificCardInformation( () => {
                 const taskDescription = document.getElementById('taskDescription').value;
                 
                 const time = document.getElementById('time').value;
@@ -198,8 +201,8 @@
                 };
 
                 const timeSpans = [{
-                    startDate: usercardTemplateGateway.getStartDate(),
-                    endDate: usercardTemplateGateway.getEndDate(),
+                    startDate: usercardTemplateGateway.getStartDate(), // keep deprecated method for cypress test only
+                    endDate: usercardTemplateGateway.getEndDate(), // keep deprecated method for cypress test only
                     recurrence: recurrence
                 }]
                 
@@ -210,7 +213,7 @@
                     timeSpans: timeSpans
                 };
 
-            }
+            });
         },
 
         checkIsAllDaysSelected: function() {

@@ -9,10 +9,10 @@
 
 import {Component, ElementRef, Input, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {Card} from '@ofModel/card.model';
-import {ProcessesService} from 'app/business/services/processes.service';
+import {ProcessesService} from 'app/business/services/businessconfig/processes.service';
 import {Subject} from 'rxjs';
 import {takeUntil} from 'rxjs/operators';
-import {UserService} from 'app/business/services/user.service';
+import {UserService} from 'app/business/services/users/user.service';
 import {State} from '@ofModel/processes.model';
 import {NgbModal, NgbModalOptions, NgbModalRef} from '@ng-bootstrap/ng-bootstrap';
 import {SelectedCard, SelectedCardService} from 'app/business/services/card/selectedCard.service';
@@ -54,7 +54,7 @@ export class CardComponent implements OnInit, OnDestroy {
             .getSelectCard()
             .pipe(takeUntil(this.unsubscribe$))
             .subscribe((selectedCard: SelectedCard) => {
-                if (!!selectedCard.card) {
+                if (selectedCard.card) {
                     this.cardNotFound = false;
                     this.businessconfigService
                         .queryProcess(selectedCard.card.process, selectedCard.card.processVersion)
@@ -63,7 +63,7 @@ export class CardComponent implements OnInit, OnDestroy {
                                 this.card = selectedCard.card;
                                 this.childCards = selectedCard.childCards;
                                 this.cardLoadingInProgress = false;
-                                if (!!businessconfig) {
+                                if (businessconfig) {
                                     this.cardState = businessconfig.states.get(selectedCard.card.state);
                                     if (!this.cardState) {
                                         console.log(
@@ -150,7 +150,7 @@ export class CardComponent implements OnInit, OnDestroy {
 
     closeDetails() {
         this.detailClosed = true;
-        if (!!this.modalRef) this.modalRef.dismiss();
+        if (this.modalRef) this.modalRef.dismiss();
     }
 
     public isSmallscreen() {

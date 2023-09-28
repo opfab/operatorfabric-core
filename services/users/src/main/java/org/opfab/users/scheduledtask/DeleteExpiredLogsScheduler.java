@@ -23,7 +23,7 @@ public class DeleteExpiredLogsScheduler {
     @Autowired
     UserActionLogService userActionLogService;
 
-    @Value("${daysBeforeLogExpiration:61}") Integer daysBeforeLogExpiration;
+    @Value("${operatorfabric.users.daysBeforeLogExpiration:61}") Integer daysBeforeLogExpiration;
 
     @Scheduled(cron = "${hourScheduledForLogsCleaning:0 30 0 * * *}")
     public void deleteExpiredLogs() {

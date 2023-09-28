@@ -88,21 +88,20 @@
       },
       "automaticPinWhenAcknowledged" : true
     },
+    "kitchenSinkDeprecated":
+    {
+      "name":"State to test template deprecated rendering features",
+      "templateName" : "kitchenSinkDeprecated",
+      "response": {
+        "state": "dummyResponseState"
+      },
+      "automaticPinWhenAcknowledged" : true
+    },
     "stateWithUserHasAcknowledged":
     {
       "name":"State to test UserHasAcknowledged",
       "description": "State to test entities acks with consideredAcknowledgedForUserWhen=UserHasAcknowledged",
       "consideredAcknowledgedForUserWhen": "UserHasAcknowledged",
-      "templateName" : "kitchenSink",
-      "response": {
-        "state": "dummyResponseState"
-      }
-    },
-    "stateWithOneEntityOfUserHasAcknowledged":
-    {
-      "name":"State to test OneEntityOfUserHasAcknowledged",
-      "description": "State to test entities acks with consideredAcknowledgedForUserWhen=OneEntityOfUserHasAcknowledged",
-      "consideredAcknowledgedForUserWhen": "OneEntityOfUserHasAcknowledged",
       "templateName" : "kitchenSink",
       "response": {
         "state": "dummyResponseState"

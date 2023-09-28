@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2022, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2023, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -29,7 +29,6 @@ public class UserSettingsData implements UserSettings {
 
     @Id
     private String login;
-    private String description;
     private String locale;
     private Boolean playSoundForAlarm;
     private Boolean playSoundForAction;
@@ -43,15 +42,20 @@ public class UserSettingsData implements UserSettings {
     private Boolean replayEnabled;
     private Integer replayInterval;
     private Boolean remoteLoggingEnabled;
+    private Boolean sendCardsByEmail;
+    private String email;
 
     @Singular("processStatesNotNotified")
     private Map<String, List<String>> processesStatesNotNotified;
+
+    @Singular("processStatesNotifiedByEmail")
+    private Map<String, List<String>> processesStatesNotifiedByEmail;
+
     @Singular("entityDisconnected")
     private List<String> entitiesDisconnected;
 
     public UserSettingsData(UserSettings settings) {
         this.login = settings.getLogin();
-        this.description = settings.getDescription();
         this.locale = settings.getLocale();
         this.playSoundForAlarm = settings.getPlaySoundForAlarm();
         this.playSoundForAction = settings.getPlaySoundForAction();
@@ -65,11 +69,18 @@ public class UserSettingsData implements UserSettings {
         this.replayEnabled = settings.getReplayEnabled();
         this.replayInterval = settings.getReplayInterval();
         this.remoteLoggingEnabled = settings.getRemoteLoggingEnabled();
+        this.sendCardsByEmail = settings.getSendCardsByEmail();
+        this.email = settings.getEmail();
 
         if (settings.getProcessesStatesNotNotified() != null)
             this.processesStatesNotNotified = new HashMap<>(settings.getProcessesStatesNotNotified());
         else
             this.processesStatesNotNotified = null;
+
+        if (settings.getProcessesStatesNotifiedByEmail() != null)
+            this.processesStatesNotifiedByEmail = new HashMap<>(settings.getProcessesStatesNotifiedByEmail());
+        else
+            this.processesStatesNotifiedByEmail = null;
 
         if (settings.getEntitiesDisconnected() != null)
             this.entitiesDisconnected = new ArrayList<>(settings.getEntitiesDisconnected());
@@ -100,7 +111,6 @@ public class UserSettingsData implements UserSettings {
     public UserSettingsData patch(UserSettings other) {
         UserSettingsData result = new UserSettingsData();
         result.login = this.login;
-        result.description = ObjectUtils.getNotNullOrDefault(other.getDescription(), this.getDescription());
         result.locale = ObjectUtils.getNotNullOrDefault( other.getLocale(), this.getLocale());
 
         result.playSoundForAlarm = ObjectUtils.getNotNullOrDefault( other.getPlaySoundForAlarm(), this.getPlaySoundForAlarm());
@@ -119,7 +129,10 @@ public class UserSettingsData implements UserSettings {
         result.replayInterval = ObjectUtils.getNotNullOrDefault( other.getReplayInterval(), this.getReplayInterval());
         result.remoteLoggingEnabled = ObjectUtils.getNotNullOrDefault( other.getRemoteLoggingEnabled(), this.getRemoteLoggingEnabled());
         result.processesStatesNotNotified = ObjectUtils.getNotNullOrDefault( other.getProcessesStatesNotNotified(), this.getProcessesStatesNotNotified(), HashMap::new);
+        result.processesStatesNotifiedByEmail = ObjectUtils.getNotNullOrDefault( other.getProcessesStatesNotifiedByEmail(), this.getProcessesStatesNotifiedByEmail(), HashMap::new);
         result.entitiesDisconnected = ObjectUtils.getNotNullOrDefault( other.getEntitiesDisconnected(), this.getEntitiesDisconnected(), ArrayList::new);
+        result.sendCardsByEmail = ObjectUtils.getNotNullOrDefault( other.getSendCardsByEmail(), this.getSendCardsByEmail());
+        result.email = ObjectUtils.getNotNullOrDefault( other.getEmail(), this.getEmail());
 
         return result;
     }

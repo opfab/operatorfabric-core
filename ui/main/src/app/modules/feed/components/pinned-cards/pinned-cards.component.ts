@@ -8,7 +8,7 @@
  */
 
 import {OnInit, Component, OnDestroy, Input, OnChanges} from '@angular/core';
-import {ProcessesService} from 'app/business/services/processes.service';
+import {ProcessesService} from 'app/business/services/businessconfig/processes.service';
 import {LightCardsStoreService} from 'app/business/services/lightcards/lightcards-store.service';
 import {Subject, takeUntil, timer} from 'rxjs';
 import {LightCard} from '@ofModel/light-card.model';
@@ -54,14 +54,14 @@ export class PinnedCardsComponent implements OnInit, OnDestroy, OnChanges {
     private setPinnedCards(cards: LightCard[]) {
         this.pinnedCards = [];
 
-        if (!!cards && cards.length > 0) {
+        if (cards?.length > 0) {
             this.pinnedCards = this.getPinnedCards(cards);
         }
         this.setVisiblePinnedCards();
     }
 
     private setVisiblePinnedCards() {
-        if (!!this.pinnedCards) {
+        if (this.pinnedCards) {
             this.visiblePinnedCards = [];
             this.hiddenPinnedCards = [];
             if (this.pinnedCards.length > this.maxVisiblePinnedCards) {
@@ -79,7 +79,7 @@ export class PinnedCardsComponent implements OnInit, OnDestroy, OnChanges {
             .filter((card) => {
                 const processDefinition = this.processesService.getProcess(card.process);
                 return (
-                    processDefinition.states.get((card.state)).automaticPinWhenAcknowledged &&
+                    processDefinition.states.get((card.state))?.automaticPinWhenAcknowledged &&
                     card.hasBeenAcknowledged &&
                     (!card.endDate || card.endDate > Date.now())
                 );

@@ -7,6 +7,8 @@
  * This file is part of the OperatorFabric project.
  */
 
+/* CSS file intended for the style of external applications */
+
  @font-face {
     font-family: 'Open Sans';
     src: url('/shared/fonts/OpenSans-Bold.ttf') format('truetype');
@@ -371,9 +373,10 @@ input:-webkit-autofill {
         border-bottom: 1px solid var(--opfab-table-border-color);
     }
 
-    /* #2588 : Logging screen : summary column extends without limit if the message contains no space character */
+/* #2588 : Logging screen : summary column extends without limit if the message contains no space character */
 .opfab-table td {
-        overflow: hidden;
+    overflow: hidden;
+    word-break: break-all;
     }
 
 .opfab-pagination {
@@ -568,6 +571,34 @@ input:-webkit-autofill {
     background-color: var(--opfab-bgcolor);
 }
 
+.opfab-form-lighter .opfab-tooltip:before {
+    background-color: var(--opfab-tooltip-template-bgcolor-for-form-lighter);
+}
+
+.opfab-form-lighter .opfab-tooltip:after {
+    /* the arrow */
+    border: 10px solid var(--opfab-tooltip-template-bgcolor-for-form-lighter);
+    border-color: transparent var(--opfab-tooltip-template-bgcolor-for-form-lighter) transparent transparent;
+}
+
+.opfab-form-lighter .opfab-tooltip.left:after {
+    /* the arrow */
+    border: 10px solid var(--opfab-tooltip-template-bgcolor-for-form-lighter);
+    border-color: transparent transparent transparent var(--opfab-tooltip-template-bgcolor-for-form-lighter);
+}
+
+.opfab-form-lighter .opfab-tooltip.top:after {
+    /* the arrow */
+    border: 10px solid var(--opfab-tooltip-template-bgcolor-for-form-lighter);
+    border-color: var(--opfab-tooltip-template-bgcolor-for-form-lighter) transparent transparent transparent;
+}
+
+.opfab-form-lighter .opfab-tooltip.bottom:after {
+    /* the arrow */
+    border: 10px solid var(--opfab-tooltip-template-bgcolor-for-form-lighter);
+    border-color: transparent transparent var(--opfab-tooltip-template-bgcolor-for-form-lighter) transparent;
+}
+
 /* BUTTON STYLE */
 
 .opfab-btn {
@@ -599,6 +630,7 @@ input:-webkit-autofill {
 
 .opfab-btn-cancel {
     color: #2784ff;
+    outline:none;
     background-color: var(--opfab-bg-color);
     border-width: 0px;
     border-radius: 2px;
@@ -613,4 +645,182 @@ input:-webkit-autofill {
 .opfab-btn-cancel:hover {
     color: #2268ff;
 }
+
 /* END BUTTON STYLE */
+
+.opfab-tooltip {
+    position: relative; /* making the .tooltip span a container for the tooltip text */
+    font-weight: normal;
+    font-style: normal;
+}
+
+.opfab-tooltip:before {
+    content: attr(opfab-tooltip-text); /* here's the magic */
+    position: absolute;
+
+    /* vertically center */
+    top: 50%;
+    transform: translateY(-50%);
+
+    /* move to right */
+    left: 100%;
+    margin-left: 15px; /* and add a small left margin */
+
+    /* basic styles */
+    width: fit-content;
+    min-width: 200px;
+    padding: 10px;
+    border-radius: 10px;
+    background: var(--opfab-tooltip-template-bgcolor);
+    color: var(--opfab-text-color);
+    text-align: center;
+
+    display: none; /* hide by default */
+    opacity: 0;
+    transition: opacity .3s;
+}
+
+.opfab-tooltip:hover:before {
+    display: block;
+    opacity: 1;
+}
+
+.opfab-tooltip.left:before {   /* tooltip displayed on the left of the element */
+    /* reset defaults */
+    left: initial;
+    margin: initial;
+
+    /* set new values */
+    right: 100%;
+    margin-right: 15px;
+}
+
+.opfab-tooltip.top:before {   /* tooltip displayed on the top of the element */
+    /* reset defaults */
+    top: initial;
+    margin: initial;
+
+    /* set new values */
+    bottom: 100%;
+    transform: translateX(-50%);
+    margin-bottom: 15px;
+}
+
+.opfab-tooltip.bottom:before {   /* tooltip displayed on the bottom of the element */
+    /* reset defaults */
+    bottom: initial;
+    margin: initial;
+
+    /* set new values */
+    top: 100%;
+    transform: translateX(-50%);
+    margin-top: 15px;
+}
+
+.opfab-tooltip:after {
+    content: "";
+    position: absolute;
+
+    /* position tooltip correctly */
+    left: 100%;
+    margin-left: -5px;
+
+    /* vertically center */
+    top: 50%;
+    transform: translateY(-50%);
+
+    /* the arrow */
+    border: 10px solid var(--opfab-tooltip-template-bgcolor);
+    border-color: transparent var(--opfab-tooltip-template-bgcolor) transparent transparent;
+
+    display: none;
+    opacity:0;
+    transition: opacity .3s;
+}
+
+.opfab-tooltip:hover:after {
+    display: block;
+    opacity: 1;
+}
+
+.opfab-tooltip.left:after {
+    content: "";
+    position: absolute;
+
+    /* reset defaults */
+    left: initial;
+    margin: initial;
+
+    /* set new values */
+    right: 100%;
+    margin-right: -5px;
+
+    /* vertically center */
+    top: 50%;
+    transform: translateY(-50%);
+
+    /* the arrow */
+    border: 10px solid var(--opfab-tooltip-template-bgcolor);
+    border-color: transparent transparent transparent var(--opfab-tooltip-template-bgcolor);
+
+    display: none;
+}
+
+.opfab-tooltip.left:hover:before, .opfab-tooltip.left:hover:after {
+    display: block;
+}
+
+.opfab-tooltip.top:after {
+    content: "";
+    position: absolute;
+
+    /* reset defaults */
+    top: initial;
+    margin: initial;
+
+    /* set new values */
+    bottom: 100%;
+    margin-bottom: -5px;
+
+    /* horizontally center */
+    left: 50%;
+    transform: translateX(-50%);
+
+    /* the arrow */
+    border: 10px solid var(--opfab-tooltip-template-bgcolor);
+    border-color: var(--opfab-tooltip-template-bgcolor) transparent transparent transparent;
+
+    display: none;
+}
+
+.opfab-tooltip.top:hover:before, .opfab-tooltip.top:hover:after {
+    display: block;
+}
+
+.opfab-tooltip.bottom:after {
+    content: "";
+    position: absolute;
+
+    /* reset defaults */
+    bottom: initial;
+    margin: initial;
+
+    /* set new values */
+    top: 100%;
+    margin-top: -5px;
+
+    /* horizontally center */
+    left: 50%;
+    transform: translateX(-50%);
+
+    /* the arrow */
+    border: 10px solid var(--opfab-tooltip-template-bgcolor);
+    border-color: transparent transparent var(--opfab-tooltip-template-bgcolor) transparent;
+
+    display: none;
+}
+
+.opfab-tooltip.bottom:hover:before, .opfab-tooltip.bottom:hover:after {
+    display: block;
+}
+

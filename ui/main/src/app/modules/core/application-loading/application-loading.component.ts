@@ -11,32 +11,32 @@ import {Component, NgZone, OnInit, Output, ViewChild} from '@angular/core';
 import {Title} from '@angular/platform-browser';
 import {TranslateService} from '@ngx-translate/core';
 import {ConfigService} from 'app/business/services/config.service';
-import {EntitiesService} from 'app/business/services/entities.service';
-import {GroupsService} from 'app/business/services/groups.service';
-import {I18nService} from 'app/business/services/i18n.service';
+import {EntitiesService} from 'app/business/services/users/entities.service';
+import {GroupsService} from 'app/business/services/users/groups.service';
+import {I18nService} from 'app/business/services/translation/i18n.service';
 import {LogOption, OpfabLoggerService} from 'app/business/services/logs/opfab-logger.service';
-import {ProcessesService} from 'app/business/services/processes.service';
-import {ReminderService} from 'app/business/services/reminder/reminder.service';
-import {UserService} from 'app/business/services/user.service';
+import {ProcessesService} from 'app/business/services/businessconfig/processes.service';
+import {UserService} from 'app/business/services/users/user.service';
 import {Utilities} from 'app/business/common/utilities';
 import {catchError, Subject} from 'rxjs';
 import {ActivityAreaChoiceAfterLoginComponent} from './activityarea-choice-after-login/activityarea-choice-after-login.component';
 import {AccountAlreadyUsedComponent} from './account-already-used/account-already-used.component';
 import {AppLoadedInAnotherTabComponent} from './app-loaded-in-another-tab/app-loaded-in-another-tab.component';
-import {SettingsService} from 'app/business/services/settings.service';
+import {SettingsService} from 'app/business/services/users/settings.service';
 import {GlobalStyleService} from 'app/business/services/global-style.service';
-import {RRuleReminderService} from 'app/business/services/rrule-reminder/rrule-reminder.service';
 import {OpfabEventStreamServer} from 'app/business/server/opfabEventStream.server';
-import {OpfabEventStreamService} from 'app/business/services/opfabEventStream.service';
+import {OpfabEventStreamService} from 'app/business/services/events/opfabEventStream.service';
 import {LightCardsStoreService} from 'app/business/services/lightcards/lightcards-store.service';
-import {ApplicationUpdateService} from 'app/business/services/application-update.service';
+import {ApplicationUpdateService} from 'app/business/services/events/application-update.service';
 import {ServerResponseStatus} from 'app/business/server/serverResponse';
 import {CurrentUserStore} from 'app/business/store/current-user.store';
 import {AuthService} from 'app/authentication/auth.service';
 import {AuthenticationMode} from 'app/authentication/auth.model';
-import {SystemNotificationService} from '../../../business/services/system-notification.service';
-import {BusinessDataService} from 'app/business/services/businessdata.service';
+import {SystemNotificationService} from '../../../business/services/notifications/system-notification.service';
+import {BusinessDataService} from 'app/business/services/businessconfig/businessdata.service';
 import {Router} from '@angular/router';
+import {OpfabAPIService} from 'app/business/services/opfabAPI.service';
+import {loadBuildInTemplates} from 'app/business/buildInTemplates/templatesLoader';
 
 declare const opfab: any;
 @Component({
@@ -76,8 +76,6 @@ export class ApplicationLoadingComponent implements OnInit {
         private groupsService: GroupsService,
         private businessDataService: BusinessDataService,
         private processesService: ProcessesService,
-        private reminderService: ReminderService,
-        private rRuleReminderService: RRuleReminderService,
         private logger: OpfabLoggerService,
         private globalStyleService: GlobalStyleService,
         private lightCardsStoreService: LightCardsStoreService,
@@ -86,6 +84,7 @@ export class ApplicationLoadingComponent implements OnInit {
         private applicationUpdateService: ApplicationUpdateService,
         private currentUserStore: CurrentUserStore,
         private systemNotificationService: SystemNotificationService,
+        private opfabAPIService: OpfabAPIService,
         private router: Router,
         private ngZone: NgZone
     ) {}
@@ -100,7 +99,7 @@ export class ApplicationLoadingComponent implements OnInit {
         this.configService.loadWebUIConfiguration().subscribe({
             //This configuration needs to be loaded first as it defines the authentication mode
             next: (config) => {
-                if (!!config) {
+                if (config) {
                     this.logger.info(`Configuration loaded (web-ui.json)`);
                     this.setTitleInBrowser();
                     this.loadTranslation(config);
@@ -119,7 +118,7 @@ export class ApplicationLoadingComponent implements OnInit {
     private loadEnvironmentName() {
         this.environmentName = this.configService.getConfigValue('environmentName');
         this.environmentColor = this.configService.getConfigValue('environmentColor', 'blue');
-        if (!!this.environmentName) {
+        if (this.environmentName) {
             this.displayEnvironmentName = true;
         }
     }
@@ -130,7 +129,7 @@ export class ApplicationLoadingComponent implements OnInit {
     }
 
     private loadTranslation(config) {
-        if (!!config.i18n.supported.locales) {
+        if (config.i18n.supported.locales) {
             this.i18nService.loadGlobalTranslations(config.i18n.supported.locales).subscribe(() => {
                 this.logger.info(
                     'opfab translation loaded for locales: ' + this.translateService.getLangs(),
@@ -232,11 +231,12 @@ export class ApplicationLoadingComponent implements OnInit {
 
     private loadAllConfigurations(): void {
         const requestsToLaunch$ = [
-            this.configService.loadCoreMenuConfigurations(),
+            this.configService.loadUiMenuConfig(),
             this.userService.loadUserWithPerimetersData(),
             this.entitiesService.loadAllEntitiesData(),
             this.groupsService.loadAllGroupsData(),
-            this.processesService.loadAllProcesses(),
+            this.processesService.loadAllProcessesWithLatestVersion(),
+            this.processesService.loadAllProcessesWithAllVersions(),
             this.processesService.loadProcessGroups(),
             this.processesService.loadMonitoringConfig()
         ];
@@ -271,22 +271,19 @@ export class ApplicationLoadingComponent implements OnInit {
         });
         this.lightCardsStoreService.initStore(); // this will effectively open the http stream connection
         this.applicationUpdateService.init();
-        this.reminderService.startService(this.userLogin);
-        this.rRuleReminderService.startService(this.userLogin);
         this.systemNotificationService.initSystemNotificationService();
-        this.initOpFabAPI();
+        this.initOpfabAPI();
+        loadBuildInTemplates();
     }
 
-    private initOpFabAPI(): void {
+    private initOpfabAPI(): void {
         const that = this;
-        opfab.businessconfig.businessData.get = async function (resourceName) {
-            const resource = await that.businessDataService.getBusinessData(resourceName);
-            return resource;
-        };
 
         opfab.navigate.showCardInFeed = function(cardId: string) {
             that.ngZone.run(() => that.router.navigate(['feed/cards/', cardId]));
         }
-    }
 
+        this.opfabAPIService.initAPI();
+        
+    }
 }

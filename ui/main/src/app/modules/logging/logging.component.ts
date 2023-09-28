@@ -10,7 +10,7 @@
 import {AfterViewInit, Component, ElementRef, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {Subject} from 'rxjs';
 
-import {ProcessesService} from 'app/business/services/processes.service';
+import {ProcessesService} from 'app/business/services/businessconfig/processes.service';
 import {takeUntil} from 'rxjs/operators';
 import {FormControl, FormGroup} from '@angular/forms';
 import {ConfigService} from 'app/business/services/config.service';
@@ -19,13 +19,12 @@ import {LightCard} from '@ofModel/light-card.model';
 import {Page} from '@ofModel/page.model';
 import {ExcelExport} from 'app/business/common/excel-export';
 import {ArchivesLoggingFiltersComponent} from '../share/archives-logging-filters/archives-logging-filters.component';
-import {EntitiesService} from 'app/business/services/entities.service';
-import {Utilities} from 'app/business/common/utilities';
+import {EntitiesService} from 'app/business/services/users/entities.service';
 import {NgbModal, NgbModalOptions, NgbModalRef} from '@ng-bootstrap/ng-bootstrap';
 import {CardsFilter} from '@ofModel/cards-filter.model';
 import {FilterMatchTypeEnum, FilterModel} from '@ofModel/filter-model';
-import {CardService} from 'app/business/services/card.service';
-import {TranslationService} from 'app/business/services/translation.service';
+import {CardService} from 'app/business/services/card/card.service';
+import {TranslationService} from 'app/business/services/translation/translation.service';
 
 @Component({
     selector: 'of-logging',
@@ -95,8 +94,8 @@ export class LoggingComponent implements OnDestroy, OnInit, AfterViewInit {
         private modalService: NgbModal
     ) {
         processesService.getAllProcesses().forEach((process) => {
-            if (!!process.uiVisibility && !!process.uiVisibility.logging) {
-                const itemName = !!process.name ? process.name : process.id;
+            if (process.uiVisibility?.logging) {
+                const itemName = process.name ? process.name : process.id;
                 this.processNames.set(process.id, itemName);
                 for (let key of process.states.keys()) {
                     this.processStateDescription.set(process.id + '.' + key, process.states.get(key).description);
@@ -194,7 +193,7 @@ export class LoggingComponent implements OnDestroy, OnInit, AfterViewInit {
         const sender = isThirdPartyPublisher ? card.publisher : this.entitiesService.getEntityName(card.publisher);
 
         let representative = '';
-        if (!!card.representativeType && !!card.representative) {
+        if (card.representativeType && card.representative) {
             const isThirdPartyRepresentative = card.representativeType === 'EXTERNAL';
             representative = isThirdPartyRepresentative
                 ? card.representative
@@ -265,10 +264,9 @@ export class LoggingComponent implements OnDestroy, OnInit, AfterViewInit {
 
                 lines.forEach((card: any) => {
                     this.cardPostProcessing(card);
-                    // TO DO translation for old process should be done  , but loading local arrive to late , solution to find
                     if (this.filtersTemplate.isProcessGroupFilterVisible())
                         exportArchiveData.push({
-                            [severityColumnName]: Utilities.translateSeverity(this.translationService, card.severity),
+                            [severityColumnName]: this.translationService.translateSeverity(card.severity),
                             [timeOfActionColumnName]: this.dateTimeFormatter.getFormattedDateAndTimeFromEpochDate(
                                 card.publishDate
                             ),
@@ -309,7 +307,7 @@ export class LoggingComponent implements OnDestroy, OnInit, AfterViewInit {
     }
 
     ngOnDestroy() {
-        if (!!this.modalRef) {
+        if (this.modalRef) {
             this.modalRef.close();
         }
         this.unsubscribe$.next();

@@ -1,4 +1,4 @@
-<!-- Copyright (c) 2018-2020, RTE (http://www.rte-france.com)              -->
+<!-- Copyright (c) 2018-2023, RTE (http://www.rte-france.com)              -->
 <!-- See AUTHORS.txt                                                       -->
 <!-- This Source Code Form is subject to the terms of the Mozilla Public   -->
 <!-- License, v. 2.0. If a copy of the MPL was not distributed with this   -->
@@ -11,9 +11,8 @@
 <form [formGroup]="form">
   <div class="opfab-input">
     <label for="opfab-setting-{{settingPath}}" translate>settings.{{settingPath}}</label>
-    <input id="opfab-setting-{{settingPath}}" *ngIf="(settingPath === 'description') && disabled" type="text"  formControlName="setting" [pattern]="pattern" [attr.required]="requiredField" disabled>
 
-    <input id="opfab-setting-{{settingPath}}" *ngIf="!((settingPath === 'description') && disabled)" type="text"  formControlName="setting" [pattern]="pattern" [attr.required]="requiredField">
+    <input id="opfab-setting-{{settingPath}}" *ngIf="!disabled" type="text"  formControlName="setting" [pattern]="pattern" [attr.required]="requiredField">
 
     <span class="text-danger" *ngIf="!form.valid" translate>shared.error.incorrectSubmission</span>
   </div>

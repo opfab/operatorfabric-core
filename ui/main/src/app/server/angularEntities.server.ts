@@ -16,7 +16,6 @@ import {ServerResponse} from 'app/business/server/serverResponse';
 import {AngularServer} from './angular.server';
 import {EntitiesServer} from 'app/business/server/entities.server';
 
-declare const templateGateway: any;
 
 @Injectable({
     providedIn: 'root'
@@ -30,7 +29,7 @@ export class AngularEntitiesServer extends AngularServer implements EntitiesServ
      */
     constructor(private httpClient: HttpClient) {
         super();
-        this.entitiesUrl = `${environment.urls.entities}`;
+        this.entitiesUrl = `${environment.url}/users/entities`;
     }
 
     deleteById(id: string): Observable<ServerResponse<any>> {

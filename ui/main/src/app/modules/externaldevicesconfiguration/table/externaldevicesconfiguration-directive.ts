@@ -12,7 +12,7 @@ import {NgbModal, NgbModalOptions} from '@ng-bootstrap/ng-bootstrap';
 import {TranslateService} from '@ngx-translate/core';
 import {MessageLevel} from '@ofModel/message.model';
 import {AlertMessageService} from 'app/business/services/alert-message.service';
-import {ExternalDevicesService} from 'app/business/services/external-devices.service';
+import {ExternalDevicesService} from 'app/business/services/notifications/external-devices.service';
 import {ColDef, GridOptions, ICellRendererParams} from 'ag-grid-community';
 import {CheckboxCellRendererComponent} from 'app/modules/admin/components/cell-renderers/checkbox-cell-renderer.component';
 import {Observable, throwError} from 'rxjs';

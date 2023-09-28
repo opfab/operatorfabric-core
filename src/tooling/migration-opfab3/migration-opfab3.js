@@ -115,11 +115,11 @@ async function update(collectionName, documents) {
 function loadI18n(i18nFileJson, prefixe, suffixe) {
     for (var key in i18nFileJson) {
         if (i18nFileJson[key] instanceof Object) {
-            (!!prefixe) ? loadI18n(i18nFileJson[key], prefixe + '.' + key, suffixe) :
+            (prefixe) ? loadI18n(i18nFileJson[key], prefixe + '.' + key, suffixe) :
                 loadI18n(i18nFileJson[key], key, suffixe);
         }
         else {
-            (!!prefixe) ? i18nPerProcessAndVersion.set(prefixe + '.' + key + '.' + suffixe, i18nFileJson[key]) :
+            (prefixe) ? i18nPerProcessAndVersion.set(prefixe + '.' + key + '.' + suffixe, i18nFileJson[key]) :
                 i18nPerProcessAndVersion.set(key + '.' + suffixe, i18nFileJson[key]);
         }
     }

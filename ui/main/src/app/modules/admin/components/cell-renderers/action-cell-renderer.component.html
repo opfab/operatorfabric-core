@@ -6,6 +6,13 @@
 <!-- SPDX-License-Identifier: MPL-2.0                                      -->
 <!-- This file is part of the OperatorFabric project.                      -->
 
+
 <a (click)="openModalFromParent()" aria-hidden="" class="btn btn-primary btn-sm">
         <em class="{{getIconForAction()}}"></em>
 </a>
+
+<span *ngIf="this.actionType === 'update'" >
+        <form action="/" method="post" enctype="multipart/form-data">
+            <input id="fileUpdater" type="file" class="file-update" style="display: none;" (change)="onFileSelectedForUpdate($event, this.params.data['name'])">
+        </form>
+</span>

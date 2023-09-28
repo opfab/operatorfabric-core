@@ -30,10 +30,21 @@ public class CurrentUserWithPerimetersService {
         this.entityRepository = entityRepository;
     }
 
+    public CurrentUserWithPerimeters fetchUserWithPerimeters(String login) {
+        CurrentUserWithPerimeters currentUserWithPerimetersData = new CurrentUserWithPerimetersData();
+
+        Optional<User> userResp = usersService.fetchUserByLogin(login);
+        if (userResp.isPresent()) {
+            currentUserWithPerimetersData = fetchCurrentUserWithPerimeters(userResp.get());
+        }
+        return currentUserWithPerimetersData;
+    }
+
     public CurrentUserWithPerimeters fetchCurrentUserWithPerimeters(User user) {
         CurrentUserWithPerimetersData currentUserWithPerimetersData = new CurrentUserWithPerimetersData();
         if (user != null) {
             currentUserWithPerimetersData.setUserData(user);
+            handleUserSettings(user, currentUserWithPerimetersData);
             handleGroups(user, currentUserWithPerimetersData);
             handleEntities(user);
         }
@@ -42,13 +53,6 @@ public class CurrentUserWithPerimetersService {
 
     protected void handleGroups(User userData, CurrentUserWithPerimetersData userWithPerimeterData) {
         List<String> userGroups = userData.getGroups(); // First, we recover the groups to which the user belongs
-
-        // We recover the user_settings to have the process/state filters defined by the
-        // user, for his feed
-        OperationResult<UserSettings> operationResult = userSettingsService.fetchUserSettings(userData.getLogin());
-        if (operationResult.isSuccess())
-            userWithPerimeterData
-                    .setProcessesStatesNotNotified(operationResult.getResult().getProcessesStatesNotNotified());
 
         if ((userGroups != null) && (!userGroups.isEmpty())) { // Then, we recover the groups data
             List<Group> groups = usersService.retrieveGroups(userGroups);
@@ -68,6 +72,19 @@ public class CurrentUserWithPerimetersService {
                 userWithPerimeterData.computePerimeters(perimetersData);
                 userWithPerimeterData.setPermissions(new ArrayList<>(permissionsData));
             }
+        }
+    }
+
+    protected void handleUserSettings(User userData, CurrentUserWithPerimetersData userWithPerimeterData) {
+        // We recover the user_settings to have the process/state filters defined by the
+        // user, for his feed
+        OperationResult<UserSettings> operationResult = userSettingsService.fetchUserSettings(userData.getLogin());
+
+        if (operationResult.isSuccess()) {
+            userWithPerimeterData.setProcessesStatesNotNotified(operationResult.getResult().getProcessesStatesNotNotified());
+            userWithPerimeterData.setProcessesStatesNotifiedByEmail(operationResult.getResult().getProcessesStatesNotifiedByEmail());
+            userWithPerimeterData.setSendCardsByEmail(operationResult.getResult().getSendCardsByEmail());
+            userWithPerimeterData.setEmail(operationResult.getResult().getEmail());
         }
     }
 

@@ -34,7 +34,7 @@ Feature: Get current user with perimeters (opfab in JWT mode)(endpoint tested : 
  "stateRights" : [
     {
       "state" : "state1",
-      "right" : "Write"
+      "right" : "ReceiveAndWrite"
     }
   ]
 }

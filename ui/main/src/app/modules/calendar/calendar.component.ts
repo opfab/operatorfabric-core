@@ -16,7 +16,7 @@ import allLocales from '@fullcalendar/core/locales-all';
 import {NgbModal, NgbModalOptions, NgbModalRef} from '@ng-bootstrap/ng-bootstrap';
 import {FilterType} from '@ofModel/feed-filter.model';
 import {HourAndMinutes, TimeSpan} from '@ofModel/card.model';
-import {ProcessesService} from 'app/business/services/processes.service';
+import {ProcessesService} from 'app/business/services/businessconfig/processes.service';
 import {LightCardsStoreService} from 'app/business/services/lightcards/lightcards-store.service';
 import {FilterService} from 'app/business/services/lightcards/filter.service';
 import {ConfigService} from 'app/business/services/config.service';
@@ -43,7 +43,7 @@ export class CalendarComponent implements OnInit, OnDestroy, AfterViewInit {
         private selectedCardService: SelectedCardService
     ) {
         processesService.getAllProcesses().forEach((process) => {
-            if (!!process.uiVisibility && !!process.uiVisibility.calendar) this.mapOfProcesses.set(process.id, 1);
+            if (process.uiVisibility?.calendar) this.mapOfProcesses.set(process.id, 1);
         });
     }
 
@@ -124,7 +124,7 @@ export class CalendarComponent implements OnInit, OnDestroy, AfterViewInit {
     private processCards(cards) {
         this.calendarEvents = [];
         for (const card of cards) {
-            if (!!this.mapOfProcesses && this.mapOfProcesses.has(card.process)) {
+            if (this.mapOfProcesses?.has(card.process)) {
                 if (card.timeSpans) {
                     for (const timespan of card.timeSpans) {
                         if (timespan.end) {
@@ -179,7 +179,7 @@ export class CalendarComponent implements OnInit, OnDestroy, AfterViewInit {
     }
 
     private computeRRuleCalendarEvents(card: any) {
-        if (!! card.rRule) {
+        if (card.rRule) {
             this.calendarEvents = this.calendarEvents.concat({
                 id: card.id,
                 title: card.titleTranslated,
@@ -252,7 +252,7 @@ export class CalendarComponent implements OnInit, OnDestroy, AfterViewInit {
     }
 
     ngOnDestroy() {
-        if (!!this.modalRef) {
+        if (this.modalRef) {
             this.modalRef.close();
         }
         this.unsubscribe$.next();

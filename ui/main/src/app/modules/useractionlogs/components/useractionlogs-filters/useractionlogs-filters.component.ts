@@ -13,7 +13,7 @@ import {DateTimeNgb} from '@ofModel/datetime-ngb.model';
 import {MessageLevel} from '@ofModel/message.model';
 import {MultiSelectOption} from '@ofModel/multiselect.model';
 import {ActionTypeEnum} from '@ofModel/user-action-log.model';
-import {UserService} from 'app/business/services/user.service';
+import {UserService} from 'app/business/services/users/user.service';
 import {Utilities} from 'app/business/common/utilities';
 import {debounceTime, Subject, takeUntil} from 'rxjs';
 import {AlertMessageService} from 'app/business/services/alert-message.service';
@@ -99,6 +99,8 @@ export class UserActionLogsFiltersComponent implements OnInit, OnDestroy {
     resetForm() {
         this.loginsSelected = [];
         this.actionsSelected = [];
+        this.minDate = this.defaultMinDate;
+        this.maxDate = null;
         this.reset.emit(null);
     }
 

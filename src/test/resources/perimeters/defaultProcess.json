@@ -17,7 +17,7 @@
     },
     {
       "state" : "responseState",
-      "right" : "Write"
+      "right" : "ReceiveAndWrite"
     },
     {
       "state" : "questionState",

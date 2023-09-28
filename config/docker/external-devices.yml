@@ -1,0 +1,49 @@
+#  POPULATE THE EXTERNAL DATABASE ON INIT
+# !!!! WARNING: VALUES SHOULD BE CHANGED FOR PRODUCTION MODE !!!!
+#
+
+operatorfabric:
+  externaldevices:
+    watchdog:
+      enabled: true
+    default:
+      deviceConfigurations:
+        - id: CDS_1
+          host: dummy-modbus-device_1
+          port: 4030
+          signalMappingId: default_CDS_mapping
+          isEnabled: true
+        - id: CDS_2
+          host: dummy-modbus-device_2
+          port: 4030
+          signalMappingId: exotic_CDS_mapping
+        - id: CDS_3
+          host: dummy-modbus-device_3
+          port: 4030
+          signalMappingId: default_CDS_mapping
+      signalMappings:
+        - id: default_CDS_mapping
+          supportedSignals:
+            ALARM: 1
+            ACTION: 2
+            COMPLIANT: 3
+            INFORMATION: 4
+        - id: exotic_CDS_mapping
+          supportedSignals:
+            ALARM: 5
+            ACTION: 6
+            COMPLIANT: 7
+            INFORMATION: 8
+      userConfigurations:
+        - userLogin: operator1_fr
+          externalDeviceIds: ["CDS_1"]
+        - userLogin: operator2_fr
+          externalDeviceIds: ["CDS_2"]
+        - userLogin: operator3_fr
+          externalDeviceIds: ["CDS_3"]
+        - userLogin: operator4_fr
+          externalDeviceIds: ["CDS_1"]
+logging.level.org.opfab: debug
+
+
+

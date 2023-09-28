@@ -77,8 +77,9 @@ import {AngularSoundServer} from './server/angularSound.server';
 import {DashboardModule} from './modules/dashboard/dashboard.module';
 import {BusinessDataServer} from './business/server/businessData.server';
 import {AngularBusinessDataServer} from './server/angularBusinessData.server';
-import {TranslationService} from './business/services/translation.service';
+import {TranslationService} from './business/services/translation/translation.service';
 import {AngularTranslationService} from '@ofServices/angularTranslationService';
+import {LoadingInProgress} from "./modules/core/application-loading/loading-in-progress/loading-in-progress";
 
 @NgModule({
     imports: [
@@ -117,7 +118,8 @@ import {AngularTranslationService} from '@ofServices/angularTranslationService';
         AccountAlreadyUsedComponent,
         AppLoadedInAnotherTabComponent,
         ApplicationLoadingComponent,
-        ReloadRequiredComponent
+        ReloadRequiredComponent,
+        LoadingInProgress
     ],
 
     providers: [

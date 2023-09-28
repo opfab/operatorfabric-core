@@ -14,7 +14,6 @@ Feature: patch user settings
 """
 {
   "login" : "loginkarate1",
-  "description" : "my dummy user",
   "locale" : "en",
   "processesStatesNotNotified": {"processA": ["state1", "state2"], "processB": ["state3", "state4"]},
   "entitiesDisconnected": ["ENTITY_A", "ENTITY_B"],
@@ -26,7 +25,6 @@ Feature: patch user settings
 """
 {
   "login" : "operator1_fr",
-  "description" : "my dummy operator1_fr user",
   "locale" : "en",
   "processesStatesNotNotified": {"processC": ["state5", "state6"], "processD": ["state7", "state8"]},
   "entitiesDisconnected": ["ENTITY_C", "ENTITY_D"],
@@ -38,7 +36,6 @@ Feature: patch user settings
 """
 {
   "login" : "nonexistentUser",
-  "description" : "my dummy nonexistentUser user",
   "locale" : "fr",
   "processesStatesNotNotified": {"processE": ["state9", "state10"], "processF": ["state11", "state12"]}
 }
@@ -125,7 +122,6 @@ Feature: patch user settings
     When method patch
     Then status 200
     And match response.login == userSettings.login
-    And match response.description == userSettings.description
     And match response.locale == userSettings.locale
     And match response.processesStatesNotNotified == userSettings.processesStatesNotNotified
     And match response.entitiesDisconnected == userSettings.entitiesDisconnected
@@ -140,7 +136,6 @@ Feature: patch user settings
     When method patch
     Then status 200
     And match response.login == userSettingsDispatcher.login
-    And match response.description == userSettingsDispatcher.description
     And match response.locale == userSettingsDispatcher.locale
     And match response.processesStatesNotNotified == userSettingsDispatcher.processesStatesNotNotified
     And match response.entitiesDisconnected == userSettingsDispatcher.entitiesDisconnected

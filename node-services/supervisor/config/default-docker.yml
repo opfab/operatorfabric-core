@@ -1,0 +1,34 @@
+operatorfabric:
+  servicesUrls:
+    authToken: "http://web-ui/auth/token"
+    users: "http://users:2103"
+    cardsPublication: "http://cards-publication:2102"
+    cardsConsultation: "http://cards-consultation:2104"
+  internalAccount:
+    login: opfab
+  logConfig:
+    logFolder: logs/
+    logFile: "opfab.%DATE%.log"
+    logLevel: info
+  supervisor:
+    adminPort: 2108
+    activeOnStartup: true
+    defaultConfig:
+      disconnectedCardTemplate:
+        publisher: opfab
+        processVersion: '1'
+        process: supervisor
+        state: disconnectedEntity
+        severity: ALARM
+      secondsBetweenConnectionChecks: 10
+      nbOfConsecutiveNotConnectedToSendFirstCard: 3
+      nbOfConsecutiveNotConnectedToSendSecondCard: 12
+      unackCardTemplate:
+        publisher: opfab
+        processVersion: '1'
+        process: supervisor
+        state: unacknowledgedCards
+        severity: ALARM
+      windowInSecondsForCardSearch: 1200
+      secondsBetweenAcknowledgmentChecks: 10
+      secondsAfterPublicationToConsiderCardAsNotAcknowledged: 600

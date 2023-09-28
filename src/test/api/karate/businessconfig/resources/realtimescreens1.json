@@ -2,6 +2,7 @@
   "realTimeScreens": [
     {
       "screenName": "All Control Centers",
+      "onlyDisplayUsersInGroups": ["group1"],
       "screenColumns": [
         {
           "entitiesGroups": [

@@ -11,13 +11,22 @@
     <of-spinner *ngIf="isPreparingCard"></of-spinner>
 
     <div [hidden]="isPreparingCard" id="opfab-usercard-creation">
-        <of-usercard-select-state-form 
-                [cardIdToEdit]="this.cardIdToEdit" 
+        <of-usercard-select-state-form *ngIf="!this.cardIdToCopy"
+                [cardIdToEditOrCopy]="this.cardIdToEdit"
                 [initialProcess]="this.editCardProcessId" 
                 [initialState]="this.editCardStateId"
                 (stateChange)="stateChanged($event)"
                 (emptyProcessList)="setEmptyProcessList()"
                 > </of-usercard-select-state-form>
+        <br/>
+
+        <of-usercard-select-state-form *ngIf="this.cardIdToCopy"
+                [cardIdToEditOrCopy]="this.cardIdToCopy"
+                [initialProcess]="this.copyCardProcessId"
+                [initialState]="this.copyCardStateId"
+                (stateChange)="stateChanged($event)"
+                (emptyProcessList)="setEmptyProcessList()"
+        > </of-usercard-select-state-form>
         <br/>
     
         <form [formGroup]="severityForm" class="opfab-form-lighter" >
@@ -69,9 +78,10 @@
             </div>
 
             <div *ngIf="recipientVisible">
-                <of-usercard-recipients-form [userCardConfiguration]="userCardConfiguration" [initialSelectedRecipients]="initialSelectedRecipients"
-                    [initialSelectedRecipientsForInformation]="initialSelectedRecipientsForInformation"
-                    [recipientForInformationVisible]="recipientForInformationVisible" #recipientsForm> </of-usercard-recipients-form>
+                <of-usercard-recipients-form [userCardConfiguration]="userCardConfiguration" [selectedRecipients]="initialSelectedRecipients"
+                    [selectedRecipientsForInformation]="initialSelectedRecipientsForInformation"
+                    [recipientForInformationVisible]="recipientForInformationVisible"
+                    [editCardMode]="editCardMode" #recipientsForm> </of-usercard-recipients-form>
             </div>
         </div>
 
@@ -88,42 +98,58 @@
 
 
 <div *ngIf="displayPreview">
-        <div class="opfab-section-header" style="display: flex;flex-wrap: wrap;" id="opfab-entity-recipients">
-            <span translate>userCard.recipients</span>
-            <span *ngFor="let entityId of this.recipients" style="padding-right: 10px">&nbsp; {{getEntityName(entityId)}} &nbsp;</span>
-        </div>
+    <ng-template #connected>
+        <span class="badge rounded-pill bg-success opfab-activityarea-badge" style ="transform: translate(0,-1px) scale(0.8);">&nbsp;</span>
+    </ng-template>
+    <ng-template #disconnected>
+        <span class="badge rounded-pill bg-danger opfab-activityarea-badge" style ="transform: translate(0,-1px) scale(0.8);">&nbsp;</span>
+    </ng-template>
+    <div class="opfab-section-header" style="display: flex;flex-wrap: wrap;" id="opfab-entity-recipients">
+        <span translate>userCard.recipients</span>
+        <span *ngFor="let entityId of this.recipients" style="padding-right: 10px">
+            &nbsp; {{getEntityName(entityId)}}
+            <span *ngIf="this.displayConnectionCircles">
+                <span *ngIf="this.connectedRecipients.has(entityId);then connected else disconnected"></span>
+            </span>
+        </span>
+    </div>
 
-        <div class="opfab-section-header" style="display: flex;flex-wrap: wrap;" id="opfab-entity-recipients-for-information"
-             *ngIf="!!card.entityRecipientsForInformation && card.entityRecipientsForInformation.length">
-            <span translate>userCard.recipientsForInformation</span>
-            <span *ngFor="let entityId of card.entityRecipientsForInformation" style="padding-right: 10px">&nbsp; {{getEntityName(entityId)}} &nbsp;</span>
-        </div>
+    <div class="opfab-section-header" style="display: flex;flex-wrap: wrap;" id="opfab-entity-recipients-for-information"
+            *ngIf="!!card.entityRecipientsForInformation && card.entityRecipientsForInformation.length">
+        <span translate>userCard.recipientsForInformation</span>
+        <span *ngFor="let entityId of card.entityRecipientsForInformation" style="padding-right: 10px">
+            &nbsp; {{getEntityName(entityId)}}
+            <span *ngIf="this.displayConnectionCircles">
+                <span *ngIf="this.connectedRecipients.has(entityId);then connected else disconnected"></span>
+            </span>
+        </span>
+    </div>
 
-        <div *ngIf="! card.entityRecipients.length" id="opfab-you-are-only-one-recipient">
-            <span class="opfab-color-danger" translate>userCard.youAreTheOnlyRecipient</span>
+    <div *ngIf="! card.entityRecipients.length" id="opfab-you-are-only-one-recipient">
+        <span class="opfab-color-danger" translate>userCard.youAreTheOnlyRecipient</span>
+    </div>
+    <div>
+        <div class="opfab-section-header">
+            <span translate>userCard.feedPreview</span>
         </div>
+        
+        <div style="width: 40%;">
+        <of-light-card [lightCard]="card" [open]="false" [displayUnreadIcon]="false" [displayContext]="displayContext"></of-light-card>
+        </div>
+        <div class="opfab-section-header"><span translate>userCard.contentPreview</span></div>
+        
         <div>
-            <div class="opfab-section-header">
-                <span translate>userCard.feedPreview</span>
+            <of-simplified-card-view [card]="card" [childCards]="childCards" [screenSize]="'md'" [displayContext]="displayContext" fixedBottomOffset="60"> </of-simplified-card-view>
             </div>
-           
-            <div style="width: 40%;">
-            <of-light-card [lightCard]="card" [open]="false" [displayUnreadIcon]="false" [displayContext]="displayContext"></of-light-card>
-            </div>
-            <div class="opfab-section-header"><span translate>userCard.contentPreview</span></div>
-            
-            <div>
-                <of-simplified-card-view [card]="card" [childCards]="childCards" [screenSize]="'md'" [displayContext]="displayContext" fixedBottomOffset="60"> </of-simplified-card-view>
-             </div>
 
+    </div>
+    <div id='opfab-card-detail-footer'>
+        <div class="modal-footer" style="margin-top:10px;margin-bottom: 0px;" ></div>
+        <div style="text-align: center;width:100%">
+            <button id="opfab-usercard-btn-refuse" type="button" class="opfab-btn-cancel" (click)="decline()" translate>userCard.refuse</button>
+            <button id="opfab-usercard-btn-accept" type="button" class="opfab-btn" (click)="confirm()" translate>userCard.accept</button>
         </div>
-        <div id='opfab-card-detail-footer'>
-            <div class="modal-footer" style="margin-top:10px;margin-bottom: 0px;" ></div>
-            <div style="text-align: center;width:100%">
-                <button id="opfab-usercard-btn-refuse" type="button" class="opfab-btn-cancel" (click)="decline()" translate>userCard.refuse</button>
-                <button id="opfab-usercard-btn-accept" type="button" class="opfab-btn" (click)="confirm()" translate>userCard.accept</button>
-            </div>
-        </div>
+    </div>
 
 </div>
 

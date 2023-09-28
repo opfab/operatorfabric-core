@@ -7,11 +7,11 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {ProcessesService} from 'app/business/services/processes.service';
+import {ProcessesService} from 'app/business/services/businessconfig/processes.service';
 import {ConfigServerMock} from '@tests/mocks/configServer.mock';
 import {ProcessServerMock} from '@tests/mocks/processServer.mock';
 import {Dashboard} from './dashboard.view';
-import {UserService} from 'app/business/services/user.service';
+import {UserService} from 'app/business/services/users/user.service';
 import {OpfabLoggerService} from 'app/business/services/logs/opfab-logger.service';
 import {RemoteLoggerServiceMock} from '@tests/mocks/remote-logger.service.mock';
 import {UserServerMock} from '@tests/mocks/userServer.mock';
@@ -22,7 +22,7 @@ import {ComputedPerimeter, UserWithPerimeters} from '@ofModel/userWithPerimeters
 import {RightsEnum} from '@ofModel/perimeter.model';
 import {LightCardsStoreService} from 'app/business/services/lightcards/lightcards-store.service';
 import {OpfabEventStreamServerMock} from '@tests/mocks/opfab-event-stream.server.mock';
-import {OpfabEventStreamService} from 'app/business/services/opfabEventStream.service';
+import {OpfabEventStreamService} from 'app/business/services/events/opfabEventStream.service';
 import {SelectedCardService} from 'app/business/services/card/selectedCard.service';
 import {getOneRandomLightCard} from '@tests/helpers';
 import {firstValueFrom, skip} from 'rxjs';
@@ -30,6 +30,10 @@ import {Severity} from '@ofModel/light-card.model';
 import {Utilities} from 'app/business/common/utilities';
 import {FilterService} from 'app/business/services/lightcards/filter.service';
 import {FilterType} from '@ofModel/feed-filter.model';
+import {AcknowledgeService} from "../../services/acknowledge.service";
+import {UserPermissionsService} from "../../services/user-permissions.service";
+import {AlertMessageService} from "../../services/alert-message.service";
+import {EntitiesService} from 'app/business/services/users/entities.service';
 
 describe('Dashboard', () => {
     let dashboard: Dashboard;
@@ -42,6 +46,7 @@ describe('Dashboard', () => {
     let lightCardsStoreService: LightCardsStoreService;
     let filterService: FilterService;
     let opfabEventStreamServerMock: OpfabEventStreamServerMock;
+    let acknowledgeService: AcknowledgeService;
 
     beforeEach(() => {
         configServerMock = new ConfigServerMock();
@@ -60,13 +65,17 @@ describe('Dashboard', () => {
             null,
             opfabLoggerService
         );
+
+        const entitiesService = new EntitiesService(opfabLoggerService, null, new AlertMessageService());
+        const userPermissionService = new UserPermissionsService(entitiesService, processesService);
+        acknowledgeService = new AcknowledgeService(null, userPermissionService, userService, processesService, entitiesService);
+
         lightCardsStoreService = new LightCardsStoreService(
             userService,
-            processesService,
-            null,
             opfabEventStreamService,
             new SelectedCardService(),
-            opfabLoggerService
+            opfabLoggerService,
+            acknowledgeService
         );
         lightCardsStoreService.initStore();
     });
@@ -97,7 +106,8 @@ describe('Dashboard', () => {
         processServerMock.setResponseForAllProcessDefinition(
             new ServerResponse(processes, ServerResponseStatus.OK, null)
         );
-        await processesService.loadAllProcesses().subscribe();
+        await processesService.loadAllProcessesWithLatestVersion().subscribe();
+        await processesService.loadAllProcessesWithAllVersions().subscribe();
     }
 
     it('GIVEN an empty process list WHEN get dashboard THEN dashboard is empty', async () => {
@@ -105,7 +115,8 @@ describe('Dashboard', () => {
         processServerMock.setResponseForAllProcessDefinition(
             new ServerResponse(processes, ServerResponseStatus.OK, null)
         );
-        await processesService.loadAllProcesses().subscribe();
+        await processesService.loadAllProcessesWithLatestVersion().subscribe();
+        await processesService.loadAllProcessesWithAllVersions().subscribe();
         const userWithPerimeters = new UserWithPerimeters(null, new Array(), null, new Map());
         userServerMock.setResponseForCurrentUserWithPerimeter(new ServerResponse(userWithPerimeters, null, null));
 

@@ -314,12 +314,12 @@ export class CustomTimelineChartComponent extends BaseChartComponent implements 
         for (const card of cards) {
             if (!card.parentCardId) {
                 // is not child card
-                if (!!card.rRule) {
+                if (card.rRule) {
                     this.computeCardsToDrawOnTheTimelineUsingRRule(card, myCardsTimeline);
                 } else {
                     if (card.timeSpans && card.timeSpans.length > 0) {
                         card.timeSpans.forEach((timeSpan) => {
-                            if (!!timeSpan.recurrence) {
+                            if (timeSpan.recurrence) {
                                 let dateForReminder: number = getNextTimeForRepeating(
                                     card,
                                     this.xDomainForTimeLineGridDisplay[0].valueOf() +
@@ -348,7 +348,7 @@ export class CustomTimelineChartComponent extends BaseChartComponent implements 
                                     );
                                 }
                             } else {
-                                if (!!timeSpan.start) {
+                                if (timeSpan.start) {
                                     const myCardTimeline = {
                                         date: timeSpan.start,
                                         id: card.id,
@@ -587,7 +587,7 @@ export class CustomTimelineChartComponent extends BaseChartComponent implements 
         // wait for 500ms to be sure the card is selected and scroll to the card with his id (opfab-selected-card-summary)
         setTimeout(() => {
             const selectedCard = document.getElementById('opfab-selected-card-summary');
-            if (!!selectedCard) selectedCard.scrollIntoView({behavior: 'smooth', block: 'center'});
+            if (selectedCard) selectedCard.scrollIntoView({behavior: 'smooth', block: 'center'});
         }, 500);
     }
 

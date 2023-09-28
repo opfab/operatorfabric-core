@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Copyright (c) 2021, RTE (http://www.rte-france.com)
+# Copyright (c) 2021-2023, RTE (http://www.rte-france.com)
 # See AUTHORS.txt
 # This Source Code Form is subject to the terms of the Mozilla Public
 # License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -12,16 +12,16 @@
 # is called from another folder
 cd "$(dirname "${BASH_SOURCE[0]}")"
 
-url=$2 
-if [ -z $url ] 
+url=$2
+if [[ -z $url ]]
 then
 	url="http://localhost"
 fi
-if [ -z $1 ]
+if [[ -z $1 ]]
 then
     echo "Usage : deletePerimeter perimeter_name opfab_url"
 else
-    source ../getToken.sh "admin" $url
+    source ../getToken.sh $url
     echo "delete perimeter $1 on $url "
     curl -X DELETE $url:2103/perimeters/$1 -H "Authorization:Bearer $token"
     echo ""

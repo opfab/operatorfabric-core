@@ -13,16 +13,17 @@ import {Router} from '@angular/router';
 import {takeUntil} from 'rxjs/operators';
 import {Observable, Subject} from 'rxjs';
 import {ConfigService} from 'app/business/services/config.service';
-import {EntitiesService} from 'app/business/services/entities.service';
-import {ProcessesService} from 'app/business/services/processes.service';
-import {DisplayContext} from '@ofModel/templateGateway.model';
-import {GroupedCardsService} from 'app/business/services/grouped-cards.service';
+import {EntitiesService} from 'app/business/services/users/entities.service';
+import {ProcessesService} from 'app/business/services/businessconfig/processes.service';
+import {DisplayContext} from '@ofModel/template.model';
+import {GroupedCardsService} from 'app/business/services/lightcards/grouped-cards.service';
 import {TypeOfStateEnum} from '@ofModel/processes.model';
-import {SoundNotificationService} from 'app/business/services/sound-notification.service';
+import {SoundNotificationService} from 'app/business/services/notifications/sound-notification.service';
 import {DateTimeFormatterService} from 'app/business/services/date-time-formatter.service';
 import {MapService} from 'app/business/services/map.service';
 import {TranslateService} from '@ngx-translate/core';
 import {RouterStore} from 'app/business/store/router.store';
+import {Utilities} from 'app/business/common/utilities';
 
 @Component({
     selector: 'of-light-card',
@@ -39,6 +40,7 @@ export class LightCardComponent implements OnInit, OnDestroy {
 
     protected _i18nPrefix: string;
     dateToDisplay: string;
+    truncatedTitle: string;
     fromEntity = null;
     showExpiredIcon = true;
     showExpiredLabel = true;
@@ -74,6 +76,7 @@ export class LightCardComponent implements OnInit, OnDestroy {
         this.computeDisplayedDate();
         this.computeLttdParams();
         this.computeDisplayedExpirationDate();
+        this.truncatedTitle = Utilities.sliceForFormat(this.lightCard.titleTranslated, 130);
         this.hasGeoLocation =
             this.lightCard.wktGeometry === undefined ||
             this.lightCard.wktGeometry == null ||
@@ -91,7 +94,7 @@ export class LightCardComponent implements OnInit, OnDestroy {
                 if (state.type === TypeOfStateEnum.FINISHED) {
                     this.showExpiredIcon = false;
                     this.showExpiredLabel = false;
-                } else if (!!state.response) {
+                } else if (state.response) {
                     this.showExpiredIcon = false;
                     this.expiredLabel = 'feed.responsesClosed';
                 }
@@ -132,7 +135,8 @@ export class LightCardComponent implements OnInit, OnDestroy {
     }
 
     private computeGroupedCardsIcon() {
-        this.showGroupedCardsIcon = this.groupedCardsService.isParentGroupCard(this.lightCard);
+        this.showGroupedCardsIcon = this.groupedCardsService.isParentGroupCard(this.lightCard)
+        && this.groupedCardsService.getChildCardsByTags(this.lightCard.tags).length !== 0;
     }
 
     getGroupedChildCards() {

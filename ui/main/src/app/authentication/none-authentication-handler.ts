@@ -9,7 +9,7 @@
 
 import {AuthenticatedUser} from './auth.model';
 import {AuthHandler} from './auth-handler';
-import {UserService} from 'app/business/services/user.service';
+import {UserService} from 'app/business/services/users/user.service';
 import {Message, MessageLevel} from '@ofModel/message.model';
 import {ConfigService} from 'app/business/services/config.service';
 import {HttpClient} from '@angular/common/http';
@@ -39,7 +39,11 @@ export class NoneAuthenticationHandler extends AuthHandler {
         });
     }
 
-    regularCheckTokenValidity() {
+    regularCheckIfTokenExpireSoon() {
+        // Override because there is no regularly check in none mode
+    }
+
+    regularCheckIfTokenIsExpired() {
         // Override because there is no regularly check in none mode
     }
 }

@@ -14,20 +14,20 @@ import {MultiSelectConfig, MultiSelectOption} from '@ofModel/multiselect.model';
 import {RightsEnum} from '@ofModel/perimeter.model';
 import {Process, UserCard} from '@ofModel/processes.model';
 import {ComputedPerimeter, UserWithPerimeters} from '@ofModel/userWithPerimeters.model';
-import {ProcessesService} from 'app/business/services/processes.service';
-import {UserService} from 'app/business/services/user.service';
+import {ProcessesService} from 'app/business/services/businessconfig/processes.service';
+import {UserService} from 'app/business/services/users/user.service';
 import {Utilities} from 'app/business/common/utilities';
 import {MultiSelectComponent} from 'app/modules/share/multi-select/multi-select.component';
 import {Subject} from 'rxjs';
 import {debounceTime, takeUntil} from 'rxjs/operators';
-import {EntitiesService} from 'app/business/services/entities.service';
+import {EntitiesService} from 'app/business/services/users/entities.service';
 
 @Component({
     selector: 'of-usercard-select-state-form',
     templateUrl: './usercard-select-state-form.component.html'
 })
 export class UserCardSelectStateFormComponent implements OnInit, OnDestroy {
-    @Input() public cardIdToEdit;
+    @Input() public cardIdToEditOrCopy;
     @Input() public initialProcess;
     @Input() public initialState;
 
@@ -35,11 +35,11 @@ export class UserCardSelectStateFormComponent implements OnInit, OnDestroy {
     @Output() public emptyProcessList: EventEmitter<any> = new EventEmitter<any>();
 
     @ViewChild('processGroupSelect') set processGroup(processGroupSelect: MultiSelectComponent) {
-        if (processGroupSelect && this.cardIdToEdit) processGroupSelect.disable();
+        if (processGroupSelect && this.cardIdToEditOrCopy) processGroupSelect.disable();
     }
 
     @ViewChild('processSelect') set process(processSelect: MultiSelectComponent) {
-        if (processSelect && this.cardIdToEdit) processSelect.disable();
+        if (processSelect && this.cardIdToEditOrCopy) processSelect.disable();
     }
 
     processesDefinition: Process[];
@@ -106,10 +106,10 @@ export class UserCardSelectStateFormComponent implements OnInit, OnDestroy {
         this.changeProcessesWhenSelectProcessGroup();
         this.loadAllProcessGroupsRelatingToUserPerimeter();
 
-        if (!this.cardIdToEdit && this.processGroupOptions.length <= 1 && this.processOptions.length > 0) {
+        if (!this.cardIdToEditOrCopy && this.processGroupOptions.length <= 1 && this.processOptions.length > 0) {
             this.selectedProcess = this.processOptions[0].value;
         }
-        if (!this.cardIdToEdit && this.processGroupOptions.length > 1) {
+        if (!this.cardIdToEditOrCopy && this.processGroupOptions.length > 1) {
             this.selectedProcessGroupOption = this.processGroupOptions[0].value;
         }
         this.initProcessState();
@@ -142,7 +142,7 @@ export class UserCardSelectStateFormComponent implements OnInit, OnDestroy {
     }
 
     private isUserAllowedToSendCard(perimeter: ComputedPerimeter): boolean {
-        return perimeter.rights === RightsEnum.ReceiveAndWrite || perimeter.rights === RightsEnum.Write;
+        return perimeter.rights === RightsEnum.ReceiveAndWrite;
     }
 
     private loadStatesForProcess(process: Process): void {
@@ -215,7 +215,7 @@ export class UserCardSelectStateFormComponent implements OnInit, OnDestroy {
             );
         }
 
-        if (!this.cardIdToEdit && this.processGroupOptions.length > 0)
+        if (!this.cardIdToEditOrCopy && this.processGroupOptions.length > 0)
             this.selectedProcessGroupOption = this.processGroupOptions[0].value;
     }
 
@@ -237,7 +237,7 @@ export class UserCardSelectStateFormComponent implements OnInit, OnDestroy {
                     this.processOptionsWhenSelectedProcessGroup = this.processesWithoutProcessGroup;
                 else this.processOptionsWhenSelectedProcessGroup = this.processesPerProcessGroups.get(processGroup);
                 this.processOptionsWhenSelectedProcessGroup.sort((a, b) => Utilities.compareObj(a.label, b.label));
-                if (!this.cardIdToEdit) {
+                if (!this.cardIdToEditOrCopy) {
                     this.selectedProcess = this.processOptionsWhenSelectedProcessGroup[0].value;
                 }
             }
@@ -248,7 +248,7 @@ export class UserCardSelectStateFormComponent implements OnInit, OnDestroy {
         this.selectStateForm.get('usercardProcess').valueChanges.subscribe((process) => {
             if (process) {
                 this.stateOptions = this.statesPerProcesses.get(process);
-                if (!this.cardIdToEdit) {
+                if (!this.cardIdToEditOrCopy) {
                     const oldSelectedState = this.selectedState;
                     this.selectedState = this.stateOptions[0].value;
 
@@ -266,7 +266,7 @@ export class UserCardSelectStateFormComponent implements OnInit, OnDestroy {
     }
 
     private initProcessState() {
-        if (this.cardIdToEdit) {
+        if (this.cardIdToEditOrCopy) {
             const processGroupForCardToEdit = this.processGroupPerProcesses.get(this.initialProcess);
             if (processGroupForCardToEdit) this.selectedProcessGroupOption = processGroupForCardToEdit;
             else this.selectedProcessGroupOption = '--';

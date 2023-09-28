@@ -31,6 +31,7 @@ export class State {
         public cancelAcknowledgmentAllowed?: boolean,
         public closeCardWhenUserAcknowledges?: boolean,
         public editCardEnabledOnUserInterface?: boolean,
+        public copyCardEnabledOnUserInterface?: boolean,
         public deleteCardEnabledOnUserInterface?: boolean,
         public name?: string,
         public color?: string,
@@ -88,7 +89,6 @@ export enum TypeOfStateEnum {
 
 export enum ConsideredAcknowledgedForUserWhenEnum {
     USER_HAS_ACKNOWLEDGED = 'UserHasAcknowledged',
-    ONE_ENTITY_OF_USER_HAS_ACKNOWLEDGED = 'OneEntityOfUserHasAcknowledged',
     ALL_ENTITIES_OF_USER_HAVE_ACKNOWLEDGED = 'AllEntitiesOfUserHaveAcknowledged'
 }
 

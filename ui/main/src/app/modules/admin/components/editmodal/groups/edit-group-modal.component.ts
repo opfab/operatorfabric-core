@@ -20,12 +20,12 @@ import {
 import {NgbActiveModal} from '@ng-bootstrap/ng-bootstrap';
 import {AdminItemType, SharingService} from '../../../services/sharing.service';
 import {CrudService} from 'app/business/services/crud-service';
-import {PerimetersService} from 'app/business/services/perimeters.service';
+import {PerimetersService} from 'app/business/services/users/perimeters.service';
 import {MessageLevel} from '@ofModel/message.model';
-import {GroupsService} from 'app/business/services/groups.service';
+import {GroupsService} from 'app/business/services/users/groups.service';
 import {MultiSelectConfig, MultiSelectOption} from '@ofModel/multiselect.model';
 import {GroupTypeEnum} from '@ofModel/group.model';
-import {UserService} from 'app/business/services/user.service';
+import {UserService} from 'app/business/services/users/user.service';
 import {User} from '@ofModel/user.model';
 import {PermissionEnum} from '@ofModel/permission.model';
 import {Observable, of} from 'rxjs';
@@ -150,7 +150,7 @@ export class EditGroupModalComponent implements OnInit {
     }
 
     private isUserInCurrentGroup(usr: User) :boolean {
-        return !!usr.groups && usr.groups.findIndex(g => g === this.row.id) >= 0;
+        return usr.groups && usr.groups.findIndex(g => g === this.row.id) >= 0;
     }
 
     update() {
@@ -166,7 +166,7 @@ export class EditGroupModalComponent implements OnInit {
     }
 
     isUniqueGroupId(groupId: string): boolean {
-        if (!!groupId && this.groupsService.getGroups().filter((group) => group.id === groupId).length) return false;
+        if (groupId && this.groupsService.getGroups().filter((group) => group.id === groupId).length) return false;
         else return true;
     }
 
@@ -179,7 +179,7 @@ export class EditGroupModalComponent implements OnInit {
     }
 
     isUniqueGroupName(groupName: string): boolean {
-        if (!!groupName && this.groupsService.getGroups().filter((group) => (group.name === groupName.trim()) && (group.id !== this.row?.id)).length) return false;
+        if (groupName && this.groupsService.getGroups().filter((group) => (group.name === groupName.trim()) && (group.id !== this.row?.id)).length) return false;
         else return true;
     }
 
@@ -213,7 +213,7 @@ export class EditGroupModalComponent implements OnInit {
         this.id.setValue((this.id.value as string).trim());
         this.name.setValue((this.name.value as string).trim());
 
-        if (!! this.description.value) {
+        if (this.description.value) {
             this.description.setValue((this.description.value as string).trim());
         }
 

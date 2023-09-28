@@ -27,10 +27,10 @@ export class UserCardDatesFormComponent implements OnInit, OnDestroy, OnChanges 
     @Output() public expirationDateFilterChange = new Subject();
 
     datesForm: FormGroup<{
-        startDate: FormControl<any | null>;
-        endDate: FormControl<any | null>;
-        lttd: FormControl<any | null>;
-        expirationDate: FormControl<any | null>;
+        startDate: FormControl<any>;
+        endDate: FormControl<any>;
+        lttd: FormControl<any>;
+        expirationDate: FormControl<any>;
     }>;
     unsubscribe$: Subject<void> = new Subject<void>();
 

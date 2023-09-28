@@ -1,4 +1,4 @@
-// Copyright (c) 2018-2021 RTE (http://www.rte-france.com)
+// Copyright (c) 2018-2023 RTE (http://www.rte-france.com)
 // See AUTHORS.txt
 // This document is subject to the terms of the Creative Commons Attribution 4.0 International license.
 // If a copy of the license was not distributed with this
@@ -26,11 +26,17 @@ include::card_rendering.adoc[leveloffset=+1]
 
 include::card_notification.adoc[leveloffset=+1]
 
+include::mail_notification.adoc[leveloffset=+1]
+
 include::response_cards.adoc[leveloffset=+1]
 
 include::user_cards.adoc[leveloffset=+1]
 
+include::build-in_templates.adoc[leveloffset=+1]
+
 include::business_data.adoc[leveloffset=+1]
+
+include::ui_api.adoc[leveloffset=+1]
 
 include::archives.adoc[leveloffset=+1]
 
@@ -39,6 +45,8 @@ include::monitoring.adoc[leveloffset=+1]
 include::users_management.adoc[leveloffset=+1]
 
 include::ui_customization.adoc[leveloffset=+1]
+
+include::supervisor.adoc[leveloffset=+1]
 
 include::external_devices_service.adoc[leveloffset=+1]
 

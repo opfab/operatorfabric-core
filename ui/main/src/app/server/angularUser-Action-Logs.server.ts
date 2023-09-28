@@ -25,7 +25,7 @@ export class AngularUserActionLogsServer extends AngularServer implements UserAc
 
     constructor(private httpClient: HttpClient) {
         super();
-        this.userActionsUrl = `${environment.urls.userActionLogs}`;
+        this.userActionsUrl = `${environment.url}/users/userActionLogs`;
     }
 
     queryUserActionLogs(filters: Map<string, string[]>): Observable<ServerResponse<Page<UserActionLog>>> {

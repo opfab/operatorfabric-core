@@ -10,7 +10,7 @@
 import {LightCard, Severity} from '@ofModel/light-card.model';
 import {CardOperation, CardOperationType} from '@ofModel/card-operation.model';
 import {Process, State} from '@ofModel/processes.model';
-import {Menu, MenuEntry, MenuEntryLinkTypeEnum} from '@ofModel/menu.model';
+import {CustomMenu, MenuEntry, MenuEntryLinkTypeEnum} from '@ofModel/menu.model';
 import {Card} from '@ofModel/card.model';
 import {I18n} from '@ofModel/i18n.model';
 import {Page} from '@ofModel/page.model';
@@ -21,7 +21,7 @@ import SpyObj = jasmine.SpyObj;
 import {TestBed} from '@angular/core/testing';
 
 
-export function getOneRandomMenu(): Menu {
+export function getOneRandomMenu(): CustomMenu {
     const entries: MenuEntry[] = [];
     const entryCount = getPositiveRandomNumberWithinRange(2, 5);
     for (let j = 0; j < entryCount; j++) {
@@ -34,11 +34,11 @@ export function getOneRandomMenu(): Menu {
             )
         );
     }
-    return new Menu(getRandomAlphanumericValue(3, 10), getRandomAlphanumericValue(3, 10), entries);
+    return new CustomMenu(getRandomAlphanumericValue(3, 10), getRandomAlphanumericValue(3, 10), entries);
 }
 
-export function getRandomMenus(): Menu[] {
-    const result: Menu[] = [];
+export function getRandomMenus(): CustomMenu[] {
+    const result: CustomMenu[] = [];
     const menuCount = getPositiveRandomNumberWithinRange(2, 4);
     for (let i = 0; i < menuCount; i++) {
         result.push(getOneRandomMenu());
@@ -163,7 +163,7 @@ export function getOneRandomCard(cardTemplate?: any): Card {
             ? cardTemplate.expirationDate
             : startTime + generateRandomPositiveIntegerWithinRangeWithOneAsMinimum(3455),
         cardTemplate.severity ? cardTemplate.severity : getRandomSeverity(),
-        false,
+        cardTemplate.hasBeenAcknowledged ? cardTemplate.hasBeenAcknowledged : false,
         false,
         false,
         cardTemplate.process ? cardTemplate.process : 'testProcess',
@@ -175,14 +175,25 @@ export function getOneRandomCard(cardTemplate?: any): Card {
         getRandomAlphanumericValue(3, 24),
         getRandomAlphanumericValue(3, 24),
         cardTemplate.data ? cardTemplate.data : {data: 'data'},
-        undefined,
-        undefined,
-        undefined,
+        cardTemplate.userRecipients ? cardTemplate.userRecipients : null,
+        cardTemplate.groupRecipients ? cardTemplate.groupRecipients : null,
+        cardTemplate.entityRecipients ? cardTemplate.entityRecipients : null,
         undefined,
         undefined,
         cardTemplate.entitiesAllowedToRespond ? cardTemplate.entitiesAllowedToRespond : null,
         cardTemplate.entitiesRequiredToRespond ? cardTemplate.entitiesRequiredToRespond : null,
-        cardTemplate.entitiesAllowedToEdit ? cardTemplate.entitiesAllowedToEdit : null
+        cardTemplate.entitiesAllowedToEdit ? cardTemplate.entitiesAllowedToEdit : null,
+        cardTemplate.parentCardId ? cardTemplate.parentCardId : null,
+        cardTemplate.initialParentCardUid ? cardTemplate.initialParentCardUid : null,
+        cardTemplate.keepChildCards ? cardTemplate.keepChildCards : null,
+        cardTemplate.publisherType ? cardTemplate.publisherType : null,
+        cardTemplate.representative ? cardTemplate.representative : null,
+        cardTemplate.representativeType ? cardTemplate.representativeType : null,
+        cardTemplate.wktGeometry ? cardTemplate.wktGeometry : null,
+        cardTemplate.wktProjection ? cardTemplate.wktProjection : null,
+        cardTemplate.secondsBeforeTimeSpanForReminder ? cardTemplate.secondsBeforeTimeSpanForReminder : null,
+        cardTemplate.timeSpans ? cardTemplate.timeSpans : null,
+        cardTemplate.entitiesAcks ? cardTemplate.entitiesAcks : null
     );
 }
 

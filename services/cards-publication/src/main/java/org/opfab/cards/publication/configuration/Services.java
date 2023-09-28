@@ -39,16 +39,19 @@ public class Services {
             ExternalAppService externalAppService,
             I18nProcessesCache i18nProcessesCache, ProcessesCache processesCache, EventBus eventBus,
             ObjectMapper objectMapper,
-            @Value("${checkAuthenticationForCardSending:true}") boolean checkAuthenticationForCardSending,
-            @Value("${checkPerimeterForCardSending:true}") boolean checkPerimeterForCardSending,
-            @Value("${authorizeToSendCardWithInvalidProcessState:false}") boolean authorizeToSendCardWithInvalidProcessState) {
+            @Value("${operatorfabric.cards-publication.checkAuthenticationForCardSending:true}") boolean checkAuthenticationForCardSending,
+            @Value("${operatorfabric.cards-publication.checkPerimeterForCardSending:true}") boolean checkPerimeterForCardSending,
+            @Value("${operatorfabric.cards-publication.authorizeToSendCardWithInvalidProcessState:false}") boolean authorizeToSendCardWithInvalidProcessState,
+            @Value("${operatorfabric.cards-publication.cardSendingLimitCardCount:1000}") int cardSendingLimitCardCount,
+            @Value("${operatorfabric.cards-publication.cardSendingLimitPeriod:3600}") int cardSendingLimitPeriod,
+            @Value("${operatorfabric.cards-publication.activateCardSendingLimiter:true}") boolean activateCardSendingLimiter) {
         this.cardTranslationService = new CardTranslationService(i18nProcessesCache, processesCache, eventBus);
         this.userActionLogService = userActionLogService;
         CardNotificationService cardNotificationService = new CardNotificationService(eventBus, objectMapper);
         cardProcessingService = new CardProcessingService(cardNotificationService,
                 cardRepository, externalAppService,
                 cardTranslationService, processesCache, checkAuthenticationForCardSending, checkPerimeterForCardSending,
-                authorizeToSendCardWithInvalidProcessState);
+                authorizeToSendCardWithInvalidProcessState, cardSendingLimitCardCount, cardSendingLimitPeriod, activateCardSendingLimiter);
 
     }
 

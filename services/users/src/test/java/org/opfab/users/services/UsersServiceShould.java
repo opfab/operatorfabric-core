@@ -72,7 +72,7 @@ public class UsersServiceShould {
                 .id("perimeter2")
                 .process("process1")
                 .stateRights(new HashSet<>(Arrays.asList(new StateRightData("state1", RightsEnum.RECEIVEANDWRITE, true),
-                        new StateRightData("state2", RightsEnum.WRITE, true))))
+                        new StateRightData("state2", RightsEnum.RECEIVEANDWRITE, true))))
                 .build();
 
         perimeterRepositoryStub.insert(perimeter1);
@@ -124,6 +124,7 @@ public class UsersServiceShould {
                 .login("user1")
                 .firstName("user1FirstName")
                 .lastName("user1LastName")
+                .comment("comment")
                 .group("group1").group("group2")
                 .build();
         u2 = UserData.builder()

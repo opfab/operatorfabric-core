@@ -15,7 +15,9 @@ import {EntitiesCellRendererComponent} from "./cell-renderers/entities-cell-rend
 import moment from "moment";
 import {NgbModalRef, NgbModalOptions, NgbModal} from "@ng-bootstrap/ng-bootstrap";
 import {Card, CardData} from "@ofModel/card.model";
-import {CardService} from "app/business/services/card.service";
+import {CardService} from "app/business/services/card/card.service";
+import {AlertMessageService} from "app/business/services/alert-message.service";
+import {MessageLevel} from "@ofModel/message.model";
 
 
 @Component({
@@ -55,6 +57,7 @@ export class UserActionLogsTableComponent {
 
     constructor( private translate: TranslateService,
         private cardService: CardService,
+        private alertMessageService: AlertMessageService,
         private modalService: NgbModal) {
 
         this.dateColumnName = this.translate.instant('useractionlogs.date');
@@ -173,7 +176,11 @@ export class UserActionLogsTableComponent {
         this.cardLoadingInProgress = true;
         if (!this.cardLoadingIsTakingMoreThanOneSecond) this.checkForCardLoadingInProgressForMoreThanOneSecond();
         this.cardService.loadArchivedCard(cardId).subscribe((card: CardData) => {
-            if (card.card.initialParentCardUid)
+            if (!card) {
+                this.cardLoadingInProgress = false;
+                if (this.modalRef) this.modalRef.close();
+                this.alertMessageService.sendAlertMessage({message: '', i18n: {key: "feed.selectedCardDeleted"}, level: MessageLevel.ERROR});
+            } else if (card.card.initialParentCardUid)
                 this.openCardDetail(card.card.initialParentCardUid);
             else {
                 this.selectedCard = card.card;
@@ -182,7 +189,7 @@ export class UserActionLogsTableComponent {
                 const options: NgbModalOptions = {
                     size: 'fullscreen'
                 };
-                if (!!this.modalRef) this.modalRef.close();
+                if (this.modalRef) this.modalRef.close();
                 this.modalRef = this.modalService.open(this.cardDetailTemplate, options);
                 this.cardLoadingInProgress = false;
                 this.cardLoadingIsTakingMoreThanOneSecond = false;

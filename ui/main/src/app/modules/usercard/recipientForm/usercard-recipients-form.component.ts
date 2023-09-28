@@ -9,23 +9,25 @@
 
 import {Component, Input, OnChanges, OnInit} from '@angular/core';
 import {ConfigService} from 'app/business/services/config.service';
-import {EntitiesService} from 'app/business/services/entities.service';
+import {EntitiesService} from 'app/business/services/users/entities.service';
 import {EntitiesTree} from '@ofModel/processes.model';
 import {Entity} from '@ofModel/entity.model';
 import {OpfabLoggerService} from 'app/business/services/logs/opfab-logger.service';
 import {FormControl, FormGroup} from '@angular/forms';
 import {MultiSelectConfig, MultiSelectOption} from '@ofModel/multiselect.model';
+import {OpfabAPIService} from 'app/business/services/opfabAPI.service';
 
-declare const usercardTemplateGateway: any;
 @Component({
     selector: 'of-usercard-recipients-form',
     templateUrl: './usercard-recipients-form.component.html'
 })
 export class UserCardRecipientsFormComponent implements OnInit, OnChanges {
     @Input() public userCardConfiguration;
-    @Input() public initialSelectedRecipients;
-    @Input() public initialSelectedRecipientsForInformation;
+    @Input() public selectedRecipients;
+    @Input() public selectedRecipientsForInformation;
     @Input() public recipientForInformationVisible;
+    @Input() public editCardMode;
+
     public recipientForm: FormGroup<{
         userCardRecipients: FormControl<[] | null>;
         userCardRecipientsForInformation: FormControl<[] | null>;
@@ -46,6 +48,7 @@ export class UserCardRecipientsFormComponent implements OnInit, OnChanges {
     constructor(
         private configService: ConfigService,
         private entitiesService: EntitiesService,
+        private opfabAPIService: OpfabAPIService,
         private opfabLogger: OpfabLoggerService
     ) {
         this.useDescriptionFieldForEntityList = this.configService.getConfigValue(
@@ -64,6 +67,9 @@ export class UserCardRecipientsFormComponent implements OnInit, OnChanges {
 
         this.listenForDropdownRecipientForInformationList();
         this.listenForInitialSelectedRecipientForInformationList();
+
+        this.listenForSelectedRecipientList();
+        this.listenForSelectedRecipientForInformationList();
     }
 
     ngOnChanges() {
@@ -95,17 +101,26 @@ export class UserCardRecipientsFormComponent implements OnInit, OnChanges {
         this.entitiesService
             .getEntities()
             .forEach((entity) =>
-                this.recipientsForInformationOptions.push(new MultiSelectOption(entity.id, this.getEntityLabel(entity))));
+                this.recipientsForInformationOptions.push(new MultiSelectOption(entity.id, this.getEntityLabel(entity)))
+            );
     }
 
     private loadRestrictedRecipientList(recipients: EntitiesTree[]): void {
         this.recipientsOptions = [];
-        this.entitiesService.resolveEntities(recipients).forEach(entity => this.recipientsOptions.push(new MultiSelectOption(entity.id, this.getEntityLabel(entity))));
+        this.entitiesService
+            .resolveEntities(recipients)
+            .forEach((entity) =>
+                this.recipientsOptions.push(new MultiSelectOption(entity.id, this.getEntityLabel(entity)))
+            );
     }
 
     private loadRestrictedRecipientForInformationList(recipientsForInformation: EntitiesTree[]): void {
         this.recipientsForInformationOptions = [];
-        this.entitiesService.resolveEntities(recipientsForInformation).forEach(entity => this.recipientsForInformationOptions.push(new MultiSelectOption(entity.id, this.getEntityLabel(entity))));
+        this.entitiesService
+            .resolveEntities(recipientsForInformation)
+            .forEach((entity) =>
+                this.recipientsForInformationOptions.push(new MultiSelectOption(entity.id, this.getEntityLabel(entity)))
+            );
     }
 
     private getEntityLabel(entity: Entity) {
@@ -113,36 +128,54 @@ export class UserCardRecipientsFormComponent implements OnInit, OnChanges {
     }
 
     private listenForDropdownRecipientList() {
-        usercardTemplateGateway.setDropdownEntityRecipientList = (recipients) =>
+        this.opfabAPIService.currentUserCard.setDropdownEntityRecipientList = (recipients) =>
             this.loadRestrictedRecipientList(recipients);
     }
 
     private listenForInitialSelectedRecipientList() {
         // Set initial recipient list from template only if not in edition mode
-        usercardTemplateGateway.setInitialSelectedRecipients = (recipients) => {
-            if (!this.initialSelectedRecipients || this.initialSelectedRecipients.length === 0)
-                this.initialSelectedRecipients = recipients;
+        this.opfabAPIService.currentUserCard.setInitialSelectedRecipients = (recipients) => {
+            if (!this.editCardMode && (!this.selectedRecipients || this.selectedRecipients.length === 0))
+                this.selectedRecipients = recipients;
         };
     }
 
     private listenForDropdownRecipientForInformationList() {
-        usercardTemplateGateway.setDropdownEntityRecipientForInformationList = (recipients) =>
+        this.opfabAPIService.currentUserCard.setDropdownEntityRecipientForInformationList = (recipients) =>
             this.loadRestrictedRecipientForInformationList(recipients);
     }
 
     private listenForInitialSelectedRecipientForInformationList() {
         // Set initial recipient for information list from template only if not in edition mode
-        usercardTemplateGateway.setInitialSelectedRecipientsForInformation = (recipients) => {
-            if (!this.initialSelectedRecipientsForInformation || this.initialSelectedRecipientsForInformation.length === 0)
-                this.initialSelectedRecipientsForInformation = recipients;
+        this.opfabAPIService.currentUserCard.setInitialSelectedRecipientsForInformation = (recipients) => {
+            if (
+                !this.editCardMode &&
+                (!this.selectedRecipientsForInformation ||
+                    this.selectedRecipientsForInformation.length === 0)
+            )
+                this.selectedRecipientsForInformation = recipients;
+        };
+    }
+
+    private listenForSelectedRecipientList() {
+        // Set initial recipient list from template only if not in edition mode
+        this.opfabAPIService.currentUserCard.setSelectedRecipients = (recipients) => {
+                this.selectedRecipients = recipients;
+        };
+    }
+
+    private listenForSelectedRecipientForInformationList() {
+        // Set initial recipient list from template only if not in edition mode
+        this.opfabAPIService.currentUserCard.setSelectedRecipientsForInformation = (recipients) => {
+                this.selectedRecipientsForInformation = recipients;
         };
     }
 
     public recipientChoiceChanged(selected: any) {
-        usercardTemplateGateway.selectedEntityRecipients = selected;
+        this.opfabAPIService.currentUserCard.selectedEntityRecipients = selected;
     }
 
     public recipientForInformationChoiceChanged(selected: any) {
-        usercardTemplateGateway.selectedEntityRecipientsForInformation = selected;
+        this.opfabAPIService.currentUserCard.selectedEntityForInformationRecipients = selected;
     }
 }

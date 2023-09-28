@@ -106,7 +106,7 @@ class CardProcessServiceShould {
                 cardProcessingService = new CardProcessingService(cardNotificationService,
                                 cardRepositoryMock, externalAppService,
                                 cardTranslationService, processesCache, true, true,
-                                false);
+                                false, 1000, 3600, true);
                 initCurrentUser();
                 cardRepositoryMock.clear();
                 eventBusSpy.clearMessageSent();
@@ -140,7 +140,7 @@ class CardProcessServiceShould {
                 c2.setRights(RightsEnum.RECEIVE);
                 c3.setProcess("PROCESS_CARD_USER");
                 c3.setState("state3");
-                c3.setRights(RightsEnum.WRITE);
+                c3.setRights(RightsEnum.RECEIVEANDWRITE);
                 List<ComputedPerimeter> list = new ArrayList<>();
                 list.add(c1);
                 list.add(c2);
@@ -691,6 +691,29 @@ class CardProcessServiceShould {
         }
 
         @Test
+        void GIVEN_a_card_WHEN_card_is_send_with_a_login_case_different_than_publisher_THEN_card_is_accepted() {
+                User user = new User();
+                user.setLogin("DUMMYUSER");
+                CurrentUserWithPerimeters caseDifferentUser = new CurrentUserWithPerimeters();
+                caseDifferentUser.setUserData(user);
+
+                ComputedPerimeter cp = new ComputedPerimeter();
+                cp.setProcess("PROCESS_CARD_USER");
+                cp.setState("state1");
+                cp.setRights(RightsEnum.RECEIVEANDWRITE);
+                List<ComputedPerimeter> list = new ArrayList<>();
+                list.add(cp);
+                caseDifferentUser.setComputedPerimeters(list);
+
+                CardPublicationData card = generateOneCard(currentUserWithPerimeters.getUserData().getLogin());
+                card.setPublisherType(PublisherTypeEnum.EXTERNAL);
+                Optional<CurrentUserWithPerimeters> optionalCaseDifferentUser = Optional.of(caseDifferentUser);
+
+                cardProcessingService.processCard(card, optionalCaseDifferentUser, token);
+                Assertions.assertThat(checkCardCount(1)).isTrue();
+        }
+
+        @Test
         void GIVEN_an_existing_card_WHEN_card_is_deleted_with_a_login_different_than_publisher_THEN_card_deletion_is_rejected() {
                 User user = new User();
                 user.setLogin("wrongUser");
@@ -732,6 +755,32 @@ class CardProcessServiceShould {
                                 .isInstanceOf(ApiErrorException.class).hasMessage(
                                                 "Card representative is set to dummyUser and account login is wrongUser, the card cannot be sent");
                 Assertions.assertThat(checkCardCount(0)).isTrue();
+        }
+
+        @Test
+        void GIVEN_a_card_with_representative_dummyUser_WHEN_card_is_send_with_a_login_case_different_than_representative_THEN_card_is_accepted() {
+
+                User user = new User();
+                user.setLogin("DUMMYUSER");
+                CurrentUserWithPerimeters caseDifferentUser = new CurrentUserWithPerimeters();
+                caseDifferentUser.setUserData(user);
+
+                ComputedPerimeter cp = new ComputedPerimeter();
+                cp.setProcess("PROCESS_CARD_USER");
+                cp.setState("state1");
+                cp.setRights(RightsEnum.RECEIVEANDWRITE);
+                List<ComputedPerimeter> list = new ArrayList<>();
+                list.add(cp);
+                caseDifferentUser.setComputedPerimeters(list);
+
+                CardPublicationData card = generateOneCard("IGNORED_PUBLISHER");
+                card.setPublisherType(PublisherTypeEnum.EXTERNAL);
+                card.setRepresentativeType(PublisherTypeEnum.EXTERNAL);
+                card.setRepresentative(currentUserWithPerimeters.getUserData().getLogin());
+                Optional<CurrentUserWithPerimeters> optionalCaseDifferentUser = Optional.of(caseDifferentUser);
+
+                cardProcessingService.processCard(card, optionalCaseDifferentUser, token);
+                Assertions.assertThat(checkCardCount(1)).isTrue();
         }
 
         @Test
@@ -1004,6 +1053,14 @@ class CardProcessServiceShould {
                 cardProcessingService.processCard(card, user, token);
 
                 Assertions.assertThat(checkCardCount(1)).isTrue();
+        }
+
+        @Test
+        void GIVEN_a_card_WHEN_reset_reads_and_acks_THEN_card_event_UPDATE_is_sent_to_eventBus() {
+                CardPublicationData card = generateOneCard();
+                cardProcessingService.processCard(card);
+                cardProcessingService.resetReadAndAcks(card.getUid());
+                Assertions.assertThat(eventBusSpy.getMessagesSent().get(1)[1]).contains("{\"type\":\"UPDATE\"");
         }
 
 }

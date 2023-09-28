@@ -386,6 +386,11 @@ body {
     }
 }
 
+.opfab-popover-unclickable {
+    @extend .opfab-popover;
+    pointer-events: none;
+}
+
 .opfab-popover-with-scrolling {
     max-width: 800px;
     .popover-body {
@@ -433,6 +438,13 @@ body {
     .popover-arrow::after {
         border-bottom: 0px;
     }
+}
+
+.opfab-bubble-text{
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 600px;
 }
 
 // OpFab customization of the alpine theme for ag-grid

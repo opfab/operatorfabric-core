@@ -10,9 +10,9 @@
 import {Component, Input, OnInit} from "@angular/core";
 import {TranslateService} from "@ngx-translate/core";
 import {Card} from "@ofModel/card.model";
-import {DisplayContext} from "@ofModel/templateGateway.model";
+import {DisplayContext} from "@ofModel/template.model";
 import {DateTimeFormatterService} from "app/business/services/date-time-formatter.service";
-import {EntitiesService} from "app/business/services/entities.service";
+import {EntitiesService} from "app/business/services/users/entities.service";
 import {Utilities} from "../../../../business/common/utilities";
 
 @Component({
@@ -51,7 +51,7 @@ export class ArchivedCardDetailComponent implements OnInit{
                 this.card.publisher
             );
 
-            if (!!this.card.representativeType && !!this.card.representative) {
+            if (this.card.representativeType && this.card.representative) {
                 const representative =
                     this.card.representativeType === 'ENTITY'
                         ? this.entitiesService.getEntityName(this.card.representative)
@@ -66,14 +66,14 @@ export class ArchivedCardDetailComponent implements OnInit{
         const listOfEntityRecipients = [];
         this.entityRecipientsForFooter = '';
 
-        if (!! this.card.entityRecipients) {
+        if (this.card.entityRecipients) {
             const entityRecipientsForFooter = Utilities.removeElementsFromArray(this.card.entityRecipients, this.card.entityRecipientsForInformation);
 
             entityRecipientsForFooter.forEach((entityRecipient) => {
                 listOfEntityRecipients.push(this.entitiesService.getEntityName(entityRecipient));
             });
         }
-        listOfEntityRecipients.sort();
+        listOfEntityRecipients.sort((a, b) => (a.localeCompare(b)));
 
         listOfEntityRecipients.forEach((entityRecipient) => {
             this.entityRecipientsForFooter += ' ' + entityRecipient + ',';
@@ -88,12 +88,12 @@ export class ArchivedCardDetailComponent implements OnInit{
         const listOfEntityRecipientsForInformation = [];
         this.entityRecipientsForInformationForFooter = '';
 
-        if (!! this.card.entityRecipientsForInformation) {
+        if (this.card.entityRecipientsForInformation) {
             this.card.entityRecipientsForInformation.forEach((entityRecipientForInformation) => {
                 listOfEntityRecipientsForInformation.push(this.entitiesService.getEntityName(entityRecipientForInformation));
             });
         }
-        listOfEntityRecipientsForInformation.sort();
+        listOfEntityRecipientsForInformation.sort((a, b) => (a.localeCompare(b)));
 
         listOfEntityRecipientsForInformation.forEach((entityRecipientForInformation) => {
             this.entityRecipientsForInformationForFooter += ' ' + entityRecipientForInformation + ',';
@@ -104,12 +104,8 @@ export class ArchivedCardDetailComponent implements OnInit{
         }
     }
 
-    getFormattedPublishDate(): any {
-        return this.dateTimeFormatter.getFormattedDateFromEpochDate(this.card.publishDate);
-    }
-
-    getFormattedPublishTime(): any {
-        return this.dateTimeFormatter.getFormattedTimeFromEpochDate(this.card.publishDate);
+    getFormattedDateAndTime(date: number): any {
+        return this.dateTimeFormatter.getFormattedDateAndTimeFromEpochDate(date);
     }
 
     getFormattedDate(date: number): any {

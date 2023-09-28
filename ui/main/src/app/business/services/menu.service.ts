@@ -9,9 +9,10 @@
 
 import {Injectable} from '@angular/core';
 import {ConfigService} from 'app/business/services/config.service';
-import {UserService} from 'app/business/services/user.service';
-import {CoreMenuConfig, Menu, MenuEntry} from '@ofModel/menu.model';
+import {UserService} from 'app/business/services/users/user.service';
+import {CoreMenuConfig, CustomMenu} from '@ofModel/menu.model';
 import {PermissionEnum} from '@ofModel/permission.model';
+import {OpfabLoggerService} from "./logs/opfab-logger.service";
 
 @Injectable({
     providedIn: 'root'
@@ -20,38 +21,85 @@ export class MenuService {
 
     private ADMIN_MENUS = ['admin', 'externaldevicesconfiguration', 'useractionlogs'];
 
-    constructor(private configService: ConfigService, private userService: UserService) {
+    constructor(private configService: ConfigService,
+                private userService: UserService,
+                private logger: OpfabLoggerService) {
     }
 
-    public getCurrentUserCustomMenus(menus: Menu[]): Menu[] {
+    public getCurrentUserCustomMenus(menus: CustomMenu[]): CustomMenu[] {
         const filteredMenus = [];
         menus.forEach((m) => {
             const entries = m.entries.filter((e) => this.isMenuVisibleForUserGroups(e));
             if (entries.length > 0) {
-                filteredMenus.push(new Menu(m.id, m.label, entries));
+                filteredMenus.push(new CustomMenu(m.id, m.label, entries));
             }
         });
         return filteredMenus;
     }
 
     public computeVisibleCoreMenusForCurrentUser(): string[] {
-        const coreMenuConfiguration = this.configService.getCoreMenuConfiguration();
+        return this.computeVisibleNavigationBarCoreMenusForCurrentUser()
+            .concat(this.computeVisibleTopRightIconMenusForCurrentUser())
+            .concat(this.computeVisibleTopRightMenusForCurrentUser());
+    }
 
-        if (coreMenuConfiguration) {
-            return coreMenuConfiguration
+    public computeVisibleNavigationBarCoreMenusForCurrentUser(): string[] {
+        const visibleCoreMenus: string[] = [];
+        const navigationBar = this.configService.getNavigationBar();
+
+        if (navigationBar) {
+            navigationBar.forEach((menuConfig: any) => {
+                if (menuConfig.opfabCoreMenuId) {
+                    if (this.isMenuVisibleForUserGroups(menuConfig)) {
+                        visibleCoreMenus.push(menuConfig.opfabCoreMenuId);
+                    }
+                }
+            });
+        } else {
+            this.logger.error('No navigationBar property set in ui-menu.json');
+            return [];
+        }
+        return visibleCoreMenus;
+    }
+
+    public computeVisibleTopRightIconMenusForCurrentUser(): string[] {
+        const topRightIconMenus = this.configService.getTopRightIconMenus();
+
+        if (topRightIconMenus) {
+            return topRightIconMenus
                 .filter((coreMenuConfig: CoreMenuConfig) => {
                     return coreMenuConfig.visible && this.isMenuVisibleForUserGroups(coreMenuConfig);
                 })
-                .map((coreMenuConfig: CoreMenuConfig) => coreMenuConfig.id);
+                .map((coreMenuConfig: CoreMenuConfig) => coreMenuConfig.opfabCoreMenuId);
         } else {
-            console.log('No coreMenusConfiguration property set in ui-menu.json');
+            this.logger.error('No topRightIconMenus property set in ui-menu.json');
             return [];
         }
     }
 
-    public isMenuVisibleForUserGroups(menuConfig: CoreMenuConfig | MenuEntry): boolean {
-        if (this.ADMIN_MENUS.includes(menuConfig.id) && !this.userService.hasCurrentUserAnyPermission([PermissionEnum.ADMIN]))
-            return false;
+    public computeVisibleTopRightMenusForCurrentUser(): string[] {
+        const topRightMenus = this.configService.getTopRightMenus();
+
+        if (topRightMenus) {
+            return topRightMenus
+                .filter((coreMenuConfig: CoreMenuConfig) => {
+                    return coreMenuConfig.visible && this.isMenuVisibleForUserGroups(coreMenuConfig);
+                })
+                .map((coreMenuConfig: CoreMenuConfig) => coreMenuConfig.opfabCoreMenuId);
+        } else {
+            this.logger.error('No topRightMenus property set in ui-menu.json');
+            return [];
+        }
+    }
+
+    public isMenuVisibleForUserGroups(menuConfig: any): boolean {
+        if (menuConfig.opfabCoreMenuId) {
+            if (this.ADMIN_MENUS.includes(menuConfig.opfabCoreMenuId) && !this.userService.hasCurrentUserAnyPermission([PermissionEnum.ADMIN]))
+                return false;
+        } else {
+            if (this.ADMIN_MENUS.includes(menuConfig.id) && !this.userService.hasCurrentUserAnyPermission([PermissionEnum.ADMIN]))
+                return false;
+        }
 
         return (!menuConfig.showOnlyForGroups || menuConfig.showOnlyForGroups.length === 0) ||
             (menuConfig.showOnlyForGroups && this.userService.isCurrentUserInAnyGroup(menuConfig.showOnlyForGroups));

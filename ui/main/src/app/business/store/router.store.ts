@@ -23,7 +23,8 @@ export class RouterStore {
         ['about', PageType.ABOUT],
         ['calendar', PageType.CALENDAR],
         ['monitoring', PageType.MONITORING],
-        ['usercard', PageType.USERCARD]
+        ['usercard', PageType.USERCARD],
+        ['dashboard', PageType.DASHBOARD]
     ]);
 
 
@@ -54,7 +55,7 @@ export class RouterStore {
     public getCurrentPageType(): PageType {
         const pageName = this.getCurrentRoute().split('/')[1];
         const currentPageType = this.pageConf.get(pageName);
-        return !!currentPageType ? currentPageType : PageType.UNKNOWN;
+        return currentPageType ? currentPageType : PageType.UNKNOWN;
     }
 
 }
@@ -68,5 +69,6 @@ export enum PageType {
     ABOUT,
     CALENDAR,
     MONITORING,
-    USERCARD
+    USERCARD,
+    DASHBOARD
 }

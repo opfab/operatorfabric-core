@@ -59,3 +59,5 @@ include::migration_guide_to_3.13.adoc[leveloffset=+1]
 include::migration_guide_to_3.14.adoc[leveloffset=+1]
 
 include::migration_guide_to_3.15.adoc[leveloffset=+1]
+
+include::migration_guide_to_4.0.adoc[leveloffset=+1]

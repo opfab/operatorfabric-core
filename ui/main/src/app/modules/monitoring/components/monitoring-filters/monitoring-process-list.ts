@@ -9,8 +9,8 @@
 
 import {Injectable} from '@angular/core';
 import {Process} from '@ofModel/processes.model';
-import {ProcessesService} from 'app/business/services/processes.service';
-import {UserService} from 'app/business/services/user.service';
+import {ProcessesService} from 'app/business/services/businessconfig/processes.service';
+import {UserService} from 'app/business/services/users/user.service';
 
 export const DEFAULT_PROCESS_GROUP_ID = '--';
 
@@ -31,8 +31,7 @@ export class MonitoringProcessList {
     private loadVisibleProcessesForCurrentUser() {
         this.processesService.getAllProcesses().forEach((process) => {
             if (
-                !!process.uiVisibility &&
-                !!process.uiVisibility.monitoring &&
+                process.uiVisibility?.monitoring &&
                 this.userService.isReceiveRightsForProcess(process.id)
             ) {
                 this.processList.push(process);
@@ -49,7 +48,7 @@ export class MonitoringProcessList {
 
     private getProcessGroupIdForProcess(processId): string {
         const processGroup = this.processesService.findProcessGroupForProcess(processId);
-        if (!!processGroup) return processGroup.id;
+        if (processGroup) return processGroup.id;
         return DEFAULT_PROCESS_GROUP_ID;
     }
 

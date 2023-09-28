@@ -20,11 +20,13 @@ import {Observable, of, Subject} from 'rxjs';
 
 export const ONE_SECOND = 1000;
 export const MILLIS_TO_WAIT_BETWEEN_TOKEN_EXPIRATION_DATE_CONTROLS = 5000;
+export const EXPIRE_CLAIM = 'exp';
 export abstract class AuthHandler {
-    protected checkTokenUrl = `${environment.urls.auth}/check_token`;
-    protected askTokenUrl = `${environment.urls.auth}/token`;
+    protected checkTokenUrl = `${environment.url}/auth/check_token`;
+    protected askTokenUrl = `${environment.url}/auth/token`;
 
-    protected sessionExpired = new Subject<boolean>();
+    protected tokenWillSoonExpire = new Subject<boolean>();
+    protected tokenExpired = new Subject<boolean>();
     protected userAuthenticated = new Subject<AuthenticatedUser>();
     protected rejectAuthentication = new Subject<Message>();
 
@@ -32,14 +34,12 @@ export abstract class AuthHandler {
     protected clientId: string;
     protected delegateUrl: string;
     protected loginClaim: string;
-    protected expireClaim: string;
 
     constructor(configService: ConfigService, protected httpClient: HttpClient, protected logger: OpfabLoggerService) {
         this.secondsToCloseSession = configService.getConfigValue('secondsToCloseSession', 60);
         this.clientId = configService.getConfigValue('security.oauth2.client-id', null);
         this.delegateUrl = configService.getConfigValue('security.oauth2.flow.delegate-url', null);
         this.loginClaim = configService.getConfigValue('security.jwt.login-claim', 'sub');
-        this.expireClaim = configService.getConfigValue('security.jwt.expire-claim', 'exp');
     }
 
     abstract initializeAuthentication();
@@ -51,8 +51,12 @@ export abstract class AuthHandler {
         // not implemented by default
     }
 
-    public getSessionExpired(): Observable<boolean> {
-        return this.sessionExpired.asObservable();
+    public getTokenWillSoonExpire(): Observable<boolean> {
+        return this.tokenWillSoonExpire.asObservable();
+    }
+
+    public getTokenExpired(): Observable<boolean> {
+        return this.tokenExpired.asObservable();
     }
 
     public getUserAuthenticated(): Observable<AuthenticatedUser> {
@@ -65,7 +69,7 @@ export abstract class AuthHandler {
 
     protected checkAuthentication(): Observable<any> {
         const token = localStorage.getItem('token');
-        if (!!token) {
+        if (token) {
             const postData = new URLSearchParams();
             postData.append('token', token);
             const headers = new HttpHeaders({'Content-type': 'application/x-www-form-urlencoded; charset=utf-8'});
@@ -77,12 +81,10 @@ export abstract class AuthHandler {
     protected getUserFromAuthInfo(authInfo: HttpAuthInfo): AuthenticatedUser {
         let expirationDate;
         const jwt = this.decodeToken(authInfo.access_token);
-        if (!!authInfo.expires_in) {
+        if (authInfo.expires_in) {
             expirationDate = Date.now() + ONE_SECOND * authInfo.expires_in;
-        } else if (!!this.expireClaim) {
-            expirationDate = jwt[this.expireClaim];
-        } else {
-            expirationDate = 0;
+        } else  {
+            expirationDate = jwt[EXPIRE_CLAIM];
         }
         const user = new AuthenticatedUser();
         user.login = jwt[this.loginClaim];
@@ -94,7 +96,8 @@ export abstract class AuthHandler {
     private decodeToken(token: string): any {
         try {
             return jwt_decode(token);
-        } catch (Error) {
+        } catch (err) {
+            this.logger.error(" Error in token decoding " + err);
             return null;
         }
     }
@@ -121,17 +124,17 @@ export abstract class AuthHandler {
         this.rejectAuthentication.next(new Message(message, MessageLevel.ERROR, new I18n(key, params)));
     }
 
-    public regularCheckTokenValidity() {
-        if (this.verifyExpirationDate()) {
+    public regularCheckIfTokenExpireSoon() {
+        if (this.doesTokenExpireSoon()) {
             setTimeout(() => {
-                this.regularCheckTokenValidity();
+                this.regularCheckIfTokenExpireSoon();
             }, MILLIS_TO_WAIT_BETWEEN_TOKEN_EXPIRATION_DATE_CONTROLS);
         } else {
             // Will send Logout if token is expired
-            this.sessionExpired.next(true);
+            this.tokenWillSoonExpire.next(true);
         }
     }
-    private verifyExpirationDate(): boolean {
+    protected doesTokenExpireSoon(): boolean {
         // + to convert the stored number as a string back to number
         const expirationDate = +localStorage.getItem('expirationDate');
         const isNotANumber = isNaN(expirationDate);
@@ -139,8 +142,23 @@ export abstract class AuthHandler {
         return !isNotANumber && stillValid;
     }
 
-    protected isExpirationDateOver(): boolean {
-        return !this.verifyExpirationDate();
+    public regularCheckIfTokenIsExpired() {
+        if (this.isTokenExpired()) {
+            setTimeout(() => {
+                this.regularCheckIfTokenIsExpired();
+            }, MILLIS_TO_WAIT_BETWEEN_TOKEN_EXPIRATION_DATE_CONTROLS);
+        } else {
+            // Will send Logout if token is expired
+            this.tokenExpired.next(true);
+        }
+    }
+
+    private isTokenExpired(): boolean {
+        // + to convert the stored number as a string back to number
+        const expirationDate = +localStorage.getItem('expirationDate');
+        const isNotANumber = isNaN(expirationDate);
+        const stillValid = expirationDate > Date.now();
+        return !isNotANumber && stillValid;
     }
 }
 

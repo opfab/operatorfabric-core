@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Copyright (c) 2021, RTE (http://www.rte-france.com)
+# Copyright (c) 2021-2023, RTE (http://www.rte-france.com)
 # See AUTHORS.txt
 # This Source Code Form is subject to the terms of the Mozilla Public
 # License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -10,11 +10,11 @@
 
 
 url=$1
-if [ -z $url ] 
+if [[ -z $url ]]
 then
 	url="http://localhost"
 fi
 
-source ./getToken.sh "admin" $url
+source ./getToken.sh $url
 curl $url:2002/cards/connections -H "Authorization:Bearer $token"
 echo ""

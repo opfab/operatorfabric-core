@@ -9,7 +9,7 @@
 
 import {Component, Input, OnChanges, OnDestroy, OnInit} from '@angular/core';
 import {Card} from '@ofModel/card.model';
-import {EntitiesService} from 'app/business/services/entities.service';
+import {EntitiesService} from 'app/business/services/users/entities.service';
 import {LightCardsStoreService} from 'app/business/services/lightcards/lightcards-store.service';
 import {Utilities} from 'app/business/common/utilities';
 import {Subject} from 'rxjs';
@@ -40,7 +40,7 @@ export class CardAcksFooterComponent implements OnChanges, OnInit, OnDestroy {
     }
 
     private addAckFromSubscription(entitiesAcksToAdd: string[]) {
-        if (!!this.listEntitiesToAck && this.listEntitiesToAck.length > 0) {
+        if (this.listEntitiesToAck?.length > 0) {
             entitiesAcksToAdd.forEach((entityAckToAdd) => {
                 const indexToUpdate = this.listEntitiesToAck.findIndex(
                     (entityToAck) => entityToAck.id === entityAckToAdd
@@ -58,7 +58,7 @@ export class CardAcksFooterComponent implements OnChanges, OnInit, OnDestroy {
 
     setAcksList() {
         this.listEntitiesToAck = [];
-        if (!!this.card.entityRecipients) this.computeListEntitiesToAck();
+        if (this.card.entityRecipients) this.computeListEntitiesToAck();
     }
 
     private computeListEntitiesToAck() {
@@ -89,7 +89,7 @@ export class CardAcksFooterComponent implements OnChanges, OnInit, OnDestroy {
     }
 
     private checkEntityAcknowledged(entityId: string): boolean {
-        return !!this.card.entitiesAcks && this.card.entitiesAcks.includes(entityId);
+        return this.card.entitiesAcks?.includes(entityId);
     }
 
     ngOnDestroy() {

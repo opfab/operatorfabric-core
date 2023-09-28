@@ -25,8 +25,8 @@ export class AngularProcessServer extends AngularServer implements ProcessServer
 
     constructor(private httpClient: HttpClient) {
         super();
-        this.processesUrl = `${environment.urls.processes}`;
-        this.processGroupsUrl = `${environment.urls.processGroups}`;
+        this.processesUrl = `${environment.url}/businessconfig/processes`;
+        this.processGroupsUrl = `${environment.url}/businessconfig/processgroups`;
     }
 
     getProcessDefinition(processId: string, processVersion: string): Observable<ServerResponse<Process>> {
@@ -56,6 +56,14 @@ export class AngularProcessServer extends AngularServer implements ProcessServer
         return this.processHttpResponse(this.httpClient.get(this.processesUrl, {responseType: 'text'})).pipe(
             map((response) => this.convertProcessesStatesInResponseToMap(response))
         );
+    }
+
+    getAllProcessesWithAllVersions(): Observable<ServerResponse<Process[]>> {
+        const params = new HttpParams().set('allVersions', true);
+        return this.processHttpResponse(this.httpClient.get(this.processesUrl, {
+            params: params,
+            responseType: 'text'
+        })).pipe(map((response) => this.convertProcessesStatesInResponseToMap(response)));
     }
 
     convertProcessesStatesInResponseToMap(serverResponse: ServerResponse<any>): ServerResponse<Process[]> {

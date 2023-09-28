@@ -9,7 +9,7 @@
 
 import {Component, ElementRef, OnInit, ViewChild} from '@angular/core';
 import {navigationRoutes} from '../../router/app-routing.module';
-import {Menu} from '@ofModel/menu.model';
+import {CustomMenu} from '@ofModel/menu.model';
 import {GlobalStyleService} from 'app/business/services/global-style.service';
 import {Route, Router} from '@angular/router';
 import {ConfigService} from 'app/business/services/config.service';
@@ -27,11 +27,15 @@ import {RouterStore} from 'app/business/store/router.store';
 export class NavbarComponent implements OnInit {
 
     navbarCollapsed = true;
-    navigationRoutes: Route[];
+    navigationRoutes: Route[] = [];
+    navigationRoutesMap: Map<string, Route>;
     currentRoute = '';
-    businessconfigMenus: Menu[];
+    businessconfigMenus: CustomMenu[];
+    businessconfigMenusMap: Map<string, CustomMenu>;
     openDropdownPopover: NgbPopover;
     currentDropdownHovered;
+    showDropdownMenuEvenIfOnlyOneEntry = false;
+    navigationBar: any[];
 
     modalRef: NgbModalRef;
     @ViewChild('userCard') userCardTemplate: ElementRef;
@@ -81,17 +85,19 @@ export class NavbarComponent implements OnInit {
 
         this.businessconfigMenus = this.menuService.getCurrentUserCustomMenus(this.configService.getMenus());
 
+        this.showDropdownMenuEvenIfOnlyOneEntry = this.configService.getShowDropdownMenuEvenIfOnlyOneEntry();
+
         const logo = this.configService.getConfigValue('logo.base64');
-        if (!!logo) {
+        if (logo) {
             this.customLogo = `data:image/svg+xml;base64,${logo}`;
         }
         const logo_height = this.configService.getConfigValue('logo.height');
-        if (!!logo_height) {
+        if (logo_height) {
             this.height = logo_height;
         }
 
         const logo_width = this.configService.getConfigValue('logo.width');
-        if (!!logo_width) {
+        if (logo_width) {
             this.width = logo_width;
         }
 
@@ -99,8 +105,14 @@ export class NavbarComponent implements OnInit {
         this.limitSize = logo_limitSize === true;
 
         const visibleCoreMenus = this.menuService.computeVisibleCoreMenusForCurrentUser();
+        visibleCoreMenus.forEach(visibleCoreMenu => {
+            const route = navigationRoutes.find(route => route.path === visibleCoreMenu);
 
-        this.navigationRoutes = navigationRoutes.filter((route) => visibleCoreMenus.includes(route.path));
+            if (route) {
+                this.navigationRoutes.push(route);
+            }
+        });
+
         this.displayAdmin = visibleCoreMenus.includes('admin');
         this.displayActivityArea = visibleCoreMenus.includes('activityarea');
         this.displayFeedConfiguration = visibleCoreMenus.includes('feedconfiguration');
@@ -117,9 +129,13 @@ export class NavbarComponent implements OnInit {
 
         this.environmentName = this.configService.getConfigValue('environmentName');
         this.environmentColor = this.configService.getConfigValue('environmentColor', 'blue');
-        if (!!this.environmentName) this.displayEnvironmentName = true;
+        if (this.environmentName) this.displayEnvironmentName = true;
 
         this.styleMode = this.globalStyleService.getStyleChange();
+
+        this.navigationRoutesMap = new Map(this.navigationRoutes.map(element => [element.path, element]));
+        this.businessconfigMenusMap = new Map(this.businessconfigMenus.map(element => [element.id, element]));
+        this.navigationBar = this.configService.getNavigationBar();
     }
 
     logOut() {
@@ -155,8 +171,8 @@ export class NavbarComponent implements OnInit {
 
      REASONS :
 
-     The card template in the preview  may redefine method templateGateway.applyChild
-     This will override method templateGateway.applyChild  form the card on the feed
+     The card template in the preview  may redefine listener set via opfab.currentCard.listenToChildCards
+     This will override listener form the card on the feed
      As a consequence, the card on the feed will never receive new (or updated) child cards
 
      Furthermore, having the same template open twice in the application may cause unwanted behavior as

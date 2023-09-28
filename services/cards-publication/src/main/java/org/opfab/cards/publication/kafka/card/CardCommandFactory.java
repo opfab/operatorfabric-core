@@ -1,5 +1,5 @@
 /* Copyright (c) 2020, Alliander (http://www.alliander.com)
- * Copyright (c) 2021, RTE (http://www.rte-france.com)
+ * Copyright (c) 2021-2023, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -33,7 +33,7 @@ public class CardCommandFactory {
         try {
             cardPublicationData.setData(null); // Prevent Jackson errors
 
-            kafkaCard = objectMapper.readCardValue(objectMapper.writeValueAsString(cardPublicationData), ResponseCard.class);
+            kafkaCard = objectMapper.readResponseCardValue(objectMapper.writeValueAsString(cardPublicationData));
             cardCommand.setCommand(CommandType.RESPONSE_CARD);
             cardCommand.setResponseCard(kafkaCard);
 

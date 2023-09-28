@@ -64,6 +64,10 @@ public class UsersService {
                     String.format(USER_NOT_FOUND_MSG, userId));
     }
 
+    public Optional<User> fetchUserByLogin(String userId) {
+        return userRepository.findByLogin(userId).map(User.class::cast);
+    }
+
     public OperationResult<EntityCreationReport<User>> createUser(User user) {
         boolean formatCheckResult = false;
         if (user.getLogin().length() >= 1)
@@ -216,8 +220,8 @@ public class UsersService {
                     .filter(groupId -> this.entityRepository.findById(groupId).isEmpty()).toList();
             if (!invalidEntities.isEmpty())
                 entities.removeAll(invalidEntities);
+            user.setEntities(entities);
         }
-        user.setEntities(entities);
     }
 
     private void removeInvalidGroups(User user) {
@@ -227,8 +231,9 @@ public class UsersService {
                     .filter(groupId -> this.groupRepository.findById(groupId).isEmpty()).toList();
             if (!invalidGroups.isEmpty())
                 groups.removeAll(invalidGroups);
+            user.setGroups(groups);
         }
-        user.setGroups(groups);
+       
     }
 
 }

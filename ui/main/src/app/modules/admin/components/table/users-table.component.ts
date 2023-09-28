@@ -12,6 +12,7 @@ import {Component, OnInit} from '@angular/core';
 import {EditUserModalComponent} from '../editmodal/users/edit-user-modal.component';
 import {AdminTableDirective, Field} from './admin-table.directive';
 import {AdminItemType} from '../../services/sharing.service';
+import {ActionButton} from '../cell-renderers/action-cell-renderer.component';
 
 @Component({
     templateUrl: 'admin-table.directive.html',
@@ -24,12 +25,13 @@ export class UsersTableComponent extends AdminTableDirective implements OnInit {
         new Field('login', 3, 'idCellRenderer'),
         new Field('firstName', 3),
         new Field('lastName', 3),
-        new Field('groups', 6, 'groupCellRenderer', null,'groupsColumn'),
-        new Field('entities', 6, 'entityCellRenderer', null, 'entitiesColumn'),
+        new Field('groups', 6, 'groupCellRenderer', null, 'groupsColumn'),
+        new Field('entities', 6, 'entityCellRenderer', null, 'entitiesColumn')
     ];
     idField = 'login';
+    actionButtonsDisplayed = [ActionButton.EDIT, ActionButton.DELETE];
     editModalComponent = EditUserModalComponent;
-    ngOnInit(){
+    ngOnInit() {
         this.gridOptions.columnTypes['groupsColumn'] = {
             sortable: true,
             filter: 'agTextColumnFilter',

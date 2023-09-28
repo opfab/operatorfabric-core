@@ -17,8 +17,8 @@ import {
 import {Component, Input, OnInit} from '@angular/core';
 import {NgbActiveModal} from '@ng-bootstrap/ng-bootstrap';
 import {Perimeter, RightsEnum} from '@ofModel/perimeter.model';
-import {ProcessesService} from 'app/business/services/processes.service';
-import {PerimetersService} from 'app/business/services/perimeters.service';
+import {ProcessesService} from 'app/business/services/businessconfig/processes.service';
+import {PerimetersService} from 'app/business/services/users/perimeters.service';
 import {Process} from '@ofModel/processes.model';
 import {MessageLevel} from '@ofModel/message.model';
 
@@ -162,7 +162,7 @@ export class EditPerimeterModalComponent implements OnInit {
             let isSelectedProcessDifferentFromPrevious = false;
 
             // Update state options based on selected process
-            if (!!process) {
+            if (process) {
                 if (process !== this.processIdEdited) {
                     isSelectedProcessDifferentFromPrevious = true;
                     this.processIdEdited = process;

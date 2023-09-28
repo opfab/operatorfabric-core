@@ -218,7 +218,7 @@
     "firstName" : "",
     "lastName" : "",
     "attributes" : {
-      "entitiesId" : [ "ENTITY1_FR;ENTITY2_FR;ENTITY3_FR;ENTITY3_FR" ],
+      "entitiesId" : [ "ENTITY1_FR;ENTITY2_FR;ENTITY3_FR;ENTITY4_FR"],
       "groups" : ["Dispatcher;ReadOnly"]
     },
     "credentials" : [ {
@@ -704,7 +704,40 @@
     "firstName" : "",
     "lastName" : "",
     "attributes" : {
-      "groups" : ["Dispatcher;ReadOnly,Manager"]
+      "groups" : ["Dispatcher;ReadOnly;Manager"]
+    },
+    "credentials" : [ {
+      "type" : "password",
+      "hashedSaltedValue" : "GMBbWuLbTQCAjzm46uXhvMXzkYsvrEt9zCdOafiR36ECpkHznpCP3T6wiEgfmNHHnuERdRWn5gYmAIS3A1oNWQ==",
+      "salt" : "TnbUjMTW+Iv2JiYwXAzfOw==",
+      "hashIterations" : 27500,
+      "counter" : 0,
+      "algorithm" : "pbkdf2-sha256",
+      "digits" : 0,
+      "period" : 0,
+      "createdDate" : 1557499745015,
+      "config" : { }
+    } ],
+    "disableableCredentialTypes" : [ "password" ],
+    "requiredActions" : [ ],
+    "realmRoles" : [ "uma_authorization", "offline_access" ],
+    "clientRoles" : {
+      "account" : [ "view-profile", "manage-account" ]
+    },
+    "notBefore" : 0,
+    "groups" : [ ]
+  },
+  {
+    "id" : "193c4556-1162-33n0-opfab",
+    "createdTimestamp" : 1557499736343,
+    "username" : "opfab",
+    "enabled" : true,
+    "totp" : false,
+    "emailVerified" : false,
+    "firstName" : "",
+    "lastName" : "",
+    "attributes" : {
+      "groups" : ["Dispatcher;ReadOnly;Manager;ADMIN"]
     },
     "credentials" : [ {
       "type" : "password",

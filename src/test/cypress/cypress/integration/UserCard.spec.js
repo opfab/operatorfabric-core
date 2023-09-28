@@ -31,7 +31,7 @@ describe('User Card ', function () {
     script.deleteAllArchivedCards();
     script.deleteAllSettings();
   });
- 
+
   describe('Check READONLY user cannot send usercard', function () {
     it('Check error message when READONLY user try to create a usercard', () => {
       opfab.loginWithUser('operator1_crisisroom');
@@ -40,7 +40,7 @@ describe('User Card ', function () {
     })
   })
 
-  describe('Check edit and delete buttons visibility', function () {
+  describe('Check edit, copy and delete buttons visibility', function () {
     it('Check edit button is not present when editCardEnabledOnUserInterface is false', () => {
       opfab.loginWithUser('operator1_fr');
       opfab.navigateToUserCard();
@@ -53,6 +53,19 @@ describe('User Card ', function () {
       card.delete();
       feed.checkNumberOfDisplayedCardsIs(0);
 
+    })
+
+    it('Check copy button is not present when copyCardEnabledOnUserInterface is false ', () => {
+      opfab.loginWithUser('operator1_fr');
+      opfab.navigateToUserCard();
+      usercard.selectService('User card examples');
+      usercard.selectProcess('Conference and IT incident');
+      usercard.selectState('Conference Call ☏');
+      usercard.previewThenSendCard();
+      feed.openFirstCard();
+      card.checkCopyButtonDoesNotExist();
+      card.delete();
+      feed.checkNumberOfDisplayedCardsIs(0);
     })
 
     it('Check delete button is not present when deleteCardEnabledOnUserInterface is false ', () => {
@@ -92,9 +105,9 @@ describe('User Card ', function () {
       opfab.navigateToUserCard();
       usercard.selectService('User card examples');
       usercard.selectProcess('Message or question');
-      usercard.selectState('Question');
+      usercard.selectState('Confirmation');
       cy.get('#label').should('have.text',' QUESTION ');
-      cy.get('#question').type('First question');
+      cy.get('#question').invoke('val', 'First question'); // the cy.type does not work (no explanation found),  using invoke works 
       usercard.selectRecipient('Control Center FR East');
       usercard.previewThenSendCard();
       feed.openFirstCard();
@@ -120,6 +133,7 @@ describe('User Card ', function () {
 
     it('Recipients should not be displayed in IT incident user card but set via template code', () => {
 
+      script.setPropertyInConf('usercard.displayConnectionCirclesInPreview','web-ui','\\"true\\"');
       opfab.loginWithUser('operator1_fr');
       opfab.navigateToUserCard();
       usercard.selectService('User card examples');
@@ -129,6 +143,11 @@ describe('User Card ', function () {
       usercard.preview();
       usercard.checkEntityRecipientsInPreviewContains("French Control Centers");
       usercard.checkEntityRecipientsInPreviewContains("IT SUPERVISION CENTER");
+      // Check circles for connected entities
+      cy.get('#opfab-entity-recipients').get('.badge').should('have.length', 2);
+      cy.get('#opfab-entity-recipients').get('.bg-success').should('have.length', 1);
+      cy.get('#opfab-entity-recipients').get('.bg-danger').should('have.length', 1);
+      script.resetUIConfigurationFiles();
     })
 
     it('Recipients should be the union of user selection and template defined recipients in conference user card', () => {
@@ -274,11 +293,11 @@ describe('User Card ', function () {
 
       // no report name and no report link : no error
       cy.get('#opfab-usercard-btn-prepareCard').click();
-      cy.get('#div-detail-msg').should('not.exist'); // no error message
+      cy.get('opfab-info-message').should('not.exist'); // no error message
       usercard.cancelCardSending();
 
       // a report name without report link : an error should be displayed
-      cy.get('#report_title').type('report name');
+      cy.get('#report_title').invoke('val', 'report name'); // using invoke instead of cy.type to avoid flaky cypress test 
       cy.get('#opfab-usercard-btn-prepareCard').click();
       cy.get('.opfab-info-message').contains('You must provide a report name and link, or none of them.');
       cy.get('.opfab-alert-close').click();
@@ -412,8 +431,6 @@ describe('User Card ', function () {
 
     })
 
-
-
     it('Receive User card ', () => {
 
       opfab.loginWithUser('operator2_fr');
@@ -424,6 +441,7 @@ describe('User Card ', function () {
       feed.checkSelectedCardHasSummary("Message received :   Hello, that's a test message / Result is <OK> & work done is 100%");
       cy.get('#opfab-div-card-template-processed').find('div').eq(0).should('have.text', "\n  Hello, that's a test message / Result is <OK> & work done is 100%\n");
     })
+
   })
 
 
@@ -626,7 +644,7 @@ describe('User Card ', function () {
       cy.get('#message').should('be.visible');
 
       usercard.checkEmitterSelectExists();
-      cy.get('#of-usercard-card-emitter-selector').find('label').should("have.text", "EMITTER");
+      cy.get('#of-usercard-card-emitter-selector').find('label').first().should("have.text", "EMITTER");
       cy.get('#of-usercard-card-emitter-selector').find('.vscomp-option-text').should("have.length", 4);
       cy.get('#of-usercard-card-emitter-selector').find('.vscomp-option-text').eq(0).should("contain.text", "Control Center FR East");
       cy.get('#of-usercard-card-emitter-selector').find('.vscomp-option-text').eq(1).should("contain.text", "Control Center FR North");
@@ -709,13 +727,13 @@ describe('User Card ', function () {
       cy.get('#of-usercard-card-emitter-selector').find('.vscomp-option-text').eq(0).should("contain.text", "Control Center FR East");
       cy.get('#of-usercard-card-emitter-selector').find('.vscomp-option-text').eq(1).should("contain.text", "Control Center FR South");
       cy.get('#of-usercard-card-emitter-selector').find('.vscomp-option-text').eq(2).should("contain.text", "Control Center FR West");
-    
-    
+
+
     })
 
 
     it('Send User card from operator4_fr with restricted list of emitters for a state', () => {
-      
+
       opfab.loginWithUser('operator4_fr');
       feed.checkNumberOfDisplayedCardsIs(1);
 
@@ -746,7 +764,7 @@ describe('User Card ', function () {
       usercard.selectState('Process example');
 
       usercard.checkEmitterSelectExists();
-      cy.get('#of-usercard-card-emitter-selector').find('label').should("have.text", "EMITTER");
+      cy.get('#of-usercard-card-emitter-selector').find('label').first().should("have.text", "EMITTER");
       cy.get('#of-usercard-card-emitter-selector').find('.vscomp-option-text').should("have.length", 2);
       cy.get('#of-usercard-card-emitter-selector').find('.vscomp-option-text').eq(0).should("contain.text", "Control Center FR East");
       cy.get('#of-usercard-card-emitter-selector').find('.vscomp-option-text').eq(1).should("contain.text", "Control Center FR North");
@@ -762,7 +780,7 @@ describe('User Card ', function () {
       usercard.selectState('Process example');
 
       usercard.checkEmitterSelectExists();
-      cy.get('#of-usercard-card-emitter-selector').find('label').should("have.text", "EMITTER");
+      cy.get('#of-usercard-card-emitter-selector').find('label').first().should("have.text", "EMITTER");
       cy.get('#of-usercard-card-emitter-selector').find('.vscomp-option-text').should("have.length", 2);
       cy.get('#of-usercard-card-emitter-selector').find('.vscomp-option-text').eq(0).should("contain.text", "Control Center FR East");
       cy.get('#of-usercard-card-emitter-selector').find('.vscomp-option-text').eq(1).should("contain.text", "Control Center FR North");
@@ -773,15 +791,15 @@ describe('User Card ', function () {
 
       opfab.navigateToFeed();
       feed.checkNumberOfDisplayedCardsIs(2);
-     
+
     })
 
 
     it('Edit User card from operator4_fr with restricted list of emitters for a state', () => {
-      
+
       opfab.loginWithUser('operator4_fr');
       feed.checkNumberOfDisplayedCardsIs(2);
-      
+
       feed.openFirstCard();
 
       cy.get('#opfab-div-card-template-processed').contains('Process is in state');
@@ -790,7 +808,7 @@ describe('User Card ', function () {
 
       usercard.checkEmitterSelectExists();
 
-      cy.get('#of-usercard-card-emitter-selector').find('label').should("have.text", "EMITTER");
+      cy.get('#of-usercard-card-emitter-selector').find('label').first().should("have.text", "EMITTER");
       cy.get('#of-usercard-card-emitter-selector').find('.vscomp-option-text').should("have.length", 2);
       cy.get('#of-usercard-card-emitter-selector').find('.vscomp-option-text').eq(0).should("contain.text", "Control Center FR East");
       cy.get('#of-usercard-card-emitter-selector').find('.vscomp-option-text').eq(1).should("contain.text", "Control Center FR North");
@@ -806,7 +824,7 @@ describe('User Card ', function () {
       usercard.selectState('Process example');
 
       usercard.checkEmitterSelectExists();
-      cy.get('#of-usercard-card-emitter-selector').find('label').should("have.text", "EMITTER");
+      cy.get('#of-usercard-card-emitter-selector').find('label').first().should("have.text", "EMITTER");
       cy.get('#of-usercard-card-emitter-selector').find('.vscomp-option-text').should("have.length", 2);
       cy.get('#of-usercard-card-emitter-selector').find('.vscomp-option-text').eq(0).should("contain.text", "Control Center FR East");
       cy.get('#of-usercard-card-emitter-selector').find('.vscomp-option-text').eq(1).should("contain.text", "Control Center FR North");
@@ -855,6 +873,7 @@ describe('User Card ', function () {
 
       // Test on existing card, opened from the feed
       usercard.previewThenSendCard();
+      cy.get("#opfab-card-list").contains("IT INCIDENT"); // to be sure card is in the feed (avoid flaky test with github CI)
       feed.openFirstCard();
       feed.editCurrentCard();
       cy.get("#hidden_process").should("exist");
@@ -868,15 +887,15 @@ describe('User Card ', function () {
 
   describe('Loading start date, end date and lttd from template', function () {
 
-    it('Check dates are loaded from template for Question user card', () => {
+    it('Check dates are loaded from template for confirmation user card', () => {
 
       opfab.loginWithUser('operator1_fr');
       opfab.navigateToUserCard();
       usercard.selectService('User card examples');
       usercard.selectProcess('Message or question');
-      usercard.selectState('Question');
+      usercard.selectState('Confirmation');
 
-      var startDate = new Date();
+      const startDate = new Date();
       startDate.setTime(startDate.getTime()+ 3600000);
       startDate.setMinutes(0);
       startDate.setSeconds(0);
@@ -1031,7 +1050,7 @@ describe('User Card ', function () {
       feed.openFirstCard();
       feed.editCurrentCard();
       usercard.checkSelectedSeverityIs('INFORMATION');
-
+      
     })
   })
   
@@ -1275,10 +1294,10 @@ describe('User Card ', function () {
       cy.get('#opfab-recipients-for-information').find('.vscomp-value').contains("Control Center FR West");
       cy.get('#opfab-recipients-for-information').find('.vscomp-value').contains("French Control Centers").should('not.exist');
       cy.get('#opfab-recipients-for-information').find('.vscomp-value').contains("IT SUPERVISION CENTER").should('not.exist');
-
-      cy.get('#message').type('Hello');
+      
       // We check we can add an entity to the default selected value
       usercard.selectRecipientForInformation('IT SUPERVISION CENTER');
+      cy.get('#usercard_message_input').type('Hello');
       usercard.preview();
 
       cy.get("#opfab-entity-recipients").find('span').should('have.length', 4);
@@ -1315,4 +1334,73 @@ describe('User Card ', function () {
     })
   })
 
+  describe('Check "create a copy" feature', function () {
+    
+    it('Check "create a copy" button is present only when it should', () => {
+      script.deleteAllCards();
+      script.send6TestCards();
+      opfab.loginWithUser('operator1_fr');
+      feed.sortByReceptionDate();
+      feed.checkNumberOfDisplayedCardsIs(6);
+
+      feed.openNthCard(0);
+      card.checkEditButtonDoesNotExist();
+
+      feed.openNthCard(1);
+      card.checkEditButtonDoesNotExist();
+
+      feed.openNthCard(2);
+      card.checkEditButtonDoesNotExist();
+
+      feed.openNthCard(3);
+      card.checkCopyButtonDoesExist();
+
+      feed.openNthCard(4);
+      card.checkEditButtonDoesNotExist();
+
+      feed.openNthCard(5);
+      card.checkCopyButtonDoesExist();
+    })
+
+    
+    it('Check fields service/process/state/severity/data/recipients/recipients for information are copied from the original ' +
+        'card and emitter field is not copied', () => {
+      script.deleteAllCards();
+      opfab.loginWithUser('operator4_fr');
+      opfab.navigateToUserCard();
+      usercard.selectService('User card examples');
+      usercard.selectProcess('Message or question');
+      usercard.selectState('Message');
+
+      cy.waitDefaultTime();
+      cy.get('#opfab-sev-information').check(); // we set severity different from default value
+      cy.get('#usercard_message_input').type('Test for copy card feature');
+
+      usercard.selectEmitter('Control Center FR West');
+
+      usercard.clearSelectedRecipients();
+      usercard.selectRecipient('Control Center FR South');
+
+      usercard.clearSelectedRecipientsForInformation();
+      usercard.selectRecipientForInformation('Control Center FR East');
+
+      usercard.previewThenSendCard();
+      feed.openFirstCard();
+      feed.copyCurrentCard();
+
+      //we check the fields have been copied in the usercard form
+      usercard.checkSelectedServiceIs('User card examples');
+      usercard.checkSelectedProcessIs('Message or question');
+      usercard.checkSelectedStateIs('Message');
+      usercard.checkSelectedSeverityIs('INFORMATION');
+      cy.get('#usercard_message_input').should('contain.text', 'Test for copy card feature');
+      usercard.checkNumberOfRecipientsIs(1);
+      usercard.checkRecipientsContain('Control Center FR South');
+      usercard.checkNumberOfRecipientsForInformationIs(1);
+      usercard.checkRecipientsForInformationContain('Control Center FR East');
+
+      //we check the emitter is not copied (emitter value should be set to the default value)
+      usercard.checkEmitterIs('Control Center FR East');
+    })
+  })
 })

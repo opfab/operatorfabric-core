@@ -29,7 +29,7 @@ export class AngularPerimetersServer extends AngularServer implements Perimeters
      */
     constructor(private httpClient: HttpClient) {
         super();
-        this.perimetersUrl = `${environment.urls.perimeters}`;
+        this.perimetersUrl = `${environment.url}/users/perimeters`;
     }
 
     deleteById(id: string): Observable<ServerResponse<any>> {

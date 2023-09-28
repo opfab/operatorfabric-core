@@ -25,6 +25,7 @@ import org.springframework.security.web.SecurityFilterChain;
 import static org.opfab.springtools.configuration.oauth.OpfabAuthorizationManager.authenticatedAndIpAllowed;
 
 import static org.opfab.springtools.configuration.oauth.OpfabAuthorizationManager.hasAnyRoleAndIpAllowed;
+import static org.opfab.springtools.configuration.oauth.OpfabAuthorizationManager.hasAnyUsernameAndIpAllowed;
 
 /**
  * OAuth 2 http authentication configuration and access rules
@@ -40,17 +41,19 @@ public class WebSecurityConfiguration {
 
     public static final String ADMIN_ROLE = "ADMIN";
 
-    @Value("${checkAuthenticationForCardSending:true}")
+    @Value("${operatorfabric.cards-publication.checkAuthenticationForCardSending:true}")
     private boolean checkAuthenticationForCardSending;
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http,
                                            Converter<Jwt, AbstractAuthenticationToken> opfabJwtConverter) throws Exception {
         configureCommon(http, checkAuthenticationForCardSending);
-        http.csrf().disable();
+        http.csrf(csrf -> csrf.disable());
         http
-                .oauth2ResourceServer()
-                .jwt().jwtAuthenticationConverter(opfabJwtConverter);
+                .oauth2ResourceServer(oauth2ResourceServer -> oauth2ResourceServer
+                    .jwt(jwt -> jwt
+                        .jwtAuthenticationConverter(opfabJwtConverter))
+                );
 
         return http.build();
     }
@@ -58,20 +61,24 @@ public class WebSecurityConfiguration {
     public static void configureCommon(final HttpSecurity http, boolean checkAuthenticationForCardSending) throws Exception {
         if (checkAuthenticationForCardSending) {
             http
-                    .authorizeHttpRequests()
-                    .requestMatchers(HttpMethod.GET, PROMETHEUS_PATH).permitAll()
-                    .requestMatchers(LOGGERS_PATH).hasRole(ADMIN_ROLE)
-                    .requestMatchers("/cards/userCard/**").access(authenticatedAndIpAllowed())
-                    .requestMatchers("/cards/translateCardField").access(authenticatedAndIpAllowed())
-                    .requestMatchers(HttpMethod.DELETE, "/cards").access(hasAnyRoleAndIpAllowed(ADMIN_ROLE))
-                    .requestMatchers("/**").access(authenticatedAndIpAllowed());
+                    .authorizeHttpRequests(authorizeHttpRequests -> authorizeHttpRequests
+                        .requestMatchers(HttpMethod.GET, PROMETHEUS_PATH).permitAll()
+                        .requestMatchers(LOGGERS_PATH).hasRole(ADMIN_ROLE)
+                        .requestMatchers("/cards/userCard/**").access(authenticatedAndIpAllowed())
+                        .requestMatchers("/cards/translateCardField").access(authenticatedAndIpAllowed())
+                        .requestMatchers("/cards/resetReadAndAcks/**").access(hasAnyUsernameAndIpAllowed("opfab"))
+                        .requestMatchers(HttpMethod.DELETE, "/cards").access(hasAnyRoleAndIpAllowed(ADMIN_ROLE))
+                        .requestMatchers("/**").access(authenticatedAndIpAllowed())
+                    );
         } else {
             http
-                    .authorizeHttpRequests()
-                    .requestMatchers(LOGGERS_PATH).hasRole(ADMIN_ROLE)
-                    .requestMatchers("/cards/userCard/**").access(authenticatedAndIpAllowed())
-                    .requestMatchers("/cards/translateCardField").access(authenticatedAndIpAllowed())
-                    .requestMatchers("/**").permitAll();
+                    .authorizeHttpRequests(authorizeHttpRequests -> authorizeHttpRequests
+                        .requestMatchers(LOGGERS_PATH).hasRole(ADMIN_ROLE)
+                        .requestMatchers("/cards/userCard/**").access(authenticatedAndIpAllowed())
+                        .requestMatchers("/cards/translateCardField").access(authenticatedAndIpAllowed())
+                        .requestMatchers("/cards/resetReadAndAcks/**").access(hasAnyUsernameAndIpAllowed("opfab"))
+                        .requestMatchers("/**").permitAll()
+                    );
         }
     }
 

@@ -1,0 +1,345 @@
+// Copyright (c) 2023 RTE (http://www.rte-france.com)
+// See AUTHORS.txt
+// This document is subject to the terms of the Creative Commons Attribution 4.0 International license.
+// If a copy of the license was not distributed with this
+// file, You can obtain one at https://creativecommons.org/licenses/by/4.0/.
+// SPDX-License-Identifier: CC-BY-4.0
+
+= Migration Guide from release 3.15.0 to release 4.0.0
+
+== Management of core menus and custom menus
+The structure of the `ui-menu.json` file has changed. Fields `coreMenusConfiguration` and `menus` do not exist anymore.
+
+Now `ui-menu.json` file contains 4 fields :
+
+* `navigationBar` : contains the navigation bar mixing core menus and custom menus
+* `topRightIconMenus` : contains only the two menu icons `agenda` and `usercard` on the top right of the screen
+* `topRightMenus` : contains the core menus you want to see when you click the user, on the top right of the screen
+* `locales` : contains the translations for the custom menus
+
+NOTE: With the new structure of the file, it is now possible to mix core menus and custom menus in the navigation bar.
+
+You can find more information and a full example in the documentation :
+https://opfab.github.io/documentation/current/reference_doc/#menu_entries
+
+== UI Configuration
+Some fields of the `web-ui.json` file have changed and renamed:
+
+* `alertMessageBusinessAutoClose` has been moved to the  `alerts` section and is now called `messageBusinessAutoClose`
+* `alertMessageOnBottomOfTheScreen` has been moved to the  `alerts` section and is now called `messageOnBottomOfTheScreen`
+
+== OpfabAPI
+
+Use of methods or attributes starting with templateGateway are now deprecated , the following table give you the new methods to use
+
+|===
+|Deprecated method or attribute | New method
+
+|templateGateway.getEntityName(entityId)
+|opfab.users.entities.getEntityName(entityId)
+
+|templateGateway.getEntity(entityId)
+|opfab.users.entities.getEntity(entityId)
+
+|templateGateway.getAllEntities()
+|opfab.users.entities.getAllEntities()
+
+|templateGateway.redirectToBusinessMenu(menuId, menuItemId, urlExtension)
+|opfab.navigate.redirectToBusinessMenu(menuId, menuItemId, urlExtension)
+
+|templateGateway.isUserAllowedToRespond()
+|opfab.currentCard.isUserAllowedToRespond()
+
+|templateGateway.isUserMemberOfAnEntityRequiredToRespond()
+|opfab.currentCard.isUserMemberOfAnEntityRequiredToRespond()
+
+|templateGateway.getEntitiesAllowedToRespond()
+|opfab.currentCard.getEntitiesAllowedToRespond()
+
+|templateGateway.getEntityUsedForUserResponse()
+|opfab.currentCard.getEntityUsedForUserResponse()
+
+|templateGateway.getDisplayContext()
+|opfab.currentCard.getDisplayContext()
+
+|templateGateway.displayLoadingSpinner()
+|opfab.currentCard.displayLoadingSpinner()
+
+|templateGateway.hideLoadingSpinner()
+|opfab.currentCard.hideLoadingSpinner()
+
+|templateGateway.childCards
+|opfab.currentCard.getChildCards()
+
+|templateGateway.isLocked
+|opfab.currentCard.isResponseLocked()
+
+|templateGateway.lockAnswer = function () {//do some stuff}
+|opfab.currentCard.listenToResponseLock( () => {//do some stuff} )
+
+|templateGateway.unlockAnswer = function () {//do some stuff}
+|opfab.currentCard.listenToResponseUnlock( ()  => {//do some stuff} )
+
+|templateGateway.setLttdExpired = function () {//do some stuff}
+|opfab.currentCard.listenToLttdExpired( ()  => {//do some stuff} )
+
+|templateGateway.onStyleChange = function () {//do some stuff}
+|opfab.currentCard.listenToStyleChange( ()  => {//do some stuff} )
+
+|templateGateway.setScreenSize =  function () {//do some stuff}
+|opfab.currentCard.listenToScreenSize( ()  => {//do some stuff} )
+
+|templateGateway.onTemplateRenderingComplete =  function () {//do some stuff}
+|opfab.currentCard.listenToTemplateRenderingComplete( ()  => {//do some stuff} )
+
+|templateGateway.getUserResponse =  function () {//do some stuff}
+|opfab.currentCard.registerFunctionToGetUserResponse( ()  => {//do some stuff} )
+
+|templateGateway.applyChildCards =  function () {//do some stuff}
+|opfab.currentCard.listenToChildCards( ()  => {//do some stuff} )
+
+|usercardTemplateGateway.getCurrentProcess()
+|opfab.currentUserCard.getProcessId()
+
+|usercardTemplateGateway.getEditionMode()
+|opfab.currentUserCard.getEditionMode()
+
+|usercardTemplateGateway.getEndDate()
+|opfab.currentUserCard.getEndDate()
+
+|usercardTemplateGateway.getExpirationDate()
+|opfab.currentUserCard.getExpirationDate()
+
+|usercardTemplateGateway.getLttd()
+|opfab.currentUserCard.getLttd()
+
+|usercardTemplateGateway.getSelectedEntityRecipients()
+|opfab.currentUserCard.getSelectedEntityRecipients()
+
+|usercardTemplateGateway.getSelectedEntityForInformationRecipients()
+|opfab.currentUserCard.getSelectedEntityForInformationRecipients()
+
+|usercardTemplateGateway.getStartDate()
+|opfab.currentUserCard.getStartDate()
+
+|usercardTemplateGateway.getCurrentState()
+|opfab.currentUserCard.getState()
+
+|usercardTemplateGateway.getUserEntityChildCardFromCurrentCard()
+|opfab.currentUserCard.getUserEntityChildCard()
+
+|usercardTemplateGateway.getSpecificCardInformation =  function () {//do some stuff}
+|opfab.currentUserCard.registerFunctionToGetSpecificCardInformation( ()  => {//do some stuff} )
+
+|usercardTemplateGateway.setDropdownEntityRecipientList(recipients)
+|opfab.currentUserCard.setDropdownEntityRecipientList(recipients)
+
+|usercardTemplateGateway.setDropdownEntityRecipientForInformationList(recipients)
+|opfab.currentUserCard.setDropdownEntityRecipientForInformationList(recipients)
+
+|userCardTemplateGateway.setEntityUsedForSendingCard = function (entityID) {//do some stuff}
+|opfab.currentUserCard.listenToEntityUsedForSendingCard( (entityID)  => {//do some stuff} )
+
+|usercardTemplateGateway.setInitialEndDate(endDate)
+|opfab.currentUserCard.setInitialEndDate(endDate)
+
+|usercardTemplateGateway.setInitialExpirationDate(expirationDate)
+|opfab.currentUserCard.setInitialExpirationDate(expirationDate)
+
+|usercardTemplateGateway.setInitialLttd(lttd)
+|opfab.currentUserCard.setInitialLttd(lttd)
+
+|usercardTemplateGateway.setInitialSelectedRecipients(recipients)
+|opfab.currentUserCard.setInitialSelectedRecipients(recipients)
+
+|usercardTemplateGateway.setInitialSelectedRecipientsForInformation(recipients)
+|opfab.currentUserCard.setInitialSelectedRecipientsForInformation(recipients)
+
+|usercardTemplateGateway.setInitialSeverity(initialSeverity)
+|opfab.currentUserCard.setInitialSeverity(initialSeverity)
+
+|usercardTemplateGateway.setInitialStartDate(startDate)
+|opfab.currentUserCard.setInitialStartDate(startDate)
+
+|===
+
+== Write right for user (RightsEnum.Write)
+
+The `Write` right has been removed. Considering `Receive` and `ReceiveAndWrite` rights, `Write` was useless
+and confusing for the code.
+
+Before upgrading to 4.0, you must replace all "Write" rights by "ReceiveAndWrite" rights. If you want to
+automate it, you can do it directly in the database via the following request :
+
+`db.perimeter.updateMany({"stateRights.right": "Write"}, {"$set": {"stateRights.$.right": "ReceiveAndWrite"}});`
+
+== Cards reminder
+Cards reminder logic has been moved from front-end to back-end. The reminder logic is handled by the new "cards-reminder" service.
+
+After upgrading to 4.0, you must call the `/reset` endpoint to populate the reminders database by processing all current cards with reminder set. For example using cURL:
+....
+curl http://localhost:2107/reset -H "Authorization:Bearer $token"
+....
+
+
+== Internal technical account 
+
+The new back service for reminder and the new service regarding mail diffusion and supervision introduce the need of an internal account to communicate between opfab back services. Therefore, if you intend to utilize any of these services, it is necessary to create an Opfab technical account with ADMIN permissions and configure it within your shared YAML configuration file, for example : 
+
+```
+operatorfabric:
+  internalAccount:
+    login: opfab
+    password: the_password
+
+```
+
+The services require knowledge of the URL to retrieve the account's token, and this URL should be configured within operatorfabric.servicesUrls.authToken. A default value, based on OperatorFabric default installation, is set to: "http://web-ui/auth/token".
+
+== Port mapping
+
+In release 4.0, the listening port is not any more 8080 for services in docker, it is now identical to the default port mapping outside the docker.
+
+So you need to modify your port mapping to migrate replacing the 8080 legacy port by the new port :
+
+|===
+|2100 |businessconfig
+|2102 |cards-publication
+|2103 |users
+|2104 |cards-consultation
+|2105 |external-devices
+|===
+
+Depending on your production configuration, you may need as well to change the ports in your nginx conf file.
+
+If you want to keep the old port 8080, you can change it via the server.port parameter in the yml config files of the services.
+
+== RabbitMQ
+
+In previous versions, it was necessary to start a RabbitMQ container referencing "rabbitmq:3-management." We now highly recommend that you update your configuration to utilize "lfeoperatorfabric/of-rabbitmq:4.0.0" instead. This adjustment ensures that you have a qualified version that is fully compatible with OpFab.
+
+When migrating your production environment you may be unable to start rabbitMQ with the following error in log :
+
+```
+2023-09-14 13:57:00.803114+00:00 [error] <0.230.0> Feature flags: `maintenance_mode_status`: required feature flag not enabled! It must be enabled before upgrading RabbitMQ.
+2023-09-14 13:57:00.955976+00:00 [error] <0.230.0> Failed to initialize feature flags registry:{disabled_required_feature_flag,
+2023-09-14 13:57:00.955976+00:00 [error] <0.230.0>                                               maintenance_mode_status}
+
+BOOT
+FAILED
+===========
+Error during startup: {error,failed_to_initialize_feature_flags_registry}
+
+2023-09-14 13:57:01.022987+00:00 [error] <0.230.0>
+2023-09-14 13:57:01.022987+00:00 [error] <0.230.0> BOOT FAILED
+2023-09-14 13:57:01.022987+00:00 [error] <0.230.0> ===========
+2023-09-14 13:57:01.022987+00:00 [error] <0.230.0> Error during startup: {error,failed_to_initialize_feature_flags_registry}
+
+
+```
+
+This issue arises because the persisted data (RabbitMQ queues) generated by the previous version of RabbitMQ is incompatible with the current RabbitMQ version. To address this problem, it is necessary to remove the persisted data before launching OpFab, which can be found at the path mapping /var/lib/rabbitmq/mnesia/ within the Docker container.
+
+**If you have configured RabbitMQ persistence, we recommend implementing this as a preventive measure to avoid service unavailability in production.**
+
+
+== Configuration
+
+
+The configuration has been simplified, you have now default parameters you do not need to set anymore in the back configuration:
+
+ - in all yml file you do not need to set anymore spring.application.name
+ - a default kafka configuration is provided, you only have to add "kafka.consumer.group-id : opfab-command" to enable kafka
+ - a default rabbit configuration is provided
+ - default value are provided for "operatorfabric.servicesUrls.users" and "operatorfabric.servicesUrls.businessconfig"
+ - "spring.data.mongodb.database" is not to be set anymore 
+ - you still need to set "management.endpoints.web.exposure.include: '*'" if you want to monitor opfab via prometheus
+ - operatorfabric.businessconfig.storage.path is set by default to "/businessconfig-storage"
+
+
+The nginx configuration has been simplified as well, the best is to redefine your actual nginx based on the example /config/docker/nginx.conf. The main modification is the removal of the following endpoints declaration :
+
+ - /archives
+ - /ui
+ - /ui/assets/i18n
+ - /config/web-ui.json
+ - /config/menu-ui.json
+
+We have also implemented data compression for the information supplied by the "businessconfig" service within the "nginx.conf" reference file. This is done by adding  in the location /businessconfig :
+
+```
+    gzip on;
+    gzip_types application/json;
+```
+
+
+The nginx conf is not loaded anymore in /usr/share/nginx/html/opfab in the docker but in /usr/share/nginx/html/config. You need to modify your volume configuration . For example in docker compose : 
+
+```
+    volumes:
+      - "./ui-config:/usr/share/nginx/html/opfab"
+```
+
+becomes : 
+
+```
+    volumes:
+      - "./ui-config:/usr/share/nginx/html/config"
+```
+
+In the web-ui.json file, you do not need anymore to set :
+- security.jwt.expire-claim
+- security.oauth2.flow.provider
+- security.oauth2.provider-realm
+- security.oauth2.provider-url
+
+
+== Normalization of some configuration parameters
+
+Some configuration parameters have been renamed, so you have to check your config files and adapt them. Here are the
+concerned parameters (old name -> new name):
+
+- daysBeforeLogExpiration -> operatorfabric.users.daysBeforeLogExpiration
+- checkAuthenticationForCardSending -> operatorfabric.cards-publication.checkAuthenticationForCardSending
+- authorizeToSendCardWithInvalidProcessState -> operatorfabric.cards-publication.authorizeToSendCardWithInvalidProcessState
+- checkPerimeterForCardSending -> operatorfabric.cards-publication.checkPerimeterForCardSending
+- external-recipients.* -> operatorfabric.cards-publication.external-recipients.*
+- opfab.kafka.topics.card.topicname -> operatorfabric.cards-publication.kafka.topics.card.topicname
+- opfab.kafka.topics.response-card.topicname -> operatorfabric.cards-publication.kafka.topics.response-card.topicname
+- opfab.kafka.schema.registry.url -> operatorfabric.cards-publication.kafka.schema.registry.url
+- delayForDeleteExpiredCardsScheduling -> operatorfabric.cards-publication.delayForDeleteExpiredCardsScheduling
+- checkIfUserIsAlreadyConnected -> operatorfabric.checkIfUserIsAlreadyConnected
+- spring.data.mongodb.uri -->  operatorfabric.mongodb.uri
+- spring.rabbit.* --> operatorfabric.rabbit.*
+- spring.security.oauth2.resourceserver.jwt.jwk-set-uri -->  operatorfabric.security.oauth2.resourceserver.jwt.jwk-set-uri
+
+== Mongodb uri
+The option "authMode=scram-sha1" has to be removed from mongodb uri as SCRAM authentication is enabled by default and "authMode" option is not supported by node.js mongodb driver.
+For example you should change : 
+
+```
+ mongodb:
+    uri: mongodb://root:password@mongodb:27017/operator-fabric?authSource=admin&authMode=scram-sha1
+```
+to 
+
+```
+ mongodb:
+    uri: mongodb://root:password@mongodb:27017/operator-fabric?authSource=admin
+```
+
+== Rate limiter for card sendings
+
+External publishers are now monitored by a new module which limits how many cards they can send
+ifdef::single-page-doc[<<cardSendingLimitCardCount, `cardSendingLimitCardCount`>>]
+ifndef::single-page-doc[<</documentation/current/deployment/configuration/configuration.adoc#cardSendingLimitCardCount, `cardSendingLimitCardCount`>>]
+ in a period of time
+ifdef::single-page-doc[<<cardSendingLimitPeriod, `cardSendingLimitPeriod`>>]
+ifndef::single-page-doc[<</documentation/current/deployment/configuration/configuration.adoc#cardSendingLimitPeriod, `cardSendingLimitPeriod`>>]
+.
+This is to avoid potential overloading due to external apps stuck in a card sending loop.
+
+Default value is set to 1000 cards per hour. It can be disabled / enabled with
+ifdef::single-page-doc[<<activateCardSendingLimiter, `activateCardSendingLimiter`>>]
+ifndef::single-page-doc[<</documentation/current/deployment/configuration/configuration.adoc#activateCardSendingLimiter, `activateCardSendingLimiter`>>]
+

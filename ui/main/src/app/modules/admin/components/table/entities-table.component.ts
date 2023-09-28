@@ -12,6 +12,7 @@ import {Component, OnInit} from '@angular/core';
 import {AdminTableDirective, Field} from './admin-table.directive';
 import {EditEntityModalComponent} from '../editmodal/entities/edit-entity-modal.component';
 import {AdminItemType} from '../../services/sharing.service';
+import {ActionButton} from '../cell-renderers/action-cell-renderer.component';
 
 @Component({
     templateUrl: 'admin-table.directive.html',
@@ -28,19 +29,13 @@ export class EntitiesTableComponent extends AdminTableDirective implements OnIni
         new Field('parents', 5, 'entityCellRenderer', null, 'parentsColumn')
     ];
     idField = 'id';
+    actionButtonsDisplayed = [ActionButton.EDIT, ActionButton.DELETE];
     editModalComponent = EditEntityModalComponent;
 
-    ngOnInit(){
+    ngOnInit() {
         this.gridOptions.columnTypes['entityAllowedToSendCardColumn'] = {
             sortable: true,
             filter: 'agTextColumnFilter',
-            filterParams: {
-                valueGetter: (params) => {
-                    return params.data.entityAllowedToSendCard
-                        ? this.translateService.instant('admin.input.entity.true')
-                        : this.translateService.instant('admin.input.entity.false');
-                }
-            },
             wrapText: true,
             autoHeight: true,
             flex: 4

@@ -76,10 +76,10 @@ describe('ActivityAreaPage', () => {
         cy.get('#opfab-archives-logging-btn-search').click();
         cy.get('#opfab-archives-cards-list').find('.opfab-archives-table-line').should('have.length', 4);
         cy.get('#opfab-archives-cards-list').find('.opfab-archives-table-line').as('archives-table');
-        cy.get('@archives-table').eq(0).find('td').eq(4).should('have.text', '⚡ Planned Outage'.toUpperCase());
-        cy.get('@archives-table').eq(1).find('td').eq(4).should('have.text', 'Process state (calcul)'.toUpperCase());
-        cy.get('@archives-table').eq(2).find('td').eq(4).should('have.text', 'Data quality'.toUpperCase());
-        cy.get('@archives-table').eq(3).find('td').eq(4).should('have.text', 'Message'.toUpperCase());
+        cy.get('@archives-table').eq(0).find('td').eq(5).should('have.text', '⚡ Planned Outage'.toUpperCase());
+        cy.get('@archives-table').eq(1).find('td').eq(5).should('have.text', 'Process state (calcul)'.toUpperCase());
+        cy.get('@archives-table').eq(2).find('td').eq(5).should('have.text', 'Data quality'.toUpperCase());
+        cy.get('@archives-table').eq(3).find('td').eq(5).should('have.text', 'Message'.toUpperCase());
 
         // We reconnect to ENTITY1_FR, ENTITY2_FR and ENTITY3_FR
         opfab.navigateToActivityArea();

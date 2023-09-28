@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2022, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2023, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -54,9 +54,10 @@ public class WebSecurityConfiguration {
             Converter<Jwt, Mono<AbstractAuthenticationToken>> opfabReactiveJwtConverter) {
         configureCommon(http);
         http
-                .oauth2ResourceServer()
-                .jwt()
-                .jwtAuthenticationConverter(opfabReactiveJwtConverter);
+                .oauth2ResourceServer(oauth2ResourceServer -> oauth2ResourceServer
+                    .jwt(jwt -> jwt
+                        .jwtAuthenticationConverter(opfabReactiveJwtConverter))
+                );
 
         return http.build();
     }
@@ -67,14 +68,18 @@ public class WebSecurityConfiguration {
      */
     public static void configureCommon(final ServerHttpSecurity http) {
         http
-                .headers().frameOptions().disable()
-                .and()
-                .authorizeExchange()
-                .pathMatchers(HttpMethod.GET, PROMETHEUS_PATH).permitAll()
-                .pathMatchers(HttpMethod.GET, CONNECTIONS).authenticated()
-                .pathMatchers(CONNECTIONS_PATH).hasRole(ADMIN_ROLE)
-                .pathMatchers(LOGGERS_PATH).hasRole(ADMIN_ROLE)
-                .pathMatchers(MESSAGE_TO_SUBSCRIPTIONS).hasRole(ADMIN_ROLE)
-                .anyExchange().access(new IpAddressAuthorizationManager());
+                .headers(headers -> headers
+                    .frameOptions(frameOptions -> frameOptions
+                        .disable()
+                    )
+                )
+                .authorizeExchange(authorizeExchange -> authorizeExchange
+                    .pathMatchers(HttpMethod.GET, PROMETHEUS_PATH).permitAll()
+                    .pathMatchers(HttpMethod.GET, CONNECTIONS).authenticated()
+                    .pathMatchers(CONNECTIONS_PATH).hasRole(ADMIN_ROLE)
+                    .pathMatchers(LOGGERS_PATH).hasRole(ADMIN_ROLE)
+                    .pathMatchers(MESSAGE_TO_SUBSCRIPTIONS).hasRole(ADMIN_ROLE)
+                    .anyExchange().access(new IpAddressAuthorizationManager())
+                );
     }
 }

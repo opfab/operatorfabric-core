@@ -14,16 +14,18 @@ import {NgbModalRef} from '@ng-bootstrap/ng-bootstrap/modal/modal-ref';
 import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
 import {ConfigService} from 'app/business/services/config.service';
 import {MessageLevel} from '@ofModel/message.model';
-import {ProcessesService} from 'app/business/services/processes.service';
+import {ProcessesService} from 'app/business/services/businessconfig/processes.service';
 import {AcknowledgeService} from 'app/business/services/acknowledge.service';
-import {UserService} from 'app/business/services/user.service';
+import {UserService} from 'app/business/services/users/user.service';
 import {UserWithPerimeters} from '@ofModel/userWithPerimeters.model';
-import {EntitiesService} from 'app/business/services/entities.service';
-import {GroupedCardsService} from 'app/business/services/grouped-cards.service';
+import {EntitiesService} from 'app/business/services/users/entities.service';
+import {GroupedCardsService} from 'app/business/services/lightcards/grouped-cards.service';
 import {AlertMessageService} from 'app/business/services/alert-message.service';
 import {Router} from '@angular/router';
 import {SortService} from 'app/business/services/lightcards/sort.service';
-import {UserPreferencesService} from 'app/business/services/user-preference.service';
+import {UserPreferencesService} from 'app/business/services/users/user-preference.service';
+import {LightCardsStoreService} from 'app/business/services/lightcards/lightcards-store.service';
+import {ServerResponseStatus} from 'app/business/server/serverResponse';
 
 @Component({
     selector: 'of-card-list',
@@ -63,7 +65,8 @@ export class CardListComponent implements AfterViewChecked, OnInit {
         private alertMessageService: AlertMessageService,
         private router: Router,
         private sortService: SortService,
-        private userPreferences: UserPreferencesService
+        private userPreferences: UserPreferencesService,
+        private lightCardsStoreService: LightCardsStoreService,
     ) {
         this.currentUserWithPerimeters = this.userService.getCurrentUserWithPerimeters();
     }
@@ -100,7 +103,7 @@ export class CardListComponent implements AfterViewChecked, OnInit {
 
     adaptFrameHeight() {
         const domCardListElement = document.getElementById('opfab-card-list');
-        if (!!domCardListElement) {
+        if (domCardListElement) {
             const rect = domCardListElement.getBoundingClientRect();
             let height = window.innerHeight - rect.top - 50;
             if (this.hideAckAllCardsFeature) height = window.innerHeight - rect.top - 10;
@@ -108,7 +111,7 @@ export class CardListComponent implements AfterViewChecked, OnInit {
         }
 
         const domFiltersElement = document.getElementById('opfab-filters');
-        if (!!domFiltersElement) {
+        if (domFiltersElement) {
             const rect = domFiltersElement.getBoundingClientRect();
             let height = window.innerHeight - rect.top - 45;
             if (this.hideAckAllCardsFeature) height = window.innerHeight - rect.top - 10;
@@ -170,7 +173,13 @@ export class CardListComponent implements AfterViewChecked, OnInit {
                         // this avoids to display entities used only for grouping
                         entitiesAcks.push(entity.id);
                 });
-                this.acknowledgeService.acknowledgeCard(lightCard, entitiesAcks);
+                this.acknowledgeService.postUserAcknowledgement(lightCard.uid, entitiesAcks).subscribe((resp) => {
+                    if (resp.status === ServerResponseStatus.OK) {
+                        this.lightCardsStoreService.setLightCardAcknowledgment(lightCard.id, true);
+                    } else {
+                        throw new Error('the remote acknowledgement endpoint returned an error status(' + resp.status + ')');
+                    }
+                });
             } catch (err) {
                 console.error(err);
                 this.displayMessage('response.error.ack', null, MessageLevel.ERROR);

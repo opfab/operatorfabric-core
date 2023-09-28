@@ -163,7 +163,7 @@ public class DevicesService {
                 exceptionMessage = buildSignalSendingExceptionMessage(opFabSignalKey,
                         resolvedConfiguration.getSignalId(), userLogin,
                         resolvedConfiguration.getDeviceConfiguration().getId(), "as device is disabled");
-                log.warn(exceptionMessage, e);
+                log.warn(exceptionMessage);
             }
         }
         if (exceptionMessage != null)

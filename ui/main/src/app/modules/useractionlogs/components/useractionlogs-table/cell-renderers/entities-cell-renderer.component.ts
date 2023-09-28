@@ -1,4 +1,4 @@
-/* Copyright (c) 2022, RTE (http://www.rte-france.com)
+/* Copyright (c) 2022-2023, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -11,7 +11,7 @@ import {Component} from '@angular/core';
 import {ICellRendererAngularComp} from 'ag-grid-angular';
 import {ICellRendererParams} from 'ag-grid-community';
 
-import {EntitiesService} from 'app/business/services/entities.service';
+import {EntitiesService} from 'app/business/services/users/entities.service';
 import {Entity} from '@ofModel/entity.model';
 
 @Component({
@@ -29,9 +29,9 @@ export class EntitiesCellRendererComponent implements ICellRendererAngularComp {
     agInit(params: any): void {
         this.entities = this.entitiesService.getCachedValues();
         // Look up code in values returned by the corresponding service, if it exists return corresponding name, otherwise return code
-        if (!!this.entities) {
+        if (this.entities) {
             const value = params.getValue();
-            if (!!value) {
+            if (value) {
                 this._nameValues = value
                     .map((code) => {
                         const lookedUpName = this.entities

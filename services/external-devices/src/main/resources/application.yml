@@ -1,7 +1,31 @@
+server:
+  port : 2105
+  forward-headers-strategy: framework # Needed for IP control feature
 spring:
   application:
     name: external-devices
   data:
     mongodb:
       database: operator-fabric
+      uri: ${operatorfabric.mongodb.uri} # To be set outside of docker
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          jwk-set-uri: ${operatorfabric.security.oauth2.resourceserver.jwt.jwk-set-uri} #To be set outside of docker
+  # default values for docker mode 
 
+# Patten to avoid Log Injection
+# each new line is prefix with spaces + three dots
+logging.pattern.console: "%d{yyyy-MM-dd HH:mm:ss.SSS} %5p ${PID:- } --- [%15.15t] %-40.40logger{39} : %replace(%msg){'\n|\r', '\n                 ... '}%n%wex"
+
+
+operatorfabric:
+  rabbitmq:
+    host: rabbitmq
+    port: 5672
+    username: guest
+    password: guest
+  servicesUrls:
+    businessconfig: "businessconfig:2100"
+    users: "users:2103"

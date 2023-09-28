@@ -19,7 +19,7 @@ NB : properties may be set using ".properties" file or ".yml" file. See
 https://docs.spring.io/spring-boot/docs/current/reference/html/spring-boot-features.html#boot-features-external-config[Spring
 Boot configuration] for more info.
 * Generic property list extract :
-** server.port (defaults to 8080) : embedded server port
+** server.port : embedded server port
 * :services:core:businessconfig-party-service properties list extract :
 ** operatorfabric.businessconfig.storage.path (defaults to &quot;&quot;) : where to
 save/load OperatorFabric Businessconfig  data

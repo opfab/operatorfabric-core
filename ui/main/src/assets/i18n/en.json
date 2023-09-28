@@ -52,7 +52,8 @@
       "answer": "ANSWER",
       "emitter": "EMITTER",
       "entitiesResponses": "ANSWERS",
-      "requiredResponses": "REQUIRED ANSWERS"
+      "requiredResponses": "REQUIRED ANSWERS",
+      "entityRecipients": "ENTITY RECIPIENTS"
     },
     "exportInProgress": "Export in progress",
     "loadingInProgress": "Loading in progress",
@@ -89,7 +90,8 @@
     "sessionExpiredText":"Your session has expired.",
     "disconnected": "You are disconnected.",
     "disconnectedByNewUser": "You have been disconnected because another user logged in using this account.",
-    "disconnectByAppLoadedInAnotherTab": "You have been disconnected because another tab of this browser was used to log in using this URL."
+    "disconnectByAppLoadedInAnotherTab": "You have been disconnected because another tab of this browser was used to log in using this URL.",
+    "reloadPageButton": "Reload page"
   },
   "menu": {
     "feed": "Card Feed",
@@ -193,7 +195,7 @@
       "label": "Acknowledge all cards",
       "popup": {
         "title": "CONFIRMATION",
-        "doYouReallyWant": "This will ack all visible cards of your feed, please confirm."
+        "doYouReallyWant": "This will acknowledge all visible cards of your feed, please confirm."
       }
     },
     "lttdFinished": "Finished",
@@ -211,7 +213,8 @@
     "entityRecipients" : "Entity recipients :",
     "entityRecipientsForInformation" : "Entity recipients in copy :",
     "searchPlaceholderText": "Search...",
-    "hiddenCardReceived": "You have received a card hidden by the filters you have activated (Timeline or card feed)"
+    "hiddenCardReceived": "You have received a card hidden by the filters you have activated (Timeline or card feed)",
+    "businessPeriod": "Business period :"
   },
   "login": {
     "reset": "Reset",
@@ -256,7 +259,9 @@
     "systemNotificationAction": "Action",
     "systemNotificationCompliant": "Compliant",
     "systemNotificationInformation": "Information",
-    "systemNotificationsDisabledInBrowser": "System notifications are disabled in your browser, you will not be notified."
+    "systemNotificationsDisabledInBrowser": "System notifications are disabled in your browser, you will not be notified.",
+    "sendCardsByEmail" : "Send notification by email",
+    "email": "Email"
   },
   "archive": {
     "cardLoadingInProgress":"Loading card  ...",
@@ -284,6 +289,7 @@
     "reset": "RESET",
     "delete": "Delete",
     "edit": "Edit",
+    "createCopy": "Create a copy",
     "yes": "YES",
     "search" : "SEARCH"
   },
@@ -327,7 +333,7 @@
     "state": "State",
     "recipients": "RECIPIENTS:",
     "recipientsForInformation": "RECIPIENTS IN COPY:",
-    "youAreTheOnlyRecipient": "You are the only recipient of this card.",
+    "youAreTheOnlyRecipient": "No recipient are set.",
     "feedPreview": "FEED PREVIEW:",
     "contentPreview": "CONTENT PREVIEW:",
     "send-another-one": "SEND ANOTHER CARD",
@@ -416,11 +422,17 @@
         "login": "LOGIN",
         "lastName": "LAST NAME",
         "firstName": "FIRST NAME",
+        "comment": "COMMENT",
         "groups": "GROUPS",
         "entities": "ENTITIES",
         "authorizedIPAddresses": "AUTHORIZED IP ADDRESSES FOR USER CONNECTION (separated by ',')",
         "confirmDelete": "Do you really want to delete user",
         "add": "ADD NEW USER"
+      },
+      "businessData": {
+        "name": "BUSINESS DATA",
+        "add": "ADD NEW BUSINESS DATA FILE",
+        "confirmDelete": "Do you really want to delete the business data file"
       },
       "selectGroupText": "Select a Group",
       "selectEntityText": "Select an Entity",
@@ -439,7 +451,7 @@
       "login": {
         "required": "Login is required.",
         "minLength": "Login should be minimum 2 characters.",
-        "pattern": "Login should only contain the following characters: lowercase letters, _, -, . or digits.",
+        "pattern": "Login should not contain any whitespace character.",
         "alreadyExisting": "Login already existing."
       },
       "authorizedIPAddresses": {
@@ -471,7 +483,8 @@
       "groups": "Groups Management",
       "entities": "Entities Management",
       "perimeters": "Perimeters Management",
-      "processes": "Processes Management"
+      "processes": "Processes Management",
+      "businessData": "Business Data Management"
     }
   },
   "processGroup": {
@@ -493,7 +506,10 @@
     "of": "of",
     "page": "Page",
     "blank": "Blank",
-    "notBlank": "Not blank"
+    "notBlank": "Not blank",
+    "true": "YES",
+    "false": "NO",
+    "empty": " "
   },
   "realTimeUsers": {
     "connected": "Connected",
@@ -573,5 +589,38 @@
     "notFound" : "Resource not found",
     "notAllowed" : "Action not allowed",
     "pageNotAllowed": "You are not allowed to view this page"
-  } 
+  },
+  "buildInTemplate" : {
+    "messageCard" : {
+      "message" : "You received a message : "
+    },
+    "messageUserCard": {
+      "noMessageError":"You must provide a message",
+      "textareaLabel" :"MESSAGE"
+    },
+    "questionCard" :{
+      "responseInputLabel" : "RESPONSE",
+      "responsesReceivedLabel":"Responses received :",
+      "entityColumnLabel":"Entity",
+      "responseColumnLabel":"Response"
+    },
+    "questionUserCard": {
+      "noQuestionError":"You must provide a question",
+      "textareaLabel":"QUESTION"
+    }, 
+    "message-or-question-listCard": {
+      "answers": "Answers",
+      "yes": "Yes",
+      "no": "No",
+      "entityColumnLabel": "ENTITY",
+      "responseColumnLabel": "RESPONSE",
+      "commentColumnLabel": "COMMENT",
+      "comment": "COMMENT"
+    },
+    "message-or-question-listUserCard": {
+      "titleLabel": "TITLE",
+      "messageLabel": "MESSAGE",
+      "emptyMessage": "You can't send an empty message"
+    }
+  }
 }

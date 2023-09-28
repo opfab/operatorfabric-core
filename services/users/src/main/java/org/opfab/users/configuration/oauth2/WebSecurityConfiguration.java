@@ -48,10 +48,10 @@ public class WebSecurityConfiguration {
     public static final String GROUPS_PATH = "/groups/**";
     public static final String GROUPS = "/groups";
     public static final String ENTITIES_PATH = "/entities/**";
-    public static final String ENTITIES = "/entities";
     public static final String PERIMETERS_PATH = "/perimeters/**";
     public static final String USER_ACTION_LOGS = "/userActionLogs";
     public static final String CURRENTUSER_INTERNAL_PATH = "/internal/CurrentUserWithPerimeters";
+    public static final String USER_WITH_PERIMETERS_PATH = "/UserWithPerimeters";
     public static final String ADMIN_ROLE = "ADMIN";
     public static final String VIEW_USER_ACTION_LOGS_ROLE = "VIEW_USER_ACTION_LOGS";
 
@@ -61,9 +61,10 @@ public class WebSecurityConfiguration {
                                            Converter<Jwt, AbstractAuthenticationToken> opfabJwtConverter) throws Exception {
         configureCommon(http);
         http
-                .oauth2ResourceServer()
-                .jwt()
-                .jwtAuthenticationConverter(opfabJwtConverter);
+                .oauth2ResourceServer(oauth2ResourceServer -> oauth2ResourceServer
+                    .jwt(jwt -> jwt
+                        .jwtAuthenticationConverter(opfabJwtConverter))
+                );
 
         return http.build();
     }
@@ -71,29 +72,33 @@ public class WebSecurityConfiguration {
     /**This method handles the configuration to be shared with the test WebSecurityConfiguration class (access rules to be tested)
      * */
     public static void configureCommon(final HttpSecurity http) throws Exception {
-        http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED)
-                .and()
-                .authorizeHttpRequests()
-                .requestMatchers(HttpMethod.GET,PROMETHEUS_PATH).permitAll()
-                .requestMatchers(HttpMethod.POST, USER_TOKEN_SYNCHRONIZATION_PATH).access(authenticatedAndIpAllowed())
-                .requestMatchers(HttpMethod.GET, USER_PATH).access(hasRoleOrLoginAndIpAllowed(ADMIN_ROLE))
-                .requestMatchers(HttpMethod.PUT, USER_PATH).access(hasRoleOrLoginAndIpAllowed(ADMIN_ROLE))
-                .requestMatchers(HttpMethod.DELETE, USER_PATH).access(hasRoleAndLoginNotEqualAndIpAllowed(ADMIN_ROLE))
-                .requestMatchers(HttpMethod.GET, USERS_SETTINGS_PATH).access(hasRoleOrLoginAndIpAllowed(ADMIN_ROLE))
-                .requestMatchers(HttpMethod.PUT, USERS_SETTINGS_PATH).access(hasRoleOrLoginAndIpAllowed(ADMIN_ROLE))
-                .requestMatchers(HttpMethod.PATCH, USERS_SETTINGS_PATH).access(hasRoleOrLoginAndIpAllowed(ADMIN_ROLE))
-                .requestMatchers(HttpMethod.GET, USERS_PERIMETERS_PATH).access(hasRoleOrLoginAndIpAllowed(ADMIN_ROLE))
-                .requestMatchers(HttpMethod.GET, USERS) .access(authenticatedAndIpAllowed())
-                .requestMatchers(USERS_PATH).access(hasAnyRoleAndIpAllowed(ADMIN_ROLE))
-                .requestMatchers(HttpMethod.GET, GROUPS).access(authenticatedAndIpAllowed())
-                .requestMatchers(GROUPS_PATH).access(hasAnyRoleAndIpAllowed(ADMIN_ROLE))
-                .requestMatchers(HttpMethod.GET, ENTITIES).access(authenticatedAndIpAllowed())   // OC-1067 : we authorize all users for GET /entities
-                .requestMatchers(ENTITIES_PATH).access(hasAnyRoleAndIpAllowed(ADMIN_ROLE))
-                .requestMatchers(PERIMETERS_PATH).access(hasAnyRoleAndIpAllowed(ADMIN_ROLE))
-                .requestMatchers(USER_ACTION_LOGS).access(hasAnyRoleAndIpAllowed(ADMIN_ROLE,VIEW_USER_ACTION_LOGS_ROLE))
-                .requestMatchers(CURRENTUSER_INTERNAL_PATH).authenticated()
-                .requestMatchers(LOGGERS_PATH).hasRole(ADMIN_ROLE)
-                .anyRequest().access(authenticatedAndIpAllowed());
+        http
+                .sessionManagement(sessionManagement -> sessionManagement
+                    .sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED)
+                )
+                .authorizeHttpRequests(authorizeHttpRequests -> authorizeHttpRequests
+                    .requestMatchers(HttpMethod.GET,PROMETHEUS_PATH).permitAll()
+                    .requestMatchers(HttpMethod.POST, USER_TOKEN_SYNCHRONIZATION_PATH).access(authenticatedAndIpAllowed())
+                    .requestMatchers(HttpMethod.GET, USER_PATH).access(hasRoleOrLoginAndIpAllowed(ADMIN_ROLE))
+                    .requestMatchers(HttpMethod.PUT, USER_PATH).access(hasRoleOrLoginAndIpAllowed(ADMIN_ROLE))
+                    .requestMatchers(HttpMethod.DELETE, USER_PATH).access(hasRoleAndLoginNotEqualAndIpAllowed(ADMIN_ROLE))
+                    .requestMatchers(HttpMethod.GET, USERS_SETTINGS_PATH).access(hasRoleOrLoginAndIpAllowed(ADMIN_ROLE))
+                    .requestMatchers(HttpMethod.PUT, USERS_SETTINGS_PATH).access(hasRoleOrLoginAndIpAllowed(ADMIN_ROLE))
+                    .requestMatchers(HttpMethod.PATCH, USERS_SETTINGS_PATH).access(hasRoleOrLoginAndIpAllowed(ADMIN_ROLE))
+                    .requestMatchers(HttpMethod.GET, USERS_PERIMETERS_PATH).access(hasRoleOrLoginAndIpAllowed(ADMIN_ROLE))
+                    .requestMatchers(HttpMethod.GET, USERS) .access(authenticatedAndIpAllowed())
+                    .requestMatchers(USERS_PATH).access(hasAnyRoleAndIpAllowed(ADMIN_ROLE))
+                    .requestMatchers(HttpMethod.GET, GROUPS).access(authenticatedAndIpAllowed())
+                    .requestMatchers(GROUPS_PATH).access(hasAnyRoleAndIpAllowed(ADMIN_ROLE))
+                    .requestMatchers(HttpMethod.GET, ENTITIES_PATH).access(authenticatedAndIpAllowed()) 
+                    .requestMatchers(ENTITIES_PATH).access(hasAnyRoleAndIpAllowed(ADMIN_ROLE))
+                    .requestMatchers(PERIMETERS_PATH).access(hasAnyRoleAndIpAllowed(ADMIN_ROLE))
+                    .requestMatchers(USER_ACTION_LOGS).access(hasAnyRoleAndIpAllowed(ADMIN_ROLE,VIEW_USER_ACTION_LOGS_ROLE))
+                    .requestMatchers(USER_WITH_PERIMETERS_PATH).access(hasAnyRoleAndIpAllowed(ADMIN_ROLE))
+                    .requestMatchers(CURRENTUSER_INTERNAL_PATH).authenticated()
+                    .requestMatchers(LOGGERS_PATH).hasRole(ADMIN_ROLE)
+                    .anyRequest().access(authenticatedAndIpAllowed())
+                );
     }
 
 

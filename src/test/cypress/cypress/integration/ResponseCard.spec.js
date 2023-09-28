@@ -1,4 +1,4 @@
-/* Copyright (c) 2021-2022, RTE (http://www.rte-france.com)
+/* Copyright (c) 2021-2023, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -569,8 +569,8 @@ describe('Response card tests', function () {
         usercard.selectService('User card examples');
         usercard.selectProcess('Message or question');
         usercard.selectState('Question');
-        cy.get('#label').should('have.text', ' QUESTION ');
-        cy.get('#question').type('question');
+        cy.get('#opfab-question-label').should('have.text', 'QUESTION');
+        cy.get('#usercard_question_input').invoke('val', 'question'); // the cy.type does not work (no explanation found),  using invoke works 
         usercard.selectRecipient('Control Center FR East');
         usercard.selectRecipient('Control Center FR North');
         usercard.selectRecipient('Control Center FR South');
@@ -597,7 +597,7 @@ describe('Response card tests', function () {
         opfab.logout();
         opfab.loginWithUser('operator1_it');
         feed.openFirstCard();
-        cy.get('#response').type('my response');
+        cy.get('#template_response_input').type('my response');
         card.sendResponse();
 
         card.openEntityDropdownInCardHeader();
@@ -605,5 +605,58 @@ describe('Response card tests', function () {
         card.checkEntityIsOrangeInCardHeader('ENTITY4_FR');
         card.checkEntityIsGreenInCardHeader('ENTITY1_IT');
         card.checkEntityIsOrangeInCardHeader('ENTITY2_IT');
+    });
+
+    it('Check response publisher set from template', () => {
+        script.deleteAllCards();
+        opfab.loginWithUser('operator4_fr');
+        opfab.navigateToUserCard();
+        usercard.selectService('User card examples');
+        usercard.selectProcess('Message or question');
+        usercard.selectState('Confirmation');
+        cy.get('#question').invoke('val', 'question'); // the cy.type does not work (no explanation found),  using invoke works 
+        cy.get('#message').invoke('val', 'Cypress test for response publisher');
+        usercard.selectRecipient('Control Center FR East');
+        usercard.selectRecipient('Control Center FR North');
+        usercard.selectRecipient('Control Center FR South');
+        usercard.selectRecipient('Control Center FR West');
+        usercard.preview();
+
+        // Feed preview show response from current entity
+        cy.get('#opfab-feed-lightcard-hasChildCardFromCurrentUserEntity').should('exist');
+        // Card preview show responses list
+        cy.get("#childs-div").should('not.be.empty');
+        // Response table has 1 header and 1 row 
+        cy.get("#childs-div").find('tr').should('have.length', 2);
+        // Publisher of child card is set by the template 
+        cy.get("#childs-div").find('tr').eq(1).find('td').eq(0).contains('Control Center FR South');
+        usercard.sendCard();
+
+        
+        feed.openFirstCard();
+        card.modifyResponse();
+
+        card.sendResponse();
+
+        // Check the popup for the entities choice is displayed
+        cy.get('#opfab-card-details-entities-choice-selector').should('exist');
+        cy.get('#opfab-card-details-entities-choice-selector').find('.vscomp-option-text').should('have.length', 4);
+        
+
+        cy.get('#opfab-card-details-entity-choice-btn-cancel').click();
+
+        cy.get('#resp_message').invoke('val', 'Cypress test for response publisher');
+        card.sendResponse();
+
+        //Response was sent without showing popup for the entities choice
+        //Response is updated
+        cy.get('#childs-div').find('tr').should('have.length', 2);
+        cy.get('#childs-div').find('td')
+        .first()
+        .should('have.text', ' Control Center FR South ')
+        .next()
+        .should('have.text', ' YES ')
+        .next()
+        .should('have.text', ' Cypress test for response publisher ');
     });
 });

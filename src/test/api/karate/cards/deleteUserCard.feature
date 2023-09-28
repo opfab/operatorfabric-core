@@ -67,11 +67,11 @@ Feature: deleteUserCards tests
   "stateRights" : [
       {
         "state" : "state1",
-        "right" : "Write"
+        "right" : "ReceiveAndWrite"
       },
       {
         "state" : "state2",
-        "right" : "Write"
+        "right" : "ReceiveAndWrite"
       }
   ]
 }

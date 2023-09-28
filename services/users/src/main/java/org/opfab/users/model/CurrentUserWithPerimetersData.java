@@ -33,6 +33,10 @@ public class CurrentUserWithPerimetersData implements CurrentUserWithPerimeters 
     private User userData;
     private Set<ComputedPerimeter> computedPerimeters;
     private Map<String, List<String>> processesStatesNotNotified;
+    private Map<String, List<String>> processesStatesNotifiedByEmail;
+
+    private Boolean sendCardsByEmail;
+    private String email;
 
     private Set<PermissionEnum> permissions;
 
@@ -157,12 +161,6 @@ public class CurrentUserWithPerimetersData implements CurrentUserWithPerimeters 
 
         int size = rightsList.size();
         if (rightsList.get(size - 2) == RightsEnum.RECEIVEANDWRITE || rightsList.get(size - 1) == RightsEnum.RECEIVEANDWRITE)
-            return RightsEnum.RECEIVEANDWRITE;
-
-        if (rightsList.get(size - 2) == RightsEnum.RECEIVE && rightsList.get(size - 1) == RightsEnum.WRITE)
-            return RightsEnum.RECEIVEANDWRITE;
-
-        if (rightsList.get(size - 2) == RightsEnum.WRITE && rightsList.get(size - 1) == RightsEnum.RECEIVE)
             return RightsEnum.RECEIVEANDWRITE;
 
         if (rightsList.get(size - 2) == rightsList.get(size - 1)) {

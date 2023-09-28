@@ -1,3 +1,53 @@
+server:
+  port: 2102
+  forward-headers-strategy: framework # Needed for IP control feature
+
 spring:
   application:
     name: cards-publication
+  data:
+    mongodb:
+      database: operator-fabric
+      uri: ${operatorfabric.mongodb.uri} # To be set outside of docker
+  deserializer:
+    value:
+      delegate:
+        class: io.confluent.kafka.serializers.KafkaAvroDeserializer
+  serializer:
+    value:
+      delegate:
+        class: io.confluent.kafka.serializers.KafkaAvroSerializer
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          jwk-set-uri: ${operatorfabric.security.oauth2.resourceserver.jwt.jwk-set-uri} #To be set outside of docker
+
+# Patten to avoid Log Injection
+# each new line is prefix with spaces + three dots
+logging.pattern.console: "%d{yyyy-MM-dd HH:mm:ss.SSS} %5p ${PID:- } --- [%15.15t] %-40.40logger{39} : %replace(%msg){'\n|\r', '\n                 ... '}%n%wex"
+
+
+
+# default values for docker mode 
+operatorfabric:
+  rabbitmq:
+    host: rabbitmq
+    port: 5672
+    username: guest
+    password: guest
+  servicesUrls:
+    users: "users:2103"
+    businessconfig: "businessconfig:2100"
+  cards-publication:
+    kafka:
+      topics:
+        card:
+          topicname: opfab
+        response-card:
+          topicname: opfab-response
+      schema:
+        registry:
+          url: http://localhost:8081
+
+

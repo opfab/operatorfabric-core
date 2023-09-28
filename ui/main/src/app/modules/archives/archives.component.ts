@@ -9,7 +9,7 @@
 
 import {Component, ElementRef, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {Observable, Subject} from 'rxjs';
-import {ProcessesService} from 'app/business/services/processes.service';
+import {ProcessesService} from 'app/business/services/businessconfig/processes.service';
 import {takeUntil, tap} from 'rxjs/operators';
 import {FormControl, FormGroup} from '@angular/forms';
 import {ConfigService} from 'app/business/services/config.service';
@@ -17,16 +17,17 @@ import {NgbModal, NgbModalOptions, NgbModalRef} from '@ng-bootstrap/ng-bootstrap
 import {LightCard} from '@ofModel/light-card.model';
 import {Page} from '@ofModel/page.model';
 import {ExcelExport} from 'app/business/common/excel-export';
-import {UserPreferencesService} from 'app/business/services/user-preference.service';
+import {UserPreferencesService} from 'app/business/services/users/user-preference.service';
 import {Utilities} from 'app/business/common/utilities';
 import {Card, CardData} from '@ofModel/card.model';
 import {ArchivesLoggingFiltersComponent} from '../share/archives-logging-filters/archives-logging-filters.component';
-import {DisplayContext} from '@ofModel/templateGateway.model';
+import {DisplayContext} from '@ofModel/template.model';
 import {FilterMatchTypeEnum, FilterModel} from '@ofModel/filter-model';
 import {CardsFilter} from '@ofModel/cards-filter.model';
 import {DateTimeFormatterService} from 'app/business/services/date-time-formatter.service';
-import {CardService} from 'app/business/services/card.service';
-import {TranslationService} from 'app/business/services/translation.service';
+import {CardService} from 'app/business/services/card/card.service';
+import {TranslationService} from 'app/business/services/translation/translation.service';
+import {EntitiesService} from 'app/business/services/users/entities.service';
 
 @Component({
     selector: 'of-archives',
@@ -75,6 +76,7 @@ export class ArchivesComponent implements OnDestroy, OnInit {
     @ViewChild('filters') filtersTemplate: ArchivesLoggingFiltersComponent;
 
     selectedCard: Card;
+    selectedCardTruncatedTitle: string;
     selectedChildCards: Card[];
 
     listOfProcesses = [];
@@ -85,6 +87,7 @@ export class ArchivesComponent implements OnDestroy, OnInit {
 
     constructor(
         private processesService: ProcessesService,
+        private entitiesService: EntitiesService,
         private configService: ConfigService,
         private dateTimeFormatter: DateTimeFormatterService,
         private cardService: CardService,
@@ -299,38 +302,41 @@ export class ArchivesComponent implements OnDestroy, OnInit {
 
                 const severityColumnName = this.translateColumn('shared.result.severity');
                 const publishDateColumnName = this.translateColumn('shared.result.publishDate');
-                const businessDateColumnName = this.translateColumn('shared.result.businessPeriod');
+                const publisherColumnName = this.translateColumn('shared.result.emitter');
+                const entityRecipientsColumnName = this.translateColumn('shared.result.entityRecipients');
                 const titleColumnName = this.translateColumn('shared.result.title');
                 const summaryColumnName = this.translateColumn('shared.result.summary');
                 const processGroupColumnName = this.translateColumn('shared.result.processGroup');
+                const processColumnName = this.translateColumn('shared.result.process');
 
                 lines.forEach((card: LightCard) => {
-                    if (typeof card !== undefined) {
-                        // TO DO translation for old process should be done, but loading local arrives too late, solution to find
+                    if (card) {
                         if (this.filtersTemplate.isProcessGroupFilterVisible())
                             exportArchiveData.push({
-                                [severityColumnName]: Utilities.translateSeverity(this.translationService, card.severity),
+                                [severityColumnName]: this.translationService.translateSeverity(card.severity),
                                 [publishDateColumnName]: this.dateTimeFormatter.getFormattedDateAndTimeFromEpochDate(
                                     card.publishDate
                                 ),
-                                [businessDateColumnName]:
-                                    this.displayTime(card.startDate) + '-' + this.displayTime(card.endDate),
+                                [publisherColumnName]: this.entitiesService.getEntityName(card.publisher),
+                                [entityRecipientsColumnName]: this.getEntityRecipientsNames(card.entityRecipients).join(', '),
                                 [titleColumnName]: card.titleTranslated,
                                 [summaryColumnName]: card.summaryTranslated,
                                 [processGroupColumnName]: this.translateColumn(
                                     this.processesService.findProcessGroupLabelForProcess(card.process)
-                                )
+                                ),
+                                [processColumnName]: this.getProcessName(card.process)
                             });
                         else
                             exportArchiveData.push({
-                                [severityColumnName]: Utilities.translateSeverity(this.translationService, card.severity),
+                                [severityColumnName]: this.translationService.translateSeverity(card.severity),
                                 [publishDateColumnName]: this.dateTimeFormatter.getFormattedDateAndTimeFromEpochDate(
                                     card.publishDate
                                 ),
-                                [businessDateColumnName]:
-                                    this.displayTime(card.startDate) + '-' + this.displayTime(card.endDate),
+                                [publisherColumnName]: this.entitiesService.getEntityName(card.publisher),
+                                [entityRecipientsColumnName]: this.getEntityRecipientsNames(card.entityRecipients).join(', '),
                                 [titleColumnName]: card.titleTranslated,
-                                [summaryColumnName]: card.summaryTranslated
+                                [summaryColumnName]: card.summaryTranslated,
+                                [processColumnName]: this.getProcessName(card.process)
                             });
                     }
                 });
@@ -354,12 +360,13 @@ export class ArchivesComponent implements OnDestroy, OnInit {
 
         this.cardService.loadArchivedCard(cardId).subscribe((card: CardData) => {
             this.selectedCard = card.card;
+            this.selectedCardTruncatedTitle = Utilities.sliceForFormat(card.card.titleTranslated,100);
             this.selectedChildCards = card.childCards;
 
             const options: NgbModalOptions = {
                 size: 'fullscreen'
             };
-            if (!!this.modalRef) this.modalRef.close();
+            if (this.modalRef) this.modalRef.close();
             this.modalRef = this.modalService.open(this.cardDetailTemplate, options);
             this.cardLoadingInProgress = false;
             this.cardLoadingIsTakingMoreThanOneSecond = false;
@@ -389,8 +396,30 @@ export class ArchivesComponent implements OnDestroy, OnInit {
         return this.dateTimeFormatter.getFormattedTimeFromEpochDate(date);
     }
 
+    getEntityRecipientsNames(entityRecipients: string[], maxLength?: number): string[] {
+        if (entityRecipients) {
+            let entityRecipientsNames = [];
+
+            entityRecipients.forEach((entityId) => {
+                entityRecipientsNames.push(this.entitiesService.getEntityName(entityId));
+            });
+
+            if (maxLength && entityRecipientsNames.length > maxLength) {
+                entityRecipientsNames = entityRecipientsNames.slice(0, maxLength);
+                entityRecipientsNames[entityRecipientsNames.length - 1] += ' ...';
+            }
+            return entityRecipientsNames;
+        }
+        return [];
+    }
+
+    getProcessName(processId: string): string {
+        const process = this.processesService.getProcess(processId);
+        return process?.name ?? processId;
+    }
+
     ngOnDestroy() {
-        if (!!this.modalRef) {
+        if (this.modalRef) {
             this.modalRef.close();
         }
         this.unsubscribe$.next();

@@ -1,3 +1,10 @@
+<!-- Copyright (c) 2021-2023, RTE (http://www.rte-france.com)              -->
+<!-- See AUTHORS.txt                                                       -->
+<!-- This Source Code Form is subject to the terms of the Mozilla Public   -->
+<!-- License, v. 2.0. If a copy of the MPL was not distributed with this   -->
+<!-- file, You can obtain one at http://mozilla.org/MPL/2.0/.              -->
+<!-- SPDX-License-Identifier: MPL-2.0                                      -->
+<!-- This file is part of the OperatorFabric project.                      -->
 
 
 <form id='question-form'>
@@ -21,10 +28,12 @@
 
 <script>
 
-  templateGateway.applyChildCards = () => {
+  
+
+  opfab.currentCard.listenToChildCards((childCards) => {
     let childsDiv = document.getElementById("childs-div");
 
-    if (templateGateway.childCards[0])
+    if (childCards[0])
     {
       let responses  = '<center> <h4>Responses received </h4> <br/>';
       responses += ' <table width="100%""> <tr> <th> Entity </th>';
@@ -33,8 +42,8 @@
       responses += ' <th> 11/08/2020 8AM-10AM </th>';
       responses += ' </tr>';
       
-      templateGateway.childCards.forEach( (c, i) => {
-        const entityName = templateGateway.getEntityName(c.publisher);
+      childCards.forEach( (c, i) => {
+        const entityName = opfab.users.entities.getEntityName(c.publisher);
         responses += `<tr> <td id="response_from_${c.publisher}"> ${entityName} </td>`;
         if (c.data.choice1) responses += "<td> OK </td>";
         else responses  += "<td> NOK </td>";
@@ -52,12 +61,12 @@
     } else {
       childsDiv.innerHTML = '';
     }
-  };
+  });
 
   // The below 'tag' comment (and matching end tag) is directed at asciidoctor to include this snippet as an example in the
   // documentation, it should not be used in actual templates.
-  //tag::templateGateway.getUserResponse_example[]
-  templateGateway.getUserResponse = function() {
+  //tag::opfab.currentCard.registerFunctionToGetUserResponse_example[]
+  opfab.currentCard.registerFunctionToGetUserResponse(() => {
 
     const responseCardData = {};
     const formElement = document.getElementById('question-form');
@@ -76,23 +85,23 @@
 
     return result;
 
-    };
-  //end::templateGateway.getUserResponse_example[]
+    });
+  //end::opfab.currentCard.registerFunctionToGetUserResponse_example[]
 
-  templateGateway.lockAnswer = function() {
+  opfab.currentCard.listenToResponseLock(() => {
       document.getElementById('choice1').disabled = true;
       document.getElementById('choice2').disabled = true;
       document.getElementById('choice3').disabled = true;
-  };
+  });
 
-  templateGateway.unlockAnswer = function() {
+  opfab.currentCard.listenToResponseUnlock(() => {
       document.getElementById('choice1').disabled = false;
       document.getElementById('choice2').disabled = false;
       document.getElementById('choice3').disabled = false;
 
-  };
+  });
 
-  templateGateway.setLttdExpired = function(expired) {
+  opfab.currentCard.listenToLttdExpired((expired) => {
       const responseEnabled = document.getElementById('responseDisabled');
       if (responseEnabled != null) {
         if (expired) {
@@ -101,16 +110,20 @@
               responseRequired.innerHTML="";
             }
             responseEnabled.innerHTML="Response time has expired";
-            templateGateway.lockAnswer();
+            document.getElementById('choice1').disabled = true;
+            document.getElementById('choice2').disabled = true;
+            document.getElementById('choice3').disabled = true;
         } else {
             responseEnabled.innerHTML="";
-            templateGateway.unlockAnswer();
-        }
+            document.getElementById('choice1').disabled = false;
+            document.getElementById('choice2').disabled = false;
+            document.getElementById('choice3').disabled = false;
       }
-  }
+    }
+  });
 
 
-  if (templateGateway.isUserMemberOfAnEntityRequiredToRespond()) {
+  if (opfab.currentCard.isUserMemberOfAnEntityRequiredToRespond()) {
 
       const responseRequired = document.getElementById('responseRequired');
       if (responseRequired != null) {

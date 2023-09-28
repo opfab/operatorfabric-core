@@ -1,0 +1,34 @@
+operatorfabric:
+  rabbitmq:
+    host: localhost
+    port: 5672
+    username: guest
+    password: guest
+  servicesUrls:
+    authToken: "http://127.0.0.1:2002/auth/token"
+    users: "http://127.0.0.1:2103"
+    cardsConsultation: "http://127.0.0.1:2104"
+  internalAccount:
+    login: opfab
+    password: test
+  logConfig:
+    logFolder: logs/
+    logFile: "%DATE%.log"
+    logLevel: info
+  mail:
+    host: localhost
+    port: 1025
+    auth:
+      user: guest
+      pass: guest
+  cardsExternalDiffusion:
+    adminPort: 2106
+    activeOnStartup: true
+    defaultConfig:
+      mailFrom: opfab@localhost.it
+      subjectPrefix: 'Opfab card received '
+      bodyPrefix: 'You received a card in opfab : '
+      opfabUrlInMailContent: http://localhost:2002
+      windowInSecondsForCardSearch: 360
+      secondsAfterPublicationToConsiderCardAsNotRead: 60
+      checkPeriodInSeconds: 10

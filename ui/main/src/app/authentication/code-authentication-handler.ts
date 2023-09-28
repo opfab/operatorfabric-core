@@ -23,7 +23,7 @@ export class CodeAuthenticationHandler extends AuthHandler {
         this.checkAuthentication().subscribe((payload) => {
             // no token stored or token invalid
             if (!payload) {
-                if (!!authCode) {
+                if (authCode) {
                     this.askToken(authCode).subscribe({
                         next: (authInfo) => {
                             this.userAuthenticated.next(this.getUserFromAuthInfo(authInfo));
@@ -34,7 +34,7 @@ export class CodeAuthenticationHandler extends AuthHandler {
                     this.moveToLoginPage();
                 }
             } else {
-                if (!this.isExpirationDateOver()) {
+                if (this.doesTokenExpireSoon()) {
                     this.userAuthenticated.next(null);
                 } else {
                     this.moveToLoginPage();
@@ -56,7 +56,7 @@ export class CodeAuthenticationHandler extends AuthHandler {
 
     private moveToLoginPage() {
         if (!this.delegateUrl) {
-            window.location.href = `${environment.urls.auth}/code/redirect_uri=${this.computeRedirectUri()}`;
+            window.location.href = `${environment.url}/auth/code/redirect_uri=${this.computeRedirectUri()}`;
         } else {
             window.location.href = `${this.delegateUrl}&redirect_uri=${this.computeRedirectUri()}`;
         }

@@ -92,14 +92,14 @@ public class CardCustomRepositoryImpl implements CardCustomRepository {
 		Criteria criteria ;
 		if (publishFrom != null) 
 		{
-			if ((rangeEnd!=null) || (rangeStart!=null))criteria = new Criteria().andOperator(publishDateCriteria(publishFrom),
+			if ((rangeEnd != null) || (rangeStart != null))criteria = new Criteria().andOperator(publishDateCriteria(publishFrom),
 													  										computeCriteriaForUser(currentUserWithPerimeters),
-													  										getCriteriaForRange(rangeStart,rangeEnd));  
+													  										getCriteriaForRange(rangeStart, rangeEnd));
 			else criteria = new Criteria().andOperator(publishDateCriteria(publishFrom),
 														computeCriteriaForUser(currentUserWithPerimeters));  
 		}
 		else criteria = new Criteria().andOperator(computeCriteriaForUser(currentUserWithPerimeters),
-													  getCriteriaForRange(rangeStart,rangeEnd));
+													  getCriteriaForRange(rangeStart, rangeEnd));
 
 
 		Query query = new Query();
@@ -186,7 +186,10 @@ public class CardCustomRepositoryImpl implements CardCustomRepository {
         "representativeType",
 		"entityRecipients",
 		"entityRecipientsForInformation",
-        "entitiesAcks"
+        "entitiesAcks",
+		"usersReads",
+		"userRecipients",
+		"groupRecipients",
 	};
         Aggregation agg = newAggregation( this.getFilterOperations(filter,pageableRequest, fields));
         Aggregation countAgg = newAggregation( this.getFilterOperationsForCount(filter));

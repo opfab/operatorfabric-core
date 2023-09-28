@@ -27,6 +27,8 @@ public interface UserRepository {
 
     public Optional<User> findById(String id);
 
+    public Optional<User> findByLogin(String userId);
+
     public void delete(User user);
 
     public void deleteAll();
@@ -34,4 +36,5 @@ public interface UserRepository {
     public List<User> findByGroupSetContaining(String groupContains);
 
     public List<User> findByEntitiesContaining(String entityContains);
+
 }

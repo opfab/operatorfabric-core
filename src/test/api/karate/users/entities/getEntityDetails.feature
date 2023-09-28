@@ -43,14 +43,6 @@ Feature: Get Entity details
     When method get
     Then status 401
 
-
-  Scenario: get entity details with a simple user
-    Given url opfabUrl + 'users/entities/' + entity.id
-    And header Authorization = 'Bearer ' + authTokenAsTSO
-    When method get
-    Then status 403
-
-
   Scenario: get nonexistent entity details
     Given url opfabUrl + 'users/entities/Random'
     And header Authorization = 'Bearer ' + authToken

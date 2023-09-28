@@ -11,7 +11,7 @@ import {Component, Input, OnDestroy, OnInit} from '@angular/core';
 import {FormControl, FormGroup} from '@angular/forms';
 import {Subject} from 'rxjs';
 import {takeUntil} from 'rxjs/operators';
-import {UserPreferencesService} from 'app/business/services/user-preference.service';
+import {UserPreferencesService} from 'app/business/services/users/user-preference.service';
 import {SortService} from 'app/business/services/lightcards/sort.service';
 
 @Component({
@@ -61,7 +61,7 @@ export class FeedSortComponent implements OnInit, OnDestroy {
     private getInitialSort(): string {
         let sortedChoice = this.defaultSorting;
         const sortedPreference = this.userPreferences.getPreference('opfab.feed.sort.type');
-        if (!!sortedPreference)  sortedChoice = sortedPreference;
+        if (sortedPreference)  sortedChoice = sortedPreference;
         return sortedChoice;
     }
 

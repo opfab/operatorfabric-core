@@ -220,7 +220,7 @@ describe('Archives screen tests', function () {
         archivesAndLogging.checkAdminModeLinkDoesNotExist();
 
         archivesAndLogging.clickOnProcessSelect();
-        archivesAndLogging.checkNumberOfProcessEntriesIs(8);
+        archivesAndLogging.checkNumberOfProcessEntriesIs(9);
         archivesAndLogging.checkProcessSelectContains('Conference and IT incident');
         archivesAndLogging.checkProcessSelectContains('External recipient');
         archivesAndLogging.checkProcessSelectContains('Message or question');
@@ -229,12 +229,13 @@ describe('Archives screen tests', function () {
         archivesAndLogging.checkProcessSelectContains('IGCC');
         archivesAndLogging.checkProcessSelectContains('Process example');
         archivesAndLogging.checkProcessSelectContains('Test process for cypress');
+        archivesAndLogging.checkProcessSelectContains('Supervisor');
         archivesAndLogging.selectAllProcesses();
         archivesAndLogging.clickOnProcessSelect();
 
         archivesAndLogging.clickOnStateSelect();
         archivesAndLogging.selectAllStates();
-        archivesAndLogging.checkNumberOfStateSelectedIs(33);
+        archivesAndLogging.checkNumberOfStateSelectedIs(36);
         // We check this state is not present because it is only a child state
         archivesAndLogging.checkStateSelectDoesNotContains('Planned outage date response');
 
@@ -305,91 +306,115 @@ describe('Archives screen tests', function () {
 
                 expect(rows[0]['SEVERITY']).to.equal('Alarm');
                 checkPublicationDateForExportRow(rows[0]);
-                checkBusinessPeriodForExportRow(rows[0]);
+                expect(rows[0]['EMITTER']).to.equal('publisher_test');
+                checkEntityRecipientsCountForExportRow(rows[0], 1);
                 expect(rows[0]['TITLE']).to.equal('⚠️ Network Contingencies ⚠️');
                 expect(rows[0]['SUMMARY']).to.equal('Contingencies report for French network');
                 expect(rows[0]['SERVICE']).to.equal('Base Examples');
+                expect(rows[0]['PROCESS']).to.equal('Process example ');
 
                 expect(rows[1]['SEVERITY']).to.equal('Alarm');
                 checkPublicationDateForExportRow(rows[1]);
-                checkBusinessPeriodWithNoEndDateForExportRow(rows[1]);
+                expect(rows[1]['EMITTER']).to.equal('publisher_test');
+                checkEntityRecipientsCountForExportRow(rows[1], 3);
                 expect(rows[1]['TITLE']).to.equal('Electricity consumption forecast');
                 expect(rows[1]['SUMMARY']).to.equal('Message received');
                 expect(rows[1]['SERVICE']).to.equal('Base Examples');
+                expect(rows[1]['PROCESS']).to.equal('Process example ');
 
                 expect(rows[2]['SEVERITY']).to.equal('Action');
                 checkPublicationDateForExportRow(rows[2]);
-                checkBusinessPeriodForExportRow(rows[2]);
+                expect(rows[2]['EMITTER']).to.equal('publisher_test');
+                checkEntityRecipientsCountForExportRow(rows[2], 5);
                 expect(rows[2]['TITLE']).to.equal('⚡ Planned Outage');
                 expect(rows[2]['SUMMARY']).to.equal('Message received');
                 expect(rows[2]['SERVICE']).to.equal('Base Examples');
+                expect(rows[2]['PROCESS']).to.equal('Process example ');
 
                 expect(rows[3]['SEVERITY']).to.equal('Compliant');
                 checkPublicationDateForExportRow(rows[3]);
-                checkBusinessPeriodForExportRow(rows[3]);
+                expect(rows[3]['EMITTER']).to.equal('publisher_test');
+                checkEntityRecipientsCountForExportRow(rows[3], 0);
                 expect(rows[3]['TITLE']).to.equal('Process state (calcul)');
                 expect(rows[3]['SUMMARY']).to.equal('Message received');
                 expect(rows[3]['SERVICE']).to.equal('Base Examples');
+                expect(rows[3]['PROCESS']).to.equal('Process example ');
 
                 expect(rows[4]['SEVERITY']).to.equal('Information');
                 checkPublicationDateForExportRow(rows[4]);
-                checkBusinessPeriodForExportRow(rows[4]);
+                expect(rows[4]['EMITTER']).to.equal('publisher_test');
+                checkEntityRecipientsCountForExportRow(rows[4], 0);
                 expect(rows[4]['TITLE']).to.equal('Data quality');
                 expect(rows[4]['SUMMARY']).to.equal('Message received');
                 expect(rows[4]['SERVICE']).to.equal('Base Examples');
+                expect(rows[4]['PROCESS']).to.equal('Process example ');
 
                 expect(rows[5]['SEVERITY']).to.equal('Information');
                 checkPublicationDateForExportRow(rows[5]);
-                checkBusinessPeriodForExportRow(rows[5]);
+                expect(rows[5]['EMITTER']).to.equal('Control Center FR North');
+                checkEntityRecipientsCountForExportRow(rows[5], 0);
                 expect(rows[5]['TITLE']).to.equal('Message');
                 expect(rows[5]['SUMMARY']).to.equal(
                     "Message received : France-England's interconnection is 100% operational / Result of the maintenance is <OK>"
                 );
                 expect(rows[5]['SERVICE']).to.equal('Base Examples');
+                expect(rows[5]['PROCESS']).to.equal('Process example ');
 
                 expect(rows[6]['SEVERITY']).to.equal('Alarm');
                 checkPublicationDateForExportRow(rows[6]);
-                checkBusinessPeriodForExportRow(rows[6]);
+                expect(rows[6]['EMITTER']).to.equal('publisher_test');
+                checkEntityRecipientsCountForExportRow(rows[6], 1);
                 expect(rows[6]['TITLE']).to.equal('⚠️ Network Contingencies ⚠️');
                 expect(rows[6]['SUMMARY']).to.equal('Contingencies report for French network');
                 expect(rows[6]['SERVICE']).to.equal('Base Examples');
+                expect(rows[6]['PROCESS']).to.equal('Process example ');
 
                 expect(rows[7]['SEVERITY']).to.equal('Alarm');
                 checkPublicationDateForExportRow(rows[7]);
-                checkBusinessPeriodWithNoEndDateForExportRow(rows[7]);
+                expect(rows[7]['EMITTER']).to.equal('publisher_test');
+                checkEntityRecipientsCountForExportRow(rows[7], 3);
                 expect(rows[7]['TITLE']).to.equal('Electricity consumption forecast');
                 expect(rows[7]['SUMMARY']).to.equal('Message received');
                 expect(rows[7]['SERVICE']).to.equal('Base Examples');
+                expect(rows[7]['PROCESS']).to.equal('Process example ');
 
                 expect(rows[8]['SEVERITY']).to.equal('Action');
                 checkPublicationDateForExportRow(rows[8]);
-                checkBusinessPeriodForExportRow(rows[8]);
+                expect(rows[8]['EMITTER']).to.equal('publisher_test');
+                checkEntityRecipientsCountForExportRow(rows[8], 5);
                 expect(rows[8]['TITLE']).to.equal('⚡ Planned Outage');
                 expect(rows[8]['SUMMARY']).to.equal('Message received');
                 expect(rows[8]['SERVICE']).to.equal('Base Examples');
+                expect(rows[8]['PROCESS']).to.equal('Process example ');
 
                 expect(rows[9]['SEVERITY']).to.equal('Compliant');
                 checkPublicationDateForExportRow(rows[9]);
-                checkBusinessPeriodForExportRow(rows[9]);
+                expect(rows[9]['EMITTER']).to.equal('publisher_test');
+                checkEntityRecipientsCountForExportRow(rows[9], 0);
                 expect(rows[9]['TITLE']).to.equal('Process state (calcul)');
                 expect(rows[9]['SUMMARY']).to.equal('Message received');
                 expect(rows[9]['SERVICE']).to.equal('Base Examples');
+                expect(rows[9]['PROCESS']).to.equal('Process example ');
 
                 expect(rows[10]['SEVERITY']).to.equal('Information');
                 checkPublicationDateForExportRow(rows[10]);
-                checkBusinessPeriodForExportRow(rows[10]);
+                expect(rows[10]['EMITTER']).to.equal('publisher_test');
+                checkEntityRecipientsCountForExportRow(rows[10], 0);
                 expect(rows[10]['TITLE']).to.equal('Data quality');
                 expect(rows[10]['SUMMARY']).to.equal('Message received');
                 expect(rows[10]['SERVICE']).to.equal('Base Examples');
+                expect(rows[10]['PROCESS']).to.equal('Process example ');
 
                 expect(rows[11]['SEVERITY']).to.equal('Information');
                 checkPublicationDateForExportRow(rows[11]);
-                checkBusinessPeriodForExportRow(rows[11]);
+                expect(rows[11]['EMITTER']).to.equal('Control Center FR North');
+                checkEntityRecipientsCountForExportRow(rows[11], 0);
                 expect(rows[11]['TITLE']).to.equal('Message');
                 expect(rows[11]['SUMMARY']).to.equal(
                     "Message received : France-England's interconnection is 100% operational / Result of the maintenance is <OK>"
                 );
                 expect(rows[11]['SERVICE']).to.equal('Base Examples');
+                expect(rows[11]['PROCESS']).to.equal('Process example ');
             });
         });
     });
@@ -466,11 +491,9 @@ describe('Archives screen tests', function () {
         expect(row['PUBLICATION DATE']).to.match(/^\d{2}:\d{2} \d{2}\/\d{2}\/\d{4}$/);
     }
 
-    function checkBusinessPeriodForExportRow(row) {
-        expect(row['BUSINESS PERIOD']).to.match(/^\d{2}:\d{2} \d{2}\/\d{2}\/\d{4}-\d{2}:\d{2} \d{2}\/\d{2}\/\d{4}$/);
-    }
-    function checkBusinessPeriodWithNoEndDateForExportRow(row) {
-        expect(row['BUSINESS PERIOD']).to.match(/^\d{2}:\d{2} \d{2}\/\d{2}\/\d{4}-$/);
+    function checkEntityRecipientsCountForExportRow(row, count) {
+        if (count === 0) expect(row['ENTITY RECIPIENTS']).to.equal('');
+        else expect(row['ENTITY RECIPIENTS'].split(', ').length).to.equal(count);
     }
 
     function openAndCheckArchiveCardContent(cellContent, cardText, entityRecipientsFooterText = '') {
@@ -484,9 +507,9 @@ describe('Archives screen tests', function () {
     }
 
     function checkMultifiltersWhenAllProcessStatesAreDisplayed() {
-        // We check we have 6 items in process multi-filter, even without choosing a process group
+        // We check we have 9 items in process multi-filter, even without choosing a process group
         archivesAndLogging.clickOnProcessSelect();
-        archivesAndLogging.checkNumberOfProcessEntriesIs(8);
+        archivesAndLogging.checkNumberOfProcessEntriesIs(9);
         archivesAndLogging.checkProcessSelectContains('Conference and IT incident');
         archivesAndLogging.checkProcessSelectContains('External recipient');
         archivesAndLogging.checkProcessSelectContains('Message or question');
@@ -495,6 +518,7 @@ describe('Archives screen tests', function () {
         archivesAndLogging.checkProcessSelectContains('IGCC');
         archivesAndLogging.checkProcessSelectContains('Process example');
         archivesAndLogging.checkProcessSelectContains('Test process for cypress');
+        archivesAndLogging.checkProcessSelectContains('Supervisor');
 
         archivesAndLogging.clickOnProcessGroupSelect();
         archivesAndLogging.checkNumberOfProcessGroupEntriesIs(3);
@@ -504,7 +528,7 @@ describe('Archives screen tests', function () {
         archivesAndLogging.selectAllProcessGroups();
 
         archivesAndLogging.clickOnProcessSelect();
-        archivesAndLogging.checkNumberOfProcessEntriesIs(8);
+        archivesAndLogging.checkNumberOfProcessEntriesIs(9);
         archivesAndLogging.checkProcessSelectContains('Conference and IT incident');
         archivesAndLogging.checkProcessSelectContains('External recipient');
         archivesAndLogging.checkProcessSelectContains('Message or question');
@@ -513,16 +537,18 @@ describe('Archives screen tests', function () {
         archivesAndLogging.checkProcessSelectContains('IGCC');
         archivesAndLogging.checkProcessSelectContains('Process example');
         archivesAndLogging.checkProcessSelectContains('Test process for cypress');
+        archivesAndLogging.checkProcessSelectContains('Supervisor');
+
         archivesAndLogging.selectAllProcesses();
         archivesAndLogging.clickOnProcessSelect();
 
         archivesAndLogging.clickOnStateSelect();
         archivesAndLogging.selectAllStates();
-        archivesAndLogging.checkNumberOfStateSelectedIs(33);
+        archivesAndLogging.checkNumberOfStateSelectedIs(36);
 
-        archivesAndLogging.clickOnProcessSelect();
-        archivesAndLogging.unselectAllProcesses();
-        cy.selectProcess('Process example');
+        archivesAndLogging.clickOnProcessGroupSelect();
+        archivesAndLogging.selectAllProcessGroups();
+        archivesAndLogging.selectProcess('Process example');
         archivesAndLogging.clickOnProcessSelect();
         archivesAndLogging.clickOnStateSelect();
         archivesAndLogging.checkNumberOfStateEntriesIs(8);
@@ -568,7 +594,7 @@ describe('Archives screen tests', function () {
 
         archivesAndLogging.clickOnStateSelect();
         archivesAndLogging.selectAllStates();
-        archivesAndLogging.checkNumberOfStateSelectedIs(26);
+        archivesAndLogging.checkNumberOfStateSelectedIs(27);
 
         archivesAndLogging.clickOnProcessSelect();
         archivesAndLogging.unselectAllProcesses();

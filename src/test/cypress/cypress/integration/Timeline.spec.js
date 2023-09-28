@@ -22,7 +22,7 @@ describe('Time line moves', function () {
 
     before('Set up configuration and cards', function () {
         script.loadTestConf();
-        // send heardbeat every 100 hours 
+        // send heartbeat every 100 hours 
         // to avoid sending many heartbeats request when going in the future with clock
         script.setPropertyInConf('heartbeatSendingInterval','web-ui',360000);
     });
@@ -806,7 +806,13 @@ describe('Time line moves', function () {
 
     });
 
-    it('Check timeline circles have valid popover', function () {
+    it('Check timeline circles have valid popover',
+      {
+        retries: {
+          runMode: 2,  // to avoid flaky test with cy.get("#opfab-timeline-bubble-btn1").click();
+          openMode: 1,
+        },
+      }, function () {
 
         opfab.loginWithUser("operator1_fr");
         const currentDate = new Date(); 

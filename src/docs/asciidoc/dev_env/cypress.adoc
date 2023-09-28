@@ -1,4 +1,4 @@
-// Copyright (c) 2021 RTE (http://www.rte-france.com)
+// Copyright (c) 2021-2023 RTE (http://www.rte-france.com)
 // See AUTHORS.txt
 // This document is subject to the terms of the Creative Commons Attribution 4.0 International license.
 // If a copy of the license was not distributed with this
@@ -39,7 +39,7 @@ instance in docker mode, just substitute `dev` for `docker` to launch it in dev 
 ----
 cd config/docker
 docker-compose down <1>
-./docker-compose-cypress.sh <2>
+./startOpfabForCypress.sh <2>
 ----
 <1> Remove existing config/docker containers to avoid conflicts
 <2> Start "Cypress-flavoured" containers
@@ -77,7 +77,7 @@ before each test or series of test.
 
 The docker container relies on the `XXX.json` files under `config/cypress/ui-config`.
 
-For convenience, the `generateUIConfigForCypress.sh` is launched as part of the `docker-compose-cypress.sh` scripts.
+For convenience, the `generateUIConfigForCypress.sh` is launched as part of the `startOpfabForCypress.sh` scripts.
 
 == Running existing tests
 
@@ -140,7 +140,7 @@ associated collections through the MongoDB shell with the following commands:
 [source,bash]
 ----
 docker exec -it docker_mongodb_1 bash
-mongo "mongodb://root:password@localhost:27017/?authSource=admin&authMode=scram-sha1"
+mongo "mongodb://root:password@localhost:27017/?authSource=admin"
 use operator-fabric
 db.cards.remove({})
 db.archivedCards.remove({})

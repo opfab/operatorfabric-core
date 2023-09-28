@@ -52,7 +52,8 @@
       "answer": "ANTWOORD",
       "emitter": "ZENDER",
       "entitiesResponses": "ANTWOORDEN",
-      "requiredResponses": "VEREISTE ANTWOORDEN"
+      "requiredResponses": "VEREISTE ANTWOORDEN",
+      "entityRecipients": "ONTVANGERS ENTITEITEN"
     },
     "exportInProgress": "Bezig met exporteren",
     "loadingInProgress": "Bezig met laden",
@@ -89,7 +90,8 @@
     "sessionExpiredText":"De sessie is verlopen.",
     "disconnected": "Je bent losgekoppeld.",
     "disconnectedByNewUser": "De verbinding met u is verbroken omdat een andere gebruiker met dit account heeft ingelogd.",
-    "disconnectByAppLoadedInAnotherTab": "De verbinding is verbroken omdat een ander tabblad van deze browser werd gebruikt om in te loggen met deze URL."
+    "disconnectByAppLoadedInAnotherTab": "De verbinding is verbroken omdat een ander tabblad van deze browser werd gebruikt om in te loggen met deze URL.",
+    "reloadPageButton": "Herlaad pagina"
   },
   "menu": {
     "feed": "Kaart Feed",
@@ -211,7 +213,8 @@
     "entityRecipients" : "Ontvangers entiteiten :",
     "entityRecipientsForInformation" : "Ontvangers entiteiten in kopie :",
     "searchPlaceholderText": "Zoeken...",
-    "hiddenCardReceived": "Je hebt een kaart ontvangen die verborgen is door de filters die je hebt geactiveerd (tijdlijn of kaart feed)"
+    "hiddenCardReceived": "Je hebt een kaart ontvangen die verborgen is door de filters die je hebt geactiveerd (tijdlijn of kaart feed)",
+    "businessPeriod": "Bedrijfsperiode :"
   },
   "login": {
     "reset": "Opnieuw instellen",
@@ -256,7 +259,9 @@
     "systemNotificationAction": "Actie",
     "systemNotificationCompliant": "Conform",
     "systemNotificationInformation": "Informatie",
-    "systemNotificationsDisabledInBrowser": "Systeemmeldingen zijn uitgeschakeld in uw browser, u ontvangt geen melding."
+    "systemNotificationsDisabledInBrowser": "Systeemmeldingen zijn uitgeschakeld in uw browser, u ontvangt geen melding.",
+    "sendCardsByEmail" : "Kaartmeldingen per e-mail versturen",
+    "email": "Email"
   },
   "archive": {
     "cardLoadingInProgress":"Bezig met laden van de kaart  ...",
@@ -284,6 +289,7 @@
     "reset": "HERSTEL",
     "delete": "Verwijderen",
     "edit": "Wijzigen",
+    "createCopy": "Een kopie maken",
     "yes": "JA",
     "search" : "ZOEK"
   },
@@ -327,7 +333,7 @@
     "state": "Status",
     "recipients": "ONTVANGERS:",
     "recipientsForInformation": "ONTVANGERS IN KOPIE:",
-    "youAreTheOnlyRecipient": "U bent de enige ontvanger van deze kaart.",
+    "youAreTheOnlyRecipient": "Er is geen ontvanger ingesteld.",
     "feedPreview": "FEED PREVIEW:",
     "contentPreview": "CONTENT PREVIEW:",
     "send-another-one": "SEND ANOTHER CARD",
@@ -379,7 +385,7 @@
         "type": "TYPE",
         "true": "JA",
         "false": "NEE",
-        "confirmDelete": "Wilt u de groep echt verwijderen?",
+        "confirmDelete": "Wilt u de groep echt verwijderen",
         "add": "NIEUWE GROEP TOEVOEGEN"
       },
       "entity": {
@@ -390,7 +396,7 @@
         "labels": "LABELS",
         "users": "GEBRUIKERS",
         "entityAllowedToSendCard": "KAARTEN VERSTUREN TOEGESTAAN",
-        "confirmDelete": "Wilt u de entiteit echt verwijderen?",
+        "confirmDelete": "Wilt u de entiteit echt verwijderen",
         "add": "NIEUWE ENTITEIT TOEVOEGEN",
         "true": "JA",
         "false": "NEE",
@@ -403,24 +409,31 @@
         "state": "STATUS",
         "right": "RECHT",
         "filteringNotificationAllowed": "FILTERBERICHT\nTOEGESTAAN",
-        "confirmDelete": "Wilt u de perimeter echt verwijderen?",
+        "confirmDelete": "Wilt u de perimeter echt verwijderen",
         "add":"NIEUWE PERIMETER TOEVOEGEN"
       },
       "process": {
         "ProcessId": "ID",
         "ProcessName": "PROCES",
         "ProcessVersion": "HUIDIGE VERSIE",
-        "confirmDelete": "Wilt u het proces echt verwijderen?"
+        "confirmDelete": "Wilt u het proces echt verwijderen"
       },
       "user": {
         "login": "GEBRUIKERSNAAM",
         "lastName": "ACHTERNAAM",
         "firstName": "VOORNAAM",
+        "comment": "OPMERKING",
         "groups": "GROEPEN",
         "entities": "ENTITEITEN",
         "authorizedIPAddresses": "GEAUTHORIZEERDE IP ADRESSEN VOOR GEBRUIKERSAANSLUITING (gescheiden door ',')",
-        "confirmDelete": "Wilt u de gebruiker echt verwijderen?",
+        "confirmDelete": "Wilt u de gebruiker echt verwijderen",
         "add": "NIEUWE GEBRUIKER TOEVOEGEN"
+      },
+      "businessData": {
+        "name": "ZAKELIJKE GEGEVENS",
+        "add": "NIEUWE ZAKELIJKE GEGEVENS TOEVOEGEN",
+        "confirmDelete": "Wilt u het bestand met zakelijke gegevens echt verwijderen"
+
       },
       "selectGroupText": "Selecteer een Groep",
       "selectEntityText": "Selecteen een Entiteit",
@@ -439,7 +452,7 @@
       "login": {
         "required": "Gebruikersnaam is vereist.",
         "minLength": "Gebruikersnaam moet minimaal 2 tekens bevatten.",
-        "pattern": "Gebruikersnaam mag alleen de volgende tekens bevatten: kleine letters, _, -, . of cijfers.",
+        "pattern": "Gebruikersnaam mag geen spaties bevatten.",
         "alreadyExisting": "Gebruikersnaam bestaat al."
       },
       "authorizedIPAddresses": {
@@ -493,7 +506,10 @@
     "of": "van",
     "page": "Pagina",
     "blank": "Leeg",
-    "notBlank": "Niet leeg"
+    "notBlank": "Niet leeg",
+    "true": "JA",
+    "false": "NEE",
+    "empty": " "
   },
   "realTimeUsers": {
     "connected": "Verbonden",
@@ -573,5 +589,39 @@
     "notFound" : "Bron niet gevonden",
     "notAllowed" : "Actie niet toegestaan",
     "pageNotAllowed" : "Je mag deze pagina niet bekijken"
-  } 
+  } ,
+  "buildInTemplate" : {
+    "messageCard" : {
+      "message" : "U hebt een bericht ontvangen :"
+    },
+    "messageUserCard": {
+      "noMessageError":"U moet een bericht opgeven",
+      "textareaLabel":"BERICHT"
+    },
+    "questionCard" :{
+      "responseInputLabel" : "ANTWOORD",
+      "responsesReceivedLabel":"Ontvangen reacties :",
+      "entityColumnLabel":"Entiteit",
+      "responseColumnLabel":"Antwoord"
+    },
+    "questionUserCard": {
+      "noQuestionError":"U moet een vraag opgeven",
+      "textareaLabel":"VRAAG"
+    }, 
+    "message-or-question-listCard": {
+      "answers": "Antwoorden",
+      "yes": "Ja",
+      "no": "Nee",
+      "entityColumnLabel": "ENTITEIT",
+      "responseColumnLabel": "ANTWOORD",
+      "commentColumnLabel": "OPMERKING",
+      "comment": "OPMERKING"
+    },
+    "message-or-question-listUserCard": {
+      "titleLabel": "TITEL",
+      "messageLabel": "BERICHT",
+      "emptyMessage": "U kunt geen leeg bericht verzenden"
+    } 
+
+  }
 }

@@ -234,9 +234,6 @@ describe('Acknowledgment tests', function () {
 
         // We create a usercard sent to several entities
         opfab.navigateToUserCard();
-        usercard.selectService('Base Examples')
-        usercard.selectProcess('Process example');
-        usercard.selectState('Message');
         cy.get('#message').type('Test message for entities acks');
         cy.get('#opfab-recipients').click();
         cy.get('#opfab-recipients').find('.vscomp-toggle-all-checkbox').click();
@@ -761,7 +758,7 @@ describe('Acknowledgment tests', function () {
         usercard.selectProcess('Message or question');
         usercard.selectState('Message');
         cy.waitDefaultTime();
-        cy.get('#message').type('Test message for ack footer');
+        cy.get('#usercard_message_input').type('Test message for ack footer');
         usercard.previewThenSendCard();
         cy.waitDefaultTime();
 

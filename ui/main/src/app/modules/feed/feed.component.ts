@@ -15,7 +15,7 @@ import * as moment from 'moment';
 import {LightCardsFeedFilterService} from 'app/business/services/lightcards/lightcards-feed-filter.service';
 import {ConfigService} from 'app/business/services/config.service';
 import {Router} from '@angular/router';
-import {UserService} from 'app/business/services/user.service';
+import {UserService} from 'app/business/services/users/user.service';
 import {SelectedCardService} from 'app/business/services/card/selectedCard.service';
 
 @Component({
@@ -46,7 +46,7 @@ export class FeedComponent implements OnInit,OnDestroy {
 
     configureExperimentalHallwayMode() {
         const usersInHallwayMode = this.configService.getConfigValue('settings.usersInHallwayMode',null);
-        if ((!!usersInHallwayMode) && (usersInHallwayMode.includes(this.user.getCurrentUserWithPerimeters().userData.login))) {
+        if (usersInHallwayMode?.includes(this.user.getCurrentUserWithPerimeters().userData.login)) {
             this.hallwayMode = true;
             console.log("User in hallwayMode");
         }

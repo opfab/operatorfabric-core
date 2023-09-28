@@ -11,8 +11,8 @@ import {Component, Input, OnChanges, OnInit} from '@angular/core';
 import {Card} from '@ofModel/card.model';
 import {User} from '@ofModel/user.model';
 import {DateTimeFormatterService} from 'app/business/services/date-time-formatter.service';
-import {EntitiesService} from 'app/business/services/entities.service';
-import {UserService} from 'app/business/services/user.service';
+import {EntitiesService} from 'app/business/services/users/entities.service';
+import {UserService} from 'app/business/services/users/user.service';
 import {Utilities} from 'app/business/common/utilities';
 import {Subject} from 'rxjs';
 import {takeUntil} from 'rxjs/operators';
@@ -43,7 +43,7 @@ export class CardFooterTextComponent implements OnChanges,OnInit {
         private lightCardsStoreService: LightCardsStoreService
     ) {
         const userWithPerimeters = this.userService.getCurrentUserWithPerimeters();
-        if (!!userWithPerimeters) this.user = userWithPerimeters.userData;
+        if (userWithPerimeters) this.user = userWithPerimeters.userData;
     }
 
     ngOnInit() {
@@ -78,7 +78,7 @@ export class CardFooterTextComponent implements OnChanges,OnInit {
         if (this.card.publisherType === 'ENTITY') {
             this.fromEntityOrRepresentative = this.entitiesService.getEntityName(this.card.publisher);
 
-            if (!!this.card.representativeType && !!this.card.representative) {
+            if (this.card.representativeType && this.card.representative) {
                 const representative =
                     this.card.representativeType === 'ENTITY'
                         ? this.entitiesService.getEntityName(this.card.representative)
@@ -91,7 +91,7 @@ export class CardFooterTextComponent implements OnChanges,OnInit {
 
     private computeListEntitiesAcknowledged() {
         const addressedTo = [];
-        if (!!this.card.entityRecipients && this.card.entityRecipients.length > 0) {
+        if (this.card.entityRecipients && this.card.entityRecipients.length > 0) {
             // We compute the entities allowed to send cards to which the user is connected
             const userEntitiesAllowedToSendCards = this.user.entities.filter((entityId) =>
                 this.entitiesService.isEntityAllowedToSendCard(entityId)
@@ -107,7 +107,7 @@ export class CardFooterTextComponent implements OnChanges,OnInit {
                 entityRecipientsAllowedToSendCards.includes(entityId)
             );
             userEntitiesAllowedToSendCardsWhichAreRecipient.forEach((entityId) => {
-                addressedTo.push({id: entityId, entityName: this.entitiesService.getEntityName(entityId), acknowledged: !!this.card.entitiesAcks? this.card.entitiesAcks.includes(entityId) : false});
+                addressedTo.push({id: entityId, entityName: this.entitiesService.getEntityName(entityId), acknowledged: this.card.entitiesAcks? this.card.entitiesAcks.includes(entityId) : false});
             });
 
             addressedTo.sort((a, b) => Utilities.compareObj(a.entityName, b.entityName));
@@ -116,7 +116,7 @@ export class CardFooterTextComponent implements OnChanges,OnInit {
     }
 
     private addAckFromSubscription(entitiesAcksToAdd: string[]) {
-        if (!!this.listEntitiesAcknowledged && this.listEntitiesAcknowledged.length > 0) {
+        if (this.listEntitiesAcknowledged?.length > 0) {
             entitiesAcksToAdd.forEach((entityAckToAdd) => {
                 const indexToUpdate = this.listEntitiesAcknowledged.findIndex(
                     (entityToAck) => entityToAck.id === entityAckToAdd
@@ -128,12 +128,12 @@ export class CardFooterTextComponent implements OnChanges,OnInit {
         }
     }
     private getLastResponse(): Card {
-        if (!!this.childCards && this.childCards.length > 0) {
+        if (this.childCards?.length > 0) {
             return [...this.childCards].sort((a, b) => (a.publishDate < b.publishDate ? 1 : -1))[0];
         }
         return null;
     }
-    
+
     public getResponsePublisher(resp: Card) {
         return this.entitiesService.getEntityName(resp.publisher);
     }

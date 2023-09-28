@@ -1,7 +1,7 @@
 swagger: '2.0'
 info:
   description: IMPORTANT - The Try it Out button will generate curl requests for examples, but executing them through the UI will not work as authentication has not been set up. This page is for documentation only.
-  version: 3.15.0.RELEASE
+  version: 4.0.0.RELEASE
   title: Card Management API
   termsOfService: ''
   contact:
@@ -588,6 +588,21 @@ definitions:
         type: array
         items:
           type: string
+      groupRecipients:
+        type: array
+        description: List of recipient groups
+        items:
+          type: string
+      userRecipients:
+        type: array
+        description: List of recipient users
+        items:
+          type: string
+      usersReads:
+        type: array
+        description: List of users who read the read
+        items:
+          type: string   
       hasBeenRead:
         type: boolean
         description: Is true if the card was read by current user  
@@ -1232,3 +1247,25 @@ paths:
           description: Authentication required
         '403':
           description: Forbidden - User doesn't have any group
+  '/cards/resetReadAndAcks/{uid}':
+    parameters:
+      - in: path
+        name: uid
+        type: string
+        required: true
+        description: "The card uid"
+    post:
+      operationId: resetReadAndAcks
+      tags:
+        - cards
+        - update
+        - acknowledgement
+      summary: update current card removing acknowledgements and reads
+      description: update current card removing acknowledgements and reads, send the card with updated publishDate
+      responses:
+        '200':
+          description: card updated and sent with updated publishDate
+        '404':
+          description: Try to update unexisting card
+        '403':
+          description: Forbidden - User not allowed

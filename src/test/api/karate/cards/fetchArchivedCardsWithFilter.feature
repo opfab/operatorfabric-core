@@ -243,7 +243,7 @@ Feature: Archives
       },
 	  {
         "state" : "incidentInProgressState",
-        "right" : "Write"
+        "right" : "ReceiveAndWrite"
       }
     ]
 }
@@ -355,7 +355,7 @@ Scenario: fetch the first page
 	  And request filter
 	  Then method post
 	  Then status 200
-	  And match response.numberOfElements == 9
+	  And match response.numberOfElements == 10
   
   
 	Scenario: fetch all archived cards for operator1_fr, not in admin mode
@@ -375,7 +375,7 @@ Scenario: fetch the first page
 	  And request filter
 	  Then method post
 	  Then status 200
-	  And assert response.numberOfElements == 9
+	  And assert response.numberOfElements == 10
   
   
 	#Test parameter adminMode
@@ -395,7 +395,7 @@ Scenario: fetch the first page
 	  And header Authorization = 'Bearer ' + authTokenAsTSO
 	  And request filter
 	  Then method post
-	  And assert response.numberOfElements == 9
+	  And assert response.numberOfElements == 10
   
   
 	#Test parameter adminMode
@@ -479,7 +479,7 @@ Scenario: fetch the first page
 	And request filter
 	Then method post
 	Then status 200
-	And assert response.numberOfElements == 9
+	And assert response.numberOfElements == 10
   
   
   
@@ -543,7 +543,7 @@ Scenario: fetch the first page
 	  And request filter
 	  Then method post
 	  Then status 200
-	  And assert response.numberOfElements == 9
+	  And assert response.numberOfElements == 10
   
   
 	Scenario: filter by activeFrom
@@ -567,7 +567,7 @@ Scenario: fetch the first page
 	  And request filter
 	  Then method post
 	  Then status 200
-	   And assert response.numberOfElements == 9
+	   And assert response.numberOfElements == 10
   
   
 	  Scenario: filter by activeFrom after startDate of card with no endDate
@@ -591,7 +591,7 @@ Scenario: fetch the first page
 		And request filter
 		Then method post
 		Then status 200
-		 And assert response.numberOfElements == 8
+		 And assert response.numberOfElements == 9
   
 		Scenario: filter by activeTo
   
@@ -614,7 +614,7 @@ Scenario: fetch the first page
 		  And request filter
 		  Then method post
 		  Then status 200
-		  And assert response.numberOfElements == 9
+		  And assert response.numberOfElements == 10
   
   
 		Scenario: filter process
@@ -639,7 +639,7 @@ Scenario: fetch the first page
 		  And request filter
 		  Then method post
 		  Then status 200
-		  And assert response.numberOfElements == 9
+		  And assert response.numberOfElements == 10
   
   
 		Scenario: fetch all archived cards, child cards included
@@ -678,7 +678,7 @@ Scenario: fetch the first page
 		  And request filter
 		  Then method post
 		  Then status 200
-		  And assert response.numberOfElements == 9
+		  And assert response.numberOfElements == 10
   
 		Scenario: fetch archived cards (child cards excluded by default)
   
@@ -696,7 +696,7 @@ Scenario: fetch the first page
 		  And request filter
 		  Then method post
 		  Then status 200
-		  And assert response.numberOfElements == 9
+		  And assert response.numberOfElements == 10
   
   
 		Scenario: filter equal, ignore case
@@ -736,7 +736,7 @@ Scenario: fetch the first page
 		  And request filterEQUALS
 		  When method post
 		  Then status 200
-		  And assert response.numberOfElements == 9
+		  And assert response.numberOfElements == 10
   
   
 		  Given url opfabUrl + 'cards/archives'
@@ -785,7 +785,7 @@ Scenario: fetch the first page
 			And request filterNEQ
 			When method post
 			Then status 200
-			And assert response.numberOfElements == 9
+			And assert response.numberOfElements == 10
   
   
 			Given url opfabUrl + 'cards/archives'
@@ -831,7 +831,7 @@ Scenario: fetch the first page
 			And request filterSW
 			  When method post
 			Then status 200
-			And assert response.numberOfElements == 9
+			And assert response.numberOfElements == 10
 		  
 			Given url opfabUrl + 'cards/archives'
 			And header Authorization = 'Bearer ' + authTokenAsTSO
@@ -915,7 +915,7 @@ Scenario: fetch the first page
 			And request filterBLANK
 			  When method post
 			Then status 200
-			And assert response.numberOfElements == 9
+			And assert response.numberOfElements == 10
    
 			Given url opfabUrl + 'cards/archives'
 			And header Authorization = 'Bearer ' + authTokenAsTSO
@@ -960,7 +960,7 @@ Scenario: fetch the first page
 			And request filterNOTBLANK
 			  When method post
 			Then status 200
-			And assert response.numberOfElements == 9
+			And assert response.numberOfElements == 10
   
 			Given url opfabUrl + 'cards/archives'
 			And header Authorization = 'Bearer ' + authTokenAsTSO
@@ -1007,7 +1007,7 @@ Scenario: fetch the first page
 			And request filterCONTAINS
 			  When method post
 			Then status 200
-			And assert response.numberOfElements == 9
+			And assert response.numberOfElements == 10
   
 			Given url opfabUrl + 'cards/archives'
 			And header Authorization = 'Bearer ' + authTokenAsTSO
@@ -1054,7 +1054,7 @@ Scenario: fetch the first page
 			And request filterNOTCONTAINS
 			  When method post
 			Then status 200
-			And assert response.numberOfElements == 9 
+			And assert response.numberOfElements == 10
   
 			Given url opfabUrl + 'cards/archives'
 			And header Authorization = 'Bearer ' + authTokenAsTSO
@@ -1101,7 +1101,7 @@ Scenario: fetch the first page
 			And request filterIN
 			  When method post
 			Then status 200
-			And assert response.numberOfElements == 9 
+			And assert response.numberOfElements == 10
   
 			Given url opfabUrl + 'cards/archives'
 			And header Authorization = 'Bearer ' + authTokenAsTSO

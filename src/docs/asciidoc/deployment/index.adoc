@@ -1,4 +1,4 @@
-// Copyright (c) 2018-2022 RTE (http://www.rte-france.com)
+// Copyright (c) 2018-2023 RTE (http://www.rte-france.com)
 // See AUTHORS.txt
 // This document is subject to the terms of the Creative Commons Attribution 4.0 International license.
 // If a copy of the license was not distributed with this
@@ -37,7 +37,6 @@ In particular, *if you are using edge have a look to https://github.com/opfab/op
 
 include::configuration/configuration.adoc[leveloffset=+1]
 
-include::RABBITMQ.adoc[leveloffset=+1]
 
 == Monitoring
 
@@ -76,6 +75,11 @@ The response will be a json object like the following:
 }
 ----
 
+To get the log level for ROOT logger of a service it is possible to call the provided script  
+https://github.com/opfab/operatorfabric-core/tree/master/src/test/resources/logs/getLogs.sh[src/test/resources/logs/getLogs.sh] as follows: `getLogs.sh <server:port> <user> <opfab_url>`. For example to get the current log level for "card-publication" service  execute: `getLogs.sh localhost:2102 admin http://localhost`
+
+  
+
 To configure a given logger, POST a json entity to the '/actuator/logger' URI, as follows:
 
 ----
@@ -84,13 +88,29 @@ curl -i -X POST http://<server>:<port>/actuator/loggers/${logger} -H "Authorizat
 
 To “reset” the specific level of the logger (and use the default configuration instead) it is possible to pass a value of null as the configuredLevel.
 
+To set the log level for ROOT logger of a service it is possible to call the provided script  
+https://github.com/opfab/operatorfabric-core/tree/master/src/test/resources/logs/setLogs.sh[src/test/resources/logs/setLogs.sh] as follows: `setLogs.sh <server:port> <log_level>  <user> <opfab_url>`. For example to set the log level to DEBUG for "card-publication" service  execute: `setLogs.sh localhost:2102 DEBUG admin http://localhost`
+
+
 
 include::users_groups_admin.adoc[leveloffset=+1]
 
 
 include::port_table.adoc[leveloffset=+1]
 
+== Rate limiter for card sendings
 
+External publishers are monitored by this module which limits how many cards they can send
+ifdef::single-page-doc[<<cardSendingLimitCardCount, `cardSendingLimitCardCount`>>]
+ifndef::single-page-doc[<</documentation/current/deployment/configuration/configuration.adoc#cardSendingLimitCardCount, `cardSendingLimitCardCount`>>]
+ in a period of time
+ifdef::single-page-doc[<<cardSendingLimitPeriod, `cardSendingLimitPeriod`>>]
+ifndef::single-page-doc[<</documentation/current/deployment/configuration/configuration.adoc#cardSendingLimitPeriod, `cardSendingLimitPeriod`>>]
+.
+This is to avoid potential overloading due to external apps stuck in a card sending loop.
+It can be disabled / enabled with
+ifdef::single-page-doc[<<activateCardSendingLimiter, `activateCardSendingLimiter`>>]
+ifndef::single-page-doc[<</documentation/current/deployment/configuration/configuration.adoc#activateCardSendingLimiter, `activateCardSendingLimiter`>>]
 
 == Restricted operations (administration)
 

@@ -11,7 +11,7 @@ import {Injectable} from '@angular/core';
 import {Filter} from '@ofModel/feed-filter.model';
 import {LightCard} from '@ofModel/light-card.model';
 import {FilterService} from 'app/business/services/lightcards/filter.service';
-import {ProcessesService} from 'app/business/services/processes.service';
+import {ProcessesService} from 'app/business/services/businessconfig/processes.service';
 
 @Injectable({
     providedIn: 'root'
@@ -34,7 +34,7 @@ export class MonitoringFilterBuilder {
         return new Filter(
             (card: LightCard, status) => {
                 const processList = status.processes;
-                if (!!processList) {
+                if (processList) {
                     return processList.includes(card.process);
                 }
                 return true;
@@ -60,7 +60,7 @@ export class MonitoringFilterBuilder {
         return new Filter(
             (card: LightCard, status) => {
                 const typeOfStatesList = status.typeOfStates;
-                if (!!typeOfStatesList) {
+                if (typeOfStatesList) {
                     const typeOfStateOfTheCard = status.mapOfTypeOfStates.get(card.process + '.' + card.state);
                     return typeOfStatesList.includes(typeOfStateOfTheCard);
                 }

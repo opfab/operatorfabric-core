@@ -80,7 +80,7 @@ export class DateTimeNgb {
 
     formatDateTime() {
         let result = '';
-        const {date, time} = this;
+        const {date} = this;
         // if date is present
         if (date) {
             result = `${this.format()}T${this.formatTime()}`;
@@ -90,7 +90,7 @@ export class DateTimeNgb {
 
     convertToMomentOrNull(): moment.Moment {
         const dateString = this.formatDateTime();
-        if (!!dateString && dateString !== '' && !dateString.includes('--')) {
+        if (dateString && dateString !== '' && !dateString.includes('--')) {
             return moment(dateString);
         }
         return null;
@@ -98,7 +98,7 @@ export class DateTimeNgb {
 
     convertToNumber(): number {
         const asMoment = this.convertToMomentOrNull();
-        if (!!asMoment) {
+        if (asMoment) {
             return asMoment.valueOf();
         }
         return NaN;
@@ -106,7 +106,7 @@ export class DateTimeNgb {
 
     convertToDateOrNull(): Date {
         const asMoment = this.convertToMomentOrNull();
-        if (!!asMoment) {
+        if (asMoment) {
             return asMoment.toDate();
         }
         return null;

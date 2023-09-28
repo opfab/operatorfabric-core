@@ -1,4 +1,4 @@
-<!-- Copyright (c) 2021-2022, RTE (http://www.rte-france.com)              -->
+<!-- Copyright (c) 2021-2023, RTE (http://www.rte-france.com)              -->
 <!-- See AUTHORS.txt                                                       -->
 <!-- This Source Code Form is subject to the terms of the Mozilla Public   -->
 <!-- License, v. 2.0. If a copy of the MPL was not distributed with this   -->
@@ -28,7 +28,7 @@
             if (document.getElementById(rect)) document.getElementById(rect).setAttribute("fill",stateColor);
             else console.log("element not found " + rect);
 
-            templateGateway.setScreenSize = function(size) {
+            opfab.currentCard.listenToScreenSize((size) => {
                 const chart = document.getElementById('chart');
                 if (chart) {
                     if (size === 'lg') {
@@ -39,7 +39,7 @@
                     chart.setAttribute("height", "311px");
                     }
                 }
-            }
+            });
         }
     } 
     cardTemplate.initSvg();

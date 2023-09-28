@@ -12,8 +12,8 @@ import {userRight, UserWithPerimeters} from '@ofModel/userWithPerimeters.model';
 import {Card} from '@ofModel/card.model';
 import {Process, ShowAcknowledgmentFooterEnum} from '@ofModel/processes.model';
 import {RightsEnum} from '@ofModel/perimeter.model';
-import {EntitiesService} from 'app/business/services/entities.service';
-import {ProcessesService} from 'app/business/services/processes.service';
+import {EntitiesService} from 'app/business/services/users/entities.service';
+import {ProcessesService} from 'app/business/services/businessconfig/processes.service';
 import {User} from '@ofModel/user.model';
 
 /** This class contains functions allowing to know if the user has the right to answer to the card or not */
@@ -45,7 +45,7 @@ export class UserPermissionsService {
     }
 
     public doesTheUserHavePermissionToEditCard(user: UserWithPerimeters, card: Card): boolean {
-        if (!!card.entitiesAllowedToEdit && this.isUserInEntityAllowedToEditCard(user.userData, card))
+        if (card.entitiesAllowedToEdit && this.isUserInEntityAllowedToEditCard(user.userData, card))
             return this.checkUserWritePerimeter(user, card);
         if (card.publisherType === 'ENTITY' && user.userData.entities.includes(card.publisher))
             return this.checkUserWritePerimeter(user, card);
@@ -58,8 +58,7 @@ export class UserPermissionsService {
             if (
                 perim.process === card.process &&
                 perim.state === card.state &&
-                (this.compareRightAction(perim.rights, RightsEnum.Write) ||
-                    this.compareRightAction(perim.rights, RightsEnum.ReceiveAndWrite))
+                this.compareRightAction(perim.rights, RightsEnum.ReceiveAndWrite)
             ) {
                 permission = true;
                 return true;
@@ -115,9 +114,9 @@ export class UserPermissionsService {
                 .filter((entity) => entitiesAllowedToRespondAndEntitiesRequiredToRespond.includes(entity.id));
 
             let emittingEntityAllowedToRespond = false;
-            if (!!processDefinition.states.get((card.state)).response)
+            if (processDefinition.states.get((card.state)).response)
                 emittingEntityAllowedToRespond =
-                    !!processDefinition.states.get((card.state)).response.emittingEntityAllowedToRespond;
+                    processDefinition.states.get((card.state)).response.emittingEntityAllowedToRespond;
 
             const allowed = this.entitiesService
                 .resolveEntitiesAllowedToSendCards(entitiesAllowedToRespond)
@@ -146,12 +145,10 @@ export class UserPermissionsService {
             const stateOfTheCard =   processDefinition.states.get((card.state));
 
             if (
-                !!stateOfTheCard &&
+                stateOfTheCard?.response &&
                 perim.process === card.process &&
-                !!stateOfTheCard.response &&
                 perim.state === stateOfTheCard.response.state &&
-                (this.compareRightAction(perim.rights, RightsEnum.Write) ||
-                    this.compareRightAction(perim.rights, RightsEnum.ReceiveAndWrite))
+                this.compareRightAction(perim.rights, RightsEnum.ReceiveAndWrite)
             ) {
                 permission = true;
             }

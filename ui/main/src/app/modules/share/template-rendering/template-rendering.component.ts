@@ -21,7 +21,7 @@ import {
     ViewEncapsulation
 } from '@angular/core';
 import {Card} from '@ofModel/card.model';
-import {HandlebarsService} from '../../card/services/handlebars.service';
+import {HandlebarsService} from '../../../business/services/card/handlebars.service';
 import {DomSanitizer, SafeHtml} from '@angular/platform-browser';
 import {State} from '@ofModel/processes.model';
 import {DetailContext} from '@ofModel/detail-context.model';
@@ -30,13 +30,13 @@ import {map, skip, takeUntil} from 'rxjs/operators';
 import {Observable, Subject, zip} from 'rxjs';
 import {User} from '@ofModel/user.model';
 import {OpfabLoggerService} from 'app/business/services/logs/opfab-logger.service';
-import {DisplayContext} from '@ofModel/templateGateway.model';
-import {TemplateCssService} from 'app/business/services/template-css.service';
+import {DisplayContext} from '@ofModel/template.model';
+import {TemplateCssService} from 'app/business/services/card/template-css.service';
 import {GlobalStyleService} from 'app/business/services/global-style.service';
 import {CurrentUserStore} from 'app/business/store/current-user.store';
-import {UserService} from 'app/business/services/user.service';
+import {UserService} from 'app/business/services/users/user.service';
+import {OpfabAPIService} from 'app/business/services/opfabAPI.service';
 
-declare const templateGateway: any;
 
 @Component({
     selector: 'of-template-rendering',
@@ -73,6 +73,7 @@ export class TemplateRenderingComponent implements OnChanges, OnInit, OnDestroy,
         private templateCssService: TemplateCssService,
         private globalStyleService: GlobalStyleService,
         private userService: UserService,
+        private opfabAPIService: OpfabAPIService,
         private logger: OpfabLoggerService
     ) {}
 
@@ -86,27 +87,27 @@ export class TemplateRenderingComponent implements OnChanges, OnInit, OnDestroy,
         this.globalStyleService
             .getStyleChange()
             .pipe(takeUntil(this.unsubscribeToGlobalStyle$), skip(1))
-            .subscribe(() => templateGateway.onStyleChange());
+            .subscribe(() => this.opfabAPIService.templateInterface.setStyleChange());
     }
 
     ngOnChanges(changes: SimpleChanges) {
-        if (!!changes.screenSize && this.templateLoaded) templateGateway.setScreenSize(this.screenSize);
+        if (changes.screenSize && this.templateLoaded) this.opfabAPIService.templateInterface.setScreenSize(this.screenSize);
         else this.render();
     }
 
     private render() {
         this.isLoadingSpinnerToDisplay = false;
-        templateGateway.initTemplateGateway();
+        this.opfabAPIService.initTemplateInterface();
         this.enableSpinnerForTemplate();
         this.getUserContextAndRenderTemplate();
     }
 
     private enableSpinnerForTemplate() {
         const that = this;
-        templateGateway.displayLoadingSpinner = function () {
+        this.opfabAPIService.currentCard.displayLoadingSpinner = function () {
             that.isLoadingSpinnerToDisplay = true;
         };
-        templateGateway.hideLoadingSpinner = function () {
+        this.opfabAPIService.currentCard.hideLoadingSpinner= function () {
             that.isLoadingSpinnerToDisplay = false;
         };
     }
@@ -128,10 +129,10 @@ export class TemplateRenderingComponent implements OnChanges, OnInit, OnDestroy,
     }
 
     private computeAndRenderTemplate() {
-        if (!!this.cardState.templateName) {
+        if (this.cardState.templateName) {
             this.isLoadingSpinnerToDisplay = true;
             if (this.functionToCallBeforeRendering) this.functionToCallBeforeRendering.call(this.parentComponent);
-            templateGateway.displayContext = this.displayContext;
+            this.opfabAPIService.currentCard.displayContext = this.displayContext;
 
             this.getHTMLFromTemplate().subscribe({
                 next: (html) => {
@@ -197,9 +198,9 @@ export class TemplateRenderingComponent implements OnChanges, OnInit, OnDestroy,
 
     private callTemplateJsPostRenderingFunctions() {
         if (this.functionToCallAfterRendering) this.functionToCallAfterRendering.call(this.parentComponent);
-        templateGateway.setScreenSize(this.screenSize);
-        templateGateway.applyChildCards();
-        setTimeout(() => templateGateway.onTemplateRenderingComplete(), 10);
+        this.opfabAPIService.templateInterface.setScreenSize(this.screenSize);
+        this.opfabAPIService.currentCard.applyChildCards();
+        setTimeout(() => this.opfabAPIService.templateInterface.setTemplateRenderingComplete(), 10);
     }
 
     public ngAfterViewChecked() {
@@ -208,11 +209,11 @@ export class TemplateRenderingComponent implements OnChanges, OnInit, OnDestroy,
 
     private computeRenderingHeight() {
         const htmlElementForCardRendering = document.getElementById('opfab-div-card-template');
-        if (!!htmlElementForCardRendering) {
+        if (htmlElementForCardRendering) {
             const renderingRect = htmlElementForCardRendering.getBoundingClientRect();
             let renderingHeight = window.innerHeight - renderingRect.top - this.fixedBottomOffset;
 
-            if (!!this.cardFooterHtmlElementId) {
+            if (this.cardFooterHtmlElementId) {
                 const cardFooterElement = document.getElementById(this.cardFooterHtmlElementId);
                 if (cardFooterElement) {
                     renderingHeight -= cardFooterElement.scrollHeight;
@@ -223,7 +224,7 @@ export class TemplateRenderingComponent implements OnChanges, OnInit, OnDestroy,
     }
 
     ngOnDestroy() {
-        templateGateway.initTemplateGateway();
+        this.opfabAPIService.initTemplateInterface();
         this.unsubscribeToGlobalStyle$.next();
         this.unsubscribeToGlobalStyle$.complete();
     }

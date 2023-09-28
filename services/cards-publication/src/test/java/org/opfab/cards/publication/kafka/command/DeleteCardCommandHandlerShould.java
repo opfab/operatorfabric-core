@@ -68,7 +68,7 @@ class DeleteCardCommandHandlerShould {
         Card cardMock = mock(Card.class);
         when(cardCommandMock.getCard()).thenReturn(cardMock);
         when(objectMapper.writeValueAsString(any())).thenReturn("");
-        when(objectMapper.readValue(anyString(), eq(CardPublicationData.class))).thenReturn(cardPublicationDataMock);
+        when(objectMapper.readCardPublicationDataValue(anyString())).thenReturn(cardPublicationDataMock);
         when(services.getCardProcessingService()).thenReturn(cardProcessingService);
         cut.executeCommand(cardCommandMock);
 

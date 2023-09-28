@@ -115,7 +115,7 @@ export class MapComponent implements OnInit, OnDestroy, AfterViewChecked {
         const marginBottom = 30;
         const mapTemplate = document.getElementById('ol-map');
 
-        if (!!mapTemplate && !!this.map) {
+        if (mapTemplate && this.map) {
             const diffWindow = mapTemplate.getBoundingClientRect();
             const mapTemplateHeight = window.innerHeight - (diffWindow.top + marginBottom);
             if (mapTemplate.style.height !== `${mapTemplateHeight}px`) {
@@ -127,7 +127,7 @@ export class MapComponent implements OnInit, OnDestroy, AfterViewChecked {
 
     private highlightFeature(lightCardId: string, highlight: boolean) {
         const mapTemplate = document.getElementById('ol-map');
-        if (!!mapTemplate && !!this.map) {
+        if (mapTemplate && this.map) {
             if (this.vectorLayer.getSource().getFeatures().length > 0) {
                 const features = this.vectorLayer.getSource().getFeatures();
                 features.forEach((feature) => {
@@ -491,7 +491,7 @@ export class MapComponent implements OnInit, OnDestroy, AfterViewChecked {
     }
 
     private updateGraphChart(chart, data) {
-        if (chart != null && chart.data != null) {
+        if (chart?.data) {
             chart.data.datasets.forEach((dataset) => {
                 dataset.data = data;
             });

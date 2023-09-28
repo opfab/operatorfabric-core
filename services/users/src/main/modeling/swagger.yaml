@@ -1,7 +1,7 @@
 swagger: '2.0'
 info:
   description: IMPORTANT - The Try it Out button will generate curl requests for examples, but executing them through the UI will not work as authentication has not been set up. This page is for documentation only.
-  version: 3.15.0.RELEASE
+  version: 4.0.0.RELEASE
   title: User Management
   termsOfService: ''
   contact:
@@ -34,6 +34,8 @@ definitions:
       firstName:
         type: string
       lastName:
+        type: string
+      comment:
         type: string
       groups:
         type: array
@@ -150,11 +152,9 @@ definitions:
     description: |-
       Different rights possible >
       * Receive: Only receive rights (receiving card)
-      * Write: Write rights (creating new card)
       * ReceiveAndWrite: Receive and write rights (receiving card and creating new card)
     enum:
       - Receive
-      - Write
       - ReceiveAndWrite
   StateRight:
     type: object
@@ -199,9 +199,6 @@ definitions:
       login:
         type: string
         description: User login
-      description:
-        type: string
-        description: 'Free user description label (ex: organization role)'
       locale:
         type: string
         description: User using browser format
@@ -219,16 +216,16 @@ definitions:
         description: If this is set to true, a sound will be played for incoming cards with INFORMATION severity.
       systemNotificationAlarm:
         type: boolean
-        description: If this is set to true, a notification will be send for incoming cards with ALARM severity.
+        description: If this is set to true, a notification will be sent for incoming cards with ALARM severity.
       systemNotificationAction:
         type: boolean
-        description: If this is set to true, a notification will be send for incoming cards with ACTION severity.
+        description: If this is set to true, a notification will be sent for incoming cards with ACTION severity.
       systemNotificationCompliant:
         type: boolean
-        description: If this is set to true, a notification will be send for incoming cards with COMPLIANT severity.
+        description: If this is set to true, a notification will be sent for incoming cards with COMPLIANT severity.
       systemNotificationInformation:
         type: boolean
-        description: If this is set to true, a notification will be send for incoming cards with INFORMATION severity.
+        description: If this is set to true, a notification will be sent for incoming cards with INFORMATION severity.
       playSoundOnExternalDevice:
         type: boolean
         description: |-
@@ -255,11 +252,27 @@ definitions:
           description: List of process states for which the user will not be notified
           items:
             type: string
+      processesStatesNotifiedByEmail:
+        type: object
+        description: Indicates for which process states the user will be notified by email
+        additionalProperties:
+          type: array
+          description: List of process states for which the user will be notified by email
+          items:
+            type: string
       entitiesDisconnected:
         description: Entities not represented by the user for his current session
         type: array
         items:
           type: string
+          description: Entities not represented by the user for his current session
+      sendCardsByEmail:
+        type: boolean
+        description: |-
+          If this is set to true, Opfab will send unread cards notification by email
+      email:
+        type: string
+        description: Email address to use as recipient for email notifications
     required:
       - login
     example:
@@ -286,6 +299,21 @@ definitions:
           description: List of process states for which the user will not be notified
           items:
             type: string
+      processesStatesNotifiedByEmail:
+        type: object
+        description: Indicates for which process states the user will be notified by email
+        additionalProperties:
+          type: array
+          description: List of process states for which the user will be notified by email
+          items:
+            type: string
+      sendCardsByEmail:
+        type: boolean
+        description: |-
+          If this is set to true, Opfab will send unread cards notification by email
+      email:
+        type: string
+        description: Email address to use as recipient for email notifications
       permissions:
         type: array
         items:
@@ -1654,6 +1682,48 @@ paths:
       summary: Get information about the user connected and his perimeters
       description: 'Get information about the user connected and his perimeters.'
       operationId: fetchCurrentUserWithPerimeters
+      produces:
+        - application/json
+      responses:
+        '200':
+          description: OK
+          schema:
+            type: object
+            $ref: '#/definitions/CurrentUserWithPerimeters'
+          examples:
+            application/json:
+              userData:
+                login: jcleese
+                firstName: John
+                lastName: Cleese
+                groups:
+                  - MONTY
+                  - WANDA
+                entities:
+                  - ENITY1
+                  - ENTITY2
+              computedPerimeters:
+                - process: Process1
+                  state: State1
+                  rights: Receive
+                - process: Process1
+                  state: State2
+                  rights: ReceiveAndWrite
+        '401':
+          description: Authentication required
+  /UserWithPerimeters/{login}:
+    get:
+      tags:
+        - users
+      summary: Get information about a user and his perimeters
+      description: 'Get information about a user and his perimeters.'
+      operationId: fetchUserWithPerimeters
+      parameters:
+        - in: path
+          name: login
+          description: user login
+          type: string
+          required: true
       produces:
         - application/json
       responses:

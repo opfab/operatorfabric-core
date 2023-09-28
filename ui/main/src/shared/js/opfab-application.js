@@ -1,4 +1,4 @@
-/* Copyright (c) 2022, RTE (http://www.rte-france.com)
+/* Copyright (c) 2022-2023, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -36,7 +36,8 @@ const opfabStyle = {
     },
 
 
-    DAY_STYLE : `:root { --opfab-bgcolor: white;
+    DAY_STYLE : `:root { 
+        --opfab-bgcolor: white;
         --opfab-bgcolor-darker: #F3F2F1;
         --opfab-font-family: 'Open Sans', sans-serif;
         --opfab-text-color: black;
@@ -47,6 +48,8 @@ const opfabStyle = {
         --opfab-form-border-color:  #9C9B9B;
         --opfab-button-disable-bgcolor: #DBDBDB;
         --opfab-popover-bgcolor: #f3f2f1;
+        --opfab-tooltip-template-bgcolor: white;
+        --opfab-tooltip-template-bgcolor-for-form-lighter: #F3F2F1;
         --opfab-feedbar-icon-color: black;
         --opfab-feedbar-icon-hover-color:#212529;
         --opfab-feedbar-icon-hover-bgcolor: #F3F2F1;
@@ -110,6 +113,8 @@ const opfabStyle = {
         --opfab-form-label-text-color: #bababa;
         --opfab-button-disable-bgcolor: #2B353F;
         --opfab-popover-bgcolor: #182638;
+        --opfab-tooltip-template-bgcolor: #182638;
+        --opfab-tooltip-template-bgcolor-for-form-lighter: #182638;
         --opfab-feedbar-icon-color: white;
         --opfab-feedbar-icon-hover-color:white;
         --opfab-feedbar-icon-hover-bgcolor:#131D2B;

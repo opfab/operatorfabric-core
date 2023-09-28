@@ -12,7 +12,7 @@ import {ConfigService} from 'app/business/services/config.service';
 import {Card} from '@ofModel/card.model';
 import {LightCard} from '@ofModel/light-card.model';
 import {AbstractControl, FormGroup} from '@angular/forms';
-import {ProcessesService} from 'app/business/services/processes.service';
+import {ProcessesService} from 'app/business/services/businessconfig/processes.service';
 import {debounceTime, takeUntil} from 'rxjs/operators';
 import {Subject} from 'rxjs';
 import {NgbDateStruct, NgbTimeStruct} from '@ng-bootstrap/ng-bootstrap';
@@ -22,8 +22,8 @@ import {MultiSelectOption} from '@ofModel/multiselect.model';
 import {MessageLevel} from '@ofModel/message.model';
 import moment from 'moment';
 import {Utilities} from 'app/business/common/utilities';
-import {UserPreferencesService} from 'app/business/services/user-preference.service';
-import {UserService} from 'app/business/services/user.service';
+import {UserPreferencesService} from 'app/business/services/users/user-preference.service';
+import {UserService} from 'app/business/services/users/user.service';
 import {PermissionEnum} from '@ofModel/permission.model';
 import {AlertMessageService} from 'app/business/services/alert-message.service';
 
@@ -200,7 +200,7 @@ export class ArchivesLoggingFiltersComponent implements OnInit, OnDestroy, After
             processesIds.includes(visibleProcess.value)
         );
 
-        if (!!this.tags) {
+        if (this.tags) {
             this.tags.forEach((tag) => this.tagsMultiSelectOptions.push(new MultiSelectOption(tag.value, tag.label)));
         }
         this.setDefaultPublishDateFilter();
@@ -275,7 +275,7 @@ export class ArchivesLoggingFiltersComponent implements OnInit, OnDestroy, After
 
     changeProcessesWhenSelectProcessGroup(): void {
         this.parentForm.get('processGroup').valueChanges.subscribe((selectedProcessGroups) => {
-            if (!!selectedProcessGroups && selectedProcessGroups.length > 0) {
+            if (selectedProcessGroups?.length > 0) {
                 this.processMultiSelectOptionsWhenSelectedProcessGroup = [];
                 selectedProcessGroups.forEach((processGroup) => {
                     if (processGroup === '--')
@@ -291,7 +291,7 @@ export class ArchivesLoggingFiltersComponent implements OnInit, OnDestroy, After
         this.parentForm.get('process').valueChanges.subscribe((selectedProcesses) => {
             this.stateSelected = [];
             this.stateMultiSelectOptions = [];
-            if (!!selectedProcesses && selectedProcesses.length > 0) {
+            if (selectedProcesses?.length > 0) {
                 this.statesMultiSelectOptionsPerProcesses.forEach((processStates) => {
                     if (selectedProcesses.includes(processStates.value)) {
                         this.stateMultiSelectOptions.push(processStates);
@@ -302,20 +302,20 @@ export class ArchivesLoggingFiltersComponent implements OnInit, OnDestroy, After
     }
 
     isProcessGroupFilterVisible(): boolean {
-        return !!this.processGroupMultiSelectOptions && this.processGroupMultiSelectOptions.length > 1;
+        return this.processGroupMultiSelectOptions?.length > 1;
     }
 
     isThereProcessGroup(): boolean {
-        return !!this.processesGroups && this.processesGroups.size > 0;
+        return this.processesGroups?.size > 0;
     }
 
     isThereOnlyOneProcessGroupInDropdownList(): boolean {
-        return !!this.processGroupMultiSelectOptions && this.processGroupMultiSelectOptions.length === 1;
+        return this.processGroupMultiSelectOptions?.length === 1;
     }
 
     isThereProcessStateToDisplay(): boolean {
-        return !!this.processMultiSelectOptions && this.processMultiSelectOptions.length > 0 &&
-               !!this.statesMultiSelectOptionsPerProcesses && this.statesMultiSelectOptionsPerProcesses.length > 0;
+        return this.processMultiSelectOptions?.length > 0 &&
+               this.statesMultiSelectOptionsPerProcesses?.length > 0;
     }
 
     setDefaultPublishDateFilter() {
@@ -381,6 +381,7 @@ export class ArchivesLoggingFiltersComponent implements OnInit, OnDestroy, After
     }
 
     resetForm() {
+        this.reset.emit(null);
         this.tagsSelected = [];
         this.processGroupSelected = [];
         this.processSelected = [];
@@ -390,7 +391,6 @@ export class ArchivesLoggingFiltersComponent implements OnInit, OnDestroy, After
         this.activeMinDate = null;
         this.activeMaxDate = null;
         this.setDateFilterBounds();
-        this.reset.emit(null);
     }
 
     ngOnDestroy() {

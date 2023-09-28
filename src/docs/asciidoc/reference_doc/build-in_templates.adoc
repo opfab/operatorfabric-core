@@ -1,0 +1,151 @@
+// Copyright (c) 2023 RTE (http://www.rte-france.com)
+// See AUTHORS.txt
+// This document is subject to the terms of the Creative Commons Attribution 4.0 International license.
+// If a copy of the license was not distributed with this
+// file, You can obtain one at https://creativecommons.org/licenses/by/4.0/.
+// SPDX-License-Identifier: CC-BY-4.0
+
+= Build-in templates
+
+Instead of coding you own templates for cards or user cards, you can use opfab build-in templates if it suits your needs. 
+
+== Message
+
+=== Card template
+
+If you want to show only a simple message, you can use the message build-in template, to do that just put in your handlebar file :
+
+```
+<opfab-message-card> </opfab-message-card>
+
+```
+
+The build-in template supposes the message is stored in the card in field `data.message`.
+
+
+You can change the text header by providing the message-header attribute: 
+
+```
+<opfab-message-card  message-header="a new header"> </opfab-message-card>
+```
+
+=== User card template 
+
+
+If you want to create a user card for a simple message, just add in your handlebar file : 
+
+```
+<opfab-message-usercard> </opfab-message-usercard>
+
+```
+The message will be stored in the field `data.message` of the card 
+
+By using attributes you can set some parameters regarding recipients, see 
+ifdef::single-page-doc[<<'build-in_templates_common_usercard_attributes,common attributes for user cards'>>]
+ifndef::single-page-doc[<</documentation/current/reference_doc/index.adoc#build-in_templates_common_usercard_attributes, common attributes for user cards>>]
+
+== Question 
+
+=== Card template
+
+If you want to show a question and see user responses, you can use the question build-in template, to do that just put in your handlebar file:
+
+```
+<opfab-question-card> </opfab-question-card>
+
+```
+
+The build-in template supposes the question is stored in the card in the field `data.question`.
+
+
+=== User card template 
+
+
+If you want to create a user card for a simple question, just add in your handlebar file : 
+
+```
+<opfab-question-usercard> </opfab-question-usercard>
+
+```
+The question will be stored in the field `data.question` of the card 
+
+By using attributes you can set some parameters regarding recipients, see 
+ifdef::single-page-doc[<<'build-in_templates_common_usercard_attributes,common attributes for user cards'>>]
+ifndef::single-page-doc[<</documentation/current/reference_doc/index.adoc#build-in_templates_common_usercard_attributes, common attributes for user cards>>]
+
+== Message Or Question List 
+
+=== Card template
+
+If you want to show a message or a question and the answers, you can use the message or question list build-in template, to do that just put in your handlebar file:
+
+```
+<opfab-message-or-question-list-card> </opfab-message-or-question-list-card>
+
+```
+
+The build-in template supposes the message or question is stored in the card in the field `data.message`.
+
+
+=== User card template 
+
+
+If you want to create a user card where you can select a list of messages or questions linked to a json file, just add in your handlebar file : 
+
+```
+<opfab-message-or-question-list-usercard businessData="businessDataFileName"> </opfab-message-or-question-list-usercard>
+
+```
+The message will be stored in the field `data.message` of the card
+You need to set the json file name with the `businessData` attribute
+If you want to use the template as is, the json file must follow this structure :
+
+`{   "possibleRecipients": [
+    {"id": "ENTITY1_FR"},
+    {"id": "ENTITY2_FR"}
+    ],
+
+    "messagesList": [{
+        "id": "Warning",
+        "title": "Warning about the state of the grid",
+        "message": "A problem has been detected, please put maintenance work on hold and be on stand by",
+        "question": false,
+        "recipients" : [
+            "ENTITY1_FR",
+            "ENTITY2_FR"
+        ]
+    },
+    {
+        "id": "Confirmation",
+        "title": "Confirmation the issues have been fixed",
+        "message": "Please confirm the issues in your area have been fixed",
+        "question": true,
+        "recipients" : [
+            "ENTITY1_FR"
+        ]
+    }]
+
+}`
+
+
+[[build-in_templates_common_usercard_attributes]]
+== Common attributes for user cards build-in templates 
+
+For each user card templates, you can set : 
+
+- The entity recipient list 
+- The initial selected recipients 
+- The entity recipient for information list 
+- The initial selected recipients for information
+- The external recipients
+
+For example :
+```
+<opfab-message-usercard
+    entityRecipientList='[{"id": "ENTITY_FR", "levels": [0, 1]}, {"id": "ENTITY_IT"},{"id": "IT_SUPERVISOR_ENTITY"}]'
+    initialSelectedRecipients='["ENTITY1_FR", "ENTITY2_FR", "ENTITY3_FR"]'
+    entityRecipientForInformationList='[{"id": "ENTITY_FR", "levels": [0, 1]},{"id": "IT_SUPERVISOR_ENTITY"}]'
+    initialSelectedRecipientsForInformation='["ENTITY4_FR"]'
+    externalRecipients='["externalRecipient1", "externalRecipient2"]'>
+</opfab-message-usercard>
+```

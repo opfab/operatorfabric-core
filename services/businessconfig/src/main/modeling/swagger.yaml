@@ -1,7 +1,7 @@
 swagger: '2.0'
 info:
   description: IMPORTANT - The Try it Out button will generate curl requests for examples, but executing them through the UI will not work as authentication has not been set up. This page is for documentation only.
-  version: 3.15.0.RELEASE
+  version: 4.0.0.RELEASE
   title: BusinessConfig Management
   termsOfService: ''
   contact:
@@ -16,11 +16,18 @@ schemes:
 paths:
   /businessconfig/processes:
     get:
-      summary: List latest version of existing processes
-      description: List latest version of existing processes
+      summary: List existing processes.
+      description: List existing processes. If the query parameter allVersions is absent or set to false, only the latest
+        version of the processes will be returned.
       operationId: getProcesses
       produces:
         - application/json
+      parameters:
+        - name: allVersions
+          in: query
+          required: false
+          description: If true, all versions of processes will be returned.
+          type: boolean
       responses:
         '200':
           description: OK
@@ -549,6 +556,9 @@ definitions:
             editCardEnabledOnUserInterface:
               type: boolean
               description: Show or hide card edit button
+            copyCardEnabledOnUserInterface:
+              type: boolean
+              description: Show or hide card copy button
             deleteCardEnabledOnUserInterface:
               type: boolean
               description: Show or hide card delete button
@@ -685,11 +695,9 @@ definitions:
     description: |-
       This field is used to define how a card is considered as acknowledged in the feed. >
       * USER_HAS_ACKNOWLEDGED - For the card to appear acknowledged in the feed, it suffices that the user acknowledges it 
-      * ONE_ENTITY_OF_USER_HAS_ACKNOWLEDGED - For the card to appear acknowledged in the feed, one (or more) entity(ies) of the user must acknowledge it 
       * ALL_ENTITIES_OF_USER_HAVE_ACKNOWLEDGED - For the card to appear acknowledged in the feed, all the entities of the user must acknowledge it
     enum:
       - UserHasAcknowledged
-      - OneEntityOfUserHasAcknowledged
       - AllEntitiesOfUserHaveAcknowledged
 
   ShowAcknowledgmentFooterEnum:
@@ -744,6 +752,10 @@ definitions:
     properties:
       screenName:
         type: string
+      onlyDisplayUsersInGroups:
+        type: array
+        items:
+          type: string
       screenColumns:
         type: array
         items:

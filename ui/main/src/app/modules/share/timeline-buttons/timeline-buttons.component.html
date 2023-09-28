@@ -1,4 +1,4 @@
-<!-- Copyright (c) 2022, RTE (http://www.rte-france.com)              -->
+<!-- Copyright (c) 2022-2023, RTE (http://www.rte-france.com)              -->
 <!-- See AUTHORS.txt                                                       -->
 <!-- This Source Code Form is subject to the terms of the Mozilla Public   -->
 <!-- License, v. 2.0. If a copy of the MPL was not distributed with this   -->
@@ -8,7 +8,7 @@
 
 <div class="opfab-menu-timeline">
     <div *ngIf='hideTimeLine || isMonitoringScreen' class="opfab-business-period">
-      <span translate>timeline.businessPeriod</span> : {{startDateForBusinessPeriodDisplay}} &#45;&#45; {{endDateForBusinessPeriodDisplay}}
+      <span translate>timeline.businessPeriod</span> : {{startDateForBusinessPeriodDisplay}}<span *ngIf='this.currentDomainId != "J"'> &#45;&#45;  {{endDateForBusinessPeriodDisplay}} </span>
     </div>
 
 
@@ -36,9 +36,9 @@
 
         <li style="width:1.5em;cursor: pointer">
           <span *ngIf="isTimelineLocked()" id="opfab-timeline-unlock" class="fas fa-lock" (click)="unlockTimeline()"
-                [ngbPopover]="tipLockedTimeline" popoverClass="opfab-popover" placement="left" container="body" triggers="mouseenter:mouseleave"></span>
-          <span *ngIf="!isTimelineLocked()" id="opfab-timeline-lock" class="fas fa-lock-open" (click)="lockTimeline()" 
-                [ngbPopover]="tipUnlockedTimeline" popoverClass="opfab-popover" placement="left" container="body" triggers="mouseenter:mouseleave"></span>
+                [ngbPopover]="tipLockedTimeline" popoverClass="opfab-popover-unclickable" placement="left" container="body" triggers="mouseenter:mouseleave"></span>
+          <span *ngIf="!isTimelineLocked()" id="opfab-timeline-lock" class="fas fa-lock-open" (click)="lockTimeline()"
+                [ngbPopover]="tipUnlockedTimeline" popoverClass="opfab-popover-unclickable" placement="left" container="body" triggers="mouseenter:mouseleave"></span>
 
           <ng-template #tipLockedTimeline>
             <span id="opfab-timeline-lock-popover" translate>timeline.lockTooltip</span>

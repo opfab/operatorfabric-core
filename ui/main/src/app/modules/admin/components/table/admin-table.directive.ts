@@ -15,28 +15,46 @@ import {NgbModal, NgbModalOptions} from '@ng-bootstrap/ng-bootstrap';
 import {Subject, throwError} from 'rxjs';
 import {ConfirmationDialogService} from '../../services/confirmation-dialog.service';
 import {CrudService} from 'app/business/services/crud-service';
-import {ActionCellRendererComponent} from '../cell-renderers/action-cell-renderer.component';
+import {ActionButton, ActionCellRendererComponent} from '../cell-renderers/action-cell-renderer.component';
 import {EntityCellRendererComponent} from '../cell-renderers/entity-cell-renderer.component';
 import {GroupCellRendererComponent} from '../cell-renderers/group-cell-renderer.component';
 import {AdminItemType, SharingService} from '../../services/sharing.service';
 import {takeUntil} from 'rxjs/operators';
 import {StateRightsCellRendererComponent} from '../cell-renderers/state-rights-cell-renderer.component';
-import {ProcessesService} from 'app/business/services/processes.service';
+import {ProcessesService} from 'app/business/services/businessconfig/processes.service';
 import {Process} from '@ofModel/processes.model';
-import {GroupsService} from 'app/business/services/groups.service';
+import {GroupsService} from 'app/business/services/users/groups.service';
 import {Group} from '@ofModel/group.model';
 import {Entity} from '@ofModel/entity.model';
-import {EntitiesService} from 'app/business/services/entities.service';
+import {EntitiesService} from 'app/business/services/users/entities.service';
 import {PerimetersCellRendererComponent} from '../cell-renderers/perimeters-cell-renderer.component';
 import {ExcelExport} from 'app/business/common/excel-export';
+import {saveAs} from 'file-saver-es';
 import {IdCellRendererComponent} from '../cell-renderers/id-cell-renderer.component';
 import {ArrayCellRendererComponent} from '../cell-renderers/array-cell-renderer.component';
+import {BusinessDataService} from 'app/business/services/businessconfig/businessdata.service';
+
+
+export class ActionColumn {
+    colId: any;
+    type: any;
+    headerClass: any;
+    cellStyle: any;
+    maxWidth: any;
+    cellClassRules:any;
+    constructor( colId: string) {
+        this.colId = colId;
+        this.type= 'actionColumn';
+        this.headerClass= 'action-cell-column-header';
+        this.cellStyle= {'padding-left': '0', 'padding-right': '0'};
+        this.maxWidth= 50;
+    }
+}
 
 @Directive()
 @Injectable()
 export abstract class AdminTableDirective implements OnInit, OnDestroy {
-
-    showEditButton = true;
+    actionButtonsDisplayed: any;
     showAddButton = true;
     processesDefinition: Process[];
     groupsDefinition: Group[];
@@ -48,7 +66,6 @@ export abstract class AdminTableDirective implements OnInit, OnDestroy {
     // (e.g. EntitiesTableComponent) as they depend on the type of the table
     /** Modal component to open when editing an item from the table (e.g. `EditEntityGroupModal`) */
     public editModalComponent;
- 
 
     /** Type of data managed by the table (e.g. `AdminItemType.ENTITY`) */
     protected tableType: AdminItemType;
@@ -63,7 +80,6 @@ export abstract class AdminTableDirective implements OnInit, OnDestroy {
     public rowData: any[];
     public page = 1;
 
-        
     protected static defaultEditionModalOptions: NgbModalOptions = {
         backdrop: 'static', // Modal shouldn't close even if we click outside it
         size: 'lg'
@@ -81,7 +97,8 @@ export abstract class AdminTableDirective implements OnInit, OnDestroy {
         protected dataHandlingService: SharingService,
         protected processesService: ProcessesService,
         protected groupsService: GroupsService,
-        protected entitiesService: EntitiesService
+        protected entitiesService: EntitiesService,
+        protected businessDataService: BusinessDataService
     ) {
         this.processesDefinition = this.processesService.getAllProcesses();
         this.gridOptions = <GridOptions>{
@@ -118,7 +135,7 @@ export abstract class AdminTableDirective implements OnInit, OnDestroy {
                     wrapText: true,
                     autoHeight: true,
                     flex: 4
-                },
+                }
             },
             getLocaleText: function (params) {
                 // To avoid clashing with opfab assets, all keys defined by ag-grid are prefixed with "ag-grid."
@@ -173,18 +190,17 @@ export abstract class AdminTableDirective implements OnInit, OnDestroy {
 
         // Create data columns from fields
         let columnDefs: ColDef[];
-        columnDefs = new Array(fields.length + 2); // +2 because 2 action columns (see below)
+        columnDefs = new Array(fields.length);
 
         fields.forEach((field: Field, index: number) => {
             const columnDef = {
                 type: field.type,
                 headerName: i18nPrefixForHeader + field.name,
                 field: field.name
-                
             };
-            if (!!field.flex) columnDef['flex'] = field.flex;
-            if (!!field.cellRendererName) columnDef['cellRenderer'] = field.cellRendererName;
-            if (!!field.valueFormatter) {
+            if (field.flex) columnDef['flex'] = field.flex;
+            if (field.cellRendererName) columnDef['cellRenderer'] = field.cellRendererName;
+            if (field.valueFormatter) {
                 columnDef['valueFormatter'] = field.valueFormatter;
             }
             columnDefs[index] = columnDef;
@@ -197,30 +213,33 @@ export abstract class AdminTableDirective implements OnInit, OnDestroy {
                 (params.context.componentParent.tableType === AdminItemType.GROUP &&
                     params.data.id.toLowerCase() === 'admin')
         };
-        
-        // Add action columns
-        const edit_col = {
-            colId: 'edit',
-            type: 'actionColumn',
-            headerClass:'action-cell-column-header',
-            cellStyle: {'padding-left': '0', 'padding-right': '0'},
-            maxWidth: 50,
-        };
-        const delete_col = {
-            colId: 'delete',
-            type: 'actionColumn',
-            headerClass:'action-cell-column-header',
-            cellStyle: {'padding-left': '0', 'padding-right': '0'},
-            maxWidth: 50,
-            cellClassRules: deleteActionCellClassRules
-        };
-        if (this.showEditButton) {
-            columnDefs[fields.length] = edit_col;
-            columnDefs[fields.length +1] = delete_col;
-        } else {
-            columnDefs[fields.length] = delete_col;
-            columnDefs.pop();
-        };
+
+        // Add action columns 
+        const edit_col = new ActionColumn('edit');
+        const delete_col = new ActionColumn('delete');
+        delete_col.cellClassRules = deleteActionCellClassRules;
+        const update_col = new ActionColumn('update');
+        const download_col = new ActionColumn('download');
+
+        this.actionButtonsDisplayed.forEach((actionButton) => {
+            switch (actionButton) {
+                case ActionButton.UPDATE:
+                    columnDefs.push(update_col);
+                    break;
+                case ActionButton.DOWNLOAD:
+                    columnDefs.push(download_col);
+                    break;
+
+                case ActionButton.DELETE:
+                    columnDefs.push(delete_col);
+                    break;
+                case ActionButton.EDIT:
+                    columnDefs.push(edit_col);
+                    break;
+                default:
+                    return;
+            }
+        });
 
         return columnDefs;
     }
@@ -252,6 +271,20 @@ export abstract class AdminTableDirective implements OnInit, OnDestroy {
         if (columnId === 'delete') {
             this.openDeleteConfirmationDialog(params.data);
         }
+        if (columnId === 'download') {
+            let fileName = params.data[this.idField];
+            this.businessDataService.getBusinessData(fileName).then(
+                resource =>{
+                    let fileToSave = new Blob([JSON.stringify(resource, undefined, 2)], {
+                        type: 'application/json;charset=UTF-8'
+                    });
+                    saveAs(fileToSave, fileName);
+                }
+            );
+        }
+        if (columnId === 'update') {
+            this.updateItem();
+        }
     }
 
     openDeleteConfirmationDialog(row: any): any {
@@ -278,21 +311,55 @@ export abstract class AdminTableDirective implements OnInit, OnDestroy {
     }
 
     createNewItem(): void {
-        const modalRef = this.modalService.open(this.editModalComponent, this.modalOptions);
-        modalRef.componentInstance.type = this.tableType;
-        modalRef.result.then(
-            // Hooking the refresh of the data to the closing of the modal seemed simpler than setting up
-            // NGRX actions and effects for this sole purpose
-            () => {
-                // If modal is closed
-                this.refreshData(); // This refreshes the data when the modal is closed after a change
-                // Data creation doesn't need to be propagated to the user table
-            },
-            () => {
-                // If modal is dismissed (by clicking the "close" button, the top right cross icon
-                // or clicking outside the modal, there is no need to refresh the data
-            }
-        );
+        if (this.tableType === AdminItemType.BUSINESSDATA) {
+            document.getElementById("fileUploader").click()
+        } else {
+            const modalRef = this.modalService.open(this.editModalComponent, this.modalOptions);
+            modalRef.componentInstance.type = this.tableType;
+            modalRef.result.then(
+                // Hooking the refresh of the data to the closing of the modal seemed simpler than setting up
+                // NGRX actions and effects for this sole purpose
+                () => {
+                    // If modal is closed
+                    this.refreshData(); // This refreshes the data when the modal is closed after a change
+                    // Data creation doesn't need to be propagated to the user table
+                },
+                () => {
+                    // If modal is dismissed (by clicking the "close" button, the top right cross icon
+                    // or clicking outside the modal, there is no need to refresh the data
+                }
+            );
+        }
+    }
+
+    updateItem(): void {
+        document.getElementById("fileUpdater").click()
+    }
+
+    onFileSelected(event) {
+        const file: File = event.target.files[0];
+        if (file) {
+            this.uploadFile(file)
+        }
+    }
+
+    uploadFile(file: File, resourceName?: string) {
+        let read = new FileReader();
+        const formData = new FormData();
+        formData.append("file", file);
+        read.readAsBinaryString(file);
+        let fileName = file.name;
+
+        if (resourceName !== undefined) {
+            fileName = resourceName;
+        } 
+
+        read.onload = (e) => {
+            this.businessDataService.updateBusinessData(fileName, formData).subscribe( () => {
+                this.refreshData();
+            });
+        }
+        
     }
 
     refreshData() {
@@ -320,11 +387,11 @@ export abstract class AdminTableDirective implements OnInit, OnDestroy {
         this.unsubscribe$.complete();
     }
 
-    private getDataForExportFile() : Array<any> {
+    private getDataForExportFile(): Array<any> {
         const exportData = [];
 
         this.gridApi.rowModel.rowsToDisplay.forEach((line) => {
-            if (typeof line !== undefined) {
+            if (line) {
                 const item = {};
                 this.fields.forEach((field) => {
                     if (Array.isArray(line.data[field.name]))
@@ -383,10 +450,10 @@ export abstract class AdminTableDirective implements OnInit, OnDestroy {
         return JSON.stringify(arr);
     }
 
-    removeSquareBraketsInArrayAsString(arrayAsString: string) : string{
+    removeSquareBraketsInArrayAsString(arrayAsString: string): string {
         if (arrayAsString.length > 1) {
-              arrayAsString = arrayAsString.substring(1,arrayAsString.length -1)
-          }
+            arrayAsString = arrayAsString.substring(1, arrayAsString.length - 1);
+        }
         return arrayAsString;
     }
 }
@@ -402,7 +469,13 @@ export class Field {
    @param flex: Sets the column size relative to others
    @param cellRendererName: needs to match one of the renderers defined under `components` in the `gridOptions` above.
    * */
-    constructor(name: string, flex?: number, cellRendererName?: string, valueFormatter?: any, type: string='dataColumn') {
+    constructor(
+        name: string,
+        flex?: number,
+        cellRendererName?: string,
+        valueFormatter?: any,
+        type: string = 'dataColumn'
+    ) {
         this.name = name;
         this.flex = flex;
         this.cellRendererName = cellRendererName;

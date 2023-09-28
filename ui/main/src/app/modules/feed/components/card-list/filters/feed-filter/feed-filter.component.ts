@@ -13,7 +13,7 @@ import {AbstractControl, FormControl, FormGroup} from '@angular/forms';
 import {debounce, debounceTime, distinctUntilChanged, takeUntil} from 'rxjs/operators';
 import * as _ from 'lodash-es';
 import {FilterType} from '@ofModel/feed-filter.model';
-import {UserPreferencesService} from 'app/business/services/user-preference.service';
+import {UserPreferencesService} from 'app/business/services/users/user-preference.service';
 
 import {DateTimeNgb} from '@ofModel/datetime-ngb.model';
 import moment from 'moment';
@@ -54,8 +54,8 @@ export class FeedFilterComponent implements OnInit, OnDestroy {
         notAckControl: FormControl<boolean | null>;
     }>;
     timeFilterForm: FormGroup<{
-        dateTimeFrom: FormControl<any | null>;
-        dateTimeTo: FormControl<any | null>;
+        dateTimeFrom: FormControl<any>;
+        dateTimeTo: FormControl<any>;
     }>;
     responseFilterForm: FormGroup<{
         responseControl: FormControl<boolean | null>;
@@ -124,8 +124,8 @@ export class FeedFilterComponent implements OnInit, OnDestroy {
 
     private createDateTimeForm() {
         return new FormGroup({
-            dateTimeFrom: new FormControl<any | null>(''),
-            dateTimeTo: new FormControl<any | null>('')
+            dateTimeFrom: new FormControl<any>(''),
+            dateTimeTo: new FormControl<any>('')
         });
     }
 

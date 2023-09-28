@@ -55,6 +55,18 @@ Cypress.Commands.add('setFormDateTime', (formName, year, month, day, hours, minu
         .type('{backspace}{backspace}' + minutes);
 });
 
+Cypress.Commands.add('upload_file', (fileName, fileType = ' ', selector) => {
+    cy.get(selector).then(subject => {
+        cy.fixture(fileName, 'base64').then(content => {
+            const el = subject[0];
+            const testFile = new File([content], fileName, { type: fileType });
+            const dataTransfer = new DataTransfer();
+            dataTransfer.items.add(testFile);
+            el.files = dataTransfer.files;
+        });
+    });
+});
+
 
 Cypress.Commands.add('loadMonitoringConfig', (config) => {
     cy.exec('cd .. && ./resources/monitoringConfig/loadMonitoringConfig.sh ' + config);

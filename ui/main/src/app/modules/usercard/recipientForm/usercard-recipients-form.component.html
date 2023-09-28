@@ -13,7 +13,7 @@
             [parentForm]="recipientForm"
             [config] = "multiSelectConfig"
             [options]="recipientsOptions"
-            [selectedOptions]="initialSelectedRecipients"
+            [selectedOptions]="selectedRecipients"
             (selectionChange)="recipientChoiceChanged($event)">    
     </of-multi-select>
     <div *ngIf="recipientForInformationVisible">
@@ -24,7 +24,7 @@
                 [parentForm]="recipientForm"
                 [config] = "multiSelectConfigForInformation"
                 [options]="recipientsForInformationOptions"
-                [selectedOptions]="initialSelectedRecipientsForInformation"
+                [selectedOptions]="selectedRecipientsForInformation"
                 (selectionChange)="recipientForInformationChoiceChanged($event)">
         </of-multi-select>
     </div>

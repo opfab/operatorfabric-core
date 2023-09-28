@@ -12,7 +12,7 @@ import {ICellRendererAngularComp} from 'ag-grid-angular';
 import {ICellRendererParams} from 'ag-grid-community';
 import {StateRight} from '@ofModel/perimeter.model';
 import {Process} from '@ofModel/processes.model';
-import {ProcessesService} from 'app/business/services/processes.service';
+import {ProcessesService} from 'app/business/services/businessconfig/processes.service';
 import {Utilities} from '../../../../business/common/utilities';
 
 @Component({
@@ -36,9 +36,9 @@ export class StateRightsCellRendererComponent implements ICellRendererAngularCom
         const currentProcessDef = this.processesDefinition.filter(
             (processDef) => processDef.id === params.data.process
         )[0];
-        if (!!currentProcessDef) {
+        if (currentProcessDef) {
             stateRightsValues.forEach((stateRight) => {
-                if (!!currentProcessDef.states.get(stateRight.state))
+                if (currentProcessDef.states.get(stateRight.state))
                     this._stateRightsValues.push({
                         stateName: currentProcessDef.states.get(stateRight.state).name,
                         stateRight: stateRight

@@ -48,6 +48,7 @@ Feature: uploadRealTimeScreens
     Then status 200
     And assert response.realTimeScreens.length == 1
     Then match response.realTimeScreens[0].screenName == 'All Control Centers'
+    Then match response.realTimeScreens[0].onlyDisplayUsersInGroups[0] == 'group1'
     Then assert response.realTimeScreens[0].screenColumns.length == 2
     Then assert response.realTimeScreens[0].screenColumns[0].entitiesGroups.length == 3
     Then match response.realTimeScreens[0].screenColumns[0].entitiesGroups[0].name == 'French Control Centers'

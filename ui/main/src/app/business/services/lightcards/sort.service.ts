@@ -1,4 +1,4 @@
-/* Copyright (c) 2021-2022, RTE (http://www.rte-france.com)
+/* Copyright (c) 2021-2023, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -103,7 +103,7 @@ export function compareByStartDate(card1: LightCard, card2: LightCard) {
 }
 
 export function compareByEndDate(card1: LightCard, card2: LightCard) {
-    const date1 = !!card1.endDate ? card1.endDate: card1.startDate;
-    const date2 = !!card2.endDate ? card2.endDate: card2.startDate;
+    const date1 = card1.endDate ? card1.endDate: card1.startDate;
+    const date2 = card2.endDate ? card2.endDate: card2.startDate;
     return date1 - date2;
 }

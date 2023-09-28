@@ -48,6 +48,10 @@ public class UserRepositoryImpl implements UserRepository {
     public Optional<User> findById(String id) {
         return mongoUserRepository.findById(id).map(User.class::cast);
     }
+    @Override
+    public Optional<User> findByLogin(String login) {
+        return mongoUserRepository.findByLogin(login).map(User.class::cast);
+    }
 
     @Override
     public void delete(User user) {

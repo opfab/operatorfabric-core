@@ -9,7 +9,7 @@
 
 import {Injectable} from '@angular/core';
 import {catchError, filter, map, switchMap} from 'rxjs';
-import {CardService} from '../card.service';
+import {CardService} from './card.service';
 import {SelectedCardService} from './selectedCard.service';
 
 @Injectable({

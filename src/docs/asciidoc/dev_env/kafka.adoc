@@ -1,4 +1,4 @@
-// Copyright (c) 2018-2022 RTE (http://www.rte-france.com)
+// Copyright (c) 2018-2023 RTE (http://www.rte-france.com)
 // See AUTHORS.txt
 // This document is subject to the terms of the Creative Commons Attribution 4.0 International license.
 // If a copy of the license was not distributed with this
@@ -14,7 +14,7 @@
 Next to publishing cards to OperatorFabric using the REST API, OperatorFabric also supports publishing cards via a Kafka Topic.
 In the default configuration Kafka is disabled.
 
-== Setup Kafka enviroment
+== Setup Kafka environment
 If you do not have a Kafka environment running you need to set one up so the Kafka consumers and producers can find each other.
 You can for example download link:{lense}[lenses.io] for an easy-to-use broker with a graphical interface. Another option is to add
 a free broker like a bitnami Kafka image to docker compose. To do so, add the following lines to `config/dev/docker-compose.yml` or
@@ -66,16 +66,17 @@ With the default settings, the Kafka consumer expects a broker running on http//
 Example settings for the cards-publication.yml file:
 [source,yaml]
 ----
-opfab:
-  kafka:
-    topics:
-      card:
-        topicname: opfab
-      response-card:
-        topicname: opfab-response
-    schema:
-      registry:
-        url: http://localhost:8081
+operatorfabric:
+  cards-publication:
+    kafka:
+      topics:
+        card:
+          topicname: opfab
+        response-card:
+          topicname: opfab-response
+      schema:
+        registry:
+          url: http://localhost:8081
 
 ----
 
@@ -174,14 +175,16 @@ convention to configure a REST endpoint. Instead of setting the 'http://host/api
 section from the cards-publication.yml file:
 [source, yaml]
 ----
-external-recipients:
-  recipents:
-    - id: "processAction"
-      url: "http://localhost:8090/test"
-      propagateUserToken: false
-    - id: "mykafka"
-      url: "kafka:topicname"
-      propagateUserToken: false
+operatorfabric:
+  cards-publication:
+    external-recipients:
+      recipents:
+        - id: "processAction"
+          url: "http://localhost:8090/test"
+          propagateUserToken: false
+        - id: "mykafka"
+          url: "kafka:topicname"
+          propagateUserToken: false
 ----
 
 Note that `topicname` is a placeholder for now. All response cards are returned via the same Kafka response topic, as specified in the `opfab.kafka.topics.response-card` field.

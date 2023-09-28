@@ -28,5 +28,5 @@ fi
 	cd ../realTimeScreens
 	./loadRealTimeScreens.sh realTimeScreens.json $url
 	cd ../businessData
-	./loadBusinessData.sh services $url
+	./loadAllBusinessData.sh $url
 )

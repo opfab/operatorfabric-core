@@ -43,11 +43,11 @@
       "right": "ReceiveAndWrite"
     },
     {
-      "state": "stateWithUserHasAcknowledged",
+      "state": "kitchenSinkDeprecated",
       "right": "ReceiveAndWrite"
     },
     {
-      "state": "stateWithOneEntityOfUserHasAcknowledged",
+      "state": "stateWithUserHasAcknowledged",
       "right": "ReceiveAndWrite"
     },
     {

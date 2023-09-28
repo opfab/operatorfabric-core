@@ -9,8 +9,8 @@
 
 import {Injectable} from '@angular/core';
 import {TranslateService} from '@ngx-translate/core';
-import {ProcessesService} from 'app/business/services/processes.service';
-import {UserService} from 'app/business/services/user.service';
+import {ProcessesService} from 'app/business/services/businessconfig/processes.service';
+import {UserService} from 'app/business/services/users/user.service';
 import {MultiSelectOption} from '@ofModel/multiselect.model';
 
 /** This class contains functions to get the list of process and states for filters in UI */

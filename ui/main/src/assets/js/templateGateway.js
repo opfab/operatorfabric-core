@@ -8,170 +8,183 @@
  */
 
 const templateGateway = {
-    opfabEntityNames: null,
-    opfabEntities: null,
-    childCards: [],
-    userAllowedToRespond: false,
-    userMemberOfAnEntityRequiredToRespond: false,
-    entitiesAllowedToRespond: [],
-    entityUsedForUserResponse: null,
-    displayContext: '',
-    isLocked: false,
-
-    setEntityNames: function (entityNames) {
-        this.opfabEntityNames = entityNames;
-    },
-
-    setEntities: function (entities) {
-        this.opfabEntities = entities;
-    },
-
-    // UTILITIES FOR TEMPLATE
+    
+    // UTILITIES FOR TEMPLATE - DEPRECATED
 
     getEntityName: function (entityId) {
-        if (!this.opfabEntityNames) {
-            console.log(new Date().toISOString(), ` Template.js : no entities information loaded`);
-            return entityId;
-        }
-        if (!this.opfabEntityNames.has(entityId)) {
-            console.log(new Date().toISOString(), ` Template.js : entityId ${entityId} is unknown`);
-            return entityId;
-        }
-        return this.opfabEntityNames.get(entityId);
+        console.warn(
+            new Date().toISOString(),
+            ' WARNING : Use of templateGateway.getEntityName is deprecated , you shall use opfab.users.entities.getEntityName instead'
+        );
+        return opfab.users.entities.getEntityName(entityId);
     },
 
     getEntity: function (entityId) {
-        if (!this.opfabEntities) {
-            console.log(new Date().toISOString(), ` Template.js : no entities information loaded`);
-            return entityId;
-        }
-        if (!this.opfabEntities.has(entityId)) {
-            console.log(new Date().toISOString(), ` Template.js : entityId ${entityId} is unknown`);
-            return entityId;
-        }
-        return this.opfabEntities.get(entityId);
+        console.warn(
+            new Date().toISOString(),
+            ' WARNING : Use of templateGateway.getEntity is deprecated , you shall use opfab.users.entities.getEntity instead'
+        );
+        return opfab.users.entities.getEntity(entityId);
     },
 
     getAllEntities: function () {
-        return Array.from(this.opfabEntities.values());
+        console.warn(
+            new Date().toISOString(),
+            ' WARNING : Use of templateGateway.getAllEntities is deprecated , you shall use opfab.users.entities.getAllEntities instead'
+        );
+        return opfab.users.entities.getAllEntities();
     },
 
     redirectToBusinessMenu: function (menuId, menuItemId, urlExtension) {
-        const urlSplit = document.location.href.split('#');
-        // WARNING : HACK
-        //
-        // When user makes a reload (for example via F5) or use a bookmark link, the browser encodes what is after #
-        // if user makes a second reload, the browser encodes again the encoded link
-        // and after if user reload again, this time it is not encoded anymore by the browser
-        // So it ends up with 3 possible links: a none encoded link, an encoded link or a twice encoding link
-        // and we have no way to know which one it is when processing the url
-        //
-        // To solve the problem we encode two times the url before giving it to the browser
-        // so we always have a unique case : a double encoded url
-        let newUrl =
-            urlSplit[0] +
-            '#/businessconfigparty/' +
-            encodeURIComponent(encodeURIComponent(menuId)) +
-            '/' +
-            encodeURIComponent(encodeURIComponent(menuItemId));
-        if (urlExtension) newUrl += encodeURIComponent(encodeURIComponent(urlExtension));
-        document.location.href = newUrl;
+        console.warn(
+            new Date().toISOString(),
+            ' WARNING : Use of templateGateway.redirectToBusinessMenu is deprecated , you shall use opfab.navigate.redirectToBusinessMenu instead'
+        );
+        opfab.navigate.redirectToBusinessMenu(menuId, menuItemId, urlExtension);
     },
 
     // True if user is allowed to respond to the current card :
     //  - his entity is allowed to respond
     //  - he is member of a group having a perimeter permitting the response
     isUserAllowedToRespond: function () {
-        return this.userAllowedToRespond;
+        console.warn(
+            new Date().toISOString(),
+            ' WARNING : Use of templateGateway.isUserAllowedToRespond is deprecated , you shall use opfab.currentCard.isUserAllowedToRespond instead'
+        );
+        return opfab.currentCard.isUserAllowedToRespond();
     },
 
     // True if user is member of an entity required to respond to the current card
     isUserMemberOfAnEntityRequiredToRespond: function () {
-        return this.userMemberOfAnEntityRequiredToRespond;
+        console.warn(
+            new Date().toISOString(),
+            ' WARNING : Use of templateGateway.isUserMemberOfAnEntityRequiredToRespond is deprecated , you shall use opfab.currentCard.isUserMemberOfAnEntityRequiredToRespond instead'
+        );
+        return opfab.currentCard.isUserMemberOfAnEntityRequiredToRespond();
     },
 
     // Returns an array containing the ids of the entities allowed to respond
     getEntitiesAllowedToRespond() {
-        return this.entitiesAllowedToRespond;
+        console.warn(
+            new Date().toISOString(),
+            ' WARNING : Use of templateGateway.getEntitiesAllowedToRespond is deprecated , you shall use opfab.currentCard.getEntitiesAllowedToRespond instead'
+        );
+        return opfab.currentCard.getEntitiesAllowedToRespond();
     },
 
     getEntityUsedForUserResponse() {
-        return this.entityUsedForUserResponse;
+        console.warn(
+            new Date().toISOString(),
+            ' WARNING : Use of templateGateway.getEntityUsedForUserResponse is deprecated , you shall use opfab.currentCard.getEntityUsedForUserResponse instead'
+        );
+        return opfab.currentCard.getEntityUsedForUserResponse();
     },
 
     getDisplayContext() {
-        return this.displayContext;
+        console.warn(
+            new Date().toISOString(),
+            ' WARNING : Use of templateGateway.getDisplayContext is deprecated , you shall use opfab.currentCard.getDisplayContext instead'
+        );
+        return opfab.currentCard.getDisplayContext();
+    },
+
+    displayLoadingSpinner() {
+        console.warn(
+            new Date().toISOString(),
+            ' WARNING : Use of templateGateway.displayLoadingSpinner is deprecated , you shall use opfab.currentCard.displayLoadingSpinner instead'
+        );
+        opfab.currentCard.displayLoadingSpinner();
+    },
+
+    hideLoadingSpinner() {
+        console.warn(
+            new Date().toISOString(),
+            ' WARNING : Use of templateGateway.hideLoadingSpinner is deprecated , you shall use opfab.currentCard.hideLoadingSpinner instead'
+        );
+        opfab.currentCard.hideLoadingSpinner();
     },
 
     //
-    // FUNCTIONS TO OVERRIDE BY TEMPLATES
+    // DEPRECATED FUNCTIONS OVERRIDE BY TEMPLATES
     //
 
-    initTemplateGateway: function () {
-        this.childCards = [];
-        this.userAllowedToRespond = false;
-        this.userMemberOfAnEntityRequiredToRespond = false;
-        this.entitiesAllowedToRespond = [];
-        this.entityUsedForUserResponse = null;
-        this.displayContext = '';
-        this.isLocked = false;
+    get childCards() {
+        console.warn(
+            new Date().toISOString(),
+            ' WARNING : Use of templateGateway.childCards is deprecated , you shall use opfab.currentCard.getChildCards() instead'
+        );
+        return opfab.currentCard.getChildCards();
+    },
 
-        // OpFab calls this function to inform the template that the card is locked
-        this.lockAnswer = function () {
-            // This function should be overridden in the template.
-        };
+    get isLocked() {
+        console.warn(
+            new Date().toISOString(),
+            ' WARNING : Use of templateGateway.isLocked is deprecated , you shall use opfab.currentCard.isResponseLocked() instead'
+        );
+        return opfab.currentCard.isResponseLocked();
+    },
 
-        // OpFab calls this function to inform the template that the card is unlocked
-        this.unlockAnswer = function () {
-            // This function should be overridden in the template.
-        };
+    set lockAnswer(value) {
+        console.warn(
+            new Date().toISOString(),
+            ' WARNING : Use of templateGateway.lockAnswer is deprecated , you shall use opfab.currentCard.listenToResponseLock() instead'
+        );
+        opfab.currentCard.listenToResponseLock(value);
+    },
 
-        // OpFab calls this function to inform that the template has to apply child cards (called after template rendering and after change in child cards)
-        this.applyChildCards = function () {
-            // This function should be overridden in the template.
-        };
+    set unlockAnswer(value) {
+        console.warn(
+            new Date().toISOString(),
+            ' WARNING : Use of templateGateway.unlockAnswer is deprecated , you shall use opfab.currentCard.listenToResponseUnlock() instead'
+        );
+        opfab.currentCard.listenToResponseUnlock(value);
+    },
 
-        // OpFab calls this function when lttd expire with expired set to true
-        this.setLttdExpired = function (expired) {
-            // This function should be overridden in the template.
-        };
+    set setLttdExpired(value) {
+        console.warn(
+            new Date().toISOString(),
+            ' WARNING : Use of templateGateway.setLttdExpired is deprecated , you shall use opfab.currentCard.listenToLttdExpired() instead'
+        );
+        opfab.currentCard.listenToLttdExpired(value);
+    },
 
-        // OpFab calls this method to inform the template of the size of the screen dedicated to the card
-        // size = 'md' for standard size
-        // size = 'lg' for large size , i.e when the card is in full screen mode
-        this.setScreenSize = function (size) {
-            // This function should be overridden in the template.
-        };
+    set onStyleChange(value) {
+        console.warn(
+            new Date().toISOString(),
+            ' WARNING : Use of templateGateway.onStyleChange is deprecated , you shall use opfab.currentCard.listenToStyleChange() instead'
+        );
+        opfab.currentCard.listenToStyleChange(value);
+    },
 
-        // OpFab calls this method to get the form result when the user wants to send a response
-        this.getUserResponse = function () {
-            console.log(
-                new Date().toISOString(),
-                ` Template.js : no getUserResponse method defined in template , valid set to false`
-            );
-            return {valid: false, errorMsg: 'Impossible to respond due to a technical error in the template'};
-        };
+    set setScreenSize(value) {
+        console.warn(
+            new Date().toISOString(),
+            ' WARNING : Use of templateGateway.setScreenSize is deprecated , you shall use opfab.currentCard.listenToScreenSize() instead'
+        );
+        opfab.currentCard.listenToScreenSize(value);
+    },
 
-        // OpFab calls this method when it has finished all tasks regarding rendering template :
-        // it is called after applyChildCard(), lockAnswer(), setLttdExpired() and setScreenSize()
-        this.onTemplateRenderingComplete = function () {
-            // This function may be overridden in the template.
-        };
+    set onTemplateRenderingComplete(value) {
+        console.warn(
+            new Date().toISOString(),
+            ' WARNING : Use of templateGateway.onTemplateRenderingComplete is deprecated , you shall use opfab.currentCard.listenToTemplateRenderingComplete() instead'
+        );
+        opfab.currentCard.listenToTemplateRenderingComplete(value);
+    },
 
-        // The template may call this method to display a spinner when the card is loaded but is in a time consuming process
-        this.displayLoadingSpinner = function () {
-            // This function is overridden in CardBodyComponent and in CardDetailComponent.
-        };
+    set getUserResponse(value) {
+        console.warn(
+            new Date().toISOString(),
+            ' WARNING : Use of templateGateway.getUserResponse is deprecated , you shall use opfab.currentCard.registerFunctionToGetUserResponse() instead'
+        );
+        opfab.currentCard.registerFunctionToGetUserResponse(value);
+    },
 
-        // The template may call this method to hide the spinner displayed after displayLoadingSpinner(), once the computations
-        // of the template are done.
-        this.hideLoadingSpinner = function () {
-            // This function is overridden in CardBodyComponent and in CardDetailComponent.
-        };
-
-        // OpFab calls this function when global style has changed
-        this.onStyleChange = function (expired) {
-            // This function should be overridden in the template.
-        };
+    set applyChildCards(value) {
+        console.warn(
+            new Date().toISOString(),
+            ' WARNING : Use of templateGateway.applyChildCards is deprecated , you shall use opfab.currentCard.listenToChildCards() instead'
+        );
+        opfab.currentCard.listenToChildCards(value);
     }
 };

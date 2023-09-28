@@ -11,7 +11,7 @@ import {Component, EventEmitter, Input, OnDestroy, OnInit, Output} from '@angula
 import {ConfigService} from 'app/business/services/config.service';
 import moment from 'moment';
 import {FilterType} from '@ofModel/feed-filter.model';
-import {UserPreferencesService} from 'app/business/services/user-preference.service';
+import {UserPreferencesService} from 'app/business/services/users/user-preference.service';
 import {DateTimeFormatterService} from 'app/business/services/date-time-formatter.service';
 import {FilterService} from 'app/business/services/lightcards/filter.service';
 import {LogOption, OpfabLoggerService} from 'app/business/services/logs/opfab-logger.service';
@@ -109,14 +109,14 @@ export class TimelineButtonsComponent implements OnInit, OnDestroy {
 
         const savedDomain = this.userPreferences.getPreference('opfab.timeLine.domain');
 
-        if (!!savedDomain) {
+        if (savedDomain) {
             const savedConf = this.buttonList.find((b) => b.domainId === savedDomain);
-            if (!!savedConf) {
+            if (savedConf) {
                 initialGraphConf = savedConf;
             }
         }
 
-        if (!!initialGraphConf) {
+        if (initialGraphConf) {
             this.changeGraphConf(initialGraphConf);
         }
     }

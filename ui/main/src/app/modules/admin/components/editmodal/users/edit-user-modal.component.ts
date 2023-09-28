@@ -17,9 +17,9 @@ import {
 import {Component, Input, OnInit} from '@angular/core';
 import {User} from '@ofModel/user.model';
 import {NgbActiveModal} from '@ng-bootstrap/ng-bootstrap';
-import {UserService} from 'app/business/services/user.service';
-import {GroupsService} from 'app/business/services/groups.service';
-import {EntitiesService} from 'app/business/services/entities.service';
+import {UserService} from 'app/business/services/users/user.service';
+import {GroupsService} from 'app/business/services/users/groups.service';
+import {EntitiesService} from 'app/business/services/users/entities.service';
 import {debounceTime, distinctUntilChanged, first, map, switchMap} from 'rxjs/operators';
 import {Observable, Subject} from 'rxjs';
 import {MultiSelectConfig, MultiSelectOption} from '@ofModel/multiselect.model';
@@ -34,9 +34,10 @@ export class EditUserModalComponent implements OnInit {
         login: FormControl<string | null>,
         firstName: FormControl<string | null>,
         lastName: FormControl<string | null>,
+        comment: FormControl<string | null>,
         groups: FormControl<[] | null>,
         entities: FormControl<[] | null>,
-        authorizedIPAddresses: FormControl<any | null>
+        authorizedIPAddresses: FormControl<any>
     }>;
 
     entitiesMultiSelectOptions: Array<MultiSelectOption> = [];
@@ -75,11 +76,12 @@ export class EditUserModalComponent implements OnInit {
         this.userForm = new FormGroup({
             login: new FormControl(
                 '',
-                [Validators.required, Validators.minLength(1)],
+                [Validators.required, Validators.minLength(2), Validators.pattern(/^\S*$/)],
                 uniqueLoginValidator
             ),
             firstName: new FormControl('', []),
             lastName: new FormControl('', []),
+            comment: new FormControl('', []),
             groups: new FormControl([]),
             entities: new FormControl([]),
             authorizedIPAddresses: new FormControl(
@@ -91,10 +93,10 @@ export class EditUserModalComponent implements OnInit {
             // If the modal is used for edition, initialize the modal with current data from this row
 
             // For 'simple' fields (where the value is directly displayed), we use the form's patching method
-            const {login, firstName, lastName} = this.row;
-            this.userForm.patchValue({login, firstName, lastName}, {onlySelf: false});
+            const {login, firstName, lastName, comment} = this.row;
+            this.userForm.patchValue({login, firstName, lastName, comment}, {onlySelf: false});
 
-            if (!!this.row.authorizedIPAddresses) {
+            if (this.row.authorizedIPAddresses) {
                 this.userForm.patchValue({authorizedIPAddresses: this.row.authorizedIPAddresses.join(',')});
             }
             // Otherwise, we use the selectedItems property of the of-multiselect component
@@ -139,7 +141,7 @@ export class EditUserModalComponent implements OnInit {
     isUniqueLogin(login: string): Observable<boolean> {
         const subject = new Subject<boolean>();
 
-        if (!!login) {
+        if (login) {
             this.crudService.queryAllUsers().subscribe((users) => {
                 if (users.filter((user) => user.login === login).length) subject.next(false);
                 else subject.next(true);
@@ -165,8 +167,9 @@ export class EditUserModalComponent implements OnInit {
             this.userForm.value['login'] = this.row.login;
         }
         this.login.setValue((this.login.value as string).trim());
-        if (!!this.lastName.value) this.lastName.setValue((this.lastName.value as string).trim());
-        if (!!this.firstName.value) this.firstName.setValue((this.firstName.value as string).trim());
+        if (this.lastName.value) this.lastName.setValue((this.lastName.value as string).trim());
+        if (this.firstName.value) this.firstName.setValue((this.firstName.value as string).trim());
+        if (this.comment.value) this.comment.setValue((this.comment.value as string).trim());
     }
 
     get login() {
@@ -179,6 +182,10 @@ export class EditUserModalComponent implements OnInit {
 
     get lastName() {
         return this.userForm.get('lastName');
+    }
+
+    get comment() {
+        return this.userForm.get('comment')
     }
 
     get groups() {

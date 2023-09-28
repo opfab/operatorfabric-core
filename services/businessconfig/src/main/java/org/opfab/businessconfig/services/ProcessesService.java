@@ -16,7 +16,6 @@ import com.google.common.collect.HashBasedTable;
 import com.google.common.collect.Table;
 import org.apache.commons.io.FileUtils;
 
-import net.minidev.json.JSONObject;
 import net.minidev.json.parser.JSONParser;
 import net.minidev.json.parser.ParseException;
 
@@ -66,7 +65,7 @@ public class ProcessesService implements ResourceLoaderAware {
     private String storagePath;
     private ObjectMapper objectMapper;
     private Map<String, Process> defaultCache;
-    private Table<String,String, Process> completeCache;
+    private Table<String, String, Process> completeCache;
     private ResourceLoader resourceLoader;
     private LocalValidatorFactoryBean validator;
     private ProcessGroupsData processGroupsCache;
@@ -98,8 +97,12 @@ public class ProcessesService implements ResourceLoaderAware {
      *
      * @return registered processes
      */
-	public List<Process> listProcesses() {
-		return new ArrayList<>(defaultCache.values());		
+	public List<Process> listProcesses(Boolean allVersions) {
+        if ((allVersions == null) || Boolean.FALSE.equals(allVersions)) {
+            return new ArrayList<>(defaultCache.values());
+        } else {
+            return new ArrayList<>(completeCache.values());
+        }
 	}
 
     /**
@@ -201,7 +204,7 @@ public class ProcessesService implements ResourceLoaderAware {
                     .filter(File::isDirectory)
                     .forEach(f -> {
                                 File[] configFile = f.listFiles((sf, name) -> name.equals(CONFIG_FILE_NAME));
-                                if (configFile.length >= 1) {
+                                if (configFile != null && configFile.length >= 1) {
                                     try {
                                         ProcessData process = objectMapper.readValue(configFile[0], ProcessData.class);
                                         Optional<String> validationError = getConfigFileValidationErrors(process);
@@ -232,7 +235,7 @@ public class ProcessesService implements ResourceLoaderAware {
      */
     public Resource fetchResource(String process, ResourceTypeEnum type, String name) throws
             FileNotFoundException {
-        return fetchResource(process, type, null, null, name);
+        return fetchResource(process, type, null, name);
     }
 
     /**
@@ -241,12 +244,11 @@ public class ProcessesService implements ResourceLoaderAware {
      * @param processId Process id
      * @param type      resource type
      * @param version   process configuration version
-     * @param locale    chosen locale use default if not set
      * @param name      resource name
      * @return resource handle
      * @throws FileNotFoundException if corresponding file does not exist
      */
-    public Resource fetchResource(String processId, ResourceTypeEnum type, String version, String locale,
+    public Resource fetchResource(String processId, ResourceTypeEnum type, String version,
                                   String name) throws FileNotFoundException {
         Map<String, Process> versions = completeCache.row(processId);
         if (versions.isEmpty())
@@ -264,9 +266,6 @@ public class ProcessesService implements ResourceLoaderAware {
         if (process == null)
             throw new FileNotFoundException("Unknown version (" + finalVersion + ") for " + processId + " at " + this.storagePath);
 
-        if (type.isLocalized() && locale == null)
-            throw new FileNotFoundException("Unable to determine resource for undefined locale");
-
         String resourcePath = PATH_PREFIX +
                 storagePath +
                 BUNDLE_FOLDER +
@@ -277,7 +276,6 @@ public class ProcessesService implements ResourceLoaderAware {
                 File.separator +
                 type.getFolder() +
                 File.separator +
-                (type.isLocalized() ? (locale + File.separator) : "") +
                 name + type.getSuffix();
 
         log.info("loading resource: {}", resourcePath);
@@ -296,21 +294,6 @@ public class ProcessesService implements ResourceLoaderAware {
      */
     public Process fetch(String id) {
         return fetch(id, null);
-    }
-
-    /**
-     * Computes resource handle
-     *
-     * @param process Process id
-     * @param type      resource type
-     * @param version   process configuration version
-     * @param name      resource name
-     * @return resource handle
-     * @throws FileNotFoundException if corresponding resource does not exist
-     */
-    public Resource fetchResource(String process, ResourceTypeEnum type, String version, String name) throws
-            FileNotFoundException {
-        return fetchResource(process, type, version, null, name);
     }
 
     @Override
@@ -369,7 +352,7 @@ public class ProcessesService implements ResourceLoaderAware {
     /**
      * Updates or creates processgroups file from a file uploaded from POST /businessconfig/processgroups
      *
-     * @param is processgroups file input stream
+     * @param fileContent processgroups file input stream
      * @throws IOException if error arise during stream reading
      */
     public synchronized void updateProcessGroupsFile(String fileContent) throws IOException {
@@ -408,6 +391,9 @@ public class ProcessesService implements ResourceLoaderAware {
         // load Process from config
         Path outConfigPath = outPath.resolve(CONFIG_FILE_NAME);
         ProcessData process = objectMapper.readValue(outConfigPath.toFile(), ProcessData.class);
+
+        this.checkInputDoesNotContainForbiddenCharacters("id of the process",process.getId());
+
         //process root
         Path existingRootPath = Paths.get(this.storagePath + BUNDLE_FOLDER)
                 .resolve(process.getId())
@@ -429,7 +415,7 @@ public class ProcessesService implements ResourceLoaderAware {
 
         pushProcessChangeInEventBus();
 
-        //retieve newly loaded process from cache
+        //retrieve newly loaded process from cache
         return fetch(process.getId(), process.getVersion());
     }
 
@@ -595,7 +581,7 @@ public class ProcessesService implements ResourceLoaderAware {
     /**
      * Updates or creates realtimescreens file from a file uploaded from POST /businessconfig/realtimescreens
      *
-     * @param is realtimescreens file input stream
+     * @param fileContent realtimescreens file input stream
      * @throws IOException if error arise during stream reading
      */
     public synchronized void updateRealTimeScreensFile(String fileContent) throws IOException {
@@ -619,7 +605,7 @@ public class ProcessesService implements ResourceLoaderAware {
 
     /**
      * Deletes {@link Process} for specified id
-     * @param id process id
+     * @param resourceName process id
      * @throws IOException 
      */
     public synchronized void deleteFile(String resourceName) throws IOException {
@@ -665,6 +651,7 @@ public class ProcessesService implements ResourceLoaderAware {
     }
 
     public Resource getBusinessData(String resourceName) throws FileNotFoundException {
+        this.checkInputDoesNotContainForbiddenCharacters("business data file name", resourceName);
         Path resourcePath = Paths.get(this.storagePath + BUSINESS_DATA_FOLDER)
                 .resolve(resourceName)
                 .normalize();
@@ -692,5 +679,17 @@ public class ProcessesService implements ResourceLoaderAware {
         Path resourcePath = Paths.get(this.storagePath + BUSINESS_DATA_FOLDER).normalize();
         File dataDirectory = new File(resourcePath.toString());
         FileUtils.cleanDirectory(dataDirectory);
+    }
+
+    private void checkInputDoesNotContainForbiddenCharacters(String inputName, String inputValue)
+            throws ApiErrorException {
+        if (inputValue.contains("#") || inputValue.contains("?") ||
+                inputValue.contains("/") || inputValue.contains("\\")) {
+            throw new ApiErrorException(
+                    ApiError.builder()
+                            .status(HttpStatus.BAD_REQUEST)
+                            .message("The " + inputName + " should not contain characters #, ?, /, \\")
+                            .build());
+        }
     }
 }

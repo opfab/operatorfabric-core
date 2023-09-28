@@ -55,7 +55,7 @@ Feature: Get current user with perimeters (endpoint tested : GET /CurrentUserWit
   "stateRights" : [
       {
         "state" : "state1",
-        "right" : "Write",
+        "right" : "ReceiveAndWrite",
         "filteringNotificationAllowed" : true
       },
       {

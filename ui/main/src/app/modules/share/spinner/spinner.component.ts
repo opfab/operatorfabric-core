@@ -51,7 +51,7 @@ export class SpinnerComponent implements OnInit, OnDestroy {
 
     ngOnDestroy() {
         this.destroy = true;
-        if (!!this.modalRef) {
+        if (this.modalRef) {
             this.modalRef.close();
         }
     }

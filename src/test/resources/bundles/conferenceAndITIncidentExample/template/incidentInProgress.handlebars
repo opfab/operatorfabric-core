@@ -1,4 +1,4 @@
-<!-- Copyright (c) 2020-2022, RTE (http://www.rte-france.com)              -->
+<!-- Copyright (c) 2020-2023, RTE (http://www.rte-france.com)              -->
 <!-- See AUTHORS.txt                                                       -->
 <!-- This Source Code Form is subject to the terms of the Mozilla Public   -->
 <!-- License, v. 2.0. If a copy of the MPL was not distributed with this   -->
@@ -50,7 +50,7 @@
         init: function() {
             this.initImpact();
             this.displayResponseInputsIfUserIsAllowedToRespond();
-            this.initTemplateGateway();
+            this.initOpfabAPI();
         },
 
         initImpact: function() {
@@ -77,7 +77,7 @@
         },
 
         displayResponseInputsIfUserIsAllowedToRespond: function() {
-            if (templateGateway.isUserAllowedToRespond()) {
+            if (opfab.currentCard.isUserAllowedToRespond()) {
                 document.getElementById('services').style.display = '';
                 document.getElementById('other-impacts').style.display = '';
             } else {
@@ -86,18 +86,18 @@
             }
         },
 
-        initTemplateGateway: function() {
-            templateGateway.applyChildCards = () => {
+        initOpfabAPI: function() {
+                opfab.currentCard.listenToChildCards((childCards) => {
                 let childsDiv = document.getElementById("childs-div");
 
-                if (templateGateway.childCards[0]) {
+                if (childCards[0]) {
                     let responses = '<strong> RESPONSES RECEIVED : </strong> <br/>';
                     responses += ' <table style="width: 100%"> <tr> <th> Entity </th>';
                     responses += ' <th> Service A </th> <th> Service B </th> <th> Service C </th> <th> Service D </th> <th>Service E </th> <th> Service F </th>';
                     responses += ' </tr>';
 
-                    templateGateway.childCards.forEach((c) => {
-                        const entityName = templateGateway.getEntityName(c.publisher);
+                    childCards.forEach((c) => {
+                        const entityName = opfab.users.entities.getEntityName(c.publisher);
                         responses += `<tr> <td> ${entityName} </td>`;
                         if (c.data.impacts.SA)  responses += `<td style="color:red;">  YES </td>`;
                         else  responses += `<td>  NO </td>`;
@@ -111,7 +111,7 @@
                         else  responses += `<td>  NO </td>`;
                         if (c.data.impacts.SF)  responses += `<td style="color:red;">  YES </td>`;
                         else  responses += `<td>  NO </td>`;
-                        responses += `<td> ${c.data.impacts.OTHERS}</td>`;
+                        responses += `<td> ${opfab.utils.escapeHtml(c.data.impacts.OTHERS)}</td>`;
                         responses += "</tr>";
                     });
 
@@ -121,9 +121,9 @@
                 } else {
                     childsDiv.innerHTML = '';
                 }
-            };
+            });
 
-            templateGateway.getUserResponse = function () {
+            opfab.currentCard.registerFunctionToGetUserResponse(() => {
 
                 const SA = document.getElementById('SA').checked;
                 const SB = document.getElementById('SB').checked;
@@ -150,7 +150,7 @@
                     valid: true,
                     responseCardData: responseCardData
                 };
-            }
+            });
         }
     }
 

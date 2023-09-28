@@ -1,0 +1,15 @@
+operatorfabric:
+  mail:
+    host: mailhog
+    port: 1025
+    auth:
+      user: guest
+      pass: guest
+  cardsExternalDiffusion:
+    defaultConfig:
+      mailFrom: opfab@localhost.it
+      subjectPrefix: 'Opfab card received '
+      bodyPrefix: 'You received a card in opfab : '
+      opfabUrlInMailContent: http://localhost:2002
+#  logConfig:
+#    logLevel: debug

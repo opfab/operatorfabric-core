@@ -1,5 +1,5 @@
 
-<!-- Copyright (c) 2020-2022, RTE (http://www.rte-france.com)              -->
+<!-- Copyright (c) 2020-2023, RTE (http://www.rte-france.com)              -->
 <!-- See AUTHORS.txt                                                       -->
 <!-- This Source Code Form is subject to the terms of the Mozilla Public   -->
 <!-- License, v. 2.0. If a copy of the MPL was not distributed with this   -->
@@ -7,65 +7,5 @@
 <!-- SPDX-License-Identifier: MPL-2.0                                      -->
 <!-- This file is part of the OperatorFabric project.                      -->
 
-
-<div class="opfab-input">
-    <label id="label"> QUESTION </label>
-    <input id="question" name="question" style="width:100%" value="{{card.data.question}}">
-</div>
-<script>
-
-    userCardTemplate = {
-        init: function() {
-            this.changeLabelInEditionMode();
-            this.setInitialDates();
-            this.initUserCardTemplateGateway();
-        },
-
-        changeLabelInEditionMode: function() {
-            if (usercardTemplateGateway.getEditionMode() == 'EDITION') {
-                const question = document.getElementById('label').innerHTML = ' QUESTION (New) ';
-            }
-        },
-
-        setInitialDates: function() {
-            var mystartDate = new Date();
-            mystartDate.setTime(mystartDate.getTime()+ 3600000);
-            mystartDate.setMinutes(0);
-            mystartDate.setSeconds(0);
-            usercardTemplateGateway.setInitialStartDate(mystartDate.getTime());
-
-            usercardTemplateGateway.setInitialEndDate(mystartDate.getTime() + 8 * 3600000);
-
-            usercardTemplateGateway.setInitialLttd(mystartDate.getTime() + 4 * 3600000);
-        },
-
-        initUserCardTemplateGateway: function() {
-            usercardTemplateGateway.getSpecificCardInformation = function () {
-                const question = document.getElementById('question').value;
-
-                if (question.length <1) return {
-                    valid: false,
-                    errorMsg : "You must provide a question"
-                }
-            
-                const card = {
-                    summary: { key: "question.summary" },
-                    title: { key: "question.title" },
-                    severity: "ACTION",
-                    data: {
-                        question: question,
-                    }
-                };
-                return {
-                    valid: true,
-                    card: card,
-                    viewCardInCalendar: false
-                };
-
-            }
-        }
-    }
-    
-    userCardTemplate.init();
-
-</script>
+<opfab-question-usercard>
+</opfab-question-usercard>

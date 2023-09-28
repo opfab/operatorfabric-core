@@ -1,0 +1,586 @@
+// Copyright (c) 2023 RTE (http://www.rte-france.com)
+// See AUTHORS.txt
+// This document is subject to the terms of the Creative Commons Attribution 4.0 International license.
+// If a copy of the license was not distributed with this
+// file, You can obtain one at https://creativecommons.org/licenses/by/4.0/.
+// SPDX-License-Identifier: CC-BY-4.0
+
+
+= Frontend API
+
+The frontend API is intended to provide a way for template to communicate with the core opfab code. It's divided as follow :
+- Users API : API to get information about users and entities
+- Navigate API : API to ask opfab to navigate to a specific view
+- CurrentCard API : API to get information regarding the current card 
+- CurrentUserCard API : API to get information regarding the current user card (card in creation or edition)
+- Utils API : utilities functions
+
+== Users API 
+
+=== Entities
+
+Entity object contains the following fields :
+
+- 'id' : id of the entity
+- 'name' : name of the entity
+- 'description' : description of the entity
+- 'entityAllowedToSendCard' : boolean indicating whether the entity is allowed to send cards or not
+- 'parents' : list of parent entities
+- 'labels' : list of labels associated to the entity
+
+
+==== Function getEntityName
+
+Obtain the name of an entity :
+
+```
+const myEntityName = opfab.users.entities.getEntityName('myEntityId');
+```
+
+==== Function getEntity 
+
+Obtain a specific entity : 
+
+```
+const myEntity = opfab.users.entities.getEntity('myEntityId');
+```
+
+
+==== Function getAllEntities
+
+Obtain all entities as an array :
+
+```
+const entities = opfab.users.entities.getAllEntities();
+```
+
+
+
+== Navigate API 
+
+=== Function redirectToBusinessMenu
+
+It’s possible to redirect the user from a card to a business application declared in ui-menu.json.
+
+This can be done by calling the following function from the template :
+
+```
+opfab.navigate.redirectToBusinessMenu(idMenu,idEntry);
+```
+
+- idMenu is the id of the menu defined in ui-menu.json
+- idEntry is the id of the entry defined in ui-menu.json
+
+It is also possible to append a url extension (sub paths and/or parameters) to the url that will be called:
+
+```
+opfab.navigate.redirectToBusinessMenu('myMenu','myEntry','/extension?param1=aParam&param2=anotherParam');
+```
+
+This can be useful to pass context from the card to the business application.
+
+=== Function showCardDetail
+
+It is possible from the template to redirect the user to another "card detail" in feed page 
+```
+ opfab.navigation.showCardDetail('cardId'); 
+```
+
+== CurrentCard API
+
+=== Function displayLoadingSpinner
+
+Once the card is loaded, there may be some processing that is time consuming. In this case, it is possible to show a spinner using the method displayLoadingSpinner and hideLoadingSpinner in the card template .
+
+```
+        opfab.currentCard.displayLoadingSpinner();
+        // Time consumming code 
+        .... 
+        opfab.currentCard.hideLoadingSpinner(); 
+```
+
+=== Function hideLoadingSpinner
+
+Hide loading spinner previously open with displayLoadingSpinner()
+```
+        opfab.currentCard.hideLoadingSpinner()
+```
+
+=== Function getChildCards
+
+ Returns an array of the child cards. The structure of a child card is the same as the structure of a classic card.
+```
+        const childCards =  opfab.currentCard.getChildCards(); 
+```
+
+=== Function getCard()
+
+You can access the current selected card as a js object using the getCard() method.
+
+```
+        const currentCard = opfab.currentCard.getCard();
+```
+
+=== Function getDisplayContext
+
+To adapt the template content to the display context it is possible to get from OperatorFabric the page context where the template will be rendered by calling the javascript function getDisplayContext(). The function returns a string with one of the following values :
+
+- 'realtime' : realtime page context (feed, monitoring)
+
+- 'archive' : archive page context
+
+- 'preview': preview context (user card)
+
+```
+    const displayContext =  opfab.currentCard.getDisplayContext();
+```
+
+===  Function getEntitiesAllowedToRespond
+
+If inside your template, you want to get the ids of the entities allowed to send a response, you can call the method getEntitiesAllowedToRespond. This method returns an array containing the ids. An example of usage can be found in the file https://github.com/opfab/operatorfabric-core/tree/master/src/test/resources/bundles/messageOrQuestionExample/template/question.handlebars[src/test/resources/bundles/messageOrQuestionExample/template/question.handlebars].
+
+```
+    const entities = opfab.currentCard.getEntitiesAllowedToRespond(); 
+```
+
+=== Function  getEntityUsedForUserResponse
+
+If inside your template, you want to get the id of the entity used by the user to send a response, you can call the method getEntityUsedForUserResponse. 
+An example of usage can be found in the file https://github.com/opfab/operatorfabric-core/tree/master/src/test/resources/bundles/messageOrQuestionExample/template/question.handlebars[src/test/resources/bundles/messageOrQuestionExample/template/question.handlebars].
+
+```
+    const entity = opfab.currentCard.getEntityUsedForUserResponse()
+        
+```
+
+
+=== Function isResponseLocked
+
+To know if template is locked (i.e user can not respond unless he unlocks the card)
+```
+    const isResponseLocked =  opfab.currentCard.isResponseLocked()
+```
+
+=== Function isUserAllowedToRespond
+
+The template can know if the current user has the permission to send a response to the current card by calling the isUserAllowedToRespond() function.
+An example of usage can be found in the file
+https://github.com/opfab/operatorfabric-core/tree/master/src/test/resources/bundles/conferenceAndITIncidentExample/template/incidentInProgress.handlebars[src/test/resources/bundles/conferenceAndITIncidentExample/template/incidentInProgress.handlebars].
+
+
+```
+    const isUserAllowed = opfab.currentCard.isUserAllowedToRespond();
+```
+
+=== Function isUserMemberOfAnEntityRequiredToRespond
+
+The template can know if the current user is member of an Entity required to respond by calling the isUserMemberOfAnEntityRequiredToRespond function.
+An example of usage can be found in the file https://github.com/opfab/operatorfabric-core/tree/master/src/test/resources/bundles/defaultProcess_V1/template/question.handlebars[src/test/resources/bundles/defaultProcess_V1/template/question.handlebars].
+
+
+``` 
+    const isUserRequired = opfab.currentCard.isUserMemberOfAnEntityRequiredToRespond()
+```
+
+=== Function listenToResponseLock
+
+Register a function to be informed when template is locked (i.e user has responded to the current card)
+
+```
+    opfab.currentCard.listenToResponseLock( () => {// do some stuff});
+```
+
+=== Function listenToResponseUnlock
+
+Register a function to be informed when template is unlocked (i.e user has clicked the modify button to prepare a new response)
+
+
+```
+    opfab.currentCard.listenToResponseUnlock( () => {// do some stuff}))
+```
+
+=== Function listenToChildCards 
+
+Register a function to receive the child cards on card loading and when the childCards list changes
+
+```
+opfab.currentCard.listenToChildCards( (childCards) => { // process child cards });
+```
+
+
+=== Function listenToLttdExpired
+
+If the card has a last time to decide (lttd) configured, when the time is expired this information can be received by the template by registering a listener.
+
+```
+    opfab.currentCard.listenToLttdExpired( () => { // do some stuff });
+```
+
+=== Function listenToStyleChange
+
+Card template can be informed when switching day/night mode by registering a listener as follow : 
+
+```
+    opfab.currentCard.listenToStyleChange( () => { // do some stuff });
+```
+
+It can be used by a template to refresh styles and reload embedded charts.
+
+=== Function listenToScreenSize
+
+To adapt the template content on screen size it is possible to receive from OperatorFabric information on the size of the window where the template will be rendered. To receive screen size information you need to implement a listener function which will receive as input a string parameter with one of the following values :
+
+- 'md' : medium size window
+- 'lg' : large size window
+
+
+```
+        opfab.currentCard.listenToScreenSize( (screenSize) => {
+            if (screenSize == 'lg') // do some stuff
+            else // do some other stuff
+        })
+```
+
+=== Function listenToTemplateRenderingComplete
+
+
+It is possible to be informed when opfab has finished all tasks regarding rendering template by registering a listener function .The function will be called after the call of the other listener (applyChildCard, lockAnswer ,lttdExpired and screenSize)
+
+It can be used by a template to launch some processing when loading is complete
+
+```
+        opfab.currentCard.listenToTemplateRenderingComplete(() => {// do some stuff})
+```
+
+=== Function registerFunctionToGetUserResponse
+
+Register the template function to call to get user response. This function will be called by opfab when user clicks on the "send reponse" button. More explanation can be found in the <<response_cards, response card chapter>>.
+
+For example : 
+
+```
+        opfab.currentCard.registerFunctionToGetUserResponse ( () => 
+          {
+                const question = document.getElementById('question').value;
+
+                if (question.length <1) return {
+                    valid: false,
+                    errorMsg : "You must provide a question"
+                }
+            
+                const card = {
+                    summary: { key: "question.summary" },
+                    title: { key: "question.title" },
+                    severity: "ACTION",
+                    data: {
+                        question: question,
+                    }
+                };
+                return {
+                    valid: true,
+                    card: card,
+                    viewCardInCalendar: false
+                };
+
+            })
+```
+
+== CurrentUserCard API
+
+
+=== Function getEditionMode
+
+The template can know if the user is creating a new card or editing an existing card by calling the _opfab.currentUserCard.getEditionMode()_ function. The function will return one of the following values:
+
+* 'CREATE'
+* 'EDITION'
+* 'COPY'
+
+```
+        const mode = opfab.currentUserCard.getEditionMode();
+```
+
+=== Function getEndDate
+
+The template can know the current endDate of the card in creation or edition by calling the _opfab.currentUserCard.getEndDate()_ function. The function will return a number corresponding to the endDate as epoch date value.
+
+```
+        const endDate = opfab.currentUserCard.getEndDate();
+```
+
+=== Function getExpirationDate
+
+The template can know the current expirationDate of the card in creation or edition by calling the _opfab.currentUserCard.getExpirationDate()_ function. The function will return a number corresponding to the expirationDate as epoch date value.
+
+```
+        const expirationDate = opfab.currentUserCard.getExpirationDate();
+```
+
+
+=== Function getLttd
+
+The template can know the current lttd of the card in creation or edition by calling the _opfab.currentUserCard.getLttd()_ function. The function will return a number corresponding to the lttd as epoch date value.
+
+```
+        const lttd = opfab.currentUserCard.getLttd();
+```
+
+=== Function getProcessId
+
+The template can know the process id of the card by calling the _opfab.currentUserCard.getProcessId()_  function. The function will return a string corresponding to the process id.
+
+```
+        const id = opfab.currentUserCard.getProcessId();
+```
+=== Function getSelectedEntityRecipients
+
+The template can know the list of entities selected by the user as recipients of the card by calling the _opfab.currentUserCard.getSelectedEntityRecipients()_ function. The function will return an array of entity ids.
+
+
+```
+        const recipients = opfab.currentUserCard.getSelectedEntityRecipients();
+```
+
+=== Function getSelectedEntityForInformationRecipients
+
+The template can know the list of entities selected by the users as recipients of the card by calling the _opfab.currentUserCard.getSelectedEntityForInformationRecipients()_ function.  The function will return an array of entity ids.
+
+
+```
+        const recipients = opfab.currentUserCard.getSelectedEntityForInformationRecipients();
+```
+
+=== Function getStartDate
+
+The template can know the current startDate of the card in creation or edition by calling the _opfab.currentUserCard.getStartDate()_ function.The function will return a number corresponding to the startDate as epoch date value.
+
+```
+        const startDate = opfab.currentUserCard.getStartDate();
+```
+
+=== Function getState
+
+The template can know the state of the card by calling the _opfab.currentUserCard.getState()_ function. The function will return a string corresponding to the state.
+
+```
+        const state = opfab.currentUserCard.getState();
+```
+
+=== Function getUserEntityChildCard
+
+When editing a user card, the template can get the response sent by the entity of the current user by calling the _opfab.currentUserCard.getUserEntityChildCard()_ function. The function will return the response child card sent by current user entity or null if there is no response.
+
+```
+        const card = opfab.currentUserCard.getUserEntityChildCard();
+```
+
+[WARNING]
+The method returns only one child card and is therefore not compatible with the fact that the user is in more than one activity area authorized to send the card. In this case, if there is more than one child card, only one will be returned.
+
+
+=== Function listenToEntityUsedForSendingCard
+
+The template can receive the emitter entity of the card by registering a listener function. The function will be called by OperatorFabric after loading the template and every time the card emitter changes (if the user can choose from multiple entities).
+
+```
+        opfab.currentUserCard.listenToEntityUsedForSendingCard((entityId) => {// do some stuff with the entity id})
+```
+
+=== Function registerFunctionToGetSpecificCardInformation
+
+Register the template function to call to get user card specific information. This function will be called by opfab when user clicks on the "preview" button. More explanation can be found in the <<user_cards, user card chapter>>.
+
+For example: 
+
+```
+        opfab.currentCard.registerFunctionToGetSpecificCardInformation( () => {
+        const message = document.getElementById('message').value;
+        const card = {
+          summary : {key : "message.summary"},
+          title : {key : "message.title"},
+          data : {message: message}
+        };
+        if (message.length<1) return { valid:false , errorMsg:'You must provide a message'}
+        return {
+            valid: true,
+            card: card
+        };
+
+    }
+```
+
+=== Function setDropdownEntityRecipientList
+
+When sending a user card, by default it is possible to choose the recipients from all the available entities. To limit the list of available recipients it is possible to configure the list of possible recipients via javascript in the user template.
+
+For example : 
+
+....
+    opfab.currentUserCard.setDropdownEntityRecipientList([
+            {"id": "ENTITY_FR", "levels": [0,1]},
+            {"id": "IT_SUPERVISOR_ENTITY"}
+        ]);
+....
+
+
+In this example the list of available recipients will contain: "ENTITY_FR" (level 0), all the first level children of "ENTITY_FR" (level 1) and "IT_SUPERVISOR_ENTITY".
+
+=== Function setDropdownEntityRecipientForInformationList
+
+When sending a user card, by default it is possible to choose the recipients for information from all the available entities. To limit the list of available recipients it is possible to configure the list of possible recipients via javascript in the user template.
+
+For example : 
+
+....
+    opfab.currentUserCard.setDropdownEntityRecipientForInformationList([
+            {"id": "ENTITY_FR", "levels": [0,1]},
+            {"id": "IT_SUPERVISOR_ENTITY"}
+        ]);
+....
+
+
+In this example the list of available recipients for information will contain: "ENTITY_FR" (level 0), all the first level children of "ENTITY_FR" (level 1) and "IT_SUPERVISOR_ENTITY".
+
+=== Function setInitialEndDate
+
+From the template it is possible to set the initial value for `endDate` by calling  _opfab.currentUserCard.setInitialEndDate(endDate)_ . The endDate is a number representing an epoch date value.
+
+
+```
+        const endDate = new Date().valueOf() + 10000;
+        opfab.currentUserCard.setInitialEndDate(endDate);
+```
+
+=== Function setInitialExpirationDate
+
+From the template it is possible to set the initial value for `expirationDate` by calling  _opfab.currentUserCard.setInitialExpirationDate(expirationDate)_ . The expirationDate is a number representing an epoch date value.
+
+
+```
+        const expirationDate = new Date().valueOf() + 10000;
+        opfab.currentUserCard.setInitialExpirationDate(expirationDate);
+```
+
+=== Function setInitialLttd
+
+From the template it is possible to set the initial value for `lttd` by calling  _opfab.currentUserCard.setInitialLttd(lttd)_ . The lttd is a number representing an epoch date value.
+
+
+```
+        const lttd = new Date().valueOf() + 10000;
+        opfab.currentUserCard.setInitialLttd(lttd);
+```
+
+=== Function setInitialSelectedRecipients
+
+It is possible to configure the list of initially selected recipients via javascript in the user template by calling the setInitialSelectedRecipients method. The method takes as input the list of Entity ids to be preselected. The method will work only at template loading time, cannot be used to modify the selected recipients after the template is loaded or in card edition mode.
+
+For example : 
+
+....
+    opfab.currentUserCard.setInitialSelectedRecipients([
+            "ENTITY_FR",
+            "IT_SUPERVISOR_ENTITY"
+        ]);
+....
+
+
+In this example the dropdown list of available recipients will have "ENTITY_FR" and "IT_SUPERVISOR_ENTITY" preselected. The user can anyway change the selected recipients.
+
+=== Function setInitialSelectedRecipientsForInformation
+
+It is possible to configure the list of initially selected recipients for information via javascript in the user template by calling the setInitialSelectedRecipientsForInformation method. The method takes as input the list of Entity ids to be preselected. The method will work only at template loading time, cannot be used to modify the selected recipients after the template is loaded or in card edition mode.
+
+For example : 
+
+....
+    opfab.currentUserCard.setInitialSelectedRecipientsForInformation([
+            "ENTITY_FR",
+            "IT_SUPERVISOR_ENTITY"
+        ]);
+....
+
+
+In this example the dropdown list of available recipients will have "ENTITY_FR" and "IT_SUPERVISOR_ENTITY" preselected. The user can anyway change the selected recipients for information.
+
+
+=== Function setSelectedRecipients
+
+It is possible to configure the list of selected recipients via javascript in the user template by calling the setInitialSelectedRecipients method. The method takes as input the list of Entity ids to be preselected. This method can be called at any time and also in edition mode.
+
+For example : 
+
+....
+    opfab.currentUserCard.setSelectedRecipients([
+            "ENTITY_FR",
+            "IT_SUPERVISOR_ENTITY"
+        ]);
+....
+
+
+In this example the dropdown list of available recipients will have "ENTITY_FR" and "IT_SUPERVISOR_ENTITY" preselected. The user can anyway change the selected recipients.
+
+=== Function setSelectedRecipientsForInformation
+
+It is possible to configure the list of selected recipients for information via javascript in the user template by calling the setSelectedRecipientsForInformation method. The method takes as input the list of Entity ids to be selected.  This method can be called at any time and also in edition mode.
+
+For example : 
+
+....
+    opfab.currentUserCard.setSelectedRecipientsForInformation([
+            "ENTITY_FR",
+            "IT_SUPERVISOR_ENTITY"
+        ]);
+....
+
+
+In this example the dropdown list of available recipients will have "ENTITY_FR" and "IT_SUPERVISOR_ENTITY" preselected. The user can anyway change the selected recipients for information.
+
+=== Function setInitialSeverity
+
+From the template it is possible to set the initial value for card severity choice by calling the function _setInitialSeverity(severity)_ 
+
+Allowed severity values are:
+
+* 'ALARM'
+* 'ACTION'
+* 'INFORMATION'
+* 'COMPLIANT'
+
+```
+       opfab.currentUserCard.setInitialSeverity('ACTION');
+```
+
+
+=== Function setInitialStartDate
+
+From the template it is possible to set the initial values for `startDate` by calling  _opfab.currentUserCard.setInitialStartDate(startDate)_ . The startDate is a number representing an epoch date value.
+
+
+```
+        const startDate = new Date().valueOf();
+        opfab.currentUserCard.setInitialStartDate(startDate);
+```
+
+== Utils API
+
+=== Function escapeHtml 
+
+
+To avoid script injection, OperatorFabric provides a utility function 'opfab.utils.escapeHtml()' to sanitize input content by escaping HTML specific characters. For example: 
+
+```
+<input id="input-message" type="text" name="message">
+<button onClick="showMessage()">
+
+<span id="safe-message"></span>
+
+
+<script>
+  showMessage : function() {
+    let msg = document.getElementById("input-message");
+    document.getElementById("safe-message").innerHTML = opfab.utils.escapeHtml(msg.value);
+  }
+
+</script>
+```

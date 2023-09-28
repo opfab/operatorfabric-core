@@ -73,6 +73,10 @@
           <div *ngIf="authorizedIPAddresses.invalid" class="row alert alert-danger">
             <div *ngIf="authorizedIPAddresses.errors.pattern" translate>admin.input.authorizedIPAddresses.pattern</div>
           </div>
+          <div class="opfab-input opfab-edit-row">
+            <label for="opfab-comment" translate>admin.input.user.comment</label>
+            <input formControlName="comment" name="comment" id="opfab-comment" type="text">
+          </div>
         </div>
       </div>
     </form>

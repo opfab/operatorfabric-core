@@ -13,12 +13,11 @@ import {LineOfMonitoringResult} from '@ofModel/line-of-monitoring-result.model';
 import {ExcelExport} from 'app/business/common/excel-export';
 import {Observable, Subject} from 'rxjs';
 import {NgbModal, NgbModalOptions, NgbModalRef} from '@ng-bootstrap/ng-bootstrap';
-import {ProcessesService} from 'app/business/services/processes.service';
-import {Utilities} from 'app/business/common/utilities';
+import {ProcessesService} from 'app/business/services/businessconfig/processes.service';
 import {MonitoringConfig} from '@ofModel/monitoringConfig.model';
 import {JsonToArray} from 'app/business/common/jsontoarray/json-to-array';
 import {Process} from '@ofModel/processes.model';
-import {EntitiesService} from 'app/business/services/entities.service';
+import {EntitiesService} from 'app/business/services/users/entities.service';
 import {ColDef, GridOptions} from 'ag-grid-community';
 import {AnswerCellRendererComponent} from '../cell-renderers/answer-cell-renderer.component';
 import {ResponsesCellRendererComponent} from '../cell-renderers/responses-cell-renderer.component';
@@ -26,8 +25,8 @@ import {LightCard} from '@ofModel/light-card.model';
 import {LightCardsStoreService} from 'app/business/services/lightcards/lightcards-store.service';
 import {DateTimeFormatterService} from 'app/business/services/date-time-formatter.service';
 import {SelectedCardService} from 'app/business/services/card/selectedCard.service';
-import {CardService} from 'app/business/services/card.service';
-import {TranslationService} from 'app/business/services/translation.service';
+import {CardService} from 'app/business/services/card/card.service';
+import {TranslationService} from 'app/business/services/translation/translation.service';
 
 @Component({
     selector: 'of-monitoring-table',
@@ -237,14 +236,14 @@ export class MonitoringTableComponent implements OnChanges, OnDestroy {
     }
 
     refreshData(): void {
-        if (!!this.result) {
+        if (this.result) {
 
             this.displayedResults = this.result;
             this.rowData = [];
             this.displayedResults.forEach((line) => {
                 const entitiesNamesResponses = [];
                 const entitiesResponses =
-                    !!line.requiredResponses && line.requiredResponses.length
+                    line.requiredResponses?.length
                         ? line.requiredResponses
                         : line.allowedOrRequiredResponses;
 
@@ -305,18 +304,18 @@ export class MonitoringTableComponent implements OnChanges, OnDestroy {
         this.exportMonitoringData = [];
 
         this.gridApi.rowModel.rowsToDisplay.forEach((line) => {
-            if (typeof line !== undefined) {
+            if (line) {
                 const responses = this.getResponses(line.data.cardId, line.data.entitiesResponses);
                 this.exportMonitoringData.push({
                     [this.timeColumnName]: line.data.time,
-                    [this.answerColumnName]: !!line.data.answer ? line.data.answer : false,
+                    [this.answerColumnName]: line.data.answer ? line.data.answer : false,
                     [this.businessPeriodColumnName]: this.getFormattedDateTime(line.data.beginningOfBusinessPeriod)
                         .concat('-')
                         .concat(this.getFormattedDateTime(line.data.endOfBusinessPeriod)),
                     [this.titleColumnName]: line.data.title,
                     [this.summaryColumnName]: line.data.summary,
                     [this.typeOfStateColumnName]: line.data.processStatus,
-                    [this.severityColumnName]: Utilities.translateSeverity(this.translationService, line.data.severity),
+                    [this.severityColumnName]: this.translationService.translateSeverity(line.data.severity),
                     [this.emitterColumnName]: line.data.emitter,
                     [this.requiredResponsesColumnName]: line.data.requiredResponses
                         ? this.getEntitiesNames(line.data.requiredResponses).join()
@@ -330,7 +329,7 @@ export class MonitoringTableComponent implements OnChanges, OnDestroy {
     export(): void {
         this.exportCancelled = false;
         // if monitoring has a specific configuration
-        if (this.monitoringConfig && this.monitoringConfig.export && this.monitoringConfig.export.fields) {
+        if (this.monitoringConfig?.export?.fields) {
             this.jsonToArray = new JsonToArray(this.monitoringConfig.export.fields);
             const modalOptions: NgbModalOptions = {
                 centered: true,
@@ -382,15 +381,15 @@ export class MonitoringTableComponent implements OnChanges, OnDestroy {
             this.processesService.findProcessGroupLabelForProcess(card.card.process)
         );
         const process: Process = this.processesService.getProcess(card.card.process);
-        if (!!process) {
+        if (process) {
             card.card.processName = process.name;
             const state = process.states.get(card.card.state);
-            if (!!state) card.card.typeOfState = this.translateValue('shared.typeOfState.' + state.type);
+            if (state) card.card.typeOfState = this.translateValue('shared.typeOfState.' + state.type);
         }
         card.card.title = card.card.titleTranslated;
         card.card.summary = card.card.summaryTranslated;
-        card.card.severity = Utilities.translateSeverity(this.translationService, card.card.severity);
-        if (!!card.childCards) {
+        card.card.severity = this.translationService.translateSeverity(card.card.severity);
+        if (card.childCards) {
             card.childCards.forEach((childCard) => {
                 if (childCard.publisherType === 'ENTITY')
                     childCard.publisherName = this.entitiesService.getEntityName(childCard.publisher);
@@ -411,10 +410,10 @@ export class MonitoringTableComponent implements OnChanges, OnDestroy {
 
 
     ngOnDestroy() {
-        if (!!this.modalRef) {
+        if (this.modalRef) {
             this.modalRef.close();
         }
-        if (!!this.exportModalRef) {
+        if (this.exportModalRef) {
             this.exportModalRef.close();
         }
         this.unsubscribe$.next();

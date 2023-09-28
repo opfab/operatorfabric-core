@@ -14,9 +14,9 @@ import {BusinessconfigI18nLoaderFactory, injectedSpy} from '@tests/helpers';
 import {RouterTestingModule} from '@angular/router/testing';
 import {TranslateLoader, TranslateModule, TranslateService} from '@ngx-translate/core';
 import {HttpClientTestingModule} from '@angular/common/http/testing';
-import {ProcessesService} from 'app/business/services/processes.service';
+import {ProcessesService} from 'app/business/services/businessconfig/processes.service';
 import {Router} from '@angular/router';
-import {I18nService} from 'app/business/services/i18n.service';
+import {I18nService} from 'app/business/services/translation/i18n.service';
 import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
 import {CountDownModule} from '../countdown/countdown.module';
 import createSpyObj = jasmine.createSpyObj;
@@ -32,8 +32,9 @@ import {RemoteLoggerServer} from 'app/business/server/remote-logger.server';
 import {EntitiesServer} from 'app/business/server/entities.server';
 import {UserServer} from 'app/business/server/user.server';
 import {SoundServer} from 'app/business/server/sound.server';
-import {TranslationService} from 'app/business/services/translation.service';
+import {TranslationService} from 'app/business/services/translation/translation.service';
 import {TranslationServiceMock} from '@tests/mocks/translation.service.mock';
+import {AcknowledgeServer} from "../../../business/server/acknowledge.server";
 
 describe('LightCardComponent', () => {
     let lightCardDetailsComp: LightCardComponent;
@@ -77,7 +78,8 @@ describe('LightCardComponent', () => {
                 {provide: UserServer, useValue: null},
                 {provide: ExternalDevicesServer, use:null},
                 {provide: SoundServer, use: null},
-                {provide: TranslationService, useClass: TranslationServiceMock}
+                {provide: TranslationService, useClass: TranslationServiceMock},
+                {provide: AcknowledgeServer, useClass: null}
             ]
         }).compileComponents();
         // avoid exceptions during construction and init of the component

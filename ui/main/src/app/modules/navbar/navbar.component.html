@@ -25,33 +25,42 @@
   </div>
   <div class="collapse navbar-collapse " id="opfab-navbarContent" [ngbCollapse]="navbarCollapsed">
     <ul class="navbar-nav mr-auto ">
-      <!-- Links to OperatorFabric pages as defined in app-rooting.module.ts (e.g. Card Feed, Archive) -->
-      <li class="nav-item" *ngFor="let link of navigationRoutes, let i = index"
-        [class.active]="link.path === currentRoute">
-        <a id="opfab-navbar-menu-{{link.path}}" class="nav-link" [routerLink]="link.path" routerLinkActive #rla="routerLinkActive"
-          (click)="activeLinkIndex = i" translate>{{'menu.'+link.path}}</a>
-      </li>
-      <!-- Links from menus declared in businessconfig-party bundles-->
-      <li *ngFor="let tMenu of (businessconfigMenus); let index = index;" class="nav-item"
-        [class.dropdown]="tMenu.entries.length>1" [class.businessconfig-dropdown]="tMenu.entries.length>1">
-        <!-- Dropdown menu if at least 2 entries-->
-        <a class="nav-link" id="opfab-navbar-menu-dropdown-{{tMenu.id}}" *ngIf="tMenu.entries.length>1"
-           (mouseenter)="toggleMenu(tMenu, p1)" triggers="mouseenter:mouseleave" closeDelay="3000"
-           #p1="ngbPopover" [ngbPopover]="navbarDropdown" popoverClass="opfab-popover-no-arrow" placement="bottom-left" container="body"
-           href="javascript:void(0)" translate>{{tMenu.id}}.{{tMenu.label}} <em class="fa fa-caret-down"></em>
-        </a>
-        <ng-template #navbarDropdown>
-          <div class="opfab-dropdown-menu" (mouseleave)="openDropdownPopover.close()">
-            <div class="opfab-dropdown-menu-item" *ngFor="let entry of tMenu.entries">
-              <of-menu-link [menu]="tMenu" [menuEntry]="entry"></of-menu-link>
+
+      <span *ngFor="let navBarElement of navigationBar, let i = index">
+
+        <!-- Links to OperatorFabric pages as defined in app-rooting.module.ts (e.g. Card Feed, Archive) -->
+        <li class="nav-item" *ngIf="navigationRoutesMap.get(navBarElement.opfabCoreMenuId) as link"
+            [class.active]="link.path === currentRoute">
+          <a id="opfab-navbar-menu-{{link.path}}" class="nav-link"
+             [routerLink]="link.path" routerLinkActive #rla="routerLinkActive"
+             (click)="activeLinkIndex = i" translate>{{'menu.'+link.path}}</a>
+        </li>
+
+        <!-- Links from menus declared in businessconfig-party bundles-->
+        <li class="nav-item" *ngIf="businessconfigMenusMap.get(navBarElement.id) as tMenu"
+            [class.dropdown]="tMenu.entries.length>1 || showDropdownMenuEvenIfOnlyOneEntry"
+            [class.businessconfig-dropdown]="tMenu.entries.length>1 || showDropdownMenuEvenIfOnlyOneEntry">
+          <!-- Dropdown menu if at least 2 entries-->
+          <a class="nav-link" id="opfab-navbar-menu-dropdown-{{tMenu.id}}"
+             *ngIf="tMenu.entries.length>1 || showDropdownMenuEvenIfOnlyOneEntry"
+             (mouseenter)="toggleMenu(tMenu, p1)" triggers="mouseenter:mouseleave" closeDelay="3000"
+             #p1="ngbPopover" [ngbPopover]="navbarDropdown" popoverClass="opfab-popover-no-arrow" placement="bottom-left" container="body"
+             href="javascript:void(0)" translate>{{tMenu.label}} <em class="fa fa-caret-down"></em>
+          </a>
+          <ng-template #navbarDropdown>
+            <div class="opfab-dropdown-menu" (mouseleave)="openDropdownPopover.close()">
+              <div class="opfab-dropdown-menu-item" *ngFor="let entry of tMenu.entries">
+                <of-menu-link [currentRoute]= "currentRoute" [menu]="tMenu" [menuEntry]="entry"></of-menu-link>
+              </div>
             </div>
+          </ng-template>
+          <!-- Navbar link if only one entry -->
+          <div class="nav-link"  style="cursor: pointer;" *ngIf="tMenu.entries.length === 1 && !showDropdownMenuEvenIfOnlyOneEntry">
+            <of-menu-link [currentRoute]= "currentRoute" [menu]="tMenu" [menuEntry]="tMenu.entries[0]"></of-menu-link>
           </div>
-        </ng-template>
-        <!-- Navbar link if only one entry -->
-        <div class="nav-link" style="cursor: pointer;" *ngIf="tMenu.entries.length === 1">
-          <of-menu-link [menu]="tMenu" [menuEntry]="tMenu.entries[0]"></of-menu-link>
-        </div>
-      </li>
+        </li>
+
+      </span>
     </ul>
 
     <ul class="navbar-nav navbar-right opfab-sticky-menu">
@@ -60,15 +69,15 @@
       </ng-template>
       <li id="opfab-newcard-menu" style="display:flex;margin-top: 12px;cursor:pointer;margin-right:20px" (click)="openCardCreation()" *ngIf="(displayCreateUserCard)">
         <span class="opfab-menu-icon-newcard"
-        [ngbPopover]="createNewCard" popoverClass="opfab-popover" container="body"
+        [ngbPopover]="createNewCard" popoverClass="opfab-popover-unclickable" container="body"
         triggers="mouseenter:mouseleave" >></span>
-        </li> 
+        </li>
      <ng-template #calendartooltip>
       <span translate>menu.calendarTooltip</span>
     </ng-template>
       <li id="opfab-calendar-menu" style="display:flex;margin-top: 12px;cursor:pointer;" [routerLink]="'calendar'" routerLinkActive #rla="routerLinkActive" *ngIf="(displayCalendar)">
         <a  href="javascript:void(0)" [class.active]="(currentRoute.includes('calendar'))" class="opfab-menu-icon-calendar"
-        [ngbPopover]="calendartooltip" popoverClass="opfab-popover" container="body"
+        [ngbPopover]="calendartooltip" popoverClass="opfab-popover-unclickable" container="body"
         triggers="mouseenter:mouseleave"></a>
      </li>
 

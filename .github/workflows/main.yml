@@ -48,7 +48,7 @@ jobs:
     runs-on: ubuntu-latest
     if: ${{ github.event.inputs.dockerPush  != 'true' && github.event.inputs.dockerPushLatest  != 'true' &&  github.event.inputs.doc  != 'true' && github.event.inputs.docLatest  != 'true' && github.event_name != 'schedule' && github.ref_name != 'master' }}
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       
       - name: Job  status
         run: | 
@@ -82,7 +82,6 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           # SonarCloud access token should be generated from https://sonarcloud.io/account/security/
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-  
 
       - name: Karate tests
         if: ${{ github.event.inputs.karate  == 'true' || github.event_name == 'schedule' || github.event_name == 'pull_request' || github.event_name == 'push' }}
@@ -105,7 +104,7 @@ jobs:
     environment: publishVersion
     if: ${{ github.event.inputs.dockerPush  == 'true' || github.event.inputs.dockerPushLatest  == 'true'  ||  github.event.inputs.doc  == 'true' || github.event.inputs.docLatest  == 'true' || github.event_name == 'schedule' || github.ref_name == 'master' }}
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
     
       - name: Job  status
         run: | 

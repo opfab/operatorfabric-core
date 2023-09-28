@@ -1,5 +1,5 @@
 /* Copyright (c) 2020, Alliander (http://www.alliander.com)
- * Copyright (c) 2021, RTE (http://www.rte-france.com)
+ * Copyright (c) 2021-2023, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -53,7 +53,7 @@ class CardCommandFactoryShould {
     @Test
     void createResponseCardFailure() throws JsonProcessingException {
         CardObjectMapper failMapper = mock (CardObjectMapper.class);
-        when (failMapper.readCardValue(any(), any())).thenThrow(JsonProcessingException.class);
+        when (failMapper.readResponseCardValue(any())).thenThrow(JsonProcessingException.class);
         ReflectionTestUtils.setField(cut, "objectMapper", failMapper);
 
         CardCommand cardCommand = cut.createResponseCard(createCardPublicationData());

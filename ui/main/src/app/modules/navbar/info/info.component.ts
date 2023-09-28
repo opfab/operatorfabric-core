@@ -8,11 +8,11 @@
  */
 
 import {Component, OnInit} from '@angular/core';
-import {UserService} from 'app/business/services/user.service';
-import {EntitiesService} from 'app/business/services/entities.service';
+import {UserService} from 'app/business/services/users/user.service';
+import {EntitiesService} from 'app/business/services/users/entities.service';
 import {ConfigService} from 'app/business/services/config.service';
 import {DateTimeFormatterService} from 'app/business/services/date-time-formatter.service';
-import {ApplicationEventsService} from 'app/business/services/application-events.service';
+import {ApplicationEventsService} from 'app/business/services/events/application-events.service';
 import * as _ from 'lodash-es';
 
 @Component({
@@ -22,7 +22,9 @@ import * as _ from 'lodash-es';
 })
 export class InfoComponent implements OnInit {
     userName: string;
+    userEntities: string[];
     userEntitiesToDisplay: string;
+    userEntitiesToDisplayTrimmed: boolean;
     timeToDisplay: string;
 
     constructor(
@@ -55,22 +57,25 @@ export class InfoComponent implements OnInit {
 
     setUserEntitiesToDisplay() {
         const user_entities = this.userService.getCurrentUserWithPerimeters().userData.entities;
-        if (!!user_entities) {
-            this.userEntitiesToDisplay = '';
+        if (user_entities) {
+            this.userEntities = [];
             const entities = this.entitiesService.getEntitiesFromIds(user_entities);
             entities.forEach((entity) => {
                 if (entity.entityAllowedToSendCard) {
                     // this avoids to display entities used only for grouping
-                    if (this.userEntitiesToDisplay.length > 0) this.userEntitiesToDisplay += ', ';
-                    this.userEntitiesToDisplay += entity.name;
+                    this.userEntities.push(entity.name);
                 }
             });
-            this.trimTooLongEntitiesList();
+            this.userEntitiesToDisplay = this.userEntities.join(', ');
+            this.trimTooLongEntitiesString();
         }
     }
 
-    trimTooLongEntitiesList() {
-        if (this.userEntitiesToDisplay.length > 20)
+    trimTooLongEntitiesString() {
+        if (this.userEntitiesToDisplay.length > 20) {
             this.userEntitiesToDisplay = this.userEntitiesToDisplay.slice(0, 17) + '...';
+            this.userEntitiesToDisplayTrimmed = true;
+        }
+        else this.userEntitiesToDisplayTrimmed = false;
     }
 }

@@ -1,0 +1,58 @@
+{
+	"id":"api_test_with_forbidden_processId/",
+	"version":"1",
+	"uiVisibility": {
+		"monitoring": true,
+		"logging": true,
+		"calendar": true
+	},
+	"states": {
+		"messageState" : {
+			"templateName" : "template",
+			"description": "Message",
+			"styles" : [ "style" ]
+		},
+		"mailState" : {
+			"templateName" : "template",
+			"description": "Mail",
+			"styles" : [ "style" ]
+		},
+		"questionState": {
+		  "name": "question.title",
+		  "description": "Question",
+		  "color": "#8bcdcd",
+		  "userCard" : {
+					"template" : "usercard_question",
+					"severityVisible" : false,
+					"startDateVisible" : true,
+					"endDateVisible" : true,
+					"lttdVisible" : true
+				},
+		  "response": {
+			"state": "questionState",
+			"emittingEntityAllowedToRespond": true
+		  },
+		  "templateName": "question",
+		  "styles": [],
+		  "acknowledgmentAllowed": "Never"
+		},  
+		"incidentInProgressState": {
+		  "name": "incidentInProgress.name",
+		  "description": "Incident",
+		  "userCard" : {
+					"template" : "usercard_incidentInProgress",
+					"severityVisible" : true,
+					"startDateVisible" : false,
+					"endDateVisible" : false,
+					"recipientVisible": false
+				},
+		  "color": "#FAF0AF",
+		  "response": {
+			"state": "incidentInProgressState"
+		  },
+		  "templateName": "incidentInProgress",
+		  "styles": [],
+		  "acknowledgmentAllowed": "Always"
+		}
+	  }
+}

@@ -7,18 +7,19 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {AfterViewInit, Component, ElementRef, OnInit, ViewChild} from '@angular/core';
-import {UserService} from 'app/business/services/user.service';
+import {AfterViewInit, Component, ElementRef, OnInit, TemplateRef, ViewChild} from '@angular/core';
+import {UserService} from 'app/business/services/users/user.service';
 import {Process, State} from '@ofModel/processes.model';
 import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
 import {NgbModalRef} from '@ng-bootstrap/ng-bootstrap/modal/modal-ref';
 import {UserWithPerimeters} from '@ofModel/userWithPerimeters.model';
-import {ProcessesService} from 'app/business/services/processes.service';
+import {ProcessesService} from 'app/business/services/businessconfig/processes.service';
 import {FormArray, FormControl, FormGroup} from '@angular/forms';
-import {SettingsService} from 'app/business/services/settings.service';
+import {SettingsService} from 'app/business/services/users/settings.service';
 import {TranslateService} from '@ngx-translate/core';
 import {Utilities} from '../../business/common/utilities';
 import {LightCardsStoreService} from 'app/business/services/lightcards/lightcards-store.service';
+import {ConfigService} from "../../business/services/config.service";
 
 @Component({
     selector: 'of-feedconfiguration',
@@ -42,6 +43,7 @@ export class FeedconfigurationComponent implements OnInit, AfterViewInit {
     processIdsByProcessGroup: Map<string, string[]>;
     processesWithoutGroup: {idProcess: string; processLabel: string}[];
     currentUserWithPerimeters: UserWithPerimeters;
+    userSettings: any;
     processesStatesLabels: Map<
         string,
         {
@@ -69,13 +71,16 @@ export class FeedconfigurationComponent implements OnInit, AfterViewInit {
     messageAfterSavingSettings: string;
     isThereProcessStateToDisplay: boolean;
 
+    processesStatesNotifiedByEmail: Map<string, boolean>;
+
     constructor(
         private userService: UserService,
         private processesService: ProcessesService,
         private modalService: NgbModal,
         private settingsService: SettingsService,
         private lightCardStoreService: LightCardsStoreService,
-        private translateService: TranslateService
+        private translateService: TranslateService,
+        private configService: ConfigService
     ) {
         this.processesStatesLabels = new Map();
         this.processIdsByProcessGroup = new Map();
@@ -86,6 +91,7 @@ export class FeedconfigurationComponent implements OnInit, AfterViewInit {
         this.isAllProcessesSelectedPerProcessGroup = new Map();
         this.isAllProcessesCheckboxDisabledPerProcessGroup = new Map();
         this.isAllStatesCheckboxDisabledPerProcessId = new Map();
+        this.processesStatesNotifiedByEmail = new Map();
         this.initForm();
     }
 
@@ -98,6 +104,18 @@ export class FeedconfigurationComponent implements OnInit, AfterViewInit {
             if (processGroup.processes.find((process) => process.processId === processIdToFind)) return true;
         }
         return false;
+    }
+
+    private selectStateForMailNotif(processId: string, stateId: string, stateControlIndex: number) {
+        if (this.feedConfigurationForm.controls.processesStates.controls[stateControlIndex].value) {
+            this.processesStatesNotifiedByEmail.set(processId + '.' + stateId, true);
+        }
+    }
+
+    private unselectStateForMailNotif(processId: string, stateId: string) {
+        if (this.processesStatesNotifiedByEmail.has(processId + '.' + stateId)) {
+            this.processesStatesNotifiedByEmail.delete(processId + '.' + stateId);
+        }
     }
 
     private toggleSelectAllStates(idProcess: string) {
@@ -132,7 +150,7 @@ export class FeedconfigurationComponent implements OnInit, AfterViewInit {
             this.isAllProcessesSelectedPerProcessGroup.set(idProcessGroup, this.isAllProcessesSelected(idProcessGroup));
     }
 
-    private isAllStatesSelected(idProcess) {
+    private isAllStatesSelected(idProcess: string): boolean {
         for (const state of this.processesStatesLabels.get(idProcess).states) {
             if (!this.feedConfigurationForm.controls.processesStates.controls[state.stateControlIndex].value)
                 return false;
@@ -140,24 +158,31 @@ export class FeedconfigurationComponent implements OnInit, AfterViewInit {
         return true;
     }
 
-    private isAllProcessesSelected(idProcessGroup) {
+    private isAllProcessesSelected(idProcessGroup: string): boolean {
         for (const processId of this.processIdsByProcessGroup.get(idProcessGroup)) {
             if (!this.isAllStatesSelectedPerProcess.get(processId)) return false;
         }
         return true;
     }
 
-    private updateIsAllStatesSelected(idProcess, idProcessGroup) {
+    private updateIsAllStatesSelected(idProcess: string, idProcessGroup: string) {
         this.isAllStatesSelectedPerProcess.set(idProcess, this.isAllStatesSelected(idProcess));
 
-        if (idProcessGroup !== '')
+        if (idProcessGroup !== '') {
             this.isAllProcessesSelectedPerProcessGroup.set(idProcessGroup, this.isAllProcessesSelected(idProcessGroup));
+        }
+    }
+
+    private checkIfMailNotifMustBeDeleted(idProcess: string, idState: string, stateControlIndex: number) {
+        if (!this.feedConfigurationForm.controls.processesStates.controls[stateControlIndex].value) {
+            this.processesStatesNotifiedByEmail.delete(idProcess + '.' + idState);
+        }
     }
 
     private makeProcessesWithoutGroup() {
         this.processesDefinition.forEach((process) => {
             if (!this.findInProcessGroups(process.id)) {
-                let processLabel = !!process.name ? process.name : process.id;
+                let processLabel = process.name ? process.name : process.id;
 
                 this.translateService.get(processLabel).subscribe((translate) => {
                     processLabel = translate;
@@ -169,18 +194,18 @@ export class FeedconfigurationComponent implements OnInit, AfterViewInit {
     }
 
     private addCheckboxesInFormArray() {
-        const processesStatesNotNotified = !!this.currentUserWithPerimeters.processesStatesNotNotified
+        const processesStatesNotNotified = this.currentUserWithPerimeters.processesStatesNotNotified
             ? this.currentUserWithPerimeters.processesStatesNotNotified
             : null;
 
         this.preparedListOfProcessesStates.forEach((processState) => {
-            const notNotifiedStatesForThisProcess = !!processesStatesNotNotified
+            const notNotifiedStatesForThisProcess = processesStatesNotNotified
             ? processesStatesNotNotified.get(processState.processId)
             : null;
 
             let isChecked = true;
 
-            if (!!notNotifiedStatesForThisProcess && notNotifiedStatesForThisProcess.includes(processState.stateId)) {
+            if (notNotifiedStatesForThisProcess?.includes(processState.stateId)) {
                 isChecked = false;
                 if (
                     this.checkStateUnsubscribedButWithFilteringNotificationNotAllowed(
@@ -224,17 +249,17 @@ export class FeedconfigurationComponent implements OnInit, AfterViewInit {
                 filteringNotificationAllowed: boolean;
             }[] = [];
 
-            const processLabel = !!process.name ? process.name : process.id;
+            const processLabel = process.name ? process.name : process.id;
 
             for (const stateId of process.states.keys()) {
                 const state = process.states.get(stateId);
 
                 if (this.checkIfStateMustBeDisplayed(state, process, stateId)) {
-                    const stateLabel = !!state.name ? state.name : stateId;
+                    const stateLabel = state.name ? state.name : stateId;
 
                     const filteringNotificationAllowed =
                         this.userService.isFilteringNotificationAllowedForProcessAndState(process.id, stateId);
-                    if (!!filteringNotificationAllowed) this.setProcessAndProcessGroupCheckboxesEnabled(process.id);
+                    if (filteringNotificationAllowed) this.setProcessAndProcessGroupCheckboxesEnabled(process.id);
 
                     states.push({stateId, stateLabel, stateControlIndex, filteringNotificationAllowed});
                     this.preparedListOfProcessesStates.push({processId: process.id, stateId});
@@ -252,7 +277,7 @@ export class FeedconfigurationComponent implements OnInit, AfterViewInit {
     private setProcessAndProcessGroupCheckboxesEnabled(processId: string) {
         this.isAllStatesCheckboxDisabledPerProcessId.set(processId, false);
         const processGroupId = this.processesService.findProcessGroupIdForProcessId(processId);
-        if (!!processGroupId) {
+        if (processGroupId) {
             this.isAllProcessesCheckboxDisabledPerProcessGroup.set(processGroupId, false);
         }
     }
@@ -270,13 +295,13 @@ export class FeedconfigurationComponent implements OnInit, AfterViewInit {
         const toRemove = [];
         this.processGroupsAndLabels.forEach((processGroupData) => {
             processGroupData.processes = processGroupData.processes.filter(
-                (processData) => !!this.processesStatesLabels.get(processData.processId)
+                (processData) => this.processesStatesLabels.has(processData.processId)
             );
             if (processGroupData.processes.length === 0) toRemove.push(processGroupData.groupId);
         });
         this.processGroupsAndLabels = this.processGroupsAndLabels.filter((group) => !toRemove.includes(group.groupId));
         this.processesWithoutGroup = this.processesWithoutGroup.filter(
-            (processData) => !!this.processesStatesLabels.get(processData.idProcess)
+            (processData) => this.processesStatesLabels.has(processData.idProcess)
         );
     }
 
@@ -288,6 +313,8 @@ export class FeedconfigurationComponent implements OnInit, AfterViewInit {
 
     ngOnInit() {
         this.currentUserWithPerimeters = this.userService.getCurrentUserWithPerimeters();
+
+        this.userSettings = this.configService.getConfigValue('settings');
 
         this.processGroupsAndLabels = this.processesService.getProcessGroupsAndLabels();
         this.processGroupsAndLabels.forEach((group) => {
@@ -305,6 +332,7 @@ export class FeedconfigurationComponent implements OnInit, AfterViewInit {
         this.loadIsAllStatesSelected();
         this.makeProcessIdsByProcessGroup();
         this.loadIsAllProcessesSelected();
+        this.computeProcessesStatesNotifiedByEmail();
 
         this.isThereProcessStateToDisplay = this.processesService.getStatesListPerProcess(false, true).size > 0;
     }
@@ -316,7 +344,7 @@ export class FeedconfigurationComponent implements OnInit, AfterViewInit {
     }
 
     initIsAllProcessesCheckboxDisabledPerProcessGroup() {
-        if (!!this.processGroupsAndLabels) {
+        if (this.processGroupsAndLabels) {
             this.processGroupsAndLabels.forEach((processGroupAndLabel) => {
                 this.isAllProcessesCheckboxDisabledPerProcessGroup.set(processGroupAndLabel.groupId, true);
             });
@@ -337,9 +365,36 @@ export class FeedconfigurationComponent implements OnInit, AfterViewInit {
         });
     }
 
+    computeProcessesStatesNotifiedByEmail() {
+        this.currentUserWithPerimeters.processesStatesNotifiedByEmail?.forEach((listOfStateIds, processId) => {
+            listOfStateIds.forEach(stateId => {
+                this.processesStatesNotifiedByEmail.set(processId + '.' + stateId, true);
+            });
+        });
+    }
+
+    computeMapOfProcessesNotifiedByMail(): Map<string, string[]> {
+        const processesStatesNotifiedUpdate = new Map<string, string[]>();
+
+        this.processesStatesNotifiedByEmail.forEach((value, processState) => {
+            const currentProcessId = processState.split('.').shift();
+            const currentStateId = processState.split('.').pop();
+
+            const statesNotifiedUpdate = processesStatesNotifiedUpdate.get(currentProcessId);
+            if (statesNotifiedUpdate) {
+                statesNotifiedUpdate.push(currentStateId);
+            } else {
+                processesStatesNotifiedUpdate.set(currentProcessId, [currentStateId]);
+            }
+        });
+        return processesStatesNotifiedUpdate;
+    }
+
     confirmSaveSettings() {
         if (this.saveSettingsInProgress) return; // avoid multiple clicks
+
         this.saveSettingsInProgress = true;
+
         const processesStatesNotNotifiedUpdate = new Map<string, string[]>();
         this.feedConfigurationForm.controls.processesStates.controls.forEach((control, i) => {
             if (!control.value) {
@@ -347,23 +402,26 @@ export class FeedconfigurationComponent implements OnInit, AfterViewInit {
                 const currentStateId = this.preparedListOfProcessesStates[i].stateId;
 
                 const statesNotNotifiedUpdate = processesStatesNotNotifiedUpdate.get(currentProcessId);
-                if (!!statesNotNotifiedUpdate)
-                    statesNotNotifiedUpdate.push(this.preparedListOfProcessesStates[i].stateId);
+                if (statesNotNotifiedUpdate)
+                    statesNotNotifiedUpdate.push(currentStateId);
                 else processesStatesNotNotifiedUpdate.set(currentProcessId, [currentStateId]);
             }
         });
 
+        const processesStatesNotifiedByEmail = this.computeMapOfProcessesNotifiedByMail();
+
         this.settingsService
             .patchUserSettings({
                 login: this.currentUserWithPerimeters.userData.login,
-                processesStatesNotNotified: Object.fromEntries(processesStatesNotNotifiedUpdate)
+                processesStatesNotNotified: Object.fromEntries(processesStatesNotNotifiedUpdate),
+                processesStatesNotifiedByEmail: Object.fromEntries(processesStatesNotifiedByEmail)
             })
             .subscribe({
                 next: (resp) => {
                     this.saveSettingsInProgress = false;
                     this.messageAfterSavingSettings = '';
                     const msg = resp.message;
-                    if (!!msg && msg.includes('unable')) {
+                    if (msg?.includes('unable')) {
                         console.log('Impossible to save settings, error message from service : ', msg);
                         this.messageAfterSavingSettings = 'shared.error.impossibleToSaveSettings';
                         this.displaySendResultError = true;
@@ -388,14 +446,16 @@ export class FeedconfigurationComponent implements OnInit, AfterViewInit {
         // it ends up with nothing in the feed
         // This happens because method this.lightCardStoreService.removeAllLightCards();
         // is called too late (in method confirmSaveSettings)
-        if (!this.saveSettingsInProgress) this.modalRef.close();
+        if (!this.saveSettingsInProgress) {
+            this.modalRef.close();
+        }
     }
 
     openStatesUnsubscribedButWithFilteringNotificationNotAllowedModal() {
         this.modalRef = this.modalService.open(this.statesUnsubscribedTemplate, {centered: true, backdrop: 'static'});
     }
 
-    openConfirmSaveSettingsModal(content) {
+    openConfirmSaveSettingsModal(content: TemplateRef<any>) {
         this.modalRef = this.modalService.open(content, {centered: true, backdrop: 'static'});
     }
 }

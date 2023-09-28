@@ -30,7 +30,7 @@ import java.util.concurrent.ConcurrentHashMap;
 @Slf4j
 public class CardSubscriptionService implements EventListener {
 
-    @Value("${checkIfUserIsAlreadyConnected:true}")
+    @Value("${operatorfabric.checkIfUserIsAlreadyConnected:true}")
     private boolean checkIfUserIsAlreadyConnected;
 
     private static final String ERROR_MESSAGE_PARSING = "ERROR during received message parsing";

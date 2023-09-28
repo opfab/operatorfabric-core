@@ -1,4 +1,4 @@
-/* Copyright (c) 2022, RTE (http://www.rte-france.com)
+/* Copyright (c) 2022-2023, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -118,7 +118,7 @@ describe('ExternalDevicesconfigurationPage', () => {
         opfab.openExternalDevices();
         cy.get('#opfab-externaldevices-tabs').find('#opfab-externaldevices-users-tab').click();
 
-        agGrid.cellShould('#opfab-externaldevices-table-grid', 4, 1, 'have.text', 'CDS_1, CDS_2');
+        agGrid.cellShould('#opfab-externaldevices-table-grid', 4, 1, 'have.text', 'CDS_1,CDS_2');
 
         // Delete previously created row
         agGrid.clickCell('#opfab-externaldevices-table-grid', 4, 3, 'of-action-cell-renderer');
@@ -135,8 +135,8 @@ describe('ExternalDevicesconfigurationPage', () => {
         // Go to the users configuration screen
         cy.get('#opfab-externaldevices-tabs').find('#opfab-externaldevices-users-tab').click();
 
-        // We iterate 10 times because there are 17 users and 4 users have already a configuration
-        for (let i = 0; i < 13; i++) {
+        // We iterate 14 times because there are 18 users and 4 users have already a configuration
+        for (let i = 0; i < 14; i++) {
             cy.get('#addItem').should('be.visible').click();
 
             cy.get('of-externaldevices-modal').should('exist');
@@ -152,8 +152,8 @@ describe('ExternalDevicesconfigurationPage', () => {
         //First page is 10 rows
         agGrid.countTableRows('#opfab-externaldevices-table-grid', 10);
 
-        // Pagination should display ' Results number  : 17 '
-        cy.get('.opfab-pagination').should('contain.text', ' Results number  : 17');
+        // Pagination should display ' Results number  : 18 '
+        cy.get('.opfab-pagination').should('contain.text', ' Results number  : 18');
 
         // When all users devices are configured it is not possible to add new configurations
         cy.get('#addItem').click();
@@ -177,7 +177,7 @@ describe('ExternalDevicesconfigurationPage', () => {
         agGrid.countTableRows('#opfab-externaldevices-table-grid', 10);
 
         // Delete previously created configurations
-        for (let j = 17; j > 4; j--) {
+        for (let j = 18; j > 4; j--) {
             agGrid.clickCell('#opfab-externaldevices-table-grid', 4, 3, 'of-action-cell-renderer');
 
             cy.get('of-confirmation-dialog').should('exist');

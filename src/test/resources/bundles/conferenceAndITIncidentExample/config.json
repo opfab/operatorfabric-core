@@ -20,6 +20,7 @@
       "acknowledgmentAllowed": "Always",
       "showAcknowledgmentFooter" : "ForAllUsers",
       "editCardEnabledOnUserInterface": false,
+      "copyCardEnabledOnUserInterface": false,
       "type" : "INPROGRESS"
     },
     "incidentInProgressState": {

@@ -30,4 +30,8 @@ public class OpfabAuthorizationManager {
                             new OpfabIpAuthorizationManager());
     }
 
+    public static AuthorizationManager<RequestAuthorizationContext> hasAnyUsernameAndIpAllowed(String... usernames) {       
+        return AuthorizationManagers.allOf(AuthenticatedAuthorizationManager.authenticated(), 
+                            new OpfabLoginAuthorizationManager(usernames), new OpfabIpAuthorizationManager());
+    }
 }

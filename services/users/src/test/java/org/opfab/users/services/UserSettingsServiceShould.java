@@ -47,9 +47,9 @@ public class UserSettingsServiceShould {
         void clear() {
                 userSettingsRepositoryStub.deleteAll();
                 userRepositoryStub.deleteAll();
-                UserSettings settings1 = UserSettingsData.builder().login("user1").description("desc").locale("fr")
+                UserSettings settings1 = UserSettingsData.builder().login("user1").locale("fr")
                                 .build();
-                UserSettings settings2 = UserSettingsData.builder().login("user2").description("desc").locale("fr")
+                UserSettings settings2 = UserSettingsData.builder().login("user2").locale("fr")
                                 .build();
                 userSettingsRepositoryStub.save(settings1);
                 userSettingsRepositoryStub.save(settings2);
@@ -69,7 +69,7 @@ public class UserSettingsServiceShould {
                 stateRight1.setRight(RightsEnum.RECEIVE);
                 StateRight stateRight2 = new StateRightData();
                 stateRight2.setState("state2");
-                stateRight2.setRight(RightsEnum.WRITE);
+                stateRight2.setRight(RightsEnum.RECEIVEANDWRITE);
                 stateRight2.setFilteringNotificationAllowed(true);
                 StateRight stateRightNotFilterable = new StateRightData();
                 stateRightNotFilterable.setState("stateRightNotFilterable");
@@ -116,7 +116,6 @@ public class UserSettingsServiceShould {
                         OperationResult<UserSettings> settings = userSettingsService.fetchUserSettings("user1");
                         assertThat(settings.isSuccess()).isTrue();
                         assertThat(settings.getResult().getLogin()).isEqualTo("user1");
-                        assertThat(settings.getResult().getDescription()).isEqualTo("desc");
                 }
 
         }
@@ -128,7 +127,7 @@ public class UserSettingsServiceShould {
                 @Test
                 void GIVEN_Existing_Settings_WHEN_Patch_Settings_THEN_Settings_Are_Updated() {
 
-                        UserSettings newSettings = UserSettingsData.builder().login("user1").description("desc")
+                        UserSettings newSettings = UserSettingsData.builder().login("user1")
                                         .locale("newLocale")
                                         .build();
                         OperationResult<UserSettings> settings = userSettingsService.patchUserSettings("user1",
@@ -143,7 +142,7 @@ public class UserSettingsServiceShould {
                 @Test
                 void GIVEN_None_Existing_Settings_WHEN_Patch_Settings_THEN_Settings_Are_Created() {
 
-                        UserSettings newSettings = UserSettingsData.builder().login("user3").description("desc")
+                        UserSettings newSettings = UserSettingsData.builder().login("user3")
                                         .locale("nl")
                                         .build();
                         OperationResult<UserSettings> settings = userSettingsService.patchUserSettings("user3",
@@ -164,14 +163,10 @@ public class UserSettingsServiceShould {
                                         newSettings);
                         assertThat(settings.isSuccess()).isTrue();
                         assertThat(settings.getResult().getLocale()).isEqualTo("newLocale");
-                        assertThat(settings.getResult().getDescription()).isEqualTo("desc");
                         assertThat(userSettingsRepositoryStub.findById("user1").get().getLocale())
                                         .isEqualTo("newLocale");
-                        assertThat(userSettingsRepositoryStub.findById("user1").get().getDescription())
-                                        .isEqualTo("desc");
-                        assertThat(
-                                        userSettingsRepositoryStub.findById("user1").get()
-                                                        .getProcessesStatesNotNotified().get("process1"))
+                        assertThat(userSettingsRepositoryStub.findById("user1").get()
+                                        .getProcessesStatesNotNotified().get("process1"))
                                         .containsExactlyInAnyOrder("state1", "state2");
 
                 }
@@ -204,15 +199,93 @@ public class UserSettingsServiceShould {
                         assertThat(settings.getErrorMessage())
                                         .isEqualTo("Filtering notification not allowed for at least one process/state");
                         assertThat(userSettingsRepositoryStub.findById("user1").get().getLocale()).isEqualTo("fr");
-                        assertThat(userSettingsRepositoryStub.findById("user1").get().getDescription())
-                                        .isEqualTo("desc");
-                        assertThat(
-                                        userSettingsRepositoryStub.findById("user1").get()
-                                                        .getProcessesStatesNotNotified())
+                        assertThat(userSettingsRepositoryStub.findById("user1").get()
+                                        .getProcessesStatesNotNotified())
                                         .isEmpty();
 
                 }
 
+                @Test
+                void GIVEN_Existing_Settings_WHEN_Patch_With_SendCardsByEmail_THEN_Settings_Are_Updated() {
+                        boolean sendCardsByEmail = true;
+                        UserSettings newSettings = UserSettingsData.builder().login("user1")
+                                .sendCardsByEmail(sendCardsByEmail).build();
+                        OperationResult<UserSettings> settings = userSettingsService.patchUserSettings("user1",
+                                newSettings);
+                        assertThat(settings.isSuccess()).isTrue();
+                        assertThat(settings.getResult().getSendCardsByEmail()).isTrue();
+                        assertThat(userSettingsRepositoryStub.findById("user1").get()
+                                .getSendCardsByEmail())
+                                .isTrue();
+                }
+
+                @Test
+                void GIVEN_Existing_Settings_WHEN_Patch_With_SendCardsByEmail_THEN_A_Notification_Is_Sent_To_Other_Services() {
+                        boolean sendCardsByEmail = true;
+                        UserSettings newSettings = UserSettingsData.builder().login("user1")
+                                .sendCardsByEmail(sendCardsByEmail).build();
+                        OperationResult<UserSettings> settings = userSettingsService.patchUserSettings("user1",
+                                newSettings);
+                        assertThat(settings.isSuccess()).isTrue();
+                        String[] expectedMessageSent1 = { "user", "user1" };
+                        assertThat(eventBusSpy.getMessagesSent()).containsExactlyInAnyOrder(expectedMessageSent1);
+                }
+
+                @Test
+                void GIVEN_Existing_Settings_WHEN_Patch_With_Email_THEN_Settings_Are_Updated() {
+                        String email = "john.doe@test.com";
+                        UserSettings newSettings = UserSettingsData.builder().login("user1")
+                                .email(email).build();
+                        OperationResult<UserSettings> settings = userSettingsService.patchUserSettings("user1",
+                                newSettings);
+                        assertThat(settings.isSuccess()).isTrue();
+                        assertThat(settings.getResult().getEmail()).isEqualTo("john.doe@test.com");
+                        assertThat(userSettingsRepositoryStub.findById("user1").get()
+                                .getEmail())
+                                .isEqualTo("john.doe@test.com");
+                }
+
+                @Test
+                void GIVEN_Existing_Settings_WHEN_Patch_With_Email_THEN_A_Notification_Is_Sent_To_Other_Services() {
+                        String email = "john.doe@test.com";
+                        UserSettings newSettings = UserSettingsData.builder().login("user1")
+                                .email(email).build();
+                        OperationResult<UserSettings> settings = userSettingsService.patchUserSettings("user1",
+                                newSettings);
+                        assertThat(settings.isSuccess()).isTrue();
+                        String[] expectedMessageSent1 = { "user", "user1" };
+                        assertThat(eventBusSpy.getMessagesSent()).containsExactlyInAnyOrder(expectedMessageSent1);
+                }
+
+                @Test
+                void GIVEN_Existing_Settings_WHEN_Patch_With_ProcessesStatesNotifiedByEmail_THEN_Settings_Are_Updated() {
+                        Map<String, List<String>> processesStatesNotifiedByEmail = new HashMap<String, List<String>>();
+                        processesStatesNotifiedByEmail.put("processNotifByEmail", Arrays.asList("stateNotifByEmail1", "stateNotifByEmail2"));
+                        UserSettings newSettings = UserSettingsData.builder().login("user1")
+                                .processesStatesNotifiedByEmail(processesStatesNotifiedByEmail).build();
+                        OperationResult<UserSettings> settings = userSettingsService.patchUserSettings("user1",
+                                newSettings);
+                        assertThat(settings.isSuccess()).isTrue();
+                        assertThat(settings.getResult().getProcessesStatesNotifiedByEmail().get("processNotifByEmail"))
+                                .containsExactlyInAnyOrder("stateNotifByEmail1", "stateNotifByEmail2");
+                        assertThat(userSettingsRepositoryStub.findById("user1").get()
+                                .getProcessesStatesNotifiedByEmail().get("processNotifByEmail"))
+                                .containsExactlyInAnyOrder("stateNotifByEmail1", "stateNotifByEmail2");
+
+                }
+
+                @Test
+                void GIVEN_Existing_Settings_WHEN_Patch_With_ProcessesStatesNotifiedByEmail_THEN_A_Notification_Is_Sent_To_Other_Services() {
+                        Map<String, List<String>> processesStatesNotifiedByEmail = new HashMap<String, List<String>>();
+                        processesStatesNotifiedByEmail.put("processNotifByEmail", Arrays.asList("stateNotifByEmail1", "stateNotifByEmail2"));
+                        UserSettings newSettings = UserSettingsData.builder().login("user1")
+                                .processesStatesNotifiedByEmail(processesStatesNotifiedByEmail).build();
+                        OperationResult<UserSettings> settings = userSettingsService.patchUserSettings("user1",
+                                newSettings);
+                        assertThat(settings.isSuccess()).isTrue();
+                        String[] expectedMessageSent1 = { "user", "user1" };
+                        assertThat(eventBusSpy.getMessagesSent()).containsExactlyInAnyOrder(expectedMessageSent1);
+                }
         }
 
         @Nested
@@ -230,14 +303,13 @@ public class UserSettingsServiceShould {
                         assertThat(settings.getResult().getLocale()).isEqualTo("newLocale");
                         assertThat(userSettingsRepositoryStub.findById("user1").get().getLocale())
                                         .isEqualTo("newLocale");
-                        assertThat(userSettingsRepositoryStub.findById("user1").get().getDescription()).isNull();
 
                 }
 
                 @Test
                 void GIVEN_None_Existing_Settings_WHEN_Update_Settings_THEN_Settings_Are_Created() {
 
-                        UserSettings newSettings = UserSettingsData.builder().login("user3").description("desc")
+                        UserSettings newSettings = UserSettingsData.builder().login("user3")
                                         .locale("nl")
                                         .build();
                         OperationResult<UserSettings> settings = userSettingsService.updateUserSettings("user3",
@@ -245,9 +317,6 @@ public class UserSettingsServiceShould {
                         assertThat(settings.isSuccess()).isTrue();
                         assertThat(settings.getResult().getLocale()).isEqualTo("nl");
                         assertThat(userSettingsRepositoryStub.findById("user3").get().getLocale()).isEqualTo("nl");
-                        assertThat(userSettingsRepositoryStub.findById("user3").get().getDescription())
-                                        .isEqualTo("desc");
-
                 }
 
                 @Test
@@ -260,13 +329,10 @@ public class UserSettingsServiceShould {
                                         newSettings);
                         assertThat(settings.isSuccess()).isTrue();
                         assertThat(settings.getResult().getLocale()).isEqualTo("newLocale");
-                        assertThat(settings.getResult().getDescription()).isNull();
                         assertThat(userSettingsRepositoryStub.findById("user1").get().getLocale())
                                         .isEqualTo("newLocale");
-                        assertThat(userSettingsRepositoryStub.findById("user1").get().getDescription()).isNull();
-                        assertThat(
-                                        userSettingsRepositoryStub.findById("user1").get()
-                                                        .getProcessesStatesNotNotified().get("process1"))
+                        assertThat(userSettingsRepositoryStub.findById("user1").get()
+                                        .getProcessesStatesNotNotified().get("process1"))
                                         .containsExactlyInAnyOrder("state1", "state2");
 
                 }
@@ -310,15 +376,89 @@ public class UserSettingsServiceShould {
                         assertThat(settings.getErrorMessage())
                                         .isEqualTo("Filtering notification not allowed for at least one process/state");
                         assertThat(userSettingsRepositoryStub.findById("user1").get().getLocale()).isEqualTo("fr");
-                        assertThat(userSettingsRepositoryStub.findById("user1").get().getDescription())
-                                        .isEqualTo("desc");
-                        assertThat(
-                                        userSettingsRepositoryStub.findById("user1").get()
-                                                        .getProcessesStatesNotNotified())
+                        assertThat(userSettingsRepositoryStub.findById("user1").get()
+                                        .getProcessesStatesNotNotified())
                                         .isEmpty();
-
                 }
 
-        }
+                @Test
+                void GIVEN_Existing_Settings_WHEN_Update_With_SendCardsByEmail_THEN_Settings_Are_Updated() {
+                        boolean sendCardsByEmail = true;
+                        UserSettings newSettings = UserSettingsData.builder().login("user1")
+                                .sendCardsByEmail(sendCardsByEmail).build();
+                        OperationResult<UserSettings> settings = userSettingsService.updateUserSettings("user1",
+                                newSettings);
+                        assertThat(settings.isSuccess()).isTrue();
+                        assertThat(settings.getResult().getSendCardsByEmail()).isTrue();
+                        assertThat(userSettingsRepositoryStub.findById("user1").get().getSendCardsByEmail())
+                                .isTrue();
+                }
 
+                @Test
+                void GIVEN_Existing_Settings_WHEN_Update_With_SendCardsByEmail_THEN_A_Notification_Is_Sent_To_Other_Services() {
+                        boolean sendCardsByEmail = true;
+                        UserSettings newSettings = UserSettingsData.builder().login("user1")
+                                .sendCardsByEmail(sendCardsByEmail).build();
+                        OperationResult<UserSettings> settings = userSettingsService.updateUserSettings("user1",
+                                newSettings);
+                        assertThat(settings.isSuccess()).isTrue();
+                        String[] expectedMessageSent1 = { "user", "user1" };
+                        assertThat(eventBusSpy.getMessagesSent()).containsExactlyInAnyOrder(expectedMessageSent1);
+                }
+
+                @Test
+                void GIVEN_Existing_Settings_WHEN_Update_With_Email_THEN_Settings_Are_Updated() {
+                        String email = "john.doe@test.com";
+                        UserSettings newSettings = UserSettingsData.builder().login("user1")
+                                .email(email).build();
+                        OperationResult<UserSettings> settings = userSettingsService.updateUserSettings("user1",
+                                newSettings);
+                        assertThat(settings.isSuccess()).isTrue();
+                        assertThat(settings.getResult().getEmail()).isEqualTo("john.doe@test.com");
+                        assertThat(userSettingsRepositoryStub.findById("user1").get().getEmail())
+                                .isEqualTo("john.doe@test.com");
+                }
+
+                @Test
+                void GIVEN_Existing_Settings_WHEN_Update_With_Email_THEN_A_Notification_Is_Sent_To_Other_Services() {
+                        String email = "john.doe@test.com";
+                        UserSettings newSettings = UserSettingsData.builder().login("user1")
+                                .email(email).build();
+                        OperationResult<UserSettings> settings = userSettingsService.updateUserSettings("user1",
+                                newSettings);
+                        assertThat(settings.isSuccess()).isTrue();
+                        String[] expectedMessageSent1 = { "user", "user1" };
+                        assertThat(eventBusSpy.getMessagesSent()).containsExactlyInAnyOrder(expectedMessageSent1);
+                }
+
+                @Test
+                void GIVEN_Existing_Settings_WHEN_Update_With_ProcessesStatesNotifiedByEmail_THEN_Settings_Are_Updated() {
+                        Map<String, List<String>> processesStatesNotifiedByEmail = new HashMap<String, List<String>>();
+                        processesStatesNotifiedByEmail.put("processNotifByEmail", Arrays.asList("stateNotifByEmail1", "stateNotifByEmail2"));
+                        UserSettings newSettings = UserSettingsData.builder().login("user1").locale("newLocale")
+                                .processesStatesNotifiedByEmail(processesStatesNotifiedByEmail).build();
+                        OperationResult<UserSettings> settings = userSettingsService.updateUserSettings("user1",
+                                newSettings);
+                        assertThat(settings.isSuccess()).isTrue();
+                        assertThat(settings.getResult().getProcessesStatesNotifiedByEmail()
+                                .get("processNotifByEmail"))
+                                .containsExactlyInAnyOrder("stateNotifByEmail1", "stateNotifByEmail2");;
+                        assertThat(userSettingsRepositoryStub.findById("user1").get()
+                                .getProcessesStatesNotifiedByEmail().get("processNotifByEmail"))
+                                .containsExactlyInAnyOrder("stateNotifByEmail1", "stateNotifByEmail2");
+                }
+
+                @Test
+                void GIVEN_Existing_Settings_WHEN_Update_With_ProcessesStatesNotifiedByEmail_THEN_A_Notification_Is_Sent_To_Other_Services() {
+                        Map<String, List<String>> processesStatesNotifiedByEmail = new HashMap<String, List<String>>();
+                        processesStatesNotifiedByEmail.put("processNotifByEmail", Arrays.asList("stateNotifByEmail1", "stateNotifByEmail2"));
+                        UserSettings newSettings = UserSettingsData.builder().login("user1")
+                                .processesStatesNotifiedByEmail(processesStatesNotifiedByEmail).build();
+                        OperationResult<UserSettings> settings = userSettingsService.updateUserSettings("user1",
+                                newSettings);
+                        assertThat(settings.isSuccess()).isTrue();
+                        String[] expectedMessageSent1 = { "user", "user1" };
+                        assertThat(eventBusSpy.getMessagesSent()).containsExactlyInAnyOrder(expectedMessageSent1);
+                }
+        }
 }

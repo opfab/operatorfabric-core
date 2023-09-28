@@ -123,6 +123,20 @@ export class UserCardCommands extends OpfabCommands {
     checkEmitterSelectExists= function () {
         cy.get('#of-usercard-card-emitter-selector');
     }
+
+    selectEmitter= function (emitterName) {
+        cy.get('#of-usercard-card-emitter-selector').click();
+        cy.get('#of-usercard-card-emitter-selector').find('.vscomp-search-input').clear();
+        cy.get('#of-usercard-card-emitter-selector').find('.vscomp-search-input').type(emitterName);
+        cy.get('#of-usercard-card-emitter-selector').find('.vscomp-option-text').eq(0).should('contain.text', emitterName);
+        cy.get('#of-usercard-card-emitter-selector').find('.vscomp-option-text').eq(0).click();
+        cy.get('#of-usercard-card-emitter-selector').find('.vscomp-value').should('contain.text', emitterName);
+        cy.wait(200);
+    }
+
+    checkEmitterIs= function(emitterName) {
+        cy.get('#of-usercard-card-emitter-selector').find('.vscomp-value').should('contain.text', emitterName);
+    }
   
     // RECIPIENTS COMMANDS 
     checkRecipientSelectDoesNotExist= function () {
@@ -138,6 +152,18 @@ export class UserCardCommands extends OpfabCommands {
         cy.get('#opfab-recipients').find('.vscomp-value-tag').should('contain.text', recipientName);
         cy.get('#opfab-recipients').find('.vscomp-toggle-button').click();
         cy.wait(200);
+    }
+
+    clearSelectedRecipients= function () {
+        cy.get('#opfab-recipients').find('.vscomp-clear-button').click();
+    }
+
+    checkNumberOfRecipientsIs= function (number) {
+        cy.get('#opfab-recipients').find('.vscomp-value-tag-content').should('have.length', number);
+    }
+
+    checkRecipientsContain= function(recipientName) {
+        cy.get('#opfab-recipients').find('.vscomp-value-tag').should('contain.text', recipientName);
     }
 
     // RECIPIENTS FOR INFORMATION COMMANDS
@@ -156,6 +182,18 @@ export class UserCardCommands extends OpfabCommands {
         cy.wait(200);
     }
 
+    clearSelectedRecipientsForInformation= function () {
+        cy.get('#opfab-recipients-for-information').find('.vscomp-clear-button').click();
+    }
+
+    checkNumberOfRecipientsForInformationIs= function (number) {
+        cy.get('#opfab-recipients-for-information').find('.vscomp-value-tag-content').should('have.length', number);
+    }
+
+    checkRecipientsForInformationContain= function(recipientName) {
+        cy.get('#opfab-recipients-for-information').find('.vscomp-value-tag').should('contain.text', recipientName);
+    }
+
     // PREVIEW 
     preview= function () {
         cy.get('#opfab-usercard-btn-prepareCard').click();
@@ -171,7 +209,7 @@ export class UserCardCommands extends OpfabCommands {
     }
 
     checkSenderIsTheOnlyOneRecipient= function () {
-        cy.get('#opfab-you-are-only-one-recipient').find('span').should('contain.text', "You are the only recipient of this card.");
+        cy.get('#opfab-you-are-only-one-recipient').find('span').should('contain.text', "No recipient are set.");
     }
 
     cancelCardSending= function () {

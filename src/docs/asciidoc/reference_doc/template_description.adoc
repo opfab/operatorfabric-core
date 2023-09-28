@@ -595,6 +595,20 @@ Styles for buttons, for example:
   <button type="button" class="opfab-btn-cancel">CANCEL</button>
 ....
 
+== Tooltip
+OperatorFabric provides a css tooltip component. To use it, you must use the `opfab-tooltip` class style. You can define
+where the tooltip will be displayed using `left`, `top` or `bottom` (by default, it is displayed on the right). For
+example :
+
+....
+  <span opfab-tooltip-text="Here is an example of tooltip" class="opfab-tooltip">Some tooltip text</span>
+....
+
+or for a tooltip displyed on the left :
+....
+  <span opfab-tooltip-text="Here is an example of tooltip" class="opfab-tooltip left">Some tooltip text</span>
+....
+
 == Multi Select
 
 OperatorFabric provides a multiselect component based on https://sa-si-dev.github.io/virtual-select/#/[Virtual Select]. To use it, one must use the OperatorFabric style and provide javascript to initialize the component: 
@@ -622,7 +636,7 @@ OperatorFabric provides a multiselect component based on https://sa-si-dev.githu
             });
   
 
-  usercardTemplateGateway.getSpecificCardInformation = function () {
+  opfab.currentUserCard.registerFunctionToGetSpecificCardInformation(() => {
 
         const selectedValues = myMultiSelect.getSelectedValues(); 
   ...
@@ -689,7 +703,7 @@ It is possible to use the component also as single value select. The advantage o
             });
   
 
-  usercardTemplateGateway.getSpecificCardInformation = function () {
+   opfab.currentUserCard.registerFunctionToGetSpecificCardInformation(()  => {
 
         const selectedValues = document.getElementById('my-singleselect').value; 
 
@@ -702,116 +716,3 @@ It is possible to use the component also as single value select. The advantage o
 The library https://www.chartjs.org/[charts.js] is integrated in OperatorFabric, it means it's possible to show charts in cards, you can find a bundle example in the operator fabric git (https://github.com/opfab/operatorfabric-core/tree/develop/src/test/resources/bundles/defaultProcess_V1[src/test/resources/bundle/defaultProcess_V1]).
 
 The version of chartjs integrated in OperatorFabric is v3.7.1.
-
-== OperatorFabric specific functions
-
-=== Set screen size
-
-To adapt the template content on screen size it is possible to receive from OperatorFabric information on the size of the window where the template will be rendered. To receive screen size information you need to implement a javascript function in your template called templateGateway.setScreenSize(size) which receives as input a string parameter with one of the following values :
-
-- 'md' : medium size window
-- 'lg' : large size window
-
-=== Get display context
-
-To adapt the template content to the display context it is possible to get from OperatorFabric the page context where the template will be rendered by calling the javascript function _templateGateway.getDisplayContext()_. 
-The function returns a string with one of the following values :
-
-- 'realtime' : realtime page context (feed, monitoring)
-- 'archive' : archive page context 
-- 'preview': preview context (user card)
-
-An example of usage can be found in operator fabric git: (https://github.com/opfab/operatorfabric-core/tree/master/src/test/resources/bundles/messageOrQuestionExample/template/question.handlebars[src/test/resources/bundles/messageOrQuestionExample/template/question.handlebars]).
-
-
-=== Redirect to business application from a card
-
-It's possible to redirect from a card to a business application declared in `ui-menu.json`.
-
-This can be done by calling the following function from the template :
-
-....
-templateGateway.redirectToBusinessMenu(idMenu,idEntry)
-....
-
-  - idMenu is the id of the menu defined in ui-menu.json
-  - idEntry is the id of the entry defined in ui-menu.json
-
-It is also possible to append url extension (sub paths and/or parameters) to the url that will be called:
-
-....
-templateGateway.redirectToBusinessMenu('myMenu','myEntry','/extension?param1=aParam&param2=anotherParam')
-....
-
-For example:
-
-.src/test/resources/bundles/defaultProcess_V1/template/chart.handlebars
-[source,html]
-----
-include::../../../test/resources/bundles/defaultProcess_V1/template/chart.handlebars[tag=templateGateway.redirectToBusinessMenu_example]
-----
-
-This can be useful to pass context from the card to the business application.
-
-=== Get list of all entities
-
-To have the list of all entities in OperatorFabric, you can call the javascript function _templateGateway.getAllEntities()_.
-The function returns an array of entity object :
-
-Entity object has the following fields :
-
-- 'id' : id of the entity
-- 'name' : name of the entity
-- 'description' : description of the entity
-- 'entityAllowedToSendCard' : boolean indicating whether the entity is allowed to send card or not
-- 'parents' : list of parent entities
-- 'labels' : list of labels associated to the entity
-
-=== Get information about an entity
-
-To have information about an entity in particular, you can call the javascript function _templateGateway.getEntity(entityId)_.
-The function returns an entity object whose fields are mentioned above.
-
-=== Method onTemplateRenderingComplete()
-
-OpFab calls this method when it has finished all tasks regarding rendering template :
-it is called after applyChildCard(), lockAnswer(), setLttdExpired() and setScreenSize()
-
-It can be used by a template to launch some processing when loading is complete
-
-
-=== Display a spinner when a card is being processed
-
-Once the card is loaded, there may be some processing that is time consuming. 
-In this case, it is possible to show a spinner using the methods _templateGateway.displayLoadingSpinner()_ and _templateGateway.hideLoadingSpinner()_ in the card template .
-
-=== Method onStyleChange()
-
-OpFab calls this method when switching day/night mode.
-
-It can be used by a template to refresh styles and reload embedded charts.
-
-=== Escape HTML
-
-To avoid script injection, OperatorFabric provides an utility function 'opfab.utils.escapeHtml()' to sanitize input content by escaping HTML specific characters. For example: 
-
-....
-<input id="input-message" type="text" name="message">
-<button onClick="showMessage()">
-
-<span id="safe-message"></span>
-
-
-<script>
-  showMessage : function() {
-    let msg = document.getElementById("input-message");
-    document.getElementById("safe-message").innerHTML = opfab.utils.escapeHtml(msg.value);
-  }
-
-</script>
-
-
-....
-
-=== Redirect to another card 
-It is possible from the template to show another card detail in feed page by calling the method `opfab.navigation.showCardDetail(cardId)`. See an example in this template (https://github.com/opfab/operatorfabric-core/tree/develop/src/test/resources/bundles/cypress/template/kitchenSink.handlebars[kitchenSink.handlebars]).

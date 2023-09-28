@@ -86,7 +86,7 @@ class SendKafkaCardShould {
     @Autowired
     private KafkaTemplate<String, CardCommand> kafkaTemplate;
 
-    @Value("${opfab.kafka.topics.card.topicname:opfab}")
+    @Value("${operatorfabric.cards-publication.kafka.topics.card.topicname:opfab}")
     private String commandTopic;
 
     private static CountDownLatch latch ;
@@ -165,7 +165,7 @@ class SendKafkaCardShould {
         assertThat( card, is(notNullValue()));
     }
 
-    @KafkaListener(topics = "${opfab.kafka.topics.response-card.topicname}",
+    @KafkaListener(topics = "${operatorfabric.cards-publication.kafka.topics.response-card.topicname}",
             properties = {"auto.offset.reset = earliest"})
     public void consumer(ConsumerRecord<String, CardCommand> consumerRecord) {
         CardCommand cardCommand = consumerRecord.value();

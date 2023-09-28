@@ -12,6 +12,7 @@ package org.opfab.cards.consultation.repositories;
 
 import org.opfab.cards.consultation.model.Card;
 import org.opfab.cards.consultation.model.FilterModel;
+import org.opfab.cards.consultation.model.PublisherTypeEnum;
 import org.opfab.springtools.configuration.mongo.PaginationUtils;
 import org.opfab.users.model.CurrentUserWithPerimeters;
 import org.opfab.users.model.PermissionEnum;
@@ -78,6 +79,9 @@ public interface UserUtilitiesCommonToCardRepository<T extends Card> {
 
     public static final String ADMIN_MODE = "adminMode";
 
+    public static final String PUBLISHER = "publisher";
+    public static final String PUBLISHER_TYPE = "publisherType";
+
     public static final List<String> SPECIAL_PARAMETERS = Collections.unmodifiableList(Arrays.asList(
         PUBLISH_DATE_FROM_PARAM, PUBLISH_DATE_TO_PARAM, ACTIVE_FROM_PARAM, ACTIVE_TO_PARAM,
         PAGE_PARAM, PAGE_SIZE_PARAM, CHILD_CARDS_PARAM, LATEST_UPDATE_ONLY, ADMIN_MODE));
@@ -127,13 +131,14 @@ public interface UserUtilitiesCommonToCardRepository<T extends Card> {
         List<String> groups = currentUserWithPerimeters.getUserData().getGroups();
         List<String> entities = currentUserWithPerimeters.getUserData().getEntities();
         List<String> processStateList = new ArrayList<>();
+
         if (currentUserWithPerimeters.getComputedPerimeters() != null)
             currentUserWithPerimeters.getComputedPerimeters().forEach(perimeter -> {
                 if ((perimeter.getRights() == RightsEnum.RECEIVE) || (perimeter.getRights() == RightsEnum.RECEIVEANDWRITE))
                     processStateList.add(perimeter.getProcess() + "." + perimeter.getState());
             });
 
-        return computeCriteriaForUser(login,groups,entities,processStateList);
+        return computeCriteriaForUser(login, groups, entities, processStateList);
     }
 
     /** Rules for receiving cards :
@@ -160,7 +165,8 @@ public interface UserUtilitiesCommonToCardRepository<T extends Card> {
                         where(ENTITY_RECIPIENTS).in(entitiesList).andOperator
                                 (new Criteria().orOperator
                                         (where(GROUP_RECIPIENTS).exists(false), where(GROUP_RECIPIENTS).size(0))),
-                        where(GROUP_RECIPIENTS).in(groupsList).and(ENTITY_RECIPIENTS).in(entitiesList)));
+                        where(GROUP_RECIPIENTS).in(groupsList).and(ENTITY_RECIPIENTS).in(entitiesList),
+                        where(PUBLISHER_TYPE).is(PublisherTypeEnum.ENTITY.toString()).andOperator(where(PUBLISHER).in(entitiesList))));
     }
 
 

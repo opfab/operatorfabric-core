@@ -13,12 +13,12 @@ import {AbstractControl, AsyncValidatorFn, FormControl, FormGroup, ValidationErr
 import {NgbActiveModal} from '@ng-bootstrap/ng-bootstrap';
 import {AdminItemType, SharingService} from '../../../services/sharing.service';
 import {CrudService} from 'app/business/services/crud-service';
-import {EntitiesService} from 'app/business/services/entities.service';
+import {EntitiesService} from 'app/business/services/users/entities.service';
 import {Entity} from '@ofModel/entity.model';
 import {TranslateService} from '@ngx-translate/core';
 import {MultiSelectConfig, MultiSelectOption} from '@ofModel/multiselect.model';
 import {User} from '@ofModel/user.model';
-import {UserService} from 'app/business/services/user.service';
+import {UserService} from 'app/business/services/users/user.service';
 import {Observable, of} from 'rxjs';
 
 @Component({
@@ -69,7 +69,7 @@ export class EditEntityModalComponent implements OnInit {
         }
         uniqueEntityNameValidator.push(this.uniqueEntityNameValidatorFn());
             // modal used for creating a new entity
-            
+
         this.entityForm = new FormGroup({
             id: new FormControl(
                 '',
@@ -117,7 +117,7 @@ export class EditEntityModalComponent implements OnInit {
     }
 
     private isUserInCurrentEntity(usr: User) :boolean {
-        return !!usr.entities && usr.entities.findIndex(g => g === this.row.id) >= 0;
+        return usr.entities && usr.entities.findIndex(g => g === this.row.id) >= 0;
     }
 
     update() {
@@ -136,7 +136,7 @@ export class EditEntityModalComponent implements OnInit {
     }
 
     isUniqueEntityId(entityId: string): boolean {
-        if (!!entityId && this.entitiesService.getEntities().filter((entity) => entity.id === entityId).length)
+        if (entityId && this.entitiesService.getEntities().filter((entity) => entity.id === entityId).length)
             return false;
         else return true;
     }
@@ -150,7 +150,7 @@ export class EditEntityModalComponent implements OnInit {
     }
 
     isUniqueEntityName(entityName: string): boolean {
-        if (!!entityName && this.entitiesService.getEntities().filter((entity) => (entity.name === entityName.trim()) && (entity.id !== this.row?.id)).length)
+        if (entityName && this.entitiesService.getEntities().filter((entity) => (entity.name === entityName.trim()) && (entity.id !== this.row?.id)).length)
             return false;
         else return true;
     }

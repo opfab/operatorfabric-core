@@ -26,3 +26,4 @@ fi
 	./sendCard.sh defaultProcess/chartLine.json $url
 	./sendCard.sh defaultProcess/contingencies.json $url
 )
+echo 

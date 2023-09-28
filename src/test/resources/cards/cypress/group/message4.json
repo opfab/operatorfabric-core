@@ -1,0 +1,19 @@
+{
+	"publisher": "publisher_test",
+	"processVersion": "1",
+	"process": "cypress",
+	"processInstanceId": "message4_${current_date_in_milliseconds_from_epoch_plus_2hours}",
+	"state": "messageState",
+	"entityRecipients": ["ENTITY1_FR","ENTITY2_FR"],
+	"severity": "INFORMATION",
+	"tags": ["tag4"],
+	"startDate": ${current_date_in_milliseconds_from_epoch_plus_2hours},
+	"endDate": ${current_date_in_milliseconds_from_epoch_plus_8hours} ,
+	"summary": {"key" : "message.summary"},
+	"title": {"key" : "message.title"},
+	"data": {"message":" Information card number 4"},
+	"timeSpans": [
+		{"start":${current_date_in_milliseconds_from_epoch_plus_2hours}},
+		{"start": ${current_date_in_milliseconds_from_epoch_plus_8hours}}
+	]
+}

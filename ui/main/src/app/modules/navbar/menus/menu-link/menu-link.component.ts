@@ -9,7 +9,8 @@
 
 import {Component, Input} from '@angular/core';
 import {Router} from '@angular/router';
-import {Menu, MenuEntry, MenuEntryLinkTypeEnum} from '@ofModel/menu.model';
+import {CustomMenu, MenuEntryLinkTypeEnum} from '@ofModel/menu.model';
+import {GlobalStyleService} from 'app/business/services/global-style.service';
 
 @Component({
     selector: 'of-menu-link',
@@ -17,15 +18,20 @@ import {Menu, MenuEntry, MenuEntryLinkTypeEnum} from '@ofModel/menu.model';
     styleUrls: ['./menu-link.component.scss']
 })
 export class MenuLinkComponent {
-    @Input() public menu: Menu;
-    @Input() public menuEntry: MenuEntry;
+    @Input() public menu: CustomMenu;
+    @Input() public menuEntry: any;
+    @Input() public currentRoute: string;
 
-    constructor(private router: Router) {}
+    constructor(private router: Router, private globalStyleService: GlobalStyleService) {}
 
     LinkType = MenuEntryLinkTypeEnum;
 
-    public hasLinkType(type: MenuEntryLinkTypeEnum) {
-        return this.menuEntry.linkType === type;
+    public hasLinkType(type: MenuEntryLinkTypeEnum): boolean {
+        return !!this.menuEntry.customMenuId && this.menuEntry.linkType === type;
+    }
+
+    public isLinkACoreMenu(): boolean {
+        return !!this.menuEntry.opfabCoreMenuId;
     }
 
     goToLink() {
@@ -43,7 +49,21 @@ export class MenuLinkComponent {
             '/businessconfigparty/' +
                 encodeURIComponent(encodeURIComponent(this.menu.id)) +
                 '/' +
-                encodeURIComponent(encodeURIComponent(this.menuEntry.id))
+                encodeURIComponent(encodeURIComponent(this.menuEntry.customMenuId)) +
+                '/'
         ]);
+    }
+
+    addOpfabThemeParamToUrl(url: string): string {
+        return this.addParamsToUrl(url, 'opfab_theme=' + this.globalStyleService.getStyle());
+    }
+
+    private addParamsToUrl(url, params) {
+        let newUrl = url;
+        if (params) {
+            newUrl += url.includes('?') ? '&' : '?';
+            newUrl += params;
+        }
+        return newUrl;
     }
 }

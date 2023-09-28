@@ -44,7 +44,10 @@ public class ArchivedCardPublicationData implements Card {
     private String uid;
     @Id
     private String id;
+
+    @Indexed
     private String parentCardId;
+
     private String initialParentCardUid;
     private Boolean keepChildCards = false;
     private String publisher;

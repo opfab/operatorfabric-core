@@ -1,4 +1,4 @@
-// Copyright (c) 2018-2021 RTE (http://www.rte-france.com)
+// Copyright (c) 2018-2023 RTE (http://www.rte-france.com)
 // See AUTHORS.txt
 // This document is subject to the terms of the Creative Commons Attribution 4.0 International license.
 // If a copy of the license was not distributed with this
@@ -52,7 +52,7 @@ to log to the Authentication Provider (keycloak). The cient-id and the client-se
 **Example of the `docker` configuration**
 ----
 # Url of the Authentication provider
-    set $KeycloakBaseUrl "http://keycloak:8080";
+    set $KeycloakBaseUrl "http://keycloak:89";
 # Realm associated to OperatorFabric within the Authentication provider
     set $OperatorFabricRealm "dev";
 
@@ -68,11 +68,8 @@ where `b3BmYWItY2xpZW50Om9wZmFiLWtleWNsb2FrLXNlY3JldA==` is the base64 encoded s
 === Configuration file common.yml
 
 |===
-|name|default|mandatory?|Description
-
-|spring.security.provider-url|null|no|The keycloak instance url. 
-|spring.security.provider-realm|null|no|The realm name within the keycloak instance. 
-|spring.security.oauth2.resourceserver.jwt.jwk-set-uri|null|yes|The url providing the certificat used to verify the jwt signature
+|name|default|mandatory?|Description 
+|operatorfabric.security.oauth2.resourceserver.jwt.jwk-set-uri|null|yes|The url providing the certificate used to verify the jwt signature
 |===
 
 [NOTE]
@@ -83,15 +80,12 @@ where `b3BmYWItY2xpZW50Om9wZmFiLWtleWNsb2FrLXNlY3JldA==` is the base64 encoded s
 ----
 spring:
   security:
-    provider-url: http://localhost:89
-    provider-realm: dev
     oauth2:
       resourceserver:
         jwt:
-          jwk-set-uri: ${spring.security.provider-url}/auth/realms/${spring.security.provider-realm}/protocol/openid-connect/certs
+          jwk-set-uri:  http://localhost:89/auth/realms/dev/protocol/openid-connect/certs
 ----
 
-where `jwt-set-uri` reuses `provider-url` and `provider-realm` properties.
 ====
 
 === Configuration file web-ui.json
@@ -101,13 +95,9 @@ Nginx web server serves this file. OperatorFabric creates and uses a custom Dock
 For OAuth2 security concerns into this file, there are two ways to configure it, based on the Oauth2 chosen flow.
 There are several common properties:
 
-- `security.provider-realm`: OAuth2 provider realm under which the OpertaroFabric client is declared;
-- `security.provider-url`: url of the keycloak server instance.
 - `security.logout-url`: url used when a user is logged out of the UI;
-- `security.oauth2.flow.provider`: name of the OAuth2 provider;
 - `security.oauth2.flow.delegate-url`: url used to connect to the Authentication provider;
 - `security.oauth2.flow.mode`: technical way to be authenticated by the Autentication provider.
-
 
 
 
@@ -130,13 +120,10 @@ These two modes share the same way of declaring the delegate URL.
       "oauth2": {
         "flow": {
           "mode": "CODE",
-          "provider": "Opfab Keycloak",
           "delegate-url": "http://localhost:89/auth/realms/dev/protocol/openid-connect/auth?response_type=code&client_id=opfab-client"
+        }
       },
-      "logout-url":"http://localhost:89/auth/realms/dev/protocol/openid-connect/logout?redirect_uri=http://localhost:2002/",
-    "provider-realm": "dev",
-    "provider-url": "http://localhost:89"
-    }
+      "logout-url":"http://localhost:89/auth/realms/dev/protocol/openid-connect/logout?redirect_uri=http://localhost:2002/"
   }
 }
 ----
@@ -160,19 +147,14 @@ To enable IMPLICIT Flow authentication the following properties need to be set:
 [source,json]
 ----
 {
-  "operatorfabric": {
-    "security": {
-      "oauth2": {
-        "flow": {
-          "mode": "IMPLICIT",
-          "provider": "Opfab Keycloak",
-          "delegate-url": "http://localhost:89/auth/realms/dev"
-      },
-      "logout-url":"http://localhost:89/auth/realms/dev/protocol/openid-connect/logout?redirect_uri=http://localhost:2002/",
-    "provider-realm": "dev",
-    "provider-url": "http://localhost:89"
+  "security": {
+    "oauth2": {
+      "flow": {
+        "mode": "IMPLICIT",
+        "delegate-url": "http://localhost:89/auth/realms/dev"
       }
     }
+    "logout-url":"http://localhost:89/auth/realms/dev/protocol/openid-connect/logout?redirect_uri=http://localhost:2002/",
   }
 }
 ----
@@ -218,31 +200,25 @@ Use the security.jwt.login-claim to select value from the token will be used to 
 Settings that are not required are:
 
 * delegate-url
-* provider-realm
 
 
 ==== Example of configuration 
 [source, json]
 ----
 {
-  "operatorfabric": {
     "security": {
       "jwt": {
-        "expire-claim": "exp",
         "login-claim": "preferred_username"
       },
       "oauth2": {
         "client-id": "OAUTHCLIENTID",
         "flow": {
-          "mode": "NONE",
-          "provider": "My Secured Proxy"
-      },
-      "logout-url":"http://my-secured-proxy/OAUTHTENANTID/oauth2/logout?client_id=OAUTHCLIENTID&post_logout_redirect_uri=https%3A%2F%2Flocalhost:2002%2Fui%2Fui/",
-      "provider-url": "http://my-secured-proxy/"
+          "mode": "NONE"
+        }
       }
+      "logout-url":"http://my-secured-proxy/OAUTHTENANTID/oauth2/logout?client_id=OAUTHCLIENTID&post_logout_redirect_uri=https%3A%2F%2Flocalhost:2002%2Fui%2Fui/"
     }
-  }
-}
+ }
 ----
 
 == User creation

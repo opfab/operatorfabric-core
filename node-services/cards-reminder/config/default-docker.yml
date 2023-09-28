@@ -1,0 +1,24 @@
+
+operatorfabric:
+  rabbitmq:
+    host: "rabbitmq"
+    port: 5672
+    username: "guest"
+    password: "guest"
+  mongodb:
+    database: "operator-fabric"
+  servicesUrls:
+    authToken: "http://web-ui/auth/token"
+    users: "http://users:2103"
+    cardsPublication: "http://cards-publication:2102"
+  internalAccount:
+    login: opfab
+  logConfig:
+    logFolder: logs/
+    logFile: "opfab.%DATE%.log"
+    logLevel: "info"
+
+  cardsReminder:
+    adminPort : 2107
+    activeOnStartup : true
+    checkPeriodInSeconds : 5

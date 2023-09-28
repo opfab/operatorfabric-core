@@ -7,30 +7,40 @@
  * This file is part of the OperatorFabric project.
  */
 
-
 import {AlertMessageService} from 'app/business/services/alert-message.service';
 import {ConfigService} from 'app/business/services/config.service';
 import {AlertPage} from './alertPage';
 import {Message, MessageLevel} from '@ofModel/message.model';
-import {TranslationService} from 'app/business/services/translation.service';
+import {TranslationService} from 'app/business/services/translation/translation.service';
 
 export class AlertView {
     private alertMessageBusinessAutoClose: boolean;
     private alertPage: AlertPage;
-    private lastMessageDate : number;
+    private lastMessageDate: number;
+    private hideMessagesLevel: MessageLevel[] = [];
 
-    constructor(private configService: ConfigService, private alertMessageService: AlertMessageService, private translationService: TranslationService) {
-        this.alertMessageBusinessAutoClose = this.configService.getConfigValue('alertMessageBusinessAutoClose', false);
+    constructor(
+        private configService: ConfigService,
+        private alertMessageService: AlertMessageService,
+        private translationService: TranslationService
+    ) {
+        this.alertMessageBusinessAutoClose = this.configService.getConfigValue('alerts.messageBusinessAutoClose', false);
         this.alertPage = new AlertPage();
         this.alertPage.style = 'top: 0';
-        if (this.configService.getConfigValue('alertMessageOnBottomOfTheScreen', false))
+        if (this.configService.getConfigValue('alerts.messageOnBottomOfTheScreen', false))
             this.alertPage.style = 'bottom: 0';
+        if (this.configService.getConfigValue('alerts.hideBusinessMessages', false))
+            this.hideMessagesLevel.push(MessageLevel.BUSINESS);
+
         alertMessageService.getAlertMessage().subscribe((message: Message) => this.processAlertMessage(message));
     }
 
     private processAlertMessage(message: Message) {
+        if (this.hideMessagesLevel.includes(message.level)) return;
+
         this.alertPage.display = true;
-        if (message.i18n) this.alertPage.message = this.translationService.getTranslation(message.i18n.key,message.i18n.parameters);
+        if (message.i18n)
+            this.alertPage.message = this.translationService.getTranslation(message.i18n.key, message.i18n.parameters);
         else this.alertPage.message = message.message;
         this.alertPage.backgroundColor = this.getBackgroundColor(message.level);
         this.lastMessageDate = new Date().valueOf();

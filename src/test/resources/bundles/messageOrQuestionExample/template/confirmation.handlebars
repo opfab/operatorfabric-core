@@ -1,4 +1,4 @@
-<!-- Copyright (c) 2022, RTE (http://www.rte-france.com)              -->
+<!-- Copyright (c) 2022-2023, RTE (http://www.rte-france.com)              -->
 <!-- See AUTHORS.txt                                                       -->
 <!-- This Source Code Form is subject to the terms of the Mozilla Public   -->
 <!-- License, v. 2.0. If a copy of the MPL was not distributed with this   -->
@@ -41,59 +41,63 @@
         
         init: function() {
             this.disableResponseIfNotInRealTimeContext();
-            this.initTemplateGatewayMethods();
+            this.initOpfabAPI();
             this.loadEntitiesList();
             this.loadEntityUsedForResponse();
         },
 
         disableResponseIfNotInRealTimeContext: function() {
-            if (templateGateway.getDisplayContext() != 'realtime' ) {
+            if (opfab.currentCard.getDisplayContext() != 'realtime' ) {
                 document.getElementById("resp_confirm").disabled = true;
                 document.getElementById("resp_message").disabled = true;
             }
         },
 
-        initTemplateGatewayMethods: function() { 
+        initOpfabAPI: function() { 
 
-            templateGateway.applyChildCards = () => {
+            opfab.currentCard.listenToChildCards(() => {
                 let childsDiv = document.getElementById("childs-div");
 
-                if (templateGateway.childCards[0]) {
+                if (opfab.currentCard.getChildCards()[0]) {
                     let responses = ' <h3>Responses received </h3><center> <br/>'
                     responses += ' <table width="100%""> <tr> <th> Entity </th>';
                     responses += ' <th> Confirmed </th>';
                     responses += ' <th> Comment </th>';
                     responses += ' </tr>';
 
-                    templateGateway.childCards.forEach((c, i) => {
-                        responses += `<tr> <td> ${templateGateway.getEntityName(c.publisher)} </td>`
-                        responses += `<td> ${c.data.confirm} </td>`;
+                    opfab.currentCard.getChildCards().forEach((c, i) => {
+                        responses += `<tr> <td> ${opfab.users.entities.getEntityName(c.publisher)} </td>`
+                        responses += `<td> ${opfab.utils.escapeHtml(c.data.confirm)} </td>`;
                         responses += `<td> ${opfab.utils.escapeHtml(c.data.message)} </td>`;
                         responses += "</tr>";
                     });
 
                     responses += '</table> </center> <br/> <br/>';
  
-
-
                     childsDiv.innerHTML = responses;
                 } else {
                     childsDiv.innerHTML = '';
                 }
-            }
-            templateGateway.getUserResponse = function () {
+            });
+
+            opfab.currentCard.registerFunctionToGetUserResponse(() => {
                 var confirm = document.getElementById('resp_confirm').value;
                 const message = document.getElementById('resp_message').value;
+                let publisher = null;
+                // WARNING: this setting is just for specific cypress test
+                if (message == 'Cypress test for response publisher') publisher = "ENTITY2_FR";
+                
                 const responseCardData = { 
                         confirm: confirm,
                         message: message
                     };
                 return {
                     valid: true,
+                    publisher : publisher,
                     responseCardData: responseCardData
                 };
 
-            }
+            });
 
             templateGateway.lockAnswer = function() {
                 document.getElementById('confirmation-response').style['visibility'] = 'hidden';
@@ -107,11 +111,11 @@
         loadEntitiesList: function() {
             let entitiesDiv = document.getElementById("entities-div");
             let text = "Entities allowed to respond : ";
-            let entities = templateGateway.getEntitiesAllowedToRespond();
+            let entities = opfab.currentCard.getEntitiesAllowedToRespond();
             entities.forEach( 
                 id => {
                     text += "&nbsp; &nbsp; &nbsp;";
-                    text +=  templateGateway.getEntityName(id);
+                    text +=  opfab.utils.escapeHtml(opfab.users.entities.getEntityName(id));
                     }
             );
             // if it is in card preview (usercard) , the template gateway does not contain the list 
@@ -121,10 +125,10 @@
 
         loadEntityUsedForResponse: function() {
             let responseEntityDiv = document.getElementById("response-entity-div");
-            let responseEntity = templateGateway.getEntityUsedForUserResponse();
-            let userAllowedToRespond = templateGateway.isUserAllowedToRespond();
+            let responseEntity = opfab.currentCard.getEntityUsedForUserResponse();
+            let userAllowedToRespond = opfab.currentCard.isUserAllowedToRespond();
             if (userAllowedToRespond && responseEntity) 
-                responseEntityDiv.innerHTML = "Entity used by user to respond : " + templateGateway.getEntityName(responseEntity);         
+                responseEntityDiv.innerHTML = "Entity used by user to respond : " + opfab.users.entities.getEntityName(responseEntity);         
         }
     }
      

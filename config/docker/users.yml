@@ -1,0 +1,156 @@
+#  POPULATE THE USER DATABASE ON INIT
+# !!!! WARNING: VALUES SHOULD BE CHANGED FOR PRODUCTION MODE !!!!
+#
+operatorfabric.users.default:
+  users:
+    - login: admin
+      groups: ["ADMIN"]
+      entities: ["ENTITY1_FR","ENTITY2_FR"]
+    - login: operator1_fr
+      firstname : John
+      lastname : Doe
+      groups: ["Dispatcher","ReadOnly"]
+      entities: ["ENTITY1_FR"]
+    - login: operator2_fr
+      groups: ["Planner", "ReadOnly", "Manager"]
+      entities: ["ENTITY2_FR"]
+    - login: operator3_fr
+      groups: [ "RTE","ADMIN","ReadOnly","Dispatcher"]
+      entities: [ "ENTITY3_FR" ]
+    - login: operator4_fr
+      groups: ["ReadOnly","Dispatcher"]
+      entities: ["ENTITY1_FR", "ENTITY2_FR", "ENTITY3_FR",  "ENTITY4_FR" ]
+    - login: operator5_fr
+      groups: [ "RTE","ADMIN","ReadOnly","Dispatcher"]
+      entities: [ "ENTITY1_FR" ]
+    - login: operator6_fr
+      groups: []
+      entities: ["ENTITY1_FR"]
+    - login: itsupervisor1
+      groups: ["ADMIN", "Supervisor"]
+      entities: ["IT_SUPERVISOR_ENTITY"]
+    - login: operator1_crisisRoom
+      groups: ["Supervisor"]
+      entities: ["ENTITY1_FR", "ENTITY2_FR", "ENTITY3_FR", "ENTITY4_FR"]
+    - login: operator1_it
+      groups: ["Dispatcher", "ReadOnly"]
+      entities: ["ENTITY1_IT"]
+    - login: operator2_it
+      groups: ["Planner", "ReadOnly"]
+      entities: ["ENTITY2_IT"]
+    - login: operator3_it
+      groups: ["Dispatcher", "Planner", "ReadOnly"]
+      entities: ["ENTITY3_IT"]
+    - login: operator1_nl
+      groups: ["Dispatcher", "Planner", "ReadOnly"]
+      entities: ["ENTITY1_NL"]
+    - login: operator2_nl
+      groups: ["Dispatcher", "Planner", "ReadOnly"]
+      entities: ["ENTITY2_NL"]
+    - login: operator1_eu
+      groups: ["Planner", "ReadOnly"]
+      entities: ["ENTITY1_EU"]
+    - login: operator2_eu
+      groups: ["Planner", "ReadOnly"]
+      entities: ["ENTITY2_EU"]
+    - login: publisher_test
+      groups: ["Dispatcher", "ReadOnly", "Manager"]
+    - login: opfab
+      groups: ["Dispatcher", "ReadOnly", "Manager","ADMIN"]
+  groups:
+    - id: ADMIN
+      name: ADMINISTRATORS
+      description: The admin group
+      permissions: ["ADMIN"]
+    - id: RTE
+      name: RTE France
+      description: RTE TSO Group
+      realtime: false
+    - id: Dispatcher
+      name: Dispatcher
+      description: Dispatcher Group
+      realtime: true
+    - id: Planner
+      name: Planner
+      description: Planner Group
+      realtime: true
+    - id: Supervisor
+      name: Supervisor
+      description: Supervisor Group
+      realtime: true
+      permissions: ["READONLY","ADMIN_BUSINESS_PROCESS","VIEW_ALL_CARDS"]
+    - id: Manager
+      name: Manager
+      description: Manager Group
+      realtime: false
+      permissions: ["VIEW_ALL_ARCHIVED_CARDS","VIEW_ALL_CARDS"]
+    - id: ReadOnly
+      name: ReadOnly
+      description: ReadOnly Group
+      realtime: false
+  entities:
+   - id: ENTITY1_FR
+     name: Control Center FR North
+     description: Control Center FR North
+     parents : ["ENTITY_FR"]
+     labels: ["FR1 label"]
+   - id: ENTITY2_FR
+     name: Control Center FR South
+     description: Control Center FR South
+     parents : ["ENTITY_FR"]
+   - id: ENTITY3_FR
+     name: Control Center FR East
+     description: Control Center FR East
+     parents : ["ENTITY_FR"]
+   - id: ENTITY4_FR
+     name: Control Center FR West
+     description: Control Center FR West
+     parents : ["ENTITY_FR"]
+   - id: ENTITY_FR
+     name: French Control Centers
+     description: French Control Centers
+     entityAllowedToSendCard: false
+   - id: IT_SUPERVISOR_ENTITY
+     name: IT SUPERVISION CENTER
+     description: IT SUPERVISION CENTER
+   - id: ENTITY1_IT
+     name: Control Center IT North
+     description: Control Center IT North
+     parents : ["ENTITY_IT"]
+   - id: ENTITY2_IT
+     name: Control Center IT Center
+     description: Control Center IT Center
+     parents : ["ENTITY_IT"]
+   - id: ENTITY3_IT
+     name: Control Center IT South
+     description: Control Center IT South
+     parents : ["ENTITY_IT"]
+   - id: ENTITY_IT
+     name: Italian Control Centers
+     description: Italian Control Centers
+     entityAllowedToSendCard: false
+   - id: ENTITY1_NL
+     name: Control Center NL North
+     description: Control Center NL North
+     parents : ["ENTITY_NL"]
+   - id: ENTITY2_NL
+     name: Control Center NL South
+     description: Control Center NL South
+     parents : ["ENTITY_NL"]
+   - id: ENTITY_NL
+     name: Dutch Control Centers
+     description: Dutch Control Centers
+     entityAllowedToSendCard: false
+   - id: ENTITY1_EU
+     name: North Europe Control Center
+     description: North Europe Control Center
+     entityAllowedToSendCard: true
+   - id: ENTITY2_EU
+     name: South Europe Control Center
+     description: South Europe Control Center
+     entityAllowedToSendCard: true
+  user-settings:
+    - login: operator3_fr
+      description: Da Operator Rulez
+
+#logging.level.org.opfab: debug

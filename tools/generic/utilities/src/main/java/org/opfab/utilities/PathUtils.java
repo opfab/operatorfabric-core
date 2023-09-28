@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2021, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2023, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -139,17 +139,34 @@ public class PathUtils {
       TarArchiveEntry entry;
       //loop over tar entries
       while ((entry = tis.getNextTarEntry()) != null) {
+        String fileName = entry.getName();
+          /** This code assume we are executing the code on a linux machine
+          *  which is the case because the application is provided in containers
+          */
+        if (!isLinuxPathSafe(fileName)) {
+          log.error("Invalid path in tar.gz file : ", fileName );
+          break;
+        }
         if (entry.isDirectory()) {
           //create empty folders
-          createDirIfNeeded(outPath.resolve(entry.getName()));
+          createDirIfNeeded(outPath.resolve(fileName));
         } else {
           //copy entry to files
-          Path curPath = outPath.resolve(entry.getName());
+          Path curPath = outPath.resolve(fileName);
           createDirIfNeeded(curPath.getParent());
           Files.copy(tis, curPath);
         }
       }
     }
+  }
+
+
+  public static boolean isLinuxPathSafe(String path) {
+    if (path.contains("/../")) return false ;
+    if (path.startsWith("/")) return false;
+    if (path.startsWith("~/")) return false;
+    return true;
+
   }
 
   /**

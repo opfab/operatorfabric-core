@@ -246,7 +246,7 @@ Feature: Card Filter
       },
 	  {
         "state" : "incidentInProgressState",
-        "right" : "Write"
+        "right" : "ReceiveAndWrite"
       }
     ]
 }
@@ -359,7 +359,7 @@ Scenario: fetch the first page
 	  And request filter
 	  Then method post
 	  Then status 200
-	  And match response.numberOfElements == 9
+	  And match response.numberOfElements == 10
   
 
 	Scenario: fetch as Admin without adminMode
@@ -460,7 +460,7 @@ Scenario: fetch the first page
 		And request filter
 		Then method post
 		Then status 200
-		And assert response.numberOfElements == 9
+		And assert response.numberOfElements == 10
 
 
 	Scenario: filter process
@@ -485,7 +485,7 @@ Scenario: fetch the first page
 		And request filter
 		Then method post
 		Then status 200
-		And assert response.numberOfElements == 9
+		And assert response.numberOfElements == 10
   
 	Scenario: filter by wrong process
   

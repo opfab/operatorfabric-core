@@ -1,4 +1,4 @@
-<!-- Copyright (c) 2020-2022, RTE (http://www.rte-france.com)              -->
+<!-- Copyright (c) 2020-2023, RTE (http://www.rte-france.com)              -->
 <!-- See AUTHORS.txt                                                       -->
 <!-- This Source Code Form is subject to the terms of the Mozilla Public   -->
 <!-- License, v. 2.0. If a copy of the MPL was not distributed with this   -->
@@ -69,9 +69,10 @@
         },
 
         initGetSpecificInformation: function () {
-            usercardTemplateGateway.getSpecificCardInformation = function () {
+            opfab.currentUserCard.registerFunctionToGetSpecificCardInformation(() => {
                 const state = document.getElementById('state-select').value;
                 const status = document.getElementById('status-select').value;
+                // keep deprecated method for cypress test only
                 const selectedRecipients = usercardTemplateGateway.getSelectedEntityRecipients();
                 if ((selectedRecipients.includes('ENTITY1_FR') || selectedRecipients.includes('ENTITY3_FR')) &&  !selectedRecipients.includes('ENTITY1_EU')) 
                   selectedRecipients.push('ENTITY1_EU');
@@ -86,6 +87,8 @@
                     summary: {key: "message.summary"},
                     title: {key: "processState.title", parameters: {status: state}},
                     entityRecipients: selectedRecipients,
+                    wktGeometry: "POINT (5.8946407 51.9848624)",
+                    wktProjection: "EPSG:4326",
                     data: {
                         state: state,
                         status: status
@@ -96,7 +99,7 @@
                     valid: true,
                     card: card
                 };
-            }
+            });
         }
     }
 

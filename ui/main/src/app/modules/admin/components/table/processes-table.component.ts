@@ -11,6 +11,7 @@
 import {Component, OnInit} from '@angular/core';
 import {AdminTableDirective, Field} from './admin-table.directive';
 import {AdminItemType} from '../../services/sharing.service';
+import {ActionButton} from '../cell-renderers/action-cell-renderer.component';
 
 @Component({
     templateUrl: 'admin-table.directive.html',
@@ -20,11 +21,11 @@ import {AdminItemType} from '../../services/sharing.service';
 export class ProcessesTableComponent extends AdminTableDirective implements OnInit {
     tableType = AdminItemType.PROCESS;
     fields = [
-        new Field('id', 6, 'idCellRenderer'),
-        new Field('name', 6, null),
+        new Field('id', 6, 'idCellRenderer'), 
+        new Field('name', 6, null), 
         new Field('version', 6, null)
     ];
     idField = 'id';
-    showEditButton = false;
     showAddButton = false;
+    actionButtonsDisplayed = [ActionButton.DELETE];
 }

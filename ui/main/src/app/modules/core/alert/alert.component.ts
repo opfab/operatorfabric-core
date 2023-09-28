@@ -10,7 +10,7 @@
 
 import {Component} from '@angular/core';
 import {AlertMessageService} from 'app/business/services/alert-message.service';
-import {TranslationService} from 'app/business/services/translation.service';
+import {TranslationService} from 'app/business/services/translation/translation.service';
 import {AlertView} from 'app/business/view/core/alert/alert.view';
 import {AlertPage} from 'app/business/view/core/alert/alertPage';
 import {ConfigService} from "../../../business/services/config.service";

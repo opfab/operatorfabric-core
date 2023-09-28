@@ -23,16 +23,18 @@ import {AngularServer} from './angular.server';
 })
 export class AngularConfigServer extends AngularServer implements ConfigServer {
     private configUrl: string;
+    private menuUrl: string;
     private monitoringConfigUrl: string;
     private localUrl: string;
     readonly realTimeScreensUrl: string;
 
     constructor(private httpClient: HttpClient) {
         super();
-        this.configUrl = `${environment.urls.config}`;
-        this.monitoringConfigUrl = `${environment.urls.monitoringConfig}`;
-        this.localUrl = `${environment.paths.i18n}`;
-        this.realTimeScreensUrl = `${environment.urls.realTimeScreens}`;
+        this.configUrl = `${environment.url}/config/web-ui.json`;
+        this.menuUrl = `${environment.url}/config/ui-menu.json`;
+        this.monitoringConfigUrl = `${environment.url}/businessconfig/monitoring`;
+        this.localUrl = `/assets/i18n`;
+        this.realTimeScreensUrl = `${environment.url}/businessconfig/realtimescreens`;
     }
 
     getWebUiConfiguration(): Observable<ServerResponse<any>> {
@@ -50,7 +52,7 @@ export class AngularConfigServer extends AngularServer implements ConfigServer {
 
     getMenuConfiguration(): Observable<ServerResponse<any>> {
         return this.processHttpResponse(this.httpClient
-            .get<UIMenuFile>(`${environment.urls.menuConfig}`));
+            .get<UIMenuFile>(this.menuUrl));
     }
 
     getMonitoringConfiguration():Observable<ServerResponse<MonitoringConfig>> {
@@ -58,7 +60,7 @@ export class AngularConfigServer extends AngularServer implements ConfigServer {
     }
 
     getLocale(locale: string): Observable<ServerResponse<any>> {
-        return this.processHttpResponse(this.httpClient.get(`${this.localUrl}${locale}.json`));
+        return this.processHttpResponse(this.httpClient.get(`${this.localUrl}/${locale}.json`));
     }
 
     getRealTimeScreenConfiguration(): Observable<ServerResponse<RealTimeScreens>> {

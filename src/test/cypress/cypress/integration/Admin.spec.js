@@ -30,8 +30,8 @@ describe('AdmininstrationPages', () => {
         // Check first page has 10 rows
         agGrid.countTableRows('ag-grid-angular', 10);
 
-        // Pagination should display ' Results number  : 17 '
-        cy.get('.opfab-pagination').should('contain.text', ' Results number  : 17');
+        // Pagination should display ' Results number  : 18 '
+        cy.get('.opfab-pagination').should('contain.text', ' Results number  : 18');
 
         // Add new user
         cy.get('#add-item').click();
@@ -49,6 +49,8 @@ describe('AdmininstrationPages', () => {
 
         cy.get('#opfab-lastName').type('surname');
 
+        cy.get('#opfab-comment').type('comment');
+
         cy.get('#opfab-groups').click();
         cy.get('#opfab-groups').find('.vscomp-option-text').eq(1).click({force: true});
         cy.get('#opfab-groups').click();
@@ -59,30 +61,32 @@ describe('AdmininstrationPages', () => {
 
         cy.get('#opfab-admin-user-btn-add').click();
 
-        cy.get('.opfab-pagination').should('contain.text', ' Results number  : 18');
+        cy.get('.opfab-pagination').should('contain.text', ' Results number  : 19');
 
         cy.get('ngb-pagination').find('.page-link').eq(2).click();
 
-        agGrid.countTableRows('ag-grid-angular', 8);
+        agGrid.countTableRows('ag-grid-angular', 9);
 
-        agGrid.cellShould('ag-grid-angular', 7, 0, 'have.text', 'testuser');
+        agGrid.cellShould('ag-grid-angular', 8, 0, 'have.text', 'testuser');
 
         // Edit previously created user
-        agGrid.clickCell('ag-grid-angular', 7, 5, 'of-action-cell-renderer');
+        agGrid.clickCell('ag-grid-angular', 8, 5, 'of-action-cell-renderer');
 
         cy.get('of-edit-user-modal').should('exist');
 
         cy.get('#opfab-login').should('not.exist');
 
         cy.get('.modal-title').should('contain.text', 'testuser');
-        agGrid.cellShould('ag-grid-angular', 7, 1, 'have.text', 'name');
-        agGrid.cellShould('ag-grid-angular', 7, 2, 'have.text', 'surname');
-        agGrid.cellShould('ag-grid-angular', 7, 3, 'have.text', 'Dispatcher');
-        agGrid.cellShould('ag-grid-angular', 7, 4, 'have.text', 'Control Center FR North');
+        agGrid.cellShould('ag-grid-angular', 8, 1, 'have.text', 'name');
+        agGrid.cellShould('ag-grid-angular', 8, 2, 'have.text', 'surname');
+        agGrid.cellShould('ag-grid-angular', 8, 3, 'have.text', 'Dispatcher');
+        agGrid.cellShould('ag-grid-angular', 8, 4, 'have.text', 'Control Center FR North');
 
         cy.get('#opfab-firstName').type(' updated');
 
         cy.get('#opfab-lastName').type(' updated');
+
+        cy.get('#opfab-comment').should('have.value', 'comment')
 
         cy.get('#opfab-groups').click();
         // Deselect old group
@@ -101,20 +105,20 @@ describe('AdmininstrationPages', () => {
         cy.get('#opfab-admin-user-btn-save').click();
 
         // Check user is updated
-        cy.get('.opfab-pagination').should('contain.text', ' Results number  : 18');
+        cy.get('.opfab-pagination').should('contain.text', ' Results number  : 19');
 
         cy.get('ngb-pagination').find('.page-link').eq(2).click();
 
-        agGrid.countTableRows('ag-grid-angular', 8);
+        agGrid.countTableRows('ag-grid-angular', 9);
 
-        agGrid.cellShould('ag-grid-angular', 7, 0, 'have.text', 'testuser');
-        agGrid.cellShould('ag-grid-angular', 7, 1, 'have.text', 'name updated');
-        agGrid.cellShould('ag-grid-angular', 7, 2, 'have.text', 'surname updated');
-        agGrid.cellShould('ag-grid-angular', 7, 3, 'have.text', 'Manager');
-        agGrid.cellShould('ag-grid-angular', 7, 4, 'have.text', 'Control Center FR South');
+        agGrid.cellShould('ag-grid-angular', 8, 0, 'have.text', 'testuser');
+        agGrid.cellShould('ag-grid-angular', 8, 1, 'have.text', 'name updated');
+        agGrid.cellShould('ag-grid-angular', 8, 2, 'have.text', 'surname updated');
+        agGrid.cellShould('ag-grid-angular', 8, 3, 'have.text', 'Manager');
+        agGrid.cellShould('ag-grid-angular', 8, 4, 'have.text', 'Control Center FR South');
 
         // Delete previously created user
-        agGrid.clickCell('ag-grid-angular', 7, 6, 'of-action-cell-renderer');
+        agGrid.clickCell('ag-grid-angular', 8, 6, 'of-action-cell-renderer');
 
         cy.get('of-confirmation-dialog').should('exist');
 
@@ -123,9 +127,9 @@ describe('AdmininstrationPages', () => {
         cy.waitDefaultTime();
 
         //Check user was deleted
-        cy.get('.opfab-pagination').should('contain.text', ' Results number  : 17');
+        cy.get('.opfab-pagination').should('contain.text', ' Results number  : 18');
 
-        agGrid.countTableRows('ag-grid-angular', 7);
+        agGrid.countTableRows('ag-grid-angular', 8);
     });
 
     it('List, add, edit, delete entities', () => {
@@ -163,11 +167,13 @@ describe('AdmininstrationPages', () => {
 
         cy.get('#opfab-entity-allowed-to-send-card').check({force: true});
 
+        cy.get('tag-input').find('[aria-label="Add label"]').eq(0).type('Label1');
+
         cy.get('#opfab-parents').click();
         cy.get('#opfab-parents').find('.vscomp-option-text').eq(1).click({force: true});
         cy.get('#opfab-parents').click();
 
-        cy.get('tag-input').find('[aria-label="Add label"]').eq(0).type('Label1');
+       
 
         cy.get('#opfab-admin-edit-btn-add').click();
 
@@ -180,7 +186,7 @@ describe('AdmininstrationPages', () => {
         agGrid.cellShould('ag-grid-angular', 5, 0, 'have.text', 'entityId');
         agGrid.cellShould('ag-grid-angular', 5, 1, 'have.text', 'entity name');
         agGrid.cellShould('ag-grid-angular', 5, 2, 'have.text', 'entity description');
-        agGrid.cellShould('ag-grid-angular', 5, 3, 'have.text', 'YES');
+        agGrid.cellElementShould('ag-grid-angular', 5, 3, 'input', 'be.checked');
         agGrid.cellShould('ag-grid-angular', 5, 4, 'have.text', 'Control Center FR North');
 
         // Edit previously created entity
@@ -201,12 +207,6 @@ describe('AdmininstrationPages', () => {
         cy.get('#opfab-entity-allowed-to-send-card').should('be.checked');
         cy.get('#opfab-entity-allowed-to-send-card').uncheck({force: true});
 
-        cy.get('#opfab-parents').click();
-        // Deselect old parents
-        cy.get('#opfab-parents').find('.vscomp-option-text').eq(1).click({force: true});
-        // Select new parent
-        cy.get('#opfab-parents').find('.vscomp-option-text').eq(2).click({force: true});
-        cy.get('#opfab-parents').click();
 
         cy.get('tag-input').find('[aria-label="Label1"]').should('exist');
         // Add Label2
@@ -217,6 +217,15 @@ describe('AdmininstrationPages', () => {
         cy.get('tag-input').find('[aria-label="Label1"]').should('not.exist');
         cy.get('tag-input').find('[aria-label="Label2"]').should('exist');
 
+
+        cy.get('#opfab-parents').click();
+        // Deselect old parents
+        cy.get('#opfab-parents').find('.vscomp-option-text').eq(1).click({force: true});
+        // Select new parent
+        cy.get('#opfab-parents').find('.vscomp-option-text').eq(2).click({force: true});
+        cy.get('#opfab-parents').click();
+
+ 
         cy.get('#opfab-admin-entity-btn-save').click();
 
         // Check entity is updated
@@ -229,7 +238,7 @@ describe('AdmininstrationPages', () => {
         agGrid.cellShould('ag-grid-angular', 5, 0, 'have.text', 'entityId');
         agGrid.cellShould('ag-grid-angular', 5, 1, 'have.text', 'entity name updated');
         agGrid.cellShould('ag-grid-angular', 5, 2, 'have.text', 'entity description updated');
-        agGrid.cellShould('ag-grid-angular', 5, 3, 'have.text', 'NO');
+        agGrid.cellElementShould('ag-grid-angular', 5, 3, 'input', 'not.be.checked');
         agGrid.cellShould('ag-grid-angular', 5, 4, 'have.text', 'Control Center FR South');
 
         // Delete previously created entity
@@ -323,7 +332,7 @@ describe('AdmininstrationPages', () => {
         agGrid.cellShould('ag-grid-angular', 7, 2, 'have.text', 'group description');
         agGrid.cellShould('ag-grid-angular', 7, 3, 'have.text', 'cypress');
         agGrid.cellShould('ag-grid-angular', 7, 4, 'have.text', 'READONLY');
-        agGrid.cellShould('ag-grid-angular', 7, 5, 'have.text', 'YES');
+        agGrid.cellElementShould('ag-grid-angular', 7, 5, 'input', 'be.checked');
 
         cy.get('#opfab-name').type(' updated');
 
@@ -363,7 +372,7 @@ describe('AdmininstrationPages', () => {
         agGrid.cellShould('ag-grid-angular', 7, 2, 'have.text', 'group description updated');
         agGrid.cellShould('ag-grid-angular', 7, 3, 'have.text', 'defaultProcess');
         agGrid.cellShould('ag-grid-angular', 7, 4, 'have.text', 'VIEW_ALL_ARCHIVED_CARDS');
-        agGrid.cellShould('ag-grid-angular', 7, 5, 'have.text', 'NO');
+        agGrid.cellElementShould('ag-grid-angular', 7, 5, 'input', 'not.be.checked');
 
         // Delete previously created group
         agGrid.clickCell('ag-grid-angular', 7, 7, 'of-action-cell-renderer');
@@ -398,8 +407,8 @@ describe('AdmininstrationPages', () => {
         // Check first page has 10 rows
         agGrid.countTableRows('ag-grid-angular', 10);
 
-        // Pagination should display ' Results number  : 10 '
-        cy.get('.opfab-pagination').should('contain.text', ' Results number  : 10');
+        // Pagination should display ' Results number  : 11 '
+        cy.get('.opfab-pagination').should('contain.text', ' Results number  : 11');
 
         // Add new perimeter
         cy.get('#add-item').click();
@@ -434,34 +443,34 @@ describe('AdmininstrationPages', () => {
         cy.get('#opfab-admin-perimeter-right-filter')
             .find('.vscomp-option-text')
             .eq(0)
-            .should('contain.text', 'Write')
+            .should('contain.text', 'ReceiveAndWrite')
             .click({force: true});
 
         cy.get('#opfab-admin-perimeter-btn-add').should('not.be.disabled');
 
         cy.get('#opfab-admin-perimeter-btn-add').click();
 
-        cy.get('.opfab-pagination').should('contain.text', ' Results number  : 11');
+        cy.get('.opfab-pagination').should('contain.text', ' Results number  : 12');
 
         agGrid.countTableRows('ag-grid-angular', 10);
 
         cy.get('ngb-pagination').find('.page-link').eq(2).click();
 
-        agGrid.cellShould('ag-grid-angular', 0, 0, 'have.text', 'testperimeter');
-        agGrid.cellShould('ag-grid-angular', 0, 1, 'have.text', 'cypress');
-        agGrid.cellShould('ag-grid-angular', 0, 2, 'have.text', 'Message');
-        // We check the right for Message is Write (the badge must be from class opfab-bg-right-write)
+        agGrid.cellShould('ag-grid-angular', 1, 0, 'have.text', 'testperimeter');
+        agGrid.cellShould('ag-grid-angular', 1, 1, 'have.text', 'cypress');
+        agGrid.cellShould('ag-grid-angular', 1, 2, 'have.text', 'Message');
+        // We check the right for Message is ReceiveAndWrite (the badge must be from class opfab-bg-right-receiveandwrite)
         cy.get('ag-grid-angular')
             .find('.ag-center-cols-container')
             .find('.ag-row')
-            .eq(0)
+            .eq(1)
             .find('.ag-cell-value')
-            .find('.opfab-bg-right-write')
+            .find('.opfab-bg-right-receiveandwrite')
             .eq(0)
             .should('exist');
 
         // Edit previously created perimeter
-        agGrid.clickCell('ag-grid-angular', 0, 3, 'of-action-cell-renderer');
+        agGrid.clickCell('ag-grid-angular', 1, 3, 'of-action-cell-renderer');
 
         cy.get('of-edit-perimeter-modal').should('exist');
 
@@ -479,7 +488,7 @@ describe('AdmininstrationPages', () => {
         cy.get('#opfab-admin-perimeter-right-filter')
             .find('.vscomp-option-text')
             .eq(1)
-            .should('contain.text', 'ReceiveAndWrite')
+            .should('contain.text', 'Receive')
             .click({force: true});
 
         // We uncheck the field 'filtering notification allowed'
@@ -492,34 +501,34 @@ describe('AdmininstrationPages', () => {
 
         cy.waitDefaultTime();
 
-        // We still have 10 rows
-        cy.get('.opfab-pagination').should('contain.text', ' Results number  : 11');
+        // We still have 12 rows
+        cy.get('.opfab-pagination').should('contain.text', ' Results number  : 12');
 
-        agGrid.countTableRows('ag-grid-angular', 1);    // we are on the second page
+        agGrid.countTableRows('ag-grid-angular', 2);    // we are on the second page
 
         // We check the perimeter is updated
-        agGrid.cellShould('ag-grid-angular', 0, 0, 'have.text', 'testperimeter');
-        agGrid.cellShould('ag-grid-angular', 0, 1, 'have.text', 'cypress');
-        agGrid.cellShould('ag-grid-angular', 0, 2, 'have.text', 'Message with no ack');
-        // We check the right for Message is ReceiveAndWrite (the badge must be from class opfab-bg-right-receiveandwrite)
+        agGrid.cellShould('ag-grid-angular', 1, 0, 'have.text', 'testperimeter');
+        agGrid.cellShould('ag-grid-angular', 1, 1, 'have.text', 'cypress');
+        agGrid.cellShould('ag-grid-angular', 1, 2, 'have.text', 'Message with no ack');
+        // We check the right for Message is Receive (the badge must be from class opfab-bg-right-receive)
         cy.get('ag-grid-angular')
             .find('.ag-center-cols-container')
             .find('.ag-row')
-            .eq(0)
+            .eq(1)
             .find('.ag-cell-value')
-            .find('.opfab-bg-right-receiveandwrite')
+            .find('.opfab-bg-right-receive')
             .eq(0)
             .should('exist');
 
         // We check the 'filtering notification allowed' is still unchecked, and we close the modal
-        agGrid.clickCell('ag-grid-angular', 0, 3, 'of-action-cell-renderer');
+        agGrid.clickCell('ag-grid-angular', 1, 3, 'of-action-cell-renderer');
         cy.get('of-edit-perimeter-modal').should('exist');
         cy.get('.modal-title').should('contain.text', 'testperimeter');
         cy.get('.opfab-checkbox').contains('FILTERING NOTIFICATION ALLOWED ').find('input').should('not.be.checked');
         cy.get('#opfab-admin-perimeter-btn-close').click();
 
         // Delete previously created perimeter
-        agGrid.clickCell('ag-grid-angular', 0, 4, 'of-action-cell-renderer');
+        agGrid.clickCell('ag-grid-angular', 1, 4, 'of-action-cell-renderer');
 
         cy.get('of-confirmation-dialog').should('exist');
 
@@ -528,9 +537,9 @@ describe('AdmininstrationPages', () => {
         cy.waitDefaultTime();
 
         //Check perimeter was deleted
-        cy.get('.opfab-pagination').should('contain.text', ' Results number  : 10');
+        cy.get('.opfab-pagination').should('contain.text', ' Results number  : 11');
 
-        agGrid.countTableRows('ag-grid-angular', 10);
+        agGrid.countTableRows('ag-grid-angular', 1);
     });
 
     it('List, delete processes', () => {
@@ -548,11 +557,11 @@ describe('AdmininstrationPages', () => {
         agGrid.cellShould('ag-grid-angular', 0, 2, 'have.text', '1');
 
 
-        // Check the page has 8 rows
-        agGrid.countTableRows('ag-grid-angular', 8);
+        // Check the page has 9 rows
+        agGrid.countTableRows('ag-grid-angular', 9);
 
-        // Pagination should display ' Results number  : 8 '
-        cy.get('.opfab-pagination').should('contain.text', ' Results number  : 8');
+        // Pagination should display ' Results number  : 9 '
+        cy.get('.opfab-pagination').should('contain.text', ' Results number  : 9');
 
         // Delete first process
         agGrid.clickCell('ag-grid-angular', 0, 3, 'of-action-cell-renderer');
@@ -564,15 +573,69 @@ describe('AdmininstrationPages', () => {
         cy.waitDefaultTime();
 
         //Check process was deleted
-        cy.get('.opfab-pagination').should('contain.text', ' Results number  : 7');
+        cy.get('.opfab-pagination').should('contain.text', ' Results number  : 8');
 
-        agGrid.countTableRows('ag-grid-angular', 7);
+        agGrid.countTableRows('ag-grid-angular', 8);
+    });
+
+    it('List, delete businessdata', () => {
+        opfab.loginWithUser('admin');
+        opfab.navigateToAdministration();
+
+        //Click on "Business Data"
+        cy.get('#opfab-admin-businessData-tab').click();
+
+        // Check the content of the rows
+        agGrid.cellShould('ag-grid-angular', 0, 0, 'have.text', 'services');
+        agGrid.cellShould('ag-grid-angular', 1, 0, 'have.text', 'message-and-question-list');
+
+        // Check the page has 3 rows
+        agGrid.countTableRows('ag-grid-angular', 2);
+
+        // Pagination should display ' Results number  : 3 '
+        cy.get('.opfab-pagination').should('contain.text', ' Results number  : 2');
+
+        // Upload test file
+        cy.get('#add-item').click()
+        cy.get('#fileUploader').selectFile('cypress/fixtures/businessDataTest', {force: true});
+
+        cy.waitDefaultTime();
+
+        // Delete first business data file
+        agGrid.clickCell('ag-grid-angular', 0, 3, 'of-action-cell-renderer');
+
+        cy.get('of-confirmation-dialog').should('exist');
+
+        cy.get('#opfab-admin-confirmation-btn-ok').click();
+
+        cy.waitDefaultTime();
+
+        //Check the business data file that was created is deleted
+        cy.get('.opfab-pagination').should('contain.text', ' Results number  : 2');
+
+        // Download the services file
+        agGrid.clickCell('ag-grid-angular', 0, 2, 'of-action-cell-renderer');
+
+        cy.waitDefaultTime();
+
+        // check download folder contains the export file
+        cy.task('list', {dir: './cypress/downloads'}).then((files) => {
+            expect(files.length).to.equal(1);
+            // check file name
+            expect(files[0]).to.match(/^services.json/);
+            cy.readFile('./cypress/downloads/services.json').then(labels => {
+                expect(labels[0].label).to.eq("Group 1")
+                expect(labels[1].label).to.eq("Group 2")
+            });
+        });
+
+        agGrid.countTableRows('ag-grid-angular', 2);
     });
 
     describe('Check export files', function () {
 
 
-        afterEach('Clean export directory', function () {
+        beforeEach('Clean export directory', function () {
             script.cleanDownloadsDir();
         });
 
@@ -584,7 +647,7 @@ describe('AdmininstrationPages', () => {
             cy.get('#opfab-tabs').find('li').eq(0).click();
 
             // Wait for table rendering
-            cy.get('.opfab-pagination').should('contain.text', ' Results number  : 17');
+            cy.get('.opfab-pagination').should('contain.text', ' Results number  : 18');
 
             // Do export
             cy.get('#opfab-admin-btn-exportToExcel').click();
@@ -599,7 +662,7 @@ describe('AdmininstrationPages', () => {
                 expect(files[0]).to.match(/^user_export_\d*\.xlsx/);
                 // check file content
                 cy.task('readXlsx', {file: './cypress/downloads/' + files[0], sheet: "data"}).then((rows) => {
-                    expect(rows.length).to.equal(17);
+                    expect(rows.length).to.equal(18);
 
                     expect(rows[0].LOGIN).to.equal('admin');
                     expect(rows[0]['FIRST NAME']).to.be.undefined;
@@ -696,7 +759,7 @@ describe('AdmininstrationPages', () => {
                     expect(rows[2].NAME).to.equal('Dispatcher');
                     expect(rows[2].DESCRIPTION).to.equal('Dispatcher Group');
                     expect(rows[2].TYPE).to.be.undefined;
-                    expect(rows[2].PERIMETERS).to.equal('conferenceAndITIncidentExample,cypress,defaultProcess,externalRecipent,gridCooperation,messageOrQuestionExample,question,taskAdvancedExample,taskExample');
+                    expect(rows[2].PERIMETERS).to.equal('conferenceAndITIncidentExample,cypress,defaultProcess,externalRecipent,gridCooperation,messageOrQuestionExample,question,supervisor,taskAdvancedExample,taskExample');
                     expect(rows[2]['REAL TIME']).to.equal('YES');
                 })
             })
@@ -711,7 +774,7 @@ describe('AdmininstrationPages', () => {
             cy.get('#opfab-tabs').find('li').eq(3).click();
 
             // Wait for table rendering
-            cy.get('.opfab-pagination').should('contain.text', ' Results number  : 10');
+            cy.get('.opfab-pagination').should('contain.text', ' Results number  : 11');
 
             // Do export
             cy.get('#opfab-admin-btn-exportToExcel').click();
@@ -726,11 +789,43 @@ describe('AdmininstrationPages', () => {
                 expect(files[0]).to.match(/^perimeter_export_\d*\.xlsx/);
                 // check file content
                 cy.task('readXlsx', {file: './cypress/downloads/' + files[0], sheet: "data"}).then((rows) => {
-                    expect(rows.length).to.equal(10);
+                    expect(rows.length).to.equal(11);
 
                     expect(rows[0].ID).to.equal('conferenceAndITIncidentExample');
                     expect(rows[0].PROCESS).to.equal('conferenceAndITIncidentExample');
                     expect(rows[0]['STATE RIGHTS']).to.equal('{"state":"Conference Call ☏","right":"ReceiveAndWrite","filteringNotificationAllowed":true},{"state":"IT Incident","right":"ReceiveAndWrite","filteringNotificationAllowed":true}');
+                })
+            })
+        })
+
+        it('Check business data export', function () {
+
+            opfab.loginWithUser('admin');
+            opfab.navigateToAdministration();
+
+            //Click on "Business Data"
+            cy.get('#opfab-admin-businessData-tab').click();
+
+            //Wait for table rendering
+            cy.get('.opfab-pagination').should('contain.text', ' Results number  : 2');
+
+            // Do export
+            cy.get('#opfab-admin-btn-exportToExcel').click();
+
+
+            cy.waitDefaultTime();
+
+            // check download folder contains the export file
+            cy.task('list', {dir: './cypress/downloads'}).then((files) => {
+                expect(files.length).to.equal(1);
+
+                // check file name
+                expect(files[0]).to.match(/^businessData_export_\d*\.xlsx/);
+                // check file content
+                cy.task('readXlsx', {file: './cypress/downloads/' + files[0], sheet: "data"}).then((rows) => {
+                    expect(rows.length).to.equal(2);
+                    expect(rows[0]['BUSINESS DATA']).to.equal('services');
+                    expect(rows[1]['BUSINESS DATA']).to.equal('message-and-question-list');
                 })
             })
         })

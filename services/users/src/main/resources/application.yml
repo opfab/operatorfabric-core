@@ -1,6 +1,24 @@
+server:
+  port : 2103
+  forward-headers-strategy: framework # Needed for IP control feature
 spring:
   application:
     name: users
   data:
     mongodb:
       database: operator-fabric
+      uri: ${operatorfabric.mongodb.uri} # To be set outside of docker
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          jwk-set-uri: ${operatorfabric.security.oauth2.resourceserver.jwt.jwk-set-uri} #To be set outside of docker
+
+# default values for docker mode 
+operatorfabric:
+  rabbitmq:
+    host: rabbitmq
+    port: 5672
+    username: guest
+    password: guest
+

@@ -7,30 +7,39 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {Component, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output, SimpleChanges, ViewEncapsulation} from '@angular/core';
+import {
+    Component,
+    EventEmitter,
+    Input,
+    OnChanges,
+    OnDestroy,
+    OnInit,
+    Output,
+    SimpleChanges,
+    ViewEncapsulation
+} from '@angular/core';
 import {Card} from '@ofModel/card.model';
-import {ProcessesService} from 'app/business/services/processes.service';
+import {ProcessesService} from 'app/business/services/businessconfig/processes.service';
 import {SafeHtml} from '@angular/platform-browser';
 import {AcknowledgmentAllowedEnum, State} from '@ofModel/processes.model';
 import {map, takeUntil} from 'rxjs/operators';
 import {Subject} from 'rxjs';
 import {User} from '@ofModel/user.model';
-import {UserService} from 'app/business/services/user.service';
-import {EntitiesService} from 'app/business/services/entities.service';
+import {UserService} from 'app/business/services/users/user.service';
+import {EntitiesService} from 'app/business/services/users/entities.service';
 import {NgbModalRef} from '@ng-bootstrap/ng-bootstrap';
 import {UserPermissionsService} from 'app/business/services/user-permissions.service';
-import {DisplayContext} from '@ofModel/templateGateway.model';
+import {DisplayContext} from '@ofModel/template.model';
 import {LightCardsStoreService} from 'app/business/services/lightcards/lightcards-store.service';
 import {CardComponent} from '../../card.component';
 import {OpfabLoggerService} from 'app/business/services/logs/opfab-logger.service';
-import {UserWithPerimeters} from "@ofModel/userWithPerimeters.model";
+import {UserWithPerimeters} from '@ofModel/userWithPerimeters.model';
 import {SelectedCardService} from 'app/business/services/card/selectedCard.service';
-import {CardService} from 'app/business/services/card.service';
-import {RouterStore,PageType} from 'app/business/store/router.store';
+import {CardService} from 'app/business/services/card/card.service';
+import {RouterStore, PageType} from 'app/business/store/router.store';
 import {Router} from '@angular/router';
-import {Utilities} from "../../../../business/common/utilities";
-
-declare const templateGateway: any;
+import {Utilities} from '../../../../business/common/utilities';
+import {OpfabAPIService} from 'app/business/services/opfabAPI.service';
 
 @Component({
     selector: 'of-card-body',
@@ -57,9 +66,10 @@ export class CardBodyComponent implements OnChanges, OnInit, OnDestroy {
     public isResponseLocked = false;
     public fullscreen = false;
     public showMaxAndReduceButton = false;
-    public showDetailCardHeader = false;
+    public showDetailCardHeader= true;
     public htmlTemplateContent: SafeHtml;
     public templateOffset = 15;
+    public truncatedTitle: string;
 
     private lastCardSetToReadButNotYetOnFeed;
     private entityIdsAllowedOrRequiredToRespondAndAllowedToSendCards = [];
@@ -81,10 +91,11 @@ export class CardBodyComponent implements OnChanges, OnInit, OnDestroy {
         private userPermissionsService: UserPermissionsService,
         private lightCardsStoreService: LightCardsStoreService,
         private selectedCardService: SelectedCardService,
+        private opfabAPIService: OpfabAPIService,
         private logger: OpfabLoggerService
     ) {
         this.userWithPerimeters = this.userService.getCurrentUserWithPerimeters();
-        if (!!this.userWithPerimeters) {
+        if (this.userWithPerimeters) {
             this.user = this.userWithPerimeters.userData;
         }
     }
@@ -92,10 +103,8 @@ export class CardBodyComponent implements OnChanges, OnInit, OnDestroy {
     ngOnInit() {
         this.integrateChildCardsInRealTime();
         const pageType = this.routerStore.getCurrentPageType();
-        if (pageType === PageType.MONITORING || pageType === PageType.CALENDAR)
-            this.templateOffset = 35;
-        if (pageType !== PageType.CALENDAR && pageType !== PageType.MONITORING)
-            this.showMaxAndReduceButton = true;
+        if (pageType === PageType.CALENDAR || pageType === PageType.MONITORING || pageType === PageType.DASHBOARD) this.templateOffset = 35;
+        if (pageType !== PageType.CALENDAR && pageType !== PageType.MONITORING && pageType !== PageType.DASHBOARD) this.showMaxAndReduceButton = true;
     }
 
     private integrateChildCardsInRealTime() {
@@ -104,7 +113,7 @@ export class CardBodyComponent implements OnChanges, OnInit, OnDestroy {
             .pipe(
                 takeUntil(this.unsubscribe$),
                 map((lastCardLoaded) => {
-                    if (!!lastCardLoaded) {
+                    if (lastCardLoaded) {
                         if (
                             lastCardLoaded.parentCardId === this.card.id &&
                             !this.childCards.map((childCard) => childCard.uid).includes(lastCardLoaded.uid)
@@ -122,8 +131,7 @@ export class CardBodyComponent implements OnChanges, OnInit, OnDestroy {
                 takeUntil(this.unsubscribe$),
                 map((lastCardDeleted) => {
                     if (
-                        !!lastCardDeleted &&
-                        lastCardDeleted.parentCardId === this.card.id &&
+                        lastCardDeleted?.parentCardId === this.card.id &&
                         this.childCards.map((childCard) => childCard.id).includes(lastCardDeleted.cardId)
                     ) {
                         this.removeChildCard(lastCardDeleted.cardId);
@@ -138,10 +146,10 @@ export class CardBodyComponent implements OnChanges, OnInit, OnDestroy {
             const newChildArray = this.childCards.filter((childCard) => childCard.id !== cardData.card.id);
             newChildArray.push(cardData.card);
             this.childCards = newChildArray;
-            templateGateway.childCards = this.childCards;
-            templateGateway.applyChildCards();
+            this.opfabAPIService.currentCard.childCards = this.childCards;
+            this.opfabAPIService.currentCard.applyChildCards();
             this.lockResponseIfOneUserEntityHasAlreadyRespond();
-            if (this.isResponseLocked) templateGateway.lockAnswer();
+            if (this.isResponseLocked) this.opfabAPIService.templateInterface.lockAnswer();
         });
     }
 
@@ -159,19 +167,20 @@ export class CardBodyComponent implements OnChanges, OnInit, OnDestroy {
         const newChildArray = this.childCards.filter((childCard) => childCard.id !== deletedChildCardId);
         this.childCards = newChildArray;
         this.lockResponseIfOneUserEntityHasAlreadyRespond();
-        templateGateway.isLocked = this.isResponseLocked;
-        if (!this.isResponseLocked) templateGateway.unlockAnswer();
-        templateGateway.childCards = this.childCards;
-        templateGateway.applyChildCards();
+        this.opfabAPIService.currentCard.isResponseLocked = this.isResponseLocked;
+        if (!this.isResponseLocked) this.opfabAPIService.templateInterface.unlockAnswer();
+        this.opfabAPIService.currentCard.childCards = this.childCards;
+        this.opfabAPIService.currentCard.applyChildCards();
     }
 
     public unlockAnswer() {
         this.isResponseLocked = false;
-        templateGateway.unlockAnswer();
+        this.opfabAPIService.templateInterface.unlockAnswer();
     }
 
     ngOnChanges(changes: SimpleChanges): void {
         if (!!changes.card || !!changes.cardState) {
+            if (changes.card) this.opfabAPIService.currentCard.card = this.card;
             if (this.cardState.response != null && this.cardState.response !== undefined) {
                 this.computeEntityIdsAllowedOrRequiredToRespondAndAllowedToSendCards();
                 this.computeUserEntityIdsPossibleForResponse();
@@ -182,6 +191,7 @@ export class CardBodyComponent implements OnChanges, OnInit, OnDestroy {
                     this.businessconfigService.getProcess(this.card.process)
                 );
             }
+            this.truncatedTitle = this.card.titleTranslated;
             this.computeShowDetailCardHeader();
             this.lockResponseIfOneUserEntityHasAlreadyRespond();
             this.markAsReadIfNecessary();
@@ -240,9 +250,10 @@ export class CardBodyComponent implements OnChanges, OnInit, OnDestroy {
 
     public computeShowDetailCardHeader() {
         this.showDetailCardHeader =
-            (!this.cardState.showDetailCardHeader || this.cardState.showDetailCardHeader === true) &&
+            (this.cardState.showDetailCardHeader === undefined || this.cardState.showDetailCardHeader === true) &&
             this.cardState.response != null &&
             this.cardState.response !== undefined;
+        
     }
 
     private markAsReadIfNecessary() {
@@ -272,10 +283,12 @@ export class CardBodyComponent implements OnChanges, OnInit, OnDestroy {
     }
 
     public displayCardAcknowledgedFooter(): boolean {
-
         let entityRecipientsToAck = [];
-        if (!!this.card.entityRecipients) {
-            entityRecipientsToAck = Utilities.removeElementsFromArray(this.card.entityRecipients, this.card.entityRecipientsForInformation);
+        if (this.card.entityRecipients) {
+            entityRecipientsToAck = Utilities.removeElementsFromArray(
+                this.card.entityRecipients,
+                this.card.entityRecipientsForInformation
+            );
         }
 
         return (
@@ -286,18 +299,19 @@ export class CardBodyComponent implements OnChanges, OnInit, OnDestroy {
     }
 
     public beforeTemplateRendering() {
-        this.setTemplateGatewayVariables();
+        this.setOpfabApiVariables();
         this.stopRegularlyCheckLttd();
     }
 
-    private setTemplateGatewayVariables() {
-        templateGateway.childCards = this.childCards;
-        templateGateway.isLocked = this.isResponseLocked;
-        templateGateway.userAllowedToRespond = this.isUserEnabledToRespond;
-        templateGateway.entitiesAllowedToRespond = this.entityIdsAllowedOrRequiredToRespondAndAllowedToSendCards;
-        templateGateway.userMemberOfAnEntityRequiredToRespond =
+    private setOpfabApiVariables() {
+        this.opfabAPIService.currentCard.childCards = this.childCards;
+        this.opfabAPIService.currentCard.isResponseLocked = this.isResponseLocked;
+        this.opfabAPIService.currentCard.isUserAllowedToRespond = this.isUserEnabledToRespond;
+        this.opfabAPIService.currentCard.entitiesAllowedToRespond =
+            this.entityIdsAllowedOrRequiredToRespondAndAllowedToSendCards;
+        this.opfabAPIService.currentCard.isUserMemberOfAnEntityRequiredToRespond =
             this.userMemberOfAnEntityRequiredToRespondAndAllowedToSendCards;
-        templateGateway.entityUsedForUserResponse = this.userEntityIdToUseForResponse;
+        this.opfabAPIService.currentCard.entityUsedForUserResponse = this.userEntityIdToUseForResponse;
     }
 
     private stopRegularlyCheckLttd() {
@@ -306,9 +320,8 @@ export class CardBodyComponent implements OnChanges, OnInit, OnDestroy {
     }
 
     public afterTemplateRendering() {
-        if (this.isResponseLocked) templateGateway.lockAnswer();
+        if (this.isResponseLocked) this.opfabAPIService.templateInterface.lockAnswer();
         this.startRegularlyCheckLttd();
-        
     }
 
     private startRegularlyCheckLttd() {
@@ -320,7 +333,7 @@ export class CardBodyComponent implements OnChanges, OnInit, OnDestroy {
         if (this.card.lttd && !this.lttdExpiredIsTrue && this.regularlyLttdCheckActive) {
             if (this.isLttdExpired()) {
                 this.lttdExpiredIsTrue = true;
-                templateGateway.setLttdExpired(true);
+                this.opfabAPIService.templateInterface.setLttdExpired(true);
             } else setTimeout(() => this.regularlyCheckLttd(), 500);
         }
     }
@@ -335,7 +348,7 @@ export class CardBodyComponent implements OnChanges, OnInit, OnDestroy {
 
     public setFullScreen(active) {
         this.fullscreen = active;
-        if (!!this.parentComponent) this.parentComponent.screenSize = active ? 'lg' : 'md';
+        if (this.parentComponent) this.parentComponent.screenSize = active ? 'lg' : 'md';
     }
 
     public closeDetails() {

@@ -12,6 +12,7 @@ import {Component, OnInit} from '@angular/core';
 import {AdminTableDirective, Field} from './admin-table.directive';
 import {AdminItemType} from '../../services/sharing.service';
 import {EditGroupModalComponent} from '../editmodal/groups/edit-group-modal.component';
+import {ActionButton} from '../cell-renderers/action-cell-renderer.component';
 
 @Component({
     templateUrl: 'admin-table.directive.html',
@@ -29,19 +30,13 @@ export class GroupsTableComponent extends AdminTableDirective implements OnInit 
         new Field('realtime', 3, null, this.translateValue, 'realtimeColumn')
     ];
     idField = 'id';
+    actionButtonsDisplayed = [ActionButton.EDIT, ActionButton.DELETE];
     editModalComponent = EditGroupModalComponent;
 
-    ngOnInit(){
+    ngOnInit() {
         this.gridOptions.columnTypes['realtimeColumn'] = {
             sortable: true,
             filter: 'agTextColumnFilter',
-            filterParams: {
-                valueGetter: (params) => {
-                    return params.data.realtime
-                        ? this.translateService.instant('admin.input.group.true')
-                        : this.translateService.instant('admin.input.group.false');
-                }
-            },
             wrapText: true,
             autoHeight: true,
             flex: 4

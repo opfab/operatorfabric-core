@@ -13,8 +13,8 @@ Using the `Create card` menu, the user can send cards to entities. This feature 
 
 == Configure the bundle
 
-A card is related to a process and a state, if you want users to be able to emit a card for a specific process and state,
-you need to define it in the bundle for this process.
+A card is related to a process and a state, if you want users to be able to emit a card for a specific process and
+state, you need to define it in the bundle for this process.
 
 For example : 
 
@@ -56,7 +56,7 @@ This template works the same as templates for card presentation. Here is an exam
 
 
 <script>
-    usercardTemplateGateway.getSpecificCardInformation = function () {
+    opfab.currentCard.registerFunctionToGetSpecificCardInformation( () => {
         const message = document.getElementById('message').value;
         const card = {
           summary : {key : "message.summary"},
@@ -86,7 +86,10 @@ ifndef::single-page-doc[<</documentation/current/reference_doc/index.adoc#opfab_
 for more information)
 
 [WARNING]
-Be aware that as we have a preview of the card, the application loads the html related to the usercard (build with the usercard template) and the html related to the card in preview (build with the card template) into the browser at the same time. This implies that you MUST NOT name the elements with the same names in both templates. This rule applies to HTML elements identifiers(id), global JavaScript variables and JavaScript function names.
+Be aware that as we have a preview of the card, the application loads the html related to the usercard (build with the
+usercard template) and the html related to the card in preview (build with the card template) into the browser at the
+same time. This implies that you MUST NOT name the elements with the same names in both templates. This rule applies
+to HTML elements identifiers(id), global JavaScript variables and JavaScript function names.
 
 
 
@@ -102,9 +105,10 @@ To have a better understanding of this feature, we encourage you to have a look 
 core repository under (https://github.com/opfab/operatorfabric-core/tree/develop/src/test/resources/bundles/conferenceAndITIncidentExample[src/test/resources/bundles/conferenceAndITIncidentExample]).
 
 
-== Method getSpecificCardInformation
+== Method registerFunctionToGetSpecificCardInformation
 
-The following card fields can be set via the object `card` in the object returned by method `getSpecificCardInformation`:
+The following card fields can be set via the object `card` in the object returned by method the method register via
+registerFunctionToGetSpecificCardInformation:
 
 * title 
 * summary
@@ -120,10 +124,16 @@ The following card fields can be set via the object `card` in the object returne
 * entitiesAllowedToEdit
 * entitiesAllowedToRespond
 * entitiesRequiredToRespond
-* externalRecipients (use to send cards to third party , see 
+* externalRecipients (used to send cards to third party , see
 ifdef::single-page-doc[<<define_a_third_party_tool, Define a third party tool >>]
 ifndef::single-page-doc[<</documentation/current/reference_doc/index.adoc#define_a_third_party_tool, Define a third party tool>>]
-for more information) . 
+for more information).
+* rRule (used to define a card with recurrence, see
+ifdef::single-page-doc[<<_using_rrule_field, Using rRule field >>]
+ifndef::single-page-doc[<</documentation/current/reference_doc/index.adoc#_using_rrule_field, Using rRule field>>]
+for more information).
+* wktGeometry (string)
+* wktProjection (string)
 
 If you send a card to an ExternalRecipient, when the user delete it, the external recipient will receive the information via an HTTP DELETE request with the id of the deleted card at the end of the request (example : http://myexternal_app/myendpoint/ID_CARD).
 
@@ -180,74 +190,16 @@ For example :
 ....
 In this example the list of available publisher entities will contain all the first level children of "ENTITY_FR" (level 1) and "IT_SUPERVISOR_ENTITY".
 
-[[restrict_possible_recipients]]
-== Restrict the list of possible recipients
-
-When sending a user card, by default it is possible to choose the recipients from all the available entities. To limit the list of available recipients it is possible to configure the list of possible recipients via javascript in the user template.
-
-For example : 
-
-....
-    usercardTemplateGateway.setDropdownEntityRecipientList([
-            {"id": "ENTITY_FR", "levels": [0,1]},
-            {"id": "IT_SUPERVISOR_ENTITY"}
-        ]);
-....
-
-
-In this example the list of available recipients will contain: "ENTITY_FR" (level 0), all the first level children of "ENTITY_FR" (level 1) and "IT_SUPERVISOR_ENTITY".
-
-NOTE: The list of 'recipients in copy' can also be limited via javascript in the user template.
-
-For example :
-
-....
-    usercardTemplateGateway.setDropdownEntityRecipientForInformationList([
-            {"id": "ENTITY_FR", "levels": [0,1]},
-            {"id": "IT_SUPERVISOR_ENTITY"}
-        ]);
-....
-
-
-[[preselect_initial_recipients]]
-== Configure the list of initially selected recipients
-
-It is possible to configure the list of initially selected recipients via javascript in the user template by
-implementing the `usercardTemplateGateway.setInitialSelectedRecipients(selectedEntities)` method. The method takes as
-input the list of Entity ids to be preselected.
-
-For example : 
-
-....
-    usercardTemplateGateway.setInitialSelectedRecipients([
-            "ENTITY_FR",
-            "IT_SUPERVISOR_ENTITY"
-        ]);
-....
-
-
-In this example the dropdown list of available recipients will have "ENTITY_FR" and "IT_SUPERVISOR_ENTITY" preselected. The user can anyway change the selected recipients.
-
-NOTE: The list of initially selected 'recipients in copy' can also be configured via javascript in the user
-template by implementing the `usercardTemplateGateway.setInitialSelectedRecipientsForInformation(selectedEntities)` method.
-
-For example :
-
-....
-    usercardTemplateGateway.setInitialSelectedRecipientsForInformation([
-            "ENTITY4_FR"
-        ]);
-....
 
 [[set_recipients_via_code]]
 == Set the list of recipients via the template
 
-To do that, you have to provide the list of recipients when returning the card object in usercardTemplateGateway.getSpecificCardInformation() in the field `entityRecipients`.
+To do that, you have to provide the list of recipients when returning the card object in the field `entityRecipients`.
 
 Example:
 ....
 
-    usercardTemplateGateway.getSpecificCardInformation = function () {
+    opfab.currentUserCard.registerFunctionToGetSpecificCardInformation( () => {
         const message = document.getElementById('message').value;
         const card = {
           summary : {key : "message.summary"},
@@ -259,80 +211,26 @@ Example:
         return {
             valid: true,
             card: card
-        };
+        }
+  });
 
 ....
 
 When recipient dropdown is not visible to the user (attribute `recipientVisible` set to `false` in state definition in config.json) the final recipients list will be the one defined in the template, otherwise it will be the union of user selection and template `entityRecipients` definition.
 
 
-== Setting card dates
-From the template it is possible to set the initial values for `startDate`, `endDate`, `expirationDate` and `lttd` fields of the card by calling the following functions:
-
-* _usercardTemplateGateway.setInitialStartDate(epochMs)_ 
-* _usercardTemplateGateway.setInitialEndDate(epochMs)_
-* _usercardTemplateGateway.setInitialExpirationDate(epochMs)_
-* _usercardTemplateGateway.setInitialLttd(epochMs)_  
-
-It is also possible to get the values of  `startDate`, `endDate`, `expirationDate` and `lttd` by calling the following functions:
-
-* _usercardTemplateGateway.getStartDate()_ 
-* _usercardTemplateGateway.getEndDate()_
-* _usercardTemplateGateway.getExpirationDate()_
-* _usercardTemplateGateway.getLttd()_  
-
-== Setting initial card severity
-From the template it is possible to set the initial value for card severity choice by calling the following function: 
-
-* _usercardTemplateGateway.setInitialSeverity(severity)_ 
-
-Allowed severity values are:
-
-* 'ALARM'
-* 'ACTION'
-* 'INFORMATION'
-* 'COMPLIANT'
-
 == Card editing
 Once a user card has been sent it can be edited by a user member of the publisher entity who has write access for the process/state of the card.
 It is possible to allow other entities to edit the card by specifying the 'entitiesAllowedToEdit' card field.
 It is possible to hide card edit button on UI by setting 'editCardEnabledOnUserInterface' to false in card's process/state definition.
 
+== Card copy
+A user can copy a card and send it if he has write access for the process/state of the card. Before sending the card, the user can modify it if he wants.
+It is possible to hide card copy button on UI by setting 'copyCardEnabledOnUserInterface' to false in card's process/state definition.
+
 == Card delete
 Once a user card has been sent it can be deleted by a user member of the publisher entity who has write access for the process/state of the card.
 It is possible to hide card delete button on UI by setting 'deleteCardEnabledOnUserInterface' to false in card's process/state definition.
-
-== Get edition mode
-The template can know if the user is creating a new card or editing an existing card by calling the _usercardTemplateGateway.getEditionMode()_ function. The function will return one of the following values:
-
-* 'CREATE'
-* 'EDITION'
-
-An example of _usercardTemplateGateway.getEditionMode()_ usage can be found in the file
-https://github.com/opfab/operatorfabric-core/tree/master/src/test/resources/bundles/messageOrQuestionExample/template/usercard_question.handlebars[src/test/resources/bundles/messageOrQuestionExample/template/usercard_question.handlebars].
-
-== Get current process and current state of the card
-The template can know the process and the state of the card by calling the _usercardTemplateGateway.getCurrentProcess()_ and _usercardTemplateGateway.getCurrentState()_ functions. These functions will return a string corresponding to the process id (or state id).
-
-== Receiving emitter entity of the card
-The template can receive the emitter entity of the card by implementing the _usercardTemplateGateway.setEntityUsedForSendingCard()_  function. 
-This function will be called by OperatorFabric after loading the template and every time the card emitter changes (if the user can choose from multiple entities).
-
-An example of _usercardTemplateGateway.setEntityUsedForSendingCard()_ usage can be found in the file
-https://github.com/opfab/operatorfabric-core/tree/master/src/test/resources/bundles/defaultProcess_V1/template/usercard_message.handlebars[src/test/resources/bundles/defaultProcess_V1/template/usercard_message.handlebars].
-
-
-== Get selected recipient entities list
-The template can know the list of entities selected by the users as recipients of the card by calling the _usercardTemplateGateway.getSelectedEntityRecipients()_ function.
-
-An example of _usercardTemplateGateway.getSelectedEntityRecipients()_ usage can be found in the file
-https://github.com/opfab/operatorfabric-core/tree/master/src/test/resources/bundles/defaultProcess_V1/template/usercard_process.handlebars[src/test/resources/bundles/defaultProcess_V1/template/usercard_process.handlebars].
-
-
-== Get selected recipient entities in copy list
-The template can know the list of entities selected by the users as recipients in copy of the card by calling
-the _usercardTemplateGateway.getSelectedEntityRecipientsForInformation()_ function.
-
 
 
 == Send response automatically (experimental feature)
@@ -345,11 +243,11 @@ To enable the automated response the template should add a `childCard` field to 
 
 ....
  <script>
-    usercardTemplateGateway.getSpecificCardInformation = function () {
+     opfab.currentUserCard.registerFunctionToGetSpecificCardInformation( () =>  {
         const card = {...}
 
         childCard : { 
-          summary : {key : "exampe.summary"},
+          summary : {key : "example.summary"},
           title : {key : "example.title"},
           state : "mystateForResponse"
           data : {
@@ -363,18 +261,21 @@ To enable the automated response the template should add a `childCard` field to 
             childCard: childCard
         };
 
-    }
+    });
   </script>
 ....
 
 The card preview will display the card detail with the automated response as it will be displayed in Feed page.
 
-When editing a user card, the template can get the response sent by current user by calling the _usercardTemplateGateway.getUserEntityChildCardFromCurrentCard()_ function. The function will return the response child card sent by current user or null if there is no response from current user.
+When editing a user card, the template can get the response sent by current user by calling the
+_opfab.currentUserCard.getUserEntityChildCard_ function.
 
-An example of _usercardTemplateGateway.getUserEntityChildCardFromCurrentCard()_ usage can be found in the file
-https://github.com/opfab/operatorfabric-core/tree/master/src/test/resources/bundles/messageOrQuestionExample/template/usercard_confirmation.handlebars[src/test/resources/bundles/messageOrQuestionExample/template/usercard_confirmation.handlebars].
+By default, the publisher of the childCard is the publisher of the parent card. In the template, it is possible to
+set another value for the publisher of the childCard, provided that the user is a member of the entity publisher you
+want to set.
 
 == Misc
 
-When a user send a card, it is always sent to himself whatever he chooses in the recipient list.
+When a user send a card, the card is also sent to the members of the entity that publish the card (and therefore also to
+the sender himself), whatever the user chooses in the recipient list.
 

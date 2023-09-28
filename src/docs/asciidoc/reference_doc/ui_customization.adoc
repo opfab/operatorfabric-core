@@ -20,29 +20,39 @@ The `ui-menu.json` file is used:
 * To manage the visibility of core OperatorFabric menus (feed, monitoring, etc.)
 * To declare specific business menus to be displayed in the navigation bar of OperatorFabric
 
+This file contains 4 fields :
+
+* `navigationBar` : contains the navigation bar mixing core menus and custom menus
+* `topRightIconMenus` : contains only the two menu icons `agenda` and `usercard` on the top right of the screen
+* `topRightMenus` : contains core menus you want to see when you click the user, on the top right of the screen
+* `locales` : contains the translations for the custom menus
+* `showDropdownMenuEvenIfOnlyOneEntry` : indicates if the name of the menu and a dropdown menu are displayed if it
+contains only one submenu entry. If false, the submenu entry will be displayed directly in the navigation bar. This field is
+optional, the default value is false.
+
+
 [[core_menu_config]]
 === Core menus
 
-The `coreMenusConfiguration` property of the `ui-menu.json` files should contain one object with the following properties
-for each core menu:
+Core menus are objects containing the following fields :
 
-* `id`: Id of the core menu (string)
-* `visible`: Whether this menu should be visible for this OperatorFabric instance (boolean)
+* `opfabCoreMenuId`: Id of the core menu (string)
+* `visible`: Whether this menu should be visible for this OperatorFabric instance (boolean). This field is not
+needed in `navigationBar` field but it is needed in `topRightIconMenus` and `topRightMenus`.
 * `showOnlyForGroups` : List of groups for which this menu should be visible (array, optional)
 
 .Menu visibility summary
-* If a core menu is not present in `coreMenusVisibility`, it won't be visible.
-* If a core menu doesn't have a `visible` property, or it is set to null or false, it won't be visible.
 * For a core menu with `"visible": true`:
 ** If `showOnlyForGroups` is not present, null or an empty array : the menu is visible for all users.
-** If `showOnlyForGroups` is present and with a non-empty array as a value: menu is visible only for users from the listed groups.
+** If `showOnlyForGroups` is present and with a non-empty array as a value: menu is visible only for users from the
+listed groups.
 
 
 .List of core menus and corresponding ids
 |===
 |Location of menu |Menu |Id
 
-.4+|Navigation bar
+.5+|Navigation bar
 
 |Feed
 |feed
@@ -52,6 +62,9 @@ for each core menu:
 
 |Monitoring
 |monitoring
+
+|Dashboard
+|dashboard
 
 |Logging
 |logging
@@ -64,25 +77,34 @@ for each core menu:
 |Calendar
 |calendar
 
-.8+|Top-right menu
+.11+|Top-right menu
 
 |Administration
 |admin
 
-|Settings
-|settings
-
-|Notification Configuration
-|feedconfiguration
+|External devices configuration
+|externaldevicesconfiguration
 
 |Real time users
 |realtimeusers
 
-|Night/Day toggle
-|nightdaymode
+|Settings
+|settings
+
+|Activity area
+|activityarea
+
+|Notification Configuration
+|feedconfiguration
+
+|User action logs
+|useractionlogs
 
 |About
 |about
+
+|Night/Day toggle
+|nightdaymode
 
 |Change password
 |changepassword
@@ -94,17 +116,13 @@ for each core menu:
 
 See `/config/docker/ui-menu.json` for an example containing all core menus.
 
-IMPORTANT: This property only manages menu visibility, not resource access rights. For example, if visibility of the
-Administration menu is granted to groups other than the `ADMIN` group, users will be able to see the administration
-screen but not to perform administration tasks, as they require administrator privileges.
-
 NOTE: If you decide not to make the night/day toggle visible (globally or for certain users), you should consider
 setting the `settings.styleWhenNightDayModeDesactivated` property in `web-ui.json` to specify which mode should be used.
 
 === Custom business menus
 
 A menu can target directly a link or give access to several sub-menus when clicked.
-Those sub-menus can only target a link.
+Those sub-menus can target a link or an opfab core menu.
 A targeted link can be open in an iframe or in a new tab.
 
 Menus support i18n following the i18n OperatorFabric rules.
@@ -114,13 +132,13 @@ In case of a single menu, the navigation bar displays the l10n of the `label` of
 In this case, the `label` declared at the root level of the menu is useless and can be omitted (see example below).
 
 A single menu or a menu with sub-menus has at least attributes named `id` and `entries`.
-The `entries` attribute is an array of `menu entry`. It is possible to restrict the visibility of one menu entry the one
-or more user groups by setting the `showOnlyForGroups` parameter.
+The `entries` attribute is an array of `menu entry`. It is possible to restrict the visibility of one menu entry
+to one or more user groups by setting the `showOnlyForGroups` parameter.
 Note that menus with sub-menus need a `label` declaring an i18n key.
 
-Each `menu entry` declares the attributes listed below:
+A menu entry can target a core menu id or a link. If it targets a link, it must declare the attributes listed below:
 
-- `id`: identifier of the entry menu in the UI;
+- `customMenuId`: identifier of the entry menu in the UI;
 - `url`: url opening a new page in a tab in the browser;
 - `label`: it's an i18n key used to l10n the entry in the UI.
 - `linkType`: Defines how to display business menu links in the navigation bar and how to open them. Possible values:
@@ -130,21 +148,28 @@ Each `menu entry` declares the attributes listed below:
 **
 - `showOnlyForGroups`: Defines the list of user groups entitled to see the menu entry, if not defined or empty it will be visible to every user.
 
-Menu entry 
 In the following example, the configuration file declares two additional business menus.
-The first has only one entry, the second has two entries.
-The sample also contains the i18n translations in English and in French.
+The first has only one entry, which targets a link. The second business menu has three entries, one which targets the
+core menu `Dashboard` and two others which target links.
+The sample also contains the 2 top right icons (`usercard` and `calendar`), the composition of the top right menu and
+the i18n translations in English and French.
 
 .Example
 [source, json]
 ----
 {
-  "menus": [
+  "navigationBar": [
+    {
+      "opfabCoreMenuId": "feed"
+    },
+    {
+      "opfabCoreMenuId": "archives"
+    },
     {
       "id": "menu1",
       "entries": [
         {
-          "id": "uid_test_0",
+          "customMenuId": "uid_test_0",
           "url": "https://opfab.github.io/",
           "label": "entry.single",
           "linkType": "BOTH"
@@ -156,14 +181,17 @@ The sample also contains the i18n translations in English and in French.
       "label": "title.multi",
       "entries": [
         {
-          "id": "uid_test_1",
+          "opfabCoreMenuId": "dashboard"
+        },
+        {
+          "customMenuId": "uid_test_1",
           "url": "https://opfab.github.io/",
           "label": "entry.entry1",
           "linkType": "BOTH",
           "showOnlyForGroups": "ReadOnly,Dispatcher"
         },
         {
-          "id": "uid_test_2",
+          "customMenuId": "uid_test_2",
           "url": "https://www.wikipedia.org/",
           "label": "entry.entry2",
           "linkType": "BOTH",
@@ -172,42 +200,89 @@ The sample also contains the i18n translations in English and in French.
       ]
     }
   ],
+  "topRightIconMenus": [
+    {
+      "opfabCoreMenuId": "usercard",
+      "visible": true
+    },
+    {
+      "opfabCoreMenuId": "calendar",
+      "visible": true
+    }
+  ],
+  "topRightMenus": [
+    {
+      "opfabCoreMenuId": "admin",
+      "visible": true,
+      "showOnlyForGroups": ["ADMIN"]
+    },
+    {
+      "opfabCoreMenuId": "settings",
+      "visible": true
+    },
+    {
+      "opfabCoreMenuId": "activityarea",
+      "visible": true
+    },
+    {
+      "opfabCoreMenuId": "feedconfiguration",
+      "visible": true
+    },
+    {
+      "opfabCoreMenuId": "realtimeusers",
+      "visible": true
+    },
+    {
+      "opfabCoreMenuId": "externaldevicesconfiguration",
+      "visible": true,
+      "showOnlyForGroups": ["ADMIN"]
+    },
+    {
+      "opfabCoreMenuId": "useractionlogs",
+      "visible": true,
+      "showOnlyForGroups": ["ADMIN", "Supervisor"]
+    },
+    {
+      "opfabCoreMenuId": "nightdaymode",
+      "visible": true
+    },
+    {
+      "opfabCoreMenuId": "about",
+      "visible": true
+    },
+    {
+      "opfabCoreMenuId": "changepassword",
+      "visible": true
+    },
+    {
+      "opfabCoreMenuId": "logout",
+      "visible": true
+    }
+  ],
   "locales": [
     {
       "language": "en",
       "i18n": {
-        "menu1": {
-          "entry": {
-            "single": "Single menu entry"
-          }
+        "entry": {
+          "single": "Single menu entry",
+          "entry1": "First menu entry",
+          "entry2": "Second menu entry"
         },
-        "menu2": {
-          "title": {
-            "multi": "Second menu"
-          },
-          "entry": {
-            "entry1": "First menu entry",
-            "entry2": "Second menu entry"
-          }
+        "title": {
+          "multi": "Second menu"
         }
       }
     },
     {
       "language": "fr",
       "i18n": {
-        "menu1": {
-          "entry": {
-            "single": "Premier élément"
-          }
+        "entry": {
+          "single": "Premier élément",
+          "entry1": "Premier élément",
+          "entry2": "Deuxième élément"
         },
-        "menu2": {
-          "title": {
-            "multi": "Deuxième menu"
-          },
-          "entry": {
-            "entry1": "Premier élément",
-            "entry2": "Deuxième élément"
-          }
+        "title": {
+          "multi": "Deuxième menu"
         }
       }
     }

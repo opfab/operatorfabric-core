@@ -14,12 +14,12 @@ import {PermissionEnum} from '@ofModel/permission.model';
 import {AcknowledgmentAllowedEnum, ConsideredAcknowledgedForUserWhenEnum, State} from '@ofModel/processes.model';
 import {User} from '@ofModel/user.model';
 import {AcknowledgeService} from 'app/business/services/acknowledge.service';
-import {EntitiesService} from 'app/business/services/entities.service';
+import {EntitiesService} from 'app/business/services/users/entities.service';
 import {LightCardsStoreService} from 'app/business/services/lightcards/lightcards-store.service';
 import {LogOption, OpfabLoggerService} from 'app/business/services/logs/opfab-logger.service';
-import {ProcessesService} from 'app/business/services/processes.service';
+import {ProcessesService} from 'app/business/services/businessconfig/processes.service';
 import {UserPermissionsService} from 'app/business/services/user-permissions.service';
-import {UserService} from 'app/business/services/user.service';
+import {UserService} from 'app/business/services/users/user.service';
 import {Subject, takeUntil} from 'rxjs';
 import {ServerResponseStatus} from 'app/business/server/serverResponse';
 import {AlertMessageService} from 'app/business/services/alert-message.service';
@@ -67,7 +67,7 @@ export class CardAckComponent implements OnInit, OnChanges, OnDestroy {
         private logger: OpfabLoggerService
     ) {
         const userWithPerimeters = this.userService.getCurrentUserWithPerimeters();
-        if (!!userWithPerimeters) this.user = userWithPerimeters.userData;
+        if (userWithPerimeters) this.user = userWithPerimeters.userData;
     }
 
     ngOnInit()  {
@@ -84,8 +84,8 @@ export class CardAckComponent implements OnInit, OnChanges, OnDestroy {
 
     private addAckFromSubscription(entitiesAcksToAdd: string[]) {
         let lightcard = fromCardToLightCard(this.card);
-        if (!!lightcard && !!entitiesAcksToAdd) {
-            const newentitiesAcks = !!lightcard.entitiesAcks
+        if (lightcard && entitiesAcksToAdd) {
+            const newentitiesAcks = lightcard.entitiesAcks
                 ? [...new Set([...lightcard.entitiesAcks, ...entitiesAcksToAdd])]
                 : entitiesAcksToAdd;
            lightcard = {...lightcard, entitiesAcks: newentitiesAcks};
@@ -93,7 +93,7 @@ export class CardAckComponent implements OnInit, OnChanges, OnDestroy {
 
         this.card = {
             ...this.card,
-            hasBeenAcknowledged: this.lightCardsStoreService.isLightCardHasBeenAcknowledgedByUserOrByUserEntity(lightcard)
+            hasBeenAcknowledged: this.acknowledgeService.isLightCardHasBeenAcknowledgedByUserOrByUserEntity(lightcard)
         };
         this.setAcknowledgeButtonVisibility();
 
@@ -160,7 +160,7 @@ export class CardAckComponent implements OnInit, OnChanges, OnDestroy {
         this.acknowledgeService.postUserAcknowledgement(this.card.uid, entitiesAcks).subscribe((resp) => {
             this.ackOrUnackInProgress = false;
             if (resp.status === ServerResponseStatus.OK) {
-                this.acknowledgeService.updateAcknowledgementOnLightCard(this.card.id, true);
+                this.lightCardsStoreService.setLightCardAcknowledgment(this.card.id, true);
                 this.card = {...this.card, hasBeenAcknowledged: true};
                 this.setAcknowledgeButtonVisibility();
                 if (this.shouldCloseCardWhenUserAcknowledges()) this.closeDetails();
@@ -199,7 +199,7 @@ export class CardAckComponent implements OnInit, OnChanges, OnDestroy {
             if (resp.status === ServerResponseStatus.OK) {
                 this.card = {...this.card, hasBeenAcknowledged: false};
                 this.setAcknowledgeButtonVisibility();
-                this.acknowledgeService.updateAcknowledgementOnLightCard(this.card.id, false);
+                this.lightCardsStoreService.setLightCardAcknowledgment(this.card.id, false);
             } else {
                 this.logger.error(`The remote acknowledgement endpoint returned an error status(${resp.status})`,LogOption.LOCAL_AND_REMOTE);
                 this.displayMessage(AckI18nKeys.ERROR_MSG, null, MessageLevel.ERROR);

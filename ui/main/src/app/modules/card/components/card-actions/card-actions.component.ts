@@ -15,11 +15,11 @@ import {PermissionEnum} from '@ofModel/permission.model';
 import {State} from '@ofModel/processes.model';
 import {AlertMessageService} from 'app/business/services/alert-message.service';
 import {UserPermissionsService} from 'app/business/services/user-permissions.service';
-import {UserService} from 'app/business/services/user.service';
+import {UserService} from 'app/business/services/users/user.service';
 import {Subject} from 'rxjs';
-import {CardService} from 'app/business/services/card.service';
+import {CardService} from 'app/business/services/card/card.service';
 import {ServerResponseStatus} from 'app/business/server/serverResponse';
-import {RouterStore,PageType} from 'app/business/store/router.store';
+import {PageType, RouterStore} from 'app/business/store/router.store';
 import {Router} from '@angular/router';
 
 @Component({
@@ -35,12 +35,14 @@ export class CardActionsComponent implements OnChanges, OnDestroy {
     @Output() closeCardDetail: EventEmitter<boolean> = new EventEmitter<boolean>();
 
     @ViewChild('userCardEdition') userCardEditionTemplate: TemplateRef<any>;
+    @ViewChild('userCardCreateCopy') userCardCreateCopyTemplate: TemplateRef<any>;
     @ViewChild('deleteCardConfirmation') deleteCardConfirmationTemplate: TemplateRef<any>;
 
     private editModal: NgbModalRef;
     private deleteConfirmationModal: NgbModalRef;
     public showEditButton = false;
     public showDeleteButton = false;
+    public showCreateCopyButton = false;
     public deleteInProgress = false;
 
     private unsubscribe$: Subject<void> = new Subject<void>();
@@ -66,10 +68,16 @@ export class CardActionsComponent implements OnChanges, OnDestroy {
             !this.isReadOnlyUser &&
             this.cardState.editCardEnabledOnUserInterface &&
             this.doesTheUserHavePermissionToEditCard();
+
         this.showDeleteButton =
             !this.isReadOnlyUser &&
             this.cardState.deleteCardEnabledOnUserInterface &&
             this.doesTheUserHavePermissionToDeleteCard();
+
+        this.showCreateCopyButton =
+            this.cardState.copyCardEnabledOnUserInterface &&
+            this.cardState.userCard &&
+            this.userService.isWriteRightsForProcessAndState(this.card.process, this.card.state);
     }
 
     private doesTheUserHavePermissionToEditCard(): boolean {
@@ -91,7 +99,7 @@ export class CardActionsComponent implements OnChanges, OnDestroy {
         // Otherwise, this can cause issues with templates functions referencing elements by id as there are two elements with the same id
         // in the document.
         this.closeDetails();
-        if (!!this.parentModalRef) this.parentModalRef.close();
+        if (this.parentModalRef) this.parentModalRef.close();
 
         const options: NgbModalOptions = {
             size: 'usercard',
@@ -101,12 +109,26 @@ export class CardActionsComponent implements OnChanges, OnDestroy {
         this.reopenCardDetailOnceEditionIsFinished();
     }
 
+    public createCopy(): void {
+        this.closeDetails();
+        if (this.parentModalRef) this.parentModalRef.close();
+
+        const options: NgbModalOptions = {
+            size: 'usercard',
+            backdrop: 'static'
+        };
+        this.editModal = this.modalService.open(this.userCardCreateCopyTemplate, options);
+        this.reopenCardDetailOnceEditionIsFinished();
+    }
+
     public closeDetails() {
         this.closeCardDetail.emit(true);
     }
 
     private reopenCardDetailOnceEditionIsFinished() {
-        if (this.routerStore.getCurrentPageType() !== PageType.CALENDAR && this.routerStore.getCurrentPageType() !== PageType.MONITORING) {
+        if (this.routerStore.getCurrentPageType() !== PageType.CALENDAR &&
+            this.routerStore.getCurrentPageType() !== PageType.MONITORING &&
+            this.routerStore.getCurrentPageType() !== PageType.DASHBOARD) {
             this.editModal.result.then(
                 () => {
                      // If modal is closed
@@ -130,7 +152,7 @@ export class CardActionsComponent implements OnChanges, OnDestroy {
 
     public confirmDeleteCard(): void {
         this.deleteInProgress = true;
-        if (!!this.deleteConfirmationModal) this.deleteConfirmationModal.close();
+        if (this.deleteConfirmationModal) this.deleteConfirmationModal.close();
         this.cardService.deleteCard(this.card).subscribe((resp) => {
             const status = resp.status;
             if (status === ServerResponseStatus.OK) {

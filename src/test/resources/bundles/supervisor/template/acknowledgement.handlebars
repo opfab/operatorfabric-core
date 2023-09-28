@@ -1,0 +1,36 @@
+<!-- Copyright (c) 2023, RTE (http://www.rte-france.com)                   -->
+<!-- See AUTHORS.txt                                                       -->
+<!-- This Source Code Form is subject to the terms of the Mozilla Public   -->
+<!-- License, v. 2.0. If a copy of the MPL was not distributed with this   -->
+<!-- file, You can obtain one at http://mozilla.org/MPL/2.0/.              -->
+<!-- SPDX-License-Identifier: MPL-2.0                                      -->
+<!-- This file is part of the OperatorFabric project.                      -->
+
+<br/>
+<br/>
+<center>
+
+<h2> Card <span style="cursor:pointer;color:blue;text-decoration:underline;" onclick="opfab.navigate.showCardInFeed('{{card.data.cardId}}')">{{card.data.title}} - {{card.data.summary}}</span>  </h2>
+<h2> was not acknowledged by : 
+    <br>
+    <br>
+    <ul> <span id="missingAcks" style="color:red; display: inline-block; text-align: left;"></ul></div>
+</h2>
+
+</center>
+<script>
+
+    loadData();
+
+function loadData() {
+    
+  let missingAcks = document.getElementById("missingAcks");
+  let missingEntities = '';
+  "{{card.data.missingAcks}}".split(',').forEach(entity => {
+    missingEntities += "<li>" + opfab.utils.escapeHtml(templateGateway.getEntityName(entity)) + "</li>"
+  });
+  missingAcks.innerHTML = missingEntities;
+}
+  
+
+</script>

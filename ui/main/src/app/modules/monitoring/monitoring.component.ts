@@ -15,10 +15,10 @@ import {LightCard} from '@ofModel/light-card.model';
 import {I18n} from '@ofModel/i18n.model';
 import {MonitoringFiltersComponent} from './components/monitoring-filters/monitoring-filters.component';
 import {Process, TypeOfStateEnum} from '@ofModel/processes.model';
-import {ProcessesService} from 'app/business/services/processes.service';
+import {ProcessesService} from 'app/business/services/businessconfig/processes.service';
 import {Filter} from '@ofModel/feed-filter.model';
 import {LightCardsStoreService} from 'app/business/services/lightcards/lightcards-store.service';
-import {EntitiesService} from 'app/business/services/entities.service';
+import {EntitiesService} from 'app/business/services/users/entities.service';
 import {SelectedCardService} from 'app/business/services/card/selectedCard.service';
 
 @Component({
@@ -55,7 +55,7 @@ export class MonitoringComponent implements OnInit, OnDestroy {
     ) {
         processesService.getAllProcesses().forEach((process) => {
             const id = process.id;
-            if (!!process.uiVisibility && !!process.uiVisibility.monitoring) {
+            if (process.uiVisibility?.monitoring) {
                 this.mapOfProcesses.set(id, process);
             }
         });
@@ -75,7 +75,7 @@ export class MonitoringComponent implements OnInit, OnDestroy {
             map((results) => {
                 const activeFilters = results[0].concat(results[1]);
                 const cards = results[2].filter((card) => Filter.chainFilter(card, activeFilters));
-                if (!!cards && cards.length <= 0) {
+                if (cards?.length === 0) {
                     return null;
                 }
                 return cards
@@ -130,7 +130,7 @@ export class MonitoringComponent implements OnInit, OnDestroy {
 
         let representative = '';
 
-        if (!!card.representativeType && !!card.representative) {
+        if (card.representativeType && card.representative) {
             const isThirdPartyRepresentative = card.representativeType === 'EXTERNAL';
             representative = isThirdPartyRepresentative
                 ? card.representative
@@ -171,15 +171,13 @@ export class MonitoringComponent implements OnInit, OnDestroy {
         let typeOfState: TypeOfStateEnum;
         const procId = card.process;
 
-        if (!!this.mapOfProcesses && this.mapOfProcesses.has(procId) && !card.parentCardId) {
+        if (this.mapOfProcesses?.has(procId) && !card.parentCardId) {
             const currentProcess = this.mapOfProcesses.get(procId);
-            
+
             const state = currentProcess.states.get(card.state);
 
-            if (!!state && !!state.type) {
+            if (state?.type) {
                 typeOfState = state.type;
-            }
-            if (!!state.type) {
                 return {
                     creationDateTime: card.publishDate,
                     beginningOfBusinessPeriod: card.startDate,

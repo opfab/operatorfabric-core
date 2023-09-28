@@ -9,10 +9,10 @@
 
 import {Component, ElementRef, HostListener, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {LightCardsStoreService} from 'app/business/services/lightcards/lightcards-store.service';
-import {ProcessesService} from 'app/business/services/processes.service';
+import {ProcessesService} from 'app/business/services/businessconfig/processes.service';
 import {Dashboard} from 'app/business/view/dashboard/dashboard.view';
 import {DashboardPage} from 'app/business/view/dashboard/dashboardPage';
-import {UserService} from 'app/business/services/user.service';
+import {UserService} from 'app/business/services/users/user.service';
 import {NgbModal, NgbModalOptions, NgbModalRef, NgbPopover} from '@ng-bootstrap/ng-bootstrap';
 import {SelectedCardService} from 'app/business/services/card/selectedCard.service';
 import {FilterService} from 'app/business/services/lightcards/filter.service';
@@ -47,7 +47,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
     }
 
     ngOnDestroy() {
-        if (!!this.modalRef) {
+        if (this.modalRef) {
             this.modalRef.close();
         }
     }
@@ -76,14 +76,14 @@ export class DashboardComponent implements OnInit, OnDestroy {
 
     onCircleClick(circle) {
         if (circle.numberOfCards == 1) {
-            let cardId = circle.cards[0].id;
+            const cardId = circle.cards[0].id;
             this.selectCard(cardId);
         }
     }
 
     @HostListener('mouseleave') onMouseLeave() {
         this.popoverTimeOut = setTimeout(() => {
-            this.openPopover.close();
+            this.openPopover?.close();
         }, 1000);
     }
 
