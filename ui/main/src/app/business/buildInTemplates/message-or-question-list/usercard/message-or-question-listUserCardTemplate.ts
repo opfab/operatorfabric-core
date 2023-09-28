@@ -85,7 +85,7 @@ export class MessageOrQuestionListUserCardTemplate extends BaseUserCardTemplate 
         const message = this.view.getMessageOrQuestion(messageId)
         if ( this.previousTitleId != messageId || opfab.currentUserCard.getEditionMode() == 'CREATE') {
             document.getElementById("message").innerHTML = message?.message;
-            this.view.setRecipients(message?.recipients);
+            this.view.setRecipients(message?.recipients, message?.recipientsForInformation);
             this.previousTitleId = messageId;
         } 
         
