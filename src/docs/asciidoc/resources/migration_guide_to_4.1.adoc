@@ -1,0 +1,26 @@
+// Copyright (c) 2023 RTE (http://www.rte-france.com)
+// See AUTHORS.txt
+// This document is subject to the terms of the Creative Commons Attribution 4.0 International license.
+// If a copy of the license was not distributed with this
+// file, You can obtain one at https://creativecommons.org/licenses/by/4.0/.
+// SPDX-License-Identifier: CC-BY-4.0
+
+= Migration Guide from release 4.0.0 to release 4.1.0
+
+
+== Optimizing Nginx Configuration for Latency Reduction
+
+An optimization has been introduced in the Nginx configuration to reduce latency. To implement this optimization in your `nginx.conf` you need to add in `location /cards/`  the directive `proxy_buffering off` 
+
+For example : 
+
+```
+  location /cards/ {
+    proxy_buffering off;
+    proxy_set_header Host $http_host;
+    proxy_pass http://cards-consultation:2104/;
+    proxy_set_header X-Forwarded-For $remote_addr;
+  }
+```
+ 
+
