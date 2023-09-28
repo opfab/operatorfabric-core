@@ -72,6 +72,7 @@ export class MessageOrQuestionListUserCardTemplateView {
         this.messageOrQuestionList = await opfab.businessconfig.businessData.get(businessDataName);
 
         opfab.currentUserCard.setDropdownEntityRecipientList(this.messageOrQuestionList.possibleRecipients);
+        opfab.currentUserCard.setDropdownEntityRecipientForInformationList(this.messageOrQuestionList.possibleRecipients);
         const titlesOptions = [];
 
         this.messageOrQuestionList.messagesList.forEach( (message) => {
@@ -93,8 +94,9 @@ export class MessageOrQuestionListUserCardTemplateView {
         return this.selectedMessage;
     }
 
-    public setRecipients(selectedRecipients) {
+    public setRecipients(selectedRecipients, selectedRecipientsForInformation) {
         opfab.currentUserCard.setSelectedRecipients(selectedRecipients);
+        opfab.currentUserCard.setSelectedRecipientsForInformation(selectedRecipientsForInformation);
     }
     
 
