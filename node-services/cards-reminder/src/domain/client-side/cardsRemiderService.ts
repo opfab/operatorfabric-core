@@ -61,7 +61,7 @@ export default class CardsReminderService {
 
     private checkRegularly() {
         if (this.active) {
-            this.logger.debug("checkRegularly");
+            this.logger.debug("Check for cards to remind");
             try {
                 this.cardsReminderControl.checkCardsReminder();
             } catch (error) {      
