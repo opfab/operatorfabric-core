@@ -37,7 +37,9 @@ const authenticationService = new AuthenticationService()
 
 const remindDatabaseService = new RemindDatabaseService()
     .setMongoDbConfiguration(config.get("operatorfabric.mongodb"))
-    .setRemindersCollection(ReminderService.REMINDERS_COLLECTION);
+    .setRemindersCollection(ReminderService.REMINDERS_COLLECTION)
+    .setLogger(logger)
+
 
 const reminderService = new ReminderService()
     .setLogger(logger)
@@ -45,7 +47,8 @@ const reminderService = new ReminderService()
 
 const rRuleRemindDatabaseService = new RemindDatabaseService()
     .setMongoDbConfiguration(config.get("operatorfabric.mongodb"))
-    .setRemindersCollection(RRuleReminderService.REMINDERS_COLLECTION);
+    .setRemindersCollection(RRuleReminderService.REMINDERS_COLLECTION)
+    .setLogger(logger)
 
 const rruleReminderService = new RRuleReminderService()
     .setLogger(logger)
@@ -126,9 +129,12 @@ app.listen(adminPort, () => {
 
 opfabServicesInterface.startListener();
 
+async function start() {
+    await remindDatabaseService.connectToMongoDB();
+    await rRuleRemindDatabaseService.connectToMongoDB();
 if (activeOnStartUp) {
     cardsReminderService.start();
 }
-
 logger.info('Application started');
-
+}
+start();
