@@ -11,12 +11,10 @@ import {HttpClient} from '@angular/common/http';
 import {Injectable} from '@angular/core';
 import {Router} from '@angular/router';
 import {Message} from '@ofModel/message.model';
-import {SoundNotificationService} from 'app/business/services/notifications/sound-notification.service';
 import {OAuthService} from 'angular-oauth2-oidc';
 import {ConfigService} from 'app/business/services/config.service';
 import {GuidService} from 'app/business/services/guid.service';
 import {OpfabLoggerService} from 'app/business/services/logs/opfab-logger.service';
-import {OpfabEventStreamService} from 'app/business/services/events/opfabEventStream.service';
 import {UserService} from 'app/business/services/users/user.service';
 import {CurrentUserStore} from 'app/business/store/current-user.store';
 import {Observable, Subject} from 'rxjs';
@@ -40,9 +38,7 @@ export class AuthService {
     constructor(
         private configService: ConfigService,
         private currentUserStore: CurrentUserStore,
-        private opfabEventStreamService: OpfabEventStreamService,
         private logger: OpfabLoggerService,
-        private soundNotificationService: SoundNotificationService,
         private router: Router,
         private oauthServiceForImplicitMode: OAuthService,
         private httpClient: HttpClient,
@@ -145,9 +141,7 @@ export class AuthService {
     }
 
     public logout() {
-        this.logger.info('Logout');
-        this.soundNotificationService.stopService();
-        this.opfabEventStreamService.closeEventStream();
+        this.logger.info('Auth logout');
         this.removeUserFromStorage();
         this.authHandler.logout();
         window.location.href = this.configService.getConfigValue('security.logout-url', 'https://opfab.github.io');

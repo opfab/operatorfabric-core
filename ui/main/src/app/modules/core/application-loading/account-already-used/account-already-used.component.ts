@@ -12,7 +12,7 @@ import {NgbModal, NgbModalRef} from '@ng-bootstrap/ng-bootstrap';
 import {LogOption, OpfabLoggerService} from 'app/business/services/logs/opfab-logger.service';
 import {UserService} from 'app/business/services/users/user.service';
 import {ApplicationLoadingStep} from '../application-loading-step';
-import {AuthService} from 'app/authentication/auth.service';
+import {SessionManagerService} from 'app/business/services/session-manager.service';
 
 @Component({
     selector: 'of-account-already-used',
@@ -30,7 +30,7 @@ export class AccountAlreadyUsedComponent extends ApplicationLoadingStep {
     constructor(
         private userService: UserService,
         private modalService: NgbModal,
-        private authService: AuthService,
+        private sessionManager: SessionManagerService,
         private logger: OpfabLoggerService
     ) {
         super();
@@ -61,7 +61,7 @@ export class AccountAlreadyUsedComponent extends ApplicationLoadingStep {
     public logoutBecauseAccountIsAlreadyUsed() {
         this.logger.info('Logout with user ' + this.userLogin + ' because account already used ', LogOption.REMOTE);
         this.questionModal.close();
-        this.authService.logout();
+        this.sessionManager.logout();
     }
 
     private sendEventAccountAlreadyInUseCheckDone() {
