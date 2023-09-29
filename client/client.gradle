@@ -86,6 +86,7 @@ subprojects {
     tasks.generateSwaggerCodeModel.dependsOn ':tools:swagger-spring-generators:assemble'
 
 
+
     /** Configuration of publication of client jars to Maven Central */
 
     task sourcesJar(type: Jar){
@@ -93,6 +94,8 @@ subprojects {
         from sourceSets.main.allJava
         duplicatesStrategy = 'include' // This is a temporary fix to avoid false build error, see (#1543)
     }
+
+    tasks.sourcesJar.dependsOn generateSwaggerCodeModel
 
     task javadocJar(type: Jar){
         archiveClassifier = 'javadoc'
