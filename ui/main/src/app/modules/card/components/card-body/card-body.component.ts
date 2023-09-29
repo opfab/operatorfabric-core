@@ -342,8 +342,14 @@ export class CardBodyComponent implements OnChanges, OnInit, OnDestroy {
         return this.card.lttd != null && this.card.lttd - new Date().getTime() <= 0;
     }
 
-    public isSmallscreen() {
-        return window.innerWidth < 1000;
+    public isThereEnoughSpaceToShowCard() {
+        const domElement = document.getElementsByTagName('of-card-body');
+        const cardWidth =  domElement.item(0).getBoundingClientRect().width;
+
+        if (cardWidth === 0) //Full screen
+            return window.innerWidth > 1300
+        else
+            return cardWidth > 485 || window.innerWidth > 1300;
     }
 
     public setFullScreen(active) {

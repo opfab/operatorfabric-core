@@ -1,4 +1,4 @@
-<!-- Copyright (c) 2018-2022, RTE (http://www.rte-france.com)              -->
+<!-- Copyright (c) 2018-2023, RTE (http://www.rte-france.com)              -->
 <!-- See AUTHORS.txt                                                       -->
 <!-- This Source Code Form is subject to the terms of the Mozilla Public   -->
 <!-- License, v. 2.0. If a copy of the MPL was not distributed with this   -->
@@ -6,12 +6,12 @@
 <!-- SPDX-License-Identifier: MPL-2.0                                      -->
 <!-- This file is part of the OperatorFabric project.                      -->
 
-<div [class.opfab-card-detail-fullscreen]="fullscreen || isSmallscreen()">
+<div [class.opfab-card-detail-fullscreen]="fullscreen || !isThereEnoughSpaceToShowCard()">
   <div style="display: block;  margin-top:10px;">
     <ul class="nav nav-tabs opfab-line-undertab">
       <li class="nav-item opfab-menu-item-right">
         <span>
-          <div *ngIf="!isSmallscreen()" style="display:flex">
+          <div *ngIf="isThereEnoughSpaceToShowCard()" style="display:flex">
             <of-card-actions style="display:flex" [card]="this.card" [cardState]="this.cardState"
               [parentModalRef]="this.parentModalRef"  (closeCardDetail)="closeDetails()">
             </of-card-actions>
@@ -27,7 +27,7 @@
               &times;
             </div>
           </div>
-          <div *ngIf="isSmallscreen()" style="display:flex">
+          <div *ngIf="!isThereEnoughSpaceToShowCard()" style="display:flex">
             <div id="opfab-close-card" class="opfab-close-card-link" aria-label="Close"(click)="closeDetails()">
               &times;
             </div>
