@@ -70,9 +70,20 @@ export class CardCommands extends OpfabCommands {
         cy.get('#opfab-entities-dropdown').click();
     }
 
-    sendResponse = function () {
+    clickOnSendResponse = function() {
         cy.get('#opfab-card-details-btn-response').click();
     }
+
+    closeMessageAfterResponseSend = function() {
+        cy.get('.opfab-info-message').contains('Your answer is confirmed. Thank you!');
+        cy.get('#opfab-close-alert').click();
+    }
+
+    sendResponse = function () {
+        this.clickOnSendResponse();
+        this.closeMessageAfterResponseSend();
+    }
+
 
     unacknowledge = function () {
         cy.get('#opfab-card-details-btn-unack').click();
