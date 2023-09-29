@@ -17,7 +17,6 @@ import {filter, map, switchMap, takeUntil} from 'rxjs/operators';
 import {ExternalDevicesService} from 'app/business/services/notifications/external-devices.service';
 import {ConfigService} from 'app/business/services/config.service';
 import {LogOption, OpfabLoggerService} from '../logs/opfab-logger.service';
-import {OpfabEventStreamService} from 'app/business/services/events/opfabEventStream.service';
 import {AlertMessageService} from 'app/business/services/alert-message.service';
 import {MessageLevel} from '@ofModel/message.model';
 import {SoundServer} from 'app/business/server/sound.server';
@@ -61,7 +60,6 @@ export class SoundNotificationService implements OnDestroy {
         private lightCardsStoreService: LightCardsStoreService,
         private externalDevicesService: ExternalDevicesService,
         private configService: ConfigService,
-        private opfabEventStreamService: OpfabEventStreamService,
         private alertMessageService: AlertMessageService,
         private logger: OpfabLoggerService
     ) {
@@ -72,6 +70,7 @@ export class SoundNotificationService implements OnDestroy {
     public stopService() {
         this.isServiceActive = false;
         this.logger.info('Stopping sound service', LogOption.LOCAL_AND_REMOTE);
+        this.clearOutstandingNotifications();
     }
 
     public initSoundService() {
@@ -116,7 +115,6 @@ export class SoundNotificationService implements OnDestroy {
         this.initSoundPlayingForSessionEnd();
 
         this.listenForCardUpdate();
-        this.listenForDisconnection();
     }
 
     public getPlaySoundOnExternalDevice(): boolean {
@@ -132,10 +130,6 @@ export class SoundNotificationService implements OnDestroy {
 
     private listenForCardUpdate() {
         this.lightCardsStoreService.getNewLightCards().subscribe((card) => this.handleLoadedCard(card));
-    }
-
-    private listenForDisconnection() {
-        this.opfabEventStreamService.getReceivedDisconnectUser().subscribe(() => this.stopService());
     }
 
     ngOnDestroy() {

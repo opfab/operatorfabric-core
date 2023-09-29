@@ -16,8 +16,8 @@ import {ConfigService} from 'app/business/services/config.service';
 import {NgbModal, NgbModalOptions, NgbModalRef, NgbPopover} from '@ng-bootstrap/ng-bootstrap';
 import {MenuService} from 'app/business/services/menu.service';
 import {Observable} from 'rxjs';
-import {AuthService} from 'app/authentication/auth.service';
 import {RouterStore} from 'app/business/store/router.store';
+import {SessionManagerService} from 'app/business/services/session-manager.service';
 
 @Component({
     selector: 'of-navbar',
@@ -73,7 +73,7 @@ export class NavbarComponent implements OnInit {
         private configService: ConfigService,
         private menuService: MenuService,
         private modalService: NgbModal,
-        private authService: AuthService
+        private sessionManager: SessionManagerService
     ) {
     }
 
@@ -140,7 +140,7 @@ export class NavbarComponent implements OnInit {
 
     logOut() {
         this.logoutInProgress = true;
-        this.authService.logout();
+        this.sessionManager.logout();
     }
 
     toggleMenu(menu, p): void {
