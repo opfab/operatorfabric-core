@@ -477,7 +477,7 @@ describe('Response card tests', function () {
         cy.get('#opfab-archives-logging-btn-search').click();
 
         // operator1_fr should see 3 archived cards
-        cy.get('#opfab-archives-cards-list').find('.opfab-archives-table-line').should('have.length', 3);
+        cy.get('#opfab-archives-cards-list').find('.opfab-archives-table-line').should('have.length', 4);
 
         // open card detail for card with keepChildCards=false and check there are no responses
         cy.get('#opfab-archives-cards-list').find('.opfab-archives-table-line').eq(0).click();
@@ -524,7 +524,7 @@ describe('Response card tests', function () {
         cy.get('#opfab-archives-card-detail-close').click();
 
         // open card detail for first card and check it should have 1 child card
-        cy.get('#opfab-archives-cards-list').find('.opfab-archives-table-line').eq(2).click();
+        cy.get('#opfab-archives-cards-list').find('.opfab-archives-table-line').eq(3).click();
         cy.waitDefaultTime();
         cy.get('of-simplified-card-view').should('exist');
         // Check the responses from ENTITY1_FR  has been integrated in the template
