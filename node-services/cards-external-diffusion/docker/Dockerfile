@@ -1,4 +1,4 @@
-FROM node:20.7-alpine
+FROM node:20.8-alpine
 WORKDIR /usr/app
 RUN chown node:node /usr/app
 USER node
