@@ -87,13 +87,15 @@ export class ProcessesService {
                 const processGroupsFile = response.data;
                 if (processGroupsFile) {
                     const processGroupsList = processGroupsFile.groups;
-                    if (processGroupsList)
+                    if (processGroupsList) {
+                        this.processGroups.clear();
                         processGroupsList.forEach((processGroup) => {
                             this.processGroups.set(processGroup.id, {
                                 name: processGroup.name,
                                 processes: processGroup.processes
                             });
                         });
+                    }
                     console.log(new Date().toISOString(), 'List of process groups loaded');
                 }
                 if (response.status !== ServerResponseStatus.OK)
