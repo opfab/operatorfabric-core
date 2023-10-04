@@ -312,7 +312,7 @@
       "userHasNoEntityThatCanSendCard" : "You are not a member of any entity that can send cards.",
       "templateError": "Technical error : invalid template",
       "impossibleToSendCard": "Impossible to send card for technical reasons",
-      "lttdBeforeStartDate": "Limit date for response must be after start date.",
+      "lttdBeforeStartDate": "Limit date for response must be after start date and after the current date and time.",
       "lttdAfterEndDate": "Limit date for response must be before end date.",
       "expirationDateBeforeStartDate": "Expiration date must be after start date."
     },

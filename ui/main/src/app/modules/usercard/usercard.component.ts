@@ -770,7 +770,8 @@ export class UserCardComponent implements OnInit, OnDestroy {
             return false;
         }
 
-        if (lttd && lttd < startDate) {
+        const currentDateTime = new Date().valueOf();
+        if (lttd && ((lttd < startDate) || (lttd <= currentDateTime))) {
             this.displayMessage('userCard.error.lttdBeforeStartDate', '', MessageLevel.ERROR);
             return false;
         }

@@ -312,7 +312,7 @@
       "userHasNoEntityThatCanSendCard" : "U bent geen lid van een entiteit die kaarten kan versturen.",
       "templateError": "Technische fout: ongeldige sjabloon",
       "impossibleToSendCard": "Om technische redenen is het onmogelijk om de kaart te verzenden",
-      "lttdBeforeStartDate": "De beperkingsdatum voor reactie moet na de startdatum liggen.",
+      "lttdBeforeStartDate": "De beperkingsdatum voor reactie moet na de startdatum liggen en na de huidige datum en tijd.",
       "lttdAfterEndDate": "De beperkingsdatum voor reactie moet vóór de einddatum liggen.",
       "expirationDateBeforeStartDate": "De vervaldatum moet na de startdatum liggen."
     },
