@@ -355,6 +355,7 @@ input:-webkit-autofill {
         text-align: left;
         border-bottom: 1px solid var(--opfab-table-border-color);
         width: 100%;
+        border-collapse: collapse;
     }
 
 .opfab-table tr {
