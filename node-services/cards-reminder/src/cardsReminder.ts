@@ -123,6 +123,11 @@ app.get('/reset', (req, res) => {
     })
 });
 
+
+app.get('/healthcheck', (req, res) => {
+    res.send();
+});
+
 app.listen(adminPort, () => {
     logger.info(`Opfab cards reminder service listening on port ${adminPort}`);
 });

@@ -41,6 +41,7 @@ include::configuration/configuration.adoc[leveloffset=+1]
 == Monitoring
 
 Operator Fabric provides end points for monitoring via link:https://prometheus.io/[prometheus]. The monitoring is available for the four following services: user, businessconfig, cards-consultation, cards-publication. You can start a test prometheus instance via `config/monitoring/startPrometheus.sh` , the monitoring will be accessible on http://localhost:9090/
+It is also possible to monitor the health status of cards-external-diffusion, cards-reminder and supervisor services by making an HTTP GET request to the "/healthcheck" endpoint exposed by each service. The healthcheck enpoint will return a HTTP 200 status code if the service is up and running.
 
 == Logging Administration
 

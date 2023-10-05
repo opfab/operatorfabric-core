@@ -126,6 +126,10 @@ app.post('/config', (req, res) => {
     })
 });
 
+app.get('/healthcheck', (req, res) => {
+    res.send();
+});
+
 app.listen(adminPort, () => {
     logger.info(`Opfab card external diffusion service listening on port ${adminPort}`);
 });
