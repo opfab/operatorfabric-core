@@ -67,7 +67,6 @@ export class NavbarComponent implements OnInit {
     styleMode : Observable<string>;
 
     constructor(
-        private routerStore: RouterStore,
         private router: Router,
         private globalStyleService: GlobalStyleService,
         private configService: ConfigService,
@@ -79,7 +78,7 @@ export class NavbarComponent implements OnInit {
 
     ngOnInit() {
 
-        this.routerStore.getCurrentRouteEvent().subscribe((route)=> {
+        RouterStore.getInstance().getCurrentRouteEvent().subscribe((route)=> {
             this.currentRoute = route.split('/')[1];
         });
 

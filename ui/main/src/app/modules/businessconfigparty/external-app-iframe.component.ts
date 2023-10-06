@@ -12,7 +12,6 @@ import {takeUntil} from 'rxjs/operators';
 import {Subject} from 'rxjs';
 import {GlobalStyleService} from 'app/business/services/global-style.service';
 import {ConfigService} from 'app/business/services/config.service';
-import {RouterStore} from 'app/business/store/router.store';
 import {ExternalAppIFrameView} from 'app/business/view/externalAppIframe/externalAppIFrame.view';
 
 @Component({
@@ -27,13 +26,11 @@ export class ExternalAppIFrameComponent implements OnInit, OnDestroy {
     constructor(
         private configService: ConfigService,
         private globalStyleService: GlobalStyleService,
-        private routerStore: RouterStore
     ) {}
 
     ngOnInit() {
         this.externalAppIFrameView = new ExternalAppIFrameView(
             this.configService,
-            this.routerStore,
             this.globalStyleService
         );
         this.externalAppIFrameView

@@ -45,6 +45,7 @@ export class CardAckComponent implements OnInit, OnChanges, OnDestroy {
 
     @Output() closeCardDetail: EventEmitter<boolean> = new EventEmitter<boolean>();
 
+    private routerStore: RouterStore;
     public ackOrUnackInProgress = false;
     public showAckButton = false;
     public showUnAckButton = false;
@@ -56,7 +57,6 @@ export class CardAckComponent implements OnInit, OnChanges, OnDestroy {
     isReadOnlyUser: any;
 
     constructor(
-        private routerStore: RouterStore,
         private entitiesService: EntitiesService,
         private acknowledgeService: AcknowledgeService,
         private userService: UserService,
@@ -65,6 +65,7 @@ export class CardAckComponent implements OnInit, OnChanges, OnDestroy {
         private lightCardsStoreService: LightCardsStoreService,
         private logger: OpfabLoggerService
     ) {
+        this.routerStore= RouterStore.getInstance();
         const userWithPerimeters = this.userService.getCurrentUserWithPerimeters();
         if (userWithPerimeters) this.user = userWithPerimeters.userData;
     }

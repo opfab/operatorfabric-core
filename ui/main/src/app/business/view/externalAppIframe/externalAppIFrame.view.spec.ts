@@ -53,7 +53,7 @@ describe('ExternalAppIFrame view ', () => {
     beforeEach(() => {
         configServerMock = new ConfigServerMock();
         configService = new ConfigService(configServerMock);
-        routerStore = new RouterStore();
+        routerStore = RouterStore.getInstance();
         const mockUserServer = new UserServerMock();
         const logService = new OpfabLoggerService(new RemoteLoggerServiceMock(configService, null));
         const userService = new UserService(mockUserServer, logService);
@@ -70,7 +70,7 @@ describe('ExternalAppIFrame view ', () => {
         configServerMock.setResponseForMenuConfiguration(new ServerResponse(menuConf, ServerResponseStatus.OK, null));
         await firstValueFrom(configService.loadUiMenuConfig());
 
-        const externalAppIFrameView = new ExternalAppIFrameView(configService, routerStore, globalStyleService);
+        const externalAppIFrameView = new ExternalAppIFrameView(configService, globalStyleService);
 
         routerStore.setCurrentRoute('/businessconfigparty/menu1/entry1/');
 
@@ -85,7 +85,7 @@ describe('ExternalAppIFrame view ', () => {
         configServerMock.setResponseForMenuConfiguration(new ServerResponse(menuConf, ServerResponseStatus.OK, null));
         await firstValueFrom(configService.loadUiMenuConfig());
 
-        const externalAppIFrameView = new ExternalAppIFrameView(configService, routerStore, globalStyleService);
+        const externalAppIFrameView = new ExternalAppIFrameView(configService, globalStyleService);
 
         routerStore.setCurrentRoute('/businessconfigparty/menu1/entry2/');
 
@@ -101,7 +101,7 @@ describe('ExternalAppIFrame view ', () => {
         configServerMock.setResponseForMenuConfiguration(new ServerResponse(menuConf, ServerResponseStatus.OK, null));
         await firstValueFrom(configService.loadUiMenuConfig());
 
-        const externalAppIFrameView = new ExternalAppIFrameView(configService, routerStore, globalStyleService);
+        const externalAppIFrameView = new ExternalAppIFrameView(configService, globalStyleService);
 
         routerStore.setCurrentRoute('/businessconfigparty/menu1/entry2');
 
@@ -123,7 +123,7 @@ describe('ExternalAppIFrame view ', () => {
         configServerMock.setResponseForMenuConfiguration(new ServerResponse(menuConf, ServerResponseStatus.OK, null));
         await firstValueFrom(configService.loadUiMenuConfig());
 
-        const externalAppIFrameView = new ExternalAppIFrameView(configService, routerStore, globalStyleService);
+        const externalAppIFrameView = new ExternalAppIFrameView(configService, globalStyleService);
 
         routerStore.setCurrentRoute('/businessconfigparty/menu1/entry1/?my_param=param&my_param2=param2');
 
@@ -146,7 +146,7 @@ describe('ExternalAppIFrame view ', () => {
         configServerMock.setResponseForMenuConfiguration(new ServerResponse(menuConf, ServerResponseStatus.OK, null));
         await firstValueFrom(configService.loadUiMenuConfig());
 
-        const externalAppIFrameView = new ExternalAppIFrameView(configService, routerStore, globalStyleService);
+        const externalAppIFrameView = new ExternalAppIFrameView(configService, globalStyleService);
 
         routerStore.setCurrentRoute('/businessconfigparty/menu1/entry1/?my_param=param&my_param2=param2');
 
@@ -171,7 +171,7 @@ describe('ExternalAppIFrame view ', () => {
         configServerMock.setResponseForMenuConfiguration(new ServerResponse(menuConf, ServerResponseStatus.OK, null));
         await firstValueFrom(configService.loadUiMenuConfig());
 
-        const externalAppIFrameView = new ExternalAppIFrameView(configService, routerStore, globalStyleService);
+        const externalAppIFrameView = new ExternalAppIFrameView(configService, globalStyleService);
 
         routerStore.setCurrentRoute('/businessconfigparty/menu1/entry1/%253Fmy_param=param&my_param2=param2');
 
@@ -186,7 +186,7 @@ describe('ExternalAppIFrame view ', () => {
         configServerMock.setResponseForMenuConfiguration(new ServerResponse(menuConf, ServerResponseStatus.OK, null));
         await firstValueFrom(configService.loadUiMenuConfig());
 
-        const externalAppIFrameView = new ExternalAppIFrameView(configService, routerStore, globalStyleService);
+        const externalAppIFrameView = new ExternalAppIFrameView(configService, globalStyleService);
 
         routerStore.setCurrentRoute('/businessconfigparty/menu1/entry2/?my_param2=param2');
 
@@ -201,7 +201,7 @@ describe('ExternalAppIFrame view ', () => {
         configServerMock.setResponseForMenuConfiguration(new ServerResponse(menuConf, ServerResponseStatus.OK, null));
         await firstValueFrom(configService.loadUiMenuConfig());
 
-        const externalAppIFrameView = new ExternalAppIFrameView(configService, routerStore, globalStyleService);
+        const externalAppIFrameView = new ExternalAppIFrameView(configService, globalStyleService);
 
         routerStore.setCurrentRoute('/businessconfigparty/menu1/entry1/deep/deep2/query?my_param=param');
 
@@ -215,7 +215,7 @@ describe('ExternalAppIFrame view ', () => {
         configServerMock.setResponseForMenuConfiguration(new ServerResponse(menuConf, ServerResponseStatus.OK, null));
         await firstValueFrom(configService.loadUiMenuConfig());
 
-        const externalAppIFrameView = new ExternalAppIFrameView(configService, routerStore, globalStyleService);
+        const externalAppIFrameView = new ExternalAppIFrameView(configService, globalStyleService);
 
         routerStore.setCurrentRoute('/businessconfigparty/menu1/entry1');
 

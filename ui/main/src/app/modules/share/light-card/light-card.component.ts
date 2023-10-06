@@ -56,7 +56,6 @@ export class LightCardComponent implements OnInit, OnDestroy {
 
     constructor(
         private router: Router,
-        private routerStore: RouterStore,
         private dateTimeFormatter: DateTimeFormatterService,
         private configService: ConfigService,
         private entitiesService: EntitiesService,
@@ -157,7 +156,7 @@ export class LightCardComponent implements OnInit, OnDestroy {
             this.groupedCardsVisible = true;
         }
         if (this.displayContext != DisplayContext.PREVIEW)
-            this.router.navigate(['/' + this.routerStore.getCurrentRoute().split('/')[1], 'cards', this.lightCard.id]);
+            this.router.navigate(['/' + RouterStore.getInstance().getCurrentRoute().split('/')[1], 'cards', this.lightCard.id]);
     }
 
     get i18nPrefix(): string {

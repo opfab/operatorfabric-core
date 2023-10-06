@@ -7,14 +7,12 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {Injectable} from '@angular/core';
 import {ReplaySubject, Observable} from 'rxjs';
 
-@Injectable({
-    providedIn: 'root'
-})
+
 export class RouterStore {
 
+    private static instance : RouterStore;
     private pageConf = new Map([
         ['feed', PageType.FEED],
         ['archives', PageType.ARCHIVE],
@@ -30,6 +28,14 @@ export class RouterStore {
 
     private currentRouteEvent = new ReplaySubject<string>(1);
     private currentRoute = 'feed';
+
+
+    private constructor() {}
+
+    public static getInstance() {
+        if (!RouterStore.instance) RouterStore.instance = new RouterStore();
+        return RouterStore.instance;
+    }
 
     public getCurrentRoute() {
         return this.currentRoute;
