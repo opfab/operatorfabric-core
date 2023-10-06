@@ -14,7 +14,6 @@ import {Entity} from '@ofModel/entity.model';
 import {Injectable} from '@angular/core';
 import {CachedCrudService} from 'app/business/services/cached-crud-service';
 import {OpfabLoggerService} from '../logs/opfab-logger.service';
-import {AlertMessageService} from '../alert-message.service';
 import {EntitiesServer} from '../../server/entities.server';
 import {ServerResponseStatus} from '../../server/serverResponse';
 import {EntitiesTree} from '@ofModel/processes.model';
@@ -32,9 +31,8 @@ export class EntitiesService extends CachedCrudService {
      */
     constructor(
         protected loggerService: OpfabLoggerService,
-        private entitiesServer: EntitiesServer,
-        protected alertMessageService: AlertMessageService) {
-        super(loggerService, alertMessageService);
+        private entitiesServer: EntitiesServer) {
+        super(loggerService);
     }
 
     deleteById(id: string) {

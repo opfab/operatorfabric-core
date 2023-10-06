@@ -57,7 +57,6 @@ export class UserActionLogsTableComponent {
 
     constructor( private translate: TranslateService,
         private cardService: CardService,
-        private alertMessageService: AlertMessageService,
         private modalService: NgbModal) {
 
         this.dateColumnName = this.translate.instant('useractionlogs.date');
@@ -179,7 +178,7 @@ export class UserActionLogsTableComponent {
             if (!card) {
                 this.cardLoadingInProgress = false;
                 if (this.modalRef) this.modalRef.close();
-                this.alertMessageService.sendAlertMessage({message: '', i18n: {key: "feed.selectedCardDeleted"}, level: MessageLevel.ERROR});
+                AlertMessageService.getInstance().sendAlertMessage({message: '', i18n: {key: "feed.selectedCardDeleted"}, level: MessageLevel.ERROR});
             } else if (card.card.initialParentCardUid)
                 this.openCardDetail(card.card.initialParentCardUid);
             else {

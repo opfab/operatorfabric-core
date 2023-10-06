@@ -47,8 +47,7 @@ export abstract class ExternalDevicesConfigurationDirective {
         protected externalDevicesService: ExternalDevicesService,
         protected confirmationDialogService: ConfirmationDialogService,
         private translateService: TranslateService,
-        protected modalService: NgbModal,
-        private alertMessageService: AlertMessageService
+        protected modalService: NgbModal
     ) {
         this.gridOptions = <GridOptions>{
             context: {
@@ -235,7 +234,7 @@ export abstract class ExternalDevicesConfigurationDirective {
     }
 
     protected displayMessage(i18nKey: string, msg: string, severity: MessageLevel = MessageLevel.ERROR) {
-        this.alertMessageService.sendAlertMessage({message: msg, level: severity, i18n: {key: i18nKey}});
+        AlertMessageService.getInstance().sendAlertMessage({message: msg, level: severity, i18n: {key: i18nKey}});
     }
 
 

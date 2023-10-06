@@ -31,11 +31,12 @@ import {AlertMessageService} from 'app/business/services/alert-message.service';
     styleUrls: ['./edit-perimeter-modal.component.scss']
 })
 export class EditPerimeterModalComponent implements OnInit {
+
+ 
     constructor(
         private activeModal: NgbActiveModal,
         private crudService: PerimetersService,
-        private processesService: ProcessesService,
-        private alertMessageService: AlertMessageService
+        private processesService: ProcessesService
 
     ) {
         Object.keys(RightsEnum).forEach((key) => {
@@ -234,7 +235,7 @@ export class EditPerimeterModalComponent implements OnInit {
     }
 
     onSaveError(res) {
-        this.alertMessageService.sendAlertMessage({message: res.originalError.error.message, level: MessageLevel.ERROR});
+        AlertMessageService.getInstance().sendAlertMessage({message: res.originalError.error.message, level: MessageLevel.ERROR});
     }
 
     public removeOrClearStateRight(indexToRemove: number) {

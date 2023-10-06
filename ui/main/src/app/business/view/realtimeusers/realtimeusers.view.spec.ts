@@ -77,12 +77,12 @@ describe('Realtimeusers', () => {
 
     function mockUserService() {
         userServerMock = new UserServerMock();
-        userService = new UserService(userServerMock, opfabLoggerService, null);
+        userService = new UserService(userServerMock, opfabLoggerService);
     }
 
     function mockEntitiesService() {
         entitiesServerMock = new EntitiesServerMock();
-        entitiesService = new EntitiesService(opfabLoggerService, entitiesServerMock, null);
+        entitiesService = new EntitiesService(opfabLoggerService, entitiesServerMock);
         entitiesService.loadAllEntitiesData().subscribe();
     }
 

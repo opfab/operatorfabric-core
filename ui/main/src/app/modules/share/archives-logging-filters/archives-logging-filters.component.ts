@@ -129,8 +129,7 @@ export class ArchivesLoggingFiltersComponent implements OnInit, OnDestroy, After
         private processesService: ProcessesService,
         private processStatesDropdownListService: ProcessStatesMultiSelectOptionsService,
         private userPreferences: UserPreferencesService,
-        private userService: UserService,
-        private alertMessageService: AlertMessageService
+        private userService: UserService
     ) {
         this.hasCurrentUserRightsToViewAllArchivedCards = this.userService.isCurrentUserAdmin() || this.userService.hasCurrentUserAnyPermission([PermissionEnum.VIEW_ALL_ARCHIVED_CARDS]);
 
@@ -454,7 +453,7 @@ export class ArchivesLoggingFiltersComponent implements OnInit, OnDestroy, After
     }
 
     private displayMessage(i18nKey: string, msg: string, severity: MessageLevel = MessageLevel.ERROR) {
-        this.alertMessageService.sendAlertMessage({message: msg, level: severity, i18n: {key: i18nKey}});
+        AlertMessageService.getInstance().sendAlertMessage({message: msg, level: severity, i18n: {key: i18nKey}});
     }
 
     private areDatesInCorrectOrder() {

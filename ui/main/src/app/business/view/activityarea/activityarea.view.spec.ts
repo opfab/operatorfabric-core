@@ -57,12 +57,12 @@ describe('ActivityAreaView', () => {
 
     function mockUserService() {
         userServerMock = new UserServerMock();
-        userService = new UserService(userServerMock, opfabLoggerService, null);
+        userService = new UserService(userServerMock, opfabLoggerService);
     }
 
     function mockEntitiesService() {
         entitiesServerMock = new EntitiesServerMock();
-        entitiesService = new EntitiesService(opfabLoggerService, entitiesServerMock, null);
+        entitiesService = new EntitiesService(opfabLoggerService, entitiesServerMock);
         const entities: Entity[] = new Array();
         entities.push(new Entity('ENTITY1', 'ENTITY1_NAME', '', true, [], []));
         entities.push(new Entity('ENTITY2', 'ENTITY2_NAME', '', true, [], []));

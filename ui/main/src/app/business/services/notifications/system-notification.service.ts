@@ -30,15 +30,17 @@ export class SystemNotificationService {
     private systemNotificationEnabled: Map<Severity, boolean>;
     private incomingCardOrReminder = new Subject();
     private lastSentCardId: string;
+    private alertMessageService: AlertMessageService;
 
     constructor(
         private lightCardsFeedFilterService: LightCardsFeedFilterService,
         private lightCardsStoreService: LightCardsStoreService,
         private configService: ConfigService,
         private logger: OpfabLoggerService,
-        private alertMessageService: AlertMessageService,
         private router: Router
-    ) {}
+    ) {
+        this.alertMessageService = AlertMessageService.getInstance();
+    }
 
     public initSystemNotificationService() {
         this.systemNotificationConfigBySeverity = new Map<Severity, string>();

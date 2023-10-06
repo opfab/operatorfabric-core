@@ -87,7 +87,6 @@ export class CardResponseComponent implements OnChanges, OnInit {
         private userService: UserService,
         private userPermissionsService: UserPermissionsService,
         private processService: ProcessesService,
-        private alertMessageService: AlertMessageService,
         private opfabAPIService: OpfabAPIService,
         private logger: OpfabLoggerService,
 
@@ -210,7 +209,7 @@ export class CardResponseComponent implements OnChanges, OnInit {
     }
 
     private displayMessage(i18nKey: string, msg: string, severity: MessageLevel = MessageLevel.ERROR) {
-        this.alertMessageService.sendAlertMessage({message: msg, level: severity, i18n: {key: i18nKey}});
+        AlertMessageService.getInstance().sendAlertMessage({message: msg, level: severity, i18n: {key: i18nKey}});
     }
 
     public submitEntitiesChoice() {

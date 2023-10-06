@@ -32,7 +32,6 @@ import {FilterService} from 'app/business/services/lightcards/filter.service';
 import {FilterType} from '@ofModel/feed-filter.model';
 import {AcknowledgeService} from "../../services/acknowledge.service";
 import {UserPermissionsService} from "../../services/user-permissions.service";
-import {AlertMessageService} from "../../services/alert-message.service";
 import {EntitiesService} from 'app/business/services/users/entities.service';
 
 describe('Dashboard', () => {
@@ -54,7 +53,7 @@ describe('Dashboard', () => {
             new RemoteLoggerServiceMock(new ConfigService(configServerMock), null)
         );
         userServerMock = new UserServerMock();
-        userService = new UserService(userServerMock, opfabLoggerService, null);
+        userService = new UserService(userServerMock, opfabLoggerService);
         processServerMock = new ProcessServerMock();
         processesService = new ProcessesService(null, processServerMock, configServerMock);
         filterService = new FilterService(opfabLoggerService);
@@ -66,7 +65,7 @@ describe('Dashboard', () => {
             opfabLoggerService
         );
 
-        const entitiesService = new EntitiesService(opfabLoggerService, null, new AlertMessageService());
+        const entitiesService = new EntitiesService(opfabLoggerService, null);
         const userPermissionService = new UserPermissionsService(entitiesService, processesService);
         acknowledgeService = new AcknowledgeService(null, userPermissionService, userService, processesService, entitiesService);
 

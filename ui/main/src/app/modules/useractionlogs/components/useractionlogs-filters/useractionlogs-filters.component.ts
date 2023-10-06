@@ -56,8 +56,7 @@ export class UserActionLogsFiltersComponent implements OnInit, OnDestroy {
     unsubscribe$: Subject<void> = new Subject<void>();
 
     constructor(
-        private userService: UserService,
-        private alertMessageService: AlertMessageService) {
+        private userService: UserService) {
     }
 
     ngOnInit(): void {
@@ -163,7 +162,7 @@ export class UserActionLogsFiltersComponent implements OnInit, OnDestroy {
     }
 
     private displayMessage(i18nKey: string, msg: string, severity: MessageLevel = MessageLevel.ERROR) {
-        this.alertMessageService.sendAlertMessage({message: msg, level: severity, i18n: {key: i18nKey}});
+        AlertMessageService.getInstance().sendAlertMessage({message: msg, level: severity, i18n: {key: i18nKey}});
     }
 
     private areDatesInCorrectOrder() {

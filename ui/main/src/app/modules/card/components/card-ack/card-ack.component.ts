@@ -63,7 +63,6 @@ export class CardAckComponent implements OnInit, OnChanges, OnDestroy {
         private userPermissionsService: UserPermissionsService,
         private processService: ProcessesService,
         private lightCardsStoreService: LightCardsStoreService,
-        private alertMessageService: AlertMessageService,
         private logger: OpfabLoggerService
     ) {
         const userWithPerimeters = this.userService.getCurrentUserWithPerimeters();
@@ -189,7 +188,7 @@ export class CardAckComponent implements OnInit, OnChanges, OnDestroy {
     }
 
     private displayMessage(i18nKey: string, msg: string, severity: MessageLevel = MessageLevel.ERROR) {
-        this.alertMessageService.sendAlertMessage({message: msg, level: severity, i18n: {key: i18nKey}});
+        AlertMessageService.getInstance().sendAlertMessage({message: msg, level: severity, i18n: {key: i18nKey}});
     }
 
     public cancelAcknowledgement() {

@@ -15,7 +15,6 @@ import {ErrorService} from 'app/business/services/error-service';
 import {OpfabLoggerService} from 'app/business/services/logs/opfab-logger.service';
 import {ExternalDevicesServer} from '../../server/external-devices.server';
 import {ServerResponseStatus} from '../../server/serverResponse';
-import {AlertMessageService} from '../alert-message.service';
 
 @Injectable({
     providedIn: 'root'
@@ -27,8 +26,8 @@ export class ExternalDevicesService extends ErrorService {
      * @constructor
      * @param httpClient - Angular build-in
      */
-    constructor(private server: ExternalDevicesServer, protected loggerService: OpfabLoggerService, protected alertMessageService: AlertMessageService) {
-        super(loggerService, alertMessageService);
+    constructor(private server: ExternalDevicesServer, protected loggerService: OpfabLoggerService) {
+        super(loggerService);
     }
 
     sendNotification(notification: Notification): Observable<any> {
