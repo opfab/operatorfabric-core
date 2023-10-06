@@ -19,15 +19,17 @@ import {SoundNotificationService} from './notifications/sound-notification.servi
     providedIn: 'root'
 })
 export class SessionManagerService {
+    
+    private currentUserStore: CurrentUserStore
     private endSessionEvent = new Subject<string>();
 
     constructor(
         private opfabEventStreamService: OpfabEventStreamService,
         private soundNotificationService: SoundNotificationService,
         private authService: AuthService,
-        private logger: OpfabLoggerService,
-        private currentUserStore: CurrentUserStore
+        private logger: OpfabLoggerService
     ) {
+        this.currentUserStore = CurrentUserStore.getInstance();
         this.subscribeToSessionWillSoonExpire();
         this.subscribeToSessionExpired();
         this.subscribeToSessionClosedByNewUser();

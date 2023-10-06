@@ -30,7 +30,6 @@ export abstract class BaseSettingDirective implements OnInit, OnDestroy {
     protected constructor(
         protected configService: ConfigService,
         protected settingsService: SettingsService,
-        protected currentUserStore: CurrentUserStore,
         protected logger: OpfabLoggerService
     ) {}
 
@@ -52,7 +51,7 @@ export abstract class BaseSettingDirective implements OnInit, OnDestroy {
                 .subscribe((next) => this.dispatch(this.convert(next)))
         );
 
-        this.currentUserStore.getCurrentUserLogin()
+        CurrentUserStore.getInstance().getCurrentUserLogin()
             .pipe(
                 takeUntil(this.ngUnsubscribe$),
                 map((id) => {

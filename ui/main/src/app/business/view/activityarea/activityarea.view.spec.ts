@@ -74,9 +74,8 @@ describe('ActivityAreaView', () => {
 
     function mockSettingsService() {
         settingsServerMock = new SettingsServerMock();
-        const currentUserStore = new CurrentUserStore();
-        currentUserStore.setCurrentUserAuthenticationValid('currentUser');
-        settingsService = new SettingsService(settingsServerMock, opfabLoggerService, currentUserStore);
+        CurrentUserStore.getInstance().setCurrentUserAuthenticationValid('currentUser');
+        settingsService = new SettingsService(settingsServerMock, opfabLoggerService);
     }
 
     function mockLightCardStoreService() {

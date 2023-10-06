@@ -34,17 +34,19 @@ export class AuthService {
     private login: string;
 
     private authHandler: AuthHandler;
+    private currentUserStore: CurrentUserStore;
 
     constructor(
         private configService: ConfigService,
-        private currentUserStore: CurrentUserStore,
         private logger: OpfabLoggerService,
         private router: Router,
         private oauthServiceForImplicitMode: OAuthService,
         private httpClient: HttpClient,
         private guidService: GuidService,
         private userService: UserService
-    ) {}
+    ) {
+        this.currentUserStore = CurrentUserStore.getInstance();
+    }
 
     public initializeAuthentication() {
         this.login = localStorage.getItem('identifier');
@@ -74,8 +76,7 @@ export class AuthService {
                     this.configService,
                     this.httpClient,
                     this.logger,
-                    this.oauthServiceForImplicitMode,
-                    this.currentUserStore
+                    this.oauthServiceForImplicitMode
                 );
                 break;
             default:
