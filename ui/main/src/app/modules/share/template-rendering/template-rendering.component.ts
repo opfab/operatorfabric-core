@@ -69,7 +69,6 @@ export class TemplateRenderingComponent implements OnChanges, OnInit, OnDestroy,
         private element: ElementRef,
         private handlebars: HandlebarsService,
         private sanitizer: DomSanitizer,
-        private currentUserStore: CurrentUserStore,
         private templateCssService: TemplateCssService,
         private globalStyleService: GlobalStyleService,
         private userService: UserService,
@@ -115,7 +114,7 @@ export class TemplateRenderingComponent implements OnChanges, OnInit, OnDestroy,
     private getUserContextAndRenderTemplate() {
         if (!this.userContext) {
             const user = this.userService.getCurrentUserWithPerimeters().userData;
-            const token = this.currentUserStore.getToken();
+            const token = CurrentUserStore.getInstance().getToken();
             this.userContext = new UserContext(
                 user.login,
                 token,

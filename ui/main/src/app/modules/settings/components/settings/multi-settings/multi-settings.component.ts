@@ -13,7 +13,6 @@ import {FormControl, FormGroup, Validators} from '@angular/forms';
 import {ConfigService} from 'app/business/services/config.service';
 import {SettingsService} from 'app/business/services/users/settings.service';
 import {OpfabLoggerService} from 'app/business/services/logs/opfab-logger.service';
-import {CurrentUserStore} from 'app/business/store/current-user.store';
 
 @Component({
     selector: 'of-multi-settings',
@@ -23,10 +22,9 @@ export class MultiSettingsComponent extends BaseSettingDirective implements OnIn
     constructor(
         protected configService: ConfigService,
         protected settingsService: SettingsService,
-        protected currentUserStore: CurrentUserStore,
         protected logger: OpfabLoggerService
     ) {
-        super(configService, settingsService,currentUserStore,logger);
+        super(configService, settingsService,logger);
     }
 
     initFormGroup() {

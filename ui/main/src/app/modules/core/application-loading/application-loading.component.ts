@@ -82,7 +82,6 @@ export class ApplicationLoadingComponent implements OnInit {
         private opfabEventStreamServer: OpfabEventStreamServer,
         private opfabEventStreamService: OpfabEventStreamService,
         private applicationUpdateService: ApplicationUpdateService,
-        private currentUserStore: CurrentUserStore,
         private systemNotificationService: SystemNotificationService,
         private opfabAPIService: OpfabAPIService,
         private router: Router,
@@ -182,7 +181,7 @@ export class ApplicationLoadingComponent implements OnInit {
     }
 
     private waitForEndOfAuthentication(): void {
-        this.currentUserStore.getCurrentUserLogin().subscribe((identifier) => {
+        CurrentUserStore.getInstance().getCurrentUserLogin().subscribe((identifier) => {
             if (identifier) {
                 this.logger.info(`User ${identifier} logged`);
                 this.synchronizeUserTokenWithOpfabUserDatabase();

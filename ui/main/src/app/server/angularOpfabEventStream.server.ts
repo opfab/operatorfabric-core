@@ -23,6 +23,8 @@ import { ConfigService } from 'app/business/services/config.service';
 
 @Injectable()
 export class AngularOpfabEventStreamServer extends AngularServer implements OpfabEventStreamServer {
+
+    private currentUserStore: CurrentUserStore;
     private static TWO_MINUTES = 120000;
     private eventStreamUrl: string;
     private closeEventStreamUrl: string;
@@ -41,13 +43,14 @@ export class AngularOpfabEventStreamServer extends AngularServer implements Opfa
     private eventSource;
 
     constructor(
-        private currentUserStore: CurrentUserStore,
+        
         guidService: GuidService,
         private logger: OpfabLoggerService,
         private configService: ConfigService,
         private httpClient: HttpClient
     ) {
         super();
+        this.currentUserStore = CurrentUserStore.getInstance();
         const clientId = guidService.getCurrentGuidString();
         this.eventStreamUrl = `${environment.url}/cards/cardSubscription?clientId=${clientId}&version=${packageInfo.opfabVersion}`;
         this.closeEventStreamUrl = `${environment.url}/cards/cardSubscription?clientId=${clientId}`;

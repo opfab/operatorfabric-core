@@ -16,14 +16,18 @@ import {OpfabLoggerService} from 'app/business/services/logs/opfab-logger.servic
 import {CurrentUserStore} from 'app/business/store/current-user.store';
 
 export class ImplicitAuthenticationHandler extends AuthHandler {
+
+    private currentUserStore: CurrentUserStore
+
     constructor(
         configService: ConfigService,
         httpClient: HttpClient,
         logger: OpfabLoggerService,
-        private oauthService: OAuthService,
-        private currentUserStore: CurrentUserStore
+        private oauthService: OAuthService
+
     ) {
         super(configService, httpClient, logger);
+        this.currentUserStore = CurrentUserStore.getInstance();
     }
 
     public async initializeAuthentication() {

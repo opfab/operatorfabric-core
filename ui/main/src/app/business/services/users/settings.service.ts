@@ -23,10 +23,9 @@ export class SettingsService {
 
     constructor(
         private settingsServer: SettingsServer,
-        private logger: OpfabLoggerService,
-        private currentUserStore: CurrentUserStore
+        private logger: OpfabLoggerService
         ) {
-            this.currentUserStore.getCurrentUserLogin().subscribe((id) => (this.userId = id));
+            CurrentUserStore.getInstance().getCurrentUserLogin().subscribe((id) => (this.userId = id));
         }
 
     getUserSettings(): Observable<any> {

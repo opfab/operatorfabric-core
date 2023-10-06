@@ -7,18 +7,24 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {Injectable} from '@angular/core';
 import {ReplaySubject, Observable, Subject} from 'rxjs';
 
-@Injectable({
-    providedIn: 'root'
-})
 export class CurrentUserStore {
+
+    private static instance: CurrentUserStore;
     private connectionEvent = new ReplaySubject<string>(1);
     private sessionWillSoonExpireEvent = new Subject<boolean>();
     private sessionExpiredEvent = new Subject<boolean>();
     private token: string;
     private authenticationUsesToken = false;
+
+
+    private constructor() {}
+
+    public static getInstance():CurrentUserStore {
+        if (!CurrentUserStore.instance) CurrentUserStore.instance = new CurrentUserStore();
+        return CurrentUserStore.instance;
+    }
 
     public getCurrentUserLogin(): Observable<string> {
         return this.connectionEvent.asObservable();
