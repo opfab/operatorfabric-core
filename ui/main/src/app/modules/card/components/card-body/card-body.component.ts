@@ -58,6 +58,8 @@ export class CardBodyComponent implements OnChanges, OnInit, OnDestroy {
 
     @Output() closeCardDetail: EventEmitter<boolean> = new EventEmitter<boolean>();
 
+    private routerStore: RouterStore;
+
     public displayContext: DisplayContext = DisplayContext.REALTIME;
     public isUserEnabledToRespond = false;
     public lttdExpiredIsTrue: boolean;
@@ -83,7 +85,6 @@ export class CardBodyComponent implements OnChanges, OnInit, OnDestroy {
 
     constructor(
         private businessconfigService: ProcessesService,
-        private routerStore: RouterStore,
         private cardService: CardService,
         private router: Router,
         private userService: UserService,
@@ -94,6 +95,7 @@ export class CardBodyComponent implements OnChanges, OnInit, OnDestroy {
         private opfabAPIService: OpfabAPIService,
         private logger: OpfabLoggerService
     ) {
+        this.routerStore= RouterStore.getInstance();
         this.userWithPerimeters = this.userService.getCurrentUserWithPerimeters();
         if (this.userWithPerimeters) {
             this.user = this.userWithPerimeters.userData;

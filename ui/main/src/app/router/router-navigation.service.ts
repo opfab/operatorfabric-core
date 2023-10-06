@@ -20,7 +20,6 @@ import {RouterStore} from 'app/business/store/router.store';
 export class RouterNavigationService {
     constructor(
         private router: Router,
-        private routerStore: RouterStore,
         private logger: OpfabLoggerService,
         private selectedCardService: SelectedCardService
     ) {
@@ -38,7 +37,7 @@ export class RouterNavigationService {
 
     updateRouterStore() {
         this.router.events.pipe(filter((event) => event instanceof NavigationEnd)).subscribe((event: NavigationEnd) => {
-            this.routerStore.setCurrentRoute(event.url);
+            RouterStore.getInstance().setCurrentRoute(event.url);
         });
     }
 

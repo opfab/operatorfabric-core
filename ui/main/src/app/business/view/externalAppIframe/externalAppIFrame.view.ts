@@ -14,15 +14,16 @@ import {Observable, ReplaySubject, skip, Subject, takeUntil} from 'rxjs';
 import {environment} from '@env/environment';
 
 export class ExternalAppIFrameView {
+    private routerStore: RouterStore;
     urlSubject: Subject<string> = new ReplaySubject<string>(1);
     unsubscribe$: Subject<void> = new Subject<void>();
     private businessConfigUrl = `${environment.url}/#businessconfigparty`;
 
     constructor(
         private configService: ConfigService,
-        private routerStore: RouterStore,
         private globalStyleService: GlobalStyleService
     ) {
+        this.routerStore = RouterStore.getInstance();
         this.listenForExternalAppRoute();
         this.reloadIframeWhenGlobalStyleChange();
     }

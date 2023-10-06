@@ -38,6 +38,7 @@ export class CardActionsComponent implements OnChanges, OnDestroy {
     @ViewChild('userCardCreateCopy') userCardCreateCopyTemplate: TemplateRef<any>;
     @ViewChild('deleteCardConfirmation') deleteCardConfirmationTemplate: TemplateRef<any>;
 
+    private routerStore: RouterStore;
     private editModal: NgbModalRef;
     private deleteConfirmationModal: NgbModalRef;
     public showEditButton = false;
@@ -53,9 +54,10 @@ export class CardActionsComponent implements OnChanges, OnDestroy {
         private userService: UserService,
         private modalService: NgbModal,
         private cardService: CardService,
-        private router: Router,
-        private routerStore: RouterStore
-    ) {}
+        private router: Router
+    ) {
+        this.routerStore = RouterStore.getInstance();
+    }
 
     ngOnChanges(): void {
         this.setButtonsVisibility();
@@ -125,12 +127,14 @@ export class CardActionsComponent implements OnChanges, OnDestroy {
     }
 
     private reopenCardDetailOnceEditionIsFinished() {
-        if (this.routerStore.getCurrentPageType() !== PageType.CALENDAR &&
+        if (
+            this.routerStore.getCurrentPageType() !== PageType.CALENDAR &&
             this.routerStore.getCurrentPageType() !== PageType.MONITORING &&
-            this.routerStore.getCurrentPageType() !== PageType.DASHBOARD) {
+            this.routerStore.getCurrentPageType() !== PageType.DASHBOARD
+        ) {
             this.editModal.result.then(
                 () => {
-                     // If modal is closed
+                    // If modal is closed
                     this.router.navigate([this.routerStore.getCurrentRoute(), 'cards', this.card.id]);
                 },
                 () => {
@@ -170,8 +174,7 @@ export class CardActionsComponent implements OnChanges, OnDestroy {
     }
 
     ngOnDestroy() {
-        if (this.deleteConfirmationModal)
-            this.deleteConfirmationModal.dismiss();
+        if (this.deleteConfirmationModal) this.deleteConfirmationModal.dismiss();
         this.unsubscribe$.next();
         this.unsubscribe$.complete();
     }

@@ -67,7 +67,7 @@ export class AppComponent {
 
     @HostListener('document:click', ['$event.target'])
     public onPageClickClearSoundNotification() {
-        const pageType =  this.routerStore.getCurrentPageType();
+        const pageType =  RouterStore.getInstance().getCurrentPageType();
         if (pageType === PageType.FEED) this.soundNotificationService.clearOutstandingNotifications();
     }
 
@@ -76,7 +76,6 @@ export class AppComponent {
         private logger: OpfabLoggerService,
         private opfabEventStreamService: OpfabEventStreamService,
         private remoteLogger: RemoteLoggerService,
-        private routerStore: RouterStore,
         private routerNavigationService: RouterNavigationService, // put it here to have it injected and started a startup
         private selectedCardLoaderService: SelectedCardLoaderService  // put it here to have it injected and started a startup
     ) {}
