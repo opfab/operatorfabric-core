@@ -38,6 +38,7 @@ import {AlertMessageService} from 'app/business/services/alert-message.service';
     styleUrls: ['./edit-group-modal.component.scss']
 })
 export class EditGroupModalComponent implements OnInit {
+
     groupForm: FormGroup<{
         id: FormControl<string | null>,
         name: FormControl<string | null>,
@@ -89,8 +90,7 @@ export class EditGroupModalComponent implements OnInit {
         private dataHandlingService: SharingService,
         private perimetersService: PerimetersService,
         private groupsService: GroupsService,
-        private userService: UserService,
-        private alertMessageService: AlertMessageService
+        private userService: UserService
     ) {
         Object.values(GroupTypeEnum).forEach((t) => this.groupTypes.push({value: String(t), label: String(t)}));
         Object.values(PermissionEnum).forEach((t) => this.groupPermissions.push({value: String(t), label: String(t)}));
@@ -112,7 +112,7 @@ export class EditGroupModalComponent implements OnInit {
                 uniqueGroupIdValidator
             ),
             name: new FormControl(
-                '', 
+                '',
                 [Validators.required],
                 uniqueGroupNameValidator
             ),
@@ -202,7 +202,7 @@ export class EditGroupModalComponent implements OnInit {
             })
         );
 
-        this.alertMessageService.sendAlertMessage({message: res.originalError.error.message, level: MessageLevel.ERROR});
+        AlertMessageService.getInstance().sendAlertMessage({message: res.originalError.error.message, level: MessageLevel.ERROR});
 
     }
 

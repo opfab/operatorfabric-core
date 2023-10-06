@@ -12,7 +12,6 @@ import {firstValueFrom, map, Observable} from 'rxjs';
 import {BusinessDataServer} from '../../server/businessData.server';
 import {ServerResponseStatus} from '../../server/serverResponse';
 import {LogOption, OpfabLoggerService} from '../logs/opfab-logger.service';
-import {AlertMessageService} from '../alert-message.service';
 import {OpfabEventStreamService} from '../events/opfabEventStream.service';
 import * as _ from 'lodash-es';
 import {CachedCrudService} from '../cached-crud-service';
@@ -26,10 +25,9 @@ export class BusinessDataService extends CachedCrudService {
     constructor(
         private opfabEventStreamService: OpfabEventStreamService,
         private businessDataServer: BusinessDataServer,
-        protected alertMessageService: AlertMessageService,
         protected loggerService: OpfabLoggerService
     ) {
-        super(loggerService, alertMessageService);
+        super(loggerService);
         this.listenForBusinessDataUpdate();
     }
 

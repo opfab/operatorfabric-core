@@ -21,36 +21,51 @@ import {AlertMessageService} from './alert-message.service';
  * Note: This can't be an interface because Typescript doesn't allow default methods.
  */
 
- @Injectable({
+@Injectable({
     providedIn: 'root'
 })
 export abstract class ErrorService {
+    protected alertMessageService: AlertMessageService;
 
-    constructor(
-        protected loggerService: OpfabLoggerService,
-        protected alertMessageService: AlertMessageService) {}
+    constructor(protected loggerService: OpfabLoggerService) {
+        this.alertMessageService = AlertMessageService.getInstance();
+    }
 
     protected handleError(error: HttpErrorResponse) {
         if (error.status === 404) {
-            this.alertMessageService.sendAlertMessage({message: '', i18n: {key: "errors.notFound"}, level: MessageLevel.ERROR});
+            this.alertMessageService.sendAlertMessage({
+                message: '',
+                i18n: {key: 'errors.notFound'},
+                level: MessageLevel.ERROR
+            });
         }
         if (error.status === 403) {
-            this.alertMessageService.sendAlertMessage({message: '', i18n: {key: "errors.notAllowed"}, level: MessageLevel.ERROR});
+            this.alertMessageService.sendAlertMessage({
+                message: '',
+                i18n: {key: 'errors.notAllowed'},
+                level: MessageLevel.ERROR
+            });
         }
-        this.loggerService.error(error.status + " " + error.statusText + " " + error.message);
+        this.loggerService.error(error.status + ' ' + error.statusText + ' ' + error.message);
         return throwError(() => error);
-
     }
 
     protected handleServerResponseError(error: ServerResponse<any>) {
         if (error.status === ServerResponseStatus.NOT_FOUND) {
-            this.alertMessageService.sendAlertMessage({message: '', i18n: {key: "errors.notFound"}, level: MessageLevel.ERROR});
+            this.alertMessageService.sendAlertMessage({
+                message: '',
+                i18n: {key: 'errors.notFound'},
+                level: MessageLevel.ERROR
+            });
         }
-        if (error.status=== ServerResponseStatus.FORBIDDEN) {
-            this.alertMessageService.sendAlertMessage({message: '', i18n: {key: "errors.notAllowed"}, level: MessageLevel.ERROR});
+        if (error.status === ServerResponseStatus.FORBIDDEN) {
+            this.alertMessageService.sendAlertMessage({
+                message: '',
+                i18n: {key: 'errors.notAllowed'},
+                level: MessageLevel.ERROR
+            });
         }
-        this.loggerService.error(error.status + " " + error.statusMessage);
+        this.loggerService.error(error.status + ' ' + error.statusMessage);
         return throwError(() => error);
-
     }
 }

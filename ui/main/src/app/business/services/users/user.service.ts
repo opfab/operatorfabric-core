@@ -17,7 +17,6 @@ import {CrudService} from 'app/business/services/crud-service';
 import {Injectable} from '@angular/core';
 import {RightsEnum} from '@ofModel/perimeter.model';
 import {OpfabLoggerService} from '../logs/opfab-logger.service';
-import {AlertMessageService} from '../alert-message.service';
 import {UserServer} from '../../server/user.server';
 import {ServerResponseStatus} from '../../server/serverResponse';
 
@@ -36,10 +35,9 @@ export class UserService extends CrudService {
      */
     constructor(
         private userServer: UserServer,
-        protected loggerService: OpfabLoggerService,
-        protected alertMessageService: AlertMessageService
+        protected loggerService: OpfabLoggerService
     ) {
-        super(loggerService, alertMessageService);
+        super(loggerService);
         this._userRightsPerProcessAndState = new Map();
         this._receiveRightPerProcess = new Map();
     }

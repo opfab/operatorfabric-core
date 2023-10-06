@@ -13,7 +13,6 @@ import {map} from 'rxjs/operators';
 import {Process} from '@ofModel/processes.model';
 import {CachedCrudService} from 'app/business/services/cached-crud-service';
 import {OpfabLoggerService} from '../logs/opfab-logger.service';
-import {AlertMessageService} from '../alert-message.service';
 import {AdminProcessServer} from '../../server/adminprocess.server';
 import {ServerResponseStatus} from '../../server/serverResponse';
 
@@ -21,14 +20,13 @@ import {ServerResponseStatus} from '../../server/serverResponse';
     providedIn: 'root'
 })
 export class AdminProcessesService extends CachedCrudService{
-    
+
     private processes: Process[];
     constructor(
         private adminprocessServer: AdminProcessServer,
-        protected alertMessageService: AlertMessageService,
         protected loggerService: OpfabLoggerService
     ) {
-        super(loggerService, alertMessageService);
+        super(loggerService);
     }
 
     public getCachedValues():  Array<Process> {

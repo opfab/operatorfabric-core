@@ -11,7 +11,6 @@ import {ConfigServerMock} from '@tests/mocks/configServer.mock';
 import {RemoteLoggerServiceMock} from '@tests/mocks/remote-logger.service.mock';
 import {UserServerMock} from '@tests/mocks/userServer.mock';
 import {ServerResponse, ServerResponseStatus} from 'app/business/server/serverResponse';
-import {AlertMessageService} from 'app/business/services/alert-message.service';
 import {ConfigService} from 'app/business/services/config.service';
 import {GlobalStyleService} from 'app/business/services/global-style.service';
 import {OpfabLoggerService} from 'app/business/services/logs/opfab-logger.service';
@@ -57,7 +56,7 @@ describe('ExternalAppIFrame view ', () => {
         routerStore = new RouterStore();
         const mockUserServer = new UserServerMock();
         const logService = new OpfabLoggerService(new RemoteLoggerServiceMock(configService, null));
-        const userService = new UserService(mockUserServer, logService, new AlertMessageService());
+        const userService = new UserService(mockUserServer, logService);
         const menuService = new MenuService(configService, userService, logService);
         globalStyleService = new GlobalStyleService(new UserPreferencesService(), configService, menuService);
         

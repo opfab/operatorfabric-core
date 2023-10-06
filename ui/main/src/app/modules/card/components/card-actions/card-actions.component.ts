@@ -53,7 +53,6 @@ export class CardActionsComponent implements OnChanges, OnDestroy {
         private userService: UserService,
         private modalService: NgbModal,
         private cardService: CardService,
-        private alertMessageService: AlertMessageService,
         private router: Router,
         private routerStore: RouterStore
     ) {}
@@ -167,7 +166,7 @@ export class CardActionsComponent implements OnChanges, OnDestroy {
     }
 
     private displayMessage(i18nKey: string, msg: string, severity: MessageLevel = MessageLevel.ERROR) {
-        this.alertMessageService.sendAlertMessage({message: msg, level: severity, i18n: {key: i18nKey}});
+        AlertMessageService.getInstance().sendAlertMessage({message: msg, level: severity, i18n: {key: i18nKey}});
     }
 
     ngOnDestroy() {

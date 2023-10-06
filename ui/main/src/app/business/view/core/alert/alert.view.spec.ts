@@ -28,7 +28,7 @@ describe('Alert view ', () => {
         jasmine.clock().uninstall();
         configServerMock = new ConfigServerMock();
         configService = new ConfigService(configServerMock);
-        alertMessageService = new AlertMessageService();
+        alertMessageService = AlertMessageService.getInstance();
         translationService = new TranslationServiceMock();
     });
 
@@ -39,7 +39,7 @@ describe('Alert view ', () => {
     it('GIVEN an alertView WHEN no message is sent THEN no message is display ', async () => {
         configServerMock.setResponseForWebUIConfiguration(new ServerResponse({}, ServerResponseStatus.OK, null));
         await firstValueFrom(configService.loadWebUIConfiguration());
-        const alertView = new AlertView(configService, alertMessageService, translationService);
+        const alertView = new AlertView(configService, translationService);
         await delay();
         expect(alertView.getAlertPage().display).toBeFalsy();
     });
@@ -48,7 +48,7 @@ describe('Alert view ', () => {
         configServerMock.setResponseForWebUIConfiguration(new ServerResponse({}, ServerResponseStatus.OK, null));
         await firstValueFrom(configService.loadWebUIConfiguration());
 
-        const alertView = new AlertView(configService, alertMessageService, translationService);
+        const alertView = new AlertView(configService,translationService);
         alertMessageService.sendAlertMessage(new Message('message', MessageLevel.DEBUG));
         await delay();
         expect(alertView.getAlertPage().display).toBeTruthy();
@@ -59,7 +59,7 @@ describe('Alert view ', () => {
         configServerMock.setResponseForWebUIConfiguration(new ServerResponse({}, ServerResponseStatus.OK, null));
         await firstValueFrom(configService.loadWebUIConfiguration());
 
-        const alertView = new AlertView(configService, alertMessageService, translationService);
+        const alertView = new AlertView(configService, translationService);
         alertMessageService.sendAlertMessage(
             new Message('', MessageLevel.DEBUG, new I18n('messageKey', new Map().set('param', 'value')))
         );
@@ -72,7 +72,7 @@ describe('Alert view ', () => {
         configServerMock.setResponseForWebUIConfiguration(new ServerResponse({}, ServerResponseStatus.OK, null));
         await firstValueFrom(configService.loadWebUIConfiguration());
 
-        const alertView = new AlertView(configService, alertMessageService, translationService);
+        const alertView = new AlertView(configService,translationService);
         alertMessageService.sendAlertMessage(new Message('message', MessageLevel.DEBUG));
         await delay();
         expect(alertView.getAlertPage().display).toBeTruthy();
@@ -84,7 +84,7 @@ describe('Alert view ', () => {
         configServerMock.setResponseForWebUIConfiguration(new ServerResponse({}, ServerResponseStatus.OK, null));
         await firstValueFrom(configService.loadWebUIConfiguration());
 
-        const alertView = new AlertView(configService, alertMessageService, translationService);
+        const alertView = new AlertView(configService, translationService);
         alertMessageService.sendAlertMessage(new Message('message', MessageLevel.INFO));
         await delay();
         expect(alertView.getAlertPage().display).toBeTruthy();
@@ -96,7 +96,7 @@ describe('Alert view ', () => {
         configServerMock.setResponseForWebUIConfiguration(new ServerResponse({}, ServerResponseStatus.OK, null));
         await firstValueFrom(configService.loadWebUIConfiguration());
 
-        const alertView = new AlertView(configService, alertMessageService, translationService);
+        const alertView = new AlertView(configService, translationService);
         alertMessageService.sendAlertMessage(new Message('message', MessageLevel.ERROR));
         await delay();
         expect(alertView.getAlertPage().display).toBeTruthy();
@@ -108,7 +108,7 @@ describe('Alert view ', () => {
         configServerMock.setResponseForWebUIConfiguration(new ServerResponse({}, ServerResponseStatus.OK, null));
         await firstValueFrom(configService.loadWebUIConfiguration());
 
-        const alertView = new AlertView(configService, alertMessageService, translationService);
+        const alertView = new AlertView(configService,  translationService);
         alertMessageService.sendAlertMessage(new Message('message', MessageLevel.BUSINESS));
         await delay();
         expect(alertView.getAlertPage().display).toBeTruthy();
@@ -122,7 +122,7 @@ describe('Alert view ', () => {
         );
         await firstValueFrom(configService.loadWebUIConfiguration());
 
-        const alertView = new AlertView(configService, alertMessageService, translationService);
+        const alertView = new AlertView(configService, translationService);
         alertMessageService.sendAlertMessage(new Message('message', MessageLevel.DEBUG));
         await delay();
         expect(alertView.getAlertPage().display).toBeTruthy();
@@ -136,7 +136,7 @@ describe('Alert view ', () => {
         );
         await firstValueFrom(configService.loadWebUIConfiguration());
 
-        const alertView = new AlertView(configService, alertMessageService, translationService);
+        const alertView = new AlertView(configService, translationService);
         alertMessageService.sendAlertMessage(new Message('message', MessageLevel.DEBUG));
         await delay();
         expect(alertView.getAlertPage().display).toBeTruthy();
@@ -150,7 +150,7 @@ describe('Alert view ', () => {
         );
         await firstValueFrom(configService.loadWebUIConfiguration());
 
-        const alertView = new AlertView(configService, alertMessageService, translationService);
+        const alertView = new AlertView(configService, translationService);
         alertMessageService.sendAlertMessage(new Message('message', MessageLevel.DEBUG));
         await delay();
         expect(alertView.getAlertPage().display).toBeTruthy();
@@ -167,7 +167,7 @@ describe('Alert view ', () => {
 
         jasmine.clock().install();
         jasmine.clock().mockDate(new Date(0));
-        const alertView = new AlertView(configService, alertMessageService, translationService);
+        const alertView = new AlertView(configService,  translationService);
         alertMessageService.sendAlertMessage(new Message('message', MessageLevel.DEBUG));
         jasmine.clock().tick(1);
         expect(alertView.getAlertPage().display).toBeTruthy();
@@ -187,7 +187,7 @@ describe('Alert view ', () => {
 
         jasmine.clock().install();
         jasmine.clock().mockDate(new Date(0));
-        const alertView = new AlertView(configService, alertMessageService, translationService);
+        const alertView = new AlertView(configService, translationService);
         alertMessageService.sendAlertMessage(new Message('message', MessageLevel.DEBUG));
         jasmine.clock().tick(1);
         expect(alertView.getAlertPage().display).toBeTruthy();
@@ -212,7 +212,7 @@ describe('Alert view ', () => {
 
         jasmine.clock().install();
         jasmine.clock().mockDate(new Date(0));
-        const alertView = new AlertView(configService, alertMessageService, translationService);
+        const alertView = new AlertView(configService, translationService);
         alertMessageService.sendAlertMessage(new Message('message', MessageLevel.BUSINESS));
         jasmine.clock().tick(1);
         expect(alertView.getAlertPage().display).toBeTruthy();
@@ -236,7 +236,7 @@ describe('Alert view ', () => {
 
         jasmine.clock().install();
         jasmine.clock().mockDate(new Date(0));
-        const alertView = new AlertView(configService, alertMessageService, translationService);
+        const alertView = new AlertView(configService, translationService);
         alertMessageService.sendAlertMessage(new Message('message', MessageLevel.BUSINESS));
         jasmine.clock().tick(1);
         expect(alertView.getAlertPage().display).toBeTruthy();
@@ -258,7 +258,7 @@ describe('Alert view ', () => {
         );
         await firstValueFrom(configService.loadWebUIConfiguration());
 
-        const alertView = new AlertView(configService, alertMessageService, translationService);
+        const alertView = new AlertView(configService,translationService);
         alertMessageService.sendAlertMessage(new Message('message', MessageLevel.BUSINESS));
         await delay();
         expect(alertView.getAlertPage().display).toBeFalsy();
@@ -270,7 +270,7 @@ describe('Alert view ', () => {
         );
         await firstValueFrom(configService.loadWebUIConfiguration());
 
-        const alertView = new AlertView(configService, alertMessageService, translationService);
+        const alertView = new AlertView(configService, translationService);
         alertMessageService.sendAlertMessage(new Message('message', MessageLevel.BUSINESS));
         await delay();
         expect(alertView.getAlertPage().display).toBeTruthy();
@@ -282,7 +282,7 @@ describe('Alert view ', () => {
         );
         await firstValueFrom(configService.loadWebUIConfiguration());
 
-        const alertView = new AlertView(configService, alertMessageService, translationService);
+        const alertView = new AlertView(configService, translationService);
         alertMessageService.sendAlertMessage(new Message('message', MessageLevel.BUSINESS));
         await delay();
         expect(alertView.getAlertPage().display).toBeTruthy();

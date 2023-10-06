@@ -62,7 +62,6 @@ export class CardListComponent implements AfterViewChecked, OnInit {
         private userService: UserService,
         private entitiesService: EntitiesService,
         private groupedCardsService: GroupedCardsService,
-        private alertMessageService: AlertMessageService,
         private router: Router,
         private sortService: SortService,
         private userPreferences: UserPreferencesService,
@@ -192,7 +191,7 @@ export class CardListComponent implements AfterViewChecked, OnInit {
     }
 
     private displayMessage(i18nKey: string, msg: string, severity: MessageLevel = MessageLevel.ERROR) {
-        this.alertMessageService.sendAlertMessage({message: msg, level: severity, i18n: {key: i18nKey}});
+        AlertMessageService.getInstance().sendAlertMessage({message: msg, level: severity, i18n: {key: i18nKey}});
     }
 
     open(content) {

@@ -137,7 +137,6 @@ export class UserCardComponent implements OnInit, OnDestroy {
         private handlebars: HandlebarsService,
         protected soundNotificationService: SoundNotificationService,
         protected userPermissionsService: UserPermissionsService,
-        private alertMessageService: AlertMessageService,
         private opfabLogger: OpfabLoggerService,
         private systemNotificationService: SystemNotificationService,
         private opfabAPIService: OpfabAPIService
@@ -880,7 +879,7 @@ export class UserCardComponent implements OnInit, OnDestroy {
     }
 
     private displayMessage(i18nKey: string, msg: string, severity: MessageLevel = MessageLevel.ERROR) {
-        this.alertMessageService.sendAlertMessage({message: msg, level: severity, i18n: {key: i18nKey}});
+        AlertMessageService.getInstance().sendAlertMessage({message: msg, level: severity, i18n: {key: i18nKey}});
     }
 
     public getEntityName(id: string): string {

@@ -54,15 +54,17 @@ export class SoundNotificationService implements OnDestroy {
 
     private isServiceActive = true;
 
+    private alertMessageService: AlertMessageService;
+
     constructor(
         private soundServer: SoundServer,
         private lightCardsFeedFilterService: LightCardsFeedFilterService,
         private lightCardsStoreService: LightCardsStoreService,
         private externalDevicesService: ExternalDevicesService,
         private configService: ConfigService,
-        private alertMessageService: AlertMessageService,
         private logger: OpfabLoggerService
     ) {
+        this.alertMessageService = AlertMessageService.getInstance();
         // use to have access from cypress to the current object for stubbing method playSound
         if (window['Cypress']) window['soundNotificationService'] = this;
     }

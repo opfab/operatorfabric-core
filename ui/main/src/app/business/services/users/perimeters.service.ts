@@ -13,7 +13,6 @@ import {Injectable} from '@angular/core';
 import {CachedCrudService} from 'app/business/services/cached-crud-service';
 import {Perimeter} from '@ofModel/perimeter.model';;
 import {OpfabLoggerService} from '../logs/opfab-logger.service';
-import {AlertMessageService} from '../alert-message.service';
 import {PerimetersServer} from '../../server/perimeters.server';
 import {ServerResponseStatus} from '../../server/serverResponse';
 
@@ -30,10 +29,9 @@ export class PerimetersService extends CachedCrudService {
      * @constructor
      * @param httpClient - Angular build-in
      */
-    constructor(protected loggerService: OpfabLoggerService, 
-        alertMessageService: AlertMessageService,
+    constructor(protected loggerService: OpfabLoggerService,
         private perimeterServer: PerimetersServer) {
-        super(loggerService, alertMessageService);
+        super(loggerService);
     }
 
     deleteById(id: string) {

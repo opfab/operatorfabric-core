@@ -73,7 +73,6 @@ export class FeedFilterComponent implements OnInit, OnDestroy {
         private userPreferences: UserPreferencesService,
         private filterService: FilterService,
         private lightCardsFeedFilterService: LightCardsFeedFilterService,
-        private alertMessageService: AlertMessageService
     ) {
         this.typeFilterForm = this.createFormGroup();
         this.ackFilterForm = this.createAckFormGroup();
@@ -412,6 +411,6 @@ export class FeedFilterComponent implements OnInit, OnDestroy {
     }
 
     private displayMessage(i18nKey: string, msg: string, severity: MessageLevel = MessageLevel.ERROR) {
-        this.alertMessageService.sendAlertMessage({message: msg, level: severity, i18n: {key: i18nKey}});
+        AlertMessageService.getInstance().sendAlertMessage({message: msg, level: severity, i18n: {key: i18nKey}});
     }
 }

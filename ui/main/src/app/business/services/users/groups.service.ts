@@ -13,7 +13,6 @@ import {takeUntil, tap, map} from 'rxjs/operators';
 import {Injectable} from '@angular/core';
 import {CachedCrudService} from 'app/business/services/cached-crud-service';
 import {OpfabLoggerService} from '../logs/opfab-logger.service';
-import {AlertMessageService} from '../alert-message.service';
 import {GroupsServer} from '../../server/groups.server';
 import {ServerResponseStatus} from '../../server/serverResponse';
 
@@ -30,10 +29,9 @@ export class GroupsService extends CachedCrudService {
      * @param httpClient - Angular build-in
      */
     constructor(
-        protected loggerService: OpfabLoggerService, 
-        protected alertMessageService: AlertMessageService,
+        protected loggerService: OpfabLoggerService,
         private groupsServer: GroupsServer) {
-        super(loggerService, alertMessageService);
+        super(loggerService);
     }
 
     deleteById(id: string) {

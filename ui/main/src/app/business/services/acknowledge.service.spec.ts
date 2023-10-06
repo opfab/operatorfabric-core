@@ -29,7 +29,6 @@ import {UserService} from './users/user.service';
 import {OpfabLoggerService} from './logs/opfab-logger.service';
 import {RemoteLoggerServiceMock} from '@tests/mocks/remote-logger.service.mock';
 import {UserServerMock} from '@tests/mocks/userServer.mock';
-import {AlertMessageService} from './alert-message.service';
 import {EntitiesServerMock} from '@tests/mocks/entitiesServer.mock';
 import {Entity} from '@ofModel/entity.model';
 import {ServerResponse, ServerResponseStatus} from '../server/serverResponse';
@@ -57,7 +56,7 @@ describe('AcknowledgeService testing ', () => {
         );
         userServerMock = new UserServerMock();
         userServerMock.setResponseForCurrentUserWithPerimeter(new ServerResponse(getUserMemberOfEntity1WithPerimeter(), ServerResponseStatus.OK, ""));
-        userService = new UserService(userServerMock, opfabLoggerService, null);
+        userService = new UserService(userServerMock, opfabLoggerService);
 
         const processServerMock = new ProcessServerMock();
         processServerMock.setResponseForAllProcessDefinition(new ServerResponse(getTestProcesses(), ServerResponseStatus.OK, ""));
@@ -71,7 +70,7 @@ describe('AcknowledgeService testing ', () => {
                                         new Entity("ENTITY2", "ENTITY 2", "", true, null, null),
                                         new Entity("ENTITY3", "ENTITY 3", "", true, null, null),
                                         new Entity("ENTITY_FR", "ENTITY FR", "", true, null, null)]);
-        entitiesService = new EntitiesService(opfabLoggerService, mockEntitiesServer, new AlertMessageService());
+        entitiesService = new EntitiesService(opfabLoggerService, mockEntitiesServer);
 
         const userPermissionService = new UserPermissionsService(entitiesService, processesService);
 
