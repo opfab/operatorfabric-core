@@ -7,7 +7,7 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {OnInit, Component, OnDestroy, Input, OnChanges} from '@angular/core';
+import {OnInit, Component, OnDestroy} from '@angular/core';
 import {ProcessesService} from 'app/business/services/businessconfig/processes.service';
 import {LightCardsStoreService} from 'app/business/services/lightcards/lightcards-store.service';
 import {Subject, takeUntil, timer} from 'rxjs';
@@ -20,13 +20,13 @@ import {Utilities} from 'app/business/common/utilities';
     templateUrl: './pinned-cards.component.html',
     styleUrls: ['./pinned-cards.component.scss']
 })
-export class PinnedCardsComponent implements OnInit, OnDestroy, OnChanges {
+export class PinnedCardsComponent implements OnInit, OnDestroy {
     private ngUnsubscribe: Subject<void> = new Subject<void>();
     pinnedCards: LightCard[];
     visiblePinnedCards: LightCard[];
     hiddenPinnedCards: LightCard[];
 
-    @Input() maxVisiblePinnedCards = 6;
+    maxVisiblePinnedCards = 6;
 
     maxHiddenPinnedCards = 20;
 
@@ -45,10 +45,6 @@ export class PinnedCardsComponent implements OnInit, OnDestroy, OnChanges {
         timer(10000, 10000)
             .pipe(takeUntil(this.ngUnsubscribe))
             .subscribe((t) => this.checkPinnedCardsEndDate());
-    }
-
-    ngOnChanges(): void {
-        this.setVisiblePinnedCards();
     }
 
     private setPinnedCards(cards: LightCard[]) {
@@ -90,6 +86,21 @@ export class PinnedCardsComponent implements OnInit, OnDestroy, OnChanges {
     private checkPinnedCardsEndDate(): void {
         this.pinnedCards = this.pinnedCards.filter((card) => !card.endDate || card.endDate > Date.now());
         this.setVisiblePinnedCards();
+    }
+
+    public areThereTooManyCardsForWindow() : boolean{
+        const maxPinnedCardsForWindow = Math.floor(window.innerWidth / 290);
+
+        if (this.maxVisiblePinnedCards  !== maxPinnedCardsForWindow) {
+            this.maxVisiblePinnedCards = maxPinnedCardsForWindow;
+            this.setVisiblePinnedCards();
+        }
+
+        return this.pinnedCards.length >  this.maxVisiblePinnedCards;
+    }
+
+    public areThereTooManyHiddenCards() : boolean {
+        return this.pinnedCards.length > (this.maxVisiblePinnedCards + this.maxHiddenPinnedCards);
     }
 
     public select(id) {
