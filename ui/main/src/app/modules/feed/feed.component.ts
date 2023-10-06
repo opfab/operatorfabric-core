@@ -30,7 +30,6 @@ export class FeedComponent implements OnInit,OnDestroy {
     maxNbOfCardsToDisplay = 100;
     private ngUnsubscribe$ = new Subject<void>();
     private hallwayMode = false;
-    maxPinnedCards: number;
     filtersVisible = false;
 
     constructor(
@@ -71,13 +70,9 @@ export class FeedComponent implements OnInit,OnDestroy {
                 return cards.slice(0, this.maxNbOfCardsToDisplay);
             })
         );
-;
-
-        this.maxPinnedCards = Math.floor(window.innerWidth / 250);
     }
 
     public enoughSpaceForTimeLine() {
-        this.maxPinnedCards = Math.floor(window.innerWidth / 250);
         return window.innerWidth > 1000 && window.innerHeight > 700;
     }
 
