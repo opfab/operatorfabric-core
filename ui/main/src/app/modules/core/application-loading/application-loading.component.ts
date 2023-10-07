@@ -101,6 +101,7 @@ export class ApplicationLoadingComponent implements OnInit {
                 if (config) {
                     this.logger.info(`Configuration loaded (web-ui.json)`);
                     this.setTitleInBrowser();
+                    this.listenForRemoteLogActivation();
                     this.loadTranslation(config);
                     this.loadEnvironmentName();
                 } else {
@@ -125,6 +126,12 @@ export class ApplicationLoadingComponent implements OnInit {
     private setTitleInBrowser() {
         const title = this.configService.getConfigValue('title', 'OperatorFabric');
         this.titleService.setTitle(title);
+    }
+
+    private listenForRemoteLogActivation() {
+        this.configService
+        .getConfigValueAsObservable('settings.remoteLoggingEnabled', false)
+        .subscribe((remoteLoggingEnabled) => this.logger.setRemoteLoggerActive(remoteLoggingEnabled));
     }
 
     private loadTranslation(config) {
@@ -283,6 +290,6 @@ export class ApplicationLoadingComponent implements OnInit {
         }
 
         this.opfabAPIService.initAPI();
-        
+
     }
 }

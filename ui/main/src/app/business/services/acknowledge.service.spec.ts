@@ -52,7 +52,7 @@ describe('AcknowledgeService testing ', () => {
         statesList = new Map<string, State>();
         const configServerMock = new ConfigServerMock();
         const opfabLoggerService = new OpfabLoggerService(
-            new RemoteLoggerServiceMock(new ConfigService(configServerMock), null)
+            new RemoteLoggerServiceMock(null)
         );
         userServerMock = new UserServerMock();
         userServerMock.setResponseForCurrentUserWithPerimeter(new ServerResponse(getUserMemberOfEntity1WithPerimeter(), ServerResponseStatus.OK, ""));

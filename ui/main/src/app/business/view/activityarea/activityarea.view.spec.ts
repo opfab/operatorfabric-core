@@ -10,14 +10,12 @@
 import {Entity} from '@ofModel/entity.model';
 import {User} from '@ofModel/user.model';
 import {UserWithPerimeters} from '@ofModel/userWithPerimeters.model';
-import {ConfigServerMock} from '@tests/mocks/configServer.mock';
 import {EntitiesServerMock} from '@tests/mocks/entitiesServer.mock';
 import {OpfabEventStreamServerMock} from '@tests/mocks/opfab-event-stream.server.mock';
 import {RemoteLoggerServiceMock} from '@tests/mocks/remote-logger.service.mock';
 import {SettingsServerMock} from '@tests/mocks/settingsServer.mock';
 import {UserServerMock} from '@tests/mocks/userServer.mock';
 import {ServerResponse, ServerResponseStatus} from 'app/business/server/serverResponse';
-import {ConfigService} from 'app/business/services/config.service';
 import {EntitiesService} from 'app/business/services/users/entities.service';
 import {LightCardsStoreService} from 'app/business/services/lightcards/lightcards-store.service';
 import {OpfabLoggerService} from 'app/business/services/logs/opfab-logger.service';
@@ -51,7 +49,7 @@ describe('ActivityAreaView', () => {
 
     function mockOpfabLoggerService() {
         opfabLoggerService = new OpfabLoggerService(
-            new RemoteLoggerServiceMock(new ConfigService(new ConfigServerMock()), null)
+            new RemoteLoggerServiceMock(null)
         );
     }
 

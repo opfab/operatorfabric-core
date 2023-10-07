@@ -15,7 +15,6 @@ import {UserService} from 'app/business/services/users/user.service';
 import {OpfabLoggerService} from 'app/business/services/logs/opfab-logger.service';
 import {RemoteLoggerServiceMock} from '@tests/mocks/remote-logger.service.mock';
 import {UserServerMock} from '@tests/mocks/userServer.mock';
-import {ConfigService} from 'app/business/services/config.service';
 import {ServerResponse, ServerResponseStatus} from 'app/business/server/serverResponse';
 import {Process, State} from '@ofModel/processes.model';
 import {ComputedPerimeter, UserWithPerimeters} from '@ofModel/userWithPerimeters.model';
@@ -50,7 +49,7 @@ describe('Dashboard', () => {
     beforeEach(() => {
         configServerMock = new ConfigServerMock();
         opfabLoggerService = new OpfabLoggerService(
-            new RemoteLoggerServiceMock(new ConfigService(configServerMock), null)
+            new RemoteLoggerServiceMock(null)
         );
         userServerMock = new UserServerMock();
         userService = new UserService(userServerMock, opfabLoggerService);

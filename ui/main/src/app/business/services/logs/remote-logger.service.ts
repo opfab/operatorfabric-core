@@ -19,10 +19,7 @@ export class RemoteLoggerService {
     private isActive = false;
     private logs = [];
 
-    constructor(private configService: ConfigService, private remoteLoggerServer: RemoteLoggerServer) {
-        configService
-            .getConfigValueAsObservable('settings.remoteLoggingEnabled', false)
-            .subscribe((remoteLoggingEnabled) => this.setRemoteLoggerActive(remoteLoggingEnabled));
+    constructor(private remoteLoggerServer: RemoteLoggerServer) {
         this.regularlyFlush();
     }
 
