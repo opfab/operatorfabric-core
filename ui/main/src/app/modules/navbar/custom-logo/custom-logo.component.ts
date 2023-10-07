@@ -9,7 +9,7 @@
 
 import {Component, OnInit, Input} from '@angular/core';
 import {DomSanitizer, SafeUrl} from '@angular/platform-browser';
-import {OpfabLoggerService} from 'app/business/services/logs/opfab-logger.service';
+import {LoggerService as logger} from 'app/business/services/logs/logger.service';
 
 @Component({
     selector: 'of-custom-logo',
@@ -26,16 +26,16 @@ export class CustomLogoComponent implements OnInit {
 
     MAX_HEIGHT = 48;
 
-    constructor(public domSanitizationService: DomSanitizer, private logger: OpfabLoggerService) {}
+    constructor(public domSanitizationService: DomSanitizer) {}
 
     ngOnInit() {
         if (this.base64 == undefined || this.base64 == '') {
-            this.logger.error('no custom-logo base64 configured, no picture loaded');
+            logger.error('no custom-logo base64 configured, no picture loaded');
         }
         if (this.height == undefined) this.height = this.DEFAULT_HEIGHT;
         if (this.width == undefined) this.width = this.DEFAULT_WIDTH;
         if (this.height > this.MAX_HEIGHT) {
-            this.logger.error('Logo height > 48px in web-ui.json, height will be set to 48px ');
+            logger.error('Logo height > 48px in web-ui.json, height will be set to 48px ');
             this.height = this.MAX_HEIGHT;
         }
     }

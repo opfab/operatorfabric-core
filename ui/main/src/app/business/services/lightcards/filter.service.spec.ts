@@ -10,19 +10,14 @@
 import {FilterType} from '@ofModel/feed-filter.model';
 import {LightCard, Severity} from '@ofModel/light-card.model';
 import {getSeveralRandomLightCards} from '@tests/helpers';
-import {RemoteLoggerServiceMock} from '@tests/mocks/remote-logger.service.mock';
 import {FilterService} from './filter.service';
-import {OpfabLoggerService} from '../logs/opfab-logger.service';
 
 describe('NewFilterService ', () => {
     let service: FilterService;
     const ONE_HOUR = 3600000;
 
     beforeEach(() => {
-        const loggerService = new OpfabLoggerService(
-            new RemoteLoggerServiceMock(null)
-        );
-        service = new FilterService(loggerService);
+        service = new FilterService();
     });
 
     function getFourCards() {

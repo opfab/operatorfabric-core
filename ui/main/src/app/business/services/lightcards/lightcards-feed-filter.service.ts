@@ -16,13 +16,14 @@ import {FilterService} from './filter.service';
 import {SortService} from './sort.service';
 import {GroupedCardsService} from 'app/business/services/lightcards/grouped-cards.service';
 import {ConfigService} from 'app/business/services/config.service';
-import {LogOption, OpfabLoggerService} from 'app/business/services/logs/opfab-logger.service';
+import {LogOption, LoggerService as logger} from 'app/business/services/logs/logger.service';
 import {SearchService} from './search-service';
 
 @Injectable({
     providedIn: 'root'
 })
 export class LightCardsFeedFilterService {
+
     private filteredAndSortedLightCards = new Subject();
     private filteredLightCards = new Subject();
     private filteredAndSearchedLightCards = new ReplaySubject(1);
@@ -35,8 +36,7 @@ export class LightCardsFeedFilterService {
         private sortService: SortService,
         private searchService: SearchService,
         private groupedCardsService: GroupedCardsService,
-        private configService: ConfigService,
-        private logger : OpfabLoggerService
+        private configService: ConfigService
     ) {
         this.computeFilteredAndSortedLightCards();
         this.computeFilteredAndSearchedLightCards();
@@ -84,7 +84,7 @@ export class LightCardsFeedFilterService {
                     const lightCards = results[1];
                     const onlyBusinessFitlerForTimeLine = results[2];
 
-                    this.logger.debug('Number of cards in memory : ' +  results[1].length ,LogOption.LOCAL_AND_REMOTE);
+                    logger.debug('Number of cards in memory : ' +  results[1].length ,LogOption.LOCAL_AND_REMOTE);
 
                     if (onlyBusinessFitlerForTimeLine) {
                         const cardFilteredByBusinessDate =
@@ -109,7 +109,7 @@ export class LightCardsFeedFilterService {
                 return this.searchService.searchLightCards(results[1]);
             }))
             .subscribe((lightCards) => {
-                this.logger.debug('Number of cards visible after filtering and searching : ' +  lightCards.length, LogOption.LOCAL_AND_REMOTE);
+                logger.debug('Number of cards visible after filtering and searching : ' +  lightCards.length, LogOption.LOCAL_AND_REMOTE);
                 this.filteredAndSearchedLightCards.next(lightCards);
             });
     }

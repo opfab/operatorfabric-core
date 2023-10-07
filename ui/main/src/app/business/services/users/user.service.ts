@@ -16,9 +16,9 @@ import {catchError, map, takeUntil, tap} from 'rxjs/operators';
 import {CrudService} from 'app/business/services/crud-service';
 import {Injectable} from '@angular/core';
 import {RightsEnum} from '@ofModel/perimeter.model';
-import {OpfabLoggerService} from '../logs/opfab-logger.service';
 import {UserServer} from '../../server/user.server';
 import {ServerResponseStatus} from '../../server/serverResponse';
+import {LoggerService as logger} from '../logs/logger.service';
 
 @Injectable({
     providedIn: 'root'
@@ -33,11 +33,8 @@ export class UserService extends CrudService {
      * @constructor
      * @param userServer - Angular build-in
      */
-    constructor(
-        private userServer: UserServer,
-        protected loggerService: OpfabLoggerService
-    ) {
-        super(loggerService);
+    constructor(private userServer: UserServer) {
+        super();
         this._userRightsPerProcessAndState = new Map();
         this._receiveRightPerProcess = new Map();
     }
@@ -67,7 +64,7 @@ export class UserService extends CrudService {
                 if (userResponse.status === ServerResponseStatus.OK) {
                     return userResponse.data;
                 } else {
-                    this.loggerService.error('Impossible to synchronize token');
+                    logger.error('Impossible to synchronize token');
                     return null;
                 }
             })
@@ -80,7 +77,7 @@ export class UserService extends CrudService {
                 if (userResponse.status === ServerResponseStatus.OK) {
                     return userResponse.data;
                 } else {
-                    this.loggerService.error('Impossible to load user perimeter');
+                    logger.error('Impossible to load user perimeter');
                     return null;
                 }
             })
@@ -154,7 +151,8 @@ export class UserService extends CrudService {
     public hasCurrentUserAnyPermission(permissions: PermissionEnum[]): boolean {
         if (!permissions) return false;
         return (
-            this._userWithPerimeters.permissions?.filter((permission) => permissions.indexOf(permission) >= 0).length > 0
+            this._userWithPerimeters.permissions?.filter((permission) => permissions.indexOf(permission) >= 0).length >
+            0
         );
     }
 
@@ -233,7 +231,7 @@ export class UserService extends CrudService {
                 if (userResponse.status === ServerResponseStatus.OK) {
                     return userResponse.data;
                 } else {
-                    this.loggerService.error(
+                    logger.error(
                         'Impossible to check if new connection will disconnect existing subscription'
                     );
                     return null;

@@ -8,12 +8,10 @@
  */
 
 import {ConfigServerMock} from '@tests/mocks/configServer.mock';
-import {RemoteLoggerServiceMock} from '@tests/mocks/remote-logger.service.mock';
 import {UserServerMock} from '@tests/mocks/userServer.mock';
 import {ServerResponse, ServerResponseStatus} from 'app/business/server/serverResponse';
 import {ConfigService} from 'app/business/services/config.service';
 import {GlobalStyleService} from 'app/business/services/global-style.service';
-import {OpfabLoggerService} from 'app/business/services/logs/opfab-logger.service';
 import {MenuService} from 'app/business/services/menu.service';
 import {UserPreferencesService} from 'app/business/services/users/user-preference.service';
 import {UserService} from 'app/business/services/users/user.service';
@@ -55,9 +53,9 @@ describe('ExternalAppIFrame view ', () => {
         configService = new ConfigService(configServerMock);
         routerStore = RouterStore.getInstance();
         const mockUserServer = new UserServerMock();
-        const logService = new OpfabLoggerService(new RemoteLoggerServiceMock(null));
-        const userService = new UserService(mockUserServer, logService);
-        const menuService = new MenuService(configService, userService, logService);
+
+        const userService = new UserService(mockUserServer);
+        const menuService = new MenuService(configService, userService);
         globalStyleService = new GlobalStyleService(new UserPreferencesService(), configService, menuService);
         
         // Mock method not supported in test context

@@ -20,14 +20,11 @@ import {Card} from '@ofModel/card.model';
 import {UserWithPerimeters} from '@ofModel/userWithPerimeters.model';
 import {User} from '@ofModel/user.model';
 import {RightsEnum} from '@ofModel/perimeter.model';
-import {ConfigService} from 'app/business/services/config.service';
 import {EntitiesService} from 'app/business/services/users/entities.service';
 import {ConfigServerMock} from '@tests/mocks/configServer.mock';
 import {ProcessServerMock} from '@tests/mocks/processServer.mock';
 import {UserPermissionsService} from './user-permissions.service';
 import {UserService} from './users/user.service';
-import {OpfabLoggerService} from './logs/opfab-logger.service';
-import {RemoteLoggerServiceMock} from '@tests/mocks/remote-logger.service.mock';
 import {UserServerMock} from '@tests/mocks/userServer.mock';
 import {EntitiesServerMock} from '@tests/mocks/entitiesServer.mock';
 import {Entity} from '@ofModel/entity.model';
@@ -51,12 +48,10 @@ describe('AcknowledgeService testing ', () => {
 
         statesList = new Map<string, State>();
         const configServerMock = new ConfigServerMock();
-        const opfabLoggerService = new OpfabLoggerService(
-            new RemoteLoggerServiceMock(null)
-        );
+
         userServerMock = new UserServerMock();
         userServerMock.setResponseForCurrentUserWithPerimeter(new ServerResponse(getUserMemberOfEntity1WithPerimeter(), ServerResponseStatus.OK, ""));
-        userService = new UserService(userServerMock, opfabLoggerService);
+        userService = new UserService(userServerMock);
 
         const processServerMock = new ProcessServerMock();
         processServerMock.setResponseForAllProcessDefinition(new ServerResponse(getTestProcesses(), ServerResponseStatus.OK, ""));
@@ -70,7 +65,7 @@ describe('AcknowledgeService testing ', () => {
                                         new Entity("ENTITY2", "ENTITY 2", "", true, null, null),
                                         new Entity("ENTITY3", "ENTITY 3", "", true, null, null),
                                         new Entity("ENTITY_FR", "ENTITY FR", "", true, null, null)]);
-        entitiesService = new EntitiesService(opfabLoggerService, mockEntitiesServer);
+        entitiesService = new EntitiesService(mockEntitiesServer);
 
         const userPermissionService = new UserPermissionsService(entitiesService, processesService);
 

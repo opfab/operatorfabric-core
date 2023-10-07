@@ -12,27 +12,23 @@ import {Observable} from 'rxjs';
 import {map} from 'rxjs/operators';
 import {Process} from '@ofModel/processes.model';
 import {CachedCrudService} from 'app/business/services/cached-crud-service';
-import {OpfabLoggerService} from '../logs/opfab-logger.service';
 import {AdminProcessServer} from '../../server/adminprocess.server';
 import {ServerResponseStatus} from '../../server/serverResponse';
 
 @Injectable({
     providedIn: 'root'
 })
-export class AdminProcessesService extends CachedCrudService{
-
+export class AdminProcessesService extends CachedCrudService {
     private processes: Process[];
-    constructor(
-        private adminprocessServer: AdminProcessServer,
-        protected loggerService: OpfabLoggerService
-    ) {
-        super(loggerService);
+
+    constructor(private adminprocessServer: AdminProcessServer) {
+        super();
     }
 
-    public getCachedValues():  Array<Process> {
+    public getCachedValues(): Array<Process> {
         return this.getAllProcesses();
     }
-    private getAllProcesses(): Process[]{
+    private getAllProcesses(): Process[] {
         return this.processes;
     }
 
@@ -42,14 +38,14 @@ export class AdminProcessesService extends CachedCrudService{
     private queryAllProcesses(): Observable<Process[]> {
         return this.adminprocessServer.queryAllProcesses().pipe(
             map((adminprocessResponse) => {
-                if (adminprocessResponse.status === ServerResponseStatus.OK){
+                if (adminprocessResponse.status === ServerResponseStatus.OK) {
                     return adminprocessResponse.data;
                 } else {
                     this.handleServerResponseError(adminprocessResponse);
                     return [];
                 }
             })
-        );  
+        );
     }
 
     update(data: any): Observable<any> {
@@ -59,11 +55,10 @@ export class AdminProcessesService extends CachedCrudService{
     public deleteById(id: string) {
         return this.adminprocessServer.deleteById(id).pipe(
             map((adminprocessResponse) => {
-                if (adminprocessResponse.status !== ServerResponseStatus.OK){
+                if (adminprocessResponse.status !== ServerResponseStatus.OK) {
                     this.handleServerResponseError(adminprocessResponse);
                 }
             })
         );
     }
-
 }

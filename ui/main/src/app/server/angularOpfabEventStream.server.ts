@@ -10,7 +10,7 @@
 import {HttpClient} from '@angular/common/http';
 import {Injectable} from '@angular/core';
 import {environment} from '@env/environment';
-import {LogOption, OpfabLoggerService} from 'app/business/services/logs/opfab-logger.service';
+import {LogOption, LoggerService as logger} from 'app/business/services/logs/logger.service';
 import {OpfabEventStreamServer} from 'app/business/server/opfabEventStream.server';
 import {ServerResponse} from 'app/business/server/serverResponse';
 import {GuidService} from 'app/business/services/guid.service';
@@ -43,9 +43,7 @@ export class AngularOpfabEventStreamServer extends AngularServer implements Opfa
     private eventSource;
 
     constructor(
-        
         guidService: GuidService,
-        private logger: OpfabLoggerService,
         private configService: ConfigService,
         private httpClient: HttpClient
     ) {
@@ -77,7 +75,7 @@ export class AngularOpfabEventStreamServer extends AngularServer implements Opfa
         this.eventSource.onmessage = (message) => {
             if (message.data === 'HEARTBEAT') {
                 this.lastheartbeatDate = new Date().valueOf();
-                this.logger.info(`EventStreamServer - HEARTBEAT received - Connection alive `, LogOption.LOCAL);
+                logger.info(`EventStreamServer - HEARTBEAT received - Connection alive `, LogOption.LOCAL);
             } else {
                 if (message.data === 'INIT') {
                     if (this.firstSubscriptionInitDone) {
@@ -110,7 +108,7 @@ export class AngularOpfabEventStreamServer extends AngularServer implements Opfa
 
     private checkHeartBeatReceive() {
         this.heartbeatReceptionIntervalId = setInterval(() => {
-            this.logger.info(
+            logger.info(
                 'EventStreamServer - Last heart beat received ' +
                     (new Date().valueOf() - this.lastheartbeatDate) +
                     'ms ago',
@@ -123,7 +121,7 @@ export class AngularOpfabEventStreamServer extends AngularServer implements Opfa
         this.isHeartbeatRunning = true;
         this.heartbeatSendingIntervalId = setInterval(() => {
             this.httpClient.get(`${this.heartbeatUrl}`).subscribe();
-            this.logger.info(
+            logger.info(
                 'EventStreamServer - Heartbeat sent to the server',
                 LogOption.LOCAL_AND_REMOTE
             );
@@ -133,7 +131,7 @@ export class AngularOpfabEventStreamServer extends AngularServer implements Opfa
     private recoverAnyLostCardWhenConnectionHasBeenReset() {
         // Subtracts two minutes from the last heart beat to avoid loosing card due to latency, buffering and not synchronized clock
         const dateForRecovering = this.lastheartbeatDate - AngularOpfabEventStreamServer.TWO_MINUTES;
-        this.logger.info(
+        logger.info(
             `EventStreamServer - Card subscription has been init again , recover any lost card from date ` +
                 new Date(dateForRecovering),
             LogOption.LOCAL_AND_REMOTE

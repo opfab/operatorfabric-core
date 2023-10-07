@@ -22,8 +22,7 @@ import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
 import {LightCardsFeedFilterService} from 'app/business/services/lightcards/lightcards-feed-filter.service';
 import {LightCardsServiceMock} from '@tests/mocks/lightcards.service.mock';
 import {DateTimeFormatterService} from 'app/business/services/date-time-formatter.service';
-import {RemoteLoggerService} from 'app/business/services/logs/remote-logger.service';
-import {AngularRemoteLoggerServiceMock} from '@tests/mocks/angular-remote-logger.service.mock';
+
 describe('CustomTimelineChartComponent', () => {
     let component: CustomTimelineChartComponent;
     let fixture: ComponentFixture<CustomTimelineChartComponent>;
@@ -46,8 +45,7 @@ describe('CustomTimelineChartComponent', () => {
             providers: [
                 {provide: APP_BASE_HREF, useValue: '/'},
                 {provide: DateTimeFormatterService, useClass: DateTimeFormatterService},
-                {provide: LightCardsFeedFilterService, useClass: LightCardsServiceMock},
-                {provide: RemoteLoggerService, useClass: AngularRemoteLoggerServiceMock}
+                {provide: LightCardsFeedFilterService, useClass: LightCardsServiceMock}
             ],
             schemas: [NO_ERRORS_SCHEMA]
         }).compileComponents();

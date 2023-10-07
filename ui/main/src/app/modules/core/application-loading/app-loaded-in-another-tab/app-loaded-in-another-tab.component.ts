@@ -9,7 +9,7 @@
 
 import {Component, HostListener,TemplateRef, ViewChild} from '@angular/core';
 import {NgbModal, NgbModalRef} from '@ng-bootstrap/ng-bootstrap';
-import {LogOption, OpfabLoggerService} from 'app/business/services/logs/opfab-logger.service';
+import {LogOption, LoggerService as logger} from 'app/business/services/logs/logger.service';
 import {UrlLockService} from './url-lock.service';
 import {UserService} from 'app/business/services/users/user.service';
 import {ApplicationLoadingStep} from '../application-loading-step';
@@ -32,12 +32,13 @@ export class AppLoadedInAnotherTabComponent extends ApplicationLoadingStep {
     @HostListener('window:beforeunload')
     onBeforeUnload() {
         if (this.isApplicationActive) {
-            this.logger.info('Set application as unused in storage');
+            logger.info('Set application as unused in storage');
             this.urlLockService.unlockUrl();
         }
     }
 
     @ViewChild('confirmToContinueLoading') confirmToContinueLoadingTemplate: TemplateRef<any>;
+
     private confirmToContinueLoadingModal: NgbModalRef;
     public opfabUrl: string;
 
@@ -48,7 +49,6 @@ export class AppLoadedInAnotherTabComponent extends ApplicationLoadingStep {
         private opfabEventStreamService: OpfabEventStreamService,
         private urlLockService: UrlLockService,
         private modalService: NgbModal,
-        private logger: OpfabLoggerService,
         private userService: UserService,
         private soundNotificationService: SoundNotificationService
     ) {
@@ -63,13 +63,13 @@ export class AppLoadedInAnotherTabComponent extends ApplicationLoadingStep {
 
     private checkIfAppLoadedInAnotherTab(): void {
         if (this.urlLockService.isUrlLocked()) {
-            this.logger.info('Another browser tab has the application loaded', LogOption.LOCAL_AND_REMOTE);
+            logger.info('Another browser tab has the application loaded', LogOption.LOCAL_AND_REMOTE);
             this.confirmToContinueLoadingModal = this.modalService.open(this.confirmToContinueLoadingTemplate, {
                 centered: true,
                 backdrop: 'static'
             });
         } else {
-            this.logger.info('No another browser tab has the application loaded', LogOption.LOCAL_AND_REMOTE);
+            logger.info('No another browser tab has the application loaded', LogOption.LOCAL_AND_REMOTE);
             this.urlLockService.lockUrl();
             this.sendCheckAppLoadedInAnotherTabDone();
         }
@@ -98,7 +98,7 @@ export class AppLoadedInAnotherTabComponent extends ApplicationLoadingStep {
             this.soundNotificationService.stopService();
             this.opfabEventStreamService.closeEventStream();
             const login = this.userService.getCurrentUserWithPerimeters().userData.login;
-            this.logger.info(
+            logger.info(
                 'User ' + login + ' was disconnected by another browser tab having loaded the application',
                 LogOption.LOCAL_AND_REMOTE
             );

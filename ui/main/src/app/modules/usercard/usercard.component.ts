@@ -30,7 +30,7 @@ import {UserCardRecipientsFormComponent} from './recipientForm/usercard-recipien
 import {UserPermissionsService} from 'app/business/services/user-permissions.service';
 import {Utilities} from '../../business/common/utilities';
 import {UsercardSelectCardEmitterFormComponent} from './selectCardEmitterForm/usercard-select-card-emitter-form.component';
-import {LogOption, OpfabLoggerService} from 'app/business/services/logs/opfab-logger.service';
+import {LogOption, LoggerService as logger} from 'app/business/services/logs/logger.service';
 import {PermissionEnum} from '@ofModel/permission.model';
 import {AlertMessageService} from 'app/business/services/alert-message.service';
 import {CardService} from 'app/business/services/card/card.service';
@@ -46,6 +46,7 @@ import {OpfabAPIService} from 'app/business/services/opfabAPI.service';
 })
 export class UserCardComponent implements OnInit, OnDestroy {
     @Input() userCardModal;
+
     public pageLoading = true;
 
     // Process and state choice
@@ -137,7 +138,6 @@ export class UserCardComponent implements OnInit, OnDestroy {
         private handlebars: HandlebarsService,
         protected soundNotificationService: SoundNotificationService,
         protected userPermissionsService: UserPermissionsService,
-        private opfabLogger: OpfabLoggerService,
         private systemNotificationService: SystemNotificationService,
         private opfabAPIService: OpfabAPIService
     ) {
@@ -483,7 +483,7 @@ export class UserCardComponent implements OnInit, OnDestroy {
                     error: (error) => {
                         this.isLoadingCardTemplate = false;
 
-                        this.opfabLogger.error(
+                        logger.error(
                             'WARNING impossible to load template ' + templateName + ', error = ' + error
                         );
                         this.userCardTemplate = this.sanitizer.bypassSecurityTrustHtml('');
@@ -681,7 +681,7 @@ export class UserCardComponent implements OnInit, OnDestroy {
 
         const specificInformation = this.opfabAPIService.userCardTemplateInterface.getSpecificCardInformation();
         if (!specificInformation) {
-            this.opfabLogger.error(
+            logger.error(
                 'ERROR : registered method getSpecificCardInformation in template return no information, card cannot be sent'
             );
             this.displayMessage('userCard.error.templateError', null, MessageLevel.ERROR);
@@ -694,7 +694,7 @@ export class UserCardComponent implements OnInit, OnDestroy {
         }
 
         if (!specificInformation.card) {
-            this.opfabLogger.error(
+            logger.error(
                 'ERROR : registered method getSpecificCardInformation in template return specificInformation with no card field, card cannot be sent'
             );
             this.displayMessage('userCard.error.templateError', null, MessageLevel.ERROR);
@@ -861,7 +861,7 @@ export class UserCardComponent implements OnInit, OnDestroy {
         let timeSpans = [];
 
         if (specificInformation.recurrence)
-            this.opfabLogger.warn(
+            logger.warn(
                 "Using deprecated field 'specificInformation.recurrence'. Use 'specificInformation.timeSpan' field instead to configure timespans",
                 LogOption.LOCAL
             );
@@ -955,7 +955,7 @@ export class UserCardComponent implements OnInit, OnDestroy {
             if (resp.status !== ServerResponseStatus.OK) {
                 const msg = resp.statusMessage ? resp.statusMessage : '';
                 const error = resp.status ? resp.status : '';
-                this.opfabLogger.error(
+                logger.error(
                     'Impossible to send card , message from service : ' + msg + '. Error message : ' + error
                 );
                 this.displayMessage('userCard.error.impossibleToSendCard', null, MessageLevel.ERROR);
@@ -980,7 +980,7 @@ export class UserCardComponent implements OnInit, OnDestroy {
             if (resp.status !== ServerResponseStatus.OK) {
                 const msg = resp.statusMessage ? resp.statusMessage : '';
                 const error = resp.status ? resp.status : '';
-                this.opfabLogger.error(
+                logger.error(
                     'Impossible to send child card , message from service : ' + msg + '. Error message : ' + error
                 );
                 this.displayMessage('userCard.error.impossibleToSendCard', null, MessageLevel.ERROR);

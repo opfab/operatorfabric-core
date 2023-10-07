@@ -12,8 +12,6 @@ import {ConfigServerMock} from '@tests/mocks/configServer.mock';
 import {ProcessServerMock} from '@tests/mocks/processServer.mock';
 import {Dashboard} from './dashboard.view';
 import {UserService} from 'app/business/services/users/user.service';
-import {OpfabLoggerService} from 'app/business/services/logs/opfab-logger.service';
-import {RemoteLoggerServiceMock} from '@tests/mocks/remote-logger.service.mock';
 import {UserServerMock} from '@tests/mocks/userServer.mock';
 import {ServerResponse, ServerResponseStatus} from 'app/business/server/serverResponse';
 import {Process, State} from '@ofModel/processes.model';
@@ -36,7 +34,6 @@ import {EntitiesService} from 'app/business/services/users/entities.service';
 describe('Dashboard', () => {
     let dashboard: Dashboard;
     let userService: UserService;
-    let opfabLoggerService: OpfabLoggerService;
     let processesService: ProcessesService;
     let userServerMock: UserServerMock;
     let processServerMock: ProcessServerMock;
@@ -48,23 +45,19 @@ describe('Dashboard', () => {
 
     beforeEach(() => {
         configServerMock = new ConfigServerMock();
-        opfabLoggerService = new OpfabLoggerService(
-            new RemoteLoggerServiceMock(null)
-        );
         userServerMock = new UserServerMock();
-        userService = new UserService(userServerMock, opfabLoggerService);
+        userService = new UserService(userServerMock);
         processServerMock = new ProcessServerMock();
         processesService = new ProcessesService(null, processServerMock, configServerMock);
-        filterService = new FilterService(opfabLoggerService);
+        filterService = new FilterService();
 
         opfabEventStreamServerMock = new OpfabEventStreamServerMock();
         const opfabEventStreamService = new OpfabEventStreamService(
             opfabEventStreamServerMock,
-            null,
-            opfabLoggerService
+            null
         );
 
-        const entitiesService = new EntitiesService(opfabLoggerService, null);
+        const entitiesService = new EntitiesService(null);
         const userPermissionService = new UserPermissionsService(entitiesService, processesService);
         acknowledgeService = new AcknowledgeService(null, userPermissionService, userService, processesService, entitiesService);
 
@@ -72,7 +65,6 @@ describe('Dashboard', () => {
             userService,
             opfabEventStreamService,
             new SelectedCardService(),
-            opfabLoggerService,
             acknowledgeService
         );
         lightCardsStoreService.initStore();

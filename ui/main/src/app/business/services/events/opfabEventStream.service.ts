@@ -10,7 +10,7 @@
 import {Injectable} from '@angular/core';
 import {CardOperation} from '@ofModel/card-operation.model';
 import {FilterService} from 'app/business/services/lightcards/filter.service';
-import {LogOption, OpfabLoggerService} from 'app/business/services/logs/opfab-logger.service';
+import {LogOption, LoggerService as logger} from 'app/business/services/logs/logger.service';
 import {filter, map, Observable, Subject} from 'rxjs';
 import {OpfabEventStreamServer} from '../../server/opfabEventStream.server';
 
@@ -18,6 +18,7 @@ import {OpfabEventStreamServer} from '../../server/opfabEventStream.server';
     providedIn: 'root'
 })
 export class OpfabEventStreamService {
+
     public initSubscription = new Subject<void>();
 
     private startOfAlreadyLoadedPeriod: number;
@@ -33,8 +34,7 @@ export class OpfabEventStreamService {
 
     constructor(
         private opfabEventStreamServer: OpfabEventStreamServer,
-        private filterService: FilterService,
-        private logger: OpfabLoggerService
+        private filterService: FilterService
     ) {}
 
     public initEventStream() {
@@ -50,7 +50,7 @@ export class OpfabEventStreamService {
 
     public closeEventStream() {
         if (!this.eventStreamClosed) {
-            this.logger.info('EventStreamService - Closing event stream', LogOption.LOCAL_AND_REMOTE);
+            logger.info('EventStreamService - Closing event stream', LogOption.LOCAL_AND_REMOTE);
             this.opfabEventStreamServer.closeStream();
             this.eventStreamClosed = true;
         }
@@ -61,19 +61,19 @@ export class OpfabEventStreamService {
             map((event) => {
                 switch (event.data) {
                     case 'RELOAD':
-                        this.logger.info(`EventStreamService - RELOAD received`, LogOption.LOCAL_AND_REMOTE);
+                        logger.info(`EventStreamService - RELOAD received`, LogOption.LOCAL_AND_REMOTE);
                         this.reloadRequest.next();
                         break;
                     case 'BUSINESS_CONFIG_CHANGE':
                         this.businessConfigChange.next();
-                        this.logger.info(`EventStreamService - BUSINESS_CONFIG_CHANGE received`);
+                        logger.info(`EventStreamService - BUSINESS_CONFIG_CHANGE received`);
                         break;
                     case 'USER_CONFIG_CHANGE':
                         this.userConfigChange.next();
-                        this.logger.info(`EventStreamService - USER_CONFIG_CHANGE received`);
+                        logger.info(`EventStreamService - USER_CONFIG_CHANGE received`);
                         break;
                     case 'DISCONNECT_USER_DUE_TO_NEW_CONNECTION':
-                        this.logger.info(
+                        logger.info(
                             'EventStreamService - Disconnecting user because a new connection is being opened for this account'
                         );
                         this.closeEventStream();
@@ -87,7 +87,7 @@ export class OpfabEventStreamService {
                         try {
                             cardOperation = JSON.parse(event.data, CardOperation.convertTypeIntoEnum);
                         } catch (error) {
-                            this.logger.warn('EventStreamService - Impossible to parse server message ' + error);
+                            logger.warn('EventStreamService - Impossible to parse server message ' + error);
                         }
                         return cardOperation;
                 }
@@ -102,7 +102,7 @@ export class OpfabEventStreamService {
     }
 
     private setSubscriptionDates(start: number, end: number) {
-        this.logger.info(
+        logger.info(
             'EventStreamService - Set subscription date' + new Date(start) + ' -' + new Date(end),
             LogOption.LOCAL_AND_REMOTE
         );
@@ -123,11 +123,11 @@ export class OpfabEventStreamService {
             this.askCardsForPeriod(this.endOfAlreadyLoadedPeriod, end);
             return;
         }
-        this.logger.info('EventStreamService - Card already loaded for the chosen period', LogOption.LOCAL_AND_REMOTE);
+        logger.info('EventStreamService - Card already loaded for the chosen period', LogOption.LOCAL_AND_REMOTE);
     }
 
     private askCardsForPeriod(start: number, end: number) {
-        this.logger.info(
+        logger.info(
             'EventStreamService - Need to load card for period ' + new Date(start) + ' -' + new Date(end),
             LogOption.LOCAL_AND_REMOTE
         );

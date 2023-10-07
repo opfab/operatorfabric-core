@@ -11,7 +11,7 @@ import {Injectable} from '@angular/core';
 import {firstValueFrom, map, Observable} from 'rxjs';
 import {BusinessDataServer} from '../../server/businessData.server';
 import {ServerResponseStatus} from '../../server/serverResponse';
-import {LogOption, OpfabLoggerService} from '../logs/opfab-logger.service';
+import {LogOption,LoggerService as logger} from '../logs/logger.service';
 import {OpfabEventStreamService} from '../events/opfabEventStream.service';
 import * as _ from 'lodash-es';
 import {CachedCrudService} from '../cached-crud-service';
@@ -24,16 +24,15 @@ export class BusinessDataService extends CachedCrudService {
 
     constructor(
         private opfabEventStreamService: OpfabEventStreamService,
-        private businessDataServer: BusinessDataServer,
-        protected loggerService: OpfabLoggerService
+        private businessDataServer: BusinessDataServer
     ) {
-        super(loggerService);
+        super();
         this.listenForBusinessDataUpdate();
     }
 
     listenForBusinessDataUpdate() {
         this.opfabEventStreamService.getBusinessDataChanges().subscribe(() => {
-            this.loggerService.info(`New business data posted, emptying cache`, LogOption.LOCAL_AND_REMOTE);
+            logger.info(`New business data posted, emptying cache`, LogOption.LOCAL_AND_REMOTE);
             this.emptyCache();
         });
     }
@@ -51,7 +50,7 @@ export class BusinessDataService extends CachedCrudService {
             this.addResourceToCache(resourceName, resource.data);
             return _.clone(resource.data);
         } else {
-            this.loggerService.info(`Could not find the resource. See : ${resource.statusMessage}`);
+            logger.info(`Could not find the resource. See : ${resource.statusMessage}`);
             return {};
         }
     }

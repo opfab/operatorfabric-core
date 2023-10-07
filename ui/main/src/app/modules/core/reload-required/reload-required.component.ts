@@ -8,7 +8,7 @@
  */
 
 import {Component, OnInit} from '@angular/core';
-import {LogOption, OpfabLoggerService} from 'app/business/services/logs/opfab-logger.service';
+import {LogOption, LoggerService as logger} from 'app/business/services/logs/logger.service';
 import {OpfabEventStreamService} from 'app/business/services/events/opfabEventStream.service';
 
 
@@ -18,11 +18,11 @@ import {OpfabEventStreamService} from 'app/business/services/events/opfabEventSt
     templateUrl: './reload-required.component.html'
 })
 export class ReloadRequiredComponent implements OnInit {
+
     displayReloadRequired: boolean;
 
     constructor(
-        private opfabEventStreamService: OpfabEventStreamService,
-        private logger: OpfabLoggerService
+        private opfabEventStreamService: OpfabEventStreamService
     ) {}
 
     ngOnInit(): void {
@@ -31,7 +31,7 @@ export class ReloadRequiredComponent implements OnInit {
 
     private detectReloadRequested() {
         this.opfabEventStreamService.getReloadRequests().subscribe(() => {
-                this.logger.info('Application reload requested', LogOption.LOCAL_AND_REMOTE);
+                logger.info('Application reload requested', LogOption.LOCAL_AND_REMOTE);
                 this.displayReloadRequired = true;
         });
     }

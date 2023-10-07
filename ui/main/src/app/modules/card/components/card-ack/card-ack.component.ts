@@ -16,7 +16,7 @@ import {User} from '@ofModel/user.model';
 import {AcknowledgeService} from 'app/business/services/acknowledge.service';
 import {EntitiesService} from 'app/business/services/users/entities.service';
 import {LightCardsStoreService} from 'app/business/services/lightcards/lightcards-store.service';
-import {LogOption, OpfabLoggerService} from 'app/business/services/logs/opfab-logger.service';
+import {LogOption, LoggerService as logger} from 'app/business/services/logs/logger.service';
 import {ProcessesService} from 'app/business/services/businessconfig/processes.service';
 import {UserPermissionsService} from 'app/business/services/user-permissions.service';
 import {UserService} from 'app/business/services/users/user.service';
@@ -45,6 +45,8 @@ export class CardAckComponent implements OnInit, OnChanges, OnDestroy {
 
     @Output() closeCardDetail: EventEmitter<boolean> = new EventEmitter<boolean>();
 
+    
+
     private routerStore: RouterStore;
     public ackOrUnackInProgress = false;
     public showAckButton = false;
@@ -62,8 +64,7 @@ export class CardAckComponent implements OnInit, OnChanges, OnDestroy {
         private userService: UserService,
         private userPermissionsService: UserPermissionsService,
         private processService: ProcessesService,
-        private lightCardsStoreService: LightCardsStoreService,
-        private logger: OpfabLoggerService
+        private lightCardsStoreService: LightCardsStoreService
     ) {
         this.routerStore= RouterStore.getInstance();
         const userWithPerimeters = this.userService.getCurrentUserWithPerimeters();
@@ -165,7 +166,7 @@ export class CardAckComponent implements OnInit, OnChanges, OnDestroy {
                 this.setAcknowledgeButtonVisibility();
                 if (this.shouldCloseCardWhenUserAcknowledges()) this.closeDetails();
             } else {
-                this.logger.error(`The remote acknowledgement endpoint returned an error status(${resp.status})`,LogOption.LOCAL_AND_REMOTE);
+                logger.error(`The remote acknowledgement endpoint returned an error status(${resp.status})`,LogOption.LOCAL_AND_REMOTE);
                 this.displayMessage(AckI18nKeys.ERROR_MSG, null, MessageLevel.ERROR);
             }
         });
@@ -201,7 +202,7 @@ export class CardAckComponent implements OnInit, OnChanges, OnDestroy {
                 this.setAcknowledgeButtonVisibility();
                 this.lightCardsStoreService.setLightCardAcknowledgment(this.card.id, false);
             } else {
-                this.logger.error(`The remote acknowledgement endpoint returned an error status(${resp.status})`,LogOption.LOCAL_AND_REMOTE);
+                logger.error(`The remote acknowledgement endpoint returned an error status(${resp.status})`,LogOption.LOCAL_AND_REMOTE);
                 this.displayMessage(AckI18nKeys.ERROR_MSG, null, MessageLevel.ERROR);
             }
         });

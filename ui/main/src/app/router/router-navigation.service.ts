@@ -9,7 +9,7 @@
 
 import {Injectable} from '@angular/core';
 import {NavigationEnd, Router} from '@angular/router';
-import {LogOption, OpfabLoggerService} from 'app/business/services/logs/opfab-logger.service';
+import {LogOption, LoggerService as logger} from 'app/business/services/logs/logger.service';
 import {SelectedCardService} from 'app/business/services/card/selectedCard.service';
 import {filter} from 'rxjs';
 import {RouterStore} from 'app/business/store/router.store';
@@ -18,9 +18,9 @@ import {RouterStore} from 'app/business/store/router.store';
     providedIn: 'root'
 })
 export class RouterNavigationService {
+
     constructor(
         private router: Router,
-        private logger: OpfabLoggerService,
         private selectedCardService: SelectedCardService
     ) {
         this.logNavigation();
@@ -31,7 +31,7 @@ export class RouterNavigationService {
 
     logNavigation() {
         this.router.events.pipe(filter((event) => event instanceof NavigationEnd)).subscribe((event: NavigationEnd) => {
-            this.logger.info('Navigate to ' + event.url, LogOption.REMOTE);
+            logger.info('Navigate to ' + event.url, LogOption.REMOTE);
         });
     }
 

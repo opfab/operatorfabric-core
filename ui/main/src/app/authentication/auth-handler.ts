@@ -12,7 +12,7 @@ import {environment} from '@env/environment';
 import {I18n} from '@ofModel/i18n.model';
 import {Message, MessageLevel} from '@ofModel/message.model';
 import {ConfigService} from 'app/business/services/config.service';
-import {OpfabLoggerService} from 'app/business/services/logs/opfab-logger.service';
+import {LoggerService as logger} from 'app/business/services/logs/logger.service';
 import {AuthenticatedUser} from './auth.model';
 import {Guid} from 'guid-typescript';
 import jwt_decode from 'jwt-decode';
@@ -22,6 +22,7 @@ export const ONE_SECOND = 1000;
 export const MILLIS_TO_WAIT_BETWEEN_TOKEN_EXPIRATION_DATE_CONTROLS = 5000;
 export const EXPIRE_CLAIM = 'exp';
 export abstract class AuthHandler {
+
     protected checkTokenUrl = `${environment.url}/auth/check_token`;
     protected askTokenUrl = `${environment.url}/auth/token`;
 
@@ -35,7 +36,7 @@ export abstract class AuthHandler {
     protected delegateUrl: string;
     protected loginClaim: string;
 
-    constructor(configService: ConfigService, protected httpClient: HttpClient, protected logger: OpfabLoggerService) {
+    constructor(configService: ConfigService, protected httpClient: HttpClient) {
         this.secondsToCloseSession = configService.getConfigValue('secondsToCloseSession', 60);
         this.clientId = configService.getConfigValue('security.oauth2.client-id', null);
         this.delegateUrl = configService.getConfigValue('security.oauth2.flow.delegate-url', null);
@@ -97,7 +98,7 @@ export abstract class AuthHandler {
         try {
             return jwt_decode(token);
         } catch (err) {
-            this.logger.error(" Error in token decoding " + err);
+            logger.error(" Error in token decoding " + err);
             return null;
         }
     }
@@ -120,7 +121,7 @@ export abstract class AuthHandler {
                 key = 'login.error.unexpected';
                 params['error'] = errorResponse.message;
         }
-        this.logger.error(message + ' - ' + JSON.stringify(errorResponse));
+        logger.error(message + ' - ' + JSON.stringify(errorResponse));
         this.rejectAuthentication.next(new Message(message, MessageLevel.ERROR, new I18n(key, params)));
     }
 

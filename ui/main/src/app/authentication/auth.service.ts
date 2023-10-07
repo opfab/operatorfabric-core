@@ -14,7 +14,7 @@ import {Message} from '@ofModel/message.model';
 import {OAuthService} from 'angular-oauth2-oidc';
 import {ConfigService} from 'app/business/services/config.service';
 import {GuidService} from 'app/business/services/guid.service';
-import {OpfabLoggerService} from 'app/business/services/logs/opfab-logger.service';
+import {LoggerService as logger} from 'app/business/services/logs/logger.service';
 import {UserService} from 'app/business/services/users/user.service';
 import {CurrentUserStore} from 'app/business/store/current-user.store';
 import {Observable, Subject} from 'rxjs';
@@ -29,6 +29,7 @@ import {PasswordAuthenticationHandler} from './password-authentication-handler';
     providedIn: 'root'
 })
 export class AuthService {
+
     private mode: AuthenticationMode = AuthenticationMode.NONE;
     private rejectLoginMessage = new Subject<Message>();
     private login: string;
@@ -38,7 +39,6 @@ export class AuthService {
 
     constructor(
         private configService: ConfigService,
-        private logger: OpfabLoggerService,
         private router: Router,
         private oauthServiceForImplicitMode: OAuthService,
         private httpClient: HttpClient,
@@ -54,20 +54,19 @@ export class AuthService {
         this.mode = this.configService
             .getConfigValue('security.oauth2.flow.mode', 'password')
             .toLowerCase() as AuthenticationMode;
-        this.logger.info(`Auth mode set to ${this.mode}`);
+        logger.info(`Auth mode set to ${this.mode}`);
         if (this.mode !== AuthenticationMode.NONE) this.currentUserStore.setAuthenticationUsesToken();
         switch (this.mode) {
             case AuthenticationMode.PASSWORD:
-                this.authHandler = new PasswordAuthenticationHandler(this.configService, this.httpClient, this.logger);
+                this.authHandler = new PasswordAuthenticationHandler(this.configService, this.httpClient);
                 break;
             case AuthenticationMode.CODE:
-                this.authHandler = new CodeAuthenticationHandler(this.configService, this.httpClient, this.logger);
+                this.authHandler = new CodeAuthenticationHandler(this.configService, this.httpClient);
                 break;
             case AuthenticationMode.NONE:
                 this.authHandler = new NoneAuthenticationHandler(
                     this.configService,
                     this.httpClient,
-                    this.logger,
                     this.userService
                 );
                 break;
@@ -75,12 +74,11 @@ export class AuthService {
                 this.authHandler = new ImplicitAuthenticationHandler(
                     this.configService,
                     this.httpClient,
-                    this.logger,
                     this.oauthServiceForImplicitMode
                 );
                 break;
             default:
-                this.logger.error('No valid authentication mode');
+                logger.error('No valid authentication mode');
                 return;
         }
         this.startAuthentication();
@@ -106,7 +104,7 @@ export class AuthService {
             this.currentUserStore.setSessionExpired();
         });
         this.authHandler.getRejectAuthentication().subscribe((message) => {
-            this.logger.error('Authentication reject ' + JSON.stringify(message));
+            logger.error('Authentication reject ' + JSON.stringify(message));
             this.rejectLogin(message);
         });
         this.authHandler.initializeAuthentication();
@@ -142,14 +140,14 @@ export class AuthService {
     }
 
     public logout() {
-        this.logger.info('Auth logout');
+        logger.info('Auth logout');
         this.removeUserFromStorage();
         this.authHandler.logout();
         window.location.href = this.configService.getConfigValue('security.logout-url', 'https://opfab.github.io');
     }
 
     private goBackToLoginPage() {
-        this.logger.info('Go back to login page');
+        logger.info('Go back to login page');
         this.removeUserFromStorage();
         this.redirectToCurrentLocation();
     }

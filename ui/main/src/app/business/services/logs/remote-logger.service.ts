@@ -7,50 +7,51 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {Injectable} from '@angular/core';
-import {ConfigService} from 'app/business/services/config.service';
 import packageInfo from '../../../../../package.json';
 import {RemoteLoggerServer} from 'app/business/server/remote-logger.server';
 
-@Injectable({
-    providedIn: 'root'
-})
 export class RemoteLoggerService {
-    private isActive = false;
-    private logs = [];
+    private static remoteLoggerServer: RemoteLoggerServer;
+    private static isActive = false;
+    private static logs = [];
 
-    constructor(private remoteLoggerServer: RemoteLoggerServer) {
-        this.regularlyFlush();
+    public static setRemoteLoggerServer(remoteLoggerServer: RemoteLoggerServer) {
+        RemoteLoggerService.remoteLoggerServer = remoteLoggerServer;
     }
 
-    private regularlyFlush() {
+    private static regularlyFlush() {
         this.flush();
-        setTimeout(() => this.regularlyFlush(), 5000);
+        if (RemoteLoggerService.isActive) setTimeout(() => this.regularlyFlush(), 5000);
     }
 
-    public setRemoteLoggerActive(active: boolean) {
+    public static setRemoteLoggerActive(active: boolean) {
         if (active) {
-            this.isActive = true;
-            this.postLog('Remote log activated - ' +  packageInfo.opfabVersion + ' - ' + window.navigator.userAgent );
+            if (!RemoteLoggerService.isActive) {
+                RemoteLoggerService.isActive = true;
+                RemoteLoggerService.regularlyFlush();
+                RemoteLoggerService.postLog(
+                    'Remote log activated - ' + packageInfo.opfabVersion + ' - ' + window.navigator.userAgent
+                );
+            }
         } else {
-            this.postLog('Remote log deactivated ');
-            this.isActive = false;
+            RemoteLoggerService.postLog('Remote log deactivated ');
+            RemoteLoggerService.isActive = false;
         }
     }
 
-    public postLog(logLine: string) {
+    public static postLog(logLine: string) {
         if (this.isActive) this.logs.push(logLine);
     }
 
-    public flush() {
+    public static flush() {
         if (this.logs.length > 0) {
-            const logsToPush = this.buildLogsToPush(this.logs);
+            const logsToPush = RemoteLoggerService.buildLogsToPush(this.logs);
             this.logs = [];
-            this.remoteLoggerServer.postLogs(logsToPush).subscribe();
+            if (this.remoteLoggerServer) this.remoteLoggerServer.postLogs(logsToPush).subscribe();
         }
     }
 
-    private buildLogsToPush(logs: any[]) {
+    private static buildLogsToPush(logs: any[]) {
         let logsToPush = '';
         let first = true;
         logs.forEach((log) => {
@@ -60,5 +61,4 @@ export class RemoteLoggerService {
         });
         return logsToPush;
     }
-
 }

@@ -9,7 +9,7 @@
  */
 
 import {MessageLevel} from '@ofModel/message.model';
-import {OpfabLoggerService} from 'app/business/services/logs/opfab-logger.service';
+import {LoggerService as logger} from 'app/business/services/logs/logger.service';
 import {throwError} from 'rxjs';
 import {HttpErrorResponse} from '@angular/common/http';
 import {Injectable} from '@angular/core';
@@ -27,7 +27,7 @@ import {AlertMessageService} from './alert-message.service';
 export abstract class ErrorService {
     protected alertMessageService: AlertMessageService;
 
-    constructor(protected loggerService: OpfabLoggerService) {
+    constructor() {
         this.alertMessageService = AlertMessageService.getInstance();
     }
 
@@ -46,7 +46,7 @@ export abstract class ErrorService {
                 level: MessageLevel.ERROR
             });
         }
-        this.loggerService.error(error.status + ' ' + error.statusText + ' ' + error.message);
+        logger.error(error.status + ' ' + error.statusText + ' ' + error.message);
         return throwError(() => error);
     }
 
@@ -65,7 +65,7 @@ export abstract class ErrorService {
                 level: MessageLevel.ERROR
             });
         }
-        this.loggerService.error(error.status + ' ' + error.statusMessage);
+        logger.error(error.status + ' ' + error.statusMessage);
         return throwError(() => error);
     }
 }

@@ -29,7 +29,7 @@ import {UserContext} from '@ofModel/user-context.model';
 import {map, skip, takeUntil} from 'rxjs/operators';
 import {Observable, Subject, zip} from 'rxjs';
 import {User} from '@ofModel/user.model';
-import {OpfabLoggerService} from 'app/business/services/logs/opfab-logger.service';
+import {LoggerService as logger} from 'app/business/services/logs/logger.service';
 import {DisplayContext} from '@ofModel/template.model';
 import {TemplateCssService} from 'app/business/services/card/template-css.service';
 import {GlobalStyleService} from 'app/business/services/global-style.service';
@@ -72,8 +72,7 @@ export class TemplateRenderingComponent implements OnChanges, OnInit, OnDestroy,
         private templateCssService: TemplateCssService,
         private globalStyleService: GlobalStyleService,
         private userService: UserService,
-        private opfabAPIService: OpfabAPIService,
-        private logger: OpfabLoggerService
+        private opfabAPIService: OpfabAPIService
     ) {}
 
     public ngOnInit() {
@@ -148,7 +147,7 @@ export class TemplateRenderingComponent implements OnChanges, OnInit, OnDestroy,
                     }, 10);
                 },
                 error: (error) => {
-                    this.logger.error(
+                    logger.error(
                         `ERROR impossible to process template  ${this.cardState.templateName} : ${error} `
                     );
                     this.htmlTemplateContent = this.sanitizer.bypassSecurityTrustHtml('');
@@ -157,7 +156,7 @@ export class TemplateRenderingComponent implements OnChanges, OnInit, OnDestroy,
             });
         } else {
             this.htmlTemplateContent = ' TECHNICAL ERROR - NO TEMPLATE AVAILABLE';
-            this.logger.error(
+            logger.error(
                 `ERROR No template for process ${this.card.process} version ${this.card.processVersion} with state ${this.card.state}`
             );
         }

@@ -12,7 +12,6 @@ import {ConfigService} from 'app/business/services/config.service';
 import {EntitiesService} from 'app/business/services/users/entities.service';
 import {EntitiesTree} from '@ofModel/processes.model';
 import {Entity} from '@ofModel/entity.model';
-import {OpfabLoggerService} from 'app/business/services/logs/opfab-logger.service';
 import {FormControl, FormGroup} from '@angular/forms';
 import {MultiSelectConfig, MultiSelectOption} from '@ofModel/multiselect.model';
 import {OpfabAPIService} from 'app/business/services/opfabAPI.service';
@@ -48,8 +47,7 @@ export class UserCardRecipientsFormComponent implements OnInit, OnChanges {
     constructor(
         private configService: ConfigService,
         private entitiesService: EntitiesService,
-        private opfabAPIService: OpfabAPIService,
-        private opfabLogger: OpfabLoggerService
+        private opfabAPIService: OpfabAPIService
     ) {
         this.useDescriptionFieldForEntityList = this.configService.getConfigValue(
             'usercard.useDescriptionFieldForEntityList',

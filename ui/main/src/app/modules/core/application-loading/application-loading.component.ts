@@ -14,7 +14,7 @@ import {ConfigService} from 'app/business/services/config.service';
 import {EntitiesService} from 'app/business/services/users/entities.service';
 import {GroupsService} from 'app/business/services/users/groups.service';
 import {I18nService} from 'app/business/services/translation/i18n.service';
-import {LogOption, OpfabLoggerService} from 'app/business/services/logs/opfab-logger.service';
+import {LogOption, LoggerService as logger} from 'app/business/services/logs/logger.service';
 import {ProcessesService} from 'app/business/services/businessconfig/processes.service';
 import {UserService} from 'app/business/services/users/user.service';
 import {Utilities} from 'app/business/common/utilities';
@@ -37,6 +37,8 @@ import {BusinessDataService} from 'app/business/services/businessconfig/business
 import {Router} from '@angular/router';
 import {OpfabAPIService} from 'app/business/services/opfabAPI.service';
 import {loadBuildInTemplates} from 'app/business/buildInTemplates/templatesLoader';
+import {RemoteLoggerServer} from 'app/business/server/remote-logger.server';
+import {RemoteLoggerService} from 'app/business/services/logs/remote-logger.service';
 
 declare const opfab: any;
 @Component({
@@ -76,7 +78,6 @@ export class ApplicationLoadingComponent implements OnInit {
         private groupsService: GroupsService,
         private businessDataService: BusinessDataService,
         private processesService: ProcessesService,
-        private logger: OpfabLoggerService,
         private globalStyleService: GlobalStyleService,
         private lightCardsStoreService: LightCardsStoreService,
         private opfabEventStreamServer: OpfabEventStreamServer,
@@ -84,6 +85,7 @@ export class ApplicationLoadingComponent implements OnInit {
         private applicationUpdateService: ApplicationUpdateService,
         private systemNotificationService: SystemNotificationService,
         private opfabAPIService: OpfabAPIService,
+        private remoteLoggerServer: RemoteLoggerServer,
         private router: Router,
         private ngZone: NgZone
     ) {}
@@ -99,17 +101,17 @@ export class ApplicationLoadingComponent implements OnInit {
             //This configuration needs to be loaded first as it defines the authentication mode
             next: (config) => {
                 if (config) {
-                    this.logger.info(`Configuration loaded (web-ui.json)`);
+                    logger.info(`Configuration loaded (web-ui.json)`);
                     this.setTitleInBrowser();
-                    this.listenForRemoteLogActivation();
+                    this.setLoggerConfiguration();
                     this.loadTranslation(config);
                     this.loadEnvironmentName();
                 } else {
-                    this.logger.info('No valid web-ui.json configuration file, stop application loading');
+                    logger.info('No valid web-ui.json configuration file, stop application loading');
                 }
             },
             error: catchError((err, caught) => {
-                this.logger.error('Impossible to load configuration file web-ui.json' + err);
+                logger.error('Impossible to load configuration file web-ui.json' + err);
                 return caught;
             })
         });
@@ -128,16 +130,17 @@ export class ApplicationLoadingComponent implements OnInit {
         this.titleService.setTitle(title);
     }
 
-    private listenForRemoteLogActivation() {
+    private setLoggerConfiguration() {
+        RemoteLoggerService.setRemoteLoggerServer(this.remoteLoggerServer);
         this.configService
         .getConfigValueAsObservable('settings.remoteLoggingEnabled', false)
-        .subscribe((remoteLoggingEnabled) => this.logger.setRemoteLoggerActive(remoteLoggingEnabled));
+        .subscribe((remoteLoggingEnabled) => RemoteLoggerService.setRemoteLoggerActive(remoteLoggingEnabled));
     }
 
     private loadTranslation(config) {
         if (config.i18n.supported.locales) {
             this.i18nService.loadGlobalTranslations(config.i18n.supported.locales).subscribe(() => {
-                this.logger.info(
+                logger.info(
                     'opfab translation loaded for locales: ' + this.translateService.getLangs(),
                     LogOption.LOCAL_AND_REMOTE
                 );
@@ -150,7 +153,7 @@ export class ApplicationLoadingComponent implements OnInit {
                     this.launchAuthenticationProcess();
                 }
             });
-        } else this.logger.error('No locales define (value i18.supported.locales not present in web-ui.json)');
+        } else logger.error('No locales define (value i18.supported.locales not present in web-ui.json)');
         this.i18nService.initLocale();
     }
 
@@ -169,7 +172,7 @@ export class ApplicationLoadingComponent implements OnInit {
 
     private launchAuthenticationProcess(): void {
         this.loadingInProgress = true;
-        this.logger.info(`Launch authentication process`);
+        logger.info(`Launch authentication process`);
         this.waitForEndOfAuthentication();
         this.authService.initializeAuthentication();
         if (this.authService.getAuthMode() === AuthenticationMode.PASSWORD)
@@ -190,7 +193,7 @@ export class ApplicationLoadingComponent implements OnInit {
     private waitForEndOfAuthentication(): void {
         CurrentUserStore.getInstance().getCurrentUserLogin().subscribe((identifier) => {
             if (identifier) {
-                this.logger.info(`User ${identifier} logged`);
+                logger.info(`User ${identifier} logged`);
                 this.synchronizeUserTokenWithOpfabUserDatabase();
                 this.showLoginScreen = false;
                 this.userLogin = identifier;
@@ -201,8 +204,8 @@ export class ApplicationLoadingComponent implements OnInit {
 
     private synchronizeUserTokenWithOpfabUserDatabase() {
         this.userService.synchronizeWithToken().subscribe({
-            next: () => this.logger.info('Synchronization of user token with user database done'),
-            error: () => this.logger.warn('Impossible to synchronize user token with user database')
+            next: () => logger.info('Synchronization of user token with user database done'),
+            error: () => logger.warn('Impossible to synchronize user token with user database')
         });
     }
 
@@ -210,16 +213,16 @@ export class ApplicationLoadingComponent implements OnInit {
         this.settingsService.getUserSettings().subscribe({
             next: (response) => {
                 if (response.status === ServerResponseStatus.OK) {
-                    this.logger.info('Settings loaded' + response.data);
+                    logger.info('Settings loaded' + response.data);
                     this.configService.overrideConfigSettingsWithUserSettings(response.data);
                     this.checkIfAccountIsAlreadyUsed();
                 } else {
-                    if (response.status === ServerResponseStatus.NOT_FOUND) this.logger.info('No settings for user');
+                    if (response.status === ServerResponseStatus.NOT_FOUND) logger.info('No settings for user');
                     else if (response.status === ServerResponseStatus.FORBIDDEN) {
-                        this.logger.error('Access forbidden when loading settings');
+                        logger.error('Access forbidden when loading settings');
                         this.authService.logout();
                         return;
-                    } else this.logger.error('Error when loading settings' + response.status);
+                    } else logger.error('Error when loading settings' + response.status);
                     this.checkIfAccountIsAlreadyUsed();
                 }
             }
