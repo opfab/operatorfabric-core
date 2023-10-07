@@ -47,6 +47,10 @@ export class OpfabLoggerService {
     error(log: string, logOption: LogOption = LogOption.LOCAL) {
         this.log(log, 'ERROR', logOption);
     }
+
+    public setRemoteLoggerActive(active: boolean) {
+        this.remoteLogger.setRemoteLoggerActive(active);
+    }
 }
 
 export enum LogOption {

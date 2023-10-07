@@ -13,18 +13,14 @@ import {getSeveralRandomLightCards} from '@tests/helpers';
 import {RemoteLoggerServiceMock} from '@tests/mocks/remote-logger.service.mock';
 import {FilterService} from './filter.service';
 import {OpfabLoggerService} from '../logs/opfab-logger.service';
-import {ConfigService} from '../config.service';
-import {ConfigServerMock} from '@tests/mocks/configServer.mock';
 
 describe('NewFilterService ', () => {
-    let configServerMock: ConfigServerMock;
     let service: FilterService;
     const ONE_HOUR = 3600000;
 
     beforeEach(() => {
-        configServerMock = new ConfigServerMock();
         const loggerService = new OpfabLoggerService(
-            new RemoteLoggerServiceMock(new ConfigService(configServerMock), null)
+            new RemoteLoggerServiceMock(null)
         );
         service = new FilterService(loggerService);
     });

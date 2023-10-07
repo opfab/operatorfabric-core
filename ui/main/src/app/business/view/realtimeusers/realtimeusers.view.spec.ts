@@ -71,7 +71,7 @@ describe('Realtimeusers', () => {
             new ServerResponse(realtimeScreensTestConfig, ServerResponseStatus.OK, '')
         );
         opfabLoggerService = new OpfabLoggerService(
-            new RemoteLoggerServiceMock(new ConfigService(configServerMock), null)
+            new RemoteLoggerServiceMock(null)
         );
     }
 
