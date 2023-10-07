@@ -10,13 +10,14 @@
 import {Injectable} from '@angular/core';
 import {Filter, FilterType} from '@ofModel/feed-filter.model';
 import {LightCard, Severity} from '@ofModel/light-card.model';
-import {LogOption, OpfabLoggerService} from 'app/business/services/logs/opfab-logger.service';
+import {LogOption, LoggerService as logger} from 'app/business/services/logs/logger.service';
 import {Observable, Subject, ReplaySubject} from 'rxjs';
 
 @Injectable({
     providedIn: 'root'
 })
 export class FilterService {
+
     private static TWO_HOURS_IN_MILLIS = 2 * 60 * 60 * 1000;
     private static TWO_DAYS_IN_MILLIS = 48 * 60 * 60 * 1000;
 
@@ -25,7 +26,7 @@ export class FilterService {
     private newBusinessDateFilter = new Subject();
     private filterChanges = new ReplaySubject(1);
 
-    constructor(private logger: OpfabLoggerService) {
+    constructor() {
         this.initFilter();
     }
 
@@ -49,7 +50,7 @@ export class FilterService {
                 filterToUpdate.status = status;
             }
         }
-        this.logger.debug('Filter change : type= ' + filterType + ' ,active=' + active + ' ,value= '  + JSON.stringify(status),LogOption.REMOTE);
+        logger.debug('Filter change : type= ' + filterType + ' ,active=' + active + ' ,value= '  + JSON.stringify(status),LogOption.REMOTE);
         this.filterChanges.next(true);
     }
 

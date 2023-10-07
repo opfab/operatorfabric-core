@@ -9,7 +9,7 @@
 
 import {Component, HostListener, TemplateRef, ViewChild} from '@angular/core';
 import {NgbModalRef} from '@ng-bootstrap/ng-bootstrap';
-import {LogOption, OpfabLoggerService} from 'app/business/services/logs/opfab-logger.service';
+import {LogOption, LoggerService as logger} from 'app/business/services/logs/logger.service';
 import {RemoteLoggerService} from 'app/business/services/logs/remote-logger.service';
 import {SoundNotificationService} from 'app/business/services/notifications/sound-notification.service';
 import {OpfabEventStreamService} from './business/services/events/opfabEventStream.service';
@@ -34,9 +34,9 @@ export class AppComponent {
     @HostListener('document:visibilitychange')
     onVisibilityChange() {
         if (document.hidden) {
-            this.logger.info('Application tab is not visible anymore', LogOption.REMOTE);
+            logger.info('Application tab is not visible anymore', LogOption.REMOTE);
         } else {
-            this.logger.info('Application tab is visible again', LogOption.REMOTE);
+            logger.info('Application tab is visible again', LogOption.REMOTE);
         }
         return null;
     }
@@ -46,9 +46,9 @@ export class AppComponent {
     // this method force the closing of the HTTP connection when exiting opfab page
     @HostListener('window:beforeunload')
     onBeforeUnload() {
-        this.logger.info('Unload opfab', LogOption.LOCAL_AND_REMOTE);
+        logger.info('Unload opfab', LogOption.LOCAL_AND_REMOTE);
         this.opfabEventStreamService.closeEventStream();
-        this.remoteLogger.flush(); // flush log before exiting opfab
+        RemoteLoggerService.flush(); // flush log before exiting opfab
         return null;
     }
 
@@ -60,7 +60,7 @@ export class AppComponent {
     @HostListener('window:pageshow', ['$event'])
     pageShow(event) {
         if (event.persisted) {
-            this.logger.info('This page was restored from the bfcache , force opfab restart ', LogOption.LOCAL);
+            logger.info('This page was restored from the bfcache , force opfab restart ', LogOption.LOCAL);
             location.reload();
         }
     }
@@ -73,12 +73,11 @@ export class AppComponent {
 
     constructor(
         private soundNotificationService: SoundNotificationService,
-        private logger: OpfabLoggerService,
         private opfabEventStreamService: OpfabEventStreamService,
-        private remoteLogger: RemoteLoggerService,
         private routerNavigationService: RouterNavigationService, // put it here to have it injected and started a startup
         private selectedCardLoaderService: SelectedCardLoaderService  // put it here to have it injected and started a startup
-    ) {}
+    ) {
+    }
 
     onApplicationLoaded() {
         this.applicationLoaded = true;

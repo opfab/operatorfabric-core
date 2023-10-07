@@ -9,7 +9,7 @@
 
 import {Component, OnInit, TemplateRef, ViewChild} from '@angular/core';
 import {NgbModal, NgbModalRef} from '@ng-bootstrap/ng-bootstrap';
-import {LogOption, OpfabLoggerService} from 'app/business/services/logs/opfab-logger.service';
+import {LogOption, LoggerService as logger} from 'app/business/services/logs/logger.service';
 import {SoundNotificationService} from 'app/business/services/notifications/sound-notification.service';
 
 // Due to auto-policy in firefox and chromium based browsers, if the user does not interact with the application
@@ -25,11 +25,11 @@ import {SoundNotificationService} from 'app/business/services/notifications/soun
 })
 export class SoundActivationComponent implements OnInit {
     @ViewChild('noSound') noSoundPopupRef: TemplateRef<any>;
+
     private modalRef: NgbModalRef;
 
     constructor(
         private soundNotificationService: SoundNotificationService,
-        private logger: OpfabLoggerService,
         private modalService: NgbModal
     ) {}
 
@@ -48,7 +48,7 @@ export class SoundActivationComponent implements OnInit {
                 const context = new AudioContext();
                 if (context.state !== 'running') {
                     context.resume();
-                    this.logger.info('Sound not activated', LogOption.REMOTE);
+                    logger.info('Sound not activated', LogOption.REMOTE);
                     this.modalRef = this.modalService.open(this.noSoundPopupRef, {
                         centered: true,
                         backdrop: 'static'
@@ -59,7 +59,7 @@ export class SoundActivationComponent implements OnInit {
     }
 
     public closeModal() {
-        this.logger.info('Sound activated', LogOption.REMOTE);
+        logger.info('Sound activated', LogOption.REMOTE);
         this.modalRef.close();
     }
 }

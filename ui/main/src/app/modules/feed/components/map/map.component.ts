@@ -24,7 +24,7 @@ import Overlay from 'ol/Overlay';
 import {Style, Fill, Stroke, Circle} from 'ol/style';
 import {Attribution, ZoomToExtent, Control, defaults as defaultControls} from 'ol/control';
 import {ConfigService} from 'app/business/services/config.service';
-import {OpfabLoggerService} from 'app/business/services/logs/opfab-logger.service';
+import {LoggerService as logger} from 'app/business/services/logs/logger.service';
 import {MapService} from 'app/business/services/map.service';
 import Chart from 'chart.js/auto';
 import ChartDataLabels from 'chartjs-plugin-datalabels';
@@ -41,6 +41,7 @@ let self;
     styleUrls: ['./map.component.scss']
 })
 export class MapComponent implements OnInit, OnDestroy, AfterViewChecked {
+
     private unsubscribe$ = new Subject<void>();
     private map: OpenLayersMap;
     private vectorLayer: VectorLayer<VectorSource<any>>;
@@ -50,7 +51,6 @@ export class MapComponent implements OnInit, OnDestroy, AfterViewChecked {
     constructor(
         private lightCardsFeedFilterService: LightCardsFeedFilterService,
         private configService: ConfigService,
-        private logger: OpfabLoggerService,
         private mapService: MapService,
         private translate: TranslateService,
         private globalStyleService: GlobalStyleService,
@@ -300,7 +300,7 @@ export class MapComponent implements OnInit, OnDestroy, AfterViewChecked {
                     feature.set('lightCard', lightCard, true);
                     featureArray.push(feature);
                 } catch (e) {
-                    this.logger.error(
+                    logger.error(
                         `Unable to parse wktGeometry: ${e} for cardId [${lightCard.id}] and process [${lightCard.process}]`
                     );
                 }

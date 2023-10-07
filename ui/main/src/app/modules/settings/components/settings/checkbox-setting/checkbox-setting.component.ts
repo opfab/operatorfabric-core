@@ -12,7 +12,6 @@ import {BaseSettingDirective} from '../base-setting/base-setting.directive';
 import {FormControl, FormGroup} from '@angular/forms';
 import {ConfigService} from 'app/business/services/config.service';
 import {SettingsService} from 'app/business/services/users/settings.service';
-import {OpfabLoggerService} from 'app/business/services/logs/opfab-logger.service';
 
 @Component({
     selector: 'of-checkbox-setting',
@@ -26,10 +25,9 @@ export class CheckboxSettingComponent extends BaseSettingDirective implements On
 
     constructor(
         protected configService: ConfigService,
-        protected settingsService: SettingsService,
-        protected logger: OpfabLoggerService
+        protected settingsService: SettingsService
     ) {
-        super(configService, settingsService,logger);
+        super(configService, settingsService);
     }
 
     ngOnInit() {

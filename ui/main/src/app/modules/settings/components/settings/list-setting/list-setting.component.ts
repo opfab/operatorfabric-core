@@ -13,7 +13,6 @@ import {ConfigService} from 'app/business/services/config.service';
 import {SettingsService} from 'app/business/services/users/settings.service';
 import {FormControl, FormGroup, Validators} from '@angular/forms';
 import {MultiSelectConfig} from '@ofModel/multiselect.model';
-import {OpfabLoggerService} from 'app/business/services/logs/opfab-logger.service';
 
 @Component({
     selector: 'of-list-setting',
@@ -28,10 +27,9 @@ export class ListSettingComponent extends BaseSettingDirective implements OnInit
 
     constructor(
         protected configService: ConfigService,
-        protected settingsService: SettingsService,
-        protected logger: OpfabLoggerService
+        protected settingsService: SettingsService
     ) {
-        super(configService, settingsService,logger);
+        super(configService, settingsService);
     }
 
     ngOnInit() {

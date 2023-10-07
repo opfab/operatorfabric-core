@@ -9,7 +9,7 @@
 
 import {Component, Input, TemplateRef, ViewChild} from '@angular/core';
 import {NgbModal, NgbModalRef} from '@ng-bootstrap/ng-bootstrap';
-import {LogOption, OpfabLoggerService} from 'app/business/services/logs/opfab-logger.service';
+import {LogOption, LoggerService as logger} from 'app/business/services/logs/logger.service';
 import {UserService} from 'app/business/services/users/user.service';
 import {ApplicationLoadingStep} from '../application-loading-step';
 import {SessionManagerService} from 'app/business/services/session-manager.service';
@@ -30,8 +30,7 @@ export class AccountAlreadyUsedComponent extends ApplicationLoadingStep {
     constructor(
         private userService: UserService,
         private modalService: NgbModal,
-        private sessionManager: SessionManagerService,
-        private logger: OpfabLoggerService
+        private sessionManager: SessionManagerService
     ) {
         super();
     }
@@ -39,13 +38,13 @@ export class AccountAlreadyUsedComponent extends ApplicationLoadingStep {
     public execute() {
         this.userService.willNewSubscriptionDisconnectAnExistingSubscription().subscribe((isUserAlreadyConnected) => {
             if (isUserAlreadyConnected) {
-                this.logger.info('Login ' + this.userLogin + ' is already connected', LogOption.LOCAL_AND_REMOTE);
+                logger.info('Login ' + this.userLogin + ' is already connected', LogOption.LOCAL_AND_REMOTE);
                 this.questionModal = this.modalService.open(this.sessionAlreadyInUsePopupRef, {
                     centered: true,
                     backdrop: 'static'
                 });
             } else {
-                this.logger.info('Login ' + this.userLogin + ' is not already used ', LogOption.LOCAL_AND_REMOTE);
+                logger.info('Login ' + this.userLogin + ' is not already used ', LogOption.LOCAL_AND_REMOTE);
                 this.isDisconnectedByUserWithSameUrl = true;
                 this.sendEventAccountAlreadyInUseCheckDone();
             }
@@ -53,13 +52,13 @@ export class AccountAlreadyUsedComponent extends ApplicationLoadingStep {
     }
 
     public loginEvenIfAccountIsAlreadyUsed(): void {
-        this.logger.info('Login as ' + this.userLogin + ' even if account is already used ', LogOption.REMOTE);
+        logger.info('Login as ' + this.userLogin + ' even if account is already used ', LogOption.REMOTE);
         this.questionModal.close();
         this.sendEventAccountAlreadyInUseCheckDone();
     }
 
     public logoutBecauseAccountIsAlreadyUsed() {
-        this.logger.info('Logout with user ' + this.userLogin + ' because account already used ', LogOption.REMOTE);
+        logger.info('Logout with user ' + this.userLogin + ' because account already used ', LogOption.REMOTE);
         this.questionModal.close();
         this.sessionManager.logout();
     }

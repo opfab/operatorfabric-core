@@ -26,7 +26,7 @@ import {AlertMessageService} from 'app/business/services/alert-message.service';
 import {CardService} from 'app/business/services/card/card.service';
 import {ServerResponseStatus} from 'app/business/server/serverResponse';
 import {OpfabAPIService} from 'app/business/services/opfabAPI.service';
-import {OpfabLoggerService} from 'app/business/services/logs/opfab-logger.service';
+import {LoggerService as logger} from 'app/business/services/logs/logger.service';
 
 class FormResult {
     valid: boolean;
@@ -87,8 +87,7 @@ export class CardResponseComponent implements OnChanges, OnInit {
         private userService: UserService,
         private userPermissionsService: UserPermissionsService,
         private processService: ProcessesService,
-        private opfabAPIService: OpfabAPIService,
-        private logger: OpfabLoggerService,
+        private opfabAPIService: OpfabAPIService
 
     ) {
         const userWithPerimeters = this.userService.getCurrentUserWithPerimeters();
@@ -161,7 +160,7 @@ export class CardResponseComponent implements OnChanges, OnInit {
             const publisherEntity = responseData.publisher ?? this.userEntityIdToUseForResponse;
 
             if (!this.userEntityIdsPossibleForResponse.includes(publisherEntity)) {
-                this.logger.error("Response card publisher not allowed : " + publisherEntity);
+                logger.error("Response card publisher not allowed : " + publisherEntity);
                 this.displayMessage(ResponseI18nKeys.SUBMIT_ERROR_MSG, null, MessageLevel.ERROR);
                 return;
             }

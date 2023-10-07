@@ -32,7 +32,7 @@ import {UserPermissionsService} from 'app/business/services/user-permissions.ser
 import {DisplayContext} from '@ofModel/template.model';
 import {LightCardsStoreService} from 'app/business/services/lightcards/lightcards-store.service';
 import {CardComponent} from '../../card.component';
-import {OpfabLoggerService} from 'app/business/services/logs/opfab-logger.service';
+import {LoggerService as logger} from 'app/business/services/logs/logger.service';
 import {UserWithPerimeters} from '@ofModel/userWithPerimeters.model';
 import {SelectedCardService} from 'app/business/services/card/selectedCard.service';
 import {CardService} from 'app/business/services/card/card.service';
@@ -92,8 +92,7 @@ export class CardBodyComponent implements OnChanges, OnInit, OnDestroy {
         private userPermissionsService: UserPermissionsService,
         private lightCardsStoreService: LightCardsStoreService,
         private selectedCardService: SelectedCardService,
-        private opfabAPIService: OpfabAPIService,
-        private logger: OpfabLoggerService
+        private opfabAPIService: OpfabAPIService
     ) {
         this.routerStore= RouterStore.getInstance();
         this.userWithPerimeters = this.userService.getCurrentUserWithPerimeters();
@@ -218,7 +217,7 @@ export class CardBodyComponent implements OnChanges, OnInit, OnDestroy {
             .resolveEntitiesAllowedToSendCards(entitiesAllowedOrRequiredToRespond)
             .map((entity) => entity.id);
 
-        this.logger.debug(
+        logger.debug(
             `Detail card - entities allowed to respond = ${this.entityIdsAllowedOrRequiredToRespondAndAllowedToSendCards}`
         );
     }
@@ -227,7 +226,7 @@ export class CardBodyComponent implements OnChanges, OnInit, OnDestroy {
         this.userEntityIdsPossibleForResponse = this.entityIdsAllowedOrRequiredToRespondAndAllowedToSendCards.filter(
             (entityId) => this.user.entities.includes(entityId)
         );
-        this.logger.debug(`Detail card - user entities allowed to respond = ${this.userEntityIdsPossibleForResponse}`);
+        logger.debug(`Detail card - user entities allowed to respond = ${this.userEntityIdsPossibleForResponse}`);
         if (this.userEntityIdsPossibleForResponse.length === 1)
             this.userEntityIdToUseForResponse = this.userEntityIdsPossibleForResponse[0];
     }

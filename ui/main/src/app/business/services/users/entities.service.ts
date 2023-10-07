@@ -13,10 +13,10 @@ import {Observable, Subject} from 'rxjs';
 import {Entity} from '@ofModel/entity.model';
 import {Injectable} from '@angular/core';
 import {CachedCrudService} from 'app/business/services/cached-crud-service';
-import {OpfabLoggerService} from '../logs/opfab-logger.service';
 import {EntitiesServer} from '../../server/entities.server';
 import {ServerResponseStatus} from '../../server/serverResponse';
 import {EntitiesTree} from '@ofModel/processes.model';
+import {LoggerService as logger} from '../logs/logger.service';
 
 
 @Injectable({
@@ -30,9 +30,8 @@ export class EntitiesService extends CachedCrudService {
      * @param httpClient - Angular build-in
      */
     constructor(
-        protected loggerService: OpfabLoggerService,
         private entitiesServer: EntitiesServer) {
-        super(loggerService);
+        super();
     }
 
     deleteById(id: string) {
@@ -170,7 +169,7 @@ export class EntitiesService extends CachedCrudService {
                     const entity = this.getEntities().find((e) => e.id === r.id);
                     if (entity)
                         resolvedEntities.push(entity);
-                    else this.loggerService.info('Entity not found : ' + r.id);
+                    else logger.info('Entity not found : ' + r.id);
                 }
             }
         });

@@ -14,7 +14,6 @@ import {UserPreferencesService} from 'app/business/services/users/user-preferenc
 import {MultiSelectConfig} from '@ofModel/multiselect.model';
 import {EntitiesService} from 'app/business/services/users/entities.service';
 import {ConfigServer} from 'app/business/server/config.server';
-import {OpfabLoggerService} from 'app/business/services/logs/opfab-logger.service';
 import {RealtimeUsersView} from 'app/business/view/realtimeusers/realtimeusers.view';
 import {RealtimePage} from 'app/business/view/realtimeusers/realtimePage';
 
@@ -24,6 +23,7 @@ import {RealtimePage} from 'app/business/view/realtimeusers/realtimePage';
     styleUrls: ['./realtimeusers.component.scss']
 })
 export class RealtimeusersComponent implements OnInit, OnDestroy {
+
     realTimeScreensForm: FormGroup<{
         realTimeScreen: FormControl<string | null>;
     }>;
@@ -41,7 +41,6 @@ export class RealtimeusersComponent implements OnInit, OnDestroy {
 
     constructor(
         private configServer: ConfigServer,
-        private logger: OpfabLoggerService,
         private userService: UserService,
         private entitiesService: EntitiesService,
         private userPreferences: UserPreferencesService
@@ -54,7 +53,6 @@ export class RealtimeusersComponent implements OnInit, OnDestroy {
 
         this.realtimeusersView = new RealtimeUsersView(
             this.configServer,
-            this.logger,
             this.userService,
             this.entitiesService
         );

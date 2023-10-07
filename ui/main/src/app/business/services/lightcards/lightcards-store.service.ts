@@ -25,7 +25,7 @@ import {
 import {UserService} from 'app/business/services/users/user.service';
 import {OpfabEventStreamService} from 'app/business/services/events/opfabEventStream.service';
 import {CardOperationType} from '@ofModel/card-operation.model';
-import {LogOption, OpfabLoggerService} from 'app/business/services/logs/opfab-logger.service';
+import {LogOption, LoggerService as logger} from 'app/business/services/logs/logger.service';
 import {SelectedCardService} from 'app/business/services/card/selectedCard.service';
 import {AcknowledgeService} from "../acknowledge.service";
 
@@ -48,6 +48,7 @@ import {AcknowledgeService} from "../acknowledge.service";
     providedIn: 'root'
 })
 export class LightCardsStoreService {
+
     private lightCards = new Map();
     private childCards = new Map();
     private lightCardsEvents = new Subject<Map<any, any>>();
@@ -70,7 +71,6 @@ export class LightCardsStoreService {
         private userService: UserService,
         private opfabEventStreamService: OpfabEventStreamService,
         private selectedCardService: SelectedCardService,
-        private logger: OpfabLoggerService,
         private acknowledgeService: AcknowledgeService
     ) {
         this.getLightCardsWithLimitedUpdateRate().subscribe();
@@ -151,7 +151,7 @@ export class LightCardsStoreService {
             next: (operation) => {
                 switch (operation.type) {
                     case CardOperationType.ADD:
-                        this.logger.info(
+                        logger.info(
                             'LightCardStore - Receive card to add id=' +
                                 operation.card.id +
                                 ' with date=' +
@@ -163,14 +163,14 @@ export class LightCardsStoreService {
                             this.selectedCardService.setSelectedCardId(operation.card.id); // to update the selected card
                         break;
                     case CardOperationType.DELETE:
-                        this.logger.info(
+                        logger.info(
                             `LightCardStore - Receive card to delete id=` + operation.cardId,
                             LogOption.LOCAL_AND_REMOTE
                         );
                         this.removeLightCard(operation.cardId);
                         break;
                     case CardOperationType.ACK:
-                        this.logger.info(
+                        logger.info(
                             'LightCardStore - Receive ack on card uid=' +
                                 operation.cardUid +
                                 ', id=' +
@@ -184,7 +184,7 @@ export class LightCardsStoreService {
                         });
                         break;
                     default:
-                        this.logger.info(
+                        logger.info(
                             `LightCardStore - Unknown operation ` + operation.type + ` for card id=` + operation.cardId,
                             LogOption.LOCAL_AND_REMOTE
                         );

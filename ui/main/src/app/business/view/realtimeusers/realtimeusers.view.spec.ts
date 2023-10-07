@@ -8,9 +8,6 @@
  */
 
 import {ConfigServerMock} from '@tests/mocks/configServer.mock';
-import {ConfigService} from 'app/business/services/config.service';
-import {RemoteLoggerServiceMock} from '@tests/mocks/remote-logger.service.mock';
-import {OpfabLoggerService} from 'app/business/services/logs/opfab-logger.service';
 import {UserServerMock} from '@tests/mocks/userServer.mock';
 import {UserService} from 'app/business/services/users/user.service';
 import {EntitiesServerMock} from '@tests/mocks/entitiesServer.mock';
@@ -26,7 +23,6 @@ describe('Realtimeusers', () => {
     let clock: jasmine.Clock;
 
     let configServerMock: ConfigServerMock;
-    let opfabLoggerService: OpfabLoggerService;
     let userServerMock: UserServerMock;
     let userService: UserService;
     let entitiesServerMock: EntitiesServerMock;
@@ -53,7 +49,7 @@ describe('Realtimeusers', () => {
         clock = jasmine.clock();
         clock.install();
 
-        view = new RealtimeUsersView(configServerMock, opfabLoggerService, userService, entitiesService);
+        view = new RealtimeUsersView(configServerMock,userService, entitiesService);
         view.getPage().subscribe((realtimePage) => {
             page = realtimePage;
             view.setSelectedScreen('0');
@@ -70,19 +66,17 @@ describe('Realtimeusers', () => {
         configServerMock.setResponseForRealTimeScreenConfiguration(
             new ServerResponse(realtimeScreensTestConfig, ServerResponseStatus.OK, '')
         );
-        opfabLoggerService = new OpfabLoggerService(
-            new RemoteLoggerServiceMock(null)
-        );
+
     }
 
     function mockUserService() {
         userServerMock = new UserServerMock();
-        userService = new UserService(userServerMock, opfabLoggerService);
+        userService = new UserService(userServerMock);
     }
 
     function mockEntitiesService() {
         entitiesServerMock = new EntitiesServerMock();
-        entitiesService = new EntitiesService(opfabLoggerService, entitiesServerMock);
+        entitiesService = new EntitiesService(entitiesServerMock);
         entitiesService.loadAllEntitiesData().subscribe();
     }
 

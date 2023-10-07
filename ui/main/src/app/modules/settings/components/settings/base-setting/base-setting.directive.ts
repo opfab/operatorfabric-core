@@ -14,14 +14,15 @@ import {UntypedFormGroup} from '@angular/forms';
 import * as _ from 'lodash-es';
 import {ConfigService} from 'app/business/services/config.service';
 import {SettingsService} from 'app/business/services/users/settings.service';
-import {OpfabLoggerService} from 'app/business/services/logs/opfab-logger.service';
 import {CurrentUserStore} from 'app/business/store/current-user.store';
+import {LoggerService as logger} from 'app/business/services/logs/logger.service';
 
 @Directive()
 export abstract class BaseSettingDirective implements OnInit, OnDestroy {
     @Input() public settingPath: string;
     @Input() public messagePlaceholder: string;
     @Input() public requiredField: boolean;
+
     private ngUnsubscribe$ = new Subject<void>();
     protected setting$;
     form: UntypedFormGroup;
@@ -29,8 +30,7 @@ export abstract class BaseSettingDirective implements OnInit, OnDestroy {
 
     protected constructor(
         protected configService: ConfigService,
-        protected settingsService: SettingsService,
-        protected logger: OpfabLoggerService
+        protected settingsService: SettingsService
     ) {}
 
     ngOnInit() {
@@ -81,8 +81,8 @@ export abstract class BaseSettingDirective implements OnInit, OnDestroy {
         settings[this.settingPath] = value.setting;
         this.configService.setConfigValue('settings.' + this.settingPath, value.setting);
         this.settingsService.patchUserSettings(settings).subscribe({
-                next : (res) => this.logger.debug("Receive response for patch settings"+ JSON.stringify(res)),
-                error:  (error) => this.logger.error("Error in patching settings" + JSON.stringify(error))
+                next : (res) => logger.debug("Receive response for patch settings"+ JSON.stringify(res)),
+                error:  (error) => logger.error("Error in patching settings" + JSON.stringify(error))
         });
     }
 

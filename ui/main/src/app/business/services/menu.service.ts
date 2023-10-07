@@ -12,7 +12,7 @@ import {ConfigService} from 'app/business/services/config.service';
 import {UserService} from 'app/business/services/users/user.service';
 import {CoreMenuConfig, CustomMenu} from '@ofModel/menu.model';
 import {PermissionEnum} from '@ofModel/permission.model';
-import {OpfabLoggerService} from "./logs/opfab-logger.service";
+import {LoggerService as logger} from "./logs/logger.service";
 
 @Injectable({
     providedIn: 'root'
@@ -23,7 +23,7 @@ export class MenuService {
 
     constructor(private configService: ConfigService,
                 private userService: UserService,
-                private logger: OpfabLoggerService) {
+                ) {
     }
 
     public getCurrentUserCustomMenus(menus: CustomMenu[]): CustomMenu[] {
@@ -56,7 +56,7 @@ export class MenuService {
                 }
             });
         } else {
-            this.logger.error('No navigationBar property set in ui-menu.json');
+            logger.error('No navigationBar property set in ui-menu.json');
             return [];
         }
         return visibleCoreMenus;
@@ -72,7 +72,7 @@ export class MenuService {
                 })
                 .map((coreMenuConfig: CoreMenuConfig) => coreMenuConfig.opfabCoreMenuId);
         } else {
-            this.logger.error('No topRightIconMenus property set in ui-menu.json');
+            logger.error('No topRightIconMenus property set in ui-menu.json');
             return [];
         }
     }
@@ -87,7 +87,7 @@ export class MenuService {
                 })
                 .map((coreMenuConfig: CoreMenuConfig) => coreMenuConfig.opfabCoreMenuId);
         } else {
-            this.logger.error('No topRightMenus property set in ui-menu.json');
+            logger.error('No topRightMenus property set in ui-menu.json');
             return [];
         }
     }

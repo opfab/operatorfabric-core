@@ -12,7 +12,6 @@ import {Observable, Subject} from 'rxjs';
 import {Device, Notification, UserConfiguration} from '@ofModel/external-devices.model';
 import {Injectable} from '@angular/core';
 import {ErrorService} from 'app/business/services/error-service';
-import {OpfabLoggerService} from 'app/business/services/logs/opfab-logger.service';
 import {ExternalDevicesServer} from '../../server/external-devices.server';
 import {ServerResponseStatus} from '../../server/serverResponse';
 
@@ -26,8 +25,8 @@ export class ExternalDevicesService extends ErrorService {
      * @constructor
      * @param httpClient - Angular build-in
      */
-    constructor(private server: ExternalDevicesServer, protected loggerService: OpfabLoggerService) {
-        super(loggerService);
+    constructor(private server: ExternalDevicesServer) {
+        super();
     }
 
     sendNotification(notification: Notification): Observable<any> {
