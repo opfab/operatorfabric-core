@@ -35,7 +35,6 @@ export class AuthService {
     private login: string;
 
     private authHandler: AuthHandler;
-    private currentUserStore: CurrentUserStore;
 
     constructor(
         private configService: ConfigService,
@@ -45,17 +44,16 @@ export class AuthService {
         private guidService: GuidService,
         private userService: UserService
     ) {
-        this.currentUserStore = CurrentUserStore.getInstance();
     }
 
     public initializeAuthentication() {
         this.login = localStorage.getItem('identifier');
-        this.currentUserStore.setToken(localStorage.getItem('token'));
+        CurrentUserStore.setToken(localStorage.getItem('token'));
         this.mode = this.configService
             .getConfigValue('security.oauth2.flow.mode', 'password')
             .toLowerCase() as AuthenticationMode;
         logger.info(`Auth mode set to ${this.mode}`);
-        if (this.mode !== AuthenticationMode.NONE) this.currentUserStore.setAuthenticationUsesToken();
+        if (this.mode !== AuthenticationMode.NONE) CurrentUserStore.setAuthenticationUsesToken();
         switch (this.mode) {
             case AuthenticationMode.PASSWORD:
                 this.authHandler = new PasswordAuthenticationHandler(this.configService, this.httpClient);
@@ -90,18 +88,18 @@ export class AuthService {
                 user.clientId = this.guidService.getCurrentGuid();
                 this.login = user.login;
                 this.saveUserInStorage(user);
-                this.currentUserStore.setToken(user.token);
+                CurrentUserStore.setToken(user.token);
             }
-            this.currentUserStore.setCurrentUserAuthenticationValid(this.login);
+            CurrentUserStore.setCurrentUserAuthenticationValid(this.login);
             this.authHandler.regularCheckIfTokenExpireSoon();
             this.authHandler.regularCheckIfTokenIsExpired();
             this.redirectToCurrentLocation();
         });
         this.authHandler.getTokenWillSoonExpire().subscribe(() => {
-            this.currentUserStore.setSessionWillSoonExpire();
+            CurrentUserStore.setSessionWillSoonExpire();
         });
         this.authHandler.getTokenExpired().subscribe(() => {
-            this.currentUserStore.setSessionExpired();
+            CurrentUserStore.setSessionExpired();
         });
         this.authHandler.getRejectAuthentication().subscribe((message) => {
             logger.error('Authentication reject ' + JSON.stringify(message));

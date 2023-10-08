@@ -51,7 +51,7 @@ export abstract class BaseSettingDirective implements OnInit, OnDestroy {
                 .subscribe((next) => this.dispatch(this.convert(next)))
         );
 
-        CurrentUserStore.getInstance().getCurrentUserLogin()
+        CurrentUserStore.getCurrentUserLogin()
             .pipe(
                 takeUntil(this.ngUnsubscribe$),
                 map((id) => {

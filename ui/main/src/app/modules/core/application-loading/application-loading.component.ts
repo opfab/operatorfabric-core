@@ -191,7 +191,7 @@ export class ApplicationLoadingComponent implements OnInit {
     }
 
     private waitForEndOfAuthentication(): void {
-        CurrentUserStore.getInstance().getCurrentUserLogin().subscribe((identifier) => {
+        CurrentUserStore.getCurrentUserLogin().subscribe((identifier) => {
             if (identifier) {
                 logger.info(`User ${identifier} logged`);
                 this.synchronizeUserTokenWithOpfabUserDatabase();

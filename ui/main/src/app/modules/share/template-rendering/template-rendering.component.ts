@@ -113,7 +113,7 @@ export class TemplateRenderingComponent implements OnChanges, OnInit, OnDestroy,
     private getUserContextAndRenderTemplate() {
         if (!this.userContext) {
             const user = this.userService.getCurrentUserWithPerimeters().userData;
-            const token = CurrentUserStore.getInstance().getToken();
+            const token = CurrentUserStore.getToken();
             this.userContext = new UserContext(
                 user.login,
                 token,
