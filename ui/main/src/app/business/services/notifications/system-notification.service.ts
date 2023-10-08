@@ -31,7 +31,6 @@ export class SystemNotificationService {
     private systemNotificationEnabled: Map<Severity, boolean>;
     private incomingCardOrReminder = new Subject();
     private lastSentCardId: string;
-    private alertMessageService: AlertMessageService;
 
     constructor(
         private lightCardsFeedFilterService: LightCardsFeedFilterService,
@@ -39,7 +38,6 @@ export class SystemNotificationService {
         private configService: ConfigService,
         private router: Router
     ) {
-        this.alertMessageService = AlertMessageService.getInstance();
     }
 
     public initSystemNotificationService() {
@@ -81,7 +79,7 @@ export class SystemNotificationService {
             Notification.requestPermission();
         } else {
             if (Notification.permission === "denied") {
-                this.alertMessageService.sendAlertMessage({
+                AlertMessageService.sendAlertMessage({
                     message: null,
                     level: MessageLevel.BUSINESS,
                     i18n: {key: 'settings.systemNotificationsDisabledInBrowser'}

@@ -11,23 +11,14 @@ import {Message} from '@ofModel/message.model';
 import {Observable, Subject} from 'rxjs';
 
 export class AlertMessageService {
-    private static instance: AlertMessageService;
-    private alertEvent = new Subject<Message>();
 
-    private constructor() {}
+    private static alertEvent = new Subject<Message>();
 
-    public static getInstance(): AlertMessageService {
-        if (!AlertMessageService.instance) {
-            AlertMessageService.instance = new AlertMessageService();
-        }
-        return AlertMessageService.instance;
+    public static sendAlertMessage(message: Message) {
+        AlertMessageService.alertEvent.next(message);
     }
 
-    public sendAlertMessage(message: Message) {
-        this.alertEvent.next(message);
-    }
-
-    public getAlertMessage(): Observable<Message> {
-        return this.alertEvent.asObservable();
+    public static getAlertMessage(): Observable<Message> {
+        return AlertMessageService.alertEvent.asObservable();
     }
 }

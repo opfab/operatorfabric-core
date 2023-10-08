@@ -202,7 +202,7 @@ export class EditGroupModalComponent implements OnInit {
             })
         );
 
-        AlertMessageService.getInstance().sendAlertMessage({message: res.originalError.error.message, level: MessageLevel.ERROR});
+        AlertMessageService.sendAlertMessage({message: res.originalError.error.message, level: MessageLevel.ERROR});
 
     }
 

@@ -32,7 +32,7 @@ export class AlertView {
         if (this.configService.getConfigValue('alerts.hideBusinessMessages', false))
             this.hideMessagesLevel.push(MessageLevel.BUSINESS);
 
-        AlertMessageService.getInstance().getAlertMessage().subscribe((message: Message) => this.processAlertMessage(message));
+        AlertMessageService.getAlertMessage().subscribe((message: Message) => this.processAlertMessage(message));
     }
 
     private processAlertMessage(message: Message) {
