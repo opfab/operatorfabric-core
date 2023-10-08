@@ -235,7 +235,7 @@ export class EditPerimeterModalComponent implements OnInit {
     }
 
     onSaveError(res) {
-        AlertMessageService.getInstance().sendAlertMessage({message: res.originalError.error.message, level: MessageLevel.ERROR});
+        AlertMessageService.sendAlertMessage({message: res.originalError.error.message, level: MessageLevel.ERROR});
     }
 
     public removeOrClearStateRight(indexToRemove: number) {

@@ -25,22 +25,17 @@ import {AlertMessageService} from './alert-message.service';
     providedIn: 'root'
 })
 export abstract class ErrorService {
-    protected alertMessageService: AlertMessageService;
-
-    constructor() {
-        this.alertMessageService = AlertMessageService.getInstance();
-    }
 
     protected handleError(error: HttpErrorResponse) {
         if (error.status === 404) {
-            this.alertMessageService.sendAlertMessage({
+            AlertMessageService.sendAlertMessage({
                 message: '',
                 i18n: {key: 'errors.notFound'},
                 level: MessageLevel.ERROR
             });
         }
         if (error.status === 403) {
-            this.alertMessageService.sendAlertMessage({
+            AlertMessageService.sendAlertMessage({
                 message: '',
                 i18n: {key: 'errors.notAllowed'},
                 level: MessageLevel.ERROR
@@ -52,14 +47,14 @@ export abstract class ErrorService {
 
     protected handleServerResponseError(error: ServerResponse<any>) {
         if (error.status === ServerResponseStatus.NOT_FOUND) {
-            this.alertMessageService.sendAlertMessage({
+            AlertMessageService.sendAlertMessage({
                 message: '',
                 i18n: {key: 'errors.notFound'},
                 level: MessageLevel.ERROR
             });
         }
         if (error.status === ServerResponseStatus.FORBIDDEN) {
-            this.alertMessageService.sendAlertMessage({
+            AlertMessageService.sendAlertMessage({
                 message: '',
                 i18n: {key: 'errors.notAllowed'},
                 level: MessageLevel.ERROR

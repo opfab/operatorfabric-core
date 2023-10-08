@@ -178,7 +178,7 @@ export class UserActionLogsTableComponent {
             if (!card) {
                 this.cardLoadingInProgress = false;
                 if (this.modalRef) this.modalRef.close();
-                AlertMessageService.getInstance().sendAlertMessage({message: '', i18n: {key: "feed.selectedCardDeleted"}, level: MessageLevel.ERROR});
+                AlertMessageService.sendAlertMessage({message: '', i18n: {key: "feed.selectedCardDeleted"}, level: MessageLevel.ERROR});
             } else if (card.card.initialParentCardUid)
                 this.openCardDetail(card.card.initialParentCardUid);
             else {
