@@ -17,14 +17,11 @@ import {CurrentUserStore} from '../../store/current-user.store';
     providedIn: 'root'
 })
 export class SettingsService {
-
     readonly usersUrl: string;
     private userId: string;
 
     constructor(private settingsServer: SettingsServer) {
-        CurrentUserStore.getInstance()
-            .getCurrentUserLogin()
-            .subscribe((id) => (this.userId = id));
+        CurrentUserStore.getCurrentUserLogin().subscribe((id) => (this.userId = id));
     }
 
     getUserSettings(): Observable<any> {

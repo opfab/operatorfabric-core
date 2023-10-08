@@ -64,7 +64,7 @@ describe('ActivityAreaView', () => {
 
     function mockSettingsService() {
         settingsServerMock = new SettingsServerMock();
-        CurrentUserStore.getInstance().setCurrentUserAuthenticationValid('currentUser');
+        CurrentUserStore.setCurrentUserAuthenticationValid('currentUser');
         settingsService = new SettingsService(settingsServerMock);
     }
 

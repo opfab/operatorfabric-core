@@ -20,7 +20,6 @@ import {SoundNotificationService} from './notifications/sound-notification.servi
 })
 export class SessionManagerService {
 
-    private currentUserStore: CurrentUserStore
     private endSessionEvent = new Subject<string>();
 
     constructor(
@@ -28,14 +27,13 @@ export class SessionManagerService {
         private soundNotificationService: SoundNotificationService,
         private authService: AuthService
     ) {
-        this.currentUserStore = CurrentUserStore.getInstance();
         this.subscribeToSessionWillSoonExpire();
         this.subscribeToSessionExpired();
         this.subscribeToSessionClosedByNewUser();
     }
 
     private subscribeToSessionWillSoonExpire() {
-        this.currentUserStore.getSessionWillSoonExpire().subscribe(() => {
+        CurrentUserStore.getSessionWillSoonExpire().subscribe(() => {
             // We inform the user that session is end before it really ends
             // this lets the time for the UI to call external-devices services to send alarm
             // otherwise the call for alarm would be reject as token will have expired
@@ -46,7 +44,7 @@ export class SessionManagerService {
     }
 
     private subscribeToSessionExpired() {
-        this.currentUserStore.getSessionExpired().subscribe(() => {
+        CurrentUserStore.getSessionExpired().subscribe(() => {
             logger.info('Session expired');
             // If session is expired, all requests to external devices will fail
             // so we can stop sending request to external devices

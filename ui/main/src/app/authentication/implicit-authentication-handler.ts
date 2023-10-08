@@ -16,8 +16,6 @@ import {CurrentUserStore} from 'app/business/store/current-user.store';
 
 export class ImplicitAuthenticationHandler extends AuthHandler {
 
-    private currentUserStore: CurrentUserStore
-
     constructor(
         configService: ConfigService,
         httpClient: HttpClient,
@@ -25,7 +23,6 @@ export class ImplicitAuthenticationHandler extends AuthHandler {
 
     ) {
         super(configService, httpClient);
-        this.currentUserStore = CurrentUserStore.getInstance();
     }
 
     public async initializeAuthentication() {
@@ -75,7 +72,7 @@ export class ImplicitAuthenticationHandler extends AuthHandler {
             const expirationDate = new Date(this.oauthService.getAccessTokenExpiration());
             localStorage.setItem('token', token);
             localStorage.setItem('expirationDate', expirationDate?.getTime().toString());
-            this.currentUserStore.setToken(token);
+            CurrentUserStore.setToken(token);
         }, 5000);
     }
 

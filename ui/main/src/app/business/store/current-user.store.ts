@@ -11,58 +11,49 @@ import {ReplaySubject, Observable, Subject} from 'rxjs';
 
 export class CurrentUserStore {
 
-    private static instance: CurrentUserStore;
-    private connectionEvent = new ReplaySubject<string>(1);
-    private sessionWillSoonExpireEvent = new Subject<boolean>();
-    private sessionExpiredEvent = new Subject<boolean>();
-    private token: string;
-    private authenticationUsesToken = false;
+    private static connectionEvent = new ReplaySubject<string>(1);
+    private static sessionWillSoonExpireEvent = new Subject<boolean>();
+    private static sessionExpiredEvent = new Subject<boolean>();
+    private static token: string;
+    private static authenticationUsesToken = false;
 
-
-    private constructor() {}
-
-    public static getInstance():CurrentUserStore {
-        if (!CurrentUserStore.instance) CurrentUserStore.instance = new CurrentUserStore();
-        return CurrentUserStore.instance;
-    }
-
-    public getCurrentUserLogin(): Observable<string> {
+    public static getCurrentUserLogin(): Observable<string> {
         return this.connectionEvent.asObservable();
     }
 
-    public setSessionWillSoonExpire() {
+    public static setSessionWillSoonExpire() {
         this.sessionWillSoonExpireEvent.next(true);
     }
 
-    public getSessionWillSoonExpire(): Observable<boolean> {
+    public static getSessionWillSoonExpire(): Observable<boolean> {
         return this.sessionWillSoonExpireEvent.asObservable();
     }
 
-    public setSessionExpired() {
+    public static setSessionExpired() {
         this.sessionExpiredEvent.next(true);
     }
 
-    public getSessionExpired(): Observable<boolean> {
+    public static getSessionExpired(): Observable<boolean> {
         return this.sessionExpiredEvent.asObservable();
     }
 
-    public setCurrentUserAuthenticationValid(login: string) {
+    public static setCurrentUserAuthenticationValid(login: string) {
         this.connectionEvent.next(login);
     }
 
-    public setToken(token: string) {
+    public static setToken(token: string) {
         this.token = token;
     }
 
-    public getToken(): string {
+    public static getToken(): string {
         return this.token;
     }
 
-    public setAuthenticationUsesToken() {
+    public static setAuthenticationUsesToken() {
         this.authenticationUsesToken = true;
     }
 
-    public doesAuthenticationUseToken(): boolean {
+    public static doesAuthenticationUseToken(): boolean {
         return this.authenticationUsesToken;
     }
 }

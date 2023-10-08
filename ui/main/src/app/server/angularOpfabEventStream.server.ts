@@ -24,7 +24,6 @@ import { ConfigService } from 'app/business/services/config.service';
 @Injectable()
 export class AngularOpfabEventStreamServer extends AngularServer implements OpfabEventStreamServer {
 
-    private currentUserStore: CurrentUserStore;
     private static TWO_MINUTES = 120000;
     private eventStreamUrl: string;
     private closeEventStreamUrl: string;
@@ -48,7 +47,6 @@ export class AngularOpfabEventStreamServer extends AngularServer implements Opfa
         private httpClient: HttpClient
     ) {
         super();
-        this.currentUserStore = CurrentUserStore.getInstance();
         const clientId = guidService.getCurrentGuidString();
         this.eventStreamUrl = `${environment.url}/cards/cardSubscription?clientId=${clientId}&version=${packageInfo.opfabVersion}`;
         this.closeEventStreamUrl = `${environment.url}/cards/cardSubscription?clientId=${clientId}`;
@@ -62,8 +60,8 @@ export class AngularOpfabEventStreamServer extends AngularServer implements Opfa
 
         // security header needed here as SSE request are not intercepted by our angular header interceptor
         let securityHeader;
-        if (this.currentUserStore.doesAuthenticationUseToken()) {
-            securityHeader = {Authorization: `Bearer ${this.currentUserStore.getToken()}`}
+        if (CurrentUserStore.doesAuthenticationUseToken()) {
+            securityHeader = {Authorization: `Bearer ${CurrentUserStore.getToken()}`}
         }
         this.eventSource = new EventSourcePolyfill(`${this.eventStreamUrl}&notification=true`, {
             headers: securityHeader
