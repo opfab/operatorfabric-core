@@ -38,7 +38,6 @@ export class CardActionsComponent implements OnChanges, OnDestroy {
     @ViewChild('userCardCreateCopy') userCardCreateCopyTemplate: TemplateRef<any>;
     @ViewChild('deleteCardConfirmation') deleteCardConfirmationTemplate: TemplateRef<any>;
 
-    private routerStore: RouterStore;
     private editModal: NgbModalRef;
     private deleteConfirmationModal: NgbModalRef;
     public showEditButton = false;
@@ -56,7 +55,6 @@ export class CardActionsComponent implements OnChanges, OnDestroy {
         private cardService: CardService,
         private router: Router
     ) {
-        this.routerStore = RouterStore.getInstance();
     }
 
     ngOnChanges(): void {
@@ -128,17 +126,17 @@ export class CardActionsComponent implements OnChanges, OnDestroy {
 
     private reopenCardDetailOnceEditionIsFinished() {
         if (
-            this.routerStore.getCurrentPageType() !== PageType.CALENDAR &&
-            this.routerStore.getCurrentPageType() !== PageType.MONITORING &&
-            this.routerStore.getCurrentPageType() !== PageType.DASHBOARD
+            RouterStore.getCurrentPageType() !== PageType.CALENDAR &&
+            RouterStore.getCurrentPageType() !== PageType.MONITORING &&
+            RouterStore.getCurrentPageType() !== PageType.DASHBOARD
         ) {
             this.editModal.result.then(
                 () => {
                     // If modal is closed
-                    this.router.navigate([this.routerStore.getCurrentRoute(), 'cards', this.card.id]);
+                    this.router.navigate([RouterStore.getCurrentRoute(), 'cards', this.card.id]);
                 },
                 () => {
-                    this.router.navigate([this.routerStore.getCurrentRoute(), 'cards', this.card.id]);
+                    this.router.navigate([RouterStore.getCurrentRoute(), 'cards', this.card.id]);
                 }
             );
         }

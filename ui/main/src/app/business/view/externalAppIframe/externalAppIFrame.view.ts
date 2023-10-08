@@ -14,7 +14,6 @@ import {Observable, ReplaySubject, skip, Subject, takeUntil} from 'rxjs';
 import {environment} from '@env/environment';
 
 export class ExternalAppIFrameView {
-    private routerStore: RouterStore;
     urlSubject: Subject<string> = new ReplaySubject<string>(1);
     unsubscribe$: Subject<void> = new Subject<void>();
     private businessConfigUrl = `${environment.url}/#businessconfigparty`;
@@ -23,13 +22,12 @@ export class ExternalAppIFrameView {
         private configService: ConfigService,
         private globalStyleService: GlobalStyleService
     ) {
-        this.routerStore = RouterStore.getInstance();
         this.listenForExternalAppRoute();
         this.reloadIframeWhenGlobalStyleChange();
     }
 
     private listenForExternalAppRoute() {
-        this.routerStore
+        RouterStore
             .getCurrentRouteEvent()
             .pipe(takeUntil(this.unsubscribe$))
             .subscribe((route) => {
@@ -93,7 +91,7 @@ export class ExternalAppIFrameView {
         this.globalStyleService
             .getStyleChange()
             .pipe(takeUntil(this.unsubscribe$), skip(1))
-            .subscribe(() => this.computeURL(this.routerStore.getCurrentRoute()));
+            .subscribe(() => this.computeURL(RouterStore.getCurrentRoute()));
     }
 
     public getExternalAppUrl(): Observable<string> {

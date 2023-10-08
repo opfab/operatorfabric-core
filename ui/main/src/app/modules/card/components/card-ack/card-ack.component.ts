@@ -45,9 +45,6 @@ export class CardAckComponent implements OnInit, OnChanges, OnDestroy {
 
     @Output() closeCardDetail: EventEmitter<boolean> = new EventEmitter<boolean>();
 
-    
-
-    private routerStore: RouterStore;
     public ackOrUnackInProgress = false;
     public showAckButton = false;
     public showUnAckButton = false;
@@ -66,7 +63,6 @@ export class CardAckComponent implements OnInit, OnChanges, OnDestroy {
         private processService: ProcessesService,
         private lightCardsStoreService: LightCardsStoreService
     ) {
-        this.routerStore= RouterStore.getInstance();
         const userWithPerimeters = this.userService.getCurrentUserWithPerimeters();
         if (userWithPerimeters) this.user = userWithPerimeters.userData;
     }
@@ -114,10 +110,10 @@ export class CardAckComponent implements OnInit, OnChanges, OnDestroy {
 
     private setAcknowledgeButtonVisibility() {
         this.showAckButton = this.card.hasBeenAcknowledged ? false
-            : this.isAcknowledgmentAllowed() && this.routerStore.getCurrentPageType() !== PageType.CALENDAR;
+            : this.isAcknowledgmentAllowed() && RouterStore.getCurrentPageType() !== PageType.CALENDAR;
 
         this.showUnAckButton = this.card.hasBeenAcknowledged && this.isCardAcknowledgedAtEntityLevel() && !this.isReadOnlyUser ? false
-            : this.isCancelAcknowledgmentAllowed() &&  this.routerStore.getCurrentPageType() !== PageType.CALENDAR;
+            : this.isCancelAcknowledgmentAllowed() &&  RouterStore.getCurrentPageType() !== PageType.CALENDAR;
     }
 
     private isAcknowledgmentAllowed(): boolean {
