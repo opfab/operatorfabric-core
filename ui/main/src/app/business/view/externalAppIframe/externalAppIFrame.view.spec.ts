@@ -22,7 +22,6 @@ import {ExternalAppIFrameView} from './externalAppIFrame.view';
 describe('ExternalAppIFrame view ', () => {
     let configService: ConfigService;
     let configServerMock: ConfigServerMock;
-    let routerStore: RouterStore;
     let globalStyleService: GlobalStyleService;
 
     const menuConf = {
@@ -51,13 +50,12 @@ describe('ExternalAppIFrame view ', () => {
     beforeEach(() => {
         configServerMock = new ConfigServerMock();
         configService = new ConfigService(configServerMock);
-        routerStore = RouterStore.getInstance();
         const mockUserServer = new UserServerMock();
 
         const userService = new UserService(mockUserServer);
         const menuService = new MenuService(configService, userService);
         globalStyleService = new GlobalStyleService(new UserPreferencesService(), configService, menuService);
-        
+
         // Mock method not supported in test context
         history.replaceState = () => {};
     });
@@ -70,7 +68,7 @@ describe('ExternalAppIFrame view ', () => {
 
         const externalAppIFrameView = new ExternalAppIFrameView(configService, globalStyleService);
 
-        routerStore.setCurrentRoute('/businessconfigparty/menu1/entry1/');
+        RouterStore.setCurrentRoute('/businessconfigparty/menu1/entry1/');
 
         const url = await firstValueFrom(externalAppIFrameView.getExternalAppUrl());
 
@@ -85,7 +83,7 @@ describe('ExternalAppIFrame view ', () => {
 
         const externalAppIFrameView = new ExternalAppIFrameView(configService, globalStyleService);
 
-        routerStore.setCurrentRoute('/businessconfigparty/menu1/entry2/');
+        RouterStore.setCurrentRoute('/businessconfigparty/menu1/entry2/');
 
         const url = await firstValueFrom(externalAppIFrameView.getExternalAppUrl());
 
@@ -101,7 +99,7 @@ describe('ExternalAppIFrame view ', () => {
 
         const externalAppIFrameView = new ExternalAppIFrameView(configService, globalStyleService);
 
-        routerStore.setCurrentRoute('/businessconfigparty/menu1/entry2');
+        RouterStore.setCurrentRoute('/businessconfigparty/menu1/entry2');
 
         const url = await firstValueFrom(externalAppIFrameView.getExternalAppUrl());
 
@@ -123,7 +121,7 @@ describe('ExternalAppIFrame view ', () => {
 
         const externalAppIFrameView = new ExternalAppIFrameView(configService, globalStyleService);
 
-        routerStore.setCurrentRoute('/businessconfigparty/menu1/entry1/?my_param=param&my_param2=param2');
+        RouterStore.setCurrentRoute('/businessconfigparty/menu1/entry1/?my_param=param&my_param2=param2');
 
         const url = await firstValueFrom(externalAppIFrameView.getExternalAppUrl());
 
@@ -146,7 +144,7 @@ describe('ExternalAppIFrame view ', () => {
 
         const externalAppIFrameView = new ExternalAppIFrameView(configService, globalStyleService);
 
-        routerStore.setCurrentRoute('/businessconfigparty/menu1/entry1/?my_param=param&my_param2=param2');
+        RouterStore.setCurrentRoute('/businessconfigparty/menu1/entry1/?my_param=param&my_param2=param2');
 
         const url = await firstValueFrom(externalAppIFrameView.getExternalAppUrl());
 
@@ -171,7 +169,7 @@ describe('ExternalAppIFrame view ', () => {
 
         const externalAppIFrameView = new ExternalAppIFrameView(configService, globalStyleService);
 
-        routerStore.setCurrentRoute('/businessconfigparty/menu1/entry1/%253Fmy_param=param&my_param2=param2');
+        RouterStore.setCurrentRoute('/businessconfigparty/menu1/entry1/%253Fmy_param=param&my_param2=param2');
 
         const url = await firstValueFrom(externalAppIFrameView.getExternalAppUrl());
 
@@ -186,7 +184,7 @@ describe('ExternalAppIFrame view ', () => {
 
         const externalAppIFrameView = new ExternalAppIFrameView(configService, globalStyleService);
 
-        routerStore.setCurrentRoute('/businessconfigparty/menu1/entry2/?my_param2=param2');
+        RouterStore.setCurrentRoute('/businessconfigparty/menu1/entry2/?my_param2=param2');
 
         const url = await firstValueFrom(externalAppIFrameView.getExternalAppUrl());
 
@@ -201,7 +199,7 @@ describe('ExternalAppIFrame view ', () => {
 
         const externalAppIFrameView = new ExternalAppIFrameView(configService, globalStyleService);
 
-        routerStore.setCurrentRoute('/businessconfigparty/menu1/entry1/deep/deep2/query?my_param=param');
+        RouterStore.setCurrentRoute('/businessconfigparty/menu1/entry1/deep/deep2/query?my_param=param');
 
         const url = await firstValueFrom(externalAppIFrameView.getExternalAppUrl());
 
@@ -215,7 +213,7 @@ describe('ExternalAppIFrame view ', () => {
 
         const externalAppIFrameView = new ExternalAppIFrameView(configService, globalStyleService);
 
-        routerStore.setCurrentRoute('/businessconfigparty/menu1/entry1');
+        RouterStore.setCurrentRoute('/businessconfigparty/menu1/entry1');
 
         const url = await firstValueFrom(externalAppIFrameView.getExternalAppUrl());
         expect(url).toEqual('https://test/?opfab_theme=DAY');

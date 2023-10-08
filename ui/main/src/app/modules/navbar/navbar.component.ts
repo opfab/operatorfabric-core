@@ -78,7 +78,7 @@ export class NavbarComponent implements OnInit {
 
     ngOnInit() {
 
-        RouterStore.getInstance().getCurrentRouteEvent().subscribe((route)=> {
+        RouterStore.getCurrentRouteEvent().subscribe((route)=> {
             this.currentRoute = route.split('/')[1];
         });
 

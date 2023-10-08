@@ -37,7 +37,7 @@ export class RouterNavigationService {
 
     updateRouterStore() {
         this.router.events.pipe(filter((event) => event instanceof NavigationEnd)).subscribe((event: NavigationEnd) => {
-            RouterStore.getInstance().setCurrentRoute(event.url);
+            RouterStore.setCurrentRoute(event.url);
         });
     }
 

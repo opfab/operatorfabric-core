@@ -58,8 +58,6 @@ export class CardBodyComponent implements OnChanges, OnInit, OnDestroy {
 
     @Output() closeCardDetail: EventEmitter<boolean> = new EventEmitter<boolean>();
 
-    private routerStore: RouterStore;
-
     public displayContext: DisplayContext = DisplayContext.REALTIME;
     public isUserEnabledToRespond = false;
     public lttdExpiredIsTrue: boolean;
@@ -94,7 +92,6 @@ export class CardBodyComponent implements OnChanges, OnInit, OnDestroy {
         private selectedCardService: SelectedCardService,
         private opfabAPIService: OpfabAPIService
     ) {
-        this.routerStore= RouterStore.getInstance();
         this.userWithPerimeters = this.userService.getCurrentUserWithPerimeters();
         if (this.userWithPerimeters) {
             this.user = this.userWithPerimeters.userData;
@@ -103,7 +100,7 @@ export class CardBodyComponent implements OnChanges, OnInit, OnDestroy {
 
     ngOnInit() {
         this.integrateChildCardsInRealTime();
-        const pageType = this.routerStore.getCurrentPageType();
+        const pageType = RouterStore.getCurrentPageType();
         if (pageType === PageType.CALENDAR || pageType === PageType.MONITORING || pageType === PageType.DASHBOARD) this.templateOffset = 35;
         if (pageType !== PageType.CALENDAR && pageType !== PageType.MONITORING && pageType !== PageType.DASHBOARD) this.showMaxAndReduceButton = true;
     }
@@ -360,7 +357,7 @@ export class CardBodyComponent implements OnChanges, OnInit, OnDestroy {
             this.selectedCardService.clearSelectedCardId();
         } else {
             this.selectedCardService.clearSelectedCardId();
-            this.router.navigate(['/' + this.routerStore.getCurrentRoute().split('/')[1]]);
+            this.router.navigate(['/' + RouterStore.getCurrentRoute().split('/')[1]]);
         }
     }
 

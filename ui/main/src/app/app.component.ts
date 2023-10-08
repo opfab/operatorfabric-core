@@ -67,7 +67,7 @@ export class AppComponent {
 
     @HostListener('document:click', ['$event.target'])
     public onPageClickClearSoundNotification() {
-        const pageType =  RouterStore.getInstance().getCurrentPageType();
+        const pageType =  RouterStore.getCurrentPageType();
         if (pageType === PageType.FEED) this.soundNotificationService.clearOutstandingNotifications();
     }
 
