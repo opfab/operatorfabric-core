@@ -13,7 +13,6 @@ import {Router} from '@angular/router';
 import {Message} from '@ofModel/message.model';
 import {OAuthService} from 'angular-oauth2-oidc';
 import {ConfigService} from 'app/business/services/config.service';
-import {GuidService} from 'app/business/services/guid.service';
 import {LoggerService as logger} from 'app/business/services/logs/logger.service';
 import {UserService} from 'app/business/services/users/user.service';
 import {CurrentUserStore} from 'app/business/store/current-user.store';
@@ -41,7 +40,6 @@ export class AuthService {
         private router: Router,
         private oauthServiceForImplicitMode: OAuthService,
         private httpClient: HttpClient,
-        private guidService: GuidService,
         private userService: UserService
     ) {
     }
@@ -85,7 +83,6 @@ export class AuthService {
     private startAuthentication() {
         this.authHandler.getUserAuthenticated().subscribe((user) => {
             if (user !== null) {
-                user.clientId = this.guidService.getCurrentGuid();
                 this.login = user.login;
                 this.saveUserInStorage(user);
                 CurrentUserStore.setToken(user.token);
@@ -112,7 +109,6 @@ export class AuthService {
         localStorage.setItem('identifier', user.login);
         localStorage.setItem('token', user.token);
         localStorage.setItem('expirationDate', user.expirationDate?.getTime().toString());
-        localStorage.setItem('clientId', user.clientId.toString());
     }
 
     private redirectToCurrentLocation(): void {
@@ -121,7 +117,6 @@ export class AuthService {
             const lastDestination = hashLength > 2 ? pathname.substring(1, hashLength) : '/feed';
             this.router.navigate([decodeURI(lastDestination)]);
     }
-    
 
     public rejectLogin(message: Message) {
         this.removeUserFromStorage();
@@ -134,7 +129,6 @@ export class AuthService {
         localStorage.removeItem('identifier');
         localStorage.removeItem('token');
         localStorage.removeItem('expirationDate');
-        localStorage.removeItem('clientId');
     }
 
     public logout() {

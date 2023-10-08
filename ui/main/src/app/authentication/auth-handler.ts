@@ -14,7 +14,6 @@ import {Message, MessageLevel} from '@ofModel/message.model';
 import {ConfigService} from 'app/business/services/config.service';
 import {LoggerService as logger} from 'app/business/services/logs/logger.service';
 import {AuthenticatedUser} from './auth.model';
-import {Guid} from 'guid-typescript';
 import jwt_decode from 'jwt-decode';
 import {Observable, of, Subject} from 'rxjs';
 
@@ -167,7 +166,6 @@ export class HttpAuthInfo {
     constructor(
         public access_token: string,
         public expires_in: number,
-        public clientId: Guid,
         public identifier?: string
     ) {}
 }
