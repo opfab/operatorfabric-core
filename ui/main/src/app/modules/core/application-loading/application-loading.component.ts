@@ -8,7 +8,6 @@
  */
 
 import {Component, NgZone, OnInit, Output, ViewChild} from '@angular/core';
-import {Title} from '@angular/platform-browser';
 import {TranslateService} from '@ngx-translate/core';
 import {ConfigService} from 'app/business/services/config.service';
 import {EntitiesService} from 'app/business/services/users/entities.service';
@@ -67,7 +66,6 @@ export class ApplicationLoadingComponent implements OnInit {
      * NB: I18nService is injected to trigger its constructor at application startup
      */
     constructor(
-        private titleService: Title,
         private authService: AuthService,
         private configService: ConfigService,
         private settingsService: SettingsService,
@@ -126,8 +124,7 @@ export class ApplicationLoadingComponent implements OnInit {
     }
 
     private setTitleInBrowser() {
-        const title = this.configService.getConfigValue('title', 'OperatorFabric');
-        this.titleService.setTitle(title);
+        document.title = this.configService.getConfigValue('title', 'OperatorFabric');
     }
 
     private setLoggerConfiguration() {
