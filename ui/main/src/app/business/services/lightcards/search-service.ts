@@ -32,8 +32,8 @@ export class SearchService {
         if (!this.searchTerm) {
             return cards;
         } else {
-            const titleCards = cards.filter(card => card.titleTranslated.toUpperCase().includes(this.searchTerm));
-            const summaryCards = cards.filter(card => card.summaryTranslated.toUpperCase().includes(this.searchTerm))
+            const titleCards = cards.filter(card => card.titleTranslated?.toUpperCase().includes(this.searchTerm));
+            const summaryCards = cards.filter(card => card.summaryTranslated?.toUpperCase().includes(this.searchTerm))
             const searchedCards = titleCards.concat(summaryCards);
             return searchedCards.filter((card, index) => searchedCards.indexOf(card) === index);
         }
