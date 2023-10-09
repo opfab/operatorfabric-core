@@ -426,8 +426,7 @@ export class TaskUserCardTemplate extends BaseUserCardTemplate {
 
     initInitialDates() {
         const mystartDate = new Date();
-        mystartDate.setTime(mystartDate.getTime());
-        opfab.currentUserCard.setInitialStartDate(mystartDate.getTime() + 3600000);
+        opfab.currentUserCard.setInitialStartDate(mystartDate.getTime());
         opfab.currentUserCard.setInitialEndDate(mystartDate.getTime() + 7 * 24 * 3600000);
     }
 
