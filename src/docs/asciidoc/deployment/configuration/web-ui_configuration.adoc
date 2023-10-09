@@ -136,7 +136,7 @@ For example adding `Keycloak` application, with `'Keycloak'` as `name`, `1` as `
 [source, json]
 ----
 "about": {
-    "keycloack": {
+    "keycloak": {
       "name": "Keycloak",
       "rank": 1,
       "version": "6.0.1"
@@ -175,7 +175,7 @@ Replace the following invalid settings config
   "settings.replayEnabled": true,
   "settings": {
     "about": {
-      "keycloack": {
+      "keycloak": {
         "name": "Keycloak",
         "rank": 2,
         "version": "6.0.1"
@@ -195,7 +195,7 @@ By this valid one :
     "replayInterval": 10,
     "replayEnabled": true,
     "about": {
-      "keycloack": {
+      "keycloak": {
         "name": "Keycloak",
         "rank": 2,
         "version": "6.0.1"

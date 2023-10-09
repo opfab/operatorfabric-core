@@ -1,4 +1,4 @@
-// Copyright (c) 2022 RTE (http://www.rte-france.com)
+// Copyright (c) 2022-2023 RTE (http://www.rte-france.com)
 // See AUTHORS.txt
 // This document is subject to the terms of the Creative Commons Attribution 4.0 International license.
 // If a copy of the license was not distributed with this
@@ -24,7 +24,7 @@ Replace the following invalid config
 ```
   "settings": {
     "about": {
-      "keycloack": {
+      "keycloak": {
         "name": "Keycloak",
         "rank": 2,
         "version": "6.0.1"
@@ -51,7 +51,7 @@ By this valid one :
     "styleWhenNightDayModeDesactivated": "NIGHT"
   },
   "about": {
-    "keycloack": {
+    "keycloak": {
       "name": "Keycloak",
       "rank": 2,
       "version": "6.0.1"
