@@ -53,23 +53,23 @@ export class TaskCardTemplateView {
     }
 
     public getFrequency() {
-        return opfab.currentCard.getCard()?.data?.freq
+        return (opfab.currentUserCard.getEditionMode() !== 'CREATE') ? opfab.currentCard.getCard()?.data?.freq : undefined;
     }
 
     public getWeekDay() {
-        return opfab.currentCard.getCard()?.data?.byweekday
+        return (opfab.currentUserCard.getEditionMode() !== 'CREATE') ? opfab.currentCard.getCard()?.data?.byweekday : undefined;
     }
 
     public getMonth() {
-        return opfab.currentCard.getCard()?.data?.bymonth
+        return (opfab.currentUserCard.getEditionMode() !== 'CREATE') ? opfab.currentCard.getCard()?.data?.bymonth : undefined;
     }
 
     public getMonthDay() {
-        return opfab.currentCard.getCard()?.data?.bymonthday
+        return (opfab.currentUserCard.getEditionMode() !== 'CREATE') ? opfab.currentCard.getCard()?.data?.bymonthday : undefined;
     }
 
     public getSetPos() {
-        return opfab.currentCard.getCard()?.data?.bysetpos
+        return (opfab.currentUserCard.getEditionMode() !== 'CREATE') ? opfab.currentCard.getCard()?.data?.bysetpos : undefined;
     }
 
     public getTaskDescription() {
@@ -82,17 +82,21 @@ export class TaskCardTemplateView {
     }
 
     public getDurationInMinutes(default_value) {
-        return opfab.currentCard.getCard()?.data?.durationInMinutes ?? default_value
+        return (opfab.currentUserCard.getEditionMode() !== 'CREATE') ?  (opfab.currentCard.getCard()?.data?.durationInMinutes ?? default_value) : default_value;
     }
 
     public getMinutesForReminder(default_value) {
-        return opfab.currentCard.getCard()?.data?.minutesForReminder ?? default_value
+        return (opfab.currentUserCard.getEditionMode() !== 'CREATE') ?  (opfab.currentCard.getCard()?.data?.minutesForReminder ?? default_value) : default_value
     }
 
     public getByHourAndMinutes() {
-        let currentDate = new Date();
-        let hour = opfab.currentCard.getCard()?.data?.byhour[0].padStart(2,'0') ?? currentDate.getHours().toString().padStart(2,'0');
-        let minute = opfab.currentCard.getCard()?.data?.byminute[0].padStart(2,'0') ?? currentDate.getMinutes().toString().padStart(2,'0');
+        const currentDate = new Date();
+        let hour = currentDate.getHours().toString().padStart(2,'0');
+        let minute = currentDate.getMinutes().toString().padStart(2,'0');
+        if (opfab.currentUserCard.getEditionMode() !== 'CREATE') {
+            hour = opfab.currentCard.getCard()?.data?.byhour[0].padStart(2,'0') ?? currentDate.getHours().toString().padStart(2,'0');
+            minute = opfab.currentCard.getCard()?.data?.byminute[0].padStart(2,'0') ?? currentDate.getMinutes().toString().padStart(2,'0');
+        }
         return hour + ":" + minute
     }
 }

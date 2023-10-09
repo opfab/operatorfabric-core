@@ -294,9 +294,9 @@ export class TaskUserCardTemplate extends BaseUserCardTemplate {
 
         if (freq === 'MONTHLY') {
             this.displayMonthlyFrequency();
-            this.selectValuesInEditModeForMonthlyFreq();
+            if (opfab.currentUserCard.getEditionMode() !== 'CREATE')  this.selectValuesInEditModeForMonthlyFreq();
         } else {
-            this.selectValuesInEditModeForDailyFreq();
+            if (opfab.currentUserCard.getEditionMode() !== 'CREATE')  this.selectValuesInEditModeForDailyFreq();
         }
     }
 
