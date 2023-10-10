@@ -11,7 +11,6 @@ import {Component, OnDestroy, OnInit} from '@angular/core';
 import {takeUntil} from 'rxjs/operators';
 import {Subject} from 'rxjs';
 import {GlobalStyleService} from 'app/business/services/global-style.service';
-import {ConfigService} from 'app/business/services/config.service';
 import {ExternalAppIFrameView} from 'app/business/view/externalAppIframe/externalAppIFrame.view';
 
 @Component({
@@ -23,16 +22,10 @@ export class ExternalAppIFrameComponent implements OnInit, OnDestroy {
     unsubscribe$: Subject<void> = new Subject<void>();
     private externalAppIFrameView: ExternalAppIFrameView;
 
-    constructor(
-        private configService: ConfigService,
-        private globalStyleService: GlobalStyleService,
-    ) {}
+    constructor(private globalStyleService: GlobalStyleService) {}
 
     ngOnInit() {
-        this.externalAppIFrameView = new ExternalAppIFrameView(
-            this.configService,
-            this.globalStyleService
-        );
+        this.externalAppIFrameView = new ExternalAppIFrameView(this.globalStyleService);
         this.externalAppIFrameView
             .getExternalAppUrl()
             .pipe(takeUntil(this.unsubscribe$))

@@ -28,14 +28,13 @@ export class I18nService {
 
     constructor(
         private configServer: ConfigServer,
-        private translationService: TranslationService,
-        private configService: ConfigService
+        private translationService: TranslationService
     ) {
     }
 
 
     public initLocale() {
-        this.configService
+        ConfigService
             .getConfigValueAsObservable('settings.locale', 'en')
             .subscribe((locale) => this.changeLocale(locale));
     }
@@ -88,7 +87,7 @@ export class I18nService {
     }
 
     public loadTranslationForMenu(): void {
-        this.configService.fetchMenuTranslations().subscribe((locales) => {
+        ConfigService.fetchMenuTranslations().subscribe((locales) => {
             locales.forEach((locale) => {
                 this.translationService.setTranslation(locale.language, locale.i18n, true);
             });

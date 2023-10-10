@@ -38,6 +38,7 @@ import {OpfabAPIService} from 'app/business/services/opfabAPI.service';
 import {loadBuildInTemplates} from 'app/business/buildInTemplates/templatesLoader';
 import {RemoteLoggerServer} from 'app/business/server/remote-logger.server';
 import {RemoteLoggerService} from 'app/business/services/logs/remote-logger.service';
+import {ConfigServer} from 'app/business/server/config.server';
 
 declare const opfab: any;
 @Component({
@@ -67,7 +68,7 @@ export class ApplicationLoadingComponent implements OnInit {
      */
     constructor(
         private authService: AuthService,
-        private configService: ConfigService,
+        private configServer: ConfigServer,
         private settingsService: SettingsService,
         private translateService: TranslateService,
         private i18nService: I18nService,
@@ -89,13 +90,15 @@ export class ApplicationLoadingComponent implements OnInit {
     ) {}
 
     ngOnInit() {
+        ConfigService.setConfigServer(this.configServer)
         // Set default style before login
         this.globalStyleService.setStyle('NIGHT');
+
         this.loadUIConfiguration();
     }
 
     private loadUIConfiguration() {
-        this.configService.loadWebUIConfiguration().subscribe({
+        ConfigService.loadWebUIConfiguration().subscribe({
             //This configuration needs to be loaded first as it defines the authentication mode
             next: (config) => {
                 if (config) {
@@ -116,20 +119,20 @@ export class ApplicationLoadingComponent implements OnInit {
     }
 
     private loadEnvironmentName() {
-        this.environmentName = this.configService.getConfigValue('environmentName');
-        this.environmentColor = this.configService.getConfigValue('environmentColor', 'blue');
+        this.environmentName = ConfigService.getConfigValue('environmentName');
+        this.environmentColor = ConfigService.getConfigValue('environmentColor', 'blue');
         if (this.environmentName) {
             this.displayEnvironmentName = true;
         }
     }
 
     private setTitleInBrowser() {
-        document.title = this.configService.getConfigValue('title', 'OperatorFabric');
+        document.title = ConfigService.getConfigValue('title', 'OperatorFabric');
     }
 
     private setLoggerConfiguration() {
         RemoteLoggerService.setRemoteLoggerServer(this.remoteLoggerServer);
-        this.configService
+        ConfigService
         .getConfigValueAsObservable('settings.remoteLoggingEnabled', false)
         .subscribe((remoteLoggingEnabled) => RemoteLoggerService.setRemoteLoggerActive(remoteLoggingEnabled));
     }
@@ -155,7 +158,7 @@ export class ApplicationLoadingComponent implements OnInit {
     }
 
     private isUrlCheckActivated(): boolean {
-        return this.configService.getConfigValue('checkIfUrlIsLocked', true);
+        return ConfigService.getConfigValue('checkIfUrlIsLocked', true);
     }
 
     private checkIfAppLoadedInAnotherTab(): void {
@@ -211,7 +214,7 @@ export class ApplicationLoadingComponent implements OnInit {
             next: (response) => {
                 if (response.status === ServerResponseStatus.OK) {
                     logger.info('Settings loaded' + response.data);
-                    this.configService.overrideConfigSettingsWithUserSettings(response.data);
+                    ConfigService.overrideConfigSettingsWithUserSettings(response.data);
                     this.checkIfAccountIsAlreadyUsed();
                 } else {
                     if (response.status === ServerResponseStatus.NOT_FOUND) logger.info('No settings for user');
@@ -237,7 +240,7 @@ export class ApplicationLoadingComponent implements OnInit {
 
     private loadAllConfigurations(): void {
         const requestsToLaunch$ = [
-            this.configService.loadUiMenuConfig(),
+            ConfigService.loadUiMenuConfig(),
             this.userService.loadUserWithPerimetersData(),
             this.entitiesService.loadAllEntitiesData(),
             this.groupsService.loadAllGroupsData(),

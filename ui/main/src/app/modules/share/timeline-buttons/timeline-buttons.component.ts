@@ -48,7 +48,6 @@ export class TimelineButtonsComponent implements OnInit, OnDestroy {
     constructor(
         private dateTimeFormatter: DateTimeFormatterService,
         private userPreferences: UserPreferencesService,
-        private configService: ConfigService,
         private filterService: FilterService
     ) {}
 
@@ -87,7 +86,7 @@ export class TimelineButtonsComponent implements OnInit, OnDestroy {
                 domainId: 'Y'
             }
         };
-        const domainsConf = this.configService.getConfigValue('feed.timeline.domains', [
+        const domainsConf = ConfigService.getConfigValue('feed.timeline.domains', [
             'TR',
             'J',
             '7D',

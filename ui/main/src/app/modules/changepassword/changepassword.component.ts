@@ -19,11 +19,11 @@ import {ConfigService} from 'app/business/services/config.service';
 export class ChangepasswordComponent implements OnInit {
     public changePasswordUrl: SafeUrl;
 
-    constructor(private configService: ConfigService, private sanitizer: DomSanitizer) {}
+    constructor(private sanitizer: DomSanitizer) {}
 
     ngOnInit() {
         this.changePasswordUrl = this.sanitizer.bypassSecurityTrustResourceUrl(
-            this.configService.getConfigValue('security.changePasswordUrl')
+            ConfigService.getConfigValue('security.changePasswordUrl')
         );
     }
 }

@@ -40,7 +40,7 @@ export class AngularOpfabEventStreamServer extends AngularServer implements Opfa
     private firstSubscriptionInitDone = false;
     private eventSource;
 
-    constructor(private configService: ConfigService, private httpClient: HttpClient) {
+    constructor(private httpClient: HttpClient) {
         super();
         const subscriptionClientId = Guid.create().toString();
         this.eventStreamUrl = `${environment.url}/cards/cardSubscription?clientId=${subscriptionClientId}&version=${packageInfo.opfabVersion}`;
@@ -50,7 +50,7 @@ export class AngularOpfabEventStreamServer extends AngularServer implements Opfa
     }
 
     public initStream() {
-        this.heartbeatSendingIntervalSeconds = this.configService.getConfigValue('heartbeatSendingInterval', 30);
+        this.heartbeatSendingIntervalSeconds = ConfigService.getConfigValue('heartbeatSendingInterval', 30);
 
         // security header needed here as SSE request are not intercepted by our angular header interceptor
         let securityHeader;

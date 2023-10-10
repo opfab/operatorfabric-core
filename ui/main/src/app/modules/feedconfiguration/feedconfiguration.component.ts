@@ -80,7 +80,6 @@ export class FeedconfigurationComponent implements OnInit, AfterViewInit {
         private settingsService: SettingsService,
         private lightCardStoreService: LightCardsStoreService,
         private translateService: TranslateService,
-        private configService: ConfigService
     ) {
         this.processesStatesLabels = new Map();
         this.processIdsByProcessGroup = new Map();
@@ -314,7 +313,7 @@ export class FeedconfigurationComponent implements OnInit, AfterViewInit {
     ngOnInit() {
         this.currentUserWithPerimeters = this.userService.getCurrentUserWithPerimeters();
 
-        this.userSettings = this.configService.getConfigValue('settings');
+        this.userSettings = ConfigService.getConfigValue('settings');
 
         this.processGroupsAndLabels = this.processesService.getProcessGroupsAndLabels();
         this.processGroupsAndLabels.forEach((group) => {

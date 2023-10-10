@@ -9,7 +9,6 @@
 
 import {Component, Input, OnDestroy, OnInit} from '@angular/core';
 import {BaseSettingDirective} from '../base-setting/base-setting.directive';
-import {ConfigService} from 'app/business/services/config.service';
 import {SettingsService} from 'app/business/services/users/settings.service';
 import {FormControl, FormGroup, Validators} from '@angular/forms';
 import {MultiSelectConfig} from '@ofModel/multiselect.model';
@@ -26,10 +25,9 @@ export class ListSettingComponent extends BaseSettingDirective implements OnInit
 
 
     constructor(
-        protected configService: ConfigService,
         protected settingsService: SettingsService
     ) {
-        super(configService, settingsService);
+        super(settingsService);
     }
 
     ngOnInit() {

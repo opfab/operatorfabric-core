@@ -26,13 +26,12 @@ export class ActivityAreaChoiceAfterLoginComponent extends ApplicationLoadingSte
         private userService: UserService,
         private entitiesService: EntitiesService,
         private modalService: NgbModal,
-        private configService: ConfigService
     ) {
         super();
     }
 
     public execute(): void {
-        if (this.configService.getConfigValue('selectActivityAreaOnLogin', false)) this.confirmActivityArea();
+        if (ConfigService.getConfigValue('selectActivityAreaOnLogin', false)) this.confirmActivityArea();
         else this.sendActivityAreaChoiceDone();
     }
 

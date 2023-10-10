@@ -29,7 +29,6 @@ export abstract class BaseSettingDirective implements OnInit, OnDestroy {
     private baseSettings = {};
 
     protected constructor(
-        protected configService: ConfigService,
         protected settingsService: SettingsService
     ) {}
 
@@ -38,7 +37,7 @@ export abstract class BaseSettingDirective implements OnInit, OnDestroy {
         if (!this.form) {
             throw new Error('Trying to instantiate component without form');
         }
-        this.setting$ = this.configService.getConfigValueAsObservable('settings.' + this.settingPath, null);
+        this.setting$ = ConfigService.getConfigValueAsObservable('settings.' + this.settingPath, null);
         this.setting$.subscribe((next) => this.updateValue(next));
         this.setting$.pipe(first()).subscribe(() =>
             this.form.valueChanges
@@ -79,7 +78,7 @@ export abstract class BaseSettingDirective implements OnInit, OnDestroy {
     private dispatch(value: any) {
         const settings = {...this.baseSettings};
         settings[this.settingPath] = value.setting;
-        this.configService.setConfigValue('settings.' + this.settingPath, value.setting);
+        ConfigService.setConfigValue('settings.' + this.settingPath, value.setting);
         this.settingsService.patchUserSettings(settings).subscribe({
                 next : (res) => logger.debug("Receive response for patch settings"+ JSON.stringify(res)),
                 error:  (error) => logger.error("Error in patching settings" + JSON.stringify(error))

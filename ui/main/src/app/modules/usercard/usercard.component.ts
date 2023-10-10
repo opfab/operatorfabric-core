@@ -134,7 +134,6 @@ export class UserCardComponent implements OnInit, OnDestroy {
         private sanitizer: DomSanitizer,
         private element: ElementRef,
         private processesService: ProcessesService,
-        protected configService: ConfigService,
         private handlebars: HandlebarsService,
         protected soundNotificationService: SoundNotificationService,
         protected userPermissionsService: UserPermissionsService,
@@ -147,7 +146,7 @@ export class UserCardComponent implements OnInit, OnDestroy {
     ngOnInit() {
         this.pageLoading = true;
         this.datesFromTemplate = true;
-        this.displayConnectionCircles = this.configService.getConfigValue('usercard.displayConnectionCirclesInPreview', false)
+        this.displayConnectionCircles = ConfigService.getConfigValue('usercard.displayConnectionCirclesInPreview', false)
         this.opfabAPIService.initUserCardTemplateInterface();
         this.opfabAPIService.initCurrentUserCard();
         this.severityForm = new FormGroup({
@@ -175,7 +174,7 @@ export class UserCardComponent implements OnInit, OnDestroy {
             }
         }
 
-        this.useDescriptionFieldForEntityList = this.configService.getConfigValue(
+        this.useDescriptionFieldForEntityList = ConfigService.getConfigValue(
             'usercard.useDescriptionFieldForEntityList',
             false
         );

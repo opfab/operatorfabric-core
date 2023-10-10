@@ -35,11 +35,11 @@ export abstract class AuthHandler {
     protected delegateUrl: string;
     protected loginClaim: string;
 
-    constructor(configService: ConfigService, protected httpClient: HttpClient) {
-        this.secondsToCloseSession = configService.getConfigValue('secondsToCloseSession', 60);
-        this.clientId = configService.getConfigValue('security.oauth2.client-id', null);
-        this.delegateUrl = configService.getConfigValue('security.oauth2.flow.delegate-url', null);
-        this.loginClaim = configService.getConfigValue('security.jwt.login-claim', 'sub');
+    constructor( protected httpClient: HttpClient) {
+        this.secondsToCloseSession = ConfigService.getConfigValue('secondsToCloseSession', 60);
+        this.clientId = ConfigService.getConfigValue('security.oauth2.client-id', null);
+        this.delegateUrl = ConfigService.getConfigValue('security.oauth2.flow.delegate-url', null);
+        this.loginClaim = ConfigService.getConfigValue('security.jwt.login-claim', 'sub');
     }
 
     abstract initializeAuthentication();

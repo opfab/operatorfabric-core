@@ -35,7 +35,6 @@ export class SystemNotificationService {
     constructor(
         private lightCardsFeedFilterService: LightCardsFeedFilterService,
         private lightCardsStoreService: LightCardsStoreService,
-        private configService: ConfigService,
         private router: Router
     ) {
     }
@@ -49,7 +48,7 @@ export class SystemNotificationService {
 
         this.systemNotificationEnabled = new Map<Severity, boolean>();
         this.systemNotificationConfigBySeverity.forEach((systemNotificationConfig, severity) => {
-            this.configService.getConfigValueAsObservable(systemNotificationConfig, false).subscribe((x) => {
+            ConfigService.getConfigValueAsObservable(systemNotificationConfig, false).subscribe((x) => {
                 this.systemNotificationEnabled.set(severity, x);
 
                 if (this.isAtLeastOneSeverityEnabled()) {

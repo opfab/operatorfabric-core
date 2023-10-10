@@ -21,7 +21,6 @@ import {TranslateLoader, TranslateModule, TranslateService} from '@ngx-translate
 import {GlobalStyleService} from 'app/business/services/global-style.service';
 import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
 import {TimelineButtonsComponent} from '../../../../share/timeline-buttons/timeline-buttons.component';
-import {ConfigService} from 'app/business/services/config.service';
 import {HttpClient, HttpHandler} from '@angular/common/http';
 import {BusinessconfigI18nLoaderFactory} from '@tests/helpers';
 import {LightCardsServiceMock} from '@tests/mocks/lightcards.service.mock';
@@ -63,7 +62,6 @@ describe('InitChartComponent', () => {
             providers: [
                 {provide: APP_BASE_HREF, useValue: '/'},
                 {provide: DateTimeFormatterService, useClass: DateTimeFormatterService},
-                {provide: ConfigService, useClass: ConfigService},
                 {provide: ConfigServer, useClass: ConfigServerMock},
                 {provide: HttpClient, useClass: HttpClient},
                 {provide: HttpHandler, useClass: HttpHandler},

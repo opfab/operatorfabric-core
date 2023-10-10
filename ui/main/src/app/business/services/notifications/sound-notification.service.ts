@@ -60,8 +60,7 @@ export class SoundNotificationService implements OnDestroy {
         private soundServer: SoundServer,
         private lightCardsFeedFilterService: LightCardsFeedFilterService,
         private lightCardsStoreService: LightCardsStoreService,
-        private externalDevicesService: ExternalDevicesService,
-        private configService: ConfigService
+        private externalDevicesService: ExternalDevicesService
     ) {
         // use to have access from cypress to the current object for stubbing method playSound
         if (window['Cypress']) window['soundNotificationService'] = this;
@@ -94,18 +93,18 @@ export class SoundNotificationService implements OnDestroy {
 
         this.soundEnabled = new Map<Severity, boolean>();
         this.soundConfigBySeverity.forEach((soundConfig, severity) => {
-            this.configService.getConfigValueAsObservable(soundConfig.soundEnabledSetting, false).subscribe((x) => {
+            ConfigService.getConfigValueAsObservable(soundConfig.soundEnabledSetting, false).subscribe((x) => {
                 this.soundEnabled.set(severity, x);
                 this.setSoundForSessionEndWhenAtLeastOneSoundForASeverityIsActivated();
             });
         });
-        this.configService.getConfigValueAsObservable('settings.playSoundOnExternalDevice', false).subscribe((x) => {
+        ConfigService.getConfigValueAsObservable('settings.playSoundOnExternalDevice', false).subscribe((x) => {
             this.playSoundOnExternalDevice = x;
         });
-        this.configService.getConfigValueAsObservable('settings.replayEnabled', false).subscribe((x) => {
+        ConfigService.getConfigValueAsObservable('settings.replayEnabled', false).subscribe((x) => {
             this.replayEnabled = x;
         });
-        this.configService
+        ConfigService
             .getConfigValueAsObservable('settings.replayInterval', SoundNotificationService.DEFAULT_REPLAY_INTERVAL)
             .subscribe((x) => {
                 this.replayInterval = Math.max(3, x);
@@ -118,7 +117,7 @@ export class SoundNotificationService implements OnDestroy {
     }
 
     public getPlaySoundOnExternalDevice(): boolean {
-        return this.configService.getConfigValue('externalDevicesEnabled') && this.playSoundOnExternalDevice;
+        return ConfigService.getConfigValue('externalDevicesEnabled') && this.playSoundOnExternalDevice;
     }
 
     private setSoundForSessionEndWhenAtLeastOneSoundForASeverityIsActivated() {
@@ -200,7 +199,7 @@ export class SoundNotificationService implements OnDestroy {
 
     private playSound(severity: Severity) {
         if (!this.isServiceActive) return;
-        if (this.configService.getConfigValue('externalDevicesEnabled') && this.playSoundOnExternalDevice) {
+        if (ConfigService.getConfigValue('externalDevicesEnabled') && this.playSoundOnExternalDevice) {
             logger.debug(
                 'External devices enabled. Sending notification for ' + severity + '.',
                 LogOption.LOCAL_AND_REMOTE

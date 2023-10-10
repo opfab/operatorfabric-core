@@ -10,7 +10,6 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
 import {BaseSettingDirective} from '../base-setting/base-setting.directive';
 import {FormControl, FormGroup, Validators} from '@angular/forms';
-import {ConfigService} from 'app/business/services/config.service';
 import {SettingsService} from 'app/business/services/users/settings.service';
 
 @Component({
@@ -19,10 +18,9 @@ import {SettingsService} from 'app/business/services/users/settings.service';
 })
 export class MultiSettingsComponent extends BaseSettingDirective implements OnInit, OnDestroy {
     constructor(
-        protected configService: ConfigService,
         protected settingsService: SettingsService
     ) {
-        super(configService, settingsService);
+        super(settingsService);
     }
 
     initFormGroup() {

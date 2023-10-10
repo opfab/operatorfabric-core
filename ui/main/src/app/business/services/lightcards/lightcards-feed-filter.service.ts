@@ -35,8 +35,7 @@ export class LightCardsFeedFilterService {
         private filterService: FilterService,
         private sortService: SortService,
         private searchService: SearchService,
-        private groupedCardsService: GroupedCardsService,
-        private configService: ConfigService
+        private groupedCardsService: GroupedCardsService
     ) {
         this.computeFilteredAndSortedLightCards();
         this.computeFilteredAndSearchedLightCards();
@@ -115,7 +114,7 @@ export class LightCardsFeedFilterService {
     }
 
     private isGroupedCardsEnabled(): boolean {
-        return this.configService.getConfigValue('feed.enableGroupedCards', false);
+        return ConfigService.getConfigValue('feed.enableGroupedCards', false);
     }
 
     public isCardVisibleInFeed(card: LightCard) {

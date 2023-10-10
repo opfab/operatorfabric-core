@@ -35,6 +35,7 @@ import {SoundServer} from 'app/business/server/sound.server';
 import {TranslationService} from 'app/business/services/translation/translation.service';
 import {TranslationServiceMock} from '@tests/mocks/translation.service.mock';
 import {AcknowledgeServer} from "../../../business/server/acknowledge.server";
+import {ConfigService} from 'app/business/services/config.service';
 
 describe('LightCardComponent', () => {
     let lightCardDetailsComp: LightCardComponent;
@@ -47,6 +48,7 @@ describe('LightCardComponent', () => {
         const routerSpy = createSpyObj('Router', ['navigate']);
         const myrout = {...routerSpy};
         myrout.routerState = {snapshot: {url: 'archives'}};
+        ConfigService.setConfigServer(new ConfigServerMock());
         TestBed.configureTestingModule({
             imports: [
                 HttpClientTestingModule,

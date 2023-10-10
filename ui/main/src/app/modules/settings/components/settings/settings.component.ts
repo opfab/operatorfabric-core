@@ -42,7 +42,6 @@ export class SettingsComponent implements OnInit {
     patternReplayInterval = '[0-9]*';
 
     constructor(
-        private configService: ConfigService,
         private userService: UserService,
         private externalDevicesService: ExternalDevicesService,
         private translateService: TranslateService
@@ -50,43 +49,43 @@ export class SettingsComponent implements OnInit {
 
     ngOnInit() {
         this.locales = this.translateService.getLangs();
-        this.hiddenSettings = this.configService.getConfigValue('settingsScreen.hiddenSettings');
-        this.externalDevicesEnabled = this.configService.getConfigValue('externalDevicesEnabled');
-        this.playSoundForAlarmDefaultValue = this.configService.getConfigValue('settings.playSoundForAlarm')
-            ? this.configService.getConfigValue('settings.playSoundForAlarm')
+        this.hiddenSettings = ConfigService.getConfigValue('settingsScreen.hiddenSettings');
+        this.externalDevicesEnabled = ConfigService.getConfigValue('externalDevicesEnabled');
+        this.playSoundForAlarmDefaultValue = ConfigService.getConfigValue('settings.playSoundForAlarm')
+            ? ConfigService.getConfigValue('settings.playSoundForAlarm')
             : false;
-        this.playSoundForActionDefaultValue = this.configService.getConfigValue('settings.playSoundForAction')
-            ? this.configService.getConfigValue('settings.playSoundForAction')
+        this.playSoundForActionDefaultValue = ConfigService.getConfigValue('settings.playSoundForAction')
+            ? ConfigService.getConfigValue('settings.playSoundForAction')
             : false;
-        this.playSoundForCompliantDefaultValue = this.configService.getConfigValue('settings.playSoundForCompliant')
-            ? this.configService.getConfigValue('settings.playSoundForCompliant')
+        this.playSoundForCompliantDefaultValue = ConfigService.getConfigValue('settings.playSoundForCompliant')
+            ? ConfigService.getConfigValue('settings.playSoundForCompliant')
             : false;
-        this.playSoundForInformationDefaultValue = this.configService.getConfigValue('settings.playSoundForInformation')
-            ? this.configService.getConfigValue('settings.playSoundForInformation')
+        this.playSoundForInformationDefaultValue = ConfigService.getConfigValue('settings.playSoundForInformation')
+            ? ConfigService.getConfigValue('settings.playSoundForInformation')
             : false;
-        this.replayEnabledDefaultValue = this.configService.getConfigValue('settings.replayEnabled')
-            ? this.configService.getConfigValue('settings.replayEnabled')
+        this.replayEnabledDefaultValue = ConfigService.getConfigValue('settings.replayEnabled')
+            ? ConfigService.getConfigValue('settings.replayEnabled')
             : false;
-        this.replayIntervalDefaultValue = this.configService.getConfigValue('settings.replayInterval')
-            ? this.configService.getConfigValue('settings.replayInterval')
+        this.replayIntervalDefaultValue = ConfigService.getConfigValue('settings.replayInterval')
+            ? ConfigService.getConfigValue('settings.replayInterval')
             : 5;
-        this.remoteLoggingEnabledDefaultValue = this.configService.getConfigValue('settings.remoteLoggingEnabled')
-            ? this.configService.getConfigValue('settings.remoteLoggingEnabled')
+        this.remoteLoggingEnabledDefaultValue = ConfigService.getConfigValue('settings.remoteLoggingEnabled')
+            ? ConfigService.getConfigValue('settings.remoteLoggingEnabled')
             : false;
-        this.systemNotificationAlarmDefaultValue = this.configService.getConfigValue('settings.systemNotificationAlarm')
-            ? this.configService.getConfigValue('settings.systemNotificationAlarm')
+        this.systemNotificationAlarmDefaultValue = ConfigService.getConfigValue('settings.systemNotificationAlarm')
+            ? ConfigService.getConfigValue('settings.systemNotificationAlarm')
             : false;
-        this.systemNotificationActionDefaultValue = this.configService.getConfigValue('settings.systemNotificationAction')
-            ? this.configService.getConfigValue('settings.systemNotificationAction')
+        this.systemNotificationActionDefaultValue = ConfigService.getConfigValue('settings.systemNotificationAction')
+            ? ConfigService.getConfigValue('settings.systemNotificationAction')
             : false;
-        this.systemNotificationCompliantDefaultValue = this.configService.getConfigValue('settings.systemNotificationCompliant')
-            ? this.configService.getConfigValue('settings.systemNotificationCompliant')
+        this.systemNotificationCompliantDefaultValue = ConfigService.getConfigValue('settings.systemNotificationCompliant')
+            ? ConfigService.getConfigValue('settings.systemNotificationCompliant')
             : false;
-        this.systemNotificationInformationDefaultValue = this.configService.getConfigValue('settings.systemNotificationInformation')
-            ? this.configService.getConfigValue('settings.systemNotificationInformation')
+        this.systemNotificationInformationDefaultValue = ConfigService.getConfigValue('settings.systemNotificationInformation')
+            ? ConfigService.getConfigValue('settings.systemNotificationInformation')
             : false;
-        this.sendCardsByEmailDefaultValue = this.configService.getConfigValue('settings.sendCardsByEmail')
-            ? this.configService.getConfigValue('settings.sendCardsByEmail')
+        this.sendCardsByEmailDefaultValue = ConfigService.getConfigValue('settings.sendCardsByEmail')
+            ? ConfigService.getConfigValue('settings.sendCardsByEmail')
             : false;
         const userLogin = this.userService.getCurrentUserWithPerimeters().userData.login;
 

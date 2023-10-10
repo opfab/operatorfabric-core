@@ -8,10 +8,7 @@
  */
 
 import {Component} from '@angular/core';
-import {ConfigService} from 'app/business/services/config.service';
 import {AboutView} from 'app/business/view/core/about/about.view';
-
-
 
 @Component({
     selector: 'of-about',
@@ -21,8 +18,8 @@ import {AboutView} from 'app/business/view/core/about/about.view';
 export class AboutComponent {
     aboutElements = [];
 
-    constructor(configService: ConfigService) {
-        const aboutView = new AboutView(configService);
+    constructor() {
+        const aboutView = new AboutView();
         this.aboutElements = aboutView.getAboutElements();
     }
 }

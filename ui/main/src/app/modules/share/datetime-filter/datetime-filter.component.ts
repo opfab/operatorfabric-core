@@ -106,8 +106,7 @@ export class DatetimeFilterComponent implements ControlValueAccessor, OnInit, On
 
     constructor(
         private translateService: TranslateService,
-        private controlContainer: ControlContainer,
-        private configService: ConfigService
+        private controlContainer: ControlContainer
     ) {
         this.onChanges();
         this.resetDateAndTime();
@@ -126,7 +125,7 @@ export class DatetimeFilterComponent implements ControlValueAccessor, OnInit, On
     }
 
     protected getLocale(): Observable<string> {
-        return this.configService.getConfigValueAsObservable('settings.locale');
+        return ConfigService.getConfigValueAsObservable('settings.locale');
     }
 
     ngOnDestroy() {

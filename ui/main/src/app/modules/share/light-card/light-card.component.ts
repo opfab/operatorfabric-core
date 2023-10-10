@@ -57,7 +57,6 @@ export class LightCardComponent implements OnInit, OnDestroy {
     constructor(
         private router: Router,
         private dateTimeFormatter: DateTimeFormatterService,
-        private configService: ConfigService,
         private entitiesService: EntitiesService,
         private processesService: ProcessesService,
         private groupedCardsService: GroupedCardsService,
@@ -82,7 +81,7 @@ export class LightCardComponent implements OnInit, OnDestroy {
             this.lightCard.wktGeometry.length <= 0
                 ? false
                 : true;
-        this.isGeoMapEnabled = this.configService.getConfigValue('feed.geomap.enableMap', false);
+        this.isGeoMapEnabled = ConfigService.getConfigValue('feed.geomap.enableMap', false);
     }
 
     computeLttdParams() {
@@ -107,7 +106,7 @@ export class LightCardComponent implements OnInit, OnDestroy {
     }
 
     computeDisplayedDate() {
-        switch (this.configService.getConfigValue('feed.card.time.display', 'BUSINESS')) {
+        switch (ConfigService.getConfigValue('feed.card.time.display', 'BUSINESS')) {
             case 'NONE':
                 this.dateToDisplay = '';
                 break;
