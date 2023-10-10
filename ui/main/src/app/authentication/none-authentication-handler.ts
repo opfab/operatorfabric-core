@@ -11,17 +11,12 @@ import {AuthenticatedUser} from './auth.model';
 import {AuthHandler} from './auth-handler';
 import {UserService} from 'app/business/services/users/user.service';
 import {Message, MessageLevel} from '@ofModel/message.model';
-import {ConfigService} from 'app/business/services/config.service';
 import {HttpClient} from '@angular/common/http';
-import { LoggerService as logger } from 'app/business/services/logs/logger.service';
+import {LoggerService as logger} from 'app/business/services/logs/logger.service';
 
 export class NoneAuthenticationHandler extends AuthHandler {
-    constructor(
-        configService: ConfigService,
-        httpClient: HttpClient,
-        private userService: UserService
-    ) {
-        super(configService, httpClient);
+    constructor(httpClient: HttpClient, private userService: UserService) {
+        super(httpClient);
     }
 
     initializeAuthentication() {

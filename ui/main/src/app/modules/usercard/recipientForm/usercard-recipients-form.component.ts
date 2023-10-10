@@ -45,11 +45,10 @@ export class UserCardRecipientsFormComponent implements OnInit, OnChanges {
     };
 
     constructor(
-        private configService: ConfigService,
         private entitiesService: EntitiesService,
         private opfabAPIService: OpfabAPIService
     ) {
-        this.useDescriptionFieldForEntityList = this.configService.getConfigValue(
+        this.useDescriptionFieldForEntityList = ConfigService.getConfigValue(
             'usercard.useDescriptionFieldForEntityList',
             false
         );

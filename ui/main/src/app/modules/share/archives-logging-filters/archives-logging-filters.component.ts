@@ -125,7 +125,6 @@ export class ArchivesLoggingFiltersComponent implements OnInit, OnDestroy, After
     defaultMinPublishDate: NgbDateStruct;
 
     constructor(
-        private configService: ConfigService,
         private processesService: ProcessesService,
         private processStatesDropdownListService: ProcessStatesMultiSelectOptionsService,
         private userPreferences: UserPreferencesService,
@@ -318,7 +317,7 @@ export class ArchivesLoggingFiltersComponent implements OnInit, OnDestroy, After
     }
 
     setDefaultPublishDateFilter() {
-        const defaultPublishDateInterval = this.configService.getConfigValue('archive.filters.publishDate.days', 10);
+        const defaultPublishDateInterval = ConfigService.getConfigValue('archive.filters.publishDate.days', 10);
 
         const min = moment(Date.now());
         min.subtract(defaultPublishDateInterval, 'day');

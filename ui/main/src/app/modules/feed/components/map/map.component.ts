@@ -50,7 +50,6 @@ export class MapComponent implements OnInit, OnDestroy, AfterViewChecked {
 
     constructor(
         private lightCardsFeedFilterService: LightCardsFeedFilterService,
-        private configService: ConfigService,
         private mapService: MapService,
         private translate: TranslateService,
         private globalStyleService: GlobalStyleService,
@@ -61,8 +60,8 @@ export class MapComponent implements OnInit, OnDestroy, AfterViewChecked {
     ngOnInit() {
         self = this;
 
-        if (this.configService.getConfigValue('feed.geomap.enableMap', false)) {
-            const enableGraph = this.configService.getConfigValue('feed.geomap.enableGraph', false);
+        if (ConfigService.getConfigValue('feed.geomap.enableMap', false)) {
+            const enableGraph = ConfigService.getConfigValue('feed.geomap.enableGraph', false);
             this.drawMap(enableGraph);
             this.lightCardsFeedFilterService
                 .getFilteredAndSearchedLightCards()
@@ -144,7 +143,7 @@ export class MapComponent implements OnInit, OnDestroy, AfterViewChecked {
     }
 
     private zoomToLocation(lightCardId: string) {
-        const zoomLevelWhenZoomToLocation = this.configService.getConfigValue(
+        const zoomLevelWhenZoomToLocation = ConfigService.getConfigValue(
             'feed.geomap.zoomLevelWhenZoomToLocation',
             14
         );
@@ -170,9 +169,9 @@ export class MapComponent implements OnInit, OnDestroy, AfterViewChecked {
             collapsible: true
         });
 
-        const longitude = this.configService.getConfigValue('feed.geomap.initialLongitude', 0);
-        const latitude = this.configService.getConfigValue('feed.geomap.initialLatitude', 0);
-        const zoom = this.configService.getConfigValue('feed.geomap.initialZoom', 1);
+        const longitude = ConfigService.getConfigValue('feed.geomap.initialLongitude', 0);
+        const latitude = ConfigService.getConfigValue('feed.geomap.initialLatitude', 0);
+        const zoom = ConfigService.getConfigValue('feed.geomap.initialZoom', 1);
 
         this.map = new OpenLayersMap({
             view: new View({
@@ -184,10 +183,10 @@ export class MapComponent implements OnInit, OnDestroy, AfterViewChecked {
             controls: defaultControls({attribution: false}).extend([attribution])
         });
 
-        const bgUrl = this.configService.getConfigValue('feed.geomap.bglayer.xyz.url', null);
-        const bgTileSize = this.configService.getConfigValue('feed.geomap.bglayer.xyz.tileSize', null);
+        const bgUrl = ConfigService.getConfigValue('feed.geomap.bglayer.xyz.url', null);
+        const bgTileSize = ConfigService.getConfigValue('feed.geomap.bglayer.xyz.tileSize', null);
         if (bgUrl && bgTileSize) {
-            const bgCrossOrigin = this.configService.getConfigValue('feed.geomap.bglayer.xyz.crossOrigin', null);
+            const bgCrossOrigin = ConfigService.getConfigValue('feed.geomap.bglayer.xyz.crossOrigin', null);
             this.map.addLayer(
                 new TileLayer({
                     source: new XYZ({
@@ -227,7 +226,7 @@ export class MapComponent implements OnInit, OnDestroy, AfterViewChecked {
 
     private addGeoJSONLayer(style) {
         if (this.map) {
-            const geojsonUrl = this.configService.getConfigValue('feed.geomap.layer.geojson.url', null);
+            const geojsonUrl = ConfigService.getConfigValue('feed.geomap.layer.geojson.url', null);
             if (geojsonUrl) {
                 let colorStroke = 'rgba(0, 0, 0, 0.6)';
                 let colorFill = 'rgba(0, 0, 0, 0.05)';
@@ -281,9 +280,9 @@ export class MapComponent implements OnInit, OnDestroy, AfterViewChecked {
         const featureArray = [];
         this.map.removeLayer(this.vectorLayer);
 
-        const maxZoom = this.configService.getConfigValue('feed.geomap.maxZoom', 11);
-        const zoomDuration = this.configService.getConfigValue('feed.geomap.zoomDuration', 500);
-        const defaultDataProjection = this.configService.getConfigValue(
+        const maxZoom = ConfigService.getConfigValue('feed.geomap.maxZoom', 11);
+        const zoomDuration = ConfigService.getConfigValue('feed.geomap.zoomDuration', 500);
+        const defaultDataProjection = ConfigService.getConfigValue(
             'feed.geomap.defaultDataProjection',
             'EPSG:4326'
         );

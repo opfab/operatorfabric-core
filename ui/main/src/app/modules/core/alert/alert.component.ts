@@ -12,8 +12,6 @@ import {Component} from '@angular/core';
 import {TranslationService} from 'app/business/services/translation/translation.service';
 import {AlertView} from 'app/business/view/core/alert/alert.view';
 import {AlertPage} from 'app/business/view/core/alert/alertPage';
-import {ConfigService} from "../../../business/services/config.service";
-
 
 @Component({
     selector: 'of-alert',
@@ -26,10 +24,9 @@ export class AlertComponent  {
     public alertPage : AlertPage;
 
     constructor(
-        configService: ConfigService,
         translationService: TranslationService
     ) {
-        this.alertView = new AlertView(configService,translationService);
+        this.alertView = new AlertView(translationService);
         this.alertPage = this.alertView.getAlertPage();
     }
 

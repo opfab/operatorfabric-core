@@ -18,17 +18,13 @@ export class ExternalAppIFrameView {
     unsubscribe$: Subject<void> = new Subject<void>();
     private businessConfigUrl = `${environment.url}/#businessconfigparty`;
 
-    constructor(
-        private configService: ConfigService,
-        private globalStyleService: GlobalStyleService
-    ) {
+    constructor(private globalStyleService: GlobalStyleService) {
         this.listenForExternalAppRoute();
         this.reloadIframeWhenGlobalStyleChange();
     }
 
     private listenForExternalAppRoute() {
-        RouterStore
-            .getCurrentRouteEvent()
+        RouterStore.getCurrentRouteEvent()
             .pipe(takeUntil(this.unsubscribe$))
             .subscribe((route) => {
                 if (route.startsWith('/businessconfigparty')) {
@@ -58,20 +54,19 @@ export class ExternalAppIFrameView {
         const deeplinkWithoutParams = deeplink?.split('?')[0];
         const deeplinkParams = deeplink?.split('?')[1];
 
-        this.configService.queryMenuEntryURL(menuId, menuEntryId).subscribe((menuUrl) => {
+        ConfigService.queryMenuEntryURL(menuId, menuEntryId).subscribe((menuUrl) => {
             let url = menuUrl;
             if (deeplinkWithoutParams) url += deeplinkWithoutParams;
             url = this.addParamsToUrl(url, menuEntryParams);
             url = this.addParamsToUrl(url, deeplinkParams);
             url = this.addOpfabThemeParamToUrl(url);
             this.urlSubject.next(url);
-            this.removeParamsFromCurrentURLInBrowserNavigationBar(menuId,menuEntryId);
+            this.removeParamsFromCurrentURLInBrowserNavigationBar(menuId, menuEntryId);
         });
     }
 
-
-    private removeParamsFromCurrentURLInBrowserNavigationBar(menuId:string,menuEntryId:string) {
-        history.replaceState({},'',this.businessConfigUrl + "/" + menuId + "/" + menuEntryId + "/" );
+    private removeParamsFromCurrentURLInBrowserNavigationBar(menuId: string, menuEntryId: string) {
+        history.replaceState({}, '', this.businessConfigUrl + '/' + menuId + '/' + menuEntryId + '/');
     }
 
     private addParamsToUrl(url, params) {

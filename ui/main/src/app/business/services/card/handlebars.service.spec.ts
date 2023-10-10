@@ -24,7 +24,6 @@ import {ServerResponse, ServerResponseStatus} from 'app/business/server/serverRe
 describe('Handlebars Services', () => {
     let processesService: ProcessesService;
     let processServer: ProcessServerMock;
-    let configService: ConfigService;
     let configServer: ConfigServer;
     let handlebarsService: HandlebarsService;
 
@@ -32,9 +31,9 @@ describe('Handlebars Services', () => {
     beforeEach(() => {
         processServer = new ProcessServerMock();
         configServer = new ConfigServerMock();
+        ConfigService.setConfigServer(configServer);
         processesService = new ProcessesService(null, processServer, configServer);
-        configService = new ConfigService(configServer);
-        handlebarsService = new HandlebarsService(processesService, configService);
+        handlebarsService = new HandlebarsService(processesService);
     });
 
     describe('#executeTemplate', () => {

@@ -86,7 +86,6 @@ export class LoggingComponent implements OnDestroy, OnInit, AfterViewInit {
 
     constructor(
         private processesService: ProcessesService,
-        private configService: ConfigService,
         private dateTimeFormatter: DateTimeFormatterService,
         private cardService: CardService,
         private translationService: TranslationService,
@@ -114,8 +113,8 @@ export class LoggingComponent implements OnDestroy, OnInit, AfterViewInit {
     }
 
     ngOnInit() {
-        this.size = this.configService.getConfigValue('logging.filters.page.size', 10);
-        this.tags = this.configService.getConfigValue('logging.filters.tags.list');
+        this.size = ConfigService.getConfigValue('logging.filters.page.size', 10);
+        this.tags = ConfigService.getConfigValue('logging.filters.tags.list');
 
         this.results = [];
     }

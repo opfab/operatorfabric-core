@@ -28,7 +28,6 @@ export class GlobalStyleService {
 
     constructor(
         private userPreferences: UserPreferencesService,
-        private configService: ConfigService,
         private menuService: MenuService,) {
         opfabStyle.init();
         GlobalStyleService.styleChangeEvent = new BehaviorSubject<string>(GlobalStyleService.NIGHT);
@@ -39,7 +38,7 @@ export class GlobalStyleService {
         const visibleCoreMenus = this.menuService.computeVisibleCoreMenusForCurrentUser();
         const nightDayMode = visibleCoreMenus.includes('nightdaymode');
 
-        const settings = this.configService.getConfigValue('settings');
+        const settings = ConfigService.getConfigValue('settings');
         if (!nightDayMode) {
             if (settings?.styleWhenNightDayModeDesactivated) {
                 this.setStyle(settings.styleWhenNightDayModeDesactivated);

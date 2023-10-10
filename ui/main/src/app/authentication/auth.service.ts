@@ -36,7 +36,6 @@ export class AuthService {
     private authHandler: AuthHandler;
 
     constructor(
-        private configService: ConfigService,
         private router: Router,
         private oauthServiceForImplicitMode: OAuthService,
         private httpClient: HttpClient,
@@ -47,28 +46,26 @@ export class AuthService {
     public initializeAuthentication() {
         this.login = localStorage.getItem('identifier');
         CurrentUserStore.setToken(localStorage.getItem('token'));
-        this.mode = this.configService
+        this.mode = ConfigService
             .getConfigValue('security.oauth2.flow.mode', 'password')
             .toLowerCase() as AuthenticationMode;
         logger.info(`Auth mode set to ${this.mode}`);
         if (this.mode !== AuthenticationMode.NONE) CurrentUserStore.setAuthenticationUsesToken();
         switch (this.mode) {
             case AuthenticationMode.PASSWORD:
-                this.authHandler = new PasswordAuthenticationHandler(this.configService, this.httpClient);
+                this.authHandler = new PasswordAuthenticationHandler(this.httpClient);
                 break;
             case AuthenticationMode.CODE:
-                this.authHandler = new CodeAuthenticationHandler(this.configService, this.httpClient);
+                this.authHandler = new CodeAuthenticationHandler(this.httpClient);
                 break;
             case AuthenticationMode.NONE:
                 this.authHandler = new NoneAuthenticationHandler(
-                    this.configService,
                     this.httpClient,
                     this.userService
                 );
                 break;
             case AuthenticationMode.IMPLICIT:
                 this.authHandler = new ImplicitAuthenticationHandler(
-                    this.configService,
                     this.httpClient,
                     this.oauthServiceForImplicitMode
                 );
@@ -135,7 +132,7 @@ export class AuthService {
         logger.info('Auth logout');
         this.removeUserFromStorage();
         this.authHandler.logout();
-        window.location.href = this.configService.getConfigValue('security.logout-url', 'https://opfab.github.io');
+        window.location.href = ConfigService.getConfigValue('security.logout-url', 'https://opfab.github.io');
     }
 
     private goBackToLoginPage() {

@@ -39,7 +39,6 @@ export class CalendarComponent implements OnInit, OnDestroy, AfterViewInit {
         processesService: ProcessesService,
         private lightCardsStoreService: LightCardsStoreService,
         private filterService: FilterService,
-        private configService: ConfigService,
         private selectedCardService: SelectedCardService
     ) {
         processesService.getAllProcesses().forEach((process) => {
@@ -109,7 +108,7 @@ export class CalendarComponent implements OnInit, OnDestroy, AfterViewInit {
     }
 
     private setLocale() {
-        this.configService.getConfigValueAsObservable('settings.locale')
+        ConfigService.getConfigValueAsObservable('settings.locale')
             .pipe(takeUntil(this.unsubscribe$))
             .subscribe((locale) => this.calendarComponent.getApi().setOption('locale', locale));
     }

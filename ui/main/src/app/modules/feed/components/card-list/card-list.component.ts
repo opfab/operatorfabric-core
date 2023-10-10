@@ -56,7 +56,6 @@ export class CardListComponent implements AfterViewChecked, OnInit {
 
     constructor(
         private modalService: NgbModal,
-        private configService: ConfigService,
         private processesService: ProcessesService,
         private acknowledgeService: AcknowledgeService,
         private userService: UserService,
@@ -71,11 +70,11 @@ export class CardListComponent implements AfterViewChecked, OnInit {
     }
 
     ngOnInit(): void {
-        this.defaultSorting = this.configService.getConfigValue('feed.defaultSorting', 'unread');
+        this.defaultSorting = ConfigService.getConfigValue('feed.defaultSorting', 'unread');
 
         this.sortService.setSortBy(this.defaultSorting);
 
-        this.defaultAcknowledgmentFilter = this.configService.getConfigValue('feed.defaultAcknowledgmentFilter', 'notack');
+        this.defaultAcknowledgmentFilter = ConfigService.getConfigValue('feed.defaultAcknowledgmentFilter', 'notack');
         if (
             this.defaultAcknowledgmentFilter !== 'ack' &&
             this.defaultAcknowledgmentFilter !== 'notack' &&
@@ -83,14 +82,14 @@ export class CardListComponent implements AfterViewChecked, OnInit {
         )
             this.defaultAcknowledgmentFilter = 'notack';
 
-        this.hideTimerTags = this.configService.getConfigValue('feed.card.hideTimeFilter', false);
-        this.hideResponseFilter = this.configService.getConfigValue('feed.card.hideResponseFilter', false);
-        this.hideApplyFiltersToTimeLineChoice = this.configService.getConfigValue(
+        this.hideTimerTags = ConfigService.getConfigValue('feed.card.hideTimeFilter', false);
+        this.hideResponseFilter = ConfigService.getConfigValue('feed.card.hideResponseFilter', false);
+        this.hideApplyFiltersToTimeLineChoice = ConfigService.getConfigValue(
             'feed.card.hideApplyFiltersToTimeLineChoice',
             false
         );
 
-        this.hideAckAllCardsFeature = this.configService.getConfigValue('feed.card.hideAckAllCardsFeature', true);
+        this.hideAckAllCardsFeature = ConfigService.getConfigValue('feed.card.hideAckAllCardsFeature', true);
         this.initFilterActive();
     }
 

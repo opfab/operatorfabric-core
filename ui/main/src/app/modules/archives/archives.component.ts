@@ -88,7 +88,6 @@ export class ArchivesComponent implements OnDestroy, OnInit {
     constructor(
         private processesService: ProcessesService,
         private entitiesService: EntitiesService,
-        private configService: ConfigService,
         private dateTimeFormatter: DateTimeFormatterService,
         private cardService: CardService,
         private translationService: TranslationService,
@@ -112,9 +111,9 @@ export class ArchivesComponent implements OnDestroy, OnInit {
         );
         this.isCollapsibleUpdatesActivated = isCollapsibleUpdatesActivatedInStorage === 'true';
 
-        this.size = this.configService.getConfigValue('archive.filters.page.size', 10);
-        this.historySize = parseInt(this.configService.getConfigValue('archive.history.size', 100));
-        this.tags = this.configService.getConfigValue('archive.filters.tags.list');
+        this.size = ConfigService.getConfigValue('archive.filters.page.size', 10);
+        this.historySize = parseInt(ConfigService.getConfigValue('archive.history.size', 100));
+        this.tags = ConfigService.getConfigValue('archive.filters.tags.list');
         this.results = [];
         this.updatesByCardId = [];
     }

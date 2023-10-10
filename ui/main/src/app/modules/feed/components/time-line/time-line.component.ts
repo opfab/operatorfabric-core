@@ -19,10 +19,8 @@ import {ConfigService} from 'app/business/services/config.service';
 export class TimeLineComponent implements OnInit, OnDestroy {
     localSubscription: Subscription;
 
-    constructor(private configService: ConfigService) {}
-
     ngOnInit() {
-        this.localSubscription = this.configService.getConfigValueAsObservable('settings.locale')
+        this.localSubscription = ConfigService.getConfigValueAsObservable('settings.locale')
             .subscribe((l) => moment.locale(l));
     }
 

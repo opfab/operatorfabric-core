@@ -12,11 +12,10 @@ import packageInfo from '../../../../../../package.json';
 
 export class AboutView {
 
-
     aboutElements = [];
 
-    constructor(private configService: ConfigService) {
-        const aboutConfig = this.configService.getConfigValue('about');
+    constructor() {
+        const aboutConfig = ConfigService.getConfigValue('about');
         this.aboutElements.push({name: 'OperatorFabric', rank: 0, version: packageInfo.opfabVersion});
         if (aboutConfig)
             this.aboutElements = this.aboutElements.concat(this.extractNameWithVersionAndSortByRank(aboutConfig));

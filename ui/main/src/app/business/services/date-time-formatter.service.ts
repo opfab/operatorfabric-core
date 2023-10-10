@@ -19,18 +19,18 @@ export class DateTimeFormatterService {
     private dateFormat;
     private dateTimeFormat;
 
-    constructor( private configService: ConfigService) {
+    constructor() {
         this.loadFormatterServiceConfiguration();
     }
 
     private loadFormatterServiceConfiguration() {
-        this.configService
+        ConfigService
             .getConfigValueAsObservable('settings.timeFormat', 'LT')
             .subscribe((next) => (this.timeFormat = next));
-        this.configService
+        ConfigService
             .getConfigValueAsObservable('settings.dateFormat', 'L')
             .subscribe((next) => (this.dateFormat = next));
-        this.configService
+        ConfigService
             .getConfigValueAsObservable('settings.dateTimeFormat')
             .subscribe((next) => (this.dateTimeFormat = next));
     }

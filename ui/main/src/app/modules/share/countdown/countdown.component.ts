@@ -27,10 +27,10 @@ export class CountDownComponent implements OnInit, OnDestroy, OnChanges {
     public translatedExpiredLabel: string;
     secondsBeforeLttdForClockDisplay: number;
 
-    constructor(private configService: ConfigService, private translate: TranslateService) {}
+    constructor(private translate: TranslateService) {}
 
     ngOnInit() {
-        this.secondsBeforeLttdForClockDisplay = this.configService.getConfigValue(
+        this.secondsBeforeLttdForClockDisplay = ConfigService.getConfigValue(
             'feed.card.secondsBeforeLttdForClockDisplay',
             false
         );

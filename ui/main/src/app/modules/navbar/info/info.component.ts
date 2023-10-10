@@ -31,7 +31,6 @@ export class InfoComponent implements OnInit {
         private dateTimeFormatter: DateTimeFormatterService,
         private userService: UserService,
         private entitiesService: EntitiesService,
-        private configService: ConfigService,
         private applicationEventsService: ApplicationEventsService
     ) {}
 
@@ -42,7 +41,7 @@ export class InfoComponent implements OnInit {
         if (firstName && lastName) this.userName = `${_.upperFirst(firstName)} ${_.upperFirst(lastName)}`;
         else this.userName = this.userService.getCurrentUserWithPerimeters().userData.login;
 
-        if (this.configService.getConfigValue('showUserEntitiesOnTopRightOfTheScreen', false)) {
+        if (ConfigService.getConfigValue('showUserEntitiesOnTopRightOfTheScreen', false)) {
             this.setUserEntitiesToDisplay();
             this.applicationEventsService.getUserConfigChanges().subscribe(() => this.setUserEntitiesToDisplay());
         }

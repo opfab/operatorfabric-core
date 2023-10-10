@@ -14,7 +14,6 @@ import {debounce, debounceTime, distinctUntilChanged, takeUntil} from 'rxjs/oper
 import * as _ from 'lodash-es';
 import {FilterType} from '@ofModel/feed-filter.model';
 import {UserPreferencesService} from 'app/business/services/users/user-preference.service';
-
 import {DateTimeNgb} from '@ofModel/datetime-ngb.model';
 import moment from 'moment';
 import {MessageLevel} from '@ofModel/message.model';

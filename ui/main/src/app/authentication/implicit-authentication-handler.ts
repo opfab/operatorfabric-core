@@ -9,7 +9,6 @@
 
 import {AuthConfig, EventType as OAuthType, JwksValidationHandler, OAuthEvent, OAuthService} from 'angular-oauth2-oidc';
 import {AuthenticatedUser} from './auth.model';
-import {ConfigService} from 'app/business/services/config.service';
 import {AuthHandler} from './auth-handler';
 import {HttpClient} from '@angular/common/http';
 import {CurrentUserStore} from 'app/business/store/current-user.store';
@@ -17,12 +16,11 @@ import {CurrentUserStore} from 'app/business/store/current-user.store';
 export class ImplicitAuthenticationHandler extends AuthHandler {
 
     constructor(
-        configService: ConfigService,
         httpClient: HttpClient,
         private oauthService: OAuthService
 
     ) {
-        super(configService, httpClient);
+        super(httpClient);
     }
 
     public async initializeAuthentication() {
