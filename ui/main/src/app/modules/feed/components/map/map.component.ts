@@ -41,7 +41,6 @@ let self;
     styleUrls: ['./map.component.scss']
 })
 export class MapComponent implements OnInit, OnDestroy, AfterViewChecked {
-
     private unsubscribe$ = new Subject<void>();
     private map: OpenLayersMap;
     private vectorLayer: VectorLayer<VectorSource<any>>;
@@ -89,11 +88,14 @@ export class MapComponent implements OnInit, OnDestroy, AfterViewChecked {
     }
 
     private updateMapWhenGlobalStyleChange() {
-        this.globalStyleService.getStyleChange().subscribe((style) => {
-            this.updateMapColors(style);
-            this.addGeoJSONLayer(style);
-            this.map.render();
-        });
+        this.globalStyleService
+            .getStyleChange()
+            .pipe(takeUntil(this.unsubscribe$))
+            .subscribe((style) => {
+                this.updateMapColors(style);
+                this.addGeoJSONLayer(style);
+                this.map.render();
+            });
     }
 
     private updateMapColors(style) {
@@ -104,7 +106,9 @@ export class MapComponent implements OnInit, OnDestroy, AfterViewChecked {
                 filter = 'invert(100%) hue-rotate(180deg) brightness(95%) contrast(90%)';
             }
             this.map.on('postcompose', () => {
-                document.querySelector('canvas').style.filter = filter;
+                if (document.querySelector('canvas')) {
+                    document.querySelector('canvas').style.filter = filter;
+                }
             });
             this.map.updateSize();
         }
