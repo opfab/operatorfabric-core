@@ -37,8 +37,8 @@ import {Router} from '@angular/router';
 import {OpfabAPIService} from 'app/business/services/opfabAPI.service';
 import {loadBuildInTemplates} from 'app/business/buildInTemplates/templatesLoader';
 import {RemoteLoggerServer} from 'app/business/server/remote-logger.server';
-import {RemoteLoggerService} from 'app/business/services/logs/remote-logger.service';
 import {ConfigServer} from 'app/business/server/config.server';
+import {ServicesConfig} from 'app/business/services/services-config';
 
 declare const opfab: any;
 @Component({
@@ -90,29 +90,26 @@ export class ApplicationLoadingComponent implements OnInit {
     ) {}
 
     ngOnInit() {
-        ConfigService.setConfigServer(this.configServer)
+
+        ServicesConfig.setServers({
+            configServer: this.configServer,
+            remoteLoggerServer : this.remoteLoggerServer
+        })
+
         // Set default style before login
         this.globalStyleService.setStyle('NIGHT');
-
         this.loadUIConfiguration();
     }
 
     private loadUIConfiguration() {
-        ConfigService.loadWebUIConfiguration().subscribe({
+        ServicesConfig.load().subscribe({
             //This configuration needs to be loaded first as it defines the authentication mode
-            next: (config) => {
-                if (config) {
-                    logger.info(`Configuration loaded (web-ui.json)`);
-                    this.setTitleInBrowser();
-                    this.setLoggerConfiguration();
-                    this.loadTranslation(config);
+            next: () => {
+                    this.loadTranslation();
                     this.loadEnvironmentName();
-                } else {
-                    logger.info('No valid web-ui.json configuration file, stop application loading');
-                }
             },
             error: catchError((err, caught) => {
-                logger.error('Impossible to load configuration file web-ui.json' + err);
+                logger.error('Impossible to load  application' + err);
                 return caught;
             })
         });
@@ -126,20 +123,10 @@ export class ApplicationLoadingComponent implements OnInit {
         }
     }
 
-    private setTitleInBrowser() {
-        document.title = ConfigService.getConfigValue('title', 'OperatorFabric');
-    }
-
-    private setLoggerConfiguration() {
-        RemoteLoggerService.setRemoteLoggerServer(this.remoteLoggerServer);
-        ConfigService
-        .getConfigValueAsObservable('settings.remoteLoggingEnabled', false)
-        .subscribe((remoteLoggingEnabled) => RemoteLoggerService.setRemoteLoggerActive(remoteLoggingEnabled));
-    }
-
-    private loadTranslation(config) {
-        if (config.i18n.supported.locales) {
-            this.i18nService.loadGlobalTranslations(config.i18n.supported.locales).subscribe(() => {
+    private loadTranslation() {
+        const locales = ConfigService.getConfigValue("i18n.supported.locales")
+        if (locales) {
+            this.i18nService.loadGlobalTranslations(locales).subscribe(() => {
                 logger.info(
                     'opfab translation loaded for locales: ' + this.translateService.getLangs(),
                     LogOption.LOCAL_AND_REMOTE
