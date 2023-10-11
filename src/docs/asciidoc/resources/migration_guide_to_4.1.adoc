@@ -23,4 +23,6 @@ For example :
   }
 ```
  
+== Log directories in docker 
 
+For the services cards-reminder, supervisor, cards-external-diffusion the log directory in the docker is not anymore /usr/app/logs but /var/log/opfab. So if you map the log directory in your configuration , you need to change it. 
