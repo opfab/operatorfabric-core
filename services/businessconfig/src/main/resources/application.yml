@@ -13,6 +13,10 @@ spring:
       resourceserver:
         jwt:
           jwk-set-uri: ${operatorfabric.security.oauth2.resourceserver.jwt.jwk-set-uri} #To be set outside of docker
+  servlet:
+    multipart:
+      max-file-size: 100MB
+      max-request-size: 100MB
 
 # Patten to avoid Log Injection
 # each new line is prefix with spaces + three dots

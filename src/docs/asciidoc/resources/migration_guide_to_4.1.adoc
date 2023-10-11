@@ -23,6 +23,19 @@ For example :
   }
 ```
  
+== Updating the file size limit
+The limit of maximum file size has been updated to 100 MB. To implement this limit in your `nginx.conf` you need to add in `location /businessconfig/`  the directive `client_max_body_size 100M;` 
+
+For example : 
+
+```
+  location /businessconfig {
+    proxy_set_header Host $http_host;
+    proxy_pass http://${MY_DOCKER_HOST}:2100;
+    proxy_set_header X-Forwarded-For $remote_addr;
+    client_max_body_size 100M;
+  }
+```
 == Log directories in docker 
 
 For the services cards-reminder, supervisor, cards-external-diffusion the log directory in the docker is not anymore /usr/app/logs but /var/log/opfab. So if you map the log directory in your configuration , you need to change it. 
