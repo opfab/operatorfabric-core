@@ -2,8 +2,8 @@ FROM node:20.8-alpine
 RUN apk add --no-cache tzdata
 WORKDIR /usr/app
 RUN chown node:node /usr/app
+RUN mkdir -m777 /var/log/opfab
 USER node
-RUN mkdir -m777 logs
 COPY dockerBuild ./build
 RUN mkdir -m777 config
 COPY dockerConfig/default-docker.yml ./config/base.yml
