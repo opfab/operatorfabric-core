@@ -105,7 +105,6 @@ startProject(){
       echo Starting $1, debug port: $2
       echo "##########################################################"
       projectBuildPath=${OF_HOME}/$3/build
-      bootstrapLocation=${OF_HOME}/$3/src/main/resources/bootstrap-dev.yml
       debugOptions=-agentlib:jdwp=transport=dt_socket,address=$2,server=y,suspend=n
 
       applicationOptions="--spring.profiles.active=dev --spring.config.location=classpath:/application.yml,file:${OF_HOME}/config/docker/,file:${OF_HOME}/config/dev/ --spring.config.name=common,$4"

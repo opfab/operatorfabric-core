@@ -20,7 +20,6 @@ import org.opfab.avro.CardCommand;
 import org.opfab.cards.publication.kafka.CardObjectMapper;
 import org.opfab.cards.publication.model.CardPublicationData;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.util.ReflectionTestUtils;
 
 import java.util.Collections;
@@ -32,7 +31,6 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
-@ActiveProfiles(profiles = "test")
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class BaseCommandHandlerShould {
 

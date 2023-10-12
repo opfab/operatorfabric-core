@@ -3,8 +3,3 @@ spring:
     mongodb:
       uri: mongodb://root:password@localhost:27017/?authSource=admin
       database: operator-fabric-test
-  rabbitmq:
-    host: localhost
-    port: 5672
-    username: guest
-    password: guest

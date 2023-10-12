@@ -27,7 +27,6 @@ import org.opfab.cards.publication.kafka.auth.builder.TokenRequestBuilderFactory
 import org.opfab.cards.publication.kafka.util.BeanUtil;
 import org.springframework.context.ApplicationContext;
 import org.springframework.core.env.Environment;
-import org.springframework.test.context.ActiveProfiles;
 
 import javax.security.auth.callback.Callback;
 import javax.security.auth.callback.PasswordCallback;
@@ -49,7 +48,6 @@ import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 @MockitoSettings(strictness = Strictness.LENIENT)
-@ActiveProfiles(profiles = "test")
 class AADWorkloadIdentityLoginCallbackHandlerShould {
 
 	private AADWorkloadIdentityLoginCallbackHandler aadWorkloadIdentityLoginCallbackHandler;
