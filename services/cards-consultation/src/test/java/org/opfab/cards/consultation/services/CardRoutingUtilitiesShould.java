@@ -23,7 +23,6 @@ import org.opfab.users.model.CurrentUserWithPerimeters;
 import org.opfab.users.model.RightsEnum;
 import org.opfab.users.model.User;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 
@@ -36,7 +35,6 @@ import java.util.List;
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(classes = {IntegrationTestApplication.class})
 @Slf4j
-@ActiveProfiles("test")
 class CardRoutingUtilitiesShould {
  
     private CurrentUserWithPerimeters currentUserWithPerimeters;

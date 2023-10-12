@@ -22,7 +22,6 @@ import org.opfab.businessconfig.model.ProcessGroupsData;
 import org.opfab.utilities.PathUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 
@@ -45,7 +44,6 @@ import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(classes = {IntegrationTestApplication.class})
 @Slf4j
-@ActiveProfiles("test")
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class ProcessesServiceShould {
 

@@ -1,3 +1,0 @@
-operatorfabric.businessconfig:
-  storage:
-    path: "./build/test-data/businessconfig-storage"

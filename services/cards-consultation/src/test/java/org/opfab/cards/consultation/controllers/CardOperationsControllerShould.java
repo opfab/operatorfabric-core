@@ -26,7 +26,6 @@ import org.opfab.users.model.RightsEnum;
 import org.opfab.users.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
@@ -47,7 +46,6 @@ import static org.opfab.cards.consultation.TestUtilities.roundingToMillis;
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(classes = {IntegrationTestApplication.class, CardSubscriptionService.class, CardOperationsController
    .class, UserServiceCacheTestApplication.class})
-@ActiveProfiles("test")
 class CardOperationsControllerShould {
     private static String TEST_ID = "testClient";
 

@@ -1,9 +1,6 @@
 operatorfabric:
   security:
     jwt:
-      sub-claim: sub
-      given-name-claim: given_name
-      family-name-claim: family_name
       groups:
         mode: JWT # value possible JWT | OPERATOR_FABRIC
         rolesClaim:

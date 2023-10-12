@@ -17,12 +17,10 @@ import org.junit.jupiter.params.provider.NullSource;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.core.env.Environment;
-import org.springframework.test.context.ActiveProfiles;
 
 import static java.util.Collections.EMPTY_MAP;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 @ExtendWith(MockitoExtension.class)
-@ActiveProfiles(profiles = "test")
 class TokenRequestBuilderFactoryShould {
 
 	private TokenRequestBuilderFactory tokenRequestBuilderFactory;

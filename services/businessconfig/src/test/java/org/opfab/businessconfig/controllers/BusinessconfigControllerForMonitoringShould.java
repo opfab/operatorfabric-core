@@ -42,7 +42,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.ResourceLoaderAware;
 import org.springframework.core.io.ResourceLoader;
 import org.springframework.http.MediaType;
-import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
@@ -52,7 +51,6 @@ import lombok.extern.slf4j.Slf4j;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(classes = { IntegrationTestApplication.class })
-@ActiveProfiles("test")
 @WebAppConfiguration
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @WithMockOpFabUser(login = "adminUser", permissions = {PermissionEnum.ADMIN})
