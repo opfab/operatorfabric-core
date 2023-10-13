@@ -9,8 +9,9 @@
 
 import {catchError, Observable, Subject} from 'rxjs';
 import {ConfigService} from './config.service';
-import {LoggerService as logger} from 'app/business/services/logs/logger.service';
+import {LoggerService as logger, LogOption} from 'app/business/services/logs/logger.service';
 import {RemoteLoggerService} from './logs/remote-logger.service';
+import {I18nService} from './translation/i18n.service';
 
 export class ServicesConfig {
     private static loadDone = new Subject();
@@ -18,6 +19,8 @@ export class ServicesConfig {
     public static setServers(servers) {
         ConfigService.setConfigServer(servers.configServer);
         RemoteLoggerService.setRemoteLoggerServer(servers.remoteLoggerServer);
+        I18nService.setConfigServer(servers.configServer);
+        I18nService.setTranslationService(servers.translationService);
     }
 
     public static load(): Observable<any> {
@@ -28,7 +31,7 @@ export class ServicesConfig {
                     logger.info(`Configuration loaded (web-ui.json)`);
                     this.setTitleInBrowser();
                     this.setLoggerConfiguration();
-                    this.loadDone.next(true);
+                    this.loadTranslation();
                 } else {
                     logger.info('No valid web-ui.json configuration file, stop application loading');
                 }
@@ -49,5 +52,23 @@ export class ServicesConfig {
 
     private static setTitleInBrowser() {
         document.title = ConfigService.getConfigValue('title', 'OperatorFabric');
+    }
+
+    private static loadTranslation() {
+        const locales = ConfigService.getConfigValue('i18n.supported.locales');
+        if (locales) {
+            I18nService.loadGlobalTranslations(locales).subscribe(() => {
+                logger.info(
+                    'opfab translation loaded for locales: ' + locales,
+                    LogOption.LOCAL_AND_REMOTE
+                );
+                I18nService.loadTranslationForMenu();
+                I18nService.setTranslationForMultiSelectUsedInTemplates();
+                this.loadDone.next(true);
+                this.loadDone.complete();
+            });
+        } else logger.error('No locales define (value i18.supported.locales not present in web-ui.json)');
+
+        I18nService.initLocale();
     }
 }

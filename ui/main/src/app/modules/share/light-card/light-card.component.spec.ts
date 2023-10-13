@@ -36,13 +36,13 @@ import {TranslationService} from 'app/business/services/translation/translation.
 import {TranslationServiceMock} from '@tests/mocks/translation.service.mock';
 import {AcknowledgeServer} from "../../../business/server/acknowledge.server";
 import {ConfigService} from 'app/business/services/config.service';
+import {AngularTranslationService} from '@ofServices/angularTranslationService';
 
 describe('LightCardComponent', () => {
     let lightCardDetailsComp: LightCardComponent;
     let fixture: ComponentFixture<LightCardComponent>;
     let injector: TestBed;
     let translateService: TranslateService;
-    let i18nService: I18nService;
 
     beforeEach(waitForAsync(() => {
         const routerSpy = createSpyObj('Router', ['navigate']);
@@ -89,8 +89,8 @@ describe('LightCardComponent', () => {
         translateService = injector.get(TranslateService);
         translateService.addLangs(['en', 'fr']);
         translateService.setDefaultLang('en');
-        i18nService = injector.get(I18nService);
-        i18nService.changeLocale('en');
+        I18nService.setTranslationService(new AngularTranslationService(translateService));
+        I18nService.changeLocale('en');
     }));
 
     beforeEach(() => {
@@ -104,14 +104,14 @@ describe('LightCardComponent', () => {
     });
 
     it('should handle timestamp in English', () => {
-        i18nService.changeLocale('en');
+        I18nService.changeLocale('en');
         const date = new Date(2019, 5, 25, 10, 0, 0, 0);
         const TwentyFiveJune2019at10AMDateString = lightCardDetailsComp.handleDate(date.valueOf());
         expect(TwentyFiveJune2019at10AMDateString).toEqual('06/25/2019 10:00 AM');
     });
 
     it('should handle timestamp in French', () => {
-        i18nService.changeLocale('fr');
+        I18nService.changeLocale('fr');
         const date = new Date(2019, 5, 25, 10, 0, 0, 0);
         const TwentyFiveJune2019at10AMDateString = lightCardDetailsComp.handleDate(date.valueOf());
         expect(TwentyFiveJune2019at10AMDateString).toEqual('25/06/2019 10:00');

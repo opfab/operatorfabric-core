@@ -12,8 +12,7 @@ import {TranslateService} from '@ngx-translate/core';
 import {ConfigService} from 'app/business/services/config.service';
 import {EntitiesService} from 'app/business/services/users/entities.service';
 import {GroupsService} from 'app/business/services/users/groups.service';
-import {I18nService} from 'app/business/services/translation/i18n.service';
-import {LogOption, LoggerService as logger} from 'app/business/services/logs/logger.service';
+import {LoggerService as logger} from 'app/business/services/logs/logger.service';
 import {ProcessesService} from 'app/business/services/businessconfig/processes.service';
 import {UserService} from 'app/business/services/users/user.service';
 import {Utilities} from 'app/business/common/utilities';
@@ -39,6 +38,7 @@ import {loadBuildInTemplates} from 'app/business/buildInTemplates/templatesLoade
 import {RemoteLoggerServer} from 'app/business/server/remote-logger.server';
 import {ConfigServer} from 'app/business/server/config.server';
 import {ServicesConfig} from 'app/business/services/services-config';
+import {TranslationService} from 'app/business/services/translation/translation.service';
 
 declare const opfab: any;
 @Component({
@@ -63,15 +63,11 @@ export class ApplicationLoadingComponent implements OnInit {
     environmentName: string;
     environmentColor: string;
 
-    /**
-     * NB: I18nService is injected to trigger its constructor at application startup
-     */
     constructor(
         private authService: AuthService,
         private configServer: ConfigServer,
         private settingsService: SettingsService,
         private translateService: TranslateService,
-        private i18nService: I18nService,
         private userService: UserService,
         private entitiesService: EntitiesService,
         private groupsService: GroupsService,
@@ -84,17 +80,18 @@ export class ApplicationLoadingComponent implements OnInit {
         private applicationUpdateService: ApplicationUpdateService,
         private systemNotificationService: SystemNotificationService,
         private opfabAPIService: OpfabAPIService,
+        private translationService: TranslationService,
         private remoteLoggerServer: RemoteLoggerServer,
         private router: Router,
         private ngZone: NgZone
     ) {}
 
     ngOnInit() {
-
         ServicesConfig.setServers({
             configServer: this.configServer,
-            remoteLoggerServer : this.remoteLoggerServer
-        })
+            remoteLoggerServer: this.remoteLoggerServer,
+            translationService: this.translationService
+        });
 
         // Set default style before login
         this.globalStyleService.setStyle('NIGHT');
@@ -105,8 +102,12 @@ export class ApplicationLoadingComponent implements OnInit {
         ServicesConfig.load().subscribe({
             //This configuration needs to be loaded first as it defines the authentication mode
             next: () => {
-                    this.loadTranslation();
-                    this.loadEnvironmentName();
+                this.loadEnvironmentName();
+                if (this.isUrlCheckActivated()) {
+                    this.checkIfAppLoadedInAnotherTab();
+                } else {
+                    this.launchAuthenticationProcess();
+                }
             },
             error: catchError((err, caught) => {
                 logger.error('Impossible to load  application' + err);
@@ -121,27 +122,6 @@ export class ApplicationLoadingComponent implements OnInit {
         if (this.environmentName) {
             this.displayEnvironmentName = true;
         }
-    }
-
-    private loadTranslation() {
-        const locales = ConfigService.getConfigValue("i18n.supported.locales")
-        if (locales) {
-            this.i18nService.loadGlobalTranslations(locales).subscribe(() => {
-                logger.info(
-                    'opfab translation loaded for locales: ' + this.translateService.getLangs(),
-                    LogOption.LOCAL_AND_REMOTE
-                );
-                this.i18nService.loadTranslationForMenu();
-                this.i18nService.setTranslationForMultiSelectUsedInTemplates();
-
-                if (this.isUrlCheckActivated()) {
-                    this.checkIfAppLoadedInAnotherTab();
-                } else {
-                    this.launchAuthenticationProcess();
-                }
-            });
-        } else logger.error('No locales define (value i18.supported.locales not present in web-ui.json)');
-        this.i18nService.initLocale();
     }
 
     private isUrlCheckActivated(): boolean {
@@ -200,7 +180,7 @@ export class ApplicationLoadingComponent implements OnInit {
         this.settingsService.getUserSettings().subscribe({
             next: (response) => {
                 if (response.status === ServerResponseStatus.OK) {
-                    logger.info('Settings loaded' + response.data);
+                    logger.info('Settings loaded ' + JSON.stringify(response.data));
                     ConfigService.overrideConfigSettingsWithUserSettings(response.data);
                     this.checkIfAccountIsAlreadyUsed();
                 } else {
@@ -275,11 +255,10 @@ export class ApplicationLoadingComponent implements OnInit {
     private initOpfabAPI(): void {
         const that = this;
 
-        opfab.navigate.showCardInFeed = function(cardId: string) {
+        opfab.navigate.showCardInFeed = function (cardId: string) {
             that.ngZone.run(() => that.router.navigate(['feed/cards/', cardId]));
-        }
+        };
 
         this.opfabAPIService.initAPI();
-
     }
 }
