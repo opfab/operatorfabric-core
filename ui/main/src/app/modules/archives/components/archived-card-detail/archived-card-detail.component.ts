@@ -7,7 +7,7 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {Component, Input, OnInit} from "@angular/core";
+import {ChangeDetectionStrategy, Component, Input, OnInit} from "@angular/core";
 import {TranslateService} from "@ngx-translate/core";
 import {Card} from "@ofModel/card.model";
 import {DisplayContext} from "@ofModel/template.model";
@@ -18,7 +18,8 @@ import {Utilities} from "../../../../business/common/utilities";
 @Component({
     selector: 'of-archived-card-detail',
     templateUrl: './archived-card-detail.component.html',
-    styleUrls: ['./archived-card-detail.component.scss']
+    styleUrls: ['./archived-card-detail.component.scss'],
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ArchivedCardDetailComponent implements OnInit{
 

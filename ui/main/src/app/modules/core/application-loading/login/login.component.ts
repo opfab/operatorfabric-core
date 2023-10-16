@@ -7,7 +7,7 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {Component, OnInit} from '@angular/core';
+import {ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit} from '@angular/core';
 import {FormControl, FormGroup} from '@angular/forms';
 import {filter} from 'rxjs/operators';
 import {Message, MessageLevel} from '@ofModel/message.model';
@@ -16,7 +16,8 @@ import {AuthService} from 'app/authentication/auth.service';
 @Component({
     selector: 'of-login',
     templateUrl: './login.component.html',
-    styles: ['.btn-primary {margin-right: 8px;}']
+    styles: ['.btn-primary {margin-right: 8px;}'],
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class LoginComponent implements OnInit {
     userForm: FormGroup<{
@@ -25,12 +26,13 @@ export class LoginComponent implements OnInit {
     }>;
     loginMessage: Message;
 
-    constructor(private authService: AuthService) {}
+    constructor(private authService: AuthService, private changeDetector : ChangeDetectorRef) {}
 
     ngOnInit() {
         this.authService.getRejectLoginMessage()
             .pipe(filter((m) => m != null && m.level === MessageLevel.ERROR))
-            .subscribe((m) => (this.loginMessage = m));
+            .subscribe((m) => {this.loginMessage = m;
+                this.changeDetector.markForCheck();});
         this.userForm = new FormGroup({
             identifier: new FormControl(''),
             password: new FormControl('')

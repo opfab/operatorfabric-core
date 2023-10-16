@@ -7,7 +7,7 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {Component, OnInit, TemplateRef, ViewChild} from '@angular/core';
+import {ChangeDetectionStrategy, Component, OnInit, TemplateRef, ViewChild} from '@angular/core';
 import {NgbModal, NgbModalRef} from '@ng-bootstrap/ng-bootstrap';
 import {LogOption, LoggerService as logger} from 'app/business/services/logs/logger.service';
 import {SoundNotificationService} from 'app/business/services/notifications/sound-notification.service';
@@ -21,7 +21,8 @@ import {SoundNotificationService} from 'app/business/services/notifications/soun
 
 @Component({
     selector: 'of-sound-activation',
-    templateUrl: './sound-activation.component.html'
+    templateUrl: './sound-activation.component.html',
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class SoundActivationComponent implements OnInit {
     @ViewChild('noSound') noSoundPopupRef: TemplateRef<any>;

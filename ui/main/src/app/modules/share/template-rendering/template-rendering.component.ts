@@ -9,6 +9,8 @@
 
 import {
     AfterViewChecked,
+    ChangeDetectionStrategy,
+    ChangeDetectorRef,
     Component,
     ElementRef,
     EventEmitter,
@@ -42,7 +44,8 @@ import {OpfabAPIService} from 'app/business/services/opfabAPI.service';
     selector: 'of-template-rendering',
     templateUrl: './template-rendering.component.html',
     styleUrls: ['./template-rendering.component.scss'],
-    encapsulation: ViewEncapsulation.None
+    encapsulation: ViewEncapsulation.None,
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TemplateRenderingComponent implements OnChanges, OnInit, OnDestroy, AfterViewChecked {
     @Input() cardState: State;
@@ -72,11 +75,13 @@ export class TemplateRenderingComponent implements OnChanges, OnInit, OnDestroy,
         private templateCssService: TemplateCssService,
         private globalStyleService: GlobalStyleService,
         private userService: UserService,
-        private opfabAPIService: OpfabAPIService
+        private opfabAPIService: OpfabAPIService,
+        private changeDetector: ChangeDetectorRef
     ) {}
 
     public ngOnInit() {
         this.informTemplateWhenGlobalStyleChange();
+        addEventListener("resize", this.computeRenderingHeight);
     }
 
     // For certain types of template , we need to inform it to take into account
@@ -104,9 +109,11 @@ export class TemplateRenderingComponent implements OnChanges, OnInit, OnDestroy,
         const that = this;
         this.opfabAPIService.currentCard.displayLoadingSpinner = function () {
             that.isLoadingSpinnerToDisplay = true;
+            that.changeDetector.markForCheck();
         };
         this.opfabAPIService.currentCard.hideLoadingSpinner= function () {
             that.isLoadingSpinnerToDisplay = false;
+            that.changeDetector.markForCheck();
         };
     }
 
@@ -135,6 +142,8 @@ export class TemplateRenderingComponent implements OnChanges, OnInit, OnDestroy,
             this.getHTMLFromTemplate().subscribe({
                 next: (html) => {
                     this.htmlTemplateContent = html;
+                    this.changeDetector.markForCheck();
+
                     setTimeout(() => {
                         // wait for DOM rendering
                         this.isLoadingSpinnerToDisplay = false;
@@ -143,6 +152,7 @@ export class TemplateRenderingComponent implements OnChanges, OnInit, OnDestroy,
                             // Wait for template script execution
                             this.callTemplateJsPostRenderingFunctions();
                             this.templateLoaded = true;
+                            this.changeDetector.markForCheck();
                         }, 10);
                     }, 10);
                 },
@@ -205,7 +215,7 @@ export class TemplateRenderingComponent implements OnChanges, OnInit, OnDestroy,
         this.computeRenderingHeight();
     }
 
-    private computeRenderingHeight() {
+    private computeRenderingHeight = () =>  {
         const htmlElementForCardRendering = document.getElementById('opfab-div-card-template');
         if (htmlElementForCardRendering) {
             const renderingRect = htmlElementForCardRendering.getBoundingClientRect();
@@ -222,6 +232,7 @@ export class TemplateRenderingComponent implements OnChanges, OnInit, OnDestroy,
     }
 
     ngOnDestroy() {
+        removeEventListener("resize",this.computeRenderingHeight)
         this.opfabAPIService.initTemplateInterface();
         this.unsubscribeToGlobalStyle$.next();
         this.unsubscribeToGlobalStyle$.complete();

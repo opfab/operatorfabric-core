@@ -7,7 +7,7 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {AfterViewInit, Component, EventEmitter, Input, OnDestroy, OnInit, Output} from '@angular/core';
+import {AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Input, OnDestroy, OnInit, Output} from '@angular/core';
 import {ConfigService} from 'app/business/services/config.service';
 import {Card} from '@ofModel/card.model';
 import {LightCard} from '@ofModel/light-card.model';
@@ -53,7 +53,8 @@ export const transformToTimestamp = (date: NgbDateStruct, time: NgbTimeStruct): 
 @Component({
     selector: 'of-archives-logging-filters',
     templateUrl: './archives-logging-filters.component.html',
-    styleUrls: ['./archives-logging-filters.component.scss']
+    styleUrls: ['./archives-logging-filters.component.scss'],
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ArchivesLoggingFiltersComponent implements OnInit, OnDestroy, AfterViewInit {
     @Input() public card: Card | LightCard;
@@ -128,7 +129,8 @@ export class ArchivesLoggingFiltersComponent implements OnInit, OnDestroy, After
         private processesService: ProcessesService,
         private processStatesDropdownListService: ProcessStatesMultiSelectOptionsService,
         private userPreferences: UserPreferencesService,
-        private userService: UserService
+        private userService: UserService,
+        private changeDetector: ChangeDetectorRef
     ) {
         this.hasCurrentUserRightsToViewAllArchivedCards = this.userService.isCurrentUserAdmin() || this.userService.hasCurrentUserAnyPermission([PermissionEnum.VIEW_ALL_ARCHIVED_CARDS]);
 
@@ -282,6 +284,7 @@ export class ArchivesLoggingFiltersComponent implements OnInit, OnDestroy, After
                         this.addProcessesDropdownList(this.processMultiSelectOptionsPerProcessGroups.get(processGroup));
                 });
             } else this.processMultiSelectOptionsWhenSelectedProcessGroup = this.processMultiSelectOptions;
+            this.changeDetector.markForCheck();
         });
     }
 
@@ -296,6 +299,7 @@ export class ArchivesLoggingFiltersComponent implements OnInit, OnDestroy, After
                     }
                 });
             }
+            this.changeDetector.markForCheck();
         });
     }
 
@@ -366,6 +370,7 @@ export class ArchivesLoggingFiltersComponent implements OnInit, OnDestroy, After
         } else {
             this.activeMaxDate = null;
         }
+        this.changeDetector.markForCheck();
     }
 
     onDateTimeChange() {

@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2020, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2023, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -7,12 +7,13 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {Component, Input, OnInit} from '@angular/core';
+import {ChangeDetectionStrategy, Component, Input, OnInit} from '@angular/core';
 import {PlatformLocation} from '@angular/common';
 
 @Component({
     selector: 'of-icon',
-    templateUrl: 'icon.component.html'
+    templateUrl: 'icon.component.html',
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class IconComponent implements OnInit {
     @Input() icon: string;
@@ -24,7 +25,7 @@ export class IconComponent implements OnInit {
     iconPath: string;
 
     constructor(platformLocation: PlatformLocation) {
-        let baseHref = platformLocation.getBaseHrefFromDOM();
+        const baseHref = platformLocation.getBaseHrefFromDOM();
         this.iconPath = (baseHref ? baseHref : '/') + 'assets/images/icons/';
     }
 
@@ -50,7 +51,7 @@ export class IconComponent implements OnInit {
     }
 
     private setSprites() {
-        if (this.bright == 'dark' || this.bright == 'light') {
+        if (this.bright === 'dark' || this.bright === 'light') {
             this.sprites = 'sprites-mono.svg';
         } else {
             this.bright = undefined; // wrong value set by the user

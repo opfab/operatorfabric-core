@@ -7,20 +7,21 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {Component, OnInit} from '@angular/core';
+import {ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit} from '@angular/core';
 import {OpfabEventStreamServer} from 'app/business/server/opfabEventStream.server';
 
 @Component({
     selector: 'of-connection-lost',
     styleUrls: ['./connection-lost.component.scss'],
-    templateUrl: './connection-lost.component.html'
+    templateUrl: './connection-lost.component.html',
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ConnectionLostComponent implements OnInit {
     connectionLostForMoreThanTenSeconds = false;
     connectionLost = false;
     previousStatus = '';
 
-    constructor(private opfabEventStreamServer: OpfabEventStreamServer) {}
+    constructor(private opfabEventStreamServer: OpfabEventStreamServer,private changeDetector: ChangeDetectorRef) {}
 
     ngOnInit(): void {
         this.detectConnectionLost();
@@ -36,8 +37,11 @@ export class ConnectionLostComponent implements OnInit {
                 if (this.connectionLost)
                     setTimeout(() => {
                         if (this.connectionLost) this.connectionLostForMoreThanTenSeconds = true;
+                        this.changeDetector.markForCheck();
                     }, 10000);
+             this.changeDetector.markForCheck();
             }
+
         });
     }
 }

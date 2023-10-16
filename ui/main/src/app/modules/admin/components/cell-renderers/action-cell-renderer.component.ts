@@ -7,13 +7,14 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {Component} from '@angular/core';
+import {ChangeDetectionStrategy, Component} from '@angular/core';
 import {ICellRendererAngularComp} from 'ag-grid-angular';
 import {ICellRendererParams} from 'ag-grid-community';
 
 @Component({
     selector: 'of-action-cell-renderer',
-    templateUrl: './action-cell-renderer.component.html'
+    templateUrl: './action-cell-renderer.component.html',
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ActionCellRendererComponent implements ICellRendererAngularComp {
     // For explanations regarding ag-grid CellRenderers see
