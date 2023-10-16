@@ -8,7 +8,7 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {Component, Input, OnInit} from '@angular/core';
+import {ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnInit} from '@angular/core';
 import {AbstractControl, AsyncValidatorFn, FormControl, FormGroup, ValidationErrors, Validators} from '@angular/forms';
 import {NgbActiveModal} from '@ng-bootstrap/ng-bootstrap';
 import {AdminItemType, SharingService} from '../../../services/sharing.service';
@@ -24,7 +24,8 @@ import {Observable, of} from 'rxjs';
 @Component({
     selector: 'of-edit-entity-modal',
     templateUrl: './edit-entity-modal.component.html',
-    styleUrls: ['./edit-entity-modal.component.scss']
+    styleUrls: ['./edit-entity-modal.component.scss'],
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class EditEntityModalComponent implements OnInit {
     entityForm: FormGroup<{
@@ -58,7 +59,8 @@ export class EditEntityModalComponent implements OnInit {
         private activeModal: NgbActiveModal,
         private dataHandlingService: SharingService,
         private entitiesService: EntitiesService,
-        private userService: UserService
+        private userService: UserService,
+        private changeDetector: ChangeDetectorRef
     ) {}
 
     ngOnInit() {
@@ -95,6 +97,7 @@ export class EditEntityModalComponent implements OnInit {
 
             this.userService.getAll().subscribe(users => {
                 this.entityUsers = users.filter(usr => this.isUserInCurrentEntity(usr)).map(usr => usr.login).join(', ');
+                this.changeDetector.markForCheck();
             });
         }
 

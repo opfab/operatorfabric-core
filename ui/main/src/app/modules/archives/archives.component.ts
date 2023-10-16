@@ -7,7 +7,7 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {Component, ElementRef, OnDestroy, OnInit, ViewChild} from '@angular/core';
+import {ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {Observable, Subject} from 'rxjs';
 import {ProcessesService} from 'app/business/services/businessconfig/processes.service';
 import {takeUntil, tap} from 'rxjs/operators';
@@ -32,7 +32,8 @@ import {EntitiesService} from 'app/business/services/users/entities.service';
 @Component({
     selector: 'of-archives',
     templateUrl: './archives.component.html',
-    styleUrls: ['./archives.component.scss']
+    styleUrls: ['./archives.component.scss'],
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ArchivesComponent implements OnDestroy, OnInit {
     unsubscribe$: Subject<void> = new Subject<void>();
@@ -92,7 +93,8 @@ export class ArchivesComponent implements OnDestroy, OnInit {
         private cardService: CardService,
         private translationService: TranslationService,
         private userPreferences: UserPreferencesService,
-        private modalService: NgbModal
+        private modalService: NgbModal,
+        private changeDetector: ChangeDetectorRef
     ) {
         processesService.getAllProcesses().forEach((process) => {
             let itemName = process.name;
@@ -145,6 +147,7 @@ export class ArchivesComponent implements OnDestroy, OnInit {
     private getResults(page_number: number): void {
         this.technicalError = false;
         this.loadingInProgress = true;
+        this.changeDetector.markForCheck();
 
         const isAdminModeChecked = this.filtersTemplate.filters.get('adminMode')[0];
 
@@ -168,6 +171,7 @@ export class ArchivesComponent implements OnDestroy, OnInit {
                         this.loadUpdatesByCardId(requestID, isAdminModeChecked);
                     } else {
                         this.loadingInProgress = false;
+                        this.changeDetector.markForCheck();
                         this.updatesByCardId = [];
                         this.results.forEach((lightCard) => {
                             this.updatesByCardId.push({
@@ -181,12 +185,15 @@ export class ArchivesComponent implements OnDestroy, OnInit {
                 } else {
                     this.firstQueryHasBeenDone = false;
                     this.loadingInProgress = false;
+                    this.changeDetector.markForCheck();
                     this.technicalError = true;
                 }
+                
             },
             error: () => {
                 this.firstQueryHasBeenDone = false;
                 this.loadingInProgress = false;
+                this.changeDetector.markForCheck();
                 this.technicalError = true;
             }
         });
@@ -225,6 +232,7 @@ export class ArchivesComponent implements OnDestroy, OnInit {
 
         Utilities.subscribeAndWaitForAllObservablesToEmitAnEvent(updatesRequests$).subscribe(() => {
             this.loadingInProgress = false;
+            this.changeDetector.markForCheck();
         });
     }
 

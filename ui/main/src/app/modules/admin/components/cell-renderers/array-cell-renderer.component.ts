@@ -7,7 +7,7 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {Component} from '@angular/core';
+import {ChangeDetectionStrategy, Component} from '@angular/core';
 import {ICellRendererAngularComp} from 'ag-grid-angular';
 import {ICellRendererParams} from 'ag-grid-community';
 import {CachedCrudService} from 'app/business/services/cached-crud-service';
@@ -15,7 +15,8 @@ import {AdminItemType, SharingService} from '../../services/sharing.service';
 
 @Component({
     selector: 'of-array-cell-renderer',
-    templateUrl: 'array-cell-renderer.component.html'
+    templateUrl: 'array-cell-renderer.component.html',
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ArrayCellRendererComponent implements ICellRendererAngularComp {
     protected itemType: AdminItemType;

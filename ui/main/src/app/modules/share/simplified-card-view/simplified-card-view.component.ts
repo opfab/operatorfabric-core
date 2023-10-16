@@ -7,7 +7,7 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {Component, Input, OnDestroy, OnInit} from '@angular/core';
+import {ChangeDetectionStrategy, Component, Input, OnDestroy, OnInit} from '@angular/core';
 import {Card} from '@ofModel/card.model';
 import {ProcessesService} from 'app/business/services/businessconfig/processes.service';
 import {takeUntil} from 'rxjs/operators';
@@ -23,7 +23,8 @@ import {OpfabAPIService} from 'app/business/services/opfabAPI.service';
 
 @Component({
     selector: 'of-simplified-card-view',
-    templateUrl: './simplified-card-view.component.html'
+    templateUrl: './simplified-card-view.component.html',
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class SimplifiedCardViewComponent implements OnInit, OnDestroy {
     @Input() card: Card;

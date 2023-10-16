@@ -8,7 +8,7 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {Component, Input, OnInit} from '@angular/core';
+import {ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnInit} from '@angular/core';
 import {
     AbstractControl,
     AsyncValidatorFn,
@@ -35,7 +35,8 @@ import {AlertMessageService} from 'app/business/services/alert-message.service';
 @Component({
     selector: 'of-edit-group-modal',
     templateUrl: './edit-group-modal.component.html',
-    styleUrls: ['./edit-group-modal.component.scss']
+    styleUrls: ['./edit-group-modal.component.scss'],
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class EditGroupModalComponent implements OnInit {
 
@@ -90,7 +91,8 @@ export class EditGroupModalComponent implements OnInit {
         private dataHandlingService: SharingService,
         private perimetersService: PerimetersService,
         private groupsService: GroupsService,
-        private userService: UserService
+        private userService: UserService,
+        private changeDetector: ChangeDetectorRef
     ) {
         Object.values(GroupTypeEnum).forEach((t) => this.groupTypes.push({value: String(t), label: String(t)}));
         Object.values(PermissionEnum).forEach((t) => this.groupPermissions.push({value: String(t), label: String(t)}));
@@ -104,7 +106,7 @@ export class EditGroupModalComponent implements OnInit {
         }
         uniqueGroupNameValidator.push(this.uniqueGroupNameValidatorFn());
             // modal used for creating a new group
-           
+
         this.groupForm = new FormGroup({
             id: new FormControl(
                 '',
@@ -138,6 +140,7 @@ export class EditGroupModalComponent implements OnInit {
 
             this.userService.getAll().subscribe(users => {
                 this.groupUsers = users.filter(usr => this.isUserInCurrentGroup(usr)).map(usr => usr.login).join(', ');
+                this.changeDetector.markForCheck();
             });
         }
 

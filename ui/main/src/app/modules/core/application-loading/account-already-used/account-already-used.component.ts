@@ -7,7 +7,7 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {Component, Input, TemplateRef, ViewChild} from '@angular/core';
+import {ChangeDetectionStrategy, Component, Input, TemplateRef, ViewChild} from '@angular/core';
 import {NgbModal, NgbModalRef} from '@ng-bootstrap/ng-bootstrap';
 import {LogOption, LoggerService as logger} from 'app/business/services/logs/logger.service';
 import {UserService} from 'app/business/services/users/user.service';
@@ -16,7 +16,8 @@ import {SessionManagerService} from 'app/business/services/session-manager.servi
 
 @Component({
     selector: 'of-account-already-used',
-    templateUrl: './account-already-used.component.html'
+    templateUrl: './account-already-used.component.html',
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class AccountAlreadyUsedComponent extends ApplicationLoadingStep {
     @Input() public userLogin: string;
@@ -24,8 +25,6 @@ export class AccountAlreadyUsedComponent extends ApplicationLoadingStep {
     @ViewChild('sessionAlreadyInUse') sessionAlreadyInUsePopupRef: TemplateRef<any>;
 
     private questionModal: NgbModalRef;
-
-    public isDisconnectedByUserWithSameUrl = false;
 
     constructor(
         private userService: UserService,
@@ -45,7 +44,6 @@ export class AccountAlreadyUsedComponent extends ApplicationLoadingStep {
                 });
             } else {
                 logger.info('Login ' + this.userLogin + ' is not already used ', LogOption.LOCAL_AND_REMOTE);
-                this.isDisconnectedByUserWithSameUrl = true;
                 this.sendEventAccountAlreadyInUseCheckDone();
             }
         });

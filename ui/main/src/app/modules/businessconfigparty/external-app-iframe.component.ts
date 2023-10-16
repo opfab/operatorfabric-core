@@ -7,7 +7,7 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {Component, OnDestroy, OnInit} from '@angular/core';
+import {ChangeDetectionStrategy, Component, OnDestroy, OnInit} from '@angular/core';
 import {takeUntil} from 'rxjs/operators';
 import {Subject} from 'rxjs';
 import {GlobalStyleService} from 'app/business/services/global-style.service';
@@ -16,7 +16,8 @@ import {ExternalAppIFrameView} from 'app/business/view/externalAppIframe/externa
 @Component({
     selector: 'of-iframedisplay',
     templateUrl: './external-app-iframe.component.html',
-    styleUrls: ['./external-app-iframe.component.scss']
+    styleUrls: ['./external-app-iframe.component.scss'],
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ExternalAppIFrameComponent implements OnInit, OnDestroy {
     unsubscribe$: Subject<void> = new Subject<void>();
