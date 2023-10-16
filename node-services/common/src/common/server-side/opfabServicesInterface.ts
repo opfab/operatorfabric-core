@@ -10,7 +10,7 @@
 import axios from 'axios';
 
 import GetResponse from './getResponse';
-import JwtTokenUtils from '../util/jwtTokenUtils'
+import JwtTokenUtils from './jwtTokenUtils'
 
 
 export default class OpfabServicesInterface {

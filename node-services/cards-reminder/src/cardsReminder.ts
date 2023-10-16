@@ -20,7 +20,7 @@ import CardsReminderOpfabServicesInterface from './domain/server-side/cardsRemin
 import CardsReminderService from './domain/client-side/cardsRemiderService';
 import {RRuleReminderService} from './domain/application/rruleReminderService';
 import RemindDatabaseService from './domain/server-side/remindDatabaseService';
-import AuthorizationService from './common/client-side/authorizationService';
+import AuthorizationService from './common/server-side/authorizationService';
 
 
 const app = express();

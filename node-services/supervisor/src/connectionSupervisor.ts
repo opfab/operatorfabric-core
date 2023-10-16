@@ -16,7 +16,7 @@ import ConfigService from './domain/client-side/configService';
 import SupervisorService from './domain/client-side/supervisorService';
 import OpfabServicesInterface from './common/server-side/opfabServicesInterface';
 import logger from './common/server-side/logger';
-import AuthorizationService from './common/client-side/authorizationService';
+import AuthorizationService from './common/server-side/authorizationService';
 
 const app = express();
 app.disable('x-powered-by');
