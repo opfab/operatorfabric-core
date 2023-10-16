@@ -10,7 +10,7 @@
 import axios from 'axios';
 
 import GetResponse from './getResponse';
-import AuthenticationService from '../client-side/authenticationService'
+import JwtTokenUtils from '../util/jwtTokenUtils'
 
 
 export default class OpfabServicesInterface {
@@ -26,7 +26,7 @@ export default class OpfabServicesInterface {
 
 
     logger: any;
-    authenticationService: AuthenticationService;
+    jwtToken: JwtTokenUtils = new JwtTokenUtils();
 
     public setLogin(login: string) {
         this.login = login;
@@ -40,11 +40,6 @@ export default class OpfabServicesInterface {
 
     public setOpfabGetTokenUrl(opfabGetTokenUrl: string) {
         this.opfabGetTokenUrl = opfabGetTokenUrl;
-        return this;
-    }
-
-    public setAuthenticationService(authenticationService: AuthenticationService) {
-        this.authenticationService = authenticationService;
         return this;
     }
 
@@ -67,6 +62,7 @@ export default class OpfabServicesInterface {
 
     public setLogger(logger: any) {
         this.logger = logger;
+        this.jwtToken.setLogger(logger);
         return this;
     }
 
@@ -171,7 +167,7 @@ export default class OpfabServicesInterface {
 
 
     async getToken() {
-        if (!this.authenticationService.validateToken(this.token, this.tokenExpirationMargin)) {
+        if (!this.jwtToken.validateToken(this.token, this.tokenExpirationMargin)) {
             const response = await this.sendRequest({
                 method: 'post',
                 url: this.opfabGetTokenUrl,
