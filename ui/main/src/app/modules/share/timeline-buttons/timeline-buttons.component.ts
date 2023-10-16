@@ -47,13 +47,12 @@ export class TimelineButtonsComponent implements OnInit, OnDestroy {
 
     constructor(
         private dateTimeFormatter: DateTimeFormatterService,
-        private userPreferences: UserPreferencesService,
         private filterService: FilterService
     ) {}
 
     ngOnInit() {
         this.loadDomainConfiguration();
-        const hideTimeLineInStorage = this.userPreferences.getPreference('opfab.hideTimeLine');
+        const hideTimeLineInStorage = UserPreferencesService.getPreference('opfab.hideTimeLine');
         this.hideTimeLine = hideTimeLineInStorage === 'true';
         this.setInitialDomain();
         this.shiftTimeLineIfNecessary();
@@ -106,7 +105,7 @@ export class TimelineButtonsComponent implements OnInit, OnDestroy {
         // Set the zoom activated
         let initialGraphConf = this.buttonList.length > 0 ? this.buttonList[0] : null;
 
-        const savedDomain = this.userPreferences.getPreference('opfab.timeLine.domain');
+        const savedDomain = UserPreferencesService.getPreference('opfab.timeLine.domain');
 
         if (savedDomain) {
             const savedConf = this.buttonList.find((b) => b.domainId === savedDomain);
@@ -136,7 +135,7 @@ export class TimelineButtonsComponent implements OnInit, OnDestroy {
         this.currentDomainId = conf.domainId;
 
         this.setDefaultStartAndEndDomain();
-        this.userPreferences.setPreference('opfab.timeLine.domain', this.currentDomainId);
+        UserPreferencesService.setPreference('opfab.timeLine.domain', this.currentDomainId);
     }
 
     selectZoomButton(buttonTitle) {
@@ -326,7 +325,7 @@ export class TimelineButtonsComponent implements OnInit, OnDestroy {
 
     showOrHideTimeline() {
         this.hideTimeLine = !this.hideTimeLine;
-        this.userPreferences.setPreference('opfab.hideTimeLine', this.hideTimeLine.toString());
+        UserPreferencesService.setPreference('opfab.hideTimeLine', this.hideTimeLine.toString());
     }
 
     /**

@@ -92,7 +92,6 @@ export class ArchivesComponent implements OnDestroy, OnInit {
         private dateTimeFormatter: DateTimeFormatterService,
         private cardService: CardService,
         private translationService: TranslationService,
-        private userPreferences: UserPreferencesService,
         private modalService: NgbModal,
         private changeDetector: ChangeDetectorRef
     ) {
@@ -108,7 +107,7 @@ export class ArchivesComponent implements OnDestroy, OnInit {
     }
 
     ngOnInit() {
-        const isCollapsibleUpdatesActivatedInStorage = this.userPreferences.getPreference(
+        const isCollapsibleUpdatesActivatedInStorage = UserPreferencesService.getPreference(
             'opfab.archives.isCollapsibleUpdatesActivated'
         );
         this.isCollapsibleUpdatesActivated = isCollapsibleUpdatesActivatedInStorage === 'true';
@@ -122,7 +121,7 @@ export class ArchivesComponent implements OnDestroy, OnInit {
 
     toggleCollapsibleUpdates() {
         this.isCollapsibleUpdatesActivated = !this.isCollapsibleUpdatesActivated;
-        this.userPreferences.setPreference(
+        UserPreferencesService.setPreference(
             'opfab.archives.isCollapsibleUpdatesActivated',
             String(this.isCollapsibleUpdatesActivated)
         );
@@ -188,7 +187,6 @@ export class ArchivesComponent implements OnDestroy, OnInit {
                     this.changeDetector.markForCheck();
                     this.technicalError = true;
                 }
-                
             },
             error: () => {
                 this.firstQueryHasBeenDone = false;
