@@ -14,7 +14,7 @@ import bodyParser from 'body-parser';
 import config from 'config';
 
 import logger from './common/server-side/logger';
-import AuthorizationService from './common/client-side/authorizationService'
+import AuthorizationService from './common/server-side/authorizationService'
 import SendMailService from './domain/server-side/sendMailService';
 import CardsExternalDiffusionOpfabServicesInterface from './domain/server-side/cardsExternalDiffusionOpfabServicesInterface';
 import CardsExternalDiffusionService from './domain/client-side/cardsExternalDiffusionService';

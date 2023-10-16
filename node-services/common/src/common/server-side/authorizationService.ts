@@ -8,8 +8,8 @@
  */
 
 import {Request} from 'express';
-import OpfabServicesInterface from '../server-side/opfabServicesInterface';
-import JwtTokenUtils from '../util/jwtTokenUtils';
+import OpfabServicesInterface from './opfabServicesInterface';
+import JwtTokenUtils from './jwtTokenUtils';
 
 export default class AuthorizationService {
 
@@ -41,7 +41,7 @@ export default class AuthorizationService {
     }
 
 
-    public hasUserAnyPermission(user: any, permissions: string[]): boolean {
+    private hasUserAnyPermission(user: any, permissions: string[]): boolean {
         if (!user || !permissions) return false;
         return (
             user.permissions?.filter((permission: string) => permissions.includes(permission)).length > 0
