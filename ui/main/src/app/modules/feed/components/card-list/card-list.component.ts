@@ -63,7 +63,6 @@ export class CardListComponent implements AfterViewChecked, OnInit {
         private groupedCardsService: GroupedCardsService,
         private router: Router,
         private sortService: SortService,
-        private userPreferences: UserPreferencesService,
         private lightCardsStoreService: LightCardsStoreService,
     ) {
         this.currentUserWithPerimeters = this.userService.getCurrentUserWithPerimeters();
@@ -118,25 +117,25 @@ export class CardListComponent implements AfterViewChecked, OnInit {
     }
 
     initFilterActive() {
-        const savedAlarm = this.userPreferences.getPreference('opfab.feed.filter.type.alarm');
-        const savedAction = this.userPreferences.getPreference('opfab.feed.filter.type.action');
-        const savedCompliant = this.userPreferences.getPreference('opfab.feed.filter.type.compliant');
-        const savedInformation = this.userPreferences.getPreference('opfab.feed.filter.type.information');
+        const savedAlarm = UserPreferencesService.getPreference('opfab.feed.filter.type.alarm');
+        const savedAction = UserPreferencesService.getPreference('opfab.feed.filter.type.action');
+        const savedCompliant = UserPreferencesService.getPreference('opfab.feed.filter.type.compliant');
+        const savedInformation = UserPreferencesService.getPreference('opfab.feed.filter.type.information');
 
         const alarmUnset = savedAlarm && savedAlarm !== 'true';
         const actionUnset = savedAction && savedAction !== 'true';
         const compliantUnset = savedCompliant && savedCompliant !== 'true';
         const informationUnset = savedInformation && savedInformation !== 'true';
 
-        const responseValue = this.userPreferences.getPreference('opfab.feed.filter.response');
+        const responseValue = UserPreferencesService.getPreference('opfab.feed.filter.response');
         const responseUnset = responseValue && responseValue !== 'true';
 
-        const ackValue = this.userPreferences.getPreference('opfab.feed.filter.ack');
+        const ackValue = UserPreferencesService.getPreference('opfab.feed.filter.ack');
         const ackSet = ackValue && (ackValue === 'ack' || ackValue === 'none');
 
 
-        const savedStart = this.userPreferences.getPreference('opfab.feed.filter.start');
-        const savedEnd = this.userPreferences.getPreference('opfab.feed.filter.end');
+        const savedStart = UserPreferencesService.getPreference('opfab.feed.filter.start');
+        const savedEnd = UserPreferencesService.getPreference('opfab.feed.filter.end');
 
         this.filterActive = alarmUnset || actionUnset || compliantUnset || informationUnset || responseUnset || ackSet || !!savedStart || !!savedEnd;
     }

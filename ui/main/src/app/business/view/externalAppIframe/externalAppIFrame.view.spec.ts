@@ -13,7 +13,6 @@ import {ServerResponse, ServerResponseStatus} from 'app/business/server/serverRe
 import {ConfigService} from 'app/business/services/config.service';
 import {GlobalStyleService} from 'app/business/services/global-style.service';
 import {MenuService} from 'app/business/services/menu.service';
-import {UserPreferencesService} from 'app/business/services/users/user-preference.service';
 import {UserService} from 'app/business/services/users/user.service';
 import {RouterStore} from 'app/business/store/router.store';
 import {firstValueFrom} from 'rxjs';
@@ -53,7 +52,7 @@ describe('ExternalAppIFrame view ', () => {
 
         const userService = new UserService(mockUserServer);
         const menuService = new MenuService(userService);
-        globalStyleService = new GlobalStyleService(new UserPreferencesService(), menuService);
+        globalStyleService = new GlobalStyleService(menuService);
 
         // Mock method not supported in test context
         history.replaceState = () => {};

@@ -27,7 +27,6 @@ export class GlobalStyleService {
     private static styleChangeEvent: BehaviorSubject<string>;
 
     constructor(
-        private userPreferences: UserPreferencesService,
         private menuService: MenuService,) {
         opfabStyle.init();
         GlobalStyleService.styleChangeEvent = new BehaviorSubject<string>(GlobalStyleService.NIGHT);
@@ -59,7 +58,7 @@ export class GlobalStyleService {
     }
 
     private loadNightModeFromUserPreferences() {
-        const nightMode = this.userPreferences.getPreference('opfab.nightMode');
+        const nightMode = UserPreferencesService.getPreference('opfab.nightMode');
         if (nightMode !== null && nightMode === 'false') {
             this.setStyle(GlobalStyleService.DAY);
         } else {
@@ -69,12 +68,12 @@ export class GlobalStyleService {
 
     public switchToNightMode() {
         this.setStyle(GlobalStyleService.NIGHT);
-        this.userPreferences.setPreference('opfab.nightMode', 'true');
+        UserPreferencesService.setPreference('opfab.nightMode', 'true');
     }
 
     public switchToDayMode() {
         this.setStyle(GlobalStyleService.DAY);
-        this.userPreferences.setPreference('opfab.nightMode', 'false');
+        UserPreferencesService.setPreference('opfab.nightMode', 'false');
     }
 
     public getStyleChange(): Observable<string> {

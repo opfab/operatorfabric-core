@@ -128,13 +128,12 @@ export class ArchivesLoggingFiltersComponent implements OnInit, OnDestroy, After
     constructor(
         private processesService: ProcessesService,
         private processStatesDropdownListService: ProcessStatesMultiSelectOptionsService,
-        private userPreferences: UserPreferencesService,
         private userService: UserService,
         private changeDetector: ChangeDetectorRef
     ) {
         this.hasCurrentUserRightsToViewAllArchivedCards = this.userService.isCurrentUserAdmin() || this.userService.hasCurrentUserAnyPermission([PermissionEnum.VIEW_ALL_ARCHIVED_CARDS]);
 
-        const isAdminModeCheckedInStorage = this.userPreferences.getPreference('opfab.isAdminModeChecked');
+        const isAdminModeCheckedInStorage = UserPreferencesService.getPreference('opfab.isAdminModeChecked');
         this.isAdminModeChecked = this.hasCurrentUserRightsToViewAllArchivedCards && isAdminModeCheckedInStorage === 'true';
     }
 
@@ -208,7 +207,7 @@ export class ArchivesLoggingFiltersComponent implements OnInit, OnDestroy, After
 
     toggleAdminMode() {
         this.isAdminModeChecked = !this.isAdminModeChecked;
-        this.userPreferences.setPreference('opfab.isAdminModeChecked', String(this.isAdminModeChecked));
+        UserPreferencesService.setPreference('opfab.isAdminModeChecked', String(this.isAdminModeChecked));
         this.loadValuesForFilters();
         this.resetForm();
     }

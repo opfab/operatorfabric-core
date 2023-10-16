@@ -7,21 +7,16 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {Injectable} from '@angular/core';
-
-@Injectable({
-    providedIn: 'root'
-})
 export class UserPreferencesService {
-    setPreference(key, value) {
+    public static setPreference(key, value) {
         localStorage.setItem(key, value);
     }
 
-    getPreference(key) {
+    public static getPreference(key) {
         return localStorage.getItem(key);
     }
 
-    removePreference(key) {
+    public static removePreference(key) {
         localStorage.removeItem(key);
     }
 }
