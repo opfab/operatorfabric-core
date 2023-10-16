@@ -1,5 +1,10 @@
 
 operatorfabric:
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          jwk-set-uri: http://localhost:89/auth/realms/dev/protocol/openid-connect/certs
   rabbitmq:
     host: "localhost"
     port: 5672

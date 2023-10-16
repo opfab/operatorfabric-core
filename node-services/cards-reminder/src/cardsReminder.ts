@@ -8,12 +8,13 @@
  */
 
 import express from 'express';
+import {expressjwt, GetVerificationKey} from 'express-jwt';
+import jwksRsa from 'jwks-rsa';
 import bodyParser from 'body-parser';
 import config from 'config';
 
 import logger from './common/server-side/logger';
 
-import AuthenticationService from './common/client-side/authenticationService'
 import ReminderService from './domain/application/reminderService';
 import CardsReminderOpfabServicesInterface from './domain/server-side/cardsReminderOpfabServicesInterface';
 import CardsReminderService from './domain/client-side/cardsRemiderService';
@@ -21,10 +22,28 @@ import {RRuleReminderService} from './domain/application/rruleReminderService';
 import RemindDatabaseService from './domain/server-side/remindDatabaseService';
 import AuthorizationService from './common/client-side/authorizationService';
 
+
 const app = express();
 app.disable("x-powered-by");
 
 app.use(bodyParser.json());
+
+
+// Token verification activated except for heathcheck request 
+const jwksUri : string =  config.get('operatorfabric.security.oauth2.resourceserver.jwt.jwk-set-uri');
+app.use(
+    /\/((?!healthcheck).)*/,
+    expressjwt({
+        secret: jwksRsa.expressJwtSecret({
+            cache: true,
+            rateLimit: true,
+            jwksRequestsPerMinute: 5,
+            jwksUri:jwksUri
+        }) as GetVerificationKey,
+        algorithms: [ 'RS256' ]
+    })
+);
+
 
 app.use(express.static("public"));
 const adminPort = config.get('operatorfabric.cardsReminder.adminPort');
@@ -32,8 +51,6 @@ const adminPort = config.get('operatorfabric.cardsReminder.adminPort');
 
 const activeOnStartUp = config.get('operatorfabric.cardsReminder.activeOnStartup');
 
-const authenticationService = new AuthenticationService()
-    .setLogger(logger);
 
 const remindDatabaseService = new RemindDatabaseService()
     .setMongoDbConfiguration(config.get("operatorfabric.mongodb"))
@@ -60,14 +77,12 @@ const opfabServicesInterface = new CardsReminderOpfabServicesInterface()
     .setOpfabCardsPublicationUrl(config.get('operatorfabric.servicesUrls.cardsPublication'))
     .setOpfabUsersUrl(config.get('operatorfabric.servicesUrls.users'))
     .setOpfabGetTokenUrl(config.get('operatorfabric.servicesUrls.authToken'))
-    .setAuthenticationService(authenticationService)
     .setLogger(logger)
     .setEventBusConfiguration(config.get("operatorfabric.rabbitmq"))
     .addListener(rruleReminderService)
     .addListener(reminderService);
 
 const authorizationService = new AuthorizationService()
-    .setAuthenticationService(authenticationService)
     .setOpfabServicesInterface(opfabServicesInterface)
     .setLogger(logger);
 

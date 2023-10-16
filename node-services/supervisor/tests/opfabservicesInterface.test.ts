@@ -11,7 +11,6 @@ import 'jest';
 import sinon from 'sinon';
 import OpfabServicesInterface from '../src/common/server-side/opfabServicesInterface';
 import logger from '../src/common/server-side/logger';
-import AuthenticationService from '../src/common/client-side/authenticationService';
 
 function getOpfabServicesInterface() {
     return new OpfabServicesInterface()
@@ -23,24 +22,11 @@ function getOpfabServicesInterface() {
         .setLogger(logger);
 }
 
-class AuthenticationServiceStub extends AuthenticationService {
-
-    public validateToken(token: string, margin: number) : boolean {
-        return !!token;
-    }
-   
-}
 
 describe('Opfab interface', function () {
     it('Should get one user login when one user connected ', async function () {
-        const authenticationService = new AuthenticationServiceStub();
-        
+
         const opfabServicesInterface = getOpfabServicesInterface();
-        opfabServicesInterface.setAuthenticationService(authenticationService);
-
-
-
-
         sinon.stub(opfabServicesInterface, 'sendRequest').callsFake((request) => {
             
             if (request.url.includes('token')) return Promise.resolve({status: 200, data: {access_token: 'fakeToken'}});
