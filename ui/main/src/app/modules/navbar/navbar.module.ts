@@ -11,8 +11,7 @@ import {NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {TranslateModule} from '@ngx-translate/core';
 import {NavbarComponent} from './navbar.component';
-import {CustomLogoComponent} from './custom-logo/custom-logo.component';
-import {IconComponent} from './icon/icon.component';
+import {LogoComponent} from './logo/logo.component';
 import {InfoComponent} from './info/info.component';
 import {MenuLinkComponent} from './menus/menu-link/menu-link.component';
 import {AppRoutingModule} from 'app/router/app-routing.module';
@@ -24,8 +23,7 @@ import {SpinnerModule} from "../share/spinner/spinner.module";
 @NgModule({
     declarations: [
         NavbarComponent,
-        CustomLogoComponent,
-        IconComponent,
+        LogoComponent,
         InfoComponent,
         AboutComponent,
         MenuLinkComponent
