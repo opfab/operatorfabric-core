@@ -288,6 +288,11 @@ public class CardController {
         return null;
     }
 
+    @PostMapping("/rateLimiter")
+    public void resetRateLimiter(){
+        cardProcessingService.resetRateLimiter();
+    }
+
     private void logUserAction(String login, UserActionEnum actionType, List<String> entities, String cardUid,
             String comment) {
         if (userActionLogActivated)

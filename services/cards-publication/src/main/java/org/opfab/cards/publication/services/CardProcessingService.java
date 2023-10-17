@@ -330,4 +330,8 @@ public class CardProcessingService {
         return acksResult;
     }
 
+    public void resetRateLimiter(){
+        this.cardSendingLimiter.reset();
+    }
+
 }

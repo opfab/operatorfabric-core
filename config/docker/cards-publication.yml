@@ -5,7 +5,7 @@
 #      group-id: opfab-command
 
 #  VALUE FOR TESTING
-#  TO BE REMOVE FOR PRODUCTION MODE
+#  TO BE REMOVED FOR PRODUCTION MODE
 #
 operatorfabric:
   cards-publication:
