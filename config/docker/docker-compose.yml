@@ -35,7 +35,7 @@ services:
 #    - RABBITMQ_DEFAULT_USER=default_user
 #    - RABBITMQ_DEFAULT_PASS=password
 
-  keycloak:
+  keycloak-19:
     image: quay.io/keycloak/keycloak:19.0.3-legacy
     command: -Dkeycloak.migration.action=import -Dkeycloak.migration.provider=dir -Dkeycloak.migration.dir=/keycloak/export -Dkeycloak.profile.feature.upload_scripts=enabled -Djboss.http.port=89
 # -Dkeycloak.profile.feature.upload_scripts=enabled is only used for tests with version 12 from keycloak
@@ -44,11 +44,28 @@ services:
     - KEYCLOAK_PASSWORD=admin
     - DB_VENDOR=H2
     volumes:
-    - ../keycloak:/keycloak
+    - ../keycloak-19:/keycloak
     ports:
-    - "89:89"
+    - "8989:89"
 #    Debug port closed for security reasons, be careful if you open it 
 #    - "90:9990"
+  keycloak:
+    container_name: keycloak
+    image: quay.io/keycloak/keycloak:22.0
+    environment:
+      # Enable health and metrics support
+      - KC_HTTP_PORT=89
+      - KC_HEALTH_ENABLED=true
+      - KC_METRICS_ENABLED=true
+      - KEYCLOAK_ADMIN=admin
+      - KEYCLOAK_ADMIN_PASSWORD=admin
+      - KC_HTTP_RELATIVE_PATH=/auth
+    volumes:
+      - ../keycloak/export:/opt/keycloak/data/import
+    command:
+      - "-v start-dev --import-realm"
+    ports:
+      - "89:89"
   mailhog:
     image: mailhog/mailhog:v1.0.1
     ports:
