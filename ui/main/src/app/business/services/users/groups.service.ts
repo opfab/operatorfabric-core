@@ -14,6 +14,7 @@ import {Injectable} from '@angular/core';
 import {CachedCrudService} from 'app/business/services/cached-crud-service';
 import {GroupsServer} from '../../server/groups.server';
 import {ServerResponseStatus} from '../../server/serverResponse';
+import {ErrorService} from '../error-service';
 
 @Injectable({
     providedIn: 'root'
@@ -38,7 +39,7 @@ export class GroupsService extends CachedCrudService {
                 if (groupsResponse.status === ServerResponseStatus.OK) {
                     this.deleteFromCachedGroups(id);
                 } else {
-                    this.handleServerResponseError(groupsResponse);
+                    ErrorService.handleServerResponseError(groupsResponse);
                 }
             })
         );
@@ -60,7 +61,7 @@ export class GroupsService extends CachedCrudService {
                 if (groupsResponse.status === ServerResponseStatus.OK) {
                     return groupsResponse.data;
                 } else {
-                    this.handleServerResponseError(groupsResponse);
+                    ErrorService.handleServerResponseError(groupsResponse);
                     return [];
                 }
             }))
@@ -97,7 +98,7 @@ export class GroupsService extends CachedCrudService {
                     this.updateCachedGroups(groupData);
                     return groupsResponse.data;
                 } else {
-                    this.handleServerResponseError(groupsResponse);
+                    ErrorService.handleServerResponseError(groupsResponse);
                     return null;
                 }
             })

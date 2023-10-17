@@ -30,7 +30,7 @@ export class ExternalDevicesService extends ErrorService {
     }
 
     sendNotification(notification: Notification): Observable<any> {
-        return this.server.sendNotification(notification).pipe(( map((serverResponse) => { if (serverResponse.status === ServerResponseStatus.OK) return serverResponse.data; else  return this.handleServerResponseError(serverResponse)})));
+        return this.server.sendNotification(notification).pipe(( map((serverResponse) => { if (serverResponse.status === ServerResponseStatus.OK) return serverResponse.data; else  return ErrorService.handleServerResponseError(serverResponse)})));
     }
 
     fetchUserConfiguration(login: string): Observable<UserConfiguration> {
@@ -46,7 +46,7 @@ export class ExternalDevicesService extends ErrorService {
     }
 
     updateUserConfiguration(userconfigData: UserConfiguration): Observable<UserConfiguration> {
-        return this.server.updateUserConfiguration(userconfigData).pipe(( map((serverResponse) => { if (serverResponse.status === ServerResponseStatus.OK) return serverResponse.data; else  return this.handleServerResponseError(serverResponse)})));
+        return this.server.updateUserConfiguration(userconfigData).pipe(( map((serverResponse) => { if (serverResponse.status === ServerResponseStatus.OK) return serverResponse.data; else  return ErrorService.handleServerResponseError(serverResponse)})));
     }
 
     enableDevice(deviceId: string): Observable<string> {
@@ -58,6 +58,6 @@ export class ExternalDevicesService extends ErrorService {
     }
 
     deleteByUserLogin(login: string) {
-        return this.server.deleteByUserLogin(login).pipe(( map((serverResponse) => { if (serverResponse.status === ServerResponseStatus.OK) return serverResponse.data; else  return this.handleServerResponseError(serverResponse)})));
+        return this.server.deleteByUserLogin(login).pipe(( map((serverResponse) => { if (serverResponse.status === ServerResponseStatus.OK) return serverResponse.data; else  return ErrorService.handleServerResponseError(serverResponse)})));
     }
 }
