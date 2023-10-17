@@ -92,13 +92,14 @@ public class CardCustomRepositoryImpl implements CardCustomRepository {
 		Criteria criteria ;
 		if (publishFrom != null) 
 		{
-			if ((rangeEnd != null) || (rangeStart != null))criteria = new Criteria().andOperator(publishDateCriteria(publishFrom),
-													  										computeCriteriaForUser(currentUserWithPerimeters),
-													  										getCriteriaForRange(rangeStart, rangeEnd));
+			if ((rangeEnd != null) || (rangeStart != null))criteria =
+					new Criteria().andOperator(publishDateCriteria(publishFrom),
+						computeCriteriaForUser(currentUserWithPerimeters, false),
+						getCriteriaForRange(rangeStart, rangeEnd));
 			else criteria = new Criteria().andOperator(publishDateCriteria(publishFrom),
-														computeCriteriaForUser(currentUserWithPerimeters));  
+					computeCriteriaForUser(currentUserWithPerimeters, false));
 		}
-		else criteria = new Criteria().andOperator(computeCriteriaForUser(currentUserWithPerimeters),
+		else criteria = new Criteria().andOperator(computeCriteriaForUser(currentUserWithPerimeters, false),
 													  getCriteriaForRange(rangeStart, rangeEnd));
 
 

@@ -33,8 +33,8 @@ describe('Archives screen tests', function () {
         opfab.loginWithUser('operator1_fr');
         opfab.navigateToArchives();
         cy.waitDefaultTime();
-        archivesAndLogging.checkAdminModeCheckboxDoesNotExist();
-        archivesAndLogging.checkAdminModeLinkDoesNotExist();
+        archivesAndLogging.checkSeeOnlyCardsIAmRecipientOfCheckboxDoesNotExist();
+        archivesAndLogging.checkSeeAllCardsLinkDoesNotExist();
         archivesAndLogging.clickOnSearchButton();
         checkNumberOfLineDisplayedIs(6);
         archivesAndLogging.checkNoCardDetailIsDisplayed();
@@ -128,9 +128,9 @@ describe('Archives screen tests', function () {
         script.send6TestCards();
         opfab.loginWithUser('itsupervisor1');
         opfab.navigateToArchives();
-        archivesAndLogging.checkAdminModeLinkDoesNotExist();
-        archivesAndLogging.checkAdminModeCheckboxIsDisplayed();
-        archivesAndLogging.checkAdminModeCheckboxIsNotChecked();
+        archivesAndLogging.checkSeeAllCardsLinkDoesNotExist();
+        archivesAndLogging.checkSeeOnlyCardsIAmRecipientOfCheckboxIsDisplayed();
+        archivesAndLogging.checkSeeOnlyCardsIAmRecipientOfCheckboxIsChecked();
 
         checkMultifiltersForNotAdminModeForItsupervisor1();
 
@@ -138,8 +138,8 @@ describe('Archives screen tests', function () {
         checkNumberOfLineDisplayedIs(1);
 
         // We activate the admin mode
-        archivesAndLogging.clickAdminModeCheckbox();
-        archivesAndLogging.checkAdminModeCheckboxIsChecked();
+        archivesAndLogging.clickSeeOnlyCardsIAmRecipientOfCheckbox();
+        archivesAndLogging.checkSeeOnlyCardsIAmRecipientOfCheckboxIsNotChecked();
 
         checkMultifiltersWhenAllProcessStatesAreDisplayed();
 
@@ -150,8 +150,8 @@ describe('Archives screen tests', function () {
                             'Entity recipients : Control Center FR East, Control Center FR North, Control Center FR South');
 
         // We deactivate the admin mode
-        archivesAndLogging.clickAdminModeCheckbox();
-        archivesAndLogging.checkAdminModeCheckboxIsNotChecked();
+        archivesAndLogging.clickSeeOnlyCardsIAmRecipientOfCheckbox();
+        archivesAndLogging.checkSeeOnlyCardsIAmRecipientOfCheckboxIsChecked();
 
         checkMultifiltersForNotAdminModeForItsupervisor1();
     });
@@ -164,14 +164,14 @@ describe('Archives screen tests', function () {
         archivesAndLogging.checkStateSelectDoesNotExist();
         archivesAndLogging.checkNoProcessStateMessageIsDisplayed();
 
-        archivesAndLogging.checkAdminModeCheckboxDoesNotExist();
-        archivesAndLogging.checkAdminModeLinkIsDisplayed();
+        archivesAndLogging.checkSeeOnlyCardsIAmRecipientOfCheckboxDoesNotExist();
+        archivesAndLogging.checkSeeAllCardsLinkIsDisplayed();
 
         // We activate the admin mode
-        archivesAndLogging.clickAdminModeLink();
+        archivesAndLogging.clickSeeAllCardsLink();
 
-        archivesAndLogging.checkAdminModeCheckboxIsDisplayed();
-        archivesAndLogging.checkAdminModeCheckboxIsChecked();
+        archivesAndLogging.checkSeeOnlyCardsIAmRecipientOfCheckboxIsDisplayed();
+        archivesAndLogging.checkSeeOnlyCardsIAmRecipientOfCheckboxIsNotChecked();
 
         checkMultifiltersWhenAllProcessStatesAreDisplayed();
 
@@ -181,28 +181,28 @@ describe('Archives screen tests', function () {
         openAndCheckArchiveCardContent('Electricity consumption forecast', 'Daily electrical consumption forecast');
 
         // We deactivate the admin mode
-        archivesAndLogging.clickAdminModeCheckbox();
+        archivesAndLogging.clickSeeOnlyCardsIAmRecipientOfCheckbox();
 
         archivesAndLogging.checkNoProcessStateMessageIsDisplayed();
-        archivesAndLogging.checkAdminModeCheckboxDoesNotExist();
-        archivesAndLogging.checkAdminModeLinkIsDisplayed();
+        archivesAndLogging.checkSeeOnlyCardsIAmRecipientOfCheckboxDoesNotExist();
+        archivesAndLogging.checkSeeAllCardsLinkIsDisplayed();
     });
 
 
 
-    it('Check admin mode for for operator2_it with VIEW_ALL_ARCHIVED_CARDS role ', function () {
+    it('Check admin mode for operator2_it with VIEW_ALL_ARCHIVED_CARDS role ', function () {
         opfab.loginWithUser('operator2_fr');
         opfab.navigateToArchives();
 
         cy.waitDefaultTime();
 
-        archivesAndLogging.checkAdminModeCheckboxIsDisplayed();
-        archivesAndLogging.checkAdminModeCheckboxIsNotChecked();
+        archivesAndLogging.checkSeeOnlyCardsIAmRecipientOfCheckboxIsDisplayed();
+        archivesAndLogging.checkSeeOnlyCardsIAmRecipientOfCheckboxIsChecked();
 
         archivesAndLogging.clickOnSearchButton();
         checkNumberOfLineDisplayedIs(3);
         // We activate the admin mode
-        archivesAndLogging.clickAdminModeCheckbox();
+        archivesAndLogging.clickSeeOnlyCardsIAmRecipientOfCheckbox();
         archivesAndLogging.clickOnSearchButton();
 
         checkNumberOfLineDisplayedIs(6);
@@ -216,8 +216,8 @@ describe('Archives screen tests', function () {
         opfab.loginWithUser('operator1_fr');
         opfab.navigateToArchives();
         archivesAndLogging.checkProcessGroupSelectDoesNotExist();
-        archivesAndLogging.checkAdminModeCheckboxDoesNotExist();
-        archivesAndLogging.checkAdminModeLinkDoesNotExist();
+        archivesAndLogging.checkSeeOnlyCardsIAmRecipientOfCheckboxDoesNotExist();
+        archivesAndLogging.checkSeeAllCardsLinkDoesNotExist();
 
         archivesAndLogging.clickOnProcessSelect();
         archivesAndLogging.checkNumberOfProcessEntriesIs(9);
@@ -275,8 +275,8 @@ describe('Archives screen tests', function () {
         archivesAndLogging.checkStateSelectDoesNotExist();
         archivesAndLogging.checkNoProcessStateMessageIsDisplayed();
 
-        archivesAndLogging.checkAdminModeCheckboxDoesNotExist();
-        archivesAndLogging.checkAdminModeLinkDoesNotExist();
+        archivesAndLogging.checkSeeOnlyCardsIAmRecipientOfCheckboxDoesNotExist();
+        archivesAndLogging.checkSeeAllCardsLinkDoesNotExist();
     });
 
     it('Check export', function () {

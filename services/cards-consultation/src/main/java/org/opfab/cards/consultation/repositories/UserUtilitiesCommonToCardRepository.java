@@ -113,10 +113,14 @@ public interface UserUtilitiesCommonToCardRepository<T extends Card> {
         boolean isCurrentUserMemberOfAdminGroup = ((currentUserWithPerimeters.getUserData().getGroups() != null) &&
                                                    (currentUserWithPerimeters.getUserData().getGroups().contains("ADMIN")));
         
-        boolean hasCurrentUserAdminPermission = hasCurrentUserAnyPermission(currentUserWithPerimeters, PermissionEnum.ADMIN, PermissionEnum.VIEW_ALL_ARCHIVED_CARDS);
+        boolean hasCurrentUserAdminPermission = hasCurrentUserAnyPermission(currentUserWithPerimeters,
+                PermissionEnum.ADMIN, PermissionEnum.VIEW_ALL_ARCHIVED_CARDS);
+
+        boolean isAdminModeForUserPerimeters = (!isCurrentUserMemberOfAdminGroup && !hasCurrentUserAdminPermission &&
+                hasCurrentUserAnyPermission(currentUserWithPerimeters, PermissionEnum.VIEW_ALL_ARCHIVED_CARDS_FOR_USER_PERIMETERS));
 
         if (! isCurrentUserMemberOfAdminGroup && !hasCurrentUserAdminPermission)
-            criteria.add(computeCriteriaForUser(currentUserWithPerimeters));
+            criteria.add(computeCriteriaForUser(currentUserWithPerimeters, isAdminModeForUserPerimeters));
         return criteria;
     }
 
@@ -126,7 +130,8 @@ public interface UserUtilitiesCommonToCardRepository<T extends Card> {
         return user.getPermissions().stream().filter(role -> permissionsList.indexOf(role) >= 0).count() > 0;
     }
 
-    default Criteria computeCriteriaForUser(CurrentUserWithPerimeters currentUserWithPerimeters) {
+    default Criteria computeCriteriaForUser(CurrentUserWithPerimeters currentUserWithPerimeters,
+                                            boolean isAdminModeForUserPerimeters) {
         String login = currentUserWithPerimeters.getUserData().getLogin();
         List<String> groups = currentUserWithPerimeters.getUserData().getGroups();
         List<String> entities = currentUserWithPerimeters.getUserData().getEntities();
@@ -138,6 +143,9 @@ public interface UserUtilitiesCommonToCardRepository<T extends Card> {
                     processStateList.add(perimeter.getProcess() + "." + perimeter.getState());
             });
 
+        if (isAdminModeForUserPerimeters) {
+            return computeCriteriaForUserButWithoutCriteriaOnRecipients(processStateList);
+        }
         return computeCriteriaForUser(login, groups, entities, processStateList);
     }
 
@@ -169,6 +177,10 @@ public interface UserUtilitiesCommonToCardRepository<T extends Card> {
                         where(PUBLISHER_TYPE).is(PublisherTypeEnum.ENTITY.toString()).andOperator(where(PUBLISHER).in(entitiesList))));
     }
 
+    default Criteria computeCriteriaForUserButWithoutCriteriaOnRecipients(List<String> processStateList) {
+        return Criteria.where(PROCESS_STATE_KEY).in(processStateList);
+    }
+
 
     Mono<T> findByIdWithUser(String id, CurrentUserWithPerimeters user);
     Flux<T> findByParentCardId(String parentCardId);
@@ -183,8 +195,11 @@ public interface UserUtilitiesCommonToCardRepository<T extends Card> {
         CardsFilter filter = params.getT2();
 
         boolean isAdminMode = checkIfInAdminMode(currentUserWithPerimeters, filter);
+        boolean isAdminModeForUserPerimeters = (!isAdminMode &&
+                checkIfInAdminModeAndPermissionViewAllArchivedCardsForUserPerimeters(
+                currentUserWithPerimeters, filter));
 
-        List<Criteria> criteria = getCriteria(filter, currentUserWithPerimeters, isAdminMode);
+        List<Criteria> criteria = getCriteria(filter, currentUserWithPerimeters, isAdminMode, isAdminModeForUserPerimeters);
 
         boolean latestUpdateOnly = filter.getLatestUpdateOnly();
 
@@ -219,8 +234,11 @@ public interface UserUtilitiesCommonToCardRepository<T extends Card> {
         CardsFilter filter = params.getT2();
 
         boolean isAdminMode = checkIfInAdminMode(currentUserWithPerimeters, filter);
+        boolean isAdminModeForUserPerimeters = (!isAdminMode &&
+                checkIfInAdminModeAndPermissionViewAllArchivedCardsForUserPerimeters(
+                        currentUserWithPerimeters, filter));
 
-        List<Criteria> criteria = this.getCriteria(filter, currentUserWithPerimeters, isAdminMode);
+        List<Criteria> criteria = this.getCriteria(filter, currentUserWithPerimeters, isAdminMode, isAdminModeForUserPerimeters);
 
         boolean latestUpdateOnly = filter.getLatestUpdateOnly();
 
@@ -240,9 +258,11 @@ public interface UserUtilitiesCommonToCardRepository<T extends Card> {
         return operations;
     }
 
-    private List<Criteria> getCriteria(CardsFilter filter,
+    private List<Criteria> getCriteria(
+            CardsFilter filter,
             CurrentUserWithPerimeters currentUserWithPerimeters,
-            boolean isAdminMode) {
+            boolean isAdminMode,
+            boolean isAdminModeForUserPerimeters) {
         List<Criteria> criteria = new ArrayList<>();
         // Publish date range
         criteria.addAll(publishDateCriteria(filter));
@@ -255,7 +275,7 @@ public interface UserUtilitiesCommonToCardRepository<T extends Card> {
 
         /* Add user criteria */
         if (!isAdminMode)
-            criteria.add(computeCriteriaForUser(currentUserWithPerimeters));
+            criteria.add(computeCriteriaForUser(currentUserWithPerimeters, isAdminModeForUserPerimeters));
 
         /* Add child cards criteria (by default, child cards are not included) */
         criteria.add(childCardsIncludedOrNotCriteria(filter));
@@ -397,6 +417,20 @@ public interface UserUtilitiesCommonToCardRepository<T extends Card> {
         }
 
         return criteria;
+    }
+
+    private boolean checkIfInAdminModeAndPermissionViewAllArchivedCardsForUserPerimeters(
+            CurrentUserWithPerimeters currentUserWithPerimeters,
+            CardsFilter filter) {
+        if (filter.getAdminMode() != null) {
+            boolean adminMode = Boolean.TRUE.equals(filter.getAdminMode());
+
+            boolean hasCurrentUserThePermission = hasCurrentUserAnyPermission(currentUserWithPerimeters,
+                    PermissionEnum.VIEW_ALL_ARCHIVED_CARDS_FOR_USER_PERIMETERS);
+
+            return (hasCurrentUserThePermission && adminMode);
+        }
+        return false;
     }
 
 }

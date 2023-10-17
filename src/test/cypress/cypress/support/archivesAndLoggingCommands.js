@@ -18,47 +18,43 @@ export class ArchivesAndLoggingCommands extends OpfabCommands {
         super.init('ARCHIVES AND LOGGING');
     }
 
-    checkAdminModeCheckboxIsDisplayed = function () {
-        cy.get('#opfab-archives-logging-admin-mode-checkbox').contains('Admin mode').should('exist');
-        cy.get('#opfab-archives-logging-admin-help').should('exist');
+    checkSeeOnlyCardsIAmRecipientOfCheckboxIsDisplayed = function () {
+        cy.get('#opfab-archives-logging-see-only-cards-i-am-recipient-of-checkbox').contains('See only the cards I am recipient of').should('exist');
     };
 
-    checkAdminModeCheckboxDoesNotExist = function () {
-        cy.get('#opfab-archives-logging-admin-mode-checkbox').should('not.exist');
-        cy.get('#opfab-archives-logging-admin-help').should('not.exist');
+    checkSeeOnlyCardsIAmRecipientOfCheckboxDoesNotExist = function () {
+        cy.get('#opfab-archives-logging-see-only-cards-i-am-recipient-of-checkbox').should('not.exist');
     };
 
-    checkAdminModeCheckboxIsNotChecked = function () {
-        cy.get('#opfab-archives-logging-admin-mode-checkbox')
-            .contains('Admin mode')
+    checkSeeOnlyCardsIAmRecipientOfCheckboxIsNotChecked = function () {
+        cy.get('#opfab-archives-logging-see-only-cards-i-am-recipient-of-checkbox')
+            .contains('See only the cards I am recipient of')
             .find('input')
             .should('not.be.checked');
     };
 
-    checkAdminModeCheckboxIsChecked = function () {
-        cy.get('#opfab-archives-logging-admin-mode-checkbox').contains('Admin mode').find('input').should('be.checked');
+    checkSeeOnlyCardsIAmRecipientOfCheckboxIsChecked = function () {
+        cy.get('#opfab-archives-logging-see-only-cards-i-am-recipient-of-checkbox').contains('See only the cards I am recipient of').find('input').should('be.checked');
     };
 
-    clickAdminModeCheckbox = function () {
-        cy.get('#opfab-archives-logging-admin-mode-checkbox').contains('Admin mode').click();
+    clickSeeOnlyCardsIAmRecipientOfCheckbox = function () {
+        cy.get('#opfab-archives-logging-see-only-cards-i-am-recipient-of-checkbox').contains('See only the cards I am recipient of').click();
     };
 
     clickOnSearchButton = function () {
         cy.get('#opfab-archives-logging-btn-search').click();
     };
 
-    checkAdminModeLinkIsDisplayed = function () {
-        cy.get('#opfab-admin-mode-link').contains('Go to admin mode').should('exist');
-        cy.get('#opfab-admin-mode-help').should('exist');
+    checkSeeAllCardsLinkIsDisplayed = function () {
+        cy.get('#opfab-see-all-cards-link').contains('See all cards (whether I am the recipient or not)').should('exist');
     };
 
-    checkAdminModeLinkDoesNotExist = function () {
-        cy.get('#opfab-admin-mode-link').should('not.exist');
-        cy.get('#opfab-admin-mode-help').should('not.exist');
+    checkSeeAllCardsLinkDoesNotExist = function () {
+        cy.get('#opfab-see-all-cards-link').should('not.exist');
     };
 
-    clickAdminModeLink = function () {
-        cy.get('#opfab-admin-mode-link').contains('Go to admin mode').click();
+    clickSeeAllCardsLink = function () {
+        cy.get('#opfab-see-all-cards-link').contains('See all cards (whether I am the recipient or not)').click();
     };
 
     checkProcessGroupSelectDoesNotExist = function () {

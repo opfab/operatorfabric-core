@@ -66,6 +66,7 @@ export class ArchivesLoggingFiltersComponent implements OnInit, OnDestroy, After
     @Output() reset = new EventEmitter<string>();
 
     hasCurrentUserRightsToViewAllArchivedCards: boolean;
+    hasCurrentUserRightsToViewAllArchivedCardsInHisPerimeters: boolean;
     isAdminModeChecked: boolean;
 
     unsubscribe$: Subject<void> = new Subject<void>();
@@ -130,10 +131,17 @@ export class ArchivesLoggingFiltersComponent implements OnInit, OnDestroy, After
         private processStatesDropdownListService: ProcessStatesMultiSelectOptionsService,
         private changeDetector: ChangeDetectorRef
     ) {
-        this.hasCurrentUserRightsToViewAllArchivedCards = UserService.isCurrentUserAdmin() || UserService.hasCurrentUserAnyPermission([PermissionEnum.VIEW_ALL_ARCHIVED_CARDS]);
+        this.hasCurrentUserRightsToViewAllArchivedCards = UserService.isCurrentUserAdmin() ||
+            UserService.hasCurrentUserAnyPermission([PermissionEnum.VIEW_ALL_ARCHIVED_CARDS]);
 
-        const isAdminModeCheckedInStorage = UserPreferencesService.getPreference('opfab.isAdminModeChecked');
-        this.isAdminModeChecked = this.hasCurrentUserRightsToViewAllArchivedCards && isAdminModeCheckedInStorage === 'true';
+        this.hasCurrentUserRightsToViewAllArchivedCardsInHisPerimeters = !this.hasCurrentUserRightsToViewAllArchivedCards &&
+            UserService.hasCurrentUserAnyPermission([PermissionEnum.VIEW_ALL_ARCHIVED_CARDS_FOR_USER_PERIMETERS]);
+
+        const seeOnlyCardsForWhichUserIsRecipientInStorage = UserPreferencesService.getPreference('opfab.seeOnlyCardsForWhichUserIsRecipient') ?? true;
+
+        this.isAdminModeChecked = (this.hasCurrentUserRightsToViewAllArchivedCards ||
+                this.hasCurrentUserRightsToViewAllArchivedCardsInHisPerimeters) &&
+            seeOnlyCardsForWhichUserIsRecipientInStorage === 'false';
     }
 
     ngOnInit() {
@@ -167,19 +175,19 @@ export class ArchivesLoggingFiltersComponent implements OnInit, OnDestroy, After
 
         this.statesMultiSelectOptionsPerProcesses =
             this.processStatesDropdownListService.getStatesMultiSelectOptionsPerProcess(
-                this.isAdminModeChecked,
+                (this.isAdminModeChecked && this.hasCurrentUserRightsToViewAllArchivedCards),
                 this.hideChildStates
             );
 
         this.processesWithoutProcessGroupMultiSelectOptions =
             this.processStatesDropdownListService.getProcessesWithoutProcessGroupMultiSelectOptions(
-                this.isAdminModeChecked,
+                (this.isAdminModeChecked && this.hasCurrentUserRightsToViewAllArchivedCards),
                 this.visibleProcessesId
             );
 
         this.processMultiSelectOptionsPerProcessGroups =
             this.processStatesDropdownListService.getProcessesMultiSelectOptionsPerProcessGroup(
-                this.isAdminModeChecked,
+                (this.isAdminModeChecked && this.hasCurrentUserRightsToViewAllArchivedCards),
                 this.visibleProcessesId
             );
 
@@ -206,7 +214,7 @@ export class ArchivesLoggingFiltersComponent implements OnInit, OnDestroy, After
 
     toggleAdminMode() {
         this.isAdminModeChecked = !this.isAdminModeChecked;
-        UserPreferencesService.setPreference('opfab.isAdminModeChecked', String(this.isAdminModeChecked));
+        UserPreferencesService.setPreference('opfab.seeOnlyCardsForWhichUserIsRecipient', String(!this.isAdminModeChecked));
         this.loadValuesForFilters();
         this.resetForm();
     }
