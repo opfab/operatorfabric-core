@@ -37,6 +37,16 @@ class CardSendingLimiterShould {
 
         Assertions.assertFalse(limiter.isNewSendingAllowed("PUBLISHER1"));
     }
+    
+    @Test
+    void isLimiterReset() {
+        for (int i=0; i<limitCardCount; i++) {
+            limiter.isNewSendingAllowed("publisher1");
+        }
+        Assertions.assertFalse(limiter.isNewSendingAllowed("PUBLISHER1"));
+        limiter.reset();
+        Assertions.assertTrue(limiter.isNewSendingAllowed("PUBLISHER1"));
+    }
 
     @Test
     void isPermissionAcceptedWhenWaitAfterLimitReached() {

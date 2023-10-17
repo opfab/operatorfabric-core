@@ -123,7 +123,8 @@ ifndef::single-page-doc[<</documentation/current/deployment/configuration/config
 This is to avoid potential overloading due to external apps stuck in a card sending loop.
 It can be disabled / enabled with
 ifdef::single-page-doc[<<activateCardSendingLimiter, `activateCardSendingLimiter`>>]
-ifndef::single-page-doc[<</documentation/current/deployment/configuration/configuration.adoc#activateCardSendingLimiter, `activateCardSendingLimiter`>>]
+ifndef::single-page-doc[<</documentation/current/deployment/configuration/configuration.adoc#activateCardSendingLimiter, `activateCardSendingLimiter`>>].
+It also possible to reset the data of the limiter by calling the API through the "/cards/rateLimiter" endpoint (e.g. POST "$url:2102/cards/rateLimiter" -H "Authorization:Bearer $token").
 
 == Restricted operations (administration)
 

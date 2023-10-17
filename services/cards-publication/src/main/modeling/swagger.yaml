@@ -859,6 +859,14 @@ paths:
           description: Authentication required
         '404':
           description: Subscription not found
+  /rateLimiter:
+    post:
+      summary: reset the rate limiter
+      responses: 
+        '200':
+          description: rate limiter reset
+        '400':
+          description: bad request
   /cards:
     post:
       tags:

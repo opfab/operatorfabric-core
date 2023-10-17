@@ -42,6 +42,10 @@ public class CardSendingLimiter {
             return false;
     }
 
+    public void reset() {
+        this.publisherData = new HashMap<>();
+    }
+
     private List<Long> getCardSendings(String login) {
         return publisherData.computeIfAbsent(login, k -> new ArrayList<>());
     }
