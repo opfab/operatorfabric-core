@@ -42,10 +42,6 @@ export class NavbarComponent implements OnInit {
 
     @ViewChild('about') aboutTemplate: ElementRef;
 
-    customLogo: string;
-    height: number;
-    width: number;
-    limitSize: boolean;
     displayAdmin: boolean;
     displayActivityArea: boolean;
     displayFeedConfiguration: boolean;
@@ -85,22 +81,6 @@ export class NavbarComponent implements OnInit {
 
         this.showDropdownMenuEvenIfOnlyOneEntry = ConfigService.getShowDropdownMenuEvenIfOnlyOneEntry();
 
-        const logo = ConfigService.getConfigValue('logo.base64');
-        if (logo) {
-            this.customLogo = `data:image/svg+xml;base64,${logo}`;
-        }
-        const logo_height = ConfigService.getConfigValue('logo.height');
-        if (logo_height) {
-            this.height = logo_height;
-        }
-
-        const logo_width = ConfigService.getConfigValue('logo.width');
-        if (logo_width) {
-            this.width = logo_width;
-        }
-
-        const logo_limitSize = ConfigService.getConfigValue('logo.limitSize');
-        this.limitSize = logo_limitSize === true;
 
         const visibleCoreMenus = this.menuService.computeVisibleCoreMenusForCurrentUser();
         visibleCoreMenus.forEach(visibleCoreMenu => {
@@ -189,3 +169,5 @@ export class NavbarComponent implements OnInit {
         this.modalService.open(this.aboutTemplate, {centered: true});
     }
 }
+
+
