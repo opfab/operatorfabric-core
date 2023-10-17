@@ -69,9 +69,8 @@
     "confirmSettings": "CONFIRM SETTINGS",
     "cardEmitter": "EMITTER",
     "entity": "ENTITY",
-    "goToAdminMode": "Go to admin mode",
-    "adminMode": "Admin mode",
-    "adminModeHelp": "Show all cards",
+    "goToAdminMode": "See all cards (whether I am the recipient or not)",
+    "adminMode": "See only the cards I am recipient of",
     "popup": {
       "title": "CONFIRMATION",
       "areYouSure": "You have made some changes. Are you sure you want to save them ?"

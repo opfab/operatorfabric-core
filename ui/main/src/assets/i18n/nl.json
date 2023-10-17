@@ -69,9 +69,8 @@
     "confirmSettings": "BEVESTIG INSTELLINGEN",
     "cardEmitter": "EMITTER",
     "entity": "ENTITEIT",
-    "goToAdminMode": "Ga naar administratie modus",
-    "adminMode": "Administratie modus",
-    "adminModeHelp": "Toon alle kaarten",
+    "goToAdminMode": "Alle kaarten bekijken (of ik nu de ontvanger ben of niet)",
+    "adminMode": "Zie alleen de kaarten waarvan ik de ontvanger ben",
     "popup": {
       "title": "BEVESTIGING",
       "areYouSure": "U heeft enkele wijzigingen aangebracht. Weet u zeker dat u ze wilt opslaan?"

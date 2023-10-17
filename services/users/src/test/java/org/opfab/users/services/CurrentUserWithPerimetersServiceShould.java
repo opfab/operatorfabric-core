@@ -38,6 +38,7 @@ class CurrentUserWithPerimetersServiceShould {
         public static final String GROUP_2 = "GROUP2";
 
         public static final String GROUP_3 = "GROUP3";
+        public static final String GROUP_4 = "GROUP4";
         public static final String GROUP_ADMIN = "ADMIN";
 
 
@@ -108,6 +109,11 @@ class CurrentUserWithPerimetersServiceShould {
                 GroupData group3 = new GroupData();
                 group3.setId(GROUP_3);
                 groupRepositoryStub.save(group3);
+
+                GroupData group4 = new GroupData();
+                group4.setId(GROUP_4);
+                group4.setPermissions(Lists.list(PermissionEnum.READONLY, PermissionEnum.VIEW_ALL_ARCHIVED_CARDS_FOR_USER_PERIMETERS));
+                groupRepositoryStub.save(group4);
 
 
                 GroupData groupAdmin = new GroupData();
@@ -235,13 +241,15 @@ class CurrentUserWithPerimetersServiceShould {
         void GIVEN_User_With_Many_Groups_WHEN_Fetching_CurrentUserWithPerimeters_THEN_Return_Permissions_From_All_Groups() {
                 UserData user = UserData.builder()
                         .login("test")
-                        .group(GROUP_1).group(GROUP_2).group(GROUP_3)
+                        .group(GROUP_1).group(GROUP_2).group(GROUP_3).group(GROUP_4)
                         .build();
                 CurrentUserWithPerimetersService currentUserWithPerimetersService = new CurrentUserWithPerimetersService(
                         usersServiceStub, userSettingsService, entityRepositoryStub);
                 CurrentUserWithPerimeters currentUser = currentUserWithPerimetersService
                         .fetchCurrentUserWithPerimeters(user);
-                assertThat(currentUser.getPermissions()).containsExactlyInAnyOrder(PermissionEnum.READONLY, PermissionEnum.VIEW_ALL_ARCHIVED_CARDS);
+                assertThat(currentUser.getPermissions()).containsExactlyInAnyOrder(PermissionEnum.READONLY,
+                        PermissionEnum.VIEW_ALL_ARCHIVED_CARDS,
+                        PermissionEnum.VIEW_ALL_ARCHIVED_CARDS_FOR_USER_PERIMETERS);
         }
 
         // For compatibility with old version , being in admin group gives the admin permission

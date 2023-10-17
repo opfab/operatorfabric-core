@@ -69,9 +69,8 @@
     "confirmSettings": "ENREGISTRER LA CONFIGURATION",
     "cardEmitter": "ÉMETTEUR",
     "entity": "ENTITÉ",
-    "goToAdminMode": "Passer en mode admin",
-    "adminMode": "Mode admin",
-    "adminModeHelp": "Voir toutes les cartes",
+    "goToAdminMode": "Voir toutes les cartes (que je sois destinataire ou non)",
+    "adminMode": "Voir uniquement les cartes dont je suis destinataire",
     "popup": {
       "title": "CONFIRMATION",
       "areYouSure": "Vous avez fait des modifications. Êtes-vous sûr de vouloir les enregistrer ?"

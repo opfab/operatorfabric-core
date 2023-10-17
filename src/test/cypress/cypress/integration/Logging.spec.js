@@ -32,8 +32,8 @@ describe('Logging screen tests', function () {
         opfab.loginWithUser('operator1_fr');
 
         moveToLoggingScreen();
-        archivesAndLogging.checkAdminModeCheckboxDoesNotExist();
-        archivesAndLogging.checkAdminModeLinkDoesNotExist();
+        archivesAndLogging.checkSeeOnlyCardsIAmRecipientOfCheckboxDoesNotExist();
+        archivesAndLogging.checkSeeAllCardsLinkDoesNotExist();
 
         // We check we have 4 items in process multi-filter, even without choosing a process group
         archivesAndLogging.clickOnProcessSelect();
@@ -81,9 +81,9 @@ describe('Logging screen tests', function () {
         opfab.loginWithUser('itsupervisor1');
 
         moveToLoggingScreen();
-        archivesAndLogging.checkAdminModeLinkDoesNotExist();
-        archivesAndLogging.checkAdminModeCheckboxIsDisplayed();
-        archivesAndLogging.checkAdminModeCheckboxIsNotChecked();
+        archivesAndLogging.checkSeeAllCardsLinkDoesNotExist();
+        archivesAndLogging.checkSeeOnlyCardsIAmRecipientOfCheckboxIsDisplayed();
+        archivesAndLogging.checkSeeOnlyCardsIAmRecipientOfCheckboxIsChecked();
 
         checkMultifiltersForNotAdminModeForItsupervisor1();
 
@@ -91,8 +91,8 @@ describe('Logging screen tests', function () {
         checkNumberOfLineDisplayedIs(1);
 
         // We activate the admin mode
-        archivesAndLogging.clickAdminModeCheckbox();
-        archivesAndLogging.checkAdminModeCheckboxIsChecked();
+        archivesAndLogging.clickSeeOnlyCardsIAmRecipientOfCheckbox();
+        archivesAndLogging.checkSeeOnlyCardsIAmRecipientOfCheckboxIsNotChecked();
 
         checkMultifiltersWhenAllProcessStatesAreDisplayed();
 
@@ -100,8 +100,8 @@ describe('Logging screen tests', function () {
         checkNumberOfLineDisplayedIs(6);
 
         // We deactivate the admin mode
-        archivesAndLogging.clickAdminModeCheckbox();
-        archivesAndLogging.checkAdminModeCheckboxIsNotChecked();
+        archivesAndLogging.clickSeeOnlyCardsIAmRecipientOfCheckbox();
+        archivesAndLogging.checkSeeOnlyCardsIAmRecipientOfCheckboxIsChecked();
 
         checkMultifiltersForNotAdminModeForItsupervisor1();
     });
@@ -118,14 +118,14 @@ describe('Logging screen tests', function () {
         archivesAndLogging.checkStateSelectDoesNotExist();
         archivesAndLogging.checkNoProcessStateMessageIsDisplayed();
 
-        archivesAndLogging.checkAdminModeCheckboxDoesNotExist();
-        archivesAndLogging.checkAdminModeLinkIsDisplayed();
+        archivesAndLogging.checkSeeOnlyCardsIAmRecipientOfCheckboxDoesNotExist();
+        archivesAndLogging.checkSeeAllCardsLinkIsDisplayed();
 
         // We activate the admin mode
-        archivesAndLogging.clickAdminModeLink();
+        archivesAndLogging.clickSeeAllCardsLink();
 
-        archivesAndLogging.checkAdminModeCheckboxIsDisplayed();
-        archivesAndLogging.checkAdminModeCheckboxIsChecked();
+        archivesAndLogging.checkSeeOnlyCardsIAmRecipientOfCheckboxIsDisplayed();
+        archivesAndLogging.checkSeeOnlyCardsIAmRecipientOfCheckboxIsNotChecked();
 
         checkMultifiltersWhenAllProcessStatesAreDisplayed();
 
@@ -133,11 +133,11 @@ describe('Logging screen tests', function () {
         checkNumberOfLineDisplayedIs(6);
 
         // We deactivate the admin mode
-        archivesAndLogging.clickAdminModeCheckbox();
+        archivesAndLogging.clickSeeOnlyCardsIAmRecipientOfCheckbox();
 
         archivesAndLogging.checkNoProcessStateMessageIsDisplayed();
-        archivesAndLogging.checkAdminModeCheckboxDoesNotExist();
-        archivesAndLogging.checkAdminModeLinkIsDisplayed();
+        archivesAndLogging.checkSeeOnlyCardsIAmRecipientOfCheckboxDoesNotExist();
+        archivesAndLogging.checkSeeAllCardsLinkIsDisplayed();
     });
 
     it('Check composition of multi-filters for process groups/processes/states for operator1_fr, with a config without process group', function () {
@@ -147,8 +147,8 @@ describe('Logging screen tests', function () {
         cy.reload();
 
         moveToLoggingScreen();
-        archivesAndLogging.checkAdminModeCheckboxDoesNotExist();
-        archivesAndLogging.checkAdminModeLinkDoesNotExist();
+        archivesAndLogging.checkSeeOnlyCardsIAmRecipientOfCheckboxDoesNotExist();
+        archivesAndLogging.checkSeeAllCardsLinkDoesNotExist();
 
         archivesAndLogging.checkProcessGroupSelectDoesNotExist();
 
@@ -187,8 +187,8 @@ describe('Logging screen tests', function () {
         archivesAndLogging.checkStateSelectDoesNotExist();
         archivesAndLogging.checkNoProcessStateMessageIsDisplayed();
 
-        archivesAndLogging.checkAdminModeCheckboxDoesNotExist();
-        archivesAndLogging.checkAdminModeLinkDoesNotExist();
+        archivesAndLogging.checkSeeOnlyCardsIAmRecipientOfCheckboxDoesNotExist();
+        archivesAndLogging.checkSeeAllCardsLinkDoesNotExist();
     });
 
     it('Check export', function () {
