@@ -12,7 +12,7 @@ import {map, takeUntil, tap} from 'rxjs/operators';
 import {Observable, Subject} from 'rxjs';
 import {Entity} from '@ofModel/entity.model';
 import {Injectable} from '@angular/core';
-import {CachedCrudService} from 'app/business/services/cached-crud-service';
+import {CrudService} from 'app/business/services/crud-service';
 import {EntitiesServer} from '../../server/entities.server';
 import {ServerResponseStatus} from '../../server/serverResponse';
 import {EntitiesTree} from '@ofModel/processes.model';
@@ -23,16 +23,13 @@ import {ErrorService} from '../error-service';
 @Injectable({
     providedIn: 'root'
 })
-export class EntitiesService extends CachedCrudService {
+export class EntitiesService implements CrudService {
     protected _entities: Entity[];
     private ngUnsubscribe$ = new Subject<void>();
-    /**
-     * @constructor
-     * @param httpClient - Angular build-in
-     */
+
+
     constructor(
         private entitiesServer: EntitiesServer) {
-        super();
     }
 
     deleteById(id: string) {

@@ -85,14 +85,13 @@ export class CardBodyComponent implements OnChanges, OnInit, OnDestroy {
         private businessconfigService: ProcessesService,
         private cardService: CardService,
         private router: Router,
-        private userService: UserService,
         private entitiesService: EntitiesService,
         private userPermissionsService: UserPermissionsService,
         private lightCardsStoreService: LightCardsStoreService,
         private selectedCardService: SelectedCardService,
         private opfabAPIService: OpfabAPIService
     ) {
-        this.userWithPerimeters = this.userService.getCurrentUserWithPerimeters();
+        this.userWithPerimeters = UserService.getCurrentUserWithPerimeters();
         if (this.userWithPerimeters) {
             this.user = this.userWithPerimeters.userData;
         }
@@ -184,7 +183,7 @@ export class CardBodyComponent implements OnChanges, OnInit, OnDestroy {
                 this.computeUserEntityIdsPossibleForResponse();
                 this.computeUserMemberOfAnEntityRequiredToRespondAndAllowedToSendCards();
                 this.isUserEnabledToRespond = this.userPermissionsService.isUserEnabledToRespond(
-                    this.userService.getCurrentUserWithPerimeters(),
+                    UserService.getCurrentUserWithPerimeters(),
                     this.card,
                     this.businessconfigService.getProcess(this.card.process)
                 );

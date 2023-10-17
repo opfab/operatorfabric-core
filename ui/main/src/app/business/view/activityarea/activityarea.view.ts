@@ -23,17 +23,16 @@ export class ActivityAreaView {
     private intervalForConnectedUsersUpdate;
 
     constructor(
-        private userService: UserService,
         private entitiesService: EntitiesService,
         private settingsService: SettingsService,
         private lightCardStoreService: LightCardsStoreService
     ) {
-        this.currentUserLogin = this.userService.getCurrentUserWithPerimeters().userData.login;
+        this.currentUserLogin = UserService.getCurrentUserWithPerimeters().userData.login;
         this.activityAreaPage = new ActivityAreaPage();
 
-        this.userService.getUser(this.currentUserLogin).subscribe((user) => {
+        UserService.getUser(this.currentUserLogin).subscribe((user) => {
             if (user.entities) {
-                const entitiesConnected = this.userService.getCurrentUserWithPerimeters().userData.entities;
+                const entitiesConnected = UserService.getCurrentUserWithPerimeters().userData.entities;
                 const entities = this.entitiesService.getEntitiesFromIds(user.entities);
                 entities.sort((a, b) => Utilities.compareObj(a.name, b.name));
                 entities.forEach((entity) => {
@@ -55,7 +54,7 @@ export class ActivityAreaView {
     }
 
     private getConnectedUsers(): Observable<boolean> {
-        return this.userService.loadConnectedUsers().pipe(
+        return UserService.loadConnectedUsers().pipe(
             map((connectedUsers) => {
                 this.activityAreaPage.lines.forEach((line) => (line.connectedUsers = []));
                 connectedUsers.sort((obj1, obj2) => Utilities.compareObj(obj1.login, obj2.login));
@@ -105,7 +104,7 @@ export class ActivityAreaView {
                 map((response) => {
                     if (response.status === ServerResponseStatus.OK) {
                         this.lightCardStoreService.removeAllLightCards();
-                        this.userService.loadUserWithPerimetersData().subscribe();
+                        UserService.loadUserWithPerimetersData().subscribe();
                         return true;
                     } else return false;
                 })

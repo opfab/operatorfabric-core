@@ -68,7 +68,6 @@ export class LightCardsStoreService {
     private receivedAcksSubject = new Subject<{cardUid: string; entitiesAcks: string[]}>();
 
     constructor(
-        private userService: UserService,
         private opfabEventStreamService: OpfabEventStreamService,
         private selectedCardService: SelectedCardService,
         private acknowledgeService: AcknowledgeService
@@ -239,7 +238,7 @@ export class LightCardsStoreService {
     }
 
     private isLightChildCardFromCurrentUserEntity(childCard): boolean {
-        return this.userService
+        return UserService
             .getCurrentUserWithPerimeters()
             .userData.entities.some((entity) => entity === childCard.publisher);
     }
@@ -301,7 +300,7 @@ export class LightCardsStoreService {
     }
 
     private getChildCardsFromCurrentUserEntity(children: LightCard[]) {
-        const userEntities = this.userService.getCurrentUserWithPerimeters().userData.entities;
+        const userEntities = UserService.getCurrentUserWithPerimeters().userData.entities;
         return children.filter((c) => userEntities.includes(c.publisher));
     }
 

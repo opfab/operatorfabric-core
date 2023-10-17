@@ -360,7 +360,7 @@ export abstract class AdminTableDirective implements OnInit, OnDestroy {
                 this.refreshData();
             });
         }
-        
+
     }
 
     refreshData() {
@@ -439,10 +439,12 @@ export abstract class AdminTableDirective implements OnInit, OnDestroy {
     private getNameFromId(id: string, renderer: string): string {
         if (renderer) {
             const cellRenderer = new this.gridOptions.components[renderer].prototype.constructor();
-            if (cellRenderer.itemType)
-                return this.dataHandlingService
-                    .resolveCachedCrudServiceDependingOnType(cellRenderer.itemType)
-                    .getNameFromId(id);
+            if (cellRenderer.itemType) {
+                     const found = this.dataHandlingService
+                    .resolveCrudServiceDependingOnType(cellRenderer.itemType)
+                    .getCachedValues().find(e => e.id === id);
+                    return found?.name ? found.name : id;
+            }
         }
         return id;
     }

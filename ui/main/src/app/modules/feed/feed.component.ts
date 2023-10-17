@@ -35,7 +35,6 @@ export class FeedComponent implements OnInit,OnDestroy {
     constructor(
         private lightCardsFeedFilterService: LightCardsFeedFilterService,
         private router: Router,
-        private user : UserService,
         private selectedCardService : SelectedCardService
     ) {
         this.maxNbOfCardsToDisplay = ConfigService.getConfigValue('feed.card.maxNbOfCardsToDisplay', 100);
@@ -44,7 +43,7 @@ export class FeedComponent implements OnInit,OnDestroy {
 
     configureExperimentalHallwayMode() {
         const usersInHallwayMode = ConfigService.getConfigValue('settings.usersInHallwayMode',null);
-        if (usersInHallwayMode?.includes(this.user.getCurrentUserWithPerimeters().userData.login)) {
+        if (usersInHallwayMode?.includes(UserService.getCurrentUserWithPerimeters().userData.login)) {
             this.hallwayMode = true;
             console.log("User in hallwayMode");
         }

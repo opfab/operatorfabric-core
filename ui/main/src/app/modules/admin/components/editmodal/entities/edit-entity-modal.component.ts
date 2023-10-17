@@ -59,7 +59,6 @@ export class EditEntityModalComponent implements OnInit {
         private activeModal: NgbActiveModal,
         private dataHandlingService: SharingService,
         private entitiesService: EntitiesService,
-        private userService: UserService,
         private changeDetector: ChangeDetectorRef
     ) {}
 
@@ -95,7 +94,7 @@ export class EditEntityModalComponent implements OnInit {
             this.entityForm.patchValue(this.row, {onlySelf: true});
             this.selectedEntities = this.row.parents;
 
-            this.userService.getAll().subscribe(users => {
+            UserService.getAll().subscribe(users => {
                 this.entityUsers = users.filter(usr => this.isUserInCurrentEntity(usr)).map(usr => usr.login).join(', ');
                 this.changeDetector.markForCheck();
             });

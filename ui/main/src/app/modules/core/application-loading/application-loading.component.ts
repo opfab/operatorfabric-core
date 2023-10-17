@@ -39,6 +39,7 @@ import {RemoteLoggerServer} from 'app/business/server/remote-logger.server';
 import {ConfigServer} from 'app/business/server/config.server';
 import {ServicesConfig} from 'app/business/services/services-config';
 import {TranslationService} from 'app/business/services/translation/translation.service';
+import {UserServer} from 'app/business/server/user.server';
 
 declare const opfab: any;
 @Component({
@@ -68,7 +69,6 @@ export class ApplicationLoadingComponent implements OnInit {
         private configServer: ConfigServer,
         private settingsService: SettingsService,
         private translateService: TranslateService,
-        private userService: UserService,
         private entitiesService: EntitiesService,
         private groupsService: GroupsService,
         private businessDataService: BusinessDataService,
@@ -82,6 +82,7 @@ export class ApplicationLoadingComponent implements OnInit {
         private opfabAPIService: OpfabAPIService,
         private translationService: TranslationService,
         private remoteLoggerServer: RemoteLoggerServer,
+        private userServer: UserServer,
         private router: Router,
         private ngZone: NgZone
     ) {}
@@ -90,7 +91,8 @@ export class ApplicationLoadingComponent implements OnInit {
         ServicesConfig.setServers({
             configServer: this.configServer,
             remoteLoggerServer: this.remoteLoggerServer,
-            translationService: this.translationService
+            translationService: this.translationService,
+            userServer: this.userServer
         });
 
         // Set default style before login
@@ -170,7 +172,7 @@ export class ApplicationLoadingComponent implements OnInit {
     }
 
     private synchronizeUserTokenWithOpfabUserDatabase() {
-        this.userService.synchronizeWithToken().subscribe({
+        UserService.synchronizeWithToken().subscribe({
             next: () => logger.info('Synchronization of user token with user database done'),
             error: () => logger.warn('Impossible to synchronize user token with user database')
         });
@@ -208,7 +210,7 @@ export class ApplicationLoadingComponent implements OnInit {
     private loadAllConfigurations(): void {
         const requestsToLaunch$ = [
             ConfigService.loadUiMenuConfig(),
-            this.userService.loadUserWithPerimetersData(),
+            UserService.loadUserWithPerimetersData(),
             this.entitiesService.loadAllEntitiesData(),
             this.groupsService.loadAllGroupsData(),
             this.processesService.loadAllProcessesWithLatestVersion(),

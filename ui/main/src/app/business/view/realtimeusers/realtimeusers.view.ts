@@ -30,7 +30,6 @@ export class RealtimeUsersView {
     private updateInterval;
 
     constructor(private configServer: ConfigServer,
-                private userService: UserService,
                 private entitiesService: EntitiesService,
     ) {
         this.init();
@@ -91,7 +90,7 @@ export class RealtimeUsersView {
     }
 
     private updateConnectedUsers() {
-        this.userService.loadConnectedUsers().subscribe((connectedUsers) => {
+        UserService.loadConnectedUsers().subscribe((connectedUsers) => {
             this.connectedUsersPerEntity.clear();
 
             connectedUsers.forEach((connectedUser) => {

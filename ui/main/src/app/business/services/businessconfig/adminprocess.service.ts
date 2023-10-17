@@ -11,7 +11,7 @@ import {Injectable} from '@angular/core';
 import {Observable} from 'rxjs';
 import {map} from 'rxjs/operators';
 import {Process} from '@ofModel/processes.model';
-import {CachedCrudService} from 'app/business/services/cached-crud-service';
+import {CrudService} from 'app/business/services/crud-service';
 import {AdminProcessServer} from '../../server/adminprocess.server';
 import {ServerResponseStatus} from '../../server/serverResponse';
 import {ErrorService} from '../error-service';
@@ -19,11 +19,10 @@ import {ErrorService} from '../error-service';
 @Injectable({
     providedIn: 'root'
 })
-export class AdminProcessesService extends CachedCrudService {
+export class AdminProcessesService implements CrudService {
     private processes: Process[];
 
     constructor(private adminprocessServer: AdminProcessServer) {
-        super();
     }
 
     public getCachedValues(): Array<Process> {

@@ -32,7 +32,7 @@ describe('Handlebars Services', () => {
         processServer = new ProcessServerMock();
         configServer = new ConfigServerMock();
         ConfigService.setConfigServer(configServer);
-        processesService = new ProcessesService(null, processServer, configServer);
+        processesService = new ProcessesService(processServer, configServer);
         handlebarsService = new HandlebarsService(processesService);
     });
 

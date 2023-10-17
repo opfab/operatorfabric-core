@@ -74,7 +74,6 @@ export class TemplateRenderingComponent implements OnChanges, OnInit, OnDestroy,
         private sanitizer: DomSanitizer,
         private templateCssService: TemplateCssService,
         private globalStyleService: GlobalStyleService,
-        private userService: UserService,
         private opfabAPIService: OpfabAPIService,
         private changeDetector: ChangeDetectorRef
     ) {}
@@ -119,7 +118,7 @@ export class TemplateRenderingComponent implements OnChanges, OnInit, OnDestroy,
 
     private getUserContextAndRenderTemplate() {
         if (!this.userContext) {
-            const user = this.userService.getCurrentUserWithPerimeters().userData;
+            const user = UserService.getCurrentUserWithPerimeters().userData;
             const token = CurrentUserStore.getToken();
             this.userContext = new UserContext(
                 user.login,

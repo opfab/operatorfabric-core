@@ -8,12 +8,10 @@
  */
 
 import {Observable} from 'rxjs';
-import {Injectable} from '@angular/core';
-@Injectable({
-    providedIn: 'root'
-})
+
 export abstract class CrudService {
     abstract getAll(): Observable<Array<any>>;
     abstract update(data: any): Observable<any>;
     abstract deleteById(id: string): Observable<any>;
+    abstract getCachedValues(): Array<any>;
 }

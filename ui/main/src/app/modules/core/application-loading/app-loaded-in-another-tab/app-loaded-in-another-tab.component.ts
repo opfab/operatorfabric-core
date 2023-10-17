@@ -49,7 +49,6 @@ export class AppLoadedInAnotherTabComponent extends ApplicationLoadingStep {
         private opfabEventStreamService: OpfabEventStreamService,
         private urlLockService: UrlLockService,
         private modalService: NgbModal,
-        private userService: UserService,
         private soundNotificationService: SoundNotificationService
     ) {
         super();
@@ -97,7 +96,7 @@ export class AppLoadedInAnotherTabComponent extends ApplicationLoadingStep {
             this.isApplicationActive = false;
             this.soundNotificationService.stopService();
             this.opfabEventStreamService.closeEventStream();
-            const login = this.userService.getCurrentUserWithPerimeters().userData.login;
+            const login = UserService.getCurrentUserWithPerimeters().userData.login;
             logger.info(
                 'User ' + login + ' was disconnected by another browser tab having loaded the application',
                 LogOption.LOCAL_AND_REMOTE

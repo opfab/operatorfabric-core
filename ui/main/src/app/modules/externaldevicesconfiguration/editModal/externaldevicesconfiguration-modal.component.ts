@@ -1,4 +1,4 @@
-/* Copyright (c) 2022, RTE (http://www.rte-france.com)
+/* Copyright (c) 2022-2023, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -52,8 +52,7 @@ export class ExternaldevicesconfigurationModalComponent implements OnInit {
 
     constructor(
         private activeModal: NgbActiveModal,
-        private externalDevicesService: ExternalDevicesService,
-        private userService: UserService
+        private externalDevicesService: ExternalDevicesService
     ) {}
 
     ngOnInit() {
@@ -65,7 +64,7 @@ export class ExternaldevicesconfigurationModalComponent implements OnInit {
 
         if (!this.row) {
             this.isLoadingUsers = true;
-            this.userService.queryAllUsers().subscribe((allUsers) => this.setUsersList(allUsers));
+            UserService.queryAllUsers().subscribe((allUsers) => this.setUsersList(allUsers));
         }
         this.isLoadingExternalDevices = true;
         this.externalDevicesService.queryAllDevices().subscribe((allDevices) => this.setDevicesList(allDevices));

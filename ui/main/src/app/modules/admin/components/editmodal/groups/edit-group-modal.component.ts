@@ -91,7 +91,6 @@ export class EditGroupModalComponent implements OnInit {
         private dataHandlingService: SharingService,
         private perimetersService: PerimetersService,
         private groupsService: GroupsService,
-        private userService: UserService,
         private changeDetector: ChangeDetectorRef
     ) {
         Object.values(GroupTypeEnum).forEach((t) => this.groupTypes.push({value: String(t), label: String(t)}));
@@ -138,7 +137,7 @@ export class EditGroupModalComponent implements OnInit {
             this.selectedGroupType = this.row.type;
             this.selectedGroupPermissions = this.row.permissions;
 
-            this.userService.getAll().subscribe(users => {
+            UserService.getAll().subscribe(users => {
                 this.groupUsers = users.filter(usr => this.isUserInCurrentGroup(usr)).map(usr => usr.login).join(', ');
                 this.changeDetector.markForCheck();
             });

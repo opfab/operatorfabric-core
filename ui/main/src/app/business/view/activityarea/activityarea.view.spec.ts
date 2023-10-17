@@ -25,7 +25,6 @@ import {firstValueFrom} from 'rxjs';
 import {ActivityAreaView} from './activityarea.view';
 
 describe('ActivityAreaView', () => {
-    let userService: UserService;
     let userServerMock: UserServerMock;
     let entitiesService: EntitiesService;
     let entitiesServerMock: EntitiesServerMock;
@@ -47,7 +46,7 @@ describe('ActivityAreaView', () => {
 
     function mockUserService() {
         userServerMock = new UserServerMock();
-        userService = new UserService(userServerMock);
+        UserService.setUserServer(userServerMock);
     }
 
     function mockEntitiesService() {
@@ -70,7 +69,6 @@ describe('ActivityAreaView', () => {
 
     function mockLightCardStoreService() {
         lightCardsStoreService = new LightCardsStoreService(
-            userService,
             new OpfabEventStreamService(new OpfabEventStreamServerMock(), null),
             null,
             null
@@ -90,11 +88,11 @@ describe('ActivityAreaView', () => {
         userServerMock.setResponseForCurrentUserWithPerimeter(
             new ServerResponse(userWithPerimeters, ServerResponseStatus.OK, null)
         );
-        await firstValueFrom(userService.loadUserWithPerimetersData());
+        await firstValueFrom(UserService.loadUserWithPerimetersData());
     }
 
     function initActivityAreaView() {
-        activityAreaView = new ActivityAreaView(userService, entitiesService, settingsService, lightCardsStoreService);
+        activityAreaView = new ActivityAreaView(entitiesService, settingsService, lightCardsStoreService);
     }
 
     it('GIVEN a user  WHEN he is member of entity1 THEN activityArea has one line with entity1 and entity1 name', async () => {
@@ -276,7 +274,7 @@ describe('ActivityAreaView', () => {
         );
         const saved = await firstValueFrom(activityAreaView.saveActivityArea());
         expect(saved).toBeTruthy();
-        expect(userService.getCurrentUserWithPerimeters().userData.entities).toEqual(['ENTITY1', 'ENTITY2']);
+        expect(UserService.getCurrentUserWithPerimeters().userData.entities).toEqual(['ENTITY1', 'ENTITY2']);
     });
 
     it('GIVEN a user WHEN save activity area THEN lightcard store is cleared ', async () => {

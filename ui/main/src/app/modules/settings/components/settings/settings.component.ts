@@ -42,7 +42,6 @@ export class SettingsComponent implements OnInit {
     patternReplayInterval = '[0-9]*';
 
     constructor(
-        private userService: UserService,
         private externalDevicesService: ExternalDevicesService,
         private translateService: TranslateService
     ) {}
@@ -87,7 +86,7 @@ export class SettingsComponent implements OnInit {
         this.sendCardsByEmailDefaultValue = ConfigService.getConfigValue('settings.sendCardsByEmail')
             ? ConfigService.getConfigValue('settings.sendCardsByEmail')
             : false;
-        const userLogin = this.userService.getCurrentUserWithPerimeters().userData.login;
+        const userLogin = UserService.getCurrentUserWithPerimeters().userData.login;
 
         if (this.externalDevicesEnabled)
             this.externalDevicesService.fetchUserConfiguration(userLogin).subscribe((result) => {

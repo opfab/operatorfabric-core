@@ -29,17 +29,16 @@ export class InfoComponent implements OnInit {
 
     constructor(
         private dateTimeFormatter: DateTimeFormatterService,
-        private userService: UserService,
         private entitiesService: EntitiesService,
         private applicationEventsService: ApplicationEventsService
     ) {}
 
     ngOnInit() {
         this.updateTime();
-        const firstName = this.userService.getCurrentUserWithPerimeters().userData.firstName;
-        const lastName = this.userService.getCurrentUserWithPerimeters().userData.lastName;
+        const firstName = UserService.getCurrentUserWithPerimeters().userData.firstName;
+        const lastName = UserService.getCurrentUserWithPerimeters().userData.lastName;
         if (firstName && lastName) this.userName = `${_.upperFirst(firstName)} ${_.upperFirst(lastName)}`;
-        else this.userName = this.userService.getCurrentUserWithPerimeters().userData.login;
+        else this.userName = UserService.getCurrentUserWithPerimeters().userData.login;
 
         if (ConfigService.getConfigValue('showUserEntitiesOnTopRightOfTheScreen', false)) {
             this.setUserEntitiesToDisplay();
@@ -55,7 +54,7 @@ export class InfoComponent implements OnInit {
     }
 
     setUserEntitiesToDisplay() {
-        const user_entities = this.userService.getCurrentUserWithPerimeters().userData.entities;
+        const user_entities = UserService.getCurrentUserWithPerimeters().userData.entities;
         if (user_entities) {
             this.userEntities = [];
             const entities = this.entitiesService.getEntitiesFromIds(user_entities);

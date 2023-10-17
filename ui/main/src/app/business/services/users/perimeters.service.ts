@@ -10,7 +10,7 @@
 import {Observable, Subject} from 'rxjs';
 import {map, takeUntil, tap} from 'rxjs/operators';
 import {Injectable} from '@angular/core';
-import {CachedCrudService} from 'app/business/services/cached-crud-service';
+import {CrudService} from 'app/business/services/crud-service';
 import {Perimeter} from '@ofModel/perimeter.model';
 import {PerimetersServer} from '../../server/perimeters.server';
 import {ServerResponseStatus} from '../../server/serverResponse';
@@ -20,17 +20,12 @@ import {ErrorService} from '../error-service';
 @Injectable({
     providedIn: 'root'
 })
-export class PerimetersService extends CachedCrudService {
+export class PerimetersService implements CrudService {
     private _perimeters: Perimeter[];
 
     private ngUnsubscribe$ = new Subject<void>();
 
-    /**
-     * @constructor
-     * @param httpClient - Angular build-in
-     */
     constructor(private perimeterServer: PerimetersServer) {
-        super();
     }
 
     deleteById(id: string) {

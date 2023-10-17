@@ -20,7 +20,6 @@ import {LoggerService as logger} from './logs/logger.service';
 export class MenuService {
     private ADMIN_MENUS = ['admin', 'externaldevicesconfiguration', 'useractionlogs'];
 
-    constructor(private userService: UserService) {}
 
     public getCurrentUserCustomMenus(menus: CustomMenu[]): CustomMenu[] {
         const filteredMenus = [];
@@ -92,19 +91,19 @@ export class MenuService {
         if (menuConfig.opfabCoreMenuId) {
             if (
                 this.ADMIN_MENUS.includes(menuConfig.opfabCoreMenuId) &&
-                !this.userService.hasCurrentUserAnyPermission([PermissionEnum.ADMIN])
+                !UserService.hasCurrentUserAnyPermission([PermissionEnum.ADMIN])
             )
                 return false;
         } else if (
             this.ADMIN_MENUS.includes(menuConfig.id) &&
-            !this.userService.hasCurrentUserAnyPermission([PermissionEnum.ADMIN])
+            !UserService.hasCurrentUserAnyPermission([PermissionEnum.ADMIN])
         )
             return false;
 
         return (
             !menuConfig.showOnlyForGroups ||
             menuConfig.showOnlyForGroups.length === 0 ||
-            (menuConfig.showOnlyForGroups && this.userService.isCurrentUserInAnyGroup(menuConfig.showOnlyForGroups))
+            (menuConfig.showOnlyForGroups && UserService.isCurrentUserInAnyGroup(menuConfig.showOnlyForGroups))
         );
     }
 }

@@ -129,7 +129,6 @@ export class UserCardComponent implements OnInit, OnDestroy {
 
     constructor(
         private cardService: CardService,
-        private userService: UserService,
         private entitiesService: EntitiesService,
         private sanitizer: DomSanitizer,
         private element: ElementRef,
@@ -179,7 +178,7 @@ export class UserCardComponent implements OnInit, OnDestroy {
             false
         );
 
-        this.isReadOnlyUser = this.userService.hasCurrentUserAnyPermission([PermissionEnum.READONLY]);
+        this.isReadOnlyUser = UserService.hasCurrentUserAnyPermission([PermissionEnum.READONLY]);
     }
 
     ngOnDestroy() {
@@ -329,7 +328,7 @@ export class UserCardComponent implements OnInit, OnDestroy {
     private findUserEntitiesAllowedToSendCard(): Array<any> {
         const entitiesList = [];
 
-        let allowedUserEntities = this.userService.getCurrentUserWithPerimeters().userData.entities;
+        let allowedUserEntities = UserService.getCurrentUserWithPerimeters().userData.entities;
         if (this.userCardConfiguration?.publisherList?.length > 0) {
             const configuredPublisherList = [];
             this.entitiesService
@@ -617,7 +616,7 @@ export class UserCardComponent implements OnInit, OnDestroy {
                 if (
                     this.specificInformation.childCard &&
                     this.userPermissionsService.isUserEnabledToRespond(
-                        this.userService.getCurrentUserWithPerimeters(),
+                        UserService.getCurrentUserWithPerimeters(),
                         this.card,
                         selectedProcess
                     )
@@ -643,7 +642,7 @@ export class UserCardComponent implements OnInit, OnDestroy {
     }
 
     private getConnectedUsers(): Observable<boolean> {
-        return this.userService.loadConnectedUsers().pipe(
+        return UserService.loadConnectedUsers().pipe(
             map((connectedUsers) => {
                 this.connectedRecipients.clear();
                 connectedUsers.forEach((connectedUser) => {
@@ -940,7 +939,7 @@ export class UserCardComponent implements OnInit, OnDestroy {
         if (
             this.specificInformation.childCard &&
             this.userPermissionsService.isUserEnabledToRespond(
-                this.userService.getCurrentUserWithPerimeters(),
+                UserService.getCurrentUserWithPerimeters(),
                 this.card,
                 selectedProcess
             )

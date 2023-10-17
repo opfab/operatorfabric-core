@@ -11,16 +11,13 @@ import {AuthenticatedUser} from './auth.model';
 import {AuthHandler} from './auth-handler';
 import {UserService} from 'app/business/services/users/user.service';
 import {Message, MessageLevel} from '@ofModel/message.model';
-import {HttpClient} from '@angular/common/http';
 import {LoggerService as logger} from 'app/business/services/logs/logger.service';
 
 export class NoneAuthenticationHandler extends AuthHandler {
-    constructor(httpClient: HttpClient, private userService: UserService) {
-        super(httpClient);
-    }
+
 
     initializeAuthentication() {
-        this.userService.currentUserWithPerimeters().subscribe((foundUser) => {
+        UserService.currentUserWithPerimeters().subscribe((foundUser) => {
             if (foundUser != null) {
                 logger.info('None auth mode - User (' + foundUser.userData.login + ') found');
                 const user = new AuthenticatedUser();
