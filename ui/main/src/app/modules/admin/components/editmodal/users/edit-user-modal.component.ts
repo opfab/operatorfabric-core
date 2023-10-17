@@ -63,7 +63,6 @@ export class EditUserModalComponent implements OnInit {
 
     constructor(
         private activeModal: NgbActiveModal,
-        private crudService: UserService,
         private groupsService: GroupsService,
         private entitiesService: EntitiesService,
         private changeDetector: ChangeDetectorRef
@@ -131,7 +130,7 @@ export class EditUserModalComponent implements OnInit {
         const isAuthorizedIPAdressesAString = this.userForm.value['authorizedIPAddresses'];
         const ipList = isAuthorizedIPAdressesAString && this.authorizedIPAddresses.value.trim().length > 0 ? this.authorizedIPAddresses.value.split(',') : [];
         this.authorizedIPAddresses.setValue(ipList.map((str) => str.trim()));
-        this.crudService.update(this.userForm.value).subscribe(() => {
+        UserService.update(this.userForm.value).subscribe(() => {
             this.activeModal.close('Update button clicked on user modal');
             // We call the activeModal "close" method and not "dismiss" to indicate that the modal was closed because the
             // user chose to perform an action (here, update the selected item).
@@ -144,7 +143,7 @@ export class EditUserModalComponent implements OnInit {
         const subject = new Subject<boolean>();
 
         if (login) {
-            this.crudService.queryAllUsers().subscribe((users) => {
+            UserService.queryAllUsers().subscribe((users) => {
                 if (users.filter((user) => user.login === login).length) subject.next(false);
                 else subject.next(true);
             });

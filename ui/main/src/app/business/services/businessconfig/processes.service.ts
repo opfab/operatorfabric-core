@@ -37,7 +37,6 @@ export class ProcessesService {
     private typeOfStatesPerProcessAndState: Map<string, TypeOfStateEnum>;
 
     constructor(
-        private userService: UserService,
         private processServer: ProcessServer,
         private configServer: ConfigServer
     ) {}
@@ -327,7 +326,7 @@ export class ProcessesService {
             process.states.forEach((state, stateid) => {
                 if (
                     !(hideChildStates && state.isOnlyAChildState) &&
-                    (isAdminMode || this.userService.isReceiveRightsForProcessAndState(process.id, stateid))
+                    (isAdminMode || UserService.isReceiveRightsForProcessAndState(process.id, stateid))
                 ) {
                     statesDropdownList.push({
                         id: process.id + '.' + stateid

@@ -50,7 +50,6 @@ export class CardActionsComponent implements OnChanges, OnDestroy {
 
     constructor(
         private userPermissionsService: UserPermissionsService,
-        private userService: UserService,
         private modalService: NgbModal,
         private cardService: CardService,
         private router: Router
@@ -59,7 +58,7 @@ export class CardActionsComponent implements OnChanges, OnDestroy {
 
     ngOnChanges(): void {
         this.setButtonsVisibility();
-        this.isReadOnlyUser = this.userService.hasCurrentUserAnyPermission([PermissionEnum.READONLY]);
+        this.isReadOnlyUser = UserService.hasCurrentUserAnyPermission([PermissionEnum.READONLY]);
     }
 
     private setButtonsVisibility() {
@@ -76,19 +75,19 @@ export class CardActionsComponent implements OnChanges, OnDestroy {
         this.showCreateCopyButton =
             this.cardState.copyCardEnabledOnUserInterface &&
             this.cardState.userCard &&
-            this.userService.isWriteRightsForProcessAndState(this.card.process, this.card.state);
+            UserService.isWriteRightsForProcessAndState(this.card.process, this.card.state);
     }
 
     private doesTheUserHavePermissionToEditCard(): boolean {
         return this.userPermissionsService.doesTheUserHavePermissionToEditCard(
-            this.userService.getCurrentUserWithPerimeters(),
+            UserService.getCurrentUserWithPerimeters(),
             this.card
         );
     }
 
     private doesTheUserHavePermissionToDeleteCard(): boolean {
         return this.userPermissionsService.doesTheUserHavePermissionToDeleteCard(
-            this.userService.getCurrentUserWithPerimeters(),
+            UserService.getCurrentUserWithPerimeters(),
             this.card
         );
     }

@@ -50,8 +50,8 @@ describe('ExternalAppIFrame view ', () => {
         ConfigService.setConfigServer(configServerMock);
         const mockUserServer = new UserServerMock();
 
-        const userService = new UserService(mockUserServer);
-        const menuService = new MenuService(userService);
+        UserService.setUserServer(mockUserServer);
+        const menuService = new MenuService();
         globalStyleService = new GlobalStyleService(menuService);
 
         // Mock method not supported in test context

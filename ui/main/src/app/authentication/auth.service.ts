@@ -14,7 +14,6 @@ import {Message} from '@ofModel/message.model';
 import {OAuthService} from 'angular-oauth2-oidc';
 import {ConfigService} from 'app/business/services/config.service';
 import {LoggerService as logger} from 'app/business/services/logs/logger.service';
-import {UserService} from 'app/business/services/users/user.service';
 import {CurrentUserStore} from 'app/business/store/current-user.store';
 import {Observable, Subject} from 'rxjs';
 import {AuthHandler} from './auth-handler';
@@ -38,8 +37,7 @@ export class AuthService {
     constructor(
         private router: Router,
         private oauthServiceForImplicitMode: OAuthService,
-        private httpClient: HttpClient,
-        private userService: UserService
+        private httpClient: HttpClient
     ) {
     }
 
@@ -60,8 +58,7 @@ export class AuthService {
                 break;
             case AuthenticationMode.NONE:
                 this.authHandler = new NoneAuthenticationHandler(
-                    this.httpClient,
-                    this.userService
+                    this.httpClient
                 );
                 break;
             case AuthenticationMode.IMPLICIT:

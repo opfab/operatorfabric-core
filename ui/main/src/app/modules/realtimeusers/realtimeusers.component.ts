@@ -8,7 +8,6 @@
  */
 
 import {Component, OnDestroy, OnInit} from '@angular/core';
-import {UserService} from 'app/business/services/users/user.service';
 import {FormControl, FormGroup} from '@angular/forms';
 import {UserPreferencesService} from 'app/business/services/users/user-preference.service';
 import {MultiSelectConfig} from '@ofModel/multiselect.model';
@@ -41,7 +40,6 @@ export class RealtimeusersComponent implements OnInit, OnDestroy {
 
     constructor(
         private configServer: ConfigServer,
-        private userService: UserService,
         private entitiesService: EntitiesService
     ) {}
 
@@ -52,7 +50,6 @@ export class RealtimeusersComponent implements OnInit, OnDestroy {
 
         this.realtimeusersView = new RealtimeUsersView(
             this.configServer,
-            this.userService,
             this.entitiesService
         );
         this.realtimeusersView.getPage().subscribe((realtimePage) => {

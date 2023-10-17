@@ -88,7 +88,6 @@ export class UserCardSelectStateFormComponent implements OnInit, OnDestroy {
 
     constructor(
         private processesService: ProcessesService,
-        private userService: UserService,
         private entitiesService: EntitiesService,
         private translateService: TranslateService
     ) {}
@@ -99,7 +98,7 @@ export class UserCardSelectStateFormComponent implements OnInit, OnDestroy {
             usercardProcess: new FormControl(''),
             usercardState: new FormControl('')
         });
-        this.currentUserWithPerimeters = this.userService.getCurrentUserWithPerimeters();
+        this.currentUserWithPerimeters = UserService.getCurrentUserWithPerimeters();
         this.processGroups = this.processesService.getProcessGroups();
         this.loadAllProcessAndStateInUserPerimeter();
         this.changeStatesWhenSelectProcess();

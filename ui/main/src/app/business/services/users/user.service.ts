@@ -12,37 +12,29 @@ import {User} from '@ofModel/user.model';
 import {PermissionEnum} from '@ofModel/permission.model';
 import {UserWithPerimeters} from '@ofModel/userWithPerimeters.model';
 import {map, takeUntil, tap} from 'rxjs/operators';
-import {CrudService} from 'app/business/services/crud-service';
-import {Injectable} from '@angular/core';
 import {RightsEnum} from '@ofModel/perimeter.model';
 import {UserServer} from '../../server/user.server';
-import {ServerResponseStatus} from '../../server/serverResponse';
+import {ServerResponse, ServerResponseStatus} from '../../server/serverResponse';
 import {LoggerService as logger} from '../logs/logger.service';
 import {ErrorService} from '../error-service';
 
-@Injectable({
-    providedIn: 'root'
-})
-export class UserService extends CrudService {
-    private _userWithPerimeters: UserWithPerimeters;
-    private ngUnsubscribe = new Subject<void>();
-    private _userRightsPerProcessAndState: Map<string, {rights: RightsEnum; filteringNotificationAllowed: boolean}>;
-    private _receiveRightPerProcess: Map<string, number>;
 
-    /**
-     * @constructor
-     * @param userServer - Angular build-in
-     */
-    constructor(private userServer: UserServer) {
-        super();
-        this._userRightsPerProcessAndState = new Map();
-        this._receiveRightPerProcess = new Map();
+export class UserService {
+    private static _userWithPerimeters: UserWithPerimeters;
+    private static ngUnsubscribe = new Subject<void>();
+    private static _userRightsPerProcessAndState: Map<string, {rights: RightsEnum; filteringNotificationAllowed: boolean}> = new Map();
+    private static _receiveRightPerProcess: Map<string, number> = new Map();
+    private static userServer;
+
+
+    public static setUserServer(userServer: UserServer) {
+        UserService.userServer = userServer;
     }
 
-    deleteById(login: string) {
-        return this.userServer
+    public static deleteById(login: string) {
+        return UserService.userServer
             .deleteById(login)
-            .pipe(map((userResponse) => {
+            .pipe(map((userResponse: ServerResponse<any>) => {
                 if (userResponse.status === ServerResponseStatus.OK) {
                     return userResponse.data;
                 } else {
@@ -52,9 +44,9 @@ export class UserService extends CrudService {
             }));
     }
 
-    getUser(user: string): Observable<User> {
-        return this.userServer.getUser(user).pipe(
-            map((userResponse) => {
+    public static getUser(user: string): Observable<User> {
+        return UserService.userServer.getUser(user).pipe(
+            map((userResponse: ServerResponse<any>) => {
                 if (userResponse.status === ServerResponseStatus.OK) {
                     return userResponse.data;
                 } else {
@@ -65,9 +57,9 @@ export class UserService extends CrudService {
         );
     }
 
-    synchronizeWithToken(): Observable<User> {
-        return this.userServer.synchronizeWithToken().pipe(
-            map((userResponse) => {
+    public static synchronizeWithToken(): Observable<User> {
+        return UserService.userServer.synchronizeWithToken().pipe(
+            map((userResponse: ServerResponse<any>) => {
                 if (userResponse.status === ServerResponseStatus.OK) {
                     return userResponse.data;
                 } else {
@@ -78,9 +70,9 @@ export class UserService extends CrudService {
         );
     }
 
-    currentUserWithPerimeters(): Observable<UserWithPerimeters> {
-        return this.userServer.currentUserWithPerimeters().pipe(
-            map((userResponse) => {
+    public static currentUserWithPerimeters(): Observable<UserWithPerimeters> {
+        return UserService.userServer.currentUserWithPerimeters().pipe(
+            map((userResponse: ServerResponse<any>) => {
                 if (userResponse.status === ServerResponseStatus.OK) {
                     return userResponse.data;
                 } else {
@@ -91,9 +83,9 @@ export class UserService extends CrudService {
         );
     }
 
-    queryAllUsers(): Observable<User[]> {
-        return this.userServer.queryAllUsers().pipe(
-            map((userResponse) => {
+    public static queryAllUsers(): Observable<User[]> {
+        return UserService.userServer.queryAllUsers().pipe(
+            map((userResponse: ServerResponse<any>) => {
                 if (userResponse.status === ServerResponseStatus.OK) {
                     return userResponse.data;
                 } else {
@@ -104,13 +96,13 @@ export class UserService extends CrudService {
         );
     }
 
-    getAll(): Observable<User[]> {
+    public static getAll(): Observable<User[]> {
         return this.queryAllUsers();
     }
 
-    updateUser(userData: User): Observable<User> {
-        return this.userServer.updateUser(userData).pipe(
-            map((userResponse) => {
+    public static updateUser(userData: User): Observable<User> {
+        return UserService.userServer.updateUser(userData).pipe(
+            map((userResponse: ServerResponse<any>) => {
                 if (userResponse.status === ServerResponseStatus.OK) {
                     return userResponse.data;
                 } else {
@@ -121,19 +113,19 @@ export class UserService extends CrudService {
         );
     }
 
-    update(userData: any): Observable<User> {
-        return this.updateUser(userData);
+    public static update(userData: any): Observable<User> {
+        return UserService.updateUser(userData);
     }
 
-    public loadUserWithPerimetersData(): Observable<any> {
+    public static loadUserWithPerimetersData(): Observable<any> {
         return this.currentUserWithPerimeters().pipe(
             takeUntil(this.ngUnsubscribe),
             tap({
                 next: (userWithPerimeters) => {
                     if (userWithPerimeters) {
-                        this._userWithPerimeters = userWithPerimeters;
+                        UserService._userWithPerimeters = userWithPerimeters;
                         console.log(new Date().toISOString(), 'User perimeter loaded');
-                        this.loadUserRightsPerProcessAndState();
+                        UserService.loadUserRightsPerProcessAndState();
                     }
                 },
                 error: (error) =>
@@ -142,31 +134,31 @@ export class UserService extends CrudService {
         );
     }
 
-    public getCurrentUserWithPerimeters(): UserWithPerimeters {
-        return this._userWithPerimeters;
+    public static getCurrentUserWithPerimeters(): UserWithPerimeters {
+        return UserService._userWithPerimeters;
     }
 
-    public isCurrentUserAdmin(): boolean {
-        return this.hasCurrentUserAnyPermission([PermissionEnum.ADMIN]);
+    public static isCurrentUserAdmin(): boolean {
+        return UserService.hasCurrentUserAnyPermission([PermissionEnum.ADMIN]);
     }
 
-    public isCurrentUserInAnyGroup(groups: string[]): boolean {
+    public static isCurrentUserInAnyGroup(groups: string[]): boolean {
         if (!groups) return false;
-        return this._userWithPerimeters.userData.groups.filter((group) => groups.indexOf(group) >= 0).length > 0;
+        return UserService._userWithPerimeters.userData.groups.filter((group) => groups.indexOf(group) >= 0).length > 0;
     }
 
-    public hasCurrentUserAnyPermission(permissions: PermissionEnum[]): boolean {
+    public static hasCurrentUserAnyPermission(permissions: PermissionEnum[]): boolean {
         if (!permissions) return false;
         return (
-            this._userWithPerimeters.permissions?.filter((permission) => permissions.indexOf(permission) >= 0).length >
+            UserService._userWithPerimeters.permissions?.filter((permission) => permissions.indexOf(permission) >= 0).length >
             0
         );
     }
 
-    private loadUserRightsPerProcessAndState() {
-        this._userRightsPerProcessAndState = new Map();
-        this._userWithPerimeters.computedPerimeters.forEach((computedPerimeter) => {
-            this._userRightsPerProcessAndState.set(computedPerimeter.process + '.' + computedPerimeter.state, {
+    private static loadUserRightsPerProcessAndState() {
+        UserService._userRightsPerProcessAndState = new Map();
+        UserService._userWithPerimeters.computedPerimeters.forEach((computedPerimeter) => {
+            UserService._userRightsPerProcessAndState.set(computedPerimeter.process + '.' + computedPerimeter.state, {
                 rights: computedPerimeter.rights,
                 filteringNotificationAllowed: computedPerimeter.filteringNotificationAllowed
             });
@@ -174,12 +166,12 @@ export class UserService extends CrudService {
                 computedPerimeter.rights === RightsEnum.Receive ||
                 computedPerimeter.rights === RightsEnum.ReceiveAndWrite
             )
-                this._receiveRightPerProcess.set(computedPerimeter.process, 1);
+            UserService._receiveRightPerProcess.set(computedPerimeter.process, 1);
         });
     }
 
-    public isReceiveRightsForProcessAndState(processId: string, stateId: string): boolean {
-        const processState = this._userRightsPerProcessAndState.get(processId + '.' + stateId);
+    public static isReceiveRightsForProcessAndState(processId: string, stateId: string): boolean {
+        const processState = UserService._userRightsPerProcessAndState.get(processId + '.' + stateId);
         if (!processState) return false;
         const rights = processState.rights;
         if (rights && (rights === RightsEnum.Receive || rights === RightsEnum.ReceiveAndWrite)) {
@@ -188,8 +180,8 @@ export class UserService extends CrudService {
         return false;
     }
 
-    public isWriteRightsForProcessAndState(processId: string, stateId: string): boolean {
-        const processState = this._userRightsPerProcessAndState.get(processId + '.' + stateId);
+    public static isWriteRightsForProcessAndState(processId: string, stateId: string): boolean {
+        const processState = UserService._userRightsPerProcessAndState.get(processId + '.' + stateId);
         if (!processState) {
             return false;
         }
@@ -200,7 +192,7 @@ export class UserService extends CrudService {
         return false;
     }
 
-    public isFilteringNotificationAllowedForProcessAndState(processId: string, stateId: string): boolean {
+    public static isFilteringNotificationAllowedForProcessAndState(processId: string, stateId: string): boolean {
         const rightsAndFilteringNotificationAllowed = this._userRightsPerProcessAndState.get(processId + '.' + stateId);
         if (rightsAndFilteringNotificationAllowed) {
             const filteringNotificationAllowed = rightsAndFilteringNotificationAllowed.filteringNotificationAllowed;
@@ -215,13 +207,13 @@ export class UserService extends CrudService {
         return true;
     }
 
-    public isReceiveRightsForProcess(processId: string): boolean {
+    public static isReceiveRightsForProcess(processId: string): boolean {
         return !!this._receiveRightPerProcess.get(processId);
     }
 
-    loadConnectedUsers(): Observable<any[]> {
+    public static loadConnectedUsers(): Observable<any[]> {
         return this.userServer.loadConnectedUsers().pipe(
-            map((userResponse) => {
+            map((userResponse : ServerResponse<any>) => {
                 if (userResponse.status === ServerResponseStatus.OK) {
                     return userResponse.data;
                 } else {
@@ -232,9 +224,9 @@ export class UserService extends CrudService {
         );
     }
 
-    willNewSubscriptionDisconnectAnExistingSubscription(): Observable<boolean> {
+    public static willNewSubscriptionDisconnectAnExistingSubscription(): Observable<boolean> {
         return this.userServer.willNewSubscriptionDisconnectAnExistingSubscription().pipe(
-            map((userResponse) => {
+            map((userResponse: ServerResponse<any>) => {
                 if (userResponse.status === ServerResponseStatus.OK) {
                     return userResponse.data;
                 } else {
@@ -246,4 +238,5 @@ export class UserService extends CrudService {
             })
         );
     }
+
 }

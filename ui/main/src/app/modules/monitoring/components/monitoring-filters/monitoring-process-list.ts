@@ -22,7 +22,7 @@ export class MonitoringProcessList {
     private processByProcessGroup: Map<string, Process[]> = new Map();
     private processGroups: Array<any>;
 
-    constructor(private processesService: ProcessesService, private userService: UserService) {
+    constructor(private processesService: ProcessesService) {
         this.loadVisibleProcessesForCurrentUser();
         this.loadProcessByProcessGroupMap();
         this.loadProcessGroups();
@@ -32,7 +32,7 @@ export class MonitoringProcessList {
         this.processesService.getAllProcesses().forEach((process) => {
             if (
                 process.uiVisibility?.monitoring &&
-                this.userService.isReceiveRightsForProcess(process.id)
+                UserService.isReceiveRightsForProcess(process.id)
             ) {
                 this.processList.push(process);
             }

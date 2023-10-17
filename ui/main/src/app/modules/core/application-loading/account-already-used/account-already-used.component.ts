@@ -27,7 +27,6 @@ export class AccountAlreadyUsedComponent extends ApplicationLoadingStep {
     private questionModal: NgbModalRef;
 
     constructor(
-        private userService: UserService,
         private modalService: NgbModal,
         private sessionManager: SessionManagerService
     ) {
@@ -35,7 +34,7 @@ export class AccountAlreadyUsedComponent extends ApplicationLoadingStep {
     }
 
     public execute() {
-        this.userService.willNewSubscriptionDisconnectAnExistingSubscription().subscribe((isUserAlreadyConnected) => {
+        UserService.willNewSubscriptionDisconnectAnExistingSubscription().subscribe((isUserAlreadyConnected) => {
             if (isUserAlreadyConnected) {
                 logger.info('Login ' + this.userLogin + ' is already connected', LogOption.LOCAL_AND_REMOTE);
                 this.questionModal = this.modalService.open(this.sessionAlreadyInUsePopupRef, {

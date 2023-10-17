@@ -55,12 +55,8 @@ export class UserActionLogsFiltersComponent implements OnInit, OnDestroy {
 
     unsubscribe$: Subject<void> = new Subject<void>();
 
-    constructor(
-        private userService: UserService) {
-    }
-
     ngOnInit(): void {
-        this.userService.getAll().subscribe(users => {
+        UserService.getAll().subscribe(users => {
             this.logins=[];
             users.forEach(u => {
                 this.logins.push(new MultiSelectOption(u.login, u.login));

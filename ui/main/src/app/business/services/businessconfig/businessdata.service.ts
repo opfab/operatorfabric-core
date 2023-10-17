@@ -14,20 +14,19 @@ import {ServerResponseStatus} from '../../server/serverResponse';
 import {LogOption,LoggerService as logger} from '../logs/logger.service';
 import {OpfabEventStreamService} from '../events/opfabEventStream.service';
 import * as _ from 'lodash-es';
-import {CachedCrudService} from '../cached-crud-service';
+import {CrudService} from '../crud-service';
 import {ErrorService} from '../error-service';
 
 @Injectable({
     providedIn: 'root'
 })
-export class BusinessDataService extends CachedCrudService {
+export class BusinessDataService implements CrudService {
     private _cachedResources = new Map<string, string>();
 
     constructor(
         private opfabEventStreamService: OpfabEventStreamService,
         private businessDataServer: BusinessDataServer
     ) {
-        super();
         this.listenForBusinessDataUpdate();
     }
 

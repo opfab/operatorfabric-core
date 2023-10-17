@@ -21,7 +21,6 @@ import {MultiSelectOption} from '@ofModel/multiselect.model';
 export class ProcessStatesMultiSelectOptionsService {
     constructor(
         private processesService: ProcessesService,
-        private userService: UserService,
         private translate: TranslateService
     ) {}
 
@@ -57,7 +56,7 @@ export class ProcessStatesMultiSelectOptionsService {
     ): boolean {
         return (
             !(hideChildStates && isOnlyAChildState) &&
-            (isAdminMode || this.userService.isReceiveRightsForProcessAndState(processId, stateId))
+            (isAdminMode || UserService.isReceiveRightsForProcessAndState(processId, stateId))
         );
     }
 
@@ -65,7 +64,7 @@ export class ProcessStatesMultiSelectOptionsService {
         const processesWithoutProcessGroupMultiSelectOptions: Array<MultiSelectOption> = [];
 
         this.processesService.getProcessesWithoutProcessGroup(processesFilter).forEach((process) => {
-            if (isAdminMode || this.userService.isReceiveRightsForProcess(process.id))
+            if (isAdminMode || UserService.isReceiveRightsForProcess(process.id))
                 processesWithoutProcessGroupMultiSelectOptions.push(new MultiSelectOption(process.id, process.name));
         });
         return processesWithoutProcessGroupMultiSelectOptions;
@@ -81,7 +80,7 @@ export class ProcessStatesMultiSelectOptionsService {
         processMultiSelectOptionsPerProcessGroups.forEach((processList, processGroupId) => {
             if (!isAdminMode) {
                 processList = processList.filter((processData) =>
-                    this.userService.isReceiveRightsForProcess(processData.value)
+                    UserService.isReceiveRightsForProcess(processData.value)
                 );
             }
 

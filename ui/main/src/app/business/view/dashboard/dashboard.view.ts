@@ -24,7 +24,6 @@ export class Dashboard {
     public noSeverityColor = '#717274';
 
     constructor(
-        private userService: UserService,
         private processesService: ProcessesService,
         private lightCardsStoreService: LightCardsStoreService,
         private filterService: FilterService
@@ -42,7 +41,7 @@ export class Dashboard {
             const statesContent = new Array<StateContent>();
             process.states.forEach((state, key) => {
                 if (
-                    this.userService.isReceiveRightsForProcessAndState(process.id, key) &&
+                    UserService.isReceiveRightsForProcessAndState(process.id, key) &&
                     this.isStateNotified(process.id, key) &&
                     !state.isOnlyAChildState
                 ) {
@@ -141,9 +140,9 @@ export class Dashboard {
     }
 
     private isStateNotified(id: string, name: string): boolean {
-        if (this.userService.getCurrentUserWithPerimeters().processesStatesNotNotified.has(id)) {
+        if (UserService.getCurrentUserWithPerimeters().processesStatesNotNotified.has(id)) {
             return (
-                this.userService.getCurrentUserWithPerimeters().processesStatesNotNotified.get(id).indexOf(name) <= -1
+                UserService.getCurrentUserWithPerimeters().processesStatesNotNotified.get(id).indexOf(name) <= -1
             );
         }
         return true;

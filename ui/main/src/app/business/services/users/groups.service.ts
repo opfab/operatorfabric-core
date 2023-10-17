@@ -11,7 +11,7 @@ import {Observable, Subject} from 'rxjs';
 import {Group} from '@ofModel/group.model';
 import {takeUntil, tap, map} from 'rxjs/operators';
 import {Injectable} from '@angular/core';
-import {CachedCrudService} from 'app/business/services/cached-crud-service';
+import {CrudService} from 'app/business/services/crud-service';
 import {GroupsServer} from '../../server/groups.server';
 import {ServerResponseStatus} from '../../server/serverResponse';
 import {ErrorService} from '../error-service';
@@ -19,18 +19,13 @@ import {ErrorService} from '../error-service';
 @Injectable({
     providedIn: 'root'
 })
-export class GroupsService extends CachedCrudService {
+export class GroupsService implements CrudService {
     private _groups: Group[];
 
     private ngUnsubscribe$ = new Subject<void>();
 
-    /**
-     * @constructor
-     * @param httpClient - Angular build-in
-     */
     constructor(
         private groupsServer: GroupsServer) {
-        super();
     }
 
     deleteById(id: string) {

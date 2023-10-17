@@ -12,6 +12,7 @@ import {ConfigService} from './config.service';
 import {LoggerService as logger, LogOption} from 'app/business/services/logs/logger.service';
 import {RemoteLoggerService} from './logs/remote-logger.service';
 import {I18nService} from './translation/i18n.service';
+import {UserService} from './users/user.service';
 
 export class ServicesConfig {
     private static loadDone = new Subject();
@@ -21,6 +22,7 @@ export class ServicesConfig {
         RemoteLoggerService.setRemoteLoggerServer(servers.remoteLoggerServer);
         I18nService.setConfigServer(servers.configServer);
         I18nService.setTranslationService(servers.translationService);
+        UserService.setUserServer(servers.userServer);
     }
 
     public static load(): Observable<any> {

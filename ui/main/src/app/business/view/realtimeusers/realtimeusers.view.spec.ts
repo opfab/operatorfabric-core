@@ -24,7 +24,6 @@ describe('Realtimeusers', () => {
 
     let configServerMock: ConfigServerMock;
     let userServerMock: UserServerMock;
-    let userService: UserService;
     let entitiesServerMock: EntitiesServerMock;
     let entitiesService: EntitiesService;
 
@@ -49,7 +48,7 @@ describe('Realtimeusers', () => {
         clock = jasmine.clock();
         clock.install();
 
-        view = new RealtimeUsersView(configServerMock,userService, entitiesService);
+        view = new RealtimeUsersView(configServerMock, entitiesService);
         view.getPage().subscribe((realtimePage) => {
             page = realtimePage;
             view.setSelectedScreen('0');
@@ -71,7 +70,7 @@ describe('Realtimeusers', () => {
 
     function mockUserService() {
         userServerMock = new UserServerMock();
-        userService = new UserService(userServerMock);
+        UserService.setUserServer(userServerMock);
     }
 
     function mockEntitiesService() {

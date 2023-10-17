@@ -58,14 +58,13 @@ export class CardListComponent implements AfterViewChecked, OnInit {
         private modalService: NgbModal,
         private processesService: ProcessesService,
         private acknowledgeService: AcknowledgeService,
-        private userService: UserService,
         private entitiesService: EntitiesService,
         private groupedCardsService: GroupedCardsService,
         private router: Router,
         private sortService: SortService,
         private lightCardsStoreService: LightCardsStoreService,
     ) {
-        this.currentUserWithPerimeters = this.userService.getCurrentUserWithPerimeters();
+        this.currentUserWithPerimeters = UserService.getCurrentUserWithPerimeters();
     }
 
     ngOnInit(): void {

@@ -42,11 +42,10 @@ export class SimplifiedCardViewComponent implements OnInit, OnDestroy {
 
     constructor(
         private businessconfigService: ProcessesService,
-        private userService: UserService,
         private entitiesService: EntitiesService,
         private opfabAPIService: OpfabAPIService
     ) {
-        const userWithPerimeters = this.userService.getCurrentUserWithPerimeters();
+        const userWithPerimeters = UserService.getCurrentUserWithPerimeters();
         if (userWithPerimeters) this.user = userWithPerimeters.userData;
     }
 

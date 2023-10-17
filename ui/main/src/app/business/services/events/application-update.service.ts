@@ -31,7 +31,6 @@ export class ApplicationUpdateService {
         private processService: ProcessesService,
         private handlebarsService: HandlebarsService,
         private templateCssService: TemplateCssService,
-        private userService: UserService,
         private entitiesService: EntitiesService,
         private groupsService: GroupsService,
         private applicationEventsService: ApplicationEventsService,
@@ -72,7 +71,7 @@ export class ApplicationUpdateService {
                 debounce(() => timer(5000 + Math.floor(Math.random() * 5000))),  // use a random  part to avoid all UI to access at the same time the server
                 switchMap(() => {
                     const requestsToLaunch$ = [
-                        this.userService.loadUserWithPerimetersData(),
+                        UserService.loadUserWithPerimetersData(),
                         this.entitiesService.loadAllEntitiesData(),
                         this.groupsService.loadAllGroupsData()
                     ];
