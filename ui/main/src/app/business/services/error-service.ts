@@ -11,41 +11,13 @@
 import {MessageLevel} from '@ofModel/message.model';
 import {LoggerService as logger} from 'app/business/services/logs/logger.service';
 import {throwError} from 'rxjs';
-import {HttpErrorResponse} from '@angular/common/http';
-import {Injectable} from '@angular/core';
 import {ServerResponse, ServerResponseStatus} from 'app/business/server/serverResponse';
 import {AlertMessageService} from './alert-message.service';
 
-/** This class describes what errors should be thrown depending on the API `Response`
- * Services requiring this behaviour should extend this class (see `GroupService` for example).
- * Note: This can't be an interface because Typescript doesn't allow default methods.
- */
 
-@Injectable({
-    providedIn: 'root'
-})
-export abstract class ErrorService {
+export class ErrorService {
 
-    protected handleError(error: HttpErrorResponse) {
-        if (error.status === 404) {
-            AlertMessageService.sendAlertMessage({
-                message: '',
-                i18n: {key: 'errors.notFound'},
-                level: MessageLevel.ERROR
-            });
-        }
-        if (error.status === 403) {
-            AlertMessageService.sendAlertMessage({
-                message: '',
-                i18n: {key: 'errors.notAllowed'},
-                level: MessageLevel.ERROR
-            });
-        }
-        logger.error(error.status + ' ' + error.statusText + ' ' + error.message);
-        return throwError(() => error);
-    }
-
-    protected handleServerResponseError(error: ServerResponse<any>) {
+    public static handleServerResponseError(error: ServerResponse<any>) {
         if (error.status === ServerResponseStatus.NOT_FOUND) {
             AlertMessageService.sendAlertMessage({
                 message: '',

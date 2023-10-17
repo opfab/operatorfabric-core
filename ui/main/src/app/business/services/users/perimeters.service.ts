@@ -14,6 +14,7 @@ import {CachedCrudService} from 'app/business/services/cached-crud-service';
 import {Perimeter} from '@ofModel/perimeter.model';
 import {PerimetersServer} from '../../server/perimeters.server';
 import {ServerResponseStatus} from '../../server/serverResponse';
+import {ErrorService} from '../error-service';
 
 
 @Injectable({
@@ -38,7 +39,7 @@ export class PerimetersService extends CachedCrudService {
                 if (perimetersResponse.status === ServerResponseStatus.OK) {
                     this.deleteFromCachedPerimeters(id);
                 } else {
-                    this.handleServerResponseError(perimetersResponse);
+                    ErrorService.handleServerResponseError(perimetersResponse);
                 }
             })
         );
@@ -60,7 +61,7 @@ export class PerimetersService extends CachedCrudService {
                 if (perimetersResponse.status === ServerResponseStatus.OK) {
                     return perimetersResponse.data;
                 } else {
-                    this.handleServerResponseError(perimetersResponse);
+                    ErrorService.handleServerResponseError(perimetersResponse);
                     return [];
                 }
             })
@@ -97,7 +98,7 @@ export class PerimetersService extends CachedCrudService {
                     this.updateCachedPerimeters(perimeterData);
                     return perimetersResponse.data;
                 } else {
-                    this.handleServerResponseError(perimetersResponse);
+                    ErrorService.handleServerResponseError(perimetersResponse);
                     return null;
                 }
             })
@@ -111,7 +112,7 @@ export class PerimetersService extends CachedCrudService {
                     this.updateCachedPerimeters(perimeterData);
                     return perimetersResponse.data;
                 } else {
-                    this.handleServerResponseError(perimetersResponse);
+                    ErrorService.handleServerResponseError(perimetersResponse);
                     return null;
                 }
             })

@@ -11,14 +11,14 @@ import {Observable, Subject} from 'rxjs';
 import {User} from '@ofModel/user.model';
 import {PermissionEnum} from '@ofModel/permission.model';
 import {UserWithPerimeters} from '@ofModel/userWithPerimeters.model';
-import {HttpErrorResponse} from '@angular/common/http';
-import {catchError, map, takeUntil, tap} from 'rxjs/operators';
+import {map, takeUntil, tap} from 'rxjs/operators';
 import {CrudService} from 'app/business/services/crud-service';
 import {Injectable} from '@angular/core';
 import {RightsEnum} from '@ofModel/perimeter.model';
 import {UserServer} from '../../server/user.server';
 import {ServerResponseStatus} from '../../server/serverResponse';
 import {LoggerService as logger} from '../logs/logger.service';
+import {ErrorService} from '../error-service';
 
 @Injectable({
     providedIn: 'root'
@@ -42,7 +42,14 @@ export class UserService extends CrudService {
     deleteById(login: string) {
         return this.userServer
             .deleteById(login)
-            .pipe(catchError((error: HttpErrorResponse) => this.handleError(error)));
+            .pipe(map((userResponse) => {
+                if (userResponse.status === ServerResponseStatus.OK) {
+                    return userResponse.data;
+                } else {
+                    ErrorService.handleServerResponseError(userResponse);
+                    return null;
+                }
+            }));
     }
 
     getUser(user: string): Observable<User> {
@@ -51,7 +58,7 @@ export class UserService extends CrudService {
                 if (userResponse.status === ServerResponseStatus.OK) {
                     return userResponse.data;
                 } else {
-                    this.handleServerResponseError(userResponse);
+                    ErrorService.handleServerResponseError(userResponse);
                     return null;
                 }
             })
@@ -90,7 +97,7 @@ export class UserService extends CrudService {
                 if (userResponse.status === ServerResponseStatus.OK) {
                     return userResponse.data;
                 } else {
-                    this.handleServerResponseError(userResponse);
+                    ErrorService.handleServerResponseError(userResponse);
                     return [];
                 }
             })
@@ -107,7 +114,7 @@ export class UserService extends CrudService {
                 if (userResponse.status === ServerResponseStatus.OK) {
                     return userResponse.data;
                 } else {
-                    this.handleServerResponseError(userResponse);
+                    ErrorService.handleServerResponseError(userResponse);
                     return null;
                 }
             })
@@ -218,7 +225,7 @@ export class UserService extends CrudService {
                 if (userResponse.status === ServerResponseStatus.OK) {
                     return userResponse.data;
                 } else {
-                    this.handleServerResponseError(userResponse);
+                    ErrorService.handleServerResponseError(userResponse);
                     return [];
                 }
             })

@@ -15,6 +15,7 @@ import {LogOption,LoggerService as logger} from '../logs/logger.service';
 import {OpfabEventStreamService} from '../events/opfabEventStream.service';
 import * as _ from 'lodash-es';
 import {CachedCrudService} from '../cached-crud-service';
+import {ErrorService} from '../error-service';
 
 @Injectable({
     providedIn: 'root'
@@ -85,7 +86,7 @@ export class BusinessDataService extends CachedCrudService {
                 if (response.status === ServerResponseStatus.OK) {
                     return response.data;
                 } else {
-                    this.handleServerResponseError(response);
+                    ErrorService.handleServerResponseError(response);
                     return [];
                 }
             })
@@ -102,7 +103,7 @@ export class BusinessDataService extends CachedCrudService {
                 if (responseBusinessData.status === ServerResponseStatus.OK) {
                     return responseBusinessData.data;
                 } else {
-                    this.handleServerResponseError(responseBusinessData);
+                    ErrorService.handleServerResponseError(responseBusinessData);
                     return null;
                 }
             })
@@ -114,7 +115,7 @@ export class BusinessDataService extends CachedCrudService {
             map((response) => {
                 if (response.status !== ServerResponseStatus.OK) {
                     this.emptyCache();
-                    this.handleServerResponseError(response);
+                    ErrorService.handleServerResponseError(response);
                 }
             })
         );

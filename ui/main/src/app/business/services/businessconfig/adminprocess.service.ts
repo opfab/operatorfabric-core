@@ -14,6 +14,7 @@ import {Process} from '@ofModel/processes.model';
 import {CachedCrudService} from 'app/business/services/cached-crud-service';
 import {AdminProcessServer} from '../../server/adminprocess.server';
 import {ServerResponseStatus} from '../../server/serverResponse';
+import {ErrorService} from '../error-service';
 
 @Injectable({
     providedIn: 'root'
@@ -41,7 +42,7 @@ export class AdminProcessesService extends CachedCrudService {
                 if (adminprocessResponse.status === ServerResponseStatus.OK) {
                     return adminprocessResponse.data;
                 } else {
-                    this.handleServerResponseError(adminprocessResponse);
+                    ErrorService.handleServerResponseError(adminprocessResponse);
                     return [];
                 }
             })
@@ -56,7 +57,7 @@ export class AdminProcessesService extends CachedCrudService {
         return this.adminprocessServer.deleteById(id).pipe(
             map((adminprocessResponse) => {
                 if (adminprocessResponse.status !== ServerResponseStatus.OK) {
-                    this.handleServerResponseError(adminprocessResponse);
+                    ErrorService.handleServerResponseError(adminprocessResponse);
                 }
             })
         );

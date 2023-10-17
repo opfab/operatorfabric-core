@@ -17,6 +17,7 @@ import {EntitiesServer} from '../../server/entities.server';
 import {ServerResponseStatus} from '../../server/serverResponse';
 import {EntitiesTree} from '@ofModel/processes.model';
 import {LoggerService as logger} from '../logs/logger.service';
+import {ErrorService} from '../error-service';
 
 
 @Injectable({
@@ -40,7 +41,7 @@ export class EntitiesService extends CachedCrudService {
                 if (entitiesResponse.status === ServerResponseStatus.OK){
                     this.deleteFromCachedEntities(id);
                 } else {
-                    this.handleServerResponseError(entitiesResponse);
+                    ErrorService.handleServerResponseError(entitiesResponse);
                 }
             })
         );
@@ -56,7 +57,7 @@ export class EntitiesService extends CachedCrudService {
                 if (entitiesResponse.status === ServerResponseStatus.OK){
                     return entitiesResponse.data;
                 } else {
-                    this.handleServerResponseError(entitiesResponse);
+                    ErrorService.handleServerResponseError(entitiesResponse);
                     return [];
                 }
             })
@@ -70,7 +71,7 @@ export class EntitiesService extends CachedCrudService {
                     this.updateCachedEntity(entityData);
                     return responseEntities.data;
                 } else {
-                    this.handleServerResponseError(responseEntities);
+                    ErrorService.handleServerResponseError(responseEntities);
                     return null;
                 }
             })
