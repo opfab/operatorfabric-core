@@ -35,20 +35,6 @@ services:
 #    - RABBITMQ_DEFAULT_USER=default_user
 #    - RABBITMQ_DEFAULT_PASS=password
 
-  keycloak-19:
-    image: quay.io/keycloak/keycloak:19.0.3-legacy
-    command: -Dkeycloak.migration.action=import -Dkeycloak.migration.provider=dir -Dkeycloak.migration.dir=/keycloak/export -Dkeycloak.profile.feature.upload_scripts=enabled -Djboss.http.port=89
-# -Dkeycloak.profile.feature.upload_scripts=enabled is only used for tests with version 12 from keycloak
-    environment:
-    - KEYCLOAK_USER=admin
-    - KEYCLOAK_PASSWORD=admin
-    - DB_VENDOR=H2
-    volumes:
-    - ../keycloak-19:/keycloak
-    ports:
-    - "8989:89"
-#    Debug port closed for security reasons, be careful if you open it 
-#    - "90:9990"
   keycloak:
     container_name: keycloak
     image: quay.io/keycloak/keycloak:22.0
