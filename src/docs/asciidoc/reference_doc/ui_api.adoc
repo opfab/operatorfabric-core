@@ -9,6 +9,7 @@
 = Frontend API
 
 The frontend API is intended to provide a way for template to communicate with the core opfab code. It's divided as follow :
+
 - Users API : API to get information about users and entities
 - Navigate API : API to ask opfab to navigate to a specific view
 - CurrentCard API : API to get information regarding the current card 
