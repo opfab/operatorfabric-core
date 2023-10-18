@@ -28,7 +28,7 @@ export class UserPermissionsService {
         if (this.isLttdExpired(card)) return false;
 
         return (
-            this.isUserInEntityAllowedToRespond(user, card, processDefinition) &&
+            this.getUserEntitiesAllowedToRespond(user, card, processDefinition).length > 0 &&
             this.doesTheUserHaveThePerimeterToRespond(user, card, processDefinition)
         );
     }
@@ -98,7 +98,7 @@ export class UserPermissionsService {
         return card.lttd != null && card.lttd - new Date().getTime() <= 0;
     }
 
-    private isUserInEntityAllowedToRespond(user: UserWithPerimeters, card: Card, processDefinition: Process): boolean {
+    public getUserEntitiesAllowedToRespond(user: UserWithPerimeters, card: Card, processDefinition: Process): string[] {
         let userEntitiesAllowedToRespond = [];
         let entitiesAllowedToRespondAndEntitiesRequiredToRespond = [];
         if (card.entitiesAllowedToRespond)
@@ -131,7 +131,7 @@ export class UserPermissionsService {
                 userEntitiesAllowedToRespond
             );
         }
-        return userEntitiesAllowedToRespond.length > 0;
+        return userEntitiesAllowedToRespond;
     }
 
     private doesTheUserHaveThePerimeterToRespond(

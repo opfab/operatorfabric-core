@@ -51,7 +51,6 @@ export class CardResponseComponent implements OnChanges, OnInit {
     @Input() cardState: State;
     @Input() lttdExpiredIsTrue: boolean;
     @Input() isResponseLocked: boolean;
-    @Input() userEntityIdsPossibleForResponse;
 
     @Output() unlockAnswerEvent: EventEmitter<boolean> = new EventEmitter<boolean>();
 
@@ -67,6 +66,7 @@ export class CardResponseComponent implements OnChanges, OnInit {
     public sendingResponseInProgress: boolean;
 
     private entityChoiceModal: NgbModalRef;
+    private userEntitiesAllowedToRespond = [];
     private userEntityOptionsDropdownList = [];
     private userEntityIdToUseForResponse = '';
 
@@ -105,10 +105,15 @@ export class CardResponseComponent implements OnChanges, OnInit {
             this.card,
             this.processService.getProcess(this.card.process)
         );
+        this.userEntitiesAllowedToRespond = this.userPermissionsService.getUserEntitiesAllowedToRespond(
+            UserService.getCurrentUserWithPerimeters(),
+            this.card,
+            this.processService.getProcess(this.card.process)
+        );
         this.isReadOnlyUser = UserService.hasCurrentUserAnyPermission([PermissionEnum.READONLY]);
 
         this.showButton = this.cardState.response && !this.isReadOnlyUser;
-        this.userEntityIdToUseForResponse = this.userEntityIdsPossibleForResponse[0];
+        this.userEntityIdToUseForResponse = this.userEntitiesAllowedToRespond[0];
         this.setButtonLabels();
         this.computeEntityOptionsDropdownListForResponse();
     }
@@ -130,18 +135,19 @@ export class CardResponseComponent implements OnChanges, OnInit {
 
     private computeEntityOptionsDropdownListForResponse(): void {
         this.userEntityOptionsDropdownList = [];
-        if (this.userEntityIdsPossibleForResponse)
-            this.userEntityIdsPossibleForResponse.forEach((entityId) => {
+        if(this.userEntitiesAllowedToRespond) {
+            this.userEntitiesAllowedToRespond.forEach((entityId) => {
                 const entity = EntitiesService.getEntities().find((e) => e.id === entityId);
                 this.userEntityOptionsDropdownList.push({value: entity.id, label: entity.name});
             });
+        }
         this.userEntityOptionsDropdownList.sort((a, b) => Utilities.compareObj(a.label, b.label));
     }
 
     public processClickOnSendResponse() {
         const responseData: FormResult = this.opfabAPIService.templateInterface.getUserResponse();
 
-        if (this.userEntityIdsPossibleForResponse.length > 1 && !responseData.publisher) this.displayEntitiesChoicePopup();
+        if (this.userEntitiesAllowedToRespond.length > 1 && !responseData.publisher) this.displayEntitiesChoicePopup();
         else this.submitResponse();
     }
 
@@ -157,7 +163,7 @@ export class CardResponseComponent implements OnChanges, OnInit {
         if (responseData.valid) {
             const publisherEntity = responseData.publisher ?? this.userEntityIdToUseForResponse;
 
-            if (!this.userEntityIdsPossibleForResponse.includes(publisherEntity)) {
+            if (!this.userEntitiesAllowedToRespond.includes(publisherEntity)) {
                 logger.error("Response card publisher not allowed : " + publisherEntity);
                 this.displayMessage(ResponseI18nKeys.SUBMIT_ERROR_MSG, null, MessageLevel.ERROR);
                 return;

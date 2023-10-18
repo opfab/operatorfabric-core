@@ -72,7 +72,6 @@
               <div style="margin-left: auto;text-align: right;min-width: 250px">
                 <of-card-response [card]="this.card" [cardState]="this.cardState"
                   [lttdExpiredIsTrue]="this.lttdExpiredIsTrue" [isResponseLocked]="this.isResponseLocked"
-                  [userEntityIdsPossibleForResponse]="this.userEntityIdsPossibleForResponse"
                   (unlockAnswerEvent)="this.unlockAnswer()"> </of-card-response>
                 <of-card-ack [card]="this.card" [cardState]="this.cardState"
                   [lttdExpiredIsTrue]="this.lttdExpiredIsTrue" (closeCardDetail)="closeDetails()"> </of-card-ack>
