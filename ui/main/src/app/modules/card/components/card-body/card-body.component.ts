@@ -225,7 +225,7 @@ export class CardBodyComponent implements OnChanges, OnInit, OnDestroy {
         if (this.userEntityIdsPossibleForResponse.length === 1)
             this.userEntityIdToUseForResponse = this.userEntityIdsPossibleForResponse[0];
     }
-
+    
     private computeUserMemberOfAnEntityRequiredToRespondAndAllowedToSendCards() {
         if (!this.card.entitiesRequiredToRespond) {
             this.userMemberOfAnEntityRequiredToRespondAndAllowedToSendCards = false;

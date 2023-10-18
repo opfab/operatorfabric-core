@@ -37,15 +37,15 @@ export class MessageOrQuestionListUserCardTemplateView {
             }
         }
 
-        let title = this.selectedMessage.title.trim();
-        let id = this.selectedMessage.id;
-        let question = this.selectedMessage.question;
+        const title = this.selectedMessage.title.trim();
+        const id = this.selectedMessage.id;
+        const question = this.selectedMessage.question;
         let severity = 'INFORMATION'
         if (this.selectedMessage.question) {
             severity = 'ACTION'
         }
 
-        let entitiesAllowedToRespond = this.selectedMessage?.possibleRecipients ? this.selectedMessage?.possibleRecipients : "";
+        const entitiesAllowedToRespond = this.selectedMessage?.possibleRecipients ? this.selectedMessage?.possibleRecipients : "";
 
 
         const card = {
