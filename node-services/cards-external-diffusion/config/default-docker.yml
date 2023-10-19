@@ -1,31 +1,24 @@
-opfab:
-  login: admin
-  password: test
-  usersUrl: "http://users:2103/users"
-  cardsConsultationUrl: "http://cards-consultation:2104"
-  getTokenUrl: "http://web-ui/auth/token"
+
 operatorfabric:
   rabbitmq:
     host: rabbitmq
     port: 5672
     username: guest
     password: guest
+  servicesUrls:
+    authToken: "http://web-ui/auth/token"
+    users: "http://users:2103"
+    cardsConsultation: "http://cards-consultation:2104"
+  internalAccount:
+    login: opfab
   logConfig:
+    logFolder: /var/log/opfab/
+    logFile: "opfab.%DATE%.log"
     logLevel: info
-  mail:
-    host: mailhog
-    port: 1025
-    auth:
-      user: guest
-      pass: guest
   cardsExternalDiffusion:
     adminPort: 2106
     activeOnStartup: true
-    opfab:
-      login: admin
-      password: test
     defaultConfig:
-      mailFrom: opfab@localhost.it
       subjectPrefix: 'Opfab card received '
       bodyPrefix: 'You received a card in opfab : '
       opfabUrlInMailContent: http://localhost:2002

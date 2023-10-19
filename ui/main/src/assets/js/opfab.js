@@ -57,6 +57,7 @@ opfab.multiSelect = {
 
 opfab.utils = {
     escapeHtml: function (htmlStr) {
+        if (!htmlStr) return htmlStr;
         return htmlStr
             .replace(/&/g, '&amp;')
             .replace(/</g, '&lt;')

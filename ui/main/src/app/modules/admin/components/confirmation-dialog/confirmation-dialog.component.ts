@@ -8,12 +8,13 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {Component, Input} from '@angular/core';
+import {ChangeDetectionStrategy, Component, Input} from '@angular/core';
 import {NgbActiveModal} from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
     selector: 'of-confirmation-dialog',
-    templateUrl: './confirmation-dialog.component.html'
+    templateUrl: './confirmation-dialog.component.html',
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ConfirmationDialogComponent {
     @Input() title: string;

@@ -7,16 +7,17 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {Component, Input, TemplateRef, ViewChild} from '@angular/core';
+import {ChangeDetectionStrategy, Component, Input, TemplateRef, ViewChild} from '@angular/core';
 import {NgbModal, NgbModalRef} from '@ng-bootstrap/ng-bootstrap';
-import {LogOption, OpfabLoggerService} from 'app/business/services/logs/opfab-logger.service';
+import {LogOption, LoggerService as logger} from 'app/business/services/logs/logger.service';
 import {UserService} from 'app/business/services/users/user.service';
 import {ApplicationLoadingStep} from '../application-loading-step';
-import {AuthService} from 'app/authentication/auth.service';
+import {SessionManagerService} from 'app/business/services/session-manager.service';
 
 @Component({
     selector: 'of-account-already-used',
-    templateUrl: './account-already-used.component.html'
+    templateUrl: './account-already-used.component.html',
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class AccountAlreadyUsedComponent extends ApplicationLoadingStep {
     @Input() public userLogin: string;
@@ -25,43 +26,38 @@ export class AccountAlreadyUsedComponent extends ApplicationLoadingStep {
 
     private questionModal: NgbModalRef;
 
-    public isDisconnectedByUserWithSameUrl = false;
-
     constructor(
-        private userService: UserService,
         private modalService: NgbModal,
-        private authService: AuthService,
-        private logger: OpfabLoggerService
+        private sessionManager: SessionManagerService
     ) {
         super();
     }
 
     public execute() {
-        this.userService.willNewSubscriptionDisconnectAnExistingSubscription().subscribe((isUserAlreadyConnected) => {
+        UserService.willNewSubscriptionDisconnectAnExistingSubscription().subscribe((isUserAlreadyConnected) => {
             if (isUserAlreadyConnected) {
-                this.logger.info('Login ' + this.userLogin + ' is already connected', LogOption.LOCAL_AND_REMOTE);
+                logger.info('Login ' + this.userLogin + ' is already connected', LogOption.LOCAL_AND_REMOTE);
                 this.questionModal = this.modalService.open(this.sessionAlreadyInUsePopupRef, {
                     centered: true,
                     backdrop: 'static'
                 });
             } else {
-                this.logger.info('Login ' + this.userLogin + ' is not already used ', LogOption.LOCAL_AND_REMOTE);
-                this.isDisconnectedByUserWithSameUrl = true;
+                logger.info('Login ' + this.userLogin + ' is not already used ', LogOption.LOCAL_AND_REMOTE);
                 this.sendEventAccountAlreadyInUseCheckDone();
             }
         });
     }
 
     public loginEvenIfAccountIsAlreadyUsed(): void {
-        this.logger.info('Login as ' + this.userLogin + ' even if account is already used ', LogOption.REMOTE);
+        logger.info('Login as ' + this.userLogin + ' even if account is already used ', LogOption.REMOTE);
         this.questionModal.close();
         this.sendEventAccountAlreadyInUseCheckDone();
     }
 
     public logoutBecauseAccountIsAlreadyUsed() {
-        this.logger.info('Logout with user ' + this.userLogin + ' because account already used ', LogOption.REMOTE);
+        logger.info('Logout with user ' + this.userLogin + ' because account already used ', LogOption.REMOTE);
         this.questionModal.close();
-        this.authService.logout();
+        this.sessionManager.logout();
     }
 
     private sendEventAccountAlreadyInUseCheckDone() {

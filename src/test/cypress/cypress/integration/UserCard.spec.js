@@ -202,7 +202,7 @@ describe('User Card ', function () {
       usercard.selectProcess('Message or question');
       usercard.selectState('Message');
       usercard.checkSeverityChoiceExists();
-      usercard.selectState('Question');
+      usercard.selectState('Question', 1);
       usercard.checkSeverityChoiceDoesNotExist();
       usercard.checkEmitterSelectDoesNotExist();
     })
@@ -226,7 +226,7 @@ describe('User Card ', function () {
       opfab.navigateToUserCard();
       usercard.selectService('User card examples');
       usercard.selectProcess('Message or question');;
-      usercard.selectState('Question');
+      usercard.selectState('Question', 1);
       usercard.checkStartDateChoiceExists();
       usercard.checkEndDateChoiceExists();
       usercard.checkLttdChoiceExists();
@@ -431,8 +431,6 @@ describe('User Card ', function () {
 
     })
 
-
-
     it('Receive User card ', () => {
 
       opfab.loginWithUser('operator2_fr');
@@ -443,6 +441,7 @@ describe('User Card ', function () {
       feed.checkSelectedCardHasSummary("Message received :   Hello, that's a test message / Result is <OK> & work done is 100%");
       cy.get('#opfab-div-card-template-processed').find('div').eq(0).should('have.text', "\n  Hello, that's a test message / Result is <OK> & work done is 100%\n");
     })
+
   })
 
 

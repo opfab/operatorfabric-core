@@ -10,14 +10,13 @@
 import {Injectable, OnDestroy} from '@angular/core';
 import {EntitiesService} from 'app/business/services/users/entities.service';
 import {GroupsService} from 'app/business/services/users/groups.service';
-import {UserService} from 'app/business/services/users/user.service';
 import {CrudService} from 'app/business/services/crud-service';
-import {CachedCrudService} from 'app/business/services/cached-crud-service';
 import {Observable, ReplaySubject, Subject} from 'rxjs';
 import {takeUntil} from 'rxjs/operators';
 import {PerimetersService} from 'app/business/services/users/perimeters.service';
 import {AdminProcessesService} from 'app/business/services/businessconfig/adminprocess.service';
 import {BusinessDataService} from 'app/business/services/businessconfig/businessdata.service';
+import {CrudUserService} from 'app/business/services/admin/crud-user.service';
 
 /** The aim of this service is to provide the services that need to be shared between components of the admin screen. For example, a single
  * instance of `EntitiesService` should be used across all components so a update to the cache is visible from all components.
@@ -29,16 +28,17 @@ import {BusinessDataService} from 'app/business/services/businessconfig/business
 export class SharingService implements OnDestroy {
     private readonly _paginationPageSize$: ReplaySubject<number>;
     private unsubscribe$: Subject<void> = new Subject<void>();
+    private crudUserService: CrudUserService;
 
     constructor(
         private entitiesService: EntitiesService,
         private groupsService: GroupsService,
-        private userService: UserService,
         private perimetersService: PerimetersService,
         private businessDataService: BusinessDataService,
         private adminprocessesService: AdminProcessesService
     ) {
         this._paginationPageSize$ = new ReplaySubject<number>();
+        this.crudUserService = new CrudUserService();
 
         // Initialization necessary for perimeters selection dropdown in modals and to display names instead of codes
         // As it is only necessary for admin purposes, it's done here rather than in the app initialization code
@@ -54,7 +54,7 @@ export class SharingService implements OnDestroy {
             case AdminItemType.GROUP:
                 return this.groupsService;
             case AdminItemType.USER:
-                return this.userService;
+                return this.crudUserService;
             case AdminItemType.PERIMETER:
                 return this.perimetersService;
             case AdminItemType.PROCESS:
@@ -66,22 +66,6 @@ export class SharingService implements OnDestroy {
         }
     }
 
-    /** This is a factory method returning the appropriate `CachedCrudService` depending on the type passed as parameter.
-     * */
-    public resolveCachedCrudServiceDependingOnType(adminItemType: AdminItemType): CachedCrudService {
-        switch (adminItemType) {
-            case AdminItemType.ENTITY:
-                return this.entitiesService;
-            case AdminItemType.GROUP:
-                return this.groupsService;
-            case AdminItemType.PERIMETER:
-                return this.perimetersService;
-            case AdminItemType.PROCESS:
-                return this.adminprocessesService;
-            default:
-                throw Error('No CachedCrudService associated with ' + adminItemType);
-        }
-    }
 
     get paginationPageSize$(): Observable<number> {
         return this._paginationPageSize$;

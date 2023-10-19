@@ -14,24 +14,22 @@ import {UntypedFormGroup} from '@angular/forms';
 import * as _ from 'lodash-es';
 import {ConfigService} from 'app/business/services/config.service';
 import {SettingsService} from 'app/business/services/users/settings.service';
-import {OpfabLoggerService} from 'app/business/services/logs/opfab-logger.service';
 import {CurrentUserStore} from 'app/business/store/current-user.store';
+import {LoggerService as logger} from 'app/business/services/logs/logger.service';
 
 @Directive()
 export abstract class BaseSettingDirective implements OnInit, OnDestroy {
     @Input() public settingPath: string;
     @Input() public messagePlaceholder: string;
     @Input() public requiredField: boolean;
+
     private ngUnsubscribe$ = new Subject<void>();
     protected setting$;
     form: UntypedFormGroup;
     private baseSettings = {};
 
     protected constructor(
-        protected configService: ConfigService,
-        protected settingsService: SettingsService,
-        protected currentUserStore: CurrentUserStore,
-        protected logger: OpfabLoggerService
+        protected settingsService: SettingsService
     ) {}
 
     ngOnInit() {
@@ -39,7 +37,7 @@ export abstract class BaseSettingDirective implements OnInit, OnDestroy {
         if (!this.form) {
             throw new Error('Trying to instantiate component without form');
         }
-        this.setting$ = this.configService.getConfigValueAsObservable('settings.' + this.settingPath, null);
+        this.setting$ = ConfigService.getConfigValueAsObservable('settings.' + this.settingPath, null);
         this.setting$.subscribe((next) => this.updateValue(next));
         this.setting$.pipe(first()).subscribe(() =>
             this.form.valueChanges
@@ -52,7 +50,7 @@ export abstract class BaseSettingDirective implements OnInit, OnDestroy {
                 .subscribe((next) => this.dispatch(this.convert(next)))
         );
 
-        this.currentUserStore.getCurrentUserLogin()
+        CurrentUserStore.getCurrentUserLogin()
             .pipe(
                 takeUntil(this.ngUnsubscribe$),
                 map((id) => {
@@ -80,10 +78,10 @@ export abstract class BaseSettingDirective implements OnInit, OnDestroy {
     private dispatch(value: any) {
         const settings = {...this.baseSettings};
         settings[this.settingPath] = value.setting;
-        this.configService.setConfigValue('settings.' + this.settingPath, value.setting);
+        ConfigService.setConfigValue('settings.' + this.settingPath, value.setting);
         this.settingsService.patchUserSettings(settings).subscribe({
-                next : (res) => this.logger.debug("Receive response for patch settings"+ JSON.stringify(res)),
-                error:  (error) => this.logger.error("Error in patching settings" + JSON.stringify(error))
+                next : (res) => logger.debug("Receive response for patch settings"+ JSON.stringify(res)),
+                error:  (error) => logger.error("Error in patching settings" + JSON.stringify(error))
         });
     }
 

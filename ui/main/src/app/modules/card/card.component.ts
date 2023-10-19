@@ -12,12 +12,10 @@ import {Card} from '@ofModel/card.model';
 import {ProcessesService} from 'app/business/services/businessconfig/processes.service';
 import {Subject} from 'rxjs';
 import {takeUntil} from 'rxjs/operators';
-import {UserService} from 'app/business/services/users/user.service';
 import {State} from '@ofModel/processes.model';
 import {NgbModal, NgbModalOptions, NgbModalRef} from '@ng-bootstrap/ng-bootstrap';
 import {SelectedCard, SelectedCardService} from 'app/business/services/card/selectedCard.service';
 import {Router} from '@angular/router';
-import {RouterStore} from 'app/business/store/router.store';
 
 @Component({
     selector: 'of-card',
@@ -42,11 +40,9 @@ export class CardComponent implements OnInit, OnDestroy {
 
     constructor(
         protected businessconfigService: ProcessesService,
-        protected userService: UserService,
         protected selectedCardService: SelectedCardService,
         protected modalService: NgbModal,
-        protected router: Router,
-        protected routerStore: RouterStore
+        protected router: Router
     ) {}
 
     ngOnInit() {

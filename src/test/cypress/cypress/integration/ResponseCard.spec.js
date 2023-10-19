@@ -224,7 +224,7 @@ describe('Response card tests', function () {
 
         // Respond to the card
         cy.get('#question-choice3').click();
-        card.sendResponse();
+        card.clickOnSendResponse();
 
         // Check the popup for the entities choice is displayed
         cy.get('#opfab-card-details-entities-choice-selector').should('exist');
@@ -248,6 +248,7 @@ describe('Response card tests', function () {
             .should('contain.text', 'Control Center FR East');
 
         cy.get('#opfab-card-details-entity-choice-btn-confirm').click();
+        card.closeMessageAfterResponseSend();
 
         // Check the response from ENTITY1_FR, ENTITY2_FR and ENTITY3_FR have been integrated in the template
         cy.get('#response_from_ENTITY1_FR')
@@ -276,7 +277,7 @@ describe('Response card tests', function () {
         card.modifyResponse();
         cy.get('#question-choice1').click();
         cy.get('#question-choice3').click(); //to uncheck the box
-        card.sendResponse();
+        card.clickOnSendResponse();
         cy.get('#opfab-card-details-entities-choice-selector').click();
         cy.get('#opfab-card-details-entities-choice-selector').find('.vscomp-option-text').eq(0).click(); // We unselect ENTITY3_FR (East)
         cy.get('#opfab-card-details-entity-choice-btn-confirm').should('be.disabled'); // Check if the button is disabled when no entity is selected
@@ -290,6 +291,7 @@ describe('Response card tests', function () {
             .find('.vscomp-value')
             .should('contain.text', 'Control Center FR South');
         cy.get('#opfab-card-details-entity-choice-btn-confirm').click();
+        card.closeMessageAfterResponseSend();
 
         cy.waitDefaultTime();
         // Check the response from ENTITY1_FR and ENTITY2_FR have been updated and the other response is still the same
@@ -477,7 +479,7 @@ describe('Response card tests', function () {
         cy.get('#opfab-archives-logging-btn-search').click();
 
         // operator1_fr should see 3 archived cards
-        cy.get('#opfab-archives-cards-list').find('.opfab-archives-table-line').should('have.length', 3);
+        cy.get('#opfab-archives-cards-list').find('.opfab-archives-table-line').should('have.length', 4);
 
         // open card detail for card with keepChildCards=false and check there are no responses
         cy.get('#opfab-archives-cards-list').find('.opfab-archives-table-line').eq(0).click();
@@ -524,7 +526,7 @@ describe('Response card tests', function () {
         cy.get('#opfab-archives-card-detail-close').click();
 
         // open card detail for first card and check it should have 1 child card
-        cy.get('#opfab-archives-cards-list').find('.opfab-archives-table-line').eq(2).click();
+        cy.get('#opfab-archives-cards-list').find('.opfab-archives-table-line').eq(3).click();
         cy.waitDefaultTime();
         cy.get('of-simplified-card-view').should('exist');
         // Check the responses from ENTITY1_FR  has been integrated in the template
@@ -552,7 +554,7 @@ describe('Response card tests', function () {
         cy.get('#question-choice1');
 
         cy.get('#opfab-card-details-btn-response').should('have.text', 'SEND RESPONSE');
-        card.sendResponse();
+        card.clickOnSendResponse();
 
         // Send response button should be disabled
         cy.get('#opfab-card-details-btn-response').should('be.disabled');
@@ -560,6 +562,7 @@ describe('Response card tests', function () {
         // Modify response button should be enabled after response is sent
         cy.get('#opfab-card-details-btn-response').should('not.be.disabled');
         cy.get('#opfab-card-details-btn-response').should('have.text', 'MODIFY RESPONSE');
+        card.closeMessageAfterResponseSend();
     });
 
     it('Check detail card header response dropdownList', () => {
@@ -568,7 +571,7 @@ describe('Response card tests', function () {
         opfab.navigateToUserCard();
         usercard.selectService('User card examples');
         usercard.selectProcess('Message or question');
-        usercard.selectState('Question');
+        usercard.selectState('Question', 1);
         cy.get('#opfab-question-label').should('have.text', 'QUESTION');
         cy.get('#usercard_question_input').invoke('val', 'question'); // the cy.type does not work (no explanation found),  using invoke works 
         usercard.selectRecipient('Control Center FR East');
@@ -636,7 +639,7 @@ describe('Response card tests', function () {
         feed.openFirstCard();
         card.modifyResponse();
 
-        card.sendResponse();
+        card.clickOnSendResponse();
 
         // Check the popup for the entities choice is displayed
         cy.get('#opfab-card-details-entities-choice-selector').should('exist');

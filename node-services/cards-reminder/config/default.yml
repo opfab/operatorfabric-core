@@ -1,9 +1,10 @@
-opfab: 
-  cardsPublicationUrl: "http://127.0.0.1:2102"
-  usersUrl: "http://127.0.0.1:2103"
-  getTokenUrl: "http://127.0.0.1:2002/auth/token"
 
 operatorfabric:
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          jwk-set-uri: http://localhost:89/auth/realms/dev/protocol/openid-connect/certs
   rabbitmq:
     host: "localhost"
     port: 5672
@@ -12,6 +13,13 @@ operatorfabric:
   mongodb:
     database: "operator-fabric"
     uri: "mongodb://root:password@localhost:27017/operator-fabric?authSource=admin"
+  servicesUrls:
+    authToken: "http://127.0.0.1:2002/auth/token"
+    users: "http://127.0.0.1:2103"
+    cardsPublication: "http://127.0.0.1:2102"
+  internalAccount:
+    login: opfab
+    password: test
   logConfig:
     logFolder: "logs/"
     logFile: "%DATE%.log"
@@ -20,6 +28,4 @@ operatorfabric:
     adminPort : 2107
     activeOnStartup : true
     checkPeriodInSeconds : 5
-    opfab:
-      login: "opfab_internal_account"
-      password: "test"
+

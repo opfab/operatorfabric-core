@@ -18,6 +18,13 @@ export default class CardsReminderControl {
     private reminderService: ReminderService;
     private rruleReminderService: RRuleReminderService;
 
+    logger: any;
+
+
+    public setLogger(logger: any) {
+        this.logger = logger;
+        return this;
+    }
 
     public setReminderService(reminderService: ReminderService): this {
         this.reminderService = reminderService;
@@ -42,7 +49,9 @@ export default class CardsReminderControl {
                     if (resp.isValid()) this.reminderService.setCardHasBeenRemind(card);
                 })
             })
-        );
+        ).catch(error => {
+            this.logger.error("reminderService checkCardsReminder error " +error)
+        });
 
         this.rruleReminderService.getCardsToRemindNow().then(rrulReminders =>
             rrulReminders.forEach(card => {
@@ -51,7 +60,9 @@ export default class CardsReminderControl {
                     }
                 )
             })
-        )
+        ).catch(error => {
+            this.logger.error("rruleReminderService checkCardsReminder error " +error)
+        });
     }
 
     public resetReminderDatabase() {
@@ -64,7 +75,9 @@ export default class CardsReminderControl {
                 this.reminderService.addCardReminder(card);
                 this.rruleReminderService.addCardReminder(card);
             })
-        );
+        ).catch(error => {
+            this.logger.error("resetReminderDatabase error " +error)
+        });
 
     }
 

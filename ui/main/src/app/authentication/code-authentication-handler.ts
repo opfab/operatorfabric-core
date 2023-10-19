@@ -34,7 +34,7 @@ export class CodeAuthenticationHandler extends AuthHandler {
                     this.moveToLoginPage();
                 }
             } else {
-                if (!this.isExpirationDateOver()) {
+                if (this.doesTokenExpireSoon()) {
                     this.userAuthenticated.next(null);
                 } else {
                     this.moveToLoginPage();

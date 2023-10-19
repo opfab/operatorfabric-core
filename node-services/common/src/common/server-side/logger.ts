@@ -44,7 +44,7 @@ if (logConfiguration.logFile) {
 
   logger = winston.createLogger({
     format: format.combine( format(info => {info.message = prefixNewLinesToAvoidLogInjection(info.message); return info})(),logFormat),
-    transports: [transport],
+    transports: [transport,new winston.transports.Console({level: logConfiguration.logLevel})],
   });
 }
 

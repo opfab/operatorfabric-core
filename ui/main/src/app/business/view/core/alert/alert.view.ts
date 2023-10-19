@@ -20,19 +20,18 @@ export class AlertView {
     private hideMessagesLevel: MessageLevel[] = [];
 
     constructor(
-        private configService: ConfigService,
-        private alertMessageService: AlertMessageService,
         private translationService: TranslationService
     ) {
-        this.alertMessageBusinessAutoClose = this.configService.getConfigValue('alerts.messageBusinessAutoClose', false);
+
+        this.alertMessageBusinessAutoClose = ConfigService.getConfigValue('alerts.messageBusinessAutoClose', false);
         this.alertPage = new AlertPage();
         this.alertPage.style = 'top: 0';
-        if (this.configService.getConfigValue('alerts.messageOnBottomOfTheScreen', false))
+        if (ConfigService.getConfigValue('alerts.messageOnBottomOfTheScreen', false))
             this.alertPage.style = 'bottom: 0';
-        if (this.configService.getConfigValue('alerts.hideBusinessMessages', false))
+        if (ConfigService.getConfigValue('alerts.hideBusinessMessages', false))
             this.hideMessagesLevel.push(MessageLevel.BUSINESS);
 
-        alertMessageService.getAlertMessage().subscribe((message: Message) => this.processAlertMessage(message));
+        AlertMessageService.getAlertMessage().subscribe((message: Message) => this.processAlertMessage(message));
     }
 
     private processAlertMessage(message: Message) {

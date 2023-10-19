@@ -7,7 +7,7 @@ Feature: CardsReminder
     * def authToken = signIn.authToken
     * def signIn2 = callonce read('../common/getToken.feature') { username: 'operator2_fr'}
     * def authToken2 = signIn2.authToken
-    * def signInInternal = callonce read('../common/getToken.feature') { username: 'opfab_internal_account'}
+    * def signInInternal = callonce read('../common/getToken.feature') { username: 'opfab'}
     * def authTokenInternal = signInInternal.authToken
     * def signInAdmin = callonce read('../common/getToken.feature') { username: 'admin'}
     * def authTokenAdmin = signInAdmin.authToken

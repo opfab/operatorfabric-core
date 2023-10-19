@@ -14,7 +14,7 @@ import {
     UntypedFormGroup,
     Validators
 } from '@angular/forms';
-import {Component, Input, OnInit} from '@angular/core';
+import {ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnInit} from '@angular/core';
 import {NgbActiveModal} from '@ng-bootstrap/ng-bootstrap';
 import {Perimeter, RightsEnum} from '@ofModel/perimeter.model';
 import {ProcessesService} from 'app/business/services/businessconfig/processes.service';
@@ -28,14 +28,17 @@ import {AlertMessageService} from 'app/business/services/alert-message.service';
 @Component({
     selector: 'of-edit-perimeter-modal',
     templateUrl: './edit-perimeter-modal.component.html',
-    styleUrls: ['./edit-perimeter-modal.component.scss']
+    styleUrls: ['./edit-perimeter-modal.component.scss'],
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class EditPerimeterModalComponent implements OnInit {
+
+ 
     constructor(
         private activeModal: NgbActiveModal,
         private crudService: PerimetersService,
         private processesService: ProcessesService,
-        private alertMessageService: AlertMessageService
+        private changeDetector: ChangeDetectorRef
 
     ) {
         Object.keys(RightsEnum).forEach((key) => {
@@ -144,6 +147,7 @@ export class EditPerimeterModalComponent implements OnInit {
                 this.addStateRightControl(stateRight.state, stateRight.right, stateRight.filteringNotificationAllowed);
             });
         }
+        this.perimeterForm.valueChanges.subscribe(()=> this.changeDetector.markForCheck());
     }
 
     initProcessOptions(): void {
@@ -234,7 +238,7 @@ export class EditPerimeterModalComponent implements OnInit {
     }
 
     onSaveError(res) {
-        this.alertMessageService.sendAlertMessage({message: res.originalError.error.message, level: MessageLevel.ERROR});
+        AlertMessageService.sendAlertMessage({message: res.originalError.error.message, level: MessageLevel.ERROR});
     }
 
     public removeOrClearStateRight(indexToRemove: number) {

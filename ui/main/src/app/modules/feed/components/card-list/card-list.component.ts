@@ -56,27 +56,23 @@ export class CardListComponent implements AfterViewChecked, OnInit {
 
     constructor(
         private modalService: NgbModal,
-        private configService: ConfigService,
         private processesService: ProcessesService,
         private acknowledgeService: AcknowledgeService,
-        private userService: UserService,
         private entitiesService: EntitiesService,
         private groupedCardsService: GroupedCardsService,
-        private alertMessageService: AlertMessageService,
         private router: Router,
         private sortService: SortService,
-        private userPreferences: UserPreferencesService,
         private lightCardsStoreService: LightCardsStoreService,
     ) {
-        this.currentUserWithPerimeters = this.userService.getCurrentUserWithPerimeters();
+        this.currentUserWithPerimeters = UserService.getCurrentUserWithPerimeters();
     }
 
     ngOnInit(): void {
-        this.defaultSorting = this.configService.getConfigValue('feed.defaultSorting', 'unread');
+        this.defaultSorting = ConfigService.getConfigValue('feed.defaultSorting', 'unread');
 
         this.sortService.setSortBy(this.defaultSorting);
 
-        this.defaultAcknowledgmentFilter = this.configService.getConfigValue('feed.defaultAcknowledgmentFilter', 'notack');
+        this.defaultAcknowledgmentFilter = ConfigService.getConfigValue('feed.defaultAcknowledgmentFilter', 'notack');
         if (
             this.defaultAcknowledgmentFilter !== 'ack' &&
             this.defaultAcknowledgmentFilter !== 'notack' &&
@@ -84,14 +80,14 @@ export class CardListComponent implements AfterViewChecked, OnInit {
         )
             this.defaultAcknowledgmentFilter = 'notack';
 
-        this.hideTimerTags = this.configService.getConfigValue('feed.card.hideTimeFilter', false);
-        this.hideResponseFilter = this.configService.getConfigValue('feed.card.hideResponseFilter', false);
-        this.hideApplyFiltersToTimeLineChoice = this.configService.getConfigValue(
+        this.hideTimerTags = ConfigService.getConfigValue('feed.card.hideTimeFilter', false);
+        this.hideResponseFilter = ConfigService.getConfigValue('feed.card.hideResponseFilter', false);
+        this.hideApplyFiltersToTimeLineChoice = ConfigService.getConfigValue(
             'feed.card.hideApplyFiltersToTimeLineChoice',
             false
         );
 
-        this.hideAckAllCardsFeature = this.configService.getConfigValue('feed.card.hideAckAllCardsFeature', true);
+        this.hideAckAllCardsFeature = ConfigService.getConfigValue('feed.card.hideAckAllCardsFeature', true);
         this.initFilterActive();
     }
 
@@ -120,25 +116,25 @@ export class CardListComponent implements AfterViewChecked, OnInit {
     }
 
     initFilterActive() {
-        const savedAlarm = this.userPreferences.getPreference('opfab.feed.filter.type.alarm');
-        const savedAction = this.userPreferences.getPreference('opfab.feed.filter.type.action');
-        const savedCompliant = this.userPreferences.getPreference('opfab.feed.filter.type.compliant');
-        const savedInformation = this.userPreferences.getPreference('opfab.feed.filter.type.information');
+        const savedAlarm = UserPreferencesService.getPreference('opfab.feed.filter.type.alarm');
+        const savedAction = UserPreferencesService.getPreference('opfab.feed.filter.type.action');
+        const savedCompliant = UserPreferencesService.getPreference('opfab.feed.filter.type.compliant');
+        const savedInformation = UserPreferencesService.getPreference('opfab.feed.filter.type.information');
 
         const alarmUnset = savedAlarm && savedAlarm !== 'true';
         const actionUnset = savedAction && savedAction !== 'true';
         const compliantUnset = savedCompliant && savedCompliant !== 'true';
         const informationUnset = savedInformation && savedInformation !== 'true';
 
-        const responseValue = this.userPreferences.getPreference('opfab.feed.filter.response');
+        const responseValue = UserPreferencesService.getPreference('opfab.feed.filter.response');
         const responseUnset = responseValue && responseValue !== 'true';
 
-        const ackValue = this.userPreferences.getPreference('opfab.feed.filter.ack');
+        const ackValue = UserPreferencesService.getPreference('opfab.feed.filter.ack');
         const ackSet = ackValue && (ackValue === 'ack' || ackValue === 'none');
 
 
-        const savedStart = this.userPreferences.getPreference('opfab.feed.filter.start');
-        const savedEnd = this.userPreferences.getPreference('opfab.feed.filter.end');
+        const savedStart = UserPreferencesService.getPreference('opfab.feed.filter.start');
+        const savedEnd = UserPreferencesService.getPreference('opfab.feed.filter.end');
 
         this.filterActive = alarmUnset || actionUnset || compliantUnset || informationUnset || responseUnset || ackSet || !!savedStart || !!savedEnd;
     }
@@ -192,7 +188,7 @@ export class CardListComponent implements AfterViewChecked, OnInit {
     }
 
     private displayMessage(i18nKey: string, msg: string, severity: MessageLevel = MessageLevel.ERROR) {
-        this.alertMessageService.sendAlertMessage({message: msg, level: severity, i18n: {key: i18nKey}});
+        AlertMessageService.sendAlertMessage({message: msg, level: severity, i18n: {key: i18nKey}});
     }
 
     open(content) {

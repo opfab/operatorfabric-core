@@ -16,7 +16,7 @@ import {CurrentUserStore} from 'app/business/store/current-user.store';
     providedIn: 'root'
 })
 export class TokenInjector implements HttpInterceptor {
-    constructor(private currentUserStore: CurrentUserStore) {}
+
 
     intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
         return next.handle(this.addAuthHeadersIfNecessary(request));
@@ -30,8 +30,8 @@ export class TokenInjector implements HttpInterceptor {
             url.endsWith('/auth/token') ||
             url.endsWith('/auth/code')
         );
-        if (isUrlWithToken && this.currentUserStore.doesAuthenticationUseToken()) {
-            const securityHeader = {Authorization: `Bearer ${this.currentUserStore.getToken()}`}
+        if (isUrlWithToken && CurrentUserStore.doesAuthenticationUseToken()) {
+            const securityHeader = {Authorization: `Bearer ${CurrentUserStore.getToken()}`};
             const update = {setHeaders: securityHeader};
             request = request.clone(update);
         }

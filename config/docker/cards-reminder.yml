@@ -1,0 +1,3 @@
+#operatorfabric:
+#  logConfig:
+#    logLevel: debug

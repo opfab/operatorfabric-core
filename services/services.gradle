@@ -53,15 +53,6 @@ subprojects {
         }
     }
 
-    /////// CONFIGURATION
-
-    // Boot
-
-    bootRun {
-        systemProperty 'spring.profiles.active', findProperty('spring.profiles.active') ?: 'dev, native'
-        systemProperty 'spring.cloud.bootstrap.location', findProperty('spring.cloud.bootstrap.location') ?: './src/main/resources/bootstrap-dev.yml'
-    }
-
     // Tests
 
     test {

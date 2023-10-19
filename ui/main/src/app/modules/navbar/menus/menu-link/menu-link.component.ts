@@ -26,11 +26,11 @@ export class MenuLinkComponent {
 
     LinkType = MenuEntryLinkTypeEnum;
 
-    public hasLinkType(type: MenuEntryLinkTypeEnum) : boolean {
+    public hasLinkType(type: MenuEntryLinkTypeEnum): boolean {
         return !!this.menuEntry.customMenuId && this.menuEntry.linkType === type;
     }
 
-    public isLinkACoreMenu() : boolean {
+    public isLinkACoreMenu(): boolean {
         return !!this.menuEntry.opfabCoreMenuId;
     }
 
@@ -49,7 +49,8 @@ export class MenuLinkComponent {
             '/businessconfigparty/' +
                 encodeURIComponent(encodeURIComponent(this.menu.id)) +
                 '/' +
-                encodeURIComponent(encodeURIComponent(this.menuEntry.customMenuId))
+                encodeURIComponent(encodeURIComponent(this.menuEntry.customMenuId)) +
+                '/'
         ]);
     }
 
@@ -65,5 +66,4 @@ export class MenuLinkComponent {
         }
         return newUrl;
     }
-
 }

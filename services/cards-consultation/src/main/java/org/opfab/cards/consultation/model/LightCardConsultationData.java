@@ -80,6 +80,8 @@ public class LightCardConsultationData implements LightCard {
     private List<String> userRecipients;
     private List<String> groupRecipients;
 
+    private List<String> usersReads;
+
     @Transient
     private Boolean hasBeenRead;
 
@@ -173,7 +175,6 @@ public class LightCardConsultationData implements LightCard {
         if (other.getUserRecipients() != null && !other.getUserRecipients().isEmpty()) {
             builder.userRecipients(other.getUserRecipients());            
         }
-
         return builder.build();
 
     }

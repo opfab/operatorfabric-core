@@ -24,13 +24,10 @@ export class FeedSortComponent implements OnInit, OnDestroy {
 
     private ngUnsubscribe$ = new Subject<void>();
     sortForm: FormGroup<{
-        sortControl: FormControl<string | null>
+        sortControl: FormControl<string | null>;
     }>;
 
-    constructor(
-        private userPreferences: UserPreferencesService,
-        private sortService: SortService
-    ) {}
+    constructor(private sortService: SortService) {}
 
     ngOnInit() {
         this.sortForm = this.createFormGroup();
@@ -53,15 +50,15 @@ export class FeedSortComponent implements OnInit, OnDestroy {
         this.sortService.setSortBy(sortChoice);
 
         this.sortForm.valueChanges.pipe(takeUntil(this.ngUnsubscribe$)).subscribe((form) => {
-            this.userPreferences.setPreference('opfab.feed.sort.type', form.sortControl);
+            UserPreferencesService.setPreference('opfab.feed.sort.type', form.sortControl);
             this.sortService.setSortBy(form.sortControl);
         });
     }
 
     private getInitialSort(): string {
         let sortedChoice = this.defaultSorting;
-        const sortedPreference = this.userPreferences.getPreference('opfab.feed.sort.type');
-        if (sortedPreference)  sortedChoice = sortedPreference;
+        const sortedPreference = UserPreferencesService.getPreference('opfab.feed.sort.type');
+        if (sortedPreference) sortedChoice = sortedPreference;
         return sortedChoice;
     }
 

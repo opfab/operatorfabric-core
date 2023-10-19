@@ -12,7 +12,7 @@ import {QuestionCardTemplateView} from './questionCardTemplateView';
 
 declare const opfab;
 
-describe('Question UserCard template', () => {
+describe('Question Card template', () => {
     let view: QuestionCardTemplateView;
     beforeEach(() => {
         initOpfabApiMock();
@@ -33,7 +33,14 @@ describe('Question UserCard template', () => {
         expect(view.getQuestion()).toEqual('My question <br/> question');
     });
 
-    it('Given a card WHEN user is not allowed to response THEN response input is hidden', () => {
+    it('GIVEN a card WHEN get question with an HTML tag THEN question is provided with the HTML tag escape', () => {
+        opfab.currentCard.getCard = function () {
+            return {data: {question: 'My question <script> question'}};
+        };
+        expect(view.getQuestion()).toEqual('My question &lt;script&gt; question');
+    });
+
+    it('Given a card WHEN user is not allowed to answer THEN response input is hidden', () => {
         opfab.currentCard.isUserAllowedToRespond = () => false;
         let inputFieldVisibility = true;
         view.listenToInputFieldVisibility((visible) => (inputFieldVisibility = visible));
@@ -70,7 +77,7 @@ describe('Question UserCard template', () => {
         expect(inputFieldVisibility).toBeTrue();
     });
 
-    it('GIVEN input is "my response" WHEN  get user response THEN responseCardData.response is "my_response" and response is valid', () => {
+    it('GIVEN input is "my response" WHEN get user response THEN responseCardData.response is "my_response" and response is valid', () => {
         // Simulate opfabAPI
         let getUserResponseFromTemplate;
         opfab.currentCard.registerFunctionToGetUserResponse = (getUserResponse) => {
@@ -84,7 +91,7 @@ describe('Question UserCard template', () => {
         expect(getUserResponseFromTemplate().responseCardData.response).toEqual('my response');
     });
 
-    it('GIVEN 2 child cards WHEN listen to child card  THEN received 2 response', () => {
+    it('GIVEN 2 child cards WHEN listen to child card THEN received 2 response', () => {
         const childcards = [
             {
                 publisher: 'entity1',

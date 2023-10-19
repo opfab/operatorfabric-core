@@ -30,7 +30,7 @@ import {UserCardRecipientsFormComponent} from './recipientForm/usercard-recipien
 import {UserPermissionsService} from 'app/business/services/user-permissions.service';
 import {Utilities} from '../../business/common/utilities';
 import {UsercardSelectCardEmitterFormComponent} from './selectCardEmitterForm/usercard-select-card-emitter-form.component';
-import {LogOption, OpfabLoggerService} from 'app/business/services/logs/opfab-logger.service';
+import {LogOption, LoggerService as logger} from 'app/business/services/logs/logger.service';
 import {PermissionEnum} from '@ofModel/permission.model';
 import {AlertMessageService} from 'app/business/services/alert-message.service';
 import {CardService} from 'app/business/services/card/card.service';
@@ -46,6 +46,7 @@ import {OpfabAPIService} from 'app/business/services/opfabAPI.service';
 })
 export class UserCardComponent implements OnInit, OnDestroy {
     @Input() userCardModal;
+
     public pageLoading = true;
 
     // Process and state choice
@@ -128,17 +129,13 @@ export class UserCardComponent implements OnInit, OnDestroy {
 
     constructor(
         private cardService: CardService,
-        private userService: UserService,
         private entitiesService: EntitiesService,
         private sanitizer: DomSanitizer,
         private element: ElementRef,
         private processesService: ProcessesService,
-        protected configService: ConfigService,
         private handlebars: HandlebarsService,
         protected soundNotificationService: SoundNotificationService,
         protected userPermissionsService: UserPermissionsService,
-        private alertMessageService: AlertMessageService,
-        private opfabLogger: OpfabLoggerService,
         private systemNotificationService: SystemNotificationService,
         private opfabAPIService: OpfabAPIService
     ) {
@@ -148,7 +145,7 @@ export class UserCardComponent implements OnInit, OnDestroy {
     ngOnInit() {
         this.pageLoading = true;
         this.datesFromTemplate = true;
-        this.displayConnectionCircles = this.configService.getConfigValue('usercard.displayConnectionCirclesInPreview', false)
+        this.displayConnectionCircles = ConfigService.getConfigValue('usercard.displayConnectionCirclesInPreview', false)
         this.opfabAPIService.initUserCardTemplateInterface();
         this.opfabAPIService.initCurrentUserCard();
         this.severityForm = new FormGroup({
@@ -176,12 +173,12 @@ export class UserCardComponent implements OnInit, OnDestroy {
             }
         }
 
-        this.useDescriptionFieldForEntityList = this.configService.getConfigValue(
+        this.useDescriptionFieldForEntityList = ConfigService.getConfigValue(
             'usercard.useDescriptionFieldForEntityList',
             false
         );
 
-        this.isReadOnlyUser = this.userService.hasCurrentUserAnyPermission([PermissionEnum.READONLY]);
+        this.isReadOnlyUser = UserService.hasCurrentUserAnyPermission([PermissionEnum.READONLY]);
     }
 
     ngOnDestroy() {
@@ -331,7 +328,7 @@ export class UserCardComponent implements OnInit, OnDestroy {
     private findUserEntitiesAllowedToSendCard(): Array<any> {
         const entitiesList = [];
 
-        let allowedUserEntities = this.userService.getCurrentUserWithPerimeters().userData.entities;
+        let allowedUserEntities = UserService.getCurrentUserWithPerimeters().userData.entities;
         if (this.userCardConfiguration?.publisherList?.length > 0) {
             const configuredPublisherList = [];
             this.entitiesService
@@ -484,7 +481,7 @@ export class UserCardComponent implements OnInit, OnDestroy {
                     error: (error) => {
                         this.isLoadingCardTemplate = false;
 
-                        this.opfabLogger.error(
+                        logger.error(
                             'WARNING impossible to load template ' + templateName + ', error = ' + error
                         );
                         this.userCardTemplate = this.sanitizer.bypassSecurityTrustHtml('');
@@ -619,7 +616,7 @@ export class UserCardComponent implements OnInit, OnDestroy {
                 if (
                     this.specificInformation.childCard &&
                     this.userPermissionsService.isUserEnabledToRespond(
-                        this.userService.getCurrentUserWithPerimeters(),
+                        UserService.getCurrentUserWithPerimeters(),
                         this.card,
                         selectedProcess
                     )
@@ -645,8 +642,9 @@ export class UserCardComponent implements OnInit, OnDestroy {
     }
 
     private getConnectedUsers(): Observable<boolean> {
-        return this.userService.loadConnectedUsers().pipe(
+        return UserService.loadConnectedUsers().pipe(
             map((connectedUsers) => {
+                this.connectedRecipients.clear();
                 connectedUsers.forEach((connectedUser) => {
                     connectedUser.entitiesConnected.forEach( (entity) => {
                         if (this.recipients.includes(entity) || this.card.entityRecipientsForInformation.includes(entity)) {
@@ -681,7 +679,7 @@ export class UserCardComponent implements OnInit, OnDestroy {
 
         const specificInformation = this.opfabAPIService.userCardTemplateInterface.getSpecificCardInformation();
         if (!specificInformation) {
-            this.opfabLogger.error(
+            logger.error(
                 'ERROR : registered method getSpecificCardInformation in template return no information, card cannot be sent'
             );
             this.displayMessage('userCard.error.templateError', null, MessageLevel.ERROR);
@@ -694,7 +692,7 @@ export class UserCardComponent implements OnInit, OnDestroy {
         }
 
         if (!specificInformation.card) {
-            this.opfabLogger.error(
+            logger.error(
                 'ERROR : registered method getSpecificCardInformation in template return specificInformation with no card field, card cannot be sent'
             );
             this.displayMessage('userCard.error.templateError', null, MessageLevel.ERROR);
@@ -769,7 +767,8 @@ export class UserCardComponent implements OnInit, OnDestroy {
             return false;
         }
 
-        if (lttd && lttd < startDate) {
+        const currentDateTime = new Date().valueOf();
+        if (lttd && ((lttd < startDate) || (lttd <= currentDateTime))) {
             this.displayMessage('userCard.error.lttdBeforeStartDate', '', MessageLevel.ERROR);
             return false;
         }
@@ -861,7 +860,7 @@ export class UserCardComponent implements OnInit, OnDestroy {
         let timeSpans = [];
 
         if (specificInformation.recurrence)
-            this.opfabLogger.warn(
+            logger.warn(
                 "Using deprecated field 'specificInformation.recurrence'. Use 'specificInformation.timeSpan' field instead to configure timespans",
                 LogOption.LOCAL
             );
@@ -879,7 +878,7 @@ export class UserCardComponent implements OnInit, OnDestroy {
     }
 
     private displayMessage(i18nKey: string, msg: string, severity: MessageLevel = MessageLevel.ERROR) {
-        this.alertMessageService.sendAlertMessage({message: msg, level: severity, i18n: {key: i18nKey}});
+        AlertMessageService.sendAlertMessage({message: msg, level: severity, i18n: {key: i18nKey}});
     }
 
     public getEntityName(id: string): string {
@@ -940,7 +939,7 @@ export class UserCardComponent implements OnInit, OnDestroy {
         if (
             this.specificInformation.childCard &&
             this.userPermissionsService.isUserEnabledToRespond(
-                this.userService.getCurrentUserWithPerimeters(),
+                UserService.getCurrentUserWithPerimeters(),
                 this.card,
                 selectedProcess
             )
@@ -955,7 +954,7 @@ export class UserCardComponent implements OnInit, OnDestroy {
             if (resp.status !== ServerResponseStatus.OK) {
                 const msg = resp.statusMessage ? resp.statusMessage : '';
                 const error = resp.status ? resp.status : '';
-                this.opfabLogger.error(
+                logger.error(
                     'Impossible to send card , message from service : ' + msg + '. Error message : ' + error
                 );
                 this.displayMessage('userCard.error.impossibleToSendCard', null, MessageLevel.ERROR);
@@ -980,7 +979,7 @@ export class UserCardComponent implements OnInit, OnDestroy {
             if (resp.status !== ServerResponseStatus.OK) {
                 const msg = resp.statusMessage ? resp.statusMessage : '';
                 const error = resp.status ? resp.status : '';
-                this.opfabLogger.error(
+                logger.error(
                     'Impossible to send child card , message from service : ' + msg + '. Error message : ' + error
                 );
                 this.displayMessage('userCard.error.impossibleToSendCard', null, MessageLevel.ERROR);

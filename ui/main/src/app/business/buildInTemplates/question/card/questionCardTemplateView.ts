@@ -34,8 +34,8 @@ export class QuestionCardTemplateView {
             if (childCards?.forEach && childCards.length > 0) {
                 childCards?.forEach((element) => {
                     responses.push({
-                        entityName: opfab.users.entities.getEntityName(element.publisher),
-                        response: element.data?.response
+                        entityName: opfab.utils.escapeHtml(opfab.users.entities.getEntityName(element.publisher)),
+                        response: opfab.utils.escapeHtml(element.data?.response)
                     });
                 });
             }

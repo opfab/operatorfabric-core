@@ -16,8 +16,8 @@ import {ConfigService} from 'app/business/services/config.service';
 import {NgbModal, NgbModalOptions, NgbModalRef, NgbPopover} from '@ng-bootstrap/ng-bootstrap';
 import {MenuService} from 'app/business/services/menu.service';
 import {Observable} from 'rxjs';
-import {AuthService} from 'app/authentication/auth.service';
 import {RouterStore} from 'app/business/store/router.store';
+import {SessionManagerService} from 'app/business/services/session-manager.service';
 
 @Component({
     selector: 'of-navbar',
@@ -42,10 +42,6 @@ export class NavbarComponent implements OnInit {
 
     @ViewChild('about') aboutTemplate: ElementRef;
 
-    customLogo: string;
-    height: number;
-    width: number;
-    limitSize: boolean;
     displayAdmin: boolean;
     displayActivityArea: boolean;
     displayFeedConfiguration: boolean;
@@ -67,42 +63,24 @@ export class NavbarComponent implements OnInit {
     styleMode : Observable<string>;
 
     constructor(
-        private routerStore: RouterStore,
         private router: Router,
         private globalStyleService: GlobalStyleService,
-        private configService: ConfigService,
         private menuService: MenuService,
         private modalService: NgbModal,
-        private authService: AuthService
+        private sessionManager: SessionManagerService
     ) {
     }
 
     ngOnInit() {
 
-        this.routerStore.getCurrentRouteEvent().subscribe((route)=> {
+        RouterStore.getCurrentRouteEvent().subscribe((route)=> {
             this.currentRoute = route.split('/')[1];
         });
 
-        this.businessconfigMenus = this.menuService.getCurrentUserCustomMenus(this.configService.getMenus());
+        this.businessconfigMenus = this.menuService.getCurrentUserCustomMenus(ConfigService.getMenus());
 
-        this.showDropdownMenuEvenIfOnlyOneEntry = this.configService.getShowDropdownMenuEvenIfOnlyOneEntry();
+        this.showDropdownMenuEvenIfOnlyOneEntry = ConfigService.getShowDropdownMenuEvenIfOnlyOneEntry();
 
-        const logo = this.configService.getConfigValue('logo.base64');
-        if (logo) {
-            this.customLogo = `data:image/svg+xml;base64,${logo}`;
-        }
-        const logo_height = this.configService.getConfigValue('logo.height');
-        if (logo_height) {
-            this.height = logo_height;
-        }
-
-        const logo_width = this.configService.getConfigValue('logo.width');
-        if (logo_width) {
-            this.width = logo_width;
-        }
-
-        const logo_limitSize = this.configService.getConfigValue('logo.limitSize');
-        this.limitSize = logo_limitSize === true;
 
         const visibleCoreMenus = this.menuService.computeVisibleCoreMenusForCurrentUser();
         visibleCoreMenus.forEach(visibleCoreMenu => {
@@ -127,20 +105,20 @@ export class NavbarComponent implements OnInit {
         this.displayChangePassword = visibleCoreMenus.includes('changepassword');
         this.nightDayMode = visibleCoreMenus.includes('nightdaymode');
 
-        this.environmentName = this.configService.getConfigValue('environmentName');
-        this.environmentColor = this.configService.getConfigValue('environmentColor', 'blue');
+        this.environmentName = ConfigService.getConfigValue('environmentName');
+        this.environmentColor = ConfigService.getConfigValue('environmentColor', 'blue');
         if (this.environmentName) this.displayEnvironmentName = true;
 
         this.styleMode = this.globalStyleService.getStyleChange();
 
         this.navigationRoutesMap = new Map(this.navigationRoutes.map(element => [element.path, element]));
         this.businessconfigMenusMap = new Map(this.businessconfigMenus.map(element => [element.id, element]));
-        this.navigationBar = this.configService.getNavigationBar();
+        this.navigationBar = ConfigService.getNavigationBar();
     }
 
     logOut() {
         this.logoutInProgress = true;
-        this.authService.logout();
+        this.sessionManager.logout();
     }
 
     toggleMenu(menu, p): void {
@@ -191,3 +169,5 @@ export class NavbarComponent implements OnInit {
         this.modalService.open(this.aboutTemplate, {centered: true});
     }
 }
+
+

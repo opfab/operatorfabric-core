@@ -26,7 +26,7 @@ import {AlertMessageService} from 'app/business/services/alert-message.service';
 import {CardService} from 'app/business/services/card/card.service';
 import {ServerResponseStatus} from 'app/business/server/serverResponse';
 import {OpfabAPIService} from 'app/business/services/opfabAPI.service';
-import {OpfabLoggerService} from 'app/business/services/logs/opfab-logger.service';
+import {LoggerService as logger} from 'app/business/services/logs/logger.service';
 
 class FormResult {
     valid: boolean;
@@ -84,15 +84,12 @@ export class CardResponseComponent implements OnChanges, OnInit {
         private cardService: CardService,
         private entitiesService: EntitiesService,
         private modalService: NgbModal,
-        private userService: UserService,
         private userPermissionsService: UserPermissionsService,
         private processService: ProcessesService,
-        private alertMessageService: AlertMessageService,
-        private opfabAPIService: OpfabAPIService,
-        private logger: OpfabLoggerService,
+        private opfabAPIService: OpfabAPIService
 
     ) {
-        const userWithPerimeters = this.userService.getCurrentUserWithPerimeters();
+        const userWithPerimeters = UserService.getCurrentUserWithPerimeters();
         if (userWithPerimeters) this.user = userWithPerimeters.userData;
     }
 
@@ -105,11 +102,11 @@ export class CardResponseComponent implements OnChanges, OnInit {
 
     ngOnChanges(): void {
         this.isUserEnabledToRespond = this.userPermissionsService.isUserEnabledToRespond(
-            this.userService.getCurrentUserWithPerimeters(),
+            UserService.getCurrentUserWithPerimeters(),
             this.card,
             this.processService.getProcess(this.card.process)
         );
-        this.isReadOnlyUser = this.userService.hasCurrentUserAnyPermission([PermissionEnum.READONLY]);
+        this.isReadOnlyUser = UserService.hasCurrentUserAnyPermission([PermissionEnum.READONLY]);
 
         this.showButton = this.cardState.response && !this.isReadOnlyUser;
         this.userEntityIdToUseForResponse = this.userEntityIdsPossibleForResponse[0];
@@ -162,7 +159,7 @@ export class CardResponseComponent implements OnChanges, OnInit {
             const publisherEntity = responseData.publisher ?? this.userEntityIdToUseForResponse;
 
             if (!this.userEntityIdsPossibleForResponse.includes(publisherEntity)) {
-                this.logger.error("Response card publisher not allowed : " + publisherEntity);
+                logger.error("Response card publisher not allowed : " + publisherEntity);
                 this.displayMessage(ResponseI18nKeys.SUBMIT_ERROR_MSG, null, MessageLevel.ERROR);
                 return;
             }
@@ -210,7 +207,7 @@ export class CardResponseComponent implements OnChanges, OnInit {
     }
 
     private displayMessage(i18nKey: string, msg: string, severity: MessageLevel = MessageLevel.ERROR) {
-        this.alertMessageService.sendAlertMessage({message: msg, level: severity, i18n: {key: i18nKey}});
+        AlertMessageService.sendAlertMessage({message: msg, level: severity, i18n: {key: i18nKey}});
     }
 
     public submitEntitiesChoice() {

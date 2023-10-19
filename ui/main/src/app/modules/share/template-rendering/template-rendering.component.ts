@@ -9,6 +9,8 @@
 
 import {
     AfterViewChecked,
+    ChangeDetectionStrategy,
+    ChangeDetectorRef,
     Component,
     ElementRef,
     EventEmitter,
@@ -29,7 +31,7 @@ import {UserContext} from '@ofModel/user-context.model';
 import {map, skip, takeUntil} from 'rxjs/operators';
 import {Observable, Subject, zip} from 'rxjs';
 import {User} from '@ofModel/user.model';
-import {OpfabLoggerService} from 'app/business/services/logs/opfab-logger.service';
+import {LoggerService as logger} from 'app/business/services/logs/logger.service';
 import {DisplayContext} from '@ofModel/template.model';
 import {TemplateCssService} from 'app/business/services/card/template-css.service';
 import {GlobalStyleService} from 'app/business/services/global-style.service';
@@ -42,7 +44,8 @@ import {OpfabAPIService} from 'app/business/services/opfabAPI.service';
     selector: 'of-template-rendering',
     templateUrl: './template-rendering.component.html',
     styleUrls: ['./template-rendering.component.scss'],
-    encapsulation: ViewEncapsulation.None
+    encapsulation: ViewEncapsulation.None,
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TemplateRenderingComponent implements OnChanges, OnInit, OnDestroy, AfterViewChecked {
     @Input() cardState: State;
@@ -69,16 +72,15 @@ export class TemplateRenderingComponent implements OnChanges, OnInit, OnDestroy,
         private element: ElementRef,
         private handlebars: HandlebarsService,
         private sanitizer: DomSanitizer,
-        private currentUserStore: CurrentUserStore,
         private templateCssService: TemplateCssService,
         private globalStyleService: GlobalStyleService,
-        private userService: UserService,
         private opfabAPIService: OpfabAPIService,
-        private logger: OpfabLoggerService
+        private changeDetector: ChangeDetectorRef
     ) {}
 
     public ngOnInit() {
         this.informTemplateWhenGlobalStyleChange();
+        addEventListener("resize", this.computeRenderingHeight);
     }
 
     // For certain types of template , we need to inform it to take into account
@@ -106,16 +108,18 @@ export class TemplateRenderingComponent implements OnChanges, OnInit, OnDestroy,
         const that = this;
         this.opfabAPIService.currentCard.displayLoadingSpinner = function () {
             that.isLoadingSpinnerToDisplay = true;
+            that.changeDetector.markForCheck();
         };
         this.opfabAPIService.currentCard.hideLoadingSpinner= function () {
             that.isLoadingSpinnerToDisplay = false;
+            that.changeDetector.markForCheck();
         };
     }
 
     private getUserContextAndRenderTemplate() {
         if (!this.userContext) {
-            const user = this.userService.getCurrentUserWithPerimeters().userData;
-            const token = this.currentUserStore.getToken();
+            const user = UserService.getCurrentUserWithPerimeters().userData;
+            const token = CurrentUserStore.getToken();
             this.userContext = new UserContext(
                 user.login,
                 token,
@@ -137,6 +141,8 @@ export class TemplateRenderingComponent implements OnChanges, OnInit, OnDestroy,
             this.getHTMLFromTemplate().subscribe({
                 next: (html) => {
                     this.htmlTemplateContent = html;
+                    this.changeDetector.markForCheck();
+
                     setTimeout(() => {
                         // wait for DOM rendering
                         this.isLoadingSpinnerToDisplay = false;
@@ -145,11 +151,12 @@ export class TemplateRenderingComponent implements OnChanges, OnInit, OnDestroy,
                             // Wait for template script execution
                             this.callTemplateJsPostRenderingFunctions();
                             this.templateLoaded = true;
+                            this.changeDetector.markForCheck();
                         }, 10);
                     }, 10);
                 },
                 error: (error) => {
-                    this.logger.error(
+                    logger.error(
                         `ERROR impossible to process template  ${this.cardState.templateName} : ${error} `
                     );
                     this.htmlTemplateContent = this.sanitizer.bypassSecurityTrustHtml('');
@@ -158,7 +165,7 @@ export class TemplateRenderingComponent implements OnChanges, OnInit, OnDestroy,
             });
         } else {
             this.htmlTemplateContent = ' TECHNICAL ERROR - NO TEMPLATE AVAILABLE';
-            this.logger.error(
+            logger.error(
                 `ERROR No template for process ${this.card.process} version ${this.card.processVersion} with state ${this.card.state}`
             );
         }
@@ -207,7 +214,7 @@ export class TemplateRenderingComponent implements OnChanges, OnInit, OnDestroy,
         this.computeRenderingHeight();
     }
 
-    private computeRenderingHeight() {
+    private computeRenderingHeight = () =>  {
         const htmlElementForCardRendering = document.getElementById('opfab-div-card-template');
         if (htmlElementForCardRendering) {
             const renderingRect = htmlElementForCardRendering.getBoundingClientRect();
@@ -224,6 +231,7 @@ export class TemplateRenderingComponent implements OnChanges, OnInit, OnDestroy,
     }
 
     ngOnDestroy() {
+        removeEventListener("resize",this.computeRenderingHeight)
         this.opfabAPIService.initTemplateInterface();
         this.unsubscribeToGlobalStyle$.next();
         this.unsubscribeToGlobalStyle$.complete();

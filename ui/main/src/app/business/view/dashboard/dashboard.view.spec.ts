@@ -12,10 +12,7 @@ import {ConfigServerMock} from '@tests/mocks/configServer.mock';
 import {ProcessServerMock} from '@tests/mocks/processServer.mock';
 import {Dashboard} from './dashboard.view';
 import {UserService} from 'app/business/services/users/user.service';
-import {OpfabLoggerService} from 'app/business/services/logs/opfab-logger.service';
-import {RemoteLoggerServiceMock} from '@tests/mocks/remote-logger.service.mock';
 import {UserServerMock} from '@tests/mocks/userServer.mock';
-import {ConfigService} from 'app/business/services/config.service';
 import {ServerResponse, ServerResponseStatus} from 'app/business/server/serverResponse';
 import {Process, State} from '@ofModel/processes.model';
 import {ComputedPerimeter, UserWithPerimeters} from '@ofModel/userWithPerimeters.model';
@@ -32,13 +29,10 @@ import {FilterService} from 'app/business/services/lightcards/filter.service';
 import {FilterType} from '@ofModel/feed-filter.model';
 import {AcknowledgeService} from "../../services/acknowledge.service";
 import {UserPermissionsService} from "../../services/user-permissions.service";
-import {AlertMessageService} from "../../services/alert-message.service";
 import {EntitiesService} from 'app/business/services/users/entities.service';
 
 describe('Dashboard', () => {
     let dashboard: Dashboard;
-    let userService: UserService;
-    let opfabLoggerService: OpfabLoggerService;
     let processesService: ProcessesService;
     let userServerMock: UserServerMock;
     let processServerMock: ProcessServerMock;
@@ -50,31 +44,25 @@ describe('Dashboard', () => {
 
     beforeEach(() => {
         configServerMock = new ConfigServerMock();
-        opfabLoggerService = new OpfabLoggerService(
-            new RemoteLoggerServiceMock(new ConfigService(configServerMock), null)
-        );
         userServerMock = new UserServerMock();
-        userService = new UserService(userServerMock, opfabLoggerService, null);
+        UserService.setUserServer(userServerMock);
         processServerMock = new ProcessServerMock();
-        processesService = new ProcessesService(null, processServerMock, configServerMock);
-        filterService = new FilterService(opfabLoggerService);
+        processesService = new ProcessesService(processServerMock, configServerMock);
+        filterService = new FilterService();
 
         opfabEventStreamServerMock = new OpfabEventStreamServerMock();
         const opfabEventStreamService = new OpfabEventStreamService(
             opfabEventStreamServerMock,
-            null,
-            opfabLoggerService
+            null
         );
 
-        const entitiesService = new EntitiesService(opfabLoggerService, null, new AlertMessageService());
+        const entitiesService = new EntitiesService(null);
         const userPermissionService = new UserPermissionsService(entitiesService, processesService);
-        acknowledgeService = new AcknowledgeService(null, userPermissionService, userService, processesService, entitiesService);
+        acknowledgeService = new AcknowledgeService(null, userPermissionService, processesService, entitiesService);
 
         lightCardsStoreService = new LightCardsStoreService(
-            userService,
             opfabEventStreamService,
             new SelectedCardService(),
-            opfabLoggerService,
             acknowledgeService
         );
         lightCardsStoreService.initStore();
@@ -120,7 +108,7 @@ describe('Dashboard', () => {
         const userWithPerimeters = new UserWithPerimeters(null, new Array(), null, new Map());
         userServerMock.setResponseForCurrentUserWithPerimeter(new ServerResponse(userWithPerimeters, null, null));
 
-        dashboard = new Dashboard(userService, processesService, lightCardsStoreService, filterService);
+        dashboard = new Dashboard(processesService, lightCardsStoreService, filterService);
         filterService.updateFilter(FilterType.BUSINESSDATE_FILTER, true, filterService.getBusinessDateFilter().status);
 
         const result = await firstValueFrom(dashboard.getDashboardPage());
@@ -134,9 +122,9 @@ describe('Dashboard', () => {
         userServerMock.setResponseForCurrentUserWithPerimeter(
             new ServerResponse(userWithPerimeters, ServerResponseStatus.OK, null)
         );
-        await userService.loadUserWithPerimetersData().subscribe();
+        await UserService.loadUserWithPerimetersData().subscribe();
 
-        dashboard = new Dashboard(userService, processesService, lightCardsStoreService, filterService);
+        dashboard = new Dashboard(processesService, lightCardsStoreService, filterService);
         filterService.updateFilter(FilterType.BUSINESSDATE_FILTER, true, filterService.getBusinessDateFilter().status);
 
         const result = await firstValueFrom(dashboard.getDashboardPage());
@@ -156,9 +144,9 @@ describe('Dashboard', () => {
         userServerMock.setResponseForCurrentUserWithPerimeter(
             new ServerResponse(userWithPerimeters, ServerResponseStatus.OK, null)
         );
-        await userService.loadUserWithPerimetersData().subscribe();
+        await UserService.loadUserWithPerimetersData().subscribe();
 
-        dashboard = new Dashboard(userService, processesService, lightCardsStoreService, filterService);
+        dashboard = new Dashboard(processesService, lightCardsStoreService, filterService);
         filterService.updateFilter(FilterType.BUSINESSDATE_FILTER, true, filterService.getBusinessDateFilter().status);
 
         const result = await firstValueFrom(dashboard.getDashboardPage());
@@ -185,9 +173,9 @@ describe('Dashboard', () => {
         userServerMock.setResponseForCurrentUserWithPerimeter(
             new ServerResponse(userWithPerimeters, ServerResponseStatus.OK, null)
         );
-        await userService.loadUserWithPerimetersData().subscribe();
+        await UserService.loadUserWithPerimetersData().subscribe();
 
-        dashboard = new Dashboard(userService, processesService, lightCardsStoreService, filterService);
+        dashboard = new Dashboard(processesService, lightCardsStoreService, filterService);
         filterService.updateFilter(FilterType.BUSINESSDATE_FILTER, true, filterService.getBusinessDateFilter().status);
 
         const result = await firstValueFrom(dashboard.getDashboardPage());
@@ -210,9 +198,9 @@ describe('Dashboard', () => {
         userServerMock.setResponseForCurrentUserWithPerimeter(
             new ServerResponse(userWithPerimeters, ServerResponseStatus.OK, null)
         );
-        await userService.loadUserWithPerimetersData().subscribe();
+        await UserService.loadUserWithPerimetersData().subscribe();
 
-        dashboard = new Dashboard(userService, processesService, lightCardsStoreService, filterService);
+        dashboard = new Dashboard(processesService, lightCardsStoreService, filterService);
         filterService.updateFilter(FilterType.BUSINESSDATE_FILTER, true, filterService.getBusinessDateFilter().status);
 
         let result = await firstValueFrom(dashboard.getDashboardPage());
@@ -254,9 +242,9 @@ describe('Dashboard', () => {
         userServerMock.setResponseForCurrentUserWithPerimeter(
             new ServerResponse(userWithPerimeters, ServerResponseStatus.OK, null)
         );
-        await userService.loadUserWithPerimetersData().subscribe();
+        await UserService.loadUserWithPerimetersData().subscribe();
 
-        dashboard = new Dashboard(userService, processesService, lightCardsStoreService, filterService);
+        dashboard = new Dashboard(processesService, lightCardsStoreService, filterService);
 
         const infoCard = getOneRandomLightCard({
             process: 'process1',
@@ -322,9 +310,9 @@ describe('Dashboard', () => {
         userServerMock.setResponseForCurrentUserWithPerimeter(
             new ServerResponse(userWithPerimeters, ServerResponseStatus.OK, null)
         );
-        await userService.loadUserWithPerimetersData().subscribe();
+        await UserService.loadUserWithPerimetersData().subscribe();
 
-        dashboard = new Dashboard(userService, processesService, lightCardsStoreService, filterService);
+        dashboard = new Dashboard(processesService, lightCardsStoreService, filterService);
 
         const infoCard = getOneRandomLightCard({
             process: 'process1',
@@ -350,9 +338,9 @@ describe('Dashboard', () => {
         userServerMock.setResponseForCurrentUserWithPerimeter(
             new ServerResponse(userWithPerimeters, ServerResponseStatus.OK, null)
         );
-        await userService.loadUserWithPerimetersData().subscribe();
+        await UserService.loadUserWithPerimetersData().subscribe();
 
-        dashboard = new Dashboard(userService, processesService, lightCardsStoreService, filterService);
+        dashboard = new Dashboard(processesService, lightCardsStoreService, filterService);
 
         const infoCard = getOneRandomLightCard({
             process: 'process1',

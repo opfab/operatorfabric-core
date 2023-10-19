@@ -8,7 +8,6 @@
  */
 
 import {Component, EventEmitter, Input, OnDestroy, OnInit, Output} from '@angular/core';
-import {UserService} from 'app/business/services/users/user.service';
 import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
 import {NgbModalRef} from '@ng-bootstrap/ng-bootstrap/modal/modal-ref';
 import {FormControl, FormGroup} from '@angular/forms';
@@ -40,7 +39,6 @@ export class ActivityareaComponent implements OnInit, OnDestroy {
     activityAreaPage: ActivityAreaPage;
 
     constructor(
-        private userService: UserService,
         private entitiesService: EntitiesService,
         private modalService: NgbModal,
         private settingsService: SettingsService,
@@ -49,7 +47,6 @@ export class ActivityareaComponent implements OnInit, OnDestroy {
 
     ngOnInit() {
         this.activityAreaView = new ActivityAreaView(
-            this.userService,
             this.entitiesService,
             this.settingsService,
             this.lightCardStoreService

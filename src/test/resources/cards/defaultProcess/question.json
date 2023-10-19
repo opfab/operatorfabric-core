@@ -10,9 +10,11 @@
 		"severity" : "ACTION",
 		"startDate" : ${current_date_in_milliseconds_from_epoch},
 		"endDate" : ${current_date_in_milliseconds_from_epoch_plus_8hours},
+		"wktGeometry": "POLYGON ((1.639 50.698, 0.947 50.915, 0.976 51.106, 1.785 50.903, 1.639 50.698))",
+	  	"wktProjection": "EPSG:4326",
 		"summary" : {"key" : "message.summary"},
 		"title" : {"key" : "question.title"},
-		"data" : {"message":" Action Card"},
+		"data" : {},
 		"lttd" :  ${current_date_in_milliseconds_from_epoch_plus_3minutes},
 		"timeSpans" : [
 			{"start" :  ${current_date_in_milliseconds_from_epoch_plus_4hours}}

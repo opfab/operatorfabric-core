@@ -12,7 +12,6 @@ import {LightCardsStoreService} from 'app/business/services/lightcards/lightcard
 import {ProcessesService} from 'app/business/services/businessconfig/processes.service';
 import {Dashboard} from 'app/business/view/dashboard/dashboard.view';
 import {DashboardPage} from 'app/business/view/dashboard/dashboardPage';
-import {UserService} from 'app/business/services/users/user.service';
 import {NgbModal, NgbModalOptions, NgbModalRef, NgbPopover} from '@ng-bootstrap/ng-bootstrap';
 import {SelectedCardService} from 'app/business/services/card/selectedCard.service';
 import {FilterService} from 'app/business/services/lightcards/filter.service';
@@ -33,13 +32,12 @@ export class DashboardComponent implements OnInit, OnDestroy {
 
     constructor(
         private processesService: ProcessesService,
-        private userService: UserService,
         private lightCardsStoreService: LightCardsStoreService,
         private selectedCardService: SelectedCardService,
         private filterService: FilterService,
         private modalService: NgbModal
     ) {
-        this.dashboard = new Dashboard(userService, processesService, lightCardsStoreService, filterService);
+        this.dashboard = new Dashboard(processesService, lightCardsStoreService, filterService);
     }
 
     ngOnInit(): void {

@@ -7,22 +7,20 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {Component} from '@angular/core';
-import {ConfigService} from 'app/business/services/config.service';
+import {ChangeDetectionStrategy, Component} from '@angular/core';
 import {AboutView} from 'app/business/view/core/about/about.view';
-
-
 
 @Component({
     selector: 'of-about',
     styleUrls: ['./about.component.scss'],
-    templateUrl: './about.component.html'
+    templateUrl: './about.component.html',
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class AboutComponent {
     aboutElements = [];
 
-    constructor(configService: ConfigService) {
-        const aboutView = new AboutView(configService);
+    constructor() {
+        const aboutView = new AboutView();
         this.aboutElements = aboutView.getAboutElements();
     }
 }

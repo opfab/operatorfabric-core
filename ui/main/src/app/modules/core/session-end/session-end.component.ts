@@ -9,11 +9,7 @@
 
 import {Component, OnInit, TemplateRef, ViewChild, ViewEncapsulation} from '@angular/core';
 import {NgbModal, NgbModalRef} from '@ng-bootstrap/ng-bootstrap';
-import {LogOption, OpfabLoggerService} from 'app/business/services/logs/opfab-logger.service';
-import {SoundNotificationService} from 'app/business/services/notifications/sound-notification.service';
-import {OpfabEventStreamService} from 'app/business/services/events/opfabEventStream.service';
-import {AuthService} from 'app/authentication/auth.service';
-import {CurrentUserStore} from 'app/business/store/current-user.store';
+import {SessionManagerService} from 'app/business/services/session-manager.service';
 
 @Component({
     selector: 'of-session-end',
@@ -26,47 +22,29 @@ export class SessionEndComponent implements OnInit {
     private modalRef: NgbModalRef;
     @ViewChild('sessionEnd') sessionEndPopupRef: TemplateRef<any>;
 
-    constructor(
-        private opfabEventStreamService : OpfabEventStreamService,
-        private soundNotificationService: SoundNotificationService,
-        private modalService: NgbModal,
-        private authService: AuthService,
-        private logger: OpfabLoggerService,
-        private currentUserStore: CurrentUserStore
-    ) {}
+    constructor(private sessionManager: SessionManagerService, private modalService: NgbModal) {}
 
     ngOnInit(): void {
         this.subscribeToSessionEnd();
-        this.subscribeToSessionClosedByNewUser();
     }
 
     private subscribeToSessionEnd() {
-        this.currentUserStore.getSessionExpired().subscribe(() => {
-            this.logger.info('Session expire ', LogOption.REMOTE);
-            this.soundNotificationService.handleSessionEnd();
-            this.opfabEventStreamService.closeEventStream();
-            this.modalRef = this.modalService.open(this.sessionEndPopupRef, {
-                centered: true,
-                backdrop: 'static',
-                backdropClass: 'opfab-session-end-modal',
-                windowClass: 'opfab-session-end-modal'
-            });
-        });
-    }
-
-    private subscribeToSessionClosedByNewUser() {
-        this.opfabEventStreamService.getReceivedDisconnectUser().subscribe((isDisconnected) => {
-            this.isDisconnectedByNewUser = isDisconnected;
-
-            if (isDisconnected) {
-                this.soundNotificationService.clearOutstandingNotifications();
+        this.sessionManager.getEndSessionEvent().subscribe((event) => {
+            if (event === 'DisconnectedByNewUser') {
+                this.isDisconnectedByNewUser = true;
+            } else {
+                this.modalRef = this.modalService.open(this.sessionEndPopupRef, {
+                    centered: true,
+                    backdrop: 'static',
+                    backdropClass: 'opfab-session-end-modal',
+                    windowClass: 'opfab-session-end-modal'
+                });
             }
         });
     }
 
     public logout() {
-        this.logger.info('Logout ', LogOption.REMOTE);
         this.modalRef.close();
-        this.authService.logout();
+        this.sessionManager.logout();
     }
 }

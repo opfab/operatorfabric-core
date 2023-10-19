@@ -12,10 +12,8 @@ import {Observable, Subject} from 'rxjs';
 import {Device, Notification, UserConfiguration} from '@ofModel/external-devices.model';
 import {Injectable} from '@angular/core';
 import {ErrorService} from 'app/business/services/error-service';
-import {OpfabLoggerService} from 'app/business/services/logs/opfab-logger.service';
 import {ExternalDevicesServer} from '../../server/external-devices.server';
 import {ServerResponseStatus} from '../../server/serverResponse';
-import {AlertMessageService} from '../alert-message.service';
 
 @Injectable({
     providedIn: 'root'
@@ -27,12 +25,12 @@ export class ExternalDevicesService extends ErrorService {
      * @constructor
      * @param httpClient - Angular build-in
      */
-    constructor(private server: ExternalDevicesServer, protected loggerService: OpfabLoggerService, protected alertMessageService: AlertMessageService) {
-        super(loggerService, alertMessageService);
+    constructor(private server: ExternalDevicesServer) {
+        super();
     }
 
     sendNotification(notification: Notification): Observable<any> {
-        return this.server.sendNotification(notification).pipe(( map((serverResponse) => { if (serverResponse.status === ServerResponseStatus.OK) return serverResponse.data; else  return this.handleServerResponseError(serverResponse)})));
+        return this.server.sendNotification(notification).pipe(( map((serverResponse) => { if (serverResponse.status === ServerResponseStatus.OK) return serverResponse.data; else  return ErrorService.handleServerResponseError(serverResponse)})));
     }
 
     fetchUserConfiguration(login: string): Observable<UserConfiguration> {
@@ -48,7 +46,7 @@ export class ExternalDevicesService extends ErrorService {
     }
 
     updateUserConfiguration(userconfigData: UserConfiguration): Observable<UserConfiguration> {
-        return this.server.updateUserConfiguration(userconfigData).pipe(( map((serverResponse) => { if (serverResponse.status === ServerResponseStatus.OK) return serverResponse.data; else  return this.handleServerResponseError(serverResponse)})));
+        return this.server.updateUserConfiguration(userconfigData).pipe(( map((serverResponse) => { if (serverResponse.status === ServerResponseStatus.OK) return serverResponse.data; else  return ErrorService.handleServerResponseError(serverResponse)})));
     }
 
     enableDevice(deviceId: string): Observable<string> {
@@ -60,6 +58,6 @@ export class ExternalDevicesService extends ErrorService {
     }
 
     deleteByUserLogin(login: string) {
-        return this.server.deleteByUserLogin(login).pipe(( map((serverResponse) => { if (serverResponse.status === ServerResponseStatus.OK) return serverResponse.data; else  return this.handleServerResponseError(serverResponse)})));
+        return this.server.deleteByUserLogin(login).pipe(( map((serverResponse) => { if (serverResponse.status === ServerResponseStatus.OK) return serverResponse.data; else  return ErrorService.handleServerResponseError(serverResponse)})));
     }
 }

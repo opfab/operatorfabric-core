@@ -7,7 +7,7 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {Component} from '@angular/core';
+import {ChangeDetectionStrategy, Component} from '@angular/core';
 import {ICellRendererAngularComp} from 'ag-grid-angular';
 import {ICellRendererParams} from 'ag-grid-community';
 import {StateRight} from '@ofModel/perimeter.model';
@@ -18,7 +18,8 @@ import {Utilities} from '../../../../business/common/utilities';
 @Component({
     selector: 'of-state-rights-cell-renderer',
     templateUrl: './state-rights-cell-renderer.component.html',
-    styleUrls: ['./state-rights-cell-renderer.component.scss']
+    styleUrls: ['./state-rights-cell-renderer.component.scss'],
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class StateRightsCellRendererComponent implements ICellRendererAngularComp {
     // For explanations regarding ag-grid CellRenderers see

@@ -27,7 +27,7 @@ function loadData() {
   let missingAcks = document.getElementById("missingAcks");
   let missingEntities = '';
   "{{card.data.missingAcks}}".split(',').forEach(entity => {
-    missingEntities += "<li>" + templateGateway.getEntityName(entity) + "</li>"
+    missingEntities += "<li>" + opfab.utils.escapeHtml(templateGateway.getEntityName(entity)) + "</li>"
   });
   missingAcks.innerHTML = missingEntities;
 }

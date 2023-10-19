@@ -34,7 +34,7 @@ export class MessageUserCardTemplateView {
             const messageField = opfab.currentCard.getCard()?.data?.message;
             if (messageField) message = messageField;
         }
-        return message;
+        return opfab.utils.escapeHtml(message);
     }
 
 }

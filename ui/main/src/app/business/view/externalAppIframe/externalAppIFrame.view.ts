@@ -11,23 +11,20 @@ import {ConfigService} from 'app/business/services/config.service';
 import {GlobalStyleService} from 'app/business/services/global-style.service';
 import {RouterStore} from 'app/business/store/router.store';
 import {Observable, ReplaySubject, skip, Subject, takeUntil} from 'rxjs';
+import {environment} from '@env/environment';
 
 export class ExternalAppIFrameView {
     urlSubject: Subject<string> = new ReplaySubject<string>(1);
     unsubscribe$: Subject<void> = new Subject<void>();
+    private businessConfigUrl = `${environment.url}/#businessconfigparty`;
 
-    constructor(
-        private configService: ConfigService,
-        private routerStore: RouterStore,
-        private globalStyleService: GlobalStyleService
-    ) {
+    constructor(private globalStyleService: GlobalStyleService) {
         this.listenForExternalAppRoute();
         this.reloadIframeWhenGlobalStyleChange();
     }
 
     private listenForExternalAppRoute() {
-        this.routerStore
-            .getCurrentRouteEvent()
+        RouterStore.getCurrentRouteEvent()
             .pipe(takeUntil(this.unsubscribe$))
             .subscribe((route) => {
                 if (route.startsWith('/businessconfigparty')) {
@@ -52,15 +49,24 @@ export class ExternalAppIFrameView {
         const splitedRoute = decodeURIComponent(decodeURIComponent(route)).slice(1).split('/');
         const menuId = splitedRoute[1];
         const menuEntryId = splitedRoute[2].split('?')[0];
+        const menuEntryParams = splitedRoute[2].split('?')[1];
         const deeplink = splitedRoute.slice(3).join('/');
-        const params = splitedRoute[2].split('?')[1];
-        this.configService.queryMenuEntryURL(menuId, menuEntryId).subscribe((menuUrl) => {
+        const deeplinkWithoutParams = deeplink?.split('?')[0];
+        const deeplinkParams = deeplink?.split('?')[1];
+
+        ConfigService.queryMenuEntryURL(menuId, menuEntryId).subscribe((menuUrl) => {
             let url = menuUrl;
-            if (deeplink) url += deeplink;
-            url = this.addParamsToUrl(url, params);
+            if (deeplinkWithoutParams) url += deeplinkWithoutParams;
+            url = this.addParamsToUrl(url, menuEntryParams);
+            url = this.addParamsToUrl(url, deeplinkParams);
             url = this.addOpfabThemeParamToUrl(url);
             this.urlSubject.next(url);
+            this.removeParamsFromCurrentURLInBrowserNavigationBar(menuId, menuEntryId);
         });
+    }
+
+    private removeParamsFromCurrentURLInBrowserNavigationBar(menuId: string, menuEntryId: string) {
+        history.replaceState({}, '', this.businessConfigUrl + '/' + menuId + '/' + menuEntryId + '/');
     }
 
     private addParamsToUrl(url, params) {
@@ -80,7 +86,7 @@ export class ExternalAppIFrameView {
         this.globalStyleService
             .getStyleChange()
             .pipe(takeUntil(this.unsubscribe$), skip(1))
-            .subscribe(() => this.computeURL(this.routerStore.getCurrentRoute()));
+            .subscribe(() => this.computeURL(RouterStore.getCurrentRoute()));
     }
 
     public getExternalAppUrl(): Observable<string> {

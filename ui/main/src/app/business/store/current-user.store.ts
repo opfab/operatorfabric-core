@@ -7,47 +7,53 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {Injectable} from '@angular/core';
 import {ReplaySubject, Observable, Subject} from 'rxjs';
 
-@Injectable({
-    providedIn: 'root'
-})
 export class CurrentUserStore {
-    private connectionEvent = new ReplaySubject<string>(1);
-    private sessionExpiredEvent = new Subject<boolean>();
-    private token: string;
-    private authenticationUsesToken = false;
 
-    public getCurrentUserLogin(): Observable<string> {
+    private static connectionEvent = new ReplaySubject<string>(1);
+    private static sessionWillSoonExpireEvent = new Subject<boolean>();
+    private static sessionExpiredEvent = new Subject<boolean>();
+    private static token: string;
+    private static authenticationUsesToken = false;
+
+    public static getCurrentUserLogin(): Observable<string> {
         return this.connectionEvent.asObservable();
     }
 
-    public setSessionExpired() {
+    public static setSessionWillSoonExpire() {
+        this.sessionWillSoonExpireEvent.next(true);
+    }
+
+    public static getSessionWillSoonExpire(): Observable<boolean> {
+        return this.sessionWillSoonExpireEvent.asObservable();
+    }
+
+    public static setSessionExpired() {
         this.sessionExpiredEvent.next(true);
     }
 
-    public getSessionExpired(): Observable<boolean> {
+    public static getSessionExpired(): Observable<boolean> {
         return this.sessionExpiredEvent.asObservable();
     }
 
-    public setCurrentUserAuthenticationValid(login: string) {
+    public static setCurrentUserAuthenticationValid(login: string) {
         this.connectionEvent.next(login);
     }
 
-    public setToken(token: string) {
+    public static setToken(token: string) {
         this.token = token;
     }
 
-    public getToken(): string {
+    public static getToken(): string {
         return this.token;
     }
 
-    public setAuthenticationUsesToken() {
+    public static setAuthenticationUsesToken() {
         this.authenticationUsesToken = true;
     }
 
-    public doesAuthenticationUseToken(): boolean {
+    public static doesAuthenticationUseToken(): boolean {
         return this.authenticationUsesToken;
     }
 }

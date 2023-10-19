@@ -12,16 +12,16 @@ import {map, Observable, of} from 'rxjs';
 import {Utilities} from 'app/business/common/utilities';
 import {TemplateCssServer} from '../../server/template-css.server';
 import {ServerResponseStatus} from '../../server/serverResponse';
-import {OpfabLoggerService} from '../logs/opfab-logger.service';
+import {LoggerService as logger} from '../logs/logger.service';
 
 @Injectable({
     providedIn: 'root'
 })
 export class TemplateCssService {
+
     private styleContentCache: Map<string,string> = new Map();
 
-    constructor(private templatecssServer: TemplateCssServer,
-            private logger: OpfabLoggerService
+    constructor(private templatecssServer: TemplateCssServer
         ) {}
 
 
@@ -58,7 +58,7 @@ export class TemplateCssService {
                     this.styleContentCache.set(url, responseServerStyleContent.data);
                     return responseServerStyleContent.data;
                 } else {
-                    this.logger.error(`Impossible to load ${styleFileName} from process ${process} version ${version}`);
+                    logger.error(`Impossible to load ${styleFileName} from process ${process} version ${version}`);
                     return '';
                 }
         }));

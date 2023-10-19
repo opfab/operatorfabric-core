@@ -26,7 +26,6 @@ import org.opfab.users.model.RightsEnum;
 import org.opfab.users.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import reactor.test.StepVerifier;
 import reactor.util.function.Tuple2;
@@ -46,7 +45,6 @@ import static reactor.util.function.Tuples.of;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(classes = IntegrationTestApplication.class, webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-@ActiveProfiles(profiles = {"native", "test"})
 @Tag("end-to-end")
 @Tag("mongo")
 

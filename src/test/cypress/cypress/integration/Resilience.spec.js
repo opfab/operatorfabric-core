@@ -1,4 +1,4 @@
-/* Copyright (c) 2021-2022, RTE (http://www.rte-france.com)
+/* Copyright (c) 2021-2023, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -44,6 +44,15 @@ describe('Resilience tests', function () {
         feed.checkNumberOfDisplayedCardsIs(6);
     });
 
+
+    it('Check card reception after mongoDB restart ', function () {
+        opfab.loginWithUser('operator1_fr');
+        feed.checkNumberOfDisplayedCardsIs(0);
+        restartMongoDB();
+        script.send6TestCards();
+        feed.checkNumberOfDisplayedCardsIs(6);
+    });
+
     it('Check card reception when cards-consultation service is restarted ', function () {
     // WARNING : the following test will only be relevant if using docker mode
     // in dev mode it will execute but the cards-consultation services will not be restart
@@ -83,6 +92,11 @@ describe('Resilience tests', function () {
     function restartRabbitMQ() {
         cy.exec('docker restart rabbit');
         cy.wait(25000); // Wait for rabbitMQ to be fully up
+    }
+
+    function restartMongoDB() {
+        cy.exec('docker restart docker_mongodb_1');
+        cy.wait(25000); // Wait for mongoDB to be fully up
     }
 
     function restartCardsConsultationService() {

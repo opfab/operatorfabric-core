@@ -39,10 +39,9 @@ export class CardFooterTextComponent implements OnChanges,OnInit {
     constructor(
         private entitiesService: EntitiesService,
         private dateTimeFormatterService: DateTimeFormatterService,
-        private userService: UserService,
         private lightCardsStoreService: LightCardsStoreService
     ) {
-        const userWithPerimeters = this.userService.getCurrentUserWithPerimeters();
+        const userWithPerimeters = UserService.getCurrentUserWithPerimeters();
         if (userWithPerimeters) this.user = userWithPerimeters.userData;
     }
 

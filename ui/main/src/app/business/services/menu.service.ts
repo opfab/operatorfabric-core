@@ -12,19 +12,14 @@ import {ConfigService} from 'app/business/services/config.service';
 import {UserService} from 'app/business/services/users/user.service';
 import {CoreMenuConfig, CustomMenu} from '@ofModel/menu.model';
 import {PermissionEnum} from '@ofModel/permission.model';
-import {OpfabLoggerService} from "./logs/opfab-logger.service";
+import {LoggerService as logger} from './logs/logger.service';
 
 @Injectable({
     providedIn: 'root'
 })
 export class MenuService {
-
     private ADMIN_MENUS = ['admin', 'externaldevicesconfiguration', 'useractionlogs'];
 
-    constructor(private configService: ConfigService,
-                private userService: UserService,
-                private logger: OpfabLoggerService) {
-    }
 
     public getCurrentUserCustomMenus(menus: CustomMenu[]): CustomMenu[] {
         const filteredMenus = [];
@@ -45,7 +40,7 @@ export class MenuService {
 
     public computeVisibleNavigationBarCoreMenusForCurrentUser(): string[] {
         const visibleCoreMenus: string[] = [];
-        const navigationBar = this.configService.getNavigationBar();
+        const navigationBar = ConfigService.getNavigationBar();
 
         if (navigationBar) {
             navigationBar.forEach((menuConfig: any) => {
@@ -56,14 +51,14 @@ export class MenuService {
                 }
             });
         } else {
-            this.logger.error('No navigationBar property set in ui-menu.json');
+            logger.error('No navigationBar property set in ui-menu.json');
             return [];
         }
         return visibleCoreMenus;
     }
 
     public computeVisibleTopRightIconMenusForCurrentUser(): string[] {
-        const topRightIconMenus = this.configService.getTopRightIconMenus();
+        const topRightIconMenus = ConfigService.getTopRightIconMenus();
 
         if (topRightIconMenus) {
             return topRightIconMenus
@@ -72,13 +67,13 @@ export class MenuService {
                 })
                 .map((coreMenuConfig: CoreMenuConfig) => coreMenuConfig.opfabCoreMenuId);
         } else {
-            this.logger.error('No topRightIconMenus property set in ui-menu.json');
+            logger.error('No topRightIconMenus property set in ui-menu.json');
             return [];
         }
     }
 
     public computeVisibleTopRightMenusForCurrentUser(): string[] {
-        const topRightMenus = this.configService.getTopRightMenus();
+        const topRightMenus = ConfigService.getTopRightMenus();
 
         if (topRightMenus) {
             return topRightMenus
@@ -87,21 +82,28 @@ export class MenuService {
                 })
                 .map((coreMenuConfig: CoreMenuConfig) => coreMenuConfig.opfabCoreMenuId);
         } else {
-            this.logger.error('No topRightMenus property set in ui-menu.json');
+            logger.error('No topRightMenus property set in ui-menu.json');
             return [];
         }
     }
 
     public isMenuVisibleForUserGroups(menuConfig: any): boolean {
         if (menuConfig.opfabCoreMenuId) {
-            if (this.ADMIN_MENUS.includes(menuConfig.opfabCoreMenuId) && !this.userService.hasCurrentUserAnyPermission([PermissionEnum.ADMIN]))
+            if (
+                this.ADMIN_MENUS.includes(menuConfig.opfabCoreMenuId) &&
+                !UserService.hasCurrentUserAnyPermission([PermissionEnum.ADMIN])
+            )
                 return false;
-        } else {
-            if (this.ADMIN_MENUS.includes(menuConfig.id) && !this.userService.hasCurrentUserAnyPermission([PermissionEnum.ADMIN]))
-                return false;
-        }
+        } else if (
+            this.ADMIN_MENUS.includes(menuConfig.id) &&
+            !UserService.hasCurrentUserAnyPermission([PermissionEnum.ADMIN])
+        )
+            return false;
 
-        return (!menuConfig.showOnlyForGroups || menuConfig.showOnlyForGroups.length === 0) ||
-            (menuConfig.showOnlyForGroups && this.userService.isCurrentUserInAnyGroup(menuConfig.showOnlyForGroups));
+        return (
+            !menuConfig.showOnlyForGroups ||
+            menuConfig.showOnlyForGroups.length === 0 ||
+            (menuConfig.showOnlyForGroups && UserService.isCurrentUserInAnyGroup(menuConfig.showOnlyForGroups))
+        );
     }
 }

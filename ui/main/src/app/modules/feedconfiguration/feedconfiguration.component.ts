@@ -74,13 +74,11 @@ export class FeedconfigurationComponent implements OnInit, AfterViewInit {
     processesStatesNotifiedByEmail: Map<string, boolean>;
 
     constructor(
-        private userService: UserService,
         private processesService: ProcessesService,
         private modalService: NgbModal,
         private settingsService: SettingsService,
         private lightCardStoreService: LightCardsStoreService,
         private translateService: TranslateService,
-        private configService: ConfigService
     ) {
         this.processesStatesLabels = new Map();
         this.processIdsByProcessGroup = new Map();
@@ -216,7 +214,7 @@ export class FeedconfigurationComponent implements OnInit, AfterViewInit {
                     isChecked = true; // We force the subscription to this state
                 }
             }
-            const filteringNotificationAllowed = this.userService.isFilteringNotificationAllowedForProcessAndState(
+            const filteringNotificationAllowed = UserService.isFilteringNotificationAllowedForProcessAndState(
                 processState.processId,
                 processState.stateId
             );
@@ -258,7 +256,7 @@ export class FeedconfigurationComponent implements OnInit, AfterViewInit {
                     const stateLabel = state.name ? state.name : stateId;
 
                     const filteringNotificationAllowed =
-                        this.userService.isFilteringNotificationAllowedForProcessAndState(process.id, stateId);
+                        UserService.isFilteringNotificationAllowedForProcessAndState(process.id, stateId);
                     if (filteringNotificationAllowed) this.setProcessAndProcessGroupCheckboxesEnabled(process.id);
 
                     states.push({stateId, stateLabel, stateControlIndex, filteringNotificationAllowed});
@@ -283,7 +281,7 @@ export class FeedconfigurationComponent implements OnInit, AfterViewInit {
     }
 
     private checkIfStateMustBeDisplayed(state: State, process: Process, stateId: string): boolean {
-        return !state.isOnlyAChildState && this.userService.isReceiveRightsForProcessAndState(process.id, stateId);
+        return !state.isOnlyAChildState && UserService.isReceiveRightsForProcessAndState(process.id, stateId);
     }
 
     /** cleaning of the two arrays : processGroupsAndLabels and processesWithoutGroup
@@ -312,9 +310,9 @@ export class FeedconfigurationComponent implements OnInit, AfterViewInit {
     }
 
     ngOnInit() {
-        this.currentUserWithPerimeters = this.userService.getCurrentUserWithPerimeters();
+        this.currentUserWithPerimeters = UserService.getCurrentUserWithPerimeters();
 
-        this.userSettings = this.configService.getConfigValue('settings');
+        this.userSettings = ConfigService.getConfigValue('settings');
 
         this.processGroupsAndLabels = this.processesService.getProcessGroupsAndLabels();
         this.processGroupsAndLabels.forEach((group) => {
@@ -427,7 +425,7 @@ export class FeedconfigurationComponent implements OnInit, AfterViewInit {
                         this.displaySendResultError = true;
                     } else {
                         this.lightCardStoreService.removeAllLightCards();
-                        this.userService.loadUserWithPerimetersData().subscribe();
+                        UserService.loadUserWithPerimetersData().subscribe();
                     }
                     this.modalRef.close();
                 },

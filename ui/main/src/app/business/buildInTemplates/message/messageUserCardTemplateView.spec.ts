@@ -18,7 +18,7 @@ describe('Message UserCard template', () => {
     });
 
 
-    it('GIVEN an existing card WHEN user edit card THEN message is  actual message', () => {
+    it('GIVEN an existing card WHEN user edit card THEN message is actual message', () => {
         const view = new MessageUserCardTemplateView();
         opfab.currentUserCard.getEditionMode = function () {
             return 'EDITION';
@@ -27,6 +27,18 @@ describe('Message UserCard template', () => {
             return {data: {message: 'My message'}};
         };
         expect(view.getMessage()).toEqual('My message');
+    });
+
+
+    it('GIVEN an existing card with HTML tag in message WHEN user edit card THEN message is provided with HTML tag escaped', () => {
+        const view = new MessageUserCardTemplateView();
+        opfab.currentUserCard.getEditionMode = function () {
+            return 'EDITION';
+        };
+        opfab.currentCard.getCard = function () {
+            return {data: {message: 'My message <script>'}};
+        };
+        expect(view.getMessage()).toEqual('My message &lt;script&gt;');
     });
 
     it('GIVEN an existing card WHEN user copy card THEN message is actual message', () => {
@@ -58,7 +70,7 @@ describe('Message UserCard template', () => {
         expect(specficCardInformation.card.data.message).toEqual('My message');
     });
 
-    it('GIVEN a user WHEN create card with empty  message THEN card is not valid with error message ', () => {
+    it('GIVEN a user WHEN create card with empty message THEN card is not valid with error message ', () => {
         const view = new MessageUserCardTemplateView();
         const specficCardInformation = view.getSpecificCardInformation('');
         expect(specficCardInformation.valid).toEqual(false);

@@ -34,7 +34,7 @@ export class QuestionUserCardTemplateView {
             const questionField = opfab.currentCard.getCard()?.data?.question;
             if (questionField) question = questionField;
         }
-        return question;
+        return opfab.utils.escapeHtml(question);
     }
 
 }

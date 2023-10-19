@@ -10,30 +10,22 @@
 import {Observable, Subject} from 'rxjs';
 import {map, takeUntil, tap} from 'rxjs/operators';
 import {Injectable} from '@angular/core';
-import {CachedCrudService} from 'app/business/services/cached-crud-service';
-import {Perimeter} from '@ofModel/perimeter.model';;
-import {OpfabLoggerService} from '../logs/opfab-logger.service';
-import {AlertMessageService} from '../alert-message.service';
+import {CrudService} from 'app/business/services/crud-service';
+import {Perimeter} from '@ofModel/perimeter.model';
 import {PerimetersServer} from '../../server/perimeters.server';
 import {ServerResponseStatus} from '../../server/serverResponse';
+import {ErrorService} from '../error-service';
 
 
 @Injectable({
     providedIn: 'root'
 })
-export class PerimetersService extends CachedCrudService {
+export class PerimetersService implements CrudService {
     private _perimeters: Perimeter[];
 
     private ngUnsubscribe$ = new Subject<void>();
 
-    /**
-     * @constructor
-     * @param httpClient - Angular build-in
-     */
-    constructor(protected loggerService: OpfabLoggerService, 
-        alertMessageService: AlertMessageService,
-        private perimeterServer: PerimetersServer) {
-        super(loggerService, alertMessageService);
+    constructor(private perimeterServer: PerimetersServer) {
     }
 
     deleteById(id: string) {
@@ -42,7 +34,7 @@ export class PerimetersService extends CachedCrudService {
                 if (perimetersResponse.status === ServerResponseStatus.OK) {
                     this.deleteFromCachedPerimeters(id);
                 } else {
-                    this.handleServerResponseError(perimetersResponse);
+                    ErrorService.handleServerResponseError(perimetersResponse);
                 }
             })
         );
@@ -64,7 +56,7 @@ export class PerimetersService extends CachedCrudService {
                 if (perimetersResponse.status === ServerResponseStatus.OK) {
                     return perimetersResponse.data;
                 } else {
-                    this.handleServerResponseError(perimetersResponse);
+                    ErrorService.handleServerResponseError(perimetersResponse);
                     return [];
                 }
             })
@@ -101,7 +93,7 @@ export class PerimetersService extends CachedCrudService {
                     this.updateCachedPerimeters(perimeterData);
                     return perimetersResponse.data;
                 } else {
-                    this.handleServerResponseError(perimetersResponse);
+                    ErrorService.handleServerResponseError(perimetersResponse);
                     return null;
                 }
             })
@@ -115,7 +107,7 @@ export class PerimetersService extends CachedCrudService {
                     this.updateCachedPerimeters(perimeterData);
                     return perimetersResponse.data;
                 } else {
-                    this.handleServerResponseError(perimetersResponse);
+                    ErrorService.handleServerResponseError(perimetersResponse);
                     return null;
                 }
             })

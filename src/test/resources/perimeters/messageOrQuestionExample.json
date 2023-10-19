@@ -11,6 +11,10 @@
 		"right" : "ReceiveAndWrite"
 	  },
 	  {
+		"state" : "messageOrQuestionListState",
+		"right" : "ReceiveAndWrite"
+	  },
+	  {
 		"state" : "confirmationState",
 		"right" : "ReceiveAndWrite"
 	  }

@@ -8,8 +8,10 @@
  */
 
 import {OpfabCommands} from './opfabCommands';
+import {OpfabGeneralCommands} from './opfabGeneralCommands';
 
 export class ArchivesAndLoggingCommands extends OpfabCommands {
+    opfab = new OpfabGeneralCommands();
 
     constructor() {
         super();
@@ -19,140 +21,138 @@ export class ArchivesAndLoggingCommands extends OpfabCommands {
     checkAdminModeCheckboxIsDisplayed = function () {
         cy.get('#opfab-archives-logging-admin-mode-checkbox').contains('Admin mode').should('exist');
         cy.get('#opfab-archives-logging-admin-help').should('exist');
-    }
+    };
 
     checkAdminModeCheckboxDoesNotExist = function () {
         cy.get('#opfab-archives-logging-admin-mode-checkbox').should('not.exist');
         cy.get('#opfab-archives-logging-admin-help').should('not.exist');
-    }
+    };
 
     checkAdminModeCheckboxIsNotChecked = function () {
-        cy.get('#opfab-archives-logging-admin-mode-checkbox').contains('Admin mode').find('input').should('not.be.checked');
-    }
+        cy.get('#opfab-archives-logging-admin-mode-checkbox')
+            .contains('Admin mode')
+            .find('input')
+            .should('not.be.checked');
+    };
 
     checkAdminModeCheckboxIsChecked = function () {
         cy.get('#opfab-archives-logging-admin-mode-checkbox').contains('Admin mode').find('input').should('be.checked');
-    }
+    };
 
     clickAdminModeCheckbox = function () {
         cy.get('#opfab-archives-logging-admin-mode-checkbox').contains('Admin mode').click();
-    }
+    };
 
     clickOnSearchButton = function () {
         cy.get('#opfab-archives-logging-btn-search').click();
-    }
+    };
 
     checkAdminModeLinkIsDisplayed = function () {
         cy.get('#opfab-admin-mode-link').contains('Go to admin mode').should('exist');
         cy.get('#opfab-admin-mode-help').should('exist');
-    }
+    };
 
     checkAdminModeLinkDoesNotExist = function () {
         cy.get('#opfab-admin-mode-link').should('not.exist');
         cy.get('#opfab-admin-mode-help').should('not.exist');
-    }
+    };
 
     clickAdminModeLink = function () {
         cy.get('#opfab-admin-mode-link').contains('Go to admin mode').click();
-    }
+    };
 
     checkProcessGroupSelectDoesNotExist = function () {
         cy.get('#opfab-processGroup').should('not.exist');
-    }
+    };
 
     checkProcessSelectDoesNotExist = function () {
         cy.get('#opfab-process').should('not.exist');
-    }
+    };
 
     checkStateSelectDoesNotExist = function () {
         cy.get('#opfab-state').should('not.exist');
-    }
+    };
 
     checkNoProcessStateMessageIsDisplayed = function () {
         cy.get('#opfab-no-process-state-available').contains('No process/state available').should('exist');
-    }
+    };
 
     checkNoCardDetailIsDisplayed = function () {
         cy.get('of-simplified-card-view').should('not.exist');
-    }
+    };
 
     clickOnProcessGroupSelect = function () {
         cy.get('#opfab-processGroup').click();
-    }
+    };
 
     selectAllProcessGroups = function () {
         cy.get('#opfab-processGroup').find('.vscomp-toggle-all-button').click();
-    }
+    };
 
     checkNumberOfProcessGroupEntriesIs = function (nb) {
         cy.get('#opfab-processGroup').find('.vscomp-option-text').should('have.length', nb);
-    }
+    };
 
     checkProcessGroupSelectContains = function (value) {
         cy.get('#opfab-processGroup').contains(value).should('exist');
-    }
+    };
 
     clickOnProcessSelect = function () {
         cy.get('#opfab-process').click();
-    }
+    };
 
     selectAllProcesses = function () {
         cy.get('#opfab-process').find('.vscomp-toggle-all-button').click({force: true});
-    }
+    };
 
     unselectAllProcesses = function () {
         this.selectAllProcesses();
-    }
+    };
 
     checkNumberOfProcessEntriesIs = function (nb) {
         cy.get('#opfab-process').find('.vscomp-option-text').should('have.length', nb);
-    }
+    };
 
     checkProcessSelectContains = function (value) {
         cy.get('#opfab-process').contains(value).should('exist');
-    }
+    };
 
     clickOnStateSelect = function () {
         cy.get('#opfab-state').click();
-    }
+    };
 
     selectAllStates = function () {
         cy.get('#opfab-state').find('.vscomp-toggle-all-button').click();
-    }
+    };
 
     checkNumberOfStateEntriesIs = function (nb) {
         cy.get('#opfab-state').find('.vscomp-option-text').should('have.length', nb);
-    }
+    };
 
     checkNumberOfStateSelectedIs = function (nb) {
         cy.get('#opfab-state')
             .find('.vscomp-value')
             .contains('+ ' + (nb - 1) + ' more')
             .should('exist');
-    }
+    };
 
     checkStateSelectContains = function (value) {
         cy.get('#opfab-state').contains(value, {matchCase: false}).should('exist');
-    }
+    };
 
     checkStateSelectDoesNotContains = function (value) {
         cy.get('#opfab-state').contains(value, {matchCase: false}).should('not.exist');
-    }
+    };
 
     selectProcess = function (processName) {
-        cy.get('#opfab-process').click();
-        cy.get('#opfab-process').find('.vscomp-search-input').clear();
-        cy.get('#opfab-process').find('.vscomp-search-input').type(processName);
-        cy.get('#opfab-process').find('.vscomp-option-text').eq(0).should('contain.text', processName);
-        cy.get('#opfab-process').find('.vscomp-option-text').eq(0).click();
-    }
+        this.opfab.selectOptionsFromMultiselect('#opfab-process', processName)
+    };
 
-    selectState = function (stateName) {
-        cy.get('#opfab-state').click();
-        cy.get('#opfab-state').find('.vscomp-option-text').contains(stateName).eq(0).click({force: true});
-    }
+    selectState = function (stateName, searchResultNumber = 0) {
+        this.opfab.selectOptionsFromMultiselect('#opfab-state', stateName, false, searchResultNumber)
+    };
 
     checkNoResultForSearch = function () {
         cy.get('of-archives-entry-point').contains('Your search did not match any result.');
-    }
+    };
 }

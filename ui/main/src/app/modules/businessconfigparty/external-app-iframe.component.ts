@@ -7,35 +7,26 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {Component, OnDestroy, OnInit} from '@angular/core';
+import {ChangeDetectionStrategy, Component, OnDestroy, OnInit} from '@angular/core';
 import {takeUntil} from 'rxjs/operators';
 import {Subject} from 'rxjs';
 import {GlobalStyleService} from 'app/business/services/global-style.service';
-import {ConfigService} from 'app/business/services/config.service';
-import {RouterStore} from 'app/business/store/router.store';
 import {ExternalAppIFrameView} from 'app/business/view/externalAppIframe/externalAppIFrame.view';
 
 @Component({
     selector: 'of-iframedisplay',
     templateUrl: './external-app-iframe.component.html',
-    styleUrls: ['./external-app-iframe.component.scss']
+    styleUrls: ['./external-app-iframe.component.scss'],
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ExternalAppIFrameComponent implements OnInit, OnDestroy {
     unsubscribe$: Subject<void> = new Subject<void>();
     private externalAppIFrameView: ExternalAppIFrameView;
 
-    constructor(
-        private configService: ConfigService,
-        private globalStyleService: GlobalStyleService,
-        private routerStore: RouterStore
-    ) {}
+    constructor(private globalStyleService: GlobalStyleService) {}
 
     ngOnInit() {
-        this.externalAppIFrameView = new ExternalAppIFrameView(
-            this.configService,
-            this.routerStore,
-            this.globalStyleService
-        );
+        this.externalAppIFrameView = new ExternalAppIFrameView(this.globalStyleService);
         this.externalAppIFrameView
             .getExternalAppUrl()
             .pipe(takeUntil(this.unsubscribe$))

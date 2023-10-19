@@ -8,7 +8,7 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {Directive, Injectable, OnDestroy, OnInit} from '@angular/core';
+import {ChangeDetectorRef, Directive, Injectable, OnDestroy, OnInit} from '@angular/core';
 import {ColDef, GridOptions, ICellRendererParams, ValueFormatterParams} from 'ag-grid-community';
 import {TranslateService} from '@ngx-translate/core';
 import {NgbModal, NgbModalOptions} from '@ng-bootstrap/ng-bootstrap';
@@ -98,7 +98,8 @@ export abstract class AdminTableDirective implements OnInit, OnDestroy {
         protected processesService: ProcessesService,
         protected groupsService: GroupsService,
         protected entitiesService: EntitiesService,
-        protected businessDataService: BusinessDataService
+        protected businessDataService: BusinessDataService,
+        private changeDetector: ChangeDetectorRef
     ) {
         this.processesDefinition = this.processesService.getAllProcesses();
         this.gridOptions = <GridOptions>{
@@ -359,7 +360,7 @@ export abstract class AdminTableDirective implements OnInit, OnDestroy {
                 this.refreshData();
             });
         }
-        
+
     }
 
     refreshData() {
@@ -370,6 +371,7 @@ export abstract class AdminTableDirective implements OnInit, OnDestroy {
             // previous page
             if (this.gridApi.paginationGetTotalPages() < this.page) this.page--;
             this.gridApi.paginationGoToPage(this.page - 1);
+            this.changeDetector.markForCheck();
         });
     }
 
@@ -437,10 +439,12 @@ export abstract class AdminTableDirective implements OnInit, OnDestroy {
     private getNameFromId(id: string, renderer: string): string {
         if (renderer) {
             const cellRenderer = new this.gridOptions.components[renderer].prototype.constructor();
-            if (cellRenderer.itemType)
-                return this.dataHandlingService
-                    .resolveCachedCrudServiceDependingOnType(cellRenderer.itemType)
-                    .getNameFromId(id);
+            if (cellRenderer.itemType) {
+                     const found = this.dataHandlingService
+                    .resolveCrudServiceDependingOnType(cellRenderer.itemType)
+                    .getCachedValues().find(e => e.id === id);
+                    return found?.name ? found.name : id;
+            }
         }
         return id;
     }

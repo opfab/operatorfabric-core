@@ -7,22 +7,18 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {Injectable} from "@angular/core";
-import {Message} from "@ofModel/message.model";
-import {Observable, ReplaySubject} from "rxjs";
+import {Message} from '@ofModel/message.model';
+import {Observable, Subject} from 'rxjs';
 
-@Injectable({
-    providedIn: 'root'
-})
 export class AlertMessageService {
 
-    private alertEvent = new ReplaySubject<Message>(1);
+    private static alertEvent = new Subject<Message>();
 
-    public sendAlertMessage(message: Message) {
-        this.alertEvent.next(message);
+    public static sendAlertMessage(message: Message) {
+        AlertMessageService.alertEvent.next(message);
     }
 
-    public getAlertMessage() : Observable<Message> {
-        return this.alertEvent.asObservable();
+    public static getAlertMessage(): Observable<Message> {
+        return AlertMessageService.alertEvent.asObservable();
     }
 }

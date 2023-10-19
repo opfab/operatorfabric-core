@@ -8,7 +8,12 @@ Feature: Cards reminder service
     * def signInAdmin = callonce read('../common/getToken.feature') { username: 'admin'}
     * def authTokenAdmin = signInAdmin.authToken
 
-  
+Scenario: healthcheck API 
+
+    # Call healthcheck API without authentication
+    Given url 'http://localhost:2107/healthcheck'
+    When method get
+    Then status 200
 
 Scenario: start/stop/status API 
 

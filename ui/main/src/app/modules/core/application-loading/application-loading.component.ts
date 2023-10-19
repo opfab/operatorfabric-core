@@ -8,13 +8,11 @@
  */
 
 import {Component, NgZone, OnInit, Output, ViewChild} from '@angular/core';
-import {Title} from '@angular/platform-browser';
 import {TranslateService} from '@ngx-translate/core';
 import {ConfigService} from 'app/business/services/config.service';
 import {EntitiesService} from 'app/business/services/users/entities.service';
 import {GroupsService} from 'app/business/services/users/groups.service';
-import {I18nService} from 'app/business/services/translation/i18n.service';
-import {LogOption, OpfabLoggerService} from 'app/business/services/logs/opfab-logger.service';
+import {LoggerService as logger} from 'app/business/services/logs/logger.service';
 import {ProcessesService} from 'app/business/services/businessconfig/processes.service';
 import {UserService} from 'app/business/services/users/user.service';
 import {Utilities} from 'app/business/common/utilities';
@@ -37,6 +35,11 @@ import {BusinessDataService} from 'app/business/services/businessconfig/business
 import {Router} from '@angular/router';
 import {OpfabAPIService} from 'app/business/services/opfabAPI.service';
 import {loadBuildInTemplates} from 'app/business/buildInTemplates/templatesLoader';
+import {RemoteLoggerServer} from 'app/business/server/remote-logger.server';
+import {ConfigServer} from 'app/business/server/config.server';
+import {ServicesConfig} from 'app/business/services/services-config';
+import {TranslationService} from 'app/business/services/translation/translation.service';
+import {UserServer} from 'app/business/server/user.server';
 
 declare const opfab: any;
 @Component({
@@ -61,95 +64,70 @@ export class ApplicationLoadingComponent implements OnInit {
     environmentName: string;
     environmentColor: string;
 
-    /**
-     * NB: I18nService is injected to trigger its constructor at application startup
-     */
     constructor(
-        private titleService: Title,
         private authService: AuthService,
-        private configService: ConfigService,
+        private configServer: ConfigServer,
         private settingsService: SettingsService,
         private translateService: TranslateService,
-        private i18nService: I18nService,
-        private userService: UserService,
         private entitiesService: EntitiesService,
         private groupsService: GroupsService,
         private businessDataService: BusinessDataService,
         private processesService: ProcessesService,
-        private logger: OpfabLoggerService,
         private globalStyleService: GlobalStyleService,
         private lightCardsStoreService: LightCardsStoreService,
         private opfabEventStreamServer: OpfabEventStreamServer,
         private opfabEventStreamService: OpfabEventStreamService,
         private applicationUpdateService: ApplicationUpdateService,
-        private currentUserStore: CurrentUserStore,
         private systemNotificationService: SystemNotificationService,
         private opfabAPIService: OpfabAPIService,
+        private translationService: TranslationService,
+        private remoteLoggerServer: RemoteLoggerServer,
+        private userServer: UserServer,
         private router: Router,
         private ngZone: NgZone
     ) {}
 
     ngOnInit() {
+        ServicesConfig.setServers({
+            configServer: this.configServer,
+            remoteLoggerServer: this.remoteLoggerServer,
+            translationService: this.translationService,
+            userServer: this.userServer
+        });
+
         // Set default style before login
         this.globalStyleService.setStyle('NIGHT');
         this.loadUIConfiguration();
     }
 
     private loadUIConfiguration() {
-        this.configService.loadWebUIConfiguration().subscribe({
+        ServicesConfig.load().subscribe({
             //This configuration needs to be loaded first as it defines the authentication mode
-            next: (config) => {
-                if (config) {
-                    this.logger.info(`Configuration loaded (web-ui.json)`);
-                    this.setTitleInBrowser();
-                    this.loadTranslation(config);
-                    this.loadEnvironmentName();
+            next: () => {
+                this.loadEnvironmentName();
+                if (this.isUrlCheckActivated()) {
+                    this.checkIfAppLoadedInAnotherTab();
                 } else {
-                    this.logger.info('No valid web-ui.json configuration file, stop application loading');
+                    this.launchAuthenticationProcess();
                 }
             },
             error: catchError((err, caught) => {
-                this.logger.error('Impossible to load configuration file web-ui.json' + err);
+                logger.error('Impossible to load  application' + err);
                 return caught;
             })
         });
     }
 
     private loadEnvironmentName() {
-        this.environmentName = this.configService.getConfigValue('environmentName');
-        this.environmentColor = this.configService.getConfigValue('environmentColor', 'blue');
+        this.environmentName = ConfigService.getConfigValue('environmentName');
+        this.environmentColor = ConfigService.getConfigValue('environmentColor', 'blue');
         if (this.environmentName) {
             this.displayEnvironmentName = true;
         }
     }
 
-    private setTitleInBrowser() {
-        const title = this.configService.getConfigValue('title', 'OperatorFabric');
-        this.titleService.setTitle(title);
-    }
-
-    private loadTranslation(config) {
-        if (config.i18n.supported.locales) {
-            this.i18nService.loadGlobalTranslations(config.i18n.supported.locales).subscribe(() => {
-                this.logger.info(
-                    'opfab translation loaded for locales: ' + this.translateService.getLangs(),
-                    LogOption.LOCAL_AND_REMOTE
-                );
-                this.i18nService.loadTranslationForMenu();
-                this.i18nService.setTranslationForMultiSelectUsedInTemplates();
-
-                if (this.isUrlCheckActivated()) {
-                    this.checkIfAppLoadedInAnotherTab();
-                } else {
-                    this.launchAuthenticationProcess();
-                }
-            });
-        } else this.logger.error('No locales define (value i18.supported.locales not present in web-ui.json)');
-        this.i18nService.initLocale();
-    }
-
     private isUrlCheckActivated(): boolean {
-        return this.configService.getConfigValue('checkIfUrlIsLocked', true);
+        return ConfigService.getConfigValue('checkIfUrlIsLocked', true);
     }
 
     private checkIfAppLoadedInAnotherTab(): void {
@@ -163,7 +141,7 @@ export class ApplicationLoadingComponent implements OnInit {
 
     private launchAuthenticationProcess(): void {
         this.loadingInProgress = true;
-        this.logger.info(`Launch authentication process`);
+        logger.info(`Launch authentication process`);
         this.waitForEndOfAuthentication();
         this.authService.initializeAuthentication();
         if (this.authService.getAuthMode() === AuthenticationMode.PASSWORD)
@@ -182,9 +160,9 @@ export class ApplicationLoadingComponent implements OnInit {
     }
 
     private waitForEndOfAuthentication(): void {
-        this.currentUserStore.getCurrentUserLogin().subscribe((identifier) => {
+        CurrentUserStore.getCurrentUserLogin().subscribe((identifier) => {
             if (identifier) {
-                this.logger.info(`User ${identifier} logged`);
+                logger.info(`User ${identifier} logged`);
                 this.synchronizeUserTokenWithOpfabUserDatabase();
                 this.showLoginScreen = false;
                 this.userLogin = identifier;
@@ -194,9 +172,9 @@ export class ApplicationLoadingComponent implements OnInit {
     }
 
     private synchronizeUserTokenWithOpfabUserDatabase() {
-        this.userService.synchronizeWithToken().subscribe({
-            next: () => this.logger.info('Synchronization of user token with user database done'),
-            error: () => this.logger.warn('Impossible to synchronize user token with user database')
+        UserService.synchronizeWithToken().subscribe({
+            next: () => logger.info('Synchronization of user token with user database done'),
+            error: () => logger.warn('Impossible to synchronize user token with user database')
         });
     }
 
@@ -204,16 +182,16 @@ export class ApplicationLoadingComponent implements OnInit {
         this.settingsService.getUserSettings().subscribe({
             next: (response) => {
                 if (response.status === ServerResponseStatus.OK) {
-                    this.logger.info('Settings loaded' + response.data);
-                    this.configService.overrideConfigSettingsWithUserSettings(response.data);
+                    logger.info('Settings loaded ' + JSON.stringify(response.data));
+                    ConfigService.overrideConfigSettingsWithUserSettings(response.data);
                     this.checkIfAccountIsAlreadyUsed();
                 } else {
-                    if (response.status === ServerResponseStatus.NOT_FOUND) this.logger.info('No settings for user');
+                    if (response.status === ServerResponseStatus.NOT_FOUND) logger.info('No settings for user');
                     else if (response.status === ServerResponseStatus.FORBIDDEN) {
-                        this.logger.error('Access forbidden when loading settings');
+                        logger.error('Access forbidden when loading settings');
                         this.authService.logout();
                         return;
-                    } else this.logger.error('Error when loading settings' + response.status);
+                    } else logger.error('Error when loading settings' + response.status);
                     this.checkIfAccountIsAlreadyUsed();
                 }
             }
@@ -231,8 +209,8 @@ export class ApplicationLoadingComponent implements OnInit {
 
     private loadAllConfigurations(): void {
         const requestsToLaunch$ = [
-            this.configService.loadUiMenuConfig(),
-            this.userService.loadUserWithPerimetersData(),
+            ConfigService.loadUiMenuConfig(),
+            UserService.loadUserWithPerimetersData(),
             this.entitiesService.loadAllEntitiesData(),
             this.groupsService.loadAllGroupsData(),
             this.processesService.loadAllProcessesWithLatestVersion(),
@@ -279,11 +257,10 @@ export class ApplicationLoadingComponent implements OnInit {
     private initOpfabAPI(): void {
         const that = this;
 
-        opfab.navigate.showCardInFeed = function(cardId: string) {
+        opfab.navigate.showCardInFeed = function (cardId: string) {
             that.ngZone.run(() => that.router.navigate(['feed/cards/', cardId]));
-        }
+        };
 
         this.opfabAPIService.initAPI();
-        
     }
 }

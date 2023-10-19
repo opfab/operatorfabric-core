@@ -14,7 +14,7 @@ import {merge, Subject} from "rxjs";
 import {LightCardsFeedFilterService} from "../lightcards/lightcards-feed-filter.service";
 import {LightCardsStoreService} from "../lightcards/lightcards-store.service";
 import {ConfigService} from "../config.service";
-import {LogOption, OpfabLoggerService} from "../logs/opfab-logger.service";
+import {LogOption, LoggerService as logger} from "../logs/logger.service";
 import {Router} from "@angular/router";
 import {filter} from "rxjs/operators";
 import {MessageLevel} from "@ofModel/message.model";
@@ -24,6 +24,7 @@ import {AlertMessageService} from "../alert-message.service";
     providedIn: 'root'
 })
 export class SystemNotificationService {
+
     private static RECENT_THRESHOLD = 4000;
 
     private systemNotificationConfigBySeverity: Map<Severity, string>;
@@ -34,11 +35,9 @@ export class SystemNotificationService {
     constructor(
         private lightCardsFeedFilterService: LightCardsFeedFilterService,
         private lightCardsStoreService: LightCardsStoreService,
-        private configService: ConfigService,
-        private logger: OpfabLoggerService,
-        private alertMessageService: AlertMessageService,
         private router: Router
-    ) {}
+    ) {
+    }
 
     public initSystemNotificationService() {
         this.systemNotificationConfigBySeverity = new Map<Severity, string>();
@@ -49,7 +48,7 @@ export class SystemNotificationService {
 
         this.systemNotificationEnabled = new Map<Severity, boolean>();
         this.systemNotificationConfigBySeverity.forEach((systemNotificationConfig, severity) => {
-            this.configService.getConfigValueAsObservable(systemNotificationConfig, false).subscribe((x) => {
+            ConfigService.getConfigValueAsObservable(systemNotificationConfig, false).subscribe((x) => {
                 this.systemNotificationEnabled.set(severity, x);
 
                 if (this.isAtLeastOneSeverityEnabled()) {
@@ -79,7 +78,7 @@ export class SystemNotificationService {
             Notification.requestPermission();
         } else {
             if (Notification.permission === "denied") {
-                this.alertMessageService.sendAlertMessage({
+                AlertMessageService.sendAlertMessage({
                     message: null,
                     level: MessageLevel.BUSINESS,
                     i18n: {key: 'settings.systemNotificationsDisabledInBrowser'}
@@ -126,10 +125,10 @@ export class SystemNotificationService {
 
     private notifyIfSeverityEnabled(severity: Severity, lightCard: LightCard) {
         if (this.systemNotificationEnabled.get(severity)) {
-            this.logger.debug(new Date().toISOString() + ' Send system notification')
+            logger.debug(new Date().toISOString() + ' Send system notification')
             this.sendSystemNotificationMessage(lightCard);
         } else {
-            this.logger.debug('No system notification was sent for ' + severity + ' as system notification is disabled for this severity', LogOption.LOCAL);
+            logger.debug('No system notification was sent for ' + severity + ' as system notification is disabled for this severity', LogOption.LOCAL);
         }
     }
 

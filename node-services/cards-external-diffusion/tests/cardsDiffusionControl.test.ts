@@ -104,7 +104,7 @@ describe('Cards external diffusion', function () {
     }
 
     it('Should not send card when publishDate is before configured period', async function() {
-        const publishDateAfterAlertingPeriod = Date.now() - 55 * 1000;
+        const publishDateBeforeAlertingPeriod = Date.now() - 55 * 1000;
         setup();
         opfabServicesInterfaceStub.allUsers = [{login: 'operator_1', entities: ['ENTITY1']}, {login: 'operator_2', entities: ['ENTITY1', 'ENTITY2']}];
         opfabServicesInterfaceStub.connectedUsers = ['operator_1'];
@@ -114,11 +114,11 @@ describe('Cards external diffusion', function () {
                                 ];
 
         
-        opfabServicesInterfaceStub.cards = [{uid: "0001", id:"defaultProcess.process1" , publisher: 'publisher1', publishDate: publishDateAfterAlertingPeriod, titleTranslated:"Title1", summaryTranslated:"Summary1", process: "defaultProcess", state: "processState", entityRecipients:["ENTITY1"]}];
-
-        await new Promise(resolve => setTimeout(resolve, 1));
+        opfabServicesInterfaceStub.cards = [{uid: "0001", id:"defaultProcess.process1" , publisher: 'publisher1', publishDate: publishDateBeforeAlertingPeriod, titleTranslated:"Title1", summaryTranslated:"Summary1", process: "defaultProcess", state: "processState", entityRecipients:["ENTITY1"]}];
 
         await cardsDiffusionControl.checkUnreadCards();
+        await new Promise(resolve => setTimeout(resolve, 1));
+
         expect(mailService.numberOfMailsSent).toEqual(0);
     })
 
@@ -144,6 +144,7 @@ describe('Cards external diffusion', function () {
         expect(mailService.sent[0].toAddress).toEqual('operator_2@opfab.com');
         expect(mailService.sent[0].body).toEqual('Body <a href="http://localhost/#/feed/cards/defaultProcess.process1">Title1 - Summary1</a>' );
     })
+
 
     it('Should not send same card twice', async function() {
         const publishDateAfterAlertingPeriod = Date.now() - 65 * 1000;

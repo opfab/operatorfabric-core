@@ -18,7 +18,6 @@ import {Subject} from 'rxjs';
     styleUrls: ['./filters.component.scss']
 })
 export class FiltersComponent implements OnInit {
-
     @Input() filterActive: boolean;
 
     @Output() showFiltersAndSort = new Subject<any>();
@@ -27,14 +26,10 @@ export class FiltersComponent implements OnInit {
 
     loadingInProgress = false;
 
-    constructor(
-        private configService: ConfigService,
-        private lightCardsStoreService: LightCardsStoreService,
-
-    ) {}
+    constructor(private lightCardsStoreService: LightCardsStoreService) {}
 
     ngOnInit() {
-        this.showSearchFilter = this.configService.getConfigValue('feed.showSearchFilter', false);
+        this.showSearchFilter = ConfigService.getConfigValue('feed.showSearchFilter', false);
 
         this.lightCardsStoreService
             .getLoadingInProgress()
@@ -44,5 +39,4 @@ export class FiltersComponent implements OnInit {
     onShowFiltersAndSortChange(filterAndsort: any) {
         this.showFiltersAndSort.next(filterAndsort);
     }
-
 }

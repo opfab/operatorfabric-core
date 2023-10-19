@@ -8,7 +8,7 @@
 # SPDX-License-Identifier: MPL-2.0
 # This file is part of the OperatorFabric project.
  
-echo "Set Keycloack version to 12.0.4"
+echo "Set Keycloak version to 12.0.4"
 sed -i "s/quay\.io\/keycloak.*$/jboss\/keycloak:12.0.4/g" config/docker/docker-compose.yml
 cp config/keycloak/export/dev-realm-keycloak12.json config/keycloak/export/dev-realm.json
 echo "Set mongo version to 4.0-bionic"

@@ -17,8 +17,8 @@ import {ConfigService} from 'app/business/services/config.service';
 export class OpfabTitleCasePipe implements PipeTransform {
     private titleToUppercase;
 
-    constructor(private configService: ConfigService) {
-        this.titleToUppercase = this.configService.getConfigValue('feed.card.titleUpperCase', true);
+    constructor() {
+        this.titleToUppercase = ConfigService.getConfigValue('feed.card.titleUpperCase', true);
     }
 
     transform(title: string): string {

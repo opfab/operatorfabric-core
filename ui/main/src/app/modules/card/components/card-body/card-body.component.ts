@@ -32,7 +32,7 @@ import {UserPermissionsService} from 'app/business/services/user-permissions.ser
 import {DisplayContext} from '@ofModel/template.model';
 import {LightCardsStoreService} from 'app/business/services/lightcards/lightcards-store.service';
 import {CardComponent} from '../../card.component';
-import {OpfabLoggerService} from 'app/business/services/logs/opfab-logger.service';
+import {LoggerService as logger} from 'app/business/services/logs/logger.service';
 import {UserWithPerimeters} from '@ofModel/userWithPerimeters.model';
 import {SelectedCardService} from 'app/business/services/card/selectedCard.service';
 import {CardService} from 'app/business/services/card/card.service';
@@ -83,18 +83,15 @@ export class CardBodyComponent implements OnChanges, OnInit, OnDestroy {
 
     constructor(
         private businessconfigService: ProcessesService,
-        private routerStore: RouterStore,
         private cardService: CardService,
         private router: Router,
-        private userService: UserService,
         private entitiesService: EntitiesService,
         private userPermissionsService: UserPermissionsService,
         private lightCardsStoreService: LightCardsStoreService,
         private selectedCardService: SelectedCardService,
-        private opfabAPIService: OpfabAPIService,
-        private logger: OpfabLoggerService
+        private opfabAPIService: OpfabAPIService
     ) {
-        this.userWithPerimeters = this.userService.getCurrentUserWithPerimeters();
+        this.userWithPerimeters = UserService.getCurrentUserWithPerimeters();
         if (this.userWithPerimeters) {
             this.user = this.userWithPerimeters.userData;
         }
@@ -102,7 +99,7 @@ export class CardBodyComponent implements OnChanges, OnInit, OnDestroy {
 
     ngOnInit() {
         this.integrateChildCardsInRealTime();
-        const pageType = this.routerStore.getCurrentPageType();
+        const pageType = RouterStore.getCurrentPageType();
         if (pageType === PageType.CALENDAR || pageType === PageType.MONITORING || pageType === PageType.DASHBOARD) this.templateOffset = 35;
         if (pageType !== PageType.CALENDAR && pageType !== PageType.MONITORING && pageType !== PageType.DASHBOARD) this.showMaxAndReduceButton = true;
     }
@@ -186,7 +183,7 @@ export class CardBodyComponent implements OnChanges, OnInit, OnDestroy {
                 this.computeUserEntityIdsPossibleForResponse();
                 this.computeUserMemberOfAnEntityRequiredToRespondAndAllowedToSendCards();
                 this.isUserEnabledToRespond = this.userPermissionsService.isUserEnabledToRespond(
-                    this.userService.getCurrentUserWithPerimeters(),
+                    UserService.getCurrentUserWithPerimeters(),
                     this.card,
                     this.businessconfigService.getProcess(this.card.process)
                 );
@@ -216,7 +213,7 @@ export class CardBodyComponent implements OnChanges, OnInit, OnDestroy {
             .resolveEntitiesAllowedToSendCards(entitiesAllowedOrRequiredToRespond)
             .map((entity) => entity.id);
 
-        this.logger.debug(
+        logger.debug(
             `Detail card - entities allowed to respond = ${this.entityIdsAllowedOrRequiredToRespondAndAllowedToSendCards}`
         );
     }
@@ -225,7 +222,7 @@ export class CardBodyComponent implements OnChanges, OnInit, OnDestroy {
         this.userEntityIdsPossibleForResponse = this.entityIdsAllowedOrRequiredToRespondAndAllowedToSendCards.filter(
             (entityId) => this.user.entities.includes(entityId)
         );
-        this.logger.debug(`Detail card - user entities allowed to respond = ${this.userEntityIdsPossibleForResponse}`);
+        logger.debug(`Detail card - user entities allowed to respond = ${this.userEntityIdsPossibleForResponse}`);
         if (this.userEntityIdsPossibleForResponse.length === 1)
             this.userEntityIdToUseForResponse = this.userEntityIdsPossibleForResponse[0];
     }
@@ -342,8 +339,14 @@ export class CardBodyComponent implements OnChanges, OnInit, OnDestroy {
         return this.card.lttd != null && this.card.lttd - new Date().getTime() <= 0;
     }
 
-    public isSmallscreen() {
-        return window.innerWidth < 1000;
+    public isThereEnoughSpaceToShowCard() {
+        const domElement = document.getElementsByTagName('of-card-body');
+        const cardWidth =  domElement.item(0).getBoundingClientRect().width;
+
+        if (cardWidth === 0) //Full screen
+            return window.innerWidth > 1300
+        else
+            return cardWidth > 485 || window.innerWidth > 1300;
     }
 
     public setFullScreen(active) {
@@ -359,7 +362,7 @@ export class CardBodyComponent implements OnChanges, OnInit, OnDestroy {
             this.selectedCardService.clearSelectedCardId();
         } else {
             this.selectedCardService.clearSelectedCardId();
-            this.router.navigate(['/' + this.routerStore.getCurrentRoute().split('/')[1]]);
+            this.router.navigate(['/' + RouterStore.getCurrentRoute().split('/')[1]]);
         }
     }
 

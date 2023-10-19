@@ -8,7 +8,7 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {Component, OnInit} from '@angular/core';
+import {ChangeDetectionStrategy, Component, OnInit} from '@angular/core';
 import {ActivatedRoute} from '@angular/router';
 import {TranslateService} from '@ngx-translate/core';
 import {SharingService} from './services/sharing.service';
@@ -16,7 +16,8 @@ import {SharingService} from './services/sharing.service';
 @Component({
     selector: 'of-admin',
     templateUrl: './admin.component.html',
-    styleUrls: ['./admin.component.scss']
+    styleUrls: ['./admin.component.scss'],
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class AdminComponent implements OnInit {
     public paginationDefaultPageSize = 10;

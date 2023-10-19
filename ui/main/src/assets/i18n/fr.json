@@ -80,6 +80,27 @@
       "impossibleToSaveSettings": "Impossible d'enregistrer les paramètres pour des raisons techniques",
       "incorrectSubmission": "Saisie incorrecte",
       "technicalError" : "Erreur technique"
+    },    
+    "calendar": {
+      "monday":"Lundi",
+      "tuesday":"Mardi",
+      "wednesday":"Mercredi",
+      "thursday":"Jeudi",
+      "friday":"Vendredi",
+      "saturday":"Samedi",
+      "sunday":"Dimanche",
+      "january":"Janvier",
+      "february":"Février",
+      "march":"Mars",
+      "april":"Avril",
+      "may":"Mai",
+      "june":"Juin",
+      "july":"Juillet",
+      "august":"Août",
+      "september":"Septembre",
+      "october":"Octobre",
+      "november":"Novembre",
+      "december":"Décembre"
     }
   },
   "global":{
@@ -312,7 +333,7 @@
       "userHasNoEntityThatCanSendCard" : "Vous n'êtes pas membre d'une entité qui peut envoyer des cartes.",
       "templateError" : "Erreur technique : template non conforme",
       "impossibleToSendCard" : "Impossible d'envoyer la carte pour des raisons techniques",
-      "lttdBeforeStartDate": "La date limite de réponse doit être postérieure à la date de début.",
+      "lttdBeforeStartDate": "La date limite de réponse doit être postérieure à la date de début et postérieure à la date/heure courante.",
       "lttdAfterEndDate": "La date limite de réponse doit être antérieure à la date de fin.",
       "expirationDateBeforeStartDate": "La date d'expiration doit être postérieure à la date de début."
     },
@@ -596,7 +617,7 @@
       "message" : "Vous avez reçu un message :"
     },
     "messageUserCard": {
-      "noMessageError":"Vous devez fournir un message",
+      "noMessageError":"Vous ne pouvez pas envoyer un message vide",
       "textareaLabel":"MESSAGE"
     },
     "questionCard" :{
@@ -606,9 +627,58 @@
       "responseColumnLabel":"Réponse"
     },
     "questionUserCard": {
-      "noMessageError":"Vous devez fournir une question",
+      "noQuestionError":"Vous devez fournir une question",
       "textareaLabel":"QUESTION"
+    },
+    "taskCard": {
+      "taskToDo": "Vous avez la tâche suivante à faire",
+      "duration": "Durée",
+      "minutes": "minutes",
+      "at": "À",
+      "first": "premier",
+      "second": "deuxième",
+      "third": "troisième",
+      "fourth": "quatrième",
+      "last": "dernier",
+      "the": "Le",
+      "on": "le",
+      "firstDayOfTheMonth": "Le premier jour du mois",
+      "lastDayOfTheMonth": "Le dernier jour du mois",
+      "dayOfTheMonth": "jour du mois",
+      "in": "en"
+   },
+    "taskUserCard": {
+      "taskDescriptionLabel": "DESCRIPTION DE LA TÂCHE",
+      "dailyFreq": "Répétition quotidienne",
+      "monthlyFreq": "Répétition mensuelle",
+      "Repeat": "RÉPÉTER CHAQUE",
+      "selectAll": "Sélectionner tout",
+      "ordinalDay": "Numéro de jour",
+      "ordinalWeekDay": "Numéro de jour de la semaine",
+      "dayNumber": "N° JOUR",
+      "firstDayOfTheMonth": "Premier jour du mois",
+      "lastDayOfTheMonth": "Dernier jour du mois",
+      "dayOfTheMonth": "jour du mois",
+      "occurrenceNumber": "NUMÉRO",
+      "weekDay": "JOUR DE LA SEMAINE",
+      "at": "À",
+      "time": "HEURE",
+      "taskDuration": "DURÉE DE LA TÂCHE (MINUTES)",
+      "minutesForReminder": "MINUTES AVANT LA TÂCHE POUR RAPPEL"
+    }, 
+    "message-or-question-listCard": {
+      "answers": "Réponses",
+      "yes": "Oui",
+      "no": "Non",
+      "entityColumnLabel": "ENTITÉ",
+      "responseColumnLabel": "RÉPONSE",
+      "commentColumnLabel": "COMMENTAIRE",
+      "comment": "COMMENTAIRE"
+    },
+    "message-or-question-listUserCard": {
+      "titleLabel": "TITRE",
+      "messageLabel": "MESSAGE",
+      "emptyMessage": "Vous ne pouvez pas envoyer un message vide"
     } 
-
   }
 }

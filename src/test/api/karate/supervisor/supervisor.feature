@@ -7,10 +7,17 @@ Feature: Supervisor
     * def authTokenAsTSO = signIn.authToken
     * def signInAdmin = callonce read('../common/getToken.feature') { username: 'admin'}
     * def authTokenAdmin = signInAdmin.authToken
-    * def signInSupervisor = callonce read('../common/getToken.feature') { username: 'service_supervisor'}
+    * def signInSupervisor = callonce read('../common/getToken.feature') { username: 'opfab'}
     * def authTokenSupervisor = signInSupervisor.authToken
 
 
+
+  Scenario: healthcheck API 
+
+    # Call healthcheck API without authentication
+    Given url 'http://localhost:2108/healthcheck'
+    When method get
+    Then status 200
 
 Scenario: start/stop/status API 
 

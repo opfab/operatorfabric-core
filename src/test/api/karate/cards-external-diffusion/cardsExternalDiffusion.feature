@@ -90,6 +90,13 @@ Feature: Cards external diffusion
     And match response == {"id":'#notnull', uid: '#notnull'}
 
 
+Scenario: healthcheck API 
+
+    # Call healthcheck API without authentication
+    Given url 'http://localhost:2106/healthcheck'
+    When method get
+    Then status 200
+
 Scenario: Start/Stop/Status API 
 
     # Call API as non admin user should fail

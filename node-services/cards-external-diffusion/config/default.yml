@@ -1,15 +1,21 @@
-opfab:
-  login: admin
-  password: test
-  usersUrl: "http://127.0.0.1:2103"
-  cardsConsultationUrl: "http://127.0.0.1:2104"
-  getTokenUrl: "http://127.0.0.1:2002/auth/token"
 operatorfabric:
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          jwk-set-uri: http://localhost:89/auth/realms/dev/protocol/openid-connect/certs
   rabbitmq:
     host: localhost
     port: 5672
     username: guest
     password: guest
+  servicesUrls:
+    authToken: "http://127.0.0.1:2002/auth/token"
+    users: "http://127.0.0.1:2103"
+    cardsConsultation: "http://127.0.0.1:2104"
+  internalAccount:
+    login: opfab
+    password: test
   logConfig:
     logFolder: logs/
     logFile: "%DATE%.log"
@@ -23,9 +29,6 @@ operatorfabric:
   cardsExternalDiffusion:
     adminPort: 2106
     activeOnStartup: true
-    opfab:
-      login: admin
-      password: test
     defaultConfig:
       mailFrom: opfab@localhost.it
       subjectPrefix: 'Opfab card received '

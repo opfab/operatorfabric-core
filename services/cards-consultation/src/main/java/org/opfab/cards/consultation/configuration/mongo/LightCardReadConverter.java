@@ -59,6 +59,7 @@ public class LightCardReadConverter implements Converter<Document, LightCardCons
                 .summaryTranslated(source.getString("summaryTranslated"))
                 .tags(source.getList("tags", String.class) == null ? new ArrayList<String>() : source.getList("tags", String.class))
                 .usersAcks(source.getList("usersAcks", String.class))
+                .usersReads(source.getList("usersReads", String.class))
                 .entityRecipients(source.getList("entityRecipients", String.class))
                 .entityRecipientsForInformation(source.getList("entityRecipientsForInformation", String.class))
                 .userRecipients(source.getList("userRecipients", String.class))

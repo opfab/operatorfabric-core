@@ -213,7 +213,7 @@ describe ('User action logs page',()=>{
         opfab.navigateToUserCard();
         usercard.selectService('User card examples');
         usercard.selectProcess('Message or question');
-        usercard.selectState('Question');
+        usercard.selectState('Question', 1);
         cy.get('#opfab-question-label').should('have.text','QUESTION');
         usercard.selectRecipient('Control Center FR South');
         cy.get('#usercard_question_input').type('First question');

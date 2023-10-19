@@ -8,11 +8,8 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {Guid} from "guid-typescript";
-
 
 export class AuthenticatedUser {
-    public clientId: Guid;
     public login: string;
     public token: string;
     public expirationDate: Date;

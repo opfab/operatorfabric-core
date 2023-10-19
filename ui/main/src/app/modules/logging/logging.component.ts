@@ -7,7 +7,7 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {AfterViewInit, Component, ElementRef, OnDestroy, OnInit, ViewChild} from '@angular/core';
+import {AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {Subject} from 'rxjs';
 
 import {ProcessesService} from 'app/business/services/businessconfig/processes.service';
@@ -29,7 +29,8 @@ import {TranslationService} from 'app/business/services/translation/translation.
 @Component({
     selector: 'of-logging',
     templateUrl: './logging.component.html',
-    styleUrls: ['./logging.component.scss']
+    styleUrls: ['./logging.component.scss'],
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class LoggingComponent implements OnDestroy, OnInit, AfterViewInit {
     unsubscribe$: Subject<void> = new Subject<void>();
@@ -86,12 +87,12 @@ export class LoggingComponent implements OnDestroy, OnInit, AfterViewInit {
 
     constructor(
         private processesService: ProcessesService,
-        private configService: ConfigService,
         private dateTimeFormatter: DateTimeFormatterService,
         private cardService: CardService,
         private translationService: TranslationService,
         private entitiesService: EntitiesService,
-        private modalService: NgbModal
+        private modalService: NgbModal,
+        private changeDetector: ChangeDetectorRef
     ) {
         processesService.getAllProcesses().forEach((process) => {
             if (process.uiVisibility?.logging) {
@@ -114,8 +115,8 @@ export class LoggingComponent implements OnDestroy, OnInit, AfterViewInit {
     }
 
     ngOnInit() {
-        this.size = this.configService.getConfigValue('logging.filters.page.size', 10);
-        this.tags = this.configService.getConfigValue('logging.filters.tags.list');
+        this.size = ConfigService.getConfigValue('logging.filters.page.size', 10);
+        this.tags = ConfigService.getConfigValue('logging.filters.tags.list');
 
         this.results = [];
     }
@@ -134,6 +135,7 @@ export class LoggingComponent implements OnDestroy, OnInit, AfterViewInit {
     sendFilterQuery(page_number): void {
         this.technicalError = false;
         this.loadingInProgress = true;
+        this.changeDetector.markForCheck();
 
         const {value} = this.loggingForm;
         this.filtersTemplate.transformFiltersListToMap(value);
@@ -162,11 +164,13 @@ export class LoggingComponent implements OnDestroy, OnInit, AfterViewInit {
                     this.results = page.content;
                     this.totalElements= page.totalElements;
                     this.totalPages= page.totalPages;
+                    this.changeDetector.markForCheck();
                 },
                 error: () => {
                     this.firstQueryHasBeenDone = false;
                     this.loadingInProgress = false;
                     this.technicalError = true;
+                    this.changeDetector.markForCheck();
                 }
             });
     }

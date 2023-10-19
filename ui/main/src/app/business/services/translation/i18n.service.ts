@@ -7,7 +7,6 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {Injectable} from '@angular/core';
 import * as moment from 'moment';
 import {Observable} from 'rxjs';
 import {catchError, tap} from 'rxjs/operators';
@@ -19,28 +18,28 @@ import {TranslationService} from './translation.service';
 
 declare const opfab: any;
 
-@Injectable({
-    providedIn: 'root'
-})
 export class I18nService {
     private static localUrl = '/assets/i18n/';
-    private _locale: string;
+    private static _locale: string;
+    private static configServer: ConfigServer;
+    private static translationService: TranslationService;
 
-    constructor(
-        private configServer: ConfigServer,
-        private translationService: TranslationService,
-        private configService: ConfigService
-    ) {
+
+    public static setConfigServer(configServer: ConfigServer) {
+        this.configServer = configServer;
     }
 
+    public static setTranslationService(translationService: TranslationService) {
+        this.translationService = translationService;
+    }
 
-    public initLocale() {
-        this.configService
+    public static initLocale() {
+        ConfigService
             .getConfigValueAsObservable('settings.locale', 'en')
             .subscribe((locale) => this.changeLocale(locale));
     }
 
-    public changeLocale(locale: string) {
+    public static changeLocale(locale: string) {
         if (locale) {
             this._locale = locale;
         } else {
@@ -51,18 +50,18 @@ export class I18nService {
         this.setTranslationForMultiSelectUsedInTemplates();
     }
 
-    public setTranslationForMultiSelectUsedInTemplates() {
+    public static setTranslationForMultiSelectUsedInTemplates() {
         opfab.multiSelect.searchPlaceholderText = this.translationService.getTranslation('multiSelect.searchPlaceholderText');
         opfab.multiSelect.clearButtonText = this.translationService.getTranslation('multiSelect.clearButtonText');
         opfab.multiSelect.noOptionsText = this.translationService.getTranslation('multiSelect.noOptionsText');
         opfab.multiSelect.noSearchResultsText = this.translationService.getTranslation('multiSelect.noSearchResultsText');
     }
 
-    public get locale() {
+    public static get locale() {
         return this._locale;
     }
 
-    public loadLocale(locale: string): Observable<any> {
+    public static loadLocale(locale: string): Observable<any> {
         return this.configServer.getLocale(locale).pipe(
             tap({
                 next: (serverResponse) => {
@@ -79,7 +78,7 @@ export class I18nService {
         );
     }
 
-    public loadGlobalTranslations(locales: Array<string>): Observable<any[]> {
+    public static loadGlobalTranslations(locales: Array<string>): Observable<any[]> {
         if (locales) {
             const localeRequests$ = [];
             locales.forEach((locale) => localeRequests$.push(this.loadLocale(locale)));
@@ -87,8 +86,8 @@ export class I18nService {
         }
     }
 
-    public loadTranslationForMenu(): void {
-        this.configService.fetchMenuTranslations().subscribe((locales) => {
+    public static loadTranslationForMenu(): void {
+        ConfigService.fetchMenuTranslations().subscribe((locales) => {
             locales.forEach((locale) => {
                 this.translationService.setTranslation(locale.language, locale.i18n, true);
             });

@@ -21,7 +21,7 @@ describe('Processes Services', () => {
     beforeEach(() => {
         processServerMock = new ProcessServerMock();
         configServerMock = new ConfigServerMock();
-        processesService = new ProcessesService(null, processServerMock, configServerMock);
+        processesService = new ProcessesService(processServerMock, configServerMock);
     });
 
 

@@ -123,7 +123,7 @@
       "rank": 1,
       "version": "v12.34.56"
     },
-    "keycloack": {
+    "keycloak": {
       "name": "Keycloak",
       "rank": 2,
       "version": "6.0.1"

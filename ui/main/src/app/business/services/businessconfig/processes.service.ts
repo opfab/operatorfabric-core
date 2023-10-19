@@ -37,7 +37,6 @@ export class ProcessesService {
     private typeOfStatesPerProcessAndState: Map<string, TypeOfStateEnum>;
 
     constructor(
-        private userService: UserService,
         private processServer: ProcessServer,
         private configServer: ConfigServer
     ) {}
@@ -87,13 +86,15 @@ export class ProcessesService {
                 const processGroupsFile = response.data;
                 if (processGroupsFile) {
                     const processGroupsList = processGroupsFile.groups;
-                    if (processGroupsList)
+                    if (processGroupsList) {
+                        this.processGroups.clear();
                         processGroupsList.forEach((processGroup) => {
                             this.processGroups.set(processGroup.id, {
                                 name: processGroup.name,
                                 processes: processGroup.processes
                             });
                         });
+                    }
                     console.log(new Date().toISOString(), 'List of process groups loaded');
                 }
                 if (response.status !== ServerResponseStatus.OK)
@@ -325,7 +326,7 @@ export class ProcessesService {
             process.states.forEach((state, stateid) => {
                 if (
                     !(hideChildStates && state.isOnlyAChildState) &&
-                    (isAdminMode || this.userService.isReceiveRightsForProcessAndState(process.id, stateid))
+                    (isAdminMode || UserService.isReceiveRightsForProcessAndState(process.id, stateid))
                 ) {
                     statesDropdownList.push({
                         id: process.id + '.' + stateid

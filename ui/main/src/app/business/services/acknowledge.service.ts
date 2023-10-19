@@ -29,7 +29,6 @@ export class AcknowledgeService {
     constructor(
         private acknowledgeServer: AcknowledgeServer,
         private userPermissionsService: UserPermissionsService,
-        private userService: UserService,
         private processesService: ProcessesService,
         private entitiesService: EntitiesService,
     ) {}
@@ -71,7 +70,7 @@ export class AcknowledgeService {
     ): boolean {
         return (
             consideredAcknowledgedForUserWhen === ConsideredAcknowledgedForUserWhenEnum.USER_HAS_ACKNOWLEDGED ||
-            this.userService.hasCurrentUserAnyPermission([PermissionEnum.READONLY]) ||
+            UserService.hasCurrentUserAnyPermission([PermissionEnum.READONLY]) ||
             !lightCard.entityRecipients ||
             !lightCard.entityRecipients.length ||
             !this.doEntityRecipientsIncludeAtLeastOneEntityOfUser(lightCard)
@@ -82,7 +81,7 @@ export class AcknowledgeService {
         const entitiesOfUserThatAreRecipients = lightCard.entityRecipients.filter((entityId) => {
             return (
                 this.entitiesService.isEntityAllowedToSendCard(entityId) &&
-                this.userService.getCurrentUserWithPerimeters().userData.entities.includes(entityId)
+                UserService.getCurrentUserWithPerimeters().userData.entities.includes(entityId)
             );
         });
         return entitiesOfUserThatAreRecipients.length > 0;
@@ -128,7 +127,7 @@ export class AcknowledgeService {
             const entitiesOfUserAndWaitedForAck = entitiesWaitedForAck.filter((entityId) => {
                 return (
                     this.entitiesService.isEntityAllowedToSendCard(entityId) &&
-                    this.userService.getCurrentUserWithPerimeters().userData.entities.includes(entityId)
+                    UserService.getCurrentUserWithPerimeters().userData.entities.includes(entityId)
                 );
             });
             return entitiesOfUserAndWaitedForAck.length === 0;
@@ -137,7 +136,7 @@ export class AcknowledgeService {
 
     private isMemberOfEntityThatPublishedTheCard(lightCard: LightCard): boolean {
         if (lightCard.publisherType === 'ENTITY' &&
-            this.userService
+            UserService
                 .getCurrentUserWithPerimeters()
                 .userData.entities?.includes(lightCard.publisher)) {
             return true;

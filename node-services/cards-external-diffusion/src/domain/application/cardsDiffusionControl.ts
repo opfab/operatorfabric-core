@@ -169,7 +169,7 @@ export default class CardsDiffusionControl {
     private isCardUnreadForUser(card: any, user: any): boolean {
         return (
             card.publishDate < Date.now() - 1000 * this.secondsAfterPublicationToConsiderCardAsNotRead &&
-            !card.userReads?.includes(user.login)
+            !card.usersReads?.includes(user.login)
         );
     }
 

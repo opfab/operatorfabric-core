@@ -2,14 +2,14 @@ version: '2.1'
 services:
   rabbitmq:
     container_name: rabbit
-    image: rabbitmq:3-management
+    image: lfeoperatorfabric/of-rabbitmq:SNAPSHOT
     ports:
       - "5672:5672"
       - "15672:15672"
       - "15674:15674"
   mongodb:
     container_name: mongodb
-    image: mongo:5.0.20-focal
+    image: mongo:5.0.21-focal
     ports:
       - "27017:27017"
     environment:

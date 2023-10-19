@@ -8,13 +8,11 @@
  */
 
 import {Component, OnDestroy, OnInit} from '@angular/core';
-import {UserService} from 'app/business/services/users/user.service';
 import {FormControl, FormGroup} from '@angular/forms';
 import {UserPreferencesService} from 'app/business/services/users/user-preference.service';
 import {MultiSelectConfig} from '@ofModel/multiselect.model';
 import {EntitiesService} from 'app/business/services/users/entities.service';
 import {ConfigServer} from 'app/business/server/config.server';
-import {OpfabLoggerService} from 'app/business/services/logs/opfab-logger.service';
 import {RealtimeUsersView} from 'app/business/view/realtimeusers/realtimeusers.view';
 import {RealtimePage} from 'app/business/view/realtimeusers/realtimePage';
 
@@ -24,6 +22,7 @@ import {RealtimePage} from 'app/business/view/realtimeusers/realtimePage';
     styleUrls: ['./realtimeusers.component.scss']
 })
 export class RealtimeusersComponent implements OnInit, OnDestroy {
+
     realTimeScreensForm: FormGroup<{
         realTimeScreen: FormControl<string | null>;
     }>;
@@ -41,10 +40,7 @@ export class RealtimeusersComponent implements OnInit, OnDestroy {
 
     constructor(
         private configServer: ConfigServer,
-        private logger: OpfabLoggerService,
-        private userService: UserService,
-        private entitiesService: EntitiesService,
-        private userPreferences: UserPreferencesService
+        private entitiesService: EntitiesService
     ) {}
 
     ngOnInit(): void {
@@ -54,8 +50,6 @@ export class RealtimeusersComponent implements OnInit, OnDestroy {
 
         this.realtimeusersView = new RealtimeUsersView(
             this.configServer,
-            this.logger,
-            this.userService,
             this.entitiesService
         );
         this.realtimeusersView.getPage().subscribe((realtimePage) => {
@@ -70,7 +64,7 @@ export class RealtimeusersComponent implements OnInit, OnDestroy {
     }
 
     setInitialScreenOption(): void {
-        const screenOptionPreference = Number(this.userPreferences.getPreference(
+        const screenOptionPreference = Number(UserPreferencesService.getPreference(
             'opfab.realTimeScreens.screenIndexToDisplayFirst'
         ));
         this.initialScreenOption = this.realtimePage.screenOptions[screenOptionPreference]
@@ -83,7 +77,7 @@ export class RealtimeusersComponent implements OnInit, OnDestroy {
         this.realTimeScreensForm.get('realTimeScreen').valueChanges.subscribe((optionIndex) => {
             if (optionIndex) {
                 this.realtimeusersView.setSelectedScreen(optionIndex);
-                this.userPreferences.setPreference(
+                UserPreferencesService.setPreference(
                     'opfab.realTimeScreens.screenIndexToDisplayFirst',
                     optionIndex
                 );

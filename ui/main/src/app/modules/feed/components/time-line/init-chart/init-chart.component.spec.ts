@@ -21,14 +21,11 @@ import {TranslateLoader, TranslateModule, TranslateService} from '@ngx-translate
 import {GlobalStyleService} from 'app/business/services/global-style.service';
 import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
 import {TimelineButtonsComponent} from '../../../../share/timeline-buttons/timeline-buttons.component';
-import {ConfigService} from 'app/business/services/config.service';
 import {HttpClient, HttpHandler} from '@angular/common/http';
 import {BusinessconfigI18nLoaderFactory} from '@tests/helpers';
 import {LightCardsServiceMock} from '@tests/mocks/lightcards.service.mock';
 import {LightCardsFeedFilterService} from 'app/business/services/lightcards/lightcards-feed-filter.service';
-import {OpfabLoggerService} from 'app/business/services/logs/opfab-logger.service';
-import {RemoteLoggerService} from 'app/business/services/logs/remote-logger.service';
-import {AngularRemoteLoggerServiceMock} from '@tests/mocks/angular-remote-logger.service.mock';import {DateTimeFormatterService} from 'app/business/services/date-time-formatter.service';
+import {DateTimeFormatterService} from 'app/business/services/date-time-formatter.service';
 import {ConfigServer} from 'app/business/server/config.server';
 import {ConfigServerMock} from '@tests/mocks/configServer.mock';
 
@@ -65,14 +62,11 @@ describe('InitChartComponent', () => {
             providers: [
                 {provide: APP_BASE_HREF, useValue: '/'},
                 {provide: DateTimeFormatterService, useClass: DateTimeFormatterService},
-                {provide: ConfigService, useClass: ConfigService},
                 {provide: ConfigServer, useClass: ConfigServerMock},
                 {provide: HttpClient, useClass: HttpClient},
                 {provide: HttpHandler, useClass: HttpHandler},
                 {provide: GlobalStyleService, useClass: GlobalStyleService},
-                {provide: LightCardsFeedFilterService, useClass: LightCardsServiceMock},
-                {provide: OpfabLoggerService, useClass: OpfabLoggerService},
-                {provide: RemoteLoggerService, useClass: AngularRemoteLoggerServiceMock}
+                {provide: LightCardsFeedFilterService, useClass: LightCardsServiceMock}
             ],
             schemas: [NO_ERRORS_SCHEMA]
         }).compileComponents();

@@ -1,12 +1,12 @@
-FROM node:20.6-alpine
+FROM node:20.8-alpine
 RUN apk add --no-cache tzdata
 WORKDIR /usr/app
 RUN chown node:node /usr/app
+RUN mkdir -m777 /var/log/opfab
 USER node
-RUN mkdir -p logs
 COPY dockerBuild ./build
 RUN mkdir -m777 config
-COPY dockerConfig/default-docker.yml ./config/default.yml
+COPY dockerConfig/default-docker.yml ./config/base.yml
 COPY package.json ./
 COPY startCardsReminder.sh ./
 RUN npm config set https-proxy $https_proxy

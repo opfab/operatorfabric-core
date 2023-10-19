@@ -11,29 +11,21 @@ import {Observable, Subject} from 'rxjs';
 import {Group} from '@ofModel/group.model';
 import {takeUntil, tap, map} from 'rxjs/operators';
 import {Injectable} from '@angular/core';
-import {CachedCrudService} from 'app/business/services/cached-crud-service';
-import {OpfabLoggerService} from '../logs/opfab-logger.service';
-import {AlertMessageService} from '../alert-message.service';
+import {CrudService} from 'app/business/services/crud-service';
 import {GroupsServer} from '../../server/groups.server';
 import {ServerResponseStatus} from '../../server/serverResponse';
+import {ErrorService} from '../error-service';
 
 @Injectable({
     providedIn: 'root'
 })
-export class GroupsService extends CachedCrudService {
+export class GroupsService implements CrudService {
     private _groups: Group[];
 
     private ngUnsubscribe$ = new Subject<void>();
 
-    /**
-     * @constructor
-     * @param httpClient - Angular build-in
-     */
     constructor(
-        protected loggerService: OpfabLoggerService, 
-        protected alertMessageService: AlertMessageService,
         private groupsServer: GroupsServer) {
-        super(loggerService, alertMessageService);
     }
 
     deleteById(id: string) {
@@ -42,7 +34,7 @@ export class GroupsService extends CachedCrudService {
                 if (groupsResponse.status === ServerResponseStatus.OK) {
                     this.deleteFromCachedGroups(id);
                 } else {
-                    this.handleServerResponseError(groupsResponse);
+                    ErrorService.handleServerResponseError(groupsResponse);
                 }
             })
         );
@@ -64,7 +56,7 @@ export class GroupsService extends CachedCrudService {
                 if (groupsResponse.status === ServerResponseStatus.OK) {
                     return groupsResponse.data;
                 } else {
-                    this.handleServerResponseError(groupsResponse);
+                    ErrorService.handleServerResponseError(groupsResponse);
                     return [];
                 }
             }))
@@ -101,7 +93,7 @@ export class GroupsService extends CachedCrudService {
                     this.updateCachedGroups(groupData);
                     return groupsResponse.data;
                 } else {
-                    this.handleServerResponseError(groupsResponse);
+                    ErrorService.handleServerResponseError(groupsResponse);
                     return null;
                 }
             })

@@ -17,13 +17,12 @@ import packageInfo from '../../../../../../package.json';
 
 describe('About view ', () => {
 
-    let configService: ConfigService;
     let configServerMock: ConfigServerMock;
     const opfab = {name : 'OperatorFabric', version: packageInfo.opfabVersion , rank: 0};
 
     beforeEach(() => {
-        configServerMock = new ConfigServerMock();
-        configService = new ConfigService(configServerMock);
+        configServerMock =  new ConfigServerMock();
+        ConfigService.setConfigServer(configServerMock);
     });
 
     it('GIVEN an application list in web-ui.json WHEN getting about array THEN get an applications list by rank ', async () => {
@@ -34,9 +33,9 @@ describe('About view ', () => {
         const applications = {businessconfig: businessconfig, second: second, first: first};
 
         configServerMock.setResponseForWebUIConfiguration(new ServerResponse({about: applications},ServerResponseStatus.OK,null));
-        await firstValueFrom(configService.loadWebUIConfiguration());
+        await firstValueFrom(ConfigService.loadWebUIConfiguration());
 
-        const aboutView = new AboutView(configService);
+        const aboutView = new AboutView();
 
         expect(aboutView.getAboutElements()).toEqual([opfab,first, second, businessconfig]);
     });
@@ -48,8 +47,8 @@ describe('About view ', () => {
         const applications = {first: first, second: second, businessconfig: businessconfig};
 
         configServerMock.setResponseForWebUIConfiguration(new ServerResponse({about: applications},ServerResponseStatus.OK,null));
-        await firstValueFrom(configService.loadWebUIConfiguration());
-        const aboutView = new AboutView(configService);
+        await firstValueFrom(ConfigService.loadWebUIConfiguration());
+        const aboutView = new AboutView();
 
         expect(aboutView.getAboutElements()).toEqual([opfab,first, second, businessconfig]);
     });
@@ -61,9 +60,9 @@ describe('About view ', () => {
         const applications = {first: first, second: second, businessconfig: businessconfig};
 
         configServerMock.setResponseForWebUIConfiguration(new ServerResponse({about: applications},ServerResponseStatus.OK,null));
-        await firstValueFrom(configService.loadWebUIConfiguration());
+        await firstValueFrom(ConfigService.loadWebUIConfiguration());
 
-        const aboutView = new AboutView(configService);
+        const aboutView = new AboutView();
 
         expect(aboutView.getAboutElements()).toEqual([opfab,first, second, businessconfig]);
     });

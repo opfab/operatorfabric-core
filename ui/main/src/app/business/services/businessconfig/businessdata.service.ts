@@ -11,31 +11,28 @@ import {Injectable} from '@angular/core';
 import {firstValueFrom, map, Observable} from 'rxjs';
 import {BusinessDataServer} from '../../server/businessData.server';
 import {ServerResponseStatus} from '../../server/serverResponse';
-import {LogOption, OpfabLoggerService} from '../logs/opfab-logger.service';
-import {AlertMessageService} from '../alert-message.service';
+import {LogOption,LoggerService as logger} from '../logs/logger.service';
 import {OpfabEventStreamService} from '../events/opfabEventStream.service';
 import * as _ from 'lodash-es';
-import {CachedCrudService} from '../cached-crud-service';
+import {CrudService} from '../crud-service';
+import {ErrorService} from '../error-service';
 
 @Injectable({
     providedIn: 'root'
 })
-export class BusinessDataService extends CachedCrudService {
+export class BusinessDataService implements CrudService {
     private _cachedResources = new Map<string, string>();
 
     constructor(
         private opfabEventStreamService: OpfabEventStreamService,
-        private businessDataServer: BusinessDataServer,
-        protected alertMessageService: AlertMessageService,
-        protected loggerService: OpfabLoggerService
+        private businessDataServer: BusinessDataServer
     ) {
-        super(loggerService, alertMessageService);
         this.listenForBusinessDataUpdate();
     }
 
     listenForBusinessDataUpdate() {
         this.opfabEventStreamService.getBusinessDataChanges().subscribe(() => {
-            this.loggerService.info(`New business data posted, emptying cache`, LogOption.LOCAL_AND_REMOTE);
+            logger.info(`New business data posted, emptying cache`, LogOption.LOCAL_AND_REMOTE);
             this.emptyCache();
         });
     }
@@ -53,7 +50,7 @@ export class BusinessDataService extends CachedCrudService {
             this.addResourceToCache(resourceName, resource.data);
             return _.clone(resource.data);
         } else {
-            this.loggerService.info(`Could not find the resource. See : ${resource.statusMessage}`);
+            logger.info(`Could not find the resource. See : ${resource.statusMessage}`);
             return {};
         }
     }
@@ -88,7 +85,7 @@ export class BusinessDataService extends CachedCrudService {
                 if (response.status === ServerResponseStatus.OK) {
                     return response.data;
                 } else {
-                    this.handleServerResponseError(response);
+                    ErrorService.handleServerResponseError(response);
                     return [];
                 }
             })
@@ -105,7 +102,7 @@ export class BusinessDataService extends CachedCrudService {
                 if (responseBusinessData.status === ServerResponseStatus.OK) {
                     return responseBusinessData.data;
                 } else {
-                    this.handleServerResponseError(responseBusinessData);
+                    ErrorService.handleServerResponseError(responseBusinessData);
                     return null;
                 }
             })
@@ -117,7 +114,7 @@ export class BusinessDataService extends CachedCrudService {
             map((response) => {
                 if (response.status !== ServerResponseStatus.OK) {
                     this.emptyCache();
-                    this.handleServerResponseError(response);
+                    ErrorService.handleServerResponseError(response);
                 }
             })
         );

@@ -1,7 +1,7 @@
 version: '2.1'
 services:
   mongodb:
-    image: mongo:5.0.20-focal
+    image: mongo:5.0.21-focal
     ports:
       - "27017:27017"
     environment:
@@ -11,8 +11,9 @@ services:
       - "./mongodump:/dump"
   rabbitmq:
     container_name: rabbit
-    image: rabbitmq:3-management
+    image: lfeoperatorfabric/of-rabbitmq:SNAPSHOT
     hostname: rabbit
+
 
 #  If you want to persist queue after rabbit docker container removal mount 
 #  a volume to store persistance data 
@@ -28,6 +29,12 @@ services:
 #    ports:
 #      - "5672:5672"
 #      - "15672:15672"
+
+#    If you open the port, you must change default user and password as follow
+#    environment: 
+#    - RABBITMQ_DEFAULT_USER=default_user
+#    - RABBITMQ_DEFAULT_PASS=password
+
   keycloak:
     image: quay.io/keycloak/keycloak:19.0.3-legacy
     command: -Dkeycloak.migration.action=import -Dkeycloak.migration.provider=dir -Dkeycloak.migration.dir=/keycloak/export -Dkeycloak.profile.feature.upload_scripts=enabled -Djboss.http.port=89
@@ -137,9 +144,10 @@ services:
     ports:
       - "2106:2106"
     environment:
-      - NODE_ENV=docker
+      - NODE_ENV=base,common,docker
     volumes:
-      - "./node-services.yml:/usr/app/config/docker.yml"
+      - "./cards-external-diffusion.yml:/usr/app/config/docker.yml"
+      - "./common.yml:/usr/app/config/common.yml"
   cards-reminder:
     container_name: cards-reminder
     image: "lfeoperatorfabric/of-cards-reminder:SNAPSHOT"
@@ -151,9 +159,10 @@ services:
       - "2107:2107"
     environment:
       - TZ=Europe/Paris
-      - NODE_ENV=docker
+      - NODE_ENV=base,common,docker
     volumes:
-      - "./node-services.yml:/usr/app/config/docker.yml"
+      - "./cards-reminder.yml:/usr/app/config/docker.yml"
+      - "./common.yml:/usr/app/config/common.yml"
   supervisor:
     container_name: supervisor
     image: "lfeoperatorfabric/of-supervisor:SNAPSHOT"
@@ -165,9 +174,10 @@ services:
       - "2108:2108"
     environment:
       - TZ=Europe/Paris
-      - NODE_ENV=docker
+      - NODE_ENV=base,common,docker
     volumes:
-      - "./node-services.yml:/usr/app/config/docker.yml"
+      - "./supervisor.yml:/usr/app/config/docker.yml"
+      - "./common.yml:/usr/app/config/common.yml"
 # Uncomment the line below to customize sounds for notification
 #     - "./custom-sounds:/usr/share/nginx/html/assets/sounds"
   external-devices:

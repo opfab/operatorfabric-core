@@ -12,29 +12,24 @@ import {map, takeUntil, tap} from 'rxjs/operators';
 import {Observable, Subject} from 'rxjs';
 import {Entity} from '@ofModel/entity.model';
 import {Injectable} from '@angular/core';
-import {CachedCrudService} from 'app/business/services/cached-crud-service';
-import {OpfabLoggerService} from '../logs/opfab-logger.service';
-import {AlertMessageService} from '../alert-message.service';
+import {CrudService} from 'app/business/services/crud-service';
 import {EntitiesServer} from '../../server/entities.server';
 import {ServerResponseStatus} from '../../server/serverResponse';
 import {EntitiesTree} from '@ofModel/processes.model';
+import {LoggerService as logger} from '../logs/logger.service';
+import {ErrorService} from '../error-service';
 
 
 @Injectable({
     providedIn: 'root'
 })
-export class EntitiesService extends CachedCrudService {
+export class EntitiesService implements CrudService {
     protected _entities: Entity[];
     private ngUnsubscribe$ = new Subject<void>();
-    /**
-     * @constructor
-     * @param httpClient - Angular build-in
-     */
+
+
     constructor(
-        protected loggerService: OpfabLoggerService,
-        private entitiesServer: EntitiesServer,
-        protected alertMessageService: AlertMessageService) {
-        super(loggerService, alertMessageService);
+        private entitiesServer: EntitiesServer) {
     }
 
     deleteById(id: string) {
@@ -43,7 +38,7 @@ export class EntitiesService extends CachedCrudService {
                 if (entitiesResponse.status === ServerResponseStatus.OK){
                     this.deleteFromCachedEntities(id);
                 } else {
-                    this.handleServerResponseError(entitiesResponse);
+                    ErrorService.handleServerResponseError(entitiesResponse);
                 }
             })
         );
@@ -59,7 +54,7 @@ export class EntitiesService extends CachedCrudService {
                 if (entitiesResponse.status === ServerResponseStatus.OK){
                     return entitiesResponse.data;
                 } else {
-                    this.handleServerResponseError(entitiesResponse);
+                    ErrorService.handleServerResponseError(entitiesResponse);
                     return [];
                 }
             })
@@ -73,7 +68,7 @@ export class EntitiesService extends CachedCrudService {
                     this.updateCachedEntity(entityData);
                     return responseEntities.data;
                 } else {
-                    this.handleServerResponseError(responseEntities);
+                    ErrorService.handleServerResponseError(responseEntities);
                     return null;
                 }
             })
@@ -172,7 +167,7 @@ export class EntitiesService extends CachedCrudService {
                     const entity = this.getEntities().find((e) => e.id === r.id);
                     if (entity)
                         resolvedEntities.push(entity);
-                    else this.loggerService.info('Entity not found : ' + r.id);
+                    else logger.info('Entity not found : ' + r.id);
                 }
             }
         });

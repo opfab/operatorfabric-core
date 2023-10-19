@@ -29,6 +29,18 @@ describe('Question UserCard template', () => {
         expect(view.getQuestion()).toEqual('My question');
     });
 
+
+    it('GIVEN an existing card with an HTML tag in question WHEN user edit card THEN question is provide with HTML tag escaped', () => {
+        const view = new QuestionUserCardTemplateView();
+        opfab.currentUserCard.getEditionMode = function () {
+            return 'EDITION';
+        };
+        opfab.currentCard.getCard = function () {
+            return {data: {question: 'My question <script>'}};
+        };
+        expect(view.getQuestion()).toEqual('My question &lt;script&gt;');
+    });
+
     it('GIVEN an existing card WHEN user copy card THEN question is actual question', () => {
         const view = new QuestionUserCardTemplateView();
         opfab.currentUserCard.getEditionMode = function () {
@@ -53,16 +65,16 @@ describe('Question UserCard template', () => {
 
     it('GIVEN a user WHEN create card with question THEN card is provided with question', () => {
         const view = new QuestionUserCardTemplateView();
-        const specficCardInformation = view.getSpecificCardInformation('My question');
-        expect(specficCardInformation.valid).toEqual(true);
-        expect(specficCardInformation.card.data.question).toEqual('My question');
+        const specificCardInformation = view.getSpecificCardInformation('My question');
+        expect(specificCardInformation.valid).toEqual(true);
+        expect(specificCardInformation.card.data.question).toEqual('My question');
     });
 
-    it('GIVEN a user WHEN create card with empty  question THEN card is not valid with error message ', () => {
+    it('GIVEN a user WHEN create card with empty question THEN card is not valid with error message ', () => {
         const view = new QuestionUserCardTemplateView();
-        const specficCardInformation = view.getSpecificCardInformation('');
-        expect(specficCardInformation.valid).toEqual(false);
-        expect(specficCardInformation.errorMsg).toEqual(
+        const specificCardInformation = view.getSpecificCardInformation('');
+        expect(specificCardInformation.valid).toEqual(false);
+        expect(specificCardInformation.errorMsg).toEqual(
             'Translation of buildInTemplate.questionUserCard.noQuestionError'
         );
     });

@@ -103,7 +103,8 @@ public class CardProcessingService {
                     "user not authorized to send card with process %s and state %s as it is not permitted by his perimeters, the card is rejected",
                     card.getProcess(), card.getState()));
         }
-        if (activateCardSendingLimiter && !cardSendingLimiter.isNewSendingAllowed(card.getPublisher()))
+        String cardSender = card.getRepresentative() != null ? card.getRepresentative() : card.getPublisher();
+        if (activateCardSendingLimiter && !cardSendingLimiter.isNewSendingAllowed(cardSender))
             throw new ApiErrorException(ApiError.builder()
                     .status(HttpStatus.TOO_MANY_REQUESTS)
                     .message(String.format("Publisher %s has reached the card sending limit", card.getPublisher()))

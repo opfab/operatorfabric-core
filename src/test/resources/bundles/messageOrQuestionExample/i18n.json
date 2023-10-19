@@ -7,6 +7,10 @@
 		"title":"Question ",
 		"summary":"There is a question for you"
 	},
+	"message_or_question_list":{
+		"title":"{{messageTitle}}",
+		"summary":"Message received"
+	},
 	"confirmation":{
 		"title":"Confirmation ",
 		"summary":"Please confirm"

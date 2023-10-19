@@ -14,7 +14,7 @@
 To use OperatorFabric, you need a linux OS with the following:
   
 - Docker install with 4Gb of space 
-- 16Gb of RAM
+- 4Gb of free RAM
 
 == Install and run server
 

@@ -14,20 +14,21 @@ import {
     FormGroup,
     Validators
 } from '@angular/forms';
-import {Component, Input, OnInit} from '@angular/core';
+import {ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnInit} from '@angular/core';
 import {User} from '@ofModel/user.model';
 import {NgbActiveModal} from '@ng-bootstrap/ng-bootstrap';
 import {UserService} from 'app/business/services/users/user.service';
 import {GroupsService} from 'app/business/services/users/groups.service';
 import {EntitiesService} from 'app/business/services/users/entities.service';
-import {debounceTime, distinctUntilChanged, first, map, switchMap} from 'rxjs/operators';
+import {debounceTime, distinctUntilChanged, first, map, switchMap, tap} from 'rxjs/operators';
 import {Observable, Subject} from 'rxjs';
 import {MultiSelectConfig, MultiSelectOption} from '@ofModel/multiselect.model';
 
 @Component({
     selector: 'of-edit-user-modal',
     templateUrl: './edit-user-modal.component.html',
-    styleUrls: ['./edit-user-modal.component.scss']
+    styleUrls: ['./edit-user-modal.component.scss'],
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class EditUserModalComponent implements OnInit {
     userForm: FormGroup<{
@@ -62,9 +63,9 @@ export class EditUserModalComponent implements OnInit {
 
     constructor(
         private activeModal: NgbActiveModal,
-        private crudService: UserService,
         private groupsService: GroupsService,
-        private entitiesService: EntitiesService
+        private entitiesService: EntitiesService,
+        private changeDetector: ChangeDetectorRef
     ) { }
 
     ngOnInit() {
@@ -129,7 +130,7 @@ export class EditUserModalComponent implements OnInit {
         const isAuthorizedIPAdressesAString = this.userForm.value['authorizedIPAddresses'];
         const ipList = isAuthorizedIPAdressesAString && this.authorizedIPAddresses.value.trim().length > 0 ? this.authorizedIPAddresses.value.split(',') : [];
         this.authorizedIPAddresses.setValue(ipList.map((str) => str.trim()));
-        this.crudService.update(this.userForm.value).subscribe(() => {
+        UserService.update(this.userForm.value).subscribe(() => {
             this.activeModal.close('Update button clicked on user modal');
             // We call the activeModal "close" method and not "dismiss" to indicate that the modal was closed because the
             // user chose to perform an action (here, update the selected item).
@@ -142,12 +143,11 @@ export class EditUserModalComponent implements OnInit {
         const subject = new Subject<boolean>();
 
         if (login) {
-            this.crudService.queryAllUsers().subscribe((users) => {
+            UserService.queryAllUsers().subscribe((users) => {
                 if (users.filter((user) => user.login === login).length) subject.next(false);
                 else subject.next(true);
             });
         } else subject.next(true);
-
         return subject.asObservable();
     }
 
@@ -156,9 +156,12 @@ export class EditUserModalComponent implements OnInit {
             control.valueChanges.pipe(
                 debounceTime(500),
                 distinctUntilChanged(),
-                switchMap((value) => this.isUniqueLogin(value)),
+                switchMap((value) => {
+                    return this.isUniqueLogin(value)
+                }),
                 map((unique: boolean) => (unique ? null : {uniqueLoginViolation: true})),
-                first()
+                first(),
+                tap( () => this.changeDetector.markForCheck())
             ); // important to make observable finite
     }
 

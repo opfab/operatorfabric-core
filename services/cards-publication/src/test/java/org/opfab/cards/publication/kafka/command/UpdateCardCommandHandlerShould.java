@@ -22,14 +22,12 @@ import org.opfab.cards.publication.kafka.CardObjectMapper;
 import org.opfab.cards.publication.model.CardPublicationData;
 import org.opfab.cards.publication.services.CardProcessingService;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.util.ReflectionTestUtils;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
-@ActiveProfiles(profiles = "test")
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class UpdateCardCommandHandlerShould {
 
