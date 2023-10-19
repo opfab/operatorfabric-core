@@ -17,12 +17,12 @@ import {BehaviorSubject} from 'rxjs';
 export class GroupedCardsService {
     private groupedChildCards: LightCard[] = [];
     private parentsOfGroupedCards: LightCard[] = [];
-    private tagsMap = new Map();
+    private tagsMap: Map<string, LightCard[]> = new Map();
 
     computeEvent = new BehaviorSubject(null);
 
     static tagsAsString(tags: string[]): string {
-        return tags ? JSON.stringify([...tags].sort((a, b) => (a.localeCompare(b)))) : '';
+        return tags ? JSON.stringify([...tags].sort((a, b) => a.localeCompare(b))) : '';
     }
 
     computeGroupedCards(lightCards: LightCard[]) {
@@ -31,15 +31,17 @@ export class GroupedCardsService {
         this.parentsOfGroupedCards = [];
 
         lightCards.forEach((lightCard) => {
-
             const tagString = GroupedCardsService.tagsAsString(lightCard.tags);
+            if (tagString === '[]' || tagString === '') {
+                return; // Do not group cards without tags
+            }
             let cardsByTag = this.tagsMap.get(tagString);
             if (!cardsByTag) {
                 cardsByTag = [];
                 this.parentsOfGroupedCards.push(lightCard);
             } else {
                 this.groupedChildCards.push(lightCard);
-                cardsByTag.push(lightCard)
+                cardsByTag.push(lightCard);
             }
             this.tagsMap.set(tagString, cardsByTag);
         });
