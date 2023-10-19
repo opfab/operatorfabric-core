@@ -675,3 +675,36 @@ tag-input {
     background: var(--opfab-navbar-color-hover);
     mask: url(../assets/images/icons/help.svg);
 }
+
+.ce-toolbar__content{
+    max-width: 100%;
+}
+
+.ce-paragraph::selection {
+    background: #e95420;
+  }
+
+.codex-editor__redactor {
+    padding-bottom: 0px !important;
+}
+
+.ce-block__content {
+    max-width: 100%;
+    padding: 10px;
+}
+
+.ce-inline-toolbar {
+    color: var(--opfab-text-color);
+    background-color: var(--opfab-popover-bgcolor);
+}
+
+.ce-toolbar__actions {
+    right: 0%;
+}
+
+.ce-toolbar__settings-btn {
+    color: var(--opfab-text-color);
+}
+.ce-toolbar__plus {
+    color: var(--opfab-text-color);
+}

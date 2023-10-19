@@ -45,7 +45,8 @@
               "node_modules/chart.js/dist/chart.umd.js",
               "node_modules/chartjs-adapter-date-fns/dist/chartjs-adapter-date-fns.bundle.min.js",
               "src/assets/js/opfab.js",
-              "src/shared/js/opfab-application.js"
+              "src/shared/js/opfab-application.js",
+              "node_modules/@editorjs/editorjs/dist/editorjs.umd.js"
             ],
             "allowedCommonJsDependencies": [
               "rxjs/internal/Subject",

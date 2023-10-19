@@ -138,3 +138,25 @@ opfab.currentUserCard = {
     setInitialSeverity: function (initialSeverity) {},
     setInitialStartDate: function (startDate) {}
 };
+
+class RichTextEditor extends HTMLElement {
+    constructor() {
+        super();
+
+        let id = this.getAttribute('id');
+        if (!id) {
+            this.setAttribute('id', 'editorjs');
+            id = 'editorjs';
+        }
+
+        this.editor = new EditorJS(id);
+
+    }
+
+    getContent() {
+        return this.editor.save();
+    }
+    
+}
+
+customElements.define('opfab-richtext-editor', RichTextEditor);
