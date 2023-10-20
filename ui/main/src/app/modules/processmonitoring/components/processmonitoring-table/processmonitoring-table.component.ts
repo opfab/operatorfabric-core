@@ -177,7 +177,7 @@ export class ProcessmonitoringTableComponent {
                         field: String(column.field).split(".").pop(),
                         headerClass: 'opfab-ag-cheader-with-right-padding',
                         cellClass: 'opfab-ag-cell-with-no-padding',
-                        minWidth: column.size
+                        flex: column.size
                     });
                 } else {
                     this.columnDefs.push({
@@ -186,7 +186,7 @@ export class ProcessmonitoringTableComponent {
                         field: String(column.field).split(".").pop(),
                         headerClass: 'opfab-ag-cheader-with-right-padding',
                         cellClass: 'opfab-ag-cell-with-no-padding',
-                        minWidth: column.size
+                        flex: column.size
                     });
                 }
             });
