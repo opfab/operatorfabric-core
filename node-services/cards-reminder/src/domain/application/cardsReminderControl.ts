@@ -13,13 +13,11 @@ import ReminderService from '../application/reminderService';
 import {RRuleReminderService} from './rruleReminderService';
 
 export default class CardsReminderControl {
-
     private opfabServicesInterface: CardsReminderOpfabServicesInterface;
     private reminderService: ReminderService;
     private rruleReminderService: RRuleReminderService;
 
     logger: any;
-
 
     public setLogger(logger: any) {
         this.logger = logger;
@@ -41,44 +39,43 @@ export default class CardsReminderControl {
         return this;
     }
 
-    public checkCardsReminder() {
-        this.reminderService.getCardsToRemindNow().then(reminders => 
+    public async checkCardsReminder():Promise<boolean> {
+        const cards = await this.reminderService.getCardsToRemindNow();
+        for (const card of cards) {
+            try {
+                const resp = await this.opfabServicesInterface.sendCardReminder(card.uid);
+                if (resp.isValid()) await this.reminderService.setCardHasBeenRemind(card);
+            } catch (error) {
+                this.logger.error('reminderService checkCardsReminder error ' + error);
+            }
+        }
 
-            reminders.forEach(card => {
-                this.opfabServicesInterface.sendCardReminder(card.uid).then( resp => {
-                    if (resp.isValid()) this.reminderService.setCardHasBeenRemind(card);
-                })
-            })
-        ).catch(error => {
-            this.logger.error("reminderService checkCardsReminder error " +error)
-        });
-
-        this.rruleReminderService.getCardsToRemindNow().then(rrulReminders =>
-            rrulReminders.forEach(card => {
-                this.opfabServicesInterface.sendCardReminder(card.uid).then( resp => {
-                        if (resp.isValid()) this.rruleReminderService.setCardHasBeenRemind(card);
-                    }
-                )
-            })
-        ).catch(error => {
-            this.logger.error("rruleReminderService checkCardsReminder error " +error)
-        });
+        const rruleCards = await this.rruleReminderService.getCardsToRemindNow();
+        for (const card of rruleCards) {
+            try {
+                const resp = await this.opfabServicesInterface.sendCardReminder(card.uid);
+                if (resp.isValid()) await this.rruleReminderService.setCardHasBeenRemind(card);
+            } catch (error) {
+                this.logger.error('rruleReminderService checkCardsReminder error ' + error);
+            }
+        }
+        return Promise.resolve(true);
     }
 
     public resetReminderDatabase() {
         this.reminderService.clearReminders();
         this.rruleReminderService.clearReminders();
 
-        this.rruleReminderService.getAllCardsToRemind().then(cardsWithReminders => 
-
-            cardsWithReminders.forEach(card => {
-                this.reminderService.addCardReminder(card);
-                this.rruleReminderService.addCardReminder(card);
-            })
-        ).catch(error => {
-            this.logger.error("resetReminderDatabase error " +error)
-        });
-
+        this.rruleReminderService
+            .getAllCardsToRemind()
+            .then((cardsWithReminders) =>
+                cardsWithReminders.forEach((card) => {
+                    this.reminderService.addCardReminder(card);
+                    this.rruleReminderService.addCardReminder(card);
+                })
+            )
+            .catch((error) => {
+                this.logger.error('resetReminderDatabase error ' + error);
+            });
     }
-
 }
