@@ -89,11 +89,15 @@ export default class RemindDatabaseService {
     }
 
     public persistReminder(reminder: any) {
-        this.mongoDB.collection(this.remindersCollection).insertOne(reminder);
+        this.mongoDB.collection(this.remindersCollection).insertOne(reminder).catch((error)=> {
+            this.logger.error('Mongo error in insert reminder' + error);
+        });
     }
 
     public removeReminder(id: string) {
-        this.mongoDB.collection(this.remindersCollection).deleteOne({cardId: id});
+        this.mongoDB.collection(this.remindersCollection).deleteOne({cardId: id}).catch((error)=> {
+            this.logger.error('Mongo error in remove reminder' + error);
+        });;
     }
 
     public getCardByUid(uid: string) {
@@ -101,6 +105,8 @@ export default class RemindDatabaseService {
     }
 
     public clearReminders() {
-        this.mongoDB.collection(this.remindersCollection).deleteMany({});
+        this.mongoDB.collection(this.remindersCollection).deleteMany({}).catch((error)=> {
+            this.logger.error('Mongo error in clear reminders' + error);
+        });;
     }
 }

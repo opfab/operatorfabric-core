@@ -18,7 +18,7 @@ operatorfabric:
   logConfig:
     logFolder: "logs/"
     logFile: "%DATE%.log"
-    logLevel: "info"
+    logLevel: "debug"
   cardsReminder:
     adminPort : 2107
     activeOnStartup : true

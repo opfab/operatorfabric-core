@@ -11,17 +11,21 @@ import CardsReminderControl from '../application/cardsReminderControl';
 import CardsReminderOpfabServicesInterface from '../server-side/cardsReminderOpfabServicesInterface';
 import ReminderService from '../application/reminderService';
 import {RRuleReminderService} from '../application/rruleReminderService';
-
+import {setTimeout} from 'timers/promises';
 
 export default class CardsReminderService {
-
     private cardsReminderControl: CardsReminderControl;
     private checkPeriodInSeconds: number;
     private active = false;
     private logger: any;
 
-
-    constructor(opfabServicesInterface: CardsReminderOpfabServicesInterface, rruleReminderService: RRuleReminderService, reminderService: ReminderService, checkPeriodInSeconds: number, logger: any) {
+    constructor(
+        opfabServicesInterface: CardsReminderOpfabServicesInterface,
+        rruleReminderService: RRuleReminderService,
+        reminderService: ReminderService,
+        checkPeriodInSeconds: number,
+        logger: any
+    ) {
         this.logger = logger;
         this.checkPeriodInSeconds = checkPeriodInSeconds;
 
@@ -43,7 +47,7 @@ export default class CardsReminderService {
         this.active = false;
     }
 
-    public isActive() : boolean {
+    public isActive(): boolean {
         return this.active;
     }
 
@@ -52,24 +56,22 @@ export default class CardsReminderService {
         this.stop();
         try {
             this.cardsReminderControl.resetReminderDatabase();
-        } catch (error) {      
-            this.logger.error("error during periodic check" + error);
+        } catch (error) {
+            this.logger.error('error during periodic check' + error);
         }
         if (wasActive) this.start();
     }
 
-
-    private checkRegularly() {
+    private async checkRegularly() {
         if (this.active) {
-            this.logger.debug("Check for cards to remind");
+            this.logger.debug('Check for cards to remind');
             try {
-                this.cardsReminderControl.checkCardsReminder();
-            } catch (error) {      
-                this.logger.error("error during periodic check" + error);
+                await this.cardsReminderControl.checkCardsReminder();
+            } catch (error) {
+                this.logger.error('error during periodic check' + error);
             }
-            setTimeout(() => this.checkRegularly(), this.checkPeriodInSeconds * 1000);
-
+            await setTimeout(this.checkPeriodInSeconds * 1000);
+            this.checkRegularly();
         }
     }
-
 }
