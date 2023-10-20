@@ -189,6 +189,7 @@ export class ProcessMonitoringComponent implements OnDestroy, OnInit, AfterViewI
                     this.firstQueryHasBeenDone = false;
                     this.loadingInProgress = false;
                     this.technicalError = true;
+                    this.changeDetector.markForCheck();
                 }
             });
 
