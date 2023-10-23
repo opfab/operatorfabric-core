@@ -36,6 +36,9 @@ export class GroupedCardsService {
 
         lightCards.forEach((lightCard) => {
             const tagString = GroupedCardsService.tagsAsString(lightCard.tags);
+            if (tagString === '[]' || tagString === '') {
+                return; // Do not group cards without tags
+            }
 
             if (allTags.indexOf(tagString) !== allTags.lastIndexOf(tagString)) {
                 if (!parentTags.has(tagString)) {
