@@ -426,8 +426,8 @@ describe('User Card ', function () {
       usercard.previewThenSendCard();
       feed.openFirstCard();
       feed.checkSelectedCardHasTitle("Message");
-      feed.checkSelectedCardHasSummary("Message received :   Hello, that's a test message / Result is <OK> & work done is 100%");
-      cy.get('#opfab-div-card-template-processed').find('div').eq(0).should('have.text', "\n  Hello, that's a test message / Result is <OK> & work done is 100%\n");
+      feed.checkSelectedCardHasSummary("Message received : Hello, that's a test message / Result is <OK> & work done is 100%");
+      cy.get('#opfab-div-card-template-processed').find('div').eq(0).should('have.text', "\nHello, that's a test message / Result is <OK> & work done is 100%\n");
 
     })
 
@@ -438,8 +438,8 @@ describe('User Card ', function () {
       cy.get('#opfab-lightcard-dates').contains('(08:00 20/01/2020 - )');
       feed.openFirstCard();
       feed.checkSelectedCardHasTitle("Message");
-      feed.checkSelectedCardHasSummary("Message received :   Hello, that's a test message / Result is <OK> & work done is 100%");
-      cy.get('#opfab-div-card-template-processed').find('div').eq(0).should('have.text', "\n  Hello, that's a test message / Result is <OK> & work done is 100%\n");
+      feed.checkSelectedCardHasSummary("Message received : Hello, that's a test message / Result is <OK> & work done is 100%");
+      cy.get('#opfab-div-card-template-processed').find('div').eq(0).should('have.text', "\nHello, that's a test message / Result is <OK> & work done is 100%\n");
     })
 
   })
@@ -464,9 +464,9 @@ describe('User Card ', function () {
 
       opfab.loginWithUser('operator2_fr');
       feed.openFirstCard();
-      cy.get('#opfab-div-card-template-processed').find('div').eq(0).should('have.text', "\n   Hello, that's a test message / Result is <OK> & work done is 100%  (updated)\n");
+      cy.get('#opfab-div-card-template-processed').find('div').eq(0).should('have.text', "\nHello, that's a test message / Result is <OK> & work done is 100% (updated)\n");
       feed.checkSelectedCardHasTitle("Message");
-      feed.checkSelectedCardHasSummary("Message received :    Hello, that's a test message / Result is <OK> & work done is 100%  (updated)");
+      feed.checkSelectedCardHasSummary("Message received : Hello, that's a test message / Result is <OK> & work done is 100% (updated)");
 
     })
   })
@@ -535,9 +535,9 @@ describe('User Card ', function () {
       usercard.selectRecipient('Control Center FR South');
       usercard.previewThenSendCard();
       feed.openFirstCard(); 
-      cy.get('#opfab-div-card-template-processed').find('div').eq(0).should('have.text', '\n  Hello\n')
+      cy.get('#opfab-div-card-template-processed').find('div').eq(0).should('have.text', '\nHello\n')
       feed.checkSelectedCardHasTitle("Message");
-      feed.checkSelectedCardHasSummary("Message received :   Hello");
+      feed.checkSelectedCardHasSummary("Message received : Hello");
 
     })
 
@@ -658,9 +658,9 @@ describe('User Card ', function () {
       usercard.previewThenSendCard();
       feed.checkNumberOfDisplayedCardsIs(1);
       feed.openFirstCard();
-      cy.get('#opfab-div-card-template-processed').find('div').eq(0).should('have.text', "\n  Hello, that's a test message / Result is <OK> & work done is 100%\n");
+      cy.get('#opfab-div-card-template-processed').find('div').eq(0).should('have.text', "\nHello, that's a test message / Result is <OK> & work done is 100%\n");
       feed.checkSelectedCardHasTitle("Message");
-      feed.checkSelectedCardHasSummary("Message received :   Hello, that's a test message / Result is <OK> & work done is 100%");
+      feed.checkSelectedCardHasSummary("Message received : Hello, that's a test message / Result is <OK> & work done is 100%");
       cy.get('#opfab-form-entity').should('have.text', 'from\u00a0:\u00a0Control Center FR South');
 
     })
@@ -687,9 +687,9 @@ describe('User Card ', function () {
         cy.waitDefaultTime();
 
         // Check that the new card emitter 'Control Center FR North' is taken into account
-        cy.get('#opfab-div-card-template-processed').find('div').eq(0).should('have.text', "\n   Hello, that's a test message / Result is <OK> & work done is 100%  (updated)\n");
+        cy.get('#opfab-div-card-template-processed').find('div').eq(0).should('have.text', "\nHello, that's a test message / Result is <OK> & work done is 100% (updated)\n");
         feed.checkSelectedCardHasTitle("Message");
-        feed.checkSelectedCardHasSummary("Message received :    Hello, that's a test message / Result is <OK> & work done is 100%  (updated)");
+        feed.checkSelectedCardHasSummary("Message received : Hello, that's a test message / Result is <OK> & work done is 100% (updated)");
         cy.get('#opfab-form-entity').should('have.text', 'from\u00a0:\u00a0Control Center FR North');
     })
 
@@ -973,6 +973,7 @@ describe('User Card ', function () {
       opfab.navigateToUserCard();
 
       // Test on Message card
+      cy.get('#message').should('be.visible').type('test message');
 
       // Check that card emitter is set to Control Center FR East
       usercard.checkEmitterSelectExists();
@@ -1193,6 +1194,7 @@ describe('User Card ', function () {
       usercard.checkRecipientForInformationSelectDoesNotExist();
 
       usercard.selectState('Message');
+      cy.get('#message').should('be.visible').type('test message');
       // We check all entities are proposed in the dropdown list
       cy.get('#opfab-recipients-for-information').find('.vscomp-option-text').should("have.length", 15);
 
@@ -1235,6 +1237,7 @@ describe('User Card ', function () {
 
       usercard.selectState('Message');
 
+      cy.get('#message').should('be.visible').type('test message');
       usercard.selectRecipient('Control Center FR North');
       usercard.selectRecipient('Control Center FR East');
       usercard.selectRecipientForInformation('Control Center FR West');
