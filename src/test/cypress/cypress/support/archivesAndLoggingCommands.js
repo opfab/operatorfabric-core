@@ -149,6 +149,6 @@ export class ArchivesAndLoggingCommands extends OpfabCommands {
     };
 
     checkNoResultForSearch = function () {
-        cy.get('of-archives-entry-point').contains('Your search did not match any result.');
+        cy.get('of-archives').contains('Your search did not match any result.');
     };
 }
