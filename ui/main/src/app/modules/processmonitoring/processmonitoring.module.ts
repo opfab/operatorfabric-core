@@ -16,7 +16,6 @@ import {TranslateModule} from '@ngx-translate/core';
 import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
 import {DatetimeFilterModule} from '../share/datetime-filter/datetime-filter.module';
 import {SimplifiedCardViewModule} from 'app/modules/share/simplified-card-view/simplified-card-view.module';
-import {ProcessmonitoringEntryPointComponent} from './processmonitoring-entry-point.component';
 import {ArchivesLoggingFiltersModule} from '../share/archives-logging-filters/archives-logging-filters.module';
 import {SpinnerModule} from '../share/spinner/spinner.module';
 import {ProcessmonitoringTableComponent} from './components/processmonitoring-table/processmonitoring-table.component';
@@ -38,7 +37,7 @@ import {SenderCellRendererComponent} from './components/cell-renderers/sender-ce
         SpinnerModule,
         AgGridModule
     ],
-    declarations: [ProcessMonitoringComponent, ProcessmonitoringTableComponent, ProcessmonitoringEntryPointComponent,
+    declarations: [ProcessMonitoringComponent, ProcessmonitoringTableComponent,
         TimeCellRendererComponent,
         SenderCellRendererComponent]
 })

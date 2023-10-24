@@ -10,13 +10,13 @@
 import {NgModule} from '@angular/core';
 import {PreloadAllModules,RouterModule, Routes} from '@angular/router';
 import {LoginComponent} from '../modules/core/application-loading/login/login.component';
-import {LoggingEntryPointComponent} from '../modules/logging/logging-entry-point.component';
 import {MonitoringComponent} from '../modules/monitoring/monitoring.component';
 import {CalendarComponent} from '../modules/calendar/calendar.component';
-import {ArchivesEntryPointComponent} from '../modules/archives/archives-entry-point.component';
 import {UserActionLogsComponent} from '../modules/useractionlogs/useractionlogs.component';
 import {DashboardComponent} from 'app/modules/dashboard/dashboard.component';
-import {ProcessmonitoringEntryPointComponent} from "../modules/processmonitoring/processmonitoring-entry-point.component";
+import {ArchivesComponent} from '../modules/archives/archives.component';
+import {LoggingComponent} from '../modules/logging/logging.component';
+import {ProcessMonitoringComponent} from '../modules/processmonitoring/processmonitoring.component';
 
 const defaultPath = '/feed';
 
@@ -32,7 +32,7 @@ const routes: Routes = [
     },
     {
         path: 'archives',
-        component: ArchivesEntryPointComponent
+        component: ArchivesComponent
     },
     {
         path: 'monitoring',
@@ -44,11 +44,11 @@ const routes: Routes = [
     },
     {
         path: 'logging',
-        component: LoggingEntryPointComponent
+        component: LoggingComponent
     },
     {
         path: 'processmonitoring',
-        component: ProcessmonitoringEntryPointComponent
+        component: ProcessMonitoringComponent
     },
     {
         path: 'calendar',
