@@ -139,24 +139,74 @@ opfab.currentUserCard = {
     setInitialStartDate: function (startDate) {}
 };
 
+
+
+opfab.richTextEditor = {
+
+    getHtml: function (content) {
+        console.log("getHtml content " + content);
+        const edjsParser  = edjsHTML(); 
+        return edjsParser.parse(this.getJson(content));
+    },
+
+    getJson: function(content) {
+        var e = document.createElement('textarea');
+        e.innerHTML = content;
+        // escape line breaks for json parsing
+        let decoded = e.childNodes[0].nodeValue.replace(/\n/g, "\\n");
+        console.log("getJson decoded " + decoded);
+        return JSON.parse(decoded);
+    }
+
+};
+
+
 class RichTextEditor extends HTMLElement {
+    content;
     constructor() {
         super();
 
-        let id = this.getAttribute('id');
-        if (!id) {
+        this.id = this.getAttribute('id');
+        if (!this.id) {
             this.setAttribute('id', 'editorjs');
-            id = 'editorjs';
+            this.id = 'editorjs';
         }
 
-        this.editor = new EditorJS(id);
+        this.editor = new EditorJS( {
+            holder : this.id,
+            onChange: (api, event) => {
+                this.editor.save().then( outData => {
+                    this.content = outData;
+                })
+            }
+        });
 
+
+    }
+
+    setContent(data) {
+        if (data) {
+            this.removeChild(this.firstChild)
+     
+            const contentObj = opfab.richTextEditor.getJson(data);
+
+            this.editor = new EditorJS( {
+                holder : this.id,
+                data: contentObj,
+                onChange: (api, event) => {
+                    this.editor.save().then( outData => {
+                        this.content = outData;
+                    })
+                }
+            });
+        }
     }
 
     getContent() {
-        return this.editor.save();
+        return JSON.stringify(this.content);
     }
-    
+
 }
+
 
 customElements.define('opfab-richtext-editor', RichTextEditor);
