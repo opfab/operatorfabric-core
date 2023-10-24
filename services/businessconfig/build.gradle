@@ -7,6 +7,7 @@ dependencies {
     implementation boot.starterValidation
     implementation misc.guava
     implementation misc.commonsIO
+    implementation misc.snakeyaml
     compileOnly boot.annotationConfiguration
     annotationProcessor boot.annotationConfiguration
 
