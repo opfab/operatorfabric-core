@@ -1,4 +1,4 @@
-// Copyright (c) 2018-2020 RTE (http://www.rte-france.com)
+// Copyright (c) 2018-2023 RTE (http://www.rte-france.com)
 // See AUTHORS.txt
 // This document is subject to the terms of the Creative Commons Attribution 4.0 International license.
 // If a copy of the license was not distributed with this
@@ -38,3 +38,8 @@ The results of these queries are limited to cards that the user is allowed to se
 If a card is sent to an entity and a group, then this user must be part of both the group and the entity.
 
 NOTE: Currently, child cards are not shown in the Archives, only the parent card is shown.
+
+NOTE: If the user is a member of a group that has the `VIEW_ALL_ARCHIVED_CARDS` permission, the user can
+see all archives, whether he is part of the recipients or not, whether he has the right to receive the card or not.
+If the user is a member of a group that has the `VIEW_ALL_ARCHIVED_CARDS_FOR_USER_PERIMETERS` permission, the user
+can see all archives for which he has the right to receive it, whether he is part of the recipients or not.
