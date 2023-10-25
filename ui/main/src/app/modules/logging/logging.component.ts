@@ -151,7 +151,7 @@ export class LoggingComponent implements OnDestroy, OnInit, AfterViewInit {
                     this.currentPage = page_number + 1; // page on ngb-pagination component start at 1 , and page on backend start at 0
 
                     if (!this.firstQueryHasBeenDone) {
-                        this.firstQueryHasResults=page.content.length > 0;
+                        this.firstQueryHasResults = page.content.length > 0;
                         this.resultsNumber = page.totalElements;
                     }
 

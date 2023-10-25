@@ -61,6 +61,7 @@ export class ProcessMonitoringComponent implements OnDestroy, OnInit, AfterViewI
     totalPages: number;
     page: number;
 
+    firstQueryHasResults = false;
     firstQueryHasBeenDone = false;
     loadingInProgress = false;
     technicalError = false;
@@ -133,9 +134,9 @@ export class ProcessMonitoringComponent implements OnDestroy, OnInit, AfterViewI
 
         this.interval = setInterval(() => {
             if (this.currentPage === 0) {
-                this.sendFilterQuery(0);
+                this.sendFilterQuery(0, false);
             } else {
-                this.sendFilterQuery(this.currentPage - 1);
+                this.sendFilterQuery(this.currentPage - 1, false);
             }
         }, 5000);
 
@@ -144,7 +145,7 @@ export class ProcessMonitoringComponent implements OnDestroy, OnInit, AfterViewI
 
     ngAfterViewInit() {
         this.isProcessGroupFilterVisible = this.filtersTemplate.isProcessGroupFilterVisible();
-        this.sendFilterQuery(0);
+        this.sendFilterQuery(0, false);
     }
 
     resetForm() {
@@ -153,14 +154,16 @@ export class ProcessMonitoringComponent implements OnDestroy, OnInit, AfterViewI
         this.firstQueryHasBeenDone = false;
     }
 
-     sendFilterQuery(page_number): void {
+     sendFilterQuery(page_number: number, isSearchButtonClicked: boolean): void {
         this.technicalError = false;
         this.loadingInProgress = true;
 
-        const {value} = this.processMonitoringForm;
-        this.filtersTemplate.transformFiltersListToMap(value);
+        if (isSearchButtonClicked) {
+            const {value} = this.processMonitoringForm;
+            this.filtersTemplate.transformFiltersListToMap(value);
+        }
 
-        const filter = this.getFilter(page_number, this.size, this.filtersTemplate.filters);
+        const filter = this.getFilter(page_number, this.size, this.filtersTemplate);
 
         this.cardService
             .fetchFilteredCards(filter)
@@ -171,6 +174,7 @@ export class ProcessMonitoringComponent implements OnDestroy, OnInit, AfterViewI
                     this.currentPage = page_number + 1; // page on ngb-pagination component starts at 1, and page on backend starts at 0
 
                     if (!this.firstQueryHasBeenDone) {
+                        this.firstQueryHasResults = page.content.length > 0;
                         this.resultsNumber = page.totalElements;
                     }
 
@@ -193,17 +197,17 @@ export class ProcessMonitoringComponent implements OnDestroy, OnInit, AfterViewI
 
     }
 
-    private getFilter(page: number, size: number, filtersMap: Map<string, any[]>) : CardsFilter {
+    private getFilter(page: number, size: number, filtersTemplate: ArchivesLoggingFiltersComponent) : CardsFilter {
         const filters = [];
-        let isAdminMode = false;
-        filtersMap.forEach( (values, key) => {
+        let isAdminMode = filtersTemplate.isAdminModeChecked;
+        filtersTemplate.filters?.forEach( (values, key) => {
             if (key === 'adminMode')
                 isAdminMode = values[0];
             else
                 filters.push(new FilterModel(key, null, FilterMatchTypeEnum.IN, values));
         });
         // if no process selected, set the filter to the list of process that shall be visible on the UI
-        if (this.listOfProcessesForRequest.length && !filtersMap.has('process'))
+        if (this.listOfProcessesForRequest.length && !(filtersTemplate.filters?.has('process')))
             filters.push(new FilterModel('process', null, FilterMatchTypeEnum.IN, this.listOfProcessesForRequest));
 
         this.columnFilters.forEach(filter => filters.push(filter));
@@ -238,13 +242,13 @@ export class ProcessMonitoringComponent implements OnDestroy, OnInit, AfterViewI
     search() {
         this.firstQueryHasBeenDone = false;
         this.columnFilters = [];
-        this.sendFilterQuery(0);
+        this.sendFilterQuery(0, true);
         this.page = 1;
     }
 
     onPageChange(currentPage): void {
         // page on ngb-pagination component starts at 1, and page on backend starts at 0
-        this.sendFilterQuery(currentPage - 1);
+        this.sendFilterQuery(currentPage - 1, false);
         this.page = currentPage;
     }
 
@@ -254,7 +258,7 @@ export class ProcessMonitoringComponent implements OnDestroy, OnInit, AfterViewI
             const type : string = filterModel[column].type;
             this.columnFilters.push(new FilterModel(column, filterModel[column].filterType, FilterMatchTypeEnum[type.toUpperCase()], [filterModel[column].filter]))
         });
-        this.sendFilterQuery(0);
+        this.sendFilterQuery(0, false);
     }
 
     displayTime(date) {
@@ -271,7 +275,7 @@ export class ProcessMonitoringComponent implements OnDestroy, OnInit, AfterViewI
         };
         this.modalRef = this.modalService.open(this.exportTemplate, modalOptions);
 
-        const filter = this.getFilter(0, this.resultsNumber, this.filtersTemplate.filters);
+        const filter = this.getFilter(0, this.resultsNumber, this.filtersTemplate);
 
         this.cardService
             .fetchFilteredCards(filter)
