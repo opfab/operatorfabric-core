@@ -217,7 +217,6 @@ export class ArchivesLoggingFiltersComponent implements OnInit, OnDestroy, After
         this.isAdminModeChecked = !this.isAdminModeChecked;
         UserPreferencesService.setPreference('opfab.seeOnlyCardsForWhichUserIsRecipient', String(!this.isAdminModeChecked));
         this.loadValuesForFilters();
-        this.resetForm();
     }
 
     transformFiltersListToMap = (filters: any): void => {

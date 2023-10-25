@@ -24,7 +24,7 @@
 
 <div style="height:5%"> </div>
 
-<div *ngIf="firstQueryHasBeenDone" [hidden]="technicalError || (results.length === 0)" style="margin-left:5%;margin-right:5%">
+<div *ngIf="firstQueryHasBeenDone" [hidden]="technicalError || !firstQueryHasResults" style="margin-left:5%;margin-right:5%">
   <of-processmonitoring-table [result]="results" [processGroupVisible]="isProcessGroupFilterVisible"
     [page]="page" [totalElements]="totalElements" [totalPages]="totalPages"
     [processStateNameMap]="processStateName" [processStateDescriptionMap]="processStateDescription"
@@ -35,7 +35,8 @@
 </div>
 
 <div *ngIf="(document.getElementById('opfab-no-process-state-available') === null) &&
-    firstQueryHasBeenDone && (results.length === 0) && !loadingInProgress" style="text-align: center;font-size: 20px;" translate>shared.noResult
+    firstQueryHasBeenDone && !firstQueryHasResults && !loadingInProgress"
+     style="text-align: center;font-size: 20px;" translate>shared.noResult
 </div>
 
 <div *ngIf="technicalError" style="text-align: center;font-size: 20px;" translate> shared.error.technicalError
