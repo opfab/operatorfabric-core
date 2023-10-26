@@ -18,7 +18,8 @@
 <br/>
 <br/>
 <script>
-        alert("{{card.data.message}}");
-        document.getElementById("dataMessage").innerHTML = opfab.richTextEditor.getHtml("{{{card.data.message}}}");
-
+ loadData();
+    function loadData() {
+        document.getElementById("dataMessage").innerHTML = opfab.richTextEditor.getHtml("{{card.data.message}}");
+    }
 </script>

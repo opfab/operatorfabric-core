@@ -51,13 +51,9 @@
             
             
             const message = textEditor.getContent();
-            console.log("SET contents " + JSON.stringify(message));
-            /*
-            .then( outData => {
-                console.log("SET contents " + JSON.stringify(outData));
-                content = outData;
-            });
-            */
+            // Double escape otherwise handlebar will remove single escape invalidating the json string
+            const dataMessage =  message.replace(/\\\"/g, "\\\\\"");
+
 
             let summaryParameter = opfab.richTextEditor.getHtml(message).slice(0, 100);
             if (message.length > summaryParameter.length)
@@ -66,7 +62,7 @@
             const card = {
             summary : {key : "messageState.summary", parameters : {"summary": summaryParameter}},
             title : {key : "messageState.title"},
-            data : {message: message},
+            data : {message: dataMessage},
             entitiesAllowedToEdit: ['ENTITY_FR'],
             };
             if (message.length<1) return { valid:false , errorMsg:'You must provide a message'}

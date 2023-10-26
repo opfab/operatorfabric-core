@@ -46,6 +46,7 @@
     "chartjs-adapter-date-fns": "3.0.0",
     "chartjs-plugin-datalabels": "2.2.0",
     "editorjs-html": "^3.4.3",
+    "editorjs-text-color-plugin": "^2.0.4",
     "file-saver-es": "2.0.5",
     "guid-typescript": "1.0.9",
     "handlebars": "4.7.8",
