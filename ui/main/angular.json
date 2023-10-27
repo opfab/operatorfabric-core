@@ -48,6 +48,7 @@
               "src/shared/js/opfab-application.js",
               "node_modules/@editorjs/editorjs/dist/editorjs.umd.js",
               "node_modules/editorjs-text-color-plugin/dist/bundle.js",
+              "node_modules/@editorjs/list/dist/bundle.js",
               "node_modules/editorjs-html/build/edjsHTML.js"
             ],
             "allowedCommonJsDependencies": [

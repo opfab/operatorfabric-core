@@ -708,3 +708,15 @@ tag-input {
 .ce-toolbar__plus {
     color: var(--opfab-text-color);
 }
+.ce-inline-toolbar__actions {
+    background-color: var(--opfab-popover-bgcolor);
+
+}
+.ce-inline-tool-input--showed {
+    color: var(--opfab-text-color);
+    background-color: var(--opfab-popover-bgcolor);
+}
+.ce-conversion-toolbar--showed {
+    color: var(--opfab-text-color);
+    background-color: var(--opfab-popover-bgcolor);
+}

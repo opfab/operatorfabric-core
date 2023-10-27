@@ -48,6 +48,7 @@ export class I18nService {
         moment.locale(this._locale);
         this.translationService.setLang(this._locale);
         this.setTranslationForMultiSelectUsedInTemplates();
+        this.setTranslationForRichTextEditor();
     }
 
     public static setTranslationForMultiSelectUsedInTemplates() {
@@ -55,6 +56,10 @@ export class I18nService {
         opfab.multiSelect.clearButtonText = this.translationService.getTranslation('multiSelect.clearButtonText');
         opfab.multiSelect.noOptionsText = this.translationService.getTranslation('multiSelect.noOptionsText');
         opfab.multiSelect.noSearchResultsText = this.translationService.getTranslation('multiSelect.noSearchResultsText');
+    }
+
+    private static setTranslationForRichTextEditor() {
+        opfab.richTextEditor.locale = this._locale;        
     }
 
     public static get locale() {
