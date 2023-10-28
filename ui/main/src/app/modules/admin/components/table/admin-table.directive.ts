@@ -96,7 +96,6 @@ export abstract class AdminTableDirective implements OnInit, OnDestroy {
         protected modalService: NgbModal,
         protected dataHandlingService: SharingService,
         protected processesService: ProcessesService,
-        protected groupsService: GroupsService,
         protected businessDataService: BusinessDataService,
         private changeDetector: ChangeDetectorRef
     ) {
@@ -174,7 +173,7 @@ export abstract class AdminTableDirective implements OnInit, OnDestroy {
         this.dataHandlingService.paginationPageSize$.pipe(takeUntil(this.unsubscribe$)).subscribe((pageSize) => {
             this.gridApi.paginationSetPageSize(pageSize);
         });
-        this.groupsDefinition = this.groupsService.getGroups();
+        this.groupsDefinition = GroupsService.getGroups();
         this.entitiesDefinition = EntitiesService.getEntities();
         this.refreshData();
     }

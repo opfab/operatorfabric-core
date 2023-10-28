@@ -10,29 +10,25 @@
 import {Observable, Subject} from 'rxjs';
 import {Group} from '@ofModel/group.model';
 import {takeUntil, tap, map} from 'rxjs/operators';
-import {Injectable} from '@angular/core';
-import {CrudService} from 'app/business/services/crud-service';
 import {GroupsServer} from '../../server/groups.server';
 import {ServerResponseStatus} from '../../server/serverResponse';
 import {ErrorService} from '../error-service';
 
-@Injectable({
-    providedIn: 'root'
-})
-export class GroupsService implements CrudService {
-    private _groups: Group[];
+export class GroupsService {
+    private static _groups: Group[];
+    private static groupsServer: GroupsServer;
 
-    private ngUnsubscribe$ = new Subject<void>();
+    private static ngUnsubscribe$ = new Subject<void>();
 
-    constructor(
-        private groupsServer: GroupsServer) {
+    public static setGroupsServer(groupsServer: GroupsServer) {
+        GroupsService.groupsServer = groupsServer;
     }
 
-    deleteById(id: string) {
-        return this.groupsServer.deleteById(id).pipe(
+   public static deleteById(id: string) {
+        return GroupsService.groupsServer.deleteById(id).pipe(
             tap((groupsResponse) => {
                 if (groupsResponse.status === ServerResponseStatus.OK) {
-                    this.deleteFromCachedGroups(id);
+                    GroupsService.deleteFromCachedGroups(id);
                 } else {
                     ErrorService.handleServerResponseError(groupsResponse);
                 }
@@ -40,36 +36,36 @@ export class GroupsService implements CrudService {
         );
     }
 
-    private deleteFromCachedGroups(id: string): void {
-        this._groups = this._groups.filter((group) => group.id !== id);
+    private static deleteFromCachedGroups(id: string): void {
+        GroupsService._groups = GroupsService._groups.filter((group) => group.id !== id);
     }
 
-    private updateCachedGroups(groupData: Group): void {
-        const updatedGroups = this._groups.filter((group) => group.id !== groupData.id);
+    private static updateCachedGroups(groupData: Group): void {
+        const updatedGroups = GroupsService._groups.filter((group) => group.id !== groupData.id);
         updatedGroups.push(groupData);
-        this._groups = updatedGroups;
+        GroupsService._groups = updatedGroups;
     }
 
-    private queryAllGroups(): Observable<Group[]> {
-        return this.groupsServer.queryAllGroups().pipe(
-            map(((groupsResponse) => {
+    private static queryAllGroups(): Observable<Group[]> {
+        return GroupsService.groupsServer.queryAllGroups().pipe(
+            map((groupsResponse) => {
                 if (groupsResponse.status === ServerResponseStatus.OK) {
                     return groupsResponse.data;
                 } else {
                     ErrorService.handleServerResponseError(groupsResponse);
                     return [];
                 }
-            }))
-            );
+            })
+        );
     }
 
-    public loadAllGroupsData(): Observable<any> {
-        return this.queryAllGroups().pipe(
-            takeUntil(this.ngUnsubscribe$),
+    public static loadAllGroupsData(): Observable<any> {
+        return GroupsService.queryAllGroups().pipe(
+            takeUntil(GroupsService.ngUnsubscribe$),
             tap({
                 next: (groups) => {
                     if (groups) {
-                        this._groups = groups;
+                        GroupsService._groups = groups;
                         console.log(new Date().toISOString(), 'List of groups loaded');
                     }
                 },
@@ -78,19 +74,19 @@ export class GroupsService implements CrudService {
         );
     }
 
-    public getGroups(): Group[] {
-        return this._groups;
+    public static getGroups(): Group[] {
+        return GroupsService._groups;
     }
 
-    public getCachedValues(): Array<Group> {
-        return this.getGroups();
+    public static getCachedValues(): Array<Group> {
+        return GroupsService.getGroups();
     }
 
-    updateGroup(groupData: Group): Observable<Group> {
-        return this.groupsServer.updateGroup(groupData).pipe(
+    public static updateGroup(groupData: Group): Observable<Group> {
+        return GroupsService.groupsServer.updateGroup(groupData).pipe(
             map((groupsResponse) => {
                 if (groupsResponse.status === ServerResponseStatus.OK) {
-                    this.updateCachedGroups(groupData);
+                    GroupsService.updateCachedGroups(groupData);
                     return groupsResponse.data;
                 } else {
                     ErrorService.handleServerResponseError(groupsResponse);
@@ -100,23 +96,23 @@ export class GroupsService implements CrudService {
         );
     }
 
-    public getGroupName(idGroup: string): string {
-        const found = this._groups.find((group) => group.id === idGroup);
+    public static getGroupName(idGroup: string): string {
+        const found = GroupsService._groups.find((group) => group.id === idGroup);
         if (found?.name) return found.name;
 
         return idGroup;
     }
 
-    public isRealtimeGroup(idGroup: string): boolean {
-        const found = this._groups.find((group) => group.id === idGroup);
+    public static isRealtimeGroup(idGroup: string): boolean {
+        const found = GroupsService._groups.find((group) => group.id === idGroup);
         return found?.realtime;
     }
 
-    getAll(): Observable<any[]> {
-        return this.queryAllGroups();
+    public static getAll(): Observable<any[]> {
+        return GroupsService.queryAllGroups();
     }
 
-    update(data: any): Observable<any> {
-        return this.updateGroup(data);
+    public static update(data: any): Observable<any> {
+        return GroupsService.updateGroup(data);
     }
 }

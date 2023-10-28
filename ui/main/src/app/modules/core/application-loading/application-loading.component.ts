@@ -40,6 +40,7 @@ import {AngularRouterService} from '@ofServices/angularRouterService';
 import {GlobalStyleService} from 'app/business/services/global-style.service';
 import {EntitiesServer} from 'app/business/server/entities.server';
 import {EntitiesService} from 'app/business/services/users/entities.service';
+import {GroupsServer} from 'app/business/server/groups.server';
 
 declare const opfab: any;
 @Component({
@@ -69,7 +70,6 @@ export class ApplicationLoadingComponent implements OnInit {
         private configServer: ConfigServer,
         private settingsService: SettingsService,
         private translateService: TranslateService,
-        private groupsService: GroupsService,
         private businessDataService: BusinessDataService,
         private processesService: ProcessesService,
         private lightCardsStoreService: LightCardsStoreService,
@@ -82,7 +82,8 @@ export class ApplicationLoadingComponent implements OnInit {
         private remoteLoggerServer: RemoteLoggerServer,
         private userServer: UserServer,
         private routerService: AngularRouterService,
-        private entitiesServer: EntitiesServer
+        private entitiesServer: EntitiesServer,
+        private groupsServer: GroupsServer
     ) {}
 
     ngOnInit() {
@@ -93,7 +94,8 @@ export class ApplicationLoadingComponent implements OnInit {
             userServer: this.userServer,
             routerService: this.routerService,
             opfabAPIService: this.opfabAPIService,
-            entitiesServer: this.entitiesServer
+            entitiesServer: this.entitiesServer,
+            groupsServer: this.groupsServer
         });
 
 
@@ -212,7 +214,7 @@ export class ApplicationLoadingComponent implements OnInit {
             ConfigService.loadUiMenuConfig(),
             UserService.loadUserWithPerimetersData(),
             EntitiesService.loadAllEntitiesData(),
-            this.groupsService.loadAllGroupsData(),
+            GroupsService.loadAllGroupsData(),
             this.processesService.loadAllProcessesWithLatestVersion(),
             this.processesService.loadAllProcessesWithAllVersions(),
             this.processesService.loadProcessGroups(),
