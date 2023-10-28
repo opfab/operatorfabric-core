@@ -1,0 +1,188 @@
+/* Copyright (c) 2023, RTE (http://www.rte-france.com)
+ * See AUTHORS.txt
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ * SPDX-License-Identifier: MPL-2.0
+ * This file is part of the OperatorFabric project.
+ */
+
+import {CardData} from '@ofModel/card.model';
+import {MessageLevel} from '@ofModel/message.model';
+import {Page} from '@ofModel/page.model';
+import {PermissionEnum} from '@ofModel/permission.model';
+import {ServerResponse, ServerResponseStatus} from 'app/business/server/serverResponse';
+import {UserActionLogsServer} from 'app/business/server/user-action-logs.server';
+import {AlertMessageService} from 'app/business/services/alert-message.service';
+import {CardService} from 'app/business/services/card/card.service';
+import {TranslationService} from 'app/business/services/translation/translation.service';
+import {EntitiesService} from 'app/business/services/users/entities.service';
+import {UserService} from 'app/business/services/users/user.service';
+import moment from 'moment';
+import {map, Observable, of, ReplaySubject} from 'rxjs';
+import {UserActionLogLine} from './userActionLogLine';
+import {UserActionLogsResult} from './userActionLogsResult';
+import {UserActionLogsPageDescription} from './userActionLogsPageDescription';
+
+export class UserActionLogsView {
+    private userActionLogPage = new UserActionLogsPageDescription();
+    private selectedLogins: string[] = [];
+    private selectedActions: string[] = [];
+    private dateFrom = 0;
+    private dateTo = 0;
+    private pageNumber = 0;
+
+    constructor(
+        private translationService: TranslationService,
+        private userActionLogsServer: UserActionLogsServer,
+        private cardService: CardService
+    ) {
+        this.initPage();
+    }
+
+    private initPage() {
+        this.setDefaultFromDate();
+        this.userActionLogPage.initialFromDate = new Date(this.dateFrom);
+        this.userActionLogPage.isUserAuthorized = this.isUserAuthorized();
+        this.userActionLogPage.pageTitle = this.translationService.getTranslation('useractionlogs.title');
+        this.userActionLogPage.pageNotAllowedMessage = this.translationService.getTranslation('errors.pageNotAllowed');
+        this.userActionLogPage.columnTitle = {
+            date: this.translationService.getTranslation('useractionlogs.date'),
+            action: this.translationService.getTranslation('useractionlogs.action'),
+            login: this.translationService.getTranslation('useractionlogs.login'),
+            entities: this.translationService.getTranslation('useractionlogs.entities'),
+            cardUid: this.translationService.getTranslation('useractionlogs.cardUid'),
+            comment: this.translationService.getTranslation('useractionlogs.comment')
+        };
+    }
+
+    private setDefaultFromDate() {
+        const pubDate = moment(Date.now());
+        pubDate.subtract(10, 'day');
+        this.dateFrom = pubDate.valueOf();
+    }
+
+    private isUserAuthorized() {
+        return UserService.hasCurrentUserAnyPermission([PermissionEnum.ADMIN, PermissionEnum.VIEW_USER_ACTION_LOGS]);
+    }
+
+    public getUserActionLogPage() {
+        return this.userActionLogPage;
+    }
+
+    public getAllUserLogins(): Observable<Array<string>> {
+        return UserService.getAll().pipe(
+            map((users) => {
+                return users.map((user) => user.login);
+            })
+        );
+    }
+
+    public setSelectedLogins(logins: string[]) {
+        this.selectedLogins = logins;
+    }
+
+    public setSelectedActions(actions: string[]) {
+        this.selectedActions = actions;
+    }
+
+    public setDateFrom(fromDate: number) {
+        this.dateFrom = fromDate;
+    }
+
+    public setDateTo(toDate: number) {
+        this.dateTo = toDate;
+    }
+
+    public setPageNumber(pageNumber: number) {
+        this.pageNumber = pageNumber;
+    }
+
+    public search(): Observable<UserActionLogsResult> {
+        if (this.dateTo && this.dateTo < this.dateFrom) {
+            const result = new UserActionLogsResult();
+            result.hasError = true;
+            result.errorMessage = this.translationService.getTranslation('shared.filters.toDateBeforeFromDate');
+            return of(result);
+        }
+        const filters = this.getFiltersForRequest();
+        return this.userActionLogsServer.queryUserActionLogs(filters).pipe(
+            map((serverResponse) => {
+                return this.buildUserActionLogsResult(serverResponse);
+            })
+        );
+    }
+
+    private getFiltersForRequest(): Map<string, Array<string>> {
+        const filters = new Map();
+        filters.set('size', ['10']);
+        if (this.selectedLogins) filters.set('login', this.selectedLogins);
+        if (this.selectedActions) filters.set('action', this.selectedActions);
+        filters.set('page', [this.pageNumber.toString()]);
+        filters.set('dateFrom', [this.dateFrom.toString()]);
+        if (this.dateTo) filters.set('dateTo', [this.dateTo.toString()]);
+        return filters;
+    }
+
+    private buildUserActionLogsResult(serverResponse: ServerResponse<Page<any>>): UserActionLogsResult {
+        const data = serverResponse.data;
+        const result = new UserActionLogsResult();
+        if (serverResponse.status !== ServerResponseStatus.OK) {
+            result.hasError = true;
+            result.errorMessage = this.translationService.getTranslation('shared.error.technicalError');
+            return result;
+        }
+        if (data.content.length === 0) {
+            result.hasError = true;
+            result.errorMessage = this.translationService.getTranslation('shared.noResult');
+            return result;
+        }
+        const logs = data.content.map((line) => {
+            const resultLine = new UserActionLogLine();
+            resultLine.action = line.action;
+            resultLine.date = this.getFormattedDateTime(line.date);
+            resultLine.login = line.login;
+            resultLine.cardUid = line.cardUid;
+            resultLine.comment = line.comment;
+            resultLine.entities = this.getEntitiesNames(line.entities);
+            return resultLine;
+        });
+        const page = new Page(data.totalPages, data.totalElements, logs);
+        result.data = page;
+        return result;
+    }
+
+    private getFormattedDateTime(epochDate: number): string {
+        return moment(epochDate).format('HH:mm:ss DD/MM/YYYY');
+    }
+
+    private getEntitiesNames(ids: string[]): string {
+        const names = ids.map((id) => EntitiesService.getEntityName(id));
+        return names.join();
+    }
+
+    public getCard(cardUid: string): Observable<CardData> {
+        const responseSubject = new ReplaySubject<CardData>(1);
+        this.cardService.loadArchivedCard(cardUid).subscribe((card) => {
+            if (!card) {
+                responseSubject.next(null);
+                responseSubject.complete();
+                AlertMessageService.sendAlertMessage({
+                    message: this.translationService.getTranslation('feed.selectedCardDeleted'),
+                    level: MessageLevel.ERROR
+                });
+                return;
+            }
+            if (card.card.initialParentCardUid) {
+                this.cardService.loadArchivedCard(card.card.initialParentCardUid).subscribe((card) => {
+                    responseSubject.next(card);
+                    responseSubject.complete();
+                });
+            } else {
+                responseSubject.next(card);
+                responseSubject.complete();
+            }
+        });
+        return responseSubject.asObservable();
+    }
+}
