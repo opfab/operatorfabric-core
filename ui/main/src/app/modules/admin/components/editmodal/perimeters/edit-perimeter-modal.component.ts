@@ -36,7 +36,6 @@ export class EditPerimeterModalComponent implements OnInit {
  
     constructor(
         private activeModal: NgbActiveModal,
-        private crudService: PerimetersService,
         private processesService: ProcessesService,
         private changeDetector: ChangeDetectorRef
 
@@ -198,7 +197,7 @@ export class EditPerimeterModalComponent implements OnInit {
         this.cleanForm();
         const fieldsForRequest = this.computeFieldsForRequest();
 
-        this.crudService.create(fieldsForRequest).subscribe({
+        PerimetersService.create(fieldsForRequest).subscribe({
             next: () => this.onSavesuccess(),
             error: (e) => this.onSaveError(e)
         });
@@ -208,7 +207,7 @@ export class EditPerimeterModalComponent implements OnInit {
         this.cleanForm();
         const fieldsForRequest = this.computeFieldsForRequest();
 
-        this.crudService.update(fieldsForRequest).subscribe({
+        PerimetersService.update(fieldsForRequest).subscribe({
             next: (res) => this.onSavesuccess(),
             error: (err) => this.onSaveError(err)
         });

@@ -19,6 +19,7 @@ import {loadBuildInTemplates} from '../buildInTemplates/templatesLoader';
 import {GlobalStyleService} from './global-style.service';
 import {EntitiesService} from './users/entities.service';
 import {GroupsService} from './users/groups.service';
+import {PerimetersService} from './users/perimeters.service';
 
 declare const opfab: any;
 export class ServicesConfig {
@@ -36,6 +37,7 @@ export class ServicesConfig {
         ServicesConfig.opfabApiService = servers.opfabAPIService;
         EntitiesService.setEntitiesServer(servers.entitiesServer);
         GroupsService.setGroupsServer(servers.groupsServer);
+        PerimetersService.setPerimeterServer(servers.perimetersServer);
     }
 
     public static load(): Observable<any> {

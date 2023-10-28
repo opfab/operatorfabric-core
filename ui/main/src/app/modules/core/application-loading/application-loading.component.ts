@@ -41,6 +41,7 @@ import {GlobalStyleService} from 'app/business/services/global-style.service';
 import {EntitiesServer} from 'app/business/server/entities.server';
 import {EntitiesService} from 'app/business/services/users/entities.service';
 import {GroupsServer} from 'app/business/server/groups.server';
+import {PerimetersServer} from 'app/business/server/perimeters.server';
 
 declare const opfab: any;
 @Component({
@@ -83,7 +84,8 @@ export class ApplicationLoadingComponent implements OnInit {
         private userServer: UserServer,
         private routerService: AngularRouterService,
         private entitiesServer: EntitiesServer,
-        private groupsServer: GroupsServer
+        private groupsServer: GroupsServer,
+        private perimetersServer: PerimetersServer
     ) {}
 
     ngOnInit() {
@@ -95,7 +97,8 @@ export class ApplicationLoadingComponent implements OnInit {
             routerService: this.routerService,
             opfabAPIService: this.opfabAPIService,
             entitiesServer: this.entitiesServer,
-            groupsServer: this.groupsServer
+            groupsServer: this.groupsServer,
+            perimetersServer: this.perimetersServer
         });
 
 

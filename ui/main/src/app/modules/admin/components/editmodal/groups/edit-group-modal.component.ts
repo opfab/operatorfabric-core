@@ -89,7 +89,6 @@ export class EditGroupModalComponent implements OnInit {
     constructor(
         private activeModal: NgbActiveModal,
         private dataHandlingService: SharingService,
-        private perimetersService: PerimetersService,
         private changeDetector: ChangeDetectorRef
     ) {
         Object.values(GroupTypeEnum).forEach((t) => this.groupTypes.push({value: String(t), label: String(t)}));
@@ -142,7 +141,7 @@ export class EditGroupModalComponent implements OnInit {
             });
         }
 
-        this.perimetersService.getPerimeters().forEach((perimeter) => {
+        PerimetersService.getPerimeters().forEach((perimeter) => {
             this.perimetersMultiSelectOptions.push(new MultiSelectOption(perimeter.id, perimeter.id));
         });
 

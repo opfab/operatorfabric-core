@@ -17,6 +17,7 @@ import {BusinessDataService} from 'app/business/services/businessconfig/business
 import {CrudUserService} from 'app/business/services/admin/crud-user.service';
 import {CrudEntitiesService} from 'app/business/services/admin/crud-entities-service';
 import {CrudGroupsService} from 'app/business/services/admin/crud-groups.service';
+import {CrudPerimetersService} from 'app/business/services/admin/crud-perimeters.service';
 
 
 @Injectable()
@@ -26,9 +27,9 @@ export class SharingService implements OnDestroy {
     private crudUserService: CrudUserService;
     private crudEntitiesService: CrudEntitiesService;
     private crudGroupsService: CrudGroupsService;
+    private crudPerimetersService: CrudPerimetersService;
 
     constructor(
-        private perimetersService: PerimetersService,
         private businessDataService: BusinessDataService,
         private adminprocessesService: AdminProcessesService
     ) {
@@ -36,11 +37,12 @@ export class SharingService implements OnDestroy {
         this.crudUserService = new CrudUserService();
         this.crudEntitiesService = new CrudEntitiesService();
         this.crudGroupsService = new CrudGroupsService();
+        this.crudPerimetersService = new CrudPerimetersService();
 
 
         // Initialization necessary for perimeters selection dropdown in modals and to display names instead of codes
         // As it is only necessary for admin purposes, it's done here rather than in the app initialization code
-        this.perimetersService.loadAllPerimetersData().pipe(takeUntil(this.unsubscribe$)).subscribe();
+        PerimetersService.loadAllPerimetersData().pipe(takeUntil(this.unsubscribe$)).subscribe();
     }
 
     /** This is a factory method returning the appropriate `CrudService` depending on the type passed as parameter.
@@ -54,7 +56,7 @@ export class SharingService implements OnDestroy {
             case AdminItemType.USER:
                 return this.crudUserService;
             case AdminItemType.PERIMETER:
-                return this.perimetersService;
+                return this.crudPerimetersService;
             case AdminItemType.PROCESS:
                 return this.adminprocessesService;
             case AdminItemType.BUSINESSDATA:
