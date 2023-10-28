@@ -20,7 +20,7 @@ import {filter, Subject, takeUntil} from 'rxjs';
     templateUrl: './responses-cell-renderer.component.html'
 })
 export class ResponsesCellRendererComponent implements ICellRendererAngularComp, OnDestroy {
-    constructor(private entitiesService: EntitiesService, private lightCardsStoreService: LightCardsStoreService) {}
+    constructor(private lightCardsStoreService: LightCardsStoreService) {}
 
     // For explanations regarding ag-grid CellRenderers see
     // https://www.ag-grid.com/documentation/angular/component-cell-renderer/#example-rendering-using-angular-components
@@ -60,7 +60,7 @@ export class ResponsesCellRendererComponent implements ICellRendererAngularComp,
     private createEntityResponsesList(entities: string[]) {
         const entityHeader = [];
         entities.forEach((entity) => {
-            const entityName = this.entitiesService.getEntityName(entity);
+            const entityName = EntitiesService.getEntityName(entity);
             if (entityName) {
                 entityHeader.push({
                     id: entity,

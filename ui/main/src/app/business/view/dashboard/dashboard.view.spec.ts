@@ -29,7 +29,6 @@ import {FilterService} from 'app/business/services/lightcards/filter.service';
 import {FilterType} from '@ofModel/feed-filter.model';
 import {AcknowledgeService} from "../../services/acknowledge.service";
 import {UserPermissionsService} from "../../services/user-permissions.service";
-import {EntitiesService} from 'app/business/services/users/entities.service';
 
 describe('Dashboard', () => {
     let dashboard: Dashboard;
@@ -55,10 +54,8 @@ describe('Dashboard', () => {
             opfabEventStreamServerMock,
             null
         );
-
-        const entitiesService = new EntitiesService(null);
-        const userPermissionService = new UserPermissionsService(entitiesService, processesService);
-        acknowledgeService = new AcknowledgeService(null, userPermissionService, processesService, entitiesService);
+        const userPermissionService = new UserPermissionsService(processesService);
+        acknowledgeService = new AcknowledgeService(null, userPermissionService, processesService);
 
         lightCardsStoreService = new LightCardsStoreService(
             opfabEventStreamService,

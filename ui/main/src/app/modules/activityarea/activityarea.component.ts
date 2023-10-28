@@ -12,7 +12,6 @@ import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
 import {NgbModalRef} from '@ng-bootstrap/ng-bootstrap/modal/modal-ref';
 import {FormControl, FormGroup} from '@angular/forms';
 import {SettingsService} from 'app/business/services/users/settings.service';
-import {EntitiesService} from 'app/business/services/users/entities.service';
 import {LightCardsStoreService} from 'app/business/services/lightcards/lightcards-store.service';
 import {ActivityAreaView} from 'app/business/view/activityarea/activityarea.view';
 import {ActivityAreaPage} from 'app/business/view/activityarea/activityareaPage';
@@ -39,7 +38,6 @@ export class ActivityareaComponent implements OnInit, OnDestroy {
     activityAreaPage: ActivityAreaPage;
 
     constructor(
-        private entitiesService: EntitiesService,
         private modalService: NgbModal,
         private settingsService: SettingsService,
         private lightCardStoreService: LightCardsStoreService
@@ -47,7 +45,6 @@ export class ActivityareaComponent implements OnInit, OnDestroy {
 
     ngOnInit() {
         this.activityAreaView = new ActivityAreaView(
-            this.entitiesService,
             this.settingsService,
             this.lightCardStoreService
         );

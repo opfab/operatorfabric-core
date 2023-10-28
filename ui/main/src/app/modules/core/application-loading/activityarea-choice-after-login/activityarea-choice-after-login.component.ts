@@ -23,8 +23,7 @@ export class ActivityAreaChoiceAfterLoginComponent extends ApplicationLoadingSte
     @ViewChild('activityArea') activityAreaPopupRef: TemplateRef<any>;
 
     constructor(
-        private entitiesService: EntitiesService,
-        private modalService: NgbModal,
+        private modalService: NgbModal
     ) {
         super();
     }
@@ -37,7 +36,7 @@ export class ActivityAreaChoiceAfterLoginComponent extends ApplicationLoadingSte
     private confirmActivityArea() {
         const login = UserService.getCurrentUserWithPerimeters().userData.login;
         UserService.getUser(login).subscribe((currentUser) => {
-            const entities = this.entitiesService.getEntitiesFromIds(currentUser.entities);
+            const entities = EntitiesService.getEntitiesFromIds(currentUser.entities);
             if (entities.filter((entity) => entity.entityAllowedToSendCard).length > 1)
                 this.modalRef = this.modalService.open(this.activityAreaPopupRef, {
                     centered: true,

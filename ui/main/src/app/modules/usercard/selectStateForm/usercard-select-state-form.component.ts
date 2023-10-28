@@ -88,7 +88,6 @@ export class UserCardSelectStateFormComponent implements OnInit, OnDestroy {
 
     constructor(
         private processesService: ProcessesService,
-        private entitiesService: EntitiesService,
         private translateService: TranslateService
     ) {}
 
@@ -177,7 +176,7 @@ export class UserCardSelectStateFormComponent implements OnInit, OnDestroy {
     isUserAllowedToPublishCardForState(userCard: UserCard) {
         if (userCard.publisherList?.length > 0) {
             const configuredPublisherList = [];
-            this.entitiesService.resolveEntities(userCard.publisherList).forEach(e => configuredPublisherList.push(e.id));
+            EntitiesService.resolveEntities(userCard.publisherList).forEach(e => configuredPublisherList.push(e.id));
             return this.currentUserWithPerimeters.userData.entities.filter( entity => configuredPublisherList.includes(entity)).length > 0;
         }
         return true;

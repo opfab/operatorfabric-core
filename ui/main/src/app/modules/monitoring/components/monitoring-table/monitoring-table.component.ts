@@ -83,7 +83,6 @@ export class MonitoringTableComponent implements OnChanges, OnDestroy {
         private modalService: NgbModal,
         private processesService: ProcessesService,
         private cardService: CardService,
-        private entitiesService: EntitiesService,
         private selectedCardService: SelectedCardService,
         private lightCardsStoreService: LightCardsStoreService
     ) {
@@ -248,7 +247,7 @@ export class MonitoringTableComponent implements OnChanges, OnDestroy {
                         : line.allowedOrRequiredResponses;
 
                 entitiesResponses.forEach((entityId) => {
-                    entitiesNamesResponses.push(this.entitiesService.getEntityName(entityId));
+                    entitiesNamesResponses.push(EntitiesService.getEntityName(entityId));
                 });
 
                 this.rowData.push({
@@ -295,7 +294,7 @@ export class MonitoringTableComponent implements OnChanges, OnDestroy {
         const entityNames = [];
         if (entitiesIds)
             entitiesIds.forEach((entityId) => {
-                entityNames.push(this.entitiesService.getEntityName(entityId));
+                entityNames.push(EntitiesService.getEntityName(entityId));
             });
         return entityNames;
     }
@@ -392,7 +391,7 @@ export class MonitoringTableComponent implements OnChanges, OnDestroy {
         if (card.childCards) {
             card.childCards.forEach((childCard) => {
                 if (childCard.publisherType === 'ENTITY')
-                    childCard.publisherName = this.entitiesService.getEntityName(childCard.publisher);
+                    childCard.publisherName = EntitiesService.getEntityName(childCard.publisher);
                 else childCard.publisherName = childCard.publisher;
             });
         }

@@ -34,7 +34,6 @@ import { PermissionEnum } from '@ofModel/permission.model';
 
 describe('AcknowledgeService testing ', () => {
     let acknowledgeService: AcknowledgeService;
-    let entitiesService: EntitiesService;
     let card: Card;
     let userMemberOfEntity1: User, userMemberOfEntity2: User, userMemberOfEntity1AndEntity3: User;
     let statesList: Map<string, State>;
@@ -64,14 +63,14 @@ describe('AcknowledgeService testing ', () => {
                                         new Entity("ENTITY2", "ENTITY 2", "", true, null, null),
                                         new Entity("ENTITY3", "ENTITY 3", "", true, null, null),
                                         new Entity("ENTITY_FR", "ENTITY FR", "", true, null, null)]);
-        entitiesService = new EntitiesService(mockEntitiesServer);
+        EntitiesService.setEntitiesServer(mockEntitiesServer);
 
-        const userPermissionService = new UserPermissionsService(entitiesService, processesService);
+        const userPermissionService = new UserPermissionsService(processesService);
 
-        acknowledgeService = new AcknowledgeService(null, userPermissionService, processesService, entitiesService);
+        acknowledgeService = new AcknowledgeService(null, userPermissionService, processesService);
 
 
-        entitiesService.loadAllEntitiesData().subscribe();
+        EntitiesService.loadAllEntitiesData().subscribe();
 
         card = getOneRandomCard({
             process: 'testProcess',

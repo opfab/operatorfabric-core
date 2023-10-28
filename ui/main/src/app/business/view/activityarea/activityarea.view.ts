@@ -23,7 +23,6 @@ export class ActivityAreaView {
     private intervalForConnectedUsersUpdate;
 
     constructor(
-        private entitiesService: EntitiesService,
         private settingsService: SettingsService,
         private lightCardStoreService: LightCardsStoreService
     ) {
@@ -33,7 +32,7 @@ export class ActivityAreaView {
         UserService.getUser(this.currentUserLogin).subscribe((user) => {
             if (user.entities) {
                 const entitiesConnected = UserService.getCurrentUserWithPerimeters().userData.entities;
-                const entities = this.entitiesService.getEntitiesFromIds(user.entities);
+                const entities = EntitiesService.getEntitiesFromIds(user.entities);
                 entities.sort((a, b) => Utilities.compareObj(a.name, b.name));
                 entities.forEach((entity) => {
                     if (entity?.entityAllowedToSendCard) {

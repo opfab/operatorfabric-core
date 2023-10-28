@@ -26,13 +26,13 @@ import {Process} from '@ofModel/processes.model';
 import {GroupsService} from 'app/business/services/users/groups.service';
 import {Group} from '@ofModel/group.model';
 import {Entity} from '@ofModel/entity.model';
-import {EntitiesService} from 'app/business/services/users/entities.service';
 import {PerimetersCellRendererComponent} from '../cell-renderers/perimeters-cell-renderer.component';
 import {ExcelExport} from 'app/business/common/excel-export';
 import {saveAs} from 'file-saver-es';
 import {IdCellRendererComponent} from '../cell-renderers/id-cell-renderer.component';
 import {ArrayCellRendererComponent} from '../cell-renderers/array-cell-renderer.component';
 import {BusinessDataService} from 'app/business/services/businessconfig/businessdata.service';
+import {EntitiesService} from 'app/business/services/users/entities.service';
 
 
 export class ActionColumn {
@@ -97,7 +97,6 @@ export abstract class AdminTableDirective implements OnInit, OnDestroy {
         protected dataHandlingService: SharingService,
         protected processesService: ProcessesService,
         protected groupsService: GroupsService,
-        protected entitiesService: EntitiesService,
         protected businessDataService: BusinessDataService,
         private changeDetector: ChangeDetectorRef
     ) {
@@ -176,7 +175,7 @@ export abstract class AdminTableDirective implements OnInit, OnDestroy {
             this.gridApi.paginationSetPageSize(pageSize);
         });
         this.groupsDefinition = this.groupsService.getGroups();
-        this.entitiesDefinition = this.entitiesService.getEntities();
+        this.entitiesDefinition = EntitiesService.getEntities();
         this.refreshData();
     }
 

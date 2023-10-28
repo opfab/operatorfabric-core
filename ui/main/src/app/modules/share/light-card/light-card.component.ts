@@ -57,7 +57,6 @@ export class LightCardComponent implements OnInit, OnDestroy {
     constructor(
         private router: Router,
         private dateTimeFormatter: DateTimeFormatterService,
-        private entitiesService: EntitiesService,
         private processesService: ProcessesService,
         private groupedCardsService: GroupedCardsService,
         private soundNotificationService: SoundNotificationService,
@@ -101,7 +100,7 @@ export class LightCardComponent implements OnInit, OnDestroy {
 
     computeFromEntity() {
         if (this.lightCard.publisherType === 'ENTITY')
-            this.fromEntity = this.entitiesService.getEntityName(this.lightCard.publisher);
+            this.fromEntity = EntitiesService.getEntityName(this.lightCard.publisher);
         else this.fromEntity = null;
     }
 

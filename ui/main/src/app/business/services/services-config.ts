@@ -17,6 +17,7 @@ import {RouterService} from '../server/router.service';
 import {OpfabAPIService} from './opfabAPI.service';
 import {loadBuildInTemplates} from '../buildInTemplates/templatesLoader';
 import {GlobalStyleService} from './global-style.service';
+import {EntitiesService} from './users/entities.service';
 
 declare const opfab: any;
 export class ServicesConfig {
@@ -32,6 +33,7 @@ export class ServicesConfig {
         UserService.setUserServer(servers.userServer);
         ServicesConfig.routerService = servers.routerService;
         ServicesConfig.opfabApiService = servers.opfabAPIService;
+        EntitiesService.setEntitiesServer(servers.entitiesServer);
     }
 
     public static load(): Observable<any> {

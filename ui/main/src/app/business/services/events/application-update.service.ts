@@ -25,13 +25,11 @@ import {BusinessDataService} from '../businessconfig/businessdata.service';
     providedIn: 'root'
 })
 export class ApplicationUpdateService {
-
     constructor(
         private opfabEventStreamService: OpfabEventStreamService,
         private processService: ProcessesService,
         private handlebarsService: HandlebarsService,
         private templateCssService: TemplateCssService,
-        private entitiesService: EntitiesService,
         private groupsService: GroupsService,
         private applicationEventsService: ApplicationEventsService,
         private businessDataService: BusinessDataService
@@ -47,7 +45,7 @@ export class ApplicationUpdateService {
         this.opfabEventStreamService
             .getBusinessConfigChangeRequests()
             .pipe(
-                debounce(() => timer(5000 + Math.floor(Math.random() * 5000))),// use a random  part to avoid all UI to access at the same time the server
+                debounce(() => timer(5000 + Math.floor(Math.random() * 5000))), // use a random  part to avoid all UI to access at the same time the server
                 map(() => {
                     logger.info('Update business config');
                     this.handlebarsService.clearCache();
@@ -68,11 +66,11 @@ export class ApplicationUpdateService {
         this.opfabEventStreamService
             .getUserConfigChangeRequests()
             .pipe(
-                debounce(() => timer(5000 + Math.floor(Math.random() * 5000))),  // use a random  part to avoid all UI to access at the same time the server
+                debounce(() => timer(5000 + Math.floor(Math.random() * 5000))), // use a random  part to avoid all UI to access at the same time the server
                 switchMap(() => {
                     const requestsToLaunch$ = [
                         UserService.loadUserWithPerimetersData(),
-                        this.entitiesService.loadAllEntitiesData(),
+                        EntitiesService.loadAllEntitiesData(),
                         this.groupsService.loadAllGroupsData()
                     ];
                     logger.info('Update user perimeter, entities and groups', LogOption.LOCAL_AND_REMOTE);
@@ -89,8 +87,8 @@ export class ApplicationUpdateService {
 
     private listenForBusinessDataUpdate() {
         this.opfabEventStreamService.getBusinessDataChanges().subscribe(() => {
-                logger.info(`New business data posted, emptying cache`, LogOption.LOCAL_AND_REMOTE);
-                this.businessDataService.emptyCache();
-            });
+            logger.info(`New business data posted, emptying cache`, LogOption.LOCAL_AND_REMOTE);
+            this.businessDataService.emptyCache();
+        });
     }
 }

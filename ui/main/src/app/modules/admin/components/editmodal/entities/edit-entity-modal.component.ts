@@ -58,7 +58,6 @@ export class EditEntityModalComponent implements OnInit {
         private translate: TranslateService,
         private activeModal: NgbActiveModal,
         private dataHandlingService: SharingService,
-        private entitiesService: EntitiesService,
         private changeDetector: ChangeDetectorRef
     ) {}
 
@@ -105,7 +104,7 @@ export class EditEntityModalComponent implements OnInit {
         });
 
         // Initialize value lists for Entities
-        this.entities = this.entitiesService.getEntities();
+        this.entities = EntitiesService.getEntities();
         this.entities.forEach((entity) => {
             const id = entity.id;
             if (!this.row || id !== this.row.id) {
@@ -138,7 +137,7 @@ export class EditEntityModalComponent implements OnInit {
     }
 
     isUniqueEntityId(entityId: string): boolean {
-        if (entityId && this.entitiesService.getEntities().filter((entity) => entity.id === entityId).length)
+        if (entityId && EntitiesService.getEntities().filter((entity) => entity.id === entityId).length)
             return false;
         else return true;
     }
@@ -146,13 +145,13 @@ export class EditEntityModalComponent implements OnInit {
     uniqueEntityIdValidatorFn(): AsyncValidatorFn {
     return (control: AbstractControl): Observable<ValidationErrors> =>
         {
-            let err : ValidationErrors = {'uniqueEntityIdViolation': true};
+            const err : ValidationErrors = {'uniqueEntityIdViolation': true};
             return this.isUniqueEntityId(this.entityForm.controls["id"].value)? of(null) : of(err)
         }
     }
 
     isUniqueEntityName(entityName: string): boolean {
-        if (entityName && this.entitiesService.getEntities().filter((entity) => (entity.name === entityName.trim()) && (entity.id !== this.row?.id)).length)
+        if (entityName && EntitiesService.getEntities().filter((entity) => (entity.name === entityName.trim()) && (entity.id !== this.row?.id)).length)
             return false;
         else return true;
     }
@@ -160,7 +159,7 @@ export class EditEntityModalComponent implements OnInit {
     uniqueEntityNameValidatorFn(): AsyncValidatorFn {
         return (control: AbstractControl): Observable<ValidationErrors> =>
             {
-                let err : ValidationErrors = {'uniqueEntityNameViolation': true};
+                const err : ValidationErrors = {'uniqueEntityNameViolation': true};
                 return this.isUniqueEntityName(this.entityForm.controls["name"].value)? of(null) : of(err)
             }
     }

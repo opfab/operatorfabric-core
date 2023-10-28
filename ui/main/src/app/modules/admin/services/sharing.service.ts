@@ -8,7 +8,6 @@
  */
 
 import {Injectable, OnDestroy} from '@angular/core';
-import {EntitiesService} from 'app/business/services/users/entities.service';
 import {GroupsService} from 'app/business/services/users/groups.service';
 import {CrudService} from 'app/business/services/crud-service';
 import {Observable, ReplaySubject, Subject} from 'rxjs';
@@ -17,21 +16,17 @@ import {PerimetersService} from 'app/business/services/users/perimeters.service'
 import {AdminProcessesService} from 'app/business/services/businessconfig/adminprocess.service';
 import {BusinessDataService} from 'app/business/services/businessconfig/businessdata.service';
 import {CrudUserService} from 'app/business/services/admin/crud-user.service';
+import {CrudEntitiesService} from 'app/business/services/admin/crud-entities-service';
 
-/** The aim of this service is to provide the services that need to be shared between components of the admin screen. For example, a single
- * instance of `EntitiesService` should be used across all components so a update to the cache is visible from all components.
- * This is normally doable by defining the providers for Angular's DI in the correct place, but then I couldn't get Angular to provide the
- * appropriate subclass of `CrudService` depending on the context (I tried making it generic, to no avail).
- * */
 
 @Injectable()
 export class SharingService implements OnDestroy {
     private readonly _paginationPageSize$: ReplaySubject<number>;
     private unsubscribe$: Subject<void> = new Subject<void>();
     private crudUserService: CrudUserService;
+    private crudEntitiesService: CrudEntitiesService;
 
     constructor(
-        private entitiesService: EntitiesService,
         private groupsService: GroupsService,
         private perimetersService: PerimetersService,
         private businessDataService: BusinessDataService,
@@ -39,6 +34,7 @@ export class SharingService implements OnDestroy {
     ) {
         this._paginationPageSize$ = new ReplaySubject<number>();
         this.crudUserService = new CrudUserService();
+        this.crudEntitiesService = new CrudEntitiesService();
 
         // Initialization necessary for perimeters selection dropdown in modals and to display names instead of codes
         // As it is only necessary for admin purposes, it's done here rather than in the app initialization code
@@ -50,7 +46,7 @@ export class SharingService implements OnDestroy {
     public resolveCrudServiceDependingOnType(adminItemType: AdminItemType): CrudService {
         switch (adminItemType) {
             case AdminItemType.ENTITY:
-                return this.entitiesService;
+                return this.crudEntitiesService;
             case AdminItemType.GROUP:
                 return this.groupsService;
             case AdminItemType.USER:

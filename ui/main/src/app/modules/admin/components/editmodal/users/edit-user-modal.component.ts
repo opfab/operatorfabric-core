@@ -64,7 +64,6 @@ export class EditUserModalComponent implements OnInit {
     constructor(
         private activeModal: NgbActiveModal,
         private groupsService: GroupsService,
-        private entitiesService: EntitiesService,
         private changeDetector: ChangeDetectorRef
     ) { }
 
@@ -106,7 +105,7 @@ export class EditUserModalComponent implements OnInit {
         }
 
         // Initialize value lists for Entities and Groups inputs
-        this.entitiesService.getEntities().forEach((entity) => {
+        EntitiesService.getEntities().forEach((entity) => {
             const id = entity.id;
             let itemName = entity.name;
             if (!itemName) {
