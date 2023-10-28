@@ -6,32 +6,115 @@
 <!-- SPDX-License-Identifier: MPL-2.0                                      -->
 <!-- This file is part of the OperatorFabric project.                      -->
 
-<div class="opfab-useractionlogs-title" translate>
-    useractionlogs.title
+<div style="margin-left: 15px;margin-right: 15px; padding-top: 30px; padding-bottom: 10px;
+font-size: 20px;font-weight: bold;border-bottom: solid 1px;">
+    {{ userActionLogsPage.pageTitle }}
 </div>
 
-<ng-container *ngIf="!isUserAllowed">
-    <div style="text-align: center; font-size: 20px; padding-top: 100px" translate>errors.pageNotAllowed
+<div *ngIf="!userActionLogsPage.isUserAuthorized" style="text-align: center; font-size: 20px; padding-top: 100px">
+    {{ userActionLogsPage.pageNotAllowedMessage }}
+</div>
+
+<div *ngIf="userActionLogsView.getUserActionLogPage().isUserAuthorized && loginListLoaded">
+    <div id="opfab-useractionlogs-filters"
+        style="display: flex; padding-left: 5%; background-color: var(--opfab-bgcolor-darker)">
+        <div style="display: flex; margin-top: 38px; margin-bottom: 38px">
+            <div style="min-width: 200px">
+                <of-multi-select id="opfab-login-filter" multiSelectId="login" [parentForm]="this.userActionLogsForm"
+                    [config]="loginMultiSelectConfig" [options]="this.logins" [selectedOptions]="loginsSelected">
+                </of-multi-select>
+            </div>
+            <div style="min-width: 200px; margin-left: 10px">
+                <of-multi-select id="opfab-action-filter" multiSelectId="action" [parentForm]="this.userActionLogsForm"
+                    [config]="actionsMultiSelectConfig" [options]="actions" [selectedOptions]="actionsSelected">
+                </of-multi-select>
+            </div>
+        </div>
+
+        <div style="display: flex; margin-top: 10px" [formGroup]="this.userActionLogsForm">
+            <div style="margin-left: 10px">
+                <of-datetime-filter id="opfab-date-from" filterPath="dateFrom" formControlName="dateFrom"
+                    labelKey="useractionlogs.filters." [defaultDate]="initialDateFrom"
+                    [defaultTime]="{hour: 0, minute: 0}"></of-datetime-filter>
+            </div>
+            <div style="margin-left: 10px">
+                <of-datetime-filter id="opfab-date-to" filterPath="dateTo" formControlName="dateTo"
+                    labelKey="useractionlogs.filters."></of-datetime-filter>
+            </div>
+        </div>
+
+        <div style="margin-top: 30px; margin-left: 60px; min-width: 320px">
+            <button id="opfab-useractionlogs-btn-search" class="opfab-btn" (click)="search()" translate>
+                button.search
+            </button>
+            <button id="opfab-useractionlogs-btn-reset" class="opfab-btn-cancel" (click)="reset()" translate>
+                button.reset
+            </button>
+        </div>
     </div>
-</ng-container>
-<div *ngIf="isUserAllowed">
 
-
-    <form [formGroup]="userActionLogsForm" #currentForm>
-    <of-useractionlogs-filters [userActionLogsForm]="userActionLogsForm"  [defaultMinDate]="defaultMinDate" (search)="sendQuery()" (reset)="resetForm()" #filters></of-useractionlogs-filters> 
-    </form>
-    <div style="height:5%"> </div>
-    <div *ngIf="hasResult; else noResult" style="margin-top:20px;margin-left:5%;margin-right:5%">
-        <of-useractionlogs-table [actions]="userActions" [page]="page" [totalElements]="totalElements" [totalPages]="totalPages" (pageChange)="pageChange($event)"></of-useractionlogs-table>
+    <div *ngIf="userActionLogsResult && !userActionLogsResult.hasError; else noResult"
+        style="margin-top: 20px; margin-left: 5%; margin-right: 5%">
+        <div id="opfab-useractionlogs-table" style="background-color: var(--opfab-bgcolor-darker)">
+            <div class="opfab-table">
+                <table aria-label="user actions logs" style="width: 100%">
+                    <thead>
+                        <tr>
+                            <th>{{ userActionLogsPage.columnTitle.date }}</th>
+                            <th>{{ userActionLogsPage.columnTitle.action }}</th>
+                            <th>{{ userActionLogsPage.columnTitle.login }}</th>
+                            <th>{{ userActionLogsPage.columnTitle.entities }}</th>
+                            <th>{{ userActionLogsPage.columnTitle.cardUid }}</th>
+                            <th>{{ userActionLogsPage.columnTitle.comment }}</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let row of userActionLogsResult.data.content"
+                            class="opfab-useractionlogs-table-line" (click)="clickOnCard(row.cardUid)">
+                            <td>{{ row.date }}</td>
+                            <td>{{ row.action }}</td>
+                            <td>{{ row.login }}</td>
+                            <td>{{ row.entities }}</td>
+                            <td>{{ row.cardUid }}</td>
+                            <td>{{ row.comment }}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="opfab-pagination" style="padding-bottom: 5px; margin-top: 5px">
+                <div style="margin-top: 12px">
+                    <span translate> shared.resultsNumber </span> : {{ userActionLogsResult.data.totalElements }}
+                </div>
+                <div>
+                    <ngb-pagination *ngIf="userActionLogsResult.data.totalPages > 1"
+                        [collectionSize]="userActionLogsResult.data.totalElements" [page]="currentResultPage"
+                        (pageChange)="changePage($event)" [maxSize]="3" [rotate]="true">
+                    </ngb-pagination>
+                </div>
+            </div>
+        </div>
     </div>
-
-    <ng-template #noResult>
-        <br>
-        <div *ngIf="firstQueryHasBeenDone&&!hasResult&&!loadingInProgress" id="opfab-useractionlogs-noResult"  style="text-align: center;font-size: 20px;" translate>shared.noResult</div>
-    </ng-template>
-
-    <div *ngIf="technicalError" style="text-align: center;font-size: 20px;" translate> shared.error.technicalError
-    </div>
-
     <of-spinner *ngIf="loadingInProgress"></of-spinner>
+    <of-spinner *ngIf="cardLoadingInProgress" [seeInModal]="true" loadingText="archive.cardLoadingInProgress">
+    </of-spinner>
 </div>
+
+<ng-template #noResult>
+    <div *ngIf="errorMessage" id="opfab-useractionlogs-noResult"
+        style="text-align: center; font-size: 20px;margin-top:20px">
+        {{ errorMessage }}
+    </div>
+</ng-template>
+
+<ng-template #cardDetail let-modal>
+    <div class="modal-header">
+        <div id="opfab-archives-card-title">{{ selectedCard.titleTranslated | opfabTitleCase }}</div>
+        <div id="opfab-archives-card-detail-close" class="opfab-close-modal-icon" aria-label="Close"
+            (click)="modal.dismiss('Cross click')">
+            <span aria-hidden="true">&times;</span>
+        </div>
+    </div>
+    <div class="modal-body">
+        <of-archived-card-detail [card]="selectedCard" [childCards]="selectedChildCards"></of-archived-card-detail>
+    </div>
+</ng-template>

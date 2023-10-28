@@ -17,14 +17,12 @@ import {AppRoutingModule} from "app/router/app-routing.module";
 import {DatetimeFilterModule} from "../share/datetime-filter/datetime-filter.module";
 import {MultiSelectModule} from "../share/multi-select/multi-select.module";
 import {UserActionLogsComponent} from "./useractionlogs.component";
-import {UserActionLogsTableComponent} from "./components/useractionlogs-table/useractionlogs-table.component";
-import {UserActionLogsFiltersComponent} from "./components/useractionlogs-filters/useractionlogs-filters.component";
 import {SpinnerModule} from '../share/spinner/spinner.module';
 import {ArchivesModule} from "../archives/archives.module";
 import {PipesModule} from "../share/pipes/pipes.module";
 
 @NgModule({
-    declarations: [UserActionLogsComponent, UserActionLogsTableComponent, UserActionLogsFiltersComponent],
+    declarations: [UserActionLogsComponent],
     imports: [
     CommonModule,
     FormsModule,

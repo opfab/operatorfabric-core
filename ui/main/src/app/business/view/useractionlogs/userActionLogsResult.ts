@@ -1,4 +1,4 @@
-/* Copyright (c) 2022-2023, RTE (http://www.rte-france.com)
+/* Copyright (c) 2023, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -7,10 +7,11 @@
  * This file is part of the OperatorFabric project.
  */
 
-.opfab-useractionlogs-table-line:hover {
-    border: 2px solid #2268ff;
-}
+import {Page} from '@ofModel/page.model';
+import {UserActionLogLine} from './userActionLogLine';
 
-td,th {
-   padding: 10px; 
+export class UserActionLogsResult {
+    hasError: boolean = false;
+    errorMessage: string;
+    data: Page<UserActionLogLine>;
 }
