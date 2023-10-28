@@ -13,9 +13,15 @@ import {LoggerService as logger, LogOption} from 'app/business/services/logs/log
 import {RemoteLoggerService} from './logs/remote-logger.service';
 import {I18nService} from './translation/i18n.service';
 import {UserService} from './users/user.service';
+import {RouterService} from '../server/router.service';
+import {OpfabAPIService} from './opfabAPI.service';
+import {loadBuildInTemplates} from '../buildInTemplates/templatesLoader';
 
+declare const opfab: any;
 export class ServicesConfig {
     private static loadDone = new Subject();
+    private static routerService: RouterService;
+    private static opfabApiService: OpfabAPIService;
 
     public static setServers(servers) {
         ConfigService.setConfigServer(servers.configServer);
@@ -23,6 +29,8 @@ export class ServicesConfig {
         I18nService.setConfigServer(servers.configServer);
         I18nService.setTranslationService(servers.translationService);
         UserService.setUserServer(servers.userServer);
+        ServicesConfig.routerService = servers.routerService;
+        ServicesConfig.opfabApiService= servers.opfabAPIService;
     }
 
     public static load(): Observable<any> {
@@ -60,10 +68,7 @@ export class ServicesConfig {
         const locales = ConfigService.getConfigValue('i18n.supported.locales');
         if (locales) {
             I18nService.loadGlobalTranslations(locales).subscribe(() => {
-                logger.info(
-                    'opfab translation loaded for locales: ' + locales,
-                    LogOption.LOCAL_AND_REMOTE
-                );
+                logger.info('opfab translation loaded for locales: ' + locales, LogOption.LOCAL_AND_REMOTE);
                 I18nService.loadTranslationForMenu();
                 I18nService.setTranslationForMultiSelectUsedInTemplates();
                 this.loadDone.next(true);
@@ -72,5 +77,19 @@ export class ServicesConfig {
         } else logger.error('No locales define (value i18.supported.locales not present in web-ui.json)');
 
         I18nService.initLocale();
+    }
+
+    public static finalizeLoading() {
+        loadBuildInTemplates();
+        ServicesConfig.initOpfabAPI();
+    }
+
+    private static initOpfabAPI(): void {
+        const that = this;
+        opfab.navigate.showCardInFeed = function (cardId: string) {
+            that.routerService.navigateTo('feed/cards/' + cardId);
+        };
+
+        ServicesConfig.opfabApiService.initAPI();
     }
 }
