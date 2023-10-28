@@ -7,7 +7,7 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {Component, NgZone, OnInit, Output, ViewChild} from '@angular/core';
+import {Component, OnInit, Output, ViewChild} from '@angular/core';
 import {TranslateService} from '@ngx-translate/core';
 import {ConfigService} from 'app/business/services/config.service';
 import {EntitiesService} from 'app/business/services/users/entities.service';
@@ -32,14 +32,13 @@ import {AuthService} from 'app/authentication/auth.service';
 import {AuthenticationMode} from 'app/authentication/auth.model';
 import {SystemNotificationService} from '../../../business/services/notifications/system-notification.service';
 import {BusinessDataService} from 'app/business/services/businessconfig/businessdata.service';
-import {Router} from '@angular/router';
 import {OpfabAPIService} from 'app/business/services/opfabAPI.service';
-import {loadBuildInTemplates} from 'app/business/buildInTemplates/templatesLoader';
 import {RemoteLoggerServer} from 'app/business/server/remote-logger.server';
 import {ConfigServer} from 'app/business/server/config.server';
 import {ServicesConfig} from 'app/business/services/services-config';
 import {TranslationService} from 'app/business/services/translation/translation.service';
 import {UserServer} from 'app/business/server/user.server';
+import {AngularRouterService} from '@ofServices/angularRouterService';
 
 declare const opfab: any;
 @Component({
@@ -83,8 +82,7 @@ export class ApplicationLoadingComponent implements OnInit {
         private translationService: TranslationService,
         private remoteLoggerServer: RemoteLoggerServer,
         private userServer: UserServer,
-        private router: Router,
-        private ngZone: NgZone
+        private routerService: AngularRouterService
     ) {}
 
     ngOnInit() {
@@ -92,7 +90,9 @@ export class ApplicationLoadingComponent implements OnInit {
             configServer: this.configServer,
             remoteLoggerServer: this.remoteLoggerServer,
             translationService: this.translationService,
-            userServer: this.userServer
+            userServer: this.userServer,
+            routerService: this.routerService,
+            opfabAPIService: this.opfabAPIService
         });
 
         // Set default style before login
@@ -250,17 +250,6 @@ export class ApplicationLoadingComponent implements OnInit {
         this.lightCardsStoreService.initStore(); // this will effectively open the http stream connection
         this.applicationUpdateService.init();
         this.systemNotificationService.initSystemNotificationService();
-        this.initOpfabAPI();
-        loadBuildInTemplates();
-    }
-
-    private initOpfabAPI(): void {
-        const that = this;
-
-        opfab.navigate.showCardInFeed = function (cardId: string) {
-            that.ngZone.run(() => that.router.navigate(['feed/cards/', cardId]));
-        };
-
-        this.opfabAPIService.initAPI();
+        ServicesConfig.finalizeLoading();
     }
 }
