@@ -90,7 +90,6 @@ export class EditGroupModalComponent implements OnInit {
         private activeModal: NgbActiveModal,
         private dataHandlingService: SharingService,
         private perimetersService: PerimetersService,
-        private groupsService: GroupsService,
         private changeDetector: ChangeDetectorRef
     ) {
         Object.values(GroupTypeEnum).forEach((t) => this.groupTypes.push({value: String(t), label: String(t)}));
@@ -168,27 +167,27 @@ export class EditGroupModalComponent implements OnInit {
     }
 
     isUniqueGroupId(groupId: string): boolean {
-        if (groupId && this.groupsService.getGroups().filter((group) => group.id === groupId).length) return false;
+        if (groupId && GroupsService.getGroups().filter((group) => group.id === groupId).length) return false;
         else return true;
     }
 
     uniqueGroupIdValidatorFn(): AsyncValidatorFn {
         return (control: AbstractControl): Observable<ValidationErrors> =>
         {
-            let err : ValidationErrors = {'uniqueGroupIdViolation': true};
+            const err : ValidationErrors = {'uniqueGroupIdViolation': true};
             return this.isUniqueGroupId(this.groupForm.controls["id"].value)? of(null) : of(err)
         }
     }
 
     isUniqueGroupName(groupName: string): boolean {
-        if (groupName && this.groupsService.getGroups().filter((group) => (group.name === groupName.trim()) && (group.id !== this.row?.id)).length) return false;
+        if (groupName && GroupsService.getGroups().filter((group) => (group.name === groupName.trim()) && (group.id !== this.row?.id)).length) return false;
         else return true;
     }
 
     uniqueGroupNameValidatorFn(): AsyncValidatorFn {
         return (control: AbstractControl): Observable<ValidationErrors> =>
         {
-            let err : ValidationErrors = {'uniqueGroupNameViolation': true};
+            const err : ValidationErrors = {'uniqueGroupNameViolation': true};
             return this.isUniqueGroupName(this.groupForm.controls["name"].value)? of(null) : of(err)
         }
     }

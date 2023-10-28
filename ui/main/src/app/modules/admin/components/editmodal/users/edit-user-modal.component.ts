@@ -63,7 +63,6 @@ export class EditUserModalComponent implements OnInit {
 
     constructor(
         private activeModal: NgbActiveModal,
-        private groupsService: GroupsService,
         private changeDetector: ChangeDetectorRef
     ) { }
 
@@ -114,7 +113,7 @@ export class EditUserModalComponent implements OnInit {
             this.entitiesMultiSelectOptions.push(new MultiSelectOption(id, itemName));
         });
 
-        this.groupsService.getGroups().forEach((group) => {
+        GroupsService.getGroups().forEach((group) => {
             const id = group.id;
             let itemName = group.name;
             if (!itemName) {

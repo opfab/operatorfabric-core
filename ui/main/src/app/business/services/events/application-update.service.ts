@@ -30,7 +30,6 @@ export class ApplicationUpdateService {
         private processService: ProcessesService,
         private handlebarsService: HandlebarsService,
         private templateCssService: TemplateCssService,
-        private groupsService: GroupsService,
         private applicationEventsService: ApplicationEventsService,
         private businessDataService: BusinessDataService
     ) {}
@@ -71,7 +70,7 @@ export class ApplicationUpdateService {
                     const requestsToLaunch$ = [
                         UserService.loadUserWithPerimetersData(),
                         EntitiesService.loadAllEntitiesData(),
-                        this.groupsService.loadAllGroupsData()
+                        GroupsService.loadAllGroupsData()
                     ];
                     logger.info('Update user perimeter, entities and groups', LogOption.LOCAL_AND_REMOTE);
                     return Utilities.subscribeAndWaitForAllObservablesToEmitAnEvent(requestsToLaunch$);
