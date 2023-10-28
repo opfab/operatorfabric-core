@@ -18,7 +18,7 @@ export class ExternalAppIFrameView {
     unsubscribe$: Subject<void> = new Subject<void>();
     private businessConfigUrl = `${environment.url}/#businessconfigparty`;
 
-    constructor(private globalStyleService: GlobalStyleService) {
+    constructor() {
         this.listenForExternalAppRoute();
         this.reloadIframeWhenGlobalStyleChange();
     }
@@ -79,11 +79,11 @@ export class ExternalAppIFrameView {
     }
 
     private addOpfabThemeParamToUrl(url: string): string {
-        return this.addParamsToUrl(url, 'opfab_theme=' + this.globalStyleService.getStyle());
+        return this.addParamsToUrl(url, 'opfab_theme=' + GlobalStyleService.getStyle());
     }
 
     private reloadIframeWhenGlobalStyleChange() {
-        this.globalStyleService
+        GlobalStyleService
             .getStyleChange()
             .pipe(takeUntil(this.unsubscribe$), skip(1))
             .subscribe(() => this.computeURL(RouterStore.getCurrentRoute()));

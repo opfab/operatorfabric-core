@@ -64,7 +64,6 @@ export class NavbarComponent implements OnInit {
 
     constructor(
         private router: Router,
-        private globalStyleService: GlobalStyleService,
         private modalService: NgbModal,
         private sessionManager: SessionManagerService
     ) {
@@ -108,7 +107,7 @@ export class NavbarComponent implements OnInit {
         this.environmentColor = ConfigService.getConfigValue('environmentColor', 'blue');
         if (this.environmentName) this.displayEnvironmentName = true;
 
-        this.styleMode = this.globalStyleService.getStyleChange();
+        this.styleMode = GlobalStyleService.getStyleChange();
 
         this.navigationRoutesMap = new Map(this.navigationRoutes.map(element => [element.path, element]));
         this.businessconfigMenusMap = new Map(this.businessconfigMenus.map(element => [element.id, element]));
@@ -129,11 +128,11 @@ export class NavbarComponent implements OnInit {
     }
 
     switchToNightMode() {
-        this.globalStyleService.switchToNightMode()
+        GlobalStyleService.switchToNightMode()
     }
 
     switchToDayMode() {
-        this.globalStyleService.switchToDayMode()
+        GlobalStyleService.switchToDayMode()
     }
 
     openCardCreation() {

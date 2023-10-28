@@ -22,7 +22,7 @@ export class MenuLinkComponent {
     @Input() public menuEntry: any;
     @Input() public currentRoute: string;
 
-    constructor(private router: Router, private globalStyleService: GlobalStyleService) {}
+    constructor(private router: Router) {}
 
     LinkType = MenuEntryLinkTypeEnum;
 
@@ -55,7 +55,7 @@ export class MenuLinkComponent {
     }
 
     addOpfabThemeParamToUrl(url: string): string {
-        return this.addParamsToUrl(url, 'opfab_theme=' + this.globalStyleService.getStyle());
+        return this.addParamsToUrl(url, 'opfab_theme=' + GlobalStyleService.getStyle());
     }
 
     private addParamsToUrl(url, params) {
