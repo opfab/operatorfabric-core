@@ -7,24 +7,20 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {Injectable} from '@angular/core';
 import {ConfigService} from 'app/business/services/config.service';
 import {UserService} from 'app/business/services/users/user.service';
 import {CoreMenuConfig, CustomMenu} from '@ofModel/menu.model';
 import {PermissionEnum} from '@ofModel/permission.model';
 import {LoggerService as logger} from './logs/logger.service';
 
-@Injectable({
-    providedIn: 'root'
-})
 export class MenuService {
-    private ADMIN_MENUS = ['admin', 'externaldevicesconfiguration', 'useractionlogs'];
+    private static ADMIN_MENUS = ['admin', 'externaldevicesconfiguration', 'useractionlogs'];
 
 
-    public getCurrentUserCustomMenus(menus: CustomMenu[]): CustomMenu[] {
+    public static getCurrentUserCustomMenus(menus: CustomMenu[]): CustomMenu[] {
         const filteredMenus = [];
         menus.forEach((m) => {
-            const entries = m.entries.filter((e) => this.isMenuVisibleForUserGroups(e));
+            const entries = m.entries.filter((e) => MenuService.isMenuVisibleForUserGroups(e));
             if (entries.length > 0) {
                 filteredMenus.push(new CustomMenu(m.id, m.label, entries));
             }
@@ -32,20 +28,20 @@ export class MenuService {
         return filteredMenus;
     }
 
-    public computeVisibleCoreMenusForCurrentUser(): string[] {
-        return this.computeVisibleNavigationBarCoreMenusForCurrentUser()
-            .concat(this.computeVisibleTopRightIconMenusForCurrentUser())
-            .concat(this.computeVisibleTopRightMenusForCurrentUser());
+    public static computeVisibleCoreMenusForCurrentUser(): string[] {
+        return MenuService.computeVisibleNavigationBarCoreMenusForCurrentUser()
+            .concat(MenuService.computeVisibleTopRightIconMenusForCurrentUser())
+            .concat(MenuService.computeVisibleTopRightMenusForCurrentUser());
     }
 
-    public computeVisibleNavigationBarCoreMenusForCurrentUser(): string[] {
+    public static computeVisibleNavigationBarCoreMenusForCurrentUser(): string[] {
         const visibleCoreMenus: string[] = [];
         const navigationBar = ConfigService.getNavigationBar();
 
         if (navigationBar) {
             navigationBar.forEach((menuConfig: any) => {
                 if (menuConfig.opfabCoreMenuId) {
-                    if (this.isMenuVisibleForUserGroups(menuConfig)) {
+                    if (MenuService.isMenuVisibleForUserGroups(menuConfig)) {
                         visibleCoreMenus.push(menuConfig.opfabCoreMenuId);
                     }
                 }
@@ -57,13 +53,13 @@ export class MenuService {
         return visibleCoreMenus;
     }
 
-    public computeVisibleTopRightIconMenusForCurrentUser(): string[] {
+    public static computeVisibleTopRightIconMenusForCurrentUser(): string[] {
         const topRightIconMenus = ConfigService.getTopRightIconMenus();
 
         if (topRightIconMenus) {
             return topRightIconMenus
                 .filter((coreMenuConfig: CoreMenuConfig) => {
-                    return coreMenuConfig.visible && this.isMenuVisibleForUserGroups(coreMenuConfig);
+                    return coreMenuConfig.visible && MenuService.isMenuVisibleForUserGroups(coreMenuConfig);
                 })
                 .map((coreMenuConfig: CoreMenuConfig) => coreMenuConfig.opfabCoreMenuId);
         } else {
@@ -72,13 +68,13 @@ export class MenuService {
         }
     }
 
-    public computeVisibleTopRightMenusForCurrentUser(): string[] {
+    public static computeVisibleTopRightMenusForCurrentUser(): string[] {
         const topRightMenus = ConfigService.getTopRightMenus();
 
         if (topRightMenus) {
             return topRightMenus
                 .filter((coreMenuConfig: CoreMenuConfig) => {
-                    return coreMenuConfig.visible && this.isMenuVisibleForUserGroups(coreMenuConfig);
+                    return coreMenuConfig.visible && MenuService.isMenuVisibleForUserGroups(coreMenuConfig);
                 })
                 .map((coreMenuConfig: CoreMenuConfig) => coreMenuConfig.opfabCoreMenuId);
         } else {
@@ -87,15 +83,15 @@ export class MenuService {
         }
     }
 
-    public isMenuVisibleForUserGroups(menuConfig: any): boolean {
+    public static isMenuVisibleForUserGroups(menuConfig: any): boolean {
         if (menuConfig.opfabCoreMenuId) {
             if (
-                this.ADMIN_MENUS.includes(menuConfig.opfabCoreMenuId) &&
+                MenuService.ADMIN_MENUS.includes(menuConfig.opfabCoreMenuId) &&
                 !UserService.hasCurrentUserAnyPermission([PermissionEnum.ADMIN])
             )
                 return false;
         } else if (
-            this.ADMIN_MENUS.includes(menuConfig.id) &&
+            MenuService.ADMIN_MENUS.includes(menuConfig.id) &&
             !UserService.hasCurrentUserAnyPermission([PermissionEnum.ADMIN])
         )
             return false;

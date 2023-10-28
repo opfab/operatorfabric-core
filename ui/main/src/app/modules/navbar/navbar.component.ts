@@ -65,7 +65,6 @@ export class NavbarComponent implements OnInit {
     constructor(
         private router: Router,
         private globalStyleService: GlobalStyleService,
-        private menuService: MenuService,
         private modalService: NgbModal,
         private sessionManager: SessionManagerService
     ) {
@@ -77,12 +76,12 @@ export class NavbarComponent implements OnInit {
             this.currentRoute = route.split('/')[1];
         });
 
-        this.businessconfigMenus = this.menuService.getCurrentUserCustomMenus(ConfigService.getMenus());
+        this.businessconfigMenus = MenuService.getCurrentUserCustomMenus(ConfigService.getMenus());
 
         this.showDropdownMenuEvenIfOnlyOneEntry = ConfigService.getShowDropdownMenuEvenIfOnlyOneEntry();
 
 
-        const visibleCoreMenus = this.menuService.computeVisibleCoreMenusForCurrentUser();
+        const visibleCoreMenus = MenuService.computeVisibleCoreMenusForCurrentUser();
         visibleCoreMenus.forEach(visibleCoreMenu => {
             const route = navigationRoutes.find(route => route.path === visibleCoreMenu);
 
