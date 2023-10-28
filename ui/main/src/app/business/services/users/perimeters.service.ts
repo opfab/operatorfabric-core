@@ -9,30 +9,28 @@
 
 import {Observable, Subject} from 'rxjs';
 import {map, takeUntil, tap} from 'rxjs/operators';
-import {Injectable} from '@angular/core';
-import {CrudService} from 'app/business/services/crud-service';
 import {Perimeter} from '@ofModel/perimeter.model';
 import {PerimetersServer} from '../../server/perimeters.server';
 import {ServerResponseStatus} from '../../server/serverResponse';
 import {ErrorService} from '../error-service';
 
 
-@Injectable({
-    providedIn: 'root'
-})
-export class PerimetersService implements CrudService {
-    private _perimeters: Perimeter[];
+export class PerimetersService  {
 
-    private ngUnsubscribe$ = new Subject<void>();
+    private static perimeterServer : PerimetersServer;
+    private static _perimeters: Perimeter[];
 
-    constructor(private perimeterServer: PerimetersServer) {
+    private static ngUnsubscribe$ = new Subject<void>();
+
+    public static setPerimeterServer(perimeterServer: PerimetersServer) {
+        PerimetersService.perimeterServer = perimeterServer;
     }
 
-    deleteById(id: string) {
-        return this.perimeterServer.deleteById(id).pipe(
+    public static deleteById(id: string) {
+        return PerimetersService.perimeterServer.deleteById(id).pipe(
             map((perimetersResponse) => {
                 if (perimetersResponse.status === ServerResponseStatus.OK) {
-                    this.deleteFromCachedPerimeters(id);
+                    PerimetersService.deleteFromCachedPerimeters(id);
                 } else {
                     ErrorService.handleServerResponseError(perimetersResponse);
                 }
@@ -40,18 +38,18 @@ export class PerimetersService implements CrudService {
         );
     }
 
-    private deleteFromCachedPerimeters(id: string): void {
-        this._perimeters = this._perimeters.filter((perimeter) => perimeter.id !== id);
+    private static deleteFromCachedPerimeters(id: string): void {
+        PerimetersService._perimeters = PerimetersService._perimeters.filter((perimeter) => perimeter.id !== id);
     }
 
-    private updateCachedPerimeters(perimeterData: Perimeter): void {
-        const updatedPerimeters = this._perimeters.filter((perimeter) => perimeter.id !== perimeterData.id);
+    private static updateCachedPerimeters(perimeterData: Perimeter): void {
+        const updatedPerimeters = PerimetersService._perimeters.filter((perimeter) => perimeter.id !== perimeterData.id);
         updatedPerimeters.push(perimeterData);
-        this._perimeters = updatedPerimeters;
+        PerimetersService._perimeters = updatedPerimeters;
     }
 
-    private queryAllPerimeters(): Observable<Perimeter[]> {
-        return this.perimeterServer.queryAllPerimeters().pipe(
+    private static queryAllPerimeters(): Observable<Perimeter[]> {
+        return PerimetersService.perimeterServer.queryAllPerimeters().pipe(
             map((perimetersResponse) => {
                 if (perimetersResponse.status === ServerResponseStatus.OK) {
                     return perimetersResponse.data;
@@ -63,13 +61,13 @@ export class PerimetersService implements CrudService {
         );
     }
 
-    public loadAllPerimetersData(): Observable<any> {
-        return this.queryAllPerimeters().pipe(
-            takeUntil(this.ngUnsubscribe$),
+    public static loadAllPerimetersData(): Observable<any> {
+        return PerimetersService.queryAllPerimeters().pipe(
+            takeUntil(PerimetersService.ngUnsubscribe$),
             tap({
                 next: (perimeters) => {
                     if (perimeters) {
-                        this._perimeters = perimeters;
+                        PerimetersService._perimeters = perimeters;
                         console.log(new Date().toISOString(), 'List of perimeters loaded');
                     }
                 },
@@ -78,19 +76,19 @@ export class PerimetersService implements CrudService {
         );
     }
 
-    public getPerimeters(): Perimeter[] {
-        return this._perimeters;
+    public static getPerimeters(): Perimeter[] {
+        return PerimetersService._perimeters;
     }
 
-    public getCachedValues(): Array<Perimeter> {
-        return this.getPerimeters();
+    public static getCachedValues(): Array<Perimeter> {
+        return PerimetersService.getPerimeters();
     }
 
-    createPerimeter(perimeterData: Perimeter): Observable<Perimeter> {
-        return this.perimeterServer.createPerimeter(perimeterData).pipe(
+    public static createPerimeter(perimeterData: Perimeter): Observable<Perimeter> {
+        return PerimetersService.perimeterServer.createPerimeter(perimeterData).pipe(
             map((perimetersResponse) => {
                 if (perimetersResponse.status === ServerResponseStatus.OK) {
-                    this.updateCachedPerimeters(perimeterData);
+                    PerimetersService.updateCachedPerimeters(perimeterData);
                     return perimetersResponse.data;
                 } else {
                     ErrorService.handleServerResponseError(perimetersResponse);
@@ -100,11 +98,11 @@ export class PerimetersService implements CrudService {
         );
     }
 
-    updatePerimeter(perimeterData: Perimeter): Observable<Perimeter> {
-        return this.perimeterServer.updatePerimeter(perimeterData).pipe(
+    public static updatePerimeter(perimeterData: Perimeter): Observable<Perimeter> {
+        return PerimetersService.perimeterServer.updatePerimeter(perimeterData).pipe(
             map((perimetersResponse) => {
                 if (perimetersResponse.status === ServerResponseStatus.OK) {
-                    this.updateCachedPerimeters(perimeterData);
+                    PerimetersService.updateCachedPerimeters(perimeterData);
                     return perimetersResponse.data;
                 } else {
                     ErrorService.handleServerResponseError(perimetersResponse);
@@ -114,15 +112,15 @@ export class PerimetersService implements CrudService {
         );
     }
 
-    getAll(): Observable<any[]> {
-        return this.queryAllPerimeters();
+    public static getAll(): Observable<any[]> {
+        return PerimetersService.queryAllPerimeters();
     }
 
-    create(data: any): Observable<any> {
-        return this.createPerimeter(data);
+    public static create(data: any): Observable<any> {
+        return PerimetersService.createPerimeter(data);
     }
 
-    update(data: any): Observable<any> {
-        return this.updatePerimeter(data);
+    public static update(data: any): Observable<any> {
+        return PerimetersService.updatePerimeter(data);
     }
 }
