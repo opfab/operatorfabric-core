@@ -26,15 +26,13 @@ export class GlobalStyleService {
 
     private static styleChangeEvent: BehaviorSubject<string>;
 
-    constructor(
-        private menuService: MenuService,) {
+    constructor() {
         opfabStyle.init();
         GlobalStyleService.styleChangeEvent = new BehaviorSubject<string>(GlobalStyleService.NIGHT);
-
     }
 
     public loadUserStyle() {
-        const visibleCoreMenus = this.menuService.computeVisibleCoreMenusForCurrentUser();
+        const visibleCoreMenus = MenuService.computeVisibleCoreMenusForCurrentUser();
         const nightDayMode = visibleCoreMenus.includes('nightdaymode');
 
         const settings = ConfigService.getConfigValue('settings');
@@ -83,5 +81,4 @@ export class GlobalStyleService {
     private styleChanged() {
         GlobalStyleService.styleChangeEvent.next(GlobalStyleService.style);
     }
-
 }

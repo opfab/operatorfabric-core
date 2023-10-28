@@ -12,7 +12,6 @@ import {UserServerMock} from '@tests/mocks/userServer.mock';
 import {ServerResponse, ServerResponseStatus} from 'app/business/server/serverResponse';
 import {ConfigService} from 'app/business/services/config.service';
 import {GlobalStyleService} from 'app/business/services/global-style.service';
-import {MenuService} from 'app/business/services/menu.service';
 import {UserService} from 'app/business/services/users/user.service';
 import {RouterStore} from 'app/business/store/router.store';
 import {firstValueFrom} from 'rxjs';
@@ -51,8 +50,8 @@ describe('ExternalAppIFrame view ', () => {
         const mockUserServer = new UserServerMock();
 
         UserService.setUserServer(mockUserServer);
-        const menuService = new MenuService();
-        globalStyleService = new GlobalStyleService(menuService);
+
+        globalStyleService = new GlobalStyleService();
 
         // Mock method not supported in test context
         history.replaceState = () => {};
