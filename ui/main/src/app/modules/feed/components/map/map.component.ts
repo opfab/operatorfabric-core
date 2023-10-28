@@ -51,7 +51,6 @@ export class MapComponent implements OnInit, OnDestroy, AfterViewChecked {
         private lightCardsFeedFilterService: LightCardsFeedFilterService,
         private mapService: MapService,
         private translate: TranslateService,
-        private globalStyleService: GlobalStyleService,
         private router: Router,
         private dateTimeFormatterService: DateTimeFormatterService
     ) {}
@@ -88,8 +87,7 @@ export class MapComponent implements OnInit, OnDestroy, AfterViewChecked {
     }
 
     private updateMapWhenGlobalStyleChange() {
-        this.globalStyleService
-            .getStyleChange()
+        GlobalStyleService.getStyleChange()
             .pipe(takeUntil(this.unsubscribe$))
             .subscribe((style) => {
                 this.updateMapColors(style);
@@ -147,10 +145,7 @@ export class MapComponent implements OnInit, OnDestroy, AfterViewChecked {
     }
 
     private zoomToLocation(lightCardId: string) {
-        const zoomLevelWhenZoomToLocation = ConfigService.getConfigValue(
-            'feed.geomap.zoomLevelWhenZoomToLocation',
-            14
-        );
+        const zoomLevelWhenZoomToLocation = ConfigService.getConfigValue('feed.geomap.zoomLevelWhenZoomToLocation', 14);
         if (this.vectorLayer.getSource().getFeatures().length > 0) {
             const features = this.vectorLayer.getSource().getFeatures();
             features.forEach((feature) => {
@@ -286,10 +281,7 @@ export class MapComponent implements OnInit, OnDestroy, AfterViewChecked {
 
         const maxZoom = ConfigService.getConfigValue('feed.geomap.maxZoom', 11);
         const zoomDuration = ConfigService.getConfigValue('feed.geomap.zoomDuration', 500);
-        const defaultDataProjection = ConfigService.getConfigValue(
-            'feed.geomap.defaultDataProjection',
-            'EPSG:4326'
-        );
+        const defaultDataProjection = ConfigService.getConfigValue('feed.geomap.defaultDataProjection', 'EPSG:4326');
 
         lightCards
             .filter((lightCard) => lightCard.wktGeometry)

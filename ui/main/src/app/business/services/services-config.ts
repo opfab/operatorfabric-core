@@ -16,6 +16,7 @@ import {UserService} from './users/user.service';
 import {RouterService} from '../server/router.service';
 import {OpfabAPIService} from './opfabAPI.service';
 import {loadBuildInTemplates} from '../buildInTemplates/templatesLoader';
+import {GlobalStyleService} from './global-style.service';
 
 declare const opfab: any;
 export class ServicesConfig {
@@ -30,10 +31,12 @@ export class ServicesConfig {
         I18nService.setTranslationService(servers.translationService);
         UserService.setUserServer(servers.userServer);
         ServicesConfig.routerService = servers.routerService;
-        ServicesConfig.opfabApiService= servers.opfabAPIService;
+        ServicesConfig.opfabApiService = servers.opfabAPIService;
     }
 
     public static load(): Observable<any> {
+        // Set default style before login
+        GlobalStyleService.init();
         ConfigService.loadWebUIConfiguration().subscribe({
             //This configuration needs to be loaded first as it defines the authentication mode
             next: (config) => {

@@ -21,7 +21,6 @@ import {ActivityAreaChoiceAfterLoginComponent} from './activityarea-choice-after
 import {AccountAlreadyUsedComponent} from './account-already-used/account-already-used.component';
 import {AppLoadedInAnotherTabComponent} from './app-loaded-in-another-tab/app-loaded-in-another-tab.component';
 import {SettingsService} from 'app/business/services/users/settings.service';
-import {GlobalStyleService} from 'app/business/services/global-style.service';
 import {OpfabEventStreamServer} from 'app/business/server/opfabEventStream.server';
 import {OpfabEventStreamService} from 'app/business/services/events/opfabEventStream.service';
 import {LightCardsStoreService} from 'app/business/services/lightcards/lightcards-store.service';
@@ -39,6 +38,7 @@ import {ServicesConfig} from 'app/business/services/services-config';
 import {TranslationService} from 'app/business/services/translation/translation.service';
 import {UserServer} from 'app/business/server/user.server';
 import {AngularRouterService} from '@ofServices/angularRouterService';
+import {GlobalStyleService} from 'app/business/services/global-style.service';
 
 declare const opfab: any;
 @Component({
@@ -72,7 +72,6 @@ export class ApplicationLoadingComponent implements OnInit {
         private groupsService: GroupsService,
         private businessDataService: BusinessDataService,
         private processesService: ProcessesService,
-        private globalStyleService: GlobalStyleService,
         private lightCardsStoreService: LightCardsStoreService,
         private opfabEventStreamServer: OpfabEventStreamServer,
         private opfabEventStreamService: OpfabEventStreamService,
@@ -95,8 +94,7 @@ export class ApplicationLoadingComponent implements OnInit {
             opfabAPIService: this.opfabAPIService
         });
 
-        // Set default style before login
-        this.globalStyleService.setStyle('NIGHT');
+
         this.loadUIConfiguration();
     }
 
@@ -221,7 +219,7 @@ export class ApplicationLoadingComponent implements OnInit {
         Utilities.subscribeAndWaitForAllObservablesToEmitAnEvent(requestsToLaunch$).subscribe({
             next: () => {
                 this.loadingInProgress = false;
-                this.globalStyleService.loadUserStyle();
+                GlobalStyleService.loadUserStyle();
                 this.chooseActivityArea();
             },
             error: catchError((err, caught) => {
