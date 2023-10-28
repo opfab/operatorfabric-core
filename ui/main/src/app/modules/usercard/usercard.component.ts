@@ -129,7 +129,6 @@ export class UserCardComponent implements OnInit, OnDestroy {
 
     constructor(
         private cardService: CardService,
-        private entitiesService: EntitiesService,
         private sanitizer: DomSanitizer,
         private element: ElementRef,
         private processesService: ProcessesService,
@@ -331,7 +330,7 @@ export class UserCardComponent implements OnInit, OnDestroy {
         let allowedUserEntities = UserService.getCurrentUserWithPerimeters().userData.entities;
         if (this.userCardConfiguration?.publisherList?.length > 0) {
             const configuredPublisherList = [];
-            this.entitiesService
+            EntitiesService
                 .resolveEntities(this.userCardConfiguration.publisherList)
                 .forEach((e) => configuredPublisherList.push(e.id));
 
@@ -339,7 +338,7 @@ export class UserCardComponent implements OnInit, OnDestroy {
         }
 
         allowedUserEntities.forEach((userEntityId) => {
-            const entity = this.entitiesService.getEntities().find((e) => e.id === userEntityId);
+            const entity = EntitiesService.getEntities().find((e) => e.id === userEntityId);
             if (entity.entityAllowedToSendCard) entitiesList.push({value: entity.id, label: entity.name});
         });
         return entitiesList;
@@ -896,8 +895,8 @@ export class UserCardComponent implements OnInit, OnDestroy {
 
     public getEntityName(id: string): string {
         if (this.useDescriptionFieldForEntityList)
-            return this.entitiesService.getEntities().find((entity) => entity.id === id).description;
-        else return this.entitiesService.getEntities().find((entity) => entity.id === id).name;
+            return EntitiesService.getEntities().find((entity) => entity.id === id).description;
+        else return EntitiesService.getEntities().find((entity) => entity.id === id).name;
     }
 
     public getChildCard(childCard) {

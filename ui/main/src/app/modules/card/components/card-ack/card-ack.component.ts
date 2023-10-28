@@ -56,7 +56,6 @@ export class CardAckComponent implements OnInit, OnChanges, OnDestroy {
     isReadOnlyUser: any;
 
     constructor(
-        private entitiesService: EntitiesService,
         private acknowledgeService: AcknowledgeService,
         private userPermissionsService: UserPermissionsService,
         private processService: ProcessesService,
@@ -170,7 +169,7 @@ export class CardAckComponent implements OnInit, OnChanges, OnDestroy {
     private computeAcknowledgedEntities() : string[] {
         const entitiesAcks = [];
         if (!this.isReadOnlyUser) {
-            const entities = this.entitiesService.getEntitiesFromIds(this.user.entities);
+            const entities = EntitiesService.getEntitiesFromIds(this.user.entities);
             entities.forEach((entity) => {
                 if (entity.entityAllowedToSendCard)
                     // this avoids to display entities used only for grouping

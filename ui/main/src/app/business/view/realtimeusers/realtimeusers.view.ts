@@ -29,8 +29,7 @@ export class RealtimeUsersView {
     private pageLoaded = new ReplaySubject<RealtimePage>(1);
     private updateInterval;
 
-    constructor(private configServer: ConfigServer,
-                private entitiesService: EntitiesService,
+    constructor(private configServer: ConfigServer
     ) {
         this.init();
     }
@@ -67,7 +66,7 @@ export class RealtimeUsersView {
                                 // lines
                                 const line = new RealtimePageLine();
                                 line.entityId = configEntity;
-                                line.entityName = this.entitiesService.getEntityName(configEntity);
+                                line.entityName = EntitiesService.getEntityName(configEntity);
                                 line.connectedUsersCount = 0;
                                 line.connectedUsers = '';
                                 entityGroup.lines.push(line);

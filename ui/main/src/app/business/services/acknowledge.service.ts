@@ -29,8 +29,7 @@ export class AcknowledgeService {
     constructor(
         private acknowledgeServer: AcknowledgeServer,
         private userPermissionsService: UserPermissionsService,
-        private processesService: ProcessesService,
-        private entitiesService: EntitiesService,
+        private processesService: ProcessesService
     ) {}
 
     postUserAcknowledgement(cardUid: string, entitiesAcks: string[]): Observable<ServerResponse<void>> {
@@ -80,7 +79,7 @@ export class AcknowledgeService {
     private doEntityRecipientsIncludeAtLeastOneEntityOfUser(lightCard: LightCard): boolean {
         const entitiesOfUserThatAreRecipients = lightCard.entityRecipients.filter((entityId) => {
             return (
-                this.entitiesService.isEntityAllowedToSendCard(entityId) &&
+                EntitiesService.isEntityAllowedToSendCard(entityId) &&
                 UserService.getCurrentUserWithPerimeters().userData.entities.includes(entityId)
             );
         });
@@ -126,7 +125,7 @@ export class AcknowledgeService {
 
             const entitiesOfUserAndWaitedForAck = entitiesWaitedForAck.filter((entityId) => {
                 return (
-                    this.entitiesService.isEntityAllowedToSendCard(entityId) &&
+                    EntitiesService.isEntityAllowedToSendCard(entityId) &&
                     UserService.getCurrentUserWithPerimeters().userData.entities.includes(entityId)
                 );
             });
@@ -149,9 +148,9 @@ export class AcknowledgeService {
         const listEntitiesToAck = [];
 
         if (lightCard.entityRecipients) {
-            const listOfEntityRecipients = this.entitiesService.getEntitiesFromIds(lightCard.entityRecipients);
+            const listOfEntityRecipients = EntitiesService.getEntitiesFromIds(lightCard.entityRecipients);
             if (listOfEntityRecipients)
-                this.entitiesService
+            EntitiesService
                     .resolveEntitiesAllowedToSendCards(listOfEntityRecipients)
                     .forEach((entityToAdd) => listEntitiesToAck.push(entityToAdd.id));
         }

@@ -29,7 +29,6 @@ export class InfoComponent implements OnInit {
 
     constructor(
         private dateTimeFormatter: DateTimeFormatterService,
-        private entitiesService: EntitiesService,
         private applicationEventsService: ApplicationEventsService
     ) {}
 
@@ -57,7 +56,7 @@ export class InfoComponent implements OnInit {
         const user_entities = UserService.getCurrentUserWithPerimeters().userData.entities;
         if (user_entities) {
             this.userEntities = [];
-            const entities = this.entitiesService.getEntitiesFromIds(user_entities);
+            const entities = EntitiesService.getEntitiesFromIds(user_entities);
             entities.forEach((entity) => {
                 if (entity.entityAllowedToSendCard) {
                     // this avoids to display entities used only for grouping

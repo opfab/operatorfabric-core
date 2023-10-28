@@ -50,7 +50,6 @@ export class MonitoringComponent implements OnInit, OnDestroy {
     constructor(
         private processesService: ProcessesService,
         private lightCardsStoreService: LightCardsStoreService,
-        private entitiesService: EntitiesService,
         private selectedCardService: SelectedCardService
     ) {
         processesService.getAllProcesses().forEach((process) => {
@@ -126,7 +125,7 @@ export class MonitoringComponent implements OnInit, OnDestroy {
 
     private getEmitter(card: LightCard): string {
         const isThirdPartyPublisher = card.publisherType === 'EXTERNAL';
-        const sender = isThirdPartyPublisher ? card.publisher : this.entitiesService.getEntityName(card.publisher);
+        const sender = isThirdPartyPublisher ? card.publisher : EntitiesService.getEntityName(card.publisher);
 
         let representative = '';
 
@@ -134,7 +133,7 @@ export class MonitoringComponent implements OnInit, OnDestroy {
             const isThirdPartyRepresentative = card.representativeType === 'EXTERNAL';
             representative = isThirdPartyRepresentative
                 ? card.representative
-                : this.entitiesService.getEntityName(card.representative);
+                : EntitiesService.getEntityName(card.representative);
         }
         return !representative.length ? sender : sender + ' (' + representative + ')';
     }
@@ -150,19 +149,19 @@ export class MonitoringComponent implements OnInit, OnDestroy {
                 card.entitiesRequiredToRespond
             );
 
-        const entitiesAllowedOrRequiredToRespond = this.entitiesService.getEntitiesFromIds(
+        const entitiesAllowedOrRequiredToRespond = EntitiesService.getEntitiesFromIds(
             entityIdsAllowedOrRequiredToRespond
         );
 
-        return this.entitiesService
+        return EntitiesService
             .resolveEntitiesAllowedToSendCards(entitiesAllowedOrRequiredToRespond)
             .map((entity) => entity.id);
     }
 
     private getEntityIdsRequiredToRespondAndAllowedToSendCards(card: LightCard) {
         if (!card.entitiesRequiredToRespond) return [];
-        const entitiesAllowedToRespond = this.entitiesService.getEntitiesFromIds(card.entitiesRequiredToRespond);
-        return this.entitiesService
+        const entitiesAllowedToRespond = EntitiesService.getEntitiesFromIds(card.entitiesRequiredToRespond);
+        return EntitiesService
             .resolveEntitiesAllowedToSendCards(entitiesAllowedToRespond)
             .map((entity) => entity.id);
     }

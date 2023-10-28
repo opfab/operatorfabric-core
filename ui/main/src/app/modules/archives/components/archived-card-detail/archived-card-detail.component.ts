@@ -34,8 +34,7 @@ export class ArchivedCardDetailComponent implements OnInit{
 
     constructor(
         private dateTimeFormatter: DateTimeFormatterService,
-        private translate: TranslateService,
-        private entitiesService: EntitiesService,
+        private translate: TranslateService
     ) {
     }
 
@@ -48,14 +47,14 @@ export class ArchivedCardDetailComponent implements OnInit{
 
     private computeFromEntity() {
         if (this.card.publisherType === 'ENTITY') {
-            this.fromEntityOrRepresentativeSelectedCard = this.entitiesService.getEntityName(
+            this.fromEntityOrRepresentativeSelectedCard = EntitiesService.getEntityName(
                 this.card.publisher
             );
 
             if (this.card.representativeType && this.card.representative) {
                 const representative =
                     this.card.representativeType === 'ENTITY'
-                        ? this.entitiesService.getEntityName(this.card.representative)
+                        ? EntitiesService.getEntityName(this.card.representative)
                         : this.card.representative;
 
                 this.fromEntityOrRepresentativeSelectedCard += ' (' + representative + ')';
@@ -71,7 +70,7 @@ export class ArchivedCardDetailComponent implements OnInit{
             const entityRecipientsForFooter = Utilities.removeElementsFromArray(this.card.entityRecipients, this.card.entityRecipientsForInformation);
 
             entityRecipientsForFooter.forEach((entityRecipient) => {
-                listOfEntityRecipients.push(this.entitiesService.getEntityName(entityRecipient));
+                listOfEntityRecipients.push(EntitiesService.getEntityName(entityRecipient));
             });
         }
         listOfEntityRecipients.sort((a, b) => (a.localeCompare(b)));
@@ -91,7 +90,7 @@ export class ArchivedCardDetailComponent implements OnInit{
 
         if (this.card.entityRecipientsForInformation) {
             this.card.entityRecipientsForInformation.forEach((entityRecipientForInformation) => {
-                listOfEntityRecipientsForInformation.push(this.entitiesService.getEntityName(entityRecipientForInformation));
+                listOfEntityRecipientsForInformation.push(EntitiesService.getEntityName(entityRecipientForInformation));
             });
         }
         listOfEntityRecipientsForInformation.sort((a, b) => (a.localeCompare(b)));

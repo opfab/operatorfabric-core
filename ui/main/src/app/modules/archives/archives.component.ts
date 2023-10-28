@@ -88,7 +88,6 @@ export class ArchivesComponent implements OnDestroy, OnInit {
 
     constructor(
         private processesService: ProcessesService,
-        private entitiesService: EntitiesService,
         private dateTimeFormatter: DateTimeFormatterService,
         private cardService: CardService,
         private translationService: TranslationService,
@@ -328,7 +327,7 @@ export class ArchivesComponent implements OnDestroy, OnInit {
                                 [publishDateColumnName]: this.dateTimeFormatter.getFormattedDateAndTimeFromEpochDate(
                                     card.publishDate
                                 ),
-                                [publisherColumnName]: this.entitiesService.getEntityName(card.publisher),
+                                [publisherColumnName]: EntitiesService.getEntityName(card.publisher),
                                 [entityRecipientsColumnName]: this.getEntityRecipientsNames(card.entityRecipients).join(', '),
                                 [titleColumnName]: card.titleTranslated,
                                 [summaryColumnName]: card.summaryTranslated,
@@ -343,7 +342,7 @@ export class ArchivesComponent implements OnDestroy, OnInit {
                                 [publishDateColumnName]: this.dateTimeFormatter.getFormattedDateAndTimeFromEpochDate(
                                     card.publishDate
                                 ),
-                                [publisherColumnName]: this.entitiesService.getEntityName(card.publisher),
+                                [publisherColumnName]: EntitiesService.getEntityName(card.publisher),
                                 [entityRecipientsColumnName]: this.getEntityRecipientsNames(card.entityRecipients).join(', '),
                                 [titleColumnName]: card.titleTranslated,
                                 [summaryColumnName]: card.summaryTranslated,
@@ -415,7 +414,7 @@ export class ArchivesComponent implements OnDestroy, OnInit {
             let entityRecipientsNames = [];
 
             entityRecipients.forEach((entityId) => {
-                entityRecipientsNames.push(this.entitiesService.getEntityName(entityId));
+                entityRecipientsNames.push(EntitiesService.getEntityName(entityId));
             });
 
             if (maxLength && entityRecipientsNames.length > maxLength) {
@@ -430,6 +429,10 @@ export class ArchivesComponent implements OnDestroy, OnInit {
     getProcessName(processId: string): string {
         const process = this.processesService.getProcess(processId);
         return process?.name ?? processId;
+    }
+
+    getEntityName(name:string) {
+        return EntitiesService.getEntityName(name);
     }
 
     ngOnDestroy() {

@@ -25,7 +25,6 @@ export class OpfabAPIService {
     public userCardTemplateInterface: any;
 
     constructor(
-        private entityService: EntitiesService,
         private businessDataService: BusinessDataService,
         private translationService: TranslationService
     ) {
@@ -160,19 +159,18 @@ export class OpfabAPIService {
     }
 
     private initUserApi() {
-        const self = this;
         opfab.users.entities.getEntityName = function (entityId: string) {
-            return self.entityService.getEntityName(entityId);
+            return EntitiesService.getEntityName(entityId);
         };
         opfab.users.entities.getEntity = function (entityId: string) {
-            const entity = self.entityService.getEntity(entityId);
+            const entity = EntitiesService.getEntity(entityId);
             if (entity) return {...entity};
             else return undefined;
         };
 
         opfab.users.entities.getAllEntities = function () {
             const entities = [];
-            self.entityService.getEntities().forEach((entity) => entities.push({...entity}));
+            EntitiesService.getEntities().forEach((entity) => entities.push({...entity}));
             return entities;
         };
         // prevent unwanted modifications from templates code

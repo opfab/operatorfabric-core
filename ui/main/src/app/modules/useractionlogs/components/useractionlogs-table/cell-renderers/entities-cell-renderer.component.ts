@@ -22,12 +22,11 @@ export class EntitiesCellRendererComponent implements ICellRendererAngularComp {
     entities: Entity[];
 
 
-    constructor(protected entitiesService: EntitiesService) {}
 
     private _nameValues: string;
 
     agInit(params: any): void {
-        this.entities = this.entitiesService.getCachedValues();
+        this.entities = EntitiesService.getCachedValues();
         // Look up code in values returned by the corresponding service, if it exists return corresponding name, otherwise return code
         if (this.entities) {
             const value = params.getValue();

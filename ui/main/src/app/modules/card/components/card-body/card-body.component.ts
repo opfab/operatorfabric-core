@@ -85,7 +85,6 @@ export class CardBodyComponent implements OnChanges, OnInit, OnDestroy {
         private businessconfigService: ProcessesService,
         private cardService: CardService,
         private router: Router,
-        private entitiesService: EntitiesService,
         private userPermissionsService: UserPermissionsService,
         private lightCardsStoreService: LightCardsStoreService,
         private selectedCardService: SelectedCardService,
@@ -206,10 +205,10 @@ export class CardBodyComponent implements OnChanges, OnInit, OnDestroy {
                 this.card.entitiesRequiredToRespond
             );
 
-        const entitiesAllowedOrRequiredToRespond = this.entitiesService.getEntitiesFromIds(
+        const entitiesAllowedOrRequiredToRespond = EntitiesService.getEntitiesFromIds(
             entityIdsAllowedOrRequiredToRespond
         );
-        this.entityIdsAllowedOrRequiredToRespondAndAllowedToSendCards = this.entitiesService
+        this.entityIdsAllowedOrRequiredToRespondAndAllowedToSendCards = EntitiesService
             .resolveEntitiesAllowedToSendCards(entitiesAllowedOrRequiredToRespond)
             .map((entity) => entity.id);
 
@@ -233,9 +232,9 @@ export class CardBodyComponent implements OnChanges, OnInit, OnDestroy {
             return;
         }
 
-        const entitiesRequiredToRespond = this.entitiesService.getEntitiesFromIds(this.card.entitiesRequiredToRespond);
+        const entitiesRequiredToRespond = EntitiesService.getEntitiesFromIds(this.card.entitiesRequiredToRespond);
 
-        const entityIdsRequiredToRespondAndAllowedToSendCards = this.entitiesService
+        const entityIdsRequiredToRespondAndAllowedToSendCards = EntitiesService
             .resolveEntitiesAllowedToSendCards(entitiesRequiredToRespond)
             .map((entity) => entity.id);
 

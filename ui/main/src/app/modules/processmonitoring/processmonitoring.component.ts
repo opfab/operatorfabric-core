@@ -99,7 +99,6 @@ export class ProcessMonitoringComponent implements OnDestroy, OnInit, AfterViewI
         private dateTimeFormatter: DateTimeFormatterService,
         private cardService: CardService,
         private translationService: TranslationService,
-        private entitiesService: EntitiesService,
         private modalService: NgbModal,
         private selectedCardService: SelectedCardService,
         private changeDetector: ChangeDetectorRef
@@ -219,14 +218,14 @@ export class ProcessMonitoringComponent implements OnDestroy, OnInit, AfterViewI
 
     cardPostProcessing(card) {
         const isThirdPartyPublisher = card.publisherType === 'EXTERNAL';
-        const sender = isThirdPartyPublisher ? card.publisher : this.entitiesService.getEntityName(card.publisher);
+        const sender = isThirdPartyPublisher ? card.publisher : EntitiesService.getEntityName(card.publisher);
 
         let representative = '';
         if (card.representativeType && card.representative) {
             const isThirdPartyRepresentative = card.representativeType === 'EXTERNAL';
             representative = isThirdPartyRepresentative
                 ? card.representative
-                : this.entitiesService.getEntityName(card.representative);
+                : EntitiesService.getEntityName(card.representative);
         }
         card.sender = sender;
         card.representative = representative;

@@ -58,7 +58,6 @@ export class CardListComponent implements AfterViewChecked, OnInit {
         private modalService: NgbModal,
         private processesService: ProcessesService,
         private acknowledgeService: AcknowledgeService,
-        private entitiesService: EntitiesService,
         private groupedCardsService: GroupedCardsService,
         private router: Router,
         private sortService: SortService,
@@ -161,7 +160,7 @@ export class CardListComponent implements AfterViewChecked, OnInit {
         ) {
             try {
                 const entitiesAcks = [];
-                const entities = this.entitiesService.getEntitiesFromIds(
+                const entities = EntitiesService.getEntitiesFromIds(
                     this.currentUserWithPerimeters.userData.entities
                 );
                 entities.forEach((entity) => {

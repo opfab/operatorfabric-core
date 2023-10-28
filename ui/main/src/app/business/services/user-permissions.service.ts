@@ -22,7 +22,7 @@ import {User} from '@ofModel/user.model';
     providedIn: 'root'
 })
 export class UserPermissionsService {
-    constructor(private entitiesService: EntitiesService, private processesService: ProcessesService) {}
+    constructor(private processesService: ProcessesService) {}
 
     public isUserEnabledToRespond(user: UserWithPerimeters, card: Card, processDefinition: Process): boolean {
         if (this.isLttdExpired(card)) return false;
@@ -109,17 +109,16 @@ export class UserPermissionsService {
                 entitiesAllowedToRespondAndEntitiesRequiredToRespond.concat(card.entitiesRequiredToRespond);
 
         if (entitiesAllowedToRespondAndEntitiesRequiredToRespond) {
-            const entitiesAllowedToRespond = this.entitiesService
-                .getEntities()
-                .filter((entity) => entitiesAllowedToRespondAndEntitiesRequiredToRespond.includes(entity.id));
+            const entitiesAllowedToRespond = EntitiesService.getEntities().filter((entity) =>
+                entitiesAllowedToRespondAndEntitiesRequiredToRespond.includes(entity.id)
+            );
 
             let emittingEntityAllowedToRespond = false;
-            if (processDefinition.states.get((card.state)).response)
-                emittingEntityAllowedToRespond =
-                    processDefinition.states.get((card.state)).response.emittingEntityAllowedToRespond;
+            if (processDefinition.states.get(card.state).response)
+                emittingEntityAllowedToRespond = processDefinition.states.get(card.state).response
+                    .emittingEntityAllowedToRespond;
 
-            const allowed = this.entitiesService
-                .resolveEntitiesAllowedToSendCards(entitiesAllowedToRespond)
+            const allowed = EntitiesService.resolveEntitiesAllowedToSendCards(entitiesAllowedToRespond)
                 .map((entity) => entity.id)
                 .filter((x) => x !== card.publisher || emittingEntityAllowedToRespond);
 
@@ -142,7 +141,7 @@ export class UserPermissionsService {
     ): boolean {
         let permission = false;
         user.computedPerimeters.forEach((perim) => {
-            const stateOfTheCard =   processDefinition.states.get((card.state));
+            const stateOfTheCard = processDefinition.states.get(card.state);
 
             if (
                 stateOfTheCard?.response &&

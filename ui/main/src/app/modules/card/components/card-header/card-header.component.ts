@@ -39,7 +39,7 @@ export class CardHeaderComponent implements OnChanges {
     public listVisibleEntitiesToRespond = [];
     public listDropdownEntitiesToRespond = [];
 
-    constructor(private businessconfigService: ProcessesService, private entitiesService: EntitiesService) {}
+    constructor(private businessconfigService: ProcessesService) {}
 
     ngOnChanges(): void {
         this.computeExpireLabelAndIcon();
@@ -69,8 +69,8 @@ export class CardHeaderComponent implements OnChanges {
 
     private getEntityIdsAllowedToSendCards(entityIds) {
         if (!entityIds) return [];
-        const entities = this.entitiesService.getEntitiesFromIds(entityIds);
-        return this.entitiesService
+        const entities = EntitiesService.getEntitiesFromIds(entityIds);
+        return EntitiesService
             .resolveEntitiesAllowedToSendCards(entities)
             .map((entity) => entity.id);
     }
@@ -84,7 +84,7 @@ export class CardHeaderComponent implements OnChanges {
     private getEntitiesForCardHeaderFromEntityIds(entities: string[]) {
         const entityHeader = new Array<EntityForCardHeader>();
         entities.forEach((entity) => {
-            const entityName = this.entitiesService.getEntityName(entity);
+            const entityName = EntitiesService.getEntityName(entity);
             if (entityName) {
                 entityHeader.push({
                     id: entity,

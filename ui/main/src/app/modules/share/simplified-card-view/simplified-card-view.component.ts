@@ -42,7 +42,6 @@ export class SimplifiedCardViewComponent implements OnInit, OnDestroy {
 
     constructor(
         private businessconfigService: ProcessesService,
-        private entitiesService: EntitiesService,
         private opfabAPIService: OpfabAPIService
     ) {
         const userWithPerimeters = UserService.getCurrentUserWithPerimeters();
@@ -66,8 +65,8 @@ export class SimplifiedCardViewComponent implements OnInit, OnDestroy {
 
     private getEntityIdsRequiredToRespondAndAllowedToSendCards() {
         if (!this.card.entitiesRequiredToRespond) return [];
-        const entitiesAllowedToRespond = this.entitiesService.getEntitiesFromIds(this.card.entitiesRequiredToRespond);
-        return this.entitiesService
+        const entitiesAllowedToRespond = EntitiesService.getEntitiesFromIds(this.card.entitiesRequiredToRespond);
+        return EntitiesService
             .resolveEntitiesAllowedToSendCards(entitiesAllowedToRespond)
             .map((entity) => entity.id);
     }

@@ -26,7 +26,7 @@ export class CardAcksFooterComponent implements OnChanges, OnInit, OnDestroy {
 
     private unsubscribe$: Subject<void> = new Subject<void>();
 
-    constructor(private entitiesService: EntitiesService, private lightCardStoreService:LightCardsStoreService) {}
+    constructor(private lightCardStoreService:LightCardsStoreService) {}
 
     ngOnInit() {
         this.lightCardStoreService
@@ -67,12 +67,12 @@ export class CardAcksFooterComponent implements OnChanges, OnInit, OnDestroy {
         const entityRecipientsToAck = Utilities.removeElementsFromArray(this.card.entityRecipients, this.card.entityRecipientsForInformation);
 
         entityRecipientsToAck.forEach((entityRecipient) => {
-            const entity = this.entitiesService.getEntitiesFromIds([entityRecipient])[0];
+            const entity = EntitiesService.getEntitiesFromIds([entityRecipient])[0];
             if (entity.entityAllowedToSendCard) {
                 resolved.add(entityRecipient);
             }
 
-            this.entitiesService
+            EntitiesService
                 .resolveChildEntities(entityRecipient)
                 .filter((child) => child.entityAllowedToSendCard)
                 .forEach((child) => resolved.add(child.id));
@@ -81,7 +81,7 @@ export class CardAcksFooterComponent implements OnChanges, OnInit, OnDestroy {
         resolved.forEach((entityToAck) =>
             this.listEntitiesToAck.push({
                 id: entityToAck,
-                name: this.entitiesService.getEntityName(entityToAck),
+                name: EntitiesService.getEntityName(entityToAck),
                 color: this.checkEntityAcknowledged(entityToAck) ? 'green' : '#ff6600'
             })
         );

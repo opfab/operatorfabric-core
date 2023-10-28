@@ -11,7 +11,6 @@ import {Component, OnDestroy, OnInit} from '@angular/core';
 import {FormControl, FormGroup} from '@angular/forms';
 import {UserPreferencesService} from 'app/business/services/users/user-preference.service';
 import {MultiSelectConfig} from '@ofModel/multiselect.model';
-import {EntitiesService} from 'app/business/services/users/entities.service';
 import {ConfigServer} from 'app/business/server/config.server';
 import {RealtimeUsersView} from 'app/business/view/realtimeusers/realtimeusers.view';
 import {RealtimePage} from 'app/business/view/realtimeusers/realtimePage';
@@ -39,8 +38,7 @@ export class RealtimeusersComponent implements OnInit, OnDestroy {
     initialScreenOption: string;
 
     constructor(
-        private configServer: ConfigServer,
-        private entitiesService: EntitiesService
+        private configServer: ConfigServer
     ) {}
 
     ngOnInit(): void {
@@ -49,8 +47,7 @@ export class RealtimeusersComponent implements OnInit, OnDestroy {
         });
 
         this.realtimeusersView = new RealtimeUsersView(
-            this.configServer,
-            this.entitiesService
+            this.configServer
         );
         this.realtimeusersView.getPage().subscribe((realtimePage) => {
             if (realtimePage) {

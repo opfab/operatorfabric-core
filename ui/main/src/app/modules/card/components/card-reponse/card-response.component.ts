@@ -82,7 +82,6 @@ export class CardResponseComponent implements OnChanges, OnInit {
 
     constructor(
         private cardService: CardService,
-        private entitiesService: EntitiesService,
         private modalService: NgbModal,
         private userPermissionsService: UserPermissionsService,
         private processService: ProcessesService,
@@ -133,7 +132,7 @@ export class CardResponseComponent implements OnChanges, OnInit {
         this.userEntityOptionsDropdownList = [];
         if (this.userEntityIdsPossibleForResponse)
             this.userEntityIdsPossibleForResponse.forEach((entityId) => {
-                const entity = this.entitiesService.getEntities().find((e) => e.id === entityId);
+                const entity = EntitiesService.getEntities().find((e) => e.id === entityId);
                 this.userEntityOptionsDropdownList.push({value: entity.id, label: entity.name});
             });
         this.userEntityOptionsDropdownList.sort((a, b) => Utilities.compareObj(a.label, b.label));

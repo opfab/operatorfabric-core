@@ -25,7 +25,6 @@ describe('Realtimeusers', () => {
     let configServerMock: ConfigServerMock;
     let userServerMock: UserServerMock;
     let entitiesServerMock: EntitiesServerMock;
-    let entitiesService: EntitiesService;
 
     beforeEach(() => {
         mockLoggerService();
@@ -48,7 +47,7 @@ describe('Realtimeusers', () => {
         clock = jasmine.clock();
         clock.install();
 
-        view = new RealtimeUsersView(configServerMock, entitiesService);
+        view = new RealtimeUsersView(configServerMock);
         view.getPage().subscribe((realtimePage) => {
             page = realtimePage;
             view.setSelectedScreen('0');
@@ -75,8 +74,8 @@ describe('Realtimeusers', () => {
 
     function mockEntitiesService() {
         entitiesServerMock = new EntitiesServerMock();
-        entitiesService = new EntitiesService(entitiesServerMock);
-        entitiesService.loadAllEntitiesData().subscribe();
+        EntitiesService.setEntitiesServer(entitiesServerMock);
+        EntitiesService.loadAllEntitiesData().subscribe();
     }
 
     it('After view is initialized, screen options should be saved', () => {

@@ -45,7 +45,6 @@ export class UserCardRecipientsFormComponent implements OnInit, OnChanges {
     };
 
     constructor(
-        private entitiesService: EntitiesService,
         private opfabAPIService: OpfabAPIService
     ) {
         this.useDescriptionFieldForEntityList = ConfigService.getConfigValue(
@@ -86,7 +85,7 @@ export class UserCardRecipientsFormComponent implements OnInit, OnChanges {
 
     private loadRecipientsOptions() {
         this.recipientsOptions = [];
-        this.entitiesService
+        EntitiesService
             .getEntities()
             .forEach((entity) =>
                 this.recipientsOptions.push(new MultiSelectOption(entity.id, this.getEntityLabel(entity)))
@@ -95,7 +94,7 @@ export class UserCardRecipientsFormComponent implements OnInit, OnChanges {
 
     private loadRecipientsForInformationOptions() {
         this.recipientsForInformationOptions = [];
-        this.entitiesService
+        EntitiesService
             .getEntities()
             .forEach((entity) =>
                 this.recipientsForInformationOptions.push(new MultiSelectOption(entity.id, this.getEntityLabel(entity)))
@@ -104,7 +103,7 @@ export class UserCardRecipientsFormComponent implements OnInit, OnChanges {
 
     private loadRestrictedRecipientList(recipients: EntitiesTree[]): void {
         this.recipientsOptions = [];
-        this.entitiesService
+        EntitiesService
             .resolveEntities(recipients)
             .forEach((entity) =>
                 this.recipientsOptions.push(new MultiSelectOption(entity.id, this.getEntityLabel(entity)))
@@ -113,7 +112,7 @@ export class UserCardRecipientsFormComponent implements OnInit, OnChanges {
 
     private loadRestrictedRecipientForInformationList(recipientsForInformation: EntitiesTree[]): void {
         this.recipientsForInformationOptions = [];
-        this.entitiesService
+        EntitiesService
             .resolveEntities(recipientsForInformation)
             .forEach((entity) =>
                 this.recipientsForInformationOptions.push(new MultiSelectOption(entity.id, this.getEntityLabel(entity)))

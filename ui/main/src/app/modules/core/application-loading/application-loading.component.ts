@@ -10,7 +10,6 @@
 import {Component, OnInit, Output, ViewChild} from '@angular/core';
 import {TranslateService} from '@ngx-translate/core';
 import {ConfigService} from 'app/business/services/config.service';
-import {EntitiesService} from 'app/business/services/users/entities.service';
 import {GroupsService} from 'app/business/services/users/groups.service';
 import {LoggerService as logger} from 'app/business/services/logs/logger.service';
 import {ProcessesService} from 'app/business/services/businessconfig/processes.service';
@@ -39,6 +38,8 @@ import {TranslationService} from 'app/business/services/translation/translation.
 import {UserServer} from 'app/business/server/user.server';
 import {AngularRouterService} from '@ofServices/angularRouterService';
 import {GlobalStyleService} from 'app/business/services/global-style.service';
+import {EntitiesServer} from 'app/business/server/entities.server';
+import {EntitiesService} from 'app/business/services/users/entities.service';
 
 declare const opfab: any;
 @Component({
@@ -68,7 +69,6 @@ export class ApplicationLoadingComponent implements OnInit {
         private configServer: ConfigServer,
         private settingsService: SettingsService,
         private translateService: TranslateService,
-        private entitiesService: EntitiesService,
         private groupsService: GroupsService,
         private businessDataService: BusinessDataService,
         private processesService: ProcessesService,
@@ -81,7 +81,8 @@ export class ApplicationLoadingComponent implements OnInit {
         private translationService: TranslationService,
         private remoteLoggerServer: RemoteLoggerServer,
         private userServer: UserServer,
-        private routerService: AngularRouterService
+        private routerService: AngularRouterService,
+        private entitiesServer: EntitiesServer
     ) {}
 
     ngOnInit() {
@@ -91,7 +92,8 @@ export class ApplicationLoadingComponent implements OnInit {
             translationService: this.translationService,
             userServer: this.userServer,
             routerService: this.routerService,
-            opfabAPIService: this.opfabAPIService
+            opfabAPIService: this.opfabAPIService,
+            entitiesServer: this.entitiesServer
         });
 
 
@@ -209,7 +211,7 @@ export class ApplicationLoadingComponent implements OnInit {
         const requestsToLaunch$ = [
             ConfigService.loadUiMenuConfig(),
             UserService.loadUserWithPerimetersData(),
-            this.entitiesService.loadAllEntitiesData(),
+            EntitiesService.loadAllEntitiesData(),
             this.groupsService.loadAllGroupsData(),
             this.processesService.loadAllProcessesWithLatestVersion(),
             this.processesService.loadAllProcessesWithAllVersions(),

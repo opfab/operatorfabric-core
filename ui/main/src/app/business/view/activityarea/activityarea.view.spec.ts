@@ -26,7 +26,6 @@ import {ActivityAreaView} from './activityarea.view';
 
 describe('ActivityAreaView', () => {
     let userServerMock: UserServerMock;
-    let entitiesService: EntitiesService;
     let entitiesServerMock: EntitiesServerMock;
     let settingsService: SettingsService;
     let settingsServerMock: SettingsServerMock;
@@ -51,13 +50,13 @@ describe('ActivityAreaView', () => {
 
     function mockEntitiesService() {
         entitiesServerMock = new EntitiesServerMock();
-        entitiesService = new EntitiesService(entitiesServerMock);
+        EntitiesService.setEntitiesServer(entitiesServerMock);
         const entities: Entity[] = new Array();
         entities.push(new Entity('ENTITY1', 'ENTITY1_NAME', '', true, [], []));
         entities.push(new Entity('ENTITY2', 'ENTITY2_NAME', '', true, [], []));
         entities.push(new Entity('ENTITY_NOT_ALLOWED_TO_SEND_CARD', 'ENTITY3', '', false, [], []));
         entitiesServerMock.setEntities(entities);
-        entitiesService.loadAllEntitiesData().subscribe();
+        EntitiesService.loadAllEntitiesData().subscribe();
         userServerMock.setResponseForConnectedUsers(new ServerResponse([], ServerResponseStatus.OK, null));
     }
 
@@ -92,7 +91,7 @@ describe('ActivityAreaView', () => {
     }
 
     function initActivityAreaView() {
-        activityAreaView = new ActivityAreaView(entitiesService, settingsService, lightCardsStoreService);
+        activityAreaView = new ActivityAreaView(settingsService, lightCardsStoreService);
     }
 
     it('GIVEN a user  WHEN he is member of entity1 THEN activityArea has one line with entity1 and entity1 name', async () => {

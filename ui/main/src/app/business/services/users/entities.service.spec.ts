@@ -15,25 +15,21 @@ import {Entity} from '@ofModel/entity.model';
 import {ConfigServerMock} from '@tests/mocks/configServer.mock';
 import {ConfigServer} from 'app/business/server/config.server';
 import {RemoteLoggerServer} from 'app/business/server/remote-logger.server';
-import {EntitiesServer} from 'app/business/server/entities.server';
 import {AngularEntitiesServer} from 'app/server/angularEntities.server';
 
 describe('EntitiesService', () => {
     let httpMock: HttpTestingController;
-    let entitiesService: EntitiesService;
 
     beforeEach(() => {
         TestBed.configureTestingModule({
             providers: [
-                EntitiesService, 
                 {provide: ConfigServer, useClass: ConfigServerMock},
-                {provide: EntitiesServer, useClass: AngularEntitiesServer},
-                {provide: RemoteLoggerServer, useValue: null},
+                {provide: RemoteLoggerServer, useValue: null}
             ],
             imports: [HttpClientTestingModule]
         });
         httpMock = TestBed.inject(HttpTestingController);
-        entitiesService = TestBed.inject(EntitiesService);
+        EntitiesService.setEntitiesServer(TestBed.inject(AngularEntitiesServer));
     });
     afterEach(() => {
         httpMock.verify();
@@ -46,7 +42,7 @@ describe('EntitiesService', () => {
             const entity2 = new Entity('ENTITY2', 'Control Room 2', 'Control Room 2', true, [], []);
             listEntities.push(entity1);
             listEntities.push(entity2);
-            entitiesService.queryAllEntities().subscribe((result) => {
+            EntitiesService.queryAllEntities().subscribe((result) => {
                 expect(result.length).toBe(2);
                 expect(result[0].id).toBe('ENTITY1');
                 expect(result[1].id).toBe('ENTITY2');
@@ -90,12 +86,12 @@ describe('EntitiesService', () => {
             listEntities.push(entity3_1_2);
             listEntities.push(entity3_2);
 
-            entitiesService.loadAllEntitiesData().subscribe((result) => {
+            EntitiesService.loadAllEntitiesData().subscribe((result) => {
                 expect(result.length).toBe(7);
                 const selectedEntities: Entity[] = [];
                 selectedEntities.push(entity2);
                 selectedEntities.push(entity3);
-                const allowedEntities = entitiesService.resolveEntitiesAllowedToSendCards(selectedEntities);
+                const allowedEntities = EntitiesService.resolveEntitiesAllowedToSendCards(selectedEntities);
                 expect(allowedEntities.length).toBe(3);
                 expect(allowedEntities[0].id).toBe('ENTITY2');
                 expect(allowedEntities[1].id).toBe('ENTITY3.1.2');
@@ -117,12 +113,12 @@ describe('EntitiesService', () => {
             listEntities.push(entity2);
             listEntities.push(entityGroup);
 
-            entitiesService.loadAllEntitiesData().subscribe((result) => {
+            EntitiesService.loadAllEntitiesData().subscribe((result) => {
                 expect(result.length).toBe(3);
                 const selectedEntities: Entity[] = [];
                 selectedEntities.push(entityGroup);
 
-                const allowedEntities = entitiesService.resolveEntitiesAllowedToSendCards(selectedEntities);
+                const allowedEntities = EntitiesService.resolveEntitiesAllowedToSendCards(selectedEntities);
                 expect(allowedEntities.length).toBe(1);
                 expect(allowedEntities[0].id).toBe('ENTITYGROUP');
             });
@@ -142,14 +138,14 @@ describe('EntitiesService', () => {
             listEntities.push(entity2);
             listEntities.push(entityGroup);
 
-            entitiesService.loadAllEntitiesData().subscribe((result) => {
+            EntitiesService.loadAllEntitiesData().subscribe((result) => {
                 expect(result.length).toBe(3);
                 const selectedEntities: Entity[] = [];
                 selectedEntities.push(entity1);
                 selectedEntities.push(entity2);
                 selectedEntities.push(entityGroup);
 
-                const allowedEntities = entitiesService.resolveEntitiesAllowedToSendCards(selectedEntities);
+                const allowedEntities = EntitiesService.resolveEntitiesAllowedToSendCards(selectedEntities);
                 expect(allowedEntities.length).toBe(2);
                 expect(allowedEntities[0].id).toBe('ENTITY1');
                 expect(allowedEntities[1].id).toBe('ENTITY2');
@@ -193,26 +189,26 @@ describe('EntitiesService', () => {
             listEntities.push(entity3_1_2);
             listEntities.push(entity3_2);
 
-            entitiesService.loadAllEntitiesData().subscribe((result) => {
+            EntitiesService.loadAllEntitiesData().subscribe((result) => {
                 expect(result.length).toBe(7);
-                const allowedEntities = entitiesService.resolveChildEntitiesByLevel('ENTITY1', 0);
+                const allowedEntities = EntitiesService.resolveChildEntitiesByLevel('ENTITY1', 0);
                 expect(allowedEntities.length).toBe(1);
                 expect(allowedEntities[0].id).toBe('ENTITY1');
 
-                const allowedEntities1 = entitiesService.resolveChildEntitiesByLevel('ENTITY3', 1);
+                const allowedEntities1 = EntitiesService.resolveChildEntitiesByLevel('ENTITY3', 1);
                 expect(allowedEntities1.length).toBe(2);
                 expect(allowedEntities1[0].id).toBe('ENTITY3.1');
                 expect(allowedEntities1[1].id).toBe('ENTITY3.2');
 
-                const allowedEntities2 = entitiesService.resolveChildEntitiesByLevel('ENTITY3', 2);
+                const allowedEntities2 = EntitiesService.resolveChildEntitiesByLevel('ENTITY3', 2);
                 expect(allowedEntities2.length).toBe(2);
                 expect(allowedEntities2[0].id).toBe('ENTITY3.1.1');
                 expect(allowedEntities2[1].id).toBe('ENTITY3.1.2');
 
-                const allowedEntities3 = entitiesService.resolveChildEntitiesByLevel('ENTITY2', 1);
+                const allowedEntities3 = EntitiesService.resolveChildEntitiesByLevel('ENTITY2', 1);
                 expect(allowedEntities3.length).toBe(0);
 
-                const allowedEntities4 = entitiesService.resolveChildEntitiesByLevel('ENTITY2', 2);
+                const allowedEntities4 = EntitiesService.resolveChildEntitiesByLevel('ENTITY2', 2);
                 expect(allowedEntities4.length).toBe(0);
             });
             const req = httpMock.expectOne(`${environment.url}/users/entities`);
@@ -257,16 +253,16 @@ describe('EntitiesService', () => {
             listEntities.push(entity3_1_2);
             listEntities.push(entity3_2);
 
-            entitiesService.loadAllEntitiesData().subscribe((result) => {
+            EntitiesService.loadAllEntitiesData().subscribe((result) => {
                 expect(result.length).toBe(8);
-                const allowedEntities = entitiesService.resolveChildEntities('ENTITY1');
+                const allowedEntities = EntitiesService.resolveChildEntities('ENTITY1');
                 expect(allowedEntities.length).toBe(0);
 
-                const allowedEntities2 = entitiesService.resolveChildEntities('ENTITY2');
+                const allowedEntities2 = EntitiesService.resolveChildEntities('ENTITY2');
                 expect(allowedEntities2.length).toBe(1);
                 expect(allowedEntities2[0].id).toBe('ENTITY2.1');
 
-                const allowedEntities3 = entitiesService.resolveChildEntities('ENTITY3');
+                const allowedEntities3 = EntitiesService.resolveChildEntities('ENTITY3');
                 expect(allowedEntities3.length).toBe(4);
                 expect(allowedEntities3[0].id).toBe('ENTITY3.1');
                 expect(allowedEntities3[1].id).toBe('ENTITY3.1.1');
