@@ -7,7 +7,7 @@
  * This file is part of the OperatorFabric project.
  */
 
-// Karma configuration file, see url for more information
+/// Karma configuration file, see url for more information
 // https://karma-runner.github.io/1.0/config/configuration-file.html
 
 module.exports = function (config) {
@@ -18,12 +18,18 @@ module.exports = function (config) {
             require('karma-jasmine'),
             require('karma-chrome-launcher'),
             require('karma-jasmine-html-reporter'),
+            require('karma-coverage-istanbul-reporter'),
             require('karma-mocha-reporter'),
             require('@angular-devkit/build-angular/plugins/karma'),
             require('karma-junit-reporter')
         ],
         client: {
             clearContext: false // leave Jasmine Spec Runner output visible in browser
+        },
+        coverageIstanbulReporter: {
+            dir: require('path').join(__dirname, '../reports/coverage'),
+            reports: ['html', 'lcovonly'],
+            fixWebpackSourcePaths: true
         },
         junitReporter: {
             outputDir: '../reports/test', // results will be saved as $outputDir/$browserName.xml
@@ -32,7 +38,7 @@ module.exports = function (config) {
         },
         // add converage-istanbul for migration to angular 13  , see
         // https://stackoverflow.com/questions/70045859/after-upgrading-to-angular-13-the-tests-with-code-coverage-is-failing/70046050
-        reporters: ['mocha', 'kjhtml', 'junit'],
+        reporters: ['mocha', 'kjhtml', 'junit', 'coverage-istanbul'],
         port: 9876,
         colors: true,
         logLevel: config.LOG_INFO,
