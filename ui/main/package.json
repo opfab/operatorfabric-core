@@ -6,7 +6,7 @@
     "start": "ng serve",
     "build": "ng build",
     "test": "ng test",
-    "headless": "ng test --browsers ChromeHeadless --watch=false",
+    "headless": "ng test --browsers ChromeHeadless --watch=false --code-coverage",
     "lint": "ng lint",
     "e2e": "ng e2e",
     "audit": "npm audit --json | $(npm bin)/npm-audit-html --output reports/report.html"
@@ -81,6 +81,7 @@
     "jasmine-marbles": "0.9.2",
     "karma": "6.4.2",
     "karma-chrome-launcher": "3.2.0",
+    "karma-coverage-istanbul-reporter": "3.0.3",
     "karma-jasmine": "5.1.0",
     "karma-jasmine-html-reporter": "2.1.0",
     "karma-junit-reporter": "2.0.1",
