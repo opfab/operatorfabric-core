@@ -27,6 +27,7 @@ import {DateTimeFormatterService} from 'app/business/services/date-time-formatte
 import {SelectedCardService} from 'app/business/services/card/selectedCard.service';
 import {CardService} from 'app/business/services/card/card.service';
 import {TranslationService} from 'app/business/services/translation/translation.service';
+import {ConfigService} from 'app/business/services/config.service';
 
 @Component({
     selector: 'of-monitoring-table',
@@ -86,7 +87,7 @@ export class MonitoringTableComponent implements OnChanges, OnDestroy {
         private selectedCardService: SelectedCardService,
         private lightCardsStoreService: LightCardsStoreService
     ) {
-        this.monitoringConfig = processesService.getMonitoringConfig();
+        this.monitoringConfig = ConfigService.getMonitoringConfig();
 
         this.timeColumnName = this.translateColumn('shared.result.time');
         this.titleColumnName = this.translateColumn('shared.result.title');

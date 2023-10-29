@@ -221,7 +221,7 @@ export class ApplicationLoadingComponent implements OnInit {
             this.processesService.loadAllProcessesWithLatestVersion(),
             this.processesService.loadAllProcessesWithAllVersions(),
             this.processesService.loadProcessGroups(),
-            this.processesService.loadMonitoringConfig()
+            ConfigService.loadMonitoringConfig()
         ];
         Utilities.subscribeAndWaitForAllObservablesToEmitAnEvent(requestsToLaunch$).subscribe({
             next: () => {

@@ -16,12 +16,10 @@ import {
     ShowAcknowledgmentFooterEnum,
     TypeOfStateEnum
 } from '@ofModel/processes.model';
-import {MonitoringConfig} from '@ofModel/monitoringConfig.model';
 import {Card} from '@ofModel/card.model';
 import {UserService} from 'app/business/services/users/user.service';
 import {LightCard} from '@ofModel/light-card.model';
 import {ProcessServer} from 'app/business/server/process.server';
-import {ConfigServer} from 'app/business/server/config.server';
 import {ServerResponseStatus} from '../../server/serverResponse';
 
 @Injectable({
@@ -32,13 +30,11 @@ export class ProcessesService {
     private processesWithLatestVersionOnly: Process[];
     private processesWithAllVersions: Process[];
     private processGroups = new Map<string, {name: string; processes: string[]}>();
-    private monitoringConfig: MonitoringConfig;
 
     private typeOfStatesPerProcessAndState: Map<string, TypeOfStateEnum>;
 
     constructor(
-        private processServer: ProcessServer,
-        private configServer: ConfigServer
+        private processServer: ProcessServer
     ) {}
 
     public loadAllProcessesWithLatestVersion(): Observable<any> {
@@ -113,20 +109,6 @@ export class ProcessesService {
         });
     }
 
-    public loadMonitoringConfig(): Observable<MonitoringConfig> {
-        return this.configServer.getMonitoringConfiguration().pipe(
-            map((serverResponse) => {
-                const monitoringConfig = serverResponse.data;
-                if (monitoringConfig) {
-                    this.monitoringConfig = monitoringConfig;
-                    console.log(new Date().toISOString(), 'Monitoring config loaded');
-                } else console.log(new Date().toISOString(), 'No monitoring config to load');
-                if (serverResponse.status !== ServerResponseStatus.OK)
-                    console.error(new Date().toISOString(), 'An error occurred when loading monitoringConfig');
-                return monitoringConfig;
-            })
-        );
-    }
 
     public getAllProcesses(): Process[] {
         return this.processesWithLatestVersionOnly;
@@ -140,10 +122,6 @@ export class ProcessesService {
         const processGroup = this.processGroups.get(id);
         if (processGroup) return processGroup.name;
         return '';
-    }
-
-    public getMonitoringConfig(): any {
-        return this.monitoringConfig;
     }
 
     public getProcess(processId: string): Process {

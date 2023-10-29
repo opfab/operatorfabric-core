@@ -8,7 +8,6 @@
  */
 
 import {ProcessesService} from 'app/business/services/businessconfig/processes.service';
-import {ConfigServerMock} from '@tests/mocks/configServer.mock';
 import {ProcessServerMock} from '@tests/mocks/processServer.mock';
 import {Dashboard} from './dashboard.view';
 import {UserService} from 'app/business/services/users/user.service';
@@ -35,18 +34,17 @@ describe('Dashboard', () => {
     let processesService: ProcessesService;
     let userServerMock: UserServerMock;
     let processServerMock: ProcessServerMock;
-    let configServerMock: ConfigServerMock;
     let lightCardsStoreService: LightCardsStoreService;
     let filterService: FilterService;
     let opfabEventStreamServerMock: OpfabEventStreamServerMock;
     let acknowledgeService: AcknowledgeService;
 
     beforeEach(() => {
-        configServerMock = new ConfigServerMock();
+
         userServerMock = new UserServerMock();
         UserService.setUserServer(userServerMock);
         processServerMock = new ProcessServerMock();
-        processesService = new ProcessesService(processServerMock, configServerMock);
+        processesService = new ProcessesService(processServerMock);
         filterService = new FilterService();
 
         opfabEventStreamServerMock = new OpfabEventStreamServerMock();

@@ -21,7 +21,6 @@ import {UserWithPerimeters} from '@ofModel/userWithPerimeters.model';
 import {User} from '@ofModel/user.model';
 import {RightsEnum} from '@ofModel/perimeter.model';
 import {EntitiesService} from 'app/business/services/users/entities.service';
-import {ConfigServerMock} from '@tests/mocks/configServer.mock';
 import {ProcessServerMock} from '@tests/mocks/processServer.mock';
 import {UserPermissionsService} from './user-permissions.service';
 import {UserService} from './users/user.service';
@@ -45,7 +44,6 @@ describe('AcknowledgeService testing ', () => {
         userMemberOfEntity1AndEntity3 = new User('userMemberOfEntity1AndEntity3', 'firstName', null, 'lastName', ['group1'], ['ENTITY1', 'ENTITY3']);
 
         statesList = new Map<string, State>();
-        const configServerMock = new ConfigServerMock();
 
         userServerMock = new UserServerMock();
         userServerMock.setResponseForCurrentUserWithPerimeter(new ServerResponse(getUserMemberOfEntity1WithPerimeter(), ServerResponseStatus.OK, ""));
@@ -53,7 +51,7 @@ describe('AcknowledgeService testing ', () => {
 
         const processServerMock = new ProcessServerMock();
         processServerMock.setResponseForAllProcessDefinition(new ServerResponse(getTestProcesses(), ServerResponseStatus.OK, ""));
-        const processesService = new ProcessesService(processServerMock, configServerMock);
+        const processesService = new ProcessesService(processServerMock);
         processesService.loadAllProcessesWithLatestVersion().subscribe();
         processesService.loadAllProcessesWithAllVersions().subscribe();
         UserService.loadUserWithPerimetersData().subscribe();

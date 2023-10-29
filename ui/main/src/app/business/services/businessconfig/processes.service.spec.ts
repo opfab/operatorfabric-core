@@ -9,19 +9,16 @@
 
 import {ProcessesService} from './processes.service';
 import {Process} from '@ofModel/processes.model';
-import {ConfigServerMock} from '@tests/mocks/configServer.mock';
 import {ProcessServerMock} from '@tests/mocks/processServer.mock';
 import {ServerResponse, ServerResponseStatus} from '../../server/serverResponse';
 
 describe('Processes Services', () => {
     let processesService: ProcessesService;
     let processServerMock: ProcessServerMock;
-    let configServerMock: ConfigServerMock;
 
     beforeEach(() => {
         processServerMock = new ProcessServerMock();
-        configServerMock = new ConfigServerMock();
-        processesService = new ProcessesService(processServerMock, configServerMock);
+        processesService = new ProcessesService(processServerMock);
     });
 
 

@@ -12,8 +12,6 @@ import {HttpClientTestingModule, HttpTestingController} from '@angular/common/ht
 import {environment} from '../../../../environments/environment';
 import {EntitiesService} from 'app/business/services/users/entities.service';
 import {Entity} from '@ofModel/entity.model';
-import {ConfigServerMock} from '@tests/mocks/configServer.mock';
-import {ConfigServer} from 'app/business/server/config.server';
 import {RemoteLoggerServer} from 'app/business/server/remote-logger.server';
 import {AngularEntitiesServer} from 'app/server/angularEntities.server';
 
@@ -23,7 +21,6 @@ describe('EntitiesService', () => {
     beforeEach(() => {
         TestBed.configureTestingModule({
             providers: [
-                {provide: ConfigServer, useClass: ConfigServerMock},
                 {provide: RemoteLoggerServer, useValue: null}
             ],
             imports: [HttpClientTestingModule]

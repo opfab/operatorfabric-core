@@ -12,11 +12,14 @@ import * as _ from 'lodash-es';
 import {Observable, of, Subject, throwError} from 'rxjs';
 import {CoreMenuConfig, Locale, CustomMenu, UIMenuFile} from '@ofModel/menu.model';
 import {ConfigServer} from '../server/config.server';
+import {MonitoringConfig} from '@ofModel/monitoringConfig.model';
+import {ServerResponseStatus} from '../server/serverResponse';
 
 export class ConfigService {
     private static configServer: ConfigServer;
     private static config;
     private static customMenus: CustomMenu[] = [];
+    private static monitoringConfig: MonitoringConfig;
 
     private static navigationBar: (CoreMenuConfig | CustomMenu)[];
     private static topRightIconMenus: CoreMenuConfig[];
@@ -116,7 +119,9 @@ export class ConfigService {
     /* Configuration for custom menus */
 
     public static fetchMenuTranslations(): Observable<Locale[]> {
-        return ConfigService.configServer.getMenuConfiguration().pipe(map((serverResponse) => serverResponse.data?.locales));
+        return ConfigService.configServer
+            .getMenuConfiguration()
+            .pipe(map((serverResponse) => serverResponse.data?.locales));
     }
 
     public static computeMenu(): Observable<CustomMenu[]> {
@@ -161,5 +166,24 @@ export class ConfigService {
                 this.customMenus.push(new CustomMenu(menuConfig.id, menuConfig.label, menuConfig.entries));
         });
         return this.customMenus;
+    }
+
+    public static loadMonitoringConfig(): Observable<MonitoringConfig> {
+        return ConfigService.configServer.getMonitoringConfiguration().pipe(
+            map((serverResponse) => {
+                const monitoringConfig = serverResponse.data;
+                if (monitoringConfig) {
+                    ConfigService.monitoringConfig = monitoringConfig;
+                    console.log(new Date().toISOString(), 'Monitoring config loaded');
+                } else console.log(new Date().toISOString(), 'No monitoring config to load');
+                if (serverResponse.status !== ServerResponseStatus.OK)
+                    console.error(new Date().toISOString(), 'An error occurred when loading monitoringConfig');
+                return monitoringConfig;
+            })
+        );
+    }
+
+    public static getMonitoringConfig(): any {
+        return ConfigService.monitoringConfig;
     }
 }
