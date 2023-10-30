@@ -1,4 +1,4 @@
-// Copyright (c) 2018-2021 RTE (http://www.rte-france.com)
+// Copyright (c) 2018-2023 RTE (http://www.rte-france.com)
 // See AUTHORS.txt
 // This document is subject to the terms of the Creative Commons Attribution 4.0 International license.
 // If a copy of the license was not distributed with this
@@ -288,6 +288,12 @@ image::confirm_release_to_maven_central.png[Release to Maven Central]
 
 . It can take up to two hours for them to appear on the https://search.maven.org/search?q=opfab[Maven Central Repository Search] and up to one day for https://mvnrepository.com/artifact/org.opfab[MvnRepository]
 
+[[supported_versions]]
+=== Update supported versions
+
+Update supported version in security policy (SECURITY.md file) via a Pull Request on develop branch 
+
+
 [[advertising_new_release]]
 === Advertising the new release 
 
@@ -387,6 +393,7 @@ You then have to follow the following steps as for a classic release:
 * <<checking_docker_compose, Checking the docker-compose files>>.
 * <<publishing_release_on_github, Publishing the release on GitHub>>.
 * <<publishing_client_lib_release, Release the client library jars>>.
+* <<supported_versions, Update supported versions>>.
 * <<advertising_new_release, Advertising the new release>>.
 
 
