@@ -49,7 +49,7 @@ docker {
 				from('build') {
 					include 'domain/**'
                     include 'common/**'
-                    include 'connectionSupervisor.js'
+                    include 'supervisor.js'
 					into 'dockerBuild'
 				}
                 from('config') {

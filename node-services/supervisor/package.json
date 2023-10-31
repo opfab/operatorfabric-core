@@ -2,11 +2,11 @@
   "name": "opfab-supervisor",
   "version": "1.0.1",
   "description": "opfab supervisor",
-  "main": "connectionSupervisor.js",
+  "main": "supervisor.js",
   "scripts": {
     "start:dev": "npx nodemon",
     "build": "rimraf ./build && tsc",
-    "start": "npm run build && node build/connectionSupervisor.js",
+    "start": "npm run build && node build/supervisor.js",
     "test": "jest --coverage",
     "test:watch": "jest --watch"
   },
