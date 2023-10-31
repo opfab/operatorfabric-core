@@ -7,7 +7,7 @@
 
 = Build-in templates
 
-Instead of coding you own templates for cards or user cards, you can use opfab build-in templates if it suits your needs. 
+Instead of coding your own templates for cards or user cards, you can use opfab build-in templates if it suits your needs.
 
 == Message
 

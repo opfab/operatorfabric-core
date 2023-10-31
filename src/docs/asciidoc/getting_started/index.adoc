@@ -775,6 +775,111 @@ If you look at the *message.handlebars* file in the bundle, you will see how the
 {{card.data.message}}
 ----
 
-See the link:https://opfab.github.io/documentation/current/reference_doc/#user_cards[card documentation] for further informations on cards.
+See the link:https://opfab.github.io/documentation/current/reference_doc/#user_cards[card documentation] for further
+information on cards.
+
+=== Example 7: Message card using "build-in" templates
+
+Instead of coding your own templates for message cards or user cards, you can use opfab build-in templates if it suits your needs.
+In the following example, we are going to modify the templates of the previous bundle (the message card).
+
+If you want to show only a simple message, you can use the message build-in template, to achieve this, first you have to
+put in your handlebar file `message.handlebars`:
+
+```
+<opfab-message-card> </opfab-message-card>
+
+```
+
+NOTE: The build-in template supposes the message is stored in the card in field `data.message`.
+
+Then you have to put in your handlebar file `message_usercard.handlebars`:
+
+```
+<opfab-message-usercard> </opfab-message-usercard>
+
+```
+
+NOTE: The message will be stored in the field `data.message` of the card.
+
+You can package the bundle and send it to the server with the provided scripts :
+
+----
+./packageBundle.sh | ./sendBundle.sh
+----
+
+Now if you reload the page, you should be able to create a card using build-in template.
+
+image::example7_card_send.png[example 7 screen shot #1]
+
+
+You can change the text header by providing the message-header attribute:
+
+```
+<opfab-message-card  message-header="a new header"> </opfab-message-card>
+```
+
+By using attributes you can set some parameters regarding recipients, see
+ifdef::single-page-doc[<<'build-in_templates_common_usercard_attributes,common attributes for user cards'>>]
+ifndef::single-page-doc[<</documentation/current/reference_doc/index.adoc#build-in_templates_common_usercard_attributes, common attributes for user cards>>]
+
+You can see the updated UI using this command line and refreshing the page to update the bundle.
+
+----
+./packageBundle_updated.sh | ./sendBundle.sh
+----
+
+image::example7_card_send_updated.png[example 7 screen shot #2]
+
+=== Example 8: Question card using "build-in" templates
+
+Another example of templating is a question/response use case. Opfab allows you to send a response which will be attached
+to the card. This mechanism can be illustrated via the build-in template for question card.
+
+To show a question and see user responses, first you have to put in your handlebar file `question.handlebars`:
+
+```
+<opfab-question-card> </opfab-question-card>
+
+```
+
+NOTE: The build-in template supposes the question is stored in the card in the field `data.question`.
+
+Then you have to put in your handlebar file `question_usercard.handlebars`:
+
+```
+<opfab-question-usercard> </opfab-question-usercard>
+
+```
+NOTE: The question will be stored in the field `data.question` of the card.
+
+Like the message build-in template, you can set default attributes :
+ifdef::single-page-doc[<<'build-in_templates_common_usercard_attributes,common attributes for user cards'>>]
+ifndef::single-page-doc[<</documentation/current/reference_doc/index.adoc#build-in_templates_common_usercard_attributes, common attributes for user cards>>]
+
+Use the provided script to add rights to send question card :
+----
+./setupPerimeter.sh perimeter.json
+----
+
+You can package the bundle and send it to the server with the provided scripts :
+
+----
+./packageBundle.sh | ./sendBundle.sh
+----
+
+Example for using a question card with the previous build-in template :
+
+First, operator1_fr log in and create the question card :
+
+image::example8_create_card.png[example 8 screen shot #1]
+
+Then, operator3_fr log in, read the question card and answer to it :
+
+image::example8_answer_to_card.png[example 8 screen shot #2]
+
+Finally, operator1_fr sees the answer of operator3_fr :
+
+image::example8_answer_received.png[example 8 screen shot #3]
 
 include::troubleshooting.adoc[leveloffset=+1]
