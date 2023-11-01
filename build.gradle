@@ -70,8 +70,9 @@ ext {
             feignJackson   : "io.github.openfeign:feign-jackson:$feign",
             feignCore      : "io.github.openfeign:feign-core:$feign",
             feignOkhttp      : "io.github.openfeign:feign-okhttp:$feign",
-            guava          : "com.google.guava:guava:32.1.2-jre",
+            guava          : "com.google.guava:guava:32.1.3-jre",
             snakeyaml       : "org.yaml:snakeyaml:2.2",
+            snappy          : "org.xerial.snappy:snappy-java:1.1.10.5",
             jacksonAnnotations   : "com.fasterxml.jackson.core:jackson-annotations:$jacksonAnnotations",
             collections4   : "org.apache.commons:commons-collections4:$apacheCommonsCollections4",
             commonsIO      : "commons-io:commons-io:$commonsIO",
@@ -82,7 +83,8 @@ ext {
             jlibmodbus     : "com.intelligt.modbus:jlibmodbus:WORKAROUND",
             commonsText    : "org.apache.commons:commons-text:$apacheCommonsText",
             commonsPool    : "org.apache.commons:commons-pool2:$apacheCommonsPool",
-            rabbitMQ       : "com.rabbitmq:amqp-client:$rabbitMQ"
+            rabbitMQ       : "com.rabbitmq:amqp-client:$rabbitMQ",
+            bouncyCastle    : "org.bouncycastle:bcprov-jdk18on:1.76"
             //jakartaServletApi        : "jakarta.servlet:jakarta.servlet-api:5.0.0"
     ]
 

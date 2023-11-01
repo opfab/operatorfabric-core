@@ -4,6 +4,9 @@ dependencies {
     implementation project(':tools:generic:utilities'), project(':tools:spring:spring-utilities')
     implementation misc.jsonSmart
     implementation misc.snakeyaml
+    implementation misc.guava
+    implementation misc.snappy
+    implementation misc.bouncyCastle
     implementation spring.securityOauthResource, spring.securityOauthJose
 
     compileOnly boot.annotationConfiguration

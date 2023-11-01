@@ -8,6 +8,7 @@ dependencies {
     implementation misc.guava
     implementation misc.commonsIO
     implementation misc.snakeyaml
+    implementation misc.bouncyCastle
     compileOnly boot.annotationConfiguration
     annotationProcessor boot.annotationConfiguration
 

@@ -16,6 +16,7 @@ dependencies {
     implementation boot.starterValidation
     implementation boot.starterMongo
     implementation misc.snakeyaml
+    implementation misc.bouncyCastle
     compileOnly boot.annotationConfiguration
     annotationProcessor boot.annotationConfiguration
 
