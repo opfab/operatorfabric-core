@@ -9,7 +9,6 @@
 
 package org.opfab.cards.consultation.routes;
 
-import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -34,7 +33,6 @@ import reactor.core.publisher.Mono;
         CardSubscriptionService.class, MessageToSubscriptionsRoutesConfig.class, CardOperationsController.class,
         UserServiceCacheTestApplication.class,  }, webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @AutoConfigureWebTestClient
-@Slf4j
 class MessageToSubscriptionsRoutesShould {
 
     @Autowired

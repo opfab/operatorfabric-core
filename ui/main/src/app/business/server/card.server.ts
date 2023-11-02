@@ -7,15 +7,14 @@
  * This file is part of the OperatorFabric project.
  */
 
-
 import {CardsFilter} from '@ofModel/cards-filter.model';
 import {CardForPublishing, Card, CardCreationReportData} from '@ofModel/card.model';
 import {FieldToTranslate} from '@ofModel/field-to-translate.model';
 import {Observable} from 'rxjs';
 import {ServerResponse} from './serverResponse';
+import {LightCard} from '@ofModel/light-card.model';
 
 export abstract class CardServer {
-
     abstract loadCard(id: string): Observable<ServerResponse<any>>;
     abstract loadArchivedCard(id: string): Observable<ServerResponse<any>>;
     abstract fetchFilteredArchivedCards(filter: CardsFilter): Observable<ServerResponse<any>>;
@@ -25,4 +24,5 @@ export abstract class CardServer {
     abstract postUserCardRead(cardUid: string): Observable<ServerResponse<any>>;
     abstract deleteUserCardRead(cardUid: string): Observable<ServerResponse<any>>;
     abstract postTranslateCardField(fieldToTranslate: FieldToTranslate): Observable<ServerResponse<any>>;
+    abstract fetchConnectedRecipients(lightcard: LightCard): Observable<ServerResponse<string[]>>;
 }

@@ -10,7 +10,7 @@
 import {Component, ElementRef, Input, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {FormControl, FormGroup} from '@angular/forms';
 import {UserService} from 'app/business/services/users/user.service';
-import {Card, CardCreationReportData, CardData, fromCardToCardForPublishing, TimeSpan} from '@ofModel/card.model';
+import {Card, CardCreationReportData, CardData, fromCardToCardForPublishing, fromCardToLightCard, TimeSpan} from '@ofModel/card.model';
 import {UserCard} from '@ofModel/processes.model';
 import {Severity} from '@ofModel/light-card.model';
 import {Guid} from 'guid-typescript';
@@ -631,6 +631,7 @@ export class UserCardComponent implements OnInit, OnDestroy {
                     this.card = {...this.card, hasChildCardFromCurrentUserEntity: true};
                 }
                 this.displayPreview = true;
+                
                 if (this.displayConnectionCircles) {
                     this.updateRegularlyConnectedUsers();
                 }
@@ -638,27 +639,21 @@ export class UserCardComponent implements OnInit, OnDestroy {
     }
 
     private updateRegularlyConnectedUsers() {
-        this.getConnectedUsers().subscribe();
+        this.getConnectedRecipients().subscribe();
         this.intervalForConnectedUsersUpdate = setInterval(() => {
-            this.getConnectedUsers().subscribe();
+            this.getConnectedRecipients().subscribe();
         }, 2000);
     }
 
-    private getConnectedUsers(): Observable<boolean> {
-        return UserService.loadConnectedUsers().pipe(
-            map((connectedUsers) => {
+    private getConnectedRecipients(): Observable<void> {
+        return this.cardService.fetchConnectedRecipients(fromCardToLightCard(this.card)).pipe(
+            map((connectedRecipients) => {
                 this.connectedRecipients.clear();
-                connectedUsers.forEach((connectedUser) => {
-                    connectedUser.entitiesConnected.forEach( (entity) => {
-                        if (this.recipients.includes(entity) || this.card.entityRecipientsForInformation.includes(entity)) {
-                            this.connectedRecipients.add(entity)
-                        }
-                    })
-
-                });
-                return true;
-            })
-        );
+                connectedRecipients.forEach( recipient => {
+                    this.connectedRecipients.add(recipient)
+                })
+            }) 
+        )
     }
 
     private stopUpdateRegularlyConnectedUser() {

@@ -84,33 +84,58 @@ public class CardRoutingUtilities {
      * ReceiveAndWrite)
      **/
     public static boolean checkIfUserMustReceiveTheCard(JSONObject cardOperation,
-            CurrentUserWithPerimeters currentUserWithPerimeters) {    
-                
-        String idCard ;
-        String process ;
+            CurrentUserWithPerimeters currentUserWithPerimeters) {
+
+        String idCard;
+        String process;
         String state;
-        JSONArray groupRecipientsArray ;
-        JSONArray entityRecipientsArray ;
-        JSONArray userRecipientsArray ;
+        String publisher;
+        String publisherType;
+        JSONArray groupRecipientsArray;
+        JSONArray entityRecipientsArray;
+        JSONArray userRecipientsArray;
         JSONObject cardObj = (JSONObject) cardOperation.get("card");
 
         if (cardObj != null) {
             idCard = (cardObj.get("id") != null) ? (String) cardObj.get("id") : "";
             process = (String) cardObj.get("process");
             state = (String) cardObj.get("state");
+            publisher = (String) cardObj.get("publisher");
+            publisherType = (String) cardObj.get("publisherType");
 
             groupRecipientsArray = (JSONArray) cardObj.get("groupRecipients");
             entityRecipientsArray = (JSONArray) cardObj.get("entityRecipients");
             userRecipientsArray = (JSONArray) cardObj.get("userRecipients");
-        }
-        else return false; 
-
-        if (!checkIfUserMustBeNotifiedForThisProcessState(process, state, currentUserWithPerimeters))
+        } else
             return false;
+
+        return checkIfUserMustReceiveTheCard(currentUserWithPerimeters,
+                idCard,
+                process,
+                state,
+                publisher,
+                publisherType,
+                groupRecipientsArray,
+                userRecipientsArray,
+                entityRecipientsArray);
+    }
+
+    public static boolean checkIfUserMustReceiveTheCard(CurrentUserWithPerimeters currentUserWithPerimeters,
+            String idCard,
+            String process,
+            String state,
+            String publisher,
+            String publisherType,
+            Collection<?> groupRecipientsArray,
+            Collection<?> userRecipientsArray,
+            Collection<?> entityRecipientsArray) {
 
         String processStateKey = process + "." + state;
         List<String> userGroups = currentUserWithPerimeters.getUserData().getGroups();
         List<String> userEntities = currentUserWithPerimeters.getUserData().getEntities();
+
+        if (!checkIfUserMustBeNotifiedForThisProcessState(process, state, currentUserWithPerimeters))
+            return false;
 
         log.debug("Check if user {} shall receive card {} for processStateKey {}",
                 currentUserWithPerimeters.getUserData().getLogin(), idCard, processStateKey);
@@ -139,8 +164,8 @@ public class CardRoutingUtilities {
             return true;
         }
 
-        // FE-4573 : from now, we want user receives all the cards sent by its entities
-        if (checkInCaseOfCardSentByEntitiesOfTheUser(cardObj, userEntities)) {
+        // FE-4573 : from now, we want the user to receive all the cards sent by its entities
+        if (checkInCaseOfCardSentByEntitiesOfTheUser(publisher, publisherType, userEntities)) {
             log.debug("User {} is member of the entity that published the card {} so he shall receive it",
                     currentUserWithPerimeters.getUserData().getLogin(), idCard);
             return true;
@@ -149,15 +174,15 @@ public class CardRoutingUtilities {
         return false;
     }
 
-    private static boolean checkInCaseOfCardSentToUserDirectly(JSONArray userRecipientsArray, String userLogin) {
+    private static boolean checkInCaseOfCardSentToUserDirectly(Collection<?> userRecipientsArray, String userLogin) {
         return (userRecipientsArray != null
                 && !Collections.disjoint(Arrays.asList(userLogin), userRecipientsArray));
     }
 
-    private static boolean checkInCaseOfCardSentToGroupOrEntityOrBoth(List<String> userGroups,
-                                                                      JSONArray groupRecipientsArray,
-                                                                      List<String> userEntities,
-                                                                      JSONArray entityRecipientsArray) {
+    private static boolean checkInCaseOfCardSentToGroupOrEntityOrBoth(Collection<?> userGroups,
+            Collection<?> groupRecipientsArray,
+            Collection<?> userEntities,
+            Collection<?> entityRecipientsArray) {
         if ((groupRecipientsArray != null) && (!groupRecipientsArray.isEmpty())
                 && (Collections.disjoint(userGroups, groupRecipientsArray)))
             return false;
@@ -168,9 +193,10 @@ public class CardRoutingUtilities {
                 (entityRecipientsArray == null || entityRecipientsArray.isEmpty()));
     }
 
-    private static boolean checkInCaseOfCardSentByEntitiesOfTheUser(JSONObject cardObj,
-                                                                    List<String> userEntities) {
-        return (cardObj.get("publisherType").equals(PublisherTypeEnum.ENTITY.toString()) &&
-            userEntities.contains(cardObj.get("publisher")));
+    private static boolean checkInCaseOfCardSentByEntitiesOfTheUser(String publisher,
+            String publisherType,
+            Collection<?> userEntities) {
+        return (publisherType.equals(PublisherTypeEnum.ENTITY.toString()) &&
+                userEntities.contains(publisher));
     }
 }
