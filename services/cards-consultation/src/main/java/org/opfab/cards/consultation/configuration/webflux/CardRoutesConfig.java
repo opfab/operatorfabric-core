@@ -11,7 +11,6 @@
 
 package org.opfab.cards.consultation.configuration.webflux;
 
-import lombok.extern.slf4j.Slf4j;
 
 import org.opfab.cards.consultation.model.CardsFilter;
 import org.opfab.cards.consultation.model.CardConsultationData;
@@ -34,7 +33,6 @@ import static org.springframework.web.reactive.function.server.ServerResponse.ok
 import static reactor.util.function.Tuples.of;
 
 
-@Slf4j
 @Configuration
 public class CardRoutesConfig implements UserExtractor {
 

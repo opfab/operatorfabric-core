@@ -118,7 +118,7 @@ Values should be taken from the link:https://en.wikipedia.org/wiki/List_of_tz_da
 |settings.playSoundOnExternalDevice|false|no|If set to true (and `externalDevicesEnabled` is set to true as well) and the user has an external device configured, sounds will be played on this device rather than in the browser
 |settings.replayEnabled|false|no|If set to true, sounds are replayed every `settings.replayInterval` seconds until the user interacts with the application
 |settings.replayInterval|5|no|Interval between sound replays (see `settings.replayEnabled`)
-|settings.remoteLoggingEnabled|false|no| If set to true, some logs form the UI are sent to the back and write in the log file of the cards-consultation service
+|settings.remoteLoggingEnabled|false|no| If set to true, some logs from the UI are sent to the back and write in the log file of the cards-consultation service
 
 |settingsScreen.hiddenSettings||no|Array of string indicating which field(s) we want to hide in the settings screen. Possible values : +
 "language" : if present, language field will not be displayed +

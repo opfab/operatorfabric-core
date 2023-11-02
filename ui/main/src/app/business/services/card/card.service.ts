@@ -16,6 +16,7 @@ import {CardsFilter} from '@ofModel/cards-filter.model';
 import {CardServer} from '../../server/card.server';
 import {ServerResponse, ServerResponseStatus} from '../../server/serverResponse';
 import {AcknowledgeService} from '../acknowledge.service';
+import {LightCard} from '@ofModel/light-card.model';
 
 
 @Injectable({
@@ -76,5 +77,9 @@ export class CardService {
     postTranslateCardField(processId: string, processVersion: string, i18nValue: I18n): any {
         const fieldToTranslate = {process: processId, processVersion: processVersion, i18nValue: i18nValue};
         return this.cardServer.postTranslateCardField(fieldToTranslate).pipe(map((serverResponse) => serverResponse.data));
+    }
+
+    fetchConnectedRecipients(lightcard: LightCard): Observable<string[]> {
+        return this.cardServer.fetchConnectedRecipients(lightcard).pipe(map((serverResponse) => serverResponse.data));
     }
 }

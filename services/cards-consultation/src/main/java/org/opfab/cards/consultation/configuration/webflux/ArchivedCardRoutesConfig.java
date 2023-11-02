@@ -12,8 +12,6 @@ package org.opfab.cards.consultation.configuration.webflux;
 
 import java.util.List;
 
-import lombok.extern.slf4j.Slf4j;
-
 import org.opfab.cards.consultation.model.ArchivedCardConsultationData;
 import org.opfab.cards.consultation.model.ArchivedCardData;
 import org.opfab.cards.consultation.model.CardsFilter;
@@ -32,7 +30,6 @@ import static org.springframework.web.reactive.function.server.ServerResponse.no
 import static org.springframework.web.reactive.function.server.ServerResponse.ok;
 import static reactor.util.function.Tuples.of;
 
-@Slf4j
 @Configuration
 public class ArchivedCardRoutesConfig implements UserExtractor {
 
