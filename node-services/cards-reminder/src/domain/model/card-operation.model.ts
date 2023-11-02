@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2022, RTE (http://www.rte-france.com)
+/* Copyright (c) 2023, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -7,30 +7,18 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {LightCard} from './light-card.model';
+import {Card} from './card.model';
 
-export class CardOperation implements CardOperation {
-    constructor(
-        readonly number: number,
-        readonly publicationDate: number,
-        readonly type: CardOperationType,
-        readonly card?: LightCard,
-        readonly cardId?: string,
-        readonly cardUid?: string,
-        readonly entitiesAcks?: string[]
-    ) {}
+export class CardOperation  {
 
-    static convertTypeIntoEnum(key: string, value: string) {
-        if (key === 'type') {
-            return CardOperationType[value];
-        }
-        return value;
-    }
+        public type: CardOperationType;
+        public card: Card;
+        public cardId?: string;
 }
 
 export enum CardOperationType {
-    ADD,
-    UPDATE,
-    DELETE,
-    ACK
+    ADD = 'ADD',
+    UPDATE = 'UPDATE',
+    DELETE = "DELETE",
+    ACK = 'ACK'
 }

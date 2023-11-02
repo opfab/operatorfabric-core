@@ -11,11 +11,14 @@ import CardsReminderOpfabServicesInterface from '../server-side/cardsReminderOpf
 
 import ReminderService from '../application/reminderService';
 import {RRuleReminderService} from './rruleReminderService';
+import {Card} from '../model/card.model';
+import RemindDatabaseService from '../server-side/remindDatabaseService';
 
 export default class CardsReminderControl {
     private opfabServicesInterface: CardsReminderOpfabServicesInterface;
     private reminderService: ReminderService;
     private rruleReminderService: RRuleReminderService;
+    private remindDatabaseService: RemindDatabaseService;
 
     logger: any;
 
@@ -39,7 +42,12 @@ export default class CardsReminderControl {
         return this;
     }
 
-    public async checkCardsReminder():Promise<boolean> {
+    public setRemindDatabaseService(remindDatabaseService: RemindDatabaseService): this {
+        this.remindDatabaseService = remindDatabaseService;
+        return this;
+    }
+
+    public async checkCardsReminder(): Promise<boolean> {
         const cards = await this.reminderService.getCardsToRemindNow();
         for (const card of cards) {
             try {
@@ -62,20 +70,19 @@ export default class CardsReminderControl {
         return Promise.resolve(true);
     }
 
-    public resetReminderDatabase() {
-        this.reminderService.clearReminders();
-        this.rruleReminderService.clearReminders();
+    public async resetReminderDatabase(): Promise<boolean> {
+        await this.reminderService.clearReminders();
+        await this.rruleReminderService.clearReminders();
 
-        this.rruleReminderService
-            .getAllCardsToRemind()
-            .then((cardsWithReminders) =>
-                cardsWithReminders.forEach((card) => {
-                    this.reminderService.addCardReminder(card);
-                    this.rruleReminderService.addCardReminder(card);
-                })
-            )
-            .catch((error) => {
-                this.logger.error('resetReminderDatabase error ' + error);
-            });
+        try {
+            const cardsWithReminders:Card[] = await this.remindDatabaseService.getAllCardsWithReminder();
+            for(const card of cardsWithReminders) {
+                await this.reminderService.addCardReminder(card);
+                await this.rruleReminderService.addCardReminder(card);
+            }
+        } catch (error) {
+            this.logger.error('resetReminderDatabase error ' + error);
+        }
+        return Promise.resolve(true);
     }
 }

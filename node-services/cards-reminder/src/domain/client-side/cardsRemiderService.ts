@@ -12,6 +12,7 @@ import CardsReminderOpfabServicesInterface from '../server-side/cardsReminderOpf
 import ReminderService from '../application/reminderService';
 import {RRuleReminderService} from '../application/rruleReminderService';
 import {setTimeout} from 'timers/promises';
+import RemindDatabaseService from '../server-side/remindDatabaseService';
 
 export default class CardsReminderService {
     private cardsReminderControl: CardsReminderControl;
@@ -23,6 +24,7 @@ export default class CardsReminderService {
         opfabServicesInterface: CardsReminderOpfabServicesInterface,
         rruleReminderService: RRuleReminderService,
         reminderService: ReminderService,
+        remindDatabaseService: RemindDatabaseService,
         checkPeriodInSeconds: number,
         logger: any
     ) {
@@ -33,6 +35,7 @@ export default class CardsReminderService {
             .setOpfabServicesInterface(opfabServicesInterface)
             .setRruleReminderService(rruleReminderService)
             .setReminderService(reminderService)
+            .setRemindDatabaseService(remindDatabaseService)
             .setLogger(logger);
 
         this.checkRegularly();
@@ -51,11 +54,11 @@ export default class CardsReminderService {
         return this.active;
     }
 
-    public reset() {
+    public async reset() {
         const wasActive = this.active;
         this.stop();
         try {
-            this.cardsReminderControl.resetReminderDatabase();
+            await this.cardsReminderControl.resetReminderDatabase();
         } catch (error) {
             this.logger.error('error during periodic check' + error);
         }
