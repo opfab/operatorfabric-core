@@ -24,10 +24,11 @@ services:
 #    volumes:
 #      - "./rabbit-persistance:/var/lib/rabbitmq/mnesia/"
 
-
-#    Port closed for security reasons , be careful if you open it 
-#    ports:
-#      - "5672:5672"
+#    !!! WARNING !!! 
+#    Port is to be closed for security reasons , be careful if you open it 
+#    Port open here for dev only
+    ports:
+       - "5672:5672"
 #      - "15672:15672"
 
 #    If you open the port, you must change default user and password as follow
