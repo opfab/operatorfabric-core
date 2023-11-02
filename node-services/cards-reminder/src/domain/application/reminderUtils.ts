@@ -21,33 +21,31 @@ export function getNextTimeForRepeating(card: Card, startingDate?: number): numb
                 if (nextTime === -1 || timeForRepeating < nextTime) nextTime = timeForRepeating;
             }
         });
+        if (card.endDate && nextTime > card.endDate) return -1;
         return nextTime;
     }
     return -1;
 }
 
 function getNextTimeForRepeatingFromTimeSpan(timeSpan: TimeSpan, startingDate?: number): number {
-    if (timeSpan) {
-        if (!startingDate) {
-            startingDate = new Date().valueOf();
-        }
-        if (!timeSpan.recurrence) {
-            if (timeSpan.start + MAX_MILLISECONDS_FOR_REMINDING_AFTER_EVENT_STARTS < startingDate) {
-                return -1;
-            } else {
-                return timeSpan.start;
-            }
-        } else if (startingDate > timeSpan.start) {
-            return getNextDateTimeFromRecurrence(startingDate, timeSpan.recurrence);
-        } else {
-            return getNextDateTimeFromRecurrence(timeSpan.start, timeSpan.recurrence);
-        }
+    if (!startingDate) {
+        startingDate = new Date().valueOf();
     }
-    return -1;
+    if (!timeSpan.recurrence) {
+        if (timeSpan.start + MAX_MILLISECONDS_FOR_REMINDING_AFTER_EVENT_STARTS < startingDate) {
+            return -1;
+        } else {
+            return timeSpan.start;
+        }
+    } else if (startingDate > timeSpan.start) {
+        return getNextDateTimeFromRecurrence(startingDate, timeSpan.recurrence);
+    } else {
+        return getNextDateTimeFromRecurrence(timeSpan.start, timeSpan.recurrence);
+    }
 }
 
 function getNextDateTimeFromRecurrence(StartingDate: number, recurrence: Recurrence): number {
-    if (! isRecurrenceObjectInValidFormat(recurrence)) {
+    if (!isRecurrenceObjectInValidFormat(recurrence)) {
         return -1;
     }
 
@@ -56,15 +54,14 @@ function getNextDateTimeFromRecurrence(StartingDate: number, recurrence: Recurre
     const startingHoursMinutes = new HourAndMinutes(nextDateTime.hours(), nextDateTime.minutes());
     if (isFirstHoursMinutesInferiorOrEqualToSecondOne(recurrence.hoursAndMinutes, startingHoursMinutes)) {
         nextDateTime.add(1, 'day');
-        nextDateTime.set('hours',0);
-        nextDateTime.set('minutes',0)
+        nextDateTime.set('hours', 0);
+        nextDateTime.set('minutes', 0);
     }
 
     moveToValidMonth(nextDateTime, recurrence);
 
     if (isDaysOfWeekFieldSet(recurrence)) {
         if (!recurrence.daysOfWeek.includes(nextDateTime.isoWeekday())) {
-
             // we keep the month found previously
             const monthForNextDateTime = nextDateTime.month();
 
@@ -75,7 +72,8 @@ function getNextDateTimeFromRecurrence(StartingDate: number, recurrence: Recurre
                 nb_add++;
                 nextDateTime.add(1, 'day');
 
-                if (nextDateTime.month() !== monthForNextDateTime) { // in case incrementing took us into the next month
+                if (nextDateTime.month() !== monthForNextDateTime) {
+                    // in case incrementing took us into the next month
                     moveToValidMonth(nextDateTime, recurrence);
                 }
             } while (!recurrence.daysOfWeek.includes(nextDateTime.isoWeekday()));
@@ -116,17 +114,14 @@ function isRecurrenceObjectInValidFormat(recurrence: Recurrence): boolean {
 }
 
 function moveToValidMonth(nextDateTime: moment.Moment, recurrence: Recurrence) {
-    if (!recurrence.months || recurrence.months.length === 0)
-        return;
-    if (recurrence.months.includes(nextDateTime.month()))
-        return;
+    if (!recurrence.months || recurrence.months.length === 0) return;
+    if (recurrence.months.includes(nextDateTime.month())) return;
     let nb_add = 0;
     do {
         nb_add++;
-        if (nb_add > 12)
-            return ; // in case we have an invalid recurrence months array
+        if (nb_add > 12) return; // in case we have an invalid recurrence months array
         nextDateTime.add(1, 'month');
-        nextDateTime.set('date',1);
+        nextDateTime.set('date', 1);
     } while (!recurrence.months.includes(nextDateTime.month()));
 }
 

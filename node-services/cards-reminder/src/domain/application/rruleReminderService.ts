@@ -14,16 +14,13 @@ import {Reminder} from '../model/reminder.model';
 import {CardOperation} from '../model/card-operation.model';
 import RemindDatabaseService from '../server-side/remindDatabaseService';
 
-
-export class RRuleReminderService implements EventListener{
-
-    public static REMINDERS_COLLECTION = "rrule_reminders";
+export class RRuleReminderService implements EventListener {
+    public static REMINDERS_COLLECTION = 'rrule_reminders';
     private static MAX_MILLISECONDS_FOR_REMINDING_AFTER_EVENT_STARTS = 60000 * 15; // 15 minutes
 
     private databaseService: RemindDatabaseService;
 
     logger: any;
-
 
     public setLogger(logger: any) {
         this.logger = logger;
@@ -32,18 +29,14 @@ export class RRuleReminderService implements EventListener{
 
     async onMessage(message: any) {
         try {
-            const cardOperation : CardOperation = JSON.parse(message.content);
-            // Hack to fix enumeration value parsing from json
-            const type = '' + cardOperation.type;
+            const cardOperation: CardOperation = JSON.parse(message.content);
 
-            if (type === 'ADD' || type === 'UPDATE')
-                this.addCardReminder(cardOperation.card).catch(error => {
-                    this.logger.error("Error on addCardReminder " + error)});
-            else if (type == 'DELETE')
-                this.databaseService.removeReminder(cardOperation.cardId);     
-        } catch(error) {
-            this.logger.error("Error on card operation received " + error);
-        }   
+            if (cardOperation.type === 'ADD' || cardOperation.type === 'UPDATE')
+                await this.addCardReminder(cardOperation.card);
+            else if (cardOperation.type === 'DELETE') await this.databaseService.removeReminder(cardOperation.cardId);
+        } catch (error) {
+            this.logger.error('Error on card operation received ' + error);
+        }
     }
 
     public setDatabaseService(databaseService: RemindDatabaseService) {
@@ -53,7 +46,7 @@ export class RRuleReminderService implements EventListener{
 
     public async addCardReminder(card: Card, startingDate?: number) {
         if (card) {
-            const cardId = card.id? card.id : card._id;
+            const cardId = card.id ? card.id : card._id;
             if (card.secondsBeforeTimeSpanForReminder === undefined || card.secondsBeforeTimeSpanForReminder === null)
                 return;
             const reminderItem = await this.databaseService.getReminder(cardId);
@@ -65,70 +58,59 @@ export class RRuleReminderService implements EventListener{
                 }
             }
 
-            
             const dateForReminder: number = getNextTimeForRepeating(card, startingDate);
             if (dateForReminder >= 0) {
-
                 const reminder = new Reminder(
-                        cardId,
-                        card.uid,
-                        dateForReminder - card.secondsBeforeTimeSpanForReminder * 1000,
-                        false
-                    )
-
+                    cardId,
+                    card.uid,
+                    dateForReminder - card.secondsBeforeTimeSpanForReminder * 1000,
+                    false
+                );
 
                 this.logger.info(
                     `RRuleReminder Will remind card ${cardId} at
                          ${new Date(dateForReminder - card.secondsBeforeTimeSpanForReminder * 1000)}`
                 );
-                this.databaseService.persistReminder(reminder);
+                await this.databaseService.persistReminder(reminder);
             }
         }
     }
 
     public async getCardsToRemindNow(): Promise<Card[]> {
         const cardsToRemind = [];
-        const reminders =  await this.databaseService.getItemsToRemindNow();
+        const reminders = await this.databaseService.getItemsToRemindNow();
 
-        for(const reminder of reminders) {
+        for (const reminder of reminders) {
             const card = await this.databaseService.getCardByUid(reminder.cardUid);
             if (card) {
                 cardsToRemind.push(card);
             } else {
                 // the card has been deleted in this case
-                this.databaseService.removeReminder(reminder.cardId);
+                await this.databaseService.removeReminder(reminder.cardId);
             }
         }
 
         return cardsToRemind;
     }
 
-
     public async setCardHasBeenRemind(card: Card) {
         const reminderItem = await this.databaseService.getReminder(card._id);
-        if (reminderItem) {
-            if (!card.rRule) {
-                reminderItem.hasBeenRemind = true;
-                this.databaseService.persistReminder(reminderItem);
-            }
-            else this.setNextRemindWhenRecurrenceAndRemindHasBeenDone(card, reminderItem);
-        }
+        if (reminderItem) await this.setNextRemindWhenRecurrenceAndRemindHasBeenDone(card, reminderItem);
     }
 
-    private setNextRemindWhenRecurrenceAndRemindHasBeenDone(card: Card, reminderItem: any) {
+    private async setNextRemindWhenRecurrenceAndRemindHasBeenDone(card: Card, reminderItem: any) {
         const reminderDate: number = reminderItem.timeForReminding;
-        this.databaseService.removeReminder(card._id);
+        await this.databaseService.removeReminder(card._id); // Await is mandatory to wait remove is done in mongoDB before proceed
         this.addCardReminder(
             card,
-            reminderDate + card.secondsBeforeTimeSpanForReminder + RRuleReminderService.MAX_MILLISECONDS_FOR_REMINDING_AFTER_EVENT_STARTS
+            reminderDate +
+                card.secondsBeforeTimeSpanForReminder * 1000 +
+                RRuleReminderService.MAX_MILLISECONDS_FOR_REMINDING_AFTER_EVENT_STARTS +
+                1
         );
     }
 
-    public async getAllCardsToRemind(): Promise<Card[]> {
-        return this.databaseService.getAllCardsToRemind();
-    }
-
-    public clearReminders() {
-        this.databaseService.clearReminders();
+    public async clearReminders() {
+        await this.databaseService.clearReminders();
     }
 }
