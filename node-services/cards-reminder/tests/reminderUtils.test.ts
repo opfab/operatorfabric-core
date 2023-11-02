@@ -10,8 +10,6 @@
 import 'jest';
 import {Card, Recurrence, TimeSpan} from '../src/domain/model/card.model';
 import {getNextTimeForRepeating} from '../src/domain/application/reminderUtils';
-
-import {getOneRandomCard} from './helpers';
 import moment from 'moment-timezone';
 
 describe('ReminderUtils:getNextTimeForRepeating with recurrence hour and minutes  ', () => {
@@ -23,7 +21,7 @@ describe('ReminderUtils:getNextTimeForRepeating with recurrence hour and minutes
     let recurrence4;
 
     beforeAll(() => {
-        testCard = getOneRandomCard();
+        testCard = new Card('uid','id',0);
     });
 
     beforeEach(() => {
@@ -35,6 +33,7 @@ describe('ReminderUtils:getNextTimeForRepeating with recurrence hour and minutes
         recurrence3.timeZone = timeZone;
         recurrence4 = new Recurrence(null);
         recurrence4.timeZone = timeZone;
+        testCard.endDate =  moment.tz('2050-01-01 08:00', 'Europe/Paris').valueOf();
     });
 
     it('2000/01/01 10:00 , Recurrence :10:00  => 2000/01/02 10:00 ', () => {
@@ -65,6 +64,16 @@ describe('ReminderUtils:getNextTimeForRepeating with recurrence hour and minutes
         const expectedResponseDate = moment.tz('2000-01-02 09:00', 'Europe/Paris').valueOf();
         const dateForRepeating = getNextTimeForRepeating(testCard, date);
         expect(dateForRepeating).toEqual(expectedResponseDate);
+    });
+
+    it('2000/01/01 10:00 with endDate 2000/01/02 8:00  , Recurrence :09:00  => -1 end date reach ', () => {
+        const date = moment.tz('2000-01-01 10:00', 'Europe/Paris').valueOf();
+        recurrence.hoursAndMinutes = {hours: 9, minutes: 0};
+        testCard.timeSpans = [new TimeSpan(0, null, recurrence)];
+        testCard.endDate =  moment.tz('2000-01-01 08:00', 'Europe/Paris').valueOf();
+
+        const dateForRepeating = getNextTimeForRepeating(testCard, date);
+        expect(dateForRepeating).toEqual(-1);
     });
 
     it('2000/01/01 10:00 , Recurrence :10:10 , 10:15   => 2000/01/01 10:10 ', () => {
@@ -199,7 +208,7 @@ describe('ReminderUtils:getNextTimeForRepeating hour/minutes/daysOfWeek   ', () 
     let recurrence3;
 
     beforeAll(() => {
-        testCard = getOneRandomCard();
+        testCard = new Card('uid','id',0);
     });
 
     beforeEach(() => {
@@ -505,7 +514,7 @@ describe('ReminderUtils:getNextTimeForRepeating with recurrence on months only  
     let recurrence3;
 
     beforeAll(() => {
-        testCard = getOneRandomCard();
+        testCard = new Card('uid','id',0);
     });
 
     beforeEach(() => {
@@ -614,7 +623,7 @@ describe('ReminderUtils:getNextTimeForRepeating with recurrence on days and mont
     let recurrence3;
 
     beforeAll(() => {
-        testCard = getOneRandomCard();
+        testCard = new Card('uid','id',0);
     });
 
     beforeEach(() => {
@@ -826,7 +835,7 @@ describe('ReminderUtils:getNextTimeForRepeating without or invalid recurrence ',
     let testCard: Card;
 
     beforeAll(() => {
-        testCard = getOneRandomCard();
+        testCard = new Card('uid','id',0);
     });
 
     beforeEach(() => {

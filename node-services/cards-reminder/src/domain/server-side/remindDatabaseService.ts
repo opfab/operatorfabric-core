@@ -7,7 +7,6 @@
  * This file is part of the OperatorFabric project.
  */
 
-
 import {Db, MongoClient} from 'mongodb';
 import {Logger} from 'winston';
 
@@ -72,7 +71,7 @@ export default class RemindDatabaseService {
             .toArray();
     }
 
-    public async getAllCardsToRemind(): Promise<any[]> {
+    public async getAllCardsWithReminder(): Promise<any[]> {
         return this.mongoDB
             .collection('cards')
             .find({
@@ -88,25 +87,33 @@ export default class RemindDatabaseService {
         return this.mongoDB.collection(this.remindersCollection).findOne({cardId: id});
     }
 
-    public persistReminder(reminder: any) {
-        this.mongoDB.collection(this.remindersCollection).insertOne(reminder).catch((error)=> {
+    public async persistReminder(reminder: any): Promise<void> {
+        try {
+            await this.mongoDB.collection(this.remindersCollection).insertOne(reminder);
+        } catch (error) {
             this.logger.error('Mongo error in insert reminder' + error);
-        });
+        }
+        return Promise.resolve();
     }
 
-    public removeReminder(id: string) {
-        this.mongoDB.collection(this.remindersCollection).deleteOne({cardId: id}).catch((error)=> {
+    public async removeReminder(id: string): Promise<void> {
+        try {
+            await this.mongoDB.collection(this.remindersCollection).deleteOne({cardId: id});
+        } catch (error) {
             this.logger.error('Mongo error in remove reminder' + error);
-        });;
+        }
+        return Promise.resolve();
     }
 
     public getCardByUid(uid: string) {
         return this.mongoDB.collection('cards').findOne({uid: uid});
     }
 
-    public clearReminders() {
-        this.mongoDB.collection(this.remindersCollection).deleteMany({}).catch((error)=> {
+    public async clearReminders() {
+        try {
+            await this.mongoDB.collection(this.remindersCollection).deleteMany({});
+        } catch (error) {
             this.logger.error('Mongo error in clear reminders' + error);
-        });;
+        }
     }
 }
