@@ -15,6 +15,7 @@ dependencies {
     implementation cloud.springKafka
     implementation cloud.kafkaAvroSchemaRegistryClient
     implementation cloud.kafkaAvroSerializer
+    implementation cloud.avro
     testImplementation cloud.springKafkaTest
 
 
