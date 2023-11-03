@@ -81,8 +81,13 @@ ext {
             jlibmodbus     : "com.intelligt.modbus:jlibmodbus:WORKAROUND",
             commonsText    : "org.apache.commons:commons-text:$apacheCommonsText",
             commonsPool    : "org.apache.commons:commons-pool2:$apacheCommonsPool",
-            rabbitMQ       : "com.rabbitmq:amqp-client:$rabbitMQ"
-            //jakartaServletApi        : "jakarta.servlet:jakarta.servlet-api:5.0.0"
+            rabbitMQ       : "com.rabbitmq:amqp-client:$rabbitMQ",
+
+//Transitive dependencies udpate needed for security reasons 
+            bouncyCastle    : "org.bouncycastle:bcprov-jdk18on:1.76",
+            snakeyaml       : "org.yaml:snakeyaml:2.2",
+            snappy          : "org.xerial.snappy:snappy-java:1.1.10.5"
+//End transitive dependencies
     ]
 
     generator = [

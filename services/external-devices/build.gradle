@@ -15,6 +15,12 @@ dependencies {
     implementation spring.securityOauthResource, spring.securityOauthJose
     implementation boot.starterValidation
     implementation boot.starterMongo
+
+//Transitive dependencies udpate needed for security reasons 
+    implementation misc.snakeyaml
+    implementation misc.bouncyCastle
+//End transitive dependencies
+
     compileOnly boot.annotationConfiguration
     annotationProcessor boot.annotationConfiguration
 
