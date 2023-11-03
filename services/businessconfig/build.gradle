@@ -7,6 +7,12 @@ dependencies {
     implementation boot.starterValidation
     implementation misc.guava
     implementation misc.commonsIO
+
+//Transitive dependencies udpate needed for security reasons 
+    implementation misc.snakeyaml
+    implementation misc.bouncyCastle
+//End transitive dependencies
+    
     compileOnly boot.annotationConfiguration
     annotationProcessor boot.annotationConfiguration
 

@@ -1,12 +1,12 @@
 plugins {
-    id "com.github.node-gradle.node" version "7.0.0"
+    id "com.github.node-gradle.node" version "7.0.1"
     id "org.asciidoctor.jvm.convert" version "3.3.2"
     id "maven-publish"
     id "signing"
     id "org.springframework.boot" version "$springBoot" apply false
     id "io.spring.dependency-management" version "1.1.3" apply false
     id 'org.sonarqube' version '4.3.1.3277'
-    id "com.github.davidmc24.gradle.plugin.avro" version "1.8.0" apply false
+    id "com.github.davidmc24.gradle.plugin.avro" version "1.9.1" apply false
     id "com.palantir.docker" version "0.35.0" apply false
     id "org.hidetake.swagger.generator" version "2.19.2" apply false
 }
@@ -81,8 +81,13 @@ ext {
             jlibmodbus     : "com.intelligt.modbus:jlibmodbus:WORKAROUND",
             commonsText    : "org.apache.commons:commons-text:$apacheCommonsText",
             commonsPool    : "org.apache.commons:commons-pool2:$apacheCommonsPool",
-            rabbitMQ       : "com.rabbitmq:amqp-client:$rabbitMQ"
-            //jakartaServletApi        : "jakarta.servlet:jakarta.servlet-api:5.0.0"
+            rabbitMQ       : "com.rabbitmq:amqp-client:$rabbitMQ",
+
+//Transitive dependencies udpate needed for security reasons 
+            bouncyCastle    : "org.bouncycastle:bcprov-jdk18on:1.76",
+            snakeyaml       : "org.yaml:snakeyaml:2.2",
+            snappy          : "org.xerial.snappy:snappy-java:1.1.10.5"
+//End transitive dependencies
     ]
 
     generator = [
