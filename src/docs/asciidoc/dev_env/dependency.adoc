@@ -1,0 +1,25 @@
+// Copyright (c) 2023 RTE (http://www.rte-france.com)
+// See AUTHORS.txt
+// This document is subject to the terms of the Creative Commons Attribution 4.0 International license.
+// If a copy of the license was not distributed with this
+// file, You can obtain one at https://creativecommons.org/licenses/by/4.0/.
+// SPDX-License-Identifier: CC-BY-4.0
+
+= Dependency analysis
+
+Inside the bin/dependencies directory, you can find scripts to help analyze the dependencies used by the project. These scripts should be executed from within the same directory.
+
+The first script, named generateDependencyReport.sh, aggregates all dependency trees (including Java and npm dependencies) into a single file. The generated file includes the name of the current branch, making it easier to compare dependencies between branches.
+
+The second script, searchForDependency.sh, allows you to search for dependencies based on the generated file. For example, if you are searching for the "rabbit" dependency:
+
+```
+cd bin/dependencies
+./searchForDependency.sh rabbit
+```
+
+The analysis is conducted on the current branch by default. If you wish to utilize a report from another branch, you can specify it as follows:
+
+```
+./searchForDependency rabbit myBranch
+```
