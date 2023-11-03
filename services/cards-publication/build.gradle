@@ -3,6 +3,15 @@ dependencies {
     swaggerUI generator.swaggerUI
     implementation project(':tools:generic:utilities'), project(':tools:spring:spring-utilities')
     implementation misc.jsonSmart
+
+//Transitive dependencies udpate needed for security reasons 
+    implementation misc.snakeyaml
+    implementation misc.guava
+    implementation misc.snappy
+    implementation misc.bouncyCastle
+    implementation cloud.avro
+//End transitive dependencies
+
     implementation spring.securityOauthResource, spring.securityOauthJose
 
     compileOnly boot.annotationConfiguration
@@ -10,7 +19,7 @@ dependencies {
 
     implementation cloud.springKafka
     implementation cloud.kafkaAvroSchemaRegistryClient
-    implementation cloud.kafkaAvroSerializer
+    implementation cloud.kafkaAvroSerializer    
     testImplementation cloud.springKafkaTest
 
 
