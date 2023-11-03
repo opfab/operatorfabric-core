@@ -151,8 +151,11 @@ src/test/cypress/cypress/videos
 
 # migration-opfab3
 src/tooling/migration-opfab3/node_modules
+src/tooling/migration-rrule-recurrence/node_modules
 
 # Node modules 
 node-services/*/node_modules
 node-services/*/coverage
 node-services/*/logs
+
+bin/dependencies/report*.txt
