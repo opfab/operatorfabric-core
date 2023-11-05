@@ -29,7 +29,7 @@ export class TaskUserCardTemplate extends BaseUserCardTemplate {
         <br/>
         <div class="opfab-input">
             <label for="taskDescription"> ${opfab.utils.getTranslation('buildInTemplate.taskUserCard.taskDescriptionLabel')}</label>
-            <input size="50" type="text" id="taskDescription" value=${this.view.getTaskDescription()}> </input> 
+            <input size="50" type="text" id="taskDescription" value='${this.view.getTaskDescription()}'> </input> 
         </div>
         <br/>
         
