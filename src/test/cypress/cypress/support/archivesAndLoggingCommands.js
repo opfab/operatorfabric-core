@@ -45,6 +45,11 @@ export class ArchivesAndLoggingCommands extends OpfabCommands {
         cy.get('#opfab-archives-logging-btn-search').click();
     };
 
+    clickOnResetButton =  function () {
+        cy.get('#opfab-archives-logging-btn-reset').click();
+        cy.wait(200); // wait reset is done
+    };
+
     checkSeeAllCardsLinkIsDisplayed = function () {
         cy.get('#opfab-see-all-cards-link').contains('See all cards (whether I am the recipient or not)').should('exist');
     };
@@ -98,7 +103,7 @@ export class ArchivesAndLoggingCommands extends OpfabCommands {
     };
 
     selectAllProcesses = function () {
-        cy.get('#opfab-process').find('.vscomp-toggle-all-button').click({force: true});
+        cy.get('#opfab-process').find('.vscomp-toggle-all-button').click();
     };
 
     unselectAllProcesses = function () {
@@ -151,4 +156,6 @@ export class ArchivesAndLoggingCommands extends OpfabCommands {
     checkNoResultForSearch = function () {
         cy.get('of-archives').contains('Your search did not match any result.');
     };
+
+ 
 }

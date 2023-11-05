@@ -44,7 +44,7 @@ describe('Archives screen tests', function () {
         archivesAndLogging.selectProcess('IGCC');
         archivesAndLogging.clickOnSearchButton();
         archivesAndLogging.checkNoResultForSearch();
-        archivesAndLogging.unselectAllProcesses();
+        archivesAndLogging.clickOnResetButton();
         archivesAndLogging.selectProcess('Process example');
         archivesAndLogging.clickOnSearchButton();
         checkNumberOfLineDisplayedIs(6);
@@ -53,7 +53,7 @@ describe('Archives screen tests', function () {
         archivesAndLogging.selectState('Message', 1);
         archivesAndLogging.clickOnSearchButton();
         checkNumberOfLineDisplayedIs(1);
-        archivesAndLogging.unselectAllProcesses();
+        archivesAndLogging.clickOnResetButton();
 
         // We delete the test cards, and we check that we still have the corresponding archived cards
         script.deleteAllCards();
@@ -241,6 +241,7 @@ describe('Archives screen tests', function () {
 
         script.loadTestConf();
     });
+    
 
     it('Check behaviour of "isOnlyAChildState" attribute (in file config.json of bundles)', function () {
         opfab.loginWithUser('operator1_fr');
