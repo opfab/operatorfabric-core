@@ -10,12 +10,6 @@ subprojects {
 
     /////// DEPENDENCIES
 
-    dependencyManagement {
-        imports {
-            mavenBom cloud.dependencies
-        }
-    }
-
     dependencies {
         swaggerCodegen generator.swagger, project(':tools:swagger-spring-generators')
         implementation boot.actuator
