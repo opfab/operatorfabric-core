@@ -40,13 +40,15 @@ export class MessageOrQuestionListUserCardTemplateView {
         const title = this.selectedMessage.title.trim();
         const id = this.selectedMessage.id;
         const question = this.selectedMessage.question;
-        let severity = 'INFORMATION'
+        let severity = 'INFORMATION';
+        let entitiesAllowedToRespond;
+
         if (this.selectedMessage.question) {
-            severity = 'ACTION'
+            severity = 'ACTION';
+            entitiesAllowedToRespond = this.selectedMessage?.possibleRecipients ? this.selectedMessage?.possibleRecipients : "";
+        } else {
+            entitiesAllowedToRespond = [];
         }
-
-        const entitiesAllowedToRespond = this.selectedMessage?.possibleRecipients ? this.selectedMessage?.possibleRecipients : "";
-
 
         const card = {
 		title : {key : "message_or_question_list.title", parameters : {"messageTitle" : title} },
