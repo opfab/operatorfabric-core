@@ -34,6 +34,8 @@ ext {
             devTools                : "org.springframework.boot:spring-boot-devtools:$springBoot"
     ]
 
+
+
     spring = [
             securityOauthResource   : "org.springframework.security:spring-security-oauth2-resource-server:$springSecurity",
             securityOauthJose       : "org.springframework.security:spring-security-oauth2-jose:$springSecurity",
@@ -43,7 +45,6 @@ ext {
     ]
 
     cloud = [
-            dependencies          : "org.springframework.cloud:spring-cloud-dependencies:$springCloud",
             starterFeign          : "org.springframework.cloud:spring-cloud-starter-openfeign:$springOpenFeign",
             avro                  : "org.apache.avro:avro:$avro",
             kafkaAvroSchemaRegistryClient    : "io.confluent:kafka-schema-registry-client:$kavroSchemaRegistryClient",
@@ -90,6 +91,7 @@ ext {
 //End transitive dependencies
     ]
 
+
     generator = [
             swagger                 : "io.swagger:swagger-codegen-cli:$swagger",
             swaggerUI               : "org.webjars:swagger-ui:$swaggerUI",
@@ -103,7 +105,6 @@ ext {
 // override spring boot rabbitMQ version 
 // we do not use rabbitMQ via spring boot 
 ext['rabbit-amqp-client.version']="$rabbitMQ"
-
 ext.proxy.https =  System.env.https_proxy != null ? "$System.env.https_proxy" : ""
 
 sonar {
