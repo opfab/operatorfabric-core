@@ -99,6 +99,11 @@ ext {
             https : ""
     ]
 }
+
+// override spring boot rabbitMQ version 
+// we do not use rabbitMQ via spring boot 
+ext['rabbit-amqp-client.version']="$rabbitMQ"
+
 ext.proxy.https =  System.env.https_proxy != null ? "$System.env.https_proxy" : ""
 
 sonar {
