@@ -62,7 +62,7 @@ export class TaskUserCardTemplate extends BaseUserCardTemplate {
                         <td><label class="opfab-checkbox" style="padding-left:25px"> ${opfab.utils.getTranslation("buildInTemplate.taskUserCard.selectAll")} <input type="checkbox" id="selectAllDays">   <span class="opfab-checkbox-checkmark"> </span>   </label> </td>
                     </tr>
                 </table>
-                <table width="100%" style="margin-bottom: -5px;">
+                <table width="100%" style="margin-bottom: -5px;" id="weekdaysCheckboxes">
                     <tr>
                         <td><label class="opfab-checkbox" style="padding-left:25px"> ${opfab.utils.getTranslation("shared.calendar.monday")} <input type="checkbox" id="Monday">   <span class="opfab-checkbox-checkmark"> </span>   </label> </td>
                         <td><label class="opfab-checkbox" style="padding-left:25px"> ${opfab.utils.getTranslation("shared.calendar.tuesday")} <input type="checkbox" id="Tuesday">   <span class="opfab-checkbox-checkmark"> </span>   </label> </td>
@@ -83,7 +83,7 @@ export class TaskUserCardTemplate extends BaseUserCardTemplate {
                     <td><label class="opfab-checkbox" style="padding-left:25px">${opfab.utils.getTranslation("buildInTemplate.taskUserCard.selectAll")} <input type="checkbox" id="selectAllMonths">   <span class="opfab-checkbox-checkmark"> </span>   </label> </td>
                 </tr>
             </table>
-            <table width="100%" style="margin-bottom: -5px;">
+            <table width="100%" style="margin-bottom: -5px;" id="monthsCheckboxes">
                 <tr id="monthsCheckboxesForDailyFreq">
                     <td><label class="opfab-checkbox" style="padding-left:25px"> ${opfab.utils.getTranslation("shared.calendar.january")} <input type="checkbox" id="JanuaryDaily">   <span class="opfab-checkbox-checkmark"> </span>   </label> </td>
                     <td><label class="opfab-checkbox" style="padding-left:25px"> ${opfab.utils.getTranslation("shared.calendar.february")} <input type="checkbox" id="FebruaryDaily">   <span class="opfab-checkbox-checkmark"> </span>   </label> </td>
@@ -387,39 +387,13 @@ export class TaskUserCardTemplate extends BaseUserCardTemplate {
         let that = this; 
         document.querySelector('#radioButtonDailyFreq').addEventListener("click", function() {that.displayDailyFrequency();});
         document.querySelector('#radioButtonMonthlyFreq').addEventListener("click", function() {that.displayMonthlyFrequency();});
+        
         document.querySelector('#selectAllDays').addEventListener("click", function() {that.toggleSelectAllDays();});
-        document.querySelector('#Monday').addEventListener("click", function() {that.checkIsAllDaysSelected();});
-        document.querySelector('#Tuesday').addEventListener("click", function() {that.checkIsAllDaysSelected();});
-        document.querySelector('#Wednesday').addEventListener("click", function() {that.checkIsAllDaysSelected();});
-        document.querySelector('#Thursday').addEventListener("click", function() {that.checkIsAllDaysSelected();});
-        document.querySelector('#Friday').addEventListener("click", function() {that.checkIsAllDaysSelected();});
-        document.querySelector('#Saturday').addEventListener("click", function() {that.checkIsAllDaysSelected();});
-        document.querySelector('#Sunday').addEventListener("click", function() {that.checkIsAllDaysSelected();});
+        document.querySelector('#weekdaysCheckboxes').addEventListener("click", function() {that.checkIsAllDaysSelected();});
+
         document.querySelector('#selectAllMonths').addEventListener("click", function() {that.toggleSelectAllMonths();});
-        document.querySelector('#JanuaryDaily').addEventListener("click", function() {that.checkIsAllMonthsSelected();});
-        document.querySelector('#FebruaryDaily').addEventListener("click", function() {that.checkIsAllMonthsSelected();});
-        document.querySelector('#MarchDaily').addEventListener("click", function() {that.checkIsAllMonthsSelected();});
-        document.querySelector('#AprilDaily').addEventListener("click", function() {that.checkIsAllMonthsSelected();});
-        document.querySelector('#MayDaily').addEventListener("click", function() {that.checkIsAllMonthsSelected();});
-        document.querySelector('#JuneDaily').addEventListener("click", function() {that.checkIsAllMonthsSelected();});
-        document.querySelector('#JulyDaily').addEventListener("click", function() {that.checkIsAllMonthsSelected();});
-        document.querySelector('#AugustDaily').addEventListener("click", function() {that.checkIsAllMonthsSelected();});
-        document.querySelector('#SeptemberDaily').addEventListener("click", function() {that.checkIsAllMonthsSelected();});
-        document.querySelector('#OctoberDaily').addEventListener("click", function() {that.checkIsAllMonthsSelected();});
-        document.querySelector('#NovemberDaily').addEventListener("click", function() {that.checkIsAllMonthsSelected();});
-        document.querySelector('#DecemberDaily').addEventListener("click", function() {that.checkIsAllMonthsSelected();});
-        document.querySelector('#JanuaryMonthly').addEventListener("click", function() {that.checkIsAllMonthsSelected();});
-        document.querySelector('#FebruaryMonthly').addEventListener("click", function() {that.checkIsAllMonthsSelected();});
-        document.querySelector('#MarchMonthly').addEventListener("click", function() {that.checkIsAllMonthsSelected();});
-        document.querySelector('#AprilMonthly').addEventListener("click", function() {that.checkIsAllMonthsSelected();});
-        document.querySelector('#MayMonthly').addEventListener("click", function() {that.checkIsAllMonthsSelected();});
-        document.querySelector('#JuneMonthly').addEventListener("click", function() {that.checkIsAllMonthsSelected();});
-        document.querySelector('#JulyMonthly').addEventListener("click", function() {that.checkIsAllMonthsSelected();});
-        document.querySelector('#AugustMonthly').addEventListener("click", function() {that.checkIsAllMonthsSelected();});
-        document.querySelector('#SeptemberMonthly').addEventListener("click", function() {that.checkIsAllMonthsSelected();});
-        document.querySelector('#OctoberMonthly').addEventListener("click", function() {that.checkIsAllMonthsSelected();});
-        document.querySelector('#NovemberMonthly').addEventListener("click", function() {that.checkIsAllMonthsSelected();});
-        document.querySelector('#DecemberMonthly').addEventListener("click", function() {that.checkIsAllMonthsSelected();});
+        document.querySelector('#monthsCheckboxes').addEventListener("click", function() {that.checkIsAllMonthsSelected();});
+
         document.querySelector('#radioButtonNthDay').addEventListener("click", function() {that.displayNthDayTable();});
         document.querySelector('#radioButtonNthWeekday').addEventListener("click", function() {that.displayNthWeekdayTable();});
     }
