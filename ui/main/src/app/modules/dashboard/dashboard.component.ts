@@ -51,6 +51,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
     }
 
     selectCard(info) {
+        this.openPopover?.close();
         this.selectedCardService.setSelectedCardId(info);
         const options: NgbModalOptions = {
             size: 'fullscreen'
@@ -73,6 +74,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
     }
 
     onCircleClick(circle) {
+        this.openPopover?.close();
         if (circle.numberOfCards == 1) {
             const cardId = circle.cards[0].id;
             this.selectCard(cardId);
