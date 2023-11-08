@@ -20,6 +20,7 @@ import {GlobalStyleService} from './global-style.service';
 import {EntitiesService} from './users/entities.service';
 import {GroupsService} from './users/groups.service';
 import {PerimetersService} from './users/perimeters.service';
+import {ProcessesService} from './businessconfig/processes.service';
 
 declare const opfab: any;
 export class ServicesConfig {
@@ -38,6 +39,7 @@ export class ServicesConfig {
         EntitiesService.setEntitiesServer(servers.entitiesServer);
         GroupsService.setGroupsServer(servers.groupsServer);
         PerimetersService.setPerimeterServer(servers.perimetersServer);
+        ProcessesService.setProcessServer(servers.processServer)
     }
 
     public static load(): Observable<any> {

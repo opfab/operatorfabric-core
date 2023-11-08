@@ -36,7 +36,6 @@ export class EditPerimeterModalComponent implements OnInit {
  
     constructor(
         private activeModal: NgbActiveModal,
-        private processesService: ProcessesService,
         private changeDetector: ChangeDetectorRef
 
     ) {
@@ -150,7 +149,7 @@ export class EditPerimeterModalComponent implements OnInit {
     }
 
     initProcessOptions(): void {
-        this.processesDefinition = this.processesService.getAllProcesses();
+        this.processesDefinition = ProcessesService.getAllProcesses();
 
         // The dropdown will prefix values with the process Ids because there is no certainty that i18n values are unique across bundles.
         this.processesDefinition.forEach((process: Process) => {

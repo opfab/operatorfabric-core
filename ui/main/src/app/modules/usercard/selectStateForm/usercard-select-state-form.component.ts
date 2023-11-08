@@ -87,7 +87,6 @@ export class UserCardSelectStateFormComponent implements OnInit, OnDestroy {
     };
 
     constructor(
-        private processesService: ProcessesService,
         private translateService: TranslateService
     ) {}
 
@@ -98,7 +97,7 @@ export class UserCardSelectStateFormComponent implements OnInit, OnDestroy {
             usercardState: new FormControl('')
         });
         this.currentUserWithPerimeters = UserService.getCurrentUserWithPerimeters();
-        this.processGroups = this.processesService.getProcessGroups();
+        this.processGroups = ProcessesService.getProcessGroups();
         this.loadAllProcessAndStateInUserPerimeter();
         this.changeStatesWhenSelectProcess();
         this.changeProcessesWhenSelectProcessGroup();
@@ -120,7 +119,7 @@ export class UserCardSelectStateFormComponent implements OnInit, OnDestroy {
     }
 
     loadAllProcessAndStateInUserPerimeter(): void {
-        this.processesDefinition = this.processesService.getAllProcesses();
+        this.processesDefinition = ProcessesService.getAllProcesses();
         const processesInPerimeter: Set<string> = new Set();
         this.currentUserWithPerimeters.computedPerimeters.forEach((perimeter) => {
             if (this.isUserAllowedToSendCard(perimeter)) processesInPerimeter.add(perimeter.process);

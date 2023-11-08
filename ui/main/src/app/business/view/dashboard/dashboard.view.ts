@@ -24,7 +24,6 @@ export class Dashboard {
     public noSeverityColor = '#717274';
 
     constructor(
-        private processesService: ProcessesService,
         private lightCardsStoreService: LightCardsStoreService,
         private filterService: FilterService
     ) {
@@ -37,7 +36,7 @@ export class Dashboard {
 
         this.dashboardPage = new DashboardPage();
         this.dashboardPage.processes = new Array();
-        this.processesService.getAllProcesses().forEach((process) => {
+        ProcessesService.getAllProcesses().forEach((process) => {
             const statesContent = new Array<StateContent>();
             process.states.forEach((state, key) => {
                 if (

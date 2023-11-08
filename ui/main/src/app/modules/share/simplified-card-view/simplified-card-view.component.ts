@@ -41,7 +41,6 @@ export class SimplifiedCardViewComponent implements OnInit, OnDestroy {
     public isLoading = true;
 
     constructor(
-        private businessconfigService: ProcessesService,
         private opfabAPIService: OpfabAPIService
     ) {
         const userWithPerimeters = UserService.getCurrentUserWithPerimeters();
@@ -72,7 +71,7 @@ export class SimplifiedCardViewComponent implements OnInit, OnDestroy {
     }
 
     private getTemplateAndStyle() {
-        this.businessconfigService
+        ProcessesService
             .queryProcess(this.card.process, this.card.processVersion)
             .pipe(takeUntil(this.unsubscribe$))
             .subscribe({

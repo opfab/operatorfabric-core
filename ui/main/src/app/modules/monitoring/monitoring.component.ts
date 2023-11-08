@@ -48,11 +48,10 @@ export class MonitoringComponent implements OnInit, OnDestroy {
     selectedCardId: string;
 
     constructor(
-        private processesService: ProcessesService,
         private lightCardsStoreService: LightCardsStoreService,
         private selectedCardService: SelectedCardService
     ) {
-        processesService.getAllProcesses().forEach((process) => {
+        ProcessesService.getAllProcesses().forEach((process) => {
             const id = process.id;
             if (process.uiVisibility?.monitoring) {
                 this.mapOfProcesses.set(id, process);
@@ -92,7 +91,7 @@ export class MonitoringComponent implements OnInit, OnDestroy {
             .getLoadingInProgress()
             .pipe(takeUntil(this.unsubscribe$))
             .subscribe((inProgress: boolean) => (this.loadingInProgress = inProgress));
-        this.isThereProcessStateToDisplay = this.processesService.getStatesListPerProcess(false, false).size > 0;
+        this.isThereProcessStateToDisplay = ProcessesService.getStatesListPerProcess(false, false).size > 0;
 
         this.selectedCardService.getSelectCardIdChanges().subscribe(selectedCardId => this.selectedCardId = selectedCardId)
     }

@@ -56,7 +56,6 @@ export class CardListComponent implements AfterViewChecked, OnInit {
 
     constructor(
         private modalService: NgbModal,
-        private processesService: ProcessesService,
         private acknowledgeService: AcknowledgeService,
         private groupedCardsService: GroupedCardsService,
         private router: Router,
@@ -148,7 +147,7 @@ export class CardListComponent implements AfterViewChecked, OnInit {
     }
 
     private acknowledgeVisibleCardInTheFeed(lightCard: LightCard): void {
-        const processDefinition = this.processesService.getProcess(lightCard.process);
+        const processDefinition = ProcessesService.getProcess(lightCard.process);
         if (
             !lightCard.hasBeenAcknowledged &&
             this.isCardPublishedBeforeAckDemand(lightCard) &&

@@ -32,8 +32,7 @@ export class PinnedCardsComponent implements OnInit, OnDestroy {
 
     constructor(
         private lightCardsStoreService: LightCardsStoreService,
-        private router: Router,
-        private processesService: ProcessesService
+        private router: Router
     ) {}
 
     ngOnInit(): void {
@@ -73,7 +72,7 @@ export class PinnedCardsComponent implements OnInit, OnDestroy {
     private getPinnedCards(cards: LightCard[]) {
         return cards
             .filter((card) => {
-                const processDefinition = this.processesService.getProcess(card.process);
+                const processDefinition = ProcessesService.getProcess(card.process);
                 return (
                     processDefinition.states.get((card.state))?.automaticPinWhenAcknowledged &&
                     card.hasBeenAcknowledged &&

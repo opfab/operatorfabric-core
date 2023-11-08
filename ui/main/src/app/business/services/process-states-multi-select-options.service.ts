@@ -20,13 +20,12 @@ import {MultiSelectOption} from '@ofModel/multiselect.model';
 })
 export class ProcessStatesMultiSelectOptionsService {
     constructor(
-        private processesService: ProcessesService,
         private translate: TranslateService
     ) {}
 
     getStatesMultiSelectOptionsPerProcess(isAdminModeAndUserHasRightToSeeAllStates: boolean, hideChildStates: boolean): any[] {
         const statesMultiSelectOptionsPerProcess: Array<MultiSelectOption> = [];
-        this.processesService.getAllProcesses().forEach((process) => {
+        ProcessesService.getAllProcesses().forEach((process) => {
             const stateOptions = new MultiSelectOption(process.id, process.name);
             stateOptions.options = [];
             process.states.forEach((state, stateid) => {
@@ -63,7 +62,7 @@ export class ProcessStatesMultiSelectOptionsService {
     getProcessesWithoutProcessGroupMultiSelectOptions(isAdminModeAndUserHasRightToSeeAllStates: boolean, processesFilter?: string[]): any[] {
         const processesWithoutProcessGroupMultiSelectOptions: Array<MultiSelectOption> = [];
 
-        this.processesService.getProcessesWithoutProcessGroup(processesFilter).forEach((process) => {
+        ProcessesService.getProcessesWithoutProcessGroup(processesFilter).forEach((process) => {
             if (isAdminModeAndUserHasRightToSeeAllStates || UserService.isReceiveRightsForProcess(process.id))
                 processesWithoutProcessGroupMultiSelectOptions.push(new MultiSelectOption(process.id, process.name));
         });
@@ -75,7 +74,7 @@ export class ProcessStatesMultiSelectOptionsService {
         processesFilter?: string[]
     ): Map<string, any[]> {
         const processMultiSelectOptionsPerProcessGroups =
-            this.processesService.getProcessesPerProcessGroups(processesFilter);
+            ProcessesService.getProcessesPerProcessGroups(processesFilter);
 
         processMultiSelectOptionsPerProcessGroups.forEach((processList, processGroupId) => {
             if (!isAdminModeAndUserHasRightToSeeAllStates) {
@@ -100,7 +99,7 @@ export class ProcessStatesMultiSelectOptionsService {
         processMultiSelectOptionsPerProcessGroups: Map<string, any[]>
     ): any[] {
         const processGroupsMultiSelectOptions = [];
-        const processesGroups = this.processesService.getProcessGroups();
+        const processesGroups = ProcessesService.getProcessGroups();
 
         if (processesWithoutProcessGroupMultiSelectOptions.length > 0)
             processGroupsMultiSelectOptions.push(

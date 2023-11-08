@@ -14,22 +14,19 @@ import {HandlebarsService} from './handlebars.service';
 import * as moment from 'moment';
 import {UserContext} from '@ofModel/user-context.model';
 import {DetailContext} from '@ofModel/detail-context.model';
-import {ConfigServer} from 'app/business/server/config.server';
 import {ProcessServerMock} from '@tests/mocks/processServer.mock';
 import {ProcessesService} from 'app/business/services/businessconfig/processes.service';
 import {ServerResponse, ServerResponseStatus} from 'app/business/server/serverResponse';
 
 describe('Handlebars Services', () => {
-    let processesService: ProcessesService;
     let processServer: ProcessServerMock;
-    let configServer: ConfigServer;
     let handlebarsService: HandlebarsService;
 
     const now = moment(Date.now());
     beforeEach(() => {
         processServer = new ProcessServerMock();
-        processesService = new ProcessesService(processServer);
-        handlebarsService = new HandlebarsService(processesService);
+        ProcessesService.setProcessServer(processServer);
+        handlebarsService = new HandlebarsService();
     });
 
     describe('#executeTemplate', () => {

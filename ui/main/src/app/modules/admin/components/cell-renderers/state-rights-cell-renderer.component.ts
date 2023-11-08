@@ -27,8 +27,8 @@ export class StateRightsCellRendererComponent implements ICellRendererAngularCom
     _stateRightsValues: {stateName: string; stateRight: StateRight}[] = [];
     processesDefinition: Process[];
 
-    constructor(private processesService: ProcessesService) {
-        this.processesDefinition = this.processesService.getAllProcesses();
+    constructor() {
+        this.processesDefinition = ProcessesService.getAllProcesses();
     }
 
     agInit(params: any): void {

@@ -87,14 +87,13 @@ export class ArchivesComponent implements OnDestroy, OnInit {
     displayContext: any = DisplayContext.ARCHIVE;
 
     constructor(
-        private processesService: ProcessesService,
         private dateTimeFormatter: DateTimeFormatterService,
         private cardService: CardService,
         private translationService: TranslationService,
         private modalService: NgbModal,
         private changeDetector: ChangeDetectorRef
     ) {
-        processesService.getAllProcesses().forEach((process) => {
+        ProcessesService.getAllProcesses().forEach((process) => {
             let itemName = process.name;
             if (!itemName) itemName = process.id;
             this.listOfProcesses.push({
@@ -332,7 +331,7 @@ export class ArchivesComponent implements OnDestroy, OnInit {
                                 [titleColumnName]: card.titleTranslated,
                                 [summaryColumnName]: card.summaryTranslated,
                                 [processGroupColumnName]: this.translateColumn(
-                                    this.processesService.findProcessGroupLabelForProcess(card.process)
+                                    ProcessesService.findProcessGroupLabelForProcess(card.process)
                                 ),
                                 [processColumnName]: this.getProcessName(card.process)
                             });
@@ -427,12 +426,16 @@ export class ArchivesComponent implements OnDestroy, OnInit {
     }
 
     getProcessName(processId: string): string {
-        const process = this.processesService.getProcess(processId);
+        const process = ProcessesService.getProcess(processId);
         return process?.name ?? processId;
     }
 
     getEntityName(name:string) {
         return EntitiesService.getEntityName(name);
+    }
+
+    findProcessGroupLabelForProcess(process: string) {
+        return ProcessesService.findProcessGroupLabelForProcess(process)
     }
 
     ngOnDestroy() {

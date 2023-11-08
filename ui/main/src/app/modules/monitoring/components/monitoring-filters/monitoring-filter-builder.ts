@@ -20,7 +20,7 @@ export class MonitoringFilterBuilder {
     private typeOfStatesFilter: Filter;
     private processFilter: Filter;
 
-    constructor(private filterService: FilterService, private processesService: ProcessesService) {}
+    constructor(private filterService: FilterService) {}
 
     public setProcessList(processesId: string[]) {
         if (processesId.length > 0) {
@@ -46,7 +46,7 @@ export class MonitoringFilterBuilder {
 
     public setTypeOfStates(typeOfStates: any) {
         if (typeOfStates.length > 0) {
-            const typeOfStatesPerProcessAndState = this.processesService.getTypeOfStatesPerProcessAndState();
+            const typeOfStatesPerProcessAndState = ProcessesService.getTypeOfStatesPerProcessAndState();
             this.typeOfStatesFilter = this.getTypeOfStateFilter(true, {
                 typeOfStates: typeOfStates,
                 mapOfTypeOfStates: typeOfStatesPerProcessAndState

@@ -131,7 +131,6 @@ export class UserCardComponent implements OnInit, OnDestroy {
         private cardService: CardService,
         private sanitizer: DomSanitizer,
         private element: ElementRef,
-        private processesService: ProcessesService,
         private handlebars: HandlebarsService,
         protected soundNotificationService: SoundNotificationService,
         protected userPermissionsService: UserPermissionsService,
@@ -394,7 +393,7 @@ export class UserCardComponent implements OnInit, OnDestroy {
         this.opfabAPIService.currentUserCard.initialSeverity = null;
 
 
-        this.userCardConfiguration = this.processesService
+        this.userCardConfiguration = ProcessesService
             .getProcess(this.selectedProcessId)
             .states.get(this.selectedStateId).userCard;
         this.setFieldsVisibility();
@@ -448,7 +447,7 @@ export class UserCardComponent implements OnInit, OnDestroy {
             card = this.cardToCopy.card;
         }
 
-        const selected = this.processesService.getProcess(this.selectedProcessId);
+        const selected = ProcessesService.getProcess(this.selectedProcessId);
 
         if (this.userCardConfiguration?.template) {
             const templateName = this.userCardConfiguration.template;
@@ -544,7 +543,7 @@ export class UserCardComponent implements OnInit, OnDestroy {
         this.opfabAPIService.currentUserCard.wktProjection = wktProjection;
 
         const title = this.specificInformation.card.title ? this.specificInformation.card.title : 'UNDEFINED';
-        const selectedProcess = this.processesService.getProcess(this.selectedProcessId);
+        const selectedProcess = ProcessesService.getProcess(this.selectedProcessId);
         const cardEmitter = this.findPublisherForCreatingUsercard();
         this.recipients = this.getRecipients();
         let recipientsForInformation = this.getRecipientsForInformation();
@@ -825,7 +824,7 @@ export class UserCardComponent implements OnInit, OnDestroy {
 
     private getEntitiesAllowedTorespond(recipients): string[] {
         let entitiesAllowedToRespond = [];
-        if (this.processesService.getProcess(this.selectedProcessId).states.get(this.selectedStateId).response) {
+        if (ProcessesService.getProcess(this.selectedProcessId).states.get(this.selectedStateId).response) {
             const defaultEntityAllowedToRespond = [];
             recipients.forEach((entity) => defaultEntityAllowedToRespond.push(entity));
 
@@ -895,7 +894,7 @@ export class UserCardComponent implements OnInit, OnDestroy {
     }
 
     public getChildCard(childCard) {
-        const cardState = this.processesService.getProcess(this.selectedProcessId).states.get(this.selectedStateId);
+        const cardState = ProcessesService.getProcess(this.selectedProcessId).states.get(this.selectedStateId);
         const publisher = childCard.publisher ?? this.card.publisher;
         return {
             id: null,
@@ -939,7 +938,7 @@ export class UserCardComponent implements OnInit, OnDestroy {
         // Exclude card from sound and system notifications before publishing to avoid synchronization problems
         this.soundNotificationService.lastSentCard(this.card.process + '.' + this.card.processInstanceId);
         this.systemNotificationService.lastSentCard(this.card.process + '.' + this.card.processInstanceId);
-        const selectedProcess = this.processesService.getProcess(this.selectedProcessId);
+        const selectedProcess = ProcessesService.getProcess(this.selectedProcessId);
 
         let childCard = null;
 

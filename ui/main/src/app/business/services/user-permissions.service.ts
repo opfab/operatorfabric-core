@@ -22,7 +22,7 @@ import {User} from '@ofModel/user.model';
     providedIn: 'root'
 })
 export class UserPermissionsService {
-    constructor(private processesService: ProcessesService) {}
+ 
 
     public isUserEnabledToRespond(user: UserWithPerimeters, card: Card, processDefinition: Process): boolean {
         if (this.isLttdExpired(card)) return false;
@@ -77,7 +77,7 @@ export class UserPermissionsService {
     }
 
     public isUserAuthorizedToSeeAcknowledgmentFooter(userWithPerimeters: UserWithPerimeters, card: Card) {
-        const showAcknowledgmentFooter = this.processesService.getShowAcknowledgmentFooterForACard(card);
+        const showAcknowledgmentFooter = ProcessesService.getShowAcknowledgmentFooterForACard(card);
         if (showAcknowledgmentFooter === ShowAcknowledgmentFooterEnum.FOR_ALL_USERS) {
             return true;
         }

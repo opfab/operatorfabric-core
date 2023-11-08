@@ -128,7 +128,6 @@ export class ArchivesLoggingFiltersComponent implements OnInit, OnDestroy, After
     defaultMinPublishDate: NgbDateStruct;
 
     constructor(
-        private processesService: ProcessesService,
         private processStatesDropdownListService: ProcessStatesMultiSelectOptionsService,
         private changeDetector: ChangeDetectorRef
     ) {
@@ -146,7 +145,7 @@ export class ArchivesLoggingFiltersComponent implements OnInit, OnDestroy, After
     }
 
     ngOnInit() {
-        this.processesGroups = this.processesService.getProcessGroups();
+        this.processesGroups = ProcessesService.getProcessGroups();
         this.processMultiSelectOptionsWhenSelectedProcessGroup = [];
         this.visibleProcessesId = this.visibleProcesses.map((element) => element.value);
 

@@ -82,7 +82,6 @@ export class MonitoringTableComponent implements OnChanges, OnDestroy {
         readonly dateTimeFormatter: DateTimeFormatterService,
         private translationService: TranslationService,
         private modalService: NgbModal,
-        private processesService: ProcessesService,
         private cardService: CardService,
         private selectedCardService: SelectedCardService,
         private lightCardsStoreService: LightCardsStoreService
@@ -378,9 +377,9 @@ export class MonitoringTableComponent implements OnChanges, OnDestroy {
 
     cardPreprocessingBeforeExport(card: any): any {
         card.card.processGroup = this.translateValue(
-            this.processesService.findProcessGroupLabelForProcess(card.card.process)
+            ProcessesService.findProcessGroupLabelForProcess(card.card.process)
         );
-        const process: Process = this.processesService.getProcess(card.card.process);
+        const process: Process = ProcessesService.getProcess(card.card.process);
         if (process) {
             card.card.processName = process.name;
             const state = process.states.get(card.card.state);

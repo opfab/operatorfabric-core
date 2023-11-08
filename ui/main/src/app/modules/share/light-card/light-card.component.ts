@@ -57,7 +57,6 @@ export class LightCardComponent implements OnInit, OnDestroy {
     constructor(
         private router: Router,
         private dateTimeFormatter: DateTimeFormatterService,
-        private processesService: ProcessesService,
         private groupedCardsService: GroupedCardsService,
         private soundNotificationService: SoundNotificationService,
         private mapService: MapService,
@@ -84,7 +83,7 @@ export class LightCardComponent implements OnInit, OnDestroy {
     }
 
     computeLttdParams() {
-        this.processesService
+        ProcessesService
             .queryProcess(this.lightCard.process, this.lightCard.processVersion)
             .subscribe((process) => {
                 const state = process.states.get((this.lightCard.state));

@@ -39,15 +39,13 @@ export class CardHeaderComponent implements OnChanges {
     public listVisibleEntitiesToRespond = [];
     public listDropdownEntitiesToRespond = [];
 
-    constructor(private businessconfigService: ProcessesService) {}
-
     ngOnChanges(): void {
         this.computeExpireLabelAndIcon();
         this.computeEntitiesForHeader();
     }
 
     private computeExpireLabelAndIcon() {
-        this.businessconfigService.queryProcess(this.card.process, this.card.processVersion).subscribe((process) => {
+        ProcessesService.queryProcess(this.card.process, this.card.processVersion).subscribe((process) => {
             const state = process.states.get(this.card.state);
             if (state.type === TypeOfStateEnum.FINISHED) {
                 this.showExpiredIcon = false;
@@ -71,7 +69,7 @@ export class CardHeaderComponent implements OnChanges {
     private getEntityIdsAllowedToSendCards(entityIds) {
         if (!entityIds) return [];
         const entities = EntitiesService.getEntitiesFromIds(entityIds);
-        const processDefinition = this.businessconfigService.getProcess(this.card.process);
+        const processDefinition = ProcessesService.getProcess(this.card.process);
         const emittingEntityAllowedToRespond = processDefinition.states.get(this.card.state).response?.emittingEntityAllowedToRespond || false ;
         const entitiesIdAllowedToRespond = EntitiesService
             .resolveEntitiesAllowedToSendCards(entities)

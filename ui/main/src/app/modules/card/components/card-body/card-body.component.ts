@@ -82,7 +82,6 @@ export class CardBodyComponent implements OnChanges, OnInit, OnDestroy {
     private userWithPerimeters: UserWithPerimeters;
 
     constructor(
-        private businessconfigService: ProcessesService,
         private cardService: CardService,
         private router: Router,
         private userPermissionsService: UserPermissionsService,
@@ -184,7 +183,7 @@ export class CardBodyComponent implements OnChanges, OnInit, OnDestroy {
                 this.isUserEnabledToRespond = this.userPermissionsService.isUserEnabledToRespond(
                     UserService.getCurrentUserWithPerimeters(),
                     this.card,
-                    this.businessconfigService.getProcess(this.card.process)
+                    ProcessesService.getProcess(this.card.process)
                 );
             }
             this.truncatedTitle = this.card.titleTranslated;

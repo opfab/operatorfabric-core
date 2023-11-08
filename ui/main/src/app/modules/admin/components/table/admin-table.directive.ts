@@ -95,11 +95,10 @@ export abstract class AdminTableDirective implements OnInit, OnDestroy {
         protected confirmationDialogService: ConfirmationDialogService,
         protected modalService: NgbModal,
         protected dataHandlingService: SharingService,
-        protected processesService: ProcessesService,
         protected businessDataService: BusinessDataService,
         private changeDetector: ChangeDetectorRef
     ) {
-        this.processesDefinition = this.processesService.getAllProcesses();
+        this.processesDefinition = ProcessesService.getAllProcesses();
         this.gridOptions = <GridOptions>{
             context: {
                 componentParent: this

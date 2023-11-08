@@ -96,7 +96,6 @@ export class ProcessMonitoringComponent implements OnDestroy, OnInit, AfterViewI
     selectedCardId: string;
 
     constructor(
-        private processesService: ProcessesService,
         private dateTimeFormatter: DateTimeFormatterService,
         private cardService: CardService,
         private translationService: TranslationService,
@@ -106,7 +105,7 @@ export class ProcessMonitoringComponent implements OnDestroy, OnInit, AfterViewI
     ) {
         this.processMonitoring = ConfigService.getConfigValue('processMonitoring');
 
-        processesService.getAllProcesses().forEach((process) => {
+        ProcessesService.getAllProcesses().forEach((process) => {
             if (process.uiVisibility?.processMonitoring) {
                 const itemName = process.name ? process.name : process.id;
                 this.processNames.set(process.id, itemName);
