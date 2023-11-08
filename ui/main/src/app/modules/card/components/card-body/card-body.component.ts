@@ -84,7 +84,6 @@ export class CardBodyComponent implements OnChanges, OnInit, OnDestroy {
     constructor(
         private cardService: CardService,
         private router: Router,
-        private userPermissionsService: UserPermissionsService,
         private lightCardsStoreService: LightCardsStoreService,
         private selectedCardService: SelectedCardService,
         private opfabAPIService: OpfabAPIService
@@ -180,7 +179,7 @@ export class CardBodyComponent implements OnChanges, OnInit, OnDestroy {
                 this.computeEntityIdsAllowedOrRequiredToRespondAndAllowedToSendCards();
                 this.computeUserEntityIdsPossibleForResponse();
                 this.computeUserMemberOfAnEntityRequiredToRespondAndAllowedToSendCards();
-                this.isUserEnabledToRespond = this.userPermissionsService.isUserEnabledToRespond(
+                this.isUserEnabledToRespond = UserPermissionsService.isUserEnabledToRespond(
                     UserService.getCurrentUserWithPerimeters(),
                     this.card,
                     ProcessesService.getProcess(this.card.process)
@@ -289,7 +288,7 @@ export class CardBodyComponent implements OnChanges, OnInit, OnDestroy {
         return (
             this.cardState.acknowledgmentAllowed !== AcknowledgmentAllowedEnum.NEVER &&
             entityRecipientsToAck.length > 0 &&
-            this.userPermissionsService.isUserAuthorizedToSeeAcknowledgmentFooter(this.userWithPerimeters, this.card)
+            UserPermissionsService.isUserAuthorizedToSeeAcknowledgmentFooter(this.userWithPerimeters, this.card)
         );
     }
 
