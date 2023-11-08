@@ -1,0 +1,45 @@
+// Copyright (c) 2023 RTE (http://www.rte-france.com)
+// See AUTHORS.txt
+// This document is subject to the terms of the Creative Commons Attribution 4.0 International license.
+// If a copy of the license was not distributed with this
+// file, You can obtain one at https://creativecommons.org/licenses/by/4.0/.
+// SPDX-License-Identifier: CC-BY-4.0
+
+= Node services 
+
+When developing Node services, you have the option to run the service outside of the Docker environment. To do this, follow these steps:
+
+Stop the Docker container running the Node service. For example:
+
+```
+    docker stop cards-reminder
+```
+
+After stopping the Docker container, you can start the service in development mode with hot reload : 
+
+```
+    cd node-services/cards-reminder
+    npm run start:dev        
+
+```
+
+== Other useful commands 
+
+Here are some other useful commands for working with Node services:
+
+To launch unit tests : 
+```
+    npm run test 
+```
+
+To build the service : 
+
+```
+    npm run build
+```
+
+To start the service without hot reload : 
+
+```
+    node build/cardReminder.ts
+```
