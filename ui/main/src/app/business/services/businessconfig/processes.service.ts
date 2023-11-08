@@ -7,7 +7,6 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {Injectable} from '@angular/core';
 import {Observable, of} from 'rxjs';
 import {catchError, map} from 'rxjs/operators';
 import {
@@ -22,27 +21,27 @@ import {LightCard} from '@ofModel/light-card.model';
 import {ProcessServer} from 'app/business/server/process.server';
 import {ServerResponseStatus} from '../../server/serverResponse';
 
-@Injectable({
-    providedIn: 'root'
-})
+
 export class ProcessesService {
-    private processesWithAllVersionsCache = new Map();
-    private processesWithLatestVersionOnly: Process[];
-    private processesWithAllVersions: Process[];
-    private processGroups = new Map<string, {name: string; processes: string[]}>();
+    private static processServer: ProcessServer;
+    private static processesWithAllVersionsCache = new Map();
+    private static processesWithLatestVersionOnly: Process[];
+    private static processesWithAllVersions: Process[];
+    private static processGroups = new Map<string, {name: string; processes: string[]}>();
 
-    private typeOfStatesPerProcessAndState: Map<string, TypeOfStateEnum>;
+    private static typeOfStatesPerProcessAndState: Map<string, TypeOfStateEnum>;
 
-    constructor(
-        private processServer: ProcessServer
-    ) {}
 
-    public loadAllProcessesWithLatestVersion(): Observable<any> {
-        return this.queryAllProcesses().pipe(
+    public static setProcessServer(processServer: ProcessServer) {
+        this.processServer = processServer;
+    }
+
+    public static loadAllProcessesWithLatestVersion(): Observable<any> {
+        return ProcessesService.queryAllProcesses().pipe(
             map((processesLoaded) => {
                 if (processesLoaded) {
-                    this.processesWithLatestVersionOnly = processesLoaded;
-                    if (this.processesWithLatestVersionOnly.length === 0) {
+                    ProcessesService.processesWithLatestVersionOnly = processesLoaded;
+                    if (ProcessesService.processesWithLatestVersionOnly.length === 0) {
                         console.log(new Date().toISOString(), 'WARNING : no processes configured');
                     } else {
                         console.log(new Date().toISOString(), 'List of processes loaded');
@@ -56,36 +55,40 @@ export class ProcessesService {
         );
     }
 
-    public loadAllProcessesWithAllVersions(): Observable<any> {
-        return this.queryAllProcessesWithAllVersions().pipe(
+    public static loadAllProcessesWithAllVersions(): Observable<any> {
+        return ProcessesService.queryAllProcessesWithAllVersions().pipe(
             map((processesLoaded) => {
                 if (processesLoaded) {
-                    this.processesWithAllVersions = processesLoaded;
-                    if (this.processesWithAllVersions.length === 0) {
+                    ProcessesService.processesWithAllVersions = processesLoaded;
+                    if (ProcessesService.processesWithAllVersions.length === 0) {
                         console.log(new Date().toISOString(), 'WARNING : no processes configured');
                     } else {
-                        this.loadAllProcessesWithAllVersionsInCache();
+                        ProcessesService.loadAllProcessesWithAllVersionsInCache();
                         console.log(new Date().toISOString(), 'List of all versions of processes loaded');
                     }
                 }
             }),
             catchError((error) => {
-                console.error(new Date().toISOString(), 'An error occurred when loading all versions of processes', error);
+                console.error(
+                    new Date().toISOString(),
+                    'An error occurred when loading all versions of processes',
+                    error
+                );
                 return of(error);
             })
         );
     }
 
-    public loadProcessGroups(): Observable<any> {
-        return this.queryProcessGroups().pipe(
+    public static loadProcessGroups(): Observable<any> {
+        return ProcessesService.queryProcessGroups().pipe(
             map((response) => {
                 const processGroupsFile = response.data;
                 if (processGroupsFile) {
                     const processGroupsList = processGroupsFile.groups;
                     if (processGroupsList) {
-                        this.processGroups.clear();
+                        ProcessesService.processGroups.clear();
                         processGroupsList.forEach((processGroup) => {
-                            this.processGroups.set(processGroup.id, {
+                            ProcessesService.processGroups.set(processGroup.id, {
                                 name: processGroup.name,
                                 processes: processGroup.processes
                             });
@@ -100,39 +103,38 @@ export class ProcessesService {
         );
     }
 
-    private loadAllProcessesWithAllVersionsInCache() {
-        this.processesWithAllVersions.forEach((processInSomeVersion) => {
-            this.processesWithAllVersionsCache.set(
+    private static loadAllProcessesWithAllVersionsInCache() {
+        ProcessesService.processesWithAllVersions.forEach((processInSomeVersion) => {
+            ProcessesService.processesWithAllVersionsCache.set(
                 `${processInSomeVersion.id}.${processInSomeVersion.version}`,
                 Object.setPrototypeOf(processInSomeVersion, Process.prototype)
             );
         });
     }
 
-
-    public getAllProcesses(): Process[] {
-        return this.processesWithLatestVersionOnly;
+    public static getAllProcesses(): Process[] {
+        return ProcessesService.processesWithLatestVersionOnly;
     }
 
-    public getProcessGroups(): Map<string, {name: string; processes: string[]}> {
-        return this.processGroups;
+    public static getProcessGroups(): Map<string, {name: string; processes: string[]}> {
+        return ProcessesService.processGroups;
     }
 
-    public getProcessGroupName(id: string) {
-        const processGroup = this.processGroups.get(id);
+    public static getProcessGroupName(id: string) {
+        const processGroup = ProcessesService.processGroups.get(id);
         if (processGroup) return processGroup.name;
         return '';
     }
 
-    public getProcess(processId: string): Process {
-        return this.processesWithLatestVersionOnly.find((process) => processId === process.id);
+    public static getProcess(processId: string): Process {
+        return ProcessesService.processesWithLatestVersionOnly.find((process) => processId === process.id);
     }
 
-    public getProcessWithVersion(processId: string, processVersion: string): Process {
-        return this.processesWithAllVersionsCache.get(processId + "." + processVersion);
+    public static getProcessWithVersion(processId: string, processVersion: string): Process {
+        return ProcessesService.processesWithAllVersionsCache.get(processId + '.' + processVersion);
     }
 
-    public getProcessGroupsAndLabels(): {
+    public static getProcessGroupsAndLabels(): {
         groupId: string;
         groupLabel: string;
         processes: {
@@ -142,11 +144,11 @@ export class ProcessesService {
     }[] {
         const processGroupsAndLabels = [];
 
-        this.getProcessGroups().forEach((group, groupId) => {
+        ProcessesService.getProcessGroups().forEach((group, groupId) => {
             const processIdAndLabels = [];
 
             group.processes.forEach((processId) => {
-                const processDefinition = this.getProcess(processId);
+                const processDefinition = ProcessesService.getProcess(processId);
 
                 if (processDefinition)
                     processIdAndLabels.push({
@@ -165,12 +167,12 @@ export class ProcessesService {
         return processGroupsAndLabels;
     }
 
-    queryProcessFromCard(card: Card): Observable<Process> {
-        return this.queryProcess(card.process, card.processVersion);
+    public static queryProcessFromCard(card: Card): Observable<Process> {
+        return ProcessesService.queryProcess(card.process, card.processVersion);
     }
 
-    queryAllProcesses(): Observable<Process[]> {
-        return this.processServer.getAllProcessesDefinition().pipe(
+    public static queryAllProcesses(): Observable<Process[]> {
+        return ProcessesService.processServer.getAllProcessesDefinition().pipe(
             map((response) => {
                 if (response.status !== ServerResponseStatus.OK) {
                     console.error(new Date().toISOString(), 'An error occurred when loading processes configuration');
@@ -181,8 +183,8 @@ export class ProcessesService {
         );
     }
 
-    queryAllProcessesWithAllVersions(): Observable<Process[]> {
-        return this.processServer.getAllProcessesWithAllVersions().pipe(
+    public static queryAllProcessesWithAllVersions(): Observable<Process[]> {
+        return ProcessesService.processServer.getAllProcessesWithAllVersions().pipe(
             map((response) => {
                 if (response.status !== ServerResponseStatus.OK) {
                     console.error(new Date().toISOString(), 'An error occurred when loading all versions of processes');
@@ -193,20 +195,20 @@ export class ProcessesService {
         );
     }
 
-    queryProcessGroups(): Observable<any> {
-        return this.processServer.getProcessGroups();
+    public static queryProcessGroups(): Observable<any> {
+        return ProcessesService.processServer.getProcessGroups();
     }
 
-    queryProcess(id: string, version: string): Observable<Process> {
+    public static queryProcess(id: string, version: string): Observable<Process> {
         const key = `${id}.${version}`;
-        const process = this.processesWithAllVersionsCache.get(key);
+        const process = ProcessesService.processesWithAllVersionsCache.get(key);
         if (process) {
             return of(process);
         }
-        return this.processServer.getProcessDefinition(id, version).pipe(
+        return ProcessesService.processServer.getProcessDefinition(id, version).pipe(
             map((response) => {
                 if (response.status === ServerResponseStatus.OK && response.data)
-                    this.processesWithAllVersionsCache.set(key, response.data);
+                    ProcessesService.processesWithAllVersionsCache.set(key, response.data);
                 else
                     console.log(
                         new Date().toISOString(),
@@ -217,8 +219,8 @@ export class ProcessesService {
         );
     }
 
-    fetchHbsTemplate(process: string, version: string, name: string): Observable<string> {
-        return this.processServer.getTemplate(process, version, name).pipe(
+    public static fetchHbsTemplate(process: string, version: string, name: string): Observable<string> {
+        return ProcessesService.processServer.getTemplate(process, version, name).pipe(
             map((serverResponse) => {
                 if (serverResponse.status !== ServerResponseStatus.OK) throw new Error('Template not available');
                 return serverResponse.data;
@@ -226,8 +228,8 @@ export class ProcessesService {
         );
     }
 
-    public findProcessGroupIdForProcessId(processId: string): string {
-        const data = this.findProcessGroupForProcess(processId);
+    public static findProcessGroupIdForProcessId(processId: string): string {
+        const data = ProcessesService.findProcessGroupForProcess(processId);
 
         if (data) {
             return data.id;
@@ -235,20 +237,20 @@ export class ProcessesService {
         return null;
     }
 
-    public findProcessGroupForProcess(processId: string) {
-        for (const [groupId, group] of this.processGroups) {
+    public static findProcessGroupForProcess(processId: string) {
+        for (const [groupId, group] of ProcessesService.processGroups) {
             if (group.processes.find((process) => process === processId))
                 return {id: groupId, name: group.name, processes: group.processes};
         }
         return null;
     }
 
-    public getProcessesPerProcessGroups(processesFilter?: string[]): Map<any, any> {
+    public static getProcessesPerProcessGroups(processesFilter?: string[]): Map<any, any> {
         const processesPerProcessGroups = new Map();
 
-        this.getAllProcesses().forEach((process) => {
+        ProcessesService.getAllProcesses().forEach((process) => {
             if (!processesFilter || processesFilter.includes(process.id)) {
-                const processGroup = this.findProcessGroupForProcess(process.id);
+                const processGroup = ProcessesService.findProcessGroupForProcess(process.id);
                 if (processGroup) {
                     const processes = processesPerProcessGroups.get(processGroup.id)
                         ? processesPerProcessGroups.get(processGroup.id)
@@ -264,42 +266,42 @@ export class ProcessesService {
         return processesPerProcessGroups;
     }
 
-    public getProcessesWithoutProcessGroup(processesFilter?: string[]): Process[] {
+    public static getProcessesWithoutProcessGroup(processesFilter?: string[]): Process[] {
         const processesWithoutProcessGroup = [];
 
-        this.getAllProcesses().forEach((process) => {
+        ProcessesService.getAllProcesses().forEach((process) => {
             if (!processesFilter || processesFilter.includes(process.id)) {
-                const processGroup = this.findProcessGroupForProcess(process.id);
+                const processGroup = ProcessesService.findProcessGroupForProcess(process.id);
                 if (!processGroup) processesWithoutProcessGroup.push(process);
             }
         });
         return processesWithoutProcessGroup;
     }
 
-    public findProcessGroupLabelForProcess(processId: string): string {
-        const processGroup = this.findProcessGroupForProcess(processId);
+    public static findProcessGroupLabelForProcess(processId: string): string {
+        const processGroup = ProcessesService.findProcessGroupForProcess(processId);
         return processGroup ? processGroup.name : 'processGroup.defaultLabel';
     }
 
-    private loadTypeOfStatesPerProcessAndState() {
-        this.typeOfStatesPerProcessAndState = new Map();
+    private static loadTypeOfStatesPerProcessAndState() {
+        ProcessesService.typeOfStatesPerProcessAndState = new Map();
 
-        for (const process of this.processesWithLatestVersionOnly) {
+        for (const process of ProcessesService.processesWithLatestVersionOnly) {
             process.states.forEach((state, stateid) => {
-                this.typeOfStatesPerProcessAndState.set(process.id + '.' + stateid, state.type);
+                ProcessesService.typeOfStatesPerProcessAndState.set(process.id + '.' + stateid, state.type);
             });
         }
     }
 
-    public getTypeOfStatesPerProcessAndState(): Map<string, TypeOfStateEnum> {
-        if (!this.typeOfStatesPerProcessAndState) this.loadTypeOfStatesPerProcessAndState();
-        return this.typeOfStatesPerProcessAndState;
+    public static getTypeOfStatesPerProcessAndState(): Map<string, TypeOfStateEnum> {
+        if (!ProcessesService.typeOfStatesPerProcessAndState) ProcessesService.loadTypeOfStatesPerProcessAndState();
+        return ProcessesService.typeOfStatesPerProcessAndState;
     }
 
-    public getStatesListPerProcess(isAdminMode: boolean, hideChildStates: boolean): Map<string, any[]> {
+    public static getStatesListPerProcess(isAdminMode: boolean, hideChildStates: boolean): Map<string, any[]> {
         const statesListPerProcess = new Map();
 
-        this.getAllProcesses().forEach((process) => {
+        ProcessesService.getAllProcesses().forEach((process) => {
             const statesDropdownList = [];
             process.states.forEach((state, stateid) => {
                 if (
@@ -316,10 +318,12 @@ export class ProcessesService {
         return statesListPerProcess;
     }
 
-    public getConsideredAcknowledgedForUserWhenForALightCard(lightCard: LightCard): ConsideredAcknowledgedForUserWhenEnum {
+    public static getConsideredAcknowledgedForUserWhenForALightCard(
+        lightCard: LightCard
+    ): ConsideredAcknowledgedForUserWhenEnum {
         let consideredAcknowledgedForUserWhen = ConsideredAcknowledgedForUserWhenEnum.USER_HAS_ACKNOWLEDGED;
 
-        const processDef = this.getProcessWithVersion(lightCard.process, lightCard.processVersion);
+        const processDef = ProcessesService.getProcessWithVersion(lightCard.process, lightCard.processVersion);
 
         if (processDef) {
             const state = processDef.states.get(lightCard.state);
@@ -331,10 +335,10 @@ export class ProcessesService {
         return consideredAcknowledgedForUserWhen;
     }
 
-    public getShowAcknowledgmentFooterForACard(card: Card): ShowAcknowledgmentFooterEnum {
+    public static getShowAcknowledgmentFooterForACard(card: Card): ShowAcknowledgmentFooterEnum {
         let showAcknowledgmentFooter = ShowAcknowledgmentFooterEnum.ONLY_FOR_EMITTING_ENTITY;
 
-        const processDef = this.getProcessWithVersion(card.process, card.processVersion);
+        const processDef = ProcessesService.getProcessWithVersion(card.process, card.processVersion);
 
         if (processDef) {
             const state = processDef.states.get(card.state);

@@ -39,7 +39,6 @@ export class CardComponent implements OnInit, OnDestroy {
     detailClosed: boolean;
 
     constructor(
-        protected businessconfigService: ProcessesService,
         protected selectedCardService: SelectedCardService,
         protected modalService: NgbModal,
         protected router: Router
@@ -52,7 +51,7 @@ export class CardComponent implements OnInit, OnDestroy {
             .subscribe((selectedCard: SelectedCard) => {
                 if (selectedCard.card) {
                     this.cardNotFound = false;
-                    this.businessconfigService
+                    ProcessesService
                         .queryProcess(selectedCard.card.process, selectedCard.card.processVersion)
                         .subscribe({
                             next: (businessconfig) => {

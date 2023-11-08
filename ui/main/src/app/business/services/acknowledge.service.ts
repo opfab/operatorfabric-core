@@ -28,8 +28,7 @@ export class AcknowledgeService {
 
     constructor(
         private acknowledgeServer: AcknowledgeServer,
-        private userPermissionsService: UserPermissionsService,
-        private processesService: ProcessesService
+        private userPermissionsService: UserPermissionsService
     ) {}
 
     postUserAcknowledgement(cardUid: string, entitiesAcks: string[]): Observable<ServerResponse<void>> {
@@ -54,7 +53,7 @@ export class AcknowledgeService {
 
     public isLightCardHasBeenAcknowledgedByUserOrByUserEntity(lightCard: LightCard): boolean {
         const consideredAcknowledgedForUserWhen =
-            this.processesService.getConsideredAcknowledgedForUserWhenForALightCard(lightCard);
+            ProcessesService.getConsideredAcknowledgedForUserWhenForALightCard(lightCard);
 
         if (this.areWeInModeUserHasAcknowledged(lightCard, consideredAcknowledgedForUserWhen)) {
             return lightCard.hasBeenAcknowledged;

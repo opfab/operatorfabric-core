@@ -84,7 +84,6 @@ export class CardResponseComponent implements OnChanges, OnInit {
         private cardService: CardService,
         private modalService: NgbModal,
         private userPermissionsService: UserPermissionsService,
-        private processService: ProcessesService,
         private opfabAPIService: OpfabAPIService
 
     ) {
@@ -103,12 +102,12 @@ export class CardResponseComponent implements OnChanges, OnInit {
         this.isUserEnabledToRespond = this.userPermissionsService.isUserEnabledToRespond(
             UserService.getCurrentUserWithPerimeters(),
             this.card,
-            this.processService.getProcess(this.card.process)
+            ProcessesService.getProcess(this.card.process)
         );
         this.userEntitiesAllowedToRespond = this.userPermissionsService.getUserEntitiesAllowedToRespond(
             UserService.getCurrentUserWithPerimeters(),
             this.card,
-            this.processService.getProcess(this.card.process)
+            ProcessesService.getProcess(this.card.process)
         );
         this.isReadOnlyUser = UserService.hasCurrentUserAnyPermission([PermissionEnum.READONLY]);
 

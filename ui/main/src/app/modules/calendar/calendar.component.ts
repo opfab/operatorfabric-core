@@ -36,12 +36,11 @@ import {SelectedCardService} from 'app/business/services/card/selectedCard.servi
 export class CalendarComponent implements OnInit, OnDestroy, AfterViewInit {
     constructor(
         private modalService: NgbModal,
-        processesService: ProcessesService,
         private lightCardsStoreService: LightCardsStoreService,
         private filterService: FilterService,
         private selectedCardService: SelectedCardService
     ) {
-        processesService.getAllProcesses().forEach((process) => {
+        ProcessesService.getAllProcesses().forEach((process) => {
             if (process.uiVisibility?.calendar) this.mapOfProcesses.set(process.id, 1);
         });
     }

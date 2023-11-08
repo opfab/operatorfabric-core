@@ -25,7 +25,6 @@ import {PipesModule} from '../pipes/pipes.module';
 import {ConfigServerMock} from '@tests/mocks/configServer.mock';
 import {ConfigServer} from 'app/business/server/config.server';
 import {ProcessServerMock} from '@tests/mocks/processServer.mock';
-import {ProcessServer} from 'app/business/server/process.server';
 import {OpfabEventStreamServer} from 'app/business/server/opfabEventStream.server';
 import {ExternalDevicesServer} from 'app/business/server/external-devices.server';
 import {RemoteLoggerServer} from 'app/business/server/remote-logger.server';
@@ -49,6 +48,7 @@ describe('LightCardComponent', () => {
         const myrout = {...routerSpy};
         myrout.routerState = {snapshot: {url: 'archives'}};
         ConfigService.setConfigServer(new ConfigServerMock());
+        ProcessesService.setProcessServer(new ProcessServerMock());
         TestBed.configureTestingModule({
             imports: [
                 HttpClientTestingModule,
@@ -68,12 +68,10 @@ describe('LightCardComponent', () => {
             declarations: [LightCardComponent],
             providers: [
                 {provide: Router, useValue: myrout},
-                ProcessesService,
                 {provide: 'TimeEventSource', useValue: null},
                 DateTimeFormatterService,
                 I18nService,
                 {provide: ConfigServer, useClass: ConfigServerMock},
-                {provide: ProcessServer, useClass: ProcessServerMock},
                 {provide: RemoteLoggerServer, useValue: null},
                 {provide: OpfabEventStreamServer, use:null},
                 {provide: EntitiesServer, useValue: null},

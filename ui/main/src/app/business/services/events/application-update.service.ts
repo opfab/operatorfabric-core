@@ -27,7 +27,6 @@ import {BusinessDataService} from '../businessconfig/businessdata.service';
 export class ApplicationUpdateService {
     constructor(
         private opfabEventStreamService: OpfabEventStreamService,
-        private processService: ProcessesService,
         private handlebarsService: HandlebarsService,
         private templateCssService: TemplateCssService,
         private applicationEventsService: ApplicationEventsService,
@@ -49,9 +48,9 @@ export class ApplicationUpdateService {
                     logger.info('Update business config');
                     this.handlebarsService.clearCache();
                     this.templateCssService.clearCache();
-                    this.processService.loadAllProcessesWithLatestVersion().subscribe();
-                    this.processService.loadAllProcessesWithAllVersions().subscribe();
-                    this.processService.loadProcessGroups().subscribe();
+                    ProcessesService.loadAllProcessesWithLatestVersion().subscribe();
+                    ProcessesService.loadAllProcessesWithAllVersions().subscribe();
+                    ProcessesService.loadProcessGroups().subscribe();
                 }),
                 catchError((error, caught) => {
                     logger.error('Error in update business config ', error);

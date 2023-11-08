@@ -86,14 +86,13 @@ export class LoggingComponent implements OnDestroy, OnInit, AfterViewInit {
     ]);
 
     constructor(
-        private processesService: ProcessesService,
         private dateTimeFormatter: DateTimeFormatterService,
         private cardService: CardService,
         private translationService: TranslationService,
         private modalService: NgbModal,
         private changeDetector: ChangeDetectorRef
     ) {
-        processesService.getAllProcesses().forEach((process) => {
+        ProcessesService.getAllProcesses().forEach((process) => {
             if (process.uiVisibility?.logging) {
                 const itemName = process.name ? process.name : process.id;
                 this.processNames.set(process.id, itemName);
@@ -275,7 +274,7 @@ export class LoggingComponent implements OnDestroy, OnInit, AfterViewInit {
                                 card.publishDate
                             ),
                             [processGroupColumnName]: this.translateColumn(
-                                this.processesService.findProcessGroupLabelForProcess(card.process)
+                                ProcessesService.findProcessGroupLabelForProcess(card.process)
                             ),
                             [processColumnName]: card.processName,
                             [titleColumnName]: card.titleTranslated,

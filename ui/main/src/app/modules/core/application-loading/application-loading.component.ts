@@ -8,7 +8,6 @@
  */
 
 import {Component, OnInit, Output, ViewChild} from '@angular/core';
-import {TranslateService} from '@ngx-translate/core';
 import {ConfigService} from 'app/business/services/config.service';
 import {GroupsService} from 'app/business/services/users/groups.service';
 import {LoggerService as logger} from 'app/business/services/logs/logger.service';
@@ -29,7 +28,6 @@ import {CurrentUserStore} from 'app/business/store/current-user.store';
 import {AuthService} from 'app/authentication/auth.service';
 import {AuthenticationMode} from 'app/authentication/auth.model';
 import {SystemNotificationService} from '../../../business/services/notifications/system-notification.service';
-import {BusinessDataService} from 'app/business/services/businessconfig/businessdata.service';
 import {OpfabAPIService} from 'app/business/services/opfabAPI.service';
 import {RemoteLoggerServer} from 'app/business/server/remote-logger.server';
 import {ConfigServer} from 'app/business/server/config.server';
@@ -42,6 +40,7 @@ import {EntitiesServer} from 'app/business/server/entities.server';
 import {EntitiesService} from 'app/business/services/users/entities.service';
 import {GroupsServer} from 'app/business/server/groups.server';
 import {PerimetersServer} from 'app/business/server/perimeters.server';
+import {ProcessServer} from 'app/business/server/process.server';
 
 declare const opfab: any;
 @Component({
@@ -70,9 +69,6 @@ export class ApplicationLoadingComponent implements OnInit {
         private authService: AuthService,
         private configServer: ConfigServer,
         private settingsService: SettingsService,
-        private translateService: TranslateService,
-        private businessDataService: BusinessDataService,
-        private processesService: ProcessesService,
         private lightCardsStoreService: LightCardsStoreService,
         private opfabEventStreamServer: OpfabEventStreamServer,
         private opfabEventStreamService: OpfabEventStreamService,
@@ -85,7 +81,8 @@ export class ApplicationLoadingComponent implements OnInit {
         private routerService: AngularRouterService,
         private entitiesServer: EntitiesServer,
         private groupsServer: GroupsServer,
-        private perimetersServer: PerimetersServer
+        private perimetersServer: PerimetersServer,
+        private processServer: ProcessServer
     ) {}
 
     ngOnInit() {
@@ -98,7 +95,8 @@ export class ApplicationLoadingComponent implements OnInit {
             opfabAPIService: this.opfabAPIService,
             entitiesServer: this.entitiesServer,
             groupsServer: this.groupsServer,
-            perimetersServer: this.perimetersServer
+            perimetersServer: this.perimetersServer,
+            processServer: this.processServer
         });
 
 
@@ -218,9 +216,9 @@ export class ApplicationLoadingComponent implements OnInit {
             UserService.loadUserWithPerimetersData(),
             EntitiesService.loadAllEntitiesData(),
             GroupsService.loadAllGroupsData(),
-            this.processesService.loadAllProcessesWithLatestVersion(),
-            this.processesService.loadAllProcessesWithAllVersions(),
-            this.processesService.loadProcessGroups(),
+            ProcessesService.loadAllProcessesWithLatestVersion(),
+            ProcessesService.loadAllProcessesWithAllVersions(),
+            ProcessesService.loadProcessGroups(),
             ConfigService.loadMonitoringConfig()
         ];
         Utilities.subscribeAndWaitForAllObservablesToEmitAnEvent(requestsToLaunch$).subscribe({

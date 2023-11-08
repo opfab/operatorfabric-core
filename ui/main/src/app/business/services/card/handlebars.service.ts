@@ -21,7 +21,6 @@ import {ConfigService} from 'app/business/services/config.service';
 })
 export class HandlebarsService {
     constructor(
-        private businessconfig: ProcessesService
     ) {
         HandlebarsService.registerPreserveSpace();
         this.registerNumberFormat();
@@ -277,7 +276,7 @@ export class HandlebarsService {
         if (template) {
             return of(template);
         }
-        return this.businessconfig.fetchHbsTemplate(process, version, name).pipe(
+        return ProcessesService.fetchHbsTemplate(process, version, name).pipe(
             map((s) => Handlebars.compile(s)),
             tap((t) => (this.templateCache[key] = t))
         );

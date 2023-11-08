@@ -31,7 +31,6 @@ import {UserPermissionsService} from "../../services/user-permissions.service";
 
 describe('Dashboard', () => {
     let dashboard: Dashboard;
-    let processesService: ProcessesService;
     let userServerMock: UserServerMock;
     let processServerMock: ProcessServerMock;
     let lightCardsStoreService: LightCardsStoreService;
@@ -44,7 +43,7 @@ describe('Dashboard', () => {
         userServerMock = new UserServerMock();
         UserService.setUserServer(userServerMock);
         processServerMock = new ProcessServerMock();
-        processesService = new ProcessesService(processServerMock);
+        ProcessesService.setProcessServer(processServerMock);
         filterService = new FilterService();
 
         opfabEventStreamServerMock = new OpfabEventStreamServerMock();
@@ -52,8 +51,8 @@ describe('Dashboard', () => {
             opfabEventStreamServerMock,
             null
         );
-        const userPermissionService = new UserPermissionsService(processesService);
-        acknowledgeService = new AcknowledgeService(null, userPermissionService, processesService);
+        const userPermissionService = new UserPermissionsService();
+        acknowledgeService = new AcknowledgeService(null, userPermissionService);
 
         lightCardsStoreService = new LightCardsStoreService(
             opfabEventStreamService,
@@ -89,8 +88,8 @@ describe('Dashboard', () => {
         processServerMock.setResponseForAllProcessDefinition(
             new ServerResponse(processes, ServerResponseStatus.OK, null)
         );
-        await processesService.loadAllProcessesWithLatestVersion().subscribe();
-        await processesService.loadAllProcessesWithAllVersions().subscribe();
+        await ProcessesService.loadAllProcessesWithLatestVersion().subscribe();
+        await ProcessesService.loadAllProcessesWithAllVersions().subscribe();
     }
 
     it('GIVEN an empty process list WHEN get dashboard THEN dashboard is empty', async () => {
@@ -98,12 +97,12 @@ describe('Dashboard', () => {
         processServerMock.setResponseForAllProcessDefinition(
             new ServerResponse(processes, ServerResponseStatus.OK, null)
         );
-        await processesService.loadAllProcessesWithLatestVersion().subscribe();
-        await processesService.loadAllProcessesWithAllVersions().subscribe();
+        await ProcessesService.loadAllProcessesWithLatestVersion().subscribe();
+        await ProcessesService.loadAllProcessesWithAllVersions().subscribe();
         const userWithPerimeters = new UserWithPerimeters(null, new Array(), null, new Map());
         userServerMock.setResponseForCurrentUserWithPerimeter(new ServerResponse(userWithPerimeters, null, null));
 
-        dashboard = new Dashboard(processesService, lightCardsStoreService, filterService);
+        dashboard = new Dashboard(lightCardsStoreService, filterService);
         filterService.updateFilter(FilterType.BUSINESSDATE_FILTER, true, filterService.getBusinessDateFilter().status);
 
         const result = await firstValueFrom(dashboard.getDashboardPage());
@@ -119,7 +118,7 @@ describe('Dashboard', () => {
         );
         await UserService.loadUserWithPerimetersData().subscribe();
 
-        dashboard = new Dashboard(processesService, lightCardsStoreService, filterService);
+        dashboard = new Dashboard(lightCardsStoreService, filterService);
         filterService.updateFilter(FilterType.BUSINESSDATE_FILTER, true, filterService.getBusinessDateFilter().status);
 
         const result = await firstValueFrom(dashboard.getDashboardPage());
@@ -141,7 +140,7 @@ describe('Dashboard', () => {
         );
         await UserService.loadUserWithPerimetersData().subscribe();
 
-        dashboard = new Dashboard(processesService, lightCardsStoreService, filterService);
+        dashboard = new Dashboard(lightCardsStoreService, filterService);
         filterService.updateFilter(FilterType.BUSINESSDATE_FILTER, true, filterService.getBusinessDateFilter().status);
 
         const result = await firstValueFrom(dashboard.getDashboardPage());
@@ -170,7 +169,7 @@ describe('Dashboard', () => {
         );
         await UserService.loadUserWithPerimetersData().subscribe();
 
-        dashboard = new Dashboard(processesService, lightCardsStoreService, filterService);
+        dashboard = new Dashboard(lightCardsStoreService, filterService);
         filterService.updateFilter(FilterType.BUSINESSDATE_FILTER, true, filterService.getBusinessDateFilter().status);
 
         const result = await firstValueFrom(dashboard.getDashboardPage());
@@ -195,7 +194,7 @@ describe('Dashboard', () => {
         );
         await UserService.loadUserWithPerimetersData().subscribe();
 
-        dashboard = new Dashboard(processesService, lightCardsStoreService, filterService);
+        dashboard = new Dashboard(lightCardsStoreService, filterService);
         filterService.updateFilter(FilterType.BUSINESSDATE_FILTER, true, filterService.getBusinessDateFilter().status);
 
         let result = await firstValueFrom(dashboard.getDashboardPage());
@@ -239,7 +238,7 @@ describe('Dashboard', () => {
         );
         await UserService.loadUserWithPerimetersData().subscribe();
 
-        dashboard = new Dashboard(processesService, lightCardsStoreService, filterService);
+        dashboard = new Dashboard(lightCardsStoreService, filterService);
 
         const infoCard = getOneRandomLightCard({
             process: 'process1',
@@ -307,7 +306,7 @@ describe('Dashboard', () => {
         );
         await UserService.loadUserWithPerimetersData().subscribe();
 
-        dashboard = new Dashboard(processesService, lightCardsStoreService, filterService);
+        dashboard = new Dashboard(lightCardsStoreService, filterService);
 
         const infoCard = getOneRandomLightCard({
             process: 'process1',
@@ -335,7 +334,7 @@ describe('Dashboard', () => {
         );
         await UserService.loadUserWithPerimetersData().subscribe();
 
-        dashboard = new Dashboard(processesService, lightCardsStoreService, filterService);
+        dashboard = new Dashboard(lightCardsStoreService, filterService);
 
         const infoCard = getOneRandomLightCard({
             process: 'process1',

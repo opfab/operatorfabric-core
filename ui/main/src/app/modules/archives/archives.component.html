@@ -64,7 +64,7 @@
           </td>
           <td style ="min-width: 280px">{{ updates.mostRecent.titleTranslated | opfabTitleCase }}</td>
           <td style ="min-width: 280px">{{ updates.mostRecent.summaryTranslated }}</td>
-          <td style ="min-width: 150px" *ngIf="filtersTemplate.isProcessGroupFilterVisible()" translate>{{ processesService.findProcessGroupLabelForProcess(updates.mostRecent.process) }}</td>
+          <td style ="min-width: 150px" *ngIf="filtersTemplate.isProcessGroupFilterVisible()" translate>{{ findProcessGroupLabelForProcess(updates.mostRecent.process) }}</td>
           <td style ="min-width: 150px">{{ getProcessName(updates.mostRecent.process) }}</td>
         </tr>
 
@@ -83,7 +83,7 @@
             </td>
             <td style="padding-left: 30px"> {{ historyCard.titleTranslated | opfabTitleCase }}</td>
             <td style="padding-left: 30px"> {{ historyCard.summaryTranslated }}</td>
-            <td style="padding-left: 30px" *ngIf="filtersTemplate.isProcessGroupFilterVisible()" translate>{{ processesService.findProcessGroupLabelForProcess(historyCard.process) }}</td>
+            <td style="padding-left: 30px" *ngIf="filtersTemplate.isProcessGroupFilterVisible()" translate>{{ findProcessGroupLabelForProcess(historyCard.process) }}</td>
             <td style="padding-left: 30px">{{ getProcessName(historyCard.process) }}</td>
           </tr>
           <tr *ngIf="updates.tooManyRows">

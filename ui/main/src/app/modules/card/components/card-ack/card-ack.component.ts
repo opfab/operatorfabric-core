@@ -58,7 +58,6 @@ export class CardAckComponent implements OnInit, OnChanges, OnDestroy {
     constructor(
         private acknowledgeService: AcknowledgeService,
         private userPermissionsService: UserPermissionsService,
-        private processService: ProcessesService,
         private lightCardsStoreService: LightCardsStoreService
     ) {
         const userWithPerimeters = UserService.getCurrentUserWithPerimeters();
@@ -100,7 +99,7 @@ export class CardAckComponent implements OnInit, OnChanges, OnDestroy {
         this.isUserEnabledToRespond = this.userPermissionsService.isUserEnabledToRespond(
             UserService.getCurrentUserWithPerimeters(),
             this.card,
-            this.processService.getProcess(this.card.process)
+            ProcessesService.getProcess(this.card.process)
         );
         this.setAcknowledgeButtonVisibility();
 

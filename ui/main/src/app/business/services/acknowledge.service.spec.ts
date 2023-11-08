@@ -51,9 +51,9 @@ describe('AcknowledgeService testing ', () => {
 
         const processServerMock = new ProcessServerMock();
         processServerMock.setResponseForAllProcessDefinition(new ServerResponse(getTestProcesses(), ServerResponseStatus.OK, ""));
-        const processesService = new ProcessesService(processServerMock);
-        processesService.loadAllProcessesWithLatestVersion().subscribe();
-        processesService.loadAllProcessesWithAllVersions().subscribe();
+        ProcessesService.setProcessServer(processServerMock);
+        ProcessesService.loadAllProcessesWithLatestVersion().subscribe();
+        ProcessesService.loadAllProcessesWithAllVersions().subscribe();
         UserService.loadUserWithPerimetersData().subscribe();
 
         const mockEntitiesServer = new EntitiesServerMock();
@@ -63,9 +63,9 @@ describe('AcknowledgeService testing ', () => {
                                         new Entity("ENTITY_FR", "ENTITY FR", "", true, null, null)]);
         EntitiesService.setEntitiesServer(mockEntitiesServer);
 
-        const userPermissionService = new UserPermissionsService(processesService);
+        const userPermissionService = new UserPermissionsService();
 
-        acknowledgeService = new AcknowledgeService(null, userPermissionService, processesService);
+        acknowledgeService = new AcknowledgeService(null, userPermissionService);
 
 
         EntitiesService.loadAllEntitiesData().subscribe();
