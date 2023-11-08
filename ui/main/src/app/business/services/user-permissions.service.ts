@@ -7,7 +7,7 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {Injectable} from '@angular/core';
+
 import {userRight, UserWithPerimeters} from '@ofModel/userWithPerimeters.model';
 import {Card} from '@ofModel/card.model';
 import {Process, ShowAcknowledgmentFooterEnum} from '@ofModel/processes.model';
@@ -16,49 +16,44 @@ import {EntitiesService} from 'app/business/services/users/entities.service';
 import {ProcessesService} from 'app/business/services/businessconfig/processes.service';
 import {User} from '@ofModel/user.model';
 
-/** This class contains functions allowing to know if the user has the right to answer to the card or not */
-
-@Injectable({
-    providedIn: 'root'
-})
 export class UserPermissionsService {
  
 
-    public isUserEnabledToRespond(user: UserWithPerimeters, card: Card, processDefinition: Process): boolean {
-        if (this.isLttdExpired(card)) return false;
+    public static isUserEnabledToRespond(user: UserWithPerimeters, card: Card, processDefinition: Process): boolean {
+        if (UserPermissionsService.isLttdExpired(card)) return false;
 
         return (
-            this.getUserEntitiesAllowedToRespond(user, card, processDefinition).length > 0 &&
-            this.doesTheUserHaveThePerimeterToRespond(user, card, processDefinition)
+            UserPermissionsService.getUserEntitiesAllowedToRespond(user, card, processDefinition).length > 0 &&
+            UserPermissionsService.doesTheUserHaveThePerimeterToRespond(user, card, processDefinition)
         );
     }
 
     /* 1st check : card.publisherType == ENTITY
    2nd check : the card has been sent by an entity of the user connected
    3rd check : the user has the Write access to the process/state of the card */
-    public doesTheUserHavePermissionToDeleteCard(user: UserWithPerimeters, card: Card): boolean {
+    public static doesTheUserHavePermissionToDeleteCard(user: UserWithPerimeters, card: Card): boolean {
         let permission = false;
         if (card.publisherType === 'ENTITY' && user.userData.entities.includes(card.publisher)) {
-            permission = this.checkUserWritePerimeter(user, card);
+            permission = UserPermissionsService.checkUserWritePerimeter(user, card);
         }
         return permission;
     }
 
-    public doesTheUserHavePermissionToEditCard(user: UserWithPerimeters, card: Card): boolean {
-        if (card.entitiesAllowedToEdit && this.isUserInEntityAllowedToEditCard(user.userData, card))
-            return this.checkUserWritePerimeter(user, card);
+    public static doesTheUserHavePermissionToEditCard(user: UserWithPerimeters, card: Card): boolean {
+        if (card.entitiesAllowedToEdit && UserPermissionsService.isUserInEntityAllowedToEditCard(user.userData, card))
+            return UserPermissionsService.checkUserWritePerimeter(user, card);
         if (card.publisherType === 'ENTITY' && user.userData.entities.includes(card.publisher))
-            return this.checkUserWritePerimeter(user, card);
+            return UserPermissionsService.checkUserWritePerimeter(user, card);
         return false;
     }
 
-    private checkUserWritePerimeter(user: UserWithPerimeters, card: Card): boolean {
+    private static checkUserWritePerimeter(user: UserWithPerimeters, card: Card): boolean {
         let permission = false;
         user.computedPerimeters.forEach((perim) => {
             if (
                 perim.process === card.process &&
                 perim.state === card.state &&
-                this.compareRightAction(perim.rights, RightsEnum.ReceiveAndWrite)
+                UserPermissionsService.compareRightAction(perim.rights, RightsEnum.ReceiveAndWrite)
             ) {
                 permission = true;
                 return true;
@@ -67,7 +62,7 @@ export class UserPermissionsService {
         return permission;
     }
 
-    private isUserInEntityAllowedToEditCard(user: User, card: Card): boolean {
+    private static isUserInEntityAllowedToEditCard(user: User, card: Card): boolean {
         if (!card.entitiesAllowedToEdit) {
             return false;
         }
@@ -76,7 +71,7 @@ export class UserPermissionsService {
         return userEntitiesAllowed.length > 0;
     }
 
-    public isUserAuthorizedToSeeAcknowledgmentFooter(userWithPerimeters: UserWithPerimeters, card: Card) {
+    public static isUserAuthorizedToSeeAcknowledgmentFooter(userWithPerimeters: UserWithPerimeters, card: Card) {
         const showAcknowledgmentFooter = ProcessesService.getShowAcknowledgmentFooterForACard(card);
         if (showAcknowledgmentFooter === ShowAcknowledgmentFooterEnum.FOR_ALL_USERS) {
             return true;
@@ -85,20 +80,20 @@ export class UserPermissionsService {
             return false;
         }
         if (showAcknowledgmentFooter === ShowAcknowledgmentFooterEnum.ONLY_FOR_USERS_ALLOWED_TO_EDIT) {
-            return this.doesTheUserHavePermissionToEditCard(userWithPerimeters, card);
+            return UserPermissionsService.doesTheUserHavePermissionToEditCard(userWithPerimeters, card);
         }
-        return this.isCardPublishedByUserEntity(userWithPerimeters.userData, card);
+        return UserPermissionsService.isCardPublishedByUserEntity(userWithPerimeters.userData, card);
     }
 
-    private isCardPublishedByUserEntity(user: User, card: Card): boolean {
+    private static isCardPublishedByUserEntity(user: User, card: Card): boolean {
         return card.publisherType === 'ENTITY' && user.entities.includes(card.publisher);
     }
 
-    private isLttdExpired(card: Card): boolean {
+    private static isLttdExpired(card: Card): boolean {
         return card.lttd != null && card.lttd - new Date().getTime() <= 0;
     }
 
-    public getUserEntitiesAllowedToRespond(user: UserWithPerimeters, card: Card, processDefinition: Process): string[] {
+    public static getUserEntitiesAllowedToRespond(user: UserWithPerimeters, card: Card, processDefinition: Process): string[] {
         let userEntitiesAllowedToRespond = [];
         let entitiesAllowedToRespondAndEntitiesRequiredToRespond = [];
         if (card.entitiesAllowedToRespond)
@@ -134,7 +129,7 @@ export class UserPermissionsService {
         return userEntitiesAllowedToRespond;
     }
 
-    private doesTheUserHaveThePerimeterToRespond(
+    private static doesTheUserHaveThePerimeterToRespond(
         user: UserWithPerimeters,
         card: Card,
         processDefinition: Process
@@ -147,7 +142,7 @@ export class UserPermissionsService {
                 stateOfTheCard?.response &&
                 perim.process === card.process &&
                 perim.state === stateOfTheCard.response.state &&
-                this.compareRightAction(perim.rights, RightsEnum.ReceiveAndWrite)
+                UserPermissionsService.compareRightAction(perim.rights, RightsEnum.ReceiveAndWrite)
             ) {
                 permission = true;
             }
@@ -155,7 +150,7 @@ export class UserPermissionsService {
         return permission;
     }
 
-    private compareRightAction(userRights: RightsEnum, rightsAction: RightsEnum): boolean {
+    private static compareRightAction(userRights: RightsEnum, rightsAction: RightsEnum): boolean {
         return userRight(userRights) - userRight(rightsAction) === 0;
     }
 }

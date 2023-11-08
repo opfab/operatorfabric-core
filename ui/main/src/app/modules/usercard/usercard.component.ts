@@ -133,7 +133,6 @@ export class UserCardComponent implements OnInit, OnDestroy {
         private element: ElementRef,
         private handlebars: HandlebarsService,
         protected soundNotificationService: SoundNotificationService,
-        protected userPermissionsService: UserPermissionsService,
         private systemNotificationService: SystemNotificationService,
         private opfabAPIService: OpfabAPIService
     ) {
@@ -617,7 +616,7 @@ export class UserCardComponent implements OnInit, OnDestroy {
                 this.childCards = this.cardToEdit?.card.keepChildCards ? this.cardToEdit.childCards : [];
                 if (
                     this.specificInformation.childCard &&
-                    this.userPermissionsService.isUserEnabledToRespond(
+                    UserPermissionsService.isUserEnabledToRespond(
                         UserService.getCurrentUserWithPerimeters(),
                         this.card,
                         selectedProcess
@@ -944,7 +943,7 @@ export class UserCardComponent implements OnInit, OnDestroy {
 
         if (
             this.specificInformation.childCard &&
-            this.userPermissionsService.isUserEnabledToRespond(
+            UserPermissionsService.isUserEnabledToRespond(
                 UserService.getCurrentUserWithPerimeters(),
                 this.card,
                 selectedProcess

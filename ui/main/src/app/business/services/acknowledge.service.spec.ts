@@ -22,7 +22,6 @@ import {User} from '@ofModel/user.model';
 import {RightsEnum} from '@ofModel/perimeter.model';
 import {EntitiesService} from 'app/business/services/users/entities.service';
 import {ProcessServerMock} from '@tests/mocks/processServer.mock';
-import {UserPermissionsService} from './user-permissions.service';
 import {UserService} from './users/user.service';
 import {UserServerMock} from '@tests/mocks/userServer.mock';
 import {EntitiesServerMock} from '@tests/mocks/entitiesServer.mock';
@@ -63,9 +62,7 @@ describe('AcknowledgeService testing ', () => {
                                         new Entity("ENTITY_FR", "ENTITY FR", "", true, null, null)]);
         EntitiesService.setEntitiesServer(mockEntitiesServer);
 
-        const userPermissionService = new UserPermissionsService();
-
-        acknowledgeService = new AcknowledgeService(null, userPermissionService);
+        acknowledgeService = new AcknowledgeService(null);
 
 
         EntitiesService.loadAllEntitiesData().subscribe();

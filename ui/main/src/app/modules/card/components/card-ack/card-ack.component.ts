@@ -57,7 +57,6 @@ export class CardAckComponent implements OnInit, OnChanges, OnDestroy {
 
     constructor(
         private acknowledgeService: AcknowledgeService,
-        private userPermissionsService: UserPermissionsService,
         private lightCardsStoreService: LightCardsStoreService
     ) {
         const userWithPerimeters = UserService.getCurrentUserWithPerimeters();
@@ -96,7 +95,7 @@ export class CardAckComponent implements OnInit, OnChanges, OnDestroy {
     ngOnChanges(): void {
         this.isReadOnlyUser = UserService.hasCurrentUserAnyPermission([PermissionEnum.READONLY]);
 
-        this.isUserEnabledToRespond = this.userPermissionsService.isUserEnabledToRespond(
+        this.isUserEnabledToRespond = UserPermissionsService.isUserEnabledToRespond(
             UserService.getCurrentUserWithPerimeters(),
             this.card,
             ProcessesService.getProcess(this.card.process)

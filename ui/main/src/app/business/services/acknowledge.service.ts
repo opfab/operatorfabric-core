@@ -27,8 +27,7 @@ import {UserService} from './users/user.service';
 export class AcknowledgeService {
 
     constructor(
-        private acknowledgeServer: AcknowledgeServer,
-        private userPermissionsService: UserPermissionsService
+        private acknowledgeServer: AcknowledgeServer
     ) {}
 
     postUserAcknowledgement(cardUid: string, entitiesAcks: string[]): Observable<ServerResponse<void>> {
@@ -46,7 +45,7 @@ export class AcknowledgeService {
         if (state) {
             if (state.acknowledgmentAllowed === AcknowledgmentAllowedEnum.NEVER) return false;
             if (state.acknowledgmentAllowed === AcknowledgmentAllowedEnum.ALWAYS) return true;
-            return !this.userPermissionsService.isUserEnabledToRespond(user, card, processDefinition);
+            return !UserPermissionsService.isUserEnabledToRespond(user, card, processDefinition);
         }
         return true;
     }

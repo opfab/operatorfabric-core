@@ -49,7 +49,6 @@ export class CardActionsComponent implements OnChanges, OnDestroy {
     isReadOnlyUser: boolean;
 
     constructor(
-        private userPermissionsService: UserPermissionsService,
         private modalService: NgbModal,
         private cardService: CardService,
         private router: Router
@@ -79,14 +78,14 @@ export class CardActionsComponent implements OnChanges, OnDestroy {
     }
 
     private doesTheUserHavePermissionToEditCard(): boolean {
-        return this.userPermissionsService.doesTheUserHavePermissionToEditCard(
+        return UserPermissionsService.doesTheUserHavePermissionToEditCard(
             UserService.getCurrentUserWithPerimeters(),
             this.card
         );
     }
 
     private doesTheUserHavePermissionToDeleteCard(): boolean {
-        return this.userPermissionsService.doesTheUserHavePermissionToDeleteCard(
+        return UserPermissionsService.doesTheUserHavePermissionToDeleteCard(
             UserService.getCurrentUserWithPerimeters(),
             this.card
         );
