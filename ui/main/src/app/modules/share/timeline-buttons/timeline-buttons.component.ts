@@ -13,8 +13,8 @@ import moment from 'moment';
 import {FilterType} from '@ofModel/feed-filter.model';
 import {UserPreferencesService} from 'app/business/services/users/user-preference.service';
 import {DateTimeFormatterService} from 'app/business/services/date-time-formatter.service';
-import {FilterService} from 'app/business/services/lightcards/filter.service';
 import {LogOption, LoggerService as logger} from 'app/business/services/logs/logger.service';
+import {LightCardsFeedFilterService} from 'app/business/services/lightcards/lightcards-feed-filter.service';
 
 @Component({
     selector: 'of-timeline-buttons',
@@ -47,7 +47,7 @@ export class TimelineButtonsComponent implements OnInit, OnDestroy {
 
     constructor(
         private dateTimeFormatter: DateTimeFormatterService,
-        private filterService: FilterService
+        private lightCardsFeedFilterService: LightCardsFeedFilterService
     ) {}
 
     ngOnInit() {
@@ -235,7 +235,7 @@ export class TimelineButtonsComponent implements OnInit, OnDestroy {
         this.startDateForBusinessPeriodDisplay = this.getDateFormatting(startDomain);
         this.endDateForBusinessPeriodDisplay = this.getDateFormatting(endDomain);
 
-        this.filterService.updateFilter(FilterType.BUSINESSDATE_FILTER, true, {
+        this.lightCardsFeedFilterService.updateFilter(FilterType.BUSINESSDATE_FILTER, true, {
             start: startDomain,
             end: endDomain,
             domainId: this.currentDomainId

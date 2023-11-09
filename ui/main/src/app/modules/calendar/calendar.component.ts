@@ -18,7 +18,6 @@ import {FilterType} from '@ofModel/feed-filter.model';
 import {HourAndMinutes, TimeSpan} from '@ofModel/card.model';
 import {ProcessesService} from 'app/business/services/businessconfig/processes.service';
 import {LightCardsStoreService} from 'app/business/services/lightcards/lightcards-store.service';
-import {FilterService} from 'app/business/services/lightcards/filter.service';
 import {ConfigService} from 'app/business/services/config.service';
 import {Frequency} from 'rrule';
 import dayGridPlugin from '@fullcalendar/daygrid';
@@ -27,6 +26,7 @@ import interactionPlugin from '@fullcalendar/interaction';
 import bootstrapPlugin from '@fullcalendar/bootstrap';
 import rrulePlugin from '@fullcalendar/rrule';
 import {SelectedCardService} from 'app/business/services/card/selectedCard.service';
+import {LightCardsFeedFilterService} from 'app/business/services/lightcards/lightcards-feed-filter.service';
 
 @Component({
     selector: 'of-calendar',
@@ -37,7 +37,7 @@ export class CalendarComponent implements OnInit, OnDestroy, AfterViewInit {
     constructor(
         private modalService: NgbModal,
         private lightCardsStoreService: LightCardsStoreService,
-        private filterService: FilterService,
+        private lightCardsFeedFilterService: LightCardsFeedFilterService,
         private selectedCardService: SelectedCardService
     ) {
         ProcessesService.getAllProcesses().forEach((process) => {
@@ -243,7 +243,7 @@ export class CalendarComponent implements OnInit, OnDestroy, AfterViewInit {
     }
 
     datesRangeChange(dateInfo) {
-        this.filterService.updateFilter(FilterType.BUSINESSDATE_FILTER, true, {
+        this.lightCardsFeedFilterService.updateFilter(FilterType.BUSINESSDATE_FILTER, true, {
             start: dateInfo.view.activeStart.getTime(),
             end: dateInfo.view.activeEnd.getTime()
         });

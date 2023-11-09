@@ -24,38 +24,43 @@ import {getOneRandomLightCard} from '@tests/helpers';
 import {firstValueFrom, skip} from 'rxjs';
 import {Severity} from '@ofModel/light-card.model';
 import {Utilities} from 'app/business/common/utilities';
-import {FilterService} from 'app/business/services/lightcards/filter.service';
+import {SortService} from 'app/business/services/lightcards/sort.service';
 import {FilterType} from '@ofModel/feed-filter.model';
-import {AcknowledgeService} from "../../services/acknowledge.service";
+import {AcknowledgeService} from '../../services/acknowledge.service';
+import {LightCardsFeedFilterService} from 'app/business/services/lightcards/lightcards-feed-filter.service';
+import {SearchService} from 'app/business/services/lightcards/search-service';
+import {GroupedCardsService} from 'app/business/services/lightcards/grouped-cards.service';
 
 describe('Dashboard', () => {
     let dashboard: Dashboard;
     let userServerMock: UserServerMock;
     let processServerMock: ProcessServerMock;
     let lightCardsStoreService: LightCardsStoreService;
-    let filterService: FilterService;
+    let lightCardsFeedFilterService: LightCardsFeedFilterService;
     let opfabEventStreamServerMock: OpfabEventStreamServerMock;
     let acknowledgeService: AcknowledgeService;
 
     beforeEach(() => {
-
         userServerMock = new UserServerMock();
         UserService.setUserServer(userServerMock);
         processServerMock = new ProcessServerMock();
         ProcessesService.setProcessServer(processServerMock);
-     
 
         opfabEventStreamServerMock = new OpfabEventStreamServerMock();
-        const opfabEventStreamService = new OpfabEventStreamService(
-            opfabEventStreamServerMock
-        );
-        filterService = new FilterService(opfabEventStreamService);
+        const opfabEventStreamService = new OpfabEventStreamService(opfabEventStreamServerMock);
         acknowledgeService = new AcknowledgeService(null);
 
         lightCardsStoreService = new LightCardsStoreService(
             opfabEventStreamService,
             new SelectedCardService(),
             acknowledgeService
+        );
+        lightCardsFeedFilterService = new LightCardsFeedFilterService(
+            lightCardsStoreService,
+            opfabEventStreamService,
+            new SortService(),
+            new SearchService(),
+            new GroupedCardsService()
         );
         lightCardsStoreService.initStore();
     });
@@ -100,8 +105,8 @@ describe('Dashboard', () => {
         const userWithPerimeters = new UserWithPerimeters(null, new Array(), null, new Map());
         userServerMock.setResponseForCurrentUserWithPerimeter(new ServerResponse(userWithPerimeters, null, null));
 
-        dashboard = new Dashboard(lightCardsStoreService, filterService);
-        filterService.updateFilter(FilterType.BUSINESSDATE_FILTER, true, filterService.getBusinessDateFilter().status);
+        dashboard = new Dashboard(lightCardsStoreService, lightCardsFeedFilterService);
+        lightCardsFeedFilterService.updateFilter(FilterType.BUSINESSDATE_FILTER, true, lightCardsFeedFilterService.getBusinessDateFilter().status);
 
         const result = await firstValueFrom(dashboard.getDashboardPage());
         expect(result.processes).toHaveSize(0);
@@ -116,8 +121,8 @@ describe('Dashboard', () => {
         );
         await firstValueFrom(UserService.loadUserWithPerimetersData());
 
-        dashboard = new Dashboard(lightCardsStoreService, filterService);
-        filterService.updateFilter(FilterType.BUSINESSDATE_FILTER, true, filterService.getBusinessDateFilter().status);
+        dashboard = new Dashboard(lightCardsStoreService, lightCardsFeedFilterService);
+        lightCardsFeedFilterService.updateFilter(FilterType.BUSINESSDATE_FILTER, true, lightCardsFeedFilterService.getBusinessDateFilter().status);
 
         const result = await firstValueFrom(dashboard.getDashboardPage());
         expect(result.processes.length).toEqual(0);
@@ -138,8 +143,8 @@ describe('Dashboard', () => {
         );
         await firstValueFrom(UserService.loadUserWithPerimetersData());
 
-        dashboard = new Dashboard(lightCardsStoreService, filterService);
-        filterService.updateFilter(FilterType.BUSINESSDATE_FILTER, true, filterService.getBusinessDateFilter().status);
+        dashboard = new Dashboard(lightCardsStoreService, lightCardsFeedFilterService);
+        lightCardsFeedFilterService.updateFilter(FilterType.BUSINESSDATE_FILTER, true, lightCardsFeedFilterService.getBusinessDateFilter().status);
 
         const result = await firstValueFrom(dashboard.getDashboardPage());
         expect(result.processes.length).toEqual(2);
@@ -167,8 +172,8 @@ describe('Dashboard', () => {
         );
         await firstValueFrom(UserService.loadUserWithPerimetersData());
 
-        dashboard = new Dashboard(lightCardsStoreService, filterService);
-        filterService.updateFilter(FilterType.BUSINESSDATE_FILTER, true, filterService.getBusinessDateFilter().status);
+        dashboard = new Dashboard(lightCardsStoreService, lightCardsFeedFilterService);
+        lightCardsFeedFilterService.updateFilter(FilterType.BUSINESSDATE_FILTER, true, lightCardsFeedFilterService.getBusinessDateFilter().status);
 
         const result = await firstValueFrom(dashboard.getDashboardPage());
         expect(result.processes.length).toEqual(2);
@@ -192,8 +197,8 @@ describe('Dashboard', () => {
         );
         await firstValueFrom(UserService.loadUserWithPerimetersData());
 
-        dashboard = new Dashboard(lightCardsStoreService, filterService);
-        filterService.updateFilter(FilterType.BUSINESSDATE_FILTER, true, filterService.getBusinessDateFilter().status);
+        dashboard = new Dashboard(lightCardsStoreService, lightCardsFeedFilterService);
+        lightCardsFeedFilterService.updateFilter(FilterType.BUSINESSDATE_FILTER, true, lightCardsFeedFilterService.getBusinessDateFilter().status);
 
         let result = await firstValueFrom(dashboard.getDashboardPage());
         expect(result.processes.length).toEqual(2);
@@ -236,7 +241,7 @@ describe('Dashboard', () => {
         );
         await firstValueFrom(UserService.loadUserWithPerimetersData());
 
-        dashboard = new Dashboard(lightCardsStoreService, filterService);
+        dashboard = new Dashboard(lightCardsStoreService, lightCardsFeedFilterService);
 
         const infoCard = getOneRandomLightCard({
             process: 'process1',
@@ -269,7 +274,7 @@ describe('Dashboard', () => {
         opfabEventStreamServerMock.sendLightCard(actionCard);
         opfabEventStreamServerMock.sendLightCard(alarmCard);
 
-        filterService.updateFilter(FilterType.BUSINESSDATE_FILTER, true, filterService.getBusinessDateFilter().status);
+        lightCardsFeedFilterService.updateFilter(FilterType.BUSINESSDATE_FILTER, true, lightCardsFeedFilterService.getBusinessDateFilter().status);
 
         const result = await firstValueFrom(dashboard.getDashboardPage().pipe(skip(1)));
         expect(result.processes[0].states[0].circles.length).toEqual(4);
@@ -304,7 +309,7 @@ describe('Dashboard', () => {
         );
         await firstValueFrom(UserService.loadUserWithPerimetersData());
 
-        dashboard = new Dashboard(lightCardsStoreService, filterService);
+        dashboard = new Dashboard(lightCardsStoreService, lightCardsFeedFilterService);
 
         const infoCard = getOneRandomLightCard({
             process: 'process1',
@@ -313,7 +318,7 @@ describe('Dashboard', () => {
             hasBeenAcknowledged: true
         });
         opfabEventStreamServerMock.sendLightCard(infoCard);
-        filterService.updateFilter(FilterType.BUSINESSDATE_FILTER, true, filterService.getBusinessDateFilter().status);
+        lightCardsFeedFilterService.updateFilter(FilterType.BUSINESSDATE_FILTER, true, lightCardsFeedFilterService.getBusinessDateFilter().status);
 
         const result = await firstValueFrom(dashboard.getDashboardPage());
         expect(result.processes[0].states[0].circles.length).toEqual(1);
@@ -332,7 +337,7 @@ describe('Dashboard', () => {
         );
         await firstValueFrom(UserService.loadUserWithPerimetersData());
 
-        dashboard = new Dashboard(lightCardsStoreService, filterService);
+        dashboard = new Dashboard(lightCardsStoreService, lightCardsFeedFilterService);
 
         const infoCard = getOneRandomLightCard({
             process: 'process1',
@@ -340,7 +345,7 @@ describe('Dashboard', () => {
             severity: Severity.INFORMATION
         });
         opfabEventStreamServerMock.sendLightCard(infoCard);
-        filterService.updateFilter(FilterType.BUSINESSDATE_FILTER, true, filterService.getBusinessDateFilter().status);
+        lightCardsFeedFilterService.updateFilter(FilterType.BUSINESSDATE_FILTER, true, lightCardsFeedFilterService.getBusinessDateFilter().status);
         let result = await firstValueFrom(dashboard.getDashboardPage().pipe(skip(1)));
         expect(result.processes[0].states[0].circles.length).toEqual(1);
         expect(result.processes[0].states[0].circles[0].numberOfCards).toEqual(1);
@@ -348,7 +353,7 @@ describe('Dashboard', () => {
             Utilities.getSeverityColor(Severity.INFORMATION)
         );
 
-        filterService.updateFilter(FilterType.BUSINESSDATE_FILTER, true, {start: 0, end: 1});
+        lightCardsFeedFilterService.updateFilter(FilterType.BUSINESSDATE_FILTER, true, {start: 0, end: 1});
 
         result = await firstValueFrom(dashboard.getDashboardPage());
         expect(result.processes[0].states[0].circles.length).toEqual(1);

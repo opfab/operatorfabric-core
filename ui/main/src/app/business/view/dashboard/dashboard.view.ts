@@ -9,13 +9,13 @@
 
 import {Severity} from '@ofModel/light-card.model';
 import {Utilities} from 'app/business/common/utilities';
-import {FilterService} from 'app/business/services/lightcards/filter.service';
 import {LightCardsStoreService} from 'app/business/services/lightcards/lightcards-store.service';
 import {ProcessesService} from 'app/business/services/businessconfig/processes.service';
 import {UserService} from 'app/business/services/users/user.service';
 import moment from 'moment';
 import {combineLatest, Observable, ReplaySubject} from 'rxjs';
 import {DashboardPage, ProcessContent, StateContent, CardForDashboard, DashboardCircle} from './dashboardPage';
+import {LightCardsFeedFilterService} from 'app/business/services/lightcards/lightcards-feed-filter.service';
 
 export class Dashboard {
     private dashboardSubject = new ReplaySubject<DashboardPage>(1);
@@ -25,7 +25,7 @@ export class Dashboard {
 
     constructor(
         private lightCardsStoreService: LightCardsStoreService,
-        private filterService: FilterService
+        private lightCardsFeedFilterService: LightCardsFeedFilterService
     ) {
         this.loadProcesses();
         this.processLightCards();
@@ -69,7 +69,7 @@ export class Dashboard {
     }
 
     private processLightCards() {
-        combineLatest([this.filterService.getBusinessDateFilterChanges(),
+        combineLatest([this.lightCardsFeedFilterService.getBusinessDateFilterChanges(),
                        this.lightCardsStoreService.getLightCards()]).subscribe((results) => {
                 const cards = results[1].filter((card) => results[0].applyFilter(card));
                 this.loadProcesses();

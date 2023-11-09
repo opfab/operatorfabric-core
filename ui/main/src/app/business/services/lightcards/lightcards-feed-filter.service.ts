@@ -12,12 +12,14 @@ import {debounceTime, map} from 'rxjs/operators';
 import {combineLatest, Observable, ReplaySubject, Subject} from 'rxjs';
 import {LightCard} from '@ofModel/light-card.model';
 import {LightCardsStoreService} from './lightcards-store.service';
-import {FilterService} from './filter.service';
+import {LightCardsFilter} from './lightcards-filter';
 import {SortService} from './sort.service';
 import {GroupedCardsService} from 'app/business/services/lightcards/grouped-cards.service';
 import {ConfigService} from 'app/business/services/config.service';
 import {LogOption, LoggerService as logger} from 'app/business/services/logs/logger.service';
 import {SearchService} from './search-service';
+import {Filter, FilterType} from '@ofModel/feed-filter.model';
+import {OpfabEventStreamService} from '../events/opfabEventStream.service';
 
 @Injectable({
     providedIn: 'root'
@@ -29,14 +31,16 @@ export class LightCardsFeedFilterService {
     private filteredAndSearchedLightCards = new ReplaySubject(1);
     private filteredLightCardsForTimeLine = new Subject();
     private onlyBusinessFilterForTimeLine = new Subject();
+    private filterService: LightCardsFilter;
 
     constructor(
         private lightCardsStoreService: LightCardsStoreService,
-        private filterService: FilterService,
+        private opfabEventStreamService: OpfabEventStreamService,
         private sortService: SortService,
         private searchService: SearchService,
         private groupedCardsService: GroupedCardsService
     ) {
+        this.filterService = new LightCardsFilter();
         this.computeFilteredAndSortedLightCards();
         this.computeFilteredAndSearchedLightCards();
         this.computeFilteredLightCards();
@@ -69,6 +73,7 @@ export class LightCardsFeedFilterService {
     public getFilteredAndSearchedLightCards() : Observable<any> {
         return this.filteredAndSearchedLightCards.asObservable();
     }
+
 
     private computeFilteredLightCards() {
         combineLatest([
@@ -127,5 +132,20 @@ export class LightCardsFeedFilterService {
 
     public setOnlyBusinessFilterForTimeLine(onlyBusinessFilterForTimeLine: boolean) {
         this.onlyBusinessFilterForTimeLine.next(onlyBusinessFilterForTimeLine);
+    }
+
+    public updateFilter(filterType: FilterType, active: boolean, status: any) {
+        if (filterType === FilterType.BUSINESSDATE_FILTER) this.opfabEventStreamService.setSubscriptionDates(status.start, status.end);
+        this.filterService.updateFilter(filterType,active,status);
+    }
+
+
+    public getBusinessDateFilter(): Filter {
+        return this.filterService.getBusinessDateFilter();
+    }
+
+
+    public getBusinessDateFilterChanges(): Observable<any> {
+        return this.filterService.getBusinessDateFilterChanges();
     }
 }
