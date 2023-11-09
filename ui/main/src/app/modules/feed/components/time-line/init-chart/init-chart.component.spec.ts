@@ -27,6 +27,8 @@ import {LightCardsFeedFilterService} from 'app/business/services/lightcards/ligh
 import {DateTimeFormatterService} from 'app/business/services/date-time-formatter.service';
 import {ConfigServer} from 'app/business/server/config.server';
 import {ConfigServerMock} from '@tests/mocks/configServer.mock';
+import {OpfabEventStreamServer} from 'app/business/server/opfabEventStream.server';
+import {OpfabEventStreamServerMock} from '@tests/mocks/opfab-event-stream.server.mock';
 
 describe('InitChartComponent', () => {
     let component: InitChartComponent;
@@ -64,7 +66,8 @@ describe('InitChartComponent', () => {
                 {provide: ConfigServer, useClass: ConfigServerMock},
                 {provide: HttpClient, useClass: HttpClient},
                 {provide: HttpHandler, useClass: HttpHandler},
-                {provide: LightCardsFeedFilterService, useClass: LightCardsServiceMock}
+                {provide: LightCardsFeedFilterService, useClass: LightCardsServiceMock},
+                {provide: OpfabEventStreamServer, useClass: OpfabEventStreamServerMock}
             ],
             schemas: [NO_ERRORS_SCHEMA]
         }).compileComponents();

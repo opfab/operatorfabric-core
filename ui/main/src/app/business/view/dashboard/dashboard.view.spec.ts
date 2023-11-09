@@ -43,13 +43,13 @@ describe('Dashboard', () => {
         UserService.setUserServer(userServerMock);
         processServerMock = new ProcessServerMock();
         ProcessesService.setProcessServer(processServerMock);
-        filterService = new FilterService();
+     
 
         opfabEventStreamServerMock = new OpfabEventStreamServerMock();
         const opfabEventStreamService = new OpfabEventStreamService(
-            opfabEventStreamServerMock,
-            null
+            opfabEventStreamServerMock
         );
+        filterService = new FilterService(opfabEventStreamService);
         acknowledgeService = new AcknowledgeService(null);
 
         lightCardsStoreService = new LightCardsStoreService(

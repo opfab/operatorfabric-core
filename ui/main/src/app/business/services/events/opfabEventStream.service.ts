@@ -9,7 +9,6 @@
 
 import {Injectable} from '@angular/core';
 import {CardOperation} from '@ofModel/card-operation.model';
-import {FilterService} from 'app/business/services/lightcards/filter.service';
 import {LogOption, LoggerService as logger} from 'app/business/services/logs/logger.service';
 import {filter, map, Observable, Subject} from 'rxjs';
 import {OpfabEventStreamServer} from '../../server/opfabEventStream.server';
@@ -33,19 +32,11 @@ export class OpfabEventStreamService {
     private eventStreamClosed = false;
 
     constructor(
-        private opfabEventStreamServer: OpfabEventStreamServer,
-        private filterService: FilterService
+        private opfabEventStreamServer: OpfabEventStreamServer
     ) {}
 
     public initEventStream() {
         this.opfabEventStreamServer.initStream();
-        this.listenForFilterChange();
-    }
-
-    private listenForFilterChange() {
-        this.filterService.getBusinessDateFilterChanges().subscribe((filter) => {
-            this.setSubscriptionDates(filter.status.start, filter.status.end);
-        });
     }
 
     public closeEventStream() {
@@ -101,7 +92,7 @@ export class OpfabEventStreamService {
         this.startOfAlreadyLoadedPeriod = null;
     }
 
-    private setSubscriptionDates(start: number, end: number) {
+    public setSubscriptionDates(start: number, end: number) {
         logger.info(
             'EventStreamService - Set subscription date' + new Date(start) + ' -' + new Date(end),
             LogOption.LOCAL_AND_REMOTE
