@@ -8,14 +8,10 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {Injectable} from '@angular/core';
 import {Observable, Subject} from 'rxjs';
 import {LightCard} from '@ofModel/light-card.model';
 
-@Injectable({
-    providedIn: 'root'
-})
-export class SearchService {
+export class LightCardsTextFilter {
     private searchChanges = new Subject();
     private searchTerm = '';
 
@@ -23,13 +19,13 @@ export class SearchService {
         return this.searchChanges.asObservable();
     }
 
-    public getSearchTerm(searchTerm: string) {
+    public setSearchTerm(searchTerm: string) {
         this.searchTerm = searchTerm.toUpperCase();
         this.searchChanges.next(this.searchTerm);
     }
 
     public searchLightCards(cards: LightCard[]): LightCard[] {
-        if (!this.searchTerm) {
+        if (!this.searchTerm || this.searchTerm.length===0) {
             return cards;
         } else {
             const titleCards = cards.filter(card => card.titleTranslated?.toUpperCase().includes(this.searchTerm));

@@ -27,7 +27,6 @@ import {Utilities} from 'app/business/common/utilities';
 import {FilterType} from '@ofModel/feed-filter.model';
 import {AcknowledgeService} from '../../services/acknowledge.service';
 import {LightCardsFeedFilterService} from 'app/business/services/lightcards/lightcards-feed-filter.service';
-import {SearchService} from 'app/business/services/lightcards/search-service';
 import {GroupedCardsService} from 'app/business/services/lightcards/grouped-cards.service';
 
 describe('Dashboard', () => {
@@ -57,7 +56,6 @@ describe('Dashboard', () => {
         lightCardsFeedFilterService = new LightCardsFeedFilterService(
             lightCardsStoreService,
             opfabEventStreamService,
-            new SearchService(),
             new GroupedCardsService()
         );
         lightCardsStoreService.initStore();
