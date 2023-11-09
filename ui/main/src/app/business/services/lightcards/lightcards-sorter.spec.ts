@@ -9,14 +9,14 @@
 
 import {LightCard, Severity} from '@ofModel/light-card.model';
 import {getSeveralRandomLightCards} from '@tests/helpers';
-import {SortService} from './sort.service';
+import {LightCardsSorter} from './lightcards-sorter';
 
-describe('NewFilterService ', () => {
-    let service: SortService;
+describe('Lightcards sorter ', () => {
+    let lightCardsSorter: LightCardsSorter;
     const ONE_HOUR = 3600000;
 
     beforeEach(() => {
-        service = new SortService();
+        lightCardsSorter = new LightCardsSorter();
     });
 
     function getFourCard() {
@@ -68,29 +68,29 @@ describe('NewFilterService ', () => {
         return cards;
     }
 
-    describe(' filter', () => {
-        it('unread filter  ', () => {
+    describe(' sort', () => {
+        it('unread sort  ', () => {
             const cards = getFourCard();
-            service.setSortBy('unread');
-            const sortedCards = [...cards].sort(service.getSortFunction());
+            lightCardsSorter.setSortBy('unread');
+            const sortedCards = [...cards].sort(lightCardsSorter.getSortFunction());
             expect(sortedCards[0]).toEqual(cards[3]);
             expect(sortedCards[1]).toEqual(cards[2]);
             expect(sortedCards[2]).toEqual(cards[0]);
             expect(sortedCards[3]).toEqual(cards[1]);
         });
-        it('severity filter  ', () => {
+        it('severity sort  ', () => {
             const cards = getFourCard();
-            service.setSortBy('severity');
-            const sortedCards = [...cards].sort(service.getSortFunction());
+            lightCardsSorter.setSortBy('severity');
+            const sortedCards = [...cards].sort(lightCardsSorter.getSortFunction());
             expect(sortedCards[0]).toEqual(cards[2]);
             expect(sortedCards[1]).toEqual(cards[0]);
             expect(sortedCards[2]).toEqual(cards[1]);
             expect(sortedCards[3]).toEqual(cards[3]);
         });
-        it('date filter  ', () => {
+        it('date sort  ', () => {
             const cards = getFourCard();
-            service.setSortBy('date');
-            const sortedCards = [...cards].sort(service.getSortFunction());
+            lightCardsSorter.setSortBy('date');
+            const sortedCards = [...cards].sort(lightCardsSorter.getSortFunction());
             expect(sortedCards[0]).toEqual(cards[0]);
             expect(sortedCards[1]).toEqual(cards[1]);
             expect(sortedCards[2]).toEqual(cards[3]);

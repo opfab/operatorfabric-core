@@ -13,7 +13,7 @@ import {combineLatest, Observable, ReplaySubject, Subject} from 'rxjs';
 import {LightCard} from '@ofModel/light-card.model';
 import {LightCardsStoreService} from './lightcards-store.service';
 import {LightCardsFilter} from './lightcards-filter';
-import {SortService} from './sort.service';
+import {LightCardsSorter} from './lightcards-sorter';
 import {GroupedCardsService} from 'app/business/services/lightcards/grouped-cards.service';
 import {ConfigService} from 'app/business/services/config.service';
 import {LogOption, LoggerService as logger} from 'app/business/services/logs/logger.service';
@@ -32,15 +32,16 @@ export class LightCardsFeedFilterService {
     private filteredLightCardsForTimeLine = new Subject();
     private onlyBusinessFilterForTimeLine = new Subject();
     private filterService: LightCardsFilter;
+    private lightCardsSorter: LightCardsSorter;
 
     constructor(
         private lightCardsStoreService: LightCardsStoreService,
         private opfabEventStreamService: OpfabEventStreamService,
-        private sortService: SortService,
         private searchService: SearchService,
         private groupedCardsService: GroupedCardsService
     ) {
         this.filterService = new LightCardsFilter();
+        this.lightCardsSorter = new LightCardsSorter();
         this.computeFilteredAndSortedLightCards();
         this.computeFilteredAndSearchedLightCards();
         this.computeFilteredLightCards();
@@ -48,7 +49,7 @@ export class LightCardsFeedFilterService {
     }
 
     private computeFilteredAndSortedLightCards() {
-        combineLatest([this.sortService.getSortFunctionChanges(), this.getFilteredAndSearchedLightCards()])
+        combineLatest([this.lightCardsSorter.getSortFunctionChanges(), this.getFilteredAndSearchedLightCards()])
             .pipe(
                 map((results) => {
                     results[1] = results[1].sort(results[0]);
@@ -139,13 +140,15 @@ export class LightCardsFeedFilterService {
         this.filterService.updateFilter(filterType,active,status);
     }
 
-
     public getBusinessDateFilter(): Filter {
         return this.filterService.getBusinessDateFilter();
     }
 
-
     public getBusinessDateFilterChanges(): Observable<any> {
         return this.filterService.getBusinessDateFilterChanges();
+    }
+
+    public setSortBy(sortBy: string) {
+        return this.lightCardsSorter.setSortBy(sortBy);
     }
 }

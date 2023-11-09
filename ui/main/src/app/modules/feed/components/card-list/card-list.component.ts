@@ -22,10 +22,10 @@ import {EntitiesService} from 'app/business/services/users/entities.service';
 import {GroupedCardsService} from 'app/business/services/lightcards/grouped-cards.service';
 import {AlertMessageService} from 'app/business/services/alert-message.service';
 import {Router} from '@angular/router';
-import {SortService} from 'app/business/services/lightcards/sort.service';
 import {UserPreferencesService} from 'app/business/services/users/user-preference.service';
 import {LightCardsStoreService} from 'app/business/services/lightcards/lightcards-store.service';
 import {ServerResponseStatus} from 'app/business/server/serverResponse';
+import {LightCardsFeedFilterService} from 'app/business/services/lightcards/lightcards-feed-filter.service';
 
 @Component({
     selector: 'of-card-list',
@@ -59,7 +59,7 @@ export class CardListComponent implements AfterViewChecked, OnInit {
         private acknowledgeService: AcknowledgeService,
         private groupedCardsService: GroupedCardsService,
         private router: Router,
-        private sortService: SortService,
+        private lightCardsFeedFilterService: LightCardsFeedFilterService,
         private lightCardsStoreService: LightCardsStoreService,
     ) {
         this.currentUserWithPerimeters = UserService.getCurrentUserWithPerimeters();
@@ -68,7 +68,7 @@ export class CardListComponent implements AfterViewChecked, OnInit {
     ngOnInit(): void {
         this.defaultSorting = ConfigService.getConfigValue('feed.defaultSorting', 'unread');
 
-        this.sortService.setSortBy(this.defaultSorting);
+        this.lightCardsFeedFilterService.setSortBy(this.defaultSorting);
 
         this.defaultAcknowledgmentFilter = ConfigService.getConfigValue('feed.defaultAcknowledgmentFilter', 'notack');
         if (

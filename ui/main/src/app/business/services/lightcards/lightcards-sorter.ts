@@ -7,14 +7,10 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {Injectable} from '@angular/core';
 import {LightCard, Severity} from '@ofModel/light-card.model';
 import {Subject, Observable} from 'rxjs';
 
-@Injectable({
-    providedIn: 'root'
-})
-export class SortService {
+export class LightCardsSorter {
     private sortChanges = new Subject();
     private sortBy = 'unread';
 
