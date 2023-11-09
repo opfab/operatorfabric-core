@@ -24,7 +24,6 @@ import {getOneRandomLightCard} from '@tests/helpers';
 import {firstValueFrom, skip} from 'rxjs';
 import {Severity} from '@ofModel/light-card.model';
 import {Utilities} from 'app/business/common/utilities';
-import {SortService} from 'app/business/services/lightcards/sort.service';
 import {FilterType} from '@ofModel/feed-filter.model';
 import {AcknowledgeService} from '../../services/acknowledge.service';
 import {LightCardsFeedFilterService} from 'app/business/services/lightcards/lightcards-feed-filter.service';
@@ -58,7 +57,6 @@ describe('Dashboard', () => {
         lightCardsFeedFilterService = new LightCardsFeedFilterService(
             lightCardsStoreService,
             opfabEventStreamService,
-            new SortService(),
             new SearchService(),
             new GroupedCardsService()
         );

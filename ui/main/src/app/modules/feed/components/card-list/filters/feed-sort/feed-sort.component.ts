@@ -12,7 +12,7 @@ import {FormControl, FormGroup} from '@angular/forms';
 import {Subject} from 'rxjs';
 import {takeUntil} from 'rxjs/operators';
 import {UserPreferencesService} from 'app/business/services/users/user-preference.service';
-import {SortService} from 'app/business/services/lightcards/sort.service';
+import {LightCardsFeedFilterService} from 'app/business/services/lightcards/lightcards-feed-filter.service';
 
 @Component({
     selector: 'of-feed-sort',
@@ -27,7 +27,7 @@ export class FeedSortComponent implements OnInit, OnDestroy {
         sortControl: FormControl<string | null>;
     }>;
 
-    constructor(private sortService: SortService) {}
+    constructor(private lightCardsFeedFilterService: LightCardsFeedFilterService) {}
 
     ngOnInit() {
         this.sortForm = this.createFormGroup();
@@ -47,11 +47,11 @@ export class FeedSortComponent implements OnInit, OnDestroy {
     initSort() {
         const sortChoice = this.getInitialSort();
         this.sortForm.get('sortControl').setValue(sortChoice);
-        this.sortService.setSortBy(sortChoice);
+        this.lightCardsFeedFilterService.setSortBy(sortChoice);
 
         this.sortForm.valueChanges.pipe(takeUntil(this.ngUnsubscribe$)).subscribe((form) => {
             UserPreferencesService.setPreference('opfab.feed.sort.type', form.sortControl);
-            this.sortService.setSortBy(form.sortControl);
+            this.lightCardsFeedFilterService.setSortBy(form.sortControl);
         });
     }
 
