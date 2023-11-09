@@ -68,7 +68,7 @@ describe('ActivityAreaView', () => {
 
     function mockLightCardStoreService() {
         lightCardsStoreService = new LightCardsStoreService(
-            new OpfabEventStreamService(new OpfabEventStreamServerMock(), null),
+            new OpfabEventStreamService(new OpfabEventStreamServerMock()),
             null,
             null
         );

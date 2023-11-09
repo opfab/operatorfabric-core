@@ -12,6 +12,7 @@ import {Filter, FilterType} from '@ofModel/feed-filter.model';
 import {LightCard, Severity} from '@ofModel/light-card.model';
 import {LogOption, LoggerService as logger} from 'app/business/services/logs/logger.service';
 import {Observable, Subject, ReplaySubject} from 'rxjs';
+import {OpfabEventStreamService} from '../events/opfabEventStream.service';
 
 @Injectable({
     providedIn: 'root'
@@ -26,7 +27,7 @@ export class FilterService {
     private newBusinessDateFilter = new Subject();
     private filterChanges = new ReplaySubject(1);
 
-    constructor() {
+    constructor(private eventStreamServer:OpfabEventStreamService) {
         this.initFilter();
     }
 
@@ -42,6 +43,7 @@ export class FilterService {
         if (filterType === FilterType.BUSINESSDATE_FILTER) {
             this.businessDateFilter.active = active;
             this.businessDateFilter.status = status;
+            this.eventStreamServer.setSubscriptionDates(status.start, status.end);
             this.newBusinessDateFilter.next(this.businessDateFilter);
         } else {
             const filterToUpdate = this.filters[filterType];
