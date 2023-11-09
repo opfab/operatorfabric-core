@@ -88,8 +88,8 @@ describe('Dashboard', () => {
         processServerMock.setResponseForAllProcessDefinition(
             new ServerResponse(processes, ServerResponseStatus.OK, null)
         );
-        await ProcessesService.loadAllProcessesWithLatestVersion().subscribe();
-        await ProcessesService.loadAllProcessesWithAllVersions().subscribe();
+        await firstValueFrom(ProcessesService.loadAllProcessesWithLatestVersion());
+        await firstValueFrom(ProcessesService.loadAllProcessesWithAllVersions());
     }
 
     it('GIVEN an empty process list WHEN get dashboard THEN dashboard is empty', async () => {
@@ -97,8 +97,8 @@ describe('Dashboard', () => {
         processServerMock.setResponseForAllProcessDefinition(
             new ServerResponse(processes, ServerResponseStatus.OK, null)
         );
-        await ProcessesService.loadAllProcessesWithLatestVersion().subscribe();
-        await ProcessesService.loadAllProcessesWithAllVersions().subscribe();
+        await firstValueFrom(ProcessesService.loadAllProcessesWithLatestVersion());
+        await firstValueFrom(ProcessesService.loadAllProcessesWithAllVersions());
         const userWithPerimeters = new UserWithPerimeters(null, new Array(), null, new Map());
         userServerMock.setResponseForCurrentUserWithPerimeter(new ServerResponse(userWithPerimeters, null, null));
 
@@ -116,7 +116,7 @@ describe('Dashboard', () => {
         userServerMock.setResponseForCurrentUserWithPerimeter(
             new ServerResponse(userWithPerimeters, ServerResponseStatus.OK, null)
         );
-        await UserService.loadUserWithPerimetersData().subscribe();
+        await firstValueFrom(UserService.loadUserWithPerimetersData());
 
         dashboard = new Dashboard(lightCardsStoreService, filterService);
         filterService.updateFilter(FilterType.BUSINESSDATE_FILTER, true, filterService.getBusinessDateFilter().status);
@@ -138,7 +138,7 @@ describe('Dashboard', () => {
         userServerMock.setResponseForCurrentUserWithPerimeter(
             new ServerResponse(userWithPerimeters, ServerResponseStatus.OK, null)
         );
-        await UserService.loadUserWithPerimetersData().subscribe();
+        await firstValueFrom(UserService.loadUserWithPerimetersData());
 
         dashboard = new Dashboard(lightCardsStoreService, filterService);
         filterService.updateFilter(FilterType.BUSINESSDATE_FILTER, true, filterService.getBusinessDateFilter().status);
@@ -167,7 +167,7 @@ describe('Dashboard', () => {
         userServerMock.setResponseForCurrentUserWithPerimeter(
             new ServerResponse(userWithPerimeters, ServerResponseStatus.OK, null)
         );
-        await UserService.loadUserWithPerimetersData().subscribe();
+        await firstValueFrom(UserService.loadUserWithPerimetersData());
 
         dashboard = new Dashboard(lightCardsStoreService, filterService);
         filterService.updateFilter(FilterType.BUSINESSDATE_FILTER, true, filterService.getBusinessDateFilter().status);
@@ -192,7 +192,7 @@ describe('Dashboard', () => {
         userServerMock.setResponseForCurrentUserWithPerimeter(
             new ServerResponse(userWithPerimeters, ServerResponseStatus.OK, null)
         );
-        await UserService.loadUserWithPerimetersData().subscribe();
+        await firstValueFrom(UserService.loadUserWithPerimetersData());
 
         dashboard = new Dashboard(lightCardsStoreService, filterService);
         filterService.updateFilter(FilterType.BUSINESSDATE_FILTER, true, filterService.getBusinessDateFilter().status);
@@ -236,7 +236,7 @@ describe('Dashboard', () => {
         userServerMock.setResponseForCurrentUserWithPerimeter(
             new ServerResponse(userWithPerimeters, ServerResponseStatus.OK, null)
         );
-        await UserService.loadUserWithPerimetersData().subscribe();
+        await firstValueFrom(UserService.loadUserWithPerimetersData());
 
         dashboard = new Dashboard(lightCardsStoreService, filterService);
 
@@ -273,7 +273,7 @@ describe('Dashboard', () => {
 
         filterService.updateFilter(FilterType.BUSINESSDATE_FILTER, true, filterService.getBusinessDateFilter().status);
 
-        let result = await firstValueFrom(dashboard.getDashboardPage().pipe(skip(1)));
+        const result = await firstValueFrom(dashboard.getDashboardPage().pipe(skip(1)));
         expect(result.processes[0].states[0].circles.length).toEqual(4);
 
         expect(result.processes[0].states[0].circles[0].numberOfCards).toEqual(1);
@@ -304,7 +304,7 @@ describe('Dashboard', () => {
         userServerMock.setResponseForCurrentUserWithPerimeter(
             new ServerResponse(userWithPerimeters, ServerResponseStatus.OK, null)
         );
-        await UserService.loadUserWithPerimetersData().subscribe();
+        await firstValueFrom(UserService.loadUserWithPerimetersData());
 
         dashboard = new Dashboard(lightCardsStoreService, filterService);
 
@@ -317,7 +317,7 @@ describe('Dashboard', () => {
         opfabEventStreamServerMock.sendLightCard(infoCard);
         filterService.updateFilter(FilterType.BUSINESSDATE_FILTER, true, filterService.getBusinessDateFilter().status);
 
-        let result = await firstValueFrom(dashboard.getDashboardPage());
+        const result = await firstValueFrom(dashboard.getDashboardPage());
         expect(result.processes[0].states[0].circles.length).toEqual(1);
         expect(result.processes[0].states[0].circles[0].numberOfCards).toEqual(0);
         expect(result.processes[0].states[0].circles[0].color).toEqual(dashboard.noSeverityColor);
@@ -332,7 +332,7 @@ describe('Dashboard', () => {
         userServerMock.setResponseForCurrentUserWithPerimeter(
             new ServerResponse(userWithPerimeters, ServerResponseStatus.OK, null)
         );
-        await UserService.loadUserWithPerimetersData().subscribe();
+        await firstValueFrom(UserService.loadUserWithPerimetersData());
 
         dashboard = new Dashboard(lightCardsStoreService, filterService);
 
