@@ -10,16 +10,14 @@
 import {FilterType} from '@ofModel/feed-filter.model';
 import {LightCard, Severity} from '@ofModel/light-card.model';
 import {getSeveralRandomLightCards} from '@tests/helpers';
-import {OpfabEventStreamServerMock} from '@tests/mocks/opfab-event-stream.server.mock';
-import {OpfabEventStreamService} from '../events/opfabEventStream.service';
-import {FilterService} from './filter.service';
+import {LightCardsFilter} from './lightcards-filter';
 
 describe('NewFilterService ', () => {
-    let service: FilterService;
+    let service: LightCardsFilter;
     const ONE_HOUR = 3600000;
 
     beforeEach(() => {
-        service = new FilterService(new OpfabEventStreamService(new OpfabEventStreamServerMock()));
+        service = new LightCardsFilter();
     });
 
     function getFourCards() {

@@ -7,17 +7,13 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {Injectable} from '@angular/core';
 import {Filter, FilterType} from '@ofModel/feed-filter.model';
 import {LightCard, Severity} from '@ofModel/light-card.model';
 import {LogOption, LoggerService as logger} from 'app/business/services/logs/logger.service';
 import {Observable, Subject, ReplaySubject} from 'rxjs';
-import {OpfabEventStreamService} from '../events/opfabEventStream.service';
 
-@Injectable({
-    providedIn: 'root'
-})
-export class FilterService {
+
+export class LightCardsFilter {
 
     private static TWO_HOURS_IN_MILLIS = 2 * 60 * 60 * 1000;
     private static TWO_DAYS_IN_MILLIS = 48 * 60 * 60 * 1000;
@@ -27,11 +23,11 @@ export class FilterService {
     private newBusinessDateFilter = new Subject();
     private filterChanges = new ReplaySubject(1);
 
-    constructor(private eventStreamServer:OpfabEventStreamService) {
+    constructor() {
         this.initFilter();
     }
 
-    public initFilter() {
+    private initFilter() {
         this.filters[FilterType.TYPE_FILTER] = this.initTypeFilter();
         this.filters[FilterType.PUBLISHDATE_FILTER] = this.initPublishDateFilter();
         this.filters[FilterType.ACKNOWLEDGEMENT_FILTER] = this.initAcknowledgementFilter();
@@ -43,7 +39,6 @@ export class FilterService {
         if (filterType === FilterType.BUSINESSDATE_FILTER) {
             this.businessDateFilter.active = active;
             this.businessDateFilter.status = status;
-            this.eventStreamServer.setSubscriptionDates(status.start, status.end);
             this.newBusinessDateFilter.next(this.businessDateFilter);
         } else {
             const filterToUpdate = this.filters[filterType];
@@ -127,8 +122,8 @@ export class FilterService {
             },
             false,
             {
-                start: new Date().valueOf() - FilterService.TWO_HOURS_IN_MILLIS,
-                end: new Date().valueOf() + FilterService.TWO_DAYS_IN_MILLIS
+                start: new Date().valueOf() - LightCardsFilter.TWO_HOURS_IN_MILLIS,
+                end: new Date().valueOf() + LightCardsFilter.TWO_DAYS_IN_MILLIS
             }
         );
     }
