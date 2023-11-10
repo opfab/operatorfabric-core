@@ -4,10 +4,10 @@ operatorfabric:
     defaultConfig:
       considerConnectedIfUserInGroups: ["Dispatcher","Planner"]
       entitiesToSupervise:
-      - id: ENTITY1_FR
+      - entityId: ENTITY1_FR
         supervisors:
         - ENTITY2_FR
-      - id: ENTITY2_FR
+      - entityId: ENTITY2_FR
         supervisors:
         - ENTITY1_FR
       disconnectedCardTemplate:

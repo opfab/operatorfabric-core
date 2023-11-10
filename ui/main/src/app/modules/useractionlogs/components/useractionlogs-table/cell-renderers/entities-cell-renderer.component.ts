@@ -13,6 +13,7 @@ import {ICellRendererParams} from 'ag-grid-community';
 
 import {EntitiesService} from 'app/business/services/users/entities.service';
 import {Entity} from '@ofModel/entity.model';
+import {LoggerService} from 'app/business/services/logs/logger.service';
 
 @Component({
     selector: 'of-entities-cell-renderer',
@@ -46,7 +47,7 @@ export class EntitiesCellRendererComponent implements ICellRendererAngularComp {
                     .join(', ');
             }
         } else {
-            console.log('User action log table: id/name mapping was undefined for entity');
+            LoggerService.warn('User action log table: id/name mapping was undefined for entity');
             this._nameValues = params.getValue();
         }
     }

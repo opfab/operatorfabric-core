@@ -45,6 +45,8 @@ import {AcknowledgeServer} from 'app/business/server/acknowledge.server';
 import {AdminProcessServer} from 'app/business/server/adminprocess.server';
 import {BusinessDataServer} from 'app/business/server/businessData.server';
 import {CardServer} from 'app/business/server/card.server';
+import {SupervisedEntitiesServer} from 'app/business/server/supervised-entities.server';
+import {SupervisedEntitiesService} from 'app/business/services/users/supervised-entities.service';
 
 declare const opfab: any;
 @Component({
@@ -89,7 +91,8 @@ export class ApplicationLoadingComponent implements OnInit {
         private adminProcessServer: AdminProcessServer,
         private acknowledgeServer: AcknowledgeServer,
         private businessDataServer: BusinessDataServer,
-        private cardServer: CardServer
+        private cardServer: CardServer,
+        private supervisedEntitiesServer: SupervisedEntitiesServer
     ) {}
 
     ngOnInit() {
@@ -108,7 +111,8 @@ export class ApplicationLoadingComponent implements OnInit {
             adminProcessServer: this.adminProcessServer,
             acknowledgeServer: this.acknowledgeServer,
             businessDataServer: this.businessDataServer,
-            cardServer: this.cardServer
+            cardServer: this.cardServer,
+            supervisedEntitiesServer: this.supervisedEntitiesServer
         });
 
 
@@ -234,6 +238,7 @@ export class ApplicationLoadingComponent implements OnInit {
             ProcessesService.loadAllProcessesWithLatestVersion(),
             ProcessesService.loadAllProcessesWithAllVersions(),
             ProcessesService.loadProcessGroups(),
+            SupervisedEntitiesService.loadAllSupervisedEntitiesData(),
             ConfigService.loadMonitoringConfig()
         ];
         Utilities.subscribeAndWaitForAllObservablesToEmitAnEvent(requestsToLaunch$).subscribe({

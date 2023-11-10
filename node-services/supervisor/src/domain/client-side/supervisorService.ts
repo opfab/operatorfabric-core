@@ -22,20 +22,30 @@ export default class SupervisorService {
 
 
     constructor(config: ConfigDTO, opfabInterface: OpfabServicesInterface, logger: any) {
+
         this.config = config;
         this.opfabInterface = opfabInterface;
         this.logger = logger;
 
-        this.connectionChecker = new ConnectionChecker()
-            .setLogger(this.logger)
-            .setOpfabServicesInterface(this.opfabInterface)
-            .setSecondsBetweenConnectionChecks(this.config.secondsBetweenConnectionChecks)
-            .setNbOfConsecutiveNotConnectedToSendFirstCard(this.config.nbOfConsecutiveNotConnectedToSendFirstCard)
-            .setNbOfConsecutiveNotConnectedToSendSecondCard(this.config.nbOfConsecutiveNotConnectedToSendSecondCard)
-            .setDisconnectedCardTemplate(this.config.disconnectedCardTemplate)
-            .setEntitiesToSupervise(this.config.entitiesToSupervise)
-            .setConsiderConnectedIfUserInGroups(this.config.considerConnectedIfUserInGroups);
+    }
 
+    public setConfiguration(config: ConfigDTO) {
+        this.config = config;
+    }
+
+    public resetConnectionChecker() {
+        this.connectionChecker = new ConnectionChecker()
+        .setLogger(this.logger)
+        .setOpfabServicesInterface(this.opfabInterface)
+        .setSecondsBetweenConnectionChecks(this.config.secondsBetweenConnectionChecks)
+        .setNbOfConsecutiveNotConnectedToSendFirstCard(this.config.nbOfConsecutiveNotConnectedToSendFirstCard)
+        .setNbOfConsecutiveNotConnectedToSendSecondCard(this.config.nbOfConsecutiveNotConnectedToSendSecondCard)
+        .setDisconnectedCardTemplate(this.config.disconnectedCardTemplate)
+        .setEntitiesToSupervise(this.config.entitiesToSupervise)
+        .setConsiderConnectedIfUserInGroups(this.config.considerConnectedIfUserInGroups);
+    }
+
+    public resetAcknowledgementChecker() {
         this.acknowledgementChecker = new AcknowledgementChecker()
             .setLogger(this.logger)
             .setOpfabServicesInterface(this.opfabInterface)
@@ -43,36 +53,14 @@ export default class SupervisorService {
             .setWindowInSecondsForCardSearch(this.config.windowInSecondsForCardSearch )
             .setUnackedCardTemplate(this.config.unackCardTemplate)
             .setProcessStatesToSupervise(this.config.processesToSupervise);
-
-        this.checkConnectionRegularly();
-        this.checkAcknowledgmentRegularly();
-    }
-
-    public setConfiguration(config: ConfigDTO) {
-        this.config = config;
-        this.restartConnectionChecker();
-        this.restartAcknowledgementChecker();
-    }
-
-    private restartConnectionChecker() {
-        this.connectionChecker.setSecondsBetweenConnectionChecks(this.config.secondsBetweenConnectionChecks)
-            .setNbOfConsecutiveNotConnectedToSendFirstCard(this.config.nbOfConsecutiveNotConnectedToSendFirstCard)
-            .setNbOfConsecutiveNotConnectedToSendSecondCard(this.config.nbOfConsecutiveNotConnectedToSendSecondCard)
-            .setDisconnectedCardTemplate(this.config.disconnectedCardTemplate)
-            .setEntitiesToSupervise(this.config.entitiesToSupervise)
-            .setConsiderConnectedIfUserInGroups(this.config.considerConnectedIfUserInGroups);
-    }
-
-    private restartAcknowledgementChecker() {
-        this.acknowledgementChecker
-            .setSecondsAfterPublicationToConsiderCardAsNotAcknowledged(this.config.secondsAfterPublicationToConsiderCardAsNotAcknowledged)
-            .setWindowInSecondsForCardSearch(this.config.windowInSecondsForCardSearch )
-            .setUnackedCardTemplate(this.config.unackCardTemplate)
-            .setProcessStatesToSupervise(this.config.processesToSupervise);
-
     }
 
     public start() {
+
+        this.resetConnectionChecker()
+        this.resetAcknowledgementChecker();
+        this.checkConnectionRegularly();
+        this.checkAcknowledgmentRegularly();
         this.active = true;
     }
 

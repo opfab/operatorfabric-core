@@ -18,6 +18,7 @@ import {CrudEntitiesService} from 'app/business/services/admin/crud-entities-ser
 import {CrudGroupsService} from 'app/business/services/admin/crud-groups.service';
 import {CrudPerimetersService} from 'app/business/services/admin/crud-perimeters.service';
 import {CrudBusinessDataService} from 'app/business/services/admin/crud-business-data.service';
+import {CrudSupervisedEntitiesService} from 'app/business/services/admin/crud-supervised-entities-service';
 
 
 @Injectable()
@@ -30,6 +31,7 @@ export class SharingService implements OnDestroy {
     private crudPerimetersService: CrudPerimetersService;
     private crudProcessesService: CrudProcessesService;
     private crudBusinessDataService: CrudBusinessDataService;
+    private supervisedEntitiesService: CrudSupervisedEntitiesService;
 
     constructor(
     ) {
@@ -40,6 +42,8 @@ export class SharingService implements OnDestroy {
         this.crudPerimetersService = new CrudPerimetersService();
         this.crudProcessesService = new CrudProcessesService();
         this.crudBusinessDataService = new CrudBusinessDataService();
+        this.supervisedEntitiesService = new CrudSupervisedEntitiesService();
+
 
         // Initialization necessary for perimeters selection dropdown in modals and to display names instead of codes
         // As it is only necessary for admin purposes, it's done here rather than in the app initialization code
@@ -62,6 +66,8 @@ export class SharingService implements OnDestroy {
                 return this.crudProcessesService;
             case AdminItemType.BUSINESSDATA:
                 return this.crudBusinessDataService;
+            case AdminItemType.SUPERVISED_ENTITY:
+                return this.supervisedEntitiesService;
             default:
                 throw Error('No CrudService associated with ' + adminItemType);
         }
@@ -85,11 +91,13 @@ export class SharingService implements OnDestroy {
 /** This enum defines the type of the data managed by an admin table or renderer. When adding a type to this list, please make sure
  * to also add the corresponding handling to the methods above.
  * */
+
 export enum AdminItemType {
     USER = 'user',
     ENTITY = 'entity',
     GROUP = 'group',
     PERIMETER = 'perimeter',
     PROCESS = 'process',
-    BUSINESSDATA = 'businessData'
+    BUSINESSDATA = 'businessData',
+    SUPERVISED_ENTITY = "supervisedEntity"
 }

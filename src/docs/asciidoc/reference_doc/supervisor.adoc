@@ -12,6 +12,8 @@ Supervisor service can monitor users connections and card acknowledgements to se
 == Entities connection
 It is possible to configure supervisor module for monitoring users connections to Opfab to ensure that there is at least one user connected to Opfab for each configured entity. When no user of an entity connects to Opfab for a specified period, supervisor module will send an alert card to the configured recipient entity.
 
+The database stores a comprehensive list of supervised entities and their corresponding supervisors. The 'Supervised Entities' admin page offers functionalities to view, modify, add, or delete these entities. Within the supervisor service configuration section, there exists an option to define a default configuration for initial supervised entities. This default configuration applies only when the database's supervised entities collection is empty. In such a scenario, the defined configuration will be saved into the database for subsequent use.
+
 == Card acknowledgement
 It is possible to configure supervisor module to monitor card acknowledgements for specific processes/states. When a card of a configured process and state remains not acknowledged for a configured period, supervisor module will send an alert to the card publisher with the list of recipients that did not acknowledge the card.
 

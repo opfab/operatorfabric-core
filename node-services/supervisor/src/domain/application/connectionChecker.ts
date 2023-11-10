@@ -64,8 +64,8 @@ export default class ConnectionChecker {
         this.supervisorList = new Map();
         this.entitiesList = [];
         entitiesToSupervise.forEach((entity: any) => {
-            this.entitiesList.push(entity.id);
-            this.supervisorList.set(entity.id, entity.supervisors);
+            this.entitiesList.push(entity.entityId);
+            this.supervisorList.set(entity.entityId, entity.supervisors);
         });
         this.connectionsStates.setToSupervise(this.entitiesList);
         return this;

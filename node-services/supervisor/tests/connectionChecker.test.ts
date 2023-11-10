@@ -57,7 +57,7 @@ describe('connection checker', function () {
         .setNbOfConsecutiveNotConnectedToSendFirstCard(3)
         .setNbOfConsecutiveNotConnectedToSendSecondCard(5)
         .setConsiderConnectedIfUserInGroups(['Dispatcher'])
-        .setEntitiesToSupervise([{id:"ENTITY1",supervisors:["ENTITY2"]},{id:"ENTITY3",supervisors:["ENTITY2"]}]);
+        .setEntitiesToSupervise([{entityId:"ENTITY1",supervisors:["ENTITY2"]},{entityId:"ENTITY3",supervisors:["ENTITY2"]}]);
 
     })
 
