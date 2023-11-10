@@ -3,6 +3,7 @@ dependencies {
     swaggerUI generator.swaggerUI
     implementation project(':tools:generic:utilities'), project(':tools:spring:spring-utilities')
     implementation misc.jsonSmart
+    implementation misc.commonsLang
 
 //Transitive dependencies udpate needed for security reasons 
     implementation misc.snakeyaml
