@@ -47,7 +47,7 @@ export class AppComponent {
     @HostListener('window:beforeunload')
     onBeforeUnload() {
         logger.info('Unload opfab', LogOption.LOCAL_AND_REMOTE);
-        this.opfabEventStreamService.closeEventStream();
+        OpfabEventStreamService.closeEventStream();
         RemoteLoggerService.flush(); // flush log before exiting opfab
         return null;
     }
@@ -73,7 +73,6 @@ export class AppComponent {
 
     constructor(
         private soundNotificationService: SoundNotificationService,
-        private opfabEventStreamService: OpfabEventStreamService,
         private routerNavigationService: RouterNavigationService, // put it here to have it injected and started a startup
         private selectedCardLoaderService: SelectedCardLoaderService  // put it here to have it injected and started a startup
     ) {

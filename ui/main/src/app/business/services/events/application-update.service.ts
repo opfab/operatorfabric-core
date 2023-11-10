@@ -26,7 +26,6 @@ import {BusinessDataService} from '../businessconfig/businessdata.service';
 })
 export class ApplicationUpdateService {
     constructor(
-        private opfabEventStreamService: OpfabEventStreamService,
         private handlebarsService: HandlebarsService,
         private templateCssService: TemplateCssService,
         private applicationEventsService: ApplicationEventsService,
@@ -40,7 +39,7 @@ export class ApplicationUpdateService {
     }
 
     private listenForBusinessConfigUpdate() {
-        this.opfabEventStreamService
+        OpfabEventStreamService
             .getBusinessConfigChangeRequests()
             .pipe(
                 debounce(() => timer(5000 + Math.floor(Math.random() * 5000))), // use a random  part to avoid all UI to access at the same time the server
@@ -61,7 +60,7 @@ export class ApplicationUpdateService {
     }
 
     private listenForUserConfigUpdate() {
-        this.opfabEventStreamService
+        OpfabEventStreamService
             .getUserConfigChangeRequests()
             .pipe(
                 debounce(() => timer(5000 + Math.floor(Math.random() * 5000))), // use a random  part to avoid all UI to access at the same time the server
@@ -84,7 +83,7 @@ export class ApplicationUpdateService {
     }
 
     private listenForBusinessDataUpdate() {
-        this.opfabEventStreamService.getBusinessDataChanges().subscribe(() => {
+        OpfabEventStreamService.getBusinessDataChanges().subscribe(() => {
             logger.info(`New business data posted, emptying cache`, LogOption.LOCAL_AND_REMOTE);
             this.businessDataService.emptyCache();
         });

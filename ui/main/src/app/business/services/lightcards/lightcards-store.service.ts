@@ -68,7 +68,6 @@ export class LightCardsStoreService {
     private receivedAcksSubject = new Subject<{cardUid: string; entitiesAcks: string[]}>();
 
     constructor(
-        private opfabEventStreamService: OpfabEventStreamService,
         private selectedCardService: SelectedCardService,
         private acknowledgeService: AcknowledgeService
     ) {
@@ -146,7 +145,7 @@ export class LightCardsStoreService {
     }
 
     initStore() {
-        this.opfabEventStreamService.getCardOperationStream().subscribe({
+        OpfabEventStreamService.getCardOperationStream().subscribe({
             next: (operation) => {
                 switch (operation.type) {
                     case CardOperationType.ADD:
@@ -350,7 +349,7 @@ export class LightCardsStoreService {
     }
 
     public removeAllLightCards() {
-        this.opfabEventStreamService.resetAlreadyLoadingPeriod();
+        OpfabEventStreamService.resetAlreadyLoadingPeriod();
         this.lightCards.clear();
         this.lightCardsEvents.next(this.lightCards);
     }

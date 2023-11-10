@@ -21,6 +21,7 @@ import {EntitiesService} from './users/entities.service';
 import {GroupsService} from './users/groups.service';
 import {PerimetersService} from './users/perimeters.service';
 import {ProcessesService} from './businessconfig/processes.service';
+import {OpfabEventStreamService} from './events/opfabEventStream.service';
 
 declare const opfab: any;
 export class ServicesConfig {
@@ -39,7 +40,8 @@ export class ServicesConfig {
         EntitiesService.setEntitiesServer(servers.entitiesServer);
         GroupsService.setGroupsServer(servers.groupsServer);
         PerimetersService.setPerimeterServer(servers.perimetersServer);
-        ProcessesService.setProcessServer(servers.processServer)
+        ProcessesService.setProcessServer(servers.processServer);
+        OpfabEventStreamService.setEventStreamServer(servers.opfabEventStreamServer);
     }
 
     public static load(): Observable<any> {

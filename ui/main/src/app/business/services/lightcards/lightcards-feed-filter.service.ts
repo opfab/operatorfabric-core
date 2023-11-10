@@ -37,7 +37,6 @@ export class LightCardsFeedFilterService {
 
     constructor(
         private lightCardsStoreService: LightCardsStoreService,
-        private opfabEventStreamService: OpfabEventStreamService,
         private groupedCardsService: GroupedCardsService
     ) {
         this.lightCardFilter = new LightCardsFilter();
@@ -137,7 +136,7 @@ export class LightCardsFeedFilterService {
     }
 
     public updateFilter(filterType: FilterType, active: boolean, status: any) {
-        if (filterType === FilterType.BUSINESSDATE_FILTER) this.opfabEventStreamService.setSubscriptionDates(status.start, status.end);
+        if (filterType === FilterType.BUSINESSDATE_FILTER) OpfabEventStreamService.setSubscriptionDates(status.start, status.end);
         this.lightCardFilter.updateFilter(filterType,active,status);
     }
 

@@ -45,17 +45,16 @@ describe('Dashboard', () => {
         ProcessesService.setProcessServer(processServerMock);
 
         opfabEventStreamServerMock = new OpfabEventStreamServerMock();
-        const opfabEventStreamService = new OpfabEventStreamService(opfabEventStreamServerMock);
+
+        OpfabEventStreamService.setEventStreamServer(opfabEventStreamServerMock);
         acknowledgeService = new AcknowledgeService(null);
 
         lightCardsStoreService = new LightCardsStoreService(
-            opfabEventStreamService,
             new SelectedCardService(),
             acknowledgeService
         );
         lightCardsFeedFilterService = new LightCardsFeedFilterService(
             lightCardsStoreService,
-            opfabEventStreamService,
             new GroupedCardsService()
         );
         lightCardsStoreService.initStore();

@@ -24,14 +24,13 @@ export class BusinessDataService implements CrudService {
     private _cachedResources = new Map<string, string>();
 
     constructor(
-        private opfabEventStreamService: OpfabEventStreamService,
         private businessDataServer: BusinessDataServer
     ) {
         this.listenForBusinessDataUpdate();
     }
 
     listenForBusinessDataUpdate() {
-        this.opfabEventStreamService.getBusinessDataChanges().subscribe(() => {
+        OpfabEventStreamService.getBusinessDataChanges().subscribe(() => {
             logger.info(`New business data posted, emptying cache`, LogOption.LOCAL_AND_REMOTE);
             this.emptyCache();
         });

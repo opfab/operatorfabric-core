@@ -71,7 +71,6 @@ export class ApplicationLoadingComponent implements OnInit {
         private settingsService: SettingsService,
         private lightCardsStoreService: LightCardsStoreService,
         private opfabEventStreamServer: OpfabEventStreamServer,
-        private opfabEventStreamService: OpfabEventStreamService,
         private applicationUpdateService: ApplicationUpdateService,
         private systemNotificationService: SystemNotificationService,
         private opfabAPIService: OpfabAPIService,
@@ -96,7 +95,8 @@ export class ApplicationLoadingComponent implements OnInit {
             entitiesServer: this.entitiesServer,
             groupsServer: this.groupsServer,
             perimetersServer: this.perimetersServer,
-            processServer: this.processServer
+            processServer: this.processServer,
+            opfabEventStreamServer: this.opfabEventStreamServer
         });
 
 
@@ -243,7 +243,7 @@ export class ApplicationLoadingComponent implements OnInit {
 
     private finalizeApplicationLoading(): void {
         this.loadingInProgress = true;
-        this.opfabEventStreamService.initEventStream();
+        OpfabEventStreamService.initEventStream();
         this.opfabEventStreamServer.getStreamInitDone().subscribe(() => {
             this.applicationLoadedDone.next(true);
             this.applicationLoadedDone.complete();
