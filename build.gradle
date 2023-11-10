@@ -81,6 +81,7 @@ ext {
             jacksonDatabind   : "com.fasterxml.jackson.core:jackson-databind:$jacksonDatabind",
             jlibmodbus     : "com.intelligt.modbus:jlibmodbus:WORKAROUND",
             commonsText    : "org.apache.commons:commons-text:$apacheCommonsText",
+            commonsLang    : "org.apache.commons:commons-lang3:$apacheCommonsLang",
             commonsPool    : "org.apache.commons:commons-pool2:$apacheCommonsPool",
             rabbitMQ       : "com.rabbitmq:amqp-client:$rabbitMQ",
 
