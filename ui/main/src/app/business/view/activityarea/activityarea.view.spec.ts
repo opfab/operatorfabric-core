@@ -11,13 +11,11 @@ import {Entity} from '@ofModel/entity.model';
 import {User} from '@ofModel/user.model';
 import {UserWithPerimeters} from '@ofModel/userWithPerimeters.model';
 import {EntitiesServerMock} from '@tests/mocks/entitiesServer.mock';
-import {OpfabEventStreamServerMock} from '@tests/mocks/opfab-event-stream.server.mock';
 import {SettingsServerMock} from '@tests/mocks/settingsServer.mock';
 import {UserServerMock} from '@tests/mocks/userServer.mock';
 import {ServerResponse, ServerResponseStatus} from 'app/business/server/serverResponse';
 import {EntitiesService} from 'app/business/services/users/entities.service';
 import {LightCardsStoreService} from 'app/business/services/lightcards/lightcards-store.service';
-import {OpfabEventStreamService} from 'app/business/services/events/opfabEventStream.service';
 import {SettingsService} from 'app/business/services/users/settings.service';
 import {UserService} from 'app/business/services/users/user.service';
 import {CurrentUserStore} from 'app/business/store/current-user.store';
@@ -68,7 +66,6 @@ describe('ActivityAreaView', () => {
 
     function mockLightCardStoreService() {
         lightCardsStoreService = new LightCardsStoreService(
-            new OpfabEventStreamService(new OpfabEventStreamServerMock()),
             null,
             null
         );

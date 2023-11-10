@@ -23,7 +23,6 @@ export class SessionManagerService {
     private endSessionEvent = new Subject<string>();
 
     constructor(
-        private opfabEventStreamService: OpfabEventStreamService,
         private soundNotificationService: SoundNotificationService,
         private authService: AuthService
     ) {
@@ -50,12 +49,12 @@ export class SessionManagerService {
             // so we can stop sending request to external devices
             if (this.soundNotificationService.getPlaySoundOnExternalDevice())
                 this.soundNotificationService.clearOutstandingNotifications();
-            this.opfabEventStreamService.closeEventStream();
+            OpfabEventStreamService.closeEventStream();
         });
     }
 
     private subscribeToSessionClosedByNewUser() {
-        this.opfabEventStreamService.getReceivedDisconnectUser().subscribe((isDisconnected) => {
+        OpfabEventStreamService.getReceivedDisconnectUser().subscribe((isDisconnected) => {
             if (isDisconnected) {
                 this.soundNotificationService.stopService();
                 this.endSessionEvent.next('DisconnectedByNewUser');
@@ -70,7 +69,7 @@ export class SessionManagerService {
     public logout() {
         logger.info('Logout : end session ', LogOption.REMOTE);
         this.soundNotificationService.stopService();
-        this.opfabEventStreamService.closeEventStream();
+        OpfabEventStreamService.closeEventStream();
         this.authService.logout();
     }
 }

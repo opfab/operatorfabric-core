@@ -21,16 +21,13 @@ export class ReloadRequiredComponent implements OnInit {
 
     displayReloadRequired: boolean;
 
-    constructor(
-        private opfabEventStreamService: OpfabEventStreamService
-    ) {}
 
     ngOnInit(): void {
         this.detectReloadRequested();
     }
 
     private detectReloadRequested() {
-        this.opfabEventStreamService.getReloadRequests().subscribe(() => {
+        OpfabEventStreamService.getReloadRequests().subscribe(() => {
                 logger.info('Application reload requested', LogOption.LOCAL_AND_REMOTE);
                 this.displayReloadRequired = true;
         });
