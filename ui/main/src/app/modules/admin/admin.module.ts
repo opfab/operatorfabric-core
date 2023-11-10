@@ -38,6 +38,10 @@ import {MultiSelectModule} from '../share/multi-select/multi-select.module';
 import {IdCellRendererComponent} from './components/cell-renderers/id-cell-renderer.component';
 import {ProcessCellRendererComponent} from './components/cell-renderers/process-cell-renderer.component';
 import {BusinessDataTableComponent} from './components/table/businessData-table.component';
+import {SupervisedEntitiesTableComponent} from './components/table/supervised-entities-table.component';
+import {EntityNameCellRendererComponent} from './components/cell-renderers/entity-name-cell-renderer.component';
+import {EditSupervisedEntityModalComponent} from './components/editmodal/supervised-entities/edit-supervised-entity-modal.component';
+
 
 @NgModule({
     declarations: [
@@ -48,6 +52,8 @@ import {BusinessDataTableComponent} from './components/table/businessData-table.
         PerimetersTableComponent,
         ProcessesTableComponent,
         BusinessDataTableComponent,
+        SupervisedEntitiesTableComponent,
+        EditSupervisedEntityModalComponent,
         EditUserModalComponent,
         ConfirmationDialogComponent,
         EditEntityModalComponent,
@@ -60,6 +66,7 @@ import {BusinessDataTableComponent} from './components/table/businessData-table.
         PerimetersCellRendererComponent,
         StateRightsCellRendererComponent,
         IdCellRendererComponent,
+        EntityNameCellRendererComponent,
         ProcessCellRendererComponent
     ],
 

@@ -17,6 +17,7 @@ import SupervisorService from './domain/client-side/supervisorService';
 import OpfabServicesInterface from './common/server-side/opfabServicesInterface';
 import logger from './common/server-side/logger';
 import AuthorizationService from './common/server-side/authorizationService';
+import SupervisorDatabaseService from './domain/server-side/supervisorDatabaseService';
 
 const app = express();
 app.disable('x-powered-by');
@@ -41,11 +42,17 @@ app.use(
 app.use(express.static('public'));
 const adminPort = config.get('operatorfabric.supervisor.adminPort');
 
-const configService = new ConfigService(
+
+const supervisorDatabaseService = new SupervisorDatabaseService()
+    .setMongoDbConfiguration(config.get('operatorfabric.mongodb'))
+    .setLogger(logger);
+
+const configService = new ConfigService(supervisorDatabaseService,
     config.get('operatorfabric.supervisor.defaultConfig'),
     'config/supervisorConfig.json',
     logger
 );
+
 
 const activeOnStartUp = config.get('operatorfabric.supervisor.activeOnStartup');
 
@@ -66,6 +73,7 @@ const authorizationService = new AuthorizationService()
 
 const supervisorConfig = configService.getSupervisorConfig();
 
+
 const supervisorService = new SupervisorService(supervisorConfig, opfabServicesInterface, logger);
 
 app.get('/status', (req, res) => {
@@ -76,7 +84,9 @@ app.get('/status', (req, res) => {
 });
 
 app.get('/start', (req, res) => {
+
     authorizationService.isAdminUser(req).then((isAdmin) => {
+
         if (!isAdmin) res.status(403).send();
         else {
             logger.info('Start supervisor asked');
@@ -84,6 +94,7 @@ app.get('/start', (req, res) => {
             res.send('Start supervisor');
         }
     });
+
 });
 
 app.get('/stop', (req, res) => {
@@ -109,6 +120,8 @@ app.post('/config', (req, res) => {
             logger.info('Update configuration');
             const updated = configService.patch(req.body);
             supervisorService.setConfiguration(updated);
+            supervisorService.resetConnectionChecker();
+            supervisorService.resetAcknowledgementChecker();
             res.send(updated);
         }
     });
@@ -118,12 +131,59 @@ app.get('/healthcheck', (req, res) => {
     res.send();
 });
 
+app.get('/supervisedEntities', (req, res) => {
+
+    authorizationService.isAdminUser(req).then(isAdmin => {
+        if (!isAdmin) res.status(403).send();
+        else {
+            supervisorDatabaseService.getSupervisedEntities().then(entities => res.send(entities));
+        }
+    });
+});
+
+app.post('/supervisedEntities', (req, res) => {
+
+    authorizationService.isAdminUser(req).then(isAdmin => {
+
+        if (!isAdmin) res.status(403).send();
+        else {
+            const newEntity = req.body;
+            logger.info('Add supervised entity ' + JSON.stringify(newEntity));
+            configService.saveSupervisedEntity(newEntity).then(entity => {
+                supervisorService.setConfiguration(configService.getSupervisorConfig());
+                supervisorService.resetConnectionChecker();
+                res.send(entity);
+            })
+        }
+    });
+});
+
+app.delete('/supervisedEntities/:id', (req, res) => {
+    
+    authorizationService.isAdminUser(req).then(isAdmin => {
+
+        if (!isAdmin) res.status(403).send();
+        else {
+            configService.deleteSupervisedEntity(req.params.id).then(() => {
+                supervisorService.setConfiguration(configService.getSupervisorConfig());
+                supervisorService.resetConnectionChecker();
+                res.send();
+            })
+        }
+    });
+});
+
 app.listen(adminPort, () => {
     logger.info(`Opfab connection supervisor listening on port ${adminPort}`);
 });
 
-logger.info('Application started');
-
-if (activeOnStartUp) {
-    supervisorService.start();
+async function start() {
+    await supervisorDatabaseService.connectToMongoDB();
+    await configService.synchronizeWithMongoDb();
+    if (activeOnStartUp) {
+        supervisorService.start();
+    }
+    logger.info('Application started');
 }
+
+start()

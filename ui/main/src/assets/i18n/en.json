@@ -462,6 +462,13 @@
         "add": "ADD NEW BUSINESS DATA FILE",
         "confirmDelete": "Do you really want to delete the business data file"
       },
+      "supervisedEntity": {
+        "entityId": "ENTITY",
+        "supervisors": "SUPERVISORS",
+        "add": "ADD NEW SUPERVISED ENTITY",
+        "confirmDelete": "Do you really want to delete supervised entity",
+        "allEntitiesSupervised": "All entities are already supervised"
+      },
       "selectGroupText": "Select a Group",
       "selectEntityText": "Select an Entity",
       "selectPerimeterText": "Select a Perimeter",
@@ -512,7 +519,8 @@
       "entities": "Entities Management",
       "perimeters": "Perimeters Management",
       "processes": "Processes Management",
-      "businessData": "Business Data Management"
+      "businessData": "Business Data Management",
+      "supervisedEntities": "Supervised Entities"
     }
   },
   "processGroup": {

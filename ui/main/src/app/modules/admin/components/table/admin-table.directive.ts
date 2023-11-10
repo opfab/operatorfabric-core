@@ -33,6 +33,7 @@ import {IdCellRendererComponent} from '../cell-renderers/id-cell-renderer.compon
 import {ArrayCellRendererComponent} from '../cell-renderers/array-cell-renderer.component';
 import {BusinessDataService} from 'app/business/services/businessconfig/businessdata.service';
 import {EntitiesService} from 'app/business/services/users/entities.service';
+import {EntityNameCellRendererComponent} from '../cell-renderers/entity-name-cell-renderer.component';
 
 
 export class ActionColumn {
@@ -109,7 +110,8 @@ export abstract class AdminTableDirective implements OnInit, OnDestroy {
                 entityCellRenderer: EntityCellRendererComponent,
                 perimetersCellRenderer: PerimetersCellRendererComponent,
                 stateRightsCellRenderer: StateRightsCellRendererComponent,
-                idCellRenderer: IdCellRendererComponent
+                idCellRenderer: IdCellRendererComponent,
+                entityNameCellRenderer: EntityNameCellRendererComponent
             },
             domLayout: 'autoHeight',
             rowHeight: 50,
@@ -404,7 +406,7 @@ export abstract class AdminTableDirective implements OnInit, OnDestroy {
                                 ? this.translateService.instant(
                                       this.i18NPrefix + this.tableType + '.' + line.data[field.name]
                                   )
-                                : line.data[field.name];
+                                : this.getNameFromId(line.data[field.name], field.cellRendererName);
                 });
                 exportData.push(item);
             }

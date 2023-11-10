@@ -27,6 +27,7 @@ import {DateTimeFormatterService} from './date-time-formatter.service';
 import {AdminProcessesService} from './businessconfig/adminprocess.service';
 import {BusinessDataService} from './businessconfig/businessdata.service';
 import {CardService} from './card/card.service';
+import {SupervisedEntitiesService} from './users/supervised-entities.service';
 
 declare const opfab: any;
 export class ServicesConfig {
@@ -51,6 +52,7 @@ export class ServicesConfig {
         AdminProcessesService.setAdminProcessServer(servers.adminProcessServer);
         BusinessDataService.setBusinessDataServer(servers.businessDataServer);
         CardService.setCardServer(servers.cardServer);
+        SupervisedEntitiesService.setSupervisedEntitiesServer(servers.supervisedEntitiesServer);
     }
 
     public static load(): Observable<any> {

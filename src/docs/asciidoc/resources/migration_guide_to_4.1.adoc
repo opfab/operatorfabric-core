@@ -36,6 +36,52 @@ For example :
     client_max_body_size 100M;
   }
 ```
+
+== Nginx Configuration for entity supervision administration
+The new 'Supervised Entities' admin page requires interaction with the supervisor API via Nginx. To enable access to the supervisor API, please incorporate the following configuration into your `nginx.conf` file:
+
+```
+  location ~ "^/supervisor/(.*)" {
+    set $supervisor http://supervisor:2108;
+    proxy_set_header Host $http_host;
+    proxy_pass $supervisor/$1;
+    proxy_set_header X-Forwarded-For $remote_addr;
+  }
+```
+
+== Supervisor configuration change
+The configuration of 'supervisor.defaultConfig.entitiesToSupervise' parameter has changed. The supervised entity field `id` has been renamed to `entityId`. You should modify your configuration accordingly.
+
+For example:
+
+
+```
+  supervisor:
+    defaultConfig:
+      entitiesToSupervise:
+      - id: ENTITY1_FR
+        supervisors:
+        - ENTITY2_FR
+      - id: ENTITY2_FR
+        supervisors:
+        - ENTITY1_FR
+```
+
+should be changed to:
+
+```
+  supervisor:
+    defaultConfig:
+      entitiesToSupervise:
+      - entityId: ENTITY1_FR
+        supervisors:
+        - ENTITY2_FR
+      - entityId: ENTITY2_FR
+        supervisors:
+        - ENTITY1_FR
+```
+
+
 == Log directories in docker 
 
 For the services cards-reminder, supervisor, cards-external-diffusion the log directory in the docker is not anymore /usr/app/logs but /var/log/opfab. So if you map the log directory in your configuration , you need to change it. 

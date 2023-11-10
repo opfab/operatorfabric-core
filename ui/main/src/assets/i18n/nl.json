@@ -463,6 +463,13 @@
         "confirmDelete": "Wilt u het bestand met zakelijke gegevens echt verwijderen"
 
       },
+      "supervisedEntities": {
+        "entityId": "ENTITEIT",
+        "supervisors": "SUPERVISORS",
+        "add": "NIEUWE ENTITEIT ONDER TOEZICHT",
+        "confirmDelete": "Wilt u de entiteit onder toezicht echt verwijderen",
+        "allEntitiesSupervised": "Alle entiteiten staan al onder toezicht"
+      },
       "selectGroupText": "Selecteer een Groep",
       "selectEntityText": "Selecteen een Entiteit",
       "selectPerimeterText": "Selecteen een Perimeter",
@@ -512,7 +519,8 @@
       "groups": "Groepen Beheer",
       "entities": "Entiteiten Beheer",
       "perimeters": "Perimeters Beheer",
-      "processes": "Processen Beheer"
+      "processes": "Processen Beheer",
+      "supervisedEntities": "Entiteiten onder toezicht"
     }
   },
   "processGroup": {
