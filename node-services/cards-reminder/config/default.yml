@@ -18,7 +18,7 @@ operatorfabric:
   logConfig:
     logFolder: "logs/"
     logFile: "%DATE%.log"
-    logLevel: "debug"
+    logLevel: "error" #set to error to avoid being polluted by logs in the CI/CD during unit tests
   cardsReminder:
     adminPort : 2107
     activeOnStartup : true

@@ -11,7 +11,6 @@ import CardsReminderControl from '../application/cardsReminderControl';
 import CardsReminderOpfabServicesInterface from '../server-side/cardsReminderOpfabServicesInterface';
 import ReminderService from '../application/reminderService';
 import {RRuleReminderService} from '../application/rruleReminderService';
-import {setTimeout} from 'timers/promises';
 import RemindDatabaseService from '../server-side/remindDatabaseService';
 
 export default class CardsReminderService {
@@ -37,8 +36,6 @@ export default class CardsReminderService {
             .setReminderService(reminderService)
             .setRemindDatabaseService(remindDatabaseService)
             .setLogger(logger);
-
-        this.checkRegularly();
     }
 
     public start() {
@@ -57,24 +54,17 @@ export default class CardsReminderService {
     public async reset() {
         const wasActive = this.active;
         this.stop();
-        try {
-            await this.cardsReminderControl.resetReminderDatabase();
-        } catch (error) {
-            this.logger.error('error during periodic check' + error);
-        }
+        await this.cardsReminderControl.resetReminderDatabase();
         if (wasActive) this.start();
     }
 
-    private async checkRegularly() {
+    private checkRegularly() {
         if (this.active) {
-            this.logger.debug('Check for cards to remind');
-            try {
-                await this.cardsReminderControl.checkCardsReminder();
-            } catch (error) {
-                this.logger.error('error during periodic check' + error);
-            }
-            await setTimeout(this.checkPeriodInSeconds * 1000);
-            this.checkRegularly();
+            this.logger.debug('Check if some cards need to be remind');
+            this.cardsReminderControl
+                .checkCardsReminder()
+                .catch((error) => this.logger.warn('error during periodic check' + error))
+                .finally(() => setTimeout(() => this.checkRegularly(), this.checkPeriodInSeconds * 1000));
         }
     }
 }

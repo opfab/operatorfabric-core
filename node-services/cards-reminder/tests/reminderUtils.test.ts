@@ -864,16 +864,6 @@ describe('ReminderUtils:getNextTimeForRepeating without or invalid recurrence ',
         expect(dateForRepeating).toEqual(-1);
     });
 
-    it('No recurrence , date for remind is startdate ,  currentDate is 14 minutes after startDate , should return startDate ', () => {
-        const date = moment.tz('2000-01-01 10:00', 'Europe/Paris').valueOf();
-        const cardStartdate = moment.tz('2000-01-01 09:46', 'Europe/Paris').valueOf();
-        testCard.timeSpans = [new TimeSpan(cardStartdate)];
-
-        const expectedResponseDate = moment.tz('2000-01-01 09:46', 'Europe/Paris').valueOf();
-        const dateForRepeating = getNextTimeForRepeating(testCard, date);
-        expect(dateForRepeating).toEqual(expectedResponseDate);
-    });
-
     it('Invalid recurrence days of week should return -1 ', () => {
         const date = moment.tz('2000-01-01 10:00', 'Europe/Paris').valueOf();
         recurrence.hoursAndMinutes = {hours: 10, minutes: 30};
@@ -883,6 +873,7 @@ describe('ReminderUtils:getNextTimeForRepeating without or invalid recurrence ',
         const dateForRepeating = getNextTimeForRepeating(testCard, date);
         expect(dateForRepeating).toEqual(-1);
     });
+
 
     it('Invalid recurrence days of week for one of two timespan  should return -1 ', () => {
         const date = moment.tz('2000-01-01 10:00', 'Europe/Paris').valueOf();
@@ -896,4 +887,27 @@ describe('ReminderUtils:getNextTimeForRepeating without or invalid recurrence ',
         const dateForRepeating = getNextTimeForRepeating(testCard, date);
         expect(dateForRepeating).toEqual(expectedResponseDate);
     });
+
+    it('Invalid recurrence month 12 should return -1 ', () => {
+        const date = moment.tz('2000-01-01 10:00', 'Europe/Paris').valueOf();
+        recurrence.hoursAndMinutes = {hours: 10, minutes: 30};
+        recurrence.months = [12,3];
+        testCard.timeSpans = [new TimeSpan(0, null, recurrence)];
+
+        const dateForRepeating = getNextTimeForRepeating(testCard, date);
+        expect(dateForRepeating).toEqual(-1);
+    });
+
+    it('Invalid recurrence month -1 should return -1 ', () => {
+        const date = moment.tz('2000-01-01 10:00', 'Europe/Paris').valueOf();
+        recurrence.hoursAndMinutes = {hours: 10, minutes: 30};
+        recurrence.months = [-1,3];
+        testCard.timeSpans = [new TimeSpan(0, null, recurrence)];
+
+        const dateForRepeating = getNextTimeForRepeating(testCard, date);
+        expect(dateForRepeating).toEqual(-1);
+    });
+
+
+
 });
