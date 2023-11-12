@@ -15,28 +15,12 @@ import {CardOperation} from '../model/card-operation.model';
 import RemindDatabaseService from '../server-side/remindDatabaseService';
 
 export default class ReminderService implements EventListener {
-    public static REMINDERS_COLLECTION = 'reminders';
-    private static MAX_MILLISECONDS_FOR_REMINDING_AFTER_EVENT_STARTS = 60000 * 15; // 15 minutes
-
     private databaseService: RemindDatabaseService;
-
-    logger: any;
+    private logger: any;
 
     public setLogger(logger: any) {
         this.logger = logger;
         return this;
-    }
-
-    async onMessage(message: any) {
-        try {
-            const cardOperation: CardOperation = JSON.parse(message.content);
-
-            if (cardOperation.type === 'ADD' || cardOperation.type === 'UPDATE')
-                await this.addCardReminder(cardOperation.card);
-            else if (cardOperation.type === 'DELETE') await this.databaseService.removeReminder(cardOperation.cardId);
-        } catch (error) {
-            this.logger.error('Error on card operation received ' + error);
-        }
     }
 
     public setDatabaseService(databaseService: RemindDatabaseService) {
@@ -44,37 +28,92 @@ export default class ReminderService implements EventListener {
         return this;
     }
 
-    public async addCardReminder(card: Card, startingDate?: number): Promise<void> {
+    async onMessage(message: any) {
+        try {
+            const cardOperation: CardOperation = JSON.parse(message.content);
+
+            if (cardOperation.type === 'ADD' || cardOperation.type === 'UPDATE') {
+                this.logger.debug(
+                    `Reminder - ADD or UPDATE received from event bus for card ${cardOperation.card.id} (uid=${cardOperation.card.uid})`
+                );
+                await this.addCardReminder(cardOperation.card);
+            } else if (cardOperation.type === 'DELETE') {
+                this.logger.debug(`Reminder - DELETE received for card id=${cardOperation.cardId}`);
+                await this.databaseService.removeReminder(cardOperation.cardId);
+            }
+        } catch (error) {
+            this.logger.warn('Reminder - Error on card operation received ' + error);
+        }
+    }
+
+    public async addCardReminder(card: Card) {
         if (card) {
-            const cardId = card.id ? card.id : card._id;
-            if (card.secondsBeforeTimeSpanForReminder === undefined || card.secondsBeforeTimeSpanForReminder === null)
+            if (!card.secondsBeforeTimeSpanForReminder) {
+                this.logger.debug(`Reminder - Card ${card.id} (uid=${card.uid}) is not a card to remind`);
                 return;
-            const reminderItem = await this.databaseService.getReminder(cardId);
+            }
+            const reminderItem = await this.databaseService.getReminder(card.id);
             if (reminderItem) {
                 if (reminderItem.cardUid === card.uid) {
+                    // reminder exists , a remind has just occur , we need to set the reminder for next occurrence
+                    this.logger.debug(
+                        `Reminder - Card ${card.id} (uid=${card.uid}) reminder exist for this uid , it means a remind just occurs , set next remind date`
+                    );
+                    await this.setNextRemindWhenRecurrenceAndRemindHasBeenDone(card, reminderItem);
                     return;
                 } else {
-                    await this.databaseService.removeReminder(cardId);
+                    // card is updated , remove existing reminder
+                    this.logger.debug(
+                        `Reminder - Card ${card.id} (uid=${card.uid}) reminder exist with another uid remove it the card has been updated`
+                    );
+                    await this.databaseService.removeReminder(card.id);
                 }
             }
 
-            const dateForReminder: number = getNextTimeForRepeating(card, startingDate);
+            const dateForReminder: number = getNextTimeForRepeating(card);
             if (dateForReminder >= 0) {
                 const reminder = new Reminder(
-                    cardId,
+                    card.id,
                     card.uid,
-                    dateForReminder - card.secondsBeforeTimeSpanForReminder * 1000,
-                    false
+                    dateForReminder - card.secondsBeforeTimeSpanForReminder * 1000
                 );
 
                 this.logger.info(
-                    `Reminder Will remind card ${cardId} at
-                         ${new Date(dateForReminder - card.secondsBeforeTimeSpanForReminder * 1000)}`
+                    `Reminder - Will remind card ${card.id} (uid=${card.uid}) at ${new Date(
+                        dateForReminder - card.secondsBeforeTimeSpanForReminder * 1000
+                    )}`
                 );
                 await this.databaseService.persistReminder(reminder);
-            }
+            } else
+                this.logger.debug(
+                    `Reminder - Card ${card.id} (uid=${card.uid}) has no occurrence , no reminder to add`
+                );
         }
-        return Promise.resolve();
+    }
+
+    private async setNextRemindWhenRecurrenceAndRemindHasBeenDone(card: Card, reminderItem: any) {
+        this.logger.debug(`Reminder - Card ${card.id} (uid=${card.uid}) compute the next reminder date`);
+        const startingDate = reminderItem.timeForReminding + card.secondsBeforeTimeSpanForReminder * 1000 + 1;
+
+        const dateForReminder: number = getNextTimeForRepeating(card, startingDate);
+        if (dateForReminder >= 0) {
+            const reminder = new Reminder(
+                card.id,
+                card.uid,
+                dateForReminder - card.secondsBeforeTimeSpanForReminder * 1000
+            );
+            this.logger.info(
+                `Reminder - Will remind card ${card.id} (uid=${card.uid}) at ${new Date(
+                    dateForReminder - card.secondsBeforeTimeSpanForReminder * 1000
+                )}`
+            );
+            await this.databaseService.updateReminder(reminder);
+        } else {
+            this.logger.info(
+                `Reminder - Card ${card.id} (uid=${card.uid}) has no new occurrence , remove the reminder`
+            );
+            this.databaseService.removeReminder(card.id);
+        }
     }
 
     public async getCardsToRemindNow(): Promise<Card[]> {
@@ -87,27 +126,13 @@ export default class ReminderService implements EventListener {
                 cardsToRemind.push(card);
             } else {
                 // the card has been deleted in this case
+                this.logger.info(
+                    `Reminder - card with uid ${reminder.cardUid} does not exist anymore , remove reminder`
+                );
                 await this.databaseService.removeReminder(reminder.cardId);
             }
         }
         return cardsToRemind;
-    }
-
-    public async setCardHasBeenRemind(card: Card) {
-        const reminderItem = await this.databaseService.getReminder(card._id);
-        if (reminderItem) await this.setNextRemindWhenRecurrenceAndRemindHasBeenDone(card, reminderItem);
-    }
-
-    private async setNextRemindWhenRecurrenceAndRemindHasBeenDone(card: Card, reminderItem: any) {
-        const reminderDate: number = reminderItem.timeForReminding;
-        await this.databaseService.removeReminder(card._id);
-        this.addCardReminder(
-            card,
-            reminderDate +
-                card.secondsBeforeTimeSpanForReminder * 1000 +
-                ReminderService.MAX_MILLISECONDS_FOR_REMINDING_AFTER_EVENT_STARTS +
-                1
-        );
     }
 
     public async clearReminders() {
