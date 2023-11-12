@@ -74,8 +74,6 @@ export default class CardsReminderOpfabServicesInterface extends OpfabServicesIn
 
     }
     public async sendCardReminderRequest(cardId: string) {
-
-        this.logger.info("sendCardReminder for card " + cardId);
         return this.sendRequest({
             method: 'post',
             url: this.opfabCardsPublicationUrl + '/cards/resetReadAndAcks/' + cardId,

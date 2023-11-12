@@ -7,7 +7,6 @@
  * This file is part of the OperatorFabric project.
  */
 
-
 export class Card {
     constructor(
         public uid: string,
@@ -16,9 +15,7 @@ export class Card {
         public endDate?: number,
         public secondsBeforeTimeSpanForReminder?: number,
         public timeSpans?: TimeSpan[],
-        public rRule?: RRule,
-        public _id?: string,
-
+        public rRule?: RRule
     ) {}
 }
 
@@ -31,7 +28,6 @@ export class Recurrence {
         public hoursAndMinutes: HourAndMinutes,
         public daysOfWeek?: number[],
         public timeZone?: string,
-        public durationInMinutes?: number,
         public months?: number[]
     ) {}
 }
@@ -52,8 +48,7 @@ export class RRule {
         public byminute?: number[],
         public bysetpos?: number[],
         public bymonthday?: number[],
-        public tzid?: string,
-        public durationInMinutes?: number
+        public tzid?: string
     ) {}
 }
 

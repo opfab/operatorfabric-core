@@ -19,8 +19,7 @@ export default class CardsReminderControl {
     private reminderService: ReminderService;
     private rruleReminderService: RRuleReminderService;
     private remindDatabaseService: RemindDatabaseService;
-
-    logger: any;
+    private logger: any;
 
     public setLogger(logger: any) {
         this.logger = logger;
@@ -50,38 +49,32 @@ export default class CardsReminderControl {
     public async checkCardsReminder(): Promise<boolean> {
         const cards = await this.reminderService.getCardsToRemindNow();
         for (const card of cards) {
-            try {
-                const resp = await this.opfabServicesInterface.sendCardReminder(card.uid);
-                if (resp.isValid()) await this.reminderService.setCardHasBeenRemind(card);
-            } catch (error) {
-                this.logger.error('reminderService checkCardsReminder error ' + error);
-            }
+            this.logger.info(`ReminderControl - Send remind for card ${card.id} (uid=${card.uid})`);
+            await this.opfabServicesInterface.sendCardReminder(card.uid);
         }
 
         const rruleCards = await this.rruleReminderService.getCardsToRemindNow();
         for (const card of rruleCards) {
-            try {
-                const resp = await this.opfabServicesInterface.sendCardReminder(card.uid);
-                if (resp.isValid()) await this.rruleReminderService.setCardHasBeenRemind(card);
-            } catch (error) {
-                this.logger.error('rruleReminderService checkCardsReminder error ' + error);
-            }
+            this.logger.info(`ReminderControl - Send remind for card ${card.id} (uid=${card.uid})`);
+            await this.opfabServicesInterface.sendCardReminder(card.uid);
         }
         return Promise.resolve(true);
     }
 
     public async resetReminderDatabase(): Promise<boolean> {
-        await this.reminderService.clearReminders();
-        await this.rruleReminderService.clearReminders();
-
         try {
-            const cardsWithReminders:Card[] = await this.remindDatabaseService.getAllCardsWithReminder();
-            for(const card of cardsWithReminders) {
+            this.logger.debug('ReminderControl - Clear reminders');
+            await this.reminderService.clearReminders();
+            await this.rruleReminderService.clearReminders();
+            this.logger.debug('ReminderControl - Reminders cleared');
+            const cardsWithReminders: Card[] = await this.remindDatabaseService.getAllCardsWithReminder();
+            this.logger.debug('ReminderControl - Compute all reminders');
+            for (const card of cardsWithReminders) {
                 await this.reminderService.addCardReminder(card);
                 await this.rruleReminderService.addCardReminder(card);
             }
         } catch (error) {
-            this.logger.error('resetReminderDatabase error ' + error);
+            this.logger.warn('resetReminder error ' + error);
         }
         return Promise.resolve(true);
     }

@@ -17,7 +17,7 @@ import logger from './common/server-side/logger';
 
 import ReminderService from './domain/application/reminderService';
 import CardsReminderOpfabServicesInterface from './domain/server-side/cardsReminderOpfabServicesInterface';
-import CardsReminderService from './domain/client-side/cardsRemiderService';
+import CardsReminderService from './domain/client-side/cardsReminderService';
 import {RRuleReminderService} from './domain/application/rruleReminderService';
 import RemindDatabaseService from './domain/server-side/remindDatabaseService';
 import AuthorizationService from './common/server-side/authorizationService';
@@ -49,14 +49,14 @@ const activeOnStartUp = config.get('operatorfabric.cardsReminder.activeOnStartup
 
 const remindDatabaseService = new RemindDatabaseService()
     .setMongoDbConfiguration(config.get('operatorfabric.mongodb'))
-    .setRemindersCollection(ReminderService.REMINDERS_COLLECTION)
+    .setRemindersCollection('reminders')
     .setLogger(logger);
 
 const reminderService = new ReminderService().setLogger(logger).setDatabaseService(remindDatabaseService);
 
 const rRuleRemindDatabaseService = new RemindDatabaseService()
     .setMongoDbConfiguration(config.get('operatorfabric.mongodb'))
-    .setRemindersCollection(RRuleReminderService.REMINDERS_COLLECTION)
+    .setRemindersCollection('rrule_reminders')
     .setLogger(logger);
 
 const rruleReminderService = new RRuleReminderService()

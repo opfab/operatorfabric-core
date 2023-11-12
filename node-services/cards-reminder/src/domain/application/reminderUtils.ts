@@ -10,12 +10,13 @@
 import {Card, Recurrence, HourAndMinutes, TimeSpan} from '../model/card.model';
 import moment from 'moment-timezone';
 
-const MAX_MILLISECONDS_FOR_REMINDING_AFTER_EVENT_STARTS = 60000 * 15; // 15 minutes
 
 export function getNextTimeForRepeating(card: Card, startingDate?: number): number {
     if (card.timeSpans) {
         let nextTime = -1;
+       
         card.timeSpans.forEach((timeSpan) => {
+          
             const timeForRepeating = getNextTimeForRepeatingFromTimeSpan(timeSpan, startingDate);
             if (timeForRepeating !== -1) {
                 if (nextTime === -1 || timeForRepeating < nextTime) nextTime = timeForRepeating;
@@ -32,7 +33,7 @@ function getNextTimeForRepeatingFromTimeSpan(timeSpan: TimeSpan, startingDate?: 
         startingDate = new Date().valueOf();
     }
     if (!timeSpan.recurrence) {
-        if (timeSpan.start + MAX_MILLISECONDS_FOR_REMINDING_AFTER_EVENT_STARTS < startingDate) {
+        if (timeSpan.start < startingDate) {
             return -1;
         } else {
             return timeSpan.start;
@@ -49,7 +50,9 @@ function getNextDateTimeFromRecurrence(StartingDate: number, recurrence: Recurre
         return -1;
     }
 
+    if (!recurrence.timeZone) recurrence.timeZone = "Europe/Paris"
     const nextDateTime = moment(StartingDate).tz(recurrence.timeZone);
+
 
     const startingHoursMinutes = new HourAndMinutes(nextDateTime.hours(), nextDateTime.minutes());
     if (isFirstHoursMinutesInferiorOrEqualToSecondOne(recurrence.hoursAndMinutes, startingHoursMinutes)) {
@@ -116,10 +119,9 @@ function isRecurrenceObjectInValidFormat(recurrence: Recurrence): boolean {
 function moveToValidMonth(nextDateTime: moment.Moment, recurrence: Recurrence) {
     if (!recurrence.months || recurrence.months.length === 0) return;
     if (recurrence.months.includes(nextDateTime.month())) return;
-    let nb_add = 0;
+    // month validity has been checked before 
+    // so it avoids infinite loop for month outside of authorized range
     do {
-        nb_add++;
-        if (nb_add > 12) return; // in case we have an invalid recurrence months array
         nextDateTime.add(1, 'month');
         nextDateTime.set('date', 1);
     } while (!recurrence.months.includes(nextDateTime.month()));

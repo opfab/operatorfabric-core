@@ -67,7 +67,7 @@ export default class RemindDatabaseService {
     public async getItemsToRemindNow(): Promise<any[]> {
         return this.mongoDB
             .collection(this.remindersCollection)
-            .find({hasBeenRemind: false, timeForReminding: {$lte: new Date().valueOf()}})
+            .find({timeForReminding: {$lte: new Date().valueOf()}})
             .toArray();
     }
 
@@ -80,6 +80,15 @@ export default class RemindDatabaseService {
                     {$or: [{endDate: {$exists: false}}, {endDate: {$gte: new Date()}}]}
                 ]
             })
+            .project({
+                id: '$_id',
+                uid: 1,
+                startDate: 1,
+                endDate: 1,
+                secondsBeforeTimeSpanForReminder: 1,
+                timeSpans:1,
+                rRule:1
+            })
             .toArray();
     }
 
@@ -89,9 +98,21 @@ export default class RemindDatabaseService {
 
     public async persistReminder(reminder: any): Promise<void> {
         try {
+            reminder._id = reminder.cardId; // we have a unique entry per card
             await this.mongoDB.collection(this.remindersCollection).insertOne(reminder);
         } catch (error) {
             this.logger.error('Mongo error in insert reminder' + error);
+        }
+        return Promise.resolve();
+    }
+
+    public async updateReminder(updatedReminder: any): Promise<void> {
+        try {
+            await this.mongoDB
+                .collection(this.remindersCollection)
+                .updateOne({cardId: updatedReminder.cardId}, {$set: updatedReminder});
+        } catch (error) {
+            this.logger.error('Mongo error in update reminder' + error);
         }
         return Promise.resolve();
     }
@@ -105,8 +126,22 @@ export default class RemindDatabaseService {
         return Promise.resolve();
     }
 
-    public getCardByUid(uid: string) {
-        return this.mongoDB.collection('cards').findOne({uid: uid});
+    public async getCardByUid(uid: string) {
+        return this.mongoDB.collection('cards').findOne(
+            {uid: uid},
+            {
+                projection: {
+                    id: '$_id',
+                    uid: 1,
+                    startDate: 1,
+                    endDate: 1,
+                    secondsBeforeTimeSpanForReminder: 1,
+                    timeSpans:1,
+                    rRule:1
+
+                }
+            }
+        );
     }
 
     public async clearReminders() {

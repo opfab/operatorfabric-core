@@ -28,14 +28,14 @@ export function getNextTimeForRepeating(card: Card, startingDate?: number): numb
 }
 
 export function getNextDateTimeFromRRule(startingDate: number, card: Card): number {
-    if (card?.rRule?.freq) {
-        const byhourSorted = card.rRule.byhour ? card.rRule.byhour : null;
+    if (card.rRule?.freq) {
+        const byhourSorted = card.rRule.byhour;
         if (byhourSorted) {
             byhourSorted.sort(function (a, b) {
                 return a - b;
             });
         }
-        const byminuteSorted = card.rRule.byminute ? card.rRule.byminute : null;
+        const byminuteSorted = card.rRule.byminute;
         if (byminuteSorted) {
             byminuteSorted.sort(function (a, b) {
                 return a - b;
