@@ -14,7 +14,7 @@ const templateGateway = {
     getEntityName: function (entityId) {
         console.warn(
             new Date().toISOString(),
-            ' WARNING : Use of templateGateway.getEntityName is deprecated , you shall use opfab.users.entities.getEntityName instead'
+            ' WARNING : Use of templateGateway.getEntityName is deprecated , you should use opfab.users.entities.getEntityName instead'
         );
         return opfab.users.entities.getEntityName(entityId);
     },
@@ -22,7 +22,7 @@ const templateGateway = {
     getEntity: function (entityId) {
         console.warn(
             new Date().toISOString(),
-            ' WARNING : Use of templateGateway.getEntity is deprecated , you shall use opfab.users.entities.getEntity instead'
+            ' WARNING : Use of templateGateway.getEntity is deprecated , you should use opfab.users.entities.getEntity instead'
         );
         return opfab.users.entities.getEntity(entityId);
     },
@@ -30,7 +30,7 @@ const templateGateway = {
     getAllEntities: function () {
         console.warn(
             new Date().toISOString(),
-            ' WARNING : Use of templateGateway.getAllEntities is deprecated , you shall use opfab.users.entities.getAllEntities instead'
+            ' WARNING : Use of templateGateway.getAllEntities is deprecated , you should use opfab.users.entities.getAllEntities instead'
         );
         return opfab.users.entities.getAllEntities();
     },
@@ -38,7 +38,7 @@ const templateGateway = {
     redirectToBusinessMenu: function (menuId, menuItemId, urlExtension) {
         console.warn(
             new Date().toISOString(),
-            ' WARNING : Use of templateGateway.redirectToBusinessMenu is deprecated , you shall use opfab.navigate.redirectToBusinessMenu instead'
+            ' WARNING : Use of templateGateway.redirectToBusinessMenu is deprecated , you should use opfab.navigate.redirectToBusinessMenu instead'
         );
         opfab.navigate.redirectToBusinessMenu(menuId, menuItemId, urlExtension);
     },
@@ -49,7 +49,7 @@ const templateGateway = {
     isUserAllowedToRespond: function () {
         console.warn(
             new Date().toISOString(),
-            ' WARNING : Use of templateGateway.isUserAllowedToRespond is deprecated , you shall use opfab.currentCard.isUserAllowedToRespond instead'
+            ' WARNING : Use of templateGateway.isUserAllowedToRespond is deprecated , you should use opfab.currentCard.isUserAllowedToRespond instead'
         );
         return opfab.currentCard.isUserAllowedToRespond();
     },
@@ -58,7 +58,7 @@ const templateGateway = {
     isUserMemberOfAnEntityRequiredToRespond: function () {
         console.warn(
             new Date().toISOString(),
-            ' WARNING : Use of templateGateway.isUserMemberOfAnEntityRequiredToRespond is deprecated , you shall use opfab.currentCard.isUserMemberOfAnEntityRequiredToRespond instead'
+            ' WARNING : Use of templateGateway.isUserMemberOfAnEntityRequiredToRespond is deprecated , you should use opfab.currentCard.isUserMemberOfAnEntityRequiredToRespond instead'
         );
         return opfab.currentCard.isUserMemberOfAnEntityRequiredToRespond();
     },
@@ -67,7 +67,7 @@ const templateGateway = {
     getEntitiesAllowedToRespond() {
         console.warn(
             new Date().toISOString(),
-            ' WARNING : Use of templateGateway.getEntitiesAllowedToRespond is deprecated , you shall use opfab.currentCard.getEntitiesAllowedToRespond instead'
+            ' WARNING : Use of templateGateway.getEntitiesAllowedToRespond is deprecated , you should use opfab.currentCard.getEntitiesAllowedToRespond instead'
         );
         return opfab.currentCard.getEntitiesAllowedToRespond();
     },
@@ -75,7 +75,7 @@ const templateGateway = {
     getEntityUsedForUserResponse() {
         console.warn(
             new Date().toISOString(),
-            ' WARNING : Use of templateGateway.getEntityUsedForUserResponse is deprecated , you shall use opfab.currentCard.getEntityUsedForUserResponse instead'
+            ' WARNING : Use of templateGateway.getEntityUsedForUserResponse is deprecated , you should use opfab.currentCard.getEntityUsedForUserResponse instead'
         );
         return opfab.currentCard.getEntityUsedForUserResponse();
     },
@@ -83,7 +83,7 @@ const templateGateway = {
     getDisplayContext() {
         console.warn(
             new Date().toISOString(),
-            ' WARNING : Use of templateGateway.getDisplayContext is deprecated , you shall use opfab.currentCard.getDisplayContext instead'
+            ' WARNING : Use of templateGateway.getDisplayContext is deprecated , you should use opfab.currentCard.getDisplayContext instead'
         );
         return opfab.currentCard.getDisplayContext();
     },
@@ -91,7 +91,7 @@ const templateGateway = {
     displayLoadingSpinner() {
         console.warn(
             new Date().toISOString(),
-            ' WARNING : Use of templateGateway.displayLoadingSpinner is deprecated , you shall use opfab.currentCard.displayLoadingSpinner instead'
+            ' WARNING : Use of templateGateway.displayLoadingSpinner is deprecated , you should use opfab.currentCard.displayLoadingSpinner instead'
         );
         opfab.currentCard.displayLoadingSpinner();
     },
@@ -99,7 +99,7 @@ const templateGateway = {
     hideLoadingSpinner() {
         console.warn(
             new Date().toISOString(),
-            ' WARNING : Use of templateGateway.hideLoadingSpinner is deprecated , you shall use opfab.currentCard.hideLoadingSpinner instead'
+            ' WARNING : Use of templateGateway.hideLoadingSpinner is deprecated , you should use opfab.currentCard.hideLoadingSpinner instead'
         );
         opfab.currentCard.hideLoadingSpinner();
     },
@@ -111,7 +111,7 @@ const templateGateway = {
     get childCards() {
         console.warn(
             new Date().toISOString(),
-            ' WARNING : Use of templateGateway.childCards is deprecated , you shall use opfab.currentCard.getChildCards() instead'
+            ' WARNING : Use of templateGateway.childCards is deprecated , you should use opfab.currentCard.getChildCards() instead'
         );
         return opfab.currentCard.getChildCards();
     },
@@ -119,7 +119,7 @@ const templateGateway = {
     get isLocked() {
         console.warn(
             new Date().toISOString(),
-            ' WARNING : Use of templateGateway.isLocked is deprecated , you shall use opfab.currentCard.isResponseLocked() instead'
+            ' WARNING : Use of templateGateway.isLocked is deprecated , you should use opfab.currentCard.isResponseLocked() instead'
         );
         return opfab.currentCard.isResponseLocked();
     },
@@ -127,7 +127,7 @@ const templateGateway = {
     set lockAnswer(value) {
         console.warn(
             new Date().toISOString(),
-            ' WARNING : Use of templateGateway.lockAnswer is deprecated , you shall use opfab.currentCard.listenToResponseLock() instead'
+            ' WARNING : Use of templateGateway.lockAnswer is deprecated , you should use opfab.currentCard.listenToResponseLock() instead'
         );
         opfab.currentCard.listenToResponseLock(value);
     },
@@ -135,7 +135,7 @@ const templateGateway = {
     set unlockAnswer(value) {
         console.warn(
             new Date().toISOString(),
-            ' WARNING : Use of templateGateway.unlockAnswer is deprecated , you shall use opfab.currentCard.listenToResponseUnlock() instead'
+            ' WARNING : Use of templateGateway.unlockAnswer is deprecated , you should use opfab.currentCard.listenToResponseUnlock() instead'
         );
         opfab.currentCard.listenToResponseUnlock(value);
     },
@@ -143,7 +143,7 @@ const templateGateway = {
     set setLttdExpired(value) {
         console.warn(
             new Date().toISOString(),
-            ' WARNING : Use of templateGateway.setLttdExpired is deprecated , you shall use opfab.currentCard.listenToLttdExpired() instead'
+            ' WARNING : Use of templateGateway.setLttdExpired is deprecated , you should use opfab.currentCard.listenToLttdExpired() instead'
         );
         opfab.currentCard.listenToLttdExpired(value);
     },
@@ -151,7 +151,7 @@ const templateGateway = {
     set onStyleChange(value) {
         console.warn(
             new Date().toISOString(),
-            ' WARNING : Use of templateGateway.onStyleChange is deprecated , you shall use opfab.currentCard.listenToStyleChange() instead'
+            ' WARNING : Use of templateGateway.onStyleChange is deprecated , you should use opfab.currentCard.listenToStyleChange() instead'
         );
         opfab.currentCard.listenToStyleChange(value);
     },
@@ -159,7 +159,7 @@ const templateGateway = {
     set setScreenSize(value) {
         console.warn(
             new Date().toISOString(),
-            ' WARNING : Use of templateGateway.setScreenSize is deprecated , you shall use opfab.currentCard.listenToScreenSize() instead'
+            ' WARNING : Use of templateGateway.setScreenSize is deprecated , you should use opfab.currentCard.listenToScreenSize() instead'
         );
         opfab.currentCard.listenToScreenSize(value);
     },
@@ -167,7 +167,7 @@ const templateGateway = {
     set onTemplateRenderingComplete(value) {
         console.warn(
             new Date().toISOString(),
-            ' WARNING : Use of templateGateway.onTemplateRenderingComplete is deprecated , you shall use opfab.currentCard.listenToTemplateRenderingComplete() instead'
+            ' WARNING : Use of templateGateway.onTemplateRenderingComplete is deprecated , you should use opfab.currentCard.listenToTemplateRenderingComplete() instead'
         );
         opfab.currentCard.listenToTemplateRenderingComplete(value);
     },
@@ -175,7 +175,7 @@ const templateGateway = {
     set getUserResponse(value) {
         console.warn(
             new Date().toISOString(),
-            ' WARNING : Use of templateGateway.getUserResponse is deprecated , you shall use opfab.currentCard.registerFunctionToGetUserResponse() instead'
+            ' WARNING : Use of templateGateway.getUserResponse is deprecated , you should use opfab.currentCard.registerFunctionToGetUserResponse() instead'
         );
         opfab.currentCard.registerFunctionToGetUserResponse(value);
     },
@@ -183,7 +183,7 @@ const templateGateway = {
     set applyChildCards(value) {
         console.warn(
             new Date().toISOString(),
-            ' WARNING : Use of templateGateway.applyChildCards is deprecated , you shall use opfab.currentCard.listenToChildCards() instead'
+            ' WARNING : Use of templateGateway.applyChildCards is deprecated , you should use opfab.currentCard.listenToChildCards() instead'
         );
         opfab.currentCard.listenToChildCards(value);
     }

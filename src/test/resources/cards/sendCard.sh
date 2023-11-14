@@ -49,3 +49,5 @@ else
     echo "send card $1 (url: $url)"
     curl -X POST $url:2102/cards -H "Authorization: Bearer $token" -H "Content-type:application/json" --data "$(envsubst <$1)"
 fi
+
+echo 

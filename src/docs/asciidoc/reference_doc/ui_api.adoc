@@ -138,7 +138,7 @@ To adapt the template content to the display context it is possible to get from 
 
 ===  Function getEntitiesAllowedToRespond
 
-If inside your template, you want to get the ids of the entities allowed to send a response, you can call the method getEntitiesAllowedToRespond. This method returns an array containing the ids. An example of usage can be found in the file https://github.com/opfab/operatorfabric-core/tree/master/src/test/resources/bundles/messageOrQuestionExample/template/question.handlebars[src/test/resources/bundles/messageOrQuestionExample/template/question.handlebars].
+If inside your template, you want to get the ids of the entities allowed to send a response, you can call the method getEntitiesAllowedToRespond. This method returns an array containing the ids.
 
 ```
     const entities = opfab.currentCard.getEntitiesAllowedToRespond(); 
@@ -146,11 +146,19 @@ If inside your template, you want to get the ids of the entities allowed to send
 
 === Function  getEntityUsedForUserResponse
 
-If inside your template, you want to get the id of the entity used by the user to send a response, you can call the method getEntityUsedForUserResponse. 
-An example of usage can be found in the file https://github.com/opfab/operatorfabric-core/tree/master/src/test/resources/bundles/messageOrQuestionExample/template/question.handlebars[src/test/resources/bundles/messageOrQuestionExample/template/question.handlebars].
+If inside your template, you want to get the id of the entity used by the user to send a response, you can call the method getEntityUsedForUserResponse. This method is deprecated and you should favor the use of the method getEntitiesUsableForUserResponse.
 
 ```
     const entity = opfab.currentCard.getEntityUsedForUserResponse()
+        
+```
+
+=== Function  getEntitiesUsableForUserResponse
+
+If inside your template, you want to get the ids of the entities the user can answer on behalf of, you can call the method getEntitiesUsableForUserResponse. This method will return an array containing the entities' ids
+
+```
+    const entities = opfab.currentCard.getEntitiesUsableForUserResponse()
         
 ```
 

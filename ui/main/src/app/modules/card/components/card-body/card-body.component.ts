@@ -306,7 +306,8 @@ export class CardBodyComponent implements OnChanges, OnInit, OnDestroy {
         this.opfabAPIService.currentCard.isUserMemberOfAnEntityRequiredToRespond =
             this.userMemberOfAnEntityRequiredToRespondAndAllowedToSendCards;
         this.opfabAPIService.currentCard.entityUsedForUserResponse = this.userEntityIdToUseForResponse;
-    }
+        this.opfabAPIService.currentCard.entitiesUsableForUserResponse = this.userEntityIdsPossibleForResponse;
+        }
 
     private stopRegularlyCheckLttd() {
         this.regularlyLttdCheckActive = false;

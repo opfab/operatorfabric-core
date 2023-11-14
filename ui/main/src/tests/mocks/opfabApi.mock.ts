@@ -33,6 +33,7 @@ export function initOpfabApiMock() {
         isUserMemberOfAnEntityRequiredToRespond: function () {},
         getEntitiesAllowedToRespond: function () {},
         getEntityUsedForUserResponse: function () {},
+        getEntitiesUsableForUserResponse: function () {},
         getDisplayContext: function () {},
         isResponseLocked: function () {},
         getChildCards: function () {},
