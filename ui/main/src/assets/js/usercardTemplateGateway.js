@@ -17,7 +17,7 @@ const usercardTemplateGateway = {
     getEditionMode() {
         console.warn(
             new Date().toISOString(),
-            ' WARNING : Use of usercardTemplateGateway.getEditionMode is deprecated , you shall use opfab.currentUserCard.getEditionMode instead'
+            ' WARNING : Use of usercardTemplateGateway.getEditionMode is deprecated , you should use opfab.currentUserCard.getEditionMode instead'
         );
         return opfab.currentUserCard.getEditionMode();
     },
@@ -25,7 +25,7 @@ const usercardTemplateGateway = {
     getUserEntityChildCardFromCurrentCard() {
         console.warn(
             new Date().toISOString(),
-            ' WARNING : Use of usercardTemplateGateway.getUserEntityChildCardFromCurrentCard is deprecated , you shall use opfab.currentUserCard.getUserEntityChildCard instead'
+            ' WARNING : Use of usercardTemplateGateway.getUserEntityChildCardFromCurrentCard is deprecated , you should use opfab.currentUserCard.getUserEntityChildCard instead'
         );
         return opfab.currentUserCard.getUserEntityChildCard();
        
@@ -34,7 +34,7 @@ const usercardTemplateGateway = {
     getCurrentState() {
         console.warn(
             new Date().toISOString(),
-            ' WARNING : Use of usercardTemplateGateway.getCurrentState is deprecated , you shall use opfab.currentUserCard.getState instead'
+            ' WARNING : Use of usercardTemplateGateway.getCurrentState is deprecated , you should use opfab.currentUserCard.getState instead'
         );
         return opfab.currentUserCard.getState();
         
@@ -43,7 +43,7 @@ const usercardTemplateGateway = {
     getCurrentProcess() {
         console.warn(
             new Date().toISOString(),
-            ' WARNING : Use of usercardTemplateGateway.getCurrentProcess is deprecated , you shall use opfab.currentUserCard.getProcessId instead'
+            ' WARNING : Use of usercardTemplateGateway.getCurrentProcess is deprecated , you should use opfab.currentUserCard.getProcessId instead'
         );
         return opfab.currentUserCard.getProcessId();
     },
@@ -51,7 +51,7 @@ const usercardTemplateGateway = {
     getStartDate() {
         console.warn(
             new Date().toISOString(),
-            ' WARNING : Use of usercardTemplateGateway.getStartDate is deprecated , you shall use opfab.currentUserCard.getStartDate instead'
+            ' WARNING : Use of usercardTemplateGateway.getStartDate is deprecated , you should use opfab.currentUserCard.getStartDate instead'
         );
         return opfab.currentUserCard.getStartDate();
     },
@@ -59,7 +59,7 @@ const usercardTemplateGateway = {
     getEndDate() {
         console.warn(
             new Date().toISOString(),
-            ' WARNING : Use of usercardTemplateGateway.getEndDate is deprecated , you shall use opfab.currentUserCard.getEndDate instead'
+            ' WARNING : Use of usercardTemplateGateway.getEndDate is deprecated , you should use opfab.currentUserCard.getEndDate instead'
         );
         return opfab.currentUserCard.getEndDate();
     },
@@ -67,7 +67,7 @@ const usercardTemplateGateway = {
     getLttd() {
         console.warn(
             new Date().toISOString(),
-            ' WARNING : Use of usercardTemplateGateway.getLttd is deprecated , you shall use opfab.currentUserCard.getLttd instead'
+            ' WARNING : Use of usercardTemplateGateway.getLttd is deprecated , you should use opfab.currentUserCard.getLttd instead'
         );
         return opfab.currentUserCard.getLttd();
 
@@ -76,7 +76,7 @@ const usercardTemplateGateway = {
     getExpirationDate() {
         console.warn(
             new Date().toISOString(),
-            ' WARNING : Use of usercardTemplateGateway.getExpirationDate is deprecated , you shall use opfab.currentUserCard.getExpirationDate instead'
+            ' WARNING : Use of usercardTemplateGateway.getExpirationDate is deprecated , you should use opfab.currentUserCard.getExpirationDate instead'
         );
         return opfab.currentUserCard.getExpirationDate();
     },
@@ -84,7 +84,7 @@ const usercardTemplateGateway = {
     getSelectedEntityRecipients() {
         console.warn(
             new Date().toISOString(),
-            ' WARNING : Use of usercardTemplateGateway.getSelectedEntityRecipients is deprecated , you shall use opfab.currentUserCard.getSelectedEntityRecipients instead'
+            ' WARNING : Use of usercardTemplateGateway.getSelectedEntityRecipients is deprecated , you should use opfab.currentUserCard.getSelectedEntityRecipients instead'
         );
         return opfab.currentUserCard.getSelectedEntityRecipients();
     },
@@ -92,7 +92,7 @@ const usercardTemplateGateway = {
     getSelectedEntityForInformationRecipients() {
         console.warn(
             new Date().toISOString(),
-            ' WARNING : Use of usercardTemplateGateway.getSelectedEntityForInformationRecipients is deprecated , you shall use opfab.currentUserCard.getSelectedEntityForInformationRecipients instead'
+            ' WARNING : Use of usercardTemplateGateway.getSelectedEntityForInformationRecipients is deprecated , you should use opfab.currentUserCard.getSelectedEntityForInformationRecipients instead'
         );
         return opfab.currentUserCard.getSelectedEntityForInformationRecipients();
     },
@@ -100,7 +100,7 @@ const usercardTemplateGateway = {
     setDropdownEntityRecipientList: function(recipients) {
         console.warn(
             new Date().toISOString(),
-            ' WARNING : Use of usercardTemplateGateway.setDropdownEntityRecipientList is deprecated , you shall use opfab.currentUserCard.setDropdownEntityRecipientList instead'
+            ' WARNING : Use of usercardTemplateGateway.setDropdownEntityRecipientList is deprecated , you should use opfab.currentUserCard.setDropdownEntityRecipientList instead'
         );
         opfab.currentUserCard.setDropdownEntityRecipientList(recipients);
     },
@@ -108,7 +108,7 @@ const usercardTemplateGateway = {
     setDropdownEntityRecipientForInformationList: function(recipients) {
         console.warn(
             new Date().toISOString(),
-            ' WARNING : Use of usercardTemplateGateway.setDropdownEntityRecipientForInformationList is deprecated , you shall use opfab.currentUserCard.setDropdownEntityRecipientForInformationList instead'
+            ' WARNING : Use of usercardTemplateGateway.setDropdownEntityRecipientForInformationList is deprecated , you should use opfab.currentUserCard.setDropdownEntityRecipientForInformationList instead'
         );
         opfab.currentUserCard.setDropdownEntityRecipientForInformationList(recipients);
     },
@@ -116,7 +116,7 @@ const usercardTemplateGateway = {
     setInitialStartDate: function (startDate) {
         console.warn(
             new Date().toISOString(),
-            ' WARNING : Use of usercardTemplateGateway.setInitialStartDate is deprecated , you shall use opfab.currentUserCard.setInitialStartDate instead'
+            ' WARNING : Use of usercardTemplateGateway.setInitialStartDate is deprecated , you should use opfab.currentUserCard.setInitialStartDate instead'
         );
         opfab.currentUserCard.setInitialStartDate(startDate);
     },
@@ -124,7 +124,7 @@ const usercardTemplateGateway = {
     setInitialEndDate: function (endDate) {
         console.warn(
             new Date().toISOString(),
-            ' WARNING : Use of usercardTemplateGateway.setInitialEndDate is deprecated , you shall use opfab.currentUserCard.setInitialEndDate instead'
+            ' WARNING : Use of usercardTemplateGateway.setInitialEndDate is deprecated , you should use opfab.currentUserCard.setInitialEndDate instead'
         );
         opfab.currentUserCard.setInitialEndDate(endDate);
     },
@@ -132,7 +132,7 @@ const usercardTemplateGateway = {
     setInitialLttd: function (lttd) {
         console.warn(
             new Date().toISOString(),
-            ' WARNING : Use of usercardTemplateGateway.setInitialLttd is deprecated , you shall use opfab.currentUserCard.setInitialLttd instead'
+            ' WARNING : Use of usercardTemplateGateway.setInitialLttd is deprecated , you should use opfab.currentUserCard.setInitialLttd instead'
         );
         opfab.currentUserCard.setInitialLttd(lttd);
     },
@@ -140,7 +140,7 @@ const usercardTemplateGateway = {
     setInitialExpirationDate: function (expirationDate) {
         console.warn(
             new Date().toISOString(),
-            ' WARNING : Use of usercardTemplateGateway.setInitialExpirationDate is deprecated , you shall use opfab.currentUserCard.setInitialExpirationDate instead'
+            ' WARNING : Use of usercardTemplateGateway.setInitialExpirationDate is deprecated , you should use opfab.currentUserCard.setInitialExpirationDate instead'
         );
         opfab.currentUserCard.setInitialExpirationDate(expirationDate);
     },
@@ -148,7 +148,7 @@ const usercardTemplateGateway = {
     setInitialSelectedRecipients(recipients) {
         console.warn(
             new Date().toISOString(),
-            ' WARNING : Use of userCardTemplateGateway.setInitialSelectedRecipients is deprecated , you shall use opfab.currentUserCard.setInitialSelectedRecipients instead'
+            ' WARNING : Use of userCardTemplateGateway.setInitialSelectedRecipients is deprecated , you should use opfab.currentUserCard.setInitialSelectedRecipients instead'
         );
         opfab.currentUserCard.setInitialSelectedRecipients(recipients);
     },
@@ -157,7 +157,7 @@ const usercardTemplateGateway = {
     setInitialSelectedRecipientsForInformation(recipients) {
         console.warn(
             new Date().toISOString(),
-            ' WARNING : Use of userCardTemplateGateway.setInitialSelectedRecipientsForInformation is deprecated , you shall use opfab.currentUserCard.setInitialSelectedRecipientsForInformation instead'
+            ' WARNING : Use of userCardTemplateGateway.setInitialSelectedRecipientsForInformation is deprecated , you should use opfab.currentUserCard.setInitialSelectedRecipientsForInformation instead'
         );
         opfab.currentUserCard.setInitialSelectedRecipientsForInformation(recipients);
     },
@@ -165,7 +165,7 @@ const usercardTemplateGateway = {
     setInitialSeverity: function (initialSeverity) {
         console.warn(
             new Date().toISOString(),
-            ' WARNING : Use of usercardTemplateGateway.setInitialSeverity is deprecated , you shall use opfab.currentUserCard.setInitialSeverity instead'
+            ' WARNING : Use of usercardTemplateGateway.setInitialSeverity is deprecated , you should use opfab.currentUserCard.setInitialSeverity instead'
         );
         opfab.currentUserCard.setInitialSeverity(initialSeverity);
     },
@@ -173,7 +173,7 @@ const usercardTemplateGateway = {
     set getSpecificCardInformation(value) {
         console.warn(
             new Date().toISOString(),
-            ' WARNING : Use of usercardTemplateGateway.getSpecificCardInformation is deprecated , you shall use opfab.currentUserCard.registerFunctionToGetSpecificCardInformation() instead'
+            ' WARNING : Use of usercardTemplateGateway.getSpecificCardInformation is deprecated , you should use opfab.currentUserCard.registerFunctionToGetSpecificCardInformation() instead'
         );
         opfab.currentUserCard.registerFunctionToGetSpecificCardInformation(value);
     },
@@ -182,7 +182,7 @@ const usercardTemplateGateway = {
     set setEntityUsedForSendingCard(value) {
         console.warn(
             new Date().toISOString(),
-            ' WARNING : Use of userCardTemplateGateway.setEntityUsedForSendingCard is deprecated , you shall use opfab.currentUserCard.listenToEntityUsedForSendingCard instead'
+            ' WARNING : Use of userCardTemplateGateway.setEntityUsedForSendingCard is deprecated , you should use opfab.currentUserCard.listenToEntityUsedForSendingCard instead'
         );
         opfab.currentUserCard.listenToEntityUsedForSendingCard(value);
     },

@@ -32,7 +32,7 @@
 <div> onTemplateRenderingComplete : <span id="opfab-currentCard-onTemplateRenderingComplete"> </span>  </div>
 
 <H3> OPFAB CALLS</H3>
-<div><span id="showCardLink" style="cursor:pointer;color:blue;text-decoration:underline;" onclick="opfab.navigate.showCardInFeed('defaultProcess.process1')">LINK TO ANOTHER CARD</span></div>
+<div><span id="showCardLink" style="cursor:pointer;color:rgb(19, 85, 170);text-decoration:underline;" onclick="opfab.navigate.showCardInFeed('defaultProcess.process1')">LINK TO ANOTHER CARD</span></div>
 
 <H3> HANDLEBARS TEMPLATING </H3>
 
@@ -71,8 +71,8 @@ function loadData() {
   responses += opfab.currentCard.isUserMemberOfAnEntityRequiredToRespond();
   responses += '</span></div>';
 
-  responses += '<div> getEntityUsedForUserResponse() : <span id="opfab-currentCard-getEntityUsedForUserResponse">';
-  responses += opfab.currentCard.getEntityUsedForUserResponse();
+  responses += '<div> getEntitiesUsableForUserResponse() : <span id="opfab-currentCard-getEntitiesUsableForUserResponse">';
+  responses += opfab.currentCard.getEntitiesUsableForUserResponse();
   responses += '</span></div>';
 
   responses += '<div> getDisplayContext() : <span id="opfab-currentCard-getDisplayContext">';

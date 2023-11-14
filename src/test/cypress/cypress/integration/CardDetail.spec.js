@@ -48,7 +48,7 @@ describe('Card detail', function () {
             cy.get('#opfab-users-entities-getEntityName-unknownEntity').contains('unknownEntity');
             cy.get('#opfab-currentCard-isUserAllowedToRespond').contains('true');
             cy.get('#opfab-currentCard-isUserMemberOfAnEntityRequiredToRespond').contains('true');
-            cy.get('#opfab-currentCard-getEntityUsedForUserResponse').contains(/^ENTITY1_FR$/);
+            cy.get('#opfab-currentCard-getEntitiesUsableForUserResponse').contains(/^ENTITY1_FR$/);
             cy.get('#opfab-currentCard-getDisplayContext').contains(/^realtime$/);
             cy.get('#opfab-users-entities-getAllEntities').contains(
                 'entity[0]:id=ENTITY1_FR,name=Control Center FR North,description=Control Center FR North,entityAllowedToSendCard=true,parents=ENTITY_FR,labels=FR1 label'
