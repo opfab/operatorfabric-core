@@ -36,11 +36,11 @@ export default class CardsReminderService {
             .setReminderService(reminderService)
             .setRemindDatabaseService(remindDatabaseService)
             .setLogger(logger);
+        this.checkRegularly();
     }
 
     public start() {
         this.active = true;
-        this.checkRegularly();
     }
 
     public stop() {
@@ -66,5 +66,6 @@ export default class CardsReminderService {
                 .catch((error) => this.logger.warn('error during periodic check' + error))
                 .finally(() => setTimeout(() => this.checkRegularly(), this.checkPeriodInSeconds * 1000));
         }
+        else setTimeout(() => this.checkRegularly(), this.checkPeriodInSeconds * 1000);
     }
 }

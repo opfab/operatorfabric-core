@@ -32,14 +32,7 @@ let opfabServicesInterfaceStub = new OpfabServicesInterfaceStub(
     remindDatabaseServiceStub
 );
 
-let cardsReminderService: CardsReminderService = new CardsReminderService(
-    opfabServicesInterfaceStub,
-    rruleReminderService,
-    reminderService,
-    remindDatabaseServiceStub,
-    5,
-    logger
-);
+let cardsReminderService: CardsReminderService ;
 
 function setCurrentTime(dateTime: string) {
     jest.setSystemTime(new Date(dateTime));
@@ -107,6 +100,14 @@ describe('Cards reminder with rrule structure', function () {
 
         jest.useFakeTimers();
         setCurrentTime('2017-01-01 01:00');
+        cardsReminderService = new CardsReminderService(
+            opfabServicesInterfaceStub,
+            rruleReminderService,
+            reminderService,
+            remindDatabaseServiceStub,
+            5,
+            logger
+        );
         cardsReminderService.start();
     });
 
@@ -116,7 +117,7 @@ describe('Cards reminder with rrule structure', function () {
     });
 
     it('GIVEN a card was sent WHEN current date (02:06) > remind date - secondsBeforeTimeSpanForReminder (02:05) THEN remind is sent', async function () {
-        expect(cardsReminderService.isActive()).toBeTruthy();
+        expect(cardsReminderService.isActive()).toBeTruthy();        
         await jest.advanceTimersByTimeAsync(6000);
         await jest.advanceTimersByTimeAsync(6000);
         await sendCard(getTestCard());
