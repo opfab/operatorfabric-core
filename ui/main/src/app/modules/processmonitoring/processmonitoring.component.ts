@@ -96,7 +96,6 @@ export class ProcessMonitoringComponent implements OnDestroy, OnInit, AfterViewI
     selectedCardId: string;
 
     constructor(
-        private dateTimeFormatter: DateTimeFormatterService,
         private cardService: CardService,
         private translationService: TranslationService,
         private modalService: NgbModal,
@@ -262,7 +261,7 @@ export class ProcessMonitoringComponent implements OnDestroy, OnInit, AfterViewI
     }
 
     displayTime(date) {
-        return this.dateTimeFormatter.getFormattedDateAndTimeFromEpochDate(date);
+        return DateTimeFormatterService.getFormattedDateAndTimeFromEpochDate(date);
     }
 
     exportToExcel(): void {

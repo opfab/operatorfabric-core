@@ -28,7 +28,6 @@ export class InfoComponent implements OnInit {
     timeToDisplay: string;
 
     constructor(
-        private dateTimeFormatter: DateTimeFormatterService,
         private applicationEventsService: ApplicationEventsService
     ) {}
 
@@ -46,7 +45,7 @@ export class InfoComponent implements OnInit {
     }
 
     updateTime(): void {
-        this.timeToDisplay = this.dateTimeFormatter.getFormattedTimeFromEpochDate(new Date().valueOf());
+        this.timeToDisplay = DateTimeFormatterService.getFormattedTimeFromEpochDate(new Date().valueOf());
         setTimeout(() => {
             this.updateTime();
         }, 1000);

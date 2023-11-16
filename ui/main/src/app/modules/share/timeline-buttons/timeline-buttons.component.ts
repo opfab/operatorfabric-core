@@ -46,7 +46,6 @@ export class TimelineButtonsComponent implements OnInit, OnDestroy {
     private isDestroyed = false;
 
     constructor(
-        private dateTimeFormatter: DateTimeFormatterService,
         private lightCardsFeedFilterService: LightCardsFeedFilterService
     ) {}
 
@@ -208,14 +207,14 @@ export class TimelineButtonsComponent implements OnInit, OnDestroy {
              * To compute start day of week add 2 days to startDate to avoid changing week passing from locale with saturday as first day of week
              * to a locale with monday as first day of week
              */
-            let startOfWeek = moment(startDomain)
+            const startOfWeek = moment(startDomain)
                 .add(2, 'day')
                 .startOf('week')
                 .minutes(0)
                 .second(0)
                 .millisecond(0)
                 .valueOf();
-            let endOfWeek = moment(startDomain)
+            const endOfWeek = moment(startDomain)
                 .add(2, 'day')
                 .startOf('week')
                 .minutes(0)
@@ -247,19 +246,19 @@ export class TimelineButtonsComponent implements OnInit, OnDestroy {
         const date = moment(value);
         switch (this.currentDomainId) {
             case 'TR':
-                return this.dateTimeFormatter.getFormattedDateAndTimeFromEpochDate(value);
+                return DateTimeFormatterService.getFormattedDateAndTimeFromEpochDate(value);
             case 'J':
-                return this.dateTimeFormatter.getFormattedDateFromEpochDate(value);
+                return DateTimeFormatterService.getFormattedDateFromEpochDate(value);
             case '7D':
-                return this.dateTimeFormatter.getFormattedDateAndTimeFromEpochDate(value);
+                return DateTimeFormatterService.getFormattedDateAndTimeFromEpochDate(value);
             case 'W':
-                return this.dateTimeFormatter.getFormattedDateFromEpochDate(value);
+                return DateTimeFormatterService.getFormattedDateFromEpochDate(value);
             case 'M':
-                return this.dateTimeFormatter.getFormattedDateFromEpochDate(value);
+                return DateTimeFormatterService.getFormattedDateFromEpochDate(value);
             case 'Y':
                 return date.format('yyyy');
             default:
-                return this.dateTimeFormatter.getFormattedDateFromEpochDate(value);
+                return DateTimeFormatterService.getFormattedDateFromEpochDate(value);
         }
     }
 

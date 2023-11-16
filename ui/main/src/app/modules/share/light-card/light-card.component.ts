@@ -56,7 +56,6 @@ export class LightCardComponent implements OnInit, OnDestroy {
 
     constructor(
         private router: Router,
-        private dateTimeFormatter: DateTimeFormatterService,
         private groupedCardsService: GroupedCardsService,
         private soundNotificationService: SoundNotificationService,
         private mapService: MapService,
@@ -140,7 +139,7 @@ export class LightCardComponent implements OnInit, OnDestroy {
     }
 
     handleDate(timeStamp: number): string {
-        return this.dateTimeFormatter.getFormattedDateAndTimeFromEpochDate(timeStamp);
+        return DateTimeFormatterService.getFormattedDateAndTimeFromEpochDate(timeStamp);
     }
 
     public select($event) {

@@ -37,7 +37,6 @@ export class CardFooterTextComponent implements OnChanges,OnInit {
     private unsubscribe$: Subject<void> = new Subject<void>();
 
     constructor(
-        private dateTimeFormatterService: DateTimeFormatterService,
         private lightCardsStoreService: LightCardsStoreService
     ) {
         const userWithPerimeters = UserService.getCurrentUserWithPerimeters();
@@ -65,11 +64,11 @@ export class CardFooterTextComponent implements OnChanges,OnInit {
     }
 
     public formatDate(date: number) {
-        return this.dateTimeFormatterService.getFormattedDateFromEpochDate(date);
+        return DateTimeFormatterService.getFormattedDateFromEpochDate(date);
     }
 
     public formatTime(date: number) {
-        return this.dateTimeFormatterService.getFormattedTimeFromEpochDate(date);
+        return DateTimeFormatterService.getFormattedTimeFromEpochDate(date);
     }
 
     private computeFromEntityOrRepresentative() {

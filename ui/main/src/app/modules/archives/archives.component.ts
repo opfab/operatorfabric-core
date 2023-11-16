@@ -87,7 +87,6 @@ export class ArchivesComponent implements OnDestroy, OnInit {
     displayContext: any = DisplayContext.ARCHIVE;
 
     constructor(
-        private dateTimeFormatter: DateTimeFormatterService,
         private cardService: CardService,
         private translationService: TranslationService,
         private modalService: NgbModal,
@@ -288,7 +287,7 @@ export class ArchivesComponent implements OnDestroy, OnInit {
     }
 
     displayTime(date) {
-        return this.dateTimeFormatter.getFormattedDateAndTimeFromEpochDate(date);
+        return DateTimeFormatterService.getFormattedDateAndTimeFromEpochDate(date);
     }
 
     // EXPORT TO EXCEL
@@ -323,7 +322,7 @@ export class ArchivesComponent implements OnDestroy, OnInit {
                         if (this.filtersTemplate.isProcessGroupFilterVisible())
                             exportArchiveData.push({
                                 [severityColumnName]: this.translationService.translateSeverity(card.severity),
-                                [publishDateColumnName]: this.dateTimeFormatter.getFormattedDateAndTimeFromEpochDate(
+                                [publishDateColumnName]: DateTimeFormatterService.getFormattedDateAndTimeFromEpochDate(
                                     card.publishDate
                                 ),
                                 [publisherColumnName]: EntitiesService.getEntityName(card.publisher),
@@ -338,7 +337,7 @@ export class ArchivesComponent implements OnDestroy, OnInit {
                         else
                             exportArchiveData.push({
                                 [severityColumnName]: this.translationService.translateSeverity(card.severity),
-                                [publishDateColumnName]: this.dateTimeFormatter.getFormattedDateAndTimeFromEpochDate(
+                                [publishDateColumnName]: DateTimeFormatterService.getFormattedDateAndTimeFromEpochDate(
                                     card.publishDate
                                 ),
                                 [publisherColumnName]: EntitiesService.getEntityName(card.publisher),
@@ -401,11 +400,11 @@ export class ArchivesComponent implements OnDestroy, OnInit {
     }
 
     getFormattedDate(date: number): any {
-        return this.dateTimeFormatter.getFormattedDateFromEpochDate(date);
+        return DateTimeFormatterService.getFormattedDateFromEpochDate(date);
     }
 
     getFormattedTime(date: number): any {
-        return this.dateTimeFormatter.getFormattedTimeFromEpochDate(date);
+        return DateTimeFormatterService.getFormattedTimeFromEpochDate(date);
     }
 
     getEntityRecipientsNames(entityRecipients: string[], maxLength?: number): string[] {
