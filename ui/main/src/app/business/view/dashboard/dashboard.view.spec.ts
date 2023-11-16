@@ -25,7 +25,6 @@ import {firstValueFrom, skip} from 'rxjs';
 import {Severity} from '@ofModel/light-card.model';
 import {Utilities} from 'app/business/common/utilities';
 import {FilterType} from '@ofModel/feed-filter.model';
-import {AcknowledgeService} from '../../services/acknowledge.service';
 import {LightCardsFeedFilterService} from 'app/business/services/lightcards/lightcards-feed-filter.service';
 import {GroupedCardsService} from 'app/business/services/lightcards/grouped-cards.service';
 
@@ -36,7 +35,6 @@ describe('Dashboard', () => {
     let lightCardsStoreService: LightCardsStoreService;
     let lightCardsFeedFilterService: LightCardsFeedFilterService;
     let opfabEventStreamServerMock: OpfabEventStreamServerMock;
-    let acknowledgeService: AcknowledgeService;
 
     beforeEach(() => {
         userServerMock = new UserServerMock();
@@ -47,11 +45,9 @@ describe('Dashboard', () => {
         opfabEventStreamServerMock = new OpfabEventStreamServerMock();
 
         OpfabEventStreamService.setEventStreamServer(opfabEventStreamServerMock);
-        acknowledgeService = new AcknowledgeService(null);
 
         lightCardsStoreService = new LightCardsStoreService(
-            new SelectedCardService(),
-            acknowledgeService
+            new SelectedCardService()
         );
         lightCardsFeedFilterService = new LightCardsFeedFilterService(
             lightCardsStoreService,

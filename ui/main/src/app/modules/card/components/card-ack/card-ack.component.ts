@@ -56,7 +56,6 @@ export class CardAckComponent implements OnInit, OnChanges, OnDestroy {
     isReadOnlyUser: any;
 
     constructor(
-        private acknowledgeService: AcknowledgeService,
         private lightCardsStoreService: LightCardsStoreService
     ) {
         const userWithPerimeters = UserService.getCurrentUserWithPerimeters();
@@ -86,7 +85,7 @@ export class CardAckComponent implements OnInit, OnChanges, OnDestroy {
 
         this.card = {
             ...this.card,
-            hasBeenAcknowledged: this.acknowledgeService.isLightCardHasBeenAcknowledgedByUserOrByUserEntity(lightcard)
+            hasBeenAcknowledged: AcknowledgeService.isLightCardHasBeenAcknowledgedByUserOrByUserEntity(lightcard)
         };
         this.setAcknowledgeButtonVisibility();
 
@@ -150,7 +149,7 @@ export class CardAckComponent implements OnInit, OnChanges, OnDestroy {
 
         const entitiesAcks = this.computeAcknowledgedEntities();
 
-        this.acknowledgeService.postUserAcknowledgement(this.card.uid, entitiesAcks).subscribe((resp) => {
+        AcknowledgeService.postUserAcknowledgement(this.card.uid, entitiesAcks).subscribe((resp) => {
             this.ackOrUnackInProgress = false;
             if (resp.status === ServerResponseStatus.OK) {
                 this.lightCardsStoreService.setLightCardAcknowledgment(this.card.id, true);
@@ -187,7 +186,7 @@ export class CardAckComponent implements OnInit, OnChanges, OnDestroy {
 
     public cancelAcknowledgement() {
         this.ackOrUnackInProgress = true;
-        this.acknowledgeService.deleteUserAcknowledgement(this.card.uid).subscribe((resp) => {
+        AcknowledgeService.deleteUserAcknowledgement(this.card.uid).subscribe((resp) => {
             this.ackOrUnackInProgress = false;
             if (resp.status === ServerResponseStatus.OK) {
                 this.card = {...this.card, hasBeenAcknowledged: false};

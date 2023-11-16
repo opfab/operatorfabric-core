@@ -31,7 +31,7 @@ import {ProcessesService} from './businessconfig/processes.service';
 import { PermissionEnum } from '@ofModel/permission.model';
 
 describe('AcknowledgeService testing ', () => {
-    let acknowledgeService: AcknowledgeService;
+
     let card: Card;
     let userMemberOfEntity1: User, userMemberOfEntity2: User, userMemberOfEntity1AndEntity3: User;
     let statesList: Map<string, State>;
@@ -61,9 +61,6 @@ describe('AcknowledgeService testing ', () => {
                                         new Entity("ENTITY3", "ENTITY 3", "", true, null, null),
                                         new Entity("ENTITY_FR", "ENTITY FR", "", true, null, null)]);
         EntitiesService.setEntitiesServer(mockEntitiesServer);
-
-        acknowledgeService = new AcknowledgeService(null);
-
 
         EntitiesService.loadAllEntitiesData().subscribe();
 
@@ -151,7 +148,7 @@ describe('AcknowledgeService testing ', () => {
             {process: 'testProcess', state: 'testState', rights: RightsEnum.Receive, filteringNotificationAllowed: true}
         ]);
 
-        const res = acknowledgeService.isAcknowledgmentAllowed(userWithPerimeters, card, processDefinition);
+        const res = AcknowledgeService.isAcknowledgmentAllowed(userWithPerimeters, card, processDefinition);
         expect(res).toBeTrue();
     });
 
@@ -159,7 +156,7 @@ describe('AcknowledgeService testing ', () => {
         const userWithPerimeters = new UserWithPerimeters(userMemberOfEntity1, [
             {process: 'testProcess', state: 'testState', rights: RightsEnum.Receive, filteringNotificationAllowed: true}
         ]);
-        const res = acknowledgeService.isAcknowledgmentAllowed(userWithPerimeters, card, null);
+        const res = AcknowledgeService.isAcknowledgmentAllowed(userWithPerimeters, card, null);
         expect(res).toBeTrue();
     });
 
@@ -170,7 +167,7 @@ describe('AcknowledgeService testing ', () => {
             {process: 'testProcess', state: 'testState', rights: RightsEnum.Receive, filteringNotificationAllowed: true}
         ]);
 
-        const res = acknowledgeService.isAcknowledgmentAllowed(userWithPerimeters, card, processDefinition);
+        const res = AcknowledgeService.isAcknowledgmentAllowed(userWithPerimeters, card, processDefinition);
         expect(res).toBeTrue();
     });
 
@@ -182,7 +179,7 @@ describe('AcknowledgeService testing ', () => {
             {process: 'testProcess', state: 'testState', rights: RightsEnum.Receive, filteringNotificationAllowed: true}
         ]);
 
-        const res = acknowledgeService.isAcknowledgmentAllowed(userWithPerimeters, card, processDefinition);
+        const res = AcknowledgeService.isAcknowledgmentAllowed(userWithPerimeters, card, processDefinition);
         expect(res).toBeFalse();
     });
 
@@ -193,7 +190,7 @@ describe('AcknowledgeService testing ', () => {
             {process: 'testProcess', state: 'testState', rights: RightsEnum.Receive, filteringNotificationAllowed: true}
         ]);
 
-        const res = acknowledgeService.isAcknowledgmentAllowed(userWithPerimeters, card, processDefinition);
+        const res = AcknowledgeService.isAcknowledgmentAllowed(userWithPerimeters, card, processDefinition);
         expect(res).toBeTrue();
     });
 
@@ -221,7 +218,7 @@ describe('AcknowledgeService testing ', () => {
                 }
             ]);
 
-            const res = acknowledgeService.isAcknowledgmentAllowed(userWithPerimeters, card, processDefinition);
+            const res = AcknowledgeService.isAcknowledgmentAllowed(userWithPerimeters, card, processDefinition);
             expect(res).toBeTrue();
         }
     );
@@ -250,7 +247,7 @@ describe('AcknowledgeService testing ', () => {
                 }
             ]);
 
-            const res = acknowledgeService.isAcknowledgmentAllowed(userWithPerimeters, card, processDefinition);
+            const res = AcknowledgeService.isAcknowledgmentAllowed(userWithPerimeters, card, processDefinition);
             expect(res).toBeFalse();
         }
     );
@@ -279,7 +276,7 @@ describe('AcknowledgeService testing ', () => {
                 }
             ]);
 
-            const res = acknowledgeService.isAcknowledgmentAllowed(userWithPerimeters, card, processDefinition);
+            const res = AcknowledgeService.isAcknowledgmentAllowed(userWithPerimeters, card, processDefinition);
             expect(res).toBeFalse();
         }
     );
@@ -308,7 +305,7 @@ describe('AcknowledgeService testing ', () => {
                 }
             ]);
 
-            const res = acknowledgeService.isAcknowledgmentAllowed(userWithPerimeters, card, processDefinition);
+            const res = AcknowledgeService.isAcknowledgmentAllowed(userWithPerimeters, card, processDefinition);
             expect(res).toBeTrue();
         }
     );
@@ -337,7 +334,7 @@ describe('AcknowledgeService testing ', () => {
                 }
             ]);
 
-            const res = acknowledgeService.isAcknowledgmentAllowed(userWithPerimeters, card, processDefinition);
+            const res = AcknowledgeService.isAcknowledgmentAllowed(userWithPerimeters, card, processDefinition);
             expect(res).toBeTrue();
         }
     );
@@ -366,7 +363,7 @@ describe('AcknowledgeService testing ', () => {
                 }
             ]);
 
-            const res = acknowledgeService.isAcknowledgmentAllowed(userWithPerimeters, card, processDefinition);
+            const res = AcknowledgeService.isAcknowledgmentAllowed(userWithPerimeters, card, processDefinition);
             expect(res).toBeTrue();
         }
     );
@@ -395,7 +392,7 @@ describe('AcknowledgeService testing ', () => {
                 }
             ]);
 
-            const res = acknowledgeService.isAcknowledgmentAllowed(
+            const res = AcknowledgeService.isAcknowledgmentAllowed(
                 userWithPerimeters,
                 card,
                 processDefinition
@@ -428,7 +425,7 @@ describe('AcknowledgeService testing ', () => {
                 }
             ]);
 
-            const res = acknowledgeService.isAcknowledgmentAllowed(
+            const res = AcknowledgeService.isAcknowledgmentAllowed(
                 userWithPerimeters,
                 card,
                 processDefinition
@@ -469,7 +466,7 @@ describe('AcknowledgeService testing ', () => {
                 }
             ]);
 
-            const res = acknowledgeService.isAcknowledgmentAllowed(userWithPerimeters, cardWithLttd, processDefinition);
+            const res = AcknowledgeService.isAcknowledgmentAllowed(userWithPerimeters, cardWithLttd, processDefinition);
             expect(res).toBeFalse();
         }
     );
@@ -506,7 +503,7 @@ describe('AcknowledgeService testing ', () => {
                 }
             ]);
 
-            const res = acknowledgeService.isAcknowledgmentAllowed(userWithPerimeters, cardWithLttd, processDefinition);
+            const res = AcknowledgeService.isAcknowledgmentAllowed(userWithPerimeters, cardWithLttd, processDefinition);
             expect(res).toBeTrue();
         }
     );
@@ -525,7 +522,7 @@ describe('AcknowledgeService testing ', () => {
                 entitiesAcks: []
             });
 
-            const res = acknowledgeService.isLightCardHasBeenAcknowledgedByUserOrByUserEntity(cardWithoutAcks);
+            const res = AcknowledgeService.isLightCardHasBeenAcknowledgedByUserOrByUserEntity(cardWithoutAcks);
             expect(res).toBeFalse();
         }
     );
@@ -543,7 +540,7 @@ describe('AcknowledgeService testing ', () => {
                 entitiesAcks: ["ENTITY1"]
             });
 
-            const res = acknowledgeService.isLightCardHasBeenAcknowledgedByUserOrByUserEntity(cardWithAck);
+            const res = AcknowledgeService.isLightCardHasBeenAcknowledgedByUserOrByUserEntity(cardWithAck);
             expect(res).toBeTrue();
         }
     );
@@ -561,7 +558,7 @@ describe('AcknowledgeService testing ', () => {
                 entitiesAcks: ["ENTITY2"]
             });
 
-            const res = acknowledgeService.isLightCardHasBeenAcknowledgedByUserOrByUserEntity(cardWithoutAcks);
+            const res = AcknowledgeService.isLightCardHasBeenAcknowledgedByUserOrByUserEntity(cardWithoutAcks);
             expect(res).toBeFalse();
         }
     );
@@ -579,7 +576,7 @@ describe('AcknowledgeService testing ', () => {
                 entitiesAcks: ["ENTITY1"]
             });
 
-            const res = acknowledgeService.isLightCardHasBeenAcknowledgedByUserOrByUserEntity(cardWithoutAcks);
+            const res = AcknowledgeService.isLightCardHasBeenAcknowledgedByUserOrByUserEntity(cardWithoutAcks);
             expect(res).toBeFalse();
         }
     );
@@ -598,7 +595,7 @@ describe('AcknowledgeService testing ', () => {
                 entitiesAcks: []
             });
 
-            const res = acknowledgeService.isLightCardHasBeenAcknowledgedByUserOrByUserEntity(cardWithoutAcks);
+            const res = AcknowledgeService.isLightCardHasBeenAcknowledgedByUserOrByUserEntity(cardWithoutAcks);
             expect(res).toBeFalse();
         }
     );
@@ -618,7 +615,7 @@ describe('AcknowledgeService testing ', () => {
                 entitiesAcks: ["ENTITY1"]
             });
 
-            const res = acknowledgeService.isLightCardHasBeenAcknowledgedByUserOrByUserEntity(cardWithAck);
+            const res = AcknowledgeService.isLightCardHasBeenAcknowledgedByUserOrByUserEntity(cardWithAck);
             expect(res).toBeFalse();
         }
     );
@@ -638,7 +635,7 @@ describe('AcknowledgeService testing ', () => {
                 entitiesAcks: ["ENTITY1", "ENTITY2"]
             });
 
-            const res = acknowledgeService.isLightCardHasBeenAcknowledgedByUserOrByUserEntity(cardWithAck);
+            const res = AcknowledgeService.isLightCardHasBeenAcknowledgedByUserOrByUserEntity(cardWithAck);
             expect(res).toBeFalse();
         }
     );
@@ -658,7 +655,7 @@ describe('AcknowledgeService testing ', () => {
                 entitiesAcks: ["ENTITY1", "ENTITY3"]
             });
 
-            const res = acknowledgeService.isLightCardHasBeenAcknowledgedByUserOrByUserEntity(cardWithAck);
+            const res = AcknowledgeService.isLightCardHasBeenAcknowledgedByUserOrByUserEntity(cardWithAck);
             expect(res).toBeTrue();
         }
     );
@@ -678,7 +675,7 @@ describe('AcknowledgeService testing ', () => {
                 entitiesAcks: ["ENTITY1", "ENTITY2", "ENTITY3"]
             });
 
-            const res = acknowledgeService.isLightCardHasBeenAcknowledgedByUserOrByUserEntity(cardWithAck);
+            const res = AcknowledgeService.isLightCardHasBeenAcknowledgedByUserOrByUserEntity(cardWithAck);
             expect(res).toBeTrue();
         }
     );
@@ -698,7 +695,7 @@ describe('AcknowledgeService testing ', () => {
                 entitiesAcks: ["ENTITY2", "ENTITY3"]
             });
 
-            const res = acknowledgeService.isLightCardHasBeenAcknowledgedByUserOrByUserEntity(cardWithAck);
+            const res = AcknowledgeService.isLightCardHasBeenAcknowledgedByUserOrByUserEntity(cardWithAck);
             expect(res).toBeFalse();
         }
     );
@@ -720,7 +717,7 @@ describe('AcknowledgeService testing ', () => {
                 entitiesAcks: ["ENTITY2", "ENTITY3"]
             });
 
-            const res = acknowledgeService.isLightCardHasBeenAcknowledgedByUserOrByUserEntity(cardWithAck);
+            const res = AcknowledgeService.isLightCardHasBeenAcknowledgedByUserOrByUserEntity(cardWithAck);
             expect(res).toBeFalse();
         }
     );
@@ -742,7 +739,7 @@ describe('AcknowledgeService testing ', () => {
                 entitiesAcks: ["ENTITY1", "ENTITY2", "ENTITY3"]
             });
 
-            const res = acknowledgeService.isLightCardHasBeenAcknowledgedByUserOrByUserEntity(cardWithAck);
+            const res = AcknowledgeService.isLightCardHasBeenAcknowledgedByUserOrByUserEntity(cardWithAck);
             expect(res).toBeFalse();
         }
     );
@@ -764,7 +761,7 @@ describe('AcknowledgeService testing ', () => {
                 entitiesAcks: ["ENTITY1", "ENTITY3"]
             });
 
-            const res = acknowledgeService.isLightCardHasBeenAcknowledgedByUserOrByUserEntity(cardWithAck);
+            const res = AcknowledgeService.isLightCardHasBeenAcknowledgedByUserOrByUserEntity(cardWithAck);
             expect(res).toBeTrue();
         }
     );
@@ -786,7 +783,7 @@ describe('AcknowledgeService testing ', () => {
                 entitiesAcks: ["ENTITY3"]
             });
 
-            const res = acknowledgeService.isLightCardHasBeenAcknowledgedByUserOrByUserEntity(cardWithAck);
+            const res = AcknowledgeService.isLightCardHasBeenAcknowledgedByUserOrByUserEntity(cardWithAck);
             expect(res).toBeTrue();
         }
     );
@@ -808,7 +805,7 @@ describe('AcknowledgeService testing ', () => {
                 entitiesAcks: ["ENTITY2", "ENTITY3"]
             });
 
-            const res = acknowledgeService.isLightCardHasBeenAcknowledgedByUserOrByUserEntity(cardWithAck);
+            const res = AcknowledgeService.isLightCardHasBeenAcknowledgedByUserOrByUserEntity(cardWithAck);
             expect(res).toBeFalse();
         }
     );
@@ -830,7 +827,7 @@ describe('AcknowledgeService testing ', () => {
                 entitiesAcks: ["ENTITY1", "ENTITY2", "ENTITY3"]
             });
 
-            const res = acknowledgeService.isLightCardHasBeenAcknowledgedByUserOrByUserEntity(cardWithAck);
+            const res = AcknowledgeService.isLightCardHasBeenAcknowledgedByUserOrByUserEntity(cardWithAck);
             expect(res).toBeFalse();
         }
     );
@@ -852,7 +849,7 @@ describe('AcknowledgeService testing ', () => {
                 entitiesAcks: ["ENTITY1", "ENTITY3"]
             });
 
-            const res = acknowledgeService.isLightCardHasBeenAcknowledgedByUserOrByUserEntity(cardWithAck);
+            const res = AcknowledgeService.isLightCardHasBeenAcknowledgedByUserOrByUserEntity(cardWithAck);
             expect(res).toBeTrue();
         }
     );
@@ -874,7 +871,7 @@ describe('AcknowledgeService testing ', () => {
                 entitiesAcks: ["ENTITY3"]
             });
 
-            const res = acknowledgeService.isLightCardHasBeenAcknowledgedByUserOrByUserEntity(cardWithAck);
+            const res = AcknowledgeService.isLightCardHasBeenAcknowledgedByUserOrByUserEntity(cardWithAck);
             expect(res).toBeTrue();
         }
     );
@@ -897,7 +894,7 @@ describe('AcknowledgeService testing ', () => {
                 entitiesAcks: ["ENTITY2", "ENTITY3"]
             });
 
-            const res = acknowledgeService.isLightCardHasBeenAcknowledgedByUserOrByUserEntity(cardWithAck);
+            const res = AcknowledgeService.isLightCardHasBeenAcknowledgedByUserOrByUserEntity(cardWithAck);
             expect(res).toBeFalse();
         }
     );
@@ -920,7 +917,7 @@ describe('AcknowledgeService testing ', () => {
                 entitiesAcks: ["ENTITY1", "ENTITY2", "ENTITY3"]
             });
 
-            const res = acknowledgeService.isLightCardHasBeenAcknowledgedByUserOrByUserEntity(cardWithAck);
+            const res = AcknowledgeService.isLightCardHasBeenAcknowledgedByUserOrByUserEntity(cardWithAck);
             expect(res).toBeTrue();
         }
     );
@@ -941,7 +938,7 @@ describe('AcknowledgeService testing ', () => {
                 entitiesAcks: []
             });
 
-            const res = acknowledgeService.isLightCardHasBeenAcknowledgedByUserOrByUserEntity(cardWithAck);
+            const res = AcknowledgeService.isLightCardHasBeenAcknowledgedByUserOrByUserEntity(cardWithAck);
             expect(res).toBeTrue();
         }
     );

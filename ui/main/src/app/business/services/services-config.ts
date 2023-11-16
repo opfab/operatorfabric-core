@@ -22,6 +22,7 @@ import {GroupsService} from './users/groups.service';
 import {PerimetersService} from './users/perimeters.service';
 import {ProcessesService} from './businessconfig/processes.service';
 import {OpfabEventStreamService} from './events/opfabEventStream.service';
+import {AcknowledgeService} from './acknowledge.service';
 
 declare const opfab: any;
 export class ServicesConfig {
@@ -42,6 +43,7 @@ export class ServicesConfig {
         PerimetersService.setPerimeterServer(servers.perimetersServer);
         ProcessesService.setProcessServer(servers.processServer);
         OpfabEventStreamService.setEventStreamServer(servers.opfabEventStreamServer);
+        AcknowledgeService.setAcknowledgeServer(servers.acknowledgeServer);
     }
 
     public static load(): Observable<any> {
