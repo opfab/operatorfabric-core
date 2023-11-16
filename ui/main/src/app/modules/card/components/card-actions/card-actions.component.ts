@@ -50,7 +50,6 @@ export class CardActionsComponent implements OnChanges, OnDestroy {
 
     constructor(
         private modalService: NgbModal,
-        private cardService: CardService,
         private router: Router
     ) {
     }
@@ -152,7 +151,7 @@ export class CardActionsComponent implements OnChanges, OnDestroy {
     public confirmDeleteCard(): void {
         this.deleteInProgress = true;
         if (this.deleteConfirmationModal) this.deleteConfirmationModal.close();
-        this.cardService.deleteCard(this.card).subscribe((resp) => {
+        CardService.deleteCard(this.card).subscribe((resp) => {
             const status = resp.status;
             if (status === ServerResponseStatus.OK) {
                 this.closeDetails();

@@ -86,7 +86,6 @@ export class LoggingComponent implements OnDestroy, OnInit, AfterViewInit {
     ]);
 
     constructor(
-        private cardService: CardService,
         private translationService: TranslationService,
         private modalService: NgbModal,
         private changeDetector: ChangeDetectorRef
@@ -139,7 +138,7 @@ export class LoggingComponent implements OnDestroy, OnInit, AfterViewInit {
 
         const filter = this.getFilter(page_number, this.size, this.filtersTemplate.filters);
 
-        this.cardService
+        CardService
             .fetchFilteredArchivedCards(filter)
             .pipe(takeUntil(this.unsubscribe$))
             .subscribe({
@@ -246,7 +245,7 @@ export class LoggingComponent implements OnDestroy, OnInit, AfterViewInit {
 
         const filter = this.getFilter(0, this.resultsNumber, this.filtersTemplate.filters);
 
-        this.cardService
+        CardService
             .fetchFilteredArchivedCards(filter)
             .pipe(takeUntil(this.unsubscribe$))
             .subscribe((page: Page<LightCard>) => {

@@ -16,7 +16,9 @@ import {SelectedCardService} from './selectedCard.service';
     providedIn: 'root'
 })
 export class SelectedCardLoaderService {
-    constructor(private selectedCardService: SelectedCardService, private cardService: CardService) {
+
+
+    constructor(private selectedCardService: SelectedCardService) {
         this.loadCardWhenUserSelectCard();
     }
 
@@ -25,7 +27,7 @@ export class SelectedCardLoaderService {
             .getSelectCardIdChanges()
             .pipe(
                 filter((id) => id !== null),
-                switchMap((id) => this.cardService.loadCard(id)),
+                switchMap((id) => CardService.loadCard(id)),
                 map((cardData) =>
                     this.selectedCardService.setSelectedCardWithChildren(cardData.card, cardData.childCards)
                 ),

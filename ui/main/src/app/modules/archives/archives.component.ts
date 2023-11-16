@@ -87,7 +87,6 @@ export class ArchivesComponent implements OnDestroy, OnInit {
     displayContext: any = DisplayContext.ARCHIVE;
 
     constructor(
-        private cardService: CardService,
         private translationService: TranslationService,
         private modalService: NgbModal,
         private changeDetector: ChangeDetectorRef
@@ -149,7 +148,7 @@ export class ArchivesComponent implements OnDestroy, OnInit {
 
         const filter = this.getFilter(page_number, Number(this.size), this.filtersTemplate.filters, this.isCollapsibleUpdatesActivated);
 
-        this.cardService
+        CardService
         .fetchFilteredArchivedCards(filter)
         .pipe(takeUntil(this.unsubscribe$))
         .subscribe({
@@ -247,7 +246,7 @@ export class ArchivesComponent implements OnDestroy, OnInit {
         const filter = this.getFilter(0, 1 + this.historySize , filters, false);
 
 
-        return this.cardService.fetchFilteredArchivedCards(filter).pipe(
+        return CardService.fetchFilteredArchivedCards(filter).pipe(
             takeUntil(this.unsubscribe$),
             tap({
                 next: (page: Page<LightCard>) => {
@@ -302,7 +301,7 @@ export class ArchivesComponent implements OnDestroy, OnInit {
         this.modalRef = this.modalService.open(this.exportTemplate, modalOptions);
 
         const filter = this.getFilter(null, null, this.filtersTemplate.filters, false);
-        this.cardService
+        CardService
             .fetchFilteredArchivedCards(filter)
             .pipe(takeUntil(this.unsubscribe$))
             .subscribe((page: Page<LightCard>) => {
@@ -365,7 +364,7 @@ export class ArchivesComponent implements OnDestroy, OnInit {
         this.cardLoadingInProgress = true;
         this.checkForCardLoadingInProgressForMoreThanOneSecond();
 
-        this.cardService.loadArchivedCard(cardId).subscribe((card: CardData) => {
+        CardService.loadArchivedCard(cardId).subscribe((card: CardData) => {
             if (card) {
 
                 this.selectedCard = card.card;

@@ -26,6 +26,7 @@ import {AcknowledgeService} from './acknowledge.service';
 import {DateTimeFormatterService} from './date-time-formatter.service';
 import {AdminProcessesService} from './businessconfig/adminprocess.service';
 import {BusinessDataService} from './businessconfig/businessdata.service';
+import {CardService} from './card/card.service';
 
 declare const opfab: any;
 export class ServicesConfig {
@@ -49,6 +50,7 @@ export class ServicesConfig {
         AcknowledgeService.setAcknowledgeServer(servers.acknowledgeServer);
         AdminProcessesService.setAdminProcessServer(servers.adminProcessServer);
         BusinessDataService.setBusinessDataServer(servers.businessDataServer);
+        CardService.setCardServer(servers.cardServer);
     }
 
     public static load(): Observable<any> {

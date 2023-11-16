@@ -81,7 +81,6 @@ export class MonitoringTableComponent implements OnChanges, OnDestroy {
     constructor(
         private translationService: TranslationService,
         private modalService: NgbModal,
-        private cardService: CardService,
         private selectedCardService: SelectedCardService,
         private lightCardsStoreService: LightCardsStoreService
     ) {
@@ -171,7 +170,7 @@ export class MonitoringTableComponent implements OnChanges, OnDestroy {
             columnDefs: this.columnDefs,
             rowHeight: 45,
             popupParent: document.querySelector('body'),
-            rowClass: 'opfab-monitoring-ag-grid-row',
+            rowClass: 'opfab-monitoring-ag-grid-row'
         };
         this.rowData$ = this.rowDataSubject.asObservable();
     }
@@ -235,15 +234,13 @@ export class MonitoringTableComponent implements OnChanges, OnDestroy {
 
     refreshData(): void {
         if (this.result) {
-
             this.displayedResults = this.result;
             this.rowData = [];
             this.displayedResults.forEach((line) => {
                 const entitiesNamesResponses = [];
-                const entitiesResponses =
-                    line.requiredResponses?.length
-                        ? line.requiredResponses
-                        : line.allowedOrRequiredResponses;
+                const entitiesResponses = line.requiredResponses?.length
+                    ? line.requiredResponses
+                    : line.allowedOrRequiredResponses;
 
                 entitiesResponses.forEach((entityId) => {
                     entitiesNamesResponses.push(EntitiesService.getEntityName(entityId));
@@ -270,10 +267,9 @@ export class MonitoringTableComponent implements OnChanges, OnDestroy {
             });
         }
         this.rowDataSubject.next(this.rowData);
-
     }
 
-    getFormattedDateTime(epochDate: number):string {
+    getFormattedDateTime(epochDate: number): string {
         return DateTimeFormatterService.getFormattedDateAndTimeFromEpochDate(epochDate);
     }
 
@@ -360,12 +356,10 @@ export class MonitoringTableComponent implements OnChanges, OnDestroy {
                 this.exportInProgress = false;
             } else {
                 this.exportInProgress = true;
-                this.cardService
-                    .loadCard(this.gridApi.rowModel.rowsToDisplay[lineNumber].data.cardId)
-                    .subscribe((card) => {
-                        this.jsonToArray.add(this.cardPreprocessingBeforeExport(card));
-                        this.processMonitoringForExport(++lineNumber);
-                    });
+                CardService.loadCard(this.gridApi.rowModel.rowsToDisplay[lineNumber].data.cardId).subscribe((card) => {
+                    this.jsonToArray.add(this.cardPreprocessingBeforeExport(card));
+                    this.processMonitoringForExport(++lineNumber);
+                });
             }
         } else {
             this.exportInProgress = false;
@@ -397,14 +391,13 @@ export class MonitoringTableComponent implements OnChanges, OnDestroy {
         return card;
     }
 
-    translateValue(key: string, interpolateParams?: Map<string,string>): any {
+    translateValue(key: string, interpolateParams?: Map<string, string>): any {
         return this.translationService.getTranslation(key, interpolateParams); // we can use synchronous method as translation has already been load for UI before
     }
 
-    translateColumn(key: string, interpolateParams?: Map<string,string>): any {
+    translateColumn(key: string, interpolateParams?: Map<string, string>): any {
         return this.translationService.getTranslation(key, interpolateParams);
     }
-
 
     ngOnDestroy() {
         if (this.modalRef) {
@@ -431,5 +424,3 @@ export class MonitoringTableComponent implements OnChanges, OnDestroy {
         });
     }
 }
-
-
