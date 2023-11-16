@@ -1,4 +1,4 @@
-FROM node:21.1-alpine
+FROM node:21.2-alpine
 WORKDIR /usr/app
 RUN chown node:node /usr/app
 RUN mkdir -m777 /var/log/opfab
