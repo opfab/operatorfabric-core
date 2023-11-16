@@ -86,7 +86,6 @@ export class LoggingComponent implements OnDestroy, OnInit, AfterViewInit {
     ]);
 
     constructor(
-        private dateTimeFormatter: DateTimeFormatterService,
         private cardService: CardService,
         private translationService: TranslationService,
         private modalService: NgbModal,
@@ -232,7 +231,7 @@ export class LoggingComponent implements OnDestroy, OnInit, AfterViewInit {
     }
 
     displayTime(date) {
-        return this.dateTimeFormatter.getFormattedDateAndTimeFromEpochDate(date);
+        return DateTimeFormatterService.getFormattedDateAndTimeFromEpochDate(date);
     }
 
     exportToExcel(): void {
@@ -270,7 +269,7 @@ export class LoggingComponent implements OnDestroy, OnInit, AfterViewInit {
                     if (this.filtersTemplate.isProcessGroupFilterVisible())
                         exportArchiveData.push({
                             [severityColumnName]: this.translationService.translateSeverity(card.severity),
-                            [timeOfActionColumnName]: this.dateTimeFormatter.getFormattedDateAndTimeFromEpochDate(
+                            [timeOfActionColumnName]: DateTimeFormatterService.getFormattedDateAndTimeFromEpochDate(
                                 card.publishDate
                             ),
                             [processGroupColumnName]: this.translateColumn(
@@ -287,7 +286,7 @@ export class LoggingComponent implements OnDestroy, OnInit, AfterViewInit {
                     else
                         exportArchiveData.push({
                             [severityColumnName]: card.severity,
-                            [timeOfActionColumnName]: this.dateTimeFormatter.getFormattedDateAndTimeFromEpochDate(
+                            [timeOfActionColumnName]: DateTimeFormatterService.getFormattedDateAndTimeFromEpochDate(
                                 card.publishDate
                             ),
                             [processColumnName]: card.processName,

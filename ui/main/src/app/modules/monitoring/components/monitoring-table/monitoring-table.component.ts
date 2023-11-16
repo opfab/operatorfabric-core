@@ -79,7 +79,6 @@ export class MonitoringTableComponent implements OnChanges, OnDestroy {
     ]);
 
     constructor(
-        readonly dateTimeFormatter: DateTimeFormatterService,
         private translationService: TranslationService,
         private modalService: NgbModal,
         private cardService: CardService,
@@ -275,7 +274,7 @@ export class MonitoringTableComponent implements OnChanges, OnDestroy {
     }
 
     getFormattedDateTime(epochDate: number):string {
-        return this.dateTimeFormatter.getFormattedDateAndTimeFromEpochDate(epochDate);
+        return DateTimeFormatterService.getFormattedDateAndTimeFromEpochDate(epochDate);
     }
 
     getResponses(cardId: string, entities: string[]) {

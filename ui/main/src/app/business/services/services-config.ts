@@ -23,6 +23,7 @@ import {PerimetersService} from './users/perimeters.service';
 import {ProcessesService} from './businessconfig/processes.service';
 import {OpfabEventStreamService} from './events/opfabEventStream.service';
 import {AcknowledgeService} from './acknowledge.service';
+import {DateTimeFormatterService} from './date-time-formatter.service';
 
 declare const opfab: any;
 export class ServicesConfig {
@@ -57,6 +58,7 @@ export class ServicesConfig {
                     this.setTitleInBrowser();
                     this.setLoggerConfiguration();
                     this.loadTranslation();
+                    DateTimeFormatterService.init();
                 } else {
                     logger.info('No valid web-ui.json configuration file, stop application loading');
                 }

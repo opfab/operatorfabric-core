@@ -24,7 +24,6 @@ import {HttpClient, HttpHandler} from '@angular/common/http';
 import {BusinessconfigI18nLoaderFactory} from '@tests/helpers';
 import {LightCardsServiceMock} from '@tests/mocks/lightcards.service.mock';
 import {LightCardsFeedFilterService} from 'app/business/services/lightcards/lightcards-feed-filter.service';
-import {DateTimeFormatterService} from 'app/business/services/date-time-formatter.service';
 import {ConfigServer} from 'app/business/server/config.server';
 import {ConfigServerMock} from '@tests/mocks/configServer.mock';
 import {OpfabEventStreamServer} from 'app/business/server/opfabEventStream.server';
@@ -62,7 +61,6 @@ describe('InitChartComponent', () => {
             ],
             providers: [
                 {provide: APP_BASE_HREF, useValue: '/'},
-                {provide: DateTimeFormatterService, useClass: DateTimeFormatterService},
                 {provide: ConfigServer, useClass: ConfigServerMock},
                 {provide: HttpClient, useClass: HttpClient},
                 {provide: HttpHandler, useClass: HttpHandler},

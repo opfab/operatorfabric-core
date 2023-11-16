@@ -51,8 +51,7 @@ export class MapComponent implements OnInit, OnDestroy, AfterViewChecked {
         private lightCardsFeedFilterService: LightCardsFeedFilterService,
         private mapService: MapService,
         private translate: TranslateService,
-        private router: Router,
-        private dateTimeFormatterService: DateTimeFormatterService
+        private router: Router
     ) {}
 
     ngOnInit() {
@@ -261,7 +260,7 @@ export class MapComponent implements OnInit, OnDestroy, AfterViewChecked {
     }
 
     displayCardDetailsOnButton(lightCard: LightCard): string {
-        const publishDate = this.dateTimeFormatterService.getFormattedDateAndTimeFromEpochDate(lightCard.publishDate);
+        const publishDate = DateTimeFormatterService.getFormattedDateAndTimeFromEpochDate(lightCard.publishDate);
         return `${publishDate} : ${lightCard.titleTranslated}`;
     }
 

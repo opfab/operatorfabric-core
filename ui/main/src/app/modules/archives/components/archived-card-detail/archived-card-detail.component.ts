@@ -33,7 +33,6 @@ export class ArchivedCardDetailComponent implements OnInit{
     @Input() childCards: Card[];
 
     constructor(
-        private dateTimeFormatter: DateTimeFormatterService,
         private translate: TranslateService
     ) {
     }
@@ -105,15 +104,15 @@ export class ArchivedCardDetailComponent implements OnInit{
     }
 
     getFormattedDateAndTime(date: number): any {
-        return this.dateTimeFormatter.getFormattedDateAndTimeFromEpochDate(date);
+        return DateTimeFormatterService.getFormattedDateAndTimeFromEpochDate(date);
     }
 
     getFormattedDate(date: number): any {
-        return this.dateTimeFormatter.getFormattedDateFromEpochDate(date);
+        return DateTimeFormatterService.getFormattedDateFromEpochDate(date);
     }
 
     getFormattedTime(date: number): any {
-        return this.dateTimeFormatter.getFormattedTimeFromEpochDate(date);
+        return DateTimeFormatterService.getFormattedTimeFromEpochDate(date);
     }
 
 }

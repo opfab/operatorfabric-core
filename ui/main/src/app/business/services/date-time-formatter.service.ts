@@ -7,48 +7,35 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {Injectable} from '@angular/core';
 import * as moment from 'moment';
 import {ConfigService} from './config.service';
 
-@Injectable({
-    providedIn: 'root'
-})
 export class DateTimeFormatterService {
-    private timeFormat;
-    private dateFormat;
-    private dateTimeFormat;
+    private static timeFormat;
+    private static dateFormat;
+    private static dateTimeFormat;
 
-    constructor() {
-        this.loadFormatterServiceConfiguration();
+
+    public static  init() {
+        DateTimeFormatterService.timeFormat  = ConfigService.getConfigValue('settings.timeFormat', 'LT');
+        DateTimeFormatterService.dateFormat = ConfigService.getConfigValue('settings.dateFormat', 'L');
+        DateTimeFormatterService.dateTimeFormat = ConfigService.getConfigValue('settings.dateTimeFormat')
     }
 
-    private loadFormatterServiceConfiguration() {
-        ConfigService
-            .getConfigValueAsObservable('settings.timeFormat', 'LT')
-            .subscribe((next) => (this.timeFormat = next));
-        ConfigService
-            .getConfigValueAsObservable('settings.dateFormat', 'L')
-            .subscribe((next) => (this.dateFormat = next));
-        ConfigService
-            .getConfigValueAsObservable('settings.dateTimeFormat')
-            .subscribe((next) => (this.dateTimeFormat = next));
-    }
-
-    public getFormattedDateFromEpochDate(epochDate: number): string {
+    public static getFormattedDateFromEpochDate(epochDate: number): string {
         if (!epochDate) return '';
-        return moment(epochDate).format(this.dateFormat);
+        return moment(epochDate).format(DateTimeFormatterService.dateFormat);
     }
 
-    public getFormattedDateAndTimeFromEpochDate(epochDate: number): string {
+    public static getFormattedDateAndTimeFromEpochDate(epochDate: number): string {
         if (!epochDate) return '';
         return moment(epochDate).format(
-            this.dateTimeFormat ? this.dateTimeFormat : `${this.dateFormat} ${this.timeFormat}`
+            DateTimeFormatterService.dateTimeFormat ? DateTimeFormatterService.dateTimeFormat : `${DateTimeFormatterService.dateFormat} ${DateTimeFormatterService.timeFormat}`
         );
     }
 
-    public getFormattedTimeFromEpochDate(epochDate: number): string {
+    public static getFormattedTimeFromEpochDate(epochDate: number): string {
         if (!epochDate) return '';
-        return moment(epochDate).format(this.timeFormat);
+        return moment(epochDate).format(DateTimeFormatterService.timeFormat);
     }
 }

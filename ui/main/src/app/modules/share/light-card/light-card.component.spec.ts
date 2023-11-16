@@ -20,7 +20,6 @@ import {I18nService} from 'app/business/services/translation/i18n.service';
 import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
 import {CountDownModule} from '../countdown/countdown.module';
 import createSpyObj = jasmine.createSpyObj;
-import {DateTimeFormatterService} from 'app/business/services/date-time-formatter.service';
 import {PipesModule} from '../pipes/pipes.module';
 import {ConfigServerMock} from '@tests/mocks/configServer.mock';
 import {ConfigServer} from 'app/business/server/config.server';
@@ -36,6 +35,7 @@ import {TranslationServiceMock} from '@tests/mocks/translation.service.mock';
 import {AcknowledgeServer} from "../../../business/server/acknowledge.server";
 import {ConfigService} from 'app/business/services/config.service';
 import {AngularTranslationService} from '@ofServices/angularTranslationService';
+import {DateTimeFormatterService} from 'app/business/services/date-time-formatter.service';
 
 describe('LightCardComponent', () => {
     let lightCardDetailsComp: LightCardComponent;
@@ -69,7 +69,6 @@ describe('LightCardComponent', () => {
             providers: [
                 {provide: Router, useValue: myrout},
                 {provide: 'TimeEventSource', useValue: null},
-                DateTimeFormatterService,
                 I18nService,
                 {provide: ConfigServer, useClass: ConfigServerMock},
                 {provide: RemoteLoggerServer, useValue: null},
@@ -89,6 +88,7 @@ describe('LightCardComponent', () => {
         translateService.setDefaultLang('en');
         I18nService.setTranslationService(new AngularTranslationService(translateService));
         I18nService.changeLocale('en');
+        DateTimeFormatterService.init();
     }));
 
     beforeEach(() => {
