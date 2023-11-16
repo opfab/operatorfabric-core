@@ -24,7 +24,10 @@ export class OpfabAPIService {
     public templateInterface: any;
     public userCardTemplateInterface: any;
 
-    constructor(private businessDataService: BusinessDataService, private translationService: TranslationService) {
+
+    constructor(
+        private translationService: TranslationService
+    ) {
         this.initCurrentCard();
         this.initCurrentUserCard();
     }
@@ -119,7 +122,7 @@ export class OpfabAPIService {
     public initAPI() {
         const self = this;
         opfab.businessconfig.businessData.get = async function (resourceName) {
-            const resource = await self.businessDataService.getBusinessData(resourceName);
+            const resource = await BusinessDataService.getBusinessData(resourceName);
             return resource;
         };
 
@@ -200,7 +203,7 @@ export class OpfabAPIService {
             return self.currentCard.entitiesAllowedToRespond;
         };
         opfab.currentCard.getEntityUsedForUserResponse = function () {
-            console.warn(new Date().toISOString(), 
+            console.warn(new Date().toISOString(),
                 ' WARNING : Use of opfab.currentCard.getEntityUsedForUserResponse is deprecated, you should use opfab.currentCard.getEntitiesUsableForUserResponse instead'
             );
             return self.currentCard.entityUsedForUserResponse;

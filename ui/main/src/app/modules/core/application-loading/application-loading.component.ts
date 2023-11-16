@@ -43,6 +43,7 @@ import {PerimetersServer} from 'app/business/server/perimeters.server';
 import {ProcessServer} from 'app/business/server/process.server';
 import {AcknowledgeServer} from 'app/business/server/acknowledge.server';
 import {AdminProcessServer} from 'app/business/server/adminprocess.server';
+import {BusinessDataServer} from 'app/business/server/businessData.server';
 
 declare const opfab: any;
 @Component({
@@ -85,7 +86,8 @@ export class ApplicationLoadingComponent implements OnInit {
         private perimetersServer: PerimetersServer,
         private processServer: ProcessServer,
         private adminProcessServer: AdminProcessServer,
-        private acknowledgeServer: AcknowledgeServer
+        private acknowledgeServer: AcknowledgeServer,
+        private businessDataServer: BusinessDataServer
     ) {}
 
     ngOnInit() {
@@ -102,7 +104,8 @@ export class ApplicationLoadingComponent implements OnInit {
             processServer: this.processServer,
             opfabEventStreamServer: this.opfabEventStreamServer,
             adminProcessServer: this.adminProcessServer,
-            acknowledgeServer: this.acknowledgeServer
+            acknowledgeServer: this.acknowledgeServer,
+            businessDataServer: this.businessDataServer
         });
 
 

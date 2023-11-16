@@ -28,8 +28,7 @@ export class ApplicationUpdateService {
     constructor(
         private handlebarsService: HandlebarsService,
         private templateCssService: TemplateCssService,
-        private applicationEventsService: ApplicationEventsService,
-        private businessDataService: BusinessDataService
+        private applicationEventsService: ApplicationEventsService
     ) {}
 
     init() {
@@ -85,7 +84,7 @@ export class ApplicationUpdateService {
     private listenForBusinessDataUpdate() {
         OpfabEventStreamService.getBusinessDataChanges().subscribe(() => {
             logger.info(`New business data posted, emptying cache`, LogOption.LOCAL_AND_REMOTE);
-            this.businessDataService.emptyCache();
+            BusinessDataService.emptyCache();
         });
     }
 }
