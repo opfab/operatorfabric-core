@@ -42,6 +42,7 @@ import {GroupsServer} from 'app/business/server/groups.server';
 import {PerimetersServer} from 'app/business/server/perimeters.server';
 import {ProcessServer} from 'app/business/server/process.server';
 import {AcknowledgeServer} from 'app/business/server/acknowledge.server';
+import {AdminProcessServer} from 'app/business/server/adminprocess.server';
 
 declare const opfab: any;
 @Component({
@@ -83,6 +84,7 @@ export class ApplicationLoadingComponent implements OnInit {
         private groupsServer: GroupsServer,
         private perimetersServer: PerimetersServer,
         private processServer: ProcessServer,
+        private adminProcessServer: AdminProcessServer,
         private acknowledgeServer: AcknowledgeServer
     ) {}
 
@@ -99,6 +101,7 @@ export class ApplicationLoadingComponent implements OnInit {
             perimetersServer: this.perimetersServer,
             processServer: this.processServer,
             opfabEventStreamServer: this.opfabEventStreamServer,
+            adminProcessServer: this.adminProcessServer,
             acknowledgeServer: this.acknowledgeServer
         });
 

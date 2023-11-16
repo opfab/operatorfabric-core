@@ -24,6 +24,7 @@ import {ProcessesService} from './businessconfig/processes.service';
 import {OpfabEventStreamService} from './events/opfabEventStream.service';
 import {AcknowledgeService} from './acknowledge.service';
 import {DateTimeFormatterService} from './date-time-formatter.service';
+import {AdminProcessesService} from './businessconfig/adminprocess.service';
 
 declare const opfab: any;
 export class ServicesConfig {
@@ -45,6 +46,7 @@ export class ServicesConfig {
         ProcessesService.setProcessServer(servers.processServer);
         OpfabEventStreamService.setEventStreamServer(servers.opfabEventStreamServer);
         AcknowledgeService.setAcknowledgeServer(servers.acknowledgeServer);
+        AdminProcessesService.setAdminProcessServer(servers.adminProcessServer);
     }
 
     public static load(): Observable<any> {
