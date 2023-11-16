@@ -68,8 +68,7 @@ export class LightCardsStoreService {
     private receivedAcksSubject = new Subject<{cardUid: string; entitiesAcks: string[]}>();
 
     constructor(
-        private selectedCardService: SelectedCardService,
-        private acknowledgeService: AcknowledgeService
+        private selectedCardService: SelectedCardService
     ) {
         this.getLightCardsWithLimitedUpdateRate().subscribe();
         this.checkForLoadingInProgress();
@@ -220,7 +219,7 @@ export class LightCardsStoreService {
         } else {
             const oldCardVersion = this.lightCards.get(card.id);
             card.hasChildCardFromCurrentUserEntity = this.lightCardHasChildFromCurrentUserEntity(oldCardVersion, card);
-            card.hasBeenAcknowledged = this.acknowledgeService.isLightCardHasBeenAcknowledgedByUserOrByUserEntity(card);
+            card.hasBeenAcknowledged = AcknowledgeService.isLightCardHasBeenAcknowledgedByUserOrByUserEntity(card);
             this.addOrUpdateParentLightCard(card);
         }
     }
@@ -310,7 +309,7 @@ export class LightCardsStoreService {
             card.entitiesAcks = card.entitiesAcks
                 ? [...new Set([...card.entitiesAcks, ...entitiesAcksToAdd])]
                 : entitiesAcksToAdd;
-            card.hasBeenAcknowledged = this.acknowledgeService.isLightCardHasBeenAcknowledgedByUserOrByUserEntity(card);
+            card.hasBeenAcknowledged = AcknowledgeService.isLightCardHasBeenAcknowledgedByUserOrByUserEntity(card);
             this.lightCardsEvents.next(this.lightCards);
         }
     }
@@ -368,7 +367,7 @@ export class LightCardsStoreService {
             card.hasBeenAcknowledged = ack;
 
             // Each time hasBeenAcknowledged is updated, we have to compute it again, relating to entities acks
-            card.hasBeenAcknowledged = this.acknowledgeService.isLightCardHasBeenAcknowledgedByUserOrByUserEntity(card);
+            card.hasBeenAcknowledged = AcknowledgeService.isLightCardHasBeenAcknowledgedByUserOrByUserEntity(card);
             this.lightCardsEvents.next(this.lightCards);
         }
     }

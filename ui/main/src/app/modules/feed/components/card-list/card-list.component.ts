@@ -56,7 +56,6 @@ export class CardListComponent implements AfterViewChecked, OnInit {
 
     constructor(
         private modalService: NgbModal,
-        private acknowledgeService: AcknowledgeService,
         private groupedCardsService: GroupedCardsService,
         private router: Router,
         private lightCardsFeedFilterService: LightCardsFeedFilterService,
@@ -151,7 +150,7 @@ export class CardListComponent implements AfterViewChecked, OnInit {
         if (
             !lightCard.hasBeenAcknowledged &&
             this.isCardPublishedBeforeAckDemand(lightCard) &&
-            this.acknowledgeService.isAcknowledgmentAllowed(
+            AcknowledgeService.isAcknowledgmentAllowed(
                 this.currentUserWithPerimeters,
                 lightCard,
                 processDefinition
@@ -167,7 +166,7 @@ export class CardListComponent implements AfterViewChecked, OnInit {
                         // this avoids to display entities used only for grouping
                         entitiesAcks.push(entity.id);
                 });
-                this.acknowledgeService.postUserAcknowledgement(lightCard.uid, entitiesAcks).subscribe((resp) => {
+                AcknowledgeService.postUserAcknowledgement(lightCard.uid, entitiesAcks).subscribe((resp) => {
                     if (resp.status === ServerResponseStatus.OK) {
                         this.lightCardsStoreService.setLightCardAcknowledgment(lightCard.id, true);
                     } else {

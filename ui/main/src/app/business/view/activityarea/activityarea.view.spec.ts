@@ -39,8 +39,6 @@ describe('ActivityAreaView', () => {
         mockLightCardStoreService();
     });
 
-
-
     function mockUserService() {
         userServerMock = new UserServerMock();
         UserService.setUserServer(userServerMock);
@@ -65,10 +63,7 @@ describe('ActivityAreaView', () => {
     }
 
     function mockLightCardStoreService() {
-        lightCardsStoreService = new LightCardsStoreService(
-            null,
-            null
-        );
+        lightCardsStoreService = new LightCardsStoreService(null);
     }
 
     afterEach(() => {

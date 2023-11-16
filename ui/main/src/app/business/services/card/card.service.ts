@@ -25,8 +25,7 @@ import {LightCard} from '@ofModel/light-card.model';
 export class CardService {
 
     constructor(
-        private cardServer: CardServer,
-        private acknowledgeService: AcknowledgeService,
+        private cardServer: CardServer
     ) {
 
     }
@@ -38,7 +37,7 @@ export class CardService {
                 if (cardResponse.status === ServerResponseStatus.OK) {
                         const cardData = cardResponse.data;
                         cardData.card.hasBeenAcknowledged =
-                            this.acknowledgeService.isLightCardHasBeenAcknowledgedByUserOrByUserEntity(
+                        AcknowledgeService.isLightCardHasBeenAcknowledgedByUserOrByUserEntity(
                                 fromCardToLightCard(cardData.card));
                     return cardData;
                 }

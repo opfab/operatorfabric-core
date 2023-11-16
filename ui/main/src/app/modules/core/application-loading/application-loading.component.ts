@@ -41,6 +41,7 @@ import {EntitiesService} from 'app/business/services/users/entities.service';
 import {GroupsServer} from 'app/business/server/groups.server';
 import {PerimetersServer} from 'app/business/server/perimeters.server';
 import {ProcessServer} from 'app/business/server/process.server';
+import {AcknowledgeServer} from 'app/business/server/acknowledge.server';
 
 declare const opfab: any;
 @Component({
@@ -81,7 +82,8 @@ export class ApplicationLoadingComponent implements OnInit {
         private entitiesServer: EntitiesServer,
         private groupsServer: GroupsServer,
         private perimetersServer: PerimetersServer,
-        private processServer: ProcessServer
+        private processServer: ProcessServer,
+        private acknowledgeServer: AcknowledgeServer
     ) {}
 
     ngOnInit() {
@@ -96,7 +98,8 @@ export class ApplicationLoadingComponent implements OnInit {
             groupsServer: this.groupsServer,
             perimetersServer: this.perimetersServer,
             processServer: this.processServer,
-            opfabEventStreamServer: this.opfabEventStreamServer
+            opfabEventStreamServer: this.opfabEventStreamServer,
+            acknowledgeServer: this.acknowledgeServer
         });
 
 
