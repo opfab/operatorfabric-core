@@ -13,11 +13,11 @@ import {Observable, ReplaySubject, Subject} from 'rxjs';
 import {takeUntil} from 'rxjs/operators';
 import {PerimetersService} from 'app/business/services/users/perimeters.service';
 import {CrudProcessesService} from 'app/business/services/admin/crud-processes-service';
-import {BusinessDataService} from 'app/business/services/businessconfig/businessdata.service';
 import {CrudUserService} from 'app/business/services/admin/crud-user.service';
 import {CrudEntitiesService} from 'app/business/services/admin/crud-entities-service';
 import {CrudGroupsService} from 'app/business/services/admin/crud-groups.service';
 import {CrudPerimetersService} from 'app/business/services/admin/crud-perimeters.service';
+import {CrudBusinessDataService} from 'app/business/services/admin/crud-business-data.service';
 
 
 @Injectable()
@@ -28,11 +28,10 @@ export class SharingService implements OnDestroy {
     private crudEntitiesService: CrudEntitiesService;
     private crudGroupsService: CrudGroupsService;
     private crudPerimetersService: CrudPerimetersService;
-    private crudProcessesService: CrudProcessesService
+    private crudProcessesService: CrudProcessesService;
+    private crudBusinessDataService: CrudBusinessDataService;
 
     constructor(
-        private businessDataService: BusinessDataService,
-
     ) {
         this._paginationPageSize$ = new ReplaySubject<number>();
         this.crudUserService = new CrudUserService();
@@ -40,6 +39,7 @@ export class SharingService implements OnDestroy {
         this.crudGroupsService = new CrudGroupsService();
         this.crudPerimetersService = new CrudPerimetersService();
         this.crudProcessesService = new CrudProcessesService();
+        this.crudBusinessDataService = new CrudBusinessDataService();
 
         // Initialization necessary for perimeters selection dropdown in modals and to display names instead of codes
         // As it is only necessary for admin purposes, it's done here rather than in the app initialization code
@@ -61,7 +61,7 @@ export class SharingService implements OnDestroy {
             case AdminItemType.PROCESS:
                 return this.crudProcessesService;
             case AdminItemType.BUSINESSDATA:
-                return this.businessDataService;
+                return this.crudBusinessDataService;
             default:
                 throw Error('No CrudService associated with ' + adminItemType);
         }

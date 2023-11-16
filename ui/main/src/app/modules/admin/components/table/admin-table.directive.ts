@@ -95,7 +95,6 @@ export abstract class AdminTableDirective implements OnInit, OnDestroy {
         protected confirmationDialogService: ConfirmationDialogService,
         protected modalService: NgbModal,
         protected dataHandlingService: SharingService,
-        protected businessDataService: BusinessDataService,
         private changeDetector: ChangeDetectorRef
     ) {
         this.processesDefinition = ProcessesService.getAllProcesses();
@@ -270,10 +269,10 @@ export abstract class AdminTableDirective implements OnInit, OnDestroy {
             this.openDeleteConfirmationDialog(params.data);
         }
         if (columnId === 'download') {
-            let fileName = params.data[this.idField];
-            this.businessDataService.getBusinessData(fileName).then(
+            const fileName = params.data[this.idField];
+            BusinessDataService.getBusinessData(fileName).then(
                 resource =>{
-                    let fileToSave = new Blob([JSON.stringify(resource, undefined, 2)], {
+                    const fileToSave = new Blob([JSON.stringify(resource, undefined, 2)], {
                         type: 'application/json;charset=UTF-8'
                     });
                     saveAs(fileToSave, fileName);
@@ -342,7 +341,7 @@ export abstract class AdminTableDirective implements OnInit, OnDestroy {
     }
 
     uploadFile(file: File, resourceName?: string) {
-        let read = new FileReader();
+        const read = new FileReader();
         const formData = new FormData();
         formData.append("file", file);
         read.readAsBinaryString(file);
@@ -353,7 +352,7 @@ export abstract class AdminTableDirective implements OnInit, OnDestroy {
         } 
 
         read.onload = (e) => {
-            this.businessDataService.updateBusinessData(fileName, formData).subscribe( () => {
+            BusinessDataService.updateBusinessData(fileName, formData).subscribe( () => {
                 this.refreshData();
             });
         }
