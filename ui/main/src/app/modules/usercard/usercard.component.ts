@@ -128,7 +128,6 @@ export class UserCardComponent implements OnInit, OnDestroy {
     public userCardTemplate: SafeHtml;
 
     constructor(
-        private cardService: CardService,
         private sanitizer: DomSanitizer,
         private element: ElementRef,
         private handlebars: HandlebarsService,
@@ -187,7 +186,7 @@ export class UserCardComponent implements OnInit, OnDestroy {
 
     private loadCardForEdition() {
         this.editCardMode = true;
-        this.cardService.loadCard(this.cardIdToEdit).subscribe((card) => {
+        CardService.loadCard(this.cardIdToEdit).subscribe((card) => {
             this.cardToEdit = card;
             this.editCardProcessId = this.cardToEdit.card.process;
             this.editCardStateId = this.cardToEdit.card.state;
@@ -216,7 +215,7 @@ export class UserCardComponent implements OnInit, OnDestroy {
     }
 
     private loadCardForCopy() {
-        this.cardService.loadCard(this.cardIdToCopy).subscribe((card) => {
+        CardService.loadCard(this.cardIdToCopy).subscribe((card) => {
             this.cardToCopy = card;
             this.copyCardProcessId = this.cardToCopy.card.process;
             this.copyCardStateId = this.cardToCopy.card.state;
@@ -554,7 +553,7 @@ export class UserCardComponent implements OnInit, OnDestroy {
 
         this.isPreparingCard = true;
 
-        this.cardService
+        CardService
             .postTranslateCardField(selectedProcess.id, selectedProcess.version, title)
             .subscribe((response) => {
                 this.isPreparingCard = false;
@@ -644,7 +643,7 @@ export class UserCardComponent implements OnInit, OnDestroy {
     }
 
     private getConnectedRecipients(): Observable<void> {
-        return this.cardService.fetchConnectedRecipients(fromCardToLightCard(this.card)).pipe(
+        return CardService.fetchConnectedRecipients(fromCardToLightCard(this.card)).pipe(
             map((connectedRecipients) => {
                 this.connectedRecipients.clear();
                 connectedRecipients.forEach( recipient => {
@@ -955,7 +954,7 @@ export class UserCardComponent implements OnInit, OnDestroy {
     }
 
     private postCardAndChildCard(childCard: any) {
-        this.cardService.postCard(fromCardToCardForPublishing(this.card)).subscribe((resp) => {
+        CardService.postCard(fromCardToCardForPublishing(this.card)).subscribe((resp) => {
             if (resp.status !== ServerResponseStatus.OK) {
                 const msg = resp.statusMessage ? resp.statusMessage : '';
                 const error = resp.status ? resp.status : '';
@@ -980,7 +979,7 @@ export class UserCardComponent implements OnInit, OnDestroy {
             parentCardId: cardCreationReport.id,
             initialParentCardUid: cardCreationReport.uid
         };
-        this.cardService.postCard(automatedResponseCard).subscribe((resp) => {
+        CardService.postCard(automatedResponseCard).subscribe((resp) => {
             if (resp.status !== ServerResponseStatus.OK) {
                 const msg = resp.statusMessage ? resp.statusMessage : '';
                 const error = resp.status ? resp.status : '';

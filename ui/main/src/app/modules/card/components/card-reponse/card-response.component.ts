@@ -81,7 +81,6 @@ export class CardResponseComponent implements OnChanges, OnInit {
     isReadOnlyUser: boolean;
 
     constructor(
-        private cardService: CardService,
         private modalService: NgbModal,
         private opfabAPIService: OpfabAPIService
 
@@ -189,7 +188,7 @@ export class CardResponseComponent implements OnChanges, OnInit {
                 initialParentCardUid: this.card.uid
             };
             this.sendingResponseInProgress = true;
-            this.cardService.postCard(card).subscribe(
+            CardService.postCard(card).subscribe(
                 (resp) => {
                     this.sendingResponseInProgress = false;
                     if (resp.status !== ServerResponseStatus.OK) {

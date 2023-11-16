@@ -96,7 +96,6 @@ export class ProcessMonitoringComponent implements OnDestroy, OnInit, AfterViewI
     selectedCardId: string;
 
     constructor(
-        private cardService: CardService,
         private translationService: TranslationService,
         private modalService: NgbModal,
         private selectedCardService: SelectedCardService,
@@ -163,7 +162,7 @@ export class ProcessMonitoringComponent implements OnDestroy, OnInit, AfterViewI
 
         const filter = this.getFilter(page_number, this.size, this.filtersTemplate);
 
-        this.cardService
+        CardService
             .fetchFilteredCards(filter)
             .subscribe({
                 next: (page: Page<any>) => {
@@ -276,7 +275,7 @@ export class ProcessMonitoringComponent implements OnDestroy, OnInit, AfterViewI
 
         const filter = this.getFilter(0, this.resultsNumber, this.filtersTemplate);
 
-        this.cardService
+        CardService
             .fetchFilteredCards(filter)
             .subscribe((page: Page<Object>) => {
                 const lines = page.content;

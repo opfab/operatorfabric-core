@@ -7,25 +7,23 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {Component, ElementRef, EventEmitter, Input, Output, ViewChild} from "@angular/core";
-import {TranslateService} from "@ngx-translate/core";
-import {UserActionLog} from "@ofModel/user-action-log.model";
-import {ColDef, GridOptions} from "ag-grid-community";
-import {EntitiesCellRendererComponent} from "./cell-renderers/entities-cell-renderer.component";
-import moment from "moment";
-import {NgbModalRef, NgbModalOptions, NgbModal} from "@ng-bootstrap/ng-bootstrap";
-import {Card, CardData} from "@ofModel/card.model";
-import {CardService} from "app/business/services/card/card.service";
-import {AlertMessageService} from "app/business/services/alert-message.service";
-import {MessageLevel} from "@ofModel/message.model";
-
+import {Component, ElementRef, EventEmitter, Input, Output, ViewChild} from '@angular/core';
+import {TranslateService} from '@ngx-translate/core';
+import {UserActionLog} from '@ofModel/user-action-log.model';
+import {ColDef, GridOptions} from 'ag-grid-community';
+import {EntitiesCellRendererComponent} from './cell-renderers/entities-cell-renderer.component';
+import moment from 'moment';
+import {NgbModalRef, NgbModalOptions, NgbModal} from '@ng-bootstrap/ng-bootstrap';
+import {Card, CardData} from '@ofModel/card.model';
+import {CardService} from 'app/business/services/card/card.service';
+import {AlertMessageService} from 'app/business/services/alert-message.service';
+import {MessageLevel} from '@ofModel/message.model';
 
 @Component({
     selector: 'of-useractionlogs-table',
     templateUrl: './useractionlogs-table.component.html'
 })
 export class UserActionLogsTableComponent {
-
     @Input() actions: UserActionLog[];
     @Input() totalElements: number;
     @Input() totalPages: number;
@@ -55,10 +53,7 @@ export class UserActionLogsTableComponent {
     selectedCard: Card;
     selectedChildCards: Card[];
 
-    constructor( private translate: TranslateService,
-        private cardService: CardService,
-        private modalService: NgbModal) {
-
+    constructor(private translate: TranslateService, private modalService: NgbModal) {
         this.dateColumnName = this.translate.instant('useractionlogs.date');
         this.actionColumnName = this.translate.instant('useractionlogs.action');
         this.loginColumnName = this.translate.instant('useractionlogs.login');
@@ -82,9 +77,9 @@ export class UserActionLogsTableComponent {
                 // e.g. key "to" defined by ag-grid for use with pagination can be found under "ag-grid.to" in assets
                 return translate.instant('ag-grid.' + params.key);
             },
-            getRowStyle:  function (params) {
+            getRowStyle: function (params) {
                 if (params.data.cardUid !== null) {
-                    return {'cursor': 'pointer'}
+                    return {cursor: 'pointer'};
                 }
                 return null;
             },
@@ -95,7 +90,7 @@ export class UserActionLogsTableComponent {
                     wrapText: false,
                     autoHeight: false,
                     width: 180,
-                    valueGetter: params => {
+                    valueGetter: (params) => {
                         return this.getFormattedDateTime(params.data.date);
                     }
                 },
@@ -151,7 +146,12 @@ export class UserActionLogsTableComponent {
             {type: 'timeColumn', headerName: this.dateColumnName, field: 'date'},
             {type: 'dataColumn', headerName: this.actionColumnName, field: 'action'},
             {type: 'dataColumn', headerName: this.loginColumnName, field: 'login'},
-            {type: 'entitiesColumn', headerName: this.entitiesColumnName, field: 'entities', cellRenderer: 'entitiesCellRenderer'},
+            {
+                type: 'entitiesColumn',
+                headerName: this.entitiesColumnName,
+                field: 'entities',
+                cellRenderer: 'entitiesCellRenderer'
+            },
             {type: 'cardUidColumn', headerName: this.cardUidColumnName, field: 'cardUid'},
             {type: 'commentColumn', headerName: this.commentColumnName, field: 'comment'}
         ];
@@ -163,7 +163,7 @@ export class UserActionLogsTableComponent {
         this.pageChange.emit(currentPage);
     }
 
-    getFormattedDateTime(epochDate: number):string {
+    getFormattedDateTime(epochDate: number): string {
         return moment(epochDate).format('HH:mm:ss DD/MM/YYYY');
     }
 
@@ -174,13 +174,16 @@ export class UserActionLogsTableComponent {
     private openCardDetail(cardId: string) {
         this.cardLoadingInProgress = true;
         if (!this.cardLoadingIsTakingMoreThanOneSecond) this.checkForCardLoadingInProgressForMoreThanOneSecond();
-        this.cardService.loadArchivedCard(cardId).subscribe((card: CardData) => {
+        CardService.loadArchivedCard(cardId).subscribe((card: CardData) => {
             if (!card) {
                 this.cardLoadingInProgress = false;
                 if (this.modalRef) this.modalRef.close();
-                AlertMessageService.sendAlertMessage({message: '', i18n: {key: "feed.selectedCardDeleted"}, level: MessageLevel.ERROR});
-            } else if (card.card.initialParentCardUid)
-                this.openCardDetail(card.card.initialParentCardUid);
+                AlertMessageService.sendAlertMessage({
+                    message: '',
+                    i18n: {key: 'feed.selectedCardDeleted'},
+                    level: MessageLevel.ERROR
+                });
+            } else if (card.card.initialParentCardUid) this.openCardDetail(card.card.initialParentCardUid);
             else {
                 this.selectedCard = card.card;
                 this.selectedChildCards = card.childCards;
@@ -193,9 +196,7 @@ export class UserActionLogsTableComponent {
                 this.cardLoadingInProgress = false;
                 this.cardLoadingIsTakingMoreThanOneSecond = false;
             }
-
         });
-
     }
 
     // we show a spinner on screen if archives loading takes more than 1 second

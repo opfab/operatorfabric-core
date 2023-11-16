@@ -82,7 +82,6 @@ export class CardBodyComponent implements OnChanges, OnInit, OnDestroy {
     private userWithPerimeters: UserWithPerimeters;
 
     constructor(
-        private cardService: CardService,
         private router: Router,
         private lightCardsStoreService: LightCardsStoreService,
         private selectedCardService: SelectedCardService,
@@ -136,7 +135,7 @@ export class CardBodyComponent implements OnChanges, OnInit, OnDestroy {
     }
 
     private integrateOneChildCard(newChildCard: Card) {
-        this.cardService.loadCard(newChildCard.id).subscribe((cardData) => {
+        CardService.loadCard(newChildCard.id).subscribe((cardData) => {
             const newChildArray = this.childCards.filter((childCard) => childCard.id !== cardData.card.id);
             newChildArray.push(cardData.card);
             this.childCards = newChildArray;
@@ -265,7 +264,7 @@ export class CardBodyComponent implements OnChanges, OnInit, OnDestroy {
                     this.updateLastReadCardStatusOnFeedIfNeeded();
             }
             this.lastCardSetToReadButNotYetOnFeed = this.card;
-            this.cardService.postUserCardRead(this.card.uid).subscribe();
+            CardService.postUserCardRead(this.card.uid).subscribe();
         } else this.updateLastReadCardStatusOnFeedIfNeeded();
     }
 
