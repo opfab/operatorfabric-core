@@ -12,7 +12,7 @@ import {CrudService} from 'app/business/services/crud-service';
 import {Observable, ReplaySubject, Subject} from 'rxjs';
 import {takeUntil} from 'rxjs/operators';
 import {PerimetersService} from 'app/business/services/users/perimeters.service';
-import {AdminProcessesService} from 'app/business/services/businessconfig/adminprocess.service';
+import {CrudProcessesService} from 'app/business/services/admin/crud-processes-service';
 import {BusinessDataService} from 'app/business/services/businessconfig/businessdata.service';
 import {CrudUserService} from 'app/business/services/admin/crud-user.service';
 import {CrudEntitiesService} from 'app/business/services/admin/crud-entities-service';
@@ -28,17 +28,18 @@ export class SharingService implements OnDestroy {
     private crudEntitiesService: CrudEntitiesService;
     private crudGroupsService: CrudGroupsService;
     private crudPerimetersService: CrudPerimetersService;
+    private crudProcessesService: CrudProcessesService
 
     constructor(
         private businessDataService: BusinessDataService,
-        private adminprocessesService: AdminProcessesService
+
     ) {
         this._paginationPageSize$ = new ReplaySubject<number>();
         this.crudUserService = new CrudUserService();
         this.crudEntitiesService = new CrudEntitiesService();
         this.crudGroupsService = new CrudGroupsService();
         this.crudPerimetersService = new CrudPerimetersService();
-
+        this.crudProcessesService = new CrudProcessesService();
 
         // Initialization necessary for perimeters selection dropdown in modals and to display names instead of codes
         // As it is only necessary for admin purposes, it's done here rather than in the app initialization code
@@ -58,7 +59,7 @@ export class SharingService implements OnDestroy {
             case AdminItemType.PERIMETER:
                 return this.crudPerimetersService;
             case AdminItemType.PROCESS:
-                return this.adminprocessesService;
+                return this.crudProcessesService;
             case AdminItemType.BUSINESSDATA:
                 return this.businessDataService;
             default:
