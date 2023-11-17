@@ -6,15 +6,10 @@
 // SPDX-License-Identifier: CC-BY-4.0
 
 
-= Mail notification
+= Email Notifications
 
-Opfab can send card notification via email. Opfab will send a mail notification whenever a new card for a
-user is published, the card remains unread for a configured period and the user is not connected to
-Opfab. Email subject will contain card title, summary, start and end dates; email body will contain a link
-to card detail in Opfab.
+OpFab can send card notifications via email. These notifications are sent when a new card is published for a user, remains unread for a configured period, and the user is not connected to OpFab. The email subject includes the card title, summary, and start and end dates. The email body contains a link to the card details in OpFab.
 
-== Mail notification configuration
+== Configuring Email Notifications
 
-To receive mail notification, users need to enable the option in user settings, provide an email address
-where card notifications will be sent and select the processes/states for which they want to be notified by
-email.
+Users can enable email notifications in their user settings. They must provide an email address for receiving notifications and select the processes/states they want to be notified about.
