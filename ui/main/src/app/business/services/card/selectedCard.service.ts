@@ -7,72 +7,66 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {Injectable} from '@angular/core';
 import {Card} from '@ofModel/card.model';
 import {Observable, ReplaySubject, Subject} from 'rxjs';
 
-@Injectable({
-    providedIn: 'root'
-})
 export class SelectedCardService {
-    private selectedCardId: string;
-    private selectedCardIdChange = new ReplaySubject<string>(1);
-    private selectedCardNotFound = false;
+    private static selectedCardId: string;
+    private static selectedCardIdChange = new ReplaySubject<string>(1);
+    private static selectedCardNotFound = false;
 
-    private selectedCardWithChildrenChange = new ReplaySubject<SelectedCard>(1);
+    private static selectedCardWithChildrenChange = new ReplaySubject<SelectedCard>(1);
 
-    private selectedCardDeleted = new Subject<any>();
+    private static selectedCardDeleted = new Subject<any>();
 
-    public setSelectedCardId(cardId: string) {
-        this.selectedCardId = cardId;
-        this.selectedCardNotFound = false;
-        this.selectedCardWithChildrenChange.next(new SelectedCard(null,null,false));
-        this.selectedCardIdChange.next(cardId);
+    public static setSelectedCardId(cardId: string): void {
+        SelectedCardService.selectedCardId = cardId;
+        SelectedCardService.selectedCardNotFound = false;
+        SelectedCardService.selectedCardWithChildrenChange.next(new SelectedCard(null, null, false));
+        SelectedCardService.selectedCardIdChange.next(cardId);
     }
 
-    public setSelectedCardWithChildren(card: Card, childCards: Card[]) {
-        this.selectedCardNotFound = false;
+    public static setSelectedCardWithChildren(card: Card, childCards: Card[]): void {
+        SelectedCardService.selectedCardNotFound = false;
         if (!childCards) childCards = [];
-        this.selectedCardWithChildrenChange.next(new SelectedCard(card, childCards,false));
+        SelectedCardService.selectedCardWithChildrenChange.next(new SelectedCard(card, childCards, false));
     }
 
-    public setSelectedCardNotFound() {
-        this.selectedCardNotFound = true;
-        this.selectedCardWithChildrenChange.next(new SelectedCard(null,null,true));
+    public static setSelectedCardNotFound(): void {
+        SelectedCardService.selectedCardNotFound = true;
+        SelectedCardService.selectedCardWithChildrenChange.next(new SelectedCard(null, null, true));
     }
 
-    public isSelectedCardNotFound():boolean {
-        return  this.selectedCardNotFound;
+    public static isSelectedCardNotFound(): boolean {
+        return SelectedCardService.selectedCardNotFound;
     }
 
-
-    public getSelectedCardId(): string {
-        return this.selectedCardId;
+    public static getSelectedCardId(): string {
+        return SelectedCardService.selectedCardId;
     }
 
-    public clearSelectedCardId() {
-        this.selectedCardId = null;
-        this.selectedCardIdChange.next(null);
+    public static clearSelectedCardId(): void {
+        SelectedCardService.selectedCardId = null;
+        SelectedCardService.selectedCardIdChange.next(null);
     }
 
-    public getSelectCardIdChanges(): Observable<string> {
-        return this.selectedCardIdChange.asObservable();
+    public static getSelectCardIdChanges(): Observable<string> {
+        return SelectedCardService.selectedCardIdChange.asObservable();
     }
 
-    public getSelectCard(): Observable<SelectedCard> {
-        return this.selectedCardWithChildrenChange.asObservable();
+    public static getSelectCard(): Observable<SelectedCard> {
+        return SelectedCardService.selectedCardWithChildrenChange.asObservable();
     }
 
-    public setCardDeleted(cardId: string) {
-        if (this.selectedCardId === cardId)
-            this.selectedCardDeleted.next(cardId);
+    public static setCardDeleted(cardId: string): void {
+        if (SelectedCardService.selectedCardId === cardId)
+            SelectedCardService.selectedCardDeleted.next(cardId);
     }
 
-    public getSelectedCardsDeleted(): Observable<any> {
-        return this.selectedCardDeleted.asObservable();
+    public static getSelectedCardsDeleted(): Observable<any> {
+        return SelectedCardService.selectedCardDeleted.asObservable();
     }
 }
-
 
 export class SelectedCard {
     public readonly card: Card;

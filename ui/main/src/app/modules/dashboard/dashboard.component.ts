@@ -31,7 +31,6 @@ export class DashboardComponent implements OnInit, OnDestroy {
 
     constructor(
         private lightCardsStoreService: LightCardsStoreService,
-        private selectedCardService: SelectedCardService,
         private lightCardsFeedFilterService: LightCardsFeedFilterService,
         private modalService: NgbModal,
     ) {
@@ -50,7 +49,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
 
     selectCard(info) {
         this.openPopover?.close();
-        this.selectedCardService.setSelectedCardId(info);
+        SelectedCardService.setSelectedCardId(info);
         const options: NgbModalOptions = {
             size: 'fullscreen'
         };
@@ -59,7 +58,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
         // Clear card selection when modal is dismissed by pressing escape key or clicking outside of modal
         // Closing event is already handled in card detail component
         this.modalRef.dismissed.subscribe(() => {
-            this.selectedCardService.clearSelectedCardId();
+            SelectedCardService.clearSelectedCardId();
         });
     }
 

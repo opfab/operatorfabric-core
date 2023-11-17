@@ -68,7 +68,6 @@ export class LightCardsStoreService {
     private receivedAcksSubject = new Subject<{cardUid: string; entitiesAcks: string[]}>();
 
     constructor(
-        private selectedCardService: SelectedCardService
     ) {
         this.getLightCardsWithLimitedUpdateRate().subscribe();
         this.checkForLoadingInProgress();
@@ -156,8 +155,8 @@ export class LightCardsStoreService {
                             LogOption.LOCAL_AND_REMOTE
                         );
                         this.addOrUpdateLightCard(operation.card);
-                        if (operation.card.id === this.selectedCardService.getSelectedCardId())
-                            this.selectedCardService.setSelectedCardId(operation.card.id); // to update the selected card
+                        if (operation.card.id === SelectedCardService.getSelectedCardId())
+                            SelectedCardService.setSelectedCardId(operation.card.id); // to update the selected card
                         break;
                     case CardOperationType.DELETE:
                         logger.info(
@@ -273,8 +272,8 @@ export class LightCardsStoreService {
     }
 
     private closeCardIfOpen(cardId) {
-        if (cardId === this.selectedCardService.getSelectedCardId()) {
-            this.selectedCardService.setCardDeleted(cardId);
+        if (cardId === SelectedCardService.getSelectedCardId()) {
+            SelectedCardService.setCardDeleted(cardId);
         }
     }
 

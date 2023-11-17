@@ -84,7 +84,6 @@ export class CardBodyComponent implements OnChanges, OnInit, OnDestroy {
     constructor(
         private router: Router,
         private lightCardsStoreService: LightCardsStoreService,
-        private selectedCardService: SelectedCardService,
         private opfabAPIService: OpfabAPIService
     ) {
         this.userWithPerimeters = UserService.getCurrentUserWithPerimeters();
@@ -356,9 +355,9 @@ export class CardBodyComponent implements OnChanges, OnInit, OnDestroy {
         this.updateLastReadCardStatusOnFeedIfNeeded();
         if (this.parentModalRef) {
             this.parentModalRef.close();
-            this.selectedCardService.clearSelectedCardId();
+            SelectedCardService.clearSelectedCardId();
         } else {
-            this.selectedCardService.clearSelectedCardId();
+            SelectedCardService.clearSelectedCardId();
             this.router.navigate(['/' + RouterStore.getCurrentRoute().split('/')[1]]);
         }
     }

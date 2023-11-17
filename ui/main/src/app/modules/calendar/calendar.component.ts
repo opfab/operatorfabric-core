@@ -38,7 +38,6 @@ export class CalendarComponent implements OnInit, OnDestroy, AfterViewInit {
         private modalService: NgbModal,
         private lightCardsStoreService: LightCardsStoreService,
         private lightCardsFeedFilterService: LightCardsFeedFilterService,
-        private selectedCardService: SelectedCardService
     ) {
         ProcessesService.getAllProcesses().forEach((process) => {
             if (process.uiVisibility?.calendar) this.mapOfProcesses.set(process.id, 1);
@@ -229,7 +228,7 @@ export class CalendarComponent implements OnInit, OnDestroy, AfterViewInit {
     }
 
     selectCard(info) {
-        this.selectedCardService.setSelectedCardId(info.event.id);
+        SelectedCardService.setSelectedCardId(info.event.id);
         const options: NgbModalOptions = {
             size: 'fullscreen'
         };
@@ -238,7 +237,7 @@ export class CalendarComponent implements OnInit, OnDestroy, AfterViewInit {
         // Clear card selection when modal is dismissed by pressing escape key or clicking outside of modal
         // Closing event is already handled in card detail component
         this.modalRef.dismissed.subscribe(() => {
-            this.selectedCardService.clearSelectedCardId();
+            SelectedCardService.clearSelectedCardId();
         });
     }
 

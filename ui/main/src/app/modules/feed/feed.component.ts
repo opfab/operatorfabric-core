@@ -34,8 +34,7 @@ export class FeedComponent implements OnInit,OnDestroy {
 
     constructor(
         private lightCardsFeedFilterService: LightCardsFeedFilterService,
-        private router: Router,
-        private selectedCardService : SelectedCardService
+        private router: Router
     ) {
         this.maxNbOfCardsToDisplay = ConfigService.getConfigValue('feed.card.maxNbOfCardsToDisplay', 100);
         this.configureExperimentalHallwayMode();
@@ -50,7 +49,7 @@ export class FeedComponent implements OnInit,OnDestroy {
     }
 
     ngOnInit() {
-        this.selection$ = this.selectedCardService.getSelectCardIdChanges();
+        this.selection$ = SelectedCardService.getSelectCardIdChanges();
 
         moment.updateLocale('en', {
             week: {

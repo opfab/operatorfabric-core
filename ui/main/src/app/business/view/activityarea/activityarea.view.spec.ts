@@ -63,7 +63,7 @@ describe('ActivityAreaView', () => {
     }
 
     function mockLightCardStoreService() {
-        lightCardsStoreService = new LightCardsStoreService(null);
+        lightCardsStoreService = new LightCardsStoreService();
     }
 
     afterEach(() => {

@@ -39,13 +39,12 @@ export class CardComponent implements OnInit, OnDestroy {
     detailClosed: boolean;
 
     constructor(
-        protected selectedCardService: SelectedCardService,
         protected modalService: NgbModal,
         protected router: Router
     ) {}
 
     ngOnInit() {
-        this.selectedCardService
+        SelectedCardService
             .getSelectCard()
             .pipe(takeUntil(this.unsubscribe$))
             .subscribe((selectedCard: SelectedCard) => {
@@ -86,7 +85,7 @@ export class CardComponent implements OnInit, OnDestroy {
 
     // we show a spinner on screen if card loading takes more than 1 second
     checkForCardLoadingInProgressForMoreThanOneSecond() {
-        this.selectedCardService
+        SelectedCardService
             .getSelectCardIdChanges()
             .pipe(takeUntil(this.unsubscribe$))
             .subscribe((cardId) => {
@@ -94,7 +93,7 @@ export class CardComponent implements OnInit, OnDestroy {
                 //this.cardNotFound = false;
                 this.currentSelectedCardId = cardId;
                 setTimeout(() => {
-                    if (this.selectedCardService.isSelectedCardNotFound()) {
+                    if (SelectedCardService.isSelectedCardNotFound()) {
                         this.cardLoadingInProgress = false;
                         return;
                     }
@@ -108,7 +107,7 @@ export class CardComponent implements OnInit, OnDestroy {
     }
 
     checkForCardDeleted() {
-        this.selectedCardService
+        SelectedCardService
             .getSelectedCardsDeleted()
             .pipe(takeUntil(this.unsubscribe$))
             .subscribe(cardId => {
@@ -136,9 +135,9 @@ export class CardComponent implements OnInit, OnDestroy {
 
         if (this.parentModalRef) {
             this.parentModalRef.close();
-            this.selectedCardService.clearSelectedCardId();
+            SelectedCardService.clearSelectedCardId();
         } else {
-            this.selectedCardService.clearSelectedCardId();
+            SelectedCardService.clearSelectedCardId();
             this.router.navigate(['/feed']);
         }
     }

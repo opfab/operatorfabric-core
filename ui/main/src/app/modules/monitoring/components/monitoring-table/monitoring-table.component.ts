@@ -81,7 +81,6 @@ export class MonitoringTableComponent implements OnChanges, OnDestroy {
     constructor(
         private translationService: TranslationService,
         private modalService: NgbModal,
-        private selectedCardService: SelectedCardService,
         private lightCardsStoreService: LightCardsStoreService
     ) {
         this.monitoringConfig = ConfigService.getMonitoringConfig();
@@ -411,7 +410,7 @@ export class MonitoringTableComponent implements OnChanges, OnDestroy {
     }
 
     selectCard(info) {
-        this.selectedCardService.setSelectedCardId(info);
+        SelectedCardService.setSelectedCardId(info);
         const options: NgbModalOptions = {
             size: 'fullscreen'
         };
@@ -420,7 +419,7 @@ export class MonitoringTableComponent implements OnChanges, OnDestroy {
         // Clear card selection when modal is dismissed by pressing escape key or clicking outside of modal
         // Closing event is already handled in card detail component
         this.modalRef.dismissed.subscribe(() => {
-            this.selectedCardService.clearSelectedCardId();
+            SelectedCardService.clearSelectedCardId();
         });
     }
 }
