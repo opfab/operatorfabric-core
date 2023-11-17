@@ -98,7 +98,6 @@ export class ProcessMonitoringComponent implements OnDestroy, OnInit, AfterViewI
     constructor(
         private translationService: TranslationService,
         private modalService: NgbModal,
-        private selectedCardService: SelectedCardService,
         private changeDetector: ChangeDetectorRef
     ) {
         this.processMonitoring = ConfigService.getConfigValue('processMonitoring');
@@ -137,7 +136,7 @@ export class ProcessMonitoringComponent implements OnDestroy, OnInit, AfterViewI
             }
         }, 5000);
 
-        this.selectedCardService.getSelectCardIdChanges().subscribe(selectedCardId => this.selectedCardId = selectedCardId)
+        SelectedCardService.getSelectCardIdChanges().subscribe(selectedCardId => this.selectedCardId = selectedCardId)
     }
 
     ngAfterViewInit() {

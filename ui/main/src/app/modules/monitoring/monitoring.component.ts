@@ -48,8 +48,7 @@ export class MonitoringComponent implements OnInit, OnDestroy {
     selectedCardId: string;
 
     constructor(
-        private lightCardsStoreService: LightCardsStoreService,
-        private selectedCardService: SelectedCardService
+        private lightCardsStoreService: LightCardsStoreService
     ) {
         ProcessesService.getAllProcesses().forEach((process) => {
             const id = process.id;
@@ -93,7 +92,7 @@ export class MonitoringComponent implements OnInit, OnDestroy {
             .subscribe((inProgress: boolean) => (this.loadingInProgress = inProgress));
         this.isThereProcessStateToDisplay = ProcessesService.getStatesListPerProcess(false, false).size > 0;
 
-        this.selectedCardService.getSelectCardIdChanges().subscribe(selectedCardId => this.selectedCardId = selectedCardId)
+        SelectedCardService.getSelectCardIdChanges().subscribe(selectedCardId => this.selectedCardId = selectedCardId)
     }
 
     private areFiltersCorrectlySet(filters: Array<any>): boolean {

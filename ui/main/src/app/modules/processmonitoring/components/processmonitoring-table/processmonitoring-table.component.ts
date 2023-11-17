@@ -46,7 +46,6 @@ export class ProcessmonitoringTableComponent {
     private columnDefs: ColDef[] = [];
 
     constructor(private translate: TranslateService,
-                private selectedCardService: SelectedCardService,
                 private modalService: NgbModal) {
 
         this.gridOptions = <GridOptions>{
@@ -204,7 +203,7 @@ export class ProcessmonitoringTableComponent {
     }
 
     selectCard(info) {
-        this.selectedCardService.setSelectedCardId(info);
+        SelectedCardService.setSelectedCardId(info);
         const options: NgbModalOptions = {
             size: 'fullscreen'
         };
@@ -213,7 +212,7 @@ export class ProcessmonitoringTableComponent {
         // Clear card selection when modal is dismissed by pressing escape key or clicking outside of modal
         // Closing event is already handled in card detail component
         this.modalRef.dismissed.subscribe(() => {
-            this.selectedCardService.clearSelectedCardId();
+            SelectedCardService.clearSelectedCardId();
         });
     }
 }

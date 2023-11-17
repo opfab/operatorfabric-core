@@ -14,7 +14,6 @@ import {RemoteLoggerService} from 'app/business/services/logs/remote-logger.serv
 import {SoundNotificationService} from 'app/business/services/notifications/sound-notification.service';
 import {OpfabEventStreamService} from './business/services/events/opfabEventStream.service';
 import {RouterNavigationService} from 'app/router/router-navigation.service';
-import {SelectedCardLoaderService} from './business/services/card/selectedCardLoader.service';
 import {PageType, RouterStore} from './business/store/router.store';
 
 @Component({
@@ -74,7 +73,6 @@ export class AppComponent {
     constructor(
         private soundNotificationService: SoundNotificationService,
         private routerNavigationService: RouterNavigationService, // put it here to have it injected and started a startup
-        private selectedCardLoaderService: SelectedCardLoaderService  // put it here to have it injected and started a startup
     ) {
     }
 

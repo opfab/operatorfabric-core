@@ -20,8 +20,7 @@ import {RouterStore} from 'app/business/store/router.store';
 export class RouterNavigationService {
 
     constructor(
-        private router: Router,
-        private selectedCardService: SelectedCardService
+        private router: Router
     ) {
         this.logNavigation();
         this.updateRouterStore();
@@ -44,7 +43,7 @@ export class RouterNavigationService {
     clearSelectedCardWhenUserNavigateAwayFromTheFeed() {
         this.router.events.pipe(filter((event) => event instanceof NavigationEnd)).subscribe((event: NavigationEnd) => {
             if (!event.url.startsWith('/feed/cards')) {
-                this.selectedCardService.clearSelectedCardId();
+                SelectedCardService.clearSelectedCardId();
             }
         });
     }
@@ -53,7 +52,7 @@ export class RouterNavigationService {
         this.router.events.pipe(filter((event) => event instanceof NavigationEnd)).subscribe((event: NavigationEnd) => {
             if (event.url.startsWith('/feed/cards/')) {
                 const cardId = event.url.split('cards/')[1];
-                this.selectedCardService.setSelectedCardId(decodeURI(cardId));
+                SelectedCardService.setSelectedCardId(decodeURI(cardId));
             }
         });
     }
