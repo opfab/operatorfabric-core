@@ -11,13 +11,14 @@ declare const opfab;
 
 export class MessageUserCardTemplateView {
 
-    public getSpecificCardInformation(message: string) {
+    public getSpecificCardInformation(quillEditor: any) {
+
         const card = {
             summary: {key: 'message.summary'},
             title: {key: 'message.title'},
-            data: {message: message}
+            data: {richMessage: quillEditor.getContents()}
         };
-        if (message.length < 1)
+        if (quillEditor.isEmpty())
             return {
                 valid: false,
                 errorMsg: opfab.utils.getTranslation('buildInTemplate.messageUserCard.noMessageError')
@@ -28,13 +29,13 @@ export class MessageUserCardTemplateView {
         };
     }
 
-    public getMessage() {
+    public getRichMessage() {
         let message = '';
         if (opfab.currentUserCard.getEditionMode() !== 'CREATE') {
-            const messageField = opfab.currentCard.getCard()?.data?.message;
+            const messageField = opfab.currentCard.getCard()?.data?.richMessage;
             if (messageField) message = messageField;
         }
-        return opfab.utils.escapeHtml(message);
+        return message;
     }
 
 }

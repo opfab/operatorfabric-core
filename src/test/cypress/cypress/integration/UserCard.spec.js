@@ -1302,7 +1302,7 @@ describe('User Card ', function () {
       
       // We check we can add an entity to the default selected value
       usercard.selectRecipientForInformation('IT SUPERVISION CENTER');
-      cy.get('#usercard_message_input').type('Hello');
+      cy.get('#usercard_message_input').find('div').eq(0).type('Hello');
       usercard.preview();
 
       cy.get("#opfab-entity-recipients").find('span').should('have.length', 4);
@@ -1380,7 +1380,7 @@ describe('User Card ', function () {
 
       cy.waitDefaultTime();
       cy.get('#opfab-sev-information').check(); // we set severity different from default value
-      cy.get('#usercard_message_input').type('Test for copy card feature');
+      cy.get('#usercard_message_input').find('div').eq(0).type('Test for copy card feature');
 
       usercard.selectEmitter('Control Center FR West');
 
