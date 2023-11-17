@@ -1,4 +1,4 @@
-/* Copyright (c) 2021-2022, RTE (http://www.rte-france.com)
+/* Copyright (c) 2021-2023, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -37,20 +37,24 @@ public class DataInitComponent {
     private static final String NUMBER_OF_ITEMS_DEBUG = "Found {} {} in properties file.";
     private static final String NO_PROPERTIES_DEBUG = "No {} in properties file.";
 
-    @Autowired
-    private ExternalDevicesProperties externalDevicesProperties;
+    private final ExternalDevicesProperties externalDevicesProperties;
+    private final DeviceConfigurationRepository deviceConfigurationRepository;
+    private final SignalMappingRepository signalMappingRepository;
+    private final UserConfigurationRepository userConfigurationRepository;
+    private final DevicesService deviceService;
 
     @Autowired
-    private DeviceConfigurationRepository deviceConfigurationRepository;
-
-    @Autowired
-    private SignalMappingRepository signalMappingRepository;
-
-    @Autowired
-    private UserConfigurationRepository userConfigurationRepository;
-
-    @Autowired
-    private DevicesService deviceService;
+    public DataInitComponent(ExternalDevicesProperties externalDevicesProperties,
+                             DeviceConfigurationRepository deviceConfigurationRepository,
+                             SignalMappingRepository signalMappingRepository,
+                             UserConfigurationRepository userConfigurationRepository,
+                             DevicesService deviceService) {
+        this.externalDevicesProperties = externalDevicesProperties;
+        this.deviceConfigurationRepository = deviceConfigurationRepository;
+        this.signalMappingRepository = signalMappingRepository;
+        this.userConfigurationRepository = userConfigurationRepository;
+        this.deviceService = deviceService;
+    }
 
     @PostConstruct
     public void init() {
