@@ -189,20 +189,23 @@ export class ApplicationLoadingComponent implements OnInit {
 
     private loadSettings() {
         this.settingsService.getUserSettings().subscribe({
-            next: (response) => {
-                if (response.status === ServerResponseStatus.OK) {
-                    logger.info('Settings loaded ' + JSON.stringify(response.data));
-                    ConfigService.overrideConfigSettingsWithUserSettings(response.data);
-                    this.checkIfAccountIsAlreadyUsed();
-                } else {
-                    if (response.status === ServerResponseStatus.NOT_FOUND) logger.info('No settings for user');
-                    else if (response.status === ServerResponseStatus.FORBIDDEN) {
+            next: ({ status, data }) => {
+                switch (status) {
+                    case ServerResponseStatus.OK:
+                        logger.info('Settings loaded ' + JSON.stringify(data));
+                        ConfigService.overrideConfigSettingsWithUserSettings(data);
+                        break;
+                    case ServerResponseStatus.NOT_FOUND:
+                        logger.info('No settings for user');
+                        break;
+                    case ServerResponseStatus.FORBIDDEN:
                         logger.error('Access forbidden when loading settings');
                         this.authService.logout();
                         return;
-                    } else logger.error('Error when loading settings' + response.status);
-                    this.checkIfAccountIsAlreadyUsed();
+                    default:
+                        logger.error('Error when loading settings' + status);
                 }
+                this.checkIfAccountIsAlreadyUsed();
             }
         });
     }
