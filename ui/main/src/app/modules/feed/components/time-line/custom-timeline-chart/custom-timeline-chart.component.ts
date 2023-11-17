@@ -653,36 +653,14 @@ export class CustomTimelineChartComponent extends BaseChartComponent implements 
     };
 
     getTickSize() {
-        switch (this.domainId) {
-            // need to explicit format for moment : https://stackoverflow.com/questions/41768864/moment-add-only-works-with-literal-values
-            case 'TR':
-                const amountTR: moment.DurationInputArg1 = 15;
-                const unitTR: moment.DurationInputArg2 = 'minute';
-                return {amount: amountTR, unit: unitTR};
-
-            case 'J':
-                const amountJ: moment.DurationInputArg1 = 30;
-                const unitJ: moment.DurationInputArg2 = 'minute';
-                return {amount: amountJ, unit: unitJ};
-
-            case '7D':
-                const amount7D: moment.DurationInputArg1 = 4;
-                const unit7D: moment.DurationInputArg2 = 'hour';
-                return {amount: amount7D, unit: unit7D};
-
-            case 'W':
-                const amountW: moment.DurationInputArg1 = 4;
-                const unitW: moment.DurationInputArg2 = 'hour';
-                return {amount: amountW, unit: unitW};
-
-            case 'M':
-                const amountM: moment.DurationInputArg1 = 1;
-                const unitM: moment.DurationInputArg2 = 'day';
-                return {amount: amountM, unit: unitM};
-
-            default:
-                return;
-        }
+        const tickSizeMap = {
+            'TR': {amount: 15 as moment.DurationInputArg1, unit: 'minute' as moment.DurationInputArg2},
+            'J': {amount: 30 as moment.DurationInputArg1, unit: 'minute' as moment.DurationInputArg2},
+            '7D': {amount: 4 as moment.DurationInputArg1, unit: 'hour' as moment.DurationInputArg2},
+            'W': {amount: 4 as moment.DurationInputArg1, unit: 'hour' as moment.DurationInputArg2},
+            'M': {amount: 1 as moment.DurationInputArg1, unit: 'day' as moment.DurationInputArg2}
+        };
+        return tickSizeMap[this.domainId];
     }
 
     /**
