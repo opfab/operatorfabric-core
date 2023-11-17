@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2022, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2023, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -6,8 +6,6 @@
  * SPDX-License-Identifier: MPL-2.0
  * This file is part of the OperatorFabric project.
  */
-
-
 
 package org.opfab.users.configuration;
 
@@ -25,10 +23,11 @@ import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Component;
 
 import jakarta.annotation.PostConstruct;
-import java.util.Optional;
 
+import java.util.List;
 /**
- * This component solely serves as data initializer for users, groups and entities, it loads users, groups and entities from properties
+ * This component solely serves as data initializer for users, groups and
+ * entities, it loads users, groups and entities from properties
  * configuration and insert or update them as needed
  *
  *
@@ -38,26 +37,27 @@ import java.util.Optional;
 public class DataInitComponent {
 
     private static final String FAILED_INIT_MSG = "Unable to init ";
-    @Autowired
-    private UsersProperties usersProperties;
-
-    @Autowired
-    private MongoUserRepository userRepository;
-
-    @Autowired
-    private MongoGroupRepository groupRepository;
-
-    @Autowired
-    private MongoEntityRepository entityRepository;
-
-    @Autowired
-    private PerimeterRepository perimeterRepository;
-
-    @Autowired
-    private MongoUserSettingsRepository userSettingsRepository;
+    private final UsersProperties usersProperties;
+    private final MongoUserRepository userRepository;
+    private final MongoGroupRepository groupRepository;
+    private final MongoEntityRepository entityRepository;
+    private final PerimeterRepository perimeterRepository;
+    private final MongoUserSettingsRepository userSettingsRepository;
 
     @Getter
     private boolean initiated;
+
+    @Autowired
+    public DataInitComponent(UsersProperties usersProperties, MongoUserRepository userRepository,
+            MongoGroupRepository groupRepository, MongoEntityRepository entityRepository,
+            PerimeterRepository perimeterRepository, MongoUserSettingsRepository userSettingsRepository) {
+        this.usersProperties = usersProperties;
+        this.userRepository = userRepository;
+        this.groupRepository = groupRepository;
+        this.entityRepository = entityRepository;
+        this.perimeterRepository = perimeterRepository;
+        this.userSettingsRepository = userSettingsRepository;
+    }
 
     @PostConstruct
     public void init() {
@@ -74,16 +74,19 @@ public class DataInitComponent {
             for (UserData u : usersProperties.getUsers()) {
                 safeInsertUsers(u);
             }
-
-            for (UserSettingsData us : usersProperties.getUserSettings())
+            for (UserSettingsData us : usersProperties.getUserSettings()) {
                 safeInsertUserSettings(us);
-        }finally {
-            initiated=true;
+            }
+            initiated = true;
+        } catch (Exception e) {
+            log.error(FAILED_INIT_MSG, e);
+            initiated = false;
         }
     }
 
     /**
-     * Insert user settings, if failure (settings already exist), logs and carries on to next user settings
+     * Insert user settings, if failure (settings already exist), logs and carries
+     * on to next user settings
      *
      * If users exist adds missing groups (no delete)
      *
@@ -94,14 +97,15 @@ public class DataInitComponent {
             u.setLogin(u.getLogin().toLowerCase());
             userSettingsRepository.insert(u);
         } catch (DuplicateKeyException ex) {
-            log.warn("{} {} user settings: duplicate",FAILED_INIT_MSG, u.getLogin() );
+            log.warn("{} {} user settings: duplicate", FAILED_INIT_MSG, u.getLogin());
         }
     }
 
     /**
-     * Insert users, if failure (users already exist), logs and carries on to next users
+     * Insert users, if failure (users already exist), logs and carries on to next
+     * users
      *
-     * If users exist adds missing groups (no delete)
+     * If users exist adds missing groups and entities (no delete)
      *
      * @param u
      */
@@ -111,35 +115,44 @@ public class DataInitComponent {
             userRepository.insert(u);
         } catch (DuplicateKeyException ex) {
             log.warn("{} {} user: duplicate", FAILED_INIT_MSG, u.getLogin());
-            Optional<UserData> resultUser = userRepository.findById(u.getLogin());
-            if (resultUser.isPresent()) {
-                UserData loadedUser = resultUser.get();
-                boolean updated = false;
-                for (String groupId : u.getGroupSet()) {
-                    if (!loadedUser.getGroupSet().contains(groupId)) {
-                        loadedUser.addGroup(groupId);
-                        log.info("Added group '{}' to existing user '{}'", groupId, loadedUser.getLogin());
-
-                        updated = true;
-                    }
-                }
-                for (String entityId : u.getEntities()) {
-                    if (!loadedUser.getEntities().contains(entityId)) {
-                        loadedUser.addEntity(entityId);
-                        log.info("Added entityId '{}' to existing user '{}'", entityId, loadedUser.getLogin());
-
-                        updated = true;
-                    }
-                }
-
-                if (updated)
+            userRepository.findById(u.getLogin()).ifPresent(loadedUser -> {
+                boolean updated = updateGroups(u, loadedUser) || updateEntities(u, loadedUser);
+                if (updated) {
                     userRepository.save(loadedUser);
-            }
+                }
+            });
         }
     }
 
+    private boolean updateGroups(UserData u, UserData loadedUser) {
+        List<String> newGroups = u.getGroupSet().stream()
+                .filter(groupId -> !loadedUser.getGroupSet().contains(groupId))
+                .toList();
+
+        newGroups.forEach(groupId -> {
+            loadedUser.addGroup(groupId);
+            log.info("Added group '{}' to existing user '{}'", groupId, loadedUser.getLogin());
+        });
+
+        return !newGroups.isEmpty();
+    }
+
+    private boolean updateEntities(UserData u, UserData loadedUser) {
+        List<String> newEntities = u.getEntities().stream()
+                .filter(entityId -> !loadedUser.getEntities().contains(entityId))
+                .toList();
+
+        newEntities.forEach(entityId -> {
+            loadedUser.addEntity(entityId);
+            log.info("Added entityId '{}' to existing user '{}'", entityId, loadedUser.getLogin());
+        });
+
+        return !newEntities.isEmpty();
+    }
+
     /**
-     * Insert groups, if failure (groups already exist), logs and carries on to next group
+     * Insert groups, if failure (groups already exist), logs and carries on to next
+     * group
      *
      * @param g
      */
@@ -152,7 +165,8 @@ public class DataInitComponent {
     }
 
     /**
-     * Insert entities, if failure (entities already exist), logs and carries on to next entity
+     * Insert entities, if failure (entities already exist), logs and carries on to
+     * next entity
      *
      * @param e
      */
@@ -165,7 +179,8 @@ public class DataInitComponent {
     }
 
     /**
-     * Insert perimeters, if failure (perimeters already exist), logs and carries on to next perimeter
+     * Insert perimeters, if failure (perimeters already exist), logs and carries on
+     * to next perimeter
      *
      * @param p
      */
