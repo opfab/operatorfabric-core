@@ -12,6 +12,23 @@ import {MessageUserCardTemplateView} from './messageUserCardTemplateView';
 
 declare const opfab;
 
+        
+class QuillEditorMock {
+    contents: string;
+
+    setContents(contents: string) {
+        this.contents = contents;
+    }
+
+    getContents() {
+        return this.contents;
+    }
+
+    isEmpty() {
+        return !this.contents || this.contents.length == 0;
+    }
+}
+
 describe('Message UserCard template', () => {
 
     let view: MessageUserCardTemplateView;
@@ -23,41 +40,38 @@ describe('Message UserCard template', () => {
 
     function mockGetCard(message: string) {
         opfab.currentCard.getCard = function () {
-            return {data: {message}};
+            return {data: {richMessage: message}};
         };
     }
     it('GIVEN an existing card WHEN user edit card THEN message is actual message', () => {
         opfab.currentUserCard.getEditionMode = () => 'EDITION';
         mockGetCard('My message');
-        expect(view.getMessage()).toEqual('My message');
-    });
-
-    it('GIVEN an existing card with HTML tag in message WHEN user edit card THEN message is provided with HTML tag escaped', () => {
-        opfab.currentUserCard.getEditionMode = () => 'EDITION';
-        mockGetCard('My message <script>');
-        expect(view.getMessage()).toEqual('My message &lt;script&gt;');
+        expect(view.getRichMessage()).toEqual('My message');
     });
 
     it('GIVEN an existing card WHEN user copy card THEN message is actual message', () => {
         opfab.currentUserCard.getEditionMode = () => 'COPY';
         mockGetCard('My message');
-        expect(view.getMessage()).toEqual('My message');
+        expect(view.getRichMessage()).toEqual('My message');
     });
 
     it('GIVEN a user WHEN create card THEN message is empty', () => {
         opfab.currentUserCard.getEditionMode = () => 'CREATE';
         mockGetCard('My message');
-        expect(view.getMessage()).toEqual('');
+        expect(view.getRichMessage()).toEqual('');
     });
 
     it('GIVEN a user WHEN create card with message THEN card is provided with message', () => {
-        const specficCardInformation = view.getSpecificCardInformation('My message');
+        const quillEditor = new QuillEditorMock();
+        quillEditor.setContents('My message');
+        const specficCardInformation = view.getSpecificCardInformation(quillEditor);
         expect(specficCardInformation.valid).toEqual(true);
-        expect(specficCardInformation.card.data.message).toEqual('My message');
+        expect(specficCardInformation.card.data.richMessage).toEqual('My message');
     });
 
     it('GIVEN a user WHEN create card with empty message THEN card is not valid with error message ', () => {
-        const specficCardInformation = view.getSpecificCardInformation('');
+        const quillEditor = new QuillEditorMock();
+        const specficCardInformation = view.getSpecificCardInformation(quillEditor);
         expect(specficCardInformation.valid).toEqual(false);
         expect(specficCardInformation.errorMsg).toEqual(
             'Translation of buildInTemplate.messageUserCard.noMessageError'

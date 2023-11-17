@@ -18,21 +18,21 @@ export class MessageUserCardTemplate extends BaseUserCardTemplate {
     constructor() {
         super();
         this.view = new MessageUserCardTemplateView();
-        const message = this.view.getMessage();
+        const richMessage = this.view.getRichMessage();
         const textareaLabel = opfab.utils.getTranslation('buildInTemplate.messageUserCard.textareaLabel');
         this.innerHTML = `
         <br/>
         <div class="opfab-textarea">
             <label>${textareaLabel}</label>
-            <textarea id="usercard_message_input" rows="5" 
-                style="width:100%">${message}</textarea>
+            <opfab-richtext-editor id="usercard_message_input">${richMessage}</opfab-richtext-editor>
         </div>
         `;
     }
 
     getSpecificCardInformation() {
-        const message = (<HTMLInputElement>document.getElementById('usercard_message_input')).value;
-        return this.view.getSpecificCardInformation(message);
+        const quillEditor = (<HTMLInputElement>document.getElementById('usercard_message_input'));
+
+        return this.view.getSpecificCardInformation(quillEditor);
     }
 
 }
