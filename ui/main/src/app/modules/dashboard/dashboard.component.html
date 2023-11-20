@@ -26,18 +26,17 @@
                         [attr.width]="2*circle.width +1"
                         type="button"
                         [id]="'opfab-dashboardCircle-'+ state.id + index"
-                        (click)="onCircleClick(circle)"
-                        (mouseenter)="dashboardCircleHovered(circle, p1)"
-                        container="body"
-                        #p1="ngbPopover"
-                        [ngbPopover]="tooltipTemplate"
-                        triggers="mouseenter"
-                        [autoClose]="false"
-                        popoverClass="opfab-popover opfab-popover-with-scrolling"
                         xmlns="http://www.w3.org/2000/svg"
                         xmlns:xlink="http://www.w3.org/1999/xlink"
                         style=" max-height: 500px; overflow: auto; overflow-x: hidden; margin-top: 0; margin-bottom: 0;">
-                        <g>
+                        <g (click)="onCircleClick(circle)"
+                            [ngbPopover]="tooltipTemplate"
+                            #p1="ngbPopover"
+                            (mouseenter)="dashboardCircleHovered(circle, p1)"
+                            (mouseleave)="closePopover(1000)"
+                            container="body"
+                            triggers="mouseenter"
+                            popoverClass="opfab-popover opfab-popover-with-scrolling">
                             <ellipse [attr.cx]="circle.width+0.5" cy="10" [attr.rx]="circle.width" ry="10" [attr.fill]="circle.color" />
                             <text
                                 [attr.x]="circle.width+0.25"
@@ -79,7 +78,7 @@
 
 
 <ng-template #tooltipTemplate>
-    <div (mouseenter)="onMouseEnter()" (mouseleave)="openPopover.close()" style="padding:10px;overflow-y: auto;max-height: 500px;">
+    <div (mouseenter)="onMouseEnter()" (mouseleave)="closePopover(400)" style="padding:10px;overflow-y: auto;max-height: 500px;">
             <div *ngFor="let card of currentCircleHovered.cards" style="padding: 0px; margin: 0px; line-height: 8px">
                 <button id="opfab-dashboard-bubble-btn-{{card.id}}" class="btn btn-verycardlink btn-sm" (click)="selectCard(card.id)" style="width:100%">
                     <div style="text-align: left" class="opfab-bubble-text">

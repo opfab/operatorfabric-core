@@ -119,14 +119,15 @@
         <svg:g *ngFor="let circle of circles;let index = index;" type="button">
         <svg:g id="opfab-timelineCircle-{{index}}" 
             (click)="onCircleClick(circle)" 
-            (mouseenter)="feedCircleHovered(circle, p1)" 
+            (mouseenter)="feedCircleHovered(circle, p1)"
+            (mouseleave)="onMouseLeave()" 
             container="body" 
             #p1="ngbPopover" 
             [ngbPopover]="tooltipTemplate" 
             [autoClose]=false
             triggers="mouseenter" 
             popoverClass="opfab-popover opfab-popover-with-scrolling">
-            <svg:g (mouseleave)="onMouseLeave()"/>
+            <svg:g/>
             <svg:ellipse [attr.cx]="xScale(circle.date)"
                 [attr.cy]="yScale(circle.circleYPosition)" [attr.ry]="'10'" [attr.rx]="circle.width" [attr.fill]=circle.color [attr.stroke]="'stroke'"
                 />

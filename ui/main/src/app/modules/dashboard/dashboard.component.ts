@@ -7,7 +7,7 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {Component, ElementRef, HostListener, OnDestroy, OnInit, ViewChild} from '@angular/core';
+import {Component, ElementRef, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {LightCardsStoreService} from 'app/business/services/lightcards/lightcards-store.service';
 import {Dashboard} from 'app/business/view/dashboard/dashboard.view';
 import {DashboardPage} from 'app/business/view/dashboard/dashboardPage';
@@ -33,7 +33,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
         private lightCardsStoreService: LightCardsStoreService,
         private selectedCardService: SelectedCardService,
         private lightCardsFeedFilterService: LightCardsFeedFilterService,
-        private modalService: NgbModal
+        private modalService: NgbModal,
     ) {
         this.dashboard = new Dashboard(lightCardsStoreService, lightCardsFeedFilterService);
     }
@@ -67,8 +67,15 @@ export class DashboardComponent implements OnInit, OnDestroy {
         if (this.openPopover) {
             this.openPopover.close();
         }
+        clearTimeout(this.popoverTimeOut);
         this.openPopover = p;
         this.currentCircleHovered = myCircle;
+    }
+
+    closePopover(timeUntilClosed): void {
+        this.popoverTimeOut = setTimeout(() => {
+            this.openPopover?.close();
+        }, timeUntilClosed);
     }
 
     onCircleClick(circle) {
@@ -79,13 +86,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
         }
     }
 
-    @HostListener('mouseleave') onMouseLeave() {
-        this.popoverTimeOut = setTimeout(() => {
-            this.openPopover?.close();
-        }, 1000);
-    }
-
-    @HostListener('mouseenter') onMouseEnter() {
+    onMouseEnter() {
         clearTimeout(this.popoverTimeOut);
     }
 }
