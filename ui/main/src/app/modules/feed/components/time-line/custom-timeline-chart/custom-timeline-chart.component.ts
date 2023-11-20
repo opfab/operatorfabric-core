@@ -13,7 +13,6 @@ import {
     Component,
     ElementRef,
     EventEmitter,
-    HostListener,
     Inject,
     Input,
     NgZone,
@@ -638,11 +637,12 @@ export class CustomTimelineChartComponent extends BaseChartComponent implements 
         if (this.openPopover) {
             this.openPopover.close();
         }
+        clearTimeout(this.popoverTimeOut);
         this.openPopover = p;
         this.currentCircleHovered = myCircle;
     }
 
-    @HostListener('mouseleave') onMouseLeave() {
+    onMouseLeave() {
         if (this.openPopover) {
             this.popoverTimeOut = setTimeout(() => {
                 this.openPopover.close();
@@ -650,7 +650,7 @@ export class CustomTimelineChartComponent extends BaseChartComponent implements 
         }
     }
 
-    @HostListener('mouseenter') onMouseEnter() {
+    onMouseEnter() {
         clearTimeout(this.popoverTimeOut);
     }
 
