@@ -123,7 +123,9 @@ Values should be taken from the link:https://en.wikipedia.org/wiki/List_of_tz_da
 |settingsScreen.hiddenSettings||no|Array of string indicating which field(s) we want to hide in the settings screen. Possible values : +
 "language" : if present, language field will not be displayed +
 "remoteLoggingEnabled" : if present, the checkbox to activate remote logging will not be displayed +
-"sounds" : if present, the checkboxes for sound notifications will not be displayed
+"sounds" : if present, the checkboxes for sound notifications won't be displayed +
+"systemNotifications" : if present, the checkboxes for systemNotifications won't be displayed +
+"sendCardsByEmail"  : if present, the email options won't be displayed 
 
 |about
 a|none
