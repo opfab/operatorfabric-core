@@ -143,16 +143,33 @@ definitions:
         items:
           type: string
           uniqueItems: true
+      roles: 
+        type: array
+        items:
+          $ref: '#/definitions/RolesEnum'
     required:
        - id
     example:
       id: ENTITY1
       name: Control Room 1
       description: Control Room 1
+  RolesEnum:
+    type: string
+    description: |-
+      Different possible roles >
+      * ACTIVITY_AREA_GROUP : Used to group entities in the activity area screen
+      * REALTIME_SCREEN_GROUP : Used to group entities in the realtime screen 
+      * CARD_SENDER : Allows an entity to send cards
+      * CARD_RECEIVER : Allows an entity to receive cards
+    enum:
+      - ACTIVITY_AREA_GROUP
+      - REALTIME_SCREEN_GROUP
+      - CARD_SENDER
+      - CARD_RECEIVER
   RightsEnum:
     type: string
     description: |-
-      Different rights possible >
+      Different possible rights >
       * Receive: Only receive rights (receiving card)
       * ReceiveAndWrite: Receive and write rights (receiving card and creating new card)
     enum:

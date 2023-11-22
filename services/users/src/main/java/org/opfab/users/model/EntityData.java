@@ -46,6 +46,7 @@ public class EntityData implements Entity {
     private Boolean entityAllowedToSendCard = true;
 
     private Set<String> parents;
+    private Set<RolesEnum> roles;
 
     public EntityData(EntityData entityData) {
         this.id = entityData.id;
@@ -66,6 +67,7 @@ public class EntityData implements Entity {
         this.description = entity.getDescription();
         this.entityAllowedToSendCard = entity.getEntityAllowedToSendCard();
         this.parents = entity.getParents().stream().collect(Collectors.toSet());
+        this.roles = entity.getRoles().stream().collect(Collectors.toSet());
     }
 
     @Override
@@ -94,6 +96,21 @@ public class EntityData implements Entity {
         this.parents = Collections.emptySet();
         if(parents != null) {
             this.parents = parents.stream().collect(Collectors.toSet());
+        }
+
+    }
+
+    @Override
+    public List<RolesEnum> getRoles(){
+        if (roles == null) return Collections.emptyList();
+        return roles.stream().collect(Collectors.toList());
+    }
+
+    @Override
+    public void setRoles(List<RolesEnum> roles){
+        this.roles = Collections.emptySet();
+        if(roles != null) {
+            this.roles = roles.stream().collect(Collectors.toSet());
         }
 
     }
