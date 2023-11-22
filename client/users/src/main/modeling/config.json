@@ -14,6 +14,8 @@
   "importMappings": {
     "EpochDate": "java.time.Instant",
     "RightsEnum": "org.opfab.users.model.RightsEnum",
+    "RolesEnum": "org.opfab.users.model.RolesEnum",
+    "GroupTypeEnum": "org.opfab.users.model.GroupTypeEnum",
     "PermissionEnum": "org.opfab.users.model.PermissionEnum"
   }
 }
