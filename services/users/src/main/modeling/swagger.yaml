@@ -83,15 +83,6 @@ definitions:
       - VIEW_ALL_CARDS
       - VIEW_USER_ACTION_LOGS
       - READONLY
-  GroupTypeEnum:
-    type: string
-    description: |-
-      Different group types possible >
-      * ROLE: Used to define user role or profile
-      * PERMISSION: Used to define user permissions on processes
-    enum:
-      - ROLE
-      - PERMISSION
   Group:
     type: object
     properties:
@@ -100,8 +91,6 @@ definitions:
         description: Id must be minimum 2 characters and must only contain letters, _, - or digits.
       name:
         type: string
-      type:
-        $ref: '#/definitions/GroupTypeEnum'
       description:
         type: string
       perimeters:

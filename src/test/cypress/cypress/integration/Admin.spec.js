@@ -298,9 +298,6 @@ describe('AdmininstrationPages', () => {
 
         cy.get('#opfab-description').type('group description');
 
-        // we choose ROLE
-        clickOnNthGroupTypeInDropdown(1);
-
         cy.get('#opfab-perimeters').click();
         cy.get('#opfab-perimeters').find('.vscomp-option-text').eq(1).click({force: true});
         cy.get('#opfab-perimeters').click();
@@ -337,9 +334,6 @@ describe('AdmininstrationPages', () => {
         cy.get('#opfab-name').type(' updated');
 
         cy.get('#opfab-description').type(' updated');
-
-        // we choose PERMISSION
-        clickOnNthGroupTypeInDropdown(0);
 
         cy.get('#opfab-perimeters').click();
         // Deselect old perimeter
@@ -830,10 +824,5 @@ describe('AdmininstrationPages', () => {
             })
         })
     })
- 
-    function clickOnNthGroupTypeInDropdown(index) {
-        cy.get('#opfab-group-type').click();
-        cy.get('#opfab-group-type').find('.vscomp-option-text').eq(index).click();
-        cy.get('#opfab-group-type').click();
-    }
+
 });

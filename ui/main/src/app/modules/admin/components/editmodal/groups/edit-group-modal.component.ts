@@ -24,7 +24,6 @@ import {PerimetersService} from 'app/business/services/users/perimeters.service'
 import {MessageLevel} from '@ofModel/message.model';
 import {GroupsService} from 'app/business/services/users/groups.service';
 import {MultiSelectConfig, MultiSelectOption} from '@ofModel/multiselect.model';
-import {GroupTypeEnum} from '@ofModel/group.model';
 import {UserService} from 'app/business/services/users/user.service';
 import {User} from '@ofModel/user.model';
 import {PermissionEnum} from '@ofModel/permission.model';
@@ -47,12 +46,10 @@ export class EditGroupModalComponent implements OnInit {
         perimeters: FormControl<{}[] | null>,
         permissions: FormControl<[] | null>,
         realtime: FormControl<boolean | null>,
-        type: FormControl<string | null>
     }>;
 
     perimetersMultiSelectOptions: Array<MultiSelectOption> = [];
     selectedPerimeters = [];
-    selectedGroupType = '';
     selectedGroupPermissions = [];
 
     perimetersMultiSelectConfig: MultiSelectConfig = {
@@ -66,18 +63,9 @@ export class EditGroupModalComponent implements OnInit {
 
     private crudService: CrudService;
 
-    groupTypes = [];
     groupPermissions = [];
 
     groupUsers: string;
-
-    public multiSelectConfig: MultiSelectConfig = {
-        labelKey: 'admin.input.group.type',
-        placeholderKey: 'admin.input.selectGroupTypeText',
-        multiple: false,
-        search: true,
-        sortOptions: true
-    };
 
     public permissionsMultiSelectConfig: MultiSelectConfig = {
         labelKey: 'admin.input.group.permissions',
@@ -91,7 +79,6 @@ export class EditGroupModalComponent implements OnInit {
         private dataHandlingService: SharingService,
         private changeDetector: ChangeDetectorRef
     ) {
-        Object.values(GroupTypeEnum).forEach((t) => this.groupTypes.push({value: String(t), label: String(t)}));
         Object.values(PermissionEnum).forEach((t) => this.groupPermissions.push({value: String(t), label: String(t)}));
     }
 
@@ -119,7 +106,6 @@ export class EditGroupModalComponent implements OnInit {
             perimeters: new FormControl([]),
             permissions: new FormControl([]),
             realtime: new FormControl<boolean | null>(false),
-            type: new FormControl('')
         });
 
         this.crudService = this.dataHandlingService.resolveCrudServiceDependingOnType(this.type);
@@ -128,11 +114,10 @@ export class EditGroupModalComponent implements OnInit {
             // If the modal is used for edition, initialize the modal with current data from this row
 
             // For 'simple' fields (where the value is directly displayed), we use the form's patching method
-            const {id, name, description, realtime, type} = this.row;
-            this.groupForm.patchValue({id, name, description, realtime, type}, {onlySelf: false});
+            const {id, name, description, realtime} = this.row;
+            this.groupForm.patchValue({id, name, description, realtime}, {onlySelf: false});
             // Otherwise, we use the selectedItems property of the of-multiselect component
             this.selectedPerimeters = this.row.perimeters;
-            this.selectedGroupType = this.row.type;
             this.selectedGroupPermissions = this.row.permissions;
 
             UserService.getAll().subscribe(users => {
@@ -210,14 +195,14 @@ export class EditGroupModalComponent implements OnInit {
         if (this.row) {
             this.groupForm.value['id'] = this.row.id;
         }
-        this.id.setValue((this.id.value as string).trim());
-        this.name.setValue((this.name.value as string).trim());
+        this.id.setValue((this.id.value).trim());
+        this.name.setValue((this.name.value).trim());
 
         if (this.description.value) {
-            this.description.setValue((this.description.value as string).trim());
+            this.description.setValue((this.description.value).trim());
         }
 
-        this.realtime.setValue(this.realtime.value as boolean);
+        this.realtime.setValue(this.realtime.value);
     }
 
     get id() {
