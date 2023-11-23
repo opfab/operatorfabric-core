@@ -14,7 +14,7 @@ import {Message, MessageLevel} from '@ofModel/message.model';
 import {ConfigService} from 'app/business/services/config.service';
 import {LoggerService as logger} from 'app/business/services/logs/logger.service';
 import {AuthenticatedUser} from './auth.model';
-import jwt_decode from 'jwt-decode';
+import {jwtDecode} from 'jwt-decode';
 import {Observable, of, Subject} from 'rxjs';
 
 export const ONE_SECOND = 1000;
@@ -95,7 +95,7 @@ export abstract class AuthHandler {
 
     private decodeToken(token: string): any {
         try {
-            return jwt_decode(token);
+            return jwtDecode(token);
         } catch (err) {
             logger.error(" Error in token decoding " + err);
             return null;

@@ -8,7 +8,7 @@
  */
 
 import {Request} from 'express';
-import jwt_decode from 'jwt-decode';
+import {jwtDecode} from 'jwt-decode';
 
 
 export default class JwtTokenUtils {
@@ -45,7 +45,7 @@ export default class JwtTokenUtils {
 
     private decodeToken(token: string): any {
         try {
-            return jwt_decode(token);
+            return jwtDecode(token);
         } catch (error) {
             if (this.logger) this.logger.error("Error decoding token", error);
             return null;
