@@ -56,7 +56,6 @@ export class CardListComponent implements AfterViewChecked, OnInit {
 
     constructor(
         private modalService: NgbModal,
-        private groupedCardsService: GroupedCardsService,
         private router: Router,
         private lightCardsFeedFilterService: LightCardsFeedFilterService,
         private lightCardsStoreService: LightCardsStoreService,
@@ -139,7 +138,7 @@ export class CardListComponent implements AfterViewChecked, OnInit {
     acknowledgeAllVisibleCardsInTheFeed() {
         this.lightCards.forEach((lightCard) => {
             this.acknowledgeVisibleCardInTheFeed(lightCard);
-            this.groupedCardsService
+            GroupedCardsService
                 .getChildCardsByTags(lightCard.tags)
                 .forEach((groupedCard) => this.acknowledgeVisibleCardInTheFeed(groupedCard));
         });
@@ -204,7 +203,7 @@ export class CardListComponent implements AfterViewChecked, OnInit {
     }
 
     isCardInGroup(selected: string, id: string) {
-        return this.groupedCardsService.isCardInGroup(selected, id);
+        return GroupedCardsService.isCardInGroup(selected, id);
     }
 
     onFilterActiveChange(active: boolean) {

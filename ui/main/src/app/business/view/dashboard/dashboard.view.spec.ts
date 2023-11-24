@@ -25,7 +25,6 @@ import {Severity} from '@ofModel/light-card.model';
 import {Utilities} from 'app/business/common/utilities';
 import {FilterType} from '@ofModel/feed-filter.model';
 import {LightCardsFeedFilterService} from 'app/business/services/lightcards/lightcards-feed-filter.service';
-import {GroupedCardsService} from 'app/business/services/lightcards/grouped-cards.service';
 
 describe('Dashboard', () => {
     let dashboard: Dashboard;
@@ -47,8 +46,7 @@ describe('Dashboard', () => {
 
         lightCardsStoreService = new LightCardsStoreService();
         lightCardsFeedFilterService = new LightCardsFeedFilterService(
-            lightCardsStoreService,
-            new GroupedCardsService()
+            lightCardsStoreService
         );
         lightCardsStoreService.initStore();
     });

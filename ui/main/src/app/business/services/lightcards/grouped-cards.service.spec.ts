@@ -1,4 +1,5 @@
 /* Copyright (c) 2023, Alliander (http://www.alliander.com)
+ * Copyright (c) 2023, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -12,11 +13,6 @@ import {getSeveralRandomLightCards} from '@tests/helpers';
 import {GroupedCardsService} from './grouped-cards.service';
 
 describe('GroupedCardFilterService ', () => {
-    let service: GroupedCardsService;
-
-    beforeEach(() => {
-        service = new GroupedCardsService();
-    });
 
     function getCardWithTag(tags: string[]) {
         return getSeveralRandomLightCards(1, {
@@ -33,8 +29,8 @@ describe('GroupedCardFilterService ', () => {
     describe('group cards', () => {
         it('no child cards', () => {
             const cards = getCardWithTag(['tag1']);
-            service.computeGroupedCards(cards);
-            const childCards = service.getChildCardsByTags(['tag1']);
+            GroupedCardsService.computeGroupedCards(cards);
+            const childCards = GroupedCardsService.getChildCardsByTags(['tag1']);
             expect(childCards.length).toBe(0);
         });
         it('Three tags that are the same', () => {
@@ -42,8 +38,8 @@ describe('GroupedCardFilterService ', () => {
                 .concat(getCardWithTag(['tag1']))
                 .concat(getCardWithTag(['tag1']));
 
-            service.computeGroupedCards(cards);
-            const childCards = service.getChildCardsByTags(['tag1']);
+            GroupedCardsService.computeGroupedCards(cards);
+            const childCards = GroupedCardsService.getChildCardsByTags(['tag1']);
             expect(childCards.length).toBe(2);
         });
         it('Two sets of two different tags', () => {
@@ -51,26 +47,28 @@ describe('GroupedCardFilterService ', () => {
                 .concat(getCardWithTag(['tag1', 'tag2']))
                 .concat(getCardWithTag(['tag1', 'tag3']));
 
-            service.computeGroupedCards(cards);
-            const childCardsTwo = service.getChildCardsByTags(['tag1', 'tag2']);
+            GroupedCardsService.computeGroupedCards(cards);
+            const childCardsTwo = GroupedCardsService.getChildCardsByTags(['tag1', 'tag2']);
             expect(childCardsTwo.length).toBe(1);
 
-            const childCardsOneTag = service.getChildCardsByTags(['tag1', 'tag3']);
+            const childCardsOneTag = GroupedCardsService.getChildCardsByTags(['tag1', 'tag3']);
             expect(childCardsOneTag.length).toBe(0);
         });
         it('Three cards with empty tags => expect no child cards', () => {
             const cards = getCardWithTag([]).concat(getCardWithTag([])).concat(getCardWithTag([]));
 
-            service.computeGroupedCards(cards);
-            const childCards = service.getChildCardsByTags([]);
+            GroupedCardsService.computeGroupedCards(cards);
+            const childCards = GroupedCardsService.getChildCardsByTags([]);
             expect(childCards.length).toBe(0);
         });
         it('Three cards with null tags => expect no child cards', () => {
             const cards = getCardWithTag(null).concat(getCardWithTag(null)).concat(getCardWithTag([]));
 
-            service.computeGroupedCards(cards);
-            const childCards = service.getChildCardsByTags(null);
+            GroupedCardsService.computeGroupedCards(cards);
+            const childCards = GroupedCardsService.getChildCardsByTags(null);
             expect(childCards.length).toBe(0);
         });
     });
 });
+
+

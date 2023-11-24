@@ -36,8 +36,7 @@ export class LightCardsFeedFilterService {
     private lightCardTextFilter: LightCardsTextFilter;
 
     constructor(
-        private lightCardsStoreService: LightCardsStoreService,
-        private groupedCardsService: GroupedCardsService
+        private lightCardsStoreService: LightCardsStoreService
     ) {
         this.lightCardFilter = new LightCardsFilter();
         this.lightCardsSorter = new LightCardsSorter();
@@ -54,8 +53,8 @@ export class LightCardsFeedFilterService {
                 map((results) => {
                     results[1] = results[1].sort(results[0]);
                     if (this.isGroupedCardsEnabled()) {
-                        this.groupedCardsService.computeGroupedCards(results[1]);
-                        results[1] = this.groupedCardsService.filterGroupedChilds(results[1]);
+                        GroupedCardsService.computeGroupedCards(results[1]);
+                        results[1] = GroupedCardsService.filterGroupedChilds(results[1]);
                     }
                     return results[1];
                 })
