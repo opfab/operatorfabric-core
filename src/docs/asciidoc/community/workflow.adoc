@@ -1,4 +1,4 @@
-// Copyright (c) 2018-2021 RTE (http://www.rte-france.com)
+// Copyright (c) 2018-2023 RTE (http://www.rte-france.com)
 // See AUTHORS.txt
 // This document is subject to the terms of the Creative Commons Attribution 4.0 International license.
 // If a copy of the license was not distributed with this
@@ -118,12 +118,12 @@ Commit messages should also start with the GitHub issue reference: `#123 My comm
 
 This allows the branch, PR and commits to be directly accessible from the GitHub issue.
 
-NOTE: The deprecated OC-XXX notation (from when we tracked issues in JIRA) is no longer accepted by the CI/CD pipeline.
-
 === Release branches
 
-Once developments are in a release-ready state and have been tested on the `develop` branch, a release branch should
-be created off `develop` to prepare the merge into master.
+
+==== Release candidate
+Once developments are in a release-ready state and have been tested on the `develop` branch, a release candidate branch should
+be created off `develop` . 
 
 NOTE: _"All features that are targeted for the release-to-be-built must be merged in to develop at this point in time.
 All features targeted at future releases may not—they must wait until after the release branch is branched off."_
@@ -134,15 +134,21 @@ fixes should be made on the release branch. This simplifies things because it me
 be merged back into `develop`.
 
 Once the `X.X.X.release` branch has been created, a new commit should be made on this branch to change the repository
-version from `SNAPSHOT` to `X.X.X.RELEASE`.
+version from `SNAPSHOT` to `X.X.X-RC.RELEASE`.
+
+==== Release
+
+When release candidate is ready to be released, a new commit should be made on the `X.X.X.release` branch to change the repository version from `X.X.X-RC.RELEASE` to `X.X.X.RELEASE`.
+
+
 Then, pushing the branch will trigger a build and a "dry-run" generation of docker images. The aim
 is to detect any issue with this generation before moving to master.
+
 
 Finally, the `X.X.X.release` can be merged into `master`, triggering
 The resulting merge commit on `master` should then be tagged with `X.X.X.RELEASE`.
 
-All commits on `master` should be merged commits from `release` branches, direct pushes on master will be disabled in
-the future.
+All commits on `master` should be merged commits from `release` branches, direct pushes on master are disabled .
 
 *Naming convention:* The name of a release branch should match the repository version it is meant to merge into
 `master` but in lower case to avoid confusion with release tags on master.
