@@ -7,7 +7,7 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {Injectable} from '@angular/core';
+
 import * as Handlebars from 'handlebars/dist/handlebars.js';
 import * as moment from 'moment';
 import {Observable, of} from 'rxjs';
@@ -16,23 +16,21 @@ import {ProcessesService} from 'app/business/services/businessconfig/processes.s
 import {DetailContext} from '@ofModel/detail-context.model';
 import {ConfigService} from 'app/business/services/config.service';
 
-@Injectable({
-    providedIn: 'root'
-})
+
 export class HandlebarsService {
-    constructor(
-    ) {
+   public static init()
+     {
         HandlebarsService.registerPreserveSpace();
-        this.registerNumberFormat();
-        this.registerDateFormat();
-        this.registerSort();
+        HandlebarsService.registerNumberFormat();
+        HandlebarsService.registerDateFormat();
+        HandlebarsService.registerSort();
         HandlebarsService.registerSlice();
         HandlebarsService.registerArrayAtIndex();
         HandlebarsService.registerMath();
         HandlebarsService.registerSplit();
         HandlebarsService.registerArrayAtIndexLength();
         HandlebarsService.registerBool();
-        this.registerNow();
+        HandlebarsService.registerNow();
         HandlebarsService.registerJson();
         HandlebarsService.registerKeyValue();
         HandlebarsService.registerToBreakage();
@@ -46,11 +44,11 @@ export class HandlebarsService {
         HandlebarsService.registerPadStart();
         HandlebarsService.registerObjectContainsKey();
         HandlebarsService.registerFindObjectByProperty();
-        ConfigService.getConfigValueAsObservable('settings.locale').subscribe((locale) => this.changeLocale(locale));
+        ConfigService.getConfigValueAsObservable('settings.locale').subscribe((locale) => HandlebarsService.changeLocale(locale));
     }
 
-    private templateCache: Map<string,Function> = new Map();
-    private _locale: string;
+    private static  templateCache: Map<string,Function> = new Map();
+    private static _locale: string;
 
     private static registerJson() {
         Handlebars.registerHelper('json', function (obj) {
@@ -256,37 +254,37 @@ export class HandlebarsService {
         });
     }
 
-    public changeLocale(locale: string) {
+    public  static changeLocale(locale: string) {
         if (locale) {
-            this._locale = locale;
+            HandlebarsService._locale = locale;
         } else {
-            this._locale = 'en';
+            HandlebarsService._locale = 'en';
         }
     }
 
-    public executeTemplate(templateName: string, context: DetailContext): Observable<string> {
-        return this.queryTemplate(context.card.process, context.card.processVersion, templateName).pipe(
+    public static executeTemplate(templateName: string, context: DetailContext): Observable<string> {
+        return HandlebarsService.queryTemplate(context.card.process, context.card.processVersion, templateName).pipe(
             map((t) => t(context))
         );
     }
 
-    public queryTemplate(process: string, version: string, name: string): Observable<Function> {
+    public static queryTemplate(process: string, version: string, name: string): Observable<Function> {
         const key = `${process}.${version}.${name}`;
-        const template = this.templateCache[key];
+        const template = HandlebarsService.templateCache[key];
         if (template) {
             return of(template);
         }
         return ProcessesService.fetchHbsTemplate(process, version, name).pipe(
             map((s) => Handlebars.compile(s)),
-            tap((t) => (this.templateCache[key] = t))
+            tap((t) => (HandlebarsService.templateCache[key] = t))
         );
     }
 
-    public clearCache() {
-        this.templateCache = new Map();
+    public static clearCache() {
+        HandlebarsService.templateCache = new Map();
     }
 
-    private registerSort() {
+    private static registerSort() {
         Handlebars.registerHelper('sort', function () {
             const args = [];
             for (let index = 0; index < arguments.length - 1; index++) {
@@ -334,25 +332,25 @@ export class HandlebarsService {
     }
 
 
-    private registerDateFormat() {
+    private static registerDateFormat() {
         Handlebars.registerHelper('dateFormat', (value, options) => {
             if (typeof value == 'string') {
                 value = parseInt(value);
             }
             const m = moment(new Date(value));
-            m.locale(this._locale);
+            m.locale(HandlebarsService._locale);
             return m.format(options.hash.format);
         });
     }
 
-    private registerNumberFormat() {
+    private static registerNumberFormat() {
         Handlebars.registerHelper('numberFormat', (value, options) => {
-            const formatter = new Intl.NumberFormat(this._locale, options.hash);
+            const formatter = new Intl.NumberFormat(HandlebarsService._locale, options.hash);
             return formatter.format(value);
         });
     }
 
-    private registerNow() {
+    private static registerNow() {
         Handlebars.registerHelper('now', function () {
             return moment().valueOf();
         });

@@ -26,7 +26,6 @@ import {BusinessDataService} from '../businessconfig/businessdata.service';
 })
 export class ApplicationUpdateService {
     constructor(
-        private handlebarsService: HandlebarsService,
         private templateCssService: TemplateCssService,
         private applicationEventsService: ApplicationEventsService
     ) {}
@@ -44,7 +43,7 @@ export class ApplicationUpdateService {
                 debounce(() => timer(5000 + Math.floor(Math.random() * 5000))), // use a random  part to avoid all UI to access at the same time the server
                 map(() => {
                     logger.info('Update business config');
-                    this.handlebarsService.clearCache();
+                    HandlebarsService.clearCache();
                     this.templateCssService.clearCache();
                     ProcessesService.loadAllProcessesWithLatestVersion().subscribe();
                     ProcessesService.loadAllProcessesWithAllVersions().subscribe();

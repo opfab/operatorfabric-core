@@ -130,7 +130,6 @@ export class UserCardComponent implements OnInit, OnDestroy {
     constructor(
         private sanitizer: DomSanitizer,
         private element: ElementRef,
-        private handlebars: HandlebarsService,
         protected soundNotificationService: SoundNotificationService,
         private systemNotificationService: SystemNotificationService,
         private opfabAPIService: OpfabAPIService
@@ -455,7 +454,7 @@ export class UserCardComponent implements OnInit, OnDestroy {
 
             this.isLoadingCardTemplate = true;
 
-            this.handlebars
+            HandlebarsService
                 .queryTemplate(this.selectedProcessId, selected.version, templateName)
                 .pipe(map((t) => t(new DetailContext(card, null, null))))
                 .subscribe({

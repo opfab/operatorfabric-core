@@ -29,6 +29,7 @@ import {BusinessDataService} from './businessconfig/businessdata.service';
 import {CardService} from './card/card.service';
 import {SupervisedEntitiesService} from './users/supervised-entities.service';
 import {SelectedCardLoaderService} from './card/selectedCardLoader.service';
+import {HandlebarsService} from './card/handlebars.service';
 
 declare const opfab: any;
 export class ServicesConfig {
@@ -107,6 +108,7 @@ export class ServicesConfig {
     }
 
     public static finalizeLoading() {
+        HandlebarsService.init();
         SelectedCardLoaderService.init();
         loadBuildInTemplates();
         ServicesConfig.initOpfabAPI();

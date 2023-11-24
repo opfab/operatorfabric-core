@@ -20,13 +20,18 @@ import {ServerResponse, ServerResponseStatus} from 'app/business/server/serverRe
 
 describe('Handlebars Services', () => {
     let processServer: ProcessServerMock;
-    let handlebarsService: HandlebarsService;
+
 
     const now = moment(Date.now());
+
+    beforeAll(() => {
+        HandlebarsService.init()
+    });
+
     beforeEach(() => {
         processServer = new ProcessServerMock();
         ProcessesService.setProcessServer(processServer);
-        handlebarsService = new HandlebarsService();
+        HandlebarsService.clearCache();
     });
 
     describe('#executeTemplate', () => {
@@ -64,7 +69,7 @@ describe('Handlebars Services', () => {
 
         function testTemplate(template, expectedResult, done, contextMessage?) {
             processServer.setResponseForTemplate(new ServerResponse(template,ServerResponseStatus.OK,null));
-            handlebarsService
+            HandlebarsService
                 .executeTemplate("test", new DetailContext(card, userContext, null))
                 .subscribe((result) => {
                     expect(result).withContext(contextMessage).toEqual(expectedResult);
@@ -327,7 +332,7 @@ describe('Handlebars Services', () => {
 
         it('compile  now ', (done) => {
             processServer.setResponseForTemplate(new ServerResponse('{{now}}',ServerResponseStatus.OK,null));
-            handlebarsService
+            HandlebarsService
                 .executeTemplate("test", new DetailContext(card, userContext, null))
                 .subscribe((result) => {
                     // As it takes times to execute and the test are asynchronous we could not test the exact value
