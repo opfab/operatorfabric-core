@@ -13,18 +13,18 @@ import {RemoteLoggerServer} from 'app/business/server/remote-logger.server';
 export class RemoteLoggerService {
     private static remoteLoggerServer: RemoteLoggerServer;
     private static isActive = false;
-    private static logs = [];
+    private static logQueue: string[] = [];
 
-    public static setRemoteLoggerServer(remoteLoggerServer: RemoteLoggerServer) {
+    public static setRemoteLoggerServer(remoteLoggerServer: RemoteLoggerServer): void {
         RemoteLoggerService.remoteLoggerServer = remoteLoggerServer;
     }
 
-    private static regularlyFlush() {
-        this.flush();
+    private static regularlyFlush(): void {
+        RemoteLoggerService.flush();
         if (RemoteLoggerService.isActive) setTimeout(() => this.regularlyFlush(), 5000);
     }
 
-    public static setRemoteLoggerActive(active: boolean) {
+    public static setRemoteLoggerActive(active: boolean): void {
         if (active) {
             if (!RemoteLoggerService.isActive) {
                 RemoteLoggerService.isActive = true;
@@ -34,31 +34,24 @@ export class RemoteLoggerService {
                 );
             }
         } else {
-            RemoteLoggerService.postLog('Remote log deactivated ');
+            RemoteLoggerService.postLog('Remote log deactivated');
             RemoteLoggerService.isActive = false;
         }
     }
 
-    public static postLog(logLine: string) {
-        if (this.isActive) this.logs.push(logLine);
-    }
-
-    public static flush() {
-        if (this.logs.length > 0) {
-            const logsToPush = RemoteLoggerService.buildLogsToPush(this.logs);
-            this.logs = [];
-            if (this.remoteLoggerServer) this.remoteLoggerServer.postLogs(logsToPush).subscribe();
+    public static postLog(logLine: string): void {
+        if (RemoteLoggerService.isActive) {
+            RemoteLoggerService.logQueue.push(logLine);
         }
     }
 
-    private static buildLogsToPush(logs: any[]) {
-        let logsToPush = '';
-        let first = true;
-        logs.forEach((log) => {
-            if (!first) logsToPush += '\n';
-            logsToPush += log;
-            first = false;
-        });
-        return logsToPush;
+    public static flush(): void {
+        if (RemoteLoggerService.logQueue.length > 0) {
+            const logsToPush = RemoteLoggerService.logQueue.join('\n');
+            RemoteLoggerService.logQueue = [];
+            if (RemoteLoggerService.remoteLoggerServer) {
+                RemoteLoggerService.remoteLoggerServer.postLogs(logsToPush).subscribe();
+            }
+        }
     }
 }
