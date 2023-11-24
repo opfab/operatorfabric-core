@@ -46,7 +46,6 @@ import {AdminProcessServer} from 'app/business/server/adminprocess.server';
 import {BusinessDataServer} from 'app/business/server/businessData.server';
 import {CardServer} from 'app/business/server/card.server';
 import {SupervisedEntitiesServer} from 'app/business/server/supervised-entities.server';
-import {SupervisedEntitiesService} from 'app/business/services/users/supervised-entities.service';
 
 declare const opfab: any;
 @Component({
@@ -238,7 +237,6 @@ export class ApplicationLoadingComponent implements OnInit {
             ProcessesService.loadAllProcessesWithLatestVersion(),
             ProcessesService.loadAllProcessesWithAllVersions(),
             ProcessesService.loadProcessGroups(),
-            SupervisedEntitiesService.loadAllSupervisedEntitiesData(),
             ConfigService.loadMonitoringConfig()
         ];
         Utilities.subscribeAndWaitForAllObservablesToEmitAnEvent(requestsToLaunch$).subscribe({
