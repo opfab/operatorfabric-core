@@ -69,7 +69,6 @@ export class TemplateRenderingComponent implements OnChanges, OnInit, OnDestroy,
 
     constructor(
         private element: ElementRef,
-        private handlebars: HandlebarsService,
         private sanitizer: DomSanitizer,
         private templateCssService: TemplateCssService,
         private opfabAPIService: OpfabAPIService,
@@ -168,7 +167,7 @@ export class TemplateRenderingComponent implements OnChanges, OnInit, OnDestroy,
     }
 
     private getHTMLFromTemplate(): Observable<SafeHtml> {
-        const htmlContent$ = this.handlebars.executeTemplate(
+        const htmlContent$ = HandlebarsService.executeTemplate(
             this.cardState.templateName,
             new DetailContext(this.card, this.userContext, this.cardState.response)
         );
