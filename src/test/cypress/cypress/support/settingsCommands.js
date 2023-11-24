@@ -45,7 +45,8 @@ export class SettingsCommands extends OpfabCommands {
         cy.intercept('PATCH', '/users/**').as('saved');
         cy.get('#opfab-setting-email').clear();
         cy.wait('@saved'); // wait for settings to be saved
+        cy.intercept('PATCH', '/users/**').as('saved2');
         cy.get('#opfab-setting-email').type(email);
-        cy.wait('@saved'); // wait for settings to be saved
+        cy.wait('@saved2'); // wait for settings to be saved
     }
 }
