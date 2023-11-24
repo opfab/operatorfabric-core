@@ -56,7 +56,6 @@ export class LightCardComponent implements OnInit, OnDestroy {
 
     constructor(
         private router: Router,
-        private groupedCardsService: GroupedCardsService,
         private soundNotificationService: SoundNotificationService,
         private mapService: MapService,
         private translateService: TranslateService
@@ -64,7 +63,7 @@ export class LightCardComponent implements OnInit, OnDestroy {
 
     ngOnInit() {
         this._i18nPrefix = `${this.lightCard.process}.${this.lightCard.processVersion}.`;
-        this.groupedCardsService.computeEvent
+        GroupedCardsService.computeEvent.pipe(takeUntil(this.ngUnsubscribe))
             .pipe(takeUntil(this.ngUnsubscribe))
             .subscribe((x) => this.computeGroupedCardsIcon());
         this.computeFromEntity();
@@ -72,12 +71,7 @@ export class LightCardComponent implements OnInit, OnDestroy {
         this.computeLttdParams();
         this.computeDisplayedExpirationDate();
         this.truncatedTitle = Utilities.sliceForFormat(this.lightCard.titleTranslated, 130);
-        this.hasGeoLocation =
-            this.lightCard.wktGeometry === undefined ||
-            this.lightCard.wktGeometry == null ||
-            this.lightCard.wktGeometry.length <= 0
-                ? false
-                : true;
+        this.hasGeoLocation = !!this.lightCard?.wktGeometry?.length;
         this.isGeoMapEnabled = ConfigService.getConfigValue('feed.geomap.enableMap', false);
     }
 
@@ -130,23 +124,24 @@ export class LightCardComponent implements OnInit, OnDestroy {
     }
 
     private computeGroupedCardsIcon() {
-        this.showGroupedCardsIcon = this.groupedCardsService.isParentGroupCard(this.lightCard)
-        && this.groupedCardsService.getChildCardsByTags(this.lightCard.tags).length !== 0;
+        this.showGroupedCardsIcon = GroupedCardsService.isParentGroupCard(this.lightCard)
+        && GroupedCardsService.getChildCardsByTags(this.lightCard.tags).length !== 0;
     }
 
     getGroupedChildCards() {
-        return this.groupedCardsService.getChildCardsByTags(this.lightCard.tags);
+        return GroupedCardsService.getChildCardsByTags(this.lightCard.tags);
     }
 
     handleDate(timeStamp: number): string {
         return DateTimeFormatterService.getFormattedDateAndTimeFromEpochDate(timeStamp);
     }
 
+
     public select($event) {
         $event.stopPropagation();
         // Fix for https://github.com/opfab/operatorfabric-core/issues/2994
         this.soundNotificationService.clearOutstandingNotifications();
-        if (this.open && this.groupedCardsService.isParentGroupCard(this.lightCard)) {
+        if (this.open && GroupedCardsService.isParentGroupCard(this.lightCard)) {
             this.groupedCardsVisible = !this.groupedCardsVisible;
         } else {
             this.groupedCardsVisible = true;

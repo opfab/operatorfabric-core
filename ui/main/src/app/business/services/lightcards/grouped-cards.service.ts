@@ -7,66 +7,64 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {Injectable} from '@angular/core';
+
 import {LightCard} from '@ofModel/light-card.model';
 import {BehaviorSubject} from 'rxjs';
 
-@Injectable({
-    providedIn: 'root'
-})
-export class GroupedCardsService {
-    private groupedChildCards: LightCard[] = [];
-    private parentsOfGroupedCards: LightCard[] = [];
-    private tagsMap: Map<string, LightCard[]> = new Map();
 
-    computeEvent = new BehaviorSubject(null);
+export class GroupedCardsService {
+    private static groupedChildCards: LightCard[] = [];
+    private static parentsOfGroupedCards: LightCard[] = [];
+    private static tagsMap: Map<string, LightCard[]> = new Map();
+
+    static computeEvent = new BehaviorSubject(null);
 
     static tagsAsString(tags: string[]): string {
         return tags ? JSON.stringify([...tags].sort((a, b) => a.localeCompare(b))) : '';
     }
 
-    computeGroupedCards(lightCards: LightCard[]) {
-        this.tagsMap.clear();
-        this.groupedChildCards = [];
-        this.parentsOfGroupedCards = [];
+    static computeGroupedCards(lightCards: LightCard[]) {
+        GroupedCardsService.tagsMap.clear();
+        GroupedCardsService.groupedChildCards = [];
+        GroupedCardsService.parentsOfGroupedCards = [];
 
         lightCards.forEach((lightCard) => {
             const tagString = GroupedCardsService.tagsAsString(lightCard.tags);
             if (tagString === '[]' || tagString === '') {
                 return; // Do not group cards without tags
             }
-            let cardsByTag = this.tagsMap.get(tagString);
+            let cardsByTag = GroupedCardsService.tagsMap.get(tagString);
             if (!cardsByTag) {
                 cardsByTag = [];
-                this.parentsOfGroupedCards.push(lightCard);
+                GroupedCardsService.parentsOfGroupedCards.push(lightCard);
             } else {
-                this.groupedChildCards.push(lightCard);
+                GroupedCardsService.groupedChildCards.push(lightCard);
                 cardsByTag.push(lightCard);
             }
-            this.tagsMap.set(tagString, cardsByTag);
+            GroupedCardsService.tagsMap.set(tagString, cardsByTag);
         });
 
-        this.computeEvent.next(null);
+        GroupedCardsService.computeEvent.next(null);
     }
 
-    filterGroupedChilds(lightCards: LightCard[]): LightCard[] {
-        return lightCards.filter((element) => !this.groupedChildCards.includes(element));
+    static filterGroupedChilds(lightCards: LightCard[]): LightCard[] {
+        return lightCards.filter((element) => !GroupedCardsService.groupedChildCards.includes(element));
     }
 
-    isParentGroupCard(lightCard: LightCard): boolean {
-        return this.parentsOfGroupedCards.indexOf(lightCard) !== -1;
+    static isParentGroupCard(lightCard: LightCard): boolean {
+        return GroupedCardsService.parentsOfGroupedCards.indexOf(lightCard) !== -1;
     }
 
-    getChildCardsByTags(tags: string[]): LightCard[] {
+    static getChildCardsByTags(tags: string[]): LightCard[] {
         const tagString = GroupedCardsService.tagsAsString(tags);
-        const groupedChildCardsByTags = this.tagsMap.get(tagString);
-        return groupedChildCardsByTags ? groupedChildCardsByTags : [];
+        const groupedChildCardsByTags = GroupedCardsService.tagsMap.get(tagString);
+        return groupedChildCardsByTags ?? [];
     }
 
-    isCardInGroup(child: string, parent: string): boolean {
-        const parentCard = this.parentsOfGroupedCards.find((c) => c.id === parent);
+    static isCardInGroup(child: string, parent: string): boolean {
+        const parentCard = GroupedCardsService.parentsOfGroupedCards.find((c) => c.id === parent);
         if (parentCard) {
-            const childCards = this.getChildCardsByTags(parentCard.tags);
+            const childCards = GroupedCardsService.getChildCardsByTags(parentCard.tags);
             return childCards.find((c) => c.id === child) !== undefined;
         }
         return false;
