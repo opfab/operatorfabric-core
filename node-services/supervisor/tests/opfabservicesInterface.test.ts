@@ -39,20 +39,20 @@ describe('Opfab interface', function () {
         expect(GetResponse.getData().length).toEqual(1);
     });
 
-    it('Should return invalid reponse  when impossible to authenticate to opfab ', async function () {
+    it('Should return invalid response when impossible to authenticate to opfab ', async function () {
         const opfabServicesInterface = getOpfabServicesInterface();
         sinon.stub(opfabServicesInterface, 'sendRequest').callsFake((request: any) => {
-            return Promise.reject('test');
+            return Promise.reject(new Error('test'));
         });
         const GetResponse = await opfabServicesInterface.getUsersConnected();
         expect(GetResponse.isValid()).toBe(false);
     });
 
-    it('Should return invalid reponse  when error in user request ', async function () {
+    it('Should return invalid response when error in user request', async function () {
         const opfabServicesInterface = getOpfabServicesInterface();
         sinon.stub(opfabServicesInterface, 'sendRequest').callsFake((request) => {
             if (request.url.includes('token')) return Promise.resolve({status: 200, data: {access_token: 'fakeToken'}});
-            else return Promise.reject('error message');
+            else return Promise.reject(new Error('error message'));
         });
         const GetResponse = await opfabServicesInterface.getUsersConnected();
         expect(GetResponse.isValid()).toBe(false);

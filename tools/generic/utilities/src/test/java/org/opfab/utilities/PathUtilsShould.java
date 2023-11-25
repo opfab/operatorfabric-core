@@ -10,7 +10,6 @@
 
 package org.opfab.utilities;
 
-import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.Test;
 
@@ -23,7 +22,7 @@ import java.nio.file.Paths;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 
-@Slf4j
+
 class PathUtilsShould {
 
   private static final Path basePath = Paths.get("build","test-data");

@@ -9,7 +9,6 @@
 
 package org.opfab.cards.consultation.configuration.mongo;
 
-import lombok.extern.slf4j.Slf4j;
 import org.bson.Document;
 import org.opfab.cards.consultation.model.LightCard;
 import org.opfab.cards.consultation.model.LightCardConsultationData;
@@ -30,7 +29,6 @@ import java.util.List;
  * </p>
  *
  */
-@Slf4j
 public class LightCardReadConverter implements Converter<Document, LightCardConsultationData> {
     private I18nReadConverter i18nReadConverter = new I18nReadConverter();
     private TimeSpanReadConverter timeSpanConverter = new TimeSpanReadConverter();

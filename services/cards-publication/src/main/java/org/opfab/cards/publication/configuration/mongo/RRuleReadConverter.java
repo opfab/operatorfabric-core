@@ -35,18 +35,18 @@ public class RRuleReadConverter implements Converter<Document, RRule> {
         DayEnum wkst = DayEnum.valueOf(source.getString("wkst"));
         Integer durationInMinutes = source.getInteger("durationInMinutes");
 
-        List<String> byweekdayStringList = (List<String>) source.get("byweekday");
+        List<String> byweekdayStringList = source.getList("byweekday", String.class);
         if (byweekdayStringList != null) {
             for (String byweekdayString : byweekdayStringList) {
                 byweekdayEnumList.add(DayEnum.valueOf(byweekdayString));
             }
         }
 
-        List<Integer> bymonth = (List<Integer>) source.get("bymonth");
-        List<Integer> byhour = (List<Integer>) source.get("byhour");
-        List<Integer> byminute = (List<Integer>) source.get("byminute");
-        List<Integer> bysetpos = (List<Integer>) source.get("bysetpos");
-        List<Integer> bymonthday = (List<Integer>) source.get("bymonthday");
+        List<Integer> bymonth = source.getList("bymonth", Integer.class);
+        List<Integer> byhour = source.getList("byhour", Integer.class);
+        List<Integer> byminute = source.getList("byminute", Integer.class);
+        List<Integer> bysetpos = source.getList("bysetpos", Integer.class);
+        List<Integer> bymonthday = source.getList("bymonthday", Integer.class);
 
         String tzid = source.getString("tzid");
 

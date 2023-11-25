@@ -37,12 +37,15 @@ class KafkaSerializeDeserializeShould {
         CardCommandFactory cardCommandFactory = new CardCommandFactory(new CardObjectMapper());
         CardCommand cardCommand = cardCommandFactory.createResponseCard(createCardPublicationData());
 
-        KafkaAvroWithoutRegistrySerializer<CardCommand> kafkaAvroSerializer = new KafkaAvroWithoutRegistrySerializer<>();
-        byte[] byteResult = kafkaAvroSerializer.serialize("TOPIC",cardCommand);
+        byte[] byteResult;
+        try (KafkaAvroWithoutRegistrySerializer<CardCommand> kafkaAvroSerializer = new KafkaAvroWithoutRegistrySerializer<>()) {
+            byteResult = kafkaAvroSerializer.serialize("TOPIC", cardCommand);
+        }
 
-        KafkaAvroWithoutRegistryDeserializer kafkaAvroDeSerializer = new KafkaAvroWithoutRegistryDeserializer();
-        CardCommand cardResult = kafkaAvroDeSerializer.deserialize("TOPIC", byteResult);
-        assertThat(cardResult, is(cardCommand));
+        try (KafkaAvroWithoutRegistryDeserializer kafkaAvroDeSerializer = new KafkaAvroWithoutRegistryDeserializer()) {
+            CardCommand cardResult = kafkaAvroDeSerializer.deserialize("TOPIC", byteResult);
+            assertThat(cardResult, is(cardCommand));
+        }
     }
 
     private CardPublicationData createCardPublicationData() {

@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2022, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2023, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -34,7 +34,7 @@ class I18nTranslationShould {
         String titleTranslated = trans.translate("process.card.title", null);
         assertThat(titleTranslated).isEqualTo("Card title");
 
-        Map<String, String> params = new HashMap();
+        Map<String, String> params = new HashMap<>();
         params.put("contingenciesSize", "56");
         String summaryTranslated = trans.translate("process.card.summary", params);
         assertThat(summaryTranslated).isEqualTo("56 contingencies");
@@ -45,7 +45,7 @@ class I18nTranslationShould {
 
         I18nTranslation trans2 = new I18nTranslation(obj2);
 
-        Map<String, String> params2 = new HashMap();
+        Map<String, String> params2 = new HashMap<>();
         params2.put("contingenciesSize", "12");
         params2.put("country", "France");
         String summaryTranslated2 = trans2.translate("process.card.summary", params2);

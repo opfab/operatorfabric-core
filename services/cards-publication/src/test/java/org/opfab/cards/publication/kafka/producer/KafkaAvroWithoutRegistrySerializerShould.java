@@ -30,17 +30,20 @@ import static org.mockito.Mockito.mock;
 class KafkaAvroWithoutRegistrySerializerShould {
 
     @InjectMocks
-    KafkaAvroWithoutRegistrySerializer cut;
+    KafkaAvroWithoutRegistrySerializer<CardCommand> cut;
 
     @Test
     void serializeRoundTripSuccess() {
-        KafkaAvroWithoutRegistryDeserializer deserializer = new KafkaAvroWithoutRegistryDeserializer();
         String topic = "MyTopic";
 
         Card card = createCard();
         CardCommand cardCommand = createCardCommand(card);
 
-        CardCommand cardCommandRoundTrip = deserializer.deserialize(topic, cut.serialize(topic, cardCommand));
+        CardCommand cardCommandRoundTrip;
+        try (KafkaAvroWithoutRegistryDeserializer deserializer = new KafkaAvroWithoutRegistryDeserializer()) {
+            cardCommandRoundTrip = deserializer.deserialize(topic, cut.serialize(topic, cardCommand));
+        }
+
         assertThat(cardCommandRoundTrip, is(cardCommand));
     }
 

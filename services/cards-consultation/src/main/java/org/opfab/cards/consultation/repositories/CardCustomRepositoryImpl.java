@@ -9,16 +9,12 @@
 
 package org.opfab.cards.consultation.repositories;
 
-import com.nimbusds.jose.util.ArrayUtils;
 import lombok.extern.slf4j.Slf4j;
 
-import net.minidev.json.JSONObject;
-import netscape.javascript.JSObject;
 import org.opfab.cards.consultation.model.CardsFilter;
 import org.opfab.cards.consultation.model.CardConsultationData;
 import org.opfab.cards.consultation.model.CardOperation;
 import org.opfab.cards.consultation.model.CardOperationConsultationData;
-import org.opfab.cards.consultation.model.LightCard;
 import org.opfab.cards.consultation.model.LightCardConsultationData;
 import org.opfab.cards.model.CardOperationTypeEnum;
 import org.opfab.springtools.configuration.mongo.PaginationUtils;
@@ -33,22 +29,16 @@ import org.springframework.data.mongodb.core.aggregation.AggregationOptions;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 
-import org.springframework.http.MediaType;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import reactor.util.function.Tuple2;
 
 import java.time.Instant;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
-
 import static org.springframework.data.mongodb.core.query.Criteria.where;
 import static org.springframework.data.mongodb.core.aggregation.Aggregation.*;
-import static org.springframework.web.reactive.function.BodyInserters.fromValue;
-import static org.springframework.web.reactive.function.server.ServerResponse.ok;
 
 
 @Slf4j

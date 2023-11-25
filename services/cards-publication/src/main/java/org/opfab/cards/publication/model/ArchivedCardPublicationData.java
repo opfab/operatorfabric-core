@@ -24,17 +24,9 @@ import org.springframework.data.mongodb.core.mapping.Document;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.function.Function;
 
 import  org.opfab.utilities.ObjectUtils;
 
-/**
- * <p>Archived Card Model, documented at {@link Card}</p>
- *
- * {@inheritDoc}
- *
- *
- */
 @Data
 @NoArgsConstructor
 @Document(collection = "archivedCards")

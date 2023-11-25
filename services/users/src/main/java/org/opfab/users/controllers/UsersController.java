@@ -43,22 +43,21 @@ public class UsersController implements UsersApi, UserExtractor {
 
     private static final String NO_MATCHING_USER_NAME_MSG = "Payload User login does not match URL User login";
 
-    @Autowired
-    private JwtProperties jwtProperties;
+    private final JwtProperties jwtProperties;
+    private final GroupsProperties groupsProperties;
+
+    private final UsersService usersService;
+    private final UserSettingsService userSettingsService;
+    private final NotificationService notificationService;
 
     @Autowired
-    private GroupsProperties groupsProperties;
-
-    private UsersService usersService;
-    private UserSettingsService userSettingsService;
-    private NotificationService notificationService;
-
-    public UsersController(UserRepository userRepository,UserSettingsRepository userSettingsRepository, GroupRepository groupRepository, EntityRepository entityRepository, PerimeterRepository perimeterRepository,EventBus eventBus) {
+    public UsersController(UserRepository userRepository, UserSettingsRepository userSettingsRepository, GroupRepository groupRepository, EntityRepository entityRepository, PerimeterRepository perimeterRepository, EventBus eventBus, JwtProperties jwtProperties, GroupsProperties groupsProperties) {
+        this.jwtProperties = jwtProperties;
+        this.groupsProperties = groupsProperties;
         this.notificationService = new NotificationService(userRepository, eventBus);
-        usersService = new UsersService(userRepository,groupRepository,entityRepository,perimeterRepository,notificationService);
-        userSettingsService = new UserSettingsService(userSettingsRepository,usersService,notificationService);
-        }
-
+        this.usersService = new UsersService(userRepository, groupRepository, entityRepository, perimeterRepository, notificationService);
+        this.userSettingsService = new UserSettingsService(userSettingsRepository, usersService, notificationService);
+    }
 
     @Override
     public List<User> fetchUsers(HttpServletRequest request, HttpServletResponse response) {

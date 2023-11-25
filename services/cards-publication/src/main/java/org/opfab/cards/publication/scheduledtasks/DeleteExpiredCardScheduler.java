@@ -12,7 +12,6 @@ package org.opfab.cards.publication.scheduledtasks;
 
 import org.opfab.cards.publication.configuration.Services;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
@@ -23,10 +22,12 @@ import java.time.Instant;
 @EnableScheduling
 public class DeleteExpiredCardScheduler {
 
-    @Autowired
-    Services services;
+    private final Services services;
 
-    @Value("${operatorfabric.cards-publication.delayForDeleteExpiredCardsScheduling:60000}") String delayForDeleteExpiredCardsScheduling;
+    @Autowired
+    public DeleteExpiredCardScheduler(Services services) {
+        this.services = services;
+    }
 
     @Scheduled(fixedDelayString = "${operatorfabric.cards-publication.delayForDeleteExpiredCardsScheduling:60000}")
     public void deleteExpiredCards() {

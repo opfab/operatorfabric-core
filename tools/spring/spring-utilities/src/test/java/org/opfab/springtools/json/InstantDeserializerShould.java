@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2021, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2023, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -21,7 +21,6 @@ import java.io.IOException;
 import java.time.Instant;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Java6Assertions.fail;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -57,7 +56,7 @@ public class InstantDeserializerShould {
             assertThat(actualDeserialization).isEqualTo(expectedDeserialization);
         } catch (IOException e) {
             log.error(String.format("Unable to deserialize %s", Instant.class.getSimpleName()), e);
-            fail("Exception thrown: "+e.getMessage());
+            throw new AssertionError("Exception thrown: " + e.getMessage());
         }
 
     }
@@ -68,8 +67,8 @@ public class InstantDeserializerShould {
         String jsonString = "123456789AZ";
 
         try {
-            Instant actualDeserialization = objectMapper.readValue(jsonString, Instant.class);
-            fail("Expected exception not thrown.");
+            objectMapper.readValue(jsonString, Instant.class);
+            throw new AssertionError("Expected exception not thrown.");
         } catch (IOException e) {
             assertTrue(e instanceof IOException);
         }

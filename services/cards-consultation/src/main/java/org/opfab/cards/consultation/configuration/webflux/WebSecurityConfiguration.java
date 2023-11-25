@@ -11,8 +11,6 @@
 
 package org.opfab.cards.consultation.configuration.webflux;
 
-import lombok.extern.slf4j.Slf4j;
-
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.convert.converter.Converter;
@@ -25,12 +23,7 @@ import org.springframework.security.web.server.SecurityWebFilterChain;
 import reactor.core.publisher.Mono;
 
 
-/**
- * Configures web security
- *
- */
 @Configuration
-@Slf4j
 @EnableWebFluxSecurity
 public class WebSecurityConfiguration {
 

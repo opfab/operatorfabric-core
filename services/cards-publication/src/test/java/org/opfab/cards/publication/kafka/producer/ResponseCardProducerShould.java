@@ -47,8 +47,7 @@ class ResponseCardProducerShould {
     private CardCommand cardCommand;
 
 
-    private final int partition = 11;
-    private final int offset = 2;
+
     private final String topic = "MYTOPIC";
     private final String key = "MyKey";
 

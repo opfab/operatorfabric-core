@@ -31,6 +31,7 @@ import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Locale;
@@ -133,7 +134,7 @@ public class WithMockOpFabUserSecurityContextFactory implements WithSecurityCont
         }
 
         @Override
-        public Enumeration getAttributeNames() {
+        public Enumeration<String> getAttributeNames() {
             return null;
         }
 
@@ -144,6 +145,7 @@ public class WithMockOpFabUserSecurityContextFactory implements WithSecurityCont
 
         @Override
         public void setCharacterEncoding(String env) {
+            // not used
         }
 
         @Override
@@ -167,8 +169,8 @@ public class WithMockOpFabUserSecurityContextFactory implements WithSecurityCont
         }
 
         @Override
-        public Enumeration getParameterNames() {
-            return null;
+        public Enumeration<String> getParameterNames() {
+            return Collections.emptyEnumeration();
         }
 
         @Override
@@ -218,10 +220,12 @@ public class WithMockOpFabUserSecurityContextFactory implements WithSecurityCont
 
         @Override
         public void setAttribute(String name, Object o) {
+            // not used
         }
 
         @Override
         public void removeAttribute(String name) {
+            // not used
         }
 
         @Override
@@ -230,7 +234,7 @@ public class WithMockOpFabUserSecurityContextFactory implements WithSecurityCont
         }
 
         @Override
-        public Enumeration getLocales() {
+        public Enumeration<Locale> getLocales() {
             return null;
         }
 
@@ -396,10 +400,12 @@ public class WithMockOpFabUserSecurityContextFactory implements WithSecurityCont
 
         @Override
         public void logout() {
+            // not used
         }
 
         @Override
         public void login(String user, String password) {
+            // not used
         }
 
         @Override

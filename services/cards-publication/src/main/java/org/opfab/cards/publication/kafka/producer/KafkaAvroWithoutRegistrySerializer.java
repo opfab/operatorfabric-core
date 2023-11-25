@@ -1,5 +1,5 @@
 /* Copyright (c) 2020, Alliander (http://www.alliander.com)
- * Copyright (c) 2021, RTE (http://www.rte-france.com)
+ * Copyright (c) 2021-2023, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -27,17 +27,17 @@ public class KafkaAvroWithoutRegistrySerializer<T extends SpecificRecord> implem
     private final EncoderFactory encoderFactory = EncoderFactory.get();
 
     @Override
-    public byte[] serialize(String topic, T record) {
-        if (record == null) {
+    public byte[] serialize(String topic, T kafkaRecord) {
+        if (kafkaRecord == null) {
             return new byte[0];
         } else {
             try {
-                Schema schema = record.getSchema();
+                Schema schema = kafkaRecord.getSchema();
 
                 ByteArrayOutputStream out = new ByteArrayOutputStream();
                 BinaryEncoder encoder = this.encoderFactory.directBinaryEncoder(out, null);
                 DatumWriter<T> writer = new SpecificDatumWriter<>(schema);
-                writer.write(record, encoder);
+                writer.write(kafkaRecord, encoder);
                 encoder.flush();
 
                 byte[] bytes = out.toByteArray();

@@ -56,13 +56,15 @@ public class OpfabSpringGenerator extends SpringCodegen {
     @Override
     public Map<String, Object> postProcessModels(Map<String, Object> objs) {
         Map<String, Object> result = super.postProcessModels(objs);
-        List<Map<String, String>> imports = (List)objs.get("imports");
-        ListIterator listIterator = imports.listIterator();
+        List<Map<String, String>> imports = (List<Map<String, String>>) (List<?>) objs.get("imports");
+        ListIterator<Map<String, String>> listIterator = imports.listIterator();
 
         while (listIterator.hasNext()) {
-            String currentImport = (String)((Map)listIterator.next()).get("import");
-            if (currentImport.contains("io.swagger.annotations") || currentImport.contains("springfox"))
+            Map<String, String> currentImport = listIterator.next();
+            String importValue = currentImport.get("import");
+            if (importValue.contains("io.swagger.annotations") || importValue.contains("springfox")) {
                 listIterator.remove();
+            }
         }
         return result;
     }

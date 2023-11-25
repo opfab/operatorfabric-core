@@ -444,10 +444,10 @@ class CardProcessServiceShould {
 
                 Instant start = Instant.ofEpochMilli(Instant.now().toEpochMilli()).plusSeconds(3600);
 
-                LinkedHashMap data = new LinkedHashMap();
+                LinkedHashMap<String, Object> data = new LinkedHashMap<>();
                 data.put("int", 123);
                 data.put("string", "test");
-                LinkedHashMap subdata = new LinkedHashMap();
+                LinkedHashMap<String, Object> subdata = new LinkedHashMap<>();
                 subdata.put("int", 456);
                 subdata.put("string", "test2");
                 data.put("object", subdata);

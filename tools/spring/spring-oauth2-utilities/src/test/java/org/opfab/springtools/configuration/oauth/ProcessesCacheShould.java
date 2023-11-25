@@ -1,4 +1,4 @@
-/* Copyright (c) 2022, RTE (http://www.rte-france.com)
+/* Copyright (c) 2022-2023, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -57,8 +57,6 @@ class ProcessesCacheShould {
 
     @Test
     void shouldNotHitCacheForFirstCall() {
-        String principalID ="testuser";
-
         // First call
         processesCache.fetchProcessFromCacheOrProxy(TEST_PROCESS, TEST_VERSION);
         mockProcessesClient.verifyTimes(HttpMethod.GET, TEST_URL, 1);
@@ -66,8 +64,6 @@ class ProcessesCacheShould {
 
     @Test
     void shouldReturnSameDataForSecondCall() {
-        String principalID1 ="testuser1";
-        String principalID2 ="testuser2";
 
         // First call
         Process request1 = processesCache.fetchProcessFromCacheOrProxy(TEST_PROCESS, TEST_VERSION);
@@ -80,7 +76,6 @@ class ProcessesCacheShould {
 
     @Test
     void shouldHitCacheForSecondCall() {
-        String principalID ="testuser";
 
         // First call
         processesCache.fetchProcessFromCacheOrProxy(TEST_PROCESS, TEST_VERSION);
@@ -93,7 +88,6 @@ class ProcessesCacheShould {
 
     @Test
     void shouldClearSelectedCache() {
-        String principalID ="testuser";
 
         // First call
         processesCache.fetchProcessFromCacheOrProxy(TEST_PROCESS, TEST_VERSION);
