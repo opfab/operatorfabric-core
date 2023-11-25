@@ -56,7 +56,7 @@ class ExternalAppServiceShould {
     @BeforeAll
     void setup() {
         externalRecipients = new ExternalRecipients();
-        List<ExternalRecipients.ExternalRecipient> recipients = new ArrayList();
+        List<ExternalRecipients.ExternalRecipient> recipients = new ArrayList<>();
         ExternalRecipients.ExternalRecipient kafka = new ExternalRecipients.ExternalRecipient();
         kafka.setId(externalRecipientKafka);
         kafka.setUrl("kafka:");

@@ -81,7 +81,7 @@ public class UsersServiceShould {
     }
 
     private void initGroupRepository() {
-        GroupData g1, g2, g3;
+        GroupData g1, g2;
         g1 = GroupData.builder()
                 .id("group1")
                 .name("Group 1")

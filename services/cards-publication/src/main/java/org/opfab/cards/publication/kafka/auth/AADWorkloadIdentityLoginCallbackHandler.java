@@ -17,7 +17,6 @@ import org.opfab.cards.publication.kafka.auth.dto.OAuthBearerTokenImpl;
 import org.opfab.cards.publication.kafka.util.BeanUtil;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import lombok.extern.slf4j.Slf4j;
 import org.apache.kafka.common.security.auth.AuthenticateCallbackHandler;
 import org.apache.kafka.common.security.oauthbearer.OAuthBearerToken;
 import org.apache.kafka.common.security.oauthbearer.OAuthBearerTokenCallback;
@@ -58,7 +57,7 @@ import static org.apache.kafka.common.security.oauthbearer.OAuthBearerLoginModul
  * <br>
  * Apart from the required configuration above the rest is automatically picked up based on the injected AZURE_... environment variables
  */
-@Slf4j
+
 public class AADWorkloadIdentityLoginCallbackHandler implements AuthenticateCallbackHandler {
 
     private final HttpClient httpClient;

@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2021, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2023, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -28,12 +28,10 @@ import feign.jackson.JacksonDecoder;
 import feign.mock.HttpMethod;
 import feign.mock.MockClient;
 import feign.mock.MockTarget;
-import lombok.extern.slf4j.Slf4j;
 
 
 @SpringBootApplication
 @EnableConfigurationProperties
-@Slf4j
 @Import({UserServiceCache.class, GroupsProperties.class, GroupsUtils.class, JwtProperties.class})
 public class UserServiceCacheTestApplication {
 
@@ -72,15 +70,11 @@ public class UserServiceCacheTestApplication {
     @Bean
     @Primary
     public UserServiceProxy mockUserServiceProxy(MockClient mockClient) {
-
-        //Build Feign with MockClient
-        UserServiceProxy mockUserServiceProxy = Feign.builder()
+        return Feign.builder()
                 .decoder(new JacksonDecoder())
                 .client(mockClient)
                 .contract(new SpringMvcContract()) // Needed because spring-cloud-starter-feign implements a default Contract class "SpringMvcContract". See https://github.com/spring-cloud/spring-cloud-netflix/issues/760
                 .target(new MockTarget<>(UserServiceProxy.class));
-
-        return mockUserServiceProxy;
     }
 
 }

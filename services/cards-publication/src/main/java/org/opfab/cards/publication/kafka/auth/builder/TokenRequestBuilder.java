@@ -1,4 +1,5 @@
 /* Copyright (c) 2023, Alliander N.V. (https://www.alliander.com)
+ * Copyright (c) 2023, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -59,12 +60,11 @@ public class TokenRequestBuilder {
 	}
 
 	private String buildScope(final Map<String, ?> properties, final Environment environment) {
-		return ofNullable(environment.getProperty("OAUTH_SCOPE"))
-				.orElseGet(() -> ofNullable((List<String>) properties.get("bootstrap.servers"))
-						.map(servers -> servers.get(0))
-						.map(this::mapServersToScope)
-						.orElseThrow(() -> new IllegalStateException("config properties does not contain any broker addresses (bootstrap.servers)")));
-
+	    return ofNullable(environment.getProperty("OAUTH_SCOPE"))
+		    .orElseGet(() -> ofNullable((List<?>) properties.get("bootstrap.servers"))
+			    .map(servers -> (String) servers.get(0))
+			    .map(this::mapServersToScope)
+			    .orElseThrow(() -> new IllegalStateException("config properties does not contain any broker addresses (bootstrap.servers)")));
 	}
 
 	private String mapServersToScope(final String brokerAddress) {

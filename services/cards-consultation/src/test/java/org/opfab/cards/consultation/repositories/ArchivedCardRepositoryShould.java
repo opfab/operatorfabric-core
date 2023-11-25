@@ -11,7 +11,6 @@
 
 package org.opfab.cards.consultation.repositories;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.opfab.cards.consultation.application.IntegrationTestApplication;
@@ -82,8 +81,6 @@ public class ArchivedCardRepositoryShould {
     @Autowired
     private ArchivedCardRepository repository;
 
-    @Autowired
-    private ObjectMapper mapper;
 
 
     @AfterEach
@@ -558,6 +555,7 @@ public class ArchivedCardRepositoryShould {
                 .verify();
 
     }
+
 
     @Test
     void fetchArchivedCardsActiveTo() {

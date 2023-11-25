@@ -11,7 +11,6 @@
 
 package org.opfab.cards.publication.services;
 
-import lombok.extern.slf4j.Slf4j;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -31,7 +30,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(classes = UnitTestApplication.class)
-@Slf4j
 class CardTranslationServiceShould {
 
     @Autowired

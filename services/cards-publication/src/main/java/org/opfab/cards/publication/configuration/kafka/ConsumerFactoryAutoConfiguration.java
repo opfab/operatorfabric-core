@@ -1,5 +1,5 @@
 /* Copyright (c) 2020, Alliander (http://www.alliander.com)
- * Copyright (c) 2021, RTE (http://www.rte-france.com)
+ * Copyright (c) 2021-2023, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -10,7 +10,6 @@
 
 package org.opfab.cards.publication.configuration.kafka;
 
-import io.confluent.kafka.serializers.KafkaAvroDeserializerConfig;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
@@ -59,7 +58,7 @@ public class ConsumerFactoryAutoConfiguration {
     ConsumerFactory<String, CardCommand> consumerFactory(SchemaRegistryProperties schemaRegistryProperties) {
         Map<String,Object> props = consumerConfig();
         if (schemaRegistryProperties.getUrl() != null && !schemaRegistryProperties.getUrl().isEmpty()) {
-            props.put(KafkaAvroDeserializerConfig.SCHEMA_REGISTRY_URL_CONFIG, schemaRegistryProperties.getUrl());
+            props.put(io.confluent.kafka.serializers.AbstractKafkaSchemaSerDeConfig.SCHEMA_REGISTRY_URL_CONFIG, schemaRegistryProperties.getUrl());
         }
         return new DefaultKafkaConsumerFactory<>(props);
     }

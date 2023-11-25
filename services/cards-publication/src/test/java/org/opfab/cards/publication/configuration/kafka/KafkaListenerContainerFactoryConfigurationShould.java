@@ -57,7 +57,7 @@ class KafkaListenerContainerFactoryConfigurationShould {
 
         assertNotNull(kafkaListenerContainerFactory);
 
-        ConcurrentMessageListenerContainer container = kafkaListenerContainerFactory.createContainer("dummyTopic");
+        ConcurrentMessageListenerContainer<String, CardCommand> container = kafkaListenerContainerFactory.createContainer("dummyTopic");
         assertThat (container.getConcurrency()).isEqualTo(concurrency);
         assertThat (container.getContainerProperties().getPollTimeout()).isEqualTo(pollTimeout.toMillis());
     }
@@ -72,7 +72,7 @@ class KafkaListenerContainerFactoryConfigurationShould {
 
         assertNotNull(kafkaListenerContainerFactory);
 
-        ConcurrentMessageListenerContainer container = kafkaListenerContainerFactory.createContainer("dummyTopic");
+        ConcurrentMessageListenerContainer<String, CardCommand> container = kafkaListenerContainerFactory.createContainer("dummyTopic");
 
         assertThat (container.getConcurrency()).isPositive();
         assertThat(container.getContainerProperties().getPollTimeout()).isEqualTo(ConsumerProperties.DEFAULT_POLL_TIMEOUT);

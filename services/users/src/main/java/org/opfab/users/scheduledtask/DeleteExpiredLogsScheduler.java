@@ -20,10 +20,15 @@ import org.springframework.stereotype.Service;
 @Service
 @EnableScheduling
 public class DeleteExpiredLogsScheduler {
-    @Autowired
-    UserActionLogService userActionLogService;
+    private final UserActionLogService userActionLogService;
+    private final Integer daysBeforeLogExpiration;
 
-    @Value("${operatorfabric.users.daysBeforeLogExpiration:61}") Integer daysBeforeLogExpiration;
+    @Autowired
+    public DeleteExpiredLogsScheduler(UserActionLogService userActionLogService,
+                                      @Value("${operatorfabric.users.daysBeforeLogExpiration:61}") Integer daysBeforeLogExpiration) {
+        this.userActionLogService = userActionLogService;
+        this.daysBeforeLogExpiration = daysBeforeLogExpiration;
+    }
 
     @Scheduled(cron = "${hourScheduledForLogsCleaning:0 30 0 * * *}")
     public void deleteExpiredLogs() {

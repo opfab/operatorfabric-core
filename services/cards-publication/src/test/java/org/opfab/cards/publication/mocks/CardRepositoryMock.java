@@ -98,25 +98,21 @@ public class CardRepositoryMock implements CardRepository {
 
     @Override
     public UserBasedOperationResult addUserAck(User user, String cardUid, List<String> entitiesAcks) {
-        // TODO Auto-generated method stub
         throw new UnsupportedOperationException("Unimplemented method 'addUserRead'");
     }
 
     @Override
     public UserBasedOperationResult addUserRead(String name, String cardUid) {
-        // TODO Auto-generated method stub
         throw new UnsupportedOperationException("Unimplemented method 'addUserRead'");
     }
 
     @Override
     public UserBasedOperationResult deleteUserAck(String userName, String cardUid) {
-        // TODO Auto-generated method stub
         throw new UnsupportedOperationException("Unimplemented method 'deleteUserAck'");
     }
 
     @Override
     public UserBasedOperationResult deleteUserRead(String userName, String cardUid) {
-        // TODO Auto-generated method stub
         throw new UnsupportedOperationException("Unimplemented method 'deleteUserRead'");
     }
 

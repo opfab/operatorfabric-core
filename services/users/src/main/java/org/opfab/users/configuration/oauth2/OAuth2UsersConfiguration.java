@@ -53,14 +53,16 @@ import java.util.Set;
 @Data
 public class OAuth2UsersConfiguration {
 
-    @Autowired
-    private JwtProperties jwtProperties;
+    private final JwtProperties jwtProperties;
+    private final GroupsProperties groupsProperties;
+    private final GroupsUtils groupsUtils;
 
     @Autowired
-    private GroupsProperties groupsProperties;
-
-    @Autowired
-    private GroupsUtils groupsUtils;
+    public OAuth2UsersConfiguration(JwtProperties jwtProperties, GroupsProperties groupsProperties, GroupsUtils groupsUtils) {
+        this.jwtProperties = jwtProperties;
+        this.groupsProperties = groupsProperties;
+        this.groupsUtils = groupsUtils;
+    }
 
     /**
      * Generates a converter that converts {@link Jwt} to
