@@ -144,6 +144,11 @@ opfab.currentUserCard = {
 
 
 opfab.richTextEditor = {
+
+    showRichMessage(element) {
+        const delta = element.innerHTML;
+        element.innerHTML = this.getHtml(delta);
+    },
  
     getHtml: function (delta) {
         const container = document.createElement("div");

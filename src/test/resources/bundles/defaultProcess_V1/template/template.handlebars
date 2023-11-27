@@ -11,7 +11,7 @@
 <br/>
 
 <div class="template-style">
-<span id="richMessage"></span>
+<span id="richMessage">{{card.data.richMessage}}</span>
 </div>
 
 
@@ -19,10 +19,5 @@
 <br/>
 <br/>
 <script>
-    loadData();
-
-    function loadData() {
-        document.getElementById("richMessage").innerHTML = opfab.richTextEditor.getHtml("{{card.data.richMessage}}");
-    }
-
+    opfab.richTextEditor.showRichMessage(document.getElementById("richMessage"));
 </script>
