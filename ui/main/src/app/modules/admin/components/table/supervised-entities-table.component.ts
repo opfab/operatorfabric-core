@@ -13,6 +13,7 @@ import {AdminTableDirective, Field} from './admin-table.directive';
 import {AdminItemType} from '../../services/sharing.service';
 import {ActionButton} from '../cell-renderers/action-cell-renderer.component';
 import {EditSupervisedEntityModalComponent} from '../editmodal/supervised-entities/edit-supervised-entity-modal.component';
+import {SupervisedEntitiesService} from 'app/business/services/users/supervised-entities.service';
 
 @Component({
     templateUrl: 'admin-table.directive.html',
@@ -31,6 +32,8 @@ export class SupervisedEntitiesTableComponent extends AdminTableDirective implem
     editModalComponent = EditSupervisedEntityModalComponent;
 
     ngOnInit() {
+        SupervisedEntitiesService.loadAllSupervisedEntitiesData().subscribe();
+
         this.gridOptions.columnTypes['entityNameColumn'] = {
             sortable: true,
             filter: 'agTextColumnFilter',

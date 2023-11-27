@@ -59,22 +59,22 @@ export class EditSupervisedEntityModalComponent implements OnInit {
 
     ngOnInit() {
 
-
         this.entityForm = new FormGroup({
             entityId: new FormControl<string | null>('', [Validators.required]),
             supervisors: new FormControl<string[] | null>([], [Validators.required])
         });
-        this.crudService = this.dataHandlingService.resolveCrudServiceDependingOnType(this.type);
-        this.supervisedEntities = this.crudService.getCachedValues();
 
         this.entities = EntitiesService.getEntities();
+
+        this.crudService = this.dataHandlingService.resolveCrudServiceDependingOnType(this.type);
+
+        this.supervisedEntities = this.crudService.getCachedValues();
 
         if (this.row) this.initializeForEdition();
 
         this.allEntitiesSupervised = this.entities.length === this.supervisedEntities.length;
-        
-        if (!this.allEntitiesSupervised) this.initializeMultiselectOptions();
 
+        if (!this.allEntitiesSupervised) this.initializeMultiselectOptions();
     }
 
     initializeForEdition() {
