@@ -29,6 +29,11 @@
         fill: none;
         stroke: var(--opfab-timeline-grid-color);
     }
+
+    // move ticks closer to the grid
+    .tick text {
+        transform: translate(0, -10px);
+    }
 }
 
 .btn-cardlink {

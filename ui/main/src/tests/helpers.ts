@@ -172,8 +172,8 @@ export function getOneRandomCard(cardTemplate?: any): Card {
         cardTemplate.lttd ? cardTemplate.lttd : null,
         getRandomI18nData(),
         getRandomI18nData(),
-        getRandomAlphanumericValue(3, 24),
-        getRandomAlphanumericValue(3, 24),
+        cardTemplate.titleTranslated ?  cardTemplate.titleTranslated : getRandomAlphanumericValue(3, 24),
+        cardTemplate.summaryTranslated ? cardTemplate.summaryTranslated : getRandomAlphanumericValue(3, 24),
         cardTemplate.data ? cardTemplate.data : {data: 'data'},
         cardTemplate.userRecipients ? cardTemplate.userRecipients : null,
         cardTemplate.groupRecipients ? cardTemplate.groupRecipients : null,
@@ -194,7 +194,9 @@ export function getOneRandomCard(cardTemplate?: any): Card {
         cardTemplate.wktProjection ? cardTemplate.wktProjection : null,
         cardTemplate.secondsBeforeTimeSpanForReminder ? cardTemplate.secondsBeforeTimeSpanForReminder : null,
         cardTemplate.timeSpans ? cardTemplate.timeSpans : null,
-        cardTemplate.entitiesAcks ? cardTemplate.entitiesAcks : null
+        cardTemplate.entitiesAcks ? cardTemplate.entitiesAcks : null,
+        undefined,
+        cardTemplate.rRule ? cardTemplate.rRule : null
     );
 }
 

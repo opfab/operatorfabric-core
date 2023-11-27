@@ -9,6 +9,7 @@
  */
 
 import {
+    ChangeDetectionStrategy,
     ChangeDetectorRef,
     Component,
     ElementRef,
@@ -33,63 +34,21 @@ import {
 } from '@swimlane/ngx-charts';
 import * as moment from 'moment';
 import {Router} from '@angular/router';
-import {Subject} from 'rxjs';
-import {takeUntil} from 'rxjs/operators';
-import {getNextTimeForRepeating} from 'app/business/services/reminder/reminderUtils';
-import {getNextTimeForRepeating as getNextTimeForRepeatingUsingRRule} from 'app/business/services/rrule-reminder/rrule-reminderUtils';
 import {NgbPopover} from '@ng-bootstrap/ng-bootstrap';
 import {LightCardsFeedFilterService} from 'app/business/services/lightcards/lightcards-feed-filter.service';
-import {DurationInputArg2} from 'moment';
+import {TimelineView} from 'app/business/view/timeline/timeline.view';
+import {Observable} from 'rxjs';
 
 @Component({
     selector: 'of-custom-timeline-chart',
     templateUrl: './custom-timeline-chart.component.html',
     styleUrls: ['./custom-timeline-chart.component.scss'],
-    encapsulation: ViewEncapsulation.None
+    encapsulation: ViewEncapsulation.None,
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class CustomTimelineChartComponent extends BaseChartComponent implements OnInit, OnDestroy {
-    private ngUnsubscribe$ = new Subject<void>();
-    public xTicks: Array<any> = [];
-    public xTicksOne: Array<any> = [];
-    public xTicksTwo: Array<any> = [];
-    public xTicksOneFormat: string;
-    public xTicksTwoFormat: string;
-    public title: string;
-    public oldWidth = 0;
-    public openPopover: NgbPopover;
-    public popoverTimeOut;
-
-    xDomainForTimeLineGridDisplay: any;
-
-    @ViewChild(ChartComponent, {read: ElementRef}) chart: ElementRef;
-    public dims: ViewDimensions;
-    public xDomain: any;
-    public yScale: any;
-    private xAxisHeight = 0;
-    private yAxisWidth = 0;
-    public xScale: any;
-    private margin: any[] = [30, 15, 10, 0];
-    public translateGraph: string;
-    public translateXTicksTwo: string;
-    public xRealTimeLine: moment.Moment;
-    private isDestroyed = false;
-    public weekRectangles;
-
-    // TOOLTIP
-    public currentCircleHovered;
-    public circles;
-    public cardsData;
-
-    @Input() prod; // Workaround for testing, the variable is not set in unit test an true in production mode
     @Input() domainId;
-    @Input()
-    set valueDomain(value: any) {
-        this.xDomain = value;
-        this.setDomainForTimeLineGridDisplay();
-        this.setTitle();
-        this.setWeekRectanglePositions();
-    }
-
+    @Input() valueDomain;
     // Hack to force reload of the timeline when the user switch from hidden timeline
     // to visible timeline by cliking on "show timeline" :
     // When isHidden will change from true to false, it will trigger ngOnchange in ngx-chart and reprocess the chart drawing
@@ -98,63 +57,27 @@ export class CustomTimelineChartComponent extends BaseChartComponent implements 
     // - https://github.com/opfab/operatorfabric-core/issues/3348
     @Input() isHidden;
 
-    setDomainForTimeLineGridDisplay() {
-        this.xDomainForTimeLineGridDisplay = [this.xDomain.startDate + this.xDomain.overlap, this.xDomain.endDate];
-    }
-
-    setTitle() {
-        switch (this.domainId) {
-            case 'TR':
-            case 'J':
-                this.title = moment(this.xDomainForTimeLineGridDisplay[0]).format('DD MMMM YYYY');
-                break;
-            case 'M':
-                this.title = moment(this.xDomainForTimeLineGridDisplay[0]).format('MMMM YYYY').toLocaleUpperCase();
-                break;
-            case 'Y':
-                this.title = moment(this.xDomainForTimeLineGridDisplay[0]).format('YYYY').toLocaleUpperCase();
-                break;
-            case '7D':
-            case 'W':
-                this.title =
-                    moment(this.xDomainForTimeLineGridDisplay[0]).format('DD/MM/YYYY').toLocaleUpperCase() +
-                    ' - ' +
-                    moment(this.xDomainForTimeLineGridDisplay[1]).format('DD/MM/YYYY');
-                break;
-            default:
-        }
-    }
-
-    setWeekRectanglePositions() {
-        this.weekRectangles = new Array();
-        if (this.domainId === 'W' || this.domainId === '7D') {
-            let startOfDay = this.xDomainForTimeLineGridDisplay[0];
-            let changeBgColor = true;
-            while (startOfDay < this.xDomainForTimeLineGridDisplay[1]) {
-                let endOfDay = moment(startOfDay);
-                endOfDay.set('hour', 23);
-                endOfDay.set('minute', 59);
-                if (endOfDay > this.xDomainForTimeLineGridDisplay[1]) endOfDay = this.xDomainForTimeLineGridDisplay[1];
-                const week = {
-                    start: startOfDay,
-                    end: endOfDay,
-                    changeBgColor: changeBgColor
-                };
-                this.weekRectangles.push(week);
-                startOfDay = moment(startOfDay).add(1, 'day');
-                startOfDay.set('hour', 0);
-                startOfDay.set('minute', 0);
-                changeBgColor = !changeBgColor;
-            }
-        }
-    }
-
-    get valueDomain() {
-        return this.xDomainForTimeLineGridDisplay;
-    }
-
     @Output() zoomChange: EventEmitter<string> = new EventEmitter<string>();
-    @Output() widthChange: EventEmitter<boolean> = new EventEmitter<boolean>();
+
+    @ViewChild(ChartComponent, {read: ElementRef}) chart: ElementRef;
+
+    public timeLineView;
+
+    public dims: ViewDimensions;
+    public yScale: any;
+    public xScale: any;
+    public translateGraph: string;
+
+    public xRealTimeLine: moment.Moment;
+
+    public currentCircleHovered;
+    public openPopover: NgbPopover;
+    public popoverTimeOut;
+
+    private changeDetectorRef: ChangeDetectorRef;
+    private isDestroyed = false;
+
+    public circles$: Observable<any>;
 
     constructor(
         chartElement: ElementRef,
@@ -162,36 +85,18 @@ export class CustomTimelineChartComponent extends BaseChartComponent implements 
         cd: ChangeDetectorRef,
         private router: Router,
         @Inject(PLATFORM_ID) platformId: any,
-        private lightCardsFeedFilterService: LightCardsFeedFilterService
+        lightCardsFeedFilterService: LightCardsFeedFilterService
     ) {
         super(chartElement, zone, cd, platformId);
+        this.timeLineView = new TimelineView(lightCardsFeedFilterService);
+        this.changeDetectorRef = cd;
+        this.circles$ = this.timeLineView.getCircles();
     }
 
     ngOnInit(): void {
-        this.initGraph();
         this.updateRealtime();
-        this.initDataPipe();
-
-        this.setDomainForTimeLineGridDisplay();
-        this.updateDimensions(); // need to init here only for unit test , otherwise dims is null
     }
 
-    ngOnDestroy() {
-        this.ngUnsubscribe$.next();
-        this.ngUnsubscribe$.complete();
-        this.isDestroyed = true;
-    }
-
-    // set inside ngx-charts library verticalSpacing variable to 10
-    // library need to rotate ticks one time for set verticalSpacing to 10px on ngx-charts-x-axis-ticks
-    // searching to loop lessiest time possible but loop enough time for use more than usable space
-    initGraph(): void {
-        const limit = window.innerWidth / 10;
-        for (let i = 0; i < limit; i++) {
-            this.xTicksOne.push(moment(i));
-            this.xTicksTwo.push(moment(i));
-        }
-    }
 
     /**
      * loop function for set xRealTimeLine at the actual time
@@ -201,6 +106,7 @@ export class CustomTimelineChartComponent extends BaseChartComponent implements 
      */
     updateRealtime(): void {
         this.xRealTimeLine = moment();
+        this.changeDetectorRef.markForCheck();
         setTimeout(() => {
             if (!this.isDestroyed) this.updateRealtime();
         }, 1000);
@@ -211,391 +117,42 @@ export class CustomTimelineChartComponent extends BaseChartComponent implements 
      * called for each update on chart
      */
     update(): void {
+        this.timeLineView.setDomain(this.domainId, this.valueDomain);
         super.update();
         this.updateDimensions();
-        this.setupXAxis();
-        this.createCircles();
     }
 
     updateDimensions(): void {
         this.dims = calculateViewDimensions({
             width: this.width,
             height: this.height,
-            margins: this.margin,
+            margins: [30, 15, 10, 0],
             showXAxis: true,
             showYAxis: true,
-            xAxisHeight: this.xAxisHeight,
-            yAxisWidth: this.yAxisWidth,
+            xAxisHeight: 19,
+            yAxisWidth: 0,
             showLegend: false,
             legendType: ScaleType.Time
         });
 
-        this.xScale = scaleTime().range([0, this.dims.width]).domain(this.xDomainForTimeLineGridDisplay);
+        this.xScale = scaleTime()
+            .range([0, this.dims.width])
+            .domain(this.timeLineView.getTimeGridDomain());
         this.yScale = scaleLinear().range([this.dims.height, 0]).domain([0, 5]);
-        this.translateGraph = `translate(${this.dims.xOffset} , ${this.margin[0]})`;
-        this.translateXTicksTwo = `translate(0, ${this.dims.height + 5})`;
-        if (this.oldWidth !== this.dims.width) {
-            this.oldWidth = this.dims.width;
-            this.widthChange.emit(true);
-        }
-    }
-    setupXAxis(): void {
-        this.setXTicksValue();
-        this.xTicksOne = [];
-        this.xTicksTwo = [];
-
-        switch (this.domainId) {
-            case 'TR':
-                this.processTicksForTR();
-                break;
-            case 'J':
-            case 'M':
-            case 'Y':
-                this.processTicksForJMY();
-                break;
-            case '7D':
-            case 'W':
-                this.processTicksFor7DW();
-                break;
-            default:
-        }
-    }
-
-    private processTicksForTR(): void {
-        this.xTicks.forEach((tick) => {
-            if (tick.minute() === 0 || tick.minute() === 30) this.xTicksOne.push(tick);
-            else this.xTicksTwo.push(tick);
-        });
-    }
-
-    private processTicksForJMY(): void {
-                for (let i = 0; i < this.xTicks.length; i++) {
-                    if (i % 2 === 0) {
-                        this.xTicksOne.push(this.xTicks[i]);
-                    } else {
-                        this.xTicksTwo.push(this.xTicks[i]);
-                    }
-                }
-    }
-
-    private processTicksFor7DW(): void {
-                this.xTicks.forEach((tick) => {
-                    if (tick.hour() === 0 || tick.hour() === 8 || tick.hour() === 16) this.xTicksOne.push(tick);
-                    else this.xTicksTwo.push(tick);
-                });
-    }
-    setXTicksValue(): void {
-        const startDomain = moment(this.xDomainForTimeLineGridDisplay[0]);
-        this.xTicks = [startDomain];
-        let nextTick = moment(startDomain);
-        const tickSize = this.getTickSize();
-
-        while (nextTick.valueOf() < this.xDomainForTimeLineGridDisplay[1].valueOf()) {
-            nextTick =
-                this.domainId === 'Y' ? this.addHalfMonthOrMonth(nextTick) : this.addTickSize(nextTick, tickSize);
-            this.xTicks.push(moment(nextTick));
-        }
-    }
-
-    private addHalfMonthOrMonth(nextTick: moment.Moment): moment.Moment {
-                if (nextTick.isSame(moment(nextTick).startOf('month'))) {
-            return nextTick.add(15, 'day');
-                } else {
-            return nextTick.add(1, 'month').startOf('month');
-        }
-                }
-
-    private addTickSize(nextTick: moment.Moment, tickSize: {amount: number; unit: DurationInputArg2}): moment.Moment {
-        nextTick = nextTick.add(tickSize.amount, tickSize.unit);
-                if (this.domainId === '7D' || this.domainId === 'W') {
-            nextTick = this.adjustForDaylightSaving(nextTick);
-        }
-        return nextTick;
-    }
-
-    private adjustForDaylightSaving(nextTick: moment.Moment): moment.Moment {
-                    // OC-1205 : Deal with winter/summer time changes
-                    // if hour is 5, we are switching from winter to summer time, we subtract 1 hour to keep  ticks  to 04 / 08 / 12 ...
-                    // if hour is 3, we are switching from summer to winter time, we add 1 hour to keep  ticks  to 04 / 08 / 12 ...
-        if (nextTick.hour() === 5) {
-            return nextTick.subtract(1, 'hour');
-                }
-        if (nextTick.hour() === 3) {
-            return nextTick.add(1, 'hour');
-        }
-        return nextTick;
-    }
-
-    initDataPipe(): void {
-        this.lightCardsFeedFilterService
-            .getFilteredLightCardsForTimeLine()
-            .pipe(takeUntil(this.ngUnsubscribe$))
-            .subscribe((value) => this.getAllCardsToDrawOnTheTimeLine(value));
-    }
-
-    getAllCardsToDrawOnTheTimeLine(cards) {
-        const myCardsTimeline = [];
-        for (const card of cards) {
-            if (!card.parentCardId) {
-                // is not child card
-                if (card.rRule) {
-                    this.computeCardsToDrawOnTheTimelineUsingRRule(card, myCardsTimeline);
-                } else {
-                    if (card.timeSpans && card.timeSpans.length > 0) {
-                        card.timeSpans.forEach((timeSpan) => {
-                            if (timeSpan.recurrence) {
-                                let dateForReminder: number = getNextTimeForRepeating(
-                                    card,
-                                    this.xDomainForTimeLineGridDisplay[0].valueOf() +
-                                        1000 * card.secondsBeforeTimeSpanForReminder
-                                );
-
-                                while (
-                                    dateForReminder >= 0 &&
-                                    (!timeSpan.end || dateForReminder < timeSpan.end) &&
-                                    dateForReminder < this.xDomainForTimeLineGridDisplay[1].valueOf()
-                                ) {
-                                    const myCardTimeline = {
-                                        date: dateForReminder,
-                                        id: card.id,
-                                        severity: card.severity,
-                                        process: card.process,
-                                        processVersion: card.processVersion,
-                                        titleTranslated: card.titleTranslated
-                                    };
-                                    myCardsTimeline.push(myCardTimeline);
-                                    const nextDate = moment(dateForReminder).add(1, 'minute');
-
-                                    dateForReminder = getNextTimeForRepeating(
-                                        card,
-                                        nextDate.valueOf() + 1000 * card.secondsBeforeTimeSpanForReminder
-                                    );
-                                }
-                            } else {
-                                if (timeSpan.start) {
-                                    const myCardTimeline = {
-                                        date: timeSpan.start,
-                                        id: card.id,
-                                        severity: card.severity,
-                                        process: card.process,
-                                        processVersion: card.processVersion,
-                                        titleTranslated: card.titleTranslated
-                                    };
-                                    myCardsTimeline.push(myCardTimeline);
-                                }
-                            }
-                        });
-                    } else {
-                        const myCardTimeline = {
-                            date: card.startDate,
-                            id: card.id,
-                            severity: card.severity,
-                            process: card.process,
-                            processVersion: card.processVersion,
-                            titleTranslated: card.titleTranslated
-                        };
-                        myCardsTimeline.push(myCardTimeline);
-                    }
-                }
-            }
-        }
-        this.cardsData = myCardsTimeline;
-        this.createCircles();
-    }
-
-    computeCardsToDrawOnTheTimelineUsingRRule(card: any, myCardsTimeline: any[]) {
-        let dateForReminder: number = getNextTimeForRepeatingUsingRRule(
-            card,
-            this.xDomainForTimeLineGridDisplay[0].valueOf() + 1000 * card.secondsBeforeTimeSpanForReminder
-        );
-
-        while (
-            dateForReminder >= 0 &&
-            (!card.endDate || dateForReminder < card.endDate) &&
-            dateForReminder < this.xDomainForTimeLineGridDisplay[1].valueOf()
-        ) {
-            const myCardTimeline = {
-                date: dateForReminder,
-                id: card.id,
-                severity: card.severity,
-                process: card.process,
-                processVersion: card.processVersion,
-                titleTranslated: card.titleTranslated
-            };
-            myCardsTimeline.push(myCardTimeline);
-            const nextDate = moment(dateForReminder).add(1, 'minute');
-
-            dateForReminder = getNextTimeForRepeatingUsingRRule(
-                card,
-                nextDate.valueOf() + 1000 * card.secondsBeforeTimeSpanForReminder
-            );
-        }
-    }
-
-    createCircles(): void {
-        this.circles = [];
-        if (this.cardsData === undefined) {
-            return;
-        }
-
-        // filter cards by date
-        this.cardsData.sort((val1, val2) => {
-            return val1.date - val2.date;
-        });
-
-        // separate cards by severity
-        const cardsBySeverity = [];
-        for (let i = 0; i < 4; i++) {
-            cardsBySeverity.push([]);
-        }
-        for (const card of this.cardsData) {
-            card.circleYPosition = this.getCircleYPosition(card.severity);
-            cardsBySeverity[card.circleYPosition - 1].push(card);
-        }
-
-        // for each severity array create the circles
-        for (const cards of cardsBySeverity) {
-            let cardIndex = 0;
-            // move index to the first card in the time domain
-            if (cards.length > 0) {
-                while (cards[cardIndex] && cards[cardIndex].date < this.xDomain.startDate && cardIndex < cards.length) {
-                    cardIndex++;
-                }
-            }
-            // for each interval , if a least one card in the interval , create a circle object.
-            if (cardIndex < cards.length) {
-                for (let tickIndex = 1; tickIndex < this.xTicks.length; tickIndex++) {
-                    let endLimit = this.xTicks[tickIndex].valueOf();
-
-                    if (tickIndex + 1 === this.xTicks.length) {
-                        endLimit += 1; // Include the limit domain value by adding 1ms
-                    }
-
-                    if (cards[cardIndex] && cards[cardIndex].date < endLimit) {
-                        // initialisation of a new circle
-                        const circle = {
-                            start: cards[cardIndex].date,
-                            end: cards[cardIndex].date,
-                            date: moment(this.xTicks[tickIndex - 1].valueOf()),
-                            dateOrPeriod: '',
-                            count: 0,
-                            width: 10,
-                            color: this.getCircleColor(cards[cardIndex].severity),
-                            circleYPosition: cards[cardIndex].circleYPosition,
-                            summary: []
-                        };
-
-                        // while cards date is inside the interval of the two current ticks, add card information in the circle
-                        while (cards[cardIndex] && cards[cardIndex].date < endLimit) {
-                            circle.count++;
-                            circle.end = cards[cardIndex].date;
-                            circle.summary.push({
-                                cardId: cards[cardIndex].id,
-                                titleTranslated: cards[cardIndex].titleTranslated,
-                                summaryDate: moment(cards[cardIndex].date).format('DD/MM - HH:mm :'),
-                                i18nPrefix: cards[cardIndex].process + '.' + cards[cardIndex].processVersion + '.'
-                            });
-                            cardIndex++;
-                        }
-                        circle.width = 10 + 2 * this.getEllipseWidth(circle.count);
-
-                        //  add the circle to the list of circles to display
-                        if (circle.start.valueOf() === circle.end.valueOf()) {
-                            circle.dateOrPeriod = 'Date : ' + this.getCircleDateFormatting(circle.start);
-                        } else {
-                            circle.dateOrPeriod =
-                                'Period : ' +
-                                this.getCircleDateFormatting(circle.start) +
-                                ' - ' +
-                                this.getCircleDateFormatting(circle.end);
-                        }
-                        this.circles.push(circle);
-                    }
-                }
-            }
-        }
-    }
-
-    getEllipseWidth(count: number) {
-        return (Math.log(count) * Math.LOG10E) | 0;
-    }
-
-    getCircleYPosition(severity: string): number {
-        if (severity) {
-            switch (severity) {
-                case 'ALARM':
-                    return 4;
-                case 'ACTION':
-                    return 3;
-                case 'COMPLIANT':
-                    return 2;
-                case 'INFORMATION':
-                    return 1;
-                default:
-                    return 1;
-            }
-        } else {
-            return 1;
-        }
-    }
-
-    getCircleColor(severity: string): string {
-        if (severity) {
-            switch (severity) {
-                case 'ALARM':
-                    return '#A71A1A'; // red
-                case 'ACTION':
-                    return '#FD9313'; // orange
-                case 'COMPLIANT':
-                    return '#00BB03'; // green
-                case 'INFORMATION':
-                    return '#1074AD'; // blue
-                default:
-                    return 'blue';
-            }
-        } else {
-            return 'blue';
-        }
-    }
-
-    /**
-     * format the date of the hovered circle
-     */
-    getCircleDateFormatting(value): string {
-        if (typeof value === 'string') {
-            return value;
-        }
-        const date = moment(value);
-        switch (this.domainId) {
-            case 'TR':
-                return date.format('ddd DD MMM HH') + 'h' + date.format('mm');
-            case '7D':
-            case 'W':
-            case 'M':
-                return date.format('ddd DD MMM HH') + 'h';
-            case 'Y':
-                return date.format('ddd DD MMM YYYY');
-            case 'J':
-            default:
-                return date.format('HH[h]mm');
-        }
+        this.translateGraph = `translate(${this.dims.xOffset} , 30)`;
     }
 
     //
     // FOLLOWING METHODS ARE  CALLED FROM THE HTML
     //
 
-    /**
-     * return an empty value to display (use to have no label on y axis)
-     */
-    hideLabelsTicks = (e): string => {
+    emptyLabel(): string {
         return '';
-    };
+    }
 
     onCircleClick(circle) {
-        if (circle.count == 1) {
-            let cardId = circle.summary[0].cardId;
-            this.showCard(cardId);
+        if (circle.count === 1) {
+            this.showCard(circle.summary[0].cardId);
         }
     }
 
@@ -615,18 +172,8 @@ export class CustomTimelineChartComponent extends BaseChartComponent implements 
         }, 500);
     }
 
-    checkInsideDomain(date): boolean {
-        const domain = this.xDomainForTimeLineGridDisplay;
-        return date >= domain[0] && date <= domain[1];
-    }
-
     getXRealTimeLineFormatting(xRealTimeLine) {
         return moment(xRealTimeLine).format('DD/MM/YY HH:mm');
-    }
-
-    getWeekFormatting(start, end) {
-        if (end.valueOf() - start.valueOf() < 43200000) return ''; //  12h =>  12h*3600s*1000ms =  43200000ms
-        return moment(start).format('ddd DD MMM');
     }
 
     getRealTimeTextPosition() {
@@ -654,52 +201,15 @@ export class CustomTimelineChartComponent extends BaseChartComponent implements 
         clearTimeout(this.popoverTimeOut);
     }
 
-    getXTickOneFormatting = (value): string => {
-        switch (this.domainId) {
-            case 'TR':
-                if (value.minute() === 0) return value.format('HH') + 'h';
-                return value.format('HH') + 'h30';
-            case 'J':
-                return value.format('HH') + 'h';
-            case '7D':
-            case 'W':
-                return value.format('HH') + 'h';
-            case 'M':
-                return value.format('ddd').toLocaleUpperCase().substring(0, 3) + value.format(' DD');
-            case 'Y':
-                return value.format('D MMM');
-            default:
-                return '';
-        }
-    };
-
-    getXTickTwoFormatting = (value): string => {
-        return '';
-    };
-
-    getTickSize() {
-        const tickSizeMap = {
-            'TR': {amount: 15 as moment.DurationInputArg1, unit: 'minute' as moment.DurationInputArg2},
-            'J': {amount: 30 as moment.DurationInputArg1, unit: 'minute' as moment.DurationInputArg2},
-            '7D': {amount: 4 as moment.DurationInputArg1, unit: 'hour' as moment.DurationInputArg2},
-            'W': {amount: 4 as moment.DurationInputArg1, unit: 'hour' as moment.DurationInputArg2},
-            'M': {amount: 1 as moment.DurationInputArg1, unit: 'day' as moment.DurationInputArg2}
-        };
-        return tickSizeMap[this.domainId];
-    }
-
-    /**
-     * called when the height of the chart is updated
-     */
-    updateXAxisHeight({height}): void {
-        this.xAxisHeight = height;
-        this.updateDimensions();
-    }
-
     /**
      *  change for next or previous zoom set by buttons conf
      */
     onZoom($event: MouseEvent, direction): void {
         this.zoomChange.emit(direction);
+    }
+
+    ngOnDestroy() {
+        this.timeLineView.destroy();
+        this.isDestroyed = true;
     }
 }
