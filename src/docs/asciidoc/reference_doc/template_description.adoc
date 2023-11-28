@@ -723,7 +723,6 @@ The component provides the following text formatting tools :
 - Italics
 - Link
 - Align
-- Ordered list
 - Bullet list 
 - Indent       
 

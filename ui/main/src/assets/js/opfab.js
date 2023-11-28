@@ -189,7 +189,7 @@ class QuillEditor extends HTMLElement {
             [{ 'color': [] }],
             ['bold', 'italic', 'underline', 'link'],
             [{ 'align': [] }],
-            [{ 'list': 'ordered' }, { 'list': 'bullet' }],
+            [{ 'list': 'bullet' }],
             [{ 'indent': '-1' }, { 'indent': '+1' }],
             ['clean']
         ];
