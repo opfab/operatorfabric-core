@@ -711,6 +711,27 @@ tag-input {
     text-align: center;
 }
 
+
+ul {
+    li.ql-align-right::before {
+        content: '\2022';
+    }
+
+    li.ql-align-center {
+        list-style: none;
+    }
+
+    li.ql-align-right {
+        list-style: none;
+    }
+
+    li.ql-align-center::before {
+        content: '\2022';
+    }
+}
+
+
+
 .ql-align-right {
     text-align: right;
 }
@@ -727,65 +748,68 @@ tag-input {
     margin-left: 25px;
 }
 
-li.ql-indent-1 {
-    list-style-type: lower-latin;
+ol {
+    li.ql-indent-1 {
+        list-style-type: lower-latin;
+    }
+
+    li.ql-indent-2 {
+        list-style-type: lower-roman;
+    }
+
+    li.ql-indent-3 {
+        list-style-type: decimal;
+    }
+
+    li.ql-indent-4 {
+        list-style-type: lower-latin;
+    }
+
+    li.ql-indent-5 {
+        list-style-type: lower-roman;
+    }
+
+    li.ql-indent-6 {
+        list-style-type: decimal;
+    }
+
+    li.ql-indent-7 {
+        list-style-type: lower-latin;
+    }
+
+    li.ql-indent-8 {
+        list-style-type: lower-roman;
+    }
 }
 
 .ql-indent-2 {
     margin-left: 50px;
 }
 
-li.ql-indent-2 {
-    list-style-type: lower-roman;
-}
-
 .ql-indent-3 {
     margin-left: 150px;
-}
-
-li.ql-indent-3 {
-    list-style-type: decimal;
 }
 
 .ql-indent-4 {
     margin-left: 200px;
 }
 
-li.ql-indent-4 {
-    list-style-type: lower-latin;
-}
-
 .ql-indent-5 {
     margin-left: 250px;
-}
-
-li.ql-indent-5 {
-    list-style-type: lower-roman;
 }
 
 .ql-indent-6 {
     margin-left: 300px;
 }
 
-li.ql-indent-6 {
-    list-style-type: decimal;
-}
-
 .ql-indent-7 {
     margin-left: 350px;
-}
-
-li.ql-indent-7 {
-    list-style-type: lower-latin;
 }
 
 .ql-indent-8 {
     margin-left: 400px;
 }
 
-li.ql-indent-8 {
-    list-style-type: lower-roman;
-}
 
 // END QUILLJS STYLE
 
