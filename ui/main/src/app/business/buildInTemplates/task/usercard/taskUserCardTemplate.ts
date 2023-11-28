@@ -194,7 +194,8 @@ export class TaskUserCardTemplate extends BaseUserCardTemplate {
                     <td style="width:22%">
                         <div class="opfab-input">
                             <label> ${opfab.utils.getTranslation("buildInTemplate.taskUserCard.taskDuration")} </label>
-                            <input size="3" maxlength="3" type="text" id="durationInMinutes" value=${this.view.getDurationInMinutes(15)}>
+                            <input maxlength="3" type="text" oninput="this.value = this.value.replace(/[^0-9]/g, '')" 
+                            id="durationInMinutes" value=${this.view.getDurationInMinutes(15)}>
                         </div>
                     </td>
                     <td style="width:6%">
@@ -203,7 +204,8 @@ export class TaskUserCardTemplate extends BaseUserCardTemplate {
                     <td style="width:30%">
                         <div class="opfab-input">
                             <label> ${opfab.utils.getTranslation("buildInTemplate.taskUserCard.minutesForReminder")} </label>
-                            <input size="2" maxlength="2" type="text" id="minutesForReminder" value=${this.view.getMinutesForReminder(5)}>
+                            <input type="text" maxlength="3" oninput="this.value = this.value.replace(/[^0-9]/g, '')"
+                             id="minutesForReminder" value=${this.view.getMinutesForReminder(5)}>
                         </div>
                     </td>
                 </tr>
