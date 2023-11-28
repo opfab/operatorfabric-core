@@ -463,7 +463,7 @@
         "confirmDelete": "Wilt u het bestand met zakelijke gegevens echt verwijderen"
 
       },
-      "supervisedEntities": {
+      "supervisedEntity": {
         "entityId": "ENTITEIT",
         "supervisors": "SUPERVISORS",
         "add": "NIEUWE ENTITEIT ONDER TOEZICHT",
@@ -520,6 +520,7 @@
       "entities": "Entiteiten Beheer",
       "perimeters": "Perimeters Beheer",
       "processes": "Processen Beheer",
+      "businessData": "Zakelijke gegevens",
       "supervisedEntities": "Entiteiten onder toezicht"
     }
   },

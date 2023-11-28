@@ -463,10 +463,10 @@
         "confirmDelete": "Voulez vous vraiment supprimer le fichier de données métier"
 
       },
-      "supervisedEntities": {
+      "supervisedEntity": {
         "entityId": "ENTITÉ",
         "supervisors": "SUPERVISEURS",
-        "add": "AJOUTER UN NOUVEL ENTITÉ SUPERVISÉE",
+        "add": "AJOUTER UNE NOUVELLE ENTITÉ SUPERVISÉE",
         "confirmDelete": "Voulez-vous vraiment supprimer l'entité supervisée",
         "allEntitiesSupervised": "Toutes les entités sont déjà supervisées"
       },
@@ -520,6 +520,7 @@
       "entities": "Gestion des entités",
       "perimeters": "Gestion des périmètres",
       "processes": "Gestion des processus",
+      "businessData": "Données métier",
       "supervisedEntities": "Entités Supervisées"
     }
   },
