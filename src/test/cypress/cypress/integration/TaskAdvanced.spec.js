@@ -78,16 +78,22 @@ describe('Task Advanced', function () {
       opfab.navigateToUserCard();
       usercard.selectService('User card examples');
       usercard.selectProcess('Task Advanced');
-      cy.get('#taskDescription').type('Test task for daily frequency');
-      cy.get('.opfab-checkbox').contains('Monday').click();
-      cy.get('.opfab-checkbox').contains('Wednesday').click();
-      cy.get('.opfab-checkbox').contains('Friday').click();
+      cy.get('#taskDescription').invoke('val', 'Test task for daily frequency');
 
-      cy.get('.opfab-checkbox').contains('February').click();
-      cy.get('.opfab-checkbox').contains('May').click();
-      cy.get('.opfab-checkbox').contains('August').click();
-      cy.get('.opfab-checkbox').contains('November').click();
-      cy.get('.opfab-checkbox').contains('December').click();
+      // we unselect Tuesday, Thursday, Saturday, Sunday
+      cy.get('.opfab-checkbox').contains('Tuesday').click();
+      cy.get('.opfab-checkbox').contains('Thursday').click();
+      cy.get('.opfab-checkbox').contains('Saturday').click();
+      cy.get('.opfab-checkbox').contains('Sunday').click();
+
+      // we unselect January, March, April, June, July, September, October
+      cy.get('.opfab-checkbox').contains('January').click();
+      cy.get('.opfab-checkbox').contains('March').click();
+      cy.get('.opfab-checkbox').contains('April').click();
+      cy.get('.opfab-checkbox').contains('June').click();
+      cy.get('.opfab-checkbox').contains('July').click();
+      cy.get('.opfab-checkbox').contains('September').click();
+      cy.get('.opfab-checkbox').contains('October').click();
 
       cy.get('#time').type('20:00');
       cy.get('#durationInMinutes').clear();
@@ -141,8 +147,11 @@ describe('Task Advanced', function () {
       usercard.selectService('User card examples');
       usercard.selectProcess('Task Advanced');
       cy.get('#radioButtonMonthlyFreq').click();
-      cy.get('#taskDescription').type('Test task for monthly frequency (Nth day)');
+      cy.get('#taskDescription').invoke('val', 'Test task for monthly frequency (Nth day)');
 
+      // by default, all months are selected, so we unselect all months
+      cy.get('#selectAllMonths').parent().find('.opfab-checkbox-checkmark').click();
+      // then we select the months we want
       cy.get('#monthsCheckboxesForMonthlyFreq').find('.opfab-checkbox').contains('July').click();
       cy.get('#monthsCheckboxesForMonthlyFreq').find('.opfab-checkbox').contains('August').click();
       cy.get('#monthsCheckboxesForMonthlyFreq').find('.opfab-checkbox').contains('November').click();
@@ -206,8 +215,11 @@ describe('Task Advanced', function () {
       usercard.selectService('User card examples');
       usercard.selectProcess('Task Advanced');
       cy.get('#radioButtonMonthlyFreq').click();
-      cy.get('#taskDescription').type('Test task for monthly frequency (Nth weekday)');
+      cy.get('#taskDescription').invoke('val', 'Test task for monthly frequency (Nth weekday)');
 
+      // by default, all months are selected, so we unselect all months
+      cy.get('#selectAllMonths').parent().find('.opfab-checkbox-checkmark').click();
+      // then we select the months we want
       cy.get('#monthsCheckboxesForMonthlyFreq').find('.opfab-checkbox').contains('September').click();
       cy.get('#monthsCheckboxesForMonthlyFreq').find('.opfab-checkbox').contains('December').click();
 

@@ -680,7 +680,9 @@
       "taskDuration": "TASK DURATION (MINUTES) ",
       "minutesForReminder": "MINUTES TO REMIND BEFORE TASK",
       "youMustProvideAnOccurrenceNumberAndAWeekday": "You must provide an occurrence number and a weekday.",
-      "youMustProvideAtLeastOneNthDay": "You must provide at least one nth day."
+      "youMustProvideAtLeastOneNthDay": "You must provide at least one nth day.",
+      "youMustProvideAtLeastOneWeekday": "You must provide at least one weekday.",
+      "youMustProvideAtLeastOneMonth": "You must provide at least one month."
     }, 
     "message-or-question-listCard": {
       "answers": "Answers",
