@@ -723,7 +723,8 @@ The component provides the following text formatting tools :
 - Italics
 - Link
 - Align
-- Bullet list 
+- Bullet list
+- Ordered list
 - Indent       
 
 To use the rich text editor component just add a <opfab-richtext-editor> tag in the template using the OperatorFabric style. From javascript it is then possible to get formatted text content.

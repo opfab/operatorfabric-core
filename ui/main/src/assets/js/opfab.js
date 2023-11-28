@@ -148,6 +148,7 @@ opfab.richTextEditor = {
     showRichMessage(element) {
         const delta = element.innerHTML;
         element.innerHTML = this.getHtml(delta);
+        element.classList.add('ql-editor');
     },
  
     getHtml: function (delta) {
@@ -189,7 +190,7 @@ class QuillEditor extends HTMLElement {
             [{ 'color': [] }],
             ['bold', 'italic', 'underline', 'link'],
             [{ 'align': [] }],
-            [{ 'list': 'bullet' }],
+            [{ 'list': 'bullet' }, { 'list': 'ordered' }],
             [{ 'indent': '-1' }, { 'indent': '+1' }],
             ['clean']
         ];
