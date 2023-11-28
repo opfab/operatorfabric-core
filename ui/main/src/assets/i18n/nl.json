@@ -680,7 +680,9 @@
       "taskDuration": "TAAKDUUR (MINUTEN)",
       "minutesForReminder": "MINUTEN VOOR HERINNERING VOOR TAAK",
       "youMustProvideAnOccurrenceNumberAndAWeekday": "U moet een nummer van voorkomen en een weekdag opgeven.",
-      "youMustProvideAtLeastOneNthDay": "U dient minimaal één dagnummer op te geven."
+      "youMustProvideAtLeastOneNthDay": "U dient minimaal één dagnummer op te geven.",
+      "youMustProvideAtLeastOneWeekday": "U dient minimaal één dag van de week op te geven.",
+      "youMustProvideAtLeastOneMonth": "U dient minimaal één maand op te geven."
     },
     "message-or-question-listCard": {
       "answers": "Antwoorden",

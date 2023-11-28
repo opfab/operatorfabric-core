@@ -21,6 +21,7 @@ export class TaskUserCardTemplate extends BaseUserCardTemplate {
     monthsArrayDaily = ["JanuaryDaily", "FebruaryDaily", "MarchDaily", "AprilDaily", "MayDaily", "JuneDaily", "JulyDaily", "AugustDaily", "SeptemberDaily", "OctoberDaily", "NovemberDaily", "DecemberDaily"];
     monthsArrayMonthly = ["JanuaryMonthly", "FebruaryMonthly", "MarchMonthly", "AprilMonthly", "MayMonthly", "JuneMonthly", "JulyMonthly", "AugustMonthly", "SeptemberMonthly", "OctoberMonthly", "NovemberMonthly", "DecemberMonthly"];
 
+    hasMonthlyFreqAlreadyBeenDisplayedInCreateMode = false;
 
     constructor() {
         super();
@@ -223,6 +224,8 @@ export class TaskUserCardTemplate extends BaseUserCardTemplate {
         this.doWeHaveToDisplayMonthlyFreqInEditMode();
         this.checkIsAllDaysSelected();
         this.checkIsAllMonthsSelected();
+        this.selectAllDaysIfInCreateMode();
+        this.selectAllMonthsIfInCreateMode();
     }
     
     displayDailyFrequency() {
@@ -242,6 +245,11 @@ export class TaskUserCardTemplate extends BaseUserCardTemplate {
         document.getElementById("monthsCheckboxesForMonthlyFreq").hidden = false;
         document.getElementById("dayPositionInTheMonth").hidden = false;
         this.checkIsAllMonthsSelected();
+
+        if ((opfab.currentUserCard.getEditionMode() === 'CREATE') && (this.hasMonthlyFreqAlreadyBeenDisplayedInCreateMode === false)) {
+            this.hasMonthlyFreqAlreadyBeenDisplayedInCreateMode = true;
+            this.selectAllMonthsIfInCreateMode();
+        }
     }
 
     displayNthDayTable() {
@@ -299,6 +307,18 @@ export class TaskUserCardTemplate extends BaseUserCardTemplate {
             if (opfab.currentUserCard.getEditionMode() !== 'CREATE')  this.selectValuesInEditModeForMonthlyFreq();
         } else {
             if (opfab.currentUserCard.getEditionMode() !== 'CREATE')  this.selectValuesInEditModeForDailyFreq();
+        }
+    }
+
+    selectAllDaysIfInCreateMode() {
+        if (opfab.currentUserCard.getEditionMode() === 'CREATE') {
+            (<HTMLInputElement>document.getElementById("selectAllDays")).click();
+        }
+    }
+
+    selectAllMonthsIfInCreateMode() {
+        if (opfab.currentUserCard.getEditionMode() === 'CREATE') {
+            (<HTMLInputElement>document.getElementById("selectAllMonths")).click();
         }
     }
 
@@ -440,7 +460,7 @@ export class TaskUserCardTemplate extends BaseUserCardTemplate {
                 if ((<HTMLInputElement>document.getElementById("lastDay")).checked === true)  bymonthday.push("-1");
 
                 if (bymonthday.length === 0) {
-                    return {valid: false , errorMsg: opfab.utils.getTranslation('buildInTemplate.taskUserCard.youMustProvideAtLeastOneNthDay')}
+                    return {valid: false , errorMsg: opfab.utils.getTranslation('buildInTemplate.taskUserCard.youMustProvideAtLeastOneNthDay')};
                 }
             }
 
@@ -451,13 +471,25 @@ export class TaskUserCardTemplate extends BaseUserCardTemplate {
                 }
 
                 if ((bysetpos.length === 0) || (byweekday.length === 0)) {
-                    return {valid: false , errorMsg: opfab.utils.getTranslation('buildInTemplate.taskUserCard.youMustProvideAnOccurrenceNumberAndAWeekday')}
+                    return {valid: false , errorMsg: opfab.utils.getTranslation('buildInTemplate.taskUserCard.youMustProvideAnOccurrenceNumberAndAWeekday')};
                 }
+            }
+
+            if (bymonth.length === 0) {
+                return {valid: false , errorMsg: opfab.utils.getTranslation('buildInTemplate.taskUserCard.youMustProvideAtLeastOneMonth')};
             }
         } else {
             freq = 'DAILY';
             byweekday = this.fetchWeekDay();
             bymonth = this.fetchMonthDaily();
+
+            if (byweekday.length === 0) {
+                return {valid: false , errorMsg: opfab.utils.getTranslation('buildInTemplate.taskUserCard.youMustProvideAtLeastOneWeekday')};
+            }
+
+            if (bymonth.length === 0) {
+                return {valid: false , errorMsg: opfab.utils.getTranslation('buildInTemplate.taskUserCard.youMustProvideAtLeastOneMonth')};
+            }
         }
 
         return this.view.getSpecificCardInformation(taskDescription, freq, durationInMinutes, minutesForReminder, byweekday, bymonth, bysetpos, bymonthday, time);
