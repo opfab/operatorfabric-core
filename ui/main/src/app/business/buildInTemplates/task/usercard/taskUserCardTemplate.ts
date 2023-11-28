@@ -438,7 +438,7 @@ export class TaskUserCardTemplate extends BaseUserCardTemplate {
                 if ((<HTMLInputElement>document.getElementById("lastDay")).checked === true)  bymonthday.push("-1");
 
                 if (bymonthday.length === 0) {
-                    return {valid: false , errorMsg: 'You must provide at least one nth day.'}
+                    return {valid: false , errorMsg: opfab.utils.getTranslation('buildInTemplate.taskUserCard.youMustProvideAtLeastOneNthDay')}
                 }
             }
 
@@ -449,7 +449,7 @@ export class TaskUserCardTemplate extends BaseUserCardTemplate {
                 }
 
                 if ((bysetpos.length === 0) || (byweekday.length === 0)) {
-                    return {valid: false , errorMsg: 'You must provide an occurrence number and a weekday.'}
+                    return {valid: false , errorMsg: opfab.utils.getTranslation('buildInTemplate.taskUserCard.youMustProvideAnOccurrenceNumberAndAWeekday')}
                 }
             }
         } else {
