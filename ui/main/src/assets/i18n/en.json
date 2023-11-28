@@ -678,7 +678,9 @@
       "at": "AT",
       "time": "TIME",
       "taskDuration": "TASK DURATION (MINUTES) ",
-      "minutesForReminder": "MINUTES TO REMIND BEFORE TASK"
+      "minutesForReminder": "MINUTES TO REMIND BEFORE TASK",
+      "youMustProvideAnOccurrenceNumberAndAWeekday": "You must provide an occurrence number and a weekday.",
+      "youMustProvideAtLeastOneNthDay": "You must provide at least one nth day."
     }, 
     "message-or-question-listCard": {
       "answers": "Answers",

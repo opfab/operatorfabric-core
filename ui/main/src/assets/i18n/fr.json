@@ -679,7 +679,9 @@
       "at": "À",
       "time": "HEURE",
       "taskDuration": "DURÉE DE LA TÂCHE (MINUTES)",
-      "minutesForReminder": "MINUTES AVANT LA TÂCHE POUR RAPPEL"
+      "minutesForReminder": "MINUTES AVANT LA TÂCHE POUR RAPPEL",
+      "youMustProvideAnOccurrenceNumberAndAWeekday": "Vous devez fournir un numéro d'ocurrence et un jour de la semaine.",
+      "youMustProvideAtLeastOneNthDay": "Vous devez fournir au moins un numéro de jour."
     }, 
     "message-or-question-listCard": {
       "answers": "Réponses",

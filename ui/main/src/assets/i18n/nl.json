@@ -678,8 +678,10 @@
       "at": "OM",
       "time": "TIJD",
       "taskDuration": "TAAKDUUR (MINUTEN)",
-      "minutesForReminder": "MINUTEN VOOR HERINNERING VOOR TAAK"
-    }, 
+      "minutesForReminder": "MINUTEN VOOR HERINNERING VOOR TAAK",
+      "youMustProvideAnOccurrenceNumberAndAWeekday": "U moet een nummer van voorkomen en een weekdag opgeven.",
+      "youMustProvideAtLeastOneNthDay": "U dient minimaal één dagnummer op te geven."
+    },
     "message-or-question-listCard": {
       "answers": "Antwoorden",
       "yes": "Ja",
