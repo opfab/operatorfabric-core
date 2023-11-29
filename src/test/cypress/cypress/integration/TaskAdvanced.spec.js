@@ -66,7 +66,8 @@ describe('Task Advanced', function () {
 
   describe('Send Task advanced user card, open the card and edit it', function () {
 
-    before('Delete previous cards', function () {
+
+    beforeEach(() => {
       script.deleteAllCards();
       script.deleteAllArchivedCards();
     });
