@@ -202,7 +202,7 @@ class QuillEditor extends HTMLElement {
             theme: 'snow',
             sanitize: true
         });
-
+        this.setDefaultLinkPlaceholder('');
     }
 
     init() {
@@ -228,6 +228,12 @@ class QuillEditor extends HTMLElement {
           }
           
           Quill.register(CustomLinkSanitizer, true);
+    }
+
+    setDefaultLinkPlaceholder(placeholder) {
+        const tooltip = this.quill.theme.tooltip;
+        const input = tooltip.root.querySelector("input[data-link]");
+        input.dataset.link = placeholder;
     }
 
     setContents(value) {
