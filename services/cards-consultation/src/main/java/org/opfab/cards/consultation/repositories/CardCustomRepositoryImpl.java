@@ -181,8 +181,6 @@ public class CardCustomRepositoryImpl implements CardCustomRepository {
 			return findWithUserAndFilterAndSelectedFields(filter);
 		}
 
-        log.info("findWithUserAndFilter" + queryFilter);
-
         Pageable pageableRequest = PaginationUtils.createPageable(queryFilter.getPage() != null ? queryFilter.getPage().intValue() : null , queryFilter.getSize() != null ? queryFilter.getSize().intValue() : null);
         String[] fields = {"uid",
         "publisher",
@@ -226,7 +224,6 @@ public class CardCustomRepositoryImpl implements CardCustomRepository {
 	public Mono<Page<Object>> findWithUserAndFilterAndSelectedFields(
 			Tuple2<CurrentUserWithPerimeters, CardsFilter> filter) {
 		CardsFilter queryFilter = filter.getT2();
-		log.info("findWithUserAndFilterAndSelectedFields" + queryFilter);
 
 		Pageable pageableRequest = PaginationUtils.createPageable(queryFilter.getPage() != null ? queryFilter.getPage().intValue() : null , queryFilter.getSize() != null ? queryFilter.getSize().intValue() : null);
 		List<String> fields = new ArrayList<>(List.of(
