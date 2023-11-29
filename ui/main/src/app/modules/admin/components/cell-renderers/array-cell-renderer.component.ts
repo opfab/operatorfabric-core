@@ -12,7 +12,6 @@ import {ICellRendererAngularComp} from 'ag-grid-angular';
 import {ICellRendererParams} from 'ag-grid-community';
 import {CrudService} from 'app/business/services/crud-service';
 import {AdminItemType, SharingService} from '../../services/sharing.service';
-import {LoggerService} from 'app/business/services/logs/logger.service';
 
 @Component({
     selector: 'of-array-cell-renderer',
@@ -55,7 +54,7 @@ export class ArrayCellRendererComponent implements ICellRendererAngularComp {
                     })
                     .sort()
                     .join(', ');
-            } else LoggerService.warn('Admin table: id/name mapping was undefined for ' + this.itemType);
+            }
         }
 
     }

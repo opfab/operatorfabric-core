@@ -39,10 +39,8 @@ export class EntityNameCellRendererComponent implements ICellRendererAngularComp
 
             const lookedUpEntity = this.mapping.find((entityDefinition) => params.value === entityDefinition.id);
 
-            if (!lookedUpEntity) 
-                LoggerService.warn('Admin table: id/name mapping was undefined for ' + this.itemType);
-            
-            this.value = lookedUpEntity.name;
+            if (lookedUpEntity) this.value = lookedUpEntity.name
+            else LoggerService.warn('Admin table: id/name mapping was undefined for ' + this.itemType + ' id=' +params.value);
         }
 
     }
