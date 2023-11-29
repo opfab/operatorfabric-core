@@ -85,7 +85,14 @@ git commit -s -m "[RELEASE] X.X.X-RC.RELEASE"
 ----
 git push --set-upstream origin X.X.X.release
 ----
-
++
+. Create the tag for the release candidate:
++
+----
+git tag X.X.X-RC.RELEASE
+git push origin X.X.X-RC.RELEASE
+----
++
 . Check that the build is correctly triggered
 +
 You can check the status of the GitHub Actions triggered by the commit on
@@ -170,15 +177,12 @@ link:https://github.com/opfab/release-notes/[release-notes repository].
 src/docs/asciidoc/resources/index.adoc and include a link to it at the top of the release notes.
 .. Click "Publish release"
 
-. Create a new release_notes.Y.Y.Y.md file with next version number and copy inside the content of current release_notes.X.X.X.md file.
+. Create a new release_notes.Y.Y.Y.md file with next version number.
 
 === Updating the version list on the website
 
 On the link:{opfab_website_repo}[website repository],
-edit the link:{opfab_website_repo}/blob/master/_data/versions.yml[/_data/versions.yml] file to:
-
-. Add the version being released to the list with the `current` badge
-. Remove the `current` badge from the previous version
+edit the link:{opfab_website_repo}/blob/master/_data/versions.yml[/_data/versions.yml] file to add the version being released 
 
 For example:
 
@@ -202,8 +206,8 @@ For example:
   type: SNAPSHOT
   external_devices_api: true
 - id: X.X.X-RC.RELEASE
-  badge: current
   external_devices_api: true
+  badge: current
 - id: D.E.F.RELEASE
   external_devices_api: true
 - id: A.B.C.RELEASE
