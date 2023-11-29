@@ -582,6 +582,10 @@ body {
     .ag-header-cell-menu-button {
         cursor: pointer;
     }
+
+    .ag-center-cols-viewport {
+        min-height: unset !important;
+    }
 }
 
 .opfab-monitoring-ag-grid-row {
