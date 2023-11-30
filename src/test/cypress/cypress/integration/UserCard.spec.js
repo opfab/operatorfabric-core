@@ -1196,7 +1196,7 @@ describe('User Card ', function () {
       usercard.selectState('Message');
       cy.get('#message').find('div').eq(0).should('be.visible').type('test message');
       // We check all entities are proposed in the dropdown list
-      cy.get('#opfab-recipients-for-information').find('.vscomp-option-text').should("have.length", 15);
+      cy.get('#opfab-recipients-for-information').find('.vscomp-option-text').should("have.length", 16);
 
       usercard.selectRecipient('Control Center FR North');
       usercard.selectRecipientForInformation('Control Center FR West');

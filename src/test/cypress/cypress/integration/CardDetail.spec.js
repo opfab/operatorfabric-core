@@ -66,7 +66,7 @@ describe('Card detail', function () {
                 'entity[4]:id=ENTITY_FR,name=French Control Centers,description=French Control Centers,entityAllowedToSendCard=false,parents=undefined,labels=undefined'
             );
             cy.get('#opfab-users-entities-getAllEntities').contains(
-                'entity[5]:id=IT_SUPERVISOR_ENTITY,name=IT SUPERVISION CENTER,description=IT SUPERVISION CENTER,entityAllowedToSendCard=true,parents=undefined,labels=undefined'
+                'entity[6]:id=IT_SUPERVISOR_ENTITY,name=IT SUPERVISION CENTER,description=IT SUPERVISION CENTER,entityAllowedToSendCard=true,parents=EUROPEAN_SUPERVISION_CENTERS,labels=undefined'
             );
             cy.get('#opfab-users-entities-getEntity-ENTITY1_FR').contains(
                 /^ENTITY1_FR,Control Center FR North,Control Center FR North,true,ENTITY_FR,FR1 label$/

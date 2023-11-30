@@ -16,9 +16,5 @@ export class RealTimeScreen {
 }
 
 export class ScreenColumn {
-    constructor(readonly entitiesGroups: Array<EntitiesGroups>) {}
-}
-
-export class EntitiesGroups {
-    constructor(readonly name: string, readonly entities: Array<string>) {}
+    constructor(readonly entitiesGroups: Array<string>) {}
 }

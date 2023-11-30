@@ -31,16 +31,25 @@ describe('Realtimeusers', () => {
         mockUserService();
         mockEntitiesService();
 
-        const connectedUsers = [{login: 'user1', entitiesConnected: ['ENTITY1_FR', 'IT_SUPERVISOR_ENTITY']},
-                                {login: 'user1', entitiesConnected: ['ENTITY1_FR', 'ENTITY1_NL'], groups: ['group1']},
-                                {login: 'user2', entitiesConnected: ['ENTITY1_FR', 'ENTITY1_NL'], groups: ['group2']},
-                                {login: 'user3', entitiesConnected: ['ENTITY1_NL'], groups: ['group2', 'group3']},
-                                {login: 'user4'}];
+        const connectedUsers = [
+            {login: 'user1', entitiesConnected: ['ENTITY1_FR', 'IT_SUPERVISOR_ENTITY']},
+            {login: 'user1', entitiesConnected: ['ENTITY1_FR', 'ENTITY1_NL'], groups: ['group1']},
+            {login: 'user2', entitiesConnected: ['ENTITY1_FR', 'ENTITY1_NL'], groups: ['group2']},
+            {login: 'user3', entitiesConnected: ['ENTITY1_NL'], groups: ['group2', 'group3']},
+            {login: 'user4'}
+        ];
         userServerMock.setResponseForConnectedUsers(new ServerResponse(connectedUsers, ServerResponseStatus.OK, null));
 
         const entities: Entity[] = [
-            new Entity('ENTITY1_FR', 'ENTITY1_FR_NAME', '', [], true, [], []),
-            new Entity('ENTITY1_IT', 'ENTITY1_IT_NAME', '', [], true, [], [])
+          new Entity('ENTITY_FR', 'French Control Centers', '', [], true, [], []),
+          new Entity('ENTITY1_FR', 'ENTITY1_FR_NAME', '', [], true, [], ['ENTITY_FR']),
+          new Entity('ENTITY2_FR', 'ENTITY2_FR_NAME', '', [], true, [], ['ENTITY_FR']),
+          new Entity('ENTITY_IT', 'Italian Control Centers', '', [], true, [], []),
+          new Entity('EUROPEAN_SUPERVISION_CENTERS', 'EUROPEAN_SUPERVISION_CENTERS', '', [], true, [], []),
+          new Entity('IT_SUPERVISOR_ENTITY', 'IT SUPERVISION CENTER', '', [], true, [], ['EUROPEAN_SUPERVISION_CENTERS']),
+          new Entity('ENTITY_NL', 'Dutch Control Centers', '', [], true, [], []),
+          new Entity('ENTITY1_NL', 'ENTITY1_NL_NAME', '', [], true, [], ['ENTITY_NL']),
+          new Entity('ENTITY1_IT', 'ENTITY1_IT_NAME', '', [], true, [], ['ENTITY_IT'])
         ];
         entitiesServerMock.setEntities(entities);
 
@@ -64,7 +73,6 @@ describe('Realtimeusers', () => {
         configServerMock.setResponseForRealTimeScreenConfiguration(
             new ServerResponse(realtimeScreensTestConfig, ServerResponseStatus.OK, '')
         );
-
     }
 
     function mockUserService() {
@@ -90,143 +98,97 @@ describe('Realtimeusers', () => {
         view.setSelectedScreen('1');
         expect(page.currentScreen.name).toEqual('French Control Centers');
         expect(page.currentScreen.columns.length).toEqual(2);
-        expect(page.currentScreen.columns[0].entitiesGroups[0].name).toEqual('French Control Centers');
-        expect(page.currentScreen.columns[0].entitiesGroups[0].lines[0].entityId).toEqual('ENTITY1_FR');
-        expect(page.currentScreen.columns[0].entitiesGroups[0].lines[0].entityName).toEqual('ENTITY1_FR_NAME');
+        expect(page.currentScreen.columns[0].entityPages[0].name).toEqual('French Control Centers');
+        expect(page.currentScreen.columns[0].entityPages[0].lines[0].entityId).toEqual('ENTITY1_FR');
+        expect(page.currentScreen.columns[0].entityPages[0].lines[0].entityName).toEqual('ENTITY1_FR_NAME');
 
         view.setSelectedScreen('2');
         expect(page.currentScreen.name).toEqual('Italian Control Centers');
         expect(page.currentScreen.columns.length).toEqual(2);
-        expect(page.currentScreen.columns[0].entitiesGroups[0].name).toEqual('Italian Control Centers');
-        expect(page.currentScreen.columns[0].entitiesGroups[0].lines[0].entityId).toEqual('ENTITY1_IT');
-        expect(page.currentScreen.columns[0].entitiesGroups[0].lines[0].entityName).toEqual('ENTITY1_IT_NAME');
+        expect(page.currentScreen.columns[0].entityPages[0].name).toEqual('Italian Control Centers');
+        expect(page.currentScreen.columns[0].entityPages[0].lines[0].entityId).toEqual('ENTITY1_IT');
+        expect(page.currentScreen.columns[0].entityPages[0].lines[0].entityName).toEqual('ENTITY1_IT_NAME');
     });
 
     it('When connected users are updated (on view init), the label and count should be computed', () => {
-        expect(page.currentScreen.columns[0].entitiesGroups[0].lines[0].connectedUsersCount).toEqual(2);
-        expect(page.currentScreen.columns[0].entitiesGroups[0].lines[0].connectedUsers).toEqual('user1, user2');
-        expect(page.currentScreen.columns[1].entitiesGroups[0].lines[0].connectedUsersCount).toEqual(1);
-        expect(page.currentScreen.columns[1].entitiesGroups[0].lines[0].connectedUsers).toEqual('user1');
-        expect(page.currentScreen.columns[0].entitiesGroups[0].lines[1].connectedUsersCount).toEqual(0);
-        expect(page.currentScreen.columns[0].entitiesGroups[0].lines[1].connectedUsers).toEqual('');
+        expect(page.currentScreen.columns[0].entityPages[0].lines[0].connectedUsersCount).toEqual(2);
+        expect(page.currentScreen.columns[0].entityPages[0].lines[0].connectedUsers).toEqual('user1, user2');
+        expect(page.currentScreen.columns[1].entityPages[0].lines[0].connectedUsersCount).toEqual(1);
+        expect(page.currentScreen.columns[1].entityPages[0].lines[0].connectedUsers).toEqual('user1');
+        expect(page.currentScreen.columns[0].entityPages[0].lines[1].connectedUsersCount).toEqual(0);
+        expect(page.currentScreen.columns[0].entityPages[0].lines[1].connectedUsers).toEqual('');
     });
 
     it('When a screen config has onlyDisplayUsersInGroups, only users in specified groups should be considered', () => {
         view.setSelectedScreen('3');
-        expect(page.currentScreen.columns[0].entitiesGroups[0].lines[0].connectedUsersCount).toEqual(2);
-        expect(page.currentScreen.columns[0].entitiesGroups[0].lines[0].connectedUsers).toEqual('user2, user3');
+        expect(page.currentScreen.columns[0].entityPages[0].lines[0].connectedUsersCount).toEqual(2);
+        expect(page.currentScreen.columns[0].entityPages[0].lines[0].connectedUsers).toEqual('user2, user3');
     });
 
     it('After view is initialized, connected users should be updated every 2 seconds', () => {
-        expect(page.currentScreen.columns[1].entitiesGroups[0].lines[0].connectedUsersCount).toEqual(1);
-        expect(page.currentScreen.columns[1].entitiesGroups[0].lines[0].connectedUsers).toEqual('user1');
+        expect(page.currentScreen.columns[1].entityPages[0].lines[0].connectedUsersCount).toEqual(1);
+        expect(page.currentScreen.columns[1].entityPages[0].lines[0].connectedUsers).toEqual('user1');
 
-        const connectedUsers = [{login: 'user1', entitiesConnected: ['IT_SUPERVISOR_ENTITY']},
-                                {login: 'user2', entitiesConnected: ['IT_SUPERVISOR_ENTITY']}];
+        const connectedUsers = [
+            {login: 'user1', entitiesConnected: ['IT_SUPERVISOR_ENTITY']},
+            {login: 'user2', entitiesConnected: ['IT_SUPERVISOR_ENTITY']}
+        ];
         userServerMock.setResponseForConnectedUsers(new ServerResponse(connectedUsers, ServerResponseStatus.OK, null));
-        
+
         clock.tick(2500);
-        expect(page.currentScreen.columns[1].entitiesGroups[0].lines[0].connectedUsersCount).toEqual(2);
-        expect(page.currentScreen.columns[1].entitiesGroups[0].lines[0].connectedUsers).toEqual('user1, user2');
+        expect(page.currentScreen.columns[1].entityPages[0].lines[0].connectedUsersCount).toEqual(2);
+        expect(page.currentScreen.columns[1].entityPages[0].lines[0].connectedUsers).toEqual('user1, user2');
     });
 
-
-
     const realtimeScreensTestConfig = {
-        realTimeScreens: [
+            
+        "realTimeScreens": [
             {
-                screenName: 'All Control Centers',
-                screenColumns: [
-                    {
-                        entitiesGroups: [
-                            {
-                                name: 'French Control Centers',
-                                entities: ['ENTITY1_FR', 'ENTITY2_FR', 'ENTITY3_FR', 'ENTITY4_FR']
-                            },
-                            {
-                                name: 'Italian Control Centers',
-                                entities: ['ENTITY1_IT', 'ENTITY2_IT', 'ENTITY3_IT']
-                            },
-                            {
-                                name: 'Dutch Control Centers',
-                                entities: ['ENTITY1_NL', 'ENTITY2_NL']
-                            }
-                        ]
-                    },
-                    {
-                        entitiesGroups: [
-                            {
-                                name: 'European Supervision Centers',
-                                entities: ['IT_SUPERVISOR_ENTITY']
-                            }
-                        ]
-                    }
-                ]
+            "screenName": "All Control Centers",
+            "screenColumns": [
+                {
+                "entitiesGroups": ["ENTITY_FR","ENTITY_IT","ENTITY_NL"]
+                },
+                {
+                "entitiesGroups": ["EUROPEAN_SUPERVISION_CENTERS"]
+                }
+            ]
             },
             {
-                screenName: 'French Control Centers',
-                screenColumns: [
-                    {
-                        entitiesGroups: [
-                            {
-                                name: 'French Control Centers',
-                                entities: ['ENTITY1_FR', 'ENTITY2_FR', 'ENTITY3_FR', 'ENTITY4_FR']
-                            }
-                        ]
-                    },
-                    {
-                        entitiesGroups: [
-                            {
-                                name: 'European Supervision Centers',
-                                entities: ['IT_SUPERVISOR_ENTITY']
-                            }
-                        ]
-                    }
-                ]
+            "screenName": "French Control Centers",
+            "screenColumns": [
+                {
+                "entitiesGroups": ["ENTITY_FR"]
+                },
+                {
+                "entitiesGroups": ["EUROPEAN_SUPERVISION_CENTERS"]
+                }
+            ]
             },
             {
-                screenName: 'Italian Control Centers',
-                screenColumns: [
-                    {
-                        entitiesGroups: [
-                            {
-                                name: 'Italian Control Centers',
-                                entities: ['ENTITY1_IT', 'ENTITY2_IT', 'ENTITY3_IT']
-                            }
-                        ]
-                    },
-                    {
-                        entitiesGroups: [
-                            {
-                                name: 'European Supervision Centers',
-                                entities: ['IT_SUPERVISOR_ENTITY']
-                            }
-                        ]
-                    }
-                ]
+            "screenName": "Italian Control Centers",
+            "screenColumns": [
+                {
+                "entitiesGroups": ["ENTITY_IT"]
+                },
+                {
+                "entitiesGroups": ["EUROPEAN_SUPERVISION_CENTERS"]
+                }
+            ]
             },
             {
-                screenName: 'Dutch Control Centers',
-                onlyDisplayUsersInGroups: ['group2', 'group3'],
-                screenColumns: [
-                    {
-                        entitiesGroups: [
-                            {
-                                name: 'Dutch Control Centers',
-                                entities: ['ENTITY1_NL', 'ENTITY2_NL']
-                            }
-                        ]
-                    },
-                    {
-                        entitiesGroups: [
-                            {
-                                name: 'European Supervision Centers',
-                                entities: ['IT_SUPERVISOR_ENTITY']
-                            }
-                        ]
-                    }
-                ]
+            "screenName": "Dutch Control Centers",
+            "onlyDisplayUsersInGroups": ['group2', 'group3'],
+            "screenColumns": [
+                {
+                "entitiesGroups": ["ENTITY_NL"]
+                },
+                {
+                "entitiesGroups": ["EUROPEAN_SUPERVISION_CENTERS"]
+                }
+            ]
             }
         ]
-    };
+};
+                
 });
