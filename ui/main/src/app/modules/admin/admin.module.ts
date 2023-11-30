@@ -29,6 +29,7 @@ import {SharingService} from './services/sharing.service';
 import {PerimetersTableComponent} from './components/table/perimeters-table.component';
 import {ProcessesTableComponent} from './components/table/processes-table.component';
 import {StateRightsCellRendererComponent} from './components/cell-renderers/state-rights-cell-renderer.component';
+import {RoleCellRendererComponent} from './components/cell-renderers/role-cell-renderer.component';
 import {EditEntityModalComponent} from './components/editmodal/entities/edit-entity-modal.component';
 import {EditGroupModalComponent} from './components/editmodal/groups/edit-group-modal.component';
 import {EditPerimeterModalComponent} from './components/editmodal/perimeters/edit-perimeter-modal.component';
@@ -65,6 +66,7 @@ import {EditSupervisedEntityModalComponent} from './components/editmodal/supervi
         EntityCellRendererComponent,
         PerimetersCellRendererComponent,
         StateRightsCellRendererComponent,
+        RoleCellRendererComponent,
         IdCellRendererComponent,
         EntityNameCellRendererComponent,
         ProcessCellRendererComponent

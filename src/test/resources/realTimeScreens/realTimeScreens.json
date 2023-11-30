@@ -34,7 +34,7 @@
         {
           "entitiesGroups": [
             {
-              "name": "Central Supervision Centers",
+              "name": "European Supervision Centers",
               "entities": [
                 "IT_SUPERVISOR_ENTITY"
               ]
@@ -62,7 +62,7 @@
         {
           "entitiesGroups": [
             {
-              "name": "Central Supervision Centers",
+              "name": "European Supervision Centers",
               "entities": [
                 "IT_SUPERVISOR_ENTITY"
               ]
@@ -89,7 +89,7 @@
         {
           "entitiesGroups": [
             {
-              "name": "Central Supervision Centers",
+              "name": "European Supervision Centers",
               "entities": [
                 "IT_SUPERVISOR_ENTITY"
               ]
@@ -115,7 +115,7 @@
         {
           "entitiesGroups": [
             {
-              "name": "Central Supervision Centers",
+              "name": "European Supervision Centers",
               "entities": [
                 "IT_SUPERVISOR_ENTITY"
               ]

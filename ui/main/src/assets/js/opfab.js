@@ -10,7 +10,7 @@
 const opfab = {};
 
 opfab.multiSelect = {
-    // these value is to be provided at startup by opfab angular application
+    // these values are to be provided at launch by opfab angular application
     // it is done in i18n.service.ts
     searchPlaceholderText: '',
     clearButtonText: 'test',

@@ -48,9 +48,9 @@ describe('ActivityAreaView', () => {
         entitiesServerMock = new EntitiesServerMock();
         EntitiesService.setEntitiesServer(entitiesServerMock);
         const entities: Entity[] = new Array();
-        entities.push(new Entity('ENTITY1', 'ENTITY1_NAME', '', true, [], []));
-        entities.push(new Entity('ENTITY2', 'ENTITY2_NAME', '', true, [], []));
-        entities.push(new Entity('ENTITY_NOT_ALLOWED_TO_SEND_CARD', 'ENTITY3', '', false, [], []));
+        entities.push(new Entity('ENTITY1', 'ENTITY1_NAME', '', [], true, [], []));
+        entities.push(new Entity('ENTITY2', 'ENTITY2_NAME', '', [], true, [], []));
+        entities.push(new Entity('ENTITY_NOT_ALLOWED_TO_SEND_CARD', 'ENTITY3', '', [], false, [], []));
         entitiesServerMock.setEntities(entities);
         EntitiesService.loadAllEntitiesData().subscribe();
         userServerMock.setResponseForConnectedUsers(new ServerResponse([], ServerResponseStatus.OK, null));
