@@ -105,7 +105,7 @@ public class EntityData implements Entity {
     @Override
     public List<RolesEnum> getRoles(){
         if (roles == null) return Collections.emptyList();
-        return roles.stream().collect(Collectors.toList());
+        return roles.stream().toList();
     }
 
     @Override

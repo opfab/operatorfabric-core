@@ -23,5 +23,5 @@ import java.util.List;
 @AllArgsConstructor
 @Builder
 public class ScreenColumnData implements ScreenColumn {
-    private List<EntitiesGroups> entitiesGroups;
+    private List<String> entitiesGroups;
 }

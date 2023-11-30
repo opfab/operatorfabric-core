@@ -58,9 +58,9 @@ describe('User action logs view ', () => {
     async function initEntityService() {
         entityServerMock = new EntitiesServerMock();
         entityServerMock.setEntities([
-            new Entity('entity1', 'ENTITY1 NAME', null, true, null, null),
-            new Entity('entity2', 'ENTITY2 NAME', null, true, null, null),
-            new Entity('entity3', 'ENTITY3 NAME', null, true, null, null)
+            new Entity('entity1', 'ENTITY1 NAME', null, null, true, null, null),
+            new Entity('entity2', 'ENTITY2 NAME', null, null, true, null, null),
+            new Entity('entity3', 'ENTITY3 NAME', null, null, true, null, null)
         ]);
         EntitiesService.setEntitiesServer(entityServerMock);
         await firstValueFrom(EntitiesService.loadAllEntitiesData());

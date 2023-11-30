@@ -97,15 +97,15 @@ public class ConfigService {
     }
 
     public List<DeviceConfiguration> getDeviceConfigurations() {
-        return deviceConfigurationRepository.findAll().stream().collect(Collectors.toList());
+        return deviceConfigurationRepository.findAll().stream().toList();
     }
 
     public List<SignalMapping> getSignalMappings() {
-        return signalMappingRepository.findAll().stream().collect(Collectors.toList());
+        return signalMappingRepository.findAll().stream().toList();
     }
 
     public List<UserConfiguration> getUserConfigurations() {
-        return userConfigurationRepository.findAll().stream().collect(Collectors.toList());
+        return userConfigurationRepository.findAll().stream().toList();
     }
 
     public List<ResolvedConfiguration> getResolvedConfigurationList(String opFabSignalKey, String userLogin) throws ExternalDeviceConfigurationException, UnknownExternalDeviceException {

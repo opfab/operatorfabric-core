@@ -38,6 +38,5 @@ public class BusinessconfigModule extends SimpleModule {
         addAbstractTypeMapping(RealTimeScreens.class, RealTimeScreensData.class);
         addAbstractTypeMapping(RealTimeScreen.class, RealTimeScreenData.class);
         addAbstractTypeMapping(ScreenColumn.class, ScreenColumnData.class);
-        addAbstractTypeMapping(EntitiesGroups.class, EntitiesGroupsData.class);
     }
 }

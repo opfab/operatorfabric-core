@@ -53,25 +53,23 @@ export class RealtimeUsersView {
                     screen.name = configScreen.screenName;
                     screen.onlyDisplayUsersInGroups = configScreen.onlyDisplayUsersInGroups ?? [];
                     configScreen.screenColumns.forEach((configColumn) => {
-
                         // columns
                         const screenColumn = new RealtimePageScreenColumn();
-                        configColumn.entitiesGroups.forEach((configEntityGroup) => {
+                        configColumn.entitiesGroups.forEach((configEntityGroupId) => {
 
                             // entitiesGroups
                             const entityGroup = new RealtimePageEntityGroup();
-                            entityGroup.name = configEntityGroup.name;
-                            configEntityGroup.entities.forEach((configEntity) => {
-
+                            entityGroup.name = EntitiesService.getEntityName(configEntityGroupId);
+                            EntitiesService.resolveChildEntities(configEntityGroupId).forEach((childEntity) => {
                                 // lines
                                 const line = new RealtimePageLine();
-                                line.entityId = configEntity;
-                                line.entityName = EntitiesService.getEntityName(configEntity);
+                                line.entityId = childEntity.id;
+                                line.entityName = childEntity.name;
                                 line.connectedUsersCount = 0;
                                 line.connectedUsers = '';
                                 entityGroup.lines.push(line);
                             });
-                            screenColumn.entitiesGroups.push(entityGroup);
+                            screenColumn.entityPages.push(entityGroup);
                         });
                         screen.columns.push(screenColumn);
                     });
@@ -83,6 +81,7 @@ export class RealtimeUsersView {
             } else {
                 logger.error('realTimeScreens config could not be loaded');
             }
+            console.log(this.realtimePage)
             this.pageLoaded.next(this.realtimePage);
             this.pageLoaded.complete();
         });
@@ -115,7 +114,7 @@ export class RealtimeUsersView {
     private computeLinesInformations() {
         this.realtimeScreens.forEach((screen) => {
             screen.columns.forEach((column) => {
-                column.entitiesGroups.forEach((entityGroup) => {
+                column.entityPages.forEach((entityGroup) => {
                     entityGroup.lines.forEach((line) => {
                         const connectedUsers = this.getUsersInDisplayedGroups(
                             line.entityId,
