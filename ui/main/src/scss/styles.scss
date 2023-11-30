@@ -689,6 +689,11 @@ tag-input {
     stroke: var(--opfab-text-color) !important;
 }
 
+.ql-fill {
+    fill: var(--opfab-text-color) !important;
+}
+
+
 .ql-snow .ql-picker {
     color: var(--opfab-text-color) !important;
 }
@@ -710,6 +715,26 @@ tag-input {
     border: 1px solid var(--opfab-form-border-color) !important;
     border-radius: 3px;
 }
+.ql-snow.ql-toolbar button {
+    margin-left: 2px;
+}
+
+.ql-snow.ql-toolbar button.ql-active {
+    background: var(--opfab-richtexteditor-button-active);
+    border-radius: 3px;
+    padding: 2px;
+}
+
+.ql-picker-label {
+   color: var(--opfab-color) !important;
+}
+
+
+.ql-picker-label.ql-active {
+    background: var(--opfab-richtexteditor-button-active);
+    border-radius: 3px;
+}
+
 
 // END QUILLJS STYLE
 
