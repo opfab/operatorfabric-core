@@ -114,6 +114,10 @@ operatorfabric.users.default:
      name: European Supervision Centers
      description: European Supervision Centers
      entityAllowedToSendCard: false
+   - id: CENTRAL_SUPERVISION_CENTERS
+     name: Central Supervision Centers
+     description: Central Supervision Centers
+     roles: ["REALTIME_SCREEN_GROUP"]
    - id: IT_SUPERVISOR_ENTITY
      name: IT SUPERVISION CENTER
      description: IT SUPERVISION CENTER
