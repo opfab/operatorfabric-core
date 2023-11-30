@@ -72,7 +72,7 @@ Feature: uploadRealTimeScreens
     Then match response.realTimeScreens[0].screenName == 'All Control Centers'
     Then assert response.realTimeScreens[0].screenColumns.length == 2
     Then assert response.realTimeScreens[0].screenColumns[0].entitiesGroups.length == 1
-    Then match response.realTimeScreens[0].screenColumns[0].entitiesGroups[0].name == 'Central Supervision Centers'
+    Then match response.realTimeScreens[0].screenColumns[0].entitiesGroups[0].name == 'European Supervision Centers'
     Then assert response.realTimeScreens[0].screenColumns[0].entitiesGroups[0].entities.length == 1
 
 
@@ -84,5 +84,5 @@ Feature: uploadRealTimeScreens
     Then match response.realTimeScreens[0].screenName == 'All Control Centers'
     Then assert response.realTimeScreens[0].screenColumns.length == 2
     Then assert response.realTimeScreens[0].screenColumns[0].entitiesGroups.length == 1
-    Then match response.realTimeScreens[0].screenColumns[0].entitiesGroups[0].name == 'Central Supervision Centers'
+    Then match response.realTimeScreens[0].screenColumns[0].entitiesGroups[0].name == 'European Supervision Centers'
     Then assert response.realTimeScreens[0].screenColumns[0].entitiesGroups[0].entities.length == 1

@@ -39,8 +39,8 @@ describe('Realtimeusers', () => {
         userServerMock.setResponseForConnectedUsers(new ServerResponse(connectedUsers, ServerResponseStatus.OK, null));
 
         const entities: Entity[] = [
-            new Entity('ENTITY1_FR', 'ENTITY1_FR_NAME', '', true, [], []),
-            new Entity('ENTITY1_IT', 'ENTITY1_IT_NAME', '', true, [], [])
+            new Entity('ENTITY1_FR', 'ENTITY1_FR_NAME', '', [], true, [], []),
+            new Entity('ENTITY1_IT', 'ENTITY1_IT_NAME', '', [], true, [], [])
         ];
         entitiesServerMock.setEntities(entities);
 
@@ -156,7 +156,7 @@ describe('Realtimeusers', () => {
                     {
                         entitiesGroups: [
                             {
-                                name: 'Central Supervision Centers',
+                                name: 'European Supervision Centers',
                                 entities: ['IT_SUPERVISOR_ENTITY']
                             }
                         ]
@@ -177,7 +177,7 @@ describe('Realtimeusers', () => {
                     {
                         entitiesGroups: [
                             {
-                                name: 'Central Supervision Centers',
+                                name: 'European Supervision Centers',
                                 entities: ['IT_SUPERVISOR_ENTITY']
                             }
                         ]
@@ -198,7 +198,7 @@ describe('Realtimeusers', () => {
                     {
                         entitiesGroups: [
                             {
-                                name: 'Central Supervision Centers',
+                                name: 'European Supervision Centers',
                                 entities: ['IT_SUPERVISOR_ENTITY']
                             }
                         ]
@@ -220,7 +220,7 @@ describe('Realtimeusers', () => {
                     {
                         entitiesGroups: [
                             {
-                                name: 'Central Supervision Centers',
+                                name: 'European Supervision Centers',
                                 entities: ['IT_SUPERVISOR_ENTITY']
                             }
                         ]

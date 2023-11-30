@@ -57,6 +57,8 @@ public class EntityData implements Entity {
         this.entityAllowedToSendCard =   entityData.entityAllowedToSendCard;
         if (entityData.parents==null) this.parents = new HashSet<>();
         else this.parents = new HashSet<>(entityData.parents);
+        if (entityData.roles==null) this.roles = new HashSet<>();
+        else this.roles = new HashSet<>(entityData.roles);
     }
 
 

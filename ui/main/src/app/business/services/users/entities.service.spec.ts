@@ -20,9 +20,7 @@ describe('EntitiesService', () => {
 
     beforeEach(() => {
         TestBed.configureTestingModule({
-            providers: [
-                {provide: RemoteLoggerServer, useValue: null}
-            ],
+            providers: [{provide: RemoteLoggerServer, useValue: null}],
             imports: [HttpClientTestingModule]
         });
         httpMock = TestBed.inject(HttpTestingController);
@@ -35,8 +33,8 @@ describe('EntitiesService', () => {
     describe('#queryAllEntities', () => {
         it('should return an Observable<Entity[]>', () => {
             const listEntities: Entity[] = [];
-            const entity1 = new Entity('ENTITY1', 'Control Room 1', 'Control Room 1', true, [], []);
-            const entity2 = new Entity('ENTITY2', 'Control Room 2', 'Control Room 2', true, [], []);
+            const entity1 = new Entity('ENTITY1', 'Control Room 1', 'Control Room 1', [], true, [], []);
+            const entity2 = new Entity('ENTITY2', 'Control Room 2', 'Control Room 2', [], true, [], []);
             listEntities.push(entity1);
             listEntities.push(entity2);
             EntitiesService.queryAllEntities().subscribe((result) => {
@@ -53,14 +51,23 @@ describe('EntitiesService', () => {
     describe('#getEntitiesAllowedToRespond', () => {
         it('should return 3 entities', () => {
             const listEntities: Entity[] = [];
-            const entity1 = new Entity('ENTITY1', 'Control Room 1', 'Control Room 1', true, [], []);
-            const entity2 = new Entity('ENTITY2', 'Control Room 2', 'Control Room 2', true, [], []);
-            const entity3 = new Entity('ENTITY3', 'Control Room 3', 'Control Room 3', false, [], []);
-            const entity3_1 = new Entity('ENTITY3.1', 'Control Room 3.1', 'Control Room 3.1', false, [], ['ENTITY3']);
+            const entity1 = new Entity('ENTITY1', 'Control Room 1', 'Control Room 1', [], true, [], []);
+            const entity2 = new Entity('ENTITY2', 'Control Room 2', 'Control Room 2', [], true, [], []);
+            const entity3 = new Entity('ENTITY3', 'Control Room 3', 'Control Room 3', [], false, [], []);
+            const entity3_1 = new Entity(
+                'ENTITY3.1',
+                'Control Room 3.1',
+                'Control Room 3.1',
+                [],
+                false,
+                [],
+                ['ENTITY3']
+            );
             const entity3_1_1 = new Entity(
                 'ENTITY3.1.1',
                 'Control Room 3.1.1',
                 'Control Room 3.1.1',
+                [],
                 false,
                 [],
                 ['ENTITY3.1']
@@ -69,11 +76,20 @@ describe('EntitiesService', () => {
                 'ENTITY3.1.2',
                 'Control Room 3.1.2',
                 'Control Room 3.1.2',
+                [],
                 true,
                 [],
                 ['ENTITY3.1']
             );
-            const entity3_2 = new Entity('ENTITY3.2', 'Control Room 3.2', 'Control Room 3.2', true, [], ['ENTITY3']);
+            const entity3_2 = new Entity(
+                'ENTITY3.2',
+                'Control Room 3.2',
+                'Control Room 3.2',
+                [],
+                true,
+                [],
+                ['ENTITY3']
+            );
 
             listEntities.push(entity1);
             listEntities.push(entity2);
@@ -102,9 +118,9 @@ describe('EntitiesService', () => {
         it('should return 1 entity', () => {
             const listEntities: Entity[] = [];
 
-            const entityGroup = new Entity('ENTITYGROUP', 'Control Rooms', 'Control Rooms', true, [], []);
-            const entity1 = new Entity('ENTITY1', 'Control Room 1', 'Control Room 1', true, [], ['ENTITYGROUP']);
-            const entity2 = new Entity('ENTITY2', 'Control Room 2', 'Control Room 2', true, [], ['ENTITYGROUP']);
+            const entityGroup = new Entity('ENTITYGROUP', 'Control Rooms', 'Control Rooms', [], true, [], []);
+            const entity1 = new Entity('ENTITY1', 'Control Room 1', 'Control Room 1', [], true, [], ['ENTITYGROUP']);
+            const entity2 = new Entity('ENTITY2', 'Control Room 2', 'Control Room 2', [], true, [], ['ENTITYGROUP']);
 
             listEntities.push(entity1);
             listEntities.push(entity2);
@@ -127,9 +143,9 @@ describe('EntitiesService', () => {
         it('should return 2 entities', () => {
             const listEntities: Entity[] = [];
 
-            const entityGroup = new Entity('ENTITYGROUP', 'Control Rooms', 'Control Rooms', false, [], []);
-            const entity1 = new Entity('ENTITY1', 'Control Room 1', 'Control Room 1', true, [], ['ENTITYGROUP']);
-            const entity2 = new Entity('ENTITY2', 'Control Room 2', 'Control Room 2', true, [], ['ENTITYGROUP']);
+            const entityGroup = new Entity('ENTITYGROUP', 'Control Rooms', 'Control Rooms', [], false, [], []);
+            const entity1 = new Entity('ENTITY1', 'Control Room 1', 'Control Room 1', [], true, [], ['ENTITYGROUP']);
+            const entity2 = new Entity('ENTITY2', 'Control Room 2', 'Control Room 2', [], true, [], ['ENTITYGROUP']);
 
             listEntities.push(entity1);
             listEntities.push(entity2);
@@ -156,14 +172,23 @@ describe('EntitiesService', () => {
     describe('#resolveChildEntitiesByLevel', () => {
         it('should return the child entities with the specified connection level', () => {
             const listEntities: Entity[] = [];
-            const entity1 = new Entity('ENTITY1', 'Control Room 1', 'Control Room 1', true, [], []);
-            const entity2 = new Entity('ENTITY2', 'Control Room 2', 'Control Room 2', true, [], []);
-            const entity3 = new Entity('ENTITY3', 'Control Room 3', 'Control Room 3', false, [], []);
-            const entity3_1 = new Entity('ENTITY3.1', 'Control Room 3.1', 'Control Room 3.1', false, [], ['ENTITY3']);
+            const entity1 = new Entity('ENTITY1', 'Control Room 1', 'Control Room 1', [], true, [], []);
+            const entity2 = new Entity('ENTITY2', 'Control Room 2', 'Control Room 2', [], true, [], []);
+            const entity3 = new Entity('ENTITY3', 'Control Room 3', 'Control Room 3', [], false, [], []);
+            const entity3_1 = new Entity(
+                'ENTITY3.1',
+                'Control Room 3.1',
+                'Control Room 3.1',
+                [],
+                false,
+                [],
+                ['ENTITY3']
+            );
             const entity3_1_1 = new Entity(
                 'ENTITY3.1.1',
                 'Control Room 3.1.1',
                 'Control Room 3.1.1',
+                [],
                 false,
                 [],
                 ['ENTITY3.1']
@@ -172,11 +197,20 @@ describe('EntitiesService', () => {
                 'ENTITY3.1.2',
                 'Control Room 3.1.2',
                 'Control Room 3.1.2',
+                [],
                 true,
                 [],
                 ['ENTITY3.1']
             );
-            const entity3_2 = new Entity('ENTITY3.2', 'Control Room 3.2', 'Control Room 3.2', true, [], ['ENTITY3']);
+            const entity3_2 = new Entity(
+                'ENTITY3.2',
+                'Control Room 3.2',
+                'Control Room 3.2',
+                [],
+                true,
+                [],
+                ['ENTITY3']
+            );
 
             listEntities.push(entity1);
             listEntities.push(entity2);
@@ -217,16 +251,33 @@ describe('EntitiesService', () => {
     describe('#resolveChildEntities', () => {
         it('should return all the child and sub child entities', () => {
             const listEntities: Entity[] = [];
-            const entity1 = new Entity('ENTITY1', 'Control Room 1', 'Control Room 1', true, [], []);
-            const entity2 = new Entity('ENTITY2', 'Control Room 2', 'Control Room 2', true, [], []);
-            const entity2_1 = new Entity('ENTITY2.1', 'Control Room 2.1', 'Control Room 2.1', true, [], ['ENTITY2']);
+            const entity1 = new Entity('ENTITY1', 'Control Room 1', 'Control Room 1', [], true, [], []);
+            const entity2 = new Entity('ENTITY2', 'Control Room 2', 'Control Room 2', [], true, [], []);
+            const entity2_1 = new Entity(
+                'ENTITY2.1',
+                'Control Room 2.1',
+                'Control Room 2.1',
+                [],
+                true,
+                [],
+                ['ENTITY2']
+            );
 
-            const entity3 = new Entity('ENTITY3', 'Control Room 3', 'Control Room 3', false, [], []);
-            const entity3_1 = new Entity('ENTITY3.1', 'Control Room 3.1', 'Control Room 3.1', false, [], ['ENTITY3']);
+            const entity3 = new Entity('ENTITY3', 'Control Room 3', 'Control Room 3', [], false, [], []);
+            const entity3_1 = new Entity(
+                'ENTITY3.1',
+                'Control Room 3.1',
+                'Control Room 3.1',
+                [],
+                false,
+                [],
+                ['ENTITY3']
+            );
             const entity3_1_1 = new Entity(
                 'ENTITY3.1.1',
                 'Control Room 3.1.1',
                 'Control Room 3.1.1',
+                [],
                 false,
                 [],
                 ['ENTITY3.1']
@@ -235,11 +286,20 @@ describe('EntitiesService', () => {
                 'ENTITY3.1.2',
                 'Control Room 3.1.2',
                 'Control Room 3.1.2',
+                [],
                 true,
                 [],
                 ['ENTITY3.1']
             );
-            const entity3_2 = new Entity('ENTITY3.2', 'Control Room 3.2', 'Control Room 3.2', true, [], ['ENTITY3']);
+            const entity3_2 = new Entity(
+                'ENTITY3.2',
+                'Control Room 3.2',
+                'Control Room 3.2',
+                [],
+                true,
+                [],
+                ['ENTITY3']
+            );
 
             listEntities.push(entity1);
             listEntities.push(entity2);

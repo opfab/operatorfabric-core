@@ -428,7 +428,14 @@
         "add": "ADD NEW ENTITY",
         "true": "YES",
         "false": "NO",
-        "addLabel": "Add label"
+        "addLabel": "Add label",
+        "roles": "ROLES",
+        "roleValues": {
+          "ACTIVITY_AREA_GROUP": "Activity Area Group",
+          "REALTIME_SCREEN_GROUP": "Real Time Screen Group",
+          "CARD_SENDER": "Card Sender",
+          "CARD_RECEIVER": "Card Receiver"
+        }
       },
       "perimeter": {
         "id": "ID",
