@@ -32,7 +32,7 @@
 
         <div class="row" style="margin-left: 0px; margin-right: 0px;">
             <div class="col-sm" *ngFor="let column of realtimePage.currentScreen.columns; let colIndex = index;">
-                <div class="opfab-realtimeusers-entitiesgroups " *ngFor="let entitiesGroupsElement of column.entitiesGroups;">
+                <div class="opfab-realtimeusers-entitiesgroups " *ngFor="let entitiesGroupsElement of column.entityPages;">
                     <span class="opfab-realtimeusers-entitiesgroups-title">{{entitiesGroupsElement.name}}</span>
                     <table aria-describedby="real time users table" style="width: 100%;table-layout: fixed">
                         <tr *ngFor="let line of entitiesGroupsElement.lines;">

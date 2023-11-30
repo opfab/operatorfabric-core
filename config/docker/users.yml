@@ -109,10 +109,17 @@ operatorfabric.users.default:
    - id: ENTITY_FR
      name: French Control Centers
      description: French Control Centers
+     roles: ["REALTIME_SCREEN_GROUP"]
+     entityAllowedToSendCard: false
+   - id: EUROPEAN_SUPERVISION_CENTERS
+     name: European Supervision Centers
+     description: European Supervision Centers
+     roles: ["REALTIME_SCREEN_GROUP"]
      entityAllowedToSendCard: false
    - id: IT_SUPERVISOR_ENTITY
      name: IT SUPERVISION CENTER
      description: IT SUPERVISION CENTER
+     parents : ["EUROPEAN_SUPERVISION_CENTERS"]
    - id: ENTITY1_IT
      name: Control Center IT North
      description: Control Center IT North
@@ -129,6 +136,7 @@ operatorfabric.users.default:
      name: Italian Control Centers
      description: Italian Control Centers
      entityAllowedToSendCard: false
+     roles: ["REALTIME_SCREEN_GROUP"]
    - id: ENTITY1_NL
      name: Control Center NL North
      description: Control Center NL North
@@ -141,6 +149,7 @@ operatorfabric.users.default:
      name: Dutch Control Centers
      description: Dutch Control Centers
      entityAllowedToSendCard: false
+     roles: ["REALTIME_SCREEN_GROUP"]
    - id: ENTITY1_EU
      name: North Europe Control Center
      description: North Europe Control Center

@@ -59,7 +59,7 @@ describe('Card detail (deprecated calls to templateGateway) ', function () {
                 'entity[4]:id=ENTITY_FR,name=French Control Centers,description=French Control Centers,entityAllowedToSendCard=false,parents=undefined,labels=undefined'
             );
             cy.get('#templateGateway-getAllEntities').contains(
-                'entity[5]:id=IT_SUPERVISOR_ENTITY,name=IT SUPERVISION CENTER,description=IT SUPERVISION CENTER,entityAllowedToSendCard=true,parents=undefined,labels=undefined'
+                'entity[6]:id=IT_SUPERVISOR_ENTITY,name=IT SUPERVISION CENTER,description=IT SUPERVISION CENTER,entityAllowedToSendCard=true,parents=EUROPEAN_SUPERVISION_CENTERS,labels=undefined'
             );
             cy.get('#templateGateway-getEntity-ENTITY1_FR').contains(
                 /^ENTITY1_FR,Control Center FR North,Control Center FR North,true,ENTITY_FR,FR1 label$/

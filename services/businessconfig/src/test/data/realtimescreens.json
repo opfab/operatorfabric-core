@@ -4,44 +4,13 @@
       "screenName": "All Control Centers",
       "screenColumns": [
         {
-          "entitiesGroups": [
-            {
-              "name": "French Control Centers",
-              "entities": [
-                "ENTITY1_FR",
-                "ENTITY2_FR",
-                "ENTITY3_FR",
-                "ENTITY4_FR"
-              ]
-            },
-            {
-              "name": "Italian Control Centers",
-              "entities": [
-                "ENTITY1_IT",
-                "ENTITY2_IT",
-                "ENTITY3_IT"
-              ]
-            },
-            {
-              "name": "Dutch Control Centers",
-              "entities": [
-                "ENTITY1_NL",
-                "ENTITY2_NL"
-              ]
-            }
-          ]
+          "entitiesGroups": ["ENTITY_FR","ENTITY_IT","ENTITY_NL"]
         },
         {
-          "entitiesGroups": [
-            {
-              "name": "European Supervision Centers",
-              "entities": [
-                "IT_SUPERVISOR_ENTITY"
-              ]
-            }
-          ]
+          "entitiesGroups": ["EUROPEAN_SUPERVISION_CENTERS"]
         }
       ]
     }
   ]
 }
+
