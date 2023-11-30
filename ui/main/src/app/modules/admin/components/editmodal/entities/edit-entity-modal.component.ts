@@ -16,10 +16,12 @@ import {CrudService} from 'app/business/services/crud-service';
 import {EntitiesService} from 'app/business/services/users/entities.service';
 import {Entity} from '@ofModel/entity.model';
 import {TranslateService} from '@ngx-translate/core';
+import {TranslationService} from 'app/business/services/translation/translation.service';
 import {MultiSelectConfig, MultiSelectOption} from '@ofModel/multiselect.model';
 import {User} from '@ofModel/user.model';
 import {UserService} from 'app/business/services/users/user.service';
 import {Observable, of} from 'rxjs';
+import {RolesEnum} from '@ofModel/roles.model';
 
 @Component({
     selector: 'of-edit-entity-modal',
@@ -32,6 +34,7 @@ export class EditEntityModalComponent implements OnInit {
         id: FormControl<string | null>,
         name: FormControl<string | null>,
         description: FormControl<string | null>,
+        roles: FormControl<[] | null>,
         entityAllowedToSendCard: FormControl<boolean | null>,
         labels: FormControl<[] | null>,
         parents: FormControl<[] | null>
@@ -41,10 +44,17 @@ export class EditEntityModalComponent implements OnInit {
     @Input() type: AdminItemType;
 
     entities: Entity[];
-    entitiesMultiSelectOptions: Array<MultiSelectOption> = [];
+    entityParentsMultiSelectOptions: Array<MultiSelectOption> = [];
+    entityRolesMultiSelectOptions: Array<MultiSelectOption> = [];
     selectedEntities = [];
-    entitiesMultiSelectConfig: MultiSelectConfig = {
+    selectedRoles = [];
+    entityParentsMultiSelectConfig: MultiSelectConfig = {
         labelKey: 'admin.input.entity.parents',
+        placeholderKey: 'admin.input.selectEntityText',
+        sortOptions: true
+    };
+    entityRolesMultiSelectConfig: MultiSelectConfig = {
+        labelKey: 'admin.input.entity.roles',
         placeholderKey: 'admin.input.selectEntityText',
         sortOptions: true
     };
@@ -55,6 +65,7 @@ export class EditEntityModalComponent implements OnInit {
     private crudService: CrudService;
 
     constructor(
+        private translationService: TranslationService,
         private translate: TranslateService,
         private activeModal: NgbActiveModal,
         private dataHandlingService: SharingService,
@@ -82,6 +93,7 @@ export class EditEntityModalComponent implements OnInit {
                 uniqueEntityNameValidator
             ),
             description: new FormControl(''),
+            roles: new FormControl([]),
             entityAllowedToSendCard: new FormControl<boolean | null>(false),
             labels: new FormControl([]),
             parents: new FormControl([])
@@ -92,6 +104,7 @@ export class EditEntityModalComponent implements OnInit {
             // If the modal is used for edition, initialize the modal with current data from this row
             this.entityForm.patchValue(this.row, {onlySelf: true});
             this.selectedEntities = this.row.parents;
+            this.selectedRoles = this.row.roles;
 
             UserService.getAll().subscribe(users => {
                 this.entityUsers = users.filter(usr => this.isUserInCurrentEntity(usr)).map(usr => usr.login).join(', ');
@@ -103,7 +116,7 @@ export class EditEntityModalComponent implements OnInit {
             this.labelsPlaceholder = translation;
         });
 
-        // Initialize value lists for Entities
+        // Initialize the value list for parent Entities
         this.entities = EntitiesService.getEntities();
         this.entities.forEach((entity) => {
             const id = entity.id;
@@ -112,9 +125,15 @@ export class EditEntityModalComponent implements OnInit {
                 if (!itemName) {
                     itemName = id;
                 }
-                this.entitiesMultiSelectOptions.push(new MultiSelectOption(id, itemName));
+                this.entityParentsMultiSelectOptions.push(new MultiSelectOption(id, itemName));
             }
         });
+
+        for (const role in RolesEnum) {
+            const roleTranslation = this.translationService.getTranslation('admin.input.entity.roleValues.'+role);
+            this.entityRolesMultiSelectOptions.push(new MultiSelectOption(role, roleTranslation))
+        };
+        
     }
 
     private isUserInCurrentEntity(usr: User) :boolean {
@@ -168,10 +187,11 @@ export class EditEntityModalComponent implements OnInit {
         if (this.row) {
             this.entityForm.value['id'] = this.row.id;
         }
-        this.id.setValue((this.id.value as string).trim());
-        this.name.setValue((this.name.value as string).trim());
-        this.description.setValue((this.description.value as string).trim());
-        this.entityAllowedToSendCard.setValue(this.entityAllowedToSendCard.value as boolean);
+        this.id.setValue((this.id.value).trim());
+        this.name.setValue((this.name.value).trim());
+        this.description.setValue((this.description.value).trim());
+        this.roles.setValue((this.roles.value));
+        this.entityAllowedToSendCard.setValue(this.entityAllowedToSendCard.value);
     }
 
     get id() {
@@ -184,6 +204,10 @@ export class EditEntityModalComponent implements OnInit {
 
     get description() {
         return this.entityForm.get('description');
+    }
+
+    get roles() {
+        return this.entityForm.get('roles');
     }
 
     get entityAllowedToSendCard() {

@@ -428,7 +428,14 @@
         "add": "NIEUWE ENTITEIT TOEVOEGEN",
         "true": "JA",
         "false": "NEE",
-        "addLabel": "Voeg label toe"
+        "addLabel": "Voeg label toe",
+        "roles": "ROLLEN",
+        "roleValues": {
+          "ACTIVITY_AREA_GROUP": "Activiteitengebiedgroep",
+          "REALTIME_SCREEN_GROUP": "Realtime Schermgroep",
+          "CARD_SENDER": "Kaartverzender",
+          "CARD_RECEIVER": "Kaartontvanger"
+        }
       },
       "perimeter": {
         "id": "ID",

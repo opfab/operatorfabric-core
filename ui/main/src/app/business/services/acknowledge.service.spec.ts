@@ -56,10 +56,10 @@ describe('AcknowledgeService testing ', () => {
         UserService.loadUserWithPerimetersData().subscribe();
 
         const mockEntitiesServer = new EntitiesServerMock();
-        mockEntitiesServer.setEntities([new Entity("ENTITY1", "ENTITY 1", "", true, null, null),
-                                        new Entity("ENTITY2", "ENTITY 2", "", true, null, null),
-                                        new Entity("ENTITY3", "ENTITY 3", "", true, null, null),
-                                        new Entity("ENTITY_FR", "ENTITY FR", "", true, null, null)]);
+        mockEntitiesServer.setEntities([new Entity("ENTITY1", "ENTITY 1", "", [], true, null, null),
+                                        new Entity("ENTITY2", "ENTITY 2", "", [], true, null, null),
+                                        new Entity("ENTITY3", "ENTITY 3", "", [], true, null, null),
+                                        new Entity("ENTITY_FR", "ENTITY FR", "", [], true, null, null)]);
         EntitiesService.setEntitiesServer(mockEntitiesServer);
 
         EntitiesService.loadAllEntitiesData().subscribe();
