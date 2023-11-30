@@ -99,6 +99,7 @@ const opfabStyle = {
         --opfab-scrollbar-bar-bgcolor-firefox: #bbbbbb;
         --opfab-pagination-active-page-background: #909090;
         --opfab-pagination-disabled-link: #808080;
+        --opfab-richtexteditor-button-active: #ccc;
         }`,
 
     NIGHT_STYLE : `:root {
@@ -163,7 +164,8 @@ const opfabStyle = {
         --opfab-scrollbar-bgcolor-firefox: #131D2B;
         --opfab-scrollbar-bar-bgcolor-firefox: #333D4B;
         --opfab-pagination-active-page-background: #bababa;
-        --opfab-pagination-disabled-link: #606060
+        --opfab-pagination-disabled-link: #606060;
+        --opfab-richtexteditor-button-active: #474f5b;
     }`
 
     
