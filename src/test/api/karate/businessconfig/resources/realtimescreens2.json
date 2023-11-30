@@ -3,6 +3,7 @@
     {
       "screenName": "All Control Centers",
       "screenColumns": [
+        
         {
           "entitiesGroups": ["EUROPEAN_SUPERVISION_CENTERS"]
         },
