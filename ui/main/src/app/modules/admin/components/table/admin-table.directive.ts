@@ -21,6 +21,7 @@ import {GroupCellRendererComponent} from '../cell-renderers/group-cell-renderer.
 import {AdminItemType, SharingService} from '../../services/sharing.service';
 import {takeUntil} from 'rxjs/operators';
 import {StateRightsCellRendererComponent} from '../cell-renderers/state-rights-cell-renderer.component';
+import {RoleCellRendererComponent} from '../cell-renderers/role-cell-renderer.component';
 import {ProcessesService} from 'app/business/services/businessconfig/processes.service';
 import {Process} from '@ofModel/processes.model';
 import {GroupsService} from 'app/business/services/users/groups.service';
@@ -110,6 +111,7 @@ export abstract class AdminTableDirective implements OnInit, OnDestroy {
                 entityCellRenderer: EntityCellRendererComponent,
                 perimetersCellRenderer: PerimetersCellRendererComponent,
                 stateRightsCellRenderer: StateRightsCellRendererComponent,
+                roleCellRenderer: RoleCellRendererComponent,
                 idCellRenderer: IdCellRendererComponent,
                 entityNameCellRenderer: EntityNameCellRendererComponent
             },

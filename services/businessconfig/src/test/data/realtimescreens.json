@@ -34,7 +34,7 @@
         {
           "entitiesGroups": [
             {
-              "name": "Central Supervision Centers",
+              "name": "European Supervision Centers",
               "entities": [
                 "IT_SUPERVISOR_ENTITY"
               ]

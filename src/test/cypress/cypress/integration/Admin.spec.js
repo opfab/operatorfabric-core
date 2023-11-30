@@ -186,7 +186,6 @@ describe('AdmininstrationPages', () => {
         agGrid.cellShould('ag-grid-angular', 5, 0, 'have.text', 'entityId');
         agGrid.cellShould('ag-grid-angular', 5, 1, 'have.text', 'entity name');
         agGrid.cellShould('ag-grid-angular', 5, 2, 'have.text', 'entity description');
-        agGrid.cellElementShould('ag-grid-angular', 5, 3, 'input', 'be.checked');
         agGrid.cellShould('ag-grid-angular', 5, 4, 'have.text', 'Control Center FR North');
 
         // Edit previously created entity
@@ -238,7 +237,6 @@ describe('AdmininstrationPages', () => {
         agGrid.cellShould('ag-grid-angular', 5, 0, 'have.text', 'entityId');
         agGrid.cellShould('ag-grid-angular', 5, 1, 'have.text', 'entity name updated');
         agGrid.cellShould('ag-grid-angular', 5, 2, 'have.text', 'entity description updated');
-        agGrid.cellElementShould('ag-grid-angular', 5, 3, 'input', 'not.be.checked');
         agGrid.cellShould('ag-grid-angular', 5, 4, 'have.text', 'Control Center FR South');
 
         // Delete previously created entity
@@ -703,13 +701,11 @@ describe('AdmininstrationPages', () => {
                     expect(rows[0].ID).to.equal('ENTITY1_FR');
                     expect(rows[0].NAME).to.equal('Control Center FR North');
                     expect(rows[0].DESCRIPTION).to.equal('Control Center FR North');
-                    expect(rows[0]['CARD SENDING ALLOWED']).to.equal('YES');
                     expect(rows[0]['PARENT ENTITIES']).to.equal('French Control Centers');
 
                     expect(rows[4].ID).to.equal('ENTITY_FR');
                     expect(rows[4].NAME).to.equal('French Control Centers');
                     expect(rows[4].DESCRIPTION).to.equal('French Control Centers');
-                    expect(rows[4]['CARD SENDING ALLOWED']).to.equal('NO');
                     expect(rows[4]['PARENT ENTITIES']).to.be.undefined;
                 })
             })

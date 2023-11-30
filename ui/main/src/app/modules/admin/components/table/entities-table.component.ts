@@ -26,7 +26,7 @@ export class EntitiesTableComponent extends AdminTableDirective implements OnIni
         new Field('id', 3, 'idCellRenderer'),
         new Field('name', 3),
         new Field('description', 5),
-        new Field('entityAllowedToSendCard', 4, null, this.translateValue, 'entityAllowedToSendCardColumn'),
+        new Field('roles', 4, 'roleCellRenderer', null, 'rolesColumn'),
         new Field('parents', 5, 'entityCellRenderer', null, 'parentsColumn')
     ];
     idField = 'id';
@@ -34,9 +34,8 @@ export class EntitiesTableComponent extends AdminTableDirective implements OnIni
     editModalComponent = EditEntityModalComponent;
 
     ngOnInit() {
-        this.gridOptions.columnTypes['entityAllowedToSendCardColumn'] = {
+        this.gridOptions.columnTypes['rolesColumn'] = {
             sortable: true,
-            filter: 'agTextColumnFilter',
             wrapText: true,
             autoHeight: true,
             flex: 4

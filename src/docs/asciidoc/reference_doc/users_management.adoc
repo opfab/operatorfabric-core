@@ -154,7 +154,7 @@ Here is an example of the configuration file :
         {
           "entitiesGroups": [
             {
-              "name": "Central Supervision Centers",
+              "name": "European Supervision Centers",
               "entities": [
                 "IT_SUPERVISOR_ENTITY"
               ]
@@ -182,7 +182,7 @@ Here is an example of the configuration file :
         {
           "entitiesGroups": [
             {
-              "name": "Central Supervision Centers",
+              "name": "European Supervision Centers",
               "entities": [
                 "IT_SUPERVISOR_ENTITY"
               ]
@@ -209,7 +209,7 @@ Here is an example of the configuration file :
         {
           "entitiesGroups": [
             {
-              "name": "Central Supervision Centers",
+              "name": "European Supervision Centers",
               "entities": [
                 "IT_SUPERVISOR_ENTITY"
               ]
@@ -235,7 +235,7 @@ Here is an example of the configuration file :
         {
           "entitiesGroups": [
             {
-              "name": "Central Supervision Centers",
+              "name": "European Supervision Centers",
               "entities": [
                 "IT_SUPERVISOR_ENTITY"
               ]
