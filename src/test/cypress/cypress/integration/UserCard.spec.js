@@ -145,8 +145,8 @@ describe('User Card ', function () {
       usercard.checkEntityRecipientsInPreviewContains("IT SUPERVISION CENTER");
       // Check circles for connected entities
       cy.get('#opfab-entity-recipients').get('.badge').should('have.length', 2);
-      cy.get('#opfab-entity-recipients').get('.bg-success').should('have.length', 1);
-      cy.get('#opfab-entity-recipients').get('.bg-danger').should('have.length', 1);
+      cy.get('#opfab-entity-recipients').get('.bg-primary').should('have.length', 1);
+      cy.get('#opfab-entity-recipients').get('.bg-secondary').should('have.length', 1);
       script.resetUIConfigurationFiles();
     })
 
