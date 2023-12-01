@@ -16,7 +16,6 @@ import org.opfab.cards.publication.model.*;
 import org.opfab.cards.publication.ratelimiter.CardSendingLimiter;
 import org.opfab.cards.publication.repositories.CardRepository;
 import org.opfab.cards.publication.repositories.UserBasedOperationResult;
-import org.opfab.springtools.configuration.oauth.ProcessesCache;
 import org.opfab.springtools.error.model.ApiError;
 import org.opfab.springtools.error.model.ApiErrorException;
 import org.opfab.users.model.CurrentUserWithPerimeters;
@@ -56,7 +55,7 @@ public class CardProcessingService {
             CardRepository cardRepository,
             ExternalAppService externalAppService,
             CardTranslationService cardTranslationService,
-            ProcessesCache processesCache,
+            CardValidationService cardValidationService,
             boolean checkAuthenticationForCardSending,
             boolean checkPerimeterForCardSending,
             boolean authorizeToSendCardWithInvalidProcessState,
@@ -67,7 +66,7 @@ public class CardProcessingService {
         this.cardRepository = cardRepository;
         this.externalAppService = externalAppService;
         this.cardPermissionControlService = new CardPermissionControlService();
-        this.cardValidationService = new CardValidationService(this.cardRepository, processesCache);
+        this.cardValidationService = cardValidationService;
         this.cardSendingLimiter = new CardSendingLimiter(cardSendingLimitCardCount, cardSendingLimitPeriod);
         this.cardTranslationService = cardTranslationService;
         this.checkAuthenticationForCardSending = checkAuthenticationForCardSending;

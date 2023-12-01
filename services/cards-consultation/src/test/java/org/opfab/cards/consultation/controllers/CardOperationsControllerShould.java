@@ -19,7 +19,6 @@ import org.opfab.cards.consultation.application.IntegrationTestApplication;
 import org.opfab.cards.consultation.model.CardOperation;
 import org.opfab.cards.consultation.repositories.CardRepository;
 import org.opfab.cards.consultation.services.CardSubscriptionService;
-import org.opfab.springtools.configuration.test.UserServiceCacheTestApplication;
 import org.opfab.users.model.ComputedPerimeter;
 import org.opfab.users.model.CurrentUserWithPerimeters;
 import org.opfab.users.model.RightsEnum;
@@ -45,7 +44,7 @@ import static org.opfab.cards.consultation.TestUtilities.roundingToMillis;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(classes = {IntegrationTestApplication.class, CardSubscriptionService.class, CardOperationsController
-   .class, UserServiceCacheTestApplication.class})
+   .class})
 class CardOperationsControllerShould {
     private static String TEST_ID = "testClient";
 

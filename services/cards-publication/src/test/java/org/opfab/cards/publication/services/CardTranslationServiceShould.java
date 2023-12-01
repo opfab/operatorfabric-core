@@ -12,28 +12,42 @@
 package org.opfab.cards.publication.services;
 
 import org.assertj.core.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.api.TestInstance;
 import org.opfab.cards.model.SeverityEnum;
 import org.opfab.cards.publication.model.CardPublicationData;
 import org.opfab.cards.publication.model.I18nPublicationData;
-import org.opfab.cards.publication.application.UnitTestApplication;
+import org.opfab.cards.publication.mocks.I18NRepositoryMock;
 import org.opfab.springtools.error.model.ApiErrorException;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 
 import java.time.Instant;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-
-@ExtendWith(SpringExtension.class)
-@SpringBootTest(classes = UnitTestApplication.class)
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class CardTranslationServiceShould {
-
-    @Autowired
+  
     CardTranslationService cardTranslationService;
+
+    I18NRepositoryMock i18nRepositoryMock = new I18NRepositoryMock();
+
+    @BeforeEach
+    void setUp() {
+        cardTranslationService = new CardTranslationService(i18nRepositoryMock);
+
+        ObjectMapper mapper = new ObjectMapper();
+        ObjectNode node = mapper.createObjectNode();
+
+        node.put("title", "Title translated");
+        node.put("summary", "Summary translated {{arg1}}");
+        
+        i18nRepositoryMock.setJsonNode(node);
+    }
+    
+
 
     @Test
     void translateCardField(){
@@ -68,6 +82,7 @@ class CardTranslationServiceShould {
 
     @Test
     void translateCardWithNonExistingI18nFile(){
+        i18nRepositoryMock.setJsonNode(null);
         CardPublicationData card = CardPublicationData.builder().publisher("publisher_test").processVersion("1")
                 .processInstanceId("cardWithProcessWithNonExistingI18nFile").severity(SeverityEnum.INFORMATION)
                 .process("processWithNonExistingI18nFile")
@@ -81,7 +96,10 @@ class CardTranslationServiceShould {
             cardTranslationService.translate(card);
         }).isInstanceOf(ApiErrorException.class).hasMessageContaining("Impossible to publish card : no i18n file for " +
                 "process=processWithNonExistingI18nFile, processVersion=1 (processInstanceId=cardWithProcessWithNonExistingI18nFile)");
+
     }
+
+
 
     @Test
     void translateCardWithNonExistingI18nKey(){
@@ -113,7 +131,7 @@ class CardTranslationServiceShould {
         }).isInstanceOf(ApiErrorException.class).hasMessageContaining("Impossible to publish card : no i18n translation " +
                 "for key=nonExistingI18nKeyForSummary (process=process1, processVersion=0, processInstanceId=cardWithNonExistingI18nKeyForSummary)");
     }
-
+ 
     @Test
     void translateCard(){
         CardPublicationData card = CardPublicationData.builder().publisher("publisher_test").processVersion("0")

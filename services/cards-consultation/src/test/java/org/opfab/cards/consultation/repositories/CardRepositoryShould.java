@@ -10,7 +10,6 @@
 package org.opfab.cards.consultation.repositories;
 
 
-import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -535,7 +534,6 @@ class CardRepositoryShould {
            
         }
         
-    @NotNull
     private Predicate<CardConsultationData> computeCardPredicate(CardConsultationData card) {
         Predicate<CardConsultationData> predicate = c -> card.getId().equals(c.getId());
         predicate = predicate.and(c -> "PUBLISHER".equals(c.getPublisher()));

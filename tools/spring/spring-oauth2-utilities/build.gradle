@@ -2,12 +2,8 @@ dependencies{
     implementation boot.starterSecurity
     implementation boot.starterValidation
     implementation spring.securityOauthResource, spring.securityOauthJose
-    implementation cloud.starterFeign
-    implementation misc.feignMock
-    implementation misc.feignJackson
-    implementation misc.feignCore
-    implementation misc.feignOkhttp
     implementation spring.webflux
+    implementation misc.jacksonDatabind
     implementation project(":client:users-client-data")
     implementation project(":client:businessconfig-client-data")
     implementation project(":tools:generic:utilities")

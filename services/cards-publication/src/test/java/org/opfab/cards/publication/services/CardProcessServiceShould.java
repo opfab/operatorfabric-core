@@ -16,6 +16,8 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.opfab.cards.model.SeverityEnum;
 import org.opfab.cards.publication.application.UnitTestApplication;
 import org.opfab.cards.publication.mocks.CardRepositoryMock;
+import org.opfab.cards.publication.mocks.I18NRepositoryMock;
+import org.opfab.cards.publication.mocks.ProcessRepositoryMock;
 import org.opfab.cards.publication.model.ArchivedCardPublicationData;
 import org.opfab.cards.publication.model.CardPublicationData;
 import org.opfab.cards.publication.model.HoursAndMinutes;
@@ -24,8 +26,6 @@ import org.opfab.cards.publication.model.I18nPublicationData;
 import org.opfab.cards.publication.model.PublisherTypeEnum;
 import org.opfab.cards.publication.model.RecurrencePublicationData;
 import org.opfab.cards.publication.model.TimeSpanPublicationData;
-import org.opfab.springtools.configuration.oauth.I18nProcessesCache;
-import org.opfab.springtools.configuration.oauth.ProcessesCache;
 import org.opfab.springtools.error.model.ApiErrorException;
 import org.opfab.test.EventBusSpy;
 import org.opfab.users.model.ComputedPerimeter;
@@ -45,6 +45,8 @@ import org.springframework.test.web.client.MockRestServiceServer;
 import org.springframework.web.client.RestTemplate;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ObjectNode;
+
 import jakarta.validation.ConstraintViolationException;
 
 import java.net.URI;
@@ -77,10 +79,6 @@ class CardProcessServiceShould {
 
         @Autowired
         private ExternalAppService externalAppService;
-        @Autowired
-        private I18nProcessesCache i18nProcessesCache;
-        @Autowired
-        private ProcessesCache processesCache;
 
         private CardProcessingService cardProcessingService;
         private CardTranslationService cardTranslationService;
@@ -90,25 +88,57 @@ class CardProcessServiceShould {
         @Autowired
         private CardRepositoryMock cardRepositoryMock;
 
+        private I18NRepositoryMock i18NRepositoryMock;
+        private ProcessRepositoryMock processRepositoryMock;
+
         private MockRestServiceServer mockServer;
 
         private User user;
         private CurrentUserWithPerimeters currentUserWithPerimeters;
         private Optional<Jwt> token = Optional.empty();
-
+ 
         @BeforeEach
         public void init() {
+                initI18NRepositoryMock();
+                initProcessRepositoryMock();
                 eventBusSpy = new EventBusSpy();
-                cardNotificationService = new CardNotificationService(eventBusSpy, objectMapper);
-                cardTranslationService = new CardTranslationService(i18nProcessesCache, processesCache, eventBusSpy);
+                cardNotificationService = new CardNotificationService(eventBusSpy, objectMapper);                
+                cardTranslationService = new CardTranslationService(i18NRepositoryMock);
+                CardValidationService cardValidationService = new CardValidationService(cardRepositoryMock,processRepositoryMock);
                 cardProcessingService = new CardProcessingService(cardNotificationService,
                                 cardRepositoryMock, externalAppService,
-                                cardTranslationService, processesCache, true, true,
+                                cardTranslationService,cardValidationService, true, true,
                                 false, 1000, 3600, true);
                 initCurrentUser();
                 cardRepositoryMock.clear();
                 eventBusSpy.clearMessageSent();
                 mockServer = MockRestServiceServer.createServer(restTemplate);
+        }
+
+        public void initI18NRepositoryMock() {
+                i18NRepositoryMock = new I18NRepositoryMock();
+                ObjectMapper mapper = new ObjectMapper();
+                ObjectNode node = mapper.createObjectNode();
+                node.put("title", "Title translated");
+                node.put("summary", "Summary translated {{arg1}}");
+                i18NRepositoryMock.setJsonNode(node);
+        }
+
+        public void initProcessRepositoryMock() {
+                processRepositoryMock = new ProcessRepositoryMock();
+                String process1 = "{\"id\":\"process1\",\"states\":{\"state1\":{\"name\":\"state1\"}}}";
+                String process2 = "{\"id\":\"process2\",\"states\":{\"state2\":{\"name\":\"state1\"}}}";
+                String process3 = "{\"id\":\"process3\",\"states\":{\"state3\":{\"name\":\"state1\"}}}";
+                String process4 = "{\"id\":\"process4\",\"states\":{\"state4\":{\"name\":\"state1\"}}}";
+                String process5 = "{\"id\":\"process5\",\"states\":{\"state5\":{\"name\":\"state1\"}}}";
+                String processCardUser = "{\"id\":\"PROCESS_CARD_USER\",\"states\":{\"state1\":{\"name\":\"state1\"}}}";
+                processRepositoryMock.setProcessAsString(process1,"0");
+                processRepositoryMock.setProcessAsString(process2,"0");
+                processRepositoryMock.setProcessAsString(process3,"0");
+                processRepositoryMock.setProcessAsString(process4,"0");
+                processRepositoryMock.setProcessAsString(process5,"0");
+                processRepositoryMock.setProcessAsString(processCardUser,"0");
+                    
         }
 
         public void initCurrentUser() {
@@ -514,8 +544,8 @@ class CardProcessServiceShould {
                 String id = firstCard.getId();
                 cardProcessingService.deleteCard(id, token);
 
-                /* one card should be deleted(the first one) */
-                Assertions.assertThat(checkCardCount(4)).isTrue();
+                // one card should be deleted(the first one)
+                 Assertions.assertThat(checkCardCount(4)).isTrue();
         }
 
         @Test
@@ -528,7 +558,7 @@ class CardProcessServiceShould {
                 firstCard.setId(null);
                 cardProcessingService.prepareAndDeleteCard(firstCard);
 
-                /* one card should be deleted(the first one) */
+                // one card should be deleted(the first one)
                 Assertions.assertThat(checkCardCount(4)).isTrue();
         }
 
@@ -665,7 +695,7 @@ class CardProcessServiceShould {
 
                 // 5 add message and 2 delete messages
                 Assertions.assertThat(eventBusSpy.getMessagesSent()).hasSize(7);
-                /* 2 cards should be removed */
+                // 2 cards should be removed 
                 Assertions.assertThat(cardRepositoryMock.count()).isEqualTo(3);
         }
 

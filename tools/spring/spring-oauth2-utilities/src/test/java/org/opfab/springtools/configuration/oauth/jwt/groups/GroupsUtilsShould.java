@@ -22,7 +22,6 @@ import java.util.Map;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.opfab.springtools.configuration.test.UserServiceCacheTestApplication;
 import org.opfab.springtools.configuration.oauth.jwt.JwtProperties;
 import org.opfab.springtools.configuration.oauth.jwt.groups.roles.RoleClaim;
 import org.opfab.springtools.configuration.oauth.jwt.groups.roles.RoleClaimCheckExistPath;
@@ -40,7 +39,7 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.context.web.WebAppConfiguration;
 
 @ExtendWith(SpringExtension.class)
-@SpringBootTest(classes = UserServiceCacheTestApplication.class)
+@SpringBootTest(classes = TestApplication.class)
 @WebAppConfiguration
 class GroupsUtilsShould {
 	
@@ -52,7 +51,9 @@ class GroupsUtilsShould {
 	
 	@MockBean
 	private JwtProperties jwtProperties;
-	
+
+
+
 	@BeforeEach
 	public void setUp() {
 	    Mockito.when(jwtProperties.getLoginClaim()).thenReturn("sub");

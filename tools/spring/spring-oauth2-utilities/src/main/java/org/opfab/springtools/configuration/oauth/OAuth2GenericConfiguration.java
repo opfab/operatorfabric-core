@@ -11,7 +11,7 @@
 package org.opfab.springtools.configuration.oauth;
 
 
-import feign.FeignException;
+
 import lombok.extern.slf4j.Slf4j;
 import org.opfab.springtools.configuration.oauth.jwt.JwtProperties;
 import org.opfab.springtools.configuration.oauth.jwt.groups.GroupsMode;
@@ -20,7 +20,6 @@ import org.opfab.springtools.configuration.oauth.jwt.groups.GroupsUtils;
 import org.opfab.users.model.CurrentUserWithPerimeters;
 import org.opfab.users.model.User;
 import org.springframework.cache.annotation.EnableCaching;
-import org.springframework.cloud.openfeign.EnableFeignClients;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
@@ -29,6 +28,7 @@ import org.springframework.security.authentication.AbstractAuthenticationToken;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.oauth2.jwt.Jwt;
 
+import java.io.IOException;
 import java.util.List;
 
 /**
@@ -37,12 +37,8 @@ import java.util.List;
  *
  */
 @Configuration
-@EnableFeignClients
 @EnableCaching
-@Import({UserServiceCache.class
-        ,I18nProcessesCache.class
-        ,ProcessesCache.class
-        ,UpdateUserListenerConfiguration.class
+@Import({UpdateUserListenerConfiguration.class
         , GroupsProperties.class
         , GroupsUtils.class
         , JwtProperties.class})
@@ -73,24 +69,35 @@ public class OAuth2GenericConfiguration {
 
         return new Converter<Jwt, AbstractAuthenticationToken>(){
             @Override
-            public AbstractAuthenticationToken convert(Jwt jwt) throws FeignException {
+            public AbstractAuthenticationToken convert(Jwt jwt) throws IllegalArgumentException {
                 return generateOpFabJwtAuthenticationToken(jwt);
             }
         };
     }
 
-    public AbstractAuthenticationToken generateOpFabJwtAuthenticationToken(Jwt jwt) {
+    public AbstractAuthenticationToken generateOpFabJwtAuthenticationToken(Jwt jwt) throws IllegalArgumentException {
         
         String principalId = jwt.getClaimAsString(jwtProperties.getLoginClaim()).toLowerCase();
-        UserServiceCache.setTokenForUserRequest(principalId,jwt.getTokenValue());
-        ProcessesCache.setTokenForUserRequest(principalId,jwt.getTokenValue());
-        CurrentUserWithPerimeters currentUserWithPerimeters = userServiceCache.fetchCurrentUserWithPerimetersFromCacheOrProxy(principalId);
-        User user = currentUserWithPerimeters.getUserData();
+                userServiceCache.setTokenForUserRequest(principalId,jwt.getTokenValue());
+                CurrentUserWithPerimeters currentUserWithPerimeters = null;
+                try {
+                    currentUserWithPerimeters = userServiceCache.fetchCurrentUserWithPerimetersFromCacheOrProxy(principalId);
+                }
+                catch (IOException e) {
+                    log.error("Error getting user information", e);
+                    throw new IllegalArgumentException("Error getting user information", e);
+                }
+                catch (InterruptedException e) {
+                    Thread.currentThread().interrupt();
+                     log.error("Error getting user information (Interrupted Exception)", e);
+                    throw new IllegalArgumentException("Error getting user information (Interrupted Exception)", e);
+                }
+                User user = currentUserWithPerimeters.getUserData();
 
-        // override the groups list from JWT mode, otherwise, default mode is OPERATOR_FABRIC
-		if (groupsProperties.getMode() == GroupsMode.JWT) user.setGroups(getGroupsList(jwt));
-        
-		List<GrantedAuthority> authorities = OAuth2JwtProcessingUtilities.computeAuthorities(currentUserWithPerimeters.getPermissions());
+                // override the groups list from JWT mode, otherwise, default mode is OPERATOR_FABRIC
+        		if (groupsProperties.getMode() == GroupsMode.JWT) user.setGroups(getGroupsList(jwt));
+                
+        		List<GrantedAuthority> authorities = OAuth2JwtProcessingUtilities.computeAuthorities(currentUserWithPerimeters.getPermissions());
 		
 		log.debug("user [{}] has these roles '{}' through the {} mode and entities {}",principalId,authorities,groupsProperties.getMode(),user.getEntities());
         

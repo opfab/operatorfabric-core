@@ -2,9 +2,6 @@ dependencies{
     implementation spring.securityTest
     implementation spring.securityOauthResource, spring.securityOauthJose
     implementation boot.starterWeb
-    implementation cloud.starterFeign
-    implementation misc.feignMock
-    implementation misc.feignJackson
     implementation project(':tools:spring:spring-oauth2-utilities')
     implementation project(":client:users-client-data")
     implementation project(":client:businessconfig-client-data")

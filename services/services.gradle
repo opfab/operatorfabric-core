@@ -22,7 +22,6 @@ subprojects {
 
         testImplementation boot.starterTest, testing_deps.assertJ
         testImplementation project(':tools:generic:test-utilities')
-        testImplementation testing_deps.awaitility
         testImplementation group:'org.jeasy', name: 'easy-random-core', version: '5.0.0'
 
     }

@@ -9,19 +9,18 @@
 
 package org.opfab.cards.publication.services;
 
-import feign.FeignException;
 import jakarta.validation.ConstraintViolationException;
 import lombok.extern.slf4j.Slf4j;
 
 import org.opfab.cards.publication.model.*;
 import org.opfab.cards.publication.repositories.CardRepository;
+import org.opfab.cards.publication.repositories.ProcessRepository;
 import org.opfab.businessconfig.model.Process;
-import org.opfab.springtools.configuration.oauth.ProcessesCache;
 import org.opfab.springtools.error.model.ApiError;
 import org.opfab.springtools.error.model.ApiErrorException;
-
 import org.springframework.http.HttpStatus;
 
+import java.io.IOException;
 import java.time.Instant;
 import java.util.List;
 import java.util.Optional;
@@ -30,19 +29,23 @@ import java.util.Optional;
 public class CardValidationService {
 
     private CardRepository cardRepository;
-    private ProcessesCache processesCache;
+    private ProcessRepository processRepository;
 
     public static final String UNEXISTING_PROCESS_STATE = "Impossible to publish card because process and/or state does not exist (process=%1$s, state=%2$s, processVersion=%3$s, processInstanceId=%4$s)";
     protected static final char[] FORBIDDEN_CHARS = new char[] {'#','?','/'};
 
     public CardValidationService(
         CardRepository cardRepository,
-        ProcessesCache processesCache
+        ProcessRepository processRepository
     ) {
         this.cardRepository = cardRepository;
-        this.processesCache = processesCache;
+        this.processRepository = processRepository;
     }
 
+
+    public void setProcessRepository(ProcessRepository processRepository) {
+        this.processRepository = processRepository;
+    }
     /**
      * Apply bean validation to card
      *
@@ -143,12 +146,16 @@ public class CardValidationService {
     }
 
     public boolean doesProcessStateExistInBundles(String processId, String processVersion, String stateId) {
-        if (processesCache != null) {
+        if (processRepository != null) {
             try {
-                Process process = processesCache.fetchProcessFromCacheOrProxy(processId, processVersion);
+                Process process = processRepository.getProcess(processId, processVersion);
                 if ((process != null) && (process.getStates() != null) && (process.getStates().containsKey(stateId)))
                     return true;
-            } catch (FeignException ex) {
+            } catch (InterruptedException ex) {
+                log.error("Error getting process information for process={} and processVersion={} (Interrupted Exception)", processId,
+                        processVersion, ex);
+                Thread.currentThread().interrupt();
+            } catch (IOException ex) {
                 log.error("Error getting process information for process={} and processVersion={}", processId,
                         processVersion, ex);
             }
