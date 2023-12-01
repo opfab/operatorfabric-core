@@ -1,4 +1,4 @@
-/* Copyright (c) 2021-2022, RTE (http://www.rte-france.com)
+/* Copyright (c) 2021-2023, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -20,10 +20,11 @@ import org.opfab.externaldevices.model.SignalMappingData;
 import org.opfab.externaldevices.model.UserConfiguration;
 import org.opfab.externaldevices.model.UserConfigurationData;
 import org.opfab.externaldevices.repositories.DeviceConfigurationRepository;
+import org.opfab.externaldevices.repositories.SettingsRepository;
 import org.opfab.externaldevices.repositories.SignalMappingRepository;
 import org.opfab.externaldevices.repositories.UserConfigurationRepository;
-import org.opfab.springtools.configuration.oauth.UserServiceProxy;
 import org.opfab.users.model.UserSettings;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.stereotype.Service;
 
@@ -54,16 +55,17 @@ public class ConfigService {
     private final UserConfigurationRepository userConfigurationRepository;
     private final DeviceConfigurationRepository deviceConfigurationRepository;
     private final SignalMappingRepository signalMappingRepository;
+    private final SettingsRepository settingsRepository;
 
-    private final UserServiceProxy userServiceProxy;
 
     public ConfigService(UserConfigurationRepository userConfigurationRepository,
                          DeviceConfigurationRepository deviceConfigurationRepository,
-                         SignalMappingRepository signalMappingRepository, UserServiceProxy userServiceProxy) {
+                         SignalMappingRepository signalMappingRepository,
+                         @Value("${operatorfabric.servicesUrls.users:http://users:2103}") String usersServiceUrl) {
         this.userConfigurationRepository = userConfigurationRepository;
         this.deviceConfigurationRepository = deviceConfigurationRepository;
         this.signalMappingRepository = signalMappingRepository;
-        this.userServiceProxy = userServiceProxy;
+        this.settingsRepository = new SettingsRepository(usersServiceUrl);
     }
 
     public void insertDeviceConfiguration(DeviceConfiguration deviceConfiguration) {
@@ -219,8 +221,8 @@ public class ConfigService {
         UserSettings settings = new UserSettings();
         settings.setPlaySoundOnExternalDevice(false);
         settings.setLogin(userLogin);
-        String authToken = token.isPresent() ? "Bearer " + token.get().getTokenValue() : "";
-        userServiceProxy.patchUserSettings(authToken, userLogin, settings);
+        String authToken = token.isPresent() ? token.get().getTokenValue() : "";
+        settingsRepository.patchUserSettings(authToken, userLogin, settings);
     }
 
     private int computeSignalId(SignalMapping signalMapping, String opFabSignalKey) throws ExternalDeviceConfigurationException {

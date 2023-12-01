@@ -37,19 +37,21 @@ public class CardSubscription {
     private FluxSink<String> messageSink;
 
     private String userLogin;
-    protected UserServiceCache userServiceCache;
+
+    private UserServiceCache userServiceCache;
 
 
     /**
      * Constructs a card subscription and init access to AMQP exchanges
      */
     @Builder
-    public CardSubscription(CurrentUserWithPerimeters currentUserWithPerimeters,
+    public CardSubscription(UserServiceCache userServiceCache, CurrentUserWithPerimeters currentUserWithPerimeters,
                             String clientId) {
         userLogin = currentUserWithPerimeters.getUserData().getLogin();
         this.id = computeSubscriptionId(userLogin, clientId);
         this.currentUserWithPerimeters = currentUserWithPerimeters;
         this.lastHearbeatReceptionDate = Instant.now();
+        this.userServiceCache = userServiceCache;
 
     }
 
@@ -59,21 +61,25 @@ public class CardSubscription {
     }
     
     public CurrentUserWithPerimeters getCurrentUserWithPerimeters() {
-        if (userServiceCache != null)
+        if (userServiceCache != null) {
             try {
                 currentUserWithPerimeters = userServiceCache.fetchCurrentUserWithPerimetersFromCacheOrProxy(userLogin);
-
+            } catch (InterruptedException exc) {
+                log.info("Interrupted exception if fetch fetchCurrentUserWithPerimetersFromCacheOrProxy {}", userLogin);
+                Thread.currentThread().interrupt();
+               
             } catch (Exception exc) {
-                // This situation arises when the usercache has been cleared and the token is expired
-                // in this case the service cannot retrieve the user information 
+                // This situation arises when the user cache has been cleared and the token is expired
+                // in this case, the service cannot retrieve the user information
                 // it arises only in implicit mode as the user is not disconnected
-                // if token expired due to silent refresh mechanism
+                // if the token expired due to the silent refresh mechanism
                 //
-                // When the user will make another request (for example : click on a card feed) 
-                // the new token will be set and it will then retrieve user information on next call 
-                // 
-                log.info("Cannot get new perimeter for user {} , use old one ", userLogin);
+                // When the user will make another request (for example: click on a card feed)
+                // the new token will be set and it will then retrieve user information on the next call
+                //
+                log.info("Cannot get new perimeter for user {}, use old one", userLogin);
             }
+        }
         return currentUserWithPerimeters;
     }
  

@@ -24,7 +24,7 @@ logging.pattern.console: "%d{yyyy-MM-dd HH:mm:ss.SSS} %5p ${PID:- } --- [%15.15t
 operatorfabric:
   servicesUrls:
     businessconfig: "businessconfig:2100"
-    users: "users:2103"
+    users: "http://users:2103"
 # default values for docker mode 
   rabbitmq:
     host: rabbitmq

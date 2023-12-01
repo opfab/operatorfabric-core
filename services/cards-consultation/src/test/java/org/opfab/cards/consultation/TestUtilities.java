@@ -16,7 +16,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.jeasy.random.EasyRandom;
 import org.jeasy.random.EasyRandomParameters;
 import org.jeasy.random.FieldPredicates;
-import org.jetbrains.annotations.NotNull;
 import org.opfab.cards.consultation.model.*;
 import org.opfab.cards.model.SeverityEnum;
 import org.springframework.data.domain.Page;
@@ -41,12 +40,10 @@ public class TestUtilities {
 
     private static DateTimeFormatter ZONED_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss").withZone(ZoneOffset.UTC);
 
-    @NotNull
     public static String format(Instant now) {
         return ZONED_FORMATTER.format(now);
     }
 
-    @NotNull
     public static String format(Long now) {
         return ZONED_FORMATTER.format(Instant.ofEpochMilli(now));
     }
@@ -291,8 +288,7 @@ public class TestUtilities {
     public static CardConsultationData instantiateOneCardConsultationData(){
         return instantiateSeveralCardConsultationData(1).get(0);
     }
-
-    @NotNull
+    
     public static EasyRandom instantiateEasyRandom() {
         LocalDate today = LocalDate.now();
         LocalDate tomorrow = today.plus(1, ChronoUnit.DAYS);

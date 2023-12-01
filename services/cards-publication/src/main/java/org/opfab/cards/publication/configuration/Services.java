@@ -11,12 +11,13 @@
 package org.opfab.cards.publication.configuration;
 
 import org.opfab.cards.publication.repositories.CardRepository;
+import org.opfab.cards.publication.repositories.I18NRepositoryImpl;
+import org.opfab.cards.publication.repositories.ProcessRepositoryImpl;
 import org.opfab.cards.publication.services.CardNotificationService;
 import org.opfab.cards.publication.services.CardProcessingService;
 import org.opfab.cards.publication.services.CardTranslationService;
+import org.opfab.cards.publication.services.CardValidationService;
 import org.opfab.cards.publication.services.ExternalAppService;
-import org.opfab.springtools.configuration.oauth.I18nProcessesCache;
-import org.opfab.springtools.configuration.oauth.ProcessesCache;
 import org.opfab.useractiontracing.services.UserActionLogService;
 import org.opfab.utilities.eventbus.EventBus;
 import org.springframework.beans.factory.annotation.Value;
@@ -33,26 +34,34 @@ public class Services {
 
     private final UserActionLogService userActionLogService;
 
+    private final CardValidationService cardValidationService;
+
     Services(
             UserActionLogService userActionLogService,
             CardRepository cardRepository,
             ExternalAppService externalAppService,
-            I18nProcessesCache i18nProcessesCache, ProcessesCache processesCache, EventBus eventBus,
+            EventBus eventBus,
             ObjectMapper objectMapper,
             @Value("${operatorfabric.cards-publication.checkAuthenticationForCardSending:true}") boolean checkAuthenticationForCardSending,
             @Value("${operatorfabric.cards-publication.checkPerimeterForCardSending:true}") boolean checkPerimeterForCardSending,
             @Value("${operatorfabric.cards-publication.authorizeToSendCardWithInvalidProcessState:false}") boolean authorizeToSendCardWithInvalidProcessState,
             @Value("${operatorfabric.cards-publication.cardSendingLimitCardCount:1000}") int cardSendingLimitCardCount,
             @Value("${operatorfabric.cards-publication.cardSendingLimitPeriod:3600}") int cardSendingLimitPeriod,
-            @Value("${operatorfabric.cards-publication.activateCardSendingLimiter:true}") boolean activateCardSendingLimiter) {
-        this.cardTranslationService = new CardTranslationService(i18nProcessesCache, processesCache, eventBus);
+            @Value("${operatorfabric.cards-publication.activateCardSendingLimiter:true}") boolean activateCardSendingLimiter,
+            @Value("${operatorfabric.servicesUrls.businessconfig:http://businessconfig:2100}") String businessconfigUrl) {
+        this.cardTranslationService = new CardTranslationService(new I18NRepositoryImpl(eventBus,businessconfigUrl));
         this.userActionLogService = userActionLogService;
         CardNotificationService cardNotificationService = new CardNotificationService(eventBus, objectMapper);
+        cardValidationService = new CardValidationService(cardRepository, new ProcessRepositoryImpl(businessconfigUrl, eventBus));
         cardProcessingService = new CardProcessingService(cardNotificationService,
                 cardRepository, externalAppService,
-                cardTranslationService, processesCache, checkAuthenticationForCardSending, checkPerimeterForCardSending,
+                cardTranslationService, cardValidationService,checkAuthenticationForCardSending, checkPerimeterForCardSending,
                 authorizeToSendCardWithInvalidProcessState, cardSendingLimitCardCount, cardSendingLimitPeriod, activateCardSendingLimiter);
 
+    }
+
+    public CardValidationService getCardValidationService() {
+        return cardValidationService;
     }
 
     public CardProcessingService getCardProcessingService() {

@@ -17,12 +17,14 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.opfab.avro.*;
 import org.opfab.cards.model.SeverityEnum;
 import org.opfab.cards.publication.application.UnitTestApplication;
+import org.opfab.cards.publication.configuration.Services;
 import org.opfab.cards.publication.configuration.kafka.ConsumerFactoryAutoConfiguration;
 import org.opfab.cards.publication.configuration.kafka.KafkaListenerContainerFactoryConfiguration;
 import org.opfab.cards.publication.configuration.kafka.ProducerFactoryAutoConfiguration;
 import org.opfab.cards.publication.kafka.command.CreateCardCommandHandler;
 import org.opfab.cards.publication.kafka.consumer.CardCommandConsumerListener;
 import org.opfab.cards.publication.mocks.CardRepositoryMock;
+import org.opfab.cards.publication.mocks.ProcessRepositoryMock;
 import org.opfab.cards.publication.model.CardPublicationData;
 import org.opfab.cards.publication.model.I18nPublicationData;
 import org.opfab.cards.publication.model.TimeSpanPublicationData;
@@ -45,6 +47,8 @@ import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
+
+import com.google.common.util.concurrent.Service;
 
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
@@ -79,6 +83,8 @@ class SendKafkaCardShould {
     @Autowired
     private CardRepositoryMock cardRepositoryMock;
 
+    @Autowired
+    private Services services;
 
     @Autowired
     private ExternalAppService externalAppService;
@@ -112,6 +118,11 @@ class SendKafkaCardShould {
     @BeforeAll
     void setUp() {
         String TOPIC="DummyTopic";
+        ProcessRepositoryMock processRepositoryMock = new ProcessRepositoryMock();
+        String process = "{\"id\":\"taskId\",\"states\":{\"currentState\":{\"name\":\"state1\"}}}";
+        processRepositoryMock.setProcessAsString(process,"myVersion");
+        services.getCardValidationService().setProcessRepository(processRepositoryMock);
+
         Map<String, Object> configs = new HashMap<>(KafkaTestUtils.consumerProps("consumerGroup", "true", embeddedKafkaBroker));
         DefaultKafkaConsumerFactory<String, String> consumerFactory = new DefaultKafkaConsumerFactory<>(configs, new StringDeserializer(), new StringDeserializer());
         ContainerProperties containerProperties = new ContainerProperties(TOPIC);

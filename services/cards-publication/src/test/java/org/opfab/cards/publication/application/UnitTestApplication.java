@@ -21,8 +21,6 @@ import org.opfab.cards.publication.services.*;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ConfigurableApplicationContext;
-import org.opfab.springtools.configuration.oauth.I18nProcessesCache;
-import org.opfab.springtools.configuration.test.I18nProcessesCacheTestApplication;
 import org.opfab.test.EventBusSpy;
 import org.springframework.http.converter.json.Jackson2ObjectMapperBuilder;
 import org.opfab.cards.publication.configuration.json.JacksonConfig;
@@ -34,10 +32,10 @@ import org.opfab.cards.publication.controllers.CardController;
 import org.springframework.context.annotation.Import;
 
 @SpringBootApplication
-@Import({CardTranslationService.class, CardNotificationService.class,
+@Import({CardNotificationService.class,
      ExternalAppService.class , ResponseCardProducer.class
 , CardCommandFactory.class, CardObjectMapper.class, JacksonConfig.class
-, Common.class , CardController.class,  I18nProcessesCache.class, I18nProcessesCacheTestApplication.class, 
+, Common.class , CardController.class, 
 ExternalRecipients.class, UserActionLogsConfiguration.class, UserActionLogRepositoryImpl.class, EventBusSpy.class,CardRepositoryMock.class,Services.class})
 public class UnitTestApplication {
 

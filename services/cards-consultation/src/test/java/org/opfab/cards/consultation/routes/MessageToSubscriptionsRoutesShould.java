@@ -18,7 +18,6 @@ import org.opfab.cards.consultation.application.IntegrationTestApplication;
 import org.opfab.cards.consultation.configuration.webflux.MessageToSubscriptionsRoutesConfig;
 import org.opfab.cards.consultation.controllers.CardOperationsController;
 import org.opfab.cards.consultation.services.CardSubscriptionService;
-import org.opfab.springtools.configuration.test.UserServiceCacheTestApplication;
 import org.opfab.springtools.configuration.test.WithMockOpFabUserReactive;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.reactive.AutoConfigureWebTestClient;
@@ -30,8 +29,8 @@ import reactor.core.publisher.Mono;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(classes = { IntegrationTestApplication.class,
-        CardSubscriptionService.class, MessageToSubscriptionsRoutesConfig.class, CardOperationsController.class,
-        UserServiceCacheTestApplication.class,  }, webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+        CardSubscriptionService.class, MessageToSubscriptionsRoutesConfig.class, CardOperationsController.class
+        }, webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @AutoConfigureWebTestClient
 class MessageToSubscriptionsRoutesShould {
 

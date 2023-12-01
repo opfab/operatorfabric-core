@@ -29,4 +29,4 @@ operatorfabric:
     password: guest
   servicesUrls:
     businessconfig: "businessconfig:2100"
-    users: "users:2103"
+    users: "http://users:2103"

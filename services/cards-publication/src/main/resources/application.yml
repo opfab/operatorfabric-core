@@ -38,8 +38,8 @@ operatorfabric:
     username: guest
     password: guest
   servicesUrls:
-    users: "users:2103"
-    businessconfig: "businessconfig:2100"
+    users: "http://users:2103"
+    businessconfig: "http://businessconfig:2100"
   cards-publication:
     kafka:
       topics:

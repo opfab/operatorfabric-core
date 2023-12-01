@@ -7,29 +7,32 @@
  * This file is part of the OperatorFabric project.
  */
 
+package org.opfab.springtools.configuration.oauth.jwt.groups;
 
-
-package org.opfab.businessconfig;
-
-
-import org.opfab.springtools.configuration.oauth.EnableOperatorFabricOAuth2;
-import org.opfab.springtools.configuration.oauth.UserServiceCacheImpl;
-import org.opfab.utilities.eventbus.rabbit.RabbitEventBus;
+import org.opfab.springtools.configuration.oauth.jwt.JwtProperties;
+import org.opfab.springtools.configuration.oauth.jwt.groups.GroupsProperties;
+import org.opfab.springtools.configuration.oauth.jwt.groups.GroupsUtils;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.annotation.Import;
 
 
+
 @SpringBootApplication
-@EnableOperatorFabricOAuth2
-@Import({RabbitEventBus.class, UserServiceCacheImpl.class})
+@EnableConfigurationProperties
+@Import({GroupsProperties.class, GroupsUtils.class, JwtProperties.class})
+public class TestApplication {
 
-public class BusinessconfigApplication {
 
+    
     public static void main(String[] args) {
-        ConfigurableApplicationContext ctx = SpringApplication.run(BusinessconfigApplication.class, args);
+        ConfigurableApplicationContext ctx = SpringApplication.run(TestApplication.class, args);
+
         assert (ctx != null);
     }
+
+
 
 }

@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2022, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2023, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -21,7 +21,7 @@ import java.util.List;
 @Builder
 @JsonInclude(JsonInclude.Include.NON_EMPTY)
 public class ProcessStatesData implements ProcessStates {
-    private ResponseData responseData;
+
     private AcknowledgmentAllowedEnum acknowledgmentAllowed;
     private ConsideredAcknowledgedForUserWhenEnum consideredAcknowledgedForUserWhen;
     private ShowAcknowledgmentFooterEnum showAcknowledgmentFooter;
@@ -42,6 +42,7 @@ public class ProcessStatesData implements ProcessStates {
     private String description;
     private Boolean showDetailCardHeader;
     private UserCard userCard;
+    private Response response;
     private String templateName;
     @Singular
     private List<String> styles;
@@ -51,15 +52,6 @@ public class ProcessStatesData implements ProcessStates {
     private String modifyAnswerButtonLabel;
     private Boolean automaticPinWhenAcknowledged;
 
-    @Override
-    public Response getResponse() {
-        return responseData;
-    }
-
-    @Override
-    public void setResponse(Response responseData) {
-        this.responseData = (ResponseData) responseData;
-    }
 
     @Override
     public AcknowledgmentAllowedEnum getAcknowledgmentAllowed() { return this.acknowledgmentAllowed; }

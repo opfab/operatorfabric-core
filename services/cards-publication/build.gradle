@@ -29,7 +29,6 @@ dependencies {
     implementation boot.starterSecurity
     implementation boot.starterValidation
     implementation boot.starterMongo
-    implementation cloud.starterFeign
     testImplementation spring.securityTest
     implementation project(':client:cards-client-data')
     implementation project(':client:users-client-data')
