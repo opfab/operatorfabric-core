@@ -62,7 +62,7 @@ export class TaskCardTemplateView {
             if (bysetpos.includes("-1")) textForBysetpos += opfab.utils.getTranslation("buildInTemplate.taskCard.last") + ", ";
 
             if (textForBysetpos != "") {
-                textForBysetpos = textForBysetpos.slice(0, -1); //we delete the last comma
+                textForBysetpos = textForBysetpos.slice(0, -2); //we delete the last comma
                 textForBysetpos = opfab.utils.getTranslation("buildInTemplate.taskCard.the") + " " + textForBysetpos + " ";
             }
         }
