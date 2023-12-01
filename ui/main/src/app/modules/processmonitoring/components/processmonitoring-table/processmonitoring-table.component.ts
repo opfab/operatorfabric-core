@@ -175,7 +175,6 @@ export class ProcessmonitoringTableComponent {
                         cellRenderer: 'timeCellRenderer',
                         field: String(column.field).split(".").pop(),
                         headerClass: 'opfab-ag-cheader-with-right-padding',
-                        cellClass: 'opfab-ag-cell-with-no-padding',
                         flex: column.size
                     });
                 } else {
