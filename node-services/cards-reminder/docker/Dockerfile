@@ -1,4 +1,4 @@
-FROM node:21.2-alpine
+FROM node:21.3-alpine
 RUN apk add --no-cache tzdata
 WORKDIR /usr/app
 RUN chown node:node /usr/app
