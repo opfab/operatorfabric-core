@@ -130,6 +130,15 @@ describe('Cards reminder with rrule structure', function () {
         await checkOneReminderIsSent();
     });
 
+    it('GIVEN a card was sent WHEN current date (02:11) > remind date - secondsBeforeTimeSpanForReminder with secondsBeforeTimeSpanForReminder = 0  (02:10) THEN remind is sent', async function () {
+        const card = getTestCard();
+        card.secondsBeforeTimeSpanForReminder = 0;
+        await sendCard(card);
+        setCurrentTime('2017-01-01 02:11');
+        await checkOneReminderIsSent();
+    });
+
+
     it('GIVEN a card was sent WHEN current date (02:06) > remind date +  (02:05) THEN no remind is sent', async function () {
         await sendCard(getTestCard());
         setCurrentTime('2017-01-01 02:06');
@@ -243,6 +252,15 @@ describe('Cards reminder with rrule structure', function () {
         await checkNoReminderIsSent();
     });
 
+    it('GIVEN a card was sent WHEN secondsBeforeTimeSpanForReminder is set to a negative number THEN no reminder is sent', async function () {
+        const card = getTestCard();
+        card.secondsBeforeTimeSpanForReminder = -1;
+        await sendCard(card);
+
+        setCurrentTime('2017-01-01 02:06');
+        await checkNoReminderIsSent();
+    });
+
     it('GIVEN a card WHEN card is deleted THEN reminder is removed', async function () {
         await sendCard(getTestCard());
         expect(rruleRemindDatabaseServiceStub.getNbReminder()).toBe(1);
@@ -319,6 +337,15 @@ describe('Cards reminder with recurrence structure', function () {
     it('GIVEN a card was sent WHEN current date (02:06) > remind date - secondsBeforeTimeSpanForReminder (02:05) THEN remind is sent', async function () {
         await sendCard(getTestCard());
         setCurrentTime('2017-01-01 02:06');
+        await checkOneReminderIsSent();
+    });
+
+
+    it('GIVEN a card was sent WHEN current date (02:11) > remind date - secondsBeforeTimeSpanForReminder , with secondsBeforeTimeSpanForReminder = 0 (02:10) THEN remind is sent', async function () {
+        const card = getTestCard();
+        card.secondsBeforeTimeSpanForReminder = 0;
+        await sendCard(card);
+        setCurrentTime('2017-01-01 02:11');
         await checkOneReminderIsSent();
     });
 
@@ -563,7 +590,17 @@ describe('Cards reminder with timespans and no recurrence', function () {
         card.secondsBeforeTimeSpanForReminder = null;
         await sendCard(card);
 
-        setCurrentTime('2017-01-01 01:56');
+        setCurrentTime('2017-01-01 02:01');
+        await checkNoReminderIsSent();
+    });
+
+
+    it('GIVEN a card was sent WHEN secondsBeforeTimeSpanForReminder is set to a negative number THEN no reminder is sent', async function () {
+        const card = getTestCard();
+        card.secondsBeforeTimeSpanForReminder = -1;
+        await sendCard(card);
+
+        setCurrentTime('2017-01-01 02:01');
         await checkNoReminderIsSent();
     });
 });
