@@ -9,7 +9,7 @@
 
 import {Directive,Input, OnDestroy, OnInit} from '@angular/core';
 import {Subject, timer} from 'rxjs';
-import {debounce, distinctUntilChanged, filter, first, map, takeUntil} from 'rxjs/operators';
+import {debounce, distinctUntilChanged, filter, first, map, skip, takeUntil} from 'rxjs/operators';
 import {UntypedFormGroup} from '@angular/forms';
 import * as _ from 'lodash-es';
 import {ConfigService} from 'app/business/services/config.service';
@@ -28,6 +28,8 @@ export abstract class BaseSettingDirective implements OnInit, OnDestroy {
     form: UntypedFormGroup;
     private baseSettings = {};
 
+    protected ignoreFirstUpdate = false;
+
     protected constructor(
         protected settingsService: SettingsService
     ) {}
@@ -42,6 +44,7 @@ export abstract class BaseSettingDirective implements OnInit, OnDestroy {
         this.setting$.pipe(first()).subscribe(() =>
             this.form.valueChanges
                 .pipe(
+                    skip( this.ignoreFirstUpdate ? 1 : 0), // skip first update to avoid patching settings on init (used for list-setting with virtual select)
                     takeUntil(this.ngUnsubscribe$),
                     filter(() => this.form.valid),
                     distinctUntilChanged((formA, formB) => this.isEqual(formA, formB)),
