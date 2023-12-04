@@ -42,6 +42,7 @@ export class ListSettingComponent extends BaseSettingDirective implements OnInit
         if (this.values) {
             for (const v of this.values) this.optionList.push({value: v, label: v});
         }
+        super.ignoreFirstUpdate = true;
         super.ngOnInit();
     }
 
