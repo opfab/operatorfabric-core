@@ -51,6 +51,10 @@ describe('Dashboard', () => {
         lightCardsStoreService.initStore();
     });
 
+    afterEach(() => {
+        dashboard.destroy();
+    });
+
     async function initProcesses() {
         const states1 = new Map<string, State>();
         const state1 = new State();

@@ -45,6 +45,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
         if (this.modalRef) {
             this.modalRef.close();
         }
+        this.dashboard.destroy();
     }
 
     selectCard(info) {
