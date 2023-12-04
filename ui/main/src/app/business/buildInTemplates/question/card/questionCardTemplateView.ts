@@ -7,6 +7,8 @@
  * This file is part of the OperatorFabric project.
  */
 
+import * as moment from "moment/moment";
+
 declare const opfab;
 
 export class QuestionCardTemplateView {
@@ -35,7 +37,8 @@ export class QuestionCardTemplateView {
                 childCards?.forEach((element) => {
                     responses.push({
                         entityName: opfab.utils.escapeHtml(opfab.users.entities.getEntityName(element.publisher)),
-                        response: opfab.utils.escapeHtml(element.data?.response)
+                        response: opfab.utils.escapeHtml(element.data?.response),
+                        dateTime: moment(element.publishDate).format('HH:mm DD/MM/yyyy')
                     });
                 });
             }

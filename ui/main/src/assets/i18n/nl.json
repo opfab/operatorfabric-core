@@ -635,15 +635,16 @@
       "noMessageError":"U moet een bericht opgeven",
       "textareaLabel":"BERICHT"
     },
-    "questionCard" :{
+    "questionCard" : {
       "responseInputLabel" : "ANTWOORD",
-      "responsesReceivedLabel":"Ontvangen reacties :",
-      "entityColumnLabel":"Entiteit",
-      "responseColumnLabel":"Antwoord"
+      "responsesReceivedLabel": "Ontvangen reacties :",
+      "entityColumnLabel": "Entiteit",
+      "responseColumnLabel": "Antwoord",
+      "dateColumnLabel": "Datum"
     },
     "questionUserCard": {
-      "noQuestionError":"U moet een vraag opgeven",
-      "textareaLabel":"VRAAG"
+      "noQuestionError": "U moet een vraag opgeven",
+      "textareaLabel": "VRAAG"
     },
     "taskCard": {
       "taskToDo": "U heeft de volgende taak te doen",

@@ -636,15 +636,16 @@
       "noMessageError":"Vous ne pouvez pas envoyer un message vide",
       "textareaLabel":"MESSAGE"
     },
-    "questionCard" :{
+    "questionCard" : {
       "responseInputLabel" : "REPONSE",
-      "responsesReceivedLabel":"Réponses reçues :",
-      "entityColumnLabel":"Entité",
-      "responseColumnLabel":"Réponse"
+      "responsesReceivedLabel": "Réponses reçues :",
+      "entityColumnLabel": "Entité",
+      "responseColumnLabel": "Réponse",
+      "dateColumnLabel": "Date"
     },
     "questionUserCard": {
-      "noQuestionError":"Vous devez fournir une question",
-      "textareaLabel":"QUESTION"
+      "noQuestionError": "Vous devez fournir une question",
+      "textareaLabel": "QUESTION"
     },
     "taskCard": {
       "taskToDo": "Vous avez la tâche suivante à faire",

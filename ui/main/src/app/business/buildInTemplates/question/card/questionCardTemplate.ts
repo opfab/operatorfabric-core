@@ -50,11 +50,13 @@ export class QuestionCardTemplate extends HTMLElement {
             if (responses?.forEach && responses.length > 0) {
                 html += `<center><h3> ${opfab.utils.getTranslation('buildInTemplate.questionCard.responsesReceivedLabel')} </h3> <br/>`;
                 html += '<div class="opfab-table">';
-                html += `<table width="100%"> <tr> <th> ${opfab.utils.getTranslation('buildInTemplate.questionCard.entityColumnLabel')} </th>`;
+                html += `<table width="100%"> <tr> <th> ${opfab.utils.getTranslation('buildInTemplate.questionCard.dateColumnLabel')} </th>`;
+                html += `<th>  ${opfab.utils.getTranslation('buildInTemplate.questionCard.entityColumnLabel')} </th>`;
                 html += `<th>  ${opfab.utils.getTranslation('buildInTemplate.questionCard.responseColumnLabel')} </th>`;
                 html += ' </tr>';
                 responses?.forEach((response) => {
                     html += '<tr>';
+                    html += '<td>' + response.dateTime + '</td>';
                     html += '<td>' + response.entityName + '</td>';
                     html += '<td>' + response.response + '</td> </tr>';
                 });
