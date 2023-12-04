@@ -48,7 +48,12 @@ export class RRuleReminderService implements EventListener {
 
     public async addCardReminder(card: Card) {
         if (card) {
-            if (!card.secondsBeforeTimeSpanForReminder) {
+            if (
+                card.secondsBeforeTimeSpanForReminder === undefined ||
+                card.secondsBeforeTimeSpanForReminder === null ||
+                isNaN(card.secondsBeforeTimeSpanForReminder) ||
+                card.secondsBeforeTimeSpanForReminder < 0
+            ) {
                 this.logger.debug(`RRuleReminder - Card ${card.id} (uid=${card.uid}) is not a card to remind`);
                 return;
             }
@@ -114,7 +119,7 @@ export class RRuleReminderService implements EventListener {
             this.databaseService.removeReminder(card.id);
         }
     }
-    
+
     public async getCardsToRemindNow(): Promise<Card[]> {
         const cardsToRemind = [];
         const reminders = await this.databaseService.getItemsToRemindNow();
