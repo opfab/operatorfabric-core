@@ -634,15 +634,16 @@
       "noMessageError":"You must provide a message",
       "textareaLabel" :"MESSAGE"
     },
-    "questionCard" :{
+    "questionCard" : {
       "responseInputLabel" : "RESPONSE",
-      "responsesReceivedLabel":"Responses received :",
-      "entityColumnLabel":"Entity",
-      "responseColumnLabel":"Response"
+      "responsesReceivedLabel": "Responses received :",
+      "entityColumnLabel": "Entity",
+      "responseColumnLabel": "Response",
+      "dateColumnLabel": "Date"
     },
     "questionUserCard": {
-      "noQuestionError":"You must provide a question",
-      "textareaLabel":"QUESTION"
+      "noQuestionError": "You must provide a question",
+      "textareaLabel": "QUESTION"
     },
     "taskCard": {
       "taskToDo": "You have the following task to do ",
