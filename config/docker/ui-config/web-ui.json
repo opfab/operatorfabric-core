@@ -134,8 +134,7 @@
     }
   },
   "usercard": {
-    "useDescriptionFieldForEntityList": false,
-    "displayConnectionCirclesInPreview": false
+    "useDescriptionFieldForEntityList": false
   },
   "processMonitoring": [
     { "field": "startDate", "type": "date", "colName": "Start Date", "size": "200"},

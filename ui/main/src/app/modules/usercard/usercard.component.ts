@@ -94,7 +94,6 @@ export class UserCardComponent implements OnInit, OnDestroy {
     public initialSelectedRecipientsForInformation = [];
 
     private intervalForConnectedUsersUpdate;
-    public displayConnectionCircles = false;
 
     // For edition mode
     @Input() cardIdToEdit: string = null;
@@ -140,7 +139,6 @@ export class UserCardComponent implements OnInit, OnDestroy {
     ngOnInit() {
         this.pageLoading = true;
         this.datesFromTemplate = true;
-        this.displayConnectionCircles = ConfigService.getConfigValue('usercard.displayConnectionCirclesInPreview', false)
         this.opfabAPIService.initUserCardTemplateInterface();
         this.opfabAPIService.initCurrentUserCard();
         this.severityForm = new FormGroup({
@@ -628,9 +626,7 @@ export class UserCardComponent implements OnInit, OnDestroy {
                 }
                 this.displayPreview = true;
                 
-                if (this.displayConnectionCircles) {
-                    this.updateRegularlyConnectedUsers();
-                }
+                this.updateRegularlyConnectedUsers();
             });
     }
 

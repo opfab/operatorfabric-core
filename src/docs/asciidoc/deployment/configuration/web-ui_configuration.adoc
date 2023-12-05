@@ -173,7 +173,6 @@ a|authentication mode, available options:
 
 |title|OperatorFabric|no|Title of the application, displayed on the browser
 
-|usercard.displayConnectionCirclesInPreview|false|no|Displays a green circle next to the recipient entities if any account associated to the entity is connected. If not, displays a red circle. The green circle doesn't take filters or perimeters into account. It doesn't warrant that the message will be received.
 |usercard.useDescriptionFieldForEntityList|false|no|If true, show entity `description` field instead of `name` in user card page
 
 
