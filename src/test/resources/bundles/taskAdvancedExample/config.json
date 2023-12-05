@@ -14,12 +14,13 @@
       "color": "#0070C0",
       "userCard" : {
         "template" : "usercard_taskAdvanced",
-        "recipientVisible" : false
+        "recipientVisible" : true
       },
       "templateName": "taskAdvanced",
       "styles": [
       ],
       "acknowledgmentAllowed": "Always",
+      "consideredAcknowledgedForUserWhen" : "AllEntitiesOfUserHaveAcknowledged",
       "type" : "INPROGRESS"
     }
   }
