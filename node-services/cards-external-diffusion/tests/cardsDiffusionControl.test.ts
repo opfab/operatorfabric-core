@@ -13,6 +13,7 @@ import SendMailService from '../src/domain/server-side/sendMailService';
 import GetResponse from '../src/common/server-side/getResponse';
 import logger from '../src/common/server-side/logger';
 import CardsExternalDiffusionOpfabServicesInterface from '../src/domain/server-side/cardsExternalDiffusionOpfabServicesInterface';
+import CardsDiffusionRateLimiter from '../src/domain/application/cardsDiffusionRateLimiter';
 
 class OpfabServicesInterfaceStub extends CardsExternalDiffusionOpfabServicesInterface {
 
@@ -266,4 +267,62 @@ describe('Cards external diffusion', function () {
     })
 
 
+    it('Should not send card when cardsDiffusionRateLimiter is active and rate limit is reached', async function() {
+        const publishDateAfterAlertingPeriod = Date.now() - 65 * 1000;
+        setup();
+
+        opfabServicesInterfaceStub.allUsers = [{login: 'operator_1', entities: ['ENTITY1']}, {login: 'operator_2', entities: ['ENTITY1', 'ENTITY2']}];
+        opfabServicesInterfaceStub.connectedUsers = [];
+        
+        opfabServicesInterfaceStub.usersWithPerimeters = [{userData: {login: 'operator_1', entities: ['ENTITY1']}, sendCardsByEmail: true, email: "operator_1@opfab.com", processesStatesNotifiedByEmail: {defaultProcess: ['processState']}, computedPerimeters: perimeters}];
+        opfabServicesInterfaceStub.cards = [{uid: "2006", id: "defaultProcess.process1", publisher: 'publisher1', publishDate: publishDateAfterAlertingPeriod, startDate: publishDateAfterAlertingPeriod,
+            titleTranslated: "Title1", summaryTranslated: "Summary1", process: "defaultProcess", state: "processState", entityRecipients: ["ENTITY1"]}];
+
+
+        const cardsDiffusionRateLimiter = new CardsDiffusionRateLimiter()
+                                                .setLimitPeriodInSec(30)
+                                                .setSendRateLimit(1);
+
+        cardsDiffusionControl.setCardsDiffusionRateLimiter(cardsDiffusionRateLimiter);
+        cardsDiffusionControl.setActivateCardsDiffusionRateLimiter(true);
+
+        expect(cardsDiffusionRateLimiter.isNewSendingAllowed('operator_1@opfab.com')).toBeTruthy();
+        cardsDiffusionRateLimiter.registerNewSending('operator_1@opfab.com');
+        expect(cardsDiffusionRateLimiter.isNewSendingAllowed('operator_1@opfab.com')).toBeFalsy();
+
+        await cardsDiffusionControl.checkUnreadCards();
+        await new Promise(resolve => setTimeout(resolve, 1));
+
+        expect(mailService.numberOfMailsSent).toEqual(0);
+
+    })
+
+    it('Should send cards if cardsDiffusionRateLimiter is not active', async function() {
+        const publishDateAfterAlertingPeriod = Date.now() - 65 * 1000;
+        setup();
+
+        opfabServicesInterfaceStub.allUsers = [{login: 'operator_1', entities: ['ENTITY1']}, {login: 'operator_2', entities: ['ENTITY1', 'ENTITY2']}];
+        opfabServicesInterfaceStub.connectedUsers = [];
+        
+        opfabServicesInterfaceStub.usersWithPerimeters = [{userData: {login: 'operator_1', entities: ['ENTITY1']}, sendCardsByEmail: true, email: "operator_1@opfab.com", processesStatesNotifiedByEmail: {defaultProcess: ['processState']}, computedPerimeters: perimeters}];
+        opfabServicesInterfaceStub.cards = [{uid: "2007", id: "defaultProcess.process1", publisher: 'publisher1', publishDate: publishDateAfterAlertingPeriod, startDate: publishDateAfterAlertingPeriod,
+            titleTranslated: "Title1", summaryTranslated: "Summary1", process: "defaultProcess", state: "processState", entityRecipients: ["ENTITY1"]}];
+
+        
+        const cardsDiffusionRateLimiter = new CardsDiffusionRateLimiter()
+                                                .setLimitPeriodInSec(30)
+                                                .setSendRateLimit(1);
+        cardsDiffusionControl.setCardsDiffusionRateLimiter(cardsDiffusionRateLimiter);
+        cardsDiffusionControl.setActivateCardsDiffusionRateLimiter(false);
+
+        expect(cardsDiffusionRateLimiter.isNewSendingAllowed('operator_1@opfab.com')).toBeTruthy();
+        cardsDiffusionRateLimiter.registerNewSending('operator_1@opfab.com');
+        expect(cardsDiffusionRateLimiter.isNewSendingAllowed('operator_1@opfab.com')).toBeFalsy();
+
+        await cardsDiffusionControl.checkUnreadCards();
+        await new Promise(resolve => setTimeout(resolve, 1));
+
+        expect(mailService.numberOfMailsSent).toEqual(1);
+
+    })
 })
