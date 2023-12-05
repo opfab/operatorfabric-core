@@ -1,0 +1,16 @@
+// Copyright (c) 2023 RTE (http://www.rte-france.com)
+// See AUTHORS.txt
+// This document is subject to the terms of the Creative Commons Attribution 4.0 International license.
+// If a copy of the license was not distributed with this
+// file, You can obtain one at https://creativecommons.org/licenses/by/4.0/.
+// SPDX-License-Identifier: CC-BY-4.0
+
+= Migration Guide from release 4.1.0 to release 4.2.0
+
+
+== Deletion of parameter displayConnectionCirclesInPreview
+
+The parameter `displayConnectionCirclesInPreview` has been deleted. Now, in the usercard preview, users will see
+which recipients entities are connected or not via badges : a blue badge if connected and a gray one if not.
+This feature is provided for all users.
+So you have to remove this parameter from the configuration file `web-ui.json`.
