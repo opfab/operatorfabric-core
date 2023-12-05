@@ -143,7 +143,7 @@ export class TaskUserCardTemplate extends BaseUserCardTemplate {
                     <tr>
                         <td><label class="opfab-checkbox" style="padding-left:25px"> ${opfab.utils.getTranslation("buildInTemplate.taskUserCard.firstDayOfTheMonth")} <input type="checkbox" id="firstDay">   <span class="opfab-checkbox-checkmark"> </span>   </label> </td>
                         <td><label class="opfab-checkbox" style="padding-left:25px"> ${opfab.utils.getTranslation("buildInTemplate.taskUserCard.lastDayOfTheMonth")} <input type="checkbox" id="lastDay">   <span class="opfab-checkbox-checkmark"> </span>   </label> </td>
-                        <td style="width: 35px;font-size: 13px"> The </td>
+                        <td style="width: 35px;font-size: 13px"> ${opfab.utils.getTranslation("buildInTemplate.taskUserCard.the")} </td>
                         <td style="width: 90px">
                             <div class="opfab-input">
                                 <label> ${opfab.utils.getTranslation("buildInTemplate.taskUserCard.dayNumber")} </label>
@@ -272,11 +272,11 @@ export class TaskUserCardTemplate extends BaseUserCardTemplate {
         this.occurrenceNumberSelect = opfab.multiSelect.init({
             id: "occurrence-number-select",
             options : [
-                { label: 'First', value: 1 },
-                { label: 'Second', value: 2 },
-                { label: 'Third', value: 3 },
-                { label: 'Fourth', value: 4},
-                { label: 'Last', value: -1 }
+                { label: opfab.utils.getTranslation('buildInTemplate.taskCard.first'), value: 1 },
+                { label: opfab.utils.getTranslation('buildInTemplate.taskCard.second'), value: 2 },
+                { label: opfab.utils.getTranslation('buildInTemplate.taskCard.third'), value: 3 },
+                { label: opfab.utils.getTranslation('buildInTemplate.taskCard.fourth'), value: 4},
+                { label: opfab.utils.getTranslation('buildInTemplate.taskCard.last'), value: -1 }
             ],
             multiple: true,
             search: true
@@ -286,13 +286,13 @@ export class TaskUserCardTemplate extends BaseUserCardTemplate {
             id: "weekday-select",
             options : [
                 { label: '', value: ''},    //to clear the selection
-                { label: 'Monday', value: 'MO' },
-                { label: 'Tuesday', value: 'TU' },
-                { label: 'Wednesday', value: 'WE' },
-                { label: 'Thursday', value: 'TH'},
-                { label: 'Friday', value: 'FR' },
-                { label: 'Saturday', value: 'SA'},
-                { label: 'Sunday', value: 'SU' }
+                { label: opfab.utils.getTranslation('shared.calendar.monday'), value: 'MO' },
+                { label: opfab.utils.getTranslation('shared.calendar.tuesday'), value: 'TU' },
+                { label: opfab.utils.getTranslation('shared.calendar.wednesday'), value: 'WE' },
+                { label: opfab.utils.getTranslation('shared.calendar.thursday'), value: 'TH'},
+                { label: opfab.utils.getTranslation('shared.calendar.friday'), value: 'FR' },
+                { label: opfab.utils.getTranslation('shared.calendar.saturday'), value: 'SA'},
+                { label: opfab.utils.getTranslation('shared.calendar.sunday'), value: 'SU' }
             ],
             multiple: false,
             search: true

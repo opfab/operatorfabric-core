@@ -683,7 +683,8 @@
       "youMustProvideAnOccurrenceNumberAndAWeekday": "You must provide an occurrence number and a weekday.",
       "youMustProvideAtLeastOneNthDay": "You must provide at least one nth day.",
       "youMustProvideAtLeastOneWeekday": "You must provide at least one weekday.",
-      "youMustProvideAtLeastOneMonth": "You must provide at least one month."
+      "youMustProvideAtLeastOneMonth": "You must provide at least one month.",
+      "the": "The"
     }, 
     "message-or-question-listCard": {
       "answers": "Answers",
