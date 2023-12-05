@@ -309,6 +309,8 @@ public class TestUtilities {
                 .scanClasspathForConcreteTypes(true)
                 .overrideDefaultInitialization(false)
                 .ignoreRandomizationErrors(true)
+                .excludeField(predicate->predicate.getName().equals("durationInMinutes"))
+                .excludeField(predicate->predicate.getName().equals("secondsBeforeTimeSpanForReminder"))
                 .excludeField(predicate->predicate.getName().equals("usersAcks"))
                 .excludeField(predicate->predicate.getName().equals("usersReads"))
                 .excludeField(predicate->predicate.getName().equals("entitiesAcks"));
