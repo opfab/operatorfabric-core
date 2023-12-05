@@ -139,6 +139,7 @@ Feature: CardsReminder
     Then status 200
     And match response.card.hasBeenRead == true
     And match response.card.hasBeenAcknowledged == true
+    And match response.card.entitiesAcks == ["ENTITY1_FR", "ENTITY2_FR"]
     And match response.card.uid == uid
 
     #call resetReadAndAcks with unauthorized user operator2_fr 
@@ -161,13 +162,14 @@ Feature: CardsReminder
     When method post
     Then status 200
 
-    #get card with user operator1_fr and check hasBeenRead and hasBeenAcknowledged is set to false
+    #get card with user operator1_fr and check hasBeenRead and hasBeenAcknowledged is set to false and entitiesAck is empty
     Given url opfabUrl + 'cards/cards/api_test.process1'
     And header Authorization = 'Bearer ' + authToken
     When method get
     Then status 200
     And match response.card.hasBeenRead == false
     And match response.card.hasBeenAcknowledged == false
+    And match response.card.entitiesAcks == '#notpresent'
     And match response.card.uid == uid
     
     #get card with user operator2_fr and check hasBeenRead and hasBeenAcknowledged is set to false
