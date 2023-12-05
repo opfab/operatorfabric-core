@@ -1,4 +1,5 @@
-FROM node:21.3-alpine
+# Do not upgrade version of node because rrule is not compatible with 21.3 
+FROM node:21.2-alpine
 RUN apk add --no-cache tzdata
 WORKDIR /usr/app
 RUN chown node:node /usr/app
