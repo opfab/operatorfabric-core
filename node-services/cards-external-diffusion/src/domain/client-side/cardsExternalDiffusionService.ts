@@ -8,6 +8,7 @@
  */
 
 import CardsDiffusionControl from '../application/cardsDiffusionControl';
+import CardsDiffusionRateLimiter from '../application/cardsDiffusionRateLimiter';
 import CardsExternalDiffusionOpfabServicesInterface from '../server-side/cardsExternalDiffusionOpfabServicesInterface';
 import SendMailService from '../server-side/sendMailService';
 import ConfigDTO from './configDTO';
@@ -34,6 +35,14 @@ export default class CardsExternalDiffusionService {
             .setOpfabUrlInMailContent(serviceConfig.opfabUrlInMailContent)
             .setWindowInSecondsForCardSearch(serviceConfig.windowInSecondsForCardSearch)
             .setSecondsAfterPublicationToConsiderCardAsNotRead(serviceConfig.secondsAfterPublicationToConsiderCardAsNotRead);
+
+        if (serviceConfig.activateCardsDiffusionRateLimiter) {
+            const cardsDiffusionRateLimiter = new CardsDiffusionRateLimiter()
+                .setLimitPeriodInSec(serviceConfig.sendRateLimitPeriodInSec)
+                .setSendRateLimit(serviceConfig.sendRateLimit);
+            this.cardsDiffusionControl.setCardsDiffusionRateLimiter(cardsDiffusionRateLimiter);
+            this.cardsDiffusionControl.setActivateCardsDiffusionRateLimiter(true);
+        }
 
         this.checkRegularly();
     }

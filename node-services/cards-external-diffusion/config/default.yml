@@ -37,3 +37,6 @@ operatorfabric:
       windowInSecondsForCardSearch: 360
       secondsAfterPublicationToConsiderCardAsNotRead: 60
       checkPeriodInSeconds: 10
+      activateCardsDiffusionRateLimiter: true
+      sendRateLimit: 100
+      sendRateLimitPeriodInSec : 3600

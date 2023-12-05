@@ -12,8 +12,10 @@ import GetResponse from '../../common/server-side/getResponse';
 import CardsExternalDiffusionOpfabServicesInterface from '../server-side/cardsExternalDiffusionOpfabServicesInterface';
 import CardsRoutingUtilities from './cardRoutingUtilities';
 import ConfigDTO from '../client-side/configDTO';
+import CardsDiffusionRateLimiter from './cardsDiffusionRateLimiter';
 
 export default class CardsDiffusionControl {
+
     opfabUrlInMailContent: any;
 
     private opfabServicesInterface: CardsExternalDiffusionOpfabServicesInterface;
@@ -25,6 +27,8 @@ export default class CardsDiffusionControl {
     private from: string;
     private subjectPrefix: string;
     private bodyPrefix: string;
+    private activateCardsDiffusionRateLimiter: boolean;
+    private cardsDiffusionRateLimiter: CardsDiffusionRateLimiter;
 
     public setOpfabServicesInterface(opfabServicesInterface: CardsExternalDiffusionOpfabServicesInterface) {
         this.opfabServicesInterface = opfabServicesInterface;
@@ -71,12 +75,27 @@ export default class CardsDiffusionControl {
         return this;
     }
 
-    setConfiguration(updated: ConfigDTO) {
+    public setActivateCardsDiffusionRateLimiter(activate: boolean) {
+        this.activateCardsDiffusionRateLimiter = activate;
+        return this;
+    }
+
+    public setCardsDiffusionRateLimiter( cardsDiffusionRateLimiter: CardsDiffusionRateLimiter) {
+        this.cardsDiffusionRateLimiter = cardsDiffusionRateLimiter;
+    }
+
+    public setConfiguration(updated: ConfigDTO) {
         this.from = updated.mailFrom;
         this.subjectPrefix = updated.subjectPrefix;
         this.bodyPrefix = updated.bodyPrefix;
         this.secondsAfterPublicationToConsiderCardAsNotRead = updated.secondsAfterPublicationToConsiderCardAsNotRead;
         this.windowInSecondsForCardSearch = updated.windowInSecondsForCardSearch;
+        this.activateCardsDiffusionRateLimiter = updated.activateCardsDiffusionRateLimiter; 
+        if (this.activateCardsDiffusionRateLimiter) {
+            this.cardsDiffusionRateLimiter = new CardsDiffusionRateLimiter()
+                .setLimitPeriodInSec(updated.sendRateLimitPeriodInSec)
+                .setSendRateLimit(updated.sendRateLimit);
+        } 
     }
 
     public async checkUnreadCards() {
@@ -124,14 +143,26 @@ export default class CardsDiffusionControl {
             if (this.isEmailSettingEnabled(userWithPerimeters)) {
                 const unreadCards = await this.getCardsForUser(cards, userWithPerimeters);
                 unreadCards.forEach((unreadCard: any) => {
-                    if (!this.wasCardsAlreadySentToUser(unreadCard.uid, userWithPerimeters.email))
-                        this.sendMail(unreadCard, userWithPerimeters.email).catch(error =>
-                            this.logger.error("error during sendMail ", error)
-                        )
+                    if (!this.wasCardsAlreadySentToUser(unreadCard.uid, userWithPerimeters.email)) {
+                        if (this.isSendingAllowed(userWithPerimeters.email)) {
+                            this.sendMail(unreadCard, userWithPerimeters.email).catch(error =>
+                                this.logger.error("error during sendMail ", error)
+                            )
+                        } else this.logger.warn("Send rate limit reached for " + userWithPerimeters.email + ', not sending mail for card ' + unreadCard.uid);
+                    }
                 });
             }
         }
 
+    }
+
+    private isSendingAllowed(email: string) {
+        return !this.activateCardsDiffusionRateLimiter || this.cardsDiffusionRateLimiter.isNewSendingAllowed(email);
+    }
+
+    private registerNewSending(destination: string) {
+        if (this.activateCardsDiffusionRateLimiter)
+            this.cardsDiffusionRateLimiter.registerNewSending(destination);
     }
 
     private async getCardsForUser(cards : [], userWithPerimeters: any) : Promise<any[]> {
@@ -153,6 +184,8 @@ export default class CardsDiffusionControl {
         if (!mailSent) mailSent = [];
         mailSent.push({email: email, date: Date.now()});
         this.cardsAlreadySent.set(cardUid, mailSent);
+
+        this.registerNewSending(email);
     }
 
     private wasCardsAlreadySentToUser(cardUid: string, email: string): boolean {

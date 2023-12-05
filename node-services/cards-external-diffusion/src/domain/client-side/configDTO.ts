@@ -17,4 +17,8 @@ export default class ConfigDTO {
     public windowInSecondsForCardSearch = 0;
     public secondsAfterPublicationToConsiderCardAsNotRead = 0;
     public checkPeriodInSeconds = 0;
-}
+    public activateCardsDiffusionRateLimiter: boolean;
+    public sendRateLimit: number = 100;
+    public sendRateLimitPeriodInSec : number = 3600;
+
+ }
