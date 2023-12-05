@@ -226,7 +226,7 @@ describe('Task Advanced', function () {
 
       cy.get('#radioButtonNthWeekday').click();
 
-      opfab.selectOptionsFromMultiselect('#occurrence-number-select', 'First');
+      opfab.selectOptionsFromMultiselect('#occurrence-number-select', 'first');
       opfab.selectOptionsFromMultiselect('#weekday-select', 'Wednesday');
 
       cy.get('#time').type('19:00');
@@ -266,7 +266,7 @@ describe('Task Advanced', function () {
 
       cy.get('#radioButtonNthWeekday').should('be.checked');
 
-      cy.get('#occurrence-number-select').find('.vscomp-value-tag-content').should('have.text', 'First');
+      cy.get('#occurrence-number-select').find('.vscomp-value-tag-content').should('have.text', 'first');
       cy.get('#weekday-select').find('.vscomp-value').should('have.text', 'Wednesday');
 
       cy.get('#time').should('have.value', '19:00');
