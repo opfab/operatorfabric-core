@@ -10,6 +10,7 @@ spring:
         #        class: io.confluent.kafka.serializers.KafkaAvroSerializer
         class: org.opfab.cards.publication.kafka.producer.KafkaAvroWithoutRegistrySerializer
   kafka:
+    bootstrap-servers: localhost:8384
     consumer:
       group-id: opfab-command
 
@@ -24,7 +25,7 @@ external-recipients:
   recipients:
     - id:  "api_test_externalRecipient1"
       url: "http://localhost:8090/test"
-      propagateUserToken : true 
+      propagateUserToken : true
     - id:  "camunda1"
       url: "kafka:"
-      propagateUserToken: false 
+      propagateUserToken: false
