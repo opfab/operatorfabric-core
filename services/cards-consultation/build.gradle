@@ -9,11 +9,6 @@ dependencies {
     implementation boot.starterSecurity
     implementation boot.starterValidation
 
-//Transitive dependencies udpate needed for security reasons 
-    implementation misc.snakeyaml
-    implementation misc.bouncyCastle
-//End transitive dependencies
-
     compileOnly boot.annotationConfiguration
     annotationProcessor boot.annotationConfiguration
 
