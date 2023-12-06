@@ -38,7 +38,7 @@ import org.springframework.kafka.listener.ContainerProperties;
 import org.springframework.kafka.listener.KafkaMessageListenerContainer;
 import org.springframework.kafka.listener.MessageListener;
 import org.springframework.kafka.test.EmbeddedKafkaBroker;
-import org.springframework.kafka.test.context.EmbeddedKafka;
+import org.springframework.kafka.test.EmbeddedKafkaZKBroker;
 import org.springframework.kafka.test.utils.ContainerTestUtils;
 import org.springframework.kafka.test.utils.KafkaTestUtils;
 import org.springframework.test.annotation.DirtiesContext;
@@ -61,7 +61,6 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.notNullValue;
 
-@EmbeddedKafka(partitions = 1, bootstrapServersProperty="spring.kafka.bootstrap-servers")
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(classes = {UnitTestApplication.class})
 @ContextConfiguration(classes = { CardCommandConsumerListener.class, ConsumerFactoryAutoConfiguration.class,
@@ -72,9 +71,9 @@ import static org.hamcrest.Matchers.notNullValue;
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 
 class SendKafkaCardShould {
-    @Autowired
-    private EmbeddedKafkaBroker embeddedKafkaBroker;
 
+    private static final EmbeddedKafkaBroker embeddedKafkaBroker = new EmbeddedKafkaZKBroker(1, false)
+            .kafkaPorts(8384);
 
     @Autowired
     private CardRepositoryMock cardRepositoryMock;
@@ -100,23 +99,20 @@ class SendKafkaCardShould {
         cardRepositoryMock.clear();
     }
 
-
     @AfterEach
     public void cleanAfter() {
         cardRepositoryMock.clear();
     }
 
-
-
-    // Configure a dummy topic and listener so we know Kafka is ready when this method finishes
     @BeforeAll
     void setUp() {
+        embeddedKafkaBroker.afterPropertiesSet();
         String TOPIC="DummyTopic";
         Map<String, Object> configs = new HashMap<>(KafkaTestUtils.consumerProps("consumerGroup", "true", embeddedKafkaBroker));
         DefaultKafkaConsumerFactory<String, String> consumerFactory = new DefaultKafkaConsumerFactory<>(configs, new StringDeserializer(), new StringDeserializer());
         ContainerProperties containerProperties = new ContainerProperties(TOPIC);
         container = new KafkaMessageListenerContainer<>(consumerFactory, containerProperties);
-        BlockingQueue<ConsumerRecord<String, String>> records = new LinkedBlockingQueue<>();
+        @SuppressWarnings("MismatchedQueryAndUpdateOfCollection") BlockingQueue<ConsumerRecord<String, String>> records = new LinkedBlockingQueue<>();
         container.setupMessageListener((MessageListener<String, String>) records::add);
         container.start();
         ContainerTestUtils.waitForAssignment(container, embeddedKafkaBroker.getPartitionsPerTopic());
@@ -138,7 +134,7 @@ class SendKafkaCardShould {
         String processInstanceId = UUID.randomUUID().toString();
         String taskId = "taskId";
         String state = "currentState";
-        
+
         CardCommand cardCommand = CardCommand.newBuilder()
                 .setCommand(CommandType.CREATE_CARD)
                 .setCard(Card.newBuilder()
@@ -158,7 +154,7 @@ class SendKafkaCardShould {
 
         CardPublicationData card = cardRepositoryMock.findCardById(taskId + "." + processInstanceId);
         for (int retries = 10; retries >0 && card == null; retries--){
-            Thread.sleep(250);  // Give the service some time to process the card 
+            Thread.sleep(250);  // Give the service some time to process the card
             card = cardRepositoryMock.findCardById(taskId + "." + processInstanceId);
         }
 
