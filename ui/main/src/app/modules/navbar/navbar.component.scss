@@ -123,7 +123,7 @@
     height: 18px;
     width: 18px;
     margin-right: 5px;
-    background: var(--opfab-navbar-color-hover);
+    background: var(--opfab-navbar-color);
     mask-size: cover;
 }
 
@@ -131,32 +131,63 @@
     mask: url(../../../assets/images/icons/parameters.svg);
 }
 
+.opfab-right-menu-item:hover .opfab-menu-icon-parameters {
+    background: var(--opfab-navbar-color-hover);
+}
+
 .opfab-menu-icon-notification {
     mask: url(../../../assets/images/icons/notification.svg);
+}
+
+.opfab-right-menu-item:hover .opfab-menu-icon-notification {
+    background: var(--opfab-navbar-color-hover);
 }
 
 .opfab-menu-icon-useractionlogs {
     mask: url(../../../assets/images/icons/logs.svg);
 }
 
+.opfab-right-menu-item:hover .opfab-menu-icon-useractionlogs {
+    background: var(--opfab-navbar-color-hover);
+}
+
 .opfab-menu-icon-about {
     mask: url(../../../assets/images/icons/about.svg);
+}
+
+.opfab-right-menu-item:hover .opfab-menu-icon-about {
+    background: var(--opfab-navbar-color-hover);
 }
 
 .opfab-menu-icon-change-password {
     mask: url(../../../assets/images/icons/change-password.svg);
 }
 
+.opfab-right-menu-item:hover .opfab-menu-icon-change-password {
+    background: var(--opfab-navbar-color-hover);
+}
+
 .opfab-menu-icon-logout {
     mask: url(../../../assets/images/icons/logout.svg);
+}
+
+.opfab-right-menu-item:hover .opfab-menu-icon-logout {
+    background: var(--opfab-navbar-color-hover);
 }
 
 .opfab-menu-icon-admin {
     mask: url(../../../assets/images/icons/administration.svg);
 }
+.opfab-right-menu-item:hover .opfab-menu-icon-admin {
+    background: var(--opfab-navbar-color-hover);
+}
 
 .opfab-menu-icon-dark-light {
     mask: url(../../../assets/images/icons/dark-light.svg);
+}
+
+.opfab-right-menu-item:hover .opfab-menu-icon-dark-light {
+    background: var(--opfab-navbar-color-hover);
 }
 
 .opfab-menu-icon-newcard {
