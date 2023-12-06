@@ -50,6 +50,11 @@ dependencies {
 	implementation boot.starterSecurity
     implementation spring.securityOauthResource, spring.securityOauthJose
 
+
+	//Transitive dependencies udpate needed for security reasons 
+	implementation misc.snakeyaml
+	//End transitive dependencies
+
 	compileOnly 'org.projectlombok:lombok'
 	annotationProcessor 'org.projectlombok:lombok'
 	implementation project(':tools:generic:utilities')

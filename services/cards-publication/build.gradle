@@ -6,10 +6,8 @@ dependencies {
     implementation misc.commonsLang
 
 //Transitive dependencies udpate needed for security reasons 
-    implementation misc.snakeyaml
     implementation misc.guava
     implementation misc.snappy
-    implementation misc.bouncyCastle
     implementation cloud.avro
 //End transitive dependencies
 
