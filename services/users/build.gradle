@@ -8,8 +8,6 @@ dependencies {
     implementation boot.starterMongo
     implementation misc.jsonSmart
     implementation misc.collections4
-    implementation misc.snakeyaml
-    implementation misc.bouncyCastle
 
     compileOnly boot.annotationConfiguration
     annotationProcessor boot.annotationConfiguration

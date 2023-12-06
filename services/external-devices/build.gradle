@@ -15,8 +15,8 @@ dependencies {
     implementation spring.securityOauthResource, spring.securityOauthJose
     implementation boot.starterValidation
     implementation boot.starterMongo
-    implementation misc.snakeyaml
-    implementation misc.bouncyCastle
+
+
     compileOnly boot.annotationConfiguration
     annotationProcessor boot.annotationConfiguration
 

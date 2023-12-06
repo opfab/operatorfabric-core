@@ -8,8 +8,6 @@ dependencies {
     implementation cloud.starterFeign
     implementation boot.starterSecurity
     implementation boot.starterValidation
-    implementation misc.snakeyaml
-    implementation misc.bouncyCastle
     compileOnly boot.annotationConfiguration
     annotationProcessor boot.annotationConfiguration
 
