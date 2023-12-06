@@ -124,20 +124,22 @@ include::users_groups_admin.adoc[leveloffset=+1]
 
 include::port_table.adoc[leveloffset=+1]
 
-== Rate limiter for card sendings
+== Rate limiter for card sending
 
 External publishers are monitored by this module which limits how many cards they can send
 ifdef::single-page-doc[<<cardSendingLimitCardCount, `cardSendingLimitCardCount`>>]
-ifndef::single-page-doc[<</documentation/current/deployment/configuration/configuration.adoc#cardSendingLimitCardCount, `cardSendingLimitCardCount`>>]
+ifndef::single-page-doc[<</documentation/current/deployment/#cardSendingLimitCardCount, `cardSendingLimitCardCount`>>]
  in a period of time
 ifdef::single-page-doc[<<cardSendingLimitPeriod, `cardSendingLimitPeriod`>>]
-ifndef::single-page-doc[<</documentation/current/deployment/configuration/configuration.adoc#cardSendingLimitPeriod, `cardSendingLimitPeriod`>>]
+ifndef::single-page-doc[<</documentation/current/deployment/#cardSendingLimitPeriod, `cardSendingLimitPeriod`>>]
 .
 This is to avoid potential overloading due to external apps stuck in a card sending loop.
 It can be disabled / enabled with
 ifdef::single-page-doc[<<activateCardSendingLimiter, `activateCardSendingLimiter`>>]
-ifndef::single-page-doc[<</documentation/current/deployment/configuration/configuration.adoc#activateCardSendingLimiter, `activateCardSendingLimiter`>>].
-It also possible to reset the data of the limiter by calling the API through the "/cards/rateLimiter" endpoint (e.g. POST "$url:2102/cards/rateLimiter" -H "Authorization:Bearer $token").
+ifndef::single-page-doc[<</documentation/current/deployment/#activateCardSendingLimiter, `activateCardSendingLimiter`>>]
+.
+It is also possible to reset the data of the limiter by calling the API through the "/cards/rateLimiter" endpoint (e.g.
+POST "$url:2102/cards/rateLimiter" -H "Authorization:Bearer $token").
 
 == Restricted operations (administration)
 
