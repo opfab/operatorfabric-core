@@ -1,4 +1,4 @@
-/* Copyright (c) 2021, RTE (http://www.rte-france.com)
+/* Copyright (c) 2021-2023, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -11,18 +11,16 @@
 
 package org.opfab.externaldevices.repositories;
 
-import org.opfab.externaldevices.model.DeviceConfigurationData;
+import org.opfab.externaldevices.model.DeviceConfiguration;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
-/**
- * Mongo {@link DeviceConfigurationData} repository
- */
-@Repository
-public interface DeviceConfigurationRepository extends MongoRepository<DeviceConfigurationData,String> {
 
-    List<DeviceConfigurationData> findBySignalMappingId(String signalMappingId);
+@Repository
+public interface DeviceConfigurationRepository extends MongoRepository<DeviceConfiguration,String> {
+
+    List<DeviceConfiguration> findBySignalMappingId(String signalMappingId);
 
 }

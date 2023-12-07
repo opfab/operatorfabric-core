@@ -14,7 +14,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.opfab.externaldevices.application.UnitTestApplication;
-import org.opfab.externaldevices.model.DeviceConfigurationData;
+import org.opfab.externaldevices.model.DeviceConfiguration;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
@@ -37,21 +37,19 @@ class DeviceConfigurationRepositoryShould {
 
     @BeforeEach
     public void init(){
-        DeviceConfigurationData deviceConfiguration1, deviceConfiguration2;
+        DeviceConfiguration deviceConfiguration1, deviceConfiguration2;
 
-        deviceConfiguration1 = DeviceConfigurationData.builder()
-                .id("ESS_1")
-                .host("some_host")
-                .port(1234)
-                .signalMappingId("someMapping")
-                .build();
+        deviceConfiguration1 = new DeviceConfiguration();
+        deviceConfiguration1.setId("ESS_1");
+        deviceConfiguration1.setHost("some_host");
+        deviceConfiguration1.setPort(1234);
+        deviceConfiguration1.setSignalMappingId("someMapping");
 
-        deviceConfiguration2 = DeviceConfigurationData.builder()
-                .id("ESS_2")
-                .host("some_other_host")
-                .port(1234)
-                .signalMappingId("someMapping")
-                .build();
+        deviceConfiguration2 = new DeviceConfiguration();
+        deviceConfiguration2.setId("ESS_2");
+        deviceConfiguration2.setHost("some_other_host");
+        deviceConfiguration2.setPort(1234);
+        deviceConfiguration2.setSignalMappingId("someMapping");
 
         deviceConfigurationRepository.insert(deviceConfiguration1);
         deviceConfigurationRepository.insert(deviceConfiguration2);
@@ -59,7 +57,7 @@ class DeviceConfigurationRepositoryShould {
 
     @Test
     void findAll() {
-        List<DeviceConfigurationData> deviceConfigurationDataList = deviceConfigurationRepository.findAll();
+        List<DeviceConfiguration> deviceConfigurationDataList = deviceConfigurationRepository.findAll();
         assertThat(deviceConfigurationDataList).hasSize(2);
     }
 

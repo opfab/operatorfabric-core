@@ -1,4 +1,4 @@
-/* Copyright (c) 2021, RTE (http://www.rte-france.com)
+/* Copyright (c) 2021-2023, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -9,16 +9,9 @@
 
 package org.opfab.externaldevices.model;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+public class Notification {
 
-
-@AllArgsConstructor
-@NoArgsConstructor
-@Data
-public class NotificationData implements Notification {
-
-    private String opfabSignalId;
+    @SuppressWarnings("java:S1104") // This is just a data object
+    public String opfabSignalId;
 
 }

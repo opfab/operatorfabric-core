@@ -12,9 +12,9 @@ package org.opfab.externaldevices.configuration;
 
 import lombok.extern.slf4j.Slf4j;
 import org.opfab.externaldevices.configuration.externaldevices.ExternalDevicesProperties;
-import org.opfab.externaldevices.model.DeviceConfigurationData;
-import org.opfab.externaldevices.model.SignalMappingData;
-import org.opfab.externaldevices.model.UserConfigurationData;
+import org.opfab.externaldevices.model.DeviceConfiguration;
+import org.opfab.externaldevices.model.SignalMapping;
+import org.opfab.externaldevices.model.UserConfiguration;
 import org.opfab.externaldevices.repositories.DeviceConfigurationRepository;
 import org.opfab.externaldevices.repositories.SignalMappingRepository;
 import org.opfab.externaldevices.repositories.UserConfigurationRepository;
@@ -74,10 +74,10 @@ public class DataInitComponent {
     /**
      * Initialize signal mappings using provided collection (if null, log debug message).
      */
-    private void initSignalMappings(List<SignalMappingData> signalMappings) {
+    private void initSignalMappings(List<SignalMapping> signalMappings) {
         if(signalMappings != null) {
             log.debug(NUMBER_OF_ITEMS_DEBUG,signalMappings.size(),"signal mappings");
-            for(SignalMappingData signalMappingData : signalMappings) {
+            for(SignalMapping signalMappingData : signalMappings) {
                 safeInsertDeviceSignalMapping(signalMappingData);
             }
         } else {
@@ -88,10 +88,10 @@ public class DataInitComponent {
     /**
      * Initialize device configurations using provided collection (if null, log debug message).
      */
-    private void initDeviceConfigurations(List<DeviceConfigurationData> deviceConfigurations) {
+    private void initDeviceConfigurations(List<DeviceConfiguration> deviceConfigurations) {
         if(deviceConfigurations != null) {
             log.debug(NUMBER_OF_ITEMS_DEBUG,deviceConfigurations.size(),"device configurations");
-            for(DeviceConfigurationData deviceConfigurationData : deviceConfigurations) {
+            for(DeviceConfiguration deviceConfigurationData : deviceConfigurations) {
                 safeInsertDeviceConfiguration(deviceConfigurationData);
             }
         } else {
@@ -102,10 +102,10 @@ public class DataInitComponent {
     /**
      * Initialize user configurations using provided collection (if null, log debug message).
      */
-    private void initUserConfigurations(List<UserConfigurationData> userConfigurations) {
+    private void initUserConfigurations(List<UserConfiguration> userConfigurations) {
         if(userConfigurations != null) {
             log.debug(NUMBER_OF_ITEMS_DEBUG,userConfigurations.size(),"user configurations");
-            for(UserConfigurationData userConfigurationData : userConfigurations) {
+            for(UserConfiguration userConfigurationData : userConfigurations) {
                 safeInsertUserConfiguration(userConfigurationData);
             }
         } else {
@@ -119,12 +119,12 @@ public class DataInitComponent {
      *
      * @param deviceConfigurationData
      */
-    private void safeInsertDeviceConfiguration(DeviceConfigurationData deviceConfigurationData) {
+    private void safeInsertDeviceConfiguration(DeviceConfiguration deviceConfigurationData) {
         try {
             deviceConfigurationRepository.insert(deviceConfigurationData);
-            if (Boolean.TRUE.equals(deviceConfigurationData.getIsEnabled()))  enableDevice(deviceConfigurationData.getId());
+            if (Boolean.TRUE.equals(deviceConfigurationData.isEnabled))  enableDevice(deviceConfigurationData.id);
         } catch (DuplicateKeyException ex) {
-            log.warn("{} {} device configuration: duplicate",FAILED_INIT_MSG, deviceConfigurationData.getId());
+            log.warn("{} {} device configuration: duplicate",FAILED_INIT_MSG, deviceConfigurationData.id);
         }
     }
 
@@ -142,11 +142,11 @@ public class DataInitComponent {
      *
      * @param signalMappingData
      */
-    private void safeInsertDeviceSignalMapping(SignalMappingData signalMappingData) {
+    private void safeInsertDeviceSignalMapping(SignalMapping signalMappingData) {
         try {
             signalMappingRepository.insert(signalMappingData);
         } catch (DuplicateKeyException ex) {
-            log.warn("{} {} signal mapping: duplicate",FAILED_INIT_MSG, signalMappingData.getId());
+            log.warn("{} {} signal mapping: duplicate",FAILED_INIT_MSG, signalMappingData.id);
         }
     }
 
@@ -156,11 +156,11 @@ public class DataInitComponent {
      *
      * @param userConfigurationData
      */
-    private void safeInsertUserConfiguration(UserConfigurationData userConfigurationData) {
+    private void safeInsertUserConfiguration(UserConfiguration userConfigurationData) {
         try {
             userConfigurationRepository.insert(userConfigurationData);
         } catch (DuplicateKeyException ex) {
-            log.warn("{} {} user configuration: duplicate",FAILED_INIT_MSG, userConfigurationData.getUserLogin());
+            log.warn("{} {} user configuration: duplicate",FAILED_INIT_MSG, userConfigurationData.userLogin);
         }
     }
 
