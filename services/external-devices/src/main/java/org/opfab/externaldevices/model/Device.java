@@ -1,4 +1,4 @@
-/* Copyright (c) 2021, RTE (http://www.rte-france.com)
+/* Copyright (c) 2021-2023, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -9,20 +9,23 @@
 
 package org.opfab.externaldevices.model;
 
-import lombok.Builder;
-import lombok.Data;
 import org.springframework.data.annotation.Id;
 
-@Data
-@Builder
-public class DeviceData implements Device {
+import jakarta.validation.constraints.NotNull;
+
+public class Device{
 
     @Id
-    private String id;
-    private String resolvedAddress;
-    private Integer port;
+    @NotNull
+    public String id;
 
-    @Builder.Default
-    private Boolean isConnected = false;
+    @NotNull
+    public String resolvedAddress;
+
+    @NotNull
+    public Integer port;
+
+    @SuppressWarnings("java:S1104") // This is just a data object
+    public Boolean isConnected = false;
 
 }

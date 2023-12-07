@@ -135,9 +135,7 @@ subprojects {
         }
     }
 
-    tasks.compileJava.dependsOn generateSwaggerCode
-    tasks.compileTestJava.dependsOn generateSwaggerCode
-    tasks.generateSwaggerCodeEndpoints.dependsOn ':tools:swagger-spring-generators:assemble'
+   
     tasks.docker.dependsOn copyWorkingDir
     tasks.docker.dependsOn build
     tasks.jacocoTestReport.dependsOn test
