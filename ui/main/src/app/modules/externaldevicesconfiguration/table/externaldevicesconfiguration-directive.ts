@@ -44,7 +44,6 @@ export abstract class ExternalDevicesConfigurationDirective {
     private isLoadingData = true;
 
     constructor(
-        protected externalDevicesService: ExternalDevicesService,
         protected confirmationDialogService: ConfirmationDialogService,
         private translateService: TranslateService,
         protected modalService: NgbModal
@@ -225,7 +224,7 @@ export abstract class ExternalDevicesConfigurationDirective {
                 if (confirmed) {
                     // The data refresh is launched inside the subscribe to make sure that the deletion request has been (correctly)
                     // handled first
-                    this.externalDevicesService.deleteByUserLogin(row['userLogin']).subscribe(() => {
+                    ExternalDevicesService.deleteByUserLogin(row['userLogin']).subscribe(() => {
                         this.refreshData();
                     });
                 }

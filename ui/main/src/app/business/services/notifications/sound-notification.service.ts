@@ -59,8 +59,7 @@ export class SoundNotificationService implements OnDestroy {
     constructor(
         private soundServer: SoundServer,
         private lightCardsFeedFilterService: LightCardsFeedFilterService,
-        private lightCardsStoreService: LightCardsStoreService,
-        private externalDevicesService: ExternalDevicesService
+        private lightCardsStoreService: LightCardsStoreService
     ) {
         // use to have access from cypress to the current object for stubbing method playSound
         if (window['Cypress']) window['soundNotificationService'] = this;
@@ -205,7 +204,7 @@ export class SoundNotificationService implements OnDestroy {
                 LogOption.LOCAL_AND_REMOTE
             );
             const notification = new Notification(severity.toString());
-            this.externalDevicesService.sendNotification(notification).subscribe();
+            ExternalDevicesService.sendNotification(notification).subscribe();
         } else {
             logger.debug('Play sound on browser with severity ' + severity + '.', LogOption.LOCAL_AND_REMOTE);
             this.playSoundOnBrowser(this.getSoundForSeverity(severity));
