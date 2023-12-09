@@ -14,7 +14,6 @@ import {Card} from '@ofModel/card.model';
 import {DateTimeNgb} from '@ofModel/datetime-ngb.model';
 import {MultiSelectConfig, MultiSelectOption} from '@ofModel/multiselect.model';
 import {UserActionLogsServer} from 'app/business/server/user-action-logs.server';
-import {CardService} from 'app/business/services/card/card.service';
 import {TranslationService} from 'app/business/services/translation/translation.service';
 import {UserActionLogsView} from 'app/business/view/useractionlogs/userActionLogs.view';
 import {UserActionLogsResult} from 'app/business/view/useractionlogs/userActionLogsResult';
@@ -55,14 +54,12 @@ export class UserActionLogsComponent implements OnInit {
     constructor(
         translationService: TranslationService,
         userActionLogsServer: UserActionLogsServer,
-        cardService: CardService,
         private modalService: NgbModal,
         private changeDetector: ChangeDetectorRef
     ) {
         this.userActionLogsView = new UserActionLogsView(
             translationService,
-            userActionLogsServer,
-            cardService
+            userActionLogsServer
         );
         this.userActionLogsPage = this.userActionLogsView.getUserActionLogPage();
     }
@@ -119,6 +116,19 @@ export class UserActionLogsComponent implements OnInit {
     }
 
     search(page) {
+        this.setViewParametersFromForm(page);
+        this.loadingInProgress = true;
+        this.userActionLogsResult = null;
+        this.errorMessage = null;
+        this.userActionLogsView.search().subscribe((result) => {
+            if (result.hasError) this.errorMessage = result.errorMessage;
+            else this.userActionLogsResult = result;
+            this.loadingInProgress = false;
+            this.changeDetector.markForCheck();
+        });
+    }
+
+    private setViewParametersFromForm(page) {
         const logins = this.userActionLogsForm.get('login').value;
         const actions = this.userActionLogsForm.get('action').value;
         const dateFrom = this.extractDateAndTime(this.userActionLogsForm.get('dateFrom'));
@@ -134,15 +144,6 @@ export class UserActionLogsComponent implements OnInit {
             this.userActionLogsView.setPageNumber(0);
             this.currentResultPage = 1;
         }
-        this.loadingInProgress = true;
-        this.userActionLogsResult = null;
-        this.errorMessage = null;
-        this.userActionLogsView.search().subscribe((result) => {
-            if (result.hasError) this.errorMessage = result.errorMessage;
-            else this.userActionLogsResult = result;
-            this.loadingInProgress = false;
-            this.changeDetector.markForCheck();
-        });
     }
 
     private extractDateAndTime(form: AbstractControl) {
@@ -150,18 +151,11 @@ export class UserActionLogsComponent implements OnInit {
         if (!val || val === '') {
             return null;
         }
+        const hour = val.time?.hour ?? 0;
+        const minute = val.time?.minute ?? 0;
+        const second = val.time?.second ?? 0;
 
-        if (isNaN(val.time.hour)) {
-            val.time.hour = 0;
-        }
-        if (isNaN(val.time.minute)) {
-            val.time.minute = 0;
-        }
-        if (isNaN(val.time.second)) {
-            val.time.second = 0;
-        }
-
-        const converter = new DateTimeNgb(val.date, val.time);
+        const converter = new DateTimeNgb(val.date, {hour, minute, second});
         return converter.convertToNumber();
     }
 

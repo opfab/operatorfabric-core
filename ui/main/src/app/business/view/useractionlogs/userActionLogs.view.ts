@@ -19,7 +19,7 @@ import {TranslationService} from 'app/business/services/translation/translation.
 import {EntitiesService} from 'app/business/services/users/entities.service';
 import {UserService} from 'app/business/services/users/user.service';
 import moment from 'moment';
-import {map, Observable, of, ReplaySubject} from 'rxjs';
+import {map, Observable, of, switchMap} from 'rxjs';
 import {UserActionLogLine} from './userActionLogLine';
 import {UserActionLogsResult} from './userActionLogsResult';
 import {UserActionLogsPageDescription} from './userActionLogsPageDescription';
@@ -32,11 +32,7 @@ export class UserActionLogsView {
     private dateTo = 0;
     private pageNumber = 0;
 
-    constructor(
-        private translationService: TranslationService,
-        private userActionLogsServer: UserActionLogsServer,
-        private cardService: CardService
-    ) {
+    constructor(private translationService: TranslationService, private userActionLogsServer: UserActionLogsServer) {
         this.initPage();
     }
 
@@ -99,18 +95,27 @@ export class UserActionLogsView {
     }
 
     public search(): Observable<UserActionLogsResult> {
-        if (this.dateTo && this.dateTo < this.dateFrom) {
-            const result = new UserActionLogsResult();
-            result.hasError = true;
-            result.errorMessage = this.translationService.getTranslation('shared.filters.toDateBeforeFromDate');
-            return of(result);
+        if (this.isInvalidDateRange()) {
+            return of(this.buildErrorResult('shared.filters.toDateBeforeFromDate'));
         }
+
         const filters = this.getFiltersForRequest();
         return this.userActionLogsServer.queryUserActionLogs(filters).pipe(
             map((serverResponse) => {
                 return this.buildUserActionLogsResult(serverResponse);
             })
         );
+    }
+
+    private isInvalidDateRange(): boolean {
+        return this.dateTo && this.dateTo < this.dateFrom;
+    }
+
+    private buildErrorResult(messageKey: string): UserActionLogsResult {
+        const result = new UserActionLogsResult();
+        result.hasError = true;
+        result.errorMessage = this.translationService.getTranslation(messageKey);
+        return result;
     }
 
     private getFiltersForRequest(): Map<string, Array<string>> {
@@ -125,31 +130,35 @@ export class UserActionLogsView {
     }
 
     private buildUserActionLogsResult(serverResponse: ServerResponse<Page<any>>): UserActionLogsResult {
-        const data = serverResponse.data;
         const result = new UserActionLogsResult();
+        const data = serverResponse.data;
+
         if (serverResponse.status !== ServerResponseStatus.OK) {
-            result.hasError = true;
-            result.errorMessage = this.translationService.getTranslation('shared.error.technicalError');
-            return result;
+            return this.buildErrorResult('shared.error.technicalError');
         }
+
         if (data.content.length === 0) {
-            result.hasError = true;
-            result.errorMessage = this.translationService.getTranslation('shared.noResult');
-            return result;
+            return this.buildErrorResult('shared.noResult');
         }
-        const logs = data.content.map((line) => {
-            const resultLine = new UserActionLogLine();
-            resultLine.action = line.action;
-            resultLine.date = this.getFormattedDateTime(line.date);
-            resultLine.login = line.login;
-            resultLine.cardUid = line.cardUid;
-            resultLine.comment = line.comment;
-            resultLine.entities = this.getEntitiesNames(line.entities);
-            return resultLine;
-        });
-        const page = new Page(data.totalPages, data.totalElements, logs);
-        result.data = page;
+
+        result.data = this.buildPage(data);
         return result;
+    }
+
+    private buildPage(data: any): Page<any> {
+        const logs = data.content.map((line: any) => this.buildLogLine(line));
+        return new Page(data.totalPages, data.totalElements, logs);
+    }
+
+    private buildLogLine(line: any): UserActionLogLine {
+        const resultLine = new UserActionLogLine();
+        resultLine.action = line.action;
+        resultLine.date = this.getFormattedDateTime(line.date);
+        resultLine.login = line.login;
+        resultLine.cardUid = line.cardUid;
+        resultLine.comment = line.comment;
+        resultLine.entities = this.getEntitiesNames(line.entities);
+        return resultLine;
     }
 
     private getFormattedDateTime(epochDate: number): string {
@@ -162,27 +171,21 @@ export class UserActionLogsView {
     }
 
     public getCard(cardUid: string): Observable<CardData> {
-        const responseSubject = new ReplaySubject<CardData>(1);
-        this.cardService.loadArchivedCard(cardUid).subscribe((card) => {
-            if (!card) {
-                responseSubject.next(null);
-                responseSubject.complete();
-                AlertMessageService.sendAlertMessage({
-                    message: this.translationService.getTranslation('feed.selectedCardDeleted'),
-                    level: MessageLevel.ERROR
-                });
-                return;
-            }
-            if (card.card.initialParentCardUid) {
-                this.cardService.loadArchivedCard(card.card.initialParentCardUid).subscribe((card) => {
-                    responseSubject.next(card);
-                    responseSubject.complete();
-                });
-            } else {
-                responseSubject.next(card);
-                responseSubject.complete();
-            }
-        });
-        return responseSubject.asObservable();
+        return CardService.loadArchivedCard(cardUid).pipe(
+            switchMap((card) => {
+                if (!card) {
+                    AlertMessageService.sendAlertMessage({
+                        message: this.translationService.getTranslation('feed.selectedCardDeleted'),
+                        level: MessageLevel.ERROR
+                    });
+                    return of(null);
+                }
+                if (card.card.initialParentCardUid) {
+                    return CardService.loadArchivedCard(card.card.initialParentCardUid);
+                } else {
+                    return of(card);
+                }
+            })
+        );
     }
 }
