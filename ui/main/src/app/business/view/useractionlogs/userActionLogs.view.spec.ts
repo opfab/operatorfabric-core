@@ -30,28 +30,25 @@ import {CardServerMock} from '@tests/mocks/cardServer.mock';
 import {AlertMessageService} from 'app/business/services/alert-message.service';
 import {Message, MessageLevel} from '@ofModel/message.model';
 
+
 describe('User action logs view ', () => {
-    let configServerMock: ConfigServerMock;
     let translationService: TranslationService;
     let userActionLogsView: UserActionLogsView;
     let userServerMock: UserServerMock;
     let userActionLogsServerMock: UserActionLogsServerMock;
-    let entityService: EntitiesService;
     let entityServerMock: EntitiesServerMock;
-    let cardService: CardService;
     let cardServerMock: CardServerMock;
 
     const user = new User('login', 'firstName', 'lastName', null, ['group1'], ['ENTITY1']);
 
     beforeEach(async () => {
-        jasmine.clock().uninstall();
-        configServerMock = new ConfigServerMock();
-        ConfigService.setConfigServer(configServerMock);
+        ConfigService.setConfigServer(new ConfigServerMock());
         translationService = new TranslationServiceMock();
-        userServerMock = new UserServerMock();
-        await initEntityService();
         cardServerMock = new CardServerMock();
-        cardService = new CardService(cardServerMock, null);
+        CardService.setCardServer(cardServerMock);
+        await initEntityService();
+        await initCurrentUserPerimeter();
+        await mockUserActionLogsService();
     });
 
     afterEach(() => {
@@ -70,15 +67,19 @@ describe('User action logs view ', () => {
     }
 
     async function initCurrentUserPerimeter() {
-        const permission = [PermissionEnum.VIEW_USER_ACTION_LOGS];
-        const computedPerimeter = [];
-        const userWithPerimeters = new UserWithPerimeters(user, computedPerimeter, permission);
+        await setUserWithPermissions([PermissionEnum.VIEW_USER_ACTION_LOGS]);
+    }
+
+    async function setUserWithPermissions(permissions: PermissionEnum[]) {
+        const userWithPerimeters = new UserWithPerimeters(user, [], permissions);
+        userServerMock = new UserServerMock();
+        UserService.setUserServer(userServerMock);
         userServerMock.setResponseForCurrentUserWithPerimeter(
             new ServerResponse(userWithPerimeters, ServerResponseStatus.OK, '')
         );
         UserService.setUserServer(userServerMock);
         await firstValueFrom(UserService.loadUserWithPerimetersData());
-    }
+    };
 
     async function mockUserActionLogsService() {
         userActionLogsServerMock = new UserActionLogsServerMock();
@@ -90,59 +91,28 @@ describe('User action logs view ', () => {
     }
 
     it('GIVEN user is not admin  WHEN get view THEN user is not authorized to access the view ', async () => {
-        const permission = [];
-        const computedPerimeter = [];
-        const userWithPerimeters = new UserWithPerimeters(user, computedPerimeter, permission);
-        userServerMock.setResponseForCurrentUserWithPerimeter(
-            new ServerResponse(userWithPerimeters, ServerResponseStatus.OK, '')
-        );
-        UserService.setUserServer(userServerMock);
-        await firstValueFrom(UserService.loadUserWithPerimetersData());
-        userActionLogsView = new UserActionLogsView(
-            translationService,
-            userActionLogsServerMock,
-            cardService
-        );
+        setUserWithPermissions([]);
+        userActionLogsView = new UserActionLogsView(translationService, userActionLogsServerMock);
         expect(userActionLogsView.getUserActionLogPage().isUserAuthorized).toBeFalsy();
     });
 
     it('GIVEN user is  admin  WHEN get view THEN user is authorized to access the view ', async () => {
-        const permission = [PermissionEnum.ADMIN];
-        const computedPerimeter = [];
-        const userWithPerimeters = new UserWithPerimeters(user, computedPerimeter, permission);
-        userServerMock.setResponseForCurrentUserWithPerimeter(
-            new ServerResponse(userWithPerimeters, ServerResponseStatus.OK, '')
-        );
-        UserService.setUserServer(userServerMock);
-        await firstValueFrom(UserService.loadUserWithPerimetersData());
-        userActionLogsView = new UserActionLogsView(
-            translationService,
-            userActionLogsServerMock,
-            cardService
-        );
+        setUserWithPermissions([PermissionEnum.ADMIN]);
+        userActionLogsView = new UserActionLogsView(translationService, userActionLogsServerMock);
         expect(userActionLogsView.getUserActionLogPage().isUserAuthorized).toBeTrue();
     });
 
     it('GIVEN user has permission VIEW_USER_ACTION_LOGS  WHEN get view THEN user is authorized to access the view ', async () => {
-        await initCurrentUserPerimeter();
-        userActionLogsView = new UserActionLogsView(
-            translationService,
-            userActionLogsServerMock,
-            cardService
-        );
+        setUserWithPermissions([PermissionEnum.VIEW_USER_ACTION_LOGS]);
+        userActionLogsView = new UserActionLogsView(translationService, userActionLogsServerMock);
         expect(userActionLogsView.getUserActionLogPage().isUserAuthorized).toBeTrue();
     });
 
     it('GIVEN a list of user WHEN get all user login THEN user login list is provided ', async () => {
-        await initCurrentUserPerimeter();
 
         const user2 = new User('login2', 'firstName2', 'lastName2', null, ['group1'], ['ENTITY1']);
         userServerMock.setResponseForQueryAllUsers(new ServerResponse([user, user2], ServerResponseStatus.OK, ''));
-        userActionLogsView = new UserActionLogsView(
-            translationService,
-            userActionLogsServerMock,
-            cardService
-        );
+        userActionLogsView = new UserActionLogsView(translationService, userActionLogsServerMock);
         const users = await firstValueFrom(userActionLogsView.getAllUserLogins());
         expect(users).toContain('login');
         expect(users).toContain('login2');
@@ -150,28 +120,13 @@ describe('User action logs view ', () => {
 
     it('GIVEN date is 20/11/2022 WHEN get initial from date THEN initial day is 10 days before 10/11/2022', async () => {
         jasmine.clock().mockDate(new Date(2022, 11, 20));
-        await initCurrentUserPerimeter();
-        userActionLogsView = new UserActionLogsView(
-            translationService,
-            userActionLogsServerMock,
-            cardService
-        );
+        userActionLogsView = new UserActionLogsView(translationService, userActionLogsServerMock);
         const pubDate = userActionLogsView.getUserActionLogPage().initialFromDate;
-        console.error('puDate = ', pubDate);
-        expect(pubDate.getFullYear()).toEqual(2022);
-        expect(pubDate.getMonth()).toEqual(11);
-        expect(pubDate.getDate()).toEqual(10);
+        expect(pubDate).toEqual(new Date(2022, 11, 10));
     });
 
     it('GIVEN a search is performed THEN data is obtain', async () => {
-        await initCurrentUserPerimeter();
-        mockUserActionLogsService();
-
-        userActionLogsView = new UserActionLogsView(
-            translationService,
-            userActionLogsServerMock,
-            cardService
-        );
+        userActionLogsView = new UserActionLogsView(translationService, userActionLogsServerMock);
 
         const result = await firstValueFrom(userActionLogsView.search());
         expect(result.hasError).toBeFalse();
@@ -184,15 +139,10 @@ describe('User action logs view ', () => {
     });
 
     it('GIVEN a search is performed WHEN technical error  THEN error message is provide ', async () => {
-        await initCurrentUserPerimeter();
         userActionLogsServerMock = new UserActionLogsServerMock();
         userActionLogsServerMock.setResponse(new ServerResponse(null, ServerResponseStatus.UNKNOWN_ERROR, ''));
 
-        userActionLogsView = new UserActionLogsView(
-            translationService,
-            userActionLogsServerMock,
-            cardService
-        );
+        userActionLogsView = new UserActionLogsView(translationService, userActionLogsServerMock);
 
         const result = await firstValueFrom(userActionLogsView.search());
         expect(result.hasError).toBeTrue();
@@ -200,16 +150,11 @@ describe('User action logs view ', () => {
     });
 
     it('GIVEN a search is performed WHEN no data THEN no result message is provide ', async () => {
-        await initCurrentUserPerimeter();
         userActionLogsServerMock = new UserActionLogsServerMock();
         const page = new Page(1, 0, []);
         userActionLogsServerMock.setResponse(new ServerResponse(page, ServerResponseStatus.OK, ''));
 
-        userActionLogsView = new UserActionLogsView(
-            translationService,
-            userActionLogsServerMock,
-            cardService
-        );
+        userActionLogsView = new UserActionLogsView(translationService, userActionLogsServerMock);
 
         const result = await firstValueFrom(userActionLogsView.search());
         expect(result.hasError).toBeTrue();
@@ -217,13 +162,8 @@ describe('User action logs view ', () => {
     });
 
     it('GIVEN a search is performed WHEN end date before start date THEN error message is provide ', async () => {
-        await initCurrentUserPerimeter();
 
-        userActionLogsView = new UserActionLogsView(
-            translationService,
-            userActionLogsServerMock,
-            cardService
-        );
+        userActionLogsView = new UserActionLogsView(translationService, userActionLogsServerMock);
         userActionLogsView.setDateFrom(2);
         userActionLogsView.setDateTo(1);
 
@@ -233,14 +173,8 @@ describe('User action logs view ', () => {
     });
 
     it('GIVEN a search is performed WHEN data is obtained THEN data contains entity names', async () => {
-        await initCurrentUserPerimeter();
-        mockUserActionLogsService();
 
-        userActionLogsView = new UserActionLogsView(
-            translationService,
-            userActionLogsServerMock,
-            cardService
-        );
+        userActionLogsView = new UserActionLogsView(translationService, userActionLogsServerMock);
 
         const result = await firstValueFrom(userActionLogsView.search());
         expect(result.hasError).toBeFalse();
@@ -250,14 +184,8 @@ describe('User action logs view ', () => {
     });
 
     it('GIVEN a search is performed WHEN data is obtained THEN data contains formatted dates', async () => {
-        await initCurrentUserPerimeter();
-        mockUserActionLogsService();
 
-        userActionLogsView = new UserActionLogsView(
-            translationService,
-            userActionLogsServerMock,
-            cardService
-        );
+        userActionLogsView = new UserActionLogsView(translationService, userActionLogsServerMock);
 
         const result = await firstValueFrom(userActionLogsView.search());
         expect(result.hasError).toBeFalse();
@@ -267,14 +195,8 @@ describe('User action logs view ', () => {
     });
 
     it('GIVEN a search is performed WHEN filter by login THEN request is send with login list', async () => {
-        await initCurrentUserPerimeter();
-        mockUserActionLogsService();
 
-        userActionLogsView = new UserActionLogsView(
-            translationService,
-            userActionLogsServerMock,
-            cardService
-        );
+        userActionLogsView = new UserActionLogsView(translationService, userActionLogsServerMock);
         userActionLogsView.setSelectedLogins(['login1', 'login2']);
         await firstValueFrom(userActionLogsView.search());
 
@@ -286,14 +208,8 @@ describe('User action logs view ', () => {
     });
 
     it('GIVEN a search is performed WHEN filter by action THEN request is send with action list', async () => {
-        await initCurrentUserPerimeter();
-        mockUserActionLogsService();
 
-        userActionLogsView = new UserActionLogsView(
-            translationService,
-            userActionLogsServerMock,
-            cardService
-        );
+        userActionLogsView = new UserActionLogsView(translationService, userActionLogsServerMock);
         userActionLogsView.setSelectedActions(['ACK_CARD', 'SEND_CARD']);
         await firstValueFrom(userActionLogsView.search());
 
@@ -304,14 +220,8 @@ describe('User action logs view ', () => {
     });
 
     it('GIVEN a search is performed WHEN setting page number 2 THEN request is send with page 2', async () => {
-        await initCurrentUserPerimeter();
-        mockUserActionLogsService();
 
-        userActionLogsView = new UserActionLogsView(
-            translationService,
-            userActionLogsServerMock,
-            cardService
-        );
+        userActionLogsView = new UserActionLogsView(translationService, userActionLogsServerMock);
         userActionLogsView.setPageNumber(2);
         await firstValueFrom(userActionLogsView.search());
 
@@ -321,14 +231,8 @@ describe('User action logs view ', () => {
     });
 
     it('GIVEN a search is performed WHEN filtering by date THEN request is send with date filtering', async () => {
-        await initCurrentUserPerimeter();
-        mockUserActionLogsService();
 
-        userActionLogsView = new UserActionLogsView(
-            translationService,
-            userActionLogsServerMock,
-            cardService
-        );
+        userActionLogsView = new UserActionLogsView(translationService, userActionLogsServerMock);
         userActionLogsView.setDateTo(2);
         userActionLogsView.setDateFrom(1);
         await firstValueFrom(userActionLogsView.search());
@@ -339,12 +243,7 @@ describe('User action logs view ', () => {
     });
 
     it('GIVEN an uid WHEN getCard THEN card is obtain from archives', async () => {
-        await initCurrentUserPerimeter();
-        userActionLogsView = new UserActionLogsView(
-            translationService,
-            userActionLogsServerMock,
-            cardService
-        );
+        userActionLogsView = new UserActionLogsView(translationService, userActionLogsServerMock);
         cardServerMock.setResponseFunctionForLoadArchivedCard(() => {
             return new ServerResponse({card: {uid: 'uidtest'}}, ServerResponseStatus.OK, '');
         });
@@ -354,12 +253,7 @@ describe('User action logs view ', () => {
     });
 
     it('GIVEN a child card uid WHEN getCard THEN initial parent card is obtain from archives', async () => {
-        await initCurrentUserPerimeter();
-        userActionLogsView = new UserActionLogsView(
-            translationService,
-            userActionLogsServerMock,
-            cardService
-        );
+        userActionLogsView = new UserActionLogsView(translationService, userActionLogsServerMock);
         cardServerMock.setResponseFunctionForLoadArchivedCard((cardUid) => {
             if (cardUid === 'childUid')
                 return new ServerResponse(
@@ -375,12 +269,7 @@ describe('User action logs view ', () => {
     });
 
     it('GIVEN an unexisting uid WHEN getCard THEN alert message is send and no card is return ', async () => {
-        await initCurrentUserPerimeter();
-        userActionLogsView = new UserActionLogsView(
-            translationService,
-            userActionLogsServerMock,
-            cardService
-        );
+        userActionLogsView = new UserActionLogsView(translationService, userActionLogsServerMock);
         cardServerMock.setResponseFunctionForLoadArchivedCard(() => {
             return new ServerResponse(null, ServerResponseStatus.NOT_FOUND, '');
         });
