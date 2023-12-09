@@ -1,4 +1,4 @@
-/* Copyright (c) 2022, RTE (http://www.rte-france.com)
+/* Copyright (c) 2022-2023, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -11,6 +11,7 @@ import {Component} from '@angular/core';
 import {MessageLevel} from '@ofModel/message.model';
 import {Observable} from 'rxjs';
 import {ExternalDevicesConfigurationDirective, Field, FieldType} from './externaldevicesconfiguration-directive';
+import {ExternalDevicesService} from 'app/business/services/notifications/external-devices.service';
 
 @Component({
     selector: 'of-externaldevices',
@@ -27,16 +28,16 @@ export class DevicesTableComponent extends ExternalDevicesConfigurationDirective
     canAddItems = false;
 
     queryData(): Observable<any[]> {
-        return this.externalDevicesService.queryAllDevices();
+        return ExternalDevicesService.queryAllDevices();
     }
 
     detectCheckboxClick(deviceData: any, isCheckboxChecked: boolean): void {
         if (isCheckboxChecked) {
-            this.externalDevicesService.enableDevice(deviceData.id).subscribe({
+            ExternalDevicesService.enableDevice(deviceData.id).subscribe({
                 error: () => this.displayMessage("externalDevicesConfiguration.error.errorWhenEnablingDevice", null, MessageLevel.ERROR)
             });
         } else {
-            this.externalDevicesService.disableDevice(deviceData.id).subscribe({
+            ExternalDevicesService.disableDevice(deviceData.id).subscribe({
                 error: () => this.displayMessage("externalDevicesConfiguration.error.errorWhenDisablingDevice", null,  MessageLevel.ERROR)
             });
         }

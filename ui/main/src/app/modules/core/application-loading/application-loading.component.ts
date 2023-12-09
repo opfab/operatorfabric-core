@@ -46,6 +46,7 @@ import {AdminProcessServer} from 'app/business/server/adminprocess.server';
 import {BusinessDataServer} from 'app/business/server/businessData.server';
 import {CardServer} from 'app/business/server/card.server';
 import {SupervisedEntitiesServer} from 'app/business/server/supervised-entities.server';
+import {ExternalDevicesServer} from 'app/business/server/external-devices.server';
 
 declare const opfab: any;
 @Component({
@@ -91,7 +92,8 @@ export class ApplicationLoadingComponent implements OnInit {
         private acknowledgeServer: AcknowledgeServer,
         private businessDataServer: BusinessDataServer,
         private cardServer: CardServer,
-        private supervisedEntitiesServer: SupervisedEntitiesServer
+        private supervisedEntitiesServer: SupervisedEntitiesServer,
+        private externalDevicesServer: ExternalDevicesServer
     ) {}
 
     ngOnInit() {
@@ -111,7 +113,8 @@ export class ApplicationLoadingComponent implements OnInit {
             acknowledgeServer: this.acknowledgeServer,
             businessDataServer: this.businessDataServer,
             cardServer: this.cardServer,
-            supervisedEntitiesServer: this.supervisedEntitiesServer
+            supervisedEntitiesServer: this.supervisedEntitiesServer,
+            externalDevicesServer: this.externalDevicesServer
         });
 
 

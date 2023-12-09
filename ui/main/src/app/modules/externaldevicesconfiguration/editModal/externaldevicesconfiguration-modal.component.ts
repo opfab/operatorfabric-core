@@ -51,8 +51,7 @@ export class ExternaldevicesconfigurationModalComponent implements OnInit {
     };
 
     constructor(
-        private activeModal: NgbActiveModal,
-        private externalDevicesService: ExternalDevicesService
+        private activeModal: NgbActiveModal
     ) {}
 
     ngOnInit() {
@@ -67,7 +66,7 @@ export class ExternaldevicesconfigurationModalComponent implements OnInit {
             UserService.queryAllUsers().subscribe((allUsers) => this.setUsersList(allUsers));
         }
         this.isLoadingExternalDevices = true;
-        this.externalDevicesService.queryAllDevices().subscribe((allDevices) => this.setDevicesList(allDevices));
+        ExternalDevicesService.queryAllDevices().subscribe((allDevices) => this.setDevicesList(allDevices));
     }
 
     setUsersList(allUsers: User[]) {
@@ -94,7 +93,7 @@ export class ExternaldevicesconfigurationModalComponent implements OnInit {
         // This is important as code in the corresponding table components relies on the resolution of the
         // `NgbModalRef.result` promise to trigger a refresh of the data shown on the table.
 
-        this.externalDevicesService.updateUserConfiguration(this.formToUserConfig()).subscribe(() => {
+        ExternalDevicesService.updateUserConfiguration(this.formToUserConfig()).subscribe(() => {
             this.activeModal.close('Update button clicked on modal');
         });
     }

@@ -42,7 +42,6 @@ export class SettingsComponent implements OnInit {
     patternReplayInterval = '[0-9]*';
 
     constructor(
-        private externalDevicesService: ExternalDevicesService,
         private translateService: TranslateService
     ) {}
 
@@ -89,7 +88,7 @@ export class SettingsComponent implements OnInit {
         const userLogin = UserService.getCurrentUserWithPerimeters().userData.login;
 
         if (this.externalDevicesEnabled)
-            this.externalDevicesService.fetchUserConfiguration(userLogin).subscribe((result) => {
+                ExternalDevicesService.fetchUserConfiguration(userLogin).subscribe((result) => {
                 this.userConfiguration = result;
             });
     }
