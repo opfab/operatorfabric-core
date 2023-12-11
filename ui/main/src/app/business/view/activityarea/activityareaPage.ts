@@ -1,4 +1,4 @@
-/* Copyright (c) 2023, RTE (http://www.rte-france.com)
+/* Copyright (c) 2023-2024, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -8,6 +8,11 @@
  */
 
 export class ActivityAreaLine {
+    entityId: string;
+    entityName: string;
+    isUserConnected: boolean;
+    connectedUsers: string[];
+    connectedUsersText: string;
     constructor() {
         this.entityId = '';
         this.entityName = '';
@@ -15,17 +20,22 @@ export class ActivityAreaLine {
         this.connectedUsers = [];
         this.connectedUsersText = '';
     }
-    entityId: string;
-    entityName: string;
-    isUserConnected: boolean;
-    connectedUsers: string[];
-    connectedUsersText: string;
 }
 
 export class ActivityAreaPage {
-    constructor() {
-        this.lines = [];
-    }
+    activityAreaClusters: ActivityAreaEntityCluster[];
 
+    constructor() {
+        this.activityAreaClusters = [];
+    }
+}
+
+export class ActivityAreaEntityCluster {
+    name: string;
     lines: ActivityAreaLine[];
+
+    constructor(name, line) {
+        this.name = name;
+        this.lines = line;
+    }
 }
