@@ -57,10 +57,7 @@ export class UserActionLogsComponent implements OnInit {
         private modalService: NgbModal,
         private changeDetector: ChangeDetectorRef
     ) {
-        this.userActionLogsView = new UserActionLogsView(
-            translationService,
-            userActionLogsServer
-        );
+        this.userActionLogsView = new UserActionLogsView(translationService, userActionLogsServer);
         this.userActionLogsPage = this.userActionLogsView.getUserActionLogPage();
     }
 
@@ -177,9 +174,7 @@ export class UserActionLogsComponent implements OnInit {
                     };
                     if (this.modalRef) this.modalRef.close();
                     this.modalRef = this.modalService.open(this.cardDetailTemplate, options);
-                } else {
-                    if (this.modalRef) this.modalRef.close();
-                }
+                } else if (this.modalRef) this.modalRef.close();
             });
         }
     }
