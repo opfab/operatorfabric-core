@@ -49,7 +49,6 @@ export class RealtimeusersComponent implements OnInit, OnDestroy {
         this.realtimeusersView = new RealtimeUsersView(
             this.configServer
         );
-        console.log(this.realtimeusersView);
         this.realtimeusersView.getPage().subscribe((realtimePage) => {
             if (realtimePage) {
                 this.realtimePage = realtimePage;

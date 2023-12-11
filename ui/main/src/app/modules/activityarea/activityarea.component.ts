@@ -1,4 +1,4 @@
-/* Copyright (c) 2022-2023, RTE (http://www.rte-france.com)
+/* Copyright (c) 2022-2024, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -50,12 +50,14 @@ export class ActivityareaComponent implements OnInit, OnDestroy {
 
     private initForm() {
         const lines = {};
-        this.activityAreaPage.lines.forEach((line) => {
-            if (line.isUserConnected) {
-                lines[line.entityId] = new FormControl<boolean | null>(true);
-            } else {
-                lines[line.entityId] = new FormControl<boolean | null>(false);
-            }
+        this.activityAreaPage.activityAreaClusters.forEach((cluster) => {
+            cluster.lines.forEach((line) => {
+                if (line.isUserConnected) {
+                    lines[line.entityId] = new FormControl<boolean | null>(true);
+                } else {
+                    lines[line.entityId] = new FormControl<boolean | null>(false);
+                }
+            });
         });
         this.activityAreaForm = new FormGroup(lines);
     }
@@ -64,7 +66,7 @@ export class ActivityareaComponent implements OnInit, OnDestroy {
         if (this.saveSettingsInProgress) return; // avoid multiple clicks
         this.saveSettingsInProgress = true;
 
-        if (this.confirmationPopup) this.confirmationPopup.close(); // we close the confirmation popup
+        if (this.confirmationPopup) this.confirmationPopup.close();
 
         for (const entityId of Object.keys(this.activityAreaForm.controls)) {
             const control = this.activityAreaForm.get(entityId);
@@ -84,10 +86,10 @@ export class ActivityareaComponent implements OnInit, OnDestroy {
     }
 
     doNotConfirmSaveSettings() {
-        // The modal must not be closed until the settings has been saved in the back
+        // The modal must not be closed until the settings have been saved in the back
         // If not, with slow network, when user goes to the feed before the end of the request
-        // it ends up with nothing in the feed
-        // This happens because method LightCardsStoreService.removeAllLightCards();
+        // it results with nothing in the feed
+        // This happens because the method this.LightCardsStoreService.removeAllLightCards();
         // is called too late (in activityAreaView)
         if (!this.saveSettingsInProgress) this.confirmationPopup.close();
     }
