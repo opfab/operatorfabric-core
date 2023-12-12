@@ -462,7 +462,7 @@ export class MapComponent implements OnInit, OnDestroy, AfterViewChecked {
                 plugins: {
                     datalabels: {
                         display: function (context) {
-                            return context.dataset.data[context.dataIndex] > 0;
+                            return Number(context.dataset.data[context.dataIndex]) > 0;
                         },
                         color: 'rgb(38, 47, 61, 0.8)',
                         font: {
