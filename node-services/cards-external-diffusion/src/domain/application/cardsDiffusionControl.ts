@@ -12,6 +12,7 @@ import GetResponse from '../../common/server-side/getResponse';
 import CardsExternalDiffusionOpfabServicesInterface from '../server-side/cardsExternalDiffusionOpfabServicesInterface';
 import CardsRoutingUtilities from './cardRoutingUtilities';
 import ConfigDTO from '../client-side/configDTO';
+import CardsExternalDiffusionDatabaseService from '../server-side/cardsExternaDiffusionDatabaseService';
 import CardsDiffusionRateLimiter from './cardsDiffusionRateLimiter';
 
 export default class CardsDiffusionControl {
@@ -19,10 +20,10 @@ export default class CardsDiffusionControl {
     opfabUrlInMailContent: any;
 
     private opfabServicesInterface: CardsExternalDiffusionOpfabServicesInterface;
+    private cardsExternalDiffusionDatabaseService: CardsExternalDiffusionDatabaseService;
     private logger: any;
     private secondsAfterPublicationToConsiderCardAsNotRead: number;
     private windowInSecondsForCardSearch: number;
-    private cardsAlreadySent = new Map();
     private mailService: SendMailService;
     private from: string;
     private subjectPrefix: string;
@@ -32,6 +33,11 @@ export default class CardsDiffusionControl {
 
     public setOpfabServicesInterface(opfabServicesInterface: CardsExternalDiffusionOpfabServicesInterface) {
         this.opfabServicesInterface = opfabServicesInterface;
+        return this;
+    }
+
+    public setCardsExternalDiffusionDatabaseService(cardsExternalDiffusionDatabaseService: CardsExternalDiffusionDatabaseService) {
+        this.cardsExternalDiffusionDatabaseService = cardsExternalDiffusionDatabaseService;
         return this;
     }
 
@@ -129,7 +135,7 @@ export default class CardsDiffusionControl {
                     }
                 }
             }
-            this.cleanCardsAreadySent();
+            await this.cleanCardsAreadySent();
         }
     }
 
@@ -142,18 +148,28 @@ export default class CardsDiffusionControl {
             this.logger.debug('Got user with perimeters ' + JSON.stringify(userWithPerimeters));
             if (this.isEmailSettingEnabled(userWithPerimeters)) {
                 const unreadCards = await this.getCardsForUser(cards, userWithPerimeters);
-                unreadCards.forEach((unreadCard: any) => {
-                    if (!this.wasCardsAlreadySentToUser(unreadCard.uid, userWithPerimeters.email)) {
-                        if (this.isSendingAllowed(userWithPerimeters.email)) {
-                            this.sendMail(unreadCard, userWithPerimeters.email).catch(error =>
-                                this.logger.error("error during sendMail ", error)
-                            )
-                        } else this.logger.warn("Send rate limit reached for " + userWithPerimeters.email + ', not sending mail for card ' + unreadCard.uid);
-                    }
-                });
+                for (let i = 0; i < unreadCards.length; i++) {
+                    await this.sendCardIfAllowed(unreadCards[i], userWithPerimeters.email);
+                }
             }
         }
+    }
 
+
+    private async sendCardIfAllowed(unreadCard: any, userEmail: string): Promise<void> {
+        try {
+            const alreadySent = await this.wasCardsAlreadySentToUser(unreadCard.uid, userEmail);
+
+            if (!alreadySent) {
+                if (this.isSendingAllowed(userEmail)) {
+                    await this.sendMail(unreadCard, userEmail);
+                } else {
+                    this.logger.warn(`Send rate limit reached for ${userEmail}, not sending mail for card ${unreadCard.uid}`);
+                }
+            }
+        } catch (error) {
+            this.logger.error("Error occurred while sending mail: ", error);
+        }
     }
 
     private isSendingAllowed(email: string) {
@@ -179,20 +195,8 @@ export default class CardsDiffusionControl {
         );
     }
 
-    private setCardSent(cardUid: string, email: string) {
-        let mailSent = this.cardsAlreadySent.get(cardUid);
-        if (!mailSent) mailSent = [];
-        mailSent.push({email: email, date: Date.now()});
-        this.cardsAlreadySent.set(cardUid, mailSent);
-
-        this.registerNewSending(email);
-    }
-
-    private wasCardsAlreadySentToUser(cardUid: string, email: string): boolean {
-        const cardsRecipients = this.cardsAlreadySent.get(cardUid);
-        if (!cardsRecipients) return false;
-        const res = cardsRecipients.findIndex((sent: any) => sent.email === email) >= 0;
-        return res;
+    private wasCardsAlreadySentToUser(cardUid: string, email: string) {
+        return this.cardsExternalDiffusionDatabaseService.getSentMail(cardUid, email);
     }
 
     private isEmailSettingEnabled(userWithPerimeters: any): boolean {
@@ -231,7 +235,8 @@ export default class CardsDiffusionControl {
 
         try {
             await this.mailService.sendMail(subject, body, this.from, to);
-            this.setCardSent(card.uid, to);
+            this.registerNewSending(to);
+            await this.cardsExternalDiffusionDatabaseService.persistSentMail(card.uid, to);
         } catch (e) {
             this.logger.error('Error sending mail ', e);
         }
@@ -249,14 +254,9 @@ export default class CardsDiffusionControl {
         }
     }
 
-    private cleanCardsAreadySent() {
+    private async cleanCardsAreadySent() {
         const dateLimit = Date.now() - this.windowInSecondsForCardSearch * 1000;
-        this.cardsAlreadySent.forEach((v, k) => {
-            const maxDate = v.sort((a: any, b: any) => b.date - a.date)[0];
-            if (maxDate.date < dateLimit) {
-                this.cardsAlreadySent.delete(k);
-            }
-        });
+        await this.cardsExternalDiffusionDatabaseService.deleteMailsSentBefore(dateLimit);
     }
 
     private getFormattedDateAndTimeFromEpochDate(epochDate: number): string {

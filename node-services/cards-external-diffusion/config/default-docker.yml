@@ -5,6 +5,8 @@ operatorfabric:
     port: 5672
     username: guest
     password: guest
+  mongodb:
+    database: "operator-fabric"
   servicesUrls:
     authToken: "http://web-ui/auth/token"
     users: "http://users:2103"

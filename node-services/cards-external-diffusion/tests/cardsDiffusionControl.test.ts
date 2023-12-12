@@ -14,6 +14,7 @@ import GetResponse from '../src/common/server-side/getResponse';
 import logger from '../src/common/server-side/logger';
 import CardsExternalDiffusionOpfabServicesInterface from '../src/domain/server-side/cardsExternalDiffusionOpfabServicesInterface';
 import CardsDiffusionRateLimiter from '../src/domain/application/cardsDiffusionRateLimiter';
+import CardsExternalDiffusionDatabaseService from '../src/domain/server-side/cardsExternaDiffusionDatabaseService';
 
 class OpfabServicesInterfaceStub extends CardsExternalDiffusionOpfabServicesInterface {
 
@@ -66,6 +67,26 @@ class SendMailServiceStub extends SendMailService {
             return Promise.resolve({messageId: "msg1234"});
         } else return Promise.reject(new Error());
     }
+}
+
+class DatabaseServiceStub extends CardsExternalDiffusionDatabaseService {
+
+    sent : Array<any> = [];
+
+    public async getSentMail(cardUid: string, email: string) {
+        const found = this.sent.find( sentmail => sentmail.cardUid == cardUid && sentmail.email == email);
+        return Promise.resolve(found);
+    }
+
+    public async persistSentMail(cardUid: string, email: string): Promise<void> {
+        this.sent.push({cardUid: cardUid, email: email, date: Date.now()});
+        return Promise.resolve();
+    }
+
+    public async deleteMailsSentBefore(dateLimit: number) {
+        return Promise.resolve();
+    }
+
 } 
 
 describe('Cards external diffusion', function () {
@@ -80,6 +101,7 @@ describe('Cards external diffusion', function () {
     cardsDiffusionControl = new CardsDiffusionControl()
     .setLogger(logger)
     .setOpfabServicesInterface(opfabServicesInterfaceStub)
+    .setCardsExternalDiffusionDatabaseService(new DatabaseServiceStub())
     .setMailService(mailService)
     .setFrom('test@opfab.com')
     .setSubjectPrefix('Subject')
