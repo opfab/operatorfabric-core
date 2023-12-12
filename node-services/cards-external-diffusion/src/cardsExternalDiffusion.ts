@@ -19,6 +19,7 @@ import SendMailService from './domain/server-side/sendMailService';
 import CardsExternalDiffusionOpfabServicesInterface from './domain/server-side/cardsExternalDiffusionOpfabServicesInterface';
 import CardsExternalDiffusionService from './domain/client-side/cardsExternalDiffusionService';
 import ConfigService from './domain/client-side/configService';
+import CardsExternalDiffusionDatabaseService from './domain/server-side/cardsExternaDiffusionDatabaseService';
 
 const app = express();
 app.disable("x-powered-by");
@@ -64,7 +65,9 @@ opfabServicesInterface.loadUsersData().catch(error =>
     logger.error("error during loadUsersData", error)
 );
 
-
+const cardsExternalDiffusionDatabaseService = new CardsExternalDiffusionDatabaseService()
+    .setMongoDbConfiguration(config.get('operatorfabric.mongodb'))
+    .setLogger(logger);
 
 const authorizationService = new AuthorizationService()
     .setOpfabServicesInterface(opfabServicesInterface)
@@ -73,8 +76,7 @@ const authorizationService = new AuthorizationService()
 
 const serviceConfig = configService.getConfig();
 
-const cardsExternalDiffusionService = new CardsExternalDiffusionService(opfabServicesInterface, mailService, serviceConfig, logger);
-
+const cardsExternalDiffusionService = new CardsExternalDiffusionService(opfabServicesInterface, cardsExternalDiffusionDatabaseService, mailService, serviceConfig, logger);
 
 app.get('/status', (req, res) => {
 
@@ -143,10 +145,17 @@ app.listen(adminPort, () => {
     logger.info(`Opfab card external diffusion service listening on port ${adminPort}`);
 });
 
-opfabServicesInterface.startListener();
 
-if (activeOnStartUp) {
-    cardsExternalDiffusionService.start();
+
+
+async function start() {
+    await cardsExternalDiffusionDatabaseService.connectToMongoDB();
+    opfabServicesInterface.startListener();
+
+    if (activeOnStartUp) {
+        cardsExternalDiffusionService.start();
+    }
+    logger.info('Application started');
 }
 
-logger.info('Application started');
+start();

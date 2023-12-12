@@ -9,6 +9,7 @@
 
 import CardsDiffusionControl from '../application/cardsDiffusionControl';
 import CardsDiffusionRateLimiter from '../application/cardsDiffusionRateLimiter';
+import CardsExternalDiffusionDatabaseService from '../server-side/cardsExternaDiffusionDatabaseService';
 import CardsExternalDiffusionOpfabServicesInterface from '../server-side/cardsExternalDiffusionOpfabServicesInterface';
 import SendMailService from '../server-side/sendMailService';
 import ConfigDTO from './configDTO';
@@ -22,12 +23,15 @@ export default class CardsExternalDiffusionService {
     private logger: any;
 
 
-    constructor(opfabServicesInterface: CardsExternalDiffusionOpfabServicesInterface, mailService: SendMailService, serviceConfig: any, logger: any) {
+    constructor(opfabServicesInterface: CardsExternalDiffusionOpfabServicesInterface,
+            cardsExternalDiffusionDatabaseService: CardsExternalDiffusionDatabaseService, 
+            mailService: SendMailService, serviceConfig: any, logger: any) {
         this.logger = logger;
         this.checkPeriodInSeconds = serviceConfig.checkPeriodInSeconds;
         this.cardsDiffusionControl = new CardsDiffusionControl()
             .setLogger(logger)
             .setOpfabServicesInterface(opfabServicesInterface)
+            .setCardsExternalDiffusionDatabaseService(cardsExternalDiffusionDatabaseService)
             .setMailService(mailService)
             .setFrom(serviceConfig.mailFrom)
             .setSubjectPrefix(serviceConfig.subjectPrefix)
