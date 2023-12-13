@@ -8,7 +8,6 @@
  */
 
 import {Component, ElementRef, OnDestroy, OnInit, ViewChild} from '@angular/core';
-import {LightCardsStoreService} from 'app/business/services/lightcards/lightcards-store.service';
 import {Dashboard} from 'app/business/view/dashboard/dashboard.view';
 import {DashboardPage} from 'app/business/view/dashboard/dashboardPage';
 import {NgbModal, NgbModalOptions, NgbModalRef, NgbPopover} from '@ng-bootstrap/ng-bootstrap';
@@ -30,11 +29,10 @@ export class DashboardComponent implements OnInit, OnDestroy {
     public popoverTimeOut;
 
     constructor(
-        private lightCardsStoreService: LightCardsStoreService,
-        private lightCardsFeedFilterService: LightCardsFeedFilterService,
+        lightCardsFeedFilterService: LightCardsFeedFilterService,
         private modalService: NgbModal,
     ) {
-        this.dashboard = new Dashboard(lightCardsStoreService, lightCardsFeedFilterService);
+        this.dashboard = new Dashboard(lightCardsFeedFilterService);
     }
 
     ngOnInit(): void {

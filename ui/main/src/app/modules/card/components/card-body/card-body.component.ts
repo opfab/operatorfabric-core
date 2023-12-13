@@ -83,7 +83,6 @@ export class CardBodyComponent implements OnChanges, OnInit, OnDestroy {
 
     constructor(
         private router: Router,
-        private lightCardsStoreService: LightCardsStoreService,
         private opfabAPIService: OpfabAPIService
     ) {
         this.userWithPerimeters = UserService.getCurrentUserWithPerimeters();
@@ -100,7 +99,7 @@ export class CardBodyComponent implements OnChanges, OnInit, OnDestroy {
     }
 
     private integrateChildCardsInRealTime() {
-        this.lightCardsStoreService
+        LightCardsStoreService
             .getNewLightChildCards()
             .pipe(
                 takeUntil(this.unsubscribe$),
@@ -117,7 +116,7 @@ export class CardBodyComponent implements OnChanges, OnInit, OnDestroy {
             )
             .subscribe();
 
-        this.lightCardsStoreService
+        LightCardsStoreService
             .getDeletedChildCardsIds()
             .pipe(
                 takeUntil(this.unsubscribe$),
@@ -269,7 +268,7 @@ export class CardBodyComponent implements OnChanges, OnInit, OnDestroy {
 
     private updateLastReadCardStatusOnFeedIfNeeded() {
         if (this.lastCardSetToReadButNotYetOnFeed) {
-            this.lightCardsStoreService.setLightCardRead(this.lastCardSetToReadButNotYetOnFeed.id, true);
+            LightCardsStoreService.setLightCardRead(this.lastCardSetToReadButNotYetOnFeed.id, true);
             this.lastCardSetToReadButNotYetOnFeed = null;
         }
     }

@@ -80,8 +80,7 @@ export class MonitoringTableComponent implements OnChanges, OnDestroy {
 
     constructor(
         private translationService: TranslationService,
-        private modalService: NgbModal,
-        private lightCardsStoreService: LightCardsStoreService
+        private modalService: NgbModal
     ) {
         this.monitoringConfig = ConfigService.getMonitoringConfig();
 
@@ -274,7 +273,7 @@ export class MonitoringTableComponent implements OnChanges, OnDestroy {
 
     getResponses(cardId: string, entities: string[]) {
         return this.getEntitiesNames(
-            this.getEntitiesResponses(this.lightCardsStoreService.getChildCards(cardId), entities)
+            this.getEntitiesResponses(LightCardsStoreService.getChildCards(cardId), entities)
         );
     }
 

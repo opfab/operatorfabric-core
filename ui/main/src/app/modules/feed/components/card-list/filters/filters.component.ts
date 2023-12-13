@@ -26,12 +26,11 @@ export class FiltersComponent implements OnInit {
 
     loadingInProgress = false;
 
-    constructor(private lightCardsStoreService: LightCardsStoreService) {}
-
+  
     ngOnInit() {
         this.showSearchFilter = ConfigService.getConfigValue('feed.showSearchFilter', false);
 
-        this.lightCardsStoreService
+        LightCardsStoreService
             .getLoadingInProgress()
             .subscribe((inProgress: boolean) => (this.loadingInProgress = inProgress));
     }

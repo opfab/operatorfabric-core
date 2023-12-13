@@ -56,7 +56,6 @@ export class CardAckComponent implements OnInit, OnChanges, OnDestroy {
     isReadOnlyUser: any;
 
     constructor(
-        private lightCardsStoreService: LightCardsStoreService
     ) {
         const userWithPerimeters = UserService.getCurrentUserWithPerimeters();
         if (userWithPerimeters) this.user = userWithPerimeters.userData;
@@ -64,7 +63,7 @@ export class CardAckComponent implements OnInit, OnChanges, OnDestroy {
 
     ngOnInit()  {
 
-            this.lightCardsStoreService
+            LightCardsStoreService
             .getReceivedAcks()
             .pipe(takeUntil(this.unsubscribe$))
             .subscribe((receivedAck) => {
@@ -152,7 +151,7 @@ export class CardAckComponent implements OnInit, OnChanges, OnDestroy {
         AcknowledgeService.postUserAcknowledgement(this.card.uid, entitiesAcks).subscribe((resp) => {
             this.ackOrUnackInProgress = false;
             if (resp.status === ServerResponseStatus.OK) {
-                this.lightCardsStoreService.setLightCardAcknowledgment(this.card.id, true);
+                LightCardsStoreService.setLightCardAcknowledgment(this.card.id, true);
                 this.card = {...this.card, hasBeenAcknowledged: true};
                 this.setAcknowledgeButtonVisibility();
                 if (this.shouldCloseCardWhenUserAcknowledges()) this.closeDetails();
@@ -191,7 +190,7 @@ export class CardAckComponent implements OnInit, OnChanges, OnDestroy {
             if (resp.status === ServerResponseStatus.OK) {
                 this.card = {...this.card, hasBeenAcknowledged: false};
                 this.setAcknowledgeButtonVisibility();
-                this.lightCardsStoreService.setLightCardAcknowledgment(this.card.id, false);
+                LightCardsStoreService.setLightCardAcknowledgment(this.card.id, false);
             } else {
                 logger.error(`The remote acknowledgement endpoint returned an error status(${resp.status})`,LogOption.LOCAL_AND_REMOTE);
                 this.displayMessage(AckI18nKeys.ERROR_MSG, null, MessageLevel.ERROR);

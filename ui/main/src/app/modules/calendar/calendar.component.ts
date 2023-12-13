@@ -36,7 +36,6 @@ import {LightCardsFeedFilterService} from 'app/business/services/lightcards/ligh
 export class CalendarComponent implements OnInit, OnDestroy, AfterViewInit {
     constructor(
         private modalService: NgbModal,
-        private lightCardsStoreService: LightCardsStoreService,
         private lightCardsFeedFilterService: LightCardsFeedFilterService,
     ) {
         ProcessesService.getAllProcesses().forEach((process) => {
@@ -112,7 +111,7 @@ export class CalendarComponent implements OnInit, OnDestroy, AfterViewInit {
     }
 
     private initDataPipe(): void {
-        this.lightCardsStoreService
+        LightCardsStoreService
             .getLightCards()
             .pipe(takeUntil(this.unsubscribe$), debounceTime(200), distinctUntilChanged())
             .subscribe((cards) => this.processCards(cards));

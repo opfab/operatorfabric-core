@@ -34,7 +34,6 @@ export class SystemNotificationService {
 
     constructor(
         private lightCardsFeedFilterService: LightCardsFeedFilterService,
-        private lightCardsStoreService: LightCardsStoreService,
         private router: Router
     ) {
     }
@@ -88,7 +87,7 @@ export class SystemNotificationService {
     }
 
     listenForCardUpdate() {
-        this.lightCardsStoreService.getNewLightCards().subscribe((lightCard) => this.handleLoadedCard(lightCard));
+        LightCardsStoreService.getNewLightCards().subscribe((lightCard) => this.handleLoadedCard(lightCard));
     }
 
     public handleRemindCard(card: LightCard) {

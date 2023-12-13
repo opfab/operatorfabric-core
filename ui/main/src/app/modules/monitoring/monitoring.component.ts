@@ -48,7 +48,6 @@ export class MonitoringComponent implements OnInit, OnDestroy {
     selectedCardId: string;
 
     constructor(
-        private lightCardsStoreService: LightCardsStoreService
     ) {
         ProcessesService.getAllProcesses().forEach((process) => {
             const id = process.id;
@@ -62,7 +61,7 @@ export class MonitoringComponent implements OnInit, OnDestroy {
         this.monitoringResult$ = combineLatest([
             this.monitoringFilters$.asObservable(),
             this.responseFilter$.asObservable(),
-            this.lightCardsStoreService.getLightCards()
+            LightCardsStoreService.getLightCards()
         ]).pipe(
             debounceTime(0), // Add this to avoid ExpressionChangedAfterItHasBeenCheckedError, so it waits for component init before processing
             takeUntil(this.unsubscribe$),
@@ -86,7 +85,7 @@ export class MonitoringComponent implements OnInit, OnDestroy {
         );
         this.monitoringResult$.subscribe((lines) => (this.result = lines));
         this.applyResponseFilter();
-        this.lightCardsStoreService
+        LightCardsStoreService
             .getLoadingInProgress()
             .pipe(takeUntil(this.unsubscribe$))
             .subscribe((inProgress: boolean) => (this.loadingInProgress = inProgress));

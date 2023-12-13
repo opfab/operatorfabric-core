@@ -26,10 +26,9 @@ export class CardAcksFooterComponent implements OnChanges, OnInit, OnDestroy {
 
     private unsubscribe$: Subject<void> = new Subject<void>();
 
-    constructor(private lightCardStoreService:LightCardsStoreService) {}
 
     ngOnInit() {
-        this.lightCardStoreService
+        LightCardsStoreService
             .getReceivedAcks()
             .pipe(takeUntil(this.unsubscribe$))
             .subscribe((receivedAck) => {

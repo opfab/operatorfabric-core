@@ -31,7 +31,6 @@ export class PinnedCardsComponent implements OnInit, OnDestroy {
     maxHiddenPinnedCards = 20;
 
     constructor(
-        private lightCardsStoreService: LightCardsStoreService,
         private router: Router
     ) {}
 
@@ -39,7 +38,7 @@ export class PinnedCardsComponent implements OnInit, OnDestroy {
 
         this.pinnedCards = [];
 
-        this.lightCardsStoreService.getLightCards().subscribe((cards) => this.setPinnedCards(cards));
+        LightCardsStoreService.getLightCards().subscribe((cards) => this.setPinnedCards(cards));
 
         timer(10000, 10000)
             .pipe(takeUntil(this.ngUnsubscribe))

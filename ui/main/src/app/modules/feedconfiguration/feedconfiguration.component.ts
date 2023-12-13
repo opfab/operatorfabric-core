@@ -76,7 +76,6 @@ export class FeedconfigurationComponent implements OnInit, AfterViewInit {
     constructor(
         private modalService: NgbModal,
         private settingsService: SettingsService,
-        private lightCardStoreService: LightCardsStoreService,
         private translateService: TranslateService,
     ) {
         this.processesStatesLabels = new Map();
@@ -423,7 +422,7 @@ export class FeedconfigurationComponent implements OnInit, AfterViewInit {
                         this.messageAfterSavingSettings = 'shared.error.impossibleToSaveSettings';
                         this.displaySendResultError = true;
                     } else {
-                        this.lightCardStoreService.removeAllLightCards();
+                        LightCardsStoreService.removeAllLightCards();
                         UserService.loadUserWithPerimetersData().subscribe();
                     }
                     this.modalRef.close();
@@ -441,7 +440,7 @@ export class FeedconfigurationComponent implements OnInit, AfterViewInit {
         // The modal must not be closed until the settings has been saved in the back
         // If not, with  slow network, when user go to the feed before the end of the request
         // it ends up with nothing in the feed
-        // This happens because method this.lightCardStoreService.removeAllLightCards();
+        // This happens because method LightCardsStoreService.removeAllLightCards();
         // is called too late (in method confirmSaveSettings)
         if (!this.saveSettingsInProgress) {
             this.modalRef.close();
