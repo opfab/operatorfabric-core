@@ -40,11 +40,12 @@ export class MessageOrQuestionListUserCardTemplateView {
         const title = this.selectedMessage.title.trim();
         const id = this.selectedMessage.id;
         const question = this.selectedMessage.question;
-        let severity = 'INFORMATION';
+        let severity = question ? 'ACTION' : 'INFORMATION';
+        if (this.selectedMessage.severity) severity = this.selectedMessage.severity;
+        
         let entitiesAllowedToRespond;
 
         if (this.selectedMessage.question) {
-            severity = 'ACTION';
             entitiesAllowedToRespond = this.selectedMessage?.possibleRecipients ? this.selectedMessage?.possibleRecipients : "";
         } else {
             entitiesAllowedToRespond = [];

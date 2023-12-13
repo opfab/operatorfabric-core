@@ -110,6 +110,7 @@ If you want to use the template as is, the json file must follow this structure 
         "title": "Warning about the state of the grid",
         "message": "A problem has been detected, please put maintenance work on hold and be on stand by",
         "question": false,
+        "severity": "ALARM",
         "recipients" : [
             "ENTITY1_FR",
             "ENTITY2_FR"
@@ -120,6 +121,7 @@ If you want to use the template as is, the json file must follow this structure 
         "title": "Confirmation the issues have been fixed",
         "message": "Please confirm the issues in your area have been fixed",
         "question": true,
+        "severity": "ACTION",
         "recipients" : [
             "ENTITY1_FR"
         ]
