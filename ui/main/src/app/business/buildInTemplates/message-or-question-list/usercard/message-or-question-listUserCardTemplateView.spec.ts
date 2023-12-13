@@ -78,14 +78,25 @@ describe('MessageOrQuestionList UserCard template', () => {
     it('GIVEN a user WHEN create card THEN card is the correct severity', () => {
         const view = new MessageOrQuestionListUserCardTemplateView();
 
-        const selectedMessage = {title: "my title", question: true};
-        view.selectedMessage = selectedMessage;
-        let specficCardInformation = view.getSpecificCardInformation('my question');
-        expect(specficCardInformation.card.severity).toEqual('ACTION');
+        const selectedMessageWithoutseverity = {title: "default severity", question: true};
+        view.selectedMessage = selectedMessageWithoutseverity;
 
+        let specficCardInformation = view.getSpecificCardInformation('my question');
+        expect(specficCardInformation.card.severity).toEqual('ACTION')
 
         view.selectedMessage.question = false;
         specficCardInformation = view.getSpecificCardInformation('my message');
         expect(specficCardInformation.card.severity).toEqual('INFORMATION');
+
+        let selectedMessageWithSeverity = {title: "my title", question: true, severity: 'ACTION'};
+        view.selectedMessage = selectedMessageWithSeverity;
+        specficCardInformation = view.getSpecificCardInformation('my question');
+        expect(specficCardInformation.card.severity).toEqual('ACTION');
+
+        view.selectedMessage.severity = 'ALARM';
+        specficCardInformation = view.getSpecificCardInformation('my message');
+        expect(specficCardInformation.card.severity).toEqual('ALARM');
+
     });
+
 });

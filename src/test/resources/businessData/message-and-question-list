@@ -18,6 +18,7 @@
         "title": "Warning about the state of the grid",
         "message": "A problem has been detected, please put maintenance work on hold and be on stand by",
         "question": false,
+        "severity": "ALARM",
         "recipients" : [
             "ENTITY1_FR",
             "ENTITY2_FR",
@@ -33,6 +34,7 @@
         "title": "Confirmation the issues have been fixed",
         "message": "Please confirm the issues in your area have been fixed",
         "question": true,
+        "severity": "ACTION",
         "recipients" : [
             "ENTITY1_FR",
             "ENTITY2_FR",
