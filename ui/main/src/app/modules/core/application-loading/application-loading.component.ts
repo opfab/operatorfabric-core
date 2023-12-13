@@ -75,7 +75,6 @@ export class ApplicationLoadingComponent implements OnInit {
         private authService: AuthService,
         private configServer: ConfigServer,
         private settingsService: SettingsService,
-        private lightCardsStoreService: LightCardsStoreService,
         private opfabEventStreamServer: OpfabEventStreamServer,
         private applicationUpdateService: ApplicationUpdateService,
         private systemNotificationService: SystemNotificationService,
@@ -271,7 +270,7 @@ export class ApplicationLoadingComponent implements OnInit {
             this.loadingInProgress = false;
             this.applicationLoaded = true;
         });
-        this.lightCardsStoreService.initStore(); // this will effectively open the http stream connection
+        LightCardsStoreService.initStore(); // this will effectively open the http stream connection
         this.applicationUpdateService.init();
         this.systemNotificationService.initSystemNotificationService();
         ServicesConfig.finalizeLoading();

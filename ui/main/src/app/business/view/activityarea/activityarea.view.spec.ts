@@ -21,6 +21,10 @@ import {UserService} from 'app/business/services/users/user.service';
 import {CurrentUserStore} from 'app/business/store/current-user.store';
 import {firstValueFrom} from 'rxjs';
 import {ActivityAreaView} from './activityarea.view';
+import {OpfabEventStreamServerMock} from '@tests/mocks/opfab-event-stream.server.mock';
+import {OpfabEventStreamService} from 'app/business/services/events/opfabEventStream.service';
+import {getOneRandomLightCard} from '@tests/helpers';
+import {Severity} from '@ofModel/light-card.model';
 
 describe('ActivityAreaView', () => {
     let userServerMock: UserServerMock;
@@ -28,7 +32,6 @@ describe('ActivityAreaView', () => {
     let settingsService: SettingsService;
     let settingsServerMock: SettingsServerMock;
     let user: User;
-    let lightCardsStoreService: LightCardsStoreService;
     let activityAreaView: ActivityAreaView;
 
     beforeEach(() => {
@@ -36,7 +39,6 @@ describe('ActivityAreaView', () => {
         mockUserService();
         mockEntitiesService();
         mockSettingsService();
-        mockLightCardStoreService();
     });
 
     function mockUserService() {
@@ -62,9 +64,6 @@ describe('ActivityAreaView', () => {
         settingsService = new SettingsService(settingsServerMock);
     }
 
-    function mockLightCardStoreService() {
-        lightCardsStoreService = new LightCardsStoreService();
-    }
 
     afterEach(() => {
         jasmine.clock().uninstall();
@@ -83,7 +82,7 @@ describe('ActivityAreaView', () => {
     }
 
     function initActivityAreaView() {
-        activityAreaView = new ActivityAreaView(settingsService, lightCardsStoreService);
+        activityAreaView = new ActivityAreaView(settingsService);
     }
 
     it('GIVEN a user  WHEN he is member of entity1 THEN activityArea has one line with entity1 and entity1 name', async () => {
@@ -269,13 +268,24 @@ describe('ActivityAreaView', () => {
     });
 
     it('GIVEN a user WHEN save activity area THEN lightcard store is cleared ', async () => {
+
+        const opfabEventStreamServerMock = new OpfabEventStreamServerMock();
+        OpfabEventStreamService.setEventStreamServer(opfabEventStreamServerMock);
+        LightCardsStoreService.initStore(0);
+        const card = getOneRandomLightCard({
+            process: 'process1',
+            state: 'state1',
+            severity: Severity.ALARM
+        });
+        opfabEventStreamServerMock.sendLightCard(card);
+
         mockUserConfig(['ENTITY1', 'ENTITY2'], ['ENTITY1']);
         initActivityAreaView();
         await firstValueFrom(activityAreaView.getActivityAreaPage());
         settingsServerMock.setResponseForPatchUserSettings(new ServerResponse(null, ServerResponseStatus.OK, null));
         const saved = await firstValueFrom(activityAreaView.saveActivityArea());
         expect(saved).toBeTruthy();
-        const lightCards = await firstValueFrom(lightCardsStoreService.getLightCards());
+        const lightCards = await firstValueFrom(LightCardsStoreService.getLightCards().pipe());
         expect(lightCards).toEqual([]);
     });
 

@@ -23,8 +23,7 @@ export class ActivityAreaView {
     private intervalForConnectedUsersUpdate;
 
     constructor(
-        private settingsService: SettingsService,
-        private lightCardStoreService: LightCardsStoreService
+        private settingsService: SettingsService
     ) {
         this.currentUserLogin = UserService.getCurrentUserWithPerimeters().userData.login;
         this.activityAreaPage = new ActivityAreaPage();
@@ -102,7 +101,7 @@ export class ActivityAreaView {
             .pipe(
                 map((response) => {
                     if (response.status === ServerResponseStatus.OK) {
-                        this.lightCardStoreService.removeAllLightCards();
+                        LightCardsStoreService.removeAllLightCards();
                         UserService.loadUserWithPerimetersData().subscribe();
                         return true;
                     } else return false;

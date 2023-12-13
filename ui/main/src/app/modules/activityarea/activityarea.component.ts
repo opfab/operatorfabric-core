@@ -12,7 +12,6 @@ import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
 import {NgbModalRef} from '@ng-bootstrap/ng-bootstrap/modal/modal-ref';
 import {FormControl, FormGroup} from '@angular/forms';
 import {SettingsService} from 'app/business/services/users/settings.service';
-import {LightCardsStoreService} from 'app/business/services/lightcards/lightcards-store.service';
 import {ActivityAreaView} from 'app/business/view/activityarea/activityarea.view';
 import {ActivityAreaPage} from 'app/business/view/activityarea/activityareaPage';
 
@@ -39,14 +38,12 @@ export class ActivityareaComponent implements OnInit, OnDestroy {
 
     constructor(
         private modalService: NgbModal,
-        private settingsService: SettingsService,
-        private lightCardStoreService: LightCardsStoreService
+        private settingsService: SettingsService
     ) {}
 
     ngOnInit() {
         this.activityAreaView = new ActivityAreaView(
-            this.settingsService,
-            this.lightCardStoreService
+            this.settingsService
         );
         this.activityAreaView.getActivityAreaPage().subscribe((page) => {
             this.activityAreaPage = page;
@@ -94,7 +91,7 @@ export class ActivityareaComponent implements OnInit, OnDestroy {
         // The modal must not be closed until the settings has been saved in the back
         // If not, with slow network, when user goes to the feed before the end of the request
         // it ends up with nothing in the feed
-        // This happens because method this.lightCardStoreService.removeAllLightCards();
+        // This happens because method LightCardsStoreService.removeAllLightCards();
         // is called too late (in activityAreaView)
         if (!this.saveSettingsInProgress) this.confirmationPopup.close();
     }

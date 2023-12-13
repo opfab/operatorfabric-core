@@ -30,11 +30,10 @@ describe('Dashboard', () => {
     let dashboard: Dashboard;
     let userServerMock: UserServerMock;
     let processServerMock: ProcessServerMock;
-    let lightCardsStoreService: LightCardsStoreService;
     let lightCardsFeedFilterService: LightCardsFeedFilterService;
     let opfabEventStreamServerMock: OpfabEventStreamServerMock;
 
-    beforeEach(() => {
+    beforeEach(async() => {
         userServerMock = new UserServerMock();
         UserService.setUserServer(userServerMock);
         processServerMock = new ProcessServerMock();
@@ -44,12 +43,16 @@ describe('Dashboard', () => {
 
         OpfabEventStreamService.setEventStreamServer(opfabEventStreamServerMock);
 
-        lightCardsStoreService = new LightCardsStoreService();
-        lightCardsFeedFilterService = new LightCardsFeedFilterService(
-            lightCardsStoreService
-        );
-        lightCardsStoreService.initStore();
+        lightCardsFeedFilterService = new LightCardsFeedFilterService();
+        await initLightCardStore();
     });
+
+    async function initLightCardStore(){
+        LightCardsStoreService.initStore(0);
+        LightCardsStoreService.removeAllLightCards();
+        // wait for the store to be empty
+        await new Promise(resolve => setTimeout(resolve, 10));
+    }
 
     afterEach(() => {
         dashboard.destroy();
@@ -95,7 +98,7 @@ describe('Dashboard', () => {
         const userWithPerimeters = new UserWithPerimeters(null, new Array(), null, new Map());
         userServerMock.setResponseForCurrentUserWithPerimeter(new ServerResponse(userWithPerimeters, null, null));
 
-        dashboard = new Dashboard(lightCardsStoreService, lightCardsFeedFilterService);
+        dashboard = new Dashboard(lightCardsFeedFilterService);
         lightCardsFeedFilterService.updateFilter(FilterType.BUSINESSDATE_FILTER, true, lightCardsFeedFilterService.getBusinessDateFilter().status);
 
         const result = await firstValueFrom(dashboard.getDashboardPage());
@@ -111,7 +114,7 @@ describe('Dashboard', () => {
         );
         await firstValueFrom(UserService.loadUserWithPerimetersData());
 
-        dashboard = new Dashboard(lightCardsStoreService, lightCardsFeedFilterService);
+        dashboard = new Dashboard(lightCardsFeedFilterService);
         lightCardsFeedFilterService.updateFilter(FilterType.BUSINESSDATE_FILTER, true, lightCardsFeedFilterService.getBusinessDateFilter().status);
 
         const result = await firstValueFrom(dashboard.getDashboardPage());
@@ -133,7 +136,7 @@ describe('Dashboard', () => {
         );
         await firstValueFrom(UserService.loadUserWithPerimetersData());
 
-        dashboard = new Dashboard(lightCardsStoreService, lightCardsFeedFilterService);
+        dashboard = new Dashboard(lightCardsFeedFilterService);
         lightCardsFeedFilterService.updateFilter(FilterType.BUSINESSDATE_FILTER, true, lightCardsFeedFilterService.getBusinessDateFilter().status);
 
         const result = await firstValueFrom(dashboard.getDashboardPage());
@@ -162,7 +165,7 @@ describe('Dashboard', () => {
         );
         await firstValueFrom(UserService.loadUserWithPerimetersData());
 
-        dashboard = new Dashboard(lightCardsStoreService, lightCardsFeedFilterService);
+        dashboard = new Dashboard(lightCardsFeedFilterService);
         lightCardsFeedFilterService.updateFilter(FilterType.BUSINESSDATE_FILTER, true, lightCardsFeedFilterService.getBusinessDateFilter().status);
 
         const result = await firstValueFrom(dashboard.getDashboardPage());
@@ -187,7 +190,7 @@ describe('Dashboard', () => {
         );
         await firstValueFrom(UserService.loadUserWithPerimetersData());
 
-        dashboard = new Dashboard(lightCardsStoreService, lightCardsFeedFilterService);
+        dashboard = new Dashboard(lightCardsFeedFilterService);
         lightCardsFeedFilterService.updateFilter(FilterType.BUSINESSDATE_FILTER, true, lightCardsFeedFilterService.getBusinessDateFilter().status);
 
         let result = await firstValueFrom(dashboard.getDashboardPage());
@@ -231,7 +234,7 @@ describe('Dashboard', () => {
         );
         await firstValueFrom(UserService.loadUserWithPerimetersData());
 
-        dashboard = new Dashboard(lightCardsStoreService, lightCardsFeedFilterService);
+        dashboard = new Dashboard(lightCardsFeedFilterService);
 
         const infoCard = getOneRandomLightCard({
             process: 'process1',
@@ -299,7 +302,7 @@ describe('Dashboard', () => {
         );
         await firstValueFrom(UserService.loadUserWithPerimetersData());
 
-        dashboard = new Dashboard(lightCardsStoreService, lightCardsFeedFilterService);
+        dashboard = new Dashboard(lightCardsFeedFilterService);
 
         const infoCard = getOneRandomLightCard({
             process: 'process1',
@@ -327,7 +330,7 @@ describe('Dashboard', () => {
         );
         await firstValueFrom(UserService.loadUserWithPerimetersData());
 
-        dashboard = new Dashboard(lightCardsStoreService, lightCardsFeedFilterService);
+        dashboard = new Dashboard(lightCardsFeedFilterService);
 
         const infoCard = getOneRandomLightCard({
             process: 'process1',

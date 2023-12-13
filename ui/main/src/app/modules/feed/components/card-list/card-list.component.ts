@@ -57,8 +57,7 @@ export class CardListComponent implements AfterViewChecked, OnInit {
     constructor(
         private modalService: NgbModal,
         private router: Router,
-        private lightCardsFeedFilterService: LightCardsFeedFilterService,
-        private lightCardsStoreService: LightCardsStoreService,
+        private lightCardsFeedFilterService: LightCardsFeedFilterService
     ) {
         this.currentUserWithPerimeters = UserService.getCurrentUserWithPerimeters();
     }
@@ -167,7 +166,7 @@ export class CardListComponent implements AfterViewChecked, OnInit {
                 });
                 AcknowledgeService.postUserAcknowledgement(lightCard.uid, entitiesAcks).subscribe((resp) => {
                     if (resp.status === ServerResponseStatus.OK) {
-                        this.lightCardsStoreService.setLightCardAcknowledgment(lightCard.id, true);
+                        LightCardsStoreService.setLightCardAcknowledgment(lightCard.id, true);
                     } else {
                         throw new Error('the remote acknowledgement endpoint returned an error status(' + resp.status + ')');
                     }

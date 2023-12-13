@@ -36,7 +36,6 @@ export class LightCardsFeedFilterService {
     private lightCardTextFilter: LightCardsTextFilter;
 
     constructor(
-        private lightCardsStoreService: LightCardsStoreService
     ) {
         this.lightCardFilter = new LightCardsFilter();
         this.lightCardsSorter = new LightCardsSorter();
@@ -78,7 +77,7 @@ export class LightCardsFeedFilterService {
     private computeFilteredLightCards() {
         combineLatest([
             this.lightCardFilter.getFiltersChanges(),
-            this.lightCardsStoreService.getLightCards(),
+            LightCardsStoreService.getLightCards(),
             this.onlyBusinessFilterForTimeLine.asObservable()
         ])
             .pipe(

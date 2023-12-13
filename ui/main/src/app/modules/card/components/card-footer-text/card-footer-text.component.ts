@@ -37,7 +37,6 @@ export class CardFooterTextComponent implements OnChanges,OnInit {
     private unsubscribe$: Subject<void> = new Subject<void>();
 
     constructor(
-        private lightCardsStoreService: LightCardsStoreService
     ) {
         const userWithPerimeters = UserService.getCurrentUserWithPerimeters();
         if (userWithPerimeters) this.user = userWithPerimeters.userData;
@@ -45,7 +44,7 @@ export class CardFooterTextComponent implements OnChanges,OnInit {
 
     ngOnInit() {
 
-        this.lightCardsStoreService
+        LightCardsStoreService
             .getReceivedAcks()
             .pipe(takeUntil(this.unsubscribe$))
             .subscribe((receivedAck) => {

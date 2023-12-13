@@ -58,8 +58,7 @@ export class SoundNotificationService implements OnDestroy {
 
     constructor(
         private soundServer: SoundServer,
-        private lightCardsFeedFilterService: LightCardsFeedFilterService,
-        private lightCardsStoreService: LightCardsStoreService
+        private lightCardsFeedFilterService: LightCardsFeedFilterService
     ) {
         // use to have access from cypress to the current object for stubbing method playSound
         if (window['Cypress']) window['soundNotificationService'] = this;
@@ -127,7 +126,7 @@ export class SoundNotificationService implements OnDestroy {
     }
 
     private listenForCardUpdate() {
-        this.lightCardsStoreService.getNewLightCards().subscribe((card) => this.handleLoadedCard(card));
+        LightCardsStoreService.getNewLightCards().subscribe((card) => this.handleLoadedCard(card));
     }
 
     ngOnDestroy() {

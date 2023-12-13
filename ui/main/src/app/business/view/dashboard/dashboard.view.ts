@@ -25,7 +25,6 @@ export class Dashboard {
     private ngUnsubscribe$ = new Subject<void>();
 
     constructor(
-        private lightCardsStoreService: LightCardsStoreService,
         private lightCardsFeedFilterService: LightCardsFeedFilterService
     ) {
         this.loadProcesses();
@@ -71,7 +70,7 @@ export class Dashboard {
     private processLightCards() {
         combineLatest([
             this.lightCardsFeedFilterService.getBusinessDateFilterChanges(),
-            this.lightCardsStoreService.getLightCards()
+            LightCardsStoreService.getLightCards()
         ])
             .pipe(takeUntil(this.ngUnsubscribe$))
             .subscribe((results) => {

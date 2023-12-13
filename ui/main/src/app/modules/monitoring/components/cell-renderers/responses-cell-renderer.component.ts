@@ -20,7 +20,6 @@ import {filter, Subject, takeUntil} from 'rxjs';
     templateUrl: './responses-cell-renderer.component.html'
 })
 export class ResponsesCellRendererComponent implements ICellRendererAngularComp, OnDestroy {
-    constructor(private lightCardsStoreService: LightCardsStoreService) {}
 
     // For explanations regarding ag-grid CellRenderers see
     // https://www.ag-grid.com/documentation/angular/component-cell-renderer/#example-rendering-using-angular-components
@@ -36,9 +35,9 @@ export class ResponsesCellRendererComponent implements ICellRendererAngularComp,
         this.params = params;
         this.api = params.api;
         this.cardUid = params.data.cardUid;
-        this.childCards = this.lightCardsStoreService.getChildCards(params.data.cardId);
+        this.childCards = LightCardsStoreService.getChildCards(params.data.cardId);
         this.checkEntitiesResponses();
-        this.lightCardsStoreService
+        LightCardsStoreService
             .getNewLightChildCards()
             .pipe(
                 takeUntil(this.unsubscribe$),
