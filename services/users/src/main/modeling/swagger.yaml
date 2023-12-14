@@ -147,12 +147,10 @@ definitions:
     description: |-
       Different possible roles >
       * ACTIVITY_AREA_GROUP : Used to group entities in the activity area screen
-      * REALTIME_SCREEN_GROUP : Used to group entities in the realtime screen 
       * CARD_SENDER : Allows an entity to send cards
       * CARD_RECEIVER : Allows an entity to receive cards
     enum:
       - ACTIVITY_AREA_GROUP
-      - REALTIME_SCREEN_GROUP
       - CARD_SENDER
       - CARD_RECEIVER
   RightsEnum:

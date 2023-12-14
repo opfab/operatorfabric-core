@@ -432,7 +432,6 @@
         "roles": "ROLES",
         "roleValues": {
           "ACTIVITY_AREA_GROUP": "Groupe de Zone d'Activité",
-          "REALTIME_SCREEN_GROUP": "Groupe d'Écran Temps Réel",
           "CARD_SENDER": "Expéditeur de Cartes",
           "CARD_RECEIVER": "Destinataire de Cartes"
         }

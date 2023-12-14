@@ -432,7 +432,6 @@
         "roles": "ROLLEN",
         "roleValues": {
           "ACTIVITY_AREA_GROUP": "Activiteitengebiedgroep",
-          "REALTIME_SCREEN_GROUP": "Realtime Schermgroep",
           "CARD_SENDER": "Kaartverzender",
           "CARD_RECEIVER": "Kaartontvanger"
         }
