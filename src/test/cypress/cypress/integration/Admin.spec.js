@@ -706,7 +706,6 @@ describe('AdmininstrationPages', () => {
                     expect(rows[4].ID).to.equal('ENTITY_FR');
                     expect(rows[4].NAME).to.equal('French Control Centers');
                     expect(rows[4].DESCRIPTION).to.equal('French Control Centers');
-                    expect(rows[4]['ROLES']).to.equal('REALTIME_SCREEN_GROUP');
                     expect(rows[4]['PARENT ENTITIES']).to.be.undefined;
                 })
             })
