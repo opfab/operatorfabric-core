@@ -88,9 +88,15 @@ export class TaskCardTemplateView {
         if (bymonthday.includes("1"))  textForBymonthday += opfab.utils.getTranslation("buildInTemplate.taskCard.firstDayOfTheMonth") + ", ";
         if (bymonthday.includes("-1")) textForBymonthday += opfab.utils.getTranslation("buildInTemplate.taskCard.lastDayOfTheMonth") + ", ";
         if (bymonthday.length > 0) {
-            if ((bymonthday[0] !== "1") && (bymonthday[0] !== "-1")) {
-                textForBymonthday += "The " + bymonthday[0] + this.cardinalToOrdinal(bymonthday[0]) + " " + opfab.utils.getTranslation("buildInTemplate.taskCard.dayOfTheMonth") + " , ";
+            this.replaceZero(bymonthday);
+            if (bymonthday[0] !== "1" && bymonthday[0] !== "-1") {
+                if (bymonthday[0].startsWith('-')) {
+                    textForBymonthday += bymonthday[0].substring(1) + " " + opfab.utils.getTranslation("buildInTemplate.taskCard.daysBeforeEndOfTheMonth") + " , ";
+                } else {
+                    textForBymonthday += opfab.utils.getTranslation("buildInTemplate.taskCard.the") + " " + bymonthday[0] + this.getOrdinalMonthDaySuffix(bymonthday[0]) + " " + opfab.utils.getTranslation("buildInTemplate.taskCard.dayOfTheMonth") + " , ";
+                }
             }
+
         }
         if (textForBymonthday !== "") {
             textForBymonthday = textForBymonthday.slice(0, -2);
@@ -119,18 +125,18 @@ export class TaskCardTemplateView {
         return textForBymonth;
     }
 
-    cardinalToOrdinal(cardinal: string) {
-        let card = Number(cardinal)
-        if (Number.isNaN(card)) {
+    getOrdinalMonthDaySuffix(cardinal: string) {
+        const cardinalNumber = Number(cardinal)
+        if (Number.isNaN(cardinalNumber)) {
             return null;
         }
+        const standard_suffix_day = opfab.utils.getTranslation("shared.ordinal.suffix.default");
 
-        let ord = 'th';
-        if (card % 10 == 1 && card % 100 != 11){ ord = 'st'; }
-        else if (card % 10 == 2 && card % 100 != 12){ ord = 'nd'; }
-        else if (card % 10 == 3 && card % 100 != 13){ ord = 'rd'; }
-        return ord;
+        return (cardinalNumber > 31) ? standard_suffix_day : opfab.utils.getTranslation("shared.ordinal.suffix." + cardinalNumber);
     }
 
-    
+    replaceZero(days: any[]) {
+        const zeroIndex = days.findIndex(d => d === "0");
+        if (zeroIndex >= 0) days[zeroIndex] = "1";
+    }
 }

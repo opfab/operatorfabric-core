@@ -100,6 +100,42 @@
       "october":"octobre",
       "november":"novembre",
       "december":"décembre"
+    },
+    "ordinal": {
+      "suffix": {
+        "1": "er",
+        "2": "nd",
+        "3": "ème",
+        "4": "ème",
+        "5": "ème",
+        "6": "ème",
+        "7": "ème",
+        "8": "ème",
+        "9": "ème",
+        "10": "ème",
+        "11": "ème",
+        "12": "ème",
+        "13": "ème",
+        "14": "ème",
+        "15": "ème",
+        "16": "ème",
+        "17": "ème",
+        "18": "ème",
+        "19": "ème",
+        "20": "ème",
+        "21": "ème",
+        "22": "ème",
+        "23": "ème",
+        "24": "ème",
+        "25": "ème",
+        "26": "ème",
+        "27": "ème",
+        "28": "ème",
+        "29": "ème",
+        "30": "ème",
+        "31": "ème",
+        "default": "ème"
+      }
     }
   },
   "global":{
@@ -667,6 +703,7 @@
       "on": "le(s)",
       "firstDayOfTheMonth": "Le premier jour du mois",
       "lastDayOfTheMonth": "Le dernier jour du mois",
+      "daysBeforeEndOfTheMonth": "jours avant la fin du mois",
       "dayOfTheMonth": "jour du mois",
       "in": "en"
    },
