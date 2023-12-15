@@ -7,20 +7,16 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {Injectable} from '@angular/core';
 import {Observable, Subject} from 'rxjs';
 
-@Injectable({
-    providedIn: 'root'
-})
 export class ApplicationEventsService {
-    private configChangeEvent = new Subject<void>();
+    private static configChangeEvent = new Subject<void>();
 
-    public setUserConfigChange() {
+    public static setUserConfigChange() {
         this.configChangeEvent.next();
     }
 
-    public getUserConfigChanges(): Observable<void> {
+    public static getUserConfigChanges(): Observable<void> {
         return this.configChangeEvent.asObservable();
     }
 }

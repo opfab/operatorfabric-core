@@ -27,9 +27,6 @@ export class InfoComponent implements OnInit {
     userEntitiesToDisplayTrimmed: boolean;
     timeToDisplay: string;
 
-    constructor(
-        private applicationEventsService: ApplicationEventsService
-    ) {}
 
     ngOnInit() {
         this.updateTime();
@@ -40,7 +37,7 @@ export class InfoComponent implements OnInit {
 
         if (ConfigService.getConfigValue('showUserEntitiesOnTopRightOfTheScreen', false)) {
             this.setUserEntitiesToDisplay();
-            this.applicationEventsService.getUserConfigChanges().subscribe(() => this.setUserEntitiesToDisplay());
+            ApplicationEventsService.getUserConfigChanges().subscribe(() => this.setUserEntitiesToDisplay());
         }
     }
 

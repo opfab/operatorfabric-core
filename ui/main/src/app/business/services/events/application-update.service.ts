@@ -26,8 +26,7 @@ import {BusinessDataService} from '../businessconfig/businessdata.service';
 })
 export class ApplicationUpdateService {
     constructor(
-        private templateCssService: TemplateCssService,
-        private applicationEventsService: ApplicationEventsService
+        private templateCssService: TemplateCssService
     ) {}
 
     init() {
@@ -71,7 +70,7 @@ export class ApplicationUpdateService {
                     logger.info('Update user perimeter, entities and groups', LogOption.LOCAL_AND_REMOTE);
                     return Utilities.subscribeAndWaitForAllObservablesToEmitAnEvent(requestsToLaunch$);
                 }),
-                map(() => this.applicationEventsService.setUserConfigChange()),
+                map(() => ApplicationEventsService.setUserConfigChange()),
                 catchError((error, caught) => {
                     logger.error('Error in update user config ', error);
                     return caught;
