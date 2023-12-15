@@ -70,7 +70,6 @@ export class TemplateRenderingComponent implements OnChanges, OnInit, OnDestroy,
     constructor(
         private element: ElementRef,
         private sanitizer: DomSanitizer,
-        private templateCssService: TemplateCssService,
         private opfabAPIService: OpfabAPIService,
         private changeDetector: ChangeDetectorRef
     ) {}
@@ -180,7 +179,7 @@ export class TemplateRenderingComponent implements OnChanges, OnInit, OnDestroy,
 
     private getCssFilesContent(): Observable<string> {
         const styles = this.cardState.styles;
-        return this.templateCssService.getCssFilesContent(this.card.process, this.card.processVersion, styles);
+        return TemplateCssService.getCssFilesContent(this.card.process, this.card.processVersion, styles);
     }
 
     private loadTemplateJSScripts(): void {

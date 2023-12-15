@@ -7,55 +7,53 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {Injectable} from '@angular/core';
 import {map, Observable, of} from 'rxjs';
 import {Utilities} from 'app/business/common/utilities';
 import {TemplateCssServer} from '../../server/template-css.server';
 import {ServerResponseStatus} from '../../server/serverResponse';
 import {LoggerService as logger} from '../logs/logger.service';
+import {AcknowledgeServer} from "../../server/acknowledge.server";
 
-@Injectable({
-    providedIn: 'root'
-})
 export class TemplateCssService {
 
-    private styleContentCache: Map<string,string> = new Map();
+    private static templatecssServer: TemplateCssServer;
+    private static styleContentCache: Map<string,string> = new Map();
 
-    constructor(private templatecssServer: TemplateCssServer
-        ) {}
+    public static setTemplatecssServer(templatecssServer: TemplateCssServer) {
+        TemplateCssService.templatecssServer = templatecssServer;
+    }
 
-
-    public getCssFilesContent(process: string, version: string, styleFileNames: string[]): Observable<string> {
+    public static getCssFilesContent(process: string, version: string, styleFileNames: string[]): Observable<string> {
 
         if (!styleFileNames) return of("");
         const styles: Observable<any>[] = new Array();
         styleFileNames.forEach(styleFileName => {
-            const cacheKey = this.getCacheKey(process, version, styleFileName);
-            if (!this.styleContentCache.has(cacheKey)) styles.push(this.loadCssFile(process, version, styleFileName));
+            const cacheKey = TemplateCssService.getCacheKey(process, version, styleFileName);
+            if (!TemplateCssService.styleContentCache.has(cacheKey)) styles.push(TemplateCssService.loadCssFile(process, version, styleFileName));
         })
         if (styles.length > 0) return Utilities.subscribeAndWaitForAllObservablesToEmitAnEvent(styles).pipe (map ( () => {
-            return this.getCssContentFromCache(process,version,styleFileNames);
+            return TemplateCssService.getCssContentFromCache(process,version,styleFileNames);
         }));
-        else return of(this.getCssContentFromCache(process,version,styleFileNames));
+        else return of(TemplateCssService.getCssContentFromCache(process,version,styleFileNames));
     }
 
-    private getCssContentFromCache (process: string, version: string, styleFileNames: string[]): string {
+    private static getCssContentFromCache (process: string, version: string, styleFileNames: string[]): string {
         let stylesContent = "";
         styleFileNames.forEach(styleFileName =>  {
-            const cacheKey = this.getCacheKey(process, version, styleFileName);
-            const styleContent = this.styleContentCache.get(cacheKey);
+            const cacheKey = TemplateCssService.getCacheKey(process, version, styleFileName);
+            const styleContent = TemplateCssService.styleContentCache.get(cacheKey);
             if (cacheKey) stylesContent += '\n' + styleContent;
 
         });
         return stylesContent;
     }
 
-    private loadCssFile(process: string, version: string, styleFileName: string): Observable<string> {
-        return this.templatecssServer.loadCssFile(process, version, styleFileName).pipe(
+    private static loadCssFile(process: string, version: string, styleFileName: string): Observable<string> {
+        return TemplateCssService.templatecssServer.loadCssFile(process, version, styleFileName).pipe(
             map( (responseServerStyleContent) => {
                 if (responseServerStyleContent.status === ServerResponseStatus.OK) {
-                    const url = this.getCacheKey(process, version, styleFileName);
-                    this.styleContentCache.set(url, responseServerStyleContent.data);
+                    const url = TemplateCssService.getCacheKey(process, version, styleFileName);
+                    TemplateCssService.styleContentCache.set(url, responseServerStyleContent.data);
                     return responseServerStyleContent.data;
                 } else {
                     logger.error(`Impossible to load ${styleFileName} from process ${process} version ${version}`);
@@ -64,11 +62,11 @@ export class TemplateCssService {
         }));
     }
 
-    public clearCache() {
-        this.styleContentCache = new Map();
+    public static clearCache() {
+        TemplateCssService.styleContentCache = new Map();
     }
 
-    private getCacheKey(process, version, styleFileName): string {
+    private static getCacheKey(process, version, styleFileName): string {
         return process + "/" + version + "/" + styleFileName;
     }
 }

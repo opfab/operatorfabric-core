@@ -31,6 +31,8 @@ import {SupervisedEntitiesService} from './users/supervised-entities.service';
 import {SelectedCardLoaderService} from './card/selectedCardLoader.service';
 import {HandlebarsService} from './card/handlebars.service';
 import {ExternalDevicesService} from './notifications/external-devices.service';
+import {TemplateCssService} from "./card/template-css.service";
+import {TemplateCssServer} from "../server/template-css.server";
 
 declare const opfab: any;
 export class ServicesConfig {
@@ -57,6 +59,7 @@ export class ServicesConfig {
         CardService.setCardServer(servers.cardServer);
         SupervisedEntitiesService.setSupervisedEntitiesServer(servers.supervisedEntitiesServer);
         ExternalDevicesService.setExternalDevicesServer(servers.externalDevicesServer);
+        TemplateCssService.setTemplatecssServer(servers.templateCssServer);
     }
 
     public static load(): Observable<any> {
