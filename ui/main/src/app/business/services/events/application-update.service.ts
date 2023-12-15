@@ -25,9 +25,6 @@ import {BusinessDataService} from '../businessconfig/businessdata.service';
     providedIn: 'root'
 })
 export class ApplicationUpdateService {
-    constructor(
-        private templateCssService: TemplateCssService
-    ) {}
 
     init() {
         this.listenForBusinessConfigUpdate();
@@ -43,7 +40,7 @@ export class ApplicationUpdateService {
                 map(() => {
                     logger.info('Update business config');
                     HandlebarsService.clearCache();
-                    this.templateCssService.clearCache();
+                    TemplateCssService.clearCache();
                     ProcessesService.loadAllProcessesWithLatestVersion().subscribe();
                     ProcessesService.loadAllProcessesWithAllVersions().subscribe();
                     ProcessesService.loadProcessGroups().subscribe();
