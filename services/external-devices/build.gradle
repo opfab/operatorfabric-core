@@ -3,8 +3,6 @@ plugins {
 }
 
 dependencies {
-
-    swaggerCodegen generator.swagger, project(':tools:swagger-spring-generators')
     implementation project(':tools:spring:spring-mongo-utilities')
     implementation project(':tools:spring:spring-utilities')
     implementation project(':tools:spring:spring-oauth2-utilities')
@@ -15,18 +13,12 @@ dependencies {
     implementation spring.securityOauthResource, spring.securityOauthJose
     implementation boot.starterValidation
     implementation boot.starterMongo
-
-
-    compileOnly boot.annotationConfiguration
-    annotationProcessor boot.annotationConfiguration
-
+    implementation misc.jlibmodbus
     implementation boot.starterWeb, boot.starterUndertow
 
-    testImplementation spring.securityTest
-    testImplementation project(':tools:generic:test-utilities')
+    compileOnly boot.annotationConfiguration   
+   
     testImplementation project(':tools:spring:spring-test-utilities')
-
-    implementation misc.jlibmodbus
 }
 
 
@@ -40,10 +32,7 @@ bootJar {
         )
     }
 }
-// This is a temporary fix to avoid false build error, see (#1543)
-tasks.named("processResources") {
-    duplicatesStrategy = 'include'
-}
+
 
 docker {
     name "lfeoperatorfabric/of-${project.name}:${project.version}"
