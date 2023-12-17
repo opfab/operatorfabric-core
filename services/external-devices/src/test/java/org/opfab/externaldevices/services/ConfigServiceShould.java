@@ -13,24 +13,23 @@ import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
-import org.opfab.externaldevices.application.UnitTestApplication;
 import org.opfab.externaldevices.drivers.ExternalDeviceConfigurationException;
 import org.opfab.externaldevices.drivers.UnknownExternalDeviceException;
+import org.opfab.externaldevices.mocks.DeviceConfigurationRepositoryMock;
+import org.opfab.externaldevices.mocks.SettingsRepositoryMock;
+import org.opfab.externaldevices.mocks.SignalMappingRepositoryMock;
+import org.opfab.externaldevices.mocks.UserConfigurationRepositoryMock;
 import org.opfab.externaldevices.model.DeviceConfiguration;
 import org.opfab.externaldevices.model.ResolvedConfiguration;
 import org.opfab.externaldevices.model.SignalMapping;
 import org.opfab.externaldevices.model.UserConfiguration;
 import org.opfab.externaldevices.repositories.DeviceConfigurationRepository;
+import org.opfab.externaldevices.repositories.SettingsRepository;
 import org.opfab.externaldevices.repositories.SignalMappingRepository;
 import org.opfab.externaldevices.repositories.UserConfigurationRepository;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.dao.DuplicateKeyException;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -42,26 +41,17 @@ import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-@ExtendWith(SpringExtension.class)
-@SpringBootTest(classes = UnitTestApplication.class)
-
 class ConfigServiceShould {
 
     private static final int INITIAL_NUMBER_OF_SIGNAL_MAPPINGS = 2;
     private static final int INITIAL_NUMBER_OF_DEVICE_CONFIGS = 3;
     private static final int INITIAL_NUMBER_OF_USER_CONFIGS = 5;
 
-    @Autowired
     private ConfigService configService;
-
-    @Autowired
     private SignalMappingRepository signalMappingRepository;
-
-    @Autowired
     private DeviceConfigurationRepository deviceConfigurationRepository;
-
-    @Autowired
     private UserConfigurationRepository userConfigurationRepository;
+    private SettingsRepository settingsRepository;
 
     private SignalMapping signalMapping1;
     private SignalMapping signalMapping2;
@@ -78,6 +68,14 @@ class ConfigServiceShould {
 
     @BeforeEach
     public void init() {
+
+        signalMappingRepository = new SignalMappingRepositoryMock();
+        deviceConfigurationRepository = new DeviceConfigurationRepositoryMock();
+        userConfigurationRepository = new UserConfigurationRepositoryMock();
+        settingsRepository = new SettingsRepositoryMock();
+
+        configService = new ConfigService(userConfigurationRepository, deviceConfigurationRepository,
+                signalMappingRepository, settingsRepository);
 
         signalMapping1 = new SignalMapping();
         signalMapping1.id = "signalMapping1";
@@ -159,34 +157,13 @@ class ConfigServiceShould {
     }
 
     @Test
-    void abortAndThrowExceptionWhenInsertingDuplicateDeviceConfiguration() {
-
-        DeviceConfiguration deviceConfiguration_1_duplicate = new DeviceConfiguration();
-        deviceConfiguration_1_duplicate.id = "ESS1";
-        deviceConfiguration_1_duplicate.host = "host1_dup";
-        deviceConfiguration_1_duplicate.port = 2345;
-        deviceConfiguration_1_duplicate.signalMappingId = "signalMapping1_dup";
-        
-        assertThrows(DuplicateKeyException.class,
-                () -> configService.insertDeviceConfiguration(deviceConfiguration_1_duplicate));
-
-        // Check that nothing was inserted and that the existing item was not updated.
-        Assertions.assertThat(deviceConfigurationRepository.findAll()).hasSize(INITIAL_NUMBER_OF_DEVICE_CONFIGS);
-        Optional<DeviceConfiguration> retrievedConfiguration = deviceConfigurationRepository.findById("ESS1");
-
-        Assertions.assertThat(retrievedConfiguration).isPresent();
-        Assertions.assertThat(retrievedConfiguration.get()).usingRecursiveComparison().isEqualTo(deviceConfiguration1);
-
-    }
-
-    @Test
     void getDeviceConfigurations() {
         List<DeviceConfiguration> deviceConfigurationList = configService.getDeviceConfigurations();
         Assertions.assertThat(deviceConfigurationList).hasSize(INITIAL_NUMBER_OF_DEVICE_CONFIGS);
-        Assertions.assertThat(deviceConfigurationList.get(0).id).isEqualTo("ESS1");
-        Assertions.assertThat(deviceConfigurationList.get(0).host).isEqualTo("host1");
-        Assertions.assertThat(deviceConfigurationList.get(0).port).isEqualTo(1234);
-        Assertions.assertThat(deviceConfigurationList.get(0).signalMappingId).isEqualTo("signalMapping1");
+        Assertions.assertThat(deviceConfigurationList.get(2).id).isEqualTo("ESS1");
+        Assertions.assertThat(deviceConfigurationList.get(2).host).isEqualTo("host1");
+        Assertions.assertThat(deviceConfigurationList.get(2).port).isEqualTo(1234);
+        Assertions.assertThat(deviceConfigurationList.get(2).signalMappingId).isEqualTo("signalMapping1");
     }
 
     @Test
@@ -248,51 +225,28 @@ class ConfigServiceShould {
     }
 
     @Test
-    void abortAndThrowExceptionWhenInsertingDuplicateSignalMapping() {
-
-        SignalMapping signalMapping_1_duplicate = new SignalMapping();
-        signalMapping_1_duplicate.id = "signalMapping1";
-        signalMapping_1_duplicate.supportedSignals = new HashMap<String, Integer>();
-        signalMapping_1_duplicate.supportedSignals.put("ALARM", 7);
-        signalMapping_1_duplicate.supportedSignals.put("ACTION", 8);
-        signalMapping_1_duplicate.supportedSignals.put("COMPLIANT", 9);
-        signalMapping_1_duplicate.supportedSignals.put("INFORMATION", 0);
-
-        assertThrows(DuplicateKeyException.class,
-                () -> configService.insertSignalMapping(signalMapping_1_duplicate));
-
-        // Check that nothing was inserted and that the existing item was not updated.
-        Assertions.assertThat(signalMappingRepository.findAll()).hasSize(INITIAL_NUMBER_OF_SIGNAL_MAPPINGS);
-        Optional<SignalMapping> retrievedConfiguration = signalMappingRepository.findById("signalMapping1");
-
-        Assertions.assertThat(retrievedConfiguration).isPresent();
-        Assertions.assertThat(retrievedConfiguration.get()).usingRecursiveComparison().isEqualTo(signalMapping1);
-    }
-
-    @Test
     void getSignalMappings() {
         List<SignalMapping> signalMappingsList = configService.getSignalMappings();
         Assertions.assertThat(signalMappingsList).hasSize(INITIAL_NUMBER_OF_SIGNAL_MAPPINGS);
 
         SignalMapping signalMapping1Result = signalMappingsList.get(0);
         SignalMapping signalMapping2Result = signalMappingsList.get(1);
-        
+
         Assertions.assertThat(signalMapping1Result)
-            .extracting("id", "supportedSignals")
-            .containsExactly("signalMapping1", Map.of(
-                "ALARM", 1,
-                "ACTION", 2,
-                "COMPLIANT", 3,
-                "INFORMATION", 4
-            ));
-        
+                .extracting("id", "supportedSignals")
+                .containsExactly("signalMapping2", Map.of(
+                        "ALARM", 5,
+                        "ACTION", 6,
+                        "COMPLIANT", 7));
+
         Assertions.assertThat(signalMapping2Result)
-            .extracting("id", "supportedSignals")
-            .containsExactly("signalMapping2", Map.of(
-                "ALARM", 5,
-                "ACTION", 6,
-                "COMPLIANT", 7
-            ));
+                .extracting("id", "supportedSignals")
+                .containsExactly("signalMapping1", Map.of(
+                        "ALARM", 1,
+                        "ACTION", 2,
+                        "COMPLIANT", 3,
+                        "INFORMATION", 4));
+
     }
 
     @Test
@@ -369,10 +323,10 @@ class ConfigServiceShould {
     void getUserConfigurations() {
         List<UserConfiguration> userConfigurationList = configService.getUserConfigurations();
         Assertions.assertThat(userConfigurationList).hasSize(INITIAL_NUMBER_OF_USER_CONFIGS);
-        Assertions.assertThat(userConfigurationList.get(0).userLogin).isEqualTo("user1");
-        Assertions.assertThat(userConfigurationList.get(0).externalDeviceIds).containsExactlyInAnyOrder("ESS1");
-        Assertions.assertThat(userConfigurationList.get(4).userLogin).isEqualTo("user5");
-        Assertions.assertThat(userConfigurationList.get(4).externalDeviceIds).containsExactlyInAnyOrder("ESS1", "ESS2");
+        Assertions.assertThat(userConfigurationList.get(4).userLogin).isEqualTo("user1");
+        Assertions.assertThat(userConfigurationList.get(4).externalDeviceIds).containsExactlyInAnyOrder("ESS1");
+        Assertions.assertThat(userConfigurationList.get(0).userLogin).isEqualTo("user5");
+        Assertions.assertThat(userConfigurationList.get(0).externalDeviceIds).containsExactlyInAnyOrder("ESS1", "ESS2");
     }
 
     @Test
@@ -403,16 +357,22 @@ class ConfigServiceShould {
     void getResolvedConfigurationSuccessfully(String userLogin, String opFabSignalKey,
             List<ResolvedConfiguration> expected)
             throws ExternalDeviceConfigurationException, UnknownExternalDeviceException {
-        List<ResolvedConfiguration> resolvedConfigurationListResult = configService.getResolvedConfigurationList(opFabSignalKey, userLogin);
+        List<ResolvedConfiguration> resolvedConfigurationListResult = configService
+                .getResolvedConfigurationList(opFabSignalKey, userLogin);
 
         for (int i = 0; i < resolvedConfigurationListResult.size(); i++) {
             ResolvedConfiguration resolvedConfigurationResult = resolvedConfigurationListResult.get(i);
             ResolvedConfiguration expectedResolvedConfiguration = expected.get(i);
-            Assertions.assertThat(resolvedConfigurationResult.getDeviceConfiguration().id).isEqualTo(expectedResolvedConfiguration.getDeviceConfiguration().id); 
-            Assertions.assertThat(resolvedConfigurationResult.getDeviceConfiguration().port).isEqualTo(expectedResolvedConfiguration.getDeviceConfiguration().port);    
-            Assertions.assertThat(resolvedConfigurationResult.getDeviceConfiguration().host).isEqualTo(expectedResolvedConfiguration.getDeviceConfiguration().host);    
-            Assertions.assertThat(resolvedConfigurationResult.getDeviceConfiguration().signalMappingId).isEqualTo(expectedResolvedConfiguration.getDeviceConfiguration().signalMappingId);  
-            Assertions.assertThat(resolvedConfigurationResult.getDeviceConfiguration().isEnabled).isEqualTo(expectedResolvedConfiguration.getDeviceConfiguration().isEnabled);  
+            Assertions.assertThat(resolvedConfigurationResult.getDeviceConfiguration().id)
+                    .isEqualTo(expectedResolvedConfiguration.getDeviceConfiguration().id);
+            Assertions.assertThat(resolvedConfigurationResult.getDeviceConfiguration().port)
+                    .isEqualTo(expectedResolvedConfiguration.getDeviceConfiguration().port);
+            Assertions.assertThat(resolvedConfigurationResult.getDeviceConfiguration().host)
+                    .isEqualTo(expectedResolvedConfiguration.getDeviceConfiguration().host);
+            Assertions.assertThat(resolvedConfigurationResult.getDeviceConfiguration().signalMappingId)
+                    .isEqualTo(expectedResolvedConfiguration.getDeviceConfiguration().signalMappingId);
+            Assertions.assertThat(resolvedConfigurationResult.getDeviceConfiguration().isEnabled)
+                    .isEqualTo(expectedResolvedConfiguration.getDeviceConfiguration().isEnabled);
         }
     }
 

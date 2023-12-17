@@ -7,18 +7,28 @@
  * This file is part of the OperatorFabric project.
  */
 
-
-
 package org.opfab.externaldevices.repositories;
 
 import org.opfab.externaldevices.model.UserConfiguration;
-import org.springframework.data.mongodb.repository.MongoRepository;
-import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
-@Repository
-public interface UserConfigurationRepository extends MongoRepository<UserConfiguration,String> {
+public interface UserConfigurationRepository {
+
+    void insert(UserConfiguration userConfiguration);
+
+    void save(UserConfiguration userConfiguration);
+
+    void saveAll(List<UserConfiguration> userConfigurations);
+
+    List<UserConfiguration> findAll();
+
+    Optional<UserConfiguration> findById(String id);
+
+    void deleteById(String id);
+
+    void deleteAll();
 
     List<UserConfiguration> findByExternalDeviceIds(String externalDeviceId);
 

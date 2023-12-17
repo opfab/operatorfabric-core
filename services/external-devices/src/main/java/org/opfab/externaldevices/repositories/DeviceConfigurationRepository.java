@@ -7,19 +7,28 @@
  * This file is part of the OperatorFabric project.
  */
 
-
-
 package org.opfab.externaldevices.repositories;
 
 import org.opfab.externaldevices.model.DeviceConfiguration;
-import org.springframework.data.mongodb.repository.MongoRepository;
-import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
+public interface DeviceConfigurationRepository {
 
-@Repository
-public interface DeviceConfigurationRepository extends MongoRepository<DeviceConfiguration,String> {
+    Optional<DeviceConfiguration> findById(String id);
+
+    List<DeviceConfiguration> findAll();
+
+    void deleteById(String id);
+
+    void deleteAll();
+
+    void insert(DeviceConfiguration deviceConfiguration);
+
+    void save(DeviceConfiguration deviceConfiguration);
+
+    void saveAll(List<DeviceConfiguration> deviceConfigurations);
 
     List<DeviceConfiguration> findBySignalMappingId(String signalMappingId);
 
