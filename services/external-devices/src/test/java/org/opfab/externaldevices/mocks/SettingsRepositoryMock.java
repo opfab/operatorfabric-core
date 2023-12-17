@@ -7,12 +7,16 @@
  * This file is part of the OperatorFabric project.
  */
 
-package org.opfab.externaldevices.repositories;
+package org.opfab.externaldevices.mocks;
 
+import org.opfab.externaldevices.repositories.SettingsRepository;
 import org.opfab.users.model.UserSettings;
 
-public interface SettingsRepository {
+public class SettingsRepositoryMock implements SettingsRepository {
 
-    public void patchUserSettings(String token, String login, UserSettings settings);
+    @Override
+    public void patchUserSettings(String token, String login, UserSettings settings) {
+        // Nothing to do , just for stubbing
+    }
 
 }

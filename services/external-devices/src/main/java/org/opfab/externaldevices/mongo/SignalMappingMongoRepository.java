@@ -7,22 +7,18 @@
  * This file is part of the OperatorFabric project.
  */
 
-package org.opfab.externaldevices.repositories;
 
-import java.util.List;
-import java.util.Optional;
+package org.opfab.externaldevices.mongo;
 
 import org.opfab.externaldevices.model.SignalMapping;
+import org.springframework.data.mongodb.repository.MongoRepository;
+import org.springframework.stereotype.Repository;
 
-public interface SignalMappingRepository {
+/**
+ * Mongo {@link SignalMapping} repository
+ */
+@Repository
+public interface SignalMappingMongoRepository extends MongoRepository<SignalMapping,String> {
 
-    public void insert(SignalMapping signalMapping);
 
-    public Optional<SignalMapping> findById(String id);
-
-    public void deleteById(String id);
-
-    public void deleteAll();
-
-    public List<SignalMapping> findAll();
 }

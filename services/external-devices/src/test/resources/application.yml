@@ -1,5 +1,0 @@
-spring:
-  data:
-    mongodb:
-      uri: mongodb://root:password@localhost:27017/?authSource=admin
-      database: operator-fabric-test

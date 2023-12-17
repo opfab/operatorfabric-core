@@ -21,14 +21,12 @@ import org.opfab.externaldevices.repositories.SettingsRepository;
 import org.opfab.externaldevices.repositories.SignalMappingRepository;
 import org.opfab.externaldevices.repositories.UserConfigurationRepository;
 import org.opfab.users.model.UserSettings;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 /**
  * {@link DevicesService}
@@ -58,11 +56,11 @@ public class ConfigService {
     public ConfigService(UserConfigurationRepository userConfigurationRepository,
                          DeviceConfigurationRepository deviceConfigurationRepository,
                          SignalMappingRepository signalMappingRepository,
-                         @Value("${operatorfabric.servicesUrls.users:http://users:2103}") String usersServiceUrl) {
+                         SettingsRepository settingsRepository) {
         this.userConfigurationRepository = userConfigurationRepository;
         this.deviceConfigurationRepository = deviceConfigurationRepository;
         this.signalMappingRepository = signalMappingRepository;
-        this.settingsRepository = new SettingsRepository(usersServiceUrl);
+        this.settingsRepository = settingsRepository;
     }
 
     public void insertDeviceConfiguration(DeviceConfiguration deviceConfiguration) {
