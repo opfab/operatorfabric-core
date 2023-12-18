@@ -82,8 +82,7 @@ export class CardBodyComponent implements OnChanges, OnInit, OnDestroy {
     private userWithPerimeters: UserWithPerimeters;
 
     constructor(
-        private router: Router,
-        private opfabAPIService: OpfabAPIService
+        private router: Router
     ) {
         this.userWithPerimeters = UserService.getCurrentUserWithPerimeters();
         if (this.userWithPerimeters) {
@@ -137,10 +136,10 @@ export class CardBodyComponent implements OnChanges, OnInit, OnDestroy {
             const newChildArray = this.childCards.filter((childCard) => childCard.id !== cardData.card.id);
             newChildArray.push(cardData.card);
             this.childCards = newChildArray;
-            this.opfabAPIService.currentCard.childCards = this.childCards;
-            this.opfabAPIService.currentCard.applyChildCards();
+            OpfabAPIService.currentCard.childCards = this.childCards;
+            OpfabAPIService.currentCard.applyChildCards();
             this.lockResponseIfOneUserEntityHasAlreadyRespond();
-            if (this.isResponseLocked) this.opfabAPIService.templateInterface.lockAnswer();
+            if (this.isResponseLocked) OpfabAPIService.templateInterface.lockAnswer();
         });
     }
 
@@ -158,20 +157,20 @@ export class CardBodyComponent implements OnChanges, OnInit, OnDestroy {
         const newChildArray = this.childCards.filter((childCard) => childCard.id !== deletedChildCardId);
         this.childCards = newChildArray;
         this.lockResponseIfOneUserEntityHasAlreadyRespond();
-        this.opfabAPIService.currentCard.isResponseLocked = this.isResponseLocked;
-        if (!this.isResponseLocked) this.opfabAPIService.templateInterface.unlockAnswer();
-        this.opfabAPIService.currentCard.childCards = this.childCards;
-        this.opfabAPIService.currentCard.applyChildCards();
+        OpfabAPIService.currentCard.isResponseLocked = this.isResponseLocked;
+        if (!this.isResponseLocked) OpfabAPIService.templateInterface.unlockAnswer();
+        OpfabAPIService.currentCard.childCards = this.childCards;
+        OpfabAPIService.currentCard.applyChildCards();
     }
 
     public unlockAnswer() {
         this.isResponseLocked = false;
-        this.opfabAPIService.templateInterface.unlockAnswer();
+        OpfabAPIService.templateInterface.unlockAnswer();
     }
 
     ngOnChanges(changes: SimpleChanges): void {
         if (!!changes.card || !!changes.cardState) {
-            if (changes.card) this.opfabAPIService.currentCard.card = this.card;
+            if (changes.card) OpfabAPIService.currentCard.card = this.card;
             if (this.cardState.response != null && this.cardState.response !== undefined) {
                 this.computeEntityIdsAllowedOrRequiredToRespondAndAllowedToSendCards();
                 this.computeUserEntityIdsPossibleForResponse();
@@ -295,15 +294,15 @@ export class CardBodyComponent implements OnChanges, OnInit, OnDestroy {
     }
 
     private setOpfabApiVariables() {
-        this.opfabAPIService.currentCard.childCards = this.childCards;
-        this.opfabAPIService.currentCard.isResponseLocked = this.isResponseLocked;
-        this.opfabAPIService.currentCard.isUserAllowedToRespond = this.isUserEnabledToRespond;
-        this.opfabAPIService.currentCard.entitiesAllowedToRespond =
+        OpfabAPIService.currentCard.childCards = this.childCards;
+        OpfabAPIService.currentCard.isResponseLocked = this.isResponseLocked;
+        OpfabAPIService.currentCard.isUserAllowedToRespond = this.isUserEnabledToRespond;
+        OpfabAPIService.currentCard.entitiesAllowedToRespond =
             this.entityIdsAllowedOrRequiredToRespondAndAllowedToSendCards;
-        this.opfabAPIService.currentCard.isUserMemberOfAnEntityRequiredToRespond =
+        OpfabAPIService.currentCard.isUserMemberOfAnEntityRequiredToRespond =
             this.userMemberOfAnEntityRequiredToRespondAndAllowedToSendCards;
-        this.opfabAPIService.currentCard.entityUsedForUserResponse = this.userEntityIdToUseForResponse;
-        this.opfabAPIService.currentCard.entitiesUsableForUserResponse = this.userEntityIdsPossibleForResponse;
+        OpfabAPIService.currentCard.entityUsedForUserResponse = this.userEntityIdToUseForResponse;
+        OpfabAPIService.currentCard.entitiesUsableForUserResponse = this.userEntityIdsPossibleForResponse;
         }
 
     private stopRegularlyCheckLttd() {
@@ -312,7 +311,7 @@ export class CardBodyComponent implements OnChanges, OnInit, OnDestroy {
     }
 
     public afterTemplateRendering() {
-        if (this.isResponseLocked) this.opfabAPIService.templateInterface.lockAnswer();
+        if (this.isResponseLocked) OpfabAPIService.templateInterface.lockAnswer();
         this.startRegularlyCheckLttd();
     }
 
@@ -325,7 +324,7 @@ export class CardBodyComponent implements OnChanges, OnInit, OnDestroy {
         if (this.card.lttd && !this.lttdExpiredIsTrue && this.regularlyLttdCheckActive) {
             if (this.isLttdExpired()) {
                 this.lttdExpiredIsTrue = true;
-                this.opfabAPIService.templateInterface.setLttdExpired(true);
+                OpfabAPIService.templateInterface.setLttdExpired(true);
             } else setTimeout(() => this.regularlyCheckLttd(), 500);
         }
     }

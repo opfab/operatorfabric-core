@@ -79,7 +79,6 @@ export class ApplicationLoadingComponent implements OnInit {
         private opfabEventStreamServer: OpfabEventStreamServer,
         private applicationUpdateService: ApplicationUpdateService,
         private systemNotificationService: SystemNotificationService,
-        private opfabAPIService: OpfabAPIService,
         private translationService: TranslationService,
         private remoteLoggerServer: RemoteLoggerServer,
         private userServer: UserServer,
@@ -105,7 +104,6 @@ export class ApplicationLoadingComponent implements OnInit {
             translationService: this.translationService,
             userServer: this.userServer,
             routerService: this.routerService,
-            opfabAPIService: this.opfabAPIService,
             entitiesServer: this.entitiesServer,
             groupsServer: this.groupsServer,
             perimetersServer: this.perimetersServer,
@@ -123,6 +121,7 @@ export class ApplicationLoadingComponent implements OnInit {
 
 
         this.loadUIConfiguration();
+        OpfabAPIService.init();
     }
 
     private loadUIConfiguration() {

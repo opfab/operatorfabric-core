@@ -38,7 +38,6 @@ declare const opfab: any;
 export class ServicesConfig {
     private static loadDone = new Subject();
     private static routerService: RouterService;
-    private static opfabApiService: OpfabAPIService;
 
     public static setServers(servers) {
         ConfigService.setConfigServer(servers.configServer);
@@ -47,7 +46,6 @@ export class ServicesConfig {
         I18nService.setTranslationService(servers.translationService);
         UserService.setUserServer(servers.userServer);
         ServicesConfig.routerService = servers.routerService;
-        ServicesConfig.opfabApiService = servers.opfabAPIService;
         EntitiesService.setEntitiesServer(servers.entitiesServer);
         GroupsService.setGroupsServer(servers.groupsServer);
         PerimetersService.setPerimeterServer(servers.perimetersServer);
@@ -61,6 +59,7 @@ export class ServicesConfig {
         ExternalDevicesService.setExternalDevicesServer(servers.externalDevicesServer);
         TemplateCssService.setTemplatecssServer(servers.templateCssServer);
         SettingsService.setSettingsServer(servers.settingsServer);
+        OpfabAPIService.setTranslationService(servers.translationService);
     }
 
     public static load(): Observable<any> {
@@ -126,6 +125,6 @@ export class ServicesConfig {
             that.routerService.navigateTo('feed/cards/' + cardId);
         };
 
-        ServicesConfig.opfabApiService.initAPI();
+        OpfabAPIService.initAPI();
     }
 }

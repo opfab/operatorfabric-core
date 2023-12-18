@@ -40,15 +40,13 @@ export class SimplifiedCardViewComponent implements OnInit, OnDestroy {
     private userMemberOfAnEntityRequiredToRespondAndAllowedToSendCards = false;
     public isLoading = true;
 
-    constructor(
-        private opfabAPIService: OpfabAPIService
-    ) {
+    constructor() {
         const userWithPerimeters = UserService.getCurrentUserWithPerimeters();
         if (userWithPerimeters) this.user = userWithPerimeters.userData;
     }
 
     ngOnInit() {
-        this.opfabAPIService.currentCard.card = this.card;
+        OpfabAPIService.currentCard.card = this.card;
         this.computeEntitiesForResponses();
         this.getTemplateAndStyle();
     }
@@ -90,14 +88,14 @@ export class SimplifiedCardViewComponent implements OnInit, OnDestroy {
     }
 
     public beforeTemplateRendering() {
-        this.opfabAPIService.currentCard.isUserMemberOfAnEntityRequiredToRespond =
+        OpfabAPIService.currentCard.isUserMemberOfAnEntityRequiredToRespond =
             this.userMemberOfAnEntityRequiredToRespondAndAllowedToSendCards;
-        this.opfabAPIService.currentCard.childCards = this.childCards ? this.childCards : [];
+        OpfabAPIService.currentCard.childCards = this.childCards ? this.childCards : [];
     }
 
     public afterTemplateRendering() {
         if (this.displayContext === DisplayContext.ARCHIVE) {
-            this.opfabAPIService.templateInterface.lockAnswer();
+            OpfabAPIService.templateInterface.lockAnswer();
         }
     }
 
