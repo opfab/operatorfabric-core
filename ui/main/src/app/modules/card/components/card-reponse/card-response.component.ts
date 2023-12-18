@@ -81,9 +81,7 @@ export class CardResponseComponent implements OnChanges, OnInit {
     isReadOnlyUser: boolean;
 
     constructor(
-        private modalService: NgbModal,
-        private opfabAPIService: OpfabAPIService
-
+        private modalService: NgbModal
     ) {
         const userWithPerimeters = UserService.getCurrentUserWithPerimeters();
         if (userWithPerimeters) this.user = userWithPerimeters.userData;
@@ -142,7 +140,7 @@ export class CardResponseComponent implements OnChanges, OnInit {
     }
 
     public processClickOnSendResponse() {
-        const responseData: FormResult = this.opfabAPIService.templateInterface.getUserResponse();
+        const responseData: FormResult = OpfabAPIService.templateInterface.getUserResponse();
 
         if (this.userEntitiesAllowedToRespond.length > 1 && !responseData.publisher) this.displayEntitiesChoicePopup();
         else this.submitResponse();
@@ -155,7 +153,7 @@ export class CardResponseComponent implements OnChanges, OnInit {
     }
 
     private submitResponse() {
-        const responseData: FormResult = this.opfabAPIService.templateInterface.getUserResponse();
+        const responseData: FormResult = OpfabAPIService.templateInterface.getUserResponse();
 
         if (responseData.valid) {
             const publisherEntity = responseData.publisher ?? this.userEntityIdToUseForResponse;
@@ -196,7 +194,7 @@ export class CardResponseComponent implements OnChanges, OnInit {
                         console.error(resp);
                     } else {
                         this.isResponseLocked = true;
-                        this.opfabAPIService.templateInterface.lockAnswer();
+                        OpfabAPIService.templateInterface.lockAnswer();
                         this.displayMessage(ResponseI18nKeys.SUBMIT_SUCCESS_MSG, null, MessageLevel.INFO);
                     }
                 }
