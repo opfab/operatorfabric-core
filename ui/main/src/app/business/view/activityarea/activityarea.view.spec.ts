@@ -29,7 +29,6 @@ import {Severity} from '@ofModel/light-card.model';
 describe('ActivityAreaView', () => {
     let userServerMock: UserServerMock;
     let entitiesServerMock: EntitiesServerMock;
-    let settingsService: SettingsService;
     let settingsServerMock: SettingsServerMock;
     let user: User;
     let activityAreaView: ActivityAreaView;
@@ -60,8 +59,8 @@ describe('ActivityAreaView', () => {
 
     function mockSettingsService() {
         settingsServerMock = new SettingsServerMock();
+        SettingsService.setSettingsServer(settingsServerMock);
         CurrentUserStore.setCurrentUserAuthenticationValid('currentUser');
-        settingsService = new SettingsService(settingsServerMock);
     }
 
 
@@ -82,7 +81,7 @@ describe('ActivityAreaView', () => {
     }
 
     function initActivityAreaView() {
-        activityAreaView = new ActivityAreaView(settingsService);
+        activityAreaView = new ActivityAreaView();
     }
 
     it('GIVEN a user  WHEN he is member of entity1 THEN activityArea has one line with entity1 and entity1 name', async () => {

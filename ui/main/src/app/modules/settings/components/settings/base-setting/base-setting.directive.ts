@@ -30,10 +30,6 @@ export abstract class BaseSettingDirective implements OnInit, OnDestroy {
 
     protected ignoreFirstUpdate = false;
 
-    protected constructor(
-        protected settingsService: SettingsService
-    ) {}
-
     ngOnInit() {
         this.form = this.initFormGroup();
         if (!this.form) {
@@ -82,7 +78,7 @@ export abstract class BaseSettingDirective implements OnInit, OnDestroy {
         const settings = {...this.baseSettings};
         settings[this.settingPath] = value.setting;
         ConfigService.setConfigValue('settings.' + this.settingPath, value.setting);
-        this.settingsService.patchUserSettings(settings).subscribe({
+        SettingsService.patchUserSettings(settings).subscribe({
                 next : (res) => logger.debug("Receive response for patch settings"+ JSON.stringify(res)),
                 error:  (error) => logger.error("Error in patching settings" + JSON.stringify(error))
         });

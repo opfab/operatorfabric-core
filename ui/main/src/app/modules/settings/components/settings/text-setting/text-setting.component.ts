@@ -10,7 +10,6 @@
 import {Component, Input, OnDestroy, OnInit} from '@angular/core';
 import {BaseSettingDirective} from '../base-setting/base-setting.directive';
 import {FormControl, FormGroup, Validators} from '@angular/forms';
-import {SettingsService} from 'app/business/services/users/settings.service';
 
 @Component({
     selector: 'of-text-setting',
@@ -21,11 +20,6 @@ export class TextSettingComponent extends BaseSettingDirective implements OnInit
     @Input() disabled: boolean;
     @Input() text: string;
 
-    constructor(
-        protected settingsService: SettingsService
-    ) {
-        super(settingsService);
-    }
 
     initFormGroup() {
         const validators = this.computeTextValidators();

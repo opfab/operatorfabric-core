@@ -47,7 +47,8 @@ import {BusinessDataServer} from 'app/business/server/businessData.server';
 import {CardServer} from 'app/business/server/card.server';
 import {SupervisedEntitiesServer} from 'app/business/server/supervised-entities.server';
 import {ExternalDevicesServer} from 'app/business/server/external-devices.server';
-import {TemplateCssServer} from "../../../business/server/template-css.server";
+import {TemplateCssServer} from '../../../business/server/template-css.server';
+import {SettingsServer} from '../../../business/server/settings.server';
 
 declare const opfab: any;
 @Component({
@@ -75,7 +76,6 @@ export class ApplicationLoadingComponent implements OnInit {
     constructor(
         private authService: AuthService,
         private configServer: ConfigServer,
-        private settingsService: SettingsService,
         private opfabEventStreamServer: OpfabEventStreamServer,
         private applicationUpdateService: ApplicationUpdateService,
         private systemNotificationService: SystemNotificationService,
@@ -94,7 +94,8 @@ export class ApplicationLoadingComponent implements OnInit {
         private cardServer: CardServer,
         private supervisedEntitiesServer: SupervisedEntitiesServer,
         private externalDevicesServer: ExternalDevicesServer,
-        private templateCssServer: TemplateCssServer
+        private templateCssServer: TemplateCssServer,
+        private settingsServer: SettingsServer
     ) {}
 
     ngOnInit() {
@@ -116,7 +117,8 @@ export class ApplicationLoadingComponent implements OnInit {
             cardServer: this.cardServer,
             supervisedEntitiesServer: this.supervisedEntitiesServer,
             externalDevicesServer: this.externalDevicesServer,
-            templateCssServer: this.templateCssServer
+            templateCssServer: this.templateCssServer,
+            settingsServer: this.settingsServer
         });
 
 
@@ -202,7 +204,7 @@ export class ApplicationLoadingComponent implements OnInit {
     }
 
     private loadSettings() {
-        this.settingsService.getUserSettings().subscribe({
+        SettingsService.getUserSettings().subscribe({
             next: ({ status, data }) => {
                 switch (status) {
                     case ServerResponseStatus.OK:

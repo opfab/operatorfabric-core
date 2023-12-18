@@ -11,7 +11,6 @@ import {Component, EventEmitter, Input, OnDestroy, OnInit, Output} from '@angula
 import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
 import {NgbModalRef} from '@ng-bootstrap/ng-bootstrap/modal/modal-ref';
 import {FormControl, FormGroup} from '@angular/forms';
-import {SettingsService} from 'app/business/services/users/settings.service';
 import {ActivityAreaView} from 'app/business/view/activityarea/activityarea.view';
 import {ActivityAreaPage} from 'app/business/view/activityarea/activityareaPage';
 
@@ -37,14 +36,11 @@ export class ActivityareaComponent implements OnInit, OnDestroy {
     activityAreaPage: ActivityAreaPage;
 
     constructor(
-        private modalService: NgbModal,
-        private settingsService: SettingsService
+        private modalService: NgbModal
     ) {}
 
     ngOnInit() {
-        this.activityAreaView = new ActivityAreaView(
-            this.settingsService
-        );
+        this.activityAreaView = new ActivityAreaView();
         this.activityAreaView.getActivityAreaPage().subscribe((page) => {
             this.activityAreaPage = page;
             this.initForm();

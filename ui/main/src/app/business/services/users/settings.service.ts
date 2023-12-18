@@ -7,29 +7,27 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {Injectable} from '@angular/core';
 import {Observable} from 'rxjs';
 import {SettingsServer} from '../../server/settings.server';
 import {LogOption, LoggerService as logger} from 'app/business/services/logs/logger.service';
 import {CurrentUserStore} from '../../store/current-user.store';
 
-@Injectable({
-    providedIn: 'root'
-})
 export class SettingsService {
-    readonly usersUrl: string;
-    private userId: string;
+    private static userId: string;
+    private static settingsServer;
 
-    constructor(private settingsServer: SettingsServer) {
-        CurrentUserStore.getCurrentUserLogin().subscribe((id) => (this.userId = id));
+
+    public static setSettingsServer(settingsServer: SettingsServer) {
+        CurrentUserStore.getCurrentUserLogin().subscribe((id) => (SettingsService.userId = id));
+        SettingsService.settingsServer = settingsServer;
     }
 
-    getUserSettings(): Observable<any> {
-        return this.settingsServer.getUserSettings(this.userId);
+    static getUserSettings(): Observable<any> {
+        return SettingsService.settingsServer.getUserSettings(this.userId);
     }
 
-    patchUserSettings(settings: any): Observable<any> {
+    static patchUserSettings(settings: any): Observable<any> {
         logger.debug('Patch settings : ' + JSON.stringify(settings), LogOption.REMOTE);
-        return this.settingsServer.patchUserSettings(this.userId, settings);
+        return SettingsService.settingsServer.patchUserSettings(this.userId, settings);
     }
 }

@@ -23,7 +23,6 @@ export class ActivityAreaView {
     private intervalForConnectedUsersUpdate;
 
     constructor(
-        private settingsService: SettingsService
     ) {
         this.currentUserLogin = UserService.getCurrentUserWithPerimeters().userData.login;
         this.activityAreaPage = new ActivityAreaPage();
@@ -96,7 +95,7 @@ export class ActivityAreaView {
             if (line.isUserConnected) return;
             entitiesDisconnected.push(line.entityId);
         });
-        return this.settingsService
+        return SettingsService
             .patchUserSettings({login: this.currentUserLogin, entitiesDisconnected: entitiesDisconnected})
             .pipe(
                 map((response) => {
