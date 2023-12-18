@@ -17,6 +17,7 @@ export class MessageOrQuestionListUserCardTemplate extends BaseUserCardTemplate 
     view: MessageOrQuestionListUserCardTemplateView;
     titleOptions;
     previousTitleId;
+    initialSetting = true;
 
     constructor() {
         super();
@@ -38,6 +39,8 @@ export class MessageOrQuestionListUserCardTemplate extends BaseUserCardTemplate 
 
         <br/>
         `;
+        this.listenToEntityUsedForSendingCardChange();
+        this.view.initRecipientsAndMessageList(this.getAttribute('businessData')).then(() => this.handleInitialSettings())
         this.initMultiSelect();
         this.previousTitleId = this.view.getTitleId();
     }
@@ -47,27 +50,12 @@ export class MessageOrQuestionListUserCardTemplate extends BaseUserCardTemplate 
         return this.view.getSpecificCardInformation(message);
     }
 
-    async initMultiSelect() {
+    initMultiSelect() {
         this.messageSelect = opfab.multiSelect.init({
             id: "message-select",
             multiple: false,
             search: true
         });
-
-        await this.view.initRecipientsAndMessageList(this.getAttribute('businessData')).then( (titlesOptions) => {
-            this.titleOptions = titlesOptions;
-        });
-        
-        this.messageSelect.setOptions(this.titleOptions);
-
-        if (['EDITION', 'COPY'].includes(opfab.currentUserCard.getEditionMode())) {
-            let titleId = this.view.getTitleId();
-            if (titleId) {
-                this.messageSelect.setSelectedValues(titleId)
-            } else {
-                this.messageSelect.setSelectedValues(this.titleOptions[0].value)
-            }
-        }
 
         let that = this; 
 
@@ -75,9 +63,6 @@ export class MessageOrQuestionListUserCardTemplate extends BaseUserCardTemplate 
             that.fillTextAndRecipientFields();
         });
 
-        if (opfab.currentUserCard.getEditionMode() == 'CREATE') {
-            this.messageSelect.setSelectedValues(this.titleOptions[0].value)
-        }
     }
 
     fillTextAndRecipientFields () {
@@ -91,5 +76,48 @@ export class MessageOrQuestionListUserCardTemplate extends BaseUserCardTemplate 
         } 
         
     }
+
+    private listenToEntityUsedForSendingCardChange() {
+        opfab.currentUserCard.listenToEntityUsedForSendingCard((entity) => {
+            this.updateSelectedEmitter(entity);
+        });
+    }
+
+    private handleInitialSettings() {
+        const initialSelectedEmitter = this.view.getPublisher() ?? this.view.getSelectedEmitter();
+
+        if (initialSelectedEmitter) {
+            this.view.setSelectedEmitter(initialSelectedEmitter);
+            this.loadInitialSetting();
+            this.initialSetting = false;
+        }
+    }
+
+    private updateSelectedEmitter(entity) {
+        this.view.setSelectedEmitter(entity);
+
+        if (!this.initialSetting || !['EDITION', 'COPY'].includes(opfab.currentUserCard.getEditionMode())) {
+            const previousSelectedOption = this.messageSelect.getSelectedValues();
+            this.setMessageListOptions(previousSelectedOption);
+        }
+
+        this.initialSetting = false;
+    }
+
+    private loadInitialSetting() {
+        this.setMessageListOptions();
+        this.messageSelect.setSelectedValues(this.view.getInitialSelectedOption());
+    }
+
+    private setMessageListOptions(selected?) {
+        this.titleOptions  = this.view.getMessageListOptions();
+        if (this.titleOptions?.length > 0) {
+            this.messageSelect.setOptions(this.titleOptions);
+            if (selected && this.titleOptions.find(t => t.value === selected))
+                this.messageSelect.setSelectedValues(selected);
+            else this.messageSelect.setSelectedValues(this.titleOptions[0].value)
+        }
+    }
+
 
 }
