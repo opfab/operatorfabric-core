@@ -17,7 +17,6 @@ import {NgbModal, NgbModalOptions, NgbModalRef} from '@ng-bootstrap/ng-bootstrap
 import {FilterType} from '@ofModel/feed-filter.model';
 import {HourAndMinutes, TimeSpan} from '@ofModel/card.model';
 import {ProcessesService} from 'app/business/services/businessconfig/processes.service';
-import {LightCardsStoreService} from 'app/business/services/lightcards/lightcards-store.service';
 import {ConfigService} from 'app/business/services/config.service';
 import {Frequency} from 'rrule';
 import dayGridPlugin from '@fullcalendar/daygrid';
@@ -26,7 +25,8 @@ import interactionPlugin from '@fullcalendar/interaction';
 import bootstrapPlugin from '@fullcalendar/bootstrap';
 import rrulePlugin from '@fullcalendar/rrule';
 import {SelectedCardService} from 'app/business/services/card/selectedCard.service';
-import {LightCardsFeedFilterService} from 'app/business/services/lightcards/lightcards-feed-filter.service';
+import {FilteredLightCardsStore} from 'app/business/store/lightcards/lightcards-feed-filter-store';
+import {OpfabStore} from 'app/business/store/opfabStore';
 
 @Component({
     selector: 'of-calendar',
@@ -34,10 +34,11 @@ import {LightCardsFeedFilterService} from 'app/business/services/lightcards/ligh
     styleUrls: ['./calendar.component.scss']
 })
 export class CalendarComponent implements OnInit, OnDestroy, AfterViewInit {
-    constructor(
-        private modalService: NgbModal,
-        private lightCardsFeedFilterService: LightCardsFeedFilterService,
-    ) {
+
+    private filteredLightCardStore: FilteredLightCardsStore;
+
+    constructor(private modalService: NgbModal) {
+        this.filteredLightCardStore = OpfabStore.getFilteredLightCardStore();
         ProcessesService.getAllProcesses().forEach((process) => {
             if (process.uiVisibility?.calendar) this.mapOfProcesses.set(process.id, 1);
         });
@@ -45,7 +46,6 @@ export class CalendarComponent implements OnInit, OnDestroy, AfterViewInit {
 
     @ViewChild('calendar') calendarComponent: FullCalendarComponent; // the #calendar in the template
     @ViewChild('cardDetail') cardDetailTemplate: ElementRef; // the #cardDetail in the template
-
 
     private unsubscribe$ = new Subject<void>();
     calendarVisible = true;
@@ -56,12 +56,7 @@ export class CalendarComponent implements OnInit, OnDestroy, AfterViewInit {
     // allDaySlot is now specific to timeGrid views (since v4), so it generates an error in build if we specify that the type of calendarOptions is
     // CalendarOptions... Yet it seems to be the correct way to set this property since it works as intended.
     calendarOptions = {
-        plugins: [
-            dayGridPlugin,
-            timeGridPlugin,
-            bootstrapPlugin,
-            interactionPlugin,
-            rrulePlugin],
+        plugins: [dayGridPlugin, timeGridPlugin, bootstrapPlugin, interactionPlugin, rrulePlugin],
         initialView: 'dayGridMonth',
         headerToolbar: {
             left: 'prev,today,next',
@@ -111,8 +106,7 @@ export class CalendarComponent implements OnInit, OnDestroy, AfterViewInit {
     }
 
     private initDataPipe(): void {
-        LightCardsStoreService
-            .getLightCards()
+        OpfabStore.getLightCardStore().getLightCards()
             .pipe(takeUntil(this.unsubscribe$), debounceTime(200), distinctUntilChanged())
             .subscribe((cards) => this.processCards(cards));
     }
@@ -128,7 +122,6 @@ export class CalendarComponent implements OnInit, OnDestroy, AfterViewInit {
                             const endDate = new Date(timespan.end.valueOf());
 
                             if (timespan.recurrence) {
-
                                 this.calendarEvents = this.calendarEvents.concat({
                                     // add new event data. must create new array
                                     id: card.id,
@@ -180,10 +173,7 @@ export class CalendarComponent implements OnInit, OnDestroy, AfterViewInit {
                 id: card.id,
                 title: card.titleTranslated,
                 allDay: false,
-                className: [
-                    'opfab-calendar-event',
-                    'opfab-calendar-event-' + card.severity.toLowerCase()
-                ],
+                className: ['opfab-calendar-event', 'opfab-calendar-event-' + card.severity.toLowerCase()],
                 duration: {minutes: card.rRule.durationInMinutes},
                 rrule: {
                     freq: card.rRule.freq,
@@ -200,27 +190,25 @@ export class CalendarComponent implements OnInit, OnDestroy, AfterViewInit {
         }
     }
 
-    private getDaysOfWeek(timeSpan: TimeSpan):Array<number>
-    {
+    private getDaysOfWeek(timeSpan: TimeSpan): Array<number> {
         let daysOfWeek = [];
         if (timeSpan.recurrence) {
             if (timeSpan.recurrence.daysOfWeek) {
                 daysOfWeek = timeSpan.recurrence.daysOfWeek.map((d) => d - 1);
             } else {
-                daysOfWeek = [0,1,2,3,4,5,6];
+                daysOfWeek = [0, 1, 2, 3, 4, 5, 6];
             }
         }
         return daysOfWeek;
     }
 
-    private getMonths(timeSpan: TimeSpan):Array<number>
-    {
+    private getMonths(timeSpan: TimeSpan): Array<number> {
         let months = [];
         if (timeSpan.recurrence) {
             if (timeSpan.recurrence.months) {
                 months = timeSpan.recurrence.months.map((d) => d + 1);
             } else {
-                months = [1,2,3,4,5,6,7,8,9,10,11,12];
+                months = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
             }
         }
         return months;
@@ -241,7 +229,7 @@ export class CalendarComponent implements OnInit, OnDestroy, AfterViewInit {
     }
 
     datesRangeChange(dateInfo) {
-        this.lightCardsFeedFilterService.updateFilter(FilterType.BUSINESSDATE_FILTER, true, {
+        this.filteredLightCardStore.updateFilter(FilterType.BUSINESSDATE_FILTER, true, {
             start: dateInfo.view.activeStart.getTime(),
             end: dateInfo.view.activeEnd.getTime()
         });

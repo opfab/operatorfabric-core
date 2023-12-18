@@ -10,8 +10,7 @@
 import {Injectable, OnDestroy} from '@angular/core';
 import {LightCard, Severity} from '@ofModel/light-card.model';
 import {Notification} from '@ofModel/external-devices.model';
-import {LightCardsFeedFilterService} from '../lightcards/lightcards-feed-filter.service';
-import {LightCardsStoreService} from '../lightcards/lightcards-store.service';
+import {FilteredLightCardsStore} from '../../store/lightcards/lightcards-feed-filter-store';
 import {EMPTY, iif, merge, of, Subject, timer} from 'rxjs';
 import {filter, map, switchMap, takeUntil} from 'rxjs/operators';
 import {ExternalDevicesService} from 'app/business/services/notifications/external-devices.service';
@@ -20,6 +19,7 @@ import {LogOption, LoggerService as logger} from '../logs/logger.service';
 import {AlertMessageService} from 'app/business/services/alert-message.service';
 import {MessageLevel} from '@ofModel/message.model';
 import {SoundServer} from 'app/business/server/sound.server';
+import {OpfabStore} from 'app/business/store/opfabStore';
 
 @Injectable({
     providedIn: 'root'
@@ -55,13 +55,14 @@ export class SoundNotificationService implements OnDestroy {
     private lastUserAction = new Date().valueOf();
 
     private isServiceActive = true;
+    private filteredLightCardStore: FilteredLightCardsStore;
 
     constructor(
-        private soundServer: SoundServer,
-        private lightCardsFeedFilterService: LightCardsFeedFilterService
+        private soundServer: SoundServer
     ) {
         // use to have access from cypress to the current object for stubbing method playSound
         if (window['Cypress']) window['soundNotificationService'] = this;
+        this.filteredLightCardStore = OpfabStore.getFilteredLightCardStore();
     }
 
     public stopService() {
@@ -126,7 +127,7 @@ export class SoundNotificationService implements OnDestroy {
     }
 
     private listenForCardUpdate() {
-        LightCardsStoreService.getNewLightCards().subscribe((card) => this.handleLoadedCard(card));
+        OpfabStore.getLightCardStore().getNewLightCards().subscribe((card) => this.handleLoadedCard(card));
     }
 
     ngOnDestroy() {
@@ -153,7 +154,7 @@ export class SoundNotificationService implements OnDestroy {
                 this.checkCardIsRecent(card)
             ) {
                 this.incomingCardOrReminder.next(card);
-                if (!this.lightCardsFeedFilterService.isCardVisibleInFeed(card))
+                if (!this.filteredLightCardStore.isCardVisibleInFeed(card))
                     AlertMessageService.sendAlertMessage({
                         message: null,
                         level: MessageLevel.BUSINESS,

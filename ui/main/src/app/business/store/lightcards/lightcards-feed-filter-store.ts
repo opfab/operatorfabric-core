@@ -7,11 +7,9 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {Injectable} from '@angular/core';
 import {debounceTime, map} from 'rxjs/operators';
 import {combineLatest, Observable, ReplaySubject, Subject} from 'rxjs';
 import {LightCard} from '@ofModel/light-card.model';
-import {LightCardsStoreService} from './lightcards-store.service';
 import {LightCardsFilter} from './lightcards-filter';
 import {LightCardsSorter} from './lightcards-sorter';
 import {GroupedCardsService} from 'app/business/services/lightcards/grouped-cards.service';
@@ -19,12 +17,11 @@ import {ConfigService} from 'app/business/services/config.service';
 import {LogOption, LoggerService as logger} from 'app/business/services/logs/logger.service';
 import {LightCardsTextFilter} from './lightcards-text-filter';
 import {Filter, FilterType} from '@ofModel/feed-filter.model';
-import {OpfabEventStreamService} from '../events/opfabEventStream.service';
+import {OpfabEventStreamService} from '../../services/events/opfabEventStream.service';
+import {LightCardsStore} from './lightcards-store';
 
-@Injectable({
-    providedIn: 'root'
-})
-export class LightCardsFeedFilterService {
+
+export class FilteredLightCardsStore {
 
     private filteredAndSortedLightCards = new Subject();
     private filteredLightCards = new Subject();
@@ -35,8 +32,7 @@ export class LightCardsFeedFilterService {
     private lightCardsSorter: LightCardsSorter;
     private lightCardTextFilter: LightCardsTextFilter;
 
-    constructor(
-    ) {
+    constructor(private lightCardStore: LightCardsStore) {
         this.lightCardFilter = new LightCardsFilter();
         this.lightCardsSorter = new LightCardsSorter();
         this.lightCardTextFilter = new LightCardsTextFilter();
@@ -77,7 +73,7 @@ export class LightCardsFeedFilterService {
     private computeFilteredLightCards() {
         combineLatest([
             this.lightCardFilter.getFiltersChanges(),
-            LightCardsStoreService.getLightCards(),
+            this.lightCardStore.getLightCards(),
             this.onlyBusinessFilterForTimeLine.asObservable()
         ])
             .pipe(

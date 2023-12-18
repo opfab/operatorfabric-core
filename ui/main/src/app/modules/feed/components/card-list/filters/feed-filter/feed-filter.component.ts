@@ -17,9 +17,10 @@ import {UserPreferencesService} from 'app/business/services/users/user-preferenc
 import {DateTimeNgb} from '@ofModel/datetime-ngb.model';
 import moment from 'moment';
 import {MessageLevel} from '@ofModel/message.model';
-import {LightCardsFeedFilterService} from 'app/business/services/lightcards/lightcards-feed-filter.service';
+import {FilteredLightCardsStore} from 'app/business/store/lightcards/lightcards-feed-filter-store';
 import {Utilities} from 'app/business/common/utilities';
 import {AlertMessageService} from 'app/business/services/alert-message.service';
+import {OpfabStore} from 'app/business/store/opfabStore';
 
 @Component({
     selector: 'of-feed-filter',
@@ -66,10 +67,10 @@ export class FeedFilterComponent implements OnInit, OnDestroy {
     startMaxDate: {year: number; month: number; day: number} = null;
 
     private dateFilterType = FilterType.PUBLISHDATE_FILTER;
+    private filteredLightCardStore: FilteredLightCardsStore;
 
-    constructor(
-        private lightCardsFeedFilterService: LightCardsFeedFilterService,
-    ) {
+    constructor() {
+        this.filteredLightCardStore = OpfabStore.getFilteredLightCardStore();
         this.typeFilterForm = this.createFormGroup();
         this.ackFilterForm = this.createAckFormGroup();
         this.timeFilterForm = this.createDateTimeForm();
@@ -162,7 +163,7 @@ export class FeedFilterComponent implements OnInit, OnDestroy {
         this.typeFilterForm.get('compliant').setValue(!compliantUnset, {emitEvent: false});
         this.typeFilterForm.get('information').setValue(!informationUnset, {emitEvent: false});
 
-        this.lightCardsFeedFilterService.updateFilter(
+        this.filteredLightCardStore.updateFilter(
             FilterType.TYPE_FILTER,
             alarmUnset || actionUnset || compliantUnset || informationUnset,
             {alarm: !alarmUnset, action: !actionUnset, compliant: !compliantUnset, information: !informationUnset}
@@ -182,7 +183,7 @@ export class FeedFilterComponent implements OnInit, OnDestroy {
                 UserPreferencesService.setPreference('opfab.feed.filter.type.compliant', form.compliant);
                 UserPreferencesService.setPreference('opfab.feed.filter.type.information', form.information);
                 this.filterActiveChange.next(this.isFilterActive());
-                return this.lightCardsFeedFilterService.updateFilter(
+                return this.filteredLightCardStore.updateFilter(
                     FilterType.TYPE_FILTER,
                     !(form.alarm && form.action && form.compliant && form.information),
                     form
@@ -197,13 +198,13 @@ export class FeedFilterComponent implements OnInit, OnDestroy {
         this.responseFilterForm.get('responseControl').setValue(!responseUnset, {emitEvent: false});
 
         if (responseValue) {
-            this.lightCardsFeedFilterService.updateFilter(FilterType.RESPONSE_FILTER, responseUnset, !responseUnset);
+            this.filteredLightCardStore.updateFilter(FilterType.RESPONSE_FILTER, responseUnset, !responseUnset);
         }
 
         this.responseFilterForm.valueChanges.pipe(takeUntil(this.ngUnsubscribe$)).subscribe((form) => {
             UserPreferencesService.setPreference('opfab.feed.filter.response', form.responseControl);
             this.filterActiveChange.next(this.isFilterActive());
-            return this.lightCardsFeedFilterService.updateFilter(
+            return this.filteredLightCardStore.updateFilter(
                 FilterType.RESPONSE_FILTER,
                 !form.responseControl,
                 form.responseControl
@@ -218,13 +219,12 @@ export class FeedFilterComponent implements OnInit, OnDestroy {
         if (timeLineValue && timeLineValue !== 'true') timeLineFiltered = false;
 
         this.timeLineFilterForm.get('timeLineControl').setValue(timeLineFiltered, {emitEvent: false});
-        this.lightCardsFeedFilterService.setOnlyBusinessFilterForTimeLine(!timeLineFiltered);
+        this.filteredLightCardStore.setOnlyBusinessFilterForTimeLine(!timeLineFiltered);
 
         this.timeLineFilterForm.valueChanges.pipe(takeUntil(this.ngUnsubscribe$)).subscribe((form) => {
             UserPreferencesService.setPreference('opfab.feed.filter.applyToTimeLine', form.timeLineControl);
-            this.lightCardsFeedFilterService.setOnlyBusinessFilterForTimeLine(!form.timeLineControl);
+            this.filteredLightCardStore.setOnlyBusinessFilterForTimeLine(!form.timeLineControl);
             this.filterActiveChange.next(this.isFilterActive());
-
         });
     }
 
@@ -232,41 +232,43 @@ export class FeedFilterComponent implements OnInit, OnDestroy {
         const ackValue = UserPreferencesService.getPreference('opfab.feed.filter.ack');
         this.initAckFilterValues(ackValue ? ackValue : this.defaultAcknowledgmentFilter);
 
-
         this.ackFilterForm.valueChanges.pipe(takeUntil(this.ngUnsubscribe$)).subscribe((form) => {
             const active = !form.ackControl || !form.notAckControl;
-            const ack = (!form.ackControl && !form.notAckControl) ? null : active && form.ackControl;
-            UserPreferencesService.setPreference('opfab.feed.filter.ack', this.getAckPreference(form.ackControl, form.notAckControl));
+            const ack = !form.ackControl && !form.notAckControl ? null : active && form.ackControl;
+            UserPreferencesService.setPreference(
+                'opfab.feed.filter.ack',
+                this.getAckPreference(form.ackControl, form.notAckControl)
+            );
             this.filterActiveChange.next(this.isFilterActive());
-            return this.lightCardsFeedFilterService.updateFilter(FilterType.ACKNOWLEDGEMENT_FILTER, active, ack);
+            return this.filteredLightCardStore.updateFilter(FilterType.ACKNOWLEDGEMENT_FILTER, active, ack);
         });
     }
 
-    private initAckFilterValues(ackValue : string) {
+    private initAckFilterValues(ackValue: string) {
         if (ackValue === 'ack') {
             this.ackFilterForm.get('ackControl').setValue(true, {emitEvent: false});
             this.ackFilterForm.get('notAckControl').setValue(false, {emitEvent: false});
 
-            this.lightCardsFeedFilterService.updateFilter(FilterType.ACKNOWLEDGEMENT_FILTER, true, true);
+            this.filteredLightCardStore.updateFilter(FilterType.ACKNOWLEDGEMENT_FILTER, true, true);
         } else if (ackValue === 'notack') {
             this.ackFilterForm.get('ackControl').setValue(false, {emitEvent: false});
             this.ackFilterForm.get('notAckControl').setValue(true, {emitEvent: false});
 
-            this.lightCardsFeedFilterService.updateFilter(FilterType.ACKNOWLEDGEMENT_FILTER, true, false);
-        } else  if (ackValue === 'all') {
+            this.filteredLightCardStore.updateFilter(FilterType.ACKNOWLEDGEMENT_FILTER, true, false);
+        } else if (ackValue === 'all') {
             this.ackFilterForm.get('ackControl').setValue(true, {emitEvent: false});
             this.ackFilterForm.get('notAckControl').setValue(true, {emitEvent: false});
 
-            this.lightCardsFeedFilterService.updateFilter(FilterType.ACKNOWLEDGEMENT_FILTER, false, false);
-        } else  if (ackValue === 'none'){
+            this.filteredLightCardStore.updateFilter(FilterType.ACKNOWLEDGEMENT_FILTER, false, false);
+        } else if (ackValue === 'none') {
             this.ackFilterForm.get('ackControl').setValue(false, {emitEvent: false});
             this.ackFilterForm.get('notAckControl').setValue(false, {emitEvent: false});
 
-            this.lightCardsFeedFilterService.updateFilter(FilterType.ACKNOWLEDGEMENT_FILTER, true, null);
+            this.filteredLightCardStore.updateFilter(FilterType.ACKNOWLEDGEMENT_FILTER, true, null);
         }
     }
 
-    private getAckPreference(ack: boolean, notAck: boolean) : string {
+    private getAckPreference(ack: boolean, notAck: boolean): string {
         if (ack && notAck) return 'all';
         else if (!ack && !notAck) return 'none';
         else return ack ? 'ack' : 'notack';
@@ -279,10 +281,14 @@ export class FeedFilterComponent implements OnInit, OnDestroy {
         const savedEnd = UserPreferencesService.getPreference('opfab.feed.filter.end');
 
         if (savedStart) {
-            this.timeFilterForm.get('dateTimeFrom').setValue(Utilities.convertEpochDateToNgbDateTime(moment(+savedStart).valueOf()));
+            this.timeFilterForm
+                .get('dateTimeFrom')
+                .setValue(Utilities.convertEpochDateToNgbDateTime(moment(+savedStart).valueOf()));
         }
         if (savedEnd) {
-            this.timeFilterForm.get('dateTimeTo').setValue(Utilities.convertEpochDateToNgbDateTime(moment(+savedEnd).valueOf()));
+            this.timeFilterForm
+                .get('dateTimeTo')
+                .setValue(Utilities.convertEpochDateToNgbDateTime(moment(+savedEnd).valueOf()));
         }
 
         this.setNewFilterValue();
@@ -335,7 +341,7 @@ export class FeedFilterComponent implements OnInit, OnDestroy {
             };
         }
 
-        this.lightCardsFeedFilterService.updateFilter(this.dateFilterType, true, status);
+        this.filteredLightCardStore.updateFilter(this.dateFilterType, true, status);
         this.filterActiveChange.next(this.isFilterActive());
     }
 
@@ -379,7 +385,11 @@ export class FeedFilterComponent implements OnInit, OnDestroy {
             !this.typeFilterForm.get('compliant').value ||
             !this.typeFilterForm.get('information').value ||
             !this.responseFilterForm.get('responseControl').value ||
-            this.defaultAcknowledgmentFilter !== this.getAckPreference(this.ackFilterForm.get('ackControl').value, this.ackFilterForm.get('notAckControl').value) ||
+            this.defaultAcknowledgmentFilter !==
+                this.getAckPreference(
+                    this.ackFilterForm.get('ackControl').value,
+                    this.ackFilterForm.get('notAckControl').value
+                ) ||
             !!this.extractTime(this.timeFilterForm.get('dateTimeFrom')) ||
             !!this.extractTime(this.timeFilterForm.get('dateTimeTo'))
         );

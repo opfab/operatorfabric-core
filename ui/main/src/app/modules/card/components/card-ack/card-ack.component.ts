@@ -15,7 +15,6 @@ import {AcknowledgmentAllowedEnum, ConsideredAcknowledgedForUserWhenEnum, State}
 import {User} from '@ofModel/user.model';
 import {AcknowledgeService} from 'app/business/services/acknowledge.service';
 import {EntitiesService} from 'app/business/services/users/entities.service';
-import {LightCardsStoreService} from 'app/business/services/lightcards/lightcards-store.service';
 import {LogOption, LoggerService as logger} from 'app/business/services/logs/logger.service';
 import {ProcessesService} from 'app/business/services/businessconfig/processes.service';
 import {UserPermissionsService} from 'app/business/services/user-permissions.service';
@@ -24,6 +23,7 @@ import {Subject, takeUntil} from 'rxjs';
 import {ServerResponseStatus} from 'app/business/server/serverResponse';
 import {AlertMessageService} from 'app/business/services/alert-message.service';
 import {RouterStore,PageType} from 'app/business/store/router.store';
+import {OpfabStore} from 'app/business/store/opfabStore';
 
 const enum AckI18nKeys {
     BUTTON_TEXT_ACK = 'cardAcknowledgment.button.ack',
@@ -63,7 +63,7 @@ export class CardAckComponent implements OnInit, OnChanges, OnDestroy {
 
     ngOnInit()  {
 
-            LightCardsStoreService
+            OpfabStore.getLightCardStore()
             .getReceivedAcks()
             .pipe(takeUntil(this.unsubscribe$))
             .subscribe((receivedAck) => {
@@ -151,7 +151,7 @@ export class CardAckComponent implements OnInit, OnChanges, OnDestroy {
         AcknowledgeService.postUserAcknowledgement(this.card.uid, entitiesAcks).subscribe((resp) => {
             this.ackOrUnackInProgress = false;
             if (resp.status === ServerResponseStatus.OK) {
-                LightCardsStoreService.setLightCardAcknowledgment(this.card.id, true);
+                OpfabStore.getLightCardStore().setLightCardAcknowledgment(this.card.id, true);
                 this.card = {...this.card, hasBeenAcknowledged: true};
                 this.setAcknowledgeButtonVisibility();
                 if (this.shouldCloseCardWhenUserAcknowledges()) this.closeDetails();
@@ -190,7 +190,7 @@ export class CardAckComponent implements OnInit, OnChanges, OnDestroy {
             if (resp.status === ServerResponseStatus.OK) {
                 this.card = {...this.card, hasBeenAcknowledged: false};
                 this.setAcknowledgeButtonVisibility();
-                LightCardsStoreService.setLightCardAcknowledgment(this.card.id, false);
+                OpfabStore.getLightCardStore().setLightCardAcknowledgment(this.card.id, false);
             } else {
                 logger.error(`The remote acknowledgement endpoint returned an error status(${resp.status})`,LogOption.LOCAL_AND_REMOTE);
                 this.displayMessage(AckI18nKeys.ERROR_MSG, null, MessageLevel.ERROR);

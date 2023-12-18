@@ -10,7 +10,7 @@
 import {FilterType} from '@ofModel/feed-filter.model';
 import {LightCard, Severity} from '@ofModel/light-card.model';
 import {getSeveralRandomLightCards} from '@tests/helpers';
-import {LightCardsFilter} from './lightcards-filter';
+import {LightCardsFilter} from '../../store/lightcards/lightcards-filter';
 
 describe('NewFilterService ', () => {
     let service: LightCardsFilter;

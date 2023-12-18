@@ -9,7 +9,7 @@
 
 import {Component, Input, OnInit, Output} from '@angular/core';
 import {ConfigService} from 'app/business/services/config.service';
-import {LightCardsStoreService} from 'app/business/services/lightcards/lightcards-store.service';
+import {OpfabStore} from 'app/business/store/opfabStore';
 import {Subject} from 'rxjs';
 
 @Component({
@@ -30,7 +30,7 @@ export class FiltersComponent implements OnInit {
     ngOnInit() {
         this.showSearchFilter = ConfigService.getConfigValue('feed.showSearchFilter', false);
 
-        LightCardsStoreService
+        OpfabStore.getLightCardStore()
             .getLoadingInProgress()
             .subscribe((inProgress: boolean) => (this.loadingInProgress = inProgress));
     }

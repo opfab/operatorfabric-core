@@ -23,9 +23,9 @@ import {GroupedCardsService} from 'app/business/services/lightcards/grouped-card
 import {AlertMessageService} from 'app/business/services/alert-message.service';
 import {Router} from '@angular/router';
 import {UserPreferencesService} from 'app/business/services/users/user-preference.service';
-import {LightCardsStoreService} from 'app/business/services/lightcards/lightcards-store.service';
 import {ServerResponseStatus} from 'app/business/server/serverResponse';
-import {LightCardsFeedFilterService} from 'app/business/services/lightcards/lightcards-feed-filter.service';
+import {FilteredLightCardsStore} from 'app/business/store/lightcards/lightcards-feed-filter-store';
+import {OpfabStore} from 'app/business/store/opfabStore';
 
 @Component({
     selector: 'of-card-list',
@@ -50,22 +50,20 @@ export class CardListComponent implements AfterViewChecked, OnInit {
     defaultSorting: string;
     defaultAcknowledgmentFilter: string;
 
-
     filterActive: boolean;
     filterOpen: boolean;
 
-    constructor(
-        private modalService: NgbModal,
-        private router: Router,
-        private lightCardsFeedFilterService: LightCardsFeedFilterService
-    ) {
+    private filteredLightCardStore: FilteredLightCardsStore;
+
+    constructor(private modalService: NgbModal, private router: Router) {
+        this.filteredLightCardStore = OpfabStore.getFilteredLightCardStore();
         this.currentUserWithPerimeters = UserService.getCurrentUserWithPerimeters();
     }
 
     ngOnInit(): void {
         this.defaultSorting = ConfigService.getConfigValue('feed.defaultSorting', 'unread');
 
-        this.lightCardsFeedFilterService.setSortBy(this.defaultSorting);
+        this.filteredLightCardStore.setSortBy(this.defaultSorting);
 
         this.defaultAcknowledgmentFilter = ConfigService.getConfigValue('feed.defaultAcknowledgmentFilter', 'notack');
         if (
@@ -85,8 +83,6 @@ export class CardListComponent implements AfterViewChecked, OnInit {
         this.hideAckAllCardsFeature = ConfigService.getConfigValue('feed.card.hideAckAllCardsFeature', true);
         this.initFilterActive();
     }
-
-
 
     ngAfterViewChecked() {
         this.adaptFrameHeight();
@@ -127,19 +123,26 @@ export class CardListComponent implements AfterViewChecked, OnInit {
         const ackValue = UserPreferencesService.getPreference('opfab.feed.filter.ack');
         const ackSet = ackValue && (ackValue === 'ack' || ackValue === 'none');
 
-
         const savedStart = UserPreferencesService.getPreference('opfab.feed.filter.start');
         const savedEnd = UserPreferencesService.getPreference('opfab.feed.filter.end');
 
-        this.filterActive = alarmUnset || actionUnset || compliantUnset || informationUnset || responseUnset || ackSet || !!savedStart || !!savedEnd;
+        this.filterActive =
+            alarmUnset ||
+            actionUnset ||
+            compliantUnset ||
+            informationUnset ||
+            responseUnset ||
+            ackSet ||
+            !!savedStart ||
+            !!savedEnd;
     }
 
     acknowledgeAllVisibleCardsInTheFeed() {
         this.lightCards.forEach((lightCard) => {
             this.acknowledgeVisibleCardInTheFeed(lightCard);
-            GroupedCardsService
-                .getChildCardsByTags(lightCard.tags)
-                .forEach((groupedCard) => this.acknowledgeVisibleCardInTheFeed(groupedCard));
+            GroupedCardsService.getChildCardsByTags(lightCard.tags).forEach((groupedCard) =>
+                this.acknowledgeVisibleCardInTheFeed(groupedCard)
+            );
         });
     }
 
@@ -148,17 +151,11 @@ export class CardListComponent implements AfterViewChecked, OnInit {
         if (
             !lightCard.hasBeenAcknowledged &&
             this.isCardPublishedBeforeAckDemand(lightCard) &&
-            AcknowledgeService.isAcknowledgmentAllowed(
-                this.currentUserWithPerimeters,
-                lightCard,
-                processDefinition
-            )
+            AcknowledgeService.isAcknowledgmentAllowed(this.currentUserWithPerimeters, lightCard, processDefinition)
         ) {
             try {
                 const entitiesAcks = [];
-                const entities = EntitiesService.getEntitiesFromIds(
-                    this.currentUserWithPerimeters.userData.entities
-                );
+                const entities = EntitiesService.getEntitiesFromIds(this.currentUserWithPerimeters.userData.entities);
                 entities.forEach((entity) => {
                     if (entity.entityAllowedToSendCard)
                         // this avoids to display entities used only for grouping
@@ -166,9 +163,11 @@ export class CardListComponent implements AfterViewChecked, OnInit {
                 });
                 AcknowledgeService.postUserAcknowledgement(lightCard.uid, entitiesAcks).subscribe((resp) => {
                     if (resp.status === ServerResponseStatus.OK) {
-                        LightCardsStoreService.setLightCardAcknowledgment(lightCard.id, true);
+                        OpfabStore.getLightCardStore().setLightCardAcknowledgment(lightCard.id, true);
                     } else {
-                        throw new Error('the remote acknowledgement endpoint returned an error status(' + resp.status + ')');
+                        throw new Error(
+                            'the remote acknowledgement endpoint returned an error status(' + resp.status + ')'
+                        );
                     }
                 });
             } catch (err) {

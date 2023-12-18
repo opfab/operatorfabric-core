@@ -21,7 +21,6 @@ import {AppLoadedInAnotherTabComponent} from './app-loaded-in-another-tab/app-lo
 import {SettingsService} from 'app/business/services/users/settings.service';
 import {OpfabEventStreamServer} from 'app/business/server/opfabEventStream.server';
 import {OpfabEventStreamService} from 'app/business/services/events/opfabEventStream.service';
-import {LightCardsStoreService} from 'app/business/services/lightcards/lightcards-store.service';
 import {ApplicationUpdateService} from 'app/business/services/events/application-update.service';
 import {ServerResponseStatus} from 'app/business/server/serverResponse';
 import {CurrentUserStore} from 'app/business/store/current-user.store';
@@ -49,6 +48,7 @@ import {SupervisedEntitiesServer} from 'app/business/server/supervised-entities.
 import {ExternalDevicesServer} from 'app/business/server/external-devices.server';
 import {TemplateCssServer} from '../../../business/server/template-css.server';
 import {SettingsServer} from '../../../business/server/settings.server';
+import {OpfabStore} from 'app/business/store/opfabStore';
 
 declare const opfab: any;
 @Component({
@@ -275,7 +275,7 @@ export class ApplicationLoadingComponent implements OnInit {
             this.loadingInProgress = false;
             this.applicationLoaded = true;
         });
-        LightCardsStoreService.initStore(); // this will effectively open the http stream connection
+        OpfabStore.init(); // this will effectively open the http stream connection
         this.applicationUpdateService.init();
         this.systemNotificationService.initSystemNotificationService();
         ServicesConfig.finalizeLoading();

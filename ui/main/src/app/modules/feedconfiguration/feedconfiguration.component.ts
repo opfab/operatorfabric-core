@@ -18,8 +18,8 @@ import {FormArray, FormControl, FormGroup} from '@angular/forms';
 import {SettingsService} from 'app/business/services/users/settings.service';
 import {TranslateService} from '@ngx-translate/core';
 import {Utilities} from '../../business/common/utilities';
-import {LightCardsStoreService} from 'app/business/services/lightcards/lightcards-store.service';
 import {ConfigService} from "../../business/services/config.service";
+import {OpfabStore} from 'app/business/store/opfabStore';
 
 @Component({
     selector: 'of-feedconfiguration',
@@ -421,7 +421,7 @@ export class FeedconfigurationComponent implements OnInit, AfterViewInit {
                         this.messageAfterSavingSettings = 'shared.error.impossibleToSaveSettings';
                         this.displaySendResultError = true;
                     } else {
-                        LightCardsStoreService.removeAllLightCards();
+                        OpfabStore.getLightCardStore().removeAllLightCards();
                         UserService.loadUserWithPerimetersData().subscribe();
                     }
                     this.modalRef.close();

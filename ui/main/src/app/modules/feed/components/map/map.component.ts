@@ -15,7 +15,7 @@ import {Tile as TileLayer, Vector as VectorLayer} from 'ol/layer';
 import {OSM, XYZ, Vector as VectorSource} from 'ol/source';
 import {fromLonLat} from 'ol/proj';
 import {LightCard, Severity} from '@ofModel/light-card.model';
-import {LightCardsFeedFilterService} from 'app/business/services/lightcards/lightcards-feed-filter.service';
+import {FilteredLightCardsStore} from 'app/business/store/lightcards/lightcards-feed-filter-store';
 import {Subject} from 'rxjs';
 import {takeUntil} from 'rxjs/operators';
 import WKT from 'ol/format/WKT';
@@ -32,6 +32,7 @@ import {TranslateService} from '@ngx-translate/core';
 import {GlobalStyleService} from 'app/business/services/global-style.service';
 import {Router} from '@angular/router';
 import {DateTimeFormatterService} from '../../../../business/services/date-time-formatter.service';
+import {OpfabStore} from 'app/business/store/opfabStore';
 
 let self;
 
@@ -46,13 +47,11 @@ export class MapComponent implements OnInit, OnDestroy, AfterViewChecked {
     private vectorLayer: VectorLayer<VectorSource<any>>;
     private graphChart = null;
     public lightCardsToDisplay: LightCard[];
+    private filteredLightCardStore: FilteredLightCardsStore;
 
-    constructor(
-        private lightCardsFeedFilterService: LightCardsFeedFilterService,
-        private mapService: MapService,
-        private translate: TranslateService,
-        private router: Router
-    ) {}
+    constructor(private mapService: MapService, private translate: TranslateService, private router: Router) {
+        this.filteredLightCardStore = OpfabStore.getFilteredLightCardStore();
+    }
 
     ngOnInit() {
         self = this;
@@ -60,7 +59,7 @@ export class MapComponent implements OnInit, OnDestroy, AfterViewChecked {
         if (ConfigService.getConfigValue('feed.geomap.enableMap', false)) {
             const enableGraph = ConfigService.getConfigValue('feed.geomap.enableGraph', false);
             this.drawMap(enableGraph);
-            this.lightCardsFeedFilterService
+            this.filteredLightCardStore
                 .getFilteredAndSearchedLightCards()
                 .pipe(takeUntil(this.unsubscribe$))
                 .subscribe((cards) => {

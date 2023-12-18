@@ -35,7 +35,6 @@ import {
 import * as moment from 'moment';
 import {Router} from '@angular/router';
 import {NgbPopover} from '@ng-bootstrap/ng-bootstrap';
-import {LightCardsFeedFilterService} from 'app/business/services/lightcards/lightcards-feed-filter.service';
 import {TimelineView} from 'app/business/view/timeline/timeline.view';
 import {Observable} from 'rxjs';
 
@@ -84,11 +83,10 @@ export class CustomTimelineChartComponent extends BaseChartComponent implements 
         zone: NgZone,
         cd: ChangeDetectorRef,
         private router: Router,
-        @Inject(PLATFORM_ID) platformId: any,
-        lightCardsFeedFilterService: LightCardsFeedFilterService
+        @Inject(PLATFORM_ID) platformId: any
     ) {
         super(chartElement, zone, cd, platformId);
-        this.timeLineView = new TimelineView(lightCardsFeedFilterService);
+        this.timeLineView = new TimelineView();
         this.changeDetectorRef = cd;
         this.circles$ = this.timeLineView.getCircles();
     }
