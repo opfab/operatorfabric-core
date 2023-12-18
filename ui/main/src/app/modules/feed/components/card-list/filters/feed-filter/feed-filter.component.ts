@@ -68,7 +68,6 @@ export class FeedFilterComponent implements OnInit, OnDestroy {
     private dateFilterType = FilterType.PUBLISHDATE_FILTER;
 
     constructor(
-        private lightCardsFeedFilterService: LightCardsFeedFilterService,
     ) {
         this.typeFilterForm = this.createFormGroup();
         this.ackFilterForm = this.createAckFormGroup();
@@ -162,7 +161,7 @@ export class FeedFilterComponent implements OnInit, OnDestroy {
         this.typeFilterForm.get('compliant').setValue(!compliantUnset, {emitEvent: false});
         this.typeFilterForm.get('information').setValue(!informationUnset, {emitEvent: false});
 
-        this.lightCardsFeedFilterService.updateFilter(
+        LightCardsFeedFilterService.updateFilter(
             FilterType.TYPE_FILTER,
             alarmUnset || actionUnset || compliantUnset || informationUnset,
             {alarm: !alarmUnset, action: !actionUnset, compliant: !compliantUnset, information: !informationUnset}
@@ -182,7 +181,7 @@ export class FeedFilterComponent implements OnInit, OnDestroy {
                 UserPreferencesService.setPreference('opfab.feed.filter.type.compliant', form.compliant);
                 UserPreferencesService.setPreference('opfab.feed.filter.type.information', form.information);
                 this.filterActiveChange.next(this.isFilterActive());
-                return this.lightCardsFeedFilterService.updateFilter(
+                return LightCardsFeedFilterService.updateFilter(
                     FilterType.TYPE_FILTER,
                     !(form.alarm && form.action && form.compliant && form.information),
                     form
@@ -197,13 +196,13 @@ export class FeedFilterComponent implements OnInit, OnDestroy {
         this.responseFilterForm.get('responseControl').setValue(!responseUnset, {emitEvent: false});
 
         if (responseValue) {
-            this.lightCardsFeedFilterService.updateFilter(FilterType.RESPONSE_FILTER, responseUnset, !responseUnset);
+            LightCardsFeedFilterService.updateFilter(FilterType.RESPONSE_FILTER, responseUnset, !responseUnset);
         }
 
         this.responseFilterForm.valueChanges.pipe(takeUntil(this.ngUnsubscribe$)).subscribe((form) => {
             UserPreferencesService.setPreference('opfab.feed.filter.response', form.responseControl);
             this.filterActiveChange.next(this.isFilterActive());
-            return this.lightCardsFeedFilterService.updateFilter(
+            return LightCardsFeedFilterService.updateFilter(
                 FilterType.RESPONSE_FILTER,
                 !form.responseControl,
                 form.responseControl
@@ -218,11 +217,11 @@ export class FeedFilterComponent implements OnInit, OnDestroy {
         if (timeLineValue && timeLineValue !== 'true') timeLineFiltered = false;
 
         this.timeLineFilterForm.get('timeLineControl').setValue(timeLineFiltered, {emitEvent: false});
-        this.lightCardsFeedFilterService.setOnlyBusinessFilterForTimeLine(!timeLineFiltered);
+        LightCardsFeedFilterService.setOnlyBusinessFilterForTimeLine(!timeLineFiltered);
 
         this.timeLineFilterForm.valueChanges.pipe(takeUntil(this.ngUnsubscribe$)).subscribe((form) => {
             UserPreferencesService.setPreference('opfab.feed.filter.applyToTimeLine', form.timeLineControl);
-            this.lightCardsFeedFilterService.setOnlyBusinessFilterForTimeLine(!form.timeLineControl);
+            LightCardsFeedFilterService.setOnlyBusinessFilterForTimeLine(!form.timeLineControl);
             this.filterActiveChange.next(this.isFilterActive());
 
         });
@@ -238,7 +237,7 @@ export class FeedFilterComponent implements OnInit, OnDestroy {
             const ack = (!form.ackControl && !form.notAckControl) ? null : active && form.ackControl;
             UserPreferencesService.setPreference('opfab.feed.filter.ack', this.getAckPreference(form.ackControl, form.notAckControl));
             this.filterActiveChange.next(this.isFilterActive());
-            return this.lightCardsFeedFilterService.updateFilter(FilterType.ACKNOWLEDGEMENT_FILTER, active, ack);
+            return LightCardsFeedFilterService.updateFilter(FilterType.ACKNOWLEDGEMENT_FILTER, active, ack);
         });
     }
 
@@ -247,22 +246,22 @@ export class FeedFilterComponent implements OnInit, OnDestroy {
             this.ackFilterForm.get('ackControl').setValue(true, {emitEvent: false});
             this.ackFilterForm.get('notAckControl').setValue(false, {emitEvent: false});
 
-            this.lightCardsFeedFilterService.updateFilter(FilterType.ACKNOWLEDGEMENT_FILTER, true, true);
+            LightCardsFeedFilterService.updateFilter(FilterType.ACKNOWLEDGEMENT_FILTER, true, true);
         } else if (ackValue === 'notack') {
             this.ackFilterForm.get('ackControl').setValue(false, {emitEvent: false});
             this.ackFilterForm.get('notAckControl').setValue(true, {emitEvent: false});
 
-            this.lightCardsFeedFilterService.updateFilter(FilterType.ACKNOWLEDGEMENT_FILTER, true, false);
+            LightCardsFeedFilterService.updateFilter(FilterType.ACKNOWLEDGEMENT_FILTER, true, false);
         } else  if (ackValue === 'all') {
             this.ackFilterForm.get('ackControl').setValue(true, {emitEvent: false});
             this.ackFilterForm.get('notAckControl').setValue(true, {emitEvent: false});
 
-            this.lightCardsFeedFilterService.updateFilter(FilterType.ACKNOWLEDGEMENT_FILTER, false, false);
+            LightCardsFeedFilterService.updateFilter(FilterType.ACKNOWLEDGEMENT_FILTER, false, false);
         } else  if (ackValue === 'none'){
             this.ackFilterForm.get('ackControl').setValue(false, {emitEvent: false});
             this.ackFilterForm.get('notAckControl').setValue(false, {emitEvent: false});
 
-            this.lightCardsFeedFilterService.updateFilter(FilterType.ACKNOWLEDGEMENT_FILTER, true, null);
+            LightCardsFeedFilterService.updateFilter(FilterType.ACKNOWLEDGEMENT_FILTER, true, null);
         }
     }
 
@@ -335,7 +334,7 @@ export class FeedFilterComponent implements OnInit, OnDestroy {
             };
         }
 
-        this.lightCardsFeedFilterService.updateFilter(this.dateFilterType, true, status);
+        LightCardsFeedFilterService.updateFilter(this.dateFilterType, true, status);
         this.filterActiveChange.next(this.isFilterActive());
     }
 

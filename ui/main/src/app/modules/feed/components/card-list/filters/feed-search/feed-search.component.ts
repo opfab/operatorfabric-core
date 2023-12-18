@@ -25,15 +25,14 @@ export class FeedSearchComponent implements OnInit {
     placeholder : string;
 
     constructor(
-        private lightCardsFeedFilterService: LightCardsFeedFilterService,
         private translateService: TranslateService
     ) {}
 
     ngOnInit() {
         this.placeholder = this.translateService.instant('feed.searchPlaceholderText');
-        this.lightCardsFeedFilterService.setSearchTermForTextFilter("");
+        LightCardsFeedFilterService.setSearchTermForTextFilter("");
         this.searchControl.valueChanges.subscribe(searchTerm => {
-            this.lightCardsFeedFilterService.setSearchTermForTextFilter(searchTerm);
+            LightCardsFeedFilterService.setSearchTermForTextFilter(searchTerm);
         })
     }
 }

@@ -48,7 +48,6 @@ export class MapComponent implements OnInit, OnDestroy, AfterViewChecked {
     public lightCardsToDisplay: LightCard[];
 
     constructor(
-        private lightCardsFeedFilterService: LightCardsFeedFilterService,
         private mapService: MapService,
         private translate: TranslateService,
         private router: Router
@@ -60,7 +59,7 @@ export class MapComponent implements OnInit, OnDestroy, AfterViewChecked {
         if (ConfigService.getConfigValue('feed.geomap.enableMap', false)) {
             const enableGraph = ConfigService.getConfigValue('feed.geomap.enableGraph', false);
             this.drawMap(enableGraph);
-            this.lightCardsFeedFilterService
+            LightCardsFeedFilterService
                 .getFilteredAndSearchedLightCards()
                 .pipe(takeUntil(this.unsubscribe$))
                 .subscribe((cards) => {

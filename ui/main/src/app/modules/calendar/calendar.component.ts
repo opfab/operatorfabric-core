@@ -35,8 +35,7 @@ import {LightCardsFeedFilterService} from 'app/business/services/lightcards/ligh
 })
 export class CalendarComponent implements OnInit, OnDestroy, AfterViewInit {
     constructor(
-        private modalService: NgbModal,
-        private lightCardsFeedFilterService: LightCardsFeedFilterService,
+        private modalService: NgbModal
     ) {
         ProcessesService.getAllProcesses().forEach((process) => {
             if (process.uiVisibility?.calendar) this.mapOfProcesses.set(process.id, 1);
@@ -241,7 +240,7 @@ export class CalendarComponent implements OnInit, OnDestroy, AfterViewInit {
     }
 
     datesRangeChange(dateInfo) {
-        this.lightCardsFeedFilterService.updateFilter(FilterType.BUSINESSDATE_FILTER, true, {
+        LightCardsFeedFilterService.updateFilter(FilterType.BUSINESSDATE_FILTER, true, {
             start: dateInfo.view.activeStart.getTime(),
             end: dateInfo.view.activeEnd.getTime()
         });

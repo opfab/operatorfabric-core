@@ -9,14 +9,12 @@
 
 import moment from 'moment';
 import {TimelineView} from './timeline.view';
-import {LightCardsFeedFilterService} from 'app/business/services/lightcards/lightcards-feed-filter.service';
 
 describe('TimeLine view title', () => {
     let timeLineView: TimelineView;
 
     beforeEach(() => {
-        const lightCardsFeedFilterService = new LightCardsFeedFilterService();
-        timeLineView = new TimelineView(lightCardsFeedFilterService);
+        timeLineView = new TimelineView();
         moment.locale('en');
     });
 

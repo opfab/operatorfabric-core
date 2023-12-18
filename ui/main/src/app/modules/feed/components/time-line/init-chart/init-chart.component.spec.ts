@@ -75,6 +75,8 @@ describe('InitChartComponent', () => {
 
         fixture2 = TestBed.createComponent(TimelineButtonsComponent);
         timelineButtonsComponent = fixture2.componentInstance;
+
+        LightCardsFeedFilterService.init();
     }));
 
     it('check applyNewZoom function with only one button' + 'forward level activated is different', () => {

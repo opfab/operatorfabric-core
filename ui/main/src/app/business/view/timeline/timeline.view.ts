@@ -24,14 +24,14 @@ export class TimelineView {
 
     private circlesSubject = new Subject<Circle[]>();
 
-    constructor(private lightCardsFeedFilterService: LightCardsFeedFilterService) {
+    constructor() {
         this.circles = new Circles();
         this.xAxis = new XAxis();
         this.initDataPipe();
     }
 
     private initDataPipe(): void {
-        this.lightCardsFeedFilterService
+        LightCardsFeedFilterService
             .getFilteredLightCardsForTimeLine()
             .pipe(takeUntil(this.ngUnsubscribe$))
             .subscribe((value) => {

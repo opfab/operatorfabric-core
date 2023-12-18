@@ -20,12 +20,10 @@ import {LightCardsFeedFilterService} from 'app/business/services/lightcards/ligh
 export class Dashboard {
     private dashboardSubject = new ReplaySubject<DashboardPage>(1);
     private dashboardPage;
-    public dashboardTimeFilter;
     public noSeverityColor = '#717274';
     private ngUnsubscribe$ = new Subject<void>();
 
     constructor(
-        private lightCardsFeedFilterService: LightCardsFeedFilterService
     ) {
         this.loadProcesses();
         this.processLightCards();
@@ -69,7 +67,7 @@ export class Dashboard {
 
     private processLightCards() {
         combineLatest([
-            this.lightCardsFeedFilterService.getBusinessDateFilterChanges(),
+            LightCardsFeedFilterService.getBusinessDateFilterChanges(),
             LightCardsStoreService.getLightCards()
         ])
             .pipe(takeUntil(this.ngUnsubscribe$))

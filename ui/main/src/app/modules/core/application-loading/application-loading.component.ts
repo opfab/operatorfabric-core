@@ -49,6 +49,7 @@ import {SupervisedEntitiesServer} from 'app/business/server/supervised-entities.
 import {ExternalDevicesServer} from 'app/business/server/external-devices.server';
 import {TemplateCssServer} from '../../../business/server/template-css.server';
 import {SettingsServer} from '../../../business/server/settings.server';
+import {LightCardsFeedFilterService} from '../../../business/services/lightcards/lightcards-feed-filter.service';
 
 declare const opfab: any;
 @Component({
@@ -123,6 +124,7 @@ export class ApplicationLoadingComponent implements OnInit {
 
 
         this.loadUIConfiguration();
+        LightCardsFeedFilterService.init();
     }
 
     private loadUIConfiguration() {

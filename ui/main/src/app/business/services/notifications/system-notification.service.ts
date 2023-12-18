@@ -33,7 +33,6 @@ export class SystemNotificationService {
     private lastSentCardId: string;
 
     constructor(
-        private lightCardsFeedFilterService: LightCardsFeedFilterService,
         private router: Router
     ) {
     }
@@ -91,7 +90,7 @@ export class SystemNotificationService {
     }
 
     public handleRemindCard(card: LightCard) {
-        if (this.lightCardsFeedFilterService.isCardVisibleInFeed(card)) this.incomingCardOrReminder.next(card);
+        if (LightCardsFeedFilterService.isCardVisibleInFeed(card)) this.incomingCardOrReminder.next(card);
     }
 
     public handleLoadedCard(lightCard: LightCard) {

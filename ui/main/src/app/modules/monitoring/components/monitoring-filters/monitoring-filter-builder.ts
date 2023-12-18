@@ -20,8 +20,6 @@ export class MonitoringFilterBuilder {
     private typeOfStatesFilter: Filter;
     private processFilter: Filter;
 
-    constructor(private lightCardsFeedFilterService: LightCardsFeedFilterService) {}
-
     public setProcessList(processesId: string[]) {
         if (processesId.length > 0) {
             this.processFilter = this.getProcessFilter(true, {processes: processesId});
@@ -72,7 +70,7 @@ export class MonitoringFilterBuilder {
     }
 
     public getFilters(): Array<Filter> {
-        const timelineFilter = this.lightCardsFeedFilterService.getBusinessDateFilter();
+        const timelineFilter = LightCardsFeedFilterService.getBusinessDateFilter();
         return [timelineFilter, this.processFilter, this.typeOfStatesFilter];
     }
 }

@@ -7,7 +7,6 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {Injectable} from '@angular/core';
 import {debounceTime, map} from 'rxjs/operators';
 import {combineLatest, Observable, ReplaySubject, Subject} from 'rxjs';
 import {LightCard} from '@ofModel/light-card.model';
@@ -21,32 +20,28 @@ import {LightCardsTextFilter} from './lightcards-text-filter';
 import {Filter, FilterType} from '@ofModel/feed-filter.model';
 import {OpfabEventStreamService} from '../events/opfabEventStream.service';
 
-@Injectable({
-    providedIn: 'root'
-})
 export class LightCardsFeedFilterService {
 
-    private filteredAndSortedLightCards = new Subject();
-    private filteredLightCards = new Subject();
-    private filteredAndSearchedLightCards = new ReplaySubject(1);
-    private filteredLightCardsForTimeLine = new Subject();
-    private onlyBusinessFilterForTimeLine = new Subject();
-    private lightCardFilter: LightCardsFilter;
-    private lightCardsSorter: LightCardsSorter;
-    private lightCardTextFilter: LightCardsTextFilter;
+    private static filteredAndSortedLightCards = new Subject();
+    private static filteredLightCards = new Subject();
+    private static filteredAndSearchedLightCards = new ReplaySubject(1);
+    private static filteredLightCardsForTimeLine = new Subject();
+    private static onlyBusinessFilterForTimeLine = new Subject();
+    private static lightCardFilter: LightCardsFilter;
+    private static lightCardsSorter: LightCardsSorter;
+    private static lightCardTextFilter: LightCardsTextFilter;
 
-    constructor(
-    ) {
-        this.lightCardFilter = new LightCardsFilter();
-        this.lightCardsSorter = new LightCardsSorter();
-        this.lightCardTextFilter = new LightCardsTextFilter();
-        this.computeFilteredAndSortedLightCards();
-        this.computeFilteredAndSearchedLightCards();
-        this.computeFilteredLightCards();
-        this.onlyBusinessFilterForTimeLine.next(false);
+    public static init() {
+        LightCardsFeedFilterService.lightCardFilter = new LightCardsFilter();
+        LightCardsFeedFilterService.lightCardsSorter = new LightCardsSorter();
+        LightCardsFeedFilterService.lightCardTextFilter = new LightCardsTextFilter();
+        LightCardsFeedFilterService.computeFilteredAndSortedLightCards();
+        LightCardsFeedFilterService.computeFilteredAndSearchedLightCards();
+        LightCardsFeedFilterService.computeFilteredLightCards();
+        LightCardsFeedFilterService.onlyBusinessFilterForTimeLine.next(false);
     }
 
-    private computeFilteredAndSortedLightCards() {
+    private static computeFilteredAndSortedLightCards() {
         combineLatest([this.lightCardsSorter.getSortFunctionChanges(), this.getFilteredAndSearchedLightCards()])
             .pipe(
                 map((results) => {
@@ -61,20 +56,20 @@ export class LightCardsFeedFilterService {
             .subscribe((lightCards) => this.filteredAndSortedLightCards.next(lightCards));
     }
 
-    public getFilteredLightCards(): Observable<any> {
+    public static getFilteredLightCards(): Observable<any> {
         return this.filteredLightCards.asObservable();
     }
 
-    public getFilteredLightCardsForTimeLine(): Observable<any> {
+    public static getFilteredLightCardsForTimeLine(): Observable<any> {
         return this.filteredLightCardsForTimeLine.asObservable();
     }
 
-    public getFilteredAndSearchedLightCards() : Observable<any> {
+    public static getFilteredAndSearchedLightCards() : Observable<any> {
         return this.filteredAndSearchedLightCards.asObservable();
     }
 
 
-    private computeFilteredLightCards() {
+    private static computeFilteredLightCards() {
         combineLatest([
             this.lightCardFilter.getFiltersChanges(),
             LightCardsStoreService.getLightCards(),
@@ -106,7 +101,7 @@ export class LightCardsFeedFilterService {
             });
     }
 
-    private computeFilteredAndSearchedLightCards() {
+    private static computeFilteredAndSearchedLightCards() {
         combineLatest([this.lightCardTextFilter.getSearchChanges(), this.getFilteredLightCards()])
             .pipe(map((results) => {
                 return this.lightCardTextFilter.searchLightCards(results[1]);
@@ -117,40 +112,40 @@ export class LightCardsFeedFilterService {
             });
     }
 
-    private isGroupedCardsEnabled(): boolean {
+    private static isGroupedCardsEnabled(): boolean {
         return ConfigService.getConfigValue('feed.enableGroupedCards', false);
     }
 
-    public isCardVisibleInFeed(card: LightCard) {
+    public static isCardVisibleInFeed(card: LightCard) {
         return this.lightCardTextFilter.searchLightCards(this.lightCardFilter.filterLightCards([card])).length > 0;
     }
 
-    public getFilteredAndSortedLightCards(): Observable<any> {
+    public static getFilteredAndSortedLightCards(): Observable<any> {
         return this.filteredAndSortedLightCards.asObservable();
     }
 
-    public setOnlyBusinessFilterForTimeLine(onlyBusinessFilterForTimeLine: boolean) {
+    public static setOnlyBusinessFilterForTimeLine(onlyBusinessFilterForTimeLine: boolean) {
         this.onlyBusinessFilterForTimeLine.next(onlyBusinessFilterForTimeLine);
     }
 
-    public updateFilter(filterType: FilterType, active: boolean, status: any) {
+    public static updateFilter(filterType: FilterType, active: boolean, status: any) {
         if (filterType === FilterType.BUSINESSDATE_FILTER) OpfabEventStreamService.setSubscriptionDates(status.start, status.end);
         this.lightCardFilter.updateFilter(filterType,active,status);
     }
 
-    public getBusinessDateFilter(): Filter {
+    public static getBusinessDateFilter(): Filter {
         return this.lightCardFilter.getBusinessDateFilter();
     }
 
-    public getBusinessDateFilterChanges(): Observable<any> {
+    public static getBusinessDateFilterChanges(): Observable<any> {
         return this.lightCardFilter.getBusinessDateFilterChanges();
     }
 
-    public setSortBy(sortBy: string) {
+    public static setSortBy(sortBy: string) {
         return this.lightCardsSorter.setSortBy(sortBy);
     }
 
-    public setSearchTermForTextFilter(searchTerm:string) {
+    public static setSearchTermForTextFilter(searchTerm:string) {
         return this.lightCardTextFilter.setSearchTerm(searchTerm);
     }
 }

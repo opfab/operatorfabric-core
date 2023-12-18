@@ -57,8 +57,7 @@ export class SoundNotificationService implements OnDestroy {
     private isServiceActive = true;
 
     constructor(
-        private soundServer: SoundServer,
-        private lightCardsFeedFilterService: LightCardsFeedFilterService
+        private soundServer: SoundServer
     ) {
         // use to have access from cypress to the current object for stubbing method playSound
         if (window['Cypress']) window['soundNotificationService'] = this;
@@ -153,7 +152,7 @@ export class SoundNotificationService implements OnDestroy {
                 this.checkCardIsRecent(card)
             ) {
                 this.incomingCardOrReminder.next(card);
-                if (!this.lightCardsFeedFilterService.isCardVisibleInFeed(card))
+                if (!LightCardsFeedFilterService.isCardVisibleInFeed(card))
                     AlertMessageService.sendAlertMessage({
                         message: null,
                         level: MessageLevel.BUSINESS,

@@ -45,10 +45,6 @@ export class TimelineButtonsComponent implements OnInit, OnDestroy {
 
     private isDestroyed = false;
 
-    constructor(
-        private lightCardsFeedFilterService: LightCardsFeedFilterService
-    ) {}
-
     ngOnInit() {
         this.loadDomainConfiguration();
         const hideTimeLineInStorage = UserPreferencesService.getPreference('opfab.hideTimeLine');
@@ -234,7 +230,7 @@ export class TimelineButtonsComponent implements OnInit, OnDestroy {
         this.startDateForBusinessPeriodDisplay = this.getDateFormatting(startDomain);
         this.endDateForBusinessPeriodDisplay = this.getDateFormatting(endDomain);
 
-        this.lightCardsFeedFilterService.updateFilter(FilterType.BUSINESSDATE_FILTER, true, {
+        LightCardsFeedFilterService.updateFilter(FilterType.BUSINESSDATE_FILTER, true, {
             start: startDomain,
             end: endDomain,
             domainId: this.currentDomainId

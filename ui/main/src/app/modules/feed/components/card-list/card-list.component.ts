@@ -56,8 +56,7 @@ export class CardListComponent implements AfterViewChecked, OnInit {
 
     constructor(
         private modalService: NgbModal,
-        private router: Router,
-        private lightCardsFeedFilterService: LightCardsFeedFilterService
+        private router: Router
     ) {
         this.currentUserWithPerimeters = UserService.getCurrentUserWithPerimeters();
     }
@@ -65,7 +64,7 @@ export class CardListComponent implements AfterViewChecked, OnInit {
     ngOnInit(): void {
         this.defaultSorting = ConfigService.getConfigValue('feed.defaultSorting', 'unread');
 
-        this.lightCardsFeedFilterService.setSortBy(this.defaultSorting);
+        LightCardsFeedFilterService.setSortBy(this.defaultSorting);
 
         this.defaultAcknowledgmentFilter = ConfigService.getConfigValue('feed.defaultAcknowledgmentFilter', 'notack');
         if (

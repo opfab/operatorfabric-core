@@ -27,8 +27,6 @@ export class FeedSortComponent implements OnInit, OnDestroy {
         sortControl: FormControl<string | null>;
     }>;
 
-    constructor(private lightCardsFeedFilterService: LightCardsFeedFilterService) {}
-
     ngOnInit() {
         this.sortForm = this.createFormGroup();
         this.initSort();
@@ -47,11 +45,11 @@ export class FeedSortComponent implements OnInit, OnDestroy {
     initSort() {
         const sortChoice = this.getInitialSort();
         this.sortForm.get('sortControl').setValue(sortChoice);
-        this.lightCardsFeedFilterService.setSortBy(sortChoice);
+        LightCardsFeedFilterService.setSortBy(sortChoice);
 
         this.sortForm.valueChanges.pipe(takeUntil(this.ngUnsubscribe$)).subscribe((form) => {
             UserPreferencesService.setPreference('opfab.feed.sort.type', form.sortControl);
-            this.lightCardsFeedFilterService.setSortBy(form.sortControl);
+            LightCardsFeedFilterService.setSortBy(form.sortControl);
         });
     }
 

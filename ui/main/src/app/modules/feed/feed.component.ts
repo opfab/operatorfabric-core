@@ -33,7 +33,6 @@ export class FeedComponent implements OnInit,OnDestroy {
     filtersVisible = false;
 
     constructor(
-        private lightCardsFeedFilterService: LightCardsFeedFilterService,
         private router: Router
     ) {
         this.maxNbOfCardsToDisplay = ConfigService.getConfigValue('feed.card.maxNbOfCardsToDisplay', 100);
@@ -58,7 +57,7 @@ export class FeedComponent implements OnInit,OnDestroy {
             }
         });
 
-        this.lightCards$ = this.lightCardsFeedFilterService.getFilteredAndSortedLightCards().pipe(
+        this.lightCards$ = LightCardsFeedFilterService.getFilteredAndSortedLightCards().pipe(
             delay(0), // Solve error: 'Expression has changed after it was checked' --> See https://blog.angular-university.io/angular-debugging/
             map((cards) => {
                 this.totalNumberOfLightsCards = cards.length;
