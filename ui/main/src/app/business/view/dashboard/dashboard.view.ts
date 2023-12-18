@@ -9,13 +9,13 @@
 
 import {Severity} from '@ofModel/light-card.model';
 import {Utilities} from 'app/business/common/utilities';
-import {LightCardsStoreService} from 'app/business/services/lightcards/lightcards-store.service';
 import {ProcessesService} from 'app/business/services/businessconfig/processes.service';
 import {UserService} from 'app/business/services/users/user.service';
 import moment from 'moment';
 import {combineLatest, Observable, ReplaySubject, Subject, takeUntil} from 'rxjs';
 import {DashboardPage, ProcessContent, StateContent, CardForDashboard, DashboardCircle} from './dashboardPage';
-import {LightCardsFeedFilterService} from 'app/business/services/lightcards/lightcards-feed-filter.service';
+import {FilteredLightCardsStore} from 'app/business/store/lightcards/lightcards-feed-filter-store';
+import {OpfabStore} from 'app/business/store/opfabStore';
 
 export class Dashboard {
     private dashboardSubject = new ReplaySubject<DashboardPage>(1);
@@ -23,10 +23,10 @@ export class Dashboard {
     public dashboardTimeFilter;
     public noSeverityColor = '#717274';
     private ngUnsubscribe$ = new Subject<void>();
+    private filteredLightCardStore: FilteredLightCardsStore;
 
-    constructor(
-        private lightCardsFeedFilterService: LightCardsFeedFilterService
-    ) {
+    constructor() {
+        this.filteredLightCardStore = OpfabStore.getFilteredLightCardStore();
         this.loadProcesses();
         this.processLightCards();
         this.dashboardSubject.next(this.dashboardPage);
@@ -69,8 +69,8 @@ export class Dashboard {
 
     private processLightCards() {
         combineLatest([
-            this.lightCardsFeedFilterService.getBusinessDateFilterChanges(),
-            LightCardsStoreService.getLightCards()
+            this.filteredLightCardStore.getBusinessDateFilterChanges(),
+            OpfabStore.getLightCardStore().getLightCards()
         ])
             .pipe(takeUntil(this.ngUnsubscribe$))
             .subscribe((results) => {

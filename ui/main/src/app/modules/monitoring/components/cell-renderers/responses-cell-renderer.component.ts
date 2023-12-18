@@ -10,10 +10,10 @@
 import {Component, OnDestroy} from '@angular/core';
 import {Card} from '@ofModel/card.model';
 import {EntitiesService} from 'app/business/services/users/entities.service';
-import {LightCardsStoreService} from 'app/business/services/lightcards/lightcards-store.service';
 import {ICellRendererAngularComp} from 'ag-grid-angular';
 import {ICellRendererParams} from 'ag-grid-community';
 import {filter, Subject, takeUntil} from 'rxjs';
+import {OpfabStore} from 'app/business/store/opfabStore';
 
 @Component({
     selector: 'of-responses-cell-renderer',
@@ -35,9 +35,9 @@ export class ResponsesCellRendererComponent implements ICellRendererAngularComp,
         this.params = params;
         this.api = params.api;
         this.cardUid = params.data.cardUid;
-        this.childCards = LightCardsStoreService.getChildCards(params.data.cardId);
+        this.childCards = OpfabStore.getLightCardStore().getChildCards(params.data.cardId);
         this.checkEntitiesResponses();
-        LightCardsStoreService
+        OpfabStore.getLightCardStore()
             .getNewLightChildCards()
             .pipe(
                 takeUntil(this.unsubscribe$),

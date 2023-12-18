@@ -11,14 +11,14 @@
 import {Injectable} from "@angular/core";
 import {LightCard, Severity} from "@ofModel/light-card.model";
 import {merge, Subject} from "rxjs";
-import {LightCardsFeedFilterService} from "../lightcards/lightcards-feed-filter.service";
-import {LightCardsStoreService} from "../lightcards/lightcards-store.service";
+import {FilteredLightCardsStore} from "../../store/lightcards/lightcards-feed-filter-store";
 import {ConfigService} from "../config.service";
 import {LogOption, LoggerService as logger} from "../logs/logger.service";
 import {Router} from "@angular/router";
 import {filter} from "rxjs/operators";
 import {MessageLevel} from "@ofModel/message.model";
 import {AlertMessageService} from "../alert-message.service";
+import {OpfabStore} from "app/business/store/opfabStore";
 
 @Injectable({
     providedIn: 'root'
@@ -31,11 +31,12 @@ export class SystemNotificationService {
     private systemNotificationEnabled: Map<Severity, boolean>;
     private incomingCardOrReminder = new Subject();
     private lastSentCardId: string;
+    private filteredLightCardStore: FilteredLightCardsStore;
 
     constructor(
-        private lightCardsFeedFilterService: LightCardsFeedFilterService,
         private router: Router
     ) {
+        this.filteredLightCardStore = OpfabStore.getFilteredLightCardStore();
     }
 
     public initSystemNotificationService() {
@@ -87,11 +88,11 @@ export class SystemNotificationService {
     }
 
     listenForCardUpdate() {
-        LightCardsStoreService.getNewLightCards().subscribe((lightCard) => this.handleLoadedCard(lightCard));
+        OpfabStore.getLightCardStore().getNewLightCards().subscribe((lightCard) => this.handleLoadedCard(lightCard));
     }
 
     public handleRemindCard(card: LightCard) {
-        if (this.lightCardsFeedFilterService.isCardVisibleInFeed(card)) this.incomingCardOrReminder.next(card);
+        if (this.filteredLightCardStore.isCardVisibleInFeed(card)) this.incomingCardOrReminder.next(card);
     }
 
     public handleLoadedCard(lightCard: LightCard) {

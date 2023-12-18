@@ -12,18 +12,19 @@ import {Observable, Subject} from 'rxjs';
 import {LightCard} from '@ofModel/light-card.model';
 import {delay, map} from 'rxjs/operators';
 import * as moment from 'moment';
-import {LightCardsFeedFilterService} from 'app/business/services/lightcards/lightcards-feed-filter.service';
+import {FilteredLightCardsStore} from 'app/business/store/lightcards/lightcards-feed-filter-store';
 import {ConfigService} from 'app/business/services/config.service';
 import {Router} from '@angular/router';
 import {UserService} from 'app/business/services/users/user.service';
 import {SelectedCardService} from 'app/business/services/card/selectedCard.service';
+import {OpfabStore} from 'app/business/store/opfabStore';
 
 @Component({
     selector: 'of-cards',
     templateUrl: './feed.component.html',
     styleUrls: ['./feed.component.scss']
 })
-export class FeedComponent implements OnInit,OnDestroy {
+export class FeedComponent implements OnInit, OnDestroy {
     lightCards$: Observable<LightCard[]>;
     selection$: Observable<string>;
     totalNumberOfLightsCards = 0;
@@ -31,20 +32,19 @@ export class FeedComponent implements OnInit,OnDestroy {
     private ngUnsubscribe$ = new Subject<void>();
     private hallwayMode = false;
     filtersVisible = false;
+    private filteredLightCardStore: FilteredLightCardsStore;
 
-    constructor(
-        private lightCardsFeedFilterService: LightCardsFeedFilterService,
-        private router: Router
-    ) {
+    constructor(private router: Router) {
+        this.filteredLightCardStore = OpfabStore.getFilteredLightCardStore();
         this.maxNbOfCardsToDisplay = ConfigService.getConfigValue('feed.card.maxNbOfCardsToDisplay', 100);
         this.configureExperimentalHallwayMode();
     }
 
     configureExperimentalHallwayMode() {
-        const usersInHallwayMode = ConfigService.getConfigValue('settings.usersInHallwayMode',null);
+        const usersInHallwayMode = ConfigService.getConfigValue('settings.usersInHallwayMode', null);
         if (usersInHallwayMode?.includes(UserService.getCurrentUserWithPerimeters().userData.login)) {
             this.hallwayMode = true;
-            console.log("User in hallwayMode");
+            console.log('User in hallwayMode');
         }
     }
 
@@ -58,12 +58,12 @@ export class FeedComponent implements OnInit,OnDestroy {
             }
         });
 
-        this.lightCards$ = this.lightCardsFeedFilterService.getFilteredAndSortedLightCards().pipe(
+        this.lightCards$ = this.filteredLightCardStore.getFilteredAndSortedLightCards().pipe(
             delay(0), // Solve error: 'Expression has changed after it was checked' --> See https://blog.angular-university.io/angular-debugging/
             map((cards) => {
                 this.totalNumberOfLightsCards = cards.length;
                 // Experimental hallway feature
-                if ((cards.length)&&(this.hallwayMode)) this.router.navigate(['/feed', 'cards', cards[0].id]);
+                if (cards.length && this.hallwayMode) this.router.navigate(['/feed', 'cards', cards[0].id]);
                 return cards.slice(0, this.maxNbOfCardsToDisplay);
             })
         );
@@ -77,12 +77,9 @@ export class FeedComponent implements OnInit,OnDestroy {
         return window.innerWidth > 1000;
     }
 
-
-
     showFilters(visible: boolean) {
         this.filtersVisible = visible;
     }
-
 
     ngOnDestroy() {
         this.ngUnsubscribe$.next();

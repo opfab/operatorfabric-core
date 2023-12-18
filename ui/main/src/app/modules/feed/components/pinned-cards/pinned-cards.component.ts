@@ -9,11 +9,11 @@
 
 import {OnInit, Component, OnDestroy} from '@angular/core';
 import {ProcessesService} from 'app/business/services/businessconfig/processes.service';
-import {LightCardsStoreService} from 'app/business/services/lightcards/lightcards-store.service';
 import {Subject, takeUntil, timer} from 'rxjs';
 import {LightCard} from '@ofModel/light-card.model';
 import {Router} from '@angular/router';
 import {Utilities} from 'app/business/common/utilities';
+import {OpfabStore} from 'app/business/store/opfabStore';
 
 @Component({
     selector: 'of-pinned-cards',
@@ -38,7 +38,7 @@ export class PinnedCardsComponent implements OnInit, OnDestroy {
 
         this.pinnedCards = [];
 
-        LightCardsStoreService.getLightCards().subscribe((cards) => this.setPinnedCards(cards));
+        OpfabStore.getLightCardStore().getLightCards().subscribe((cards) => this.setPinnedCards(cards));
 
         timer(10000, 10000)
             .pipe(takeUntil(this.ngUnsubscribe))

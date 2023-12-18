@@ -14,7 +14,8 @@ import {FilterType} from '@ofModel/feed-filter.model';
 import {UserPreferencesService} from 'app/business/services/users/user-preference.service';
 import {DateTimeFormatterService} from 'app/business/services/date-time-formatter.service';
 import {LogOption, LoggerService as logger} from 'app/business/services/logs/logger.service';
-import {LightCardsFeedFilterService} from 'app/business/services/lightcards/lightcards-feed-filter.service';
+import {FilteredLightCardsStore} from 'app/business/store/lightcards/lightcards-feed-filter-store';
+import {OpfabStore} from 'app/business/store/opfabStore';
 
 @Component({
     selector: 'of-timeline-buttons',
@@ -22,7 +23,6 @@ import {LightCardsFeedFilterService} from 'app/business/services/lightcards/ligh
     styleUrls: ['./timeline-buttons.component.scss']
 })
 export class TimelineButtonsComponent implements OnInit, OnDestroy {
-
     private OVERLAP_DURATION_IN_MS = 15 * 60 * 1000;
 
     public hideTimeLine = false;
@@ -45,9 +45,11 @@ export class TimelineButtonsComponent implements OnInit, OnDestroy {
 
     private isDestroyed = false;
 
-    constructor(
-        private lightCardsFeedFilterService: LightCardsFeedFilterService
-    ) {}
+    private filteredLightCardStore: FilteredLightCardsStore;
+
+    constructor() {
+        this.filteredLightCardStore = OpfabStore.getFilteredLightCardStore();
+    }
 
     ngOnInit() {
         this.loadDomainConfiguration();
@@ -84,14 +86,7 @@ export class TimelineButtonsComponent implements OnInit, OnDestroy {
                 domainId: 'Y'
             }
         };
-        const domainsConf = ConfigService.getConfigValue('feed.timeline.domains', [
-            'TR',
-            'J',
-            '7D',
-            'W',
-            'M',
-            'Y'
-        ]);
+        const domainsConf = ConfigService.getConfigValue('feed.timeline.domains', ['TR', 'J', '7D', 'W', 'M', 'Y']);
         this.buttonList = [];
         domainsConf.map((domain) => {
             if (Object.keys(domains).includes(domain)) {
@@ -234,7 +229,7 @@ export class TimelineButtonsComponent implements OnInit, OnDestroy {
         this.startDateForBusinessPeriodDisplay = this.getDateFormatting(startDomain);
         this.endDateForBusinessPeriodDisplay = this.getDateFormatting(endDomain);
 
-        this.lightCardsFeedFilterService.updateFilter(FilterType.BUSINESSDATE_FILTER, true, {
+        this.filteredLightCardStore.updateFilter(FilterType.BUSINESSDATE_FILTER, true, {
             start: startDomain,
             end: endDomain,
             domainId: this.currentDomainId

@@ -30,7 +30,6 @@ import {EntitiesService} from 'app/business/services/users/entities.service';
 import {NgbModalRef} from '@ng-bootstrap/ng-bootstrap';
 import {UserPermissionsService} from 'app/business/services/user-permissions.service';
 import {DisplayContext} from '@ofModel/template.model';
-import {LightCardsStoreService} from 'app/business/services/lightcards/lightcards-store.service';
 import {CardComponent} from '../../card.component';
 import {LoggerService as logger} from 'app/business/services/logs/logger.service';
 import {UserWithPerimeters} from '@ofModel/userWithPerimeters.model';
@@ -40,6 +39,7 @@ import {RouterStore, PageType} from 'app/business/store/router.store';
 import {Router} from '@angular/router';
 import {Utilities} from '../../../../business/common/utilities';
 import {OpfabAPIService} from 'app/business/services/opfabAPI.service';
+import {OpfabStore} from 'app/business/store/opfabStore';
 
 @Component({
     selector: 'of-card-body',
@@ -99,7 +99,7 @@ export class CardBodyComponent implements OnChanges, OnInit, OnDestroy {
     }
 
     private integrateChildCardsInRealTime() {
-        LightCardsStoreService
+        OpfabStore.getLightCardStore()
             .getNewLightChildCards()
             .pipe(
                 takeUntil(this.unsubscribe$),
@@ -116,7 +116,7 @@ export class CardBodyComponent implements OnChanges, OnInit, OnDestroy {
             )
             .subscribe();
 
-        LightCardsStoreService
+        OpfabStore.getLightCardStore()
             .getDeletedChildCardsIds()
             .pipe(
                 takeUntil(this.unsubscribe$),
@@ -220,7 +220,6 @@ export class CardBodyComponent implements OnChanges, OnInit, OnDestroy {
         if (this.userEntityIdsPossibleForResponse.length === 1)
             this.userEntityIdToUseForResponse = this.userEntityIdsPossibleForResponse[0];
     }
-    
     private computeUserMemberOfAnEntityRequiredToRespondAndAllowedToSendCards() {
         if (!this.card.entitiesRequiredToRespond) {
             this.userMemberOfAnEntityRequiredToRespondAndAllowedToSendCards = false;
@@ -244,7 +243,6 @@ export class CardBodyComponent implements OnChanges, OnInit, OnDestroy {
             (this.cardState.showDetailCardHeader === undefined || this.cardState.showDetailCardHeader === true) &&
             this.cardState.response != null &&
             this.cardState.response !== undefined;
-        
     }
 
     private markAsReadIfNecessary() {
@@ -268,7 +266,7 @@ export class CardBodyComponent implements OnChanges, OnInit, OnDestroy {
 
     private updateLastReadCardStatusOnFeedIfNeeded() {
         if (this.lastCardSetToReadButNotYetOnFeed) {
-            LightCardsStoreService.setLightCardRead(this.lastCardSetToReadButNotYetOnFeed.id, true);
+            OpfabStore.getLightCardStore().setLightCardRead(this.lastCardSetToReadButNotYetOnFeed.id, true);
             this.lastCardSetToReadButNotYetOnFeed = null;
         }
     }

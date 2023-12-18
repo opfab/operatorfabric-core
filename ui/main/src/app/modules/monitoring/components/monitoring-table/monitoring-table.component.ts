@@ -22,12 +22,12 @@ import {ColDef, GridOptions} from 'ag-grid-community';
 import {AnswerCellRendererComponent} from '../cell-renderers/answer-cell-renderer.component';
 import {ResponsesCellRendererComponent} from '../cell-renderers/responses-cell-renderer.component';
 import {LightCard} from '@ofModel/light-card.model';
-import {LightCardsStoreService} from 'app/business/services/lightcards/lightcards-store.service';
 import {DateTimeFormatterService} from 'app/business/services/date-time-formatter.service';
 import {SelectedCardService} from 'app/business/services/card/selectedCard.service';
 import {CardService} from 'app/business/services/card/card.service';
 import {TranslationService} from 'app/business/services/translation/translation.service';
 import {ConfigService} from 'app/business/services/config.service';
+import {OpfabStore} from 'app/business/store/opfabStore';
 
 @Component({
     selector: 'of-monitoring-table',
@@ -273,7 +273,7 @@ export class MonitoringTableComponent implements OnChanges, OnDestroy {
 
     getResponses(cardId: string, entities: string[]) {
         return this.getEntitiesNames(
-            this.getEntitiesResponses(LightCardsStoreService.getChildCards(cardId), entities)
+            this.getEntitiesResponses(OpfabStore.getLightCardStore().getChildCards(cardId), entities)
         );
     }
 

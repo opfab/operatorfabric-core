@@ -15,7 +15,6 @@ import {SettingsServerMock} from '@tests/mocks/settingsServer.mock';
 import {UserServerMock} from '@tests/mocks/userServer.mock';
 import {ServerResponse, ServerResponseStatus} from 'app/business/server/serverResponse';
 import {EntitiesService} from 'app/business/services/users/entities.service';
-import {LightCardsStoreService} from 'app/business/services/lightcards/lightcards-store.service';
 import {SettingsService} from 'app/business/services/users/settings.service';
 import {UserService} from 'app/business/services/users/user.service';
 import {CurrentUserStore} from 'app/business/store/current-user.store';
@@ -25,6 +24,7 @@ import {OpfabEventStreamServerMock} from '@tests/mocks/opfab-event-stream.server
 import {OpfabEventStreamService} from 'app/business/services/events/opfabEventStream.service';
 import {getOneRandomLightCard} from '@tests/helpers';
 import {Severity} from '@ofModel/light-card.model';
+import {OpfabStore} from 'app/business/store/opfabStore';
 
 describe('ActivityAreaView', () => {
     let userServerMock: UserServerMock;
@@ -270,7 +270,7 @@ describe('ActivityAreaView', () => {
 
         const opfabEventStreamServerMock = new OpfabEventStreamServerMock();
         OpfabEventStreamService.setEventStreamServer(opfabEventStreamServerMock);
-        LightCardsStoreService.initStore(0);
+        OpfabStore.reset();
         const card = getOneRandomLightCard({
             process: 'process1',
             state: 'state1',
@@ -284,7 +284,7 @@ describe('ActivityAreaView', () => {
         settingsServerMock.setResponseForPatchUserSettings(new ServerResponse(null, ServerResponseStatus.OK, null));
         const saved = await firstValueFrom(activityAreaView.saveActivityArea());
         expect(saved).toBeTruthy();
-        const lightCards = await firstValueFrom(LightCardsStoreService.getLightCards().pipe());
+        const lightCards = await firstValueFrom(OpfabStore.getLightCardStore().getLightCards());
         expect(lightCards).toEqual([]);
     });
 

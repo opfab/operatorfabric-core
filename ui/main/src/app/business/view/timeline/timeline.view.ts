@@ -10,8 +10,9 @@
 import moment from 'moment';
 import {Circle, Circles} from './circles';
 import {XAxis} from './xaxis';
-import {LightCardsFeedFilterService} from 'app/business/services/lightcards/lightcards-feed-filter.service';
+import {FilteredLightCardsStore} from 'app/business/store/lightcards/lightcards-feed-filter-store';
 import {Observable, Subject, takeUntil} from 'rxjs';
+import {OpfabStore} from 'app/business/store/opfabStore';
 
 export class TimelineView {
     private circles: Circles;
@@ -23,15 +24,17 @@ export class TimelineView {
     private ngUnsubscribe$ = new Subject<void>();
 
     private circlesSubject = new Subject<Circle[]>();
+    private filteredLightCardStore: FilteredLightCardsStore
 
-    constructor(private lightCardsFeedFilterService: LightCardsFeedFilterService) {
+    constructor() {
+        this.filteredLightCardStore = OpfabStore.getFilteredLightCardStore();
         this.circles = new Circles();
         this.xAxis = new XAxis();
         this.initDataPipe();
     }
 
     private initDataPipe(): void {
-        this.lightCardsFeedFilterService
+        this.filteredLightCardStore
             .getFilteredLightCardsForTimeLine()
             .pipe(takeUntil(this.ngUnsubscribe$))
             .subscribe((value) => {

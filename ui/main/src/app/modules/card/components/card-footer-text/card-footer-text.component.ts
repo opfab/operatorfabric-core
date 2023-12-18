@@ -16,7 +16,7 @@ import {UserService} from 'app/business/services/users/user.service';
 import {Utilities} from 'app/business/common/utilities';
 import {Subject} from 'rxjs';
 import {takeUntil} from 'rxjs/operators';
-import {LightCardsStoreService} from 'app/business/services/lightcards/lightcards-store.service';
+import {OpfabStore} from 'app/business/store/opfabStore';
 
 @Component({
     selector: 'of-card-footer-text',
@@ -44,7 +44,7 @@ export class CardFooterTextComponent implements OnChanges,OnInit {
 
     ngOnInit() {
 
-        LightCardsStoreService
+        OpfabStore.getLightCardStore()
             .getReceivedAcks()
             .pipe(takeUntil(this.unsubscribe$))
             .subscribe((receivedAck) => {

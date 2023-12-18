@@ -10,10 +10,10 @@
 import {Component, Input, OnChanges, OnDestroy, OnInit} from '@angular/core';
 import {Card} from '@ofModel/card.model';
 import {EntitiesService} from 'app/business/services/users/entities.service';
-import {LightCardsStoreService} from 'app/business/services/lightcards/lightcards-store.service';
 import {Utilities} from 'app/business/common/utilities';
 import {Subject} from 'rxjs';
 import {takeUntil} from 'rxjs/operators';
+import {OpfabStore} from 'app/business/store/opfabStore';
 
 @Component({
     selector: 'of-card-acks-footer',
@@ -28,7 +28,7 @@ export class CardAcksFooterComponent implements OnChanges, OnInit, OnDestroy {
 
 
     ngOnInit() {
-        LightCardsStoreService
+        OpfabStore.getLightCardStore()
             .getReceivedAcks()
             .pipe(takeUntil(this.unsubscribe$))
             .subscribe((receivedAck) => {

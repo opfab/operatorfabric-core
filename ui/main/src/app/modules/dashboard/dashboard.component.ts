@@ -12,7 +12,6 @@ import {Dashboard} from 'app/business/view/dashboard/dashboard.view';
 import {DashboardPage} from 'app/business/view/dashboard/dashboardPage';
 import {NgbModal, NgbModalOptions, NgbModalRef, NgbPopover} from '@ng-bootstrap/ng-bootstrap';
 import {SelectedCardService} from 'app/business/services/card/selectedCard.service';
-import {LightCardsFeedFilterService} from 'app/business/services/lightcards/lightcards-feed-filter.service';
 @Component({
     selector: 'of-dashboard',
     templateUrl: './dashboard.component.html',
@@ -21,22 +20,19 @@ import {LightCardsFeedFilterService} from 'app/business/services/lightcards/ligh
 export class DashboardComponent implements OnInit, OnDestroy {
     @ViewChild('cardDetail') cardDetailTemplate: ElementRef;
 
-    public dashboardPage : DashboardPage
+    public dashboardPage: DashboardPage;
     public dashboard: Dashboard;
     public modalRef: NgbModalRef;
     public openPopover: NgbPopover;
     public currentCircleHovered;
     public popoverTimeOut;
 
-    constructor(
-        lightCardsFeedFilterService: LightCardsFeedFilterService,
-        private modalService: NgbModal,
-    ) {
-        this.dashboard = new Dashboard(lightCardsFeedFilterService);
+    constructor(private modalService: NgbModal) {
+        this.dashboard = new Dashboard();
     }
 
     ngOnInit(): void {
-      this.dashboard.getDashboardPage().subscribe( (dashboardPage) => this.dashboardPage = dashboardPage  );
+        this.dashboard.getDashboardPage().subscribe((dashboardPage) => (this.dashboardPage = dashboardPage));
     }
 
     ngOnDestroy() {

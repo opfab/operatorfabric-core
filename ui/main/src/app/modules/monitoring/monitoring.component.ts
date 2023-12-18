@@ -17,9 +17,9 @@ import {MonitoringFiltersComponent} from './components/monitoring-filters/monito
 import {Process, TypeOfStateEnum} from '@ofModel/processes.model';
 import {ProcessesService} from 'app/business/services/businessconfig/processes.service';
 import {Filter} from '@ofModel/feed-filter.model';
-import {LightCardsStoreService} from 'app/business/services/lightcards/lightcards-store.service';
 import {EntitiesService} from 'app/business/services/users/entities.service';
 import {SelectedCardService} from 'app/business/services/card/selectedCard.service';
+import {OpfabStore} from 'app/business/store/opfabStore';
 
 @Component({
     selector: 'of-monitoring',
@@ -61,7 +61,7 @@ export class MonitoringComponent implements OnInit, OnDestroy {
         this.monitoringResult$ = combineLatest([
             this.monitoringFilters$.asObservable(),
             this.responseFilter$.asObservable(),
-            LightCardsStoreService.getLightCards()
+            OpfabStore.getLightCardStore().getLightCards()
         ]).pipe(
             debounceTime(0), // Add this to avoid ExpressionChangedAfterItHasBeenCheckedError, so it waits for component init before processing
             takeUntil(this.unsubscribe$),
@@ -85,7 +85,7 @@ export class MonitoringComponent implements OnInit, OnDestroy {
         );
         this.monitoringResult$.subscribe((lines) => (this.result = lines));
         this.applyResponseFilter();
-        LightCardsStoreService
+        OpfabStore.getLightCardStore()
             .getLoadingInProgress()
             .pipe(takeUntil(this.unsubscribe$))
             .subscribe((inProgress: boolean) => (this.loadingInProgress = inProgress));
