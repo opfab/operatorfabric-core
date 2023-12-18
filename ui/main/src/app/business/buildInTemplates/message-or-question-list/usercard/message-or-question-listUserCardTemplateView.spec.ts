@@ -17,6 +17,26 @@ describe('MessageOrQuestionList UserCard template', () => {
         initOpfabApiMock();
     });
 
+    it('GIVEN an new card THEN initial selected message option is the first option', () => {
+        const view = new MessageOrQuestionListUserCardTemplateView();
+        const messageOrQuestionList = {
+            messagesList: [{id: 'id1',message: 'message1'},
+            { id: 'id2', message: 'message2'},
+            { id: 'id3', message: 'message3'}]
+        };
+
+        view.messageOrQuestionList = messageOrQuestionList;
+
+        opfab.currentUserCard.getEditionMode = function () {
+            return 'CREATE';
+        };
+        opfab.currentCard.getCard = function () {
+            return {data: {id: 'id1', message: 'message1'}};
+        };
+        view.setSelectedEmitter('ENTITY1_FR');
+        expect(view.getInitialSelectedOption()).toEqual('id1');
+    });
+
     it('GIVEN an existing card WHEN user edit card THEN message is actual message', () => {
         const view = new MessageOrQuestionListUserCardTemplateView();
         opfab.currentUserCard.getEditionMode = function () {
@@ -37,6 +57,46 @@ describe('MessageOrQuestionList UserCard template', () => {
             return {data: {message: 'My message <script>'}};
         };
         expect(view.getMessage()).toEqual('My message &lt;script&gt;');
+    });
+
+    it('GIVEN an existing card WHEN user edit card THEN initial selected message option is actual option id', () => {
+        const view = new MessageOrQuestionListUserCardTemplateView();
+        const messageOrQuestionList = {
+            messagesList: [{id: 'id1',message: 'message1'},
+            { id: 'id2', message: 'message2'},
+            { id: 'id3', message: 'message3'}]
+        };
+
+        view.messageOrQuestionList = messageOrQuestionList;
+
+        opfab.currentUserCard.getEditionMode = function () {
+            return 'EDITION';
+        };
+        opfab.currentCard.getCard = function () {
+            return {data: {id: 'id2', message: 'message2'}};
+        };
+        view.setSelectedEmitter('ENTITY1_FR');
+        expect(view.getInitialSelectedOption()).toEqual('id2');
+    });
+
+    it('GIVEN an existing card WHEN user copy card THEN initial selected message option is actual option id', () => {
+        const view = new MessageOrQuestionListUserCardTemplateView();
+        const messageOrQuestionList = {
+            messagesList: [{id: 'id1',message: 'message1'},
+            { id: 'id2', message: 'message2'},
+            { id: 'id3', message: 'message3'}]
+        };
+
+        view.messageOrQuestionList = messageOrQuestionList;
+
+        opfab.currentUserCard.getEditionMode = function () {
+            return 'COPY';
+        };
+        opfab.currentCard.getCard = function () {
+            return {data: {id: 'id2', message: 'message2'}};
+        };
+        view.setSelectedEmitter('ENTITY1_FR');
+        expect(view.getInitialSelectedOption()).toEqual('id2');
     });
 
 
@@ -99,4 +159,58 @@ describe('MessageOrQuestionList UserCard template', () => {
 
     });
 
+    it('GIVEN a message list with restricted publishers WHEN given a selected emitter THEN only allowed messages options are returned', () => {
+        const view = new MessageOrQuestionListUserCardTemplateView();
+        const messageOrQuestionList = {
+            messagesList: [{
+                id: 'id1',
+                message: 'allowed publishers : ENTITY1_FR ENTITY2_FR',
+                publishers:  [
+                    'ENTITY1_FR',
+                    'ENTITY2_FR'
+               ]
+            },
+            {
+                
+                id: 'id2',
+                message: 'allowed publishers :  ENTITY3_FR',
+                publishers:  [
+                    'ENTITY3_FR'
+               ]
+            },
+            {
+                id: 'id3',
+                message: 'empty allowed publishers',
+                publishers:  []
+            },
+            {
+                id: 'id4',
+                message: 'publishers not defined'
+            }
+        ]
+        };
+
+        view.messageOrQuestionList = messageOrQuestionList;
+        view.setSelectedEmitter('ENTITY1_FR');
+        let messages = view.getMessageListOptions()
+        expect(messages.length).toEqual(3);
+        expect(messages[0].value).toEqual('id1');
+        expect(messages[1].value).toEqual('id3');
+        expect(messages[2].value).toEqual('id4');
+
+        view.messageOrQuestionList = messageOrQuestionList;
+        view.setSelectedEmitter('ENTITY3_FR');
+        messages = view.getMessageListOptions()
+        expect(messages.length).toEqual(3);
+        expect(messages[0].value).toEqual('id2');
+        expect(messages[1].value).toEqual('id3');
+        expect(messages[2].value).toEqual('id4');
+
+        view.messageOrQuestionList = messageOrQuestionList;
+        view.setSelectedEmitter('ENTITY4_FR');
+        messages = view.getMessageListOptions()
+        expect(messages.length).toEqual(2);
+        expect(messages[0].value).toEqual('id3');
+        expect(messages[1].value).toEqual('id4');
+    });
 });

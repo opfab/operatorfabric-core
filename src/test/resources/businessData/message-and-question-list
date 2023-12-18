@@ -19,6 +19,10 @@
         "message": "A problem has been detected, please put maintenance work on hold and be on stand by",
         "question": false,
         "severity": "ALARM",
+        "publishers":  [
+            "ENTITY2_FR",
+            "ENTITY3_FR"
+       ],
         "recipients" : [
             "ENTITY1_FR",
             "ENTITY2_FR",
@@ -50,6 +54,10 @@
         "title": "Situation solved",
         "message": "All the problems have been dealt with, please resume normal operations",
         "question": false,
+        "publishers":  [
+            "ENTITY2_FR",
+            "ENTITY3_FR"
+       ],
         "recipients" : [
             "ENTITY1_FR",
             "ENTITY2_FR",

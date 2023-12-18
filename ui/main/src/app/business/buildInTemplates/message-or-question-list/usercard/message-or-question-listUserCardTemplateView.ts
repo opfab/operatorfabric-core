@@ -12,9 +12,9 @@ declare const opfab;
 
 export class MessageOrQuestionListUserCardTemplateView {
 
-    
     messageOrQuestionList;
     selectedMessage;
+    selectedEmitter;
 
     public getMessage() {
         let message = opfab.currentCard.getCard()?.data?.message;
@@ -28,6 +28,10 @@ export class MessageOrQuestionListUserCardTemplateView {
         return titleId
     }
 
+    public getPublisher() {
+        return opfab.currentCard.getCard()?.publisher;
+    }
+ 
     public getSpecificCardInformation(message: string) {
         message = message.trim();
         if (message.length === 0) {
@@ -76,16 +80,6 @@ export class MessageOrQuestionListUserCardTemplateView {
 
         opfab.currentUserCard.setDropdownEntityRecipientList(this.messageOrQuestionList.possibleRecipients);
         opfab.currentUserCard.setDropdownEntityRecipientForInformationList(this.messageOrQuestionList.possibleRecipients);
-        const titlesOptions = [];
-
-        this.messageOrQuestionList.messagesList.forEach( (message) => {
-            const option = {
-                label: message.title,
-                value: message.id
-            };
-            titlesOptions.push(option);
-        })
-        return titlesOptions;
     }
 
     public getMessageOrQuestion(messageId: string) {
@@ -101,6 +95,39 @@ export class MessageOrQuestionListUserCardTemplateView {
         opfab.currentUserCard.setSelectedRecipients(selectedRecipients);
         opfab.currentUserCard.setSelectedRecipientsForInformation(selectedRecipientsForInformation);
     }
+
+    getSelectedEmitter() {
+        return this.selectedEmitter;
+    }
+
+    setSelectedEmitter(entity: string) {
+        this.selectedEmitter = entity;
+    }
     
+    getMessageListOptions() {
+
+        const titlesOptions = [];
+        if (this.messageOrQuestionList) 
+            this.messageOrQuestionList.messagesList.forEach( (message) => {
+                
+                if ( !message.publishers || message.publishers.length === 0 || message.publishers.includes(this.selectedEmitter) ) {
+                    const option = {
+                        label: message.title,
+                        value: message.id
+                    };
+                    titlesOptions.push(option);
+                }
+            })
+        return titlesOptions;
+    }
+
+    getInitialSelectedOption() {
+        let selectedOption = this.getMessageListOptions()[0].value;
+        if (['EDITION', 'COPY'].includes(opfab.currentUserCard.getEditionMode())) {
+            const titleId = this.getTitleId();
+            if (titleId) selectedOption = titleId;
+        }
+        return selectedOption;
+    }
 
 }

@@ -111,6 +111,11 @@ If you want to use the template as is, the json file must follow this structure 
         "message": "A problem has been detected, please put maintenance work on hold and be on stand by",
         "question": false,
         "severity": "ALARM",
+        "publishers":  [
+            "ENTITY1_FR",
+            "ENTITY2_FR",
+            "ENTITY3_FR"
+        ]
         "recipients" : [
             "ENTITY1_FR",
             "ENTITY2_FR"
@@ -129,6 +134,9 @@ If you want to use the template as is, the json file must follow this structure 
 
 }`
 
+The 'severity' field is optional. If not specified the card will take a default severity value depending on 'question' field value : "ACTION" if question is true, "INFORMATION" if question is false.
+
+The 'publishers' fields is optional. It is used to restrict the possible publishers of the message. If specified, the message option is available only for the specified entities. If not specified or empty there are no restrictions.
 
 [[build-in_templates_common_usercard_attributes]]
 == Common attributes for user cards build-in templates 
