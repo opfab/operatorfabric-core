@@ -10,7 +10,6 @@
 import {Component, Input, OnDestroy, OnInit} from '@angular/core';
 import {BaseSettingDirective} from '../base-setting/base-setting.directive';
 import {FormControl, FormGroup} from '@angular/forms';
-import {SettingsService} from 'app/business/services/users/settings.service';
 
 @Component({
     selector: 'of-checkbox-setting',
@@ -22,11 +21,6 @@ export class CheckboxSettingComponent extends BaseSettingDirective implements On
     @Input() public name: string;
     @Input() public checked: boolean;
 
-    constructor(
-        protected settingsService: SettingsService
-    ) {
-        super(settingsService);
-    }
 
     ngOnInit() {
         super.ngOnInit();

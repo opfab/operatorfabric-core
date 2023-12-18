@@ -75,7 +75,6 @@ export class FeedconfigurationComponent implements OnInit, AfterViewInit {
 
     constructor(
         private modalService: NgbModal,
-        private settingsService: SettingsService,
         private translateService: TranslateService,
     ) {
         this.processesStatesLabels = new Map();
@@ -406,7 +405,7 @@ export class FeedconfigurationComponent implements OnInit, AfterViewInit {
 
         const processesStatesNotifiedByEmail = this.computeMapOfProcessesNotifiedByMail();
 
-        this.settingsService
+        SettingsService
             .patchUserSettings({
                 login: this.currentUserWithPerimeters.userData.login,
                 processesStatesNotNotified: Object.fromEntries(processesStatesNotNotifiedUpdate),
