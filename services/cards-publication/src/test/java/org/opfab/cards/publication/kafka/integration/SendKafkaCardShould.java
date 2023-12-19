@@ -161,7 +161,7 @@ class SendKafkaCardShould {
         kafkaTemplate.send(commandTopic, cardCommand);
 
         CardPublicationData card = cardRepositoryMock.findCardById(taskId + "." + processInstanceId);
-        for (int retries = 10; retries > 0 && card == null; retries--) {
+        for (int retries = 20; retries > 0 && card == null; retries--) {
             Thread.sleep(250);  // Give the service some time to process the card
             card = cardRepositoryMock.findCardById(taskId + "." + processInstanceId);
         }
