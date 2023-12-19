@@ -1,0 +1,367 @@
+/* Copyright (c) 2023-2024, RTE (http://www.rte-france.com)
+ * See AUTHORS.txt
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ * SPDX-License-Identifier: MPL-2.0
+ * This file is part of the OperatorFabric project.
+ */
+
+import {Process, State, UiVisibility} from '@ofModel/processes.model';
+import {ProcessServerMock} from '@tests/mocks/processServer.mock';
+import {ServerResponse, ServerResponseStatus} from 'app/business/server/serverResponse';
+import {ProcessesService} from 'app/business/services/businessconfig/processes.service';
+import {firstValueFrom} from 'rxjs';
+import {ProcessMonitoringView} from './processmonitoring.view';
+import {ComputedPerimeter, UserWithPerimeters} from '@ofModel/userWithPerimeters.model';
+import {RightsEnum} from '@ofModel/perimeter.model';
+import {UserService} from 'app/business/services/users/user.service';
+import {UserServerMock} from '@tests/mocks/userServer.mock';
+import {PermissionEnum} from '@ofModel/permission.model';
+
+describe('Process Monitoring view ', () => {
+    let processServerMock: ProcessServerMock;
+    let userServerMock: UserServerMock;
+
+    async function initProcesses(
+        processNames: string[] = ['process name 1', 'process name 2'],
+        stateNames: string[] = ['State 1_1', 'State 2_1', 'State 2_2']
+    ) {
+        const statesForProcess1 = new Map<string, State>();
+        const state1_1 = new State();
+        state1_1.name = stateNames[0];
+        statesForProcess1.set('state1_1', state1_1);
+
+        const statesForProcess2 = new Map<string, State>();
+        const state2_1 = new State();
+        state2_1.name = stateNames[1];
+        statesForProcess2.set('state2_1', state2_1);
+        const state2_2 = new State();
+        state2_2.name = stateNames[2];
+        statesForProcess2.set('state2_2', state2_2);
+
+        const statesForProcess3 = new Map<string, State>();
+        const state3_1 = new State();
+        state3_1.name = 'State 3_1';
+        statesForProcess3.set('state3_1', state3_1);
+
+        const statesForProcessWithNoName = new Map<string, State>();
+        const stateNoName_1 = new State();
+        stateNoName_1.name = 'State NoName_1';
+        statesForProcessWithNoName.set('stateNoName_1', stateNoName_1);
+
+        const processes = new Array();
+        const process1 = new Process(
+            'process1',
+            'v1',
+            processNames[0],
+            undefined,
+            statesForProcess1,
+            new UiVisibility(true, true, true, true)
+        );
+        const process2 = new Process(
+            'process2',
+            'v2',
+            processNames[1],
+            undefined,
+            statesForProcess2,
+            new UiVisibility(true, true, true, true)
+        );
+        const process3 = new Process(
+            'process3',
+            'v2',
+            'process name 3',
+            undefined,
+            statesForProcess3,
+            new UiVisibility(true, false, true, true)
+        );
+        const process4 = new Process('process4', 'v2', 'process name 4', undefined, undefined);
+        const processWithNoName = new Process(
+            'processWithNoName',
+            'v2',
+            '',
+            undefined,
+            statesForProcessWithNoName,
+            new UiVisibility(true, true, true, true)
+        );
+        processes.push(process1);
+        processes.push(process2);
+        processes.push(process3);
+        processes.push(process4);
+        processes.push(processWithNoName);
+        processServerMock = new ProcessServerMock();
+        ProcessesService.setProcessServer(processServerMock);
+        processServerMock.setResponseForAllProcessDefinition(
+            new ServerResponse(processes, ServerResponseStatus.OK, null)
+        );
+        await firstValueFrom(ProcessesService.loadAllProcessesWithLatestVersion());
+        await firstValueFrom(ProcessesService.loadAllProcessesWithAllVersions());
+    }
+
+    async function setDefaultUserPerimeter() {
+        const computedPerimeters = new Array();
+        const computedPerimeter = new ComputedPerimeter('process1', 'state1_1', RightsEnum.Receive, true);
+        const computedPerimeter2 = new ComputedPerimeter('process2', 'state2_1', RightsEnum.Receive, true);
+        const computedPerimeter3 = new ComputedPerimeter('process2', 'state2_2', RightsEnum.Receive, true);
+        computedPerimeters.push(computedPerimeter);
+        computedPerimeters.push(computedPerimeter2);
+        computedPerimeters.push(computedPerimeter3);
+        await setUserPerimeter(computedPerimeters);
+    }
+
+    async function setUserPerimeter(computedPerimeters: ComputedPerimeter[], permissions?: PermissionEnum[]) {
+        userServerMock = new UserServerMock();
+        UserService.setUserServer(userServerMock);
+        const userWithPerimeters = new UserWithPerimeters(null, computedPerimeters, permissions, new Map());
+        userServerMock.setResponseForCurrentUserWithPerimeter(
+            new ServerResponse(userWithPerimeters, ServerResponseStatus.OK, null)
+        );
+        await firstValueFrom(UserService.loadUserWithPerimetersData());
+    }
+
+    async function initProcessGroups(
+        processGroups = {
+            groups: [
+                {
+                    id: 'service1',
+                    name: 'Service 1',
+                    processes: ['process1', 'process2']
+                },
+                {
+                    id: 'service2',
+                    name: 'Service 2',
+                    processes: ['processWithNoName']
+                }
+            ]
+        }
+    ) {
+        processServerMock.setResponseForProcessGroups(new ServerResponse(processGroups, ServerResponseStatus.OK, null));
+        await firstValueFrom(ProcessesService.loadProcessGroups());
+    }
+
+    describe('get processes', () => {
+        it('should return the list of processes that have uiVisibility for monitoring process screen', async () => {
+            await initProcesses();
+            await setDefaultUserPerimeter();
+            const processMonitoringView: ProcessMonitoringView = new ProcessMonitoringView();
+            const processList = processMonitoringView.getProcessList();
+            expect(processList.length).toBe(2);
+            expect(processList[0].id).toBe('process1');
+            expect(processList[0].label).toBe('process name 1');
+            expect(processList[1].id).toBe('process2');
+            expect(processList[1].label).toBe('process name 2');
+        });
+
+        it('should return the list of processes sort alphabetical order for monitoring process screen', async () => {
+            await initProcesses(['B - process name 1', 'A - process name 2']);
+            await setDefaultUserPerimeter();
+            const processMonitoringView: ProcessMonitoringView = new ProcessMonitoringView();
+            const processList = processMonitoringView.getProcessList();
+            expect(processList.length).toBe(2);
+            expect(processList[0].id).toBe('process2');
+            expect(processList[0].label).toBe('A - process name 2');
+            expect(processList[1].id).toBe('process1');
+            expect(processList[1].label).toBe('B - process name 1');
+        });
+
+        it(' should return an empty process list if the user has no perimeter ', async () => {
+            await initProcesses();
+            await setUserPerimeter([]);
+            const processMonitoringView: ProcessMonitoringView = new ProcessMonitoringView();
+            const processList = processMonitoringView.getProcessList();
+            expect(processList.length).toBe(0);
+        });
+
+        it(' should return process2 when the user has RECEIVE permission for process2 with state2_1', async () => {
+            await initProcesses();
+            await setUserPerimeter([new ComputedPerimeter('process2', 'state2_1', RightsEnum.Receive, true)]);
+            const processMonitoringView: ProcessMonitoringView = new ProcessMonitoringView();
+            const processList = processMonitoringView.getProcessList();
+            expect(processList.length).toBe(1);
+            expect(processList[0].id).toBe('process2');
+            expect(processList[0].label).toBe('process name 2');
+        });
+
+        it(' should return process2 and process1 when the user has permission for the process1 and process2', async () => {
+            await initProcesses();
+            await setUserPerimeter([
+                new ComputedPerimeter('process2', 'state2_1', RightsEnum.Receive, true),
+                new ComputedPerimeter('process1', 'state1_1', RightsEnum.ReceiveAndWrite, true)
+            ]);
+            const processMonitoringView: ProcessMonitoringView = new ProcessMonitoringView();
+            const processList = processMonitoringView.getProcessList();
+            expect(processList.length).toBe(2);
+            expect(processList[0].id).toBe('process1');
+            expect(processList[0].label).toBe('process name 1');
+            expect(processList[1].id).toBe('process2');
+            expect(processList[1].label).toBe('process name 2');
+        });
+
+        it('should return process with name if no process name is defined', async () => {
+            await initProcesses();
+            await setUserPerimeter([
+                new ComputedPerimeter('processWithNoName', 'stateNoName_1', RightsEnum.Receive, true)
+            ]);
+            const processMonitoringView: ProcessMonitoringView = new ProcessMonitoringView();
+            const processList = processMonitoringView.getProcessList();
+            expect(processList[0].id).toBe('processWithNoName');
+            expect(processList[0].label).toBe('processWithNoName');
+        });
+    });
+
+    describe('get state per processes', () => {
+        it('should return an empty list if no process selected', async () => {
+            await initProcesses();
+            await setDefaultUserPerimeter();
+            const processMonitoringView: ProcessMonitoringView = new ProcessMonitoringView();
+            const statePerProcess = processMonitoringView.getStatesPerProcess([]);
+            expect(statePerProcess.length).toBe(0);
+        });
+
+        it('should return state1_1 if process 1 is selected', async () => {
+            await initProcesses();
+            await setDefaultUserPerimeter();
+            const processMonitoringView: ProcessMonitoringView = new ProcessMonitoringView();
+            const statePerProcess = processMonitoringView.getStatesPerProcess(['process1']);
+            expect(statePerProcess.length).toBe(1);
+            expect(statePerProcess[0].id).toBe('process1');
+            expect(statePerProcess[0].processName).toBe('process name 1');
+            expect(statePerProcess[0].states.length).toBe(1);
+            expect(statePerProcess[0].states[0].id).toBe('state1_1');
+            expect(statePerProcess[0].states[0].label).toBe('State 1_1');
+        });
+
+        it('should return state1_1,state2_1,state2_2 if process 1 & 2  are selected', async () => {
+            await initProcesses();
+            await setDefaultUserPerimeter();
+            const processMonitoringView: ProcessMonitoringView = new ProcessMonitoringView();
+            const statePerProcess = processMonitoringView.getStatesPerProcess(['process1', 'process2']);
+            expect(statePerProcess.length).toBe(2);
+            expect(statePerProcess[0].id).toBe('process1');
+            expect(statePerProcess[0].processName).toBe('process name 1');
+            expect(statePerProcess[0].states.length).toBe(1);
+            expect(statePerProcess[0].states[0].id).toBe('state1_1');
+            expect(statePerProcess[0].states[0].label).toBe('State 1_1');
+            expect(statePerProcess[1].id).toBe('process2');
+            expect(statePerProcess[1].processName).toBe('process name 2');
+            expect(statePerProcess[1].states.length).toBe(2);
+            expect(statePerProcess[1].states[0].id).toBe('state2_1');
+            expect(statePerProcess[1].states[0].label).toBe('State 2_1');
+            expect(statePerProcess[1].states[1].id).toBe('state2_2');
+            expect(statePerProcess[1].states[1].label).toBe('State 2_2');
+        });
+
+        it('should return process 1 & 2 by alphabetical order', async () => {
+            await initProcesses(['B - process name 1', 'A - process name 2']);
+            await setDefaultUserPerimeter();
+            const processMonitoringView: ProcessMonitoringView = new ProcessMonitoringView();
+            const statePerProcess = processMonitoringView.getStatesPerProcess(['process1', 'process2']);
+            expect(statePerProcess.length).toBe(2);
+            expect(statePerProcess[0].id).toBe('process2');
+            expect(statePerProcess[0].processName).toBe('A - process name 2');
+            expect(statePerProcess[1].id).toBe('process1');
+            expect(statePerProcess[1].processName).toBe('B - process name 1');
+        });
+
+        it('should return state 2 & 3 by alphabetical order', async () => {
+            await initProcesses(['process 1', 'process 2'], ['State 1', 'State BBB', 'State AAA']);
+            await setDefaultUserPerimeter();
+            const processMonitoringView: ProcessMonitoringView = new ProcessMonitoringView();
+            const statePerProcess = processMonitoringView.getStatesPerProcess(['process1', 'process2']);
+            expect(statePerProcess[1].id).toBe('process2');
+            expect(statePerProcess[1].states[0].label).toBe('State AAA');
+            expect(statePerProcess[1].states[1].label).toBe('State BBB');
+        });
+
+        it('should return state 2 & 3 by alphabetical order ignoring emojis', async () => {
+            await initProcesses(['process 1', 'process 2'], ['State 1', 'State BBB', 'State 😊AAA']);
+            await setDefaultUserPerimeter();
+            const processMonitoringView: ProcessMonitoringView = new ProcessMonitoringView();
+            const statePerProcess = processMonitoringView.getStatesPerProcess(['process1', 'process2']);
+            expect(statePerProcess[1].id).toBe('process2');
+            expect(statePerProcess[1].states[0].label).toBe('State 😊AAA');
+            expect(statePerProcess[1].states[1].label).toBe('State BBB');
+        });
+
+        it('should return state2_1 if process2 is selected and user has no permission on state2_2', async () => {
+            await initProcesses();
+            await setUserPerimeter([
+                new ComputedPerimeter('process2', 'state2_1', RightsEnum.Receive, true),
+                new ComputedPerimeter('process1', 'state1_1', RightsEnum.ReceiveAndWrite, true)
+            ]);
+            const processMonitoringView: ProcessMonitoringView = new ProcessMonitoringView();
+            const statePerProcess = processMonitoringView.getStatesPerProcess(['process2']);
+            expect(statePerProcess.length).toBe(1);
+            expect(statePerProcess[0].id).toBe('process2');
+            expect(statePerProcess[0].processName).toBe('process name 2');
+            expect(statePerProcess[0].states.length).toBe(1);
+            expect(statePerProcess[0].states[0].id).toBe('state2_1');
+            expect(statePerProcess[0].states[0].label).toBe('State 2_1');
+        });
+    });
+    describe('get process groups', () => {
+        it('should return an empty list if no process groups', async () => {
+            await initProcesses();
+            await setDefaultUserPerimeter();
+            await initProcessGroups({groups: []});
+            const processMonitoringView: ProcessMonitoringView = new ProcessMonitoringView();
+            const processGroups = processMonitoringView.getProcessGroups();
+            expect(processGroups.length).toBe(0);
+        });
+
+        it('should return 2 process groups when user has access to process process1 , process2 and processWithNoName', async () => {
+            await initProcesses();
+            await setUserPerimeter([
+                new ComputedPerimeter('process1', 'state1_1', RightsEnum.ReceiveAndWrite, true),
+                new ComputedPerimeter('process2', 'state2_1', RightsEnum.Receive, true),
+                new ComputedPerimeter('processWithNoName', 'stateNoName_1', RightsEnum.ReceiveAndWrite, true)
+            ]);
+            await initProcessGroups();
+            const processMonitoringView: ProcessMonitoringView = new ProcessMonitoringView();
+            const processGroups = processMonitoringView.getProcessGroups();
+            expect(processGroups[0].id).toBe('service1');
+            expect(processGroups[0].label).toBe('Service 1');
+            expect(processGroups.length).toBe(2);
+        });
+
+        it('should return process 1 & 2 if service 1  is selected', async () => {
+            await initProcesses();
+            await initProcessGroups();
+            const computedPerimeters = new Array();
+            const computedPerimeter = new ComputedPerimeter('process1', 'state1_1', RightsEnum.Receive, true);
+            const computedPerimeter2 = new ComputedPerimeter('process2', 'state2_1', RightsEnum.Receive, true);
+            const computedPerimeter3 = new ComputedPerimeter('process2', 'state2_2', RightsEnum.Receive, true);
+            const computedPerimeter4 = new ComputedPerimeter(
+                'processWithNoName',
+                'stateNoName_1',
+                RightsEnum.Receive,
+                true
+            );
+            computedPerimeters.push(computedPerimeter);
+            computedPerimeters.push(computedPerimeter2);
+            computedPerimeters.push(computedPerimeter3);
+            computedPerimeters.push(computedPerimeter4);
+            await setUserPerimeter(computedPerimeters);
+            const processMonitoringView: ProcessMonitoringView = new ProcessMonitoringView();
+
+            const processes = processMonitoringView.getProcessesPerProcessGroups(['service1']);
+            expect(processes.length).toBe(2);
+            expect(processes[0].id).toBe('process1');
+            expect(processes[0].label).toBe('process name 1');
+            expect(processes[1].id).toBe('process2');
+            expect(processes[1].label).toBe('process name 2');
+        });
+
+        it('should return process 2 if service 1  is selected and user has no permission on process 1', async () => {
+            await initProcesses();
+            await setUserPerimeter([new ComputedPerimeter('process2', 'state2_1', RightsEnum.Receive, true)]);
+            await initProcessGroups();
+            const processMonitoringView: ProcessMonitoringView = new ProcessMonitoringView();
+
+            const processes = processMonitoringView.getProcessesPerProcessGroups(['service1']);
+            expect(processes.length).toBe(1);
+            expect(processes[0].id).toBe('process2');
+            expect(processes[0].label).toBe('process name 2');
+        });
+    });
+});

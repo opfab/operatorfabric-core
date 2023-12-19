@@ -22,6 +22,7 @@ import {ProcessmonitoringTableComponent} from './components/processmonitoring-ta
 import {AgGridModule} from 'ag-grid-angular';
 import {TimeCellRendererComponent} from './components/cell-renderers/time-cell-renderer.component';
 import {SenderCellRendererComponent} from './components/cell-renderers/sender-cell-renderer.component';
+import {MultiSelectModule} from '../share/multi-select/multi-select.module';
 
 @NgModule({
     imports: [
@@ -35,7 +36,8 @@ import {SenderCellRendererComponent} from './components/cell-renderers/sender-ce
         SimplifiedCardViewModule,
         ArchivesLoggingFiltersModule,
         SpinnerModule,
-        AgGridModule
+        AgGridModule,
+        MultiSelectModule
     ],
     declarations: [
         ProcessMonitoringComponent,

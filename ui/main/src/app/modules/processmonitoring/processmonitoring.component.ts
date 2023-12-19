@@ -25,14 +25,42 @@ import {DateTimeFormatterService} from 'app/business/services/date-time-formatte
 import {LightCard} from '@ofModel/light-card.model';
 import {Page} from '@ofModel/page.model';
 import {ExcelExport} from 'app/business/common/excel-export';
-import {ArchivesLoggingFiltersComponent} from '../share/archives-logging-filters/archives-logging-filters.component';
 import {EntitiesService} from 'app/business/services/users/entities.service';
-import {NgbModal, NgbModalOptions, NgbModalRef} from '@ng-bootstrap/ng-bootstrap';
+import {NgbDateStruct, NgbModal, NgbModalOptions, NgbModalRef, NgbTimeStruct} from '@ng-bootstrap/ng-bootstrap';
 import {CardsFilter} from '@ofModel/cards-filter.model';
 import {FilterMatchTypeEnum, FilterModel} from '@ofModel/filter-model';
 import {CardService} from 'app/business/services/card/card.service';
 import {TranslationService} from 'app/business/services/translation/translation.service';
 import {SelectedCardService} from '../../business/services/card/selectedCard.service';
+import {ProcessMonitoringView} from 'app/business/view/processmonitoring/processmonitoring.view';
+import {ProcessToMonitor} from 'app/business/view/processmonitoring/processmonitoringPage';
+import {MultiSelectOption} from '@ofModel/multiselect.model';
+import {UserPreferencesService} from 'app/business/services/users/user-preference.service';
+import {DateTimeNgb} from '@ofModel/datetime-ngb.model';
+import {Utilities} from 'app/business/common/utilities';
+
+export enum FilterDateTypes {
+    PUBLISH_DATE_FROM_PARAM = 'publishDateFrom',
+    PUBLISH_DATE_TO_PARAM = 'publishDateTo',
+    ACTIVE_FROM_PARAM = 'activeFrom',
+    ACTIVE_TO_PARAM = 'activeTo'
+}
+
+export const checkElement = (enumeration: typeof FilterDateTypes, value: string): boolean => {
+    let result = false;
+    if (
+        Object.values(enumeration)
+            .map((enumValue) => enumValue.toString())
+            .includes(value)
+    ) {
+        result = true;
+    }
+    return result;
+};
+
+export const transformToTimestamp = (date: NgbDateStruct, time: NgbTimeStruct): string => {
+    return new DateTimeNgb(date, time).formatDateTime();
+};
 
 @Component({
     selector: 'of-processmonitoring',
@@ -41,6 +69,36 @@ import {SelectedCardService} from '../../business/services/card/selectedCard.ser
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ProcessMonitoringComponent implements OnDestroy, OnInit, AfterViewInit {
+    processMonitoringView = new ProcessMonitoringView();
+    processList: ProcessToMonitor[];
+
+    processGroupMultiSelectOptions: Array<MultiSelectOption> = [];
+    processGroupSelected: Array<string> = [];
+    processGroupMultiSelectConfig = {
+        labelKey: 'shared.filters.processGroup',
+        placeholderKey: 'shared.filters.selectProcessGroupText',
+        sortOptions: true,
+        nbOfDisplayValues: 1
+    };
+
+    processMultiSelectOptions: Array<MultiSelectOption> = [];
+    processSelected: Array<string> = [];
+    processMultiSelectConfig = {
+        labelKey: 'shared.filters.process',
+        placeholderKey: 'shared.filters.selectProcessText',
+        sortOptions: true,
+        nbOfDisplayValues: 1
+    };
+
+    stateMultiSelectOptions: Array<MultiSelectOption> = [];
+    stateSelected: Array<string> = [];
+    stateMultiSelectConfig = {
+        labelKey: 'shared.filters.state',
+        placeholderKey: 'shared.filters.selectStateText',
+        sortOptions: true,
+        nbOfDisplayValues: 1
+    };
+
     tags: any[];
     size: number;
     processMonitoringForm = new FormGroup({
@@ -48,11 +106,12 @@ export class ProcessMonitoringComponent implements OnDestroy, OnInit, AfterViewI
         state: new FormControl([]),
         process: new FormControl([]),
         processGroup: new FormControl([]),
-        publishDateFrom: new FormControl<string | null>(null),
-        publishDateTo: new FormControl(''),
-        activeFrom: new FormControl(''),
-        activeTo: new FormControl('')
+        activeFrom: new FormControl(),
+        activeTo: new FormControl()
     });
+
+    activeMinDate: {year: number; month: number; day: number} = null;
+    activeMaxDate: {year: number; month: number; day: number} = null;
 
     results: LightCard[];
     currentPage = 0;
@@ -73,7 +132,7 @@ export class ProcessMonitoringComponent implements OnDestroy, OnInit, AfterViewI
     processNames = new Map();
     stateColors = new Map();
 
-    @ViewChild('filters') filtersTemplate: ArchivesLoggingFiltersComponent;
+    interval: any;
 
     modalRef: NgbModalRef;
     @ViewChild('exportInProgress') exportTemplate: ElementRef;
@@ -83,6 +142,8 @@ export class ProcessMonitoringComponent implements OnDestroy, OnInit, AfterViewI
 
     columnFilters: FilterModel[] = [];
     isProcessGroupFilterVisible: boolean;
+    isAdminModeChecked: boolean;
+    filters;
 
     private mapSeverity = new Map([
         ['alarm', 1],
@@ -99,6 +160,9 @@ export class ProcessMonitoringComponent implements OnDestroy, OnInit, AfterViewI
         private changeDetector: ChangeDetectorRef
     ) {
         this.processMonitoring = ConfigService.getConfigValue('processMonitoring');
+        this.processList = this.processMonitoringView.getProcessList();
+        this.isAdminModeChecked =
+            UserPreferencesService.getPreference('opfab.seeOnlyCardsForWhichUserIsRecipient') === 'false';
 
         ProcessesService.getAllProcesses().forEach((process) => {
             if (process.uiVisibility?.processMonitoring) {
@@ -120,7 +184,23 @@ export class ProcessMonitoringComponent implements OnDestroy, OnInit, AfterViewI
         });
     }
 
+    isThereProcessStateToDisplay(): boolean {
+        return this.processList.length > 0;
+    }
+
     ngOnInit() {
+        this.isProcessGroupFilterVisible = this.processMonitoringView.getProcessGroups().length > 1;
+
+        this.processGroupMultiSelectOptions = this.processMonitoringView.getProcessGroups().map((processGroup) => {
+            return new MultiSelectOption(processGroup.id, processGroup.label);
+        });
+        this.processMultiSelectOptions = this.processList.map((process) => {
+            return new MultiSelectOption(process.id, process.label);
+        });
+
+        this.changeProcessesWhenSelectProcessGroup();
+        this.changeStatesWhenSelectProcess();
+
         this.size = ConfigService.getConfigValue('processmonitoring.filters.page.size', 10);
         this.tags = ConfigService.getConfigValue('processmonitoring.filters.tags.list');
 
@@ -131,25 +211,104 @@ export class ProcessMonitoringComponent implements OnDestroy, OnInit, AfterViewI
         );
     }
 
+    changeProcessesWhenSelectProcessGroup(): void {
+        this.processMonitoringForm.get('processGroup').valueChanges.subscribe((selectedProcessGroups) => {
+            if (selectedProcessGroups?.length > 0) {
+                this.processMultiSelectOptions = this.processMonitoringView
+                    .getProcessesPerProcessGroups(selectedProcessGroups)
+                    .map((process) => {
+                        return new MultiSelectOption(process.id, process.label);
+                    });
+            } else
+                this.processMultiSelectOptions = this.processList.map((process) => {
+                    return new MultiSelectOption(process.id, process.label);
+                });
+            this.changeDetector.markForCheck();
+        });
+    }
+
+    changeStatesWhenSelectProcess(): void {
+        this.processMonitoringForm.get('process').valueChanges.subscribe((selectedProcess) => {
+            if (selectedProcess?.length > 0) {
+                this.stateMultiSelectOptions = this.processMonitoringView
+                    .getStatesPerProcess(selectedProcess)
+                    .map((statePerProcess) => {
+                        const stateOptions = new MultiSelectOption(statePerProcess.id, statePerProcess.processName);
+                        stateOptions.options = [];
+                        statePerProcess.states.forEach((state) => {
+                            stateOptions.options.push(
+                                new MultiSelectOption(statePerProcess.id + '.' + state.id, state.label)
+                            );
+                        });
+                        return stateOptions;
+                    });
+            } else {
+                this.stateMultiSelectOptions = [];
+            }
+            this.changeDetector.markForCheck();
+        });
+    }
+
     ngAfterViewInit() {
-        this.isProcessGroupFilterVisible = this.filtersTemplate.isProcessGroupFilterVisible();
         this.sendFilterQuery(0, false);
     }
 
     resetForm() {
         this.processMonitoringForm.reset();
+        this.processGroupMultiSelectOptions = this.processMonitoringView.getProcessGroups().map((processGroup) => {
+            return new MultiSelectOption(processGroup.id, processGroup.label);
+        });
         this.columnFilters = [];
         this.firstQueryHasBeenDone = false;
+        console.log('restForm');
+        this.setDateFilterBounds();
+    }
+
+    setDateFilterBounds(): void {
+        if (this.processMonitoringForm.value.activeFrom?.date) {
+            this.activeMinDate = {
+                year: this.processMonitoringForm.value.activeFrom.date.year,
+                month: this.processMonitoringForm.value.activeFrom.date.month,
+                day: this.processMonitoringForm.value.activeFrom.date.day
+            };
+        } else {
+            this.activeMinDate = null;
+        }
+        if (this.processMonitoringForm.value.activeTo?.date) {
+            this.activeMaxDate = {
+                year: this.processMonitoringForm.value.activeTo.date.year,
+                month: this.processMonitoringForm.value.activeTo.date.month,
+                day: this.processMonitoringForm.value.activeTo.date.day
+            };
+        } else {
+            this.activeMaxDate = null;
+        }
+        this.changeDetector.markForCheck();
+    }
+
+    onDateTimeChange() {
+        // need to wait otherwise change is not always done
+        setTimeout(() => this.setDateFilterBounds(), 100);
+    }
+
+    toggleAdminMode() {
+        this.isAdminModeChecked = !this.isAdminModeChecked;
+        UserPreferencesService.setPreference(
+            'opfab.seeOnlyCardsForWhichUserIsRecipient',
+            String(!this.isAdminModeChecked)
+        );
     }
 
     sendFilterQuery(page_number: number, isSearchButtonClicked: boolean): void {
         this.technicalError = false;
         this.loadingInProgress = true;
 
-        const {value} = this.processMonitoringForm;
-        this.filtersTemplate.transformFiltersListToMap(value);
+        if (isSearchButtonClicked) {
+            const {value} = this.processMonitoringForm;
+            this.transformFiltersListToMap(value);
+        }
 
-        const filter = this.getFilter(page_number, this.size, this.filtersTemplate);
+        const filter = this.getFilter(page_number, this.size);
 
         CardService.fetchFilteredCards(filter).subscribe({
             next: (page: Page<any>) => {
@@ -181,25 +340,74 @@ export class ProcessMonitoringComponent implements OnDestroy, OnInit, AfterViewI
         });
     }
 
-    private getFilter(page: number, size: number, filtersTemplate: ArchivesLoggingFiltersComponent): CardsFilter {
-        const filters = [];
-        let isAdminMode = filtersTemplate.isAdminModeChecked;
-        filtersTemplate.filters?.forEach((values, key) => {
-            if (key === 'adminMode') isAdminMode = values[0];
-            else filters.push(new FilterModel(key, null, FilterMatchTypeEnum.IN, values));
+    private getFilter(page: number, size: number): CardsFilter {
+        const localFilters = [];
+        this.filters?.forEach((values, key) => {
+            localFilters.push(new FilterModel(key, null, FilterMatchTypeEnum.IN, values));
         });
         // if no process selected, set the filter to the list of process that shall be visible on the UI
-        if (this.listOfProcessesForRequest.length && !filtersTemplate.filters?.has('process'))
-            filters.push(new FilterModel('process', null, FilterMatchTypeEnum.IN, this.listOfProcessesForRequest));
+        if (this.listOfProcessesForRequest.length && !this.filters?.has('process'))
+            localFilters.push(new FilterModel('process', null, FilterMatchTypeEnum.IN, this.listOfProcessesForRequest));
 
-        this.columnFilters.forEach((filter) => filters.push(filter));
+        this.columnFilters.forEach((filter) => localFilters.push(filter));
 
         const selectedFields: string[] = [];
         this.processMonitoring.forEach((column) => {
             selectedFields.push(column.field);
         });
 
-        return new CardsFilter(page, size, isAdminMode, true, false, filters, selectedFields);
+        return new CardsFilter(page, size, false, true, false, localFilters, selectedFields);
+    }
+
+    transformFiltersListToMap = (filters: any): void => {
+        this.filters = new Map();
+
+        Object.keys(filters).forEach((key) => {
+            const element = filters[key];
+            // if the form element is date
+            if (key !== 'processGroup' && element) {
+                if (checkElement(FilterDateTypes, key)) {
+                    this.dateFilterToMap(key, element);
+                } else if (key === 'process') {
+                    this.processFilterToMap(element);
+                } else if (element.length) {
+                    if (key === 'state') {
+                        this.stateFilterToMap(element);
+                    } else {
+                        this.otherFilterToMap(element, key);
+                    }
+                }
+            }
+        });
+    };
+
+    otherFilterToMap(element: any, key: string) {
+        const ids = [];
+        element.forEach((val) => ids.push(val));
+        this.filters.set(key, ids);
+    }
+
+    dateFilterToMap(key: string, element: any) {
+        const epochDate = Utilities.convertNgbDateTimeToEpochDate(element);
+        if (epochDate) this.filters.set(key, [epochDate]);
+    }
+
+    processFilterToMap(element: any) {
+        const processes = [];
+        if (element.length === 0) this.processMultiSelectOptions.forEach((val) => processes.push(val.value));
+        else
+            element.forEach((val) => {
+                processes.push(val);
+            });
+        this.filters.set('process', processes);
+    }
+
+    stateFilterToMap(element: any) {
+        const processStateKeys = [];
+        element.forEach((val) => {
+            processStateKeys.push(val);
+        });
+        this.filters.set('processStateKey', processStateKeys);
     }
 
     cardPostProcessing(card) {
@@ -261,7 +469,7 @@ export class ProcessMonitoringComponent implements OnDestroy, OnInit, AfterViewI
         };
         this.modalRef = this.modalService.open(this.exportTemplate, modalOptions);
 
-        const filter = this.getFilter(0, this.resultsNumber, this.filtersTemplate);
+        const filter = this.getFilter(0, this.resultsNumber);
 
         CardService.fetchFilteredCards(filter).subscribe((page: Page<Object>) => {
             const lines = page.content;

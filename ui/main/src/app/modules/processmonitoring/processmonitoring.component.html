@@ -6,16 +6,82 @@
 <!-- SPDX-License-Identifier: MPL-2.0                                      -->
 <!-- This file is part of the OperatorFabric project.                      -->
 
+<div>
 
-<div class="processmonitoring-page">
-    <form [formGroup]="processMonitoringForm" #currentForm>
-          <of-archives-logging-filters [parentForm]="processMonitoringForm" [visibleProcesses]="listOfProcessesForFilter"
-                                       (resetFormEvent)='resetForm()' (search)='search()'
-                                       [tags]="tags" [hideChildStates]="false"
-                                       [displayPublishDateFilter]="false" #filters>
-          </of-archives-logging-filters>
+  <ng-template #noProcessStateToDisplay>
+    <div id="opfab-no-process-state-available" style="text-align: center; font-size: 20px; padding-top: 100px"
+      translate>shared.noProcessStateAvailable</div>
+    <div *ngIf="hasCurrentUserRightsToViewAllArchivedCards"
+      style="display: flex; justify-content: center; padding-top: 10px">
+      <a id='opfab-see-all-cards-link' class="opfab-link" (click)="toggleAdminMode()"><span
+          translate>shared.goToAdminMode</span></a>
+    </div>
+  </ng-template>
 
-    </form>
+  <div class="opfab-processmonitoring-header" *ngIf="isThereProcessStateToDisplay(); else noProcessStateToDisplay">
+    <div style="display: flex;">
+      <div style="display: flex;">
+        <!--2 columns in this case-->
+        <!--First column-->
+        <div *ngIf="isProcessGroupFilterVisible || tags" style="margin-right:40px">
+          <div style="min-width:300px;max-width:400px;margin-top: 28px;margin-bottom: 54px;max-height: 48px">
+
+            <of-multi-select *ngIf="isProcessGroupFilterVisible" id="opfab-processGroup" multiSelectId="processGroup"
+              [parentForm]="processMonitoringForm" [config]="processGroupMultiSelectConfig"
+              [options]="processGroupMultiSelectOptions" [selectedOptions]="processGroupSelected">
+            </of-multi-select>
+
+            <of-multi-select *ngIf="!isProcessGroupFilterVisible && tags" id="opfab-tags" multiSelectId="tags"
+              [parentForm]="processMonitoringForm" [config]="tagsMultiSelectConfig" [options]="tagsMultiSelectOptions"
+              [selectedOptions]="tagsSelected">
+            </of-multi-select>
+          </div>
+          <div *ngIf="isProcessGroupFilterVisible && tags" style="min-width:300px;max-width:400px;max-height: 48px">
+            <of-multi-select id="opfab-tags" multiSelectId="tags" [parentForm]="processMonitoringForm"
+              [config]="tagsMultiSelectConfig" [options]="tagsMultiSelectOptions" [selectedOptions]="tagsSelected">
+            </of-multi-select>
+          </div>
+        </div>
+        <!--Second column-->
+        <div *ngIf="isProcessGroupFilterVisible || tags" style="margin-right:40px">
+          <div style="min-width:300px;max-width:400px;margin-top:28px;margin-bottom: 54px;max-height: 48px">
+
+            <of-multi-select id="opfab-process" multiSelectId="process"
+              [parentForm]="processMonitoringForm" [config]="processMultiSelectConfig" [options]="processMultiSelectOptions"
+              [selectedOptions]="processSelected">
+            </of-multi-select>
+
+          </div>
+          <div style="min-width:300px;max-width:400px;max-height: 48px">
+            <of-multi-select id="opfab-state" multiSelectId="state" [parentForm]="processMonitoringForm"
+              [config]="stateMultiSelectConfig" [options]="stateMultiSelectOptions" [selectedOptions]="stateSelected">
+            </of-multi-select>
+          </div>
+        </div>
+        
+        <div class="opfab-vertical-bar"></div>
+        <div style="margin-left:40px;width:230px;min-width: 230px;" [formGroup]="processMonitoringForm">
+            <div>
+                <of-datetime-filter id="opfab-active-from" filterPath="activeFrom" formControlName="activeFrom" labelKey="shared.filters." [maxDate]="activeMaxDate" (dateTimeChange)="onDateTimeChange()">
+                </of-datetime-filter>
+            </div>
+            <div>
+                <of-datetime-filter id="opfab-active-to" filterPath="activeTo" formControlName="activeTo" labelKey="shared.filters." [minDate]="activeMinDate" (dateTimeChange)="onDateTimeChange()">
+                </of-datetime-filter>
+            </div>
+        </div>
+        
+        <div  class="opfab-buttons">
+            <button id="opfab-archives-logging-btn-search" class="opfab-btn" (click)='search()' translate>button.search</button>
+            <button id="opfab-archives-logging-btn-reset" class="opfab-btn-cancel" style="margin-top:50px" (click)='resetForm()' translate>button.reset</button>
+        </div>
+  
+      </div>
+    </div>
+  </div>
+
+
+
 </div>
 
 <!-- Display spinner if loading cards is taking more than 1s -->
@@ -24,19 +90,19 @@
 
 <div style="height:5%"> </div>
 
-<div *ngIf="firstQueryHasBeenDone" [hidden]="technicalError || !firstQueryHasResults" style="margin-left:5%;margin-right:5%">
-  <of-processmonitoring-table [result]="results" [processGroupVisible]="isProcessGroupFilterVisible"
-    [page]="page" [totalElements]="totalElements" [totalPages]="totalPages"
-    [processStateNameMap]="processStateName" [processStateDescriptionMap]="processStateDescription"
-    [processMonitoring]="processMonitoring"
+<div *ngIf="firstQueryHasBeenDone" [hidden]="technicalError || !firstQueryHasResults"
+  style="margin-left:5%;margin-right:5%">
+  <of-processmonitoring-table [result]="results" [processGroupVisible]="isProcessGroupFilterVisible" [page]="page"
+    [totalElements]="totalElements" [totalPages]="totalPages" [processStateNameMap]="processStateName"
+    [processStateDescriptionMap]="processStateDescription" [processMonitoring]="processMonitoring"
     (filterChange)="onTableFilterChange($event)" (pageChange)="onPageChange($event)" (export)="exportToExcel()">
   </of-processmonitoring-table>
 
 </div>
 
 <div *ngIf="(document.getElementById('opfab-no-process-state-available') === null) &&
-    firstQueryHasBeenDone && !firstQueryHasResults && !loadingInProgress"
-     style="text-align: center;font-size: 20px;" translate>shared.noResult
+    firstQueryHasBeenDone && !firstQueryHasResults && !loadingInProgress" style="text-align: center;font-size: 20px;"
+  translate>shared.noResult
 </div>
 
 <div *ngIf="technicalError" style="text-align: center;font-size: 20px;" translate> shared.error.technicalError
