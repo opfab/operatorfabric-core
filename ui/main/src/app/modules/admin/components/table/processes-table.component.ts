@@ -24,9 +24,16 @@ export class ProcessesTableComponent extends AdminTableDirective implements OnIn
     fields = [
         new Field('id', 6, 'idCellRenderer'), 
         new Field('name', 6, null), 
-        new Field('version', 6, null)
+        new Field('version', 6, null, null, 'versionColumn')
     ];
     idField = 'id';
     showAddButton = false;
     actionButtonsDisplayed = [ActionButton.DELETE];
+
+    ngOnInit() {
+        this.gridOptions.columnTypes['versionColumn'] = {
+            resizable: false
+        };
+        super.ngOnInit();
+    }
 }

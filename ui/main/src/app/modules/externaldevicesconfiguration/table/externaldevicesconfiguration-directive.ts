@@ -74,7 +74,8 @@ export abstract class ExternalDevicesConfigurationDirective {
                     filter: true,
                     wrapText: true,
                     autoHeight: true,
-                    flex: 1
+                    flex: 1,
+                    resizable: false
                 },
                 actionColumn: {
                     field: '',
@@ -82,7 +83,8 @@ export abstract class ExternalDevicesConfigurationDirective {
                     filter: false,
                     minWidth: 90,
                     flex: 1,
-                    cellRenderer: 'actionCellRenderer'
+                    cellRenderer: 'actionCellRenderer',
+                    resizable: false
                 },
                 checkboxColumn: {
                     field: '',
@@ -90,7 +92,8 @@ export abstract class ExternalDevicesConfigurationDirective {
                     filter: false,
                     minWidth: 90,
                     flex: 1,
-                    cellRenderer: 'checkboxCellRenderer'
+                    cellRenderer: 'checkboxCellRenderer',
+                    resizable: false
                 }
             },
             getLocaleText: function (params) {

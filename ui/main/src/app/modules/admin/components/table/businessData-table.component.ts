@@ -21,8 +21,15 @@ import {ActionButton} from '../cell-renderers/action-cell-renderer.component';
 })
 export class BusinessDataTableComponent extends AdminTableDirective implements OnInit {
     tableType = AdminItemType.BUSINESSDATA;
-    fields = [new Field('name', 6, 'idCellRenderer')];
+    fields = [new Field('name', 6, 'idCellRenderer', null, 'businessDataColumn')];
     idField = 'name';
     actionButtonsDisplayed = [ActionButton.UPDATE, ActionButton.DOWNLOAD, ActionButton.DELETE];
     showAddButton = true;
+
+    ngOnInit() {
+        this.gridOptions.columnTypes['businessDataColumn'] = {
+            resizable: false
+        };
+        super.ngOnInit();
+    }
 }

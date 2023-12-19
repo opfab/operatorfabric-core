@@ -40,7 +40,8 @@ export class GroupsTableComponent extends AdminTableDirective implements OnInit 
             filter: 'agTextColumnFilter',
             wrapText: true,
             autoHeight: true,
-            flex: 4
+            flex: 4,
+            resizable: false
         };
         super.ngOnInit();
     }

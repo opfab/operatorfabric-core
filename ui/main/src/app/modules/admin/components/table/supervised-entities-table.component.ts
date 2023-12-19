@@ -68,7 +68,8 @@ export class SupervisedEntitiesTableComponent extends AdminTableDirective implem
             },
             wrapText: true,
             autoHeight: true,
-            flex: 4
+            flex: 4,
+            resizable: false
         };
         super.ngOnInit();
     }
