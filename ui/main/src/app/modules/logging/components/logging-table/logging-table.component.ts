@@ -94,7 +94,8 @@ export class LoggingTableComponent implements OnDestroy {
                     filter: false,
                     wrapText: false,
                     autoHeight: false,
-                    width: 130
+                    width: 130,
+                    resizable: false
                 },
                 noFiltersDataColumn: {
                     sortable: false,
@@ -149,7 +150,8 @@ export class LoggingTableComponent implements OnDestroy {
                     filter: false,
                     wrapText: false,
                     autoHeight: false,
-                    maxWidth: 18
+                    maxWidth: 18,
+                    resizable: false
                 }
             },
             ensureDomOrder: true, // rearrange row-index of rows when sorting cards (used for cypress)

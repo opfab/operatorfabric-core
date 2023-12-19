@@ -59,7 +59,8 @@ export class EntitiesTableComponent extends AdminTableDirective implements OnIni
             },
             wrapText: true,
             autoHeight: true,
-            flex: 4
+            flex: 4,
+            resizable: false
         };
         super.ngOnInit();
     }

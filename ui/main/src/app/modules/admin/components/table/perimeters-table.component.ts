@@ -63,7 +63,8 @@ export class PerimetersTableComponent extends AdminTableDirective implements OnI
             },
             wrapText: true,
             autoHeight: true,
-            flex: 4
+            flex: 4,
+            resizable: false
         };
         super.ngOnInit();
     }

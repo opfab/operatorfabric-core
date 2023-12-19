@@ -69,7 +69,8 @@ export class UsersTableComponent extends AdminTableDirective implements OnInit {
             },
             wrapText: true,
             autoHeight: true,
-            flex: 4
+            flex: 4,
+            resizable: false
         };
         super.ngOnInit();
     }

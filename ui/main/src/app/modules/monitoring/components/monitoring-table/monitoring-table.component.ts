@@ -118,7 +118,8 @@ export class MonitoringTableComponent implements OnChanges, OnDestroy {
                     filter: true,
                     wrapText: false,
                     autoHeight: false,
-                    width: 150
+                    width: 150,
+                    resizable: false
                 },
                 emitterColumn: {
                     sortable: true,
@@ -149,14 +150,16 @@ export class MonitoringTableComponent implements OnChanges, OnDestroy {
                     filter: false,
                     wrapText: false,
                     autoHeight: false,
-                    maxWidth: 18
+                    maxWidth: 18,
+                    resizable: false
                 },
                 answerColumn: {
                     sortable: false,
                     filter: false,
                     wrapText: false,
                     autoHeight: false,
-                    width: 30
+                    width: 30,
+                    resizable: false
                 }
             },
             ensureDomOrder: true, // rearrange row-index of rows when sorting cards (used for cypress)
