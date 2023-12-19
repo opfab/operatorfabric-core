@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2023, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2024, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -236,11 +236,11 @@ export class ProcessesService {
         return null;
     }
 
-    public static getProcessesPerProcessGroups(processesFilter?: string[]): Map<any, any> {
+    public static getProcessesPerProcessGroups(processIds?: string[]): Map<any, any> {
         const processesPerProcessGroups = new Map();
 
         ProcessesService.getAllProcesses().forEach((process) => {
-            if (!processesFilter || processesFilter.includes(process.id)) {
+            if (!processIds || processIds.includes(process.id)) {
                 const processGroup = ProcessesService.findProcessGroupForProcess(process.id);
                 if (processGroup) {
                     const processes = processesPerProcessGroups.get(processGroup.id)
