@@ -10,7 +10,7 @@
 import {ChangeDetectionStrategy, Component} from '@angular/core';
 import {ICellRendererAngularComp} from 'ag-grid-angular';
 import {ICellRendererParams} from 'ag-grid-community';
-import {CrudService} from 'app/business/services/crud-service';
+import {CrudService} from 'app/business/services/admin/crud-service';
 import {AdminItemType, SharingService} from '../../services/sharing.service';
 
 @Component({
