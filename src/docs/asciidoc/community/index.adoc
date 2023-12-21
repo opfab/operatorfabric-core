@@ -150,8 +150,6 @@ could be interested in:
 
 * https://lists.lfenergy.org/g/opfab-announce[OperatorFabric Announcements] (such as new releases)
 * https://lists.lfenergy.org/g/opfab-tsc[OperatorFabric Technical Steering Committee] (agenda, minutes and invitations for TSC)
-* https://lists.lfenergy.org/g/opfab[OperatorFabric General Discussion]
-* https://lists.lfenergy.org/g/opfab-dev[OperatorFabric Developers] for project development discussions (not really active, we might abandon it in favour of GitHub Discussions)
 
 And if you're interested in LF Energy in general:
 https://lists.lfenergy.org/g/lfenergy[LF Energy General Discussion]
