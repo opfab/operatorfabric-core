@@ -8,43 +8,15 @@
  */
 
 import {LightCard, Severity} from '@ofModel/light-card.model';
-import {CardOperation, CardOperationType} from '@ofModel/card-operation.model';
 import {Process, State} from '@ofModel/processes.model';
-import {CustomMenu, MenuEntry, MenuEntryLinkTypeEnum} from '@ofModel/menu.model';
 import {Card} from '@ofModel/card.model';
 import {I18n} from '@ofModel/i18n.model';
-import {Page} from '@ofModel/page.model';
 import {TranslateLoader} from '@ngx-translate/core';
 import {Observable, of} from 'rxjs';
 import {Type} from '@angular/core';
 import SpyObj = jasmine.SpyObj;
 import {TestBed} from '@angular/core/testing';
 
-
-export function getOneRandomMenu(): CustomMenu {
-    const entries: MenuEntry[] = [];
-    const entryCount = getPositiveRandomNumberWithinRange(2, 5);
-    for (let j = 0; j < entryCount; j++) {
-        entries.push(
-            new MenuEntry(
-                getRandomAlphanumericValue(3, 10),
-                getRandomAlphanumericValue(3, 10),
-                getRandomAlphanumericValue(3, 10),
-                MenuEntryLinkTypeEnum.BOTH
-            )
-        );
-    }
-    return new CustomMenu(getRandomAlphanumericValue(3, 10), getRandomAlphanumericValue(3, 10), entries);
-}
-
-export function getRandomMenus(): CustomMenu[] {
-    const result: CustomMenu[] = [];
-    const menuCount = getPositiveRandomNumberWithinRange(2, 4);
-    for (let i = 0; i < menuCount; i++) {
-        result.push(getOneRandomMenu());
-    }
-    return result;
-}
 
 export function getOneRandomProcess(processTemplate?: any): Process {
     processTemplate = processTemplate ? processTemplate : {};
@@ -63,37 +35,6 @@ export function getOneRandomProcess(processTemplate?: any): Process {
         processTemplate.locales ? processTemplate.locales : undefined,
         processTemplate.states ? processTemplate.states : states
     );
-}
-
-// fully random without any control
-export function getOneRandomAddCardOperation(): CardOperation {
-    const numberOfCards = generateRandomPositiveIntegerWithinRangeWithOneAsMinimum(5);
-    const now = new Date().getTime();
-    return new CardOperation(
-        generateRandomPositiveIntegerWithinRangeWithOneAsMinimum(768),
-        now,
-        CardOperationType.ADD,
-        getSeveralRandomLightCards(numberOfCards)[0]
-    );
-}
-
-// heavily based on enum implementation
-export function pickARandomItemOfAnEnum<E>(currentEnum: E): E {
-    const keys = Object.keys(currentEnum).filter((k) => {
-        const parsedInt = parseInt(k);
-        return !isNaN(parsedInt);
-    });
-    const randomIndex = getRandomIndex(keys);
-    const key = keys[randomIndex];
-    return currentEnum[key];
-}
-
-export function getRandomIndex<E>(array: E[]) {
-    if (array && array.length > 0) {
-        return generateRandomPositiveIntegerWithinRangeWithOneAsMinimum(0, array.length);
-    } else {
-        return 0;
-    }
 }
 
 export function getOneRandomLightCard(lightCardTemplate?: any): LightCard {
@@ -140,10 +81,7 @@ export function getRandomSeverity(): Severity {
     return severities[getPositiveRandomNumberWithinRange(0, 3)];
 }
 
-export function getRandomPage(totalPages = 1, totalElements = 10): Page<LightCard> {
-    const lightCards = getSeveralRandomLightCards(totalElements);
-    return new Page<LightCard>(totalPages, totalElements, lightCards);
-}
+
 
 export function getOneRandomCard(cardTemplate?: any): Card {
     cardTemplate = cardTemplate ? cardTemplate : {};
@@ -200,16 +138,6 @@ export function getOneRandomCard(cardTemplate?: any): Card {
     );
 }
 
-export function generateRandomArray<T>(func: () => T, min = 1, max = 2): Array<T> {
-    const size = generateRandomPositiveIntegerWithinRangeWithOneAsMinimum(min, max);
-    const array = [];
-    for (let i = 0; i < size; ++i) {
-        array[i] = func();
-    }
-
-    return array;
-}
-
 export function getSeveralRandomLightCards(numberOfCards = 1, cardTemplate?: any): LightCard[] {
     const finalNumberOfCards = forcePositiveAndOneMinimum(numberOfCards);
     const lightCards: LightCard[] = new Array(finalNumberOfCards);
@@ -245,9 +173,6 @@ export function generateRandomPositiveIntegerWithinRangeWithOneAsMinimum(min = 1
     return Math.floor(Math.random() * (maximum - minimum) + minimum);
 }
 
-export function getRandomBoolean(): boolean {
-    return Math.random() >= 0.5;
-}
 
 function forcePositiveAndOneMinimum(min: number): number {
     return min < 0 ? 1 : min;
@@ -279,35 +204,6 @@ export function appendFixedLengthAlphanumericValue(length = 1, base = ''): strin
     }
 }
 
-export function shuffleArrayContentByFisherYatesLike<T>(array: Array<T>): Array<T> {
-    const workingArray = Object.assign([], array);
-    let currentLengthOfRemainingArrayToShuffle = array.length;
-    let valueHolderForPermutation: T;
-    let currentIndex: number;
-    // need a new array otherwise the old one behave weirdly
-    const result = Array<T>(currentLengthOfRemainingArrayToShuffle);
-    while (currentLengthOfRemainingArrayToShuffle) {
-        currentIndex = Math.floor(Math.random() * currentLengthOfRemainingArrayToShuffle--);
-        valueHolderForPermutation = workingArray[currentLengthOfRemainingArrayToShuffle];
-        result[currentLengthOfRemainingArrayToShuffle] = workingArray[currentIndex];
-        workingArray[currentIndex] = valueHolderForPermutation;
-    }
-    return result;
-}
-
-export function generateBusinessconfigWithVersion(
-    businessconfigName?: string,
-    versions?: Set<string>
-): Map<string, Set<string>> {
-    const result = new Map<string, Set<string>>();
-    const businessconfig = businessconfigName ? businessconfigName : getRandomAlphanumericValue(3, 5);
-    function getSomeVersions() {
-        return getRandomAlphanumericValue(3, 8);
-    }
-    const versionValues = versions ? versions : new Set(generateRandomArray(getSomeVersions, 3, 6));
-    result[businessconfig] = versionValues;
-    return result;
-}
 
 export class BusinessconfigI18nLoader implements TranslateLoader {
     getTranslation(lang: string): Observable<any> {
