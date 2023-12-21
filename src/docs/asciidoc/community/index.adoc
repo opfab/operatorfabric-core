@@ -93,11 +93,18 @@ to have to maintain these mentions (since this information is tracked by git any
 * Always precise the type of the function parameters (Example : `setUserName(name : string)`)
 * Function shall start with a verb (Example :  `showAlertPopup()`)
 * When the return type is a boolean, the method name shall be a yes/no question (Example : `isUserDeleted() : boolean`)
+* Whenever possible use changeDetection: ChangeDetectionStrategy.OnPush in the component decorator to improve performance
 
 ==== Back development 
 
 * When developing a Spring Controller, you do not need to develop unit test, use karate api test (file pattern \\**/controllers/** is excluded from test coverage indicator in sonarCloud).
 * Do not use spring annotation (@Autowired, @PostConstruct.. ) in business code to avoid coupling business code with spring framework. This rules is recent so a lot of the business code depends on spring.
+
+==== Unit test
+
+* Unit test shall not use random values which is considered as a bad practice
+* Unit test shall not use external resources (database, file system, network, ...)  
+
 
 include::documentation.adoc[leveloffset=+2]
 
