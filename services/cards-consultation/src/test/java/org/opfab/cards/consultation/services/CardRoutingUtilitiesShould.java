@@ -9,21 +9,16 @@
 
 package org.opfab.cards.consultation.services;
 
-import lombok.extern.slf4j.Slf4j;
 import org.assertj.core.api.Assertions;
 import net.minidev.json.JSONObject;
 import net.minidev.json.parser.JSONParser;
 import net.minidev.json.parser.ParseException;
 
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.opfab.cards.consultation.application.IntegrationTestApplication;
 import org.opfab.users.model.ComputedPerimeter;
 import org.opfab.users.model.CurrentUserWithPerimeters;
 import org.opfab.users.model.RightsEnum;
 import org.opfab.users.model.User;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 
 import java.util.ArrayList;
@@ -31,10 +26,6 @@ import java.util.Arrays;
 import java.util.List;
 
 
-
-@ExtendWith(SpringExtension.class)
-@SpringBootTest(classes = {IntegrationTestApplication.class})
-@Slf4j
 class CardRoutingUtilitiesShould {
  
     private CurrentUserWithPerimeters currentUserWithPerimeters;
@@ -76,7 +67,7 @@ class CardRoutingUtilitiesShould {
         {
            return  (JSONObject) (new JSONParser(JSONParser.MODE_PERMISSIVE)).parse(jsonString);
         }
-        catch(ParseException e){ log.error("Error parsing", e); return null;}
+        catch(ParseException e){ System.err.println("Error parsing :" + e.toString()); return null;}
     }
 
     @Test
