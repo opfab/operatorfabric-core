@@ -472,6 +472,8 @@ body {
 
     --ag-borders : none;
     --ag-header-height: 70px;
+    --ag-icon-font-color : var(--opfab-text-color);
+
 
     // This is done to reduce min-height (150px by default) in order to remove empty space when there is 1 line or 2
     // The height of a line is 42 (40 + 1*2 padding)
