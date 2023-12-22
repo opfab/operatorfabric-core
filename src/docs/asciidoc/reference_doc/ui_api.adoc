@@ -1,4 +1,4 @@
-// Copyright (c) 2023 RTE (http://www.rte-france.com)
+// Copyright (c) 2023-2024 RTE (http://www.rte-france.com)
 // See AUTHORS.txt
 // This document is subject to the terms of the Creative Commons Attribution 4.0 International license.
 // If a copy of the license was not distributed with this
@@ -66,16 +66,15 @@ It’s possible to redirect the user from a card to a business application decla
 This can be done by calling the following function from the template :
 
 ```
-opfab.navigate.redirectToBusinessMenu(idMenu,idEntry);
+opfab.navigate.redirectToBusinessMenu(idMenu);
 ```
 
-- idMenu is the id of the menu defined in ui-menu.json
-- idEntry is the id of the entry defined in ui-menu.json
+- idMenu is the id of the menu entry defined in ui-menu.json
 
 It is also possible to append a url extension (sub paths and/or parameters) to the url that will be called:
 
 ```
-opfab.navigate.redirectToBusinessMenu('myMenu','myEntry','/extension?param1=aParam&param2=anotherParam');
+opfab.navigate.redirectToBusinessMenu('myMenu','/extension?param1=aParam&param2=anotherParam');
 ```
 
 This can be useful to pass context from the card to the business application.

@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2023, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2024, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -7,7 +7,7 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {Component, OnInit} from '@angular/core';
+import {ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit} from '@angular/core';
 import {UserService} from 'app/business/services/users/user.service';
 import {EntitiesService} from 'app/business/services/users/entities.service';
 import {ConfigService} from 'app/business/services/config.service';
@@ -18,7 +18,8 @@ import * as _ from 'lodash-es';
 @Component({
     selector: 'of-info',
     templateUrl: './info.component.html',
-    styleUrls: ['./info.component.scss']
+    styleUrls: ['./info.component.scss'],
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class InfoComponent implements OnInit {
     userName: string;
@@ -27,6 +28,8 @@ export class InfoComponent implements OnInit {
     userEntitiesToDisplayTrimmed: boolean;
     timeToDisplay: string;
 
+    constructor(private changeDetector: ChangeDetectorRef) {
+    }
 
     ngOnInit() {
         this.updateTime();
@@ -45,6 +48,7 @@ export class InfoComponent implements OnInit {
         this.timeToDisplay = DateTimeFormatterService.getFormattedTimeFromEpochDate(new Date().valueOf());
         setTimeout(() => {
             this.updateTime();
+            this.changeDetector.markForCheck();
         }, 1000);
     }
 
@@ -62,6 +66,7 @@ export class InfoComponent implements OnInit {
             this.userEntitiesToDisplay = this.userEntities.join(', ');
             this.trimTooLongEntitiesString();
         }
+        this.changeDetector.markForCheck();
     }
 
     trimTooLongEntitiesString() {

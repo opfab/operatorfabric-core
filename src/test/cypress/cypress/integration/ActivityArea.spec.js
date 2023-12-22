@@ -1,4 +1,4 @@
-/* Copyright (c) 2022-2023, RTE (http://www.rte-france.com)
+/* Copyright (c) 2022-2024, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -95,7 +95,7 @@ describe('ActivityAreaPage', () => {
     });
 
     it('Choose activity area on login', function () {
-        script.setPropertyInConf('selectActivityAreaOnLogin ', 'web-ui', true);
+        script.setPropertyInConf('selectActivityAreaOnLogin ',true);
 
         cy.visit('');
 
@@ -186,7 +186,7 @@ describe('ActivityAreaPage', () => {
         cy.get('.opfab-checkbox').contains('Control Center FR North').click();
         activityArea.save();
 
-        script.setPropertyInConf('selectActivityAreaOnLogin ', 'web-ui', false);
+        script.setPropertyInConf('selectActivityAreaOnLogin ',false);
     });
 
     it('Check spinner is displayed when request is delayed and that spinner disappears once the request arrived', function () {

@@ -1,4 +1,4 @@
-/* Copyright (c) 2023, RTE (http://www.rte-france.com)
+/* Copyright (c) 2023-2024, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -7,11 +7,11 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {ConfigService} from 'app/business/services/config.service';
 import {GlobalStyleService} from 'app/business/services/global-style.service';
 import {RouterStore} from 'app/business/store/router.store';
 import {Observable, ReplaySubject, skip, Subject, takeUntil} from 'rxjs';
 import {environment} from '@env/environment';
+import {MenuService} from 'app/business/services/menu.service';
 
 export class ExternalAppIFrameView {
     urlSubject: Subject<string> = new ReplaySubject<string>(1);
@@ -47,26 +47,25 @@ export class ExternalAppIFrameView {
         // that is why we need a double decoding here
 
         const splitedRoute = decodeURIComponent(decodeURIComponent(route)).slice(1).split('/');
-        const menuId = splitedRoute[1];
-        const menuEntryId = splitedRoute[2].split('?')[0];
-        const menuEntryParams = splitedRoute[2].split('?')[1];
-        const deeplink = splitedRoute.slice(3).join('/');
+        const menuId = splitedRoute[1].split('?')[0];
+        const menuEntryParams = splitedRoute[1].split('?')[1];
+        const deeplink = splitedRoute.slice(2).join('/');
         const deeplinkWithoutParams = deeplink?.split('?')[0];
         const deeplinkParams = deeplink?.split('?')[1];
 
-        ConfigService.queryMenuEntryURL(menuId, menuEntryId).subscribe((menuUrl) => {
-            let url = menuUrl;
-            if (deeplinkWithoutParams) url += deeplinkWithoutParams;
-            url = this.addParamsToUrl(url, menuEntryParams);
-            url = this.addParamsToUrl(url, deeplinkParams);
-            url = this.addOpfabThemeParamToUrl(url);
-            this.urlSubject.next(url);
-            this.removeParamsFromCurrentURLInBrowserNavigationBar(menuId, menuEntryId);
-        });
+        const menuUrl = MenuService.queryMenuEntryURL(menuId)
+        let url = menuUrl;
+        if (deeplinkWithoutParams) url += deeplinkWithoutParams;
+        url = this.addParamsToUrl(url, menuEntryParams);
+        url = this.addParamsToUrl(url, deeplinkParams);
+        url = this.addOpfabThemeParamToUrl(url);
+        this.urlSubject.next(url);
+        this.removeParamsFromCurrentURLInBrowserNavigationBar(menuId);
+
     }
 
-    private removeParamsFromCurrentURLInBrowserNavigationBar(menuId: string, menuEntryId: string) {
-        history.replaceState({}, '', this.businessConfigUrl + '/' + menuId + '/' + menuEntryId + '/');
+    private removeParamsFromCurrentURLInBrowserNavigationBar(menuId: string) {
+        history.replaceState({}, '', this.businessConfigUrl + '/' + menuId  + '/');
     }
 
     private addParamsToUrl(url, params) {

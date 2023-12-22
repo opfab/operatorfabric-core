@@ -1,4 +1,4 @@
-/* Copyright (c) 2022-2023, RTE (http://www.rte-france.com)
+/* Copyright (c) 2022-2024, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -50,26 +50,11 @@ describe('Test translations', function () {
         }
     }
 
-    function setNightMode() {
-        cy.get('.opfab-right-menu').should('exist').then(menu => {
-            if (menu.find('#opfab-navbar-right-menu-night-mode').length > 0) {
-                cy.get('#opfab-navbar-right-menu-night-mode').click();
-            } else {
-                // Close the dropdown user menu in order to always have it closed at the end of this function
-                cy.get('#opfab-navbar-drop-user-menu').should('exist').click();
-            }
-        });
-    }
 
-    function setDayMode() {
-        cy.get('.opfab-right-menu').should('exist').then(menu => {
-            if (menu.find('#opfab-navbar-right-menu-day-mode').length > 0) {
-                cy.get('#opfab-navbar-right-menu-day-mode').click();
-            } else {
-                // Close the dropdown user menu in order to always have it closed at the end of this function
-                cy.get('#opfab-navbar-drop-user-menu').should('exist').click();
-            }
-        });
+    function switchDayNightMode() {
+        cy.get('#opfab-navbar-right-menu-nightdaymode').click();
+        cy.get('.opfab-right-menu').should('not.exist');
+
     }
 
     function checkMenuTitles(feedTitle, archivesTitle, monitoringTitle, loggingTitle, singleMenuTitle, secondMenuTitle, 
@@ -78,14 +63,14 @@ describe('Test translations', function () {
         cy.get('#opfab-navbar-menu-archives').should('have.text', archivesTitle);
         cy.get('#opfab-navbar-menu-monitoring').should('have.text', monitoringTitle);
         cy.get('#opfab-navbar-menu-logging').should('have.text', loggingTitle);
-        cy.get('#opfab-navbar-menu-menu1').should('have.text', singleMenuTitle);
+        cy.get('#opfab-navbar-menu-uid_test_0').should('have.text', singleMenuTitle);
         cy.get('#opfab-navbar-menu-dropdown-menu2').should('have.text', secondMenuTitle);
         cy.get('#opfab-navbar-menu-dropdown-menu2').trigger('mouseenter');
 
         // Test dropdown menus titles
         cy.get('#opfab-navbar-menu-dropdown-menu2').trigger('mouseenter');
-        cy.get('.opfab-dropdown-menu').find('.text-link').eq(0).should('have.text', firstEntryTitle);
-        cy.get('.opfab-dropdown-menu').find('.text-link').eq(1).should('have.text', secondEntryTitle);
+        cy.get('.opfab-dropdown-menu').find('.opfab-dropdown-menu-item').eq(0).should('have.text', firstEntryTitle);
+        cy.get('.opfab-dropdown-menu').find('.opfab-dropdown-menu-item').eq(1).should('have.text', secondEntryTitle);
     }
 
     function checkRightMenuStaticEntries(realTimeTitle, settingsTitle, activityAreaTitle, feedConfigurationTitle, aboutTitle,
@@ -96,32 +81,29 @@ describe('Test translations', function () {
         cy.get('#opfab-navbar-right-menu-activityarea').should('have.text', activityAreaTitle);
         cy.get('#opfab-navbar-right-menu-feedconfiguration').should('have.text', feedConfigurationTitle);
         cy.get('#opfab-navbar-right-menu-about').should('have.text', aboutTitle);
-        cy.get('#opfab-navbar-right-menu-change-password').should('have.text', changePasswordTitle);
+        cy.get('#opfab-navbar-right-menu-changepassword').should('have.text', changePasswordTitle);
         cy.get('#opfab-navbar-right-menu-logout').should('have.text', logoutTitle);
+        cy.get('#opfab-navbar-drop-user-menu').click(); // Close the dropdown menu
     }
 
     function checkDayAndNightTitles(dayModeTitle, nightModeTitle) {
         
-        // Check day mode text
-        setNightMode();
+        // Check day mode text 
         cy.get('.opfab-right-menu').should('not.exist');
         cy.get('#opfab-navbar-drop-user-menu').should('exist').click();
         cy.get('.opfab-right-menu').should('exist');
-        cy.get('#opfab-navbar-right-menu-day-mode').should('have.text', dayModeTitle);
+        cy.get('#opfab-navbar-right-menu-nightdaymode').should('have.text', dayModeTitle);
 
         // Check night mode text
-        setDayMode();
-        cy.get('.opfab-right-menu').should('not.exist');
+        switchDayNightMode();
         cy.get('#opfab-navbar-drop-user-menu').should('exist').click();
         cy.get('.opfab-right-menu').should('exist');
-        cy.get('#opfab-navbar-right-menu-night-mode').should('have.text', nightModeTitle);
+        cy.get('#opfab-navbar-right-menu-nightdaymode').should('have.text', nightModeTitle);
 
-        // Close dropdown menu
-        cy.get('#opfab-navbar-drop-user-menu').should('exist').click();
-        cy.get('.opfab-right-menu').should('not.exist');
+        // set back to night mode
+        switchDayNightMode();
+
     }
-
-
 
     function checkArchivesScreenLabels(serviceLabel, tagLabel, processLabel, stateLabel, publishFromLabel, publishToLabel,
                                       activeFromLabel, activeToLabel) {

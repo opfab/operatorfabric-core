@@ -1,4 +1,4 @@
-/* Copyright (c) 2021-2023, RTE (http://www.rte-france.com)
+/* Copyright (c) 2021-2024, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -11,9 +11,7 @@ import {NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {TranslateModule} from '@ngx-translate/core';
 import {NavbarComponent} from './navbar.component';
-import {LogoComponent} from './logo/logo.component';
 import {InfoComponent} from './info/info.component';
-import {MenuLinkComponent} from './menus/menu-link/menu-link.component';
 import {AppRoutingModule} from 'app/router/app-routing.module';
 import {UserCardModule} from '../usercard/usercard.module';
 import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
@@ -23,10 +21,8 @@ import {SpinnerModule} from "../share/spinner/spinner.module";
 @NgModule({
     declarations: [
         NavbarComponent,
-        LogoComponent,
         InfoComponent,
-        AboutComponent,
-        MenuLinkComponent
+        AboutComponent
     ],
     imports: [CommonModule, TranslateModule, AppRoutingModule, UserCardModule, NgbModule, SpinnerModule],
     exports: [NavbarComponent]

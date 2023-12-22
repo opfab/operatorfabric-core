@@ -1,4 +1,4 @@
-/* Copyright (c) 2023, RTE (http://www.rte-france.com)
+/* Copyright (c) 2023-2024, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -64,11 +64,12 @@ describe('ExternalAppIFrame view ', () => {
 
         const externalAppIFrameView = new ExternalAppIFrameView();
 
-        RouterStore.setCurrentRoute('/businessconfigparty/menu1/entry1/');
+        RouterStore.setCurrentRoute('/businessconfigparty/entry1/');
 
         const url = await firstValueFrom(externalAppIFrameView.getExternalAppUrl());
 
         expect(url).toEqual('https://test/?opfab_theme=DAY');
+        externalAppIFrameView.destroy();
     });
 
     // menu1/entry2/ ==> https://test/question?param=myparam ==> https://test/question?param=myparam&opfab_theme=DAY
@@ -79,11 +80,12 @@ describe('ExternalAppIFrame view ', () => {
 
         const externalAppIFrameView = new ExternalAppIFrameView();
 
-        RouterStore.setCurrentRoute('/businessconfigparty/menu1/entry2/');
+        RouterStore.setCurrentRoute('/businessconfigparty/entry2/');
 
         const url = await firstValueFrom(externalAppIFrameView.getExternalAppUrl());
 
         expect(url).toEqual('https://test/question?param=myparam&opfab_theme=DAY');
+        externalAppIFrameView.destroy();
     });
 
     // menu1/entry2 ==> https://test/question?param=myparam ==> https://test/question?param=myparam&opfab_theme=DAY
@@ -95,11 +97,12 @@ describe('ExternalAppIFrame view ', () => {
 
         const externalAppIFrameView = new ExternalAppIFrameView();
 
-        RouterStore.setCurrentRoute('/businessconfigparty/menu1/entry2');
+        RouterStore.setCurrentRoute('/businessconfigparty/entry2');
 
         const url = await firstValueFrom(externalAppIFrameView.getExternalAppUrl());
 
         expect(url).toEqual('https://test/question?param=myparam&opfab_theme=DAY');
+        externalAppIFrameView.destroy();
     });
 
     // If a business application is called form a card, it can be called with parameters
@@ -117,11 +120,12 @@ describe('ExternalAppIFrame view ', () => {
 
         const externalAppIFrameView = new ExternalAppIFrameView();
 
-        RouterStore.setCurrentRoute('/businessconfigparty/menu1/entry1/?my_param=param&my_param2=param2');
+        RouterStore.setCurrentRoute('/businessconfigparty/entry1/?my_param=param&my_param2=param2');
 
         const url = await firstValueFrom(externalAppIFrameView.getExternalAppUrl());
 
         expect(url).toEqual('https://test/?my_param=param&my_param2=param2&opfab_theme=DAY');
+        externalAppIFrameView.destroy();
     });
 
     // If a business application is called form a card, it can be called with parameters
@@ -140,11 +144,12 @@ describe('ExternalAppIFrame view ', () => {
 
         const externalAppIFrameView = new ExternalAppIFrameView();
 
-        RouterStore.setCurrentRoute('/businessconfigparty/menu1/entry1/?my_param=param&my_param2=param2');
+        RouterStore.setCurrentRoute('/businessconfigparty/entry1/?my_param=param&my_param2=param2');
 
         const url = await firstValueFrom(externalAppIFrameView.getExternalAppUrl());
 
         expect(url).toEqual('https://test/?my_param=param&my_param2=param2&opfab_theme=DAY');
+        externalAppIFrameView.destroy();
     });
 
     // WARNING : HACK
@@ -165,11 +170,12 @@ describe('ExternalAppIFrame view ', () => {
 
         const externalAppIFrameView = new ExternalAppIFrameView();
 
-        RouterStore.setCurrentRoute('/businessconfigparty/menu1/entry1/%253Fmy_param=param&my_param2=param2');
+        RouterStore.setCurrentRoute('/businessconfigparty/entry1/%253Fmy_param=param&my_param2=param2');
 
         const url = await firstValueFrom(externalAppIFrameView.getExternalAppUrl());
 
         expect(url).toEqual('https://test/?my_param=param&my_param2=param2&opfab_theme=DAY');
+        externalAppIFrameView.destroy();
     });
 
     // menu1/entry2/?my_param2=param2 ==> https://test/question?param=myparam ==> https://test/question?my_param=param&my_param2=param2&opfab_theme=DAY
@@ -180,11 +186,12 @@ describe('ExternalAppIFrame view ', () => {
 
         const externalAppIFrameView = new ExternalAppIFrameView();
 
-        RouterStore.setCurrentRoute('/businessconfigparty/menu1/entry2/?my_param2=param2');
+        RouterStore.setCurrentRoute('/businessconfigparty/entry2/?my_param2=param2');
 
         const url = await firstValueFrom(externalAppIFrameView.getExternalAppUrl());
 
         expect(url).toEqual('https://test/question?param=myparam&my_param2=param2&opfab_theme=DAY');
+        externalAppIFrameView.destroy();
     });
 
     // menu1/entry1/deep/deep2/query?my_param=param ==> https://test/ ==> https://test/deepurl/deepurl2/query?my_param=param&opfab_theme=DAY
@@ -195,11 +202,12 @@ describe('ExternalAppIFrame view ', () => {
 
         const externalAppIFrameView = new ExternalAppIFrameView();
 
-        RouterStore.setCurrentRoute('/businessconfigparty/menu1/entry1/deep/deep2/query?my_param=param');
+        RouterStore.setCurrentRoute('/businessconfigparty/entry1/deep/deep2/query?my_param=param');
 
         const url = await firstValueFrom(externalAppIFrameView.getExternalAppUrl());
 
         expect(url).toEqual('https://test/deep/deep2/query?my_param=param&opfab_theme=DAY');
+        externalAppIFrameView.destroy();
     });
 
     it('GIVEN an url is set  WHEN global style change THEN url is set with new style  ', async () => {
@@ -209,7 +217,7 @@ describe('ExternalAppIFrame view ', () => {
 
         const externalAppIFrameView = new ExternalAppIFrameView();
 
-        RouterStore.setCurrentRoute('/businessconfigparty/menu1/entry1');
+        RouterStore.setCurrentRoute('/businessconfigparty/entry1');
 
         const url = await firstValueFrom(externalAppIFrameView.getExternalAppUrl());
         expect(url).toEqual('https://test/?opfab_theme=DAY');
@@ -217,5 +225,6 @@ describe('ExternalAppIFrame view ', () => {
         GlobalStyleService.setStyle(GlobalStyleService.NIGHT);
         const newUrl = await firstValueFrom(externalAppIFrameView.getExternalAppUrl());
         expect(newUrl).toEqual('https://test/?opfab_theme=NIGHT');
+        externalAppIFrameView.destroy();
     });
 });
